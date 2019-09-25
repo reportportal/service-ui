@@ -51,3 +51,5 @@ export const launchesDistinctLinksSelectorsMap = {
 };
 
 export const localSortingSelector = (state) => domainSelector(state).localSorting;
+export const debugLocalSortingSelector = (state) => domainSelector(state).debugLocalSorting;
+export const debugLocalFilterSelector = (state) => domainSelector(state).debugLocalFilter;

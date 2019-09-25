@@ -8,7 +8,7 @@ import { Input } from 'components/inputs/input';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { validate } from 'common/utils';
+import { commonValidators } from 'common/utils';
 import { patternsSelector } from 'controllers/project';
 
 const LABEL_WIDTH = 110;
@@ -25,22 +25,16 @@ const messages = defineMessages({
 });
 
 @withModal('renamePatternModal')
-@connect((state, ownProps) => ({
-  validate: ({ name }) => ({
-    name:
-      ((!name || !validate.patternNameLength(name, patternsSelector(state))) &&
-        'patternNameLengthHint') ||
-      (name &&
-        !validate.patternNameUnique(
-          name,
-          ownProps.data.pattern && ownProps.data.pattern.id,
-          patternsSelector(state),
-        ) &&
-        'patternNameDuplicateHint'),
-  }),
+@connect((state) => ({
+  patterns: patternsSelector(state),
 }))
 @reduxForm({
   form: 'renamePatternForm',
+  validate: ({ name }, { patterns, data }) => ({
+    name: commonValidators.createPatternNameValidator(data.pattern && data.pattern.id, patterns)(
+      name,
+    ),
+  }),
 })
 @injectIntl
 export class RenamePatternModal extends Component {

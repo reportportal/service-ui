@@ -26,14 +26,14 @@ help:
 	@echo "checkstyle - gofmt+golint+misspell"
 
 get-build-deps:
-	$(GO) get -u $(BUILD_DEPS)
+	$(GO) get $(BUILD_DEPS)
 
 test:
 	$(GO) test ${GODIRS_NOVENDOR}
 
 
 checkstyle:
-	golangci-lint run
+	golangci-lint run --deadline 10m
 
 fmt:
 	gofmt -l -w -s ${GOFILES_NOVENDOR}

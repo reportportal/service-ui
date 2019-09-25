@@ -18,6 +18,7 @@ import { InputUserSearch } from 'components/inputs/inputUserSearch';
 import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { commonValidators } from 'common/utils';
 import styles from './inviteUserModal.scss';
 
 const cx = classNames.bind(styles);
@@ -66,8 +67,8 @@ const inviteFormSelector = formValueSelector('inviteUserForm');
 @reduxForm({
   form: 'inviteUserForm',
   validate: ({ user, project }) => ({
-    user: !user && 'requiredFieldHint',
-    project: !project && 'requiredFieldHint',
+    user: commonValidators.requiredField(user),
+    project: commonValidators.requiredField(project),
   }),
   enableReinitialize: true,
 })

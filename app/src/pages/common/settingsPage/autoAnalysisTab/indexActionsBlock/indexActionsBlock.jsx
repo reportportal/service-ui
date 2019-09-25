@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { showModalAction } from 'controllers/modal';
-import { analyzerExtensionsSelector } from 'controllers/appInfo/selectors';
 import classNames from 'classnames/bind';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -45,14 +44,9 @@ const messages = defineMessages({
   },
 });
 
-@connect(
-  (state) => ({
-    analyzerExtensions: analyzerExtensionsSelector(state),
-  }),
-  {
-    showRemoveIndexModal: () => showModalAction({ id: 'removeIndexModal' }),
-  },
-)
+@connect(null, {
+  showRemoveIndexModal: () => showModalAction({ id: 'removeIndexModal' }),
+})
 @injectIntl
 @track()
 export class IndexActionsBlock extends Component {

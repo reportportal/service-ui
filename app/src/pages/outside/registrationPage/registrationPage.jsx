@@ -22,13 +22,25 @@
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { referenceDictionary } from 'common/utils';
-import { FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage } from 'react-intl';
+import { BlockHeader } from '../common/pageBlockContainer/blockHeader';
 import { RegistrationPageSection } from './registrationPageSection';
 import { RegistrationFailBlock } from './registrationFailBlock';
 import { RegistrationForm } from './registrationForm';
 import styles from './registrationPage.scss';
 
 const cx = classNames.bind(styles);
+
+const messages = defineMessages({
+  welcome: {
+    id: 'RegistrationPage.welcome',
+    defaultMessage: 'Welcome,',
+  },
+  registration: {
+    id: 'RegistrationPage.registration',
+    defaultMessage: 'complete the registration form',
+  },
+});
 
 export const RegistrationPage = ({ tokenActive, tokenProvided, email, onRegistrationSubmit }) => {
   const backgroundClasses = {
@@ -57,16 +69,7 @@ export const RegistrationPage = ({ tokenActive, tokenProvided, email, onRegistra
         <RegistrationPageSection failed={!tokenActive || !tokenProvided}>
           {tokenProvided && tokenActive ? (
             <div>
-              <span className={cx('welcome-msg')}>
-                <span className={cx('big')}>
-                  <FormattedMessage id={'RegistrationPage.welcome'} defaultMessage={'Welcome,'} />
-                </span>
-                <br />
-                <FormattedMessage
-                  id={'RegistrationPage.registration'}
-                  defaultMessage={'complete the registration form'}
-                />
-              </span>
+              <BlockHeader header={messages.welcome} hint={messages.registration} />
               <RegistrationForm email={email} submitForm={onRegistrationSubmit} />
             </div>
           ) : (
@@ -77,7 +80,6 @@ export const RegistrationPage = ({ tokenActive, tokenProvided, email, onRegistra
     </div>
   );
 };
-
 RegistrationPage.propTypes = {
   tokenActive: PropTypes.bool,
   tokenProvided: PropTypes.bool,
@@ -118,7 +120,6 @@ const TokenErrorSection = ({ tokenProvided }) => (
     </div>
   </RegistrationFailBlock>
 );
-
 TokenErrorSection.propTypes = {
   tokenProvided: PropTypes.bool,
 };

@@ -5,7 +5,7 @@ import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { ModalLayout, withModal, ModalField } from 'components/main/modal';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { validate } from 'common/utils';
+import { commonValidators } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { reduxForm } from 'redux-form';
 import { Input } from 'components/inputs/input';
@@ -56,8 +56,8 @@ const messages = defineMessages({
 @reduxForm({
   form: 'changePasswordForm',
   validate: ({ oldPassword, newPassword, confirmPassword }) => ({
-    oldPassword: (!oldPassword || !validate.password(oldPassword)) && 'profilePassword',
-    newPassword: (!newPassword || !validate.password(newPassword)) && 'profilePassword',
+    oldPassword: commonValidators.password(oldPassword),
+    newPassword: commonValidators.password(newPassword),
     confirmPassword: newPassword !== confirmPassword && 'profileConfirmPassword',
   }),
 })

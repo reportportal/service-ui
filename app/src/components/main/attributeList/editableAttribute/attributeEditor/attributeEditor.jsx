@@ -3,11 +3,14 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
-import { reduxForm, formValues } from 'redux-form';
 import Parser from 'html-react-parser';
-import { FieldProvider } from 'components/fields/fieldProvider';
 import { activeProjectSelector } from 'controllers/user';
-import { validate } from 'common/utils';
+import {
+  validate,
+  commonValidators,
+  bindMessageToValidator,
+  composeBoundValidators,
+} from 'common/utils';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import CircleCrossIcon from 'common/img/circle-cross-icon-inline.svg';
 import CircleCheckIcon from 'common/img/circle-check-inline.svg';
@@ -27,42 +30,18 @@ const messages = defineMessages({
   },
 });
 
-const ValueField = formValues({ attributeKey: 'key' })(
-  ({ attributeKey, parse, format, attributeComparator, projectId, valueURLCreator, ...rest }) => (
-    <FieldProvider name="value" format={format} parse={parse}>
-      <FieldErrorHint staticHint>
-        <AttributeInput
-          customClass={cx('input')}
-          async
-          minLength={1}
-          attributeComparator={attributeComparator}
-          uri={valueURLCreator(projectId, attributeKey)}
-          creatable
-          showNewLabel
-          {...rest}
-        />
-      </FieldErrorHint>
-    </FieldProvider>
-  ),
+const attributeKeyValidator = bindMessageToValidator(
+  validate.attributeKey,
+  'attributeKeyLengthHint',
 );
+const attributeValueValidator = composeBoundValidators([
+  commonValidators.requiredField,
+  bindMessageToValidator(validate.attributeValue, 'attributeValueLengthHint'),
+]);
 
 @connect((state) => ({
   projectId: activeProjectSelector(state),
 }))
-@reduxForm({
-  validate: ({ key, value }) => {
-    let valueError;
-    if (!value) {
-      valueError = 'requiredFieldHint';
-    } else if (!validate.attributeKey(value)) {
-      valueError = 'attributeValueLengthHint';
-    }
-    return {
-      key: key && !validate.attributeKey(key) ? 'attributeKeyLengthHint' : undefined,
-      value: valueError,
-    };
-  },
-})
 @injectIntl
 export class AttributeEditor extends Component {
   static propTypes = {
@@ -72,9 +51,10 @@ export class AttributeEditor extends Component {
     onCancel: PropTypes.func,
     handleSubmit: PropTypes.func,
     invalid: PropTypes.bool,
-    keyURLCreator: PropTypes.func.isRequired,
-    valueURLCreator: PropTypes.func.isRequired,
+    keyURLCreator: PropTypes.func,
+    valueURLCreator: PropTypes.func,
     intl: intlShape.isRequired,
+    attribute: PropTypes.object,
   };
 
   static defaultProps = {
@@ -83,8 +63,26 @@ export class AttributeEditor extends Component {
     handleSubmit: () => {},
     onConfirm: () => {},
     onCancel: () => {},
+    keyURLCreator: null,
+    valueURLCreator: null,
     invalid: false,
+    attribute: {},
   };
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      key: props.attribute.key,
+      value: props.attribute.value,
+      errors: this.getValidationErrors(props.attribute.key, props.attribute.value),
+    };
+  }
+
+  getValidationErrors = (key, value) => ({
+    key: attributeKeyValidator(key),
+    value: attributeValueValidator(value),
+  });
 
   byKeyComparator = (attribute, item, key, value) =>
     attribute.key === item && attribute.value === value;
@@ -94,52 +92,86 @@ export class AttributeEditor extends Component {
   formatValue = (value) => (value ? { value, label: value } : null);
   parseValue = (value) => (value ? value.value : undefined);
 
+  handleKeyChange = (key) => {
+    this.setState((oldState) => ({
+      key: this.parseValue(key),
+      errors: this.getValidationErrors(this.parseValue(key), oldState.value),
+    }));
+  };
+
+  handleValueChange = (value) => {
+    this.setState((oldState) => ({
+      value: this.parseValue(value),
+      errors: this.getValidationErrors(oldState.key, this.parseValue(value)),
+    }));
+  };
+
+  isAttributeUnique = () =>
+    !this.props.attributes.some(
+      (attribute) => attribute.key === this.state.key && attribute.value === this.state.value,
+    );
+
+  isFormValid = () =>
+    !this.state.errors.key && !this.state.errors.value && this.isAttributeUnique();
+
+  handleSubmit = () => {
+    if (!this.isFormValid()) {
+      return;
+    }
+    const { key, value } = this.state;
+    this.props.onConfirm({
+      key,
+      value,
+    });
+  };
+
   render() {
-    const {
-      projectId,
-      attributes,
-      onConfirm,
-      onCancel,
-      handleSubmit,
-      keyURLCreator,
-      valueURLCreator,
-      intl,
-    } = this.props;
+    const { projectId, attributes, onCancel, keyURLCreator, valueURLCreator, intl } = this.props;
     return (
       <div className={cx('attribute-editor')}>
         <div className={cx('control')}>
-          <FieldProvider name="key" format={this.formatValue} parse={this.parseValue}>
-            <FieldErrorHint staticHint>
-              <AttributeInput
-                customClass={cx('input')}
-                attributes={attributes}
-                async
-                minLength={1}
-                attributeComparator={this.byKeyComparator}
-                uri={keyURLCreator(projectId)}
-                creatable
-                isClearable
-                showNewLabel
-                placeholder={intl.formatMessage(messages.keyLabel)}
-              />
-            </FieldErrorHint>
-          </FieldProvider>
+          <FieldErrorHint error={this.state.errors.key} staticHint>
+            <AttributeInput
+              customClass={cx('input')}
+              attributes={attributes}
+              async={!!keyURLCreator}
+              minLength={1}
+              attributeComparator={this.byKeyComparator}
+              uri={keyURLCreator ? keyURLCreator(projectId) : null}
+              creatable
+              isClearable
+              showNewLabel
+              placeholder={intl.formatMessage(messages.keyLabel)}
+              onChange={this.handleKeyChange}
+              value={this.formatValue(this.state.key)}
+              attributeKey={this.state.key}
+              attributeValue={this.state.value}
+            />
+          </FieldErrorHint>
         </div>
         <div className={cx('control')}>
-          <ValueField
-            parse={this.parseValue}
-            format={this.formatValue}
-            projectId={projectId}
-            attributeComparator={this.byValueComparator}
-            attributes={attributes}
-            valueURLCreator={valueURLCreator}
-            placeholder={intl.formatMessage(messages.valueLabel)}
-          />
+          <FieldErrorHint error={this.state.errors.value} staticHint>
+            <AttributeInput
+              customClass={cx('input')}
+              async={!!valueURLCreator}
+              minLength={1}
+              attributes={attributes}
+              attributeComparator={this.byValueComparator}
+              uri={valueURLCreator ? valueURLCreator(projectId, this.state.key) : null}
+              creatable
+              showNewLabel
+              onChange={this.handleValueChange}
+              value={this.formatValue(this.state.value)}
+              placeholder={intl.formatMessage(messages.valueLabel)}
+              attributeKey={this.state.key}
+              attributeValue={this.state.value}
+            />
+          </FieldErrorHint>
         </div>
         <div className={cx('control')}>
           <div
-            className={cx('icon', 'check-icon', { disabled: this.props.invalid })}
-            onClick={handleSubmit(onConfirm)}
+            className={cx('icon', 'check-icon', { disabled: !this.isFormValid() })}
+            onClick={this.isFormValid() ? this.handleSubmit : null}
           >
             {Parser(CircleCheckIcon)}
           </div>

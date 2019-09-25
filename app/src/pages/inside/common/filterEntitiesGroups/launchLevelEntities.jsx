@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
-import { validate } from 'common/utils';
+import { commonValidators } from 'common/utils';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
 import {
@@ -17,6 +17,7 @@ import {
   EntityItemStartTime,
   EntityInputConditionalTags,
   EntitySearch,
+  EntityContains,
 } from 'components/filterEntities';
 import { bindDefaultValue } from 'components/filterEntities/utils';
 import {
@@ -190,9 +191,7 @@ export class LaunchLevelEntities extends Component {
         value: this.bindDefaultValue(ENTITY_NAME, {
           condition: CONDITION_CNT,
         }),
-        validationFunc: (entityObject) =>
-          (!entityObject || !entityObject.value || !validate.itemNameEntity(entityObject.value)) &&
-          'itemNameEntityHint',
+        validationFunc: commonValidators.itemNameEntity,
         title: intl.formatMessage(messages.NameTitle),
         active: true,
         removable: false,
@@ -207,11 +206,7 @@ export class LaunchLevelEntities extends Component {
         value: this.bindDefaultValue(ENTITY_NUMBER, {
           condition: CONDITION_GREATER_EQ,
         }),
-        validationFunc: (entityObject) =>
-          (!entityObject ||
-            !entityObject.value ||
-            !validate.launchNumericEntity(entityObject.value)) &&
-          'launchNumericEntityHint',
+        validationFunc: commonValidators.launchNumericEntity,
         title: intl.formatMessage(messages.NumberTitle),
         active: ENTITY_NUMBER in filterValues,
         removable: true,
@@ -227,11 +222,7 @@ export class LaunchLevelEntities extends Component {
           condition: CONDITION_CNT,
         }),
         title: intl.formatMessage(messages.DescriptionTitle),
-        validationFunc: (entityObject) =>
-          (!entityObject ||
-            !entityObject.value ||
-            !validate.descriptionEntity(entityObject.value)) &&
-          'descriptionEntityHint',
+        validationFunc: commonValidators.descriptionEntity,
         active: ENTITY_DESCRIPTION in filterValues,
         removable: true,
         customProps: {
@@ -298,11 +289,7 @@ export class LaunchLevelEntities extends Component {
         value: this.bindDefaultValue(STATS_TOTAL, {
           condition: CONDITION_GREATER_EQ,
         }),
-        validationFunc: (entityObject) =>
-          (!entityObject ||
-            !entityObject.value ||
-            !validate.launchNumericEntity(entityObject.value)) &&
-          'launchNumericEntityHint',
+        validationFunc: commonValidators.launchNumericEntity,
         title: intl.formatMessage(messages.TotalTitle),
         active: STATS_TOTAL in filterValues,
         removable: true,
@@ -317,11 +304,7 @@ export class LaunchLevelEntities extends Component {
         value: this.bindDefaultValue(STATS_PASSED, {
           condition: CONDITION_GREATER_EQ,
         }),
-        validationFunc: (entityObject) =>
-          (!entityObject ||
-            !entityObject.value ||
-            !validate.launchNumericEntity(entityObject.value)) &&
-          'launchNumericEntityHint',
+        validationFunc: commonValidators.launchNumericEntity,
         title: intl.formatMessage(messages.PassedTitle),
         active: STATS_PASSED in filterValues,
         removable: true,
@@ -336,11 +319,7 @@ export class LaunchLevelEntities extends Component {
         value: this.bindDefaultValue(STATS_FAILED, {
           condition: CONDITION_GREATER_EQ,
         }),
-        validationFunc: (entityObject) =>
-          (!entityObject ||
-            !entityObject.value ||
-            !validate.launchNumericEntity(entityObject.value)) &&
-          'launchNumericEntityHint',
+        validationFunc: commonValidators.launchNumericEntity,
         title: intl.formatMessage(messages.FailedTitle),
         active: STATS_FAILED in filterValues,
         removable: true,
@@ -355,11 +334,7 @@ export class LaunchLevelEntities extends Component {
         value: this.bindDefaultValue(STATS_SKIPPED, {
           condition: CONDITION_GREATER_EQ,
         }),
-        validationFunc: (entityObject) =>
-          (!entityObject ||
-            !entityObject.value ||
-            !validate.launchNumericEntity(entityObject.value)) &&
-          'launchNumericEntityHint',
+        validationFunc: commonValidators.launchNumericEntity,
         title: intl.formatMessage(messages.SkippedTitle),
         active: STATS_SKIPPED in filterValues,
         removable: true,
@@ -389,11 +364,7 @@ export class LaunchLevelEntities extends Component {
         value: this.bindDefaultValue(totalEntityId, {
           condition: CONDITION_GREATER_EQ,
         }),
-        validationFunc: (entityObject) =>
-          (!entityObject ||
-            !entityObject.value ||
-            !validate.launchNumericEntity(entityObject.value)) &&
-          'launchNumericEntityHint',
+        validationFunc: commonValidators.launchNumericEntity,
         title: messages[defectTitle] ? this.props.intl.formatMessage(messages[defectTitle]) : '',
         active: totalEntityId in filterValues,
         removable: true,
@@ -414,11 +385,7 @@ export class LaunchLevelEntities extends Component {
               value: this.bindDefaultValue(entityId, {
                 condition: CONDITION_GREATER_EQ,
               }),
-              validationFunc: (entityObject) =>
-                (!entityObject ||
-                  !entityObject.value ||
-                  !validate.launchNumericEntity(entityObject.value)) &&
-                'launchNumericEntityHint',
+              validationFunc: commonValidators.launchNumericEntity,
               title: `${this.props.intl.formatMessage(messages[`${defectTypeRef}_title`])} ${
                 defectType.shortName
               }`,
@@ -439,13 +406,37 @@ export class LaunchLevelEntities extends Component {
     });
     return defectTypeEntities;
   };
+
+  collectLostEntities = (entities) => {
+    const lostKeys = Object.keys(this.props.filterValues).filter(
+      (key) => !entities.find((entity) => entity.id === key),
+    );
+    return lostKeys.map((key) => ({
+      id: key,
+      value: this.props.filterValues[key],
+      active: true,
+      static: true,
+      title: key.split('$').pop(),
+      component: EntityContains,
+      removable: true,
+      customProps: {
+        disabled: true,
+        error: 'error',
+      },
+    }));
+  };
+
   bindDefaultValue = bindDefaultValue;
+
   render() {
     const { render, ...rest } = this.props;
 
+    const entities = this.getStaticEntities().concat(this.getDynamicEntities());
+    const lostEntities = this.collectLostEntities(entities);
+
     return render({
       ...rest,
-      filterEntities: this.getStaticEntities().concat(this.getDynamicEntities()),
+      filterEntities: [...entities, ...lostEntities],
     });
   }
 }

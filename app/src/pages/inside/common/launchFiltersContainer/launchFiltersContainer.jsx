@@ -139,8 +139,10 @@ export class LaunchFiltersContainer extends Component {
     const conditionsWithFilteringField = addFilteringFieldToConditions(conditions);
     const newFilter = this.createQuery(conditionsWithFilteringField);
     const currentFilter = this.createQuery(this.getConditions());
+    const { sortingColumn, sortingDirection } = this.getSortingParams();
+    const sortingString = formatSortingString([sortingColumn, ENTITY_NUMBER], sortingDirection);
     if (!isEqual(currentFilter, newFilter)) {
-      this.fetchLaunches({ [PAGE_KEY]: 1, ...newFilter });
+      this.fetchLaunches({ [PAGE_KEY]: 1, [SORTING_KEY]: sortingString, ...newFilter });
     }
     if (this.props.activeFilter) {
       this.updateFilter(this.props.activeFilterId, conditionsWithFilteringField);

@@ -15,6 +15,8 @@ import {
   UPDATE_LAUNCHES_LOCALLY,
   UPDATE_LOCAL_SORTING,
   DEFAULT_LOCAL_SORTING,
+  UPDATE_DEBUG_LOCAL_SORTING,
+  UPDATE_DEBUG_LOCAL_FILTER,
 } from './constants';
 
 const getDefaultLaunchDistinctState = () =>
@@ -69,6 +71,24 @@ export const localSortingReducer = (state = DEFAULT_LOCAL_SORTING, { type, paylo
   }
 };
 
+export const debugLocalSortingReducer = (state = DEFAULT_LOCAL_SORTING, { type, payload }) => {
+  switch (type) {
+    case UPDATE_DEBUG_LOCAL_SORTING:
+      return payload;
+    default:
+      return state;
+  }
+};
+
+export const debugLocalFilterReducer = (state = {}, { type, payload }) => {
+  switch (type) {
+    case UPDATE_DEBUG_LOCAL_FILTER:
+      return payload;
+    default:
+      return state;
+  }
+};
+
 export const launchReducer = combineReducers({
   launches: queueReducers(
     fetchReducer(NAMESPACE, { contentPath: 'content' }),
@@ -81,4 +101,6 @@ export const launchReducer = combineReducers({
   debugMode: debugModeReducer,
   launchDistinct: launchDistinctReducer,
   localSorting: localSortingReducer,
+  debugLocalSorting: debugLocalSortingReducer,
+  debugLocalFilter: debugLocalFilterReducer,
 });

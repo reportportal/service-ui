@@ -131,11 +131,7 @@ const getChartOptions = (widget, options) => {
           const titleName = getScaleName(widget, options);
           return `${firstCapital(titleName)}: ${data.labels[tooltipItem[0].index]}`;
         },
-        afterTitle(tooltipItem, data) {
-          const dataset = data.datasets[tooltipItem[0].index];
-          if (!dataset) {
-            return '';
-          }
+        afterTitle(tooltipItem) {
           return tooltipContents[tooltipItem[0].index];
         },
         label(tooltipItem, data) {
@@ -181,11 +177,8 @@ const getChartOptions = (widget, options) => {
 
 export const getChartData = (widget, options) => {
   const { percentage, defectTypes } = options;
-  const labels = widget.content.result
-    ? widget.content.result.map((item) => item.attributeValue)
-    : [];
   const contentFields = widget.contentParameters.contentFields;
-  const executions = getExecutions(contentFields);
+  const executions = getExecutions();
   const defects = getDefects(contentFields);
   const total = getTotal();
   const legendItems = defectTypes ? defects : executions;
@@ -195,6 +188,7 @@ export const getChartData = (widget, options) => {
     defectTypes ? [] : executions,
   );
   const tooltipContents = [];
+  const labels = [];
 
   let datasets = Array.prototype.concat(
     total.map((field) => createDataSet(field, null, options)),
@@ -203,22 +197,17 @@ export const getChartData = (widget, options) => {
   );
 
   if (widget.content.result) {
-    Object.keys(widget.content.result)
-      .sort()
-      .map((resultId) => {
-        const items = widget.content.result[resultId];
-        tooltipContents.push(items.content.tooltipContent);
+    widget.content.result.forEach((item) => {
+      tooltipContents.push(item.content.tooltipContent);
+      labels.push(item.attributeValue);
 
-        filteredContentFields.forEach((field) => {
-          const totals = items.content.statistics[field] || 0;
+      filteredContentFields.forEach((field) => {
+        const totals = item.content.statistics[field] || 0;
+        const column = datasets.find((entry) => entry.label === field);
 
-          const column = datasets.find((entry) => entry.label === field);
-
-          column.data.push(totals);
-        });
-
-        return resultId;
+        column.data.push(totals);
       });
+    });
   }
 
   if (percentage) {

@@ -8,7 +8,7 @@ import { reduxForm, formValueSelector } from 'redux-form';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { Input } from 'components/inputs/input';
-import { validate, validateAsync } from 'common/utils';
+import { commonValidators, validateAsync } from 'common/utils';
 import { URLS } from 'common/urls';
 import { ROLES_MAP, MEMBER, PROJECT_MANAGER } from 'common/constants/projectRoles';
 import { ACCOUNT_ROLES_MAP, USER, ADMINISTRATOR } from 'common/constants/accountRoles';
@@ -92,11 +92,11 @@ const generatePassword = () => {
   form: 'addUserForm',
   initialValues: { accountRole: USER, projectRole: MEMBER },
   validate: ({ login, fullName, email, password, defaultProject }) => ({
-    login: (!login || !validate.login(login)) && 'loginHint',
-    fullName: (!fullName || !validate.name(fullName)) && 'nameHint',
-    email: (!email || !validate.email(email)) && 'emailHint',
-    password: (!password || !validate.password(password)) && 'passwordHint',
-    defaultProject: !defaultProject && 'requiredFieldHint',
+    login: commonValidators.login(login),
+    fullName: commonValidators.userName(fullName),
+    email: commonValidators.email(email),
+    password: commonValidators.password(password),
+    defaultProject: commonValidators.requiredField(defaultProject),
   }),
   asyncValidate: ({ login, email }, dispatch, { asyncErrors }, currentField) => {
     switch (currentField) {

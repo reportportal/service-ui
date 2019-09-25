@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { InfoPanel } from 'pages/inside/common/infoPanel';
 import { SelectedItems } from 'pages/inside/common/selectedItems';
+import { RefineFiltersPanel } from 'pages/inside/common/refineFiltersPanel';
 import { LIST_VIEW } from 'controllers/testItem';
 import { ActionPanel } from './actionPanel';
-import { RefineFiltersPanel } from './refineFiltersPanel';
 import styles from './suiteTestToolbar.scss';
 
 const cx = classNames.bind(styles);

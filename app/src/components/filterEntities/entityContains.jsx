@@ -50,7 +50,7 @@ export class EntityContains extends Component {
         <Input
           value={value.value}
           maxLength={'128'}
-          readOnly
+          touched
           onChange={this.onChangeInput}
           onBlur={this.onBlurInput}
           {...customProps}

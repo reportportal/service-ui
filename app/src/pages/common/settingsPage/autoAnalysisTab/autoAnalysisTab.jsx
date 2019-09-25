@@ -17,6 +17,7 @@ import {
   analyzerAttributesSelector,
   ANALYZER_ATTRIBUTE_PREFIX,
 } from 'controllers/project';
+import { analyzerExtensionsSelector } from 'controllers/appInfo/selectors';
 import { AnalysisForm } from './analysisForm/analysisForm';
 import { IndexActionsBlock } from './indexActionsBlock';
 import { StrategyBlock } from './analysisForm/strategyBlock';
@@ -42,6 +43,15 @@ const messages = defineMessages({
     id: 'AnalysisForm.updateErrorNotification',
     defaultMessage: 'Something went wrong',
   },
+  regenerateIndexTitle: {
+    id: 'AnalysisForm.regenerateIndexTitle',
+    defaultMessage: 'Regenerate index',
+  },
+  regenerateIndexDescription: {
+    id: 'AnalysisForm.regenerateIndexDescription',
+    defaultMessage:
+      'You have changed a parameter "Number of log lines". This action can influence on results of an analysis. For an appropriate work of the analyzer, please regenerate Index in Elastic Search. Do you want to regenerate it now?',
+  },
 });
 
 @connect(
@@ -50,12 +60,13 @@ const messages = defineMessages({
     accountRole: userAccountRoleSelector(state),
     userRole: activeProjectRoleSelector(state),
     analyzerConfiguration: analyzerAttributesSelector(state),
+    analyzerExtensions: analyzerExtensionsSelector(state),
   }),
   {
     fetchConfigurationAttributesAction,
     updateConfigurationAttributesAction,
     showNotification,
-    showGenerateIndexModal: () => showModalAction({ id: 'generateIndexModal' }),
+    showGenerateIndexModal: (data) => showModalAction({ id: 'generateIndexModal', data }),
   },
 )
 @injectIntl
@@ -70,11 +81,13 @@ export class AutoAnalysisTab extends Component {
     userRole: PropTypes.string.isRequired,
     showGenerateIndexModal: PropTypes.func.isRequired,
     analyzerConfiguration: PropTypes.object,
+    analyzerExtensions: PropTypes.array,
   };
 
   static defaultProps = {
     projectId: '',
     analyzerConfiguration: {},
+    analyzerExtensions: [],
   };
 
   componentDidMount() {
@@ -104,8 +117,18 @@ export class AutoAnalysisTab extends Component {
     };
   };
 
-  checkIfConfirmationNeeded = (data) =>
-    data[NUMBER_OF_LOG_LINES] !== this.props.analyzerConfiguration[NUMBER_OF_LOG_LINES];
+  checkIfConfirmationNeeded = (data) => {
+    const { analyzerExtensions, analyzerConfiguration } = this.props;
+    const indexingRunning = this.getIndexActionsBlockValues();
+    const newLogLinesValue = data[NUMBER_OF_LOG_LINES];
+
+    return (
+      !indexingRunning &&
+      analyzerExtensions.length &&
+      newLogLinesValue &&
+      String(newLogLinesValue) !== String(analyzerConfiguration[NUMBER_OF_LOG_LINES])
+    );
+  };
 
   updateProjectConfig = (formData) => {
     const {
@@ -130,7 +153,10 @@ export class AutoAnalysisTab extends Component {
         });
         this.props.updateConfigurationAttributesAction(data);
         if (isConfirmationNeeded) {
-          showGenerateIndexModal();
+          showGenerateIndexModal({
+            modalTitle: messages.regenerateIndexTitle,
+            modalDescription: messages.regenerateIndexDescription,
+          });
         }
       })
       .catch(() => {
@@ -142,7 +168,7 @@ export class AutoAnalysisTab extends Component {
   };
 
   render() {
-    const { accountRole, userRole, showGenerateIndexModal } = this.props;
+    const { accountRole, userRole, showGenerateIndexModal, analyzerExtensions } = this.props;
     const disabled = !canUpdateSettings(accountRole, userRole);
 
     return (
@@ -161,6 +187,7 @@ export class AutoAnalysisTab extends Component {
           disabled={disabled}
           indexingRunning={this.getIndexActionsBlockValues()}
           showGenerateIndexModal={showGenerateIndexModal}
+          analyzerExtensions={analyzerExtensions}
         />
       </div>
     );

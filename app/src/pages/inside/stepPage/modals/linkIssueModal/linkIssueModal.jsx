@@ -13,6 +13,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { URLS } from 'common/urls';
 import { validate, fetch } from 'common/utils';
+import { bindMessageToValidator } from 'common/utils/validation/validatorHelpers';
 import { RALLY } from 'common/constants/integrationNames';
 import { BetaBadge } from 'pages/inside/common/betaBadge';
 import { BtsIntegrationSelector } from 'pages/inside/common/btsIntegrationSelector';
@@ -51,8 +52,8 @@ const messages = defineMessages({
     issues:
       issues &&
       issues.map((issue) => ({
-        issueLink: (!issue.issueLink || !validate.url(issue.issueLink)) && 'urlHint',
-        issueId: (!issue.issueId || !validate.issueId(issue.issueId)) && 'issueIdHint',
+        issueLink: bindMessageToValidator(validate.url, 'urlHint')(issue.issueLink),
+        issueId: bindMessageToValidator(validate.issueId, 'issueIdHint')(issue.issueId),
       })),
   }),
 })

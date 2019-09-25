@@ -1,17 +1,13 @@
-import { validate } from 'common/utils';
+import { validate, commonValidators, bindMessageToValidator } from 'common/utils';
 import { LDAP_ATTRIBUTES_KEY, ENABLED_KEY } from './constants';
 
-export const validateLdapAttributes = (ldapAttributes) => ({
-  url:
-    (!ldapAttributes || !ldapAttributes.url || !validate.urlPart(ldapAttributes.url)) &&
-    'requiredFieldHint',
-  baseDn: (!ldapAttributes || !ldapAttributes.baseDn) && 'requiredFieldHint',
+export const validateLdapAttributes = (ldapAttributes = {}) => ({
+  url: bindMessageToValidator(validate.ldapUrl, 'requiredFieldHint')(ldapAttributes.url),
+  baseDn: commonValidators.requiredField(ldapAttributes.baseDn),
   synchronizationAttributes: {
-    email:
-      (!ldapAttributes ||
-        !ldapAttributes.synchronizationAttributes ||
-        !ldapAttributes.synchronizationAttributes.email) &&
-      'requiredFieldHint',
+    email: bindMessageToValidator(validate.ldapSynchronizationAttributes, 'requiredFieldHint')(
+      ldapAttributes.synchronizationAttributes,
+    ),
   },
 });
 

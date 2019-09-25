@@ -88,8 +88,8 @@ AttributeList.propTypes = {
   onEdit: PropTypes.func,
   onAddNew: PropTypes.func,
   onRemove: PropTypes.func,
-  keyURLCreator: PropTypes.func.isRequired,
-  valueURLCreator: PropTypes.func.isRequired,
+  keyURLCreator: PropTypes.func,
+  valueURLCreator: PropTypes.func,
 };
 AttributeList.defaultProps = {
   attributes: [],
@@ -99,4 +99,6 @@ AttributeList.defaultProps = {
   onRemove: () => {},
   onEdit: () => {},
   onAddNew: () => {},
+  keyURLCreator: null,
+  valueURLCreator: null,
 };
