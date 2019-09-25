@@ -12,6 +12,7 @@ import {
   INTERRUPTED,
   IN_PROGRESS,
   STOPPED,
+  CANCELLED,
 } from 'common/constants/launchStatuses';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { getDuration } from 'common/utils';
@@ -58,6 +59,10 @@ const messages = defineMessages({
     id: 'HistoryLineItemContent.launchStopped',
     defaultMessage: 'Stopped',
   },
+  launchCancelled: {
+    id: 'HistoryLineItemContent.launchCancelled',
+    defaultMessage: 'Cancelled',
+  },
 });
 
 const blockTitleMessagesMap = {
@@ -70,6 +75,7 @@ const blockTitleMessagesMap = {
   [NOT_FOUND]: messages.launchNotFound,
   [IN_PROGRESS]: messages.launchInProgress,
   [STOPPED]: messages.launchStopped,
+  [CANCELLED]: messages.launchCancelled,
 };
 
 @injectIntl
