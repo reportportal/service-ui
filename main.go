@@ -109,7 +109,6 @@ func buildCSP(csp map[string][]string) string {
 		instr = append(instr, k+" "+strings.Join(v, " "))
 	}
 	return strings.Join(instr, "; ")
-
 }
 
 type redirectingRW struct {
@@ -129,7 +128,6 @@ func (hrw *redirectingRW) WriteHeader(status int) {
 	} else {
 		hrw.ResponseWriter.WriteHeader(status)
 	}
-
 }
 
 func (hrw *redirectingRW) Write(p []byte) (int, error) {
