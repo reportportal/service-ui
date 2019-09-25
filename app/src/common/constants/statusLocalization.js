@@ -30,4 +30,8 @@ export const statusLocalization = defineMessages({
     id: 'TestStatuses.reseted',
     defaultMessage: 'Reseted',
   },
+  [statuses.CANCELLED]: {
+    id: 'TestStatuses.cancelled',
+    defaultMessage: 'Cancelled',
+  },
 });
