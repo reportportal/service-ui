@@ -36,7 +36,7 @@ const messages = defineMessages({
   },
   descriptionListSecItem: {
     id: 'DemoDataTab.descriptionListSecItem',
-    defaultMessage: '1 dashboard with 9 widgets',
+    defaultMessage: '1 dashboard with 12 widgets',
   },
   descriptionListThirdItem: {
     id: 'DemoDataTab.descriptionListThirdItem',
