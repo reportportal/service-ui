@@ -118,7 +118,11 @@ export class EditPersonalInformationModal extends Component {
           <ModalField label={intl.formatMessage(messages.emailLabel)} labelWidth={LABEL_WIDTH}>
             <FieldProvider name="email">
               <FieldErrorHint>
-                <Input placeholder={intl.formatMessage(messages.emailPlaceholder)} type="text" />
+                <Input
+                  maxLength="128"
+                  placeholder={intl.formatMessage(messages.emailPlaceholder)}
+                  type="text"
+                />
               </FieldErrorHint>
             </FieldProvider>
           </ModalField>
