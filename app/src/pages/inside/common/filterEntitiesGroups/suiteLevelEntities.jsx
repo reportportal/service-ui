@@ -4,7 +4,7 @@ import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
-import { validate } from 'common/utils';
+import { commonValidators } from 'common/utils';
 import {
   STATS_TOTAL,
   STATS_FAILED,
@@ -169,9 +169,7 @@ export class SuiteLevelEntities extends Component {
         value: this.bindDefaultValue(ENTITY_NAME, {
           condition: CONDITION_CNT,
         }),
-        validationFunc: (entityObject) =>
-          (!entityObject || !entityObject.value || !validate.itemNameEntity(entityObject.value)) &&
-          'itemNameEntityHint',
+        validationFunc: commonValidators.itemNameEntity,
         title: intl.formatMessage(messages.NameTitle),
         active: true,
         removable: false,
@@ -198,15 +196,12 @@ export class SuiteLevelEntities extends Component {
           condition: CONDITION_CNT,
         }),
         title: intl.formatMessage(messages.DescriptionTitle),
-        validationFunc: (entityObject) =>
-          (!entityObject ||
-            !entityObject.value ||
-            !validate.launchDescriptionEntity(entityObject.value)) &&
-          'launchDescriptionEntityHint',
+        validationFunc: commonValidators.descriptionEntity,
         active: visibleFilters.includes(ENTITY_DESCRIPTION),
         removable: true,
         customProps: {
           placeholder: intl.formatMessage(messages.DESCRIPTION_PLACEHOLDER),
+          maxLength: 18,
         },
       },
       {
@@ -247,11 +242,7 @@ export class SuiteLevelEntities extends Component {
         value: this.bindDefaultValue(STATS_TOTAL, {
           condition: CONDITION_GREATER_EQ,
         }),
-        validationFunc: (entityObject) =>
-          (!entityObject ||
-            !entityObject.value ||
-            !validate.launchNumericEntity(entityObject.value)) &&
-          'launchNumericEntityHint',
+        validationFunc: commonValidators.launchNumericEntity,
         title: intl.formatMessage(messages.TotalTitle),
         active: visibleFilters.includes(STATS_TOTAL),
         removable: true,
@@ -266,11 +257,7 @@ export class SuiteLevelEntities extends Component {
         value: this.bindDefaultValue(STATS_PASSED, {
           condition: CONDITION_GREATER_EQ,
         }),
-        validationFunc: (entityObject) =>
-          (!entityObject ||
-            !entityObject.value ||
-            !validate.launchNumericEntity(entityObject.value)) &&
-          'launchNumericEntityHint',
+        validationFunc: commonValidators.launchNumericEntity,
         title: intl.formatMessage(messages.PassedTitle),
         active: visibleFilters.includes(STATS_PASSED),
         removable: true,
@@ -285,11 +272,7 @@ export class SuiteLevelEntities extends Component {
         value: this.bindDefaultValue(STATS_FAILED, {
           condition: CONDITION_GREATER_EQ,
         }),
-        validationFunc: (entityObject) =>
-          (!entityObject ||
-            !entityObject.value ||
-            !validate.launchNumericEntity(entityObject.value)) &&
-          'launchNumericEntityHint',
+        validationFunc: commonValidators.launchNumericEntity,
         title: intl.formatMessage(messages.FailedTitle),
         active: visibleFilters.includes(STATS_FAILED),
         removable: true,
@@ -304,11 +287,7 @@ export class SuiteLevelEntities extends Component {
         value: this.bindDefaultValue(STATS_SKIPPED, {
           condition: CONDITION_GREATER_EQ,
         }),
-        validationFunc: (entityObject) =>
-          (!entityObject ||
-            !entityObject.value ||
-            !validate.launchNumericEntity(entityObject.value)) &&
-          'launchNumericEntityHint',
+        validationFunc: commonValidators.launchNumericEntity,
         title: intl.formatMessage(messages.SkippedTitle),
         active: visibleFilters.includes(STATS_SKIPPED),
         removable: true,
@@ -340,11 +319,7 @@ export class SuiteLevelEntities extends Component {
             condition: CONDITION_GREATER_EQ,
           },
         ),
-        validationFunc: (entityObject) =>
-          (!entityObject ||
-            !entityObject.value ||
-            !validate.launchNumericEntity(entityObject.value)) &&
-          'launchNumericEntityHint',
+        validationFunc: commonValidators.launchNumericEntity,
         title: messages[defectTitle] ? intl.formatMessage(messages[defectTitle]) : '',
         active: visibleFilters.includes(
           `${DEFECT_ENTITY_ID_BASE}${defectTypeRef.toLowerCase()}$total`,
@@ -366,11 +341,7 @@ export class SuiteLevelEntities extends Component {
                 condition: CONDITION_GREATER_EQ,
               },
             ),
-            validationFunc: (entityObject) =>
-              (!entityObject ||
-                !entityObject.value ||
-                !validate.launchNumericEntity(entityObject.value)) &&
-              'launchNumericEntityHint',
+            validationFunc: commonValidators.launchNumericEntity,
             title: `${intl.formatMessage(messages[`${defectTypeRef}_title`])} ${
               defectType.shortName
             }`,

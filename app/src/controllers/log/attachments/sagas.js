@@ -59,17 +59,17 @@ function* fetchFirstAttachments({ payload }) {
   yield call(fetchAttachmentsConcat, { payload: { params } });
 }
 
-export function fetchImageData({ binaryId }) {
-  return fetch(URLS.getFileById(binaryId), { responseType: 'blob' });
+export function fetchImageData({ projectId, binaryId }) {
+  return fetch(URLS.getFileById(projectId, binaryId), { responseType: 'blob' });
 }
 
-export function fetchData({ binaryId }) {
-  return fetch(URLS.getFileById(binaryId));
+export function fetchData({ projectId, binaryId }) {
+  return fetch(URLS.getFileById(projectId, binaryId));
 }
 
 /* IMAGE */
-function* openImageModalsWorker({ binaryId }) {
-  const data = yield call(fetchImageData, { binaryId });
+function* openImageModalsWorker({ projectId, binaryId }) {
+  const data = yield call(fetchImageData, { projectId, binaryId });
   const imageURL = URL.createObjectURL(data);
   yield put(showModalAction({ id: ATTACHMENT_IMAGE_MODAL_ID, data: { image: imageURL } }));
   yield take(HIDE_MODAL);
@@ -102,13 +102,14 @@ const ATTACHMENT_MODAL_WORKERS = {
 
 function* openAttachment({ payload: { id, contentType } }) {
   const modalId = getAttachmentModalId(contentType);
+  const projectId = yield select(activeProjectSelector);
   if (modalId) {
-    const data = { binaryId: id, extension: extractExtension(contentType) };
+    const data = { projectId, binaryId: id, extension: extractExtension(contentType) };
     try {
       yield call(ATTACHMENT_MODAL_WORKERS[modalId], data);
     } catch (e) {} // eslint-disable-line no-empty
   } else {
-    const data = yield call(fetch, URLS.getFileById(id), { responseType: 'blob' });
+    const data = yield call(fetch, URLS.getFileById(projectId, id), { responseType: 'blob' });
 
     if (window.navigator && window.navigator.msSaveOrOpenBlob) {
       window.navigator.msSaveOrOpenBlob(data);

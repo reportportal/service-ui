@@ -18,16 +18,17 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
+export {
+  validate,
+  validateAsync,
+  commonValidators,
+  bindMessageToValidator,
+  composeBoundValidators,
+} from './validation';
 
-import * as validation from './validation';
-import * as asyncValidation from './asyncValidation';
-
-export const validate = validation;
-export const validateAsync = asyncValidation;
 export { isEmptyObject } from './isEmptyObject';
 export { referenceDictionary } from './referenceDictionary';
 export { fetch, ERROR_CANCELED, ERROR_UNAUTHORIZED } from './fetch';
-export { addTokenToImagePath } from './addTokenToImagePath';
 export {
   getStorageItem,
   setStorageItem,
@@ -50,7 +51,6 @@ export {
   getMinutesFromTimestamp,
   formatDuration,
 } from './timeDateUtils';
-export { formatValue } from './numberUtils';
 export { connectRouter } from './connectRouter';
 export { uniqueId } from './uniqueId';
 export { fileSizeConverter } from './fileSizeConverter';

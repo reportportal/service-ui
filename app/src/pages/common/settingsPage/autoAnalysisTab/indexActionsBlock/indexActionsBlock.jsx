@@ -4,12 +4,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { showModalAction } from 'controllers/modal';
-import { analyzerExtensionsSelector } from 'controllers/appInfo/selectors';
 import classNames from 'classnames/bind';
 import { GhostButton } from 'components/buttons/ghostButton';
-import { analyzerAttributesSelector } from 'controllers/project';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { INDEXING_RUNNING } from '../analysisForm/constants';
 import styles from './indexActionsBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -47,16 +44,9 @@ const messages = defineMessages({
   },
 });
 
-@connect(
-  (state) => ({
-    indexingRunning: JSON.parse(analyzerAttributesSelector(state)[INDEXING_RUNNING] || 'false'),
-    analyzerExtensions: analyzerExtensionsSelector(state),
-  }),
-  {
-    showRemoveIndexModal: () => showModalAction({ id: 'removeIndexModal' }),
-    showGenerateIndexModal: () => showModalAction({ id: 'generateIndexModal' }),
-  },
-)
+@connect(null, {
+  showRemoveIndexModal: () => showModalAction({ id: 'removeIndexModal' }),
+})
 @injectIntl
 @track()
 export class IndexActionsBlock extends Component {

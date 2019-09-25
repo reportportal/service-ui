@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { STATS_TOTAL, STATS_FAILED, STATS_SKIPPED } from 'common/constants/statistics';
-import { validate } from 'common/utils';
+import { commonValidators } from 'common/utils';
 import { ITEMS_INPUT_WIDTH } from './constants';
 import { FiltersControl, InputControl } from './controls';
 
@@ -18,11 +18,6 @@ const messages = defineMessages({
     defaultMessage: 'Items count should have value from 1 to 600',
   },
 });
-const validators = {
-  items: (formatMessage) => (value) =>
-    (!value || !validate.inRangeValidate(value, 1, 600)) &&
-    formatMessage(messages.ItemsValidationError),
-};
 
 @injectIntl
 export class NotPassedTestCasesTrendControls extends Component {
@@ -70,7 +65,9 @@ export class NotPassedTestCasesTrendControls extends Component {
           <Fragment>
             <FieldProvider
               name="contentParameters.itemsCount"
-              validate={validators.items(formatMessage)}
+              validate={commonValidators.createNumberOfLaunchesValidator(
+                formatMessage(messages.ItemsValidationError),
+              )}
               format={String}
               normalize={this.normalizeValue}
             >

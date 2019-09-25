@@ -142,6 +142,7 @@ export class StepGrid extends Component {
     intl: PropTypes.object.isRequired,
     selectedItems: PropTypes.array,
     onItemSelect: PropTypes.func,
+    onItemsSelect: PropTypes.func,
     onAllItemsSelect: PropTypes.func,
     loading: PropTypes.bool,
     listView: PropTypes.bool,
@@ -168,6 +169,7 @@ export class StepGrid extends Component {
     data: [],
     selectedItems: [],
     onItemSelect: () => {},
+    onItemsSelect: () => {},
     onAllItemsSelect: () => {},
     loading: false,
     listView: false,
@@ -275,22 +277,24 @@ export class StepGrid extends Component {
   }
 
   handleAttributeFilterClick = (attribute) => {
-    this.props.onFilterClick({
-      id: ENTITY_ATTRIBUTE_KEYS,
-      value: {
-        filteringField: ENTITY_ATTRIBUTE_KEYS,
-        condition: CONDITION_HAS,
-        value: attribute.key || '',
+    this.props.onFilterClick([
+      {
+        id: ENTITY_ATTRIBUTE_KEYS,
+        value: {
+          filteringField: ENTITY_ATTRIBUTE_KEYS,
+          condition: CONDITION_HAS,
+          value: attribute.key || '',
+        },
       },
-    });
-    this.props.onFilterClick({
-      id: ENTITY_ATTRIBUTE_VALUES,
-      value: {
-        filteringField: ENTITY_ATTRIBUTE_VALUES,
-        condition: CONDITION_HAS,
-        value: attribute.value || '',
+      {
+        id: ENTITY_ATTRIBUTE_VALUES,
+        value: {
+          filteringField: ENTITY_ATTRIBUTE_VALUES,
+          condition: CONDITION_HAS,
+          value: attribute.value || '',
+        },
       },
-    });
+    ]);
   };
 
   highlightFailedItems = (value) => ({
@@ -311,6 +315,7 @@ export class StepGrid extends Component {
       intl: { formatMessage },
       data,
       onItemSelect,
+      onItemsSelect,
       onAllItemsSelect,
       selectedItems,
       loading,
@@ -329,6 +334,7 @@ export class StepGrid extends Component {
           data={data}
           onToggleSelection={onItemSelect}
           onToggleSelectAll={onAllItemsSelect}
+          onItemsSelect={onItemsSelect}
           selectedItems={selectedItems}
           selectable
           rowClassMapper={this.highlightFailedItems}

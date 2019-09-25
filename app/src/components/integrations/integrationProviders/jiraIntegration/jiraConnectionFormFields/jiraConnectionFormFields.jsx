@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
-import { validate } from 'common/utils';
+import { commonValidators } from 'common/utils';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { Input } from 'components/inputs/input';
@@ -9,12 +9,6 @@ import { IntegrationFormField } from 'components/integrations/elements';
 import { COMMON_BTS_MESSAGES } from 'components/integrations/elements/bts';
 import { DEFAULT_FORM_CONFIG } from '../constants';
 import { messages } from '../messages';
-
-const validators = {
-  url: (value) => (!value || !validate.url(value)) && 'btsUrlHint',
-  project: (value) => (!value || !validate.btsProject(value)) && 'btsProjectHint',
-  requiredField: (value) => !value && 'requiredFieldHint',
-};
 
 @injectIntl
 export class JiraConnectionFormFields extends Component {
@@ -61,7 +55,7 @@ export class JiraConnectionFormFields extends Component {
           required
           disabled={disabled}
           lineAlign={lineAlign}
-          validate={validators.requiredField}
+          validate={commonValidators.requiredField}
         >
           <FieldErrorHint>
             <Input mobileDisabled />
@@ -73,7 +67,7 @@ export class JiraConnectionFormFields extends Component {
           required
           disabled={disabled || editAuthMode}
           lineAlign={lineAlign}
-          validate={validators.url}
+          validate={commonValidators.btsUrl}
         >
           <FieldErrorHint>
             <Input mobileDisabled />
@@ -85,7 +79,7 @@ export class JiraConnectionFormFields extends Component {
           required
           disabled={disabled || editAuthMode}
           lineAlign={lineAlign}
-          validate={validators.project}
+          validate={commonValidators.btsProject}
         >
           <FieldErrorHint>
             <Input mobileDisabled />
@@ -108,7 +102,7 @@ export class JiraConnectionFormFields extends Component {
           disabled={disabled}
           lineAlign={lineAlign}
           maxLength="55"
-          validate={validators.requiredField}
+          validate={commonValidators.requiredField}
         >
           <FieldErrorHint>
             <Input type="text" mobileDisabled />
@@ -121,7 +115,7 @@ export class JiraConnectionFormFields extends Component {
           disabled={disabled}
           lineAlign={lineAlign}
           maxLength="55"
-          validate={validators.requiredField}
+          validate={commonValidators.requiredField}
         >
           <FieldErrorHint>
             <Input type="password" mobileDisabled />

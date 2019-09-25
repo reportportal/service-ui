@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form';
 import { FormController } from 'pages/admin/serverSettingsPage/common/formController';
 import { ENABLED_KEY, messages } from 'pages/admin/serverSettingsPage/common/constants';
+import { commonValidators } from 'common/utils';
 import { joinOrganizations, splitOrganizations } from './utils';
 import { GITHUB_AUTH_FORM, DEFAULT_FORM_CONFIG } from './constants';
 import { GithubAuthFormFields } from './githubAuthFormFields';
@@ -28,8 +29,8 @@ const localMessages = defineMessages({
 @reduxForm({
   form: GITHUB_AUTH_FORM,
   validate: ({ clientId, clientSecret }) => ({
-    clientId: !clientId && 'requiredFieldHint',
-    clientSecret: !clientSecret && 'requiredFieldHint',
+    clientId: commonValidators.requiredField(clientId),
+    clientSecret: commonValidators.requiredField(clientSecret),
   }),
   initialValues: DEFAULT_FORM_CONFIG,
 })

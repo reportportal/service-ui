@@ -10,9 +10,8 @@ import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 import ImportIcon from 'common/img/import-inline.svg';
 import { URLS } from 'common/urls';
 import { MODAL_TYPE_UPLOAD_PLUGIN } from 'pages/common/modals/importModal/constants';
-
-import { UPLOAD } from './constants';
-
+import { UPLOAD, INITIAL_PARAMS_FIELD_KEY } from './constants';
+import { UploadCustomBlock } from './uploadCustomBlock';
 import styles from './actionPanel.scss';
 
 const cx = classNames.bind(styles);
@@ -59,6 +58,25 @@ export class ActionPanel extends Component {
     intl: intlShape.isRequired,
     showModalAction: PropTypes.func.isRequired,
     fetchPluginsAction: PropTypes.func.isRequired,
+    initialParamsValues: PropTypes.array,
+  };
+  static defaultProps = {
+    initialParamsValues: [],
+  };
+
+  prepareInitialParamsValue = (initialParamsValues) =>
+    JSON.stringify(
+      initialParamsValues.reduce((acc, item) => ({ ...acc, [item.key]: item.value }), {}),
+    );
+
+  appendInitialParamsValue = (formData, initialParamsValues) => {
+    if (initialParamsValues && initialParamsValues.length) {
+      formData.append(
+        INITIAL_PARAMS_FIELD_KEY,
+        this.prepareInitialParamsValue(initialParamsValues),
+      );
+    }
+    return formData;
   };
 
   openUploadModal = () => {
@@ -76,6 +94,9 @@ export class ActionPanel extends Component {
         tip: formatMessage(messages.uploadTip),
         incorrectFileSize: formatMessage(messages.incorrectFileSize),
         url: URLS.plugin(),
+        customBlock: UploadCustomBlock,
+        appendCustomBlockValue: this.appendInitialParamsValue,
+        singleImport: true,
         eventsInfo: {
           okBtn: PLUGINS_PAGE_EVENTS.OK_BTN_UPLOAD_MODAL,
           cancelBtn: PLUGINS_PAGE_EVENTS.CANCEL_BTN_UPLOAD_MODAL,

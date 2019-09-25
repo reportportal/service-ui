@@ -19,6 +19,7 @@ export class GridRow extends Component {
     selectable: PropTypes.bool,
     selectedItems: PropTypes.arrayOf(PropTypes.object),
     onToggleSelection: PropTypes.func,
+    onClickRow: PropTypes.func,
     changeOnlyMobileLayout: PropTypes.bool,
     rowClassMapper: PropTypes.func,
     toggleAccordionEventInfo: PropTypes.object,
@@ -42,6 +43,7 @@ export class GridRow extends Component {
     selectable: false,
     selectedItems: [],
     onToggleSelection: () => {},
+    onClickRow: null,
     changeOnlyMobileLayout: false,
     rowClassMapper: null,
     toggleAccordionEventInfo: {},
@@ -59,10 +61,12 @@ export class GridRow extends Component {
     withAccordion: false,
     expanded: false,
     updateHighlight: true,
+    highlightBlockStyle: {},
   };
 
   componentDidMount() {
     this.handleAccordion();
+    this.updateHighlightBlockStyle();
 
     if (!!this.props.rowHighlightingConfig.highlightedRowId && this.state.updateHighlight) {
       // eslint-disable-next-line
@@ -70,8 +74,9 @@ export class GridRow extends Component {
     }
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState) {
     this.handleAccordion();
+    this.updateHighlightBlockStyleIfNeeded(prevState);
 
     if (this.checkIfTheHighlightNeeded()) {
       this.highLightGridRow();
@@ -87,17 +92,36 @@ export class GridRow extends Component {
     this.overflowCell.style.maxHeight = `${this.overflowCellMaxHeight}px`;
   };
 
-  getHighLightBlockSize = () =>
-    this.rowRef && this.rowRef.current
-      ? {
-          left: LEVEL_OFFSET * this.props.level,
-          height: `${this.rowRef.current.clientHeight}px`,
-          width: `${this.rowRef.current.clientWidth - LEVEL_OFFSET * this.props.level}px`,
-        }
-      : {};
+  getHighlightBlockStyle = () => {
+    if (!this.rowRef || !this.rowRef.current) {
+      return {};
+    }
+    return {
+      left: LEVEL_OFFSET * this.props.level,
+      height: `${this.rowRef.current.clientHeight}px`,
+      width: `${this.rowRef.current.clientWidth - LEVEL_OFFSET * this.props.level}px`,
+    };
+  };
 
   getHighlightBlockClasses = () =>
     this.checkIfTheHighlightNeeded() ? this.highLightBlockClasses : '';
+
+  handleRowClick = (e) => this.props.onClickRow(e, this.props.value);
+
+  updateHighlightBlockStyleIfNeeded = (prevState) => {
+    const highlightBlockStyle = this.getHighlightBlockStyle();
+    if (
+      prevState.highlightBlockStyle.left !== highlightBlockStyle.left ||
+      prevState.highlightBlockStyle.height !== highlightBlockStyle.height ||
+      prevState.highlightBlockStyle.width !== highlightBlockStyle.width
+    ) {
+      this.updateHighlightBlockStyle();
+    }
+  };
+
+  updateHighlightBlockStyle = () => {
+    this.setState({ highlightBlockStyle: this.getHighlightBlockStyle() });
+  };
 
   isItemSelected = () => this.props.selectedItems.some((item) => item.id === this.props.value.id);
 
@@ -151,11 +175,10 @@ export class GridRow extends Component {
 
     this.props.tracking.trackEvent(this.props.toggleAccordionEventInfo);
 
-    this.setState({ expanded: !this.state.expanded }, () => {
-      this.overflowCell.style.maxHeight = !this.state.expanded
-        ? `${this.overflowCellMaxHeight}px`
-        : null;
-    });
+    this.setState({ expanded: !this.state.expanded });
+    this.overflowCell.style.maxHeight = this.state.expanded
+      ? `${this.overflowCellMaxHeight}px`
+      : null;
   };
 
   render() {
@@ -163,6 +186,7 @@ export class GridRow extends Component {
       columns,
       value,
       selectable,
+      onClickRow,
       changeOnlyMobileLayout,
       rowClassMapper,
       gridRowClassName,
@@ -180,12 +204,13 @@ export class GridRow extends Component {
         })}
         data-id={value.id}
         ref={this.rowRef}
+        onClick={onClickRow ? this.handleRowClick : null}
       >
         <div className={cx('grid-row')}>
           <div
             ref={this.highlightBlockRef}
             className={cx('highlight-block', this.getHighlightBlockClasses())}
-            style={this.getHighLightBlockSize()}
+            style={this.state.highlightBlockStyle}
           />
         </div>
         {this.state.withAccordion && (

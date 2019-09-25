@@ -4,7 +4,12 @@ import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { formValueSelector } from 'redux-form';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
-import { validate } from 'common/utils';
+import {
+  validate,
+  commonValidators,
+  bindMessageToValidator,
+  composeBoundValidators,
+} from 'common/utils';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { Input } from 'components/inputs/input';
@@ -58,18 +63,10 @@ const messages = defineMessages({
   },
 });
 
-const validators = {
-  host: (value) => (!value && 'requiredFieldHint') || undefined,
-  port: (value) => {
-    if (!value) {
-      return 'requiredFieldHint';
-    }
-    if (!validate.inRangeValidate(value, 1, 65535)) {
-      return 'portFieldHint';
-    }
-    return undefined;
-  },
-};
+const portValidator = composeBoundValidators([
+  commonValidators.requiredField,
+  bindMessageToValidator(validate.port, 'portFieldHint'),
+]);
 
 @connect((state) => ({
   authEnabled: formValueSelector(INTEGRATION_FORM)(state, AUTH_ENABLED_KEY),
@@ -128,7 +125,7 @@ export class EmailFormFields extends Component {
           required
           disabled={disabled}
           label={formatMessage(messages.hostLabel)}
-          validate={validators.host}
+          validate={commonValidators.requiredField}
           lineAlign={lineAlign}
         >
           <FieldErrorHint>
@@ -159,7 +156,7 @@ export class EmailFormFields extends Component {
           format={this.formatPortValue}
           normalize={this.normalizeValue}
           lineAlign={lineAlign}
-          validate={validators.port}
+          validate={portValidator}
         >
           <FieldErrorHint>
             <Input maxLength="5" mobileDisabled />

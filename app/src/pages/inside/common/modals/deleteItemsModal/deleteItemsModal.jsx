@@ -24,7 +24,7 @@ export class DeleteItemsModal extends Component {
       namespace: PropTypes.string,
       currentLaunch: PropTypes.object,
       eventsInfo: PropTypes.object,
-      warningMessage: PropTypes.string,
+      warning: PropTypes.string,
     }),
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -46,16 +46,18 @@ export class DeleteItemsModal extends Component {
   };
 
   render() {
-    const { intl } = this.props;
-    const { header, mainContent, eventsInfo, warningMessage } = this.props.data;
+    const {
+      intl: { formatMessage },
+      data: { header, mainContent, eventsInfo, warning },
+    } = this.props;
     const okButton = {
-      text: intl.formatMessage(COMMON_LOCALE_KEYS.DELETE),
+      text: formatMessage(COMMON_LOCALE_KEYS.DELETE),
       danger: true,
       onClick: this.confirmAndClose,
       eventInfo: eventsInfo.cancelBtn,
     };
     const cancelButton = {
-      text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
       eventInfo: eventsInfo.cancelBtn,
     };
     return (
@@ -64,7 +66,7 @@ export class DeleteItemsModal extends Component {
         okButton={okButton}
         cancelButton={cancelButton}
         closeIconEventInfo={eventsInfo.closeIcon}
-        warningMessage={warningMessage}
+        warningMessage={warning}
       >
         <p className={cx('message')}>{Parser(mainContent)}</p>
       </ModalLayout>

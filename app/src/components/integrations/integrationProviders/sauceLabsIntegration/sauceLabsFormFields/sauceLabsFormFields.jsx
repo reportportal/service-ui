@@ -4,6 +4,7 @@ import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { Input } from 'components/inputs/input';
 import { IntegrationFormField } from 'components/integrations/elements';
+import { commonValidators } from 'common/utils';
 
 const messages = defineMessages({
   userNameTitle: {
@@ -15,10 +16,6 @@ const messages = defineMessages({
     defaultMessage: 'Access token',
   },
 });
-
-const validators = {
-  requiredField: (value) => (!value && 'requiredFieldHint') || undefined,
-};
 
 @injectIntl
 export class SauceLabsFormFields extends Component {
@@ -54,7 +51,7 @@ export class SauceLabsFormFields extends Component {
           name="username"
           disabled={disabled}
           label={formatMessage(messages.userNameTitle)}
-          validate={validators.requiredField}
+          validate={commonValidators.requiredField}
           lineAlign={lineAlign}
         >
           <FieldErrorHint>
@@ -65,7 +62,7 @@ export class SauceLabsFormFields extends Component {
           name="accessToken"
           disabled={disabled}
           label={formatMessage(messages.accessTokenTitle)}
-          validate={validators.requiredField}
+          validate={commonValidators.requiredField}
           lineAlign={lineAlign}
         >
           <FieldErrorHint>

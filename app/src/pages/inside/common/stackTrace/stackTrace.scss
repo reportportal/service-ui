@@ -1,0 +1,66 @@
+.row {
+  display: block;
+  border-bottom: solid 1px $COLOR--gray-91;
+}
+.row:last-child {
+  border-bottom: 0;
+}
+.message-container {
+  display: flex;
+  justify-content: stretch;
+  flex-direction: row;  
+  @media (max-width: $SCREEN_SM_MAX) {
+    justify-content: flex-start;
+    flex-direction: column;
+  }
+}
+
+.cell {
+  padding: 12px 16px;
+  font-size: 11px;
+  color: $COLOR--charcoal-grey;
+  line-height: 1.82;
+  font-family: $FONT-MENLO;
+}
+
+.message-cell {
+  flex-grow: 10;
+  word-break: break-all;
+  @supports (word-break: break-word) {
+    word-break: break-word;
+  }
+}
+
+.time-cell {
+  flex-grow: 1;
+  white-space: nowrap;
+}
+
+.load-more-container {
+  padding-left: 35px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-content: flex-start;
+  align-items: center;
+  height: 32px;
+  border-top: solid 1px $COLOR--gray-91;
+  cursor: pointer;
+}
+
+.loading-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.load-more-label {
+  color: $COLOR--topaz;
+  font-size: 13px;
+}
+.load-more-container.loading {
+  pointer-events: none;
+}
+.load-more-container.loading .load-more-label {
+  color: $COLOR--gray-80;
+}

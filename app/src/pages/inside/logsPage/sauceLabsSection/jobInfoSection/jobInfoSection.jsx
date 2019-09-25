@@ -51,42 +51,46 @@ export class JobInfoSection extends Component {
       observer,
       isFullscreenMode,
     } = this.props;
+    const isLogsAvailable = !!logs.length;
+    const commandsTab = {
+      name: formatMessage(messages[COMMANDS_TAB]),
+      content: (
+        <CommandsContent
+          authToken={authToken}
+          commands={logs}
+          assets={assets}
+          observer={observer}
+          isFullscreenMode={isFullscreenMode}
+        />
+      ),
+    };
 
-    return [
-      {
-        name: formatMessage(messages[COMMANDS_TAB]),
-        content: (
-          <CommandsContent
-            authToken={authToken}
-            commands={logs}
-            assets={assets}
-            observer={observer}
-            isFullscreenMode={isFullscreenMode}
-          />
-        ),
-      },
-      {
-        name: formatMessage(messages[LOGS_TAB]),
-        content: (
-          <LogsContent
-            logs={logs}
-            assets={assets}
-            authToken={authToken}
-            isFullscreenMode={isFullscreenMode}
-          />
-        ),
-      },
-      {
-        name: formatMessage(messages[METADATA_TAB]),
-        content: (
-          <MetadataContent
-            assets={assets}
-            authToken={authToken}
-            isFullscreenMode={isFullscreenMode}
-          />
-        ),
-      },
-    ];
+    return isLogsAvailable
+      ? [
+          commandsTab,
+          {
+            name: formatMessage(messages[LOGS_TAB]),
+            content: (
+              <LogsContent
+                logs={logs}
+                assets={assets}
+                authToken={authToken}
+                isFullscreenMode={isFullscreenMode}
+              />
+            ),
+          },
+          {
+            name: formatMessage(messages[METADATA_TAB]),
+            content: (
+              <MetadataContent
+                assets={assets}
+                authToken={authToken}
+                isFullscreenMode={isFullscreenMode}
+              />
+            ),
+          },
+        ]
+      : [commandsTab];
   };
 
   render() {

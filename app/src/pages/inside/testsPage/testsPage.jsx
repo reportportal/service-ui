@@ -16,6 +16,7 @@ import {
   testPaginationSelector,
   toggleAllTestsAction,
   validationErrorsSelector,
+  selectTestsAction,
 } from 'controllers/test';
 import { withPagination } from 'controllers/pagination';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
@@ -43,6 +44,7 @@ import { ENTITY_START_TIME } from 'components/filterEntities/constants';
     toggleTestSelectionAction,
     unselectAllTestsAction,
     toggleAllTestsAction,
+    selectTestsAction,
     fetchTestItemsAction,
   },
 )
@@ -78,6 +80,7 @@ export class TestsPage extends Component {
     toggleTestSelectionAction: PropTypes.func,
     unselectAllTestsAction: PropTypes.func,
     toggleAllTestsAction: PropTypes.func,
+    selectTestsAction: PropTypes.func,
     parentItem: PropTypes.object,
     loading: PropTypes.bool,
     onFilterAdd: PropTypes.func,
@@ -112,6 +115,7 @@ export class TestsPage extends Component {
     toggleTestSelectionAction: () => {},
     unselectAllTestsAction: () => {},
     toggleAllTestsAction: () => {},
+    selectTestsAction: () => {},
     parentItem: null,
     loading: false,
     onFilterAdd: () => {},
@@ -207,9 +211,7 @@ export class TestsPage extends Component {
 
     return (
       <PageLayout>
-        <PageSection>
-          <LaunchFiltersSection />
-        </PageSection>
+        <PageSection>{!debugMode && <LaunchFiltersSection />}</PageSection>
         <PageSection>
           <SuiteTestToolbar
             selectedItems={selectedTests}
@@ -236,6 +238,7 @@ export class TestsPage extends Component {
             onChangeSorting={onChangeSorting}
             selectedItems={selectedTests}
             onItemSelect={this.handleOneItemSelection}
+            onItemsSelect={this.props.selectTestsAction}
             onAllItemsSelect={this.handleAllTestsSelection}
             loading={loading}
             events={SUITES_PAGE_EVENTS}

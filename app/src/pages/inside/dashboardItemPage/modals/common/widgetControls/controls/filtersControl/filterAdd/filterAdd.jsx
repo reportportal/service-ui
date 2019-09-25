@@ -4,7 +4,7 @@ import classNames from 'classnames/bind';
 import { defineMessages, intlShape, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form';
-import { validate } from 'common/utils';
+import { commonValidators } from 'common/utils';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { Input } from 'components/inputs/input';
@@ -30,7 +30,7 @@ const localMessages = defineMessages({
 @reduxForm({
   form: FILTER_ADD_FORM,
   validate: ({ name }) => ({
-    name: (!name || !validate.filterName(name)) && 'filterNameError',
+    name: commonValidators.filterName(name),
   }),
   onChange: ({ name }, dispatcher, { onChange }) => onChange({ name }),
   enableReinitialize: true,

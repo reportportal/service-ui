@@ -1,11 +1,10 @@
+import { validate as commonValidate, commonValidators, bindMessageToValidator } from 'common/utils';
 import {
   INCLUDE_ATTACHMENTS_KEY,
   INCLUDE_COMMENTS_KEY,
   INCLUDE_LOGS_KEY,
   REQUIRED_KEY,
 } from './constants';
-
-const validateRequiredField = (value) => (!value || !value[0] ? 'requiredFieldHint' : undefined);
 
 const validateNonRequiredField = (value, type, hint) => {
   const fieldValue = value && value[0];
@@ -31,14 +30,14 @@ const validateBooleanField = (value) =>
 const FIELDS_VALIDATION_MAP = {
   boolean: validateBooleanField,
   double: validateDoubleField,
-  [REQUIRED_KEY]: validateRequiredField,
+  [REQUIRED_KEY]: bindMessageToValidator(commonValidate.isNotEmptyArray, 'requiredFieldHint'),
 };
 
 export const validate = (fields, validationConfig) => {
   let validValues = {
-    username: validateRequiredField(fields.username),
-    password: validateRequiredField(fields.password),
-    token: validateRequiredField(fields.token),
+    username: commonValidators.requiredField(fields.username),
+    password: commonValidators.requiredField(fields.password),
+    token: commonValidators.requiredField(fields.token),
   };
   if (validationConfig) {
     const validatedFields = Object.keys(validationConfig).reduce((acc, key) => {

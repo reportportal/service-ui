@@ -3,6 +3,7 @@ import track from 'react-tracking';
 import { reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { validate, bindMessageToValidator } from 'common/utils';
 import AddFilterIcon from 'common/img/add-filter-inline.svg';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -12,7 +13,6 @@ import { FILTERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './filterPageToolbar.scss';
 
 const cx = classNames.bind(styles);
-
 const messages = defineMessages({
   favoriteFilters: {
     id: 'FiltersPage.msgFavoriteFilters',
@@ -26,17 +26,15 @@ const messages = defineMessages({
 });
 @track()
 @reduxForm({
-  form: 'filterSearch',
+  form: 'searchFilterForm',
   validate: ({ filter }) => ({
-    filter: filter && filter.length < 3 ? 'filterNameError' : undefined,
+    filter: bindMessageToValidator(validate.searchFilter, 'filterNameError')(filter),
   }),
-  onChange: (values, dispatch, props, previousValues) => {
-    if (typeof previousValues.filter === 'undefined') {
-      return;
-    }
-    if (!values.filter || values.filter.length >= 3) {
+  enableReinitialize: true,
+  onChange: ({ filter }, dispatch, props) => {
+    if (validate.searchFilter(filter)) {
       props.tracking.trackEvent(FILTERS_PAGE_EVENTS.SEARCH_FILTER);
-      props.onFilterChange(values.filter);
+      props.onFilterChange(filter);
     }
   },
 })
@@ -44,43 +42,39 @@ const messages = defineMessages({
 export class FilterPageToolbar extends React.Component {
   static propTypes = {
     intl: intlShape,
-    change: PropTypes.func,
-    invalid: PropTypes.bool,
-    filter: PropTypes.string,
-    filters: PropTypes.array,
+    isSearchDisabled: PropTypes.bool,
     onAddFilter: PropTypes.func,
   };
 
   static defaultProps = {
     intl: {},
-    invalid: false,
-    filter: null,
-    filters: [],
-    change: () => {},
+    isSearchDisabled: false,
     onAddFilter: () => {},
   };
 
-  componentDidMount() {
-    this.props.change('filter', this.props.filter);
-  }
-
   render() {
+    const {
+      intl: { formatMessage },
+      isSearchDisabled,
+      onAddFilter,
+    } = this.props;
+
     return (
       <div className={cx('filter-page-toolbar')}>
         <div className={cx('filter-search')}>
           <FieldProvider name="filter">
             <FieldErrorHint>
               <InputSearch
-                disabled={!this.props.filters.length && !this.props.filter}
+                disabled={isSearchDisabled}
                 maxLength="128"
-                placeholder={this.props.intl.formatMessage(messages.searchInputPlaceholder)}
+                placeholder={formatMessage(messages.searchInputPlaceholder)}
               />
             </FieldErrorHint>
           </FieldProvider>
         </div>
-        <div className={cx('label')}>{this.props.intl.formatMessage(messages.favoriteFilters)}</div>
-        <GhostButton icon={AddFilterIcon} onClick={this.props.onAddFilter}>
-          {this.props.intl.formatMessage(messages.addFilter)}
+        <div className={cx('label')}>{formatMessage(messages.favoriteFilters)}</div>
+        <GhostButton icon={AddFilterIcon} onClick={onAddFilter}>
+          {formatMessage(messages.addFilter)}
         </GhostButton>
       </div>
     );

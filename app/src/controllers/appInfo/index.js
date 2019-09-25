@@ -1,11 +1,11 @@
 export { appInfoReducer } from './reducer';
-export { fetchApiInfoAction, fetchCompositeInfoAction } from './actionCreators';
+export { fetchAppInfoAction } from './actionCreators';
 export {
+  appInfoSelector,
+  uiBuildVersionSelector,
   authExtensionsSelector,
-  buildVersionSelector,
   instanceIdSelector,
   analyticsEnabledSelector,
   analyzerExtensionsSelector,
-  compositeInfoSelector,
 } from './selectors';
 export { ANALYTICS_ALL_KEY } from './constants';

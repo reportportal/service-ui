@@ -1,0 +1,73 @@
+linters-settings:
+  govet:
+    check-shadowing: true
+  golint:
+    min-confidence: 0.8
+  gocyclo:
+    min-complexity: 10
+    max-complexity: 12
+  maligned:
+    suggest-new: true
+  dupl:
+    threshold: 500
+  goconst:
+    min-len: 3
+    min-occurrences: 3
+  misspell:
+    locale: US
+  lll:
+    line-length: 140
+  goimports:
+    local-prefixes: github.com/golangci/golangci-lint
+  gocritic:
+    enabled-tags:
+      - performance
+      - style
+      - experimental
+    disabled-checks:
+      - wrapperFunc
+      - commentFormatting
+      - yodaStyleExpr
+      - unnamedResult
+      - commentedOutCode
+      - assignOp
+      - docStub
+
+linters:
+  enable-all: true
+  disable:
+    - maligned
+    - prealloc
+    - gochecknoglobals
+    - stylecheck
+    - dupl
+    - deadcode
+    - gosec
+    - gochecknoinits
+    - lll
+    - unused
+    - unparam
+    - goimports
+    - varcheck
+    #    - structcheck
+    - gocritic
+
+run:
+  # default concurrency is a available CPU number
+  concurrency: 1
+#  skip-dirs:
+#    - test/testdata_etc
+
+issues:
+  #  exclude-use-default: false
+  exclude-rules:
+    - text: "weak cryptographic primitive"
+      linters:
+        - gosec
+
+# golangci.com configuration
+# https://github.com/golangci/golangci/wiki/Configuration
+service:
+  golangci-lint-version: 1.17.x # use the fixed version to not introduce new linters unexpectedly
+#  prepare:
+#    - echo "here I can run custom commands, but no preparation needed for this repo"

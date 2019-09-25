@@ -25,6 +25,7 @@ import {
 } from 'common/utils/routingUtils';
 import { LEVEL_SUITE, LEVEL_TEST, LEVEL_STEP } from 'common/constants/launchLevels';
 import { ALL } from 'common/constants/reservedFilterIds';
+import { FILTER_TITLES } from 'common/constants/reservedFilterTitles';
 import { suitesSelector, suitePaginationSelector } from 'controllers/suite';
 import { testsSelector, testPaginationSelector } from 'controllers/test';
 import { stepsSelector, stepPaginationSelector } from 'controllers/step';
@@ -115,7 +116,7 @@ export const breadcrumbsSelector = createSelector(
     const queryNamespacesToCopy = [LAUNCH_NAMESPACE];
     let isListViewExist = false;
     const filterId = (filter && filter.id) || filterCategory;
-    const filterName = (filter && filter.name) || filterCategory;
+    const filterName = (filter && filter.name) || FILTER_TITLES[filterCategory];
     const descriptors = [
       {
         id: filterId,

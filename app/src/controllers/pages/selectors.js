@@ -1,7 +1,9 @@
 import { createSelector } from 'reselect';
 import { extractNamespacedQuery } from 'common/utils/routingUtils';
-import { DEFAULT_PAGINATION } from 'controllers/pagination';
+import { DEFAULT_PAGINATION, DEFAULT_PAGE_SIZE, SIZE_KEY } from 'controllers/pagination';
 import { SORTING_KEY } from 'controllers/sorting';
+import { getStorageItem } from 'common/utils';
+import { userIdSelector } from 'controllers/user';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { pageNames, NO_PAGE } from './constants';
 import { stringToArray } from './utils';
@@ -9,6 +11,11 @@ import { stringToArray } from './utils';
 export const locationSelector = (state) => state.location || {};
 export const payloadSelector = (state) => locationSelector(state).payload || {};
 export const searchStringSelector = (state) => locationSelector(state).search || '';
+export const isInitialDispatchDoneSelector = (state) => !!locationSelector(state).kind;
+export const currentPathSelector = (state) => {
+  const { pathname, search } = locationSelector(state);
+  return `${pathname}${search || ''}`;
+};
 
 export const activeDashboardIdSelector = (state) => payloadSelector(state).dashboardId;
 export const projectIdSelector = (state) => payloadSelector(state).projectId;
@@ -73,12 +80,19 @@ export const createQueryParametersSelector = ({
   defaultPagination,
   defaultSorting,
 } = {}) => (state, namespace) => {
-  const query = pagePropertiesSelector(state, staticNamespace || namespace);
-  return {
+  const calculatedNamespace = staticNamespace || namespace;
+  const query = pagePropertiesSelector(state, calculatedNamespace);
+  const queryParameters = {
     ...(defaultPagination || DEFAULT_PAGINATION),
     [SORTING_KEY]: defaultSorting || '',
     ...query,
   };
+  if ((!defaultPagination || !defaultPagination[SIZE_KEY]) && calculatedNamespace) {
+    const userId = userIdSelector(state);
+    const userSettings = getStorageItem(`${userId}_settings`) || {};
+    queryParameters[SIZE_KEY] = userSettings[`${calculatedNamespace}PageSize`] || DEFAULT_PAGE_SIZE;
+  }
+  return queryParameters;
 };
 
 export const launchIdSelector = (state) => {

@@ -8,7 +8,12 @@ import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
-import { canResizeAndDragWidgets } from 'common/utils/permissions';
+import {
+  canResizeAndDragWidgets,
+  canAddWidget,
+  canEditDashboard,
+  canDeleteDashboard,
+} from 'common/utils/permissions';
 import {
   activeDashboardItemSelector,
   fetchDashboardAction,
@@ -19,7 +24,11 @@ import {
   deleteDashboardAction,
   updateDashboardAction,
 } from 'controllers/dashboard';
-import { userInfoSelector, activeProjectSelector } from 'controllers/user';
+import {
+  userInfoSelector,
+  activeProjectSelector,
+  activeProjectRoleSelector,
+} from 'controllers/user';
 import { PROJECT_DASHBOARD_PAGE, PROJECT_DASHBOARD_PRINT_PAGE } from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -102,6 +111,7 @@ const messages = defineMessages({
     dashboard: activeDashboardItemSelector(state),
     userInfo: userInfoSelector(state),
     fullScreenMode: dashboardFullScreenModeSelector(state),
+    projectRole: activeProjectRoleSelector(state),
   }),
   {
     showModalAction,
@@ -136,10 +146,12 @@ export class DashboardItemPage extends Component {
     toggleFullScreenModeAction: PropTypes.func.isRequired,
     deleteDashboard: PropTypes.func.isRequired,
     editDashboard: PropTypes.func.isRequired,
+    projectRole: PropTypes.string,
   };
 
   static defaultProps = {
     fullScreenMode: false,
+    projectRole: '',
   };
 
   componentDidMount() {
@@ -154,23 +166,23 @@ export class DashboardItemPage extends Component {
 
   onDeleteDashboard = () => {
     const {
-      deleteDashboard,
+      intl: { formatMessage },
       userInfo: { userId },
-      intl,
+      deleteDashboard,
       dashboard,
     } = this.props;
-    const warningMessage =
-      dashboard.owner === userId ? '' : intl.formatMessage(messages.deleteModalWarningMessage);
+    const warning =
+      dashboard.owner === userId ? '' : formatMessage(messages.deleteModalWarningMessage);
     this.props.showModalAction({
       id: 'deleteItemsModal',
       data: {
         items: [dashboard],
         onConfirm: () => deleteDashboard(dashboard),
-        header: intl.formatMessage(messages.deleteModalTitle),
-        mainContent: intl.formatMessage(messages.deleteModalConfirmationText, {
+        header: formatMessage(messages.deleteModalTitle),
+        mainContent: formatMessage(messages.deleteModalConfirmationText, {
           name: `'<b>${dashboard.name}</b>'`,
         }),
-        warningMessage,
+        warning,
         eventsInfo: {
           closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_DELETE_DASHBOARD_MODAL,
           cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_DELETE_DASHBOARD_MODAL,
@@ -281,19 +293,8 @@ export class DashboardItemPage extends Component {
     });
   };
 
-  checkIfWidgetsModifiable = () => {
-    const { userInfo, activeProject, dashboard } = this.props;
-    const isOwner = dashboard.owner === userInfo.userId;
-    const projectRole =
-      userInfo.assignedProjects[activeProject] &&
-      userInfo.assignedProjects[activeProject].projectRole;
-
-    return canResizeAndDragWidgets(userInfo.userRole, projectRole, isOwner);
-  };
-
   hasOwnerActions() {
     const { dashboard, userInfo } = this.props;
-
     return dashboard.owner === userInfo.userId;
   }
 
@@ -304,6 +305,8 @@ export class DashboardItemPage extends Component {
       fullScreenMode,
       activeProject,
       changeFullScreenModeAction: changeFullScreenMode,
+      userInfo: { userRole },
+      projectRole,
     } = this.props;
 
     const isOwner = this.hasOwnerActions();
@@ -317,7 +320,7 @@ export class DashboardItemPage extends Component {
           <div className={cx('dashboard-item')}>
             <div className={cx('buttons-container')}>
               <div className={cx('buttons-block')}>
-                {isOwner ? (
+                {canAddWidget(userRole, projectRole, isOwner) ? (
                   <Fragment>
                     <GhostButton icon={AddWidgetIcon} onClick={this.showWidgetWizard}>
                       {formatMessage(messages.addNewWidget)}
@@ -335,7 +338,7 @@ export class DashboardItemPage extends Component {
                 )}
               </div>
               <div className={cx('buttons-block')}>
-                {isOwner && (
+                {canEditDashboard(userRole, projectRole, isOwner) && (
                   <GhostButton icon={EditIcon} onClick={this.onEditDashboardItem}>
                     {formatMessage(messages.editDashboard)}
                   </GhostButton>
@@ -345,7 +348,7 @@ export class DashboardItemPage extends Component {
                   {formatMessage(messages.fullscreen)}
                 </GhostButton>
 
-                {isOwner && (
+                {canDeleteDashboard(userRole, projectRole, isOwner) && (
                   <GhostButton icon={CancelIcon} onClick={this.onDeleteDashboard}>
                     {formatMessage(messages.delete)}
                   </GhostButton>
@@ -367,7 +370,7 @@ export class DashboardItemPage extends Component {
             </div>
             <Fullscreen enabled={fullScreenMode} onChange={changeFullScreenMode}>
               <WidgetsGrid
-                isModifiable={this.checkIfWidgetsModifiable()}
+                isModifiable={canResizeAndDragWidgets(userRole, projectRole, isOwner)}
                 dashboard={dashboard}
                 isFullscreen={fullScreenMode}
                 showWidgetWizard={this.showWidgetWizard}

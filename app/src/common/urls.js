@@ -196,7 +196,7 @@ export const URLS = {
   userUnasign: (activeProject) => `${urlBase}project/${activeProject}/unassign`,
 
   generateDemoData: (projectId) => `${urlBase}demo/${projectId}`,
-  getFileById: (dataId) => `${urlBase}data/${dataId}`,
+  getFileById: (projectId, dataId) => `${urlBase}data/${projectId}/${dataId}`,
 
   serverSettings: () => `${urlBase}settings`,
   emailServerSettings: () => `${urlBase}settings/email`,
@@ -215,8 +215,7 @@ export const URLS = {
       ...createFilterQuery(filterEntities),
     })}`,
 
-  apiInfo: () => `${urlBase}info`,
-  compositeInfo: () => `${compositeBase}info`,
+  appInfo: () => `${compositeBase}info`,
 
   plugin: () => `${urlBase}plugin`,
   pluginUpdate: (pluginId) => `${urlBase}plugin/${pluginId}`,

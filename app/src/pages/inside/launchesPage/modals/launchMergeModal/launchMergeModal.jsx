@@ -3,6 +3,7 @@ import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { fetch, validate } from 'common/utils';
+import { bindMessageToValidator } from 'common/utils/validation/validatorHelpers';
 import { URLS } from 'common/urls';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { reduxForm, formValueSelector, getFormSyncErrors, getFormMeta } from 'redux-form';
@@ -93,8 +94,10 @@ const formSyncErrorsSelector = getFormSyncErrors(MERGE_FORM);
   form: MERGE_FORM,
   validate: ({ name, description, mergeType, attributes }) => ({
     mergeType: !mergeType,
-    name: (!name || !validate.launchName(name)) && 'launchNameHint',
-    description: !validate.launchDescription(description) && 'launchDescriptionHint',
+    name: bindMessageToValidator(validate.launchName, 'launchNameHint')(name),
+    description: bindMessageToValidator(validate.launchDescription, 'launchDescriptionHint')(
+      description,
+    ),
     attributes: !validate.attributesArray(attributes),
   }),
 })

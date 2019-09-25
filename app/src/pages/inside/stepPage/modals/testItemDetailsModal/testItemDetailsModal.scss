@@ -1,3 +1,7 @@
+.details-tab {
+  font-size: 13px;
+  padding: 10px;
+}
 .name {
   color: $COLOR--charcoal-grey;
   text-overflow: ellipsis;
@@ -12,6 +16,11 @@
   padding-bottom: 10px;
   font-family: $FONT-SEMIBOLD;
   font-size: 14px;
+  line-height: 18px;
+}
+
+.status {
+  white-space: nowrap;
 }
 
 .id {
@@ -66,4 +75,24 @@
   line-height: 1.2;
   color: $COLOR--charcoal-grey;
   padding-bottom: 10px;
+}
+
+.tab-header {
+  justify-content: flex-start;
+  height: 38px;
+  > div {
+    font-family: $FONT-CONDBOLD;
+    align-items: flex-end;
+    line-height: 25px;
+  }
+}
+
+.tab-container {
+  padding: 0;
+}
+
+.stack-trace-tab {
+  border: 1px solid $COLOR--gray-91;
+  margin-bottom: 10px;
+  height: 547px;
 }

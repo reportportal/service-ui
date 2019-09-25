@@ -1,9 +1,7 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import { formValues } from 'redux-form';
 import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
 
-@formValues({ attributeKey: 'key', attributeValue: 'value' })
 export class AttributeInput extends Component {
   static propTypes = {
     attributes: PropTypes.array,

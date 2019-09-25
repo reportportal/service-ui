@@ -89,4 +89,8 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.uninstall',
     defaultMessage: 'Uninstall',
   },
+  LOGIN: {
+    id: 'Common.login',
+    defaultMessage: 'Login',
+  },
 });

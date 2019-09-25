@@ -10,6 +10,7 @@ import {
   validateLdapAttributes,
   prepareDataBeforeInitialize,
 } from 'pages/admin/serverSettingsPage/common/utils';
+import { commonValidators } from 'common/utils';
 import {
   messages,
   ENABLED_KEY,
@@ -35,7 +36,7 @@ const localMessages = defineMessages({
 @reduxForm({
   form: AD_AUTH_FORM,
   validate: ({ domain, ldapAttributes }) => ({
-    domain: !domain && 'requiredFieldHint',
+    domain: commonValidators.requiredField(domain),
     ldapAttributes: validateLdapAttributes(ldapAttributes),
   }),
   initialValues: DEFAULT_FORM_CONFIG,

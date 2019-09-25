@@ -217,15 +217,16 @@ export class FiltersPage extends Component {
       activeProject,
       ...rest
     } = this.props;
+
     return (
       <PageLayout title={intl.formatMessage(messages.filtersPageTitle)}>
         <PageHeader breadcrumbs={this.getBreadcrumbs()} />
         <PageSection>
           <FilterPageToolbar
-            filter={filter}
-            filters={filters}
+            initialValues={{ filter }}
             onFilterChange={onFilterChange}
             onAddFilter={this.addFilter}
+            isSearchDisabled={!filters.length && !filter && !loading}
           />
           <FilterGrid
             onEdit={this.openEditModal}

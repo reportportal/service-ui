@@ -197,6 +197,9 @@ export class UsersEntities extends Component {
         title: intl.formatMessage(messages.lastLogin),
         active: true,
         removable: false,
+        customProps: {
+          withoutDynamic: true,
+        },
       },
       {
         id: PROJECT,

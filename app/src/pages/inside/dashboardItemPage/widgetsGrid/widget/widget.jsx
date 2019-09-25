@@ -75,7 +75,7 @@ export class SimpleWidget extends Component {
   componentDidMount() {
     this.props.observer.subscribe(`${this.props.widgetId}_resizeStarted`, this.hideWidget);
     this.props.observer.subscribe('widgetResized', this.showWidget);
-    this.fetchWidget();
+    this.fetchWidget({}, false);
   }
 
   componentWillUnmount() {
@@ -106,7 +106,7 @@ export class SimpleWidget extends Component {
   };
 
   getWidgetContent = () => {
-    const { widgetType } = this.props;
+    const { widgetType, isPrintMode } = this.props;
     const { widget, uncheckedLegendItems, queryParameters, userSettings } = this.state;
 
     if (this.state.loading) {
@@ -133,6 +133,7 @@ export class SimpleWidget extends Component {
           clearQueryParams={this.clearQueryParams}
           userSettings={userSettings}
           onChangeUserSettings={this.onChangeUserSettings}
+          isPrintMode={isPrintMode}
         />
       )
     );
@@ -177,13 +178,13 @@ export class SimpleWidget extends Component {
     );
   };
 
-  fetchWidget = (params = {}) => {
+  fetchWidget = (params = {}, silent = true) => {
     const { tracking, isFullscreen } = this.props;
     const url = this.getWidgetUrl(params);
     this.silentUpdaterId && clearTimeout(this.silentUpdaterId);
     tracking.trackEvent(DASHBOARD_PAGE_EVENTS.REFRESH_WIDGET);
 
-    if (!isWidgetDataAvailable(this.state.widget) && !this.state.widget.id) {
+    if (!silent) {
       this.setState({
         loading: true,
       });

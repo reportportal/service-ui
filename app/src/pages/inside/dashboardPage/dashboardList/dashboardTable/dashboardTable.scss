@@ -56,6 +56,17 @@
   padding: 15px 0;
 }
 
+.delete {
+  width: 6.5%;
+  i {
+    display: block;
+  }
+  padding: 15px 0;
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+  }
+}
+
 .icon-holder {
   border-left: 1px solid $COLOR--gray-91;
   min-height: 20px;

@@ -9,6 +9,7 @@ import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
 import { ModalField } from 'components/main/modal';
 import { activeProjectSelector } from 'controllers/user';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
+import { bindMessageToValidator, commonValidators } from 'common/utils/validation';
 import { FIELD_LABEL_WIDTH } from 'pages/inside/dashboardItemPage/modals/common/widgetControls/controls/constants';
 import { FiltersControl, InputControl, TogglerControl } from './controls';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
@@ -41,14 +42,7 @@ const messages = defineMessages({
     defaultMessage: 'Value should have size from 1 to 128',
   },
 });
-const validators = {
-  numberOfLaunches: (formatMessage) => (value) =>
-    (!value || !validate.inRangeValidate(value, 1, 600)) &&
-    formatMessage(messages.numberOfLaunchesValidationError),
-  attributeKey: (formatMessage) => (value) =>
-    (!value || !validate.attributeKey(value)) &&
-    formatMessage(messages.attributeKeyValidationError),
-};
+const attributeKeyValidator = (message) => bindMessageToValidator(validate.attributeValue, message);
 
 @injectIntl
 @connect((state) => ({
@@ -118,7 +112,9 @@ export class MostPopularPatternsControls extends Component {
         </FieldProvider>
         <FieldProvider
           name="contentParameters.itemsCount"
-          validate={validators.numberOfLaunches(intl.formatMessage)}
+          validate={commonValidators.createNumberOfLaunchesValidator(
+            intl.formatMessage(messages.numberOfLaunchesValidationError),
+          )}
           format={String}
           normalize={this.normalizeValue}
         >
@@ -137,7 +133,9 @@ export class MostPopularPatternsControls extends Component {
             parse={this.parseAttribute}
             format={this.formatAttribute}
             name="contentParameters.widgetOptions.attributeKey"
-            validate={validators.attributeKey(intl.formatMessage)}
+            validate={attributeKeyValidator(
+              intl.formatMessage(messages.attributeKeyValidationError),
+            )}
           >
             <InputTagsSearch
               uri={launchAttributeKeysSearch}

@@ -2,6 +2,10 @@
   overflow: hidden;
 }
 
+.accordion-container {
+  position: relative;
+}
+
 .accordion-block {
   position: absolute;
   display: flex;

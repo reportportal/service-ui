@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types';
 import { Fragment } from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { GridHeader } from './gridHeader';
@@ -93,6 +93,7 @@ Grid.propTypes = {
   selectable: PropTypes.bool,
   selectedItems: PropTypes.arrayOf(PropTypes.object),
   onToggleSelection: PropTypes.func,
+  onClickRow: PropTypes.func,
   onToggleSelectAll: PropTypes.func,
   className: PropTypes.string,
   changeOnlyMobileLayout: PropTypes.bool,
@@ -123,6 +124,7 @@ Grid.defaultProps = {
   selectedItems: [],
   onToggleSelectAll: () => {},
   onToggleSelection: () => {},
+  onClickRow: null,
   className: '',
   changeOnlyMobileLayout: false,
   loading: false,

@@ -1,12 +1,19 @@
 import React, { Component, Fragment } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { activeProjectSelector, activeProjectRoleSelector } from 'controllers/user';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { Grid } from 'components/main/grid';
-import { Icon } from 'components/main/icon';
 import { EmptyDashboards } from 'pages/inside/dashboardPage/dashboardList/EmptyDashboards';
-import { DeleteColumn } from './deleteColumn';
-import DashboardNameColumn from './dashboardNameColumn';
+import {
+  NameColumn,
+  DescriptionColumn,
+  OwnerColumn,
+  SharedColumn,
+  EditColumn,
+  DeleteColumn,
+} from './dashboardTableColumns';
 import styles from './dashboardTable.scss';
 
 const cx = classNames.bind(styles);
@@ -37,70 +44,11 @@ const messages = defineMessages({
   },
 });
 
-const DescriptionColumn = ({ value }) => <div className={cx('description', 'cell')}>{value}</div>;
-DescriptionColumn.propTypes = {
-  value: PropTypes.string,
-};
-DescriptionColumn.defaultProps = {
-  value: '',
-};
-
-const OwnerColumn = ({ value }) => <div className={cx('owner', 'cell')}>{value}</div>;
-OwnerColumn.propTypes = {
-  value: PropTypes.string,
-};
-OwnerColumn.defaultProps = {
-  value: '',
-};
-
-const SharedColumn = ({
-  value: { share, owner },
-  customProps: {
-    currentUser: { userId },
-  },
-}) => {
-  const isShared = share || userId !== owner;
-
-  return <div className={cx('shared', 'cell')}>{isShared && <Icon type="icon-check" />}</div>;
-};
-SharedColumn.propTypes = {
-  value: PropTypes.object,
-  customProps: PropTypes.object,
-};
-SharedColumn.defaultProps = {
-  value: {},
-  customProps: {},
-};
-
-const EditColumn = ({ value, customProps }) => {
-  const {
-    onEdit,
-    currentUser: { userId },
-  } = customProps;
-  const { owner } = value;
-
-  const editItemHandler = () => {
-    onEdit(value);
-  };
-
-  return (
-    <div className={cx('cell', 'with-button', 'edit')}>
-      <div className={cx('icon-holder')}>
-        {userId === owner && <Icon type="icon-pencil" onClick={editItemHandler} />}
-      </div>
-    </div>
-  );
-};
-EditColumn.propTypes = {
-  value: PropTypes.object,
-  customProps: PropTypes.object,
-};
-EditColumn.defaultProps = {
-  value: {},
-  customProps: {},
-};
-
 @injectIntl
+@connect((state) => ({
+  projectId: activeProjectSelector(state),
+  projectRole: activeProjectRoleSelector(state),
+}))
 export class DashboardTable extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -108,7 +56,10 @@ export class DashboardTable extends Component {
     onEditItem: PropTypes.func,
     onAddItem: PropTypes.func,
     userInfo: PropTypes.object,
+    projectId: PropTypes.string,
+    projectRole: PropTypes.string,
     dashboardItems: PropTypes.array,
+    loading: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -116,11 +67,14 @@ export class DashboardTable extends Component {
     onEditItem: () => {},
     onAddItem: () => {},
     userInfo: {},
+    projectId: '',
+    projectRole: '',
     dashboardItems: [],
+    loading: false,
   };
 
   getTableColumns() {
-    const { onDeleteItem, onEditItem, userInfo, intl } = this.props;
+    const { onDeleteItem, onEditItem, userInfo, intl, projectId, projectRole } = this.props;
 
     return [
       {
@@ -128,7 +82,10 @@ export class DashboardTable extends Component {
           full: intl.formatMessage(messages.dashboardName),
           short: intl.formatMessage(messages.dashboardName),
         },
-        component: DashboardNameColumn,
+        component: NameColumn,
+        customProps: {
+          projectId,
+        },
       },
       {
         title: {
@@ -165,6 +122,7 @@ export class DashboardTable extends Component {
         customProps: {
           onEdit: onEditItem,
           currentUser: userInfo,
+          projectRole,
         },
       },
       {
@@ -176,6 +134,7 @@ export class DashboardTable extends Component {
         customProps: {
           onDelete: onDeleteItem,
           currentUser: userInfo,
+          projectRole,
         },
       },
     ];
@@ -184,11 +143,16 @@ export class DashboardTable extends Component {
   COLUMNS = this.getTableColumns();
 
   render() {
-    const { dashboardItems, onAddItem } = this.props;
+    const { dashboardItems, loading, onAddItem } = this.props;
 
     return (
       <Fragment>
-        <Grid className={cx('dashboard-table')} columns={this.COLUMNS} data={dashboardItems} />
+        <Grid
+          className={cx('dashboard-table')}
+          columns={this.COLUMNS}
+          data={dashboardItems}
+          loading={loading}
+        />
         {dashboardItems.length === 0 && <EmptyDashboards userDashboards action={onAddItem} />}
       </Fragment>
     );

@@ -1,6 +1,6 @@
 import { takeEvery, call, all, put, select, cancelled } from 'redux-saga/effects';
 import { fetch, updateToken } from 'common/utils/fetch';
-import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import { showDefaultErrorNotification } from 'controllers/notification';
 import { SET_TOKEN, tokenSelector } from 'controllers/auth';
 import { SET_API_TOKEN } from 'controllers/user';
 import { CHANGE_FULL_SCREEN_MODE, TOGGLE_FULL_SCREEN_MODE } from 'controllers/dashboard';
@@ -89,7 +89,7 @@ export function* handleError({ payload, meta: { silent } = {} }) {
   if (silent) {
     return;
   }
-  yield put(showNotification({ message: payload.message, type: NOTIFICATION_TYPES.ERROR }));
+  yield put(showDefaultErrorNotification(payload));
 }
 
 function* watchFetchError() {

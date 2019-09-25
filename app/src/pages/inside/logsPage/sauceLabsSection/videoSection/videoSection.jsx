@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
@@ -10,6 +10,7 @@ import TimeIcon from 'common/img/time-icon-inline.svg';
 import FullscreenIcon from 'common/img/fullscreen-inline.svg';
 import FullscreenExitIcon from 'common/img/fullscreen-exit-inline.svg';
 import { jobInfoSelector, sauceLabsAuthTokenSelector } from 'controllers/log/sauceLabs';
+import { NoDataAvailable } from 'components/widgets/noDataAvailable';
 import { VideoPlayer } from './videoPlayer';
 import styles from './videoSection.scss';
 
@@ -56,6 +57,7 @@ export class VideoSection extends Component {
 
   render() {
     const { jobInfo, observer, isFullscreenMode, onToggleFullscreen } = this.props;
+    const isJobInfoAvailable = !!Object.keys(jobInfo).length;
 
     return (
       <div className={cx('video-section')}>
@@ -65,21 +67,29 @@ export class VideoSection extends Component {
             {Parser(isFullscreenMode ? FullscreenExitIcon : FullscreenIcon)}
           </div>
         </div>
-        <div className={cx('section-content')}>
-          <VideoPlayer observer={observer} {...this.getVideoOptions()} />
-        </div>
-        <div className={cx('section-info', { 'full-screen': isFullscreenMode })}>
-          <div className={cx('info-item')}>
-            {Parser(CalendarIcon)}
-            {this.getFormattedDate(jobInfo.start_time)}
+        {isJobInfoAvailable ? (
+          <Fragment>
+            <div className={cx('section-content')}>
+              <VideoPlayer observer={observer} {...this.getVideoOptions()} />
+            </div>
+            <div className={cx('section-info', { 'full-screen': isFullscreenMode })}>
+              <div className={cx('info-item')}>
+                {Parser(CalendarIcon)}
+                {this.getFormattedDate(jobInfo.start_time)}
+              </div>
+              <div className={cx('info-item')}>
+                {Parser(TimeIcon)}
+                {this.getVideoDuration()}
+              </div>
+              <div className={cx('info-item')}>{jobInfo.os}</div>
+              <div className={cx('info-item')}>{jobInfo.browser}</div>
+            </div>
+          </Fragment>
+        ) : (
+          <div className={cx('no-data-wrapper')}>
+            <NoDataAvailable />
           </div>
-          <div className={cx('info-item')}>
-            {Parser(TimeIcon)}
-            {this.getVideoDuration()}
-          </div>
-          <div className={cx('info-item')}>{jobInfo.os}</div>
-          <div className={cx('info-item')}>{jobInfo.browser}</div>
-        </div>
+        )}
       </div>
     );
   }

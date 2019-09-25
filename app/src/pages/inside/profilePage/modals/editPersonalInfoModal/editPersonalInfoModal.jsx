@@ -3,7 +3,7 @@ import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { ModalLayout, withModal, ModalField } from 'components/main/modal';
-import { validate } from 'common/utils';
+import { commonValidators } from 'common/utils';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -43,8 +43,8 @@ const messages = defineMessages({
 @reduxForm({
   form: 'editModal',
   validate: ({ name, email }) => ({
-    name: (!name || !validate.name(name)) && 'profileUserName',
-    email: (!email || !validate.email(email)) && 'profileEmail',
+    name: commonValidators.userName(name),
+    email: commonValidators.email(email),
   }),
 })
 @track()

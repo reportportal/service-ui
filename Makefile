@@ -7,10 +7,10 @@ GO = go
 BINARY_DIR=bin
 RELEASE_DIR=release
 
-BUILD_DEPS:= github.com/alecthomas/gometalinter github.com/avarabyeu/releaser
+BUILD_DEPS:= github.com/avarabyeu/releaser github.com/golangci/golangci-lint/cmd/golangci-lint
 GODIRS_NOVENDOR = $(shell go list ./... | grep -v /vendor/)
 GOFILES_NOVENDOR = $(shell find . -type f -name '*.go' -not -path "./vendor/*")
-PACKAGE_COMMONS=github.com/reportportal/service-ui/vendor/gopkg.in/reportportal/commons-go.v5
+PACKAGE_COMMONS=github.com/reportportal/commons-go
 REPO_NAME=reportportal/service-ui
 
 UI_BUILD_REACT=app/
@@ -18,30 +18,25 @@ UI_BUILD_REACT=app/
 BUILD_INFO_LDFLAGS=-ldflags "-extldflags '"-static"' -X ${PACKAGE_COMMONS}/commons.repo=${REPO_NAME} -X ${PACKAGE_COMMONS}/commons.branch=${COMMIT_HASH} -X ${PACKAGE_COMMONS}/commons.buildDate=${BUILD_DATE} -X ${PACKAGE_COMMONS}/commons.version=${v}"
 IMAGE_NAME=reportportal-dev-5/service-ui$(IMAGE_POSTFIX)
 
-.PHONY: vendor get-build-deps test build
+.PHONY: get-build-deps test build
 
 help:
 	@echo "build      - go build"
 	@echo "test       - go test"
 	@echo "checkstyle - gofmt+golint+misspell"
 
-vendor: ## Install glide and sync vendored dependencies
-	$(if $(shell which glide 2>/dev/null),$(echo "Glide is already installed..."),$(shell go get github.com/Masterminds/glide))
-	glide install
+get-build-deps:
+	$(GO) get -u $(BUILD_DEPS)
 
-get-build-deps: vendor
-	$(GO) get $(BUILD_DEPS)
-	gometalinter --install
+test:
+	$(GO) test ${GODIRS_NOVENDOR}
 
-test: vendor
-	$(GO) test $(glide novendor)
 
-checkstyle: get-build-deps
-	gometalinter --vendor ./... --fast --disable=gas --disable=errcheck --disable=gotype --deadline 10m
+checkstyle:
+	golangci-lint run --deadline 10m
 
 fmt:
 	gofmt -l -w -s ${GOFILES_NOVENDOR}
-
 
 # Builds server
 build-server: checkstyle test
@@ -51,7 +46,7 @@ build-server: checkstyle test
 build-statics:
 	npm --prefix $(UI_BUILD_REACT) ci
 	npm --prefix $(UI_BUILD_REACT) run lint
-	npm --prefix $(UI_BUILD_REACT) run test
+	npm --prefix $(UI_BUILD_REACT) run test:coverage
 	npm --prefix $(UI_BUILD_REACT) run build
 
 # Builds the project

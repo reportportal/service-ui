@@ -8,6 +8,7 @@ import {
   pagePropertiesSelector,
   PROJECT_DASHBOARD_PAGE,
   LOGIN_PAGE,
+  querySelector,
 } from 'controllers/pages';
 import { NOTIFICATION_TYPES } from 'controllers/notification/constants';
 import {
@@ -19,9 +20,10 @@ import {
 } from 'controllers/user';
 import { fetchProjectAction } from 'controllers/project';
 import { fetchPluginsAction, fetchGlobalIntegrationsAction } from 'controllers/plugins';
-import { redirect } from 'redux-first-router';
-import { stringify } from 'qs';
-import { fetchApiInfoAction, fetchCompositeInfoAction } from 'controllers/appInfo';
+import { redirect, pathToAction } from 'redux-first-router';
+import qs, { stringify } from 'qs';
+import { fetchAppInfoAction } from 'controllers/appInfo';
+import routesMap from 'routes/routesMap';
 import {
   authSuccessAction,
   resetTokenAction,
@@ -39,11 +41,14 @@ import {
   ERROR_CODE_LOGIN_MAX_LIMIT,
 } from './constants';
 
-function* handleLogout() {
+function* handleLogout({ payload: redirectPath }) {
   yield put(resetTokenAction());
   yield put(
     redirect({
       type: LOGIN_PAGE,
+      meta: {
+        query: { redirectPath },
+      },
     }),
   );
   yield put(
@@ -72,22 +77,25 @@ function* loginSuccessHandler({ payload }) {
       value: payload.value,
     }),
   );
-  yield put(fetchCompositeInfoAction());
+  yield put(fetchAppInfoAction());
   yield put(fetchUserAction());
-  yield take([FETCH_USER_SUCCESS, FETCH_USER_ERROR]);
-  yield take(SET_ACTIVE_PROJECT);
+  yield all([take([FETCH_USER_SUCCESS, FETCH_USER_ERROR]), take(SET_ACTIVE_PROJECT)]);
   const projectId = yield select(activeProjectSelector);
   yield put(fetchProjectAction(projectId));
-  yield put(fetchApiInfoAction());
   yield put(fetchPluginsAction());
   yield put(fetchGlobalIntegrationsAction());
   yield put(authSuccessAction());
-  yield put(
-    redirect({
-      type: PROJECT_DASHBOARD_PAGE,
-      payload: { projectId },
-    }),
-  );
+  const query = yield select(querySelector);
+  if (query && query.redirectPath) {
+    yield put(redirect(pathToAction(query.redirectPath, routesMap, qs)));
+  } else {
+    yield put(
+      redirect({
+        type: PROJECT_DASHBOARD_PAGE,
+        payload: { projectId },
+      }),
+    );
+  }
 }
 
 function* watchLoginSuccess() {

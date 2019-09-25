@@ -1,0 +1,74 @@
+.access-token-block {
+  width: 100%;
+  margin-bottom: 5px;
+}
+.header-label {
+  width: 100%;
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.body-wrapper {
+  padding: 15px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+.field-wrapper {
+  display: flex;
+  justify-content: space-between;
+  height: 30px;
+}
+
+.label {
+  margin-right: 10px;
+  display: block;
+  line-height: 30px;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  color: $COLOR--charcoal-grey;
+  white-space: nowrap;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+.field {
+  height: 100%;
+  display: block;
+  box-sizing: border-box;
+  flex-grow: 1;
+  margin-right: 10px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin: 0;
+
+    input {
+      background-color: $COLOR--gray-91;
+    }
+  }
+
+  &:hover {
+    border-color: $COLOR--gray-47;
+  }
+}
+.regenerate-btn {
+  white-space: nowrap;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+.tip {
+  margin-top: 10px;
+  line-height: 1.43;
+  font-family: $FONT-REGULAR;
+  font-size: 12px;
+  color: $COLOR--gray-60;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}

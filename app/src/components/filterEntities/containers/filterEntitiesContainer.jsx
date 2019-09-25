@@ -83,12 +83,28 @@ export class FilterEntitiesContainer extends Component {
     }
   };
 
-  handleAdd = (entity) => {
+  handleAdd = (entities) => {
     this.setState(
-      (prevState) => ({
-        values: { ...prevState.values, [entity.id]: entity.value },
-        visibleFilters: [...prevState.visibleFilters, entity.id],
-      }),
+      (prevState) => {
+        let entitiesObj;
+        let entitiesId;
+
+        if (Array.isArray(entities)) {
+          entitiesObj = entities.reduce(
+            (acc, entity) => ({ ...acc, [entity.id]: entity.value }),
+            {},
+          );
+          entitiesId = entities.map((entity) => entity.id);
+        } else {
+          entitiesObj = { [entities.id]: entities.value };
+          entitiesId = [entities.id];
+        }
+
+        return {
+          values: { ...prevState.values, ...entitiesObj },
+          visibleFilters: [...prevState.visibleFilters, ...entitiesId],
+        };
+      },
       () => this.props.onChange(this.collectEntities(this.state.values)),
     );
   };

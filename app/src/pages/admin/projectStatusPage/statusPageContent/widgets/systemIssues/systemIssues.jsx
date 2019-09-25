@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl } from 'react-intl';
-import { IssuesStatusPageChart } from 'components/widgets/charts/issuesStatusPageChart';
+import { IssuesStatusPageChart } from 'components/widgets/singleLevelWidgets/charts/issuesStatusPageChart';
 import { NoDataAvailable } from 'components/widgets/noDataAvailable';
 import { PERIOD_VALUES, PERIOD_VALUES_LENGTH } from 'common/constants/statusPeriodValues';
 import { DATE_FORMAT_TOOLTIP } from 'common/constants/timeDateFormat';

@@ -28,4 +28,7 @@ export {
   canConfigreEmailNotifications,
   canConfigurePatternAnalysis,
   canSeeDemoData,
+  canAddWidget,
+  canEditDashboard,
+  canEditWidget,
 } from './permissions';

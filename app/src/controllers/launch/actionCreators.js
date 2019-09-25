@@ -16,6 +16,10 @@ import {
   FETCH_LAUNCHES_PAGE_DATA,
   UPDATE_LAUNCH_LOCALLY,
   UPDATE_LAUNCHES_LOCALLY,
+  UPDATE_LOCAL_SORTING,
+  DEFAULT_LOCAL_SORTING,
+  UPDATE_DEBUG_LOCAL_SORTING,
+  UPDATE_DEBUG_LOCAL_FILTER,
 } from './constants';
 import {
   validateMergeLaunch,
@@ -57,6 +61,28 @@ export const updateLaunchesLocallyAction = (launches) => ({
   type: UPDATE_LAUNCHES_LOCALLY,
   payload: launches,
 });
+
+export const updateLocalSortingAction = (sorting) => ({
+  type: UPDATE_LOCAL_SORTING,
+  payload: sorting,
+});
+
+export const resetLocalSortingAction = () => updateLocalSortingAction(DEFAULT_LOCAL_SORTING);
+
+export const updateDebugLocalSortingAction = (sorting) => ({
+  type: UPDATE_DEBUG_LOCAL_SORTING,
+  payload: sorting,
+});
+
+export const resetDebugLocalSortingAction = () =>
+  updateDebugLocalSortingAction(DEFAULT_LOCAL_SORTING);
+
+export const updateDebugLocalFilterAction = (filter) => ({
+  type: UPDATE_DEBUG_LOCAL_FILTER,
+  payload: filter,
+});
+
+export const resetDebugLocalFilterAction = () => updateDebugLocalFilterAction({});
 
 export const toggleLaunchSelectionAction = toggleItemSelectionAction(NAMESPACE);
 export const selectLaunchesAction = selectItemsAction(NAMESPACE);

@@ -102,9 +102,9 @@ const messages = defineMessages({
     id: 'LaunchLevelEntities.launchNumberEntityHint',
     defaultMessage: 'This filter accepts only digits',
   },
-  launchDescriptionEntityHint: {
-    id: 'LaunchLevelEntities.launchDescriptionEntityHint',
-    defaultMessage: 'At least 3 symbols required',
+  descriptionEntityHint: {
+    id: 'LaunchLevelEntities.descriptionEntityHint',
+    defaultMessage: 'Description should have size from 3 to 18',
   },
   demoDataPostfixHint: {
     id: 'DemoDataTabForm.demoDataPostfixHint',

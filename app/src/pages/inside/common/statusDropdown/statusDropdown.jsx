@@ -10,7 +10,7 @@ import { fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { formatStatus } from 'common/utils/localizationUtils';
-import { PASSED, FAILED, SKIPPED, INTERRUPTED, IN_PROGRESS } from 'common/constants/testStatuses';
+import { PASSED, FAILED, SKIPPED, IN_PROGRESS } from 'common/constants/testStatuses';
 import { ATTRIBUTE_KEY_MANUALLY } from './constants';
 import styles from './statusDropdown.scss';
 
@@ -97,11 +97,10 @@ export class StatusDropdown extends Component {
 
   generateOptions = (status) => {
     const { intl } = this.props;
-    if (status === IN_PROGRESS)
-      return [{ label: formatStatus(intl.formatMessage, IN_PROGRESS), value: IN_PROGRESS }];
 
-    const STATUS_TYPES = [PASSED, FAILED, SKIPPED];
-    if (status === INTERRUPTED) STATUS_TYPES.push(INTERRUPTED);
+    const STATUS_TYPES = status === IN_PROGRESS ? [] : [PASSED, FAILED, SKIPPED];
+
+    if (STATUS_TYPES.indexOf(status) < 0) STATUS_TYPES.push(status);
 
     return STATUS_TYPES.map((item) => ({
       label: formatStatus(intl.formatMessage, item),

@@ -14,7 +14,7 @@ import InfoIcon from 'common/img/info-inline.svg';
 import { getLogItemLinkSelector } from 'controllers/testItem';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { TextTooltip } from 'components/main/tooltips/textTooltip';
-import { MessageBlock } from './messageBlock';
+import { StackTraceMessageBlock } from 'pages/inside/common/stackTraceMessageBlock';
 import styles from './itemsListRow.scss';
 
 const cx = classNames.bind(styles);
@@ -74,6 +74,16 @@ export class ItemsListRow extends React.Component {
     this.props.onToggleItemSelect(this.props.testItem, !this.props.selected);
   };
 
+  renderLogMessages = () => {
+    const { logs } = this.props.testItem;
+    return logs.map((log, index) => (
+      // eslint-disable-next-line react/no-array-index-key
+      <StackTraceMessageBlock key={`log-message-${index}`} level={log.level}>
+        <div className={cx('message')}>{log.message}</div>
+      </StackTraceMessageBlock>
+    ));
+  };
+
   render() {
     const { selected, testItem } = this.props;
     return (
@@ -83,8 +93,8 @@ export class ItemsListRow extends React.Component {
         </div>
         <div className={cx('info-column')}>
           <div className={cx('item-header')}>
+            <ItemPathTooltipIcon tooltipContent={this.getLogItemTooltip()} />
             <div className={cx('item-name')}>
-              <ItemPathTooltipIcon tooltipContent={this.getLogItemTooltip()} />
               <Link
                 to={this.props.getLogItemLink(testItem)}
                 className={cx('item-link')}
@@ -111,7 +121,7 @@ export class ItemsListRow extends React.Component {
               </div>
             </div>
           </div>
-          <MessageBlock message={testItem.logMessages} />
+          {this.renderLogMessages()}
         </div>
       </div>
     );

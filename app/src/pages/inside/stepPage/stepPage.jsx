@@ -83,14 +83,13 @@ import { StepGrid } from './stepGrid';
 export class StepPage extends Component {
   static propTypes = {
     deleteItems: PropTypes.func,
-    onEditItem: PropTypes.func,
     onEditItems: PropTypes.func,
     debugMode: PropTypes.bool.isRequired,
     steps: PropTypes.arrayOf(PropTypes.object),
     parentItem: PropTypes.object,
     selectedItems: PropTypes.arrayOf(PropTypes.object),
     validationErrors: PropTypes.object,
-    lastOperation: PropTypes.string,
+    lastOperation: PropTypes.object,
     selectStepsAction: PropTypes.func,
     unselectAllSteps: PropTypes.func,
     proceedWithValidItemsAction: PropTypes.func,
@@ -130,13 +129,12 @@ export class StepPage extends Component {
 
   static defaultProps = {
     deleteItems: () => {},
-    onEditItem: () => {},
     onEditItems: () => {},
     steps: [],
     parentItem: {},
     selectedItems: [],
     validationErrors: {},
-    lastOperation: '',
+    lastOperation: {},
     selectStepsAction: () => {},
     unselectAllSteps: () => {},
     proceedWithValidItemsAction: () => {},
@@ -198,11 +196,11 @@ export class StepPage extends Component {
     });
   };
 
-  onEditItem = (launch) => {
+  onEditItem = (item) => {
     this.props.showModalAction({
       id: 'testItemDetails',
       data: {
-        item: launch,
+        item,
         type: LAUNCH_ITEM_TYPES.item,
         fetchFunc: this.props.fetchTestItemsAction,
       },
@@ -236,7 +234,7 @@ export class StepPage extends Component {
 
   handleUnlinkIssue = () =>
     this.props.unlinkIssueAction(this.props.selectedItems, {
-      fetchFunc: this.props.fetchTestItemsAction,
+      fetchFunc: this.unselectAndFetchItems,
     });
 
   handleUnlinkSingleTicket = (testItem) => (ticketId) => {
@@ -253,28 +251,28 @@ export class StepPage extends Component {
     ];
 
     this.props.unlinkIssueAction(items, {
-      fetchFunc: this.props.fetchTestItemsAction,
+      fetchFunc: this.unselectAndFetchItems,
     });
   };
 
   handleLinkIssue = () =>
     this.props.linkIssueAction(this.props.selectedItems, {
-      fetchFunc: this.props.fetchTestItemsAction,
+      fetchFunc: this.unselectAndFetchItems,
     });
 
   handlePostIssue = () =>
     this.props.postIssueAction(this.props.selectedItems, {
-      fetchFunc: this.props.fetchTestItemsAction,
+      fetchFunc: this.unselectAndFetchItems,
     });
 
   handleIgnoreInAA = () =>
     this.props.ignoreInAutoAnalysisAction(this.props.selectedItems, {
-      fetchFunc: this.props.fetchTestItemsAction,
+      fetchFunc: this.unselectAndFetchItems,
     });
 
   handleIncludeInAA = () =>
     this.props.includeInAutoAnalysisAction(this.props.selectedItems, {
-      fetchFunc: this.props.fetchTestItemsAction,
+      fetchFunc: this.unselectAndFetchItems,
     });
 
   handleEditDefects = (eventData) => {
@@ -282,11 +280,11 @@ export class StepPage extends Component {
     if (this.isDefectGroupOperationAvailable(eventData)) {
       this.props.showModalAction({
         id: 'editToInvestigateDefectModal',
-        data: { item: items[0], fetchFunc: this.props.fetchTestItemsAction },
+        data: { item: items[0], fetchFunc: this.unselectAndFetchItems },
       });
     } else {
       this.props.editDefectsAction(items, {
-        fetchFunc: this.props.fetchTestItemsAction,
+        fetchFunc: this.unselectAndFetchItems,
         debugMode: this.props.debugMode,
       });
     }
@@ -304,11 +302,19 @@ export class StepPage extends Component {
     );
   };
 
+  unselectAndFetchItems = () => {
+    this.props.unselectAllSteps();
+    this.props.fetchTestItemsAction();
+  };
+
   proceedWithValidItems = () => {
+    const {
+      lastOperation: { operationName, operationArgs },
+      selectedItems,
+    } = this.props;
+
     this.props.tracking.trackEvent(STEP_PAGE_EVENTS.PROCEED_VALID_ITEMS);
-    this.props.proceedWithValidItemsAction(this.props.lastOperation, this.props.selectedItems, {
-      fetchFunc: this.props.fetchTestItemsAction,
-    });
+    this.props.proceedWithValidItemsAction(operationName, selectedItems, operationArgs);
   };
 
   deleteItems = () => {
@@ -350,9 +356,7 @@ export class StepPage extends Component {
 
     return (
       <PageLayout>
-        <PageSection>
-          <LaunchFiltersSection />
-        </PageSection>
+        <PageSection>{!debugMode && <LaunchFiltersSection />}</PageSection>
         <PageSection>
           <SuiteTestToolbar
             onDelete={this.deleteItems}
@@ -383,6 +387,7 @@ export class StepPage extends Component {
             selectedItems={selectedItems}
             onAllItemsSelect={this.handleAllStepsSelection}
             onItemSelect={this.handleOneItemSelection}
+            onItemsSelect={this.props.selectStepsAction}
             loading={loading}
             listView={listView}
             onEditDefect={this.handleEditDefects}

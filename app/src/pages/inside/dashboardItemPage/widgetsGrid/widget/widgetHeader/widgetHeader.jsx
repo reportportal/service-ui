@@ -9,7 +9,7 @@ import {
   activeProjectRoleSelector,
   userAccountRoleSelector,
 } from 'controllers/user';
-import { canDeleteWidget } from 'common/utils/permissions';
+import { canEditWidget, canDeleteWidget } from 'common/utils/permissions';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import RefreshIcon from 'common/img/refresh-icon-inline.svg';
@@ -91,6 +91,9 @@ export class WidgetHeader extends Component {
       customClass,
       isPrintMode,
     } = this.props;
+
+    const isOwner = data.owner === userId;
+
     return (
       <div className={cx('widget-header')}>
         <div className={cx('info-block')}>
@@ -103,13 +106,13 @@ export class WidgetHeader extends Component {
                 </div>
               )}
               {data.shared &&
-                data.owner === userId && (
+                isOwner && (
                   <div className={cx('icon')} title={intl.formatMessage(messages.widgetIsShared)}>
                     {Parser(ShareIcon)}
                   </div>
                 )}
               {data.shared &&
-                data.owner !== userId && (
+                !isOwner && (
                   <div
                     className={cx('icon')}
                     title={intl.formatMessage(messages.sharedWidget, { owner: data.owner })}
@@ -132,13 +135,15 @@ export class WidgetHeader extends Component {
         {!isPrintMode && (
           <div className={customClass}>
             <div className={cx('controls-block')}>
-              <div className={cx('control', 'mobile-hide')} onClick={onEdit}>
-                {data.owner === userId && Parser(PencilIcon)}
-              </div>
+              {canEditWidget(userRole, projectRole, isOwner) && (
+                <div className={cx('control', 'mobile-hide')} onClick={onEdit}>
+                  {Parser(PencilIcon)}
+                </div>
+              )}
               <div className={cx('control')} onClick={onRefresh}>
                 {Parser(RefreshIcon)}
               </div>
-              {canDeleteWidget(userRole, projectRole, userId === data.owner) && (
+              {canDeleteWidget(userRole, projectRole, isOwner) && (
                 <div className={cx('control', 'mobile-hide')} onClick={onDelete}>
                   {Parser(CrossIcon)}
                 </div>

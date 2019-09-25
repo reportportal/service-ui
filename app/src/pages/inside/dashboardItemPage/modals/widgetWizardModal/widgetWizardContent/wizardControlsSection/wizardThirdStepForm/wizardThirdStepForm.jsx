@@ -95,13 +95,13 @@ export class WizardThirdStepForm extends Component {
   };
 
   initializeControlsForm = () => {
-    const { dashboards, intl } = this.props;
+    const { intl, activeDashboard } = this.props;
     const newDashboard = {
       name: intl.formatMessage(messages.newDashboardName),
       description: '',
       share: false,
     };
-    const selectedDashboard = dashboards.length > 0 ? dashboards[0] : newDashboard;
+    const selectedDashboard = activeDashboard || newDashboard;
     const data = {
       name: this.generateWidgetName(),
       description: '',

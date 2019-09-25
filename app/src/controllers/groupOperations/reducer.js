@@ -4,7 +4,7 @@ import {
   TOGGLE_ITEM_SELECTION,
   UNSELECT_ALL_ITEMS,
   REMOVE_VALIDATION_ERRORS,
-  SET_LAST_OPERATION_NAME,
+  SET_LAST_OPERATION,
   SET_VALIDATION_ERRORS,
   RESET_VALIDATION_ERRORS,
   SELECTED_ITEMS_INITIAL_STATE,
@@ -94,7 +94,7 @@ export const lastOperationReducer = (namespace) => (
     return state;
   }
   switch (type) {
-    case SET_LAST_OPERATION_NAME:
+    case SET_LAST_OPERATION:
       return payload;
     default:
       return state;

@@ -12,7 +12,7 @@ import { showModalAction } from 'controllers/modal';
 import { deleteDefectSubTypeAction, updateDefectSubTypeAction } from 'controllers/project';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { withHoverableTooltip } from 'components/main/tooltips/hoverableTooltip';
-import { C3Chart } from 'components/widgets/charts/common/c3chart';
+import { C3Chart } from 'components/widgets/common/c3chart';
 
 import { defectTypeShape } from './defectTypeShape';
 import { DefectSubTypeForm } from './defectSubTypeForm';
@@ -33,7 +33,8 @@ ColorMarker.propTypes = {
 const DefectTypeName = withHoverableTooltip({
   TooltipComponent: ({ locator }) => `locator: ${locator}`,
   data: {
-    placement: 'bottom',
+    placement: 'top',
+    dynamicWidth: true,
   },
 })(({ color, longName }) => (
   <span className={cx('defect-type-name-wrap')}>

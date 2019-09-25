@@ -5,6 +5,7 @@ export {
   fetchHistoryEntriesAction,
   fetchLogPageStackTrace,
   setPageLoadingAction,
+  clearLogPageStackTrace,
 } from './actionCreators';
 export { logReducer } from './reducer';
 export {

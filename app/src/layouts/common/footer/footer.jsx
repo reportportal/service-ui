@@ -5,14 +5,14 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
 import { FOOTER_EVENTS } from 'components/main/analytics/events';
-import { buildVersionSelector } from 'controllers/appInfo';
+import { uiBuildVersionSelector } from 'controllers/appInfo';
 import { referenceDictionary } from 'common/utils';
 import styles from './footer.scss';
 
 const cx = classNames.bind(styles);
 
 @connect((state) => ({
-  buildVersion: buildVersionSelector(state),
+  buildVersion: uiBuildVersionSelector(state),
 }))
 @track()
 export class Footer extends Component {

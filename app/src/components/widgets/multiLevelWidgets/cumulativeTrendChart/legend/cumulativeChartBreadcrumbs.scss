@@ -1,0 +1,29 @@
+.container {
+  margin-right: auto;
+  margin-left: 40px;
+  color: $COLOR--charcoal-grey;
+  text-transform: uppercase;
+  font-size: 14px;
+  font-family: $FONT-SEMIBOLD;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &.static {
+    margin-left: 0;
+  }
+}
+
+.link {
+  color: $COLOR--topaz;
+  cursor: pointer;
+  padding-right: 5px;
+}
+
+.icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  fill: $COLOR--charcoal-grey;
+  vertical-align: text-top;
+}

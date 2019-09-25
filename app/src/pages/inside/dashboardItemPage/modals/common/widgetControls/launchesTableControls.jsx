@@ -2,7 +2,12 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { arrayRemoveDoubles, validate } from 'common/utils';
+import {
+  arrayRemoveDoubles,
+  validate,
+  bindMessageToValidator,
+  commonValidators,
+} from 'common/utils';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { defectTypesSelector } from 'controllers/project';
 import {
@@ -47,13 +52,9 @@ const messages = defineMessages({
     defaultMessage: 'You must select at least one item',
   },
 });
-const validators = {
-  items: (formatMessage) => (value) =>
-    (!value || !validate.inRangeValidate(value, 1, 600)) &&
-    formatMessage(messages.ItemsValidationError),
-  contentFields: (formatMessage) => (value) =>
-    (!value || value.length === 3) && formatMessage(messages.ContentFieldsValidationError), // 3 - count of static content fields
-};
+
+const contentFieldsValidator = (message) =>
+  bindMessageToValidator(validate.launchesWidgetContentFields, message);
 
 @injectIntl
 @connect((state) => ({
@@ -140,7 +141,9 @@ export class LaunchesTableControls extends Component {
               name="contentParameters.contentFields"
               parse={this.parseContentFields}
               format={this.formatContentFields}
-              validate={validators.contentFields(formatMessage)}
+              validate={contentFieldsValidator(
+                formatMessage(messages.ContentFieldsValidationError),
+              )}
             >
               <DropdownControl
                 fieldLabel={formatMessage(messages.CriteriaFieldLabel)}
@@ -151,7 +154,9 @@ export class LaunchesTableControls extends Component {
             </FieldProvider>
             <FieldProvider
               name="contentParameters.itemsCount"
-              validate={validators.items(formatMessage)}
+              validate={commonValidators.createNumberOfLaunchesValidator(
+                formatMessage(messages.ItemsValidationError),
+              )}
               format={String}
               normalize={this.normalizeValue}
             >

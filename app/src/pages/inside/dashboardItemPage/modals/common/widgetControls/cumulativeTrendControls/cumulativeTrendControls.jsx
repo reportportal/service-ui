@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { FieldArray } from 'redux-form';
-import { validate } from 'common/utils';
+import { validate, bindMessageToValidator, composeBoundValidators } from 'common/utils';
 import { STATS_FAILED, STATS_PASSED, STATS_SKIPPED } from 'common/constants/statistics';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FiltersControl, InputControl, TogglerControl } from '../controls';
@@ -44,19 +44,23 @@ const messages = defineMessages({
       'Enter an attribute key whose unique values will be used for combine launches into groups',
   },
 });
-const validators = {
-  items: (formatMessage) => (value) =>
-    (!value || !validate.inRangeValidate(value, 1, 15)) &&
+
+const itemsValidator = (formatMessage) =>
+  bindMessageToValidator(
+    validate.cumulativeItemsValidation,
     formatMessage(messages.ItemsValidationError),
-  attributeKey: (formatMessage) => (value) => {
-    if (!value) {
-      return formatMessage(messages.attributesArrayValidationError);
-    } else if (!validate.attributeKey(value)) {
-      return formatMessage(messages.attributeKeyValidationError);
-    }
-    return undefined;
-  },
-};
+  );
+const attributeKeyValidator = (formatMessage) =>
+  composeBoundValidators([
+    bindMessageToValidator(
+      validate.required,
+      formatMessage(messages.attributesArrayValidationError),
+    ),
+    bindMessageToValidator(
+      validate.attributeKey,
+      formatMessage(messages.attributeKeyValidationError),
+    ),
+  ]);
 
 @injectIntl
 export class CumulativeTrendControls extends Component {
@@ -138,7 +142,7 @@ export class CumulativeTrendControls extends Component {
 
             <FieldProvider
               name="contentParameters.itemsCount"
-              validate={validators.items(formatMessage)}
+              validate={itemsValidator(formatMessage)}
               format={String}
               normalize={this.normalizeValue}
             >
@@ -154,7 +158,7 @@ export class CumulativeTrendControls extends Component {
             <FieldArray
               name="contentParameters.widgetOptions.attributes"
               component={AttributesFieldArray}
-              fieldValidator={validators.attributeKey(formatMessage)}
+              fieldValidator={attributeKeyValidator(formatMessage)}
             />
           </Fragment>
         )}

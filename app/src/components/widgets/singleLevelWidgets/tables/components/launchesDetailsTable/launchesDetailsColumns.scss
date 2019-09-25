@@ -1,0 +1,120 @@
+.name-col {
+  width: 25%;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+  }
+}
+
+.name-link {
+  font-family: $FONT-SEMIBOLD;
+  font-size: 14px;
+  color: $COLOR--windows-blue;
+  text-decoration: none;
+  word-break: break-all;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    font-size: 16px;
+  }
+}
+
+.name {
+  word-break: break-all;
+
+  @supports (word-break: break-word) {
+    word-break: break-word;
+  }
+}
+
+.statistics-col {
+  width: 6.5%;
+
+  .mobile-block {
+    display: none;
+    width: 100%;
+    padding-left: 10px;
+    box-sizing: border-box;
+
+    .block-content {
+      display: flex;
+      flex-wrap: wrap;
+      box-sizing: border-box;
+    }
+
+    .message {
+      margin-right: 5px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .value {
+      color: $COLOR--windows-blue;
+      text-decoration: none;
+    }
+  }
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: flex;
+    width: auto;
+
+    .mobile-block {
+      display: block;
+    }
+
+    .desktop-block {
+      display: none;
+    }
+  }
+}
+
+.hint-message {
+  color: $COLOR--gray-47;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  text-align: left;
+}
+
+.passing-rate-col {
+  width: 8%;
+  font-size: 13px;
+  font-family: $FONT-SEMIBOLD;
+
+  .hint-message {
+    display: none;
+    margin-right: 10px;
+  }
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: auto;
+    padding-left: 20px;
+    .hint-message {
+      display: inline;
+    }
+  }
+}
+
+.defect-types-col {
+  .hint-message {
+    display: none;
+  }
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: block;
+    width: 100%;
+    padding-left: 20px;
+
+    .hint-message {
+      display: block;
+      margin-bottom: 5px;
+    }
+  }
+}
+
+.defect-type {
+  display: inline-block;
+  min-width: 90px;
+
+  &:not(:last-child) {
+    margin-right: 10px;
+  }
+}

@@ -5,10 +5,14 @@ import styles from './modalContent.scss';
 
 const cx = classNames.bind(styles);
 
-export const ModalContent = ({ children }) => <div className={cx('modal-content')}>{children}</div>;
+export const ModalContent = ({ className, children }) => (
+  <div className={cx('modal-content', className)}>{children}</div>
+);
 ModalContent.propTypes = {
   children: PropTypes.node,
+  className: PropTypes.string,
 };
 ModalContent.defaultProps = {
   children: null,
+  className: '',
 };
