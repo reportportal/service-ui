@@ -56,6 +56,7 @@ export class InputTagsSearch extends Component {
     isOptionUnique: PropTypes.func,
     inputProps: PropTypes.object,
     filterOption: PropTypes.func,
+    onInputChange: PropTypes.func,
   };
   static defaultProps = {
     uri: '',
@@ -86,6 +87,7 @@ export class InputTagsSearch extends Component {
     isOptionUnique: null,
     inputProps: {},
     filterOption: () => true,
+    onInputChange: () => {},
   };
   state = {
     searchPromptText: this.props.nothingFound,
@@ -105,6 +107,7 @@ export class InputTagsSearch extends Component {
     } else {
       this.setState({ searchPromptText: this.props.nothingFound });
     }
+    this.props.onInputChange(input);
     return input;
   };
   getItems = (input) => {
