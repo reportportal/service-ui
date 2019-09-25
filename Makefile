@@ -26,7 +26,7 @@ help:
 	@echo "checkstyle - gofmt+golint+misspell"
 
 get-build-deps:
-	$(GO) get -u $(BUILD_DEPS)
+	$(GO) get $(BUILD_DEPS)
 
 test:
 	$(GO) test ${GODIRS_NOVENDOR}
