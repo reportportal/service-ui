@@ -53,6 +53,7 @@ export const URLS = {
   filters: (activeProject) => `${urlBase}${activeProject}/filter`,
   filtersSearch: (activeProject) =>
     `${urlBase}${activeProject}/filter?page.sort=name&page.page=1&page.size=50&filter.cnt.name=`,
+  searchFilterNames: (activeProject) => `${urlBase}${activeProject}/filter/names`,
   launchesFilters: (activeProject, ids = []) =>
     `${urlBase}${activeProject}/filter/filters?ids=${ids.join(',')}`,
 
