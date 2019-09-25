@@ -16,6 +16,10 @@ export const descriptionEntity = bindMessageToValidator(
 );
 
 export const btsUrl = bindMessageToValidator(validate.url, 'btsUrlHint');
+export const btsIntegrationName = bindMessageToValidator(
+  validate.btsIntegrationName,
+  'btsIntegrationNameHint',
+);
 export const btsProject = bindMessageToValidator(validate.btsProject, 'btsProjectHint');
 
 export const email = bindMessageToValidator(validate.requiredEmail, 'emailHint');
