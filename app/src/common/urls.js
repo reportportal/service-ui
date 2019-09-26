@@ -14,8 +14,9 @@ const getQueryParams = (paramsObj) => stringify(paramsObj, { addQueryPrefix: tru
 export const URLS = {
   apiDocs: (apiType) => `${apiType}/api-docs`,
 
-  dataPhoto: (at) => `${urlBase}data/photo${getQueryParams({ at })}`,
-  dataUserPhoto: (id) => `${urlBase}data/userphoto${getQueryParams({ id })}`,
+  dataPhoto: (at, loadThumbnail) => `${urlBase}data/photo${getQueryParams({ at, loadThumbnail })}`,
+  dataUserPhoto: (activeProject, id, loadThumbnail) =>
+    `${urlBase}data/${activeProject}/userphoto${getQueryParams({ id, loadThumbnail })}`,
 
   dashboard: (activeProject, id) => `${urlBase}${activeProject}/dashboard/${id}`,
   dashboards: (activeProject) => `${urlBase}${activeProject}/dashboard`,

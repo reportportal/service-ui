@@ -91,7 +91,7 @@ export class UserBlock extends Component {
         <div className={cx('avatar-wrapper')}>
           <Image
             className={cx('avatar')}
-            src={URLS.dataPhoto(this.props.photoTimeStamp)}
+            src={URLS.dataPhoto(this.props.photoTimeStamp, true)}
             alt="avatar"
             fallback={DefaultUserImage}
           />

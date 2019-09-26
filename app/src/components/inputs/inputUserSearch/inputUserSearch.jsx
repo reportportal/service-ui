@@ -28,7 +28,6 @@ import styles from './inputUserSearch.scss';
 import { UsersList } from './usersList';
 
 const cx = classNames.bind(styles);
-const getPhoto = (userId) => URLS.dataUserPhoto(userId);
 const isValidNewOption = ({ label }) => validate.email(label);
 const newOptionCreator = (option) => ({
   externalUser: true,
@@ -37,7 +36,7 @@ const newOptionCreator = (option) => ({
 });
 const promptTextCreator = (label) => label;
 const makeURL = (input, isAdmin, projectId) =>
-  !isAdmin ? URLS.projectUserSearchUser(projectId, input) : URLS.searchUsers(input);
+  isAdmin ? URLS.searchUsers(input) : URLS.projectUserSearchUser(projectId, input);
 const makeOptions = (options, projectId) =>
   options.map((option) => ({
     userName: option.fullName || '',
@@ -45,7 +44,7 @@ const makeOptions = (options, projectId) =>
     email: option.email || '',
     disabled: !!option.assignedProjects[projectId],
     isAssigned: !!option.assignedProjects[projectId],
-    userAvatar: getPhoto(option.userId),
+    userAvatar: URLS.dataUserPhoto(projectId, option.userId, true),
     assignedProjects: option.assignedProjects || {},
   }));
 const getUsers = (input, isAdmin, projectId) => {
