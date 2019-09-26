@@ -13,7 +13,7 @@ node {
             }
 
         stage('Build') {
-                withEnv(["NODE_OPTIONS=--max_old_space_size=4096"]) {
+                withEnv(["NODE_OPTIONS=--max_old_space_size=3072"]) {
                         docker.image('node:11').inside('-u root') {
                             sh 'node -v'
                             sh 'npm config set unsafe-perm=true'
