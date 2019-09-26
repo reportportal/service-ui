@@ -237,7 +237,8 @@ export class ComponentHealthCheck extends Component {
       },
     }));
 
-  getPassingRateValue = () => this.props.widget.contentParameters.widgetOptions.minPassingRate;
+  getPassingRateValue = () =>
+    Number(this.props.widget.contentParameters.widgetOptions.minPassingRate);
 
   getGroupItems = () => {
     const { widget } = this.props;

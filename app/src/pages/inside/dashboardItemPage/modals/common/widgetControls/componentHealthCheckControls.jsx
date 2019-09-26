@@ -4,22 +4,27 @@ import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import { FieldArray } from 'redux-form';
-import { validate } from 'common/utils';
+import {
+  validate,
+  commonValidators,
+  composeBoundValidators,
+  bindMessageToValidator,
+} from 'common/utils';
 import { URLS } from 'common/urls';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { activeProjectSelector } from 'controllers/user';
 import { DEFAULT_LAUNCHES_LIMIT } from 'controllers/testItem';
-import { getWidgetModeOptions } from '../utils/getWidgetModeOptions';
+import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import {
   FiltersControl,
   InputControl,
   AttributesFieldArrayControl,
   TogglerControl,
-} from '../controls';
-import { ITEMS_INPUT_WIDTH } from '../constants';
-import styles from '../widgetControls.scss';
+} from './controls';
+import { ITEMS_INPUT_WIDTH } from './constants';
+import styles from './widgetControls.scss';
 
 const cx = classNames.bind(styles);
 
@@ -28,40 +33,37 @@ const DEFAULT_PASSING_RATE = '100';
 
 const messages = defineMessages({
   passingRateFieldLabel: {
-    id: 'CumulativeTrendControls.PassingRateFieldLabel',
+    id: 'ComponentHealthCheckControls.PassingRateFieldLabel',
     defaultMessage: 'The min allowable passing rate for the component',
   },
   componentTitle: {
-    id: 'CumulativeTrendControls.ComponentTitle',
+    id: 'ComponentHealthCheckControls.ComponentTitle',
     defaultMessage: 'Component',
   },
   passingRateValidationError: {
-    id: 'CumulativeTrendControls.PassingRateValidationError',
+    id: 'ComponentHealthCheckControls.PassingRateValidationError',
     defaultMessage: 'Should have value from 50 to 100',
   },
-  attributeKeyValidationError: {
-    id: 'CumulativeTrendControls.attributeKeyValidationError',
-    defaultMessage: 'Value should have size from 1 to 128',
-  },
   attributesArrayValidationError: {
-    id: 'CumulativeTrendControls.attributesArrayValidationError',
+    id: 'ComponentHealthCheckControls.attributesArrayValidationError',
     defaultMessage:
       'Enter an attribute key whose unique value will be used for combine tests into groups',
   },
 });
-const validators = {
-  passingRate: (formatMessage) => (value) =>
-    (!value || !validate.inRangeValidate(value, 50, 100)) &&
+
+const passingRateValidator = (formatMessage) =>
+  bindMessageToValidator(
+    validate.healthCheckWidgetPassingRate,
     formatMessage(messages.passingRateValidationError),
-  attributeKey: (formatMessage) => (value) => {
-    if (!value) {
-      return formatMessage(messages.attributesArrayValidationError);
-    } else if (!validate.attributeKey(value)) {
-      return formatMessage(messages.attributeKeyValidationError);
-    }
-    return undefined;
-  },
-};
+  );
+const attributeKeyValidator = (formatMessage) =>
+  composeBoundValidators([
+    bindMessageToValidator(
+      validate.required,
+      formatMessage(messages.attributesArrayValidationError),
+    ),
+    commonValidators.attributeKey,
+  ]);
 
 @connect((state) => ({
   itemAttributeKeysAllSearch: URLS.itemAttributeKeysAllSearch(activeProjectSelector(state)),
@@ -139,7 +141,7 @@ export class ComponentHealthCheckControls extends Component {
             </FieldProvider>
             <FieldProvider
               name="contentParameters.widgetOptions.minPassingRate"
-              validate={validators.passingRate(formatMessage)}
+              validate={passingRateValidator(formatMessage)}
               format={String}
               normalize={this.normalizeValue}
             >
@@ -154,7 +156,7 @@ export class ComponentHealthCheckControls extends Component {
             <FieldArray
               name="contentParameters.widgetOptions.attributeKeys"
               component={this.renderAttributesFieldArray}
-              fieldValidator={validators.attributeKey(formatMessage)}
+              fieldValidator={attributeKeyValidator(formatMessage)}
             />
           </ScrollWrapper>
         )}

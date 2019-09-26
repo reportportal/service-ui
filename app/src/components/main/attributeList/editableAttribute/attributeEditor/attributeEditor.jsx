@@ -30,10 +30,7 @@ const messages = defineMessages({
   },
 });
 
-const attributeKeyValidator = bindMessageToValidator(
-  validate.attributeKey,
-  'attributeKeyLengthHint',
-);
+const attributeKeyValidator = commonValidators.attributeKey;
 const attributeValueValidator = composeBoundValidators([
   commonValidators.requiredField,
   bindMessageToValidator(validate.attributeValue, 'attributeValueLengthHint'),
