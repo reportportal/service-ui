@@ -68,10 +68,6 @@ const messages = defineMessages({
     id: 'AddUserForm.projectNamePlaceholder',
     defaultMessage: 'Enter project name',
   },
-  projectNameFocusPlaceholder: {
-    id: 'AddUserForm.projectNameFocusPlaceholder',
-    defaultMessage: 'Searching...',
-  },
 });
 
 const generatePassword = () => {
@@ -252,14 +248,15 @@ export class AddUserModal extends Component {
               format={this.formatValueProject}
               parse={this.parseValueProject}
             >
-              <InputTagsSearch
-                placeholder={intl.formatMessage(messages.projectNamePlaceholder)}
-                focusPlaceholder={intl.formatMessage(messages.projectNameFocusPlaceholder)}
-                uri={URLS.projectNameSearch()}
-                makeOptions={this.formatProjectNameOptions}
-                async
-                minLength={1}
-              />
+              <FieldErrorHint>
+                <InputTagsSearch
+                  placeholder={intl.formatMessage(messages.projectNamePlaceholder)}
+                  uri={URLS.projectNameSearch()}
+                  makeOptions={this.formatProjectNameOptions}
+                  async
+                  minLength={1}
+                />
+              </FieldErrorHint>
             </FieldProvider>
           </ModalField>
           <ModalField

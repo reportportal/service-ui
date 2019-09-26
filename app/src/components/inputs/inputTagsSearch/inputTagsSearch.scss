@@ -69,6 +69,7 @@
     .select2-search-tags {
       position: relative;
       background-color: $COLOR--white-two;
+      z-index: $Z-INDEX-SEARCH-TAGS;
 
       .Select-control,
       .Select-menu-outer {
