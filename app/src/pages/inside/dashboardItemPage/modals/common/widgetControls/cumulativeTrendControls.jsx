@@ -4,7 +4,12 @@ import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import { FieldArray } from 'redux-form';
-import { validate, bindMessageToValidator, composeBoundValidators } from 'common/utils';
+import {
+  validate,
+  bindMessageToValidator,
+  composeBoundValidators,
+  commonValidators,
+} from 'common/utils';
 import { URLS } from 'common/urls';
 import { STATS_FAILED, STATS_PASSED, STATS_SKIPPED } from 'common/constants/statistics';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -14,10 +19,10 @@ import {
   InputControl,
   TogglerControl,
   AttributesFieldArrayControl,
-} from '../controls';
-import { getWidgetCriteriaOptions } from '../utils/getWidgetCriteriaOptions';
-import { DEFECT_STATISTICS_OPTIONS, TO_INVESTIGATE_OPTION, ITEMS_INPUT_WIDTH } from '../constants';
-import styles from '../widgetControls.scss';
+} from './controls';
+import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
+import { DEFECT_STATISTICS_OPTIONS, TO_INVESTIGATE_OPTION, ITEMS_INPUT_WIDTH } from './constants';
+import styles from './widgetControls.scss';
 
 const cx = classNames.bind(styles);
 
@@ -50,10 +55,6 @@ const messages = defineMessages({
     id: 'CumulativeTrendControls.attributeKeyFieldLabelDetailedView',
     defaultMessage: '(detailed view)',
   },
-  attributeKeyValidationError: {
-    id: 'CumulativeTrendControls.attributeKeyValidationError',
-    defaultMessage: 'Value should have size from 1 to 128',
-  },
   attributesArrayValidationError: {
     id: 'CumulativeTrendControls.attributesArrayValidationError',
     defaultMessage:
@@ -72,10 +73,7 @@ const attributeKeyValidator = (formatMessage) =>
       validate.required,
       formatMessage(messages.attributesArrayValidationError),
     ),
-    bindMessageToValidator(
-      validate.attributeKey,
-      formatMessage(messages.attributeKeyValidationError),
-    ),
+    commonValidators.attributeKey,
   ]);
 
 @connect((state) => ({

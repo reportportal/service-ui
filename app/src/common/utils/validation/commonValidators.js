@@ -3,6 +3,8 @@ import { bindMessageToValidator, composeBoundValidators } from './validatorHelpe
 
 export const requiredField = bindMessageToValidator(validate.required, 'requiredFieldHint');
 
+export const attributeKey = bindMessageToValidator(validate.attributeKey, 'attributeKeyLengthHint');
+
 export const filterName = bindMessageToValidator(validate.filterName, 'filterNameError');
 
 export const itemNameEntity = bindMessageToValidator(validate.itemNameEntity, 'itemNameEntityHint');
