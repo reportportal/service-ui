@@ -24,6 +24,14 @@ const messages = defineMessages({
     id: 'DashboardEmptyResults.sharedDashboardsHeadline',
     defaultMessage: 'No dashboards are shared',
   },
+  noDashboardFound: {
+    id: 'DashboardEmptyResults.noDashboardFound',
+    defaultMessage: "No dashboards found for '{filter}'",
+  },
+  checkQuery: {
+    id: 'DashboardEmptyResults.checkQuery',
+    defaultMessage: 'Check your query and try again',
+  },
 });
 
 @injectIntl
@@ -32,15 +40,31 @@ export class EmptyDashboards extends Component {
     intl: intlShape.isRequired,
     action: PropTypes.func,
     userDashboards: PropTypes.bool,
+    filter: PropTypes.string,
   };
 
   static defaultProps = {
     action: () => {},
     userDashboards: false,
+    filter: '',
+  };
+
+  renderNoFilteredItems = () => {
+    const { intl, filter } = this.props;
+    return (
+      <div className={cx('empty-dashboards')}>
+        <p className={cx('empty-dashboard-headline')}>
+          {intl.formatMessage(messages.noDashboardFound, { filter })}
+        </p>
+        <p className={cx('empty-dashboard-text')}>{intl.formatMessage(messages.checkQuery)}</p>
+      </div>
+    );
   };
 
   render() {
-    const { userDashboards, action, intl } = this.props;
+    const { userDashboards, action, intl, filter } = this.props;
+
+    if (filter) return this.renderNoFilteredItems();
 
     return (
       <div className={cx('empty-dashboards')}>
