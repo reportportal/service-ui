@@ -47,6 +47,7 @@ export class SimpleWidget extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    isDashboardShared: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -55,6 +56,7 @@ export class SimpleWidget extends Component {
     isModifiable: false,
     isFullscreen: false,
     isPrintMode: false,
+    isDashboardShared: false,
   };
 
   constructor(props) {
@@ -245,7 +247,7 @@ export class SimpleWidget extends Component {
 
   render() {
     const { widget, visible } = this.state;
-    const { isFullscreen, widgetType, isModifiable, isPrintMode } = this.props;
+    const { isFullscreen, widgetType, isModifiable, isPrintMode, isDashboardShared } = this.props;
     const widgetOptions = this.getWidgetOptions();
     const headerData = {
       owner: widget.owner,
@@ -274,6 +276,7 @@ export class SimpleWidget extends Component {
               onEdit={this.showEditWidgetModal}
               customClass={cx('common-control')}
               isPrintMode={isPrintMode}
+              isDashboardShared={isDashboardShared}
             />
           </div>
           <div ref={this.getWidgetNode} className={cx('widget', { hidden: !visible })}>
