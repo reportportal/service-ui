@@ -175,10 +175,11 @@ export class GridRow extends Component {
 
     this.props.tracking.trackEvent(this.props.toggleAccordionEventInfo);
 
-    this.setState({ expanded: !this.state.expanded });
-    this.overflowCell.style.maxHeight = this.state.expanded
-      ? `${this.overflowCellMaxHeight}px`
-      : null;
+    this.setState({ expanded: !this.state.expanded }, () => {
+      this.overflowCell.style.maxHeight = !this.state.expanded
+        ? `${this.overflowCellMaxHeight}px`
+        : null;
+    });
   };
 
   render() {

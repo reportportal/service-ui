@@ -82,6 +82,7 @@ export class MembersPageToolbar extends React.Component {
         <div className={cx('search-input')}>
           <FieldProvider name="filter">
             <InputSearch
+              maxLength="128"
               placeholder={this.props.intl.formatMessage(messages.searchInputPlaceholder)}
             />
           </FieldProvider>

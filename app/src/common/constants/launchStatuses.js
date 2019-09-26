@@ -7,3 +7,4 @@ export const STOPPED = 'stopped';
 export const RESETED = 'reseted';
 export const MANY = 'many';
 export const NOT_FOUND = 'not_found';
+export const CANCELLED = 'cancelled';

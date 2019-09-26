@@ -26,7 +26,7 @@ help:
 	@echo "checkstyle - gofmt+golint+misspell"
 
 get-build-deps:
-	$(GO) get -u $(BUILD_DEPS)
+	$(GO) get $(BUILD_DEPS)
 
 test:
 	$(GO) test ${GODIRS_NOVENDOR}
@@ -53,7 +53,7 @@ build-statics:
 build: build-statics build-server
 
 # Builds server
-build-release: checkstyle test
+build-release: get-build-deps checkstyle test
 	$(eval v := $(or $(v),$(shell releaser bump)))
 	# make sure latest version is bumped to file
 	releaser bump --version ${v}

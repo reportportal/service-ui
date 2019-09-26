@@ -17,12 +17,13 @@ export const DashboardGridList = ({
   onAddItem,
   userInfo,
   loading,
+  filter,
   ...rest
 }) => {
   const noItems = loading ? (
     <SpinningPreloader />
   ) : (
-    <EmptyDashboards userDashboards={userDashboards} action={onAddItem} />
+    <EmptyDashboards userDashboards={userDashboards} filter={filter} action={onAddItem} />
   );
   return (
     <Fragment>
@@ -54,6 +55,7 @@ DashboardGridList.propTypes = {
   onAddItem: PropTypes.func,
   userInfo: PropTypes.object,
   loading: PropTypes.bool,
+  filter: PropTypes.string,
 };
 DashboardGridList.defaultProps = {
   name: '',
@@ -64,4 +66,5 @@ DashboardGridList.defaultProps = {
   onAddItem: () => {},
   userInfo: () => {},
   loading: false,
+  filter: '',
 };
