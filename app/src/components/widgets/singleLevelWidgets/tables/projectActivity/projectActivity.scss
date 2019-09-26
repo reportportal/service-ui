@@ -17,10 +17,8 @@
     color: $COLOR--black-2;
   }
 
-  .avatar {
+  .avatar-wrapper {
     box-sizing: border-box;
-    width: 40px;
-    height: 50px;
     padding: 2px;
     border: 1px solid $COLOR--gray-80;
     background-color: $COLOR--white-two;
