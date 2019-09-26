@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { GhostButton } from 'components/buttons/ghostButton';
+import { NoResultsForFilter } from 'pages/inside/common/noResultsForFilter';
 import styles from './emptyDashboards.scss';
 import AddDashboardIcon from './img/ic-add-dash-inline.svg';
 
@@ -28,10 +29,6 @@ const messages = defineMessages({
     id: 'DashboardEmptyResults.noDashboardFound',
     defaultMessage: "No dashboards found for '{filter}'",
   },
-  checkQuery: {
-    id: 'DashboardEmptyResults.checkQuery',
-    defaultMessage: 'Check your query and try again',
-  },
 });
 
 @injectIntl
@@ -49,22 +46,11 @@ export class EmptyDashboards extends Component {
     filter: '',
   };
 
-  renderNoFilteredItems = () => {
-    const { intl, filter } = this.props;
-    return (
-      <div className={cx('empty-dashboards')}>
-        <p className={cx('empty-dashboard-headline')}>
-          {intl.formatMessage(messages.noDashboardFound, { filter })}
-        </p>
-        <p className={cx('empty-dashboard-text')}>{intl.formatMessage(messages.checkQuery)}</p>
-      </div>
-    );
-  };
-
   render() {
     const { userDashboards, action, intl, filter } = this.props;
 
-    if (filter) return this.renderNoFilteredItems();
+    if (filter)
+      return <NoResultsForFilter filter={filter} notFoundMessage={messages.noDashboardFound} />;
 
     return (
       <div className={cx('empty-dashboards')}>
