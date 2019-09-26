@@ -53,7 +53,7 @@ build-statics:
 build: build-statics build-server
 
 # Builds server
-build-release: get-build-deps checkstyle test
+build-release: get-build-deps test
 	$(eval v := $(or $(v),$(shell releaser bump)))
 	# make sure latest version is bumped to file
 	releaser bump --version ${v}
