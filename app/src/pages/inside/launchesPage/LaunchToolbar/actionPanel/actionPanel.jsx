@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import { canBulkEditLaunches } from 'common/utils/permissions';
+import { CUSTOMER } from 'common/constants/projectRoles';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
@@ -172,7 +173,7 @@ export class ActionPanel extends Component {
       {
         label: intl.formatMessage(messages.actionMoveToDebug),
         value: 'action-move-to-debug',
-        hidden: debugMode,
+        hidden: debugMode || projectRole === CUSTOMER,
         onClick: onMove,
       },
       {
