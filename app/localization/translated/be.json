@@ -844,6 +844,8 @@
   "LaunchDurationControls.ItemsFieldLabel": "Элементы",
   "LaunchDurationControls.ItemsValidationError": "Колькасць элементаў павінна быць памерам ад '1' да '600'",
   "LaunchFiltersToolbar.addFilter": "Дадаць фільтр",
+  "LaunchFiltersToolbar.saveFilterSuccess": "Фільтр захаваны",
+  "LaunchFiltersToolbar.updateFilterSuccess": "Фільтр абноўлены",
   "LaunchFinishForceDialog.finishForceLaunchHeader": "Скончыць прымусова",
   "LaunchFinishForceDialog.finishForceLaunchText": "Вы ўпэўнены, што жадаеце завяршыць запуск? Усе дадзеныя будуць страчаны.",
   "LaunchFinishForceDialog.finishForceLaunchWarning": "Вы збіраецеся спыніць не свой уласны запуск. Гэта можа паўплываць на інфармацыю іншых карыстальнікаў праекта.",
