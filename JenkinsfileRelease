@@ -23,7 +23,7 @@ node {
             }
 
         stage ('Build Server') {
-                withEnv(["GOPATH=${JENKINS_HOME}/workspace/${JOB_NAME}", "BINTRAY_TOKEN=${BINTRAY_TOKEN}", "RELEASE_VERSION=${RELEASE_VERSION}"]) {
+                withEnv(["GOPATH=${JENKINS_HOME}/workspace/${JOB_NAME}", "BINTRAY_TOKEN=${BINTRAY_TOKEN}", "RELEASE_VERSION=${RELEASE_VERSION}", "GO111MODULE=on"]) {
                         env.PATH="${GOPATH}/bin:$PATH"
                         sh 'go version'
                         sh 'make release v=${RELEASE_VERSION}'
