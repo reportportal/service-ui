@@ -817,6 +817,8 @@
   "LaunchDurationControls.ItemsFieldLabel": "Элементы",
   "LaunchDurationControls.ItemsValidationError": "Количество элементов принимает значения от '1' до '600'",
   "LaunchFiltersToolbar.addFilter": "Добавить фильтр",
+  "LaunchFiltersToolbar.saveFilterSuccess": "Фильтр сохранен",
+  "LaunchFiltersToolbar.updateFilterSuccess": "Фильтр обновлен",
   "LaunchFinishForceDialog.finishForceLaunchHeader": "Завершить принудительно",
   "LaunchFinishForceDialog.finishForceLaunchText": "Вы уверены, что хотите завершить запуск? Все данные будут потеряны.",
   "LaunchFinishForceDialog.finishForceLaunchWarning": "Вы собираетесь остановить не ваш запуск. Это может повлиять на иинформацию других пользователей проекта.",

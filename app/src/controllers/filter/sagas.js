@@ -5,6 +5,7 @@ import {
   FETCH_SUCCESS,
   FETCH_ERROR,
 } from 'controllers/fetch';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { activeProjectSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
 import { userFiltersSelector, updateProjectFilterPreferencesAction } from 'controllers/project';
@@ -69,6 +70,12 @@ function* updateLaunchesFilter({ payload: filter }) {
     ),
   );
   yield put(updateFilterSuccessAction(shallowFilter));
+  yield put(
+    showNotification({
+      messageId: 'updateFilterSuccess',
+      type: NOTIFICATION_TYPES.SUCCESS,
+    }),
+  );
 }
 
 function* changeActiveFilter({ payload: filterId }) {
@@ -128,6 +135,12 @@ function* saveNewFilter({ payload: filter }) {
   const newId = response.payload.id;
   const newFilter = { ...shallowFilter, id: newId };
   yield put(updateFilterSuccessAction(newFilter, filter.id));
+  yield put(
+    showNotification({
+      messageId: 'saveFilterSuccess',
+      type: NOTIFICATION_TYPES.SUCCESS,
+    }),
+  );
   yield put(updateProjectFilterPreferencesAction(newFilter.id, 'PUT'));
   yield put(changeActiveFilterAction(newId));
 }
