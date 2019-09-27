@@ -3,7 +3,11 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { updateIntegrationAction } from 'controllers/plugins';
-import { INTEGRATIONS_SETTINGS_COMPONENTS_MAP, INTEGRATIONS_IMAGES_MAP } from '../../constants';
+import {
+  INTEGRATIONS_SETTINGS_COMPONENTS_MAP,
+  INTEGRATIONS_IMAGES_MAP,
+  INTEGRATION_NAMES_TITLES,
+} from 'components/integrations/constants';
 import styles from './integrationSettingsContainer.scss';
 
 const cx = classNames.bind(styles);
@@ -30,17 +34,14 @@ export class IntegrationSettingsContainer extends Component {
 
   updateIntegration = (formData, onConfirm) => {
     const {
-      data: { id },
+      data: { id, integrationType },
       isGlobal,
     } = this.props;
     const data = {
       enabled: true,
       integrationParameters: formData,
+      name: formData.integrationName || INTEGRATION_NAMES_TITLES[integrationType.name],
     };
-
-    if (formData.integrationName) {
-      data.name = formData.integrationName;
-    }
 
     this.props.updateIntegrationAction(data, isGlobal, id, () => {
       onConfirm();
@@ -52,9 +53,9 @@ export class IntegrationSettingsContainer extends Component {
 
   render() {
     const { data, goToPreviousPage, isGlobal } = this.props;
-    const integrationName = data.integrationType.name;
-    const image = INTEGRATIONS_IMAGES_MAP[integrationName];
-    const IntegrationSettingsComponent = INTEGRATIONS_SETTINGS_COMPONENTS_MAP[integrationName];
+    const instanceType = data.integrationType.name;
+    const image = INTEGRATIONS_IMAGES_MAP[instanceType];
+    const IntegrationSettingsComponent = INTEGRATIONS_SETTINGS_COMPONENTS_MAP[instanceType];
     const updatedData = {
       ...data,
       ...this.state.updatedParameters,
@@ -63,7 +64,7 @@ export class IntegrationSettingsContainer extends Component {
     return (
       <div className={cx('integration-settings-container')}>
         <div className={cx('settings-header')}>
-          <img className={cx('logo')} src={image} alt={integrationName} />
+          <img className={cx('logo')} src={image} alt={instanceType} />
           <h2 className={cx('title')}>{updatedData.name}</h2>
         </div>
         <IntegrationSettingsComponent
