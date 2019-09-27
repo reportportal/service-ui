@@ -71,11 +71,11 @@ const messages = defineMessages({
   },
   noBugTrackingSystemToLinkIssue: {
     id: 'ActionPanel.noBugTrackingSystemToLinkIssue',
-    defaultMessage: 'Configure bug tracking system to link issue',
+    defaultMessage: 'BTS integration is not configured. Connect with Admin',
   },
   noBugTrackingSystemToPostIssue: {
     id: 'ActionPanel.noBugTrackingSystemToPostIssue',
-    defaultMessage: 'Configure bug tracking system to post issue',
+    defaultMessage: 'BTS integration is not configured. Connect with Admin',
   },
 });
 

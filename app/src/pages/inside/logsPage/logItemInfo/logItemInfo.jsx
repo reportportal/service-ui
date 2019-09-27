@@ -59,7 +59,7 @@ const messages = defineMessages({
   },
   noBugTrackingSystemToLinkIssue: {
     id: 'LogItemInfo.noBugTrackingSystemToLinkIssue',
-    defaultMessage: 'Configure bug tracking system to link issue',
+    defaultMessage: 'BTS integration is not configured. Connect with Admin',
   },
   noDefectTypeToLinkIssue: {
     id: 'LogItemInfo.noDefectTypeToLinkIssue',
@@ -67,7 +67,7 @@ const messages = defineMessages({
   },
   noBugTrackingSystemToPostIssue: {
     id: 'LogItemInfo.noBugTrackingSystemToPostIssue',
-    defaultMessage: 'Configure bug tracking system to post issue',
+    defaultMessage: 'BTS integration is not configured. Connect with Admin',
   },
   retries: {
     id: 'LogItemInfo.retries',
