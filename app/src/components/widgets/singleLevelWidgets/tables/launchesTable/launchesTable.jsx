@@ -9,6 +9,12 @@ import {
   STATS_PASSED,
   STATS_FAILED,
 } from 'common/constants/statistics';
+import {
+  PRODUCT_BUG,
+  TO_INVESTIGATE,
+  AUTOMATION_BUG,
+  SYSTEM_ISSUE,
+} from 'common/constants/defectTypes';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { activeProjectSelector } from 'controllers/user';
 import { TEST_ITEM_PAGE, LAUNCHES_PAGE } from 'controllers/pages';
@@ -29,9 +35,9 @@ import { StatisticsLink } from 'pages/inside/common/statisticsLink';
 import { DefectLink } from 'pages/inside/common/defectLink';
 import { formatStatus } from 'common/utils/localizationUtils';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { getItemNameConfig } from 'components/widgets/common/utils';
 import { defaultDefectsMessages, defaultStatisticsMessages } from '../components/messages';
-import { STATS_SI, STATS_PB, STATS_TI, STATS_AB } from '../components/constants';
-import { getStatisticsStatuses } from '../components/utils';
+import { getStatisticsStatuses, groupFieldsWithDefectTypes } from '../components/utils';
 import {
   START_TIME,
   NAME,
@@ -117,16 +123,19 @@ const StatisticsColumn = ({ className, value }, name, { linkPayload }) => {
       payload: linkPayload,
     },
   };
+  const itemValue = Number(value.values[name]);
   return (
     <div className={cx('statistics-col', className)}>
       <div className={cx('desktop-block')}>
-        <ExecutionStatistics value={Number(value.values[name])} {...defaultColumnProps} />
+        <ExecutionStatistics value={itemValue} {...defaultColumnProps} />
       </div>
       <div className={cx('mobile-block', `statistics-${name.split('$')[2]}`)}>
         <div className={cx('block-content')}>
-          <StatisticsLink className={cx('value')} {...defaultColumnProps}>
-            {Number(value.values[name])}
-          </StatisticsLink>
+          {!!itemValue && (
+            <StatisticsLink className={cx('value')} {...defaultColumnProps}>
+              {Number(value.values[name])}
+            </StatisticsLink>
+          )}
           <span className={cx('message')}>{defaultStatisticsMessages[name]}</span>
         </div>
       </div>
@@ -138,11 +147,7 @@ StatisticsColumn.propTypes = {
   className: PropTypes.string.isRequired,
 };
 
-const DefectsColumn = ({ className, value }, name, { linkPayload }) => {
-  const nameConfig = name.split('$');
-  const defectType = nameConfig[2];
-  const defectLocator = nameConfig[3];
-  const itemValue = value.values[name];
+const DefectsColumn = ({ className, value }, name, { linkPayload }, fieldKeys) => {
   const defaultColumnProps = {
     itemId: Number(value.id),
     ownLinkParams: {
@@ -150,20 +155,31 @@ const DefectsColumn = ({ className, value }, name, { linkPayload }) => {
       payload: linkPayload,
     },
   };
+  let total = 0;
+  const data = fieldKeys.reduce((acc, item) => {
+    const itemValue = value.values[item];
+    if (!itemValue) {
+      return acc;
+    }
+    const { locator } = getItemNameConfig(item);
+    total += parseInt(itemValue, 10);
+
+    return { ...acc, [locator]: itemValue };
+  }, {});
+  data.total = total;
+
   return (
     <div className={cx('defect-col', className)}>
       <div className={cx('desktop-block')}>
-        <DefectStatistics
-          type={defectType}
-          data={{ [defectLocator]: itemValue, total: itemValue }}
-          {...defaultColumnProps}
-        />
+        <DefectStatistics type={name} data={data} {...defaultColumnProps} />
       </div>
-      <div className={cx('mobile-block', `defect-${defectType}`)}>
+      <div className={cx('mobile-block', `defect-${name}`)}>
         <div className={cx('block-content')}>
-          <DefectLink {...defaultColumnProps} defects={[defectLocator, 'total']}>
-            {itemValue}
-          </DefectLink>
+          {!!total && (
+            <DefectLink {...defaultColumnProps} defects={Object.keys(data)}>
+              {total}
+            </DefectLink>
+          )}
           <span className={cx('message')}>{defaultDefectsMessages[name]}</span>
         </div>
       </div>
@@ -192,16 +208,17 @@ const COLUMNS_KEYS_MAP = {
   [STATS_PASSED]: STATISTICS_COLUMN_KEY,
   [STATS_FAILED]: STATISTICS_COLUMN_KEY,
   [STATS_SKIPPED]: STATISTICS_COLUMN_KEY,
-  [STATS_PB]: DEFECT_COLUMN_KEY,
-  [STATS_AB]: DEFECT_COLUMN_KEY,
-  [STATS_SI]: DEFECT_COLUMN_KEY,
-  [STATS_TI]: DEFECT_COLUMN_KEY,
+  [PRODUCT_BUG]: DEFECT_COLUMN_KEY,
+  [AUTOMATION_BUG]: DEFECT_COLUMN_KEY,
+  [SYSTEM_ISSUE]: DEFECT_COLUMN_KEY,
+  [TO_INVESTIGATE]: DEFECT_COLUMN_KEY,
 };
 
-const getColumn = (name, customProps) => ({
+const getColumn = (name, customProps, fieldKeys) => ({
   id: name,
   title: COLUMN_NAMES_MAP[name],
-  component: (data) => columnComponentsMap[COLUMNS_KEYS_MAP[name]](data, name, customProps),
+  component: (data) =>
+    columnComponentsMap[COLUMNS_KEYS_MAP[name]](data, name, customProps, fieldKeys),
 });
 
 @connect(
@@ -222,14 +239,16 @@ export class LaunchesTable extends PureComponent {
   };
 
   getColumns = () => {
-    const fieldsMap = this.props.widget.contentParameters.contentFields.reduce(
-      (map, item) => ({ ...map, [item]: item }),
-      {},
-    );
+    const {
+      intl: { formatMessage },
+      widget: { contentParameters },
+      projectId,
+    } = this.props;
+    const fieldsMap = groupFieldsWithDefectTypes(contentParameters.contentFields);
     const customProps = {
-      formatMessage: this.props.intl.formatMessage,
+      formatMessage,
       linkPayload: {
-        projectId: this.props.projectId,
+        projectId,
         filterId: ALL,
       },
       onOwnerClick: this.handleOwnerFilterClick,
@@ -237,7 +256,8 @@ export class LaunchesTable extends PureComponent {
     };
 
     return Object.keys(COLUMNS_KEYS_MAP).reduce(
-      (columns, item) => (fieldsMap[item] ? [...columns, getColumn(item, customProps)] : columns),
+      (columns, item) =>
+        fieldsMap[item] ? [...columns, getColumn(item, customProps, fieldsMap[item])] : columns,
       [],
     );
   };
@@ -277,14 +297,13 @@ export class LaunchesTable extends PureComponent {
     this.props.createFilterAction(filter);
   };
 
-  columns = this.getColumns();
-
   render() {
     const { result } = this.props.widget.content;
+    const columns = this.getColumns();
 
     return (
       <ScrollWrapper hideTracksWhenNotNeeded>
-        <Grid columns={this.columns} data={result} />
+        <Grid columns={columns} data={result} />
       </ScrollWrapper>
     );
   }
