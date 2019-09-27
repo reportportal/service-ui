@@ -1,5 +1,5 @@
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { COLOR_CHART_DURATION, COLOR_FAILED } from 'common/constants/colors';
+import { COLOR_CHART_DURATION, COLOR_INTERRUPTED } from 'common/constants/colors';
 import {
   getLaunchAxisTicks,
   transformCategoryLabelByDefault,
@@ -15,15 +15,13 @@ export const getConfig = ({ content, isPreview, formatMessage, positionCallback,
     data: {
       columns: [chartData],
       type: 'bar',
-      colors: {
-        [DURATION]: COLOR_CHART_DURATION,
-      },
       groups: [[DURATION]],
       color: (color, d) => {
-        if (itemsData[d.index] && isValueInterrupted(itemsData[d.index])) {
-          return COLOR_FAILED;
+        const item = itemsData[d.index];
+        if (item && isValueInterrupted(item)) {
+          return COLOR_INTERRUPTED;
         }
-        return color;
+        return COLOR_CHART_DURATION;
       },
     },
     grid: {
@@ -79,6 +77,7 @@ export const getConfig = ({ content, isPreview, formatMessage, positionCallback,
       contents: createTooltipRenderer(LaunchDurationTooltip, calculateTooltipParams, {
         itemsData,
         timeType,
+        formatMessage,
       }),
     },
     size,

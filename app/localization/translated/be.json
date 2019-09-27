@@ -172,6 +172,7 @@
   "Charts.failedSkippedTotal": "% (Няўдалых+Прапушчаных)/Усяго",
   "Charts.filterLabel": "Фільтр:",
   "Charts.launchName": "Імя запуску:",
+  "Charts.launchInterrupted": "Запуск перапыніўся",
   "Charts.nd": "nd",
   "Charts.notPassed": "Няўдала",
   "Charts.passed": "Паспяхова",
