@@ -180,12 +180,14 @@ export class LaunchExecutionChart extends Component {
     if (!id) {
       const appliedWidgetFilterId = widget.appliedFilters[0].id;
       const launchesLimit = widget.contentParameters.itemsCount;
+      const isLatest = widget.contentParameters.widgetOptions.latest;
       const activeFilter = launchFilters.filter((filter) => filter.id === appliedWidgetFilterId)[0];
       const activeFilterId = (activeFilter && activeFilter.id) || appliedWidgetFilterId;
 
       link = getStatisticsLink({
         statuses: this.getLinkParametersStatuses(nameConfig),
         launchesLimit,
+        isLatest,
       });
       navigationParams = this.getDefaultParamsOverallStatisticsWidget(activeFilterId);
     } else {

@@ -181,6 +181,7 @@ export class IssueStatisticsChart extends Component {
     if (!id) {
       const appliedWidgetFilterId = widget.appliedFilters[0].id;
       const launchesLimit = widget.contentParameters.itemsCount;
+      const isLatest = widget.contentParameters.widgetOptions.latest;
       const activeFilter = launchFilters.filter((filter) => filter.id === appliedWidgetFilterId)[0];
       const activeFilterId = (activeFilter && activeFilter.id) || appliedWidgetFilterId;
 
@@ -188,6 +189,7 @@ export class IssueStatisticsChart extends Component {
         defects: defectLocators,
         itemId: TEST_ITEMS_TYPE_LIST,
         launchesLimit,
+        isLatest,
       });
       navigationParams = this.getDefaultParamsOverallStatisticsWidget(activeFilterId);
     } else {
