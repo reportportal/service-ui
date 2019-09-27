@@ -152,6 +152,7 @@ export class ComponentHealthCheck extends Component {
       statuses: this.getLinkParametersStatuses(),
       launchesLimit: DEFAULT_LAUNCHES_LIMIT,
       compositeAttribute: activeAttributes.map(formatAttribute).join(','),
+      isLatest: widget.contentParameters.widgetOptions.latest,
     });
     const navigationParams = this.getDefaultLinkParams(widget.appliedFilters[0].id);
 
