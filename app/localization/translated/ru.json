@@ -161,6 +161,7 @@
   "Charts.failedSkippedTotal": "% (Неудачных+Пропущенных)/Всего",
   "Charts.filterLabel": "Фильтр:",
   "Charts.launchName": "Имя запуска:",
+  "Charts.launchInterrupted": "Запуск прервался",
   "Charts.notPassed": "Неудачно",
   "Charts.passed": "Успешно",
   "Charts.skipped": "Пропущено",

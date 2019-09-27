@@ -85,4 +85,8 @@ export const messages = defineMessages({
     id: 'Charts.testCasesCaption',
     defaultMessage: 'Test cases',
   },
+  launchInterrupted: {
+    id: `Charts.launchInterrupted`,
+    defaultMessage: 'Run interrupted',
+  },
 });
