@@ -44,7 +44,6 @@ export const getConfig = ({
       chartData[key].push(val);
     });
   });
-  itemsData.reverse();
 
   contentFields.forEach((key) => {
     if (key === 'statistics$executions$total') {
@@ -52,7 +51,6 @@ export const getConfig = ({
     }
     chartDataOrdered.push(chartData[key]);
   });
-
   chartDataOrdered.reverse();
 
   const itemNames = chartDataOrdered.map((item) => item[0]);
@@ -105,7 +103,7 @@ export const getConfig = ({
       show: false,
     },
     tooltip: {
-      grouped: true,
+      grouped: false,
       position: positionCallback,
       contents: createTooltipRenderer(IssueTypeStatTooltip, calculateTooltipParams, {
         itemsData,
