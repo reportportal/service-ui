@@ -7,6 +7,7 @@ import { NonPassedTestCasesTrendChart } from './nonPassedTestCasesTrendChart';
 import { PassingRatePerLaunch } from './passingRatePerLaunch';
 import { LaunchExecutionAndIssueStatistics } from './launchExecutionAndIssueStatistics';
 import { CumulativeTrendChart } from '../../multiLevelWidgets/cumulativeTrendChart';
+import { ComponentHealthCheck } from '../../multiLevelWidgets/componentHealthCheck';
 import { OverallStatisticsChart } from './overallStatisticsChart';
 import { InvestigatedTrendChart } from './investigatedTrendChart';
 
@@ -20,6 +21,7 @@ export {
   PassingRatePerLaunch,
   LaunchExecutionAndIssueStatistics,
   CumulativeTrendChart,
+  ComponentHealthCheck,
   OverallStatisticsChart,
   InvestigatedTrendChart,
 };

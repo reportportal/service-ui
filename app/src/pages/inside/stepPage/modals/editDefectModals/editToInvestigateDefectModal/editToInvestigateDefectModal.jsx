@@ -6,7 +6,7 @@ import classNames from 'classnames/bind';
 import { injectIntl, intlShape } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
 import { availableBtsIntegrationsSelector, isPostIssueActionAvailable } from 'controllers/plugins';
-import { fetchTestItemsAction, launchSelector } from 'controllers/testItem';
+import { launchSelector } from 'controllers/testItem';
 import { activeFilterSelector } from 'controllers/filter';
 import { unlinkIssueAction, linkIssueAction, postIssueAction } from 'controllers/step';
 import { hideModalAction } from 'controllers/modal';
@@ -44,7 +44,6 @@ const cx = classNames.bind(styles);
   {
     showNotification,
     hideModalAction,
-    fetchTestItemsAction,
     unlinkIssueAction,
     linkIssueAction,
     postIssueAction,
@@ -62,7 +61,6 @@ export class EditToInvestigateDefectModal extends Component {
     }).isRequired,
     showNotification: PropTypes.func.isRequired,
     hideModalAction: PropTypes.func.isRequired,
-    fetchTestItemsAction: PropTypes.func.isRequired,
     unlinkIssueAction: PropTypes.func.isRequired,
     linkIssueAction: PropTypes.func.isRequired,
     postIssueAction: PropTypes.func.isRequired,
@@ -380,7 +378,16 @@ export class EditToInvestigateDefectModal extends Component {
   );
 
   render() {
-    const { intl, currentLaunch, currentFilter } = this.props;
+    const {
+      intl,
+      currentLaunch,
+      currentFilter,
+      data: {
+        item: {
+          pathNames: { launchPathName },
+        },
+      },
+    } = this.props;
     const customButton = {
       onClick: this.onEditDefects,
       buttonProps: {
@@ -439,6 +446,7 @@ export class EditToInvestigateDefectModal extends Component {
             selectedItems={this.state.selectedItems}
             currentLaunch={currentLaunch}
             currentFilter={currentFilter}
+            itemLaunch={launchPathName}
             searchMode={this.state.searchMode}
             loading={this.state.loading}
             onSelectAllToggle={this.handleSelectAllToggle}

@@ -1,14 +1,17 @@
-import { Component } from 'react';
+import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { InfoLine } from 'pages/inside/common/infoLine';
+import { InfoLine, InfoLineListView } from 'pages/inside/common/infoLine';
 import {
   listViewLinkSelector,
   logViewLinkSelector,
+  isTestItemsListSelector,
   LOG_VIEW,
   LIST_VIEW,
 } from 'controllers/testItem';
+import { activeFilterSelector } from 'controllers/filter';
+import { userIdSelector } from 'controllers/user';
 import { LogViewSwitcher } from './logViewSwitcher';
 import styles from './infoPanel.scss';
 
@@ -16,8 +19,11 @@ const cx = classNames.bind(styles);
 
 @connect(
   (state) => ({
+    currentUser: userIdSelector(state),
     listViewLink: listViewLinkSelector(state),
     logViewLink: logViewLinkSelector(state),
+    currentFilter: activeFilterSelector(state),
+    isTestItemsList: isTestItemsListSelector(state),
   }),
   {
     navigate: (linkAction) => linkAction,
@@ -30,7 +36,10 @@ export class InfoPanel extends Component {
     events: PropTypes.object,
     logViewLink: PropTypes.object,
     listViewLink: PropTypes.object,
+    currentFilter: PropTypes.object,
     navigate: PropTypes.func.isRequired,
+    currentUser: PropTypes.string,
+    isTestItemsList: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -39,6 +48,8 @@ export class InfoPanel extends Component {
     data: {},
     logViewLink: {},
     listViewLink: {},
+    currentFilter: null,
+    currentUser: '',
   };
 
   onToggleView = (viewMode) => {
@@ -47,11 +58,18 @@ export class InfoPanel extends Component {
   };
 
   render() {
-    const { viewMode, data, events } = this.props;
+    const { viewMode, data, events, currentFilter, currentUser, isTestItemsList } = this.props;
+
     return (
       <div className={cx('info-panel')}>
-        <LogViewSwitcher viewMode={viewMode} onToggleView={this.onToggleView} />
-        <InfoLine data={data} events={events} />
+        {isTestItemsList ? (
+          <InfoLineListView data={currentFilter} currentUser={currentUser} />
+        ) : (
+          <Fragment>
+            <LogViewSwitcher viewMode={viewMode} onToggleView={this.onToggleView} />
+            <InfoLine data={data} events={events} />
+          </Fragment>
+        )}
       </div>
     );
   }

@@ -1,10 +1,11 @@
 import React, { Fragment, Component } from 'react';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, intlShape } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import Link from 'redux-first-router-link';
 
+import { messages } from 'pages/inside/common/sharedFilterIcon/messages';
 import ShareIcon from 'common/img/share-icon-inline.svg';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import GlobeIcon from 'common/img/globe-icon-inline.svg';
@@ -12,17 +13,6 @@ import { MarkdownViewer } from 'components/main/markdown';
 import styles from './filterName.scss';
 
 const cx = classNames.bind(styles);
-
-const messages = defineMessages({
-  sharedByFilter: {
-    id: 'FiltersPage.sharedByFilter',
-    defaultMessage: 'Filter is shared by {owner}',
-  },
-  sharedFilter: {
-    id: 'FiltersPage.sharedFilter',
-    defaultMessage: 'Filter is shared',
-  },
-});
 
 @injectIntl
 export class FilterName extends Component {

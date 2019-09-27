@@ -1,0 +1,17 @@
+.share-block {
+  display: inline;
+}
+.share-icon {
+  position: relative;
+  height: 18px;
+  width: 18px;
+  display: inline-block;
+  fill: $COLOR--gray-60;
+  vertical-align: middle;
+
+  &:hover {
+    svg {
+      fill: $COLOR--gray-47;
+    }
+  }
+}

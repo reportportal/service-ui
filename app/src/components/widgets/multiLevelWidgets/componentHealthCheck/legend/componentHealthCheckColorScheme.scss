@@ -1,0 +1,40 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  height: 100%;
+  width: 100px;
+  box-sizing: border-box;
+}
+
+.item {
+  height: 50%;
+  width: 100%;
+  text-align: right;
+  margin-top: 10px;
+}
+
+.scheme-wrap {
+  width: 100%;
+  height: 5px;
+
+  &--failed {
+    background: linear-gradient(to right, $COLOR--burgundy 0%, $COLOR--burgundy 25%, $COLOR--cherry 25%, $COLOR--cherry 50%, $COLOR--deep-red 50%, $COLOR--deep-red 75%, $COLOR--dull-red 75%, $COLOR--dull-red 100%);
+  }
+
+  &--passed {
+    background: linear-gradient(to right, $COLOR--dull-green 0%, $COLOR--dull-green 50%, $COLOR--passed 50%, $COLOR--passed 100%);
+  }
+
+  &--passed-max {
+    background: $COLOR--passed;
+  }
+}
+
+.scheme-message {
+  font-family: $FONT-REGULAR;
+  font-size: 10px;
+  line-height: normal;
+  color: $COLOR--charcoal-grey;
+}

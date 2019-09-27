@@ -10,6 +10,7 @@ import {
   PassingRatePerLaunch,
   LaunchExecutionAndIssueStatistics,
   CumulativeTrendChart,
+  ComponentHealthCheck,
   OverallStatisticsChart,
   InvestigatedTrendChart,
 } from './singleLevelWidgets/charts';
@@ -22,7 +23,11 @@ import {
   ProductStatus,
   MostPopularPatterns,
 } from './singleLevelWidgets/tables';
-import { cumulativeFormatParams, topPatternsFormatParams } from './utils';
+import {
+  cumulativeFormatParams,
+  topPatternsFormatParams,
+  componentHealthCheckFormatParams,
+} from './utils';
 import { MostTimeConsumingTestCases } from './singleLevelWidgets/mostTimeConsumingTestCases';
 
 const CHARTS = {
@@ -43,6 +48,7 @@ const CHARTS = {
   [widgetTypes.PROJECT_ACTIVITY]: ProjectActivity,
   [widgetTypes.PRODUCT_STATUS]: ProductStatus,
   [widgetTypes.CUMULATIVE_TREND]: CumulativeTrendChart,
+  [widgetTypes.COMPONENT_HEALTH_CHECK]: ComponentHealthCheck,
   [widgetTypes.OVERALL_STATISTICS]: OverallStatisticsChart,
   [widgetTypes.INVESTIGATED_PERCENTAGE_OF_LAUNCHES]: InvestigatedTrendChart,
   [widgetTypes.MOST_POPULAR_PATTERNS]: MostPopularPatterns,
@@ -55,6 +61,9 @@ const MULTI_LEVEL_WIDGETS_MAP = {
   },
   [widgetTypes.MOST_POPULAR_PATTERNS]: {
     formatter: topPatternsFormatParams,
+  },
+  [widgetTypes.COMPONENT_HEALTH_CHECK]: {
+    formatter: componentHealthCheckFormatParams,
   },
 };
 

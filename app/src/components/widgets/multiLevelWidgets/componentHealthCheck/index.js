@@ -1,0 +1,1 @@
+export { ComponentHealthCheck } from './componentHealthCheck';

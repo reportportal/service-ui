@@ -2,18 +2,31 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { connect } from 'react-redux';
 import { FieldArray } from 'redux-form';
-import { validate, bindMessageToValidator, composeBoundValidators } from 'common/utils';
+import {
+  validate,
+  bindMessageToValidator,
+  composeBoundValidators,
+  commonValidators,
+} from 'common/utils';
+import { URLS } from 'common/urls';
 import { STATS_FAILED, STATS_PASSED, STATS_SKIPPED } from 'common/constants/statistics';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { FiltersControl, InputControl, TogglerControl } from '../controls';
-import { getWidgetCriteriaOptions } from '../utils/getWidgetCriteriaOptions';
-import { DEFECT_STATISTICS_OPTIONS, TO_INVESTIGATE_OPTION, ITEMS_INPUT_WIDTH } from '../constants';
-import { AttributesFieldArray } from './attributesFieldArray';
-import styles from '../widgetControls.scss';
+import { activeProjectSelector } from 'controllers/user';
+import {
+  FiltersControl,
+  InputControl,
+  TogglerControl,
+  AttributesFieldArrayControl,
+} from './controls';
+import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
+import { DEFECT_STATISTICS_OPTIONS, TO_INVESTIGATE_OPTION, ITEMS_INPUT_WIDTH } from './constants';
+import styles from './widgetControls.scss';
 
 const cx = classNames.bind(styles);
 
+const MAX_ATTRIBUTES_AMOUNT = 2;
 const DEFAULT_ITEMS_COUNT = '15';
 const STATIC_CONTENT_FIELDS = [STATS_FAILED, STATS_SKIPPED, STATS_PASSED];
 
@@ -34,9 +47,13 @@ const messages = defineMessages({
     id: 'CumulativeTrendControls.ItemsValidationError',
     defaultMessage: 'Items count should have value from 1 to 15',
   },
-  attributeKeyValidationError: {
-    id: 'CumulativeTrendControls.attributeKeyValidationError',
-    defaultMessage: 'Value should have size from 1 to 128',
+  attributeKeyFieldLabelOverview: {
+    id: 'CumulativeTrendControls.attributeKeyFieldLabelOverview',
+    defaultMessage: '(overview)',
+  },
+  attributeKeyFieldLabelDetailedView: {
+    id: 'CumulativeTrendControls.attributeKeyFieldLabelDetailedView',
+    defaultMessage: '(detailed view)',
   },
   attributesArrayValidationError: {
     id: 'CumulativeTrendControls.attributesArrayValidationError',
@@ -56,12 +73,12 @@ const attributeKeyValidator = (formatMessage) =>
       validate.required,
       formatMessage(messages.attributesArrayValidationError),
     ),
-    bindMessageToValidator(
-      validate.attributeKey,
-      formatMessage(messages.attributeKeyValidationError),
-    ),
+    commonValidators.attributeKey,
   ]);
 
+@connect((state) => ({
+  launchAttributeKeysSearch: URLS.launchAttributeKeysSearch(activeProjectSelector(state)),
+}))
 @injectIntl
 export class CumulativeTrendControls extends Component {
   static propTypes = {
@@ -70,6 +87,7 @@ export class CumulativeTrendControls extends Component {
     initializeControlsForm: PropTypes.func.isRequired,
     formAppearance: PropTypes.object.isRequired,
     onFormAppearanceChange: PropTypes.func.isRequired,
+    launchAttributeKeysSearch: PropTypes.string.isRequired,
   };
 
   constructor(props) {
@@ -120,6 +138,19 @@ export class CumulativeTrendControls extends Component {
   formatFilterValue = (value) => value && value[0];
   parseFilterValue = (value) => value && [value];
 
+  renderAttributesFieldArray = ({ fields, fieldValidator }) => (
+    <AttributesFieldArrayControl
+      fields={fields}
+      fieldValidator={fieldValidator}
+      maxAttributesAmount={MAX_ATTRIBUTES_AMOUNT}
+      url={this.props.launchAttributeKeysSearch}
+      attributeKeyFieldViewLabels={[
+        this.props.intl.formatMessage(messages.attributeKeyFieldLabelOverview),
+        this.props.intl.formatMessage(messages.attributeKeyFieldLabelDetailedView),
+      ]}
+    />
+  );
+
   render() {
     const {
       intl: { formatMessage },
@@ -157,7 +188,7 @@ export class CumulativeTrendControls extends Component {
             <div className={cx('attr-header')}>{formatMessage(messages.attributesTitle)}</div>
             <FieldArray
               name="contentParameters.widgetOptions.attributes"
-              component={AttributesFieldArray}
+              component={this.renderAttributesFieldArray}
               fieldValidator={attributeKeyValidator(formatMessage)}
             />
           </Fragment>

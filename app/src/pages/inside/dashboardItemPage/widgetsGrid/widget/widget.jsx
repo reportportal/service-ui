@@ -173,12 +173,12 @@ export class SimpleWidget extends Component {
         queryParameters: {},
       },
       () => {
-        this.fetchWidget().then(onClearParams);
+        this.fetchWidget({}, true, false).then(onClearParams);
       },
     );
   };
 
-  fetchWidget = (params = {}, silent = true) => {
+  fetchWidget = (params = {}, silent = true, shouldClearQueryParams = true) => {
     const { tracking, isFullscreen } = this.props;
     const url = this.getWidgetUrl(params);
     this.silentUpdaterId && clearTimeout(this.silentUpdaterId);
@@ -216,6 +216,7 @@ export class SimpleWidget extends Component {
         }
       })
       .catch(() => {
+        shouldClearQueryParams && this.clearQueryParams();
         this.setState({
           loading: false,
         });

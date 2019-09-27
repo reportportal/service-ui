@@ -117,8 +117,11 @@ export const STEP_DATA = [
     },
     parent: 41479,
     pathNames: {
-      '41472': 'Launch Tests',
-      '41479': 'UpdateLaunchTest',
+      launchPathName: {
+        name: 'Nested Steps Launch',
+        number: 1,
+      },
+      itemPaths: [{ id: 41472, name: 'Launch Tests' }, { id: 41479, name: 'UpdateLaunchTest' }],
     },
     issue: {
       issueType: 'ti001',
@@ -176,8 +179,11 @@ export const STEP_DATA = [
         },
         parent: 41490,
         pathNames: {
-          '41472': 'Launch Tests',
-          '41490': 'StartLaunchTest',
+          launchPathName: {
+            name: 'Nested Steps Launch',
+            number: 1,
+          },
+          itemPaths: [{ id: 41472, name: 'Launch Tests' }, { id: 41479, name: 'UpdateLaunchTest' }],
         },
         issue: {
           issueType: 'ti001',
@@ -270,8 +276,11 @@ export const STEP_DATA = [
     },
     parent: 41490,
     pathNames: {
-      '41472': 'Launch Tests',
-      '41490': 'StartLaunchTest',
+      launchPathName: {
+        name: 'Nested Steps Launch',
+        number: 1,
+      },
+      itemPaths: [{ id: 41472, name: 'Launch Tests' }, { id: 41479, name: 'UpdateLaunchTest' }],
     },
     issue: {
       issueType: 'ti001',

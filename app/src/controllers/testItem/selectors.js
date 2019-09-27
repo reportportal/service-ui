@@ -30,7 +30,7 @@ import { suitesSelector, suitePaginationSelector } from 'controllers/suite';
 import { testsSelector, testPaginationSelector } from 'controllers/test';
 import { stepsSelector, stepPaginationSelector } from 'controllers/step';
 import { defectTypesSelector } from 'controllers/project';
-import { DEFAULT_SORTING } from './constants';
+import { DEFAULT_SORTING, TEST_ITEMS_TYPE_LIST } from './constants';
 import {
   createLink,
   getQueryNamespace,
@@ -58,6 +58,11 @@ export const parentItemSelector = createParentItemsSelector();
 export const launchSelector = (state) => parentItemsSelector(state)[0];
 export const isLostLaunchSelector = (state) =>
   parentItemsSelector(state).length > 1 && !launchSelector(state);
+
+export const isTestItemsListSelector = createSelector(
+  testItemIdsSelector,
+  (testItemIds) => testItemIds === TEST_ITEMS_TYPE_LIST,
+);
 
 const isListView = (query, namespace) => {
   const namespacedQuery = extractNamespacedQuery(query, namespace);
@@ -112,7 +117,17 @@ export const breadcrumbsSelector = createSelector(
   pagePropertiesSelector,
   debugModeSelector,
   filterIdSelector,
-  (projectId, filter, parentItems, testItemIds, query, debugMode, filterCategory) => {
+  isTestItemsListSelector,
+  (
+    projectId,
+    filter,
+    parentItems,
+    testItemIdsArray,
+    query,
+    debugMode,
+    filterCategory,
+    isTestItemsListView,
+  ) => {
     const queryNamespacesToCopy = [LAUNCH_NAMESPACE];
     let isListViewExist = false;
     const filterId = (filter && filter.id) || filterCategory;
@@ -131,18 +146,41 @@ export const breadcrumbsSelector = createSelector(
             query: copyQuery(query, queryNamespacesToCopy),
           },
         },
-        active: !testItemIds || testItemIds.length === 0,
+        active: !testItemIdsArray || testItemIdsArray.length === 0,
       },
     ];
-    if (!testItemIds || testItemIds.length === 0) {
+    if (!testItemIdsArray || testItemIdsArray.length === 0) {
       return descriptors;
+    }
+
+    if (isTestItemsListView) {
+      return [
+        ...descriptors,
+        {
+          id: `listView${filterId}`,
+          title: filterName,
+          link: {
+            type: debugMode ? PROJECT_USERDEBUG_TEST_ITEM_PAGE : TEST_ITEM_PAGE,
+            payload: {
+              projectId,
+              filterId,
+              testItemIds: TEST_ITEMS_TYPE_LIST,
+            },
+            meta: {
+              query: copyQuery(query, queryNamespacesToCopy),
+            },
+          },
+          active: true,
+          listView: true,
+        },
+      ];
     }
     return [
       ...descriptors,
       ...parentItems.map((item, i) => {
         if (!item) {
           return {
-            id: testItemIds[i] || i,
+            id: testItemIdsArray[i] || i,
             error: true,
             lost: i === 0 && parentItems.length > 1,
           };
@@ -161,7 +199,7 @@ export const breadcrumbsSelector = createSelector(
             payload: {
               projectId,
               filterId,
-              testItemIds: testItemIds && testItemIds.slice(0, i + 1).join('/'),
+              testItemIds: testItemIdsArray && testItemIdsArray.slice(0, i + 1).join('/'),
             },
             meta: {
               query: itemQuery,
@@ -208,6 +246,7 @@ export const statisticsLinkSelector = createSelector(
   testItemIdsArraySelector,
   (query, payload, testItemIds, isDebugMode, testItemIdsArray) => (ownProps) => {
     const linkPayload = (ownProps.ownLinkParams && ownProps.ownLinkParams.payload) || payload;
+    const launchesLimit = ownProps.launchesLimit;
     const page =
       (ownProps.ownLinkParams && ownProps.ownLinkParams.page) || getNextPage(isDebugMode, true);
     return createLink(
@@ -222,6 +261,8 @@ export const statisticsLinkSelector = createSelector(
             'filter.eq.hasChildren': false,
             'filter.in.type': LEVEL_STEP,
             'filter.in.status': ownProps.statuses && ownProps.statuses.join(','),
+            'filter.has.compositeAttribute': ownProps.compositeAttribute,
+            launchesLimit,
           },
           getQueryNamespace(testItemIdsArray ? testItemIdsArray.length : 0),
         ),
@@ -239,6 +280,7 @@ export const defectLinkSelector = createSelector(
   testItemIdsArraySelector,
   (query, payload, testItemIds, isDebugMode, testItemIdsArray) => (ownProps) => {
     const linkPayload = (ownProps.ownLinkParams && ownProps.ownLinkParams.payload) || payload;
+    const launchesLimit = ownProps.launchesLimit;
     let levelIndex = 0;
     if (testItemIdsArray.length >= 0) {
       levelIndex = !ownProps.itemId ? testItemIdsArray.length - 1 : testItemIdsArray.length;
@@ -262,6 +304,7 @@ export const defectLinkSelector = createSelector(
             'filter.eq.hasStats': true,
             'filter.eq.hasChildren': false,
             'filter.in.issueType': getDefectsString(ownProps.defects),
+            launchesLimit,
           },
           getQueryNamespace(levelIndex),
         ),
