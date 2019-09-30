@@ -20,11 +20,23 @@ export const getTimeType = (max) => {
   }
   return { value: 3600000, type: TIME_TYPES.HOURS };
 };
+export const getListAverage = (data) => {
+  let count = 0;
+  let sum = 0; // sum of not-interrupted launches duration
+  data.forEach((item) => {
+    if (!isValueInterrupted(item)) {
+      count += 1;
+      sum += +item.duration;
+    }
+  });
+  return sum / count;
+};
 
 export const prepareChartData = (data) => {
   const chartData = [DURATION];
   const itemsData = [];
   let max = 0;
+  const average = getListAverage(data.result);
   data.result.forEach((item) => {
     const duration = parseInt(item.duration, 10);
     const { id, name, number } = item;
@@ -39,7 +51,8 @@ export const prepareChartData = (data) => {
       endTime,
       duration,
     });
-    chartData.push(duration);
+    // Average value is used for interrupted launches in order to reduce their effect on the duration for normally finished launches
+    chartData.push(isValueInterrupted(item) ? average : duration);
   });
   return {
     timeType: getTimeType(max),
