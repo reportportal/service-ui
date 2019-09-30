@@ -226,7 +226,7 @@ export class LaunchStatisticsChart extends Component {
         show:
           this.isSingleColumn() &&
           this.configData.widgetViewMode === MODES_VALUES[CHART_MODES.AREA_VIEW],
-        r: 3,
+        r: 5,
         focus: {
           expand: {
             r: 5,
@@ -342,7 +342,9 @@ export class LaunchStatisticsChart extends Component {
       itemData.push(currentItemData);
       contentFields.forEach((contentFieldKey) => {
         const value = item.values[contentFieldKey] || 0;
-        chartData[contentFieldKey].push(!Number(value) && isTimeLine ? null : Number(value));
+        if (value) {
+          chartData[contentFieldKey].push(!Number(value) && isTimeLine ? null : Number(value));
+        }
       });
     });
 
