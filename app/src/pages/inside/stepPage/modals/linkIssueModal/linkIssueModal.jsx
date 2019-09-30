@@ -5,18 +5,18 @@ import { connect } from 'react-redux';
 import { reduxForm, FieldArray } from 'redux-form';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
-import { activeProjectSelector } from 'controllers/user';
+import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { namedAvailableBtsIntegrationsSelector } from 'controllers/plugins';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { URLS } from 'common/urls';
-import { validate, fetch } from 'common/utils';
-import { bindMessageToValidator } from 'common/utils/validation/validatorHelpers';
+import { validate, bindMessageToValidator, fetch, updateSessionItem } from 'common/utils';
 import { RALLY } from 'common/constants/integrationNames';
 import { BetaBadge } from 'pages/inside/common/betaBadge';
 import { BtsIntegrationSelector } from 'pages/inside/common/btsIntegrationSelector';
+import { getDefaultIssueModalConfig } from '../postIssueModal/utils';
 import { LinkIssueFields } from './linkIssueFields';
 import styles from './linkIssueModal.scss';
 
@@ -59,6 +59,7 @@ const messages = defineMessages({
 })
 @connect(
   (state) => ({
+    userId: userIdSelector(state),
     requestUrl: URLS.testItemsLinkIssues(activeProjectSelector(state)),
     namedBtsIntegrations: namedAvailableBtsIntegrationsSelector(state),
   }),
@@ -71,6 +72,7 @@ const messages = defineMessages({
 export class LinkIssueModal extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
+    userId: PropTypes.string.isRequired,
     requestUrl: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
     namedBtsIntegrations: PropTypes.object.isRequired,
@@ -90,20 +92,22 @@ export class LinkIssueModal extends Component {
 
   constructor(props) {
     super(props);
-    const pluginName = Object.keys(props.namedBtsIntegrations)[0];
+    const { namedBtsIntegrations, userId } = props;
+    const { pluginName, integration } = getDefaultIssueModalConfig(namedBtsIntegrations, userId);
 
     this.props.initialize({
       issues: [{}],
     });
     this.state = {
       pluginName,
-      integrationId: props.namedBtsIntegrations[pluginName][0].id,
+      integrationId: integration.id,
     };
   }
 
   onFormSubmit = (formData) => {
     const {
       intl,
+      userId,
       requestUrl,
       data: { items, fetchFunc },
       namedBtsIntegrations,
@@ -130,6 +134,12 @@ export class LinkIssueModal extends Component {
       .then(() => {
         this.closeModal();
         fetchFunc();
+        const sessionConfig = {
+          pluginName,
+          integrationId,
+        };
+
+        updateSessionItem(`${userId}_settings`, sessionConfig);
         this.props.showNotification({
           message: intl.formatMessage(messages.linkIssueSuccess),
           type: NOTIFICATION_TYPES.SUCCESS,
