@@ -69,14 +69,6 @@ const messages = defineMessages({
     id: 'ActionPanel.actionsBtnTooltip',
     defaultMessage: ' Select several items to processing',
   },
-  noBugTrackingSystemToLinkIssue: {
-    id: 'ActionPanel.noBugTrackingSystemToLinkIssue',
-    defaultMessage: 'Configure bug tracking system to link issue',
-  },
-  noBugTrackingSystemToPostIssue: {
-    id: 'ActionPanel.noBugTrackingSystemToPostIssue',
-    defaultMessage: 'Configure bug tracking system to post issue',
-  },
 });
 
 @connect(
@@ -177,7 +169,7 @@ export class ActionPanel extends Component {
 
   createStepActionDescriptors = () => {
     const {
-      intl,
+      intl: { formatMessage },
       tracking,
       debugMode,
       onEditDefects,
@@ -196,13 +188,13 @@ export class ActionPanel extends Component {
 
     return [
       {
-        label: intl.formatMessage(messages.editItems),
+        label: formatMessage(messages.editItems),
         value: 'action-edit',
         hidden: !canBulkEditLaunches(accountRole, projectRole),
         onClick: onEditItems,
       },
       {
-        label: intl.formatMessage(messages.editDefects),
+        label: formatMessage(messages.editDefects),
         value: 'action-edit-defects',
         onClick: (data) => {
           tracking.trackEvent(STEP_PAGE_EVENTS.EDIT_DEFECT_ACTION);
@@ -210,51 +202,47 @@ export class ActionPanel extends Component {
         },
       },
       {
-        label: intl.formatMessage(messages.postIssue),
+        label: formatMessage(messages.postIssue),
         value: 'action-post-issue',
         hidden: debugMode,
         disabled: isPostIssueUnavailable,
-        title:
-          (isPostIssueUnavailable && intl.formatMessage(messages.noBugTrackingSystemToPostIssue)) ||
-          '',
+        title: isPostIssueUnavailable ? formatMessage(COMMON_LOCALE_KEYS.NO_BTS_INTEGRATION) : '',
         onClick: () => {
           tracking.trackEvent(STEP_PAGE_EVENTS.POST_BUG_ACTION);
           onPostIssue();
         },
       },
       {
-        label: intl.formatMessage(messages.linkIssue),
+        label: formatMessage(messages.linkIssue),
         value: 'action-link-issue',
         hidden: debugMode,
         disabled: !btsIntegrations.length,
-        title: btsIntegrations.length
-          ? ''
-          : intl.formatMessage(messages.noBugTrackingSystemToLinkIssue),
+        title: btsIntegrations.length ? '' : formatMessage(COMMON_LOCALE_KEYS.NO_BTS_INTEGRATION),
         onClick: () => {
           tracking.trackEvent(STEP_PAGE_EVENTS.LOAD_BUG_ACTION);
           onLinkIssue();
         },
       },
       {
-        label: intl.formatMessage(messages.unlinkIssue),
+        label: formatMessage(messages.unlinkIssue),
         value: 'action-unlink-issue',
         hidden: debugMode,
         onClick: onUnlinkIssue,
       },
       {
-        label: intl.formatMessage(messages.ignoreInAA),
+        label: formatMessage(messages.ignoreInAA),
         value: 'action-ignore-in-AA',
         hidden: debugMode,
         onClick: onIgnoreInAA,
       },
       {
-        label: intl.formatMessage(messages.includeInAA),
+        label: formatMessage(messages.includeInAA),
         value: 'action-include-into-AA',
         hidden: debugMode,
         onClick: onIncludeInAA,
       },
       {
-        label: intl.formatMessage(COMMON_LOCALE_KEYS.DELETE),
+        label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
         value: 'action-delete',
         onClick: onDelete,
       },
