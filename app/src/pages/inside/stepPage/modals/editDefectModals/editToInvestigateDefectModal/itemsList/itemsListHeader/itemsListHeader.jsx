@@ -6,7 +6,6 @@ import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { FilterItem } from 'pages/inside/common/launchFiltersToolbar/filterList/filterItem';
 import Parser from 'html-react-parser';
-import { isEmptyObject } from 'common/utils';
 import InfoIcon from 'common/img/info-inline.svg';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { TextTooltip } from 'components/main/tooltips/textTooltip';
@@ -31,7 +30,6 @@ export class ItemsListHeader extends React.Component {
     searchMode: PropTypes.string,
     currentLaunch: PropTypes.object,
     currentFilter: PropTypes.object,
-    itemLaunch: PropTypes.object,
     onSelectAllToggle: PropTypes.func,
     onChangeSearchMode: PropTypes.func,
   };
@@ -42,7 +40,6 @@ export class ItemsListHeader extends React.Component {
     searchMode: SEARCH_MODES.CURRENT_LAUNCH,
     currentLaunch: {},
     currentFilter: null,
-    itemLaunch: {},
     onChangeSearchMode: () => {},
   };
 
@@ -67,26 +64,20 @@ export class ItemsListHeader extends React.Component {
       intl: { formatMessage },
       searchMode,
       currentFilter,
+      currentLaunch,
     } = this.props;
-    const actualLaunch = this.getActualLaunch();
     switch (searchMode) {
       case SEARCH_MODES.FILTER:
         return formatMessage(messages[`${searchMode}Tooltip`], { filter: currentFilter.name });
       case SEARCH_MODES.CURRENT_LAUNCH:
         return formatMessage(messages[`${searchMode}Tooltip`], {
-          launch: `${actualLaunch.name} #${actualLaunch.number}`,
+          launch: `${currentLaunch.name} #${currentLaunch.number}`,
         });
       case SEARCH_MODES.LAUNCH_NAME:
-        return formatMessage(messages[`${searchMode}Tooltip`], { launch: actualLaunch.name });
+        return formatMessage(messages[`${searchMode}Tooltip`], { launch: currentLaunch.name });
       default:
         return '';
     }
-  };
-
-  getActualLaunch = () => {
-    const { currentLaunch, itemLaunch } = this.props;
-
-    return isEmptyObject(currentLaunch) ? itemLaunch : currentLaunch;
   };
 
   toggleSelectAll = () => {
@@ -94,12 +85,18 @@ export class ItemsListHeader extends React.Component {
   };
 
   render() {
-    const { intl, allSelected, searchMode, currentFilter, onChangeSearchMode } = this.props;
-    const actualLaunch = this.getActualLaunch();
+    const {
+      intl,
+      allSelected,
+      searchMode,
+      currentLaunch,
+      currentFilter,
+      onChangeSearchMode,
+    } = this.props;
     const launchTitle =
       searchMode === SEARCH_MODES.CURRENT_LAUNCH
-        ? `${actualLaunch.name} #${actualLaunch.number}`
-        : actualLaunch.name;
+        ? `${currentLaunch.name} #${currentLaunch.number}`
+        : currentLaunch.name;
     return (
       <div className={cx('list-header')}>
         <div className={cx('select-all')}>
@@ -120,9 +117,9 @@ export class ItemsListHeader extends React.Component {
         </div>
         {searchMode !== SEARCH_MODES.FILTER && (
           <div className={cx('launch')} title={launchTitle}>
-            <span className={cx('launch-name')}>{actualLaunch.name}</span>
+            <span className={cx('launch-name')}>{currentLaunch.name}</span>
             {searchMode === SEARCH_MODES.CURRENT_LAUNCH && (
-              <span className={cx('launch-number')}>{`#${actualLaunch.number}`}</span>
+              <span className={cx('launch-number')}>{`#${currentLaunch.number}`}</span>
             )}
           </div>
         )}

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { InputDropdown } from 'components/inputs/inputDropdown';
-import { DynamicField } from '../../dynamicField';
+import { DynamicField } from '../dynamicField';
 
 export class DropdownField extends Component {
   static propTypes = {
