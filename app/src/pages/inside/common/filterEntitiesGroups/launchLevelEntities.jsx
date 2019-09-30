@@ -172,12 +172,14 @@ export class LaunchLevelEntities extends Component {
     usersSearchUrl: PropTypes.string.isRequired,
     launchAttributeKeysSearch: PropTypes.string.isRequired,
     activeProject: PropTypes.string.isRequired,
+    visibleFilters: PropTypes.array,
   };
   static defaultProps = {
     filterValues: {},
+    visibleFilters: [],
   };
   getStaticEntities = () => {
-    const { intl, filterValues, activeProject } = this.props;
+    const { intl, filterValues, activeProject, visibleFilters } = this.props;
     const attributeKey = (filterValues[ENTITY_ATTRIBUTE_KEYS] || {}).value;
     const normalizeValue = (value) => (Array.isArray(value) ? value.join(',') : value);
     const launchAttributeValuesSearch = URLS.launchAttributeValuesSearch(
@@ -208,7 +210,7 @@ export class LaunchLevelEntities extends Component {
         }),
         validationFunc: commonValidators.launchNumericEntity,
         title: intl.formatMessage(messages.NumberTitle),
-        active: ENTITY_NUMBER in filterValues,
+        active: visibleFilters.includes(ENTITY_NUMBER),
         removable: true,
         customProps: {
           conditions: [CONDITION_EQ, CONDITION_GREATER_EQ, CONDITION_LESS_EQ],
@@ -223,7 +225,7 @@ export class LaunchLevelEntities extends Component {
         }),
         title: intl.formatMessage(messages.DescriptionTitle),
         validationFunc: commonValidators.descriptionEntity,
-        active: ENTITY_DESCRIPTION in filterValues,
+        active: visibleFilters.includes(ENTITY_DESCRIPTION),
         removable: true,
         customProps: {
           placeholder: intl.formatMessage(messages.DESCRIPTION_PLACEHOLDER),
@@ -237,7 +239,7 @@ export class LaunchLevelEntities extends Component {
           condition: CONDITION_IN,
         }),
         title: intl.formatMessage(messages.OwnerTitle),
-        active: ENTITY_USER in filterValues,
+        active: visibleFilters.includes(ENTITY_USER),
         removable: true,
         customProps: {
           uri: this.props.usersSearchUrl,
@@ -252,7 +254,7 @@ export class LaunchLevelEntities extends Component {
           condition: CONDITION_BETWEEN,
         }),
         title: intl.formatMessage(messages.StartTimeTitle),
-        active: ENTITY_START_TIME in filterValues,
+        active: visibleFilters.includes(ENTITY_START_TIME),
         removable: true,
       },
       {
@@ -262,7 +264,7 @@ export class LaunchLevelEntities extends Component {
           condition: CONDITION_HAS,
         }),
         title: intl.formatMessage(messages.AttributeKeysTitle),
-        active: ENTITY_ATTRIBUTE_KEYS in filterValues,
+        active: visibleFilters.includes(ENTITY_ATTRIBUTE_KEYS),
         removable: true,
         customProps: {
           uri: this.props.launchAttributeKeysSearch,
@@ -276,7 +278,7 @@ export class LaunchLevelEntities extends Component {
           condition: CONDITION_HAS,
         }),
         title: intl.formatMessage(messages.AttributeValuesTitle),
-        active: ENTITY_ATTRIBUTE_VALUES in filterValues,
+        active: visibleFilters.includes(ENTITY_ATTRIBUTE_VALUES),
         removable: true,
         customProps: {
           uri: launchAttributeValuesSearch,
@@ -291,7 +293,7 @@ export class LaunchLevelEntities extends Component {
         }),
         validationFunc: commonValidators.launchNumericEntity,
         title: intl.formatMessage(messages.TotalTitle),
-        active: STATS_TOTAL in filterValues,
+        active: visibleFilters.includes(STATS_TOTAL),
         removable: true,
         customProps: {
           conditions: [CONDITION_GREATER_EQ, CONDITION_LESS_EQ, CONDITION_EQ],
@@ -306,7 +308,7 @@ export class LaunchLevelEntities extends Component {
         }),
         validationFunc: commonValidators.launchNumericEntity,
         title: intl.formatMessage(messages.PassedTitle),
-        active: STATS_PASSED in filterValues,
+        active: visibleFilters.includes(STATS_PASSED),
         removable: true,
         customProps: {
           conditions: [CONDITION_GREATER_EQ, CONDITION_LESS_EQ, CONDITION_EQ],
@@ -321,7 +323,7 @@ export class LaunchLevelEntities extends Component {
         }),
         validationFunc: commonValidators.launchNumericEntity,
         title: intl.formatMessage(messages.FailedTitle),
-        active: STATS_FAILED in filterValues,
+        active: visibleFilters.includes(STATS_FAILED),
         removable: true,
         customProps: {
           conditions: [CONDITION_GREATER_EQ, CONDITION_LESS_EQ, CONDITION_EQ],
@@ -336,7 +338,7 @@ export class LaunchLevelEntities extends Component {
         }),
         validationFunc: commonValidators.launchNumericEntity,
         title: intl.formatMessage(messages.SkippedTitle),
-        active: STATS_SKIPPED in filterValues,
+        active: visibleFilters.includes(STATS_SKIPPED),
         removable: true,
         customProps: {
           conditions: [CONDITION_GREATER_EQ, CONDITION_LESS_EQ, CONDITION_EQ],

@@ -717,6 +717,7 @@ export class LaunchesPage extends Component {
       <FilterEntitiesContainer
         level={LEVEL_LAUNCH}
         filterId={activeFilterId}
+        key={activeFilterId}
         entities={activeFilterConditions}
         onChange={onChangeFilter}
         render={({ onFilterAdd, ...rest }) => (
