@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Input } from 'components/inputs/input';
-import { DynamicField } from '../../dynamicField';
+import { DynamicField } from '../dynamicField';
 
 export class TextField extends Component {
   static propTypes = {
@@ -10,7 +10,7 @@ export class TextField extends Component {
 
   formatInputValue = (value) => value && value[0];
 
-  parseInputValue = (value) => [value || ''];
+  parseInputValue = (value) => (value ? [value] : []);
 
   render() {
     const { field, ...rest } = this.props;

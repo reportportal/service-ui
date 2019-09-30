@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
-import { DynamicField } from '../../dynamicField';
+import { DynamicField } from '../dynamicField';
 
 export class ArrayField extends Component {
   static propTypes = {
