@@ -103,7 +103,7 @@ export class StackTrace extends Component {
         <ScrollWrapper autoHeight autoHeightMax={this.getScrolledHeight()}>
           {items.map((item) => (
             <div key={item.id} className={cx('row')}>
-              <StackTraceMessageBlock maxHeight={this.getMaxRowHeight()}>
+              <StackTraceMessageBlock level={item.level} maxHeight={this.getMaxRowHeight()}>
                 <div className={cx('message-container')}>
                   <div className={cx('cell', 'message-cell')}>{item.message}</div>
                   {!hideTime && (
