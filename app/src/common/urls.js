@@ -200,7 +200,8 @@ export const URLS = {
   userUnasign: (activeProject) => `${urlBase}project/${activeProject}/unassign`,
 
   generateDemoData: (projectId) => `${urlBase}demo/${projectId}`,
-  getFileById: (projectId, dataId) => `${urlBase}data/${projectId}/${dataId}`,
+  getFileById: (projectId, dataId, loadThumbnail) =>
+    `${urlBase}data/${projectId}/${dataId}${getQueryParams({ loadThumbnail })}`,
 
   serverSettings: () => `${urlBase}settings`,
   emailServerSettings: () => `${urlBase}settings/email`,
