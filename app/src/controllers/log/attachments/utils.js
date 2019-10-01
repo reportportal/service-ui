@@ -14,10 +14,10 @@ export const extractExtension = (contentType) => {
 export const getExtensionFromPattern = (extensionString) =>
   Object.keys(FILE_PATTERNS_MAP).find((key) => !!FILE_PATTERNS_MAP[key].exec(extensionString));
 
-export const getFileIconSource = (item, projectId) => {
+export const getFileIconSource = (item, projectId, loadThumbnail) => {
   const [fileType, extension] = getAttachmentTypeConfig(item.contentType);
   if (fileType === IMAGE) {
-    return URLS.getFileById(projectId, item.id);
+    return URLS.getFileById(projectId, item.id, loadThumbnail);
   }
   const extensionFromPattern = getExtensionFromPattern(extension || fileType);
   return (
@@ -36,10 +36,15 @@ export const getAttachmentModalId = (contentType) => {
   );
 };
 
-export const createAttachment = (item, projectId) => ({
-  id: item.id,
-  src: getFileIconSource(item, projectId),
-  alt: item.contentType,
-  contentType: item.contentType,
-  isImage: getAttachmentTypeConfig(item.contentType)[0] === IMAGE,
-});
+export const createAttachment = (item, projectId) => {
+  const isImage = getAttachmentTypeConfig(item.contentType)[0] === IMAGE;
+
+  return {
+    id: item.id,
+    src: getFileIconSource(item, projectId),
+    thumbnailSrc: isImage ? URLS.getFileById(projectId, item.id, true) : null,
+    alt: item.contentType,
+    contentType: item.contentType,
+    isImage,
+  };
+};

@@ -110,7 +110,9 @@ class AttachmentsSlider extends Component {
               >
                 <Image
                   className={cx('preview', { active: isThumbsView && activeItemId === index })}
-                  src={attachment.src}
+                  src={
+                    isThumbsView && attachment.isImage ? attachment.thumbnailSrc : attachment.src
+                  }
                   alt={attachment.alt}
                   isStatic={!attachment.isImage}
                 />
