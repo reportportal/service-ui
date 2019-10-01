@@ -53,7 +53,7 @@ export class WidgetHeader extends Component {
     onEdit: PropTypes.func,
     customClass: PropTypes.string,
     isPrintMode: PropTypes.bool,
-    isDashboardShared: PropTypes.bool,
+    dashboardOwner: PropTypes.string,
   };
   static defaultProps = {
     data: {},
@@ -64,7 +64,7 @@ export class WidgetHeader extends Component {
     onEdit: () => {},
     customClass: null,
     isPrintMode: false,
-    isDashboardShared: false,
+    dashboardOwner: '',
   };
 
   renderMetaInfo = () =>
@@ -92,15 +92,12 @@ export class WidgetHeader extends Component {
       onEdit,
       customClass,
       isPrintMode,
-      isDashboardShared,
+      dashboardOwner,
     } = this.props;
 
     const isOwner = data.owner === userId;
-    const isWidgetDeletable = canDeleteWidget(
-      userRole,
-      projectRole,
-      isOwner || (data.shared && !isDashboardShared),
-    );
+    const isDashboardOwner = dashboardOwner === userId;
+    const isWidgetDeletable = canDeleteWidget(userRole, projectRole, isOwner || isDashboardOwner);
 
     return (
       <div className={cx('widget-header')}>
