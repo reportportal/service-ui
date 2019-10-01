@@ -349,7 +349,7 @@ export class LaunchLevelEntities extends Component {
   };
 
   getDynamicEntities = () => {
-    const { filterValues, intl } = this.props;
+    const { intl, visibleFilters } = this.props;
     let defectTypeEntities = [];
     DEFECT_TYPES_SEQUENCE.forEach((defectTypeRef) => {
       if (defectTypeRef.toLowerCase() === NO_DEFECT) {
@@ -368,7 +368,7 @@ export class LaunchLevelEntities extends Component {
         }),
         validationFunc: commonValidators.launchNumericEntity,
         title: messages[defectTitle] ? this.props.intl.formatMessage(messages[defectTitle]) : '',
-        active: totalEntityId in filterValues,
+        active: visibleFilters.includes(totalEntityId),
         removable: true,
         customProps: {
           conditions: [CONDITION_GREATER_EQ, CONDITION_LESS_EQ, CONDITION_EQ],
@@ -391,7 +391,7 @@ export class LaunchLevelEntities extends Component {
               title: `${this.props.intl.formatMessage(messages[`${defectTypeRef}_title`])} ${
                 defectType.shortName
               }`,
-              active: entityId in filterValues,
+              active: visibleFilters.includes(entityId),
               removable: true,
               customProps: {
                 conditions: [CONDITION_GREATER_EQ, CONDITION_LESS_EQ, CONDITION_EQ],
