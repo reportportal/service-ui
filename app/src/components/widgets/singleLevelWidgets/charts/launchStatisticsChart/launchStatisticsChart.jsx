@@ -341,9 +341,9 @@ export class LaunchStatisticsChart extends Component {
       delete currentItemData.values;
       itemData.push(currentItemData);
       contentFields.forEach((contentFieldKey) => {
-        const value = item.values[contentFieldKey] || 0;
-        if (value) {
-          chartData[contentFieldKey].push(!Number(value) && isTimeLine ? null : Number(value));
+        const value = Number(item.values[contentFieldKey]) || 0;
+        if (value || !isTimeLine) {
+          chartData[contentFieldKey].push(value);
         }
       });
     });
