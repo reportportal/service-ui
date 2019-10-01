@@ -88,6 +88,11 @@ export class CumulativeTrendControls extends Component {
     formAppearance: PropTypes.object.isRequired,
     onFormAppearanceChange: PropTypes.func.isRequired,
     launchAttributeKeysSearch: PropTypes.string.isRequired,
+    eventsInfo: PropTypes.object,
+  };
+
+  static defaultProps = {
+    eventsInfo: {},
   };
 
   constructor(props) {
@@ -156,6 +161,7 @@ export class CumulativeTrendControls extends Component {
       intl: { formatMessage },
       formAppearance,
       onFormAppearanceChange,
+      eventsInfo,
     } = this.props;
 
     return (
@@ -164,6 +170,7 @@ export class CumulativeTrendControls extends Component {
           <FiltersControl
             formAppearance={formAppearance}
             onFormAppearanceChange={onFormAppearanceChange}
+            eventsInfo={eventsInfo}
           />
         </FieldProvider>
 

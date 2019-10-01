@@ -29,10 +29,12 @@ export class WizardSecondStepForm extends Component {
     widgetSettings: PropTypes.object.isRequired,
     onSubmit: PropTypes.func.isRequired,
     onDisableButtons: PropTypes.func.isRequired,
+    eventsInfo: PropTypes.object,
   };
 
   static defaultProps = {
     handleSubmit: () => {},
+    eventsInfo: {},
   };
 
   constructor(props) {
@@ -60,6 +62,7 @@ export class WizardSecondStepForm extends Component {
       widget,
       initializeWizardSecondStepForm,
       widgetSettings,
+      eventsInfo,
     } = this.props;
     const { formAppearance } = this.state;
     const ControlsForm = widget.controls;
@@ -72,6 +75,7 @@ export class WizardSecondStepForm extends Component {
           onFormAppearanceChange={this.handleFormAppearanceChange}
           initializeControlsForm={initializeWizardSecondStepForm}
           widgetSettings={widgetSettings}
+          eventsInfo={eventsInfo}
         />
       </form>
     );

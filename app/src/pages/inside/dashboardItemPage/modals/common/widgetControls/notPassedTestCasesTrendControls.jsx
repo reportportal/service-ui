@@ -27,6 +27,11 @@ export class NotPassedTestCasesTrendControls extends Component {
     initializeControlsForm: PropTypes.func.isRequired,
     formAppearance: PropTypes.object.isRequired,
     onFormAppearanceChange: PropTypes.func.isRequired,
+    eventsInfo: PropTypes.object,
+  };
+
+  static defaultProps = {
+    eventsInfo: {},
   };
 
   constructor(props) {
@@ -51,6 +56,7 @@ export class NotPassedTestCasesTrendControls extends Component {
       intl: { formatMessage },
       formAppearance,
       onFormAppearanceChange,
+      eventsInfo,
     } = this.props;
 
     return (
@@ -59,6 +65,7 @@ export class NotPassedTestCasesTrendControls extends Component {
           <FiltersControl
             formAppearance={formAppearance}
             onFormAppearanceChange={onFormAppearanceChange}
+            eventsInfo={eventsInfo}
           />
         </FieldProvider>
         {!formAppearance.isMainControlsLocked && (

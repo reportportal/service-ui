@@ -207,6 +207,12 @@ export class StepPage extends Component {
         item,
         type: LAUNCH_ITEM_TYPES.item,
         fetchFunc: this.props.fetchTestItemsAction,
+        eventsInfo: {
+          saveBtn: STEP_PAGE_EVENTS.SAVE_BTN_EDIT_ITEM_MODAL,
+          editDescription: STEP_PAGE_EVENTS.EDIT_ITEM_DESCRIPTION,
+          cancelBtn: STEP_PAGE_EVENTS.CANCEL_BTN_EDIT_ITEM_MODAL,
+          closeIcon: STEP_PAGE_EVENTS.CLOSE_ICON_EDIT_ITEM_MODAL,
+        },
       },
     });
   };
@@ -262,11 +268,25 @@ export class StepPage extends Component {
   handleLinkIssue = () =>
     this.props.linkIssueAction(this.props.selectedItems, {
       fetchFunc: this.unselectAndFetchItems,
+      eventsInfo: {
+        loadBtn: STEP_PAGE_EVENTS.LOAD_BTN_LOAD_BUG_MODAL,
+        cancelBtn: STEP_PAGE_EVENTS.CANCEL_BTN_LOAD_BUG_MODAL,
+        addNewIssue: STEP_PAGE_EVENTS.ADD_NEW_ISSUE_BTN_LOAD_BUG_MODAL,
+        closeIcon: STEP_PAGE_EVENTS.CLOSE_ICON_LOAD_BUG_MODAL,
+      },
     });
 
   handlePostIssue = () =>
     this.props.postIssueAction(this.props.selectedItems, {
       fetchFunc: this.unselectAndFetchItems,
+      eventsInfo: {
+        postBtn: STEP_PAGE_EVENTS.POST_BTN_POST_BUG_MODAL,
+        attachmentsSwitcher: STEP_PAGE_EVENTS.ATTACHMENTS_SWITCHER_POST_BUG_MODAL,
+        logsSwitcher: STEP_PAGE_EVENTS.LOGS_SWITCHER_POST_BUG_MODAL,
+        commentSwitcher: STEP_PAGE_EVENTS.COMMENT_SWITCHER_POST_BUG_MODAL,
+        cancelBtn: STEP_PAGE_EVENTS.CANCEL_BTN_POST_BUG_MODAL,
+        closeIcon: STEP_PAGE_EVENTS.CLOSE_ICON_POST_BUG_MODAL,
+      },
     });
 
   handleIgnoreInAA = () =>
@@ -284,12 +304,25 @@ export class StepPage extends Component {
     if (this.isDefectGroupOperationAvailable(eventData)) {
       this.props.showModalAction({
         id: 'editToInvestigateDefectModal',
-        data: { item: items[0], fetchFunc: this.unselectAndFetchItems },
+        data: {
+          item: items[0],
+          fetchFunc: this.unselectAndFetchItems,
+          eventsInfo: {
+            saveBtnDropdown: STEP_PAGE_EVENTS.SAVE_BTN_DROPDOWN_EDIT_ITEM_MODAL,
+            postBugBtn: STEP_PAGE_EVENTS.POST_BUG_BTN_EDIT_ITEM_MODAL,
+            linkIssueBtn: STEP_PAGE_EVENTS.LOAD_BUG_BTN_EDIT_ITEM_MODAL,
+          },
+        },
       });
     } else {
       this.props.editDefectsAction(items, {
         fetchFunc: this.unselectAndFetchItems,
         debugMode: this.props.debugMode,
+        eventsInfo: {
+          saveBtnDropdown: STEP_PAGE_EVENTS.SAVE_BTN_DROPDOWN_EDIT_ITEM_MODAL,
+          postBugBtn: STEP_PAGE_EVENTS.POST_BUG_BTN_EDIT_ITEM_MODAL,
+          linkIssueBtn: STEP_PAGE_EVENTS.LOAD_BUG_BTN_EDIT_ITEM_MODAL,
+        },
       });
     }
   };

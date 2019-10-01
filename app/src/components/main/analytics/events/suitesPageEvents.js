@@ -71,37 +71,31 @@ export const SUITES_PAGE_EVENTS = {
     label: 'Unselect all items',
   },
   PROCEED_VALID_ITEMS: {
-    // todo
     category: SUITE_PAGE,
     action: 'Click on Bttn "Proceed Valid Items"',
     label: 'Remove invalid items from selection',
   },
   CLOSE_ICON_EDIT_ITEM_MODAL: {
-    // todo
     category: SUITE_PAGE,
     action: 'Click on Close Icon on Modal "Edit Item"',
     label: 'Close modal "Edit Item"',
   },
   EDIT_ITEM_DESCRIPTION: {
-    // todo
     category: SUITE_PAGE,
     action: 'Edit description in Modal "Edit Item"',
     label: 'Edit description',
   },
   CANCEL_BTN_EDIT_ITEM_MODAL: {
-    // todo
     category: SUITE_PAGE,
     action: 'Click on Bttn Cancel on Modal "Edit Item"',
     label: 'Close modal "Edit Item"',
   },
   SAVE_BTN_EDIT_ITEM_MODAL: {
-    // todo
     category: SUITE_PAGE,
     action: 'Click on Bttn Save on Modal "Edit Item"',
     label: 'Save changes',
   },
   NAME_FILTER: {
-    // todo
     category: SUITE_PAGE,
     action: 'Click on icon "filter" on Name',
     label: 'Suite name input becomes active',
@@ -235,23 +229,5 @@ export const SUITES_PAGE_EVENTS = {
     category: SUITE_PAGE,
     action: 'Click on TI tag',
     label: 'Transition to TI list view',
-  },
-  SAVE_BTN_DROPDOWN_EDIT_ITEM_MODAL: {
-    // todo
-    category: SUITE_PAGE,
-    action: 'Click on dropdown icon on Save Bttnon Modal "Edit Item"',
-    label: 'Arise dropdown',
-  },
-  POST_BUG_BTN_EDIT_ITEM_MODAL: {
-    // todo
-    category: SUITE_PAGE,
-    action: 'Select Save and Post Bug on dropdown in Modal "Edit Item"',
-    label: 'Arise Modal "Post Bug"',
-  },
-  LOAD_BUG_BTN_EDIT_ITEM_MODAL: {
-    // todo
-    category: SUITE_PAGE,
-    action: 'Select Save and Load Bug on dropdown in Modal "Edit Item"',
-    label: 'Arise Modal "Load Bug"',
   },
 };

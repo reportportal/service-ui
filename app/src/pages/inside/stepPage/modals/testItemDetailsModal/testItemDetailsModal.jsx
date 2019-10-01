@@ -1,6 +1,7 @@
 import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape } from 'react-intl';
 import { reduxForm } from 'redux-form';
@@ -57,6 +58,7 @@ const cx = classNames.bind(styles);
     clearLogPageStackTrace,
   },
 )
+@track()
 @injectIntl
 export class TestItemDetailsModal extends Component {
   static propTypes = {
@@ -65,6 +67,7 @@ export class TestItemDetailsModal extends Component {
       item: PropTypes.object,
       type: PropTypes.string,
       fetchFunc: PropTypes.func,
+      eventsInfo: PropTypes.object,
     }).isRequired,
     launch: PropTypes.object,
     userProjectRole: PropTypes.string,
@@ -75,6 +78,10 @@ export class TestItemDetailsModal extends Component {
     handleSubmit: PropTypes.func.isRequired,
     currentProject: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
     clearLogPageStackTrace: PropTypes.func,
   };
 
@@ -160,7 +167,7 @@ export class TestItemDetailsModal extends Component {
   renderDetailsTab = (editable) => {
     const {
       intl,
-      data: { item },
+      data: { item, eventsInfo },
     } = this.props;
     return (
       <div className={cx('details-tab')}>
@@ -209,7 +216,10 @@ export class TestItemDetailsModal extends Component {
         {editable ? (
           <ModalField>
             <FieldProvider name="description">
-              <MarkdownEditor placeholder={intl.formatMessage(messages.descriptionPlaceholder)} />
+              <MarkdownEditor
+                onChangeEventInfo={eventsInfo.editDescription}
+                placeholder={intl.formatMessage(messages.descriptionPlaceholder)}
+              />
             </FieldProvider>
           </ModalField>
         ) : (
@@ -243,21 +253,24 @@ export class TestItemDetailsModal extends Component {
   render() {
     const {
       intl,
-      data: { item },
+      data: { item, eventsInfo },
       launch,
       userAccountRole,
       userProjectRole,
       userId,
       handleSubmit,
+      tracking,
     } = this.props;
     const okButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.SAVE),
       onClick: (closeModal) => {
+        tracking.trackEvent(eventsInfo.saveBtn);
         handleSubmit(this.updateItemAndCloseModal(closeModal))();
       },
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      eventInfo: eventsInfo.cancelBtn,
     };
 
     const editable = canEditLaunch(
@@ -273,6 +286,7 @@ export class TestItemDetailsModal extends Component {
         closeConfirmation={editable ? this.getCloseConfirmationConfig() : undefined}
         warningMessage={editable ? intl.formatMessage(messages.launchWarning) : ''}
         contentClassName={cx('tab-container')}
+        closeIconEventInfo={eventsInfo.closeIcon}
       >
         <ContainerWithTabs data={this.getTabsConfig(editable)} customClass={cx('tab-header')} />
       </ModalLayout>

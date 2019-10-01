@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
+import track from 'react-tracking';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { destroy, getFormValues, isDirty, isValid } from 'redux-form';
 import { URLS } from 'common/urls';
@@ -33,6 +34,7 @@ const messages = defineMessages({
 });
 
 @withModal('editWidgetModal')
+@track()
 @connect(
   (state) => ({
     projectId: activeProjectSelector(state),
@@ -57,10 +59,15 @@ export class EditWidgetModal extends Component {
     destroyWizardForm: PropTypes.func.isRequired,
     dirty: PropTypes.bool.isRequired,
     valid: PropTypes.bool.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
     widgetSettings: PropTypes.object,
     data: PropTypes.shape({
       onConfirm: PropTypes.func,
       widget: PropTypes.object,
+      eventsInfo: PropTypes.object,
     }),
     projectId: PropTypes.string,
   };
@@ -107,7 +114,7 @@ export class EditWidgetModal extends Component {
 
   onSave = (closeModal) => {
     const {
-      data: { onConfirm, widget },
+      data: { onConfirm, widget, eventsInfo },
       intl: { formatMessage },
       widgetSettings,
       projectId,
@@ -115,6 +122,7 @@ export class EditWidgetModal extends Component {
 
     const data = prepareWidgetDataForSubmit(this.preprocessOutputData(widgetSettings));
 
+    this.props.tracking.trackEvent(eventsInfo.okBtn);
     this.props.showScreenLockAction();
     fetch(URLS.widget(projectId, widget.id), {
       method: 'put',
@@ -168,7 +176,7 @@ export class EditWidgetModal extends Component {
   render() {
     const {
       intl: { formatMessage },
-      data: { widget },
+      data: { widget, eventsInfo },
       projectId,
       widgetSettings,
       valid,
@@ -186,6 +194,7 @@ export class EditWidgetModal extends Component {
     const cancelButton = {
       text: buttonsMessages.cancel,
       disabled: this.state.formAppearance.isMainControlsLocked,
+      eventInfo: eventsInfo.cancelBtn,
     };
 
     return (
@@ -195,6 +204,7 @@ export class EditWidgetModal extends Component {
         cancelButton={cancelButton}
         className={cx('edit-widget-modal')}
         closeConfirmation={this.getCloseConfirmationConfig()}
+        closeIconEventInfo={eventsInfo.closeIcon}
       >
         <div className={cx('edit-widget-modal-content')}>
           <EditWidgetInfoSection
@@ -211,6 +221,7 @@ export class EditWidgetModal extends Component {
             formAppearance={this.state.formAppearance}
             handleFormAppearanceChange={this.handleFormAppearanceChange}
             buttonsMessages={buttonsMessages}
+            eventsInfo={eventsInfo}
           />
         </div>
       </ModalLayout>

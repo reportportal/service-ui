@@ -56,6 +56,11 @@ export class MostPopularPatternsControls extends Component {
     formAppearance: PropTypes.object.isRequired,
     onFormAppearanceChange: PropTypes.func.isRequired,
     launchAttributeKeysSearch: PropTypes.string.isRequired,
+    eventsInfo: PropTypes.object,
+  };
+
+  static defaultProps = {
+    eventsInfo: {},
   };
 
   constructor(props) {
@@ -92,13 +97,20 @@ export class MostPopularPatternsControls extends Component {
   };
 
   render() {
-    const { intl, formAppearance, onFormAppearanceChange, launchAttributeKeysSearch } = this.props;
+    const {
+      intl,
+      formAppearance,
+      onFormAppearanceChange,
+      launchAttributeKeysSearch,
+      eventsInfo,
+    } = this.props;
     return (
       <Fragment>
         <FieldProvider name="filters" parse={this.parseFilterValue} format={this.formatFilterValue}>
           <FiltersControl
             formAppearance={formAppearance}
             onFormAppearanceChange={onFormAppearanceChange}
+            eventsInfo={eventsInfo}
           />
         </FieldProvider>
         <FieldProvider name="contentParameters.widgetOptions.latest">

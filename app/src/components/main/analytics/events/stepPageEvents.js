@@ -91,25 +91,21 @@ export const STEP_PAGE_EVENTS = {
     label: 'Select/unselect one item',
   },
   CLOSE_ICON_EDIT_ITEM_MODAL: {
-    // todo
     category: STEP_PAGE,
     action: 'Click on Close Icon on Modal "Edit Item"',
     label: 'Close modal "Edit Item"',
   },
   EDIT_ITEM_DESCRIPTION: {
-    // todo
     category: STEP_PAGE,
     action: 'Edit description in Modal "Edit Item"',
     label: 'Edit description',
   },
   CANCEL_BTN_EDIT_ITEM_MODAL: {
-    // todo
     category: STEP_PAGE,
     action: 'Click on Bttn Cancel on Modal "Edit Item',
     label: 'Close modal "Edit Item"',
   },
   SAVE_BTN_EDIT_ITEM_MODAL: {
-    // todo
     category: STEP_PAGE,
     action: 'Click on Bttn Save on Modal "Edit Item"',
     label: 'Save changes',
@@ -180,37 +176,31 @@ export const STEP_PAGE_EVENTS = {
     label: 'Refresh page',
   },
   CLOSE_ICON_POST_BUG_MODAL: {
-    // todo
     category: STEP_PAGE,
     action: 'Click on Icon Close on Modal Post Bug',
     label: 'Close Modal Post Bug',
   },
-  SCREENSHOTS_SWITCHER_POST_BUG_MODAL: {
-    // todo
+  ATTACHMENTS_SWITCHER_POST_BUG_MODAL: {
     category: STEP_PAGE,
-    action: 'Click on Screenshots switcher on Modal Post Bug',
-    label: 'On/off Screenshots in Modal Post Bug',
+    action: 'Click on Attachments switcher on Modal Post Bug',
+    label: 'On/off Attachments in Modal Post Bug',
   },
   LOGS_SWITCHER_POST_BUG_MODAL: {
-    // todo
     category: STEP_PAGE,
     action: 'Click on Logs switcher on Modal Post Bug',
     label: 'On/off Logs in Modal Post Bug',
   },
   COMMENT_SWITCHER_POST_BUG_MODAL: {
-    // todo
     category: STEP_PAGE,
     action: 'Click on Comment switcher on Modal Post Bug',
     label: 'On/off Comment in Modal Post Bug',
   },
   CANCEL_BTN_POST_BUG_MODAL: {
-    // todo
     category: STEP_PAGE,
     action: 'Click on Bttn Cancel on Modal Post Bug',
     label: 'Close Modal Post Bug',
   },
   POST_BTN_POST_BUG_MODAL: {
-    // todo
     category: STEP_PAGE,
     action: 'Click on Bttn Post on Modal Post Bug',
     label: 'Post bug',
@@ -249,5 +239,20 @@ export const STEP_PAGE_EVENTS = {
     category: STEP_PAGE,
     action: 'Click on Bttn Delete on Modal Delete Item',
     label: 'Delete item',
+  },
+  SAVE_BTN_DROPDOWN_EDIT_ITEM_MODAL: {
+    category: STEP_PAGE,
+    action: 'Click on dropdown icon on Save Bttn on Modal "Edit Item"',
+    label: 'Arise dropdown',
+  },
+  POST_BUG_BTN_EDIT_ITEM_MODAL: {
+    category: STEP_PAGE,
+    action: 'Select Save and Post Bug on dropdown in Modal "Edit Item"',
+    label: 'Arise Modal "Post Bug"',
+  },
+  LOAD_BUG_BTN_EDIT_ITEM_MODAL: {
+    category: STEP_PAGE,
+    action: 'Select Save and Load Bug on dropdown in Modal "Edit Item"',
+    label: 'Arise Modal "Load Bug"',
   },
 };

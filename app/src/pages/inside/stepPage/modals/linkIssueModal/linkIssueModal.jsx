@@ -10,7 +10,6 @@ import { namedAvailableBtsIntegrationsSelector } from 'controllers/plugins';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { URLS } from 'common/urls';
 import { validate, fetch } from 'common/utils';
 import { bindMessageToValidator } from 'common/utils/validation/validatorHelpers';
@@ -81,11 +80,20 @@ export class LinkIssueModal extends Component {
     data: PropTypes.shape({
       items: PropTypes.array,
       fetchFunc: PropTypes.func,
+      eventsInfo: PropTypes.object,
     }).isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+  };
+
+  static defaultProps = {
+    data: {
+      items: [],
+      fetchFunc: () => {},
+      eventsInfo: {},
+    },
   };
 
   constructor(props) {
@@ -144,7 +152,7 @@ export class LinkIssueModal extends Component {
   };
 
   onLink = () => (closeModal) => {
-    this.props.tracking.trackEvent(STEP_PAGE_EVENTS.LOAD_BTN_LOAD_BUG_MODAL);
+    this.props.tracking.trackEvent(this.props.data.eventsInfo.loadBtn);
     this.closeModal = closeModal;
     this.props.handleSubmit(this.onFormSubmit)();
   };
@@ -176,14 +184,18 @@ export class LinkIssueModal extends Component {
   };
 
   render() {
-    const { intl, namedBtsIntegrations } = this.props;
+    const {
+      intl,
+      namedBtsIntegrations,
+      data: { eventsInfo = {} },
+    } = this.props;
     const okButton = {
       text: intl.formatMessage(messages.linkButton),
       onClick: this.onLink(),
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      eventInfo: STEP_PAGE_EVENTS.CANCEL_BTN_LOAD_BUG_MODAL,
+      eventInfo: eventsInfo.cancelBtn,
     };
 
     return (
@@ -197,7 +209,7 @@ export class LinkIssueModal extends Component {
         okButton={okButton}
         cancelButton={cancelButton}
         closeConfirmation={this.getCloseConfirmationConfig()}
-        closeIconEventInfo={STEP_PAGE_EVENTS.CLOSE_ICON_LOAD_BUG_MODAL}
+        closeIconEventInfo={eventsInfo.closeIcon}
       >
         <h4 className={cx('add-issue-id-title')}>{intl.formatMessage(messages.addIssueIdTitle)}</h4>
         <div className={cx('link-issue-form-wrapper')}>
@@ -213,7 +225,7 @@ export class LinkIssueModal extends Component {
               name="issues"
               change={this.props.change}
               component={LinkIssueFields}
-              addEventInfo={STEP_PAGE_EVENTS.ADD_NEW_ISSUE_BTN_LOAD_BUG_MODAL}
+              addEventInfo={eventsInfo.addNewIssue}
               withAutocomplete={this.state.pluginName !== RALLY}
             />
           </form>

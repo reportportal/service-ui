@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import track from 'react-tracking';
 import { intlShape, injectIntl, defineMessages } from 'react-intl';
 import { change } from 'redux-form';
 import PropTypes from 'prop-types';
@@ -64,6 +65,7 @@ const messages = defineMessages({
   },
 });
 
+@track()
 @connect(
   (state) => ({
     userId: userIdSelector(state),
@@ -101,6 +103,11 @@ export class FiltersControl extends Component {
     fetchFiltersConcatAction: PropTypes.func,
     onFormAppearanceChange: PropTypes.func.isRequired,
     notify: PropTypes.func.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
+    eventsInfo: PropTypes.object,
   };
 
   static defaultProps = {
@@ -120,6 +127,7 @@ export class FiltersControl extends Component {
     fetchFiltersConcatAction: () => {},
     onFormAppearanceChange: () => {},
     notify: () => {},
+    eventsInfo: {},
   };
 
   constructor(props) {
@@ -144,6 +152,7 @@ export class FiltersControl extends Component {
     const {
       formAppearance: { mode: formAppearanceMode, filter: formAppearanceFilter },
       activeProject,
+      eventsInfo,
     } = this.props;
 
     const component = (() => {
@@ -155,6 +164,7 @@ export class FiltersControl extends Component {
               onChange={this.handleFilterChange}
               onCancel={this.clearFormAppearance}
               onSave={this.handleFilterUpdate}
+              eventsInfo={eventsInfo}
             />
           );
         }
@@ -168,11 +178,12 @@ export class FiltersControl extends Component {
               onChange={this.handleFilterChange}
               onCancel={this.clearFormAppearance}
               onSave={this.handleFilterInsert}
+              eventsInfo={eventsInfo}
             />
           );
         }
         case FORM_APPEARANCE_MODE_LOCKED: {
-          return <LockedActiveFilter filter={activeFilter} onEdit={this.clearFormAppearance} />;
+          return <LockedActiveFilter filter={activeFilter} onEdit={this.editLockedActiveFilter} />;
         }
         default:
           return null;
@@ -227,10 +238,15 @@ export class FiltersControl extends Component {
     this.props.onFormAppearanceChange(false, {});
   };
 
-  handleSearchValueChange = debounce(
-    (value) => this.fetchFilter({ page: 1, searchValue: value }),
-    300,
-  );
+  handleSearchValueChange = debounce((value) => {
+    this.props.tracking.trackEvent(this.props.eventsInfo.enterSearchParams);
+    return this.fetchFilter({ page: 1, searchValue: value });
+  }, 300);
+
+  editLockedActiveFilter = () => {
+    this.props.tracking.trackEvent(this.props.eventsInfo.editFilterIcon);
+    this.clearFormAppearance();
+  };
 
   handleFormAppearanceMode = (event, mode, filter) => {
     event.preventDefault();
@@ -310,7 +326,10 @@ export class FiltersControl extends Component {
     this.clearFormAppearance();
   };
 
-  handleFilterListChange = (event) => this.handleActiveFilterChange(event.target.value);
+  handleFilterListChange = (event) => {
+    this.props.tracking.trackEvent(this.props.eventsInfo.chooseFilter);
+    return this.handleActiveFilterChange(event.target.value);
+  };
 
   handleActiveFilterChange = (id, newFilter) => {
     const filter = this.getFilterById(id);
@@ -347,7 +366,7 @@ export class FiltersControl extends Component {
       return this.getFormAppearanceComponent(activeFilter);
     }
 
-    const { loading, userId, filter, touched, error } = this.props;
+    const { loading, userId, filter, touched, error, eventsInfo } = this.props;
     const { searchValue } = this.state;
 
     return (
@@ -358,6 +377,7 @@ export class FiltersControl extends Component {
           value={searchValue}
           onFilterChange={this.handleSearchValueChange}
           onAdd={this.handleFormAppearanceMode}
+          eventsInfo={eventsInfo}
         />
         <ActiveFilter filter={activeFilter || null} touched={touched} error={error || null} />
         <FiltersList

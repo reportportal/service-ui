@@ -187,6 +187,7 @@ export class FilterGrid extends Component {
           if (!isActiveFilter) {
             this.props.showFilterOnLaunchesAction(filter);
           }
+          this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_FILTER_NAME);
         },
         onEdit: (filter) => {
           this.props.onEdit(filter);

@@ -205,6 +205,7 @@ export class SuitesPage extends Component {
       onFilterChange,
       filterErrors,
       filterEntities,
+      tracking,
     } = this.props;
 
     const rowHighlightingConfig = {
@@ -224,6 +225,7 @@ export class SuitesPage extends Component {
             selectedItems={selectedSuites}
             onUnselect={this.unselectItem}
             onUnselectAll={this.unselectAllItems}
+            onProceedValidItems={() => tracking.trackEvent(SUITES_PAGE_EVENTS.PROCEED_VALID_ITEMS)}
             parentItem={parentItem}
             onRefresh={this.props.fetchTestItemsAction}
             debugMode={debugMode}

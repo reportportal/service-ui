@@ -2,16 +2,23 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
+import track from 'react-tracking';
 import { WithStore, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
 import ArrowIcon from 'common/img/arrow-right-inline.svg';
 import { Image } from 'components/main/image';
+import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { DEFAULT_VISIBLE_THUMBS } from '../constants';
 import styles from './attachmentsSlider.scss';
 
 const cx = classNames.bind(styles);
 
+@track()
 class AttachmentsSlider extends Component {
   static propTypes = {
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
     attachments: PropTypes.array,
     activeItemId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     currentThumb: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -74,6 +81,7 @@ class AttachmentsSlider extends Component {
       thumbConfig =
         activeItemId + 1 >= currentThumb + visibleThumbs ? { currentThumb: nextItemId } : null;
     }
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.NEXT_ATTACHMENT_ICON);
     this.props.changeActiveItem(nextItemId, thumbConfig);
   };
 
@@ -94,6 +102,7 @@ class AttachmentsSlider extends Component {
       const thumbToUpdate = currentThumb - visibleThumbs < 0 ? 0 : currentThumb - visibleThumbs;
       thumbConfig = activeItemId <= currentThumb ? { currentThumb: thumbToUpdate } : null;
     }
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.PREVIOUS_ATTACHMENT_ICON);
     this.props.changeActiveItem(prevItemId, thumbConfig);
   };
 

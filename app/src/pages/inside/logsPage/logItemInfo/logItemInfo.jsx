@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { GhostButton } from 'components/buttons/ghostButton';
@@ -92,6 +93,7 @@ const messages = defineMessages({
     showModalAction,
   },
 )
+@track()
 @connectRouter(
   () => {},
   {
@@ -118,6 +120,10 @@ export class LogItemInfo extends Component {
     isSauceLabsIntegrationView: PropTypes.bool.isRequired,
     debugMode: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
     logItem: PropTypes.object,
     updateRetryId: PropTypes.func,
     retryItemId: PropTypes.number,
@@ -213,8 +219,15 @@ export class LogItemInfo extends Component {
   addExtraSpaceTop = () => this.isDefectTypeVisible() && this.hasRetries();
 
   handleLinkIssue = () => {
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.LINK_ISSUE_BTN);
     this.props.linkIssueAction([this.props.logItem], {
       fetchFunc: this.props.fetchFunc,
+      eventsInfo: {
+        loadBtn: LOG_PAGE_EVENTS.LOAD_BTN_LINK_ISSUE_MODAL,
+        cancelBtn: LOG_PAGE_EVENTS.CANCEL_BTN_LINK_ISSUE_MODAL,
+        addNewIssue: LOG_PAGE_EVENTS.ADD_NEW_ISSUE_LINK_ISSUE_MODAL,
+        closeIcon: LOG_PAGE_EVENTS.CLOSE_ICON_LINK_ISSUE_MODAL,
+      },
     });
   };
 
@@ -236,8 +249,17 @@ export class LogItemInfo extends Component {
   };
 
   handlePostIssue = () => {
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.POST_ISSUE_BTN);
     this.props.postIssueAction([this.props.logItem], {
       fetchFunc: this.props.fetchFunc,
+      eventsInfo: {
+        postBtn: LOG_PAGE_EVENTS.POST_BTN_POST_ISSUE_MODAL,
+        attachmentsSwitcher: LOG_PAGE_EVENTS.ATTACHMENTS_SWITCHER_POST_ISSUE_MODAL,
+        logsSwitcher: LOG_PAGE_EVENTS.LOGS_SWITCHER_POST_ISSUE_MODAL,
+        commentSwitcher: LOG_PAGE_EVENTS.COMMENT_SWITCHER_POST_ISSUE_MODAL,
+        cancelBtn: LOG_PAGE_EVENTS.CANCEL_BTN_POST_ISSUE_MODAL,
+        closeIcon: LOG_PAGE_EVENTS.CLOSE_ICON_POST_ISSUE_MODAL,
+      },
     });
   };
 
@@ -246,12 +268,25 @@ export class LogItemInfo extends Component {
     if (this.isDefectGroupOperationAvailable()) {
       this.props.showModalAction({
         id: 'editToInvestigateDefectModal',
-        data: { item: logItem, fetchFunc: this.props.fetchFunc },
+        data: {
+          item: logItem,
+          fetchFunc: this.props.fetchFunc,
+          eventsInfo: {
+            saveBtnDropdown: LOG_PAGE_EVENTS.SAVE_BTN_DROPDOWN_EDIT_ITEM_MODAL,
+            postBugBtn: LOG_PAGE_EVENTS.POST_BUG_BTN_EDIT_ITEM_MODAL,
+            linkIssueBtn: LOG_PAGE_EVENTS.LOAD_BUG_BTN_EDIT_ITEM_MODAL,
+          },
+        },
       });
     } else {
       this.props.editDefectsAction([this.props.logItem], {
         fetchFunc: this.props.fetchFunc,
         debugMode: this.props.debugMode,
+        eventsInfo: {
+          saveBtnDropdown: LOG_PAGE_EVENTS.SAVE_BTN_DROPDOWN_EDIT_ITEM_MODAL,
+          postBugBtn: LOG_PAGE_EVENTS.POST_BUG_BTN_EDIT_ITEM_MODAL,
+          linkIssueBtn: LOG_PAGE_EVENTS.LOAD_BUG_BTN_EDIT_ITEM_MODAL,
+        },
       });
     }
   };
