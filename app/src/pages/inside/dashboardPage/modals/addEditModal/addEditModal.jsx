@@ -127,7 +127,7 @@ export class AddEditModal extends Component {
   submitFormAndCloseModal = (closeModal) => (item) => {
     const {
       tracking,
-      data: { dashboardItem, eventsInfo },
+      data: { dashboardItem, eventsInfo = {} },
       dirty,
     } = this.props;
     if (dirty) {
@@ -141,7 +141,7 @@ export class AddEditModal extends Component {
     const {
       intl,
       handleSubmit,
-      data: { type, eventsInfo },
+      data: { type, eventsInfo = {} },
     } = this.props;
     const submitText = intl.formatMessage(messages[`${type}ModalSubmitButtonText`]);
     const title = intl.formatMessage(messages[`${type}ModalTitle`]);

@@ -50,6 +50,7 @@ export class EditDefectModal extends Component {
       items: PropTypes.array,
       fetchFunc: PropTypes.func,
       debugMode: PropTypes.bool,
+      eventsInfo: PropTypes.object,
     }).isRequired,
     showNotification: PropTypes.func.isRequired,
     hideModalAction: PropTypes.func.isRequired,
@@ -204,15 +205,19 @@ export class EditDefectModal extends Component {
       fetchFunc: this.props.data.fetchFunc,
     });
 
-  handleLinkIssue = () =>
-    this.props.linkIssueAction(this.getItemsToTheNextAction(), {
+  handleLinkIssue = () => {
+    this.props.tracking.trackEvent(this.props.data.eventsInfo.linkIssueBtn);
+    return this.props.linkIssueAction(this.getItemsToTheNextAction(), {
       fetchFunc: this.props.data.fetchFunc,
     });
+  };
 
-  handlePostIssue = () =>
+  handlePostIssue = () => {
+    this.props.tracking.trackEvent(this.props.data.eventsInfo.postBugBtn);
     this.props.postIssueAction(this.getItemsToTheNextAction(), {
       fetchFunc: this.props.data.fetchFunc,
     });
+  };
 
   checkIfTheDataWasChanged = () => {
     const { items } = this.props.data;
@@ -302,6 +307,10 @@ export class EditDefectModal extends Component {
       </div>
     );
 
+  renderMultiActionButton = ({ ...rest }) => (
+    <MultiActionButton {...rest} toggleMenuEventInfo={this.props.data.eventsInfo.saveBtnDropdown} />
+  );
+
   render() {
     const {
       intl,
@@ -313,7 +322,7 @@ export class EditDefectModal extends Component {
         items: this.multiActionButtonItems,
         title: intl.formatMessage(COMMON_LOCALE_KEYS.SAVE),
       },
-      component: MultiActionButton,
+      component: this.renderMultiActionButton,
     };
     const okButton = {
       onClick: this.onEditDefects,

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { reduxForm } from 'redux-form';
+import track from 'react-tracking';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
@@ -25,15 +26,16 @@ const messages = defineMessages({
 });
 
 @injectIntl
+@track()
 @reduxForm({
   form: FILTER_SEARCH_FORM,
   validate: ({ filter }) => (filter && filter.length < 3 ? { filter: 'filterNameError' } : {}),
-  onChange: ({ filter }, dispatcher, { onFilterChange }) => {
+  onChange: ({ filter }, dispatcher, props) => {
     if (filter && filter.length < 3) {
       return;
     }
-
-    onFilterChange(filter || undefined);
+    props.tracking.trackEvent(props.eventsInfo.enterSearchParams);
+    props.onFilterChange(filter || undefined);
   },
 })
 export class FiltersActionPanel extends Component {
@@ -45,6 +47,11 @@ export class FiltersActionPanel extends Component {
     invalid: PropTypes.bool,
     change: PropTypes.func,
     onAdd: PropTypes.func,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
+    eventsInfo: PropTypes.object,
   };
 
   static defaultProps = {
@@ -55,6 +62,7 @@ export class FiltersActionPanel extends Component {
     filters: [],
     change: () => {},
     onAdd: () => {},
+    eventsInfo: {},
   };
 
   componentDidMount() {
@@ -71,8 +79,13 @@ export class FiltersActionPanel extends Component {
     }
   }
 
+  onFilterClick = (event) => {
+    this.props.tracking.trackEvent(this.props.eventsInfo.addFilter);
+    this.props.onAdd(event, FORM_APPEARANCE_MODE_ADD);
+  };
+
   render() {
-    const { intl, onAdd } = this.props;
+    const { intl } = this.props;
 
     return (
       <div className={cx('filters-header')}>
@@ -89,7 +102,7 @@ export class FiltersActionPanel extends Component {
         <GhostButton
           icon={AddFilterIcon}
           title={intl.formatMessage(messages.addFilterButton)}
-          onClick={(event) => onAdd(event, FORM_APPEARANCE_MODE_ADD)}
+          onClick={(event) => this.onFilterClick(event)}
         >
           {intl.formatMessage(messages.addFilterButton)}
         </GhostButton>

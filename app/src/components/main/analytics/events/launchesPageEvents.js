@@ -54,7 +54,6 @@ export const LAUNCHES_PAGE_EVENTS = {
     label: 'Stars download of report in XLS',
   },
   NAME_FILTER: {
-    // todo
     category: LAUNCHES_PAGE,
     action: getActionTableFilter('NAME'),
     label: getDescriptionTableFilter(),
@@ -200,7 +199,6 @@ export const LAUNCHES_PAGE_EVENTS = {
     label: 'Unselect all launches',
   },
   CLICK_PROCEED_ITEMS_BUTTON: {
-    // todo
     category: LAUNCHES_PAGE,
     action: 'Click on button "Proceed Valid Items"',
     label: 'Remove invalid launches from selection',

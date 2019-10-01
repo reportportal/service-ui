@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { reduxForm, initialize } from 'redux-form';
 import PropTypes from 'prop-types';
@@ -23,6 +24,7 @@ const cx = classNames.bind(styles);
   initializeWidgetControls: (data) =>
     initialize(WIDGET_WIZARD_FORM, data, true, { keepValues: true }),
 })
+@track()
 export class EditWidgetControlsSectionForm extends Component {
   static propTypes = {
     widget: PropTypes.object.isRequired,
@@ -33,20 +35,30 @@ export class EditWidgetControlsSectionForm extends Component {
     formAppearance: PropTypes.object.isRequired,
     handleFormAppearanceChange: PropTypes.func.isRequired,
     change: PropTypes.func.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
     buttonsMessages: PropTypes.object,
+    eventsInfo: PropTypes.object,
   };
 
   static defaultProps = {
     previousFilter: [],
     buttonsMessages: {},
+    eventsInfo: {},
   };
 
   onClickCancel = () => {
+    this.props.tracking.trackEvent(this.props.eventsInfo.cancelEditFilter);
     this.props.handleFormAppearanceChange(FORM_APPEARANCE_MODE_LOCKED, {});
     this.props.change('filters', this.props.previousFilter);
   };
 
-  onClickSubmit = () => this.props.handleFormAppearanceChange(FORM_APPEARANCE_MODE_LOCKED, {});
+  onClickSubmit = () => {
+    this.props.tracking.trackEvent(this.props.eventsInfo.submitChanges);
+    this.props.handleFormAppearanceChange(FORM_APPEARANCE_MODE_LOCKED, {});
+  };
 
   render() {
     const {
@@ -57,6 +69,8 @@ export class EditWidgetControlsSectionForm extends Component {
       formAppearance,
       handleFormAppearanceChange,
       buttonsMessages,
+      eventsInfo,
+      tracking,
     } = this.props;
     const ControlsForm = widget.controls;
 
@@ -68,10 +82,15 @@ export class EditWidgetControlsSectionForm extends Component {
           onFormAppearanceChange={handleFormAppearanceChange}
           initializeControlsForm={initializeWidgetControls}
           widgetSettings={widgetSettings}
+          eventsInfo={eventsInfo}
         />
         {!formAppearance.isMainControlsLocked && (
           <div className={cx('common-controls-wrapper')}>
-            <CommonWidgetControls widgetId={widgetId} />
+            <CommonWidgetControls
+              trackEvent={tracking.trackEvent}
+              eventsInfo={eventsInfo}
+              widgetId={widgetId}
+            />
           </div>
         )}
         {formAppearance.isMainControlsLocked &&

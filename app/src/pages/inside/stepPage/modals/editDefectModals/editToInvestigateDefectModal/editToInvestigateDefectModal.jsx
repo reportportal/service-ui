@@ -58,6 +58,7 @@ export class EditToInvestigateDefectModal extends Component {
     data: PropTypes.shape({
       item: PropTypes.object,
       fetchFunc: PropTypes.func,
+      eventsInfo: PropTypes.object,
     }).isRequired,
     showNotification: PropTypes.func.isRequired,
     hideModalAction: PropTypes.func.isRequired,
@@ -220,15 +221,19 @@ export class EditToInvestigateDefectModal extends Component {
       fetchFunc: this.props.data.fetchFunc,
     });
 
-  handleLinkIssue = () =>
-    this.props.linkIssueAction(this.prepareDataToSend(), {
+  handleLinkIssue = () => {
+    this.props.tracking.trackEvent(this.props.data.eventsInfo.linkIssueBtn);
+    return this.props.linkIssueAction(this.prepareDataToSend(), {
       fetchFunc: this.props.data.fetchFunc,
     });
+  };
 
-  handlePostIssue = () =>
-    this.props.postIssueAction(this.prepareDataToSend(), {
+  handlePostIssue = () => {
+    this.props.tracking.trackEvent(this.props.data.eventsInfo.postBugBtn);
+    return this.props.postIssueAction(this.prepareDataToSend(), {
       fetchFunc: this.props.data.fetchFunc,
     });
+  };
 
   checkIfTheDataWasChanged = () => {
     const { item } = this.props.data;
@@ -388,6 +393,10 @@ export class EditToInvestigateDefectModal extends Component {
     </div>
   );
 
+  renderMultiActionButton = ({ ...rest }) => (
+    <MultiActionButton {...rest} toggleMenuEventInfo={this.props.data.eventsInfo.saveBtnDropdown} />
+  );
+
   render() {
     const { intl, currentFilter } = this.props;
     const customButton = {
@@ -396,7 +405,7 @@ export class EditToInvestigateDefectModal extends Component {
         items: this.multiActionButtonItems,
         title: intl.formatMessage(COMMON_LOCALE_KEYS.SAVE),
       },
-      component: MultiActionButton,
+      component: this.renderMultiActionButton,
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),

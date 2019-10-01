@@ -4,6 +4,7 @@ import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
+import track from 'react-tracking';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Parser from 'html-react-parser';
 import IconDuplicate from 'common/img/duplicate-inline.svg';
@@ -25,6 +26,7 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { MarkdownEditor, MarkdownViewer } from 'components/main/markdown';
 import { AttributeListField } from 'components/main/attributeList';
 import { AccordionContainer } from 'components/main/accordionContainer';
+import { SUITES_PAGE_EVENTS } from 'components/main/analytics/events/suitesPageEvents';
 import { canEditLaunch } from 'common/utils/permissions';
 import styles from './editItemModal.scss';
 
@@ -80,6 +82,7 @@ const messages = defineMessages({
 
 @withModal('editItemModal')
 @injectIntl
+@track()
 @reduxForm({
   form: 'editItemForm',
   validate: ({ attributes }) => ({
@@ -114,6 +117,10 @@ export class EditItemModal extends Component {
     handleSubmit: PropTypes.func.isRequired,
     currentProject: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -156,7 +163,10 @@ export class EditItemModal extends Component {
       : this.testItemAttributeValueURLCreator;
   };
 
-  updateItemAndCloseModal = (closeModal) => (formData) => {
+  updateItemAndCloseModal = (closeModal) => (formData, dispatch, props) => {
+    if (props.data.item.description !== formData.description) {
+      this.props.tracking.trackEvent(SUITES_PAGE_EVENTS.EDIT_ITEM_DESCRIPTION);
+    }
     this.props.dirty && this.updateItem(formData);
     closeModal();
   };
@@ -202,15 +212,18 @@ export class EditItemModal extends Component {
       userAccountRole,
       userProjectRole,
       userId,
+      tracking,
     } = this.props;
     const okButton = {
       text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
       onClick: (closeModal) => {
+        tracking.trackEvent(SUITES_PAGE_EVENTS.SAVE_BTN_EDIT_ITEM_MODAL);
         handleSubmit(this.updateItemAndCloseModal(closeModal))();
       },
     };
     const cancelButton = {
       text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      eventInfo: SUITES_PAGE_EVENTS.CANCEL_BTN_EDIT_ITEM_MODAL,
     };
 
     const editable = canEditLaunch(
@@ -225,6 +238,7 @@ export class EditItemModal extends Component {
         okButton={editable ? okButton : undefined}
         cancelButton={cancelButton}
         closeConfirmation={this.getCloseConfirmationConfig()}
+        closeIconEventInfo={SUITES_PAGE_EVENTS.CLOSE_ICON_EDIT_ITEM_MODAL}
         warningMessage={
           type === LAUNCH_ITEM_TYPES.launch && editable && formatMessage(messages.launchWarning)
         }
