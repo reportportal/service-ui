@@ -83,7 +83,5 @@ export const launchesWidgetContentFields = composeValidators([isNotEmptyArray, m
 export const mostFailedWidgetNumberOfLaunches = composeValidators([isNotEmpty, range(2, 600)]);
 export const createNotificationRecipientsValidator = (informOwner) => (value) =>
   isNotEmptyArray(value) || informOwner;
-export const notificationLaunchNames = composeValidators([
-  isNotEmptyArray,
-  (value) => value.every(launchName),
-]);
+export const notificationLaunchNames = (value) =>
+  isEmpty(value) || !value.length || value.every(launchName);
