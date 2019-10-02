@@ -53,6 +53,15 @@ export class DefectTypeTooltip extends Component {
       .filter(({ locator }, i) => i === 0 || data[locator] > 0);
   };
 
+  hasTotal = (defectTypesConfig, defectTypes) => {
+    if (defectTypes.length > 1) {
+      return true;
+    }
+    return (
+      defectTypesConfig.findIndex((defectType) => defectType.locator === defectTypes[0].locator) > 0
+    );
+  };
+
   render() {
     const {
       data,
@@ -72,7 +81,7 @@ export class DefectTypeTooltip extends Component {
       <div className={cx('defect-type-tooltip')}>
         {defectConfig && (
           <Fragment>
-            {filteredBodyData.length > 1 && (
+            {this.hasTotal(defectConfig, filteredBodyData) && (
               <DefectLink
                 itemId={itemId}
                 ownLinkParams={ownLinkParams}
