@@ -281,13 +281,15 @@ export class InviteUserModal extends Component {
                 format={this.formatValueProject}
                 parse={this.parseValueProject}
               >
-                <InputTagsSearch
-                  minLength={1}
-                  async
-                  uri={this.projectSearchUrl}
-                  makeOptions={this.formatValue}
-                  filterOption={this.filterProject}
-                />
+                <FieldErrorHint hintType="top">
+                  <InputTagsSearch
+                    minLength={1}
+                    async
+                    uri={this.projectSearchUrl}
+                    makeOptions={this.formatValue}
+                    filterOption={this.filterProject}
+                  />
+                </FieldErrorHint>
               </FieldProvider>
             </ModalField>
           )}
