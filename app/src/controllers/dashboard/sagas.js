@@ -50,9 +50,18 @@ function* fetchDashboards({ payload: params }) {
 function* fetchDashboard() {
   const activeProject = yield select(activeProjectSelector);
   const activeDashboardId = yield select(activeDashboardIdSelector);
-  const dashboard = yield call(fetch, URLS.dashboard(activeProject, activeDashboardId));
-
-  yield put(updateDashboardItemSuccessAction(dashboard));
+  try {
+    const dashboard = yield call(fetch, URLS.dashboard(activeProject, activeDashboardId));
+    yield put(updateDashboardItemSuccessAction(dashboard));
+  } catch (error) {
+    const projectId = yield select(projectIdSelector);
+    yield put(
+      redirect({
+        type: PROJECT_DASHBOARD_PAGE,
+        payload: { projectId },
+      }),
+    );
+  }
 }
 
 function* addDashboard({ payload: dashboard }) {
