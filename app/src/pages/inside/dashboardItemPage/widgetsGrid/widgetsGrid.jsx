@@ -221,6 +221,7 @@ export class WidgetsGrid extends Component {
       isResizable={this.props.isModifiable}
       draggableHandle=".draggable-field"
       useCSSTransforms={!this.isFirefox}
+      measureBeforeMount
     >
       {this.renderItems()}
     </ResponsiveGridLayout>
