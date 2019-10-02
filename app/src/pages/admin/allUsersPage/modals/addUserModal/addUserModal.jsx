@@ -248,7 +248,7 @@ export class AddUserModal extends Component {
               format={this.formatValueProject}
               parse={this.parseValueProject}
             >
-              <FieldErrorHint>
+              <FieldErrorHint hintType="top">
                 <InputTagsSearch
                   placeholder={intl.formatMessage(messages.projectNamePlaceholder)}
                   uri={URLS.projectNameSearch()}
