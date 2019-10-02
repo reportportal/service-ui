@@ -13,6 +13,7 @@ export {
   removeLaunchesFilterAction,
   addFilterAction,
   updateFilterOrdersAction,
+  updateFilterSuccessAction,
 } from './actionCreators';
 export { filterReducer } from './reducer';
 export {

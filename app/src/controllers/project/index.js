@@ -19,7 +19,6 @@ export {
   deleteDefectSubTypeAction,
   deleteDefectSubTypeSuccessAction,
   addPatternAction,
-  addPatternActionSuccess,
   updatePatternAction,
   updatePatternSuccessAction,
   deletePatternAction,
