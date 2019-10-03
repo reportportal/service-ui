@@ -46,7 +46,7 @@ const MERGE_FORM = 'launchMergeForm';
 const MERGE_TYPE_DEEP = 'DEEP';
 const MERGE_TYPE_BASIC = 'BASIC';
 const FIELD_LABEL_WIDTH = 130;
-const DESCRIPTION_SEPARATOR = '\n≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡\n';
+const DESCRIPTION_SEPARATOR = '\n≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡\n\n';
 const cx = classNames.bind(styles);
 const messages = defineMessages({
   MergeLaunchHeader: {
