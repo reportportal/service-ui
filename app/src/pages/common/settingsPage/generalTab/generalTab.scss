@@ -27,21 +27,21 @@
 
 .button-container {
   box-sizing: content-box;
-  margin-left: 455px;
+  margin-left: 430px;
   &::after {
     content: '';
     clear: both;
     display: table;
   }
   @media (max-width: $SCREEN_SM_MAX) {
-    margin-left: 345px;
+    margin-left: 320px;
   }
   @media (max-width: $SCREEN_XS_MAX) {
     display: none;
   }
 }
 .submit-button {
-  width: 70px;
+  width: 95px;
   button {
     font-size: 13px;
   }
