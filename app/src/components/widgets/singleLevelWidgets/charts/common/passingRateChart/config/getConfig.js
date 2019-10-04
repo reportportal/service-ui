@@ -2,7 +2,7 @@ import * as COLORS from 'common/constants/colors';
 import { STATS_PASSED } from 'common/constants/statistics';
 import { createTooltipRenderer } from 'components/widgets/common/tooltip';
 import { IssueTypeStatTooltip } from '../../issueTypeStatTooltip';
-import { getPercentage, getChartVieModeOptions, calculateTooltipParams } from './utils';
+import { getPercentage, getChartViewModeOptions, calculateTooltipParams } from './utils';
 
 export const NOT_PASSED_STATISTICS_KEY = 'statistics$executions$notPassed';
 
@@ -38,7 +38,7 @@ export const getConfig = ({
       format: (value) => (isPreview ? '' : `${getPercentage(value, totalItems)}%`),
     },
   };
-  const viewModeOptions = getChartVieModeOptions(viewMode, isPreview, totalItems);
+  const viewModeOptions = getChartViewModeOptions(viewMode, isPreview, totalItems);
 
   return {
     data: chartData,

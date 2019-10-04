@@ -278,7 +278,8 @@ export class SimpleWidget extends Component {
             onEdit={this.showEditWidgetModal}
             customClass={cx('common-control')}
             isPrintMode={isPrintMode}
-            dashboardOwner={dashboardOwner}/>
+            dashboardOwner={dashboardOwner}
+          />
         </div>
         <div ref={this.getWidgetNode} className={cx('widget', { hidden: !visible })}>
           {this.getWidgetContent()}
