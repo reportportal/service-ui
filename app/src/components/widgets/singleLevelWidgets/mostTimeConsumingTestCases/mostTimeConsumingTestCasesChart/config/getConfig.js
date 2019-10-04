@@ -4,8 +4,8 @@ import { createTooltipRenderer } from 'components/widgets/common/tooltip';
 import { MostTimeConsumingTestCasesTooltip } from './mostTimeConsumingTestCasesTooltip';
 import { calculateTooltipParams } from './utils';
 
-export const getConfig = ({ content, positionCallback, size: { height }, itemClickHandler }) => {
-  const itemsData = [...content.result]
+export const getConfig = ({ content, positionCallback, size: { height }, onChartClick }) => {
+  const itemsData = [...content]
     .sort((a, b) => b.duration - a.duration)
     .map((item, index) => ({ ...item, tickIndex: 30 - index, index }));
 
@@ -18,7 +18,7 @@ export const getConfig = ({ content, positionCallback, size: { height }, itemCli
   const dataClickHandler = (d) => {
     const targetItem = itemsData.find((item) => item.index === d.index) || {};
 
-    itemClickHandler(targetItem.id);
+    onChartClick(targetItem.id);
   };
 
   return {

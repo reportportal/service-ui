@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
-import isEqual from 'fast-deep-equal';
 import classNames from 'classnames/bind';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { activeProjectSelector } from 'controllers/user';
 import { TEST_ITEM_PAGE } from 'controllers/pages';
-import { C3Chart } from 'components/widgets/common/c3chart';
+import { ChartContainer } from 'components/widgets/common/c3chart';
+import { getChartDefaultProps } from 'components/widgets/common/utils';
 import { getConfig } from './config/getConfig';
 import styles from './launchesDurationChart.scss';
 
@@ -40,29 +40,6 @@ export class LaunchesDurationChart extends Component {
     observer: {},
   };
 
-  state = {
-    isConfigReady: false,
-  };
-
-  componentDidMount() {
-    !this.props.isPreview && this.props.observer.subscribe('widgetResized', this.resizeChart);
-    this.getConfig();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (!isEqual(prevProps.widget, this.props.widget)) {
-      this.getConfig();
-    }
-  }
-
-  componentWillUnmount() {
-    if (!this.props.isPreview) {
-      this.node.removeEventListener('mousemove', this.setupCoords);
-      this.props.observer.unsubscribe('widgetResized', this.resizeChart);
-    }
-    this.chart = null;
-  }
-
   onChartClick = (data) => {
     const {
       widget: { content },
@@ -79,92 +56,23 @@ export class LaunchesDurationChart extends Component {
     });
   };
 
-  onChartCreated = (chart, element) => {
-    this.chart = chart;
-    this.node = element;
-
-    if (!this.props.widget.content.result || this.props.isPreview) {
-      return;
-    }
-
-    this.resizeChart();
-
-    this.node.addEventListener('mousemove', this.setupCoords);
-  };
-
-  getPosition = (d, width, height) => {
-    const rect = this.node.getBoundingClientRect();
-    const left = this.x - rect.left - width / 2;
-    const top = this.y - rect.top - height;
-
-    return {
-      top: top - 8,
-      left,
-    };
-  };
-
-  getConfig = () => {
-    const {
-      intl: { formatMessage },
-      widget: { content },
-      isPreview,
-      container,
-    } = this.props;
-
-    this.height = container.offsetHeight;
-    this.width = container.offsetWidth;
-
-    const params = {
-      content,
-      isPreview,
-      formatMessage,
-      positionCallback: this.getPosition,
-      size: {
-        height: this.height,
-      },
-    };
-
-    this.config = getConfig(params);
-
-    if (!isPreview) {
-      this.config.data.onclick = this.onChartClick;
-    }
-
-    this.setState({
-      isConfigReady: true,
-    });
-  };
-
-  setupCoords = ({ pageX, pageY }) => {
-    this.x = pageX;
-    this.y = pageY;
-  };
-
-  resizeChart = () => {
-    const { offsetHeight: newHeight, offsetWidth: newWidth } = this.props.container;
-
-    if (this.height !== newHeight) {
-      this.chart.resize({
-        height: newHeight,
-      });
-      this.height = newHeight;
-      this.config.size.height = newHeight;
-    } else if (this.width !== newWidth) {
-      this.chart.flush();
-    }
-    this.width = newWidth;
+  configData = {
+    getConfig,
+    formatMessage: this.props.intl.formatMessage,
+    onChartClick: this.onChartClick,
   };
 
   render() {
-    const { isPreview } = this.props;
-    const classes = cx('launches-duration-chart', {
-      'isPreview-view': isPreview,
-    });
     return (
-      <div className={classes}>
-        {this.state.isConfigReady && (
-          <C3Chart config={this.config} onChartCreated={this.onChartCreated} />
-        )}
+      <div className={cx('launches-duration-chart')}>
+        <ChartContainer
+          {...getChartDefaultProps(this.props)}
+          className={cx('widget-wrapper')}
+          configData={this.configData}
+          legendConfig={{
+            showLegend: false,
+          }}
+        />
       </div>
     );
   }

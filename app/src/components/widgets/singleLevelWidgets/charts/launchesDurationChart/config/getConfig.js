@@ -8,7 +8,14 @@ import { createTooltipRenderer } from 'components/widgets/common/tooltip';
 import { DURATION, isValueInterrupted, prepareChartData, calculateTooltipParams } from './utils';
 import { LaunchesDurationTooltip } from './launchesDurationTooltip';
 
-export const getConfig = ({ content, isPreview, formatMessage, positionCallback, size }) => {
+export const getConfig = ({
+  content,
+  isPreview,
+  formatMessage,
+  positionCallback,
+  size,
+  onChartClick,
+}) => {
   const { timeType, chartData, itemsData = [] } = prepareChartData(content);
 
   return {
@@ -23,6 +30,7 @@ export const getConfig = ({ content, isPreview, formatMessage, positionCallback,
         }
         return COLOR_CHART_DURATION;
       },
+      onclick: isPreview ? null : onChartClick,
     },
     grid: {
       y: {

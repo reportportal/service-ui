@@ -3,7 +3,7 @@ import {
   transformCategoryLabelByDefault,
 } from 'components/widgets/common/utils';
 import { createTooltipRenderer } from 'components/widgets/common/tooltip';
-import { COLORS } from '../../../../common/constants';
+import { COLORS } from 'components/widgets/common/constants';
 import { calculateTooltipParams, localMessages } from './utils';
 import { IssueTypeStatTooltip } from '../../common/issueTypeStatTooltip';
 
@@ -13,12 +13,12 @@ export const getLaunchModeConfig = ({
   formatMessage,
   positionCallback,
   size,
+  onChartClick,
 }) => {
-  const { result } = content;
   const colors = {};
   const columns = [];
 
-  const sortedResult = result.sort((item) => -item.number);
+  const sortedResult = content.sort((item) => -item.number);
   const itemsData = sortedResult.map((item) => ({
     id: item.id,
     name: item.name,
@@ -34,12 +34,14 @@ export const getLaunchModeConfig = ({
   });
 
   return {
+    legendItems: groups,
     data: {
       columns,
       type: 'bar',
       order: null,
       groups: [groups],
       colors,
+      onclick: isPreview ? null : onChartClick,
     },
     grid: {
       y: {

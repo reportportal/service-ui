@@ -36,8 +36,8 @@ export const prepareChartData = (data) => {
   const chartData = [DURATION];
   const itemsData = [];
   let max = 0;
-  const average = getListAverage(data.result);
-  data.result.forEach((item) => {
+  const average = getListAverage(data);
+  data.forEach((item) => {
     const duration = parseInt(item.duration, 10);
     const { id, name, number } = item;
     const { status, startTime, endTime } = item;

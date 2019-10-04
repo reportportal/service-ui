@@ -4,14 +4,17 @@ import classNames from 'classnames/bind';
 import { injectIntl, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import * as d3 from 'd3-selection';
-import isEqual from 'fast-deep-equal';
+import { ALL } from 'common/constants/reservedFilterIds';
 import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { defectTypesSelector } from 'controllers/project';
 import { defectLinkSelector, statisticsLinkSelector } from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
-import { getDefectTypeLocators, getItemNameConfig } from 'components/widgets/common/utils';
-import { C3Chart } from 'components/widgets/common/c3chart';
-import { Legend } from 'components/widgets/common/legend';
+import {
+  getDefectTypeLocators,
+  getItemNameConfig,
+  getChartDefaultProps,
+} from 'components/widgets/common/utils';
+import { ChartContainer } from 'components/widgets/common/c3chart';
 import { getConfig } from './config/getConfig';
 import styles from './launchesComparisonChart.scss';
 
@@ -54,63 +57,13 @@ export class LaunchesComparisonChart extends Component {
     onChangeLegend: () => {},
   };
 
-  state = {
-    isConfigReady: false,
-  };
-
-  componentDidMount() {
-    !this.props.isPreview && this.props.observer.subscribe('widgetResized', this.resizeChart);
-    this.getConfig();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (!isEqual(prevProps.widget, this.props.widget)) {
-      this.getConfig();
-    }
-  }
-
-  componentWillUnmount() {
-    if (!this.props.isPreview) {
-      this.node.removeEventListener('mousemove', this.setupCoords);
-      this.props.observer.unsubscribe('widgetResized', this.resizeChart);
-    }
-    this.chart = null;
-  }
-
-  onChartCreated = (chart, element) => {
-    this.chart = chart;
-    this.node = element;
-
-    if (!this.props.widget.content.result || this.props.isPreview) {
-      return;
-    }
-
-    this.props.uncheckedLegendItems.forEach((id) => {
-      this.chart.toggle(id);
-    });
-
-    this.node.addEventListener('mousemove', this.setupCoords);
-
-    // eslint-disable-next-line func-names
+  onChartCreated = () => {
     d3.selectAll(document.querySelectorAll('.c3-chart-bar path')).each(function() {
       const elem = d3.select(this);
       if (elem.datum().value === 0) {
         elem.style('stroke-width', '3px');
       }
     });
-  };
-
-  onMouseOut = () => {
-    this.chart.revert();
-  };
-
-  onMouseOver = (id) => {
-    this.chart.focus(id);
-  };
-
-  onClickLegendItem = (id) => {
-    this.props.onChangeLegend(id);
-    this.chart.toggle(id);
   };
 
   onChartClick = (data) => {
@@ -130,100 +83,48 @@ export class LaunchesComparisonChart extends Component {
   getDefaultLinkParams = (testItemIds) => ({
     payload: {
       projectId: this.props.project,
-      filterId: 'all',
+      filterId: ALL,
       testItemIds,
     },
     type: TEST_ITEM_PAGE,
   });
 
-  getPosition = (d, width, height) => {
-    const rect = this.node.getBoundingClientRect();
-    const left = this.x - rect.left - width / 2;
-    const top = this.y - rect.top - height;
-
-    return {
-      top: top - 8,
-      left,
-    };
-  };
-
-  getConfig = () => {
+  getConfigData = () => {
     const {
       intl: { formatMessage },
-      widget: { content, contentParameters },
-      isPreview,
-      container,
+      widget: { contentParameters },
       defectTypes,
     } = this.props;
 
-    this.height = container.offsetHeight;
-    this.width = container.offsetWidth;
-
-    const params = {
-      content,
-      contentParameters,
-      isPreview,
+    return {
       formatMessage,
-      positionCallback: this.getPosition,
-      size: {
-        height: this.height,
-      },
       defectTypes,
+      getConfig,
+      contentParameters,
+      onChartClick: this.onChartClick,
     };
-
-    const configurationData = getConfig(params);
-
-    this.config = configurationData.config;
-    this.itemNames = configurationData.itemNames;
-
-    if (!isPreview) {
-      this.config.data.onclick = this.onChartClick;
-    }
-
-    this.setState({
-      isConfigReady: true,
-    });
-  };
-
-  setupCoords = ({ pageX, pageY }) => {
-    this.x = pageX;
-    this.y = pageY;
-  };
-
-  resizeChart = () => {
-    const newHeight = this.props.container.offsetHeight;
-    const newWidth = this.props.container.offsetWidth;
-
-    if (this.height !== newHeight) {
-      this.chart.resize({
-        height: newHeight,
-      });
-      this.height = newHeight;
-      this.config.size.height = newHeight;
-    } else if (this.width !== newWidth) {
-      this.chart.flush();
-    }
-    this.width = newWidth;
   };
 
   render() {
+    const { onChangeLegend, uncheckedLegendItems } = this.props;
+    const legendConfig = {
+      onChangeLegend,
+      showLegend: true,
+      uncheckedLegendItems,
+      legendProps: {
+        noTotal: true,
+      },
+    };
+
     return (
-      this.state.isConfigReady && (
-        <div className={cx('launches-comparison-chart')}>
-          <C3Chart config={this.config} onChartCreated={this.onChartCreated}>
-            {!this.props.isPreview && (
-              <Legend
-                items={this.itemNames}
-                uncheckedLegendItems={this.props.uncheckedLegendItems}
-                noTotal
-                onClick={this.onClickLegendItem}
-                onMouseOver={this.onMouseOver}
-                onMouseOut={this.onMouseOut}
-              />
-            )}
-          </C3Chart>
-        </div>
-      )
+      <div className={cx('launches-comparison-chart')}>
+        <ChartContainer
+          {...getChartDefaultProps(this.props)}
+          legendConfig={legendConfig}
+          configData={this.getConfigData()}
+          chartCreatedCallback={this.onChartCreated}
+        />
+      </div>
     );
   }
 }
