@@ -9,4 +9,5 @@ export {
   getUpdatedFilterWithTime,
   DEFECTS,
   range,
+  getChartDefaultProps,
 } from './utils';

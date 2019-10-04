@@ -101,3 +101,11 @@ export const getUpdatedFilterWithTime = (chartFilter, itemDate) => {
     conditions: chartFilter.conditions.concat(newCondition),
   };
 };
+
+export const getChartDefaultProps = ({ isPreview, widget, container, observer, height }) => ({
+  isPreview,
+  widget,
+  container,
+  observer,
+  height,
+});

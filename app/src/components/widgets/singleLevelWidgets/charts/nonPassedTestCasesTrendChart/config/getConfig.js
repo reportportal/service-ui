@@ -17,7 +17,7 @@ export const getConfig = ({ content, isPreview, formatMessage, positionCallback,
   const chartData = ['notPassed'];
   const itemsData = [];
 
-  content.result.forEach((item) => {
+  content.forEach((item) => {
     const value = parseFloat(item.values[FAILED_SKIPPED_TOTAL]);
     const { id, name, number, startTime } = item;
     itemsData.push({ id, name, number, startTime });

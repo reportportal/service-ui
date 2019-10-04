@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import c3 from 'c3';
 
-export class C3Chart extends React.Component {
+export class C3Chart extends Component {
   static propTypes = {
     children: PropTypes.node,
     config: PropTypes.object,
@@ -54,7 +54,7 @@ export class C3Chart extends React.Component {
 
   render() {
     return (
-      <React.Fragment>
+      <Fragment>
         <div
           ref={(node) => {
             this.node = node;
@@ -63,7 +63,7 @@ export class C3Chart extends React.Component {
           style={this.props.style}
         />
         {this.props.children}
-      </React.Fragment>
+      </Fragment>
     );
   }
 }
