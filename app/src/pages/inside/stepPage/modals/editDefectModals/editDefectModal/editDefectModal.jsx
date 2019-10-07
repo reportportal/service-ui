@@ -6,7 +6,6 @@ import classNames from 'classnames/bind';
 import { injectIntl, intlShape } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
 import { availableBtsIntegrationsSelector, isPostIssueActionAvailable } from 'controllers/plugins';
-import { fetchTestItemsAction } from 'controllers/testItem';
 import { unlinkIssueAction, linkIssueAction, postIssueAction } from 'controllers/step';
 import { hideModalAction } from 'controllers/modal';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -36,7 +35,6 @@ const cx = classNames.bind(styles);
   {
     showNotification,
     hideModalAction,
-    fetchTestItemsAction,
     unlinkIssueAction,
     linkIssueAction,
     postIssueAction,
@@ -55,7 +53,6 @@ export class EditDefectModal extends Component {
     }).isRequired,
     showNotification: PropTypes.func.isRequired,
     hideModalAction: PropTypes.func.isRequired,
-    fetchTestItemsAction: PropTypes.func.isRequired,
     unlinkIssueAction: PropTypes.func.isRequired,
     linkIssueAction: PropTypes.func.isRequired,
     postIssueAction: PropTypes.func.isRequired,

@@ -36,6 +36,7 @@ describe('Attachments Selectors', () => {
         contentType: 'text/html',
         id: '1234',
         src: '**FILE_MOCK**',
+        thumbnailSrc: null,
         isImage: false,
       },
       {
@@ -43,6 +44,7 @@ describe('Attachments Selectors', () => {
         contentType: 'image/png',
         id: '5678',
         src: '/api/v1/data/test_project/5678',
+        thumbnailSrc: '/api/v1/data/test_project/5678?loadThumbnail=true',
         isImage: true,
       },
     ];

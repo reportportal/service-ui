@@ -5,3 +5,4 @@ export { InputControl } from './inputControl';
 export { TagsControl } from './tagsControl';
 export { TogglerControl } from './togglerControl';
 export { CustomColumnsControl } from './customColumnsControl';
+export { AttributesFieldArrayControl } from './attributesFieldArrayControl';

@@ -6,13 +6,13 @@ import classNames from 'classnames/bind';
 import { injectIntl, intlShape } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
 import { availableBtsIntegrationsSelector, isPostIssueActionAvailable } from 'controllers/plugins';
-import { fetchTestItemsAction, launchSelector } from 'controllers/testItem';
+import { launchSelector } from 'controllers/testItem';
 import { activeFilterSelector } from 'controllers/filter';
 import { unlinkIssueAction, linkIssueAction, postIssueAction } from 'controllers/step';
 import { hideModalAction } from 'controllers/modal';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { fetch, setStorageItem, getStorageItem } from 'common/utils';
+import { fetch, setStorageItem, getStorageItem, isEmptyObject } from 'common/utils';
 import { URLS } from 'common/urls';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -44,7 +44,6 @@ const cx = classNames.bind(styles);
   {
     showNotification,
     hideModalAction,
-    fetchTestItemsAction,
     unlinkIssueAction,
     linkIssueAction,
     postIssueAction,
@@ -62,7 +61,6 @@ export class EditToInvestigateDefectModal extends Component {
     }).isRequired,
     showNotification: PropTypes.func.isRequired,
     hideModalAction: PropTypes.func.isRequired,
-    fetchTestItemsAction: PropTypes.func.isRequired,
     unlinkIssueAction: PropTypes.func.isRequired,
     linkIssueAction: PropTypes.func.isRequired,
     postIssueAction: PropTypes.func.isRequired,
@@ -156,6 +154,17 @@ export class EditToInvestigateDefectModal extends Component {
     return {
       confirmationWarning: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING),
     };
+  };
+
+  getCurrentLaunch = () => {
+    const {
+      currentLaunch,
+      data: {
+        item: { pathNames: { launchPathName = {} } = {} },
+      },
+    } = this.props;
+
+    return isEmptyObject(currentLaunch) ? launchPathName : currentLaunch;
   };
 
   prepareDataToSend = () => {
@@ -380,7 +389,7 @@ export class EditToInvestigateDefectModal extends Component {
   );
 
   render() {
-    const { intl, currentLaunch, currentFilter } = this.props;
+    const { intl, currentFilter } = this.props;
     const customButton = {
       onClick: this.onEditDefects,
       buttonProps: {
@@ -437,7 +446,7 @@ export class EditToInvestigateDefectModal extends Component {
           <ItemsList
             testItems={this.state.testItems}
             selectedItems={this.state.selectedItems}
-            currentLaunch={currentLaunch}
+            currentLaunch={this.getCurrentLaunch()}
             currentFilter={currentFilter}
             searchMode={this.state.searchMode}
             loading={this.state.loading}

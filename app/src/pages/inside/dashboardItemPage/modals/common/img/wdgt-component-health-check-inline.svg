@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="250px" height="124px" viewBox="0 0 250 124" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 57.1 (83088) - https://sketch.com -->
+    <title>Group</title>
+    <desc>Created with Sketch.</desc>
+    <g id="health-check" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Wizard-Copy" transform="translate(-83.000000, -314.000000)">
+            <g id="left-panel-copy" transform="translate(28.000000, 20.000000)">
+                <g id="Group" transform="translate(55.000000, 294.000000)">
+                    <rect id="Rectangle-3" fill="#FFFFFF" x="0" y="0" width="250" height="124"></rect>
+                    <rect id="Rectangle-18" fill="#D8D8D8" x="19" y="14.88" width="27" height="3.968"></rect>
+                    <rect id="Rectangle-18-Copy-11" fill="#D8D8D8" x="60" y="14.88" width="27" height="3.968"></rect>
+                    <rect id="Rectangle-18-Copy-12" fill="#D8D8D8" x="60" y="82.336" width="27" height="3.968"></rect>
+                    <rect id="Rectangle-18-Copy-5" fill="#E9E9E9" opacity="0.5" x="60" y="21.824" width="46" height="23.808" rx="2"></rect>
+                    <path d="M62,21.824 L104,21.824 C105.104569,21.824 106,22.7194305 106,23.824 L106,25.792 L106,25.792 L60,25.792 L60,23.824 C60,22.7194305 60.8954305,21.824 62,21.824 Z" id="Rectangle-18-Copy-5" fill="#8F0808"></path>
+                    <rect id="Rectangle-18-Copy-8" fill="#E9E9E9" opacity="0.5" x="60" y="50.592" width="46" height="23.808" rx="2"></rect>
+                    <path d="M62,50.592 L104,50.592 C105.104569,50.592 106,51.4874305 106,52.592 L106,54.56 L106,54.56 L60,54.56 L60,52.592 C60,51.4874305 60.8954305,50.592 62,50.592 Z" id="Rectangle-18-Copy-18" fill="#F5E206"></path>
+                    <rect id="Rectangle-18-Copy-13" fill="#E9E9E9" opacity="0.5" x="60" y="90.272" width="46" height="23.808" rx="2"></rect>
+                    <path d="M62,90.272 L104,90.272 C105.104569,90.272 106,91.1674305 106,92.272 L106,94.24 L106,94.24 L60,94.24 L60,92.272 C60,91.1674305 60.8954305,90.272 62,90.272 Z" id="Rectangle-18-Copy-21" fill="#87B77B"></path>
+                    <rect id="Rectangle-18-Copy-6" fill="#E9E9E9" opacity="0.5" x="111" y="21.824" width="46" height="23.808" rx="2"></rect>
+                    <rect id="Rectangle-18-Copy-9" fill="#E9E9E9" opacity="0.5" x="111" y="50.592" width="46" height="23.808" rx="2"></rect>
+                    <path d="M113,21.824 L155,21.824 C156.104569,21.824 157,22.7194305 157,23.824 L157,25.792 L157,25.792 L111,25.792 L111,23.824 C111,22.7194305 111.895431,21.824 113,21.824 Z" id="Rectangle-18-Copy-16" fill="#BE0A0A"></path>
+                    <rect id="Rectangle-18-Copy-14" fill="#E9E9E9" opacity="0.5" x="111" y="90.272" width="46" height="23.808" rx="2"></rect>
+                    <path d="M113,50.592 L155,50.592 C156.104569,50.592 157,51.4874305 157,52.592 L157,54.56 L157,54.56 L111,54.56 L111,52.592 C111,51.4874305 111.895431,50.592 113,50.592 Z" id="Rectangle-18-Copy-19" fill="#F5E206"></path>
+                    <rect id="Rectangle-18-Copy-7" fill="#E9E9E9" opacity="0.5" x="162" y="21.824" width="46" height="23.808" rx="2"></rect>
+                    <path d="M113,90.272 L155,90.272 C156.104569,90.272 157,91.1674305 157,92.272 L157,94.24 L157,94.24 L111,94.24 L111,92.272 C111,91.1674305 111.895431,90.272 113,90.272 Z" id="Rectangle-18-Copy-22" fill="#87B77B"></path>
+                    <rect id="Rectangle-18-Copy-10" fill="#E9E9E9" opacity="0.5" x="162" y="50.592" width="46" height="23.808" rx="2"></rect>
+                    <path d="M164,21.824 L206,21.824 C207.104569,21.824 208,22.7194305 208,23.824 L208,25.792 L208,25.792 L162,25.792 L162,23.824 C162,22.7194305 162.895431,21.824 164,21.824 Z" id="Rectangle-18-Copy-17" fill="#F56E6E"></path>
+                    <rect id="Rectangle-18-Copy-15" fill="#E9E9E9" opacity="0.5" x="162" y="90.272" width="46" height="23.808" rx="2"></rect>
+                    <path d="M164,50.592 L206,50.592 C207.104569,50.592 208,51.4874305 208,52.592 L208,54.56 L208,54.56 L162,54.56 L162,52.592 C162,51.4874305 162.895431,50.592 164,50.592 Z" id="Rectangle-18-Copy-20" fill="#F5E206"></path>
+                    <rect id="Rectangle-18-Copy" fill="#D8D8D8" x="19" y="28.768" width="27" height="3.968"></rect>
+                    <path d="M164,90.272 L206,90.272 C207.104569,90.272 208,91.1674305 208,92.272 L208,94.24 L208,94.24 L162,94.24 L162,92.272 C162,91.1674305 162.895431,90.272 164,90.272 Z" id="Rectangle-18-Copy-23" fill="#87B77B"></path>
+                    <rect id="Rectangle-18-Copy-2" fill="#D8D8D8" x="19" y="42.656" width="27" height="3.968"></rect>
+                    <rect id="Rectangle-18-Copy-3" fill="#D8D8D8" x="19" y="56.544" width="27" height="3.968"></rect>
+                    <rect id="Rectangle-18-Copy-4" fill="#D8D8D8" x="19" y="70.432" width="27" height="3.968"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -38,6 +38,7 @@
 
 .desktop-label {
   display: inline-block;
+  line-height: 1.2;
 
   @media(max-width: $SCREEN_SM_MAX) {
     display: none;

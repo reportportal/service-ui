@@ -1,4 +1,4 @@
 export const ANALYZER_TYPES = {
-  AUTO_ANALYZER: 'auto',
-  PATTERN_ANALYSER: 'pattern',
+  AUTO_ANALYZER: 'autoAnalyzer',
+  PATTERN_ANALYSER: 'patternAnalyzer',
 };

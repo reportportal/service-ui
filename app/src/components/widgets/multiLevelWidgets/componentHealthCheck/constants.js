@@ -1,0 +1,1 @@
+export const MAX_PASSING_RATE_VALUE = 100;

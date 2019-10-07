@@ -9,6 +9,7 @@ import {
   loadingSelector,
   fetchTestItemsAction,
   isListViewSelector,
+  isTestItemsListSelector,
   namespaceSelector,
 } from 'controllers/testItem';
 import { debugModeSelector } from 'controllers/launch';
@@ -54,6 +55,7 @@ import { StepGrid } from './stepGrid';
     listView: isListViewSelector(state, namespaceSelector(state)),
     highlightItemId: prevTestItemSelector(state),
     getDefectType: getDefectTypeSelector(state),
+    isTestItemsList: isTestItemsListSelector(state),
   }),
   {
     unselectAllSteps: unselectAllStepsAction,
@@ -125,6 +127,7 @@ export class StepPage extends Component {
     }).isRequired,
     highlightItemId: PropTypes.number,
     getDefectType: PropTypes.func,
+    isTestItemsList: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -165,6 +168,7 @@ export class StepPage extends Component {
     filterEntities: [],
     highlightItemId: null,
     getDefectType: () => {},
+    isTestItemsList: false,
   };
 
   state = {
@@ -347,6 +351,7 @@ export class StepPage extends Component {
       onChangeSorting,
       sortingColumn,
       sortingDirection,
+      isTestItemsList,
     } = this.props;
     const rowHighlightingConfig = {
       onGridRowHighlighted: this.onGridRowHighlighted,
@@ -381,6 +386,7 @@ export class StepPage extends Component {
             onFilterValidate={onFilterValidate}
             onFilterRemove={onFilterRemove}
             onFilterAdd={onFilterAdd}
+            isTestItemsList={isTestItemsList}
           />
           <StepGrid
             data={steps}

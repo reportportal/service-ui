@@ -1,0 +1,72 @@
+.health-check-breadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  width: 80%;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  margin-right: 12px;
+  margin-top: 5px;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  line-height: normal;
+  color: $COLOR--gray-60;
+
+  &.active {
+    color: $COLOR--windows-blue;
+  }
+}
+
+.item-name {
+  max-width: 70px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.link {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  cursor: pointer;
+}
+
+.link-color {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 4px;
+  border-radius: 2px;
+}
+
+.link-value {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  font-size: 13px;
+  color: $COLOR--black-2;
+}
+
+.link-value-name {
+  max-width: 65px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.link-key {
+  font-size: 11px;
+}
+
+.icon {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-left: 8px;
+  transform: rotate(45deg);
+  border: 1px solid $COLOR--gray-91;
+  border-left: none;
+  border-bottom: none;
+}

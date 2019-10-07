@@ -93,4 +93,8 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.login',
     defaultMessage: 'Login',
   },
+  NO_BTS_INTEGRATION: {
+    id: 'Common.notBtsIntegration',
+    defaultMessage: 'BTS integration is not configured. Connect with Admin',
+  },
 });

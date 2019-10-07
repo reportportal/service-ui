@@ -99,6 +99,14 @@ const messages = defineMessages({
     id: 'PatternAnalysis.updatePAStateSuccess',
     defaultMessage: 'Pattern analysis settings were successfully updated',
   },
+  saveFilterSuccess: {
+    id: 'LaunchFiltersToolbar.saveFilterSuccess',
+    defaultMessage: 'Filter has been saved',
+  },
+  updateFilterSuccess: {
+    id: 'LaunchFiltersToolbar.updateFilterSuccess',
+    defaultMessage: 'Filter has been updated',
+  },
 });
 
 @injectIntl

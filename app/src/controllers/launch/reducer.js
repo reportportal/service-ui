@@ -49,12 +49,6 @@ const updateLaunchLocallyReducer = (state, { type, payload }) => {
         }
         return item;
       });
-    default:
-      return state;
-  }
-};
-const updateLaunchesLocallyReducer = (state, { type, payload }) => {
-  switch (type) {
     case UPDATE_LAUNCHES_LOCALLY:
       return state.map((item) => payload.find((newItem) => newItem.id === item.id) || item);
     default:
@@ -93,7 +87,6 @@ export const launchReducer = combineReducers({
   launches: queueReducers(
     fetchReducer(NAMESPACE, { contentPath: 'content' }),
     updateLaunchLocallyReducer,
-    updateLaunchesLocallyReducer,
   ),
   pagination: paginationReducer(NAMESPACE),
   groupOperations: groupOperationsReducer(NAMESPACE),

@@ -53,7 +53,9 @@ export class FilterEntitiesContainer extends Component {
   collectEntities = (values) =>
     Object.keys(values).reduce((acc, entityId) => {
       const value = values[entityId];
-      return !this.isValidChange(entityId) ? acc : { ...acc, [entityId]: value };
+      return this.isValidChange(entityId)
+        ? { ...acc, [entityId]: value }
+        : { ...acc, [entityId]: { ...value, value: '' } };
     }, {});
 
   isValidChange = (entityId) => {

@@ -4,7 +4,7 @@ import classNames from 'classnames/bind';
 import { defineMessages, intlShape, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form';
-import { commonValidators } from 'common/utils';
+import { commonValidators, validateAsync } from 'common/utils';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { Input } from 'components/inputs/input';
@@ -32,6 +32,10 @@ const localMessages = defineMessages({
   validate: ({ name }) => ({
     name: commonValidators.filterName(name),
   }),
+  asyncValidate: ({ name }, dispatch, props) =>
+    validateAsync.filterNameUnique(props.activeProject, undefined, name),
+  asyncChangeFields: ['name'],
+  asyncBlurFields: ['name'],
   onChange: ({ name }, dispatcher, { onChange }) => onChange({ name }),
   enableReinitialize: true,
   keepDirtyOnReinitialize: true,

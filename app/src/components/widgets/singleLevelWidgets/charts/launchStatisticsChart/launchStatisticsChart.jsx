@@ -226,7 +226,7 @@ export class LaunchStatisticsChart extends Component {
         show:
           this.isSingleColumn() &&
           this.configData.widgetViewMode === MODES_VALUES[CHART_MODES.AREA_VIEW],
-        r: 3,
+        r: 5,
         focus: {
           expand: {
             r: 5,
@@ -341,8 +341,10 @@ export class LaunchStatisticsChart extends Component {
       delete currentItemData.values;
       itemData.push(currentItemData);
       contentFields.forEach((contentFieldKey) => {
-        const value = item.values[contentFieldKey] || 0;
-        chartData[contentFieldKey].push(!Number(value) && isTimeLine ? null : Number(value));
+        const value = Number(item.values[contentFieldKey]) || 0;
+        if (value || !isTimeLine) {
+          chartData[contentFieldKey].push(value);
+        }
       });
     });
 
@@ -451,18 +453,18 @@ export class LaunchStatisticsChart extends Component {
   };
 
   renderContents = (data, defaultTitleFormat, defaultValueFormat, color) => {
-    const { name, number, startTime, date } = this.configData.itemData[data[0].index];
+    const { index, id, value } = data[0];
+    const { name, number, startTime, date } = this.configData.itemData[index];
     const {
       intl: { formatMessage },
       defectTypes,
     } = this.props;
-    const id = data[0].id;
 
     return ReactDOMServer.renderToStaticMarkup(
       <IssueTypeStatTooltip
         itemName={this.configData.isTimeLine ? date : `${name} #${number}`}
         startTime={this.configData.isTimeLine ? null : Number(startTime)}
-        itemCases={`${data[0].value} ${formatMessage(messages.cases)}`}
+        itemCases={`${value} ${formatMessage(messages.cases)}`}
         color={color(id)}
         issueStatNameProps={{ itemName: id, defectTypes, formatMessage }}
       />,

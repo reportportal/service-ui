@@ -11,7 +11,6 @@ import ImportIcon from 'common/img/import-inline.svg';
 import { URLS } from 'common/urls';
 import { MODAL_TYPE_UPLOAD_PLUGIN } from 'pages/common/modals/importModal/constants';
 import { UPLOAD, INITIAL_PARAMS_FIELD_KEY } from './constants';
-import { UploadCustomBlock } from './uploadCustomBlock';
 import styles from './actionPanel.scss';
 
 const cx = classNames.bind(styles);
@@ -94,8 +93,8 @@ export class ActionPanel extends Component {
         tip: formatMessage(messages.uploadTip),
         incorrectFileSize: formatMessage(messages.incorrectFileSize),
         url: URLS.plugin(),
-        customBlock: UploadCustomBlock,
-        appendCustomBlockValue: this.appendInitialParamsValue,
+        // customBlock: UploadCustomBlock,
+        // appendCustomBlockValue: this.appendInitialParamsValue,
         singleImport: true,
         eventsInfo: {
           okBtn: PLUGINS_PAGE_EVENTS.OK_BTN_UPLOAD_MODAL,

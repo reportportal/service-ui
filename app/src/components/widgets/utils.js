@@ -10,3 +10,7 @@ export const topPatternsFormatParams = (params = {}) =>
         patternTemplateName: params.patternTemplateName,
       }
     : {};
+
+export const componentHealthCheckFormatParams = (params = {}) => ({
+  attributes: (params.attributes || []).join(','),
+});

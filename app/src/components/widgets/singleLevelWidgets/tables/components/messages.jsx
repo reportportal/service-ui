@@ -6,6 +6,13 @@ import {
   STATS_FAILED,
   STATS_SKIPPED,
 } from 'common/constants/statistics';
+import {
+  PRODUCT_BUG,
+  TO_INVESTIGATE,
+  SYSTEM_ISSUE,
+  AUTOMATION_BUG,
+  NO_DEFECT,
+} from 'common/constants/defectTypes';
 import { STATS_AB, STATS_ND, STATS_PB, STATS_SI, STATS_TI } from './constants';
 
 export const totalColumnFullTitle = (
@@ -39,6 +46,11 @@ export const defaultDefectsMessages = {
   [STATS_AB]: 'Automation bug',
   [STATS_ND]: 'No defect',
   [STATS_SI]: 'System issue',
+  [TO_INVESTIGATE]: 'To investigate',
+  [PRODUCT_BUG]: 'Product bug',
+  [AUTOMATION_BUG]: 'Automation bug',
+  [NO_DEFECT]: 'No defect',
+  [SYSTEM_ISSUE]: 'System issue',
 };
 
 export const defaultStatisticsMessages = {

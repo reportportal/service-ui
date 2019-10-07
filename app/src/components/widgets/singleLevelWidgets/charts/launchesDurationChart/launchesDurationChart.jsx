@@ -4,10 +4,10 @@ import { injectIntl, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import isEqual from 'fast-deep-equal';
 import classNames from 'classnames/bind';
+import { ALL } from 'common/constants/reservedFilterIds';
 import { activeProjectSelector } from 'controllers/user';
 import { TEST_ITEM_PAGE } from 'controllers/pages';
-import { ALL } from 'common/constants/reservedFilterIds';
-import { C3Chart } from '../../../common/c3chart';
+import { C3Chart } from 'components/widgets/common/c3chart';
 import { getConfig } from './config/getConfig';
 import styles from './launchesDurationChart.scss';
 
@@ -141,8 +141,7 @@ export class LaunchesDurationChart extends Component {
   };
 
   resizeChart = () => {
-    const newHeight = this.props.container.offsetHeight;
-    const newWidth = this.props.container.offsetWidth;
+    const { offsetHeight: newHeight, offsetWidth: newWidth } = this.props.container;
 
     if (this.height !== newHeight) {
       this.chart.resize({

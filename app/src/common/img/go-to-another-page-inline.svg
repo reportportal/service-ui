@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="12px" height="12px" viewBox="0 0 12 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <desc>Created with Sketch.</desc>
+    <g id="health-check-new" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="healt_check_accnt-hover" transform="translate(-321.000000, -427.000000)">
+            <g id="baseline-open_in_new-24px" transform="translate(320.000000, 426.000000)">
+                <polygon id="Path" points="0 0 14 0 14 14 0 14"></polygon>
+                <path d="M11.0833333,11.0833333 L2.91666667,11.0833333 L2.91666667,2.91666667 L7,2.91666667 L7,1.75 L2.91666667,1.75 C2.26916667,1.75 1.75,2.275 1.75,2.91666667 L1.75,11.0833333 C1.75,11.725 2.26916667,12.25 2.91666667,12.25 L11.0833333,12.25 C11.725,12.25 12.25,11.725 12.25,11.0833333 L12.25,7 L11.0833333,7 L11.0833333,11.0833333 Z M8.16666667,1.75 L8.16666667,2.91666667 L10.2608333,2.91666667 L4.52666667,8.65083333 L5.34916667,9.47333333 L11.0833333,3.73916667 L11.0833333,5.83333333 L12.25,5.83333333 L12.25,1.75 L8.16666667,1.75 Z" id="Shape" fill="#777777" fill-rule="nonzero"></path>
+            </g>
+        </g>
+    </g>
+</svg>

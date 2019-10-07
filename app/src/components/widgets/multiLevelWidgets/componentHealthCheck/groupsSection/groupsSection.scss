@@ -1,0 +1,24 @@
+.groups-section {
+  display: flex;
+  flex-direction: column;
+  margin: 10px 0 5px 25px;
+}
+
+.section-title {
+  margin: 15px 0;
+  color: $COLOR--black-2;
+  font-size: 13px;
+
+  .caption {
+    font-family: $FONT-SEMIBOLD;
+  }
+}
+
+.section-content {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.group-item-wrapper {
+  margin: 0 15px 15px 0;
+}

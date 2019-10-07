@@ -14,6 +14,7 @@ import {
   activeFilterSelector,
   loadingSelector,
   filtersPaginationSelector,
+  updateFilterSuccessAction,
 } from 'controllers/filter';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { WIDGET_WIZARD_FORM } from '../../../constants';
@@ -76,6 +77,7 @@ const messages = defineMessages({
   {
     changeWizardForm: (field, value) => change(WIDGET_WIZARD_FORM, field, value, null),
     fetchFiltersConcatAction,
+    updateFilterSuccessAction,
     notify: showNotification,
   },
 )
@@ -99,6 +101,7 @@ export class FiltersControl extends Component {
     activeLaunchFilter: PropTypes.object,
     changeWizardForm: PropTypes.func,
     fetchFiltersConcatAction: PropTypes.func,
+    updateFilterSuccessAction: PropTypes.func,
     onFormAppearanceChange: PropTypes.func.isRequired,
     notify: PropTypes.func.isRequired,
   };
@@ -118,6 +121,7 @@ export class FiltersControl extends Component {
     pagination: {},
     changeWizardForm: () => {},
     fetchFiltersConcatAction: () => {},
+    updateFilterSuccessAction: () => {},
     onFormAppearanceChange: () => {},
     notify: () => {},
   };
@@ -143,6 +147,7 @@ export class FiltersControl extends Component {
   getFormAppearanceComponent = (activeFilter) => {
     const {
       formAppearance: { mode: formAppearanceMode, filter: formAppearanceFilter },
+      activeProject,
     } = this.props;
 
     const component = (() => {
@@ -163,6 +168,7 @@ export class FiltersControl extends Component {
               filter={
                 formAppearanceFilter.conditions ? formAppearanceFilter : NEW_FILTER_DEFAULT_CONFIG
               }
+              activeProject={activeProject}
               onChange={this.handleFilterChange}
               onCancel={this.clearFormAppearance}
               onSave={this.handleFilterInsert}
@@ -285,14 +291,15 @@ export class FiltersControl extends Component {
 
   handleFilterUpdate = (filter) => {
     const { intl, notify, activeProject } = this.props;
+    const data = this.getFilterForSubmit(filter);
 
     fetch(URLS.filter(activeProject, filter.id), {
       method: 'put',
-      data: this.getFilterForSubmit(filter),
+      data,
     })
       .then(() => {
         this.fetchFilter({ page: 1 });
-
+        this.props.updateFilterSuccessAction(data);
         notify({
           message: intl.formatMessage(messages.updateFilterSuccess),
           type: NOTIFICATION_TYPES.SUCCESS,

@@ -3,6 +3,8 @@ import { bindMessageToValidator, composeBoundValidators } from './validatorHelpe
 
 export const requiredField = bindMessageToValidator(validate.required, 'requiredFieldHint');
 
+export const attributeKey = bindMessageToValidator(validate.attributeKey, 'attributeKeyLengthHint');
+
 export const filterName = bindMessageToValidator(validate.filterName, 'filterNameError');
 
 export const itemNameEntity = bindMessageToValidator(validate.itemNameEntity, 'itemNameEntityHint');
@@ -16,6 +18,10 @@ export const descriptionEntity = bindMessageToValidator(
 );
 
 export const btsUrl = bindMessageToValidator(validate.url, 'btsUrlHint');
+export const btsIntegrationName = bindMessageToValidator(
+  validate.btsIntegrationName,
+  'btsIntegrationNameHint',
+);
 export const btsProject = bindMessageToValidator(validate.btsProject, 'btsProjectHint');
 
 export const email = bindMessageToValidator(validate.requiredEmail, 'emailHint');

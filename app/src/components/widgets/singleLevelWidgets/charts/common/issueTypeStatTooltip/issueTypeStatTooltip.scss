@@ -8,12 +8,14 @@
   border-radius: 6px;
 }
 
-.start-time {
+.start-time, .items-count {
   margin-bottom: 4px;
 }
 
-.issue-stat-name {
-  margin-right: 4px;
+.items-count {
+  font-size: 16px;
+  color: $COLOR--charcoal-grey;
+  white-space: nowrap;
 }
 
 .item-cases {

@@ -6,6 +6,7 @@ import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { DefectType } from 'pages/inside/stepPage/stepGrid/defectType';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import {
   linkIssueAction,
   unlinkIssueAction,
@@ -57,17 +58,17 @@ const messages = defineMessages({
     id: 'LogItemInfo.linkIssue',
     defaultMessage: 'Link issue',
   },
-  noBugTrackingSystemToLinkIssue: {
-    id: 'LogItemInfo.noBugTrackingSystemToLinkIssue',
-    defaultMessage: 'Configure bug tracking system to link issue',
-  },
   noDefectTypeToLinkIssue: {
     id: 'LogItemInfo.noDefectTypeToLinkIssue',
     defaultMessage: "You can't link issue if item has no defect type",
   },
-  noBugTrackingSystemToPostIssue: {
-    id: 'LogItemInfo.noBugTrackingSystemToPostIssue',
-    defaultMessage: 'Configure bug tracking system to post issue',
+  noDefectTypeToPostIssue: {
+    id: 'LogItemInfo.noDefectTypeToPostIssue',
+    defaultMessage: "You can't post issue if item has no defect type",
+  },
+  noDefectTypeToCopySendDefect: {
+    id: 'LogItemInfo.noDefectTypeToCopySendDefect',
+    defaultMessage: "You can't copy/send defect if item has no defect type",
   },
   retries: {
     id: 'LogItemInfo.retries',
@@ -132,18 +133,17 @@ export class LogItemInfo extends Component {
     getDefectType: () => {},
   };
 
-  getLinkIssueTitle = () => {
+  getIssueActionTitle = (noIssueMessage, isBtsUnavailable) => {
     const {
       logItem,
-      btsIntegrations,
       intl: { formatMessage },
     } = this.props;
     let title = '';
 
     if (!logItem.issue) {
-      title = formatMessage(messages.noDefectTypeToLinkIssue);
-    } else if (!btsIntegrations.length) {
-      title = formatMessage(messages.noBugTrackingSystemToLinkIssue);
+      title = formatMessage(noIssueMessage);
+    } else if (isBtsUnavailable) {
+      title = formatMessage(COMMON_LOCALE_KEYS.NO_BTS_INTEGRATION);
     }
 
     return title;
@@ -323,6 +323,7 @@ export class LogItemInfo extends Component {
                     icon={this.checkIfTheLastItemIsActive() ? DownLeftArrowIcon : UpRightArrowIcon}
                     disabled={this.isCopySendButtonDisabled()}
                     onClick={this.showCopySendDefectModal}
+                    title={this.getIssueActionTitle(messages.noDefectTypeToCopySendDefect)}
                   >
                     {this.getCopySendDefectButtonText()}
                   </GhostButton>
@@ -332,11 +333,10 @@ export class LogItemInfo extends Component {
                     icon={BugIcon}
                     disabled={!logItem.issue || isPostIssueUnavailable}
                     onClick={this.handlePostIssue}
-                    title={
-                      (isPostIssueUnavailable &&
-                        this.props.intl.formatMessage(messages.noBugTrackingSystemToPostIssue)) ||
-                      ''
-                    }
+                    title={this.getIssueActionTitle(
+                      messages.noDefectTypeToPostIssue,
+                      !isPostIssueActionAvailable(btsIntegrations),
+                    )}
                   >
                     {formatMessage(messages.postIssue)}
                   </GhostButton>
@@ -346,7 +346,10 @@ export class LogItemInfo extends Component {
                     icon={LinkIcon}
                     disabled={!logItem.issue || !btsIntegrations.length}
                     onClick={this.handleLinkIssue}
-                    title={this.getLinkIssueTitle()}
+                    title={this.getIssueActionTitle(
+                      messages.noDefectTypeToLinkIssue,
+                      !btsIntegrations.length,
+                    )}
                   >
                     {formatMessage(messages.linkIssue)}
                   </GhostButton>

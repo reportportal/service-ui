@@ -1,8 +1,20 @@
 import * as COLORS from 'common/constants/colors';
+import { defineMessages } from 'react-intl';
 import { PERIOD_VALUES_LENGTH, PERIOD_VALUES } from 'common/constants/statusPeriodValues';
 import { createTooltipRenderer } from 'components/widgets/common/tooltip';
 import { messages } from 'components/widgets/common/messages';
 import { IssueTypeStatTooltip } from './issueTypeStatTooltip';
+
+export const localMessages = defineMessages({
+  xAxisWeeksTitle: {
+    id: 'Chart.xAxisWeeksTitle',
+    defaultMessage: 't, weeks',
+  },
+  xAxisDaysTitle: {
+    id: 'Chart.xAxisDaysTitle',
+    defaultMessage: 't, days',
+  },
+});
 
 const getCategories = (itemData, interval) => {
   const ticksToShowPeriod = Math.floor(PERIOD_VALUES_LENGTH[interval] / 4);
@@ -125,8 +137,8 @@ export const getConfig = ({
         label: {
           text:
             interval === PERIOD_VALUES.ONE_MONTH
-              ? formatMessage(messages.xAxisDaysTitle)
-              : formatMessage(messages.xAxisWeeksTitle),
+              ? formatMessage(localMessages.xAxisDaysTitle)
+              : formatMessage(localMessages.xAxisWeeksTitle),
           position: 'outer-center',
         },
       },

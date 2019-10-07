@@ -21,7 +21,6 @@ const DEFAULT_ITEMS_COUNT = '2';
 export class DifferentLaunchesComparisonControls extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    widgetSettings: PropTypes.object.isRequired,
     initializeControlsForm: PropTypes.func.isRequired,
     formAppearance: PropTypes.object.isRequired,
     onFormAppearanceChange: PropTypes.func.isRequired,

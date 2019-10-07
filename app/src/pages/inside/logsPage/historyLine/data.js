@@ -46,8 +46,14 @@ export const mockEntries = [
         },
         parent: '5b75a36397a1c00001ea3d4e',
         pathNames: {
-          '5b75a36397a1c00001ea3d4d': 'Launch Tests',
-          '5b75a36397a1c00001ea3d4e': 'LaunchStatusTest',
+          launchPathName: {
+            name: 'Nested Steps Launch',
+            number: 1,
+          },
+          itemPaths: [
+            { id: '5b75a36397a1c00001ea3d4d', name: 'Launch Tests' },
+            { id: '5b75a36397a1c00001ea3d4e', name: 'UpdateLaunchTest' },
+          ],
         },
         launchStatus: 'FAILED',
         hasChildren: false,
@@ -111,8 +117,14 @@ export const mockEntries = [
         },
         parent: '5b75a35a97a1c00001ea2225',
         pathNames: {
-          '5b75a35a97a1c00001ea2224': 'Launch Tests',
-          '5b75a35a97a1c00001ea2225': 'LaunchStatusTest',
+          launchPathName: {
+            name: 'Nested Steps Launch',
+            number: 1,
+          },
+          itemPaths: [
+            { id: '5b75a36397a1c00001ea3d4d', name: 'Launch Tests' },
+            { id: '5b75a36397a1c00001ea3d4e', name: 'UpdateLaunchTest' },
+          ],
         },
         launchStatus: 'FAILED',
         hasChildren: false,
@@ -169,8 +181,14 @@ export const mockEntries = [
         },
         parent: '5b75a35697a1c00001ea13d9',
         pathNames: {
-          '5b75a35697a1c00001ea13d8': 'Launch Tests',
-          '5b75a35697a1c00001ea13d9': 'LaunchStatusTest',
+          launchPathName: {
+            name: 'Nested Steps Launch',
+            number: 1,
+          },
+          itemPaths: [
+            { id: '5b75a36397a1c00001ea3d4d', name: 'Launch Tests' },
+            { id: '5b75a36397a1c00001ea3d4e', name: 'UpdateLaunchTest' },
+          ],
         },
         launchStatus: 'FAILED',
         issue: {
@@ -232,8 +250,14 @@ export const mockEntries = [
         },
         parent: '5b75a35297a1c00001ea0636',
         pathNames: {
-          '5b75a35297a1c00001ea0635': 'Launch Tests',
-          '5b75a35297a1c00001ea0636': 'LaunchStatusTest',
+          launchPathName: {
+            name: 'Nested Steps Launch',
+            number: 1,
+          },
+          itemPaths: [
+            { id: '5b75a36397a1c00001ea3d4d', name: 'Launch Tests' },
+            { id: '5b75a36397a1c00001ea3d4e', name: 'UpdateLaunchTest' },
+          ],
         },
         launchStatus: 'FAILED',
         hasChildren: false,
@@ -297,8 +321,14 @@ export const mockEntries = [
         },
         parent: '5b75a34b97a1c00001e9f249',
         pathNames: {
-          '5b75a34b97a1c00001e9f248': 'Launch Tests',
-          '5b75a34b97a1c00001e9f249': 'LaunchStatusTest',
+          launchPathName: {
+            name: 'Nested Steps Launch',
+            number: 1,
+          },
+          itemPaths: [
+            { id: '5b75a36397a1c00001ea3d4d', name: 'Launch Tests' },
+            { id: '5b75a36397a1c00001ea3d4e', name: 'UpdateLaunchTest' },
+          ],
         },
         launchStatus: 'FAILED',
         hasChildren: false,
@@ -369,8 +399,14 @@ export const mockEntries = [
         },
         parent: '5b75a34997a1c00001e9eaf1',
         pathNames: {
-          '5b75a34997a1c00001e9eaf0': 'Launch Tests',
-          '5b75a34997a1c00001e9eaf1': 'LaunchStatusTest',
+          launchPathName: {
+            name: 'Nested Steps Launch',
+            number: 1,
+          },
+          itemPaths: [
+            { id: '5b75a36397a1c00001ea3d4d', name: 'Launch Tests' },
+            { id: '5b75a36397a1c00001ea3d4e', name: 'UpdateLaunchTest' },
+          ],
         },
         launchStatus: 'FAILED',
         hasChildren: false,

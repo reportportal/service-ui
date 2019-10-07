@@ -155,9 +155,10 @@ export class ProductStatus extends PureComponent {
         contentParameters: { contentFields },
       },
     } = this.props;
-    const fieldsMap = contentFields.reduce((map, item) => ({ ...map, [item]: item }), {});
-    fieldsMap[NAME] = NAME;
-    fieldsMap[PASSING_RATE] = PASSING_RATE;
+    const fieldsMap = contentFields.reduce((map, item) => ({ ...map, [item]: item }), {
+      [NAME]: NAME,
+      [PASSING_RATE]: PASSING_RATE,
+    });
     if (hasStartTimeAndStatusColumns) {
       Object.keys(attributesColumns).forEach((key) => {
         fieldsMap[key] = key;

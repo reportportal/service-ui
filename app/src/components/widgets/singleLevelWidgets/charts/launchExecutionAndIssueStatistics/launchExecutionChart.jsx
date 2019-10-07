@@ -27,19 +27,23 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import isEqual from 'fast-deep-equal';
 import ReactDOMServer from 'react-dom/server';
-import { statisticsLinkSelector } from 'controllers/testItem';
+import {
+  defectLinkSelector,
+  statisticsLinkSelector,
+  TEST_ITEMS_TYPE_LIST,
+} from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
 import { launchFiltersSelector } from 'controllers/filter';
-import { TEST_ITEM_PAGE, PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
+import { defectTypesSelector } from 'controllers/project';
+import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { ALL } from 'common/constants/reservedFilterIds';
-import { TooltipWrapper } from '../../../common/tooltip';
+import { FAILED, INTERRUPTED } from 'common/constants/testStatuses';
 import { C3Chart } from '../../../common/c3chart';
 import chartStyles from './launchExecutionAndIssueStatistics.scss';
 import { Legend } from '../../../common/legend';
-import { LaunchExecutionAndIssueStatisticsTooltip } from './launchExecutionAndIssueStatisticsTooltip';
 import { getPercentage, getDefectItems, getChartData } from './chartUtils';
-import { messages } from './messages';
 import { getItemNameConfig } from '../../../common/utils';
+import { IssueTypeStatTooltip } from '../common/issueTypeStatTooltip';
 
 const chartCx = classNames.bind(chartStyles);
 const getResult = (widget) => widget.content.result[0] || widget.content.result;
@@ -48,6 +52,8 @@ const getResult = (widget) => widget.content.result[0] || widget.content.result;
 @connect(
   (state) => ({
     project: activeProjectSelector(state),
+    defectTypes: defectTypesSelector(state),
+    getDefectLink: defectLinkSelector(state),
     getStatisticsLink: statisticsLinkSelector(state),
     launchFilters: launchFiltersSelector(state),
   }),
@@ -60,6 +66,8 @@ export class LaunchExecutionChart extends Component {
     intl: intlShape.isRequired,
     widget: PropTypes.object.isRequired,
     isPreview: PropTypes.bool.isRequired,
+    defectTypes: PropTypes.object.isRequired,
+    getDefectLink: PropTypes.func.isRequired,
     getStatisticsLink: PropTypes.func.isRequired,
     navigate: PropTypes.func.isRequired,
     project: PropTypes.string.isRequired,
@@ -165,26 +173,36 @@ export class LaunchExecutionChart extends Component {
     const nameConfig = getItemNameConfig(d.id);
     const id = getResult(widget).id;
     let navigationParams;
+    let link;
 
     if (!id) {
       const appliedWidgetFilterId = widget.appliedFilters[0].id;
+      const launchesLimit = widget.contentParameters.itemsCount;
+      const isLatest = widget.contentParameters.widgetOptions.latest;
       const activeFilter = launchFilters.filter((filter) => filter.id === appliedWidgetFilterId)[0];
-      const activeFilterId = activeFilter && activeFilter.id;
+      const activeFilterId = (activeFilter && activeFilter.id) || appliedWidgetFilterId;
+
+      link = getStatisticsLink({
+        statuses: this.getLinkParametersStatuses(nameConfig),
+        launchesLimit,
+        isLatest,
+      });
       navigationParams = this.getDefaultParamsOverallStatisticsWidget(activeFilterId);
     } else {
-      const link = getStatisticsLink({ statuses: [nameConfig.defectType.toUpperCase()] });
-      navigationParams = Object.assign(link, this.getDefaultParamsLaunchExecutionWidget(id));
+      link = getStatisticsLink({ statuses: [nameConfig.defectType.toUpperCase()] });
+      navigationParams = this.getDefaultParamsLaunchExecutionWidget(id);
     }
 
-    this.props.navigate(navigationParams);
+    this.props.navigate(Object.assign(link, navigationParams));
   };
 
   getDefaultParamsOverallStatisticsWidget = (activeFilterId) => ({
     payload: {
       projectId: this.props.project,
-      filterId: activeFilterId || ALL,
+      filterId: activeFilterId,
+      testItemIds: TEST_ITEMS_TYPE_LIST,
     },
-    type: PROJECT_LAUNCHES_PAGE,
+    type: TEST_ITEM_PAGE,
   });
 
   getDefaultParamsLaunchExecutionWidget = (id) => ({
@@ -195,6 +213,13 @@ export class LaunchExecutionChart extends Component {
     },
     type: TEST_ITEM_PAGE,
   });
+
+  getLinkParametersStatuses = ({ defectType }) => {
+    if (defectType.toUpperCase() === FAILED) {
+      return [FAILED, INTERRUPTED];
+    }
+    return [defectType.toUpperCase()];
+  };
 
   getConfig = () => {
     const EXECUTIONS = '$executions$';
@@ -317,21 +342,18 @@ export class LaunchExecutionChart extends Component {
     }
   };
 
-  // This function is a reimplementation of its d3 counterpart, and it needs 4 arguments of which 2 are not used here.
-  // These two are named a and b in the original implementation.
-
   renderStatusContents = (data, a, b, color) => {
-    const launchData = this.statusItems.find((item) => item.id === data[0].id);
+    const {
+      intl: { formatMessage },
+    } = this.props;
+    const { value, ratio, id } = data[0];
 
     return ReactDOMServer.renderToStaticMarkup(
-      <TooltipWrapper>
-        <LaunchExecutionAndIssueStatisticsTooltip
-          launchNumber={data[0].value}
-          duration={getPercentage(data[0].ratio)}
-          color={color(launchData.name)}
-          itemName={this.props.intl.formatMessage(messages[launchData.name.split('$total')[0]])}
-        />
-      </TooltipWrapper>,
+      <IssueTypeStatTooltip
+        itemsCount={`${value} (${getPercentage(ratio)}%)`}
+        color={color(id)}
+        issueStatNameProps={{ itemName: id, defectTypes: {}, formatMessage }}
+      />,
     );
   };
 

@@ -16,3 +16,15 @@ export const projectNameUnique = (projectName) =>
       };
     }
   });
+
+export const filterNameUnique = (activeProject, filterId, filterName) =>
+  fetch(URLS.searchFilterNames(activeProject), {
+    params: { 'filter.ne.id': filterId, 'filter.eq.name': filterName },
+  }).then((filters) => {
+    if (filters && filters.content && filters.content.length) {
+      // eslint-disable-next-line no-throw-literal
+      throw {
+        name: 'filterNameDuplicateHint',
+      };
+    }
+  });

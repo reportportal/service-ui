@@ -45,14 +45,6 @@ export const messages = defineMessages({
     id: 'Charts.failedSkippedTotal',
     defaultMessage: '% (Failed+Skipped)/Total',
   },
-  xAxisWeeksTitle: {
-    id: 'Chart.xAxisWeeksTitle',
-    defaultMessage: 't, weeks',
-  },
-  xAxisDaysTitle: {
-    id: 'Chart.xAxisDaysTitle',
-    defaultMessage: 't, days',
-  },
   [TO_INVESTIGATE]: {
     id: `Chart.label.toInvestigate`,
     defaultMessage: 'To Investigate',
@@ -76,5 +68,17 @@ export const messages = defineMessages({
   [LAUNCHES_QUANTITY]: {
     id: `Chart.label.launchesQuantity`,
     defaultMessage: 'Launches',
+  },
+  passingRate: {
+    id: 'Charts.passingRate',
+    defaultMessage: 'Passing rate',
+  },
+  testCasesCaption: {
+    id: 'Charts.testCasesCaption',
+    defaultMessage: 'Test cases',
+  },
+  launchInterrupted: {
+    id: `Charts.launchInterrupted`,
+    defaultMessage: 'Run interrupted',
   },
 });

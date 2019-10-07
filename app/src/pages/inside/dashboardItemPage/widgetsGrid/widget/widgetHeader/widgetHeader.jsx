@@ -53,6 +53,7 @@ export class WidgetHeader extends Component {
     onEdit: PropTypes.func,
     customClass: PropTypes.string,
     isPrintMode: PropTypes.bool,
+    dashboardOwner: PropTypes.string,
   };
   static defaultProps = {
     data: {},
@@ -63,6 +64,7 @@ export class WidgetHeader extends Component {
     onEdit: () => {},
     customClass: null,
     isPrintMode: false,
+    dashboardOwner: '',
   };
 
   renderMetaInfo = () =>
@@ -90,9 +92,12 @@ export class WidgetHeader extends Component {
       onEdit,
       customClass,
       isPrintMode,
+      dashboardOwner,
     } = this.props;
 
     const isOwner = data.owner === userId;
+    const isDashboardOwner = dashboardOwner === userId;
+    const isWidgetDeletable = canDeleteWidget(userRole, projectRole, isOwner || isDashboardOwner);
 
     return (
       <div className={cx('widget-header')}>
@@ -143,7 +148,7 @@ export class WidgetHeader extends Component {
               <div className={cx('control')} onClick={onRefresh}>
                 {Parser(RefreshIcon)}
               </div>
-              {canDeleteWidget(userRole, projectRole, isOwner) && (
+              {isWidgetDeletable && (
                 <div className={cx('control', 'mobile-hide')} onClick={onDelete}>
                   {Parser(CrossIcon)}
                 </div>

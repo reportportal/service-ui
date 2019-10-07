@@ -63,8 +63,8 @@ export class ItemsListHeader extends React.Component {
     const {
       intl: { formatMessage },
       searchMode,
-      currentLaunch,
       currentFilter,
+      currentLaunch,
     } = this.props;
     switch (searchMode) {
       case SEARCH_MODES.FILTER:

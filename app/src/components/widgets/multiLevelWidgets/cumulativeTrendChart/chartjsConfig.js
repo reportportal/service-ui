@@ -77,7 +77,8 @@ const createDataSet = (field, group, options) => {
 const getScaleName = (widget, options) => {
   const { attributes } = widget.contentParameters.widgetOptions;
   const { activeAttribute } = options;
-  return activeAttribute ? attributes[1] : attributes[0];
+
+  return activeAttribute && attributes[1] ? attributes[1] : attributes[0];
 };
 
 const getChartOptions = (widget, options) => {

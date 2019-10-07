@@ -17,7 +17,7 @@ import {
   userAccountRoleSelector,
   activeProjectSelector,
 } from 'controllers/user';
-import { patternsSelector, PAStateSelector } from 'controllers/project';
+import { enabledPattersSelector } from 'controllers/project';
 import { HamburgerMenuItem } from './hamburgerMenuItem';
 import styles from './hamburger.scss';
 
@@ -71,8 +71,7 @@ const messages = defineMessages({
   userId: userIdSelector(state),
   accountRole: userAccountRoleSelector(state),
   projectId: activeProjectSelector(state),
-  patterns: patternsSelector(state),
-  PAState: PAStateSelector(state),
+  enabledPatterns: enabledPattersSelector(state),
 }))
 @track()
 export class Hamburger extends Component {
@@ -85,8 +84,7 @@ export class Hamburger extends Component {
     projectId: PropTypes.string.isRequired,
     customProps: PropTypes.object,
     accountRole: PropTypes.string,
-    patterns: PropTypes.array,
-    PAState: PropTypes.bool,
+    enabledPatterns: PropTypes.array,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -97,8 +95,7 @@ export class Hamburger extends Component {
     onAction: () => {},
     customProps: {},
     accountRole: '',
-    patterns: [],
-    PAState: false,
+    enabledPatterns: [],
   };
 
   state = {
@@ -194,8 +191,7 @@ export class Hamburger extends Component {
       accountRole,
       launch,
       customProps,
-      patterns,
-      PAState,
+      enabledPatterns,
       tracking,
     } = this.props;
     return (
@@ -279,7 +275,7 @@ export class Hamburger extends Component {
                 tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_PATTERN_ANALYSIS_LAUNCH_MENU);
                 customProps.onPatternAnalysis(launch);
               }}
-              disabled={!patterns.length || !PAState}
+              disabled={!enabledPatterns.length}
             />
             <HamburgerMenuItem
               text={intl.formatMessage(messages.delete)}

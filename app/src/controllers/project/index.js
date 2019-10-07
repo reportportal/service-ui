@@ -19,7 +19,6 @@ export {
   deleteDefectSubTypeAction,
   deleteDefectSubTypeSuccessAction,
   addPatternAction,
-  addPatternActionSuccess,
   updatePatternAction,
   updatePatternSuccessAction,
   deletePatternAction,
@@ -45,6 +44,7 @@ export {
   patternsSelector,
   PAStateSelector,
   getDefectTypeSelector,
+  enabledPattersSelector,
 } from './selectors';
 export { normalizeAttributesWithPrefix } from './utils';
 export { projectSagas } from './sagas';

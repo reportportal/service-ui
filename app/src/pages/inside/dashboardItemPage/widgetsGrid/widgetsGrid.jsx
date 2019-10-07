@@ -39,6 +39,7 @@ export class WidgetsGrid extends Component {
     dashboard: PropTypes.shape({
       widgets: PropTypes.array,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      owner: PropTypes.string,
     }),
   };
 
@@ -48,6 +49,7 @@ export class WidgetsGrid extends Component {
     dashboard: {
       widgets: [],
       id: '',
+      owner: '',
     },
     showWidgetWizard: () => {},
     isPrintMode: false,
@@ -162,7 +164,7 @@ export class WidgetsGrid extends Component {
   isStaticWidget = (widgetType) => STATIC_CHARTS[widgetType];
 
   renderItems = () => {
-    const { widgets = [] } = this.props.dashboard;
+    const { widgets = [], owner } = this.props.dashboard;
 
     if (widgets.length) {
       return widgets.map(
@@ -194,6 +196,7 @@ export class WidgetsGrid extends Component {
               observer={this.observer}
               isPrintMode={this.props.isPrintMode}
               onDelete={this.onDeleteWidget}
+              dashboardOwner={owner}
             />
           </div>
         ),
@@ -218,6 +221,7 @@ export class WidgetsGrid extends Component {
       isResizable={this.props.isModifiable}
       draggableHandle=".draggable-field"
       useCSSTransforms={!this.isFirefox}
+      measureBeforeMount
     >
       {this.renderItems()}
     </ResponsiveGridLayout>

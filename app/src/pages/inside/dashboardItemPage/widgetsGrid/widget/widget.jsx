@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
@@ -47,6 +47,7 @@ export class SimpleWidget extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    dashboardOwner: PropTypes.string,
   };
 
   static defaultProps = {
@@ -55,6 +56,7 @@ export class SimpleWidget extends Component {
     isModifiable: false,
     isFullscreen: false,
     isPrintMode: false,
+    dashboardOwner: '',
   };
 
   constructor(props) {
@@ -67,7 +69,6 @@ export class SimpleWidget extends Component {
         content: {},
         contentParameters: {},
       },
-      uncheckedLegendItems: [],
       userSettings: {},
     };
   }
@@ -89,14 +90,15 @@ export class SimpleWidget extends Component {
   };
 
   onChangeWidgetLegend = (itemId, callback = () => {}) => {
-    const uncheckedItemIndex = this.state.uncheckedLegendItems.indexOf(itemId);
-    const uncheckedLegendItems = [...this.state.uncheckedLegendItems];
+    const uncheckedItemIndex = this.uncheckedLegendItems.indexOf(itemId);
+    const uncheckedLegendItems = [...this.uncheckedLegendItems];
     if (uncheckedItemIndex !== -1) {
       uncheckedLegendItems.splice(uncheckedItemIndex, 1);
     } else {
       uncheckedLegendItems.push(itemId);
     }
-    this.setState({ uncheckedLegendItems }, callback);
+    this.uncheckedLegendItems = uncheckedLegendItems;
+    callback();
   };
 
   getWidgetOptions = () => (this.state.widget.contentParameters || {}).widgetOptions || {};
@@ -107,7 +109,7 @@ export class SimpleWidget extends Component {
 
   getWidgetContent = () => {
     const { widgetType, isPrintMode } = this.props;
-    const { widget, uncheckedLegendItems, queryParameters, userSettings } = this.state;
+    const { widget, queryParameters, userSettings } = this.state;
 
     if (this.state.loading) {
       return <SpinningPreloader />;
@@ -123,7 +125,7 @@ export class SimpleWidget extends Component {
       Chart && (
         <Chart
           widget={widget}
-          uncheckedLegendItems={uncheckedLegendItems}
+          uncheckedLegendItems={this.uncheckedLegendItems}
           onChangeLegend={this.onChangeWidgetLegend}
           isFullscreen={this.props.isFullscreen}
           container={this.node}
@@ -155,6 +157,8 @@ export class SimpleWidget extends Component {
     return url;
   };
 
+  uncheckedLegendItems = [];
+
   showWidget = () => {
     this.setState({
       visible: true,
@@ -173,12 +177,12 @@ export class SimpleWidget extends Component {
         queryParameters: {},
       },
       () => {
-        this.fetchWidget().then(onClearParams);
+        this.fetchWidget({}, true, false).then(onClearParams);
       },
     );
   };
 
-  fetchWidget = (params = {}, silent = true) => {
+  fetchWidget = (params = {}, silent = true, shouldClearQueryParams = true) => {
     const { tracking, isFullscreen } = this.props;
     const url = this.getWidgetUrl(params);
     this.silentUpdaterId && clearTimeout(this.silentUpdaterId);
@@ -216,6 +220,7 @@ export class SimpleWidget extends Component {
         }
       })
       .catch(() => {
+        shouldClearQueryParams && this.clearQueryParams();
         this.setState({
           loading: false,
         });
@@ -245,7 +250,7 @@ export class SimpleWidget extends Component {
 
   render() {
     const { widget, visible } = this.state;
-    const { isFullscreen, widgetType, isModifiable, isPrintMode } = this.props;
+    const { isFullscreen, widgetType, isModifiable, isPrintMode, dashboardOwner } = this.props;
     const widgetOptions = this.getWidgetOptions();
     const headerData = {
       owner: widget.owner,
@@ -261,25 +266,24 @@ export class SimpleWidget extends Component {
 
     return (
       <div className={cx('widget-container', { disabled: isFullscreen })}>
-        <Fragment>
-          <div
-            className={cx('widget-header', 'draggable-field', {
-              modifiable: isModifiable,
-            })}
-          >
-            <WidgetHeader
-              data={headerData}
-              onRefresh={this.fetchWidget}
-              onDelete={this.showDeleteWidgetModal}
-              onEdit={this.showEditWidgetModal}
-              customClass={cx('common-control')}
-              isPrintMode={isPrintMode}
-            />
-          </div>
-          <div ref={this.getWidgetNode} className={cx('widget', { hidden: !visible })}>
-            {this.getWidgetContent()}
-          </div>
-        </Fragment>
+        <div
+          className={cx('widget-header', 'draggable-field', {
+            modifiable: isModifiable,
+          })}
+        >
+          <WidgetHeader
+            data={headerData}
+            onRefresh={this.fetchWidget}
+            onDelete={this.showDeleteWidgetModal}
+            onEdit={this.showEditWidgetModal}
+            customClass={cx('common-control')}
+            isPrintMode={isPrintMode}
+            dashboardOwner={dashboardOwner}
+          />
+        </div>
+        <div ref={this.getWidgetNode} className={cx('widget', { hidden: !visible })}>
+          {this.getWidgetContent()}
+        </div>
       </div>
     );
   }

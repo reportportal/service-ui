@@ -22,7 +22,6 @@ import {
 import { VALUE_ID_KEY, VALUE_NAME_KEY } from 'components/fields/dynamicFieldsSection/constants';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
-import { INTEGRATION_NAMES_TITLES } from 'components/integrations';
 import { ISSUE_TYPE_FIELD_KEY } from 'components/integrations/elements/bts/constants';
 import { BetaBadge } from 'pages/inside/common/betaBadge';
 import { BtsIntegrationSelector } from 'pages/inside/common/btsIntegrationSelector';
@@ -34,7 +33,12 @@ import {
   INCLUDE_COMMENTS_KEY,
   LOG_QUANTITY,
 } from './constants';
-import { validate, createFieldsValidationConfig, getDataSectionConfig } from './utils';
+import {
+  validate,
+  createFieldsValidationConfig,
+  getDataSectionConfig,
+  getDefaultIssueModalConfig,
+} from './utils';
 import styles from './postIssueModal.scss';
 
 const cx = classNames.bind(styles);
@@ -134,17 +138,16 @@ export class PostIssueModal extends Component {
 
   constructor(props) {
     super(props);
-    this.pluginNamesOptions = Object.keys(props.namedBtsIntegrations).map((key) => ({
-      value: key,
-      label: INTEGRATION_NAMES_TITLES[key],
-    }));
+    const { pluginName, integration, ...config } = getDefaultIssueModalConfig(
+      props.namedBtsIntegrations,
+      props.userId,
+    );
 
-    const pluginName = this.pluginNamesOptions[0].value;
     const {
       id,
       integrationParameters: { defectFormFields },
-    } = props.namedBtsIntegrations[pluginName][0];
-    const systemAuthConfig = this.getSystemAuthDefaultConfig(pluginName);
+    } = integration;
+    const systemAuthConfig = this.getSystemAuthDefaultConfig(pluginName, config);
     const fields = this.initIntegrationFields(defectFormFields, systemAuthConfig, pluginName);
 
     this.state = {
@@ -171,6 +174,7 @@ export class PostIssueModal extends Component {
     const fields = this.initIntegrationFields(
       integrationParameters.defectFormFields,
       systemAuthConfig,
+      pluginName,
     );
 
     this.setState({
@@ -206,10 +210,10 @@ export class PostIssueModal extends Component {
     };
   };
 
-  getSystemAuthDefaultConfig = (pluginName) => {
+  getSystemAuthDefaultConfig = (pluginName, config) => {
     const systemAuthConfig = {};
     if (this.isJiraIntegration(pluginName)) {
-      const storedConfig = getSessionItem(`${this.props.userId}_settings`) || {};
+      const storedConfig = config || getSessionItem(`${this.props.userId}_settings`) || {};
       systemAuthConfig.username = storedConfig.username;
     }
     return systemAuthConfig;
@@ -323,14 +327,16 @@ export class PostIssueModal extends Component {
         fetchFunc();
         this.props.hideScreenLockAction();
         this.closeModal();
+        const sessionConfig = {
+          pluginName,
+          integrationId,
+        };
 
         if (this.isJiraIntegration()) {
-          const sessionConfig = {
-            username: data.username,
-          };
-          updateSessionItem(`${userId}_settings`, sessionConfig);
+          sessionConfig.username = data.username;
         }
 
+        updateSessionItem(`${userId}_settings`, sessionConfig);
         this.props.showNotification({
           message: formatMessage(messages.postIssueSuccess),
           type: NOTIFICATION_TYPES.SUCCESS,
