@@ -30,6 +30,7 @@ import {
   setTokenAction,
   setLastFailedLoginTimeAction,
   loginSuccessAction,
+  setBadCredentialsAction,
 } from './actionCreators';
 import {
   LOGIN,
@@ -39,6 +40,7 @@ import {
   SET_TOKEN,
   LOGIN_SUCCESS,
   ERROR_CODE_LOGIN_MAX_LIMIT,
+  ERROR_CODE_LOGIN_BAD_CREDENTIALS,
 } from './constants';
 
 function* handleLogout({ payload: redirectPath }) {
@@ -129,6 +131,9 @@ function* handleLogin({ payload }) {
         values: { error },
       }),
     );
+    if (errorCode === ERROR_CODE_LOGIN_BAD_CREDENTIALS) {
+      yield put(setBadCredentialsAction());
+    }
     if (errorCode === ERROR_CODE_LOGIN_MAX_LIMIT) {
       const lastFailedLoginTime = Date.now();
       updateStorageItem(APPLICATION_SETTINGS, { lastFailedLoginTime });
