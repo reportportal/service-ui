@@ -158,7 +158,7 @@ export const URLS = {
   logItem: (activeProject, itemId, level) =>
     `${urlBase}${activeProject}/log${getQueryParams({
       'filter.eq.item': itemId,
-      'filter.in.level': level,
+      'filter.gte.level': level,
       'page.page': 1,
       'page.size': 1,
       'page.sort': 'logTime,DESC',

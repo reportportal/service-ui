@@ -27,7 +27,6 @@ export const CLEAR_LOG_PAGE_STACK_TRACE = 'clearStackTrace';
 export const STACK_TRACE_PAGINATION_OFFSET = 5;
 export const DETAILED_LOG_VIEW = 'DETAILED_LOG_VIEW';
 export const LAUNCH_LOG_VIEW = 'LAUNCH_LOG_VIEW';
-export const FETCH_TEST_ITEMS_SUCCES = 'FETCH_TEST_ITEMS_SUCCESS';
 export const SET_LOG_PAGE_LOADING = 'SET_LOG_PAGE_LOADING';
 
 export const LOG_LEVELS = [
