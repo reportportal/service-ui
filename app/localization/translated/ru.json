@@ -1003,6 +1003,7 @@
   "LoginForm.loginPlaceholder": "Логин",
   "LoginForm.or": "или",
   "LoginForm.passwordPlaceholder": "Пароль",
+  "LoginForm.badCredentials": "Некорректные учетные данные",
   "LogsGrid.noResults": "Результатов не найдено",
   "LogsGrid.statusColumnTitle": "Статус",
   "LogsGrid.timeColumnTitle": "Время",

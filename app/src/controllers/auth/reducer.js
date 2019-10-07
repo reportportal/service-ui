@@ -7,6 +7,7 @@ import {
   SET_TOKEN,
   DEFAULT_TOKEN,
   SET_LAST_FAILED_LOGIN_TIME,
+  SET_BAD_CREDENTIALS,
 } from './constants';
 
 export const authorizedReducer = (state = false, { type }) => {
@@ -24,6 +25,17 @@ export const tokenReducer = (state = DEFAULT_TOKEN, { type, payload }) => {
   switch (type) {
     case SET_TOKEN:
       return payload || DEFAULT_TOKEN;
+    default:
+      return state;
+  }
+};
+
+const badCredentialsReducer = (state = false, { type }) => {
+  switch (type) {
+    case AUTH_SUCCESS:
+      return false;
+    case SET_BAD_CREDENTIALS:
+      return true;
     default:
       return state;
   }
@@ -50,4 +62,5 @@ export const authReducer = combineReducers({
   authorized: authorizedReducer,
   token: tokenReducer,
   lastFailedLoginTime: lastFailedLoginTimeReducer,
+  badCredentials: badCredentialsReducer,
 });
