@@ -18,19 +18,12 @@ import {
   activeProjectSelector,
 } from 'controllers/user';
 import { enabledPattersSelector } from 'controllers/project';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { HamburgerMenuItem } from './hamburgerMenuItem';
 import styles from './hamburger.scss';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
-  toDebug: {
-    id: 'Hamburger.toDebug',
-    defaultMessage: 'Move to debug',
-  },
-  toAllLaunches: {
-    id: 'Hamburger.toAllLaunches',
-    defaultMessage: 'Move to all launches',
-  },
   forceFinish: {
     id: 'Hamburger.forceFinish',
     defaultMessage: 'Force Finish',
@@ -42,10 +35,6 @@ const messages = defineMessages({
   patternAnalysis: {
     id: 'Hamburger.patternAnalysis',
     defaultMessage: 'Pattern analysis',
-  },
-  delete: {
-    id: 'Hamburger.delete',
-    defaultMessage: 'Delete',
   },
   launchFinished: {
     id: 'Hamburger.launchFinished',
@@ -214,7 +203,7 @@ export class Hamburger extends Component {
                 {launch.mode === 'DEFAULT' ? (
                   <HamburgerMenuItem
                     title={this.getMoveToDebugTooltip()}
-                    text={intl.formatMessage(messages.toDebug)}
+                    text={intl.formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_DEBUG)}
                     disabled={
                       !canMoveToDebug(
                         accountRole,
@@ -229,7 +218,7 @@ export class Hamburger extends Component {
                   />
                 ) : (
                   <HamburgerMenuItem
-                    text={intl.formatMessage(messages.toAllLaunches)}
+                    text={intl.formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_ALL_LAUNCHES)}
                     title={this.getMoveToDebugTooltip()}
                     disabled={
                       !canMoveToDebug(
@@ -278,7 +267,7 @@ export class Hamburger extends Component {
               disabled={!enabledPatterns.length}
             />
             <HamburgerMenuItem
-              text={intl.formatMessage(messages.delete)}
+              text={intl.formatMessage(COMMON_LOCALE_KEYS.DELETE)}
               disabled={
                 !canDeleteLaunch(
                   accountRole,
