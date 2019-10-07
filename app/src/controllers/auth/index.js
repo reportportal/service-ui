@@ -13,3 +13,4 @@ export {
   lastFailedLoginTimeSelector,
   badCredentialsSelector,
 } from './selectors';
+export { ANONYMOUS_REDIRECT_PATH_STORAGE_KEY } from './constants';
