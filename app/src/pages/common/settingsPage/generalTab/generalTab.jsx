@@ -205,7 +205,7 @@ export class GeneralTab extends Component {
           >
             <InputDropdown options={this.filterOptions(this.keepScreenshots)} mobileDisabled />
           </FormField>
-          <div className={cx('button-container')}>
+          <FormField withoutProvider fieldWrapperClassName={cx('button-container')}>
             <div className={cx('submit-button')}>
               <BigButton
                 color="booger"
@@ -215,7 +215,7 @@ export class GeneralTab extends Component {
                 {this.props.intl.formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
               </BigButton>
             </div>
-          </div>
+          </FormField>
         </form>
       </div>
     );
