@@ -291,6 +291,7 @@ export class TestCasesGrowthTrendChart extends Component {
       },
       onrendered: this.onChartRendered,
     };
+    this.configCreationTimeStamp = Date.now();
 
     this.setState({
       isConfigReady: true,
@@ -361,7 +362,11 @@ export class TestCasesGrowthTrendChart extends Component {
     return (
       <div className={cx('test-cases-growth-trend-chart')}>
         {this.state.isConfigReady && (
-          <C3Chart config={this.config} onChartCreated={this.onChartCreated} />
+          <C3Chart
+            config={this.config}
+            onChartCreated={this.onChartCreated}
+            configCreationTimeStamp={this.configCreationTimeStamp}
+          />
         )}
       </div>
     );

@@ -319,6 +319,7 @@ export class IssueStatisticsChart extends Component {
       },
       onrendered: this.renderTotalLabel,
     };
+    this.configCreationTimeStamp = Date.now();
 
     if (!onStatusPageMode) {
       this.issueConfig.data.onclick = this.onChartClick;
@@ -421,6 +422,7 @@ export class IssueStatisticsChart extends Component {
                 config={this.issueConfig}
                 onChartCreated={this.onIssuesChartCreated}
                 className={chartClasses}
+                configCreationTimeStamp={this.configCreationTimeStamp}
               />
             </div>
           </div>
