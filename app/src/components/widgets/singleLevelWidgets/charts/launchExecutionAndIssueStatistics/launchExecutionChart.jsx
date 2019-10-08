@@ -42,7 +42,6 @@ import { C3Chart } from '../../../common/c3chart';
 import chartStyles from './launchExecutionAndIssueStatistics.scss';
 import { Legend } from '../../../common/legend';
 import { getPercentage, getDefectItems, getChartData, isSmallDonutChartView } from './chartUtils';
-import { messages } from './messages';
 import { getItemNameConfig } from '../../../common/utils';
 import { IssueTypeStatTooltip } from '../common/issueTypeStatTooltip';
 
