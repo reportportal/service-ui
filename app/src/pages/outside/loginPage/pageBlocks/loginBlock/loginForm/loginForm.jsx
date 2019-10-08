@@ -109,16 +109,13 @@ export class LoginForm extends React.Component {
     this.state = this.calculateLoginLimitState();
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { badCredentials } = nextProps;
-    if (badCredentials) {
-      this.badCredentialsHandler();
-    }
-  }
-
   componentDidUpdate(prevProps) {
     if (prevProps.lastFailedLoginTime !== this.props.lastFailedLoginTime) {
       this.blockLoginForm();
+    }
+    const { badCredentials } = this.props;
+    if (badCredentials) {
+      this.badCredentialsHandler();
     }
   }
 
