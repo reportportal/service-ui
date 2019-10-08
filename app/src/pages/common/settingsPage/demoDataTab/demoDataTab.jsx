@@ -131,16 +131,18 @@ export class DemoDataTab extends Component {
           <li>{intl.formatMessage(messages.descriptionListSecItem)}</li>
           <li>{intl.formatMessage(messages.descriptionListThirdItem)}</li>
         </ul>
-        <BigButton
-          className={cx('generate-button')}
-          mobileDisabled
-          onClick={this.onGenerateDemoData}
-          disabled={this.state.isLoading}
-        >
-          <span className={cx('generate-button-title')}>
-            {intl.formatMessage(messages.generateButtonTitle)}
-          </span>
-        </BigButton>
+        <div className={cx('generate-button-container')}>
+          <BigButton
+            className={cx('generate-button')}
+            mobileDisabled
+            onClick={this.onGenerateDemoData}
+            disabled={this.state.isLoading}
+          >
+            <span className={cx('generate-button-title')}>
+              {intl.formatMessage(messages.generateButtonTitle)}
+            </span>
+          </BigButton>
+        </div>
         {this.state.isLoading && (
           <div className={cx('preloader-block')}>
             <div className={cx('preloader-icon')}>
