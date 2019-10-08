@@ -114,7 +114,7 @@ export class LoginForm extends React.Component {
       this.blockLoginForm();
     }
     const { badCredentials } = this.props;
-    if (badCredentials) {
+    if (badCredentials !== prevProps.badCredentials && badCredentials) {
       this.badCredentialsHandler();
     }
   }
