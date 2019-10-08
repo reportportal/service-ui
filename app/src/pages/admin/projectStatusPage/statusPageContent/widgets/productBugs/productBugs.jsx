@@ -116,7 +116,6 @@ export class ProductBugs extends Component {
             widget={this.prepareData(data, interval)}
             interval={interval}
             container={this.containerRef.current}
-            onStatusPageMode
           />
         ) : (
           <div className={cx('no-data-wrapper')}>

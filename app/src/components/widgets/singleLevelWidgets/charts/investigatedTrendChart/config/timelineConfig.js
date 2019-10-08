@@ -42,7 +42,9 @@ export const getTimelineConfig = ({
   const itemNames = Object.keys(chartData);
 
   return {
-    legendItems: itemNames,
+    customData: {
+      legendItems: itemNames,
+    },
     data: {
       columns: [chartData[itemNames[0]], chartData[itemNames[1]]],
       type: 'bar',

@@ -290,6 +290,7 @@ export class LaunchExecutionChart extends Component {
       },
       onrendered: this.renderTotalLabel,
     };
+    this.configCreationTimeStamp = Date.now();
 
     if (!onStatusPageMode) {
       this.statusConfig.data.onclick = this.onChartClick;
@@ -392,6 +393,7 @@ export class LaunchExecutionChart extends Component {
                 config={this.statusConfig}
                 onChartCreated={this.onStatusChartCreated}
                 className={chartClasses}
+                configCreationTimeStamp={this.configCreationTimeStamp}
               />
             </div>
           </div>
