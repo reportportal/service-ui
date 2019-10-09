@@ -30,14 +30,12 @@ export const tokenReducer = (state = DEFAULT_TOKEN, { type, payload }) => {
   }
 };
 
-const badCredentialsReducer = (state = false, { type }) => {
+const badCredentialsReducer = (state, { type }) => {
   switch (type) {
-    case AUTH_SUCCESS:
-      return false;
     case SET_BAD_CREDENTIALS:
       return true;
     default:
-      return state;
+      return false;
   }
 };
 
