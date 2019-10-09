@@ -2,7 +2,6 @@ import { createSelector } from 'reselect';
 import isEqual from 'fast-deep-equal';
 import { createQueryParametersSelector, filterIdSelector } from 'controllers/pages';
 import { userFiltersSelector } from '../project/selectors';
-import { DEFAULT_PAGINATION } from './constants';
 
 const domainSelector = (state) => state.filters || {};
 
@@ -10,7 +9,6 @@ export const filtersPaginationSelector = (state) => domainSelector(state).pagina
 export const filtersSelector = (state) => domainSelector(state).filters;
 export const loadingSelector = (state) => domainSelector(state).loading || false;
 export const querySelector = createQueryParametersSelector({
-  defaultPagination: DEFAULT_PAGINATION,
   defaultSorting: 'name',
 });
 export const launchFiltersSelector = (state) => domainSelector(state).launchesFilters || [];

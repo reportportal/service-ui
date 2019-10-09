@@ -28,7 +28,7 @@ import {
 import { parentItemSelector } from 'controllers/testItem';
 import { withFilter } from 'controllers/filter';
 import { debugModeSelector } from 'controllers/launch';
-import { withPagination, PAGE_KEY } from 'controllers/pagination';
+import { withPagination, PAGE_KEY, DEFAULT_PAGINATION, SIZE_KEY } from 'controllers/pagination';
 import { withSortingURL, SORTING_ASC } from 'controllers/sorting';
 import { userIdSelector } from 'controllers/user';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
@@ -136,10 +136,10 @@ export class LogsPage extends Component {
 
   static defaultProps = {
     logItems: [],
-    activePage: 1,
+    activePage: DEFAULT_PAGINATION[PAGE_KEY],
     itemCount: 0,
     pageCount: 0,
-    pageSize: 20,
+    pageSize: DEFAULT_PAGINATION[SIZE_KEY],
     onChangePage: () => {},
     onChangePageSize: () => {},
     loading: false,

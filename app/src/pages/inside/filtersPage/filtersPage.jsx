@@ -12,7 +12,6 @@ import {
   filtersSelector,
   loadingSelector,
   removeFilterAction,
-  DEFAULT_PAGE_SIZE,
   createFilterAction,
   updateFilterSuccessAction,
 } from 'controllers/filter';
@@ -23,7 +22,7 @@ import {
   userAccountRoleSelector,
 } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { withPagination } from 'controllers/pagination';
+import { withPagination, DEFAULT_PAGINATION, SIZE_KEY, PAGE_KEY } from 'controllers/pagination';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { showModalAction } from 'controllers/modal';
@@ -120,10 +119,10 @@ export class FiltersPage extends Component {
 
   static defaultProps = {
     filters: [],
-    activePage: 1,
+    activePage: DEFAULT_PAGINATION[PAGE_KEY],
     itemCount: 0,
     pageCount: 0,
-    pageSize: DEFAULT_PAGE_SIZE,
+    pageSize: DEFAULT_PAGINATION[SIZE_KEY],
     userId: '',
     filter: '',
     activeProject: '',
