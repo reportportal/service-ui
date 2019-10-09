@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape } from 'react-intl';
 
-import { SIZE_KEY, withPagination } from 'controllers/pagination';
+import { SIZE_KEY, withPagination, PAGE_KEY } from 'controllers/pagination';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
 import {
   DEFAULT_PAGINATION,
@@ -61,7 +61,7 @@ export class Projects extends Component {
   };
 
   static defaultProps = {
-    activePage: 1,
+    activePage: DEFAULT_PAGINATION[PAGE_KEY],
     itemCount: null,
     pageCount: null,
     pageSize: DEFAULT_PAGINATION[SIZE_KEY],

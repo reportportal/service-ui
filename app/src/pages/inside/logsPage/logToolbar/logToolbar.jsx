@@ -14,7 +14,7 @@ import {
   namespaceSelector,
   fetchTestItemsFromLogPageAction,
 } from 'controllers/testItem';
-import { withPagination } from 'controllers/pagination';
+import { withPagination, DEFAULT_PAGINATION, PAGE_KEY } from 'controllers/pagination';
 import {
   nextLogLinkSelector,
   previousLogLinkSelector,
@@ -76,7 +76,7 @@ export class LogToolbar extends Component {
     navigate: () => {},
     previousLinkDisable: false,
     nextLinkDisable: false,
-    activePage: 1,
+    activePage: DEFAULT_PAGINATION[PAGE_KEY],
     fetchTestItems: () => {},
     logViewMode: DETAILED_LOG_VIEW,
   };

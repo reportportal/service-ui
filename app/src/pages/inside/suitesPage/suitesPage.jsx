@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { PageLayout, PageSection } from 'layouts/pageLayout';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
-import { withPagination } from 'controllers/pagination';
+import { DEFAULT_PAGINATION, SIZE_KEY, PAGE_KEY, withPagination } from 'controllers/pagination';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { debugModeSelector } from 'controllers/launch';
 import {
@@ -104,10 +104,10 @@ export class SuitesPage extends Component {
     onEditItems: () => {},
     suites: [],
     selectedSuites: [],
-    activePage: 1,
+    activePage: DEFAULT_PAGINATION[PAGE_KEY],
     itemCount: null,
     pageCount: null,
-    pageSize: 20,
+    pageSize: DEFAULT_PAGINATION[SIZE_KEY],
     sortingColumn: null,
     sortingDirection: null,
     fetchTestItemsAction: () => {},

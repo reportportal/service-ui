@@ -20,7 +20,7 @@ import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { MODAL_TYPE_IMPORT_LAUNCH } from 'pages/common/modals/importModal/constants';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { projectConfigSelector } from 'controllers/project';
-import { withPagination, DEFAULT_PAGINATION, SIZE_KEY } from 'controllers/pagination';
+import { withPagination, DEFAULT_PAGINATION, SIZE_KEY, PAGE_KEY } from 'controllers/pagination';
 import { showModalAction } from 'controllers/modal';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
@@ -230,7 +230,7 @@ export class LaunchesPage extends Component {
   static defaultProps = {
     level: '',
     launches: [],
-    activePage: 1,
+    activePage: DEFAULT_PAGINATION[PAGE_KEY],
     itemCount: null,
     pageCount: null,
     pageSize: DEFAULT_PAGINATION[SIZE_KEY],

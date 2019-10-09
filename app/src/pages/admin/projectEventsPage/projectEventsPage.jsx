@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
-import { withPagination, DEFAULT_PAGINATION, SIZE_KEY } from 'controllers/pagination';
+import { withPagination, DEFAULT_PAGINATION, SIZE_KEY, PAGE_KEY } from 'controllers/pagination';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
 import {
@@ -44,7 +44,7 @@ export class ProjectEventsPage extends Component {
   };
 
   static defaultProps = {
-    activePage: 1,
+    activePage: DEFAULT_PAGINATION[PAGE_KEY],
     itemCount: null,
     pageCount: null,
     pageSize: DEFAULT_PAGINATION[SIZE_KEY],
