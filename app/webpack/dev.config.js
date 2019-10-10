@@ -1,6 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -18,17 +18,14 @@ module.exports = () => {
         {
           test: /\.(sa|sc|c)ss$/,
           use: [
-            'css-hot-loader',
             'style-loader',
             {
               loader: 'css-loader',
               options: {
                 modules: true,
                 importLoaders: 1,
-                localIdentName: '[name]__[local]___[hash:base64:5]',
               },
             },
-            'postcss-loader',
             'sass-loader',
             {
               loader: 'sass-resources-loader',
