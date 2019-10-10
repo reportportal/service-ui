@@ -1,8 +1,7 @@
 const path = require('path');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
   mode: 'production',
@@ -15,9 +14,10 @@ module.exports = {
           {
             loader: 'css-loader',
             options: {
-              modules: true,
+              modules: {
+                localIdentName: '[path][name]__[local]--[hash:base64:5]',
+              },
               importLoaders: 1,
-              localIdentName: '[name]__[local]___[hash:base64:5]',
             },
           },
           'postcss-loader',
@@ -33,7 +33,6 @@ module.exports = {
     ],
   },
   optimization: {
-    minimizer: [new UglifyJsPlugin()],
     splitChunks: {
       cacheGroups: {
         styles: {

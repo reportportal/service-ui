@@ -16,9 +16,11 @@ export class ModalFooter extends Component {
       text: PropTypes.string.isRequired,
       disabled: PropTypes.bool,
       danger: PropTypes.bool,
+      onClick: PropTypes.func,
     }),
     cancelButton: PropTypes.shape({
       text: PropTypes.string.isRequired,
+      disabled: PropTypes.bool,
     }),
     customButton: PropTypes.oneOfType([
       PropTypes.node,

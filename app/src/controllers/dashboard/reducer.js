@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { fetchReducer } from 'controllers/fetch/reducer';
+import { fetchReducer } from 'controllers/fetch';
 import { queueReducers } from 'common/utils/queueReducers';
 import { loadingReducer } from 'controllers/loading';
 import {

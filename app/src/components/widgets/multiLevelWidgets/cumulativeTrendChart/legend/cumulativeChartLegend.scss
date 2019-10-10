@@ -31,7 +31,7 @@
 }
 
 .separate {
-  background-image: url(common/img/toggle-stacked.svg);
+  background-image: url(~common/img/toggle-stacked.svg);
   background-position-y: center;
   background-repeat: no-repeat;
   cursor: pointer;
@@ -41,11 +41,11 @@
   }
 }
 .separate-active {
-  background-image: url(common/img/toggle_separated.svg);
+  background-image: url(~common/img/toggle_separated.svg);
 }
 
 .percentage {
-  background-image: url(common/img/toggle-absolute.svg);
+  background-image: url(~common/img/toggle-absolute.svg);
   background-position-y: center;
   background-repeat: no-repeat;
   cursor: pointer;
@@ -57,5 +57,5 @@
 }
 
 .percentage-active {
-  background-image: url(common/img/toggle_percentage.svg);
+  background-image: url(~common/img/toggle_percentage.svg);
 }
