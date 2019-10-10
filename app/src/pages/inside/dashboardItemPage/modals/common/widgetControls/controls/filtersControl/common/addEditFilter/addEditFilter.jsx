@@ -10,6 +10,7 @@ import { BigButton } from 'components/buttons/bigButton';
 import { FilterEntitiesContainer } from 'components/filterEntities/containers';
 import { EntitiesGroup } from 'components/filterEntities/entitiesGroup';
 import { FiltersSorting } from 'pages/inside/common/filtersSorting';
+import { ENTITY_NUMBER } from 'components/filterEntities/constants';
 import styles from './addEditFilter.scss';
 
 const cx = classNames.bind(styles);
@@ -79,7 +80,11 @@ export class AddEditFilter extends Component {
       isAsc: sortingColumn === newSortingColumn ? !isAsc : true,
     };
 
-    const newOrders = [sortObject, ...orders.slice(1)];
+    const newOrders = [sortObject];
+    const numberColumnIndex = orders.findIndex((o) => o.sortingColumn === ENTITY_NUMBER);
+    if (numberColumnIndex >= 0) {
+      newOrders.push(orders[numberColumnIndex]);
+    }
 
     tracking.trackEvent(eventsInfo.sortingSelectParameters);
     onChange({
