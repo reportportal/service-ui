@@ -27,7 +27,7 @@ export class SharedFilterIcon extends Component {
   static defaultProps = {
     share: false,
     currentUser: '',
-    owner: '',
+    owner: undefined,
   };
 
   render() {
