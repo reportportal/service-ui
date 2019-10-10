@@ -16,7 +16,6 @@
 
 require('babel-register');
 const path = require('path');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const getConfig = require('../webpack.config');
 const baseConfig = getConfig();
 
@@ -32,8 +31,5 @@ module.exports = {
   }),
   module: {
     rules: baseConfig.module.rules,
-  },
-  optimization: {
-    minimizer: [new UglifyJsPlugin()],
   },
 };
