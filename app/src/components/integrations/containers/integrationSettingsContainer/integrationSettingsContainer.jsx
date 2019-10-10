@@ -6,7 +6,6 @@ import { updateIntegrationAction } from 'controllers/plugins';
 import {
   INTEGRATIONS_SETTINGS_COMPONENTS_MAP,
   INTEGRATIONS_IMAGES_MAP,
-  INTEGRATION_NAMES_TITLES,
 } from 'components/integrations/constants';
 import styles from './integrationSettingsContainer.scss';
 
@@ -34,14 +33,17 @@ export class IntegrationSettingsContainer extends Component {
 
   updateIntegration = (formData, onConfirm) => {
     const {
-      data: { id, integrationType },
+      data: { id },
       isGlobal,
     } = this.props;
     const data = {
       enabled: true,
       integrationParameters: formData,
-      name: formData.integrationName || INTEGRATION_NAMES_TITLES[integrationType.name],
     };
+
+    if (formData.integrationName) {
+      data.name = formData.integrationName;
+    }
 
     this.props.updateIntegrationAction(data, isGlobal, id, () => {
       onConfirm();
