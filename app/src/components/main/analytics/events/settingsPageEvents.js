@@ -32,8 +32,8 @@ export const SETTINGS_PAGE_EVENTS = {
   },
   CLICK_ON_DELETE_RULE_NOTIFICATIONS: {
     category: SETTINGS_PAGE,
-    action: 'Click on icon Delete rule on tab Notifications',
-    label: 'Arise Modal Delete rule on tab Notifications',
+    action: 'Click on icon Delete Rule on tab Notifications',
+    label: 'Arise Modal Delete Rule on tab Notifications',
   },
   CLOSE_ICON_DELETE_RULE_NOTIFICATIONS: {
     category: SETTINGS_PAGE,
@@ -48,7 +48,7 @@ export const SETTINGS_PAGE_EVENTS = {
   DELETE_RULE_NOTIFICATIONS: {
     category: SETTINGS_PAGE,
     action: 'Click on Bttn Delete in Delete Rule Notification modal on tab Notifications',
-    label: 'Delete rule on tab Notifications',
+    label: 'Delete Rule on tab Notifications',
   },
   EDIT_RULE_NOTIFICATIONS: {
     category: SETTINGS_PAGE,

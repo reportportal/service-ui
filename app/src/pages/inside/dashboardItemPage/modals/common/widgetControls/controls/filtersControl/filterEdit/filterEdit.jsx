@@ -41,8 +41,8 @@ export class FilterEdit extends Component {
     this.props.onCancel(this.props.filter);
   };
 
-  onFilterChange = () => {
-    this.props.onChange();
+  onFilterChange = (data) => {
+    this.props.onChange(data);
   };
 
   getCustomBlock = (filter) => (
