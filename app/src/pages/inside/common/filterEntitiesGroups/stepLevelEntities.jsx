@@ -50,6 +50,7 @@ import {
   ENTITY_AUTOANALYZE,
   CONDITION_EQ,
   ENTITY_PATTERN_NAME,
+  ENTITY_ISSUE_ID,
 } from 'components/filterEntities/constants';
 import { defectTypesSelector, patternsSelector } from 'controllers/project';
 import { launchIdSelector } from 'controllers/pages';
@@ -274,11 +275,17 @@ export class StepLevelEntities extends Component {
     launchId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     visibleFilters: PropTypes.array,
     patterns: PropTypes.array,
+    onFilterAdd: PropTypes.func,
+    onFilterRemove: PropTypes.func,
+    onFilterChange: PropTypes.func,
   };
   static defaultProps = {
     filterValues: {},
     visibleFilters: [],
     patterns: [],
+    onFilterAdd: () => {},
+    onFilterRemove: () => {},
+    onFilterChange: () => {},
   };
   getDefectTypeEntity = () => {
     const { intl, defectTypes, filterValues, visibleFilters } = this.props;
@@ -614,13 +621,60 @@ export class StepLevelEntities extends Component {
       ...this.getPatternNameEntity(),
     ];
   };
+
   bindDefaultValue = bindDefaultValue;
+
+  handleAdd = (entity) => {
+    if (entity.id === ENTITY_BTS_ISSUES && entity.value.value === 'FALSE') {
+      this.props.onFilterAdd([
+        entity,
+        {
+          id: ENTITY_ISSUE_ID,
+          filteringField: ENTITY_ISSUE_ID,
+          value: {
+            condition: CONDITION_EX,
+            value: 'TRUE',
+          },
+        },
+      ]);
+    } else {
+      this.props.onFilterAdd(entity);
+    }
+  };
+
+  handleChange = (entityId, value) => {
+    this.props.onFilterChange(entityId, value);
+    if (entityId === ENTITY_BTS_ISSUES && value.value === 'FALSE') {
+      this.props.onFilterAdd({
+        id: ENTITY_ISSUE_ID,
+        filteringField: ENTITY_ISSUE_ID,
+        value: {
+          condition: CONDITION_EX,
+          value: 'TRUE',
+        },
+      });
+    } else if (ENTITY_ISSUE_ID in this.props.filterValues) {
+      this.props.onFilterRemove(ENTITY_ISSUE_ID);
+    }
+  };
+
+  handleRemove = (entityId) => {
+    if (entityId === ENTITY_BTS_ISSUES) {
+      this.props.onFilterRemove([entityId, ENTITY_ISSUE_ID]);
+    } else {
+      this.props.onFilterRemove(entityId);
+    }
+  };
+
   render() {
-    const { render, ...rest } = this.props;
+    const { render, onFilterAdd, onFilterRemove, onFilterChange, ...rest } = this.props;
 
     return render({
       ...rest,
       filterEntities: this.getEntities(),
+      onFilterAdd: this.handleAdd,
+      onFilterRemove: this.handleRemove,
+      onFilterChange: this.handleChange,
     });
   }
 }
