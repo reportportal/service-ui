@@ -89,7 +89,7 @@ export class SimpleWidget extends Component {
     this.setState({ userSettings: { ...this.state.userSettings, ...settings } }, callback);
   };
 
-  onChangeWidgetLegend = (itemId, callback = () => {}) => {
+  onChangeWidgetLegend = (itemId, callback) => {
     const uncheckedItemIndex = this.uncheckedLegendItems.indexOf(itemId);
     const uncheckedLegendItems = [...this.uncheckedLegendItems];
     if (uncheckedItemIndex !== -1) {
@@ -98,7 +98,9 @@ export class SimpleWidget extends Component {
       uncheckedLegendItems.push(itemId);
     }
     this.uncheckedLegendItems = uncheckedLegendItems;
-    callback();
+    if (callback) {
+      this.forceUpdate(callback);
+    }
   };
 
   getWidgetOptions = () => (this.state.widget.contentParameters || {}).widgetOptions || {};

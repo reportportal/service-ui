@@ -73,9 +73,7 @@ export class ChartContainer extends Component {
     }
 
     if (showLegend && !legendProps.disabled) {
-      uncheckedLegendItems.forEach((id) => {
-        this.chart.toggle(id);
-      });
+      this.chart.toggle(uncheckedLegendItems);
     }
 
     this.resizeChart();
