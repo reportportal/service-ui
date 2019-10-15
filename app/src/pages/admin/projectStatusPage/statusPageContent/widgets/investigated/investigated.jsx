@@ -69,7 +69,11 @@ export class Investigated extends Component {
       });
     }
 
-    return { content: data };
+    return {
+      content: {
+        result: data,
+      },
+    };
   };
 
   render() {

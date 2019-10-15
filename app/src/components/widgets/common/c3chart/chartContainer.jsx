@@ -25,7 +25,10 @@ export class ChartContainer extends Component {
   static defaultProps = {
     isPreview: false,
     height: 0,
-    observer: {},
+    observer: {
+      subscribe: () => {},
+      unsubscribe: () => {},
+    },
     configData: {},
     chartCreatedCallback: () => {},
     legendConfig: {
