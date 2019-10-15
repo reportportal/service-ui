@@ -116,11 +116,6 @@ export class LogsGrid extends Component {
     onChangeSorting: PropTypes.func,
     consoleView: PropTypes.bool,
     markdownMode: PropTypes.bool,
-    rowHighlightingConfig: PropTypes.shape({
-      onGridRowHighlighted: PropTypes.func,
-      isGridRowHighlighted: PropTypes.bool,
-      highlightedRowId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    }),
     logStatus: PropTypes.string,
     onChangeLogStatusFilter: PropTypes.func,
     isNestedStepView: PropTypes.bool,
@@ -136,11 +131,6 @@ export class LogsGrid extends Component {
     onChangeSorting: () => {},
     consoleView: false,
     markdownMode: false,
-    rowHighlightingConfig: PropTypes.shape({
-      onGridRowHighlighted: () => {},
-      isGridRowHighlighted: false,
-      highlightedRowId: null,
-    }),
     logStatus: null,
     onChangeLogStatusFilter: () => {},
     isNestedStepView: false,
@@ -294,7 +284,6 @@ export class LogsGrid extends Component {
       sortingColumn,
       sortingDirection,
       onChangeSorting,
-      rowHighlightingConfig,
     } = this.props;
 
     return (
@@ -302,7 +291,6 @@ export class LogsGrid extends Component {
         <Grid
           columns={this.getColumns()}
           data={logItems}
-          rowHighlightingConfig={rowHighlightingConfig}
           rowClassMapper={this.getLogRowClasses}
           changeOnlyMobileLayout
           loading={loading}

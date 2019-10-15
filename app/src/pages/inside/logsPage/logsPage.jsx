@@ -162,22 +162,7 @@ export class LogsPage extends Component {
   };
 
   state = {
-    highlightedRowId: null,
-    isGridRowHighlighted: false,
     isSauceLabsIntegrationView: false,
-  };
-
-  onHighlightRow = (highlightedRowId) => {
-    this.setState({
-      highlightedRowId,
-      isGridRowHighlighted: true,
-    });
-  };
-
-  onGridRowHighlighted = () => {
-    this.setState({
-      isGridRowHighlighted: false,
-    });
   };
 
   toggleSauceLabsIntegrationView = () =>
@@ -224,12 +209,6 @@ export class LogsPage extends Component {
       isNestedStepView,
     } = this.props;
 
-    const rowHighlightingConfig = {
-      onGridRowHighlighted: this.onGridRowHighlighted,
-      isGridRowHighlighted: this.state.isGridRowHighlighted,
-      highlightedRowId: this.state.highlightedRowId,
-    };
-
     return (
       <PageLayout>
         <PageSection>
@@ -243,7 +222,6 @@ export class LogsPage extends Component {
                   <LogItemInfo
                     onChangeLogLevel={onChangeLogLevel}
                     onChangePage={onChangePage}
-                    onHighlightRow={this.onHighlightRow}
                     onToggleSauceLabsIntegrationView={this.toggleSauceLabsIntegrationView}
                     isSauceLabsIntegrationView={this.state.isSauceLabsIntegrationView}
                     fetchFunc={refresh}
@@ -278,7 +256,6 @@ export class LogsPage extends Component {
                         sortingColumn={sortingColumn}
                         sortingDirection={sortingDirection}
                         onChangeSorting={onChangeSorting}
-                        rowHighlightingConfig={rowHighlightingConfig}
                         markdownMode={markdownMode}
                         logStatus={logStatus}
                         onChangeLogStatusFilter={onChangeLogStatusFilter}
