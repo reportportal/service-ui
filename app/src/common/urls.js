@@ -65,8 +65,8 @@ export const URLS = {
   launchByIds: (activeProject, ids) => `${urlBase}${activeProject}/launch?filter.in.id=${ids}`,
   launchAttributeKeysSearch: (activeProject) =>
     `${urlBase}${activeProject}/launch/attribute/keys?filter.cnt.attributeKey=`,
-  itemAttributeKeysAllSearch: (activeProject) =>
-    `${urlBase}${activeProject}/item/attribute/keys/all?filter.cnt.attributeKey=`,
+  itemAttributeKeysAllSearch: (activeProject, filterId, isLatest, launchesLimit) =>
+    `${urlBase}${activeProject}/item/attribute/keys/all?filterId=${filterId}&isLatest=${isLatest}&launchesLimit=${launchesLimit}&filter.cnt.attributeKey=`,
   launchAttributeValuesSearch: (activeProject, key = '') =>
     `${urlBase}${activeProject}/launch/attribute/values?${
       key ? `filter.eq.attributeKey=${key}&` : ''
