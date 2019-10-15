@@ -142,8 +142,6 @@ export class DashboardTable extends Component {
     ];
   }
 
-  COLUMNS = this.getTableColumns();
-
   render() {
     const { dashboardItems, loading, onAddItem, filter } = this.props;
 
@@ -151,7 +149,7 @@ export class DashboardTable extends Component {
       <Fragment>
         <Grid
           className={cx('dashboard-table')}
-          columns={this.COLUMNS}
+          columns={this.getTableColumns()}
           data={dashboardItems}
           loading={loading}
         />

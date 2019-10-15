@@ -23,6 +23,7 @@ export class Legend extends Component {
     colors: PropTypes.object,
     noTotal: PropTypes.bool,
     disabled: PropTypes.bool,
+    clickable: PropTypes.bool,
     onClick: PropTypes.func,
     onMouseOver: PropTypes.func,
     onMouseOut: PropTypes.func,
@@ -36,6 +37,7 @@ export class Legend extends Component {
     colors: {},
     noTotal: false,
     disabled: false,
+    clickable: true,
     onClick: () => {},
     onMouseOver: () => {},
     onMouseOut: () => {},
@@ -57,13 +59,14 @@ export class Legend extends Component {
 
   getElements = () => {
     const {
+      intl: { formatMessage },
+      defectTypes,
       items,
       uncheckedLegendItems,
       disabled,
+      clickable,
       noTotal,
       onMouseOut,
-      defectTypes,
-      intl: { formatMessage },
       colors,
     } = this.props;
 
@@ -79,9 +82,9 @@ export class Legend extends Component {
             disabled,
             unchecked: uncheckedLegendItems.indexOf(name) !== -1,
           })}
-          onClick={disabled ? null : this.onClick}
-          onMouseOver={this.onMouseOver}
-          onMouseOut={onMouseOut}
+          onClick={disabled || !clickable ? null : this.onClick}
+          onMouseOver={disabled ? null : this.onMouseOver}
+          onMouseOut={disabled ? null : onMouseOut}
         >
           <span
             className={cx('color-mark')}

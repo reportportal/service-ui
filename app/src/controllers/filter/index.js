@@ -27,7 +27,6 @@ export {
 } from './selectors';
 export { filterSagas } from './sagas';
 export {
-  DEFAULT_PAGE_SIZE,
   LAUNCHES_FILTERS_NAMESPACE,
   ADD_FILTER,
   REMOVE_FILTER,

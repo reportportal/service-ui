@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
@@ -14,7 +15,7 @@ import {
   namespaceSelector,
   fetchTestItemsFromLogPageAction,
 } from 'controllers/testItem';
-import { withPagination } from 'controllers/pagination';
+import { withPagination, DEFAULT_PAGINATION, PAGE_KEY } from 'controllers/pagination';
 import {
   nextLogLinkSelector,
   previousLogLinkSelector,
@@ -50,8 +51,13 @@ const cx = classNames.bind(styles);
   namespaceSelector,
   offset: 1,
 })
+@track()
 export class LogToolbar extends Component {
   static propTypes = {
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
     breadcrumbs: PropTypes.array,
     onRefresh: PropTypes.func,
     previousItem: PropTypes.object,
@@ -76,20 +82,24 @@ export class LogToolbar extends Component {
     navigate: () => {},
     previousLinkDisable: false,
     nextLinkDisable: false,
-    activePage: 1,
+    activePage: DEFAULT_PAGINATION[PAGE_KEY],
     fetchTestItems: () => {},
     logViewMode: DETAILED_LOG_VIEW,
   };
 
   handleBackClick = () => {
-    const { navigate, previousLink, fetchTestItems } = this.props;
+    const { navigate, previousLink, fetchTestItems, tracking } = this.props;
+
+    tracking.trackEvent(LOG_PAGE_EVENTS.PREVIOUS_ITEM_BTN);
     if (previousLink) {
       return navigate(previousLink);
     }
     return fetchTestItems();
   };
   handleForwardClick = () => {
-    const { fetchTestItems, nextLink, navigate } = this.props;
+    const { fetchTestItems, nextLink, navigate, tracking } = this.props;
+
+    tracking.trackEvent(LOG_PAGE_EVENTS.NEXT_ITEM_BTN);
     if (nextLink) {
       return navigate(nextLink);
     }

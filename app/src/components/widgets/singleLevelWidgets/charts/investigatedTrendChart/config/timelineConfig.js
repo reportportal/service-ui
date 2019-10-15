@@ -11,14 +11,14 @@ export const getTimelineConfig = ({
   formatMessage,
   positionCallback,
   size,
+  onChartClick,
 }) => {
   const chartData = {};
   const colors = {};
   const itemsData = [];
-  const { result } = content;
-  const data = Object.keys(result).map((key) => ({
+  const data = Object.keys(content).map((key) => ({
     date: key,
-    values: result[key].values,
+    values: content[key].values,
   }));
 
   // prepare columns array and fill it witch field names
@@ -42,12 +42,14 @@ export const getTimelineConfig = ({
   const itemNames = Object.keys(chartData);
 
   return {
+    legendItems: itemNames,
     data: {
       columns: [chartData[itemNames[0]], chartData[itemNames[1]]],
       type: 'bar',
       order: null,
       groups: [itemNames],
       colors,
+      onclick: isPreview ? null : onChartClick,
     },
     grid: {
       y: {

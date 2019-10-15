@@ -89,7 +89,7 @@ export class SimpleWidget extends Component {
     this.setState({ userSettings: { ...this.state.userSettings, ...settings } }, callback);
   };
 
-  onChangeWidgetLegend = (itemId, callback = () => {}) => {
+  onChangeWidgetLegend = (itemId, callback) => {
     const uncheckedItemIndex = this.uncheckedLegendItems.indexOf(itemId);
     const uncheckedLegendItems = [...this.uncheckedLegendItems];
     if (uncheckedItemIndex !== -1) {
@@ -98,7 +98,9 @@ export class SimpleWidget extends Component {
       uncheckedLegendItems.push(itemId);
     }
     this.uncheckedLegendItems = uncheckedLegendItems;
-    callback();
+    if (callback) {
+      this.forceUpdate(callback);
+    }
   };
 
   getWidgetOptions = () => (this.state.widget.contentParameters || {}).widgetOptions || {};
@@ -228,11 +230,31 @@ export class SimpleWidget extends Component {
   };
 
   showEditWidgetModal = () => {
+    this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.EDIT_WIDGET);
     this.props.showModalAction({
       id: 'editWidgetModal',
       data: {
         widget: this.state.widget,
         onConfirm: this.fetchWidget,
+        eventsInfo: {
+          closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_EDIT_WIDGET_MODAL,
+          cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_EDIT_WIDGET_MODAL,
+          changeName: DASHBOARD_PAGE_EVENTS.WIDGET_NAME_EDIT_WIDGET_MODAL,
+          changeDescription: DASHBOARD_PAGE_EVENTS.WIDGET_DESCRIPTION_EDIT_WIDGET_MODAL,
+          shareWidget: DASHBOARD_PAGE_EVENTS.SHARE_WIDGET_EDIT_WIDGET_MODAL,
+          okBtn: DASHBOARD_PAGE_EVENTS.SAVE_BTN_EDIT_WIDGET_MODAL,
+          editFilterIcon: DASHBOARD_PAGE_EVENTS.EDIT_FILTER_ICON_EDIT_WIDGET_MODAL,
+          enterSearchParams: DASHBOARD_PAGE_EVENTS.ENTER_SEARCH_PARAMS_EDIT_WIDGET_MODAL,
+          chooseFilter: DASHBOARD_PAGE_EVENTS.CHOOSE_FILTER_EDIT_WIDGET_MODAL,
+          addFilter: DASHBOARD_PAGE_EVENTS.ADD_FILTER_BTN_EDIT_WIDGET_MODAL,
+          cancelAddNewFilter: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_ADD_NEW_FILTER_EDIT_WIDGET_MODAL,
+          addNewFilter: DASHBOARD_PAGE_EVENTS.ADD_NEW_FILTER_BTN_EDIT_WIDGET_MODAL,
+          editFilterName: DASHBOARD_PAGE_EVENTS.EDIT_FILTER_NAME_EDIT_WIDGET_MODAL,
+          sortingSelectParameters: DASHBOARD_PAGE_EVENTS.SORTING_FOR_NEW_FILTER_EDIT_WIDGET_MODAL,
+          selectParamsForFilter: DASHBOARD_PAGE_EVENTS.PARAMS_FOR_FILTER_EDIT_WIDGET_MODAL,
+          submitChanges: DASHBOARD_PAGE_EVENTS.SUBMIT_CHANGES_EDIT_WIDGET_MODAL,
+          cancelEditFilter: DASHBOARD_PAGE_EVENTS.CANCEL_EDIT_FILTER_EDIT_WIDGET_MODAL,
+        },
       },
     });
   };
@@ -244,6 +266,11 @@ export class SimpleWidget extends Component {
       data: {
         widget: this.state.widget,
         onConfirm: () => this.props.onDelete(this.props.widgetId),
+        eventsInfo: {
+          closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_DELETE_WIDGET_MODAL,
+          cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_DELETE_WIDGET_MODAL,
+          deleteBtn: DASHBOARD_PAGE_EVENTS.DELETE_BTN_DELETE_WIDGET_MODAL,
+        },
       },
     });
   };

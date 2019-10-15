@@ -18,12 +18,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames/bind';
-import { intlShape, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import isEqual from 'fast-deep-equal';
-import { Component } from 'react';
+import { intlShape, injectIntl } from 'react-intl';
+import classNames from 'classnames/bind';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import {
   PRODUCT_BUG,
@@ -37,13 +36,12 @@ import { activeProjectSelector } from 'controllers/user';
 import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { createFilterAction } from 'controllers/filter';
 import { defectTypesSelector } from 'controllers/project';
-import { C3Chart } from 'components/widgets/common/c3chart';
-import { Legend } from 'components/widgets/common/legend';
-import { getUpdatedFilterWithTime } from 'components/widgets/common/utils';
+import { getUpdatedFilterWithTime, getChartDefaultProps } from 'components/widgets/common/utils';
 import { ALL } from 'common/constants/reservedFilterIds';
 import * as STATUSES from 'common/constants/testStatuses';
+import { ChartContainer } from '../../../common/c3chart';
 import { getConfig as getStatusPageModeConfig } from '../common/statusPageChartConfig';
-import { getConfig } from './config';
+import { selectConfigFunction } from './config';
 import styles from './investigatedTrendChart.scss';
 
 const cx = classNames.bind(styles);
@@ -88,7 +86,10 @@ export class InvestigatedTrendChart extends Component {
     createFilterAction: () => {},
     isPreview: false,
     height: 0,
-    observer: {},
+    observer: {
+      subscribe: () => {},
+      unsubscribe: () => {},
+    },
     onStatusPageMode: false,
     interval: null,
     integerValueType: false,
@@ -96,59 +97,8 @@ export class InvestigatedTrendChart extends Component {
     onChangeLegend: () => {},
   };
 
-  state = {
-    isConfigReady: false,
-  };
-
-  componentDidMount() {
-    this.props.observer.subscribe &&
-      this.props.observer.subscribe('widgetResized', this.resizeChart);
-    this.getConfig();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (!isEqual(prevProps.widget, this.props.widget)) {
-      this.getConfig();
-    }
-  }
-
-  componentWillUnmount() {
-    this.node && this.node.removeEventListener('mousemove', this.getCoords);
-    this.props.observer.unsubscribe &&
-      this.props.observer.unsubscribe('widgetResized', this.resizeChart);
-    this.chart = null;
-  }
-
   onChartClick = (data) =>
     this.isTimeline ? this.timeLineModeClickHandler(data) : this.launchModeClickHandler(data);
-
-  onChartCreated = (chart, element) => {
-    this.chart = chart;
-    this.node = element;
-
-    if (this.props.isPreview) {
-      return;
-    }
-
-    this.props.uncheckedLegendItems.forEach((id) => {
-      this.chart.toggle(id);
-    });
-
-    this.node.addEventListener('mousemove', this.getCoords);
-  };
-
-  onLegendMouseOut = () => {
-    this.chart.revert();
-  };
-
-  onLegendMouseOver = (id) => {
-    this.chart.focus(id);
-  };
-
-  onClickLegendItem = (id) => {
-    this.props.onChangeLegend(id);
-    this.chart.toggle(id);
-  };
 
   getDefectTypeLocators = (id) => {
     const { defectTypes } = this.props;
@@ -170,71 +120,39 @@ export class InvestigatedTrendChart extends Component {
     type: TEST_ITEM_PAGE,
   });
 
-  getCoords = ({ pageX, pageY }) => {
-    this.x = pageX;
-    this.y = pageY;
-  };
-
-  getPosition = (d, width, height) => {
-    const rect = this.node.getBoundingClientRect();
-    const left = this.x - rect.left - width / 2;
-    const top = this.y - rect.top - height;
-
-    return {
-      top: top - 8,
-      left,
-    };
-  };
-
-  getConfig = () => {
+  getConfigData = () => {
     const {
       intl: { formatMessage },
-      widget: { content, contentParameters },
-      isPreview,
-      container,
+      widget: { contentParameters },
       interval,
       onStatusPageMode,
       integerValueType,
     } = this.props;
 
-    this.height = container.offsetHeight;
-    this.width = container.offsetWidth;
-
-    const params = {
-      content,
-      isPreview,
+    const configData = {
       formatMessage,
-      positionCallback: this.getPosition,
-      size: {
-        height: container.offsetHeight,
-      },
     };
-
-    this.size = params.size;
 
     this.isTimeline =
       contentParameters &&
       contentParameters.widgetOptions.timeline === MODES_VALUES[CHART_MODES.TIMELINE_MODE];
 
     if (onStatusPageMode) {
-      this.config = getStatusPageModeConfig({
-        ...params,
+      return {
+        ...configData,
+        getConfig: getStatusPageModeConfig,
         interval,
         chartType: MODES_VALUES[CHART_MODES.BAR_VIEW],
         integerValueType,
         wrapperClassName: cx('tooltip-container'),
-      });
-    } else {
-      this.config = getConfig(params, this.isTimeline);
+      };
     }
 
-    if (!onStatusPageMode && !isPreview) {
-      this.config.data.onclick = this.onChartClick;
-    }
-
-    this.setState({
-      isConfigReady: true,
-    });
+    return {
+      ...configData,
+      getConfig: selectConfigFunction(this.isTimeline),
+      onChartClick: this.onChartClick,
+    };
   };
 
   timeLineModeClickHandler = (data) => {
@@ -260,47 +178,24 @@ export class InvestigatedTrendChart extends Component {
     this.props.navigate(Object.assign(link, defaultParams));
   };
 
-  resizeChart = () => {
-    const newHeight = this.props.container.offsetHeight;
-    const newWidth = this.props.container.offsetWidth;
-
-    if (this.height !== newHeight) {
-      this.chart.resize({
-        height: newHeight,
-      });
-      this.height = newHeight;
-      this.config.size.height = newHeight;
-    } else if (this.width !== newWidth) {
-      this.chart.flush();
-    }
-    this.width = newWidth;
-  };
-
   render() {
-    const { isPreview, onStatusPageMode, uncheckedLegendItems } = this.props;
+    const { onChangeLegend, uncheckedLegendItems, onStatusPageMode } = this.props;
+    const legendConfig = {
+      onChangeLegend,
+      showLegend: !onStatusPageMode,
+      uncheckedLegendItems,
+      legendProps: {},
+    };
 
     return (
-      this.state.isConfigReady && (
-        <div className={cx('investigated-trend-chart', { 'timeline-mode': this.isTimeline })}>
-          <C3Chart
-            config={this.config}
-            onChartCreated={this.onChartCreated}
-            className={cx('widget-wrapper')}
-          >
-            {!isPreview &&
-              !onStatusPageMode && (
-                <Legend
-                  items={this.config.data.groups[0]}
-                  uncheckedLegendItems={uncheckedLegendItems}
-                  colors={this.config.data.colors}
-                  onClick={this.onClickLegendItem}
-                  onMouseOver={this.onLegendMouseOver}
-                  onMouseOut={this.onLegendMouseOut}
-                />
-              )}
-          </C3Chart>
-        </div>
-      )
+      <div className={cx('investigated-trend-chart', { 'timeline-mode': this.isTimeline })}>
+        <ChartContainer
+          {...getChartDefaultProps(this.props)}
+          className={cx('widget-wrapper')}
+          legendConfig={legendConfig}
+          configData={this.getConfigData()}
+        />
+      </div>
     );
   }
 }

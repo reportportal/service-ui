@@ -30,6 +30,7 @@ export class WidgetsGrid extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     activeProject: PropTypes.string.isRequired,
+    currentUser: PropTypes.string.isRequired,
     isFullscreen: PropTypes.bool,
     isModifiable: PropTypes.bool,
     showNotification: PropTypes.func.isRequired,
@@ -164,10 +165,18 @@ export class WidgetsGrid extends Component {
   isStaticWidget = (widgetType) => STATIC_CHARTS[widgetType];
 
   renderItems = () => {
-    const { widgets = [], owner } = this.props.dashboard;
+    const {
+      dashboard: { widgets = [], owner },
+      currentUser,
+    } = this.props;
 
     if (widgets.length) {
-      return widgets.map(
+      const newWidgets =
+        this.props.isPrintMode && owner !== currentUser
+          ? widgets.filter((item) => item.share)
+          : widgets;
+
+      return newWidgets.map(
         ({
           widgetPosition: { positionX: x, positionY: y },
           widgetSize: { width: w, height: h },

@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { reduxForm } from 'redux-form';
+import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
 import { FormField } from 'components/fields/formField';
 import { LABEL_WIDTH, ENABLED_FIELD_KEY } from '../constants';
@@ -63,7 +64,11 @@ export class NotificationsEnableForm extends Component {
           format={Boolean}
           parse={Boolean}
         >
-          <InputBigSwitcher title={titleMessage} mobileDisabled />
+          <InputBigSwitcher
+            title={titleMessage}
+            onChangeEventInfo={SETTINGS_PAGE_EVENTS.EDIT_INPUT_NOTIFICATIONS}
+            mobileDisabled
+          />
         </FormField>
       </Fragment>
     );

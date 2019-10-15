@@ -93,6 +93,8 @@ $LEVEL_OFFSET_STEP: 20px;
   border-left-color: $COLOR--gray-91;
   border-left-style: solid;
   border-left-width: 0px;
+  background-color: transparent;
+  transition: background-color 2s ease;
   @media (max-width: $SCREEN_SM_MAX) {
     display: flex;
     flex-wrap: wrap;
@@ -108,6 +110,11 @@ $LEVEL_OFFSET_STEP: 20px;
     }
   }
   @include levels-mobile;
+
+  &.highlight {
+    background-color: $COLOR--go-to-stack-trace;
+    transition: background-color 0.01s linear;
+  }
 }
 .accordion-wrapper {
   position: absolute;
@@ -118,13 +125,18 @@ $LEVEL_OFFSET_STEP: 20px;
 .accordion-block {
   position: absolute;
   display: flex;
-  left: 20px;
+  left: 0;
   bottom: 0;
-  width: calc(100% - 20px);
+  width: 100%;
   height: 20px;
   background-color: $COLOR--white-two;
   box-shadow: 0 -15px 20px 0px $COLOR--white-two;
-  transition: background-color 0.2s ease 0s, box-shadow 0.2s ease 0s;
+  transition: background-color 0.2s ease 0s, box-shadow 0.2s ease 0s, opacity 2s ease 0.1s;
+  opacity: 1;
+
+  &.highlight {
+    opacity: 0;
+  }
 
   &.expanded {
     box-shadow: none;
@@ -220,6 +232,8 @@ $LEVEL_OFFSET_STEP: 20px;
   background-position: 0 0;
 
   .accordion-block {
+    left: 20px;
+    width: calc(100% - 20px);
     background-color: $COLOR--white-two;
     box-shadow: 0 -15px 20px 0px $COLOR--white-two;
     &.expanded {
@@ -261,39 +275,6 @@ $LEVEL_OFFSET_STEP: 20px;
 
   &:hover {
     background: none;
-  }
-}
-
-.highlight-block {
-  position: absolute;
-  right: 0;
-  left: 0;
-  z-index: -1;
-
-  &:before {
-    content: '';
-    display: block;
-  }
-}
-
-.highlight {
-  z-index: 1;
-  &:before {
-    position: absolute;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: $COLOR--go-to-stack-trace;
-    opacity: 0.6;
-    transition: opacity 3s ease;
-  }
-}
-
-.hide-highlight {
-  &:before {
-    opacity: 0;
   }
 }
 

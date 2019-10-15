@@ -112,10 +112,20 @@ export class FilterEntitiesContainer extends Component {
   };
 
   handleRemove = (entityId) => {
-    const values = omit(this.state.values, [entityId]);
-    const visibleFilters = this.state.visibleFilters.filter((item) => item !== entityId);
-    this.setState({ values, visibleFilters }, () =>
-      this.props.onChange(this.collectEntities(this.state.values)),
+    this.setState(
+      (prevState) => {
+        let values;
+        let visibleFilters;
+        if (Array.isArray(entityId)) {
+          values = omit(prevState.values, entityId);
+          visibleFilters = prevState.visibleFilters.filter((item) => !entityId.includes(item));
+        } else {
+          values = omit(prevState.values, [entityId]);
+          visibleFilters = prevState.visibleFilters.filter((item) => item !== entityId);
+        }
+        return { values, visibleFilters };
+      },
+      () => this.props.onChange(this.collectEntities(this.state.values)),
     );
   };
 

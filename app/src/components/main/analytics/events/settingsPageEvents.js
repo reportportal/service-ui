@@ -30,10 +30,65 @@ export const SETTINGS_PAGE_EVENTS = {
     action: 'Click on tab Notifications in Settings',
     label: 'Open tab Notifications in Settings',
   },
+  CLICK_ON_DELETE_RULE_NOTIFICATIONS: {
+    category: SETTINGS_PAGE,
+    action: 'Click on icon Delete Rule on tab Notifications',
+    label: 'Arise Modal Delete Rule on tab Notifications',
+  },
+  CLOSE_ICON_DELETE_RULE_NOTIFICATIONS: {
+    category: SETTINGS_PAGE,
+    action: 'Click on icon Close on Modal Delete Rule Notification',
+    label: 'Close Modal Delete Rule Notification',
+  },
+  CANCEL_DELETE_RULE_NOTIFICATIONS: {
+    category: SETTINGS_PAGE,
+    action: 'Click on Bttn Cancel in Delete Rule Notification modal on tab Notifications',
+    label: 'Close Delete Rule Notification modal on tab Notifications',
+  },
   DELETE_RULE_NOTIFICATIONS: {
     category: SETTINGS_PAGE,
-    action: 'Delete rule on tab Notifications',
-    label: 'Delete rule on tab Notifications',
+    action: 'Click on Bttn Delete in Delete Rule Notification modal on tab Notifications',
+    label: 'Delete Rule on tab Notifications',
+  },
+  EDIT_RULE_NOTIFICATIONS: {
+    category: SETTINGS_PAGE,
+    action: 'Click on icon Edit rule on tab Notifications',
+    label: 'Arise Modal Edit Rule Notification on tab Notifications',
+  },
+  CLOSE_ICON_EDIT_RULE_NOTIFICATIONS: {
+    category: SETTINGS_PAGE,
+    action: 'Click on icon Close on Modal Edit Rule Notification',
+    label: 'Close Modal Edit Rule Notification',
+  },
+  CANCEL_EDIT_RULE_NOTIFICATIONS: {
+    category: SETTINGS_PAGE,
+    action: 'Click on Bttn Cancel in Edit Rule Notification modal on tab Notifications',
+    label: 'Close Edit Rule Notification modal on tab Notifications',
+  },
+  SAVE_EDIT_RULE_NOTIFICATIONS: {
+    category: SETTINGS_PAGE,
+    action: 'Click on Bttn Save in Edit Rule Notification modal on tab Notifications',
+    label: 'Save Rule Notification in Edit Rule Notification modal on tab Notifications',
+  },
+  CLOSE_ICON_ADD_RULE_NOTIFICATIONS: {
+    category: SETTINGS_PAGE,
+    action: 'Click on icon Close on Modal Add Rule Notification',
+    label: 'Close Modal Add Rule Notification',
+  },
+  CANCEL_ADD_RULE_NOTIFICATIONS: {
+    category: SETTINGS_PAGE,
+    action: 'Click on Bttn Cancel in Add Rule Notification modal on tab Notifications',
+    label: 'Close Add Rule Notification modal on tab Notifications',
+  },
+  SAVE_ADD_RULE_NOTIFICATIONS: {
+    category: SETTINGS_PAGE,
+    action: 'Click on Bttn Save in Add Rule Notification modal on tab Notifications',
+    label: 'Save Rule Notification in Add Rule Notification modal on tab Notifications',
+  },
+  EDIT_INPUT_NOTIFICATIONS: {
+    category: SETTINGS_PAGE,
+    action: 'Edit input Email notifications on tab Notifications',
+    label: 'Change input Email notifications on tab Notifications',
   },
   EDIT_RECIPIENTS_INPUT_NOTIFICATIONS: {
     category: SETTINGS_PAGE,
@@ -149,43 +204,36 @@ export const SETTINGS_PAGE_EVENTS = {
     label: 'Submit Change of Default properties for issue form on tab Integrations',
   },
   EDIT_DEFECT_TAG_DEFECT_TYPES: {
-    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Click on icon Edit defect tag on tab Defect Types',
     label: 'Arise fields for editing defect tag on tab Defect Types',
   },
   DELETE_ICON_DEFECT_TYPE: {
-    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Click on icon Delete defect tag on tab Defect Types',
     label: 'Arise Modal Delete defect type on tab Defect Types',
   },
   EDIT_DEFECT_TYPE_NAME_DEFECT_TYPE: {
-    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Edit input Defect type name on tab Defect Types',
     label: 'Change Defect type name on tab Defect Types',
   },
   EDIT_DEFECT_TYPE_ABBREVIATION: {
-    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Edit input Defect type abbreviation on tab Defect Types',
     label: 'Change Defect type abbreviation on tab Defect Types',
   },
   CHANGE_DEFECT_TYPE_COLOR: {
-    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Edit input Defect type color on tab Defect Types',
     label: 'Change Defect type color on tab Defect Types',
   },
   SUBMIT_DEFECT_TYPE_CHANGES: {
-    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Click on icon Submit defect type change on tab Defect Types',
     label: 'Change defect type on tab Defect Types',
   },
   CANCEL_DEFECT_TYPE_CHANGES: {
-    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Click on icon Cancel defect type change on tab Defect Types',
     label: 'Cancel defect type change on tab Defect Types',
@@ -206,31 +254,26 @@ export const SETTINGS_PAGE_EVENTS = {
     label: 'Delete Defect type',
   },
   ADD_DEFECT_TYPE_BTN: {
-    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Click on Bttn Add defect type on tab Defect types',
     label: 'Arise fieldes for Add defect type on tab Defect types',
   },
   RESET_DEFAULT_COLOR: {
-    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Click on link Reset to default colors on tab Defect types',
     label: 'Arise fieldes for Add defect type on tab Defect types',
   },
   CLOSE_ICON_RESET_DEFECT_COLORS_MODAL: {
-    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Click on icon Close on Modal Reset Defect colors',
     label: 'Close Modal Reset Defect colors',
   },
   CANCEL_BTN_RESET_DEFECT_COLORS_MODAL: {
-    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Click on Bttn Cancel on Modal Reset Defect colors',
     label: 'Close Modal Reset Defect colors',
   },
   RESET_BTN_RESET_DEFECT_COLORS_MODAL: {
-    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Click on Bttn Reset on Modal Reset Defect colors',
     label: 'Reset Defect colors',

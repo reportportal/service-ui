@@ -20,7 +20,7 @@ import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { MODAL_TYPE_IMPORT_LAUNCH } from 'pages/common/modals/importModal/constants';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { projectConfigSelector } from 'controllers/project';
-import { withPagination, DEFAULT_PAGINATION, SIZE_KEY } from 'controllers/pagination';
+import { withPagination, DEFAULT_PAGINATION, SIZE_KEY, PAGE_KEY } from 'controllers/pagination';
 import { showModalAction } from 'controllers/modal';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
@@ -230,7 +230,7 @@ export class LaunchesPage extends Component {
   static defaultProps = {
     level: '',
     launches: [],
-    activePage: 1,
+    activePage: DEFAULT_PAGINATION[PAGE_KEY],
     itemCount: null,
     pageCount: null,
     pageSize: DEFAULT_PAGINATION[SIZE_KEY],
@@ -275,14 +275,7 @@ export class LaunchesPage extends Component {
     finishedLaunchesCount: null,
   };
 
-  componentDidMount() {
-    const { highlightItemId } = this.props;
-    if (highlightItemId) {
-      this.onHighlightRow(highlightItemId);
-    }
-  }
-
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     if (!this.state.launchesInProgress.length && this.intervalId) {
       clearInterval(this.intervalId);
       this.intervalId = null;
@@ -294,6 +287,14 @@ export class LaunchesPage extends Component {
         5000,
       );
     }
+    if (
+      this.props.loading !== prevProps.loading &&
+      this.props.loading === false &&
+      !this.state.highlightedRowId &&
+      this.props.highlightItemId
+    ) {
+      this.onHighlightRow(this.props.highlightItemId);
+    }
   }
 
   componentWillUnmount() {
@@ -304,13 +305,13 @@ export class LaunchesPage extends Component {
   onHighlightRow = (highlightedRowId) => {
     this.setState({
       highlightedRowId,
-      isGridRowHighlighted: false,
+      isGridRowHighlighted: true,
     });
   };
 
   onGridRowHighlighted = () => {
     this.setState({
-      isGridRowHighlighted: true,
+      isGridRowHighlighted: false,
     });
   };
 
@@ -645,6 +646,7 @@ export class LaunchesPage extends Component {
       selectedLaunches,
     } = this.props;
 
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_PROCEED_ITEMS_BUTTON);
     this.props.proceedWithValidItemsAction(operationName, selectedLaunches, operationArgs);
   };
 

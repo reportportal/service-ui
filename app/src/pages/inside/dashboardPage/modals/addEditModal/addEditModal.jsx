@@ -60,6 +60,8 @@ const messages = defineMessages({
   },
 });
 
+const LABEL_WIDTH = 90;
+
 const createDashboardNameValidator = (dashboardItems, dashboardItem) =>
   composeBoundValidators([
     bindMessageToValidator(validate.dashboardName, 'dashboardNameHint'),
@@ -127,7 +129,7 @@ export class AddEditModal extends Component {
   submitFormAndCloseModal = (closeModal) => (item) => {
     const {
       tracking,
-      data: { dashboardItem, eventsInfo },
+      data: { dashboardItem, eventsInfo = {} },
       dirty,
     } = this.props;
     if (dirty) {
@@ -141,12 +143,11 @@ export class AddEditModal extends Component {
     const {
       intl,
       handleSubmit,
-      data: { type, eventsInfo },
+      data: { type, eventsInfo = {} },
     } = this.props;
     const submitText = intl.formatMessage(messages[`${type}ModalSubmitButtonText`]);
     const title = intl.formatMessage(messages[`${type}ModalTitle`]);
     const cancelText = intl.formatMessage(messages.modalCancelButtonText);
-    const labelWidth = 70;
 
     return (
       <ModalLayout
@@ -168,7 +169,7 @@ export class AddEditModal extends Component {
         <form onSubmit={(event) => event.preventDefault()} className={cx('add-dashboard-form')}>
           <ModalField
             label={intl.formatMessage(messages.dashboardNameLabel)}
-            labelWidth={labelWidth}
+            labelWidth={LABEL_WIDTH}
           >
             <FieldProvider name="name" type="text">
               <FieldErrorHint>
@@ -181,7 +182,7 @@ export class AddEditModal extends Component {
           </ModalField>
           <ModalField
             label={intl.formatMessage(messages.dashboardDescriptionLabel)}
-            labelWidth={labelWidth}
+            labelWidth={LABEL_WIDTH}
           >
             <FieldProvider
               name="description"
@@ -192,7 +193,7 @@ export class AddEditModal extends Component {
           </ModalField>
           <ModalField
             label={intl.formatMessage(messages.dashboardShareLabel)}
-            labelWidth={labelWidth}
+            labelWidth={LABEL_WIDTH}
           >
             <FieldProvider name="share" type="checkbox" format={Boolean} parse={Boolean}>
               <InputBigSwitcher onChangeEventInfo={eventsInfo.shareSwitcher} />

@@ -209,7 +209,7 @@ export const retryLinkSelector = createSelector(
     type: debugMode ? PROJECT_USERDEBUG_LOG_PAGE : PROJECT_LOG_PAGE,
     payload: {
       ...payload,
-      testItemIds: [...(payload.testItemIds || '').split('/'), testItemId].join('/'),
+      testItemIds: [...`${payload.testItemIds || ''}`.split('/'), testItemId].join('/'),
     },
     meta: {
       query: {

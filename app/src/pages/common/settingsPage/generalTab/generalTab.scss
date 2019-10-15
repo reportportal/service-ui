@@ -26,22 +26,15 @@
 }
 
 .button-container {
-  box-sizing: content-box;
-  margin-left: 455px;
-  &::after {
-    content: '';
-    clear: both;
-    display: table;
-  }
-  @media (max-width: $SCREEN_SM_MAX) {
-    margin-left: 345px;
-  }
+  min-width: 300px;
+  width: 300px;
+  display: flex;
+  justify-content: flex-end;
   @media (max-width: $SCREEN_XS_MAX) {
     display: none;
   }
 }
 .submit-button {
-  width: 70px;
   button {
     font-size: 13px;
   }

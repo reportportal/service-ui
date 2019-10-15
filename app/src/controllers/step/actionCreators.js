@@ -46,21 +46,23 @@ export const unlinkIssueAction = defineGroupOperation(
 export const editDefectsAction = defineGroupOperation(
   NAMESPACE,
   'edit-defect',
-  (items, { fetchFunc, debugMode }) =>
-    showModalAction({ id: 'editDefectModal', data: { items, fetchFunc, debugMode } }),
+  (items, { fetchFunc, debugMode, eventsInfo }) =>
+    showModalAction({ id: 'editDefectModal', data: { items, fetchFunc, debugMode, eventsInfo } }),
   validateEditDefect,
 );
 
 export const linkIssueAction = defineGroupOperation(
   NAMESPACE,
   'link-issue',
-  (items, { fetchFunc }) => showModalAction({ id: 'linkIssueModal', data: { items, fetchFunc } }),
+  (items, { fetchFunc, eventsInfo }) =>
+    showModalAction({ id: 'linkIssueModal', data: { items, fetchFunc, eventsInfo } }),
   validateLinkIssue,
 );
 
 export const postIssueAction = defineGroupOperation(
   NAMESPACE,
   'post-issue',
-  (items, { fetchFunc }) => showModalAction({ id: 'postIssueModal', data: { items, fetchFunc } }),
+  (items, { fetchFunc, eventsInfo }) =>
+    showModalAction({ id: 'postIssueModal', data: { items, fetchFunc, eventsInfo } }),
   validatePostIssue,
 );

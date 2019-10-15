@@ -23,13 +23,13 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { connect } from 'react-redux';
-import { reduxForm } from 'redux-form';
+import { reduxForm, stopSubmit } from 'redux-form';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
 import Link from 'redux-first-router-link';
 import { commonValidators, isEmptyObject } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { authExtensionsSelector } from 'controllers/appInfo';
-import { loginAction, lastFailedLoginTimeSelector } from 'controllers/auth';
+import { loginAction, lastFailedLoginTimeSelector, badCredentialsSelector } from 'controllers/auth';
 import { LOGIN_PAGE } from 'controllers/pages';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputOutside } from 'components/inputs/inputOutside';
@@ -63,12 +63,17 @@ const messages = defineMessages({
     id: 'LoginForm.errorMessage',
     defaultMessage: 'Error',
   },
+  badCredentials: {
+    id: 'LoginForm.badCredentials',
+    defaultMessage: 'Bad Credentials',
+  },
 });
 
 @connect(
   (state) => ({
     externalAuth: authExtensionsSelector(state),
     lastFailedLoginTime: lastFailedLoginTimeSelector(state),
+    badCredentials: badCredentialsSelector(state),
   }),
   {
     authorize: loginAction,
@@ -89,6 +94,9 @@ export class LoginForm extends React.Component {
     authorize: PropTypes.func.isRequired,
     externalAuth: PropTypes.object,
     lastFailedLoginTime: PropTypes.number,
+    badCredentials: PropTypes.bool.isRequired,
+    form: PropTypes.string.isRequired,
+    dispatch: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -104,6 +112,10 @@ export class LoginForm extends React.Component {
   componentDidUpdate(prevProps) {
     if (prevProps.lastFailedLoginTime !== this.props.lastFailedLoginTime) {
       this.blockLoginForm();
+    }
+    const { badCredentials } = this.props;
+    if (badCredentials !== prevProps.badCredentials && badCredentials) {
+      this.badCredentialsHandler();
     }
   }
 
@@ -152,6 +164,20 @@ export class LoginForm extends React.Component {
         });
       }
     }, 1000);
+  };
+
+  badCredentialsHandler = () => {
+    const {
+      form,
+      dispatch,
+      intl: { formatMessage },
+    } = this.props;
+    dispatch(
+      stopSubmit(form, {
+        login: formatMessage(messages.badCredentials),
+        password: formatMessage(messages.badCredentials),
+      }),
+    );
   };
 
   render() {

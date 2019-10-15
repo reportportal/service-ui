@@ -19,6 +19,7 @@ export const getConfig = ({
   positionCallback,
   size,
   defectTypes,
+  onChartClick,
 }) => {
   const chartData = {};
   const chartDataOrdered = [];
@@ -32,15 +33,15 @@ export const getConfig = ({
     colors[key] = getItemColor(key, defectTypes);
   });
 
-  content.result.forEach((item) => {
+  content.forEach((item) => {
     itemsData.push({
       id: item.id,
       name: item.name,
       number: item.number,
       startTime: item.startTime,
     });
-    Object.keys(item.values).forEach((key) => {
-      const val = item.values[key];
+    contentFields.forEach((key) => {
+      const val = item.values[key] || 0;
       chartData[key].push(val);
     });
   });
@@ -53,13 +54,16 @@ export const getConfig = ({
   });
   chartDataOrdered.reverse();
 
-  const itemNames = chartDataOrdered.map((item) => item[0]);
-  const config = {
+  const legendItems = chartDataOrdered.map((item) => item[0]);
+
+  return {
+    legendItems,
     data: {
       columns: chartDataOrdered,
       type: 'bar',
       order: null,
       colors,
+      onclick: isPreview ? null : onChartClick,
     },
     grid: {
       y: {
@@ -112,10 +116,5 @@ export const getConfig = ({
       }),
     },
     size,
-  };
-
-  return {
-    itemNames,
-    config,
   };
 };

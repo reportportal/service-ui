@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
+import track from 'react-tracking';
 import 'pure-react-carousel/dist/react-carousel.es.css';
 import { CarouselProvider } from 'pure-react-carousel';
 import {
@@ -17,6 +18,7 @@ import {
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { NoItemMessage } from 'components/main/noItemMessage';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { DEFAULT_VISIBLE_THUMBS, MOBILE_VISIBLE_THUMBS } from './constants';
 import { AttachmentsSlider } from './attachmentsSlider';
 import styles from './attachments.scss';
@@ -49,9 +51,14 @@ const getCurrentThumb = (activeItemId, visibleThumbs) =>
   },
 )
 @injectIntl
+@track()
 export class Attachments extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
     attachments: PropTypes.array,
     activeItemId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     pagination: PropTypes.object,
@@ -98,9 +105,14 @@ export class Attachments extends Component {
     };
   }
 
-  onClickItem = (itemIndex) => this.props.openAttachmentAction(this.props.attachments[itemIndex]);
+  onClickItem = (itemIndex) => {
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.ATTACHMENT_CLICK);
+
+    return this.props.openAttachmentAction(this.props.attachments[itemIndex]);
+  };
 
   onClickThumb = (itemIndex) => {
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.ATTACHMENT_THUMBNAIL);
     this.props.setActiveAttachmentAction(itemIndex);
     this.setState({ mainAreaVisible: true });
   };

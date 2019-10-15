@@ -158,8 +158,9 @@ export class DashboardPage extends Component {
   };
 
   onAddDashboardItem = () => {
-    const { showModal, addDashboard } = this.props;
+    const { showModal, addDashboard, tracking } = this.props;
 
+    tracking.trackEvent(DASHBOARD_PAGE_EVENTS.ADD_NEW_WIDGET_EMPTY_PAGE);
     showModal({
       id: 'dashboardAddEditModal',
       data: {

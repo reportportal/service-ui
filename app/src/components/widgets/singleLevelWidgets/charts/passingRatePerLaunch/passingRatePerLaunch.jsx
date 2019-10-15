@@ -2,7 +2,8 @@ import PropTypes from 'prop-types';
 import { messages } from 'components/widgets/common/messages';
 import { PassingRateChart } from '../common/passingRateChart';
 
-const getFilterName = (widget) => widget.contentParameters.widgetOptions.launchNameFilter;
+const getFilterName = ({ contentParameters, content: { result = {} } = {} } = {}) =>
+  `${contentParameters.widgetOptions.launchNameFilter} #${result.number}`;
 
 export const PassingRatePerLaunch = (props) => (
   <PassingRateChart

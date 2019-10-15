@@ -7,4 +7,10 @@ export {
   resetTokenAction,
 } from './actionCreators';
 export { authReducer } from './reducer';
-export { isAuthorizedSelector, tokenSelector, lastFailedLoginTimeSelector } from './selectors';
+export {
+  isAuthorizedSelector,
+  tokenSelector,
+  lastFailedLoginTimeSelector,
+  badCredentialsSelector,
+} from './selectors';
+export { ANONYMOUS_REDIRECT_PATH_STORAGE_KEY } from './constants';

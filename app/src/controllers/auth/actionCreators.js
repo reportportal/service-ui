@@ -7,6 +7,7 @@ import {
   DEFAULT_TOKEN,
   SET_LAST_FAILED_LOGIN_TIME,
   LOGIN_SUCCESS,
+  SET_BAD_CREDENTIALS,
 } from './constants';
 
 export const authSuccessAction = () => ({ type: AUTH_SUCCESS });
@@ -23,7 +24,7 @@ export const loginSuccessAction = (token) => ({
   payload: token,
 });
 
-export const logoutAction = (redirectPath) => ({ type: LOGOUT, payload: redirectPath });
+export const logoutAction = () => ({ type: LOGOUT });
 
 export const setTokenAction = (token) => ({
   type: SET_TOKEN,
@@ -35,4 +36,8 @@ export const resetTokenAction = () => setTokenAction(DEFAULT_TOKEN);
 export const setLastFailedLoginTimeAction = (time) => ({
   type: SET_LAST_FAILED_LOGIN_TIME,
   payload: time,
+});
+
+export const setBadCredentialsAction = () => ({
+  type: SET_BAD_CREDENTIALS,
 });

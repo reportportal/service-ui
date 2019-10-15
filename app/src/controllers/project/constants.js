@@ -21,7 +21,7 @@ export const DELETE_DEFECT_SUBTYPE_SUCCESS = 'deleteDefectSubTypeSuccess';
 
 export const ANALYZER_ATTRIBUTE_PREFIX = 'analyzer';
 export const JOB_ATTRIBUTE_PREFIX = 'job';
-export const PA_ATTRIBUTE_ENABLED_KEY = 'pattern.analysis.enabled';
+export const PA_ATTRIBUTE_ENABLED_KEY = 'analyzer.isAutoPatternAnalyzerEnabled';
 
 export const ADD_PATTERN = 'addPattern';
 export const ADD_PATTERN_SUCCESS = 'addPatternSuccess';

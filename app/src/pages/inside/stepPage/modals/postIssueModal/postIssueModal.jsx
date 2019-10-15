@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
+import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { fetch, updateSessionItem, getSessionItem } from 'common/utils';
@@ -102,6 +103,7 @@ const messages = defineMessages({
   form: 'postIssueForm',
   validate: (fields) => validate(fields, validationConfig),
 })
+@track()
 @connect(
   (state) => ({
     activeProject: activeProjectSelector(state),
@@ -133,7 +135,20 @@ export class PostIssueModal extends Component {
     data: PropTypes.shape({
       items: PropTypes.array,
       fetchFunc: PropTypes.func,
+      eventsInfo: PropTypes.object,
     }).isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
+  };
+
+  static defaultProps = {
+    data: {
+      items: [],
+      fetchFunc: () => {},
+      eventsInfo: {},
+    },
   };
 
   constructor(props) {
@@ -160,6 +175,7 @@ export class PostIssueModal extends Component {
   }
 
   onPost = () => (closeModal) => {
+    this.props.tracking.trackEvent(this.props.data.eventsInfo.postBtn);
     this.closeModal = closeModal;
     this.props.handleSubmit(this.prepareDataToSend)();
   };
@@ -200,6 +216,10 @@ export class PostIssueModal extends Component {
     });
   };
 
+  onChangeCheckbox = (event) => {
+    this.props.tracking.trackEvent(event);
+  };
+
   getCloseConfirmationConfig = () => {
     if (!this.props.dirty) {
       return null;
@@ -226,14 +246,17 @@ export class PostIssueModal extends Component {
     {
       name: INCLUDE_ATTACHMENTS_KEY,
       title: this.props.intl.formatMessage(messages.attachmentsHeader),
+      trackEvent: this.props.data.eventsInfo && this.props.data.eventsInfo.attachmentsSwitcher,
     },
     {
       name: INCLUDE_LOGS_KEY,
       title: this.props.intl.formatMessage(messages.logsHeader),
+      trackEvent: this.props.data.eventsInfo && this.props.data.eventsInfo.logsSwitcher,
     },
     {
       name: INCLUDE_COMMENTS_KEY,
       title: this.props.intl.formatMessage(messages.commentsHeader),
+      trackEvent: this.props.data.eventsInfo && this.props.data.eventsInfo.commentSwitcher,
     },
   ];
 
@@ -366,6 +389,7 @@ export class PostIssueModal extends Component {
     const {
       intl: { formatMessage },
       namedBtsIntegrations,
+      data: { eventsInfo = {} },
     } = this.props;
     const okButton = {
       text: formatMessage(messages.postButton),
@@ -374,6 +398,7 @@ export class PostIssueModal extends Component {
     };
     const cancelButton = {
       text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      eventInfo: eventsInfo.cancelBtn,
     };
     const CredentialsComponent = SYSTEM_CREDENTIALS_BLOCKS[this.state.pluginName];
 
@@ -388,6 +413,7 @@ export class PostIssueModal extends Component {
         okButton={okButton}
         cancelButton={cancelButton}
         closeConfirmation={this.getCloseConfirmationConfig()}
+        closeIconEventInfo={eventsInfo.closeIcon}
       >
         <form className={cx('post-issue-form')}>
           <BtsIntegrationSelector
@@ -417,7 +443,12 @@ export class PostIssueModal extends Component {
               </h4>
               <div className={cx('include-data-block')}>
                 {this.dataFieldsConfig.map((item) => (
-                  <FieldProvider key={item.name} name={item.name} format={Boolean}>
+                  <FieldProvider
+                    key={item.name}
+                    name={item.name}
+                    format={Boolean}
+                    onChange={() => this.onChangeCheckbox(item.trackEvent)}
+                  >
                     <InputCheckbox>
                       <span className={cx('switch-field-label')}>{item.title}</span>
                     </InputCheckbox>

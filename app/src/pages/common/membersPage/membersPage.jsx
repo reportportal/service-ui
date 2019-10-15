@@ -8,11 +8,10 @@ import {
   fetchMembersAction,
   membersSelector,
   loadingSelector,
-  DEFAULT_PAGE_SIZE,
 } from 'controllers/members';
 import { withFilter } from 'controllers/filter';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
-import { withPagination } from 'controllers/pagination';
+import { withPagination, DEFAULT_PAGINATION, SIZE_KEY, PAGE_KEY } from 'controllers/pagination';
 import { MEMBERS_PAGE, MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { NoResultsForFilter } from 'pages/inside/common/noResultsForFilter';
 import { MembersPageToolbar } from './membersPageToolbar';
@@ -65,10 +64,10 @@ export class MembersPage extends Component {
     onSearchChange: () => {},
     onFilterChange: () => {},
     fetchMembersAction: () => {},
-    activePage: 1,
+    activePage: DEFAULT_PAGINATION[PAGE_KEY],
     itemCount: 0,
     pageCount: 0,
-    pageSize: DEFAULT_PAGE_SIZE,
+    pageSize: DEFAULT_PAGINATION[SIZE_KEY],
     onChangePage: () => {},
     onChangePageSize: () => {},
     filter: '',

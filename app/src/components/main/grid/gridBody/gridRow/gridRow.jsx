@@ -9,7 +9,6 @@ import { CheckboxCell } from './checkboxCell';
 import styles from './gridRow.scss';
 
 const cx = classNames.bind(styles);
-const LEVEL_OFFSET = 20;
 
 @track()
 export class GridRow extends Component {
@@ -66,17 +65,10 @@ export class GridRow extends Component {
 
   componentDidMount() {
     this.handleAccordion();
-    this.updateHighlightBlockStyle();
-
-    if (!!this.props.rowHighlightingConfig.highlightedRowId && this.state.updateHighlight) {
-      // eslint-disable-next-line
-      this.setState({ updateHighlight: false });
-    }
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate() {
     this.handleAccordion();
-    this.updateHighlightBlockStyleIfNeeded(prevState);
 
     if (this.checkIfTheHighlightNeeded()) {
       this.highLightGridRow();
@@ -92,36 +84,9 @@ export class GridRow extends Component {
     this.overflowCell.style.maxHeight = `${this.overflowCellMaxHeight}px`;
   };
 
-  getHighlightBlockStyle = () => {
-    if (!this.rowRef || !this.rowRef.current) {
-      return {};
-    }
-    return {
-      left: LEVEL_OFFSET * this.props.level,
-      height: `${this.rowRef.current.clientHeight}px`,
-      width: `${this.rowRef.current.clientWidth - LEVEL_OFFSET * this.props.level}px`,
-    };
-  };
-
-  getHighlightBlockClasses = () =>
-    this.checkIfTheHighlightNeeded() ? this.highLightBlockClasses : '';
+  getHighlightBlockClasses = () => (this.checkIfTheHighlightNeeded() ? cx('highlight') : '');
 
   handleRowClick = (e) => this.props.onClickRow(e, this.props.value);
-
-  updateHighlightBlockStyleIfNeeded = (prevState) => {
-    const highlightBlockStyle = this.getHighlightBlockStyle();
-    if (
-      prevState.highlightBlockStyle.left !== highlightBlockStyle.left ||
-      prevState.highlightBlockStyle.height !== highlightBlockStyle.height ||
-      prevState.highlightBlockStyle.width !== highlightBlockStyle.width
-    ) {
-      this.updateHighlightBlockStyle();
-    }
-  };
-
-  updateHighlightBlockStyle = () => {
-    this.setState({ highlightBlockStyle: this.getHighlightBlockStyle() });
-  };
 
   isItemSelected = () => this.props.selectedItems.some((item) => item.id === this.props.value.id);
 
@@ -131,21 +96,13 @@ export class GridRow extends Component {
   checkIfTheHighlightNeeded = () => {
     const { highlightedRowId, isGridRowHighlighted } = this.props.rowHighlightingConfig;
 
-    return (
-      this.highlightBlockRef.current &&
-      highlightedRowId === this.props.value.id &&
-      !isGridRowHighlighted
-    );
+    return highlightedRowId === this.props.value.id && isGridRowHighlighted;
   };
-
-  highlightBlockRef = React.createRef();
 
   rowRef = React.createRef();
 
-  highLightBlockClasses = `${cx('highlight')} ${cx('hide-highlight')}`;
-
   highLightGridRow() {
-    this.highlightBlockRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    this.rowRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     setTimeout(() => {
       this.props.rowHighlightingConfig.onGridRowHighlighted();
     }, LOG_MESSAGE_HIGHLIGHT_TIMEOUT);
@@ -207,13 +164,6 @@ export class GridRow extends Component {
         ref={this.rowRef}
         onClick={onClickRow ? this.handleRowClick : null}
       >
-        <div className={cx('grid-row')}>
-          <div
-            ref={this.highlightBlockRef}
-            className={cx('highlight-block', this.getHighlightBlockClasses())}
-            style={this.state.highlightBlockStyle}
-          />
-        </div>
         {this.state.withAccordion && (
           <div className={cx('accordion-wrapper-mobile')}>
             <div
@@ -227,6 +177,7 @@ export class GridRow extends Component {
             'grid-row',
             { 'change-mobile': changeOnlyMobileLayout, [`level-${level}`]: level !== 0 },
             gridRowClassName,
+            this.getHighlightBlockClasses(),
           )}
         >
           {columns.map((column, i) => {
@@ -280,7 +231,13 @@ export class GridRow extends Component {
         {this.state.withAccordion && (
           <div className={cx('grid-row')}>
             <div className={cx('accordion-wrapper', { [`level-${level}`]: level !== 0 })}>
-              <div className={cx('accordion-block', { expanded: this.state.expanded })}>
+              <div
+                className={cx(
+                  'accordion-block',
+                  { expanded: this.state.expanded },
+                  this.getHighlightBlockClasses(),
+                )}
+              >
                 <div
                   className={cx('accordion-toggler', { rotated: this.state.expanded })}
                   onClick={this.toggleAccordion}

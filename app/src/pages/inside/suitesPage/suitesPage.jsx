@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { PageLayout, PageSection } from 'layouts/pageLayout';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
-import { withPagination } from 'controllers/pagination';
+import { DEFAULT_PAGINATION, SIZE_KEY, PAGE_KEY, withPagination } from 'controllers/pagination';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { debugModeSelector } from 'controllers/launch';
 import {
@@ -104,10 +104,10 @@ export class SuitesPage extends Component {
     onEditItems: () => {},
     suites: [],
     selectedSuites: [],
-    activePage: 1,
+    activePage: DEFAULT_PAGINATION[PAGE_KEY],
     itemCount: null,
     pageCount: null,
-    pageSize: 20,
+    pageSize: DEFAULT_PAGINATION[SIZE_KEY],
     sortingColumn: null,
     sortingDirection: null,
     fetchTestItemsAction: () => {},
@@ -150,13 +150,13 @@ export class SuitesPage extends Component {
   onHighlightRow = (highlightedRowId) => {
     this.setState({
       highlightedRowId,
-      isGridRowHighlighted: false,
+      isGridRowHighlighted: true,
     });
   };
 
   onGridRowHighlighted = () => {
     this.setState({
-      isGridRowHighlighted: true,
+      isGridRowHighlighted: false,
     });
   };
 
@@ -205,6 +205,7 @@ export class SuitesPage extends Component {
       onFilterChange,
       filterErrors,
       filterEntities,
+      tracking,
     } = this.props;
 
     const rowHighlightingConfig = {
@@ -224,6 +225,7 @@ export class SuitesPage extends Component {
             selectedItems={selectedSuites}
             onUnselect={this.unselectItem}
             onUnselectAll={this.unselectAllItems}
+            onProceedValidItems={() => tracking.trackEvent(SUITES_PAGE_EVENTS.PROCEED_VALID_ITEMS)}
             parentItem={parentItem}
             onRefresh={this.props.fetchTestItemsAction}
             debugMode={debugMode}
