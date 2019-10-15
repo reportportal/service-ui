@@ -28,10 +28,6 @@ const messages = defineMessages({
     id: 'ActionPanel.actionCompare',
     defaultMessage: 'Compare',
   },
-  actionForceFinish: {
-    id: 'ActionPanel.actionForceFinish',
-    defaultMessage: 'Force finish',
-  },
   proceedButton: {
     id: 'ActionPanel.proceedButton',
     defaultMessage: 'Proceed Valid Items',
@@ -164,7 +160,7 @@ export class ActionPanel extends Component {
         onClick: onMove,
       },
       {
-        label: intl.formatMessage(messages.actionForceFinish),
+        label: intl.formatMessage(COMMON_LOCALE_KEYS.FORCE_FINISH),
         value: 'action-force-finish',
         onClick: onForceFinish,
       },

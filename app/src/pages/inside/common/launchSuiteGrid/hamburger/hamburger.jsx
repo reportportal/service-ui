@@ -24,10 +24,6 @@ import styles from './hamburger.scss';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
-  forceFinish: {
-    id: 'Hamburger.forceFinish',
-    defaultMessage: 'Force Finish',
-  },
   analysis: {
     id: 'Hamburger.analysis',
     defaultMessage: 'Analysis',
@@ -235,7 +231,7 @@ export class Hamburger extends Component {
               </Fragment>
             )}
             <HamburgerMenuItem
-              text={intl.formatMessage(messages.forceFinish)}
+              text={intl.formatMessage(COMMON_LOCALE_KEYS.FORCE_FINISH)}
               title={this.getForceFinishTooltip()}
               disabled={
                 !canForceFinishLaunch(
