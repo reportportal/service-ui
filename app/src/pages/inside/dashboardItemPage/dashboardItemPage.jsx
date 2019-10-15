@@ -327,7 +327,7 @@ export class DashboardItemPage extends Component {
       fullScreenMode,
       activeProject,
       changeFullScreenModeAction: changeFullScreenMode,
-      userInfo: { userRole },
+      userInfo: { userRole, userId },
       projectRole,
     } = this.props;
 
@@ -399,6 +399,7 @@ export class DashboardItemPage extends Component {
                 activeProject={activeProject}
                 showNotification={this.props.showNotification}
                 updateDashboardWidgetsAction={this.props.updateDashboardWidgetsAction}
+                currentUser={userId}
               />
               {fullScreenMode && (
                 <i className={cx('icon-close')} onClick={this.toggleFullscreen}>
