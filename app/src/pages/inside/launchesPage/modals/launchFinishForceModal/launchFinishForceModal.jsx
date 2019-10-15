@@ -16,10 +16,6 @@ import styles from './launchFinishForceModal.scss';
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
-  finishForceLaunchHeader: {
-    id: 'LaunchFinishForceDialog.finishForceLaunchHeader',
-    defaultMessage: 'Force finish',
-  },
   finishForceLaunchText: {
     id: 'LaunchFinishForceDialog.finishForceLaunchText',
     defaultMessage: 'Are you sure you want to finish the launch? All data will be missed.',
@@ -138,7 +134,7 @@ export class LaunchFinishForceModal extends Component {
     };
     return (
       <ModalLayout
-        title={intl.formatMessage(messages.finishForceLaunchHeader)}
+        title={intl.formatMessage(COMMON_LOCALE_KEYS.FORCE_FINISH)}
         okButton={okButton}
         cancelButton={cancelButton}
         warningMessage={

@@ -105,4 +105,8 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.moveToAllLaunches',
     defaultMessage: 'Move to all launches',
   },
+  FORCE_FINISH: {
+    id: 'Common.forceFinish',
+    defaultMessage: 'Force Finish',
+  },
 });
