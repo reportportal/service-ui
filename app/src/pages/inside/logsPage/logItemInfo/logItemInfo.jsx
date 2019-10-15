@@ -116,7 +116,6 @@ export class LogItemInfo extends Component {
     btsIntegrations: PropTypes.array.isRequired,
     fetchFunc: PropTypes.func.isRequired,
     showModalAction: PropTypes.func.isRequired,
-    onHighlightRow: PropTypes.func.isRequired,
     onToggleSauceLabsIntegrationView: PropTypes.func.isRequired,
     isSauceLabsIntegrationView: PropTypes.bool.isRequired,
     debugMode: PropTypes.bool.isRequired,
@@ -326,7 +325,6 @@ export class LogItemInfo extends Component {
       loading,
       onChangePage,
       onChangeLogLevel,
-      onHighlightRow,
       onToggleSauceLabsIntegrationView,
       isSauceLabsIntegrationView,
       debugMode,
@@ -405,7 +403,6 @@ export class LogItemInfo extends Component {
           <LogItemInfoTabs
             onChangePage={onChangePage}
             onChangeLogLevel={onChangeLogLevel}
-            onHighlightRow={onHighlightRow}
             onToggleSauceLabsIntegrationView={onToggleSauceLabsIntegrationView}
             isSauceLabsIntegrationView={isSauceLabsIntegrationView}
             loading={loading}
