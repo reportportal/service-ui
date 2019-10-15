@@ -275,14 +275,7 @@ export class LaunchesPage extends Component {
     finishedLaunchesCount: null,
   };
 
-  componentDidMount() {
-    const { highlightItemId } = this.props;
-    if (highlightItemId) {
-      this.onHighlightRow(highlightItemId);
-    }
-  }
-
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     if (!this.state.launchesInProgress.length && this.intervalId) {
       clearInterval(this.intervalId);
       this.intervalId = null;
@@ -293,6 +286,14 @@ export class LaunchesPage extends Component {
         () => this.fetchLaunchStatus(this.state.launchesInProgress),
         5000,
       );
+    }
+    if (
+      this.props.loading !== prevProps.loading &&
+      this.props.loading === false &&
+      !this.state.highlightedRowId &&
+      this.props.highlightItemId
+    ) {
+      this.onHighlightRow(this.props.highlightItemId);
     }
   }
 
