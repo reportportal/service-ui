@@ -66,7 +66,7 @@ const attributeKeyValidator = (formatMessage) =>
   ]);
 
 @connect((state) => ({
-  itemAttributeKeysAllSearch: URLS.itemAttributeKeysAllSearch(activeProjectSelector(state)),
+  activeProject: activeProjectSelector(state),
 }))
 @injectIntl
 export class ComponentHealthCheckControls extends Component {
@@ -76,7 +76,7 @@ export class ComponentHealthCheckControls extends Component {
     initializeControlsForm: PropTypes.func.isRequired,
     formAppearance: PropTypes.object.isRequired,
     onFormAppearanceChange: PropTypes.func.isRequired,
-    itemAttributeKeysAllSearch: PropTypes.string.isRequired,
+    activeProject: PropTypes.string.isRequired,
     eventsInfo: PropTypes.object,
   };
 
@@ -106,15 +106,31 @@ export class ComponentHealthCheckControls extends Component {
   formatFilterValue = (value) => value && value[0];
   parseFilterValue = (value) => value && [value];
 
-  renderAttributesFieldArray = ({ fields, fieldValidator }) => (
-    <AttributesFieldArrayControl
-      fields={fields}
-      fieldValidator={fieldValidator}
-      maxAttributesAmount={MAX_ATTRIBUTES_AMOUNT}
-      showRemainingLevels
-      url={this.props.itemAttributeKeysAllSearch}
-    />
-  );
+  renderAttributesFieldArray = ({ fields, fieldValidator }) => {
+    const {
+      activeProject,
+      widgetSettings: { contentParameters, filters },
+    } = this.props;
+    const filterId = filters && filters[0].value;
+    const isLatest =
+      (contentParameters && contentParameters.widgetOptions.latest) ||
+      MODES_VALUES[CHART_MODES.ALL_LAUNCHES];
+
+    return (
+      <AttributesFieldArrayControl
+        fields={fields}
+        fieldValidator={fieldValidator}
+        maxAttributesAmount={MAX_ATTRIBUTES_AMOUNT}
+        showRemainingLevels
+        url={URLS.itemAttributeKeysAllSearch(
+          activeProject,
+          filterId,
+          isLatest,
+          DEFAULT_LAUNCHES_LIMIT,
+        )}
+      />
+    );
+  };
 
   render() {
     const {
