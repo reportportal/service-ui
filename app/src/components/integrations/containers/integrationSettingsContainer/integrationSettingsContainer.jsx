@@ -46,21 +46,26 @@ export class IntegrationSettingsContainer extends Component {
     }
 
     this.props.updateIntegrationAction(data, isGlobal, id, () => {
-      onConfirm();
       this.setState({
         updatedParameters: data,
       });
+      onConfirm();
     });
   };
 
   render() {
     const { data, goToPreviousPage, isGlobal } = this.props;
+    const { updatedParameters } = this.state;
     const instanceType = data.integrationType.name;
     const image = INTEGRATIONS_IMAGES_MAP[instanceType];
     const IntegrationSettingsComponent = INTEGRATIONS_SETTINGS_COMPONENTS_MAP[instanceType];
     const updatedData = {
       ...data,
-      ...this.state.updatedParameters,
+      name: updatedParameters.name || data.name,
+      integrationParameters: {
+        ...data.integrationParameters,
+        ...updatedParameters.integrationParameters,
+      },
     };
 
     return (
