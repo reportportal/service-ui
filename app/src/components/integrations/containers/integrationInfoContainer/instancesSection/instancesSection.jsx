@@ -144,7 +144,14 @@ export class InstancesSection extends Component {
   removeProjectIntegrations = () =>
     this.props.removeProjectIntegrationsByTypeAction(this.props.instanceType);
 
-  navigateToNewIntegration = (data) => this.props.onItemClick(data, data.name);
+  navigateToNewIntegration = (data) =>
+    this.props.onItemClick(
+      {
+        ...data,
+        isNew: true,
+      },
+      data.name,
+    );
 
   addProjectIntegration = (formData) => {
     const { isGlobal, instanceType } = this.props;
