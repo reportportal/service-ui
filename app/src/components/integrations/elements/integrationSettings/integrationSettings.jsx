@@ -59,30 +59,15 @@ export class IntegrationSettings extends Component {
   };
 
   state = {
-    connected: false,
-    loading: true,
-    updated: false,
+    connected: this.props.data.isNew,
+    loading: !this.props.data.isNew,
   };
 
   componentDidMount() {
-    this.testIntegrationConnection();
-  }
-
-  componentDidUpdate() {
-    if (this.state.updated && !this.state.loading) {
-      this.updateWithUnmount();
+    if (!this.state.connected) {
+      this.testIntegrationConnection();
     }
   }
-
-  updateWithUnmount = () => {
-    this.setState({ loading: true }, () => {
-      this.setState({
-        connected: true,
-        updated: false,
-        loading: false,
-      });
-    });
-  };
 
   testIntegrationConnection = () => {
     const {
@@ -100,7 +85,6 @@ export class IntegrationSettings extends Component {
         this.setState({
           connected: true,
           loading: false,
-          updated: false,
         });
       })
       .catch(({ message }) => {
@@ -108,22 +92,8 @@ export class IntegrationSettings extends Component {
           connected: false,
           errorMessage: message,
           loading: false,
-          updated: false,
         });
       });
-  };
-
-  updateIntegrationHandler = (data, onConfirm, metaData) => {
-    this.props.onUpdate(
-      data,
-      () => {
-        onConfirm();
-        this.setState({
-          updated: true,
-        });
-      },
-      metaData,
-    );
   };
 
   removeIntegration = () => {
@@ -140,6 +110,7 @@ export class IntegrationSettings extends Component {
     const {
       intl: { formatMessage },
       data,
+      onUpdate,
       formFieldsComponent,
       editAuthConfig,
       isEmptyConfiguration,
@@ -174,7 +145,7 @@ export class IntegrationSettings extends Component {
               connected={connected}
               pluginName={pluginName}
               isGlobal={isGlobal}
-              onSubmit={this.updateIntegrationHandler}
+              onSubmit={onUpdate}
               formFieldsComponent={formFieldsComponent}
               isEmptyConfiguration={isEmptyConfiguration}
             />

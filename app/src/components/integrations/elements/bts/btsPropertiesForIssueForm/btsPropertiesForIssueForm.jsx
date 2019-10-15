@@ -61,7 +61,6 @@ export class BtsPropertiesForIssueForm extends Component {
     initialData: PropTypes.object,
     showNotification: PropTypes.func,
     initialize: PropTypes.func,
-    reset: PropTypes.func,
     change: PropTypes.func,
     disabled: PropTypes.bool.isRequired,
     updateMetaData: PropTypes.func,
@@ -77,7 +76,6 @@ export class BtsPropertiesForIssueForm extends Component {
     updateMetaData: () => {},
     showNotification: () => {},
     initialize: () => {},
-    reset: () => {},
     change: () => {},
     isGlobal: false,
   };
