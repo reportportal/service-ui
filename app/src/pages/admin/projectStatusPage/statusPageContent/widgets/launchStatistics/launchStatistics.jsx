@@ -74,7 +74,11 @@ export class LaunchStatistics extends Component {
       });
     }
 
-    return { content: data };
+    return {
+      content: {
+        result: data,
+      },
+    };
   };
 
   render() {

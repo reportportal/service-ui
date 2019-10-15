@@ -70,9 +70,19 @@ export class IntegrationSettings extends Component {
 
   componentDidUpdate() {
     if (this.state.updated && !this.state.loading) {
-      this.testIntegrationConnection();
+      this.updateWithUnmount();
     }
   }
+
+  updateWithUnmount = () => {
+    this.setState({ loading: true }, () => {
+      this.setState({
+        connected: true,
+        updated: false,
+        loading: false,
+      });
+    });
+  };
 
   testIntegrationConnection = () => {
     const {

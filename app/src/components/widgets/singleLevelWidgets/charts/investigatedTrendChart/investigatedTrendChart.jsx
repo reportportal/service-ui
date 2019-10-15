@@ -86,7 +86,10 @@ export class InvestigatedTrendChart extends Component {
     createFilterAction: () => {},
     isPreview: false,
     height: 0,
-    observer: {},
+    observer: {
+      subscribe: () => {},
+      unsubscribe: () => {},
+    },
     onStatusPageMode: false,
     interval: null,
     integerValueType: false,
@@ -176,10 +179,10 @@ export class InvestigatedTrendChart extends Component {
   };
 
   render() {
-    const { onChangeLegend, uncheckedLegendItems } = this.props;
+    const { onChangeLegend, uncheckedLegendItems, onStatusPageMode } = this.props;
     const legendConfig = {
       onChangeLegend,
-      showLegend: true,
+      showLegend: !onStatusPageMode,
       uncheckedLegendItems,
       legendProps: {},
     };
