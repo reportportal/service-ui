@@ -20,7 +20,7 @@ before_script:
   - export DISPLAY=:99.0
   - export NODE_OPTIONS=--max_old_space_size=4096
   - sh -e /etc/init.d/xvfb start
-  - go get github.com/golangci/golangci-lint/cmd/golangci-lint@v1.17.1
+  - go get github.com/golangci/golangci-lint/cmd/golangci-lint@v1.21.0
 
 script: make build
 
