@@ -37,7 +37,7 @@ export class ConfirmationModal extends Component {
       confirmText,
       cancelText,
       dangerConfirm,
-      eventsInfo,
+      eventsInfo = {},
     } = this.props.data;
     const { confirmModal } = this.props;
     return (
