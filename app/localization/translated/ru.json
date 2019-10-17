@@ -958,7 +958,7 @@
   "LinkIssueModal.title": "Прикрепить ошибку",
   "LinkIssueModal.urlHint": "Ссылка должна соответствовать действительному адресу веб-сайта",
   "LocalizationBlock.belarusian": "Белорусский",
-  "LocalizationBlock.contribute": "Русский язык находится в бета-версии. Пожалуйста, помогите нам с переводом, отправьте Ваш ПР в <a target='_blank' href ='https://github.com/reportportal/service-ui/blob/v5/app/localization/translated/ru.json'>файл</a>.",
+  "LocalizationBlock.contribute": "Русский язык находится в бета-версии. Пожалуйста, помогите нам с переводом, отправьте Ваш ПР в <a target='_blank' href ='https://github.com/reportportal/service-ui/blob/develop/app/localization/translated/ru.json'>файл</a>.",
   "LocalizationBlock.english": "English (United States)",
   "LocalizationBlock.label": "Язык",
   "LocalizationBlock.note": "К сведению",
