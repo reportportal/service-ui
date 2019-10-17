@@ -184,7 +184,6 @@ export class InvestigatedTrendChart extends Component {
       onChangeLegend,
       showLegend: !onStatusPageMode,
       uncheckedLegendItems,
-      legendProps: {},
     };
 
     return (

@@ -115,6 +115,7 @@ export class IssuesStatusPageChart extends Component {
     };
 
     this.config = getConfig(configParams);
+    this.configCreationTimeStamp = Date.now();
     this.initTooltipContentRenderer();
 
     this.setState({
@@ -182,6 +183,7 @@ export class IssuesStatusPageChart extends Component {
             config={this.config}
             onChartCreated={this.onChartCreated}
             className={cx('widget-wrapper')}
+            configCreationTimeStamp={this.configCreationTimeStamp}
           />
         </div>
       )

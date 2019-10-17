@@ -34,7 +34,9 @@ export const getLaunchModeConfig = ({
   });
 
   return {
-    legendItems: groups,
+    customData: {
+      legendItems: groups,
+    },
     data: {
       columns,
       type: 'bar',

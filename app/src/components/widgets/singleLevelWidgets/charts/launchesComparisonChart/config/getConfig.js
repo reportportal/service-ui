@@ -57,7 +57,9 @@ export const getConfig = ({
   const legendItems = chartDataOrdered.map((item) => item[0]);
 
   return {
-    legendItems,
+    customData: {
+      legendItems,
+    },
     data: {
       columns: chartDataOrdered,
       type: 'bar',

@@ -117,15 +117,6 @@
 .time-line {
   :global {
     svg {
-      .c3-chart {
-        .c3-chart-line {
-         .c3-shapes {
-           .c3-shape.c3-circle {
-             opacity: 1 !important;
-           }
-         }
-        }
-      }
       .c3-axis {
         line {
           stroke: none;

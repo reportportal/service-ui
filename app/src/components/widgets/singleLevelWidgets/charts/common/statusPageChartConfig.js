@@ -84,7 +84,7 @@ export const getConfig = ({
     values: value.values,
   }));
 
-  // prepare columns array and fill it witch field names
+  // prepare columns array and fill it with field names
   Object.keys(data[0].values).forEach((key) => {
     const shortKey = key.split('$').pop();
 
