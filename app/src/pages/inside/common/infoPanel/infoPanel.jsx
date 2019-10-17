@@ -2,6 +2,7 @@ import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import track from 'react-tracking';
 import { InfoLine, InfoLineListView } from 'pages/inside/common/infoLine';
 import {
   listViewLinkSelector,
@@ -29,6 +30,7 @@ const cx = classNames.bind(styles);
     navigate: (linkAction) => linkAction,
   },
 )
+@track()
 export class InfoPanel extends Component {
   static propTypes = {
     viewMode: PropTypes.string,
@@ -40,6 +42,10 @@ export class InfoPanel extends Component {
     navigate: PropTypes.func.isRequired,
     currentUser: PropTypes.string,
     isTestItemsList: PropTypes.bool.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -53,7 +59,14 @@ export class InfoPanel extends Component {
   };
 
   onToggleView = (viewMode) => {
-    const link = viewMode === LOG_VIEW ? this.props.logViewLink : this.props.listViewLink;
+    let link;
+    if (viewMode === LOG_VIEW) {
+      const { logViewLink, tracking, events } = this.props;
+      tracking.trackEvent(events.LOG_VIEW_SWITCHER);
+      link = logViewLink;
+    } else {
+      link = this.props.listViewLink;
+    }
     this.props.navigate(link);
   };
 

@@ -568,6 +568,7 @@ export class LaunchesPage extends Component {
   };
 
   openEditModal = (launch) => {
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_EDIT_LAUNCH_ACTION);
     this.props.showModalAction({
       id: 'editItemModal',
       data: {
@@ -579,6 +580,7 @@ export class LaunchesPage extends Component {
   };
 
   openEditItemsModal = (launches) => {
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_EDIT_LAUNCHES_ACTION);
     this.props.showModalAction({
       id: 'editItemsModal',
       data: {
