@@ -230,4 +230,9 @@ export const SUITES_PAGE_EVENTS = {
     action: 'Click on TI tag',
     label: 'Transition to TI list view',
   },
+  LOG_VIEW_SWITCHER: {
+    category: SUITE_PAGE,
+    action: 'Click on launch log view switcher',
+    label: 'Open "Launch log view"',
+  },
 };

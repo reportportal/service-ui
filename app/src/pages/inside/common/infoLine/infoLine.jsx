@@ -37,8 +37,8 @@ const normalizeExecutions = (executions) => ({
 @injectIntl
 export class InfoLine extends Component {
   static propTypes = {
-    data: PropTypes.object.isRequired,
     intl: intlShape.isRequired,
+    data: PropTypes.object.isRequired,
     events: PropTypes.object,
   };
   static defaultProps = {
@@ -46,10 +46,13 @@ export class InfoLine extends Component {
   };
 
   render() {
-    const { events, data } = this.props;
-    const { formatMessage } = this.props.intl;
-    const defects = this.props.data.statistics.defects;
-    const executions = normalizeExecutions(this.props.data.statistics.executions);
+    const {
+      intl: { formatMessage },
+      events,
+      data,
+    } = this.props;
+    const defects = data.statistics.defects;
+    const executions = normalizeExecutions(data.statistics.executions);
     const passed = executions.passed / executions.total * 100 || 0;
     const failed = executions.failed / executions.total * 100 || 0;
     const skipped = executions.skipped / executions.total * 100 || 0;

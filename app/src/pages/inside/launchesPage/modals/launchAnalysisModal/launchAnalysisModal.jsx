@@ -4,7 +4,10 @@ import PropTypes from 'prop-types';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { LAUNCHES_MODAL_EVENTS } from 'components/main/analytics/events';
+import {
+  LAUNCHES_MODAL_EVENTS,
+  getRunAnalysisAnalysisModalEvent,
+} from 'components/main/analytics/events';
 import { InputRadio } from 'components/inputs/inputRadio';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { LAUNCH_ANALYZE_TYPES } from 'common/constants/launchAnalyzeTypes';
@@ -151,6 +154,7 @@ export class LaunchAnalysisModal extends Component {
       analyzerMode,
       launchId: id,
     };
+    this.props.tracking.trackEvent(getRunAnalysisAnalysisModalEvent(analyzeItemsMode));
     this.props.data.onConfirm(data);
     closeModal();
   };
@@ -243,7 +247,7 @@ export class LaunchAnalysisModal extends Component {
         <p className={cx('launch-analysis-modal-text')}>{formatMessage(messages.MOD_TITLE)}</p>
         <ul className={cx('launch-analysis-modal-list')}>{this.renderModes()}</ul>
         <p className={cx('launch-analysis-modal-text')}>{formatMessage(messages.OPTIONS_TITLE)}</p>
-        <ul className={cx(['launch-analysis-modal-list', 'launch-analysis-modal-list-last'])}>
+        <ul className={cx('launch-analysis-modal-list', 'launch-analysis-modal-list-last')}>
           {this.renderOptions()}
         </ul>
       </ModalLayout>
