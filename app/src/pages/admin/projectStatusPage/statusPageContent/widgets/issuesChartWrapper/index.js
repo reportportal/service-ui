@@ -1,0 +1,1 @@
+export { IssuesChartWrapper } from './issuesChartWrapper';

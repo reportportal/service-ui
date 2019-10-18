@@ -15,16 +15,15 @@
  */
 
 import { URLS } from 'common/urls';
+import { AUTOMATION_BUG, SYSTEM_ISSUE, PRODUCT_BUG } from 'components/widgets/common/constants';
 import {
   GeneralInfo,
   OwnersInfo,
   LastLaunch,
   Investigated,
-  AutoBugs,
   LaunchesQuantity,
-  ProductBugs,
   LaunchStatistics,
-  SystemIssues,
+  IssuesChartWrapper,
   ActivityPanel,
 } from './widgets';
 import { WIDGETS_IDS } from '../constants';
@@ -78,7 +77,9 @@ export const statusPageWidgets = [
     title: messages.issuesChart,
     id: WIDGETS_IDS.issuesChart,
     source: WIDGETS_IDS.issuesChart,
-    component: (data, interval) => <ProductBugs data={data} interval={interval} />,
+    component: (data, interval) => (
+      <IssuesChartWrapper data={data} interval={interval} targetFieldKey={PRODUCT_BUG} />
+    ),
     getUrl: (projectId, interval) =>
       URLS.projectWidget(projectId, WIDGETS_IDS.issuesChart, interval),
   },
@@ -86,15 +87,17 @@ export const statusPageWidgets = [
     title: messages.systemIssues,
     id: WIDGETS_IDS.systemIssues,
     source: WIDGETS_IDS.issuesChart,
-    component: (data, interval) => <SystemIssues data={data} interval={interval} />,
-    getUrl: (projectId, interval) =>
-      URLS.projectWidget(projectId, WIDGETS_IDS.issuesChart, interval),
+    component: (data, interval) => (
+      <IssuesChartWrapper data={data} interval={interval} targetFieldKey={SYSTEM_ISSUE} />
+    ),
   },
   {
     title: messages.autoBugs,
     id: WIDGETS_IDS.autoBugs,
     source: WIDGETS_IDS.issuesChart,
-    component: (data, interval) => <AutoBugs data={data} interval={interval} />,
+    component: (data, interval) => (
+      <IssuesChartWrapper data={data} interval={interval} targetFieldKey={AUTOMATION_BUG} />
+    ),
   },
 ];
 

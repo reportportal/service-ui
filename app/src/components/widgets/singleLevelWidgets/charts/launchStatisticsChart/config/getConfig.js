@@ -33,7 +33,7 @@ export const getConfig = ({
   isTimeline,
   widgetViewMode,
   isZoomEnabled,
-  isCustomTooltipNeeded,
+  isCustomTooltip,
   isSingleColumn,
   contentFields,
   onChartClick,
@@ -55,7 +55,7 @@ export const getConfig = ({
     data: {
       columns: chartDataOrdered,
       type: widgetViewMode,
-      onclick: !isPreview && !isCustomTooltipNeeded ? onChartClick : null,
+      onclick: !isPreview && !isCustomTooltip ? onChartClick : null,
       order: null,
       colors,
       groups: [itemNames],
@@ -124,7 +124,7 @@ export const getConfig = ({
       show: false,
     },
     tooltip: {
-      show: !isPreview && !isCustomTooltipNeeded,
+      show: !isPreview && !isCustomTooltip,
       grouped: false,
       position: positionCallback,
       contents: createTooltipRenderer(IssueTypeStatTooltip, calculateTooltipParams, {
