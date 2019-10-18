@@ -28,6 +28,7 @@ export const querySelector = createQueryParametersSelector({
   defaultSorting: 'name',
 });
 export const launchFiltersSelector = (state) => domainSelector(state).launchesFilters || [];
+export const launchFiltersReadySelector = (state) => domainSelector(state).launchesFiltersReady;
 export const activeFilterSelector = createSelector(
   launchFiltersSelector,
   filterIdSelector,

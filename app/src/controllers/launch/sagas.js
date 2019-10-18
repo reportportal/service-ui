@@ -27,7 +27,11 @@ import {
 import { fetchDataAction } from 'controllers/fetch';
 import { activeProjectSelector } from 'controllers/user';
 import { ALL, LATEST } from 'common/constants/reservedFilterIds';
-import { activeFilterSelector, changeActiveFilterAction } from 'controllers/filter';
+import {
+  activeFilterSelector,
+  changeActiveFilterAction,
+  launchFiltersReadySelector,
+} from 'controllers/filter';
 import { showFilterOnLaunchesAction } from 'controllers/project';
 import { filterIdSelector } from 'controllers/pages';
 import { isEmptyValue } from 'common/utils/isEmptyValue';
@@ -72,10 +76,17 @@ function* fetchLaunches() {
       return;
     }
     if (!activeFilter) {
+      const launchFiltersReady = yield select(launchFiltersReadySelector);
+      if (!launchFiltersReady) {
+        yield call(waitForSelector, launchFiltersReadySelector);
+      }
+      activeFilter = yield select(activeFilterSelector);
+    }
+    if (!activeFilter) {
       const activeProject = yield select(activeProjectSelector);
       let filter = null;
       try {
-        filter = yield fetch(URLS.filter(activeProject, filterId), { method: 'get' });
+        filter = yield call(fetch, URLS.filter(activeProject, filterId), { method: 'get' });
       } catch (e) {
         yield put(changeActiveFilterAction(ALL));
         return;

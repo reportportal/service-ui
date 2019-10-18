@@ -58,9 +58,19 @@ export const launchesFiltersReducer = (state = [], { type, payload, meta: { oldI
   }
 };
 
+export const launchesFiltersReadyReducer = (state = false, { type }) => {
+  switch (type) {
+    case FETCH_USER_FILTERS_SUCCESS:
+      return true;
+    default:
+      return state;
+  }
+};
+
 export const filterReducer = combineReducers({
   filters: fetchReducer(NAMESPACE, { contentPath: 'content' }),
   pagination: paginationReducer(NAMESPACE),
   loading: loadingReducer(NAMESPACE),
   launchesFilters: launchesFiltersReducer,
+  launchesFiltersReady: launchesFiltersReadyReducer,
 });
