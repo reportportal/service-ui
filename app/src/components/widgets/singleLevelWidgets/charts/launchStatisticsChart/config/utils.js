@@ -14,19 +14,11 @@
  * limitations under the License.
  */
 
-import { getItemColor } from 'components/widgets/common/utils';
+import { normalizeChartData, getItemColor } from 'components/widgets/common/utils';
 import { messages } from 'components/widgets/common/messages';
 
-const prepareData = (data, isTimeLine) =>
-  isTimeLine
-    ? Object.keys(data).map((item) => ({
-        date: item,
-        values: data[item].values,
-      }))
-    : data;
-
 export const isSingleColumnChart = (content, isTimeLine) => {
-  const data = prepareData(content.result, isTimeLine);
+  const data = normalizeChartData(content.result, isTimeLine);
 
   return data.length < 2;
 };
@@ -35,7 +27,7 @@ export const getConfigData = (
   data,
   { defectTypes, orderedContentFields, contentFields, isTimeline },
 ) => {
-  const widgetData = prepareData(data, isTimeline);
+  const widgetData = normalizeChartData(data, isTimeline);
   const itemsData = [];
   const chartData = {};
   const chartDataOrdered = [];

@@ -19,11 +19,12 @@ import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
-import { ALL } from 'common/constants/reservedFilterIds';
 import { activeProjectSelector } from 'controllers/user';
-import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { ChartContainer } from 'components/widgets/common/c3chart';
-import { getChartDefaultProps } from 'components/widgets/common/utils';
+import {
+  getChartDefaultProps,
+  getDefaultTestItemLinkParams,
+} from 'components/widgets/common/utils';
 import { getConfig } from './config/getConfig';
 import styles from './launchesDurationChart.scss';
 
@@ -61,15 +62,9 @@ export class LaunchesDurationChart extends Component {
       widget: { content },
       projectId,
     } = this.props;
+    const link = getDefaultTestItemLinkParams(`${content.result[data.index].id}`, projectId);
 
-    this.props.navigate({
-      type: TEST_ITEM_PAGE,
-      payload: {
-        projectId,
-        filterId: ALL,
-        testItemIds: `${content.result[data.index].id}`,
-      },
-    });
+    this.props.navigate(link);
   };
 
   configData = {
