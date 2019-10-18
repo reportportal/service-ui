@@ -34,7 +34,7 @@ import {
   ENTITY_ATTRIBUTE_VALUES,
 } from 'components/filterEntities/constants';
 import { NoItemMessage } from 'components/main/noItemMessage';
-import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
+import { STEP_PAGE_EVENTS, getChangeItemStatusEvent } from 'components/main/analytics/events';
 import { StatusDropdown } from '../../common/statusDropdown/statusDropdown';
 import { PredefinedFilterSwitcher } from './predefinedFilterSwitcher';
 import { DefectType } from './defectType';
@@ -73,7 +73,7 @@ NameColumn.defaultProps = {
   className: null,
 };
 
-const StatusColumn = ({ className, value }) => {
+const StatusColumn = ({ className, value, customProps: { onChange } }) => {
   const { id, status, attributes, description } = value;
   return (
     <div className={cx('status-col', className)}>
@@ -82,6 +82,7 @@ const StatusColumn = ({ className, value }) => {
         status={status}
         attributes={attributes}
         description={description}
+        onChange={onChange}
       />
     </div>
   );
@@ -91,6 +92,7 @@ StatusColumn.propTypes = {
   value: PropTypes.object,
   customProps: PropTypes.shape({
     formatMessage: PropTypes.func.isRequired,
+    onChange: PropTypes.func,
   }).isRequired,
 };
 StatusColumn.defaultProps = {
@@ -255,6 +257,8 @@ export class StepGrid extends Component {
         component: StatusColumn,
         customProps: {
           formatMessage: props.intl.formatMessage,
+          onChange: (oldStatus, newStatus) =>
+            props.tracking.trackEvent(getChangeItemStatusEvent(oldStatus, newStatus)),
         },
         withFilter: true,
         filterEventInfo: events.STATUS_FILTER,

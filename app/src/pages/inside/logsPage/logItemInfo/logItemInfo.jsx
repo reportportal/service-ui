@@ -268,7 +268,7 @@ export class LogItemInfo extends Component {
   };
 
   handleUnlinkTicket = (ticketId) => {
-    const { logItem, fetchFunc } = this.props;
+    const { logItem, fetchFunc, tracking } = this.props;
     const items = [
       {
         ...logItem,
@@ -281,7 +281,16 @@ export class LogItemInfo extends Component {
       },
     ];
 
-    this.props.unlinkIssueAction(items, { fetchFunc });
+    tracking.trackEvent(LOG_PAGE_EVENTS.UNLINK_ISSUE);
+
+    this.props.unlinkIssueAction(items, {
+      fetchFunc,
+      eventsInfo: {
+        unlinkBtn: LOG_PAGE_EVENTS.UNLINK_BTN_UNLINK_ISSUE_MODAL,
+        cancelBtn: LOG_PAGE_EVENTS.CANCEL_BTN_UNLINK_ISSUE_MODAL,
+        closeIcon: LOG_PAGE_EVENTS.CLOSE_ICON_UNLINK_ISSUE_MODAL,
+      },
+    });
   };
 
   handlePostIssue = () => {
