@@ -18,6 +18,7 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
+import track from 'react-tracking';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { activeProjectSelector } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -72,6 +73,7 @@ const messages = defineMessages({
     showNotification,
   },
 )
+@track()
 export class CopySendDefectModal extends Component {
   static propTypes = {
     activeProject: PropTypes.string.isRequired,
@@ -82,6 +84,11 @@ export class CopySendDefectModal extends Component {
       itemForCopy: PropTypes.object,
       isCopy: PropTypes.bool,
       fetchFunc: PropTypes.func,
+      eventsInfo: PropTypes.object,
+    }).isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
     }).isRequired,
   };
 
@@ -89,8 +96,12 @@ export class CopySendDefectModal extends Component {
     const {
       intl,
       activeProject,
-      data: { lastHistoryItem, itemForCopy, fetchFunc },
+      tracking,
+      data: { lastHistoryItem, itemForCopy, fetchFunc, eventsInfo },
     } = this.props;
+
+    tracking.trackEvent(eventsInfo.okBtn);
+
     const issues = [
       {
         issue: {
@@ -127,7 +138,10 @@ export class CopySendDefectModal extends Component {
   };
 
   render() {
-    const { intl } = this.props;
+    const {
+      intl,
+      data: { eventsInfo },
+    } = this.props;
     const okButton = {
       text: this.getTitle(MESSAGE_TYPES.button),
       danger: true,
@@ -135,6 +149,7 @@ export class CopySendDefectModal extends Component {
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      eventInfo: eventsInfo.cancelBtn,
     };
 
     return (
@@ -142,6 +157,7 @@ export class CopySendDefectModal extends Component {
         title={this.getTitle(MESSAGE_TYPES.header)}
         okButton={okButton}
         cancelButton={cancelButton}
+        closeIconEventInfo={eventsInfo.cancelBtn}
       >
         {this.getTitle(MESSAGE_TYPES.content)}
       </ModalLayout>

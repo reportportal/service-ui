@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
+import track from 'react-tracking';
 import {
   lastLogActivitySelector,
   activeRetrySelector,
@@ -82,6 +83,7 @@ const ATTACHMENTS_TAB_ID = 'attachments';
     fetchFirstAttachments: fetchFirstAttachmentsAction,
   },
 )
+@track()
 export class LogItemInfoTabs extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -98,6 +100,10 @@ export class LogItemInfoTabs extends Component {
     sauceLabsIntegrations: PropTypes.array.isRequired,
     fetchFirstAttachments: PropTypes.func,
     attachments: PropTypes.array,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -209,6 +215,7 @@ export class LogItemInfoTabs extends Component {
   };
 
   toggleSauceLabsIntegrationContent = () => {
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.SAUCE_LABS_BTN);
     this.setActiveTab(null);
     this.props.onToggleSauceLabsIntegrationView();
   };
