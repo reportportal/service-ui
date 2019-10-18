@@ -35,10 +35,11 @@ import {
   getChartDefaultProps,
 } from 'components/widgets/common/utils';
 import { createTooltipRenderer } from 'components/widgets/common/tooltip';
+import { CHART_OFFSET } from 'components/widgets/common/constants';
 import { IssueTypeStatTooltip } from '../common/issueTypeStatTooltip';
 import { isSingleColumnChart, calculateTooltipParams } from './config/utils';
 import { getConfig } from './config/getConfig';
-import { TOTAL_KEY, CHART_OFFSET } from './constants';
+import { TOTAL_KEY } from './constants';
 import styles from './launchStatisticsChart.scss';
 
 const cx = classNames.bind(styles);
@@ -93,6 +94,7 @@ export class LaunchStatisticsChart extends Component {
   componentWillUnmount() {
     if (!this.props.isPreview && this.isCustomTooltipNeeded()) {
       this.removeChartListeners();
+      this.chart = null;
     }
   }
 
@@ -139,14 +141,16 @@ export class LaunchStatisticsChart extends Component {
     const itemWidth = rectWidth / data.values.length;
     const dataIndex = Math.trunc((currentMousePosition[0] - CHART_OFFSET) / itemWidth);
     this.selectedLaunchData = data.values.find((item) => item.index === dataIndex);
+    const renderTooltip = createTooltipRenderer(IssueTypeStatTooltip, calculateTooltipParams, {
+      itemsData: this.chartData.itemsData,
+      isTimeline,
+      formatMessage,
+      defectTypes,
+    });
+
     this.tooltip
       .html(() =>
-        createTooltipRenderer(IssueTypeStatTooltip, calculateTooltipParams, {
-          itemsData: this.chartData.itemsData,
-          isTimeline,
-          formatMessage,
-          defectTypes,
-        })([this.selectedLaunchData], null, null, (id) => this.chartData.colors[id]),
+        renderTooltip([this.selectedLaunchData], null, null, (id) => this.chartData.colors[id]),
       )
       .style('left', `${currentMousePosition[0] - (isTimeline ? 75 : 85)}px`)
       .style('top', `${currentMousePosition[1] - (isTimeline ? 60 : 75)}px`);
@@ -189,7 +193,7 @@ export class LaunchStatisticsChart extends Component {
       isTimeline: this.isTimeline(),
       isZoomEnabled: widgetOptions.zoom,
       widgetViewMode: this.getWidgetViewMode(),
-      isCustomTooltipNeeded: this.isCustomTooltipNeeded(),
+      isCustomTooltip: this.isCustomTooltipNeeded(),
       isSingleColumn: this.isSingleColumn(),
       onChartClick: this.onChartClick,
     };

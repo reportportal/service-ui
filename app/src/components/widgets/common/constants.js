@@ -37,3 +37,5 @@ export const COLORS = {
   [PRODUCT_BUG]: AVAILABLE_COLORS[`COLOR_${PRODUCT_BUG.toUpperCase()}`],
   [SYSTEM_ISSUE]: AVAILABLE_COLORS[`COLOR_${SYSTEM_ISSUE.toUpperCase()}`],
 };
+
+export const CHART_OFFSET = 40.5;
