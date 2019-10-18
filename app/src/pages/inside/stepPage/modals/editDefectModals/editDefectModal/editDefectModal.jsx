@@ -216,10 +216,13 @@ export class EditDefectModal extends Component {
     return issues;
   };
 
-  handleUnlinkIssue = () =>
+  handleUnlinkIssue = () => {
+    this.props.tracking.trackEvent(this.props.data.eventsInfo.unlinkIssueBtn);
     this.props.unlinkIssueAction(this.getItemsToTheNextAction(), {
       fetchFunc: this.props.data.fetchFunc,
+      eventsInfo: this.props.data.eventsInfo.unlinkModalEvents,
     });
+  };
 
   handleLinkIssue = () => {
     this.props.tracking.trackEvent(this.props.data.eventsInfo.linkIssueBtn);
@@ -292,6 +295,11 @@ export class EditDefectModal extends Component {
   };
 
   handleIgnoreAnalyzerChange = (newValue) => {
+    this.props.tracking.trackEvent(
+      newValue
+        ? STEP_PAGE_EVENTS.IGNORE_IN_AA_EDIT_DEFECT_MODAL
+        : STEP_PAGE_EVENTS.INCLUDE_IN_AA_EDIT_DEFECT_MODAL,
+    );
     this.setState({
       ignoreAnalyzer: newValue,
     });

@@ -281,4 +281,24 @@ export const LOG_PAGE_EVENTS = {
     action: 'Click on Play button on Sauce Labs video',
     label: 'Play Sauce Labs video',
   },
+  UNLINK_ISSUE: {
+    category: LOG_PAGE,
+    action: 'Click on Unlink issue',
+    label: 'Arise Unlink issue',
+  },
+  CANCEL_BTN_UNLINK_ISSUE_MODAL: {
+    category: LOG_PAGE,
+    action: 'Click on Cancel in Unlink issue',
+    label: 'Close modal Unlink issue',
+  },
+  CLOSE_ICON_UNLINK_ISSUE_MODAL: {
+    category: LOG_PAGE,
+    action: 'Click on Close icon in Unlink issue',
+    label: 'Close modal Unlink issue',
+  },
+  UNLINK_BTN_UNLINK_ISSUE_MODAL: {
+    category: LOG_PAGE,
+    action: 'Click on Unlink in Unlink issue',
+    label: 'Unlink issues',
+  },
 };

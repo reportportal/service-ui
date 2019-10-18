@@ -20,6 +20,7 @@ import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import Parser from 'html-react-parser';
+import track from 'react-tracking';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { activeProjectSelector } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -71,6 +72,7 @@ const messages = defineMessages({
     showNotification,
   },
 )
+@track()
 export class IgnoreInAAModal extends Component {
   static propTypes = {
     activeProject: PropTypes.string.isRequired,
@@ -79,14 +81,21 @@ export class IgnoreInAAModal extends Component {
     data: PropTypes.shape({
       items: PropTypes.array,
       fetchFunc: PropTypes.func,
+      eventsInfo: PropTypes.object,
+    }).isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
     }).isRequired,
   };
 
   onIgnore = (closeModal) => {
     const {
       activeProject,
-      data: { items, fetchFunc },
+      data: { items, fetchFunc, eventsInfo },
+      tracking: { trackEvent },
     } = this.props;
+    trackEvent(eventsInfo.ignoreBtn);
     const issues = items.map((item) => ({
       testItemId: item.id,
       issue: {
@@ -150,7 +159,10 @@ export class IgnoreInAAModal extends Component {
   };
 
   render() {
-    const { intl } = this.props;
+    const {
+      intl,
+      data: { eventsInfo },
+    } = this.props;
     const okButton = {
       text: intl.formatMessage(messages.ignoreButton),
       onClick: this.onIgnore,
@@ -158,6 +170,7 @@ export class IgnoreInAAModal extends Component {
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      eventInfo: eventsInfo.cancelBtn,
     };
     return (
       <ModalLayout
@@ -165,6 +178,7 @@ export class IgnoreInAAModal extends Component {
         title={this.getModalTitle()}
         okButton={okButton}
         cancelButton={cancelButton}
+        closeIconEventInfo={eventsInfo.closeIcon}
       >
         {this.getModalText()}
       </ModalLayout>

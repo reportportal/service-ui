@@ -41,21 +41,24 @@ export const proceedWithValidItemsAction = createProceedWithValidItemsAction(NAM
 export const ignoreInAutoAnalysisAction = defineGroupOperation(
   NAMESPACE,
   'ignore-in-aa',
-  (items, { fetchFunc }) => showModalAction({ id: 'ignoreInAAModal', data: { items, fetchFunc } }),
+  (items, { fetchFunc, eventsInfo }) =>
+    showModalAction({ id: 'ignoreInAAModal', data: { items, fetchFunc, eventsInfo } }),
   validateIgnoreInAA,
 );
 
 export const includeInAutoAnalysisAction = defineGroupOperation(
   NAMESPACE,
   'include-in-aa',
-  (items, { fetchFunc }) => showModalAction({ id: 'includeInAAModal', data: { items, fetchFunc } }),
+  (items, { fetchFunc, eventsInfo }) =>
+    showModalAction({ id: 'includeInAAModal', data: { items, fetchFunc, eventsInfo } }),
   validateIncludeInAA,
 );
 
 export const unlinkIssueAction = defineGroupOperation(
   NAMESPACE,
   'unlink-issue',
-  (items, { fetchFunc }) => showModalAction({ id: 'unlinkIssueModal', data: { items, fetchFunc } }),
+  (items, { fetchFunc, eventsInfo }) =>
+    showModalAction({ id: 'unlinkIssueModal', data: { items, fetchFunc, eventsInfo } }),
   validateUnlinkIssue,
 );
 

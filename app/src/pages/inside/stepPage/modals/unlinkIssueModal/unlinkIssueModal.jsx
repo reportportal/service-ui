@@ -18,6 +18,8 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
+import track from 'react-tracking';
+import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { activeProjectSelector } from 'controllers/user';
 import { ModalLayout, withModal } from 'components/main/modal';
 import {
@@ -58,6 +60,7 @@ const messages = defineMessages({
     showNotification,
   },
 )
+@track()
 export class UnlinkIssueModal extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
@@ -66,6 +69,11 @@ export class UnlinkIssueModal extends Component {
     data: PropTypes.shape({
       items: PropTypes.array,
       fetchFunc: PropTypes.func,
+      eventsInfo: PropTypes.object,
+    }).isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
     }).isRequired,
   };
 
@@ -74,7 +82,9 @@ export class UnlinkIssueModal extends Component {
       intl,
       url,
       data: { items, fetchFunc },
+      tracking: { trackEvent },
     } = this.props;
+    trackEvent(STEP_PAGE_EVENTS.UNLINK_BTN_UNLINK_ISSUE_MODAL);
     const dataToSend = items.reduce(
       (acc, item) => {
         acc.testItemIds.push(item.id);
@@ -112,12 +122,14 @@ export class UnlinkIssueModal extends Component {
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      eventInfo: STEP_PAGE_EVENTS.CANCEL_BTN_UNLINK_ISSUE_MODAL,
     };
     return (
       <ModalLayout
         title={intl.formatMessage(messages.title)}
         okButton={okButton}
         cancelButton={cancelButton}
+        closeIconEventInfo={STEP_PAGE_EVENTS.CLOSE_ICON_UNLINK_ISSUE_MODAL}
       >
         {intl.formatMessage(messages.unlinkModalConfirmationText)}
       </ModalLayout>

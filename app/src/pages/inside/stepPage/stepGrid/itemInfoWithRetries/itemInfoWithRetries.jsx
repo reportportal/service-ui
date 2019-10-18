@@ -17,18 +17,25 @@
 import { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import track from 'react-tracking';
+import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { ItemInfo } from 'pages/inside/common/itemInfo';
 import { RetriesBlock } from './retriesBlock';
 import styles from './itemInfoWithRetries.scss';
 
 const cx = classNames.bind(styles);
 
+@track()
 export class ItemInfoWithRetries extends Component {
   static propTypes = {
     expanded: PropTypes.bool,
     value: PropTypes.object.isRequired,
     toggleExpand: PropTypes.func.isRequired,
     refFunction: PropTypes.func.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -52,6 +59,7 @@ export class ItemInfoWithRetries extends Component {
 
   showRetries = () => {
     if (!this.props.expanded) {
+      this.props.tracking.trackEvent(STEP_PAGE_EVENTS.RETRIES_BTN_CLICK);
       this.props.toggleExpand();
     }
     this.setState({ retriesVisible: true }, () => {
