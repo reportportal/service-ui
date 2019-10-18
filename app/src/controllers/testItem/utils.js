@@ -33,9 +33,10 @@ export const getItemLevel = (type) => {
   return level;
 };
 
-export const calculateLevel = (data = [], previousLevel) => {
+export const calculateLevel = (data = [], previousLevel, isTestItemsList) => {
   if (data.length === 0) {
-    return previousLevel || launchLevels.LEVEL_SUITE;
+    const launchLevel = isTestItemsList ? launchLevels.LEVEL_STEP : launchLevels.LEVEL_SUITE;
+    return previousLevel || launchLevel;
   }
   return data.reduce((acc, item) => {
     const itemLevel = getItemLevel(item.type);

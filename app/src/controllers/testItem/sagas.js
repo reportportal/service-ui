@@ -167,7 +167,7 @@ function* fetchTestItems({ payload = {} }) {
     level = LEVEL_NOT_FOUND;
   } else {
     const previousLevel = yield select(levelSelector);
-    level = calculateLevel(dataPayload.payload.content, previousLevel);
+    level = calculateLevel(dataPayload.payload.content, previousLevel, isTestItemsList);
   }
 
   if (LEVELS[level]) {
