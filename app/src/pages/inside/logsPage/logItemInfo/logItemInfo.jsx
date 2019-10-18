@@ -154,20 +154,21 @@ export class LogItemInfo extends Component {
     return title;
   };
 
-  getCopySendDefectButtonText = () => {
+  getCopyDefectButtonText = () => {
     const {
       intl: { formatMessage },
     } = this.props;
 
-    if (this.checkIfTheLastItemIsActive()) {
-      const lastItemWithDefect = this.getLastWithDefect();
-      return formatMessage(messages.copyDefect, {
-        prefix: lastItemWithDefect ? formatMessage(messages.fromPrefix) : '',
-        message: lastItemWithDefect ? `#${lastItemWithDefect.launchNumber}` : '',
-      });
-    }
+    const lastItemWithDefect = this.getLastWithDefect();
+    return formatMessage(messages.copyDefect, {
+      prefix: lastItemWithDefect ? formatMessage(messages.fromPrefix) : '',
+      message: lastItemWithDefect ? `#${lastItemWithDefect.launchNumber}` : '',
+    });
+  };
+
+  getSendDefectButtonText = () => {
     const lastHistoryItem = this.getLastHistoryItem();
-    return formatMessage(messages.sendDefect, {
+    return this.props.intl.formatMessage(messages.sendDefect, {
       message: `#${lastHistoryItem.launchNumber}`,
     });
   };
@@ -182,16 +183,36 @@ export class LogItemInfo extends Component {
 
   getLastHistoryItem = () => this.props.historyItems[this.props.historyItems.length - 1];
 
-  showCopySendDefectModal = () => {
+  showCopyDefectModal = () => {
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.COPY_DEFECT_FROM_BTN);
     this.props.showModalAction({
       id: 'copySendDefectModal',
       data: {
         lastHistoryItem: this.getLastHistoryItem(),
-        itemForCopy: this.checkIfTheLastItemIsActive()
-          ? this.getLastWithDefect()
-          : this.props.logItem,
-        isCopy: this.checkIfTheLastItemIsActive(),
+        itemForCopy: this.getLastWithDefect(),
+        isCopy: true,
         fetchFunc: this.props.fetchFunc,
+        eventsInfo: {
+          okBtn: LOG_PAGE_EVENTS.RECEIVE_BTN_RECEIVE_PREVIOUS_RESULT_MODAL,
+          cancelBtn: LOG_PAGE_EVENTS.CANCEL_BTN_RECEIVE_PREVIOUS_RESULT_MODAL,
+        },
+      },
+    });
+  };
+
+  showSendDefectModal = () => {
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.SEND_DEFECT_TO_BTN);
+    this.props.showModalAction({
+      id: 'copySendDefectModal',
+      data: {
+        lastHistoryItem: this.getLastHistoryItem(),
+        itemForCopy: this.props.logItem,
+        isCopy: false,
+        fetchFunc: this.props.fetchFunc,
+        eventsInfo: {
+          okBtn: LOG_PAGE_EVENTS.SEND_BTN_SEND_DEFECT_MODAL,
+          cancelBtn: LOG_PAGE_EVENTS.CANCEL_BTN_SEND_DEFECT_MODAL,
+        },
       },
     });
   };
@@ -306,7 +327,10 @@ export class LogItemInfo extends Component {
     return retries.map((item, index) => {
       const selected = item.id === retryItemId;
       const retryNumber = index + 1;
-      const updateActiveRetry = () => this.props.updateRetryId(item.id);
+      const updateActiveRetry = () => {
+        this.props.tracking.trackEvent(LOG_PAGE_EVENTS.RETRY_CLICK);
+        this.props.updateRetryId(item.id);
+      };
       return (
         <Retry
           key={item.id}
@@ -352,14 +376,25 @@ export class LogItemInfo extends Component {
             {!debugMode && (
               <div className={cx('actions')}>
                 <div className={cx('action')}>
-                  <GhostButton
-                    icon={this.checkIfTheLastItemIsActive() ? DownLeftArrowIcon : UpRightArrowIcon}
-                    disabled={this.isCopySendButtonDisabled()}
-                    onClick={this.showCopySendDefectModal}
-                    title={this.getIssueActionTitle(messages.noDefectTypeToCopySendDefect)}
-                  >
-                    {this.getCopySendDefectButtonText()}
-                  </GhostButton>
+                  {this.checkIfTheLastItemIsActive() ? (
+                    <GhostButton
+                      icon={DownLeftArrowIcon}
+                      disabled={this.isCopySendButtonDisabled()}
+                      onClick={this.showCopyDefectModal}
+                      title={this.getIssueActionTitle(messages.noDefectTypeToCopySendDefect)}
+                    >
+                      {this.getCopyDefectButtonText()}
+                    </GhostButton>
+                  ) : (
+                    <GhostButton
+                      icon={UpRightArrowIcon}
+                      disabled={this.isCopySendButtonDisabled()}
+                      onClick={this.showSendDefectModal}
+                      title={this.getIssueActionTitle(messages.noDefectTypeToCopySendDefect)}
+                    >
+                      {this.getSendDefectButtonText()}
+                    </GhostButton>
+                  )}
                 </div>
                 <div className={cx('action')}>
                   <GhostButton

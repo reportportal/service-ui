@@ -10,10 +10,12 @@ const cx = classNames.bind(styles);
 export class VideoPlayer extends React.Component {
   static propTypes = {
     observer: PropTypes.object,
+    onPlay: PropTypes.func,
   };
 
   static defaultProps = {
     observer: {},
+    onPlay: () => {},
   };
 
   constructor(props) {
@@ -23,6 +25,7 @@ export class VideoPlayer extends React.Component {
 
   componentDidMount() {
     this.player = videojs(this.videoNode.current, this.props);
+    this.player.on('play', () => this.props.onPlay());
     this.props.observer.subscribe('goToVideoTimeline', this.updateCurrentTime);
   }
 

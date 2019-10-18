@@ -148,7 +148,7 @@ export const LOG_PAGE_EVENTS = {
   ADD_NEW_ISSUE_LINK_ISSUE_MODAL: {
     category: LOG_PAGE,
     action: 'Click on Bttn Add New Issue on Modal Load Bug',
-    label: 'Add imputs in Modal Load Bug',
+    label: 'Add inputs in Modal Load Bug',
   },
   CANCEL_BTN_LINK_ISSUE_MODAL: {
     category: LOG_PAGE,
@@ -209,5 +209,60 @@ export const LOG_PAGE_EVENTS = {
     category: LOG_PAGE,
     action: 'Select Save and Load Bug on dropdown in Modal "Edit Item"',
     label: 'Arise Modal "Load Bug"',
+  },
+  COPY_DEFECT_FROM_BTN: {
+    category: LOG_PAGE,
+    action: 'Click on Bttn "Copy defect from #"',
+    label: 'Arize Modal "Receive previous result"',
+  },
+  RECEIVE_BTN_RECEIVE_PREVIOUS_RESULT_MODAL: {
+    category: LOG_PAGE,
+    action: 'Click on button Receive in Modal "Receive previous result"',
+    label: 'Receive defect from previouse result',
+  },
+  CANCEL_BTN_RECEIVE_PREVIOUS_RESULT_MODAL: {
+    category: LOG_PAGE,
+    action: 'Click on Copy defect from #',
+    label: 'Close Modal "Receive previous result"',
+  },
+  SEND_DEFECT_TO_BTN: {
+    category: LOG_PAGE,
+    action: 'Click on Bttn "Send defect to #"',
+    label: 'Arize Modal "Send defect to the last item"',
+  },
+  SEND_BTN_SEND_DEFECT_MODAL: {
+    category: LOG_PAGE,
+    action: 'Click on button Send in Modal "Send defect to the last item"',
+    label: 'Send defect to the last item',
+  },
+  CANCEL_BTN_SEND_DEFECT_MODAL: {
+    category: LOG_PAGE,
+    action: 'Click on button Cancel in Modal "Send defect to the last item"',
+    label: 'Close Modal "Send defect to the last item"',
+  },
+  RETRY_CLICK: {
+    category: LOG_PAGE,
+    action: 'Click on retry',
+    label: 'Transition to retry log page',
+  },
+  LOAD_MORE_CLICK_STACK_TRACE: {
+    category: LOG_PAGE,
+    action: 'Click on Load more in Stake Trace',
+    label: 'Load more logs in Stak Trace tab on Log view',
+  },
+  NESTED_STEP_EXPAND: {
+    category: LOG_PAGE,
+    action: 'Click on Nested step',
+    label: 'Expand Nested step',
+  },
+  SAUCE_LABS_BTN: {
+    category: LOG_PAGE,
+    action: 'Click on Sauce labs button',
+    label: 'Open Sauce Labs section',
+  },
+  PLAY_SAUCE_LABS_VIDEO: {
+    category: LOG_PAGE,
+    action: 'Click on Play button on Sauce Labs video',
+    label: 'Play Sauce Labs video',
   },
 };

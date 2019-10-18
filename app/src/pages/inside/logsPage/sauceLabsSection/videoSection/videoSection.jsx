@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import track from 'react-tracking';
 import moment from 'moment';
 import { getDuration } from 'common/utils';
 import CalendarIcon from 'common/img/calendar-icon-inline.svg';
@@ -11,6 +12,7 @@ import FullscreenIcon from 'common/img/fullscreen-inline.svg';
 import FullscreenExitIcon from 'common/img/fullscreen-exit-inline.svg';
 import { jobInfoSelector, sauceLabsAuthTokenSelector } from 'controllers/log/sauceLabs';
 import { NoDataAvailable } from 'components/widgets/noDataAvailable';
+import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { VideoPlayer } from './videoPlayer';
 import styles from './videoSection.scss';
 
@@ -20,6 +22,7 @@ const cx = classNames.bind(styles);
   jobInfo: jobInfoSelector(state),
   authToken: sauceLabsAuthTokenSelector(state),
 }))
+@track()
 export class VideoSection extends Component {
   static propTypes = {
     jobInfo: PropTypes.object,
@@ -27,6 +30,10 @@ export class VideoSection extends Component {
     observer: PropTypes.object,
     isFullscreenMode: PropTypes.bool,
     onToggleFullscreen: PropTypes.func,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -55,6 +62,8 @@ export class VideoSection extends Component {
 
   getFormattedDate = (data) => moment.unix(data).format('MMMM DD, Y [at] HH:mm:ss ');
 
+  handlePlayVideo = () => this.props.tracking.trackEvent(LOG_PAGE_EVENTS.PLAY_SAUCE_LABS_VIDEO);
+
   render() {
     const { jobInfo, observer, isFullscreenMode, onToggleFullscreen } = this.props;
     const isJobInfoAvailable = !!Object.keys(jobInfo).length;
@@ -70,7 +79,11 @@ export class VideoSection extends Component {
         {isJobInfoAvailable ? (
           <Fragment>
             <div className={cx('section-content')}>
-              <VideoPlayer observer={observer} {...this.getVideoOptions()} />
+              <VideoPlayer
+                observer={observer}
+                onPlay={this.handlePlayVideo}
+                {...this.getVideoOptions()}
+              />
             </div>
             <div className={cx('section-info', { 'full-screen': isFullscreenMode })}>
               <div className={cx('info-item')}>
