@@ -56,6 +56,7 @@ export class FilterEntitiesContainer extends Component {
         errors: {},
         values: props.entities,
         prevEntities: props.entities,
+        visibleFilters: Object.keys(props.entities),
       };
     }
     return null;

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { UPDATE_FILTER_CONDITIONS } from './constants';
-import { launchesFiltersReducer } from './reducer';
+import { FETCH_USER_FILTERS_SUCCESS, UPDATE_FILTER_CONDITIONS } from './constants';
+import { launchesFiltersReducer, launchesFiltersReadyReducer } from './reducer';
 
 describe('filter reducer', () => {
   describe('launchesFiltersReducer', () => {
@@ -76,6 +76,21 @@ describe('filter reducer', () => {
           ],
         },
       ]);
+    });
+  });
+
+  describe('launchesFiltersReadyReducer', () => {
+    test('should return old state in unknown action', () => {
+      const oldState = true;
+      expect(
+        launchesFiltersReadyReducer(oldState, {
+          type: 'unknownAction',
+        }),
+      ).toBe(oldState);
+    });
+
+    test('should return true on FETCH_USER_FILTERS_SUCCESS action', () => {
+      expect(launchesFiltersReadyReducer(false, FETCH_USER_FILTERS_SUCCESS).toBe(true));
     });
   });
 });
