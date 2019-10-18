@@ -20,12 +20,11 @@ import classNames from 'classnames/bind';
 import { injectIntl, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import * as d3 from 'd3-selection';
-import { ALL } from 'common/constants/reservedFilterIds';
-import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { defectTypesSelector } from 'controllers/project';
 import { defectLinkSelector, statisticsLinkSelector } from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
 import {
+  getDefaultTestItemLinkParams,
   getDefectTypeLocators,
   getItemNameConfig,
   getChartDefaultProps,
@@ -39,7 +38,7 @@ const cx = classNames.bind(styles);
 @injectIntl
 @connect(
   (state) => ({
-    project: activeProjectSelector(state),
+    projectId: activeProjectSelector(state),
     defectTypes: defectTypesSelector(state),
     getDefectLink: defectLinkSelector(state),
     getStatisticsLink: statisticsLinkSelector(state),
@@ -53,7 +52,7 @@ export class LaunchesComparisonChart extends Component {
     intl: intlShape.isRequired,
     navigate: PropTypes.func.isRequired,
     widget: PropTypes.object.isRequired,
-    project: PropTypes.string.isRequired,
+    projectId: PropTypes.string.isRequired,
     defectTypes: PropTypes.object.isRequired,
     getDefectLink: PropTypes.func.isRequired,
     getStatisticsLink: PropTypes.func.isRequired,
@@ -74,6 +73,7 @@ export class LaunchesComparisonChart extends Component {
   };
 
   onChartCreated = () => {
+    // eslint-disable-next-line func-names
     d3.selectAll(document.querySelectorAll('.c3-chart-bar path')).each(function() {
       const elem = d3.select(this);
       if (elem.datum().value === 0) {
@@ -83,11 +83,11 @@ export class LaunchesComparisonChart extends Component {
   };
 
   onChartClick = (data) => {
-    const { widget, getDefectLink, getStatisticsLink, defectTypes } = this.props;
+    const { widget, getDefectLink, getStatisticsLink, defectTypes, projectId } = this.props;
 
     const nameConfig = getItemNameConfig(data.id);
     const id = widget.content.result[data.index].id;
-    const defaultParams = this.getDefaultLinkParams(id);
+    const defaultParams = getDefaultTestItemLinkParams(id, projectId);
     const defectLocators = getDefectTypeLocators(nameConfig, defectTypes);
 
     const link = defectLocators
@@ -95,15 +95,6 @@ export class LaunchesComparisonChart extends Component {
       : getStatisticsLink({ statuses: [nameConfig.defectType.toUpperCase()] });
     this.props.navigate(Object.assign(link, defaultParams));
   };
-
-  getDefaultLinkParams = (testItemIds) => ({
-    payload: {
-      projectId: this.props.project,
-      filterId: ALL,
-      testItemIds,
-    },
-    type: TEST_ITEM_PAGE,
-  });
 
   getConfigData = () => {
     const {

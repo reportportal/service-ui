@@ -20,7 +20,6 @@ import { injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import * as d3 from 'd3-selection';
-import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { defectTypesSelector, orderedContentFieldsSelector } from 'controllers/project';
 import { defectLinkSelector, statisticsLinkSelector } from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
@@ -29,6 +28,7 @@ import { PASSED, FAILED, SKIPPED, INTERRUPTED } from 'common/constants/testStatu
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { ChartContainer } from 'components/widgets/common/c3chart';
 import {
+  getDefaultTestItemLinkParams,
   getItemNameConfig,
   getDefectTypeLocators,
   getUpdatedFilterWithTime,
@@ -46,7 +46,7 @@ const cx = classNames.bind(styles);
 @injectIntl
 @connect(
   (state) => ({
-    project: activeProjectSelector(state),
+    projectId: activeProjectSelector(state),
     defectTypes: defectTypesSelector(state),
     orderedContentFields: orderedContentFieldsSelector(state),
     getDefectLink: defectLinkSelector(state),
@@ -62,7 +62,7 @@ export class LaunchStatisticsChart extends Component {
     intl: intlShape.isRequired,
     navigate: PropTypes.func,
     widget: PropTypes.object.isRequired,
-    project: PropTypes.string.isRequired,
+    projectId: PropTypes.string.isRequired,
     defectTypes: PropTypes.object.isRequired,
     orderedContentFields: PropTypes.array.isRequired,
     getDefectLink: PropTypes.func.isRequired,
@@ -159,15 +159,6 @@ export class LaunchStatisticsChart extends Component {
     return [defectType.toUpperCase()];
   };
 
-  getDefaultLinkParams = (testItemIds) => ({
-    payload: {
-      projectId: this.props.project,
-      filterId: 'all',
-      testItemIds,
-    },
-    type: TEST_ITEM_PAGE,
-  });
-
   getWidgetViewMode = () => this.props.widget.contentParameters.widgetOptions.viewMode;
 
   getConfigData = () => {
@@ -202,10 +193,10 @@ export class LaunchStatisticsChart extends Component {
     MODES_VALUES[CHART_MODES.TIMELINE_MODE];
 
   launchModeClickHandler = (data) => {
-    const { widget, getDefectLink, getStatisticsLink, defectTypes } = this.props;
+    const { widget, getDefectLink, getStatisticsLink, defectTypes, projectId } = this.props;
     const nameConfig = getItemNameConfig(data.id);
     const id = widget.content.result[data.index].id;
-    const defaultParams = this.getDefaultLinkParams(id);
+    const defaultParams = getDefaultTestItemLinkParams(id, projectId);
     const locators = getDefectTypeLocators(nameConfig, defectTypes);
 
     const link = locators

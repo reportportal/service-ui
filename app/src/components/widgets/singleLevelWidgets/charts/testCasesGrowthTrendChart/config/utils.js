@@ -30,12 +30,12 @@ const localMessages = defineMessages({
 });
 
 export const calculateTooltipParams = (data, color, customProps) => {
-  const { itemsData, isTimeLineMode, formatMessage } = customProps;
+  const { itemsData, positiveTrend, isTimeline, formatMessage } = customProps;
   const { name, number, startTime, date } = itemsData[data[0].index];
 
   let total;
   let growth;
-  if (this.positiveTrend[data[0].index]) {
+  if (positiveTrend[data[0].index]) {
     growth = data[1].value;
     total = data[0].value + data[1].value;
   } else {
@@ -49,8 +49,8 @@ export const calculateTooltipParams = (data, color, customProps) => {
   });
 
   return {
-    itemName: isTimeLineMode ? date : `${name} #${number}`,
-    startTime: isTimeLineMode ? '' : dateFormat(Number(startTime)),
+    itemName: isTimeline ? date : `${name} #${number}`,
+    startTime: isTimeline ? '' : dateFormat(Number(startTime)),
     growth,
     growthClass,
     total,

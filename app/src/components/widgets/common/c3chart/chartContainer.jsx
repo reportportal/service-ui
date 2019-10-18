@@ -89,6 +89,7 @@ export class ChartContainer extends Component {
     const { showLegend, legendProps = {}, uncheckedLegendItems = [] } = legendConfig;
     this.chart = chart;
     this.node = element;
+    chartCreatedCallback(element, chart, this.config.customData);
 
     if (!widget.content.result || isPreview) {
       return;
@@ -103,7 +104,6 @@ export class ChartContainer extends Component {
       this.node.addEventListener('mousemove', this.setupCoords);
       this.isChartCreated = true;
     }
-    chartCreatedCallback(element, chart, this.config.customData);
   };
 
   onLegendMouseOut = () => {
