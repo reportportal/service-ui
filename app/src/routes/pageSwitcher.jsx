@@ -23,6 +23,7 @@ import { pageSelector, isInitialDispatchDoneSelector } from 'controllers/pages';
 import { LocalizationSwitcher } from 'components/main/localizationSwitcher';
 import { ScreenLock } from 'components/main/screenLock';
 import { NotificationContainer } from 'components/main/notification';
+import { PageErrorBoundary } from 'components/containers/pageErrorBoundary';
 
 import { pageRendering } from './constants';
 
@@ -62,7 +63,9 @@ export default class PageSwitcher extends React.PureComponent {
       <div className={styles.pageSwitcher}>
         <Layout>
           {!process.env.production && <LocalizationSwitcher />}
-          <PageComponent />
+          <PageErrorBoundary key={page}>
+            <PageComponent />
+          </PageErrorBoundary>
         </Layout>
         <ModalContainer />
         <NotificationContainer />
