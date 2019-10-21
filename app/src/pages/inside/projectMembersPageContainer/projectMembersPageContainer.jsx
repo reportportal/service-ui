@@ -20,7 +20,7 @@ import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { MembersPage } from 'pages/common/membersPage';
 
 export class ProjectMembersPageContainer extends Component {
-  getBreadcrumbs = () => [
+  breadcrumbs = [
     {
       title: <FormattedMessage id="MembersPage.title" defaultMessage="Project members" />,
     },
@@ -29,7 +29,7 @@ export class ProjectMembersPageContainer extends Component {
   render() {
     return (
       <PageLayout>
-        <PageHeader breadcrumbs={this.getBreadcrumbs()} />
+        <PageHeader breadcrumbs={this.breadcrumbs} />
         <PageSection>
           <MembersPage />
         </PageSection>

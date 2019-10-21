@@ -30,7 +30,7 @@ export class ProjectSettingsPageContainer extends Component {
     projectId: PropTypes.string.isRequired,
   };
 
-  getBreadcrumbs = () => [
+  breadcrumbs = [
     {
       title: <FormattedMessage id="SettingsPage.title" defaultMessage="Settings" />,
     },
@@ -44,7 +44,7 @@ export class ProjectSettingsPageContainer extends Component {
   render() {
     return (
       <PageLayout>
-        <PageHeader breadcrumbs={this.getBreadcrumbs()} />
+        <PageHeader breadcrumbs={this.breadcrumbs} />
         <SettingsPage projectId={this.props.projectId} createTabLink={this.createTabLink} />
       </PageLayout>
     );

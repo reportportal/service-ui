@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2019 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,24 +14,4 @@
  * limitations under the License.
  */
 
-.container {
-    display: flex;
-    width: 100%;
-    height: 12px;
-    border-radius: 6px;
-    overflow: hidden;
-    border: 1px $COLOR--gray-80 solid;
-    background-color: $COLOR--white;
-}
-
-.passed {
-    background-color: $COLOR--passed;
-}
-
-.failed {
-    background-color: $COLOR--failed;
-}
-
-.skipped {
-    background-color: $COLOR--skipped;
-}
+export { TotalStatistics } from './totalStatistics';

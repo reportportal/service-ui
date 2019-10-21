@@ -17,7 +17,7 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { getItemNameConfig, DEFECTS } from '../../../common/utils';
+import { getItemNameConfig, DEFECTS } from 'components/widgets/common/utils';
 import { DefectTypeItem } from './defectTypeItem';
 import styles from './overallDefects.scss';
 

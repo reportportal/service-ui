@@ -48,7 +48,7 @@ export const getChartData = (data, filter) => {
   return { itemTypes, itemColors };
 };
 
-/** *
+/**
  *
  * @param height - element height
  * @param width - current element width
