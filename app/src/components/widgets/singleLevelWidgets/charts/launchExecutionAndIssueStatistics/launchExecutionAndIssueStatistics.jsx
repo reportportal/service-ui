@@ -42,6 +42,7 @@ export const LaunchExecutionAndIssueStatistics = injectIntl((props) => {
   const { name, number } = result[0];
   const launchName = number ? `${name} #${number}` : name;
   const isLaunchNameBlockNeeded = !isPreview && launchName && !onStatusPageMode;
+  const heightOffset = isLaunchNameBlockNeeded ? launchNameBlockHeight : 0;
 
   return (
     <div className={cx('launch-execution-and-issues-chart')}>
@@ -54,14 +55,12 @@ export const LaunchExecutionAndIssueStatistics = injectIntl((props) => {
         </div>
       )}
       <div className={cx('widgets-wrapper', { 'with-launch-name-block': isLaunchNameBlockNeeded })}>
-        <LaunchExecutionChart
-          {...props}
-          launchNameBlockHeight={isLaunchNameBlockNeeded ? launchNameBlockHeight : 0}
-        />
-        <IssueStatisticsChart
-          {...props}
-          launchNameBlockHeight={isLaunchNameBlockNeeded ? launchNameBlockHeight : 0}
-        />
+        <div className={cx('chart-container')}>
+          <LaunchExecutionChart {...props} heightOffset={heightOffset} />
+        </div>
+        <div className={cx('chart-container')}>
+          <IssueStatisticsChart {...props} heightOffset={heightOffset} />
+        </div>
       </div>
     </div>
   );
@@ -80,7 +79,7 @@ LaunchExecutionAndIssueStatistics.propTypes = {
 LaunchExecutionAndIssueStatistics.defaultProps = {
   isPreview: false,
   height: 0,
-  observer: {},
+  observer: undefined,
   uncheckedLegendItems: [],
   onChangeLegend: () => {},
   onStatusPageMode: false,
