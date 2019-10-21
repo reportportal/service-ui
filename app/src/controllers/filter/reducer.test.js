@@ -90,7 +90,7 @@ describe('filter reducer', () => {
     });
 
     test('should return true on FETCH_USER_FILTERS_SUCCESS action', () => {
-      expect(launchesFiltersReadyReducer(false, FETCH_USER_FILTERS_SUCCESS).toBe(true));
+      expect(launchesFiltersReadyReducer(false, { type: FETCH_USER_FILTERS_SUCCESS })).toBe(true);
     });
   });
 });
