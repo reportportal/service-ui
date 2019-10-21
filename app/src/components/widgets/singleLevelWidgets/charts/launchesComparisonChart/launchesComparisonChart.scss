@@ -21,11 +21,16 @@
       stroke: $COLOR--gray-80;
     }
 
-    .c3-axis path,
-    .tick line {
-      display: none;
+    .c3-axis {
+      .c3-axis-y-label {
+        font-family: $FONT-REGULAR;
+        fill: $COLOR--charcoal-grey;
+        font-size: 12px;
+      }
     }
 
+    .c3-axis path,
+    .tick line,
     .c3-xgrid-focus {
       display: none;
     }

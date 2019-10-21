@@ -50,7 +50,7 @@ export const LaunchExecutionAndIssueStatistics = injectIntl((props) => {
           <span className={cx('launch-name-text')}>
             {`${props.intl.formatMessage(localMessages.launchNameText)} `}
           </span>
-          <span className={cx('launch-name')}>{`${launchName}`}</span>
+          <span className={cx('launch-name')}>{launchName}</span>
         </div>
       )}
       <div className={cx('widgets-wrapper', { 'with-launch-name-block': isLaunchNameBlockNeeded })}>

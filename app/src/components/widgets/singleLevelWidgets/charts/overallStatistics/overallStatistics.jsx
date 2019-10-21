@@ -19,7 +19,7 @@ import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { OverallStatisticsPanel } from './overallStatisticsPanel';
 import { LaunchExecutionAndIssueStatistics } from '../launchExecutionAndIssueStatistics';
 
-export class OverallStatisticsChart extends React.Component {
+export class OverallStatistics extends React.Component {
   static propTypes = {
     widget: PropTypes.object.isRequired,
   };

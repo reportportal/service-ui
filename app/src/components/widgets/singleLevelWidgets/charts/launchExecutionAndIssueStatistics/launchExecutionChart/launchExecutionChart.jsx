@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
@@ -26,26 +27,27 @@ import {
   statisticsLinkSelector,
   TEST_ITEMS_TYPE_LIST,
 } from 'controllers/testItem';
-import { defectTypesSelector, orderedDefectFieldsSelector } from 'controllers/project';
-import { launchFiltersSelector } from 'controllers/filter';
 import { activeProjectSelector } from 'controllers/user';
+import { launchFiltersSelector } from 'controllers/filter';
+import { defectTypesSelector } from 'controllers/project';
 import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { ALL } from 'common/constants/reservedFilterIds';
-import { C3Chart } from '../../../common/c3chart';
-import chartStyles from './launchExecutionAndIssueStatistics.scss';
-import { Legend } from '../../../common/legend';
-import { getDefectTypeLocators, getItemNameConfig } from '../../../common/utils';
-import { IssueTypeStatTooltip } from '../common/issueTypeStatTooltip';
-import { getPercentage, getChartData, isSmallDonutChartView } from './chartUtils';
+import { FAILED, INTERRUPTED } from 'common/constants/testStatuses';
+import { getItemNameConfig } from 'components/widgets/common/utils';
+import { C3Chart } from 'components/widgets/common/c3chart';
+import { Legend } from 'components/widgets/common/legend';
+import { getPercentage, getDefectItems, getChartData, isSmallDonutChartView } from '../chartUtils';
+import { IssueTypeStatTooltip } from '../../common/issueTypeStatTooltip';
+import styles from './launchExecutionChart.scss';
 
-const chartCx = classNames.bind(chartStyles);
+const cx = classNames.bind(styles);
 const getResult = (widget) => widget.content.result[0] || widget.content.result;
 
+@injectIntl
 @connect(
   (state) => ({
     project: activeProjectSelector(state),
     defectTypes: defectTypesSelector(state),
-    orderedContentFields: orderedDefectFieldsSelector(state),
     getDefectLink: defectLinkSelector(state),
     getStatisticsLink: statisticsLinkSelector(state),
     launchFilters: launchFiltersSelector(state),
@@ -54,14 +56,12 @@ const getResult = (widget) => widget.content.result[0] || widget.content.result;
     navigate: (linkAction) => linkAction,
   },
 )
-@injectIntl
-export class IssueStatisticsChart extends Component {
+export class LaunchExecutionChart extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     widget: PropTypes.object.isRequired,
-    isPreview: PropTypes.bool,
+    isPreview: PropTypes.bool.isRequired,
     defectTypes: PropTypes.object.isRequired,
-    orderedContentFields: PropTypes.array.isRequired,
     getDefectLink: PropTypes.func.isRequired,
     getStatisticsLink: PropTypes.func.isRequired,
     navigate: PropTypes.func.isRequired,
@@ -76,7 +76,6 @@ export class IssueStatisticsChart extends Component {
   };
 
   static defaultProps = {
-    isPreview: false,
     height: 0,
     observer: {},
     uncheckedLegendItems: [],
@@ -93,7 +92,7 @@ export class IssueStatisticsChart extends Component {
   componentDidMount() {
     const { observer, isPreview } = this.props;
 
-    !isPreview && observer.subscribe && observer.subscribe('widgetResized', this.resizeIssuesChart);
+    !isPreview && observer.subscribe && observer.subscribe('widgetResized', this.resizeStatusChart);
 
     this.getConfig();
   }
@@ -108,16 +107,16 @@ export class IssueStatisticsChart extends Component {
     const { observer, isPreview } = this.props;
 
     if (!isPreview) {
-      this.issuesNode && this.issuesNode.removeEventListener('mousemove', this.setCoords);
+      this.statusNode && this.statusNode.removeEventListener('mousemove', this.setCoords);
 
-      observer.unsubscribe && observer.unsubscribe('widgetResized', this.resizeIssuesChart);
+      observer.unsubscribe && observer.unsubscribe('widgetResized', this.resizeStatusChart);
     }
     this.chart = null;
   }
 
-  onIssuesChartCreated = (chart, element) => {
+  onStatusChartCreated = (chart, element) => {
     this.chart = chart;
-    this.issuesNode = element;
+    this.statusNode = element;
 
     const { onStatusPageMode, widget, isPreview, uncheckedLegendItems } = this.props;
 
@@ -145,9 +144,9 @@ export class IssueStatisticsChart extends Component {
       .attr('dy', onStatusPageMode || isSmallDonutChartView(this.height, this.width) ? 15 : 30)
       .attr('x', 0)
       .attr('fill', '#666')
-      .text('ISSUES');
+      .text('SUM');
 
-    this.issuesNode.addEventListener('mousemove', this.setCoords);
+    this.statusNode.addEventListener('mousemove', this.setCoords);
   };
 
   onMouseOut = () => {
@@ -164,11 +163,10 @@ export class IssueStatisticsChart extends Component {
   };
 
   onChartClick = (d) => {
-    const { widget, launchFilters, getDefectLink, defectTypes } = this.props;
+    const { widget, launchFilters, getStatisticsLink } = this.props;
 
     const nameConfig = getItemNameConfig(d.id);
     const id = getResult(widget).id;
-    const defectLocators = getDefectTypeLocators(nameConfig, defectTypes);
     let navigationParams;
     let link;
 
@@ -179,15 +177,14 @@ export class IssueStatisticsChart extends Component {
       const activeFilter = launchFilters.filter((filter) => filter.id === appliedWidgetFilterId)[0];
       const activeFilterId = (activeFilter && activeFilter.id) || appliedWidgetFilterId;
 
-      link = getDefectLink({
-        defects: defectLocators,
-        itemId: TEST_ITEMS_TYPE_LIST,
+      link = getStatisticsLink({
+        statuses: this.getLinkParametersStatuses(nameConfig),
         launchesLimit,
         isLatest,
       });
       navigationParams = this.getDefaultParamsOverallStatisticsWidget(activeFilterId);
     } else {
-      link = getDefectLink({ defects: defectLocators, itemId: id });
+      link = getStatisticsLink({ statuses: [nameConfig.defectType.toUpperCase()] });
       navigationParams = this.getDefaultParamsLaunchExecutionWidget(id);
     }
 
@@ -212,85 +209,58 @@ export class IssueStatisticsChart extends Component {
     type: TEST_ITEM_PAGE,
   });
 
-  getChartColors(columns) {
-    const { defectTypes } = this.props;
-
-    return columns.reduce((colors, column) => {
-      const locator = getItemNameConfig(column[0]).locator;
-      const defectTypesValues = Object.values(defectTypes);
-
-      for (let i = 0; i < defectTypesValues.length; i += 1) {
-        const defect = defectTypesValues[i].find((defectType) => defectType.locator === locator);
-
-        if (defect) {
-          Object.assign(colors, { [column[0]]: defect.color });
-
-          return colors;
-        }
-      }
-
-      return colors;
-    }, {});
-  }
-
-  setDefectItems(columns) {
-    this.defectItems = columns.map((item) => ({
-      id: item[0],
-      count: item[1],
-      name: item[0]
-        .split('$')
-        .slice(0, 3)
-        .join('$'),
-    }));
-  }
-
-  getColumns() {
-    const { widget, orderedContentFields } = this.props;
-    const DEFECTS = '$defects$';
-    const values = getResult(widget).values;
-    const defectDataItems = getChartData(values, DEFECTS);
-    const defectTypesChartData = defectDataItems.itemTypes;
-    const columns = [];
-
-    const orderedData = orderedContentFields.map((type) => ({
-      key: type,
-      value: defectTypesChartData[type] || 0,
-    }));
-
-    orderedData.forEach((item) => {
-      widget.contentParameters.contentFields.forEach((field) => {
-        if (field === item.key) {
-          columns.push([field, item.value]);
-        }
-      });
-    });
-
-    return columns;
-  }
+  getLinkParametersStatuses = ({ defectType }) => {
+    if (defectType.toUpperCase() === FAILED) {
+      return [FAILED, INTERRUPTED];
+    }
+    return [defectType.toUpperCase()];
+  };
 
   getConfig = () => {
-    const { container, isPreview, onStatusPageMode, launchNameBlockHeight } = this.props;
+    const EXECUTIONS = '$executions$';
+    const { widget, container, isPreview, onStatusPageMode, launchNameBlockHeight } = this.props;
+    const values = getResult(widget).values;
+    const statusDataItems = getChartData(values, EXECUTIONS);
+    const statusChartData = statusDataItems.itemTypes;
+    const statusChartColors = statusDataItems.itemColors;
+    const statusChartDataOrdered = [];
+
     this.height = container.offsetHeight - launchNameBlockHeight;
     this.width = container.offsetWidth;
     this.noAvailableData = false;
 
-    const columns = this.getColumns();
+    statusChartData.statistics$executions$passed &&
+      statusChartDataOrdered.push([
+        'statistics$executions$passed',
+        statusChartData.statistics$executions$passed,
+      ]);
+    statusChartData.statistics$executions$failed &&
+      statusChartDataOrdered.push([
+        'statistics$executions$failed',
+        statusChartData.statistics$executions$failed,
+      ]);
+    statusChartData.statistics$executions$skipped &&
+      statusChartDataOrdered.push([
+        'statistics$executions$skipped',
+        statusChartData.statistics$executions$skipped,
+      ]);
 
-    if (!columns.length) {
+    if (
+      +statusChartDataOrdered.statistics$executions$total === 0 ||
+      !statusChartDataOrdered.length
+    ) {
       this.noAvailableData = true;
       return;
     }
 
-    this.setDefectItems(columns);
+    this.statusItems = getDefectItems(statusChartDataOrdered);
 
-    const colors = this.getChartColors(columns);
-
-    this.issueConfig = {
+    this.statusConfig = {
       data: {
-        columns,
+        columns: statusChartDataOrdered,
         type: 'donut',
         order: null,
-        colors,
+        colors: statusChartColors,
       },
       interaction: {
         enabled: !isPreview,
@@ -309,15 +279,15 @@ export class IssueStatisticsChart extends Component {
       },
       tooltip: {
         grouped: false,
-        position: this.getIssuesPosition,
-        contents: this.renderIssuesContents,
+        position: this.getStatusPosition,
+        contents: this.renderStatusContents,
       },
       onrendered: this.renderTotalLabel,
     };
     this.configCreationTimeStamp = Date.now();
 
     if (!onStatusPageMode) {
-      this.issueConfig.data.onclick = this.onChartClick;
+      this.statusConfig.data.onclick = this.onChartClick;
     }
 
     this.setState({
@@ -330,8 +300,8 @@ export class IssueStatisticsChart extends Component {
     this.y = pageY;
   };
 
-  getIssuesPosition = (d, width, height) => {
-    const rect = this.issuesNode.getBoundingClientRect();
+  getStatusPosition = (d, width, height) => {
+    const rect = this.statusNode.getBoundingClientRect();
     const left = this.x - rect.left - width / 2;
     const top = this.y - rect.top - height;
 
@@ -341,17 +311,17 @@ export class IssueStatisticsChart extends Component {
     };
   };
 
-  defectItems = [];
+  statusItems = [];
 
-  resizeIssuesChart = () => {
+  resizeStatusChart = () => {
     const newHeight = this.props.container.offsetHeight - this.props.launchNameBlockHeight;
     const newWidth = this.props.container.offsetWidth;
     if (this.height !== newHeight) {
       this.chart.resize({
         height: newHeight,
       });
-      this.width = newWidth;
       this.height = newHeight;
+      this.width = newWidth;
       this.forceUpdate();
     } else if (this.width !== newWidth) {
       this.chart.flush();
@@ -365,14 +335,14 @@ export class IssueStatisticsChart extends Component {
       const total = this.chart.data
         .shown()
         .reduce((acc, dataItem) => acc + dataItem.values[0].value, 0);
-      this.issuesNode.querySelector('.c3-chart-arcs-title').childNodes[0].textContent = total;
+
+      this.statusNode.querySelector('.c3-chart-arcs-title').childNodes[0].textContent = total;
     }
   };
 
-  renderIssuesContents = (data, a, b, color) => {
+  renderStatusContents = (data, a, b, color) => {
     const {
       intl: { formatMessage },
-      defectTypes,
     } = this.props;
     const { value, ratio, id } = data[0];
 
@@ -380,29 +350,25 @@ export class IssueStatisticsChart extends Component {
       <IssueTypeStatTooltip
         itemsCount={`${value} (${getPercentage(ratio)}%)`}
         color={color(id)}
-        issueStatNameProps={{ itemName: id, defectTypes, formatMessage }}
+        issueStatNameProps={{ itemName: id, defectTypes: {}, formatMessage }}
       />,
     );
   };
 
   render() {
-    const { isPreview, uncheckedLegendItems, onStatusPageMode } = this.props;
-    const classes = chartCx('container', { 'preview-view': isPreview });
-    const chartClasses = chartCx('c3', {
-      'small-view': isSmallDonutChartView(this.height, this.width),
-    });
     const { isConfigReady } = this.state;
-    const legendItems = this.defectItems.map((item) => item.id);
+    const { isPreview, uncheckedLegendItems, onStatusPageMode } = this.props;
+    const legendItems = this.statusItems.map((item) => item.id);
 
     return (
-      <div className={classes}>
+      <div className={cx('container', { 'preview-view': isPreview })}>
         {isConfigReady && (
           <div
-            className={chartCx('issue-statistics-chart', {
+            className={cx('launch-execution-chart', {
               'status-page-mode': onStatusPageMode,
             })}
           >
-            <div className={chartCx('data-js-issue-statistics-chart-container')}>
+            <div className={cx('data-js-launch-execution-chart-container')}>
               {!isPreview &&
                 !onStatusPageMode && (
                   <Legend
@@ -414,9 +380,11 @@ export class IssueStatisticsChart extends Component {
                   />
                 )}
               <C3Chart
-                config={this.issueConfig}
-                onChartCreated={this.onIssuesChartCreated}
-                className={chartClasses}
+                config={this.statusConfig}
+                onChartCreated={this.onStatusChartCreated}
+                className={cx({
+                  'small-view': isSmallDonutChartView(this.height, this.width),
+                })}
                 configCreationTimeStamp={this.configCreationTimeStamp}
               />
             </div>

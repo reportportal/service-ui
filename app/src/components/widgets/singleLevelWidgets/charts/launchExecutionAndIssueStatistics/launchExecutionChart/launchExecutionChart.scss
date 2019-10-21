@@ -14,40 +14,49 @@
  * limitations under the License.
  */
 
-.launch-execution-and-issues-chart {
+
+.launch-execution-chart.with-background-color {
+  background-color: $COLOR--light-yellow;
   height: 100%;
 }
 
-.widgets-wrapper {
-  display: flex;
-  flex-direction: row;
+.data-js-launch-execution-chart-container {
+  position: relative;
   width: 100%;
-  height: 100%;
 
-  &.with-launch-name-block {
-    margin-top: -20px;
+  :global {
+    .c3-chart-arcs-title {
+      font-size: 24px !important;
+      font-weight: bold;
+    }
+  }
+
+  .small-view {
+    :global {
+      .c3-chart-arc {
+        & text {
+          display: none;
+        }
+      }
+
+      .c3-chart-arcs-title {
+        font-size: 12px !important;
+      }
+    }
   }
 }
 
-.launch-name-block {
-  display: inline-flex;
-  height: 40px;
-  z-index: $Z-INDEX-DEFAULT;
-  align-items: center;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  line-height: 17px;
-  margin: 0 20px;
-  font-size: 13px;
+.container {
+  width: 50%;
+  height: 100%;
+}
 
-  .launch-name-text {
-    color: $COLOR--gray-47;
-    margin-right: 5px;
-    text-transform: uppercase;
-  }
-
-  .launch-name {
-    font-family: $FONT-SEMIBOLD;
-    color: $COLOR--charcoal-grey;
+.status-page-mode {
+  .small-view {
+    :global {
+      .c3-chart-arcs-title > tspan {
+        font-size: 12px !important;
+      }
+    }
   }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { PropTypes } from 'prop-types';
+import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { ProgressBar } from './progressBar';
 import styles from './totalStatistics.scss';

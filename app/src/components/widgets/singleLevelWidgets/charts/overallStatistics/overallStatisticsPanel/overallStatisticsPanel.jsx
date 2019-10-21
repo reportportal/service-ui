@@ -20,7 +20,7 @@ import classNames from 'classnames/bind';
 import { orderedDefectFieldsSelector } from 'controllers/project';
 import { TotalStatistics } from './totalStatistics';
 import { OverallDefects } from './overallDefects';
-import styles from './overallStatistics.scss';
+import styles from './overallStatisticsPanel.scss';
 
 const cx = classNames.bind(styles);
 

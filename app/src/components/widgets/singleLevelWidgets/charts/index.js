@@ -23,7 +23,7 @@ import { NonPassedTestCasesTrendChart } from './nonPassedTestCasesTrendChart';
 import { PassingRatePerLaunch } from './passingRatePerLaunch';
 import { PassingRateSummary } from './passingRateSummary';
 import { LaunchExecutionAndIssueStatistics } from './launchExecutionAndIssueStatistics';
-import { OverallStatisticsChart } from './overallStatisticsChart';
+import { OverallStatistics } from './overallStatistics';
 import { InvestigatedTrendChart } from './investigatedTrendChart';
 
 export {
@@ -36,6 +36,6 @@ export {
   PassingRatePerLaunch,
   PassingRateSummary,
   LaunchExecutionAndIssueStatistics,
-  OverallStatisticsChart,
+  OverallStatistics,
   InvestigatedTrendChart,
 };
