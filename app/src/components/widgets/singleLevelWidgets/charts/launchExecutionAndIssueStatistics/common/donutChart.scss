@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 
-.issue-statistics-chart {
-  height: 100%;
-}
-
-.data-js-issue-statistics-chart-container {
+.donut-chart {
   position: relative;
   width: 100%;
 
@@ -42,11 +38,6 @@
       }
     }
   }
-}
-
-.container {
-  width: 50%;
-  height: 100%;
 }
 
 .status-page-mode {
