@@ -49,6 +49,8 @@ import {
   ComponentHealthCheck,
 } from './multiLevelWidgets';
 
+export { WidgetError } from './widgetError';
+
 const CHARTS = {
   [widgetTypes.DIFFERENT_LAUNCHES_COMPARISON]: LaunchesComparisonChart,
   [widgetTypes.LAUNCH_STATISTICS]: LaunchStatisticsChart,
