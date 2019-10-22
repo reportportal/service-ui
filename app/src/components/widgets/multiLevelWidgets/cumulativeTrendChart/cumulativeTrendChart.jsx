@@ -42,7 +42,7 @@ import { ActionsPopup } from './actionsPopup';
 import {
   getDefectTypeLocators,
   getItemNameConfig,
-  getDefaultNavigationParams,
+  getDefaultTestItemLinkParams,
 } from '../../common/utils';
 import styles from './cumulativeTrendChart.scss';
 
@@ -256,7 +256,7 @@ export class CumulativeTrendChart extends PureComponent {
       defectTypes,
       project,
     } = this.props;
-    const navigationParams = getDefaultNavigationParams(
+    const navigationParams = getDefaultTestItemLinkParams(
       project,
       widget.appliedFilters[0].id,
       TEST_ITEMS_TYPE_LIST,

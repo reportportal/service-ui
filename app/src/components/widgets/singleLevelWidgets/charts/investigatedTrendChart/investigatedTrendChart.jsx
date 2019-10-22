@@ -36,6 +36,7 @@ import {
   getDefaultTestItemLinkParams,
 } from 'components/widgets/common/utils';
 import * as STATUSES from 'common/constants/testStatuses';
+import { ALL } from 'common/constants/reservedFilterIds';
 import { ChartContainer } from 'components/widgets/common/c3chart';
 import { getConfig as getStatusPageModeConfig } from '../common/statusPageChartConfig';
 import { selectConfigFunction } from './config';
@@ -151,7 +152,7 @@ export class InvestigatedTrendChart extends Component {
   launchModeClickHandler = (data) => {
     const { widget, getDefectLink, getStatisticsLink, projectId } = this.props;
     const id = widget.content.result[data.index].id;
-    const defaultParams = getDefaultTestItemLinkParams(id, projectId);
+    const defaultParams = getDefaultTestItemLinkParams(projectId, ALL, id);
     const defectTypeLocators = this.getDefectTypeLocators(data.id, projectId);
     const link = defectTypeLocators
       ? getDefectLink({ defects: defectTypeLocators, itemId: id })

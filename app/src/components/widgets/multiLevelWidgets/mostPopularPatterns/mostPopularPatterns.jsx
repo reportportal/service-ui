@@ -25,7 +25,7 @@ import { activeProjectSelector } from 'controllers/user';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { NoDataAvailable } from 'components/widgets';
-import { getDefaultNavigationParams } from 'components/widgets/common/utils';
+import { getDefaultTestItemLinkParams } from 'components/widgets/common/utils';
 import { PatternGrid } from './patternGrid';
 import styles from './mostPopularPatterns.scss';
 
@@ -92,7 +92,7 @@ export class MostPopularPatterns extends Component {
     const compositeAttribute = `${
       widget.contentParameters.widgetOptions.attributeKey
     }:${selectedAttribute}`;
-    const defaultNavigationParams = getDefaultNavigationParams(
+    const defaultNavigationParams = getDefaultTestItemLinkParams(
       project,
       widget.appliedFilters[0].id,
       TEST_ITEMS_TYPE_LIST,

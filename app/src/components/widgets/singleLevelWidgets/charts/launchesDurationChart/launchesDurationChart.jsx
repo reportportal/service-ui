@@ -25,6 +25,7 @@ import {
   getChartDefaultProps,
   getDefaultTestItemLinkParams,
 } from 'components/widgets/common/utils';
+import { ALL } from 'common/constants/reservedFilterIds';
 import { getConfig } from './config/getConfig';
 import styles from './launchesDurationChart.scss';
 
@@ -62,7 +63,7 @@ export class LaunchesDurationChart extends Component {
       widget: { content },
       projectId,
     } = this.props;
-    const link = getDefaultTestItemLinkParams(`${content.result[data.index].id}`, projectId);
+    const link = getDefaultTestItemLinkParams(projectId, ALL, `${content.result[data.index].id}`);
 
     this.props.navigate(link);
   };

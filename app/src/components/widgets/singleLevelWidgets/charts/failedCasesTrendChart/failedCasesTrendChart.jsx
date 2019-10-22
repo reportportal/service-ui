@@ -24,7 +24,10 @@ import { activeProjectSelector } from 'controllers/user';
 import { FAILED, INTERRUPTED } from 'common/constants/testStatuses';
 import { STATS_FAILED } from 'common/constants/statistics';
 import { ChartContainer } from 'components/widgets/common/c3chart';
-import { getChartDefaultProps, getDefaultNavigationParams } from 'components/widgets/common/utils';
+import {
+  getChartDefaultProps,
+  getDefaultTestItemLinkParams,
+} from 'components/widgets/common/utils';
 import { getConfig } from './config/getConfig';
 import styles from './failedCasesTrendChart.scss';
 
@@ -65,7 +68,7 @@ export class FailedCasesTrendChart extends Component {
     const link = getStatisticsLink({
       statuses: [FAILED, INTERRUPTED],
     });
-    const navigationParams = getDefaultNavigationParams(
+    const navigationParams = getDefaultTestItemLinkParams(
       project,
       widget.appliedFilters[0].id,
       launchIds[data.index],

@@ -19,7 +19,10 @@ import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import { ChartContainer } from 'components/widgets/common/c3chart';
-import { getChartDefaultProps, getDefaultNavigationParams } from 'components/widgets/common/utils';
+import {
+  getChartDefaultProps,
+  getDefaultTestItemLinkParams,
+} from 'components/widgets/common/utils';
 import { connect } from 'react-redux';
 import { statisticsLinkSelector } from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
@@ -66,7 +69,7 @@ export class NonPassedTestCasesTrendChart extends Component {
     const link = getStatisticsLink({
       statuses: [FAILED, SKIPPED, INTERRUPTED],
     });
-    const navigationParams = getDefaultNavigationParams(
+    const navigationParams = getDefaultTestItemLinkParams(
       project,
       widget.appliedFilters[0].id,
       launchIds[data.index],

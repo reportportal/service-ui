@@ -16,7 +16,6 @@
 
 import moment from 'moment/moment';
 import * as COLORS from 'common/constants/colors';
-import { ALL } from 'common/constants/reservedFilterIds';
 import { ENTITY_START_TIME, CONDITION_BETWEEN } from 'components/filterEntities/constants';
 import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { messages } from '../messages';
@@ -136,16 +135,7 @@ export const normalizeChartData = (data, isTimeLine) =>
       }))
     : data;
 
-export const getDefaultTestItemLinkParams = (testItemIds, projectId) => ({
-  payload: {
-    projectId,
-    filterId: ALL,
-    testItemIds,
-  },
-  type: TEST_ITEM_PAGE,
-});
-
-export const getDefaultNavigationParams = (projectId, filterId, testItemIds) => ({
+export const getDefaultTestItemLinkParams = (projectId, filterId, testItemIds) => ({
   payload: {
     projectId,
     filterId,

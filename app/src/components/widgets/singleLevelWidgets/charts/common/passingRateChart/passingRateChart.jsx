@@ -25,7 +25,10 @@ import { activeProjectSelector } from 'controllers/user';
 import { PASSED, FAILED, INTERRUPTED, SKIPPED } from 'common/constants/testStatuses';
 import { STATS_PASSED } from 'common/constants/statistics';
 import { ChartContainer } from 'components/widgets/common/c3chart';
-import { getChartDefaultProps, getDefaultNavigationParams } from 'components/widgets/common/utils';
+import {
+  getChartDefaultProps,
+  getDefaultTestItemLinkParams,
+} from 'components/widgets/common/utils';
 import { getConfig, NOT_PASSED_STATISTICS_KEY } from './config/getConfig';
 import styles from './passingRateChart.scss';
 
@@ -73,7 +76,7 @@ export class PassingRateChart extends Component {
       statuses: data.id === STATS_PASSED ? [PASSED] : [FAILED, INTERRUPTED, SKIPPED],
       launchesLimit: widget.contentParameters.itemsCount,
     });
-    const navigationParams = getDefaultNavigationParams(
+    const navigationParams = getDefaultTestItemLinkParams(
       project,
       widget.appliedFilters[0].id,
       TEST_ITEMS_TYPE_LIST,

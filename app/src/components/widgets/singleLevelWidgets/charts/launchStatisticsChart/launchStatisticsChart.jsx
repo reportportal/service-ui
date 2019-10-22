@@ -26,6 +26,7 @@ import { activeProjectSelector } from 'controllers/user';
 import { createFilterAction } from 'controllers/filter';
 import { PASSED, FAILED, SKIPPED, INTERRUPTED } from 'common/constants/testStatuses';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
+import { ALL } from 'common/constants/reservedFilterIds';
 import { ChartContainer } from 'components/widgets/common/c3chart';
 import {
   getDefaultTestItemLinkParams,
@@ -200,7 +201,7 @@ export class LaunchStatisticsChart extends Component {
     const { widget, getDefectLink, getStatisticsLink, defectTypes, projectId } = this.props;
     const nameConfig = getItemNameConfig(data.id);
     const id = widget.content.result[data.index].id;
-    const defaultParams = getDefaultTestItemLinkParams(id, projectId);
+    const defaultParams = getDefaultTestItemLinkParams(projectId, ALL, id);
     const locators = getDefectTypeLocators(nameConfig, defectTypes);
 
     const link = locators

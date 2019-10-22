@@ -24,7 +24,7 @@ import {
   TEST_ITEMS_TYPE_LIST,
 } from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
-import { getDefaultNavigationParams } from 'components/widgets/common/utils';
+import { getDefaultTestItemLinkParams } from 'components/widgets/common/utils';
 import { TotalStatistics } from './totalStatistics';
 import { OverallDefects } from './overallDefects';
 import styles from './overallStatistics.scss';
@@ -65,7 +65,7 @@ export class OverallStatisticsPanel extends React.PureComponent {
       statuses,
       launchesLimit,
     });
-    const navigationParams = getDefaultNavigationParams(
+    const navigationParams = getDefaultTestItemLinkParams(
       project,
       widget.appliedFilters[0].id,
       TEST_ITEMS_TYPE_LIST,
@@ -83,7 +83,7 @@ export class OverallStatisticsPanel extends React.PureComponent {
       itemId: TEST_ITEMS_TYPE_LIST,
       launchesLimit,
     });
-    const navigationParams = getDefaultNavigationParams(
+    const navigationParams = getDefaultTestItemLinkParams(
       project,
       widget.appliedFilters[0].id,
       TEST_ITEMS_TYPE_LIST,

@@ -25,6 +25,7 @@ import { activeProjectSelector } from 'controllers/user';
 import { createFilterAction } from 'controllers/filter';
 import * as STATUSES from 'common/constants/testStatuses';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
+import { ALL } from 'common/constants/reservedFilterIds';
 import { ChartContainer } from 'components/widgets/common/c3chart';
 import {
   getUpdatedFilterWithTime,
@@ -124,7 +125,7 @@ export class TestCasesGrowthTrendChart extends Component {
   launchModeClickHandler = (data) => {
     const { widget, getStatisticsLink, projectId } = this.props;
     const id = widget.content.result[data.index].id;
-    const defaultParams = getDefaultTestItemLinkParams(id, projectId);
+    const defaultParams = getDefaultTestItemLinkParams(projectId, ALL, id);
     const statisticsLink = getStatisticsLink({
       statuses: [STATUSES.PASSED, STATUSES.FAILED, STATUSES.SKIPPED, STATUSES.INTERRUPTED],
     });

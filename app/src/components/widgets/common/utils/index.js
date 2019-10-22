@@ -26,7 +26,6 @@ export {
   DEFECTS,
   range,
   getChartDefaultProps,
-  getDefaultNavigationParams,
   normalizeChartData,
   getDefaultTestItemLinkParams,
 } from './utils';
