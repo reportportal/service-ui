@@ -97,7 +97,12 @@ export class MostPopularPatterns extends Component {
       widget.appliedFilters[0].id,
       TEST_ITEMS_TYPE_LIST,
     );
-    const metaParams = this.getNavigationMetaParams(patternName, compositeAttribute, launchesLimit);
+    const metaParams = this.getNavigationMetaParams(
+      patternName,
+      compositeAttribute,
+      launchesLimit,
+      widget.contentParameters.widgetOptions.latest,
+    );
 
     this.props.navigate(Object.assign(defaultNavigationParams, metaParams));
   };
@@ -107,7 +112,7 @@ export class MostPopularPatterns extends Component {
       selectedAttribute: newAttribute,
     });
 
-  getNavigationMetaParams = (patternName, compositeAttribute, launchesLimit) => ({
+  getNavigationMetaParams = (patternName, compositeAttribute, launchesLimit, isLatest) => ({
     meta: {
       query: createNamespacedQuery(
         {
@@ -115,6 +120,7 @@ export class MostPopularPatterns extends Component {
           'filter.eq.hasChildren': false,
           'filter.any.patternName': patternName,
           'filter.has.compositeAttribute': compositeAttribute,
+          isLatest,
           launchesLimit,
         },
         getQueryNamespace(0),

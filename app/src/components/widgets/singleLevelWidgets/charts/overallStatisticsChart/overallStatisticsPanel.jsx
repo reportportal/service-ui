@@ -61,9 +61,11 @@ export class OverallStatisticsPanel extends React.PureComponent {
     const { widget, getStatisticsLink, project } = this.props;
 
     const launchesLimit = widget.contentParameters.itemsCount;
+    const isLatest = widget.contentParameters.widgetOptions.latest;
     const link = getStatisticsLink({
       statuses,
       launchesLimit,
+      isLatest,
     });
     const navigationParams = getDefaultTestItemLinkParams(
       project,
@@ -78,10 +80,12 @@ export class OverallStatisticsPanel extends React.PureComponent {
     const { widget, getDefectLink, project } = this.props;
 
     const launchesLimit = widget.contentParameters.itemsCount;
+    const isLatest = widget.contentParameters.widgetOptions.latest;
     const link = getDefectLink({
       defects,
       itemId: TEST_ITEMS_TYPE_LIST,
       launchesLimit,
+      isLatest,
     });
     const navigationParams = getDefaultTestItemLinkParams(
       project,
