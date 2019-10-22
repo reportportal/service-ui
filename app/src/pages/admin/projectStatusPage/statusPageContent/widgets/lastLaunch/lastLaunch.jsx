@@ -47,7 +47,7 @@ export class LastLaunch extends Component {
     });
 
     const defectsMapped = {};
-    const contentFieldsdefects = Object.keys(defects).map((key) => {
+    const contentFieldsDefects = Object.keys(defects).map((key) => {
       const defectGroup = omit(defects[key], ['total']);
       const defectType = Object.keys(defectGroup)[0];
       const newKey = `statistics$defects$${key}$${defectType}`;
@@ -63,7 +63,7 @@ export class LastLaunch extends Component {
         ...defectsMapped,
       },
       contentParameters: {
-        contentFields: [...contentFieldsExec, ...contentFieldsdefects],
+        contentFields: [...contentFieldsExec, ...contentFieldsDefects],
       },
     };
   };

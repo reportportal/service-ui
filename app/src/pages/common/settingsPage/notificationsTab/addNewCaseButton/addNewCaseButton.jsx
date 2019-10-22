@@ -57,6 +57,11 @@ export class AddNewCaseButton extends Component {
         onConfirm: this.confirmAddCase,
         notificationCase: DEFAULT_CASE_CONFIG,
         isNewCase: true,
+        eventsInfo: {
+          closeIcon: SETTINGS_PAGE_EVENTS.CLOSE_ICON_ADD_RULE_NOTIFICATIONS,
+          cancelBtn: SETTINGS_PAGE_EVENTS.CANCEL_ADD_RULE_NOTIFICATIONS,
+          saveBtn: SETTINGS_PAGE_EVENTS.SAVE_ADD_RULE_NOTIFICATIONS,
+        },
       },
     });
   };

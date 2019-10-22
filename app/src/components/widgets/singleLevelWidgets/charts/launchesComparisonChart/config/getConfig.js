@@ -19,6 +19,7 @@ export const getConfig = ({
   positionCallback,
   size,
   defectTypes,
+  onChartClick,
 }) => {
   const chartData = {};
   const chartDataOrdered = [];
@@ -32,19 +33,18 @@ export const getConfig = ({
     colors[key] = getItemColor(key, defectTypes);
   });
 
-  content.result.forEach((item) => {
+  content.forEach((item) => {
     itemsData.push({
       id: item.id,
       name: item.name,
       number: item.number,
       startTime: item.startTime,
     });
-    Object.keys(item.values).forEach((key) => {
-      const val = item.values[key];
+    contentFields.forEach((key) => {
+      const val = item.values[key] || 0;
       chartData[key].push(val);
     });
   });
-  itemsData.reverse();
 
   contentFields.forEach((key) => {
     if (key === 'statistics$executions$total') {
@@ -52,16 +52,20 @@ export const getConfig = ({
     }
     chartDataOrdered.push(chartData[key]);
   });
-
   chartDataOrdered.reverse();
 
-  const itemNames = chartDataOrdered.map((item) => item[0]);
-  const config = {
+  const legendItems = chartDataOrdered.map((item) => item[0]);
+
+  return {
+    customData: {
+      legendItems,
+    },
     data: {
       columns: chartDataOrdered,
       type: 'bar',
       order: null,
       colors,
+      onclick: isPreview ? null : onChartClick,
     },
     grid: {
       y: {
@@ -105,7 +109,7 @@ export const getConfig = ({
       show: false,
     },
     tooltip: {
-      grouped: true,
+      grouped: false,
       position: positionCallback,
       contents: createTooltipRenderer(IssueTypeStatTooltip, calculateTooltipParams, {
         itemsData,
@@ -114,10 +118,5 @@ export const getConfig = ({
       }),
     },
     size,
-  };
-
-  return {
-    itemNames,
-    config,
   };
 };

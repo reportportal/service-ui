@@ -15,12 +15,11 @@ const pageDataActions = {
 };
 function* fetchProjectData() {
   const section = yield select(projectSectionSelector);
-  if (!section || !pageDataActions[section]) {
-    return;
-  }
+  const sectionDataAction = pageDataActions[section] || fetchProjectAction;
   const projectId = yield select(projectIdSelector);
   const isAdminAccess = true;
-  yield put(pageDataActions[section](projectId, isAdminAccess));
+
+  yield put(sectionDataAction(projectId, isAdminAccess));
 }
 
 function* watchFetchProjectData() {

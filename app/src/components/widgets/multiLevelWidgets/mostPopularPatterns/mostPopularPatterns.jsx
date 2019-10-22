@@ -5,11 +5,11 @@ import { connect } from 'react-redux';
 import isEqual from 'fast-deep-equal';
 import { createNamespacedQuery } from 'common/utils/routingUtils';
 import { getQueryNamespace, TEST_ITEMS_TYPE_LIST } from 'controllers/testItem';
-import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { activeProjectSelector } from 'controllers/user';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { NoDataAvailable } from 'components/widgets';
+import { getDefaultNavigationParams } from 'components/widgets/common/utils';
 import { PatternGrid } from './patternGrid';
 import styles from './mostPopularPatterns.scss';
 
@@ -69,21 +69,21 @@ export class MostPopularPatterns extends Component {
   }
 
   onPatternClick = (patternName) => {
-    const { widget } = this.props;
+    const { widget, project } = this.props;
     const { selectedAttribute } = this.state;
 
     const launchesLimit = widget.contentParameters.itemsCount;
     const compositeAttribute = `${
       widget.contentParameters.widgetOptions.attributeKey
     }:${selectedAttribute}`;
-    const navigationParams = this.getDefaultNavigationParams(
+    const defaultNavigationParams = getDefaultNavigationParams(
+      project,
       widget.appliedFilters[0].id,
-      patternName,
-      compositeAttribute,
-      launchesLimit,
+      TEST_ITEMS_TYPE_LIST,
     );
+    const metaParams = this.getNavigationMetaParams(patternName, compositeAttribute, launchesLimit);
 
-    this.props.navigate(navigationParams);
+    this.props.navigate(Object.assign(defaultNavigationParams, metaParams));
   };
 
   onChangeAttribute = (newAttribute) =>
@@ -91,13 +91,7 @@ export class MostPopularPatterns extends Component {
       selectedAttribute: newAttribute,
     });
 
-  getDefaultNavigationParams = (filterId, patternName, compositeAttribute, launchesLimit) => ({
-    payload: {
-      projectId: this.props.project,
-      filterId,
-      testItemIds: TEST_ITEMS_TYPE_LIST,
-    },
-    type: TEST_ITEM_PAGE,
+  getNavigationMetaParams = (patternName, compositeAttribute, launchesLimit) => ({
     meta: {
       query: createNamespacedQuery(
         {

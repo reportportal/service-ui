@@ -255,11 +255,15 @@ function* watchUpdatePAState() {
 }
 
 function* fetchProject({ payload: { projectId, isAdminAccess } }) {
-  const project = yield call(fetch, URLS.project(projectId));
-  yield put(fetchProjectSuccessAction(project));
-  yield put(setProjectIntegrationsAction(project.integrations));
-  if (!isAdminAccess) {
-    yield put(fetchProjectPreferencesAction(projectId));
+  try {
+    const project = yield call(fetch, URLS.project(projectId));
+    yield put(fetchProjectSuccessAction(project));
+    yield put(setProjectIntegrationsAction(project.integrations));
+    if (!isAdminAccess) {
+      yield put(fetchProjectPreferencesAction(projectId));
+    }
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
   }
 }
 

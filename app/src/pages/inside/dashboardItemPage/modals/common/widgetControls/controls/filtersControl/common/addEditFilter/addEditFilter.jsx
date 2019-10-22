@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import track from 'react-tracking';
 import { injectIntl, intlShape } from 'react-intl';
 import { addFilteringFieldToConditions } from 'controllers/filter';
 import { LEVEL_LAUNCH } from 'common/constants/launchLevels';
@@ -9,21 +10,28 @@ import { BigButton } from 'components/buttons/bigButton';
 import { FilterEntitiesContainer } from 'components/filterEntities/containers';
 import { EntitiesGroup } from 'components/filterEntities/entitiesGroup';
 import { FiltersSorting } from 'pages/inside/common/filtersSorting';
+import { ENTITY_NUMBER } from 'components/filterEntities/constants';
 import styles from './addEditFilter.scss';
 
 const cx = classNames.bind(styles);
 
+@track()
 @injectIntl
 export class AddEditFilter extends Component {
   static propTypes = {
     intl: intlShape,
     filter: PropTypes.object.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
     isValid: PropTypes.bool,
     blockTitle: PropTypes.object,
     onSubmit: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
     customBlock: PropTypes.element,
+    eventsInfo: PropTypes.object,
   };
 
   static defaultProps = {
@@ -34,6 +42,7 @@ export class AddEditFilter extends Component {
     onSubmit: () => {},
     onCancel: () => {},
     onChange: () => {},
+    eventsInfo: {},
   };
 
   getFilterEntities = () => {
@@ -50,8 +59,9 @@ export class AddEditFilter extends Component {
   };
 
   handleEntitiesChange = (conditions) => {
-    const { filter, onChange } = this.props;
+    const { filter, onChange, tracking, eventsInfo } = this.props;
 
+    tracking.trackEvent(eventsInfo.selectParamsForFilter);
     onChange({
       ...filter,
       conditions: addFilteringFieldToConditions(conditions),
@@ -59,7 +69,7 @@ export class AddEditFilter extends Component {
   };
 
   handleOrdersChange = (newSortingColumn) => {
-    const { filter, onChange } = this.props;
+    const { filter, onChange, tracking, eventsInfo } = this.props;
     const { orders } = filter;
 
     const currentOrder = filter.orders.length ? filter.orders[0] : {};
@@ -70,8 +80,13 @@ export class AddEditFilter extends Component {
       isAsc: sortingColumn === newSortingColumn ? !isAsc : true,
     };
 
-    const newOrders = [sortObject, ...orders.slice(1)];
+    const newOrders = [sortObject];
+    const numberColumnIndex = orders.findIndex((o) => o.sortingColumn === ENTITY_NUMBER);
+    if (numberColumnIndex >= 0) {
+      newOrders.push(orders[numberColumnIndex]);
+    }
 
+    tracking.trackEvent(eventsInfo.sortingSelectParameters);
     onChange({
       ...filter,
       orders: newOrders,

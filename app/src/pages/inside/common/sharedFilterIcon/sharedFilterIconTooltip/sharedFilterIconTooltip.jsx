@@ -21,5 +21,5 @@ SharedFilterIconTooltip.propTypes = {
 
 SharedFilterIconTooltip.defaultProps = {
   currentUser: '',
-  owner: '',
+  owner: undefined,
 };

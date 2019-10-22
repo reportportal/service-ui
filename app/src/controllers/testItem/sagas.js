@@ -103,6 +103,10 @@ function* fetchTestItems({ payload = {} }) {
     launchId = parentItem ? parentItem.launchId : launchId;
   }
 
+  if (!isTestItemsList && !launchId) {
+    return;
+  }
+
   if (itemIds.length > 1) {
     parentId = itemIds[itemIds.length - 1];
   }

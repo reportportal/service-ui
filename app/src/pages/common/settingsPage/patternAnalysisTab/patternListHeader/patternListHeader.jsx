@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Parser from 'html-react-parser';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
@@ -18,7 +19,8 @@ export const messages = defineMessages({
   },
   enablePA: {
     id: 'PatternAnalysis.enablePA',
-    defaultMessage: 'Enable pattern-analysis to the project',
+    defaultMessage:
+      'If ON - analysis starts as soon as any launch finished<br/>If OFF - not automatic, but can be invoked manually',
   },
   createPattern: {
     id: 'PatternAnalysis.createPattern',
@@ -63,15 +65,13 @@ export class PatternListHeader extends Component {
     return (
       <div className={cx('pattern-list-header')}>
         <span className={cx('caption')}>{formatMessage(messages.patternAnalysis)}</span>
-        <span className={cx('switcher')}>
-          <InputBigSwitcher
-            disabled={readOnly}
-            mobileDisabled
-            value={PAState}
-            onChange={updatePAState}
-          />
-        </span>
-        <span className={cx('description')}>{formatMessage(messages.enablePA)}</span>
+        <InputBigSwitcher
+          disabled={readOnly}
+          mobileDisabled
+          value={PAState}
+          onChange={updatePAState}
+        />
+        <p className={cx('description')}>{Parser(formatMessage(messages.enablePA))}</p>
         <span className={cx('create-button')}>
           <GhostButton disabled={readOnly} mobileDisabled icon={PlusIcon} onClick={onAddPattern}>
             {formatMessage(messages.createPattern)}

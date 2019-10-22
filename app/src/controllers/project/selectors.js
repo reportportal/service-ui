@@ -122,3 +122,6 @@ export const getDefectTypeSelector = createSelector(subTypesSelector, (subTypes)
 export const patternsSelector = (state) => projectConfigSelector(state).patterns || [];
 export const PAStateSelector = (state) =>
   !!(attributesSelector(state)[PA_ATTRIBUTE_ENABLED_KEY].toString() === 'true');
+export const enabledPattersSelector = createSelector(patternsSelector, (patterns) =>
+  patterns.filter((pattern) => pattern.enabled),
+);

@@ -78,8 +78,10 @@ function* fetchLaunches() {
         .filter(notEmptyConditionsPredicate)
         .reduce((res, condition) => ({ ...res, [condition.filteringField]: condition }), {}),
     );
-    if (activeFilter.orders && activeFilter.orders[0]) {
-      const order = activeFilter.orders[0];
+    if (activeFilter.orders && activeFilter.orders.length > 0) {
+      const order =
+        activeFilter.orders.find((o) => o.sortingColumn !== ENTITY_NUMBER) ||
+        activeFilter.orders[0];
       filtersQuery = {
         ...filtersQuery,
         [SORTING_KEY]: formatSortingString(

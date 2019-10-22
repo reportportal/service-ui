@@ -8,4 +8,6 @@ export {
   getLaunchAxisTicks,
   getUpdatedFilterWithTime,
   range,
+  getChartDefaultProps,
+  getDefaultNavigationParams,
 } from './utils';

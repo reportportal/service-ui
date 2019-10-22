@@ -38,14 +38,12 @@ import { defectTypesSelector } from 'controllers/project';
 import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { FAILED, INTERRUPTED } from 'common/constants/testStatuses';
-import { TooltipWrapper } from '../../../common/tooltip';
 import { C3Chart } from '../../../common/c3chart';
 import chartStyles from './launchExecutionAndIssueStatistics.scss';
 import { Legend } from '../../../common/legend';
-import { LaunchExecutionAndIssueStatisticsTooltip } from './launchExecutionAndIssueStatisticsTooltip';
-import { getPercentage, getDefectItems, getChartData } from './chartUtils';
-import { messages } from './messages';
+import { getPercentage, getDefectItems, getChartData, isSmallDonutChartView } from './chartUtils';
 import { getItemNameConfig } from '../../../common/utils';
+import { IssueTypeStatTooltip } from '../common/issueTypeStatTooltip';
 
 const chartCx = classNames.bind(chartStyles);
 const getResult = (widget) => widget.content.result[0] || widget.content.result;
@@ -148,7 +146,7 @@ export class LaunchExecutionChart extends Component {
       .select('.c3-chart-arcs-title')
       .attr('dy', onStatusPageMode ? -5 : -15)
       .append('tspan')
-      .attr('dy', onStatusPageMode ? 15 : 30)
+      .attr('dy', onStatusPageMode || isSmallDonutChartView(this.height, this.width) ? 15 : 30)
       .attr('x', 0)
       .attr('fill', '#666')
       .text('SUM');
@@ -180,12 +178,14 @@ export class LaunchExecutionChart extends Component {
     if (!id) {
       const appliedWidgetFilterId = widget.appliedFilters[0].id;
       const launchesLimit = widget.contentParameters.itemsCount;
+      const isLatest = widget.contentParameters.widgetOptions.latest;
       const activeFilter = launchFilters.filter((filter) => filter.id === appliedWidgetFilterId)[0];
       const activeFilterId = (activeFilter && activeFilter.id) || appliedWidgetFilterId;
 
       link = getStatisticsLink({
         statuses: this.getLinkParametersStatuses(nameConfig),
         launchesLimit,
+        isLatest,
       });
       navigationParams = this.getDefaultParamsOverallStatisticsWidget(activeFilterId);
     } else {
@@ -290,6 +290,7 @@ export class LaunchExecutionChart extends Component {
       },
       onrendered: this.renderTotalLabel,
     };
+    this.configCreationTimeStamp = Date.now();
 
     if (!onStatusPageMode) {
       this.statusConfig.data.onclick = this.onChartClick;
@@ -326,9 +327,12 @@ export class LaunchExecutionChart extends Component {
         height: newHeight,
       });
       this.height = newHeight;
+      this.width = newWidth;
+      this.forceUpdate();
     } else if (this.width !== newWidth) {
       this.chart.flush();
       this.width = newWidth;
+      this.forceUpdate();
     }
   };
 
@@ -342,21 +346,18 @@ export class LaunchExecutionChart extends Component {
     }
   };
 
-  // This function is a reimplementation of its d3 counterpart, and it needs 4 arguments of which 2 are not used here.
-  // These two are named a and b in the original implementation.
-
   renderStatusContents = (data, a, b, color) => {
-    const launchData = this.statusItems.find((item) => item.id === data[0].id);
+    const {
+      intl: { formatMessage },
+    } = this.props;
+    const { value, ratio, id } = data[0];
 
     return ReactDOMServer.renderToStaticMarkup(
-      <TooltipWrapper>
-        <LaunchExecutionAndIssueStatisticsTooltip
-          launchNumber={data[0].value}
-          duration={getPercentage(data[0].ratio)}
-          color={color(launchData.name)}
-          itemName={this.props.intl.formatMessage(messages[launchData.name.split('$total')[0]])}
-        />
-      </TooltipWrapper>,
+      <IssueTypeStatTooltip
+        itemsCount={`${value} (${getPercentage(ratio)}%)`}
+        color={color(id)}
+        issueStatNameProps={{ itemName: id, defectTypes: {}, formatMessage }}
+      />,
     );
   };
 
@@ -364,7 +365,9 @@ export class LaunchExecutionChart extends Component {
     const { isConfigReady } = this.state;
     const { isPreview, uncheckedLegendItems, onStatusPageMode } = this.props;
     const classes = chartCx('container', { 'preview-view': isPreview });
-    const chartClasses = chartCx('c3', { 'small-view': this.height <= 250 });
+    const chartClasses = chartCx('c3', {
+      'small-view': isSmallDonutChartView(this.height, this.width),
+    });
     const legendItems = this.statusItems.map((item) => item.id);
 
     return (
@@ -390,6 +393,7 @@ export class LaunchExecutionChart extends Component {
                 config={this.statusConfig}
                 onChartCreated={this.onStatusChartCreated}
                 className={chartClasses}
+                configCreationTimeStamp={this.configCreationTimeStamp}
               />
             </div>
           </div>

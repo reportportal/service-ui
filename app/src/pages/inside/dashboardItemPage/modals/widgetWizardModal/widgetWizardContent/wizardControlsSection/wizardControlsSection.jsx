@@ -70,6 +70,7 @@ export class WizardControlsSection extends Component {
             widget={widgets.find((widget) => widget.id === activeWidgetId)}
             onSubmit={this.props.nextStep}
             onDisableButtons={this.handleDisableButtons}
+            eventsInfo={this.props.eventsInfo}
           />
         );
       case 2:

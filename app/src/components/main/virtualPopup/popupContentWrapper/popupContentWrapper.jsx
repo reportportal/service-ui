@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import isEqual from 'fast-deep-equal';
 
@@ -20,9 +20,5 @@ export class PopupContentWrapper extends PureComponent {
     }
   }
 
-  render() {
-    const { children } = this.props;
-
-    return <div>{children}</div>;
-  }
+  render = () => this.props.children;
 }

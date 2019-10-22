@@ -42,6 +42,10 @@ export function setSessionItem(key, value) {
   return sessionStorage.setItem(key, JSON.stringify(value));
 }
 
+export function removeSessionItem(key) {
+  sessionStorage.removeItem(key);
+}
+
 export function updateSessionItem(key, value = {}) {
   const previousItem = getSessionItem(key) || {};
   return setSessionItem(key, { ...previousItem, ...value });

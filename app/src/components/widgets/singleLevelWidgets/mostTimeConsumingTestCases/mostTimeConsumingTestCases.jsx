@@ -23,7 +23,7 @@ const localMessages = defineMessages({
 @injectIntl
 @connect(
   (state) => ({
-    project: activeProjectSelector(state),
+    projectId: activeProjectSelector(state),
   }),
   {
     navigate: (linkAction) => linkAction,
@@ -34,7 +34,7 @@ export class MostTimeConsumingTestCases extends Component {
     intl: intlShape.isRequired,
     widget: PropTypes.object.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
-    project: PropTypes.string.isRequired,
+    projectId: PropTypes.string.isRequired,
     navigate: PropTypes.func.isRequired,
     isPreview: PropTypes.bool,
     height: PropTypes.number,
@@ -49,14 +49,14 @@ export class MostTimeConsumingTestCases extends Component {
 
   launchNameClickHandler = () => {
     const {
-      project,
+      projectId,
       widget: { content: { latestLaunch = {} } = {} },
       navigate,
     } = this.props;
 
     const navigationParams = {
       payload: {
-        projectId: project,
+        projectId,
         filterId: ALL,
         testItemIds: latestLaunch.id,
       },
@@ -77,7 +77,7 @@ export class MostTimeConsumingTestCases extends Component {
       height,
       isPreview,
       navigate,
-      project,
+      projectId,
       observer,
       container,
     } = this.props;
@@ -97,7 +97,7 @@ export class MostTimeConsumingTestCases extends Component {
             widget={widget}
             height={height}
             isPreview={isPreview}
-            project={project}
+            projectId={projectId}
             navigate={navigate}
             observer={observer}
             container={container}

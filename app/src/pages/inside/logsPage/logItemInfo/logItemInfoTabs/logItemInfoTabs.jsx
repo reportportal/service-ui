@@ -73,7 +73,6 @@ export class LogItemInfoTabs extends Component {
     loading: PropTypes.bool.isRequired,
     onChangePage: PropTypes.func.isRequired,
     onChangeLogLevel: PropTypes.func.isRequired,
-    onHighlightRow: PropTypes.func.isRequired,
     activeRetry: PropTypes.object.isRequired,
     retryId: PropTypes.number.isRequired,
     logId: PropTypes.number.isRequired,
@@ -145,7 +144,6 @@ export class LogItemInfoTabs extends Component {
       intl: { formatMessage },
       onChangePage,
       onChangeLogLevel,
-      onHighlightRow,
       activeRetry,
       logItem,
     } = this.props;
@@ -165,7 +163,6 @@ export class LogItemInfoTabs extends Component {
         eventInfo: LOG_PAGE_EVENTS.STACK_TRACE_TAB,
         component: StackTrace,
         componentProps: {
-          onHighlightRow,
           onChangePage,
           onChangeLogLevel,
           logItem,

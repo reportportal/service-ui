@@ -65,7 +65,11 @@ export class LaunchesQuantity extends Component {
       });
     }
 
-    return { content: data };
+    return {
+      content: {
+        result: data,
+      },
+    };
   };
 
   render() {

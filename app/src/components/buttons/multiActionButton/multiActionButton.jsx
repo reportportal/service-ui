@@ -21,6 +21,7 @@
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import track from 'react-tracking';
 import React, { Component } from 'react';
 import Parser from 'html-react-parser';
 import ArrowIcon from 'common/img/arrow-down-inline.svg';
@@ -28,8 +29,13 @@ import styles from './multiActionButton.scss';
 
 const cx = classNames.bind(styles);
 
+@track()
 export class MultiActionButton extends Component {
   static propTypes = {
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
     title: PropTypes.string,
     items: PropTypes.arrayOf(
       PropTypes.shape({
@@ -43,6 +49,7 @@ export class MultiActionButton extends Component {
     onClick: PropTypes.func,
     disabled: PropTypes.bool,
     color: PropTypes.string,
+    toggleMenuEventInfo: PropTypes.object,
   };
   static defaultProps = {
     title: '',
@@ -51,6 +58,7 @@ export class MultiActionButton extends Component {
     disabled: false,
     color: 'booger',
     onClick: () => {},
+    toggleMenuEventInfo: {},
   };
 
   state = {
@@ -72,6 +80,9 @@ export class MultiActionButton extends Component {
   };
 
   toggleMenu = () => {
+    if (!this.state.opened) {
+      this.props.tracking.trackEvent(this.props.toggleMenuEventInfo);
+    }
     this.setState({ opened: !this.state.opened });
   };
 

@@ -5,6 +5,7 @@ import {
   STATS_PASSED,
   STATS_FAILED,
 } from 'common/constants/statistics';
+import { getItemNameConfig } from 'components/widgets/common/utils';
 
 export const getStatisticsStatuses = (type) => {
   switch (type) {
@@ -28,3 +29,17 @@ export const getStatisticsStatuses = (type) => {
 };
 
 export const getPassingRate = (passed = 0, total) => `${Math.round(100 * passed / total)}%`;
+
+export const groupFieldsWithDefectTypes = (contentFields) =>
+  contentFields.reduce((acc, item) => {
+    const { defectType, locator } = getItemNameConfig(item);
+    const itemKey = locator && defectType ? defectType : item;
+
+    if (acc[itemKey]) {
+      acc[itemKey].push(item);
+    } else {
+      acc[itemKey] = [item];
+    }
+
+    return acc;
+  }, {});

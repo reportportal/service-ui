@@ -7,7 +7,6 @@ import { injectIntl, intlShape } from 'react-intl';
 import { NoDataAvailable } from 'components/widgets';
 import { VirtualPopup } from 'components/main/virtualPopup';
 import { ChartJS } from 'components/widgets/common/chartjs';
-import { ActionsPopup } from 'components/widgets/common/actionsPopup';
 import {
   defectLinkSelector,
   statisticsLinkSelector,
@@ -16,7 +15,6 @@ import {
 } from 'controllers/testItem';
 import { defectTypesSelector } from 'controllers/project';
 import { activeProjectSelector } from 'controllers/user';
-import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { PASSED, FAILED, SKIPPED, INTERRUPTED, IN_PROGRESS } from 'common/constants/testStatuses';
 import { formatAttribute } from 'common/utils/attributeUtils';
 import SearchIcon from 'common/img/search-icon-inline.svg';
@@ -24,7 +22,12 @@ import FiltersIcon from 'common/img/filters-icon-inline.svg';
 import { DEFECTS, TOTAL_KEY } from '../../common/constants';
 import { getChartData } from './chartjsConfig';
 import { CumulativeChartLegend } from './legend/cumulativeChartLegend';
-import { getDefectTypeLocators, getItemNameConfig } from '../../common/utils';
+import { ActionsPopup } from './actionsPopup';
+import {
+  getDefectTypeLocators,
+  getItemNameConfig,
+  getDefaultNavigationParams,
+} from '../../common/utils';
 import styles from './cumulativeTrendChart.scss';
 
 const cx = classNames.bind(styles);
@@ -172,15 +175,6 @@ export class CumulativeTrendChart extends PureComponent {
     },
   ];
 
-  getDefaultNavigationParams = (filterId) => ({
-    payload: {
-      projectId: this.props.project,
-      filterId,
-      testItemIds: TEST_ITEMS_TYPE_LIST,
-    },
-    type: TEST_ITEM_PAGE,
-  });
-
   updateActiveAttributes = (actionSuccessCallback) => {
     const { selectedItem, activeAttributes } = this.state;
     const activeAttribute = {
@@ -238,8 +232,19 @@ export class CumulativeTrendChart extends PureComponent {
 
   navigateToTestListView = () => {
     const { selectedItem, activeAttributes } = this.state;
-    const { widget, userSettings, getStatisticsLink, getDefectLink, defectTypes } = this.props;
-    const navigationParams = this.getDefaultNavigationParams(widget.appliedFilters[0].id);
+    const {
+      widget,
+      userSettings,
+      getStatisticsLink,
+      getDefectLink,
+      defectTypes,
+      project,
+    } = this.props;
+    const navigationParams = getDefaultNavigationParams(
+      project,
+      widget.appliedFilters[0].id,
+      TEST_ITEMS_TYPE_LIST,
+    );
     let link;
 
     if (userSettings.defectTypes) {

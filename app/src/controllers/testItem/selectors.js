@@ -247,6 +247,7 @@ export const statisticsLinkSelector = createSelector(
   (query, payload, testItemIds, isDebugMode, testItemIdsArray) => (ownProps) => {
     const linkPayload = (ownProps.ownLinkParams && ownProps.ownLinkParams.payload) || payload;
     const launchesLimit = ownProps.launchesLimit;
+    const isLatest = ownProps.isLatest;
     const page =
       (ownProps.ownLinkParams && ownProps.ownLinkParams.page) || getNextPage(isDebugMode, true);
     return createLink(
@@ -263,6 +264,7 @@ export const statisticsLinkSelector = createSelector(
             'filter.in.status': ownProps.statuses && ownProps.statuses.join(','),
             'filter.has.compositeAttribute': ownProps.compositeAttribute,
             launchesLimit,
+            isLatest,
           },
           getQueryNamespace(testItemIdsArray ? testItemIdsArray.length : 0),
         ),
@@ -281,6 +283,7 @@ export const defectLinkSelector = createSelector(
   (query, payload, testItemIds, isDebugMode, testItemIdsArray) => (ownProps) => {
     const linkPayload = (ownProps.ownLinkParams && ownProps.ownLinkParams.payload) || payload;
     const launchesLimit = ownProps.launchesLimit;
+    const isLatest = ownProps.isLatest;
     let levelIndex = 0;
     if (testItemIdsArray.length >= 0) {
       levelIndex = !ownProps.itemId ? testItemIdsArray.length - 1 : testItemIdsArray.length;
@@ -306,6 +309,7 @@ export const defectLinkSelector = createSelector(
             'filter.in.issueType': getDefectsString(ownProps.defects),
             'filter.has.compositeAttribute': ownProps.compositeAttribute,
             launchesLimit,
+            isLatest,
           },
           getQueryNamespace(levelIndex),
         ),

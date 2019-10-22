@@ -26,11 +26,10 @@ import {
   DELETE_PATTERN,
   MATCHED_PATTERN,
 } from 'common/constants/actionTypes';
-import { URLS } from 'common/urls';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { externalSystemSelector } from 'controllers/project';
-import { Image } from 'components/main/image';
-import DefaultUserImage from 'common/img/default-user-avatar.png';
+import { projectIdSelector } from 'controllers/pages';
+import { UserAvatar } from 'pages/inside/common/userAvatar';
 import { DefaultProjectSettings } from './activities/defaultProjectSettings';
 import { AnalysisProperties } from './activities/analysisProperties';
 import { AnalysisConfigurations } from './activities/analysisConfigurations';
@@ -148,11 +147,13 @@ const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
 // TODO: rewrite it when integrations will be added
 @connect((state) => ({
   hasBts: externalSystemSelector(state).length > 0,
+  projectId: projectIdSelector(state),
 }))
 @injectIntl
 export class ProjectActivity extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
+    projectId: PropTypes.string.isRequired,
     widget: PropTypes.object,
     hasBts: PropTypes.bool,
   };
@@ -211,13 +212,6 @@ export class ProjectActivity extends Component {
       return days[dt.getDay()];
     }
     return `${intl.formatMessage(messages[months[dt.getMonth()]])} ${dt.getDate()}`;
-  };
-
-  getUserAvatar = (activity) => {
-    const avatarUrl = URLS.dataUserPhoto(activity.user);
-    return (
-      <Image className={cx('avatar')} src={avatarUrl} alt="avatar" fallback={DefaultUserImage} />
-    );
   };
 
   isValidActivity = (activity) =>
@@ -281,7 +275,12 @@ export class ProjectActivity extends Component {
               </Fragment>
             ) : (
               <Fragment>
-                {this.getUserAvatar(activity)}
+                <UserAvatar
+                  className={cx('avatar-wrapper')}
+                  userId={activity.user}
+                  projectId={this.props.projectId}
+                  alt="avatar"
+                />
                 <div className={cx('activity-wrapper')}>
                   {ActivityComponent}
                   <AbsRelTime

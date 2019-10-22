@@ -16,7 +16,6 @@ import {
   loadingSelector,
 } from 'controllers/dashboard';
 import { DASHBOARD_PAGE, DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
-import { NoItemMessage } from 'components/main/noItemMessage';
 import { userInfoSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { withFilter } from 'controllers/filter';
@@ -159,8 +158,9 @@ export class DashboardPage extends Component {
   };
 
   onAddDashboardItem = () => {
-    const { showModal, addDashboard } = this.props;
+    const { showModal, addDashboard, tracking } = this.props;
 
+    tracking.trackEvent(DASHBOARD_PAGE_EVENTS.ADD_NEW_WIDGET_EMPTY_PAGE);
     showModal({
       id: 'dashboardAddEditModal',
       data: {
@@ -193,15 +193,7 @@ export class DashboardPage extends Component {
   };
 
   render() {
-    const {
-      intl,
-      gridType,
-      userInfo,
-      onFilterChange,
-      filter,
-      dashboardItems,
-      loading,
-    } = this.props;
+    const { gridType, userInfo, onFilterChange, filter, dashboardItems, loading } = this.props;
     const eventsInfo = {
       closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_ADD_NEW_DASHBOARD_MODAL,
       changeDescription: DASHBOARD_PAGE_EVENTS.ENTER_DESCRIPTION_ADD_NEW_DASHBOARD_MODAL,
@@ -223,19 +215,16 @@ export class DashboardPage extends Component {
             onTableViewToggle={this.toggleTableView}
             gridType={gridType}
           />
-          {filter && dashboardItems.length === 0 ? (
-            <NoItemMessage message={intl.formatMessage(messages.noResults)} />
-          ) : (
-            <DashboardList
-              dashboardItems={dashboardItems}
-              gridType={gridType}
-              userInfo={userInfo}
-              loading={loading}
-              onDeleteItem={this.onDeleteDashboardItem}
-              onEditItem={this.onEditDashboardItem}
-              onAddItem={this.onAddDashboardItem}
-            />
-          )}
+          <DashboardList
+            dashboardItems={dashboardItems}
+            gridType={gridType}
+            userInfo={userInfo}
+            loading={loading}
+            onDeleteItem={this.onDeleteDashboardItem}
+            onEditItem={this.onEditDashboardItem}
+            onAddItem={this.onAddDashboardItem}
+            filter={filter}
+          />
         </PageSection>
       </PageLayout>
     );

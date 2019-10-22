@@ -6,7 +6,6 @@ export {
   deleteItemsAction,
   setPageLoadingAction,
   fetchTestItemsFromLogPageAction,
-  fetchTestItemsSuccessAction,
 } from './actionCreators';
 export { fetchParentItems, testItemsSagas } from './sagas';
 export { SET_PAGE_LOADING } from './constants';

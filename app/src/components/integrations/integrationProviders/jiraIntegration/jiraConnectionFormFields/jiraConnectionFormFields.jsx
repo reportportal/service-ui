@@ -55,7 +55,8 @@ export class JiraConnectionFormFields extends Component {
           required
           disabled={disabled}
           lineAlign={lineAlign}
-          validate={commonValidators.requiredField}
+          maxLength="55"
+          validate={commonValidators.btsIntegrationName}
         >
           <FieldErrorHint>
             <Input mobileDisabled />
@@ -79,6 +80,7 @@ export class JiraConnectionFormFields extends Component {
           required
           disabled={disabled || editAuthMode}
           lineAlign={lineAlign}
+          maxLength="55"
           validate={commonValidators.btsProject}
         >
           <FieldErrorHint>

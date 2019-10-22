@@ -9,7 +9,6 @@ const calculateTooltipParams = (data, color, customProps) => {
 
   return {
     itemName: name,
-    startTime: null,
     itemCases: `${value} ${formatMessage(messages.cases)}`,
     color: color[id],
     issueStatNameProps: { itemName: formatMessage(messages[id]) },

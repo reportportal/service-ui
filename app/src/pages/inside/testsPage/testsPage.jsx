@@ -18,7 +18,7 @@ import {
   validationErrorsSelector,
   selectTestsAction,
 } from 'controllers/test';
-import { withPagination } from 'controllers/pagination';
+import { DEFAULT_PAGINATION, SIZE_KEY, PAGE_KEY, withPagination } from 'controllers/pagination';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import {
   namespaceSelector,
@@ -102,10 +102,10 @@ export class TestsPage extends Component {
     onEditItems: () => {},
     tests: [],
     selectedTests: [],
-    activePage: 1,
+    activePage: DEFAULT_PAGINATION[PAGE_KEY],
     itemCount: null,
     pageCount: null,
-    pageSize: 20,
+    pageSize: DEFAULT_PAGINATION[SIZE_KEY],
     sortingColumn: null,
     sortingDirection: null,
     fetchTestItemsAction: () => {},
@@ -147,13 +147,13 @@ export class TestsPage extends Component {
   onHighlightRow = (highlightedRowId) => {
     this.setState({
       highlightedRowId,
-      isGridRowHighlighted: false,
+      isGridRowHighlighted: true,
     });
   };
 
   onGridRowHighlighted = () => {
     this.setState({
-      isGridRowHighlighted: true,
+      isGridRowHighlighted: false,
     });
   };
 

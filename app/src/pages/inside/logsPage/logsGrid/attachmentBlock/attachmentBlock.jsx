@@ -53,7 +53,7 @@ export class AttachmentBlock extends Component {
         ) : (
           <Image
             className={cx('image')}
-            src={getFileIconSource(value, activeProject)}
+            src={getFileIconSource(value, activeProject, true)}
             alt={value.contentType}
           />
         )}

@@ -4,7 +4,6 @@ import { UniqueBugsTable } from './uniqueBugsTable';
 import { LaunchesTable } from './launchesTable';
 import { ProjectActivity } from './projectActivity';
 import { ProductStatus } from './productStatus';
-import { MostPopularPatterns } from '../../multiLevelWidgets/mostPopularPatterns';
 
 export {
   FlakyTests,
@@ -13,5 +12,4 @@ export {
   LaunchesTable,
   ProjectActivity,
   ProductStatus,
-  MostPopularPatterns,
 };

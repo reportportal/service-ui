@@ -1,4 +1,9 @@
-import { validate as commonValidate, commonValidators, bindMessageToValidator } from 'common/utils';
+import {
+  validate as commonValidate,
+  commonValidators,
+  bindMessageToValidator,
+  getSessionItem,
+} from 'common/utils';
 import {
   INCLUDE_ATTACHMENTS_KEY,
   INCLUDE_COMMENTS_KEY,
@@ -61,3 +66,19 @@ export const getDataSectionConfig = (value) => ({
   [INCLUDE_LOGS_KEY]: value,
   [INCLUDE_COMMENTS_KEY]: value,
 });
+
+export const getDefaultIssueModalConfig = (namedIntegrations, userId) => {
+  const { pluginName = Object.keys(namedIntegrations)[0], integrationId, ...config } =
+    getSessionItem(`${userId}_settings`) || {};
+
+  const integration =
+    namedIntegrations[pluginName].find((item) => item.id === integrationId) ||
+    namedIntegrations[pluginName][0] ||
+    {};
+
+  return {
+    ...config,
+    integration,
+    pluginName,
+  };
+};

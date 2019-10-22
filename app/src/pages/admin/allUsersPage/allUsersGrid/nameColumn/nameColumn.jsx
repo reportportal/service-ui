@@ -4,14 +4,13 @@ import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import { fetch } from 'common/utils';
-import DefaultUserImage from 'common/img/default-user-avatar.png';
 import { ADMINISTRATOR, USER } from 'common/constants/accountRoles';
-import { userIdSelector } from 'controllers/user';
+import { userIdSelector, activeProjectSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
 import { fetchAllUsersAction } from 'controllers/administrate/allUsers';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { showModalAction } from 'controllers/modal';
-import { Image } from 'components/main/image';
+import { UserAvatar } from 'pages/inside/common/userAvatar';
 import styles from './nameColumn.scss';
 
 const cx = classNames.bind(styles);
@@ -29,6 +28,7 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     currentUser: userIdSelector(state),
+    activeProject: activeProjectSelector(state),
   }),
   {
     showModal: showModalAction,
@@ -39,17 +39,19 @@ const messages = defineMessages({
 @injectIntl
 export class NameColumn extends Component {
   static propTypes = {
+    intl: intlShape.isRequired,
+    showNotification: PropTypes.func.isRequired,
     className: PropTypes.string.isRequired,
     value: PropTypes.object,
     currentUser: PropTypes.string,
-    intl: intlShape.isRequired,
+    activeProject: PropTypes.string,
     showModal: PropTypes.func,
     fetchAllUsers: PropTypes.func,
-    showNotification: PropTypes.func.isRequired,
   };
   static defaultProps = {
     value: {},
     currentUser: '',
+    activeProject: '',
     showModal: () => {},
     fetchAllUsers: () => {},
   };
@@ -83,35 +85,38 @@ export class NameColumn extends Component {
   };
 
   render() {
-    const { value, className, currentUser, intl } = this.props;
+    const {
+      intl: { formatMessage },
+      activeProject,
+      value,
+      className,
+      currentUser,
+    } = this.props;
     return (
       <div className={cx('name-col', className)}>
         {value.photoLoaded && (
-          <div className={cx('avatar-wrapper')}>
-            <Image
-              className={cx('avatar')}
-              src={URLS.dataUserPhoto(value.userId)}
-              alt="avatar"
-              fallback={DefaultUserImage}
-            />
-          </div>
+          <UserAvatar
+            className={cx('avatar-wrapper')}
+            projectId={activeProject}
+            userId={value.userId}
+          />
         )}
         <span className={cx('name')} title={value.fullName}>
           {value.fullName}
         </span>
         {value.userId === currentUser && (
-          <span className={cx('label', 'you-label')}>{intl.formatMessage(messages.youLabel)}</span>
+          <span className={cx('label', 'you-label')}>{formatMessage(messages.youLabel)}</span>
         )}
         {value.userRole === ADMINISTRATOR ? (
           <span
             className={cx('label', 'admin-label')}
             onClick={value.userId !== currentUser ? this.onChangeAccountRole : undefined}
           >
-            {intl.formatMessage(messages.adminLabel)}
+            {formatMessage(messages.adminLabel)}
           </span>
         ) : (
           <span className={cx('label', 'make-admin-label')} onClick={this.onChangeAccountRole}>
-            {intl.formatMessage(messages.makeAdminLabel)}
+            {formatMessage(messages.makeAdminLabel)}
           </span>
         )}
       </div>

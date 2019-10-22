@@ -1,11 +1,5 @@
 import * as STATUSES from 'common/constants/testStatuses';
-import {
-  TIME_TYPES,
-  getTimeType,
-  validItemsFilter,
-  getListAverage,
-  isValueInterrupted,
-} from './utils';
+import { TIME_TYPES, getTimeType, getListAverage, isValueInterrupted } from './utils';
 
 describe('launchDurationChartUtils', () => {
   describe('getTimeType', () => {
@@ -35,19 +29,6 @@ describe('launchDurationChartUtils', () => {
       };
       expect(isValueInterrupted(interruptedEntry)).toBe(true);
       expect(isValueInterrupted(nonInterruptedEntry)).toBe(false);
-    });
-  });
-
-  describe('validItemsFilter', () => {
-    test('can filter out valid items', () => {
-      const itemStopped = { id: '5bb342ee0274390001975997', status: STATUSES.STOPPED };
-      const itemFailed = { id: '5bb342e60274390001974193', status: STATUSES.FAILED };
-      const itemInterrupted = { id: '5bb342e50274390001973ec7', status: STATUSES.INTERRUPTED };
-      const itemPassed = { id: '5bb342e50274390001973f69', status: STATUSES.PASSED };
-      expect(validItemsFilter(itemStopped)).toBe(true);
-      expect(validItemsFilter(itemFailed)).toBe(true);
-      expect(validItemsFilter(itemInterrupted)).toBe(false);
-      expect(validItemsFilter(itemPassed)).toBe(true);
     });
   });
 

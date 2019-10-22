@@ -108,6 +108,7 @@ export class CommonWidgetControls extends Component {
             name="name"
             validate={widgetNameValidator(formatMessage, widgets, widgetId)}
             placeholder={formatMessage(messages.namePlaceholder)}
+            onChange={() => trackEvent(eventsInfo.changeName)}
           >
             <FieldErrorHint>
               <Input maxLength="128" />

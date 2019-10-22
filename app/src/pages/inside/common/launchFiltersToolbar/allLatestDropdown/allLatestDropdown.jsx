@@ -1,10 +1,12 @@
 import { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import track from 'react-tracking';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import Parser from 'html-react-parser';
 import ArrowDownIcon from 'common/img/arrow-down-inline.svg';
 import { ALL, LATEST } from 'common/constants/reservedFilterIds';
+import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './allLatestDropdown.scss';
 
 const cx = classNames.bind(styles);
@@ -29,9 +31,14 @@ const messages = defineMessages({
 });
 
 @injectIntl
+@track()
 export class AllLatestDropdown extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
     value: PropTypes.string,
     onChange: PropTypes.func,
     onClick: PropTypes.func,
@@ -87,6 +94,16 @@ export class AllLatestDropdown extends Component {
   };
 
   handleOptionClick = (value) => {
+    switch (value) {
+      case ALL:
+        this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.SELECT_ALL_LAUNCHES);
+        break;
+      case LATEST:
+        this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.SELECT_LATEST_LAUNCHES);
+        break;
+      default:
+        break;
+    }
     this.props.onChange(value);
     this.setState({ expanded: false });
   };
@@ -95,7 +112,11 @@ export class AllLatestDropdown extends Component {
     this.props.onClick(this.props.value);
   };
 
-  toggleExpand = () => this.setState({ expanded: !this.state.expanded });
+  toggleExpand = () => {
+    !this.state.expanded &&
+      this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ALL_LAUNCHES_DROPDOWN);
+    return this.setState({ expanded: !this.state.expanded });
+  };
 
   isActive = () => this.props.activeFilterId === ALL || this.props.activeFilterId === LATEST;
 

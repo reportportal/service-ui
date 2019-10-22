@@ -43,14 +43,6 @@ const messages = defineMessages({
     id: 'InstancesSection.globalIntegration',
     defaultMessage: 'Global integration',
   },
-  projectSettingsDefaultTitle: {
-    id: 'InstancesSection.projectSettingsDefaultTitle',
-    defaultMessage: 'Project settings',
-  },
-  globalSettingsDefaultTitle: {
-    id: 'InstancesSection.globalSettingsDefaultTitle',
-    defaultMessage: 'Global settings',
-  },
   resetToGlobalSettingsTitle: {
     id: 'InstancesSection.resetToGlobalSettingsTitle',
     defaultMessage: 'Reset to Global Settings',
@@ -152,24 +144,22 @@ export class InstancesSection extends Component {
   removeProjectIntegrations = () =>
     this.props.removeProjectIntegrationsByTypeAction(this.props.instanceType);
 
-  navigateToNewIntegration = (data) => {
-    const {
-      intl: { formatMessage },
-    } = this.props;
-
-    this.props.onItemClick(data, data.name || formatMessage(messages.projectSettingsDefaultTitle));
-  };
+  navigateToNewIntegration = (data) =>
+    this.props.onItemClick(
+      {
+        ...data,
+        isNew: true,
+      },
+      data.name,
+    );
 
   addProjectIntegration = (formData) => {
+    const { isGlobal, instanceType } = this.props;
     const data = {
       enabled: true,
       integrationParameters: formData,
+      name: formData.integrationName || INTEGRATION_NAMES_TITLES[instanceType],
     };
-    const { isGlobal, instanceType } = this.props;
-
-    if (formData.integrationName) {
-      data.name = formData.integrationName;
-    }
 
     this.props.addIntegrationAction(data, isGlobal, instanceType, this.navigateToNewIntegration);
   };
@@ -254,7 +244,6 @@ export class InstancesSection extends Component {
                 )}
                 items={projectIntegrations}
                 onItemClick={onItemClick}
-                defaultItemTitle={formatMessage(messages.projectSettingsDefaultTitle)}
               />
               {this.multiple &&
                 !disabled && (
@@ -269,7 +258,7 @@ export class InstancesSection extends Component {
         <InstancesList
           blocked={!isGlobal}
           title={formatMessage(
-            isGlobal ? messages.allGlobalIntegrations : globalIntegrationMessage,
+            isGlobal && this.multiple ? messages.allGlobalIntegrations : globalIntegrationMessage,
             {
               pluginName: this.props.title,
             },
@@ -282,7 +271,6 @@ export class InstancesSection extends Component {
                 disabled: isProjectIntegrationsExists,
                 disabledHint: formatMessage(messages.globalIntegrationsDisabledHint),
               })}
-          defaultItemTitle={formatMessage(messages.globalSettingsDefaultTitle)}
         />
         {!globalIntegrations.length && (
           <p className={cx('no-items-message')}>

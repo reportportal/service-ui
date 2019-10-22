@@ -20,6 +20,11 @@ export class LaunchExecutionAndIssueStatisticsControls extends Component {
     initializeControlsForm: PropTypes.func.isRequired,
     formAppearance: PropTypes.object.isRequired,
     onFormAppearanceChange: PropTypes.func.isRequired,
+    eventsInfo: PropTypes.object,
+  };
+
+  static defaultProps = {
+    eventsInfo: {},
   };
 
   constructor(props) {
@@ -43,13 +48,14 @@ export class LaunchExecutionAndIssueStatisticsControls extends Component {
   parseFilterValue = (value) => value && [value];
 
   render() {
-    const { formAppearance, onFormAppearanceChange } = this.props;
+    const { formAppearance, onFormAppearanceChange, eventsInfo } = this.props;
     return (
       <Fragment>
         <FieldProvider name="filters" parse={this.parseFilterValue} format={this.formatFilterValue}>
           <FiltersControl
             formAppearance={formAppearance}
             onFormAppearanceChange={onFormAppearanceChange}
+            eventsInfo={eventsInfo}
           />
         </FieldProvider>
       </Fragment>

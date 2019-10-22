@@ -23,6 +23,7 @@ export class StatusPageContent extends Component {
   };
 
   state = {
+    widgetsData: {},
     loading: true,
   };
 
@@ -48,7 +49,7 @@ export class StatusPageContent extends Component {
 
     Promise.all(widgetsWithUrls.map((item) => fetch(item.getUrl(projectId, interval))))
       .then((responses) => {
-        const itemsData = widgetsWithUrls.reduce(
+        const widgetsData = widgetsWithUrls.reduce(
           (acc, item, index) => ({
             ...acc,
             [item.id]: responses[index],
@@ -56,28 +57,32 @@ export class StatusPageContent extends Component {
           {},
         );
         this.setState({
-          ...itemsData,
+          widgetsData,
           loading: false,
         });
       })
       .catch(() => {
         this.setState({
+          widgetsData: {},
           loading: false,
         });
       });
   };
 
-  renderWidget = (widgetData) => (
-    <StatusPageItem title={this.props.intl.formatMessage(widgetData.title)}>
-      {this.state.loading ? (
-        <div className={cx('status-page-spinner-wrapper')}>
-          <SpinningPreloader />
-        </div>
-      ) : (
-        widgetData.component(this.state[widgetData.source], this.props.interval)
-      )}
-    </StatusPageItem>
-  );
+  renderWidget = (widgetData) => {
+    const widget = this.state.widgetsData[widgetData.source];
+    return (
+      <StatusPageItem title={this.props.intl.formatMessage(widgetData.title)}>
+        {this.state.loading ? (
+          <div className={cx('status-page-spinner-wrapper')}>
+            <SpinningPreloader />
+          </div>
+        ) : (
+          widget && widgetData.component(widget, this.props.interval)
+        )}
+      </StatusPageItem>
+    );
+  };
 
   render() {
     return (

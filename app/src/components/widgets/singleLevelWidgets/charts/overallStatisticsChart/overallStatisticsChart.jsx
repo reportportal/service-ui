@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
+import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { OverallStatisticsPanel } from './overallStatisticsPanel';
-import { OverallStatisticsDonut } from './overallStatisticsDonut';
+import { LaunchExecutionAndIssueStatistics } from '../launchExecutionAndIssueStatistics';
 
 export class OverallStatisticsChart extends React.Component {
   static propTypes = {
@@ -8,13 +9,14 @@ export class OverallStatisticsChart extends React.Component {
   };
 
   views = {
-    panel: (props) => <OverallStatisticsPanel {...props} />,
-    donut: (props) => <OverallStatisticsDonut {...props} />,
+    [MODES_VALUES[CHART_MODES.PANEL_VIEW]]: (props) => <OverallStatisticsPanel {...props} />,
+    [MODES_VALUES[CHART_MODES.DONUT_VIEW]]: (props) => (
+      <LaunchExecutionAndIssueStatistics {...props} />
+    ),
   };
 
   render() {
-    const { widget } = this.props;
-    const { viewMode } = widget.contentParameters.widgetOptions;
+    const { viewMode } = this.props.widget.contentParameters.widgetOptions;
 
     return viewMode ? this.views[viewMode](this.props) : '';
   }

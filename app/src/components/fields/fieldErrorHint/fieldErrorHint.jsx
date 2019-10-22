@@ -41,6 +41,10 @@ const messages = defineMessages({
     id: 'FiltersPage.filterNameLength',
     defaultMessage: 'Filter name length should have size from 3 to 128 characters.',
   },
+  filterNameDuplicateHint: {
+    id: 'FiltersPage.filterNameDuplicateHint',
+    defaultMessage: 'Filter with the same name already exists in system.',
+  },
   sharedWidgetSearchHint: {
     id: 'SharedWidgetsSearch.sharedWidgetSearchHint',
     defaultMessage: 'Value should have size from 3 to 256.',
@@ -154,6 +158,10 @@ const messages = defineMessages({
   projectDuplicateHint: {
     id: 'ProjectsPage.projectDuplicateHint',
     defaultMessage: 'Project with the same name already exists in system',
+  },
+  btsIntegrationNameHint: {
+    id: 'BtsCommonMessages.btsIntegrationNameHint',
+    defaultMessage: 'Integration name should have size from 1 to 55',
   },
   btsUrlHint: {
     id: 'BtsCommonMessages.btsUrlHint',

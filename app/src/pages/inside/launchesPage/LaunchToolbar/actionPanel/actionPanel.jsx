@@ -5,12 +5,14 @@ import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import { canBulkEditLaunches } from 'common/utils/permissions';
+import { CUSTOMER } from 'common/constants/projectRoles';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
 import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
 import { breadcrumbsSelector, restorePathAction } from 'controllers/testItem';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import AddWidgetIcon from 'common/img/add-widget-inline.svg';
 import ImportIcon from 'common/img/import-inline.svg';
 import RefreshIcon from './img/refresh-inline.svg';
@@ -22,33 +24,9 @@ const messages = defineMessages({
     id: 'ActionPanel.actionsBtn',
     defaultMessage: 'Actions',
   },
-  actionBulkEdit: {
-    id: 'ActionPanel.actionBulkEdit',
-    defaultMessage: 'Edit',
-  },
-  actionMerge: {
-    id: 'ActionPanel.actionMerge',
-    defaultMessage: 'Merge',
-  },
   actionCompare: {
     id: 'ActionPanel.actionCompare',
     defaultMessage: 'Compare',
-  },
-  actionMoveToDebug: {
-    id: 'ActionPanel.actionMoveToDebug',
-    defaultMessage: 'Move to debug',
-  },
-  actionMoveToAll: {
-    id: 'ActionPanel.actionMoveToAll',
-    defaultMessage: 'Move to all launches',
-  },
-  actionForceFinish: {
-    id: 'ActionPanel.actionForceFinish',
-    defaultMessage: 'Force finish',
-  },
-  actionDelete: {
-    id: 'ActionPanel.actionDelete',
-    defaultMessage: 'Delete',
   },
   proceedButton: {
     id: 'ActionPanel.proceedButton',
@@ -148,7 +126,7 @@ export class ActionPanel extends Component {
 
     return [
       {
-        label: intl.formatMessage(messages.actionBulkEdit),
+        label: intl.formatMessage(COMMON_LOCALE_KEYS.EDIT),
         value: 'action-bulk-edit',
         hidden: debugMode || !canBulkEditLaunches(accountRole, projectRole),
         onClick: () => {
@@ -158,7 +136,7 @@ export class ActionPanel extends Component {
         },
       },
       {
-        label: intl.formatMessage(messages.actionMerge),
+        label: intl.formatMessage(COMMON_LOCALE_KEYS.MERGE),
         value: 'action-merge',
         hidden: debugMode,
         onClick: onMerge,
@@ -170,24 +148,24 @@ export class ActionPanel extends Component {
         onClick: onCompare,
       },
       {
-        label: intl.formatMessage(messages.actionMoveToDebug),
+        label: intl.formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_DEBUG),
         value: 'action-move-to-debug',
-        hidden: debugMode,
+        hidden: debugMode || projectRole === CUSTOMER,
         onClick: onMove,
       },
       {
-        label: intl.formatMessage(messages.actionMoveToAll),
+        label: intl.formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_ALL_LAUNCHES),
         value: 'action-move-to-all',
         hidden: !debugMode,
         onClick: onMove,
       },
       {
-        label: intl.formatMessage(messages.actionForceFinish),
+        label: intl.formatMessage(COMMON_LOCALE_KEYS.FORCE_FINISH),
         value: 'action-force-finish',
         onClick: onForceFinish,
       },
       {
-        label: intl.formatMessage(messages.actionDelete),
+        label: intl.formatMessage(COMMON_LOCALE_KEYS.DELETE),
         value: 'action-delete',
         onClick: onDelete,
       },

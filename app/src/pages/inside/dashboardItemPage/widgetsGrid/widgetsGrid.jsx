@@ -30,6 +30,7 @@ export class WidgetsGrid extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     activeProject: PropTypes.string.isRequired,
+    currentUser: PropTypes.string.isRequired,
     isFullscreen: PropTypes.bool,
     isModifiable: PropTypes.bool,
     showNotification: PropTypes.func.isRequired,
@@ -39,6 +40,7 @@ export class WidgetsGrid extends Component {
     dashboard: PropTypes.shape({
       widgets: PropTypes.array,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      owner: PropTypes.string,
     }),
   };
 
@@ -48,6 +50,7 @@ export class WidgetsGrid extends Component {
     dashboard: {
       widgets: [],
       id: '',
+      owner: '',
     },
     showWidgetWizard: () => {},
     isPrintMode: false,
@@ -162,10 +165,18 @@ export class WidgetsGrid extends Component {
   isStaticWidget = (widgetType) => STATIC_CHARTS[widgetType];
 
   renderItems = () => {
-    const { widgets = [] } = this.props.dashboard;
+    const {
+      dashboard: { widgets = [], owner },
+      currentUser,
+    } = this.props;
 
     if (widgets.length) {
-      return widgets.map(
+      const newWidgets =
+        this.props.isPrintMode && owner !== currentUser
+          ? widgets.filter((item) => item.share)
+          : widgets;
+
+      return newWidgets.map(
         ({
           widgetPosition: { positionX: x, positionY: y },
           widgetSize: { width: w, height: h },
@@ -194,6 +205,7 @@ export class WidgetsGrid extends Component {
               observer={this.observer}
               isPrintMode={this.props.isPrintMode}
               onDelete={this.onDeleteWidget}
+              dashboardOwner={owner}
             />
           </div>
         ),
@@ -218,6 +230,7 @@ export class WidgetsGrid extends Component {
       isResizable={this.props.isModifiable}
       draggableHandle=".draggable-field"
       useCSSTransforms={!this.isFirefox}
+      measureBeforeMount
     >
       {this.renderItems()}
     </ResponsiveGridLayout>

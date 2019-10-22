@@ -8,7 +8,7 @@ import {
   payloadSelector,
   prevPagePropertiesSelector,
 } from 'controllers/pages';
-import { DEFAULT_PAGINATION, PAGE_KEY } from 'controllers/pagination';
+import { PAGE_KEY } from 'controllers/pagination';
 import {
   itemsSelector,
   paginationSelector,
@@ -58,7 +58,6 @@ export const logStackTraceLoadingSelector = (state) => logStackTraceSelector(sta
 export const pageLoadingSelector = (state) => logSelector(state).pageLoading;
 
 export const querySelector = createQueryParametersSelector({
-  defaultPagination: DEFAULT_PAGINATION,
   defaultSorting: DEFAULT_SORTING,
 });
 
@@ -210,7 +209,7 @@ export const retryLinkSelector = createSelector(
     type: debugMode ? PROJECT_USERDEBUG_LOG_PAGE : PROJECT_LOG_PAGE,
     payload: {
       ...payload,
-      testItemIds: [...(payload.testItemIds || '').split('/'), testItemId].join('/'),
+      testItemIds: [...`${payload.testItemIds || ''}`.split('/'), testItemId].join('/'),
     },
     meta: {
       query: {

@@ -14,8 +14,9 @@ const getQueryParams = (paramsObj) => stringify(paramsObj, { addQueryPrefix: tru
 export const URLS = {
   apiDocs: (apiType) => `${apiType}/api-docs`,
 
-  dataPhoto: (at) => `${urlBase}data/photo${getQueryParams({ at })}`,
-  dataUserPhoto: (id) => `${urlBase}data/userphoto${getQueryParams({ id })}`,
+  dataPhoto: (at, loadThumbnail) => `${urlBase}data/photo${getQueryParams({ at, loadThumbnail })}`,
+  dataUserPhoto: (activeProject, id, loadThumbnail) =>
+    `${urlBase}data/${activeProject}/userphoto${getQueryParams({ id, loadThumbnail })}`,
 
   dashboard: (activeProject, id) => `${urlBase}${activeProject}/dashboard/${id}`,
   dashboards: (activeProject) => `${urlBase}${activeProject}/dashboard`,
@@ -53,6 +54,7 @@ export const URLS = {
   filters: (activeProject) => `${urlBase}${activeProject}/filter`,
   filtersSearch: (activeProject) =>
     `${urlBase}${activeProject}/filter?page.sort=name&page.page=1&page.size=50&filter.cnt.name=`,
+  searchFilterNames: (activeProject) => `${urlBase}${activeProject}/filter/names`,
   launchesFilters: (activeProject, ids = []) =>
     `${urlBase}${activeProject}/filter/filters?ids=${ids.join(',')}`,
 
@@ -63,8 +65,8 @@ export const URLS = {
   launchByIds: (activeProject, ids) => `${urlBase}${activeProject}/launch?filter.in.id=${ids}`,
   launchAttributeKeysSearch: (activeProject) =>
     `${urlBase}${activeProject}/launch/attribute/keys?filter.cnt.attributeKey=`,
-  itemAttributeKeysAllSearch: (activeProject) =>
-    `${urlBase}${activeProject}/item/attribute/keys/all?filter.cnt.attributeKey=`,
+  itemAttributeKeysAllSearch: (activeProject, filterId, isLatest, launchesLimit) =>
+    `${urlBase}${activeProject}/item/attribute/keys/all?filterId=${filterId}&isLatest=${isLatest}&launchesLimit=${launchesLimit}&filter.cnt.attributeKey=`,
   launchAttributeValuesSearch: (activeProject, key = '') =>
     `${urlBase}${activeProject}/launch/attribute/values?${
       key ? `filter.eq.attributeKey=${key}&` : ''
@@ -156,7 +158,7 @@ export const URLS = {
   logItem: (activeProject, itemId, level) =>
     `${urlBase}${activeProject}/log${getQueryParams({
       'filter.eq.item': itemId,
-      'filter.in.level': level,
+      'filter.gte.level': level,
       'page.page': 1,
       'page.size': 1,
       'page.sort': 'logTime,DESC',
@@ -198,7 +200,8 @@ export const URLS = {
   userUnasign: (activeProject) => `${urlBase}project/${activeProject}/unassign`,
 
   generateDemoData: (projectId) => `${urlBase}demo/${projectId}`,
-  getFileById: (projectId, dataId) => `${urlBase}data/${projectId}/${dataId}`,
+  getFileById: (projectId, dataId, loadThumbnail) =>
+    `${urlBase}data/${projectId}/${dataId}${getQueryParams({ loadThumbnail })}`,
 
   serverSettings: () => `${urlBase}settings`,
   emailServerSettings: () => `${urlBase}settings/email`,

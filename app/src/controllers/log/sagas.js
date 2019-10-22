@@ -101,12 +101,15 @@ export function* collectLogPayload() {
 }
 
 function* fetchLogItems(payload = {}) {
-  const { activeProject, params, filterLevel, activeLogItemId } = yield call(collectLogPayload);
+  const { activeProject, params, filterLevel, activeLogItemId, query } = yield call(
+    collectLogPayload,
+  );
   const namespace = payload.namespace || LOG_ITEMS_NAMESPACE;
   const logLevel = payload.level || filterLevel;
   const fetchParams = {
     ...params,
     ...payload.params,
+    ...query,
   };
   const isLaunchLog = yield select(isLaunchLogSelector);
   const url = isLaunchLog

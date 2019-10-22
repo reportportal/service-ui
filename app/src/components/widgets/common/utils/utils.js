@@ -1,5 +1,6 @@
 import moment from 'moment/moment';
 import { ENTITY_START_TIME, CONDITION_BETWEEN } from 'components/filterEntities/constants';
+import { TEST_ITEM_PAGE } from 'controllers/pages';
 import * as COLORS from 'common/constants/colors';
 import { DEFECTS } from '../constants';
 import { messages } from '../messages';
@@ -100,3 +101,20 @@ export const getUpdatedFilterWithTime = (chartFilter, itemDate) => {
     conditions: chartFilter.conditions.concat(newCondition),
   };
 };
+
+export const getChartDefaultProps = ({ isPreview, widget, container, observer, height }) => ({
+  isPreview,
+  widget,
+  container,
+  observer,
+  height,
+});
+
+export const getDefaultNavigationParams = (projectId, filterId, testItemIds) => ({
+  payload: {
+    projectId,
+    filterId,
+    testItemIds,
+  },
+  type: TEST_ITEM_PAGE,
+});

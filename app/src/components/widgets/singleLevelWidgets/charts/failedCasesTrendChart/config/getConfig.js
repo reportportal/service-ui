@@ -25,7 +25,7 @@ export const getConfig = ({
   let topExtremum = 0;
   let bottomExtremum = Infinity;
 
-  content.result.forEach((item) => {
+  content.forEach((item) => {
     if (+item.values.total > topExtremum) {
       topExtremum = +item.values.total;
     }

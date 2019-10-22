@@ -53,7 +53,7 @@ export class Fullscreen extends Component {
 
   render() {
     return (
-      <div className={cx({ container: true, fullscreen: this.props.enabled })}>
+      <div className={cx('container', { fullscreen: this.props.enabled })}>
         {this.props.children}
         {this.props.enabled && (
           <Fragment>

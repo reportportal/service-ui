@@ -1,30 +1,36 @@
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { COLOR_CHART_DURATION, COLOR_FAILED } from 'common/constants/colors';
+import { COLOR_CHART_DURATION, COLOR_INTERRUPTED } from 'common/constants/colors';
 import {
   getLaunchAxisTicks,
   transformCategoryLabelByDefault,
 } from 'components/widgets/common/utils';
 import { createTooltipRenderer } from 'components/widgets/common/tooltip';
 import { DURATION, isValueInterrupted, prepareChartData, calculateTooltipParams } from './utils';
-import { LaunchDurationTooltip } from './launchDurationTooltip';
+import { LaunchesDurationTooltip } from './launchesDurationTooltip';
 
-export const getConfig = ({ content, isPreview, formatMessage, positionCallback, size }) => {
+export const getConfig = ({
+  content,
+  isPreview,
+  formatMessage,
+  positionCallback,
+  size,
+  onChartClick,
+}) => {
   const { timeType, chartData, itemsData = [] } = prepareChartData(content);
 
   return {
     data: {
       columns: [chartData],
       type: 'bar',
-      colors: {
-        [DURATION]: COLOR_CHART_DURATION,
-      },
       groups: [[DURATION]],
       color: (color, d) => {
-        if (itemsData[d.index] && isValueInterrupted(itemsData[d.index])) {
-          return COLOR_FAILED;
+        const item = itemsData[d.index];
+        if (item && isValueInterrupted(item)) {
+          return COLOR_INTERRUPTED;
         }
-        return color;
+        return COLOR_CHART_DURATION;
       },
+      onclick: isPreview ? null : onChartClick,
     },
     grid: {
       y: {
@@ -76,9 +82,10 @@ export const getConfig = ({ content, isPreview, formatMessage, positionCallback,
     tooltip: {
       grouped: true,
       position: positionCallback,
-      contents: createTooltipRenderer(LaunchDurationTooltip, calculateTooltipParams, {
+      contents: createTooltipRenderer(LaunchesDurationTooltip, calculateTooltipParams, {
         itemsData,
         timeType,
+        formatMessage,
       }),
     },
     size,

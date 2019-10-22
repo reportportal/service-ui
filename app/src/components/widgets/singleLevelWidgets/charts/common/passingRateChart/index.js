@@ -1,0 +1,1 @@
+export { PassingRateChart } from './passingRateChart';

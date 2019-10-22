@@ -73,6 +73,7 @@ export class AttributeEditor extends Component {
       key: props.attribute.key,
       value: props.attribute.value,
       errors: this.getValidationErrors(props.attribute.key, props.attribute.value),
+      isKeyEdited: false,
     };
   }
 
@@ -109,7 +110,10 @@ export class AttributeEditor extends Component {
     );
 
   isFormValid = () =>
-    !this.state.errors.key && !this.state.errors.value && this.isAttributeUnique();
+    !this.state.errors.key &&
+    !this.state.errors.value &&
+    this.isAttributeUnique() &&
+    !this.state.isKeyEdited;
 
   handleSubmit = () => {
     if (!this.isFormValid()) {
@@ -121,6 +125,8 @@ export class AttributeEditor extends Component {
       value,
     });
   };
+
+  handleAttributeKeyInputChange = (text) => this.setState({ isKeyEdited: !!text });
 
   render() {
     const { projectId, attributes, onCancel, keyURLCreator, valueURLCreator, intl } = this.props;
@@ -143,6 +149,7 @@ export class AttributeEditor extends Component {
               value={this.formatValue(this.state.key)}
               attributeKey={this.state.key}
               attributeValue={this.state.value}
+              onInputChange={this.handleAttributeKeyInputChange}
             />
           </FieldErrorHint>
         </div>

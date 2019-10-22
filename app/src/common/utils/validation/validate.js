@@ -39,6 +39,7 @@ export const ldapSynchronizationAttributes = composeValidators([
 export const defectTypeLongName = composeValidators([isNotEmpty, lengthRange(3, 55)]);
 export const defectTypeShortName = composeValidators([isNotEmpty, maxLength(4)]);
 export const projectName = composeValidators([isNotEmpty, regex(/^[0-9a-zA-Z-_]{3,256}$/)]);
+export const btsIntegrationName = composeValidators([isNotEmpty, maxLength(55)]);
 export const btsProject = composeValidators([isNotEmpty, maxLength(55)]);
 export const patternNameLength = composeValidators([isNotEmpty, maxLength(55)]);
 export const createPatternNameUniqueValidator = (patternId, patterns) => (newPatternName) =>
@@ -82,7 +83,5 @@ export const launchesWidgetContentFields = composeValidators([isNotEmptyArray, m
 export const mostFailedWidgetNumberOfLaunches = composeValidators([isNotEmpty, range(2, 600)]);
 export const createNotificationRecipientsValidator = (informOwner) => (value) =>
   isNotEmptyArray(value) || informOwner;
-export const notificationLaunchNames = composeValidators([
-  isNotEmptyArray,
-  (value) => value.every(launchName),
-]);
+export const notificationLaunchNames = (value) =>
+  isEmpty(value) || !value.length || value.every(launchName);

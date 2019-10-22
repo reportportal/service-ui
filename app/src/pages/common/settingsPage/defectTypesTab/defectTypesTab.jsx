@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import track from 'react-tracking';
 import { injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 
@@ -8,6 +9,7 @@ import { defectTypesSelector, updateDefectSubTypeAction } from 'controllers/proj
 import { showModalAction } from 'controllers/modal';
 import { DEFECT_TYPES_SEQUENCE } from 'common/constants/defectTypes';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 
 import { DefectTypesGroup } from './defectTypesGroup';
 import { defectTypeShape } from './defectTypeShape';
@@ -18,6 +20,7 @@ import styles from './defectTypesTab.scss';
 
 const cx = classNames.bind(styles);
 
+@track()
 @connect(
   (state) => ({
     subTypes: defectTypesSelector(state),
@@ -34,11 +37,16 @@ export class DefectTypesTab extends Component {
     showModal: PropTypes.func.isRequired,
     updateDefectSubTypeAction: PropTypes.func.isRequired,
     intl: intlShape.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   showResetColorsConfirmationDialog = () => {
     const { showModal, intl } = this.props;
 
+    this.props.tracking.trackEvent(SETTINGS_PAGE_EVENTS.RESET_DEFAULT_COLOR);
     showModal({
       id: 'confirmationModal',
       data: {
@@ -47,6 +55,10 @@ export class DefectTypesTab extends Component {
         message: intl.formatMessage(messages.resetColorsModalContent),
         confirmText: intl.formatMessage(COMMON_LOCALE_KEYS.RESET),
         cancelText: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+        eventsInfo: {
+          closeIcon: SETTINGS_PAGE_EVENTS.CLOSE_ICON_RESET_DEFECT_COLORS_MODAL,
+          cancelBtn: SETTINGS_PAGE_EVENTS.CANCEL_BTN_RESET_DEFECT_COLORS_MODAL,
+        },
       },
     });
   };
@@ -54,6 +66,7 @@ export class DefectTypesTab extends Component {
   resetColors = () => {
     const { subTypes } = this.props;
 
+    this.props.tracking.trackEvent(SETTINGS_PAGE_EVENTS.RESET_BTN_RESET_DEFECT_COLORS_MODAL);
     this.props.updateDefectSubTypeAction(
       Object.keys(subTypes).reduce((result, typeRef) => {
         // for all defect sub types except system types (with index=0) set default colors

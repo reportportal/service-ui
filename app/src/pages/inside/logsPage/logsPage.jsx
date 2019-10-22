@@ -28,7 +28,7 @@ import {
 import { parentItemSelector } from 'controllers/testItem';
 import { withFilter } from 'controllers/filter';
 import { debugModeSelector } from 'controllers/launch';
-import { withPagination, PAGE_KEY } from 'controllers/pagination';
+import { withPagination, PAGE_KEY, DEFAULT_PAGINATION, SIZE_KEY } from 'controllers/pagination';
 import { withSortingURL, SORTING_ASC } from 'controllers/sorting';
 import { userIdSelector } from 'controllers/user';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
@@ -136,10 +136,10 @@ export class LogsPage extends Component {
 
   static defaultProps = {
     logItems: [],
-    activePage: 1,
+    activePage: DEFAULT_PAGINATION[PAGE_KEY],
     itemCount: 0,
     pageCount: 0,
-    pageSize: 20,
+    pageSize: DEFAULT_PAGINATION[SIZE_KEY],
     onChangePage: () => {},
     onChangePageSize: () => {},
     loading: false,
@@ -162,22 +162,7 @@ export class LogsPage extends Component {
   };
 
   state = {
-    highlightedRowId: null,
-    isGridRowHighlighted: false,
     isSauceLabsIntegrationView: false,
-  };
-
-  onHighlightRow = (highlightedRowId) => {
-    this.setState({
-      highlightedRowId,
-      isGridRowHighlighted: false,
-    });
-  };
-
-  onGridRowHighlighted = () => {
-    this.setState({
-      isGridRowHighlighted: true,
-    });
   };
 
   toggleSauceLabsIntegrationView = () =>
@@ -224,12 +209,6 @@ export class LogsPage extends Component {
       isNestedStepView,
     } = this.props;
 
-    const rowHighlightingConfig = {
-      onGridRowHighlighted: this.onGridRowHighlighted,
-      isGridRowHighlighted: this.state.isGridRowHighlighted,
-      highlightedRowId: this.state.highlightedRowId,
-    };
-
     return (
       <PageLayout>
         <PageSection>
@@ -243,7 +222,6 @@ export class LogsPage extends Component {
                   <LogItemInfo
                     onChangeLogLevel={onChangeLogLevel}
                     onChangePage={onChangePage}
-                    onHighlightRow={this.onHighlightRow}
                     onToggleSauceLabsIntegrationView={this.toggleSauceLabsIntegrationView}
                     isSauceLabsIntegrationView={this.state.isSauceLabsIntegrationView}
                     fetchFunc={refresh}
@@ -278,7 +256,6 @@ export class LogsPage extends Component {
                         sortingColumn={sortingColumn}
                         sortingDirection={sortingDirection}
                         onChangeSorting={onChangeSorting}
-                        rowHighlightingConfig={rowHighlightingConfig}
                         markdownMode={markdownMode}
                         logStatus={logStatus}
                         onChangeLogStatusFilter={onChangeLogStatusFilter}

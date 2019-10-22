@@ -65,8 +65,12 @@ export class IntegrationForm extends Component {
     this.setState({ disabled: !this.state.disabled });
   };
 
+  submitIntegrationSuccess = () => {
+    this.setState({ disabled: true });
+  };
+
   submitIntegration = (formData) => {
-    this.props.onSubmit(formData, this.toggleDisabled, this.state.metaData);
+    this.props.onSubmit(formData, this.submitIntegrationSuccess, this.state.metaData);
   };
 
   updateMetaData = (metaData) => {
@@ -80,7 +84,6 @@ export class IntegrationForm extends Component {
       intl: { formatMessage },
       data: { blocked, id, integrationParameters = {} },
       handleSubmit,
-      dirty,
       initialize,
       change,
       connected,
@@ -141,11 +144,7 @@ export class IntegrationForm extends Component {
                 )}
                 <div className={cx('button-container')}>
                   <BigButton
-                    onClick={
-                      dirty || this.isSupportsMultipleInstances
-                        ? handleSubmit(this.submitIntegration)
-                        : this.toggleDisabled
-                    }
+                    onClick={handleSubmit(this.submitIntegration)}
                     disabled={shouldFieldsBeHidden}
                   >
                     {formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}

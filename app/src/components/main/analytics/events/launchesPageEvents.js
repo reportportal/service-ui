@@ -1,7 +1,27 @@
+export const LAUNCHES_PAGE = 'launches';
+const LAUNCHES_MODAL = 'Modal launches';
+
 const getActionTableFilter = (titleName) =>
   `Click on Filter Icon before Table title "${titleName}"`;
 const getDescriptionTableFilter = () => 'Arise new field in filter';
-export const LAUNCHES_PAGE = 'launches';
+
+const getAnalyzeItemMessage = (analyzerType, analyzeItemsMode) =>
+  `Run analysis on Modal ${analyzerType} with mode: ${analyzeItemsMode}`;
+
+const getAnalyzeItemEvent = (analyzerType, analyzeItemsMode) => {
+  const message = getAnalyzeItemMessage(analyzerType, analyzeItemsMode.join(', '));
+  return {
+    category: LAUNCHES_MODAL,
+    action: message,
+    label: message,
+  };
+};
+
+export const getRunAnalysisAnalysisModalEvent = (analyzeItemsMode) =>
+  getAnalyzeItemEvent('Analyze Launch', analyzeItemsMode);
+export const getRunAnalysisPatternAnalysisModalEvent = (analyzeItemsMode) =>
+  getAnalyzeItemEvent('Pattern Analyze Launch', analyzeItemsMode);
+
 export const LAUNCHES_PAGE_EVENTS = {
   CLICK_ITEM_NAME: {
     category: LAUNCHES_PAGE,
@@ -26,12 +46,12 @@ export const LAUNCHES_PAGE_EVENTS = {
   CLICK_ANALYSIS_LAUNCH_MENU: {
     category: LAUNCHES_PAGE,
     action: 'Click on "Analysis" in Launch Menu',
-    label: 'Starts Analysing',
+    label: 'Arise Modal "Analyze Launches"',
   },
   CLICK_PATTERN_ANALYSIS_LAUNCH_MENU: {
     category: LAUNCHES_PAGE,
     action: 'Click on "Pattern analysis" in Launch Menu',
-    label: 'Starts pattern analysis',
+    label: 'Arise Modal "Pattern Analyze Launches"',
   },
   CLICK_DELETE_LAUNCH_MENU: {
     category: LAUNCHES_PAGE,
@@ -54,7 +74,6 @@ export const LAUNCHES_PAGE_EVENTS = {
     label: 'Stars download of report in XLS',
   },
   NAME_FILTER: {
-    // todo
     category: LAUNCHES_PAGE,
     action: getActionTableFilter('NAME'),
     label: getDescriptionTableFilter(),
@@ -169,6 +188,16 @@ export const LAUNCHES_PAGE_EVENTS = {
     action: 'Click on button "Merge" in list of actions',
     label: 'Arise Modal "Merge Launches"',
   },
+  CLICK_EDIT_LAUNCH_ACTION: {
+    category: LAUNCHES_PAGE,
+    action: 'Click on button "Edit" in list of actions',
+    label: 'Edit Launch/Arise Modal "Edit Launch"',
+  },
+  CLICK_EDIT_LAUNCHES_ACTION: {
+    category: LAUNCHES_PAGE,
+    action: 'Click on button "Edit" in list of actions',
+    label: 'Arise Modal "Edit Launches"',
+  },
   CLICK_COMPARE_ACTION: {
     category: LAUNCHES_PAGE,
     action: 'Click on button "Compare" in list of actions',
@@ -200,7 +229,6 @@ export const LAUNCHES_PAGE_EVENTS = {
     label: 'Unselect all launches',
   },
   CLICK_PROCEED_ITEMS_BUTTON: {
-    // todo
     category: LAUNCHES_PAGE,
     action: 'Click on button "Proceed Valid Items"',
     label: 'Remove invalid launches from selection',
@@ -232,7 +260,6 @@ export const LAUNCHES_PAGE_EVENTS = {
   },
 };
 
-const LAUNCHES_MODAL = 'Modal launches';
 export const LAUNCHES_MODAL_EVENTS = {
   CLOSE_ICON_EDIT_MODAL: {
     category: LAUNCHES_MODAL,
@@ -326,18 +353,33 @@ export const LAUNCHES_MODAL_EVENTS = {
   },
   OK_BTN_ANALYSIS_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Ok on Modal "Analysis Launch"',
-    label: 'Analysis Launch',
+    action: 'Click on Bttn Analyze on Modal "Analyze Launch"',
+    label: 'Analyze launch mentioned in modal "Analyze Launch"',
   },
   CLOSE_BTN_ANALYSIS_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Close Icon on Modal "Analysis Launch"',
-    label: 'Close Analysis Launch Modal',
+    action: 'Click on Close Icon on Modal "Analyze Launch"',
+    label: 'Close Analyze Launch Modal',
   },
   CANCEL_BTN_ANALYSIS_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Cancel on Modal "Analysis Launch"',
-    label: 'Cancel Analysis Launch Modal',
+    action: 'Click on Bttn Cancel on Modal "Analyze Launch"',
+    label: 'Cancel Modal "Analyze Launch"',
+  },
+  OK_BTN_PATTERN_ANALYSIS_MODAL: {
+    category: LAUNCHES_MODAL,
+    action: 'Click on Bttn Analyze on Modal "Pattern Analyze Launch"',
+    label: 'Analyze launch mentioned in modal "Pattern Analyze Launch"',
+  },
+  CLOSE_BTN_PATTERN_ANALYSIS_MODAL: {
+    category: LAUNCHES_MODAL,
+    action: 'Click on Close Icon on Modal "Pattern Analyze Launch"',
+    label: 'Close Pattern Analyze Launch Modal',
+  },
+  CANCEL_BTN_PATTERN_ANALYSIS_MODAL: {
+    category: LAUNCHES_MODAL,
+    action: 'Click on Bttn Cancel on Modal "Pattern Analyze Launch"',
+    label: 'Cancel Modal "Pattern Analyze Launch"',
   },
   CLOSE_ICON_ADD_WIDGET_MODAL: {
     category: LAUNCHES_MODAL,

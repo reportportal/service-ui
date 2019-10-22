@@ -19,7 +19,6 @@ export {
   HIDE_EMPTY_STEPS,
   DETAILED_LOG_VIEW,
   LAUNCH_LOG_VIEW,
-  FETCH_TEST_ITEMS_SUCCESS,
   LOG_STATUS_FILTER_KEY,
 } from './constants';
 export {
@@ -41,8 +40,6 @@ export {
   activeRetrySelector,
   disablePrevItemLinkSelector,
   disableNextItemLinkSelector,
-  disableNextErrorButtonSelector,
-  nextErrorLogItemIdSelector,
   logStackTraceItemsSelector,
   logStackTracePaginationSelector,
   logStackTraceLoadingSelector,

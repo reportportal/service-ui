@@ -25,3 +25,4 @@ export const COLOR_CHERRY = '#be0a0a';
 export const COLOR_DEEP_RED = '#ee0d0d';
 export const COLOR_DULL_RED = '#f56e6e';
 export const COLOR_DULL_GREEN = '#add8a2';
+export const COLOR_INTERRUPTED = '#a94442';

@@ -103,8 +103,10 @@ export class LaunchFiltersContainer extends Component {
 
   getSortingParams = () => {
     const { activeFilter } = this.props;
-    if (activeFilter) {
-      const currentOrder = activeFilter.orders[0];
+    if (activeFilter && activeFilter.orders && activeFilter.orders.length > 0) {
+      const currentOrder =
+        activeFilter.orders.find((v) => v.sortingColumn !== ENTITY_NUMBER) ||
+        activeFilter.orders[0];
       const { sortingColumn, isAsc } = currentOrder;
       return {
         sortingColumn,
@@ -180,7 +182,11 @@ export class LaunchFiltersContainer extends Component {
         sortingColumn,
         isAsc: sortingDirection === SORTING_ASC,
       };
-      const newOrders = [filterSortObject, ...orders.slice(1)];
+      const newOrders = [filterSortObject];
+      const numberColumnIndex = orders.findIndex((o) => o.sortingColumn === ENTITY_NUMBER);
+      if (numberColumnIndex >= 0) {
+        newOrders.push(orders[numberColumnIndex]);
+      }
       updateFilterOrders(activeFilterId, newOrders);
     } else {
       updateLocalSorting(sortObject);

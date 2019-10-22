@@ -6,15 +6,7 @@ import styles from './instancesList.scss';
 
 const cx = classNames.bind(styles);
 
-export const InstancesList = ({
-  items,
-  title,
-  onItemClick,
-  disabled,
-  disabledHint,
-  blocked,
-  defaultItemTitle,
-}) => (
+export const InstancesList = ({ items, title, onItemClick, disabled, disabledHint, blocked }) => (
   <div className={cx('instances-list-wrapper')}>
     <h3 className={cx('instances-list-title')}>{title}</h3>
     {disabled && <p className={cx('instances-disabled-hint')}>{disabledHint}</p>}
@@ -24,10 +16,10 @@ export const InstancesList = ({
           key={item.id}
           disabled={disabled}
           data={item}
-          title={item.name || defaultItemTitle}
+          title={item.name}
           creator={item.creator}
           creationInfo={moment(item.creationDate).format('ll')}
-          onClick={() => onItemClick({ name: defaultItemTitle, ...item, blocked }, title)}
+          onClick={() => onItemClick({ ...item, blocked }, title)}
         />
       ))}
     </ul>
@@ -40,13 +32,11 @@ InstancesList.propTypes = {
   onItemClick: PropTypes.func.isRequired,
   disabled: PropTypes.bool,
   disabledHint: PropTypes.string,
-  defaultItemTitle: PropTypes.string,
   blocked: PropTypes.bool,
 };
 
 InstancesList.defaultProps = {
   disabled: false,
   disabledHint: '',
-  defaultItemTitle: '',
   blocked: false,
 };
