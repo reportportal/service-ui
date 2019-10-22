@@ -41,7 +41,7 @@ export class VideoPlayer extends React.Component {
 
   componentDidMount() {
     this.player = videojs(this.videoNode.current, this.props);
-    this.player.on('play', () => this.props.onPlay());
+    this.player.on('play', this.props.onPlay);
     this.props.observer.subscribe('goToVideoTimeline', this.updateCurrentTime);
   }
 
