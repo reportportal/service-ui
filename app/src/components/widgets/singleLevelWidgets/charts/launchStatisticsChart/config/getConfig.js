@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import moment from 'moment';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { getLaunchAxisTicks, getTimelineAxisTicks } from 'components/widgets/common/utils';
@@ -17,7 +33,7 @@ export const getConfig = ({
   isTimeline,
   widgetViewMode,
   isZoomEnabled,
-  isCustomTooltipNeeded,
+  isCustomTooltip,
   isSingleColumn,
   contentFields,
   onChartClick,
@@ -39,7 +55,7 @@ export const getConfig = ({
     data: {
       columns: chartDataOrdered,
       type: widgetViewMode,
-      onclick: !isPreview && !isCustomTooltipNeeded ? onChartClick : null,
+      onclick: !isPreview && !isCustomTooltip ? onChartClick : null,
       order: null,
       colors,
       groups: [itemNames],
@@ -108,7 +124,7 @@ export const getConfig = ({
       show: false,
     },
     tooltip: {
-      show: !isPreview && !isCustomTooltipNeeded,
+      show: !isPreview && !isCustomTooltip,
       grouped: false,
       position: positionCallback,
       contents: createTooltipRenderer(IssueTypeStatTooltip, calculateTooltipParams, {

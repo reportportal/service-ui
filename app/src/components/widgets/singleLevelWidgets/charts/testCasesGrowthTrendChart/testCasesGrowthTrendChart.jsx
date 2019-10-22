@@ -1,44 +1,48 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import ReactDOMServer from 'react-dom/server';
 import { connect } from 'react-redux';
-import moment from 'moment';
 import * as d3 from 'd3-selection';
-import isEqual from 'fast-deep-equal';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
-import { dateFormat } from 'common/utils/timeDateUtils';
+import { injectIntl, intlShape } from 'react-intl';
 import { statisticsLinkSelector } from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
-import { TEST_ITEM_PAGE } from 'controllers/pages';
-import * as COLORS from 'common/constants/colors';
+import { createFilterAction } from 'controllers/filter';
 import * as STATUSES from 'common/constants/testStatuses';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
-import { C3Chart } from 'components/widgets/common/c3chart';
-import { getLaunchAxisTicks, getTimelineAxisTicks } from 'components/widgets/common/utils';
-import { messages } from 'components/widgets/common/messages';
-import { TestCasesGrowthTrendChartTooltip } from './config/testCasesGrowthTrendChartTooltip';
+import { ChartContainer } from 'components/widgets/common/c3chart';
+import {
+  getUpdatedFilterWithTime,
+  getChartDefaultProps,
+  getDefaultTestItemLinkParams,
+} from 'components/widgets/common/utils';
+import { getConfig } from './config/getConfig';
 import styles from './testCasesGrowthTrendChart.scss';
 
 const cx = classNames.bind(styles);
 
-const localMessages = defineMessages({
-  growTestCases: {
-    id: 'Widgets.growtestCases',
-    defaultMessage: 'Grow test cases',
-  },
-  totalTestCases: {
-    id: 'Widgets.totalTestCases',
-    defaultMessage: 'Total test cases',
-  },
-});
-
 @connect(
   (state) => ({
-    project: activeProjectSelector(state),
+    projectId: activeProjectSelector(state),
     getStatisticsLink: statisticsLinkSelector(state),
   }),
   {
+    createFilterAction,
     navigate: (linkAction) => linkAction,
   },
 )
@@ -48,9 +52,10 @@ export class TestCasesGrowthTrendChart extends Component {
     intl: intlShape.isRequired,
     widget: PropTypes.object.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
-    project: PropTypes.string.isRequired,
+    projectId: PropTypes.string.isRequired,
     getStatisticsLink: PropTypes.func.isRequired,
     navigate: PropTypes.func.isRequired,
+    createFilterAction: PropTypes.func.isRequired,
     isPreview: PropTypes.bool,
     height: PropTypes.number,
     observer: PropTypes.object,
@@ -62,52 +67,38 @@ export class TestCasesGrowthTrendChart extends Component {
     observer: {},
   };
 
-  state = {
-    isConfigReady: false,
-  };
-
-  componentDidMount() {
-    !this.props.isPreview && this.props.observer.subscribe('widgetResized', this.resizeChart);
-    this.getConfig();
-  }
-
-  componentDidUpdate(prevProps) {
-    this.onChartRendered();
-    if (!isEqual(prevProps.widget, this.props.widget)) {
-      this.getConfig();
-    }
-  }
-
-  componentWillUnmount() {
-    if (!this.props.isPreview) {
-      this.node.removeEventListener('mousemove', this.setupCoords);
-      this.props.observer.unsubscribe('widgetResized', this.resizeChart);
-    }
-    this.chart = null;
-  }
-
-  onChartCreated = (chart, element) => {
-    this.chart = chart;
+  onChartCreated = (element) => {
     this.node = element;
-
-    this.node.addEventListener('mousemove', this.setupCoords);
+    this.restoreBars();
   };
 
-  onChartClick = (d) => {
-    if (this.isTimeLine) {
+  onChartClick = (data) =>
+    this.isTimeline ? this.timeLineModeClickHandler(data) : this.launchModeClickHandler(data);
+
+  getConfigData = () => {
+    const {
+      intl: { formatMessage },
+      widget: { contentParameters },
+    } = this.props;
+
+    this.isTimeline =
+      contentParameters &&
+      contentParameters.widgetOptions.timeline === MODES_VALUES[CHART_MODES.TIMELINE_MODE];
+
+    return {
+      getConfig,
+      formatMessage,
+      isTimeline: this.isTimeline,
+      onChartClick: this.onChartClick,
+      onRendered: this.restoreBars,
+    };
+  };
+
+  restoreBars = () => {
+    if (!this.node) {
       return;
     }
 
-    const { widget, getStatisticsLink } = this.props;
-    const id = widget.content.result[d.index].id;
-    const defaultParams = this.getDefaultLinkParams(id);
-    const statisticsLink = getStatisticsLink({
-      statuses: [STATUSES.PASSED, STATUSES.FAILED, STATUSES.SKIPPED, STATUSES.INTERRUPTED],
-    });
-    this.props.navigate(Object.assign(statisticsLink, defaultParams));
-  };
-
-  onChartRendered = () => {
     const barPathSelector = '.c3-bars-bar path';
     const barPaths = d3.select(this.node).selectAll(barPathSelector);
     barPaths.each((pathData, i) => {
@@ -121,254 +112,36 @@ export class TestCasesGrowthTrendChart extends Component {
     });
   };
 
-  setupCoords = ({ pageX, pageY }) => {
-    this.x = pageX;
-    this.y = pageY;
+  timeLineModeClickHandler = (data) => {
+    const chartFilter = this.props.widget.appliedFilters[0];
+    const arrResult = Object.keys(this.props.widget.content.result).map((item) => item);
+    const itemDate = arrResult[data.index];
+    const newFilter = getUpdatedFilterWithTime(chartFilter, itemDate);
+
+    this.props.createFilterAction(newFilter);
   };
 
-  getDefaultLinkParams = (testItemIds) => ({
-    payload: {
-      projectId: this.props.project,
-      filterId: 'all',
-      testItemIds,
-    },
-    type: TEST_ITEM_PAGE,
-  });
-
-  getConfig = () => {
-    const {
-      widget: { content, contentParameters },
-      intl,
-      isPreview,
-      container,
-    } = this.props;
-
-    this.height = container.offsetHeight;
-    this.width = container.offsetWidth;
-
-    this.isTimeLine =
-      contentParameters &&
-      contentParameters.widgetOptions.timeline === MODES_VALUES[CHART_MODES.TIMELINE_MODE];
-
-    let data;
-
-    if (this.isTimeLine) {
-      data = Object.keys(content.result).map((key) => ({
-        date: key,
-        ...content.result[key],
-      }));
-    } else {
-      data = content.result;
-    }
-
-    this.itemData = [];
-
-    const offsets = ['offset'];
-    const bars = ['bar'];
-    this.positiveTrend = [];
-
-    data.forEach((item) => {
-      const { values } = item;
-      if (+values.delta < 0) {
-        this.positiveTrend.push(false);
-        offsets.push(+values.statistics$executions$total);
-      } else {
-        this.positiveTrend.push(true);
-        offsets.push(+values.statistics$executions$total - +values.delta);
-      }
-      bars.push(Math.abs(+values.delta));
-
-      if (this.isTimeLine) {
-        this.itemData.push({ date: item.date });
-      } else {
-        this.itemData.push({
-          id: item.id,
-          name: item.name,
-          number: item.number,
-          startTime: item.startTime,
-        });
-      }
+  launchModeClickHandler = (data) => {
+    const { widget, getStatisticsLink, projectId } = this.props;
+    const id = widget.content.result[data.index].id;
+    const defaultParams = getDefaultTestItemLinkParams(id, projectId);
+    const statisticsLink = getStatisticsLink({
+      statuses: [STATUSES.PASSED, STATUSES.FAILED, STATUSES.SKIPPED, STATUSES.INTERRUPTED],
     });
-
-    this.config = {
-      data: {
-        columns: [offsets, bars],
-        type: MODES_VALUES[CHART_MODES.BAR_VIEW],
-        order: null,
-        groups: [['offset', 'bar']],
-        onclick: this.onChartClick,
-        color: (c, d) => {
-          let color;
-          switch (d.id) {
-            case 'bar':
-              if (this.positiveTrend[d.index]) {
-                color = COLORS.COLOR_DARK_PASTEL_GREEN;
-                break;
-              }
-              color = COLORS.COLOR_ORANGE_RED;
-              break;
-            default:
-              color = null;
-              break;
-          }
-          return color;
-        },
-        labels: {
-          format: (v, id, i) => {
-            let step = this.itemData.length < 20 ? 1 : 2;
-            if (this.isTimeLine && this.itemData.length >= 20) {
-              step = 6;
-            }
-
-            if (isPreview || id !== 'bar' || i % step !== 0) {
-              return null;
-            }
-            return this.positiveTrend[i] ? v : -v;
-          },
-        },
-      },
-      grid: {
-        y: {
-          show: !isPreview,
-        },
-      },
-      axis: {
-        x: {
-          show: !isPreview,
-          type: 'category',
-          categories: this.itemData.map((item) => {
-            let day;
-            if (this.isTimeLine) {
-              day = moment(item.date)
-                .format('dddd')
-                .substring(0, 3);
-              return `${day}, ${item.date}`;
-            }
-            return `#${item.number}`;
-          }),
-          tick: {
-            values: this.isTimeLine
-              ? getTimelineAxisTicks(this.itemData.length)
-              : getLaunchAxisTicks(this.itemData.length),
-            width: 60,
-            centered: true,
-            inner: true,
-            outer: false,
-            multiline: this.isTimeLine,
-          },
-        },
-        y: {
-          show: !isPreview,
-          padding: {
-            top: 10,
-            bottom: 0,
-          },
-          label: {
-            text: `${intl.formatMessage(messages.cases)}`,
-            position: 'outer-middle',
-          },
-        },
-      },
-      interaction: {
-        enabled: !isPreview,
-      },
-      padding: {
-        top: isPreview ? 0 : 10,
-        left: isPreview ? 0 : 60,
-        right: isPreview ? 0 : 20,
-        bottom: isPreview || !this.isTimeLine ? 0 : 10,
-      },
-      legend: {
-        show: false,
-      },
-      size: {
-        height: this.height,
-      },
-      tooltip: {
-        grouped: true,
-        position: this.getTooltipPosition,
-        contents: this.renderTooltip,
-      },
-      onrendered: this.onChartRendered,
-    };
-    this.configCreationTimeStamp = Date.now();
-
-    this.setState({
-      isConfigReady: true,
-    });
-  };
-
-  getTooltipPosition = (d, width, height) => {
-    const rect = this.node.getBoundingClientRect();
-    const left = this.x - rect.left - width / 2;
-    const top = this.y - rect.top - height;
-
-    return {
-      top: top - 8,
-      left,
-    };
-  };
-
-  resizeChart = () => {
-    const { offsetHeight: newHeight, offsetWidth: newWidth } = this.props.container;
-
-    if (this.height !== newHeight) {
-      this.chart.resize({
-        height: newHeight,
-      });
-      this.height = newHeight;
-      this.config.size.height = newHeight;
-    } else if (this.width !== newWidth) {
-      this.chart.flush();
-    }
-    this.width = newWidth;
-  };
-
-  renderTooltip = (d) => {
-    const {
-      intl: { formatMessage },
-    } = this.props;
-    const { name, number, startTime, date } = this.itemData[d[0].index];
-
-    let total;
-    let growth;
-    if (this.positiveTrend[d[0].index]) {
-      growth = d[1].value;
-      total = d[0].value + d[1].value;
-    } else {
-      growth = -d[1].value;
-      total = d[0].value;
-    }
-
-    const growthClass = classNames({
-      increase: growth > 0,
-      decrease: growth < 0,
-    });
-
-    return ReactDOMServer.renderToStaticMarkup(
-      <TestCasesGrowthTrendChartTooltip
-        itemName={this.isTimeLine ? date : `${name} #${number}`}
-        startTime={this.isTimeLine ? '' : dateFormat(Number(startTime))}
-        growth={growth}
-        growthClass={growthClass}
-        total={total}
-        growTestCasesMessage={formatMessage(localMessages.growTestCases)}
-        totalTestCasesMessage={formatMessage(localMessages.totalTestCases)}
-      />,
-    );
+    this.props.navigate(Object.assign(statisticsLink, defaultParams));
   };
 
   render() {
     return (
-      <div className={cx('test-cases-growth-trend-chart')}>
-        {this.state.isConfigReady && (
-          <C3Chart
-            config={this.config}
-            onChartCreated={this.onChartCreated}
-            configCreationTimeStamp={this.configCreationTimeStamp}
-          />
-        )}
-      </div>
+      <ChartContainer
+        {...getChartDefaultProps(this.props)}
+        configData={this.getConfigData()}
+        className={cx('test-cases-growth-trend-chart')}
+        legendConfig={{
+          showLegend: false,
+        }}
+        chartCreatedCallback={this.onChartCreated}
+      />
     );
   }
 }

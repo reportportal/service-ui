@@ -1,16 +1,24 @@
-import { getItemColor } from 'components/widgets/common/utils';
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { normalizeChartData, getItemColor } from 'components/widgets/common/utils';
 import { messages } from 'components/widgets/common/messages';
 
-const prepareData = (data, isTimeLine) =>
-  isTimeLine
-    ? Object.keys(data).map((item) => ({
-        date: item,
-        values: data[item].values,
-      }))
-    : data;
-
 export const isSingleColumnChart = (content, isTimeLine) => {
-  const data = prepareData(content.result, isTimeLine);
+  const data = normalizeChartData(content.result, isTimeLine);
 
   return data.length < 2;
 };
@@ -19,7 +27,7 @@ export const getConfigData = (
   data,
   { defectTypes, orderedContentFields, contentFields, isTimeline },
 ) => {
-  const widgetData = prepareData(data, isTimeline);
+  const widgetData = normalizeChartData(data, isTimeline);
   const itemsData = [];
   const chartData = {};
   const chartDataOrdered = [];

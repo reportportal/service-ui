@@ -1,22 +1,17 @@
 /*
  * Copyright 2019 EPAM Systems
  *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * This file is part of EPAM Report Portal.
- * https://github.com/reportportal/service-ui
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Report Portal is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Report Portal is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
@@ -33,13 +28,15 @@ import {
 } from 'common/constants/defectTypes';
 import { defectLinkSelector, statisticsLinkSelector } from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
-import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { createFilterAction } from 'controllers/filter';
 import { defectTypesSelector } from 'controllers/project';
-import { getUpdatedFilterWithTime, getChartDefaultProps } from 'components/widgets/common/utils';
-import { ALL } from 'common/constants/reservedFilterIds';
+import {
+  getUpdatedFilterWithTime,
+  getChartDefaultProps,
+  getDefaultTestItemLinkParams,
+} from 'components/widgets/common/utils';
 import * as STATUSES from 'common/constants/testStatuses';
-import { ChartContainer } from '../../../common/c3chart';
+import { ChartContainer } from 'components/widgets/common/c3chart';
 import { getConfig as getStatusPageModeConfig } from '../common/statusPageChartConfig';
 import { selectConfigFunction } from './config';
 import styles from './investigatedTrendChart.scss';
@@ -111,15 +108,6 @@ export class InvestigatedTrendChart extends Component {
       .map((item) => item.locator);
   };
 
-  getDefaultLinkParams = (testItemIds) => ({
-    payload: {
-      projectId: this.props.projectId,
-      filterId: ALL,
-      testItemIds,
-    },
-    type: TEST_ITEM_PAGE,
-  });
-
   getConfigData = () => {
     const {
       intl: { formatMessage },
@@ -129,17 +117,13 @@ export class InvestigatedTrendChart extends Component {
       integerValueType,
     } = this.props;
 
-    const configData = {
-      formatMessage,
-    };
-
     this.isTimeline =
       contentParameters &&
       contentParameters.widgetOptions.timeline === MODES_VALUES[CHART_MODES.TIMELINE_MODE];
 
     if (onStatusPageMode) {
       return {
-        ...configData,
+        formatMessage,
         getConfig: getStatusPageModeConfig,
         interval,
         chartType: MODES_VALUES[CHART_MODES.BAR_VIEW],
@@ -149,7 +133,7 @@ export class InvestigatedTrendChart extends Component {
     }
 
     return {
-      ...configData,
+      formatMessage,
       getConfig: selectConfigFunction(this.isTimeline),
       onChartClick: this.onChartClick,
     };
@@ -165,16 +149,16 @@ export class InvestigatedTrendChart extends Component {
   };
 
   launchModeClickHandler = (data) => {
-    const { widget, getDefectLink, getStatisticsLink } = this.props;
+    const { widget, getDefectLink, getStatisticsLink, projectId } = this.props;
     const id = widget.content.result[data.index].id;
-    const defaultParams = this.getDefaultLinkParams(id);
-    const defectTypeLocators = this.getDefectTypeLocators(data.id);
-
+    const defaultParams = getDefaultTestItemLinkParams(id, projectId);
+    const defectTypeLocators = this.getDefectTypeLocators(data.id, projectId);
     const link = defectTypeLocators
       ? getDefectLink({ defects: defectTypeLocators, itemId: id })
       : getStatisticsLink({
           statuses: [STATUSES.PASSED, STATUSES.FAILED, STATUSES.SKIPPED, STATUSES.INTERRUPTED],
         });
+
     this.props.navigate(Object.assign(link, defaultParams));
   };
 
