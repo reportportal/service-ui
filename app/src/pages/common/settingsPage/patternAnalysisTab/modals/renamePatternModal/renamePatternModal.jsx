@@ -47,7 +47,7 @@ const messages = defineMessages({
 @reduxForm({
   form: 'renamePatternForm',
   validate: ({ name }, { patterns, data }) => ({
-    name: commonValidators.createPatternNameValidator(data.pattern && data.pattern.id, patterns)(
+    name: commonValidators.createPatternNameValidator(patterns, data.pattern && data.pattern.id)(
       name,
     ),
   }),
