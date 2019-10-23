@@ -15,16 +15,29 @@
  */
 
 import PropTypes from 'prop-types';
+import classNames from 'classnames/bind';
+import Parser from 'html-react-parser';
+import { injectIntl, intlShape } from 'react-intl';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import ErrorIcon from 'common/img/error-inline.svg';
+import styles from './errorMessage.scss';
 
-export const WidgetError = ({ error }) => (
-  <div>
-    {error.name}: {error.message}
+const cx = classNames.bind(styles);
+
+export const ErrorMessage = injectIntl(({ error, intl: { formatMessage } }) => (
+  <div className={cx('error-message')}>
+    <div className={cx('error-icon')}>{Parser(ErrorIcon)}</div>
+    <div className={cx('error-header')}>{formatMessage(COMMON_LOCALE_KEYS.ERROR)}</div>
+    <div className={cx('error-text')}>
+      {error.name}: {error.message}
+    </div>
   </div>
-);
+));
 
-WidgetError.propTypes = {
+ErrorMessage.propTypes = {
   error: PropTypes.shape({
     name: PropTypes.string.isRequired,
     message: PropTypes.string.isRequired,
   }).isRequired,
+  intl: intlShape.isRequired,
 };

@@ -49,7 +49,7 @@ import {
   ComponentHealthCheck,
 } from './multiLevelWidgets';
 
-export { WidgetError } from './widgetError';
+export { ErrorMessage } from '../main/errorMessage';
 
 const CHARTS = {
   [widgetTypes.DIFFERENT_LAUNCHES_COMPARISON]: LaunchesComparisonChart,

@@ -14,4 +14,4 @@
  *  limitations under the License.
  */
 
-export { WidgetError } from './widgetError';
+export { PageError } from './pageError';

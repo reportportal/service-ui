@@ -14,32 +14,4 @@
  *  limitations under the License.
  */
 
-import { Component } from 'react';
-import PropTypes from 'prop-types';
-import {PageError} from './pageError';
-
-export class PageErrorBoundary extends Component {
-  static propTypes = {
-    children: PropTypes.node.isRequired,
-  };
-
-  static getDerivedStateFromError(error) {
-    return {
-      hasError: true,
-      error,
-    };
-  }
-
-  state = {
-    hasError: false,
-    error: null,
-  };
-
-  render() {
-    const { hasError, error } = this.state;
-    if (!hasError) {
-      return this.props.children;
-    }
-    return <PageError error={error} />;
-  }
-}
+export { ErrorMessage } from './errorMessage';

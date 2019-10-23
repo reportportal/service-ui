@@ -28,7 +28,7 @@ import { activeProjectSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
-import { CHARTS, MULTI_LEVEL_WIDGETS_MAP, NoDataAvailable, WidgetError } from 'components/widgets';
+import { CHARTS, MULTI_LEVEL_WIDGETS_MAP, NoDataAvailable, ErrorMessage } from 'components/widgets';
 import { isWidgetDataAvailable } from '../../modals/common/utils';
 import { WidgetHeader } from './widgetHeader';
 import styles from './widget.scss';
@@ -143,7 +143,11 @@ export class SimpleWidget extends Component {
     }
 
     if (this.state.hasError) {
-      return <WidgetError error={this.state.error} />;
+      return (
+        <div className={cx('error-message-container')}>
+          <ErrorMessage error={this.state.error} />
+        </div>
+      );
     }
 
     if (!isWidgetDataAvailable(widget) && !MULTI_LEVEL_WIDGETS_MAP[widgetType]) {
@@ -340,7 +344,7 @@ export class SimpleWidget extends Component {
           />
         </div>
         <div ref={this.getWidgetNode} className={cx('widget', { hidden: !visible })}>
-            {this.getWidgetContent()}
+          {this.getWidgetContent()}
         </div>
       </div>
     );

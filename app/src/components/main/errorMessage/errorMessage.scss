@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright 2 2019 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,32 +14,32 @@
  *  limitations under the License.
  */
 
-import { Component } from 'react';
-import PropTypes from 'prop-types';
-import {PageError} from './pageError';
+.error-message {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 
-export class PageErrorBoundary extends Component {
-  static propTypes = {
-    children: PropTypes.node.isRequired,
-  };
-
-  static getDerivedStateFromError(error) {
-    return {
-      hasError: true,
-      error,
-    };
+.error-icon {
+  width: 20px;
+  height: 17px;
+  svg {
+    fill: $COLOR--black-2;
   }
+}
 
-  state = {
-    hasError: false,
-    error: null,
-  };
+.error-header {
+  padding-top: 15px;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 16px;
+  line-height: 16px;
+  color: $COLOR--black-2;
+}
 
-  render() {
-    const { hasError, error } = this.state;
-    if (!hasError) {
-      return this.props.children;
-    }
-    return <PageError error={error} />;
-  }
+.error-text {
+  padding-top: 5px;
+  font-family: $FONT-REGULAR;
+  font-size: 14px;
+  color: $COLOR--black-2;
 }
