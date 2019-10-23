@@ -27,7 +27,9 @@ export class ChartContainer extends Component {
     isPreview: PropTypes.bool,
     heightOffset: PropTypes.number,
     observer: PropTypes.object,
-    configData: PropTypes.object,
+    configData: PropTypes.shape({
+      getConfig: PropTypes.func,
+    }),
     legendConfig: PropTypes.shape({
       showLegend: PropTypes.bool,
       onChangeLegend: PropTypes.func,
@@ -47,7 +49,9 @@ export class ChartContainer extends Component {
       subscribe: () => {},
       unsubscribe: () => {},
     },
-    configData: {},
+    configData: {
+      getConfig: () => {},
+    },
     chartCreatedCallback: () => {},
     legendConfig: {
       showLegend: false,
