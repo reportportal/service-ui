@@ -19,11 +19,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
-
+import track from 'react-tracking';
 import { InputFilter } from 'components/inputs/inputFilter';
 import { FilterEntitiesURLContainer } from 'components/filterEntities/containers';
 import { GhostButton } from 'components/buttons/ghostButton';
-import { ADMIN_ALL_PROJECTS_PAGE_MODAL_EVENTS } from 'components/main/analytics/events';
+import { ADMIN_PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events';
 
 import {
   GRID_VIEW,
@@ -71,6 +71,7 @@ const cx = classNames.bind(styles);
   },
 )
 @injectIntl
+@track()
 export class ProjectsToolbar extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -87,6 +88,10 @@ export class ProjectsToolbar extends Component {
     sortingColumn: PropTypes.string,
     sortingDirection: PropTypes.string,
     onChangeSorting: PropTypes.func,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -98,7 +103,10 @@ export class ProjectsToolbar extends Component {
     onChangeSorting: () => {},
   };
 
-  onExportProjects = () => downloadFile(URLS.exportProjects(this.props.filterEnities));
+  onExportProjects = () => {
+    this.props.tracking.trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.EXPORT_BTN);
+    downloadFile(URLS.exportProjects(this.props.filterEnities));
+  };
 
   getSelectedProjectsNames = () =>
     this.props.selectedProjects.map(({ projectName }) => `'<b>${projectName}</b>'`).join(', ');
@@ -139,7 +147,8 @@ export class ProjectsToolbar extends Component {
   };
 
   deleteProjects = () => {
-    const { selectedProjects, intl } = this.props;
+    const { selectedProjects, intl, tracking } = this.props;
+    tracking.trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.DELETE_PROJECT_BTN);
 
     this.props.deleteItemsAction(selectedProjects, {
       onConfirm: this.confirmDeleteItems,
@@ -156,9 +165,9 @@ export class ProjectsToolbar extends Component {
               names: this.getSelectedProjectsNames(),
             }),
       eventsInfo: {
-        closeIcon: ADMIN_ALL_PROJECTS_PAGE_MODAL_EVENTS.CLOSE_ICON_DELETE_MODAL,
-        cancelBtn: ADMIN_ALL_PROJECTS_PAGE_MODAL_EVENTS.CANCEL_BTN_DELETE_MODAL,
-        deleteBtn: ADMIN_ALL_PROJECTS_PAGE_MODAL_EVENTS.DELETE_BTN_DELETE_MODAL,
+        closeIcon: ADMIN_PROJECTS_PAGE_EVENTS.CLOSE_ICON_DELETE_MODAL,
+        cancelBtn: ADMIN_PROJECTS_PAGE_EVENTS.CANCEL_BTN_DELETE_MODAL,
+        deleteBtn: ADMIN_PROJECTS_PAGE_EVENTS.DELETE_BTN_DELETE_MODAL,
       },
     });
   };
@@ -186,6 +195,10 @@ export class ProjectsToolbar extends Component {
                 entitiesProvider={ProjectEntities}
                 filterValues={entities}
                 onChange={onChange}
+                eventsInfo={{
+                  openFilter: ADMIN_PROJECTS_PAGE_EVENTS.FUNNEL_BTN,
+                  applyBtn: ADMIN_PROJECTS_PAGE_EVENTS.APPLY_FILTER_BTN,
+                }}
               />
             )}
           />

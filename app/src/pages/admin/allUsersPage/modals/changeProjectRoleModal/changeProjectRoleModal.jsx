@@ -42,6 +42,7 @@ export class ChangeProjectRoleModal extends Component {
     intl: intlShape.isRequired,
     tracking: PropTypes.shape({
       getTrackingData: PropTypes.func,
+      trackEvent: PropTypes.func,
     }).isRequired,
   };
 
@@ -49,8 +50,15 @@ export class ChangeProjectRoleModal extends Component {
     data: {},
   };
 
+  handleChangeRole = (closeModal) => {
+    const { onSubmit, eventsInfo } = this.props.data;
+    this.props.tracking.trackEvent(eventsInfo.changeBtn);
+    closeModal();
+    onSubmit();
+  };
+
   render() {
-    const { onSubmit, name } = this.props.data;
+    const { name, eventsInfo } = this.props.data;
     const { intl } = this.props;
 
     return (
@@ -59,14 +67,13 @@ export class ChangeProjectRoleModal extends Component {
         okButton={{
           text: intl.formatMessage(messages.submitText),
           danger: false,
-          onClick: (closeModal) => {
-            closeModal();
-            onSubmit();
-          },
+          onClick: this.handleChangeRole,
         }}
         cancelButton={{
           text: intl.formatMessage(messages.cancelText),
+          eventInfo: eventsInfo.cancelBtn,
         }}
+        closeIconEventInfo={eventsInfo.closeIcon}
       >
         <div>{intl.formatMessage(messages.changeAccountRoleText, { name })}</div>
       </ModalLayout>

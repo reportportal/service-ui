@@ -112,6 +112,10 @@ export class DotsMenuButton extends Component {
   toggleMenu = () => {
     this.setState({ opened: !this.state.opened });
     this.updateMenuPosition();
+  };
+
+  handleClickMenu = () => {
+    this.toggleMenu();
     this.props.onClick();
   };
 
@@ -143,7 +147,7 @@ export class DotsMenuButton extends Component {
                   disabled,
                   opened: this.state.opened,
                 })}
-                onClick={!disabled ? this.toggleMenu : null}
+                onClick={!disabled ? this.handleClickMenu : null}
               />
             )}
           </Reference>

@@ -28,6 +28,8 @@ import {
 } from 'controllers/pages/constants';
 import { ALL } from 'common/constants/reservedFilterIds';
 import PropTypes from 'prop-types';
+import track from 'react-tracking';
+import { ADMIN_SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { Sidebar } from 'layouts/common/sidebar';
 import ProjectsIcon from './img/projects-inline.svg';
 import UsersIcon from './img/users-inline.svg';
@@ -38,36 +40,46 @@ import ProfileIcon from './img/profile-inline.svg';
 @connect((state) => ({
   activeProject: activeProjectSelector(state),
 }))
+@track()
 export class AdminSidebar extends Component {
   static propTypes = {
     onClickNavBtn: PropTypes.func,
     activeProject: PropTypes.string.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     onClickNavBtn: () => {},
   };
 
+  handleClickButton = (eventInfo) => () => {
+    this.props.onClickNavBtn();
+    this.props.tracking.trackEvent(eventInfo);
+  };
+
   createTopSidebarItems = () => [
     {
-      onClick: this.props.onClickNavBtn,
+      onClick: this.handleClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_PROJECTS_BTN),
       link: { type: PROJECTS_PAGE },
       icon: ProjectsIcon,
       message: <FormattedMessage id={'AdminSidebar.allProjects'} defaultMessage={'Projects'} />,
     },
     {
-      onClick: this.props.onClickNavBtn,
+      onClick: this.handleClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_ALL_USERS_BTN),
       link: { type: ALL_USERS_PAGE },
       icon: UsersIcon,
       message: <FormattedMessage id={'AdminSidebar.allUsers'} defaultMessage={'All Users'} />,
     },
     {
-      onClick: this.props.onClickNavBtn,
+      onClick: this.handleClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_SERVER_SETTINGS_BTN),
       link: { type: SERVER_SETTINGS_PAGE },
       icon: SettingsIcon,
       message: <FormattedMessage id={'AdminSidebar.settings'} defaultMessage={'Server settings'} />,
     },
     {
-      onClick: this.props.onClickNavBtn,
+      onClick: this.handleClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_PLUGINS_BTN),
       link: { type: PLUGINS_PAGE },
       icon: SettingsIcon,
       message: <FormattedMessage id={'AdminSidebar.plugins'} defaultMessage={'Plugins'} />,

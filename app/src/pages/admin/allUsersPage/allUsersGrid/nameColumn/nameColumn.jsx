@@ -18,6 +18,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { fetch } from 'common/utils';
 import { ADMINISTRATOR, USER } from 'common/constants/accountRoles';
@@ -27,6 +28,7 @@ import { fetchAllUsersAction } from 'controllers/administrate/allUsers';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { showModalAction } from 'controllers/modal';
 import { UserAvatar } from 'pages/inside/common/userAvatar';
+import { ADMIN_ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './nameColumn.scss';
 
 const cx = classNames.bind(styles);
@@ -53,6 +55,7 @@ const messages = defineMessages({
   },
 )
 @injectIntl
+@track()
 export class NameColumn extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -63,6 +66,10 @@ export class NameColumn extends Component {
     activeProject: PropTypes.string,
     showModal: PropTypes.func,
     fetchAllUsers: PropTypes.func,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     value: {},
@@ -74,6 +81,7 @@ export class NameColumn extends Component {
 
   onChangeAccountRole = () => {
     const { intl, showModal, value, fetchAllUsers } = this.props;
+    this.props.tracking.trackEvent(ADMIN_ALL_USERS_PAGE_EVENTS.MAKE_ADMIN_BTN);
     const onSubmit = () => {
       fetch(URLS.userInfo(value.userId), {
         method: 'PUT',
@@ -96,6 +104,11 @@ export class NameColumn extends Component {
       data: {
         name: value.fullName,
         onSubmit,
+        eventsInfo: {
+          changeBtn: ADMIN_ALL_USERS_PAGE_EVENTS.CHANGE_BTN_CHANGE_ROLE_MODAL,
+          closeIcon: ADMIN_ALL_USERS_PAGE_EVENTS.CLOSE_ICON_CHANGE_ROLE_MODAL,
+          cancelBtn: ADMIN_ALL_USERS_PAGE_EVENTS.CANCEL_BTN_CHANGE_ROLE_MODAL,
+        },
       },
     });
   };
