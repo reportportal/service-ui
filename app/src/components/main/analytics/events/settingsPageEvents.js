@@ -15,6 +15,13 @@
  */
 
 export const SETTINGS_PAGE = 'settings';
+
+export const getSaveNewPatternEvent = (patternType) => ({
+  category: SETTINGS_PAGE,
+  action: `Choose ${patternType} and Click Save in Modal Create Pattern`,
+  label: `Save new Pattern with ${patternType}`,
+});
+
 export const SETTINGS_PAGE_EVENTS = {
   GENERAL_TAB: {
     category: SETTINGS_PAGE,
@@ -368,5 +375,85 @@ export const SETTINGS_PAGE_EVENTS = {
     category: SETTINGS_PAGE,
     action: 'Click on Bttn Delete on Modal Delete Pattern',
     label: 'Delete Pattern',
+  },
+  CREATE_PATTERN_BTN: {
+    category: SETTINGS_PAGE,
+    action: 'Click on Bttn Create Pattern',
+    label: 'Arise Modal Create Pattern',
+  },
+  EDIT_PATTERN_ICON: {
+    category: SETTINGS_PAGE,
+    action: 'Click on Edit Pencil',
+    label: 'Arise Modal Edit Pattern',
+  },
+  CLONE_PATTERN_ICON: {
+    category: SETTINGS_PAGE,
+    action: 'Click on Clone Pattern Rule',
+    label: 'Arrise Modal Clone Pattern Rule',
+  },
+  DELETE_PATTERN_ICON: {
+    category: SETTINGS_PAGE,
+    action: 'Click on Delete Pattern icon',
+    label: 'Arise Modal Delete Pattern Rule',
+  },
+  TURN_ON_PA_RULE_SWITCHER: {
+    category: SETTINGS_PAGE,
+    action: 'Enable Pattern Rule',
+    label: 'Enable Pattern Rule',
+  },
+  TURN_OFF_PA_RULE_SWITCHER: {
+    category: SETTINGS_PAGE,
+    action: 'Disable Pattern Rule',
+    label: 'Disable Pattern Rule',
+  },
+  TURN_ON_PA_SWITCHER: {
+    category: SETTINGS_PAGE,
+    action: 'Switch On Pattern Analysis',
+    label: 'Switch On Pattern Analysis',
+  },
+  TURN_OFF_PA_SWITCHER: {
+    category: SETTINGS_PAGE,
+    action: 'Switch Off Pattern Analysis',
+    label: 'Switch Off Pattern Analysis',
+  },
+  CLOSE_ICON_CREATE_PATTERN_MODAL: {
+    category: SETTINGS_PAGE,
+    action: 'Click on icon Close on Modal Create Pattern',
+    label: 'Close Modal Create Pattern',
+  },
+  CANCEL_BTN_CREATE_PATTERN_MODAL: {
+    category: SETTINGS_PAGE,
+    action: 'Click on Bttn Cancel on Modal Create Pattern',
+    label: 'Close Modal Create Pattern',
+  },
+  CLOSE_ICON_CLONE_PATTERN_MODAL: {
+    category: SETTINGS_PAGE,
+    action: 'Click on icon Close on Modal Clone Pattern',
+    label: 'Close Modal Clone Pattern',
+  },
+  CANCEL_BTN_CLONE_PATTERN_MODAL: {
+    category: SETTINGS_PAGE,
+    action: 'Click on Bttn Cancel on Modal Clone Pattern',
+    label: 'Close Modal Clone Pattern',
+  },
+  SAVE_BTN_CLONE_PATTERN_MODAL: {
+    category: SETTINGS_PAGE,
+    action: 'Click on Bttn Save on Modal Clone Pattern',
+    label: 'Clone Pattern',
+  },
+  CLOSE_ICON_RENAME_PATTERN_MODAL: {
+    category: SETTINGS_PAGE,
+    action: 'Click on icon Close on Modal Rename Pattern',
+    label: 'Close Modal Rename Pattern',
+  },
+  CANCEL_BTN_RENAME_PATTERN_MODAL: {
+    category: SETTINGS_PAGE,
+    action: 'Click on Bttn Cancel on Modal Rename Pattern',
+    label: 'Close Modal Rename Pattern',
+  },
+  SAVE_BTN_RENAME_PATTERN_MODAL: {
+    category: SETTINGS_PAGE,
+    action: 'Click on Bttn Save on Modal Rename Pattern',
+    label: 'Rename Pattern',
   },
 };
