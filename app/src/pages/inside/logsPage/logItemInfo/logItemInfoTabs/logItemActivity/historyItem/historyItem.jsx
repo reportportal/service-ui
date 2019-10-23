@@ -107,7 +107,7 @@ export class HistoryItem extends Component {
       return (
         <Fragment>
           {intl.formatMessage(messages.basedOn)}{' '}
-          <Link className={cx('link')} to={itemLink}>
+          <Link className={cx('link')} to={itemLink} target="_blank">
             {intl.formatMessage(messages.item)}
           </Link>
         </Fragment>
