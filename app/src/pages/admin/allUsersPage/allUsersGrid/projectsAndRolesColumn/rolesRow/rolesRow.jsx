@@ -18,6 +18,8 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import track from 'react-tracking';
+import { ADMIN_ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
 import { withTooltip } from 'components/main/tooltips/tooltip';
@@ -69,6 +71,7 @@ const messages = defineMessages({
 });
 
 @injectIntl
+@track()
 export class RolesRow extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -81,6 +84,10 @@ export class RolesRow extends Component {
     userId: PropTypes.string,
     entryType: PropTypes.string,
     accountType: PropTypes.string,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     value: MEMBER,
@@ -109,9 +116,11 @@ export class RolesRow extends Component {
     const { value, project } = this.state;
     const { createNew } = this.props;
     if (createNew) {
+      this.props.tracking.trackEvent(ADMIN_ALL_USERS_PAGE_EVENTS.ASSIGN_PROJECT_AND_ROLES);
       this.props.onAssignProjectRole(project.value, value);
     }
     this.props.onChange(project, value);
+    this.props.tracking.trackEvent(ADMIN_ALL_USERS_PAGE_EVENTS.CHANGE_ROLE_PROJECT_AND_ROLES);
   };
   getRolesMap = () =>
     ROLES_MAP.map((role) => {

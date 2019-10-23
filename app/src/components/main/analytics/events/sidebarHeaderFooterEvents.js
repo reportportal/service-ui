@@ -33,6 +33,29 @@ export const SIDEBAR_EVENTS = {
   },
 };
 
+export const ADMIN_SIDEBAR_EVENTS = {
+  CLICK_PROJECTS_BTN: {
+    category: SIDEBAR,
+    action: 'Click on Menu Btn Projects',
+    label: 'Transition to Projects Page',
+  },
+  CLICK_ALL_USERS_BTN: {
+    category: SIDEBAR,
+    action: 'Click on Menu Btn All Users',
+    label: 'Transition on All Users Page',
+  },
+  CLICK_SERVER_SETTINGS_BTN: {
+    category: SIDEBAR,
+    action: 'Click on Menu Btn Server Settings',
+    label: 'Transition on Server Settings Page',
+  },
+  CLICK_PLUGINS_BTN: {
+    category: SIDEBAR,
+    action: 'Click on Menu Btn Plugins',
+    label: 'Transition on Plugins Page',
+  },
+};
+
 const HEADER = 'header';
 export const HEADER_EVENTS = {
   CLICK_MEMBERS_BTN: {

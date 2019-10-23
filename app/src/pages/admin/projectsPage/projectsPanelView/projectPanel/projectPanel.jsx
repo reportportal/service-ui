@@ -16,6 +16,7 @@
 
 import React, { Component } from 'react';
 import track from 'react-tracking';
+import { ADMIN_PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
@@ -37,15 +38,10 @@ export class ProjectPanel extends Component {
   static propTypes = {
     project: PropTypes.object.isRequired,
     intl: intlShape.isRequired,
-    statisticEventInfo: PropTypes.object,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-  };
-
-  static defaultProps = {
-    statisticEventInfo: {},
   };
 
   getProjectIcon() {
@@ -134,7 +130,9 @@ export class ProjectPanel extends Component {
             />
             <ProjectStatisticButton
               projectName={projectName}
-              onClick={() => this.props.tracking.trackEvent(this.props.statisticEventInfo)}
+              onClick={() =>
+                this.props.tracking.trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.STATISTIC_ICON)
+              }
             />
           </div>
         </div>

@@ -19,6 +19,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
+import track from 'react-tracking';
+import { ADMIN_ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { GhostButton } from 'components/buttons/ghostButton';
 import ExportIcon from 'common/img/export-inline.svg';
 import InviteUserIcon from 'common/img/invite-inline.svg';
@@ -63,6 +65,7 @@ const messages = defineMessages({
   },
 });
 
+@track()
 @connect(
   (state) => ({
     users: allUsersSelector(state),
@@ -85,6 +88,10 @@ export class ActionPanel extends Component {
     showDefaultErrorNotification: PropTypes.func.isRequired,
     fetchAllUsersAction: PropTypes.func.isRequired,
     showModalAction: PropTypes.func.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -92,15 +99,20 @@ export class ActionPanel extends Component {
     filterEnities: {},
   };
 
-  onExportUsers = () => downloadFile(URLS.exportUsers(this.props.filterEnities));
+  onExportUsers = () => {
+    this.props.tracking.trackEvent(ADMIN_ALL_USERS_PAGE_EVENTS.EXPORT_BTN);
+    downloadFile(URLS.exportUsers(this.props.filterEnities));
+  };
 
-  showAddUserModal = () =>
+  showAddUserModal = () => {
+    this.props.tracking.trackEvent(ADMIN_ALL_USERS_PAGE_EVENTS.ADD_USER_BTN);
     this.props.showModalAction({
       id: 'allUsersAddUserModal',
       data: {
         onSubmit: this.addUser,
       },
     });
+  };
 
   addUser = (values) => {
     fetch(URLS.user(), {
@@ -127,6 +139,7 @@ export class ActionPanel extends Component {
   };
 
   showInviteUserModal = () => {
+    this.props.tracking.trackEvent(ADMIN_ALL_USERS_PAGE_EVENTS.INVITE_USER_BTN);
     this.props.showModalAction({
       id: 'inviteUserModal',
       data: { onInvite: this.props.fetchAllUsersAction, isProjectSelector: true },

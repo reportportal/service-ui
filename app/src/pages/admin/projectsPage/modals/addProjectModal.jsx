@@ -47,6 +47,7 @@ export class AddProjectModal extends Component {
     intl: intlShape.isRequired,
     tracking: PropTypes.shape({
       getTrackingData: PropTypes.func,
+      trackEvent: PropTypes.func,
     }).isRequired,
     data: PropTypes.object,
     dirty: PropTypes.bool,
@@ -70,25 +71,38 @@ export class AddProjectModal extends Component {
     };
   };
 
+  handleAddProject = () => {
+    const {
+      handleSubmit,
+      data: { onSubmit, eventsInfo },
+      tracking,
+    } = this.props;
+
+    tracking.trackEvent(eventsInfo.addBtn);
+    handleSubmit((values) => {
+      onSubmit(values);
+    })();
+  };
+
   render() {
-    const { onSubmit } = this.props.data;
-    const { intl, handleSubmit } = this.props;
+    const {
+      intl,
+      data: { eventsInfo },
+    } = this.props;
     return (
       <ModalLayout
         title={intl.formatMessage(messages.addProject)}
         okButton={{
           text: intl.formatMessage(COMMON_LOCALE_KEYS.ADD),
           danger: false,
-          onClick: () => {
-            handleSubmit((values) => {
-              onSubmit(values);
-            })();
-          },
+          onClick: this.handleAddProject,
         }}
         cancelButton={{
           text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+          eventInfo: eventsInfo.cancelBtn,
         }}
         closeConfirmation={this.getCloseConfirmationConfig()}
+        closeIconEventInfo={eventsInfo.closeIcon}
       >
         <form>
           <ModalField>
