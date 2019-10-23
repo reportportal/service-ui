@@ -78,6 +78,7 @@ export class CreatePatternModal extends Component {
       pattern: PropTypes.object,
       onSave: PropTypes.func,
       modalTitle: PropTypes.string,
+      eventsInfo: PropTypes.object,
     }),
     handleSubmit: PropTypes.func.isRequired,
     initialize: PropTypes.func.isRequired,
@@ -114,7 +115,7 @@ export class CreatePatternModal extends Component {
   render() {
     const {
       intl: { formatMessage },
-      data: { modalTitle },
+      data: { modalTitle, eventsInfo },
       handleSubmit,
       selectedType,
     } = this.props;
@@ -128,8 +129,10 @@ export class CreatePatternModal extends Component {
         }}
         cancelButton={{
           text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+          eventInfo: eventsInfo.cancelBtn,
         }}
         renderHeaderElements={this.renderHeaderElements}
+        closeIconEventInfo={eventsInfo.closeIcon}
       >
         <ModalField label={formatMessage(messages.patternName)} labelWidth={LABEL_WIDTH}>
           <FieldProvider name="name" type="text">

@@ -20,6 +20,8 @@ import { connect } from 'react-redux';
 import Parser from 'html-react-parser';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
+import track from 'react-tracking';
+import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
 import { GhostButton } from 'components/buttons/ghostButton';
 import PlusIcon from 'common/img/plus-button-inline.svg';
@@ -53,6 +55,7 @@ export const messages = defineMessages({
     updatePAState: updatePAStateAction,
   },
 )
+@track()
 export class PatternListHeader extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -60,6 +63,10 @@ export class PatternListHeader extends Component {
     PAState: PropTypes.bool.isRequired,
     updatePAState: PropTypes.func,
     readOnly: PropTypes.bool,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -70,12 +77,20 @@ export class PatternListHeader extends Component {
     readOnly: false,
   };
 
+  handleUpdatePAState = (PAState) => {
+    this.props.tracking.trackEvent(
+      PAState
+        ? SETTINGS_PAGE_EVENTS.TURN_ON_PA_SWITCHER
+        : SETTINGS_PAGE_EVENTS.TURN_OFF_PA_SWITCHER,
+    );
+    this.props.updatePAState(PAState);
+  };
+
   render() {
     const {
       intl: { formatMessage },
       onAddPattern,
       PAState,
-      updatePAState,
       readOnly,
     } = this.props;
     return (
@@ -85,7 +100,7 @@ export class PatternListHeader extends Component {
           disabled={readOnly}
           mobileDisabled
           value={PAState}
-          onChange={updatePAState}
+          onChange={this.handleUpdatePAState}
         />
         <p className={cx('description')}>{Parser(formatMessage(messages.enablePA))}</p>
         <span className={cx('create-button')}>
