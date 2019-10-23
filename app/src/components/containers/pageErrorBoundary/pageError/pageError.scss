@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright 2 2019 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,32 +14,18 @@
  *  limitations under the License.
  */
 
-import { Component } from 'react';
-import PropTypes from 'prop-types';
-import {PageError} from './pageError';
+.page-error {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
 
-export class PageErrorBoundary extends Component {
-  static propTypes = {
-    children: PropTypes.node.isRequired,
-  };
-
-  static getDerivedStateFromError(error) {
-    return {
-      hasError: true,
-      error,
-    };
-  }
-
-  state = {
-    hasError: false,
-    error: null,
-  };
-
-  render() {
-    const { hasError, error } = this.state;
-    if (!hasError) {
-      return this.props.children;
-    }
-    return <PageError error={error} />;
-  }
+.back-button {
+  margin-top: 15px;
+  width: 70px;
+  height: 30px;
+  font-size: 13px;
 }

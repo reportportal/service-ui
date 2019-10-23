@@ -72,3 +72,10 @@
 .hidden {
   opacity: 0;
 }
+
+.error-message-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
