@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2019 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,31 +14,5 @@
  * limitations under the License.
  */
 
-.ldap-auth-form-fields {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  margin-top: 5px;
-}
-
-.form-field-wrapper {
-  width: 330px;
-  position: relative;
-  @media (max-width: $SCREEN_XS_MAX) {
-    width: 100%;
-  }
-}
-
-.label {
-  padding-right: 4px;
-}
-
-.conditional-input {
-  padding-left: 90px;
-}
-
-.conditions-block {
-  width: 85px;
-}
+export { LdapSettings } from './ldapSettings';
+export { LdapFormFields } from './ldapFormFields';

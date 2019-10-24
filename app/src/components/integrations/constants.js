@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-import { JIRA, RALLY, EMAIL, SAUCE_LABS, SAML } from 'common/constants/integrationNames';
+import { JIRA, RALLY, EMAIL, SAUCE_LABS, SAML, LDAP, AD } from 'common/constants/integrationNames';
 import JiraIcon from 'common/img/plugins/jira.svg';
 import RallyIcon from 'common/img/plugins/rally.png';
 import EmailIcon from 'common/img/plugins/email.png';
 import SauceLabsIcon from 'common/img/plugins/sauce-labs.png';
 import SamlIcon from 'common/img/plugins/saml.png';
+import LdapIcon from 'common/img/plugins/ldap.png';
 import {
   SauceLabsSettings,
   SauceLabsFormFields,
@@ -31,6 +32,8 @@ import {
   RallyConnectionFormFields,
   SamlSettings,
   SamlFormFields,
+  LdapSettings,
+  LdapFormFields,
 } from './integrationProviders';
 
 export const INTEGRATION_NAMES_TITLES = {
@@ -39,6 +42,8 @@ export const INTEGRATION_NAMES_TITLES = {
   [EMAIL]: 'Email Server',
   [SAUCE_LABS]: 'Sauce Labs',
   [SAML]: 'SAML',
+  [LDAP]: 'LDAP',
+  [AD]: 'AD',
 };
 
 export const INTEGRATIONS_IMAGES_MAP = {
@@ -47,11 +52,13 @@ export const INTEGRATIONS_IMAGES_MAP = {
   [EMAIL]: EmailIcon,
   [SAUCE_LABS]: SauceLabsIcon,
   [SAML]: SamlIcon,
+  [LDAP]: LdapIcon,
+  [AD]: SamlIcon, // TODO
 };
 
 export const INTEGRATIONS_SUPPORTS_MULTIPLE_INSTANCES = [JIRA, RALLY, SAML];
 
-export const BUILTIN_PLUGINS = [EMAIL];
+export const BUILTIN_PLUGINS = [EMAIL, SAML, LDAP, AD];
 
 export const INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP = {
   [SAUCE_LABS]: SauceLabsFormFields,
@@ -59,6 +66,7 @@ export const INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP = {
   [JIRA]: JiraConnectionFormFields,
   [RALLY]: RallyConnectionFormFields,
   [SAML]: SamlFormFields,
+  [LDAP]: LdapFormFields,
 };
 
 export const INTEGRATIONS_SETTINGS_COMPONENTS_MAP = {
@@ -67,4 +75,5 @@ export const INTEGRATIONS_SETTINGS_COMPONENTS_MAP = {
   [JIRA]: JiraSettings,
   [RALLY]: RallySettings,
   [SAML]: SamlSettings,
+  [LDAP]: LdapSettings,
 };

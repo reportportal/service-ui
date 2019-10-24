@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { LdapAuthFormFields } from './ldapAuthFormFields';
+export { LdapFormFields } from './ldapFormFields';

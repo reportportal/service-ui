@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { LdapAuthForm } from './ldapAuthForm';
+export { LdapSettings } from './ldapSettings';

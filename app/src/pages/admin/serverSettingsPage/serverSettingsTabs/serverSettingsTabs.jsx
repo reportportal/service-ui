@@ -19,11 +19,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { SERVER_SETTINGS_TAB_PAGE, settingsTabSelector } from 'controllers/pages';
-import {
-  EMAIL_SERVER,
-  AUTHORIZATION_CONFIGURATION,
-  STATISTICS,
-} from 'common/constants/settingsTabs';
+import { AUTHORIZATION_CONFIGURATION, STATISTICS } from 'common/constants/settingsTabs';
 import { NavigationTabs } from 'components/main/navigationTabs';
 import { AuthConfigurationTab } from './authConfigurationTab';
 import { StatisticsTab } from './statisticsTab';
@@ -55,7 +51,7 @@ export class ServerSettingsTabs extends Component {
     onChangeTab: PropTypes.func,
   };
   static defaultProps = {
-    activeTab: EMAIL_SERVER,
+    activeTab: AUTHORIZATION_CONFIGURATION,
     onChangeTab: () => {},
   };
 
