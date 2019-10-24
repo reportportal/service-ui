@@ -92,6 +92,20 @@ const messages = defineMessages({
     defaultMessage: 'Retries',
   },
 });
+const POST_BUG_EVENTS_INFO = {
+  postBtn: LOG_PAGE_EVENTS.POST_BTN_POST_ISSUE_MODAL,
+  attachmentsSwitcher: LOG_PAGE_EVENTS.ATTACHMENTS_SWITCHER_POST_ISSUE_MODAL,
+  logsSwitcher: LOG_PAGE_EVENTS.LOGS_SWITCHER_POST_ISSUE_MODAL,
+  commentSwitcher: LOG_PAGE_EVENTS.COMMENT_SWITCHER_POST_ISSUE_MODAL,
+  cancelBtn: LOG_PAGE_EVENTS.CANCEL_BTN_POST_ISSUE_MODAL,
+  closeIcon: LOG_PAGE_EVENTS.CLOSE_ICON_POST_ISSUE_MODAL,
+};
+const LINK_ISSUE_EVENTS_INFO = {
+  loadBtn: LOG_PAGE_EVENTS.LOAD_BTN_LINK_ISSUE_MODAL,
+  cancelBtn: LOG_PAGE_EVENTS.CANCEL_BTN_LINK_ISSUE_MODAL,
+  addNewIssue: LOG_PAGE_EVENTS.ADD_NEW_ISSUE_LINK_ISSUE_MODAL,
+  closeIcon: LOG_PAGE_EVENTS.CLOSE_ICON_LINK_ISSUE_MODAL,
+};
 
 @connect(
   (state) => ({
@@ -258,12 +272,7 @@ export class LogItemInfo extends Component {
     this.props.tracking.trackEvent(LOG_PAGE_EVENTS.LINK_ISSUE_BTN);
     this.props.linkIssueAction([this.props.logItem], {
       fetchFunc: this.props.fetchFunc,
-      eventsInfo: {
-        loadBtn: LOG_PAGE_EVENTS.LOAD_BTN_LINK_ISSUE_MODAL,
-        cancelBtn: LOG_PAGE_EVENTS.CANCEL_BTN_LINK_ISSUE_MODAL,
-        addNewIssue: LOG_PAGE_EVENTS.ADD_NEW_ISSUE_LINK_ISSUE_MODAL,
-        closeIcon: LOG_PAGE_EVENTS.CLOSE_ICON_LINK_ISSUE_MODAL,
-      },
+      eventsInfo: LINK_ISSUE_EVENTS_INFO,
     });
   };
 
@@ -297,14 +306,7 @@ export class LogItemInfo extends Component {
     this.props.tracking.trackEvent(LOG_PAGE_EVENTS.POST_ISSUE_BTN);
     this.props.postIssueAction([this.props.logItem], {
       fetchFunc: this.props.fetchFunc,
-      eventsInfo: {
-        postBtn: LOG_PAGE_EVENTS.POST_BTN_POST_ISSUE_MODAL,
-        attachmentsSwitcher: LOG_PAGE_EVENTS.ATTACHMENTS_SWITCHER_POST_ISSUE_MODAL,
-        logsSwitcher: LOG_PAGE_EVENTS.LOGS_SWITCHER_POST_ISSUE_MODAL,
-        commentSwitcher: LOG_PAGE_EVENTS.COMMENT_SWITCHER_POST_ISSUE_MODAL,
-        cancelBtn: LOG_PAGE_EVENTS.CANCEL_BTN_POST_ISSUE_MODAL,
-        closeIcon: LOG_PAGE_EVENTS.CLOSE_ICON_POST_ISSUE_MODAL,
-      },
+      eventsInfo: POST_BUG_EVENTS_INFO,
     });
   };
 
@@ -320,6 +322,8 @@ export class LogItemInfo extends Component {
             saveBtnDropdown: LOG_PAGE_EVENTS.SAVE_BTN_DROPDOWN_EDIT_ITEM_MODAL,
             postBugBtn: LOG_PAGE_EVENTS.POST_BUG_BTN_EDIT_ITEM_MODAL,
             linkIssueBtn: LOG_PAGE_EVENTS.LOAD_BUG_BTN_EDIT_ITEM_MODAL,
+            postBugEvents: POST_BUG_EVENTS_INFO,
+            linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
           },
         },
       });
@@ -331,6 +335,8 @@ export class LogItemInfo extends Component {
           saveBtnDropdown: LOG_PAGE_EVENTS.SAVE_BTN_DROPDOWN_EDIT_ITEM_MODAL,
           postBugBtn: LOG_PAGE_EVENTS.POST_BUG_BTN_EDIT_ITEM_MODAL,
           linkIssueBtn: LOG_PAGE_EVENTS.LOAD_BUG_BTN_EDIT_ITEM_MODAL,
+          postBugEvents: POST_BUG_EVENTS_INFO,
+          linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
         },
       });
     }
