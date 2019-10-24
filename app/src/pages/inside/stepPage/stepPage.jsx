@@ -65,6 +65,22 @@ const UNLINK_MODAL_EVENTS_INFO = {
   closeIcon: STEP_PAGE_EVENTS.CLOSE_ICON_UNLINK_ISSUE_MODAL,
 };
 
+const POST_BUG_EVENTS_INFO = {
+  postBtn: STEP_PAGE_EVENTS.POST_BTN_POST_ISSUE_MODAL,
+  attachmentsSwitcher: STEP_PAGE_EVENTS.ATTACHMENTS_SWITCHER_POST_ISSUE_MODAL,
+  logsSwitcher: STEP_PAGE_EVENTS.LOGS_SWITCHER_POST_ISSUE_MODAL,
+  commentSwitcher: STEP_PAGE_EVENTS.COMMENT_SWITCHER_POST_ISSUE_MODAL,
+  cancelBtn: STEP_PAGE_EVENTS.CANCEL_BTN_POST_ISSUE_MODAL,
+  closeIcon: STEP_PAGE_EVENTS.CLOSE_ICON_POST_ISSUE_MODAL,
+};
+
+const LINK_ISSUE_EVENTS_INFO = {
+  loadBtn: STEP_PAGE_EVENTS.LOAD_BTN_LINK_ISSUE_MODAL,
+  cancelBtn: STEP_PAGE_EVENTS.CANCEL_BTN_LINK_ISSUE_MODAL,
+  addNewIssue: STEP_PAGE_EVENTS.ADD_NEW_ISSUE_BTN_LINK_ISSUE_MODAL,
+  closeIcon: STEP_PAGE_EVENTS.CLOSE_ICON_LINK_ISSUE_MODAL,
+};
+
 @connect(
   (state) => ({
     debugMode: debugModeSelector(state),
@@ -294,25 +310,13 @@ export class StepPage extends Component {
   handleLinkIssue = () =>
     this.props.linkIssueAction(this.props.selectedItems, {
       fetchFunc: this.unselectAndFetchItems,
-      eventsInfo: {
-        loadBtn: STEP_PAGE_EVENTS.LOAD_BTN_LINK_ISSUE_MODAL,
-        cancelBtn: STEP_PAGE_EVENTS.CANCEL_BTN_LINK_ISSUE_MODAL,
-        addNewIssue: STEP_PAGE_EVENTS.ADD_NEW_ISSUE_BTN_LINK_ISSUE_MODAL,
-        closeIcon: STEP_PAGE_EVENTS.CLOSE_ICON_LINK_ISSUE_MODAL,
-      },
+      eventsInfo: LINK_ISSUE_EVENTS_INFO,
     });
 
   handlePostIssue = () =>
     this.props.postIssueAction(this.props.selectedItems, {
       fetchFunc: this.unselectAndFetchItems,
-      eventsInfo: {
-        postBtn: STEP_PAGE_EVENTS.POST_BTN_POST_ISSUE_MODAL,
-        attachmentsSwitcher: STEP_PAGE_EVENTS.ATTACHMENTS_SWITCHER_POST_ISSUE_MODAL,
-        logsSwitcher: STEP_PAGE_EVENTS.LOGS_SWITCHER_POST_ISSUE_MODAL,
-        commentSwitcher: STEP_PAGE_EVENTS.COMMENT_SWITCHER_POST_ISSUE_MODAL,
-        cancelBtn: STEP_PAGE_EVENTS.CANCEL_BTN_POST_ISSUE_MODAL,
-        closeIcon: STEP_PAGE_EVENTS.CLOSE_ICON_POST_ISSUE_MODAL,
-      },
+      eventsInfo: POST_BUG_EVENTS_INFO,
     });
 
   handleIgnoreInAA = () => {
@@ -353,6 +357,8 @@ export class StepPage extends Component {
             linkIssueBtn: STEP_PAGE_EVENTS.LOAD_BUG_BTN_EDIT_ITEM_MODAL,
             unlinkIssueBtn: STEP_PAGE_EVENTS.UNLINK_ISSUE_BTN_EDIT_ITEM_MODAL,
             unlinkModalEvents: UNLINK_MODAL_EVENTS_INFO,
+            postBugEvents: POST_BUG_EVENTS_INFO,
+            linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
           },
         },
       });
@@ -366,6 +372,8 @@ export class StepPage extends Component {
           linkIssueBtn: STEP_PAGE_EVENTS.LOAD_BUG_BTN_EDIT_ITEM_MODAL,
           unlinkIssueBtn: STEP_PAGE_EVENTS.UNLINK_ISSUE_BTN_EDIT_ITEM_MODAL,
           unlinkModalEvents: UNLINK_MODAL_EVENTS_INFO,
+          postBugEvents: POST_BUG_EVENTS_INFO,
+          linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
         },
       });
     }

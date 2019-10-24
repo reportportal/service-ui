@@ -228,6 +228,7 @@ export class EditDefectModal extends Component {
     this.props.tracking.trackEvent(this.props.data.eventsInfo.linkIssueBtn);
     return this.props.linkIssueAction(this.getItemsToTheNextAction(), {
       fetchFunc: this.props.data.fetchFunc,
+      eventsInfo: this.props.data.eventsInfo.linkIssueEvents,
     });
   };
 
@@ -235,6 +236,7 @@ export class EditDefectModal extends Component {
     this.props.tracking.trackEvent(this.props.data.eventsInfo.postBugBtn);
     this.props.postIssueAction(this.getItemsToTheNextAction(), {
       fetchFunc: this.props.data.fetchFunc,
+      eventsInfo: this.props.data.eventsInfo.postBugEvents,
     });
   };
 
