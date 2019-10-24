@@ -29,7 +29,11 @@ import {
 } from 'controllers/testItem';
 import { HISTORY_PAGE, payloadSelector } from 'controllers/pages';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
-import { availableBtsIntegrationsSelector, isPostIssueActionAvailable } from 'controllers/plugins';
+import {
+  availableBtsIntegrationsSelector,
+  isPostIssueActionAvailable,
+  isBtsIntegrationsExistSelector,
+} from 'controllers/plugins';
 import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
 import { SUITES_PAGE_EVENTS } from 'components/main/analytics/events/suitesPageEvents';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -96,6 +100,7 @@ const messages = defineMessages({
     btsIntegrations: availableBtsIntegrationsSelector(state),
     accountRole: userAccountRoleSelector(state),
     projectRole: activeProjectRoleSelector(state),
+    isBtsIntegrationsExist: isBtsIntegrationsExistSelector(state),
   }),
   {
     restorePath: restorePathAction,
@@ -136,6 +141,7 @@ export class ActionPanel extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    isBtsIntegrationsExist: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -163,6 +169,7 @@ export class ActionPanel extends Component {
     listView: false,
     btsIntegrations: [],
     deleteDisabled: false,
+    isBtsIntegrationsExist: false,
   };
 
   onClickHistory = () => {
@@ -183,6 +190,25 @@ export class ActionPanel extends Component {
     this.props.onRefresh();
   };
 
+  getIssueTitle = () => {
+    const {
+      intl: { formatMessage },
+      btsIntegrations,
+      isBtsIntegrationsExist,
+    } = this.props;
+    let title = '';
+
+    if (btsIntegrations.length) {
+      title = formatMessage(COMMON_LOCALE_KEYS.NO_PROJECT_INTEGRATION);
+    } else {
+      title = isBtsIntegrationsExist
+        ? formatMessage(COMMON_LOCALE_KEYS.NO_AVAILABLE_BTS_INTEGRATION)
+        : formatMessage(COMMON_LOCALE_KEYS.NO_BTS_INTEGRATION);
+    }
+
+    return title;
+  };
+
   createStepActionDescriptors = () => {
     const {
       intl: { formatMessage },
@@ -201,6 +227,7 @@ export class ActionPanel extends Component {
       projectRole,
     } = this.props;
     const isPostIssueUnavailable = !isPostIssueActionAvailable(btsIntegrations);
+    const issueTitle = this.getIssueTitle();
 
     return [
       {
@@ -222,7 +249,7 @@ export class ActionPanel extends Component {
         value: 'action-post-issue',
         hidden: debugMode,
         disabled: isPostIssueUnavailable,
-        title: isPostIssueUnavailable ? formatMessage(COMMON_LOCALE_KEYS.NO_BTS_INTEGRATION) : '',
+        title: isPostIssueUnavailable ? issueTitle : '',
         onClick: () => {
           tracking.trackEvent(STEP_PAGE_EVENTS.POST_BUG_ACTION);
           onPostIssue();
@@ -233,7 +260,7 @@ export class ActionPanel extends Component {
         value: 'action-link-issue',
         hidden: debugMode,
         disabled: !btsIntegrations.length,
-        title: btsIntegrations.length ? '' : formatMessage(COMMON_LOCALE_KEYS.NO_BTS_INTEGRATION),
+        title: btsIntegrations.length ? '' : issueTitle,
         onClick: () => {
           tracking.trackEvent(STEP_PAGE_EVENTS.LOAD_BUG_ACTION);
           onLinkIssue();

@@ -51,6 +51,11 @@ export const availableGroupedPluginsSelector = createSelector(
   },
 );
 
+export const isBtsIntegrationsExistSelector = createSelector(
+  pluginsSelector,
+  (plugins) => !!plugins.filter((item) => item.groupType === BTS_GROUP_TYPE).length,
+);
+
 export const createNamedIntegrationsSelector = (integrationName, integrationsSelector) =>
   createSelector(integrationsSelector, (integrations) =>
     filterIntegrationsByName(integrations, integrationName),

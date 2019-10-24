@@ -42,7 +42,11 @@ import {
 import { getDefectTypeSelector } from 'controllers/project';
 import { TO_INVESTIGATE } from 'common/constants/defectTypes';
 import { MANY } from 'common/constants/launchStatuses';
-import { availableBtsIntegrationsSelector, isPostIssueActionAvailable } from 'controllers/plugins';
+import {
+  availableBtsIntegrationsSelector,
+  isPostIssueActionAvailable,
+  isBtsIntegrationsExistSelector,
+} from 'controllers/plugins';
 import { connectRouter } from 'common/utils';
 import LinkIcon from 'common/img/link-inline.svg';
 import DownLeftArrowIcon from 'common/img/down-left-arrow-inline.svg';
@@ -101,6 +105,7 @@ const messages = defineMessages({
     retryItemId: activeRetryIdSelector(state),
     retries: retriesSelector(state),
     getDefectType: getDefectTypeSelector(state),
+    isBtsIntegrationsExist: isBtsIntegrationsExistSelector(state),
   }),
   {
     linkIssueAction,
@@ -145,6 +150,7 @@ export class LogItemInfo extends Component {
     retryItemId: PropTypes.number,
     retries: PropTypes.arrayOf(PropTypes.object),
     getDefectType: PropTypes.func,
+    isBtsIntegrationsExist: PropTypes.bool,
   };
   static defaultProps = {
     logItem: null,
@@ -152,19 +158,25 @@ export class LogItemInfo extends Component {
     retryItemId: null,
     retries: [],
     getDefectType: () => {},
+    isBtsIntegrationsExist: false,
   };
 
-  getIssueActionTitle = (noIssueMessage, isBtsUnavailable) => {
+  getIssueActionTitle = (noIssueMessage, isBtsUnavailable, isBtsIntegrationsUnavailable) => {
     const {
       logItem,
       intl: { formatMessage },
+      isBtsIntegrationsExist,
     } = this.props;
     let title = '';
 
     if (!logItem.issue) {
       title = formatMessage(noIssueMessage);
+    } else if (isBtsIntegrationsUnavailable) {
+      title = formatMessage(COMMON_LOCALE_KEYS.NO_PROJECT_INTEGRATION);
     } else if (isBtsUnavailable) {
-      title = formatMessage(COMMON_LOCALE_KEYS.NO_BTS_INTEGRATION);
+      title = isBtsIntegrationsExist
+        ? formatMessage(COMMON_LOCALE_KEYS.NO_AVAILABLE_BTS_INTEGRATION)
+        : formatMessage(COMMON_LOCALE_KEYS.NO_BTS_INTEGRATION);
     }
 
     return title;
@@ -385,6 +397,7 @@ export class LogItemInfo extends Component {
                     title={this.getIssueActionTitle(
                       messages.noDefectTypeToPostIssue,
                       !isPostIssueActionAvailable(btsIntegrations),
+                      !!btsIntegrations.length,
                     )}
                   >
                     {formatMessage(messages.postIssue)}
