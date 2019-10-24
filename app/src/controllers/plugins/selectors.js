@@ -21,6 +21,9 @@ import {
   RALLY,
   EMAIL,
   SAUCE_LABS,
+  SAML,
+  LDAP,
+  AD,
   INTEGRATION_NAMES_BY_GROUP_TYPES_MAP,
 } from 'common/constants/integrationNames';
 import {
@@ -61,6 +64,9 @@ export const namedGlobalIntegrationsSelectorsMap = {
   [JIRA]: createNamedIntegrationsSelector(JIRA, globalIntegrationsSelector),
   [RALLY]: createNamedIntegrationsSelector(RALLY, globalIntegrationsSelector),
   [EMAIL]: createNamedIntegrationsSelector(EMAIL, globalIntegrationsSelector),
+  [SAML]: createNamedIntegrationsSelector(SAML, globalIntegrationsSelector),
+  [LDAP]: createNamedIntegrationsSelector(LDAP, globalIntegrationsSelector),
+  [AD]: createNamedIntegrationsSelector(AD, globalIntegrationsSelector),
 };
 
 export const namedProjectIntegrationsSelectorsMap = {
@@ -68,6 +74,9 @@ export const namedProjectIntegrationsSelectorsMap = {
   [JIRA]: createNamedIntegrationsSelector(JIRA, projectIntegrationsSelector),
   [RALLY]: createNamedIntegrationsSelector(RALLY, projectIntegrationsSelector),
   [EMAIL]: createNamedIntegrationsSelector(EMAIL, projectIntegrationsSelector),
+  [SAML]: createNamedIntegrationsSelector(SAML, projectIntegrationsSelector),
+  [LDAP]: createNamedIntegrationsSelector(LDAP, projectIntegrationsSelector),
+  [AD]: createNamedIntegrationsSelector(AD, projectIntegrationsSelector),
 };
 
 export const availableIntegrationsByPluginNameSelector = (state, pluginName) => {

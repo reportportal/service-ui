@@ -19,7 +19,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { pluginsSelector } from 'controllers/plugins';
-import { AUTHORIZATION_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { PluginsTabs } from './pluginsTabs';
 
@@ -46,17 +45,14 @@ export class PluginsPage extends Component {
     },
   ];
 
-  getFilterItems = () => [...new Set(this.getPlugins().map((item) => item.groupType))];
-
-  getPlugins = () =>
-    this.props.plugins.filter((item) => item.groupType !== AUTHORIZATION_GROUP_TYPE);
+  getFilterItems = () => [...new Set(this.props.plugins.map((item) => item.groupType))];
 
   render() {
     return (
       <PageLayout>
         <PageHeader breadcrumbs={this.getBreadcrumbs()} />
         <PageSection>
-          <PluginsTabs plugins={this.getPlugins()} filterItems={this.getFilterItems()} />
+          <PluginsTabs plugins={this.props.plugins} filterItems={this.getFilterItems()} />
         </PageSection>
       </PageLayout>
     );

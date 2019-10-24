@@ -14,17 +14,10 @@
  * limitations under the License.
  */
 
-.ldap-auth-form {
-  position: relative;
-  margin-bottom: 20px;
+.conditional-input {
+  padding-left: 90px;
 }
 
-.label-container {
-  position: relative;
-
-  .beta {
-    right: unset;
-    left: 34px;
-    top: 4px;
-  }
+.conditions-block {
+  width: 85px;
 }
