@@ -38,6 +38,7 @@ export class MultiActionButton extends Component {
         value: PropTypes.string,
         disabled: PropTypes.bool,
         onClick: PropTypes.func,
+        title: PropTypes.string,
       }),
     ),
     menuAtRight: PropTypes.bool,
@@ -106,6 +107,7 @@ export class MultiActionButton extends Component {
               key={item.value}
               className={cx('menu-item', { disabled: item.disabled })}
               onClick={!item.disabled ? item.onClick : null}
+              title={item.title || ''}
             >
               {item.label}
             </div>

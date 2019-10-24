@@ -21,7 +21,11 @@ import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
-import { availableBtsIntegrationsSelector, isPostIssueActionAvailable } from 'controllers/plugins';
+import {
+  availableBtsIntegrationsSelector,
+  isPostIssueActionAvailable,
+  isBtsIntegrationsExistSelector,
+} from 'controllers/plugins';
 import { unlinkIssueAction, linkIssueAction, postIssueAction } from 'controllers/step';
 import { hideModalAction } from 'controllers/modal';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -47,6 +51,7 @@ const cx = classNames.bind(styles);
   (state) => ({
     btsIntegrations: availableBtsIntegrationsSelector(state),
     url: URLS.testItems(activeProjectSelector(state)),
+    isBtsIntegrationsExist: isBtsIntegrationsExistSelector(state),
   }),
   {
     showNotification,
@@ -77,6 +82,7 @@ export class EditDefectModal extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    isBtsIntegrationsExist: PropTypes.bool.isRequired,
   };
 
   constructor(props) {
@@ -87,6 +93,8 @@ export class EditDefectModal extends Component {
       data: { items },
     } = props;
     const initialState = {};
+    const isPostIssueUnavailable = !isPostIssueActionAvailable(btsIntegrations);
+    const issueTitle = this.getIssueTitle();
 
     if (this.isBulkEditOperation()) {
       initialState.changeCommentMode =
@@ -103,12 +111,14 @@ export class EditDefectModal extends Component {
       {
         label: intl.formatMessage(messages.saveAndPostIssueMessage),
         value: 'Post',
+        title: isPostIssueUnavailable ? issueTitle : '',
         onClick: () => this.onEditDefects(this.handlePostIssue, true),
-        disabled: !isPostIssueActionAvailable(btsIntegrations),
+        disabled: isPostIssueUnavailable,
       },
       {
         label: intl.formatMessage(messages.saveAndLinkIssueMessage),
         value: 'Link',
+        title: btsIntegrations.length ? '' : issueTitle,
         onClick: () => this.onEditDefects(this.handleLinkIssue, true),
         disabled: !btsIntegrations.length,
       },
@@ -166,6 +176,25 @@ export class EditDefectModal extends Component {
     const updatedItems = this.prepareDataToSend();
 
     return items.map((item, index) => ({ ...item, ...updatedItems[index] }));
+  };
+
+  getIssueTitle = () => {
+    const {
+      intl: { formatMessage },
+      btsIntegrations,
+      isBtsIntegrationsExist,
+    } = this.props;
+    let title = '';
+
+    if (btsIntegrations.length) {
+      title = formatMessage(COMMON_LOCALE_KEYS.NO_PROJECT_INTEGRATION);
+    } else {
+      title = isBtsIntegrationsExist
+        ? formatMessage(COMMON_LOCALE_KEYS.NO_AVAILABLE_BTS_INTEGRATION)
+        : formatMessage(COMMON_LOCALE_KEYS.NO_BTS_INTEGRATION);
+    }
+
+    return title;
   };
 
   prepareDataToSend = () => {
