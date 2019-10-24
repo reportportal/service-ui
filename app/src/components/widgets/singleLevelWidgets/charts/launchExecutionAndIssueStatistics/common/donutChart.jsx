@@ -80,15 +80,14 @@ export class DonutChart extends Component {
     this.chart = null;
   }
 
-  onChartCreated = (node, chart, { getChartSize }) => {
+  onChartCreated = (node, chart) => {
     this.node = node;
     this.chart = chart;
-    this.getChartSize = getChartSize;
 
     const { onStatusPageMode, chartText } = this.props;
 
     if (!onStatusPageMode) {
-      const height = getChartSize().height;
+      const height = this.getChartSize().height;
       this.chart.resize({ height });
     }
 
@@ -176,7 +175,14 @@ export class DonutChart extends Component {
     };
   };
 
-  getChartSize = () => null;
+  getChartSize = () => {
+    const { container, heightOffset } = this.props;
+
+    return {
+      height: container.offsetHeight - heightOffset,
+      width: container.offsetWidth,
+    };
+  };
 
   checkIfTheSmallView = () => {
     const size = this.getChartSize();
