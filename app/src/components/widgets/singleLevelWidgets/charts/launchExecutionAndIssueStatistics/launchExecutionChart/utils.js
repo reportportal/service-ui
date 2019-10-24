@@ -17,9 +17,8 @@
 import { getChartData } from '../common/config/utils';
 
 export const getColumns = (content) => {
-  const EXECUTIONS = '$executions$';
   const values = (content[0] || content).values;
-  const { itemTypes: chartData, itemColors: colors } = getChartData(values, EXECUTIONS);
+  const { itemTypes: chartData, itemColors: colors } = getChartData(values, '$executions$');
   const columns = [];
 
   chartData.statistics$executions$passed &&

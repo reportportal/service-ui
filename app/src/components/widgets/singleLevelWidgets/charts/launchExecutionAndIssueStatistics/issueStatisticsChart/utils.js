@@ -36,9 +36,8 @@ export const getChartColors = (columns, defectTypes) =>
   }, {});
 
 export const getColumns = (content, contentFields, { orderedContentFields, defectTypes }) => {
-  const DEFECTS = '$defects$';
   const values = (content[0] || content).values;
-  const defectDataItems = getChartData(values, DEFECTS);
+  const defectDataItems = getChartData(values, '$defects$');
   const defectTypesChartData = defectDataItems.itemTypes;
   const columns = [];
 
@@ -48,11 +47,10 @@ export const getColumns = (content, contentFields, { orderedContentFields, defec
   }));
 
   orderedData.forEach((item) => {
-    contentFields.forEach((field) => {
-      if (field === item.key) {
-        columns.push([field, item.value]);
-      }
-    });
+    const currentContentField = contentFields.find((field) => field === item.key);
+    if (currentContentField) {
+      columns.push([item.key, item.value]);
+    }
   });
 
   const colors = getChartColors(columns, defectTypes);

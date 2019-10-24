@@ -91,10 +91,7 @@ export class ChartContainer extends Component {
     const { showLegend, legendProps = {}, uncheckedLegendItems = [] } = legendConfig;
     this.chart = chart;
     this.node = element;
-    chartCreatedCallback(element, chart, {
-      getChartSize: this.getChartSize,
-      ...(this.config.customData || {}),
-    });
+    chartCreatedCallback(element, chart, this.config.customData);
 
     if (!widget.content.result || isPreview) {
       return;
@@ -127,11 +124,6 @@ export class ChartContainer extends Component {
   onZoomEnd = () => {
     this.chart.flush();
   };
-
-  getChartSize = () => ({
-    height: this.height,
-    width: this.width,
-  });
 
   setupConfig = () => {
     const { widget, isPreview, container, configData, heightOffset } = this.props;
