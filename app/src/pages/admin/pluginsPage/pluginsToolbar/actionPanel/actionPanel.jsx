@@ -18,6 +18,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
+import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { showModalAction } from 'controllers/modal';
 import { fetchPluginsAction } from 'controllers/plugins';
@@ -68,11 +69,16 @@ const messages = defineMessages({
   fetchPluginsAction,
 })
 @injectIntl
+@track()
 export class ActionPanel extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     showModalAction: PropTypes.func.isRequired,
     fetchPluginsAction: PropTypes.func.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
     initialParamsValues: PropTypes.array,
   };
   static defaultProps = {
@@ -97,7 +103,9 @@ export class ActionPanel extends Component {
   openUploadModal = () => {
     const {
       intl: { formatMessage },
+      tracking,
     } = this.props;
+    tracking.trackEvent(PLUGINS_PAGE_EVENTS.CLICK_UPLOAD_BTN);
 
     this.props.showModalAction({
       id: 'importModal',

@@ -267,7 +267,7 @@ export const LAUNCHES_PAGE_EVENTS = {
   CLICK_IMPORT_BTN: {
     category: LAUNCHES_PAGE,
     action: 'Click on Bttn Import',
-    label: 'Arise Modul Import Launch',
+    label: 'Arise Modal Import Launch',
   },
   ADD_NEW_WIDGET_BTN: {
     category: LAUNCHES_PAGE,
@@ -354,7 +354,7 @@ export const LAUNCHES_MODAL_EVENTS = {
   },
   OK_BTN_IMPORT_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Ok on Modal "Import Launch"',
+    action: 'Click on Bttn Import on Modal "Import Launch"',
     label: 'Import Launch',
   },
   LINEAR_MERGE_BTN_MERGE_MODAL: {

@@ -25,8 +25,8 @@ export const getSaveNewPatternEvent = (patternType) => ({
 export const SETTINGS_PAGE_EVENTS = {
   GENERAL_TAB: {
     category: SETTINGS_PAGE,
-    action: 'MY CUSTOM EVENT',
-    label: 'MY CUSTOM EVENT',
+    action: 'Click on tab General in Settings',
+    label: 'Open tab General in Settings',
   },
   INACTIVITY_TIMEOUT_GENERAL: {
     category: SETTINGS_PAGE,
