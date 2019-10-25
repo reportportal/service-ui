@@ -30,7 +30,9 @@ import {
   dirtyFilterIdsSelector,
 } from 'controllers/filter';
 import { changeLaunchDistinctAction, launchDistinctSelector } from 'controllers/launch';
+import { userIdSelector, activeProjectRoleSelector, isAdminSelector } from 'controllers/user';
 import { isEmptyObject, isEmptyValue } from 'common/utils';
+import { PROJECT_MANAGER } from 'common/constants/projectRoles';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { levelSelector } from 'controllers/testItem';
 import { EntitiesGroup } from 'components/filterEntities/entitiesGroup';
@@ -50,6 +52,9 @@ const cx = classNames.bind(styles);
     dirtyFilterIds: dirtyFilterIdsSelector(state),
     launchDistinct: launchDistinctSelector(state),
     level: levelSelector(state),
+    userId: userIdSelector(state),
+    userProjectRole: activeProjectRoleSelector(state),
+    isAdmin: isAdminSelector(state),
   }),
   {
     showModal: showModalAction,
@@ -88,6 +93,9 @@ export class LaunchFiltersToolbar extends Component {
     changeLaunchDistinct: PropTypes.func,
     launchDistinct: PropTypes.string,
     level: PropTypes.string,
+    userId: PropTypes.string.isRequired,
+    userProjectRole: PropTypes.string.isRequired,
+    isAdmin: PropTypes.bool.isRequired,
     intl: intlShape.isRequired,
   };
 
@@ -185,9 +193,18 @@ export class LaunchFiltersToolbar extends Component {
     const { dirtyFilterIds, activeFilterId } = this.props;
     return dirtyFilterIds.indexOf(activeFilterId) !== -1;
   };
+  isFilterCreatorCurrentUser = () => {
+    const { userId, activeFilter } = this.props;
+    return activeFilter.owner === userId;
+  };
   isSaveDisabled = () => {
-    const { filterErrors } = this.props;
-    return !this.isFilterUnsaved() || !isEmptyObject(filterErrors) || this.isNoFilterValues();
+    const { filterErrors, isAdmin, userProjectRole } = this.props;
+    return (
+      !this.isFilterUnsaved() ||
+      !isEmptyObject(filterErrors) ||
+      this.isNoFilterValues() ||
+      (!this.isFilterCreatorCurrentUser() && (!isAdmin || userProjectRole !== PROJECT_MANAGER))
+    );
   };
   isDiscardDisabled = () => !this.isFilterDirty();
   isEditDisabled = () => this.isFilterUnsaved() || this.isNewFilter();
