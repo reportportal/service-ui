@@ -110,7 +110,7 @@ export class DefectTypeTooltip extends Component {
                     className={cx('circle')}
                     style={{ backgroundColor: defectConfig[0].color }}
                   />
-                  {formatMessage(messages[`${type}_total`])}
+                  {formatMessage(messages[`${type.toLowerCase()}_total`])}
                 </div>
                 <span className={cx('value')}>{data.total}</span>
               </DefectLink>
