@@ -21,6 +21,7 @@ import EmailIcon from 'common/img/plugins/email.png';
 import SauceLabsIcon from 'common/img/plugins/sauce-labs.png';
 import SamlIcon from 'common/img/plugins/saml.png';
 import LdapIcon from 'common/img/plugins/ldap.png';
+import ActiveDirectoryIcon from 'common/img/plugins/activeDirectory.png';
 import {
   SauceLabsSettings,
   SauceLabsFormFields,
@@ -34,6 +35,8 @@ import {
   SamlFormFields,
   LdapSettings,
   LdapFormFields,
+  ActiveDirectorySettings,
+  ActiveDirectoryFormFields,
 } from './integrationProviders';
 
 export const INTEGRATION_NAMES_TITLES = {
@@ -43,7 +46,7 @@ export const INTEGRATION_NAMES_TITLES = {
   [SAUCE_LABS]: 'Sauce Labs',
   [SAML]: 'SAML',
   [LDAP]: 'LDAP',
-  [AD]: 'AD',
+  [AD]: 'Active Directory',
 };
 
 export const INTEGRATIONS_IMAGES_MAP = {
@@ -53,7 +56,7 @@ export const INTEGRATIONS_IMAGES_MAP = {
   [SAUCE_LABS]: SauceLabsIcon,
   [SAML]: SamlIcon,
   [LDAP]: LdapIcon,
-  [AD]: SamlIcon, // TODO
+  [AD]: ActiveDirectoryIcon,
 };
 
 export const INTEGRATIONS_SUPPORTS_MULTIPLE_INSTANCES = [JIRA, RALLY, SAML];
@@ -67,6 +70,7 @@ export const INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP = {
   [RALLY]: RallyConnectionFormFields,
   [SAML]: SamlFormFields,
   [LDAP]: LdapFormFields,
+  [AD]: ActiveDirectoryFormFields,
 };
 
 export const INTEGRATIONS_SETTINGS_COMPONENTS_MAP = {
@@ -76,4 +80,5 @@ export const INTEGRATIONS_SETTINGS_COMPONENTS_MAP = {
   [RALLY]: RallySettings,
   [SAML]: SamlSettings,
   [LDAP]: LdapSettings,
+  [AD]: ActiveDirectorySettings,
 };
