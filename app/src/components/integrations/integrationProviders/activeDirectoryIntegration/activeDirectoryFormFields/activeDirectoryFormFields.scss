@@ -14,27 +14,6 @@
  * limitations under the License.
  */
 
-.active-directory-auth-form-fields {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  margin-top: 5px;
-}
-
-.form-field-wrapper {
-  width: 330px;
-  position: relative;
-  @media (max-width: $SCREEN_XS_MAX) {
-    width: 100%;
-  }
-}
-
-.label {
-  padding-right: 4px;
-}
-
 .conditional-input {
   padding-left: 90px;
 }

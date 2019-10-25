@@ -15,4 +15,3 @@
  */
 
 export { GithubAuthForm } from './githubAuthForm';
-export { ActiveDirectoryAuthForm } from './activeDirectoryAuthForm';

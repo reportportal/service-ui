@@ -56,8 +56,8 @@ export const INTEGRATIONS_DESCRIPTIONS_MAP = {
   ),
   [AD]: (
     <FormattedMessage
-      id="Integrations.Ad.description"
-      defaultMessage="Integration with AD, can be help to speed up the process user creation and login to ReportPortal. Integration provides an exchange of information between ReportPortal and AD, such as possibility to login to ReportPortal with AD credentials."
+      id="Integrations.ActiveDirectory.description"
+      defaultMessage="Integration with Active Directory, can be help to speed up the process user creation and login to ReportPortal. Integration provides an exchange of information between ReportPortal and Active Directory, such as possibility to login to ReportPortal with Active Directory credentials."
     />
   ),
 };

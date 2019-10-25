@@ -14,4 +14,5 @@
  * limitations under the License.
  */
 
-export { ActiveDirectoryAuthForm } from './activeDirectoryAuthForm';
+export { ActiveDirectorySettings } from './activeDirectorySettings';
+export { ActiveDirectoryFormFields } from './activeDirectoryFormFields';

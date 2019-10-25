@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2019 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +14,4 @@
  * limitations under the License.
  */
 
-.active-directory-auth-form {
-  position: relative;
-  margin-bottom: 20px;
-}
+export { ActiveDirectorySettings } from './activeDirectorySettings';
