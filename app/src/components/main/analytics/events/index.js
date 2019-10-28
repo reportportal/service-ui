@@ -30,7 +30,14 @@ export {
   FOOTER_EVENTS,
 } from './sidebarHeaderFooterEvents';
 export { MEMBERS_PAGE, MEMBERS_PAGE_EVENTS } from './membersPageEvents';
-export { PLUGINS_PAGE_EVENTS } from './pluginsPageEvents';
+export {
+  PLUGINS_PAGE_EVENTS,
+  PLUGINS_PAGE,
+  getPluginFilterTabClickEvent,
+  getPluginItemClickEvent,
+  getDisablePluginItemClickEvent,
+  getUninstallPluginBtnClickEvent,
+} from './pluginsPageEvents';
 export { PROFILE_PAGE, PROFILE_PAGE_EVENTS } from './profilePageEvents';
 export { SETTINGS_PAGE, SETTINGS_PAGE_EVENTS, getSaveNewPatternEvent } from './settingsPageEvents';
 export { SUITE_PAGE, SUITES_PAGE_EVENTS } from './suitesPageEvents';

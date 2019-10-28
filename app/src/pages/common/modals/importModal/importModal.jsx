@@ -122,9 +122,9 @@ export class ImportModal extends Component {
       disabled: isLoading,
       onClick: (closeModal) => {
         if (uploadFinished) {
-          tracking.trackEvent(eventsInfo.okBtn);
           closeModal();
         } else {
+          tracking.trackEvent(eventsInfo.okBtn);
           this.uploadFilesOnOkClick();
         }
       },
