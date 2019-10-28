@@ -22,8 +22,8 @@ import classNames from 'classnames/bind';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { DefectType } from 'pages/inside/stepPage/stepGrid/defectType';
+import { getIssueTitle } from 'pages/inside/common/utils';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import {
   linkIssueAction,
   unlinkIssueAction,
@@ -45,7 +45,8 @@ import { MANY } from 'common/constants/launchStatuses';
 import {
   availableBtsIntegrationsSelector,
   isPostIssueActionAvailable,
-  isBtsIntegrationsExistSelector,
+  isBtsPluginsExistSelector,
+  enabledBtsPluginsSelector,
 } from 'controllers/plugins';
 import { connectRouter } from 'common/utils';
 import LinkIcon from 'common/img/link-inline.svg';
@@ -105,7 +106,8 @@ const messages = defineMessages({
     retryItemId: activeRetryIdSelector(state),
     retries: retriesSelector(state),
     getDefectType: getDefectTypeSelector(state),
-    isBtsIntegrationsExist: isBtsIntegrationsExistSelector(state),
+    isBtsPluginsExist: isBtsPluginsExistSelector(state),
+    enabledBtsPlugins: enabledBtsPluginsSelector(state),
   }),
   {
     linkIssueAction,
@@ -150,7 +152,8 @@ export class LogItemInfo extends Component {
     retryItemId: PropTypes.number,
     retries: PropTypes.arrayOf(PropTypes.object),
     getDefectType: PropTypes.func,
-    isBtsIntegrationsExist: PropTypes.bool,
+    isBtsPluginsExist: PropTypes.bool,
+    enabledBtsPlugins: PropTypes.array,
   };
   static defaultProps = {
     logItem: null,
@@ -158,28 +161,30 @@ export class LogItemInfo extends Component {
     retryItemId: null,
     retries: [],
     getDefectType: () => {},
-    isBtsIntegrationsExist: false,
+    isBtsPluginsExist: false,
+    enabledBtsPlugins: [],
   };
 
-  getIssueActionTitle = (noIssueMessage, isBtsUnavailable, isBtsIntegrationsUnavailable) => {
+  getIssueActionTitle = (noIssueMessage, isPostIssueUnavailable) => {
     const {
       logItem,
       intl: { formatMessage },
-      isBtsIntegrationsExist,
+      btsIntegrations,
+      isBtsPluginsExist,
+      enabledBtsPlugins,
     } = this.props;
-    let title = '';
 
     if (!logItem.issue) {
-      title = formatMessage(noIssueMessage);
-    } else if (isBtsIntegrationsUnavailable) {
-      title = formatMessage(COMMON_LOCALE_KEYS.NO_PROJECT_INTEGRATION);
-    } else if (isBtsUnavailable) {
-      title = isBtsIntegrationsExist
-        ? formatMessage(COMMON_LOCALE_KEYS.NO_AVAILABLE_BTS_INTEGRATION)
-        : formatMessage(COMMON_LOCALE_KEYS.NO_BTS_INTEGRATION);
+      return formatMessage(noIssueMessage);
     }
 
-    return title;
+    return getIssueTitle(
+      formatMessage,
+      btsIntegrations,
+      isBtsPluginsExist,
+      enabledBtsPlugins,
+      isPostIssueUnavailable,
+    );
   };
 
   getCopySendDefectButtonText = () => {
@@ -384,7 +389,10 @@ export class LogItemInfo extends Component {
                     icon={this.checkIfTheLastItemIsActive() ? DownLeftArrowIcon : UpRightArrowIcon}
                     disabled={this.isCopySendButtonDisabled()}
                     onClick={this.showCopySendDefectModal}
-                    title={this.getIssueActionTitle(messages.noDefectTypeToCopySendDefect)}
+                    title={this.getIssueActionTitle(
+                      messages.noDefectTypeToCopySendDefect,
+                      isPostIssueUnavailable,
+                    )}
                   >
                     {this.getCopySendDefectButtonText()}
                   </GhostButton>
@@ -394,11 +402,14 @@ export class LogItemInfo extends Component {
                     icon={BugIcon}
                     disabled={!logItem.issue || isPostIssueUnavailable}
                     onClick={this.handlePostIssue}
-                    title={this.getIssueActionTitle(
-                      messages.noDefectTypeToPostIssue,
-                      !isPostIssueActionAvailable(btsIntegrations),
-                      !!btsIntegrations.length,
-                    )}
+                    title={
+                      !logItem.issue || isPostIssueUnavailable
+                        ? this.getIssueActionTitle(
+                            messages.noDefectTypeToPostIssue,
+                            isPostIssueUnavailable,
+                          )
+                        : ''
+                    }
                   >
                     {formatMessage(messages.postIssue)}
                   </GhostButton>
@@ -408,10 +419,14 @@ export class LogItemInfo extends Component {
                     icon={LinkIcon}
                     disabled={!logItem.issue || !btsIntegrations.length}
                     onClick={this.handleLinkIssue}
-                    title={this.getIssueActionTitle(
-                      messages.noDefectTypeToLinkIssue,
-                      !btsIntegrations.length,
-                    )}
+                    title={
+                      !logItem.issue || !btsIntegrations.length
+                        ? this.getIssueActionTitle(
+                            messages.noDefectTypeToLinkIssue,
+                            isPostIssueUnavailable,
+                          )
+                        : ''
+                    }
                   >
                     {formatMessage(messages.linkIssue)}
                   </GhostButton>

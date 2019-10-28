@@ -24,13 +24,15 @@ import { activeProjectSelector } from 'controllers/user';
 import {
   availableBtsIntegrationsSelector,
   isPostIssueActionAvailable,
-  isBtsIntegrationsExistSelector,
+  isBtsPluginsExistSelector,
+  enabledBtsPluginsSelector,
 } from 'controllers/plugins';
 import { unlinkIssueAction, linkIssueAction, postIssueAction } from 'controllers/step';
 import { hideModalAction } from 'controllers/modal';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { fetch, setStorageItem, getStorageItem } from 'common/utils';
+import { getIssueTitle } from 'pages/inside/common/utils';
 import { URLS } from 'common/urls';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -51,7 +53,8 @@ const cx = classNames.bind(styles);
   (state) => ({
     btsIntegrations: availableBtsIntegrationsSelector(state),
     url: URLS.testItems(activeProjectSelector(state)),
-    isBtsIntegrationsExist: isBtsIntegrationsExistSelector(state),
+    isBtsPluginsExist: isBtsPluginsExistSelector(state),
+    enabledBtsPlugins: enabledBtsPluginsSelector(state),
   }),
   {
     showNotification,
@@ -82,19 +85,28 @@ export class EditDefectModal extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    isBtsIntegrationsExist: PropTypes.bool.isRequired,
+    isBtsPluginsExist: PropTypes.bool.isRequired,
+    enabledBtsPlugins: PropTypes.array.isRequired,
   };
 
   constructor(props) {
     super(props);
     const {
-      intl,
+      intl: { formatMessage },
       btsIntegrations,
+      isBtsPluginsExist,
+      enabledBtsPlugins,
       data: { items },
     } = props;
     const initialState = {};
     const isPostIssueUnavailable = !isPostIssueActionAvailable(btsIntegrations);
-    const issueTitle = this.getIssueTitle();
+    const issueTitle = getIssueTitle(
+      formatMessage,
+      btsIntegrations,
+      isBtsPluginsExist,
+      enabledBtsPlugins,
+      isPostIssueUnavailable,
+    );
 
     if (this.isBulkEditOperation()) {
       initialState.changeCommentMode =
@@ -109,21 +121,21 @@ export class EditDefectModal extends Component {
 
     this.multiActionButtonItems = [
       {
-        label: intl.formatMessage(messages.saveAndPostIssueMessage),
+        label: formatMessage(messages.saveAndPostIssueMessage),
         value: 'Post',
         title: isPostIssueUnavailable ? issueTitle : '',
         onClick: () => this.onEditDefects(this.handlePostIssue, true),
         disabled: isPostIssueUnavailable,
       },
       {
-        label: intl.formatMessage(messages.saveAndLinkIssueMessage),
+        label: formatMessage(messages.saveAndLinkIssueMessage),
         value: 'Link',
         title: btsIntegrations.length ? '' : issueTitle,
         onClick: () => this.onEditDefects(this.handleLinkIssue, true),
         disabled: !btsIntegrations.length,
       },
       {
-        label: intl.formatMessage(messages.saveAndUnlinkIssueMessage),
+        label: formatMessage(messages.saveAndUnlinkIssueMessage),
         value: 'Unlink',
         onClick: () => this.onEditDefects(this.handleUnlinkIssue, true),
         disabled: this.isBulkEditOperation()
@@ -135,15 +147,15 @@ export class EditDefectModal extends Component {
     this.changeCommentModeOptions = [
       {
         value: CHANGE_COMMENT_MODE.NOT_CHANGE,
-        label: intl.formatMessage(messages.notChangeCommentTitle),
+        label: formatMessage(messages.notChangeCommentTitle),
       },
       {
         value: CHANGE_COMMENT_MODE.REPLACE,
-        label: intl.formatMessage(messages.replaceCommentsTitle),
+        label: formatMessage(messages.replaceCommentsTitle),
       },
       {
         value: CHANGE_COMMENT_MODE.ADD_TO_EXISTING,
-        label: intl.formatMessage(messages.addToExistingCommentTitle),
+        label: formatMessage(messages.addToExistingCommentTitle),
       },
     ];
 
@@ -176,25 +188,6 @@ export class EditDefectModal extends Component {
     const updatedItems = this.prepareDataToSend();
 
     return items.map((item, index) => ({ ...item, ...updatedItems[index] }));
-  };
-
-  getIssueTitle = () => {
-    const {
-      intl: { formatMessage },
-      btsIntegrations,
-      isBtsIntegrationsExist,
-    } = this.props;
-    let title = '';
-
-    if (btsIntegrations.length) {
-      title = formatMessage(COMMON_LOCALE_KEYS.NO_PROJECT_INTEGRATION);
-    } else {
-      title = isBtsIntegrationsExist
-        ? formatMessage(COMMON_LOCALE_KEYS.NO_AVAILABLE_BTS_INTEGRATION)
-        : formatMessage(COMMON_LOCALE_KEYS.NO_BTS_INTEGRATION);
-    }
-
-    return title;
   };
 
   prepareDataToSend = () => {
