@@ -60,12 +60,12 @@ const HEADER = 'header';
 export const HEADER_EVENTS = {
   CLICK_MEMBERS_BTN: {
     category: HEADER,
-    action: 'Click on Menu Bttn Members',
+    action: 'Click on Menu Btn Members',
     label: 'Transition on Members Page',
   },
   CLICK_SETTINGS_BTN: {
     category: HEADER,
-    action: 'Click on Menu Bttn Settings',
+    action: 'Click on Menu Btn Settings',
     label: 'Transition on Settings Page',
   },
   CLICK_PROFILE_DROPDOWN: {

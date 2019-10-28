@@ -266,12 +266,12 @@ export const LAUNCHES_PAGE_EVENTS = {
   },
   CLICK_IMPORT_BTN: {
     category: LAUNCHES_PAGE,
-    action: 'Click on Bttn Import',
+    action: 'Click on Btn Import',
     label: 'Arise Modul Import Launch',
   },
   ADD_NEW_WIDGET_BTN: {
     category: LAUNCHES_PAGE,
-    action: 'Click on Bttn Add New Widget on Dashboard',
+    action: 'Click on Btn Add New Widget on Dashboard',
     label: 'Arise Modal Add New Widget',
   },
 };
@@ -289,12 +289,12 @@ export const LAUNCHES_MODAL_EVENTS = {
   },
   CLICK_CANCEL_BTN_EDIT_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Cancel on Modal "Edit Launch"',
+    action: 'Click on Btn Cancel on Modal "Edit Launch"',
     label: 'Close modal "Edit Launch"',
   },
   CLICK_SAVE_BTN_EDIT_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Save on Modal "Edit Launch"',
+    action: 'Click on Btn Save on Modal "Edit Launch"',
     label: 'Save changes "Edit Launch"',
   },
   CLOSE_ICON_MOVE_MODAL: {
@@ -304,12 +304,12 @@ export const LAUNCHES_MODAL_EVENTS = {
   },
   CLICK_CANCEL_BTN_MOVE_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Cancel on Modal "Move to Debug"',
+    action: 'Click on Btn Cancel on Modal "Move to Debug"',
     label: 'Close modal "Move to Debug"',
   },
   CLICK_MOVE_BTN_MOVE_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Move on Modal "Move to Debug"',
+    action: 'Click on Btn Move on Modal "Move to Debug"',
     label: 'Save changes "Move to Debug"',
   },
   CLOSE_ICON_DELETE_MODAL: {
@@ -319,12 +319,12 @@ export const LAUNCHES_MODAL_EVENTS = {
   },
   CANCEL_BTN_DELETE_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Cancel on Modal "Delete Launch"',
+    action: 'Click on Btn Cancel on Modal "Delete Launch"',
     label: 'Close modal "Delete Launch"',
   },
   DELETE_BTN_DELETE_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Delete on Modal "Delete Launch"',
+    action: 'Click on Btn Delete on Modal "Delete Launch"',
     label: 'Delete launch mentioned in modal "Delete Launch"',
   },
   CLOSE_ICON_MERGE_MODAL: {
@@ -334,12 +334,12 @@ export const LAUNCHES_MODAL_EVENTS = {
   },
   CANCEL_BTN_MERGE_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Cancel on Modal "Merge Launches"',
+    action: 'Click on Btn Cancel on Modal "Merge Launches"',
     label: 'Close modal "Merge Launches"',
   },
   MERGE_BTN_MERGE_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Merge on Modal "Merge Launches"',
+    action: 'Click on Btn Merge on Modal "Merge Launches"',
     label: 'Merge launches mentioned in modal "Merge Launches"',
   },
   CLOSE_ICON_IMPORT_MODAL: {
@@ -349,27 +349,27 @@ export const LAUNCHES_MODAL_EVENTS = {
   },
   CANCEL_BTN_IMPORT_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Cancel on Modal "Import Launch"',
+    action: 'Click on Btn Cancel on Modal "Import Launch"',
     label: 'Close Modal Import Launch',
   },
   OK_BTN_IMPORT_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Ok on Modal "Import Launch"',
+    action: 'Click on Btn Ok on Modal "Import Launch"',
     label: 'Import Launch',
   },
   LINEAR_MERGE_BTN_MERGE_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Linear Merge on Modal "Merge Launches"',
+    action: 'Click on Btn Linear Merge on Modal "Merge Launches"',
     label: 'Linear Merge',
   },
   DEEP_MERGE_BTN_MERGE_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Deep Merge on Modal "Merge Launches"',
+    action: 'Click on Btn Deep Merge on Modal "Merge Launches"',
     label: 'Deep Merge',
   },
   OK_BTN_ANALYSIS_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Analyze on Modal "Analyze Launch"',
+    action: 'Click on Btn Analyze on Modal "Analyze Launch"',
     label: 'Analyze launch mentioned in modal "Analyze Launch"',
   },
   CLOSE_BTN_ANALYSIS_MODAL: {
@@ -379,12 +379,12 @@ export const LAUNCHES_MODAL_EVENTS = {
   },
   CANCEL_BTN_ANALYSIS_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Cancel on Modal "Analyze Launch"',
+    action: 'Click on Btn Cancel on Modal "Analyze Launch"',
     label: 'Cancel Modal "Analyze Launch"',
   },
   OK_BTN_PATTERN_ANALYSIS_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Analyze on Modal "Pattern Analyze Launch"',
+    action: 'Click on Btn Analyze on Modal "Pattern Analyze Launch"',
     label: 'Analyze launch mentioned in modal "Pattern Analyze Launch"',
   },
   CLOSE_BTN_PATTERN_ANALYSIS_MODAL: {
@@ -394,7 +394,7 @@ export const LAUNCHES_MODAL_EVENTS = {
   },
   CANCEL_BTN_PATTERN_ANALYSIS_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Cancel on Modal "Pattern Analyze Launch"',
+    action: 'Click on Btn Cancel on Modal "Pattern Analyze Launch"',
     label: 'Cancel Modal "Pattern Analyze Launch"',
   },
   CLOSE_ICON_ADD_WIDGET_MODAL: {
@@ -404,17 +404,17 @@ export const LAUNCHES_MODAL_EVENTS = {
   },
   CHOOSE_WIDGET_TYPE_ADD_WIDGET_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Choose radio bttn of Widget type in Modal Add New Widget',
+    action: 'Choose radio Btn of Widget type in Modal Add New Widget',
     label: 'Choose Widget type in Modal Add New Widget',
   },
   NEXT_STEP_ADD_WIDGET_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Next Step on Modal Add New Widget',
+    action: 'Click on Btn Next Step on Modal Add New Widget',
     label: 'Transition to Next Step on Modal Add New Widget',
   },
   PREVIOUS_STEP_ADD_WIDGET_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Previous Step on Modal Add New Widget',
+    action: 'Click on Btn Previous Step on Modal Add New Widget',
     label: 'Transition to Previous Step in Modal Add New Widget',
   },
   ENTER_WIDGET_DESCRIPTION_ADD_WIDGET_MODAL: {
@@ -429,7 +429,7 @@ export const LAUNCHES_MODAL_EVENTS = {
   },
   ADD_BTN_ADD_WIDGET_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Add in Modal Add New Widget',
+    action: 'Click on Btn Add in Modal Add New Widget',
     label: 'Submit changes in filter in Modal Add New Widget',
   },
 };

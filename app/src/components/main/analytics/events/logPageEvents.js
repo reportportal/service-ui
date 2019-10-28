@@ -33,17 +33,17 @@ export const LOG_PAGE_EVENTS = {
   },
   PREVIOUS_ITEM_BTN: {
     category: LOG_PAGE,
-    action: 'Click on Bttn prev Method',
+    action: 'Click on Btn prev Method',
     label: 'Transition to prev Method Item',
   },
   NEXT_ITEM_BTN: {
     category: LOG_PAGE,
-    action: 'Click on Bttn next Method',
+    action: 'Click on Btn next Method',
     label: 'Transition to next Method Item',
   },
   REFRESH_BTN: {
     category: LOG_PAGE,
-    action: 'Click on Bttn Refresh',
+    action: 'Click on Btn Refresh',
     label: 'Refresh page',
   },
   HISTORY_LINE_ITEM: {
@@ -58,12 +58,12 @@ export const LOG_PAGE_EVENTS = {
   },
   POST_ISSUE_BTN: {
     category: LOG_PAGE,
-    action: 'Click on Bttn Post Bug',
+    action: 'Click on Btn Post Bug',
     label: 'Arise Modal Post Bug',
   },
   LINK_ISSUE_BTN: {
     category: LOG_PAGE,
-    action: 'Click on Bttn Load Bug',
+    action: 'Click on Btn Load Bug',
     label: 'Arise Modal Load Bug',
   },
   STACK_TRACE_TAB: {
@@ -98,12 +98,12 @@ export const LOG_PAGE_EVENTS = {
   },
   PREVIOUS_LOG_MSG_PAGE: {
     category: LOG_PAGE,
-    action: 'Click on Bttn Previous Log message page',
+    action: 'Click on Btn Previous Log message page',
     label: 'Transition to previous log message page',
   },
   NEXT_LOG_MSG_PAGE: {
     category: LOG_PAGE,
-    action: 'Click on Bttn Next Log message page',
+    action: 'Click on Btn Next Log message page',
     label: 'Transition to next log message page',
   },
   ENTER_LOG_MSG_FILTER: {
@@ -148,12 +148,12 @@ export const LOG_PAGE_EVENTS = {
   },
   CANCEL_BTN_POST_ISSUE_MODAL: {
     category: LOG_PAGE,
-    action: 'Click on Bttn Cancel on Modal Post Bug',
+    action: 'Click on Btn Cancel on Modal Post Bug',
     label: 'Close Modal Post Bug',
   },
   POST_BTN_POST_ISSUE_MODAL: {
     category: LOG_PAGE,
-    action: 'Click on Bttn Post on Modal Post Bug',
+    action: 'Click on Btn Post on Modal Post Bug',
     label: 'Post bug',
   },
   CLOSE_ICON_LINK_ISSUE_MODAL: {
@@ -163,17 +163,17 @@ export const LOG_PAGE_EVENTS = {
   },
   ADD_NEW_ISSUE_LINK_ISSUE_MODAL: {
     category: LOG_PAGE,
-    action: 'Click on Bttn Add New Issue on Modal Load Bug',
+    action: 'Click on Btn Add New Issue on Modal Load Bug',
     label: 'Add inputs in Modal Load Bug',
   },
   CANCEL_BTN_LINK_ISSUE_MODAL: {
     category: LOG_PAGE,
-    action: 'Click on Bttn Cancel on Modal Load Bug',
+    action: 'Click on Btn Cancel on Modal Load Bug',
     label: 'Close Modal Load Bug',
   },
   LOAD_BTN_LINK_ISSUE_MODAL: {
     category: LOG_PAGE,
-    action: 'Click on Bttn Load on Modal Load Bug',
+    action: 'Click on Btn Load on Modal Load Bug',
     label: 'Load bug',
   },
   PREVIOUS_ATTACHMENT_ICON: {
@@ -208,12 +208,12 @@ export const LOG_PAGE_EVENTS = {
   },
   CLOSE_BTN_ATTACHMENT_MODAL: {
     category: LOG_PAGE,
-    action: 'Click on Bttn Close on Modal Attachment',
+    action: 'Click on Btn Close on Modal Attachment',
     label: 'Close Modal Attachment',
   },
   SAVE_BTN_DROPDOWN_EDIT_ITEM_MODAL: {
     category: LOG_PAGE,
-    action: 'Click on dropdown icon on Save Bttn on Modal "Edit Item"',
+    action: 'Click on dropdown icon on Save Btn on Modal "Edit Item"',
     label: 'Arise dropdown',
   },
   POST_BUG_BTN_EDIT_ITEM_MODAL: {
@@ -228,8 +228,8 @@ export const LOG_PAGE_EVENTS = {
   },
   COPY_DEFECT_FROM_BTN: {
     category: LOG_PAGE,
-    action: 'Click on Bttn "Copy defect from #"',
-    label: 'Arize Modal "Receive previous result"',
+    action: 'Click on Btn "Copy defect from #"',
+    label: 'Arise Modal "Receive previous result"',
   },
   RECEIVE_BTN_RECEIVE_PREVIOUS_RESULT_MODAL: {
     category: LOG_PAGE,
@@ -243,8 +243,8 @@ export const LOG_PAGE_EVENTS = {
   },
   SEND_DEFECT_TO_BTN: {
     category: LOG_PAGE,
-    action: 'Click on Bttn "Send defect to #"',
-    label: 'Arize Modal "Send defect to the last item"',
+    action: 'Click on Btn "Send defect to #"',
+    label: 'Arise Modal "Send defect to the last item"',
   },
   SEND_BTN_SEND_DEFECT_MODAL: {
     category: LOG_PAGE,

@@ -18,7 +18,7 @@ export const PROFILE_PAGE = 'profile';
 export const PROFILE_PAGE_EVENTS = {
   CHANGE_PASSWORD_CLICK: {
     category: PROFILE_PAGE,
-    action: 'Click on Bttn Change password',
+    action: 'Click on Btn Change password',
     label: 'Arise Modal Change password',
   },
   EDIT_USER_NAME_ICON: {
@@ -33,7 +33,7 @@ export const PROFILE_PAGE_EVENTS = {
   },
   UPLOAD_PHOTO_BTN: {
     category: PROFILE_PAGE,
-    action: 'Click on Bttn Upload photo',
+    action: 'Click on Btn Upload photo',
     label: 'Upload photo',
   },
   REMOVE_PHOTO_BTN: {
@@ -43,7 +43,7 @@ export const PROFILE_PAGE_EVENTS = {
   },
   REGENERATE_BTN: {
     category: PROFILE_PAGE,
-    action: 'Click on Bttn Regenerate',
+    action: 'Click on Btn Regenerate',
     label: 'Regenerate',
   },
   SELECT_CONFIGURATION_TAB: {
@@ -58,12 +58,12 @@ export const PROFILE_PAGE_EVENTS = {
   },
   CANCEL_BTN_CHANGE_PASSWORD_MODAL: {
     category: PROFILE_PAGE,
-    action: 'Click on Bttn Cancel on Modal Change password',
+    action: 'Click on Btn Cancel on Modal Change password',
     label: 'Close Modal Change password',
   },
   SUBMIT_BTN_CHANGE_PASSWORD_MODAL: {
     category: PROFILE_PAGE,
-    action: 'Click on Bttn Submit on Modal Change password',
+    action: 'Click on Btn Submit on Modal Change password',
     label: 'Submit changes on Modal Change password',
   },
   CLOSE_ICON_DELETE_IMAGE_MODAL: {
@@ -73,12 +73,12 @@ export const PROFILE_PAGE_EVENTS = {
   },
   CANCEL_BTN_DELETE_IMAGE_MODAL: {
     category: PROFILE_PAGE,
-    action: 'Click on Bttn Cancel on Modal Delete image',
+    action: 'Click on Btn Cancel on Modal Delete image',
     label: 'Close Modal Delete image',
   },
   DELETE_BTN_DELETE_IMAGE_MODAL: {
     category: PROFILE_PAGE,
-    action: 'Click on Bttn Delete on Modal Delete image',
+    action: 'Click on Btn Delete on Modal Delete image',
     label: 'Delete image',
   },
   CLOSE_ICON_EDIT_PERSONAL_INFO_MODAL: {
@@ -98,12 +98,12 @@ export const PROFILE_PAGE_EVENTS = {
   },
   CANCEL_BTN_EDIT_PERSONAL_INFO_MODAL: {
     category: PROFILE_PAGE,
-    action: 'Click on Bttn Cancel on Modal Edit personal information',
+    action: 'Click on Btn Cancel on Modal Edit personal information',
     label: 'Close Modal Edit personal information',
   },
   SUBMIT_BTN_EDIT_PERSONAL_INFO_MODAL: {
     category: PROFILE_PAGE,
-    action: 'Click on Bttn Submit on Modal Edit personal information',
+    action: 'Click on Btn Submit on Modal Edit personal information',
     label: 'Submit changes on Modal Edit personal information',
   },
   CHANGE_LANGUAGE: {
