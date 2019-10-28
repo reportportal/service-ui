@@ -39,7 +39,7 @@ export const ADMIN_PROJECTS_PAGE_EVENTS = {
   DELETE_PROJECT_BTN: {
     category: ADMIN_PROJECTS_PAGE,
     action: 'Click on Delete project',
-    label: 'Arrise Modal Delete project',
+    label: 'Arise Modal Delete project',
   },
   CLOSE_ICON_DELETE_MODAL: {
     category: ADMIN_PROJECTS_PAGE,
@@ -104,6 +104,6 @@ export const ADMIN_PROJECTS_PAGE_EVENTS = {
   FUNNEL_BTN: {
     category: ADMIN_PROJECTS_PAGE,
     action: 'Click on Funnel',
-    label: 'Arrise Filter modal',
+    label: 'Arise Filter modal',
   },
 };

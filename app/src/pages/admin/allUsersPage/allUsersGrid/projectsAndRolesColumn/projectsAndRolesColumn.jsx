@@ -166,10 +166,6 @@ export class ProjectsAndRolesColumn extends Component {
     } = this.props;
     this.showUnassignModal(project, userId);
   };
-  onUnassign = (project, user) => () => {
-    this.unassignAction(project, user);
-    this.props.tracking.trackEvent(ADMIN_ALL_USERS_PAGE_EVENTS.UNASSIGN_BTN_UNASSIGN_USER_MODAL);
-  };
   setMobileView = (media) =>
     media.matches !== this.state.isMobileView &&
     this.setState({
@@ -213,12 +209,13 @@ export class ProjectsAndRolesColumn extends Component {
           user,
           project,
         }),
-        onConfirm: this.onUnassign(project, user),
+        onConfirm: this.unassignAction(project, user),
         title: intl.formatMessage(messages.unAssignTitle),
         confirmText: intl.formatMessage(messages.btnTitle),
         cancelText: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
         dangerConfirm: true,
         eventsInfo: {
+          confirmBtn: ADMIN_ALL_USERS_PAGE_EVENTS.UNASSIGN_BTN_UNASSIGN_USER_MODAL,
           closeIcon: ADMIN_ALL_USERS_PAGE_EVENTS.CLOSE_ICON_UNASSIGN_USER_MODAL,
           cancelBtn: ADMIN_ALL_USERS_PAGE_EVENTS.CANCEL_BTN_UNASSIGN_USER_MODAL,
         },

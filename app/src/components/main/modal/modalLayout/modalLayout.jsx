@@ -44,6 +44,7 @@ export class ModalLayout extends Component {
       disabled: PropTypes.bool,
       danger: PropTypes.bool,
       onClick: PropTypes.func,
+      eventInfo: PropTypes.object,
     }),
     cancelButton: PropTypes.shape({
       text: PropTypes.string.isRequired,
@@ -139,6 +140,7 @@ export class ModalLayout extends Component {
   };
 
   closeModalWithOk = () => {
+    this.props.tracking.trackEvent(this.props.okButton.eventInfo);
     this.setState({ shown: false });
   };
 
