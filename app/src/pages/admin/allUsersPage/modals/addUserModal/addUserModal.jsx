@@ -189,19 +189,6 @@ export class AddUserModal extends Component {
     };
   };
 
-  handleAddUser = (closeModal) => {
-    const {
-      handleSubmit,
-      tracking,
-      data: { onSubmit },
-    } = this.props;
-    tracking.trackEvent(ADMIN_ALL_USERS_PAGE_EVENTS.ADD_BTN_ADD_USER_MODAL);
-    handleSubmit((values) => {
-      onSubmit(values);
-      closeModal();
-    })();
-  };
-
   formatProjectNameOptions = (values) => values.map((value) => ({ value, label: value }));
 
   formatValueProject = (value) => (value ? { value, label: value } : null);
@@ -214,14 +201,25 @@ export class AddUserModal extends Component {
   };
 
   render() {
-    const { intl, userRole } = this.props;
+    const {
+      intl,
+      handleSubmit,
+      userRole,
+      data: { onSubmit },
+    } = this.props;
     return (
       <ModalLayout
         title={intl.formatMessage(messages.addUserTitle)}
         okButton={{
           text: intl.formatMessage(COMMON_LOCALE_KEYS.ADD),
           danger: false,
-          onClick: this.handleAddUser,
+          onClick: (closeModal) => {
+            handleSubmit((values) => {
+              onSubmit(values);
+              closeModal();
+            })();
+          },
+          eventInfo: ADMIN_ALL_USERS_PAGE_EVENTS.ADD_BTN_ADD_USER_MODAL,
         }}
         cancelButton={{
           text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),

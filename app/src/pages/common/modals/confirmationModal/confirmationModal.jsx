@@ -67,6 +67,7 @@ export class ConfirmationModal extends Component {
             closeModal();
             onConfirm();
           },
+          eventInfo: eventsInfo.confirmBtn,
         }}
         cancelButton={{
           text: cancelText,

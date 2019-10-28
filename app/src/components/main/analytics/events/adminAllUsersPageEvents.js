@@ -23,17 +23,17 @@ export const ADMIN_ALL_USERS_PAGE_EVENTS = {
   },
   CANCEL_BTN_DELETE_MODAL: {
     category: ADMIN_ALL_USERS_PAGE,
-    action: 'Click on Bttn Cancel on Modal "Delete user"',
+    action: 'Click on Btn Cancel on Modal "Delete user"',
     label: 'Close Modal Delete user',
   },
   OK_BTN_DELETE_MODAL: {
     category: ADMIN_ALL_USERS_PAGE,
-    action: 'Click on Bttn Ok on Modal "Delete user"',
+    action: 'Click on Btn Ok on Modal "Delete user"',
     label: 'Delete user',
   },
   UNASSIGN_BTN_CLICK: {
     category: ADMIN_ALL_USERS_PAGE,
-    action: 'Click on Bttn Unassign',
+    action: 'Click on Btn Unassign',
     label: 'Arise Modal Unassign User',
   },
   CLOSE_ICON_UNASSIGN_USER_MODAL: {
@@ -43,12 +43,12 @@ export const ADMIN_ALL_USERS_PAGE_EVENTS = {
   },
   CANCEL_BTN_UNASSIGN_USER_MODAL: {
     category: ADMIN_ALL_USERS_PAGE,
-    action: 'Click on Bttn Cancel on Modal Unassign User',
+    action: 'Click on Btn Cancel on Modal Unassign User',
     label: 'Close Modal Unassign User',
   },
   UNASSIGN_BTN_UNASSIGN_USER_MODAL: {
     category: ADMIN_ALL_USERS_PAGE,
-    action: 'Click on Bttn Unassign on Modal Unassign User',
+    action: 'Click on Btn Unassign on Modal Unassign User',
     label: 'Unassign user',
   },
   CHANGE_PROJECT_ROLE: {
@@ -88,12 +88,12 @@ export const ADMIN_ALL_USERS_PAGE_EVENTS = {
   },
   CANCEL_BTN_ADD_USER_MODAL: {
     category: ADMIN_ALL_USERS_PAGE,
-    action: 'Click on Bttn Cancel in Modal Add User',
+    action: 'Click on Btn Cancel in Modal Add User',
     label: 'Close Modal Add User',
   },
   ADD_BTN_ADD_USER_MODAL: {
     category: ADMIN_ALL_USERS_PAGE,
-    action: 'Click on Bttn Add in Modal Add User',
+    action: 'Click on Btn Add in Modal Add User',
     label: 'Add User',
   },
   MAKE_ADMIN_BTN: {
@@ -108,22 +108,22 @@ export const ADMIN_ALL_USERS_PAGE_EVENTS = {
   },
   CANCEL_BTN_CHANGE_ROLE_MODAL: {
     category: ADMIN_ALL_USERS_PAGE,
-    action: 'Click on Bttn Cancel in Modal Change Role',
+    action: 'Click on Btn Cancel in Modal Change Role',
     label: 'Close Modal Change Role',
   },
   CHANGE_BTN_CHANGE_ROLE_MODAL: {
     category: ADMIN_ALL_USERS_PAGE,
-    action: 'Click on Bttn Change in Modal Change Role',
+    action: 'Click on Btn Change in Modal Change Role',
     label: 'Change Role',
   },
   PROJECT_AND_ROLES_BTN: {
     category: ADMIN_ALL_USERS_PAGE,
-    action: 'Click on Bttn View Projects and roles',
+    action: 'Click on Btn View Projects and roles',
     label: 'Arise tile with Projects and roles',
   },
   ADD_BTN_PROJECT_AND_ROLES: {
     category: ADMIN_ALL_USERS_PAGE,
-    action: 'Click on Add Bttn in Projects and roles tile',
+    action: 'Click on Add Btn in Projects and roles tile',
     label: 'Arise fields to Add on project',
   },
   CHANGE_ROLE_PROJECT_AND_ROLES: {
@@ -133,7 +133,7 @@ export const ADMIN_ALL_USERS_PAGE_EVENTS = {
   },
   ASSIGN_PROJECT_AND_ROLES: {
     category: ADMIN_ALL_USERS_PAGE,
-    action: 'Click on Bttn Assign',
+    action: 'Click on Btn Assign',
     label: 'Assign on Project',
   },
   APPLY_FILTER_BTN: {
@@ -144,6 +144,6 @@ export const ADMIN_ALL_USERS_PAGE_EVENTS = {
   FUNNEL_BTN: {
     category: ADMIN_ALL_USERS_PAGE,
     action: 'Click on Funnel',
-    label: 'Arrise Filter modal',
+    label: 'Arise Filter modal',
   },
 };

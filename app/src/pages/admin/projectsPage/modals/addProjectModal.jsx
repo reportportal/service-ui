@@ -15,7 +15,6 @@
  */
 
 import React, { Component } from 'react';
-import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
 import { reduxForm } from 'redux-form';
@@ -41,14 +40,9 @@ const LABEL_WIDTH = 105;
   asyncChangeFields: ['projectName'],
   asyncBlurFields: ['projectName'], // validate on blur in case of copy-paste value
 })
-@track()
 export class AddProjectModal extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    tracking: PropTypes.shape({
-      getTrackingData: PropTypes.func,
-      trackEvent: PropTypes.func,
-    }).isRequired,
     data: PropTypes.object,
     dirty: PropTypes.bool,
     handleSubmit: PropTypes.func,
@@ -71,23 +65,11 @@ export class AddProjectModal extends Component {
     };
   };
 
-  handleAddProject = () => {
-    const {
-      handleSubmit,
-      data: { onSubmit, eventsInfo },
-      tracking,
-    } = this.props;
-
-    tracking.trackEvent(eventsInfo.addBtn);
-    handleSubmit((values) => {
-      onSubmit(values);
-    })();
-  };
-
   render() {
     const {
       intl,
-      data: { eventsInfo },
+      data: { onSubmit, eventsInfo },
+      handleSubmit,
     } = this.props;
     return (
       <ModalLayout
@@ -95,7 +77,12 @@ export class AddProjectModal extends Component {
         okButton={{
           text: intl.formatMessage(COMMON_LOCALE_KEYS.ADD),
           danger: false,
-          onClick: this.handleAddProject,
+          onClick: () => {
+            handleSubmit((values) => {
+              onSubmit(values);
+            })();
+          },
+          eventInfo: eventsInfo.addBtn,
         }}
         cancelButton={{
           text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
