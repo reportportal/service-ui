@@ -47,4 +47,5 @@ export {
   canAddWidget,
   canEditDashboard,
   canEditWidget,
+  canEditFilter,
 } from './permissions';

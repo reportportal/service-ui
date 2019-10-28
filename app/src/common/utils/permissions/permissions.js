@@ -65,6 +65,7 @@ export const canResizeAndDragWidgets = checkPermission(ACTIONS.RESIZE_AND_DRAG_W
 export const canDeleteWidget = checkPermission(ACTIONS.DELETE_WIDGET);
 export const canDeleteDashboard = checkPermission(ACTIONS.DELETE_DASHBOARD);
 export const canDeleteFilter = checkPermission(ACTIONS.DELETE_FILTER);
+export const canEditFilter = checkPermission(ACTIONS.EDIT_FILTER);
 export const canSeeDemoData = checkPermission(ACTIONS.SEE_DEMO_DATA);
 export const canConfigreEmailNotifications = checkPermission(ACTIONS.CONFIGURE_EMAIL_NOTIFICATION);
 export const canConfigurePatternAnalysis = checkPermission(ACTIONS.CONFIGURE_PATTERN_ANALYSIS);

@@ -30,9 +30,9 @@ import {
   dirtyFilterIdsSelector,
 } from 'controllers/filter';
 import { changeLaunchDistinctAction, launchDistinctSelector } from 'controllers/launch';
-import { userIdSelector, activeProjectRoleSelector, isAdminSelector } from 'controllers/user';
+import { userInfoSelector, activeProjectRoleSelector } from 'controllers/user';
+import { canEditFilter } from 'common/utils/permissions';
 import { isEmptyObject, isEmptyValue } from 'common/utils';
-import { PROJECT_MANAGER } from 'common/constants/projectRoles';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { levelSelector } from 'controllers/testItem';
 import { EntitiesGroup } from 'components/filterEntities/entitiesGroup';
@@ -52,9 +52,8 @@ const cx = classNames.bind(styles);
     dirtyFilterIds: dirtyFilterIdsSelector(state),
     launchDistinct: launchDistinctSelector(state),
     level: levelSelector(state),
-    userId: userIdSelector(state),
-    userProjectRole: activeProjectRoleSelector(state),
-    isAdmin: isAdminSelector(state),
+    userInfo: userInfoSelector(state),
+    projectRole: activeProjectRoleSelector(state),
   }),
   {
     showModal: showModalAction,
@@ -93,9 +92,8 @@ export class LaunchFiltersToolbar extends Component {
     changeLaunchDistinct: PropTypes.func,
     launchDistinct: PropTypes.string,
     level: PropTypes.string,
-    userId: PropTypes.string.isRequired,
-    userProjectRole: PropTypes.string.isRequired,
-    isAdmin: PropTypes.bool.isRequired,
+    userInfo: PropTypes.object.isRequired,
+    projectRole: PropTypes.string.isRequired,
     intl: intlShape.isRequired,
   };
 
@@ -193,17 +191,19 @@ export class LaunchFiltersToolbar extends Component {
     const { dirtyFilterIds, activeFilterId } = this.props;
     return dirtyFilterIds.indexOf(activeFilterId) !== -1;
   };
-  isFilterCreatorCurrentUser = () => {
-    const { userId, activeFilter } = this.props;
-    return activeFilter.owner === userId;
-  };
   isSaveDisabled = () => {
-    const { filterErrors, isAdmin, userProjectRole } = this.props;
+    const {
+      filterErrors,
+      projectRole,
+      userInfo: { userRole, userId },
+      activeFilter,
+    } = this.props;
+
     return (
       !this.isFilterUnsaved() ||
       !isEmptyObject(filterErrors) ||
       this.isNoFilterValues() ||
-      (!this.isFilterCreatorCurrentUser() && (!isAdmin || userProjectRole !== PROJECT_MANAGER))
+      !canEditFilter(userRole, projectRole, activeFilter.owner === userId)
     );
   };
   isDiscardDisabled = () => !this.isFilterDirty();
