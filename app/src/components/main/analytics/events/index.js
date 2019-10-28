@@ -39,7 +39,16 @@ export {
   getUninstallPluginBtnClickEvent,
 } from './pluginsPageEvents';
 export { PROFILE_PAGE, PROFILE_PAGE_EVENTS } from './profilePageEvents';
-export { SETTINGS_PAGE, SETTINGS_PAGE_EVENTS, getSaveNewPatternEvent } from './settingsPageEvents';
+export {
+  SETTINGS_PAGE,
+  SETTINGS_PAGE_EVENTS,
+  getSaveNewPatternEvent,
+  getIntegrationItemClickEvent,
+  getIntegrationUnlinkGlobalEvent,
+  getSaveIntegrationModalEvents,
+  getIntegrationAddClickEvent,
+  getIntegrationEditAuthClickEvent,
+} from './settingsPageEvents';
 export { SUITE_PAGE, SUITES_PAGE_EVENTS } from './suitesPageEvents';
 export { STEP_PAGE, STEP_PAGE_EVENTS, getChangeItemStatusEvent } from './stepPageEvents';
 export { LOG_PAGE, LOG_PAGE_EVENTS } from './logPageEvents';

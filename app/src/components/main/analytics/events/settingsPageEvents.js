@@ -22,11 +22,56 @@ export const getSaveNewPatternEvent = (patternType) => ({
   label: `Save new Pattern with ${patternType}`,
 });
 
+export const getIntegrationItemClickEvent = (integrationName) => ({
+  category: SETTINGS_PAGE,
+  action: `Click on ${integrationName} integration on tab Integrations`,
+  label: `Open page with info for ${integrationName} integration on tab Integrations`,
+});
+
+export const getIntegrationAddClickEvent = (integrationName) => ({
+  category: SETTINGS_PAGE,
+  action: `Click on Add integration ${integrationName} plugin`,
+  label: `Arise Modal Create Manual Integration for ${integrationName} integration`,
+});
+
+export const getIntegrationEditAuthClickEvent = (integrationName) => ({
+  category: SETTINGS_PAGE,
+  action: `Click on Add integration ${integrationName} plugin`,
+  label: `Arise Modal Create Manual Integration for ${integrationName} integration`,
+});
+
+export const getIntegrationUnlinkGlobalEvent = (integrationName) => ({
+  category: SETTINGS_PAGE,
+  action: `Click on Unlink global integration for ${integrationName} integration on tab Integrations`,
+  label: `Arise Modal Create Manual Integration for ${integrationName} integration`,
+});
+
+export const getSaveIntegrationModalEvents = (integrationName, isGlobal) => {
+  const integrationType = isGlobal ? 'Global' : 'Project';
+  return {
+    saveBtn: {
+      category: SETTINGS_PAGE,
+      action: `Click on Save in Modal Save ${integrationType} Integration for ${integrationName} plugin`,
+      label: `Save ${integrationType.toLowerCase()} integration for ${integrationName} plugin`,
+    },
+    cancelBtn: {
+      category: SETTINGS_PAGE,
+      action: `Click on Cancel in Modal Save ${integrationType} Integration for ${integrationName} plugin`,
+      label: `Close Modal Save ${integrationType} Integration for ${integrationName} plugin`,
+    },
+    closeIcon: {
+      category: SETTINGS_PAGE,
+      action: `Click on Close icon in Modal Save ${integrationType} Integration for ${integrationName} plugin`,
+      label: `Close Modal Save ${integrationType} Integration for ${integrationName} plugin`,
+    },
+  };
+};
+
 export const SETTINGS_PAGE_EVENTS = {
   GENERAL_TAB: {
     category: SETTINGS_PAGE,
-    action: 'MY CUSTOM EVENT',
-    label: 'MY CUSTOM EVENT',
+    action: 'Click on tab General in Settings',
+    label: 'Open tab General in Settings',
   },
   INACTIVITY_TIMEOUT_GENERAL: {
     category: SETTINGS_PAGE,
@@ -147,84 +192,6 @@ export const SETTINGS_PAGE_EVENTS = {
     category: SETTINGS_PAGE,
     action: 'Click on tab Integrations in Settings',
     label: 'Open tab Integrations in Settings',
-  },
-  SELECT_BTS_BTS: {
-    // todo add analytics
-    category: SETTINGS_PAGE,
-    action: 'Edit input Bug tracking system on tab Integrations',
-    label: 'Change input Bug tracking system on tab Integrations',
-  },
-  CHANGE_PROJECT_BTS: {
-    // todo add analytics
-    category: SETTINGS_PAGE,
-    action: 'Change project of BTS Instances on tab Integrations',
-    label: 'Change project of BTS Instances on tab Integrations',
-  },
-  ADD_NEW_BTS_INSTANCE: {
-    // todo add analytics
-    category: SETTINGS_PAGE,
-    action: 'Click on link Add new instance on tab Integrations',
-    label: 'Arise fields for adding new project on tab Integrations',
-  },
-  EDIT_PROJECT_BTS: {
-    // todo add analytics
-    category: SETTINGS_PAGE,
-    action: 'Click on icon Edit Projects BTS Instance on tab Integrations',
-    label: 'Arise fields for editing Projects BTS Instance on tab Integrations',
-  },
-  DELETE_PROJECT_BTS: {
-    // todo add analytics
-    category: SETTINGS_PAGE,
-    action: 'Click on icon Delete Projects BTS Instance on tab Integrations',
-    label: 'Arise Modal delete Projects BTS Instance on tab Integrations',
-  },
-  CANCEL_EDIT_PROJECT_BTS: {
-    // todo add analytics
-    category: SETTINGS_PAGE,
-    action: 'Click on Btn Cancel Edit Projects BTS Instance on tab Integrations',
-    label: 'Cancel Change of Projects BTS Instance on tab Integrations',
-  },
-  SUBMIT_EDIT_PROJECT_BTS: {
-    // todo add analytics
-    category: SETTINGS_PAGE,
-    action: 'Click on Btn Submit Edit Projects BTS Instance on tab Integrations',
-    label: 'Submit Change of Projects BTS Instance on tab Integrations',
-  },
-  CLOSE_ICON_DELETE_PROJECT_MODAL_BTS: {
-    // todo add analytics
-    category: SETTINGS_PAGE,
-    action: 'Click on icon Close on Modal Delete Project',
-    label: 'Close Modal Delete Project',
-  },
-  CANCEL_BTN_DELETE_PROJECT_MODAL_BTS: {
-    // todo add analytics
-    category: SETTINGS_PAGE,
-    action: 'Click on Btn Cancel on Modal Delete Project',
-    label: 'Close Modal Delete Project',
-  },
-  DELETE_BTN_DELETE_PROJECT_MODAL_BTS: {
-    // todo add analytics
-    category: SETTINGS_PAGE,
-    action: 'Click on Btn Delete on Modal Delete Project',
-    label: 'Delete Project',
-  },
-  EDIT_DEFAULT_PROPS_FOR_ISSUE_BTS: {
-    // todo add analytics
-    category: SETTINGS_PAGE,
-    action: 'Edit inputs of Default properties for issue form on tab Integrations',
-    label: 'Change inputs of Default properties for issue form on tab Integrations',
-  },
-  UPDATE_BTN_DEFAULT_PROPS_BTS: {
-    // todo add analytics
-    category: SETTINGS_PAGE,
-    action: 'Click on Btn Update Default properties for issue form on tab Integrations',
-    label: 'Update Default properties for issue form on tab Integrations',
-  },
-  SUBMIT_BTN_DEFAULT_PROPS_BTS: {
-    // todo add analytics
-    category: SETTINGS_PAGE,
-    action: 'Click on Btn Submit Default properties for issue form on tab Integrations',
-    label: 'Submit Change of Default properties for issue form on tab Integrations',
   },
   EDIT_DEFECT_TAG_DEFECT_TYPES: {
     category: SETTINGS_PAGE,
@@ -378,7 +345,7 @@ export const SETTINGS_PAGE_EVENTS = {
   },
   CREATE_PATTERN_BTN: {
     category: SETTINGS_PAGE,
-    action: 'Click on Bttn Create Pattern',
+    action: 'Click on Btn Create Pattern',
     label: 'Arise Modal Create Pattern',
   },
   EDIT_PATTERN_ICON: {
@@ -423,7 +390,7 @@ export const SETTINGS_PAGE_EVENTS = {
   },
   CANCEL_BTN_CREATE_PATTERN_MODAL: {
     category: SETTINGS_PAGE,
-    action: 'Click on Bttn Cancel on Modal Create Pattern',
+    action: 'Click on Btn Cancel on Modal Create Pattern',
     label: 'Close Modal Create Pattern',
   },
   CLOSE_ICON_CLONE_PATTERN_MODAL: {
@@ -433,12 +400,12 @@ export const SETTINGS_PAGE_EVENTS = {
   },
   CANCEL_BTN_CLONE_PATTERN_MODAL: {
     category: SETTINGS_PAGE,
-    action: 'Click on Bttn Cancel on Modal Clone Pattern',
+    action: 'Click on Btn Cancel on Modal Clone Pattern',
     label: 'Close Modal Clone Pattern',
   },
   SAVE_BTN_CLONE_PATTERN_MODAL: {
     category: SETTINGS_PAGE,
-    action: 'Click on Bttn Save on Modal Clone Pattern',
+    action: 'Click on Btn Save on Modal Clone Pattern',
     label: 'Clone Pattern',
   },
   CLOSE_ICON_RENAME_PATTERN_MODAL: {
@@ -448,12 +415,12 @@ export const SETTINGS_PAGE_EVENTS = {
   },
   CANCEL_BTN_RENAME_PATTERN_MODAL: {
     category: SETTINGS_PAGE,
-    action: 'Click on Bttn Cancel on Modal Rename Pattern',
+    action: 'Click on Btn Cancel on Modal Rename Pattern',
     label: 'Close Modal Rename Pattern',
   },
   SAVE_BTN_RENAME_PATTERN_MODAL: {
     category: SETTINGS_PAGE,
-    action: 'Click on Bttn Save on Modal Rename Pattern',
+    action: 'Click on Btn Save on Modal Rename Pattern',
     label: 'Rename Pattern',
   },
 };
