@@ -21,13 +21,19 @@ import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
-import { availableBtsIntegrationsSelector, isPostIssueActionAvailable } from 'controllers/plugins';
+import {
+  availableBtsIntegrationsSelector,
+  isPostIssueActionAvailable,
+  isBtsPluginsExistSelector,
+  enabledBtsPluginsSelector,
+} from 'controllers/plugins';
 import { launchSelector } from 'controllers/testItem';
 import { activeFilterSelector } from 'controllers/filter';
 import { unlinkIssueAction, linkIssueAction, postIssueAction } from 'controllers/step';
 import { hideModalAction } from 'controllers/modal';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import { getIssueTitle } from 'pages/inside/common/utils';
 import { fetch, setStorageItem, getStorageItem, isEmptyObject } from 'common/utils';
 import { URLS } from 'common/urls';
 import { ModalLayout, withModal } from 'components/main/modal';
@@ -56,6 +62,8 @@ const cx = classNames.bind(styles);
     activeProject: activeProjectSelector(state),
     currentLaunch: launchSelector(state),
     currentFilter: activeFilterSelector(state),
+    isBtsPluginsExist: isBtsPluginsExistSelector(state),
+    enabledBtsPlugins: enabledBtsPluginsSelector(state),
   }),
   {
     showNotification,
@@ -81,6 +89,8 @@ export class EditToInvestigateDefectModal extends Component {
     unlinkIssueAction: PropTypes.func.isRequired,
     linkIssueAction: PropTypes.func.isRequired,
     postIssueAction: PropTypes.func.isRequired,
+    isBtsPluginsExist: PropTypes.bool.isRequired,
+    enabledBtsPlugins: PropTypes.array.isRequired,
     currentLaunch: PropTypes.object,
     currentFilter: PropTypes.object,
     tracking: PropTypes.shape({
@@ -97,8 +107,10 @@ export class EditToInvestigateDefectModal extends Component {
   constructor(props) {
     super(props);
     const {
-      intl,
+      intl: { formatMessage },
       btsIntegrations,
+      isBtsPluginsExist,
+      enabledBtsPlugins,
       data: { item },
     } = props;
     this.state = {
@@ -112,22 +124,32 @@ export class EditToInvestigateDefectModal extends Component {
       defectType: item.issue.issueType,
       loading: false,
     };
+    const isPostIssueUnavailable = !isPostIssueActionAvailable(btsIntegrations);
+    const issueTitle = getIssueTitle(
+      formatMessage,
+      btsIntegrations,
+      isBtsPluginsExist,
+      enabledBtsPlugins,
+      isPostIssueUnavailable,
+    );
 
     this.multiActionButtonItems = [
       {
-        label: intl.formatMessage(messages.saveAndPostIssueMessage),
+        label: formatMessage(messages.saveAndPostIssueMessage),
         value: 'Post',
+        title: isPostIssueUnavailable ? issueTitle : '',
         onClick: () => this.onEditDefects(this.handlePostIssue, true),
-        disabled: !isPostIssueActionAvailable(btsIntegrations),
+        disabled: isPostIssueUnavailable,
       },
       {
-        label: intl.formatMessage(messages.saveAndLinkIssueMessage),
+        label: formatMessage(messages.saveAndLinkIssueMessage),
         value: 'Link',
+        title: btsIntegrations.length ? '' : issueTitle,
         onClick: () => this.onEditDefects(this.handleLinkIssue, true),
         disabled: !btsIntegrations.length,
       },
       {
-        label: intl.formatMessage(messages.saveAndUnlinkIssueMessage),
+        label: formatMessage(messages.saveAndUnlinkIssueMessage),
         value: 'Unlink',
         onClick: () => this.onEditDefects(this.handleUnlinkIssue, true),
         disabled: !item.issue.externalSystemIssues || !item.issue.externalSystemIssues.length,
@@ -137,15 +159,15 @@ export class EditToInvestigateDefectModal extends Component {
     this.changeCommentModeOptions = [
       {
         value: CHANGE_COMMENT_MODE.NOT_CHANGE,
-        label: intl.formatMessage(messages.notChangeCommentTitle),
+        label: formatMessage(messages.notChangeCommentTitle),
       },
       {
         value: CHANGE_COMMENT_MODE.REPLACE,
-        label: intl.formatMessage(messages.replaceCommentsTitle),
+        label: formatMessage(messages.replaceCommentsTitle),
       },
       {
         value: CHANGE_COMMENT_MODE.ADD_TO_EXISTING,
-        label: intl.formatMessage(messages.addToExistingCommentTitle),
+        label: formatMessage(messages.addToExistingCommentTitle),
       },
     ];
   }

@@ -32,13 +32,15 @@ import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/
 import {
   availableBtsIntegrationsSelector,
   isPostIssueActionAvailable,
-  isBtsIntegrationsExistSelector,
+  isBtsPluginsExistSelector,
+  enabledBtsPluginsSelector,
 } from 'controllers/plugins';
 import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
 import { SUITES_PAGE_EVENTS } from 'components/main/analytics/events/suitesPageEvents';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
+import { getIssueTitle } from 'pages/inside/common/utils';
 import { LEVEL_STEP, LEVEL_SUITE, LEVEL_TEST } from 'common/constants/launchLevels';
 import { canBulkEditLaunches } from 'common/utils/permissions';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -100,7 +102,8 @@ const messages = defineMessages({
     btsIntegrations: availableBtsIntegrationsSelector(state),
     accountRole: userAccountRoleSelector(state),
     projectRole: activeProjectRoleSelector(state),
-    isBtsIntegrationsExist: isBtsIntegrationsExistSelector(state),
+    isBtsPluginsExist: isBtsPluginsExistSelector(state),
+    enabledBtsPlugins: enabledBtsPluginsSelector(state),
   }),
   {
     restorePath: restorePathAction,
@@ -141,7 +144,8 @@ export class ActionPanel extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    isBtsIntegrationsExist: PropTypes.bool,
+    isBtsPluginsExist: PropTypes.bool,
+    enabledBtsPlugins: PropTypes.array,
   };
 
   static defaultProps = {
@@ -169,7 +173,8 @@ export class ActionPanel extends Component {
     listView: false,
     btsIntegrations: [],
     deleteDisabled: false,
-    isBtsIntegrationsExist: false,
+    isBtsPluginsExist: false,
+    enabledBtsPlugins: [],
   };
 
   onClickHistory = () => {
@@ -190,25 +195,6 @@ export class ActionPanel extends Component {
     this.props.onRefresh();
   };
 
-  getIssueTitle = () => {
-    const {
-      intl: { formatMessage },
-      btsIntegrations,
-      isBtsIntegrationsExist,
-    } = this.props;
-    let title = '';
-
-    if (btsIntegrations.length) {
-      title = formatMessage(COMMON_LOCALE_KEYS.NO_PROJECT_INTEGRATION);
-    } else {
-      title = isBtsIntegrationsExist
-        ? formatMessage(COMMON_LOCALE_KEYS.NO_AVAILABLE_BTS_INTEGRATION)
-        : formatMessage(COMMON_LOCALE_KEYS.NO_BTS_INTEGRATION);
-    }
-
-    return title;
-  };
-
   createStepActionDescriptors = () => {
     const {
       intl: { formatMessage },
@@ -223,11 +209,19 @@ export class ActionPanel extends Component {
       onIncludeInAA,
       onDelete,
       btsIntegrations,
+      isBtsPluginsExist,
+      enabledBtsPlugins,
       accountRole,
       projectRole,
     } = this.props;
     const isPostIssueUnavailable = !isPostIssueActionAvailable(btsIntegrations);
-    const issueTitle = this.getIssueTitle();
+    const issueTitle = getIssueTitle(
+      formatMessage,
+      btsIntegrations,
+      isBtsPluginsExist,
+      enabledBtsPlugins,
+      isPostIssueUnavailable,
+    );
 
     return [
       {

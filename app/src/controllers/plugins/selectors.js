@@ -54,9 +54,12 @@ export const availableGroupedPluginsSelector = createSelector(
   },
 );
 
-export const isBtsIntegrationsExistSelector = createSelector(
-  pluginsSelector,
-  (plugins) => !!plugins.filter((item) => item.groupType === BTS_GROUP_TYPE).length,
+export const isBtsPluginsExistSelector = createSelector(pluginsSelector, (plugins) =>
+  plugins.some((item) => item.groupType === BTS_GROUP_TYPE),
+);
+
+export const enabledBtsPluginsSelector = createSelector(pluginsSelector, (plugins) =>
+  plugins.filter((item) => item.groupType === BTS_GROUP_TYPE && item.enabled),
 );
 
 export const createNamedIntegrationsSelector = (integrationName, integrationsSelector) =>
