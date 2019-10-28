@@ -18,6 +18,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
+import track from 'react-tracking';
+import { getIntegrationItemClickEvent } from 'components/main/analytics/events';
 import {
   IntegrationInfoContainer,
   IntegrationSettingsContainer,
@@ -37,6 +39,7 @@ import styles from './integrationsTab.scss';
 
 const cx = classNames.bind(styles);
 
+@track()
 @connect(
   (state) => ({
     availablePlugins: availableGroupedPluginsSelector(state),
@@ -49,6 +52,10 @@ export class IntegrationsTab extends Component {
   static propTypes = {
     showDefaultErrorNotification: PropTypes.func.isRequired,
     availablePlugins: PropTypes.object.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   state = {
@@ -97,13 +104,14 @@ export class IntegrationsTab extends Component {
       default:
         return (
           <IntegrationsList
-            onItemClick={(pageData) =>
+            onItemClick={(pageData) => {
               this.changeSubPage({
                 type: INTEGRATION_SUBPAGE,
                 data: pageData,
                 title: INTEGRATION_NAMES_TITLES[pageData.name] || pageData.name,
-              })
-            }
+              });
+              this.props.tracking.trackEvent(getIntegrationItemClickEvent(pageData.name));
+            }}
             availableIntegrations={this.props.availablePlugins}
           />
         );

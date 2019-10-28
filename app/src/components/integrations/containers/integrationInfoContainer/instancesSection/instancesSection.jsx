@@ -34,6 +34,9 @@ import { showModalAction } from 'controllers/modal';
 import {
   PLUGINS_PAGE_EVENTS,
   getUninstallPluginBtnClickEvent,
+  getIntegrationAddClickEvent,
+  getSaveIntegrationModalEvents,
+  getIntegrationUnlinkGlobalEvent,
 } from 'components/main/analytics/events';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { BigButton } from 'components/buttons/bigButton';
@@ -164,10 +167,8 @@ export class InstancesSection extends Component {
 
   builtin = isPluginBuiltin(this.props.instanceType);
 
-  removePlugin = () => {
-    this.tracking.trackEvent(PLUGINS_PAGE_EVENTS.OK_BTN_UNINSTALL_PLUGIN_MODAL);
+  removePlugin = () =>
     this.props.removePluginAction(this.props.pluginId, this.props.removePluginSuccessCallback);
-  };
 
   removeProjectIntegrations = () =>
     this.props.removeProjectIntegrationsByTypeAction(this.props.instanceType);
@@ -212,6 +213,7 @@ export class InstancesSection extends Component {
         cancelText: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
         dangerConfirm: true,
         eventsInfo: {
+          confirmBtn: PLUGINS_PAGE_EVENTS.OK_BTN_UNINSTALL_PLUGIN_MODAL,
           closeIcon: PLUGINS_PAGE_EVENTS.CLOSE_ICON_UNINSTALL_PLUGIN_MODAL,
           cancelBtn: PLUGINS_PAGE_EVENTS.CANCEL_BTN_UNINSTALL_PLUGIN_MODAL,
         },
@@ -237,17 +239,29 @@ export class InstancesSection extends Component {
     });
   };
 
-  addProjectIntegrationClickHandler = () => {
+  showAddProjectIntegrationModal = () => {
     const { instanceType, isGlobal } = this.props;
-
     this.props.showModalAction({
       id: 'addIntegrationModal',
       data: {
         onConfirm: this.addProjectIntegration,
         instanceType,
         isGlobal,
+        eventsInfo: getSaveIntegrationModalEvents(instanceType, isGlobal),
       },
     });
+  };
+
+  addProjectIntegrationClickHandler = () => {
+    const { instanceType, tracking } = this.props;
+    tracking.trackEvent(getIntegrationAddClickEvent(instanceType));
+    this.showAddProjectIntegrationModal();
+  };
+
+  unlinkAndSetupManuallyClickHandler = () => {
+    const { instanceType, tracking } = this.props;
+    tracking.trackEvent(getIntegrationUnlinkGlobalEvent(instanceType));
+    this.showAddProjectIntegrationModal();
   };
 
   render() {
@@ -346,7 +360,7 @@ export class InstancesSection extends Component {
                 onClick={
                   isProjectIntegrationsExists
                     ? this.returnToGlobalSettingsClickHandler
-                    : this.addProjectIntegrationClickHandler
+                    : this.unlinkAndSetupManuallyClickHandler
                 }
               >
                 {formatMessage(

@@ -69,7 +69,7 @@ export class AddIntegrationModal extends Component {
   render() {
     const {
       intl: { formatMessage },
-      data: { onConfirm, instanceType, isGlobal, customProps = {} },
+      data: { onConfirm, instanceType, isGlobal, customProps = {}, eventsInfo = {} },
       handleSubmit,
       initialize,
       change,
@@ -86,11 +86,14 @@ export class AddIntegrationModal extends Component {
         okButton={{
           text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
           onClick: handleSubmit(onConfirm),
+          eventInfo: eventsInfo.saveBtn,
         }}
         cancelButton={{
           text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+          eventInfo: eventsInfo.cancelBtn,
         }}
         closeConfirmation={this.getCloseConfirmationConfig()}
+        closeIconEventInfo={eventsInfo.closeIcon}
       >
         <FieldsComponent initialize={initialize} change={change} lineAlign {...customProps} />
       </ModalLayout>
