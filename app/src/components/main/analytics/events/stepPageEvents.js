@@ -31,7 +31,7 @@ export const STEP_PAGE_EVENTS = {
   },
   REFINE_BTN_MORE: {
     category: STEP_PAGE,
-    action: 'Click on Refine bttn More',
+    action: 'Click on Refine Btn More',
     label: 'Arise dropdown with parameters',
   },
   SELECT_REFINE_PARAMS: {
@@ -126,12 +126,12 @@ export const STEP_PAGE_EVENTS = {
   },
   CANCEL_BTN_EDIT_ITEM_MODAL: {
     category: STEP_PAGE,
-    action: 'Click on Bttn Cancel on Modal "Edit Item',
+    action: 'Click on Btn Cancel on Modal "Edit Item',
     label: 'Close modal "Edit Item"',
   },
   SAVE_BTN_EDIT_ITEM_MODAL: {
     category: STEP_PAGE,
-    action: 'Click on Bttn Save on Modal "Edit Item"',
+    action: 'Click on Btn Save on Modal "Edit Item"',
     label: 'Save changes',
   },
   CLOSE_ICON_EDIT_DEFECT_MODAL: {
@@ -146,12 +146,12 @@ export const STEP_PAGE_EVENTS = {
   },
   CANCEL_BTN_EDIT_DEFECT_MODAL: {
     category: STEP_PAGE,
-    action: 'Click on Bttn Cancel on Modal "Edit Defect Type"',
+    action: 'Click on Btn Cancel on Modal "Edit Defect Type"',
     label: 'Close modal "Edit Defect Type"',
   },
   SAVE_BTN_EDIT_DEFECT_MODAL: {
     category: STEP_PAGE,
-    action: 'Click on Bttn Save on Modal "Edit Defect Type"',
+    action: 'Click on Btn Save on Modal "Edit Defect Type"',
     label: 'Save changes',
   },
   CLOSE_ICON_SELECTED_ITEM: {
@@ -161,7 +161,7 @@ export const STEP_PAGE_EVENTS = {
   },
   PROCEED_VALID_ITEMS: {
     category: STEP_PAGE,
-    action: 'Click on Bttn "Proceed Valid Items"',
+    action: 'Click on Btn "Proceed Valid Items"',
     label: 'Remove invalid launches from selection',
   },
   CLOSE_ICON_FOR_ALL_SELECTIONS: {
@@ -171,22 +171,22 @@ export const STEP_PAGE_EVENTS = {
   },
   EDIT_DEFECT_ACTION: {
     category: STEP_PAGE,
-    action: 'Click on Bttn "Edit Defect"',
+    action: 'Click on Btn "Edit Defect"',
     label: 'Arise Modal "Edit Defect Type"',
   },
   POST_ISSUE_ACTION: {
     category: STEP_PAGE,
-    action: 'Click on Bttn "Post Issue"',
+    action: 'Click on Btn "Post Issue"',
     label: 'Arise Modal "Post Issue"',
   },
   LINK_ISSUE_ACTION: {
     category: STEP_PAGE,
-    action: 'Click on Bttn "Link Issue"',
+    action: 'Click on Btn "Link Issue"',
     label: 'Arise Modal "Link Issue"',
   },
   DELETE_ACTION: {
     category: STEP_PAGE,
-    action: 'Click on Bttn "Delete"',
+    action: 'Click on Btn "Delete"',
     label: 'Arise Modal "Delete Item"',
   },
   IGNORE_IN_AA_ACTION: {
@@ -226,12 +226,12 @@ export const STEP_PAGE_EVENTS = {
   },
   HISTORY_BTN: {
     category: STEP_PAGE,
-    action: 'Click on Bttn "History"',
+    action: 'Click on Btn "History"',
     label: 'Transition to History View Page',
   },
   REFRESH_BTN: {
     category: STEP_PAGE,
-    action: 'Click on Bttn "Refresh"',
+    action: 'Click on Btn "Refresh"',
     label: 'Refresh page',
   },
   CLOSE_ICON_POST_ISSUE_MODAL: {
@@ -256,12 +256,12 @@ export const STEP_PAGE_EVENTS = {
   },
   CANCEL_BTN_POST_ISSUE_MODAL: {
     category: STEP_PAGE,
-    action: 'Click on Bttn Cancel on Modal Post Issue',
+    action: 'Click on Btn Cancel on Modal Post Issue',
     label: 'Close Modal Post Issue',
   },
   POST_BTN_POST_ISSUE_MODAL: {
     category: STEP_PAGE,
-    action: 'Click on Bttn Post on Modal Post Issue',
+    action: 'Click on Btn Post on Modal Post Issue',
     label: 'Post bug',
   },
   CLOSE_ICON_LINK_ISSUE_MODAL: {
@@ -271,17 +271,17 @@ export const STEP_PAGE_EVENTS = {
   },
   ADD_NEW_ISSUE_BTN_LINK_ISSUE_MODAL: {
     category: STEP_PAGE,
-    action: 'Click on Bttn Add New Issue on Modal Link Issue',
+    action: 'Click on Btn Add New Issue on Modal Link Issue',
     label: 'Add input in Modal Link Issue',
   },
   CANCEL_BTN_LINK_ISSUE_MODAL: {
     category: STEP_PAGE,
-    action: 'Click on Bttn Cancel on Modal Link Issue',
+    action: 'Click on Btn Cancel on Modal Link Issue',
     label: 'Close Modal Modal Link Issue',
   },
   LOAD_BTN_LINK_ISSUE_MODAL: {
     category: STEP_PAGE,
-    action: 'Click on Bttn Load on Modal Link Issue',
+    action: 'Click on Btn Load on Modal Link Issue',
     label: 'Link issue',
   },
   CLOSE_ICON_DELETE_ITEM_MODAL: {
@@ -291,17 +291,17 @@ export const STEP_PAGE_EVENTS = {
   },
   CANCEL_BTN_DELETE_ITEM_MODAL: {
     category: STEP_PAGE,
-    action: 'Click on Bttn Cancel on Modal Delete Item',
+    action: 'Click on Btn Cancel on Modal Delete Item',
     label: 'Close Modal Delete Item',
   },
   DELETE_BTN_DELETE_ITEM_MODAL: {
     category: STEP_PAGE,
-    action: 'Click on Bttn Delete on Modal Delete Item',
+    action: 'Click on Btn Delete on Modal Delete Item',
     label: 'Delete item',
   },
   SAVE_BTN_DROPDOWN_EDIT_ITEM_MODAL: {
     category: STEP_PAGE,
-    action: 'Click on dropdown icon on Save Bttn on Modal "Edit Item"',
+    action: 'Click on dropdown icon on Save Btn on Modal "Edit Item"',
     label: 'Arise dropdown',
   },
   POST_BUG_BTN_EDIT_ITEM_MODAL: {
@@ -326,7 +326,7 @@ export const STEP_PAGE_EVENTS = {
   },
   RETRIES_BTN_CLICK: {
     category: STEP_PAGE,
-    action: 'Click on Bttn Retries',
+    action: 'Click on Btn Retries',
     label: 'Open a list with Retries',
   },
   OPEN_RETRY_IN_LOG_VIEW_LINK_CLICK: {

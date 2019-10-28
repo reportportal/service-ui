@@ -45,7 +45,7 @@ export const SETTINGS_PAGE_EVENTS = {
   },
   GENERAL_SUBMIT: {
     category: SETTINGS_PAGE,
-    action: 'Click on Bttn Submit on tab General',
+    action: 'Click on Btn Submit on tab General',
     label: 'Submit changes on tab General',
   },
   NOTIFICATIONS_TAB: {
@@ -65,12 +65,12 @@ export const SETTINGS_PAGE_EVENTS = {
   },
   CANCEL_DELETE_RULE_NOTIFICATIONS: {
     category: SETTINGS_PAGE,
-    action: 'Click on Bttn Cancel in Delete Rule Notification modal on tab Notifications',
+    action: 'Click on Btn Cancel in Delete Rule Notification modal on tab Notifications',
     label: 'Close Delete Rule Notification modal on tab Notifications',
   },
   DELETE_RULE_NOTIFICATIONS: {
     category: SETTINGS_PAGE,
-    action: 'Click on Bttn Delete in Delete Rule Notification modal on tab Notifications',
+    action: 'Click on Btn Delete in Delete Rule Notification modal on tab Notifications',
     label: 'Delete Rule on tab Notifications',
   },
   EDIT_RULE_NOTIFICATIONS: {
@@ -85,12 +85,12 @@ export const SETTINGS_PAGE_EVENTS = {
   },
   CANCEL_EDIT_RULE_NOTIFICATIONS: {
     category: SETTINGS_PAGE,
-    action: 'Click on Bttn Cancel in Edit Rule Notification modal on tab Notifications',
+    action: 'Click on Btn Cancel in Edit Rule Notification modal on tab Notifications',
     label: 'Close Edit Rule Notification modal on tab Notifications',
   },
   SAVE_EDIT_RULE_NOTIFICATIONS: {
     category: SETTINGS_PAGE,
-    action: 'Click on Bttn Save in Edit Rule Notification modal on tab Notifications',
+    action: 'Click on Btn Save in Edit Rule Notification modal on tab Notifications',
     label: 'Save Rule Notification in Edit Rule Notification modal on tab Notifications',
   },
   CLOSE_ICON_ADD_RULE_NOTIFICATIONS: {
@@ -100,12 +100,12 @@ export const SETTINGS_PAGE_EVENTS = {
   },
   CANCEL_ADD_RULE_NOTIFICATIONS: {
     category: SETTINGS_PAGE,
-    action: 'Click on Bttn Cancel in Add Rule Notification modal on tab Notifications',
+    action: 'Click on Btn Cancel in Add Rule Notification modal on tab Notifications',
     label: 'Close Add Rule Notification modal on tab Notifications',
   },
   SAVE_ADD_RULE_NOTIFICATIONS: {
     category: SETTINGS_PAGE,
-    action: 'Click on Bttn Save in Add Rule Notification modal on tab Notifications',
+    action: 'Click on Btn Save in Add Rule Notification modal on tab Notifications',
     label: 'Save Rule Notification in Add Rule Notification modal on tab Notifications',
   },
   EDIT_INPUT_NOTIFICATIONS: {
@@ -140,7 +140,7 @@ export const SETTINGS_PAGE_EVENTS = {
   },
   ADD_RULE_BTN_NOTIFICATIONS: {
     category: SETTINGS_PAGE,
-    action: 'Click on Bttn Add new rule on tab Notifications',
+    action: 'Click on Btn Add new rule on tab Notifications',
     label: 'Add new rule on tab Notifications',
   },
   INTEGRATIONS_TAB: {
@@ -181,13 +181,13 @@ export const SETTINGS_PAGE_EVENTS = {
   CANCEL_EDIT_PROJECT_BTS: {
     // todo add analytics
     category: SETTINGS_PAGE,
-    action: 'Click on Bttn Cancel Edit Projects BTS Instance on tab Integrations',
+    action: 'Click on Btn Cancel Edit Projects BTS Instance on tab Integrations',
     label: 'Cancel Change of Projects BTS Instance on tab Integrations',
   },
   SUBMIT_EDIT_PROJECT_BTS: {
     // todo add analytics
     category: SETTINGS_PAGE,
-    action: 'Click on Bttn Submit Edit Projects BTS Instance on tab Integrations',
+    action: 'Click on Btn Submit Edit Projects BTS Instance on tab Integrations',
     label: 'Submit Change of Projects BTS Instance on tab Integrations',
   },
   CLOSE_ICON_DELETE_PROJECT_MODAL_BTS: {
@@ -199,13 +199,13 @@ export const SETTINGS_PAGE_EVENTS = {
   CANCEL_BTN_DELETE_PROJECT_MODAL_BTS: {
     // todo add analytics
     category: SETTINGS_PAGE,
-    action: 'Click on Bttn Cancel on Modal Delete Project',
+    action: 'Click on Btn Cancel on Modal Delete Project',
     label: 'Close Modal Delete Project',
   },
   DELETE_BTN_DELETE_PROJECT_MODAL_BTS: {
     // todo add analytics
     category: SETTINGS_PAGE,
-    action: 'Click on Bttn Delete on Modal Delete Project',
+    action: 'Click on Btn Delete on Modal Delete Project',
     label: 'Delete Project',
   },
   EDIT_DEFAULT_PROPS_FOR_ISSUE_BTS: {
@@ -217,13 +217,13 @@ export const SETTINGS_PAGE_EVENTS = {
   UPDATE_BTN_DEFAULT_PROPS_BTS: {
     // todo add analytics
     category: SETTINGS_PAGE,
-    action: 'Click on Bttn Update Default properties for issue form on tab Integrations',
+    action: 'Click on Btn Update Default properties for issue form on tab Integrations',
     label: 'Update Default properties for issue form on tab Integrations',
   },
   SUBMIT_BTN_DEFAULT_PROPS_BTS: {
     // todo add analytics
     category: SETTINGS_PAGE,
-    action: 'Click on Bttn Submit Default properties for issue form on tab Integrations',
+    action: 'Click on Btn Submit Default properties for issue form on tab Integrations',
     label: 'Submit Change of Default properties for issue form on tab Integrations',
   },
   EDIT_DEFECT_TAG_DEFECT_TYPES: {
@@ -268,17 +268,17 @@ export const SETTINGS_PAGE_EVENTS = {
   },
   CANCEL_BTN_DELETE_DEFECT_TYPE_MODAL: {
     category: SETTINGS_PAGE,
-    action: 'Click on Bttn Cancel on Modal Delete Defect type',
+    action: 'Click on Btn Cancel on Modal Delete Defect type',
     label: 'Close Modal Delete Defect type',
   },
   DELETE_BTN_DELETE_DEFECT_TYPE_MODAL: {
     category: SETTINGS_PAGE,
-    action: 'Click on Bttn Delete on Modal Delete Defect type',
+    action: 'Click on Btn Delete on Modal Delete Defect type',
     label: 'Delete Defect type',
   },
   ADD_DEFECT_TYPE_BTN: {
     category: SETTINGS_PAGE,
-    action: 'Click on Bttn Add defect type on tab Defect types',
+    action: 'Click on Btn Add defect type on tab Defect types',
     label: 'Arise fieldes for Add defect type on tab Defect types',
   },
   RESET_DEFAULT_COLOR: {
@@ -293,12 +293,12 @@ export const SETTINGS_PAGE_EVENTS = {
   },
   CANCEL_BTN_RESET_DEFECT_COLORS_MODAL: {
     category: SETTINGS_PAGE,
-    action: 'Click on Bttn Cancel on Modal Reset Defect colors',
+    action: 'Click on Btn Cancel on Modal Reset Defect colors',
     label: 'Close Modal Reset Defect colors',
   },
   RESET_BTN_RESET_DEFECT_COLORS_MODAL: {
     category: SETTINGS_PAGE,
-    action: 'Click on Bttn Reset on Modal Reset Defect colors',
+    action: 'Click on Btn Reset on Modal Reset Defect colors',
     label: 'Reset Defect colors',
   },
   DEFECT_TYPE_TAB: {
@@ -318,7 +318,7 @@ export const SETTINGS_PAGE_EVENTS = {
   },
   GENERATE_DATA_BTN: {
     category: SETTINGS_PAGE,
-    action: 'Click on Bttn Generate Demo Data on tab Demo Data',
+    action: 'Click on Btn Generate Demo Data on tab Demo Data',
     label: 'Generate Demo Data on tab Demo Data',
   },
   AUTO_ANALYSIS_TAB: {
@@ -333,7 +333,7 @@ export const SETTINGS_PAGE_EVENTS = {
   },
   AUTO_ANALYSIS_BASE_RADIO_BTN: {
     category: SETTINGS_PAGE,
-    action: 'Choose radio bttn of Base for Auto-Analysis',
+    action: 'Choose radio Btn of Base for Auto-Analysis',
     label: 'Choose Base for Auto-Analysis',
   },
   TOGGLE_AUTO_ANALYSIS_MODE: {
@@ -343,17 +343,17 @@ export const SETTINGS_PAGE_EVENTS = {
   },
   SUBMIT_AUTO_ANALYSIS_SETTINGS: {
     category: SETTINGS_PAGE,
-    action: 'Click on Bttn Submit in Auto-Analysis tab',
+    action: 'Click on Btn Submit in Auto-Analysis tab',
     label: 'Submit changes in Auto-Analysis tab',
   },
   REMOVE_INDEX_BTN: {
     category: SETTINGS_PAGE,
-    action: 'Click on Bttn Remove index in Auto-Analysis tab',
+    action: 'Click on Btn Remove index in Auto-Analysis tab',
     label: 'Remove index in Auto-Analysis tab',
   },
   GENERATE_INDEX_BTN: {
     category: SETTINGS_PAGE,
-    action: 'Click on Bttn Generate index in Auto-Analysis tab',
+    action: 'Click on Btn Generate index in Auto-Analysis tab',
     label: 'Generate index in Auto-Analysis tab',
   },
   PATTERN_ANALYSIS_TAB: {
@@ -368,12 +368,12 @@ export const SETTINGS_PAGE_EVENTS = {
   },
   CANCEL_BTN_DELETE_PATTERN_MODAL: {
     category: SETTINGS_PAGE,
-    action: 'Click on Bttn Cancel on Modal Delete Pattern',
+    action: 'Click on Btn Cancel on Modal Delete Pattern',
     label: 'Close Modal Delete Pattern',
   },
   DELETE_BTN_DELETE_PATTERN_MODAL: {
     category: SETTINGS_PAGE,
-    action: 'Click on Bttn Delete on Modal Delete Pattern',
+    action: 'Click on Btn Delete on Modal Delete Pattern',
     label: 'Delete Pattern',
   },
   CREATE_PATTERN_BTN: {
