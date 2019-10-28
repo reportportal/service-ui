@@ -28,7 +28,15 @@ const cx = classNames.bind(styles);
 export class NavigationTabs extends Component {
   static propTypes = {
     onChangeTab: PropTypes.func,
-    config: PropTypes.object,
+    config: PropTypes.objectOf(
+      PropTypes.shape({
+        name: PropTypes.string,
+        link: PropTypes.object,
+        component: PropTypes.instanceOf(Element),
+        eventInfo: PropTypes.object,
+        mobileDisabled: PropTypes.bool,
+      }),
+    ),
     activeTab: PropTypes.string,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,

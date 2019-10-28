@@ -21,6 +21,7 @@ import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { PLUGINS_TAB_PAGE, pluginsTabSelector } from 'controllers/pages';
 import { INSTALLED, STORE } from 'common/constants/pluginsTabs';
 import { NavigationTabs } from 'components/main/navigationTabs';
+import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { InstalledTab } from './installedTab';
 import { StoreTab } from './storeTab';
 import { PluginsToolbar } from './../pluginsToolbar';
@@ -68,12 +69,14 @@ export class PluginsTabs extends Component {
       name: this.props.intl.formatMessage(messages.installed),
       link: this.createTabLink(INSTALLED),
       component: <InstalledTab plugins={this.props.plugins} filterItems={this.props.filterItems} />,
+      eventInfo: PLUGINS_PAGE_EVENTS.INSTALLED_TAB,
     },
     [STORE]: {
       name: this.props.intl.formatMessage(messages.store),
       link: this.createTabLink(STORE),
       component: <StoreTab />,
       mobileDisabled: true,
+      eventInfo: PLUGINS_PAGE_EVENTS.STORE_TAB,
     },
   });
 
