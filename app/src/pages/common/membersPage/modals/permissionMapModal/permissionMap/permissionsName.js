@@ -152,13 +152,9 @@ const widgetFilterDashboardMessages = defineMessages({
     id: 'PermissionMap.createShareItem',
     defaultMessage: 'Create, share item',
   },
-  [ACTIONS.EDIT_SHARED_ITEM]: {
-    id: 'PermissionMap.editSharedItem',
-    defaultMessage: 'Edit shared item',
-  },
-  [ACTIONS.DELETE_SHARED_ITEM]: {
-    id: 'PermissionMap.deleteSharedItem',
-    defaultMessage: 'Delete shared item',
+  [ACTIONS.EDIT_DELETE_SHARED_ITEM]: {
+    id: 'PermissionMap.editDeleteSharedItem',
+    defaultMessage: 'Edit, delete shared item',
   },
 });
 
