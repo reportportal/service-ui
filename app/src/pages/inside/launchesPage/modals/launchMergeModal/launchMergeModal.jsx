@@ -25,6 +25,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { reduxForm, formValueSelector, getFormSyncErrors, getFormMeta } from 'redux-form';
 import { connect } from 'react-redux';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
+import { showDefaultErrorNotification } from 'controllers/notification';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { SectionHeader } from 'components/main/sectionHeader';
 import { ModalLayout, withModal, ModalField } from 'components/main/modal';
@@ -130,6 +131,7 @@ const formSyncErrorsSelector = getFormSyncErrors(MERGE_FORM);
   {
     showScreenLockAction,
     hideScreenLockAction,
+    showDefaultErrorNotification,
   },
 )
 @track()
@@ -138,6 +140,7 @@ export class LaunchMergeModal extends Component {
     intl: intlShape.isRequired,
     showScreenLockAction: PropTypes.func.isRequired,
     hideScreenLockAction: PropTypes.func.isRequired,
+    showDefaultErrorNotification: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     activeProject: PropTypes.string.isRequired,
     user: PropTypes.object.isRequired,
@@ -214,11 +217,15 @@ export class LaunchMergeModal extends Component {
     fetch(URLS.launchesMerge(this.props.activeProject), {
       method: 'post',
       data: values,
-    }).then(() => {
-      this.props.data.fetchFunc();
-      closeModal();
-      this.props.hideScreenLockAction();
-    });
+    })
+      .then(() => {
+        this.props.data.fetchFunc();
+        closeModal();
+      })
+      .catch(this.props.showDefaultErrorNotification)
+      .then(() => {
+        this.props.hideScreenLockAction();
+      });
   };
 
   render() {

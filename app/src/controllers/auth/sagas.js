@@ -42,6 +42,8 @@ import {
   userIdSelector,
 } from 'controllers/user';
 import { fetchProjectAction } from 'controllers/project';
+import { screenLockVisibilitySelector, hideScreenLockAction } from 'controllers/screenLock';
+import { activeModalSelector, hideModalAction } from 'controllers/modal';
 import { fetchPluginsAction, fetchGlobalIntegrationsAction } from 'controllers/plugins';
 import { redirect, pathToAction } from 'redux-first-router';
 import qs, { stringify } from 'qs';
@@ -67,7 +69,19 @@ import {
   ANONYMOUS_REDIRECT_PATH_STORAGE_KEY,
 } from './constants';
 
+function* hideExtraPopups() {
+  const activeModal = yield select(activeModalSelector);
+  const screenLockVisibility = yield select(screenLockVisibilitySelector);
+  if (activeModal) {
+    yield put(hideModalAction());
+  }
+  if (screenLockVisibility) {
+    yield put(hideScreenLockAction());
+  }
+}
+
 function* handleLogout() {
+  yield call(hideExtraPopups);
   yield put(resetTokenAction());
   yield put(
     redirect({
