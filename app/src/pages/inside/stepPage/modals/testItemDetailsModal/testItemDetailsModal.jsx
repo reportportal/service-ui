@@ -42,7 +42,11 @@ import { getDuration } from 'common/utils/timeDateUtils';
 import { AccordionContainer } from 'components/main/accordionContainer';
 import { AttributeListField } from 'components/main/attributeList';
 import { canEditLaunch } from 'common/utils/permissions';
-import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import {
+  showDefaultErrorNotification,
+  showNotification,
+  NOTIFICATION_TYPES,
+} from 'controllers/notification';
 import { TestItemStatus } from 'pages/inside/common/testItemStatus';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { TestParameters } from 'pages/inside/common/testParameters';
@@ -71,6 +75,7 @@ const cx = classNames.bind(styles);
   }),
   {
     showNotification,
+    showDefaultErrorNotification,
     clearLogPageStackTrace,
   },
 )
@@ -94,6 +99,7 @@ export class TestItemDetailsModal extends Component {
     handleSubmit: PropTypes.func.isRequired,
     currentProject: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
+    showDefaultErrorNotification: PropTypes.func.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -171,13 +177,15 @@ export class TestItemDetailsModal extends Component {
     fetch(URLS.launchesItemsUpdate(currentProject, item.id, type), {
       method: 'put',
       data,
-    }).then(() => {
-      this.props.showNotification({
-        message: formatMessage(messages.itemUpdateSuccess),
-        type: NOTIFICATION_TYPES.SUCCESS,
-      });
-      fetchFunc();
-    });
+    })
+      .then(() => {
+        this.props.showNotification({
+          message: formatMessage(messages.itemUpdateSuccess),
+          type: NOTIFICATION_TYPES.SUCCESS,
+        });
+        fetchFunc();
+      })
+      .catch(this.props.showDefaultErrorNotification);
   };
 
   renderDetailsTab = (editable) => {
