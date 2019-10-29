@@ -191,7 +191,6 @@ export class PostIssueModal extends Component {
   }
 
   onPost = () => (closeModal) => {
-    this.props.tracking.trackEvent(this.props.data.eventsInfo.postBtn);
     this.closeModal = closeModal;
     this.props.handleSubmit(this.prepareDataToSend)();
   };
@@ -411,6 +410,7 @@ export class PostIssueModal extends Component {
       text: formatMessage(messages.postButton),
       disabled: !this.state.fields.length,
       onClick: this.onPost(),
+      eventInfo: eventsInfo.postBtn,
     };
     const cancelButton = {
       text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),

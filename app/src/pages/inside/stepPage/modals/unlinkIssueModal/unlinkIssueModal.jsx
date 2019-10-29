@@ -18,8 +18,6 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
-import track from 'react-tracking';
-import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { activeProjectSelector } from 'controllers/user';
 import { ModalLayout, withModal } from 'components/main/modal';
 import {
@@ -60,7 +58,6 @@ const messages = defineMessages({
     showNotification,
   },
 )
-@track()
 export class UnlinkIssueModal extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
@@ -71,10 +68,6 @@ export class UnlinkIssueModal extends Component {
       fetchFunc: PropTypes.func,
       eventsInfo: PropTypes.object,
     }).isRequired,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
   };
 
   onUnlink = (closeModal) => {
@@ -82,9 +75,7 @@ export class UnlinkIssueModal extends Component {
       intl,
       url,
       data: { items, fetchFunc },
-      tracking: { trackEvent },
     } = this.props;
-    trackEvent(STEP_PAGE_EVENTS.UNLINK_BTN_UNLINK_ISSUE_MODAL);
     const dataToSend = items.reduce(
       (acc, item) => {
         acc.testItemIds.push(item.id);
@@ -115,21 +106,25 @@ export class UnlinkIssueModal extends Component {
   };
 
   render() {
-    const { intl } = this.props;
+    const {
+      intl,
+      data: { eventsInfo = {} },
+    } = this.props;
     const okButton = {
       text: intl.formatMessage(messages.unlinkButton),
       onClick: this.onUnlink,
+      eventInfo: eventsInfo.unlinkBtn,
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      eventInfo: STEP_PAGE_EVENTS.CANCEL_BTN_UNLINK_ISSUE_MODAL,
+      eventInfo: eventsInfo.cancelBtn,
     };
     return (
       <ModalLayout
         title={intl.formatMessage(messages.title)}
         okButton={okButton}
         cancelButton={cancelButton}
-        closeIconEventInfo={STEP_PAGE_EVENTS.CLOSE_ICON_UNLINK_ISSUE_MODAL}
+        closeIconEventInfo={eventsInfo.closeIcon}
       >
         {intl.formatMessage(messages.unlinkModalConfirmationText)}
       </ModalLayout>

@@ -15,7 +15,6 @@
  */
 
 import { Component } from 'react';
-import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
@@ -28,7 +27,6 @@ const cx = classNames.bind(styles);
 
 @withModal('deleteItemsModal')
 @injectIntl
-@track()
 export class DeleteItemsModal extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -42,10 +40,6 @@ export class DeleteItemsModal extends Component {
       eventsInfo: PropTypes.object,
       warning: PropTypes.string,
     }),
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
   };
 
   static defaultProps = {
@@ -56,7 +50,6 @@ export class DeleteItemsModal extends Component {
     },
   };
   confirmAndClose = (closeModal) => {
-    this.props.tracking.trackEvent(this.props.data.eventsInfo.deleteBtn);
     this.props.data.onConfirm(this.props.data.items);
     closeModal();
   };
@@ -70,7 +63,7 @@ export class DeleteItemsModal extends Component {
       text: formatMessage(COMMON_LOCALE_KEYS.DELETE),
       danger: true,
       onClick: this.confirmAndClose,
-      eventInfo: eventsInfo.cancelBtn,
+      eventInfo: eventsInfo.deleteBtn,
     };
     const cancelButton = {
       text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
