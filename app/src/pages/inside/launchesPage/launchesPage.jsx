@@ -736,8 +736,6 @@ export class LaunchesPage extends Component {
     return (
       <FilterEntitiesContainer
         level={LEVEL_LAUNCH}
-        filterId={activeFilterId}
-        key={activeFilterId}
         entities={activeFilterConditions}
         onChange={onChangeFilter}
         render={({ onFilterAdd, ...rest }) => (
@@ -776,7 +774,7 @@ export class LaunchesPage extends Component {
                 onImportLaunch={this.openImportModal}
                 debugMode={debugMode}
                 onDelete={this.deleteItems}
-                activeFilterId={debugMode ? activeFilterId : ALL}
+                activeFilterId={debugMode ? ALL : activeFilterId}
                 onAddNewWidget={this.showWidgetWizard}
                 finishedLaunchesCount={finishedLaunchesCount}
               />
