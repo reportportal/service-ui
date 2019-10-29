@@ -18,7 +18,6 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
-import track from 'react-tracking';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { activeProjectSelector } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -73,7 +72,6 @@ const messages = defineMessages({
     showNotification,
   },
 )
-@track()
 export class CopySendDefectModal extends Component {
   static propTypes = {
     activeProject: PropTypes.string.isRequired,
@@ -86,21 +84,14 @@ export class CopySendDefectModal extends Component {
       fetchFunc: PropTypes.func,
       eventsInfo: PropTypes.object,
     }).isRequired,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
   };
 
   onInclude = (closeModal) => {
     const {
       intl,
       activeProject,
-      tracking,
-      data: { lastHistoryItem, itemForCopy, fetchFunc, eventsInfo },
+      data: { lastHistoryItem, itemForCopy, fetchFunc },
     } = this.props;
-
-    tracking.trackEvent(eventsInfo.okBtn);
 
     const issues = [
       {
@@ -146,6 +137,7 @@ export class CopySendDefectModal extends Component {
       text: this.getTitle(MESSAGE_TYPES.button),
       danger: true,
       onClick: this.onInclude,
+      eventInfo: eventsInfo.okBtn,
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),

@@ -17,7 +17,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import className from 'classnames/bind';
-import track from 'react-tracking';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import Parser from 'html-react-parser';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -39,13 +38,8 @@ const messages = defineMessages({
 
 @withModal('deleteNotificationCaseModal')
 @injectIntl
-@track()
 export class DeleteNotificationCaseModal extends Component {
   static propTypes = {
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
     intl: intlShape.isRequired,
     data: PropTypes.object,
   };
@@ -58,7 +52,6 @@ export class DeleteNotificationCaseModal extends Component {
     const {
       intl,
       data: { id, onConfirm, eventsInfo },
-      tracking,
     } = this.props;
     return (
       <ModalLayout
@@ -67,9 +60,9 @@ export class DeleteNotificationCaseModal extends Component {
           text: intl.formatMessage(COMMON_LOCALE_KEYS.DELETE),
           danger: true,
           onClick: () => {
-            tracking.trackEvent(eventsInfo.deleteBtn);
             onConfirm();
           },
+          eventInfo: eventsInfo.deleteBtn,
         }}
         cancelButton={{
           text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),

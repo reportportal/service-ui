@@ -15,7 +15,6 @@
  */
 
 import { Component } from 'react';
-import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { reduxForm, FieldArray } from 'redux-form';
@@ -83,7 +82,6 @@ const messages = defineMessages({
   },
 )
 @injectIntl
-@track()
 export class LinkIssueModal extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -99,10 +97,6 @@ export class LinkIssueModal extends Component {
       items: PropTypes.array,
       fetchFunc: PropTypes.func,
       eventsInfo: PropTypes.object,
-    }).isRequired,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
     }).isRequired,
   };
 
@@ -178,7 +172,6 @@ export class LinkIssueModal extends Component {
   };
 
   onLink = () => (closeModal) => {
-    this.props.tracking.trackEvent(this.props.data.eventsInfo.loadBtn);
     this.closeModal = closeModal;
     this.props.handleSubmit(this.onFormSubmit)();
   };
@@ -218,6 +211,7 @@ export class LinkIssueModal extends Component {
     const okButton = {
       text: intl.formatMessage(messages.linkButton),
       onClick: this.onLink(),
+      eventInfo: eventsInfo.loadBtn,
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),

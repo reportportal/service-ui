@@ -17,7 +17,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { reduxForm } from 'redux-form';
-import track from 'react-tracking';
 import className from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { ModalLayout, withModal } from 'components/main/modal';
@@ -58,14 +57,9 @@ const messages = defineMessages({
   }),
 })
 @injectIntl
-@track()
 export class AddEditNotificationCaseModal extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
     data: PropTypes.shape({
       notificationCase: PropTypes.object,
       onConfirm: PropTypes.func,
@@ -99,7 +93,6 @@ export class AddEditNotificationCaseModal extends Component {
       intl: { formatMessage },
       data: { isNewCase, onConfirm, eventsInfo },
       handleSubmit,
-      tracking,
     } = this.props;
 
     return (
@@ -110,9 +103,9 @@ export class AddEditNotificationCaseModal extends Component {
         okButton={{
           text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
           onClick: () => {
-            tracking.trackEvent(eventsInfo.saveBtn);
             handleSubmit(onConfirm)();
           },
+          eventInfo: eventsInfo.saveBtn,
         }}
         cancelButton={{
           text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),

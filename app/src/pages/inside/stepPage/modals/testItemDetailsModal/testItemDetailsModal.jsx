@@ -281,14 +281,13 @@ export class TestItemDetailsModal extends Component {
       userProjectRole,
       userId,
       handleSubmit,
-      tracking,
     } = this.props;
     const okButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.SAVE),
       onClick: (closeModal) => {
-        tracking.trackEvent(eventsInfo.saveBtn);
         handleSubmit(this.updateItemAndCloseModal(closeModal))();
       },
+      eventInfo: eventsInfo.saveBtn,
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),

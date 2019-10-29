@@ -140,7 +140,6 @@ export class ModalLayout extends Component {
   };
 
   closeModalWithOk = () => {
-    this.props.tracking.trackEvent(this.props.okButton.eventInfo);
     this.setState({ shown: false });
   };
 
