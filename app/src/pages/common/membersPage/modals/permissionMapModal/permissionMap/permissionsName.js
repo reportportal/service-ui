@@ -134,6 +134,10 @@ const launchesMessages = defineMessages({
     id: 'PermissionMap.manualAnalysisExportCompareImport',
     defaultMessage: 'Manual analysis, export, compare, import functionalities',
   },
+  [ACTIONS.RERUN_LAUNCHES]: {
+    id: 'PermissionMap.rerunLaunches',
+    defaultMessage: 'Re-run launches',
+  },
 });
 
 const suiteTestTestItemMessages = defineMessages({
@@ -144,6 +148,10 @@ const suiteTestTestItemMessages = defineMessages({
   [ACTIONS.INVESTIGATION_ACTIONS]: {
     id: 'PermissionMap.investigationActions',
     defaultMessage: 'Investigation actions (defect types and issues in BTS)',
+  },
+  [ACTIONS.CHANGE_STATUS]: {
+    id: 'PermissionMap.changeStatus',
+    defaultMessage: 'Change status',
   },
 });
 
