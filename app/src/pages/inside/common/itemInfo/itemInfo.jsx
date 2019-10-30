@@ -59,7 +59,10 @@ const messages = defineMessages({
 
 const ItemNameTooltip = withTooltip({
   TooltipComponent: TextTooltip,
-  data: { dynamicWidth: true },
+  data: {
+    dynamicWidth: true,
+    tooltipTriggerClass: cx('name'),
+  },
 })(({ children }) => children);
 
 @injectIntl
