@@ -77,7 +77,7 @@ export class WidgetsGrid extends Component {
     this.observer = ReactObserver();
 
     this.state = {
-      isMobile: false,
+      isMobile: window.innerWidth <= breakpoints.sm,
     };
   }
 
