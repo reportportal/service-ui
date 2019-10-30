@@ -41,6 +41,8 @@ import RetryIcon from 'common/img/retry-inline.svg';
 import SauceLabsIcon from 'common/img/plugins/sauce-labs-gray.png';
 import { NameLink } from 'pages/inside/common/nameLink';
 import { DurationBlock } from 'pages/inside/common/durationBlock';
+import { withTooltip } from 'components/main/tooltips/tooltip';
+import { TextTooltip } from 'components/main/tooltips/textTooltip';
 import { AttributesBlock } from './attributesBlock';
 import { OwnerBlock } from './ownerBlock';
 import { RetriesCounter } from './retriesCounter';
@@ -109,6 +111,17 @@ export class ItemInfo extends Component {
     }
   };
 
+  renderItemName = () => {
+    const { value } = this.props;
+    const Tooltip = () => <TextTooltip tooltipContent={value.name} />;
+    const ItemNameComponent = () => <span>{`${formatItemName(value.name)} `}</span>;
+    const ItemNameWithTooltip = withTooltip({
+      TooltipComponent: Tooltip,
+      data: { dynamicWidth: true },
+    })(ItemNameComponent);
+    return <ItemNameWithTooltip />;
+  };
+
   renderSauceLabsLabel = () => {
     const isSauceLabsIntegrationAvailable = !!getSauceLabsConfig(this.props.value.attributes);
     if (isSauceLabsIntegrationAvailable && this.props.sauceLabsIntegrations.length) {
@@ -145,7 +158,7 @@ export class ItemInfo extends Component {
             className={cx('name-link')}
             onClick={() => tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ITEM_NAME)}
           >
-            <span title={value.name}>{`${formatItemName(value.name)} `}</span>
+            {this.renderItemName()}
           </NameLink>
           <span className={cx('edit-number-box')}>
             <NameLink
