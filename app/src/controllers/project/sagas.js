@@ -64,7 +64,7 @@ import {
   fetchProjectPreferencesSuccessAction,
   updateProjectFilterPreferencesAction,
 } from './actionCreators';
-import { projectNotificationsConfigurationSelector } from './selectors';
+import { projectNotificationsConfigurationSelector, patternsSelector } from './selectors';
 
 function* updateDefectSubType({ payload: subTypes }) {
   try {
@@ -167,6 +167,23 @@ function* watchUpdateProjectNotificationsConfig() {
   yield takeEvery(UPDATE_NOTIFICATIONS_CONFIG, updateProjectNotificationsConfig);
 }
 
+function* updatePAState(PAEnabled) {
+  const projectId = yield select(projectIdSelector);
+  const updatedConfig = {
+    configuration: {
+      attributes: {
+        [PA_ATTRIBUTE_ENABLED_KEY]: PAEnabled.toString(),
+      },
+    },
+  };
+
+  yield call(fetch, URLS.project(projectId), {
+    method: 'put',
+    data: updatedConfig,
+  });
+  yield put(updateConfigurationAttributesAction(updatedConfig));
+}
+
 function* addPattern({ payload: pattern }) {
   try {
     const projectId = yield select(projectIdSelector);
@@ -174,6 +191,10 @@ function* addPattern({ payload: pattern }) {
       method: 'post',
       data: pattern,
     });
+    const patterns = yield select(patternsSelector);
+    if (!patterns.length) {
+      yield call(updatePAState, true);
+    }
     yield put(addPatternSuccessAction({ ...pattern, ...response }));
     yield put(
       showNotification({
@@ -236,23 +257,10 @@ function* watchDeletePattern() {
   yield takeEvery(DELETE_PATTERN, deletePattern);
 }
 
-function* updatePAState({ payload: PAEnabled }) {
+function* updatePAStateWithNotification({ payload: PAEnabled }) {
   yield put(showScreenLockAction());
   try {
-    const projectId = yield select(projectIdSelector);
-    const updatedConfig = {
-      configuration: {
-        attributes: {
-          [PA_ATTRIBUTE_ENABLED_KEY]: PAEnabled.toString(),
-        },
-      },
-    };
-
-    yield call(fetch, URLS.project(projectId), {
-      method: 'put',
-      data: updatedConfig,
-    });
-    yield put(updateConfigurationAttributesAction(updatedConfig));
+    yield call(updatePAState, PAEnabled);
     yield put(
       showNotification({
         messageId: 'updatePAStateSuccess',
@@ -267,7 +275,7 @@ function* updatePAState({ payload: PAEnabled }) {
 }
 
 function* watchUpdatePAState() {
-  yield takeEvery(UPDATE_PA_STATE, updatePAState);
+  yield takeEvery(UPDATE_PA_STATE, updatePAStateWithNotification);
 }
 
 function* fetchProject({ payload: { projectId, isAdminAccess } }) {
