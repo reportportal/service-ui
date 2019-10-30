@@ -57,6 +57,11 @@ const messages = defineMessages({
   },
 });
 
+const ItemNameTooltip = withTooltip({
+  TooltipComponent: TextTooltip,
+  data: { dynamicWidth: true },
+})(({ children }) => children);
+
 @injectIntl
 @connect((state) => ({
   sauceLabsIntegrations: availableIntegrationsByPluginNameSelector(state, SAUCE_LABS),
@@ -111,17 +116,6 @@ export class ItemInfo extends Component {
     }
   };
 
-  renderItemName = () => {
-    const { value } = this.props;
-    const Tooltip = () => <TextTooltip tooltipContent={value.name} />;
-    const ItemNameComponent = () => <span>{`${formatItemName(value.name)} `}</span>;
-    const ItemNameWithTooltip = withTooltip({
-      TooltipComponent: Tooltip,
-      data: { dynamicWidth: true },
-    })(ItemNameComponent);
-    return <ItemNameWithTooltip />;
-  };
-
   renderSauceLabsLabel = () => {
     const isSauceLabsIntegrationAvailable = !!getSauceLabsConfig(this.props.value.attributes);
     if (isSauceLabsIntegrationAvailable && this.props.sauceLabsIntegrations.length) {
@@ -158,7 +152,9 @@ export class ItemInfo extends Component {
             className={cx('name-link')}
             onClick={() => tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ITEM_NAME)}
           >
-            {this.renderItemName()}
+            <ItemNameTooltip tooltipContent={value.name}>
+              <span>{formatItemName(value.name)}</span>
+            </ItemNameTooltip>
           </NameLink>
           <span className={cx('edit-number-box')}>
             <NameLink
