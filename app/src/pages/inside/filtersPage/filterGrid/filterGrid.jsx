@@ -54,6 +54,8 @@ const NameColumn = ({ className, value, customProps }) => (
       }}
       isLink
       noShareIcons
+      userRole={customProps.userRole}
+      projectRole={customProps.projectRole}
     />
   </div>
 );
@@ -211,6 +213,8 @@ export class FilterGrid extends Component {
         },
         userId: this.props.userId,
         activeProject: this.props.activeProject,
+        userRole: this.props.accountRole,
+        projectRole: this.props.projectRole,
       },
     },
     {
