@@ -46,10 +46,14 @@
   }
 }
 .name-link {
+  padding-right: 5px;
   font-family: $FONT-SEMIBOLD;
   font-size: 14px;
   color: $COLOR--windows-blue;
   text-decoration: none;
+  > div {
+    display: inline;
+  }
 
   @media (max-width: $SCREEN_SM_MAX) {
     font-size: 16px;
