@@ -26,6 +26,7 @@ import ShareIcon from 'common/img/share-icon-inline.svg';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import GlobeIcon from 'common/img/globe-icon-inline.svg';
 import { MarkdownViewer } from 'components/main/markdown';
+import { canEditFilter } from 'common/utils/permissions';
 import styles from './filterName.scss';
 
 const cx = classNames.bind(styles);
@@ -46,6 +47,8 @@ export class FilterName extends Component {
     isLink: PropTypes.bool,
     noShareIcons: PropTypes.bool,
     nameLink: PropTypes.object,
+    userRole: PropTypes.string,
+    projectRole: PropTypes.string,
   };
 
   static defaultProps = {
@@ -62,6 +65,8 @@ export class FilterName extends Component {
     isLink: false,
     noShareIcons: false,
     nameLink: null,
+    userRole: null,
+    projectRole: null,
   };
 
   getHighlightName = () => {
@@ -102,6 +107,8 @@ export class FilterName extends Component {
       isLink,
       noShareIcons,
       nameLink,
+      userRole,
+      projectRole,
     } = this.props;
 
     const NameLink = ({ link, children }) =>
@@ -134,7 +141,7 @@ export class FilterName extends Component {
                 {Parser(this.getShareIcon())}
               </span>
             )}
-          {userId === filter.owner &&
+          {canEditFilter(userRole, projectRole, userId === filter.owner) &&
             editable && (
               <span className={cx('pencil-icon')} onClick={() => onEdit(filter)}>
                 {Parser(PencilIcon)}
