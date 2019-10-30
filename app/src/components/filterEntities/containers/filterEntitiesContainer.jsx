@@ -34,6 +34,20 @@ const ENTITY_PROVIDERS = {
   [LEVEL_STEP]: StepLevelEntities,
 };
 
+const saveEntitiesConditions = (entities, prevEntities, visibleFilters) =>
+  visibleFilters.reduce((acc, entityId) => {
+    if (entities[entityId] || !prevEntities[entityId]) {
+      return acc;
+    }
+    return {
+      ...acc,
+      [entityId]: {
+        value: '',
+        condition: prevEntities[entityId].condition,
+      },
+    };
+  }, entities);
+
 export class FilterEntitiesContainer extends Component {
   static propTypes = {
     entities: PropTypes.objectOf(filterValueShape),
@@ -51,12 +65,17 @@ export class FilterEntitiesContainer extends Component {
   };
 
   static getDerivedStateFromProps(props, state) {
-    if (props.entities !== state.values && !isEqual(props.entities, state.prevEntities)) {
+    if (props.entities !== state.entities && !isEqual(props.entities, state.prevEntities)) {
+      const newEntities = saveEntitiesConditions(
+        props.entities,
+        state.prevEntities,
+        state.visibleFilters,
+      );
       return {
         errors: {},
-        values: props.entities,
-        prevEntities: props.entities,
-        visibleFilters: Object.keys(props.entities),
+        entities: props.entities,
+        values: newEntities,
+        prevEntities: newEntities,
       };
     }
     return null;
