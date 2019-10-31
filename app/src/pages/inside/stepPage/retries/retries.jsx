@@ -30,12 +30,13 @@ export const Retries = ({
   selectedIndex,
   loading,
   onRetrySelect,
+  collapsed,
 }) => (
   <div className={cx('retries')}>
     <div className={cx('list')}>
       <RetriesList retries={retries} selectedId={selectedId} onRetrySelect={onRetrySelect} />
     </div>
-    <div className={cx('details')}>
+    <div className={cx('details', { collapsed })}>
       <StackTrace
         retryId={selectedId}
         testItemId={testItemId}
@@ -54,6 +55,7 @@ Retries.propTypes = {
   selectedIndex: PropTypes.number.isRequired,
   loading: PropTypes.bool,
   onRetrySelect: PropTypes.func,
+  collapsed: PropTypes.bool.isRequired,
 };
 Retries.defaultProps = {
   retries: [],
