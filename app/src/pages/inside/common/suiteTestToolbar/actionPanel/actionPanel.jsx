@@ -364,13 +364,21 @@ export class ActionPanel extends Component {
           {!listView &&
             !debugMode && (
               <div className={cx('action-button')}>
-                <GhostButton icon={HistoryIcon} onClick={this.onClickHistory}>
+                <GhostButton
+                  disabled={!!selectedItems.length}
+                  icon={HistoryIcon}
+                  onClick={this.onClickHistory}
+                >
                   <FormattedMessage id="ActionPanel.history" defaultMessage="History" />
                 </GhostButton>
               </div>
             )}
           <div className={cx('action-button')}>
-            <GhostButton icon={RefreshIcon} onClick={this.onClickRefresh}>
+            <GhostButton
+              disabled={!!selectedItems.length}
+              icon={RefreshIcon}
+              onClick={this.onClickRefresh}
+            >
               <FormattedMessage id="Common.refresh" defaultMessage="Refresh" />
             </GhostButton>
           </div>
