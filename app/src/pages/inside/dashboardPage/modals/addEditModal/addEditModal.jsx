@@ -36,7 +36,7 @@ const cx = classNames.bind(styles);
 const messages = defineMessages({
   dashboardNamePlaceholder: {
     id: 'DashboardForm.dashboardNamePlaceholder',
-    defaultMessage: 'Enter Dashboard Name',
+    defaultMessage: 'Enter dashboard name',
   },
   dashboardNameLabel: {
     id: 'DashboardForm.dashboardNameLabel',
@@ -44,7 +44,7 @@ const messages = defineMessages({
   },
   dashboardDescriptionPlaceholder: {
     id: 'DashboardForm.dashboardDescriptionPlaceholder',
-    defaultMessage: 'Enter Dashboard Description',
+    defaultMessage: 'Enter dashboard description',
   },
   dashboardDescriptionLabel: {
     id: 'DashboardForm.dashboardDescriptionLabel',

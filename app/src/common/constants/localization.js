@@ -135,6 +135,6 @@ export const COMMON_LOCALE_KEYS = defineMessages({
   },
   FORCE_FINISH: {
     id: 'Common.forceFinish',
-    defaultMessage: 'Force Finish',
+    defaultMessage: 'Force finish',
   },
 });

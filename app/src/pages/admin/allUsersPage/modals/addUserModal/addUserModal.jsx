@@ -50,7 +50,7 @@ const messages = defineMessages({
   },
   userFullNameLabel: {
     id: 'AddUserForm.userFullNameLabel',
-    defaultMessage: 'Full Name',
+    defaultMessage: 'Full name',
   },
   userEmailLabel: {
     id: 'AddUserForm.userEmailLabel',
