@@ -22,8 +22,8 @@ import {
   SET_LEVEL,
   RESTORE_PATH,
   SET_PAGE_LOADING,
-  NAMESPACE,
   FETCH_TEST_ITEMS_LOG_PAGE,
+  DELETE_TEST_ITEMS,
 } from './constants';
 
 export const setLevelAction = (level) => ({
@@ -50,13 +50,28 @@ export const fetchTestItemsFromLogPageAction = (payload) => ({
   payload,
 });
 
-export const deleteItemsAction = defineGroupOperation(
-  NAMESPACE,
-  'deleteTestItems',
-  (items, { onConfirm, header, mainContent, userId, currentLaunch, warning, eventsInfo }) =>
-    showModalAction({
-      id: 'deleteItemsModal',
-      data: { items, onConfirm, header, mainContent, userId, currentLaunch, warning, eventsInfo },
-    }),
-  validateDeleteItem,
-);
+export const deleteTestItemsAction = (payload) => ({
+  type: DELETE_TEST_ITEMS,
+  payload,
+});
+
+export const createBulkDeleteTestItemsAction = (namespace) =>
+  defineGroupOperation(
+    namespace,
+    'deleteTestItems',
+    (items, { onConfirm, header, mainContent, userId, currentLaunch, warning, eventsInfo }) =>
+      showModalAction({
+        id: 'deleteItemsModal',
+        data: {
+          items,
+          onConfirm,
+          header,
+          mainContent,
+          userId,
+          currentLaunch,
+          warning,
+          eventsInfo,
+        },
+      }),
+    validateDeleteItem,
+  );

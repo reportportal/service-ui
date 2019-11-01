@@ -251,4 +251,19 @@ export const SUITES_PAGE_EVENTS = {
     action: 'Click on launch log view switcher',
     label: 'Open "Launch log view"',
   },
+  CLOSE_ICON_DELETE_ITEM_MODAL: {
+    category: SUITE_PAGE,
+    action: 'Click on Icon Close on Modal Delete Item',
+    label: 'Close Modal Delete Item',
+  },
+  CANCEL_BTN_DELETE_ITEM_MODAL: {
+    category: SUITE_PAGE,
+    action: 'Click on Btn Cancel on Modal Delete Item',
+    label: 'Close Modal Delete Item',
+  },
+  DELETE_BTN_DELETE_ITEM_MODAL: {
+    category: SUITE_PAGE,
+    action: 'Click on Btn Delete on Modal Delete Item',
+    label: 'Delete item',
+  },
 };
