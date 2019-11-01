@@ -97,6 +97,7 @@ export class AddSharedWidgetModal extends Component {
     this.props.showScreenLockAction();
     const widget = {
       widgetId: id,
+      widgetType,
       ...getDefaultWidgetConfig(widgetType),
     };
     tracking.trackEvent(eventsInfo.addBtn);
