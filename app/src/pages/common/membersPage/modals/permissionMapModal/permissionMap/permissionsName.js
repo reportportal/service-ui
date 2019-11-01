@@ -118,6 +118,10 @@ const launchesMessages = defineMessages({
     id: 'PermissionMap.reportLaunch',
     defaultMessage: 'Report launches',
   },
+  [ACTIONS.RERUN_LAUNCHES]: {
+    id: 'PermissionMap.rerunLaunches',
+    defaultMessage: 'Re-run launches',
+  },
   [ACTIONS.VIEW_LAUNCH_IN_DEBUG_MODE]: {
     id: 'PermissionMap.viewLaunchInDebugMode',
     defaultMessage: 'View launches in debug mode',
@@ -133,10 +137,6 @@ const launchesMessages = defineMessages({
   [ACTIONS.MANUAL_ANALYSIS_EXPORT_COMPARE_IMPORT]: {
     id: 'PermissionMap.manualAnalysisExportCompareImport',
     defaultMessage: 'Manual analysis, export, compare, import functionalities',
-  },
-  [ACTIONS.RERUN_LAUNCHES]: {
-    id: 'PermissionMap.rerunLaunches',
-    defaultMessage: 'Re-run launches',
   },
 });
 
