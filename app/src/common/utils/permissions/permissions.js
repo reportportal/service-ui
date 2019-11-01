@@ -72,3 +72,4 @@ export const canConfigurePatternAnalysis = checkPermission(ACTIONS.CONFIGURE_PAT
 export const canAddWidget = checkPermission(ACTIONS.ADD_WIDGET);
 export const canEditDashboard = checkPermission(ACTIONS.EDIT_DASHBOARD);
 export const canEditWidget = checkPermission(ACTIONS.EDIT_WIDGET);
+export const canResetToDefaultColors = checkPermission(ACTIONS.RESET_TO_DEFAULT_COLORS);

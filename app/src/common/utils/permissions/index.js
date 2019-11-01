@@ -48,4 +48,5 @@ export {
   canEditDashboard,
   canEditWidget,
   canEditFilter,
+  canResetToDefaultColors,
 } from './permissions';
