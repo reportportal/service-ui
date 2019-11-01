@@ -123,6 +123,14 @@ const messages = defineMessages({
     id: 'LaunchFiltersToolbar.updateFilterSuccess',
     defaultMessage: 'Filter has been updated',
   },
+  deleteTestItemSuccess: {
+    id: 'TestItemsPage.success',
+    defaultMessage: 'Item was deleted',
+  },
+  deleteTestItemMultipleSuccess: {
+    id: 'TestItemsPage.successMultiple',
+    defaultMessage: 'Items were deleted',
+  },
 });
 
 @injectIntl
