@@ -23,6 +23,8 @@ import classNames from 'classnames/bind';
 
 import { defectTypesSelector, updateDefectSubTypeAction } from 'controllers/project';
 import { showModalAction } from 'controllers/modal';
+import { userAccountRoleSelector, activeProjectRoleSelector } from 'controllers/user';
+import { canResetToDefaultColors } from 'common/utils/permissions';
 import { DEFECT_TYPES_SEQUENCE } from 'common/constants/defectTypes';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -40,6 +42,8 @@ const cx = classNames.bind(styles);
 @connect(
   (state) => ({
     subTypes: defectTypesSelector(state),
+    userAccountRole: userAccountRoleSelector(state),
+    userProjectRole: activeProjectRoleSelector(state),
   }),
   {
     showModal: showModalAction,
@@ -57,6 +61,8 @@ export class DefectTypesTab extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    userAccountRole: PropTypes.string.isRequired,
+    userProjectRole: PropTypes.string.isRequired,
   };
 
   showResetColorsConfirmationDialog = () => {
@@ -103,6 +109,8 @@ export class DefectTypesTab extends Component {
     const {
       intl: { formatMessage },
       subTypes,
+      userAccountRole,
+      userProjectRole,
     } = this.props;
     const isResetDisabled = this.isOnlySystemDefectTypes();
 
@@ -131,17 +139,19 @@ export class DefectTypesTab extends Component {
             </div>
           </React.Fragment>
         ))}
-        <div className={cx('reset-button-wrap')}>
-          <button
-            className={cx('reset-button')}
-            type="button"
-            onClick={isResetDisabled ? undefined : this.showResetColorsConfirmationDialog}
-            disabled={isResetDisabled}
-            title={isResetDisabled ? formatMessage(messages.noColorsToUpdate) : undefined}
-          >
-            {formatMessage(messages.resetColors)}
-          </button>
-        </div>
+        {canResetToDefaultColors(userAccountRole, userProjectRole) && (
+          <div className={cx('reset-button-wrap')}>
+            <button
+              className={cx('reset-button')}
+              type="button"
+              onClick={isResetDisabled ? undefined : this.showResetColorsConfirmationDialog}
+              disabled={isResetDisabled}
+              title={isResetDisabled ? formatMessage(messages.noColorsToUpdate) : undefined}
+            >
+              {formatMessage(messages.resetColors)}
+            </button>
+          </div>
+        )}
       </div>
     );
   }
