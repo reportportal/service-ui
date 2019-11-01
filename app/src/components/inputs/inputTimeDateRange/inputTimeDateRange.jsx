@@ -44,7 +44,7 @@ const cx = classNames.bind(styles);
 const messages = defineMessages({
   customRange: {
     id: 'InputTimeDateRange.customRange',
-    defaultMessage: 'Custom Range',
+    defaultMessage: 'Custom range',
   },
   from: {
     id: 'InputTimeDateRange.from',
