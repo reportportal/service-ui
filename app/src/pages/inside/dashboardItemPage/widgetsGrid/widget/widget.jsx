@@ -133,7 +133,7 @@ export class SimpleWidget extends Component {
       return <SpinningPreloader />;
     }
 
-    if (!isWidgetDataAvailable(widget) && !MULTI_LEVEL_WIDGETS_MAP[widgetType]) {
+    if (!isWidgetDataAvailable(widget) && (!MULTI_LEVEL_WIDGETS_MAP[widgetType] || !widget.id)) {
       return <NoDataAvailable />;
     }
 
