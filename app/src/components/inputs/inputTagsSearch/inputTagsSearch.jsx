@@ -149,11 +149,9 @@ export class InputTagsSearch extends Component {
   renderNewItemLabel = (label) => {
     if (this.props.showNewLabel) {
       return (
-        <div>
-          <span>{label}</span>
-          <span className={cx('new')}>
-            <FormattedMessage id="InputTagsSearch.new" defaultMessage="New" />
-          </span>
+        <div className={cx('new-item-wrap')} title={label}>
+          <span className={cx('label')}>{label}</span>
+          <FormattedMessage id="InputTagsSearch.new" defaultMessage="New" />
         </div>
       );
     }
