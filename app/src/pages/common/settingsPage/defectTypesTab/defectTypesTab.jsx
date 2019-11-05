@@ -24,7 +24,7 @@ import classNames from 'classnames/bind';
 import { defectTypesSelector, updateDefectSubTypeAction } from 'controllers/project';
 import { showModalAction } from 'controllers/modal';
 import { userAccountRoleSelector, activeProjectRoleSelector } from 'controllers/user';
-import { canResetToDefaultColors } from 'common/utils/permissions';
+import { canUpdateSettings } from 'common/utils/permissions';
 import { DEFECT_TYPES_SEQUENCE } from 'common/constants/defectTypes';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -139,7 +139,7 @@ export class DefectTypesTab extends Component {
             </div>
           </React.Fragment>
         ))}
-        {canResetToDefaultColors(userAccountRole, userProjectRole) && (
+        {canUpdateSettings(userAccountRole, userProjectRole) && (
           <div className={cx('reset-button-wrap')}>
             <button
               className={cx('reset-button')}

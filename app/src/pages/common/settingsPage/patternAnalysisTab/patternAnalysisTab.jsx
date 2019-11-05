@@ -24,7 +24,7 @@ import { STRING_PATTERN } from 'common/constants/patternTypes';
 import { showModalAction } from 'controllers/modal';
 import { GhostButton } from 'components/buttons/ghostButton';
 import PlusIcon from 'common/img/plus-button-inline.svg';
-import { canConfigurePatternAnalysis } from 'common/utils/permissions';
+import { canUpdateSettings } from 'common/utils/permissions';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { PatternListHeader } from './patternListHeader';
 import { PatternList } from './patternList';
@@ -96,7 +96,7 @@ export class PatternAnalysisTab extends Component {
     });
   };
 
-  isAbleToEditForm = () => canConfigurePatternAnalysis(this.props.userRole, this.props.projectRole);
+  isAbleToEditForm = () => canUpdateSettings(this.props.userRole, this.props.projectRole);
 
   render() {
     const { intl, patterns } = this.props;

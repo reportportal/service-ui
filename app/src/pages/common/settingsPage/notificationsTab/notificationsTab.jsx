@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
-import { canConfigreEmailNotifications } from 'common/utils/permissions';
+import { canUpdateSettings } from 'common/utils/permissions';
 import {
   updateProjectNotificationsConfigAction,
   projectNotificationsCasesSelector,
@@ -76,10 +76,10 @@ export class NotificationsTab extends Component {
   };
 
   isAbleToEditNotificationCaseList = () =>
-    canConfigreEmailNotifications(this.props.userRole, this.props.projectRole);
+    canUpdateSettings(this.props.userRole, this.props.projectRole);
 
   isAbleToEditNotificationsEnableForm = () =>
-    canConfigreEmailNotifications(this.props.userRole, this.props.projectRole) &&
+    canUpdateSettings(this.props.userRole, this.props.projectRole) &&
     this.props.isEmailIntegrationAvailable;
 
   toggleNotificationsEnabled = ({ enabled } = {}, dispatch, formProps) =>
