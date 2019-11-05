@@ -41,12 +41,9 @@ export {
   canDeleteDashboard,
   canDeleteFilter,
   canResizeAndDragWidgets,
-  canConfigreEmailNotifications,
-  canConfigurePatternAnalysis,
   canSeeDemoData,
   canAddWidget,
   canEditDashboard,
   canEditWidget,
   canEditFilter,
-  canResetToDefaultColors,
 } from './permissions';
