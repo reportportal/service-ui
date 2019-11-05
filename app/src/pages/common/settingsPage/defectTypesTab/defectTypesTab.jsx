@@ -113,6 +113,7 @@ export class DefectTypesTab extends Component {
       userProjectRole,
     } = this.props;
     const isResetDisabled = this.isOnlySystemDefectTypes();
+    const isEditable = canUpdateSettings(userAccountRole, userProjectRole);
 
     return (
       <div className={cx('defect-types-list')}>
@@ -135,11 +136,11 @@ export class DefectTypesTab extends Component {
               {formatMessage(messages[groupName.toLowerCase()])}
             </div>
             <div className={cx('group')}>
-              <DefectTypesGroup group={subTypes[groupName]} />
+              <DefectTypesGroup group={subTypes[groupName]} readonly={!isEditable} />
             </div>
           </React.Fragment>
         ))}
-        {canUpdateSettings(userAccountRole, userProjectRole) && (
+        {isEditable && (
           <div className={cx('reset-button-wrap')}>
             <button
               className={cx('reset-button')}
