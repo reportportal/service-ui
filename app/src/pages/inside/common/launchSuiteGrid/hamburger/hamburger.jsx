@@ -117,12 +117,10 @@ export class Hamburger extends Component {
   };
 
   getForceFinishTooltip = () => {
-    const { intl, projectRole, accountRole } = this.props;
+    const { intl, projectRole, accountRole, userId, launch } = this.props;
     let forceFinishTitle = '';
 
-    if (
-      !canForceFinishLaunch(accountRole, projectRole, this.props.userId === this.props.launch.owner)
-    ) {
+    if (!canForceFinishLaunch(accountRole, projectRole, userId === launch.owner || launch.rerun)) {
       forceFinishTitle = intl.formatMessage(messages.noPermissions);
     }
     if (!this.isInProgress()) {

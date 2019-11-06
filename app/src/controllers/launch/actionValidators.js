@@ -53,7 +53,7 @@ export const validateFinishForceLaunch = (launch, launches, state) => {
   const user = userInfoSelector(state);
   const userRole = userAccountRoleSelector(state);
   const projectRole = activeProjectRoleSelector(state);
-  if (!canForceFinishLaunch(userRole, projectRole, launch.owner === user.userId)) {
+  if (!canForceFinishLaunch(userRole, projectRole, launch.owner === user.userId || launch.rerun)) {
     return 'notYourOwnLaunch';
   }
   return null;
