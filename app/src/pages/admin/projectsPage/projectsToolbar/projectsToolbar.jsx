@@ -48,10 +48,10 @@ import { fetch } from 'common/utils';
 import { PROJECTS } from 'common/constants/projectsObjectTypes';
 import { collectFilterEntities } from 'components/filterEntities/containers/utils';
 import { downloadFile } from 'common/utils/downloadFile';
+import { messages } from './../messages';
 import { ProjectEntities } from './projectEntities';
 import { ProjectsSorting } from './projectsSorting';
 import styles from './projectsToolbar.scss';
-import { messages } from './../messages';
 
 const cx = classNames.bind(styles);
 @connect(

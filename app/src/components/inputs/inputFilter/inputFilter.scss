@@ -37,6 +37,11 @@
   &.disabled {
     border-color: $COLOR--gray-80;
   }
+
+  @media(max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+    max-width: 400px;
+  }
 }
 
 .icon {
