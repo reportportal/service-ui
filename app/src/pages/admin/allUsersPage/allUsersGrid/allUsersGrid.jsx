@@ -62,7 +62,11 @@ TypeColumn.defaultProps = {
 };
 
 const LoginColumn = ({ className, value }) => (
-  <div className={cx('login-col', className)}>{value.userId}</div>
+  <div className={cx('login-col', className)}>
+    <div className={cx('login-block')} title={value.userId}>
+      {value.userId}
+    </div>
+  </div>
 );
 LoginColumn.propTypes = {
   className: PropTypes.string.isRequired,
@@ -77,7 +81,9 @@ const EmailColumn = ({ className, value }) => (
     <span className={cx('mobile-label')}>
       <FormattedMessage id={'AllUsersGrid.emailCol'} defaultMessage={'Email'} />
     </span>
-    {value.email}
+    <div className={cx('email-block')} title={value.email}>
+      {value.email}
+    </div>
   </div>
 );
 EmailColumn.propTypes = {

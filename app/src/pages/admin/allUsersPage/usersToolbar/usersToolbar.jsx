@@ -69,7 +69,7 @@ export class UsersToolbar extends PureComponent {
   render() {
     return (
       <div className={cx('users-toolbar')}>
-        <div>
+        <div className={cx('entities-wrapper')}>
           <FilterEntitiesURLContainer
             debounced={false}
             render={({ entities, onChange }) => (

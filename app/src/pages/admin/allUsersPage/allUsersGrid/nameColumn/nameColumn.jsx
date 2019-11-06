@@ -108,15 +108,14 @@ export class NameColumn extends Component {
       className,
       currentUser,
     } = this.props;
+
     return (
       <div className={cx('name-col', className)}>
-        {value.photoLoaded && (
-          <UserAvatar
-            className={cx('avatar-wrapper')}
-            projectId={activeProject}
-            userId={value.userId}
-          />
-        )}
+        <UserAvatar
+          className={cx('avatar-wrapper')}
+          projectId={activeProject}
+          userId={value.userId}
+        />
         <span className={cx('name')} title={value.fullName}>
           {value.fullName}
         </span>
