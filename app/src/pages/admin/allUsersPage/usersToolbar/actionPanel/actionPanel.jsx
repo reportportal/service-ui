@@ -133,30 +133,32 @@ export class ActionPanel extends Component {
     });
   };
 
+  actionButtons = [
+    {
+      key: EXPORT,
+      icon: ExportIcon,
+      onClick: this.onExportUsers,
+    },
+    {
+      key: INVITE_USER,
+      icon: InviteUserIcon,
+      onClick: this.showInviteUserModal,
+    },
+    {
+      key: ADD_USER,
+      icon: AddUserIcon,
+      onClick: this.showAddUserModal,
+    },
+  ];
+
   renderHeaderButtons = () => {
     const {
       intl: { formatMessage },
     } = this.props;
-    const ACTION_BUTTONS = [
-      {
-        key: EXPORT,
-        icon: ExportIcon,
-        onClick: this.onExportUsers,
-      },
-      {
-        key: INVITE_USER,
-        icon: InviteUserIcon,
-        onClick: this.showInviteUserModal,
-      },
-      {
-        key: ADD_USER,
-        icon: AddUserIcon,
-        onClick: this.showAddUserModal,
-      },
-    ];
+
     return (
       <div className={cx('action-buttons')}>
-        {ACTION_BUTTONS.map(({ key, icon, onClick }) => (
+        {this.actionButtons.map(({ key, icon, onClick }) => (
           <div className={cx('action-button')} key={key}>
             <GhostButton icon={icon} onClick={onClick}>
               {formatMessage(messages[key])}
