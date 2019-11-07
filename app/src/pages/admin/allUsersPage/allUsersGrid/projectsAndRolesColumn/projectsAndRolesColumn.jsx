@@ -209,7 +209,7 @@ export class ProjectsAndRolesColumn extends Component {
           user,
           project,
         }),
-        onConfirm: this.unassignAction(project, user),
+        onConfirm: () => this.unassignAction(project, user),
         title: intl.formatMessage(messages.unAssignTitle),
         confirmText: intl.formatMessage(messages.btnTitle),
         cancelText: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
