@@ -26,6 +26,8 @@ import { canInviteInternalUser } from 'common/utils/permissions';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { InputSearch } from 'components/inputs/inputSearch';
+import { validate, bindMessageToValidator } from 'common/utils';
+import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import PermissionMapIcon from 'common/img/permission-inline.svg';
 import InviteUserIcon from 'common/img/invite-inline.svg';
@@ -59,6 +61,14 @@ const messages = defineMessages({
 @reduxForm({
   form: 'filterSearch',
   enableReinitialize: true,
+  validate: ({ filter }) => ({
+    filter: bindMessageToValidator(validate.searchMembers, 'membersSearchHint')(filter),
+  }),
+  onChange: ({ filter }, dispatch, props) => {
+    if (validate.searchMembers(filter)) {
+      props.onFilterChange(filter);
+    }
+  },
 })
 @injectIntl
 @track()
@@ -97,10 +107,12 @@ export class MembersPageToolbar extends React.Component {
       <div className={cx('members-page-toolbar')}>
         <div className={cx('search-input')}>
           <FieldProvider name="filter">
-            <InputSearch
-              maxLength="128"
-              placeholder={this.props.intl.formatMessage(messages.searchInputPlaceholder)}
-            />
+            <FieldErrorHint>
+              <InputSearch
+                maxLength="128"
+                placeholder={this.props.intl.formatMessage(messages.searchInputPlaceholder)}
+              />
+            </FieldErrorHint>
           </FieldProvider>
         </div>
         <div className={cx('members-page-controls')}>
