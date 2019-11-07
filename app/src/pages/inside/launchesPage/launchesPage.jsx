@@ -481,6 +481,11 @@ export class LaunchesPage extends Component {
     this.props.fetchLaunchesAction();
   };
 
+  unselectAndResetPage = () => {
+    this.props.unselectAllLaunchesAction();
+    this.resetPageNumber();
+  };
+
   deleteItem = (item) => this.deleteItems([item]);
 
   confirmDeleteItems = (items) => {
@@ -679,7 +684,7 @@ export class LaunchesPage extends Component {
   mergeLaunches = () => {
     this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_MERGE_ACTION);
     this.props.mergeLaunchesAction(this.props.selectedLaunches, {
-      fetchFunc: this.unselectAndFetchLaunches,
+      fetchFunc: this.unselectAndResetPage,
     });
   };
 
