@@ -211,6 +211,10 @@ const messages = defineMessages({
     id: 'PostIssueModal.doubleFieldHint',
     defaultMessage: "This field must be of 'double' type",
   },
+  membersSearchHint: {
+    id: 'MembersPageToolbar.membersSearchHint',
+    defaultMessage: 'Member name must not be empty',
+  },
 });
 
 @injectIntl

@@ -1073,6 +1073,7 @@
   "MembersPageToolbar.inviteUser": "Запрасіць карыстальніка",
   "MembersPageToolbar.permissionMap": "Карта правоў",
   "MembersPageToolbar.searchByName": "Шукаць па імя",
+  "MembersPageToolbar.membersSearchHint": "Імя карыстальніка не павінна быць пустым",
   "MergeLaunchDialog.MergeLaunchHeader": "Аб'яднаць запускі",
   "MergeLaunchDialog.extendSuitesDescriptionText": "Пашырыць апісанне аб'ектаў-нашчадкаў з арыгніальнай назвай запуску (т.б. @запуск 'Запуск #1')",
   "MergeLaunchDialog.launchAttributesLabel": "Атрыбуты",

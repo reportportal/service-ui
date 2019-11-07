@@ -83,6 +83,7 @@ export const port = range(1, 65535);
 
 export const searchFilter = (value) =>
   !value || composeValidators([isNotOnlySpaces, minLength(3)])(value);
+export const searchMembers = (value) => !value || isNotOnlySpaces(value);
 export const attributeKey = (value) =>
   !value || composeValidators([isNotOnlySpaces, maxLength(128)])(value);
 export const attributeValue = composeValidators([isNotEmpty, maxLength(128)]);
