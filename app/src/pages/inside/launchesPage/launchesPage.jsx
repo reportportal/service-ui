@@ -515,10 +515,21 @@ export class LaunchesPage extends Component {
       });
   };
 
+  isNotAllOwnLaunches = (launches) => {
+    const { userId } = this.props;
+    return launches.some((launch) => launch.owner !== userId);
+  };
+
   deleteItems = (launches) => {
     this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_DELETE_ACTION);
     const { intl, userId } = this.props;
     const selectedLaunches = launches || this.props.selectedLaunches;
+    const warning =
+      this.isNotAllOwnLaunches(selectedLaunches) &&
+      (selectedLaunches.length === 1
+        ? intl.formatMessage(messages.warning)
+        : intl.formatMessage(messages.warningMultiple));
+
     this.props.deleteItemsAction(selectedLaunches, {
       onConfirm: this.confirmDeleteItems,
       header:
@@ -530,10 +541,7 @@ export class LaunchesPage extends Component {
           ? intl.formatMessage(messages.deleteModalContent, { name: selectedLaunches[0].name })
           : intl.formatMessage(messages.deleteModalMultipleContent),
       userId,
-      warning:
-        selectedLaunches.length === 1
-          ? intl.formatMessage(messages.warning)
-          : intl.formatMessage(messages.warningMultiple),
+      warning,
       eventsInfo: {
         closeIcon: LAUNCHES_MODAL_EVENTS.CLOSE_ICON_DELETE_MODAL,
         cancelBtn: LAUNCHES_MODAL_EVENTS.CANCEL_BTN_DELETE_MODAL,
