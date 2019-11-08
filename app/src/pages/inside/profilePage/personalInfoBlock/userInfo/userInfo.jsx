@@ -113,8 +113,8 @@ export class UserInfo extends Component {
     return (
       <Fragment>
         <div className={cx('login')}>{userId}</div>
-        <div className={cx('name')}>
-          {name}
+        <div className={cx('name-line')}>
+          <span className={cx('name')}>{name}</span>
           {accountType === INTERNAL && (
             <span
               className={cx('pencil-icon')}
@@ -127,8 +127,8 @@ export class UserInfo extends Component {
             </span>
           )}
         </div>
-        <div className={cx('email')}>
-          {email}
+        <div className={cx('email-line')}>
+          <span className={cx('email')}>{email}</span>
           {accountType === INTERNAL && (
             <div
               className={cx('pencil-icon')}

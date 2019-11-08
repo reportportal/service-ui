@@ -32,36 +32,27 @@
     margin-right: 0;
   }
 }
-.name {
+.name-line {
   position: relative;
+  display: flex;
+  justify-content: flex-start;
   max-width: 100%;
   margin-bottom: 10px;
-  padding-right: 25px;
-  overflow: hidden;
   box-sizing: border-box;
-  text-overflow: ellipsis;
   font-family: $FONT-REGULAR;
   font-size: 14px;
   color: $COLOR--charcoal-grey;
   white-space: nowrap;
   line-height: 20px;
 
-  @media (max-width: $SCREEN_XS_MAX) {
-    padding-right: 0;
-  }
-
   &:hover {
     .pencil-icon {
-      display: inline;
-
-      @media (max-width: $SCREEN_XS_MAX) {
-        display: none;
-      }
+      opacity: 1;
     }
   }
 }
 .pencil-icon {
-  display: none;
+  opacity: 0;
   margin-left: 5px;
   cursor: pointer;
   svg {
@@ -70,15 +61,17 @@
     display: inline-block;
     vertical-align: top;
   }
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
 }
-.email {
+.email-line {
   position: relative;
+  display: flex;
+  justify-content: flex-start;
   max-width: 100%;
   min-height: 20px;
   margin-bottom: 10px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  word-break: break-all;
   line-height: 20px;
   font-family: $FONT-SEMIBOLD;
   font-size: 14px;
@@ -86,11 +79,13 @@
 
   &:hover {
     .pencil-icon {
-      display: inline;
-
-      @media (max-width: $SCREEN_XS_MAX) {
-        display: none;
-      }
+      opacity: 1;
     }
   }
+}
+.name,
+.email {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
