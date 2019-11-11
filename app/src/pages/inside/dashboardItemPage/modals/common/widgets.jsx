@@ -428,7 +428,7 @@ export const getWidgets = (formatMessage) => [
       <FormattedMessage
         id={'Widgets.Description.componentHealthCheck'}
         defaultMessage={
-          'Shows the passing rate of the application components which are indicated by the specified tags.'
+          'Shows the passing rate of the application components which are indicated by the specified attributes.'
         }
       />
     ),
