@@ -52,12 +52,13 @@ const DefectTypeName = withHoverableTooltip({
   data: {
     placement: 'top',
     dynamicWidth: true,
+    tooltipTriggerClass: cx('defect-type-name-tooltip-trigger'),
   },
 })(({ color, longName }) => (
-  <span className={cx('defect-type-name-wrap')}>
+  <div className={cx('defect-type-name-wrap')}>
     <ColorMarker color={color} />
-    <span className={cx('defect-type-name')}>{longName}</span>
-  </span>
+    <div className={cx('defect-type-name')}>{longName}</div>
+  </div>
 ));
 
 DefectTypeName.propTypes = {
