@@ -51,7 +51,6 @@ $DEFECT_NAME_PADDING: 70px;
 .name-cell {
   padding-left: $DEFECT_NAME_PADDING;
   width: 43%;
-  min-width: 0;
 
   @media (max-width: $SCREEN_XS_MAX) {
     padding-left: 0;
