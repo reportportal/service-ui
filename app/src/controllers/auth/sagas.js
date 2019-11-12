@@ -41,7 +41,7 @@ import {
   SET_ACTIVE_PROJECT,
   userIdSelector,
 } from 'controllers/user';
-import { fetchProjectAction } from 'controllers/project';
+import { FETCH_PROJECT_SUCCESS, fetchProjectAction } from 'controllers/project';
 import { fetchPluginsAction, fetchGlobalIntegrationsAction } from 'controllers/plugins';
 import { redirect, pathToAction } from 'redux-first-router';
 import qs, { stringify } from 'qs';
@@ -105,6 +105,7 @@ function* loginSuccessHandler({ payload }) {
   yield all([take([FETCH_USER_SUCCESS, FETCH_USER_ERROR]), take(SET_ACTIVE_PROJECT)]);
   const projectId = yield select(activeProjectSelector);
   yield put(fetchProjectAction(projectId));
+  yield take(FETCH_PROJECT_SUCCESS);
   yield put(fetchPluginsAction());
   yield put(fetchGlobalIntegrationsAction());
   yield put(authSuccessAction());
