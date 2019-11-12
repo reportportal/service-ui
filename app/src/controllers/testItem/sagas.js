@@ -21,7 +21,8 @@ import {
   bulkFetchDataAction,
   createFetchPredicate,
 } from 'controllers/fetch';
-import { updateFilterAction, activeFilterSelector } from 'controllers/filter';
+import { showFilterOnLaunchesAction } from 'controllers/project';
+import { activeFilterSelector } from 'controllers/filter';
 import { activeProjectSelector } from 'controllers/user';
 import { put, select, all, takeEvery, take, call } from 'redux-saga/effects';
 import {
@@ -153,7 +154,7 @@ function* fetchTestItems({ payload = {} }) {
     const filter = yield call(fetch, URLS.filter(project, filterId));
 
     if (filter) {
-      yield put(updateFilterAction(filter));
+      yield put(showFilterOnLaunchesAction(filter));
     }
   }
   yield put(

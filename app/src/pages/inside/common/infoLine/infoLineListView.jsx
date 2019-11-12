@@ -34,12 +34,13 @@ const messages = defineMessages({
 @injectIntl
 export class InfoLineListView extends Component {
   static propTypes = {
-    data: PropTypes.object.isRequired,
+    data: PropTypes.object,
     intl: intlShape.isRequired,
     currentUser: PropTypes.string,
   };
   static defaultProps = {
     currentUser: '',
+    data: {},
   };
 
   render() {
@@ -48,24 +49,30 @@ export class InfoLineListView extends Component {
 
     return (
       <div className={cx('info-line')}>
-        <div className={cx('filter-holder')}>
-          {formatMessage(messages.filter)}: {data.name}
-        </div>
-        {data.owner && (
-          <div className={cx('icon-holder')}>
-            <Owner owner={data.owner} />
-          </div>
-        )}
-        {data.share && (
-          <div className={cx('icon-holder', 'info-line-icon-holder')}>
-            <SharedFilterIcon share={data.share} currentUser={currentUser} owner={data.owner} />
-          </div>
-        )}
-        {data.description && (
-          <div className={cx('icon-holder')}>
-            <Description description={data.description} />
-          </div>
-        )}
+        {data &&
+          data.name && (
+            <div className={cx('filter-holder')}>
+              {formatMessage(messages.filter)}: {data.name}
+            </div>
+          )}
+        {data &&
+          data.owner && (
+            <div className={cx('icon-holder')}>
+              <Owner owner={data.owner} />
+            </div>
+          )}
+        {data &&
+          data.share && (
+            <div className={cx('icon-holder', 'info-line-icon-holder')}>
+              <SharedFilterIcon share={data.share} currentUser={currentUser} owner={data.owner} />
+            </div>
+          )}
+        {data &&
+          data.description && (
+            <div className={cx('icon-holder')}>
+              <Description description={data.description} />
+            </div>
+          )}
       </div>
     );
   }
