@@ -156,10 +156,10 @@ export class DurationBlock extends Component {
   isInterrupted = () => this.props.status === 'INTERRUPTED';
 
   validateForApproximateTime = () => {
-    const { type } = this.props;
+    const { timing, type } = this.props;
     const isLaunch = type === 'LAUNCH' || !type;
 
-    return this.isInProgress() && isLaunch;
+    return this.isInProgress() && isLaunch && timing.approxTime > 0;
   };
 
   renderInProgressDuration = () => {
