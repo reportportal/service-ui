@@ -99,16 +99,15 @@ export class DefectTypesGroup extends Component {
 
     return (
       <Fragment>
-        {group &&
-          group.map((subType, i) => (
-            <DefectSubType
-              key={subType.id}
-              data={subType}
-              parentType={group[0]}
-              group={i === 0 ? group : null}
-              isPossibleUpdateSettings={this.isPossibleUpdateSettings}
-            />
-          ))}
+        {group.map((subType, i) => (
+          <DefectSubType
+            key={subType.id}
+            data={subType}
+            parentType={group[0]}
+            group={i === 0 ? group : null}
+            isPossibleUpdateSettings={this.isPossibleUpdateSettings}
+          />
+        ))}
         {newSubType && (
           <div className={cx('defect-type')}>
             <DefectSubTypeForm
