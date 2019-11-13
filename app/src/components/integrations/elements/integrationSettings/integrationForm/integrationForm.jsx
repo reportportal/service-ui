@@ -98,7 +98,7 @@ export class IntegrationForm extends Component {
   render() {
     const {
       intl: { formatMessage },
-      data: { blocked, id, integrationParameters = {} },
+      data: { blocked, id, integrationParameters = {}, integrationType = {} },
       handleSubmit,
       initialize,
       change,
@@ -127,6 +127,7 @@ export class IntegrationForm extends Component {
                 change={change}
                 instanceId={id}
                 initialData={integrationParameters}
+                pluginDetails={integrationType.details}
                 disabled={disabled}
                 updateMetaData={this.updateMetaData}
                 isGlobal={isGlobal}
