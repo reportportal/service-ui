@@ -31,9 +31,9 @@ export const setLevelAction = (level) => ({
   payload: level,
 });
 
-export const fetchTestItemsAction = (options) => ({
+export const fetchTestItemsAction = (payload) => ({
   type: FETCH_TEST_ITEMS,
-  payload: options,
+  payload,
 });
 
 export const restorePathAction = () => ({

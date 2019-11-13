@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import { PageLayout, PageSection } from 'layouts/pageLayout';
 import PropTypes from 'prop-types';
-import { refreshHistory } from 'controllers/itemsHistory';
+import { refreshHistoryAction } from 'controllers/itemsHistory';
 import { parentItemSelector } from 'controllers/testItem';
 import { connect } from 'react-redux';
 import { HistoryToolbar } from './historyToolbar';
@@ -28,12 +28,12 @@ import { HistoryView } from './historyView';
     parentItem: parentItemSelector(state),
   }),
   {
-    refreshHistory,
+    refreshHistoryAction,
   },
 )
 export class HistoryPage extends Component {
   static propTypes = {
-    refreshHistory: PropTypes.func.isRequired,
+    refreshHistoryAction: PropTypes.func.isRequired,
     parentItem: PropTypes.object,
   };
 
@@ -46,10 +46,10 @@ export class HistoryPage extends Component {
       <PageLayout>
         <PageSection>
           <HistoryToolbar
-            onRefresh={this.props.refreshHistory}
+            onRefresh={this.props.refreshHistoryAction}
             parentItem={this.props.parentItem}
           />
-          <HistoryView refreshHistory={this.props.refreshHistory} />
+          <HistoryView refreshHistory={this.props.refreshHistoryAction} />
         </PageSection>
       </PageLayout>
     );

@@ -19,10 +19,8 @@ export const HISTORY_ITEMS_TO_LOAD = 30;
 export const OPTIMAL_HISTORY_DEPTH_FOR_RENDER = 5;
 export const NAMESPACE = 'history';
 export const FETCH_HISTORY_PAGE_INFO = 'fetchHistoryPageInfo';
-export const SET_ITEMS_HISTORY = 'setItemsForHistory';
-export const SET_VISIBLE_ITEMS_COUNT = 'setVisibleItemsCount';
 export const RESET_HISTORY = 'resetHistory';
-export const RESET_FETCH_HISTORY = 'refreshHistory';
+export const REFRESH_HISTORY = 'refreshHistory';
 export const HISTORY_DEPTH_CONFIG = {
   name: 'historyDepth',
   defaultValue: '10',
@@ -35,4 +33,11 @@ export const HISTORY_DEPTH_CONFIG = {
     { value: '25', label: '25' },
     { value: '30', label: '30' },
   ],
+};
+
+export const PAGINATION_INITIAL_STATE = {
+  number: 1,
+  size: HISTORY_ITEMS_TO_LOAD,
+  totalElements: 0,
+  totalPages: 0,
 };
