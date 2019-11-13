@@ -17,9 +17,8 @@
 export { itemsHistoryReducer } from './reducer';
 export {
   fetchItemsHistoryAction,
-  fetchHistoryPageInfo,
-  setVisibleItemsCount,
-  refreshHistory,
+  fetchHistoryPageInfoAction,
+  refreshHistoryAction,
 } from './actionCreators';
 export {
   FETCH_ITEMS_HISTORY,
@@ -30,9 +29,8 @@ export {
 } from './constants';
 export { historySagas } from './sagas';
 export {
-  itemsHistorySelector,
   historySelector,
-  visibleItemsCountSelector,
+  totalItemsCountSelector,
+  historyPaginationSelector,
   loadingSelector,
-  historyItemsSelector,
 } from './selectors';

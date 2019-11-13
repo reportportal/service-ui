@@ -20,16 +20,16 @@ import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import {
-  itemsHistorySelector,
   historySelector,
-  visibleItemsCountSelector,
+  totalItemsCountSelector,
+  loadingSelector,
   fetchItemsHistoryAction,
 } from 'controllers/itemsHistory';
 import { nameLinkSelector } from 'controllers/testItem';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { MANY, NOT_FOUND, RESETED } from 'common/constants/launchStatuses';
-import { PROJECT_LOG_PAGE, TEST_ITEM_PAGE } from 'controllers/pages';
+import { NOT_FOUND, RESETED } from 'common/constants/launchStatuses';
+import { PROJECT_LOG_PAGE } from 'controllers/pages';
 import { ItemNameBlock } from './itemNameBlock';
 import { HistoryItem } from './historyItem';
 import { HistoryCell } from './historyCell';
@@ -39,14 +39,6 @@ import styles from './historyTable.scss';
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
-  loadHistoryErrorNotification: {
-    id: 'HistoryTable.loadHistoryErrorNotification',
-    defaultMessage: 'Failed to load history for current item',
-  },
-  loadItemInfoErrorNotification: {
-    id: 'HistoryTable.loadItemInfoErrorNotification',
-    defaultMessage: 'Failed to load info for item',
-  },
   loadMoreHistoryItemsTitle: {
     id: 'HistoryTable.loadMoreHistoryItemsTitle',
     defaultMessage: 'Click here to load more items',
@@ -55,17 +47,17 @@ const messages = defineMessages({
     id: 'HistoryTable.itemNamesHeaderTitle',
     defaultMessage: 'Name',
   },
-  launchNumberTitle: {
+  executionNumberTitle: {
     id: 'HistoryTable.launchNumberTitle',
-    defaultMessage: 'Launch #',
+    defaultMessage: 'Execution #',
   },
 });
 
 @connect(
   (state) => ({
-    items: itemsHistorySelector(state),
     history: historySelector(state),
-    visibleItemsCount: visibleItemsCountSelector(state),
+    loading: loadingSelector(state),
+    totalItemsCount: totalItemsCountSelector(state),
     link: (ownProps) => nameLinkSelector(state, ownProps),
   }),
   {
@@ -78,98 +70,75 @@ export class HistoryTable extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     historyDepth: PropTypes.string.isRequired,
-    items: PropTypes.array,
+    loading: PropTypes.bool,
     history: PropTypes.array,
-    visibleItemsCount: PropTypes.number,
+    totalItemsCount: PropTypes.number,
     fetchItemsHistoryAction: PropTypes.func,
     link: PropTypes.func,
     navigate: PropTypes.func,
   };
 
   static defaultProps = {
-    items: [],
     history: [],
-    visibleItemsCount: 0,
+    loading: false,
+    totalItemsCount: 0,
     fetchItemsHistoryAction: () => {},
     link: () => {},
     navigate: () => {},
   };
 
-  getItems = () => {
-    const { items, visibleItemsCount } = this.props;
-    return items.slice(0, visibleItemsCount);
+  getHeaderItemsCount = () => {
+    const { history } = this.props;
+    let headerItemsCount = 0;
+    history.forEach((item) => {
+      if (item.resources.length > headerItemsCount) {
+        headerItemsCount = item.resources.length;
+      }
+    });
+    this.rowItemsCount = headerItemsCount;
+
+    return headerItemsCount;
   };
 
-  getHistoryItemProps = (filteredLaunchHistoryItem) => {
+  getHistoryItemProps = (historyItem) => {
     let itemProps = {};
 
-    if (!filteredLaunchHistoryItem.length) {
+    if (!historyItem) {
       itemProps = {
         status: NOT_FOUND.toUpperCase(),
         defects: {},
       };
-    } else if (filteredLaunchHistoryItem.length > 1) {
-      const itemIdsArray = filteredLaunchHistoryItem[0].path.split('.');
-      const itemIds = itemIdsArray.slice(0, itemIdsArray.length - 1).join('/');
-      itemProps = {
-        status: MANY.toUpperCase(),
-        defects: {},
-        itemIds,
-      };
     } else {
-      const itemIdsArray = filteredLaunchHistoryItem[0].path.split('.');
+      const itemIdsArray = historyItem.path.split('.');
       const itemIds = itemIdsArray.slice(0, itemIdsArray.length - 1).join('/');
       itemProps = {
-        status: filteredLaunchHistoryItem[0].status,
-        issue: filteredLaunchHistoryItem[0].issue,
-        defects: filteredLaunchHistoryItem[0].statistics.defects,
+        status: historyItem.status,
+        issue: historyItem.issue,
+        defects: historyItem.statistics.defects,
         itemIds,
       };
     }
     return itemProps;
   };
 
-  getCorrespondingHistoryItem = (historyItemProps, currentHistoryItem, launchId) => {
+  getCorrespondingHistoryItem = (historyItemProps, currentHistoryItem) => {
     const { navigate, link } = this.props;
     switch (historyItemProps.status) {
       case NOT_FOUND.toUpperCase():
       case RESETED.toUpperCase():
         return (
-          <HistoryCell status={historyItemProps.status} key={launchId}>
+          <HistoryCell status={historyItemProps.status}>
             <HistoryItem {...historyItemProps} />
           </HistoryCell>
         );
-      case MANY.toUpperCase(): {
-        const clickHandler = () => {
-          const ownProps = {
-            ownLinkParams: {
-              page: TEST_ITEM_PAGE,
-              testItemIds: historyItemProps.itemIds
-                ? `${launchId}/${historyItemProps.itemIds}`
-                : launchId,
-            },
-            itemId: currentHistoryItem.id,
-          };
-          navigate(link(ownProps));
-        };
-        return (
-          <HistoryCell
-            status={historyItemProps.status}
-            onClick={clickHandler}
-            key={currentHistoryItem.id}
-          >
-            <HistoryItem {...historyItemProps} />
-          </HistoryCell>
-        );
-      }
       default: {
         const clickHandler = () => {
           const ownProps = {
             ownLinkParams: {
               page: currentHistoryItem.hasChildren ? null : PROJECT_LOG_PAGE,
               testItemIds: historyItemProps.itemIds
-                ? `${launchId}/${historyItemProps.itemIds}`
-                : launchId,
+                ? `${currentHistoryItem.launchId}/${historyItemProps.itemIds}`
+                : currentHistoryItem.launchId,
             },
             itemId: currentHistoryItem.id,
           };
@@ -196,38 +165,76 @@ export class HistoryTable extends Component {
   };
 
   renderHeader = () => {
-    const { history, intl } = this.props;
-    return history.map((historyItem) => (
-      <HistoryCell status={historyItem.launchStatus} key={historyItem.launchId} header>
-        {`${intl.formatMessage(messages.launchNumberTitle)}${historyItem.launchNumber}`}
-      </HistoryCell>
-    ));
+    const { intl } = this.props;
+    const headerItemsCount = this.getHeaderItemsCount();
+    const headerItems = [];
+    for (let index = headerItemsCount; index > 0; index -= 1) {
+      headerItems.push(
+        <HistoryCell key={index} header>
+          {`${intl.formatMessage(messages.executionNumberTitle)}${index}`}
+        </HistoryCell>,
+      );
+    }
+    return headerItems;
   };
+
+  renderHistoryItems = (item) => {
+    const itemLastIndex = this.rowItemsCount - 1;
+    const itemResources = [...item.resources].reverse();
+    const historyItems = [];
+
+    for (let index = itemLastIndex; index >= 0; index -= 1) {
+      const historyItem = itemResources[index];
+
+      const historyItemProps = this.getHistoryItemProps(historyItem);
+      historyItems.push(this.getCorrespondingHistoryItem(historyItemProps, historyItem));
+    }
+
+    return historyItems;
+  };
+
   renderBody = () => {
     const { history } = this.props;
-    return this.getItems().map((launch) => (
-      <tr key={launch.uniqueId}>
+    return history.map((item) => (
+      <tr key={item.testCaseId}>
         <HistoryCell first>
           <div className={cx('history-grid-name')}>
-            <ItemNameBlock data={launch} />
+            <ItemNameBlock data={item.resources[0]} />
           </div>
         </HistoryCell>
-        {history.map((historyItem) => {
-          const currentLaunchHistoryItem = historyItem.resources.filter(
-            (item) => item.uniqueId === launch.uniqueId,
-          );
-          const historyItemProps = this.getHistoryItemProps(currentLaunchHistoryItem);
-          return this.getCorrespondingHistoryItem(
-            historyItemProps,
-            currentLaunchHistoryItem[0],
-            historyItem.launchId,
-          );
-        })}
+        {this.renderHistoryItems(item)}
       </tr>
     ));
   };
+
+  renderFooter = () => {
+    const { intl, history, loading, totalItemsCount } = this.props;
+    const visibleItemsCount = history.length;
+
+    if (visibleItemsCount && loading) {
+      return (
+        <div className={cx('spinner-wrapper')}>
+          <SpinningPreloader />
+        </div>
+      );
+    }
+
+    return (
+      !!visibleItemsCount &&
+      visibleItemsCount < totalItemsCount && (
+        <div className={cx('load-more-container')}>
+          <button className={cx('load-more')} onClick={this.loadMoreHistoryItems}>
+            <h3 className={cx('load-more-title')}>
+              {intl.formatMessage(messages.loadMoreHistoryItemsTitle)}
+            </h3>
+          </button>
+        </div>
+      )
+    );
+  };
+
   render() {
-    const { intl, history, items, visibleItemsCount } = this.props;
+    const { intl, history } = this.props;
 
     return (
       <Fragment>
@@ -252,16 +259,7 @@ export class HistoryTable extends Component {
             </table>
           </ScrollWrapper>
         )}
-        {!!history.length &&
-          visibleItemsCount < items.length && (
-            <div className={cx('load-more-container')}>
-              <button className={cx('load-more')} onClick={this.loadMoreHistoryItems}>
-                <h3 className={cx('load-more-title')}>
-                  {intl.formatMessage(messages.loadMoreHistoryItemsTitle)}
-                </h3>
-              </button>
-            </div>
-          )}
+        {this.renderFooter()}
       </Fragment>
     );
   }
