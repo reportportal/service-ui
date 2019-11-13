@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
@@ -42,14 +58,6 @@ const messages = defineMessages({
   globalIntegration: {
     id: 'InstancesSection.globalIntegration',
     defaultMessage: 'Global integration',
-  },
-  projectSettingsDefaultTitle: {
-    id: 'InstancesSection.projectSettingsDefaultTitle',
-    defaultMessage: 'Project settings',
-  },
-  globalSettingsDefaultTitle: {
-    id: 'InstancesSection.globalSettingsDefaultTitle',
-    defaultMessage: 'Global settings',
   },
   resetToGlobalSettingsTitle: {
     id: 'InstancesSection.resetToGlobalSettingsTitle',
@@ -152,24 +160,22 @@ export class InstancesSection extends Component {
   removeProjectIntegrations = () =>
     this.props.removeProjectIntegrationsByTypeAction(this.props.instanceType);
 
-  navigateToNewIntegration = (data) => {
-    const {
-      intl: { formatMessage },
-    } = this.props;
-
-    this.props.onItemClick(data, data.name || formatMessage(messages.projectSettingsDefaultTitle));
-  };
+  navigateToNewIntegration = (data) =>
+    this.props.onItemClick(
+      {
+        ...data,
+        isNew: true,
+      },
+      data.name,
+    );
 
   addProjectIntegration = (formData) => {
+    const { isGlobal, instanceType } = this.props;
     const data = {
       enabled: true,
       integrationParameters: formData,
+      name: formData.integrationName || INTEGRATION_NAMES_TITLES[instanceType],
     };
-    const { isGlobal, instanceType } = this.props;
-
-    if (formData.integrationName) {
-      data.name = formData.integrationName;
-    }
 
     this.props.addIntegrationAction(data, isGlobal, instanceType, this.navigateToNewIntegration);
   };
@@ -254,7 +260,6 @@ export class InstancesSection extends Component {
                 )}
                 items={projectIntegrations}
                 onItemClick={onItemClick}
-                defaultItemTitle={formatMessage(messages.projectSettingsDefaultTitle)}
               />
               {this.multiple &&
                 !disabled && (
@@ -269,7 +274,7 @@ export class InstancesSection extends Component {
         <InstancesList
           blocked={!isGlobal}
           title={formatMessage(
-            isGlobal ? messages.allGlobalIntegrations : globalIntegrationMessage,
+            isGlobal && this.multiple ? messages.allGlobalIntegrations : globalIntegrationMessage,
             {
               pluginName: this.props.title,
             },
@@ -282,7 +287,6 @@ export class InstancesSection extends Component {
                 disabled: isProjectIntegrationsExists,
                 disabledHint: formatMessage(messages.globalIntegrationsDisabledHint),
               })}
-          defaultItemTitle={formatMessage(messages.globalSettingsDefaultTitle)}
         />
         {!globalIntegrations.length && (
           <p className={cx('no-items-message')}>

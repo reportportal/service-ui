@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import * as logLevels from 'common/constants/logLevels';
 import { formatSortingString, SORTING_ASC } from 'controllers/sorting';
 
@@ -27,7 +43,6 @@ export const CLEAR_LOG_PAGE_STACK_TRACE = 'clearStackTrace';
 export const STACK_TRACE_PAGINATION_OFFSET = 5;
 export const DETAILED_LOG_VIEW = 'DETAILED_LOG_VIEW';
 export const LAUNCH_LOG_VIEW = 'LAUNCH_LOG_VIEW';
-export const FETCH_TEST_ITEMS_SUCCES = 'FETCH_TEST_ITEMS_SUCCESS';
 export const SET_LOG_PAGE_LOADING = 'SET_LOG_PAGE_LOADING';
 
 export const LOG_LEVELS = [

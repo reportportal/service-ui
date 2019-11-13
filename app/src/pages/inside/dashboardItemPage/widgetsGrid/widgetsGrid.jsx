@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import classNames from 'classnames/bind';
@@ -30,6 +46,7 @@ export class WidgetsGrid extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     activeProject: PropTypes.string.isRequired,
+    currentUser: PropTypes.string.isRequired,
     isFullscreen: PropTypes.bool,
     isModifiable: PropTypes.bool,
     showNotification: PropTypes.func.isRequired,
@@ -39,6 +56,7 @@ export class WidgetsGrid extends Component {
     dashboard: PropTypes.shape({
       widgets: PropTypes.array,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      owner: PropTypes.string,
     }),
   };
 
@@ -48,6 +66,7 @@ export class WidgetsGrid extends Component {
     dashboard: {
       widgets: [],
       id: '',
+      owner: '',
     },
     showWidgetWizard: () => {},
     isPrintMode: false,
@@ -58,7 +77,7 @@ export class WidgetsGrid extends Component {
     this.observer = ReactObserver();
 
     this.state = {
-      isMobile: false,
+      isMobile: window.innerWidth <= breakpoints.sm,
     };
   }
 
@@ -162,10 +181,18 @@ export class WidgetsGrid extends Component {
   isStaticWidget = (widgetType) => STATIC_CHARTS[widgetType];
 
   renderItems = () => {
-    const { widgets = [] } = this.props.dashboard;
+    const {
+      dashboard: { widgets = [], owner },
+      currentUser,
+    } = this.props;
 
     if (widgets.length) {
-      return widgets.map(
+      const newWidgets =
+        this.props.isPrintMode && owner !== currentUser
+          ? widgets.filter((item) => item.share)
+          : widgets;
+
+      return newWidgets.map(
         ({
           widgetPosition: { positionX: x, positionY: y },
           widgetSize: { width: w, height: h },
@@ -194,6 +221,7 @@ export class WidgetsGrid extends Component {
               observer={this.observer}
               isPrintMode={this.props.isPrintMode}
               onDelete={this.onDeleteWidget}
+              dashboardOwner={owner}
             />
           </div>
         ),
@@ -218,6 +246,7 @@ export class WidgetsGrid extends Component {
       isResizable={this.props.isModifiable}
       draggableHandle=".draggable-field"
       useCSSTransforms={!this.isFirefox}
+      measureBeforeMount
     >
       {this.renderItems()}
     </ResponsiveGridLayout>

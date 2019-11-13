@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
@@ -8,8 +24,15 @@ import { reduxForm, formValueSelector } from 'redux-form';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { DEFAULT_PROJECT_ROLE, ROLES_MAP } from 'common/constants/projectRoles';
 import { URLS } from 'common/urls';
+import { fetch, commonValidators } from 'common/utils';
 import { projectIdSelector } from 'controllers/pages';
 import { isAdminSelector } from 'controllers/user';
+import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
+import {
+  showNotification,
+  showDefaultErrorNotification,
+  NOTIFICATION_TYPES,
+} from 'controllers/notification';
 import { withModal, ModalLayout, ModalField } from 'components/main/modal';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -18,7 +41,6 @@ import { InputUserSearch } from 'components/inputs/inputUserSearch';
 import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { commonValidators } from 'common/utils';
 import styles from './inviteUserModal.scss';
 
 const cx = classNames.bind(styles);
@@ -44,6 +66,15 @@ const messages = defineMessages({
     id: 'InviteUserModal.inputPlaceholder',
     defaultMessage: 'Enter login or email',
   },
+  memberWasInvited: {
+    id: 'InviteUserModal.memberWasInvited',
+    defaultMessage: "Member '<b>{name}</b>' was assigned to the project",
+  },
+  inviteExternalMember: {
+    id: 'InviteUserModal.inviteExternalMember',
+    defaultMessage:
+      'Invite for member is successfully registered. Confirmation info will be send on provided email. Expiration: 1 day.',
+  },
 });
 
 const inviteFormSelector = formValueSelector('inviteUserForm');
@@ -62,7 +93,13 @@ const inviteFormSelector = formValueSelector('inviteUserForm');
       project: projectIdSelector(state),
     },
   }),
-  { showModalAction },
+  {
+    showModalAction,
+    showScreenLockAction,
+    hideScreenLockAction,
+    showNotification,
+    showDefaultErrorNotification,
+  },
 )
 @reduxForm({
   form: 'inviteUserForm',
@@ -82,6 +119,10 @@ export class InviteUserModal extends Component {
     }).isRequired,
     handleSubmit: PropTypes.func.isRequired,
     showModalAction: PropTypes.func.isRequired,
+    showScreenLockAction: PropTypes.func.isRequired,
+    hideScreenLockAction: PropTypes.func.isRequired,
+    showNotification: PropTypes.func.isRequired,
+    showDefaultErrorNotification: PropTypes.func.isRequired,
     selectedProject: PropTypes.string,
     selectedUser: PropTypes.object,
     isAdmin: PropTypes.bool,
@@ -115,15 +156,81 @@ export class InviteUserModal extends Component {
     };
   };
 
+  inviteUser = (userData) => {
+    const {
+      intl: { formatMessage },
+      data: { onInvite },
+      selectedProject,
+    } = this.props;
+    const data = {};
+
+    if (userData.user.externalUser) {
+      data.defaultProject = selectedProject;
+      data.email = userData.user.userLogin;
+      data.role = userData.role;
+
+      this.props.showScreenLockAction();
+      return fetch(URLS.userInviteExternal(), {
+        method: 'post',
+        data,
+      })
+        .then((res) => {
+          this.props.showNotification({
+            message: formatMessage(messages.inviteExternalMember),
+            type: NOTIFICATION_TYPES.SUCCESS,
+          });
+          onInvite();
+          this.props.hideScreenLockAction();
+          data.backLink = res.backLink;
+          return data;
+        })
+        .catch((err) => {
+          this.props.showDefaultErrorNotification(err);
+          this.props.hideScreenLockAction();
+          return {
+            errorOccurred: true,
+            ...err,
+          };
+        });
+    }
+    data.userNames = {
+      [userData.user.userLogin]: userData.role,
+    };
+
+    return fetch(URLS.userInviteInternal(selectedProject), {
+      method: 'put',
+      data,
+    })
+      .then(() => {
+        this.props.showNotification({
+          message: formatMessage(messages.memberWasInvited, {
+            name: userData.user.userLogin,
+          }),
+          type: NOTIFICATION_TYPES.SUCCESS,
+        });
+        onInvite();
+      })
+      .catch((err) => {
+        this.props.showDefaultErrorNotification(err);
+        return {
+          errorOccurred: true,
+          ...err,
+        };
+      });
+  };
+
   inviteUserAndCloseModal = (closeModal) => (data) => {
-    this.props.data.onInvite(data).then((res) => {
-      closeModal();
-      if (res && res.errorOccurred) return;
+    this.inviteUser(data).then((res) => {
+      if (res && res.errorOccurred) {
+        return;
+      }
       if (data.user.externalUser) {
         this.props.showModalAction({
           id: 'externalUserInvitationModal',
           data: { email: res.email, link: res.backLink },
         });
+      } else {
+        closeModal();
       }
     });
   };
@@ -190,13 +297,15 @@ export class InviteUserModal extends Component {
                 format={this.formatValueProject}
                 parse={this.parseValueProject}
               >
-                <InputTagsSearch
-                  minLength={1}
-                  async
-                  uri={this.projectSearchUrl}
-                  makeOptions={this.formatValue}
-                  filterOption={this.filterProject}
-                />
+                <FieldErrorHint hintType="top">
+                  <InputTagsSearch
+                    minLength={1}
+                    async
+                    uri={this.projectSearchUrl}
+                    makeOptions={this.formatValue}
+                    filterOption={this.filterProject}
+                  />
+                </FieldErrorHint>
               </FieldProvider>
             </ModalField>
           )}

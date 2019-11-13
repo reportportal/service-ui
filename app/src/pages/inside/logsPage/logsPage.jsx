@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { Component, Fragment } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
@@ -28,7 +44,7 @@ import {
 import { parentItemSelector } from 'controllers/testItem';
 import { withFilter } from 'controllers/filter';
 import { debugModeSelector } from 'controllers/launch';
-import { withPagination, PAGE_KEY } from 'controllers/pagination';
+import { withPagination, PAGE_KEY, DEFAULT_PAGINATION, SIZE_KEY } from 'controllers/pagination';
 import { withSortingURL, SORTING_ASC } from 'controllers/sorting';
 import { userIdSelector } from 'controllers/user';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
@@ -136,10 +152,10 @@ export class LogsPage extends Component {
 
   static defaultProps = {
     logItems: [],
-    activePage: 1,
+    activePage: DEFAULT_PAGINATION[PAGE_KEY],
     itemCount: 0,
     pageCount: 0,
-    pageSize: 20,
+    pageSize: DEFAULT_PAGINATION[SIZE_KEY],
     onChangePage: () => {},
     onChangePageSize: () => {},
     loading: false,
@@ -162,22 +178,7 @@ export class LogsPage extends Component {
   };
 
   state = {
-    highlightedRowId: null,
-    isGridRowHighlighted: false,
     isSauceLabsIntegrationView: false,
-  };
-
-  onHighlightRow = (highlightedRowId) => {
-    this.setState({
-      highlightedRowId,
-      isGridRowHighlighted: false,
-    });
-  };
-
-  onGridRowHighlighted = () => {
-    this.setState({
-      isGridRowHighlighted: true,
-    });
   };
 
   toggleSauceLabsIntegrationView = () =>
@@ -224,12 +225,6 @@ export class LogsPage extends Component {
       isNestedStepView,
     } = this.props;
 
-    const rowHighlightingConfig = {
-      onGridRowHighlighted: this.onGridRowHighlighted,
-      isGridRowHighlighted: this.state.isGridRowHighlighted,
-      highlightedRowId: this.state.highlightedRowId,
-    };
-
     return (
       <PageLayout>
         <PageSection>
@@ -243,7 +238,6 @@ export class LogsPage extends Component {
                   <LogItemInfo
                     onChangeLogLevel={onChangeLogLevel}
                     onChangePage={onChangePage}
-                    onHighlightRow={this.onHighlightRow}
                     onToggleSauceLabsIntegrationView={this.toggleSauceLabsIntegrationView}
                     isSauceLabsIntegrationView={this.state.isSauceLabsIntegrationView}
                     fetchFunc={refresh}
@@ -278,7 +272,6 @@ export class LogsPage extends Component {
                         sortingColumn={sortingColumn}
                         sortingDirection={sortingDirection}
                         onChangeSorting={onChangeSorting}
-                        rowHighlightingConfig={rowHighlightingConfig}
                         markdownMode={markdownMode}
                         logStatus={logStatus}
                         onChangeLogStatusFilter={onChangeLogStatusFilter}

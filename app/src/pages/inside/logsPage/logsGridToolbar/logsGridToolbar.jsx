@@ -1,6 +1,23 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import Parser from 'html-react-parser';
@@ -19,6 +36,7 @@ import {
 } from 'controllers/log';
 import { InputSlider } from 'components/inputs/inputSlider';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
+import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import ConsoleIcon from 'common/img/console-inline.svg';
 import MarkdownIcon from 'common/img/markdown-inline.svg';
 import { Pagination } from './pagination';
@@ -50,6 +68,7 @@ const messages = defineMessages({
 });
 
 @injectIntl
+@track()
 @connect((state) => ({
   userId: userIdSelector(state),
   isLogView: isLogPageWithOutNestedSteps(state),
@@ -65,6 +84,10 @@ export class LogsGridToolbar extends Component {
     logLevel: PropTypes.shape({
       id: PropTypes.string.isRequired,
       label: PropTypes.string.isRequired,
+    }).isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
     }).isRequired,
     children: PropTypes.func,
     onChangeLogLevel: PropTypes.func,
@@ -112,6 +135,7 @@ export class LogsGridToolbar extends Component {
   changeLogLevel = (newLogLevel) => {
     const { onChangeLogLevel, userId, logLevel: activeLogLevel } = this.props;
 
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.LOG_LEVEL_FILTER);
     if (newLogLevel.id !== activeLogLevel.id) {
       onChangeLogLevel(userId, newLogLevel);
     }
@@ -121,6 +145,7 @@ export class LogsGridToolbar extends Component {
     const { withAttachments } = this.state;
     const { onChangeWithAttachments, userId } = this.props;
 
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.LOG_WITH_ATTACHMENT_CHECKBOX);
     onChangeWithAttachments(userId, !withAttachments);
 
     this.setState({

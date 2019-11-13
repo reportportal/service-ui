@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import {
   composeValidators,
   isEmpty,
@@ -39,6 +55,7 @@ export const ldapSynchronizationAttributes = composeValidators([
 export const defectTypeLongName = composeValidators([isNotEmpty, lengthRange(3, 55)]);
 export const defectTypeShortName = composeValidators([isNotEmpty, maxLength(4)]);
 export const projectName = composeValidators([isNotEmpty, regex(/^[0-9a-zA-Z-_]{3,256}$/)]);
+export const btsIntegrationName = composeValidators([isNotEmpty, maxLength(55)]);
 export const btsProject = composeValidators([isNotEmpty, maxLength(55)]);
 export const patternNameLength = composeValidators([isNotEmpty, maxLength(55)]);
 export const createPatternNameUniqueValidator = (patternId, patterns) => (newPatternName) =>
@@ -66,6 +83,7 @@ export const port = range(1, 65535);
 
 export const searchFilter = (value) =>
   !value || composeValidators([isNotOnlySpaces, minLength(3)])(value);
+export const searchMembers = (value) => !value || isNotOnlySpaces(value);
 export const attributeKey = (value) =>
   !value || composeValidators([isNotOnlySpaces, maxLength(128)])(value);
 export const attributeValue = composeValidators([isNotEmpty, maxLength(128)]);
@@ -82,7 +100,5 @@ export const launchesWidgetContentFields = composeValidators([isNotEmptyArray, m
 export const mostFailedWidgetNumberOfLaunches = composeValidators([isNotEmpty, range(2, 600)]);
 export const createNotificationRecipientsValidator = (informOwner) => (value) =>
   isNotEmptyArray(value) || informOwner;
-export const notificationLaunchNames = composeValidators([
-  isNotEmptyArray,
-  (value) => value.every(launchName),
-]);
+export const notificationLaunchNames = (value) =>
+  isEmpty(value) || !value.length || value.every(launchName);

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import * as widgetTypes from 'common/constants/widgetTypes';
 import { NoDataAvailable } from './noDataAvailable';
 import {
@@ -8,9 +24,8 @@ import {
   FailedCasesTrendChart,
   NonPassedTestCasesTrendChart,
   PassingRatePerLaunch,
+  PassingRateSummary,
   LaunchExecutionAndIssueStatistics,
-  CumulativeTrendChart,
-  ComponentHealthCheck,
   OverallStatisticsChart,
   InvestigatedTrendChart,
 } from './singleLevelWidgets/charts';
@@ -21,7 +36,6 @@ import {
   MostFailedTests,
   ProjectActivity,
   ProductStatus,
-  MostPopularPatterns,
 } from './singleLevelWidgets/tables';
 import {
   cumulativeFormatParams,
@@ -29,6 +43,11 @@ import {
   componentHealthCheckFormatParams,
 } from './utils';
 import { MostTimeConsumingTestCases } from './singleLevelWidgets/mostTimeConsumingTestCases';
+import {
+  CumulativeTrendChart,
+  MostPopularPatterns,
+  ComponentHealthCheck,
+} from './multiLevelWidgets';
 
 const CHARTS = {
   [widgetTypes.DIFFERENT_LAUNCHES_COMPARISON]: LaunchesComparisonChart,
@@ -39,7 +58,7 @@ const CHARTS = {
   [widgetTypes.TEST_CASES_GROWTH_TREND]: TestCasesGrowthTrendChart,
   [widgetTypes.LAUNCH_DURATION]: LaunchesDurationChart,
   [widgetTypes.PASSING_RATE_PER_LAUNCH]: PassingRatePerLaunch,
-  [widgetTypes.PASSING_RATE_SUMMARY]: PassingRatePerLaunch,
+  [widgetTypes.PASSING_RATE_SUMMARY]: PassingRateSummary,
   [widgetTypes.LAUNCH_EXECUTION_AND_ISSUE_STATISTICS]: LaunchExecutionAndIssueStatistics,
   [widgetTypes.LAUNCHES_TABLE]: LaunchesTable,
   [widgetTypes.UNIQUE_BUGS_TABLE]: UniqueBugsTable,

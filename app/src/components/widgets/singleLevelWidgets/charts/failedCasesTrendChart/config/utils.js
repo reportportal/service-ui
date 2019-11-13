@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { range } from 'common/utils';
 import { FAILED } from 'common/constants/testStatuses';
 import { statusLocalization } from 'common/constants/statusLocalization';
@@ -26,14 +42,13 @@ export const getTicks = (bottom, top) => {
 
 export const calculateTooltipParams = (data, color, customProps) => {
   const { itemsData, formatMessage } = customProps;
-  const activeItem = data[0];
-  const { name, number, startTime } = itemsData[activeItem.index];
-  const id = activeItem.id;
+  const { index, id, value } = data[0];
+  const { name, number, startTime } = itemsData[index];
 
   return {
     itemName: `${name} #${number}`,
     startTime: Number(startTime),
-    itemCases: `${activeItem.value} ${formatMessage(messages.cases)}`,
+    itemCases: `${value} ${formatMessage(messages.cases)}`,
     color: color(id),
     issueStatNameProps: { itemName: formatMessage(statusLocalization[FAILED]) },
   };

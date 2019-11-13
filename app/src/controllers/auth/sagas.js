@@ -1,5 +1,28 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { all, call, put, select, takeEvery, take } from 'redux-saga/effects';
-import { fetch, setStorageItem, updateStorageItem } from 'common/utils';
+import { fetch } from 'common/utils';
+import {
+  getSessionItem,
+  getStorageItem,
+  removeSessionItem,
+  setStorageItem,
+  updateStorageItem,
+} from 'common/utils/storageUtils';
 import { URLS } from 'common/urls';
 import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
 import { showNotification } from 'controllers/notification';
@@ -8,7 +31,6 @@ import {
   pagePropertiesSelector,
   PROJECT_DASHBOARD_PAGE,
   LOGIN_PAGE,
-  querySelector,
 } from 'controllers/pages';
 import { NOTIFICATION_TYPES } from 'controllers/notification/constants';
 import {
@@ -17,8 +39,11 @@ import {
   FETCH_USER_SUCCESS,
   fetchUserAction,
   SET_ACTIVE_PROJECT,
+  userIdSelector,
 } from 'controllers/user';
 import { fetchProjectAction } from 'controllers/project';
+import { screenLockVisibilitySelector, hideScreenLockAction } from 'controllers/screenLock';
+import { activeModalSelector, hideModalAction } from 'controllers/modal';
 import { fetchPluginsAction, fetchGlobalIntegrationsAction } from 'controllers/plugins';
 import { redirect, pathToAction } from 'redux-first-router';
 import qs, { stringify } from 'qs';
@@ -30,6 +55,7 @@ import {
   setTokenAction,
   setLastFailedLoginTimeAction,
   loginSuccessAction,
+  setBadCredentialsAction,
 } from './actionCreators';
 import {
   LOGIN,
@@ -39,16 +65,27 @@ import {
   SET_TOKEN,
   LOGIN_SUCCESS,
   ERROR_CODE_LOGIN_MAX_LIMIT,
+  ERROR_CODE_LOGIN_BAD_CREDENTIALS,
+  ANONYMOUS_REDIRECT_PATH_STORAGE_KEY,
 } from './constants';
 
-function* handleLogout({ payload: redirectPath }) {
+function* hideExtraPopups() {
+  const activeModal = yield select(activeModalSelector);
+  const screenLockVisibility = yield select(screenLockVisibilitySelector);
+  if (activeModal) {
+    yield put(hideModalAction());
+  }
+  if (screenLockVisibility) {
+    yield put(hideScreenLockAction());
+  }
+}
+
+function* handleLogout() {
+  yield call(hideExtraPopups);
   yield put(resetTokenAction());
   yield put(
     redirect({
       type: LOGIN_PAGE,
-      meta: {
-        query: { redirectPath },
-      },
     }),
   );
   yield put(
@@ -85,9 +122,15 @@ function* loginSuccessHandler({ payload }) {
   yield put(fetchPluginsAction());
   yield put(fetchGlobalIntegrationsAction());
   yield put(authSuccessAction());
-  const query = yield select(querySelector);
-  if (query && query.redirectPath) {
-    yield put(redirect(pathToAction(query.redirectPath, routesMap, qs)));
+  const userId = yield select(userIdSelector);
+  const anonymousRedirectPath = getSessionItem(ANONYMOUS_REDIRECT_PATH_STORAGE_KEY);
+  const userSettings = getStorageItem(`${userId}_settings`) || {};
+  const redirectPath = anonymousRedirectPath || userSettings.lastPath;
+  if (redirectPath) {
+    yield put(redirect(pathToAction(redirectPath, routesMap, qs)));
+    if (anonymousRedirectPath) {
+      removeSessionItem('anonymousRedirectPath');
+    }
   } else {
     yield put(
       redirect({
@@ -129,6 +172,9 @@ function* handleLogin({ payload }) {
         values: { error },
       }),
     );
+    if (errorCode === ERROR_CODE_LOGIN_BAD_CREDENTIALS) {
+      yield put(setBadCredentialsAction());
+    }
     if (errorCode === ERROR_CODE_LOGIN_MAX_LIMIT) {
       const lastFailedLoginTime = Date.now();
       updateStorageItem(APPLICATION_SETTINGS, { lastFailedLoginTime });

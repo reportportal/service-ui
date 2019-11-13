@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { Component } from 'react';
 import track from 'react-tracking';
 import { connect } from 'react-redux';
@@ -25,6 +41,8 @@ import RetryIcon from 'common/img/retry-inline.svg';
 import SauceLabsIcon from 'common/img/plugins/sauce-labs-gray.png';
 import { NameLink } from 'pages/inside/common/nameLink';
 import { DurationBlock } from 'pages/inside/common/durationBlock';
+import { withTooltip } from 'components/main/tooltips/tooltip';
+import { TextTooltip } from 'components/main/tooltips/textTooltip';
 import { AttributesBlock } from './attributesBlock';
 import { OwnerBlock } from './ownerBlock';
 import { RetriesCounter } from './retriesCounter';
@@ -38,6 +56,14 @@ const messages = defineMessages({
     defaultMessage: 'Launch has retries of the test cases',
   },
 });
+
+const ItemNameTooltip = withTooltip({
+  TooltipComponent: TextTooltip,
+  data: {
+    dynamicWidth: true,
+    tooltipTriggerClass: cx('name'),
+  },
+})(({ children }) => children);
 
 @injectIntl
 @connect((state) => ({
@@ -129,7 +155,9 @@ export class ItemInfo extends Component {
             className={cx('name-link')}
             onClick={() => tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ITEM_NAME)}
           >
-            <span title={value.name}>{`${formatItemName(value.name)} `}</span>
+            <ItemNameTooltip tooltipContent={value.name}>
+              <span>{formatItemName(value.name)}</span>
+            </ItemNameTooltip>
           </NameLink>
           <span className={cx('edit-number-box')}>
             <NameLink

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
@@ -116,11 +132,6 @@ export class LogsGrid extends Component {
     onChangeSorting: PropTypes.func,
     consoleView: PropTypes.bool,
     markdownMode: PropTypes.bool,
-    rowHighlightingConfig: PropTypes.shape({
-      onGridRowHighlighted: PropTypes.func,
-      isGridRowHighlighted: PropTypes.bool,
-      highlightedRowId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    }),
     logStatus: PropTypes.string,
     onChangeLogStatusFilter: PropTypes.func,
     isNestedStepView: PropTypes.bool,
@@ -136,11 +147,6 @@ export class LogsGrid extends Component {
     onChangeSorting: () => {},
     consoleView: false,
     markdownMode: false,
-    rowHighlightingConfig: PropTypes.shape({
-      onGridRowHighlighted: () => {},
-      isGridRowHighlighted: false,
-      highlightedRowId: null,
-    }),
     logStatus: null,
     onChangeLogStatusFilter: () => {},
     isNestedStepView: false,
@@ -294,7 +300,6 @@ export class LogsGrid extends Component {
       sortingColumn,
       sortingDirection,
       onChangeSorting,
-      rowHighlightingConfig,
     } = this.props;
 
     return (
@@ -302,7 +307,6 @@ export class LogsGrid extends Component {
         <Grid
           columns={this.getColumns()}
           data={logItems}
-          rowHighlightingConfig={rowHighlightingConfig}
           rowClassMapper={this.getLogRowClasses}
           changeOnlyMobileLayout
           loading={loading}

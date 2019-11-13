@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Fragment, Component } from 'react';
 import { injectIntl, intlShape } from 'react-intl';
 import PropTypes from 'prop-types';
@@ -10,6 +26,7 @@ import ShareIcon from 'common/img/share-icon-inline.svg';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import GlobeIcon from 'common/img/globe-icon-inline.svg';
 import { MarkdownViewer } from 'components/main/markdown';
+import { canEditFilter } from 'common/utils/permissions';
 import styles from './filterName.scss';
 
 const cx = classNames.bind(styles);
@@ -30,6 +47,8 @@ export class FilterName extends Component {
     isLink: PropTypes.bool,
     noShareIcons: PropTypes.bool,
     nameLink: PropTypes.object,
+    userRole: PropTypes.string,
+    projectRole: PropTypes.string,
   };
 
   static defaultProps = {
@@ -46,6 +65,8 @@ export class FilterName extends Component {
     isLink: false,
     noShareIcons: false,
     nameLink: null,
+    userRole: null,
+    projectRole: null,
   };
 
   getHighlightName = () => {
@@ -86,6 +107,8 @@ export class FilterName extends Component {
       isLink,
       noShareIcons,
       nameLink,
+      userRole,
+      projectRole,
     } = this.props;
 
     const NameLink = ({ link, children }) =>
@@ -118,7 +141,7 @@ export class FilterName extends Component {
                 {Parser(this.getShareIcon())}
               </span>
             )}
-          {userId === filter.owner &&
+          {canEditFilter(userRole, projectRole, userId === filter.owner) &&
             editable && (
               <span className={cx('pencil-icon')} onClick={() => onEdit(filter)}>
                 {Parser(PencilIcon)}

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
@@ -5,12 +21,18 @@ import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
-import { availableBtsIntegrationsSelector, isPostIssueActionAvailable } from 'controllers/plugins';
+import {
+  availableBtsIntegrationsSelector,
+  isPostIssueActionAvailable,
+  isBtsPluginsExistSelector,
+  enabledBtsPluginsSelector,
+} from 'controllers/plugins';
 import { unlinkIssueAction, linkIssueAction, postIssueAction } from 'controllers/step';
 import { hideModalAction } from 'controllers/modal';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { fetch, setStorageItem, getStorageItem } from 'common/utils';
+import { getIssueTitle } from 'pages/inside/common/utils';
 import { URLS } from 'common/urls';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -31,6 +53,8 @@ const cx = classNames.bind(styles);
   (state) => ({
     btsIntegrations: availableBtsIntegrationsSelector(state),
     url: URLS.testItems(activeProjectSelector(state)),
+    isBtsPluginsExist: isBtsPluginsExistSelector(state),
+    enabledBtsPlugins: enabledBtsPluginsSelector(state),
   }),
   {
     showNotification,
@@ -50,6 +74,7 @@ export class EditDefectModal extends Component {
       items: PropTypes.array,
       fetchFunc: PropTypes.func,
       debugMode: PropTypes.bool,
+      eventsInfo: PropTypes.object,
     }).isRequired,
     showNotification: PropTypes.func.isRequired,
     hideModalAction: PropTypes.func.isRequired,
@@ -60,16 +85,28 @@ export class EditDefectModal extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    isBtsPluginsExist: PropTypes.bool.isRequired,
+    enabledBtsPlugins: PropTypes.array.isRequired,
   };
 
   constructor(props) {
     super(props);
     const {
-      intl,
+      intl: { formatMessage },
       btsIntegrations,
+      isBtsPluginsExist,
+      enabledBtsPlugins,
       data: { items },
     } = props;
     const initialState = {};
+    const isPostIssueUnavailable = !isPostIssueActionAvailable(btsIntegrations);
+    const issueTitle = getIssueTitle(
+      formatMessage,
+      btsIntegrations,
+      isBtsPluginsExist,
+      enabledBtsPlugins,
+      isPostIssueUnavailable,
+    );
 
     if (this.isBulkEditOperation()) {
       initialState.changeCommentMode =
@@ -84,19 +121,21 @@ export class EditDefectModal extends Component {
 
     this.multiActionButtonItems = [
       {
-        label: intl.formatMessage(messages.saveAndPostIssueMessage),
+        label: formatMessage(messages.saveAndPostIssueMessage),
         value: 'Post',
+        title: isPostIssueUnavailable ? issueTitle : '',
         onClick: () => this.onEditDefects(this.handlePostIssue, true),
-        disabled: !isPostIssueActionAvailable(btsIntegrations),
+        disabled: isPostIssueUnavailable,
       },
       {
-        label: intl.formatMessage(messages.saveAndLinkIssueMessage),
+        label: formatMessage(messages.saveAndLinkIssueMessage),
         value: 'Link',
+        title: btsIntegrations.length ? '' : issueTitle,
         onClick: () => this.onEditDefects(this.handleLinkIssue, true),
         disabled: !btsIntegrations.length,
       },
       {
-        label: intl.formatMessage(messages.saveAndUnlinkIssueMessage),
+        label: formatMessage(messages.saveAndUnlinkIssueMessage),
         value: 'Unlink',
         onClick: () => this.onEditDefects(this.handleUnlinkIssue, true),
         disabled: this.isBulkEditOperation()
@@ -108,15 +147,15 @@ export class EditDefectModal extends Component {
     this.changeCommentModeOptions = [
       {
         value: CHANGE_COMMENT_MODE.NOT_CHANGE,
-        label: intl.formatMessage(messages.notChangeCommentTitle),
+        label: formatMessage(messages.notChangeCommentTitle),
       },
       {
         value: CHANGE_COMMENT_MODE.REPLACE,
-        label: intl.formatMessage(messages.replaceCommentsTitle),
+        label: formatMessage(messages.replaceCommentsTitle),
       },
       {
         value: CHANGE_COMMENT_MODE.ADD_TO_EXISTING,
-        label: intl.formatMessage(messages.addToExistingCommentTitle),
+        label: formatMessage(messages.addToExistingCommentTitle),
       },
     ];
 
@@ -204,15 +243,19 @@ export class EditDefectModal extends Component {
       fetchFunc: this.props.data.fetchFunc,
     });
 
-  handleLinkIssue = () =>
-    this.props.linkIssueAction(this.getItemsToTheNextAction(), {
+  handleLinkIssue = () => {
+    this.props.tracking.trackEvent(this.props.data.eventsInfo.linkIssueBtn);
+    return this.props.linkIssueAction(this.getItemsToTheNextAction(), {
       fetchFunc: this.props.data.fetchFunc,
     });
+  };
 
-  handlePostIssue = () =>
+  handlePostIssue = () => {
+    this.props.tracking.trackEvent(this.props.data.eventsInfo.postBugBtn);
     this.props.postIssueAction(this.getItemsToTheNextAction(), {
       fetchFunc: this.props.data.fetchFunc,
     });
+  };
 
   checkIfTheDataWasChanged = () => {
     const { items } = this.props.data;
@@ -302,6 +345,10 @@ export class EditDefectModal extends Component {
       </div>
     );
 
+  renderMultiActionButton = ({ ...rest }) => (
+    <MultiActionButton {...rest} toggleMenuEventInfo={this.props.data.eventsInfo.saveBtnDropdown} />
+  );
+
   render() {
     const {
       intl,
@@ -313,7 +360,7 @@ export class EditDefectModal extends Component {
         items: this.multiActionButtonItems,
         title: intl.formatMessage(COMMON_LOCALE_KEYS.SAVE),
       },
-      component: MultiActionButton,
+      component: this.renderMultiActionButton,
     };
     const okButton = {
       onClick: this.onEditDefects,

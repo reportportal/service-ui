@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -9,13 +25,11 @@ import InviteUserIcon from 'common/img/invite-inline.svg';
 import AddUserIcon from 'common/img/add-user-inline.svg';
 import { URLS } from 'common/urls';
 import { showModalAction } from 'controllers/modal';
-import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import {
   showNotification,
   showDefaultErrorNotification,
   NOTIFICATION_TYPES,
 } from 'controllers/notification';
-import { activeProjectSelector } from 'controllers/user';
 import {
   fetchAllUsersAction,
   allUsersSelector,
@@ -25,9 +39,7 @@ import { fetch } from 'common/utils';
 import { INTERNAL } from 'common/constants/accountType';
 import { collectFilterEntities } from 'components/filterEntities/containers/utils';
 import { downloadFile } from 'common/utils/downloadFile';
-
 import { EXPORT, INVITE_USER, ADD_USER } from './constants';
-
 import styles from './actionPanel.scss';
 
 const cx = classNames.bind(styles);
@@ -45,31 +57,19 @@ const messages = defineMessages({
     id: 'AllUsersPage.AddUser',
     defaultMessage: 'Add user',
   },
-  inviteExternalMember: {
-    id: 'MembersPage.inviteExternalMember',
-    defaultMessage:
-      'Invite for member is successfully registered. Confirmation info will be send on provided email. Expiration: 1 day.',
-  },
   addUserSuccessNotification: {
     id: 'ActionPanel.addUserNotification',
     defaultMessage: 'New account has been created successfully',
-  },
-  memberWasInvited: {
-    id: 'MembersPage.memberWasInvited',
-    defaultMessage: "Member '<b>{name}</b>' has assigned to the project",
   },
 });
 
 @connect(
   (state) => ({
-    activeProject: activeProjectSelector(state),
     users: allUsersSelector(state),
     filterEnities: collectFilterEntities(querySelector(state)),
   }),
   {
     showModalAction,
-    showScreenLockAction,
-    hideScreenLockAction,
     showNotification,
     showDefaultErrorNotification,
     fetchAllUsersAction,
@@ -80,18 +80,14 @@ export class ActionPanel extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     users: PropTypes.arrayOf(PropTypes.object),
-    activeProject: PropTypes.string,
     filterEnities: PropTypes.object,
-    showScreenLockAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
     showDefaultErrorNotification: PropTypes.func.isRequired,
     fetchAllUsersAction: PropTypes.func.isRequired,
-    hideScreenLockAction: PropTypes.func.isRequired,
     showModalAction: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
-    activeProject: '',
     users: [],
     filterEnities: {},
   };
@@ -130,96 +126,39 @@ export class ActionPanel extends Component {
       .catch(this.props.showDefaultErrorNotification);
   };
 
-  inviteUser = (userData) => {
-    const data = {};
-    if (userData.user.externalUser) {
-      this.props.showScreenLockAction();
-
-      data.defaultProject = userData.project || this.props.activeProject;
-      data.email = userData.user.userLogin;
-      data.role = userData.role;
-      return fetch(URLS.userInviteExternal(), {
-        method: 'post',
-        data,
-      })
-        .then((res) => {
-          this.props.showNotification({
-            message: this.props.intl.formatMessage(messages.inviteExternalMember),
-            type: NOTIFICATION_TYPES.SUCCESS,
-          });
-          this.props.fetchAllUsersAction();
-          this.props.hideScreenLockAction();
-          data.backLink = res.backLink;
-          return data;
-        })
-        .catch((err) => {
-          this.props.showDefaultErrorNotification(err);
-          this.props.fetchAllUsersAction();
-          this.props.hideScreenLockAction();
-          return {
-            errorOccurred: true,
-            ...err,
-          };
-        });
-    }
-    data.userNames = {
-      [userData.user.userLogin]: userData.role,
-    };
-
-    return fetch(URLS.userInviteInternal(userData.project), {
-      method: 'put',
-      data,
-    })
-      .then(() => {
-        this.props.showNotification({
-          message: this.props.intl.formatMessage(messages.memberWasInvited, {
-            name: userData.user.userLogin,
-          }),
-          type: NOTIFICATION_TYPES.SUCCESS,
-        });
-        this.props.fetchAllUsersAction();
-      })
-      .catch((err) => {
-        this.props.showDefaultErrorNotification(err);
-        this.props.fetchAllUsersAction();
-        return {
-          errorOccurred: true,
-          ...err,
-        };
-      });
-  };
-
   showInviteUserModal = () => {
     this.props.showModalAction({
       id: 'inviteUserModal',
-      data: { onInvite: this.inviteUser, isProjectSelector: true },
+      data: { onInvite: this.props.fetchAllUsersAction, isProjectSelector: true },
     });
   };
+
+  actionButtons = [
+    {
+      key: EXPORT,
+      icon: ExportIcon,
+      onClick: this.onExportUsers,
+    },
+    {
+      key: INVITE_USER,
+      icon: InviteUserIcon,
+      onClick: this.showInviteUserModal,
+    },
+    {
+      key: ADD_USER,
+      icon: AddUserIcon,
+      onClick: this.showAddUserModal,
+    },
+  ];
 
   renderHeaderButtons = () => {
     const {
       intl: { formatMessage },
     } = this.props;
-    const ACTION_BUTTONS = [
-      {
-        key: EXPORT,
-        icon: ExportIcon,
-        onClick: this.onExportUsers,
-      },
-      {
-        key: INVITE_USER,
-        icon: InviteUserIcon,
-        onClick: this.showInviteUserModal,
-      },
-      {
-        key: ADD_USER,
-        icon: AddUserIcon,
-        onClick: this.showAddUserModal,
-      },
-    ];
+
     return (
       <div className={cx('action-buttons')}>
-        {ACTION_BUTTONS.map(({ key, icon, onClick }) => (
+        {this.actionButtons.map(({ key, icon, onClick }) => (
           <div className={cx('action-button')} key={key}>
             <GhostButton icon={icon} onClick={onClick}>
               {formatMessage(messages[key])}

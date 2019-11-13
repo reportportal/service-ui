@@ -1,5 +1,21 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { FormattedMessage } from 'react-intl';
-import { SAUCE_LABS, EMAIL, JIRA, RALLY, SAML } from 'common/constants/integrationNames';
+import { SAUCE_LABS, EMAIL, JIRA, RALLY, SAML, LDAP, AD } from 'common/constants/integrationNames';
 
 export const INTEGRATIONS_DESCRIPTIONS_MAP = {
   [SAUCE_LABS]: (
@@ -29,7 +45,19 @@ export const INTEGRATIONS_DESCRIPTIONS_MAP = {
   [SAML]: (
     <FormattedMessage
       id="Integrations.Saml.description"
-      defaultMessage="Integration with SAML, can be help to speed up the process user creation and  login to ReportPortal. Integration provides an exchange of information between ReportPortal and SAML, such as possibility to login to ReportPortal with SAML credentials."
+      defaultMessage="Integration with SAML, can be help to speed up the process user creation and login to ReportPortal. Integration provides an exchange of information between ReportPortal and SAML, such as possibility to login to ReportPortal with SAML credentials."
+    />
+  ),
+  [LDAP]: (
+    <FormattedMessage
+      id="Integrations.Ldap.description"
+      defaultMessage="Integration with LDAP, can be help to speed up the process user creation and login to ReportPortal. Integration provides an exchange of information between ReportPortal and LDAP, such as possibility to login to ReportPortal with LDAP credentials."
+    />
+  ),
+  [AD]: (
+    <FormattedMessage
+      id="Integrations.ActiveDirectory.description"
+      defaultMessage="Integration with Active Directory, can be help to speed up the process user creation and login to ReportPortal. Integration provides an exchange of information between ReportPortal and Active Directory, such as possibility to login to ReportPortal with Active Directory credentials."
     />
   ),
 };

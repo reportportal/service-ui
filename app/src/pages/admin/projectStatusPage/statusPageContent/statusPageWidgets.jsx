@@ -1,14 +1,29 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { URLS } from 'common/urls';
+import { AUTOMATION_BUG, SYSTEM_ISSUE, PRODUCT_BUG } from 'components/widgets/common/constants';
 import {
   GeneralInfo,
   OwnersInfo,
   LastLaunch,
   Investigated,
-  AutoBugs,
   LaunchesQuantity,
-  ProductBugs,
   LaunchStatistics,
-  SystemIssues,
+  IssuesChartWrapper,
   ActivityPanel,
 } from './widgets';
 import { WIDGETS_IDS } from '../constants';
@@ -62,7 +77,9 @@ export const statusPageWidgets = [
     title: messages.issuesChart,
     id: WIDGETS_IDS.issuesChart,
     source: WIDGETS_IDS.issuesChart,
-    component: (data, interval) => <ProductBugs data={data} interval={interval} />,
+    component: (data, interval) => (
+      <IssuesChartWrapper data={data} interval={interval} targetFieldKey={PRODUCT_BUG} />
+    ),
     getUrl: (projectId, interval) =>
       URLS.projectWidget(projectId, WIDGETS_IDS.issuesChart, interval),
   },
@@ -70,15 +87,17 @@ export const statusPageWidgets = [
     title: messages.systemIssues,
     id: WIDGETS_IDS.systemIssues,
     source: WIDGETS_IDS.issuesChart,
-    component: (data, interval) => <SystemIssues data={data} interval={interval} />,
-    getUrl: (projectId, interval) =>
-      URLS.projectWidget(projectId, WIDGETS_IDS.issuesChart, interval),
+    component: (data, interval) => (
+      <IssuesChartWrapper data={data} interval={interval} targetFieldKey={SYSTEM_ISSUE} />
+    ),
   },
   {
     title: messages.autoBugs,
     id: WIDGETS_IDS.autoBugs,
     source: WIDGETS_IDS.issuesChart,
-    component: (data, interval) => <AutoBugs data={data} interval={interval} />,
+    component: (data, interval) => (
+      <IssuesChartWrapper data={data} interval={interval} targetFieldKey={AUTOMATION_BUG} />
+    ),
   },
 ];
 

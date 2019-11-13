@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import isEqual from 'fast-deep-equal';
@@ -103,8 +119,10 @@ export class LaunchFiltersContainer extends Component {
 
   getSortingParams = () => {
     const { activeFilter } = this.props;
-    if (activeFilter) {
-      const currentOrder = activeFilter.orders[0];
+    if (activeFilter && activeFilter.orders && activeFilter.orders.length > 0) {
+      const currentOrder =
+        activeFilter.orders.find((v) => v.sortingColumn !== ENTITY_NUMBER) ||
+        activeFilter.orders[0];
       const { sortingColumn, isAsc } = currentOrder;
       return {
         sortingColumn,
@@ -180,7 +198,11 @@ export class LaunchFiltersContainer extends Component {
         sortingColumn,
         isAsc: sortingDirection === SORTING_ASC,
       };
-      const newOrders = [filterSortObject, ...orders.slice(1)];
+      const newOrders = [filterSortObject];
+      const numberColumnIndex = orders.findIndex((o) => o.sortingColumn === ENTITY_NUMBER);
+      if (numberColumnIndex >= 0) {
+        newOrders.push(orders[numberColumnIndex]);
+      }
       updateFilterOrders(activeFilterId, newOrders);
     } else {
       updateLocalSorting(sortObject);

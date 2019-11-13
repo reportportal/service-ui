@@ -1,22 +1,17 @@
 /*
- * Copyright 2017 EPAM Systems
+ * Copyright 2019 EPAM Systems
  *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * This file is part of EPAM Report Portal.
- * https://github.com/reportportal/service-ui
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Report Portal is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Report Portal is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 import Select from 'react-select';
 import PropTypes from 'prop-types';
@@ -28,7 +23,6 @@ import styles from './inputUserSearch.scss';
 import { UsersList } from './usersList';
 
 const cx = classNames.bind(styles);
-const getPhoto = (userId) => URLS.dataUserPhoto(userId);
 const isValidNewOption = ({ label }) => validate.email(label);
 const newOptionCreator = (option) => ({
   externalUser: true,
@@ -37,7 +31,7 @@ const newOptionCreator = (option) => ({
 });
 const promptTextCreator = (label) => label;
 const makeURL = (input, isAdmin, projectId) =>
-  !isAdmin ? URLS.projectUserSearchUser(projectId, input) : URLS.searchUsers(input);
+  isAdmin ? URLS.searchUsers(input) : URLS.projectUserSearchUser(projectId, input);
 const makeOptions = (options, projectId) =>
   options.map((option) => ({
     userName: option.fullName || '',
@@ -45,7 +39,7 @@ const makeOptions = (options, projectId) =>
     email: option.email || '',
     disabled: !!option.assignedProjects[projectId],
     isAssigned: !!option.assignedProjects[projectId],
-    userAvatar: getPhoto(option.userId),
+    userAvatar: URLS.dataUserPhoto(projectId, option.userId, true),
     assignedProjects: option.assignedProjects || {},
   }));
 const getUsers = (input, isAdmin, projectId) => {

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { createSelector } from 'reselect';
 import { BTS_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
 import {
@@ -5,6 +21,9 @@ import {
   RALLY,
   EMAIL,
   SAUCE_LABS,
+  SAML,
+  LDAP,
+  AD,
   INTEGRATION_NAMES_BY_GROUP_TYPES_MAP,
 } from 'common/constants/integrationNames';
 import {
@@ -35,6 +54,14 @@ export const availableGroupedPluginsSelector = createSelector(
   },
 );
 
+export const isBtsPluginsExistSelector = createSelector(pluginsSelector, (plugins) =>
+  plugins.some((item) => item.groupType === BTS_GROUP_TYPE),
+);
+
+export const enabledBtsPluginsSelector = createSelector(pluginsSelector, (plugins) =>
+  plugins.filter((item) => item.groupType === BTS_GROUP_TYPE && item.enabled),
+);
+
 export const createNamedIntegrationsSelector = (integrationName, integrationsSelector) =>
   createSelector(integrationsSelector, (integrations) =>
     filterIntegrationsByName(integrations, integrationName),
@@ -45,6 +72,9 @@ export const namedGlobalIntegrationsSelectorsMap = {
   [JIRA]: createNamedIntegrationsSelector(JIRA, globalIntegrationsSelector),
   [RALLY]: createNamedIntegrationsSelector(RALLY, globalIntegrationsSelector),
   [EMAIL]: createNamedIntegrationsSelector(EMAIL, globalIntegrationsSelector),
+  [SAML]: createNamedIntegrationsSelector(SAML, globalIntegrationsSelector),
+  [LDAP]: createNamedIntegrationsSelector(LDAP, globalIntegrationsSelector),
+  [AD]: createNamedIntegrationsSelector(AD, globalIntegrationsSelector),
 };
 
 export const namedProjectIntegrationsSelectorsMap = {
@@ -52,6 +82,9 @@ export const namedProjectIntegrationsSelectorsMap = {
   [JIRA]: createNamedIntegrationsSelector(JIRA, projectIntegrationsSelector),
   [RALLY]: createNamedIntegrationsSelector(RALLY, projectIntegrationsSelector),
   [EMAIL]: createNamedIntegrationsSelector(EMAIL, projectIntegrationsSelector),
+  [SAML]: createNamedIntegrationsSelector(SAML, projectIntegrationsSelector),
+  [LDAP]: createNamedIntegrationsSelector(LDAP, projectIntegrationsSelector),
+  [AD]: createNamedIntegrationsSelector(AD, projectIntegrationsSelector),
 };
 
 export const availableIntegrationsByPluginNameSelector = (state, pluginName) => {

@@ -1,14 +1,28 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape } from 'react-intl';
-import { TEST_ITEM_PAGE, PROJECT_LOG_PAGE } from 'controllers/pages/constants';
-import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { ALL } from 'common/constants/reservedFilterIds';
-import isEqual from 'fast-deep-equal';
-import { C3Chart } from '../../../common/c3chart';
-import { messages } from '../../../common/messages';
-import { getConfig } from './getConfig';
+import { TEST_ITEM_PAGE, PROJECT_LOG_PAGE } from 'controllers/pages/constants';
+import { ChartContainer } from 'components/widgets/common/c3chart';
+import { getChartDefaultProps } from 'components/widgets/common/utils';
+import { getConfig } from './config/getConfig';
 import styles from './mostTimeConsumingTestCasesChart.scss';
 
 const cx = classNames.bind(styles);
@@ -19,7 +33,7 @@ export class MostTimeConsumingTestCasesChart extends Component {
     intl: intlShape.isRequired,
     widget: PropTypes.object.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
-    project: PropTypes.string.isRequired,
+    projectId: PropTypes.string.isRequired,
     navigate: PropTypes.func.isRequired,
     isPreview: PropTypes.bool,
     height: PropTypes.number,
@@ -32,102 +46,9 @@ export class MostTimeConsumingTestCasesChart extends Component {
     observer: {},
   };
 
-  state = {
-    isConfigReady: false,
-  };
-
-  componentDidMount() {
-    const { observer } = this.props;
-
-    observer.subscribe && observer.subscribe('widgetResized', this.resizeChart);
-    this.getConfig();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (!isEqual(prevProps.widget, this.props.widget)) {
-      this.getConfig();
-    }
-  }
-
-  componentWillUnmount() {
-    const { observer } = this.props;
-
-    this.node && this.node.removeEventListener('mousemove', this.getCoords);
-    observer.unsubscribe && observer.unsubscribe('widgetResized', this.resizeChart);
-  }
-
-  onChartCreated = (chart, element) => {
-    this.chart = chart;
-    this.node = element;
-    this.node.addEventListener('mousemove', this.getCoords);
-  };
-
-  getConfig = () => {
-    const { widget, intl, container } = this.props;
-
-    const params = {
-      content: widget.content,
-      isPreview: false,
-      intl,
-      positionCallback: this.getPosition,
-      size: {
-        height: container.offsetHeight,
-        width: container.offsetWidth,
-      },
-    };
-
-    this.size = params.size;
-
-    const configParams = {
-      ...params,
-      chartType: MODES_VALUES[CHART_MODES.BAR_VIEW],
-      isPointsShow: false,
-      messages,
-      testCaseClickHandler: this.testCaseClickHandler,
-    };
-
-    this.config = getConfig(configParams);
-
-    this.setState({
-      isConfigReady: true,
-    });
-  };
-
-  getCoords = ({ pageX, pageY }) => {
-    this.x = pageX;
-    this.y = pageY;
-  };
-
-  getPosition = (d, width, height) => {
-    const rect = this.node.getBoundingClientRect();
-    const left = this.x - rect.left - width / 2;
-    const top = this.y - rect.top - height;
-
-    return {
-      top: top - 8,
-      left,
-    };
-  };
-
-  resizeChart = () => {
-    const { offsetHeight: newHeight } = this.props.container;
-    const { offsetWidth: newWidth } = this.props.container;
-
-    if (this.height !== newHeight || this.width !== newWidth) {
-      this.chart.resize({
-        height: newHeight,
-        width: newWidth,
-      });
-      this.height = newHeight;
-      this.width = newWidth;
-      this.config.size.height = newHeight;
-      this.config.size.width = newWidth;
-    }
-  };
-
   testCaseClickHandler = (id) => {
     const {
-      project,
+      projectId,
       widget: {
         content: { result, latestLaunch = {} },
       },
@@ -148,7 +69,7 @@ export class MostTimeConsumingTestCasesChart extends Component {
 
     const navigationParams = {
       payload: {
-        projectId: project,
+        projectId,
         filterId: ALL,
         testItemIds: itemLink,
       },
@@ -158,17 +79,24 @@ export class MostTimeConsumingTestCasesChart extends Component {
     navigate(navigationParams);
   };
 
+  configData = {
+    formatMessage: this.props.intl.formatMessage,
+    getConfig,
+    onChartClick: this.testCaseClickHandler,
+  };
+
   render() {
     return (
-      this.state.isConfigReady && (
-        <div className={cx('most-time-consuming-chart')}>
-          <C3Chart
-            config={this.config}
-            onChartCreated={this.onChartCreated}
-            className={cx('widget-wrapper')}
-          />
-        </div>
-      )
+      <div className={cx('most-time-consuming-chart')}>
+        <ChartContainer
+          {...getChartDefaultProps(this.props)}
+          legendConfig={{
+            showLegend: false,
+          }}
+          configData={this.configData}
+          className={cx('widget-wrapper')}
+        />
+      </div>
     );
   }
 }

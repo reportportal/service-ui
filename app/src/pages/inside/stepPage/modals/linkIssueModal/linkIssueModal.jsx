@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
@@ -5,18 +21,17 @@ import { connect } from 'react-redux';
 import { reduxForm, FieldArray } from 'redux-form';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
-import { activeProjectSelector } from 'controllers/user';
+import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { namedAvailableBtsIntegrationsSelector } from 'controllers/plugins';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { URLS } from 'common/urls';
-import { validate, fetch } from 'common/utils';
-import { bindMessageToValidator } from 'common/utils/validation/validatorHelpers';
+import { validate, bindMessageToValidator, fetch, updateSessionItem } from 'common/utils';
 import { RALLY } from 'common/constants/integrationNames';
 import { BetaBadge } from 'pages/inside/common/betaBadge';
 import { BtsIntegrationSelector } from 'pages/inside/common/btsIntegrationSelector';
+import { getDefaultIssueModalConfig } from '../postIssueModal/utils';
 import { LinkIssueFields } from './linkIssueFields';
 import styles from './linkIssueModal.scss';
 
@@ -59,6 +74,7 @@ const messages = defineMessages({
 })
 @connect(
   (state) => ({
+    userId: userIdSelector(state),
     requestUrl: URLS.testItemsLinkIssues(activeProjectSelector(state)),
     namedBtsIntegrations: namedAvailableBtsIntegrationsSelector(state),
   }),
@@ -71,6 +87,7 @@ const messages = defineMessages({
 export class LinkIssueModal extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
+    userId: PropTypes.string.isRequired,
     requestUrl: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
     namedBtsIntegrations: PropTypes.object.isRequired,
@@ -81,6 +98,7 @@ export class LinkIssueModal extends Component {
     data: PropTypes.shape({
       items: PropTypes.array,
       fetchFunc: PropTypes.func,
+      eventsInfo: PropTypes.object,
     }).isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -88,22 +106,32 @@ export class LinkIssueModal extends Component {
     }).isRequired,
   };
 
+  static defaultProps = {
+    data: {
+      items: [],
+      fetchFunc: () => {},
+      eventsInfo: {},
+    },
+  };
+
   constructor(props) {
     super(props);
-    const pluginName = Object.keys(props.namedBtsIntegrations)[0];
+    const { namedBtsIntegrations, userId } = props;
+    const { pluginName, integration } = getDefaultIssueModalConfig(namedBtsIntegrations, userId);
 
     this.props.initialize({
       issues: [{}],
     });
     this.state = {
       pluginName,
-      integrationId: props.namedBtsIntegrations[pluginName][0].id,
+      integrationId: integration.id,
     };
   }
 
   onFormSubmit = (formData) => {
     const {
       intl,
+      userId,
       requestUrl,
       data: { items, fetchFunc },
       namedBtsIntegrations,
@@ -130,6 +158,12 @@ export class LinkIssueModal extends Component {
       .then(() => {
         this.closeModal();
         fetchFunc();
+        const sessionConfig = {
+          pluginName,
+          integrationId,
+        };
+
+        updateSessionItem(`${userId}_settings`, sessionConfig);
         this.props.showNotification({
           message: intl.formatMessage(messages.linkIssueSuccess),
           type: NOTIFICATION_TYPES.SUCCESS,
@@ -144,7 +178,7 @@ export class LinkIssueModal extends Component {
   };
 
   onLink = () => (closeModal) => {
-    this.props.tracking.trackEvent(STEP_PAGE_EVENTS.LOAD_BTN_LOAD_BUG_MODAL);
+    this.props.tracking.trackEvent(this.props.data.eventsInfo.loadBtn);
     this.closeModal = closeModal;
     this.props.handleSubmit(this.onFormSubmit)();
   };
@@ -176,14 +210,18 @@ export class LinkIssueModal extends Component {
   };
 
   render() {
-    const { intl, namedBtsIntegrations } = this.props;
+    const {
+      intl,
+      namedBtsIntegrations,
+      data: { eventsInfo = {} },
+    } = this.props;
     const okButton = {
       text: intl.formatMessage(messages.linkButton),
       onClick: this.onLink(),
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      eventInfo: STEP_PAGE_EVENTS.CANCEL_BTN_LOAD_BUG_MODAL,
+      eventInfo: eventsInfo.cancelBtn,
     };
 
     return (
@@ -197,7 +235,7 @@ export class LinkIssueModal extends Component {
         okButton={okButton}
         cancelButton={cancelButton}
         closeConfirmation={this.getCloseConfirmationConfig()}
-        closeIconEventInfo={STEP_PAGE_EVENTS.CLOSE_ICON_LOAD_BUG_MODAL}
+        closeIconEventInfo={eventsInfo.closeIcon}
       >
         <h4 className={cx('add-issue-id-title')}>{intl.formatMessage(messages.addIssueIdTitle)}</h4>
         <div className={cx('link-issue-form-wrapper')}>
@@ -213,7 +251,7 @@ export class LinkIssueModal extends Component {
               name="issues"
               change={this.props.change}
               component={LinkIssueFields}
-              addEventInfo={STEP_PAGE_EVENTS.ADD_NEW_ISSUE_BTN_LOAD_BUG_MODAL}
+              addEventInfo={eventsInfo.addNewIssue}
               withAutocomplete={this.state.pluginName !== RALLY}
             />
           </form>

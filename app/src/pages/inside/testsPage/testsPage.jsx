@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
@@ -18,7 +34,7 @@ import {
   validationErrorsSelector,
   selectTestsAction,
 } from 'controllers/test';
-import { withPagination } from 'controllers/pagination';
+import { DEFAULT_PAGINATION, SIZE_KEY, PAGE_KEY, withPagination } from 'controllers/pagination';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import {
   namespaceSelector,
@@ -102,10 +118,10 @@ export class TestsPage extends Component {
     onEditItems: () => {},
     tests: [],
     selectedTests: [],
-    activePage: 1,
+    activePage: DEFAULT_PAGINATION[PAGE_KEY],
     itemCount: null,
     pageCount: null,
-    pageSize: 20,
+    pageSize: DEFAULT_PAGINATION[SIZE_KEY],
     sortingColumn: null,
     sortingDirection: null,
     fetchTestItemsAction: () => {},
@@ -147,13 +163,13 @@ export class TestsPage extends Component {
   onHighlightRow = (highlightedRowId) => {
     this.setState({
       highlightedRowId,
-      isGridRowHighlighted: false,
+      isGridRowHighlighted: true,
     });
   };
 
   onGridRowHighlighted = () => {
     this.setState({
-      isGridRowHighlighted: true,
+      isGridRowHighlighted: false,
     });
   };
 

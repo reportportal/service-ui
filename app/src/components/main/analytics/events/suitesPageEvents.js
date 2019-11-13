@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 export const SUITE_PAGE = 'suites';
 export const SUITES_PAGE_EVENTS = {
   PLUS_MINUS_BREADCRUMB: {
@@ -71,37 +87,31 @@ export const SUITES_PAGE_EVENTS = {
     label: 'Unselect all items',
   },
   PROCEED_VALID_ITEMS: {
-    // todo
     category: SUITE_PAGE,
     action: 'Click on Bttn "Proceed Valid Items"',
     label: 'Remove invalid items from selection',
   },
   CLOSE_ICON_EDIT_ITEM_MODAL: {
-    // todo
     category: SUITE_PAGE,
     action: 'Click on Close Icon on Modal "Edit Item"',
     label: 'Close modal "Edit Item"',
   },
   EDIT_ITEM_DESCRIPTION: {
-    // todo
     category: SUITE_PAGE,
     action: 'Edit description in Modal "Edit Item"',
     label: 'Edit description',
   },
   CANCEL_BTN_EDIT_ITEM_MODAL: {
-    // todo
     category: SUITE_PAGE,
     action: 'Click on Bttn Cancel on Modal "Edit Item"',
     label: 'Close modal "Edit Item"',
   },
   SAVE_BTN_EDIT_ITEM_MODAL: {
-    // todo
     category: SUITE_PAGE,
     action: 'Click on Bttn Save on Modal "Edit Item"',
     label: 'Save changes',
   },
   NAME_FILTER: {
-    // todo
     category: SUITE_PAGE,
     action: 'Click on icon "filter" on Name',
     label: 'Suite name input becomes active',
@@ -236,22 +246,9 @@ export const SUITES_PAGE_EVENTS = {
     action: 'Click on TI tag',
     label: 'Transition to TI list view',
   },
-  SAVE_BTN_DROPDOWN_EDIT_ITEM_MODAL: {
-    // todo
+  LOG_VIEW_SWITCHER: {
     category: SUITE_PAGE,
-    action: 'Click on dropdown icon on Save Bttnon Modal "Edit Item"',
-    label: 'Arise dropdown',
-  },
-  POST_BUG_BTN_EDIT_ITEM_MODAL: {
-    // todo
-    category: SUITE_PAGE,
-    action: 'Select Save and Post Bug on dropdown in Modal "Edit Item"',
-    label: 'Arise Modal "Post Bug"',
-  },
-  LOAD_BUG_BTN_EDIT_ITEM_MODAL: {
-    // todo
-    category: SUITE_PAGE,
-    action: 'Select Save and Load Bug on dropdown in Modal "Edit Item"',
-    label: 'Arise Modal "Load Bug"',
+    action: 'Click on launch log view switcher',
+    label: 'Open "Launch log view"',
   },
 };

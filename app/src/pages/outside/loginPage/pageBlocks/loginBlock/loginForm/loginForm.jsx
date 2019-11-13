@@ -1,35 +1,30 @@
 /*
- * Copyright 2017 EPAM Systems
+ * Copyright 2019 EPAM Systems
  *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * This file is part of EPAM Report Portal.
- * https://github.com/reportportal/service-ui
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Report Portal is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Report Portal is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { connect } from 'react-redux';
-import { reduxForm } from 'redux-form';
+import { reduxForm, stopSubmit } from 'redux-form';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
 import Link from 'redux-first-router-link';
 import { commonValidators, isEmptyObject } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { authExtensionsSelector } from 'controllers/appInfo';
-import { loginAction, lastFailedLoginTimeSelector } from 'controllers/auth';
+import { loginAction, lastFailedLoginTimeSelector, badCredentialsSelector } from 'controllers/auth';
 import { LOGIN_PAGE } from 'controllers/pages';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputOutside } from 'components/inputs/inputOutside';
@@ -63,12 +58,17 @@ const messages = defineMessages({
     id: 'LoginForm.errorMessage',
     defaultMessage: 'Error',
   },
+  badCredentials: {
+    id: 'LoginForm.badCredentials',
+    defaultMessage: 'Bad Credentials',
+  },
 });
 
 @connect(
   (state) => ({
     externalAuth: authExtensionsSelector(state),
     lastFailedLoginTime: lastFailedLoginTimeSelector(state),
+    badCredentials: badCredentialsSelector(state),
   }),
   {
     authorize: loginAction,
@@ -89,6 +89,9 @@ export class LoginForm extends React.Component {
     authorize: PropTypes.func.isRequired,
     externalAuth: PropTypes.object,
     lastFailedLoginTime: PropTypes.number,
+    badCredentials: PropTypes.bool.isRequired,
+    form: PropTypes.string.isRequired,
+    dispatch: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -104,6 +107,10 @@ export class LoginForm extends React.Component {
   componentDidUpdate(prevProps) {
     if (prevProps.lastFailedLoginTime !== this.props.lastFailedLoginTime) {
       this.blockLoginForm();
+    }
+    const { badCredentials } = this.props;
+    if (badCredentials !== prevProps.badCredentials && badCredentials) {
+      this.badCredentialsHandler();
     }
   }
 
@@ -152,6 +159,20 @@ export class LoginForm extends React.Component {
         });
       }
     }, 1000);
+  };
+
+  badCredentialsHandler = () => {
+    const {
+      form,
+      dispatch,
+      intl: { formatMessage },
+    } = this.props;
+    dispatch(
+      stopSubmit(form, {
+        login: formatMessage(messages.badCredentials),
+        password: formatMessage(messages.badCredentials),
+      }),
+    );
   };
 
   render() {

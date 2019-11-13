@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { defineMessages } from 'react-intl';
 import { COLOR_FAILEDSKIPPEDTOTAL } from 'common/constants/colors';
 import { createTooltipRenderer } from 'components/widgets/common/tooltip';
@@ -13,11 +29,18 @@ const localMessages = defineMessages({
 });
 const FAILED_SKIPPED_TOTAL = '% (Failed+Skipped)/Total';
 
-export const getConfig = ({ content, isPreview, formatMessage, positionCallback, size }) => {
+export const getConfig = ({
+  content,
+  isPreview,
+  formatMessage,
+  positionCallback,
+  size,
+  onClickHandler,
+}) => {
   const chartData = ['notPassed'];
   const itemsData = [];
 
-  content.result.forEach((item) => {
+  content.forEach((item) => {
     const value = parseFloat(item.values[FAILED_SKIPPED_TOTAL]);
     const { id, name, number, startTime } = item;
     itemsData.push({ id, name, number, startTime });
@@ -30,6 +53,8 @@ export const getConfig = ({ content, isPreview, formatMessage, positionCallback,
       colors: {
         notPassed: COLOR_FAILEDSKIPPEDTOTAL,
       },
+      onclick: onClickHandler,
+      itemsData,
     },
     point: {
       sensitivity: 1000,

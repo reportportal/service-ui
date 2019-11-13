@@ -1,7 +1,24 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
+import track from 'react-tracking';
 import { URLS } from 'common/urls';
 import { fetch, debounce } from 'common/utils';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
@@ -20,19 +37,26 @@ const messages = defineMessages({
 });
 
 @injectIntl
+@track()
 export class SharedWidgetsListSection extends Component {
   static propTypes = {
     intl: intlShape,
     projectId: PropTypes.string.isRequired,
     currentDashboard: PropTypes.object.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
     selectedWidget: PropTypes.object,
     onSelectWidget: PropTypes.func,
+    scrollWidgetsEvents: PropTypes.object,
   };
 
   static defaultProps = {
     intl: {},
     selectedWidget: null,
     onSelectWidget: () => {},
+    scrollWidgetsEvents: null,
   };
 
   state = {
@@ -118,6 +142,7 @@ export class SharedWidgetsListSection extends Component {
       return;
     }
 
+    this.props.tracking.trackEvent(this.props.scrollWidgetsEvents);
     this.fetchWidgets({ page, searchValue });
   };
 
@@ -131,6 +156,7 @@ export class SharedWidgetsListSection extends Component {
       intl: { formatMessage },
       selectedWidget,
       onSelectWidget,
+      scrollWidgetsEvents,
     } = this.props;
     const { searchValue, widgets, loading } = this.state;
 
@@ -145,6 +171,7 @@ export class SharedWidgetsListSection extends Component {
           loading={loading}
           onLazyLoad={this.handleWidgetsListLoad}
           noItemsMessage={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)}
+          scrollWidgetsEvents={scrollWidgetsEvents}
         />
       </div>
     );

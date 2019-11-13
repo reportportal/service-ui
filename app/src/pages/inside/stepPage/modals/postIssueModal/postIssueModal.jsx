@@ -1,7 +1,24 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
+import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { fetch, updateSessionItem, getSessionItem } from 'common/utils';
@@ -22,7 +39,6 @@ import {
 import { VALUE_ID_KEY, VALUE_NAME_KEY } from 'components/fields/dynamicFieldsSection/constants';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
-import { INTEGRATION_NAMES_TITLES } from 'components/integrations';
 import { ISSUE_TYPE_FIELD_KEY } from 'components/integrations/elements/bts/constants';
 import { BetaBadge } from 'pages/inside/common/betaBadge';
 import { BtsIntegrationSelector } from 'pages/inside/common/btsIntegrationSelector';
@@ -34,7 +50,12 @@ import {
   INCLUDE_COMMENTS_KEY,
   LOG_QUANTITY,
 } from './constants';
-import { validate, createFieldsValidationConfig, getDataSectionConfig } from './utils';
+import {
+  validate,
+  createFieldsValidationConfig,
+  getDataSectionConfig,
+  getDefaultIssueModalConfig,
+} from './utils';
 import styles from './postIssueModal.scss';
 
 const cx = classNames.bind(styles);
@@ -98,6 +119,7 @@ const messages = defineMessages({
   form: 'postIssueForm',
   validate: (fields) => validate(fields, validationConfig),
 })
+@track()
 @connect(
   (state) => ({
     activeProject: activeProjectSelector(state),
@@ -129,22 +151,34 @@ export class PostIssueModal extends Component {
     data: PropTypes.shape({
       items: PropTypes.array,
       fetchFunc: PropTypes.func,
+      eventsInfo: PropTypes.object,
     }).isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
+  };
+
+  static defaultProps = {
+    data: {
+      items: [],
+      fetchFunc: () => {},
+      eventsInfo: {},
+    },
   };
 
   constructor(props) {
     super(props);
-    this.pluginNamesOptions = Object.keys(props.namedBtsIntegrations).map((key) => ({
-      value: key,
-      label: INTEGRATION_NAMES_TITLES[key],
-    }));
+    const { pluginName, integration, ...config } = getDefaultIssueModalConfig(
+      props.namedBtsIntegrations,
+      props.userId,
+    );
 
-    const pluginName = this.pluginNamesOptions[0].value;
     const {
       id,
       integrationParameters: { defectFormFields },
-    } = props.namedBtsIntegrations[pluginName][0];
-    const systemAuthConfig = this.getSystemAuthDefaultConfig(pluginName);
+    } = integration;
+    const systemAuthConfig = this.getSystemAuthDefaultConfig(pluginName, config);
     const fields = this.initIntegrationFields(defectFormFields, systemAuthConfig, pluginName);
 
     this.state = {
@@ -157,6 +191,7 @@ export class PostIssueModal extends Component {
   }
 
   onPost = () => (closeModal) => {
+    this.props.tracking.trackEvent(this.props.data.eventsInfo.postBtn);
     this.closeModal = closeModal;
     this.props.handleSubmit(this.prepareDataToSend)();
   };
@@ -171,6 +206,7 @@ export class PostIssueModal extends Component {
     const fields = this.initIntegrationFields(
       integrationParameters.defectFormFields,
       systemAuthConfig,
+      pluginName,
     );
 
     this.setState({
@@ -196,6 +232,10 @@ export class PostIssueModal extends Component {
     });
   };
 
+  onChangeCheckbox = (event) => {
+    this.props.tracking.trackEvent(event);
+  };
+
   getCloseConfirmationConfig = () => {
     if (!this.props.dirty) {
       return null;
@@ -206,10 +246,10 @@ export class PostIssueModal extends Component {
     };
   };
 
-  getSystemAuthDefaultConfig = (pluginName) => {
+  getSystemAuthDefaultConfig = (pluginName, config) => {
     const systemAuthConfig = {};
     if (this.isJiraIntegration(pluginName)) {
-      const storedConfig = getSessionItem(`${this.props.userId}_settings`) || {};
+      const storedConfig = config || getSessionItem(`${this.props.userId}_settings`) || {};
       systemAuthConfig.username = storedConfig.username;
     }
     return systemAuthConfig;
@@ -222,14 +262,17 @@ export class PostIssueModal extends Component {
     {
       name: INCLUDE_ATTACHMENTS_KEY,
       title: this.props.intl.formatMessage(messages.attachmentsHeader),
+      trackEvent: this.props.data.eventsInfo && this.props.data.eventsInfo.attachmentsSwitcher,
     },
     {
       name: INCLUDE_LOGS_KEY,
       title: this.props.intl.formatMessage(messages.logsHeader),
+      trackEvent: this.props.data.eventsInfo && this.props.data.eventsInfo.logsSwitcher,
     },
     {
       name: INCLUDE_COMMENTS_KEY,
       title: this.props.intl.formatMessage(messages.commentsHeader),
+      trackEvent: this.props.data.eventsInfo && this.props.data.eventsInfo.commentSwitcher,
     },
   ];
 
@@ -323,14 +366,16 @@ export class PostIssueModal extends Component {
         fetchFunc();
         this.props.hideScreenLockAction();
         this.closeModal();
+        const sessionConfig = {
+          pluginName,
+          integrationId,
+        };
 
         if (this.isJiraIntegration()) {
-          const sessionConfig = {
-            username: data.username,
-          };
-          updateSessionItem(`${userId}_settings`, sessionConfig);
+          sessionConfig.username = data.username;
         }
 
+        updateSessionItem(`${userId}_settings`, sessionConfig);
         this.props.showNotification({
           message: formatMessage(messages.postIssueSuccess),
           type: NOTIFICATION_TYPES.SUCCESS,
@@ -360,6 +405,7 @@ export class PostIssueModal extends Component {
     const {
       intl: { formatMessage },
       namedBtsIntegrations,
+      data: { eventsInfo = {} },
     } = this.props;
     const okButton = {
       text: formatMessage(messages.postButton),
@@ -368,6 +414,7 @@ export class PostIssueModal extends Component {
     };
     const cancelButton = {
       text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      eventInfo: eventsInfo.cancelBtn,
     };
     const CredentialsComponent = SYSTEM_CREDENTIALS_BLOCKS[this.state.pluginName];
 
@@ -382,6 +429,7 @@ export class PostIssueModal extends Component {
         okButton={okButton}
         cancelButton={cancelButton}
         closeConfirmation={this.getCloseConfirmationConfig()}
+        closeIconEventInfo={eventsInfo.closeIcon}
       >
         <form className={cx('post-issue-form')}>
           <BtsIntegrationSelector
@@ -411,7 +459,12 @@ export class PostIssueModal extends Component {
               </h4>
               <div className={cx('include-data-block')}>
                 {this.dataFieldsConfig.map((item) => (
-                  <FieldProvider key={item.name} name={item.name} format={Boolean}>
+                  <FieldProvider
+                    key={item.name}
+                    name={item.name}
+                    format={Boolean}
+                    onChange={() => this.onChangeCheckbox(item.trackEvent)}
+                  >
                     <InputCheckbox>
                       <span className={cx('switch-field-label')}>{item.title}</span>
                     </InputCheckbox>

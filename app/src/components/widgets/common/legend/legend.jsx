@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
@@ -23,6 +39,7 @@ export class Legend extends Component {
     colors: PropTypes.object,
     noTotal: PropTypes.bool,
     disabled: PropTypes.bool,
+    clickable: PropTypes.bool,
     onClick: PropTypes.func,
     onMouseOver: PropTypes.func,
     onMouseOut: PropTypes.func,
@@ -36,6 +53,7 @@ export class Legend extends Component {
     colors: {},
     noTotal: false,
     disabled: false,
+    clickable: true,
     onClick: () => {},
     onMouseOver: () => {},
     onMouseOut: () => {},
@@ -57,13 +75,14 @@ export class Legend extends Component {
 
   getElements = () => {
     const {
+      intl: { formatMessage },
+      defectTypes,
       items,
       uncheckedLegendItems,
       disabled,
+      clickable,
       noTotal,
       onMouseOut,
-      defectTypes,
-      intl: { formatMessage },
       colors,
     } = this.props;
 
@@ -79,9 +98,9 @@ export class Legend extends Component {
             disabled,
             unchecked: uncheckedLegendItems.indexOf(name) !== -1,
           })}
-          onClick={disabled ? null : this.onClick}
-          onMouseOver={this.onMouseOver}
-          onMouseOut={onMouseOut}
+          onClick={disabled || !clickable ? null : this.onClick}
+          onMouseOver={disabled ? null : this.onMouseOver}
+          onMouseOut={disabled ? null : onMouseOut}
         >
           <span
             className={cx('color-mark')}

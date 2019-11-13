@@ -1,6 +1,23 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { reduxForm } from 'redux-form';
+import track from 'react-tracking';
 import className from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { ModalLayout, withModal } from 'components/main/modal';
@@ -41,13 +58,19 @@ const messages = defineMessages({
   }),
 })
 @injectIntl
+@track()
 export class AddEditNotificationCaseModal extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
     data: PropTypes.shape({
       notificationCase: PropTypes.object,
       onConfirm: PropTypes.func,
       isNewCase: PropTypes.bool,
+      eventsInfo: PropTypes.object,
     }),
     initialize: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
@@ -74,8 +97,9 @@ export class AddEditNotificationCaseModal extends Component {
   render() {
     const {
       intl: { formatMessage },
-      data: { isNewCase, onConfirm },
+      data: { isNewCase, onConfirm, eventsInfo },
       handleSubmit,
+      tracking,
     } = this.props;
 
     return (
@@ -85,13 +109,18 @@ export class AddEditNotificationCaseModal extends Component {
         })}
         okButton={{
           text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
-          onClick: handleSubmit(onConfirm),
+          onClick: () => {
+            tracking.trackEvent(eventsInfo.saveBtn);
+            handleSubmit(onConfirm)();
+          },
         }}
         cancelButton={{
           text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+          eventInfo: eventsInfo.cancelBtn,
         }}
         closeConfirmation={this.getCloseConfirmationConfig()}
         className={cx('add-edit-notification-case-modal')}
+        closeIconEventInfo={eventsInfo.closeIcon}
       >
         <NotificationCaseFormFields />
       </ModalLayout>

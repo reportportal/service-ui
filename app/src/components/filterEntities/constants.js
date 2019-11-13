@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 export const CONDITION_CNT = 'cnt';
 export const CONDITION_NOT_CNT = '!cnt';
 export const CONDITION_EQ = 'eq';
@@ -35,3 +51,4 @@ export const ENTITY_IGNORE_ANALYZER = 'ignoreAnalyzer';
 export const ENTITY_AUTOANALYZE = 'autoAnalyzed';
 export const ENTITY_CREATION_DATE = 'creationDate';
 export const ENTITY_PATTERN_NAME = 'patternName';
+export const ENTITY_ISSUE_ID = 'issueId';

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { takeEvery, all, put, select, take } from 'redux-saga/effects';
 import {
   fetchDataAction,
@@ -5,6 +21,7 @@ import {
   FETCH_SUCCESS,
   FETCH_ERROR,
 } from 'controllers/fetch';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { activeProjectSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
 import { userFiltersSelector, updateProjectFilterPreferencesAction } from 'controllers/project';
@@ -69,6 +86,12 @@ function* updateLaunchesFilter({ payload: filter }) {
     ),
   );
   yield put(updateFilterSuccessAction(shallowFilter));
+  yield put(
+    showNotification({
+      messageId: 'updateFilterSuccess',
+      type: NOTIFICATION_TYPES.SUCCESS,
+    }),
+  );
 }
 
 function* changeActiveFilter({ payload: filterId }) {
@@ -128,6 +151,12 @@ function* saveNewFilter({ payload: filter }) {
   const newId = response.payload.id;
   const newFilter = { ...shallowFilter, id: newId };
   yield put(updateFilterSuccessAction(newFilter, filter.id));
+  yield put(
+    showNotification({
+      messageId: 'saveFilterSuccess',
+      type: NOTIFICATION_TYPES.SUCCESS,
+    }),
+  );
   yield put(updateProjectFilterPreferencesAction(newFilter.id, 'PUT'));
   yield put(changeActiveFilterAction(newId));
 }

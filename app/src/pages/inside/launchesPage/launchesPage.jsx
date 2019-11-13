@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -20,7 +36,7 @@ import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { MODAL_TYPE_IMPORT_LAUNCH } from 'pages/common/modals/importModal/constants';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { projectConfigSelector } from 'controllers/project';
-import { withPagination, DEFAULT_PAGINATION, SIZE_KEY } from 'controllers/pagination';
+import { withPagination, DEFAULT_PAGINATION, SIZE_KEY, PAGE_KEY } from 'controllers/pagination';
 import { showModalAction } from 'controllers/modal';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
@@ -230,7 +246,7 @@ export class LaunchesPage extends Component {
   static defaultProps = {
     level: '',
     launches: [],
-    activePage: 1,
+    activePage: DEFAULT_PAGINATION[PAGE_KEY],
     itemCount: null,
     pageCount: null,
     pageSize: DEFAULT_PAGINATION[SIZE_KEY],
@@ -275,14 +291,7 @@ export class LaunchesPage extends Component {
     finishedLaunchesCount: null,
   };
 
-  componentDidMount() {
-    const { highlightItemId } = this.props;
-    if (highlightItemId) {
-      this.onHighlightRow(highlightItemId);
-    }
-  }
-
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     if (!this.state.launchesInProgress.length && this.intervalId) {
       clearInterval(this.intervalId);
       this.intervalId = null;
@@ -294,6 +303,14 @@ export class LaunchesPage extends Component {
         5000,
       );
     }
+    if (
+      this.props.loading !== prevProps.loading &&
+      this.props.loading === false &&
+      !this.state.highlightedRowId &&
+      this.props.highlightItemId
+    ) {
+      this.onHighlightRow(this.props.highlightItemId);
+    }
   }
 
   componentWillUnmount() {
@@ -304,13 +321,13 @@ export class LaunchesPage extends Component {
   onHighlightRow = (highlightedRowId) => {
     this.setState({
       highlightedRowId,
-      isGridRowHighlighted: false,
+      isGridRowHighlighted: true,
     });
   };
 
   onGridRowHighlighted = () => {
     this.setState({
-      isGridRowHighlighted: true,
+      isGridRowHighlighted: false,
     });
   };
 
@@ -464,6 +481,11 @@ export class LaunchesPage extends Component {
     this.props.fetchLaunchesAction();
   };
 
+  unselectAndResetPage = () => {
+    this.props.unselectAllLaunchesAction();
+    this.resetPageNumber();
+  };
+
   deleteItem = (item) => this.deleteItems([item]);
 
   confirmDeleteItems = (items) => {
@@ -498,10 +520,21 @@ export class LaunchesPage extends Component {
       });
   };
 
+  isNotAllOwnLaunches = (launches) => {
+    const { userId } = this.props;
+    return launches.some((launch) => launch.owner !== userId);
+  };
+
   deleteItems = (launches) => {
     this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_DELETE_ACTION);
     const { intl, userId } = this.props;
     const selectedLaunches = launches || this.props.selectedLaunches;
+    const warning =
+      this.isNotAllOwnLaunches(selectedLaunches) &&
+      (selectedLaunches.length === 1
+        ? intl.formatMessage(messages.warning)
+        : intl.formatMessage(messages.warningMultiple));
+
     this.props.deleteItemsAction(selectedLaunches, {
       onConfirm: this.confirmDeleteItems,
       header:
@@ -513,10 +546,7 @@ export class LaunchesPage extends Component {
           ? intl.formatMessage(messages.deleteModalContent, { name: selectedLaunches[0].name })
           : intl.formatMessage(messages.deleteModalMultipleContent),
       userId,
-      warning:
-        selectedLaunches.length === 1
-          ? intl.formatMessage(messages.warning)
-          : intl.formatMessage(messages.warningMultiple),
+      warning,
       eventsInfo: {
         closeIcon: LAUNCHES_MODAL_EVENTS.CLOSE_ICON_DELETE_MODAL,
         cancelBtn: LAUNCHES_MODAL_EVENTS.CANCEL_BTN_DELETE_MODAL,
@@ -567,6 +597,7 @@ export class LaunchesPage extends Component {
   };
 
   openEditModal = (launch) => {
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_EDIT_LAUNCH_ACTION);
     this.props.showModalAction({
       id: 'editItemModal',
       data: {
@@ -578,6 +609,7 @@ export class LaunchesPage extends Component {
   };
 
   openEditItemsModal = (launches) => {
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_EDIT_LAUNCHES_ACTION);
     this.props.showModalAction({
       id: 'editItemsModal',
       data: {
@@ -645,13 +677,14 @@ export class LaunchesPage extends Component {
       selectedLaunches,
     } = this.props;
 
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_PROCEED_ITEMS_BUTTON);
     this.props.proceedWithValidItemsAction(operationName, selectedLaunches, operationArgs);
   };
 
   mergeLaunches = () => {
     this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_MERGE_ACTION);
     this.props.mergeLaunchesAction(this.props.selectedLaunches, {
-      fetchFunc: this.unselectAndFetchLaunches,
+      fetchFunc: this.unselectAndResetPage,
     });
   };
 
@@ -716,7 +749,6 @@ export class LaunchesPage extends Component {
     return (
       <FilterEntitiesContainer
         level={LEVEL_LAUNCH}
-        filterId={activeFilterId}
         entities={activeFilterConditions}
         onChange={onChangeFilter}
         render={({ onFilterAdd, ...rest }) => (
@@ -755,7 +787,7 @@ export class LaunchesPage extends Component {
                 onImportLaunch={this.openImportModal}
                 debugMode={debugMode}
                 onDelete={this.deleteItems}
-                activeFilterId={debugMode ? activeFilterId : ALL}
+                activeFilterId={debugMode ? ALL : activeFilterId}
                 onAddNewWidget={this.showWidgetWizard}
                 finishedLaunchesCount={finishedLaunchesCount}
               />

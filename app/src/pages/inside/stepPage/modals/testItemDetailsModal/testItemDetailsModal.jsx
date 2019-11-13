@@ -1,6 +1,23 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape } from 'react-intl';
 import { reduxForm } from 'redux-form';
@@ -25,7 +42,11 @@ import { getDuration } from 'common/utils/timeDateUtils';
 import { AccordionContainer } from 'components/main/accordionContainer';
 import { AttributeListField } from 'components/main/attributeList';
 import { canEditLaunch } from 'common/utils/permissions';
-import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import {
+  showDefaultErrorNotification,
+  showNotification,
+  NOTIFICATION_TYPES,
+} from 'controllers/notification';
 import { TestItemStatus } from 'pages/inside/common/testItemStatus';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { TestParameters } from 'pages/inside/common/testParameters';
@@ -54,9 +75,11 @@ const cx = classNames.bind(styles);
   }),
   {
     showNotification,
+    showDefaultErrorNotification,
     clearLogPageStackTrace,
   },
 )
+@track()
 @injectIntl
 export class TestItemDetailsModal extends Component {
   static propTypes = {
@@ -65,6 +88,7 @@ export class TestItemDetailsModal extends Component {
       item: PropTypes.object,
       type: PropTypes.string,
       fetchFunc: PropTypes.func,
+      eventsInfo: PropTypes.object,
     }).isRequired,
     launch: PropTypes.object,
     userProjectRole: PropTypes.string,
@@ -75,6 +99,11 @@ export class TestItemDetailsModal extends Component {
     handleSubmit: PropTypes.func.isRequired,
     currentProject: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
+    showDefaultErrorNotification: PropTypes.func.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
     clearLogPageStackTrace: PropTypes.func,
   };
 
@@ -148,19 +177,21 @@ export class TestItemDetailsModal extends Component {
     fetch(URLS.launchesItemsUpdate(currentProject, item.id, type), {
       method: 'put',
       data,
-    }).then(() => {
-      this.props.showNotification({
-        message: formatMessage(messages.itemUpdateSuccess),
-        type: NOTIFICATION_TYPES.SUCCESS,
-      });
-      fetchFunc();
-    });
+    })
+      .then(() => {
+        this.props.showNotification({
+          message: formatMessage(messages.itemUpdateSuccess),
+          type: NOTIFICATION_TYPES.SUCCESS,
+        });
+        fetchFunc();
+      })
+      .catch(this.props.showDefaultErrorNotification);
   };
 
   renderDetailsTab = (editable) => {
     const {
       intl,
-      data: { item },
+      data: { item, eventsInfo },
     } = this.props;
     return (
       <div className={cx('details-tab')}>
@@ -209,7 +240,10 @@ export class TestItemDetailsModal extends Component {
         {editable ? (
           <ModalField>
             <FieldProvider name="description">
-              <MarkdownEditor placeholder={intl.formatMessage(messages.descriptionPlaceholder)} />
+              <MarkdownEditor
+                onChangeEventInfo={eventsInfo.editDescription}
+                placeholder={intl.formatMessage(messages.descriptionPlaceholder)}
+              />
             </FieldProvider>
           </ModalField>
         ) : (
@@ -243,21 +277,24 @@ export class TestItemDetailsModal extends Component {
   render() {
     const {
       intl,
-      data: { item },
+      data: { item, eventsInfo },
       launch,
       userAccountRole,
       userProjectRole,
       userId,
       handleSubmit,
+      tracking,
     } = this.props;
     const okButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.SAVE),
       onClick: (closeModal) => {
+        tracking.trackEvent(eventsInfo.saveBtn);
         handleSubmit(this.updateItemAndCloseModal(closeModal))();
       },
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      eventInfo: eventsInfo.cancelBtn,
     };
 
     const editable = canEditLaunch(
@@ -273,6 +310,7 @@ export class TestItemDetailsModal extends Component {
         closeConfirmation={editable ? this.getCloseConfirmationConfig() : undefined}
         warningMessage={editable ? intl.formatMessage(messages.launchWarning) : ''}
         contentClassName={cx('tab-container')}
+        closeIconEventInfo={eventsInfo.closeIcon}
       >
         <ContainerWithTabs data={this.getTabsConfig(editable)} customClass={cx('tab-header')} />
       </ModalLayout>

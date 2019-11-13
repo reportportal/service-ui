@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
@@ -9,6 +25,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { reduxForm, formValueSelector, getFormSyncErrors, getFormMeta } from 'redux-form';
 import { connect } from 'react-redux';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
+import { showDefaultErrorNotification } from 'controllers/notification';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { SectionHeader } from 'components/main/sectionHeader';
 import { ModalLayout, withModal, ModalField } from 'components/main/modal';
@@ -30,7 +47,7 @@ const MERGE_FORM = 'launchMergeForm';
 const MERGE_TYPE_DEEP = 'DEEP';
 const MERGE_TYPE_BASIC = 'BASIC';
 const FIELD_LABEL_WIDTH = 130;
-const DESCRIPTION_SEPARATOR = '\n≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡\n';
+const DESCRIPTION_SEPARATOR = '\n≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡\n\n';
 const cx = classNames.bind(styles);
 const messages = defineMessages({
   MergeLaunchHeader: {
@@ -114,6 +131,7 @@ const formSyncErrorsSelector = getFormSyncErrors(MERGE_FORM);
   {
     showScreenLockAction,
     hideScreenLockAction,
+    showDefaultErrorNotification,
   },
 )
 @track()
@@ -122,6 +140,7 @@ export class LaunchMergeModal extends Component {
     intl: intlShape.isRequired,
     showScreenLockAction: PropTypes.func.isRequired,
     hideScreenLockAction: PropTypes.func.isRequired,
+    showDefaultErrorNotification: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     activeProject: PropTypes.string.isRequired,
     user: PropTypes.object.isRequired,
@@ -198,11 +217,15 @@ export class LaunchMergeModal extends Component {
     fetch(URLS.launchesMerge(this.props.activeProject), {
       method: 'post',
       data: values,
-    }).then(() => {
-      this.props.data.fetchFunc();
-      closeModal();
-      this.props.hideScreenLockAction();
-    });
+    })
+      .then(() => {
+        this.props.data.fetchFunc();
+        closeModal();
+      })
+      .catch(this.props.showDefaultErrorNotification)
+      .then(() => {
+        this.props.hideScreenLockAction();
+      });
   };
 
   render() {

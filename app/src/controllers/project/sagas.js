@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { takeEvery, all, put, select, call } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import {
@@ -48,7 +64,7 @@ import {
   fetchProjectPreferencesSuccessAction,
   updateProjectFilterPreferencesAction,
 } from './actionCreators';
-import { projectNotificationsConfigurationSelector } from './selectors';
+import { projectNotificationsConfigurationSelector, patternsSelector } from './selectors';
 
 function* updateDefectSubType({ payload: subTypes }) {
   try {
@@ -151,6 +167,23 @@ function* watchUpdateProjectNotificationsConfig() {
   yield takeEvery(UPDATE_NOTIFICATIONS_CONFIG, updateProjectNotificationsConfig);
 }
 
+function* updatePAState(PAEnabled) {
+  const projectId = yield select(projectIdSelector);
+  const updatedConfig = {
+    configuration: {
+      attributes: {
+        [PA_ATTRIBUTE_ENABLED_KEY]: PAEnabled.toString(),
+      },
+    },
+  };
+
+  yield call(fetch, URLS.project(projectId), {
+    method: 'put',
+    data: updatedConfig,
+  });
+  yield put(updateConfigurationAttributesAction(updatedConfig));
+}
+
 function* addPattern({ payload: pattern }) {
   try {
     const projectId = yield select(projectIdSelector);
@@ -158,6 +191,10 @@ function* addPattern({ payload: pattern }) {
       method: 'post',
       data: pattern,
     });
+    const patterns = yield select(patternsSelector);
+    if (!patterns.length) {
+      yield call(updatePAState, true);
+    }
     yield put(addPatternSuccessAction({ ...pattern, ...response }));
     yield put(
       showNotification({
@@ -220,23 +257,10 @@ function* watchDeletePattern() {
   yield takeEvery(DELETE_PATTERN, deletePattern);
 }
 
-function* updatePAState({ payload: PAEnabled }) {
+function* updatePAStateWithNotification({ payload: PAEnabled }) {
   yield put(showScreenLockAction());
   try {
-    const projectId = yield select(projectIdSelector);
-    const updatedConfig = {
-      configuration: {
-        attributes: {
-          [PA_ATTRIBUTE_ENABLED_KEY]: PAEnabled.toString(),
-        },
-      },
-    };
-
-    yield call(fetch, URLS.project(projectId), {
-      method: 'put',
-      data: updatedConfig,
-    });
-    yield put(updateConfigurationAttributesAction(updatedConfig));
+    yield call(updatePAState, PAEnabled);
     yield put(
       showNotification({
         messageId: 'updatePAStateSuccess',
@@ -251,15 +275,19 @@ function* updatePAState({ payload: PAEnabled }) {
 }
 
 function* watchUpdatePAState() {
-  yield takeEvery(UPDATE_PA_STATE, updatePAState);
+  yield takeEvery(UPDATE_PA_STATE, updatePAStateWithNotification);
 }
 
 function* fetchProject({ payload: { projectId, isAdminAccess } }) {
-  const project = yield call(fetch, URLS.project(projectId));
-  yield put(fetchProjectSuccessAction(project));
-  yield put(setProjectIntegrationsAction(project.integrations));
-  if (!isAdminAccess) {
-    yield put(fetchProjectPreferencesAction(projectId));
+  try {
+    const project = yield call(fetch, URLS.project(projectId));
+    yield put(fetchProjectSuccessAction(project));
+    yield put(setProjectIntegrationsAction(project.integrations));
+    if (!isAdminAccess) {
+      yield put(fetchProjectPreferencesAction(projectId));
+    }
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
   }
 }
 

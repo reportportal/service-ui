@@ -1,8 +1,29 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import {
+  LAUNCHES_MODAL_EVENTS,
+  getRunAnalysisPatternAnalysisModalEvent,
+} from 'components/main/analytics/events';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { LAUNCH_ANALYZE_TYPES } from 'common/constants/launchAnalyzeTypes';
 import { setStorageItem, getStorageItem } from 'common/utils';
@@ -48,12 +69,17 @@ const messages = defineMessages({
 
 @withModal('launchPatternAnalysisModal')
 @injectIntl
+@track()
 export class LaunchPatternAnalysisModal extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     data: PropTypes.shape({
       item: PropTypes.object.isRequired,
       onConfirm: PropTypes.func.isRequired,
+    }).isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
     }).isRequired,
   };
 
@@ -98,6 +124,7 @@ export class LaunchPatternAnalysisModal extends Component {
   };
 
   analysisAndClose = (closeModal) => {
+    this.props.tracking.trackEvent(LAUNCHES_MODAL_EVENTS.OK_BTN_PATTERN_ANALYSIS_MODAL);
     const errorMessage = this.validate();
     if (errorMessage) {
       this.setState({
@@ -116,6 +143,7 @@ export class LaunchPatternAnalysisModal extends Component {
       launchId: id,
       analyzerMode: ANALYZER_MODE.ALL,
     };
+    this.props.tracking.trackEvent(getRunAnalysisPatternAnalysisModalEvent(analyzeItemsMode));
     this.props.data.onConfirm(data);
     closeModal();
   };
@@ -161,6 +189,7 @@ export class LaunchPatternAnalysisModal extends Component {
     };
     const cancelButton = {
       text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      eventInfo: LAUNCHES_MODAL_EVENTS.CANCEL_BTN_PATTERN_ANALYSIS_MODAL,
     };
     const { errorMessage } = this.state;
     return (
@@ -168,10 +197,11 @@ export class LaunchPatternAnalysisModal extends Component {
         title={formatMessage(messages.MODAL_TITLE)}
         okButton={okButton}
         cancelButton={cancelButton}
+        closeIconEventInfo={LAUNCHES_MODAL_EVENTS.CLOSE_BTN_PATTERN_ANALYSIS_MODAL}
         warningMessage={errorMessage}
       >
         <p className={cx('launch-analysis-modal-text')}>{formatMessage(messages.OPTIONS_TITLE)}</p>
-        <ul className={cx(['launch-analysis-modal-list', 'launch-analysis-modal-list-last'])}>
+        <ul className={cx('launch-analysis-modal-list', 'launch-analysis-modal-list-last')}>
           {this.renderOptions()}
         </ul>
       </ModalLayout>

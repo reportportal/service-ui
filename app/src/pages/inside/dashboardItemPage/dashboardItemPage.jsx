@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component, Fragment } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
@@ -173,6 +189,7 @@ export class DashboardItemPage extends Component {
     } = this.props;
     const warning =
       dashboard.owner === userId ? '' : formatMessage(messages.deleteModalWarningMessage);
+    this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.DELETE_DASHBOARD);
     this.props.showModalAction({
       id: 'deleteItemsModal',
       data: {
@@ -194,6 +211,8 @@ export class DashboardItemPage extends Component {
 
   onEditDashboardItem = () => {
     const { showModalAction: showModal, editDashboard, dashboard } = this.props;
+
+    this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.EDIT_DASHBOARD_BTN);
     showModal({
       id: 'dashboardAddEditModal',
       data: {
@@ -272,23 +291,42 @@ export class DashboardItemPage extends Component {
         onConfirm: this.addWidget,
         eventsInfo: {
           closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_ADD_WIDGET_MODAL,
+          cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_ADD_WIDGET_MODAL,
+          changeName: DASHBOARD_PAGE_EVENTS.WIDGET_NAME_ADD_WIDGET_MODAL,
           chooseWidgetType: DASHBOARD_PAGE_EVENTS.CHOOSE_WIDGET_TYPE_ADD_WIDGET_MODAL,
           nextStep: DASHBOARD_PAGE_EVENTS.NEXT_STEP_ADD_WIDGET_MODAL,
           prevStep: DASHBOARD_PAGE_EVENTS.PREVIOUS_STEP_ADD_WIDGET_MODAL,
           changeDescription: DASHBOARD_PAGE_EVENTS.ENTER_WIDGET_DESCRIPTION_ADD_WIDGET_MODAL,
           shareWidget: DASHBOARD_PAGE_EVENTS.SHARE_WIDGET_ADD_WIDGET_MODAL,
           addWidget: DASHBOARD_PAGE_EVENTS.ADD_BTN_ADD_WIDGET_MODAL,
+          editFilterIcon: DASHBOARD_PAGE_EVENTS.EDIT_FILTER_ADD_WIDGET_MODAL,
+          enterSearchParams: DASHBOARD_PAGE_EVENTS.ENTER_SEARCH_PARAMS_ADD_WIDGET_MODAL,
+          chooseFilter: DASHBOARD_PAGE_EVENTS.CHOOSE_FILTER_ADD_WIDGET_MODAL,
+          addFilter: DASHBOARD_PAGE_EVENTS.ADD_FILTER_BTN_ADD_WIDGET_MODAL,
+          cancelAddNewFilter: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_ADD_NEW_FILTER_ADD_WIDGET_MODAL,
+          addNewFilter: DASHBOARD_PAGE_EVENTS.ADD_BTN_ADD_NEW_FILTER_ADD_WIDGET_MODAL,
+          sortingSelectParameters: DASHBOARD_PAGE_EVENTS.SELECT_SORTING_FILTER_ADD_WIDGET_MODAL,
+          editFilterName: DASHBOARD_PAGE_EVENTS.EDIT_FILTER_NAME_ADD_WIDGET_MODAL,
+          selectParamsForFilter: DASHBOARD_PAGE_EVENTS.SELECT_PARAMS_FILTER_ADD_WIDGET_MODAL,
         },
       },
     });
   };
 
   showAddSharedWidgetModal = () => {
+    this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.ADD_SHARED_WIDGET_BTN);
     this.props.showModalAction({
       id: 'addSharedWidgetModal',
       data: {
         onConfirm: this.addWidget,
         currentDashboard: this.props.dashboard,
+        eventsInfo: {
+          closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_SHARE_WIDGET_MODAL,
+          cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_SHARE_WIDGET_MODAL,
+          addBtn: DASHBOARD_PAGE_EVENTS.ADD_BTN_SHARE_WIDGET_MODAL,
+          chooseRadioBtn: DASHBOARD_PAGE_EVENTS.WIDGET_TYPE_SHARE_WIDGET_MODAL,
+          scrollWidgets: DASHBOARD_PAGE_EVENTS.SCROLL_WIDGET_SHARE_WIDGET_MODAL,
+        },
       },
     });
   };
@@ -305,7 +343,7 @@ export class DashboardItemPage extends Component {
       fullScreenMode,
       activeProject,
       changeFullScreenModeAction: changeFullScreenMode,
-      userInfo: { userRole },
+      userInfo: { userRole, userId },
       projectRole,
     } = this.props;
 
@@ -377,6 +415,7 @@ export class DashboardItemPage extends Component {
                 activeProject={activeProject}
                 showNotification={this.props.showNotification}
                 updateDashboardWidgetsAction={this.props.updateDashboardWidgetsAction}
+                currentUser={userId}
               />
               {fullScreenMode && (
                 <i className={cx('icon-close')} onClick={this.toggleFullscreen}>

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
@@ -13,12 +29,18 @@ import {
 } from 'controllers/testItem';
 import { HISTORY_PAGE, payloadSelector } from 'controllers/pages';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
-import { availableBtsIntegrationsSelector, isPostIssueActionAvailable } from 'controllers/plugins';
+import {
+  availableBtsIntegrationsSelector,
+  isPostIssueActionAvailable,
+  isBtsPluginsExistSelector,
+  enabledBtsPluginsSelector,
+} from 'controllers/plugins';
 import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
 import { SUITES_PAGE_EVENTS } from 'components/main/analytics/events/suitesPageEvents';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
+import { getIssueTitle } from 'pages/inside/common/utils';
 import { LEVEL_STEP, LEVEL_SUITE, LEVEL_TEST } from 'common/constants/launchLevels';
 import { canBulkEditLaunches } from 'common/utils/permissions';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -69,14 +91,6 @@ const messages = defineMessages({
     id: 'ActionPanel.actionsBtnTooltip',
     defaultMessage: ' Select several items to processing',
   },
-  noBugTrackingSystemToLinkIssue: {
-    id: 'ActionPanel.noBugTrackingSystemToLinkIssue',
-    defaultMessage: 'Configure bug tracking system to link issue',
-  },
-  noBugTrackingSystemToPostIssue: {
-    id: 'ActionPanel.noBugTrackingSystemToPostIssue',
-    defaultMessage: 'Configure bug tracking system to post issue',
-  },
 });
 
 @connect(
@@ -88,6 +102,8 @@ const messages = defineMessages({
     btsIntegrations: availableBtsIntegrationsSelector(state),
     accountRole: userAccountRoleSelector(state),
     projectRole: activeProjectRoleSelector(state),
+    isBtsPluginsExist: isBtsPluginsExistSelector(state),
+    enabledBtsPlugins: enabledBtsPluginsSelector(state),
   }),
   {
     restorePath: restorePathAction,
@@ -128,6 +144,8 @@ export class ActionPanel extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    isBtsPluginsExist: PropTypes.bool,
+    enabledBtsPlugins: PropTypes.array,
   };
 
   static defaultProps = {
@@ -155,6 +173,8 @@ export class ActionPanel extends Component {
     listView: false,
     btsIntegrations: [],
     deleteDisabled: false,
+    isBtsPluginsExist: false,
+    enabledBtsPlugins: [],
   };
 
   onClickHistory = () => {
@@ -177,7 +197,7 @@ export class ActionPanel extends Component {
 
   createStepActionDescriptors = () => {
     const {
-      intl,
+      intl: { formatMessage },
       tracking,
       debugMode,
       onEditDefects,
@@ -189,20 +209,29 @@ export class ActionPanel extends Component {
       onIncludeInAA,
       onDelete,
       btsIntegrations,
+      isBtsPluginsExist,
+      enabledBtsPlugins,
       accountRole,
       projectRole,
     } = this.props;
     const isPostIssueUnavailable = !isPostIssueActionAvailable(btsIntegrations);
+    const issueTitle = getIssueTitle(
+      formatMessage,
+      btsIntegrations,
+      isBtsPluginsExist,
+      enabledBtsPlugins,
+      isPostIssueUnavailable,
+    );
 
     return [
       {
-        label: intl.formatMessage(messages.editItems),
+        label: formatMessage(messages.editItems),
         value: 'action-edit',
         hidden: !canBulkEditLaunches(accountRole, projectRole),
         onClick: onEditItems,
       },
       {
-        label: intl.formatMessage(messages.editDefects),
+        label: formatMessage(messages.editDefects),
         value: 'action-edit-defects',
         onClick: (data) => {
           tracking.trackEvent(STEP_PAGE_EVENTS.EDIT_DEFECT_ACTION);
@@ -210,51 +239,47 @@ export class ActionPanel extends Component {
         },
       },
       {
-        label: intl.formatMessage(messages.postIssue),
+        label: formatMessage(messages.postIssue),
         value: 'action-post-issue',
         hidden: debugMode,
         disabled: isPostIssueUnavailable,
-        title:
-          (isPostIssueUnavailable && intl.formatMessage(messages.noBugTrackingSystemToPostIssue)) ||
-          '',
+        title: isPostIssueUnavailable ? issueTitle : '',
         onClick: () => {
           tracking.trackEvent(STEP_PAGE_EVENTS.POST_BUG_ACTION);
           onPostIssue();
         },
       },
       {
-        label: intl.formatMessage(messages.linkIssue),
+        label: formatMessage(messages.linkIssue),
         value: 'action-link-issue',
         hidden: debugMode,
         disabled: !btsIntegrations.length,
-        title: btsIntegrations.length
-          ? ''
-          : intl.formatMessage(messages.noBugTrackingSystemToLinkIssue),
+        title: btsIntegrations.length ? '' : issueTitle,
         onClick: () => {
           tracking.trackEvent(STEP_PAGE_EVENTS.LOAD_BUG_ACTION);
           onLinkIssue();
         },
       },
       {
-        label: intl.formatMessage(messages.unlinkIssue),
+        label: formatMessage(messages.unlinkIssue),
         value: 'action-unlink-issue',
         hidden: debugMode,
         onClick: onUnlinkIssue,
       },
       {
-        label: intl.formatMessage(messages.ignoreInAA),
+        label: formatMessage(messages.ignoreInAA),
         value: 'action-ignore-in-AA',
         hidden: debugMode,
         onClick: onIgnoreInAA,
       },
       {
-        label: intl.formatMessage(messages.includeInAA),
+        label: formatMessage(messages.includeInAA),
         value: 'action-include-into-AA',
         hidden: debugMode,
         onClick: onIncludeInAA,
       },
       {
-        label: intl.formatMessage(COMMON_LOCALE_KEYS.DELETE),
+        label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
         value: 'action-delete',
         onClick: onDelete,
       },
@@ -339,13 +364,21 @@ export class ActionPanel extends Component {
           {!listView &&
             !debugMode && (
               <div className={cx('action-button')}>
-                <GhostButton icon={HistoryIcon} onClick={this.onClickHistory}>
+                <GhostButton
+                  disabled={!!selectedItems.length}
+                  icon={HistoryIcon}
+                  onClick={this.onClickHistory}
+                >
                   <FormattedMessage id="ActionPanel.history" defaultMessage="History" />
                 </GhostButton>
               </div>
             )}
           <div className={cx('action-button')}>
-            <GhostButton icon={RefreshIcon} onClick={this.onClickRefresh}>
+            <GhostButton
+              disabled={!!selectedItems.length}
+              icon={RefreshIcon}
+              onClick={this.onClickRefresh}
+            >
               <FormattedMessage id="Common.refresh" defaultMessage="Refresh" />
             </GhostButton>
           </div>

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
@@ -20,7 +36,7 @@ const cx = classNames.bind(styles);
 const messages = defineMessages({
   dashboardNamePlaceholder: {
     id: 'DashboardForm.dashboardNamePlaceholder',
-    defaultMessage: 'Enter Dashboard Name',
+    defaultMessage: 'Enter dashboard name',
   },
   dashboardNameLabel: {
     id: 'DashboardForm.dashboardNameLabel',
@@ -28,7 +44,7 @@ const messages = defineMessages({
   },
   dashboardDescriptionPlaceholder: {
     id: 'DashboardForm.dashboardDescriptionPlaceholder',
-    defaultMessage: 'Enter Dashboard Description',
+    defaultMessage: 'Enter dashboard description',
   },
   dashboardDescriptionLabel: {
     id: 'DashboardForm.dashboardDescriptionLabel',
@@ -59,6 +75,8 @@ const messages = defineMessages({
     defaultMessage: 'Cancel',
   },
 });
+
+const LABEL_WIDTH = 90;
 
 const createDashboardNameValidator = (dashboardItems, dashboardItem) =>
   composeBoundValidators([
@@ -127,7 +145,7 @@ export class AddEditModal extends Component {
   submitFormAndCloseModal = (closeModal) => (item) => {
     const {
       tracking,
-      data: { dashboardItem, eventsInfo },
+      data: { dashboardItem, eventsInfo = {} },
       dirty,
     } = this.props;
     if (dirty) {
@@ -141,12 +159,11 @@ export class AddEditModal extends Component {
     const {
       intl,
       handleSubmit,
-      data: { type, eventsInfo },
+      data: { type, eventsInfo = {} },
     } = this.props;
     const submitText = intl.formatMessage(messages[`${type}ModalSubmitButtonText`]);
     const title = intl.formatMessage(messages[`${type}ModalTitle`]);
     const cancelText = intl.formatMessage(messages.modalCancelButtonText);
-    const labelWidth = 70;
 
     return (
       <ModalLayout
@@ -168,7 +185,7 @@ export class AddEditModal extends Component {
         <form onSubmit={(event) => event.preventDefault()} className={cx('add-dashboard-form')}>
           <ModalField
             label={intl.formatMessage(messages.dashboardNameLabel)}
-            labelWidth={labelWidth}
+            labelWidth={LABEL_WIDTH}
           >
             <FieldProvider name="name" type="text">
               <FieldErrorHint>
@@ -181,7 +198,7 @@ export class AddEditModal extends Component {
           </ModalField>
           <ModalField
             label={intl.formatMessage(messages.dashboardDescriptionLabel)}
-            labelWidth={labelWidth}
+            labelWidth={LABEL_WIDTH}
           >
             <FieldProvider
               name="description"
@@ -192,7 +209,7 @@ export class AddEditModal extends Component {
           </ModalField>
           <ModalField
             label={intl.formatMessage(messages.dashboardShareLabel)}
-            labelWidth={labelWidth}
+            labelWidth={LABEL_WIDTH}
           >
             <FieldProvider name="share" type="checkbox" format={Boolean} parse={Boolean}>
               <InputBigSwitcher onChangeEventInfo={eventsInfo.shareSwitcher} />

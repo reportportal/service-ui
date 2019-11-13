@@ -1,4 +1,20 @@
-import React, { Component, Fragment } from 'react';
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import React, { Component } from 'react';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
@@ -47,6 +63,7 @@ export class SimpleWidget extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    dashboardOwner: PropTypes.string,
   };
 
   static defaultProps = {
@@ -55,6 +72,7 @@ export class SimpleWidget extends Component {
     isModifiable: false,
     isFullscreen: false,
     isPrintMode: false,
+    dashboardOwner: '',
   };
 
   constructor(props) {
@@ -67,7 +85,6 @@ export class SimpleWidget extends Component {
         content: {},
         contentParameters: {},
       },
-      uncheckedLegendItems: [],
       userSettings: {},
     };
   }
@@ -88,15 +105,18 @@ export class SimpleWidget extends Component {
     this.setState({ userSettings: { ...this.state.userSettings, ...settings } }, callback);
   };
 
-  onChangeWidgetLegend = (itemId, callback = () => {}) => {
-    const uncheckedItemIndex = this.state.uncheckedLegendItems.indexOf(itemId);
-    const uncheckedLegendItems = [...this.state.uncheckedLegendItems];
+  onChangeWidgetLegend = (itemId, callback) => {
+    const uncheckedItemIndex = this.uncheckedLegendItems.indexOf(itemId);
+    const uncheckedLegendItems = [...this.uncheckedLegendItems];
     if (uncheckedItemIndex !== -1) {
       uncheckedLegendItems.splice(uncheckedItemIndex, 1);
     } else {
       uncheckedLegendItems.push(itemId);
     }
-    this.setState({ uncheckedLegendItems }, callback);
+    this.uncheckedLegendItems = uncheckedLegendItems;
+    if (callback) {
+      this.forceUpdate(callback);
+    }
   };
 
   getWidgetOptions = () => (this.state.widget.contentParameters || {}).widgetOptions || {};
@@ -107,7 +127,7 @@ export class SimpleWidget extends Component {
 
   getWidgetContent = () => {
     const { widgetType, isPrintMode } = this.props;
-    const { widget, uncheckedLegendItems, queryParameters, userSettings } = this.state;
+    const { widget, queryParameters, userSettings } = this.state;
 
     if (this.state.loading) {
       return <SpinningPreloader />;
@@ -123,7 +143,7 @@ export class SimpleWidget extends Component {
       Chart && (
         <Chart
           widget={widget}
-          uncheckedLegendItems={uncheckedLegendItems}
+          uncheckedLegendItems={this.uncheckedLegendItems}
           onChangeLegend={this.onChangeWidgetLegend}
           isFullscreen={this.props.isFullscreen}
           container={this.node}
@@ -154,6 +174,8 @@ export class SimpleWidget extends Component {
     }
     return url;
   };
+
+  uncheckedLegendItems = [];
 
   showWidget = () => {
     this.setState({
@@ -224,11 +246,31 @@ export class SimpleWidget extends Component {
   };
 
   showEditWidgetModal = () => {
+    this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.EDIT_WIDGET);
     this.props.showModalAction({
       id: 'editWidgetModal',
       data: {
         widget: this.state.widget,
         onConfirm: this.fetchWidget,
+        eventsInfo: {
+          closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_EDIT_WIDGET_MODAL,
+          cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_EDIT_WIDGET_MODAL,
+          changeName: DASHBOARD_PAGE_EVENTS.WIDGET_NAME_EDIT_WIDGET_MODAL,
+          changeDescription: DASHBOARD_PAGE_EVENTS.WIDGET_DESCRIPTION_EDIT_WIDGET_MODAL,
+          shareWidget: DASHBOARD_PAGE_EVENTS.SHARE_WIDGET_EDIT_WIDGET_MODAL,
+          okBtn: DASHBOARD_PAGE_EVENTS.SAVE_BTN_EDIT_WIDGET_MODAL,
+          editFilterIcon: DASHBOARD_PAGE_EVENTS.EDIT_FILTER_ICON_EDIT_WIDGET_MODAL,
+          enterSearchParams: DASHBOARD_PAGE_EVENTS.ENTER_SEARCH_PARAMS_EDIT_WIDGET_MODAL,
+          chooseFilter: DASHBOARD_PAGE_EVENTS.CHOOSE_FILTER_EDIT_WIDGET_MODAL,
+          addFilter: DASHBOARD_PAGE_EVENTS.ADD_FILTER_BTN_EDIT_WIDGET_MODAL,
+          cancelAddNewFilter: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_ADD_NEW_FILTER_EDIT_WIDGET_MODAL,
+          addNewFilter: DASHBOARD_PAGE_EVENTS.ADD_NEW_FILTER_BTN_EDIT_WIDGET_MODAL,
+          editFilterName: DASHBOARD_PAGE_EVENTS.EDIT_FILTER_NAME_EDIT_WIDGET_MODAL,
+          sortingSelectParameters: DASHBOARD_PAGE_EVENTS.SORTING_FOR_NEW_FILTER_EDIT_WIDGET_MODAL,
+          selectParamsForFilter: DASHBOARD_PAGE_EVENTS.PARAMS_FOR_FILTER_EDIT_WIDGET_MODAL,
+          submitChanges: DASHBOARD_PAGE_EVENTS.SUBMIT_CHANGES_EDIT_WIDGET_MODAL,
+          cancelEditFilter: DASHBOARD_PAGE_EVENTS.CANCEL_EDIT_FILTER_EDIT_WIDGET_MODAL,
+        },
       },
     });
   };
@@ -240,13 +282,18 @@ export class SimpleWidget extends Component {
       data: {
         widget: this.state.widget,
         onConfirm: () => this.props.onDelete(this.props.widgetId),
+        eventsInfo: {
+          closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_DELETE_WIDGET_MODAL,
+          cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_DELETE_WIDGET_MODAL,
+          deleteBtn: DASHBOARD_PAGE_EVENTS.DELETE_BTN_DELETE_WIDGET_MODAL,
+        },
       },
     });
   };
 
   render() {
     const { widget, visible } = this.state;
-    const { isFullscreen, widgetType, isModifiable, isPrintMode } = this.props;
+    const { isFullscreen, widgetType, isModifiable, isPrintMode, dashboardOwner } = this.props;
     const widgetOptions = this.getWidgetOptions();
     const headerData = {
       owner: widget.owner,
@@ -262,25 +309,24 @@ export class SimpleWidget extends Component {
 
     return (
       <div className={cx('widget-container', { disabled: isFullscreen })}>
-        <Fragment>
-          <div
-            className={cx('widget-header', 'draggable-field', {
-              modifiable: isModifiable,
-            })}
-          >
-            <WidgetHeader
-              data={headerData}
-              onRefresh={this.fetchWidget}
-              onDelete={this.showDeleteWidgetModal}
-              onEdit={this.showEditWidgetModal}
-              customClass={cx('common-control')}
-              isPrintMode={isPrintMode}
-            />
-          </div>
-          <div ref={this.getWidgetNode} className={cx('widget', { hidden: !visible })}>
-            {this.getWidgetContent()}
-          </div>
-        </Fragment>
+        <div
+          className={cx('widget-header', 'draggable-field', {
+            modifiable: isModifiable,
+          })}
+        >
+          <WidgetHeader
+            data={headerData}
+            onRefresh={this.fetchWidget}
+            onDelete={this.showDeleteWidgetModal}
+            onEdit={this.showEditWidgetModal}
+            customClass={cx('common-control')}
+            isPrintMode={isPrintMode}
+            dashboardOwner={dashboardOwner}
+          />
+        </div>
+        <div ref={this.getWidgetNode} className={cx('widget', { hidden: !visible })}>
+          {this.getWidgetContent()}
+        </div>
       </div>
     );
   }

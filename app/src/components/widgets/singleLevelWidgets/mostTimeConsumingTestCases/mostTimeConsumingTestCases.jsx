@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
@@ -23,7 +39,7 @@ const localMessages = defineMessages({
 @injectIntl
 @connect(
   (state) => ({
-    project: activeProjectSelector(state),
+    projectId: activeProjectSelector(state),
   }),
   {
     navigate: (linkAction) => linkAction,
@@ -34,7 +50,7 @@ export class MostTimeConsumingTestCases extends Component {
     intl: intlShape.isRequired,
     widget: PropTypes.object.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
-    project: PropTypes.string.isRequired,
+    projectId: PropTypes.string.isRequired,
     navigate: PropTypes.func.isRequired,
     isPreview: PropTypes.bool,
     height: PropTypes.number,
@@ -49,14 +65,14 @@ export class MostTimeConsumingTestCases extends Component {
 
   launchNameClickHandler = () => {
     const {
-      project,
+      projectId,
       widget: { content: { latestLaunch = {} } = {} },
       navigate,
     } = this.props;
 
     const navigationParams = {
       payload: {
-        projectId: project,
+        projectId,
         filterId: ALL,
         testItemIds: latestLaunch.id,
       },
@@ -77,7 +93,7 @@ export class MostTimeConsumingTestCases extends Component {
       height,
       isPreview,
       navigate,
-      project,
+      projectId,
       observer,
       container,
     } = this.props;
@@ -97,7 +113,7 @@ export class MostTimeConsumingTestCases extends Component {
             widget={widget}
             height={height}
             isPreview={isPreview}
-            project={project}
+            projectId={projectId}
             navigate={navigate}
             observer={observer}
             container={container}

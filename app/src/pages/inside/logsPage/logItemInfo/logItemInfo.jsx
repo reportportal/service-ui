@@ -1,10 +1,28 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { DefectType } from 'pages/inside/stepPage/stepGrid/defectType';
+import { getIssueTitle } from 'pages/inside/common/utils';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import {
   linkIssueAction,
@@ -24,7 +42,12 @@ import {
 import { getDefectTypeSelector } from 'controllers/project';
 import { TO_INVESTIGATE } from 'common/constants/defectTypes';
 import { MANY } from 'common/constants/launchStatuses';
-import { availableBtsIntegrationsSelector, isPostIssueActionAvailable } from 'controllers/plugins';
+import {
+  availableBtsIntegrationsSelector,
+  isPostIssueActionAvailable,
+  isBtsPluginsExistSelector,
+  enabledBtsPluginsSelector,
+} from 'controllers/plugins';
 import { connectRouter } from 'common/utils';
 import LinkIcon from 'common/img/link-inline.svg';
 import DownLeftArrowIcon from 'common/img/down-left-arrow-inline.svg';
@@ -57,17 +80,17 @@ const messages = defineMessages({
     id: 'LogItemInfo.linkIssue',
     defaultMessage: 'Link issue',
   },
-  noBugTrackingSystemToLinkIssue: {
-    id: 'LogItemInfo.noBugTrackingSystemToLinkIssue',
-    defaultMessage: 'Configure bug tracking system to link issue',
-  },
   noDefectTypeToLinkIssue: {
     id: 'LogItemInfo.noDefectTypeToLinkIssue',
     defaultMessage: "You can't link issue if item has no defect type",
   },
-  noBugTrackingSystemToPostIssue: {
-    id: 'LogItemInfo.noBugTrackingSystemToPostIssue',
-    defaultMessage: 'Configure bug tracking system to post issue',
+  noDefectTypeToPostIssue: {
+    id: 'LogItemInfo.noDefectTypeToPostIssue',
+    defaultMessage: "You can't post issue if item has no defect type",
+  },
+  noDefectTypeToCopySendDefect: {
+    id: 'LogItemInfo.noDefectTypeToCopySendDefect',
+    defaultMessage: "You can't copy/send defect if item has no defect type",
   },
   retries: {
     id: 'LogItemInfo.retries',
@@ -83,6 +106,8 @@ const messages = defineMessages({
     retryItemId: activeRetryIdSelector(state),
     retries: retriesSelector(state),
     getDefectType: getDefectTypeSelector(state),
+    isBtsPluginsExist: isBtsPluginsExistSelector(state),
+    enabledBtsPlugins: enabledBtsPluginsSelector(state),
   }),
   {
     linkIssueAction,
@@ -92,6 +117,7 @@ const messages = defineMessages({
     showModalAction,
   },
 )
+@track()
 @connectRouter(
   () => {},
   {
@@ -113,16 +139,21 @@ export class LogItemInfo extends Component {
     btsIntegrations: PropTypes.array.isRequired,
     fetchFunc: PropTypes.func.isRequired,
     showModalAction: PropTypes.func.isRequired,
-    onHighlightRow: PropTypes.func.isRequired,
     onToggleSauceLabsIntegrationView: PropTypes.func.isRequired,
     isSauceLabsIntegrationView: PropTypes.bool.isRequired,
     debugMode: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
     logItem: PropTypes.object,
     updateRetryId: PropTypes.func,
     retryItemId: PropTypes.number,
     retries: PropTypes.arrayOf(PropTypes.object),
     getDefectType: PropTypes.func,
+    isBtsPluginsExist: PropTypes.bool,
+    enabledBtsPlugins: PropTypes.array,
   };
   static defaultProps = {
     logItem: null,
@@ -130,23 +161,30 @@ export class LogItemInfo extends Component {
     retryItemId: null,
     retries: [],
     getDefectType: () => {},
+    isBtsPluginsExist: false,
+    enabledBtsPlugins: [],
   };
 
-  getLinkIssueTitle = () => {
+  getIssueActionTitle = (noIssueMessage, isPostIssueUnavailable) => {
     const {
       logItem,
-      btsIntegrations,
       intl: { formatMessage },
+      btsIntegrations,
+      isBtsPluginsExist,
+      enabledBtsPlugins,
     } = this.props;
-    let title = '';
 
     if (!logItem.issue) {
-      title = formatMessage(messages.noDefectTypeToLinkIssue);
-    } else if (!btsIntegrations.length) {
-      title = formatMessage(messages.noBugTrackingSystemToLinkIssue);
+      return formatMessage(noIssueMessage);
     }
 
-    return title;
+    return getIssueTitle(
+      formatMessage,
+      btsIntegrations,
+      isBtsPluginsExist,
+      enabledBtsPlugins,
+      isPostIssueUnavailable,
+    );
   };
 
   getCopySendDefectButtonText = () => {
@@ -213,8 +251,15 @@ export class LogItemInfo extends Component {
   addExtraSpaceTop = () => this.isDefectTypeVisible() && this.hasRetries();
 
   handleLinkIssue = () => {
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.LINK_ISSUE_BTN);
     this.props.linkIssueAction([this.props.logItem], {
       fetchFunc: this.props.fetchFunc,
+      eventsInfo: {
+        loadBtn: LOG_PAGE_EVENTS.LOAD_BTN_LINK_ISSUE_MODAL,
+        cancelBtn: LOG_PAGE_EVENTS.CANCEL_BTN_LINK_ISSUE_MODAL,
+        addNewIssue: LOG_PAGE_EVENTS.ADD_NEW_ISSUE_LINK_ISSUE_MODAL,
+        closeIcon: LOG_PAGE_EVENTS.CLOSE_ICON_LINK_ISSUE_MODAL,
+      },
     });
   };
 
@@ -236,8 +281,17 @@ export class LogItemInfo extends Component {
   };
 
   handlePostIssue = () => {
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.POST_ISSUE_BTN);
     this.props.postIssueAction([this.props.logItem], {
       fetchFunc: this.props.fetchFunc,
+      eventsInfo: {
+        postBtn: LOG_PAGE_EVENTS.POST_BTN_POST_ISSUE_MODAL,
+        attachmentsSwitcher: LOG_PAGE_EVENTS.ATTACHMENTS_SWITCHER_POST_ISSUE_MODAL,
+        logsSwitcher: LOG_PAGE_EVENTS.LOGS_SWITCHER_POST_ISSUE_MODAL,
+        commentSwitcher: LOG_PAGE_EVENTS.COMMENT_SWITCHER_POST_ISSUE_MODAL,
+        cancelBtn: LOG_PAGE_EVENTS.CANCEL_BTN_POST_ISSUE_MODAL,
+        closeIcon: LOG_PAGE_EVENTS.CLOSE_ICON_POST_ISSUE_MODAL,
+      },
     });
   };
 
@@ -246,12 +300,25 @@ export class LogItemInfo extends Component {
     if (this.isDefectGroupOperationAvailable()) {
       this.props.showModalAction({
         id: 'editToInvestigateDefectModal',
-        data: { item: logItem, fetchFunc: this.props.fetchFunc },
+        data: {
+          item: logItem,
+          fetchFunc: this.props.fetchFunc,
+          eventsInfo: {
+            saveBtnDropdown: LOG_PAGE_EVENTS.SAVE_BTN_DROPDOWN_EDIT_ITEM_MODAL,
+            postBugBtn: LOG_PAGE_EVENTS.POST_BUG_BTN_EDIT_ITEM_MODAL,
+            linkIssueBtn: LOG_PAGE_EVENTS.LOAD_BUG_BTN_EDIT_ITEM_MODAL,
+          },
+        },
       });
     } else {
       this.props.editDefectsAction([this.props.logItem], {
         fetchFunc: this.props.fetchFunc,
         debugMode: this.props.debugMode,
+        eventsInfo: {
+          saveBtnDropdown: LOG_PAGE_EVENTS.SAVE_BTN_DROPDOWN_EDIT_ITEM_MODAL,
+          postBugBtn: LOG_PAGE_EVENTS.POST_BUG_BTN_EDIT_ITEM_MODAL,
+          linkIssueBtn: LOG_PAGE_EVENTS.LOAD_BUG_BTN_EDIT_ITEM_MODAL,
+        },
       });
     }
   };
@@ -291,7 +358,6 @@ export class LogItemInfo extends Component {
       loading,
       onChangePage,
       onChangeLogLevel,
-      onHighlightRow,
       onToggleSauceLabsIntegrationView,
       isSauceLabsIntegrationView,
       debugMode,
@@ -323,6 +389,10 @@ export class LogItemInfo extends Component {
                     icon={this.checkIfTheLastItemIsActive() ? DownLeftArrowIcon : UpRightArrowIcon}
                     disabled={this.isCopySendButtonDisabled()}
                     onClick={this.showCopySendDefectModal}
+                    title={this.getIssueActionTitle(
+                      messages.noDefectTypeToCopySendDefect,
+                      isPostIssueUnavailable,
+                    )}
                   >
                     {this.getCopySendDefectButtonText()}
                   </GhostButton>
@@ -333,9 +403,12 @@ export class LogItemInfo extends Component {
                     disabled={!logItem.issue || isPostIssueUnavailable}
                     onClick={this.handlePostIssue}
                     title={
-                      (isPostIssueUnavailable &&
-                        this.props.intl.formatMessage(messages.noBugTrackingSystemToPostIssue)) ||
-                      ''
+                      !logItem.issue || isPostIssueUnavailable
+                        ? this.getIssueActionTitle(
+                            messages.noDefectTypeToPostIssue,
+                            isPostIssueUnavailable,
+                          )
+                        : ''
                     }
                   >
                     {formatMessage(messages.postIssue)}
@@ -346,7 +419,14 @@ export class LogItemInfo extends Component {
                     icon={LinkIcon}
                     disabled={!logItem.issue || !btsIntegrations.length}
                     onClick={this.handleLinkIssue}
-                    title={this.getLinkIssueTitle()}
+                    title={
+                      !logItem.issue || !btsIntegrations.length
+                        ? this.getIssueActionTitle(
+                            messages.noDefectTypeToLinkIssue,
+                            isPostIssueUnavailable,
+                          )
+                        : ''
+                    }
                   >
                     {formatMessage(messages.linkIssue)}
                   </GhostButton>
@@ -367,7 +447,6 @@ export class LogItemInfo extends Component {
           <LogItemInfoTabs
             onChangePage={onChangePage}
             onChangeLogLevel={onChangeLogLevel}
-            onHighlightRow={onHighlightRow}
             onToggleSauceLabsIntegrationView={onToggleSauceLabsIntegrationView}
             isSauceLabsIntegrationView={isSauceLabsIntegrationView}
             loading={loading}

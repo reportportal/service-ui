@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage, intlShape } from 'react-intl';
@@ -14,6 +30,8 @@ import {
   dirtyFilterIdsSelector,
 } from 'controllers/filter';
 import { changeLaunchDistinctAction, launchDistinctSelector } from 'controllers/launch';
+import { userInfoSelector, activeProjectRoleSelector } from 'controllers/user';
+import { canEditFilter } from 'common/utils/permissions';
 import { isEmptyObject, isEmptyValue } from 'common/utils';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { levelSelector } from 'controllers/testItem';
@@ -34,6 +52,8 @@ const cx = classNames.bind(styles);
     dirtyFilterIds: dirtyFilterIdsSelector(state),
     launchDistinct: launchDistinctSelector(state),
     level: levelSelector(state),
+    userInfo: userInfoSelector(state),
+    projectRole: activeProjectRoleSelector(state),
   }),
   {
     showModal: showModalAction,
@@ -72,6 +92,8 @@ export class LaunchFiltersToolbar extends Component {
     changeLaunchDistinct: PropTypes.func,
     launchDistinct: PropTypes.string,
     level: PropTypes.string,
+    userInfo: PropTypes.object.isRequired,
+    projectRole: PropTypes.string.isRequired,
     intl: intlShape.isRequired,
   };
 
@@ -170,8 +192,19 @@ export class LaunchFiltersToolbar extends Component {
     return dirtyFilterIds.indexOf(activeFilterId) !== -1;
   };
   isSaveDisabled = () => {
-    const { filterErrors } = this.props;
-    return !this.isFilterUnsaved() || !isEmptyObject(filterErrors) || this.isNoFilterValues();
+    const {
+      filterErrors,
+      projectRole,
+      userInfo: { userRole, userId },
+      activeFilter,
+    } = this.props;
+
+    return (
+      !this.isFilterUnsaved() ||
+      !isEmptyObject(filterErrors) ||
+      this.isNoFilterValues() ||
+      !canEditFilter(userRole, projectRole, activeFilter.owner === userId)
+    );
   };
   isDiscardDisabled = () => !this.isFilterDirty();
   isEditDisabled = () => this.isFilterUnsaved() || this.isNewFilter();

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
@@ -53,6 +69,7 @@ export class WidgetHeader extends Component {
     onEdit: PropTypes.func,
     customClass: PropTypes.string,
     isPrintMode: PropTypes.bool,
+    dashboardOwner: PropTypes.string,
   };
   static defaultProps = {
     data: {},
@@ -63,6 +80,7 @@ export class WidgetHeader extends Component {
     onEdit: () => {},
     customClass: null,
     isPrintMode: false,
+    dashboardOwner: '',
   };
 
   renderMetaInfo = () =>
@@ -90,9 +108,12 @@ export class WidgetHeader extends Component {
       onEdit,
       customClass,
       isPrintMode,
+      dashboardOwner,
     } = this.props;
 
     const isOwner = data.owner === userId;
+    const isDashboardOwner = dashboardOwner === userId;
+    const isWidgetDeletable = canDeleteWidget(userRole, projectRole, isOwner || isDashboardOwner);
 
     return (
       <div className={cx('widget-header')}>
@@ -143,7 +164,7 @@ export class WidgetHeader extends Component {
               <div className={cx('control')} onClick={onRefresh}>
                 {Parser(RefreshIcon)}
               </div>
-              {canDeleteWidget(userRole, projectRole, isOwner) && (
+              {isWidgetDeletable && (
                 <div className={cx('control', 'mobile-hide')} onClick={onDelete}>
                   {Parser(CrossIcon)}
                 </div>

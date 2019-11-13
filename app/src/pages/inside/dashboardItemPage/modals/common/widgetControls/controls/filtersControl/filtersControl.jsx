@@ -1,5 +1,22 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import track from 'react-tracking';
 import { intlShape, injectIntl, defineMessages } from 'react-intl';
 import { change } from 'redux-form';
 import PropTypes from 'prop-types';
@@ -14,6 +31,7 @@ import {
   activeFilterSelector,
   loadingSelector,
   filtersPaginationSelector,
+  updateFilterSuccessAction,
 } from 'controllers/filter';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { WIDGET_WIZARD_FORM } from '../../../constants';
@@ -64,6 +82,7 @@ const messages = defineMessages({
   },
 });
 
+@track()
 @connect(
   (state) => ({
     userId: userIdSelector(state),
@@ -76,6 +95,7 @@ const messages = defineMessages({
   {
     changeWizardForm: (field, value) => change(WIDGET_WIZARD_FORM, field, value, null),
     fetchFiltersConcatAction,
+    updateFilterSuccessAction,
     notify: showNotification,
   },
 )
@@ -99,8 +119,14 @@ export class FiltersControl extends Component {
     activeLaunchFilter: PropTypes.object,
     changeWizardForm: PropTypes.func,
     fetchFiltersConcatAction: PropTypes.func,
+    updateFilterSuccessAction: PropTypes.func,
     onFormAppearanceChange: PropTypes.func.isRequired,
     notify: PropTypes.func.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
+    eventsInfo: PropTypes.object,
   };
 
   static defaultProps = {
@@ -118,8 +144,10 @@ export class FiltersControl extends Component {
     pagination: {},
     changeWizardForm: () => {},
     fetchFiltersConcatAction: () => {},
+    updateFilterSuccessAction: () => {},
     onFormAppearanceChange: () => {},
     notify: () => {},
+    eventsInfo: {},
   };
 
   constructor(props) {
@@ -143,6 +171,8 @@ export class FiltersControl extends Component {
   getFormAppearanceComponent = (activeFilter) => {
     const {
       formAppearance: { mode: formAppearanceMode, filter: formAppearanceFilter },
+      activeProject,
+      eventsInfo,
     } = this.props;
 
     const component = (() => {
@@ -154,6 +184,7 @@ export class FiltersControl extends Component {
               onChange={this.handleFilterChange}
               onCancel={this.clearFormAppearance}
               onSave={this.handleFilterUpdate}
+              eventsInfo={eventsInfo}
             />
           );
         }
@@ -163,14 +194,16 @@ export class FiltersControl extends Component {
               filter={
                 formAppearanceFilter.conditions ? formAppearanceFilter : NEW_FILTER_DEFAULT_CONFIG
               }
+              activeProject={activeProject}
               onChange={this.handleFilterChange}
               onCancel={this.clearFormAppearance}
               onSave={this.handleFilterInsert}
+              eventsInfo={eventsInfo}
             />
           );
         }
         case FORM_APPEARANCE_MODE_LOCKED: {
-          return <LockedActiveFilter filter={activeFilter} onEdit={this.clearFormAppearance} />;
+          return <LockedActiveFilter filter={activeFilter} onEdit={this.editLockedActiveFilter} />;
         }
         default:
           return null;
@@ -225,10 +258,15 @@ export class FiltersControl extends Component {
     this.props.onFormAppearanceChange(false, {});
   };
 
-  handleSearchValueChange = debounce(
-    (value) => this.fetchFilter({ page: 1, searchValue: value }),
-    300,
-  );
+  handleSearchValueChange = debounce((value) => {
+    this.props.tracking.trackEvent(this.props.eventsInfo.enterSearchParams);
+    return this.fetchFilter({ page: 1, searchValue: value });
+  }, 300);
+
+  editLockedActiveFilter = () => {
+    this.props.tracking.trackEvent(this.props.eventsInfo.editFilterIcon);
+    this.clearFormAppearance();
+  };
 
   handleFormAppearanceMode = (event, mode, filter) => {
     event.preventDefault();
@@ -285,14 +323,15 @@ export class FiltersControl extends Component {
 
   handleFilterUpdate = (filter) => {
     const { intl, notify, activeProject } = this.props;
+    const data = this.getFilterForSubmit(filter);
 
     fetch(URLS.filter(activeProject, filter.id), {
       method: 'put',
-      data: this.getFilterForSubmit(filter),
+      data,
     })
       .then(() => {
         this.fetchFilter({ page: 1 });
-
+        this.props.updateFilterSuccessAction(data);
         notify({
           message: intl.formatMessage(messages.updateFilterSuccess),
           type: NOTIFICATION_TYPES.SUCCESS,
@@ -308,7 +347,10 @@ export class FiltersControl extends Component {
     this.clearFormAppearance();
   };
 
-  handleFilterListChange = (event) => this.handleActiveFilterChange(event.target.value);
+  handleFilterListChange = (event) => {
+    this.props.tracking.trackEvent(this.props.eventsInfo.chooseFilter);
+    return this.handleActiveFilterChange(event.target.value);
+  };
 
   handleActiveFilterChange = (id, newFilter) => {
     const filter = this.getFilterById(id);
@@ -345,7 +387,7 @@ export class FiltersControl extends Component {
       return this.getFormAppearanceComponent(activeFilter);
     }
 
-    const { loading, userId, filter, touched, error } = this.props;
+    const { loading, userId, filter, touched, error, eventsInfo } = this.props;
     const { searchValue } = this.state;
 
     return (
@@ -356,6 +398,7 @@ export class FiltersControl extends Component {
           value={searchValue}
           onFilterChange={this.handleSearchValueChange}
           onAdd={this.handleFormAppearanceMode}
+          eventsInfo={eventsInfo}
         />
         <ActiveFilter filter={activeFilter || null} touched={touched} error={error || null} />
         <FiltersList

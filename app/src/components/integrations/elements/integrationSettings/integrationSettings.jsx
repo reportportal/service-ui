@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
@@ -59,17 +75,12 @@ export class IntegrationSettings extends Component {
   };
 
   state = {
-    connected: false,
-    loading: true,
-    updated: false,
+    connected: this.props.data.isNew,
+    loading: !this.props.data.isNew,
   };
 
   componentDidMount() {
-    this.testIntegrationConnection();
-  }
-
-  componentDidUpdate() {
-    if (this.state.updated && !this.state.loading) {
+    if (!this.state.connected) {
       this.testIntegrationConnection();
     }
   }
@@ -90,7 +101,6 @@ export class IntegrationSettings extends Component {
         this.setState({
           connected: true,
           loading: false,
-          updated: false,
         });
       })
       .catch(({ message }) => {
@@ -98,22 +108,8 @@ export class IntegrationSettings extends Component {
           connected: false,
           errorMessage: message,
           loading: false,
-          updated: false,
         });
       });
-  };
-
-  updateIntegrationHandler = (data, onConfirm, metaData) => {
-    this.props.onUpdate(
-      data,
-      () => {
-        onConfirm();
-        this.setState({
-          updated: true,
-        });
-      },
-      metaData,
-    );
   };
 
   removeIntegration = () => {
@@ -130,6 +126,7 @@ export class IntegrationSettings extends Component {
     const {
       intl: { formatMessage },
       data,
+      onUpdate,
       formFieldsComponent,
       editAuthConfig,
       isEmptyConfiguration,
@@ -164,7 +161,7 @@ export class IntegrationSettings extends Component {
               connected={connected}
               pluginName={pluginName}
               isGlobal={isGlobal}
-              onSubmit={this.updateIntegrationHandler}
+              onSubmit={onUpdate}
               formFieldsComponent={formFieldsComponent}
               isEmptyConfiguration={isEmptyConfiguration}
             />

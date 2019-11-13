@@ -1,12 +1,30 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import ReactObserver from 'react-event-observer';
-import Fullscreen from 'react-full-screen';
+import { Fullscreen } from 'components/containers/fullscreen';
 import { ReflexContainer, ReflexSplitter, ReflexElement } from 'react-reflex/dist/commonjs';
 import 'react-reflex/styles.css';
+import { SAUCE_LABS } from 'common/constants/integrationNames';
 import { activeLogSelector } from 'controllers/log';
+import { availableIntegrationsByPluginNameSelector } from 'controllers/plugins';
 import {
   bulkExecuteSauceLabsCommandAction,
   sauceLabsLoadingSelector,
@@ -27,6 +45,7 @@ const cx = classNames.bind(styles);
   (state) => ({
     logItem: activeLogSelector(state),
     loading: sauceLabsLoadingSelector(state),
+    sauceLabsIntegrations: availableIntegrationsByPluginNameSelector(state, SAUCE_LABS),
   }),
   {
     executeCommands: bulkExecuteSauceLabsCommandAction,
@@ -34,6 +53,7 @@ const cx = classNames.bind(styles);
 )
 export class SauceLabsSection extends Component {
   static propTypes = {
+    sauceLabsIntegrations: PropTypes.array.isRequired,
     logItem: PropTypes.object,
     executeCommands: PropTypes.func,
     loading: PropTypes.bool,
@@ -54,7 +74,8 @@ export class SauceLabsSection extends Component {
   }
 
   componentDidMount() {
-    this.slIntegrationConfig = getSauceLabsConfig(this.props.logItem.attributes);
+    const { logItem, sauceLabsIntegrations } = this.props;
+    this.slIntegrationConfig = getSauceLabsConfig(logItem.attributes, sauceLabsIntegrations);
     this.props.executeCommands(
       [SAUCE_LABS_JOB_INFO_COMMAND, SAUCE_LABS_LOGS_COMMAND, SAUCE_LABS_ASSETS_COMMAND],
       this.slIntegrationConfig,

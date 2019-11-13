@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
@@ -5,14 +21,20 @@ import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
-import { availableBtsIntegrationsSelector, isPostIssueActionAvailable } from 'controllers/plugins';
+import {
+  availableBtsIntegrationsSelector,
+  isPostIssueActionAvailable,
+  isBtsPluginsExistSelector,
+  enabledBtsPluginsSelector,
+} from 'controllers/plugins';
 import { launchSelector } from 'controllers/testItem';
 import { activeFilterSelector } from 'controllers/filter';
 import { unlinkIssueAction, linkIssueAction, postIssueAction } from 'controllers/step';
 import { hideModalAction } from 'controllers/modal';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { fetch, setStorageItem, getStorageItem } from 'common/utils';
+import { getIssueTitle } from 'pages/inside/common/utils';
+import { fetch, setStorageItem, getStorageItem, isEmptyObject } from 'common/utils';
 import { URLS } from 'common/urls';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -40,6 +62,8 @@ const cx = classNames.bind(styles);
     activeProject: activeProjectSelector(state),
     currentLaunch: launchSelector(state),
     currentFilter: activeFilterSelector(state),
+    isBtsPluginsExist: isBtsPluginsExistSelector(state),
+    enabledBtsPlugins: enabledBtsPluginsSelector(state),
   }),
   {
     showNotification,
@@ -58,12 +82,15 @@ export class EditToInvestigateDefectModal extends Component {
     data: PropTypes.shape({
       item: PropTypes.object,
       fetchFunc: PropTypes.func,
+      eventsInfo: PropTypes.object,
     }).isRequired,
     showNotification: PropTypes.func.isRequired,
     hideModalAction: PropTypes.func.isRequired,
     unlinkIssueAction: PropTypes.func.isRequired,
     linkIssueAction: PropTypes.func.isRequired,
     postIssueAction: PropTypes.func.isRequired,
+    isBtsPluginsExist: PropTypes.bool.isRequired,
+    enabledBtsPlugins: PropTypes.array.isRequired,
     currentLaunch: PropTypes.object,
     currentFilter: PropTypes.object,
     tracking: PropTypes.shape({
@@ -80,8 +107,10 @@ export class EditToInvestigateDefectModal extends Component {
   constructor(props) {
     super(props);
     const {
-      intl,
+      intl: { formatMessage },
       btsIntegrations,
+      isBtsPluginsExist,
+      enabledBtsPlugins,
       data: { item },
     } = props;
     this.state = {
@@ -95,22 +124,32 @@ export class EditToInvestigateDefectModal extends Component {
       defectType: item.issue.issueType,
       loading: false,
     };
+    const isPostIssueUnavailable = !isPostIssueActionAvailable(btsIntegrations);
+    const issueTitle = getIssueTitle(
+      formatMessage,
+      btsIntegrations,
+      isBtsPluginsExist,
+      enabledBtsPlugins,
+      isPostIssueUnavailable,
+    );
 
     this.multiActionButtonItems = [
       {
-        label: intl.formatMessage(messages.saveAndPostIssueMessage),
+        label: formatMessage(messages.saveAndPostIssueMessage),
         value: 'Post',
+        title: isPostIssueUnavailable ? issueTitle : '',
         onClick: () => this.onEditDefects(this.handlePostIssue, true),
-        disabled: !isPostIssueActionAvailable(btsIntegrations),
+        disabled: isPostIssueUnavailable,
       },
       {
-        label: intl.formatMessage(messages.saveAndLinkIssueMessage),
+        label: formatMessage(messages.saveAndLinkIssueMessage),
         value: 'Link',
+        title: btsIntegrations.length ? '' : issueTitle,
         onClick: () => this.onEditDefects(this.handleLinkIssue, true),
         disabled: !btsIntegrations.length,
       },
       {
-        label: intl.formatMessage(messages.saveAndUnlinkIssueMessage),
+        label: formatMessage(messages.saveAndUnlinkIssueMessage),
         value: 'Unlink',
         onClick: () => this.onEditDefects(this.handleUnlinkIssue, true),
         disabled: !item.issue.externalSystemIssues || !item.issue.externalSystemIssues.length,
@@ -120,15 +159,15 @@ export class EditToInvestigateDefectModal extends Component {
     this.changeCommentModeOptions = [
       {
         value: CHANGE_COMMENT_MODE.NOT_CHANGE,
-        label: intl.formatMessage(messages.notChangeCommentTitle),
+        label: formatMessage(messages.notChangeCommentTitle),
       },
       {
         value: CHANGE_COMMENT_MODE.REPLACE,
-        label: intl.formatMessage(messages.replaceCommentsTitle),
+        label: formatMessage(messages.replaceCommentsTitle),
       },
       {
         value: CHANGE_COMMENT_MODE.ADD_TO_EXISTING,
-        label: intl.formatMessage(messages.addToExistingCommentTitle),
+        label: formatMessage(messages.addToExistingCommentTitle),
       },
     ];
   }
@@ -154,6 +193,17 @@ export class EditToInvestigateDefectModal extends Component {
     return {
       confirmationWarning: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING),
     };
+  };
+
+  getCurrentLaunch = () => {
+    const {
+      currentLaunch,
+      data: {
+        item: { pathNames: { launchPathName = {} } = {} },
+      },
+    } = this.props;
+
+    return isEmptyObject(currentLaunch) ? launchPathName : currentLaunch;
   };
 
   prepareDataToSend = () => {
@@ -209,15 +259,19 @@ export class EditToInvestigateDefectModal extends Component {
       fetchFunc: this.props.data.fetchFunc,
     });
 
-  handleLinkIssue = () =>
-    this.props.linkIssueAction(this.prepareDataToSend(), {
+  handleLinkIssue = () => {
+    this.props.tracking.trackEvent(this.props.data.eventsInfo.linkIssueBtn);
+    return this.props.linkIssueAction(this.prepareDataToSend(), {
       fetchFunc: this.props.data.fetchFunc,
     });
+  };
 
-  handlePostIssue = () =>
-    this.props.postIssueAction(this.prepareDataToSend(), {
+  handlePostIssue = () => {
+    this.props.tracking.trackEvent(this.props.data.eventsInfo.postBugBtn);
+    return this.props.postIssueAction(this.prepareDataToSend(), {
       fetchFunc: this.props.data.fetchFunc,
     });
+  };
 
   checkIfTheDataWasChanged = () => {
     const { item } = this.props.data;
@@ -377,24 +431,19 @@ export class EditToInvestigateDefectModal extends Component {
     </div>
   );
 
+  renderMultiActionButton = ({ ...rest }) => (
+    <MultiActionButton {...rest} toggleMenuEventInfo={this.props.data.eventsInfo.saveBtnDropdown} />
+  );
+
   render() {
-    const {
-      intl,
-      currentLaunch,
-      currentFilter,
-      data: {
-        item: {
-          pathNames: { launchPathName },
-        },
-      },
-    } = this.props;
+    const { intl, currentFilter } = this.props;
     const customButton = {
       onClick: this.onEditDefects,
       buttonProps: {
         items: this.multiActionButtonItems,
         title: intl.formatMessage(COMMON_LOCALE_KEYS.SAVE),
       },
-      component: MultiActionButton,
+      component: this.renderMultiActionButton,
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
@@ -444,9 +493,8 @@ export class EditToInvestigateDefectModal extends Component {
           <ItemsList
             testItems={this.state.testItems}
             selectedItems={this.state.selectedItems}
-            currentLaunch={currentLaunch}
+            currentLaunch={this.getCurrentLaunch()}
             currentFilter={currentFilter}
-            itemLaunch={launchPathName}
             searchMode={this.state.searchMode}
             loading={this.state.loading}
             onSelectAllToggle={this.handleSelectAllToggle}

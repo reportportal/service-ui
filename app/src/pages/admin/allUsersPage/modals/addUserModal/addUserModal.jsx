@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -34,7 +50,7 @@ const messages = defineMessages({
   },
   userFullNameLabel: {
     id: 'AddUserForm.userFullNameLabel',
-    defaultMessage: 'Full Name',
+    defaultMessage: 'Full name',
   },
   userEmailLabel: {
     id: 'AddUserForm.userEmailLabel',
@@ -67,10 +83,6 @@ const messages = defineMessages({
   projectNamePlaceholder: {
     id: 'AddUserForm.projectNamePlaceholder',
     defaultMessage: 'Enter project name',
-  },
-  projectNameFocusPlaceholder: {
-    id: 'AddUserForm.projectNameFocusPlaceholder',
-    defaultMessage: 'Searching...',
   },
 });
 
@@ -252,14 +264,15 @@ export class AddUserModal extends Component {
               format={this.formatValueProject}
               parse={this.parseValueProject}
             >
-              <InputTagsSearch
-                placeholder={intl.formatMessage(messages.projectNamePlaceholder)}
-                focusPlaceholder={intl.formatMessage(messages.projectNameFocusPlaceholder)}
-                uri={URLS.projectNameSearch()}
-                makeOptions={this.formatProjectNameOptions}
-                async
-                minLength={1}
-              />
+              <FieldErrorHint hintType="top">
+                <InputTagsSearch
+                  placeholder={intl.formatMessage(messages.projectNamePlaceholder)}
+                  uri={URLS.projectNameSearch()}
+                  makeOptions={this.formatProjectNameOptions}
+                  async
+                  minLength={1}
+                />
+              </FieldErrorHint>
             </FieldProvider>
           </ModalField>
           <ModalField

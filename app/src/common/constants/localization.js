@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { defineMessages } from 'react-intl';
 
 export const COMMON_LOCALE_KEYS = defineMessages({
@@ -92,5 +108,33 @@ export const COMMON_LOCALE_KEYS = defineMessages({
   LOGIN: {
     id: 'Common.login',
     defaultMessage: 'Login',
+  },
+  BTS_INTEGRATION_NOT_CONFIGURED: {
+    id: 'Common.btsIntegrationIsNotConfigured',
+    defaultMessage: 'BTS integration is not configured. Connect with Admin',
+  },
+  NO_BTS_INTEGRATION: {
+    id: 'Common.notBtsIntegration',
+    defaultMessage: 'There is no BTS integration. Connect with Admin',
+  },
+  NO_BTS_PLUGIN: {
+    id: 'Common.notBtsPlugin',
+    defaultMessage: 'There is no BTS plugin. Connect with Admin',
+  },
+  NO_AVAILABLE_BTS_PLUGIN: {
+    id: 'Common.notAvailableBtsPlugin',
+    defaultMessage: 'BTS plugin is disabled. Contact Admin',
+  },
+  MOVE_TO_DEBUG: {
+    id: 'Common.moveToDebug',
+    defaultMessage: 'Move to debug',
+  },
+  MOVE_TO_ALL_LAUNCHES: {
+    id: 'Common.moveToAllLaunches',
+    defaultMessage: 'Move to all launches',
+  },
+  FORCE_FINISH: {
+    id: 'Common.forceFinish',
+    defaultMessage: 'Force finish',
   },
 });

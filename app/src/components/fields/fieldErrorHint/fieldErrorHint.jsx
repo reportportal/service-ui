@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { cloneElement, Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
@@ -40,6 +56,10 @@ const messages = defineMessages({
   filterNameError: {
     id: 'FiltersPage.filterNameLength',
     defaultMessage: 'Filter name length should have size from 3 to 128 characters.',
+  },
+  filterNameDuplicateHint: {
+    id: 'FiltersPage.filterNameDuplicateHint',
+    defaultMessage: 'Filter with the same name already exists in system.',
   },
   sharedWidgetSearchHint: {
     id: 'SharedWidgetsSearch.sharedWidgetSearchHint',
@@ -155,6 +175,10 @@ const messages = defineMessages({
     id: 'ProjectsPage.projectDuplicateHint',
     defaultMessage: 'Project with the same name already exists in system',
   },
+  btsIntegrationNameHint: {
+    id: 'BtsCommonMessages.btsIntegrationNameHint',
+    defaultMessage: 'Integration name should have size from 1 to 55',
+  },
   btsUrlHint: {
     id: 'BtsCommonMessages.btsUrlHint',
     defaultMessage: 'Please provide a valid BTS link',
@@ -186,6 +210,10 @@ const messages = defineMessages({
   doubleFieldHint: {
     id: 'PostIssueModal.doubleFieldHint',
     defaultMessage: "This field must be of 'double' type",
+  },
+  membersSearchHint: {
+    id: 'MembersPageToolbar.membersSearchHint',
+    defaultMessage: 'Member name must not be empty',
   },
 });
 

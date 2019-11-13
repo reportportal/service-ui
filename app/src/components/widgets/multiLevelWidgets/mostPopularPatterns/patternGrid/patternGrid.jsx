@@ -1,16 +1,26 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
-import { TEST_ITEM_PAGE } from 'controllers/pages';
-import { getQueryNamespace } from 'controllers/testItem';
-import { createNamespacedQuery } from 'common/utils/routingUtils';
-import { ALL } from 'common/constants/reservedFilterIds';
-
 import classNames from 'classnames/bind';
-import { PatternNameColumn, LaunchNameColumn, TestCasesColumn } from './patternGridColumns';
-
+import { PatternNameColumn, TestCasesColumn } from './patternGridColumns';
 import styles from './patternGrid.scss';
 
 const cx = classNames.bind(styles);
@@ -31,7 +41,6 @@ const messages = defineMessages({
 });
 
 const PATTERN_NAME_COLUMN = 'pattern';
-const LAUNCH_NAME_COLUMN = 'launch';
 const TEST_CASES_COLUMN = 'testCases';
 
 @connect((state) => ({
@@ -42,7 +51,6 @@ export class PatternGrid extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     widget: PropTypes.object,
-    selectedPattern: PropTypes.string,
     selectedAttribute: PropTypes.string,
     projectId: PropTypes.string,
     onPatternClick: PropTypes.func,
@@ -64,41 +72,21 @@ export class PatternGrid extends Component {
         },
       },
     },
-    selectedPattern: null,
     selectedAttribute: null,
     projectId: '',
     onPatternClick: () => {},
   };
 
   getColumns = () => {
-    const { selectedPattern, onPatternClick } = this.props;
-    if (!selectedPattern) {
-      return [
-        {
-          id: PATTERN_NAME_COLUMN,
-          component: PatternNameColumn,
-          title: this.props.intl.formatMessage(messages.patternName),
-          className: 'pattern-col',
-          columnProps: {
-            onPatternClick,
-          },
-        },
-        {
-          id: TEST_CASES_COLUMN,
-          title: this.props.intl.formatMessage(messages.testCases),
-          component: TestCasesColumn,
-          className: 'test-cases-col',
-        },
-      ];
-    }
+    const { onPatternClick } = this.props;
     return [
       {
-        id: LAUNCH_NAME_COLUMN,
-        component: LaunchNameColumn,
-        title: this.props.intl.formatMessage(messages.launchName),
-        className: 'launch-col',
+        id: PATTERN_NAME_COLUMN,
+        component: PatternNameColumn,
+        title: this.props.intl.formatMessage(messages.patternName),
+        className: 'pattern-col',
         columnProps: {
-          getLinkToLaunch: this.getLinkToLaunch,
+          onPatternClick,
         },
       },
       {
@@ -112,32 +100,6 @@ export class PatternGrid extends Component {
 
   getDataByAttribute = (data = [], attribute) =>
     (data.find((group) => group.attributeValue === attribute) || {}).patterns;
-
-  getLinkToLaunch = (launchId) => {
-    const {
-      projectId,
-      widget: { appliedFilters },
-      selectedPattern,
-    } = this.props;
-    const filterId = appliedFilters && appliedFilters.length ? appliedFilters[0].id : ALL;
-    return {
-      type: TEST_ITEM_PAGE,
-      payload: {
-        projectId,
-        filterId,
-        testItemIds: launchId,
-      },
-      meta: {
-        query: createNamespacedQuery(
-          {
-            'filter.eq.hasChildren': false,
-            'filter.any.patternName': selectedPattern,
-          },
-          getQueryNamespace(0),
-        ),
-      },
-    };
-  };
 
   renderHeader = (columns) => (
     <thead>

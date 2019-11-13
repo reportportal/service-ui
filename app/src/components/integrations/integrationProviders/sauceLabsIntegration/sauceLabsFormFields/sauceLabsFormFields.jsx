@@ -1,10 +1,28 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { Input } from 'components/inputs/input';
+import { InputDropdown } from 'components/inputs/inputDropdown';
 import { IntegrationFormField } from 'components/integrations/elements';
 import { commonValidators } from 'common/utils';
+import { DATA_CENTER_US, DATA_CENTER_EU, DEFAULT_DATA_CENTER } from '../constants';
 
 const messages = defineMessages({
   userNameTitle: {
@@ -14,6 +32,18 @@ const messages = defineMessages({
   accessTokenTitle: {
     id: 'SauceLabsFormFields.accessTokenTitle',
     defaultMessage: 'Access token',
+  },
+  dataCenter: {
+    id: 'SauceLabsFormFields.dataCenter',
+    defaultMessage: 'Data center',
+  },
+  dataCenterUS: {
+    id: 'SauceLabsFormFields.dataCenterUS',
+    defaultMessage: 'United States (US)',
+  },
+  dataCenterEU: {
+    id: 'SauceLabsFormFields.dataCenterEU',
+    defaultMessage: 'Europe (EU)',
   },
 });
 
@@ -31,8 +61,21 @@ export class SauceLabsFormFields extends Component {
   static defaultProps = {
     disabled: false,
     lineAlign: false,
-    initialData: {},
+    initialData: {
+      dataCenter: DEFAULT_DATA_CENTER,
+    },
   };
+
+  constructor(props) {
+    super(props);
+    const {
+      intl: { formatMessage },
+    } = props;
+    this.dataCenterOptions = [
+      { value: DATA_CENTER_US, label: formatMessage(messages.dataCenterUS) },
+      { value: DATA_CENTER_EU, label: formatMessage(messages.dataCenterEU) },
+    ];
+  }
 
   componentDidMount() {
     this.props.initialize(this.props.initialData);
@@ -68,6 +111,14 @@ export class SauceLabsFormFields extends Component {
           <FieldErrorHint>
             <Input mobileDisabled />
           </FieldErrorHint>
+        </IntegrationFormField>
+        <IntegrationFormField
+          name="dataCenter"
+          disabled={disabled}
+          label={formatMessage(messages.dataCenter)}
+          lineAlign={lineAlign}
+        >
+          <InputDropdown options={this.dataCenterOptions} mobileDisabled />
         </IntegrationFormField>
       </Fragment>
     );

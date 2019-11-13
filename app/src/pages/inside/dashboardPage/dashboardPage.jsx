@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import track from 'react-tracking';
 import { connect } from 'react-redux';
@@ -16,7 +32,6 @@ import {
   loadingSelector,
 } from 'controllers/dashboard';
 import { DASHBOARD_PAGE, DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
-import { NoItemMessage } from 'components/main/noItemMessage';
 import { userInfoSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { withFilter } from 'controllers/filter';
@@ -159,8 +174,9 @@ export class DashboardPage extends Component {
   };
 
   onAddDashboardItem = () => {
-    const { showModal, addDashboard } = this.props;
+    const { showModal, addDashboard, tracking } = this.props;
 
+    tracking.trackEvent(DASHBOARD_PAGE_EVENTS.ADD_NEW_WIDGET_EMPTY_PAGE);
     showModal({
       id: 'dashboardAddEditModal',
       data: {
@@ -193,15 +209,7 @@ export class DashboardPage extends Component {
   };
 
   render() {
-    const {
-      intl,
-      gridType,
-      userInfo,
-      onFilterChange,
-      filter,
-      dashboardItems,
-      loading,
-    } = this.props;
+    const { gridType, userInfo, onFilterChange, filter, dashboardItems, loading } = this.props;
     const eventsInfo = {
       closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_ADD_NEW_DASHBOARD_MODAL,
       changeDescription: DASHBOARD_PAGE_EVENTS.ENTER_DESCRIPTION_ADD_NEW_DASHBOARD_MODAL,
@@ -223,19 +231,16 @@ export class DashboardPage extends Component {
             onTableViewToggle={this.toggleTableView}
             gridType={gridType}
           />
-          {filter && dashboardItems.length === 0 ? (
-            <NoItemMessage message={intl.formatMessage(messages.noResults)} />
-          ) : (
-            <DashboardList
-              dashboardItems={dashboardItems}
-              gridType={gridType}
-              userInfo={userInfo}
-              loading={loading}
-              onDeleteItem={this.onDeleteDashboardItem}
-              onEditItem={this.onEditDashboardItem}
-              onAddItem={this.onAddDashboardItem}
-            />
-          )}
+          <DashboardList
+            dashboardItems={dashboardItems}
+            gridType={gridType}
+            userInfo={userInfo}
+            loading={loading}
+            onDeleteItem={this.onDeleteDashboardItem}
+            onEditItem={this.onEditDashboardItem}
+            onAddItem={this.onAddDashboardItem}
+            filter={filter}
+          />
         </PageSection>
       </PageLayout>
     );

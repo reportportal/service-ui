@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
@@ -12,8 +28,8 @@ import {
   filtersSelector,
   loadingSelector,
   removeFilterAction,
-  DEFAULT_PAGE_SIZE,
   createFilterAction,
+  updateFilterSuccessAction,
 } from 'controllers/filter';
 import {
   userIdSelector,
@@ -22,7 +38,7 @@ import {
   userAccountRoleSelector,
 } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { withPagination } from 'controllers/pagination';
+import { withPagination, DEFAULT_PAGINATION, SIZE_KEY, PAGE_KEY } from 'controllers/pagination';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { showModalAction } from 'controllers/modal';
@@ -76,6 +92,7 @@ const messages = defineMessages({
     hideFilterOnLaunchesAction,
     createFilter: createFilterAction,
     showNotification,
+    updateFilterSuccessAction,
   },
 )
 @withFilter()
@@ -112,15 +129,16 @@ export class FiltersPage extends Component {
     showFilterOnLaunchesAction: PropTypes.func,
     hideFilterOnLaunchesAction: PropTypes.func,
     createFilter: PropTypes.func,
+    updateFilterSuccessAction: PropTypes.func,
     showNotification: PropTypes.func,
   };
 
   static defaultProps = {
     filters: [],
-    activePage: 1,
+    activePage: DEFAULT_PAGINATION[PAGE_KEY],
     itemCount: 0,
     pageCount: 0,
-    pageSize: DEFAULT_PAGE_SIZE,
+    pageSize: DEFAULT_PAGINATION[SIZE_KEY],
     userId: '',
     filter: '',
     activeProject: '',
@@ -137,6 +155,7 @@ export class FiltersPage extends Component {
     showFilterOnLaunchesAction: () => {},
     hideFilterOnLaunchesAction: () => {},
     createFilter: () => {},
+    updateFilterSuccessAction: () => {},
     showNotification: () => {},
   };
 
@@ -163,7 +182,10 @@ export class FiltersPage extends Component {
       method: 'put',
       data: filter,
     })
-      .then(this.props.fetchFiltersAction)
+      .then(() => {
+        this.props.updateFilterSuccessAction(filter);
+        this.props.fetchFiltersAction();
+      })
       .then(() => {
         this.props.showNotification({
           type: NOTIFICATION_TYPES.SUCCESS,

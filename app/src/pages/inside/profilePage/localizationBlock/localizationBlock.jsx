@@ -1,12 +1,34 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { Component } from 'react';
 import track from 'react-tracking';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
-import { updateStorageItem } from 'common/utils';
-import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
 import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { updateStorageItem } from 'common/utils';
+import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
+import {
+  ENGLISH,
+  RUSSIAN,
+  BELARUSIAN,
+  DEFAULT_LANGUAGE,
+} from 'common/constants/supportedLanguages';
 import { langSelector, setLangAction } from 'controllers/lang';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -40,7 +62,7 @@ const messages = defineMessages({
   },
   contribute: {
     id: 'LocalizationBlock.contribute',
-    defaultMessage: `Ru lang in beta. Please help us to translate it, send your PR to this <a target='_blank' href='https://github.com/reportportal/service-ui/blob/v5/app/localization/translated/ru.json' >file.</a>`,
+    defaultMessage: `This lang in beta. Please help us to translate it, send your PR to this <a target='_blank' href='https://github.com/reportportal/service-ui/blob/develop/app/localization/translated/ru.json' >file.</a>`,
   },
 });
 
@@ -58,6 +80,24 @@ LanguageOption.defaultProps = {
   icon: '',
   label: '',
 };
+
+const LANG_OPTIONS = [
+  {
+    value: ENGLISH,
+    icon: EnglishFlagIcon,
+    label: messages.english,
+  },
+  {
+    value: RUSSIAN,
+    icon: RussianFlagIcon,
+    label: messages.russian,
+  },
+  {
+    value: BELARUSIAN,
+    icon: BelarusFlagIcon,
+    label: messages.belarusian,
+  },
+];
 
 @connect(
   (state) => ({
@@ -86,54 +126,31 @@ export class LocalizationBlock extends Component {
     this.props.setLangAction(lang);
   };
 
+  getLangOptions = () =>
+    LANG_OPTIONS.map(({ value, icon, label }) => ({
+      value,
+      label: <LanguageOption icon={icon} label={this.props.intl.formatMessage(label)} />,
+    }));
+
   render() {
-    const englishLangOption = (
-      <LanguageOption
-        icon={EnglishFlagIcon}
-        label={this.props.intl.formatMessage(messages.english)}
-      />
-    );
-    const russianLangOption = (
-      <LanguageOption
-        icon={RussianFlagIcon}
-        label={this.props.intl.formatMessage(messages.russian)}
-      />
-    );
-    const belarusLangOption = (
-      <LanguageOption
-        icon={BelarusFlagIcon}
-        label={this.props.intl.formatMessage(messages.belarusian)}
-      />
-    );
     return (
       <div className={cx('localization-block')}>
         <span className={cx('label')}>{this.props.intl.formatMessage(messages.label)}</span>
         <div className={cx('localization')}>
           <InputDropdown
-            options={[
-              {
-                value: 'en',
-                label: englishLangOption,
-              },
-              {
-                value: 'ru',
-                label: russianLangOption,
-              },
-              {
-                value: 'be',
-                label: belarusLangOption,
-              },
-            ]}
+            options={this.getLangOptions()}
             value={this.props.lang}
             onChange={this.onChangeLanguage}
           />
 
-          <div className={cx('description')}>
-            <p className={cx('note')}>{this.props.intl.formatMessage(messages.note)}:</p>
-            <p className={cx('text')}>
-              {Parser(this.props.intl.formatMessage(messages.contribute))}
-            </p>
-          </div>
+          {this.props.lang !== DEFAULT_LANGUAGE && (
+            <div className={cx('description')}>
+              <p className={cx('note')}>{this.props.intl.formatMessage(messages.note)}:</p>
+              <p className={cx('text')}>
+                {Parser(this.props.intl.formatMessage(messages.contribute))}
+              </p>
+            </div>
+          )}
         </div>
       </div>
     );

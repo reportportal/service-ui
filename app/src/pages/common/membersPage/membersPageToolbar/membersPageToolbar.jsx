@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import PropTypes from 'prop-types';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
@@ -10,6 +26,8 @@ import { canInviteInternalUser } from 'common/utils/permissions';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { InputSearch } from 'components/inputs/inputSearch';
+import { validate, bindMessageToValidator } from 'common/utils';
+import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import PermissionMapIcon from 'common/img/permission-inline.svg';
 import InviteUserIcon from 'common/img/invite-inline.svg';
@@ -43,6 +61,14 @@ const messages = defineMessages({
 @reduxForm({
   form: 'filterSearch',
   enableReinitialize: true,
+  validate: ({ filter }) => ({
+    filter: bindMessageToValidator(validate.searchMembers, 'membersSearchHint')(filter),
+  }),
+  onChange: ({ filter }, dispatch, props) => {
+    if (validate.searchMembers(filter)) {
+      props.onFilterChange(filter);
+    }
+  },
 })
 @injectIntl
 @track()
@@ -81,10 +107,12 @@ export class MembersPageToolbar extends React.Component {
       <div className={cx('members-page-toolbar')}>
         <div className={cx('search-input')}>
           <FieldProvider name="filter">
-            <InputSearch
-              maxLength="128"
-              placeholder={this.props.intl.formatMessage(messages.searchInputPlaceholder)}
-            />
+            <FieldErrorHint>
+              <InputSearch
+                maxLength="128"
+                placeholder={this.props.intl.formatMessage(messages.searchInputPlaceholder)}
+              />
+            </FieldErrorHint>
           </FieldProvider>
         </div>
         <div className={cx('members-page-controls')}>

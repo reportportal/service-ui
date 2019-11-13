@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { redirect, actionToPath } from 'redux-first-router';
 import qs from 'qs';
 import {
@@ -48,7 +64,7 @@ import {
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { INSTALLED, STORE } from 'common/constants/pluginsTabs';
 import { SETTINGS, MEMBERS, EVENTS } from 'common/constants/projectSections';
-import { isAuthorizedSelector } from 'controllers/auth';
+import { ANONYMOUS_REDIRECT_PATH_STORAGE_KEY, isAuthorizedSelector } from 'controllers/auth';
 import {
   fetchDashboardsAction,
   changeVisibilityTypeAction,
@@ -71,6 +87,7 @@ import { fetchHistoryPageInfo } from 'controllers/itemsHistory';
 import { fetchProjectsAction } from 'controllers/administrate/projects';
 import { startSetViewMode } from 'controllers/administrate/projects/actionCreators';
 import { SIZE_KEY } from 'controllers/pagination';
+import { setSessionItem, updateStorageItem } from 'common/utils/storageUtils';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
@@ -287,18 +304,21 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
         if (authorized && accountRole !== ADMINISTRATOR) {
           dispatch(redirect({ type: PROJECT_DASHBOARD_PAGE, payload: { projectId } }));
         } else if (!authorized) {
+          setSessionItem(ANONYMOUS_REDIRECT_PATH_STORAGE_KEY, redirectPath);
           dispatch(
             redirect({
               type: LOGIN_PAGE,
-              meta: {
-                query: { redirectPath },
-              },
             }),
           );
+        } else {
+          updateStorageItem(`${userInfo.userId}_settings`, {
+            lastPath: redirectPath,
+          });
         }
         break;
       default:
         if (!authorized) {
+          setSessionItem(ANONYMOUS_REDIRECT_PATH_STORAGE_KEY, redirectPath);
           dispatch(
             redirect({
               type: LOGIN_PAGE,
@@ -307,6 +327,10 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
               },
             }),
           );
+        } else {
+          updateStorageItem(`${userInfo.userId}_settings`, {
+            lastPath: redirectPath,
+          });
         }
     }
   }

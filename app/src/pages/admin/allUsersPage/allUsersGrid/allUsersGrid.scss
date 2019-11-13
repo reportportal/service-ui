@@ -1,9 +1,25 @@
+/*!
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 .type-col {
   width: 10%;
   vertical-align: middle;
   font-size: 13px;
   text-transform: capitalize;
-  @media (max-width: $SCREEN_SM_MAX) {
+  @media (max-width: $SCREEN_XS_MAX) {
     width: 100%;
   }
 }
@@ -13,27 +29,58 @@
   font-size: 13px;
   text-transform: lowercase;
   @media (max-width: $SCREEN_XS_MAX) {
-    margin-left: 55px;
+    margin-left: 60px;
     width: 100%;
   }
 }
+
+.login-block {
+  display: inline-block;
+  max-width: 110px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    max-width: 80px;
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    max-width: 240px;
+  }
+}
+
 .email-col {
   width: 15%;
   vertical-align: middle;
   font-size: 13px;
   color: $COLOR--windows-blue;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  @media (max-width: $SCREEN_SM_MAX) {
+  @media (max-width: $SCREEN_XS_MAX) {
     width: 100%;
   }
 }
+
+.email-block {
+  display: inline-block;
+  max-width: 130px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    max-width: 90px;
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    max-width: 245px;
+  }
+}
+
 .last-login-col {
   width: 15%;
   vertical-align: middle;
   font-size: 13px;
-  @media (max-width: $SCREEN_SM_MAX) {
+  @media (max-width: $SCREEN_XS_MAX) {
     width: 100%;
+    padding-bottom: 0;
   }
 }
 .projects-and-roles-col {

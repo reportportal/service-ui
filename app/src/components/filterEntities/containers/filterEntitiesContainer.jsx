@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import isEqual from 'fast-deep-equal';
@@ -40,6 +56,7 @@ export class FilterEntitiesContainer extends Component {
         errors: {},
         values: props.entities,
         prevEntities: props.entities,
+        visibleFilters: Object.keys(props.entities),
       };
     }
     return null;
@@ -53,7 +70,9 @@ export class FilterEntitiesContainer extends Component {
   collectEntities = (values) =>
     Object.keys(values).reduce((acc, entityId) => {
       const value = values[entityId];
-      return !this.isValidChange(entityId) ? acc : { ...acc, [entityId]: value };
+      return this.isValidChange(entityId)
+        ? { ...acc, [entityId]: value }
+        : { ...acc, [entityId]: { ...value, value: '' } };
     }, {});
 
   isValidChange = (entityId) => {
@@ -110,10 +129,20 @@ export class FilterEntitiesContainer extends Component {
   };
 
   handleRemove = (entityId) => {
-    const values = omit(this.state.values, [entityId]);
-    const visibleFilters = this.state.visibleFilters.filter((item) => item !== entityId);
-    this.setState({ values, visibleFilters }, () =>
-      this.props.onChange(this.collectEntities(this.state.values)),
+    this.setState(
+      (prevState) => {
+        let values;
+        let visibleFilters;
+        if (Array.isArray(entityId)) {
+          values = omit(prevState.values, entityId);
+          visibleFilters = prevState.visibleFilters.filter((item) => !entityId.includes(item));
+        } else {
+          values = omit(prevState.values, [entityId]);
+          visibleFilters = prevState.visibleFilters.filter((item) => item !== entityId);
+        }
+        return { values, visibleFilters };
+      },
+      () => this.props.onChange(this.collectEntities(this.state.values)),
     );
   };
 
