@@ -278,6 +278,7 @@ export const statisticsLinkSelector = createSelector(
             'filter.eq.hasChildren': false,
             'filter.in.type': LEVEL_STEP,
             'filter.in.status': ownProps.statuses && ownProps.statuses.join(','),
+            'filter.in.launchId': ownProps.launchId,
             'filter.has.compositeAttribute': ownProps.compositeAttribute,
             launchesLimit,
             isLatest,
@@ -322,8 +323,10 @@ export const defectLinkSelector = createSelector(
           {
             'filter.eq.hasStats': true,
             'filter.eq.hasChildren': false,
+            'filter.in.type': ownProps.filterType && LEVEL_STEP,
             'filter.in.issueType': getDefectsString(ownProps.defects),
             'filter.has.compositeAttribute': ownProps.compositeAttribute,
+            'filter.in.launchId': ownProps.launchId,
             launchesLimit,
             isLatest,
           },
