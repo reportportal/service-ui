@@ -83,7 +83,7 @@ import { fetchMembersAction } from 'controllers/members';
 import { fetchProjectDataAction } from 'controllers/administrate';
 import { fetchAllUsersAction } from 'controllers/administrate/allUsers';
 import { fetchLogPageData } from 'controllers/log';
-import { fetchHistoryPageInfo } from 'controllers/itemsHistory';
+import { fetchHistoryPageInfoAction } from 'controllers/itemsHistory';
 import { fetchProjectsAction } from 'controllers/administrate/projects';
 import { startSetViewMode } from 'controllers/administrate/projects/actionCreators';
 import { SIZE_KEY } from 'controllers/pagination';
@@ -204,7 +204,7 @@ const routesMap = {
   [HISTORY_PAGE]: {
     path: '/:projectId/launches/:filterId/:testItemIds+/history',
     thunk: (dispatch) => {
-      dispatch(fetchHistoryPageInfo());
+      dispatch(fetchHistoryPageInfoAction());
     },
   },
   PROJECT_FILTERS_PAGE: {
