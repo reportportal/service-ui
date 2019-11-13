@@ -273,12 +273,15 @@ export class CumulativeTrendChart extends PureComponent {
         itemId: TEST_ITEMS_TYPE_LIST,
         compositeAttribute: activeAttributes.map(formatAttribute).join(','),
         launchesLimit: DEFAULT_LAUNCHES_LIMIT,
+        launchId: selectedItem.content.launchIds.join(),
+        filterType: true,
       });
     } else {
       link = getStatisticsLink({
         statuses: [PASSED, FAILED, SKIPPED, INTERRUPTED, IN_PROGRESS],
         compositeAttribute: activeAttributes.map(formatAttribute).join(','),
         launchesLimit: DEFAULT_LAUNCHES_LIMIT,
+        launchId: selectedItem.content.launchIds.join(),
       });
     }
 
