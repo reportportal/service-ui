@@ -15,46 +15,23 @@
  */
 
 import { combineReducers } from 'redux';
-import { FETCH_SUCCESS } from 'controllers/fetch';
-import { NAMESPACE, SET_ITEMS_HISTORY, SET_VISIBLE_ITEMS_COUNT, RESET_HISTORY } from './constants';
+import { queueReducers } from 'common/utils';
+import { paginationReducer } from 'controllers/pagination';
+import { loadingReducer } from 'controllers/loading';
+import { fetchReducer } from 'controllers/fetch';
+import { NAMESPACE, RESET_HISTORY, PAGINATION_INITIAL_STATE } from './constants';
 
-const itemsReducer = (state = [], { type, payload }) => {
+const historyPaginationReducer = (state = PAGINATION_INITIAL_STATE, { type }) => {
   switch (type) {
-    case SET_ITEMS_HISTORY:
-      return payload;
-    default:
-      return state;
-  }
-};
-
-const visibleItemsCountReducer = (state = 0, { type, payload }) => {
-  switch (type) {
-    case SET_VISIBLE_ITEMS_COUNT:
-      return payload;
     case RESET_HISTORY:
-      return 0;
+      return PAGINATION_INITIAL_STATE;
     default:
       return state;
   }
 };
 
-const historyReducer = (state = [], { type, payload, meta }) => {
-  if (meta && meta.namespace && meta.namespace !== NAMESPACE) {
-    return state;
-  }
-  let reversedPayload;
+const historyReducer = (state = [], { type }) => {
   switch (type) {
-    case FETCH_SUCCESS:
-      if (state.length === 0) {
-        return payload.reverse();
-      }
-      reversedPayload = payload.reverse();
-      return state.map((item, index) => ({
-        ...item,
-        resources: item.resources.concat(
-          reversedPayload[index] && reversedPayload[index].resources,
-        ),
-      }));
     case RESET_HISTORY:
       return [];
     default:
@@ -63,7 +40,10 @@ const historyReducer = (state = [], { type, payload, meta }) => {
 };
 
 export const itemsHistoryReducer = combineReducers({
-  history: historyReducer,
-  items: itemsReducer,
-  visibleItemsCount: visibleItemsCountReducer,
+  history: queueReducers(historyReducer, fetchReducer(NAMESPACE, { contentPath: 'content' })),
+  loading: loadingReducer(NAMESPACE),
+  pagination: queueReducers(
+    historyPaginationReducer,
+    paginationReducer(NAMESPACE, PAGINATION_INITIAL_STATE),
+  ),
 });

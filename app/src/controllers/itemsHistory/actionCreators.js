@@ -16,11 +16,9 @@
 
 import {
   FETCH_ITEMS_HISTORY,
-  SET_ITEMS_HISTORY,
   FETCH_HISTORY_PAGE_INFO,
-  SET_VISIBLE_ITEMS_COUNT,
   RESET_HISTORY,
-  RESET_FETCH_HISTORY,
+  REFRESH_HISTORY,
 } from './constants';
 
 export const fetchItemsHistoryAction = ({ historyDepth, loadMore } = {}) => ({
@@ -28,24 +26,14 @@ export const fetchItemsHistoryAction = ({ historyDepth, loadMore } = {}) => ({
   payload: { historyDepth, loadMore },
 });
 
-export const setItemsHistory = (items) => ({
-  type: SET_ITEMS_HISTORY,
-  payload: items,
-});
-
-export const fetchHistoryPageInfo = () => ({
+export const fetchHistoryPageInfoAction = () => ({
   type: FETCH_HISTORY_PAGE_INFO,
 });
 
-export const setVisibleItemsCount = (visibleItemsCount) => ({
-  type: SET_VISIBLE_ITEMS_COUNT,
-  payload: visibleItemsCount,
-});
-
-export const resetHistory = () => ({
+export const resetHistoryAction = () => ({
   type: RESET_HISTORY,
 });
 
-export const refreshHistory = () => ({
-  type: RESET_FETCH_HISTORY,
+export const refreshHistoryAction = () => ({
+  type: REFRESH_HISTORY,
 });
