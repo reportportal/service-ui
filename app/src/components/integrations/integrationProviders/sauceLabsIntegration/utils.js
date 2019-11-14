@@ -18,13 +18,16 @@ import { SAUCE_LABS_DATA_CENTER_ATTRIBUTE_KEY, SAUCE_LABS_ID_ATTRIBUTE_KEY } fro
 
 const getDefaultDataCenter = ({ dataCenters = [''] } = {}) => dataCenters[0];
 
-const getIntegrationDataCenter = (
-  integrations = [{ integrationParameters: { dataCenter: '' }, integrationType: { details: {} } }],
-) => {
-  const defaultDataCenter = integrations[0]
-    ? getDefaultDataCenter(integrations[0].integrationType.details)
-    : '';
-  return (integrations[0] && integrations[0].integrationParameters.dataCenter) || defaultDataCenter;
+const getIntegrationDataCenter = (integrations = []) => {
+  const integration = integrations[0];
+  let dataCenter = '';
+  if (integration) {
+    dataCenter =
+      integration.integrationParameters.dataCenter ||
+      getDefaultDataCenter(integration.integrationType.details);
+  }
+
+  return dataCenter;
 };
 
 export const getSauceLabsConfig = (attributes = [], integrations) => {

@@ -1481,8 +1481,6 @@
   "SamlFormFields.providerName": "Имя провайдера",
   "SauceLabsFormFields.accessTokenTitle": "Токен доступа",
   "SauceLabsFormFields.dataCenter": "Центр данных",
-  "SauceLabsFormFields.dataCenterEU": "Европа (EU)",
-  "SauceLabsFormFields.dataCenterUS": "Соединённые Штаты Америки (US)",
   "SauceLabsFormFields.userNameTitle": "Имя пользователя",
   "ScrollWrapper.backToTop": "Вверх",
   "SearchDashboardForm.dashboardNameSearchHint": "Имя панели управления должно быть длиной от 3 до 128.",
