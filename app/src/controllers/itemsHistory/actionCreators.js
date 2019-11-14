@@ -21,9 +21,9 @@ import {
   REFRESH_HISTORY,
 } from './constants';
 
-export const fetchItemsHistoryAction = ({ historyDepth, loadMore } = {}) => ({
+export const fetchItemsHistoryAction = ({ historyDepth, period, loadMore } = {}) => ({
   type: FETCH_ITEMS_HISTORY,
-  payload: { historyDepth, loadMore },
+  payload: { historyDepth, period, loadMore },
 });
 
 export const fetchHistoryPageInfoAction = () => ({

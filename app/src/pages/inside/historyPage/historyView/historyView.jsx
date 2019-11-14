@@ -21,7 +21,7 @@ import classNames from 'classnames/bind';
 import { getStorageItem, setStorageItem } from 'common/utils';
 import { HISTORY_DEPTH_CONFIG } from 'controllers/itemsHistory';
 import { HISTORY_PAGE_EVENTS } from 'components/main/analytics/events';
-import { HistoryFiltersBlock } from './historyFiltersBlock';
+import { HistoryControls } from './historyControls';
 import { HistoryTable } from './historyTable';
 import styles from './historyView.scss';
 
@@ -38,27 +38,38 @@ export class HistoryView extends Component {
   };
 
   state = {
-    historyDepthValue:
-      getStorageItem(HISTORY_DEPTH_CONFIG.name) || HISTORY_DEPTH_CONFIG.defaultValue,
+    historyDepth: getStorageItem(HISTORY_DEPTH_CONFIG.name) || HISTORY_DEPTH_CONFIG.defaultValue,
+    period: {},
   };
 
-  onChangeHistoryDepth = (newValue) => {
+  onChangeHistoryDepth = (historyDepth) => {
     this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.SELECT_HISTORY_DEPTH);
     this.setState({
-      historyDepthValue: newValue,
+      historyDepth,
     });
-    setStorageItem(HISTORY_DEPTH_CONFIG.name, newValue);
+    setStorageItem(HISTORY_DEPTH_CONFIG.name, historyDepth);
+    this.props.refreshHistory();
+  };
+
+  onChangePeriod = (period) => {
+    this.setState({
+      period,
+    });
     this.props.refreshHistory();
   };
 
   render() {
+    const { historyDepth, period } = this.state;
+
     return (
       <div className={cx('history-view-wrapper')}>
-        <HistoryFiltersBlock
-          historyDepth={this.state.historyDepthValue}
+        <HistoryControls
+          historyDepth={historyDepth}
+          period={period}
+          onChangePeriod={this.onChangePeriod}
           onChangeHistoryDepth={this.onChangeHistoryDepth}
         />
-        <HistoryTable historyDepth={this.state.historyDepthValue} />
+        <HistoryTable historyDepth={historyDepth} period={period} />
       </div>
     );
   }
