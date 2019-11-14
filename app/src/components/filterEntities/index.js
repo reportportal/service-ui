@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-export { EntityItemStartTime } from './entityItemStartTime';
+export { EntityItemStartTime, getTimeDateRangePresets } from './entityItemStartTime';
 export { EntityDropdown } from './entityDropdown';
 export { EntityContains } from './entityContains';
 export { filterValueShape, filterEntityShape } from './propTypes';

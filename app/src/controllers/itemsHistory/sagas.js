@@ -20,7 +20,7 @@ import { getStorageItem } from 'common/utils';
 import { concatFetchDataAction } from 'controllers/fetch';
 import { activeProjectSelector } from 'controllers/user';
 import { fetchParentItems } from 'controllers/testItem';
-import { testItemIdsArraySelector } from 'controllers/pages';
+import { testItemIdsArraySelector, launchIdSelector } from 'controllers/pages';
 import { fetchItemsHistoryAction, resetHistoryAction } from './actionCreators';
 import { historyPaginationSelector } from './selectors';
 import {
@@ -35,6 +35,7 @@ function* fetchItemsHistory({ payload = {} }) {
   const pagination = yield select(historyPaginationSelector);
   const activeProject = yield select(activeProjectSelector);
   const itemIdsArray = yield select(testItemIdsArraySelector);
+  const launchId = yield select(launchIdSelector);
   let parentItemId;
   if (itemIdsArray.length > 1) {
     parentItemId = itemIdsArray[itemIdsArray.length - 1];
@@ -44,10 +45,14 @@ function* fetchItemsHistory({ payload = {} }) {
     pageNumber += 1;
   }
   const params = {
-    'filter.eq.parentId': parentItemId,
     'page.page': pageNumber,
     'page.size': pagination.size,
   };
+  if (parentItemId) {
+    params['filter.eq.parentId'] = parentItemId;
+  } else {
+    params['filter.eq.launchId'] = launchId;
+  }
   const historyDepth =
     payload.historyDepth ||
     getStorageItem(HISTORY_DEPTH_CONFIG.name) ||

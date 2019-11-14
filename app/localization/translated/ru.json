@@ -723,7 +723,7 @@
   "Hamburger.noPermissions": "Вы не являетесь владельцем запуска",
   "Hamburger.notYourLaunch": "Запуск был создан не Вами",
   "Hamburger.patternAnalysis": "Паттерн-анализ",
-  "HistoryFiltersBlock.depthFilterTitle": "Глубина истории",
+  "HistoryControls.depthFilterTitle": "Глубина истории",
   "HistoryItem.emptyItemCaption": "Элемент пуст",
   "HistoryItem.noItemCaption": "Нет элементов<br/>в запуске",
   "HistoryItem.sameItemsCaption": "Существует несколько элементов с одинаковым значением UID.",
