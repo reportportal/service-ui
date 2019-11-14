@@ -36,14 +36,6 @@ const messages = defineMessages({
     id: 'SauceLabsFormFields.dataCenter',
     defaultMessage: 'Data center',
   },
-  dataCenterUS: {
-    id: 'SauceLabsFormFields.dataCenterUS',
-    defaultMessage: 'United States (US)',
-  },
-  dataCenterEU: {
-    id: 'SauceLabsFormFields.dataCenterEU',
-    defaultMessage: 'Europe (EU)',
-  },
 });
 
 @injectIntl
