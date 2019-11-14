@@ -164,8 +164,8 @@ export class InputTimeDateRange extends Component {
 
   render() {
     const { intl, presets, value, withoutDynamic } = this.props;
-    const displayStartDate = (value && value.start) || DEFAULT_DISPLAY_START_DATE;
-    const displayEndDate = (value && value.end) || DEFAULT_DISPLAY_END_DATE;
+    const displayStartDate = moment((value && value.start) || DEFAULT_DISPLAY_START_DATE);
+    const displayEndDate = moment((value && value.end) || DEFAULT_DISPLAY_END_DATE);
     return (
       <div className={cx('input-time-date-range')} ref={this.setRef}>
         <input
@@ -199,9 +199,9 @@ export class InputTimeDateRange extends Component {
                 className={cx('from-input')}
                 fixedHeight
                 selectsStart
-                selected={moment(displayStartDate)}
-                startDate={moment(displayStartDate)}
-                endDate={moment(displayEndDate)}
+                selected={displayStartDate}
+                startDate={displayStartDate}
+                endDate={displayEndDate}
                 onChange={this.handleChangeFrom}
                 showTimeSelect
                 timeFormat={TIME_FORMAT}
@@ -223,9 +223,9 @@ export class InputTimeDateRange extends Component {
                 className={cx('to-input')}
                 fixedHeight
                 selectsEnd
-                selected={moment(displayEndDate)}
-                startDate={moment(displayStartDate)}
-                endDate={moment(displayEndDate)}
+                selected={displayEndDate}
+                startDate={displayStartDate}
+                endDate={displayEndDate}
                 onChange={this.handleChangeTo}
                 showTimeSelect
                 timeFormat={TIME_FORMAT}

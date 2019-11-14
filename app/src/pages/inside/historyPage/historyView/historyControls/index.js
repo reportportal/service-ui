@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2019 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,27 +14,4 @@
  * limitations under the License.
  */
 
-.filters-block-wrapper {
-  padding: 7px 15px 14px 15px;
-  border-bottom: 1px solid $COLOR--gray-91;
-}
-
-.filter-name {
-  max-width: 100%;
-  margin-bottom: 5px;
-  box-sizing: border-box;
-  font-family: $FONT-REGULAR;
-  font-size: 13px;
-  line-height: 18px;
-}
-
-.drop-down-container {
-  position: relative;
-  z-index: 1;
-  width: 202px;
-  height: 30px;
-  font-family: $FONT-REGULAR;
-  font-size: 13px;
-  line-height: 13px;
-  color: $COLOR--charcoal-grey;
-}
+export { HistoryControls } from './historyControls';
