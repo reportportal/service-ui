@@ -33,6 +33,7 @@ import { PROJECT_LOG_PAGE } from 'controllers/pages';
 import { ItemNameBlock } from './itemNameBlock';
 import { HistoryItem } from './historyItem';
 import { HistoryCell } from './historyCell';
+import { calculateMaxRowItemsCount } from './utils';
 
 import styles from './historyTable.scss';
 
@@ -87,17 +88,18 @@ export class HistoryTable extends Component {
     navigate: () => {},
   };
 
-  getHeaderItemsCount = () => {
-    const { history } = this.props;
-    let headerItemsCount = 0;
-    history.forEach((item) => {
-      if (item.resources.length > headerItemsCount) {
-        headerItemsCount = item.resources.length;
-      }
-    });
-    this.rowItemsCount = headerItemsCount;
+  static getDerivedStateFromProps(props, state) {
+    const newMaxRowItemsCount = calculateMaxRowItemsCount(props.history);
+    if (state.maxRowItemsCount !== newMaxRowItemsCount) {
+      return {
+        maxRowItemsCount: newMaxRowItemsCount,
+      };
+    }
+    return null;
+  }
 
-    return headerItemsCount;
+  state = {
+    maxRowItemsCount: 0,
   };
 
   getHistoryItemProps = (historyItem) => {
@@ -166,9 +168,9 @@ export class HistoryTable extends Component {
 
   renderHeader = () => {
     const { intl } = this.props;
-    const headerItemsCount = this.getHeaderItemsCount();
+    const { maxRowItemsCount } = this.state;
     const headerItems = [];
-    for (let index = headerItemsCount; index > 0; index -= 1) {
+    for (let index = maxRowItemsCount; index > 0; index -= 1) {
       headerItems.push(
         <HistoryCell key={index} header>
           {`${intl.formatMessage(messages.executionNumberTitle)}${index}`}
@@ -179,7 +181,7 @@ export class HistoryTable extends Component {
   };
 
   renderHistoryItems = (item) => {
-    const itemLastIndex = this.rowItemsCount - 1;
+    const itemLastIndex = this.state.maxRowItemsCount - 1;
     const itemResources = [...item.resources].reverse();
     const historyItems = [];
 

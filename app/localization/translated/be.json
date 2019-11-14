@@ -739,8 +739,6 @@
   "HistoryLineItemContent.launchStopped": "Спынены",
   "HistoryTable.itemNamesHeaderTitle": "Імя",
   "HistoryTable.launchNumberTitle": "Запуск №",
-  "HistoryTable.loadHistoryErrorNotification": "Не атрымалася загрузіць гісторыю для бягучага элемента",
-  "HistoryTable.loadItemInfoErrorNotification": "Не атрымалася загрузіць інфармацыю для элемента",
   "HistoryTable.loadMoreHistoryItemsTitle": "Пстрыкніце тут, каб загрузіць больш элементаў",
   "IgnoreInAAModal.ignoreButton": "Ігнараваць",
   "IgnoreInAAModal.successMessage": "Элемент паспяхова ігнаруецца пры Аўта-аналізу",
