@@ -27,7 +27,7 @@ const endOfToday = moment()
   .startOf('day')
   .valueOf();
 
-const presets = [
+export const getTimeDateRangePresets = () => [
   {
     label: <FormattedMessage id="EntityItemStartTime.today" defaultMessage="Today" />,
     getValue: () => ({
@@ -100,7 +100,7 @@ export const EntityItemStartTime = ({
     vertical={vertical}
   >
     <InputTimeDateRange
-      presets={presets}
+      presets={getTimeDateRangePresets()}
       onChange={(val) => {
         onChange({ condition: CONDITION_BETWEEN, value: formatValue({ ...val }) });
       }}
