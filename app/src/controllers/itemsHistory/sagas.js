@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { takeEvery, all, put, select } from 'redux-saga/effects';
+import { takeEvery, all, put, call, select } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { getStorageItem } from 'common/utils';
 import { concatFetchDataAction } from 'controllers/fetch';
@@ -63,7 +63,7 @@ function* fetchItemsHistory({ payload = {} }) {
 
 function* fetchHistoryPageInfo() {
   yield put(resetHistoryAction());
-  yield put(fetchParentItems());
+  yield call(fetchParentItems);
   yield put(fetchItemsHistoryAction());
 }
 
