@@ -71,7 +71,6 @@ export class HistoryTable extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     historyDepth: PropTypes.string.isRequired,
-    period: PropTypes.oneOfType([PropTypes.object, PropTypes.string]).isRequired,
     loading: PropTypes.bool,
     history: PropTypes.array,
     totalItemsCount: PropTypes.number,
@@ -163,7 +162,6 @@ export class HistoryTable extends Component {
   loadMoreHistoryItems = () => {
     this.props.fetchItemsHistoryAction({
       historyDepth: this.props.historyDepth,
-      period: this.props.period,
       loadMore: true,
     });
   };
