@@ -56,7 +56,7 @@ export class IntegrationInfoContainer extends Component {
 
   render() {
     const {
-      integrationType: { name, details: { version } = {}, type },
+      integrationType: { name, details = {}, type },
       integrationType,
       projectIntegrations,
       globalIntegrations,
@@ -72,12 +72,13 @@ export class IntegrationInfoContainer extends Component {
           image={INTEGRATIONS_IMAGES_MAP[name]}
           description={INTEGRATIONS_DESCRIPTIONS_MAP[name]}
           title={INTEGRATION_NAMES_TITLES[name]}
-          version={version}
+          version={details.version}
           data={integrationType}
           onToggleActive={onToggleActive}
           isGlobal={isGlobal}
         />
         <InstancesSection
+          pluginDetails={details}
           globalIntegrations={globalIntegrations}
           projectIntegrations={projectIntegrations}
           onItemClick={onItemClick}
