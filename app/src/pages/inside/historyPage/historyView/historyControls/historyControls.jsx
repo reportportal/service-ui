@@ -19,8 +19,6 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { InputDropdown } from 'components/inputs/inputDropdown';
-import { getTimeDateRangePresets } from 'components/filterEntities';
-import { InputTimeDateRange } from 'components/inputs/inputTimeDateRange';
 import { HISTORY_DEPTH_CONFIG } from 'controllers/itemsHistory';
 import styles from './historyControls.scss';
 
@@ -55,7 +53,7 @@ export class HistoryControls extends Component {
   };
 
   render() {
-    const { intl, historyDepth, period, onChangeHistoryDepth, onChangePeriod } = this.props;
+    const { intl, historyDepth, onChangeHistoryDepth } = this.props;
 
     return (
       <div className={cx('history-controls')}>
@@ -71,7 +69,7 @@ export class HistoryControls extends Component {
             </div>
           </div>
 
-          <div className={cx('controls-item')}>
+          {/* <div className={cx('controls-item')}>
             <p className={cx('control-name')}>{intl.formatMessage(messages.periodTitle)}</p>
             <div className={cx('control-container')}>
               <InputTimeDateRange
@@ -80,7 +78,7 @@ export class HistoryControls extends Component {
                 value={period}
               />
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     );
