@@ -147,6 +147,7 @@ export class InstancesSection extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    pluginDetails: PropTypes.object,
     projectIntegrations: PropTypes.array,
     globalIntegrations: PropTypes.array,
     isGlobal: PropTypes.bool,
@@ -155,6 +156,7 @@ export class InstancesSection extends Component {
   };
 
   static defaultProps = {
+    pluginDetails: {},
     projectIntegrations: [],
     globalIntegrations: [],
     projectId: '',
@@ -240,7 +242,7 @@ export class InstancesSection extends Component {
   };
 
   showAddProjectIntegrationModal = () => {
-    const { instanceType, isGlobal } = this.props;
+    const { instanceType, pluginDetails, isGlobal } = this.props;
     this.props.showModalAction({
       id: 'addIntegrationModal',
       data: {
@@ -248,6 +250,9 @@ export class InstancesSection extends Component {
         instanceType,
         isGlobal,
         eventsInfo: getSaveIntegrationModalEvents(instanceType, isGlobal),
+        customProps: {
+          pluginDetails,
+        },
       },
     });
   };
