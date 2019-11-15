@@ -308,7 +308,7 @@ export class SimpleWidget extends Component {
     }
 
     return (
-      <div className={cx('widget-container', { disabled: isFullscreen })}>
+      <div className={cx('widget-container', { fullscreen: isFullscreen })}>
         <div
           className={cx('widget-header', 'draggable-field', {
             modifiable: isModifiable,
