@@ -408,7 +408,9 @@ export class DashboardItemPage extends Component {
             </div>
             <Fullscreen enabled={fullScreenMode} onChange={changeFullScreenMode}>
               <WidgetsGrid
-                isModifiable={canResizeAndDragWidgets(userRole, projectRole, isOwner)}
+                isModifiable={
+                  canResizeAndDragWidgets(userRole, projectRole, isOwner) && !fullScreenMode
+                }
                 dashboard={dashboard}
                 isFullscreen={fullScreenMode}
                 showWidgetWizard={this.showWidgetWizard}
