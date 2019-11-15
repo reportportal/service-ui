@@ -69,7 +69,7 @@ export class HistoryView extends Component {
           onChangePeriod={this.onChangePeriod}
           onChangeHistoryDepth={this.onChangeHistoryDepth}
         />
-        <HistoryTable historyDepth={historyDepth} period={period} />
+        <HistoryTable historyDepth={historyDepth} />
       </div>
     );
   }
