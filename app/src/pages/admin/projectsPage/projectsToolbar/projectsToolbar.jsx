@@ -56,7 +56,7 @@ import styles from './projectsToolbar.scss';
 const cx = classNames.bind(styles);
 @connect(
   (state) => ({
-    filterEnities: collectFilterEntities(querySelector(state)),
+    filterEntities: collectFilterEntities(querySelector(state)),
     selectedProjects: selectedProjectsSelector(state),
     viewMode: viewModeSelector(state),
   }),
@@ -77,7 +77,7 @@ export class ProjectsToolbar extends Component {
     viewMode: PropTypes.string,
     setViewMode: PropTypes.func.isRequired,
     selectedProjects: PropTypes.arrayOf(PropTypes.object),
-    filterEnities: PropTypes.object,
+    filterEntities: PropTypes.object,
     deleteItemsAction: PropTypes.func.isRequired,
     showScreenLockAction: PropTypes.func.isRequired,
     hideScreenLockAction: PropTypes.func.isRequired,
@@ -92,13 +92,13 @@ export class ProjectsToolbar extends Component {
   static defaultProps = {
     viewMode: GRID_VIEW,
     selectedProjects: [],
-    filterEnities: {},
+    filterEntities: {},
     sortingColumn: null,
     sortingDirection: null,
     onChangeSorting: () => {},
   };
 
-  onExportProjects = () => downloadFile(URLS.exportProjects(this.props.filterEnities));
+  onExportProjects = () => downloadFile(URLS.exportProjects(this.props.filterEntities));
 
   getSelectedProjectsNames = () =>
     this.props.selectedProjects.map(({ projectName }) => `'<b>${projectName}</b>'`).join(', ');

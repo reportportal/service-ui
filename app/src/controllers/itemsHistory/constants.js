@@ -21,6 +21,7 @@ export const NAMESPACE = 'history';
 export const FETCH_HISTORY_PAGE_INFO = 'fetchHistoryPageInfo';
 export const RESET_HISTORY = 'resetHistory';
 export const REFRESH_HISTORY = 'refreshHistory';
+export const SET_HISTORY_PAGE_LOADING = 'setHistoryPageLoading';
 export const HISTORY_DEPTH_CONFIG = {
   name: 'historyDepth',
   defaultValue: '10',

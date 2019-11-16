@@ -14,14 +14,27 @@
  * limitations under the License.
  */
 
-import { takeEvery, all, put, call, select } from 'redux-saga/effects';
+import { takeEvery, all, put, call, select, take } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { getStorageItem } from 'common/utils';
-import { concatFetchDataAction } from 'controllers/fetch';
+import { concatFetchDataAction, createFetchPredicate } from 'controllers/fetch';
 import { activeProjectSelector } from 'controllers/user';
-import { fetchParentItems } from 'controllers/testItem';
-import { testItemIdsArraySelector, launchIdSelector } from 'controllers/pages';
-import { fetchItemsHistoryAction, resetHistoryAction } from './actionCreators';
+import {
+  namespaceSelector,
+  levelSelector,
+  fetchTestItemsAction,
+  SET_PAGE_LOADING,
+} from 'controllers/testItem';
+import {
+  testItemIdsArraySelector,
+  launchIdSelector,
+  pagePropertiesSelector,
+} from 'controllers/pages';
+import {
+  fetchItemsHistoryAction,
+  resetHistoryAction,
+  setHistoryPageLoadingAction,
+} from './actionCreators';
 import { historyPaginationSelector } from './selectors';
 import {
   FETCH_ITEMS_HISTORY,
@@ -31,20 +44,20 @@ import {
   REFRESH_HISTORY,
 } from './constants';
 
-function* fetchItemsHistory({ payload = {} }) {
+function* getHistoryParams({ loadMore } = {}) {
+  if (loadMore) {
+    yield put(setHistoryPageLoadingAction(true));
+  }
   const pagination = yield select(historyPaginationSelector);
-  const activeProject = yield select(activeProjectSelector);
   const itemIdsArray = yield select(testItemIdsArraySelector);
   const launchId = yield select(launchIdSelector);
-  let parentItemId;
-  if (itemIdsArray.length > 1) {
-    parentItemId = itemIdsArray[itemIdsArray.length - 1];
-  }
-  let pageNumber = pagination.number;
-  if (payload.loadMore) {
-    pageNumber += 1;
-  }
+  const namespace = yield select(namespaceSelector);
+  const query = yield select(pagePropertiesSelector, namespace);
+
+  const pageNumber = loadMore ? pagination.number + 1 : pagination.number;
+  const parentItemId = itemIdsArray.length > 1 ? itemIdsArray[itemIdsArray.length - 1] : undefined;
   const params = {
+    ...query,
     'page.page': pageNumber,
     'page.size': pagination.size,
   };
@@ -53,6 +66,14 @@ function* fetchItemsHistory({ payload = {} }) {
   } else {
     params['filter.eq.launchId'] = launchId;
   }
+
+  return params;
+}
+
+function* fetchItemsHistory({ payload = {} }) {
+  const activeProject = yield select(activeProjectSelector);
+  const params = yield call(getHistoryParams, payload);
+
   const historyDepth =
     payload.historyDepth ||
     getStorageItem(HISTORY_DEPTH_CONFIG.name) ||
@@ -64,15 +85,27 @@ function* fetchItemsHistory({ payload = {} }) {
       { params },
     ),
   );
+  yield take(createFetchPredicate(NAMESPACE));
+  yield put(setHistoryPageLoadingAction(false));
 }
 
 function* fetchHistoryPageInfo() {
+  yield put(setHistoryPageLoadingAction(true));
+
+  const level = yield select(levelSelector);
   yield put(resetHistoryAction());
-  yield call(fetchParentItems);
+
+  // We must fetch test items to calculate their corresponding item level.
+  if (!level) {
+    yield put(fetchTestItemsAction());
+    yield take((action) => action.type === SET_PAGE_LOADING && action.payload === false);
+  }
+
   yield put(fetchItemsHistoryAction());
 }
 
 function* refreshHistory() {
+  yield put(setHistoryPageLoadingAction(true));
   yield put(resetHistoryAction());
   yield put(fetchItemsHistoryAction());
 }
@@ -85,9 +118,9 @@ function* watchFetchHistoryPageInfo() {
   yield takeEvery(FETCH_HISTORY_PAGE_INFO, fetchHistoryPageInfo);
 }
 
-function* watchResetFetchHstory() {
+function* watchRefreshHistory() {
   yield takeEvery(REFRESH_HISTORY, refreshHistory);
 }
 export function* historySagas() {
-  yield all([watchFetchHistory(), watchFetchHistoryPageInfo(), watchResetFetchHstory()]);
+  yield all([watchFetchHistory(), watchFetchHistoryPageInfo(), watchRefreshHistory()]);
 }

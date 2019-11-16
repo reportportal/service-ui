@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { HistoryPage } from './historyPage';
+export { HistoryPageContainer as HistoryPage } from './historyPageContainer';
