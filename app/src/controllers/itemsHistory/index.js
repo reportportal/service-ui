@@ -33,4 +33,5 @@ export {
   totalItemsCountSelector,
   historyPaginationSelector,
   loadingSelector,
+  historyPageLinkSelector,
 } from './selectors';

@@ -19,6 +19,7 @@ import {
   FETCH_HISTORY_PAGE_INFO,
   RESET_HISTORY,
   REFRESH_HISTORY,
+  SET_HISTORY_PAGE_LOADING,
 } from './constants';
 
 export const fetchItemsHistoryAction = ({ historyDepth, period, loadMore } = {}) => ({
@@ -36,4 +37,9 @@ export const resetHistoryAction = () => ({
 
 export const refreshHistoryAction = () => ({
   type: REFRESH_HISTORY,
+});
+
+export const setHistoryPageLoadingAction = (payload) => ({
+  type: SET_HISTORY_PAGE_LOADING,
+  payload,
 });

@@ -26,15 +26,15 @@ import {
   fetchItemsHistoryAction,
 } from 'controllers/itemsHistory';
 import { nameLinkSelector } from 'controllers/testItem';
+import { PROJECT_LOG_PAGE } from 'controllers/pages';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { NOT_FOUND, RESETED } from 'common/constants/launchStatuses';
-import { PROJECT_LOG_PAGE } from 'controllers/pages';
+import { NoItemMessage } from 'components/main/noItemMessage';
 import { ItemNameBlock } from './itemNameBlock';
 import { HistoryItem } from './historyItem';
 import { HistoryCell } from './historyCell';
 import { calculateMaxRowItemsCount } from './utils';
-
 import styles from './historyTable.scss';
 
 const cx = classNames.bind(styles);
@@ -51,6 +51,10 @@ const messages = defineMessages({
   executionNumberTitle: {
     id: 'HistoryTable.launchNumberTitle',
     defaultMessage: 'Execution #',
+  },
+  noHistoryItems: {
+    id: 'HistoryTable.noHistoryItems',
+    defaultMessage: 'No history items',
   },
 });
 
@@ -210,10 +214,15 @@ export class HistoryTable extends Component {
   };
 
   renderFooter = () => {
-    const { intl, history, loading, totalItemsCount } = this.props;
+    const {
+      intl: { formatMessage },
+      history,
+      loading,
+      totalItemsCount,
+    } = this.props;
     const visibleItemsCount = history.length;
 
-    if (visibleItemsCount && loading) {
+    if (loading) {
       return (
         <div className={cx('spinner-wrapper')}>
           <SpinningPreloader />
@@ -227,7 +236,7 @@ export class HistoryTable extends Component {
         <div className={cx('load-more-container')}>
           <button className={cx('load-more')} onClick={this.loadMoreHistoryItems}>
             <h3 className={cx('load-more-title')}>
-              {intl.formatMessage(messages.loadMoreHistoryItemsTitle)}
+              {formatMessage(messages.loadMoreHistoryItemsTitle)}
             </h3>
           </button>
         </div>
@@ -236,30 +245,34 @@ export class HistoryTable extends Component {
   };
 
   render() {
-    const { intl, history } = this.props;
+    const {
+      intl: { formatMessage },
+      history,
+      loading,
+    } = this.props;
 
     return (
       <Fragment>
         {!history.length ? (
-          <div className={cx('spinner-wrapper')}>
-            <SpinningPreloader />
-          </div>
+          !loading && <NoItemMessage message={formatMessage(messages.noHistoryItems)} />
         ) : (
-          <ScrollWrapper autoHeight>
-            <table>
-              <thead>
-                <tr>
-                  <HistoryCell header first>
-                    <div className={cx('history-grid-name')}>
-                      {intl.formatMessage(messages.itemNamesHeaderTitle)}
-                    </div>
-                  </HistoryCell>
-                  {this.renderHeader()}
-                </tr>
-              </thead>
-              <tbody>{this.renderBody()}</tbody>
-            </table>
-          </ScrollWrapper>
+          <Fragment>
+            <ScrollWrapper autoHeight>
+              <table>
+                <thead>
+                  <tr>
+                    <HistoryCell header first>
+                      <div className={cx('history-grid-name')}>
+                        {formatMessage(messages.itemNamesHeaderTitle)}
+                      </div>
+                    </HistoryCell>
+                    {this.renderHeader()}
+                  </tr>
+                </thead>
+                <tbody>{this.renderBody()}</tbody>
+              </table>
+            </ScrollWrapper>
+          </Fragment>
         )}
         {this.renderFooter()}
       </Fragment>

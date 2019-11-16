@@ -27,8 +27,8 @@ import {
   namespaceSelector,
   restorePathAction,
 } from 'controllers/testItem';
-import { HISTORY_PAGE, payloadSelector } from 'controllers/pages';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
+import { historyPageLinkSelector } from 'controllers/itemsHistory';
 import {
   availableBtsIntegrationsSelector,
   isPostIssueActionAvailable,
@@ -98,12 +98,12 @@ const messages = defineMessages({
     breadcrumbs: breadcrumbsSelector(state),
     level: levelSelector(state),
     listView: isListViewSelector(state, namespaceSelector(state)),
-    payload: payloadSelector(state),
     btsIntegrations: availableBtsIntegrationsSelector(state),
     accountRole: userAccountRoleSelector(state),
     projectRole: activeProjectRoleSelector(state),
     isBtsPluginsExist: isBtsPluginsExistSelector(state),
     enabledBtsPlugins: enabledBtsPluginsSelector(state),
+    historyPageLink: historyPageLinkSelector(state),
   }),
   {
     restorePath: restorePathAction,
@@ -114,7 +114,6 @@ const messages = defineMessages({
 @track()
 export class ActionPanel extends Component {
   static propTypes = {
-    payload: PropTypes.object.isRequired,
     debugMode: PropTypes.bool,
     onRefresh: PropTypes.func,
     breadcrumbs: PropTypes.arrayOf(breadcrumbDescriptorShape),
@@ -146,6 +145,7 @@ export class ActionPanel extends Component {
     }).isRequired,
     isBtsPluginsExist: PropTypes.bool,
     enabledBtsPlugins: PropTypes.array,
+    historyPageLink: PropTypes.object.isRequired,
   };
 
   static defaultProps = {
@@ -183,7 +183,7 @@ export class ActionPanel extends Component {
         ? STEP_PAGE_EVENTS.HISTORY_BTN
         : SUITES_PAGE_EVENTS.HISTORY_BTN,
     );
-    this.props.navigate({ type: HISTORY_PAGE, payload: this.props.payload });
+    this.props.navigate(this.props.historyPageLink);
   };
 
   onClickRefresh = () => {
