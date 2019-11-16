@@ -15,6 +15,7 @@
  */
 
 import { createSelector } from 'reselect';
+import { HISTORY_PAGE, payloadSelector, querySelector } from 'controllers/pages';
 
 const domainSelector = (state) => state.itemsHistory || {};
 export const historySelector = (state) => domainSelector(state).history;
@@ -27,3 +28,13 @@ export const totalItemsCountSelector = createSelector(
 );
 
 export const loadingSelector = (state) => domainSelector(state).loading;
+
+export const historyPageLinkSelector = createSelector(
+  payloadSelector,
+  querySelector,
+  (payload, query) => ({
+    type: HISTORY_PAGE,
+    payload,
+    query: { ...query },
+  }),
+);

@@ -15,11 +15,11 @@
  */
 
 import React, { Component } from 'react';
-import { PageLayout, PageSection } from 'layouts/pageLayout';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { PageLayout, PageSection } from 'layouts/pageLayout';
 import { refreshHistoryAction } from 'controllers/itemsHistory';
 import { parentItemSelector } from 'controllers/testItem';
-import { connect } from 'react-redux';
 import { HistoryToolbar } from './historyToolbar';
 import { HistoryView } from './historyView';
 
@@ -35,21 +35,34 @@ export class HistoryPage extends Component {
   static propTypes = {
     refreshHistoryAction: PropTypes.func.isRequired,
     parentItem: PropTypes.object,
+    filterErrors: PropTypes.object,
+    filterEntities: PropTypes.array,
+    isTestItemsList: PropTypes.bool,
+    onFilterAdd: PropTypes.func,
+    onFilterRemove: PropTypes.func,
+    onFilterValidate: PropTypes.func,
+    onFilterChange: PropTypes.func,
   };
 
   static defaultProps = {
     parentItem: null,
+    filterErrors: {},
+    filterEntities: [],
+    isTestItemsList: false,
+    onFilterAdd: () => {},
+    onFilterRemove: () => {},
+    onFilterValidate: () => {},
+    onFilterChange: () => {},
   };
 
   render() {
+    const { refreshHistoryAction: refreshHistory, ...rest } = this.props;
+
     return (
       <PageLayout>
         <PageSection>
-          <HistoryToolbar
-            onRefresh={this.props.refreshHistoryAction}
-            parentItem={this.props.parentItem}
-          />
-          <HistoryView refreshHistory={this.props.refreshHistoryAction} />
+          <HistoryToolbar onRefresh={refreshHistory} {...rest} />
+          <HistoryView refreshHistory={refreshHistory} />
         </PageSection>
       </PageLayout>
     );
