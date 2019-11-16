@@ -15,21 +15,53 @@
  */
 
 import React, { Fragment } from 'react';
-import { InfoLine } from 'pages/inside/common/infoLine';
 import PropTypes from 'prop-types';
+import { InfoLine } from 'pages/inside/common/infoLine';
+import { RefineFiltersPanel } from 'pages/inside/common/refineFiltersPanel';
 import { ActionPanel } from './actionPanel';
 
-export const HistoryToolbar = ({ parentItem, onRefresh }) => (
+export const HistoryToolbar = ({
+  parentItem,
+  onRefresh,
+  onFilterAdd,
+  onFilterRemove,
+  onFilterValidate,
+  onFilterChange,
+  filterErrors,
+  filterEntities,
+}) => (
   <Fragment>
     <ActionPanel onRefresh={onRefresh} />
     {parentItem && <InfoLine data={parentItem} />}
+    <RefineFiltersPanel
+      onFilterAdd={onFilterAdd}
+      onFilterRemove={onFilterRemove}
+      onFilterValidate={onFilterValidate}
+      onFilterChange={onFilterChange}
+      filterErrors={filterErrors}
+      filterEntities={filterEntities}
+    />
   </Fragment>
 );
 HistoryToolbar.propTypes = {
   parentItem: PropTypes.object,
+  filterErrors: PropTypes.object,
+  filterEntities: PropTypes.array,
+  isTestItemsList: PropTypes.bool,
   onRefresh: PropTypes.func,
+  onFilterAdd: PropTypes.func,
+  onFilterRemove: PropTypes.func,
+  onFilterValidate: PropTypes.func,
+  onFilterChange: PropTypes.func,
 };
 HistoryToolbar.defaultProps = {
   parentItem: null,
+  filterErrors: {},
+  filterEntities: [],
+  isTestItemsList: false,
   onRefresh: () => {},
+  onFilterAdd: () => {},
+  onFilterRemove: () => {},
+  onFilterValidate: () => {},
+  onFilterChange: () => {},
 };

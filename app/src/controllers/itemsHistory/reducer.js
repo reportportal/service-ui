@@ -17,9 +17,13 @@
 import { combineReducers } from 'redux';
 import { queueReducers } from 'common/utils';
 import { paginationReducer } from 'controllers/pagination';
-import { loadingReducer } from 'controllers/loading';
 import { fetchReducer } from 'controllers/fetch';
-import { NAMESPACE, RESET_HISTORY, PAGINATION_INITIAL_STATE } from './constants';
+import {
+  NAMESPACE,
+  RESET_HISTORY,
+  PAGINATION_INITIAL_STATE,
+  SET_HISTORY_PAGE_LOADING,
+} from './constants';
 
 const historyPaginationReducer = (state = PAGINATION_INITIAL_STATE, { type }) => {
   switch (type) {
@@ -39,9 +43,18 @@ const historyReducer = (state = [], { type }) => {
   }
 };
 
+const loadingReducer = (state = false, { type, payload }) => {
+  switch (type) {
+    case SET_HISTORY_PAGE_LOADING:
+      return payload;
+    default:
+      return state;
+  }
+};
+
 export const itemsHistoryReducer = combineReducers({
   history: queueReducers(historyReducer, fetchReducer(NAMESPACE, { contentPath: 'content' })),
-  loading: loadingReducer(NAMESPACE),
+  loading: loadingReducer,
   pagination: queueReducers(
     historyPaginationReducer,
     paginationReducer(NAMESPACE, PAGINATION_INITIAL_STATE),
