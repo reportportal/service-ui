@@ -78,7 +78,7 @@ import {
 } from 'controllers/launch';
 import { TEST_ITEM_PAGE } from 'controllers/pages/constants';
 import { fetchTestItemsAction, setLevelAction } from 'controllers/testItem';
-import { fetchFiltersAction } from 'controllers/filter';
+import { fetchFiltersPageAction } from 'controllers/filter';
 import { fetchMembersAction } from 'controllers/members';
 import { fetchProjectDataAction } from 'controllers/administrate';
 import { fetchAllUsersAction } from 'controllers/administrate/allUsers';
@@ -209,7 +209,7 @@ const routesMap = {
   },
   PROJECT_FILTERS_PAGE: {
     path: '/:projectId/filters',
-    thunk: (dispatch) => dispatch(fetchFiltersAction()),
+    thunk: (dispatch) => dispatch(fetchFiltersPageAction()),
   },
   [PROJECT_LOG_PAGE]: {
     path: '/:projectId/launches/:filterId/:testItemIds+/log',

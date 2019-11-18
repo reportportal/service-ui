@@ -26,10 +26,10 @@ import {
   filtersPaginationSelector,
   fetchFiltersAction,
   filtersSelector,
-  loadingSelector,
   removeFilterAction,
   createFilterAction,
   updateFilterSuccessAction,
+  pageLoadingSelector,
 } from 'controllers/filter';
 import {
   userIdSelector,
@@ -82,7 +82,7 @@ const messages = defineMessages({
     projectRole: activeProjectRoleSelector(state),
     accountRole: userAccountRoleSelector(state),
     filters: filtersSelector(state),
-    loading: loadingSelector(state),
+    loading: pageLoadingSelector(state),
   }),
   {
     showModalAction,

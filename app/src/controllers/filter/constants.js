@@ -32,6 +32,8 @@ export const REMOVE_LAUNCHES_FILTER = 'removeLaunchesFilter';
 
 export const UPDATE_FILTER_SUCCESS = 'updateFilterSuccess';
 export const FETCH_USER_FILTERS_SUCCESS = 'fetchUserFiltersSuccess';
+export const FETCH_FILTERS_PAGE = 'fetchFiltersPage';
+export const SET_PAGE_LOADING = 'setPageLoading';
 
 export const DEFAULT_FILTER = {
   conditions: [],
