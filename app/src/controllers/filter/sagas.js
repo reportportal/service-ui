@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import { takeEvery, all, put, select, take } from 'redux-saga/effects';
+import { takeEvery, all, put, select, call, take } from 'redux-saga/effects';
 import {
   fetchDataAction,
+  createFetchPredicate,
   concatFetchDataAction,
   FETCH_SUCCESS,
   FETCH_ERROR,
@@ -24,7 +25,12 @@ import {
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { activeProjectSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
-import { userFiltersSelector, updateProjectFilterPreferencesAction } from 'controllers/project';
+import {
+  userFiltersSelector,
+  updateProjectFilterPreferencesAction,
+  fetchProjectPreferencesAction,
+  FETCH_PROJECT_PREFERENCES_SUCCESS,
+} from 'controllers/project';
 import { launchDistinctSelector } from 'controllers/launch';
 import { PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
 import { omit } from 'common/utils/omit';
@@ -41,6 +47,7 @@ import {
   DEFAULT_FILTER,
   SAVE_NEW_FILTER,
   RESET_FILTER,
+  FETCH_FILTERS_PAGE,
 } from './constants';
 import { querySelector, launchFiltersSelector } from './selectors';
 import {
@@ -48,6 +55,7 @@ import {
   changeActiveFilterAction,
   updateFilterSuccessAction,
   removeFilterAction,
+  setPageLoadingAction,
 } from './actionCreators';
 
 function* fetchFilters() {
@@ -199,6 +207,19 @@ function* watchRemoveFilter() {
   yield takeEvery(REMOVE_LAUNCHES_FILTER, resetActiveFilter);
 }
 
+function* fetchFiltersPage() {
+  yield put(setPageLoadingAction(true));
+  yield call(fetchFilters);
+  const activeProject = yield select(activeProjectSelector);
+  yield put(fetchProjectPreferencesAction(activeProject));
+  yield all([take(createFetchPredicate(NAMESPACE)), take(FETCH_PROJECT_PREFERENCES_SUCCESS)]);
+  yield put(setPageLoadingAction(false));
+}
+
+function* watchFetchFiltersPage() {
+  yield takeEvery(FETCH_FILTERS_PAGE, fetchFiltersPage);
+}
+
 export function* filterSagas() {
   yield all([
     watchFetchFilters(),
@@ -209,5 +230,6 @@ export function* filterSagas() {
     watchCreateFilter(),
     watchSaveNewFilter(),
     watchRemoveFilter(),
+    watchFetchFiltersPage(),
   ]);
 }

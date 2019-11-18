@@ -26,6 +26,7 @@ import {
   UPDATE_FILTER_SUCCESS,
   REMOVE_FILTER,
   UPDATE_FILTER_ORDERS,
+  SET_PAGE_LOADING,
 } from './constants';
 import { updateFilter } from './utils';
 
@@ -67,10 +68,20 @@ export const launchesFiltersReadyReducer = (state = false, { type }) => {
   }
 };
 
+export const pageLoadingReducer = (state = false, { type, payload }) => {
+  switch (type) {
+    case SET_PAGE_LOADING:
+      return payload;
+    default:
+      return state;
+  }
+};
+
 export const filterReducer = combineReducers({
   filters: fetchReducer(NAMESPACE, { contentPath: 'content' }),
   pagination: paginationReducer(NAMESPACE),
   loading: loadingReducer(NAMESPACE),
+  pageLoading: pageLoadingReducer,
   launchesFilters: launchesFiltersReducer,
   launchesFiltersReady: launchesFiltersReadyReducer,
 });
