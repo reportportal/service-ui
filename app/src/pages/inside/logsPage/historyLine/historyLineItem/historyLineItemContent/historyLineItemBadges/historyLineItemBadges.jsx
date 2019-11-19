@@ -17,13 +17,12 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { SKIPPED, RESETED, FAILED, MANY, NOT_FOUND } from 'common/constants/launchStatuses';
+import { SKIPPED, RESETED, FAILED, NOT_FOUND } from 'common/constants/launchStatuses';
 import { COLOR_BLACK_2, COLOR_WHITE_TWO } from 'common/constants/colors';
 import Parser from 'html-react-parser';
 import styles from './historyLineItemBadges.scss';
 import NoItemIcon from './img/noItem-inline.svg';
 import EmptyItemIcon from './img/emptyItem-inline.svg';
-import NotEyeIcon from './img/notEyeItem-inline.svg';
 import DurationIcon from './img/duration-icon-inline.svg';
 import InfoIcon from './img/info-icon-inline.svg';
 
@@ -89,14 +88,6 @@ export class HistoryLineItemBadges extends Component {
         badges.push(
           <i key={status} className={cx('empty-item-icon')}>
             {Parser(EmptyItemIcon)}
-          </i>,
-        );
-        break;
-      }
-      case MANY: {
-        badges.push(
-          <i key={status} className={cx('many-items-icon')}>
-            {Parser(NotEyeIcon)}
           </i>,
         );
         break;
