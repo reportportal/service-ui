@@ -52,7 +52,7 @@ export class HistoryControls extends Component {
     return (
       <div className={cx('history-controls')}>
         <div className={cx('controls-item')}>
-          <p className={cx('control-name')}>{intl.formatMessage(messages.depthTitle)}</p>
+          <span className={cx('control-name')}>{intl.formatMessage(messages.depthTitle)}</span>
           <div className={cx('control-container')}>
             <InputDropdown
               options={HISTORY_DEPTH_CONFIG.options}

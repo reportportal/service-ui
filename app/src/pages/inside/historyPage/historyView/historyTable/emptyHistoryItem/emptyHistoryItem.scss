@@ -14,16 +14,7 @@
  * limitations under the License.
  */
 
-.tooltip-wrapper {
-  display: flex;
-  width: 100%;
-  height: 100%;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.history-item {
+.item-content-wrapper {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -31,4 +22,23 @@
   align-content: flex-start;
   align-items: center;
   padding: 4px;
+}
+
+.icon {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  margin: 0 10px;
+  padding-bottom: 4px;
+  vertical-align: middle;
+
+  svg {
+    fill: $COLOR--white-two;
+  }
+}
+
+.no-item-icon {
+  width: 17px;
+  height: 17px;
+  padding-bottom: 3px;
 }
