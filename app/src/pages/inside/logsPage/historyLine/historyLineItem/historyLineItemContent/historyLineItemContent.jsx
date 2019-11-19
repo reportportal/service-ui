@@ -22,7 +22,6 @@ import {
   PASSED,
   FAILED,
   SKIPPED,
-  MANY,
   NOT_FOUND,
   RESETED,
   INTERRUPTED,
@@ -63,10 +62,6 @@ const messages = defineMessages({
     id: 'HistoryLineItemContent.launchSkipped',
     defaultMessage: 'Skipped',
   },
-  launchSameItems: {
-    id: 'HistoryLineItemContent.launchSameItems',
-    defaultMessage: "There're several items with the same UID meaning.",
-  },
   launchInProgress: {
     id: 'HistoryLineItemContent.launchInProgress',
     defaultMessage: 'In progress',
@@ -87,7 +82,6 @@ const blockTitleMessagesMap = {
   [SKIPPED]: messages.launchSkipped,
   [RESETED]: messages.launchReseted,
   [INTERRUPTED]: messages.launchInterrupted,
-  [MANY]: messages.launchSameItems,
   [NOT_FOUND]: messages.launchNotFound,
   [IN_PROGRESS]: messages.launchInProgress,
   [STOPPED]: messages.launchStopped,
@@ -132,11 +126,7 @@ export class HistoryLineItemContent extends Component {
     const { intl, status, startTime, endTime } = this.props;
     let itemTitle = intl.formatMessage(blockTitleMessagesMap[status.toLowerCase()]);
     const isThreeDecimalPlaces = true;
-    if (
-      status.toLowerCase() !== MANY &&
-      status.toLowerCase() !== NOT_FOUND &&
-      status.toLowerCase() !== IN_PROGRESS
-    ) {
+    if (status.toLowerCase() !== NOT_FOUND && status.toLowerCase() !== IN_PROGRESS) {
       itemTitle = itemTitle.concat(`; ${getDuration(startTime, endTime, isThreeDecimalPlaces)}`);
     }
     return itemTitle;

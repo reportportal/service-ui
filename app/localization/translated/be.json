@@ -732,7 +732,6 @@
   "HistoryLineItemContent.launchNotFound": "Няма элементаў у запуску",
   "HistoryLineItemContent.launchPassed": "Паспяхова",
   "HistoryLineItemContent.launchReseted": "Элемент пусты",
-  "HistoryLineItemContent.launchSameItems": "Існуе некалькі элементаў з аднолькавым значэннем UID.",
   "HistoryLineItemContent.launchSkipped": "Прапушчана",
   "HistoryLineItemContent.launchStopped": "Спынены",
   "HistoryTable.itemNamesHeaderTitle": "Імя",
