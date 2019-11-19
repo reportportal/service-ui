@@ -15,13 +15,13 @@
  */
 
 .history-controls {
-  padding: 7px 15px 14px 15px;
+  padding: 7px 15px;
   border-bottom: 1px solid $COLOR--gray-91;
 }
 
 .controls-item {
   display: flex;
-  flex-direction: column;
+  align-items: center;
 
   &:not(:last-child) {
     margin-right: 10px;
@@ -30,11 +30,17 @@
 
 .control-name {
   max-width: 100%;
-  margin-bottom: 5px;
+  margin-right: 10px;
   box-sizing: border-box;
+  color: $COLOR--gray-60;
+  font-size: 12px;
   font-family: $FONT-REGULAR;
-  font-size: 13px;
   line-height: 18px;
+  text-transform: uppercase;
+
+  &::after {
+    content: ':';
+  }
 }
 
 .control-container {
@@ -42,8 +48,8 @@
   z-index: 1;
   width: 235px;
   height: 30px;
-  font-family: $FONT-REGULAR;
-  font-size: 13px;
-  line-height: 13px;
   color: $COLOR--charcoal-grey;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+  line-height: 13px;
 }

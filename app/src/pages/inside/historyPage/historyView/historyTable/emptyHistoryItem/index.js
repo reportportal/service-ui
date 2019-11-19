@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2019 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,21 +14,4 @@
  * limitations under the License.
  */
 
-.tooltip-wrapper {
-  display: flex;
-  width: 100%;
-  height: 100%;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.history-item {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-content: flex-start;
-  align-items: center;
-  padding: 4px;
-}
+export { EmptyHistoryItem } from './emptyHistoryItem';
