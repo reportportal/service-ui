@@ -29,7 +29,7 @@ import ClockIcon from 'common/img/clock-icon-inline.svg';
 import InfoIcon from 'common/img/info-inline.svg';
 import { getLogItemLinkSelector } from 'controllers/testItem';
 import { withTooltip } from 'components/main/tooltips/tooltip';
-import { TextTooltip } from 'components/main/tooltips/textTooltip';
+import { ItemPathTooltip } from 'pages/inside/common/itemPathTooltip';
 import { StackTraceMessageBlock } from 'pages/inside/common/stackTraceMessageBlock';
 import styles from './itemsListRow.scss';
 
@@ -51,7 +51,7 @@ StepDuration.defaultProps = {
 };
 
 const ItemPathTooltipIcon = withTooltip({
-  TooltipComponent: TextTooltip,
+  TooltipComponent: ItemPathTooltip,
   data: {
     noArrow: false,
     width: 600,
@@ -74,16 +74,6 @@ export class ItemsListRow extends React.Component {
     getLogItemLink: () => {},
     selected: false,
     testItem: {},
-  };
-
-  getLogItemTooltip = () => {
-    const { testItem } = this.props;
-    const testItemPath = testItem.path.split('.').slice(0, -1);
-    return testItemPath.reduce(
-      (path, itemId, index) =>
-        `${path} \n<b>Parent ${index + 1}:</b> ${testItem.pathNames[itemId]}`,
-      `<b>Launch:</b> ${testItem.launchName}`,
-    );
   };
 
   toggleSelect = () => {
@@ -109,7 +99,7 @@ export class ItemsListRow extends React.Component {
         </div>
         <div className={cx('info-column')}>
           <div className={cx('item-header')}>
-            <ItemPathTooltipIcon tooltipContent={this.getLogItemTooltip()} />
+            <ItemPathTooltipIcon testItem={testItem} />
             <div className={cx('item-name')}>
               <Link
                 to={this.props.getLogItemLink(testItem)}

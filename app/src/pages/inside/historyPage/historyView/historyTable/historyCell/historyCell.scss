@@ -36,7 +36,6 @@
   text-transform: uppercase;
 }
 
-
 .table-header-cell-first {
   padding-left: 15px;
   min-width: 200px;
@@ -56,11 +55,6 @@
 
 .table-body-cell-SKIPPED {
   background-color: $COLOR--silver;
-}
-
-.table-body-cell-MANY {
-  background: $COLOR--light-yellow;
-  color: $COLOR--gray-47;
 }
 
 .table-body-cell-PASSED {

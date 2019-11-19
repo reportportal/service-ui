@@ -32,6 +32,7 @@ import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { NOT_FOUND, RESETED } from 'common/constants/launchStatuses';
 import { NoItemMessage } from 'components/main/noItemMessage';
 import { ItemNameBlock } from './itemNameBlock';
+import { EmptyHistoryItem } from './emptyHistoryItem';
 import { HistoryItem } from './historyItem';
 import { HistoryCell } from './historyCell';
 import { calculateMaxRowItemsCount } from './utils';
@@ -120,7 +121,7 @@ export class HistoryTable extends Component {
       case RESETED.toUpperCase():
         return (
           <HistoryCell status={historyItemProps.status} key={historyItemProps.id}>
-            <HistoryItem {...historyItemProps} />
+            <EmptyHistoryItem {...historyItemProps} />
           </HistoryCell>
         );
       default: {
@@ -142,7 +143,7 @@ export class HistoryTable extends Component {
             onClick={clickHandler}
             key={currentHistoryItem.id}
           >
-            <HistoryItem {...historyItemProps} />
+            <HistoryItem {...historyItemProps} testItem={currentHistoryItem} />
           </HistoryCell>
         );
       }
