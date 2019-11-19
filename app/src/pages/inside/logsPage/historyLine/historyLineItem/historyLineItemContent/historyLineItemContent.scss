@@ -110,17 +110,6 @@
   }
 }
 
-.status-MANY {
-  cursor: default;
-  &:before {
-    background-color: $COLOR--light-yellow;
-  }
-  .item-block-bg:before,
-  .item-block-bg:after {
-    border-color: $COLOR--light-yellow;
-  }
-}
-
 .status-RESETED {
   &:before {
     background-color: $COLOR--white;
@@ -200,16 +189,6 @@
     .item-block-bg:before,
     .item-block-bg:after {
       border-color: $COLOR--skipped;
-    }
-  }
-
-  &.status-MANY {
-    &:before {
-      background-color: $COLOR--light-yellow;
-    }
-    .item-block-bg:before,
-    .item-block-bg:after {
-      border-color: $COLOR--light-yellow;
     }
   }
 

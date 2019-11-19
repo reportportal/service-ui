@@ -156,10 +156,11 @@ export const URLS = {
   testItems: (activeProject, ids) => `${urlBase}${activeProject}/item${getQueryParams({ ids })}`,
   testItem: (activeProject, id = '') => `${urlBase}${activeProject}/item/${id}`,
   testItemUpdate: (activeProject, id = '') => `${urlBase}${activeProject}/item/${id}/update`,
-  testItemsHistory: (activeProject, historyDepth, ids) =>
+  testItemsHistory: (activeProject, historyDepth, id, type) =>
     `${urlBase}${activeProject}/item/history${getQueryParams({
       historyDepth,
-      ids,
+      type,
+      'filter.eq.id': id,
     })}`,
   testItemsInfoUpdate: (activeProject) => `${urlBase}${activeProject}/item/info`,
   testItemsLinkIssues: (activeProject) => `${urlBase}${activeProject}/item/issue/link`,

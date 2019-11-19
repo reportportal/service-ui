@@ -77,37 +77,12 @@ export const querySelector = createQueryParametersSelector({
   defaultSorting: DEFAULT_SORTING,
 });
 
-export const historyItemsSelector = createSelector(
-  historyEntriesSelector,
-  logItemIdSelector,
-  (entriesFromState, logItemId) => {
-    if (!entriesFromState.length) return [];
-    const entries = [...entriesFromState].reverse();
+export const historyItemsSelector = createSelector(historyEntriesSelector, (entriesFromState) => {
+  if (!entriesFromState.length) return [];
+  const historyItems = [...entriesFromState[0].resources].map(normalizeHistoryItem);
 
-    const currentLaunch = entries.pop();
-    if (!currentLaunch) {
-      return [];
-    }
-    const currentLaunchItem = currentLaunch.resources.find((item) => item.id === logItemId);
-    if (!currentLaunchItem) {
-      return [];
-    }
-    const historyItems = entries.map((historyItem) => {
-      const filteredSameHistoryItems = historyItem.resources.filter(
-        (item) => item.uniqueId === currentLaunchItem.uniqueId,
-      );
-
-      return {
-        ...normalizeHistoryItem(historyItem, filteredSameHistoryItems),
-      };
-    });
-
-    currentLaunchItem.launchNumber = currentLaunch.launchNumber;
-    historyItems.push(currentLaunchItem);
-
-    return calculateGrowthDuration(historyItems);
-  },
-);
+  return calculateGrowthDuration(historyItems);
+});
 
 const createActiveLogItemIdSelector = (
   pageQuerySelector,

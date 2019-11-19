@@ -64,7 +64,7 @@ export const logReducer = combineReducers({
   loading: loadingReducer(LOG_ITEMS_NAMESPACE),
   pageLoading: pageLoadingReducer,
   activity: fetchReducer(ACTIVITY_NAMESPACE, { contentPath: 'content' }),
-  historyEntries: fetchReducer(HISTORY_NAMESPACE),
+  historyEntries: fetchReducer(HISTORY_NAMESPACE, { contentPath: 'content' }),
   stackTrace: combineReducers({
     loading: loadingReducer(STACK_TRACE_NAMESPACE),
     pagination: queueReducers(
