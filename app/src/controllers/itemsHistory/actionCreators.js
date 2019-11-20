@@ -22,9 +22,9 @@ import {
   SET_HISTORY_PAGE_LOADING,
 } from './constants';
 
-export const fetchItemsHistoryAction = ({ historyDepth, period, loadMore } = {}) => ({
+export const fetchItemsHistoryAction = ({ historyDepth, loadMore } = {}) => ({
   type: FETCH_ITEMS_HISTORY,
-  payload: { historyDepth, period, loadMore },
+  payload: { historyDepth, loadMore },
 });
 
 export const fetchHistoryPageInfoAction = () => ({
