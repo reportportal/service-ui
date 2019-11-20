@@ -14,36 +14,41 @@
  * limitations under the License.
  */
 
-import { createActionPredicate } from './createActionPredicate';
+import { createNamespacedActionPredicate } from './createNamespacedActionPredicate';
 
-describe('createActionPredicate', () => {
+describe('createNamespacedActionPredicate', () => {
   test('should return false for incompatible action type', () => {
     const namespace = 'namespace2';
     expect(
-      createActionPredicate(namespace, { meta: { namespace }, type: 'type2' }, ['type1']),
+      createNamespacedActionPredicate(namespace, ['type1'])({ meta: { namespace }, type: 'type2' }),
     ).toBe(false);
   });
 
   test('should return false for incompatible action namespace', () => {
     const type = 'type1';
     expect(
-      createActionPredicate('namespace1', { meta: { namespace: 'namespace2' }, type }, [type]),
+      createNamespacedActionPredicate('namespace1', [type])({
+        meta: { namespace: 'namespace2' },
+        type,
+      }),
     ).toBe(false);
   });
 
   test('should return false for empty actionTypes', () => {
     const type = 'type1';
-    expect(createActionPredicate('namespace2', { type })).toBe(false);
+    expect(createNamespacedActionPredicate('namespace2')({ type })).toBe(false);
   });
 
   test('should return undefined for action without any namespace', () => {
     const type = 'type1';
-    expect(createActionPredicate('namespace2', { type }, [type])).toBe(undefined);
+    expect(createNamespacedActionPredicate('namespace2', [type])({ type })).toBe(undefined);
   });
 
   test('should return true for action with correct namespace and type', () => {
     const type = 'type1';
     const namespace = 'namespace1';
-    expect(createActionPredicate(namespace, { type, meta: { namespace } }, [type])).toBe(true);
+    expect(createNamespacedActionPredicate(namespace, [type])({ type, meta: { namespace } })).toBe(
+      true,
+    );
   });
 });
