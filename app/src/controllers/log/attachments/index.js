@@ -35,7 +35,6 @@ export {
   attachmentsLoadingSelector,
   logsWithAttachmentsSelector,
   attachmentsPaginationSelector,
-  activeAttachmentItemSelector,
   activeAttachmentIdSelector,
 } from './selectors';
 export { attachmentsReducer } from './reducer';
