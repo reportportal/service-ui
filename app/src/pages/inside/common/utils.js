@@ -15,6 +15,9 @@
  */
 
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { canBulkEditLaunches } from 'common/utils/permissions';
+import { isPostIssueActionAvailable } from 'controllers/plugins';
+import { actionMessages } from './constants';
 
 export const getIssueTitle = (
   formatMessage,
@@ -40,4 +43,85 @@ export const getIssueTitle = (
   }
 
   return '';
+};
+
+export const createStepActionDescriptors = (props) => {
+  const {
+    formatMessage,
+    debugMode,
+    onEditDefects,
+    onEditItems,
+    onPostIssue,
+    onLinkIssue,
+    onUnlinkIssue,
+    onIgnoreInAA,
+    onIncludeInAA,
+    onDelete,
+    btsIntegrations,
+    isBtsPluginsExist,
+    enabledBtsPlugins,
+    accountRole,
+    projectRole,
+  } = props;
+  const isPostIssueUnavailable = !isPostIssueActionAvailable(btsIntegrations);
+  const issueTitle = getIssueTitle(
+    formatMessage,
+    btsIntegrations,
+    isBtsPluginsExist,
+    enabledBtsPlugins,
+    isPostIssueUnavailable,
+  );
+
+  return [
+    {
+      label: formatMessage(COMMON_LOCALE_KEYS.EDIT_ITEMS),
+      value: 'action-edit',
+      hidden: !canBulkEditLaunches(accountRole, projectRole),
+      onClick: onEditItems,
+    },
+    {
+      label: formatMessage(actionMessages.editDefects),
+      value: 'action-edit-defects',
+      onClick: onEditDefects,
+    },
+    {
+      label: formatMessage(actionMessages.postIssue),
+      value: 'action-post-issue',
+      hidden: debugMode,
+      disabled: isPostIssueUnavailable,
+      title: isPostIssueUnavailable ? issueTitle : '',
+      onClick: onPostIssue,
+    },
+    {
+      label: formatMessage(actionMessages.linkIssue),
+      value: 'action-link-issue',
+      hidden: debugMode,
+      disabled: !btsIntegrations.length,
+      title: btsIntegrations.length ? '' : issueTitle,
+      onClick: onLinkIssue,
+    },
+    {
+      label: formatMessage(actionMessages.unlinkIssue),
+      value: 'action-unlink-issue',
+      hidden: debugMode,
+      onClick: onUnlinkIssue,
+    },
+    {
+      label: formatMessage(actionMessages.ignoreInAA),
+      value: 'action-ignore-in-AA',
+      hidden: debugMode,
+      onClick: onIgnoreInAA,
+    },
+    {
+      label: formatMessage(actionMessages.includeInAA),
+      value: 'action-include-into-AA',
+      hidden: debugMode,
+      onClick: onIncludeInAA,
+    },
+    {
+      label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
+      value: 'action-delete',
+      onClick: onDelete,
+    },
+  ];
 };
