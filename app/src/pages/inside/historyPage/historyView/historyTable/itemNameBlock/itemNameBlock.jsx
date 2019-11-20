@@ -20,7 +20,6 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { HISTORY_PAGE_EVENTS } from 'components/main/analytics/events';
-import { PROJECT_LOG_PAGE } from 'controllers/pages';
 import { NameLink } from 'pages/inside/common/nameLink';
 import { ItemInfoToolTip } from './itemInfoToolTip';
 import styles from './itemNameBlock.scss';
@@ -44,21 +43,21 @@ export class ItemNameBlock extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    ownLinkParams: PropTypes.object,
   };
 
   static defaultProps = {
     data: {},
+    ownLinkParams: {},
   };
 
   render() {
-    const { data, tracking } = this.props;
+    const { data, ownLinkParams, tracking } = this.props;
 
     return (
       <NameLink
         itemId={data.id}
-        ownLinkParams={{
-          page: data.hasChildren ? null : PROJECT_LOG_PAGE,
-        }}
+        ownLinkParams={ownLinkParams}
         className={cx('name-link')}
         onClick={() => tracking.trackEvent(HISTORY_PAGE_EVENTS.CLICK_ON_ITEM)}
       >
