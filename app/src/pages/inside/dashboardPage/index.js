@@ -15,4 +15,4 @@
  */
 
 export { DashboardPage } from './dashboardPage';
-export { DeleteModal, AddEditModal } from './modals';
+export { AddEditModal } from './modals';

@@ -47,8 +47,6 @@ export {
   loadingSelector,
   debugModeSelector,
   launchDistinctSelector,
-  allLaunchesLikSelector,
-  latestLaunchesLinkSelector,
   localSortingSelector,
   debugLocalSortingSelector,
   debugLocalFilterSelector,

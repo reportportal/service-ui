@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-require('babel-register');
 const path = require('path');
 const getConfig = require('../webpack.config');
 const baseConfig = getConfig();

@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import * as storybook from '@storybook/react';
-import { setOptions } from '@storybook/addon-options';
 import { addParameters, configure, addDecorator } from '@storybook/react';
 import { setIntlConfig, withIntl } from 'storybook-addon-intl';
 import 'reset-css/reset.css';
@@ -52,7 +50,7 @@ const req = require.context('../src', true, /\.stories\.jsx?$/);
 function loadStories() {
   req.keys().forEach((filename) => req(filename));
 }
-console.log(req);
+
 addParameters({
   options: {
     /**
