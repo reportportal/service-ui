@@ -137,4 +137,16 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.forceFinish',
     defaultMessage: 'Force finish',
   },
+  ACTIONS: {
+    id: 'Common.actions',
+    defaultMessage: 'Actions',
+  },
+  EDIT_ITEMS: {
+    id: 'Common.editItems',
+    defaultMessage: 'Edit items',
+  },
+  PROCEED_VALID_ITEMS: {
+    id: 'Common.proceedValidItems',
+    defaultMessage: 'Proceed Valid Items',
+  },
 });
