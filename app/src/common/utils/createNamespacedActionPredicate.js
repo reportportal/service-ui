@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-export const createActionPredicate = (namespace, action, actionTypes = []) =>
+export const createNamespacedActionPredicate = (namespace, actionTypes = []) => (action) =>
   actionTypes.some((type) => type === action.type) &&
   action.meta &&
   action.meta.namespace === namespace;

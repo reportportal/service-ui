@@ -25,13 +25,9 @@ import styles from './historyControls.scss';
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
-  depthFilterTitle: {
-    id: 'HistoryControls.depthFilterTitle',
+  depthTitle: {
+    id: 'HistoryControls.depthTitle',
     defaultMessage: 'History depth',
-  },
-  periodTitle: {
-    id: 'HistoryControls.periodTitle',
-    defaultMessage: 'Period',
   },
 });
 
@@ -40,14 +36,12 @@ export class HistoryControls extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     historyDepth: PropTypes.string,
-    period: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
     onChangeHistoryDepth: PropTypes.func,
     onChangePeriod: PropTypes.func,
   };
 
   static defaultProps = {
     historyDepth: HISTORY_DEPTH_CONFIG.defaultValue,
-    period: {},
     onChangeHistoryDepth: () => {},
     onChangePeriod: () => {},
   };
@@ -57,28 +51,15 @@ export class HistoryControls extends Component {
 
     return (
       <div className={cx('history-controls')}>
-        <div className={cx('controls-wrapper')}>
-          <div className={cx('controls-item')}>
-            <p className={cx('control-name')}>{intl.formatMessage(messages.depthFilterTitle)}</p>
-            <div className={cx('control-container')}>
-              <InputDropdown
-                options={HISTORY_DEPTH_CONFIG.options}
-                value={historyDepth}
-                onChange={onChangeHistoryDepth}
-              />
-            </div>
+        <div className={cx('controls-item')}>
+          <p className={cx('control-name')}>{intl.formatMessage(messages.depthTitle)}</p>
+          <div className={cx('control-container')}>
+            <InputDropdown
+              options={HISTORY_DEPTH_CONFIG.options}
+              value={historyDepth}
+              onChange={onChangeHistoryDepth}
+            />
           </div>
-
-          {/* <div className={cx('controls-item')}>
-            <p className={cx('control-name')}>{intl.formatMessage(messages.periodTitle)}</p>
-            <div className={cx('control-container')}>
-              <InputTimeDateRange
-                presets={getTimeDateRangePresets()}
-                onChange={onChangePeriod}
-                value={period}
-              />
-            </div>
-          </div> */}
         </div>
       </div>
     );

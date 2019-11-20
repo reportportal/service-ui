@@ -22,10 +22,10 @@ export const historySelector = (state) => domainSelector(state).history;
 
 export const historyPaginationSelector = (state) => domainSelector(state).pagination;
 
-export const totalItemsCountSelector = createSelector(
-  historyPaginationSelector,
-  (pagination) => pagination.totalElements,
-);
+export const totalItemsCountSelector = (state) => {
+  const pagination = historyPaginationSelector(state);
+  return pagination.totalElements;
+};
 
 export const loadingSelector = (state) => domainSelector(state).loading;
 
