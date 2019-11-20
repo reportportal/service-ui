@@ -45,9 +45,6 @@ import {
 } from './constants';
 
 function* getHistoryParams({ loadMore } = {}) {
-  if (loadMore) {
-    yield put(setHistoryPageLoadingAction(true));
-  }
   const pagination = yield select(historyPaginationSelector);
   const itemIdsArray = yield select(testItemIdsArraySelector);
   const launchId = yield select(launchIdSelector);
@@ -71,6 +68,9 @@ function* getHistoryParams({ loadMore } = {}) {
 }
 
 function* fetchItemsHistory({ payload = {} }) {
+  if (payload.loadMore) {
+    yield put(setHistoryPageLoadingAction(true));
+  }
   const activeProject = yield select(activeProjectSelector);
   const params = yield call(getHistoryParams, payload);
 
@@ -85,8 +85,10 @@ function* fetchItemsHistory({ payload = {} }) {
       { params },
     ),
   );
-  yield take(createFetchPredicate(NAMESPACE));
-  yield put(setHistoryPageLoadingAction(false));
+  if (payload.loadMore) {
+    yield take(createFetchPredicate(NAMESPACE));
+    yield put(setHistoryPageLoadingAction(false));
+  }
 }
 
 function* fetchHistoryPageInfo() {
@@ -102,12 +104,16 @@ function* fetchHistoryPageInfo() {
   }
 
   yield put(fetchItemsHistoryAction());
+  yield take(createFetchPredicate(NAMESPACE));
+  yield put(setHistoryPageLoadingAction(false));
 }
 
 function* refreshHistory() {
   yield put(setHistoryPageLoadingAction(true));
   yield put(resetHistoryAction());
   yield put(fetchItemsHistoryAction());
+  yield take(createFetchPredicate(NAMESPACE));
+  yield put(setHistoryPageLoadingAction(false));
 }
 
 function* watchFetchHistory() {

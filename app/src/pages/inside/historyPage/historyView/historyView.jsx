@@ -39,7 +39,6 @@ export class HistoryView extends Component {
 
   state = {
     historyDepth: getStorageItem(HISTORY_DEPTH_CONFIG.name) || HISTORY_DEPTH_CONFIG.defaultValue,
-    period: {},
   };
 
   onChangeHistoryDepth = (historyDepth) => {
@@ -51,21 +50,13 @@ export class HistoryView extends Component {
     this.props.refreshHistory();
   };
 
-  onChangePeriod = (period) => {
-    this.setState({
-      period,
-    });
-    this.props.refreshHistory();
-  };
-
   render() {
-    const { historyDepth, period } = this.state;
+    const { historyDepth } = this.state;
 
     return (
       <div className={cx('history-view-wrapper')}>
         <HistoryControls
           historyDepth={historyDepth}
-          period={period}
           onChangePeriod={this.onChangePeriod}
           onChangeHistoryDepth={this.onChangeHistoryDepth}
         />

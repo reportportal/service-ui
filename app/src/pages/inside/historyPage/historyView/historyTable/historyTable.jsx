@@ -92,27 +92,13 @@ export class HistoryTable extends Component {
     navigate: () => {},
   };
 
-  static getDerivedStateFromProps(props, state) {
-    const newMaxRowItemsCount = calculateMaxRowItemsCount(props.history);
-    if (state.maxRowItemsCount !== newMaxRowItemsCount) {
-      return {
-        maxRowItemsCount: newMaxRowItemsCount,
-      };
-    }
-    return null;
-  }
-
-  state = {
-    maxRowItemsCount: 0,
-  };
-
-  getHistoryItemProps = (historyItem) => {
+  getHistoryItemProps = (historyItem, index) => {
     let itemProps = {};
 
     if (!historyItem) {
       itemProps = {
         status: NOT_FOUND.toUpperCase(),
-        defects: {},
+        id: `${NOT_FOUND}_${index}`,
       };
     } else {
       const itemIdsArray = historyItem.path.split('.');
@@ -133,7 +119,7 @@ export class HistoryTable extends Component {
       case NOT_FOUND.toUpperCase():
       case RESETED.toUpperCase():
         return (
-          <HistoryCell status={historyItemProps.status}>
+          <HistoryCell status={historyItemProps.status} key={historyItemProps.id}>
             <HistoryItem {...historyItemProps} />
           </HistoryCell>
         );
@@ -170,9 +156,8 @@ export class HistoryTable extends Component {
     });
   };
 
-  renderHeader = () => {
+  renderHeader = (maxRowItemsCount) => {
     const { intl } = this.props;
-    const { maxRowItemsCount } = this.state;
     const headerItems = [];
     for (let index = maxRowItemsCount; index > 0; index -= 1) {
       headerItems.push(
@@ -184,22 +169,22 @@ export class HistoryTable extends Component {
     return headerItems;
   };
 
-  renderHistoryItems = (item) => {
-    const itemLastIndex = this.state.maxRowItemsCount - 1;
+  renderHistoryItems = (item, maxRowItemsCount) => {
+    const itemLastIndex = maxRowItemsCount - 1;
     const itemResources = [...item.resources].reverse();
     const historyItems = [];
 
     for (let index = itemLastIndex; index >= 0; index -= 1) {
       const historyItem = itemResources[index];
 
-      const historyItemProps = this.getHistoryItemProps(historyItem);
+      const historyItemProps = this.getHistoryItemProps(historyItem, index);
       historyItems.push(this.getCorrespondingHistoryItem(historyItemProps, historyItem));
     }
 
     return historyItems;
   };
 
-  renderBody = () => {
+  renderBody = (maxRowItemsCount) => {
     const { history } = this.props;
     return history.map((item) => (
       <tr key={item.testCaseId}>
@@ -208,7 +193,7 @@ export class HistoryTable extends Component {
             <ItemNameBlock data={item.resources[0]} />
           </div>
         </HistoryCell>
-        {this.renderHistoryItems(item)}
+        {this.renderHistoryItems(item, maxRowItemsCount)}
       </tr>
     ));
   };
@@ -250,29 +235,28 @@ export class HistoryTable extends Component {
       history,
       loading,
     } = this.props;
+    const maxRowItemsCount = calculateMaxRowItemsCount(history);
 
     return (
       <Fragment>
         {!history.length ? (
           !loading && <NoItemMessage message={formatMessage(messages.noHistoryItems)} />
         ) : (
-          <Fragment>
-            <ScrollWrapper autoHeight>
-              <table>
-                <thead>
-                  <tr>
-                    <HistoryCell header first>
-                      <div className={cx('history-grid-name')}>
-                        {formatMessage(messages.itemNamesHeaderTitle)}
-                      </div>
-                    </HistoryCell>
-                    {this.renderHeader()}
-                  </tr>
-                </thead>
-                <tbody>{this.renderBody()}</tbody>
-              </table>
-            </ScrollWrapper>
-          </Fragment>
+          <ScrollWrapper autoHeight>
+            <table>
+              <thead>
+                <tr>
+                  <HistoryCell header first>
+                    <div className={cx('history-grid-name')}>
+                      {formatMessage(messages.itemNamesHeaderTitle)}
+                    </div>
+                  </HistoryCell>
+                  {this.renderHeader(maxRowItemsCount)}
+                </tr>
+              </thead>
+              <tbody>{this.renderBody(maxRowItemsCount)}</tbody>
+            </table>
+          </ScrollWrapper>
         )}
         {this.renderFooter()}
       </Fragment>
