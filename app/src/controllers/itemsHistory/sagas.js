@@ -22,7 +22,6 @@ import { activeProjectSelector } from 'controllers/user';
 import {
   isTestItemsListSelector,
   namespaceSelector,
-  levelSelector,
   fetchTestItemsAction,
   SET_PAGE_LOADING,
 } from 'controllers/testItem';
@@ -99,16 +98,11 @@ function* fetchItemsHistory({ payload = {} }) {
 function* fetchHistoryPageInfo() {
   yield put(setHistoryPageLoadingAction(true));
 
-  const level = yield select(levelSelector);
   yield put(resetHistoryAction());
-
-  // We must fetch test items to calculate their corresponding item level.
-  if (!level) {
-    yield put(fetchTestItemsAction());
-    yield take((action) => action.type === SET_PAGE_LOADING && action.payload === false);
-  }
-
+  yield put(fetchTestItemsAction());
+  yield take((action) => action.type === SET_PAGE_LOADING && action.payload === false);
   yield put(fetchItemsHistoryAction());
+
   yield take(createFetchPredicate(NAMESPACE));
   yield put(setHistoryPageLoadingAction(false));
 }

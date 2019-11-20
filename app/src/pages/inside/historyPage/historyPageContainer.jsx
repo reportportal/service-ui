@@ -22,26 +22,29 @@ import {
   FilterEntitiesContainer,
 } from 'components/filterEntities/containers';
 import { PageLayout, PageSection } from 'layouts/pageLayout';
-import { namespaceSelector, levelSelector } from 'controllers/testItem';
+import { namespaceSelector, levelSelector, pageLoadingSelector } from 'controllers/testItem';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { HistoryPage } from './historyPage';
 
 @connect((state) => ({
   level: levelSelector(state),
+  pageLoading: pageLoadingSelector(state),
 }))
 export class HistoryPageContainer extends Component {
   static propTypes = {
+    pageLoading: PropTypes.bool,
     level: PropTypes.string,
   };
 
   static defaultProps = {
+    pageLoading: false,
     level: '',
   };
 
   render() {
-    const { level } = this.props;
+    const { pageLoading, level } = this.props;
 
-    return !level ? (
+    return pageLoading || !level ? (
       <PageLayout>
         <PageSection>
           <SpinningPreloader />
