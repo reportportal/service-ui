@@ -57,7 +57,6 @@ export class HistoryView extends Component {
       <div className={cx('history-view-wrapper')}>
         <HistoryControls
           historyDepth={historyDepth}
-          onChangePeriod={this.onChangePeriod}
           onChangeHistoryDepth={this.onChangeHistoryDepth}
         />
         <HistoryTable historyDepth={historyDepth} />
