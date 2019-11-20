@@ -37,13 +37,11 @@ export class HistoryControls extends Component {
     intl: intlShape.isRequired,
     historyDepth: PropTypes.string,
     onChangeHistoryDepth: PropTypes.func,
-    onChangePeriod: PropTypes.func,
   };
 
   static defaultProps = {
     historyDepth: HISTORY_DEPTH_CONFIG.defaultValue,
     onChangeHistoryDepth: () => {},
-    onChangePeriod: () => {},
   };
 
   render() {

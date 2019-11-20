@@ -114,40 +114,57 @@ export class HistoryTable extends Component {
     return itemProps;
   };
 
-  getCorrespondingHistoryItem = (historyItemProps, currentHistoryItem) => {
+  getCorrespondingHistoryItem = (historyItem) => {
     const { navigate, link } = this.props;
-    switch (historyItemProps.status) {
+    switch (historyItem.status) {
       case NOT_FOUND.toUpperCase():
       case RESETED.toUpperCase():
         return (
-          <HistoryCell status={historyItemProps.status} key={historyItemProps.id}>
-            <EmptyHistoryItem {...historyItemProps} />
+          <HistoryCell status={historyItem.status} key={historyItem.id}>
+            <EmptyHistoryItem {...historyItem} />
           </HistoryCell>
         );
       default: {
         const clickHandler = () => {
           const ownProps = {
-            ownLinkParams: {
-              page: currentHistoryItem.hasChildren ? null : PROJECT_LOG_PAGE,
-              testItemIds: historyItemProps.itemIds
-                ? `${currentHistoryItem.launchId}/${historyItemProps.itemIds}`
-                : currentHistoryItem.launchId,
-            },
-            itemId: currentHistoryItem.id,
+            ownLinkParams: this.calculateItemOwnLinkParams(historyItem),
+            itemId: historyItem.id,
           };
           navigate(link(ownProps));
         };
+        const itemProps = {
+          status: historyItem.status,
+          issue: historyItem.issue,
+          defects: historyItem.statistics.defects,
+        };
         return (
-          <HistoryCell
-            status={historyItemProps.status}
-            onClick={clickHandler}
-            key={currentHistoryItem.id}
-          >
-            <HistoryItem {...historyItemProps} testItem={currentHistoryItem} />
+          <HistoryCell status={itemProps.status} onClick={clickHandler} key={historyItem.id}>
+            <HistoryItem {...itemProps} testItem={historyItem} />
           </HistoryCell>
         );
       }
     }
+  };
+
+  calculateItemOwnLinkParams = (item) => {
+    const itemIdsArray = item.path.split('.');
+    const itemIds = itemIdsArray.slice(0, itemIdsArray.length - 1).join('/');
+
+    return {
+      page: item.hasChildren ? null : PROJECT_LOG_PAGE,
+      testItemIds: itemIds ? `${item.launchId}/${itemIds}` : item.launchId,
+    };
+  };
+
+  normalizeHistoryItem = (historyItem, index) => {
+    if (!historyItem) {
+      return {
+        status: NOT_FOUND.toUpperCase(),
+        id: `${NOT_FOUND}_${index}`,
+      };
+    }
+
+    return historyItem;
   };
 
   loadMoreHistoryItems = () => {
@@ -178,8 +195,8 @@ export class HistoryTable extends Component {
     for (let index = itemLastIndex; index >= 0; index -= 1) {
       const historyItem = itemResources[index];
 
-      const historyItemProps = this.getHistoryItemProps(historyItem, index);
-      historyItems.push(this.getCorrespondingHistoryItem(historyItemProps, historyItem));
+      const normalizedHistoryItem = this.normalizeHistoryItem(historyItem, index);
+      historyItems.push(this.getCorrespondingHistoryItem(normalizedHistoryItem));
     }
 
     return historyItems;
@@ -191,7 +208,10 @@ export class HistoryTable extends Component {
       <tr key={item.testCaseId}>
         <HistoryCell first>
           <div className={cx('history-grid-name')}>
-            <ItemNameBlock data={item.resources[0]} />
+            <ItemNameBlock
+              data={item.resources[0]}
+              ownLinkParams={this.calculateItemOwnLinkParams(item.resources[0])}
+            />
           </div>
         </HistoryCell>
         {this.renderHistoryItems(item, maxRowItemsCount)}
