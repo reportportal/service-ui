@@ -19,13 +19,12 @@ import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
-import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import { breadcrumbsSelector, levelSelector, restorePathAction } from 'controllers/testItem';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { historyPageLinkSelector } from 'controllers/itemsHistory';
 import {
   availableBtsIntegrationsSelector,
-  isPostIssueActionAvailable,
   isBtsPluginsExistSelector,
   enabledBtsPluginsSelector,
 } from 'controllers/plugins';
@@ -34,58 +33,15 @@ import { SUITES_PAGE_EVENTS } from 'components/main/analytics/events/suitesPageE
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
-import { getIssueTitle } from 'pages/inside/common/utils';
 import { LEVEL_STEP, LEVEL_SUITE, LEVEL_TEST } from 'common/constants/launchLevels';
 import { canBulkEditLaunches } from 'common/utils/permissions';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import RefreshIcon from 'common/img/refresh-inline.svg';
 import HistoryIcon from 'common/img/history-inline.svg';
+import { createStepActionDescriptors } from '../../utils';
 import styles from './actionPanel.scss';
 
 const cx = classNames.bind(styles);
-
-const messages = defineMessages({
-  actionsBtn: {
-    id: 'ActionPanel.actionsBtn',
-    defaultMessage: 'Actions',
-  },
-  editDefects: {
-    id: 'ActionPanel.editDefects',
-    defaultMessage: 'Edit defects',
-  },
-  editItems: {
-    id: 'ActionPanel.editItems',
-    defaultMessage: 'Edit items',
-  },
-  postIssue: {
-    id: 'ActionPanel.postIssue',
-    defaultMessage: 'Post issue',
-  },
-  linkIssue: {
-    id: 'ActionPanel.linkIssue',
-    defaultMessage: 'Link issue',
-  },
-  unlinkIssue: {
-    id: 'ActionPanel.unlinkIssue',
-    defaultMessage: 'Unlink issue',
-  },
-  ignoreInAA: {
-    id: 'ActionPanel.ignoreInAA',
-    defaultMessage: 'Ignore in Auto Analysis',
-  },
-  includeInAA: {
-    id: 'ActionPanel.includeInAA',
-    defaultMessage: 'Include into Auto Analysis',
-  },
-  proceedButton: {
-    id: 'ActionPanel.proceedButton',
-    defaultMessage: 'Proceed Valid Items',
-  },
-  actionsBtnTooltip: {
-    id: 'ActionPanel.actionsBtnTooltip',
-    defaultMessage: ' Select several items to processing',
-  },
-});
 
 @connect(
   (state) => ({
@@ -186,15 +142,29 @@ export class ActionPanel extends Component {
     this.props.onRefresh();
   };
 
-  createStepActionDescriptors = () => {
+  onEditDefects = (data) => {
+    const { tracking, onEditDefects } = this.props;
+    tracking.trackEvent(STEP_PAGE_EVENTS.EDIT_DEFECT_ACTION);
+    onEditDefects(data);
+  };
+
+  onPostIssue = () => {
+    const { tracking, onPostIssue } = this.props;
+    tracking.trackEvent(STEP_PAGE_EVENTS.POST_BUG_ACTION);
+    onPostIssue();
+  };
+
+  onLinkIssue = () => {
+    const { tracking, onLinkIssue } = this.props;
+    tracking.trackEvent(STEP_PAGE_EVENTS.LOAD_BUG_ACTION);
+    onLinkIssue();
+  };
+
+  getStepActionDescriptors = () => {
     const {
       intl: { formatMessage },
-      tracking,
       debugMode,
-      onEditDefects,
       onEditItems,
-      onPostIssue,
-      onLinkIssue,
       onUnlinkIssue,
       onIgnoreInAA,
       onIncludeInAA,
@@ -205,76 +175,24 @@ export class ActionPanel extends Component {
       accountRole,
       projectRole,
     } = this.props;
-    const isPostIssueUnavailable = !isPostIssueActionAvailable(btsIntegrations);
-    const issueTitle = getIssueTitle(
+
+    return createStepActionDescriptors({
       formatMessage,
+      debugMode,
+      onEditItems,
+      onUnlinkIssue,
+      onIgnoreInAA,
+      onIncludeInAA,
+      onDelete,
       btsIntegrations,
       isBtsPluginsExist,
       enabledBtsPlugins,
-      isPostIssueUnavailable,
-    );
-
-    return [
-      {
-        label: formatMessage(messages.editItems),
-        value: 'action-edit',
-        hidden: !canBulkEditLaunches(accountRole, projectRole),
-        onClick: onEditItems,
-      },
-      {
-        label: formatMessage(messages.editDefects),
-        value: 'action-edit-defects',
-        onClick: (data) => {
-          tracking.trackEvent(STEP_PAGE_EVENTS.EDIT_DEFECT_ACTION);
-          onEditDefects(data);
-        },
-      },
-      {
-        label: formatMessage(messages.postIssue),
-        value: 'action-post-issue',
-        hidden: debugMode,
-        disabled: isPostIssueUnavailable,
-        title: isPostIssueUnavailable ? issueTitle : '',
-        onClick: () => {
-          tracking.trackEvent(STEP_PAGE_EVENTS.POST_BUG_ACTION);
-          onPostIssue();
-        },
-      },
-      {
-        label: formatMessage(messages.linkIssue),
-        value: 'action-link-issue',
-        hidden: debugMode,
-        disabled: !btsIntegrations.length,
-        title: btsIntegrations.length ? '' : issueTitle,
-        onClick: () => {
-          tracking.trackEvent(STEP_PAGE_EVENTS.LOAD_BUG_ACTION);
-          onLinkIssue();
-        },
-      },
-      {
-        label: formatMessage(messages.unlinkIssue),
-        value: 'action-unlink-issue',
-        hidden: debugMode,
-        onClick: onUnlinkIssue,
-      },
-      {
-        label: formatMessage(messages.ignoreInAA),
-        value: 'action-ignore-in-AA',
-        hidden: debugMode,
-        onClick: onIgnoreInAA,
-      },
-      {
-        label: formatMessage(messages.includeInAA),
-        value: 'action-include-into-AA',
-        hidden: debugMode,
-        onClick: onIncludeInAA,
-      },
-      {
-        label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
-        value: 'action-delete',
-        onClick: onDelete,
-      },
-    ];
+      accountRole,
+      projectRole,
+      onEditDefects: this.onEditDefects,
+      onPostIssue: this.onPostIssue,
+      onLinkIssue: this.onLinkIssue,
+    });
   };
 
   createSuiteActionDescriptors = () => {
@@ -282,7 +200,7 @@ export class ActionPanel extends Component {
 
     return [
       {
-        label: intl.formatMessage(messages.editItems),
+        label: intl.formatMessage(COMMON_LOCALE_KEYS.EDIT_ITEMS),
         value: 'action-edit',
         hidden: !canBulkEditLaunches(accountRole, projectRole),
         onClick: onEditItems,
@@ -311,7 +229,7 @@ export class ActionPanel extends Component {
       debugMode,
       level,
     } = this.props;
-    const stepActionDescriptors = this.createStepActionDescriptors();
+    const stepActionDescriptors = this.getStepActionDescriptors();
     const suiteActionDescriptors = this.createSuiteActionDescriptors();
 
     return (
@@ -329,14 +247,14 @@ export class ActionPanel extends Component {
         )}
         {hasErrors && (
           <GhostButton disabled={!hasValidItems} onClick={onProceedValidItems}>
-            {intl.formatMessage(messages.proceedButton)}
+            {intl.formatMessage(COMMON_LOCALE_KEYS.PROCEED_VALID_ITEMS)}
           </GhostButton>
         )}
         <div className={cx('action-buttons')}>
           {this.checkVisibility([LEVEL_STEP]) && (
             <div className={cx('action-button', 'mobile-hidden')}>
               <GhostMenuButton
-                title={intl.formatMessage(messages.actionsBtn)}
+                title={intl.formatMessage(COMMON_LOCALE_KEYS.ACTIONS)}
                 items={stepActionDescriptors}
                 disabled={!selectedItems.length}
               />
@@ -345,7 +263,7 @@ export class ActionPanel extends Component {
           {this.checkVisibility([LEVEL_SUITE, LEVEL_TEST]) && (
             <div className={cx('action-button', 'mobile-hidden')}>
               <GhostMenuButton
-                title={intl.formatMessage(messages.actionsBtn)}
+                title={intl.formatMessage(COMMON_LOCALE_KEYS.ACTIONS)}
                 items={suiteActionDescriptors}
                 disabled={!selectedItems.length}
               />
