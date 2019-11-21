@@ -15,12 +15,63 @@
  */
 
 import {
+  toggleItemSelectionAction,
+  selectItemsAction,
+  unselectAllItemsAction,
+  createProceedWithValidItemsAction,
+  defineGroupOperation,
+} from 'controllers/groupOperations';
+import {
+  editDefect,
+  linkIssue,
+  postIssue,
+  unlinkIssue,
+  validateEditDefect,
+  validateLinkIssue,
+  validatePostIssue,
+  validateUnlinkIssue,
+} from 'controllers/step';
+import {
+  NAMESPACE,
   FETCH_ITEMS_HISTORY,
   FETCH_HISTORY_PAGE_INFO,
   RESET_HISTORY,
   REFRESH_HISTORY,
   SET_HISTORY_PAGE_LOADING,
 } from './constants';
+
+export const toggleHistoryItemSelectionAction = toggleItemSelectionAction(NAMESPACE);
+export const selectHistoryItemsAction = selectItemsAction(NAMESPACE);
+export const unselectAllHistoryItemsAction = unselectAllItemsAction(NAMESPACE);
+export const proceedWithValidItemsAction = createProceedWithValidItemsAction(NAMESPACE);
+
+export const unlinkIssueHistoryAction = defineGroupOperation(
+  NAMESPACE,
+  'unlink-issue',
+  unlinkIssue,
+  validateUnlinkIssue,
+);
+
+export const editDefectsHistoryAction = defineGroupOperation(
+  NAMESPACE,
+  'edit-defect',
+  editDefect,
+  validateEditDefect,
+);
+
+export const linkIssueHistoryAction = defineGroupOperation(
+  NAMESPACE,
+  'link-issue',
+  linkIssue,
+  validateLinkIssue,
+);
+
+export const postIssueHistoryAction = defineGroupOperation(
+  NAMESPACE,
+  'post-issue',
+  postIssue,
+  validatePostIssue,
+);
 
 export const fetchItemsHistoryAction = ({ historyDepth, loadMore } = {}) => ({
   type: FETCH_ITEMS_HISTORY,

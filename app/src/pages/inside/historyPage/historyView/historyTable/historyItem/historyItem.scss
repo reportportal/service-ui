@@ -15,12 +15,15 @@
  */
 
 .tooltip-wrapper {
+  position: relative;
   display: flex;
   width: 100%;
   height: 100%;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
+  padding: 2px;
+  box-sizing: border-box;
 }
 
 .history-item {
@@ -28,7 +31,31 @@
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
-  align-content: flex-start;
+  align-content: center;
   align-items: center;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
   padding: 4px;
+
+  &.with-group-operations {
+    &.selected {
+      border: 2px solid $COLOR--topaz;
+    }
+
+    &:hover {
+      .select-item-control {
+        display: block;
+      }
+    }
+  }
+}
+
+.select-item-control {
+  position: absolute;
+  left: 0;
+  display: none;
+  height: 100%;
+  width: 25px;
+  background: rgba(255, 255, 255, 0.75);
 }
