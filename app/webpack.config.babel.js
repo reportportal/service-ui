@@ -37,7 +37,7 @@ const defaultEnv = {
 };
 
 export default (env = defaultEnv) => ({
-  entry: [path.resolve('sl_instrumented/src', 'index.jsx')],
+  entry: [path.resolve('sl_instrumented', 'index.jsx')],
   output: {
     path: path.resolve('build'),
     filename: 'app.[hash:6].js',
@@ -46,13 +46,13 @@ export default (env = defaultEnv) => ({
   resolve: {
     extensions: ['.js', '.jsx'],
     alias: {
-      components: path.resolve(__dirname, 'sl_instrumented/src/components'),
-      controllers: path.resolve(__dirname, 'sl_instrumented/src/controllers'),
-      common: path.resolve(__dirname, 'sl_instrumented/src/common'),
-      pages: path.resolve(__dirname, 'sl_instrumented/src/pages'),
-      store: path.resolve(__dirname, 'sl_instrumented/src/store'),
-      routes: path.resolve(__dirname, 'sl_instrumented/src/routes'),
-      layouts: path.resolve(__dirname, 'sl_instrumented/src/layouts'),
+      components: path.resolve(__dirname, 'sl_instrumented/components'),
+      controllers: path.resolve(__dirname, 'sl_instrumented/controllers'),
+      common: path.resolve(__dirname, 'sl_instrumented/common'),
+      pages: path.resolve(__dirname, 'sl_instrumented/pages'),
+      store: path.resolve(__dirname, 'sl_instrumented/store'),
+      routes: path.resolve(__dirname, 'sl_instrumented/routes'),
+      layouts: path.resolve(__dirname, 'sl_instrumented/layouts'),
     },
   },
   plugins: [
@@ -75,8 +75,8 @@ export default (env = defaultEnv) => ({
     new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
-      favicon: 'sl_instrumented/src/common/img/favicon.ico',
-      template: path.resolve('sl_instrumented/src', 'index.tpl.html'),
+      favicon: 'sl_instrumented/common/img/favicon.ico',
+      template: path.resolve('sl_instrumented', 'index.tpl.html'),
       filename: 'index.html',
     }),
     ...(env.production
@@ -136,7 +136,7 @@ export default (env = defaultEnv) => ({
               options: {
                 modules: true,
                 alias: {
-                  common: path.resolve(__dirname, 'sl_instrumented/src/common'),
+                  common: path.resolve(__dirname, 'sl_instrumented/common'),
                 },
                 importLoaders: 1,
                 localIdentName: '[name]__[local]___[hash:base64:5]',
@@ -149,7 +149,7 @@ export default (env = defaultEnv) => ({
               options: {
                 resources: path.resolve(
                   __dirname,
-                  'sl_instrumented/src/common/css/variables/**/*.scss',
+                  'sl_instrumented/common/css/variables/**/*.scss',
                 ),
               },
             },
