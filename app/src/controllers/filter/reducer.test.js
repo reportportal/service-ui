@@ -19,7 +19,7 @@ import { launchesFiltersReducer, launchesFiltersReadyReducer } from './reducer';
 
 describe('filter reducer', () => {
   describe('launchesFiltersReducer', () => {
-    test('should return old state in unknown action', () => {
+    test('should return old state on unknown action', () => {
       const oldState = [{ id: 0 }];
       expect(
         launchesFiltersReducer(oldState, {
@@ -80,7 +80,7 @@ describe('filter reducer', () => {
   });
 
   describe('launchesFiltersReadyReducer', () => {
-    test('should return old state in unknown action', () => {
+    test('should return old state on unknown action', () => {
       const oldState = true;
       expect(
         launchesFiltersReadyReducer(oldState, {

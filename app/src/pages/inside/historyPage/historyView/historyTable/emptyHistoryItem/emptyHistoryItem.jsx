@@ -52,9 +52,7 @@ export class EmptyHistoryItem extends Component {
   );
 
   renderNotFoundTextContent = () => (
-    <Fragment>
-      <i className={cx('icon', 'no-item-icon')}>{Parser(NoItemIcon)}</i>
-    </Fragment>
+    <i className={cx('icon', 'no-item-icon')}>{Parser(NoItemIcon)}</i>
   );
 
   renderTextContent = () => {

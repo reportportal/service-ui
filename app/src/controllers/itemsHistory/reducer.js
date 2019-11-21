@@ -25,7 +25,7 @@ import {
   SET_HISTORY_PAGE_LOADING,
 } from './constants';
 
-const historyPaginationReducer = (state = PAGINATION_INITIAL_STATE, { type }) => {
+export const historyPaginationReducer = (state = PAGINATION_INITIAL_STATE, { type }) => {
   switch (type) {
     case RESET_HISTORY:
       return PAGINATION_INITIAL_STATE;
@@ -34,7 +34,7 @@ const historyPaginationReducer = (state = PAGINATION_INITIAL_STATE, { type }) =>
   }
 };
 
-const historyReducer = (state = [], { type }) => {
+export const historyReducer = (state = [], { type }) => {
   switch (type) {
     case RESET_HISTORY:
       return [];
@@ -43,7 +43,7 @@ const historyReducer = (state = [], { type }) => {
   }
 };
 
-const loadingReducer = (state = false, { type, payload }) => {
+export const loadingReducer = (state = false, { type, payload }) => {
   switch (type) {
     case SET_HISTORY_PAGE_LOADING:
       return payload;
