@@ -20,7 +20,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
-import { canBulkEditLaunches } from 'common/utils/permissions';
+import { canBulkEditItems } from 'common/utils/permissions';
 import { CUSTOMER } from 'common/constants/projectRoles';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { GhostButton } from 'components/buttons/ghostButton';
@@ -144,7 +144,7 @@ export class ActionPanel extends Component {
       {
         label: intl.formatMessage(COMMON_LOCALE_KEYS.EDIT),
         value: 'action-bulk-edit',
-        hidden: debugMode || !canBulkEditLaunches(accountRole, projectRole),
+        hidden: debugMode || !canBulkEditItems(accountRole, projectRole),
         onClick: () => {
           selectedLaunches.length > 1
             ? onEditItems(selectedLaunches)

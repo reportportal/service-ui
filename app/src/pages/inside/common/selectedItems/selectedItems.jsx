@@ -19,8 +19,8 @@ import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
 import Parser from 'html-react-parser';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
-import { ScrollWrapper } from 'components/main/scrollWrapper/index';
-import { SelectedItem } from './selectedItem/index';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { SelectedItem } from './selectedItem';
 import styles from './selectedItems.scss';
 
 const cx = classNames.bind(styles);

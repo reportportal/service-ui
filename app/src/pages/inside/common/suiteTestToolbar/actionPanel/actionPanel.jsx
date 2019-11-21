@@ -34,11 +34,11 @@ import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
 import { LEVEL_STEP, LEVEL_SUITE, LEVEL_TEST } from 'common/constants/launchLevels';
-import { canBulkEditLaunches } from 'common/utils/permissions';
+import { canBulkEditItems } from 'common/utils/permissions';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import RefreshIcon from 'common/img/refresh-inline.svg';
 import HistoryIcon from 'common/img/history-inline.svg';
-import { createStepActionDescriptors } from '../../utils';
+import { createStepActionDescriptors } from 'pages/inside/common/utils';
 import styles from './actionPanel.scss';
 
 const cx = classNames.bind(styles);
@@ -202,7 +202,7 @@ export class ActionPanel extends Component {
       {
         label: intl.formatMessage(COMMON_LOCALE_KEYS.EDIT_ITEMS),
         value: 'action-edit',
-        hidden: !canBulkEditLaunches(accountRole, projectRole),
+        hidden: !canBulkEditItems(accountRole, projectRole),
         onClick: onEditItems,
       },
       {

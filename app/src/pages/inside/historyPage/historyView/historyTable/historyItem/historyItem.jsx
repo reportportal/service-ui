@@ -29,6 +29,7 @@ import {
 } from 'common/constants/defectTypes';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { ItemPathTooltip } from 'pages/inside/common/itemPathTooltip';
+import { InputCheckbox } from 'components/inputs/inputCheckbox';
 
 import { DefectBadge } from './defectBadge/defectBadge';
 import { MessageBadge } from './messageBadge/messageBadge';
@@ -56,21 +57,26 @@ const defectsTitleMap = {
 })
 export class HistoryItem extends Component {
   static propTypes = {
-    status: PropTypes.string,
-    issue: PropTypes.object,
-    defects: PropTypes.object,
     testItem: PropTypes.object,
+    selectedItems: PropTypes.arrayOf(PropTypes.object),
+    withGroupOperations: PropTypes.bool,
+    onSelectItem: PropTypes.func,
   };
 
   static defaultProps = {
-    status: '',
-    issue: {},
-    defects: {},
     testItem: {},
+    selectedItems: [],
+    withGroupOperations: false,
+    onSelectItem: () => {},
   };
 
+  isItemSelected = () =>
+    this.props.selectedItems.some((item) => item.id === this.props.testItem.id);
+
   mapDefectsToBadges = () => {
-    const { defects } = this.props;
+    const {
+      statistics: { defects },
+    } = this.props.testItem;
 
     return Object.keys(defects).map((key) => {
       let badge = '';
@@ -85,10 +91,25 @@ export class HistoryItem extends Component {
     });
   };
 
+  handleItemSelection = () => {
+    const { testItem, onSelectItem } = this.props;
+    onSelectItem(testItem);
+  };
+
   render() {
-    const { status, issue } = this.props;
+    const { testItem, withGroupOperations } = this.props;
+    const { status, issue = {} } = testItem;
+    const selected = withGroupOperations ? this.isItemSelected() : false;
+
     return (
-      <div className={cx('history-item')}>
+      <div
+        className={cx('history-item', { 'with-group-operations': withGroupOperations, selected })}
+      >
+        {withGroupOperations && (
+          <div className={cx('select-item-control')} onClick={(e) => e.stopPropagation()}>
+            <InputCheckbox value={selected} onChange={this.handleItemSelection} />
+          </div>
+        )}
         {status.toLowerCase() === (FAILED || SKIPPED || INTERRUPTED) && this.mapDefectsToBadges()}
         {issue.comment && <MessageBadge data={[{ ticketId: issue.comment }]} icon={CommentIcon} />}
         {issue.externalSystemIssues &&

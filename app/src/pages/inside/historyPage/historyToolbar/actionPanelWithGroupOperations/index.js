@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2019 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,21 +14,4 @@
  * limitations under the License.
  */
 
-.action-panel {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 15px;
-
-  &.right-buttons-only {
-    justify-content: flex-end;
-  }
-}
-
-.action-buttons {
-  display: flex;
-}
-
-.action-button {
-  padding-left: 10px;
-}
+export { ActionPanelWithGroupOperations } from './actionPanelWithGroupOperations';

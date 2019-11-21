@@ -80,6 +80,8 @@ export const isTestItemsListSelector = createSelector(
   (testItemIds) => testItemIds === TEST_ITEMS_TYPE_LIST,
 );
 
+export const isStepLevelSelector = (state) => levelSelector(state) === LEVEL_STEP;
+
 const isListView = (query, namespace) => {
   const namespacedQuery = extractNamespacedQuery(query, namespace);
   return namespacedQuery && 'filter.eq.hasChildren' in namespacedQuery;
@@ -369,9 +371,9 @@ const btsBackLinkBaseSelector = createSelector(payloadSelector, (payload) => {
 });
 
 export const btsIntegrationBackLinkSelector = (state, { path = '', launchId } = {}) => {
-  const testLevel = levelSelector(state);
+  const isStepLevel = isStepLevelSelector(state);
 
-  if (testLevel !== LEVEL_STEP) {
+  if (!isStepLevel) {
     return window.location.toString();
   }
 

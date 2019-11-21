@@ -28,6 +28,7 @@ export { SET_PAGE_LOADING } from './constants';
 export {
   launchSelector,
   levelSelector,
+  isStepLevelSelector,
   loadingSelector,
   namespaceSelector,
   parentItemSelector,

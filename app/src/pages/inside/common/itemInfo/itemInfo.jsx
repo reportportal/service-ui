@@ -22,14 +22,13 @@ import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { fromNowFormat } from 'common/utils';
-import { LEVEL_STEP } from 'common/constants/launchLevels';
 import { SAUCE_LABS } from 'common/constants/integrationNames';
 import {
   activeProjectRoleSelector,
   userAccountRoleSelector,
   userIdSelector,
 } from 'controllers/user';
-import { levelSelector, formatItemName } from 'controllers/testItem';
+import { isStepLevelSelector, formatItemName } from 'controllers/testItem';
 import { availableIntegrationsByPluginNameSelector } from 'controllers/plugins';
 import { MarkdownViewer } from 'components/main/markdown';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -71,7 +70,7 @@ const ItemNameTooltip = withTooltip({
   userAccountRole: userAccountRoleSelector(state),
   userProjectRole: activeProjectRoleSelector(state),
   userId: userIdSelector(state),
-  isStepLevel: levelSelector(state) === LEVEL_STEP,
+  isStepLevel: isStepLevelSelector(state),
 }))
 @track()
 export class ItemInfo extends Component {
