@@ -2,7 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const WebpackNotifierPlugin = require('webpack-notifier');
-const CircularDependencyPlugin = require('circular-dependency-plugin');
+// const CircularDependencyPlugin = require('circular-dependency-plugin');
 
 module.exports = {
   entry: [path.resolve(__dirname, '../src/index.jsx')],
@@ -62,11 +62,11 @@ module.exports = {
       React: 'react',
       Utils: 'common/utils',
     }),
-    new CircularDependencyPlugin({
-      exclude: /a\.js|node_modules/,
-      failOnError: false,
-      allowAsyncCycles: false,
-      cwd: process.cwd(),
-    }),
+    // new CircularDependencyPlugin({
+    //   exclude: /a\.js|node_modules/,
+    //   failOnError: false,
+    //   allowAsyncCycles: false,
+    //   cwd: process.cwd(),
+    // }),
   ],
 };
