@@ -31,7 +31,7 @@ export const SelectedItems = ({ selectedItems, errors, onClose, onUnselect }) =>
       <span className={cx('header')}>
         <FormattedMessage id="LaunchesPage.multipleSelectHeader" defaultMessage="Selected items:" />
       </span>
-      <div>
+      <div className={cx('items-wrapper')}>
         <ScrollWrapper autoHeight autoHeightMax={120} hideTracksWhenNotNeeded>
           <div className={cx('list')}>
             {selectedItems.map((item) => (
