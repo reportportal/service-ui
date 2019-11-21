@@ -1,1 +1,7 @@
 **/*.test.js
+./node_modules/
+./docs/
+./build/
+./localization/
+./test/
+./.storybook/
