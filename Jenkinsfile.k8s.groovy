@@ -112,7 +112,7 @@ podTemplate(
                             sh "./node_modules/.bin/slnodejs end --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession"
                         }
                         stage('Build App') {
-                            sh "npm run build && npm run test"
+                            sh "npm run build-instrumented && npm run test"
                         }
                     }
                 }
