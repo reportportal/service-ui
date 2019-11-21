@@ -29,7 +29,7 @@ export {
   canEditOwnAccount,
   canDeleteLaunch,
   canEditLaunch,
-  canBulkEditLaunches,
+  canBulkEditItems,
   canForceFinishLaunch,
   canStartAnalysis,
   canDeleteTestItem,

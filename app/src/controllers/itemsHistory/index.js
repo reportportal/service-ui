@@ -16,9 +16,17 @@
 
 export { itemsHistoryReducer } from './reducer';
 export {
+  toggleHistoryItemSelectionAction,
+  selectHistoryItemsAction,
+  unselectAllHistoryItemsAction,
   fetchItemsHistoryAction,
   fetchHistoryPageInfoAction,
   refreshHistoryAction,
+  proceedWithValidItemsAction,
+  linkIssueHistoryAction,
+  unlinkIssueHistoryAction,
+  postIssueHistoryAction,
+  editDefectsHistoryAction,
 } from './actionCreators';
 export {
   FETCH_ITEMS_HISTORY,
@@ -29,6 +37,9 @@ export {
 } from './constants';
 export { historySagas } from './sagas';
 export {
+  selectedHistoryItemsSelector,
+  validationErrorsSelector,
+  lastOperationSelector,
   historySelector,
   totalItemsCountSelector,
   historyPaginationSelector,

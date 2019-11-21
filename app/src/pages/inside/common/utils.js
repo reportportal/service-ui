@@ -15,7 +15,7 @@
  */
 
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { canBulkEditLaunches } from 'common/utils/permissions';
+import { canBulkEditItems } from 'common/utils/permissions';
 import { isPostIssueActionAvailable } from 'controllers/plugins';
 import { actionMessages } from './constants';
 
@@ -45,8 +45,9 @@ export const getIssueTitle = (
   return '';
 };
 
-export const createStepActionDescriptors = (props) => {
+export const createStepActionDescriptors = (params) => {
   const {
+    historyView = false,
     formatMessage,
     debugMode,
     onEditDefects,
@@ -62,7 +63,7 @@ export const createStepActionDescriptors = (props) => {
     enabledBtsPlugins,
     accountRole,
     projectRole,
-  } = props;
+  } = params;
   const isPostIssueUnavailable = !isPostIssueActionAvailable(btsIntegrations);
   const issueTitle = getIssueTitle(
     formatMessage,
@@ -76,7 +77,7 @@ export const createStepActionDescriptors = (props) => {
     {
       label: formatMessage(COMMON_LOCALE_KEYS.EDIT_ITEMS),
       value: 'action-edit',
-      hidden: !canBulkEditLaunches(accountRole, projectRole),
+      hidden: !canBulkEditItems(accountRole, projectRole),
       onClick: onEditItems,
     },
     {
@@ -109,18 +110,19 @@ export const createStepActionDescriptors = (props) => {
     {
       label: formatMessage(actionMessages.ignoreInAA),
       value: 'action-ignore-in-AA',
-      hidden: debugMode,
+      hidden: debugMode || historyView,
       onClick: onIgnoreInAA,
     },
     {
       label: formatMessage(actionMessages.includeInAA),
       value: 'action-include-into-AA',
-      hidden: debugMode,
+      hidden: debugMode || historyView,
       onClick: onIncludeInAA,
     },
     {
       label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
       value: 'action-delete',
+      hidden: historyView, // TODO: Should be removed when the develop branch will be merged into 5.1
       onClick: onDelete,
     },
   ];

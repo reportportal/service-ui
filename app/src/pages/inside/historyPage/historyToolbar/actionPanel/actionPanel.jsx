@@ -18,14 +18,11 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
-import { injectIntl, intlShape, FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import RefreshIcon from 'common/img/refresh-inline.svg';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { breadcrumbsSelector, restorePathAction } from 'controllers/testItem';
 import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
-import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
 import { GhostButton } from 'components/buttons/ghostButton';
-// import { createStepActionDescriptors } from 'pages/inside/common/utils';
 import styles from './actionPanel.scss';
 
 const cx = classNames.bind(styles);
@@ -38,49 +35,55 @@ const cx = classNames.bind(styles);
     restorePath: restorePathAction,
   },
 )
-@injectIntl
 export class ActionPanel extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
-    onRefresh: PropTypes.func,
     breadcrumbs: PropTypes.arrayOf(breadcrumbDescriptorShape),
+    customBlock: PropTypes.node,
+    buttons: PropTypes.array,
+    hasErrors: PropTypes.bool,
+    showBreadcrumbs: PropTypes.bool,
+    onRefresh: PropTypes.func,
     restorePath: PropTypes.func,
-    selectedItems: PropTypes.array,
   };
 
   static defaultProps = {
-    onRefresh: () => {},
     breadcrumbs: [],
+    customBlock: null,
+    buttons: [],
+    hasErrors: false,
+    showBreadcrumbs: true,
+    onRefresh: () => {},
     restorePath: () => {},
-    selectedItems: [],
   };
-
-  getActionDescriptors = () => []; // createStepActionDescriptors
 
   render() {
     const {
-      intl: { formatMessage },
       breadcrumbs,
       onRefresh,
       restorePath,
-      selectedItems,
+      showBreadcrumbs,
+      hasErrors,
+      buttons,
+      customBlock,
     } = this.props;
-    const actionDescriptors = this.getActionDescriptors();
 
     return (
-      <div className={cx('action-panel')}>
-        <Breadcrumbs descriptors={breadcrumbs} onRestorePath={restorePath} />
-        <div className={cx('action-button')}>
-          <GhostButton icon={RefreshIcon} onClick={onRefresh}>
-            <FormattedMessage id="Common.refresh" defaultMessage="Refresh" />
-          </GhostButton>
-        </div>
-        <div className={cx('action-button', 'mobile-hidden')}>
-          <GhostMenuButton
-            title={formatMessage(COMMON_LOCALE_KEYS.ACTIONS)}
-            items={actionDescriptors}
-            disabled={!selectedItems.length}
-          />
+      <div className={cx('action-panel', { 'right-buttons-only': !showBreadcrumbs && !hasErrors })}>
+        {showBreadcrumbs && <Breadcrumbs descriptors={breadcrumbs} onRestorePath={restorePath} />}
+        {customBlock}
+        <div className={cx('action-buttons')}>
+          {!!buttons.length &&
+            buttons.map((button, index) => (
+              // eslint-disable-next-line react/no-array-index-key
+              <div key={index} className={cx('action-button')}>
+                {button}
+              </div>
+            ))}
+          <div className={cx('action-button')}>
+            <GhostButton icon={RefreshIcon} onClick={onRefresh} disabled={!showBreadcrumbs}>
+              <FormattedMessage id="Common.refresh" defaultMessage="Refresh" />
+            </GhostButton>
+          </div>
         </div>
       </div>
     );
