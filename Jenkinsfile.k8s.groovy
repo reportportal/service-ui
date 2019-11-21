@@ -97,9 +97,6 @@ podTemplate(
                         stage('Install Deps') {
                             sh "npm install"
                         }
-                        stage('Build App') {
-                            sh "npm run build && npm run test"
-                        }
                         stage ('Init Sealights') {
                             sh "./node_modules/.bin/slnodejs config --tokenfile $sealightsTokenPath --appname service-ui --branch $branchToBuild --build $srvVersion"
                             sealightsSession = utils.execStdout("cat buildSessionId")
@@ -112,6 +109,9 @@ podTemplate(
                             sh "./node_modules/.bin/slnodejs nycReport --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession"
                             sh "./node_modules/.bin/slnodejs uploadReports --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession --reportFile junit.xml"
                             sh "./node_modules/.bin/slnodejs end --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession"
+                        }
+                        stage('Build App') {
+                            sh "npm run build-instrumented && npm run test"
                         }
                     }
                 }
