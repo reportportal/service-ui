@@ -44,6 +44,8 @@ import { AttributeListField } from 'components/main/attributeList';
 import { AccordionContainer } from 'components/main/accordionContainer';
 import { SUITES_PAGE_EVENTS } from 'components/main/analytics/events/suitesPageEvents';
 import { canEditLaunch } from 'common/utils/permissions';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { TestParameters } from 'pages/inside/common/testParameters';
 import styles from './editItemModal.scss';
 
 const cx = classNames.bind(styles);
@@ -93,6 +95,10 @@ const messages = defineMessages({
   description: {
     id: 'TestItemDetailsModal.description',
     defaultMessage: 'Description:',
+  },
+  parametersLabel: {
+    id: 'TestItemDetailsModal.parametersLabel',
+    defaultMessage: 'Parameters:',
   },
 });
 
@@ -291,6 +297,16 @@ export class EditItemModal extends Component {
                 </CopyToClipboard>
               </div>
             </ModalField>
+          )}
+          {item.parameters && (
+            <Fragment>
+              <div className={cx('label')}>{formatMessage(messages.parametersLabel)}</div>
+              <ModalField>
+                <ScrollWrapper autoHeight autoHeightMax={210}>
+                  <TestParameters parameters={item.parameters} />
+                </ScrollWrapper>
+              </ModalField>
+            </Fragment>
           )}
           {editable ? (
             <ModalField>
