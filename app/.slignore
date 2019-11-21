@@ -1,4 +1,5 @@
 **/*.test.js
+**/*.jsx
 ./node_modules/
 ./docs/
 ./build/
