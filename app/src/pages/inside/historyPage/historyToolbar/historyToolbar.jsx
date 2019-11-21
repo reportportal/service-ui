@@ -16,12 +16,10 @@
 
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { InfoLine } from 'pages/inside/common/infoLine';
 import { RefineFiltersPanel } from 'pages/inside/common/refineFiltersPanel';
 import { ActionPanel } from './actionPanel';
 
 export const HistoryToolbar = ({
-  parentItem,
   onRefresh,
   onFilterAdd,
   onFilterRemove,
@@ -29,10 +27,11 @@ export const HistoryToolbar = ({
   onFilterChange,
   filterErrors,
   filterEntities,
+  infoLine,
 }) => (
   <Fragment>
     <ActionPanel onRefresh={onRefresh} />
-    {parentItem && <InfoLine data={parentItem} />}
+    {infoLine}
     <RefineFiltersPanel
       onFilterAdd={onFilterAdd}
       onFilterRemove={onFilterRemove}
@@ -44,10 +43,9 @@ export const HistoryToolbar = ({
   </Fragment>
 );
 HistoryToolbar.propTypes = {
-  parentItem: PropTypes.object,
+  infoLine: PropTypes.node,
   filterErrors: PropTypes.object,
   filterEntities: PropTypes.array,
-  isTestItemsList: PropTypes.bool,
   onRefresh: PropTypes.func,
   onFilterAdd: PropTypes.func,
   onFilterRemove: PropTypes.func,
@@ -55,10 +53,9 @@ HistoryToolbar.propTypes = {
   onFilterChange: PropTypes.func,
 };
 HistoryToolbar.defaultProps = {
-  parentItem: null,
+  infoLine: null,
   filterErrors: {},
   filterEntities: [],
-  isTestItemsList: false,
   onRefresh: () => {},
   onFilterAdd: () => {},
   onFilterRemove: () => {},
