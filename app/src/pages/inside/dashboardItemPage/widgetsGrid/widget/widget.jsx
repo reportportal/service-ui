@@ -21,7 +21,7 @@ import PropTypes from 'prop-types';
 import isEqual from 'fast-deep-equal';
 import { lazyload } from 'react-lazyload';
 import { connect } from 'react-redux';
-import { fetch } from 'common/utils';
+import { fetch, isEmptyObject } from 'common/utils';
 import { URLS } from 'common/urls';
 import { CUMULATIVE_TREND } from 'common/constants/widgetTypes';
 import { activeProjectSelector } from 'controllers/user';
@@ -238,7 +238,9 @@ export class SimpleWidget extends Component {
         }
       })
       .catch(() => {
-        shouldClearQueryParams && this.clearQueryParams();
+        if (shouldClearQueryParams && !isEmptyObject(this.state.queryParameters)) {
+          this.clearQueryParams();
+        }
         this.setState({
           loading: false,
         });
