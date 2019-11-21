@@ -20,6 +20,7 @@ import { getStorageItem } from 'common/utils';
 import { concatFetchDataAction, createFetchPredicate } from 'controllers/fetch';
 import { activeProjectSelector } from 'controllers/user';
 import {
+  isTestItemsListSelector,
   namespaceSelector,
   levelSelector,
   fetchTestItemsAction,
@@ -27,6 +28,7 @@ import {
 } from 'controllers/testItem';
 import {
   testItemIdsArraySelector,
+  filterIdSelector,
   launchIdSelector,
   pagePropertiesSelector,
 } from 'controllers/pages';
@@ -50,6 +52,7 @@ function* getHistoryParams({ loadMore } = {}) {
   const launchId = yield select(launchIdSelector);
   const namespace = yield select(namespaceSelector);
   const query = yield select(pagePropertiesSelector, namespace);
+  const isTestItemsList = yield select(isTestItemsListSelector);
 
   const pageNumber = loadMore ? pagination.number + 1 : pagination.number;
   const parentItemId = itemIdsArray.length > 1 ? itemIdsArray[itemIdsArray.length - 1] : undefined;
@@ -60,8 +63,10 @@ function* getHistoryParams({ loadMore } = {}) {
   };
   if (parentItemId) {
     params['filter.eq.parentId'] = parentItemId;
-  } else {
+  } else if (launchId) {
     params['filter.eq.launchId'] = launchId;
+  } else if (isTestItemsList) {
+    params.filterId = yield select(filterIdSelector);
   }
 
   return params;

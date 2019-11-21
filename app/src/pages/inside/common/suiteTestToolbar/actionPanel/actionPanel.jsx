@@ -20,13 +20,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import {
-  breadcrumbsSelector,
-  isListViewSelector,
-  levelSelector,
-  namespaceSelector,
-  restorePathAction,
-} from 'controllers/testItem';
+import { breadcrumbsSelector, levelSelector, restorePathAction } from 'controllers/testItem';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { historyPageLinkSelector } from 'controllers/itemsHistory';
 import {
@@ -97,7 +91,6 @@ const messages = defineMessages({
   (state) => ({
     breadcrumbs: breadcrumbsSelector(state),
     level: levelSelector(state),
-    listView: isListViewSelector(state, namespaceSelector(state)),
     btsIntegrations: availableBtsIntegrationsSelector(state),
     accountRole: userAccountRoleSelector(state),
     projectRole: activeProjectRoleSelector(state),
@@ -135,7 +128,6 @@ export class ActionPanel extends Component {
     onIgnoreInAA: PropTypes.func,
     onIncludeInAA: PropTypes.func,
     onDelete: PropTypes.func,
-    listView: PropTypes.bool,
     btsIntegrations: PropTypes.array,
     deleteDisabled: PropTypes.bool,
     navigate: PropTypes.func.isRequired,
@@ -170,7 +162,6 @@ export class ActionPanel extends Component {
     onIgnoreInAA: () => {},
     onIncludeInAA: () => {},
     onDelete: () => {},
-    listView: false,
     btsIntegrations: [],
     deleteDisabled: false,
     isBtsPluginsExist: false,
@@ -317,7 +308,6 @@ export class ActionPanel extends Component {
       hasValidItems,
       onProceedValidItems,
       selectedItems,
-      listView,
       debugMode,
       level,
     } = this.props;
@@ -361,18 +351,17 @@ export class ActionPanel extends Component {
               />
             </div>
           )}
-          {!listView &&
-            !debugMode && (
-              <div className={cx('action-button')}>
-                <GhostButton
-                  disabled={!!selectedItems.length}
-                  icon={HistoryIcon}
-                  onClick={this.onClickHistory}
-                >
-                  <FormattedMessage id="ActionPanel.history" defaultMessage="History" />
-                </GhostButton>
-              </div>
-            )}
+          {!debugMode && (
+            <div className={cx('action-button')}>
+              <GhostButton
+                disabled={!!selectedItems.length}
+                icon={HistoryIcon}
+                onClick={this.onClickHistory}
+              >
+                <FormattedMessage id="ActionPanel.history" defaultMessage="History" />
+              </GhostButton>
+            </div>
+          )}
           <div className={cx('action-button')}>
             <GhostButton
               disabled={!!selectedItems.length}

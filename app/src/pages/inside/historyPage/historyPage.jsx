@@ -18,14 +18,20 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { PageLayout, PageSection } from 'layouts/pageLayout';
+import { userIdSelector } from 'controllers/user';
+import { activeFilterSelector } from 'controllers/filter';
 import { refreshHistoryAction } from 'controllers/itemsHistory';
-import { parentItemSelector } from 'controllers/testItem';
+import { parentItemSelector, isTestItemsListSelector } from 'controllers/testItem';
+import { InfoLine, InfoLineListView } from 'pages/inside/common/infoLine';
 import { HistoryToolbar } from './historyToolbar';
 import { HistoryView } from './historyView';
 
 @connect(
   (state) => ({
     parentItem: parentItemSelector(state),
+    userId: userIdSelector(state),
+    currentFilter: activeFilterSelector(state),
+    isTestItemsList: isTestItemsListSelector(state),
   }),
   {
     refreshHistoryAction,
@@ -35,6 +41,8 @@ export class HistoryPage extends Component {
   static propTypes = {
     refreshHistoryAction: PropTypes.func.isRequired,
     parentItem: PropTypes.object,
+    currentFilter: PropTypes.object,
+    userId: PropTypes.string,
     filterErrors: PropTypes.object,
     filterEntities: PropTypes.array,
     isTestItemsList: PropTypes.bool,
@@ -46,6 +54,8 @@ export class HistoryPage extends Component {
 
   static defaultProps = {
     parentItem: null,
+    currentFilter: null,
+    userId: '',
     filterErrors: {},
     filterEntities: [],
     isTestItemsList: false,
@@ -55,13 +65,30 @@ export class HistoryPage extends Component {
     onFilterChange: () => {},
   };
 
+  getInfoLine = () => {
+    const { isTestItemsList, currentFilter, userId, parentItem } = this.props;
+
+    if (isTestItemsList) {
+      return !!currentFilter && <InfoLineListView data={currentFilter} currentUser={userId} />;
+    }
+
+    return !!parentItem && <InfoLine data={parentItem} />;
+  };
+
   render() {
-    const { refreshHistoryAction: refreshHistory, ...rest } = this.props;
+    const {
+      refreshHistoryAction: refreshHistory,
+      userId,
+      currentFilter,
+      parentItem,
+      ...rest
+    } = this.props;
+    const infoLine = this.getInfoLine();
 
     return (
       <PageLayout>
         <PageSection>
-          <HistoryToolbar onRefresh={refreshHistory} {...rest} />
+          <HistoryToolbar onRefresh={refreshHistory} infoLine={infoLine} {...rest} />
           <HistoryView refreshHistory={refreshHistory} />
         </PageSection>
       </PageLayout>
