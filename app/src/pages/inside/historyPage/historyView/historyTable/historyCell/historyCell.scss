@@ -42,10 +42,11 @@
 }
 
 .table-body-cell-first, .table-header-cell-first {
-  text-align: left;
   position: sticky;
+  z-index: $Z-INDEX-DEFAULT;
   left: 0;
   border-right: 0;
+  text-align: left;
 }
 
 .table-body-cell-FAILED,

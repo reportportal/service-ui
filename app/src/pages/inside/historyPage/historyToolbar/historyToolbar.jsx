@@ -18,8 +18,12 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { RefineFiltersPanel } from 'pages/inside/common/refineFiltersPanel';
 import { ActionPanel } from './actionPanel';
+import { ActionPanelWithGroupOperations } from './actionPanelWithGroupOperations';
 
 export const HistoryToolbar = ({
+  selectedItems,
+  onUnselect,
+  onUnselectAll,
   onRefresh,
   onFilterAdd,
   onFilterRemove,
@@ -28,9 +32,19 @@ export const HistoryToolbar = ({
   filterErrors,
   filterEntities,
   infoLine,
+  withGroupOperations,
 }) => (
   <Fragment>
-    <ActionPanel onRefresh={onRefresh} />
+    {withGroupOperations ? (
+      <ActionPanelWithGroupOperations
+        onRefresh={onRefresh}
+        selectedItems={selectedItems}
+        onUnselect={onUnselect}
+        onUnselectAll={onUnselectAll}
+      />
+    ) : (
+      <ActionPanel onRefresh={onRefresh} selectedItems={selectedItems} />
+    )}
     {infoLine}
     <RefineFiltersPanel
       onFilterAdd={onFilterAdd}
@@ -43,22 +57,30 @@ export const HistoryToolbar = ({
   </Fragment>
 );
 HistoryToolbar.propTypes = {
+  selectedItems: PropTypes.arrayOf(PropTypes.object),
   infoLine: PropTypes.node,
   filterErrors: PropTypes.object,
   filterEntities: PropTypes.array,
+  withGroupOperations: PropTypes.bool,
   onRefresh: PropTypes.func,
   onFilterAdd: PropTypes.func,
   onFilterRemove: PropTypes.func,
   onFilterValidate: PropTypes.func,
   onFilterChange: PropTypes.func,
+  onUnselect: PropTypes.func,
+  onUnselectAll: PropTypes.func,
 };
 HistoryToolbar.defaultProps = {
+  selectedItems: [],
   infoLine: null,
   filterErrors: {},
   filterEntities: [],
+  withGroupOperations: false,
   onRefresh: () => {},
   onFilterAdd: () => {},
   onFilterRemove: () => {},
   onFilterValidate: () => {},
   onFilterChange: () => {},
+  onUnselect: () => {},
+  onUnselectAll: () => {},
 };

@@ -20,49 +20,84 @@ import { connect } from 'react-redux';
 import { PageLayout, PageSection } from 'layouts/pageLayout';
 import { userIdSelector } from 'controllers/user';
 import { activeFilterSelector } from 'controllers/filter';
-import { refreshHistoryAction } from 'controllers/itemsHistory';
-import { parentItemSelector, isTestItemsListSelector } from 'controllers/testItem';
+import {
+  refreshHistoryAction,
+  selectedHistoryItemsSelector,
+  toggleHistoryItemSelectionAction,
+  unselectAllHistoryItemsAction,
+} from 'controllers/itemsHistory';
+import {
+  parentItemSelector,
+  isTestItemsListSelector,
+  isStepLevelSelector,
+} from 'controllers/testItem';
 import { InfoLine, InfoLineListView } from 'pages/inside/common/infoLine';
 import { HistoryToolbar } from './historyToolbar';
 import { HistoryView } from './historyView';
 
 @connect(
   (state) => ({
+    selectedItems: selectedHistoryItemsSelector(state),
     parentItem: parentItemSelector(state),
     userId: userIdSelector(state),
     currentFilter: activeFilterSelector(state),
     isTestItemsList: isTestItemsListSelector(state),
+    isStepLevel: isStepLevelSelector(state),
   }),
   {
     refreshHistoryAction,
+    toggleItemSelection: toggleHistoryItemSelectionAction,
+    onUnselectAll: unselectAllHistoryItemsAction,
   },
 )
 export class HistoryPage extends Component {
   static propTypes = {
     refreshHistoryAction: PropTypes.func.isRequired,
+    selectedItems: PropTypes.arrayOf(PropTypes.object),
     parentItem: PropTypes.object,
     currentFilter: PropTypes.object,
     userId: PropTypes.string,
     filterErrors: PropTypes.object,
     filterEntities: PropTypes.array,
     isTestItemsList: PropTypes.bool,
+    isStepLevel: PropTypes.bool,
     onFilterAdd: PropTypes.func,
     onFilterRemove: PropTypes.func,
     onFilterValidate: PropTypes.func,
     onFilterChange: PropTypes.func,
+    onUnselectAll: PropTypes.func,
+    toggleItemSelection: PropTypes.func,
   };
 
   static defaultProps = {
+    selectedItems: [],
     parentItem: null,
     currentFilter: null,
     userId: '',
     filterErrors: {},
     filterEntities: [],
     isTestItemsList: false,
+    isStepLevel: false,
     onFilterAdd: () => {},
     onFilterRemove: () => {},
     onFilterValidate: () => {},
     onFilterChange: () => {},
+    onUnselectAll: () => {},
+    toggleItemSelection: () => {},
+  };
+
+  componentWillUnmount() {
+    this.props.onUnselectAll();
+  }
+
+  // TODO: add analytics event here
+  onSelectItem = (item) => {
+    this.props.toggleItemSelection(item);
+  };
+
+  // TODO: add analytics event here
+  onUnselectItem = (item) => {
+    this.props.toggleItemSelection(item);
   };
 
   getInfoLine = () => {
@@ -81,6 +116,9 @@ export class HistoryPage extends Component {
       userId,
       currentFilter,
       parentItem,
+      selectedItems,
+      toggleItemSelection,
+      isStepLevel,
       ...rest
     } = this.props;
     const infoLine = this.getInfoLine();
@@ -88,8 +126,20 @@ export class HistoryPage extends Component {
     return (
       <PageLayout>
         <PageSection>
-          <HistoryToolbar onRefresh={refreshHistory} infoLine={infoLine} {...rest} />
-          <HistoryView refreshHistory={refreshHistory} />
+          <HistoryToolbar
+            onRefresh={refreshHistory}
+            infoLine={infoLine}
+            onUnselect={this.onUnselectItem}
+            selectedItems={selectedItems}
+            withGroupOperations={isStepLevel}
+            {...rest}
+          />
+          <HistoryView
+            refreshHistory={refreshHistory}
+            onSelectItem={this.onSelectItem}
+            selectedItems={selectedItems}
+            withGroupOperations={isStepLevel}
+          />
         </PageSection>
       </PageLayout>
     );

@@ -21,7 +21,6 @@ import {
   unselectAllItemsAction,
   defineGroupOperation,
 } from 'controllers/groupOperations';
-import { showModalAction } from 'controllers/modal';
 import { NAMESPACE } from './constants';
 import {
   validateIgnoreInAA,
@@ -31,6 +30,7 @@ import {
   validateLinkIssue,
   validatePostIssue,
 } from './actionValidators';
+import { ignoreInAA, editDefect, includeInAA, linkIssue, postIssue, unlinkIssue } from './utils';
 
 export const toggleStepSelectionAction = toggleItemSelectionAction(NAMESPACE);
 export const selectStepsAction = selectItemsAction(NAMESPACE);
@@ -41,47 +41,41 @@ export const proceedWithValidItemsAction = createProceedWithValidItemsAction(NAM
 export const ignoreInAutoAnalysisAction = defineGroupOperation(
   NAMESPACE,
   'ignore-in-aa',
-  (items, { fetchFunc, eventsInfo }) =>
-    showModalAction({ id: 'ignoreInAAModal', data: { items, fetchFunc, eventsInfo } }),
+  ignoreInAA,
   validateIgnoreInAA,
 );
 
 export const includeInAutoAnalysisAction = defineGroupOperation(
   NAMESPACE,
   'include-in-aa',
-  (items, { fetchFunc, eventsInfo }) =>
-    showModalAction({ id: 'includeInAAModal', data: { items, fetchFunc, eventsInfo } }),
+  includeInAA,
   validateIncludeInAA,
 );
 
 export const unlinkIssueAction = defineGroupOperation(
   NAMESPACE,
   'unlink-issue',
-  (items, { fetchFunc, eventsInfo }) =>
-    showModalAction({ id: 'unlinkIssueModal', data: { items, fetchFunc, eventsInfo } }),
+  unlinkIssue,
   validateUnlinkIssue,
 );
 
 export const editDefectsAction = defineGroupOperation(
   NAMESPACE,
   'edit-defect',
-  (items, { fetchFunc, debugMode, eventsInfo }) =>
-    showModalAction({ id: 'editDefectModal', data: { items, fetchFunc, debugMode, eventsInfo } }),
+  editDefect,
   validateEditDefect,
 );
 
 export const linkIssueAction = defineGroupOperation(
   NAMESPACE,
   'link-issue',
-  (items, { fetchFunc, eventsInfo }) =>
-    showModalAction({ id: 'linkIssueModal', data: { items, fetchFunc, eventsInfo } }),
+  linkIssue,
   validateLinkIssue,
 );
 
 export const postIssueAction = defineGroupOperation(
   NAMESPACE,
   'post-issue',
-  (items, { fetchFunc, eventsInfo }) =>
-    showModalAction({ id: 'postIssueModal', data: { items, fetchFunc, eventsInfo } }),
+  postIssue,
   validatePostIssue,
 );

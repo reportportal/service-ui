@@ -31,10 +31,13 @@ const cx = classNames.bind(styles);
 export class HistoryView extends Component {
   static propTypes = {
     refreshHistory: PropTypes.func.isRequired,
+    selectedItems: PropTypes.arrayOf(PropTypes.object).isRequired,
+    onSelectItem: PropTypes.func.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    withGroupOperations: PropTypes.bool.isRequired,
   };
 
   state = {
@@ -51,6 +54,7 @@ export class HistoryView extends Component {
   };
 
   render() {
+    const { onSelectItem, selectedItems, withGroupOperations } = this.props;
     const { historyDepth } = this.state;
 
     return (
@@ -59,7 +63,12 @@ export class HistoryView extends Component {
           historyDepth={historyDepth}
           onChangeHistoryDepth={this.onChangeHistoryDepth}
         />
-        <HistoryTable historyDepth={historyDepth} />
+        <HistoryTable
+          historyDepth={historyDepth}
+          onSelectItem={onSelectItem}
+          selectedItems={selectedItems}
+          withGroupOperations={withGroupOperations}
+        />
       </div>
     );
   }

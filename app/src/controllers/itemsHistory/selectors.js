@@ -15,9 +15,20 @@
  */
 
 import { createSelector } from 'reselect';
+import {
+  createSelectedItemsSelector,
+  createValidationErrorsSelector,
+  createLastOperationSelector,
+} from 'controllers/groupOperations';
 import { HISTORY_PAGE, payloadSelector, querySelector } from 'controllers/pages';
 
 const domainSelector = (state) => state.itemsHistory || {};
+const groupOperationsSelector = (state) => domainSelector(state).groupOperations;
+
+export const selectedHistoryItemsSelector = createSelectedItemsSelector(groupOperationsSelector);
+export const validationErrorsSelector = createValidationErrorsSelector(groupOperationsSelector);
+export const lastOperationSelector = createLastOperationSelector(groupOperationsSelector);
+
 export const historySelector = (state) => domainSelector(state).history;
 
 export const historyPaginationSelector = (state) => domainSelector(state).pagination;

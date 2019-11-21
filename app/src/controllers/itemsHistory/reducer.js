@@ -16,6 +16,7 @@
 
 import { combineReducers } from 'redux';
 import { queueReducers } from 'common/utils';
+import { groupOperationsReducer } from 'controllers/groupOperations';
 import { paginationReducer } from 'controllers/pagination';
 import { fetchReducer } from 'controllers/fetch';
 import {
@@ -59,4 +60,5 @@ export const itemsHistoryReducer = combineReducers({
     historyPaginationReducer,
     paginationReducer(NAMESPACE, PAGINATION_INITIAL_STATE),
   ),
+  groupOperations: groupOperationsReducer(NAMESPACE),
 });

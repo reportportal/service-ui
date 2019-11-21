@@ -79,43 +79,28 @@ export class HistoryTable extends Component {
     loading: PropTypes.bool,
     history: PropTypes.array,
     totalItemsCount: PropTypes.number,
+    selectedItems: PropTypes.arrayOf(PropTypes.object),
+    withGroupOperations: PropTypes.bool,
     fetchItemsHistoryAction: PropTypes.func,
     link: PropTypes.func,
     navigate: PropTypes.func,
+    onSelectItem: PropTypes.func,
   };
 
   static defaultProps = {
     history: [],
     loading: false,
     totalItemsCount: 0,
+    selectedItems: [],
+    withGroupOperations: false,
     fetchItemsHistoryAction: () => {},
     link: () => {},
     navigate: () => {},
-  };
-
-  getHistoryItemProps = (historyItem, index) => {
-    let itemProps = {};
-
-    if (!historyItem) {
-      itemProps = {
-        status: NOT_FOUND.toUpperCase(),
-        id: `${NOT_FOUND}_${index}`,
-      };
-    } else {
-      const itemIdsArray = historyItem.path.split('.');
-      const itemIds = itemIdsArray.slice(0, itemIdsArray.length - 1).join('/');
-      itemProps = {
-        status: historyItem.status,
-        issue: historyItem.issue,
-        defects: historyItem.statistics.defects,
-        itemIds,
-      };
-    }
-    return itemProps;
+    onSelectItem: () => {},
   };
 
   getCorrespondingHistoryItem = (historyItem) => {
-    const { navigate, link } = this.props;
+    const { navigate, link, onSelectItem, selectedItems, withGroupOperations } = this.props;
     switch (historyItem.status) {
       case NOT_FOUND.toUpperCase():
       case RESETED.toUpperCase():
@@ -132,14 +117,14 @@ export class HistoryTable extends Component {
           };
           navigate(link(ownProps));
         };
-        const itemProps = {
-          status: historyItem.status,
-          issue: historyItem.issue,
-          defects: historyItem.statistics.defects,
-        };
         return (
-          <HistoryCell status={itemProps.status} onClick={clickHandler} key={historyItem.id}>
-            <HistoryItem {...itemProps} testItem={historyItem} />
+          <HistoryCell status={historyItem.status} onClick={clickHandler} key={historyItem.id}>
+            <HistoryItem
+              testItem={historyItem}
+              onSelectItem={onSelectItem}
+              selectedItems={selectedItems}
+              withGroupOperations={withGroupOperations}
+            />
           </HistoryCell>
         );
       }
