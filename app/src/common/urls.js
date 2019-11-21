@@ -183,9 +183,10 @@ export const URLS = {
     `${urlBase}${activeProject}/log/nested/${itemId}${getQueryParams({
       'filter.gte.level': level,
     })}`,
-  logsUnderPath: (activeProject, path) =>
+  logsUnderPath: (activeProject, path, excludedRetryParentId) =>
     `${urlBase}${activeProject}/log${getQueryParams({
       'filter.under.path': path,
+      'filter.!ex.retryParentId': excludedRetryParentId,
     })}`,
   launchLogs: (activeProject, itemId, level) =>
     `${urlBase}${activeProject}/log${getQueryParams({
