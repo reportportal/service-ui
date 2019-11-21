@@ -25,6 +25,7 @@ import {
   isLaunchLogSelector,
   logViewModeSelector,
   activeRetrySelector,
+  activeLogIdSelector,
 } from 'controllers/log/selectors';
 import { DETAILED_LOG_VIEW } from 'controllers/log/constants';
 import { JSON as JSON_TYPE } from 'common/constants/fileTypes';
@@ -46,16 +47,21 @@ import { getAttachmentModalId, extractExtension } from './utils';
 function* getAttachmentURL() {
   const activeProject = yield select(activeProjectSelector);
   const isLaunchLog = yield select(isLaunchLogSelector);
-  const activeLogItemId = yield select(activeRetryIdSelector);
+  const activeRetryId = yield select(activeRetryIdSelector);
   if (isLaunchLog) {
-    return URLS.launchLogs(activeProject, activeLogItemId);
+    return URLS.launchLogs(activeProject, activeRetryId);
   }
   const logViewMode = yield select(logViewModeSelector);
   if (logViewMode === DETAILED_LOG_VIEW) {
     const activeRetry = yield select(activeRetrySelector);
-    return URLS.logsUnderPath(activeProject, activeRetry.path);
+    const retryParentId = yield select(activeLogIdSelector);
+    return URLS.logsUnderPath(
+      activeProject,
+      activeRetry.path,
+      retryParentId === activeRetryId ? retryParentId : undefined,
+    );
   }
-  return URLS.logItems(activeProject, activeLogItemId);
+  return URLS.logItems(activeProject, activeRetryId);
 }
 
 function* fetchAttachmentsConcat({ payload: { params, concat } }) {
