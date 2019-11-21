@@ -101,17 +101,17 @@ podTemplate(
                             sh "./node_modules/.bin/slnodejs config --tokenfile $sealightsTokenPath --appname service-ui --branch $branchToBuild --build $srvVersion"
                             sealightsSession = utils.execStdout("cat buildSessionId")
                             sh "./node_modules/.bin/slnodejs build --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession --workspacepath './build' --instrumentForBrowsers --outputpath './sl_instrumented' --scm none --es6Modules"
-                            sh "./node_modules/.bin/slnodejs build --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession --workspacepath './src' --scm none --es6Modules"
+//                            sh "./node_modules/.bin/slnodejs build --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession --workspacepath './src' --scm none --es6Modules"
                         }
                         stage ('Start Sealights') {
                             sh "./node_modules/.bin/slnodejs start --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession --testStage 'Unit Tests'"
                             sh "./node_modules/.bin/jest --coverage --testResultsProcessor=$resultsProcessor"
-                            sh "./node_modules/.bin/slnodejs nycReport --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession"
+                            sh "./node_modules/.bin/slnodejs nycReport --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession --report './coverage/coverage-final.json'"
                             sh "./node_modules/.bin/slnodejs uploadReports --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession --reportFile junit.xml"
                             sh "./node_modules/.bin/slnodejs end --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession"
                         }
                         stage('Build App') {
-                            sh "npm run build && npm run test"
+                            sh "npm run build-instrumented && npm run test"
                         }
                     }
                 }
