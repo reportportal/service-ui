@@ -53,7 +53,6 @@
   width: 15%;
   vertical-align: middle;
   font-size: 13px;
-  color: $COLOR--windows-blue;
   @media (max-width: $SCREEN_XS_MAX) {
     width: 100%;
   }
@@ -72,6 +71,11 @@
   @media (max-width: $SCREEN_XS_MAX) {
     max-width: 245px;
   }
+}
+
+.email-link {
+  color: $COLOR--windows-blue;
+  text-decoration: none;
 }
 
 .last-login-col {

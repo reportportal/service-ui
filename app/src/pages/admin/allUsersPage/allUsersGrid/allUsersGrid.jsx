@@ -82,7 +82,9 @@ const EmailColumn = ({ className, value }) => (
       <FormattedMessage id={'AllUsersGrid.emailCol'} defaultMessage={'Email'} />
     </span>
     <div className={cx('email-block')} title={value.email}>
-      {value.email}
+      <a className={cx('email-link')} href={`mailto:${value.email}`}>
+        {value.email}
+      </a>
     </div>
   </div>
 );
