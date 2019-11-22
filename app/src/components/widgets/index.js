@@ -86,8 +86,4 @@ const MULTI_LEVEL_WIDGETS_MAP = {
   },
 };
 
-const STATIC_CHARTS = {
-  [widgetTypes.CUMULATIVE_TREND]: true,
-};
-
-export { CHARTS, MULTI_LEVEL_WIDGETS_MAP, NoDataAvailable, STATIC_CHARTS };
+export { CHARTS, MULTI_LEVEL_WIDGETS_MAP, NoDataAvailable };
