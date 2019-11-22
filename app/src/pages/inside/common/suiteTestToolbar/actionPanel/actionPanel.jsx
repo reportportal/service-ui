@@ -270,7 +270,7 @@ export class ActionPanel extends Component {
             </div>
           )}
           {!debugMode && (
-            <div className={cx('action-button')}>
+            <div className={cx('action-button', 'mobile-hidden')}>
               <GhostButton
                 disabled={!!selectedItems.length}
                 icon={HistoryIcon}
