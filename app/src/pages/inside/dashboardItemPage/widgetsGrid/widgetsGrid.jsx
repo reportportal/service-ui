@@ -24,7 +24,6 @@ import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import PropTypes from 'prop-types';
-import { STATIC_CHARTS } from 'components/widgets';
 import { EmptyWidgetGrid } from './emptyWidgetGrid';
 import { Widget } from './widget';
 import styles from './widgetsGrid.scss';
@@ -177,8 +176,6 @@ export class WidgetsGrid extends Component {
     return newWidgets;
   };
 
-  isStaticWidget = (widgetType) => STATIC_CHARTS[widgetType];
-
   renderItems = () => {
     const {
       dashboard: { widgets = [], owner },
@@ -209,7 +206,6 @@ export class WidgetsGrid extends Component {
               minW: 4,
               minH: 4,
               i: String(widgetId),
-              isResizable: !this.isStaticWidget(widgetType),
             }}
           >
             <Widget

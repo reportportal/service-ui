@@ -21,7 +21,11 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import * as d3 from 'd3-selection';
 import { defectTypesSelector, orderedContentFieldsSelector } from 'controllers/project';
-import { defectLinkSelector, statisticsLinkSelector } from 'controllers/testItem';
+import {
+  defectLinkSelector,
+  statisticsLinkSelector,
+  TEST_ITEMS_TYPE_LIST,
+} from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
 import { createFilterAction } from 'controllers/filter';
 import { PASSED, FAILED, SKIPPED, INTERRUPTED } from 'common/constants/testStatuses';
@@ -32,7 +36,6 @@ import {
   getDefaultTestItemLinkParams,
   getItemNameConfig,
   getDefectTypeLocators,
-  getUpdatedFilterWithTime,
   getChartDefaultProps,
 } from 'components/widgets/common/utils';
 import { createTooltipRenderer } from 'components/widgets/common/tooltip';
@@ -211,11 +214,21 @@ export class LaunchStatisticsChart extends Component {
   };
 
   timeLineModeClickHandler = (data) => {
-    const chartFilter = this.props.widget.appliedFilters[0];
-    const itemDate = this.chartData.itemsData[data.index].date;
-    const newFilter = getUpdatedFilterWithTime(chartFilter, itemDate);
+    const { widget, getDefectLink, getStatisticsLink, defectTypes, projectId } = this.props;
+    const chartFilterId = widget.appliedFilters[0].id;
+    const launchesLimit = widget.contentParameters.itemsCount;
+    const nameConfig = getItemNameConfig(data.id);
+    const defaultParams = getDefaultTestItemLinkParams(
+      projectId,
+      chartFilterId,
+      TEST_ITEMS_TYPE_LIST,
+    );
+    const locators = getDefectTypeLocators(nameConfig, defectTypes);
 
-    this.props.createFilterAction(newFilter);
+    const link = locators
+      ? getDefectLink({ defects: locators, itemId: TEST_ITEMS_TYPE_LIST, launchesLimit })
+      : getStatisticsLink({ statuses: this.getLinkParametersStatuses(nameConfig), launchesLimit });
+    this.props.navigate(Object.assign(link, defaultParams));
   };
 
   createInteractiveTooltip = () => {
