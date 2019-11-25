@@ -135,6 +135,11 @@
     margin-top: 3px;
   }
 }
+.last-login-time {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+}
 .shown-on-mobile {
   @media (max-width: $SCREEN_XS_MAX) {
     display: inline-block;
