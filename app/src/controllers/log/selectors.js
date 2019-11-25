@@ -79,7 +79,7 @@ export const querySelector = createQueryParametersSelector({
 
 export const historyItemsSelector = createSelector(historyEntriesSelector, (entriesFromState) => {
   if (!entriesFromState.length) return [];
-  const historyItems = [...entriesFromState[0].resources].map(normalizeHistoryItem);
+  const historyItems = entriesFromState[0].resources.map(normalizeHistoryItem);
 
   return calculateGrowthDuration(historyItems);
 });
