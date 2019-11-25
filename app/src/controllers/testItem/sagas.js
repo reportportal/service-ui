@@ -21,7 +21,8 @@ import {
   bulkFetchDataAction,
   createFetchPredicate,
 } from 'controllers/fetch';
-import { updateFilterAction, activeFilterSelector } from 'controllers/filter';
+import { showFilterOnLaunchesAction } from 'controllers/project';
+import { activeFilterSelector } from 'controllers/filter';
 import { activeProjectSelector } from 'controllers/user';
 import { put, select, all, takeEvery, take, call } from 'redux-saga/effects';
 import {
@@ -40,6 +41,12 @@ import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { createNamespacedQuery, mergeNamespacedQuery } from 'common/utils/routingUtils';
 import { LEVEL_NOT_FOUND } from 'common/constants/launchLevels';
+import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
+import {
+  showNotification,
+  showDefaultErrorNotification,
+  NOTIFICATION_TYPES,
+} from 'controllers/notification';
 import { setLevelAction, setPageLoadingAction } from './actionCreators';
 import {
   FETCH_TEST_ITEMS,
@@ -47,6 +54,7 @@ import {
   PARENT_ITEMS_NAMESPACE,
   RESTORE_PATH,
   FETCH_TEST_ITEMS_LOG_PAGE,
+  DELETE_TEST_ITEMS,
 } from './constants';
 import { LEVELS } from './levels';
 import {
@@ -153,7 +161,7 @@ function* fetchTestItems({ payload = {} }) {
     const filter = yield call(fetch, URLS.filter(project, filterId));
 
     if (filter) {
-      yield put(updateFilterAction(filter));
+      yield put(showFilterOnLaunchesAction(filter));
     }
   }
   yield put(
@@ -238,6 +246,38 @@ function* watchTestItemsFromLogPage() {
   yield takeEvery(FETCH_TEST_ITEMS_LOG_PAGE, fetchTestItemsFromLogPage);
 }
 
+function* deleteTestItems({ payload: { items, selectedItems } }) {
+  const ids = items.map((item) => item.id).join(',');
+  const projectId = yield select(activeProjectSelector);
+  yield put(showScreenLockAction());
+  try {
+    yield call(fetch, URLS.testItems(projectId, ids), {
+      method: 'delete',
+    });
+    yield put(hideScreenLockAction());
+    yield call(fetchTestItems, {});
+    yield put(
+      showNotification({
+        messageId:
+          selectedItems.length === 1 ? 'deleteTestItemSuccess' : 'deleteTestItemMultipleSuccess',
+        type: NOTIFICATION_TYPES.SUCCESS,
+      }),
+    );
+  } catch (error) {
+    yield put(hideScreenLockAction());
+    yield put(showDefaultErrorNotification(error));
+  }
+}
+
+function* watchDeleteTestItems() {
+  yield takeEvery(DELETE_TEST_ITEMS, deleteTestItems);
+}
+
 export function* testItemsSagas() {
-  yield all([watchFetchTestItems(), watchRestorePath(), watchTestItemsFromLogPage()]);
+  yield all([
+    watchFetchTestItems(),
+    watchRestorePath(),
+    watchTestItemsFromLogPage(),
+    watchDeleteTestItems(),
+  ]);
 }

@@ -15,7 +15,6 @@
  */
 
 import React, { Component } from 'react';
-import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
@@ -34,15 +33,11 @@ const messages = defineMessages({
 });
 
 @withModal('allUsersChangeProjectRoleModal')
-@track()
 @injectIntl
 export class ChangeProjectRoleModal extends Component {
   static propTypes = {
     data: PropTypes.object,
     intl: intlShape.isRequired,
-    tracking: PropTypes.shape({
-      getTrackingData: PropTypes.func,
-    }).isRequired,
   };
 
   static defaultProps = {
@@ -50,7 +45,7 @@ export class ChangeProjectRoleModal extends Component {
   };
 
   render() {
-    const { onSubmit, name } = this.props.data;
+    const { onSubmit, name, eventsInfo } = this.props.data;
     const { intl } = this.props;
 
     return (
@@ -63,10 +58,13 @@ export class ChangeProjectRoleModal extends Component {
             closeModal();
             onSubmit();
           },
+          eventInfo: eventsInfo.changeBtn,
         }}
         cancelButton={{
           text: intl.formatMessage(messages.cancelText),
+          eventInfo: eventsInfo.cancelBtn,
         }}
+        closeIconEventInfo={eventsInfo.closeIcon}
       >
         <div>{intl.formatMessage(messages.changeAccountRoleText, { name })}</div>
       </ModalLayout>

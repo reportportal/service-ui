@@ -66,6 +66,7 @@ export class UnlinkIssueModal extends Component {
     data: PropTypes.shape({
       items: PropTypes.array,
       fetchFunc: PropTypes.func,
+      eventsInfo: PropTypes.object,
     }).isRequired,
   };
 
@@ -105,19 +106,25 @@ export class UnlinkIssueModal extends Component {
   };
 
   render() {
-    const { intl } = this.props;
+    const {
+      intl,
+      data: { eventsInfo = {} },
+    } = this.props;
     const okButton = {
       text: intl.formatMessage(messages.unlinkButton),
       onClick: this.onUnlink,
+      eventInfo: eventsInfo.unlinkBtn,
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      eventInfo: eventsInfo.cancelBtn,
     };
     return (
       <ModalLayout
         title={intl.formatMessage(messages.title)}
         okButton={okButton}
         cancelButton={cancelButton}
+        closeIconEventInfo={eventsInfo.closeIcon}
       >
         {intl.formatMessage(messages.unlinkModalConfirmationText)}
       </ModalLayout>

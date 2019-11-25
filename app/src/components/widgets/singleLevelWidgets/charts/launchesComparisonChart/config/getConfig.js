@@ -29,7 +29,7 @@ const messages = defineMessages({
 
 export const getConfig = ({
   content,
-  contentParameters,
+  contentFields,
   isPreview,
   formatMessage,
   positionCallback,
@@ -40,7 +40,6 @@ export const getConfig = ({
   const chartData = {};
   const chartDataOrdered = [];
   const colors = {};
-  const contentFields = contentParameters.contentFields;
 
   const itemsData = [];
 
@@ -116,7 +115,7 @@ export const getConfig = ({
       enabled: !isPreview,
     },
     padding: {
-      top: isPreview ? 0 : 85,
+      top: isPreview || !onChartClick ? 0 : 85,
       left: isPreview ? 0 : 60,
       right: isPreview ? 0 : 20,
       bottom: 0,

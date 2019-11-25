@@ -19,6 +19,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
+import track from 'react-tracking';
+import { SETTINGS_PAGE_EVENTS, getSaveNewPatternEvent } from 'components/main/analytics/events';
 import { patternsSelector, addPatternAction } from 'controllers/project';
 import { STRING_PATTERN } from 'common/constants/patternTypes';
 import { showModalAction } from 'controllers/modal';
@@ -65,6 +67,7 @@ const cx = classNames.bind(styles);
     showModal: showModalAction,
   },
 )
+@track()
 export class PatternAnalysisTab extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -73,6 +76,10 @@ export class PatternAnalysisTab extends Component {
     showModal: PropTypes.func.isRequired,
     userRole: PropTypes.string,
     projectRole: PropTypes.string,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     patterns: [],
@@ -81,19 +88,29 @@ export class PatternAnalysisTab extends Component {
   };
 
   onAddPattern = () => {
-    const { intl, showModal, addPattern } = this.props;
+    const { intl, showModal, tracking } = this.props;
+    tracking.trackEvent(SETTINGS_PAGE_EVENTS.CREATE_PATTERN_BTN);
     showModal({
       id: 'createPatternModal',
       data: {
-        onSave: addPattern,
+        onSave: this.handleSaveNewPattern,
         pattern: {
           type: STRING_PATTERN,
           enabled: true,
         },
         modalTitle: intl.formatMessage(messages.createPatternTitle),
         isNewPattern: true,
+        eventsInfo: {
+          cancelBtn: SETTINGS_PAGE_EVENTS.CANCEL_BTN_CREATE_PATTERN_MODAL,
+          closeIcon: SETTINGS_PAGE_EVENTS.CLOSE_ICON_CREATE_PATTERN_MODAL,
+        },
       },
     });
+  };
+
+  handleSaveNewPattern = (pattern) => {
+    this.props.tracking.trackEvent(getSaveNewPatternEvent(pattern.type));
+    this.props.addPattern(pattern);
   };
 
   isAbleToEditForm = () => canUpdateSettings(this.props.userRole, this.props.projectRole);

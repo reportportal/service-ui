@@ -28,6 +28,7 @@ import { activeProjectSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
+import { ErrorMessage } from 'components/main/errorMessage';
 import { CHARTS, MULTI_LEVEL_WIDGETS_MAP, NoDataAvailable } from 'components/widgets';
 import { isWidgetDataAvailable } from '../../modals/common/utils';
 import { WidgetHeader } from './widgetHeader';
@@ -75,6 +76,13 @@ export class SimpleWidget extends Component {
     dashboardOwner: '',
   };
 
+  static getDerivedStateFromError(error) {
+    return {
+      hasError: true,
+      error,
+    };
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -86,6 +94,8 @@ export class SimpleWidget extends Component {
         contentParameters: {},
       },
       userSettings: {},
+      hasError: false,
+      error: null,
     };
   }
 
@@ -98,7 +108,7 @@ export class SimpleWidget extends Component {
   componentWillUnmount() {
     this.props.observer.unsubscribe(`${this.props.widgetId}_resizeStarted`, this.hideWidget);
     this.props.observer.unsubscribe('widgetResized', this.showWidget);
-    this.silentUpdaterId && clearTimeout(this.silentUpdaterId);
+    this.clearSilentUpdater();
   }
 
   onChangeUserSettings = (settings, callback = () => {}) => {
@@ -131,6 +141,14 @@ export class SimpleWidget extends Component {
 
     if (this.state.loading) {
       return <SpinningPreloader />;
+    }
+
+    if (this.state.hasError) {
+      return (
+        <div className={cx('error-message-container')}>
+          <ErrorMessage error={this.state.error} />
+        </div>
+      );
     }
 
     if (!isWidgetDataAvailable(widget) && (!MULTI_LEVEL_WIDGETS_MAP[widgetType] || !widget.id)) {
@@ -200,11 +218,16 @@ export class SimpleWidget extends Component {
     );
   };
 
+  clearSilentUpdater = () => {
+    if (this.silentUpdaterId) {
+      clearTimeout(this.silentUpdaterId);
+    }
+  };
+
   fetchWidget = (params = {}, silent = true, shouldClearQueryParams = true) => {
-    const { tracking, isFullscreen } = this.props;
+    const { isFullscreen } = this.props;
     const url = this.getWidgetUrl(params);
-    this.silentUpdaterId && clearTimeout(this.silentUpdaterId);
-    tracking.trackEvent(DASHBOARD_PAGE_EVENTS.REFRESH_WIDGET);
+    this.clearSilentUpdater();
 
     if (!silent) {
       this.setState({
@@ -228,9 +251,12 @@ export class SimpleWidget extends Component {
             queryParameters,
             widget,
             loading: false,
+            hasError: false,
+            error: null,
           });
         }
         if (!this.props.isPrintMode) {
+          this.clearSilentUpdater();
           this.silentUpdaterId = setTimeout(
             this.fetchWidget,
             isFullscreen ? SILENT_UPDATE_TIMEOUT_FULLSCREEN : SILENT_UPDATE_TIMEOUT,
@@ -277,6 +303,11 @@ export class SimpleWidget extends Component {
     });
   };
 
+  refreshWidget = () => {
+    this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.REFRESH_WIDGET);
+    this.fetchWidget();
+  };
+
   showDeleteWidgetModal = () => {
     this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.REMOVE_WIDGET);
     this.props.showModalAction({
@@ -310,7 +341,7 @@ export class SimpleWidget extends Component {
     }
 
     return (
-      <div className={cx('widget-container', { fullscreen: isFullscreen })}>
+      <div className={cx('widget-container', { disabled: isFullscreen })}>
         <div
           className={cx('widget-header', 'draggable-field', {
             modifiable: isModifiable,
@@ -318,7 +349,7 @@ export class SimpleWidget extends Component {
         >
           <WidgetHeader
             data={headerData}
-            onRefresh={this.fetchWidget}
+            onRefresh={this.refreshWidget}
             onDelete={this.showDeleteWidgetModal}
             onEdit={this.showEditWidgetModal}
             customClass={cx('common-control')}

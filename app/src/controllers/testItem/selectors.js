@@ -230,20 +230,19 @@ export const breadcrumbsSelector = createSelector(
 );
 
 export const nameLinkSelector = (state, ownProps) => {
-  const payload =
-    (ownProps.ownLinkParams && ownProps.ownLinkParams.payload) || payloadSelector(state);
-  let testItemIds = ownProps.testItemIds || testItemIdsSelector(state);
+  const ownLinkParams = ownProps.ownLinkParams;
+  const payload = (ownLinkParams && ownLinkParams.payload) || payloadSelector(state);
+  let testItemIds = (ownLinkParams && ownLinkParams.testItemIds) || testItemIdsSelector(state);
   const isDebugMode = debugModeSelector(state);
   let query = pagePropertiesSelector(state);
   const testItem = testItemSelector(state, ownProps.itemId);
   const hasChildren = testItem && testItem.hasChildren;
-  const page =
-    (ownProps.ownLinkParams && ownProps.ownLinkParams.page) ||
-    getNextPage(isDebugMode, hasChildren);
+  const page = (ownLinkParams && ownLinkParams.page) || getNextPage(isDebugMode, hasChildren);
   if (testItem) {
     const testItemPath = testItem.path.split('.').slice(0, -1);
     testItemIds = [testItem.launchId, ...testItemPath].join('/');
   }
+
   if (ownProps.uniqueId) {
     query = {
       ...query,

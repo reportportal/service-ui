@@ -27,7 +27,7 @@ import { activeProjectSelector } from 'controllers/user';
 import { getDefaultTestItemLinkParams } from 'components/widgets/common/utils';
 import { TotalStatistics } from './totalStatistics';
 import { OverallDefects } from './overallDefects';
-import styles from './overallStatistics.scss';
+import styles from './overallStatisticsPanel.scss';
 
 const cx = classNames.bind(styles);
 

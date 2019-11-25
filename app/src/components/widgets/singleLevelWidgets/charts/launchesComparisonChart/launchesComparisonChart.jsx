@@ -58,23 +58,23 @@ export class LaunchesComparisonChart extends Component {
     getStatisticsLink: PropTypes.func.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
     isPreview: PropTypes.bool,
-    height: PropTypes.number,
     observer: PropTypes.object,
     uncheckedLegendItems: PropTypes.array,
     onChangeLegend: PropTypes.func,
+    clickable: PropTypes.bool,
   };
 
   static defaultProps = {
     isPreview: false,
-    height: 0,
-    observer: {},
+    observer: undefined,
     uncheckedLegendItems: [],
     onChangeLegend: () => {},
+    clickable: true,
   };
 
   onChartCreated = () => {
     // eslint-disable-next-line func-names
-    d3.selectAll(document.querySelectorAll('.c3-chart-bar path')).each(function() {
+    d3.selectAll(this.props.container.querySelectorAll('.c3-chart-bar path')).each(function() {
       const elem = d3.select(this);
       if (elem.datum().value === 0) {
         elem.style('stroke-width', '3px');
@@ -101,22 +101,23 @@ export class LaunchesComparisonChart extends Component {
       intl: { formatMessage },
       widget: { contentParameters },
       defectTypes,
+      clickable,
     } = this.props;
 
     return {
       formatMessage,
       defectTypes,
       getConfig,
-      contentParameters,
-      onChartClick: this.onChartClick,
+      contentFields: contentParameters.contentFields,
+      onChartClick: clickable ? this.onChartClick : undefined,
     };
   };
 
   render() {
-    const { onChangeLegend, uncheckedLegendItems } = this.props;
+    const { onChangeLegend, uncheckedLegendItems, clickable } = this.props;
     const legendConfig = {
       onChangeLegend,
-      showLegend: true,
+      showLegend: clickable,
       uncheckedLegendItems,
       legendProps: {
         noTotal: true,

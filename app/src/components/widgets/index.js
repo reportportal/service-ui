@@ -26,7 +26,7 @@ import {
   PassingRatePerLaunch,
   PassingRateSummary,
   LaunchExecutionAndIssueStatistics,
-  OverallStatisticsChart,
+  OverallStatistics,
   InvestigatedTrendChart,
 } from './singleLevelWidgets/charts';
 import {
@@ -68,7 +68,7 @@ const CHARTS = {
   [widgetTypes.PRODUCT_STATUS]: ProductStatus,
   [widgetTypes.CUMULATIVE_TREND]: CumulativeTrendChart,
   [widgetTypes.COMPONENT_HEALTH_CHECK]: ComponentHealthCheck,
-  [widgetTypes.OVERALL_STATISTICS]: OverallStatisticsChart,
+  [widgetTypes.OVERALL_STATISTICS]: OverallStatistics,
   [widgetTypes.INVESTIGATED_PERCENTAGE_OF_LAUNCHES]: InvestigatedTrendChart,
   [widgetTypes.MOST_POPULAR_PATTERNS]: MostPopularPatterns,
   [widgetTypes.MOST_TIME_CONSUMING]: MostTimeConsumingTestCases,

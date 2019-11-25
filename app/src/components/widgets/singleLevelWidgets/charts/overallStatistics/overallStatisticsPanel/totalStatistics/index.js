@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { OverallStatisticsChart } from './overallStatisticsChart';
+export { TotalStatistics } from './totalStatistics';

@@ -23,12 +23,12 @@ export const MEMBERS_PAGE_EVENTS = {
   },
   PERMISSION_MAP_CLICK: {
     category: MEMBERS_PAGE,
-    action: 'Click on Bttn Permission map',
+    action: 'Click on Btn Permission map',
     label: 'Show Permission map',
   },
   INVITE_USER_CLICK: {
     category: MEMBERS_PAGE,
-    action: 'Click on Bttn Invite user',
+    action: 'Click on Btn Invite user',
     label: 'Arise Modal Invite user',
   },
   CHANGE_PROJECT_ROLE: {
@@ -38,7 +38,7 @@ export const MEMBERS_PAGE_EVENTS = {
   },
   UNASSIGN_BTN_CLICK: {
     category: MEMBERS_PAGE,
-    action: 'Click on Bttn Unassign',
+    action: 'Click on Btn Unassign',
     label: 'Unassign user',
   },
   CLOSE_ICON_INVITE_USER_MODAL: {
@@ -48,12 +48,12 @@ export const MEMBERS_PAGE_EVENTS = {
   },
   CANCEL_BTN_INVITE_USER_MODAL: {
     category: MEMBERS_PAGE,
-    action: 'Click on Bttn Cancel on Modal Invite user',
+    action: 'Click on Btn Cancel on Modal Invite user',
     label: 'Close Modal Invite user',
   },
   INVITE_BTN_INVITE_USER_MODAL: {
     category: MEMBERS_PAGE,
-    action: 'Click on Bttn Invite on Modal Invite user',
+    action: 'Click on Btn Invite on Modal Invite user',
     label: 'Invite user',
   },
 };

@@ -171,9 +171,9 @@ export class AddEditModal extends Component {
         okButton={{
           text: submitText,
           onClick: (closeModal) => {
-            this.props.tracking.trackEvent(eventsInfo.submitBtn);
             handleSubmit(this.submitFormAndCloseModal(closeModal))();
           },
+          eventInfo: eventsInfo.submitBtn,
         }}
         cancelButton={{
           text: cancelText,

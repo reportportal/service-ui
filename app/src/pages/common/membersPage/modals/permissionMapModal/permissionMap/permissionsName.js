@@ -118,6 +118,10 @@ const launchesMessages = defineMessages({
     id: 'PermissionMap.reportLaunch',
     defaultMessage: 'Report launches',
   },
+  [ACTIONS.RERUN_LAUNCHES]: {
+    id: 'PermissionMap.rerunLaunches',
+    defaultMessage: 'Re-run launches',
+  },
   [ACTIONS.VIEW_LAUNCH_IN_DEBUG_MODE]: {
     id: 'PermissionMap.viewLaunchInDebugMode',
     defaultMessage: 'View launches in debug mode',
@@ -145,6 +149,10 @@ const suiteTestTestItemMessages = defineMessages({
     id: 'PermissionMap.investigationActions',
     defaultMessage: 'Investigation actions (defect types and issues in BTS)',
   },
+  [ACTIONS.CHANGE_STATUS]: {
+    id: 'PermissionMap.changeStatus',
+    defaultMessage: 'Change status',
+  },
 });
 
 const widgetFilterDashboardMessages = defineMessages({
@@ -152,13 +160,9 @@ const widgetFilterDashboardMessages = defineMessages({
     id: 'PermissionMap.createShareItem',
     defaultMessage: 'Create, share item',
   },
-  [ACTIONS.EDIT_SHARED_ITEM]: {
-    id: 'PermissionMap.editSharedItem',
-    defaultMessage: 'Edit shared item',
-  },
-  [ACTIONS.DELETE_SHARED_ITEM]: {
-    id: 'PermissionMap.deleteSharedItem',
-    defaultMessage: 'Delete shared item',
+  [ACTIONS.EDIT_DELETE_SHARED_ITEM]: {
+    id: 'PermissionMap.editDeleteSharedItem',
+    defaultMessage: 'Edit, delete shared item',
   },
 });
 

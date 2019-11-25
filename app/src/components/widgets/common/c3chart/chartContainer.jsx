@@ -25,9 +25,11 @@ export class ChartContainer extends Component {
     widget: PropTypes.object.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
     isPreview: PropTypes.bool,
-    height: PropTypes.number,
+    heightOffset: PropTypes.number,
     observer: PropTypes.object,
-    configData: PropTypes.object,
+    configData: PropTypes.shape({
+      getConfig: PropTypes.func,
+    }),
     legendConfig: PropTypes.shape({
       showLegend: PropTypes.bool,
       onChangeLegend: PropTypes.func,
@@ -37,17 +39,20 @@ export class ChartContainer extends Component {
     chartCreatedCallback: PropTypes.func,
     className: PropTypes.string,
     isCustomTooltip: PropTypes.bool,
+    resizedCallback: PropTypes.func,
     onChartClick: PropTypes.func,
   };
 
   static defaultProps = {
     isPreview: false,
-    height: 0,
+    heightOffset: 0,
     observer: {
       subscribe: () => {},
       unsubscribe: () => {},
     },
-    configData: {},
+    configData: {
+      getConfig: () => {},
+    },
     chartCreatedCallback: () => {},
     legendConfig: {
       showLegend: false,
@@ -57,6 +62,7 @@ export class ChartContainer extends Component {
     },
     className: '',
     isCustomTooltip: false,
+    resizedCallback: null,
     onChartClick: () => {},
   };
 
@@ -126,10 +132,10 @@ export class ChartContainer extends Component {
   };
 
   setupConfig = () => {
-    const { widget, isPreview, container, configData, onChartClick } = this.props;
+    const { widget, isPreview, container, configData, heightOffset, onChartClick } = this.props;
     const { getConfig, ...configParams } = configData;
 
-    this.height = container.offsetHeight;
+    this.height = container.offsetHeight - heightOffset;
     this.width = container.offsetWidth;
 
     const params = {
@@ -173,8 +179,9 @@ export class ChartContainer extends Component {
   isChartCreated = false;
 
   resizeChart = () => {
-    const newHeight = this.props.container.offsetHeight;
-    const newWidth = this.props.container.offsetWidth;
+    const { container, resizedCallback, heightOffset } = this.props;
+    const newHeight = container.offsetHeight - heightOffset;
+    const newWidth = container.offsetWidth;
 
     if (this.height !== newHeight) {
       this.chart.resize({
@@ -182,10 +189,14 @@ export class ChartContainer extends Component {
       });
       this.height = newHeight;
       this.width = newWidth;
-      this.config.size.height = newHeight;
+      if (this.config.size) {
+        this.config.size.height = newHeight;
+      }
+      resizedCallback && resizedCallback();
     } else if (this.width !== newWidth) {
       this.width = newWidth;
       this.chart.flush();
+      resizedCallback && resizedCallback();
     }
   };
 

@@ -17,7 +17,6 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import track from 'react-tracking';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
@@ -58,7 +57,6 @@ const messages = defineMessages({
 
 @withModal('deleteWidgetModal')
 @injectIntl
-@track()
 @connect((state) => ({
   userId: userIdSelector(state),
   userAccountRole: userAccountRoleSelector(state),
@@ -77,10 +75,6 @@ export class DeleteWidgetModal extends Component {
     userAccountRole: PropTypes.string.isRequired,
     userProjectRole: PropTypes.string.isRequired,
     isAdmin: PropTypes.bool.isRequired,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
   };
 
   static defaultProps = {
@@ -103,10 +97,9 @@ export class DeleteWidgetModal extends Component {
   };
 
   render() {
-    const { intl, tracking } = this.props;
+    const { intl } = this.props;
     const { widget, onConfirm, eventsInfo } = this.props.data;
     const confirmAndClose = (closeModal) => {
-      tracking.trackEvent(eventsInfo.deleteBtn);
       onConfirm();
       closeModal();
     };
@@ -114,6 +107,7 @@ export class DeleteWidgetModal extends Component {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.DELETE),
       danger: true,
       onClick: confirmAndClose,
+      eventInfo: eventsInfo.deleteBtn,
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),

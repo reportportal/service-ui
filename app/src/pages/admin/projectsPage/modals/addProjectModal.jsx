@@ -15,7 +15,6 @@
  */
 
 import React, { Component } from 'react';
-import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
 import { reduxForm } from 'redux-form';
@@ -41,13 +40,9 @@ const LABEL_WIDTH = 105;
   asyncChangeFields: ['projectName'],
   asyncBlurFields: ['projectName'], // validate on blur in case of copy-paste value
 })
-@track()
 export class AddProjectModal extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    tracking: PropTypes.shape({
-      getTrackingData: PropTypes.func,
-    }).isRequired,
     data: PropTypes.object,
     dirty: PropTypes.bool,
     handleSubmit: PropTypes.func,
@@ -71,8 +66,11 @@ export class AddProjectModal extends Component {
   };
 
   render() {
-    const { onSubmit } = this.props.data;
-    const { intl, handleSubmit } = this.props;
+    const {
+      intl,
+      data: { onSubmit, eventsInfo },
+      handleSubmit,
+    } = this.props;
     return (
       <ModalLayout
         title={intl.formatMessage(messages.addProject)}
@@ -84,11 +82,14 @@ export class AddProjectModal extends Component {
               onSubmit(values);
             })();
           },
+          eventInfo: eventsInfo.addBtn,
         }}
         cancelButton={{
           text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+          eventInfo: eventsInfo.cancelBtn,
         }}
         closeConfirmation={this.getCloseConfirmationConfig()}
+        closeIconEventInfo={eventsInfo.closeIcon}
       >
         <form>
           <ModalField>

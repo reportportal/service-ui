@@ -254,15 +254,19 @@ export class EditToInvestigateDefectModal extends Component {
     return preparedItems;
   };
 
-  handleUnlinkIssue = () =>
+  handleUnlinkIssue = () => {
+    this.props.tracking.trackEvent(this.props.data.eventsInfo.unlinkIssueBtn);
     this.props.unlinkIssueAction(this.prepareDataToSend(), {
       fetchFunc: this.props.data.fetchFunc,
+      eventsInfo: this.props.data.eventsInfo.unlinkModalEvents,
     });
+  };
 
   handleLinkIssue = () => {
     this.props.tracking.trackEvent(this.props.data.eventsInfo.linkIssueBtn);
     return this.props.linkIssueAction(this.prepareDataToSend(), {
       fetchFunc: this.props.data.fetchFunc,
+      eventsInfo: this.props.data.eventsInfo.linkIssueEvents,
     });
   };
 
@@ -270,6 +274,7 @@ export class EditToInvestigateDefectModal extends Component {
     this.props.tracking.trackEvent(this.props.data.eventsInfo.postBugBtn);
     return this.props.postIssueAction(this.prepareDataToSend(), {
       fetchFunc: this.props.data.fetchFunc,
+      eventsInfo: this.props.data.eventsInfo.postBugEvents,
     });
   };
 
@@ -357,6 +362,11 @@ export class EditToInvestigateDefectModal extends Component {
   };
 
   handleIgnoreAnalyzerChange = (newValue) => {
+    this.props.tracking.trackEvent(
+      newValue
+        ? STEP_PAGE_EVENTS.IGNORE_IN_AA_EDIT_DEFECT_MODAL
+        : STEP_PAGE_EVENTS.INCLUDE_IN_AA_EDIT_DEFECT_MODAL,
+    );
     this.setState({
       ignoreAnalyzer: newValue,
     });
@@ -369,6 +379,9 @@ export class EditToInvestigateDefectModal extends Component {
   };
 
   handleChangeSearchMode = (searchMode) => {
+    this.props.tracking.trackEvent(
+      STEP_PAGE_EVENTS.CHANGE_SEARCH_MODE_EDIT_DEFECT_MODAL[searchMode],
+    );
     this.setState(
       {
         searchMode,
@@ -380,6 +393,7 @@ export class EditToInvestigateDefectModal extends Component {
   };
 
   handleSelectAllToggle = (checked) => {
+    this.props.tracking.trackEvent(STEP_PAGE_EVENTS.SELECT_ALL_SIMILIAR_ITEMS_EDIT_DEFECT_MODAL);
     this.setState((state) => ({
       selectedItems: checked ? state.testItems.slice() : [],
     }));

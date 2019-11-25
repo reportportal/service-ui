@@ -119,12 +119,12 @@ export const getUpdatedFilterWithTime = (chartFilter, itemDate) => {
   };
 };
 
-export const getChartDefaultProps = ({ isPreview, widget, container, observer, height }) => ({
+export const getChartDefaultProps = ({ isPreview, widget, container, observer, heightOffset }) => ({
   isPreview,
   widget,
   container,
   observer,
-  height,
+  heightOffset,
 });
 
 export const normalizeChartData = (data, isTimeLine) =>

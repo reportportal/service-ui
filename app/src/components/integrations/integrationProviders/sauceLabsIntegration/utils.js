@@ -14,15 +14,21 @@
  * limitations under the License.
  */
 
-import {
-  SAUCE_LABS_DATA_CENTER_ATTRIBUTE_KEY,
-  SAUCE_LABS_ID_ATTRIBUTE_KEY,
-  DEFAULT_DATA_CENTER,
-} from './constants';
+import { SAUCE_LABS_DATA_CENTER_ATTRIBUTE_KEY, SAUCE_LABS_ID_ATTRIBUTE_KEY } from './constants';
 
-const getIntegrationDataCenter = (
-  integrations = [{ integrationParameters: { dataCenter: DEFAULT_DATA_CENTER } }],
-) => (integrations[0] && integrations[0].integrationParameters.dataCenter) || DEFAULT_DATA_CENTER;
+const getDefaultDataCenter = ({ dataCenters = [''] } = {}) => dataCenters[0];
+
+const getIntegrationDataCenter = (integrations = []) => {
+  const integration = integrations[0];
+  let dataCenter = '';
+  if (integration) {
+    dataCenter =
+      integration.integrationParameters.dataCenter ||
+      getDefaultDataCenter(integration.integrationType.details);
+  }
+
+  return dataCenter;
+};
 
 export const getSauceLabsConfig = (attributes = [], integrations) => {
   const slidItem =

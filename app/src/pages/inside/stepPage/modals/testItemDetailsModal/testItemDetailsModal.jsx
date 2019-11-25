@@ -53,6 +53,7 @@ import { TestParameters } from 'pages/inside/common/testParameters';
 import { validate } from 'common/utils';
 import { ContainerWithTabs } from 'components/main/containerWithTabs';
 import { StackTrace } from 'pages/inside/common/stackTrace';
+import { STEP_PAGE_EVENTS } from 'components/main/analytics/events/stepPageEvents';
 import { messages } from './messages';
 import styles from './testItemDetailsModal.scss';
 
@@ -192,6 +193,7 @@ export class TestItemDetailsModal extends Component {
     const {
       intl,
       data: { item, eventsInfo },
+      tracking: { trackEvent },
     } = this.props;
     return (
       <div className={cx('details-tab')}>
@@ -214,7 +216,11 @@ export class TestItemDetailsModal extends Component {
           <ModalField label={intl.formatMessage(messages.codeRef)}>
             <div className={cx('code-ref')} title={item.codeRef}>
               {item.codeRef}
-              <CopyToClipboard text={item.codeRef} className={cx('copy')}>
+              <CopyToClipboard
+                text={item.codeRef}
+                className={cx('copy')}
+                onCopy={() => trackEvent(STEP_PAGE_EVENTS.COPY_CODE_REFERENCE_EDIT_DEFECT_MODAL)}
+              >
                 {Parser(IconDuplicate)}
               </CopyToClipboard>
             </div>
@@ -286,14 +292,13 @@ export class TestItemDetailsModal extends Component {
       userProjectRole,
       userId,
       handleSubmit,
-      tracking,
     } = this.props;
     const okButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.SAVE),
       onClick: (closeModal) => {
-        tracking.trackEvent(eventsInfo.saveBtn);
         handleSubmit(this.updateItemAndCloseModal(closeModal))();
       },
+      eventInfo: eventsInfo.saveBtn,
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),

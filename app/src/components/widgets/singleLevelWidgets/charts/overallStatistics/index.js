@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2019 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,34 +14,4 @@
  * limitations under the License.
  */
 
-.defect {
-    display: inline-block;
-}
-
-.amount {
-    font-size: 20px;
-    font-family: $FONT-SEMIBOLD;
-    color: $COLOR--gray-47;
-    margin-bottom: 3px;
-}
-
-.label {
-    display: block;
-    padding: 2px 8px 3px 4px;
-    border-radius: 11px;
-    border: 1px solid $COLOR--gray-80;
-    margin-right: 20px;
-    margin-bottom: 10px;
-    font-size: 12px;
-    font-family: $FONT-SEMIBOLD;
-    cursor: pointer;
-}
-
-.marker {
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    border-radius: 6px;
-    margin-right: 5px;
-    margin-top: 2px;
-}
+export { OverallStatistics } from './overallStatistics';

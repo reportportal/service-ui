@@ -37,12 +37,14 @@ export class InputFilterContainer extends Component {
     onChange: PropTypes.func,
     entitiesProvider: PropTypes.elementType,
     id: PropTypes.string.isRequired,
+    eventsInfo: PropTypes.object,
   };
 
   static defaultProps = {
     filterValues: {},
     onChange: () => {},
     entitiesProvider: null,
+    eventsInfo: {},
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -91,7 +93,7 @@ export class InputFilterContainer extends Component {
   handleCancel = () => this.setState({ values: this.state.prevValues });
 
   render() {
-    const { entitiesProvider, filterValues } = this.props;
+    const { entitiesProvider, filterValues, eventsInfo } = this.props;
     return (
       <FilterEntitiesContainer
         entities={this.state.values}
@@ -110,6 +112,7 @@ export class InputFilterContainer extends Component {
             value={this.state.filterString}
             onFilterStringChange={this.handleFilterStringChange}
             filterActive={Object.keys(filterValues).length > 0}
+            eventsInfo={eventsInfo}
           />
         )}
       />

@@ -80,6 +80,7 @@ export class DefectTypesTab extends Component {
         eventsInfo: {
           closeIcon: SETTINGS_PAGE_EVENTS.CLOSE_ICON_RESET_DEFECT_COLORS_MODAL,
           cancelBtn: SETTINGS_PAGE_EVENTS.CANCEL_BTN_RESET_DEFECT_COLORS_MODAL,
+          confirmBtn: SETTINGS_PAGE_EVENTS.RESET_BTN_RESET_DEFECT_COLORS_MODAL,
         },
       },
     });
@@ -88,7 +89,6 @@ export class DefectTypesTab extends Component {
   resetColors = () => {
     const { subTypes } = this.props;
 
-    this.props.tracking.trackEvent(SETTINGS_PAGE_EVENTS.RESET_BTN_RESET_DEFECT_COLORS_MODAL);
     this.props.updateDefectSubTypeAction(
       Object.keys(subTypes).reduce((result, typeRef) => {
         // for all defect sub types except system types (with index=0) set default colors

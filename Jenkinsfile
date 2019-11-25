@@ -16,7 +16,11 @@ node {
             docker.withServer("$DOCKER_HOST") {
                 stage('Build Docker Image') {
                     withEnv(["NODE_OPTIONS=--max_old_space_size=4096"]) {
-                        sh 'make IMAGE_NAME=reportportal-dev-5-1/service-ui build-image-dev'
+                        sh """
+                            MAJOR_VER=\$(cat VERSION)
+                            BUILD_VER="\${MAJOR_VER}-${env.BUILD_NUMBER}"
+                            make IMAGE_NAME=reportportal-dev-5-1/service-ui build-image-dev v=\$BUILD_VER
+                        """
                     }
                 }
 

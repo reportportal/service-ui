@@ -245,7 +245,7 @@ export class ActionPanel extends Component {
         disabled: isPostIssueUnavailable,
         title: isPostIssueUnavailable ? issueTitle : '',
         onClick: () => {
-          tracking.trackEvent(STEP_PAGE_EVENTS.POST_BUG_ACTION);
+          tracking.trackEvent(STEP_PAGE_EVENTS.POST_ISSUE_ACTION);
           onPostIssue();
         },
       },
@@ -256,7 +256,7 @@ export class ActionPanel extends Component {
         disabled: !btsIntegrations.length,
         title: btsIntegrations.length ? '' : issueTitle,
         onClick: () => {
-          tracking.trackEvent(STEP_PAGE_EVENTS.LOAD_BUG_ACTION);
+          tracking.trackEvent(STEP_PAGE_EVENTS.LINK_ISSUE_ACTION);
           onLinkIssue();
         },
       },

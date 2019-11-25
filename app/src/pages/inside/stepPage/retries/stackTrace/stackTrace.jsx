@@ -18,6 +18,8 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
 import Link from 'redux-first-router-link';
+import track from 'react-tracking';
+import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { MarkdownViewer } from 'components/main/markdown';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -33,31 +35,36 @@ const messages = defineMessages({
   },
 });
 
-export const StackTrace = injectIntl(
-  ({ index, message, link, loading, intl: { formatMessage } }) => {
-    let description = <NoItemMessage message={formatMessage(messages.noItem)} />;
-    if (loading) {
-      description = <SpinningPreloader />;
-    } else if (message) {
-      description = (
-        <ScrollWrapper>
-          <MarkdownViewer value={message} />
-        </ScrollWrapper>
-      );
-    }
+export const StackTrace = track()(
+  injectIntl(
+    ({ index, message, link, loading, intl: { formatMessage }, tracking: { trackEvent } }) => {
+      let description = <NoItemMessage message={formatMessage(messages.noItem)} />;
+      if (loading) {
+        description = <SpinningPreloader />;
+      } else if (message) {
+        description = (
+          <ScrollWrapper>
+            <MarkdownViewer value={message} />
+          </ScrollWrapper>
+        );
+      }
 
-    return (
-      <div className={cx('stack-trace')}>
-        <div className={cx('title')}>Stack trace #{index + 1}</div>
-        <div className={cx('description', { empty: !message || loading })}>{description}</div>
-        <div className={cx('link')}>
-          <Link to={link}>
-            <FormattedMessage id="StackTrace.linkText" defaultMessage="Open in Log view" />
-          </Link>
+      return (
+        <div className={cx('stack-trace')}>
+          <div className={cx('title')}>Stack trace #{index + 1}</div>
+          <div className={cx('description', { empty: !message || loading })}>{description}</div>
+          <div className={cx('link')}>
+            <Link
+              to={link}
+              onClick={() => trackEvent(STEP_PAGE_EVENTS.OPEN_RETRY_IN_LOG_VIEW_LINK_CLICK)}
+            >
+              <FormattedMessage id="StackTrace.linkText" defaultMessage="Open in Log view" />
+            </Link>
+          </div>
         </div>
-      </div>
-    );
-  },
+      );
+    },
+  ),
 );
 StackTrace.propTypes = {
   index: PropTypes.number.isRequired,

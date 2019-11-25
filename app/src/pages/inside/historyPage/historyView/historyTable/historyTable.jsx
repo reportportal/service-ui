@@ -129,7 +129,7 @@ export class HistoryTable extends Component {
     return itemProps;
   };
 
-  getCorrespondingHistoryItem = (historyItemProps, currentHistoryItem, launchId) => {
+  getCorrespondingHistoryItem = (historyItemProps, currentHistoryItem, launchId, isLastItem) => {
     const { navigate, link } = this.props;
     switch (historyItemProps.status) {
       case NOT_FOUND.toUpperCase():
@@ -143,12 +143,13 @@ export class HistoryTable extends Component {
         const clickHandler = () => {
           const ownProps = {
             ownLinkParams: {
-              page: TEST_ITEM_PAGE,
+              page: isLastItem ? null : TEST_ITEM_PAGE,
               testItemIds: historyItemProps.itemIds
                 ? `${launchId}/${historyItemProps.itemIds}`
                 : launchId,
             },
-            itemId: currentHistoryItem.id,
+            uniqueId: isLastItem ? null : currentHistoryItem.uniqueId,
+            itemId: isLastItem ? currentHistoryItem.id : null,
           };
           navigate(link(ownProps));
         };
@@ -212,15 +213,17 @@ export class HistoryTable extends Component {
             <ItemNameBlock data={launch} />
           </div>
         </HistoryCell>
-        {history.map((historyItem) => {
+        {history.map((historyItem, index) => {
           const currentLaunchHistoryItem = historyItem.resources.filter(
             (item) => item.uniqueId === launch.uniqueId,
           );
           const historyItemProps = this.getHistoryItemProps(currentLaunchHistoryItem);
+          const isLastItem = index === history.length - 1;
           return this.getCorrespondingHistoryItem(
             historyItemProps,
             currentLaunchHistoryItem[0],
             historyItem.launchId,
+            isLastItem,
           );
         })}
       </tr>

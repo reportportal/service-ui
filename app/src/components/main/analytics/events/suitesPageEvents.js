@@ -33,17 +33,17 @@ export const SUITES_PAGE_EVENTS = {
   },
   DELETE_BTN: {
     category: SUITE_PAGE,
-    action: 'Click on Bttn Delete',
+    action: 'Click on Btn Delete',
     label: 'Delete selected Items',
   },
   HISTORY_BTN: {
     category: SUITE_PAGE,
-    action: 'Click on Bttn History',
+    action: 'Click on Btn History',
     label: 'Transition to History View Page',
   },
   REFRESH_BTN: {
     category: SUITE_PAGE,
-    action: 'Click on Bttn Refresh',
+    action: 'Click on Btn Refresh',
     label: 'Refresh the page',
   },
   REFINE_BY_NAME: {
@@ -53,7 +53,7 @@ export const SUITES_PAGE_EVENTS = {
   },
   REFINE_BTN_MORE: {
     category: SUITE_PAGE,
-    action: 'Click on Refine bttn More',
+    action: 'Click on Refine Btn More',
     label: 'Arise dropdown with parameters',
   },
   SELECT_REFINE_PARAMS: {
@@ -88,7 +88,7 @@ export const SUITES_PAGE_EVENTS = {
   },
   PROCEED_VALID_ITEMS: {
     category: SUITE_PAGE,
-    action: 'Click on Bttn "Proceed Valid Items"',
+    action: 'Click on Btn "Proceed Valid Items"',
     label: 'Remove invalid items from selection',
   },
   CLOSE_ICON_EDIT_ITEM_MODAL: {
@@ -103,12 +103,12 @@ export const SUITES_PAGE_EVENTS = {
   },
   CANCEL_BTN_EDIT_ITEM_MODAL: {
     category: SUITE_PAGE,
-    action: 'Click on Bttn Cancel on Modal "Edit Item"',
+    action: 'Click on Btn Cancel on Modal "Edit Item"',
     label: 'Close modal "Edit Item"',
   },
   SAVE_BTN_EDIT_ITEM_MODAL: {
     category: SUITE_PAGE,
-    action: 'Click on Bttn Save on Modal "Edit Item"',
+    action: 'Click on Btn Save on Modal "Edit Item"',
     label: 'Save changes',
   },
   NAME_FILTER: {
@@ -250,5 +250,20 @@ export const SUITES_PAGE_EVENTS = {
     category: SUITE_PAGE,
     action: 'Click on launch log view switcher',
     label: 'Open "Launch log view"',
+  },
+  CLOSE_ICON_DELETE_ITEM_MODAL: {
+    category: SUITE_PAGE,
+    action: 'Click on Icon Close on Modal Delete Item',
+    label: 'Close Modal Delete Item',
+  },
+  CANCEL_BTN_DELETE_ITEM_MODAL: {
+    category: SUITE_PAGE,
+    action: 'Click on Btn Cancel on Modal Delete Item',
+    label: 'Close Modal Delete Item',
+  },
+  DELETE_BTN_DELETE_ITEM_MODAL: {
+    category: SUITE_PAGE,
+    action: 'Click on Btn Delete on Modal Delete Item',
+    label: 'Delete item',
   },
 };

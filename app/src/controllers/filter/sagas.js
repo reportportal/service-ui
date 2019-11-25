@@ -22,7 +22,7 @@ import {
   FETCH_ERROR,
 } from 'controllers/fetch';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { activeProjectSelector } from 'controllers/user';
+import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
 import { userFiltersSelector, updateProjectFilterPreferencesAction } from 'controllers/project';
 import { launchDistinctSelector } from 'controllers/launch';
@@ -113,6 +113,7 @@ function* resetFilter({ payload: filterId }) {
 
 function* createFilter({ payload: filter = {} }) {
   const launchFilters = yield select(launchFiltersSelector);
+  const userId = yield select(userIdSelector);
   const lastNewFilterId = launchFilters.reduce(
     (acc, launchFilter) => (launchFilter.id < acc ? launchFilter.id : acc),
     0,
@@ -122,6 +123,7 @@ function* createFilter({ payload: filter = {} }) {
     ...filter,
     id: lastNewFilterId - 1,
     name: `${NEW_FILTER_PREFIX} ${-(lastNewFilterId - 1)}`,
+    owner: userId,
   };
   yield put(addFilterAction(newFilter));
   yield put(changeActiveFilterAction(newFilter.id));

@@ -15,7 +15,7 @@
  */
 
 import * as COLORS from 'common/constants/colors';
-import { messages } from 'components/widgets/singleLevelWidgets/charts/launchExecutionAndIssueStatistics/messages';
+import { messages } from './messages';
 import { EXECUTIONS, DEFECTS } from '../../common/constants';
 
 const Color = require('color');

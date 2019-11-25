@@ -17,6 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import track from 'react-tracking';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import { URLS } from 'common/urls';
@@ -25,6 +26,7 @@ import { getPluginsFilter } from 'common/constants/pluginsFilter';
 import { ALL_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
 import { updatePluginSuccessAction } from 'controllers/plugins';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import { getPluginFilterTabClickEvent } from 'components/main/analytics/events';
 import { IntegrationBreadcrumbs } from 'pages/common/settingsPage/integrationsTab/integrationBreadcrumbs';
 import {
   IntegrationInfoContainer,
@@ -60,6 +62,7 @@ const messages = defineMessages({
   showNotification,
   updatePluginSuccessAction,
 })
+@track()
 export class InstalledTab extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -67,6 +70,10 @@ export class InstalledTab extends Component {
     plugins: PropTypes.array.isRequired,
     updatePluginSuccessAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -198,9 +205,12 @@ export class InstalledTab extends Component {
   subPagesCache = {};
 
   handleFilterChange = (value) => {
-    this.setState({
-      activeFilterItem: value,
-    });
+    this.props.tracking.trackEvent(getPluginFilterTabClickEvent(value));
+    if (value !== this.state.activeFilterItem) {
+      this.setState({
+        activeFilterItem: value,
+      });
+    }
   };
 
   installedPluginsSettingsSubPageHandler = (pageData, pageTitle) =>

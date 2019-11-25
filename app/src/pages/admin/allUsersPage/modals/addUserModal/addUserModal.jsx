@@ -26,6 +26,7 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { Input } from 'components/inputs/input';
 import { commonValidators, validateAsync } from 'common/utils';
 import { URLS } from 'common/urls';
+import { ADMIN_ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { ROLES_MAP, MEMBER, PROJECT_MANAGER } from 'common/constants/projectRoles';
 import { ACCOUNT_ROLES_MAP, USER, ADMINISTRATOR } from 'common/constants/accountRoles';
 import { ModalLayout, withModal, ModalField } from 'components/main/modal';
@@ -149,6 +150,7 @@ export class AddUserModal extends Component {
   static propTypes = {
     data: PropTypes.object,
     tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
     intl: intlShape.isRequired,
@@ -167,6 +169,9 @@ export class AddUserModal extends Component {
   };
 
   onGeneratePassword = () => {
+    this.props.tracking.trackEvent(
+      ADMIN_ALL_USERS_PAGE_EVENTS.GENERATE_PASSWORD_BTN_ADD_USER_MODAL,
+    );
     this.props.change('password', generatePassword());
   };
 
@@ -196,8 +201,12 @@ export class AddUserModal extends Component {
   };
 
   render() {
-    const { onSubmit } = this.props.data;
-    const { intl, handleSubmit, userRole } = this.props;
+    const {
+      intl,
+      handleSubmit,
+      userRole,
+      data: { onSubmit },
+    } = this.props;
     return (
       <ModalLayout
         title={intl.formatMessage(messages.addUserTitle)}
@@ -210,11 +219,14 @@ export class AddUserModal extends Component {
               closeModal();
             })();
           },
+          eventInfo: ADMIN_ALL_USERS_PAGE_EVENTS.ADD_BTN_ADD_USER_MODAL,
         }}
         cancelButton={{
           text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+          eventInfo: ADMIN_ALL_USERS_PAGE_EVENTS.CANCEL_BTN_ADD_USER_MODAL,
         }}
         closeConfirmation={this.getCloseConfirmationConfig()}
+        closeIconEventInfo={ADMIN_ALL_USERS_PAGE_EVENTS.CLOSE_ICON_ADD_USER_MODAL}
       >
         <form>
           <ModalField>

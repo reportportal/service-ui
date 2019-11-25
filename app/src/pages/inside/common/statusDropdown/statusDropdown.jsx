@@ -63,6 +63,7 @@ export class StatusDropdown extends Component {
     description: PropTypes.string,
     fetchFunc: PropTypes.func,
     showMessage: PropTypes.func,
+    onChange: PropTypes.func,
   };
 
   static defaultProps = {
@@ -70,6 +71,7 @@ export class StatusDropdown extends Component {
     description: '',
     fetchFunc: () => {},
     showMessage: () => {},
+    onChange: () => {},
   };
 
   updateItem = (newStatus) => {
@@ -82,6 +84,7 @@ export class StatusDropdown extends Component {
       description,
       fetchFunc,
       showMessage,
+      onChange,
     } = this.props;
     const newAttribute = { key: ATTRIBUTE_KEY_MANUALLY, value: newStatus.toLowerCase() };
     const newAttributes = attributes
@@ -94,6 +97,8 @@ export class StatusDropdown extends Component {
     };
 
     if (newStatus === oldStatus) return;
+
+    onChange(oldStatus, newStatus);
 
     fetch(URLS.testItemUpdate(currentProject, itemId), { method: 'put', data })
       .then(() => {

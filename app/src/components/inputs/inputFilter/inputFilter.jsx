@@ -22,11 +22,12 @@ import AddFilterIcon from 'common/img/add-filter-inline.svg';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import SearchIcon from 'common/img/search-icon-inline.svg';
 import { EntitiesGroup } from 'components/filterEntities/entitiesGroup';
+import track from 'react-tracking';
 import { InputFilterToolbar } from './inputFilterToolbar';
 import styles from './inputFilter.scss';
 
 const cx = classNames.bind(styles);
-
+@track()
 export class InputFilter extends Component {
   static propTypes = {
     value: PropTypes.string,
@@ -42,6 +43,7 @@ export class InputFilter extends Component {
     onRemove: PropTypes.func,
     onValidate: PropTypes.func,
     filterErrors: PropTypes.object,
+    eventsInfo: PropTypes.object,
     onClear: PropTypes.func,
     onFilterChange: PropTypes.func,
     onFilterValidate: PropTypes.func,
@@ -52,6 +54,10 @@ export class InputFilter extends Component {
     filterActive: PropTypes.bool,
     onCancel: PropTypes.func,
     onQuickClear: PropTypes.func,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -64,6 +70,7 @@ export class InputFilter extends Component {
     error: '',
     onChange: () => {},
     filterEntities: [],
+    eventsInfo: {},
     onAdd: () => {},
     onRemove: () => {},
     onValidate: () => {},
@@ -89,6 +96,7 @@ export class InputFilter extends Component {
   handleClickClear = () => this.props.onQuickClear();
 
   handleApply = () => {
+    this.props.tracking.trackEvent(this.props.eventsInfo.applyBtn);
     this.setState({ opened: false });
     this.props.onFilterApply();
   };
@@ -98,7 +106,12 @@ export class InputFilter extends Component {
     this.props.onCancel();
   };
 
-  togglePopup = () => this.setState({ opened: !this.state.opened });
+  togglePopup = () =>
+    this.setState(
+      { opened: !this.state.opened },
+      () =>
+        this.state.opened ? this.props.tracking.trackEvent(this.props.eventsInfo.openFilter) : null,
+    );
 
   render() {
     const {

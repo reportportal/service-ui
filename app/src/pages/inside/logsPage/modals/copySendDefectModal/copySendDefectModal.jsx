@@ -82,6 +82,7 @@ export class CopySendDefectModal extends Component {
       itemForCopy: PropTypes.object,
       isCopy: PropTypes.bool,
       fetchFunc: PropTypes.func,
+      eventsInfo: PropTypes.object,
     }).isRequired,
   };
 
@@ -91,6 +92,7 @@ export class CopySendDefectModal extends Component {
       activeProject,
       data: { lastHistoryItem, itemForCopy, fetchFunc },
     } = this.props;
+
     const issues = [
       {
         issue: {
@@ -127,14 +129,19 @@ export class CopySendDefectModal extends Component {
   };
 
   render() {
-    const { intl } = this.props;
+    const {
+      intl,
+      data: { eventsInfo },
+    } = this.props;
     const okButton = {
       text: this.getTitle(MESSAGE_TYPES.button),
       danger: true,
       onClick: this.onInclude,
+      eventInfo: eventsInfo.okBtn,
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      eventInfo: eventsInfo.cancelBtn,
     };
 
     return (
@@ -142,6 +149,7 @@ export class CopySendDefectModal extends Component {
         title={this.getTitle(MESSAGE_TYPES.header)}
         okButton={okButton}
         cancelButton={cancelButton}
+        closeIconEventInfo={eventsInfo.cancelBtn}
       >
         {this.getTitle(MESSAGE_TYPES.content)}
       </ModalLayout>

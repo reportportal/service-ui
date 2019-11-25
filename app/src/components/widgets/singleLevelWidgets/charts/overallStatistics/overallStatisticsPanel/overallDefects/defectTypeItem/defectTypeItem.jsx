@@ -16,10 +16,10 @@
 
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { defectTypesSelector } from 'controllers/project';
 import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import { getItemColor, getItemName, getDefectTypeLocators } from '../../../common/utils';
+import { defectTypesSelector } from 'controllers/project';
+import { getItemColor, getItemName, getDefectTypeLocators } from 'components/widgets/common/utils';
 import styles from './defectTypeItem.scss';
 
 const cx = classNames.bind(styles);

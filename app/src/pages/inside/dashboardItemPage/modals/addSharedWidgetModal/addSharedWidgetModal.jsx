@@ -90,8 +90,7 @@ export class AddSharedWidgetModal extends Component {
 
   onAdd = (closeModal) => {
     const {
-      tracking,
-      data: { onConfirm, eventsInfo = {} },
+      data: { onConfirm },
     } = this.props;
     const { widgetType, id } = this.state.selectedWidget;
     this.props.showScreenLockAction();
@@ -100,7 +99,6 @@ export class AddSharedWidgetModal extends Component {
       widgetType,
       ...getDefaultWidgetConfig(widgetType),
     };
-    tracking.trackEvent(eventsInfo.addBtn);
     onConfirm(widget, closeModal);
   };
 
@@ -124,6 +122,7 @@ export class AddSharedWidgetModal extends Component {
       text: formatMessage(COMMON_LOCALE_KEYS.ADD),
       onClick: this.onAdd,
       disabled: !this.state.selectedWidget,
+      eventInfo: eventsInfo.addBtn,
     };
     const cancelButton = {
       text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),

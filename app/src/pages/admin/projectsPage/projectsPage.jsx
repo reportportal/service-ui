@@ -19,6 +19,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
+import track from 'react-tracking';
+import { ADMIN_PROJECTS_PAGE_EVENTS, ADMIN_PROJECTS_PAGE } from 'components/main/analytics/events';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import {
   PROJECTS_PAGE,
@@ -74,6 +76,7 @@ const HEADER_BUTTONS = [
   },
 )
 @injectIntl
+@track({ page: ADMIN_PROJECTS_PAGE })
 export class ProjectsPage extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -82,6 +85,10 @@ export class ProjectsPage extends Component {
     showModal: PropTypes.func.isRequired,
     section: PropTypes.string,
     projectId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -128,13 +135,20 @@ export class ProjectsPage extends Component {
     return breadcrumbs;
   };
 
-  showAddProjectModal = () =>
+  showAddProjectModal = () => {
+    this.props.tracking.trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.ADD_PROJECT_BTN);
     this.props.showModal({
       id: 'addProjectModal',
       data: {
         onSubmit: (values) => this.props.addProject(values.projectName),
+        eventsInfo: {
+          addBtn: ADMIN_PROJECTS_PAGE_EVENTS.ADD_BTN_ADD_PROJECT_MODAL,
+          closeIcon: ADMIN_PROJECTS_PAGE_EVENTS.CLOSE_ICON_ADD_PROJECT_MODAL,
+          cancelBtn: ADMIN_PROJECTS_PAGE_EVENTS.CANCEL_BTN_ADD_PROJECT_MODAL,
+        },
       },
     });
+  };
 
   renderHeaderButtons = () => {
     const {

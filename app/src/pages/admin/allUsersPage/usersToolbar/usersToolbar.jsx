@@ -18,6 +18,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { ADMIN_ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { InputFilter } from 'components/inputs/inputFilter';
 import { FilterEntitiesURLContainer } from 'components/filterEntities/containers';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -78,6 +79,10 @@ export class UsersToolbar extends PureComponent {
                 entitiesProvider={UsersEntities}
                 filterValues={entities}
                 onChange={onChange}
+                eventsInfo={{
+                  openFilter: ADMIN_ALL_USERS_PAGE_EVENTS.FUNNEL_BTN,
+                  applyBtn: ADMIN_ALL_USERS_PAGE_EVENTS.APPLY_FILTER_BTN,
+                }}
               />
             )}
           />

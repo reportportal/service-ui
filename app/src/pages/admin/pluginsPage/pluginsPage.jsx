@@ -16,10 +16,12 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import track from 'react-tracking';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { pluginsSelector } from 'controllers/plugins';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
+import { PLUGINS_PAGE } from 'components/main/analytics/events';
 import { PluginsTabs } from './pluginsTabs';
 
 const messages = defineMessages({
@@ -32,6 +34,7 @@ const messages = defineMessages({
 @connect((state) => ({
   plugins: pluginsSelector(state),
 }))
+@track({ page: PLUGINS_PAGE })
 @injectIntl
 export class PluginsPage extends Component {
   static propTypes = {
@@ -39,18 +42,18 @@ export class PluginsPage extends Component {
     plugins: PropTypes.array.isRequired,
   };
 
-  getBreadcrumbs = () => [
+  getFilterItems = () => [...new Set(this.props.plugins.map((item) => item.groupType))];
+
+  breadcrumbs = [
     {
       title: this.props.intl.formatMessage(messages.pageTitle),
     },
   ];
 
-  getFilterItems = () => [...new Set(this.props.plugins.map((item) => item.groupType))];
-
   render() {
     return (
       <PageLayout>
-        <PageHeader breadcrumbs={this.getBreadcrumbs()} />
+        <PageHeader breadcrumbs={this.breadcrumbs} />
         <PageSection>
           <PluginsTabs plugins={this.props.plugins} filterItems={this.getFilterItems()} />
         </PageSection>

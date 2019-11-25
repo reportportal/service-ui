@@ -79,6 +79,7 @@ export class IgnoreInAAModal extends Component {
     data: PropTypes.shape({
       items: PropTypes.array,
       fetchFunc: PropTypes.func,
+      eventsInfo: PropTypes.object,
     }).isRequired,
   };
 
@@ -150,14 +151,19 @@ export class IgnoreInAAModal extends Component {
   };
 
   render() {
-    const { intl } = this.props;
+    const {
+      intl,
+      data: { eventsInfo = {} },
+    } = this.props;
     const okButton = {
       text: intl.formatMessage(messages.ignoreButton),
       onClick: this.onIgnore,
       danger: true,
+      eventInfo: eventsInfo.ignoreBtn,
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      eventInfo: eventsInfo.cancelBtn,
     };
     return (
       <ModalLayout
@@ -165,6 +171,7 @@ export class IgnoreInAAModal extends Component {
         title={this.getModalTitle()}
         okButton={okButton}
         cancelButton={cancelButton}
+        closeIconEventInfo={eventsInfo.closeIcon}
       >
         {this.getModalText()}
       </ModalLayout>
