@@ -101,7 +101,7 @@ const LastLoginColumn = ({ className, value }) => (
     <span className={cx('mobile-label', 'last-login-label')}>
       <FormattedMessage id={'AllUsersGrid.loginCol'} defaultMessage={'Login'} />
     </span>
-    <AbsRelTime startTime={value.metadata.last_login} />
+    <AbsRelTime startTime={value.metadata.last_login} customClass={cx('last-login-time')} />
   </div>
 );
 LastLoginColumn.propTypes = {
