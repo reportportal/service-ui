@@ -79,6 +79,7 @@ export class FailedCasesTrendChart extends Component {
 
   configData = {
     getConfig,
+    onChartClick: this.onChartClick,
     formatMessage: this.props.intl.formatMessage,
   };
 
@@ -96,7 +97,6 @@ export class FailedCasesTrendChart extends Component {
         <ChartContainer
           {...getChartDefaultProps(this.props)}
           configData={this.configData}
-          onChartClick={this.onChartClick}
           legendConfig={this.legendConfig}
         />
       </div>

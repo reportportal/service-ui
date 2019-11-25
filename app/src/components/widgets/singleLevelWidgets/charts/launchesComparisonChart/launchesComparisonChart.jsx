@@ -20,6 +20,7 @@ import classNames from 'classnames/bind';
 import { injectIntl, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import * as d3 from 'd3-selection';
+import { ALL } from 'common/constants/reservedFilterIds';
 import { defectTypesSelector } from 'controllers/project';
 import { defectLinkSelector, statisticsLinkSelector } from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
@@ -87,7 +88,7 @@ export class LaunchesComparisonChart extends Component {
 
     const nameConfig = getItemNameConfig(data.id);
     const id = widget.content.result[data.index].id;
-    const defaultParams = getDefaultTestItemLinkParams(id, projectId);
+    const defaultParams = getDefaultTestItemLinkParams(projectId, ALL, id);
     const defectLocators = getDefectTypeLocators(nameConfig, defectTypes);
 
     const link = defectLocators

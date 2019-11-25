@@ -80,6 +80,7 @@ export class NonPassedTestCasesTrendChart extends Component {
 
   configData = {
     getConfig,
+    onChartClick: this.onChartClick,
     formatMessage: this.props.intl.formatMessage,
   };
 
@@ -97,7 +98,6 @@ export class NonPassedTestCasesTrendChart extends Component {
         <ChartContainer
           {...getChartDefaultProps(this.props)}
           configData={this.configData}
-          onChartClick={this.onChartClick}
           legendConfig={this.legendConfig}
         />
       </div>

@@ -20,6 +20,7 @@ import { injectIntl, intlShape } from 'react-intl';
 import * as d3 from 'd3-selection';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
+import { ALL } from 'common/constants/reservedFilterIds';
 import { TEST_ITEMS_TYPE_LIST } from 'controllers/testItem';
 import { launchFiltersSelector } from 'controllers/filter';
 import { activeProjectSelector } from 'controllers/user';
@@ -141,7 +142,7 @@ export class DonutChart extends Component {
         isListType: false,
         itemId: id,
       };
-      navigationParams = getDefaultTestItemLinkParams(id, project);
+      navigationParams = getDefaultTestItemLinkParams(project, ALL, id);
     }
     const link = getLink(nameConfig, linkParams);
 

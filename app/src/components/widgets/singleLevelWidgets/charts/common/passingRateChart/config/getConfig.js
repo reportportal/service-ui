@@ -30,7 +30,7 @@ export const getConfig = ({
   size,
   onRendered,
   viewMode,
-  onClickHandler,
+  onChartClick,
 }) => {
   const totalItems = content.total;
   const columnData = {
@@ -54,7 +54,7 @@ export const getConfig = ({
       show: !isPreview,
       format: (value) => (isPreview ? '' : `${getPercentage(value, totalItems)}%`),
     },
-    onclick: onClickHandler || undefined,
+    onclick: isPreview ? undefined : onChartClick,
   };
   const viewModeOptions = getChartViewModeOptions(viewMode, isPreview, totalItems);
 

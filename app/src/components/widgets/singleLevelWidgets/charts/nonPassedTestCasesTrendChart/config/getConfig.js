@@ -35,7 +35,7 @@ export const getConfig = ({
   formatMessage,
   positionCallback,
   size,
-  onClickHandler,
+  onChartClick,
 }) => {
   const chartData = ['notPassed'];
   const itemsData = [];
@@ -53,7 +53,7 @@ export const getConfig = ({
       colors: {
         notPassed: COLOR_FAILEDSKIPPEDTOTAL,
       },
-      onclick: onClickHandler,
+      onclick: isPreview ? undefined : onChartClick,
       itemsData,
     },
     point: {

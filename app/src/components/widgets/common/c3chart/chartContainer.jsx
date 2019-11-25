@@ -40,7 +40,6 @@ export class ChartContainer extends Component {
     className: PropTypes.string,
     isCustomTooltip: PropTypes.bool,
     resizedCallback: PropTypes.func,
-    onChartClick: PropTypes.func,
   };
 
   static defaultProps = {
@@ -63,7 +62,6 @@ export class ChartContainer extends Component {
     className: '',
     isCustomTooltip: false,
     resizedCallback: null,
-    onChartClick: () => {},
   };
 
   state = {
@@ -132,7 +130,7 @@ export class ChartContainer extends Component {
   };
 
   setupConfig = () => {
-    const { widget, isPreview, container, configData, heightOffset, onChartClick } = this.props;
+    const { widget, isPreview, container, configData, heightOffset } = this.props;
     const { getConfig, ...configParams } = configData;
 
     this.height = container.offsetHeight - heightOffset;
@@ -146,7 +144,6 @@ export class ChartContainer extends Component {
         height: this.height,
       },
       onZoomEnd: this.onZoomEnd,
-      onClickHandler: onChartClick,
       ...configParams,
     };
 

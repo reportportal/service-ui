@@ -34,7 +34,7 @@ export const getConfig = ({
   formatMessage,
   positionCallback,
   size,
-  onClickHandler,
+  onChartClick,
 }) => {
   const chartData = ['failed'];
   const itemsData = [];
@@ -63,7 +63,7 @@ export const getConfig = ({
       colors: {
         failed: COLOR_FAILED,
       },
-      onclick: onClickHandler,
+      onclick: isPreview ? undefined : onChartClick,
       itemsData,
     },
     point: {
