@@ -201,8 +201,11 @@ export class TestItemDetailsModal extends Component {
             <TestItemStatus status={item.status} />
           </div>
         </div>
-        <ModalField label={intl.formatMessage(messages.testCaseId)}>
+        <ModalField label={intl.formatMessage(messages.testCaseUId)}>
           <div className={cx('id')}>{item.uniqueId}</div>
+        </ModalField>
+        <ModalField label={intl.formatMessage(messages.testCaseId)}>
+          <div className={cx('id')}>{item.id}</div>
         </ModalField>
         <ModalField label={intl.formatMessage(messages.duration)}>
           {getDuration(item.startTime, item.endTime)}
