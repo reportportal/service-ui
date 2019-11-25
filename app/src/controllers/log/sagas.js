@@ -27,6 +27,7 @@ import {
   pagePropertiesSelector,
   pathnameChangedSelector,
 } from 'controllers/pages';
+import { debugModeSelector } from 'controllers/launch';
 import { createFetchPredicate, fetchDataAction } from 'controllers/fetch';
 import { isEmptyObject } from 'common/utils';
 import {
@@ -166,14 +167,18 @@ function* fetchHistoryEntries() {
 }
 
 function* fetchDetailsLog(offset = 0) {
-  yield all([
+  const fetchLogEffects = [
     put(clearAttachmentsAction()),
     put(fetchTestItemsAction({ offset })),
-    call(fetchHistoryEntries),
     call(fetchLogItems),
-    call(fetchActivity),
     put(clearLogPageStackTrace()),
-  ]);
+  ];
+
+  const isDebugMode = yield select(debugModeSelector);
+  if (!isDebugMode) {
+    fetchLogEffects.push(call(fetchHistoryEntries), call(fetchActivity));
+  }
+  yield all(fetchLogEffects);
 }
 
 function* fetchLaunchLog(offset = 0) {
