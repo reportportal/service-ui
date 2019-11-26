@@ -18,11 +18,9 @@ import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
-import { connect } from 'react-redux';
-import { URLS } from 'common/urls';
-import { fetch, ERROR_CANCELED } from 'common/utils/fetch';
+import { ERROR_CANCELED } from 'common/utils/fetch';
 import InProgressGif from 'common/img/item-in-progress.gif';
-import { activeProjectSelector } from 'controllers/user';
+
 import styles from './issueInfoTooltip.scss';
 
 const cx = classNames.bind(styles);
@@ -50,9 +48,6 @@ const messages = defineMessages({
 
 const isResolved = (status) => status.toUpperCase() === STATUS_RESOLVED;
 
-@connect((state) => ({
-  activeProject: activeProjectSelector(state),
-}))
 @injectIntl
 export class IssueInfoTooltip extends Component {
   static propTypes = {
@@ -61,6 +56,7 @@ export class IssueInfoTooltip extends Component {
     ticketId: PropTypes.string.isRequired,
     btsProject: PropTypes.string.isRequired,
     btsUrl: PropTypes.string.isRequired,
+    fetchIssue: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -83,16 +79,15 @@ export class IssueInfoTooltip extends Component {
   }
 
   fetchData = () => {
-    const { activeProject, ticketId, btsProject, btsUrl } = this.props;
     const cancelRequestFunc = (cancel) => {
       this.cancelRequest = cancel;
     };
     this.setState({ loading: true });
-    fetch(URLS.btsTicket(activeProject, ticketId, btsProject, btsUrl), {
-      abort: cancelRequestFunc,
-    })
+    this.props
+      .fetchIssue(cancelRequestFunc)
       .then((issue) => this.setState({ loading: false, issue }))
       .catch((err) => {
+        this.props.fetchIssue.reset();
         if (err.message === ERROR_CANCELED) {
           return;
         }
