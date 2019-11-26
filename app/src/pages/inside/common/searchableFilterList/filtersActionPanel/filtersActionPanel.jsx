@@ -21,20 +21,12 @@ import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { InputSearch } from 'components/inputs/inputSearch';
-import { GhostButton } from 'components/buttons/ghostButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import AddFilterIcon from 'common/img/add-filter-inline.svg';
-
 import styles from './filtersActionPanel.scss';
-import { FILTER_SEARCH_FORM, FORM_APPEARANCE_MODE_ADD } from '../common/constants';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
-  addFilterButton: {
-    id: 'FiltersActionPanel.addFilterButton',
-    defaultMessage: 'Add filter',
-  },
   searchInputPlaceholder: {
     id: 'FiltersActionPanel.searchInputPlaceholder',
     defaultMessage: 'Search filter by name',
@@ -44,13 +36,13 @@ const messages = defineMessages({
 @injectIntl
 @track()
 @reduxForm({
-  form: FILTER_SEARCH_FORM,
+  form: 'filterSearchForm',
   validate: ({ filter }) => (filter && filter.length < 3 ? { filter: 'filterNameError' } : {}),
   onChange: ({ filter }, dispatcher, props) => {
     if (filter && filter.length < 3) {
       return;
     }
-    props.tracking.trackEvent(props.eventsInfo.enterSearchParams);
+    props.changeSearchParamsCallback();
     props.onFilterChange(filter || undefined);
   },
 })
@@ -61,13 +53,9 @@ export class FiltersActionPanel extends Component {
     filter: PropTypes.string,
     filters: PropTypes.array,
     invalid: PropTypes.bool,
+    customBlock: PropTypes.node,
     change: PropTypes.func,
-    onAdd: PropTypes.func,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
-    eventsInfo: PropTypes.object,
+    changeSearchParamsCallback: PropTypes.func,
   };
 
   static defaultProps = {
@@ -76,9 +64,9 @@ export class FiltersActionPanel extends Component {
     filter: null,
     value: null,
     filters: [],
+    customBlock: null,
     change: () => {},
-    onAdd: () => {},
-    eventsInfo: {},
+    changeSearchParamsCallback: () => {},
   };
 
   componentDidMount() {
@@ -95,13 +83,11 @@ export class FiltersActionPanel extends Component {
     }
   }
 
-  onFilterClick = (event) => {
-    this.props.tracking.trackEvent(this.props.eventsInfo.addFilter);
-    this.props.onAdd(event, FORM_APPEARANCE_MODE_ADD);
-  };
-
   render() {
-    const { intl } = this.props;
+    const {
+      intl: { formatMessage },
+      customBlock,
+    } = this.props;
 
     return (
       <div className={cx('filters-header')}>
@@ -109,19 +95,13 @@ export class FiltersActionPanel extends Component {
           <FieldProvider name="filter">
             <FieldErrorHint>
               <InputSearch
-                placeholder={intl.formatMessage(messages.searchInputPlaceholder)}
+                placeholder={formatMessage(messages.searchInputPlaceholder)}
                 maxLength="128"
               />
             </FieldErrorHint>
           </FieldProvider>
         </div>
-        <GhostButton
-          icon={AddFilterIcon}
-          title={intl.formatMessage(messages.addFilterButton)}
-          onClick={(event) => this.onFilterClick(event)}
-        >
-          {intl.formatMessage(messages.addFilterButton)}
-        </GhostButton>
+        {customBlock}
       </div>
     );
   }

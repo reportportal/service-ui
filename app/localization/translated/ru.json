@@ -18,7 +18,7 @@
   "AccuracyFormBlock.numberOfLogLinesDescription": "Количество первых строк лога, которые будут учитываться при Авто-Анализе.",
   "AccuracyFormBlock.numberOfLogLinesTitle": "Количество строк журнала",
   "AccuracyFormBlock.submitButtonText": "Отправить",
-  "ActionPanel.actionCompare": "Сравнить",
+  "Common.compare": "Сравнить",
   "ActionPanel.actionsBtnTooltip": "Выберите несколько элементов для обработки",
   "ActionPanel.addUserNotification": "Новая запись пользователя создана успешно",
   "ActionPanel.editDefects": "Редактировать дефекты",

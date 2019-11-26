@@ -18,7 +18,7 @@
   "AccuracyFormBlock.numberOfLogLinesDescription": "Колькасць першых радкоў лога, якія будуць улічвацца пры Аўта-аналізу.",
   "AccuracyFormBlock.numberOfLogLinesTitle": "Колькасць радкоў часопіса",
   "AccuracyFormBlock.submitButtonText": "Адправіць",
-  "ActionPanel.actionCompare": "Параўнаць",
+  "Common.compare": "Параўнаць",
   "ActionPanel.actionsBtnTooltip": "Абярыце некалькі элементаў для апрацоўкі",
   "ActionPanel.addUserNotification": "Новы ўліковы запіс быў паспяхова створаны",
   "ActionPanel.editDefects": "Рэдагаваць Дэфекты",
