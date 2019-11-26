@@ -107,7 +107,7 @@ function* fetchTestItems({ payload = {} }) {
   const filterId = yield select(filterIdSelector);
   const isPathNameChanged = yield select(pathnameChangedSelector);
   const isTestItemsList = yield select(isTestItemsListSelector);
-  if (isPathNameChanged && !payload.offset) {
+  if (isPathNameChanged && !offset) {
     yield put(setPageLoadingAction(true));
 
     if (!isTestItemsList) {
@@ -246,7 +246,7 @@ function* watchTestItemsFromLogPage() {
   yield takeEvery(FETCH_TEST_ITEMS_LOG_PAGE, fetchTestItemsFromLogPage);
 }
 
-function* deleteTestItems({ payload: { items, selectedItems } }) {
+function* deleteTestItems({ payload: { items, callback } }) {
   const ids = items.map((item) => item.id).join(',');
   const projectId = yield select(activeProjectSelector);
   yield put(showScreenLockAction());
@@ -255,11 +255,10 @@ function* deleteTestItems({ payload: { items, selectedItems } }) {
       method: 'delete',
     });
     yield put(hideScreenLockAction());
-    yield call(fetchTestItems, {});
+    yield call(callback);
     yield put(
       showNotification({
-        messageId:
-          selectedItems.length === 1 ? 'deleteTestItemSuccess' : 'deleteTestItemMultipleSuccess',
+        messageId: items.length === 1 ? 'deleteTestItemSuccess' : 'deleteTestItemMultipleSuccess',
         type: NOTIFICATION_TYPES.SUCCESS,
       }),
     );

@@ -50,16 +50,16 @@ export const fetchTestItemsFromLogPageAction = (payload) => ({
   payload,
 });
 
-export const deleteTestItemsAction = (payload) => ({
+export const deleteTestItemsAction = ({ items, callback }) => ({
   type: DELETE_TEST_ITEMS,
-  payload,
+  payload: { items, callback },
 });
 
 export const createBulkDeleteTestItemsAction = (namespace) =>
   defineGroupOperation(
     namespace,
     'deleteTestItems',
-    (items, { onConfirm, header, mainContent, userId, currentLaunch, warning, eventsInfo }) =>
+    (items, { onConfirm, header, mainContent, userId, warning, eventsInfo }) =>
       showModalAction({
         id: 'deleteItemsModal',
         data: {
@@ -68,7 +68,6 @@ export const createBulkDeleteTestItemsAction = (namespace) =>
           header,
           mainContent,
           userId,
-          currentLaunch,
           warning,
           eventsInfo,
         },

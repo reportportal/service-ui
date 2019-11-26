@@ -31,6 +31,7 @@ import {
   validatePostIssue,
   validateUnlinkIssue,
 } from 'controllers/step';
+import { createBulkDeleteTestItemsAction } from 'controllers/testItem';
 import {
   NAMESPACE,
   FETCH_ITEMS_HISTORY,
@@ -44,6 +45,7 @@ export const toggleHistoryItemSelectionAction = toggleItemSelectionAction(NAMESP
 export const selectHistoryItemsAction = selectItemsAction(NAMESPACE);
 export const unselectAllHistoryItemsAction = unselectAllItemsAction(NAMESPACE);
 export const proceedWithValidItemsAction = createProceedWithValidItemsAction(NAMESPACE);
+export const deleteHistoryItemsAction = createBulkDeleteTestItemsAction(NAMESPACE);
 
 export const unlinkIssueHistoryAction = defineGroupOperation(
   NAMESPACE,
