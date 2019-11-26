@@ -14,33 +14,41 @@
  * limitations under the License.
  */
 
+import { Component } from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames/bind';
-import Parser from 'html-react-parser';
-import { withTooltip } from 'components/main/tooltips/tooltip';
-import CrossIcon from 'common/img/cross-icon-inline.svg';
-import { IssueInfoTooltip } from './issueInfoTooltip';
-import styles from './issue.scss';
+import { connect } from 'react-redux';
+import { activeProjectSelector } from 'controllers/user';
+import { throttle } from 'common/utils';
+import { URLS } from 'common/urls';
+import { fetch } from 'common/utils/fetch';
+import { IssueWithTooltip } from './issueWithTooltip';
 
-const cx = classNames.bind(styles);
+const FETCH_ISSUE_INTERVAL = 900000; // min request interval = 15 min
 
-export const Issue = withTooltip({
-  TooltipComponent: IssueInfoTooltip,
-})(({ ticketId, url, onRemove }) => (
-  <a href={url} className={cx('issue')}>
-    <div className={cx('title')}>{ticketId}</div>
-    <div
-      className={cx('cross')}
-      onClick={(event) => {
-        event.preventDefault();
-        onRemove(ticketId);
-      }}
-    >
-      {Parser(CrossIcon)}
-    </div>
-  </a>
-));
+@connect((state) => ({
+  activeProject: activeProjectSelector(state),
+}))
+export class Issue extends Component {
+  fetchIssue = throttle((cancelRequestFunc) => {
+    const { activeProject, ticketId, btsProject, btsUrl } = this.props;
+    return fetch(URLS.btsTicket(activeProject, ticketId, btsProject, btsUrl), {
+      abort: cancelRequestFunc,
+    });
+  }, FETCH_ISSUE_INTERVAL);
+
+  render() {
+    return (
+      <IssueWithTooltip
+        {...this.props}
+        fetchIssue={this.fetchIssue}
+        cancelRequest={this.cancelRequest}
+      />
+    );
+  }
+}
+
 Issue.propTypes = {
+  activeProject: PropTypes.string.isRequired,
   ticketId: PropTypes.string.isRequired,
   url: PropTypes.string.isRequired,
   btsProject: PropTypes.string.isRequired,
