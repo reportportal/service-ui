@@ -25,13 +25,14 @@ import {
   unlinkIssueHistoryAction,
   postIssueHistoryAction,
   editDefectsHistoryAction,
+  deleteHistoryItemsAction,
   lastOperationSelector,
   proceedWithValidItemsAction,
   validationErrorsSelector,
 } from 'controllers/itemsHistory';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
-import { launchSelector } from 'controllers/testItem';
+import { launchSelector, deleteTestItemsAction } from 'controllers/testItem';
 import { isDefectGroupOperationAvailable } from 'controllers/step';
 import { getDefectTypeSelector } from 'controllers/project';
 import {
@@ -40,6 +41,7 @@ import {
   enabledBtsPluginsSelector,
 } from 'controllers/plugins';
 import { SelectedItems } from 'pages/inside/common/selectedItems';
+import { getDeleteItemsActionParameters } from 'pages/inside/testItemPage';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
 import { createStepActionDescriptors } from 'pages/inside/common/utils';
@@ -63,6 +65,8 @@ import { ActionPanel } from '../actionPanel';
     onUnlinkIssue: unlinkIssueHistoryAction,
     onPostIssue: postIssueHistoryAction,
     onEditDefects: editDefectsHistoryAction,
+    deleteHistoryItems: deleteHistoryItemsAction,
+    deleteTestItemsAction,
     showModalAction,
   },
 )
@@ -70,6 +74,7 @@ import { ActionPanel } from '../actionPanel';
 export class ActionPanelWithGroupOperations extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
+    userId: PropTypes.string.isRequired,
     accountRole: PropTypes.string.isRequired,
     projectRole: PropTypes.string.isRequired,
     parentLaunch: PropTypes.object,
@@ -89,7 +94,9 @@ export class ActionPanelWithGroupOperations extends Component {
     onUnlinkIssue: PropTypes.func,
     onPostIssue: PropTypes.func,
     onEditDefects: PropTypes.func,
+    deleteHistoryItems: PropTypes.func,
     showModalAction: PropTypes.func,
+    deleteTestItemsAction: PropTypes.func,
   };
 
   static defaultProps = {
@@ -110,7 +117,9 @@ export class ActionPanelWithGroupOperations extends Component {
     onUnlinkIssue: () => {},
     onPostIssue: () => {},
     onEditDefects: () => {},
+    deleteHistoryItems: () => {},
     showModalAction: () => {},
+    deleteTestItemsAction: () => {},
   };
 
   onEditItems = () => {
@@ -146,6 +155,7 @@ export class ActionPanelWithGroupOperations extends Component {
       enabledBtsPlugins,
       accountRole,
       projectRole,
+      onDelete: this.handleDeleteItems,
       onEditDefects: this.handleEditDefects,
       onPostIssue: this.handlePostIssue,
       onLinkIssue: this.handleLinkIssue,
@@ -200,6 +210,27 @@ export class ActionPanelWithGroupOperations extends Component {
       fetchFunc: this.unselectAndFetchItems,
       eventsInfo: {},
     });
+
+  handleDeleteItems = () => {
+    const {
+      intl: { formatMessage },
+      selectedItems,
+      userId,
+      deleteHistoryItems,
+    } = this.props;
+
+    const parameters = getDeleteItemsActionParameters(selectedItems, formatMessage, {
+      onConfirm: (items) =>
+        this.props.deleteTestItemsAction({
+          items,
+          callback: this.unselectAndRefreshItems,
+        }),
+      userId,
+      eventsInfo: {}, // TODO: Add analytics events here
+    });
+
+    deleteHistoryItems(selectedItems, parameters);
+  };
 
   handleEditDefects = (eventData) => {
     const { selectedItems, getDefectType, debugMode, onEditDefects } = this.props;

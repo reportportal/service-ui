@@ -122,7 +122,6 @@ export const createStepActionDescriptors = (params) => {
     {
       label: formatMessage(COMMON_LOCALE_KEYS.DELETE),
       value: 'action-delete',
-      hidden: historyView, // TODO: Should be removed when the develop branch will be merged into 5.1
       onClick: onDelete,
     },
   ];

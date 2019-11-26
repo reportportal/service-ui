@@ -16,17 +16,17 @@
 import { TO_INVESTIGATE } from 'common/constants/defectTypes';
 import { showModalAction } from 'controllers/modal';
 
-export const ignoreInAA = (items, { fetchFunc }) =>
-  showModalAction({ id: 'ignoreInAAModal', data: { items, fetchFunc } });
+export const ignoreInAA = (items, { fetchFunc, eventsInfo }) =>
+  showModalAction({ id: 'ignoreInAAModal', data: { items, fetchFunc, eventsInfo } });
 
-export const includeInAA = (items, { fetchFunc }) =>
-  showModalAction({ id: 'includeInAAModal', data: { items, fetchFunc } });
+export const includeInAA = (items, { fetchFunc, eventsInfo }) =>
+  showModalAction({ id: 'includeInAAModal', data: { items, fetchFunc, eventsInfo } });
 
 export const linkIssue = (items, { fetchFunc, eventsInfo }) =>
   showModalAction({ id: 'linkIssueModal', data: { items, fetchFunc, eventsInfo } });
 
-export const unlinkIssue = (items, { fetchFunc }) =>
-  showModalAction({ id: 'unlinkIssueModal', data: { items, fetchFunc } });
+export const unlinkIssue = (items, { fetchFunc, eventsInfo }) =>
+  showModalAction({ id: 'unlinkIssueModal', data: { items, fetchFunc, eventsInfo } });
 
 export const postIssue = (items, { fetchFunc, eventsInfo }) =>
   showModalAction({ id: 'postIssueModal', data: { items, fetchFunc, eventsInfo } });

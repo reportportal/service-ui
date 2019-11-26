@@ -113,7 +113,6 @@ export class HistoryPage extends Component {
   render() {
     const {
       refreshHistoryAction: refreshHistory,
-      userId,
       currentFilter,
       parentItem,
       selectedItems,

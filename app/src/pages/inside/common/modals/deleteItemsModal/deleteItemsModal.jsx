@@ -36,7 +36,6 @@ export class DeleteItemsModal extends Component {
       header: PropTypes.string,
       mainContent: PropTypes.string,
       namespace: PropTypes.string,
-      currentLaunch: PropTypes.object,
       eventsInfo: PropTypes.object,
       warning: PropTypes.string,
     }),

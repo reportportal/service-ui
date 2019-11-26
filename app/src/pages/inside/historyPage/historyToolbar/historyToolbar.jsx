@@ -33,6 +33,7 @@ export const HistoryToolbar = ({
   filterEntities,
   infoLine,
   withGroupOperations,
+  userId,
 }) => (
   <Fragment>
     {withGroupOperations ? (
@@ -41,6 +42,7 @@ export const HistoryToolbar = ({
         selectedItems={selectedItems}
         onUnselect={onUnselect}
         onUnselectAll={onUnselectAll}
+        userId={userId}
       />
     ) : (
       <ActionPanel onRefresh={onRefresh} selectedItems={selectedItems} />
@@ -58,6 +60,7 @@ export const HistoryToolbar = ({
 );
 HistoryToolbar.propTypes = {
   selectedItems: PropTypes.arrayOf(PropTypes.object),
+  userId: PropTypes.string,
   infoLine: PropTypes.node,
   filterErrors: PropTypes.object,
   filterEntities: PropTypes.array,
@@ -72,6 +75,7 @@ HistoryToolbar.propTypes = {
 };
 HistoryToolbar.defaultProps = {
   selectedItems: [],
+  userId: '',
   infoLine: null,
   filterErrors: {},
   filterEntities: [],

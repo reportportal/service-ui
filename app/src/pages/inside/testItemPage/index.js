@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { TestItemPage } from './testItemPage';
+export { TestItemPage, getDeleteItemsActionParameters } from './testItemPage';

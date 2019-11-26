@@ -19,6 +19,7 @@ export {
   toggleHistoryItemSelectionAction,
   selectHistoryItemsAction,
   unselectAllHistoryItemsAction,
+  deleteHistoryItemsAction,
   fetchItemsHistoryAction,
   fetchHistoryPageInfoAction,
   refreshHistoryAction,
