@@ -81,6 +81,10 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.clone',
     defaultMessage: 'Clone',
   },
+  COMPARE: {
+    id: 'Common.compare',
+    defaultMessage: 'Compare',
+  },
   ADD: {
     id: 'Common.add',
     defaultMessage: 'Add',

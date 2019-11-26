@@ -23,6 +23,7 @@ import RefreshIcon from 'common/img/refresh-inline.svg';
 import { breadcrumbsSelector, restorePathAction } from 'controllers/testItem';
 import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
 import { GhostButton } from 'components/buttons/ghostButton';
+import { CompareWithFilterControl } from './compareWithFilterControl';
 import styles from './actionPanel.scss';
 
 const cx = classNames.bind(styles);
@@ -72,6 +73,9 @@ export class ActionPanel extends Component {
         {showBreadcrumbs && <Breadcrumbs descriptors={breadcrumbs} onRestorePath={restorePath} />}
         {customBlock}
         <div className={cx('action-buttons')}>
+          <div className={cx('action-button')}>
+            <CompareWithFilterControl disabled={!showBreadcrumbs} />
+          </div>
           {!!buttons.length &&
             buttons.map((button, index) => (
               // eslint-disable-next-line react/no-array-index-key

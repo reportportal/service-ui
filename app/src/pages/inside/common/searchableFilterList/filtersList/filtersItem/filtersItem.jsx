@@ -28,12 +28,13 @@ const cx = classNames.bind(styles);
 
 export class FiltersItem extends PureComponent {
   static propTypes = {
+    filter: PropTypes.object.isRequired,
+    onChange: PropTypes.func.isRequired,
     search: PropTypes.string,
     userId: PropTypes.string,
     activeFilterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    filter: PropTypes.object.isRequired,
-    onChange: PropTypes.func.isRequired,
-    onEdit: PropTypes.func.isRequired,
+    editable: PropTypes.bool,
+    onEdit: PropTypes.func,
   };
 
   static defaultProps = {
@@ -41,12 +42,12 @@ export class FiltersItem extends PureComponent {
     userId: '',
     activeFilterId: '',
     item: {},
-    onChange: () => {},
+    editable: false,
     onEdit: () => {},
   };
 
   render() {
-    const { activeFilterId, filter, search, onChange, onEdit, userId } = this.props;
+    const { activeFilterId, filter, search, onChange, editable, onEdit, userId } = this.props;
 
     return (
       <div className={cx('filter-item')}>
@@ -65,11 +66,12 @@ export class FiltersItem extends PureComponent {
             editable={false}
           />
           <FilterOptions entities={filter.conditions} sort={filter.orders}>
-            {userId === filter.owner && (
-              <span className={cx('pencil-icon')} onClick={onEdit}>
-                {Parser(PencilIcon)}
-              </span>
-            )}
+            {userId === filter.owner &&
+              editable && (
+                <span className={cx('pencil-icon')} onClick={onEdit}>
+                  {Parser(PencilIcon)}
+                </span>
+              )}
           </FilterOptions>
         </InputRadio>
       </div>

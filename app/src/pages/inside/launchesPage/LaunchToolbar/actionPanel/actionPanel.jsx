@@ -40,10 +40,6 @@ const messages = defineMessages({
     id: 'ActionPanel.actionsBtn',
     defaultMessage: 'Actions',
   },
-  actionCompare: {
-    id: 'ActionPanel.actionCompare',
-    defaultMessage: 'Compare',
-  },
   proceedButton: {
     id: 'ActionPanel.proceedButton',
     defaultMessage: 'Proceed Valid Items',
@@ -158,7 +154,7 @@ export class ActionPanel extends Component {
         onClick: onMerge,
       },
       {
-        label: intl.formatMessage(messages.actionCompare),
+        label: intl.formatMessage(COMMON_LOCALE_KEYS.COMPARE),
         value: 'action-compare',
         hidden: debugMode,
         onClick: onCompare,

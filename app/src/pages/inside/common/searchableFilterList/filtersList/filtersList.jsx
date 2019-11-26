@@ -20,37 +20,41 @@ import classNames from 'classnames/bind';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader/spinningPreloader';
 import { NoResultsForFilter } from 'pages/inside/common/noResultsForFilter';
+import { FiltersItem } from './filtersItem';
 import styles from './filtersList.scss';
-import { FiltersItem } from '../filtersItem';
-import { FORM_APPEARANCE_MODE_EDIT } from '../common/constants';
 
 const cx = classNames.bind(styles);
 
 export const FiltersList = ({
   search,
+  customClass,
   userId,
   activeId,
   filters,
   loading,
   onChange,
+  editable,
   onEdit,
   onLazyLoad,
   noItemsMessage,
   noItemsAdditionalMessage,
 }) => (
-  <div className={cx('filter-list')}>
+  <div className={cx('filter-list', customClass)}>
     <ScrollWrapper onLazyLoad={onLazyLoad}>
-      {filters.map((item) => (
-        <FiltersItem
-          search={search || ''}
-          userId={userId}
-          filter={item}
-          activeFilterId={activeId}
-          key={item.id}
-          onChange={onChange}
-          onEdit={(event) => onEdit(event, FORM_APPEARANCE_MODE_EDIT, item)}
-        />
-      ))}
+      {!loading &&
+        !search &&
+        filters.map((item) => (
+          <FiltersItem
+            search={search || ''}
+            userId={userId}
+            filter={item}
+            activeFilterId={activeId}
+            key={item.id}
+            onChange={onChange}
+            editable={editable}
+            onEdit={(event) => onEdit(event, item)}
+          />
+        ))}
       {loading && <SpinningPreloader />}
       {!filters.length &&
         !loading && (
@@ -65,26 +69,30 @@ export const FiltersList = ({
 );
 
 FiltersList.propTypes = {
+  filters: PropTypes.array.isRequired,
+  customClass: PropTypes.string,
   userId: PropTypes.string,
   search: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   activeId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   loading: PropTypes.bool,
-  filters: PropTypes.array.isRequired,
+  noItemsMessage: PropTypes.object,
+  noItemsAdditionalMessage: PropTypes.object,
+  editable: PropTypes.bool,
   onChange: PropTypes.func,
   onEdit: PropTypes.func,
   onLazyLoad: PropTypes.func,
-  noItemsMessage: PropTypes.object,
-  noItemsAdditionalMessage: PropTypes.object,
 };
 
 FiltersList.defaultProps = {
   activeId: '',
+  customClass: '',
   userId: '',
   search: '',
   loading: false,
-  onChange: () => {},
-  onEdit: () => {},
   onLazyLoad: null,
   noItemsMessage: {},
   noItemsAdditionalMessage: null,
+  editable: false,
+  onChange: () => {},
+  onEdit: () => {},
 };
