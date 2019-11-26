@@ -45,6 +45,8 @@ const defectsTitleMap = {
   [TO_INVESTIGATE]: 'ti',
 };
 
+const statusesWithDefect = [FAILED, SKIPPED, INTERRUPTED];
+
 @withTooltip({
   TooltipComponent: ItemPathTooltip,
   data: {
@@ -75,7 +77,7 @@ export class HistoryItem extends Component {
 
   mapDefectsToBadges = () => {
     const {
-      statistics: { defects },
+      statistics: { defects = {} },
     } = this.props.testItem;
 
     return Object.keys(defects).map((key) => {
@@ -110,7 +112,7 @@ export class HistoryItem extends Component {
             <InputCheckbox value={selected} onChange={this.handleItemSelection} />
           </div>
         )}
-        {status.toLowerCase() === (FAILED || SKIPPED || INTERRUPTED) && this.mapDefectsToBadges()}
+        {statusesWithDefect.indexOf(status.toLowerCase()) !== -1 && this.mapDefectsToBadges()}
         {issue.comment && <MessageBadge data={[{ ticketId: issue.comment }]} icon={CommentIcon} />}
         {issue.externalSystemIssues &&
           issue.externalSystemIssues.length > 0 && (
