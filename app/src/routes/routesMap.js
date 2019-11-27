@@ -209,7 +209,10 @@ const routesMap = {
   },
   PROJECT_FILTERS_PAGE: {
     path: '/:projectId/filters',
-    thunk: (dispatch) => dispatch(fetchFiltersPageAction()),
+    thunk: (dispatch, getState, { action }) => {
+      const location = (action.meta || {}).location || {};
+      dispatch(fetchFiltersPageAction(location.kind !== 'load'));
+    },
   },
   [PROJECT_LOG_PAGE]: {
     path: '/:projectId/launches/:filterId/:testItemIds+/log',
