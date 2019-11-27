@@ -165,6 +165,7 @@ export class ProjectEntities extends Component {
         customProps: {
           conditions: [CONDITION_EQ, CONDITION_GREATER_EQ, CONDITION_LESS_EQ],
           placeholder: null,
+          maxLength: 18,
         },
       },
       {
@@ -180,6 +181,7 @@ export class ProjectEntities extends Component {
         customProps: {
           conditions: [CONDITION_EQ, CONDITION_GREATER_EQ, CONDITION_LESS_EQ],
           placeholder: null,
+          maxLength: 18,
         },
       },
       {
@@ -193,6 +195,7 @@ export class ProjectEntities extends Component {
         removable: false,
         customProps: {
           placeholder: null,
+          maxLength: 256,
         },
       },
       {
@@ -206,6 +209,7 @@ export class ProjectEntities extends Component {
         removable: false,
         customProps: {
           placeholder: null,
+          maxLength: 256,
         },
       },
     ];

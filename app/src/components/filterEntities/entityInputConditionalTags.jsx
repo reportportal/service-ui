@@ -19,6 +19,8 @@ import PropTypes from 'prop-types';
 import { InputConditionalTags } from 'components/inputs/inputConditionalTags';
 import { FieldFilterEntity } from 'components/fields/fieldFilterEntity';
 
+const DEFAULT_MAX_LENGHT = 128;
+
 export class EntityInputConditionalTags extends PureComponent {
   static propTypes = {
     value: PropTypes.object.isRequired,
@@ -53,7 +55,7 @@ export class EntityInputConditionalTags extends PureComponent {
         <InputConditionalTags
           value={value}
           onChange={onChange}
-          inputProps={{ maxLength: 128 }}
+          inputProps={{ maxLength: customProps.maxLength || DEFAULT_MAX_LENGHT }}
           {...customProps}
         />
       </FieldFilterEntity>
