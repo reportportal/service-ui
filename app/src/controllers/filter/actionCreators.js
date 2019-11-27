@@ -111,8 +111,9 @@ export const updateFilterSuccessAction = (filter, oldId) => ({
   },
 });
 
-export const fetchFiltersPageAction = () => ({
+export const fetchFiltersPageAction = (refreshProjectSettings) => ({
   type: FETCH_FILTERS_PAGE,
+  payload: refreshProjectSettings,
 });
 
 export const setPageLoadingAction = (isLoading) => ({

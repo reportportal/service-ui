@@ -209,12 +209,16 @@ function* watchRemoveFilter() {
   yield takeEvery(REMOVE_LAUNCHES_FILTER, resetActiveFilter);
 }
 
-function* fetchFiltersPage() {
+function* fetchFiltersPage({ payload: refreshProjectSettings }) {
   yield put(setPageLoadingAction(true));
   yield call(fetchFilters);
-  const activeProject = yield select(activeProjectSelector);
-  yield put(fetchProjectPreferencesAction(activeProject));
-  yield all([take(createFetchPredicate(NAMESPACE)), take(FETCH_PROJECT_PREFERENCES_SUCCESS)]);
+  const waitEffects = [take(createFetchPredicate(NAMESPACE))];
+  if (refreshProjectSettings) {
+    const activeProject = yield select(activeProjectSelector);
+    yield put(fetchProjectPreferencesAction(activeProject));
+    waitEffects.push(take(FETCH_PROJECT_PREFERENCES_SUCCESS));
+  }
+  yield all(waitEffects);
   yield put(setPageLoadingAction(false));
 }
 
