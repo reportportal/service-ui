@@ -21,9 +21,13 @@ import { paginationReducer } from 'controllers/pagination';
 import { fetchReducer } from 'controllers/fetch';
 import {
   NAMESPACE,
+  FILTER_HISTORY_NAMESPACE,
   RESET_HISTORY,
   PAGINATION_INITIAL_STATE,
   SET_HISTORY_PAGE_LOADING,
+  FETCH_HISTORY_PAGE_INFO,
+  FILTER_FOR_COMPARE_INITIAL_STATE,
+  SET_FILTER_FOR_COMPARE,
 } from './constants';
 
 export const historyPaginationReducer = (state = PAGINATION_INITIAL_STATE, { type }) => {
@@ -53,6 +57,20 @@ export const loadingReducer = (state = false, { type, payload }) => {
   }
 };
 
+export const filterForCompareReducer = (
+  state = FILTER_FOR_COMPARE_INITIAL_STATE,
+  { type, payload },
+) => {
+  switch (type) {
+    case SET_FILTER_FOR_COMPARE:
+      return payload;
+    case FETCH_HISTORY_PAGE_INFO:
+      return FILTER_FOR_COMPARE_INITIAL_STATE;
+    default:
+      return state;
+  }
+};
+
 export const itemsHistoryReducer = combineReducers({
   history: queueReducers(historyReducer, fetchReducer(NAMESPACE, { contentPath: 'content' })),
   loading: loadingReducer,
@@ -61,4 +79,9 @@ export const itemsHistoryReducer = combineReducers({
     paginationReducer(NAMESPACE, PAGINATION_INITIAL_STATE),
   ),
   groupOperations: groupOperationsReducer(NAMESPACE),
+  filterForCompare: filterForCompareReducer,
+  filterHistory: queueReducers(
+    historyReducer,
+    fetchReducer(FILTER_HISTORY_NAMESPACE, { contentPath: 'content' }),
+  ),
 });

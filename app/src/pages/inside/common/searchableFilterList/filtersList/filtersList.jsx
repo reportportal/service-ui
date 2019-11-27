@@ -41,29 +41,26 @@ export const FiltersList = ({
 }) => (
   <div className={cx('filter-list', customClass)}>
     <ScrollWrapper onLazyLoad={onLazyLoad}>
-      {!loading &&
-        !search &&
-        filters.map((item) => (
-          <FiltersItem
-            search={search || ''}
-            userId={userId}
-            filter={item}
-            activeFilterId={activeId}
-            key={item.id}
-            onChange={onChange}
-            editable={editable}
-            onEdit={(event) => onEdit(event, item)}
-          />
-        ))}
+      {filters.map((item) => (
+        <FiltersItem
+          search={search || ''}
+          userId={userId}
+          filter={item}
+          activeFilterId={activeId}
+          key={item.id}
+          onChange={onChange}
+          editable={editable}
+          onEdit={(event) => onEdit(event, item)}
+        />
+      ))}
       {loading && <SpinningPreloader />}
-      {!filters.length &&
-        !loading && (
-          <NoResultsForFilter
-            filter={search || ''}
-            notFoundMessage={noItemsMessage}
-            notFoundAdditionalMessage={noItemsAdditionalMessage}
-          />
-        )}
+      {!filters.length && !loading && (
+        <NoResultsForFilter
+          filter={search || ''}
+          notFoundMessage={noItemsMessage}
+          notFoundAdditionalMessage={noItemsAdditionalMessage}
+        />
+      )}
     </ScrollWrapper>
   </div>
 );

@@ -39,6 +39,8 @@ import {
   RESET_HISTORY,
   REFRESH_HISTORY,
   SET_HISTORY_PAGE_LOADING,
+  SET_FILTER_FOR_COMPARE,
+  FETCH_FILTER_HISTORY,
 } from './constants';
 
 export const toggleHistoryItemSelectionAction = toggleItemSelectionAction(NAMESPACE);
@@ -95,4 +97,14 @@ export const refreshHistoryAction = () => ({
 export const setHistoryPageLoadingAction = (payload) => ({
   type: SET_HISTORY_PAGE_LOADING,
   payload,
+});
+
+export const setFilterForCompareAction = (payload) => ({
+  type: SET_FILTER_FOR_COMPARE,
+  payload,
+});
+
+export const fetchFilterHistoryAction = ({ filter, loadMore } = {}) => ({
+  type: FETCH_FILTER_HISTORY,
+  payload: { filter, loadMore },
 });

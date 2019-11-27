@@ -14,19 +14,12 @@
  * limitations under the License.
  */
 
-.compare-with-filter-control {
-  position: relative;
-  z-index: $Z-INDEX-DEFAULT;
-}
-
 .filter-control {
-  position: absolute;
-  left: -72px;
   width: 400px;
   margin-top: 5px;
   border: solid 1px $COLOR--gray-91;
   background-color: $COLOR--white-two;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
 
 .filter-list {
