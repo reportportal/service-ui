@@ -40,6 +40,10 @@ export const totalItemsCountSelector = (state) => {
 
 export const loadingSelector = (state) => domainSelector(state).loading;
 
+export const filterForCompareSelector = (state) => domainSelector(state).filterForCompare;
+
+export const filterHistorySelector = (state) => domainSelector(state).filterHistory;
+
 export const historyPageLinkSelector = createSelector(
   payloadSelector,
   querySelector,

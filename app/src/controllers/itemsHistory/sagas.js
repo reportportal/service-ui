@@ -24,6 +24,7 @@ import {
   namespaceSelector,
   fetchTestItemsAction,
   SET_PAGE_LOADING,
+  DEFAULT_LAUNCHES_LIMIT,
 } from 'controllers/testItem';
 import {
   testItemIdsArraySelector,
@@ -35,14 +36,19 @@ import {
   fetchItemsHistoryAction,
   resetHistoryAction,
   setHistoryPageLoadingAction,
+  fetchFilterHistoryAction,
 } from './actionCreators';
-import { historyPaginationSelector } from './selectors';
+import { historyPaginationSelector, filterForCompareSelector, historySelector } from './selectors';
 import {
+  HISTORY_ITEMS_TO_LOAD,
   FETCH_ITEMS_HISTORY,
   HISTORY_DEPTH_CONFIG,
   NAMESPACE,
+  FILTER_HISTORY_NAMESPACE,
   FETCH_HISTORY_PAGE_INFO,
   REFRESH_HISTORY,
+  SET_FILTER_FOR_COMPARE,
+  FETCH_FILTER_HISTORY,
 } from './constants';
 
 function* getHistoryParams({ loadMore } = {}) {
@@ -89,8 +95,14 @@ function* fetchItemsHistory({ payload = {} }) {
       { params },
     ),
   );
+
   if (payload.loadMore) {
     yield take(createFetchPredicate(NAMESPACE));
+    const filterForCompare = yield select(filterForCompareSelector);
+    if (filterForCompare) {
+      yield put(fetchFilterHistoryAction({ filter: filterForCompare, loadMore: payload.loadMore }));
+      yield take(createFetchPredicate(FILTER_HISTORY_NAMESPACE));
+    }
     yield put(setHistoryPageLoadingAction(false));
   }
 }
@@ -112,7 +124,46 @@ function* refreshHistory() {
   yield put(resetHistoryAction());
   yield put(fetchItemsHistoryAction());
   yield take(createFetchPredicate(NAMESPACE));
+
+  const filterForCompare = yield select(filterForCompareSelector);
+  if (filterForCompare) {
+    yield put(fetchFilterHistoryAction({ filter: filterForCompare }));
+    yield take(createFetchPredicate(FILTER_HISTORY_NAMESPACE));
+  }
   yield put(setHistoryPageLoadingAction(false));
+}
+
+function* setFilterForCompare({ payload: filter }) {
+  yield put(setHistoryPageLoadingAction(true));
+  yield put(fetchFilterHistoryAction({ filter }));
+  yield take(createFetchPredicate(FILTER_HISTORY_NAMESPACE));
+  yield put(setHistoryPageLoadingAction(false));
+}
+
+function* fetchFilterHistory({ payload: { filter, loadMore } }) {
+  const activeProject = yield select(activeProjectSelector);
+  const itemsHistory = yield select(historySelector);
+  const historyDepth = 1;
+  const params = {
+    filterId: filter.id,
+    launchesLimit: DEFAULT_LAUNCHES_LIMIT,
+    isLatest: true,
+  };
+  let items = itemsHistory;
+
+  if (loadMore) {
+    items = itemsHistory.slice(-HISTORY_ITEMS_TO_LOAD);
+  }
+  params['filter.in.testCaseId'] = items.map((item) => item.testCaseId).join(',');
+
+  yield put(
+    concatFetchDataAction(FILTER_HISTORY_NAMESPACE, loadMore)(
+      URLS.testItemsHistory(activeProject, historyDepth),
+      {
+        params,
+      },
+    ),
+  );
 }
 
 function* watchFetchHistory() {
@@ -126,6 +177,21 @@ function* watchFetchHistoryPageInfo() {
 function* watchRefreshHistory() {
   yield takeEvery(REFRESH_HISTORY, refreshHistory);
 }
+
+function* watchSetFilterForCompare() {
+  yield takeEvery(SET_FILTER_FOR_COMPARE, setFilterForCompare);
+}
+
+function* watchFetchFilterHistory() {
+  yield takeEvery(FETCH_FILTER_HISTORY, fetchFilterHistory);
+}
+
 export function* historySagas() {
-  yield all([watchFetchHistory(), watchFetchHistoryPageInfo(), watchRefreshHistory()]);
+  yield all([
+    watchFetchHistory(),
+    watchFetchHistoryPageInfo(),
+    watchRefreshHistory(),
+    watchSetFilterForCompare(),
+    watchFetchFilterHistory(),
+  ]);
 }

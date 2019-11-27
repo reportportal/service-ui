@@ -28,6 +28,7 @@ export {
   unlinkIssueHistoryAction,
   postIssueHistoryAction,
   editDefectsHistoryAction,
+  setFilterForCompareAction,
 } from './actionCreators';
 export {
   FETCH_ITEMS_HISTORY,
@@ -46,4 +47,6 @@ export {
   historyPaginationSelector,
   loadingSelector,
   historyPageLinkSelector,
+  filterForCompareSelector,
+  filterHistorySelector,
 } from './selectors';
