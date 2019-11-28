@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-const ADMIN_PROJECTS_PAGE = 'Projects page';
+export const ADMIN_PROJECTS_PAGE = 'Projects page';
 export const ADMIN_PROJECTS_PAGE_EVENTS = {
   ADD_PROJECT_BTN: {
     category: ADMIN_PROJECTS_PAGE,
