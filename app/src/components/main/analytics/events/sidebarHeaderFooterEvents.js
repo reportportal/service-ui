@@ -85,7 +85,7 @@ export const HEADER_EVENTS = {
   },
   CLICK_LOGOUT_LINK: {
     category: HEADER,
-    action: 'Click on Logout link on Dropdown',
+    action: 'Click on Logout link',
     label: 'Logout and transition on Landing Page',
   },
   CLICK_PROJECT_DROPDOWN: {

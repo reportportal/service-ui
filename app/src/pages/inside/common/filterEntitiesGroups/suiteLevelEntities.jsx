@@ -49,6 +49,7 @@ import {
 } from 'components/filterEntities/constants';
 import { defectTypesSelector } from 'controllers/project';
 import { launchIdSelector } from 'controllers/pages';
+import { SUITES_PAGE_EVENTS } from 'components/main/analytics/events';
 
 const messages = defineMessages({
   NameTitle: {
@@ -190,6 +191,7 @@ export class SuiteLevelEntities extends Component {
         active: true,
         removable: false,
         static: true,
+        eventInfo: SUITES_PAGE_EVENTS.REFINE_BY_NAME,
         customProps: {
           placeholder: intl.formatMessage(messages.SUITE_NAME_PLACEHOLDER),
         },

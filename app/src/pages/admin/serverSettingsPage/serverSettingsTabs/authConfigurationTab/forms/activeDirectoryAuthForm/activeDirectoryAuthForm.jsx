@@ -32,6 +32,7 @@ import {
   ENABLED_KEY,
   LDAP_ATTRIBUTES_KEY,
 } from 'pages/admin/serverSettingsPage/common/constants';
+import { ADMIN_SERVER_SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { AD_AUTH_FORM, DEFAULT_FORM_CONFIG, AD_AUTH_TYPE } from './constants';
 import { ActiveDirectoryAuthFormFields } from './activeDirectoryAuthFormFields';
 import styles from './activeDirectoryAuthForm.scss';
@@ -113,6 +114,10 @@ export class ActiveDirectoryAuthForm extends Component {
           initialize={initialize}
           formOptions={formOptions}
           handleSubmit={handleSubmit}
+          eventsInfo={{
+            bigSwitcher: ADMIN_SERVER_SETTINGS_PAGE_EVENTS.ACTIVATE_AD_SWITCHER,
+            submitBtn: ADMIN_SERVER_SETTINGS_PAGE_EVENTS.SUBMIT_AD_BTN,
+          }}
         />
       </div>
     );

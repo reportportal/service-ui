@@ -37,6 +37,7 @@ export class EntitiesGroup extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    events: PropTypes.object,
     staticMode: PropTypes.bool,
     vertical: PropTypes.bool,
   };
@@ -49,10 +50,7 @@ export class EntitiesGroup extends Component {
     onChange: () => {},
     onValidate: () => {},
     entitySmallSize: false,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
+    events: {},
     staticMode: false,
     vertical: false,
   };
@@ -97,7 +95,7 @@ export class EntitiesGroup extends Component {
   };
 
   render() {
-    const { entities, entitySmallSize, errors, staticMode, vertical } = this.props;
+    const { entities, entitySmallSize, errors, staticMode, vertical, events } = this.props;
     return (
       <div className={cx('entities-group')}>
         {this.getActiveEntities().map((entity) => {
@@ -125,7 +123,9 @@ export class EntitiesGroup extends Component {
             </div>
           );
         })}
-        {!staticMode && <EntitiesSelector entities={entities} onChange={this.toggleEntity} />}
+        {!staticMode && (
+          <EntitiesSelector entities={entities} onChange={this.toggleEntity} events={events} />
+        )}
       </div>
     );
   }

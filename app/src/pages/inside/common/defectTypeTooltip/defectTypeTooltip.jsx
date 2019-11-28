@@ -129,6 +129,7 @@ export class DefectTypeTooltip extends Component {
                 ownLinkParams={ownLinkParams}
                 defects={[locator]}
                 className={cx('item')}
+                eventInfo={tooltipEventInfo}
               >
                 <div className={cx('name')}>
                   <div className={cx('circle')} style={{ backgroundColor: color }} />
