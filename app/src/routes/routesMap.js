@@ -278,13 +278,16 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
 
   if (
     userProjects &&
-    hashProject in userProjects &&
     (hashProject !== projectId || isAdminCurrentPageType) &&
     !isAdminNewPageType
   ) {
-    dispatch(setActiveProjectAction(hashProject));
-    dispatch(fetchProjectAction(hashProject));
-    projectId = hashProject;
+    if (hashProject in userProjects) {
+      dispatch(setActiveProjectAction(hashProject));
+      dispatch(fetchProjectAction(hashProject));
+      projectId = hashProject;
+    } else if (hashProject !== projectId) {
+      dispatch(redirect({ ...action, payload: { ...action.payload, projectId }, meta: {} }));
+    }
   }
   const page = pageRendering[nextPageType];
   const redirectPath = actionToPath(action, routesMap, qs);
