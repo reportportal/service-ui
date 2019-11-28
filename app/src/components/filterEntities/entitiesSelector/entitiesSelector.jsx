@@ -20,18 +20,26 @@ import PropTypes from 'prop-types';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { FormattedMessage } from 'react-intl';
+import track from 'react-tracking';
 import { filterEntityShape } from '../propTypes';
 import styles from './entitiesSelector.scss';
 
 const cx = classNames.bind(styles);
 
+@track()
 export class EntitiesSelector extends Component {
   static propTypes = {
     entities: PropTypes.arrayOf(filterEntityShape).isRequired,
     onChange: PropTypes.func,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
+    events: PropTypes.object,
   };
   static defaultProps = {
     onChange: () => {},
+    events: {},
   };
   state = {
     opened: false,
@@ -51,12 +59,22 @@ export class EntitiesSelector extends Component {
     }
   };
 
+  handleChange = (entity) => () => {
+    const { tracking, events, onChange } = this.props;
+    if (!entity.active) {
+      tracking.trackEvent(events.SELECT_REFINE_PARAMS);
+    }
+    this.setState({ opened: !this.state.opened });
+    onChange(entity.id);
+  };
+
   toggleMenu = () => {
     this.setState({ opened: !this.state.opened });
+    this.props.tracking.trackEvent(this.props.events.REFINE_BTN_MORE);
   };
 
   render() {
-    const { entities, onChange } = this.props;
+    const { entities } = this.props;
 
     return (
       <div
@@ -79,13 +97,7 @@ export class EntitiesSelector extends Component {
                       'sub-item': entity.meta && entity.meta.subItem,
                     })}
                   >
-                    <InputCheckbox
-                      value={entity.active}
-                      onChange={() => {
-                        this.setState({ opened: !this.state.opened });
-                        onChange(entity.id);
-                      }}
-                    >
+                    <InputCheckbox value={entity.active} onChange={this.handleChange(entity)}>
                       {(entity.meta && entity.meta.longName) || entity.title}
                     </InputCheckbox>
                   </div>

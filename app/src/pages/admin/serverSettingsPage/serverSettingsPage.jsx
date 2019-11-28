@@ -17,6 +17,8 @@
 import React, { Component } from 'react';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
+import track from 'react-tracking';
+import { ADMIN_SERVER_SETTINGS_PAGE } from 'components/main/analytics/events';
 import { ServerSettingsTabs } from './serverSettingsTabs';
 
 const messages = defineMessages({
@@ -27,6 +29,7 @@ const messages = defineMessages({
 });
 
 @injectIntl
+@track({ page: ADMIN_SERVER_SETTINGS_PAGE })
 export class ServerSettingsPage extends Component {
   static propTypes = {
     intl: intlShape.isRequired,

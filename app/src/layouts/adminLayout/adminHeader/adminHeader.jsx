@@ -19,6 +19,8 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape, FormattedMessage } from 'react-intl';
+import track from 'react-tracking';
+import { HEADER_EVENTS } from 'components/main/analytics/events';
 import { NavLink } from 'components/main/navLink';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { logoutAction } from 'controllers/auth';
@@ -69,6 +71,7 @@ const pageTitles = defineMessages({
   },
 )
 @injectIntl
+@track()
 export class AdminHeader extends Component {
   static propTypes = {
     activeProject: PropTypes.string.isRequired,
@@ -78,6 +81,10 @@ export class AdminHeader extends Component {
     logout: PropTypes.func,
     intl: intlShape.isRequired,
     projectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -88,7 +95,10 @@ export class AdminHeader extends Component {
     projectId: '',
   };
 
-  onClickLogout = () => this.props.logout();
+  onClickLogout = () => {
+    this.props.logout();
+    this.props.tracking.trackEvent(HEADER_EVENTS.CLICK_LOGOUT_LINK);
+  };
 
   getHeaderCrumbs = () => {
     const { currentPage, intl, projectId } = this.props;

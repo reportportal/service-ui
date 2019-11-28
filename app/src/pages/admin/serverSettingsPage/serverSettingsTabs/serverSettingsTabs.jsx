@@ -25,6 +25,7 @@ import {
   STATISTICS,
 } from 'common/constants/settingsTabs';
 import { NavigationTabs } from 'components/main/navigationTabs';
+import { ADMIN_SERVER_SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { AuthConfigurationTab } from './authConfigurationTab';
 import { StatisticsTab } from './statisticsTab';
 
@@ -70,12 +71,14 @@ export class ServerSettingsTabs extends Component {
       link: this.createTabLink(AUTHORIZATION_CONFIGURATION),
       component: <AuthConfigurationTab />,
       mobileDisabled: true,
+      eventInfo: ADMIN_SERVER_SETTINGS_PAGE_EVENTS.AUTHORIZATION_CONFIGURATION_TAB,
     },
     [STATISTICS]: {
       name: this.props.intl.formatMessage(messages.statistics),
       link: this.createTabLink(STATISTICS),
       component: <StatisticsTab />,
       mobileDisabled: true,
+      eventInfo: ADMIN_SERVER_SETTINGS_PAGE_EVENTS.STATISTICS_TAB,
     },
   });
 

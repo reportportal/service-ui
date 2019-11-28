@@ -91,6 +91,7 @@ export const SuiteTestToolbar = ({
       onFilterChange={onFilterChange}
       filterErrors={filterErrors}
       filterEntities={filterEntities}
+      events={events}
     />
   </Fragment>
 );

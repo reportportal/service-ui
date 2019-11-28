@@ -246,6 +246,11 @@ export const SUITES_PAGE_EVENTS = {
     action: 'Click on TI tag',
     label: 'Transition to TI list view',
   },
+  TI_TOOLTIP: {
+    category: SUITE_PAGE,
+    action: 'Click on Tooltip "To Investigate"',
+    label: 'Transition to inner level of launch with To Investigate',
+  },
   LOG_VIEW_SWITCHER: {
     category: SUITE_PAGE,
     action: 'Click on launch log view switcher',

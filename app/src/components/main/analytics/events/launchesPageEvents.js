@@ -164,7 +164,7 @@ export const LAUNCHES_PAGE_EVENTS = {
     action: 'Click on To Investigate tag',
     label: 'Transition to inner level of launch with To Investigate',
   },
-  PB_TOOLTIP_CLICK: {
+  PB_TOOLTIP: {
     category: LAUNCHES_PAGE,
     action: 'Click on Tooltip "Total Product Bugs"',
     label: 'Transition to inner level of launch with Product Bugs',
@@ -174,7 +174,7 @@ export const LAUNCHES_PAGE_EVENTS = {
     action: 'Click on Tooltip "Total Auto Bug"',
     label: 'Transition to inner level of launch with Auto Bug',
   },
-  SI_TOOLTIP_CLICK: {
+  SI_TOOLTIP: {
     category: LAUNCHES_PAGE,
     action: 'Click on Tooltip "Total System Issue"',
     label: 'Transition to inner level of launch with System Issue',
@@ -212,7 +212,7 @@ export const LAUNCHES_PAGE_EVENTS = {
   CLICK_EDIT_LAUNCHES_ACTION: {
     category: LAUNCHES_PAGE,
     action: 'Click on button "Edit" in list of actions',
-    label: 'Arise Modal "Edit Launches"',
+    label: 'Arise Modal "Edit launches" in a bulk',
   },
   CLICK_COMPARE_ACTION: {
     category: LAUNCHES_PAGE,

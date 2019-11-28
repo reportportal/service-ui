@@ -32,6 +32,7 @@ import {
   ENABLED_KEY,
   LDAP_ATTRIBUTES_KEY,
 } from 'pages/admin/serverSettingsPage/common/constants';
+import { ADMIN_SERVER_SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import {
   LDAP_AUTH_FORM,
   DEFAULT_FORM_CONFIG,
@@ -120,6 +121,10 @@ export class LdapAuthForm extends Component {
           formOptions={formOptions}
           handleSubmit={handleSubmit}
           successMessage={messages.updateAuthSuccess}
+          eventsInfo={{
+            bigSwitcher: ADMIN_SERVER_SETTINGS_PAGE_EVENTS.ACTIVATE_LDAP_SWITCHER,
+            submitBtn: ADMIN_SERVER_SETTINGS_PAGE_EVENTS.SUBMIT_LDAP_BTN,
+          }}
         />
       </div>
     );

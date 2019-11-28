@@ -26,9 +26,9 @@ export const ADMIN_ALL_USERS_PAGE_EVENTS = {
     action: 'Click on Btn Cancel on Modal "Delete user"',
     label: 'Close Modal Delete user',
   },
-  OK_BTN_DELETE_MODAL: {
+  DELETE_BTN_DELETE_MODAL: {
     category: ADMIN_ALL_USERS_PAGE,
-    action: 'Click on Btn Ok on Modal "Delete user"',
+    action: 'Click on Btn Delete on Modal "Delete user"',
     label: 'Delete user',
   },
   UNASSIGN_BTN_CLICK: {

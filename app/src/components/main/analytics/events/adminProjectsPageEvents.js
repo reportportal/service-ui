@@ -106,4 +106,24 @@ export const ADMIN_PROJECTS_PAGE_EVENTS = {
     action: 'Click on Funnel',
     label: 'Arise Filter modal',
   },
+  SET_TILE_VIEW: {
+    category: ADMIN_PROJECTS_PAGE,
+    action: 'Click on Btn Tile view',
+    label: 'Tile view',
+  },
+  SET_TABLE_VIEW: {
+    category: ADMIN_PROJECTS_PAGE,
+    action: 'Click on Bttn Table view',
+    label: 'Table view',
+  },
+  CHANGE_SORTING: {
+    category: ADMIN_PROJECTS_PAGE,
+    action: 'Edit sorting tab',
+    label: 'Change sorting',
+  },
+  ENTER_FILTER: {
+    category: ADMIN_PROJECTS_PAGE,
+    action: 'Enter parameter for search',
+    label: 'Show project by parameter',
+  },
 };
