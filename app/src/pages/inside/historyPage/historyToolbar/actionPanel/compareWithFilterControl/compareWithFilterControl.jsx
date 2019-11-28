@@ -19,11 +19,11 @@ import { connect } from 'react-redux';
 import { intlShape, injectIntl, FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import * as ReactDOM from 'react-dom';
 import { Manager, Popper, Reference } from 'react-popper';
 import { userIdSelector, activeProjectSelector } from 'controllers/user/selectors';
 import { debounce } from 'common/utils';
 import CompareIcon from 'common/img/compare-inline.svg';
+import CrossIcon from 'common/img/cross-icon-inline.svg';
 import { GhostButton } from 'components/buttons/ghostButton';
 import {
   fetchFiltersConcatAction,
@@ -59,8 +59,8 @@ export class CompareWithFilterControl extends Component {
     loading: PropTypes.bool.isRequired,
     pagination: PropTypes.object.isRequired,
     activeProject: PropTypes.string.isRequired,
-    selectedFilter: PropTypes.object.isRequired,
     fetchFiltersConcatAction: PropTypes.func.isRequired,
+    selectedFilter: PropTypes.object,
     filters: PropTypes.array,
     disabled: PropTypes.bool,
     userId: PropTypes.string,
@@ -68,6 +68,7 @@ export class CompareWithFilterControl extends Component {
   };
 
   static defaultProps = {
+    selectedFilter: null,
     filters: [],
     disabled: false,
     userId: '',
@@ -84,6 +85,7 @@ export class CompareWithFilterControl extends Component {
       searchValue: '',
       filterListShown: false,
     };
+    this.refNode = null;
     this.controlNode = null;
   }
 
@@ -100,8 +102,13 @@ export class CompareWithFilterControl extends Component {
   getFilterById = (filterId) => this.props.filters.find((elem) => elem.id === Number(filterId));
 
   handleClickOutside = (e) => {
-    console.log(this.controlNode);
-    if (this.controlNode && !this.controlNode.contains(e.target) && this.state.filterListShown) {
+    if (
+      this.controlNode &&
+      !this.controlNode.contains(e.target) &&
+      this.refNode &&
+      !this.refNode.contains(e.target) &&
+      this.state.filterListShown
+    ) {
       this.setState({ filterListShown: false });
     }
   };
@@ -155,6 +162,10 @@ export class CompareWithFilterControl extends Component {
     this.fetchFilter({ page, searchValue });
   };
 
+  resetActiveFilter = () => {
+    this.props.onChangeActiveFilter(null);
+  };
+
   toggleFilterList = () => {
     this.setState({
       filterListShown: !this.state.filterListShown,
@@ -166,18 +177,30 @@ export class CompareWithFilterControl extends Component {
     const { searchValue, filterListShown } = this.state;
 
     return (
-      <Manager>
-        <Reference>
-          {({ ref }) => (
-            <div ref={ref} onClick={this.toggleFilterList}>
-              <GhostButton icon={CompareIcon} disabled={disabled}>
-                <FormattedMessage id="Common.compare" defaultMessage="Compare" />
-              </GhostButton>
-            </div>
-          )}
-        </Reference>
-        {filterListShown &&
-          ReactDOM.createPortal(
+      <div className={cx('compare-with-filter-control')}>
+        {!!selectedFilter && (
+          <div className={cx('selected-filter-control')}>
+            <span className={cx('selected-filter-name')}>{selectedFilter.name}</span>
+            <GhostButton icon={CrossIcon} disabled={disabled} onClick={this.resetActiveFilter} />
+          </div>
+        )}
+        <Manager>
+          <Reference>
+            {({ ref }) => (
+              <div
+                ref={(node) => {
+                  ref(node);
+                  this.refNode = node;
+                }}
+                onClick={this.toggleFilterList}
+              >
+                <GhostButton icon={CompareIcon} disabled={disabled}>
+                  <FormattedMessage id="Common.compare" defaultMessage="Compare" />
+                </GhostButton>
+              </div>
+            )}
+          </Reference>
+          {filterListShown && (
             <Popper
               innerRef={(node) => {
                 this.controlNode = node;
@@ -205,10 +228,10 @@ export class CompareWithFilterControl extends Component {
                   />
                 </div>
               )}
-            </Popper>,
-            document.querySelector('#popover-root'),
+            </Popper>
           )}
-      </Manager>
+        </Manager>
+      </div>
     );
   }
 }

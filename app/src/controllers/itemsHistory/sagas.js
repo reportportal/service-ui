@@ -133,16 +133,14 @@ function* refreshHistory() {
   yield put(setHistoryPageLoadingAction(false));
 }
 
-function* setFilterForCompare({ payload: filter }) {
-  yield put(setHistoryPageLoadingAction(true));
-  yield put(fetchFilterHistoryAction({ filter }));
-  yield take(createFetchPredicate(FILTER_HISTORY_NAMESPACE));
-  yield put(setHistoryPageLoadingAction(false));
-}
-
 function* fetchFilterHistory({ payload: { filter, loadMore } }) {
   const activeProject = yield select(activeProjectSelector);
   const itemsHistory = yield select(historySelector);
+
+  if (!itemsHistory.length) {
+    return;
+  }
+
   const historyDepth = 1;
   const params = {
     filterId: filter.id,
@@ -175,11 +173,7 @@ function* watchFetchHistoryPageInfo() {
 }
 
 function* watchRefreshHistory() {
-  yield takeEvery(REFRESH_HISTORY, refreshHistory);
-}
-
-function* watchSetFilterForCompare() {
-  yield takeEvery(SET_FILTER_FOR_COMPARE, setFilterForCompare);
+  yield takeEvery([REFRESH_HISTORY, SET_FILTER_FOR_COMPARE], refreshHistory);
 }
 
 function* watchFetchFilterHistory() {
@@ -191,7 +185,6 @@ export function* historySagas() {
     watchFetchHistory(),
     watchFetchHistoryPageInfo(),
     watchRefreshHistory(),
-    watchSetFilterForCompare(),
     watchFetchFilterHistory(),
   ]);
 }

@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2019 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,34 +14,21 @@
  * limitations under the License.
  */
 
-.filter-control {
-  position: absolute;
-  z-index: $Z-INDEX-DEFAULT;
-  width: 400px;
-  margin-top: 5px;
-  border: solid 1px $COLOR--gray-91;
-  background-color: $COLOR--white-two;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-}
+import { NOT_FOUND } from 'common/constants/launchStatuses';
 
-.filter-list {
-  height: 200px;
-  box-sizing: border-box;
-  padding: 5px;
-}
+export const normalizeHistoryItem = (historyItem, id) => {
+  if (!historyItem) {
+    return {
+      status: NOT_FOUND.toUpperCase(),
+      id: `${NOT_FOUND}_${id}`,
+    };
+  }
 
-.compare-with-filter-control {
-  display: flex;
-}
+  return historyItem;
+};
 
-.selected-filter-control {
-  display: flex;
-  align-items: center;
-  margin-right: 10px;
-}
-
-.selected-filter-name {
-  margin-right: 10px;
-  color: $COLOR--topaz;
-  font-size: 12px;
-}
+export const calculateMaxRowItemsCount = (history) =>
+  history.reduce(
+    (count, item) => (item.resources.length > count ? item.resources.length : count),
+    0,
+  );

@@ -61,14 +61,14 @@ export class HistoryItem extends Component {
   static propTypes = {
     testItem: PropTypes.object,
     selectedItems: PropTypes.arrayOf(PropTypes.object),
-    withGroupOperations: PropTypes.bool,
+    selectable: PropTypes.bool,
     onSelectItem: PropTypes.func,
   };
 
   static defaultProps = {
     testItem: {},
     selectedItems: [],
-    withGroupOperations: false,
+    selectable: false,
     onSelectItem: () => {},
   };
 
@@ -99,25 +99,22 @@ export class HistoryItem extends Component {
   };
 
   render() {
-    const { testItem, withGroupOperations } = this.props;
+    const { testItem, selectable } = this.props;
     const { status, issue = {} } = testItem;
-    const selected = withGroupOperations ? this.isItemSelected() : false;
+    const selected = selectable ? this.isItemSelected() : false;
 
     return (
-      <div
-        className={cx('history-item', { 'with-group-operations': withGroupOperations, selected })}
-      >
-        {withGroupOperations && (
+      <div className={cx('history-item', { selectable, selected })}>
+        {selectable && (
           <div className={cx('select-item-control')} onClick={(e) => e.stopPropagation()}>
             <InputCheckbox value={selected} onChange={this.handleItemSelection} />
           </div>
         )}
         {statusesWithDefect.indexOf(status.toLowerCase()) !== -1 && this.mapDefectsToBadges()}
         {issue.comment && <MessageBadge data={[{ ticketId: issue.comment }]} icon={CommentIcon} />}
-        {issue.externalSystemIssues &&
-          issue.externalSystemIssues.length > 0 && (
-            <MessageBadge data={issue.externalSystemIssues} icon={TagIcon} />
-          )}
+        {issue.externalSystemIssues && issue.externalSystemIssues.length > 0 && (
+          <MessageBadge data={issue.externalSystemIssues} icon={TagIcon} />
+        )}
       </div>
     );
   }

@@ -21,6 +21,7 @@ import {
   createLastOperationSelector,
 } from 'controllers/groupOperations';
 import { HISTORY_PAGE, payloadSelector, querySelector } from 'controllers/pages';
+import { normalizeHistoryItem, calculateMaxRowItemsCount } from './utils';
 
 const domainSelector = (state) => state.itemsHistory || {};
 const groupOperationsSelector = (state) => domainSelector(state).groupOperations;
@@ -29,7 +30,7 @@ export const selectedHistoryItemsSelector = createSelectedItemsSelector(groupOpe
 export const validationErrorsSelector = createValidationErrorsSelector(groupOperationsSelector);
 export const lastOperationSelector = createLastOperationSelector(groupOperationsSelector);
 
-export const historySelector = (state) => domainSelector(state).history;
+export const itemsHistorySelector = (state) => domainSelector(state).history;
 
 export const historyPaginationSelector = (state) => domainSelector(state).pagination;
 
@@ -52,4 +53,40 @@ export const historyPageLinkSelector = createSelector(
     payload,
     query: { ...query },
   }),
+);
+
+export const historySelector = createSelector(
+  itemsHistorySelector,
+  filterForCompareSelector,
+  filterHistorySelector,
+  (itemsHistory, filterForCompare, filterHistory) => {
+    const maxRowItemsCount = calculateMaxRowItemsCount(itemsHistory);
+
+    return itemsHistory.map(({ testCaseId, resources }) => {
+      const itemLastIndex = maxRowItemsCount - 1;
+      const itemResources = [...resources].reverse();
+      const historyItems = [];
+
+      for (let index = itemLastIndex; index >= 0; index -= 1) {
+        const historyItem = itemResources[index];
+
+        const normalizedHistoryItem = normalizeHistoryItem(historyItem, `${testCaseId}_${index}`);
+        historyItems.push(normalizedHistoryItem);
+      }
+
+      if (filterForCompare) {
+        const filterHistoryRow = filterHistory.find((item) => item.testCaseId === testCaseId);
+        const filterHistoryItem = normalizeHistoryItem(
+          filterHistoryRow ? filterHistoryRow.resources[0] : undefined,
+          `${testCaseId}_${maxRowItemsCount}`,
+        );
+        historyItems.unshift({ ...filterHistoryItem, isFilterItem: true });
+      }
+
+      return {
+        testCaseId,
+        resources: historyItems,
+      };
+    });
+  },
 );

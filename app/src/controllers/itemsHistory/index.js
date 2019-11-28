@@ -49,4 +49,5 @@ export {
   historyPageLinkSelector,
   filterForCompareSelector,
   filterHistorySelector,
+  itemsHistorySelector,
 } from './selectors';

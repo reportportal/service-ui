@@ -38,7 +38,7 @@
   box-sizing: border-box;
   padding: 4px;
 
-  &.with-group-operations {
+  &.selectable {
     &.selected {
       border: 2px solid $COLOR--topaz;
     }
