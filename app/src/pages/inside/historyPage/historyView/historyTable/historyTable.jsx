@@ -19,23 +19,26 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import Parser from 'html-react-parser';
+import CompareIcon from 'common/img/compare-inline.svg';
+import { NOT_FOUND, RESETED } from 'common/constants/launchStatuses';
 import {
   historySelector,
   totalItemsCountSelector,
   loadingSelector,
   fetchItemsHistoryAction,
+  filterForCompareSelector,
+  itemsHistorySelector,
 } from 'controllers/itemsHistory';
 import { nameLinkSelector } from 'controllers/testItem';
 import { PROJECT_LOG_PAGE } from 'controllers/pages';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { NOT_FOUND, RESETED } from 'common/constants/launchStatuses';
 import { NoItemMessage } from 'components/main/noItemMessage';
 import { ItemNameBlock } from './itemNameBlock';
 import { EmptyHistoryItem } from './emptyHistoryItem';
 import { HistoryItem } from './historyItem';
 import { HistoryCell } from './historyCell';
-import { calculateMaxRowItemsCount } from './utils';
 import styles from './historyTable.scss';
 
 const cx = classNames.bind(styles);
@@ -62,8 +65,10 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     history: historySelector(state),
+    itemsHistory: itemsHistorySelector(state),
     loading: loadingSelector(state),
     totalItemsCount: totalItemsCountSelector(state),
+    selectedFilter: filterForCompareSelector(state),
     link: (ownProps) => nameLinkSelector(state, ownProps),
   }),
   {
@@ -76,8 +81,10 @@ export class HistoryTable extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     historyDepth: PropTypes.string.isRequired,
-    loading: PropTypes.bool,
+    selectedFilter: PropTypes.object,
     history: PropTypes.array,
+    itemsHistory: PropTypes.array,
+    loading: PropTypes.bool,
     totalItemsCount: PropTypes.number,
     selectedItems: PropTypes.arrayOf(PropTypes.object),
     withGroupOperations: PropTypes.bool,
@@ -88,7 +95,9 @@ export class HistoryTable extends Component {
   };
 
   static defaultProps = {
+    selectedFilter: null,
     history: [],
+    itemsHistory: [],
     loading: false,
     totalItemsCount: 0,
     selectedItems: [],
@@ -99,7 +108,24 @@ export class HistoryTable extends Component {
     onSelectItem: () => {},
   };
 
-  getCorrespondingHistoryItem = (historyItem) => {
+  calculateItemOwnLinkParams = (item) => {
+    const itemIdsArray = item.path.split('.');
+    const itemIds = itemIdsArray.slice(0, itemIdsArray.length - 1).join('/');
+
+    return {
+      page: item.hasChildren ? null : PROJECT_LOG_PAGE,
+      testItemIds: itemIds ? `${item.launchId}/${itemIds}` : item.launchId,
+    };
+  };
+
+  loadMoreHistoryItems = () => {
+    this.props.fetchItemsHistoryAction({
+      historyDepth: this.props.historyDepth,
+      loadMore: true,
+    });
+  };
+
+  renderCorrespondingHistoryItem = (historyItem, isLastRow) => {
     const { navigate, link, onSelectItem, selectedItems, withGroupOperations } = this.props;
     switch (historyItem.status) {
       case NOT_FOUND.toUpperCase():
@@ -118,12 +144,18 @@ export class HistoryTable extends Component {
           navigate(link(ownProps));
         };
         return (
-          <HistoryCell status={historyItem.status} onClick={clickHandler} key={historyItem.id}>
+          <HistoryCell
+            status={historyItem.status}
+            onClick={clickHandler}
+            highlighted={historyItem.isFilterItem}
+            bottom={isLastRow}
+            key={historyItem.id}
+          >
             <HistoryItem
               testItem={historyItem}
               onSelectItem={onSelectItem}
               selectedItems={selectedItems}
-              withGroupOperations={withGroupOperations}
+              selectable={withGroupOperations && !historyItem.isFilterItem}
             />
           </HistoryCell>
         );
@@ -131,77 +163,64 @@ export class HistoryTable extends Component {
     }
   };
 
-  calculateItemOwnLinkParams = (item) => {
-    const itemIdsArray = item.path.split('.');
-    const itemIds = itemIdsArray.slice(0, itemIdsArray.length - 1).join('/');
-
-    return {
-      page: item.hasChildren ? null : PROJECT_LOG_PAGE,
-      testItemIds: itemIds ? `${item.launchId}/${itemIds}` : item.launchId,
-    };
-  };
-
-  normalizeHistoryItem = (historyItem, index) => {
-    if (!historyItem) {
-      return {
-        status: NOT_FOUND.toUpperCase(),
-        id: `${NOT_FOUND}_${index}`,
-      };
-    }
-
-    return historyItem;
-  };
-
-  loadMoreHistoryItems = () => {
-    this.props.fetchItemsHistoryAction({
-      historyDepth: this.props.historyDepth,
-      loadMore: true,
-    });
-  };
-
-  renderHeader = (maxRowItemsCount) => {
-    const { intl } = this.props;
+  renderHeader = () => {
+    const {
+      intl: { formatMessage },
+      selectedFilter,
+      loading,
+      history,
+    } = this.props;
+    const historyResourcesLength = history[0].resources.length;
+    const maxRowItemsCount = selectedFilter ? historyResourcesLength - 1 : historyResourcesLength;
     const headerItems = [];
+
     for (let index = maxRowItemsCount; index > 0; index -= 1) {
       headerItems.push(
         <HistoryCell key={index} header>
-          {`${intl.formatMessage(messages.executionNumberTitle)}${index}`}
+          {`${formatMessage(messages.executionNumberTitle)}${index}`}
+        </HistoryCell>,
+      );
+    }
+
+    if (selectedFilter) {
+      headerItems.unshift(
+        <HistoryCell key={selectedFilter.id} header highlighted>
+          {loading ? (
+            <SpinningPreloader />
+          ) : (
+            <div className={cx('filter-cell-item')}>
+              <i className={cx('compare-icon')}>{Parser(CompareIcon)}</i>
+              {selectedFilter.name}
+            </div>
+          )}
         </HistoryCell>,
       );
     }
     return headerItems;
   };
 
-  renderHistoryItems = (item, maxRowItemsCount) => {
-    const itemLastIndex = maxRowItemsCount - 1;
-    const itemResources = [...item.resources].reverse();
-    const historyItems = [];
+  renderBody = () => {
+    const { history, itemsHistory } = this.props;
 
-    for (let index = itemLastIndex; index >= 0; index -= 1) {
-      const historyItem = itemResources[index];
+    return history.map((item, index) => {
+      const isLastRow = index === history.length - 1;
 
-      const normalizedHistoryItem = this.normalizeHistoryItem(historyItem, index);
-      historyItems.push(this.getCorrespondingHistoryItem(normalizedHistoryItem));
-    }
-
-    return historyItems;
-  };
-
-  renderBody = (maxRowItemsCount) => {
-    const { history } = this.props;
-    return history.map((item) => (
-      <tr key={item.testCaseId}>
-        <HistoryCell first>
-          <div className={cx('history-grid-name')}>
-            <ItemNameBlock
-              data={item.resources[0]}
-              ownLinkParams={this.calculateItemOwnLinkParams(item.resources[0])}
-            />
-          </div>
-        </HistoryCell>
-        {this.renderHistoryItems(item, maxRowItemsCount)}
-      </tr>
-    ));
+      return (
+        <tr key={item.testCaseId}>
+          <HistoryCell first>
+            <div className={cx('history-grid-name')}>
+              <ItemNameBlock
+                data={itemsHistory[index].resources[0]}
+                ownLinkParams={this.calculateItemOwnLinkParams(itemsHistory[index].resources[0])}
+              />
+            </div>
+          </HistoryCell>
+          {item.resources.map((historyItem) =>
+            this.renderCorrespondingHistoryItem(historyItem, isLastRow),
+          )}
+        </tr>
+      );
+    });
   };
 
   renderFooter = () => {
@@ -241,7 +260,6 @@ export class HistoryTable extends Component {
       history,
       loading,
     } = this.props;
-    const maxRowItemsCount = calculateMaxRowItemsCount(history);
 
     return (
       <Fragment>
@@ -257,10 +275,10 @@ export class HistoryTable extends Component {
                       {formatMessage(messages.itemNamesHeaderTitle)}
                     </div>
                   </HistoryCell>
-                  {this.renderHeader(maxRowItemsCount)}
+                  {this.renderHeader()}
                 </tr>
               </thead>
-              <tbody>{this.renderBody(maxRowItemsCount)}</tbody>
+              <tbody>{this.renderBody()}</tbody>
             </table>
           </ScrollWrapper>
         )}
