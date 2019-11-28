@@ -18,6 +18,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const WebpackNotifierPlugin = require('webpack-notifier');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 // const CircularDependencyPlugin = require('circular-dependency-plugin');
 
 module.exports = {
@@ -69,10 +70,14 @@ module.exports = {
     ],
   },
   plugins: [
+    new CleanWebpackPlugin({
+      cleanOnceBeforeBuildPatterns: ['**/*', path.resolve(__dirname, '../localization/messages')],
+    }),
     new WebpackNotifierPlugin({ skipFirstNotification: true }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, '../src/index.tpl.html'),
       filename: 'index.html',
+      favicon: path.resolve(__dirname, '../src/common/img/favicon.ico'),
     }),
     new webpack.ProvidePlugin({
       React: 'react',

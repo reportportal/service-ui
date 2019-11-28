@@ -16,7 +16,6 @@
 
 const path = require('path');
 const webpack = require('webpack');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -53,12 +52,7 @@ module.exports = () => {
         },
       ],
     },
-    plugins: [
-      new webpack.HotModuleReplacementPlugin(),
-      new CleanWebpackPlugin({
-        cleanOnceBeforeBuildPatterns: ['**/*', path.resolve(__dirname, '../localization/messages')],
-      }),
-    ],
+    plugins: [new webpack.HotModuleReplacementPlugin()],
     devServer: {
       contentBase: path.resolve(__dirname, '../build'),
       hot: true,
