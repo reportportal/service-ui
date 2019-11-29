@@ -49,11 +49,14 @@ export class HistoryView extends Component {
 
   onChangeHistoryDepth = (historyDepth) => {
     this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.SELECT_HISTORY_DEPTH);
-    this.setState({
-      historyDepth,
-    });
-    setStorageItem(HISTORY_DEPTH_CONFIG.name, historyDepth);
-    this.props.refreshHistory();
+
+    if (historyDepth !== this.state.historyDepth) {
+      this.setState({
+        historyDepth,
+      });
+      setStorageItem(HISTORY_DEPTH_CONFIG.name, historyDepth);
+      this.props.refreshHistory();
+    }
   };
 
   render() {
