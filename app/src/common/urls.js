@@ -156,7 +156,7 @@ export const URLS = {
   testItems: (activeProject, ids) => `${urlBase}${activeProject}/item${getQueryParams({ ids })}`,
   testItem: (activeProject, id = '') => `${urlBase}${activeProject}/item/${id}`,
   testItemUpdate: (activeProject, id = '') => `${urlBase}${activeProject}/item/${id}/update`,
-  testItemsHistory: (activeProject, historyDepth, id, type) =>
+  testItemsHistory: (activeProject, historyDepth, type, id) =>
     `${urlBase}${activeProject}/item/history${getQueryParams({
       historyDepth,
       type,

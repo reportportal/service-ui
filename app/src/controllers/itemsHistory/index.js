@@ -36,6 +36,7 @@ export {
   HISTORY_ITEMS_TO_LOAD,
   RESET_HISTORY,
   HISTORY_DEPTH_CONFIG,
+  HISTORY_BASE_DEFAULT_VALUE,
 } from './constants';
 export { historySagas } from './sagas';
 export {

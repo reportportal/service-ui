@@ -43,6 +43,10 @@
   }
 }
 
+.controls-wrapper {
+  display: flex;
+}
+
 .control-container {
   position: relative;
   z-index: 1;
@@ -52,4 +56,8 @@
   font-size: 13px;
   font-family: $FONT-REGULAR;
   line-height: 13px;
+
+  &.large {
+    width: 235px;
+  }
 }

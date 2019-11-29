@@ -160,7 +160,7 @@ function* fetchHistoryEntries() {
   const logItemId = yield select(logItemIdSelector);
   yield put(
     fetchDataAction(HISTORY_NAMESPACE)(
-      URLS.testItemsHistory(activeProject, DEFAULT_HISTORY_DEPTH, logItemId, 'line'),
+      URLS.testItemsHistory(activeProject, DEFAULT_HISTORY_DEPTH, 'line', logItemId),
     ),
   );
   yield take(createFetchPredicate(HISTORY_NAMESPACE));

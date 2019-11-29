@@ -43,6 +43,7 @@ import {
   HISTORY_ITEMS_TO_LOAD,
   FETCH_ITEMS_HISTORY,
   HISTORY_DEPTH_CONFIG,
+  HISTORY_BASE_DEFAULT_VALUE,
   NAMESPACE,
   FILTER_HISTORY_NAMESPACE,
   FETCH_HISTORY_PAGE_INFO,
@@ -88,10 +89,11 @@ function* fetchItemsHistory({ payload = {} }) {
     payload.historyDepth ||
     getStorageItem(HISTORY_DEPTH_CONFIG.name) ||
     HISTORY_DEPTH_CONFIG.defaultValue;
+  const historyBase = payload.historyBase || HISTORY_BASE_DEFAULT_VALUE;
 
   yield put(
     concatFetchDataAction(NAMESPACE, payload.loadMore)(
-      URLS.testItemsHistory(activeProject, historyDepth),
+      URLS.testItemsHistory(activeProject, historyDepth, historyBase),
       { params },
     ),
   );
@@ -119,10 +121,10 @@ function* fetchHistoryPageInfo() {
   yield put(setHistoryPageLoadingAction(false));
 }
 
-function* refreshHistory() {
+function* refreshHistory({ payload }) {
   yield put(setHistoryPageLoadingAction(true));
   yield put(resetHistoryAction());
-  yield put(fetchItemsHistoryAction());
+  yield put(fetchItemsHistoryAction(payload || undefined));
   yield take(createFetchPredicate(NAMESPACE));
 
   const filterForCompare = yield select(filterForCompareSelector);
