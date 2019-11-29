@@ -71,7 +71,7 @@ import styles from './launchesTable.scss';
 const cx = classNames.bind(styles);
 
 const NameColumn = (
-  { className, value },
+  { className, value, ...rest },
   name,
   { linkPayload, onOwnerClick, onClickAttribute },
 ) => {
@@ -95,6 +95,7 @@ const NameColumn = (
         customProps={{ ownLinkParams, onOwnerClick, onClickAttribute }}
         value={itemPropValue}
         hideEdit
+        {...rest}
       />
     </div>
   );
@@ -230,11 +231,18 @@ const COLUMNS_KEYS_MAP = {
   [TO_INVESTIGATE]: DEFECT_COLUMN_KEY,
 };
 
+const COLUMNS_PROPS_MAP = {
+  [NAME]: {
+    maxHeight: 150,
+  },
+};
+
 const getColumn = (name, customProps, fieldKeys) => ({
   id: name,
   title: COLUMN_NAMES_MAP[name],
   component: (data) =>
     columnComponentsMap[COLUMNS_KEYS_MAP[name]](data, name, customProps, fieldKeys),
+  ...COLUMNS_PROPS_MAP[name],
 });
 
 @connect(
