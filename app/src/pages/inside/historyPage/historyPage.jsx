@@ -25,6 +25,7 @@ import {
   selectedHistoryItemsSelector,
   toggleHistoryItemSelectionAction,
   unselectAllHistoryItemsAction,
+  HISTORY_BASE_DEFAULT_VALUE,
 } from 'controllers/itemsHistory';
 import {
   parentItemSelector,
@@ -86,9 +87,20 @@ export class HistoryPage extends Component {
     toggleItemSelection: () => {},
   };
 
+  state = {
+    historyBase: HISTORY_BASE_DEFAULT_VALUE,
+  };
+
   componentWillUnmount() {
     this.props.onUnselectAll();
   }
+
+  onChangeHistoryBase = (historyBase) => {
+    this.setState({
+      historyBase,
+    });
+    this.props.refreshHistoryAction({ historyBase });
+  };
 
   // TODO: add analytics event here
   onSelectItem = (item) => {
@@ -110,6 +122,10 @@ export class HistoryPage extends Component {
     return !!parentItem && <InfoLine data={parentItem} />;
   };
 
+  refreshPage = () => {
+    this.props.refreshHistoryAction({ historyBase: this.state.historyBase });
+  };
+
   render() {
     const {
       refreshHistoryAction: refreshHistory,
@@ -118,6 +134,7 @@ export class HistoryPage extends Component {
       selectedItems,
       toggleItemSelection,
       isStepLevel,
+      isTestItemsList,
       ...rest
     } = this.props;
     const infoLine = this.getInfoLine();
@@ -126,7 +143,7 @@ export class HistoryPage extends Component {
       <PageLayout>
         <PageSection>
           <HistoryToolbar
-            onRefresh={refreshHistory}
+            onRefresh={this.refreshPage}
             infoLine={infoLine}
             onUnselect={this.onUnselectItem}
             selectedItems={selectedItems}
@@ -135,9 +152,12 @@ export class HistoryPage extends Component {
           />
           <HistoryView
             refreshHistory={refreshHistory}
+            historyBase={this.state.historyBase}
+            onChangeHistoryBase={this.onChangeHistoryBase}
             onSelectItem={this.onSelectItem}
             selectedItems={selectedItems}
             withGroupOperations={isStepLevel}
+            isTestItemsList={isTestItemsList}
           />
         </PageSection>
       </PageLayout>

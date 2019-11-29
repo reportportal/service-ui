@@ -32,12 +32,15 @@ export class HistoryView extends Component {
   static propTypes = {
     refreshHistory: PropTypes.func.isRequired,
     selectedItems: PropTypes.arrayOf(PropTypes.object).isRequired,
+    withGroupOperations: PropTypes.bool.isRequired,
+    isTestItemsList: PropTypes.bool.isRequired,
+    historyBase: PropTypes.string.isRequired,
     onSelectItem: PropTypes.func.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    withGroupOperations: PropTypes.bool.isRequired,
+    onChangeHistoryBase: PropTypes.func.isRequired,
   };
 
   state = {
@@ -54,17 +57,28 @@ export class HistoryView extends Component {
   };
 
   render() {
-    const { onSelectItem, selectedItems, withGroupOperations } = this.props;
+    const {
+      onSelectItem,
+      selectedItems,
+      historyBase,
+      withGroupOperations,
+      onChangeHistoryBase,
+      isTestItemsList,
+    } = this.props;
     const { historyDepth } = this.state;
 
     return (
       <div className={cx('history-view-wrapper')}>
         <HistoryControls
           historyDepth={historyDepth}
+          historyBase={historyBase}
+          onChangeHistoryBase={onChangeHistoryBase}
           onChangeHistoryDepth={this.onChangeHistoryDepth}
+          isTestItemsList={isTestItemsList}
         />
         <HistoryTable
           historyDepth={historyDepth}
+          historyBase={historyBase}
           onSelectItem={onSelectItem}
           selectedItems={selectedItems}
           withGroupOperations={withGroupOperations}

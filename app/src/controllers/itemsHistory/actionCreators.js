@@ -77,9 +77,9 @@ export const postIssueHistoryAction = defineGroupOperation(
   validatePostIssue,
 );
 
-export const fetchItemsHistoryAction = ({ historyDepth, loadMore } = {}) => ({
+export const fetchItemsHistoryAction = ({ historyDepth, historyBase, loadMore } = {}) => ({
   type: FETCH_ITEMS_HISTORY,
-  payload: { historyDepth, loadMore },
+  payload: { historyDepth, historyBase, loadMore },
 });
 
 export const fetchHistoryPageInfoAction = () => ({
@@ -90,8 +90,9 @@ export const resetHistoryAction = () => ({
   type: RESET_HISTORY,
 });
 
-export const refreshHistoryAction = () => ({
+export const refreshHistoryAction = ({ historyBase }) => ({
   type: REFRESH_HISTORY,
+  payload: { historyBase },
 });
 
 export const setHistoryPageLoadingAction = (payload) => ({

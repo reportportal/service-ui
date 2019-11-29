@@ -81,6 +81,7 @@ export class HistoryTable extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     historyDepth: PropTypes.string.isRequired,
+    historyBase: PropTypes.string.isRequired,
     selectedFilter: PropTypes.object,
     history: PropTypes.array,
     itemsHistory: PropTypes.array,
@@ -121,6 +122,7 @@ export class HistoryTable extends Component {
   loadMoreHistoryItems = () => {
     this.props.fetchItemsHistoryAction({
       historyDepth: this.props.historyDepth,
+      historyBase: this.props.historyBase,
       loadMore: true,
     });
   };
@@ -131,7 +133,12 @@ export class HistoryTable extends Component {
       case NOT_FOUND.toUpperCase():
       case RESETED.toUpperCase():
         return (
-          <HistoryCell status={historyItem.status} key={historyItem.id}>
+          <HistoryCell
+            status={historyItem.status}
+            key={historyItem.id}
+            highlighted={historyItem.isFilterItem}
+            bottom={isLastRow}
+          >
             <EmptyHistoryItem {...historyItem} />
           </HistoryCell>
         );
