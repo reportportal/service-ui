@@ -19,7 +19,7 @@ import { fetch, updateToken } from 'common/utils/fetch';
 import { showDefaultErrorNotification } from 'controllers/notification';
 import { SET_TOKEN, tokenSelector } from 'controllers/auth';
 import { SET_API_TOKEN } from 'controllers/user';
-import { CHANGE_FULL_SCREEN_MODE, TOGGLE_FULL_SCREEN_MODE } from 'controllers/dashboard';
+import { CHANGE_FULL_SCREEN_MODE, TOGGLE_FULL_SCREEN_MODE } from 'controllers/dashboard/constants';
 import { FETCH_DATA, FETCH_ERROR, BULK_FETCH_DATA, CONCAT_FETCH_DATA } from './constants';
 import {
   fetchSuccessAction,
