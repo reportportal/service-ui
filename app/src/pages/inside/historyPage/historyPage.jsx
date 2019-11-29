@@ -128,7 +128,6 @@ export class HistoryPage extends Component {
 
   render() {
     const {
-      refreshHistoryAction: refreshHistory,
       currentFilter,
       parentItem,
       selectedItems,
@@ -151,7 +150,7 @@ export class HistoryPage extends Component {
             {...rest}
           />
           <HistoryView
-            refreshHistory={refreshHistory}
+            refreshHistory={this.refreshPage}
             historyBase={this.state.historyBase}
             onChangeHistoryBase={this.onChangeHistoryBase}
             onSelectItem={this.onSelectItem}
