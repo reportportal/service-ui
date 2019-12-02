@@ -167,7 +167,6 @@ export class CompareWithFilterControl extends Component {
               onSearchChange={this.handleSearchValueChange}
               filters={filters}
               onEditItem={this.handleEditFilterListItem}
-              handleAddEditFiler={this.handleFormAppearanceMode}
               filterListCustomClass={cx('filter-list')}
             />
           </div>
