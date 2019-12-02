@@ -8,7 +8,8 @@
 **/*.app.*.js.map.gz
 ./node_modules/
 ./docs/
-./build/media
+./build/media/
+./build/src/
 ./localization/
 ./test/
 ./.storybook/
