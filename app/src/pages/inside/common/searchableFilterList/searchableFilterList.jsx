@@ -104,7 +104,7 @@ export class SearchableFilterList extends Component {
           value={searchValue}
           onFilterChange={onSearchChange}
           customBlock={customActionBlock}
-          changeSearchParamsCallback={onChangeSearchParams}
+          onChangeSearchParams={onChangeSearchParams}
         />
         <ActiveFilter filter={activeFilter} touched={touched} error={error || null} />
         <FiltersList
