@@ -45,7 +45,11 @@ import {
   activeProjectSelector,
   activeProjectRoleSelector,
 } from 'controllers/user';
-import { PROJECT_DASHBOARD_PAGE, PROJECT_DASHBOARD_PRINT_PAGE } from 'controllers/pages';
+import {
+  PROJECT_DASHBOARD_PAGE,
+  PROJECT_DASHBOARD_PRINT_PAGE,
+  activeDashboardIdSelector,
+} from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { hideScreenLockAction } from 'controllers/screenLock';
@@ -128,6 +132,7 @@ const messages = defineMessages({
     userInfo: userInfoSelector(state),
     fullScreenMode: dashboardFullScreenModeSelector(state),
     projectRole: activeProjectRoleSelector(state),
+    activeDashboardId: activeDashboardIdSelector(state),
   }),
   {
     showModalAction,
@@ -163,11 +168,13 @@ export class DashboardItemPage extends Component {
     deleteDashboard: PropTypes.func.isRequired,
     editDashboard: PropTypes.func.isRequired,
     projectRole: PropTypes.string,
+    activeDashboardId: PropTypes.number,
   };
 
   static defaultProps = {
     fullScreenMode: false,
     projectRole: '',
+    activeDashboardId: undefined,
   };
 
   componentDidMount() {
@@ -396,7 +403,7 @@ export class DashboardItemPage extends Component {
                     type: PROJECT_DASHBOARD_PRINT_PAGE,
                     payload: {
                       projectId: this.props.activeProject,
-                      dashboardId: this.props.dashboard.id,
+                      dashboardId: this.props.activeDashboardId,
                     },
                   }}
                   target={'_blank'}
