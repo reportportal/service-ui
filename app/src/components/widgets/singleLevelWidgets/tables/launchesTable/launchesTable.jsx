@@ -92,10 +92,10 @@ const NameColumn = (
   return (
     <div className={cx('name-col', className)}>
       <ItemInfo
+        {...rest}
         customProps={{ ownLinkParams, onOwnerClick, onClickAttribute }}
         value={itemPropValue}
         hideEdit
-        {...rest}
       />
     </div>
   );
