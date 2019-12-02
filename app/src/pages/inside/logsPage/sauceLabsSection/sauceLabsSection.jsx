@@ -31,6 +31,7 @@ import {
   SAUCE_LABS_JOB_INFO_COMMAND,
   SAUCE_LABS_LOGS_COMMAND,
   SAUCE_LABS_ASSETS_COMMAND,
+  SAUCE_LABS_TOKEN_COMMAND,
 } from 'controllers/log/sauceLabs';
 import { getSauceLabsConfig } from 'components/integrations/integrationProviders/sauceLabsIntegration/utils';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -77,7 +78,12 @@ export class SauceLabsSection extends Component {
     const { logItem, sauceLabsIntegrations } = this.props;
     this.slIntegrationConfig = getSauceLabsConfig(logItem.attributes, sauceLabsIntegrations);
     this.props.executeCommands(
-      [SAUCE_LABS_JOB_INFO_COMMAND, SAUCE_LABS_LOGS_COMMAND, SAUCE_LABS_ASSETS_COMMAND],
+      [
+        SAUCE_LABS_TOKEN_COMMAND,
+        SAUCE_LABS_JOB_INFO_COMMAND,
+        SAUCE_LABS_LOGS_COMMAND,
+        SAUCE_LABS_ASSETS_COMMAND,
+      ],
       this.slIntegrationConfig,
     );
   }

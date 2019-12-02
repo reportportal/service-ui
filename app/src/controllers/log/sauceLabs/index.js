@@ -15,11 +15,7 @@
  */
 
 export { sauceLabsSagas } from './sagas';
-export {
-  executeSauceLabsCommandAction,
-  bulkExecuteSauceLabsCommandAction,
-  setAuthTokenAction,
-} from './actionCreators';
+export { executeSauceLabsCommandAction, bulkExecuteSauceLabsCommandAction } from './actionCreators';
 export { sauceLabsReducer } from './reducer';
 export {
   jobInfoSelector,
@@ -33,6 +29,6 @@ export {
   SAUCE_LABS_ASSETS_COMMAND,
   SAUCE_LABS_LOGS_COMMAND,
   SAUCE_LABS_TEST_COMMAND,
+  SAUCE_LABS_TOKEN_COMMAND,
   SAUCE_LABS_COMMANDS_NAMESPACES_MAP,
-  WITH_ATTACHMENTS_FILTER_KEY,
 } from './constants';
