@@ -22,7 +22,7 @@ import { connect } from 'react-redux';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { INTERNAL, LDAP } from 'common/constants/accountType';
+import { INTERNAL, LDAP, UPSA } from 'common/constants/accountType';
 import DefaultUserImage from 'common/img/default-user-avatar.png';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { showModalAction } from 'controllers/modal';
@@ -113,7 +113,7 @@ export class PersonalInfoBlock extends Component {
 
   onForceUpdate = () => {
     const { accountType = '', intl } = this.props;
-    fetch(URLS.userSynchronize(accountType.toLowerCase()), { method: 'post' })
+    fetch(URLS.userSynchronize(this.getUserSyncType(accountType)), { method: 'post' })
       .then(() => {
         this.props.showNotification({
           message: intl.formatMessage(messages.synchronize),
@@ -131,6 +131,15 @@ export class PersonalInfoBlock extends Component {
         });
       });
   };
+
+  getUserSyncType = (accountType) => {
+    if (accountType === UPSA) {
+      return 'epam';
+    }
+
+    return accountType.toLowerCase();
+  };
+
   changePasswordHandler = (data) => {
     fetch(URLS.userChangePassword(), {
       method: 'post',
