@@ -34,6 +34,7 @@ export const CREATE_INTEGRATION = 'createIntegration';
 export const UPDATE_INTEGRATION = 'updateIntegration';
 export const DELETE_INTEGRATION = 'deleteIntegration';
 export const UPDATE_PROJECT = 'updateProject';
+export const UPDATE_NOTIFICATIONS = 'emailConfig';
 export const UPDATE_ANALYZER = 'updateAnalyzer';
 export const GENERATE_INDEX = 'generateIndex';
 export const DELETE_INDEX = 'deleteIndex';

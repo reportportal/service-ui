@@ -20,11 +20,6 @@ import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import Link from 'redux-first-router-link';
 import { NOTIFICATIONS } from 'common/constants/settingsTabs';
-import {
-  UPDATE_NOTIFICATIONS,
-  SWITCH_ON_NOTIFICATIONS,
-  SWITCH_OFF_NOTIFICATIONS,
-} from 'common/constants/actionTypes';
 import { getProjectSettingTabPageLink } from './utils';
 import styles from './common.scss';
 
@@ -35,17 +30,9 @@ const messages = defineMessages({
     id: 'Notifications.notifications',
     defaultMessage: 'E-mail notifications',
   },
-  [UPDATE_NOTIFICATIONS]: {
+  updated: {
     id: 'Notifications.updateEmail',
     defaultMessage: 'updated',
-  },
-  [SWITCH_ON_NOTIFICATIONS]: {
-    id: 'Notifications.onEmail',
-    defaultMessage: 'configured',
-  },
-  [SWITCH_OFF_NOTIFICATIONS]: {
-    id: 'Notifications.offEmail',
-    defaultMessage: 'switched off',
   },
 });
 
@@ -63,7 +50,7 @@ export class Notifications extends Component {
     return (
       <Fragment>
         <span className={cx('user-name')}>{activity.user}</span>
-        {messages[activity.actionType] && intl.formatMessage(messages[activity.actionType])}
+        {intl.formatMessage(messages.updated)}
         <Link
           to={getProjectSettingTabPageLink(activity.projectName, NOTIFICATIONS)}
           className={cx('link')}
