@@ -36,9 +36,14 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { MarkdownEditor } from 'components/main/markdown';
 import { AttributeListField } from 'components/main/attributeList';
 import { InputDropdown } from 'components/inputs/inputDropdown';
+import track from 'react-tracking';
 import styles from './editItemsModal.scss';
 
 const cx = classNames.bind(styles);
+
+const DESCRIPTION_LEAVE = 'LEAVE';
+const DESCRIPTION_UPDATE = 'UPDATE';
+const DESCRIPTION_CREATE = 'CREATE';
 
 const messages = defineMessages({
   modalHeader: {
@@ -61,15 +66,15 @@ const messages = defineMessages({
     id: 'EditItemsModal.descriptionPlaceholder',
     defaultMessage: 'Enter description',
   },
-  descriptionLeaveLabel: {
+  [DESCRIPTION_LEAVE]: {
     id: 'EditItemsModal.descriptionLeaveLabel',
     defaultMessage: "Don't change",
   },
-  descriptionAddLabel: {
+  [DESCRIPTION_UPDATE]: {
     id: 'EditItemsModal.descriptionAddLabel',
     defaultMessage: 'Add to existing descriptions',
   },
-  descriptionReplaceLabel: {
+  [DESCRIPTION_CREATE]: {
     id: 'EditItemsModal.descriptionReplaceLabel',
     defaultMessage: 'Replace for all items',
   },
@@ -95,24 +100,20 @@ const ATTRIBUTE_CREATE = 'CREATE';
 const ATTRIBUTE_UPDATE = 'UPDATE';
 const ATTRIBUTE_DELETE = 'DELETE';
 
-const DESCRIPTION_LEAVE = 'LEAVE';
-const DESCRIPTION_UPDATE = 'UPDATE';
-const DESCRIPTION_CREATE = 'CREATE';
-
 const FIELD_LABEL_WIDTH = 120;
 
 const makeDescriptionOptions = (formatMessage) => [
   {
     value: DESCRIPTION_LEAVE,
-    label: formatMessage(messages.descriptionLeaveLabel),
+    label: formatMessage(messages[DESCRIPTION_LEAVE]),
   },
   {
     value: DESCRIPTION_UPDATE,
-    label: formatMessage(messages.descriptionAddLabel),
+    label: formatMessage(messages[DESCRIPTION_UPDATE]),
   },
   {
     value: DESCRIPTION_CREATE,
-    label: formatMessage(messages.descriptionReplaceLabel),
+    label: formatMessage(messages[DESCRIPTION_CREATE]),
   },
 ];
 
@@ -134,6 +135,7 @@ const makeDescriptionOptions = (formatMessage) => [
     showDefaultErrorNotification,
   },
 )
+@track()
 export class EditItemsModal extends Component {
   static propTypes = {
     data: PropTypes.shape({
@@ -141,6 +143,7 @@ export class EditItemsModal extends Component {
       parentLaunch: PropTypes.object,
       type: PropTypes.string,
       fetchFunc: PropTypes.func,
+      eventsInfo: PropTypes.object,
     }).isRequired,
     initialize: PropTypes.func.isRequired,
     currentProject: PropTypes.string.isRequired,
@@ -149,6 +152,10 @@ export class EditItemsModal extends Component {
     intl: intlShape.isRequired,
     showNotification: PropTypes.func.isRequired,
     showDefaultErrorNotification: PropTypes.func.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
     ...formPropTypes,
   };
 
@@ -282,7 +289,8 @@ export class EditItemsModal extends Component {
     const {
       intl: { formatMessage },
       currentProject,
-      data: { type, fetchFunc },
+      data: { type, fetchFunc, eventsInfo },
+      tracking,
     } = this.props;
     const fetchUrl =
       type === LAUNCH_ITEM_TYPES.launch
@@ -300,6 +308,10 @@ export class EditItemsModal extends Component {
         action: descriptionAction,
         comment: `${DESCRIPTION_UPDATE ? '\n' : ''}${description || ''}`,
       };
+      tracking.trackEvent({
+        ...eventsInfo.editDescription,
+        label: `${eventsInfo.editDescription.label}${formatMessage(messages[descriptionAction])}`,
+      });
     }
 
     fetch(fetchUrl, { method: 'put', data })
@@ -322,14 +334,16 @@ export class EditItemsModal extends Component {
       descriptionAction,
       uniqueAttributes,
       handleSubmit,
-      data: { type },
+      data: { type, eventsInfo },
     } = this.props;
     const okButton = {
       text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
       onClick: (closeModal) => handleSubmit(this.updateItemsAndCloseModal(closeModal))(),
+      eventInfo: eventsInfo.saveBtn,
     };
     const cancelButton = {
       text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      eventInfo: eventsInfo.cancelButton,
     };
 
     return (
@@ -341,6 +355,7 @@ export class EditItemsModal extends Component {
         })}
         okButton={okButton}
         cancelButton={cancelButton}
+        closeIconEventInfo={eventsInfo.closeIcon}
         warningMessage={warningMessageShown ? formatMessage(messages.warningMessage) : ''}
       >
         <form>

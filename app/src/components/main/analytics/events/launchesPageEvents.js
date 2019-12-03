@@ -297,6 +297,11 @@ export const LAUNCHES_MODAL_EVENTS = {
     action: 'Click on Btn Save on Modal "Edit Launch"',
     label: 'Save changes "Edit Launch"',
   },
+  BULK_EDIT_LAUNCHES_DESCRIPTION: {
+    category: LAUNCHES_MODAL,
+    action: 'Edit description in Modal "Edit Launches" in a bulk',
+    label: 'Edit description in mode: ',
+  },
   CLOSE_ICON_MOVE_MODAL: {
     category: LAUNCHES_MODAL,
     action: 'Click on Close Icon on Modal "Move to Debug"',
