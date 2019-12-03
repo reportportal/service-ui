@@ -37,6 +37,7 @@ import {
   UPDATE_ANALYZER,
   CREATE_USER,
   UPDATE_PROJECT,
+  UPDATE_NOTIFICATIONS,
   CREATE_PATTERN,
   UPDATE_PATTERN,
   DELETE_PATTERN,
@@ -55,6 +56,7 @@ import { TestItem } from './activities/testItem';
 import { CreateUser } from './activities/createUser';
 import { CommonEntity } from './activities/commonEntity';
 import { DefectType } from './activities/defectType';
+import { Notifications } from './activities/notifications';
 import styles from './projectActivity.scss';
 
 const cx = classNames.bind(styles);
@@ -266,7 +268,11 @@ export class ProjectActivity extends Component {
       case DELETE_LAUNCH:
         return <Launch activity={activity} />;
       case UPDATE_PROJECT:
-        return <DefaultProjectSettings activity={activity} />;
+        return activity.objectType === UPDATE_NOTIFICATIONS ? (
+          <Notifications activity={activity} />
+        ) : (
+          <DefaultProjectSettings activity={activity} />
+        );
       case CREATE_USER:
         return <CreateUser activity={activity} />;
       default:
