@@ -603,6 +603,12 @@ export class LaunchesPage extends Component {
         items: launches,
         type: LAUNCH_ITEM_TYPES.launch,
         fetchFunc: this.unselectAndFetchLaunches,
+        eventsInfo:{
+          cancelBtn: LAUNCHES_MODAL_EVENTS.CLICK_CANCEL_BTN_EDIT_MODAL,
+          closeIcon: LAUNCHES_MODAL_EVENTS.CLOSE_ICON_EDIT_MODAL,
+          saveBtn: LAUNCHES_MODAL_EVENTS.CLICK_SAVE_BTN_EDIT_MODAL,
+          editDescription: LAUNCHES_MODAL_EVENTS.BULK_EDIT_LAUNCHES_DESCRIPTION,
+        }
       },
     });
   };
