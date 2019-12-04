@@ -23,6 +23,7 @@ import {
   PROJECT_USERDEBUG_LOG_PAGE,
   payloadSelector,
   prevPagePropertiesSelector,
+  launchIdSelector,
 } from 'controllers/pages';
 import { PAGE_KEY } from 'controllers/pagination';
 import {
@@ -80,11 +81,12 @@ export const querySelector = createQueryParametersSelector({
 export const historyItemsSelector = createSelector(
   historyEntriesSelector,
   logItemIdSelector,
-  (entriesFromState, logItemId) => {
+  launchIdSelector,
+  (entriesFromState, logItemId, launchId) => {
     if (!entriesFromState.length) return [];
     const entries = [...entriesFromState].reverse();
 
-    const currentLaunch = entries.pop();
+    const currentLaunch = entries.find((historyEntry) => historyEntry.launchId === launchId);
     if (!currentLaunch) {
       return [];
     }
