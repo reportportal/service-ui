@@ -25,8 +25,8 @@ const cx = classNames.bind(styles);
 export class Layout extends Component {
   static propTypes = {
     children: PropTypes.node,
-    Header: PropTypes.func,
-    Sidebar: PropTypes.func,
+    Header: PropTypes.elementType,
+    Sidebar: PropTypes.elementType,
   };
   static defaultProps = {
     children: null,
