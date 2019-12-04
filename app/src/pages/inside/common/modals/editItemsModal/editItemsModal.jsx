@@ -343,7 +343,7 @@ export class EditItemsModal extends Component {
     };
     const cancelButton = {
       text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      eventInfo: eventsInfo.cancelButton,
+      eventInfo: eventsInfo.cancelBtn,
     };
 
     return (
