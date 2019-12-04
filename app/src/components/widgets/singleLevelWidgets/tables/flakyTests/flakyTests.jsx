@@ -19,8 +19,22 @@ import PropTypes from 'prop-types';
 import { TestsTableWidget } from '../components/testsTableWidget';
 import * as cfg from './flakyTestsCfg';
 
+const prepareWidgetData = ({ flaky }) =>
+  flaky.map((item) => ({
+    flakyCount: item.flakyCount,
+    itemName: item.itemName,
+    total: item.total,
+    uniqueId: item.uniqueId,
+    startTime: item.startTime,
+    statuses: item.statuses.reverse(),
+  }));
+
 export const FlakyTests = ({ widget: { content } }) => (
-  <TestsTableWidget tests={content.flaky} launch={content.latestLaunch} columns={cfg.columns} />
+  <TestsTableWidget
+    tests={prepareWidgetData(content)}
+    launch={content.latestLaunch}
+    columns={cfg.columns}
+  />
 );
 
 FlakyTests.propTypes = {
