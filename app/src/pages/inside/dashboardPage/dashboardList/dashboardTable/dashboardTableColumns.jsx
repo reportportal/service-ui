@@ -25,11 +25,11 @@ import styles from './dashboardTable.scss';
 
 const cx = classNames.bind(styles);
 
-export const NameColumn = ({ value, customProps: { projectId } }) => {
+export const NameColumn = ({ value, customProps: { projectId }, className }) => {
   const { id: dashboardId, name } = value;
   return (
     <NavLink
-      className={cx('name', 'cell')}
+      className={cx(className, 'name')}
       to={{ type: PROJECT_DASHBOARD_ITEM_PAGE, payload: { projectId, dashboardId } }}
     >
       {name}
@@ -39,28 +39,36 @@ export const NameColumn = ({ value, customProps: { projectId } }) => {
 NameColumn.propTypes = {
   value: PropTypes.object,
   customProps: PropTypes.object,
+  className: PropTypes.string,
 };
 NameColumn.defaultProps = {
   value: {},
   customProps: {},
+  className: '',
 };
 
-export const DescriptionColumn = ({ value }) => (
-  <div className={cx('description', 'cell')}>{value}</div>
+export const DescriptionColumn = ({ value, className }) => (
+  <div className={cx(className, 'description', { empty: !value })}>{value}</div>
 );
 DescriptionColumn.propTypes = {
   value: PropTypes.string,
+  className: PropTypes.string,
 };
 DescriptionColumn.defaultProps = {
   value: '',
+  className: '',
 };
 
-export const OwnerColumn = ({ value }) => <div className={cx('owner', 'cell')}>{value}</div>;
+export const OwnerColumn = ({ value, className }) => (
+  <div className={cx(className, 'owner')}>{value}</div>
+);
 OwnerColumn.propTypes = {
   value: PropTypes.string,
+  className: PropTypes.string,
 };
 OwnerColumn.defaultProps = {
   value: '',
+  className: '',
 };
 
 export const SharedColumn = ({
@@ -68,21 +76,28 @@ export const SharedColumn = ({
   customProps: {
     currentUser: { userId },
   },
+  className,
 }) => {
   const isShared = share || userId !== owner;
 
-  return <div className={cx('shared', 'cell')}>{isShared && <Icon type="icon-check" />}</div>;
+  return (
+    <div className={cx(className, 'icon-cell', { empty: !isShared })}>
+      {isShared && <Icon type="icon-check" />}
+    </div>
+  );
 };
 SharedColumn.propTypes = {
   value: PropTypes.object,
   customProps: PropTypes.object,
+  className: PropTypes.string,
 };
 SharedColumn.defaultProps = {
   value: {},
   customProps: {},
+  className: '',
 };
 
-export const EditColumn = ({ value, customProps }) => {
+export const EditColumn = ({ value, customProps, className }) => {
   const {
     onEdit,
     currentUser: { userId, userRole },
@@ -95,7 +110,7 @@ export const EditColumn = ({ value, customProps }) => {
   };
 
   return (
-    <div className={cx('cell', 'with-button', 'edit')}>
+    <div className={cx(className, 'icon-cell', 'with-button')}>
       <div className={cx('icon-holder')}>
         {canEditDashboard(userRole, projectRole, userId === owner) && (
           <Icon type="icon-pencil" onClick={editItemHandler} />
@@ -107,13 +122,15 @@ export const EditColumn = ({ value, customProps }) => {
 EditColumn.propTypes = {
   value: PropTypes.object,
   customProps: PropTypes.object,
+  className: PropTypes.string,
 };
 EditColumn.defaultProps = {
   value: {},
   customProps: {},
+  className: '',
 };
 
-export const DeleteColumn = ({ value, customProps }) => {
+export const DeleteColumn = ({ value, customProps, className }) => {
   const {
     currentUser: { userId, userRole },
     projectRole,
@@ -125,7 +142,7 @@ export const DeleteColumn = ({ value, customProps }) => {
   };
 
   return (
-    <div className={cx('cell', 'with-button', 'delete')}>
+    <div className={cx(className, 'icon-cell', 'with-button')}>
       <div className={cx('icon-holder')}>
         {canDeleteDashboard(userRole, projectRole, userId === owner) && (
           <Icon type="icon-delete" onClick={deleteItemHandler} />
@@ -137,8 +154,10 @@ export const DeleteColumn = ({ value, customProps }) => {
 DeleteColumn.propTypes = {
   value: PropTypes.object,
   customProps: PropTypes.object,
+  className: PropTypes.string,
 };
 DeleteColumn.defaultProps = {
   value: {},
   customProps: {},
+  className: '',
 };
