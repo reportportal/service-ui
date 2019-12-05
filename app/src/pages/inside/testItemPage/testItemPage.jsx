@@ -20,7 +20,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { showNotification } from 'controllers/notification';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
@@ -167,7 +167,7 @@ const testItemPages = {
 @track()
 export class TestItemPage extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     activeProject: PropTypes.string.isRequired,
     namespace: PropTypes.string.isRequired,
     userId: PropTypes.string.isRequired,

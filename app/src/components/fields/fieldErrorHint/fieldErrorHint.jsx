@@ -17,7 +17,7 @@
 import { cloneElement, Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import styles from './fieldErrorHint.scss';
 
 const cx = classNames.bind(styles);
@@ -220,7 +220,7 @@ const messages = defineMessages({
 @injectIntl
 export class FieldErrorHint extends Component {
   static propTypes = {
-    intl: intlShape,
+    intl: PropTypes.object,
     hintType: PropTypes.string,
     children: PropTypes.node,
     error: PropTypes.string,

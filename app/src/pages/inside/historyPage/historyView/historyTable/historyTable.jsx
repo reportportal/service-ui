@@ -18,7 +18,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import Parser from 'html-react-parser';
 import CompareIcon from 'common/img/compare-inline.svg';
 import { NOT_FOUND, RESETED } from 'common/constants/launchStatuses';
@@ -79,7 +79,7 @@ const messages = defineMessages({
 @injectIntl
 export class HistoryTable extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     historyDepth: PropTypes.string.isRequired,
     selectedFilter: PropTypes.object,
     history: PropTypes.array,

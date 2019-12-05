@@ -17,7 +17,7 @@
 import React, { Fragment, Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import { userInfoSelector, activeProjectRoleSelector } from 'controllers/user';
 import { canAddWidget } from 'common/utils/permissions';
@@ -48,7 +48,7 @@ const messages = defineMessages({
 }))
 export class EmptyWidgetGrid extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     action: PropTypes.func,
     isDisable: PropTypes.bool,
     dashboard: PropTypes.object,

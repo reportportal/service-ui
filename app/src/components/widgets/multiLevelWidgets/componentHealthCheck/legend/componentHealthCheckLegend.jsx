@@ -17,7 +17,7 @@
 import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { ComponentHealthCheckBreadcrumbs } from './componentHealthCheckBreadcrumbs';
 import { ComponentHealthCheckColorScheme } from './componentHealthCheckColorScheme';
 import styles from './componentHealthCheckLegend.scss';
@@ -27,7 +27,7 @@ const cx = classNames.bind(styles);
 @injectIntl
 export class ComponentHealthCheckLegend extends PureComponent {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     breadcrumbs: PropTypes.array,
     activeBreadcrumbs: PropTypes.array,
     onClickBreadcrumbs: PropTypes.func,

@@ -17,7 +17,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import track from 'react-tracking';
 import { SETTINGS_PAGE_EVENTS, getSaveNewPatternEvent } from 'components/main/analytics/events';
@@ -70,7 +70,7 @@ const cx = classNames.bind(styles);
 @track()
 export class PatternAnalysisTab extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     patterns: PropTypes.array,
     addPattern: PropTypes.func.isRequired,
     showModal: PropTypes.func.isRequired,

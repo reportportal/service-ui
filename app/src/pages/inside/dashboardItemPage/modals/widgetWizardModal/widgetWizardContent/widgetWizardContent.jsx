@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { submit } from 'redux-form';
 import { connect } from 'react-redux';
 import { URLS } from 'common/urls';
@@ -52,7 +52,7 @@ const cx = classNames.bind(styles);
 @track()
 export class WidgetWizardContent extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     formValues: PropTypes.object,
     submitWidgetWizardForm: PropTypes.func.isRequired,
     projectId: PropTypes.string.isRequired,

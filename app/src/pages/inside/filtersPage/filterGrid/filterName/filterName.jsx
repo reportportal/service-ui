@@ -15,7 +15,7 @@
  */
 
 import React, { Fragment, Component } from 'react';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
@@ -34,7 +34,7 @@ const cx = classNames.bind(styles);
 @injectIntl
 export class FilterName extends Component {
   static propTypes = {
-    intl: intlShape,
+    intl: PropTypes.object,
     userFilters: PropTypes.array,
     filter: PropTypes.object,
     onClickName: PropTypes.func,
@@ -135,18 +135,16 @@ export class FilterName extends Component {
             </span>
           </NameLink>
 
-          {filter.share &&
-            !noShareIcons && (
-              <span className={cx('share-icon')} title={this.getIconTitle()}>
-                {Parser(this.getShareIcon())}
-              </span>
-            )}
-          {canEditFilter(userRole, projectRole, userId === filter.owner) &&
-            editable && (
-              <span className={cx('pencil-icon')} onClick={() => onEdit(filter)}>
-                {Parser(PencilIcon)}
-              </span>
-            )}
+          {filter.share && !noShareIcons && (
+            <span className={cx('share-icon')} title={this.getIconTitle()}>
+              {Parser(this.getShareIcon())}
+            </span>
+          )}
+          {canEditFilter(userRole, projectRole, userId === filter.owner) && editable && (
+            <span className={cx('pencil-icon')} onClick={() => onEdit(filter)}>
+              {Parser(PencilIcon)}
+            </span>
+          )}
         </span>
         {showDesc && <MarkdownViewer value={filter.description} />}
       </Fragment>

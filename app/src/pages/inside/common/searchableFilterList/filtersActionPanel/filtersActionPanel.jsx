@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import { reduxForm } from 'redux-form';
 import track from 'react-tracking';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { InputSearch } from 'components/inputs/inputSearch';
@@ -48,7 +48,7 @@ const messages = defineMessages({
 })
 export class FiltersActionPanel extends Component {
   static propTypes = {
-    intl: intlShape,
+    intl: PropTypes.object,
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
     filter: PropTypes.string,
     filters: PropTypes.array,

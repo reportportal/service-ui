@@ -18,7 +18,7 @@ import React, { Component, Fragment } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import className from 'classnames/bind';
 import { URLS } from 'common/urls';
 import { validate } from 'common/utils';
@@ -52,7 +52,7 @@ const cx = className.bind(styles);
 @track()
 export class NotificationCaseFormFields extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     projectUsernamesSearch: PropTypes.string,
     launchNameSearch: PropTypes.string,
     tracking: PropTypes.shape({

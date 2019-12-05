@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import { REGEX_PATTERN, STRING_PATTERN } from 'common/constants/patternTypes';
 import { PatternControlPanel } from './patternControlPanel';
@@ -38,7 +38,7 @@ export const messages = defineMessages({
 @injectIntl
 export class PatternListItem extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     pattern: PropTypes.object,
     id: PropTypes.number,
     readOnly: PropTypes.bool,

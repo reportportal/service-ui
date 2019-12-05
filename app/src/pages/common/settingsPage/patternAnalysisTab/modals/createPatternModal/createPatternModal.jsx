@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form';
 import className from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { ModalLayout, ModalField, withModal } from 'components/main/modal';
 import { Input } from 'components/inputs/input';
 import { InputDropdown } from 'components/inputs/inputDropdown';
@@ -73,7 +73,7 @@ const createPatternFormSelector = formValueSelector('createPatternForm');
 @injectIntl
 export class CreatePatternModal extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     data: PropTypes.shape({
       pattern: PropTypes.object,
       onSave: PropTypes.func,

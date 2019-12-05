@@ -17,7 +17,7 @@
 import React, { Component, Fragment } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { Input } from 'components/inputs/input';
 import { InputWithIcon } from 'components/inputs/inputWithIcon';
 import { InputDropdown } from 'components/inputs/inputDropdown';
@@ -79,7 +79,7 @@ const messages = defineMessages({
 export class AccuracyFormBlock extends Component {
   static propTypes = {
     disabled: PropTypes.bool,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     onInputChange: PropTypes.func,
   };
 

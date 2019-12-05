@@ -18,7 +18,7 @@ import React, { Component, Fragment } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import {
   membersPaginationSelector,
   fetchMembersAction,
@@ -58,7 +58,7 @@ const messages = defineMessages({
 @track({ page: MEMBERS_PAGE })
 export class MembersPage extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     onSearchChange: PropTypes.func,
     onFilterChange: PropTypes.func,
     fetchMembersAction: PropTypes.func,

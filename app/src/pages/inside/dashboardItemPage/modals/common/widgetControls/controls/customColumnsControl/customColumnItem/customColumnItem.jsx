@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import { ModalField } from 'components/main/modal';
 import { Input } from 'components/inputs/input';
@@ -45,7 +45,7 @@ const messages = defineMessages({
 @injectIntl
 export class CustomColumnItem extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     name: PropTypes.string,
     uri: PropTypes.string,
     attributeKey: PropTypes.object,

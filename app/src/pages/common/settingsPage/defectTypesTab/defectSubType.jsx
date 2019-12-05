@@ -20,7 +20,7 @@ import { connect } from 'react-redux';
 import track from 'react-tracking';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 
 import CircleCrossIcon from 'common/img/circle-cross-icon-inline.svg';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
@@ -68,11 +68,14 @@ DefectTypeName.propTypes = {
 };
 
 @track()
-@connect(null, {
-  showModal: showModalAction,
-  deleteDefectSubTypeAction,
-  updateDefectSubTypeAction,
-})
+@connect(
+  null,
+  {
+    showModal: showModalAction,
+    deleteDefectSubTypeAction,
+    updateDefectSubTypeAction,
+  },
+)
 @injectIntl
 export class DefectSubType extends Component {
   static propTypes = {
@@ -83,7 +86,7 @@ export class DefectSubType extends Component {
     isPossibleUpdateSettings: PropTypes.bool.isRequired,
     deleteDefectSubTypeAction: PropTypes.func.isRequired,
     updateDefectSubTypeAction: PropTypes.func.isRequired,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,

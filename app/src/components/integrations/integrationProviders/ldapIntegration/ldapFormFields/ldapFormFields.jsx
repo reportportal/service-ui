@@ -16,7 +16,7 @@
 
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
@@ -113,7 +113,7 @@ const urlValidator = bindMessageToValidator(validate.ldapUrl, 'requiredFieldHint
 @injectIntl
 export class LdapFormFields extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     initialize: PropTypes.func.isRequired,
     change: PropTypes.func.isRequired,
     disabled: PropTypes.bool,

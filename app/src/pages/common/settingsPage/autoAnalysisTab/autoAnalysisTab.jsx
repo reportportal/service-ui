@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { canUpdateSettings } from 'common/utils/permissions';
@@ -88,7 +88,7 @@ const messages = defineMessages({
 @injectIntl
 export class AutoAnalysisTab extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     projectId: PropTypes.string,
     fetchConfigurationAttributesAction: PropTypes.func.isRequired,
     updateConfigurationAttributesAction: PropTypes.func.isRequired,

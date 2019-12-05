@@ -33,7 +33,7 @@ GroupedGridBody.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.shape(columnPropTypes)),
   data: PropTypes.array,
   groupFunction: PropTypes.func,
-  groupHeader: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
+  groupHeader: PropTypes.oneOfType([PropTypes.node, PropTypes.elementType]),
   grouped: PropTypes.bool,
 };
 GroupedGridBody.defaultProps = {

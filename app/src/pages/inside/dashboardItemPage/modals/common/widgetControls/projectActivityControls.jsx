@@ -18,7 +18,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { URLS } from 'common/urls';
 import {
   arrayRemoveDoubles,
@@ -76,7 +76,7 @@ const actionTypeValidator = (message) => bindMessageToValidator(validate.isNotEm
 }))
 export class ProjectActivityControls extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     widgetSettings: PropTypes.object.isRequired,
     usernamesSearchUrl: PropTypes.string.isRequired,
     initializeControlsForm: PropTypes.func.isRequired,

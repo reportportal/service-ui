@@ -18,7 +18,7 @@ import React, { Component, Fragment } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { showModalAction } from 'controllers/modal';
 import classNames from 'classnames/bind';
 import { GhostButton } from 'components/buttons/ghostButton';
@@ -60,14 +60,17 @@ const messages = defineMessages({
   },
 });
 
-@connect(null, {
-  showRemoveIndexModal: () => showModalAction({ id: 'removeIndexModal' }),
-})
+@connect(
+  null,
+  {
+    showRemoveIndexModal: () => showModalAction({ id: 'removeIndexModal' }),
+  },
+)
 @injectIntl
 @track()
 export class IndexActionsBlock extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     disabled: PropTypes.bool,
     indexingRunning: PropTypes.bool,
     analyzerExtensions: PropTypes.array,

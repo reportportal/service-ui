@@ -16,7 +16,7 @@
 
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import {
   NOTIFICATION_GROUP_TYPE,
@@ -51,7 +51,7 @@ const messages = defineMessages({
 @injectIntl
 export class IntegrationsList extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     availableIntegrations: PropTypes.object.isRequired,
     onItemClick: PropTypes.func,
   };

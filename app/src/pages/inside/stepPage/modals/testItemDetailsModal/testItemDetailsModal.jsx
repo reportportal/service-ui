@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Parser from 'html-react-parser';
@@ -84,7 +84,7 @@ const cx = classNames.bind(styles);
 @injectIntl
 export class TestItemDetailsModal extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     data: PropTypes.shape({
       item: PropTypes.object,
       type: PropTypes.string,

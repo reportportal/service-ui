@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import { activeProjectSelector } from 'controllers/user';
 import {
@@ -49,7 +49,7 @@ const DASHBOARD_PAGE_ITEM_VALUE = 'All';
 @injectIntl
 export class DashboardPageHeader extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     projectId: PropTypes.string.isRequired,
     activeItemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     dashboards: PropTypes.arrayOf(dashboardItemPropTypes),

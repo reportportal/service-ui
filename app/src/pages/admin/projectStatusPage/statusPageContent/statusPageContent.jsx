@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { fetch } from 'common/utils';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -29,7 +29,7 @@ const cx = classNames.bind(styles);
 @injectIntl
 export class StatusPageContent extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     projectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     interval: PropTypes.string,
   };

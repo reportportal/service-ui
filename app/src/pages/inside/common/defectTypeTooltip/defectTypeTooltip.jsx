@@ -19,7 +19,7 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { projectConfigSelector } from 'controllers/project';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { DefectLink } from 'pages/inside/common/defectLink';
 import styles from './defectTypeTooltip.scss';
 
@@ -47,7 +47,7 @@ export class DefectTypeTooltip extends Component {
     type: PropTypes.string.isRequired,
     data: PropTypes.object.isRequired,
     projectConfig: PropTypes.object.isRequired,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     tooltipEventInfo: PropTypes.object,
     itemId: PropTypes.number,
     ownLinkParams: PropTypes.object,

@@ -20,7 +20,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { reduxForm, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { validate, bindMessageToValidator } from 'common/utils';
 import { ToggleButton } from 'components/buttons/toggleButton';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -100,7 +100,7 @@ const DEFAULT_ANALYSIS_MODE = 'Classic';
 export class AnalysisForm extends Component {
   static propTypes = {
     disabled: PropTypes.bool,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     initialValues: PropTypes.object,
     change: PropTypes.func,
     handleSubmit: PropTypes.func,

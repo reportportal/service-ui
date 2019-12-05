@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 
 import { defectTypesSelector, updateDefectSubTypeAction } from 'controllers/project';
@@ -56,7 +56,7 @@ export class DefectTypesTab extends Component {
     subTypes: PropTypes.objectOf(PropTypes.arrayOf(defectTypeShape)).isRequired,
     showModal: PropTypes.func.isRequired,
     updateDefectSubTypeAction: PropTypes.func.isRequired,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,

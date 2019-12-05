@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
@@ -58,14 +58,17 @@ const messages = defineMessages({
 });
 
 @injectIntl
-@connect(null, {
-  showNotification,
-  updatePluginSuccessAction,
-})
+@connect(
+  null,
+  {
+    showNotification,
+    updatePluginSuccessAction,
+  },
+)
 @track()
 export class InstalledTab extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     filterItems: PropTypes.array.isRequired,
     plugins: PropTypes.array.isRequired,
     updatePluginSuccessAction: PropTypes.func.isRequired,

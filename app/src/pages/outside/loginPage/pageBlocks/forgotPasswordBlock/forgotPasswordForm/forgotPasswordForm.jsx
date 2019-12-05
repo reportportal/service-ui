@@ -19,7 +19,7 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import { redirect } from 'redux-first-router';
-import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
+import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import {
   showNotification,
@@ -53,13 +53,16 @@ const notifications = defineMessages({
   },
 });
 
-@connect(null, {
-  showScreenLockAction,
-  hideScreenLockAction,
-  showNotification,
-  showDefaultErrorNotification,
-  redirect,
-})
+@connect(
+  null,
+  {
+    showScreenLockAction,
+    hideScreenLockAction,
+    showNotification,
+    showDefaultErrorNotification,
+    redirect,
+  },
+)
 @reduxForm({
   form: 'forgotPassword',
   validate: ({ email }) => ({
@@ -69,7 +72,7 @@ const notifications = defineMessages({
 @injectIntl
 export class ForgotPasswordForm extends PureComponent {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     showScreenLockAction: PropTypes.func.isRequired,
     hideScreenLockAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,

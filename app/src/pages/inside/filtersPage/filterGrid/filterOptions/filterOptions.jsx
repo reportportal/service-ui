@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import moment from 'moment';
 import { connect } from 'react-redux';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { defectTypesSelector } from 'controllers/project';
 import { parseDateTimeRange } from 'common/utils';
 import {
@@ -56,7 +56,7 @@ export class FilterOptions extends Component {
     entities: PropTypes.array,
     sort: PropTypes.array,
     defectTypes: PropTypes.object.isRequired,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
   };
 

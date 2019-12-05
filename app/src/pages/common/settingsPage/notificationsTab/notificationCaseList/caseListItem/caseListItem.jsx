@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import IconDelete from 'common/img/circle-cross-icon-inline.svg';
 import IconEdit from 'common/img/pencil-icon-inline.svg';
@@ -60,7 +60,7 @@ const ruleFieldsConfig = {
 @injectIntl
 export class CaseListItem extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     item: PropTypes.object,
     onDelete: PropTypes.func,
     onEdit: PropTypes.func,

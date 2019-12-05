@@ -19,7 +19,7 @@ import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import Parser from 'html-react-parser';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { showModalAction } from 'controllers/modal';
@@ -59,7 +59,7 @@ export class UserInfo extends Component {
     name: PropTypes.string,
     email: PropTypes.string,
     accountType: PropTypes.string,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     showModalAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
     fetchUserAction: PropTypes.func,

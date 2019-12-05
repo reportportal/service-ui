@@ -16,7 +16,7 @@
 
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { commonValidators } from 'common/utils';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputDropdown } from 'components/inputs/inputDropdown';
@@ -29,7 +29,7 @@ import { messages } from '../messages';
 @injectIntl
 export class JiraConnectionFormFields extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     initialize: PropTypes.func.isRequired,
     change: PropTypes.func.isRequired,
     disabled: PropTypes.bool,

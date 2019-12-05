@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Parser from 'html-react-parser';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import track from 'react-tracking';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import IconEdit from 'common/img/pencil-empty-inline.svg';
@@ -49,12 +49,15 @@ export const messages = defineMessages({
   },
 });
 
-@connect(null, {
-  addPattern: addPatternAction,
-  updatePattern: updatePatternAction,
-  deletePattern: deletePatternAction,
-  showModal: showModalAction,
-})
+@connect(
+  null,
+  {
+    addPattern: addPatternAction,
+    updatePattern: updatePatternAction,
+    deletePattern: deletePatternAction,
+    showModal: showModalAction,
+  },
+)
 @injectIntl
 @track()
 export class PatternControlPanel extends Component {
@@ -65,7 +68,7 @@ export class PatternControlPanel extends Component {
     updatePattern: PropTypes.func.isRequired,
     deletePattern: PropTypes.func.isRequired,
     showModal: PropTypes.func.isRequired,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     readOnly: PropTypes.bool,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,

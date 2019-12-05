@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import { ToggleButton } from 'components/buttons/toggleButton';
 import { PERIOD_VALUES } from 'common/constants/statusPeriodValues';
@@ -43,7 +43,7 @@ const messages = defineMessages({
 @injectIntl
 export class ProjectStatusPage extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     projectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   };
 

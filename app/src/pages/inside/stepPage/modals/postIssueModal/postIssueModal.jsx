@@ -20,7 +20,7 @@ import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { fetch, updateSessionItem, getSessionItem } from 'common/utils';
 import { URLS } from 'common/urls';
 import { JIRA, RALLY } from 'common/constants/integrationNames';
@@ -136,7 +136,7 @@ const messages = defineMessages({
 @injectIntl
 export class PostIssueModal extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     activeProject: PropTypes.string.isRequired,
     namedBtsIntegrations: PropTypes.object.isRequired,
     userId: PropTypes.string.isRequired,
@@ -277,8 +277,8 @@ export class PostIssueModal extends Component {
 
   initIntegrationFields = (defectFormFields = [], defaultConfig = {}, pluginName) => {
     const defaultOptionValueKey = this.getDefaultOptionValueKey(pluginName);
-    const fields = normalizeFieldsWithOptions(defectFormFields, defaultOptionValueKey).map(
-      (item) => (item.fieldType === ISSUE_TYPE_FIELD_KEY ? { ...item, disabled: true } : item),
+    const fields = normalizeFieldsWithOptions(defectFormFields, defaultOptionValueKey).map((item) =>
+      item.fieldType === ISSUE_TYPE_FIELD_KEY ? { ...item, disabled: true } : item,
     );
     validationConfig = createFieldsValidationConfig(fields);
     this.props.initialize({

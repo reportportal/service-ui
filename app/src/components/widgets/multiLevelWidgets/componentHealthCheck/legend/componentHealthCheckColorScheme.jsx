@@ -17,7 +17,7 @@
 import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { MAX_PASSING_RATE_VALUE } from '../constants';
 import styles from './componentHealthCheckColorScheme.scss';
 
@@ -37,7 +37,7 @@ const messages = defineMessages({
 @injectIntl
 export class ComponentHealthCheckColorScheme extends PureComponent {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     passingRate: PropTypes.number,
   };
 

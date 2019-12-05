@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { URLS } from 'common/urls';
 import { connect } from 'react-redux';
@@ -56,7 +56,7 @@ const localMessages = defineMessages({
 @injectIntl
 export class GithubAuthForm extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     enabled: PropTypes.bool,
     initialize: PropTypes.func,
     handleSubmit: PropTypes.func,

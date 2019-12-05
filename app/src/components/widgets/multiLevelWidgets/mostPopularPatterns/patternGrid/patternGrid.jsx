@@ -17,7 +17,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
 import classNames from 'classnames/bind';
 import { PatternNameColumn, TestCasesColumn } from './patternGridColumns';
@@ -49,7 +49,7 @@ const TEST_CASES_COLUMN = 'testCases';
 @injectIntl
 export class PatternGrid extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     widget: PropTypes.object,
     selectedAttribute: PropTypes.string,
     projectId: PropTypes.string,

@@ -18,7 +18,7 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import styles from './deleteItemsModal.scss';
@@ -29,7 +29,7 @@ const cx = classNames.bind(styles);
 @injectIntl
 export class DeleteItemsModal extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     data: PropTypes.shape({
       onConfirm: PropTypes.func,
       items: PropTypes.array,

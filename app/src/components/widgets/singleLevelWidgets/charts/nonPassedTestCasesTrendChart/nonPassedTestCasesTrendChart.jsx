@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { ChartContainer } from 'components/widgets/common/c3chart';
 import {
@@ -46,7 +46,7 @@ const FAILED_SKIPPED_STATISTICS_KEY = 'statistics$executions$failedSkippedTotal'
 )
 export class NonPassedTestCasesTrendChart extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     widget: PropTypes.object.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
     getStatisticsLink: PropTypes.func.isRequired,

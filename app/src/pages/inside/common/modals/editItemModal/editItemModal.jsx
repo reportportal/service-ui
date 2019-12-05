@@ -17,7 +17,7 @@
 import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
@@ -124,7 +124,7 @@ const messages = defineMessages({
 )
 export class EditItemModal extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     data: PropTypes.shape({
       item: PropTypes.object,
       parentLaunch: PropTypes.object,

@@ -20,7 +20,7 @@ import { FILTERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import styles from './filterDeleteModal.scss';
@@ -49,7 +49,7 @@ const messages = defineMessages({
 @track()
 export class FilterDeleteModal extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     data: PropTypes.shape({
       filter: PropTypes.object,
       onConfirm: PropTypes.func,

@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import Parser from 'html-react-parser';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
 import { InputRadio } from 'components/inputs/inputRadio';
@@ -67,7 +67,7 @@ const messages = defineMessages({
 @track()
 export class StrategyBlock extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     disabled: PropTypes.bool,
     data: PropTypes.object,
     onFormSubmit: PropTypes.func,

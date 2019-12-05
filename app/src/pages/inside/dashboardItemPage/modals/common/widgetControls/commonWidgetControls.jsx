@@ -16,7 +16,7 @@
 
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import {
@@ -75,7 +75,7 @@ const widgetNameValidator = (formatMessage, widgets = [], widgetId) =>
 @injectIntl
 export class CommonWidgetControls extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     initializeControlsForm: PropTypes.func,
     widgetId: PropTypes.number,
     eventsInfo: PropTypes.object,

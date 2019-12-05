@@ -17,7 +17,7 @@
 import { Fragment, Component } from 'react';
 import track from 'react-tracking';
 import { connect } from 'react-redux';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { showModalAction } from 'controllers/modal';
@@ -96,7 +96,7 @@ const messages = defineMessages({
 @track()
 export class UnassignButton extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     showModalAction: PropTypes.func.isRequired,
     userId: PropTypes.string,
     projectId: PropTypes.string,

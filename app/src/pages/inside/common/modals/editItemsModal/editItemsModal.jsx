@@ -17,7 +17,7 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { reduxForm, formPropTypes, formValues } from 'redux-form';
 import { URLS } from 'common/urls';
@@ -146,7 +146,7 @@ export class EditItemsModal extends Component {
     currentProject: PropTypes.string.isRequired,
     descriptionAction: PropTypes.string,
     uniqueAttributes: PropTypes.array,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     showNotification: PropTypes.func.isRequired,
     showDefaultErrorNotification: PropTypes.func.isRequired,
     ...formPropTypes,
@@ -290,8 +290,8 @@ export class EditItemsModal extends Component {
         : URLS.testItemsInfoUpdate(currentProject);
     const data = {
       ids,
-      attributes: attributes.filter(
-        (attribute) => (attribute.from ? Boolean(attribute.from.value) : true),
+      attributes: attributes.filter((attribute) =>
+        attribute.from ? Boolean(attribute.from.value) : true,
       ),
     };
 

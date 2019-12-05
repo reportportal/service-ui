@@ -17,7 +17,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import track from 'react-tracking';
 import { InputFilter } from 'components/inputs/inputFilter';
@@ -74,7 +74,7 @@ const cx = classNames.bind(styles);
 @track()
 export class ProjectsToolbar extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     viewMode: PropTypes.string,
     setViewMode: PropTypes.func.isRequired,
     selectedProjects: PropTypes.arrayOf(PropTypes.object),

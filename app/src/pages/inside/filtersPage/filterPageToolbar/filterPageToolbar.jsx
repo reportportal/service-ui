@@ -18,7 +18,7 @@ import PropTypes from 'prop-types';
 import track from 'react-tracking';
 import { reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { validate, bindMessageToValidator } from 'common/utils';
 import AddFilterIcon from 'common/img/add-filter-inline.svg';
 import { GhostButton } from 'components/buttons/ghostButton';
@@ -57,7 +57,7 @@ const messages = defineMessages({
 @injectIntl
 export class FilterPageToolbar extends React.Component {
   static propTypes = {
-    intl: intlShape,
+    intl: PropTypes.object,
     isSearchDisabled: PropTypes.bool,
     onAddFilter: PropTypes.func,
   };

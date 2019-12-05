@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import track from 'react-tracking';
 import isEqual from 'fast-deep-equal';
 import {
@@ -204,7 +204,7 @@ export class LaunchesPage extends Component {
     level: PropTypes.string,
     debugMode: PropTypes.bool.isRequired,
     userId: PropTypes.string.isRequired,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     launches: PropTypes.arrayOf(PropTypes.object),
     activePage: PropTypes.number,
     itemCount: PropTypes.number,
@@ -754,21 +754,20 @@ export class LaunchesPage extends Component {
         render={({ onFilterAdd, ...rest }) => (
           <PageLayout>
             <PageSection>
-              {!debugMode &&
-                !selectedLaunches.length && (
-                  <LaunchFiltersToolbar
-                    filters={launchFilters}
-                    activeFilterId={activeFilterId}
-                    activeFilter={activeFilter}
-                    onSelectFilter={onSelectFilter}
-                    onRemoveFilter={onRemoveFilter}
-                    onFilterAdd={onFilterAdd}
-                    onResetFilter={onResetFilter}
-                    onChangeSorting={onChangeSorting}
-                    sortingString={sortingColumn}
-                    {...rest}
-                  />
-                )}
+              {!debugMode && !selectedLaunches.length && (
+                <LaunchFiltersToolbar
+                  filters={launchFilters}
+                  activeFilterId={activeFilterId}
+                  activeFilter={activeFilter}
+                  onSelectFilter={onSelectFilter}
+                  onRemoveFilter={onRemoveFilter}
+                  onFilterAdd={onFilterAdd}
+                  onResetFilter={onResetFilter}
+                  onChangeSorting={onChangeSorting}
+                  sortingString={sortingColumn}
+                  {...rest}
+                />
+              )}
             </PageSection>
             <PageSection>
               <LaunchToolbar
@@ -819,17 +818,16 @@ export class LaunchesPage extends Component {
                 onPatternAnalysis={this.onPatternAnalysis}
                 rowHighlightingConfig={rowHighlightingConfig}
               />
-              {!!pageCount &&
-                !loading && (
-                  <PaginationToolbar
-                    activePage={activePage}
-                    itemCount={itemCount}
-                    pageCount={pageCount}
-                    pageSize={pageSize}
-                    onChangePage={onChangePage}
-                    onChangePageSize={onChangePageSize}
-                  />
-                )}
+              {!!pageCount && !loading && (
+                <PaginationToolbar
+                  activePage={activePage}
+                  itemCount={itemCount}
+                  pageCount={pageCount}
+                  pageSize={pageSize}
+                  onChangePage={onChangePage}
+                  onChangePageSize={onChangePageSize}
+                />
+              )}
             </PageSection>
           </PageLayout>
         )}

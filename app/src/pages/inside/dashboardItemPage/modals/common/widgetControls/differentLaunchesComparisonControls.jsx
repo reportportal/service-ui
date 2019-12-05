@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import {
   STATS_TOTAL,
@@ -36,7 +36,7 @@ const DEFAULT_ITEMS_COUNT = '2';
 @injectIntl
 export class DifferentLaunchesComparisonControls extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     initializeControlsForm: PropTypes.func.isRequired,
     formAppearance: PropTypes.object.isRequired,
     onFormAppearanceChange: PropTypes.func.isRequired,

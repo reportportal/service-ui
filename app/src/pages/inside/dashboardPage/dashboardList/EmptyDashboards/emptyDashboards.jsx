@@ -17,7 +17,7 @@
 import React, { Fragment, Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { NoResultsForFilter } from 'pages/inside/common/noResultsForFilter';
 import styles from './emptyDashboards.scss';
@@ -50,7 +50,7 @@ const messages = defineMessages({
 @injectIntl
 export class EmptyDashboards extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     action: PropTypes.func,
     userDashboards: PropTypes.bool,
     filter: PropTypes.string,

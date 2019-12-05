@@ -26,7 +26,7 @@ import { reduxForm, formValueSelector, getFormSyncErrors, getFormMeta } from 're
 import { connect } from 'react-redux';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { showDefaultErrorNotification } from 'controllers/notification';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { SectionHeader } from 'components/main/sectionHeader';
 import { ModalLayout, withModal, ModalField } from 'components/main/modal';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -137,7 +137,7 @@ const formSyncErrorsSelector = getFormSyncErrors(MERGE_FORM);
 @track()
 export class LaunchMergeModal extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     showScreenLockAction: PropTypes.func.isRequired,
     hideScreenLockAction: PropTypes.func.isRequired,
     showDefaultErrorNotification: PropTypes.func.isRequired,

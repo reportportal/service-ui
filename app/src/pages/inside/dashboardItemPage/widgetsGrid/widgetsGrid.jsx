@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import ReactObserver from 'react-event-observer';
 import { NOTIFICATION_TYPES } from 'controllers/notification';
 import { fetch } from 'common/utils';
@@ -44,7 +44,7 @@ const messages = defineMessages({
 @injectIntl
 export class WidgetsGrid extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     activeProject: PropTypes.string.isRequired,
     currentUser: PropTypes.string.isRequired,
     isFullscreen: PropTypes.bool,
@@ -162,17 +162,16 @@ export class WidgetsGrid extends Component {
 
     if (!isSomeWidgetsWithSameYPosition) {
       // update new widgets Y positions that greater than deleted widget Y position
-      return newWidgets.map(
-        (item) =>
-          item.widgetPosition.positionY > widgetForDeleteYPosition
-            ? {
-                ...item,
-                widgetPosition: {
-                  ...item.widgetPosition,
-                  positionY: item.widgetPosition.positionY - widgetForDelete.widgetSize.height,
-                },
-              }
-            : item,
+      return newWidgets.map((item) =>
+        item.widgetPosition.positionY > widgetForDeleteYPosition
+          ? {
+              ...item,
+              widgetPosition: {
+                ...item.widgetPosition,
+                positionY: item.widgetPosition.positionY - widgetForDelete.widgetSize.height,
+              },
+            }
+          : item,
       );
     }
     return newWidgets;

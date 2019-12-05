@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import * as d3 from 'd3-selection';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
@@ -49,7 +49,7 @@ const cx = classNames.bind(styles);
 @injectIntl
 export class DonutChart extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     widget: PropTypes.object.isRequired,
     isPreview: PropTypes.bool,
     navigate: PropTypes.func.isRequired,
@@ -94,8 +94,7 @@ export class DonutChart extends Component {
 
     this.renderTotalLabel();
 
-    d3
-      .select(chart.element)
+    d3.select(chart.element)
       .select('.c3-chart-arcs-title')
       .attr('dy', onStatusPageMode ? -5 : -15)
       .append('tspan')

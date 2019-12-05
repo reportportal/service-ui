@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import * as d3 from 'd3-selection';
 import { ALL } from 'common/constants/reservedFilterIds';
@@ -50,7 +50,7 @@ const cx = classNames.bind(styles);
 )
 export class LaunchesComparisonChart extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     navigate: PropTypes.func.isRequired,
     widget: PropTypes.object.isRequired,
     projectId: PropTypes.string.isRequired,

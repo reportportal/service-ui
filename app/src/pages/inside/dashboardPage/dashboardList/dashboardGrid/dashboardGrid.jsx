@@ -16,7 +16,7 @@
 
 import React, { Fragment, Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { DashboardGridList } from './dashboardGridList';
 
@@ -34,7 +34,7 @@ const messages = defineMessages({
 @injectIntl
 export class DashboardGrid extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     dashboardItems: PropTypes.array,
   };
 

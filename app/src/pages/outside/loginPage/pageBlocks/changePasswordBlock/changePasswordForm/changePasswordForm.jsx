@@ -20,7 +20,7 @@ import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import { redirect } from 'redux-first-router';
 import classNames from 'classnames/bind';
-import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
+import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
 import { commonValidators, fetch, connectRouter } from 'common/utils';
 import { URLS } from 'common/urls';
 import { LOGIN_PAGE } from 'controllers/pages';
@@ -58,12 +58,15 @@ const notifications = defineMessages({
 });
 
 @connectRouter(({ reset: resetQueryParam }) => ({ resetQueryParam }))
-@connect(null, {
-  redirect,
-  showScreenLockAction,
-  hideScreenLockAction,
-  showNotification,
-})
+@connect(
+  null,
+  {
+    redirect,
+    showScreenLockAction,
+    hideScreenLockAction,
+    showNotification,
+  },
+)
 @reduxForm({
   form: 'changePassword',
   validate: ({ password, passwordRepeat }) => ({
@@ -74,7 +77,7 @@ const notifications = defineMessages({
 @injectIntl
 export class ChangePasswordForm extends PureComponent {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     showScreenLockAction: PropTypes.func.isRequired,
     hideScreenLockAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,

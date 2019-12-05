@@ -17,7 +17,7 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import track from 'react-tracking';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { atomOneLight } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -36,7 +36,7 @@ export class AttachmentCodeModal extends Component {
       extension: PropTypes.string.isRequired,
       content: PropTypes.string.isRequired,
     }).isRequired,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,

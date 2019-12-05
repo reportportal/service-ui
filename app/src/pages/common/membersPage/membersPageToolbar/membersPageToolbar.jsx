@@ -19,7 +19,7 @@ import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { showModalAction } from 'controllers/modal';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { canInviteInternalUser } from 'common/utils/permissions';
@@ -74,7 +74,7 @@ const messages = defineMessages({
 @track()
 export class MembersPageToolbar extends React.Component {
   static propTypes = {
-    intl: intlShape,
+    intl: PropTypes.object,
     showModalAction: PropTypes.func.isRequired,
     onInvite: PropTypes.func,
     projectRole: PropTypes.string,

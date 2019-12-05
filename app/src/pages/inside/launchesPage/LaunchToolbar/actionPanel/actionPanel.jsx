@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { defineMessages, FormattedMessage, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { canBulkEditItems } from 'common/utils/permissions';
 import { CUSTOMER } from 'common/constants/projectRoles';
@@ -36,10 +36,6 @@ import styles from './actionPanel.scss';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
-  actionsBtn: {
-    id: 'ActionPanel.actionsBtn',
-    defaultMessage: 'Actions',
-  },
   proceedButton: {
     id: 'ActionPanel.proceedButton',
     defaultMessage: 'Proceed Valid Items',
@@ -69,7 +65,7 @@ export class ActionPanel extends Component {
     selectedLaunches: PropTypes.array,
     hasErrors: PropTypes.bool,
     showBreadcrumb: PropTypes.bool,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     onImportLaunch: PropTypes.func,
     hasValidItems: PropTypes.bool,
     accountRole: PropTypes.string,
@@ -240,7 +236,7 @@ export class ActionPanel extends Component {
               tooltip={
                 !selectedLaunches.length ? intl.formatMessage(messages.actionsBtnTooltip) : null
               }
-              title={intl.formatMessage(messages.actionsBtn)}
+              title={intl.formatMessage(COMMON_LOCALE_KEYS.ACTIONS)}
               items={actionDescriptors}
               disabled={!selectedLaunches.length}
               onClick={this.onClickActionButton}

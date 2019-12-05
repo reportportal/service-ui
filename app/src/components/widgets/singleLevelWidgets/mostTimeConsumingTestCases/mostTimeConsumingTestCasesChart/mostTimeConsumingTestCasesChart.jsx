@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { TEST_ITEM_PAGE, PROJECT_LOG_PAGE } from 'controllers/pages/constants';
 import { ChartContainer } from 'components/widgets/common/c3chart';
@@ -30,7 +30,7 @@ const cx = classNames.bind(styles);
 @injectIntl
 export class MostTimeConsumingTestCasesChart extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     widget: PropTypes.object.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
     projectId: PropTypes.string.isRequired,

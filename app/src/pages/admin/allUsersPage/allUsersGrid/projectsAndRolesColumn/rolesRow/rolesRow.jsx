@@ -17,7 +17,7 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import track from 'react-tracking';
 import { ADMIN_ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { InputDropdown } from 'components/inputs/inputDropdown';
@@ -74,7 +74,7 @@ const messages = defineMessages({
 @track()
 export class RolesRow extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     value: PropTypes.oneOf(PROJECT_ROLES),
     onChange: PropTypes.func,
     onDelete: PropTypes.func,

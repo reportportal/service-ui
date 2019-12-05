@@ -21,7 +21,7 @@ import Dropzone from 'react-dropzone';
 import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -50,13 +50,16 @@ const messages = defineMessages({
 
 @withModal('importModal')
 @injectIntl
-@connect(null, {
-  showNotification,
-})
+@connect(
+  null,
+  {
+    showNotification,
+  },
+)
 @track()
 export class ImportModal extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     showNotification: PropTypes.func.isRequired,
     data: PropTypes.object,
     tracking: PropTypes.shape({
@@ -267,16 +270,18 @@ export class ImportModal extends Component {
   formDataForServerUploading() {
     const { files } = this.state;
 
-    return files.filter((item) => item.valid).map((item) => {
-      const formData = new FormData();
+    return files
+      .filter((item) => item.valid)
+      .map((item) => {
+        const formData = new FormData();
 
-      formData.append('file', item.file, item.file.name);
+        formData.append('file', item.file, item.file.name);
 
-      return {
-        data: formData,
-        id: item.id,
-      };
-    });
+        return {
+          data: formData,
+          id: item.id,
+        };
+      });
   }
 
   prepareDataForServerUploading() {
@@ -308,7 +313,7 @@ export class ImportModal extends Component {
       },
       onUploadProgress: (progressEvent) => {
         const { files } = this.state;
-        const percentCompleted = Math.round(progressEvent.loaded * 100 / progressEvent.total);
+        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
 
         this.setState({
           files: files.map((item) => {

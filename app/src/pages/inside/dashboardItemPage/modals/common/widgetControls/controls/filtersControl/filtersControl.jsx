@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
-import { intlShape, injectIntl, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { change } from 'redux-form';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
@@ -106,7 +106,7 @@ const messages = defineMessages({
 @injectIntl
 export class FiltersControl extends Component {
   static propTypes = {
-    intl: intlShape,
+    intl: PropTypes.object,
     touched: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
     error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),

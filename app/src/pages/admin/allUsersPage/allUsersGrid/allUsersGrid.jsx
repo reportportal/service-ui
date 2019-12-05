@@ -17,7 +17,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl';
+import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import { Grid } from 'components/main/grid';
 import { AbsRelTime } from 'components/main/absRelTime';
 import {
@@ -116,7 +116,7 @@ LastLoginColumn.defaultProps = {
 export class AllUsersGrid extends PureComponent {
   static propTypes = {
     data: PropTypes.arrayOf(PropTypes.object),
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     loading: PropTypes.bool,
     onToggleSelection: PropTypes.func,
     onToggleSelectAll: PropTypes.func,
