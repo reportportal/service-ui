@@ -403,9 +403,8 @@ export class LogItemInfo extends Component {
       intl: { formatMessage },
     } = this.props;
     const isPostIssueUnavailable = !isPostIssueActionAvailable(this.props.btsIntegrations);
-    const copySendDefectTitle = !logItem.issue
-      ? formatMessage(messages.noDefectTypeToCopySendDefect)
-      : null;
+    const copySendDefectTitle =
+      logItem && !logItem.issue ? formatMessage(messages.noDefectTypeToCopySendDefect) : null;
 
     return (
       logItem && (

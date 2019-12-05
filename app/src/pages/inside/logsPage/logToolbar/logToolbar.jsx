@@ -30,6 +30,7 @@ import {
   breadcrumbsSelector,
   namespaceSelector,
   fetchTestItemsFromLogPageAction,
+  restorePathAction,
 } from 'controllers/testItem';
 import { withPagination, DEFAULT_PAGINATION, PAGE_KEY } from 'controllers/pagination';
 import {
@@ -60,6 +61,7 @@ const cx = classNames.bind(styles);
   {
     navigate: (linkAction) => linkAction,
     fetchTestItems: fetchTestItemsFromLogPageAction,
+    restorePath: restorePathAction,
   },
 )
 @withPagination({
@@ -86,6 +88,7 @@ export class LogToolbar extends Component {
     activePage: PropTypes.number,
     fetchTestItems: PropTypes.func,
     logViewMode: PropTypes.string,
+    restorePath: PropTypes.func,
   };
 
   static defaultProps = {
@@ -101,6 +104,7 @@ export class LogToolbar extends Component {
     activePage: DEFAULT_PAGINATION[PAGE_KEY],
     fetchTestItems: () => {},
     logViewMode: DETAILED_LOG_VIEW,
+    restorePath: () => {},
   };
 
   handleBackClick = () => {
@@ -131,6 +135,7 @@ export class LogToolbar extends Component {
       previousLinkDisable,
       nextLinkDisable,
       logViewMode,
+      restorePath,
     } = this.props;
     return (
       <div className={cx('log-toolbar', { 'with-border': logViewMode === DETAILED_LOG_VIEW })}>
@@ -139,6 +144,7 @@ export class LogToolbar extends Component {
           togglerEventInfo={LOG_PAGE_EVENTS.PLUS_MINUS_BREADCRUMB}
           breadcrumbEventInfo={LOG_PAGE_EVENTS.ITEM_NAME_BREADCRUMB_CLICK}
           allEventClick={LOG_PAGE_EVENTS.ALL_LABEL_BREADCRUMB}
+          onRestorePath={restorePath}
         />
         <div className={cx('action-buttons')}>
           {logViewMode === DETAILED_LOG_VIEW && (
