@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
 import {
   CONDITION_HAS,
@@ -39,7 +39,7 @@ const messages = defineMessages({
 @injectIntl
 export class InputConditionalTags extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     value: PropTypes.object,
     conditions: PropTypes.arrayOf(PropTypes.string),
     inputProps: PropTypes.object,

@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { showModalAction, hideModalAction } from 'controllers/modal';
 import {
@@ -29,14 +29,17 @@ import {
 import { IntegrationSettings } from 'components/integrations/elements';
 import { messages } from '../messages';
 
-@connect(null, {
-  showModalAction,
-  hideModalAction,
-})
+@connect(
+  null,
+  {
+    showModalAction,
+    hideModalAction,
+  },
+)
 @injectIntl
 export class RallySettings extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     data: PropTypes.object.isRequired,
     goToPreviousPage: PropTypes.func.isRequired,
     onUpdate: PropTypes.func.isRequired,

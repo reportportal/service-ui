@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { activeProjectSelector } from 'controllers/user';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { URLS } from 'common/urls';
 import { validate, bindMessageToValidator, commonValidators } from 'common/utils';
 import { ITEMS_INPUT_WIDTH } from './constants';
@@ -70,7 +70,7 @@ const itemsValidator = (message) =>
 }))
 export class FlakyTestCasesTableControls extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     widgetSettings: PropTypes.object.isRequired,
     launchNamesSearchUrl: PropTypes.string.isRequired,
     initializeControlsForm: PropTypes.func.isRequired,

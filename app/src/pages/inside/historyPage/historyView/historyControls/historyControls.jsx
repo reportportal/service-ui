@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { HISTORY_DEPTH_CONFIG } from 'controllers/itemsHistory';
 import styles from './historyControls.scss';
@@ -34,7 +34,7 @@ const messages = defineMessages({
 @injectIntl
 export class HistoryControls extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     historyDepth: PropTypes.string,
     onChangeHistoryDepth: PropTypes.func,
   };

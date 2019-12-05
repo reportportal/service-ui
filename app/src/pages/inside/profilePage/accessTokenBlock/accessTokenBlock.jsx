@@ -24,7 +24,7 @@ import { apiTokenValueSelector, generateApiTokenAction } from 'controllers/user'
 import { Input } from 'components/inputs/input/input';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { ButtonWithTooltip } from './buttonWithTooltip';
 import styles from './accessTokenBlock.scss';
 import { BlockContainerHeader, BlockContainerBody } from '../blockContainer';
@@ -64,7 +64,7 @@ const messages = defineMessages({
 @track()
 export class AccessTokenBlock extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     showModalAction: PropTypes.func.isRequired,
     generateApiTokenAction: PropTypes.func.isRequired,
     token: PropTypes.string,

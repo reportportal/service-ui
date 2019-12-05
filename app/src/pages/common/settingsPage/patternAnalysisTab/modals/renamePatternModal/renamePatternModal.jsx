@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import track from 'react-tracking';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { ModalLayout, ModalField, withModal } from 'components/main/modal';
@@ -58,7 +58,7 @@ const messages = defineMessages({
 @track()
 export class RenamePatternModal extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     data: PropTypes.shape({
       pattern: PropTypes.object,
       onSave: PropTypes.func,

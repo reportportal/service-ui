@@ -20,6 +20,7 @@ import 'array.find';
 import 'array.findindex';
 import 'promise-polyfill/src/polyfill';
 import 'polyfill-array-includes';
+import areIntlLocalesSupported from 'intl-locales-supported';
 
 // NodeList.prototype.forEach (https://developer.mozilla.org/en-US/docs/Web/API/NodeList/forEach#Polyfill)
 if (window.NodeList && !NodeList.prototype.forEach) {
@@ -30,3 +31,41 @@ if (window.NodeList && !NodeList.prototype.forEach) {
     }
   };
 }
+
+// Chrome Intl doesn't support 'be' locale, so we have to manually apply polyfill in this case
+export const polyfillLocales = () =>
+  new Promise((resolve) => {
+    if (areIntlLocalesSupported(['en', 'ru', 'be'])) {
+      resolve();
+      return;
+    }
+    require.ensure(
+      [
+        '@formatjs/intl-pluralrules/dist/core',
+        '@formatjs/intl-pluralrules/dist/locale-data/en.js',
+        '@formatjs/intl-pluralrules/dist/locale-data/ru.js',
+        '@formatjs/intl-pluralrules/dist/locale-data/be.js',
+        '@formatjs/intl-relativetimeformat/dist/core',
+        '@formatjs/intl-relativetimeformat/dist/locale-data/en.js',
+        '@formatjs/intl-relativetimeformat/dist/locale-data/ru.js',
+        '@formatjs/intl-relativetimeformat/dist/locale-data/be.js',
+      ],
+      (require) => {
+        const { PluralRules } = require('@formatjs/intl-pluralrules/dist/core');
+        window.Intl.PluralRules = PluralRules;
+        require('@formatjs/intl-pluralrules/dist/locale-data/en.js');
+        require('@formatjs/intl-pluralrules/dist/locale-data/ru.js');
+        require('@formatjs/intl-pluralrules/dist/locale-data/be.js');
+
+        const {
+          default: RelativeTimeFormat,
+        } = require('@formatjs/intl-relativetimeformat/dist/core');
+        window.Intl.RelativeTimeFormat = RelativeTimeFormat;
+        require('@formatjs/intl-relativetimeformat/dist/locale-data/en.js');
+        require('@formatjs/intl-relativetimeformat/dist/locale-data/ru.js');
+        require('@formatjs/intl-relativetimeformat/dist/locale-data/be.js');
+        resolve();
+      },
+    );
+  });
+

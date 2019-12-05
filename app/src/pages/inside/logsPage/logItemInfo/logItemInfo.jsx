@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { DefectType } from 'pages/inside/stepPage/stepGrid/defectType';
 import { getIssueTitle } from 'pages/inside/common/utils';
@@ -142,7 +142,7 @@ const LINK_ISSUE_EVENTS_INFO = {
 @injectIntl
 export class LogItemInfo extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     onChangePage: PropTypes.func.isRequired,
     onChangeLogLevel: PropTypes.func.isRequired,
     editDefectsAction: PropTypes.func.isRequired,

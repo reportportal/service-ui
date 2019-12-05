@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { fetch } from 'common/utils';
@@ -32,13 +32,16 @@ import styles from './formController.scss';
 
 const cx = classNames.bind(styles);
 
-@connect(null, {
-  showNotification,
-})
+@connect(
+  null,
+  {
+    showNotification,
+  },
+)
 @injectIntl
 export class FormController extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     initialize: PropTypes.func.isRequired,
     enabled: PropTypes.bool,

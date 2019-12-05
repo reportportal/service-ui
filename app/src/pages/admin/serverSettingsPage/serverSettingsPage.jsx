@@ -15,7 +15,8 @@
  */
 
 import React, { Component } from 'react';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import PropTypes from 'prop-types';
+import { injectIntl, defineMessages } from 'react-intl';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { ServerSettingsTabs } from './serverSettingsTabs';
 
@@ -29,7 +30,7 @@ const messages = defineMessages({
 @injectIntl
 export class ServerSettingsPage extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
   };
 
   getBreadcrumbs = () => [

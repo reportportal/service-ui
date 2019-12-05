@@ -16,7 +16,6 @@
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { intlShape } from 'react-intl';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { FilterItem } from './filterItem';
 import { filterShape } from '../propTypes';
@@ -57,7 +56,7 @@ FilterList.propTypes = {
   unsavedFilterIds: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])),
   onSelectFilter: PropTypes.func,
   onRemoveFilter: PropTypes.func,
-  intl: intlShape.isRequired,
+  intl: PropTypes.object.isRequired,
   allLatest: PropTypes.string,
 };
 FilterList.defaultProps = {

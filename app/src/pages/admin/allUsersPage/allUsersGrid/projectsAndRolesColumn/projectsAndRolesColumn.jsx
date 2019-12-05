@@ -21,7 +21,7 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { Manager, Reference, Popper } from 'react-popper';
 import track from 'react-tracking';
-import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl';
+import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { ADMIN_ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { showModalAction } from 'controllers/modal';
@@ -66,17 +66,20 @@ const messages = defineMessages({
     defaultMessage: 'Assign to project',
   },
 });
-@connect(null, {
-  showNotification,
-  showModalAction,
-  fetchAllUsersAction,
-  toggleUserRoleFormAction,
-})
+@connect(
+  null,
+  {
+    showNotification,
+    showModalAction,
+    fetchAllUsersAction,
+    toggleUserRoleFormAction,
+  },
+)
 @track()
 @injectIntl
 export class ProjectsAndRolesColumn extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     className: PropTypes.string.isRequired,
     value: PropTypes.object,
     tracking: PropTypes.shape({

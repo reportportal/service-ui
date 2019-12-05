@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import {
   PASSED,
   FAILED,
@@ -92,7 +92,7 @@ const blockTitleMessagesMap = {
 @track()
 export class HistoryLineItemContent extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     onClick: PropTypes.func,
     status: PropTypes.string,
     statistics: PropTypes.shape({

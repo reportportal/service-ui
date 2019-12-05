@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import track from 'react-tracking';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import Link from 'redux-first-router-link';
@@ -46,7 +46,7 @@ const cx = classNames.bind(styles);
 export class ProjectName extends Component {
   static propTypes = {
     project: PropTypes.object.isRequired,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     navigateToProject: PropTypes.func.isRequired,
     showModal: PropTypes.func.isRequired,
     isAssigned: PropTypes.bool,

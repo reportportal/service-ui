@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { intlShape, injectIntl, FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { Manager, Popper, Reference } from 'react-popper';
@@ -55,7 +55,7 @@ const cx = classNames.bind(styles);
 @injectIntl
 export class CompareWithFilterControl extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     loading: PropTypes.bool.isRequired,
     pagination: PropTypes.object.isRequired,
     activeProject: PropTypes.string.isRequired,

@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalLayout, withModal } from 'components/main/modal';
@@ -45,7 +45,7 @@ const messages = defineMessages({
 @injectIntl
 export class AddIntegrationModal extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     data: PropTypes.object,
     handleSubmit: PropTypes.func.isRequired,
     initialize: PropTypes.func.isRequired,

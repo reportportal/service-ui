@@ -18,7 +18,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { canUpdateSettings } from 'common/utils/permissions';
 import {
   updateProjectNotificationsConfigAction,
@@ -58,7 +58,7 @@ const cx = classNames.bind(styles);
 )
 export class NotificationsTab extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     enabled: PropTypes.bool,
     cases: PropTypes.array,
     updateNotificationsConfig: PropTypes.func,

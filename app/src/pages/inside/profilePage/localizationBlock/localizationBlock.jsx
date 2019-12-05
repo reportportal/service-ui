@@ -17,7 +17,7 @@
 import { Component } from 'react';
 import track from 'react-tracking';
 import { connect } from 'react-redux';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
@@ -111,7 +111,7 @@ const LANG_OPTIONS = [
 @track()
 export class LocalizationBlock extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     lang: PropTypes.string.isRequired,
     setLangAction: PropTypes.func.isRequired,
     tracking: PropTypes.shape({

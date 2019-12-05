@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import track from 'react-tracking';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
@@ -129,7 +129,7 @@ export class AllUsersPage extends Component {
     loading: PropTypes.bool,
     users: PropTypes.arrayOf(PropTypes.object),
     selectedUsers: PropTypes.arrayOf(PropTypes.object),
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     toggleAllUsersAction: PropTypes.func,
     unselectAllUsersAction: PropTypes.func,
     toggleUserSelectionAction: PropTypes.func,
@@ -288,21 +288,19 @@ export class AllUsersPage extends Component {
             sortingDirection={sortingDirection}
             onChangeSorting={onChangeSorting}
           />
-          {!!pageCount &&
-            !loading && (
-              <PaginationToolbar
-                activePage={activePage}
-                itemCount={itemCount}
-                pageCount={pageCount}
-                pageSize={pageSize}
-                onChangePage={onChangePage}
-                onChangePageSize={onChangePageSize}
-              />
-            )}
-          {!users.length &&
-            !loading && (
-              <NoItemMessage message={intl.formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />
-            )}
+          {!!pageCount && !loading && (
+            <PaginationToolbar
+              activePage={activePage}
+              itemCount={itemCount}
+              pageCount={pageCount}
+              pageSize={pageSize}
+              onChangePage={onChangePage}
+              onChangePageSize={onChangePageSize}
+            />
+          )}
+          {!users.length && !loading && (
+            <NoItemMessage message={intl.formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />
+          )}
         </PageSection>
       </PageLayout>
     );

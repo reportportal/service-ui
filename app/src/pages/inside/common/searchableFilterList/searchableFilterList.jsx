@@ -16,7 +16,7 @@
 
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { intlShape, injectIntl, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
 import { userIdSelector } from 'controllers/user/selectors';
 import { FiltersActionPanel } from './filtersActionPanel';
@@ -44,7 +44,7 @@ const messages = defineMessages({
 @injectIntl
 export class SearchableFilterList extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     userId: PropTypes.string.isRequired,
     loading: PropTypes.bool.isRequired,
     pagination: PropTypes.object.isRequired,

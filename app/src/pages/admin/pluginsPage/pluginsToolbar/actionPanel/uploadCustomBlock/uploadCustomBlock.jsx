@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import { AttributeListField } from 'components/main/attributeList';
 import { ModalField } from 'components/main/modal';
@@ -33,7 +33,7 @@ const messages = defineMessages({
 @injectIntl
 export class UploadCustomBlock extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     value: PropTypes.array,
     onChange: PropTypes.func,
   };

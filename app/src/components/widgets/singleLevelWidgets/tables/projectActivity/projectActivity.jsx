@@ -18,7 +18,7 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { START_TIME_FORMAT_ABSOLUTE } from 'controllers/user';
 import {
@@ -170,7 +170,7 @@ const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
 @injectIntl
 export class ProjectActivity extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     projectId: PropTypes.string.isRequired,
     widget: PropTypes.object,
     hasBts: PropTypes.bool,

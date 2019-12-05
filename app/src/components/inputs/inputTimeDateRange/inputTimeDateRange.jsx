@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import DatePicker from 'react-datepicker';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import 'react-datepicker/dist/react-datepicker.css';
 import {
@@ -75,7 +75,7 @@ const messages = defineMessages({
 @injectIntl
 export class InputTimeDateRange extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     presets: PropTypes.array,
     value: PropTypes.object,
     onChange: PropTypes.func,

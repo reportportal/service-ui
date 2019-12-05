@@ -17,7 +17,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
 import 'pure-react-carousel/dist/react-carousel.es.css';
@@ -70,7 +70,7 @@ const getCurrentThumb = (activeItemId, visibleThumbs) =>
 @track()
 export class Attachments extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,

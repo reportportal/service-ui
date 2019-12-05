@@ -18,7 +18,7 @@ import { Fragment, Component } from 'react';
 import track from 'react-tracking';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
@@ -67,7 +67,7 @@ const messages = defineMessages({
 @track()
 export class ProjectRole extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     assignedProjects: PropTypes.object,
     showNotification: PropTypes.func,
     accountRole: PropTypes.string,

@@ -21,7 +21,7 @@ import PropTypes from 'prop-types';
 import { ModalLayout, withModal, ModalField } from 'components/main/modal';
 import { reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -107,7 +107,7 @@ export class AddEditModal extends Component {
       type: PropTypes.string,
       eventsInfo: PropTypes.object,
     }),
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     initialize: PropTypes.func,
     dirty: PropTypes.bool.isRequired,
     handleSubmit: PropTypes.func,

@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { ModalLayout, withModal, ModalField } from 'components/main/modal';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -80,7 +80,7 @@ const messages = defineMessages({
 @track()
 export class ChangePasswordModal extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     data: PropTypes.shape({
       onChangePassword: PropTypes.func,

@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -49,7 +49,7 @@ const messages = defineMessages({
 })
 export class SharedWidgetsSearch extends Component {
   static propTypes = {
-    intl: intlShape,
+    intl: PropTypes.object,
     selectedWidget: PropTypes.object,
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   };

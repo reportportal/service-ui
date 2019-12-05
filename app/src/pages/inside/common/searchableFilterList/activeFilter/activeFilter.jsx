@@ -15,7 +15,7 @@
  */
 
 import React, { PureComponent } from 'react';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { FilterName } from 'pages/inside/filtersPage/filterGrid/filterName';
@@ -32,7 +32,7 @@ const messages = defineMessages({
 @injectIntl
 export class ActiveFilter extends PureComponent {
   static propTypes = {
-    intl: intlShape,
+    intl: PropTypes.object,
     touched: PropTypes.bool.isRequired,
     error: PropTypes.string,
     filter: PropTypes.object,

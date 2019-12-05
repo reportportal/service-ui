@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import Parser from 'html-react-parser';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { PASSED, FAILED, SKIPPED, ALL_STATUSES } from 'common/constants/testStatuses';
@@ -53,7 +53,7 @@ const cx = classNames.bind(styles);
 @injectIntl
 export class LogStatusBlock extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     onChangeLogStatusFilter: PropTypes.func.isRequired,
     logStatus: PropTypes.string,
   };

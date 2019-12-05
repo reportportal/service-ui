@@ -16,7 +16,7 @@
 
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import { defectTypesSelector } from 'controllers/project';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -72,7 +72,7 @@ const messages = defineMessages({
 }))
 export class LaunchStatisticsControls extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     defectTypes: PropTypes.object.isRequired,
     widgetSettings: PropTypes.object.isRequired,
     initializeControlsForm: PropTypes.func.isRequired,

@@ -16,7 +16,7 @@
 
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { commonValidators } from 'common/utils';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
@@ -39,7 +39,7 @@ const messages = defineMessages({
 @injectIntl
 export class LaunchDurationControls extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     widgetSettings: PropTypes.object.isRequired,
     initializeControlsForm: PropTypes.func.isRequired,
     formAppearance: PropTypes.object.isRequired,

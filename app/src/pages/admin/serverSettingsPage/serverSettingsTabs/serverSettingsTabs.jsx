@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { SERVER_SETTINGS_TAB_PAGE, settingsTabSelector } from 'controllers/pages';
 import { AUTHORIZATION_CONFIGURATION, STATISTICS } from 'common/constants/settingsTabs';
 import { NavigationTabs } from 'components/main/navigationTabs';
@@ -46,7 +46,7 @@ const messages = defineMessages({
 @injectIntl
 export class ServerSettingsTabs extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     activeTab: PropTypes.string,
     onChangeTab: PropTypes.func,
   };

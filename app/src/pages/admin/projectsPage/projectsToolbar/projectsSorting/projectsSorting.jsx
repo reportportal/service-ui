@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { SORTING_ASC } from 'controllers/sorting';
 import { InputDropdownSorting } from 'components/inputs/inputDropdownSorting';
@@ -37,7 +37,7 @@ const cx = classNames.bind(styles);
 @injectIntl
 export class ProjectsSorting extends Component {
   static propTypes = {
-    intl: intlShape,
+    intl: PropTypes.object,
     sortingColumn: PropTypes.string,
     sortingDirection: PropTypes.string,
     onChangeSorting: PropTypes.func,

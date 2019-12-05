@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { reduxForm, FieldArray } from 'redux-form';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { namedAvailableBtsIntegrationsSelector } from 'controllers/plugins';
 import { ModalLayout, withModal } from 'components/main/modal';
@@ -84,7 +84,7 @@ const messages = defineMessages({
 @injectIntl
 export class LinkIssueModal extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     userId: PropTypes.string.isRequired,
     requestUrl: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,

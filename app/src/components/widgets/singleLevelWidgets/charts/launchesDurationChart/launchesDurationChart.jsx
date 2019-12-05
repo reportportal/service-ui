@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { activeProjectSelector } from 'controllers/user';
@@ -42,7 +42,7 @@ const cx = classNames.bind(styles);
 )
 export class LaunchesDurationChart extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     navigate: PropTypes.func.isRequired,
     projectId: PropTypes.string.isRequired,
     widget: PropTypes.object.isRequired,

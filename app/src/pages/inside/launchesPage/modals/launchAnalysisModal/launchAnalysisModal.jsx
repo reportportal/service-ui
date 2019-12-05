@@ -17,7 +17,7 @@
 import { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import {
@@ -100,7 +100,7 @@ const messages = defineMessages({
 @track()
 export class LaunchAnalysisModal extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     data: PropTypes.shape({
       item: PropTypes.object.isRequired,
       onConfirm: PropTypes.func.isRequired,

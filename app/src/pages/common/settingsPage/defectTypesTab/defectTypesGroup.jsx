@@ -19,7 +19,7 @@ import { connect } from 'react-redux';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 
 import { GhostButton } from 'components/buttons/ghostButton';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -36,15 +36,18 @@ import styles from './defectTypesTab.scss';
 const cx = classNames.bind(styles);
 
 @track()
-@connect(null, {
-  addDefectSubTypeAction,
-})
+@connect(
+  null,
+  {
+    addDefectSubTypeAction,
+  },
+)
 @injectIntl
 export class DefectTypesGroup extends Component {
   static propTypes = {
     group: PropTypes.arrayOf(defectTypeShape).isRequired,
     addDefectSubTypeAction: PropTypes.func.isRequired,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     readonly: PropTypes.bool,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,

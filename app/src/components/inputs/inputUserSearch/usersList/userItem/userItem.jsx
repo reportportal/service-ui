@@ -16,7 +16,7 @@
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import DefaultUserImage from 'common/img/default-user-avatar.png';
 import { Image } from 'components/main/image';
 import styles from './userItem.scss';
@@ -50,7 +50,7 @@ export const UserItem = injectIntl(
 );
 
 UserItem.propTypes = {
-  intl: intlShape,
+  intl: PropTypes.object,
   userName: PropTypes.string,
   userLogin: PropTypes.string,
   userAvatar: PropTypes.string,

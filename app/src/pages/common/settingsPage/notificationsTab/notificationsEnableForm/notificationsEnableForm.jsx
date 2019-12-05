@@ -16,7 +16,7 @@
 
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
@@ -44,7 +44,7 @@ const messages = defineMessages({
 @injectIntl
 export class NotificationsEnableForm extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     initialize: PropTypes.func.isRequired,
     initialValues: PropTypes.object,
     readOnly: PropTypes.bool,

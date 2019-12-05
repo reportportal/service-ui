@@ -16,7 +16,7 @@
 
 import React, { PureComponent } from 'react';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
@@ -256,7 +256,7 @@ const getColumn = (name, customProps, fieldKeys) => ({
 @injectIntl
 export class LaunchesTable extends PureComponent {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     widget: PropTypes.object.isRequired,
     projectId: PropTypes.string.isRequired,
     createFilterAction: PropTypes.func.isRequired,

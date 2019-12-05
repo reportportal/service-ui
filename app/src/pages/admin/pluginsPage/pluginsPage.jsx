@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import track from 'react-tracking';
 import { connect } from 'react-redux';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { pluginsSelector } from 'controllers/plugins';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { PLUGINS_PAGE } from 'components/main/analytics/events';
@@ -38,7 +38,7 @@ const messages = defineMessages({
 @injectIntl
 export class PluginsPage extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     plugins: PropTypes.array.isRequired,
   };
 

@@ -17,7 +17,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import Parser from 'html-react-parser';
 import { RESETED, NOT_FOUND } from 'common/constants/launchStatuses';
 import NoItemIcon from 'common/img/noItem-inline.svg';
@@ -36,7 +36,7 @@ const messages = defineMessages({
 @injectIntl
 export class EmptyHistoryItem extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     status: PropTypes.string,
   };
 

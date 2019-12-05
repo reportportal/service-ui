@@ -21,7 +21,7 @@ import { connect } from 'react-redux';
 import { Fullscreen } from 'components/containers/fullscreen';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import {
@@ -149,7 +149,7 @@ const messages = defineMessages({
 @track()
 export class DashboardItemPage extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     showModalAction: PropTypes.func.isRequired,
     fetchDashboardAction: PropTypes.func.isRequired,
     updateDashboardWidgetsAction: PropTypes.func.isRequired,

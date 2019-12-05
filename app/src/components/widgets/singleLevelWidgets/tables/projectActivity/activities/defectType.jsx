@@ -16,7 +16,7 @@
 
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import Link from 'redux-first-router-link';
 import { DEFECT } from 'common/constants/settingsTabs';
@@ -44,7 +44,7 @@ const messages = defineMessages({
 @injectIntl
 export class DefectType extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     activity: PropTypes.object,
   };
   static defaultProps = {

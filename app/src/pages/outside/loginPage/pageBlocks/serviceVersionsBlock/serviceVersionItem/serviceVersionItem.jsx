@@ -17,7 +17,7 @@
 import { Component } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import styles from './serviceVersionItem.scss';
 
 const cx = classNames.bind(styles);
@@ -36,7 +36,7 @@ export class ServiceVersionItem extends Component {
     serviceVersion: PropTypes.string,
     serviceNewVersion: PropTypes.string,
     isDeprecated: PropTypes.bool,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
   };
   static defaultProps = {
     serviceName: '',

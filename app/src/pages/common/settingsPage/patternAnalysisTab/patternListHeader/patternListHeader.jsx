@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Parser from 'html-react-parser';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import track from 'react-tracking';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -58,7 +58,7 @@ export const messages = defineMessages({
 @track()
 export class PatternListHeader extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     onAddPattern: PropTypes.func,
     PAState: PropTypes.bool.isRequired,
     updatePAState: PropTypes.func,

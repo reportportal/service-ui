@@ -17,7 +17,7 @@
 import { Component } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
+import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
 import { reduxForm, SubmissionError } from 'redux-form';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldBottomConstraints } from 'components/fields/fieldBottomConstraints';
@@ -79,7 +79,7 @@ export class RegistrationForm extends Component {
   static propTypes = {
     submitForm: PropTypes.func,
     reset: PropTypes.func.isRequired,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     autofill: PropTypes.func.isRequired,
     email: PropTypes.string,

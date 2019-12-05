@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { SharedFilterIcon } from 'pages/inside/common/sharedFilterIcon';
 import styles from './infoLine.scss';
 import { Owner } from './owner';
@@ -35,7 +35,7 @@ const messages = defineMessages({
 export class InfoLineListView extends Component {
   static propTypes = {
     data: PropTypes.object,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     currentUser: PropTypes.string,
   };
   static defaultProps = {
@@ -49,30 +49,26 @@ export class InfoLineListView extends Component {
 
     return (
       <div className={cx('info-line')}>
-        {data &&
-          data.name && (
-            <div className={cx('filter-holder')}>
-              {formatMessage(messages.filter)}: {data.name}
-            </div>
-          )}
-        {data &&
-          data.owner && (
-            <div className={cx('icon-holder')}>
-              <Owner owner={data.owner} />
-            </div>
-          )}
-        {data &&
-          data.share && (
-            <div className={cx('icon-holder', 'info-line-icon-holder')}>
-              <SharedFilterIcon share={data.share} currentUser={currentUser} owner={data.owner} />
-            </div>
-          )}
-        {data &&
-          data.description && (
-            <div className={cx('icon-holder')}>
-              <Description description={data.description} />
-            </div>
-          )}
+        {data && data.name && (
+          <div className={cx('filter-holder')}>
+            {formatMessage(messages.filter)}: {data.name}
+          </div>
+        )}
+        {data && data.owner && (
+          <div className={cx('icon-holder')}>
+            <Owner owner={data.owner} />
+          </div>
+        )}
+        {data && data.share && (
+          <div className={cx('icon-holder', 'info-line-icon-holder')}>
+            <SharedFilterIcon share={data.share} currentUser={currentUser} owner={data.owner} />
+          </div>
+        )}
+        {data && data.description && (
+          <div className={cx('icon-holder')}>
+            <Description description={data.description} />
+          </div>
+        )}
       </div>
     );
   }

@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { canSeeDemoData } from 'common/utils/permissions';
@@ -92,7 +92,7 @@ export class SettingsPage extends Component {
   static propTypes = {
     projectId: PropTypes.string.isRequired,
     createTabLink: PropTypes.func.isRequired,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     onChangeTab: PropTypes.func.isRequired,
     activeTab: PropTypes.string,
     accountRole: PropTypes.string.isRequired,

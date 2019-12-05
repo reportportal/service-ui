@@ -15,7 +15,7 @@
  */
 
 import React, { Component } from 'react';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -42,7 +42,7 @@ const messages = defineMessages({
 @injectIntl
 export class ApiPage extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     token: PropTypes.string.isRequired,
   };
 

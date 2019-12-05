@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { assignedProjectsSelector } from 'controllers/user';
 import { ScrollWrapper } from 'components/main/scrollWrapper/scrollWrapper';
 import styles from './assignedProjectsBlock.scss';
@@ -43,7 +43,7 @@ const messages = defineMessages({
 export class AssignedProjectsBlock extends Component {
   static propTypes = {
     projects: PropTypes.object,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
   };
   static defaultProps = {
     projects: [],

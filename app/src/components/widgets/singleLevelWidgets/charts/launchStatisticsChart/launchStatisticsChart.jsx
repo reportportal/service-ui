@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import * as d3 from 'd3-selection';
@@ -61,7 +61,7 @@ const cx = classNames.bind(styles);
 )
 export class LaunchStatisticsChart extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     navigate: PropTypes.func,
     widget: PropTypes.object.isRequired,
     projectId: PropTypes.string.isRequired,

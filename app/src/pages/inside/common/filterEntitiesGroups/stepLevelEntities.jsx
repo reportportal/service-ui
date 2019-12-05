@@ -16,7 +16,7 @@
 
 import { Component } from 'react';
 import { connect } from 'react-redux';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
 import { commonValidators } from 'common/utils';
 import { URLS } from 'common/urls';
@@ -283,7 +283,7 @@ const messages = defineMessages({
 }))
 export class StepLevelEntities extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     defectTypes: PropTypes.object.isRequired,
     filterValues: PropTypes.object,
     render: PropTypes.func.isRequired,

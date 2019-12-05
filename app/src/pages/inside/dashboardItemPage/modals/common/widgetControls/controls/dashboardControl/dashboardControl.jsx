@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { DashboardItem } from './dashboardItem';
 import styles from './dashboardControl.scss';
 
@@ -32,7 +32,7 @@ const messages = defineMessages({
 @injectIntl
 export class DashboardControl extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     dashboards: PropTypes.arrayOf(PropTypes.object),
     onChange: PropTypes.func,
     value: PropTypes.object,

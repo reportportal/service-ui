@@ -17,7 +17,7 @@
 import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import {
@@ -73,7 +73,7 @@ import { ActionPanel } from '../actionPanel';
 @injectIntl
 export class ActionPanelWithGroupOperations extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     userId: PropTypes.string.isRequired,
     accountRole: PropTypes.string.isRequired,
     projectRole: PropTypes.string.isRequired,

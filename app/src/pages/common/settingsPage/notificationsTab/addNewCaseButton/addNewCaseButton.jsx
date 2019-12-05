@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { showModalAction } from 'controllers/modal';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -34,13 +34,16 @@ const messages = defineMessages({
 });
 
 @injectIntl
-@connect(null, {
-  showModal: showModalAction,
-})
+@connect(
+  null,
+  {
+    showModal: showModalAction,
+  },
+)
 @track()
 export class AddNewCaseButton extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     showModal: PropTypes.func,
     updateNotificationCases: PropTypes.func,
     cases: PropTypes.array,

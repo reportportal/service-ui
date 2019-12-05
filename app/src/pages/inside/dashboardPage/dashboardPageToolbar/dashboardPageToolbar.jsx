@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
 import { validate, bindMessageToValidator } from 'common/utils';
 import { GhostButton } from 'components/buttons/ghostButton';
@@ -55,7 +55,7 @@ const messages = defineMessages({
 @injectIntl
 export class DashboardPageToolbar extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     isSearchDisabled: PropTypes.bool,
     onGridViewToggle: PropTypes.func,
     onTableViewToggle: PropTypes.func,

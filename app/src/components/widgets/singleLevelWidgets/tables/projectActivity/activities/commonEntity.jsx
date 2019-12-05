@@ -17,7 +17,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import {
   CREATE_DASHBOARD,
   UPDATE_DASHBOARD,
@@ -95,7 +95,7 @@ const messages = defineMessages({
 @injectIntl
 export class CommonEntity extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     activity: PropTypes.object,
   };
   static defaultProps = {

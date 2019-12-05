@@ -19,7 +19,7 @@ import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
 import {
   availableBtsIntegrationsSelector,
@@ -67,7 +67,7 @@ const cx = classNames.bind(styles);
 @track()
 export class EditDefectModal extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     url: PropTypes.string.isRequired,
     btsIntegrations: PropTypes.array.isRequired,
     data: PropTypes.shape({
