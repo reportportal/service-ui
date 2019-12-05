@@ -21,6 +21,7 @@ import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { Icon } from 'components/main/icon/icon';
+import { getRelativeUnits } from 'common/utils/timeDateUtils';
 import { ProjectMenu } from '../../projectMenu';
 import { StatisticsItem } from './statisticsItem';
 import { ProjectTooltipIcon } from './projectTooltipIcon';
@@ -93,6 +94,7 @@ export class ProjectPanel extends Component {
       project: { projectName, entryType, lastRun, launchesQuantity, usersQuantity },
       intl,
     } = this.props;
+    const { value: relativeTime, unit } = getRelativeUnits(new Date(lastRun).getTime());
 
     return (
       <div className={cx('container')}>
@@ -110,7 +112,7 @@ export class ProjectPanel extends Component {
           {lastRun && (
             <div className={cx('gray-text')}>
               {intl.formatMessage(messages.lastLaunch, {
-                date: intl.formatRelative(new Date(lastRun).getTime()),
+                date: intl.formatRelativeTime(relativeTime, unit),
               })}
             </div>
           )}
