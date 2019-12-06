@@ -42,7 +42,7 @@ import {
   FETCH_FIRST_ATTACHMENTS_ACTION,
 } from './constants';
 import { setActiveAttachmentAction } from './actionCreators';
-import { getAttachmentModalId, extractExtension } from './utils';
+import { getAttachmentModalId, extractExtension, isTextWithJson } from './utils';
 
 function* getAttachmentURL() {
   const activeProject = yield select(activeProjectSelector);
@@ -107,7 +107,10 @@ function* openHarModalsWorker(data) {
 /* BINARY */
 function* openBinaryModalsWorker(data) {
   const binaryData = yield call(fetchData, data);
-  const content = data.extension === JSON_TYPE ? JSON.stringify(binaryData, null, 4) : binaryData;
+  const content =
+    data.extension === JSON_TYPE && !isTextWithJson(data.contentType)
+      ? JSON.stringify(binaryData, null, 4)
+      : binaryData;
   yield put(
     showModalAction({
       id: ATTACHMENT_CODE_MODAL_ID,
@@ -126,7 +129,7 @@ function* openAttachment({ payload: { id, contentType } }) {
   const modalId = getAttachmentModalId(contentType);
   const projectId = yield select(activeProjectSelector);
   if (modalId) {
-    const data = { projectId, binaryId: id, extension: extractExtension(contentType) };
+    const data = { projectId, binaryId: id, extension: extractExtension(contentType), contentType };
     try {
       yield call(ATTACHMENT_MODAL_WORKERS[modalId], data);
     } catch (e) {} // eslint-disable-line no-empty
