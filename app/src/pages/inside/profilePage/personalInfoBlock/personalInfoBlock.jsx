@@ -67,6 +67,14 @@ const messages = defineMessages({
     id: 'PersonalInfoBlock.synchronizeError',
     defaultMessage: "Can't synchronize profile!",
   },
+  synchronizeInProgress: {
+    id: 'PersonalInfoBlock.synchronizeInProgress',
+    defaultMessage: 'Force update is in progress',
+  },
+  inProgress: {
+    id: 'PersonalInfoBlock.inProgress',
+    defaultMessage: 'In progress',
+  },
 });
 
 @connect(
@@ -102,6 +110,7 @@ export class PersonalInfoBlock extends Component {
 
   state = {
     avatarSource: URLS.dataPhoto(),
+    forceUpdateInProgress: false,
   };
   onChangePassword = () => {
     this.props.tracking.trackEvent(PROFILE_PAGE_EVENTS.CHANGE_PASSWORD_CLICK);
@@ -113,6 +122,11 @@ export class PersonalInfoBlock extends Component {
 
   onForceUpdate = () => {
     const { accountType = '', intl } = this.props;
+    this.props.showNotification({
+      message: intl.formatMessage(messages.synchronizeInProgress),
+      type: NOTIFICATION_TYPES.SUCCESS,
+    });
+    this.setState({ forceUpdateInProgress: true });
     fetch(URLS.userSynchronize(this.getUserSyncType(accountType)), { method: 'post' })
       .then(() => {
         this.props.showNotification({
@@ -129,6 +143,9 @@ export class PersonalInfoBlock extends Component {
           message: intl.formatMessage(messages.synchronizeError),
           type: NOTIFICATION_TYPES.ERROR,
         });
+      })
+      .finally(() => {
+        this.setState({ forceUpdateInProgress: false });
       });
   };
 
@@ -167,7 +184,7 @@ export class PersonalInfoBlock extends Component {
 
   render() {
     const { intl, accountType, userId } = this.props;
-
+    const { forceUpdateInProgress } = this.state;
     return (
       <div className={cx('personal-info-block')}>
         <BlockContainerHeader>{intl.formatMessage(messages.header)}</BlockContainerHeader>
@@ -200,7 +217,7 @@ export class PersonalInfoBlock extends Component {
               {accountType !== INTERNAL &&
                 accountType !== LDAP && (
                   <div className={cx('top-btn')} onClick={this.onForceUpdate}>
-                    <GhostButton>{intl.formatMessage(messages.forceUpdate)}</GhostButton>
+                    <GhostButton disabled={forceUpdateInProgress}>{forceUpdateInProgress ? intl.formatMessage(messages.inProgress) : intl.formatMessage(messages.forceUpdate)}</GhostButton>
                   </div>
                 )}
             </div>
