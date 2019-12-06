@@ -1269,6 +1269,8 @@
   "PersonalInfoBlock.passwordChanged": "Ваш пароль успешно изменен",
   "PersonalInfoBlock.synchronize": "Информация о пользователе успешно синхронизирована",
   "PersonalInfoBlock.synchronizeError": "Не удается синхронизировать профиль!",
+  "PersonalInfoBlock.synchronizeInProgress": "Выполняется принудительное обновление",
+  "PersonalInfoBlock.inProgress": "В процессе",
   "PhotoControls.deleteError": "Фото не было удалено успешно",
   "PhotoControls.invalidImage": "Вы можете загрузить файл jpeg, png, gif file, не более 1 мегабайта и 300x500 пикселей",
   "PhotoControls.removePhoto": "Удалить фото",
