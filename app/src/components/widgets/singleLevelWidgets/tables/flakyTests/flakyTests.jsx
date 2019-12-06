@@ -20,7 +20,7 @@ import { TestsTableWidget } from '../components/testsTableWidget';
 import * as cfg from './flakyTestsCfg';
 
 const prepareWidgetData = ({ flaky }) =>
-  flaky.map((item) => ({ ...item, statuses: item.statuses.reverse() }));
+  flaky.map((item) => ({ ...item, statuses: [...item.statuses].reverse() }));
 
 export const FlakyTests = ({ widget: { content } }) => (
   <TestsTableWidget
