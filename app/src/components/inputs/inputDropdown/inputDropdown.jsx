@@ -236,26 +236,28 @@ export class InputDropdown extends Component {
               flip: {
                 enabled: true,
               },
-            }}>
+            }}
+          >
             {({ placement, ref, style, scheduleUpdate }) => {
               this.updatePosition = scheduleUpdate;
               return (
-              <div
-                ref={ref}
-                style={style}
-                data-placement={placement}
-                className={cx('select-list', customClasses.selectList, { opened: this.state.opened })}
-              >
-                {multiple && selectAll && (
-                  <div className={cx('select-all-block')} onClick={this.handleAllClick}>
-                    <span className={cx('select-all')}>All</span>
-                  </div>
-                )}
-                <ScrollWrapper autoHeight autoHeightMax={300}>
-                  {this.renderOptions()}
-                </ScrollWrapper>
-              </div>
-            )}}
+                <div
+                  ref={ref}
+                  style={style}
+                  data-placement={placement}
+                  className={cx('select-list', customClasses.selectList, { opened: this.state.opened })}
+                >
+                  {multiple && selectAll && (
+                    <div className={cx('select-all-block')} onClick={this.handleAllClick}>
+                      <span className={cx('select-all')}>All</span>
+                    </div>
+                  )}
+                  <ScrollWrapper autoHeight autoHeightMax={300}>
+                    {this.renderOptions()}
+                  </ScrollWrapper>
+                </div>
+              );
+            }}
           </Popper>
         </div>
       </Manager>
