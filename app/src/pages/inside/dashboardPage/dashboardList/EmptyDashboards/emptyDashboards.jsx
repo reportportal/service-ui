@@ -43,7 +43,7 @@ const messages = defineMessages({
   },
   noDashboardFound: {
     id: 'DashboardEmptyResults.noDashboardFound',
-    defaultMessage: "No dashboards found for '{filter}'",
+    defaultMessage: 'No dashboards found for "{filter}"',
   },
 });
 

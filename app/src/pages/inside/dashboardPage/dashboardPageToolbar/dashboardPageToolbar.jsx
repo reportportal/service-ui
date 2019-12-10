@@ -45,12 +45,6 @@ const messages = defineMessages({
     filter: bindMessageToValidator(validate.searchFilter, 'dashboardNameSearchHint')(filter),
   }),
   enableReinitialize: true,
-  onChange: ({ filter }, dispatch, props) => {
-    if (validate.searchFilter(filter)) {
-      props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.ENTER_PARAM_FOR_SEARCH);
-      props.onFilterChange(filter);
-    }
-  },
 })
 @injectIntl
 export class DashboardPageToolbar extends Component {
@@ -64,12 +58,21 @@ export class DashboardPageToolbar extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    onFilterChange: PropTypes.func,
   };
   static defaultProps = {
     isSearchDisabled: false,
     onGridViewToggle: () => {},
     onTableViewToggle: () => {},
     gridType: '',
+    onFilterChange: () => {},
+  };
+
+  handleFilterChange = (e, filter) => {
+    if (validate.searchFilter(filter)) {
+      this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.ENTER_PARAM_FOR_SEARCH);
+      this.props.onFilterChange(filter);
+    }
   };
 
   render() {
@@ -78,7 +81,7 @@ export class DashboardPageToolbar extends Component {
     return (
       <div className={cx('tool-bar')}>
         <div className={cx('input')}>
-          <FieldProvider name="filter">
+          <FieldProvider name="filter" onChange={this.handleFilterChange}>
             <FieldErrorHint>
               <InputSearch
                 disabled={isSearchDisabled}

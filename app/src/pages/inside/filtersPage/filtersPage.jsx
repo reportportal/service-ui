@@ -61,7 +61,7 @@ const messages = defineMessages({
   },
   filtersNotFound: {
     id: 'FiltersPage.notFound',
-    defaultMessage: "No filters found for '{filter}'",
+    defaultMessage: 'No filters found for "{filter}"',
   },
   filterUpdated: {
     id: 'FiltersPage.filterUpdated',

@@ -64,11 +64,6 @@ const messages = defineMessages({
   validate: ({ filter }) => ({
     filter: bindMessageToValidator(validate.searchMembers, 'membersSearchHint')(filter),
   }),
-  onChange: ({ filter }, dispatch, props) => {
-    if (validate.searchMembers(filter)) {
-      props.onFilterChange(filter);
-    }
-  },
 })
 @injectIntl
 @track()
@@ -83,6 +78,7 @@ export class MembersPageToolbar extends React.Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    onFilterChange: PropTypes.func,
   };
 
   static defaultProps = {
@@ -90,6 +86,13 @@ export class MembersPageToolbar extends React.Component {
     onInvite: () => {},
     projectRole: '',
     accountRole: '',
+    onFilterChange: () => {},
+  };
+
+  handleFilterChange = (e, filter) => {
+    if (validate.searchMembers(filter)) {
+      this.props.onFilterChange(filter);
+    }
   };
 
   showInviteUserModal = () => {
@@ -106,7 +109,7 @@ export class MembersPageToolbar extends React.Component {
     return (
       <div className={cx('members-page-toolbar')}>
         <div className={cx('search-input')}>
-          <FieldProvider name="filter">
+          <FieldProvider name="filter" onChange={this.handleFilterChange}>
             <FieldErrorHint>
               <InputSearch
                 maxLength="128"
