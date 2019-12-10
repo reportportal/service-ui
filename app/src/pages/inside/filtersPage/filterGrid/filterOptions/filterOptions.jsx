@@ -34,6 +34,8 @@ import {
   CONDITION_NOT_IN,
   CONDITION_NOT_EQ,
   ENTITY_NUMBER,
+  CONDITION_ANY,
+  CONDITION_NOT_ANY,
 } from 'components/filterEntities/constants';
 import { TIME_DATE_FORMAT } from 'common/constants/timeDateFormat';
 import { messages } from './optionTranslations';
@@ -152,6 +154,12 @@ export class FilterOptions extends Component {
           break;
         case CONDITION_NOT_HAS:
           condition = this.props.intl.formatMessage(messages.not_has);
+          break;
+        case CONDITION_ANY:
+          condition = this.props.intl.formatMessage(messages.any);
+          break;
+        case CONDITION_NOT_ANY:
+          condition = this.props.intl.formatMessage(messages.not_any);
           break;
         default:
           condition = '';
