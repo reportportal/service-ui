@@ -37,11 +37,15 @@ const messages = defineMessages({
   },
   [UPDATE_INTEGRATION]: {
     id: 'ExternalSystems.updateIntegration',
-    defaultMessage: 'updated',
+    defaultMessage: 'updated ',
   },
   [DELETE_INTEGRATION]: {
     id: 'ExternalSystems.deleteIntegration',
     defaultMessage: 'removed',
+  },
+  emailDefaultName: {
+    id: 'ExternalSystems.emailDefaultName',
+    defaultMessage: ' Server',
   },
   properties: {
     id: 'ExternalSystems.properties',
@@ -63,9 +67,20 @@ export class Integration extends Component {
     activity: {},
   };
 
-  integrationName = (val) => {
-    const [type, name] = val.split(':');
-    return { type, name: name && name !== 'null' ? name : null };
+  getIntegrationName = () => {
+    const {
+      activity,
+      intl: { formatMessage },
+    } = this.props;
+    const name = activity.details.history.find((item) => item.field === 'name');
+
+    return (
+      (name.newValue && ` ${name.newValue}`) ||
+      (name.oldValue && ` ${name.oldValue}`) ||
+      (messages[`${activity.details.objectName}DefaultName`]
+        ? formatMessage(messages[`${activity.details.objectName}DefaultName`])
+        : '')
+    );
   };
 
   render() {
@@ -73,30 +88,28 @@ export class Integration extends Component {
       activity,
       intl: { formatMessage },
     } = this.props;
-    const integration = this.integrationName(activity.details.objectName);
     const linksParams = {
       target: '_blank',
       to: getProjectSettingTabPageLink(activity.projectName, INTEGRATIONS),
       className: cx('link'),
     };
+    const integrationName = this.getIntegrationName();
     return (
       <Fragment>
         <span className={cx('user-name')}>{activity.user}</span>
-        {`${messages[activity.actionType] && formatMessage(messages[activity.actionType])} ${
-          integration.type
-        }`}
+        {`${messages[activity.actionType] && formatMessage(messages[activity.actionType])}`}
         {activity.actionType === UPDATE_INTEGRATION && (
           <Fragment>
-            {` ${integration.name}`}
+            {`${activity.details.objectName}${integrationName}`}
             <Link {...linksParams}>{formatMessage(messages.properties)}.</Link>
           </Fragment>
         )}
         {activity.actionType === CREATE_INTEGRATION && (
-          <Link {...linksParams}>{integration.name}.</Link>
+          <Link {...linksParams}>{`${activity.details.objectName}${integrationName}`}.</Link>
         )}
         {activity.actionType === DELETE_INTEGRATION && (
           <Fragment>
-            <Link {...linksParams}>{integration.name}</Link>
+            <Link {...linksParams}>{`${activity.details.objectName}${integrationName}`}</Link>
             {formatMessage(messages.fromProject)}.
           </Fragment>
         )}
