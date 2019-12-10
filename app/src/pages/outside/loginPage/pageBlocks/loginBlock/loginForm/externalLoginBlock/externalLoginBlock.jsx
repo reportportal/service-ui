@@ -50,8 +50,8 @@ export class ExternalLoginBlock extends PureComponent {
       const val = externalAuth[objKey];
 
       return (
-        <div className={cx('external-auth-btn')}>
-          <BigButton roundedCorners color="booger" key={objKey}>
+        <div className={cx('external-auth-btn')} key={objKey}>
+          <BigButton roundedCorners color="booger">
             {val.providers ? (
               <Link to={{ type: LOGIN_PAGE, payload: { query: { multipleAuth: objKey } } }}>
                 {Parser(val.button)}
