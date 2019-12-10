@@ -84,6 +84,9 @@ export const getUpdatedLogQuery = (query, itemId, params = {}) => {
   if (previousLogQuery.history) {
     previousLogQuery.history = itemId;
   }
+  if (previousLogQuery.retryId) {
+    delete previousLogQuery.retryId;
+  }
   const newLogQuery = { ...previousLogQuery, ...params };
   return createNamespacedQuery(newLogQuery, NAMESPACE);
 };

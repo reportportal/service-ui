@@ -56,3 +56,7 @@ export { DASHBOARD_PAGE, DASHBOARD_PAGE_EVENTS } from './dashboardsPageEvents';
 export { HISTORY_PAGE, HISTORY_PAGE_EVENTS } from './historyPageEvents';
 export { ADMIN_ALL_USERS_PAGE_EVENTS } from './adminAllUsersPageEvents';
 export { ADMIN_PROJECTS_PAGE_EVENTS, ADMIN_PROJECTS_PAGE } from './adminProjectsPageEvents';
+export {
+  ADMIN_SERVER_SETTINGS_PAGE,
+  ADMIN_SERVER_SETTINGS_PAGE_EVENTS,
+} from './adminServerSettingsPageEvents';

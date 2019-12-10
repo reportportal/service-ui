@@ -91,7 +91,10 @@ export class InputFilter extends Component {
     opened: false,
   };
 
-  handleChangeInput = (e) => this.props.onFilterStringChange(e.target.value);
+  handleChangeInput = (e) => {
+    this.props.onFilterStringChange(e.target.value);
+    this.props.tracking.trackEvent(this.props.eventsInfo.enterFilter);
+  };
 
   handleClickClear = () => this.props.onQuickClear();
 
@@ -107,10 +110,8 @@ export class InputFilter extends Component {
   };
 
   togglePopup = () =>
-    this.setState(
-      { opened: !this.state.opened },
-      () =>
-        this.state.opened ? this.props.tracking.trackEvent(this.props.eventsInfo.openFilter) : null,
+    this.setState({ opened: !this.state.opened }, () =>
+      this.state.opened ? this.props.tracking.trackEvent(this.props.eventsInfo.openFilter) : null,
     );
 
   render() {

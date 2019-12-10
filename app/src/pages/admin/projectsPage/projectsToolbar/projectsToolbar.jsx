@@ -175,6 +175,7 @@ export class ProjectsToolbar extends Component {
   render() {
     const {
       intl,
+      tracking,
       viewMode,
       setViewMode,
       selectedProjects,
@@ -196,6 +197,7 @@ export class ProjectsToolbar extends Component {
                 filterValues={entities}
                 onChange={onChange}
                 eventsInfo={{
+                  enterFilter: ADMIN_PROJECTS_PAGE_EVENTS.ENTER_FILTER,
                   openFilter: ADMIN_PROJECTS_PAGE_EVENTS.FUNNEL_BTN,
                   applyBtn: ADMIN_PROJECTS_PAGE_EVENTS.APPLY_FILTER_BTN,
                 }}
@@ -236,7 +238,13 @@ export class ProjectsToolbar extends Component {
                   'toolbar-active-button': viewMode === GRID_VIEW,
                 })}
               >
-                <GhostButton icon={GridViewDashboardIcon} onClick={() => setViewMode(GRID_VIEW)} />
+                <GhostButton
+                  icon={GridViewDashboardIcon}
+                  onClick={() => {
+                    setViewMode(GRID_VIEW);
+                    tracking.trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.SET_TILE_VIEW);
+                  }}
+                />
               </div>
               <div
                 className={cx('toolbar-button', {
@@ -245,7 +253,10 @@ export class ProjectsToolbar extends Component {
               >
                 <GhostButton
                   icon={TableViewDashboardIcon}
-                  onClick={() => setViewMode(TABLE_VIEW)}
+                  onClick={() => {
+                    setViewMode(TABLE_VIEW);
+                    tracking.trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.SET_TABLE_VIEW);
+                  }}
                 />
               </div>
             </Fragment>

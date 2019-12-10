@@ -29,6 +29,7 @@ export const RefineFiltersPanel = ({
   onFilterChange,
   filterErrors,
   filterEntities,
+  events,
 }) => (
   <div className={cx('refine-filters-panel')}>
     <div className={cx('label')}>
@@ -41,6 +42,7 @@ export const RefineFiltersPanel = ({
       onAdd={onFilterAdd}
       errors={filterErrors}
       entities={filterEntities}
+      events={events}
     />
   </div>
 );
@@ -53,6 +55,7 @@ RefineFiltersPanel.propTypes = {
   onFilterChange: PropTypes.func,
   filterErrors: PropTypes.object,
   filterEntities: PropTypes.array,
+  events: PropTypes.object,
 };
 RefineFiltersPanel.defaultProps = {
   entitiesComponent: null,
@@ -63,4 +66,5 @@ RefineFiltersPanel.defaultProps = {
   onFilterChange: () => {},
   filterErrors: {},
   filterEntities: [],
+  events: {},
 };

@@ -25,6 +25,8 @@ import { showModalAction } from 'controllers/modal';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { FormField } from 'components/fields/formField';
 import { Input } from 'components/inputs/input';
+import track from 'react-tracking';
+import { ADMIN_SERVER_SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import PlusIcon from 'common/img/plus-button-inline.svg';
 import styles from './categoriesList.scss';
 
@@ -41,13 +43,21 @@ const messages = defineMessages({
   },
 });
 
-@connect(null, { showModalAction })
+@connect(
+  null,
+  { showModalAction },
+)
 @injectIntl
+@track()
 export class CategoriesList extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     fields: PropTypes.object.isRequired,
     showModalAction: PropTypes.func.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   removeOrganizationHandler = (currentItem, index) => {
@@ -66,6 +76,7 @@ export class CategoriesList extends Component {
     const {
       intl: { formatMessage },
       fields,
+      tracking,
     } = this.props;
     const items = fields.getAll() || [];
 
@@ -97,7 +108,10 @@ export class CategoriesList extends Component {
         {!items.some((item) => item.new) && (
           <div className={cx('button-wrapper')}>
             <GhostButton
-              onClick={() => fields.push({ organization: '', new: true })}
+              onClick={() => {
+                fields.push({ organization: '', new: true });
+                tracking.trackEvent(ADMIN_SERVER_SETTINGS_PAGE_EVENTS.ADD_GITHUB_ORGANIZATION_BTN);
+              }}
               icon={PlusIcon}
             >
               {formatMessage(messages.addOrganizationButtonTitle)}

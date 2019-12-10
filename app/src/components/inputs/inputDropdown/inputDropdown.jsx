@@ -17,6 +17,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { Manager, Reference, Popper } from 'react-popper';
 import styles from './inputDropdown.scss';
 import { DropdownOption } from './inputDropdownOption/inputDropdownOption';
 
@@ -81,6 +82,7 @@ export class InputDropdown extends Component {
     if (!this.props.disabled) {
       this.setState({ opened: !this.state.opened });
       e.stopPropagation();
+      this.updatePosition();
       this.state.opened ? this.props.onBlur() : this.props.onFocus();
     }
   };
@@ -204,34 +206,63 @@ export class InputDropdown extends Component {
       customClasses,
     } = this.props;
     return (
-      <div
-        ref={this.setRef}
-        className={cx('dropdown', customClasses.dropdown, { opened: this.state.opened })}
-      >
-        <div
-          className={cx('select-block', customClasses.selectBlock, {
-            disabled,
-            error,
-            touched,
-            'mobile-disabled': mobileDisabled,
-          })}
-          onClick={this.onClickSelectBlock}
-        >
-          <span className={cx('value', customClasses.value)}>{this.displayedValue()}</span>
-          <span className={cx('arrow', customClasses.arrow)} />
-        </div>
-        <div className={cx('select-list', customClasses.selectList)}>
-          {multiple &&
-            selectAll && (
-              <div className={cx('select-all-block')} onClick={this.handleAllClick}>
-                <span className={cx('select-all')}>All</span>
+      <Manager>
+        <div ref={this.setRef} className={cx('dropdown-container')}>
+          <Reference>
+            {({ ref }) => (
+              <div
+                ref={ref}
+                className={cx('dropdown', customClasses.dropdown, { opened: this.state.opened })}
+              >
+                <div
+                  className={cx('select-block', customClasses.selectBlock, {
+                    disabled,
+                    error,
+                    touched,
+                    'mobile-disabled': mobileDisabled,
+                  })}
+                  onClick={this.onClickSelectBlock}
+                >
+                  <span className={cx('value', customClasses.value)}>{this.displayedValue()}</span>
+                  <span className={cx('arrow', customClasses.arrow)} />
+                </div>
               </div>
             )}
-          <ScrollWrapper autoHeight autoHeightMax={300}>
-            {this.renderOptions()}
-          </ScrollWrapper>
+          </Reference>
+          <Popper
+            placement="bottom-start"
+            modifiers={{
+              preventOverflow: { enabled: true },
+              flip: {
+                enabled: true,
+              },
+            }}
+          >
+            {({ placement, ref, style, scheduleUpdate }) => {
+              this.updatePosition = scheduleUpdate;
+              return (
+                <div
+                  ref={ref}
+                  style={style}
+                  data-placement={placement}
+                  className={cx('select-list', customClasses.selectList, {
+                    opened: this.state.opened,
+                  })}
+                >
+                  {multiple && selectAll && (
+                    <div className={cx('select-all-block')} onClick={this.handleAllClick}>
+                      <span className={cx('select-all')}>All</span>
+                    </div>
+                  )}
+                  <ScrollWrapper autoHeight autoHeightMax={300}>
+                    {this.renderOptions()}
+                  </ScrollWrapper>
+                </div>
+              );
+            }}
+          </Popper>
         </div>
-      </div>
+      </Manager>
     );
   }
 }

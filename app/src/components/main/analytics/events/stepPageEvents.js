@@ -99,6 +99,11 @@ export const STEP_PAGE_EVENTS = {
     action: 'Click on item icon "edit"',
     label: 'Arise Modal "Edit Item"',
   },
+  EDIT_ITEMS_ACTION: {
+    category: STEP_PAGE,
+    action: 'Click on "edit" in Actions',
+    label: 'Arise Modal "Edit Items"',
+  },
   EDIT_DEFECT_TYPE_ICON: {
     category: STEP_PAGE,
     action: 'Click on icon "edit" of Defect type tag',
@@ -123,6 +128,11 @@ export const STEP_PAGE_EVENTS = {
     category: STEP_PAGE,
     action: 'Edit description in Modal "Edit Item"',
     label: 'Edit description',
+  },
+  BULK_EDIT_ITEMS_DESCRIPTION: {
+    category: STEP_PAGE,
+    action: 'Edit description in Modal "Edit Items" in a bulk',
+    label: 'Edit description in mode: ',
   },
   CANCEL_BTN_EDIT_ITEM_MODAL: {
     category: STEP_PAGE,

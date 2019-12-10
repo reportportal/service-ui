@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
+import track from 'react-tracking';
 import { fetch } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { FormField } from 'components/fields/formField';
@@ -39,6 +40,7 @@ const cx = classNames.bind(styles);
   },
 )
 @injectIntl
+@track()
 export class FormController extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
@@ -58,6 +60,11 @@ export class FormController extends Component {
       customProps: PropTypes.object,
       defaultFormConfig: PropTypes.object,
     }),
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
+    eventsInfo: PropTypes.object,
   };
 
   static defaultProps = {
@@ -71,6 +78,7 @@ export class FormController extends Component {
       customProps: {},
       defaultFormConfig: {},
     },
+    eventsInfo: {},
   };
 
   state = {
@@ -82,6 +90,7 @@ export class FormController extends Component {
   }
 
   onFormSubmit = (formData) => {
+    this.props.tracking.trackEvent(this.props.eventsInfo.submitBtn);
     this.setState({
       loading: true,
     });
@@ -148,6 +157,7 @@ export class FormController extends Component {
       formOptions: { FieldsComponent, customProps, switcherLabel, formHeader },
       handleSubmit,
       enabled,
+      eventsInfo,
     } = this.props;
 
     return (
@@ -168,7 +178,7 @@ export class FormController extends Component {
               format={Boolean}
               parse={Boolean}
             >
-              <InputBigSwitcher mobileDisabled />
+              <InputBigSwitcher mobileDisabled onChangeEventInfo={eventsInfo.bigSwitcher} />
             </FormField>
           )}
           {enabled && <FieldsComponent {...customProps} />}

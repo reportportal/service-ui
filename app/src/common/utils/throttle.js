@@ -14,10 +14,20 @@
  * limitations under the License.
  */
 
-import CryptoJS from 'crypto-js';
-
-export const generateAuthToken = (username, accessToken, jobId) => {
-  const hash = CryptoJS.algo.HMAC.create(CryptoJS.algo.MD5, `${username}:${accessToken}`);
-  hash.update(jobId);
-  return hash.finalize().toString(CryptoJS.enc.Hex);
+export const throttle = (fn, time) => {
+  let lastTime;
+  let result;
+  const throttled = (...args) => {
+    const timeSinceLastExecution = Date.now() - lastTime;
+    if (!lastTime || timeSinceLastExecution >= time) {
+      result = fn.apply(this, ...args);
+      lastTime = Date.now();
+    }
+    return result;
+  };
+  throttled.reset = () => {
+    lastTime = 0;
+    result = undefined;
+  };
+  return throttled;
 };

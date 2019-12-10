@@ -78,13 +78,13 @@
         &.icon-image {
           background-image: url(./img/image-icon.svg);
         }
-        &.icon-link{
+        &.icon-link {
           background-image: url(./img/link-icon.svg);
         }
         &.icon-quote {
           background-image: url(./img/quote-icon.svg);
         }
-        &.icon-code{
+        &.icon-code {
           background-image: url(./img/code-icon.svg);
         }
         &.icon-preview {
@@ -108,11 +108,13 @@
         vertical-align: middle;
       }
     }
+    .CodeMirror {
+      height: 70px;
+      min-height: 50px;
+    }
     .CodeMirror-scroll {
       max-height: 350px;
-    }
-    .CodeMirror-scroll, .CodeMirror {
-      min-height: 160px;
+      min-height: 50px;
     }
     .CodeMirror-wrap {
       border: none;

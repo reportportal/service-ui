@@ -31,7 +31,11 @@ const cx = classNames.bind(styles);
 @connectRouter(
   undefined,
   {
-    changeActiveItem: (itemId) => ({ history: itemId, [PAGE_KEY]: DEFAULT_PAGINATION[PAGE_KEY] }),
+    changeActiveItem: (itemId) => ({
+      history: itemId,
+      retryId: null,
+      [PAGE_KEY]: DEFAULT_PAGINATION[PAGE_KEY],
+    }),
   },
   { namespace: NAMESPACE },
 )

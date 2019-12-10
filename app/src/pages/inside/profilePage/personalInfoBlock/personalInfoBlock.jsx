@@ -22,7 +22,7 @@ import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { INTERNAL, LDAP } from 'common/constants/accountType';
+import { INTERNAL, LDAP, UPSA } from 'common/constants/accountType';
 import DefaultUserImage from 'common/img/default-user-avatar.png';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { showModalAction } from 'controllers/modal';
@@ -67,6 +67,14 @@ const messages = defineMessages({
     id: 'PersonalInfoBlock.synchronizeError',
     defaultMessage: "Can't synchronize profile!",
   },
+  synchronizeInProgress: {
+    id: 'PersonalInfoBlock.synchronizeInProgress',
+    defaultMessage: 'Force update is in progress',
+  },
+  inProgress: {
+    id: 'PersonalInfoBlock.inProgress',
+    defaultMessage: 'In progress',
+  },
 });
 
 @connect(
@@ -102,6 +110,7 @@ export class PersonalInfoBlock extends Component {
 
   state = {
     avatarSource: URLS.dataPhoto(),
+    forceUpdateInProgress: false,
   };
   onChangePassword = () => {
     this.props.tracking.trackEvent(PROFILE_PAGE_EVENTS.CHANGE_PASSWORD_CLICK);
@@ -113,7 +122,12 @@ export class PersonalInfoBlock extends Component {
 
   onForceUpdate = () => {
     const { accountType = '', intl } = this.props;
-    fetch(URLS.userSynchronize(accountType.toLowerCase()), { method: 'post' })
+    this.props.showNotification({
+      message: intl.formatMessage(messages.synchronizeInProgress),
+      type: NOTIFICATION_TYPES.SUCCESS,
+    });
+    this.setState({ forceUpdateInProgress: true });
+    fetch(URLS.userSynchronize(this.getUserSyncType(accountType)), { method: 'post' })
       .then(() => {
         this.props.showNotification({
           message: intl.formatMessage(messages.synchronize),
@@ -129,8 +143,20 @@ export class PersonalInfoBlock extends Component {
           message: intl.formatMessage(messages.synchronizeError),
           type: NOTIFICATION_TYPES.ERROR,
         });
+      })
+      .finally(() => {
+        this.setState({ forceUpdateInProgress: false });
       });
   };
+
+  getUserSyncType = (accountType) => {
+    if (accountType === UPSA) {
+      return 'epam';
+    }
+
+    return accountType.toLowerCase();
+  };
+
   changePasswordHandler = (data) => {
     fetch(URLS.userChangePassword(), {
       method: 'post',
@@ -158,7 +184,7 @@ export class PersonalInfoBlock extends Component {
 
   render() {
     const { intl, accountType, userId } = this.props;
-
+    const { forceUpdateInProgress } = this.state;
     return (
       <div className={cx('personal-info-block')}>
         <BlockContainerHeader>{intl.formatMessage(messages.header)}</BlockContainerHeader>
@@ -190,7 +216,11 @@ export class PersonalInfoBlock extends Component {
               )}
               {accountType !== INTERNAL && accountType !== LDAP && (
                 <div className={cx('top-btn')} onClick={this.onForceUpdate}>
-                  <GhostButton>{intl.formatMessage(messages.forceUpdate)}</GhostButton>
+                  <GhostButton disabled={forceUpdateInProgress}>
+                    {forceUpdateInProgress
+                      ? intl.formatMessage(messages.inProgress)
+                      : intl.formatMessage(messages.forceUpdate)}
+                  </GhostButton>
                 </div>
               )}
             </div>

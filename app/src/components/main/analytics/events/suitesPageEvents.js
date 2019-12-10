@@ -66,6 +66,11 @@ export const SUITES_PAGE_EVENTS = {
     action: 'Click on item icon "edit"',
     label: 'Arise Modal "Edit Item"',
   },
+  EDIT_ITEMS_ACTION: {
+    category: SUITE_PAGE,
+    action: 'Click on "edit" in Actions',
+    label: 'Arise Modal "Edit Items"',
+  },
   SELECT_ALL_ITEMS: {
     category: SUITE_PAGE,
     action: 'Click on item icon "select all items"',
@@ -100,6 +105,11 @@ export const SUITES_PAGE_EVENTS = {
     category: SUITE_PAGE,
     action: 'Edit description in Modal "Edit Item"',
     label: 'Edit description',
+  },
+  BULK_EDIT_ITEMS_DESCRIPTION: {
+    category: SUITE_PAGE,
+    action: 'Edit description in Modal "Edit Items" in a bulk',
+    label: 'Edit description in mode: ',
   },
   CANCEL_BTN_EDIT_ITEM_MODAL: {
     category: SUITE_PAGE,
@@ -245,6 +255,11 @@ export const SUITES_PAGE_EVENTS = {
     category: SUITE_PAGE,
     action: 'Click on TI tag',
     label: 'Transition to TI list view',
+  },
+  TI_TOOLTIP: {
+    category: SUITE_PAGE,
+    action: 'Click on Tooltip "To Investigate"',
+    label: 'Transition to inner level of launch with To Investigate',
   },
   LOG_VIEW_SWITCHER: {
     category: SUITE_PAGE,

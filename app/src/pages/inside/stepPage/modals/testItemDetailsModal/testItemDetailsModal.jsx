@@ -278,7 +278,7 @@ export class TestItemDetailsModal extends Component {
     } = this.props;
     return (
       <div className={cx('stack-trace-tab')}>
-        <StackTrace logItem={item} hideTime minHeight={548} />
+        <StackTrace logItem={item} hideTime minHeight={508} />
       </div>
     );
   };

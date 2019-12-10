@@ -168,7 +168,7 @@ export class UnassignButton extends Component {
       })
       .catch((err) => {
         this.props.showNotification({
-          message: err.msg,
+          message: err.message,
           type: NOTIFICATION_TYPES.ERROR,
         });
       });
