@@ -53,6 +53,7 @@ const NameColumn = ({ className, value, customProps }) => (
         payload: { projectId: customProps.activeProject, filterId: value.id },
       }}
       isLink
+      isBold
       noShareIcons
     />
   </div>

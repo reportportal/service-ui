@@ -16,11 +16,9 @@
 
 .filter-page-toolbar {
   display: flex;
-  height: 70px;
-  background-color: $COLOR--white-two;
   align-items: center;
-  padding-left: 15px;
-  padding-right: 15px;
+  padding: 20px;
+  background-color: $COLOR--white-two;
 
   @media (max-width: $SCREEN_SM_MAX) {
     border-bottom: 1px solid $COLOR--gray-91;
