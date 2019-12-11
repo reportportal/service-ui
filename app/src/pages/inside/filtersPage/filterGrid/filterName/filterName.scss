@@ -33,7 +33,8 @@
   }
 
   &.link {
-    color: $COLOR--windows-blue;
+    font-size: 15px;
+    color: $COLOR--topaz;
     cursor: pointer;
 
     &:hover {
