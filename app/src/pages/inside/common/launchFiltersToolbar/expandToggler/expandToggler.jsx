@@ -26,9 +26,9 @@ const cx = classNames.bind(styles);
 export const ExpandToggler = ({ expanded, onToggleExpand }) => (
   <div className={cx('expand-toggler')} onClick={onToggleExpand}>
     {expanded ? (
-      <FormattedMessage id="ExpandToggler.hideCriteria" defaultMessage="Hide criteria" />
+      <FormattedMessage id="ExpandToggler.hideCriteria" defaultMessage="Hide Criteria" />
     ) : (
-      <FormattedMessage id="ExpandToggler.showCriteria" defaultMessage="Show criteria" />
+      <FormattedMessage id="ExpandToggler.showCriteria" defaultMessage="Show Criteria" />
     )}
     <div className={cx('icon', { expanded })}>{Parser(ArrowDownIcon)}</div>
   </div>
