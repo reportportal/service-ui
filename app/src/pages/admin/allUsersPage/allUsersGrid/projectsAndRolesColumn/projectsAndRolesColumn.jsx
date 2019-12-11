@@ -66,15 +66,12 @@ const messages = defineMessages({
     defaultMessage: 'Assign to project',
   },
 });
-@connect(
-  null,
-  {
-    showNotification,
-    showModalAction,
-    fetchAllUsersAction,
-    toggleUserRoleFormAction,
-  },
-)
+@connect(null, {
+  showNotification,
+  showModalAction,
+  fetchAllUsersAction,
+  toggleUserRoleFormAction,
+})
 @track()
 @injectIntl
 export class ProjectsAndRolesColumn extends Component {

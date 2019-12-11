@@ -51,9 +51,10 @@ const messages = defineMessages({
       'recipientsHint',
     )(recipients),
     attributes: !validate.attributesArray(attributes),
-    launchNames: bindMessageToValidator(validate.notificationLaunchNames, 'launchesHint')(
-      launchNames,
-    ),
+    launchNames: bindMessageToValidator(
+      validate.notificationLaunchNames,
+      'launchesHint',
+    )(launchNames),
   }),
 })
 @injectIntl

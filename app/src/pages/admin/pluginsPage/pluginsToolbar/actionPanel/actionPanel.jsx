@@ -64,13 +64,10 @@ const messages = defineMessages({
   },
 });
 
-@connect(
-  null,
-  {
-    showModalAction,
-    fetchPluginsAction,
-  },
-)
+@connect(null, {
+  showModalAction,
+  fetchPluginsAction,
+})
 @injectIntl
 @track()
 export class ActionPanel extends Component {

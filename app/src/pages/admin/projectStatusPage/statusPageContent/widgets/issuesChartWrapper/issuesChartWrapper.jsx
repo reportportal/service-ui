@@ -72,8 +72,8 @@ export class IssuesChartWrapper extends Component {
         date: key,
         name: interval === PERIOD_VALUES.ONE_MONTH ? key : getWeekRange(key),
         values: {
-          [targetFieldKey]: (currentItemValues[targetFieldKey] / total * 100).toFixed(2),
-          toInvestigate: (toInvestigate / total * 100).toFixed(2),
+          [targetFieldKey]: ((currentItemValues[targetFieldKey] / total) * 100).toFixed(2),
+          toInvestigate: ((toInvestigate / total) * 100).toFixed(2),
         },
       };
     });

@@ -112,9 +112,10 @@ const formSyncErrorsSelector = getFormSyncErrors(MERGE_FORM);
   validate: ({ name, description, mergeType, attributes }) => ({
     mergeType: !mergeType,
     name: bindMessageToValidator(validate.launchName, 'launchNameHint')(name),
-    description: bindMessageToValidator(validate.launchDescription, 'launchDescriptionHint')(
-      description,
-    ),
+    description: bindMessageToValidator(
+      validate.launchDescription,
+      'launchDescriptionHint',
+    )(description),
     attributes: !validate.attributesArray(attributes),
   }),
 })

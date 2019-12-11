@@ -36,12 +36,9 @@ import styles from './defectTypesTab.scss';
 const cx = classNames.bind(styles);
 
 @track()
-@connect(
-  null,
-  {
-    addDefectSubTypeAction,
-  },
-)
+@connect(null, {
+  addDefectSubTypeAction,
+})
 @injectIntl
 export class DefectTypesGroup extends Component {
   static propTypes = {

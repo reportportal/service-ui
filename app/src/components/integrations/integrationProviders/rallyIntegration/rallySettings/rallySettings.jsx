@@ -29,13 +29,10 @@ import {
 import { IntegrationSettings } from 'components/integrations/elements';
 import { messages } from '../messages';
 
-@connect(
-  null,
-  {
-    showModalAction,
-    hideModalAction,
-  },
-)
+@connect(null, {
+  showModalAction,
+  hideModalAction,
+})
 @injectIntl
 export class RallySettings extends Component {
   static propTypes = {

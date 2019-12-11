@@ -77,12 +77,14 @@ const DEFAULT_ANALYSIS_MODE = 'Classic';
 @reduxForm({
   form: 'analysisForm',
   validate: ({ minShouldMatch, minTermFreq, minDocFreq }) => ({
-    minShouldMatch: bindMessageToValidator(validate.analyzerMinShouldMatch, 'minShouldMatchHint')(
-      minShouldMatch,
-    ),
-    minTermFreq: bindMessageToValidator(validate.analyzerMinTermFreq, 'minTermFreqHint')(
-      minTermFreq,
-    ),
+    minShouldMatch: bindMessageToValidator(
+      validate.analyzerMinShouldMatch,
+      'minShouldMatchHint',
+    )(minShouldMatch),
+    minTermFreq: bindMessageToValidator(
+      validate.analyzerMinTermFreq,
+      'minTermFreqHint',
+    )(minTermFreq),
     minDocFreq: bindMessageToValidator(validate.analyzerMinDocFreq, 'minTermFreqHint')(minDocFreq),
   }),
 })

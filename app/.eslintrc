@@ -23,7 +23,7 @@
     "Utils": true
   },
   "rules": {
-    "prettier/prettier": 1, // TODO: remove this line once all codebase is reformatted
+    "prettier/prettier": 2,
     "jsx-a11y/no-static-element-interactions": 0,
     "no-unused-expressions": ["error", { "allowTernary": true, "allowShortCircuit": true }],
     "jsx-a11y/label-has-for": ["error", { "required": { "some": ["nesting", "id"] } }],

@@ -28,7 +28,8 @@
   margin-bottom: 25px;
 }
 
-.settings-action-block, .add-integration-button {
+.settings-action-block,
+.add-integration-button {
   @media (max-width: $SCREEN_XS_MAX) {
     display: none;
   }

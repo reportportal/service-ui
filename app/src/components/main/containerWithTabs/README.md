@@ -13,4 +13,4 @@ Width = 100% of it's parent. Height grows with it's content.
 
 ### Props:
 
-* **data**: _array of objects_, optional, default = []
+- **data**: _array of objects_, optional, default = []

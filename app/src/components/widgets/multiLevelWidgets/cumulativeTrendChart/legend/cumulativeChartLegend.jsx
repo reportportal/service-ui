@@ -125,12 +125,11 @@ export class CumulativeChartLegend extends PureComponent {
             </Fragment>
           )}
         </div>
-        {isChartDataAvailable &&
-          isPrintMode && (
-            <div className={cx('legend-second-row')}>
-              <Legend className={cx('legend')} {...this.props} />
-            </div>
-          )}
+        {isChartDataAvailable && isPrintMode && (
+          <div className={cx('legend-second-row')}>
+            <Legend className={cx('legend')} {...this.props} />
+          </div>
+        )}
       </div>
     );
   }

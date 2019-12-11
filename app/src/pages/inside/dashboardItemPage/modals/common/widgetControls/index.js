@@ -17,14 +17,10 @@
 export { LaunchStatisticsControls } from './launchStatisticsControls';
 export { OverallStatisticsControls } from './overallStatisticsControls';
 export { LaunchDurationControls } from './launchDurationControls';
-export {
-  LaunchExecutionAndIssueStatisticsControls,
-} from './launchExecutionAndIssueStatisticsControls';
+export { LaunchExecutionAndIssueStatisticsControls } from './launchExecutionAndIssueStatisticsControls';
 export { ProjectActivityControls } from './projectActivityControls';
 export { TestCasesGrowthTrendControls } from './testCasesGrowthTrendControls';
-export {
-  InvestigatedPercentageOfLaunchesControls,
-} from './investigatedPercentageOfLaunchesControls';
+export { InvestigatedPercentageOfLaunchesControls } from './investigatedPercentageOfLaunchesControls';
 export { LaunchesTableControls } from './launchesTableControls';
 export { UniqueBugsTableControls } from './uniqueBugsTableControls';
 export { MostFailedTestCasesTableControls } from './mostFailedTestCasesTableControls';

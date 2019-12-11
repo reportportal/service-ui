@@ -41,19 +41,17 @@ export const projectFetchReducer = fetchReducer(NAMESPACE, {
 export const assignProjectReducer = (state = [], { type, payload }) => {
   switch (type) {
     case ASSIGN_TO_RROJECT_SUCCESS:
-      return state.map(
-        (project) =>
-          project.projectName === payload.projectName
-            ? { ...project, usersQuantity: project.usersQuantity + 1 }
-            : project,
+      return state.map((project) =>
+        project.projectName === payload.projectName
+          ? { ...project, usersQuantity: project.usersQuantity + 1 }
+          : project,
       );
     case UNASSIGN_FROM_PROJECT_SUCCESS: {
       const { projectName } = payload;
-      return state.map(
-        (project) =>
-          project.projectName === projectName
-            ? { ...project, usersQuantity: project.usersQuantity - 1 }
-            : project,
+      return state.map((project) =>
+        project.projectName === projectName
+          ? { ...project, usersQuantity: project.usersQuantity - 1 }
+          : project,
       );
     }
     default:

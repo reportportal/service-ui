@@ -58,13 +58,10 @@ const messages = defineMessages({
 });
 
 @injectIntl
-@connect(
-  null,
-  {
-    showNotification,
-    updatePluginSuccessAction,
-  },
-)
+@connect(null, {
+  showNotification,
+  updatePluginSuccessAction,
+})
 @track()
 export class InstalledTab extends Component {
   static propTypes = {

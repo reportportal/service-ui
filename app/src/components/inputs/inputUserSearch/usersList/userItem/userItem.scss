@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-.user-search-result-wrap{
+.user-search-result-wrap {
   display: flex;
   justify-content: stretch;
   padding: 8px 20px 8px 15px;
   overflow: hidden;
   white-space: normal;
-  &:hover{
+  &:hover {
     cursor: pointer;
     background: rgba(57, 194, 215, 0.2);
   }
 }
-.user-avatar{
+.user-avatar {
   flex: 0 0 24px;
   width: 24px;
   height: 34px;
@@ -34,12 +34,12 @@
   background-size: contain;
   background-repeat: no-repeat;
 }
-.user-search-info{
+.user-search-info {
   display: inline-block;
   flex: 1 1;
   overflow: hidden;
 }
-.user-search-name{
+.user-search-name {
   margin: -1px 0 0 20px;
   font-size: 13px;
   padding-right: 20px;
@@ -50,7 +50,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.user-search-login{
+.user-search-login {
   margin: -1px 0 0 20px;
   font-size: 13px;
   padding-right: 20px;
@@ -62,7 +62,7 @@
   text-overflow: ellipsis;
   line-height: 1.42857143;
 }
-.assign-btn{
+.assign-btn {
   flex: 0 0 20px;
   outline: none;
   width: 20px;
@@ -77,19 +77,19 @@
   &:hover {
     cursor: pointer;
   }
-  &.assigned-user{
+  &.assigned-user {
     background-image: url('./img/ic-check-copy.svg');
   }
 }
-.disabled-item{
-  .assign-btn{
+.disabled-item {
+  .assign-btn {
     cursor: default;
   }
-  &:hover{
+  &:hover {
     background: transparent;
     cursor: default;
   }
-  *{
+  * {
     cursor: default;
     color: $COLOR--gray-60;
   }

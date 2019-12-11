@@ -3,6 +3,7 @@
 C3.js-based widgets created using the common `ChartContainer` component.
 
 `ChartContainer` is a shell for the `C3Chart` component with the common methods:
+
 - for resizing the widget;
 - managing user legends;
 - calculating the position of tooltips.
@@ -18,6 +19,7 @@ getConfig = ({ content, isPreview, formatMessage, positionCallback, size, ... })
 ```
 
 In config, to create tooltips, you should use the `createTooltipRenderer` function, which gets:
+
 - tooltip component;
 - `calculateTooltipParams` function (to calculate params for tooltip component based on chart data);
 - object with custom parameters that your tooltip uses.

@@ -33,12 +33,9 @@ import styles from './formController.scss';
 
 const cx = classNames.bind(styles);
 
-@connect(
-  null,
-  {
-    showNotification,
-  },
-)
+@connect(null, {
+  showNotification,
+})
 @injectIntl
 @track()
 export class FormController extends Component {

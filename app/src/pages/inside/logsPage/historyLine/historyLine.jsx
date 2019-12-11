@@ -61,7 +61,8 @@ export class HistoryLine extends Component {
 
   checkIfTheItemLinkIsActive = (item) =>
     item.id !== this.props.activeItemId &&
-    (item.status.toLowerCase() !== MANY && item.status.toLowerCase() !== NOT_FOUND);
+    item.status.toLowerCase() !== MANY &&
+    item.status.toLowerCase() !== NOT_FOUND;
 
   render() {
     const { historyItems, activeItemId, changeActiveItem, projectId } = this.props;

@@ -41,7 +41,7 @@ const convertIntoPercents = (datasets) => {
       dataset,
       {
         data: dataset.data.map(
-          (value, index) => -(-value / totalDataset.data[index] * 100).toFixed(2),
+          (value, index) => -((-value / totalDataset.data[index]) * 100).toFixed(2),
         ),
       },
     ),
@@ -159,7 +159,7 @@ const getChartOptions = (widget, options) => {
             return '';
           }
           const totalValue = totalDataset.data[tooltipItem.index];
-          const percentageValue = -(-value / totalValue * 100).toFixed(2);
+          const percentageValue = -((-value / totalValue) * 100).toFixed(2);
           if (percentage) {
             return ` ${label}: ${percentageValue}%`;
           }

@@ -38,5 +38,8 @@ export const SET_PAGE_LOADING = 'setPageLoading';
 export const DEFAULT_FILTER = {
   conditions: [],
   type: 'launch',
-  orders: [{ isAsc: false, sortingColumn: 'startTime' }, { isAsc: false, sortingColumn: 'number' }],
+  orders: [
+    { isAsc: false, sortingColumn: 'startTime' },
+    { isAsc: false, sortingColumn: 'number' },
+  ],
 };

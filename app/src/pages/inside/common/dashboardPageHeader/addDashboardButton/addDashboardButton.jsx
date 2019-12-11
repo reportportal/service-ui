@@ -35,13 +35,10 @@ const messages = defineMessages({
   },
 });
 
-@connect(
-  null,
-  {
-    showModal: showModalAction,
-    addDashboard: addDashboardAction,
-  },
-)
+@connect(null, {
+  showModal: showModalAction,
+  addDashboard: addDashboardAction,
+})
 @injectIntl
 @track()
 export class AddDashboardButton extends Component {

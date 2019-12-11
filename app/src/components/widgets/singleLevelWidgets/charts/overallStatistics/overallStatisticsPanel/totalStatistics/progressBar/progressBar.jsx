@@ -27,7 +27,7 @@ export class ProgressBar extends React.PureComponent {
     onChartClick: PropTypes.func.isRequired,
   };
 
-  static getPercentage = (value, totalVal) => `${value / totalVal * 100}%`;
+  static getPercentage = (value, totalVal) => `${(value / totalVal) * 100}%`;
 
   render() {
     const { total, passed, failed, skipped } = this.props.progressData;

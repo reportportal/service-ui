@@ -109,7 +109,10 @@ export class EmailFormFields extends Component {
   constructor(props) {
     super(props);
     this.protocolOptions = [{ value: 'smtp', label: 'SMTP' }];
-    this.authOptions = [{ value: true, label: 'ON' }, { value: false, label: 'OFF' }];
+    this.authOptions = [
+      { value: true, label: 'ON' },
+      { value: false, label: 'OFF' },
+    ];
   }
 
   componentDidMount() {

@@ -487,17 +487,16 @@ export class StepPage extends Component {
             sortingDirection={sortingDirection}
             rowHighlightingConfig={rowHighlightingConfig}
           />
-          {!!pageCount &&
-            !loading && (
-              <PaginationToolbar
-                activePage={activePage}
-                itemCount={itemCount}
-                pageCount={pageCount}
-                pageSize={pageSize}
-                onChangePage={onChangePage}
-                onChangePageSize={onChangePageSize}
-              />
-            )}
+          {!!pageCount && !loading && (
+            <PaginationToolbar
+              activePage={activePage}
+              itemCount={itemCount}
+              pageCount={pageCount}
+              pageSize={pageSize}
+              onChangePage={onChangePage}
+              onChangePageSize={onChangePageSize}
+            />
+          )}
         </PageSection>
       </PageLayout>
     );

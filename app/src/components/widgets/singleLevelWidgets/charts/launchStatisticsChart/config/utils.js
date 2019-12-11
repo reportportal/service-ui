@@ -38,22 +38,26 @@ export const getConfigData = (
     colors[key] = getItemColor(key, defectTypes);
   });
 
-  widgetData.sort((a, b) => a.startTime - b.startTime).forEach((item) => {
-    const currentItemData = {
-      ...item,
-    };
-    delete currentItemData.values;
-    itemsData.push(currentItemData);
+  widgetData
+    .sort((a, b) => a.startTime - b.startTime)
+    .forEach((item) => {
+      const currentItemData = {
+        ...item,
+      };
+      delete currentItemData.values;
+      itemsData.push(currentItemData);
 
-    contentFields.forEach((contentFieldKey) => {
-      const value = Number(item.values[contentFieldKey]) || 0;
-      chartData[contentFieldKey].push(value);
+      contentFields.forEach((contentFieldKey) => {
+        const value = Number(item.values[contentFieldKey]) || 0;
+        chartData[contentFieldKey].push(value);
+      });
     });
-  });
 
-  orderedContentFields.filter((name) => contentFields.indexOf(name) !== -1).forEach((key) => {
-    chartDataOrdered.push(chartData[key]);
-  });
+  orderedContentFields
+    .filter((name) => contentFields.indexOf(name) !== -1)
+    .forEach((key) => {
+      chartDataOrdered.push(chartData[key]);
+    });
 
   const itemNames = chartDataOrdered.map((item) => item[0]);
 

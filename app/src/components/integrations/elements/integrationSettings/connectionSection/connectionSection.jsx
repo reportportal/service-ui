@@ -57,12 +57,9 @@ const messages = defineMessages({
   },
 });
 
-@connect(
-  null,
-  {
-    showModalAction,
-  },
-)
+@connect(null, {
+  showModalAction,
+})
 @injectIntl
 export class ConnectionSection extends Component {
   static propTypes = {

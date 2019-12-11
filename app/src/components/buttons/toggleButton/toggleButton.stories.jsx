@@ -36,7 +36,10 @@ storiesOf('Components/Buttons/ToggleButton', module)
   .add('default state', () => <ToggleButton />)
   .add('with 2 items', () => (
     <ToggleButton
-      items={[{ value: 'first', label: 'first' }, { value: 'second', label: 'second' }]}
+      items={[
+        { value: 'first', label: 'first' },
+        { value: 'second', label: 'second' },
+      ]}
     />
   ))
   .add('with 3 items', () => (

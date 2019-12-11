@@ -89,9 +89,7 @@ export class MostPopularPatterns extends Component {
     const { selectedAttribute } = this.state;
 
     const launchesLimit = widget.contentParameters.itemsCount;
-    const compositeAttribute = `${
-      widget.contentParameters.widgetOptions.attributeKey
-    }:${selectedAttribute}`;
+    const compositeAttribute = `${widget.contentParameters.widgetOptions.attributeKey}:${selectedAttribute}`;
     const defaultNavigationParams = getDefaultTestItemLinkParams(
       project,
       widget.appliedFilters[0].id,
