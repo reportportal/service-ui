@@ -50,12 +50,9 @@ const messages = defineMessages({
 
 @withModal('importModal')
 @injectIntl
-@connect(
-  null,
-  {
-    showNotification,
-  },
-)
+@connect(null, {
+  showNotification,
+})
 @track()
 export class ImportModal extends Component {
   static propTypes = {

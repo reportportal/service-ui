@@ -60,12 +60,9 @@ const messages = defineMessages({
   },
 });
 
-@connect(
-  null,
-  {
-    showRemoveIndexModal: () => showModalAction({ id: 'removeIndexModal' }),
-  },
-)
+@connect(null, {
+  showRemoveIndexModal: () => showModalAction({ id: 'removeIndexModal' }),
+})
 @injectIntl
 @track()
 export class IndexActionsBlock extends Component {

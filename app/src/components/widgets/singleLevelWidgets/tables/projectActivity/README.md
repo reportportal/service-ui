@@ -4,4 +4,4 @@ Has no own size. Width and Height = 100% of it's parent.
 
 ### Props:
 
-* **activity**: _array_
+- **activity**: _array_

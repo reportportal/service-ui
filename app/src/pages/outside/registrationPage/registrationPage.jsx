@@ -51,15 +51,14 @@ export const RegistrationPage = ({ tokenActive, tokenProvided, email, onRegistra
           <div className={cx('logo')} />
         </a>
         <RegistrationPageSection left>
-          {tokenProvided &&
-            tokenActive && (
-              <div className={cx('couple-minutes')}>
-                <FormattedMessage
-                  id={'RegistrationPage.coupleMinutes'}
-                  defaultMessage={'It should only take a couple of minutes to get started'}
-                />
-              </div>
-            )}
+          {tokenProvided && tokenActive && (
+            <div className={cx('couple-minutes')}>
+              <FormattedMessage
+                id={'RegistrationPage.coupleMinutes'}
+                defaultMessage={'It should only take a couple of minutes to get started'}
+              />
+            </div>
+          )}
         </RegistrationPageSection>
         <RegistrationPageSection failed={!tokenActive || !tokenProvided}>
           {tokenProvided && tokenActive ? (

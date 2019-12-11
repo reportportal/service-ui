@@ -68,14 +68,11 @@ DefectTypeName.propTypes = {
 };
 
 @track()
-@connect(
-  null,
-  {
-    showModal: showModalAction,
-    deleteDefectSubTypeAction,
-    updateDefectSubTypeAction,
-  },
-)
+@connect(null, {
+  showModal: showModalAction,
+  deleteDefectSubTypeAction,
+  updateDefectSubTypeAction,
+})
 @injectIntl
 export class DefectSubType extends Component {
   static propTypes = {
@@ -224,27 +221,26 @@ export class DefectSubType extends Component {
               <ColorMarker color={color} />
             </div>
             <div className={cx('buttons-cell')}>
-              {!group &&
-                (isPossibleUpdateSettings && (
-                  <Fragment>
-                    <button
-                      className={cx('action-button', 'edit-button')}
-                      aria-label={intl.formatMessage(COMMON_LOCALE_KEYS.EDIT)}
-                      title={intl.formatMessage(COMMON_LOCALE_KEYS.EDIT)}
-                      onClick={this.setEditMode}
-                    >
-                      {Parser(PencilIcon)}
-                    </button>
-                    <button
-                      className={cx('action-button', 'delete-button')}
-                      aria-label={intl.formatMessage(COMMON_LOCALE_KEYS.DELETE)}
-                      title={intl.formatMessage(COMMON_LOCALE_KEYS.DELETE)}
-                      onClick={this.showDeleteConfirmationDialog}
-                    >
-                      {Parser(CircleCrossIcon)}
-                    </button>
-                  </Fragment>
-                ))}
+              {!group && isPossibleUpdateSettings && (
+                <Fragment>
+                  <button
+                    className={cx('action-button', 'edit-button')}
+                    aria-label={intl.formatMessage(COMMON_LOCALE_KEYS.EDIT)}
+                    title={intl.formatMessage(COMMON_LOCALE_KEYS.EDIT)}
+                    onClick={this.setEditMode}
+                  >
+                    {Parser(PencilIcon)}
+                  </button>
+                  <button
+                    className={cx('action-button', 'delete-button')}
+                    aria-label={intl.formatMessage(COMMON_LOCALE_KEYS.DELETE)}
+                    title={intl.formatMessage(COMMON_LOCALE_KEYS.DELETE)}
+                    onClick={this.showDeleteConfirmationDialog}
+                  >
+                    {Parser(CircleCrossIcon)}
+                  </button>
+                </Fragment>
+              )}
             </div>
           </Fragment>
         )}

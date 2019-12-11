@@ -207,14 +207,13 @@ export class ItemInfo extends Component {
           )}
           {value.owner && <OwnerBlock owner={value.owner} onClick={customProps.onOwnerClick} />}
           {isStepLevel && this.renderSauceLabsLabel()}
-          {value.attributes &&
-            !!value.attributes.length && (
-              <AttributesBlock
-                attributes={value.attributes}
-                onClickAttribute={customProps.onClickAttribute}
-                isAttributeClickable
-              />
-            )}
+          {value.attributes && !!value.attributes.length && (
+            <AttributesBlock
+              attributes={value.attributes}
+              onClickAttribute={customProps.onClickAttribute}
+              isAttributeClickable
+            />
+          )}
           {isStepLevel && (
             <div className={cx('mobile-info')}>
               @{formatMethodType(intl.formatMessage, value.type)}
@@ -223,13 +222,11 @@ export class ItemInfo extends Component {
               </span>
             </div>
           )}
-          {isStepLevel &&
-            value.retries &&
-            value.retries.length > 0 && (
-              <div className={cx('retries-counter')}>
-                <RetriesCounter testItem={value} onLabelClick={onClickRetries} />
-              </div>
-            )}
+          {isStepLevel && value.retries && value.retries.length > 0 && (
+            <div className={cx('retries-counter')}>
+              <RetriesCounter testItem={value} onLabelClick={onClickRetries} />
+            </div>
+          )}
           {value.description && (
             <div className={cx('item-description')}>
               <MarkdownViewer value={value.description} />

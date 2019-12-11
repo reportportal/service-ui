@@ -109,21 +109,20 @@ export class EditWidgetControlsSectionForm extends Component {
             />
           </div>
         )}
-        {formAppearance.isMainControlsLocked &&
-          !formAppearance.mode && (
-            <div className={cx('buttons-block')}>
-              <BigButton
-                className={cx('button-inline')}
-                color={'gray-60'}
-                onClick={this.onClickCancel}
-              >
-                {buttonsMessages.cancel}
-              </BigButton>
-              <BigButton className={cx('button-inline')} onClick={this.onClickSubmit}>
-                {buttonsMessages.submit}
-              </BigButton>
-            </div>
-          )}
+        {formAppearance.isMainControlsLocked && !formAppearance.mode && (
+          <div className={cx('buttons-block')}>
+            <BigButton
+              className={cx('button-inline')}
+              color={'gray-60'}
+              onClick={this.onClickCancel}
+            >
+              {buttonsMessages.cancel}
+            </BigButton>
+            <BigButton className={cx('button-inline')} onClick={this.onClickSubmit}>
+              {buttonsMessages.submit}
+            </BigButton>
+          </div>
+        )}
       </form>
     );
   }

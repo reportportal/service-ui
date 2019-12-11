@@ -280,19 +280,16 @@ export class LogsPage extends Component {
                       />
                     )}
                   </LogsGridToolbar>
-                  {!!pageCount &&
-                    logItems &&
-                    !!logItems.length &&
-                    !loading && (
-                      <PaginationToolbar
-                        activePage={activePage}
-                        itemCount={itemCount}
-                        pageCount={pageCount}
-                        pageSize={pageSize}
-                        onChangePage={onChangePage}
-                        onChangePageSize={onChangePageSize}
-                      />
-                    )}
+                  {!!pageCount && logItems && !!logItems.length && !loading && (
+                    <PaginationToolbar
+                      activePage={activePage}
+                      itemCount={itemCount}
+                      pageCount={pageCount}
+                      pageSize={pageSize}
+                      onChangePage={onChangePage}
+                      onChangePageSize={onChangePageSize}
+                    />
+                  )}
                 </Fragment>
               )}
             </Fragment>

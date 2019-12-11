@@ -43,10 +43,7 @@ const messages = defineMessages({
   },
 });
 
-@connect(
-  null,
-  { showModalAction },
-)
+@connect(null, { showModalAction })
 @injectIntl
 @track()
 export class CategoriesList extends Component {

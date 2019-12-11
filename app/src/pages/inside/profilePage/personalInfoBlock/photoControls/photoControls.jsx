@@ -67,10 +67,7 @@ const messages = defineMessages({
   },
 });
 
-@connect(
-  null,
-  { showNotification, showModalAction, setPhotoTimeStampAction },
-)
+@connect(null, { showNotification, showModalAction, setPhotoTimeStampAction })
 @injectIntl
 @track()
 export class PhotoControls extends Component {

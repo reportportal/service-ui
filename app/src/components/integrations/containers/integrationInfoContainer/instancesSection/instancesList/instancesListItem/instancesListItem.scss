@@ -32,7 +32,8 @@
   }
 
   &.disabled {
-    .integration-name, .creation-info {
+    .integration-name,
+    .creation-info {
       color: $COLOR--gray-60;
     }
 

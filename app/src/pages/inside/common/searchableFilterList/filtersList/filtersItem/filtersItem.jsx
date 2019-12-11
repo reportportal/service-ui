@@ -66,12 +66,11 @@ export class FiltersItem extends PureComponent {
             editable={false}
           />
           <FilterOptions entities={filter.conditions} sort={filter.orders}>
-            {userId === filter.owner &&
-              editable && (
-                <span className={cx('pencil-icon')} onClick={onEdit}>
-                  {Parser(PencilIcon)}
-                </span>
-              )}
+            {userId === filter.owner && editable && (
+              <span className={cx('pencil-icon')} onClick={onEdit}>
+                {Parser(PencilIcon)}
+              </span>
+            )}
           </FilterOptions>
         </InputRadio>
       </div>

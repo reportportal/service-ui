@@ -36,11 +36,27 @@
   height: 5px;
 
   &--failed {
-    background: linear-gradient(to right, $COLOR--burgundy 0%, $COLOR--burgundy 25%, $COLOR--cherry 25%, $COLOR--cherry 50%, $COLOR--deep-red 50%, $COLOR--deep-red 75%, $COLOR--dull-red 75%, $COLOR--dull-red 100%);
+    background: linear-gradient(
+      to right,
+      $COLOR--burgundy 0%,
+      $COLOR--burgundy 25%,
+      $COLOR--cherry 25%,
+      $COLOR--cherry 50%,
+      $COLOR--deep-red 50%,
+      $COLOR--deep-red 75%,
+      $COLOR--dull-red 75%,
+      $COLOR--dull-red 100%
+    );
   }
 
   &--passed {
-    background: linear-gradient(to right, $COLOR--dull-green 0%, $COLOR--dull-green 50%, $COLOR--passed 50%, $COLOR--passed 100%);
+    background: linear-gradient(
+      to right,
+      $COLOR--dull-green 0%,
+      $COLOR--dull-green 50%,
+      $COLOR--passed 50%,
+      $COLOR--passed 100%
+    );
   }
 
   &--passed-max {

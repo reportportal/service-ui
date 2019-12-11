@@ -111,7 +111,8 @@
     opacity: 1;
   }
 
-  .mobile, .non-resizable {
+  .mobile,
+  .non-resizable {
     .react-resizable-handle {
       display: none;
     }

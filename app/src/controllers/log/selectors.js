@@ -54,9 +54,8 @@ const logSelector = (state) => state.log || {};
 
 export const logActivitySelector = (state) => logSelector(state).activity || [];
 
-export const lastLogActivitySelector = createSelector(
-  logActivitySelector,
-  (activity) => (activity.length ? activity[0] : null),
+export const lastLogActivitySelector = createSelector(logActivitySelector, (activity) =>
+  activity.length ? activity[0] : null,
 );
 
 const historyEntriesSelector = (state) => logSelector(state).historyEntries || [];

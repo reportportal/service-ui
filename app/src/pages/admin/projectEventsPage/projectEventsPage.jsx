@@ -98,17 +98,16 @@ export class ProjectEventsPage extends Component {
           sortingDirection={sortingDirection}
           onChangeSorting={onChangeSorting}
         />
-        {!!pageCount &&
-          !loading && (
-            <PaginationToolbar
-              activePage={activePage}
-              itemCount={itemCount}
-              pageCount={pageCount}
-              pageSize={pageSize}
-              onChangePage={onChangePage}
-              onChangePageSize={onChangePageSize}
-            />
-          )}
+        {!!pageCount && !loading && (
+          <PaginationToolbar
+            activePage={activePage}
+            itemCount={itemCount}
+            pageCount={pageCount}
+            pageSize={pageSize}
+            onChangePage={onChangePage}
+            onChangePageSize={onChangePageSize}
+          />
+        )}
       </React.Fragment>
     );
   }

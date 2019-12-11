@@ -34,12 +34,9 @@ const messages = defineMessages({
 });
 
 @injectIntl
-@connect(
-  null,
-  {
-    showModal: showModalAction,
-  },
-)
+@connect(null, {
+  showModal: showModalAction,
+})
 @track()
 export class AddNewCaseButton extends Component {
   static propTypes = {

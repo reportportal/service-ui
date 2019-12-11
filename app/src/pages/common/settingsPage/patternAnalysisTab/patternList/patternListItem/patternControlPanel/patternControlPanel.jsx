@@ -49,15 +49,12 @@ export const messages = defineMessages({
   },
 });
 
-@connect(
-  null,
-  {
-    addPattern: addPatternAction,
-    updatePattern: updatePatternAction,
-    deletePattern: deletePatternAction,
-    showModal: showModalAction,
-  },
-)
+@connect(null, {
+  addPattern: addPatternAction,
+  updatePattern: updatePatternAction,
+  deletePattern: deletePatternAction,
+  showModal: showModalAction,
+})
 @injectIntl
 @track()
 export class PatternControlPanel extends Component {
