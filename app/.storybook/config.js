@@ -16,15 +16,11 @@
 
 import { addParameters, configure, addDecorator } from '@storybook/react';
 import { setIntlConfig, withIntl } from 'storybook-addon-intl';
+import { addReadme } from 'storybook-readme';
 import 'reset-css/reset.css';
 import 'common/css/fonts/fonts.scss';
 import 'common/css/common.scss';
 import 'c3/c3.css';
-
-import { addLocaleData } from 'react-intl';
-import en from 'react-intl/locale-data/en';
-import ru from 'react-intl/locale-data/ru';
-import be from 'react-intl/locale-data/be';
 
 import localeRU from '../localization/translated/ru.json';
 import localeBE from '../localization/translated/be.json';
@@ -36,7 +32,6 @@ const messages = {
   ru: localeRU,
   be: localeBE,
 };
-addLocaleData([...en, ...ru, ...be]);
 setIntlConfig({
   locales: ['en', 'ru', 'be'],
   defaultLocale: 'en',
@@ -120,4 +115,5 @@ addParameters({
 
 addDecorator((story) => <Provider store={store}>{story()}</Provider>);
 addDecorator(withIntl);
+addDecorator(addReadme);
 configure(loadStories, module);

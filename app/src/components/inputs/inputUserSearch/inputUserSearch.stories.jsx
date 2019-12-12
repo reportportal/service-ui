@@ -17,7 +17,7 @@
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { InputUserSearch } from './inputUserSearch';
@@ -35,7 +35,12 @@ storiesOf('Components/Inputs/InputUserSearch', module)
       width: 550,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      content: README,
+      sidebar: README,
+    },
+  })
   .add('default state', () => <InputUserSearch />)
   .add(
     'Admin,projectId="superadmin_personal",with actions(type "test" in input,close DevTools,you get MOCK DATA)',
