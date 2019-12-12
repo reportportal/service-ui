@@ -62,7 +62,7 @@ export const historySelector = createSelector(
   (itemsHistory, filterForCompare, filterHistory) => {
     const maxRowItemsCount = calculateMaxRowItemsCount(itemsHistory);
 
-    return itemsHistory.map(({ testCaseId, resources }) => {
+    return itemsHistory.map(({ testCaseHash, resources }) => {
       const itemLastIndex = maxRowItemsCount - 1;
       const itemResources = [...resources].reverse();
       const historyItems = [];
@@ -70,21 +70,21 @@ export const historySelector = createSelector(
       for (let index = itemLastIndex; index >= 0; index -= 1) {
         const historyItem = itemResources[index];
 
-        const normalizedHistoryItem = normalizeHistoryItem(historyItem, `${testCaseId}_${index}`);
+        const normalizedHistoryItem = normalizeHistoryItem(historyItem, `${testCaseHash}_${index}`);
         historyItems.push(normalizedHistoryItem);
       }
 
       if (filterForCompare) {
-        const filterHistoryRow = filterHistory.find((item) => item.testCaseId === testCaseId);
+        const filterHistoryRow = filterHistory.find((item) => item.testCaseHash === testCaseHash);
         const filterHistoryItem = normalizeHistoryItem(
           filterHistoryRow ? filterHistoryRow.resources[0] : undefined,
-          `${testCaseId}_${maxRowItemsCount}`,
+          `${testCaseHash}_${maxRowItemsCount}`,
         );
         historyItems.unshift({ ...filterHistoryItem, isFilterItem: true });
       }
 
       return {
-        testCaseId,
+        testCaseHash,
         resources: historyItems,
       };
     });
