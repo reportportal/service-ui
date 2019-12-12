@@ -154,7 +154,7 @@ function* fetchFilterHistory({ payload: { filter, loadMore } }) {
   if (loadMore) {
     items = itemsHistory.slice(-HISTORY_ITEMS_TO_LOAD);
   }
-  params['filter.in.testCaseId'] = items.map((item) => item.testCaseId).join(',');
+  params['filter.in.testCaseHash'] = items.map((item) => item.testCaseHash).join(',');
 
   yield put(
     concatFetchDataAction(FILTER_HISTORY_NAMESPACE, loadMore)(
