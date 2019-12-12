@@ -36,11 +36,11 @@ const cx = classNames.bind(styles);
 const messages = defineMessages({
   permissionMap: {
     id: 'MembersPageToolbar.permissionMap',
-    defaultMessage: 'Permission map',
+    defaultMessage: 'Permission Map',
   },
   inviteUser: {
     id: 'MembersPageToolbar.inviteUser',
-    defaultMessage: 'Invite user',
+    defaultMessage: 'Invite User',
   },
   searchInputPlaceholder: {
     id: 'MembersPageToolbar.searchByName',
