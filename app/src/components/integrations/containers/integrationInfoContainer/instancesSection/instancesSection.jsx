@@ -73,7 +73,7 @@ const messages = defineMessages({
   },
   unlinkAndSetupManuallyTitle: {
     id: 'InstancesSection.unlinkAndSetupManuallyTitle',
-    defaultMessage: 'Unlink & setup manually',
+    defaultMessage: 'Unlink & Setup Manually',
   },
   resetToGlobalSettingsDescription: {
     id: 'InstancesSection.resetToGlobalSettingsDescription',

@@ -35,15 +35,15 @@ const cx = classNames.bind(styles);
 const messages = defineMessages({
   savePhoto: {
     id: 'PhotoControls.savePhoto',
-    defaultMessage: 'Save photo',
+    defaultMessage: 'Save Photo',
   },
   uploadPhoto: {
     id: 'PhotoControls.uploadPhoto',
-    defaultMessage: 'Upload photo',
+    defaultMessage: 'Upload Photo',
   },
   removePhoto: {
     id: 'PhotoControls.removePhoto',
-    defaultMessage: 'Remove photo',
+    defaultMessage: 'Remove Photo',
   },
   invalidImage: {
     id: 'PhotoControls.invalidImage',
