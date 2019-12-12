@@ -1211,7 +1211,7 @@
   "PatternAnalysis.active": "Активный",
   "PatternAnalysis.addPatternSuccess": "Паттерн создан",
   "PatternAnalysis.clonePatternMessage": "Копирование паттерна",
-  "PatternAnalysis.createPattern": "Создать паттерн",
+  "PatternAnalysis.createPattern": "Создать Паттерн",
   "PatternAnalysis.createPatternMessage": "Создание паттерна",
   "PatternAnalysis.deleteModalContent": "Вы действительно хотите удалить паттерн {name}?",
   "PatternAnalysis.deleteModalHeader": "Удаление паттерна",
