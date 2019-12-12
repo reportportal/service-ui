@@ -53,11 +53,11 @@ const messages = defineMessages({
   },
   [INVITE_USER]: {
     id: 'AllUsersPage.inviteUser',
-    defaultMessage: 'Invite user',
+    defaultMessage: 'Invite User',
   },
   [ADD_USER]: {
     id: 'AllUsersPage.AddUser',
-    defaultMessage: 'Add user',
+    defaultMessage: 'Add User',
   },
   addUserSuccessNotification: {
     id: 'ActionPanel.addUserNotification',

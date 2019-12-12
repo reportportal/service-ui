@@ -41,7 +41,6 @@
 .member-login {
   max-width: 250px;
   color: $COLOR--charcoal-grey;
-  line-height: 1.42857143;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -50,7 +49,7 @@
   display: inline-block;
 }
 .member-login {
-  margin-top: 5px;
+  margin-top: 10px;
   font-family: $FONT-SEMIBOLD;
 }
 .member-you,
@@ -60,7 +59,7 @@
   border-radius: 100px;
   font-size: 10px;
   color: $COLOR--white-two;
-  line-height: 12px;
+  line-height: 13px;
   font-family: $FONT-SEMIBOLD;
   text-transform: lowercase;
   letter-spacing: 0.6px;
