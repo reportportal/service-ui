@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2019 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,28 +14,4 @@
  * limitations under the License.
  */
 
-.pattern-rule-data {
-  display: flex;
-  flex-direction: row;
-  margin: 8px 15px 15px 90px;
-  font-size: 13px;
-  font-family: $FONT-REGULAR;
-  @media (max-width: $SCREEN_SM_MAX) {
-    margin-left: 15px;
-  }
-}
-
-.pattern-data-name {
-  flex: 50px 0 0;
-  margin-right: 20px;
-  color: $COLOR--gray-60;
-}
-
-.pattern-data-value {
-  flex: 300px 1 1;
-  color: $COLOR--charcoal-grey;
-  word-break: break-all;
-  @supports (word-break: break-word) {
-    word-break: break-word;
-  }
-}
+export { List } from './list';

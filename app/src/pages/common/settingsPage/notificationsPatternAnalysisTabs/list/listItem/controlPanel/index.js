@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { CaseListItem } from './caseListItem';
+export { ControlPanel } from './controlPanel';
