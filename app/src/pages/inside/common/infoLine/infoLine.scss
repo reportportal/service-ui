@@ -34,7 +34,7 @@
   width: 100px;
   height: 28px;
   margin: 0 15px;
-  vertical-align: top;
+  vertical-align: middle;
 
   @media (max-width: $SCREEN_SM_MAX) {
     display: none;
@@ -85,6 +85,7 @@
 }
 .defect-types {
   display: inline-block;
+  vertical-align: middle;
 
   @media (max-width: $SCREEN_SM_MAX) {
     display: block;
