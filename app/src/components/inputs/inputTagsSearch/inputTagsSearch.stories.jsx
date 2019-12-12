@@ -17,7 +17,7 @@
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import { validate } from 'common/utils';
 import { InputTagsSearch } from './inputTagsSearch';
 import README from './README.md';
@@ -33,7 +33,12 @@ storiesOf('Components/Inputs/InputTagsSearch', module)
       width: 400,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      content: README,
+      sidebar: README,
+    },
+  })
   .add('default state', () => <InputTagsSearch />)
   .add('with options', () => {
     const options = [

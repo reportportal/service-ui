@@ -17,7 +17,7 @@
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import { ToggleButton } from './toggleButton';
 import README from './README.md';
 
@@ -32,7 +32,12 @@ storiesOf('Components/Buttons/ToggleButton', module)
       width: 300,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      content: README,
+      sidebar: README,
+    },
+  })
   .add('default state', () => <ToggleButton />)
   .add('with 2 items', () => (
     <ToggleButton

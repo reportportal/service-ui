@@ -15,7 +15,7 @@
  */
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import { EntityInputConditional } from 'components/filterEntities';
 import {
   ENTITY_NAME,
@@ -75,7 +75,12 @@ storiesOf('Components/Inputs/InputFilter', module)
       height: 38,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      content: README,
+      sidebar: README,
+    },
+  })
   .add('default state', () => <InputFilter filterEntities={entities} />)
   .add('with value', () => <InputFilter value={value} />)
   .add('with placeholder', () => <InputFilter placeholder="Search" />)

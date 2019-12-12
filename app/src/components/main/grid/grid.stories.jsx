@@ -17,7 +17,7 @@
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import { Grid } from './grid';
 import { SIMPLE_COLUMNS, SIMPLE_DATA } from './data';
 import README from './README.md';
@@ -39,7 +39,12 @@ storiesOf('Components/Main/Grid', module)
       width: '100%',
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      content: README,
+      sidebar: README,
+    },
+  })
   .add('default state', () => <Grid />)
   .add('with data', () => <Grid columns={SIMPLE_COLUMNS} data={SIMPLE_DATA} />)
   .add('with selection', () => (

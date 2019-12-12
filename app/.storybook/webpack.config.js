@@ -18,17 +18,24 @@ const path = require('path');
 const getConfig = require('../webpack.config');
 const baseConfig = getConfig();
 
-module.exports = {
-  plugins: baseConfig.plugins.filter((plugin) =>
-    ['DefinePlugin', 'ProvidePlugin', 'MiniCssExtractPlugin'].includes(plugin.constructor.name),
-  ),
-  devtool: 'cheap-module-source-map',
-  resolve: Object.assign({}, baseConfig.resolve, {
-    alias: Object.assign({}, baseConfig.resolve.alias, {
-      'storybook-decorators': path.resolve(__dirname, 'decorators'),
+module.exports = async ({config}) => {
+
+  return {
+    ...config,
+    plugins: [...config.plugins, ...baseConfig.plugins.filter((plugin) =>
+      ['DefinePlugin', 'ProvidePlugin', 'MiniCssExtractPlugin'].includes(plugin.constructor.name),
+    )],
+    devtool: 'cheap-module-source-map',
+    resolve: Object.assign({}, baseConfig.resolve, {
+      alias: Object.assign({}, baseConfig.resolve.alias, {
+        'storybook-decorators': path.resolve(__dirname, 'decorators'),
+      }),
     }),
-  }),
-  module: {
-    rules: baseConfig.module.rules,
-  },
+    module: {
+      rules: [...baseConfig.module.rules, {
+        test: /\.md$/,
+        use: 'raw-loader',
+      }],
+    },
+  };
 };
