@@ -39,6 +39,7 @@
     "core-js": "2.5.7",
     "d3": "5.9.2",
     "d3-selection": "1.4.0",
+    "dompurify": "2.0.7",
     "dotenv": "5.0.1",
     "fast-deep-equal": "2.0.1",
     "fetch-jsonp": "1.1.3",
