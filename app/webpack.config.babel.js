@@ -40,7 +40,7 @@ export default (env = defaultEnv) => ({
   entry: [path.resolve('src', 'index.jsx')],
   output: {
     path: path.resolve('build'),
-    filename: 'app.[hash:6].js',
+    filename: 'app.js',
     publicPath: '',
   },
   resolve: {
@@ -68,7 +68,7 @@ export default (env = defaultEnv) => ({
       Utils: 'common/utils',
     }),
     new ExtractTextPlugin({
-      filename: '[name].[hash:6].css',
+      filename: '[name].css',
       allChunks: true,
       disable: env.dev,
     }),
