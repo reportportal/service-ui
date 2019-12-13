@@ -41,12 +41,9 @@ import {
   userIdSelector,
 } from 'controllers/user';
 import { FETCH_PROJECT_SUCCESS, fetchProjectAction } from 'controllers/project';
-import { screenLockVisibilitySelector, hideScreenLockAction } from 'controllers/screenLock';
-import { activeModalSelector, hideModalAction } from 'controllers/modal';
 import { fetchPluginsAction, fetchGlobalIntegrationsAction } from 'controllers/plugins';
 import { redirect, pathToAction } from 'redux-first-router';
 import qs, { stringify } from 'qs';
-import { fetchAppInfoAction } from 'controllers/appInfo';
 import routesMap from 'routes/routesMap';
 import {
   authSuccessAction,
@@ -69,19 +66,7 @@ import {
 } from './constants';
 import { tokenSelector } from './selectors';
 
-function* hideExtraPopups() {
-  const activeModal = yield select(activeModalSelector);
-  const screenLockVisibility = yield select(screenLockVisibilitySelector);
-  if (activeModal) {
-    yield put(hideModalAction());
-  }
-  if (screenLockVisibility) {
-    yield put(hideScreenLockAction());
-  }
-}
-
 function* handleLogout() {
-  yield call(hideExtraPopups);
   yield put(resetTokenAction());
   yield put(
     redirect({
@@ -114,7 +99,6 @@ function* loginSuccessHandler({ payload }) {
       value: payload.value,
     }),
   );
-  yield put(fetchAppInfoAction());
   yield put(fetchUserAction());
   yield all([take([FETCH_USER_SUCCESS, FETCH_USER_ERROR]), take(SET_ACTIVE_PROJECT)]);
   const projectId = yield select(activeProjectSelector);
