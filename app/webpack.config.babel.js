@@ -72,6 +72,9 @@ export default (env = defaultEnv) => ({
       allChunks: true,
       disable: env.dev,
     }),
+    new webpack.optimize.LimitChunkCountPlugin({
+      maxChunks: 1,
+    }),
     new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
