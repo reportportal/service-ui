@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
@@ -6,7 +22,6 @@ import { Input } from 'components/inputs/input';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { IntegrationFormField } from 'components/integrations/elements';
 import { commonValidators } from 'common/utils';
-import { DATA_CENTER_US, DATA_CENTER_EU, DEFAULT_DATA_CENTER } from '../constants';
 
 const messages = defineMessages({
   userNameTitle: {
@@ -21,14 +36,6 @@ const messages = defineMessages({
     id: 'SauceLabsFormFields.dataCenter',
     defaultMessage: 'Data center',
   },
-  dataCenterUS: {
-    id: 'SauceLabsFormFields.dataCenterUS',
-    defaultMessage: 'United States (US)',
-  },
-  dataCenterEU: {
-    id: 'SauceLabsFormFields.dataCenterEU',
-    defaultMessage: 'Europe (EU)',
-  },
 });
 
 @injectIntl
@@ -40,29 +47,37 @@ export class SauceLabsFormFields extends Component {
     disabled: PropTypes.bool,
     lineAlign: PropTypes.bool,
     initialData: PropTypes.object,
+    pluginDetails: PropTypes.object,
   };
 
   static defaultProps = {
     disabled: false,
     lineAlign: false,
-    initialData: {
-      dataCenter: DEFAULT_DATA_CENTER,
+    initialData: {},
+    pluginDetails: {
+      dataCenters: [],
     },
   };
 
   constructor(props) {
     super(props);
     const {
-      intl: { formatMessage },
+      pluginDetails: { dataCenters = [] },
     } = props;
-    this.dataCenterOptions = [
-      { value: DATA_CENTER_US, label: formatMessage(messages.dataCenterUS) },
-      { value: DATA_CENTER_EU, label: formatMessage(messages.dataCenterEU) },
-    ];
+    this.dataCenterOptions = dataCenters.map((value) => ({ value, label: value }));
   }
 
   componentDidMount() {
-    this.props.initialize(this.props.initialData);
+    const {
+      initialize,
+      initialData,
+      pluginDetails: { dataCenters = [] },
+    } = this.props;
+    const data = {
+      dataCenter: dataCenters[0],
+      ...initialData,
+    };
+    initialize(data);
   }
 
   render() {

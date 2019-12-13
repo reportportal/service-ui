@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { takeLatest, call, put, all, select, take } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
@@ -9,6 +25,7 @@ import {
   isLaunchLogSelector,
   logViewModeSelector,
   activeRetrySelector,
+  activeLogIdSelector,
 } from 'controllers/log/selectors';
 import { DETAILED_LOG_VIEW } from 'controllers/log/constants';
 import { JSON as JSON_TYPE } from 'common/constants/fileTypes';
@@ -25,21 +42,26 @@ import {
   FETCH_FIRST_ATTACHMENTS_ACTION,
 } from './constants';
 import { setActiveAttachmentAction } from './actionCreators';
-import { getAttachmentModalId, extractExtension } from './utils';
+import { getAttachmentModalId, extractExtension, isTextWithJson } from './utils';
 
 function* getAttachmentURL() {
   const activeProject = yield select(activeProjectSelector);
   const isLaunchLog = yield select(isLaunchLogSelector);
-  const activeLogItemId = yield select(activeRetryIdSelector);
+  const activeRetryId = yield select(activeRetryIdSelector);
   if (isLaunchLog) {
-    return URLS.launchLogs(activeProject, activeLogItemId);
+    return URLS.launchLogs(activeProject, activeRetryId);
   }
   const logViewMode = yield select(logViewModeSelector);
   if (logViewMode === DETAILED_LOG_VIEW) {
     const activeRetry = yield select(activeRetrySelector);
-    return URLS.logsUnderPath(activeProject, activeRetry.path);
+    const retryParentId = yield select(activeLogIdSelector);
+    return URLS.logsUnderPath(
+      activeProject,
+      activeRetry.path,
+      retryParentId === activeRetryId ? retryParentId : undefined,
+    );
   }
-  return URLS.logItems(activeProject, activeLogItemId);
+  return URLS.logItems(activeProject, activeRetryId);
 }
 
 function* fetchAttachmentsConcat({ payload: { params, concat } }) {
@@ -85,7 +107,10 @@ function* openHarModalsWorker(data) {
 /* BINARY */
 function* openBinaryModalsWorker(data) {
   const binaryData = yield call(fetchData, data);
-  const content = data.extension === JSON_TYPE ? JSON.stringify(binaryData, null, 4) : binaryData;
+  const content =
+    data.extension === JSON_TYPE && !isTextWithJson(data.contentType)
+      ? JSON.stringify(binaryData, null, 4)
+      : binaryData;
   yield put(
     showModalAction({
       id: ATTACHMENT_CODE_MODAL_ID,
@@ -104,7 +129,7 @@ function* openAttachment({ payload: { id, contentType } }) {
   const modalId = getAttachmentModalId(contentType);
   const projectId = yield select(activeProjectSelector);
   if (modalId) {
-    const data = { projectId, binaryId: id, extension: extractExtension(contentType) };
+    const data = { projectId, binaryId: id, extension: extractExtension(contentType), contentType };
     try {
       yield call(ATTACHMENT_MODAL_WORKERS[modalId], data);
     } catch (e) {} // eslint-disable-line no-empty

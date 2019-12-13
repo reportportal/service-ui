@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { PROJECT_MANAGER, OPERATOR, CUSTOMER, MEMBER } from 'common/constants/projectRoles';
 import { ALL, OWNER } from 'common/constants/permissions';
 
@@ -13,8 +29,10 @@ export const ACTIONS = {
   ACTIONS_WITH_ITEM: 'ACTIONS_WITH_ITEM',
   INVESTIGATION_ACTIONS: 'INVESTIGATION_ACTIONS',
   CREATE_SHARE_ITEM: 'CREATE_SHARE_ITEM',
-  EDIT_SHARED_ITEM: 'EDIT_SHARED_ITEM',
+  EDIT_DELETE_SHARED_ITEM: 'EDIT_DELETE_SHARED_ITEM',
   DELETE_SHARED_ITEM: 'DELETE_SHARED_ITEM',
+  RERUN_LAUNCHES: 'RERUN_LAUNCHES',
+  CHANGE_STATUS: 'CHANGE_STATUS',
 };
 
 export const PERMISSIONS_MAP = {
@@ -30,8 +48,9 @@ export const PERMISSIONS_MAP = {
     [ACTIONS.ACTIONS_WITH_ITEM]: ALL,
     [ACTIONS.INVESTIGATION_ACTIONS]: ALL,
     [ACTIONS.CREATE_SHARE_ITEM]: OWNER,
-    [ACTIONS.EDIT_SHARED_ITEM]: OWNER,
-    [ACTIONS.DELETE_SHARED_ITEM]: ALL,
+    [ACTIONS.EDIT_DELETE_SHARED_ITEM]: ALL,
+    [ACTIONS.RERUN_LAUNCHES]: ALL,
+    [ACTIONS.CHANGE_STATUS]: ALL,
   },
   [MEMBER]: {
     [ACTIONS.VIEW_INFO_ABOUT_MEMBERS]: OWNER,
@@ -43,8 +62,9 @@ export const PERMISSIONS_MAP = {
     [ACTIONS.ACTIONS_WITH_ITEM]: OWNER,
     [ACTIONS.INVESTIGATION_ACTIONS]: ALL,
     [ACTIONS.CREATE_SHARE_ITEM]: OWNER,
-    [ACTIONS.EDIT_SHARED_ITEM]: OWNER,
-    [ACTIONS.DELETE_SHARED_ITEM]: OWNER,
+    [ACTIONS.EDIT_DELETE_SHARED_ITEM]: OWNER,
+    [ACTIONS.RERUN_LAUNCHES]: ALL,
+    [ACTIONS.CHANGE_STATUS]: ALL,
   },
   [OPERATOR]: {
     [ACTIONS.VIEW_INFO_ABOUT_MEMBERS]: OWNER,
@@ -52,8 +72,8 @@ export const PERMISSIONS_MAP = {
     [ACTIONS.MANUAL_ANALYSIS_EXPORT_COMPARE_IMPORT]: ALL,
     [ACTIONS.INVESTIGATION_ACTIONS]: ALL,
     [ACTIONS.CREATE_SHARE_ITEM]: OWNER,
-    [ACTIONS.EDIT_SHARED_ITEM]: OWNER,
-    [ACTIONS.DELETE_SHARED_ITEM]: OWNER,
+    [ACTIONS.EDIT_DELETE_SHARED_ITEM]: OWNER,
+    [ACTIONS.CHANGE_STATUS]: ALL,
   },
   [CUSTOMER]: {
     [ACTIONS.REPORT_LAUNCH]: OWNER,
@@ -62,7 +82,8 @@ export const PERMISSIONS_MAP = {
     [ACTIONS.ACTIONS_WITH_ITEM]: OWNER,
     [ACTIONS.INVESTIGATION_ACTIONS]: ALL,
     [ACTIONS.CREATE_SHARE_ITEM]: OWNER,
-    [ACTIONS.EDIT_SHARED_ITEM]: OWNER,
-    [ACTIONS.DELETE_SHARED_ITEM]: OWNER,
+    [ACTIONS.EDIT_DELETE_SHARED_ITEM]: OWNER,
+    [ACTIONS.RERUN_LAUNCHES]: ALL,
+    [ACTIONS.CHANGE_STATUS]: ALL,
   },
 };

@@ -1,5 +1,20 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
-import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
@@ -93,7 +108,6 @@ const inviteFormSelector = formValueSelector('inviteUserForm');
   }),
   enableReinitialize: true,
 })
-@track()
 export class InviteUserModal extends Component {
   static propTypes = {
     intl: intlShape,
@@ -111,10 +125,6 @@ export class InviteUserModal extends Component {
     selectedUser: PropTypes.object,
     isAdmin: PropTypes.bool,
     dirty: PropTypes.bool,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
   };
 
   static defaultProps = {
@@ -240,14 +250,14 @@ export class InviteUserModal extends Component {
     );
 
   render() {
-    const { intl, handleSubmit, selectedProject, isAdmin, tracking, data } = this.props;
+    const { intl, handleSubmit, selectedProject, isAdmin, data } = this.props;
 
     const okButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.INVITE),
       onClick: (closeModal) => {
-        tracking.trackEvent(MEMBERS_PAGE_EVENTS.INVITE_BTN_INVITE_USER_MODAL);
         handleSubmit(this.inviteUserAndCloseModal(closeModal))();
       },
+      eventInfo: MEMBERS_PAGE_EVENTS.INVITE_BTN_INVITE_USER_MODAL,
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),

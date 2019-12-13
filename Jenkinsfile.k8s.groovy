@@ -20,19 +20,21 @@ podTemplate(
                         ]),
                 containerTemplate(name: 'golang', image: 'golang:1.12.7', ttyEnabled: true, command: 'cat'),
                 containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.8', command: 'cat', ttyEnabled: true),
-                containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm:latest', command: 'cat', ttyEnabled: true),
-                containerTemplate(name: 'yq', image: 'mikefarah/yq', command: 'cat', ttyEnabled: true),
+                containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm:v3.0.0', command: 'cat', ttyEnabled: true),
+                // containerTemplate(name: 'yq', image: 'mikefarah/yq', command: 'cat', ttyEnabled: true),
                 containerTemplate(name: 'httpie', image: 'blacktop/httpie', command: 'cat', ttyEnabled: true)
         ],
         imagePullSecrets: ["regcred"],
         volumes: [
                 hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock'),
                 secretVolume(mountPath: '/etc/.dockercreds', secretName: 'docker-creds'),
+                secretVolume(mountPath: '/etc/.sealights-token', secretName: 'sealights-token'),
                 hostPathVolume(mountPath: '/go/pkg/mod', hostPath: '/tmp/jenkins/go')
         ]
 ) {
 
     node("${label}") {
+        def sealightsTokenPath = "/etc/.sealights-token/token"
         def srvRepo = "quay.io/reportportal/service-ui"
         def srvVersion = "BUILD-${env.BUILD_NUMBER}"
         def tag = "$srvRepo:$srvVersion"
@@ -48,6 +50,8 @@ podTemplate(
          */
         def ciDir = "reportportal-ci"
         def appDir = "app"
+
+        def branchToBuild = params.get('COMMIT_HASH', 'develop')
 
         parallel 'Checkout Infra': {
             stage('Checkout Infra') {
@@ -70,6 +74,7 @@ podTemplate(
                 }
             }
         }
+
         def test = load "${ciDir}/jenkins/scripts/test.groovy"
         def utils = load "${ciDir}/jenkins/scripts/util.groovy"
         def helm = load "${ciDir}/jenkins/scripts/helm.groovy"
@@ -78,6 +83,10 @@ podTemplate(
         docker.init()
         helm.init()
         utils.scheduleRepoPoll()
+
+        def sealightsToken = utils.execStdout("cat $sealightsTokenPath")
+        def sealightsSession;
+        def resultsProcessor = "jest-junit"
 
         dir(appDir) {
             parallel 'Build UI': {
@@ -88,6 +97,18 @@ podTemplate(
                         }
                         stage('Build App') {
                             sh "npm run build && npm run test"
+                        }
+                        stage ('Init Sealights') {
+                            sh "./node_modules/.bin/slnodejs config --tokenfile $sealightsTokenPath --appname service-ui --branch $branchToBuild --build $srvVersion"
+                            sealightsSession = utils.execStdout("cat buildSessionId")
+                            sh "./node_modules/.bin/slnodejs build --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession --workspacepath './src' --scm none --excludedpaths '**/*.test.js' --es6Modules"
+                        }
+                        stage ('Start Sealights') {
+                            sh "./node_modules/.bin/slnodejs start --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession --testStage 'Unit Tests'"
+                            sh "./node_modules/.bin/jest --coverage --testResultsProcessor=$resultsProcessor"
+                            sh "./node_modules/.bin/slnodejs nycReport --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession"
+                            sh "./node_modules/.bin/slnodejs uploadReports --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession --reportFile junit.xml"
+                            sh "./node_modules/.bin/slnodejs end --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession"
                         }
                     }
                 }
@@ -100,7 +121,7 @@ podTemplate(
 
             stage('Build Docker Image') {
                 container('docker') {
-                    sh "docker build -f Dockerfile-k8s -t quay.io/reportportal/service-ui:BUILD-${env.BUILD_NUMBER} ."
+                    sh "docker build -f Dockerfile-k8s --build-arg sealightsToken=$sealightsToken --build-arg sealightsSession=$sealightsSession -t quay.io/reportportal/service-ui:BUILD-${env.BUILD_NUMBER} ."
                     sh "docker push quay.io/reportportal/service-ui:BUILD-${env.BUILD_NUMBER}"
                 }
             }
@@ -108,16 +129,16 @@ podTemplate(
 
 
         stage('Deploy to Dev') {
-            def valsFile = "merged.yml"
-            container('yq') {
-                sh "yq m -x $k8sChartDir/values.yaml $ciDir/rp/values-ci.yml > $valsFile"
-            }
+            // def valsFile = "merged.yml"
+            // container('yq') {
+            //     sh "yq m -x $k8sChartDir/values.yaml $ciDir/rp/values-ci.yml > $valsFile"
+            // }
 
             container('helm') {
                 dir(k8sChartDir) {
                     sh 'helm dependency update'
                 }
-                sh "helm upgrade --reuse-values --set serviceui.repository=$srvRepo --set serviceui.tag=$srvVersion --wait -f $valsFile reportportal ./$k8sChartDir"
+                sh "helm upgrade -n reportportal --reuse-values --set serviceui.repository=$srvRepo --set serviceui.tag=$srvVersion --wait reportportal ./$k8sChartDir"
             }
         }
     }

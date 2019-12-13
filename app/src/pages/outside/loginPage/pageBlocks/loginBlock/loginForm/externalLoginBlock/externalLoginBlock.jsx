@@ -1,22 +1,17 @@
 /*
- * Copyright 2017 EPAM Systems
+ * Copyright 2019 EPAM Systems
  *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * This file is part of EPAM Report Portal.
- * https://github.com/reportportal/service-ui
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Report Portal is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Report Portal is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 import React, { PureComponent } from 'react';
@@ -26,6 +21,7 @@ import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import { LOGIN_PAGE } from 'controllers/pages';
 import { BigButton } from 'components/buttons/bigButton';
+import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { normalizePathWithPrefix, setWindowLocationToNewPath } from '../../../utils';
 import styles from './externalLoginBlock.scss';
 
@@ -39,32 +35,42 @@ export class ExternalLoginBlock extends PureComponent {
     externalAuth: {},
   };
 
-  externalAuthClickHandler = (path) => setWindowLocationToNewPath(normalizePathWithPrefix(path));
+  state = {
+    authInProgress: false,
+  };
+
+  externalAuthClickHandler = (path) => {
+    this.setState({ authInProgress: true });
+    setWindowLocationToNewPath(normalizePathWithPrefix(path));
+  };
+
+  renderButtons = () => {
+    const { externalAuth } = this.props;
+    return Object.keys(externalAuth).map((objKey) => {
+      const val = externalAuth[objKey];
+
+      return (
+        <div className={cx('external-auth-btn')} key={objKey}>
+          <BigButton roundedCorners color="booger">
+            {val.providers ? (
+              <Link to={{ type: LOGIN_PAGE, payload: { query: { multipleAuth: objKey } } }}>
+                {Parser(val.button)}
+              </Link>
+            ) : (
+              <span onClick={() => this.externalAuthClickHandler(val.path)}>
+                {Parser(val.button)}
+              </span>
+            )}
+          </BigButton>
+        </div>
+      );
+    });
+  };
 
   render() {
-    const { externalAuth } = this.props;
     return (
       <div className={cx('external-login-block')}>
-        {Object.keys(externalAuth).map((objKey) => {
-          const val = externalAuth[objKey];
-
-          return (
-            // eslint-disable-next-line react/no-array-index-key
-            <div className={cx('external-auth-btn')} key={objKey}>
-              <BigButton roundedCorners color="booger">
-                {val.providers ? (
-                  <Link to={{ type: LOGIN_PAGE, payload: { query: { multipleAuth: objKey } } }}>
-                    {Parser(val.button)}
-                  </Link>
-                ) : (
-                  <span onClick={() => this.externalAuthClickHandler(val.path)}>
-                    {Parser(val.button)}
-                  </span>
-                )}
-              </BigButton>
-            </div>
-          );
-        })}
+        {this.state.authInProgress ? <SpinningPreloader /> : this.renderButtons()}
       </div>
     );
   }

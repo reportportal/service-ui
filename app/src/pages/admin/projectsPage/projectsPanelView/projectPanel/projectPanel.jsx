@@ -1,5 +1,22 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import track from 'react-tracking';
+import { ADMIN_PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
@@ -21,15 +38,10 @@ export class ProjectPanel extends Component {
   static propTypes = {
     project: PropTypes.object.isRequired,
     intl: intlShape.isRequired,
-    statisticEventInfo: PropTypes.object,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-  };
-
-  static defaultProps = {
-    statisticEventInfo: {},
   };
 
   getProjectIcon() {
@@ -118,7 +130,9 @@ export class ProjectPanel extends Component {
             />
             <ProjectStatisticButton
               projectName={projectName}
-              onClick={() => this.props.tracking.trackEvent(this.props.statisticEventInfo)}
+              onClick={() =>
+                this.props.tracking.trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.STATISTIC_ICON)
+              }
             />
           </div>
         </div>

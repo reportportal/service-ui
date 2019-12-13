@@ -1,8 +1,26 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import track from 'react-tracking';
+import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { ModalLayout, ModalField, withModal } from 'components/main/modal';
 import { Input } from 'components/inputs/input';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -31,12 +49,13 @@ const messages = defineMessages({
 @reduxForm({
   form: 'renamePatternForm',
   validate: ({ name }, { patterns, data }) => ({
-    name: commonValidators.createPatternNameValidator(data.pattern && data.pattern.id, patterns)(
+    name: commonValidators.createPatternNameValidator(patterns, data.pattern && data.pattern.id)(
       name,
     ),
   }),
 })
 @injectIntl
+@track()
 export class RenamePatternModal extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -46,6 +65,10 @@ export class RenamePatternModal extends Component {
     }),
     handleSubmit: PropTypes.func.isRequired,
     initialize: PropTypes.func.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -57,7 +80,12 @@ export class RenamePatternModal extends Component {
   }
 
   saveAndClose = (closeModal) => (pattern) => {
-    this.props.data.onSave(pattern);
+    const {
+      data: { onSave },
+      tracking,
+    } = this.props;
+    tracking.trackEvent(SETTINGS_PAGE_EVENTS.SAVE_BTN_RENAME_PATTERN_MODAL);
+    onSave(pattern);
     closeModal();
   };
 
@@ -76,7 +104,9 @@ export class RenamePatternModal extends Component {
         }}
         cancelButton={{
           text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+          eventInfo: SETTINGS_PAGE_EVENTS.CANCEL_BTN_RENAME_PATTERN_MODAL,
         }}
+        closeIconEventInfo={SETTINGS_PAGE_EVENTS.CLOSE_ICON_RENAME_PATTERN_MODAL}
       >
         <ModalField label={formatMessage(messages.patternName)} labelWidth={LABEL_WIDTH}>
           <FieldProvider name="name" type="text">

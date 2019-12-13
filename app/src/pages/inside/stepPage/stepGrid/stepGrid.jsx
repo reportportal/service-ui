@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component, Fragment } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
@@ -18,7 +34,7 @@ import {
   ENTITY_ATTRIBUTE_VALUES,
 } from 'components/filterEntities/constants';
 import { NoItemMessage } from 'components/main/noItemMessage';
-import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
+import { STEP_PAGE_EVENTS, getChangeItemStatusEvent } from 'components/main/analytics/events';
 import { StatusDropdown } from '../../common/statusDropdown/statusDropdown';
 import { PredefinedFilterSwitcher } from './predefinedFilterSwitcher';
 import { DefectType } from './defectType';
@@ -57,7 +73,7 @@ NameColumn.defaultProps = {
   className: null,
 };
 
-const StatusColumn = ({ className, value }) => {
+const StatusColumn = ({ className, value, customProps: { onChange } }) => {
   const { id, status, attributes, description } = value;
   return (
     <div className={cx('status-col', className)}>
@@ -66,6 +82,7 @@ const StatusColumn = ({ className, value }) => {
         status={status}
         attributes={attributes}
         description={description}
+        onChange={onChange}
       />
     </div>
   );
@@ -75,6 +92,7 @@ StatusColumn.propTypes = {
   value: PropTypes.object,
   customProps: PropTypes.shape({
     formatMessage: PropTypes.func.isRequired,
+    onChange: PropTypes.func,
   }).isRequired,
 };
 StatusColumn.defaultProps = {
@@ -239,6 +257,8 @@ export class StepGrid extends Component {
         component: StatusColumn,
         customProps: {
           formatMessage: props.intl.formatMessage,
+          onChange: (oldStatus, newStatus) =>
+            props.tracking.trackEvent(getChangeItemStatusEvent(oldStatus, newStatus)),
         },
         withFilter: true,
         filterEventInfo: events.STATUS_FILTER,

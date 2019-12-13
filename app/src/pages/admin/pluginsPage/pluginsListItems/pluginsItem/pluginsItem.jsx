@@ -1,7 +1,24 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
+import track from 'react-tracking';
 import {
   NOTIFICATION_GROUP_TYPE,
   BTS_GROUP_TYPE,
@@ -9,6 +26,10 @@ import {
   AUTHORIZATION_GROUP_TYPE,
   ANALYZER_GROUP_TYPE,
 } from 'common/constants/pluginsGroupTypes';
+import {
+  getPluginItemClickEvent,
+  getDisablePluginItemClickEvent,
+} from 'components/main/analytics/events';
 import { INTEGRATIONS_IMAGES_MAP, INTEGRATION_NAMES_TITLES } from 'components/integrations';
 import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import styles from './pluginsItem.scss';
@@ -47,6 +68,7 @@ const titleMessagesMap = {
 const maxVersionLengthForTitle = 17;
 
 @injectIntl
+@track()
 export class PluginsItem extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -54,6 +76,10 @@ export class PluginsItem extends Component {
     onToggleActive: PropTypes.func.isRequired,
     showNotification: PropTypes.func,
     onClick: PropTypes.func,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -66,18 +92,27 @@ export class PluginsItem extends Component {
   };
 
   onToggleActiveHandler = () => {
+    const { data, onToggleActive, tracking } = this.props;
+    const isEnabled = !data.enabled;
     this.setState({
-      isEnabled: !this.props.data.enabled,
+      isEnabled,
     });
 
-    this.props.onToggleActive(this.props.data).catch(() => {
+    if (!isEnabled) {
+      tracking.trackEvent(getDisablePluginItemClickEvent(data.name));
+    }
+
+    onToggleActive(data).catch(() => {
       this.setState({
-        isEnabled: this.props.data.enabled,
+        isEnabled: data.enabled,
       });
     });
   };
 
-  itemClickHandler = () => this.props.onClick(this.props.data);
+  itemClickHandler = () => {
+    this.props.tracking.trackEvent(getPluginItemClickEvent(this.props.data.name));
+    this.props.onClick(this.props.data);
+  };
 
   render() {
     const {

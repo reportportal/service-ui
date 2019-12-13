@@ -1,69 +1,58 @@
-.cell {
-  position: relative;
-  display: table-cell;
-  padding: 15px;
-  vertical-align: top;
-  color: $COLOR--charcoal-grey;
-  font-size: 13px;
-
-  @media (max-width: $SCREEN_SM_MAX) {
-    width: 100%;
-    height: auto;
-    padding: 10px;
-    border: 0;
-    &:empty {
-      display: none;
-    }
-  }
-}
+/*!
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 .name {
-  line-height: 18px;
-  font-size: 14px;
-  font-family: $FONT-CONDBOLD;
-  letter-spacing: 1px;
+  width: 30%;
   color: $COLOR--topaz;
+  font-size: 15px;
+  font-family: $FONT-SEMIBOLD;
+  line-height: 22px;
   cursor: pointer;
   text-decoration: none;
-  width: 30%;
   word-break: break-all;
-  @media (max-width: $SCREEN_SM_MAX) {
-    padding-top: 15px;
-  }
 }
 
 .description {
   width: 36%;
-  line-height: 1.5;
-  word-break: break-all;
+  font-size: 13px;
+  line-height: 22px;
 }
 
 .owner {
   width: 13%;
-  word-break: break-all;
+  font-size: 13px;
+  line-height: 22px;
 }
 
-.shared {
-  width: 8%;
-}
-
-.edit {
+.icon-cell {
   width: 6.5%;
+  padding: 15px 0;
+
+  &:last-child {
+    padding-right: 0;
+  }
+
   i {
     display: block;
   }
 
-  padding: 15px 0;
-}
-
-.delete {
-  width: 6.5%;
-  i {
-    display: block;
-  }
-  padding: 15px 0;
   @media (max-width: $SCREEN_SM_MAX) {
-    width: 100%;
+    i {
+      display: inline-block;
+    }
   }
 }
 
@@ -80,21 +69,20 @@
   .name,
   .description,
   .owner,
-  .shared,
-  .edit {
+  .icon-cell {
     width: 100%;
+    padding: 5px 20px;
+  }
+
+  .empty, .with-button {
+    @media (max-width: $SCREEN_SM_MAX) {
+      display: none;
+    }
   }
 }
 
 .with-button {
   i {
     cursor: pointer;
-  }
-
-  @media (max-width: $SCREEN_SM_MAX) {
-    width: 100%;
-    height: auto;
-    padding: 10px;
-    display: none;
   }
 }

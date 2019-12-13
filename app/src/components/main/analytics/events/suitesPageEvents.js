@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 export const SUITE_PAGE = 'suites';
 export const SUITES_PAGE_EVENTS = {
   PLUS_MINUS_BREADCRUMB: {
@@ -17,17 +33,17 @@ export const SUITES_PAGE_EVENTS = {
   },
   DELETE_BTN: {
     category: SUITE_PAGE,
-    action: 'Click on Bttn Delete',
+    action: 'Click on Btn Delete',
     label: 'Delete selected Items',
   },
   HISTORY_BTN: {
     category: SUITE_PAGE,
-    action: 'Click on Bttn History',
+    action: 'Click on Btn History',
     label: 'Transition to History View Page',
   },
   REFRESH_BTN: {
     category: SUITE_PAGE,
-    action: 'Click on Bttn Refresh',
+    action: 'Click on Btn Refresh',
     label: 'Refresh the page',
   },
   REFINE_BY_NAME: {
@@ -37,7 +53,7 @@ export const SUITES_PAGE_EVENTS = {
   },
   REFINE_BTN_MORE: {
     category: SUITE_PAGE,
-    action: 'Click on Refine bttn More',
+    action: 'Click on Refine Btn More',
     label: 'Arise dropdown with parameters',
   },
   SELECT_REFINE_PARAMS: {
@@ -49,6 +65,11 @@ export const SUITES_PAGE_EVENTS = {
     category: SUITE_PAGE,
     action: 'Click on item icon "edit"',
     label: 'Arise Modal "Edit Item"',
+  },
+  EDIT_ITEMS_ACTION: {
+    category: SUITE_PAGE,
+    action: 'Click on "edit" in Actions',
+    label: 'Arise Modal "Edit Items"',
   },
   SELECT_ALL_ITEMS: {
     category: SUITE_PAGE,
@@ -72,7 +93,7 @@ export const SUITES_PAGE_EVENTS = {
   },
   PROCEED_VALID_ITEMS: {
     category: SUITE_PAGE,
-    action: 'Click on Bttn "Proceed Valid Items"',
+    action: 'Click on Btn "Proceed Valid Items"',
     label: 'Remove invalid items from selection',
   },
   CLOSE_ICON_EDIT_ITEM_MODAL: {
@@ -85,14 +106,19 @@ export const SUITES_PAGE_EVENTS = {
     action: 'Edit description in Modal "Edit Item"',
     label: 'Edit description',
   },
+  BULK_EDIT_ITEMS_DESCRIPTION: {
+    category: SUITE_PAGE,
+    action: 'Edit description in Modal "Edit Items" in a bulk',
+    label: 'Edit description in mode: ',
+  },
   CANCEL_BTN_EDIT_ITEM_MODAL: {
     category: SUITE_PAGE,
-    action: 'Click on Bttn Cancel on Modal "Edit Item"',
+    action: 'Click on Btn Cancel on Modal "Edit Item"',
     label: 'Close modal "Edit Item"',
   },
   SAVE_BTN_EDIT_ITEM_MODAL: {
     category: SUITE_PAGE,
-    action: 'Click on Bttn Save on Modal "Edit Item"',
+    action: 'Click on Btn Save on Modal "Edit Item"',
     label: 'Save changes',
   },
   NAME_FILTER: {
@@ -229,5 +255,30 @@ export const SUITES_PAGE_EVENTS = {
     category: SUITE_PAGE,
     action: 'Click on TI tag',
     label: 'Transition to TI list view',
+  },
+  TI_TOOLTIP: {
+    category: SUITE_PAGE,
+    action: 'Click on Tooltip "To Investigate"',
+    label: 'Transition to inner level of launch with To Investigate',
+  },
+  LOG_VIEW_SWITCHER: {
+    category: SUITE_PAGE,
+    action: 'Click on launch log view switcher',
+    label: 'Open "Launch log view"',
+  },
+  CLOSE_ICON_DELETE_ITEM_MODAL: {
+    category: SUITE_PAGE,
+    action: 'Click on Icon Close on Modal Delete Item',
+    label: 'Close Modal Delete Item',
+  },
+  CANCEL_BTN_DELETE_ITEM_MODAL: {
+    category: SUITE_PAGE,
+    action: 'Click on Btn Cancel on Modal Delete Item',
+    label: 'Close Modal Delete Item',
+  },
+  DELETE_BTN_DELETE_ITEM_MODAL: {
+    category: SUITE_PAGE,
+    action: 'Click on Btn Delete on Modal Delete Item',
+    label: 'Delete item',
   },
 };

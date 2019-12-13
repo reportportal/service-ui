@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component, Fragment } from 'react';
 import track from 'react-tracking';
 import { connect } from 'react-redux';
@@ -101,12 +117,10 @@ export class Hamburger extends Component {
   };
 
   getForceFinishTooltip = () => {
-    const { intl, projectRole, accountRole } = this.props;
+    const { intl, projectRole, accountRole, userId, launch } = this.props;
     let forceFinishTitle = '';
 
-    if (
-      !canForceFinishLaunch(accountRole, projectRole, this.props.userId === this.props.launch.owner)
-    ) {
+    if (!canForceFinishLaunch(accountRole, projectRole, userId === launch.owner || launch.rerun)) {
       forceFinishTitle = intl.formatMessage(messages.noPermissions);
     }
     if (!this.isInProgress()) {

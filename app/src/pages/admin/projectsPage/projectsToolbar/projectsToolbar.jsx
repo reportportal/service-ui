@@ -1,13 +1,29 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
-
+import track from 'react-tracking';
 import { InputFilter } from 'components/inputs/inputFilter';
 import { FilterEntitiesURLContainer } from 'components/filterEntities/containers';
 import { GhostButton } from 'components/buttons/ghostButton';
-import { ADMIN_ALL_PROJECTS_PAGE_MODAL_EVENTS } from 'components/main/analytics/events';
+import { ADMIN_PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events';
 
 import {
   GRID_VIEW,
@@ -55,6 +71,7 @@ const cx = classNames.bind(styles);
   },
 )
 @injectIntl
+@track()
 export class ProjectsToolbar extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -71,6 +88,10 @@ export class ProjectsToolbar extends Component {
     sortingColumn: PropTypes.string,
     sortingDirection: PropTypes.string,
     onChangeSorting: PropTypes.func,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -82,7 +103,10 @@ export class ProjectsToolbar extends Component {
     onChangeSorting: () => {},
   };
 
-  onExportProjects = () => downloadFile(URLS.exportProjects(this.props.filterEnities));
+  onExportProjects = () => {
+    this.props.tracking.trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.EXPORT_BTN);
+    downloadFile(URLS.exportProjects(this.props.filterEnities));
+  };
 
   getSelectedProjectsNames = () =>
     this.props.selectedProjects.map(({ projectName }) => `'<b>${projectName}</b>'`).join(', ');
@@ -123,7 +147,8 @@ export class ProjectsToolbar extends Component {
   };
 
   deleteProjects = () => {
-    const { selectedProjects, intl } = this.props;
+    const { selectedProjects, intl, tracking } = this.props;
+    tracking.trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.DELETE_PROJECT_BTN);
 
     this.props.deleteItemsAction(selectedProjects, {
       onConfirm: this.confirmDeleteItems,
@@ -140,9 +165,9 @@ export class ProjectsToolbar extends Component {
               names: this.getSelectedProjectsNames(),
             }),
       eventsInfo: {
-        closeIcon: ADMIN_ALL_PROJECTS_PAGE_MODAL_EVENTS.CLOSE_ICON_DELETE_MODAL,
-        cancelBtn: ADMIN_ALL_PROJECTS_PAGE_MODAL_EVENTS.CANCEL_BTN_DELETE_MODAL,
-        deleteBtn: ADMIN_ALL_PROJECTS_PAGE_MODAL_EVENTS.DELETE_BTN_DELETE_MODAL,
+        closeIcon: ADMIN_PROJECTS_PAGE_EVENTS.CLOSE_ICON_DELETE_MODAL,
+        cancelBtn: ADMIN_PROJECTS_PAGE_EVENTS.CANCEL_BTN_DELETE_MODAL,
+        deleteBtn: ADMIN_PROJECTS_PAGE_EVENTS.DELETE_BTN_DELETE_MODAL,
       },
     });
   };
@@ -150,6 +175,7 @@ export class ProjectsToolbar extends Component {
   render() {
     const {
       intl,
+      tracking,
       viewMode,
       setViewMode,
       selectedProjects,
@@ -170,6 +196,11 @@ export class ProjectsToolbar extends Component {
                 entitiesProvider={ProjectEntities}
                 filterValues={entities}
                 onChange={onChange}
+                eventsInfo={{
+                  enterFilter: ADMIN_PROJECTS_PAGE_EVENTS.ENTER_FILTER,
+                  openFilter: ADMIN_PROJECTS_PAGE_EVENTS.FUNNEL_BTN,
+                  applyBtn: ADMIN_PROJECTS_PAGE_EVENTS.APPLY_FILTER_BTN,
+                }}
               />
             )}
           />
@@ -207,7 +238,13 @@ export class ProjectsToolbar extends Component {
                   'toolbar-active-button': viewMode === GRID_VIEW,
                 })}
               >
-                <GhostButton icon={GridViewDashboardIcon} onClick={() => setViewMode(GRID_VIEW)} />
+                <GhostButton
+                  icon={GridViewDashboardIcon}
+                  onClick={() => {
+                    setViewMode(GRID_VIEW);
+                    tracking.trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.SET_TILE_VIEW);
+                  }}
+                />
               </div>
               <div
                 className={cx('toolbar-button', {
@@ -216,7 +253,10 @@ export class ProjectsToolbar extends Component {
               >
                 <GhostButton
                   icon={TableViewDashboardIcon}
-                  onClick={() => setViewMode(TABLE_VIEW)}
+                  onClick={() => {
+                    setViewMode(TABLE_VIEW);
+                    tracking.trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.SET_TABLE_VIEW);
+                  }}
                 />
               </div>
             </Fragment>

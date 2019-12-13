@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
@@ -6,11 +22,12 @@ import AddFilterIcon from 'common/img/add-filter-inline.svg';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import SearchIcon from 'common/img/search-icon-inline.svg';
 import { EntitiesGroup } from 'components/filterEntities/entitiesGroup';
+import track from 'react-tracking';
 import { InputFilterToolbar } from './inputFilterToolbar';
 import styles from './inputFilter.scss';
 
 const cx = classNames.bind(styles);
-
+@track()
 export class InputFilter extends Component {
   static propTypes = {
     value: PropTypes.string,
@@ -26,6 +43,7 @@ export class InputFilter extends Component {
     onRemove: PropTypes.func,
     onValidate: PropTypes.func,
     filterErrors: PropTypes.object,
+    eventsInfo: PropTypes.object,
     onClear: PropTypes.func,
     onFilterChange: PropTypes.func,
     onFilterValidate: PropTypes.func,
@@ -36,6 +54,10 @@ export class InputFilter extends Component {
     filterActive: PropTypes.bool,
     onCancel: PropTypes.func,
     onQuickClear: PropTypes.func,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -48,6 +70,7 @@ export class InputFilter extends Component {
     error: '',
     onChange: () => {},
     filterEntities: [],
+    eventsInfo: {},
     onAdd: () => {},
     onRemove: () => {},
     onValidate: () => {},
@@ -68,11 +91,15 @@ export class InputFilter extends Component {
     opened: false,
   };
 
-  handleChangeInput = (e) => this.props.onFilterStringChange(e.target.value);
+  handleChangeInput = (e) => {
+    this.props.onFilterStringChange(e.target.value);
+    this.props.tracking.trackEvent(this.props.eventsInfo.enterFilter);
+  };
 
   handleClickClear = () => this.props.onQuickClear();
 
   handleApply = () => {
+    this.props.tracking.trackEvent(this.props.eventsInfo.applyBtn);
     this.setState({ opened: false });
     this.props.onFilterApply();
   };
@@ -82,7 +109,12 @@ export class InputFilter extends Component {
     this.props.onCancel();
   };
 
-  togglePopup = () => this.setState({ opened: !this.state.opened });
+  togglePopup = () =>
+    this.setState(
+      { opened: !this.state.opened },
+      () =>
+        this.state.opened ? this.props.tracking.trackEvent(this.props.eventsInfo.openFilter) : null,
+    );
 
   render() {
     const {

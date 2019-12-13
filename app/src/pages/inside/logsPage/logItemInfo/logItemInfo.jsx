@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -76,6 +92,20 @@ const messages = defineMessages({
     defaultMessage: 'Retries',
   },
 });
+const POST_BUG_EVENTS_INFO = {
+  postBtn: LOG_PAGE_EVENTS.POST_BTN_POST_ISSUE_MODAL,
+  attachmentsSwitcher: LOG_PAGE_EVENTS.ATTACHMENTS_SWITCHER_POST_ISSUE_MODAL,
+  logsSwitcher: LOG_PAGE_EVENTS.LOGS_SWITCHER_POST_ISSUE_MODAL,
+  commentSwitcher: LOG_PAGE_EVENTS.COMMENT_SWITCHER_POST_ISSUE_MODAL,
+  cancelBtn: LOG_PAGE_EVENTS.CANCEL_BTN_POST_ISSUE_MODAL,
+  closeIcon: LOG_PAGE_EVENTS.CLOSE_ICON_POST_ISSUE_MODAL,
+};
+const LINK_ISSUE_EVENTS_INFO = {
+  loadBtn: LOG_PAGE_EVENTS.LOAD_BTN_LINK_ISSUE_MODAL,
+  cancelBtn: LOG_PAGE_EVENTS.CANCEL_BTN_LINK_ISSUE_MODAL,
+  addNewIssue: LOG_PAGE_EVENTS.ADD_NEW_ISSUE_LINK_ISSUE_MODAL,
+  closeIcon: LOG_PAGE_EVENTS.CLOSE_ICON_LINK_ISSUE_MODAL,
+};
 
 @connect(
   (state) => ({
@@ -154,20 +184,21 @@ export class LogItemInfo extends Component {
     return title;
   };
 
-  getCopySendDefectButtonText = () => {
+  getCopyDefectButtonText = () => {
     const {
       intl: { formatMessage },
     } = this.props;
 
-    if (this.checkIfTheLastItemIsActive()) {
-      const lastItemWithDefect = this.getLastWithDefect();
-      return formatMessage(messages.copyDefect, {
-        prefix: lastItemWithDefect ? formatMessage(messages.fromPrefix) : '',
-        message: lastItemWithDefect ? `#${lastItemWithDefect.launchNumber}` : '',
-      });
-    }
+    const lastItemWithDefect = this.getLastWithDefect();
+    return formatMessage(messages.copyDefect, {
+      prefix: lastItemWithDefect ? formatMessage(messages.fromPrefix) : '',
+      message: lastItemWithDefect ? `#${lastItemWithDefect.launchNumber}` : '',
+    });
+  };
+
+  getSendDefectButtonText = () => {
     const lastHistoryItem = this.getLastHistoryItem();
-    return formatMessage(messages.sendDefect, {
+    return this.props.intl.formatMessage(messages.sendDefect, {
       message: `#${lastHistoryItem.launchNumber}`,
     });
   };
@@ -182,16 +213,36 @@ export class LogItemInfo extends Component {
 
   getLastHistoryItem = () => this.props.historyItems[this.props.historyItems.length - 1];
 
-  showCopySendDefectModal = () => {
+  showCopyDefectModal = () => {
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.COPY_DEFECT_FROM_BTN);
     this.props.showModalAction({
       id: 'copySendDefectModal',
       data: {
         lastHistoryItem: this.getLastHistoryItem(),
-        itemForCopy: this.checkIfTheLastItemIsActive()
-          ? this.getLastWithDefect()
-          : this.props.logItem,
-        isCopy: this.checkIfTheLastItemIsActive(),
+        itemForCopy: this.getLastWithDefect(),
+        isCopy: true,
         fetchFunc: this.props.fetchFunc,
+        eventsInfo: {
+          okBtn: LOG_PAGE_EVENTS.RECEIVE_BTN_RECEIVE_PREVIOUS_RESULT_MODAL,
+          cancelBtn: LOG_PAGE_EVENTS.CANCEL_BTN_RECEIVE_PREVIOUS_RESULT_MODAL,
+        },
+      },
+    });
+  };
+
+  showSendDefectModal = () => {
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.SEND_DEFECT_TO_BTN);
+    this.props.showModalAction({
+      id: 'copySendDefectModal',
+      data: {
+        lastHistoryItem: this.getLastHistoryItem(),
+        itemForCopy: this.props.logItem,
+        isCopy: false,
+        fetchFunc: this.props.fetchFunc,
+        eventsInfo: {
+          okBtn: LOG_PAGE_EVENTS.SEND_BTN_SEND_DEFECT_MODAL,
+          cancelBtn: LOG_PAGE_EVENTS.CANCEL_BTN_SEND_DEFECT_MODAL,
+        },
       },
     });
   };
@@ -221,17 +272,12 @@ export class LogItemInfo extends Component {
     this.props.tracking.trackEvent(LOG_PAGE_EVENTS.LINK_ISSUE_BTN);
     this.props.linkIssueAction([this.props.logItem], {
       fetchFunc: this.props.fetchFunc,
-      eventsInfo: {
-        loadBtn: LOG_PAGE_EVENTS.LOAD_BTN_LINK_ISSUE_MODAL,
-        cancelBtn: LOG_PAGE_EVENTS.CANCEL_BTN_LINK_ISSUE_MODAL,
-        addNewIssue: LOG_PAGE_EVENTS.ADD_NEW_ISSUE_LINK_ISSUE_MODAL,
-        closeIcon: LOG_PAGE_EVENTS.CLOSE_ICON_LINK_ISSUE_MODAL,
-      },
+      eventsInfo: LINK_ISSUE_EVENTS_INFO,
     });
   };
 
   handleUnlinkTicket = (ticketId) => {
-    const { logItem, fetchFunc } = this.props;
+    const { logItem, fetchFunc, tracking } = this.props;
     const items = [
       {
         ...logItem,
@@ -244,21 +290,23 @@ export class LogItemInfo extends Component {
       },
     ];
 
-    this.props.unlinkIssueAction(items, { fetchFunc });
+    tracking.trackEvent(LOG_PAGE_EVENTS.UNLINK_ISSUE);
+
+    this.props.unlinkIssueAction(items, {
+      fetchFunc,
+      eventsInfo: {
+        unlinkBtn: LOG_PAGE_EVENTS.UNLINK_BTN_UNLINK_ISSUE_MODAL,
+        cancelBtn: LOG_PAGE_EVENTS.CANCEL_BTN_UNLINK_ISSUE_MODAL,
+        closeIcon: LOG_PAGE_EVENTS.CLOSE_ICON_UNLINK_ISSUE_MODAL,
+      },
+    });
   };
 
   handlePostIssue = () => {
     this.props.tracking.trackEvent(LOG_PAGE_EVENTS.POST_ISSUE_BTN);
     this.props.postIssueAction([this.props.logItem], {
       fetchFunc: this.props.fetchFunc,
-      eventsInfo: {
-        postBtn: LOG_PAGE_EVENTS.POST_BTN_POST_ISSUE_MODAL,
-        attachmentsSwitcher: LOG_PAGE_EVENTS.ATTACHMENTS_SWITCHER_POST_ISSUE_MODAL,
-        logsSwitcher: LOG_PAGE_EVENTS.LOGS_SWITCHER_POST_ISSUE_MODAL,
-        commentSwitcher: LOG_PAGE_EVENTS.COMMENT_SWITCHER_POST_ISSUE_MODAL,
-        cancelBtn: LOG_PAGE_EVENTS.CANCEL_BTN_POST_ISSUE_MODAL,
-        closeIcon: LOG_PAGE_EVENTS.CLOSE_ICON_POST_ISSUE_MODAL,
-      },
+      eventsInfo: POST_BUG_EVENTS_INFO,
     });
   };
 
@@ -274,6 +322,8 @@ export class LogItemInfo extends Component {
             saveBtnDropdown: LOG_PAGE_EVENTS.SAVE_BTN_DROPDOWN_EDIT_ITEM_MODAL,
             postBugBtn: LOG_PAGE_EVENTS.POST_BUG_BTN_EDIT_ITEM_MODAL,
             linkIssueBtn: LOG_PAGE_EVENTS.LOAD_BUG_BTN_EDIT_ITEM_MODAL,
+            postBugEvents: POST_BUG_EVENTS_INFO,
+            linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
           },
         },
       });
@@ -285,6 +335,8 @@ export class LogItemInfo extends Component {
           saveBtnDropdown: LOG_PAGE_EVENTS.SAVE_BTN_DROPDOWN_EDIT_ITEM_MODAL,
           postBugBtn: LOG_PAGE_EVENTS.POST_BUG_BTN_EDIT_ITEM_MODAL,
           linkIssueBtn: LOG_PAGE_EVENTS.LOAD_BUG_BTN_EDIT_ITEM_MODAL,
+          postBugEvents: POST_BUG_EVENTS_INFO,
+          linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
         },
       });
     }
@@ -306,7 +358,10 @@ export class LogItemInfo extends Component {
     return retries.map((item, index) => {
       const selected = item.id === retryItemId;
       const retryNumber = index + 1;
-      const updateActiveRetry = () => this.props.updateRetryId(item.id);
+      const updateActiveRetry = () => {
+        this.props.tracking.trackEvent(LOG_PAGE_EVENTS.RETRY_CLICK);
+        this.props.updateRetryId(item.id);
+      };
       return (
         <Retry
           key={item.id}
@@ -352,14 +407,25 @@ export class LogItemInfo extends Component {
             {!debugMode && (
               <div className={cx('actions')}>
                 <div className={cx('action')}>
-                  <GhostButton
-                    icon={this.checkIfTheLastItemIsActive() ? DownLeftArrowIcon : UpRightArrowIcon}
-                    disabled={this.isCopySendButtonDisabled()}
-                    onClick={this.showCopySendDefectModal}
-                    title={this.getIssueActionTitle(messages.noDefectTypeToCopySendDefect)}
-                  >
-                    {this.getCopySendDefectButtonText()}
-                  </GhostButton>
+                  {this.checkIfTheLastItemIsActive() ? (
+                    <GhostButton
+                      icon={DownLeftArrowIcon}
+                      disabled={this.isCopySendButtonDisabled()}
+                      onClick={this.showCopyDefectModal}
+                      title={this.getIssueActionTitle(messages.noDefectTypeToCopySendDefect)}
+                    >
+                      {this.getCopyDefectButtonText()}
+                    </GhostButton>
+                  ) : (
+                    <GhostButton
+                      icon={UpRightArrowIcon}
+                      disabled={this.isCopySendButtonDisabled()}
+                      onClick={this.showSendDefectModal}
+                      title={this.getIssueActionTitle(messages.noDefectTypeToCopySendDefect)}
+                    >
+                      {this.getSendDefectButtonText()}
+                    </GhostButton>
+                  )}
                 </div>
                 <div className={cx('action')}>
                   <GhostButton

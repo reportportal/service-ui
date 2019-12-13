@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
@@ -10,10 +26,12 @@ const cx = classNames.bind(styles);
 export class VideoPlayer extends React.Component {
   static propTypes = {
     observer: PropTypes.object,
+    onPlay: PropTypes.func,
   };
 
   static defaultProps = {
     observer: {},
+    onPlay: () => {},
   };
 
   constructor(props) {
@@ -23,6 +41,7 @@ export class VideoPlayer extends React.Component {
 
   componentDidMount() {
     this.player = videojs(this.videoNode.current, this.props);
+    this.player.on('play', this.props.onPlay);
     this.props.observer.subscribe('goToVideoTimeline', this.updateCurrentTime);
   }
 

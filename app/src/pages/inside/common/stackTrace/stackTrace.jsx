@@ -1,8 +1,25 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import track from 'react-tracking';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { NoItemMessage } from 'components/main/noItemMessage';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
@@ -14,6 +31,7 @@ import {
   isLoadMoreStackTraceVisible,
 } from 'controllers/log';
 import { StackTraceMessageBlock } from 'pages/inside/common/stackTraceMessageBlock';
+import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './stackTrace.scss';
 
 const cx = classNames.bind(styles);
@@ -48,6 +66,7 @@ const LOAD_MORE_HEIGHT = 32;
   },
 )
 @injectIntl
+@track()
 export class StackTrace extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -58,6 +77,10 @@ export class StackTrace extends Component {
     logItem: PropTypes.object,
     hideTime: PropTypes.bool,
     minHeight: PropTypes.number,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -91,6 +114,11 @@ export class StackTrace extends Component {
 
   fetchItems = () => this.props.fetchLogPageStackTrace(this.props.logItem);
 
+  loadMore = () => {
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.LOAD_MORE_CLICK_STACK_TRACE);
+    this.fetchItems();
+  };
+
   isItemsExist = () => {
     const { items } = this.props;
     return items.length;
@@ -120,7 +148,7 @@ export class StackTrace extends Component {
               loading,
             })}
           >
-            <div className={cx('load-more-label')} onClick={this.fetchItems}>
+            <div className={cx('load-more-label')} onClick={this.loadMore}>
               {intl.formatMessage(messages.loadLabel)}
             </div>
             {loading && (

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { PROJECT_MANAGER, OPERATOR, CUSTOMER, MEMBER } from 'common/constants/projectRoles';
 
 export const ALL = 'ALL';
@@ -20,6 +36,7 @@ export const ACTIONS = {
   EDIT_LAUNCH: 'EDIT_LAUNCH',
   BULK_EDIT_LAUNCHES: 'BULK_EDIT_LAUNCHES',
   FORCE_FINISH_LAUNCH: 'FORCE_FINISH_LAUNCH',
+  FORCE_FINISH_RERUN_LAUNCH: 'FORCE_FINISH_RERUN_LAUNCH',
   START_ANALYSIS: 'START_ANALYSIS',
   DELETE_TEST_ITEM: 'DELETE_TEST_ITEM',
   MOVE_TO_DEBUG: 'MOVE_TO_DEBUG',
@@ -33,6 +50,7 @@ export const ACTIONS = {
   EDIT_DASHBOARD: 'EDIT_DASHBOARD',
   DELETE_DASHBOARD: 'DELETE_DASHBOARD',
   DELETE_FILTER: 'DELETE_FILTER',
+  EDIT_FILTER: 'EDIT_FILTER',
   SEE_DEMO_DATA: 'SEE_DEMO_DATA',
   CONFIGURE_EMAIL_NOTIFICATION: 'CONFIGURE_EMAIL_NOTIFICATION',
   CONFIGURE_PATTERN_ANALYSIS: 'CONFIGURE_PATTERN_ANALYSIS',
@@ -58,11 +76,12 @@ export const PERMISSIONS_MAP = {
     [ACTIONS.READ_DATA]: ALL,
     [ACTIONS.RESIZE_AND_DRAG_WIDGETS]: OWNER,
     [ACTIONS.ADD_WIDGET]: OWNER,
-    [ACTIONS.EDIT_WIDGET]: OWNER,
-    [ACTIONS.DELETE_WIDGET]: OWNER,
-    [ACTIONS.EDIT_DASHBOARD]: OWNER,
+    [ACTIONS.EDIT_WIDGET]: ALL,
+    [ACTIONS.DELETE_WIDGET]: ALL,
+    [ACTIONS.EDIT_DASHBOARD]: ALL,
     [ACTIONS.DELETE_DASHBOARD]: ALL,
     [ACTIONS.DELETE_FILTER]: ALL,
+    [ACTIONS.EDIT_FILTER]: ALL,
     [ACTIONS.SEE_DEMO_DATA]: ALL,
     [ACTIONS.CONFIGURE_EMAIL_NOTIFICATION]: ALL,
     [ACTIONS.CONFIGURE_PATTERN_ANALYSIS]: ALL,
@@ -87,6 +106,7 @@ export const PERMISSIONS_MAP = {
     [ACTIONS.EDIT_DASHBOARD]: OWNER,
     [ACTIONS.DELETE_DASHBOARD]: OWNER,
     [ACTIONS.DELETE_FILTER]: OWNER,
+    [ACTIONS.EDIT_FILTER]: OWNER,
   },
   [OPERATOR]: {
     [ACTIONS.SEE_SETTINGS]: ALL,
@@ -102,6 +122,7 @@ export const PERMISSIONS_MAP = {
     [ACTIONS.EDIT_DASHBOARD]: OWNER,
     [ACTIONS.DELETE_DASHBOARD]: OWNER,
     [ACTIONS.DELETE_FILTER]: OWNER,
+    [ACTIONS.EDIT_FILTER]: OWNER,
   },
   [CUSTOMER]: {
     [ACTIONS.SEE_SETTINGS]: ALL,
@@ -121,5 +142,6 @@ export const PERMISSIONS_MAP = {
     [ACTIONS.EDIT_DASHBOARD]: OWNER,
     [ACTIONS.DELETE_DASHBOARD]: OWNER,
     [ACTIONS.DELETE_FILTER]: OWNER,
+    [ACTIONS.EDIT_FILTER]: OWNER,
   },
 };

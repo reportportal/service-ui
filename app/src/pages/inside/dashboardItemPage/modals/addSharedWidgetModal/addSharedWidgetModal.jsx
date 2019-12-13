@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
@@ -74,8 +90,7 @@ export class AddSharedWidgetModal extends Component {
 
   onAdd = (closeModal) => {
     const {
-      tracking,
-      data: { onConfirm, eventsInfo = {} },
+      data: { onConfirm },
     } = this.props;
     const { widgetType, id } = this.state.selectedWidget;
     this.props.showScreenLockAction();
@@ -83,7 +98,6 @@ export class AddSharedWidgetModal extends Component {
       widgetId: id,
       ...getDefaultWidgetConfig(widgetType),
     };
-    tracking.trackEvent(eventsInfo.addBtn);
     onConfirm(widget, closeModal);
   };
 
@@ -107,6 +121,7 @@ export class AddSharedWidgetModal extends Component {
       text: formatMessage(COMMON_LOCALE_KEYS.ADD),
       onClick: this.onAdd,
       disabled: !this.state.selectedWidget,
+      eventInfo: eventsInfo.addBtn,
     };
     const cancelButton = {
       text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),

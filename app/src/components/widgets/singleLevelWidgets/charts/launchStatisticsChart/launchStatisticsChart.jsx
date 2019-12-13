@@ -1,10 +1,25 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import * as d3 from 'd3-selection';
-import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { defectTypesSelector, orderedContentFieldsSelector } from 'controllers/project';
 import { defectLinkSelector, statisticsLinkSelector } from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
@@ -13,16 +28,18 @@ import { PASSED, FAILED, SKIPPED, INTERRUPTED } from 'common/constants/testStatu
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { ChartContainer } from 'components/widgets/common/c3chart';
 import {
+  getDefaultTestItemLinkParams,
   getItemNameConfig,
   getDefectTypeLocators,
   getUpdatedFilterWithTime,
   getChartDefaultProps,
 } from 'components/widgets/common/utils';
 import { createTooltipRenderer } from 'components/widgets/common/tooltip';
+import { CHART_OFFSET } from 'components/widgets/common/constants';
 import { IssueTypeStatTooltip } from '../common/issueTypeStatTooltip';
 import { isSingleColumnChart, calculateTooltipParams } from './config/utils';
 import { getConfig } from './config/getConfig';
-import { TOTAL_KEY, CHART_OFFSET } from './constants';
+import { TOTAL_KEY } from './constants';
 import styles from './launchStatisticsChart.scss';
 
 const cx = classNames.bind(styles);
@@ -30,7 +47,7 @@ const cx = classNames.bind(styles);
 @injectIntl
 @connect(
   (state) => ({
-    project: activeProjectSelector(state),
+    projectId: activeProjectSelector(state),
     defectTypes: defectTypesSelector(state),
     orderedContentFields: orderedContentFieldsSelector(state),
     getDefectLink: defectLinkSelector(state),
@@ -46,7 +63,7 @@ export class LaunchStatisticsChart extends Component {
     intl: intlShape.isRequired,
     navigate: PropTypes.func,
     widget: PropTypes.object.isRequired,
-    project: PropTypes.string.isRequired,
+    projectId: PropTypes.string.isRequired,
     defectTypes: PropTypes.object.isRequired,
     orderedContentFields: PropTypes.array.isRequired,
     getDefectLink: PropTypes.func.isRequired,
@@ -77,6 +94,7 @@ export class LaunchStatisticsChart extends Component {
   componentWillUnmount() {
     if (!this.props.isPreview && this.isCustomTooltipNeeded()) {
       this.removeChartListeners();
+      this.chart = null;
     }
   }
 
@@ -123,14 +141,16 @@ export class LaunchStatisticsChart extends Component {
     const itemWidth = rectWidth / data.values.length;
     const dataIndex = Math.trunc((currentMousePosition[0] - CHART_OFFSET) / itemWidth);
     this.selectedLaunchData = data.values.find((item) => item.index === dataIndex);
+    const renderTooltip = createTooltipRenderer(IssueTypeStatTooltip, calculateTooltipParams, {
+      itemsData: this.chartData.itemsData,
+      isTimeline,
+      formatMessage,
+      defectTypes,
+    });
+
     this.tooltip
       .html(() =>
-        createTooltipRenderer(IssueTypeStatTooltip, calculateTooltipParams, {
-          itemsData: this.chartData.itemsData,
-          isTimeline,
-          formatMessage,
-          defectTypes,
-        })([this.selectedLaunchData], null, null, (id) => this.chartData.colors[id]),
+        renderTooltip([this.selectedLaunchData], null, null, (id) => this.chartData.colors[id]),
       )
       .style('left', `${currentMousePosition[0] - (isTimeline ? 75 : 85)}px`)
       .style('top', `${currentMousePosition[1] - (isTimeline ? 60 : 75)}px`);
@@ -142,15 +162,6 @@ export class LaunchStatisticsChart extends Component {
     }
     return [defectType.toUpperCase()];
   };
-
-  getDefaultLinkParams = (testItemIds) => ({
-    payload: {
-      projectId: this.props.project,
-      filterId: 'all',
-      testItemIds,
-    },
-    type: TEST_ITEM_PAGE,
-  });
 
   getWidgetViewMode = () => this.props.widget.contentParameters.widgetOptions.viewMode;
 
@@ -173,7 +184,7 @@ export class LaunchStatisticsChart extends Component {
       isTimeline: this.isTimeline(),
       isZoomEnabled: widgetOptions.zoom,
       widgetViewMode: this.getWidgetViewMode(),
-      isCustomTooltipNeeded: this.isCustomTooltipNeeded(),
+      isCustomTooltip: this.isCustomTooltipNeeded(),
       isSingleColumn: this.isSingleColumn(),
       onChartClick: this.onChartClick,
     };
@@ -186,10 +197,10 @@ export class LaunchStatisticsChart extends Component {
     MODES_VALUES[CHART_MODES.TIMELINE_MODE];
 
   launchModeClickHandler = (data) => {
-    const { widget, getDefectLink, getStatisticsLink, defectTypes } = this.props;
+    const { widget, getDefectLink, getStatisticsLink, defectTypes, projectId } = this.props;
     const nameConfig = getItemNameConfig(data.id);
     const id = widget.content.result[data.index].id;
-    const defaultParams = this.getDefaultLinkParams(id);
+    const defaultParams = getDefaultTestItemLinkParams(id, projectId);
     const locators = getDefectTypeLocators(nameConfig, defectTypes);
 
     const link = locators

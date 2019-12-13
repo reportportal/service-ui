@@ -8,7 +8,7 @@ RUN make get-build-deps
 
 COPY ./main.go ./
 RUN make fmt
-RUN make build-server
+RUN make build-server v=$version
 
 FROM node:11-alpine as build-frontend
 RUN mkdir -p /usr/src/app

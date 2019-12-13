@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { takeEvery, all, put, select, call } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { fetch, updateStorageItem, waitForSelector } from 'common/utils';
@@ -11,7 +27,11 @@ import {
 import { fetchDataAction } from 'controllers/fetch';
 import { activeProjectSelector } from 'controllers/user';
 import { ALL, LATEST } from 'common/constants/reservedFilterIds';
-import { activeFilterSelector, changeActiveFilterAction } from 'controllers/filter';
+import {
+  activeFilterSelector,
+  changeActiveFilterAction,
+  launchFiltersReadySelector,
+} from 'controllers/filter';
 import { showFilterOnLaunchesAction } from 'controllers/project';
 import { filterIdSelector } from 'controllers/pages';
 import { isEmptyValue } from 'common/utils/isEmptyValue';
@@ -56,10 +76,17 @@ function* fetchLaunches() {
       return;
     }
     if (!activeFilter) {
+      const launchFiltersReady = yield select(launchFiltersReadySelector);
+      if (!launchFiltersReady) {
+        yield call(waitForSelector, launchFiltersReadySelector);
+      }
+      activeFilter = yield select(activeFilterSelector);
+    }
+    if (!activeFilter) {
       const activeProject = yield select(activeProjectSelector);
       let filter = null;
       try {
-        filter = yield fetch(URLS.filter(activeProject, filterId), { method: 'get' });
+        filter = yield call(fetch, URLS.filter(activeProject, filterId), { method: 'get' });
       } catch (e) {
         yield put(changeActiveFilterAction(ALL));
         return;

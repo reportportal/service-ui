@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import isEqual from 'fast-deep-equal';
@@ -9,9 +25,11 @@ export class ChartContainer extends Component {
     widget: PropTypes.object.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
     isPreview: PropTypes.bool,
-    height: PropTypes.number,
+    heightOffset: PropTypes.number,
     observer: PropTypes.object,
-    configData: PropTypes.object,
+    configData: PropTypes.shape({
+      getConfig: PropTypes.func,
+    }),
     legendConfig: PropTypes.shape({
       showLegend: PropTypes.bool,
       onChangeLegend: PropTypes.func,
@@ -21,16 +39,19 @@ export class ChartContainer extends Component {
     chartCreatedCallback: PropTypes.func,
     className: PropTypes.string,
     isCustomTooltip: PropTypes.bool,
+    resizedCallback: PropTypes.func,
   };
 
   static defaultProps = {
     isPreview: false,
-    height: 0,
+    heightOffset: 0,
     observer: {
       subscribe: () => {},
       unsubscribe: () => {},
     },
-    configData: {},
+    configData: {
+      getConfig: () => {},
+    },
     chartCreatedCallback: () => {},
     legendConfig: {
       showLegend: false,
@@ -40,6 +61,7 @@ export class ChartContainer extends Component {
     },
     className: '',
     isCustomTooltip: false,
+    resizedCallback: null,
   };
 
   state = {
@@ -73,6 +95,7 @@ export class ChartContainer extends Component {
     const { showLegend, legendProps = {}, uncheckedLegendItems = [] } = legendConfig;
     this.chart = chart;
     this.node = element;
+    chartCreatedCallback(element, chart, this.config.customData);
 
     if (!widget.content.result || isPreview) {
       return;
@@ -87,7 +110,6 @@ export class ChartContainer extends Component {
       this.node.addEventListener('mousemove', this.setupCoords);
       this.isChartCreated = true;
     }
-    chartCreatedCallback(element, chart, this.config.customData);
   };
 
   onLegendMouseOut = () => {
@@ -108,10 +130,10 @@ export class ChartContainer extends Component {
   };
 
   setupConfig = () => {
-    const { widget, isPreview, container, configData } = this.props;
+    const { widget, isPreview, container, configData, heightOffset } = this.props;
     const { getConfig, ...configParams } = configData;
 
-    this.height = container.offsetHeight;
+    this.height = container.offsetHeight - heightOffset;
     this.width = container.offsetWidth;
 
     const params = {
@@ -154,8 +176,9 @@ export class ChartContainer extends Component {
   isChartCreated = false;
 
   resizeChart = () => {
-    const newHeight = this.props.container.offsetHeight;
-    const newWidth = this.props.container.offsetWidth;
+    const { container, resizedCallback, heightOffset } = this.props;
+    const newHeight = container.offsetHeight - heightOffset;
+    const newWidth = container.offsetWidth;
 
     if (this.height !== newHeight) {
       this.chart.resize({
@@ -163,10 +186,14 @@ export class ChartContainer extends Component {
       });
       this.height = newHeight;
       this.width = newWidth;
-      this.config.size.height = newHeight;
+      if (this.config.size) {
+        this.config.size.height = newHeight;
+      }
+      resizedCallback && resizedCallback();
     } else if (this.width !== newWidth) {
       this.width = newWidth;
       this.chart.flush();
+      resizedCallback && resizedCallback();
     }
   };
 

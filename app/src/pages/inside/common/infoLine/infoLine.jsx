@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
@@ -37,8 +53,8 @@ const normalizeExecutions = (executions) => ({
 @injectIntl
 export class InfoLine extends Component {
   static propTypes = {
-    data: PropTypes.object.isRequired,
     intl: intlShape.isRequired,
+    data: PropTypes.object.isRequired,
     events: PropTypes.object,
   };
   static defaultProps = {
@@ -46,10 +62,13 @@ export class InfoLine extends Component {
   };
 
   render() {
-    const { events, data } = this.props;
-    const { formatMessage } = this.props.intl;
-    const defects = this.props.data.statistics.defects;
-    const executions = normalizeExecutions(this.props.data.statistics.executions);
+    const {
+      intl: { formatMessage },
+      events,
+      data,
+    } = this.props;
+    const defects = data.statistics.defects;
+    const executions = normalizeExecutions(data.statistics.executions);
     const passed = executions.passed / executions.total * 100 || 0;
     const failed = executions.failed / executions.total * 100 || 0;
     const skipped = executions.skipped / executions.total * 100 || 0;

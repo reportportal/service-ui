@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { defineMessages } from 'react-intl';
 import { ACTIONS } from './permissions';
 
@@ -102,6 +118,10 @@ const launchesMessages = defineMessages({
     id: 'PermissionMap.reportLaunch',
     defaultMessage: 'Report launches',
   },
+  [ACTIONS.RERUN_LAUNCHES]: {
+    id: 'PermissionMap.rerunLaunches',
+    defaultMessage: 'Re-run launches',
+  },
   [ACTIONS.VIEW_LAUNCH_IN_DEBUG_MODE]: {
     id: 'PermissionMap.viewLaunchInDebugMode',
     defaultMessage: 'View launches in debug mode',
@@ -129,6 +149,10 @@ const suiteTestTestItemMessages = defineMessages({
     id: 'PermissionMap.investigationActions',
     defaultMessage: 'Investigation actions (defect types and issues in BTS)',
   },
+  [ACTIONS.CHANGE_STATUS]: {
+    id: 'PermissionMap.changeStatus',
+    defaultMessage: 'Change status',
+  },
 });
 
 const widgetFilterDashboardMessages = defineMessages({
@@ -136,13 +160,9 @@ const widgetFilterDashboardMessages = defineMessages({
     id: 'PermissionMap.createShareItem',
     defaultMessage: 'Create, share item',
   },
-  [ACTIONS.EDIT_SHARED_ITEM]: {
-    id: 'PermissionMap.editSharedItem',
-    defaultMessage: 'Edit shared item',
-  },
-  [ACTIONS.DELETE_SHARED_ITEM]: {
-    id: 'PermissionMap.deleteSharedItem',
-    defaultMessage: 'Delete shared item',
+  [ACTIONS.EDIT_DELETE_SHARED_ITEM]: {
+    id: 'PermissionMap.editDeleteSharedItem',
+    defaultMessage: 'Edit, delete shared item',
   },
 });
 

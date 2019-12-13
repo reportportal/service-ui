@@ -1,7 +1,24 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape } from 'react-intl';
+import track from 'react-tracking';
 import {
   assignToProjectAction,
   unassignFromProjectAction,
@@ -15,7 +32,7 @@ import {
 } from 'controllers/administrate/projects';
 import { SETTINGS, MEMBERS } from 'common/constants/projectSections';
 import { DotsMenuButton, SEPARATOR_ITEM, DANGER_ITEM } from 'components/buttons/dotsMenuButton';
-import { ADMIN_ALL_PROJECTS_PAGE_MODAL_EVENTS } from 'components/main/analytics/events';
+import { ADMIN_PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { messages } from '../messages';
 
 @connect(
@@ -32,6 +49,7 @@ import { messages } from '../messages';
   },
 )
 @injectIntl
+@track()
 export class ProjectMenu extends Component {
   static propTypes = {
     project: PropTypes.object.isRequired,
@@ -43,21 +61,28 @@ export class ProjectMenu extends Component {
     unassignFromProject: PropTypes.func.isRequired,
     deleteProject: PropTypes.func.isRequired,
     showModal: PropTypes.func.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   onAssign = () => {
-    const { assignToProject, project } = this.props;
+    const { assignToProject, project, tracking } = this.props;
+    tracking.trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.ASSIGN_ACTION);
     assignToProject(project);
   };
 
   onUnassign = () => {
-    const { unassignFromProject, project } = this.props;
+    const { unassignFromProject, project, tracking } = this.props;
+    tracking.trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.UNASSIGN_ACTION);
     unassignFromProject(project);
   };
 
   onDelete = () => {
-    const { showModal, intl, userId, project } = this.props;
+    const { showModal, intl, userId, project, tracking } = this.props;
     const { projectName } = project;
+    tracking.trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.DELETE_PROJECT_BTN);
     showModal({
       id: 'deleteItemsModal',
       data: {
@@ -69,9 +94,9 @@ export class ProjectMenu extends Component {
         }),
         userId,
         eventsInfo: {
-          closeIcon: ADMIN_ALL_PROJECTS_PAGE_MODAL_EVENTS.CLOSE_ICON_DELETE_MODAL,
-          cancelBtn: ADMIN_ALL_PROJECTS_PAGE_MODAL_EVENTS.CANCEL_BTN_DELETE_MODAL,
-          deleteBtn: ADMIN_ALL_PROJECTS_PAGE_MODAL_EVENTS.DELETE_BTN_DELETE_MODAL,
+          closeIcon: ADMIN_PROJECTS_PAGE_EVENTS.CLOSE_ICON_DELETE_MODAL,
+          cancelBtn: ADMIN_PROJECTS_PAGE_EVENTS.CANCEL_BTN_DELETE_MODAL,
+          deleteBtn: ADMIN_PROJECTS_PAGE_EVENTS.DELETE_BTN_DELETE_MODAL,
         },
       },
     });
@@ -122,16 +147,29 @@ export class ProjectMenu extends Component {
   };
 
   navigateToMembers = () => {
-    const { projectName } = this.props.project;
+    const {
+      tracking,
+      project: { projectName },
+    } = this.props;
+    tracking.trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.MEMBERS_ACTION);
     this.props.navigateToProjectSection(projectName, MEMBERS);
   };
 
   navigateToSettings = () => {
-    const { projectName } = this.props.project;
+    const {
+      tracking,
+      project: { projectName },
+    } = this.props;
+    tracking.trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.SETTINGS_ACTION);
     this.props.navigateToProjectSection(projectName, SETTINGS);
   };
 
   render() {
-    return <DotsMenuButton items={this.getMenuItems()} />;
+    return (
+      <DotsMenuButton
+        items={this.getMenuItems()}
+        onClick={() => this.props.tracking.trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.PROJECT_MENU)}
+      />
+    );
   }
 }

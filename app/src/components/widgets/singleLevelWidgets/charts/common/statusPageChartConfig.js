@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import * as COLORS from 'common/constants/colors';
 import { defineMessages } from 'react-intl';
 import { PERIOD_VALUES_LENGTH, PERIOD_VALUES } from 'common/constants/statusPeriodValues';
@@ -5,7 +21,7 @@ import { createTooltipRenderer } from 'components/widgets/common/tooltip';
 import { messages } from 'components/widgets/common/messages';
 import { IssueTypeStatTooltip } from './issueTypeStatTooltip';
 
-export const localMessages = defineMessages({
+const localMessages = defineMessages({
   xAxisWeeksTitle: {
     id: 'Chart.xAxisWeeksTitle',
     defaultMessage: 't, weeks',
@@ -46,17 +62,23 @@ const getYTicksValues = (columns) => {
   return tickValues;
 };
 
-const calculateTooltipParams = (data, color, customProps) => {
-  const { itemsData, formatMessage, integerValueType, wrapperClassName } = customProps;
-  const activeItem = data[0];
-  const item = itemsData[activeItem.index];
-  const id = activeItem.id;
-  const itemCases = activeItem.value;
+const getItemCases = (value, integerValueType, casesText) => {
+  if (integerValueType) {
+    return value;
+  }
+
+  return casesText ? `${value} ${casesText}` : `${Number(value).toFixed(2)}%`;
+};
+
+export const calculateTooltipParams = (data, color, customProps) => {
+  const { itemsData, formatMessage, integerValueType, casesText, wrapperClassName } = customProps;
+  const { index, id, value } = Array.isArray(data) ? data[0] : data;
+  const item = itemsData[index];
 
   return {
     itemName: item.date || item,
     startTime: null,
-    itemCases: integerValueType ? itemCases : `${Number(itemCases).toFixed(2)}%`,
+    itemCases: getItemCases(value, integerValueType, casesText),
     color: color(id),
     issueStatNameProps: { itemName: messages[id] ? formatMessage(messages[id]) : id },
     wrapperClassName,
@@ -67,7 +89,7 @@ export const getConfig = ({
   content,
   formatMessage,
   positionCallback,
-  size: { height },
+  size,
   interval,
   chartType = 'bar',
   isPointsShow = true,
@@ -110,6 +132,10 @@ export const getConfig = ({
   const yTicksValues = integerValueType ? getYTicksValues(columns) : null;
 
   return {
+    customData: {
+      itemsData,
+      colors,
+    },
     data: {
       columns,
       type: chartType,
@@ -177,9 +203,7 @@ export const getConfig = ({
         wrapperClassName,
       }),
     },
-    size: {
-      height,
-    },
+    size,
     point: {
       show: isPointsShow,
     },

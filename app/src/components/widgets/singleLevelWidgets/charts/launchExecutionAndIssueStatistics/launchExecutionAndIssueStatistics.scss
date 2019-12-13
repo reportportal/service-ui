@@ -1,46 +1,21 @@
-.container {
-  width: 50%;
-  height: 100%;
-}
+/*!
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 .launch-execution-and-issues-chart {
   height: 100%;
-
-  :global {
-    .c3-legend-background {
-      stroke: none !important;
-      stroke-width: 0;
-    }
-
-    .c3-chart-arcs-title {
-      font-size: 24px !important;
-      font-weight: bold;
-    }
-  }
-
-  .small-view {
-    :global {
-      .c3-chart-arc {
-        & text {
-          display: none;
-        }
-      }
-
-      .c3-chart-arcs-title {
-        font-size: 12px !important;
-      }
-    }
-  }
-
-  & .status-page-mode {
-    .small-view {
-      :global {
-        .c3-chart-arcs-title > tspan {
-          font-size: 12px !important;
-        }
-      }
-    }
-  }
 }
 
 .widgets-wrapper {
@@ -52,6 +27,11 @@
   &.with-launch-name-block {
     margin-top: -20px;
   }
+}
+
+.chart-container {
+  width: 50%;
+  height: 100%;
 }
 
 .launch-name-block {
@@ -75,24 +55,4 @@
     font-family: $FONT-SEMIBOLD;
     color: $COLOR--charcoal-grey;
   }
-}
-
-.launch-execution-chart.with-background-color {
-  background-color: $COLOR--light-yellow;
-  height: 100%;
-}
-
-.issue-statistics-chart .legend {
-  top: -4px;
-  line-height: 1.5;
-}
-
-.data-js-launch-execution-chart-container,
-.data-js-issue-statistics-chart-container {
-  position: relative;
-  width: 100%;
-}
-
-.issue-statistics-chart {
-  height: 100%;
 }

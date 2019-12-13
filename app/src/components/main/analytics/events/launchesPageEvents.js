@@ -1,7 +1,43 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+export const LAUNCHES_PAGE = 'launches';
+const LAUNCHES_MODAL = 'Modal launches';
+
 const getActionTableFilter = (titleName) =>
   `Click on Filter Icon before Table title "${titleName}"`;
 const getDescriptionTableFilter = () => 'Arise new field in filter';
-export const LAUNCHES_PAGE = 'launches';
+
+const getAnalyzeItemMessage = (analyzerType, analyzeItemsMode) =>
+  `Run analysis on Modal ${analyzerType} with mode: ${analyzeItemsMode}`;
+
+const getAnalyzeItemEvent = (analyzerType, analyzeItemsMode) => {
+  const message = getAnalyzeItemMessage(analyzerType, analyzeItemsMode.join(', '));
+  return {
+    category: LAUNCHES_MODAL,
+    action: message,
+    label: message,
+  };
+};
+
+export const getRunAnalysisAnalysisModalEvent = (analyzeItemsMode) =>
+  getAnalyzeItemEvent('Analyze Launch', analyzeItemsMode);
+export const getRunAnalysisPatternAnalysisModalEvent = (analyzeItemsMode) =>
+  getAnalyzeItemEvent('Pattern Analyze Launch', analyzeItemsMode);
+
 export const LAUNCHES_PAGE_EVENTS = {
   CLICK_ITEM_NAME: {
     category: LAUNCHES_PAGE,
@@ -26,12 +62,12 @@ export const LAUNCHES_PAGE_EVENTS = {
   CLICK_ANALYSIS_LAUNCH_MENU: {
     category: LAUNCHES_PAGE,
     action: 'Click on "Analysis" in Launch Menu',
-    label: 'Starts Analysing',
+    label: 'Arise Modal "Analyze Launches"',
   },
   CLICK_PATTERN_ANALYSIS_LAUNCH_MENU: {
     category: LAUNCHES_PAGE,
     action: 'Click on "Pattern analysis" in Launch Menu',
-    label: 'Starts pattern analysis',
+    label: 'Arise Modal "Pattern Analyze Launches"',
   },
   CLICK_DELETE_LAUNCH_MENU: {
     category: LAUNCHES_PAGE,
@@ -128,7 +164,7 @@ export const LAUNCHES_PAGE_EVENTS = {
     action: 'Click on To Investigate tag',
     label: 'Transition to inner level of launch with To Investigate',
   },
-  PB_TOOLTIP_CLICK: {
+  PB_TOOLTIP: {
     category: LAUNCHES_PAGE,
     action: 'Click on Tooltip "Total Product Bugs"',
     label: 'Transition to inner level of launch with Product Bugs',
@@ -138,7 +174,7 @@ export const LAUNCHES_PAGE_EVENTS = {
     action: 'Click on Tooltip "Total Auto Bug"',
     label: 'Transition to inner level of launch with Auto Bug',
   },
-  SI_TOOLTIP_CLICK: {
+  SI_TOOLTIP: {
     category: LAUNCHES_PAGE,
     action: 'Click on Tooltip "Total System Issue"',
     label: 'Transition to inner level of launch with System Issue',
@@ -167,6 +203,16 @@ export const LAUNCHES_PAGE_EVENTS = {
     category: LAUNCHES_PAGE,
     action: 'Click on button "Merge" in list of actions',
     label: 'Arise Modal "Merge Launches"',
+  },
+  CLICK_EDIT_LAUNCH_ACTION: {
+    category: LAUNCHES_PAGE,
+    action: 'Click on button "Edit" in list of actions',
+    label: 'Edit Launch/Arise Modal "Edit Launch"',
+  },
+  CLICK_EDIT_LAUNCHES_ACTION: {
+    category: LAUNCHES_PAGE,
+    action: 'Click on button "Edit" in list of actions',
+    label: 'Arise Modal "Edit launches" in a bulk',
   },
   CLICK_COMPARE_ACTION: {
     category: LAUNCHES_PAGE,
@@ -220,17 +266,16 @@ export const LAUNCHES_PAGE_EVENTS = {
   },
   CLICK_IMPORT_BTN: {
     category: LAUNCHES_PAGE,
-    action: 'Click on Bttn Import',
+    action: 'Click on Btn Import',
     label: 'Arise Modul Import Launch',
   },
   ADD_NEW_WIDGET_BTN: {
     category: LAUNCHES_PAGE,
-    action: 'Click on Bttn Add New Widget on Dashboard',
+    action: 'Click on Btn Add New Widget on Dashboard',
     label: 'Arise Modal Add New Widget',
   },
 };
 
-const LAUNCHES_MODAL = 'Modal launches';
 export const LAUNCHES_MODAL_EVENTS = {
   CLOSE_ICON_EDIT_MODAL: {
     category: LAUNCHES_MODAL,
@@ -244,13 +289,18 @@ export const LAUNCHES_MODAL_EVENTS = {
   },
   CLICK_CANCEL_BTN_EDIT_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Cancel on Modal "Edit Launch"',
+    action: 'Click on Btn Cancel on Modal "Edit Launch"',
     label: 'Close modal "Edit Launch"',
   },
   CLICK_SAVE_BTN_EDIT_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Save on Modal "Edit Launch"',
+    action: 'Click on Btn Save on Modal "Edit Launch"',
     label: 'Save changes "Edit Launch"',
+  },
+  BULK_EDIT_LAUNCHES_DESCRIPTION: {
+    category: LAUNCHES_MODAL,
+    action: 'Edit description in Modal "Edit Launches" in a bulk',
+    label: 'Edit description in mode: ',
   },
   CLOSE_ICON_MOVE_MODAL: {
     category: LAUNCHES_MODAL,
@@ -259,12 +309,12 @@ export const LAUNCHES_MODAL_EVENTS = {
   },
   CLICK_CANCEL_BTN_MOVE_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Cancel on Modal "Move to Debug"',
+    action: 'Click on Btn Cancel on Modal "Move to Debug"',
     label: 'Close modal "Move to Debug"',
   },
   CLICK_MOVE_BTN_MOVE_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Move on Modal "Move to Debug"',
+    action: 'Click on Btn Move on Modal "Move to Debug"',
     label: 'Save changes "Move to Debug"',
   },
   CLOSE_ICON_DELETE_MODAL: {
@@ -274,12 +324,12 @@ export const LAUNCHES_MODAL_EVENTS = {
   },
   CANCEL_BTN_DELETE_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Cancel on Modal "Delete Launch"',
+    action: 'Click on Btn Cancel on Modal "Delete Launch"',
     label: 'Close modal "Delete Launch"',
   },
   DELETE_BTN_DELETE_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Delete on Modal "Delete Launch"',
+    action: 'Click on Btn Delete on Modal "Delete Launch"',
     label: 'Delete launch mentioned in modal "Delete Launch"',
   },
   CLOSE_ICON_MERGE_MODAL: {
@@ -289,12 +339,12 @@ export const LAUNCHES_MODAL_EVENTS = {
   },
   CANCEL_BTN_MERGE_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Cancel on Modal "Merge Launches"',
+    action: 'Click on Btn Cancel on Modal "Merge Launches"',
     label: 'Close modal "Merge Launches"',
   },
   MERGE_BTN_MERGE_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Merge on Modal "Merge Launches"',
+    action: 'Click on Btn Merge on Modal "Merge Launches"',
     label: 'Merge launches mentioned in modal "Merge Launches"',
   },
   CLOSE_ICON_IMPORT_MODAL: {
@@ -304,38 +354,53 @@ export const LAUNCHES_MODAL_EVENTS = {
   },
   CANCEL_BTN_IMPORT_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Cancel on Modal "Import Launch"',
+    action: 'Click on Btn Cancel on Modal "Import Launch"',
     label: 'Close Modal Import Launch',
   },
   OK_BTN_IMPORT_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Ok on Modal "Import Launch"',
+    action: 'Click on Btn Ok on Modal "Import Launch"',
     label: 'Import Launch',
   },
   LINEAR_MERGE_BTN_MERGE_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Linear Merge on Modal "Merge Launches"',
+    action: 'Click on Btn Linear Merge on Modal "Merge Launches"',
     label: 'Linear Merge',
   },
   DEEP_MERGE_BTN_MERGE_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Deep Merge on Modal "Merge Launches"',
+    action: 'Click on Btn Deep Merge on Modal "Merge Launches"',
     label: 'Deep Merge',
   },
   OK_BTN_ANALYSIS_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Ok on Modal "Analysis Launch"',
-    label: 'Analysis Launch',
+    action: 'Click on Btn Analyze on Modal "Analyze Launch"',
+    label: 'Analyze launch mentioned in modal "Analyze Launch"',
   },
   CLOSE_BTN_ANALYSIS_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Close Icon on Modal "Analysis Launch"',
-    label: 'Close Analysis Launch Modal',
+    action: 'Click on Close Icon on Modal "Analyze Launch"',
+    label: 'Close Analyze Launch Modal',
   },
   CANCEL_BTN_ANALYSIS_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Cancel on Modal "Analysis Launch"',
-    label: 'Cancel Analysis Launch Modal',
+    action: 'Click on Btn Cancel on Modal "Analyze Launch"',
+    label: 'Cancel Modal "Analyze Launch"',
+  },
+  OK_BTN_PATTERN_ANALYSIS_MODAL: {
+    category: LAUNCHES_MODAL,
+    action: 'Click on Btn Analyze on Modal "Pattern Analyze Launch"',
+    label: 'Analyze launch mentioned in modal "Pattern Analyze Launch"',
+  },
+  CLOSE_BTN_PATTERN_ANALYSIS_MODAL: {
+    category: LAUNCHES_MODAL,
+    action: 'Click on Close Icon on Modal "Pattern Analyze Launch"',
+    label: 'Close Pattern Analyze Launch Modal',
+  },
+  CANCEL_BTN_PATTERN_ANALYSIS_MODAL: {
+    category: LAUNCHES_MODAL,
+    action: 'Click on Btn Cancel on Modal "Pattern Analyze Launch"',
+    label: 'Cancel Modal "Pattern Analyze Launch"',
   },
   CLOSE_ICON_ADD_WIDGET_MODAL: {
     category: LAUNCHES_MODAL,
@@ -344,17 +409,17 @@ export const LAUNCHES_MODAL_EVENTS = {
   },
   CHOOSE_WIDGET_TYPE_ADD_WIDGET_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Choose radio bttn of Widget type in Modal Add New Widget',
+    action: 'Choose radio Btn of Widget type in Modal Add New Widget',
     label: 'Choose Widget type in Modal Add New Widget',
   },
   NEXT_STEP_ADD_WIDGET_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Next Step on Modal Add New Widget',
+    action: 'Click on Btn Next Step on Modal Add New Widget',
     label: 'Transition to Next Step on Modal Add New Widget',
   },
   PREVIOUS_STEP_ADD_WIDGET_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Previous Step on Modal Add New Widget',
+    action: 'Click on Btn Previous Step on Modal Add New Widget',
     label: 'Transition to Previous Step in Modal Add New Widget',
   },
   ENTER_WIDGET_DESCRIPTION_ADD_WIDGET_MODAL: {
@@ -369,7 +434,7 @@ export const LAUNCHES_MODAL_EVENTS = {
   },
   ADD_BTN_ADD_WIDGET_MODAL: {
     category: LAUNCHES_MODAL,
-    action: 'Click on Bttn Add in Modal Add New Widget',
+    action: 'Click on Btn Add in Modal Add New Widget',
     label: 'Submit changes in filter in Modal Add New Widget',
   },
 };

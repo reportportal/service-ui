@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { createSelector } from 'reselect';
 import {
   testItemIdsArraySelector,
@@ -214,20 +230,19 @@ export const breadcrumbsSelector = createSelector(
 );
 
 export const nameLinkSelector = (state, ownProps) => {
-  const payload =
-    (ownProps.ownLinkParams && ownProps.ownLinkParams.payload) || payloadSelector(state);
-  let testItemIds = ownProps.testItemIds || testItemIdsSelector(state);
+  const ownLinkParams = ownProps.ownLinkParams;
+  const payload = (ownLinkParams && ownLinkParams.payload) || payloadSelector(state);
+  let testItemIds = (ownLinkParams && ownLinkParams.testItemIds) || testItemIdsSelector(state);
   const isDebugMode = debugModeSelector(state);
   let query = pagePropertiesSelector(state);
   const testItem = testItemSelector(state, ownProps.itemId);
   const hasChildren = testItem && testItem.hasChildren;
-  const page =
-    (ownProps.ownLinkParams && ownProps.ownLinkParams.page) ||
-    getNextPage(isDebugMode, hasChildren);
+  const page = (ownLinkParams && ownLinkParams.page) || getNextPage(isDebugMode, hasChildren);
   if (testItem) {
     const testItemPath = testItem.path.split('.').slice(0, -1);
     testItemIds = [testItem.launchId, ...testItemPath].join('/');
   }
+
   if (ownProps.uniqueId) {
     query = {
       ...query,

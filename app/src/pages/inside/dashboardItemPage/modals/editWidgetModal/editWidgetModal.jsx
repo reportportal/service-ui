@@ -1,8 +1,23 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
-import track from 'react-tracking';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { destroy, getFormValues, isDirty, isValid } from 'redux-form';
 import { URLS } from 'common/urls';
@@ -34,7 +49,6 @@ const messages = defineMessages({
 });
 
 @withModal('editWidgetModal')
-@track()
 @connect(
   (state) => ({
     projectId: activeProjectSelector(state),
@@ -59,10 +73,6 @@ export class EditWidgetModal extends Component {
     destroyWizardForm: PropTypes.func.isRequired,
     dirty: PropTypes.bool.isRequired,
     valid: PropTypes.bool.isRequired,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
     widgetSettings: PropTypes.object,
     data: PropTypes.shape({
       onConfirm: PropTypes.func,
@@ -114,7 +124,7 @@ export class EditWidgetModal extends Component {
 
   onSave = (closeModal) => {
     const {
-      data: { onConfirm, widget, eventsInfo },
+      data: { onConfirm, widget },
       intl: { formatMessage },
       widgetSettings,
       projectId,
@@ -122,7 +132,6 @@ export class EditWidgetModal extends Component {
 
     const data = prepareWidgetDataForSubmit(this.preprocessOutputData(widgetSettings));
 
-    this.props.tracking.trackEvent(eventsInfo.okBtn);
     this.props.showScreenLockAction();
     fetch(URLS.widget(projectId, widget.id), {
       method: 'put',
@@ -190,6 +199,7 @@ export class EditWidgetModal extends Component {
       text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
       onClick: this.onSave,
       disabled: this.state.formAppearance.isMainControlsLocked || !valid,
+      eventInfo: eventsInfo.okBtn,
     };
     const cancelButton = {
       text: buttonsMessages.cancel,

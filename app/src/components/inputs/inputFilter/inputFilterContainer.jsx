@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import isEqual from 'fast-deep-equal';
@@ -21,12 +37,14 @@ export class InputFilterContainer extends Component {
     onChange: PropTypes.func,
     entitiesProvider: PropTypes.elementType,
     id: PropTypes.string.isRequired,
+    eventsInfo: PropTypes.object,
   };
 
   static defaultProps = {
     filterValues: {},
     onChange: () => {},
     entitiesProvider: null,
+    eventsInfo: {},
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -75,7 +93,7 @@ export class InputFilterContainer extends Component {
   handleCancel = () => this.setState({ values: this.state.prevValues });
 
   render() {
-    const { entitiesProvider, filterValues } = this.props;
+    const { entitiesProvider, filterValues, eventsInfo } = this.props;
     return (
       <FilterEntitiesContainer
         entities={this.state.values}
@@ -94,6 +112,7 @@ export class InputFilterContainer extends Component {
             value={this.state.filterString}
             onFilterStringChange={this.handleFilterStringChange}
             filterActive={Object.keys(filterValues).length > 0}
+            eventsInfo={eventsInfo}
           />
         )}
       />

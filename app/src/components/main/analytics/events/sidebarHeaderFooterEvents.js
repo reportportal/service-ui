@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 const SIDEBAR = 'sidebar';
 export const SIDEBAR_EVENTS = {
   CLICK_DASHBOARD_BTN: {
@@ -17,16 +33,39 @@ export const SIDEBAR_EVENTS = {
   },
 };
 
+export const ADMIN_SIDEBAR_EVENTS = {
+  CLICK_PROJECTS_BTN: {
+    category: SIDEBAR,
+    action: 'Click on Menu Btn Projects',
+    label: 'Transition to Projects Page',
+  },
+  CLICK_ALL_USERS_BTN: {
+    category: SIDEBAR,
+    action: 'Click on Menu Btn All Users',
+    label: 'Transition on All Users Page',
+  },
+  CLICK_SERVER_SETTINGS_BTN: {
+    category: SIDEBAR,
+    action: 'Click on Menu Btn Server Settings',
+    label: 'Transition on Server Settings Page',
+  },
+  CLICK_PLUGINS_BTN: {
+    category: SIDEBAR,
+    action: 'Click on Menu Btn Plugins',
+    label: 'Transition on Plugins Page',
+  },
+};
+
 const HEADER = 'header';
 export const HEADER_EVENTS = {
   CLICK_MEMBERS_BTN: {
     category: HEADER,
-    action: 'Click on Menu Bttn Members',
+    action: 'Click on Menu Btn Members',
     label: 'Transition on Members Page',
   },
   CLICK_SETTINGS_BTN: {
     category: HEADER,
-    action: 'Click on Menu Bttn Settings',
+    action: 'Click on Menu Btn Settings',
     label: 'Transition on Settings Page',
   },
   CLICK_PROFILE_DROPDOWN: {
@@ -46,7 +85,7 @@ export const HEADER_EVENTS = {
   },
   CLICK_LOGOUT_LINK: {
     category: HEADER,
-    action: 'Click on Logout link on Dropdown',
+    action: 'Click on Logout link',
     label: 'Logout and transition on Landing Page',
   },
   CLICK_PROJECT_DROPDOWN: {

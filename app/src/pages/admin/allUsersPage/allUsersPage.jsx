@@ -1,13 +1,30 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import track from 'react-tracking';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { withPagination, DEFAULT_PAGINATION, SIZE_KEY, PAGE_KEY } from 'controllers/pagination';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { ADMIN_ALL_USERS_PAGE_MODAL_EVENTS } from 'components/main/analytics/events';
+import { ADMIN_ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { NoItemMessage } from 'components/main/noItemMessage';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
@@ -68,6 +85,7 @@ const messages = defineMessages({
   },
 });
 
+@track()
 @connect(
   (state) => ({
     url: URLS.allUsers(state),
@@ -122,6 +140,10 @@ export class AllUsersPage extends Component {
     hideScreenLockAction: PropTypes.func,
     showNotification: PropTypes.func,
     fetchAllUsersAction: PropTypes.func,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -213,7 +235,8 @@ export class AllUsersPage extends Component {
       });
   };
   handlerDelete = () => {
-    const { selectedUsers, intl } = this.props;
+    const { selectedUsers, intl, tracking } = this.props;
+    tracking.trackEvent(ADMIN_ALL_USERS_PAGE_EVENTS.DELETE_BTN);
     this.props.deleteItemsAction(this.props.selectedUsers, {
       onConfirm: this.confirmDeleteItems,
       header:
@@ -227,9 +250,9 @@ export class AllUsersPage extends Component {
               names: this.selectedUsersNames,
             }),
       eventsInfo: {
-        closeIcon: ADMIN_ALL_USERS_PAGE_MODAL_EVENTS.CLOSE_ICON_DELETE_MODAL,
-        cancelBtn: ADMIN_ALL_USERS_PAGE_MODAL_EVENTS.CANCEL_BTN_DELETE_MODAL,
-        deleteBtn: ADMIN_ALL_USERS_PAGE_MODAL_EVENTS.DELETE_BTN_DELETE_MODAL,
+        closeIcon: ADMIN_ALL_USERS_PAGE_EVENTS.CLOSE_ICON_DELETE_MODAL,
+        cancelBtn: ADMIN_ALL_USERS_PAGE_EVENTS.CANCEL_BTN_DELETE_MODAL,
+        deleteBtn: ADMIN_ALL_USERS_PAGE_EVENTS.DELETE_BTN_DELETE_MODAL,
       },
     });
   };

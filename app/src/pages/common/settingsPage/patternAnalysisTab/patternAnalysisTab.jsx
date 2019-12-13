@@ -1,8 +1,26 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
+import track from 'react-tracking';
+import { SETTINGS_PAGE_EVENTS, getSaveNewPatternEvent } from 'components/main/analytics/events';
 import { patternsSelector, addPatternAction } from 'controllers/project';
 import { STRING_PATTERN } from 'common/constants/patternTypes';
 import { showModalAction } from 'controllers/modal';
@@ -49,6 +67,7 @@ const cx = classNames.bind(styles);
     showModal: showModalAction,
   },
 )
+@track()
 export class PatternAnalysisTab extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -57,6 +76,10 @@ export class PatternAnalysisTab extends Component {
     showModal: PropTypes.func.isRequired,
     userRole: PropTypes.string,
     projectRole: PropTypes.string,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     patterns: [],
@@ -65,19 +88,29 @@ export class PatternAnalysisTab extends Component {
   };
 
   onAddPattern = () => {
-    const { intl, showModal, addPattern } = this.props;
+    const { intl, showModal, tracking } = this.props;
+    tracking.trackEvent(SETTINGS_PAGE_EVENTS.CREATE_PATTERN_BTN);
     showModal({
       id: 'createPatternModal',
       data: {
-        onSave: addPattern,
+        onSave: this.handleSaveNewPattern,
         pattern: {
           type: STRING_PATTERN,
           enabled: true,
         },
         modalTitle: intl.formatMessage(messages.createPatternTitle),
         isNewPattern: true,
+        eventsInfo: {
+          cancelBtn: SETTINGS_PAGE_EVENTS.CANCEL_BTN_CREATE_PATTERN_MODAL,
+          closeIcon: SETTINGS_PAGE_EVENTS.CLOSE_ICON_CREATE_PATTERN_MODAL,
+        },
       },
     });
+  };
+
+  handleSaveNewPattern = (pattern) => {
+    this.props.tracking.trackEvent(getSaveNewPatternEvent(pattern.type));
+    this.props.addPattern(pattern);
   };
 
   isAbleToEditForm = () => canConfigurePatternAnalysis(this.props.userRole, this.props.projectRole);

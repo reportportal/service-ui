@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { all, call, put, select, takeEvery, take } from 'redux-saga/effects';
 import { fetch } from 'common/utils';
 import {
@@ -25,7 +41,7 @@ import {
   SET_ACTIVE_PROJECT,
   userIdSelector,
 } from 'controllers/user';
-import { fetchProjectAction } from 'controllers/project';
+import { FETCH_PROJECT_SUCCESS, fetchProjectAction } from 'controllers/project';
 import { fetchPluginsAction, fetchGlobalIntegrationsAction } from 'controllers/plugins';
 import { redirect, pathToAction } from 'redux-first-router';
 import qs, { stringify } from 'qs';
@@ -89,6 +105,7 @@ function* loginSuccessHandler({ payload }) {
   yield all([take([FETCH_USER_SUCCESS, FETCH_USER_ERROR]), take(SET_ACTIVE_PROJECT)]);
   const projectId = yield select(activeProjectSelector);
   yield put(fetchProjectAction(projectId));
+  yield take(FETCH_PROJECT_SUCCESS);
   yield put(fetchPluginsAction());
   yield put(fetchGlobalIntegrationsAction());
   yield put(authSuccessAction());

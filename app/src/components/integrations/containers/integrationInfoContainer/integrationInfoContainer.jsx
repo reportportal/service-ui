@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -40,7 +56,7 @@ export class IntegrationInfoContainer extends Component {
 
   render() {
     const {
-      integrationType: { name, details: { version } = {}, type },
+      integrationType: { name, details = {}, type },
       integrationType,
       projectIntegrations,
       globalIntegrations,
@@ -56,12 +72,13 @@ export class IntegrationInfoContainer extends Component {
           image={INTEGRATIONS_IMAGES_MAP[name]}
           description={INTEGRATIONS_DESCRIPTIONS_MAP[name]}
           title={INTEGRATION_NAMES_TITLES[name]}
-          version={version}
+          version={details.version}
           data={integrationType}
           onToggleActive={onToggleActive}
           isGlobal={isGlobal}
         />
         <InstancesSection
+          pluginDetails={details}
           globalIntegrations={globalIntegrations}
           projectIntegrations={projectIntegrations}
           onItemClick={onItemClick}

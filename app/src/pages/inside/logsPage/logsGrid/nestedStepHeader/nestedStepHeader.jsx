@@ -1,6 +1,24 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
+import track from 'react-tracking';
+import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { DurationBlock } from 'pages/inside/common/durationBlock';
 import ArrowIcon from 'common/img/arrow-right-inline.svg';
 import AttachmentIcon from 'common/img/attachment-inline.svg';
@@ -11,6 +29,7 @@ import styles from './nestedStepHeader.scss';
 
 const cx = classNames.bind(styles);
 
+@track()
 export class NestedStepHeader extends Component {
   static propTypes = {
     data: PropTypes.object,
@@ -18,6 +37,10 @@ export class NestedStepHeader extends Component {
     onToggle: PropTypes.func,
     level: PropTypes.number,
     loading: PropTypes.bool,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -29,7 +52,8 @@ export class NestedStepHeader extends Component {
   };
 
   onToggle = () => {
-    const { onToggle } = this.props;
+    const { onToggle, collapsed } = this.props;
+    if (collapsed) this.props.tracking.trackEvent(LOG_PAGE_EVENTS.NESTED_STEP_EXPAND);
     onToggle();
   };
   isAttachmentCountVisible = () => {

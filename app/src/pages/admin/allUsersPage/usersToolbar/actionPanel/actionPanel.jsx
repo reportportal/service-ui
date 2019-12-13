@@ -1,8 +1,26 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
+import track from 'react-tracking';
+import { ADMIN_ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { GhostButton } from 'components/buttons/ghostButton';
 import ExportIcon from 'common/img/export-inline.svg';
 import InviteUserIcon from 'common/img/invite-inline.svg';
@@ -35,11 +53,11 @@ const messages = defineMessages({
   },
   [INVITE_USER]: {
     id: 'AllUsersPage.inviteUser',
-    defaultMessage: 'Invite user',
+    defaultMessage: 'Invite User',
   },
   [ADD_USER]: {
     id: 'AllUsersPage.AddUser',
-    defaultMessage: 'Add user',
+    defaultMessage: 'Add User',
   },
   addUserSuccessNotification: {
     id: 'ActionPanel.addUserNotification',
@@ -47,6 +65,7 @@ const messages = defineMessages({
   },
 });
 
+@track()
 @connect(
   (state) => ({
     users: allUsersSelector(state),
@@ -69,6 +88,10 @@ export class ActionPanel extends Component {
     showDefaultErrorNotification: PropTypes.func.isRequired,
     fetchAllUsersAction: PropTypes.func.isRequired,
     showModalAction: PropTypes.func.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -76,15 +99,20 @@ export class ActionPanel extends Component {
     filterEnities: {},
   };
 
-  onExportUsers = () => downloadFile(URLS.exportUsers(this.props.filterEnities));
+  onExportUsers = () => {
+    this.props.tracking.trackEvent(ADMIN_ALL_USERS_PAGE_EVENTS.EXPORT_BTN);
+    downloadFile(URLS.exportUsers(this.props.filterEnities));
+  };
 
-  showAddUserModal = () =>
+  showAddUserModal = () => {
+    this.props.tracking.trackEvent(ADMIN_ALL_USERS_PAGE_EVENTS.ADD_USER_BTN);
     this.props.showModalAction({
       id: 'allUsersAddUserModal',
       data: {
         onSubmit: this.addUser,
       },
     });
+  };
 
   addUser = (values) => {
     fetch(URLS.user(), {
@@ -111,6 +139,7 @@ export class ActionPanel extends Component {
   };
 
   showInviteUserModal = () => {
+    this.props.tracking.trackEvent(ADMIN_ALL_USERS_PAGE_EVENTS.INVITE_USER_BTN);
     this.props.showModalAction({
       id: 'inviteUserModal',
       data: { onInvite: this.props.fetchAllUsersAction, isProjectSelector: true },

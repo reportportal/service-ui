@@ -1,14 +1,32 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3-selection';
-import isEqual from 'fast-deep-equal';
 import classNames from 'classnames/bind';
 import { intlShape, injectIntl } from 'react-intl';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
-import { C3Chart } from 'components/widgets/common/c3chart';
-import { getConfig } from '../common/statusPageChartConfig';
-import { CHART_OFFSET } from '../launchStatisticsChart/constants';
-import { createTooltip } from './utils';
+import { createTooltipRenderer } from 'components/widgets/common/tooltip';
+import { getChartDefaultProps } from 'components/widgets/common/utils';
+import { ChartContainer } from 'components/widgets/common/c3chart';
+import { CHART_OFFSET } from 'components/widgets/common/constants';
+import { messages } from 'components/widgets/common/messages';
+import { getConfig, calculateTooltipParams } from '../common/statusPageChartConfig';
+import { IssueTypeStatTooltip } from '../common/issueTypeStatTooltip';
 import styles from './issuesStatusPageChart.scss';
 
 const cx = classNames.bind(styles);
@@ -19,48 +37,24 @@ export class IssuesStatusPageChart extends Component {
     intl: intlShape.isRequired,
     widget: PropTypes.object.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
-    observer: PropTypes.object,
     height: PropTypes.number,
     interval: PropTypes.string,
   };
 
   static defaultProps = {
     height: 0,
-    observer: {},
     interval: null,
   };
 
-  state = {
-    isConfigReady: false,
-  };
-
-  componentDidMount() {
-    const { observer } = this.props;
-
-    observer.subscribe && observer.subscribe('widgetResized', this.resizeChart);
-    this.getConfig();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (!isEqual(prevProps.widget, this.props.widget)) {
-      this.getConfig();
-    }
-  }
-
   componentWillUnmount() {
-    const { observer } = this.props;
-
-    this.node && this.node.removeEventListener('mousemove', this.getCoords);
-    observer.unsubscribe && observer.unsubscribe('widgetResized', this.resizeChart);
-    this.interactElems && this.interactElems.on('click mousemove mouseover mouseout', null);
+    this.removeChartListeners();
     this.chart = null;
   }
 
-  onChartCreated = (chart, element) => {
+  onChartCreated = (node, chart, chartData) => {
     this.chart = chart;
-    this.node = element;
-    this.node.addEventListener('mousemove', this.getCoords);
-
+    this.node = node;
+    this.chartData = chartData;
     this.interactElems = d3.selectAll(this.node.querySelectorAll('.c3-area'));
 
     this.createInteractiveTooltip();
@@ -71,98 +65,43 @@ export class IssuesStatusPageChart extends Component {
   onItemMouseOut = () => this.tooltip.style('display', 'none');
 
   onItemMouseMove = (data) => {
+    const { formatMessage } = this.props.intl;
     const rectWidth = this.node.querySelectorAll('.c3-event-rect')[0].getAttribute('width');
     const currentMousePosition = d3.mouse(this.chart.element);
     const itemWidth = rectWidth / data.values.length;
     const dataIndex = Math.trunc((currentMousePosition[0] - CHART_OFFSET) / itemWidth);
     const selectedLaunchData = data.values.find((item) => item.index === dataIndex);
+    const renderTooltip = createTooltipRenderer(IssueTypeStatTooltip, calculateTooltipParams, {
+      itemsData: this.chartData.itemsData,
+      wrapperClassName: cx('tooltip-container'),
+      casesText: formatMessage(messages.cases),
+      formatMessage,
+    });
 
     this.tooltip
-      .html(() =>
-        this.tooltipContentRenderer(selectedLaunchData, null, null, this.config.data.colors),
-      )
+      .html(() => renderTooltip(selectedLaunchData, null, null, (id) => this.chartData.colors[id]))
       .style('left', `${currentMousePosition[0] - 90}px`)
       .style('top', `${currentMousePosition[1] - 50}px`);
   };
 
-  getConfig = () => {
+  getConfigData = () => {
     const {
       intl: { formatMessage },
-      widget,
-      container,
       interval,
     } = this.props;
 
-    const params = {
-      content: widget.content,
-      isPreview: false,
+    return {
+      getConfig,
       formatMessage,
-      positionCallback: this.getPosition,
-      size: {
-        height: container.offsetHeight,
-        width: container.offsetWidth,
-      },
-    };
-
-    this.size = params.size;
-
-    const configParams = {
-      ...params,
       interval,
       chartType: MODES_VALUES[CHART_MODES.AREA_VIEW],
       isPointsShow: false,
       isCustomTooltip: true,
     };
-
-    this.config = getConfig(configParams);
-    this.configCreationTimeStamp = Date.now();
-    this.initTooltipContentRenderer();
-
-    this.setState({
-      isConfigReady: true,
-    });
   };
 
-  getCoords = ({ pageX, pageY }) => {
-    this.x = pageX;
-    this.y = pageY;
-  };
-
-  getPosition = (d, width, height) => {
-    const rect = this.node.getBoundingClientRect();
-    const left = this.x - rect.left - width / 2;
-    const top = this.y - rect.top - height;
-
-    return {
-      top: top - 8,
-      left,
-    };
-  };
-
-  initTooltipContentRenderer = () => {
-    const {
-      intl: { formatMessage },
-      widget: { content },
-    } = this.props;
-    const wrapperClassName = cx('tooltip-container');
-
-    this.tooltipContentRenderer = createTooltip(content, formatMessage, wrapperClassName);
-  };
-
-  resizeChart = () => {
-    const newHeight = this.props.container.offsetHeight;
-    const newWidth = this.props.container.offsetWidth;
-
-    if (this.height !== newHeight) {
-      this.chart.resize({
-        height: newHeight,
-        width: newWidth,
-      });
-      this.height = newHeight;
-    } else if (this.width !== newWidth) {
-      this.chart.flush();
-      this.width = newWidth;
-    }
+  removeChartListeners = () => {
+    this.interactElems && this.interactElems.on('click mousemove mouseover mouseout', null);
   };
 
   createInteractiveTooltip = () => {
@@ -177,16 +116,16 @@ export class IssuesStatusPageChart extends Component {
 
   render() {
     return (
-      this.state.isConfigReady && (
-        <div className={cx('auto-bugs-chart', 'timeline-mode')}>
-          <C3Chart
-            config={this.config}
-            onChartCreated={this.onChartCreated}
-            className={cx('widget-wrapper')}
-            configCreationTimeStamp={this.configCreationTimeStamp}
-          />
-        </div>
-      )
+      <ChartContainer
+        {...getChartDefaultProps(this.props)}
+        legendConfig={{
+          showLegend: false,
+        }}
+        className={cx('issues-status-page-chart')}
+        configData={this.getConfigData()}
+        chartCreatedCallback={this.onChartCreated}
+        isCustomTooltip
+      />
     );
   }
 }

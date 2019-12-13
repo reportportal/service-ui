@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import * as widgetTypes from 'common/constants/widgetTypes';
 import { NoDataAvailable } from './noDataAvailable';
 import {
@@ -10,7 +26,7 @@ import {
   PassingRatePerLaunch,
   PassingRateSummary,
   LaunchExecutionAndIssueStatistics,
-  OverallStatisticsChart,
+  OverallStatistics,
   InvestigatedTrendChart,
 } from './singleLevelWidgets/charts';
 import {
@@ -52,7 +68,7 @@ const CHARTS = {
   [widgetTypes.PRODUCT_STATUS]: ProductStatus,
   [widgetTypes.CUMULATIVE_TREND]: CumulativeTrendChart,
   [widgetTypes.COMPONENT_HEALTH_CHECK]: ComponentHealthCheck,
-  [widgetTypes.OVERALL_STATISTICS]: OverallStatisticsChart,
+  [widgetTypes.OVERALL_STATISTICS]: OverallStatistics,
   [widgetTypes.INVESTIGATED_PERCENTAGE_OF_LAUNCHES]: InvestigatedTrendChart,
   [widgetTypes.MOST_POPULAR_PATTERNS]: MostPopularPatterns,
   [widgetTypes.MOST_TIME_CONSUMING]: MostTimeConsumingTestCases,

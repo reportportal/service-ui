@@ -1,7 +1,24 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape } from 'react-intl';
+import track from 'react-tracking';
 
 import { SIZE_KEY, withPagination, PAGE_KEY } from 'controllers/pagination';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
@@ -19,6 +36,7 @@ import {
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { NoItemMessage } from 'components/main/noItemMessage';
+import { ADMIN_PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events';
 
 import { ProjectsPanelView } from './../projectsPanelView';
 import { ProjectsGrid } from './../projectsGrid';
@@ -42,6 +60,7 @@ import { ProjectsToolbar } from './../projectsToolbar';
   paginationSelector: projectsPaginationSelector,
 })
 @injectIntl
+@track()
 export class Projects extends Component {
   static propTypes = {
     activePage: PropTypes.number,
@@ -58,6 +77,10 @@ export class Projects extends Component {
     loading: PropTypes.bool,
     projects: PropTypes.arrayOf(PropTypes.object),
     unselectAllProjectsAction: PropTypes.func.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -77,6 +100,11 @@ export class Projects extends Component {
     this.props.unselectAllProjectsAction();
   }
 
+  handleChangeSorting = (field) => {
+    this.props.onChangeSorting(field);
+    this.props.tracking.trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.CHANGE_SORTING);
+  };
+
   render() {
     const {
       activePage,
@@ -91,7 +119,6 @@ export class Projects extends Component {
       projects,
       sortingColumn,
       sortingDirection,
-      onChangeSorting,
     } = this.props;
 
     return (
@@ -99,14 +126,14 @@ export class Projects extends Component {
         <ProjectsToolbar
           sortingColumn={sortingColumn}
           sortingDirection={sortingDirection}
-          onChangeSorting={onChangeSorting}
+          onChangeSorting={this.handleChangeSorting}
         />
 
         {viewMode === TABLE_VIEW ? (
           <ProjectsGrid
             sortingColumn={sortingColumn}
             sortingDirection={sortingDirection}
-            onChangeSorting={onChangeSorting}
+            onChangeSorting={this.handleChangeSorting}
           />
         ) : (
           <ProjectsPanelView />

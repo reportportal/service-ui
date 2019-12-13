@@ -1,8 +1,25 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
+import track from 'react-tracking';
 import PlusIcon from 'common/img/plus-button-inline.svg';
 import { canUpdateSettings } from 'common/utils/permissions';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -14,6 +31,13 @@ import {
   removeProjectIntegrationsByTypeAction,
 } from 'controllers/plugins';
 import { showModalAction } from 'controllers/modal';
+import {
+  PLUGINS_PAGE_EVENTS,
+  getUninstallPluginBtnClickEvent,
+  getIntegrationAddClickEvent,
+  getSaveIntegrationModalEvents,
+  getIntegrationUnlinkGlobalEvent,
+} from 'components/main/analytics/events';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { BigButton } from 'components/buttons/bigButton';
 import {
@@ -49,7 +73,7 @@ const messages = defineMessages({
   },
   unlinkAndSetupManuallyTitle: {
     id: 'InstancesSection.unlinkAndSetupManuallyTitle',
-    defaultMessage: 'Unlink & setup manually',
+    defaultMessage: 'Unlink & Setup Manually',
   },
   resetToGlobalSettingsDescription: {
     id: 'InstancesSection.resetToGlobalSettingsDescription',
@@ -105,6 +129,7 @@ const messages = defineMessages({
   },
 )
 @injectIntl
+@track()
 export class InstancesSection extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -118,6 +143,11 @@ export class InstancesSection extends Component {
     removePluginAction: PropTypes.func.isRequired,
     accountRole: PropTypes.string.isRequired,
     userRole: PropTypes.string.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
+    pluginDetails: PropTypes.object,
     projectIntegrations: PropTypes.array,
     globalIntegrations: PropTypes.array,
     isGlobal: PropTypes.bool,
@@ -126,6 +156,7 @@ export class InstancesSection extends Component {
   };
 
   static defaultProps = {
+    pluginDetails: {},
     projectIntegrations: [],
     globalIntegrations: [],
     projectId: '',
@@ -168,7 +199,9 @@ export class InstancesSection extends Component {
     const {
       intl: { formatMessage },
       instanceType,
+      tracking,
     } = this.props;
+    tracking.trackEvent(getUninstallPluginBtnClickEvent(instanceType.name));
 
     this.props.showModalAction({
       id: 'confirmationModal',
@@ -181,6 +214,11 @@ export class InstancesSection extends Component {
         confirmText: formatMessage(COMMON_LOCALE_KEYS.UNINSTALL),
         cancelText: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
         dangerConfirm: true,
+        eventsInfo: {
+          confirmBtn: PLUGINS_PAGE_EVENTS.OK_BTN_UNINSTALL_PLUGIN_MODAL,
+          closeIcon: PLUGINS_PAGE_EVENTS.CLOSE_ICON_UNINSTALL_PLUGIN_MODAL,
+          cancelBtn: PLUGINS_PAGE_EVENTS.CANCEL_BTN_UNINSTALL_PLUGIN_MODAL,
+        },
       },
     });
   };
@@ -203,17 +241,32 @@ export class InstancesSection extends Component {
     });
   };
 
-  addProjectIntegrationClickHandler = () => {
-    const { instanceType, isGlobal } = this.props;
-
+  showAddProjectIntegrationModal = () => {
+    const { instanceType, pluginDetails, isGlobal } = this.props;
     this.props.showModalAction({
       id: 'addIntegrationModal',
       data: {
         onConfirm: this.addProjectIntegration,
         instanceType,
         isGlobal,
+        eventsInfo: getSaveIntegrationModalEvents(instanceType, isGlobal),
+        customProps: {
+          pluginDetails,
+        },
       },
     });
+  };
+
+  addProjectIntegrationClickHandler = () => {
+    const { instanceType, tracking } = this.props;
+    tracking.trackEvent(getIntegrationAddClickEvent(instanceType));
+    this.showAddProjectIntegrationModal();
+  };
+
+  unlinkAndSetupManuallyClickHandler = () => {
+    const { instanceType, tracking } = this.props;
+    tracking.trackEvent(getIntegrationUnlinkGlobalEvent(instanceType));
+    this.showAddProjectIntegrationModal();
   };
 
   render() {
@@ -312,7 +365,7 @@ export class InstancesSection extends Component {
                 onClick={
                   isProjectIntegrationsExists
                     ? this.returnToGlobalSettingsClickHandler
-                    : this.addProjectIntegrationClickHandler
+                    : this.unlinkAndSetupManuallyClickHandler
                 }
               >
                 {formatMessage(

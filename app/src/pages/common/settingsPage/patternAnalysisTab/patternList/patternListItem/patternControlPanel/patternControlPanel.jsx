@@ -1,15 +1,32 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Parser from 'html-react-parser';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import track from 'react-tracking';
+import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import IconEdit from 'common/img/pencil-empty-inline.svg';
 import IconDuplicate from 'common/img/duplicate-inline.svg';
 import IconDelete from 'common/img/trashcan-inline.svg';
 import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import { addPatternAction, updatePatternAction, deletePatternAction } from 'controllers/project';
 import { showModalAction } from 'controllers/modal';
-import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import classNames from 'classnames/bind';
 import styles from './patternControlPanel.scss';
 
@@ -39,6 +56,7 @@ export const messages = defineMessages({
   showModal: showModalAction,
 })
 @injectIntl
+@track()
 export class PatternControlPanel extends Component {
   static propTypes = {
     pattern: PropTypes.object,
@@ -49,6 +67,10 @@ export class PatternControlPanel extends Component {
     showModal: PropTypes.func.isRequired,
     intl: intlShape.isRequired,
     readOnly: PropTypes.bool,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -58,7 +80,8 @@ export class PatternControlPanel extends Component {
   };
 
   onRenamePattern = () => {
-    const { showModal, updatePattern, pattern } = this.props;
+    const { showModal, updatePattern, pattern, tracking } = this.props;
+    tracking.trackEvent(SETTINGS_PAGE_EVENTS.EDIT_PATTERN_ICON);
     showModal({
       id: 'renamePatternModal',
       data: {
@@ -69,7 +92,8 @@ export class PatternControlPanel extends Component {
   };
 
   onClonePattern = () => {
-    const { intl, showModal, addPattern, pattern } = this.props;
+    const { intl, showModal, pattern, tracking } = this.props;
+    tracking.trackEvent(SETTINGS_PAGE_EVENTS.CLONE_PATTERN_ICON);
     const newPattern = {
       ...pattern,
       name: pattern.name + COPY_POSTFIX,
@@ -78,15 +102,24 @@ export class PatternControlPanel extends Component {
     showModal({
       id: 'createPatternModal',
       data: {
-        onSave: addPattern,
+        onSave: this.handleSaveClonedPattern,
         pattern: newPattern,
         modalTitle: intl.formatMessage(messages.clonePatternMessage),
+        eventsInfo: {
+          cancelBtn: SETTINGS_PAGE_EVENTS.CANCEL_BTN_CLONE_PATTERN_MODAL,
+          closeIcon: SETTINGS_PAGE_EVENTS.CLOSE_ICON_CLONE_PATTERN_MODAL,
+        },
       },
     });
   };
 
   onToggleActive = (enabled) => {
-    const { updatePattern, pattern } = this.props;
+    const { updatePattern, pattern, tracking } = this.props;
+    tracking.trackEvent(
+      enabled
+        ? SETTINGS_PAGE_EVENTS.TURN_ON_PA_RULE_SWITCHER
+        : SETTINGS_PAGE_EVENTS.TURN_OFF_PA_RULE_SWITCHER,
+    );
     updatePattern({
       ...pattern,
       enabled,
@@ -94,7 +127,13 @@ export class PatternControlPanel extends Component {
   };
 
   onDeletePattern = () => {
+    this.props.tracking.trackEvent(SETTINGS_PAGE_EVENTS.DELETE_PATTERN_ICON);
     this.props.deletePattern(this.props.pattern);
+  };
+
+  handleSaveClonedPattern = (pattern) => {
+    this.props.tracking.trackEvent(SETTINGS_PAGE_EVENTS.SAVE_BTN_CLONE_PATTERN_MODAL);
+    this.props.addPattern(pattern);
   };
 
   showDeleteConfirmationDialog = () => {

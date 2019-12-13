@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component, Fragment } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
@@ -7,7 +23,7 @@ import { Manager, Reference, Popper } from 'react-popper';
 import track from 'react-tracking';
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { ADMIN_ALL_USERS_PAGE_MODAL_EVENTS } from 'components/main/analytics/events';
+import { ADMIN_ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { showModalAction } from 'controllers/modal';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
@@ -167,20 +183,25 @@ export class ProjectsAndRolesColumn extends Component {
   toggleExpand = () => {
     const {
       value: { userId, expandRoleSelection = false },
+      tracking,
     } = this.props;
+    if (!expandRoleSelection) {
+      tracking.trackEvent(ADMIN_ALL_USERS_PAGE_EVENTS.PROJECT_AND_ROLES_BTN);
+    }
     this.props.toggleUserRoleFormAction(userId, !expandRoleSelection);
   };
   toggleAssignRole = () => {
+    this.props.tracking.trackEvent(ADMIN_ALL_USERS_PAGE_EVENTS.ADD_BTN_PROJECT_AND_ROLES);
     this.setState({
       assignRole: true,
     });
   };
+
   countHiddenProjects = () => this.getHiddenProjects().length;
   showHiddenCounter = () => this.countHiddenProjects() > 0;
   showUnassignModal = (project, user) => {
     const { tracking, intl } = this.props;
-    tracking.trackEvent(ADMIN_ALL_USERS_PAGE_MODAL_EVENTS.UNASSIGN_BTN_CLICK);
-    const unassignAction = () => this.unassignAction(project, user);
+    tracking.trackEvent(ADMIN_ALL_USERS_PAGE_EVENTS.UNASSIGN_BTN_CLICK);
     this.props.showModalAction({
       id: 'confirmationModal',
       data: {
@@ -188,11 +209,16 @@ export class ProjectsAndRolesColumn extends Component {
           user,
           project,
         }),
-        onConfirm: unassignAction,
+        onConfirm: () => this.unassignAction(project, user),
         title: intl.formatMessage(messages.unAssignTitle),
         confirmText: intl.formatMessage(messages.btnTitle),
         cancelText: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
         dangerConfirm: true,
+        eventsInfo: {
+          confirmBtn: ADMIN_ALL_USERS_PAGE_EVENTS.UNASSIGN_BTN_UNASSIGN_USER_MODAL,
+          closeIcon: ADMIN_ALL_USERS_PAGE_EVENTS.CLOSE_ICON_UNASSIGN_USER_MODAL,
+          cancelBtn: ADMIN_ALL_USERS_PAGE_EVENTS.CANCEL_BTN_UNASSIGN_USER_MODAL,
+        },
       },
     });
   };
@@ -200,6 +226,7 @@ export class ProjectsAndRolesColumn extends Component {
     this.toggleExpand();
     this.toggleAssignRole();
   };
+
   unassignAction = (projectId, userId) => {
     const { intl } = this.props;
     fetch(URLS.userUnasign(projectId), {

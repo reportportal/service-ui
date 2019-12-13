@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -113,7 +129,7 @@ export class HistoryTable extends Component {
     return itemProps;
   };
 
-  getCorrespondingHistoryItem = (historyItemProps, currentHistoryItem, launchId) => {
+  getCorrespondingHistoryItem = (historyItemProps, currentHistoryItem, launchId, isLastItem) => {
     const { navigate, link } = this.props;
     switch (historyItemProps.status) {
       case NOT_FOUND.toUpperCase():
@@ -127,12 +143,13 @@ export class HistoryTable extends Component {
         const clickHandler = () => {
           const ownProps = {
             ownLinkParams: {
-              page: TEST_ITEM_PAGE,
+              page: isLastItem ? null : TEST_ITEM_PAGE,
               testItemIds: historyItemProps.itemIds
                 ? `${launchId}/${historyItemProps.itemIds}`
                 : launchId,
             },
-            itemId: currentHistoryItem.id,
+            uniqueId: isLastItem ? null : currentHistoryItem.uniqueId,
+            itemId: isLastItem ? currentHistoryItem.id : null,
           };
           navigate(link(ownProps));
         };
@@ -196,15 +213,17 @@ export class HistoryTable extends Component {
             <ItemNameBlock data={launch} />
           </div>
         </HistoryCell>
-        {history.map((historyItem) => {
+        {history.map((historyItem, index) => {
           const currentLaunchHistoryItem = historyItem.resources.filter(
             (item) => item.uniqueId === launch.uniqueId,
           );
           const historyItemProps = this.getHistoryItemProps(currentLaunchHistoryItem);
+          const isLastItem = index === history.length - 1;
           return this.getCorrespondingHistoryItem(
             historyItemProps,
             currentLaunchHistoryItem[0],
             historyItem.launchId,
+            isLastItem,
           );
         })}
       </tr>

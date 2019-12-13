@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { PERMISSIONS_MAP, ACTIONS, ALL, OWNER } from 'common/constants/permissions';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 
@@ -49,6 +65,7 @@ export const canResizeAndDragWidgets = checkPermission(ACTIONS.RESIZE_AND_DRAG_W
 export const canDeleteWidget = checkPermission(ACTIONS.DELETE_WIDGET);
 export const canDeleteDashboard = checkPermission(ACTIONS.DELETE_DASHBOARD);
 export const canDeleteFilter = checkPermission(ACTIONS.DELETE_FILTER);
+export const canEditFilter = checkPermission(ACTIONS.EDIT_FILTER);
 export const canSeeDemoData = checkPermission(ACTIONS.SEE_DEMO_DATA);
 export const canConfigreEmailNotifications = checkPermission(ACTIONS.CONFIGURE_EMAIL_NOTIFICATION);
 export const canConfigurePatternAnalysis = checkPermission(ACTIONS.CONFIGURE_PATTERN_ANALYSIS);

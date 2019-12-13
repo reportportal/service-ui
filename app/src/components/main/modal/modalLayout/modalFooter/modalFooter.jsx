@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
@@ -5,10 +21,12 @@ import Parser from 'html-react-parser';
 import { BigButton } from 'components/buttons/bigButton';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import WarningIcon from 'common/img/error-inline.svg';
+import track from 'react-tracking';
 import styles from './modalFooter.scss';
 
 const cx = classNames.bind(styles);
 
+@track()
 export class ModalFooter extends Component {
   static propTypes = {
     warningMessage: PropTypes.string,
@@ -16,6 +34,7 @@ export class ModalFooter extends Component {
       text: PropTypes.string.isRequired,
       disabled: PropTypes.bool,
       danger: PropTypes.bool,
+      eventInfo: PropTypes.object,
     }),
     cancelButton: PropTypes.shape({
       text: PropTypes.string.isRequired,
@@ -39,6 +58,10 @@ export class ModalFooter extends Component {
     confirmationWarningClassName: PropTypes.string,
     confirmWithCheckbox: PropTypes.bool,
     renderFooterElements: PropTypes.func,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     warningMessage: '',
@@ -116,7 +139,10 @@ export class ModalFooter extends Component {
             <div className={cx('button-container')}>
               <BigButton
                 color={okButton.danger ? 'tomato' : 'booger'}
-                onClick={() => okButton.onClick(onClickOk)}
+                onClick={() => {
+                  this.props.tracking.trackEvent(this.props.okButton.eventInfo);
+                  okButton.onClick(onClickOk);
+                }}
                 disabled={okButton.disabled}
               >
                 {okButton.text}
