@@ -24,6 +24,7 @@
 
   &.vertical {
     display: inline-flex;
+    flex-direction: row;
     align-items: center;
     width: 370px;
     height: 60px;
