@@ -231,6 +231,7 @@ export class TestsPage extends Component {
         <PageSection>
           <SuiteTestToolbar
             selectedItems={selectedTests}
+            itemsCount={tests.length}
             parentItem={parentItem}
             onUnselect={this.unselectItem}
             onUnselectAll={this.unselectAllItems}

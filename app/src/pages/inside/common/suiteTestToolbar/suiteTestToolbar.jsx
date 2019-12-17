@@ -29,6 +29,7 @@ const cx = classNames.bind(styles);
 export const SuiteTestToolbar = ({
   parentItem,
   selectedItems,
+  itemsCount,
   errors,
   onUnselect,
   onUnselectAll,
@@ -70,6 +71,7 @@ export const SuiteTestToolbar = ({
         showBreadcrumbs={selectedItems.length === 0}
         onRefresh={onRefresh}
         selectedItems={selectedItems}
+        itemsCount={itemsCount}
         onIgnoreInAA={onIgnoreInAA}
         onIncludeInAA={onIncludeInAA}
         onUnlinkIssue={onUnlinkIssue}
@@ -97,6 +99,7 @@ export const SuiteTestToolbar = ({
 );
 SuiteTestToolbar.propTypes = {
   selectedItems: PropTypes.arrayOf(PropTypes.object),
+  itemsCount: PropTypes.number,
   errors: PropTypes.object,
   onUnselect: PropTypes.func,
   onUnselectAll: PropTypes.func,
@@ -124,6 +127,7 @@ SuiteTestToolbar.propTypes = {
 };
 SuiteTestToolbar.defaultProps = {
   selectedItems: [],
+  itemsCount: null,
   errors: {},
   onUnselect: () => {},
   onUnselectAll: () => {},

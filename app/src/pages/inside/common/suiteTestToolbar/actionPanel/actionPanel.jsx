@@ -76,6 +76,7 @@ export class ActionPanel extends Component {
     level: PropTypes.string,
     onProceedValidItems: PropTypes.func,
     selectedItems: PropTypes.array,
+    itemsCount: PropTypes.number,
     onEditItems: PropTypes.func,
     onEditDefects: PropTypes.func,
     onPostIssue: PropTypes.func,
@@ -110,6 +111,7 @@ export class ActionPanel extends Component {
     hasValidItems: false,
     onProceedValidItems: () => {},
     selectedItems: [],
+    itemsCount: null,
     onEditItems: () => {},
     onEditDefects: () => {},
     onPostIssue: () => {},
@@ -226,6 +228,7 @@ export class ActionPanel extends Component {
       hasValidItems,
       onProceedValidItems,
       selectedItems,
+      itemsCount,
       debugMode,
       level,
     } = this.props;
@@ -272,7 +275,7 @@ export class ActionPanel extends Component {
           {!debugMode && (
             <div className={cx('action-button', 'mobile-hidden')}>
               <GhostButton
-                disabled={!!selectedItems.length}
+                disabled={!!selectedItems.length || !itemsCount}
                 icon={HistoryIcon}
                 onClick={this.onClickHistory}
               >

@@ -448,6 +448,7 @@ export class StepPage extends Component {
             onEditItems={() => onEditItems(selectedItems)}
             errors={validationErrors}
             selectedItems={selectedItems}
+            itemsCount={steps.length}
             parentItem={parentItem}
             onUnselect={this.unselectItem}
             onUnselectAll={this.unselectAllItems}

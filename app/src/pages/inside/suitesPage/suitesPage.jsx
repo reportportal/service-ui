@@ -239,6 +239,7 @@ export class SuitesPage extends Component {
             onEditItems={() => onEditItems(selectedSuites)}
             errors={this.props.validationErrors}
             selectedItems={selectedSuites}
+            itemsCount={suites.length}
             onUnselect={this.unselectItem}
             onUnselectAll={this.unselectAllItems}
             onProceedValidItems={() => tracking.trackEvent(SUITES_PAGE_EVENTS.PROCEED_VALID_ITEMS)}
