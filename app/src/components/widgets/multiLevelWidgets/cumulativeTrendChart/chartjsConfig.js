@@ -96,15 +96,13 @@ const getScaleName = (widget, options) => {
 };
 
 const getChartOptions = (widget, options) => {
-  const { percentage, formatMessage, tooltipContents, showTotal, onResize } = options;
+  const { percentage, formatMessage, tooltipContents, showTotal } = options;
 
   return {
-    responsive: true,
-    maintainAspectRatio: true,
-    onResize,
     legend: {
       display: false,
     },
+    maintainAspectRatio: false,
     layout: {
       padding: {
         left: 0,
