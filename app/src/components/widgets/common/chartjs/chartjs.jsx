@@ -27,7 +27,6 @@ export class ChartJS extends PureComponent {
     config: PropTypes.object,
     onChartElementClick: PropTypes.func,
     height: PropTypes.number.isRequired,
-    width: PropTypes.number.isRequired,
   };
 
   static defaultProps = {
@@ -50,7 +49,7 @@ export class ChartJS extends PureComponent {
   }
 
   createChart() {
-    const { chartData, chartOptions, height, width } = this.props;
+    const { chartData, chartOptions } = this.props;
     const config = {
       type: 'bar',
       data: chartData,
@@ -61,9 +60,6 @@ export class ChartJS extends PureComponent {
     if (this.chart) {
       this.chart.data = chartData;
       this.chart.options = chartOptions;
-      this.chart.height = height;
-      this.chart.width = width;
-      this.chart.canvas.style.height = `${height}px`;
       this.chart.update(config);
     } else {
       this.chart = this.generateChart(config);
@@ -93,12 +89,11 @@ export class ChartJS extends PureComponent {
   };
 
   render() {
-    const { height, width } = this.props;
+    const { height } = this.props;
     return (
       <div>
         <canvas
           height={height}
-          width={width}
           ref={(node) => {
             this.canvas = node;
           }}

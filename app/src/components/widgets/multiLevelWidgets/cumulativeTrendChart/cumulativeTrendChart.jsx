@@ -50,7 +50,6 @@ const cx = classNames.bind(styles);
 
 const LEGEND_HEIGHT = 45;
 const PRINTED_LEGEND_HEIGHT = 80;
-const SCREEN_XS_MAX = 767;
 
 @injectIntl
 @connect(
@@ -103,12 +102,10 @@ export class CumulativeTrendChart extends PureComponent {
     activeAttribute: null,
     isActionsPopupShown: false,
     selectedItem: null,
-    isLegendControlsShown: true,
   };
 
   componentDidMount = () => {
     this.getConfig();
-    this.setLegendControlsShown(this.props.container.offsetWidth);
   };
 
   componentDidUpdate(prevProps) {
@@ -148,14 +145,6 @@ export class CumulativeTrendChart extends PureComponent {
     this.props.onChangeLegend(fieldName, this.getConfig);
   };
 
-  setLegendControlsShown = (chartContainerWidth) => {
-    const isLegendControlsShown = !(chartContainerWidth < SCREEN_XS_MAX);
-
-    this.setState({
-      isLegendControlsShown,
-    });
-  };
-
   getConfig = (options = {}) => {
     const { uncheckedLegendItems, widget, userSettings } = this.props;
 
@@ -165,7 +154,6 @@ export class CumulativeTrendChart extends PureComponent {
       uncheckedLegendItems,
       formatMessage: this.props.intl.formatMessage,
       activeAttribute: this.state.activeAttribute,
-      onResize: this.resizeChart,
     });
 
     this.setState({
@@ -202,21 +190,6 @@ export class CumulativeTrendChart extends PureComponent {
       onClick: this.showFilter,
     },
   ];
-
-  resizeChart = (chart) => {
-    const newHeight = this.props.container.offsetHeight - this.getLegendHeight();
-    const newWidth = this.props.container.offsetWidth;
-
-    this.setLegendControlsShown(newWidth);
-
-    /* eslint no-param-reassign: ["error", { "props": false }] */
-    chart.width = newWidth;
-    chart.canvas.width = newWidth;
-    chart.height = newHeight;
-    chart.canvas.height = newHeight;
-    chart.canvas.style.height = `${newHeight}px`;
-    chart.update();
-  };
 
   updateActiveAttributes = (actionSuccessCallback) => {
     const { selectedItem, activeAttributes } = this.state;
@@ -323,10 +296,8 @@ export class CumulativeTrendChart extends PureComponent {
       activeAttribute,
       activeAttributes,
       isActionsPopupShown,
-      isLegendControlsShown,
     } = this.state;
-    const height = container.offsetHeight - this.getLegendHeight();
-    const width = container.offsetWidth;
+    const chartHeight = container.offsetHeight - this.getLegendHeight();
     const isChartDataAvailable = chartData && !!chartData.labels.length;
 
     return this.state.chartData ? (
@@ -343,15 +314,13 @@ export class CumulativeTrendChart extends PureComponent {
           userSettings={userSettings}
           isChartDataAvailable={isChartDataAvailable}
           isPrintMode={isPrintMode}
-          isLegendControlsShown={isLegendControlsShown}
         />
         {isChartDataAvailable ? (
           <ChartJS
             chartData={chartData}
             chartOptions={this.state.chartOptions}
             onChartElementClick={this.onChartElementClick}
-            height={height}
-            width={width}
+            height={chartHeight}
           />
         ) : (
           <NoDataAvailable />
