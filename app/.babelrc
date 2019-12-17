@@ -20,6 +20,11 @@
   "env": {
     "development": {
       "presets": ["react-hmre"]
+    },
+    "production": {
+      "targets": {
+        "uglify": true
+      }
     }
   }
 }
