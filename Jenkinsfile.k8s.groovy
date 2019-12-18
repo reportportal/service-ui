@@ -110,7 +110,7 @@ podTemplate(
                         stage ('Start Sealights') {
                             sh "./node_modules/.bin/slnodejs start --tokenfile $sealightsTokenPath --buildsessionid $sealightsSession --testStage 'Unit Tests'"
                             sh "./node_modules/.bin/jest --coverage --testResultsProcessor=$resultsProcessor"
-                            sh "./node_modules/.bin/slnodejs nycReport --tokenfile $sealightsTokenPath --buildsessionid $sealightsSession --report coverage"
+                            sh "./node_modules/.bin/slnodejs nycReport --tokenfile $sealightsTokenPath --buildsessionid $sealightsSession"
                             sh "./node_modules/.bin/slnodejs uploadReports --tokenfile $sealightsTokenPath --buildsessionid $sealightsSession --reportFile junit.xml"
                             sh "./node_modules/.bin/slnodejs end --tokenfile $sealightsTokenPath --buildsessionid $sealightsSession"
                         }
