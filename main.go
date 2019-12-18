@@ -56,6 +56,8 @@ func configureRouter(srv *server.RpServer, rpConf struct {
 				"status.reportportal.io",
 				"www.google-analytics.com",
 				"stats.g.doubleclick.net",
+				"s3-us-west-2.amazonaws.com",
+				"epam.sealights.co",
 				"*.saucelabs.com",
 				"*.epam.com",
 				"*.uservoice.com",
