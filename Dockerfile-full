@@ -13,9 +13,8 @@ RUN make build-server v=$version
 FROM node:11-alpine as build-frontend
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
-COPY ./app/package.json /usr/src/app/
-RUN npm ci
 COPY ./app/ /usr/src/app/
+RUN npm ci
 RUN NODE_OPTIONS=--max_old_space_size=4096 npm run build && npm run test
 
 FROM alpine:latest
