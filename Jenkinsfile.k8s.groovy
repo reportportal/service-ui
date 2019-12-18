@@ -104,7 +104,7 @@ podTemplate(
                             sh "./node_modules/.bin/slnodejs config --tokenfile $sealightsTokenPath --appname service-ui --branch $branchToBuild --build $srvVersion"
                             sealightsSession = utils.execStdout("cat buildSessionId")
 //                            sh "./node_modules/.bin/slnodejs build --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession --workspacepath './src' --instrumentForBrowsers --outputpath './sl_instrumented' --scm none --es6Modules"
-                            sh "./node_modules/.bin/slnodejs build --tokenfile $sealightsTokenPath --buildsessionid $sealightsSession --workspacepath build --instrumentForBrowsers --outputpath sl_instrumented --scm none --es6Modules"
+                            sh "./node_modules/.bin/slnodejs build --tokenfile $sealightsTokenPath --buildsessionid $sealightsSession --workspacepath build --instrumentForBrowsers --outputpath sl_instrumented --scm none --es6Modules --projectRoot ."
 //                            sh "./node_modules/.bin/slnodejs build --tokenfile $sealightsTokenPath --buildsessionid $sealightsSession --workspacepath './src' --scm none --es6Modules"
                         }
                         stage ('Start Sealights') {
