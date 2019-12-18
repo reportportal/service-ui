@@ -15,7 +15,7 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY ./app/ /usr/src/app/
 RUN npm ci
-RUN NODE_OPTIONS=--max_old_space_size=4096 npm run test && npm run build
+RUN NODE_OPTIONS=--max_old_space_size=4096 npm run build && npm run test
 
 FROM alpine:latest
 RUN apk --no-cache add ca-certificates
