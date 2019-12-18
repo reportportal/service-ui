@@ -11,7 +11,7 @@
     "format:scss": "npm run stylelint -- --fix",
     "format": "npm run format:js && npm run format:scss && prettier --write */**/*.md",
     "dev": "webpack-dev-server --port 3000",
-    "build": "webpack -p --env.production",
+    "build": "webpack --env.production --define process.env.NODE_ENV=\"'production'\"",
     "storybook": "start-storybook -p 9001 -c .storybook",
     "storybook:build": "build-storybook -c .storybook -o .storybook_app",
     "test": "jest --notify",

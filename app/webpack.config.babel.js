@@ -23,8 +23,8 @@ import WebpackNotifierPlugin from 'webpack-notifier';
 import CleanWebpackPlugin from 'clean-webpack-plugin';
 import CompressionPlugin from 'compression-webpack-plugin';
 import dotenv from 'dotenv';
-// import UglifyJsPlugin from 'uglifyjs-webpack-plugin';
-import TerserPlugin from 'terser-webpack-plugin-legacy';
+import UglifyJsPlugin from 'uglifyjs-webpack-plugin';
+// import TerserPlugin from 'terser-webpack-plugin-legacy';
 
 dotenv.config();
 if (!process.env.PROXY_PATH) {
@@ -83,18 +83,19 @@ export default (env = defaultEnv) => ({
     ...(env.production
       ? [
           new CleanWebpackPlugin([path.resolve(__dirname, 'build')]),
-          new TerserPlugin({
-            parallel: true,
-            terserOptions: {
-              warnings: 'verbose',
-            },
-            minify: (file) => {
-              console.log('terser minify');
-              const result = require('terser').minify(file); // eslint-disable-line global-require
-              console.log(result.error);
-              return result;
-            },
-          }),
+          // new TerserPlugin({
+          //   parallel: true,
+          //   terserOptions: {
+          //     warnings: 'verbose',
+          //   },
+          //   minify: (file) => {
+          //     console.log('terser minify');
+          //     const result = require('terser').minify(file); // eslint-disable-line global-require
+          //     console.log(result.error);
+          //     return result;
+          //   },
+          // }),
+          new UglifyJsPlugin(),
           new CompressionPlugin({
             asset: '[path].gz[query]',
             algorithm: 'gzip',
