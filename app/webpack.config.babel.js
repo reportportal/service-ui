@@ -85,6 +85,15 @@ export default (env = defaultEnv) => ({
           new CleanWebpackPlugin([path.resolve(__dirname, 'build')]),
           new TerserPlugin({
             parallel: true,
+            terserOptions: {
+              warnings: 'verbose',
+            },
+            minify: (file) => {
+              console.log('terser minify');
+              const result = require('terser').minify(file); // eslint-disable-line global-require
+              console.log(result.error);
+              return result;
+            },
           }),
           new CompressionPlugin({
             asset: '[path].gz[query]',
