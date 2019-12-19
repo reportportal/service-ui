@@ -16,7 +16,6 @@ podTemplate(
                         ttyEnabled: true,
                         command: 'cat',
                         envVars: [
-
                                 envVar(key: 'NODE_OPTIONS', value: '--max_old_space_size=8192')
                         ],
                         resourceRequestMemory: '4096Mi',
