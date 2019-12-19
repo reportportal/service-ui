@@ -2,7 +2,7 @@
   "name": "@report-portal/service-ui",
   "private": true,
   "version": "0.0.0",
-  "license": "GPL-3.0-only",
+  "license": "Apache-2.0",
   "scripts": {
     "eslint": "eslint \"./**/*.jsx\" \"./**/*.js\"",
     "stylelint": "stylelint \"./**/*.scss\"",
