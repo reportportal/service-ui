@@ -17,7 +17,9 @@ podTemplate(
                         command: 'cat',
                         envVars: [
                                 envVar(key: 'NODE_OPTIONS', value: '--max_old_space_size=4096')
-                        ]),
+                        ],
+                        resourceRequestMemory: '4096Mi',
+                        resourceLimitMemory: '6144Mi'),
                 containerTemplate(name: 'golang', image: 'golang:1.12.7', ttyEnabled: true, command: 'cat'),
                 containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.8', command: 'cat', ttyEnabled: true),
                 containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm:v3.0.1', command: 'cat', ttyEnabled: true),
