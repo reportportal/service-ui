@@ -72,9 +72,9 @@ export default (env = defaultEnv) => ({
       allChunks: true,
       disable: env.dev,
     }),
-    new webpack.optimize.LimitChunkCountPlugin({
-      maxChunks: 1,
-    }),
+    // new webpack.optimize.LimitChunkCountPlugin({
+    //   maxChunks: 1,
+    // }),
     new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
@@ -85,7 +85,9 @@ export default (env = defaultEnv) => ({
     ...(env.production
       ? [
           new CleanWebpackPlugin([path.resolve(__dirname, 'build')]),
-          new UglifyJsPlugin(),
+          new UglifyJsPlugin({
+            sourceMap: true,
+          }),
           new CompressionPlugin({
             asset: '[path].gz[query]',
             algorithm: 'gzip',
