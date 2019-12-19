@@ -17,7 +17,7 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { instanceIdSelector } from 'controllers/appInfo';
+import { instanceIdSelector, uiBuildVersionSelector } from 'controllers/appInfo';
 import track from 'react-tracking';
 import ReactGA from 'react-ga';
 
@@ -26,6 +26,7 @@ const GOOGLE_ANALYTICS_INSTANCE = 'UA-96321031-1';
 
 @connect((state) => ({
   instanceId: instanceIdSelector(state),
+  buildVersion: uiBuildVersionSelector(state),
 }))
 @track(
   {},
@@ -43,6 +44,7 @@ const GOOGLE_ANALYTICS_INSTANCE = 'UA-96321031-1';
 export class AnalyticsWrapper extends Component {
   static propTypes = {
     instanceId: PropTypes.string.isRequired,
+    buildVersion: PropTypes.string.isRequired,
     children: PropTypes.node,
   };
 
@@ -53,7 +55,7 @@ export class AnalyticsWrapper extends Component {
   componentDidMount() {
     ReactGA.initialize(GOOGLE_ANALYTICS_INSTANCE);
     ReactGA.pageview(window.location.pathname + window.location.search);
-    ReactGA.set({ dimension1: this.props.instanceId });
+    ReactGA.set({ dimension1: this.props.instanceId, appVersion: this.props.buildVersion });
   }
 
   render() {
