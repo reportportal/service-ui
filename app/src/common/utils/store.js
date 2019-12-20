@@ -15,12 +15,30 @@
  */
 
 import { LOGOUT } from 'controllers/auth/constants';
+import { CLEAR_PAGE_STATE } from 'controllers/pages/constants';
 
 export const createRootReducer = (appReducer) => (state, action) => {
   let newState = state;
+
   if (action.type === LOGOUT) {
     const { appInfo, lang, initialDataReady, location } = state;
     newState = { appInfo, lang, initialDataReady, location };
   }
+
   return appReducer(newState, action);
+};
+
+export const createPurifyPageReducer = (reducer, targetPage) => (state, action) => {
+  const { type, payload = {} } = action;
+  let newState = state;
+
+  const isTargetPageLeft = Array.isArray(targetPage)
+    ? targetPage.some((page) => page === payload.oldPage)
+    : payload.oldPage === targetPage;
+
+  if (type === CLEAR_PAGE_STATE && isTargetPageLeft) {
+    newState = undefined;
+  }
+
+  return reducer(newState, action);
 };

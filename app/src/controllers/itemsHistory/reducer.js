@@ -15,10 +15,12 @@
  */
 
 import { combineReducers } from 'redux';
-import { queueReducers } from 'common/utils';
+import { queueReducers } from 'common/utils/queueReducers';
+import { createPurifyPageReducer } from 'common/utils/store';
 import { groupOperationsReducer } from 'controllers/groupOperations';
 import { paginationReducer } from 'controllers/pagination';
 import { fetchReducer } from 'controllers/fetch';
+import { HISTORY_PAGE } from 'controllers/pages';
 import {
   NAMESPACE,
   FILTER_HISTORY_NAMESPACE,
@@ -71,7 +73,7 @@ export const filterForCompareReducer = (
   }
 };
 
-export const itemsHistoryReducer = combineReducers({
+const reducer = combineReducers({
   history: queueReducers(historyReducer, fetchReducer(NAMESPACE, { contentPath: 'content' })),
   loading: loadingReducer,
   pagination: queueReducers(
@@ -85,3 +87,5 @@ export const itemsHistoryReducer = combineReducers({
     fetchReducer(FILTER_HISTORY_NAMESPACE, { contentPath: 'content' }),
   ),
 });
+
+export const itemsHistoryReducer = createPurifyPageReducer(reducer, HISTORY_PAGE);
