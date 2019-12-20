@@ -18,9 +18,11 @@ import { combineReducers } from 'redux';
 import { fetchReducer } from 'controllers/fetch';
 import { paginationReducer } from 'controllers/pagination';
 import { loadingReducer } from 'controllers/loading';
+import { PROJECTS_PAGE } from 'controllers/pages';
 import { groupOperationsReducer } from 'controllers/groupOperations';
 import { ASSIGN_TO_RROJECT_SUCCESS, UNASSIGN_FROM_PROJECT_SUCCESS } from 'controllers/user';
 import { queueReducers } from 'common/utils/queueReducers';
+import { createPurifyPageReducer } from 'common/utils/store';
 import { NAMESPACE, SET_PROJECTS_VIEW_MODE, GRID_VIEW } from './constants';
 
 export const setViewModeReducer = (state = GRID_VIEW, { type, payload }) => {
@@ -59,10 +61,12 @@ export const assignProjectReducer = (state = [], { type, payload }) => {
   }
 };
 
-export const projectsReducer = combineReducers({
+const reducer = combineReducers({
   projects: queueReducers(projectFetchReducer, assignProjectReducer),
   pagination: paginationReducer(NAMESPACE),
   loading: loadingReducer(NAMESPACE),
   viewMode: setViewModeReducer,
   groupOperations: groupOperationsReducer(NAMESPACE),
 });
+
+export const projectsReducer = createPurifyPageReducer(reducer, PROJECTS_PAGE);

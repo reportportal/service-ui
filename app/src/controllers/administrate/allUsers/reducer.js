@@ -18,8 +18,10 @@ import { combineReducers } from 'redux';
 import { fetchReducer } from 'controllers/fetch';
 import { paginationReducer } from 'controllers/pagination';
 import { loadingReducer } from 'controllers/loading';
+import { ALL_USERS_PAGE } from 'controllers/pages';
 import { groupOperationsReducer } from 'controllers/groupOperations';
 import { queueReducers } from 'common/utils/queueReducers';
+import { createPurifyPageReducer } from 'common/utils/store';
 import { NAMESPACE, TOGGLE_USER_ROLE_FORM } from './constants';
 
 const toggleUserRoleFormReducer = (state = [], { type, payload = {} }) => {
@@ -36,7 +38,7 @@ const toggleUserRoleFormReducer = (state = [], { type, payload = {} }) => {
   }
 };
 
-export const allUsersReducer = combineReducers({
+const reducer = combineReducers({
   allUsers: queueReducers(
     fetchReducer(NAMESPACE, { contentPath: 'content' }),
     toggleUserRoleFormReducer,
@@ -45,3 +47,5 @@ export const allUsersReducer = combineReducers({
   loading: loadingReducer(NAMESPACE),
   groupOperations: groupOperationsReducer(NAMESPACE),
 });
+
+export const allUsersReducer = createPurifyPageReducer(reducer, ALL_USERS_PAGE);
