@@ -25,6 +25,10 @@ export const uiBuildVersionSelector = (state) => {
   const uiInfo = uiInfoSelector(state);
   return uiInfo.build ? uiInfo.build.version : '';
 };
+export const apiBuildVersionSelector = (state) => {
+  const apiInfo = apiInfoSelector(state);
+  return apiInfo.build ? apiInfo.build.version : '';
+};
 const extensionsSelector = (state) => apiInfoSelector(state).extensions || {};
 const extensionsConfigSelector = (state) => extensionsSelector(state).result || {};
 export const instanceIdSelector = (state) =>
