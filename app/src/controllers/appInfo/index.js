@@ -18,6 +18,7 @@ export { appInfoReducer } from './reducer';
 export { fetchAppInfoAction } from './actionCreators';
 export {
   appInfoSelector,
+  apiBuildVersionSelector,
   uiBuildVersionSelector,
   authExtensionsSelector,
   instanceIdSelector,
