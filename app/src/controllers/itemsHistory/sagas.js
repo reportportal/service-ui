@@ -158,7 +158,7 @@ function* fetchFilterHistory({ payload: { filter, loadMore } }) {
 
   yield put(
     concatFetchDataAction(FILTER_HISTORY_NAMESPACE, loadMore)(
-      URLS.testItemsHistory(activeProject, historyDepth),
+      URLS.testItemsHistory(activeProject, historyDepth, 'comparing'),
       {
         params,
       },
