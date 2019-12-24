@@ -215,7 +215,7 @@ export class PersonalInfoBlock extends Component {
                 </div>
               )}
               {accountType !== INTERNAL && accountType !== LDAP && (
-                <div className={cx('top-btn')} >
+                <div className={cx('top-btn')}>
                   <GhostButton disabled={forceUpdateInProgress} onClick={this.onForceUpdate}>
                     {forceUpdateInProgress
                       ? intl.formatMessage(messages.inProgress)
