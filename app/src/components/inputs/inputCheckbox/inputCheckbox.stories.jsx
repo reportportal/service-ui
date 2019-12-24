@@ -34,7 +34,6 @@ storiesOf('Components/Inputs/InputCheckbox', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

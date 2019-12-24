@@ -49,7 +49,6 @@ storiesOf('Components/Main/ScreenLock', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

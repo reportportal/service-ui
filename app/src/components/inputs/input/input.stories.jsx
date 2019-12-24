@@ -33,7 +33,6 @@ storiesOf('Components/Inputs/Input', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

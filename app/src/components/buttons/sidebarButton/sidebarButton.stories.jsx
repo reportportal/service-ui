@@ -35,7 +35,6 @@ storiesOf('Components/Buttons/SidebarButton', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

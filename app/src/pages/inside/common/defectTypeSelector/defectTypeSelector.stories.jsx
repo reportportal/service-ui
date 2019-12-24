@@ -38,7 +38,6 @@ storiesOf('Pages/Inside/Common/DefectTypeSelector', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

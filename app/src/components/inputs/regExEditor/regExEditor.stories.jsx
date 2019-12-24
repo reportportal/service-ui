@@ -34,7 +34,6 @@ storiesOf('Components/Inputs/RegExEditor', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

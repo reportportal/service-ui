@@ -35,7 +35,6 @@ storiesOf('Components/Inputs/InputBigSwitcher', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

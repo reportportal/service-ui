@@ -33,7 +33,6 @@ storiesOf('Components/Fields/fieldBottomConstraints', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

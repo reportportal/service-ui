@@ -76,7 +76,6 @@ storiesOf('Components/Main/ContainerWithTabs', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

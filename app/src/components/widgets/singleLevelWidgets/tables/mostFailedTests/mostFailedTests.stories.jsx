@@ -37,7 +37,6 @@ storiesOf('Components/Widgets/Tables/MostFailedTests', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

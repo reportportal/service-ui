@@ -40,7 +40,6 @@ storiesOf('Components/Widgets/Charts/investigatedTrendChart', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

@@ -33,7 +33,6 @@ storiesOf('Components/Fields/InputErrorHint', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

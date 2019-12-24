@@ -50,7 +50,6 @@ storiesOf('Components/Widgets/Charts/LaunchStatisticsChart', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

@@ -34,7 +34,6 @@ storiesOf('Components/Main/PaginationToolbar', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

@@ -53,7 +53,6 @@ storiesOf('Components/Buttons/MultiActionButton', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

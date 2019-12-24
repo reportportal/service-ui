@@ -34,7 +34,6 @@ storiesOf('Components/Main/Breadcrumbs', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

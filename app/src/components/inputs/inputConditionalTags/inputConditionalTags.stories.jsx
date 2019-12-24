@@ -73,7 +73,6 @@ storiesOf('Components/Inputs/InputConditionalTags', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

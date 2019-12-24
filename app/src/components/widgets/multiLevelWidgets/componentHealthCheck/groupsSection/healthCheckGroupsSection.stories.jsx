@@ -61,7 +61,6 @@ storiesOf('Components/Widgets/Charts/ComponentHealthCheck/GroupsSection', module
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

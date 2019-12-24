@@ -61,7 +61,6 @@ storiesOf('Components/Inputs/InputDropdownSorting', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

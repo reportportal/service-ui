@@ -36,7 +36,6 @@ storiesOf('Components/Main/Page', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

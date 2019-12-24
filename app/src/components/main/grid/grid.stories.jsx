@@ -41,7 +41,6 @@ storiesOf('Components/Main/Grid', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

@@ -35,7 +35,6 @@ storiesOf('Components/Inputs/InputRadio', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

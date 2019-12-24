@@ -36,7 +36,6 @@ storiesOf('Pages/Inside/Common/launchSuiteGrid/defectStatistics', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

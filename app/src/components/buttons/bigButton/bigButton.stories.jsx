@@ -34,7 +34,6 @@ storiesOf('Components/Buttons/BigButton', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

@@ -40,7 +40,6 @@ storiesOf('Components/Widgets/Charts/NonPassedTestCasesTrendChart', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

@@ -34,7 +34,6 @@ storiesOf('Components/Inputs/InputSwitcher', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

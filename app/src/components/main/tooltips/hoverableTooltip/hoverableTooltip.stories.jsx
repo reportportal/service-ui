@@ -46,7 +46,6 @@ storiesOf('Components/Main/Tooltips/HoverableTooltip', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

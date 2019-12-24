@@ -47,7 +47,6 @@ storiesOf('Components/Buttons/GhostMenuButton', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

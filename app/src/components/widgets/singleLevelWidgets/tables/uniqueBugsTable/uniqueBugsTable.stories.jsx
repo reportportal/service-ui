@@ -34,7 +34,6 @@ storiesOf('Components/Widgets/Tables/UniqueBugsTable', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

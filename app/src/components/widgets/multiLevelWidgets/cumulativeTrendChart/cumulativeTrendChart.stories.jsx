@@ -40,7 +40,6 @@ storiesOf('Components/Widgets/Charts/CumulativeTrendChart', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

@@ -104,7 +104,6 @@ storiesOf('Components/Inputs/InputTimeDateRange', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

@@ -54,7 +54,6 @@ storiesOf('Components/Main/ScrollWrapper', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

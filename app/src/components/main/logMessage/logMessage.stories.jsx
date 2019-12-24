@@ -33,7 +33,6 @@ storiesOf('Components/Main/LogMessage', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

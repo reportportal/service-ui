@@ -34,7 +34,6 @@ storiesOf('Components/Main/Icon', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

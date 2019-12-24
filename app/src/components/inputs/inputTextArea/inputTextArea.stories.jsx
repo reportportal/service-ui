@@ -34,7 +34,6 @@ storiesOf('Components/Inputs/InputTextArea', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })
