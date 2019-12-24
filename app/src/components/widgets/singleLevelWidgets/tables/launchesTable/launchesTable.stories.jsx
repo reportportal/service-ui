@@ -36,7 +36,6 @@ storiesOf('Components/Widgets/Tables/LaunchesTable', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

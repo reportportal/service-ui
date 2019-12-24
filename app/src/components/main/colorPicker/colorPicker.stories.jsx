@@ -33,7 +33,6 @@ storiesOf('Components/Main/ColorPicker', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

@@ -83,7 +83,6 @@ storiesOf('Components/Main/NavigationTabs', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

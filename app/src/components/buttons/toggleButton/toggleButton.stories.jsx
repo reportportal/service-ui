@@ -34,7 +34,6 @@ storiesOf('Components/Buttons/ToggleButton', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

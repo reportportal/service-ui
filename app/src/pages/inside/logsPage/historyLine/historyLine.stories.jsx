@@ -69,7 +69,6 @@ storiesOf('Pages/Inside/LogsPage/HistoryLine', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

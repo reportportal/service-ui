@@ -75,7 +75,6 @@ storiesOf('Pages/Inside/LogsPage/LogItemInfo/LogItemInfoTabs/Attachments', modul
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

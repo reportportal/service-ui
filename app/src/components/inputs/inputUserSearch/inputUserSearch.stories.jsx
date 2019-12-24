@@ -37,7 +37,6 @@ storiesOf('Components/Inputs/InputUserSearch', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

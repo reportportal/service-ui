@@ -62,7 +62,6 @@ storiesOf('Layouts/App/Header/ProjectSelector', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

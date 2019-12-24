@@ -67,7 +67,6 @@ storiesOf('Components/Main/Markdown/MarkdownViewer', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

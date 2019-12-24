@@ -36,7 +36,6 @@ storiesOf('Components/Widgets/Tables/FlakyTests', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

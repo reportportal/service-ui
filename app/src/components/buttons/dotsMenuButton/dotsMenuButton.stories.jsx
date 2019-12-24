@@ -59,7 +59,6 @@ storiesOf('Components/Buttons/DotsMenuButton', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

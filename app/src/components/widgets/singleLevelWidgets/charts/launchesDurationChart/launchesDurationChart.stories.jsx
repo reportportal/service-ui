@@ -40,7 +40,6 @@ storiesOf('Components/Widgets/Charts/LaunchesDurationChart', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

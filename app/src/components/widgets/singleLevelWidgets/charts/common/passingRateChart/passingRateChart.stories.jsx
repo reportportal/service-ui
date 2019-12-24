@@ -36,7 +36,6 @@ storiesOf('Components/Widgets/Charts/PassingRateChart', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

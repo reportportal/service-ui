@@ -51,7 +51,6 @@ storiesOf('Components/Main/ModalLayout', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

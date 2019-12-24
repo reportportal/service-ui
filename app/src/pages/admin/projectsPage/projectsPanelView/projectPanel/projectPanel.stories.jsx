@@ -35,7 +35,6 @@ storiesOf('Pages/Admin/ProjectPanel', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

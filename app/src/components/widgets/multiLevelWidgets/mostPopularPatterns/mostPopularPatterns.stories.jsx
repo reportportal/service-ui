@@ -37,7 +37,6 @@ storiesOf('Components/Widgets/Tables/MostPopularPatterns', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

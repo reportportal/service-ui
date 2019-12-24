@@ -35,7 +35,6 @@ storiesOf('Components/Inputs/InputSlider', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

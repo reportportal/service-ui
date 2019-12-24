@@ -36,7 +36,6 @@ storiesOf('Pages/Inside/Common/ItemInfo', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

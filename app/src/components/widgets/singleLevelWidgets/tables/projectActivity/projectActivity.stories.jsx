@@ -51,7 +51,6 @@ storiesOf('Components/Widgets/Tables/ProjectActivity', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

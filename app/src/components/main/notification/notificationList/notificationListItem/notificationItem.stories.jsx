@@ -35,7 +35,6 @@ storiesOf('Components/Main/Notification', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

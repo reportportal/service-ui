@@ -36,7 +36,6 @@ storiesOf('Pages/Inside/Common/InfoLine', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

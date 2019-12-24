@@ -77,7 +77,6 @@ storiesOf('Components/Inputs/InputFilter', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

@@ -61,7 +61,6 @@ storiesOf('Components/Inputs/InputDropdown', module)
   )
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })

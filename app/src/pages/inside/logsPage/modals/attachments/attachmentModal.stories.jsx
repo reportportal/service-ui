@@ -22,7 +22,6 @@ import harData from './example.har';
 storiesOf('Pages/Inside/LogsPage/LogItemInfo/LogItemInfoTabs/Attachments/modal', module)
   .addParameters({
     readme: {
-      content: README,
       sidebar: README,
     },
   })
