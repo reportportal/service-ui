@@ -16,13 +16,15 @@
 
 .field-filter-entity {
   position: relative;
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
   width: 235px;
   height: 55px;
   vertical-align: top;
 
   &.vertical {
     display: inline-flex;
+    flex-direction: row;
     align-items: center;
     width: 370px;
     height: 60px;
@@ -48,7 +50,7 @@
   width: 100%;
   box-sizing: border-box;
   padding-right: 20px;
-  margin-bottom: 5px;
+  margin-bottom: 7px;
   font-family: $FONT-REGULAR;
   font-size: 13px;
   line-height: 18px;

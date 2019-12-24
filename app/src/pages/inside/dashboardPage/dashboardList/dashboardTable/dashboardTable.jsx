@@ -20,7 +20,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { activeProjectSelector, activeProjectRoleSelector } from 'controllers/user';
 import { injectIntl, defineMessages } from 'react-intl';
-import { Grid } from 'components/main/grid';
+import { Grid, ALIGN_CENTER } from 'components/main/grid';
 import { EmptyDashboards } from 'pages/inside/dashboardPage/dashboardList/EmptyDashboards';
 import {
   NameColumn,
@@ -130,6 +130,7 @@ export class DashboardTable extends Component {
         customProps: {
           currentUser: userInfo,
         },
+        align: ALIGN_CENTER,
       },
       {
         title: {
@@ -142,6 +143,7 @@ export class DashboardTable extends Component {
           currentUser: userInfo,
           projectRole,
         },
+        align: ALIGN_CENTER,
       },
       {
         title: {
@@ -154,6 +156,7 @@ export class DashboardTable extends Component {
           currentUser: userInfo,
           projectRole,
         },
+        align: ALIGN_CENTER,
       },
     ];
   }

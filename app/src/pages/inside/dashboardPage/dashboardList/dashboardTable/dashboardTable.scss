@@ -14,72 +14,45 @@
  * limitations under the License.
  */
 
-.cell {
-  position: relative;
-  display: table-cell;
-  padding: 15px;
-  vertical-align: top;
-  color: $COLOR--charcoal-grey;
-  font-size: 13px;
-
-  @media (max-width: $SCREEN_SM_MAX) {
-    width: 100%;
-    height: auto;
-    padding: 10px;
-    border: 0;
-    &:empty {
-      display: none;
-    }
-  }
-}
-
 .name {
-  line-height: 18px;
-  font-size: 14px;
-  font-family: $FONT-CONDBOLD;
-  letter-spacing: 1px;
+  width: 30%;
   color: $COLOR--topaz;
+  font-size: 15px;
+  font-family: $FONT-SEMIBOLD;
+  line-height: 22px;
   cursor: pointer;
   text-decoration: none;
-  width: 30%;
   word-break: break-all;
-  @media (max-width: $SCREEN_SM_MAX) {
-    padding-top: 15px;
-  }
 }
 
 .description {
   width: 36%;
-  line-height: 1.5;
-  word-break: break-all;
+  font-size: 13px;
+  line-height: 22px;
 }
 
 .owner {
   width: 13%;
-  word-break: break-all;
+  font-size: 13px;
+  line-height: 22px;
 }
 
-.shared {
-  width: 8%;
-}
-
-.edit {
+.icon-cell {
   width: 6.5%;
+  padding: 15px 0;
+
+  &:last-child {
+    padding-right: 0;
+  }
+
   i {
     display: block;
   }
 
-  padding: 15px 0;
-}
-
-.delete {
-  width: 6.5%;
-  i {
-    display: block;
-  }
-  padding: 15px 0;
   @media (max-width: $SCREEN_SM_MAX) {
-    width: 100%;
+    i {
+      display: inline-block;
+    }
   }
 }
 
@@ -96,21 +69,20 @@
   .name,
   .description,
   .owner,
-  .shared,
-  .edit {
+  .icon-cell {
     width: 100%;
+    padding: 5px 20px;
+  }
+
+  .empty, .with-button {
+    @media (max-width: $SCREEN_SM_MAX) {
+      display: none;
+    }
   }
 }
 
 .with-button {
   i {
     cursor: pointer;
-  }
-
-  @media (max-width: $SCREEN_SM_MAX) {
-    width: 100%;
-    height: auto;
-    padding: 10px;
-    display: none;
   }
 }

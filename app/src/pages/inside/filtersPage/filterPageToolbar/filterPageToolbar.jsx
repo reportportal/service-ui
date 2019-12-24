@@ -36,7 +36,7 @@ const messages = defineMessages({
   },
   addFilter: {
     id: 'FiltersPage.addFilter',
-    defaultMessage: 'Add filter',
+    defaultMessage: 'Add Filter',
   },
   searchInputPlaceholder: { id: 'FiltersPage.searchByName', defaultMessage: 'Search by name' },
 });

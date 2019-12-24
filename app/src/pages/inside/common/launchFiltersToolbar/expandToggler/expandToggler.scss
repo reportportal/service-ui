@@ -15,7 +15,7 @@
  */
 
 .expand-toggler {
-  color: $COLOR--windows-blue;
+  color: $COLOR--topaz;
   font-family: $FONT-REGULAR;
   font-size: 11px;
   cursor: pointer;
@@ -30,7 +30,7 @@
   padding-left: 2px;
 
   svg {
-    fill: $COLOR--windows-blue;
+    fill: $COLOR--topaz;
   }
 
   &.expanded {

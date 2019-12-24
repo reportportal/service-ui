@@ -44,11 +44,11 @@ const messages = defineMessages({
   },
   removeIndexButtonCaption: {
     id: 'IndexActionsBlock.removeIndexButtonCaption',
-    defaultMessage: 'Remove index',
+    defaultMessage: 'Remove Index',
   },
   generateIndexButtonCaption: {
     id: 'IndexActionsBlock.generateIndexButtonCaption',
-    defaultMessage: 'Generate index',
+    defaultMessage: 'Generate Index',
   },
   generateIndexButtonProgressCaption: {
     id: 'IndexActionsBlock.generateIndexButtonProgressCaption',

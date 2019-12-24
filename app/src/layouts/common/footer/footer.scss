@@ -22,7 +22,7 @@
   justify-content: space-between;
   min-height: 35px;
   width: 100%;
-  padding: 0 15px;
+  padding: 0 25px;
   box-sizing: border-box;
   font-family: $FONT-REGULAR, sans-serif;
   font-size: 11px;
@@ -74,6 +74,7 @@
 
     &:last-child::after {
       content: '';
+      margin: 0;
     }
   }
 }

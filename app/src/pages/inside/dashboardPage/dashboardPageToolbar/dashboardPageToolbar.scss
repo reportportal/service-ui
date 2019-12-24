@@ -22,10 +22,9 @@
 }
 
 .tool-bar {
+  position: relative;
   display: flex;
   justify-content: space-between;
-  position: relative;
-
   padding: 20px;
   background-color: $COLOR--white-two;
 

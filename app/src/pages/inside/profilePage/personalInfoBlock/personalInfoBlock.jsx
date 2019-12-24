@@ -45,7 +45,7 @@ const messages = defineMessages({
   },
   changePassword: {
     id: 'PersonalInfoBlock.changePassword',
-    defaultMessage: 'Change password',
+    defaultMessage: 'Change Password',
   },
   passwordChanged: {
     id: 'PersonalInfoBlock.passwordChanged',
@@ -57,7 +57,7 @@ const messages = defineMessages({
   },
   forceUpdate: {
     id: 'PersonalInfoBlock.forceUpdate',
-    defaultMessage: 'Force update',
+    defaultMessage: 'Force Update',
   },
   synchronize: {
     id: 'PersonalInfoBlock.synchronize',
@@ -215,8 +215,8 @@ export class PersonalInfoBlock extends Component {
                 </div>
               )}
               {accountType !== INTERNAL && accountType !== LDAP && (
-                <div className={cx('top-btn')} onClick={this.onForceUpdate}>
-                  <GhostButton disabled={forceUpdateInProgress}>
+                <div className={cx('top-btn')} >
+                  <GhostButton disabled={forceUpdateInProgress} onClick={this.onForceUpdate}>
                     {forceUpdateInProgress
                       ? intl.formatMessage(messages.inProgress)
                       : intl.formatMessage(messages.forceUpdate)}

@@ -16,8 +16,7 @@
 
 .name-col {
   width: 30%;
-  padding: 15px;
-  box-sizing: border-box;
+  line-height: 22px;
 
   &:hover {
     .pencil-icon {
@@ -33,7 +32,7 @@
   width: 30%;
   padding: 15px;
   font-size: 13px;
-  line-height: 20px;
+  line-height: 22px;
   box-sizing: border-box;
 
   @media (max-width: $SCREEN_XS_MAX) {
@@ -46,7 +45,7 @@
 .owner-col {
   width: 13%;
   padding: 15px;
-  line-height: 20px;
+  line-height: 22px;
   box-sizing: border-box;
   word-break: break-all;
   font-size: 13px;

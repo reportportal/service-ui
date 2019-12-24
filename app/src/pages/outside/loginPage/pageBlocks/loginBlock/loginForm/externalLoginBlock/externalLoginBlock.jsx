@@ -21,6 +21,7 @@ import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import { LOGIN_PAGE } from 'controllers/pages';
 import { BigButton } from 'components/buttons/bigButton';
+import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { normalizePathWithPrefix, setWindowLocationToNewPath } from '../../../utils';
 import styles from './externalLoginBlock.scss';
 
@@ -34,32 +35,42 @@ export class ExternalLoginBlock extends PureComponent {
     externalAuth: {},
   };
 
-  externalAuthClickHandler = (path) => setWindowLocationToNewPath(normalizePathWithPrefix(path));
+  state = {
+    authInProgress: false,
+  };
+
+  externalAuthClickHandler = (path) => {
+    this.setState({ authInProgress: true });
+    setWindowLocationToNewPath(normalizePathWithPrefix(path));
+  };
+
+  renderButtons = () => {
+    const { externalAuth } = this.props;
+    return Object.keys(externalAuth).map((objKey) => {
+      const val = externalAuth[objKey];
+
+      return (
+        <div className={cx('external-auth-btn')} key={objKey}>
+          <BigButton roundedCorners color="booger">
+            {val.providers ? (
+              <Link to={{ type: LOGIN_PAGE, payload: { query: { multipleAuth: objKey } } }}>
+                {Parser(val.button)}
+              </Link>
+            ) : (
+              <span onClick={() => this.externalAuthClickHandler(val.path)}>
+                {Parser(val.button)}
+              </span>
+            )}
+          </BigButton>
+        </div>
+      );
+    });
+  };
 
   render() {
-    const { externalAuth } = this.props;
     return (
       <div className={cx('external-login-block')}>
-        {Object.keys(externalAuth).map((objKey) => {
-          const val = externalAuth[objKey];
-
-          return (
-            // eslint-disable-next-line react/no-array-index-key
-            <div className={cx('external-auth-btn')} key={objKey}>
-              <BigButton roundedCorners color="booger">
-                {val.providers ? (
-                  <Link to={{ type: LOGIN_PAGE, payload: { query: { multipleAuth: objKey } } }}>
-                    {Parser(val.button)}
-                  </Link>
-                ) : (
-                  <span onClick={() => this.externalAuthClickHandler(val.path)}>
-                    {Parser(val.button)}
-                  </span>
-                )}
-              </BigButton>
-            </div>
-          );
-        })}
+        {this.state.authInProgress ? <SpinningPreloader /> : this.renderButtons()}
       </div>
     );
   }

@@ -42,7 +42,7 @@ export const messages = defineMessages({
   },
   createPattern: {
     id: 'PatternAnalysis.createPattern',
-    defaultMessage: 'Create pattern',
+    defaultMessage: 'Create Pattern',
   },
 });
 

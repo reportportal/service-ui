@@ -16,11 +16,13 @@ podTemplate(
                         ttyEnabled: true,
                         command: 'cat',
                         envVars: [
-                                envVar(key: 'NODE_OPTIONS', value: '--max_old_space_size=4096')
-                        ]),
+                                envVar(key: 'NODE_OPTIONS', value: '--max_old_space_size=8192')
+                        ],
+                        resourceRequestMemory: '4096Mi',
+                        resourceLimitMemory: '8192Mi'),
                 containerTemplate(name: 'golang', image: 'golang:1.12.7', ttyEnabled: true, command: 'cat'),
                 containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.8', command: 'cat', ttyEnabled: true),
-                containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm:v3.0.0', command: 'cat', ttyEnabled: true),
+                containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm:v3.0.2', command: 'cat', ttyEnabled: true),
                 // containerTemplate(name: 'yq', image: 'mikefarah/yq', command: 'cat', ttyEnabled: true),
                 containerTemplate(name: 'httpie', image: 'blacktop/httpie', command: 'cat', ttyEnabled: true)
         ],
@@ -138,7 +140,7 @@ podTemplate(
                 dir(k8sChartDir) {
                     sh 'helm dependency update'
                 }
-                sh "helm upgrade --reuse-values --set serviceui.repository=$srvRepo --set serviceui.tag=$srvVersion --wait reportportal ./$k8sChartDir"
+                sh "helm upgrade -n reportportal --reuse-values --set serviceui.repository=$srvRepo --set serviceui.tag=$srvVersion --wait reportportal ./$k8sChartDir"
             }
         }
     }

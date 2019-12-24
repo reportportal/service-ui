@@ -27,6 +27,11 @@ export const extractExtension = (contentType) => {
   return attachmentTypeConfig[1] || attachmentTypeConfig[0] || '';
 };
 
+export const isTextWithJson = (contentType) => {
+  const attachmentTypeConfig = getAttachmentTypeConfig(contentType);
+  return attachmentTypeConfig[0] === 'text';
+};
+
 export const getExtensionFromPattern = (extensionString) =>
   Object.keys(FILE_PATTERNS_MAP).find((key) => !!FILE_PATTERNS_MAP[key].exec(extensionString));
 
