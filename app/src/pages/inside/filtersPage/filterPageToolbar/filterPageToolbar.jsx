@@ -19,7 +19,7 @@ import track from 'react-tracking';
 import { reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
-import { validate, bindMessageToValidator } from 'common/utils';
+import { validate, bindMessageToValidator } from 'common/utils/validation';
 import AddFilterIcon from 'common/img/add-filter-inline.svg';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { FieldProvider } from 'components/fields/fieldProvider';

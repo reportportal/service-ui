@@ -19,7 +19,7 @@ import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import { ModalLayout, withModal, ModalField } from 'components/main/modal';
-import { commonValidators } from 'common/utils';
+import { commonValidators } from 'common/utils/validation';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';

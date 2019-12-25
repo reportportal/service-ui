@@ -25,7 +25,8 @@ import { Input } from 'components/inputs/input';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { InputConditional } from 'components/inputs/inputConditional';
 import { IntegrationFormField, INTEGRATION_FORM } from 'components/integrations/elements';
-import { validate, commonValidators, bindMessageToValidator, isEmptyObject } from 'common/utils';
+import { validate, commonValidators, bindMessageToValidator } from 'common/utils/validation';
+import { isEmptyObject } from 'common/utils/isEmptyObject';
 import {
   DEFAULT_FORM_CONFIG,
   MANAGER_DN_KEY,

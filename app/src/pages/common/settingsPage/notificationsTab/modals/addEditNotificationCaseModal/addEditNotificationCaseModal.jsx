@@ -21,7 +21,7 @@ import className from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { validate, bindMessageToValidator } from 'common/utils';
+import { validate, bindMessageToValidator } from 'common/utils/validation';
 import { NotificationCaseFormFields } from './notificationCaseFormFields';
 import styles from './addEditNotificationCaseModal.scss';
 

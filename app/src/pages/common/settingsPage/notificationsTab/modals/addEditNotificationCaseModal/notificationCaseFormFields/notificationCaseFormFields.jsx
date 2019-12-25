@@ -21,7 +21,7 @@ import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import className from 'classnames/bind';
 import { URLS } from 'common/urls';
-import { validate } from 'common/utils';
+import { validate } from 'common/utils/validation';
 import { projectIdSelector } from 'controllers/pages';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputTagsSearch } from 'components/inputs/inputTagsSearch';

@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import Parser from 'html-react-parser';
-import { fetch } from 'common/utils';
+import { fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
 import { connect } from 'react-redux';
 import track from 'react-tracking';

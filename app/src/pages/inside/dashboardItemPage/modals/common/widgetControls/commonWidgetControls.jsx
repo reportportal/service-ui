@@ -19,12 +19,8 @@ import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import {
-  validate,
-  isEmptyObject,
-  composeBoundValidators,
-  bindMessageToValidator,
-} from 'common/utils';
+import { validate, composeBoundValidators, bindMessageToValidator } from 'common/utils/validation';
+import { isEmptyObject } from 'common/utils/isEmptyObject';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
 import { Input } from 'components/inputs/input';
 import { InputTextArea } from 'components/inputs/inputTextArea';

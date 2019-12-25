@@ -25,7 +25,7 @@ import {
   STATS_SI_TOTAL,
   STATS_TI_TOTAL,
 } from 'common/constants/statistics';
-import { commonValidators } from 'common/utils';
+import { commonValidators } from 'common/utils/validation';
 import { ITEMS_INPUT_WIDTH } from './constants';
 import { FiltersControl, InputControl } from './controls';
 

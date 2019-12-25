@@ -28,7 +28,7 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { MarkdownEditor } from 'components/main/markdown';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
-import { commonValidators, validateAsync } from 'common/utils';
+import { commonValidators, validateAsync } from 'common/utils/validation';
 import { activeProjectSelector } from 'controllers/user';
 
 const messages = defineMessages({

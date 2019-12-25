@@ -33,7 +33,7 @@ import {
   bindMessageToValidator,
   composeBoundValidators,
   commonValidators,
-} from 'common/utils';
+} from 'common/utils/validation';
 
 import { defectTypeShape } from './defectTypeShape';
 import { messages } from './defectTypesMessages';

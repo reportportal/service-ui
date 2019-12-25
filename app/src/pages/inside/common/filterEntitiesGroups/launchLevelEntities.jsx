@@ -18,7 +18,7 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
-import { commonValidators } from 'common/utils';
+import { commonValidators } from 'common/utils/validation';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
 import {

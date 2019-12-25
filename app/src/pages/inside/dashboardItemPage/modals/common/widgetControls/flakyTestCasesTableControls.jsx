@@ -21,7 +21,7 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { activeProjectSelector } from 'controllers/user';
 import { injectIntl, defineMessages } from 'react-intl';
 import { URLS } from 'common/urls';
-import { validate, bindMessageToValidator, commonValidators } from 'common/utils';
+import { validate, bindMessageToValidator, commonValidators } from 'common/utils/validation';
 import { ITEMS_INPUT_WIDTH } from './constants';
 import { InputControl, TagsControl, CheckboxControl } from './controls';
 

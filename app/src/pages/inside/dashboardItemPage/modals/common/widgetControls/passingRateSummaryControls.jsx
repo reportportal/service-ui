@@ -20,7 +20,7 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { injectIntl, defineMessages } from 'react-intl';
 import { STATS_TOTAL, STATS_PASSED } from 'common/constants/statistics';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
-import { commonValidators } from 'common/utils';
+import { commonValidators } from 'common/utils/validation';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import { ITEMS_INPUT_WIDTH } from './constants';
 import { TogglerControl, FiltersControl, InputControl } from './controls';

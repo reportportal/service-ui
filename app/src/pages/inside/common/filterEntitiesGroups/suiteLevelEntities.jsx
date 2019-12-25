@@ -20,7 +20,7 @@ import { injectIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
-import { commonValidators } from 'common/utils';
+import { commonValidators } from 'common/utils/validation';
 import {
   STATS_TOTAL,
   STATS_FAILED,

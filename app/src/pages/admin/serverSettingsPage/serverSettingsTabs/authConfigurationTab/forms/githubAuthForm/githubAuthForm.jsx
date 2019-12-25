@@ -23,7 +23,7 @@ import { connect } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form';
 import { FormController } from 'pages/admin/serverSettingsPage/common/formController';
 import { ENABLED_KEY, messages } from 'pages/admin/serverSettingsPage/common/constants';
-import { commonValidators } from 'common/utils';
+import { commonValidators } from 'common/utils/validation';
 import { ADMIN_SERVER_SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { joinOrganizations, splitOrganizations } from './utils';
 import { GITHUB_AUTH_FORM, DEFAULT_FORM_CONFIG } from './constants';

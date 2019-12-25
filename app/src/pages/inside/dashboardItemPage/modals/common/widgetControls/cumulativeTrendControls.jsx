@@ -25,7 +25,7 @@ import {
   bindMessageToValidator,
   composeBoundValidators,
   commonValidators,
-} from 'common/utils';
+} from 'common/utils/validation';
 import { URLS } from 'common/urls';
 import { STATS_FAILED, STATS_PASSED, STATS_SKIPPED } from 'common/constants/statistics';
 import { FieldProvider } from 'components/fields/fieldProvider';

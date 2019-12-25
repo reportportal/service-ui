@@ -18,7 +18,7 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 
-import { validate } from 'common/utils';
+import { validate } from 'common/utils/validation';
 import { InputTagsSearch } from './inputTagsSearch';
 import README from './README.md';
 
