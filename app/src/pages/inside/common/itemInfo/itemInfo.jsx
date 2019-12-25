@@ -100,6 +100,7 @@ export class ItemInfo extends Component {
       onEditItem: () => {},
       onClickAttribute: () => {},
       onOwnerClick: () => {},
+      events: {},
     },
     userId: '',
     userProjectRole: '',
