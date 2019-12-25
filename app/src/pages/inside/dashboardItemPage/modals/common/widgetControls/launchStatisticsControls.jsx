@@ -20,7 +20,7 @@ import { injectIntl, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import { defectTypesSelector } from 'controllers/project';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { commonValidators } from 'common/utils';
+import { commonValidators } from 'common/utils/validation';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import classNames from 'classnames/bind';
 import { BetaBadge } from 'pages/inside/common/betaBadge';

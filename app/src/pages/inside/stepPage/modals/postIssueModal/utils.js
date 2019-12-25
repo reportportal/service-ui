@@ -18,8 +18,8 @@ import {
   validate as commonValidate,
   commonValidators,
   bindMessageToValidator,
-  getSessionItem,
-} from 'common/utils';
+} from 'common/utils/validation';
+import { getSessionItem } from 'common/utils/storageUtils';
 import {
   INCLUDE_ATTACHMENTS_KEY,
   INCLUDE_COMMENTS_KEY,

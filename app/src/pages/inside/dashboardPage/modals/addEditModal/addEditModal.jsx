@@ -28,7 +28,7 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { Input } from 'components/inputs/input';
 import { InputTextArea } from 'components/inputs/inputTextArea';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
-import { validate, composeBoundValidators, bindMessageToValidator } from 'common/utils';
+import { validate, composeBoundValidators, bindMessageToValidator } from 'common/utils/validation';
 import { dashboardItemsSelector } from 'controllers/dashboard';
 import styles from './addEditModal.scss';
 

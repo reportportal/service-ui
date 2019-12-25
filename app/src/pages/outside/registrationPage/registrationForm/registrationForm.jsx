@@ -24,7 +24,7 @@ import { FieldBottomConstraints } from 'components/fields/fieldBottomConstraints
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputOutside } from 'components/inputs/inputOutside';
 import { BigButton } from 'components/buttons/bigButton';
-import { commonValidators } from 'common/utils';
+import { commonValidators } from 'common/utils/validation';
 import LoginIcon from './img/login-icon-inline.svg';
 import NameIcon from './img/name-icon-inline.svg';
 import EmailIcon from './img/email-icon-inline.svg';

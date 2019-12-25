@@ -21,7 +21,7 @@ import track from 'react-tracking';
 import { defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form';
-import { commonValidators, validateAsync } from 'common/utils';
+import { commonValidators, validateAsync } from 'common/utils/validation';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { Input } from 'components/inputs/input';

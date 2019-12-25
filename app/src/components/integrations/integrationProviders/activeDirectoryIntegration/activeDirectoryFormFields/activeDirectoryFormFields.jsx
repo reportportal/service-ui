@@ -22,7 +22,8 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { Input } from 'components/inputs/input';
 import { InputConditional } from 'components/inputs/inputConditional';
 import { IntegrationFormField } from 'components/integrations/elements';
-import { validate, commonValidators, bindMessageToValidator, isEmptyObject } from 'common/utils';
+import { validate, commonValidators, bindMessageToValidator } from 'common/utils/validation';
+import { isEmptyObject } from 'common/utils/isEmptyObject';
 import {
   DEFAULT_FORM_CONFIG,
   DOMAIN_KEY,

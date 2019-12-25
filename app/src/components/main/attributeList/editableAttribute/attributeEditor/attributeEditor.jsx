@@ -26,7 +26,7 @@ import {
   commonValidators,
   bindMessageToValidator,
   composeBoundValidators,
-} from 'common/utils';
+} from 'common/utils/validation';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import CircleCrossIcon from 'common/img/circle-cross-icon-inline.svg';
 import CircleCheckIcon from 'common/img/circle-check-inline.svg';

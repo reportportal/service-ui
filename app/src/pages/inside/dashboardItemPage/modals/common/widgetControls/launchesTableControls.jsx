@@ -18,12 +18,8 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import {
-  arrayRemoveDoubles,
-  validate,
-  bindMessageToValidator,
-  commonValidators,
-} from 'common/utils';
+import { arrayRemoveDoubles } from 'common/utils/arrayRemoveDoubles';
+import { validate, bindMessageToValidator, commonValidators } from 'common/utils/validation';
 import { injectIntl, defineMessages } from 'react-intl';
 import { defectTypesSelector } from 'controllers/project';
 import {

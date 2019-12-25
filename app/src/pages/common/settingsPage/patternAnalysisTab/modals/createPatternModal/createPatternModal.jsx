@@ -28,7 +28,7 @@ import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { commonValidators } from 'common/utils';
+import { commonValidators } from 'common/utils/validation';
 import { PATTERN_TYPES, REGEX_PATTERN, STRING_PATTERN } from 'common/constants/patternTypes';
 import { patternsSelector } from 'controllers/project';
 import { RegExEditor } from 'components/inputs/regExEditor';

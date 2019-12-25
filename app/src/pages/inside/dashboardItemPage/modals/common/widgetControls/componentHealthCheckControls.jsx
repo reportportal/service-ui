@@ -25,7 +25,7 @@ import {
   commonValidators,
   composeBoundValidators,
   bindMessageToValidator,
-} from 'common/utils';
+} from 'common/utils/validation';
 import { URLS } from 'common/urls';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { FieldProvider } from 'components/fields/fieldProvider';

@@ -21,7 +21,7 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { Input } from 'components/inputs/input';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { IntegrationFormField } from 'components/integrations/elements';
-import { commonValidators } from 'common/utils';
+import { commonValidators } from 'common/utils/validation';
 
 const messages = defineMessages({
   userNameTitle: {

@@ -21,7 +21,7 @@ import classNames from 'classnames/bind';
 import { reduxForm, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
-import { validate, bindMessageToValidator } from 'common/utils';
+import { validate, bindMessageToValidator } from 'common/utils/validation';
 import { ToggleButton } from 'components/buttons/toggleButton';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { AccuracyFormBlock } from './accuracyFormBlock';

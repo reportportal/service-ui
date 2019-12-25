@@ -25,7 +25,7 @@ import {
   commonValidators,
   bindMessageToValidator,
   composeBoundValidators,
-} from 'common/utils';
+} from 'common/utils/validation';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { Input } from 'components/inputs/input';

@@ -17,7 +17,7 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
-import { commonValidators } from 'common/utils';
+import { commonValidators } from 'common/utils/validation';
 import {
   EntityContains,
   EntityInputConditional,
