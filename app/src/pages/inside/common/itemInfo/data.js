@@ -461,6 +461,9 @@ export const state = {
     },
     token: '6c0aaff9-f471-4a07-bad2-78440d4c354b',
   },
+  plugins: {
+    plugins: [],
+  },
   location: {
     pathname: '/amsterget_personal/launches/all',
     type: 'PROJECT_LAUNCHES_PAGE',
