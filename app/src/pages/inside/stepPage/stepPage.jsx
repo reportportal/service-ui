@@ -59,13 +59,13 @@ import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { getDefectTypeSelector } from 'controllers/project';
 import { StepGrid } from './stepGrid';
 
-const UNLINK_MODAL_EVENTS_INFO = {
+const UNLINK_ISSUE_EVENTS_INFO = {
   unlinkBtn: STEP_PAGE_EVENTS.UNLINK_BTN_UNLINK_ISSUE_MODAL,
   cancelBtn: STEP_PAGE_EVENTS.CANCEL_BTN_UNLINK_ISSUE_MODAL,
   closeIcon: STEP_PAGE_EVENTS.CLOSE_ICON_UNLINK_ISSUE_MODAL,
 };
 
-const POST_BUG_EVENTS_INFO = {
+const POST_ISSUE_EVENTS_INFO = {
   postBtn: STEP_PAGE_EVENTS.POST_BTN_POST_ISSUE_MODAL,
   attachmentsSwitcher: STEP_PAGE_EVENTS.ATTACHMENTS_SWITCHER_POST_ISSUE_MODAL,
   logsSwitcher: STEP_PAGE_EVENTS.LOGS_SWITCHER_POST_ISSUE_MODAL,
@@ -284,7 +284,7 @@ export class StepPage extends Component {
     this.props.tracking.trackEvent(STEP_PAGE_EVENTS.UNLINK_ISSUES_ACTION);
     this.props.unlinkIssueAction(this.props.selectedItems, {
       fetchFunc: this.unselectAndFetchItems,
-      eventsInfo: UNLINK_MODAL_EVENTS_INFO,
+      eventsInfo: UNLINK_ISSUE_EVENTS_INFO,
     });
   };
 
@@ -303,7 +303,7 @@ export class StepPage extends Component {
     this.props.tracking.trackEvent(STEP_PAGE_EVENTS.UNLINK_SINGLE_ISSUE);
     this.props.unlinkIssueAction(items, {
       fetchFunc: this.unselectAndFetchItems,
-      eventsInfo: UNLINK_MODAL_EVENTS_INFO,
+      eventsInfo: UNLINK_ISSUE_EVENTS_INFO,
     });
   };
 
@@ -316,7 +316,7 @@ export class StepPage extends Component {
   handlePostIssue = () =>
     this.props.postIssueAction(this.props.selectedItems, {
       fetchFunc: this.unselectAndFetchItems,
-      eventsInfo: POST_BUG_EVENTS_INFO,
+      eventsInfo: POST_ISSUE_EVENTS_INFO,
     });
 
   handleIgnoreInAA = () => {
@@ -359,12 +359,11 @@ export class StepPage extends Component {
           item: items[0],
           fetchFunc: this.unselectAndFetchItems,
           eventsInfo: {
-            saveBtnDropdown: STEP_PAGE_EVENTS.SAVE_BTN_DROPDOWN_EDIT_ITEM_MODAL,
-            postBugBtn: STEP_PAGE_EVENTS.POST_BUG_BTN_EDIT_ITEM_MODAL,
-            linkIssueBtn: STEP_PAGE_EVENTS.LOAD_BUG_BTN_EDIT_ITEM_MODAL,
-            unlinkIssueBtn: STEP_PAGE_EVENTS.UNLINK_ISSUE_BTN_EDIT_ITEM_MODAL,
-            unlinkModalEvents: UNLINK_MODAL_EVENTS_INFO,
-            postBugEvents: POST_BUG_EVENTS_INFO,
+            changeSearchMode: STEP_PAGE_EVENTS.CHANGE_SEARCH_MODE_EDIT_DEFECT_MODAL,
+            selectAllSimilarItems: STEP_PAGE_EVENTS.SELECT_ALL_SIMILIAR_ITEMS_EDIT_DEFECT_MODAL,
+            editDefectsEvents: STEP_PAGE_EVENTS.EDIT_DEFECT_MODAL_EVENTS,
+            unlinkIssueEvents: UNLINK_ISSUE_EVENTS_INFO,
+            postIssueEvents: POST_ISSUE_EVENTS_INFO,
             linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
           },
         },
@@ -374,12 +373,9 @@ export class StepPage extends Component {
         fetchFunc: this.unselectAndFetchItems,
         debugMode: this.props.debugMode,
         eventsInfo: {
-          saveBtnDropdown: STEP_PAGE_EVENTS.SAVE_BTN_DROPDOWN_EDIT_ITEM_MODAL,
-          postBugBtn: STEP_PAGE_EVENTS.POST_BUG_BTN_EDIT_ITEM_MODAL,
-          linkIssueBtn: STEP_PAGE_EVENTS.LOAD_BUG_BTN_EDIT_ITEM_MODAL,
-          unlinkIssueBtn: STEP_PAGE_EVENTS.UNLINK_ISSUE_BTN_EDIT_ITEM_MODAL,
-          unlinkModalEvents: UNLINK_MODAL_EVENTS_INFO,
-          postBugEvents: POST_BUG_EVENTS_INFO,
+          editDefectsEvents: STEP_PAGE_EVENTS.EDIT_DEFECT_MODAL_EVENTS,
+          unlinkIssueEvents: UNLINK_ISSUE_EVENTS_INFO,
+          postIssueEvents: POST_ISSUE_EVENTS_INFO,
           linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
         },
       });

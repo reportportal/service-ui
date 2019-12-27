@@ -97,7 +97,7 @@ const messages = defineMessages({
     defaultMessage: 'Retries',
   },
 });
-const POST_BUG_EVENTS_INFO = {
+const POST_ISSUE_EVENTS_INFO = {
   postBtn: LOG_PAGE_EVENTS.POST_BTN_POST_ISSUE_MODAL,
   attachmentsSwitcher: LOG_PAGE_EVENTS.ATTACHMENTS_SWITCHER_POST_ISSUE_MODAL,
   logsSwitcher: LOG_PAGE_EVENTS.LOGS_SWITCHER_POST_ISSUE_MODAL,
@@ -110,6 +110,11 @@ const LINK_ISSUE_EVENTS_INFO = {
   cancelBtn: LOG_PAGE_EVENTS.CANCEL_BTN_LINK_ISSUE_MODAL,
   addNewIssue: LOG_PAGE_EVENTS.ADD_NEW_ISSUE_LINK_ISSUE_MODAL,
   closeIcon: LOG_PAGE_EVENTS.CLOSE_ICON_LINK_ISSUE_MODAL,
+};
+const UNLINK_ISSUE_EVENTS_INFO = {
+  unlinkBtn: LOG_PAGE_EVENTS.UNLINK_BTN_UNLINK_ISSUE_MODAL,
+  cancelBtn: LOG_PAGE_EVENTS.CANCEL_BTN_UNLINK_ISSUE_MODAL,
+  closeIcon: LOG_PAGE_EVENTS.CLOSE_ICON_UNLINK_ISSUE_MODAL,
 };
 
 @connect(
@@ -323,7 +328,7 @@ export class LogItemInfo extends Component {
     this.props.tracking.trackEvent(LOG_PAGE_EVENTS.POST_ISSUE_BTN);
     this.props.postIssueAction([this.props.logItem], {
       fetchFunc: this.props.fetchFunc,
-      eventsInfo: POST_BUG_EVENTS_INFO,
+      eventsInfo: POST_ISSUE_EVENTS_INFO,
     });
   };
 
@@ -336,10 +341,11 @@ export class LogItemInfo extends Component {
           item: logItem,
           fetchFunc: this.props.fetchFunc,
           eventsInfo: {
-            saveBtnDropdown: LOG_PAGE_EVENTS.SAVE_BTN_DROPDOWN_EDIT_ITEM_MODAL,
-            postBugBtn: LOG_PAGE_EVENTS.POST_BUG_BTN_EDIT_ITEM_MODAL,
-            linkIssueBtn: LOG_PAGE_EVENTS.LOAD_BUG_BTN_EDIT_ITEM_MODAL,
-            postBugEvents: POST_BUG_EVENTS_INFO,
+            changeSearchMode: LOG_PAGE_EVENTS.CHANGE_SEARCH_MODE_EDIT_DEFECT_MODAL,
+            selectAllSimilarItems: LOG_PAGE_EVENTS.SELECT_ALL_SIMILIAR_ITEMS_EDIT_DEFECT_MODAL,
+            editDefectsEvents: LOG_PAGE_EVENTS.EDIT_DEFECT_MODAL_EVENTS,
+            unlinkIssueEvents: UNLINK_ISSUE_EVENTS_INFO,
+            postIssueEvents: POST_ISSUE_EVENTS_INFO,
             linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
           },
         },
@@ -349,10 +355,9 @@ export class LogItemInfo extends Component {
         fetchFunc: this.props.fetchFunc,
         debugMode: this.props.debugMode,
         eventsInfo: {
-          saveBtnDropdown: LOG_PAGE_EVENTS.SAVE_BTN_DROPDOWN_EDIT_ITEM_MODAL,
-          postBugBtn: LOG_PAGE_EVENTS.POST_BUG_BTN_EDIT_ITEM_MODAL,
-          linkIssueBtn: LOG_PAGE_EVENTS.LOAD_BUG_BTN_EDIT_ITEM_MODAL,
-          postBugEvents: POST_BUG_EVENTS_INFO,
+          editDefectsEvents: LOG_PAGE_EVENTS.EDIT_DEFECT_MODAL_EVENTS,
+          unlinkIssueEvents: UNLINK_ISSUE_EVENTS_INFO,
+          postIssueEvents: POST_ISSUE_EVENTS_INFO,
           linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
         },
       });

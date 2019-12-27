@@ -18,6 +18,7 @@ import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
+import track from 'react-tracking';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import {
@@ -45,8 +46,31 @@ import { SelectedItems } from 'pages/inside/common/selectedItems';
 import { getDeleteItemsActionParameters } from 'pages/inside/testItemPage';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
+import { HISTORY_PAGE_EVENTS } from 'components/main/analytics/events';
 import { createStepActionDescriptors } from 'pages/inside/common/utils';
 import { ActionPanel } from '../actionPanel';
+
+const UNLINK_ISSUE_EVENTS_INFO = {
+  unlinkBtn: HISTORY_PAGE_EVENTS.UNLINK_BTN_UNLINK_ISSUE_MODAL,
+  cancelBtn: HISTORY_PAGE_EVENTS.CANCEL_BTN_UNLINK_ISSUE_MODAL,
+  closeIcon: HISTORY_PAGE_EVENTS.CLOSE_ICON_UNLINK_ISSUE_MODAL,
+};
+
+const POST_ISSUE_EVENTS_INFO = {
+  postBtn: HISTORY_PAGE_EVENTS.POST_BTN_POST_ISSUE_MODAL,
+  attachmentsSwitcher: HISTORY_PAGE_EVENTS.ATTACHMENTS_SWITCHER_POST_ISSUE_MODAL,
+  logsSwitcher: HISTORY_PAGE_EVENTS.LOGS_SWITCHER_POST_ISSUE_MODAL,
+  commentSwitcher: HISTORY_PAGE_EVENTS.COMMENT_SWITCHER_POST_ISSUE_MODAL,
+  cancelBtn: HISTORY_PAGE_EVENTS.CANCEL_BTN_POST_ISSUE_MODAL,
+  closeIcon: HISTORY_PAGE_EVENTS.CLOSE_ICON_POST_ISSUE_MODAL,
+};
+
+const LINK_ISSUE_EVENTS_INFO = {
+  loadBtn: HISTORY_PAGE_EVENTS.LOAD_BTN_LINK_ISSUE_MODAL,
+  cancelBtn: HISTORY_PAGE_EVENTS.CANCEL_BTN_LINK_ISSUE_MODAL,
+  addNewIssue: HISTORY_PAGE_EVENTS.ADD_NEW_ISSUE_BTN_LINK_ISSUE_MODAL,
+  closeIcon: HISTORY_PAGE_EVENTS.CLOSE_ICON_LINK_ISSUE_MODAL,
+};
 
 @connect(
   (state) => ({
@@ -72,12 +96,17 @@ import { ActionPanel } from '../actionPanel';
   },
 )
 @injectIntl
+@track()
 export class ActionPanelWithGroupOperations extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     userId: PropTypes.string.isRequired,
     accountRole: PropTypes.string.isRequired,
     projectRole: PropTypes.string.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
     parentLaunch: PropTypes.object,
     selectedItems: PropTypes.arrayOf(PropTypes.object),
     validationErrors: PropTypes.object,
@@ -201,30 +230,39 @@ export class ActionPanelWithGroupOperations extends Component {
     return null;
   };
 
-  handleUnlinkIssue = () =>
+  handleUnlinkIssue = () => {
+    this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.UNLINK_ISSUES_ACTION);
     this.props.onUnlinkIssue(this.props.selectedItems, {
       fetchFunc: this.unselectAndRefreshItems,
+      eventsInfo: UNLINK_ISSUE_EVENTS_INFO,
     });
+  };
 
-  handleLinkIssue = () =>
+  handleLinkIssue = () => {
+    this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.LINK_ISSUE_ACTION);
     this.props.onLinkIssue(this.props.selectedItems, {
       fetchFunc: this.unselectAndRefreshItems,
-      eventsInfo: {},
+      eventsInfo: LINK_ISSUE_EVENTS_INFO,
     });
+  };
 
-  handlePostIssue = () =>
+  handlePostIssue = () => {
+    this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.POST_ISSUE_ACTION);
     this.props.onPostIssue(this.props.selectedItems, {
       fetchFunc: this.unselectAndFetchItems,
-      eventsInfo: {},
+      eventsInfo: POST_ISSUE_EVENTS_INFO,
     });
+  };
 
   handleDeleteItems = () => {
     const {
       intl: { formatMessage },
+      tracking,
       selectedItems,
       userId,
       deleteHistoryItems,
     } = this.props;
+    tracking.trackEvent(HISTORY_PAGE_EVENTS.DELETE_ACTION);
 
     const parameters = getDeleteItemsActionParameters(selectedItems, formatMessage, {
       onConfirm: (items) =>
@@ -233,7 +271,11 @@ export class ActionPanelWithGroupOperations extends Component {
           callback: this.unselectAndRefreshItems,
         }),
       userId,
-      eventsInfo: {}, // TODO: Add analytics events here
+      eventsInfo: {
+        closeIcon: HISTORY_PAGE_EVENTS.CLOSE_ICON_DELETE_ITEM_MODAL,
+        cancelBtn: HISTORY_PAGE_EVENTS.CANCEL_BTN_DELETE_ITEM_MODAL,
+        deleteBtn: HISTORY_PAGE_EVENTS.DELETE_BTN_DELETE_ITEM_MODAL,
+      },
     });
 
     deleteHistoryItems(selectedItems, parameters);
@@ -254,14 +296,26 @@ export class ActionPanelWithGroupOperations extends Component {
         data: {
           item: items[0],
           fetchFunc: this.unselectAndRefreshItems,
-          eventsInfo: {},
+          eventsInfo: {
+            changeSearchMode: HISTORY_PAGE_EVENTS.CHANGE_SEARCH_MODE_EDIT_DEFECT_MODAL,
+            selectAllSimilarItems: HISTORY_PAGE_EVENTS.SELECT_ALL_SIMILIAR_ITEMS_EDIT_DEFECT_MODAL,
+            editDefectsEvents: HISTORY_PAGE_EVENTS.EDIT_DEFECT_MODAL_EVENTS,
+            unlinkIssueEvents: UNLINK_ISSUE_EVENTS_INFO,
+            postIssueEvents: POST_ISSUE_EVENTS_INFO,
+            linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
+          },
         },
       });
     } else {
       onEditDefects(items, {
         fetchFunc: this.unselectAndRefreshItems,
         debugMode,
-        eventsInfo: {},
+        eventsInfo: {
+          editDefectsEvents: HISTORY_PAGE_EVENTS.EDIT_DEFECT_MODAL_EVENTS,
+          unlinkIssueEvents: UNLINK_ISSUE_EVENTS_INFO,
+          postIssueEvents: POST_ISSUE_EVENTS_INFO,
+          linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
+        },
       });
     }
   };
@@ -269,9 +323,11 @@ export class ActionPanelWithGroupOperations extends Component {
   proceedWithValidItems = () => {
     const {
       lastOperation: { operationName, operationArgs },
+      tracking,
       selectedItems,
       proceedWithValidItems,
     } = this.props;
+    tracking.trackEvent(HISTORY_PAGE_EVENTS.PROCEED_VALID_ITEMS);
 
     proceedWithValidItems(operationName, selectedItems, operationArgs);
   };

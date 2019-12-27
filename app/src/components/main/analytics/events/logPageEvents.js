@@ -14,6 +14,13 @@
  * limitations under the License.
  */
 
+import { getRefreshPageActionEvent } from './common/testItemPages/actionEventsCreators';
+import {
+  getEditDefectModalEvents,
+  getEditToInvestigateChangeSearchModeEvent,
+  getEditToInvestigateSelectAllSimilarItemsEvent,
+} from './common/testItemPages/modalEventsCreators';
+
 export const LOG_PAGE = 'log';
 export const LOG_PAGE_EVENTS = {
   PLUS_MINUS_BREADCRUMB: {
@@ -41,16 +48,7 @@ export const LOG_PAGE_EVENTS = {
     action: 'Click on Btn next Method',
     label: 'Transition to next Method Item',
   },
-  REFRESH_BTN: {
-    category: LOG_PAGE,
-    action: 'Click on Btn Refresh',
-    label: 'Refresh page',
-  },
-  HISTORY_LINE_ITEM: {
-    category: LOG_PAGE,
-    action: 'Click on History execution tab',
-    label: 'Transition to item log page',
-  },
+  REFRESH_BTN: getRefreshPageActionEvent(LOG_PAGE),
   DEFECT_TYPE_TAG: {
     category: LOG_PAGE,
     action: 'Click on Defect type tag',
@@ -65,6 +63,11 @@ export const LOG_PAGE_EVENTS = {
     category: LOG_PAGE,
     action: 'Click on Btn Load Bug',
     label: 'Arise Modal Load Bug',
+  },
+  HISTORY_LINE_ITEM: {
+    category: LOG_PAGE,
+    action: 'Click on History execution tab',
+    label: 'Transition to item log page',
   },
   STACK_TRACE_TAB: {
     category: LOG_PAGE,
@@ -126,6 +129,7 @@ export const LOG_PAGE_EVENTS = {
     action: 'Click on icon Expand in Log Message',
     label: 'Expand/close log',
   },
+  // POST_ISSUE_MODAL
   CLOSE_ICON_POST_ISSUE_MODAL: {
     category: LOG_PAGE,
     action: 'Click on Icon Close on Modal Post Bug',
@@ -156,6 +160,7 @@ export const LOG_PAGE_EVENTS = {
     action: 'Click on Btn Post on Modal Post Bug',
     label: 'Post bug',
   },
+  // LINK_ISSUE_MODAL
   CLOSE_ICON_LINK_ISSUE_MODAL: {
     category: LOG_PAGE,
     action: 'Click on Icon Close on Modal Load Bug',
@@ -211,20 +216,32 @@ export const LOG_PAGE_EVENTS = {
     action: 'Click on Btn Close on Modal Attachment',
     label: 'Close Modal Attachment',
   },
-  SAVE_BTN_DROPDOWN_EDIT_ITEM_MODAL: {
+  // EDIT_DEFECT_MODAL
+  EDIT_DEFECT_MODAL_EVENTS: getEditDefectModalEvents(LOG_PAGE),
+  SELECT_ALL_SIMILIAR_ITEMS_EDIT_DEFECT_MODAL: getEditToInvestigateSelectAllSimilarItemsEvent(
+    LOG_PAGE,
+  ),
+  CHANGE_SEARCH_MODE_EDIT_DEFECT_MODAL: getEditToInvestigateChangeSearchModeEvent(LOG_PAGE),
+  // UNLINK_ISSUE_MODAL
+  UNLINK_ISSUE: {
     category: LOG_PAGE,
-    action: 'Click on dropdown icon on Save Btn on Modal "Edit Item"',
-    label: 'Arise dropdown',
+    action: 'Click on Unlink issue',
+    label: 'Arise Unlink issue',
   },
-  POST_BUG_BTN_EDIT_ITEM_MODAL: {
+  CANCEL_BTN_UNLINK_ISSUE_MODAL: {
     category: LOG_PAGE,
-    action: 'Select Save and Post Bug on dropdown in Modal "Edit Item"',
-    label: 'Arise Modal "Post Bug"',
+    action: 'Click on Cancel in Unlink issue',
+    label: 'Close modal Unlink issue',
   },
-  LOAD_BUG_BTN_EDIT_ITEM_MODAL: {
+  CLOSE_ICON_UNLINK_ISSUE_MODAL: {
     category: LOG_PAGE,
-    action: 'Select Save and Load Bug on dropdown in Modal "Edit Item"',
-    label: 'Arise Modal "Load Bug"',
+    action: 'Click on Close icon in Unlink issue',
+    label: 'Close modal Unlink issue',
+  },
+  UNLINK_BTN_UNLINK_ISSUE_MODAL: {
+    category: LOG_PAGE,
+    action: 'Click on Unlink in Unlink issue',
+    label: 'Unlink issues',
   },
   COPY_DEFECT_FROM_BTN: {
     category: LOG_PAGE,
@@ -280,25 +297,5 @@ export const LOG_PAGE_EVENTS = {
     category: LOG_PAGE,
     action: 'Click on Play button on Sauce Labs video',
     label: 'Play Sauce Labs video',
-  },
-  UNLINK_ISSUE: {
-    category: LOG_PAGE,
-    action: 'Click on Unlink issue',
-    label: 'Arise Unlink issue',
-  },
-  CANCEL_BTN_UNLINK_ISSUE_MODAL: {
-    category: LOG_PAGE,
-    action: 'Click on Cancel in Unlink issue',
-    label: 'Close modal Unlink issue',
-  },
-  CLOSE_ICON_UNLINK_ISSUE_MODAL: {
-    category: LOG_PAGE,
-    action: 'Click on Close icon in Unlink issue',
-    label: 'Close modal Unlink issue',
-  },
-  UNLINK_BTN_UNLINK_ISSUE_MODAL: {
-    category: LOG_PAGE,
-    action: 'Click on Unlink in Unlink issue',
-    label: 'Unlink issues',
   },
 };

@@ -17,6 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import track from 'react-tracking';
 import { PageLayout, PageSection } from 'layouts/pageLayout';
 import { userIdSelector } from 'controllers/user';
 import { activeFilterSelector } from 'controllers/filter';
@@ -32,6 +33,7 @@ import {
   isTestItemsListSelector,
   isStepLevelSelector,
 } from 'controllers/testItem';
+import { HISTORY_PAGE_EVENTS } from 'components/main/analytics/events';
 import { InfoLine, InfoLineListView } from 'pages/inside/common/infoLine';
 import { HistoryToolbar } from './historyToolbar';
 import { HistoryView } from './historyView';
@@ -51,9 +53,14 @@ import { HistoryView } from './historyView';
     onUnselectAll: unselectAllHistoryItemsAction,
   },
 )
+@track()
 export class HistoryPage extends Component {
   static propTypes = {
     refreshHistoryAction: PropTypes.func.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
     selectedItems: PropTypes.arrayOf(PropTypes.object),
     parentItem: PropTypes.object,
     currentFilter: PropTypes.object,
@@ -102,13 +109,13 @@ export class HistoryPage extends Component {
     this.props.refreshHistoryAction({ historyBase });
   };
 
-  // TODO: add analytics event here
   onSelectItem = (item) => {
+    this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.SELECT_HISTORY_ITEM);
     this.props.toggleItemSelection(item);
   };
 
-  // TODO: add analytics event here
   onUnselectItem = (item) => {
+    this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.UNSELECT_HISTORY_ITEM);
     this.props.toggleItemSelection(item);
   };
 
