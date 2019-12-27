@@ -219,7 +219,7 @@ export class TestItemDetailsModal extends Component {
               <CopyToClipboard
                 text={item.codeRef}
                 className={cx('copy')}
-                onCopy={() => trackEvent(STEP_PAGE_EVENTS.COPY_CODE_REFERENCE_EDIT_DEFECT_MODAL)}
+                onCopy={() => trackEvent(STEP_PAGE_EVENTS.COPY_CODE_REFERENCE_EDIT_ITEM_MODAL)}
               >
                 {Parser(IconDuplicate)}
               </CopyToClipboard>

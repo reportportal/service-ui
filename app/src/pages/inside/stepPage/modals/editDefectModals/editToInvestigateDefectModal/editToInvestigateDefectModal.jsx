@@ -31,7 +31,6 @@ import { launchSelector } from 'controllers/testItem';
 import { activeFilterSelector } from 'controllers/filter';
 import { unlinkIssueAction, linkIssueAction, postIssueAction } from 'controllers/step';
 import { hideModalAction } from 'controllers/modal';
-import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { getIssueTitle } from 'pages/inside/common/utils';
 import { fetch, setStorageItem, getStorageItem, isEmptyObject } from 'common/utils';
@@ -177,11 +176,13 @@ export class EditToInvestigateDefectModal extends Component {
   }
 
   onEditDefects = (nextAction, issueAction) => {
+    const { editDefectsEvents } = this.props.data.eventsInfo;
+
     if (this.checkIfTheDataWasChanged()) {
-      this.props.tracking.trackEvent(STEP_PAGE_EVENTS.EDIT_DESCRIPTION_EDIT_DEFECT_MODAL);
+      this.props.tracking.trackEvent(editDefectsEvents.EDIT_DESCRIPTION_EDIT_DEFECT_MODAL);
       this.saveDefects(this.prepareDataToSend());
     }
-    !issueAction && this.props.tracking.trackEvent(STEP_PAGE_EVENTS.SAVE_BTN_EDIT_DEFECT_MODAL);
+    !issueAction && this.props.tracking.trackEvent(editDefectsEvents.SAVE_BTN_EDIT_DEFECT_MODAL);
     issueAction && this.props.hideModalAction();
     nextAction();
   };
@@ -255,26 +256,32 @@ export class EditToInvestigateDefectModal extends Component {
   };
 
   handleUnlinkIssue = () => {
-    this.props.tracking.trackEvent(this.props.data.eventsInfo.unlinkIssueBtn);
+    const { editDefectsEvents, unlinkIssueEvents } = this.props.data.eventsInfo;
+
+    this.props.tracking.trackEvent(editDefectsEvents.unlinkIssueBtn);
     this.props.unlinkIssueAction(this.prepareDataToSend(), {
       fetchFunc: this.props.data.fetchFunc,
-      eventsInfo: this.props.data.eventsInfo.unlinkModalEvents,
+      eventsInfo: unlinkIssueEvents,
     });
   };
 
   handleLinkIssue = () => {
-    this.props.tracking.trackEvent(this.props.data.eventsInfo.linkIssueBtn);
+    const { editDefectsEvents, linkIssueEvents } = this.props.data.eventsInfo;
+
+    this.props.tracking.trackEvent(editDefectsEvents.linkIssueBtn);
     return this.props.linkIssueAction(this.prepareDataToSend(), {
       fetchFunc: this.props.data.fetchFunc,
-      eventsInfo: this.props.data.eventsInfo.linkIssueEvents,
+      eventsInfo: linkIssueEvents,
     });
   };
 
   handlePostIssue = () => {
-    this.props.tracking.trackEvent(this.props.data.eventsInfo.postBugBtn);
+    const { editDefectsEvents, postIssueEvents } = this.props.data.eventsInfo;
+
+    this.props.tracking.trackEvent(editDefectsEvents.postIssueBtn);
     return this.props.postIssueAction(this.prepareDataToSend(), {
       fetchFunc: this.props.data.fetchFunc,
-      eventsInfo: this.props.data.eventsInfo.postBugEvents,
+      eventsInfo: postIssueEvents,
     });
   };
 
@@ -362,10 +369,12 @@ export class EditToInvestigateDefectModal extends Component {
   };
 
   handleIgnoreAnalyzerChange = (newValue) => {
+    const { editDefectsEvents } = this.props.data.eventsInfo;
+
     this.props.tracking.trackEvent(
       newValue
-        ? STEP_PAGE_EVENTS.IGNORE_IN_AA_EDIT_DEFECT_MODAL
-        : STEP_PAGE_EVENTS.INCLUDE_IN_AA_EDIT_DEFECT_MODAL,
+        ? editDefectsEvents.IGNORE_IN_AA_EDIT_DEFECT_MODAL
+        : editDefectsEvents.INCLUDE_IN_AA_EDIT_DEFECT_MODAL,
     );
     this.setState({
       ignoreAnalyzer: newValue,
@@ -379,9 +388,9 @@ export class EditToInvestigateDefectModal extends Component {
   };
 
   handleChangeSearchMode = (searchMode) => {
-    this.props.tracking.trackEvent(
-      STEP_PAGE_EVENTS.CHANGE_SEARCH_MODE_EDIT_DEFECT_MODAL[searchMode],
-    );
+    const { changeSearchMode } = this.props.data.eventsInfo;
+
+    this.props.tracking.trackEvent(changeSearchMode[searchMode]);
     this.setState(
       {
         searchMode,
@@ -393,7 +402,9 @@ export class EditToInvestigateDefectModal extends Component {
   };
 
   handleSelectAllToggle = (checked) => {
-    this.props.tracking.trackEvent(STEP_PAGE_EVENTS.SELECT_ALL_SIMILIAR_ITEMS_EDIT_DEFECT_MODAL);
+    const { selectAllSimilarItems } = this.props.data.eventsInfo;
+
+    this.props.tracking.trackEvent(selectAllSimilarItems);
     this.setState((state) => ({
       selectedItems: checked ? state.testItems.slice() : [],
     }));
@@ -445,44 +456,55 @@ export class EditToInvestigateDefectModal extends Component {
     </div>
   );
 
-  renderMultiActionButton = ({ ...rest }) => (
-    <MultiActionButton {...rest} toggleMenuEventInfo={this.props.data.eventsInfo.saveBtnDropdown} />
-  );
+  renderMultiActionButton = ({ ...rest }) => {
+    const { editDefectsEvents } = this.props.data.eventsInfo;
+
+    return (
+      <MultiActionButton
+        {...rest}
+        toggleMenuEventInfo={editDefectsEvents.SAVE_BTN_DROPDOWN_EDIT_DEFECT_MODAL}
+      />
+    );
+  };
 
   render() {
-    const { intl, currentFilter } = this.props;
+    const {
+      intl: { formatMessage },
+      currentFilter,
+      data: { eventsInfo },
+    } = this.props;
     const customButton = {
       onClick: this.onEditDefects,
       buttonProps: {
         items: this.multiActionButtonItems,
-        title: intl.formatMessage(COMMON_LOCALE_KEYS.SAVE),
+        title: formatMessage(COMMON_LOCALE_KEYS.SAVE),
       },
       component: this.renderMultiActionButton,
     };
     const cancelButton = {
-      text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      eventInfo: STEP_PAGE_EVENTS.CANCEL_BTN_EDIT_DEFECT_MODAL,
+      text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      eventInfo: eventsInfo.editDefectsEvents.CANCEL_BTN_EDIT_DEFECT_MODAL,
     };
     return (
       <ModalLayout
-        title={intl.formatMessage(messages.title)}
+        title={formatMessage(messages.title)}
         customButton={customButton}
         cancelButton={cancelButton}
         closeConfirmation={this.getCloseConfirmationConfig()}
-        closeIconEventInfo={STEP_PAGE_EVENTS.CLOSE_ICON_EDIT_DEFECT_MODAL}
+        closeIconEventInfo={eventsInfo.editDefectsEvents.CLOSE_ICON_EDIT_DEFECT_MODAL}
         className={cx('modal-window')}
         renderFooterElements={this.renderFooter}
       >
         <div className={cx('edit-defect-content')}>
           <div className={cx('defect-type')}>
             <span className={cx('defect-type-title')}>
-              {intl.formatMessage(messages.defectTypeTitle)}
+              {formatMessage(messages.defectTypeTitle)}
             </span>
             <div className={cx('defect-type-selector-wrapper')}>
               <DefectTypeSelector
                 onChange={this.handleSelectDefectTypeChange}
                 value={this.state.defectType}
-                placeholder={intl.formatMessage(messages.defectTypeSelectorPlaceholder)}
+                placeholder={formatMessage(messages.defectTypeSelectorPlaceholder)}
               />
             </div>
           </div>
@@ -491,15 +513,13 @@ export class EditToInvestigateDefectModal extends Component {
               value={this.state.ignoreAnalyzer}
               onChange={this.handleIgnoreAnalyzerChange}
             >
-              <span className={cx('ignore-aa-title')}>
-                {intl.formatMessage(messages.ignoreAaTitle)}
-              </span>
+              <span className={cx('ignore-aa-title')}>{formatMessage(messages.ignoreAaTitle)}</span>
             </InputSwitcher>
           </div>
           <div className={cx('markdown-container')}>
             <MarkdownEditor
               value={this.state.markdownValue}
-              placeholder={intl.formatMessage(messages.defectCommentPlaceholder)}
+              placeholder={formatMessage(messages.defectCommentPlaceholder)}
               onChange={this.handleMarkdownChange}
             />
             <div className={cx('markdown-disable-cover')} />
@@ -519,11 +539,11 @@ export class EditToInvestigateDefectModal extends Component {
             <div className={cx('hot-keys-wrapper')}>
               <span className={cx('hot-keys')}>
                 <span className={cx('hot-key')}>Esc </span>
-                {intl.formatMessage(messages.hotKeyCancelCaption)}
+                {formatMessage(messages.hotKeyCancelCaption)}
               </span>
               <span className={cx('hot-keys')}>
                 <span className={cx('hot-key')}>Ctrl + Enter </span>
-                {intl.formatMessage(messages.hotKeySubmitCaption)}
+                {formatMessage(messages.hotKeySubmitCaption)}
               </span>
             </div>
           </div>

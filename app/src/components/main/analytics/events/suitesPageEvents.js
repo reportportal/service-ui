@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
+import {
+  getProceedValidItemsEvent,
+  getRefreshPageActionEvent,
+  getHistoryPageLinkEvent,
+} from './common/testItemPages/actionEventsCreators';
+
 export const SUITE_PAGE = 'suites';
 export const SUITES_PAGE_EVENTS = {
   PLUS_MINUS_BREADCRUMB: {
@@ -36,16 +42,8 @@ export const SUITES_PAGE_EVENTS = {
     action: 'Click on Btn Delete',
     label: 'Delete selected Items',
   },
-  HISTORY_BTN: {
-    category: SUITE_PAGE,
-    action: 'Click on Btn History',
-    label: 'Transition to History View Page',
-  },
-  REFRESH_BTN: {
-    category: SUITE_PAGE,
-    action: 'Click on Btn Refresh',
-    label: 'Refresh the page',
-  },
+  HISTORY_BTN: getHistoryPageLinkEvent(SUITE_PAGE),
+  REFRESH_BTN: getRefreshPageActionEvent(SUITE_PAGE),
   REFINE_BY_NAME: {
     category: SUITE_PAGE,
     action: 'Enter parameters to refine by name',
@@ -91,11 +89,7 @@ export const SUITES_PAGE_EVENTS = {
     action: 'Click on icon "close" of all selection',
     label: 'Unselect all items',
   },
-  PROCEED_VALID_ITEMS: {
-    category: SUITE_PAGE,
-    action: 'Click on Btn "Proceed Valid Items"',
-    label: 'Remove invalid items from selection',
-  },
+  PROCEED_VALID_ITEMS: getProceedValidItemsEvent(SUITE_PAGE),
   CLOSE_ICON_EDIT_ITEM_MODAL: {
     category: SUITE_PAGE,
     action: 'Click on Close Icon on Modal "Edit Item"',
