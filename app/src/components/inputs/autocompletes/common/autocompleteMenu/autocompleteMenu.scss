@@ -1,0 +1,21 @@
+.menu {
+  position: absolute;
+  top: 100%;
+  display: none;
+  max-width: 100%;
+  width: 100%;
+  min-height: 10px;
+  border: 1px solid $COLOR--gray-80;
+  padding: 0;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  line-height: 13px;
+  color: $COLOR--charcoal-grey;
+  background-color: $COLOR--white-two;
+  box-sizing: border-box;
+  box-shadow: 0 6px 12px $COLOR--gray-80;
+  z-index: $Z-INDEX-POPUP;
+  &.opened {
+    display: block;
+  }
+}
