@@ -21,7 +21,7 @@ import { reduxForm } from 'redux-form';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { INTEGRATION_FORM } from 'components/integrations/elements/integrationSettings';
-import { INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP } from '../../constants';
+import { INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP } from '../../formFieldComponentsMap';
 
 const messages = defineMessages({
   createManualTitle: {

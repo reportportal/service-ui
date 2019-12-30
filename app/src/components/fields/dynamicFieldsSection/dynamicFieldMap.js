@@ -10,14 +10,16 @@
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 
-export const TEXT_TYPE = 'text';
-export const ARRAY_TYPE = 'array';
-export const DROPDOWN_TYPE = 'dropdown';
-export const DATE_TYPE = 'date';
+import { ArrayField, DateField, DropdownField, TextField } from './fields';
+import { ARRAY_TYPE, DATE_TYPE, DROPDOWN_TYPE, TEXT_TYPE } from './constants';
 
-export const VALUE_NAME_KEY = 'valueName';
-export const VALUE_ID_KEY = 'valueId';
+export const FIELDS_MAP = {
+  [TEXT_TYPE]: TextField,
+  [DROPDOWN_TYPE]: DropdownField,
+  [DATE_TYPE]: DateField,
+  [ARRAY_TYPE]: ArrayField,
+};

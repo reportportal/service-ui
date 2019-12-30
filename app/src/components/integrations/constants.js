@@ -22,22 +22,6 @@ import SauceLabsIcon from 'common/img/plugins/sauce-labs.png';
 import SamlIcon from 'common/img/plugins/saml.png';
 import LdapIcon from 'common/img/plugins/ldap.png';
 import ActiveDirectoryIcon from 'common/img/plugins/activeDirectory.png';
-import {
-  SauceLabsSettings,
-  SauceLabsFormFields,
-  EmailSettings,
-  EmailFormFields,
-  JiraSettings,
-  JiraConnectionFormFields,
-  RallySettings,
-  RallyConnectionFormFields,
-  SamlSettings,
-  SamlFormFields,
-  LdapSettings,
-  LdapFormFields,
-  ActiveDirectorySettings,
-  ActiveDirectoryFormFields,
-} from './integrationProviders';
 
 export const INTEGRATION_NAMES_TITLES = {
   [JIRA]: 'JIRA',
@@ -62,23 +46,3 @@ export const INTEGRATIONS_IMAGES_MAP = {
 export const INTEGRATIONS_SUPPORTS_MULTIPLE_INSTANCES = [JIRA, RALLY, SAML];
 
 export const BUILTIN_PLUGINS = [EMAIL, SAML, LDAP, AD];
-
-export const INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP = {
-  [SAUCE_LABS]: SauceLabsFormFields,
-  [EMAIL]: EmailFormFields,
-  [JIRA]: JiraConnectionFormFields,
-  [RALLY]: RallyConnectionFormFields,
-  [SAML]: SamlFormFields,
-  [LDAP]: LdapFormFields,
-  [AD]: ActiveDirectoryFormFields,
-};
-
-export const INTEGRATIONS_SETTINGS_COMPONENTS_MAP = {
-  [SAUCE_LABS]: SauceLabsSettings,
-  [EMAIL]: EmailSettings,
-  [JIRA]: JiraSettings,
-  [RALLY]: RallySettings,
-  [SAML]: SamlSettings,
-  [LDAP]: LdapSettings,
-  [AD]: ActiveDirectorySettings,
-};
