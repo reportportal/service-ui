@@ -39,7 +39,7 @@ import {
 } from 'controllers/pages';
 import { PAGE_KEY } from 'controllers/pagination';
 import { URLS } from 'common/urls';
-import { fetch } from 'common/utils';
+import { fetch } from 'common/utils/fetch';
 import { createNamespacedQuery, mergeNamespacedQuery } from 'common/utils/routingUtils';
 import { LEVEL_NOT_FOUND } from 'common/constants/launchLevels';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';

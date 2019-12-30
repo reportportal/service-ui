@@ -18,12 +18,6 @@ import { takeEvery, all, put, select, call } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { fetch, updateStorageItem, waitForSelector } from 'common/utils';
 import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
-import {
-  debugLocalFilterSelector,
-  debugLocalSortingSelector,
-  debugModeSelector,
-  localSortingSelector,
-} from 'controllers/launch';
 import { fetchDataAction } from 'controllers/fetch';
 import { activeProjectSelector } from 'controllers/user';
 import { ALL, LATEST } from 'common/constants/reservedFilterIds';
@@ -48,6 +42,10 @@ import {
   queryParametersSelector,
   launchDistinctSelector,
   launchesDistinctLinksSelectorsMap,
+  debugLocalFilterSelector,
+  debugLocalSortingSelector,
+  debugModeSelector,
+  localSortingSelector,
 } from './selectors';
 
 function* fetchLaunchesWithParams({ payload }) {

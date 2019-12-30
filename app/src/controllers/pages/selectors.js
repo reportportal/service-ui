@@ -18,7 +18,7 @@ import { createSelector } from 'reselect';
 import { extractNamespacedQuery } from 'common/utils/routingUtils';
 import { DEFAULT_PAGINATION, SIZE_KEY, PAGE_KEY } from 'controllers/pagination/constants';
 import { SORTING_KEY } from 'controllers/sorting';
-import { getStorageItem } from 'common/utils';
+import { getStorageItem } from 'common/utils/storageUtils';
 import { userIdSelector } from 'controllers/user';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { pageNames, NO_PAGE } from './constants';

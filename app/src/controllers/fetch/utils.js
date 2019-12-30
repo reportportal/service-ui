@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { createNamespacedActionPredicate } from 'common/utils';
+import { createNamespacedActionPredicate } from 'common/utils/createNamespacedActionPredicate';
 import { FETCH_ERROR, FETCH_SUCCESS, CONCAT_FETCH_SUCCESS } from './constants';
 
 export const createFetchPredicate = (namespace) =>

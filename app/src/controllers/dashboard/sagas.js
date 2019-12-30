@@ -20,9 +20,11 @@ import { NOTIFICATION_TYPES } from 'controllers/notification/constants';
 import { redirect } from 'redux-first-router';
 import { URLS } from 'common/urls';
 import { fetchDataAction } from 'controllers/fetch';
-import { activeProjectSelector, userIdSelector } from 'controllers/user';
+import { activeProjectSelector, apiTokenStringSelector, userIdSelector } from 'controllers/user';
 import { hideModalAction } from 'controllers/modal';
-import { fetch, setStorageItem } from 'common/utils';
+import { fetch, updateToken } from 'common/utils/fetch';
+import { setStorageItem } from 'common/utils/storageUtils';
+import { tokenSelector } from 'controllers/auth';
 import {
   PROJECT_DASHBOARD_ITEM_PAGE,
   PROJECT_DASHBOARD_PAGE,
@@ -41,8 +43,10 @@ import {
   UPDATE_DASHBOARD,
   UPDATE_DASHBOARD_WIDGETS,
   REMOVE_DASHBOARD_SUCCESS,
+  CHANGE_FULL_SCREEN_MODE,
+  TOGGLE_FULL_SCREEN_MODE,
 } from './constants';
-import { querySelector } from './selectors';
+import { dashboardFullScreenModeSelector, querySelector } from './selectors';
 import {
   addDashboardSuccessAction,
   deleteDashboardSuccessAction,
@@ -165,6 +169,13 @@ function changeVisibilityType({ payload: visibilityType }) {
   setStorageItem(DASHBOARDS_VISIBILITY_TYPE_STORAGE_KEY, visibilityType);
 }
 
+function* updateTokenAccordingToFullscreenMode() {
+  const fullScreenMode = yield select(dashboardFullScreenModeSelector);
+  const selector = fullScreenMode ? apiTokenStringSelector : tokenSelector;
+  const token = yield select(selector);
+  yield call(updateToken, token);
+}
+
 export function* dashboardSagas() {
   yield all([
     yield takeEvery(FETCH_DASHBOARDS, fetchDashboards),
@@ -175,5 +186,9 @@ export function* dashboardSagas() {
     yield takeEvery(REMOVE_DASHBOARD, removeDashboard),
     yield takeEvery(CHANGE_VISIBILITY_TYPE, changeVisibilityType),
     yield takeEvery(REMOVE_DASHBOARD_SUCCESS, redirectAfterDelete),
+    yield takeEvery(
+      [CHANGE_FULL_SCREEN_MODE, TOGGLE_FULL_SCREEN_MODE],
+      updateTokenAccordingToFullscreenMode,
+    ),
   ]);
 }

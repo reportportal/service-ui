@@ -19,7 +19,7 @@ import { fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { PROJECT_MANAGER } from 'common/constants/projectRoles';
-import { getStorageItem, setStorageItem } from 'common/utils';
+import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
 import { userIdSelector, userInfoSelector } from './selectors';
 import {
   ASSIGN_TO_RROJECT,
