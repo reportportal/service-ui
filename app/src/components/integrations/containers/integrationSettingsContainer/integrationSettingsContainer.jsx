@@ -19,10 +19,8 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { updateIntegrationAction } from 'controllers/plugins';
-import {
-  INTEGRATIONS_SETTINGS_COMPONENTS_MAP,
-  INTEGRATIONS_IMAGES_MAP,
-} from 'components/integrations/constants';
+import { INTEGRATIONS_IMAGES_MAP } from 'components/integrations/constants';
+import { INTEGRATIONS_SETTINGS_COMPONENTS_MAP } from 'components/integrations/settingsComponentsMap';
 import styles from './integrationSettingsContainer.scss';
 
 const cx = classNames.bind(styles);
