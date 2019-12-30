@@ -39,7 +39,6 @@ import {
   GRID_VIEW,
   SET_PROJECTS_VIEW_MODE,
   ADD_PROJECT,
-  ADD_PROJECT_SUCCESS,
   DELETE_PROJECT,
   NAVIGATE_TO_PROJECT,
   ERROR_CODES,
@@ -86,10 +85,6 @@ function* addProject({ payload: projectName }) {
       projectRole: PROJECT_MANAGER,
       entryType: PROJECT_TYPE_INTERNAL,
     };
-    yield put({
-      type: ADD_PROJECT_SUCCESS,
-      payload: projectInfo,
-    });
     yield put(assignToProjectSuccessAction(projectInfo));
     yield put(hideModalAction());
     yield put(
