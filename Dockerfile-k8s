@@ -1,6 +1,7 @@
 FROM alpine:3.10
 
 LABEL maintainer="Andrei Varabyeu <andrei_varabyeu@epam.com>"
+LABEL quay.expires-after=1w
 #LABEL version=5.0.0-BETA-8
 
 COPY bin/service-ui /
