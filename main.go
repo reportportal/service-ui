@@ -69,12 +69,13 @@ func configureRouter(srv *server.RpServer, rpConf struct {
 			"object-src":     {"'self'"},
 		}
 		//apply content security policies
+		var STSSeconds int64 = 315360000
 		router.Use(func(next http.Handler) http.Handler {
 			return secure.New(secure.Options{
 				ContentTypeNosniff:    true,
 				BrowserXssFilter:      true,
 				ContentSecurityPolicy: buildCSP(csp),
-				STSSeconds:            315360000,
+				STSSeconds:            STSSeconds,
 				STSIncludeSubdomains:  true,
 				STSPreload:            true,
 			}).Handler(next)
