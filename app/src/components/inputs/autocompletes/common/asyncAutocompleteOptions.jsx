@@ -116,7 +116,7 @@ export class AsyncAutocompleteOptions extends Component {
       );
     }
 
-    if (!options.length && !this.props.creatable) {
+    if (!options.length && !this.canCreateNewItem()) {
       return (
         <AutocompletePrompt>
           <FormattedMessage id={'AsyncAutocomplete.notFound'} defaultMessage={'Nothing found'} />
@@ -127,27 +127,26 @@ export class AsyncAutocompleteOptions extends Component {
     return '';
   };
 
+  canCreateNewItem = () => {
+    const { options } = this.state;
+    const { creatable, inputValue, parseValueToString, isValidNewOption } = this.props;
+    return (
+      creatable &&
+      (!options.length || !options.some((option) => parseValueToString(option) === inputValue)) &&
+      isValidNewOption(inputValue)
+    );
+  };
+
   renderItems = () => {
     const { options } = this.state;
-    const {
-      inputValue,
-      renderItem,
-      createNewOption,
-      parseValueToString,
-      isValidNewOption,
-    } = this.props;
+    const { inputValue, renderItem, createNewOption } = this.props;
     let newItem = null;
 
-    if (this.props.creatable) {
-      if (
-        (!options.length || !options.some((option) => parseValueToString(option) === inputValue)) &&
-        isValidNewOption(inputValue)
-      ) {
-        newItem = createNewOption(inputValue);
-        return [newItem, ...options].map((item, index) =>
-          renderItem(item, index, newItem && index === 0),
-        );
-      }
+    if (this.canCreateNewItem()) {
+      newItem = createNewOption(inputValue);
+      return [newItem, ...options].map((item, index) =>
+        renderItem(item, index, newItem && index === 0),
+      );
     }
 
     return options.map((item, index) => renderItem(item, index));
