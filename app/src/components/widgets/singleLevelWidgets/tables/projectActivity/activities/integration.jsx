@@ -45,7 +45,7 @@ const messages = defineMessages({
   },
   emailDefaultName: {
     id: 'ExternalSystems.emailDefaultName',
-    defaultMessage: ' Server',
+    defaultMessage: 'Email Server',
   },
   properties: {
     id: 'ExternalSystems.properties',
@@ -73,14 +73,14 @@ export class Integration extends Component {
       intl: { formatMessage },
     } = this.props;
     const name = activity.details.history.find((item) => item.field === 'name');
-
-    return (
-      (name.newValue && ` ${name.newValue}`) ||
-      (name.oldValue && ` ${name.oldValue}`) ||
+    const actualName =
+      name.newValue ||
+      name.oldValue ||
       (messages[`${activity.details.objectName}DefaultName`]
         ? formatMessage(messages[`${activity.details.objectName}DefaultName`])
-        : '')
-    );
+        : '');
+
+    return actualName.charAt(0).toUpperCase() + actualName.slice(1);
   };
 
   render() {
@@ -100,16 +100,16 @@ export class Integration extends Component {
         {`${messages[activity.actionType] && formatMessage(messages[activity.actionType])}`}
         {activity.actionType === UPDATE_INTEGRATION && (
           <Fragment>
-            {`${activity.details.objectName}${integrationName}`}
+            {integrationName}
             <Link {...linksParams}>{formatMessage(messages.properties)}.</Link>
           </Fragment>
         )}
         {activity.actionType === CREATE_INTEGRATION && (
-          <Link {...linksParams}>{`${activity.details.objectName}${integrationName}`}.</Link>
+          <Link {...linksParams}>{integrationName}.</Link>
         )}
         {activity.actionType === DELETE_INTEGRATION && (
           <Fragment>
-            <Link {...linksParams}>{`${activity.details.objectName}${integrationName}`}</Link>
+            <Link {...linksParams}>{integrationName}</Link>
             {formatMessage(messages.fromProject)}.
           </Fragment>
         )}
