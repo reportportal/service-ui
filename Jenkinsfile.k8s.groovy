@@ -84,10 +84,8 @@ podTemplate(
 
         docker.init()
         helm.init()
-        utils.scheduleRepoPoll(null,null, [
-                string(name: 'COMMIT_HASH', defaultValue: "develop", description: 'Commit Hash or branch name', ),
+        utils.scheduleRepoPoll([
                 booleanParam(name: 'ENABLE_SEALIGHTS', defaultValue: true, description: 'Whether Sealights instrumentation should be enabled',)
-
         ])
         def sealightsEnabled = params.get('ENABLE_SEALIGHTS', false)
 
@@ -108,12 +106,13 @@ podTemplate(
                         }
 
 
-                        stage('Init Sealights') {
-                            sh "./node_modules/.bin/slnodejs config --tokenfile $sealightsTokenPath --appname service-ui --branch $branchToBuild --build $srvVersion"
-                            sealightsSession = utils.execStdout("cat buildSessionId")
-                            sh "./node_modules/.bin/slnodejs build --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession --workspacepath './src' --scm none --excludedpaths '**/*.test.js' --es6Modules"
-                        }
                         if (sealightsEnabled) {
+                            stage('Init Sealights') {
+                                sh "./node_modules/.bin/slnodejs config --tokenfile $sealightsTokenPath --appname service-ui --branch $branchToBuild --build $srvVersion"
+                                sealightsSession = utils.execStdout("cat buildSessionId")
+                                sh "./node_modules/.bin/slnodejs build --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession --workspacepath './src' --scm none --excludedpaths '**/*.test.js' --es6Modules"
+                            }
+
                             stage('Start Sealights') {
                                 sh "./node_modules/.bin/slnodejs start --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession --testStage 'Unit Tests'"
                                 sh "./node_modules/.bin/jest --coverage --testResultsProcessor=$resultsProcessor"
@@ -133,7 +132,7 @@ podTemplate(
 
             stage('Build Docker Image') {
                 container('docker') {
-                    sh "docker build -f Dockerfile-k8s --build-arg sealightsToken=$sealightsToken --build-arg sealightsSession=$sealightsSession -t quay.io/reportportal/service-ui:BUILD-${env.BUILD_NUMBER} ."
+                    sh "docker build -f Dockerfile-k8s --build-arg sealightsEnabled=$sealightsEnabled --build-arg sealightsToken=$sealightsToken --build-arg sealightsSession=$sealightsSession -t quay.io/reportportal/service-ui:BUILD-${env.BUILD_NUMBER} ."
                     sh "docker push quay.io/reportportal/service-ui:BUILD-${env.BUILD_NUMBER}"
                 }
             }
