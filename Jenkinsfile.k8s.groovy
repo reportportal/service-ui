@@ -89,7 +89,7 @@ podTemplate(
                 booleanParam(name: 'ENABLE_SEALIGHTS', defaultValue: true, description: 'Whether Sealights instrumentation should be enabled',)
 
         ])
-        def sealightsEnabled = params.get('ENABLE_SEALIGHTS', 'develop')
+        def sealightsEnabled = params.get('ENABLE_SEALIGHTS', false)
 
 
         def sealightsToken = utils.execStdout("cat $sealightsTokenPath")
