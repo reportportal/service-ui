@@ -21,7 +21,7 @@ export const updatePagePropertiesAction = (properties) => ({
   payload: properties,
 });
 
-export const clearPageStateAction = (oldPage) => ({
+export const clearPageStateAction = (oldPage, newPage) => ({
   type: CLEAR_PAGE_STATE,
-  payload: { oldPage },
+  payload: { oldPage, newPage },
 });

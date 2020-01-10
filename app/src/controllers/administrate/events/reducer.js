@@ -15,7 +15,7 @@
  */
 
 import { combineReducers } from 'redux';
-import { createPurifyPageReducer } from 'common/utils/store';
+import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
 import { fetchReducer } from 'controllers/fetch';
 import { paginationReducer } from 'controllers/pagination';
 import { loadingReducer } from 'controllers/loading';
@@ -28,4 +28,4 @@ const reducer = combineReducers({
   loading: loadingReducer(NAMESPACE),
 });
 
-export const eventsReducer = createPurifyPageReducer(reducer, [PROJECT_DETAILS_PAGE]);
+export const eventsReducer = createPageScopedReducer(reducer, PROJECT_DETAILS_PAGE);

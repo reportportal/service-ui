@@ -14,29 +14,22 @@
  * limitations under the License.
  */
 
-import { LOGOUT } from 'controllers/auth/constants';
-import { CLEAR_PAGE_STATE } from 'controllers/pages/constants';
+import { CLEAR_PAGE_STATE } from 'controllers/pages';
 
-export const createRootReducer = (appReducer) => (state, action) => {
-  let newState = state;
-
-  if (action.type === LOGOUT) {
-    const { appInfo, lang, initialDataReady, location } = state;
-    newState = { appInfo, lang, initialDataReady, location };
-  }
-
-  return appReducer(newState, action);
-};
-
-export const createPurifyPageReducer = (reducer, targetPage) => (state, action) => {
+export const createPageScopedReducer = (reducer, targetPage) => (state, action) => {
   const { type, payload = {} } = action;
   let newState = state;
 
+  if (type !== CLEAR_PAGE_STATE) {
+    return reducer(newState, action);
+  }
+
   const isTargetPageLeft = Array.isArray(targetPage)
-    ? targetPage.some((page) => page === payload.oldPage)
+    ? targetPage.some((page) => page === payload.oldPage) &&
+      targetPage.indexOf(payload.newPage) === -1
     : payload.oldPage === targetPage;
 
-  if (type === CLEAR_PAGE_STATE && isTargetPageLeft) {
+  if (isTargetPageLeft) {
     newState = undefined;
   }
 

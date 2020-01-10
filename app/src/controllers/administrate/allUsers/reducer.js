@@ -21,7 +21,7 @@ import { loadingReducer } from 'controllers/loading';
 import { ALL_USERS_PAGE } from 'controllers/pages';
 import { groupOperationsReducer } from 'controllers/groupOperations';
 import { queueReducers } from 'common/utils/queueReducers';
-import { createPurifyPageReducer } from 'common/utils/store';
+import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
 import { NAMESPACE, TOGGLE_USER_ROLE_FORM } from './constants';
 
 const toggleUserRoleFormReducer = (state = [], { type, payload = {} }) => {
@@ -48,4 +48,4 @@ const reducer = combineReducers({
   groupOperations: groupOperationsReducer(NAMESPACE),
 });
 
-export const allUsersReducer = createPurifyPageReducer(reducer, ALL_USERS_PAGE);
+export const allUsersReducer = createPageScopedReducer(reducer, ALL_USERS_PAGE);

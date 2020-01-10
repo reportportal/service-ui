@@ -15,7 +15,7 @@
  */
 
 import { combineReducers } from 'redux';
-import { createPurifyPageReducer } from 'common/utils/store';
+import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
 import { fetchReducer } from 'controllers/fetch';
 import { paginationReducer } from 'controllers/pagination';
 import { groupOperationsReducer } from 'controllers/groupOperations';
@@ -28,7 +28,7 @@ const reducer = combineReducers({
   groupOperations: groupOperationsReducer(NAMESPACE),
 });
 
-export const testReducer = createPurifyPageReducer(reducer, [
+export const testReducer = createPageScopedReducer(reducer, [
   TEST_ITEM_PAGE,
   PROJECT_USERDEBUG_TEST_ITEM_PAGE,
 ]);

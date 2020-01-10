@@ -47,7 +47,9 @@ import {
   NOT_FOUND,
   OAUTH_SUCCESS,
   HOME_PAGE,
+  TEST_ITEM_PAGE,
   pageSelector,
+  clearPageStateAction,
   adminPageNames,
 } from 'controllers/pages';
 import {
@@ -67,8 +69,8 @@ import { SETTINGS, MEMBERS, EVENTS } from 'common/constants/projectSections';
 import { ANONYMOUS_REDIRECT_PATH_STORAGE_KEY, isAuthorizedSelector } from 'controllers/auth';
 import {
   fetchDashboardsAction,
+  fetchDashboardAction,
   changeVisibilityTypeAction,
-  dashboardItemsSelector,
 } from 'controllers/dashboard';
 import {
   fetchLaunchesAction,
@@ -76,11 +78,10 @@ import {
   unselectAllLaunchesAction,
   launchDistinctSelector,
 } from 'controllers/launch';
-import { TEST_ITEM_PAGE } from 'controllers/pages/constants';
 import { fetchTestItemsAction, setLevelAction } from 'controllers/testItem';
 import { fetchFiltersPageAction } from 'controllers/filter';
 import { fetchMembersAction } from 'controllers/members';
-import { fetchProjectDataAction } from 'controllers/administrate/actionCreators';
+import { fetchProjectDataAction } from 'controllers/administrate';
 import { fetchAllUsersAction } from 'controllers/administrate/allUsers/actionCreators';
 import { fetchLogPageData } from 'controllers/log';
 import { fetchHistoryPageInfoAction } from 'controllers/itemsHistory';
@@ -167,20 +168,14 @@ const routesMap = {
   },
   [PROJECT_DASHBOARD_ITEM_PAGE]: {
     path: '/:projectId/dashboard/:dashboardId',
-    thunk: (dispatch, getState) => {
-      const dashboardItems = dashboardItemsSelector(getState());
-      if (dashboardItems.length === 0) {
-        dispatch(fetchDashboardsAction({}));
-      }
+    thunk: (dispatch) => {
+      dispatch(fetchDashboardAction());
     },
   },
   [PROJECT_DASHBOARD_PRINT_PAGE]: {
     path: '/:projectId/dashboard/:dashboardId/print',
-    thunk: (dispatch, getState) => {
-      const dashboardItems = dashboardItemsSelector(getState());
-      if (dashboardItems.length === 0) {
-        dispatch(fetchDashboardsAction({}));
-      }
+    thunk: (dispatch) => {
+      dispatch(fetchDashboardAction());
     },
   },
   [LAUNCHES_PAGE]: redirectRoute(
@@ -289,6 +284,11 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
       dispatch(redirect({ ...action, payload: { ...action.payload, projectId }, meta: {} }));
     }
   }
+
+  if (nextPageType !== currentPageType) {
+    dispatch(clearPageStateAction(currentPageType, nextPageType));
+  }
+
   const page = pageRendering[nextPageType];
   const redirectPath = actionToPath(action, routesMap, qs);
   if (page) {

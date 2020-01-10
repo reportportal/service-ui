@@ -17,9 +17,13 @@
 import { combineReducers } from 'redux';
 import { fetchReducer } from 'controllers/fetch';
 import { queueReducers } from 'common/utils/queueReducers';
-import { createPurifyPageReducer } from 'common/utils/store';
+import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
 import { loadingReducer } from 'controllers/loading';
-import { PROJECT_DASHBOARD_PAGE } from 'controllers/pages';
+import {
+  PROJECT_DASHBOARD_PAGE,
+  PROJECT_DASHBOARD_ITEM_PAGE,
+  PROJECT_DASHBOARD_PRINT_PAGE,
+} from 'controllers/pages';
 import {
   ADD_DASHBOARD_SUCCESS,
   CHANGE_FULL_SCREEN_MODE,
@@ -65,4 +69,8 @@ const reducer = combineReducers({
   loading: loadingReducer(NAMESPACE),
 });
 
-export const dashboardReducer = createPurifyPageReducer(reducer, PROJECT_DASHBOARD_PAGE);
+export const dashboardReducer = createPageScopedReducer(reducer, [
+  PROJECT_DASHBOARD_PAGE,
+  PROJECT_DASHBOARD_ITEM_PAGE,
+  PROJECT_DASHBOARD_PRINT_PAGE,
+]);
