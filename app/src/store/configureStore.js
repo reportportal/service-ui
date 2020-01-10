@@ -21,10 +21,21 @@ import createSagaMiddleware from 'redux-saga';
 import queryString from 'qs';
 
 import { initAuthInterceptor } from 'common/utils/fetch';
-import { createRootReducer } from 'common/utils/store';
+import { LOGOUT } from 'controllers/auth';
 import routesMap, { onBeforeRouteChange } from 'routes/routesMap';
 import reducers from './reducers';
 import { rootSagas } from './rootSaga';
+
+const createRootReducer = (appReducer) => (state, action) => {
+  let newState = state;
+
+  if (action.type === LOGOUT) {
+    const { appInfo, lang, initialDataReady, location } = state;
+    newState = { appInfo, lang, initialDataReady, location };
+  }
+
+  return appReducer(newState, action);
+};
 
 const composeEnhancers = (...args) =>
   typeof window !== 'undefined' ? composeWithDevTools({})(...args) : compose(...args);

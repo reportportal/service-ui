@@ -22,7 +22,7 @@ import { PROJECTS_PAGE } from 'controllers/pages';
 import { groupOperationsReducer } from 'controllers/groupOperations';
 import { ASSIGN_TO_RROJECT_SUCCESS, UNASSIGN_FROM_PROJECT_SUCCESS } from 'controllers/user';
 import { queueReducers } from 'common/utils/queueReducers';
-import { createPurifyPageReducer } from 'common/utils/store';
+import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
 import { NAMESPACE, SET_PROJECTS_VIEW_MODE, GRID_VIEW } from './constants';
 
 export const setViewModeReducer = (state = GRID_VIEW, { type, payload }) => {
@@ -69,4 +69,4 @@ const reducer = combineReducers({
   groupOperations: groupOperationsReducer(NAMESPACE),
 });
 
-export const projectsReducer = createPurifyPageReducer(reducer, PROJECTS_PAGE);
+export const projectsReducer = createPageScopedReducer(reducer, PROJECTS_PAGE);

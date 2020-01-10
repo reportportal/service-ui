@@ -16,7 +16,7 @@
 
 import { combineReducers } from 'redux';
 import { queueReducers } from 'common/utils/queueReducers';
-import { createPurifyPageReducer } from 'common/utils/store';
+import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
 import { groupOperationsReducer } from 'controllers/groupOperations';
 import { paginationReducer } from 'controllers/pagination';
 import { fetchReducer } from 'controllers/fetch';
@@ -88,4 +88,4 @@ const reducer = combineReducers({
   ),
 });
 
-export const itemsHistoryReducer = createPurifyPageReducer(reducer, HISTORY_PAGE);
+export const itemsHistoryReducer = createPageScopedReducer(reducer, HISTORY_PAGE);

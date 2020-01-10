@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { all, call, put, select, takeEvery } from 'redux-saga/effects';
+import { all, call, put, select, take, takeEvery } from 'redux-saga/effects';
 import { showNotification, showDefaultErrorNotification } from 'controllers/notification';
 import { NOTIFICATION_TYPES } from 'controllers/notification/constants';
 import { redirect } from 'redux-first-router';
 import { URLS } from 'common/urls';
-import { fetchDataAction } from 'controllers/fetch';
+import { fetchDataAction, createFetchPredicate } from 'controllers/fetch';
 import { activeProjectSelector, apiTokenStringSelector, userIdSelector } from 'controllers/user';
 import { hideModalAction } from 'controllers/modal';
 import { fetch, updateToken } from 'common/utils/fetch';
@@ -46,7 +46,11 @@ import {
   CHANGE_FULL_SCREEN_MODE,
   TOGGLE_FULL_SCREEN_MODE,
 } from './constants';
-import { dashboardFullScreenModeSelector, querySelector } from './selectors';
+import {
+  dashboardFullScreenModeSelector,
+  dashboardItemsSelector,
+  querySelector,
+} from './selectors';
 import {
   addDashboardSuccessAction,
   deleteDashboardSuccessAction,
@@ -70,6 +74,13 @@ function* fetchDashboards({ payload: params }) {
 function* fetchDashboard() {
   const activeProject = yield select(activeProjectSelector);
   const activeDashboardId = yield select(activeDashboardIdSelector);
+  const dashboardItems = yield select(dashboardItemsSelector);
+
+  if (dashboardItems.length === 0) {
+    yield call(fetchDashboards, { payload: {} });
+    yield take(createFetchPredicate(NAMESPACE));
+  }
+
   try {
     const dashboard = yield call(fetch, URLS.dashboard(activeProject, activeDashboardId));
     yield put(updateDashboardItemSuccessAction(dashboard));

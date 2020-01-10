@@ -16,7 +16,7 @@
 
 import { combineReducers } from 'redux';
 import { queueReducers } from 'common/utils/queueReducers';
-import { createPurifyPageReducer } from 'common/utils/store';
+import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
 import { fetchReducer } from 'controllers/fetch';
 import { paginationReducer } from 'controllers/pagination';
 import { loadingReducer } from 'controllers/loading';
@@ -83,7 +83,7 @@ const reducer = combineReducers({
   nestedSteps: nestedStepsReducer,
 });
 
-export const logReducer = createPurifyPageReducer(reducer, [
+export const logReducer = createPageScopedReducer(reducer, [
   PROJECT_LOG_PAGE,
   PROJECT_USERDEBUG_LOG_PAGE,
 ]);

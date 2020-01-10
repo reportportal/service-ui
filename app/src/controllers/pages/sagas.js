@@ -17,8 +17,7 @@
 import { put, takeEvery, select, all } from 'redux-saga/effects';
 import isEqual from 'fast-deep-equal';
 import { mergeQuery } from 'common/utils/routingUtils';
-import { UPDATE_PAGE_PROPERTIES, pageNames } from './constants';
-import { clearPageStateAction } from './actionCreators';
+import { UPDATE_PAGE_PROPERTIES } from './constants';
 import { locationSelector } from './selectors';
 
 function* updatePageProperties({ payload: properties }) {
@@ -38,22 +37,10 @@ function* updatePageProperties({ payload: properties }) {
   yield put(updatedAction);
 }
 
-function* changePage({ type: newPageType }) {
-  const { prev: { type: oldPageType } = {} } = yield select(locationSelector);
-
-  if (oldPageType && newPageType !== oldPageType) {
-    yield put(clearPageStateAction(oldPageType));
-  }
-}
-
 function* watchUpdatePageProperties() {
   yield takeEvery(UPDATE_PAGE_PROPERTIES, updatePageProperties);
 }
 
-function* watchChangePageActions() {
-  yield takeEvery(Object.keys(pageNames), changePage);
-}
-
 export function* pageSagas() {
-  yield all([watchUpdatePageProperties(), watchChangePageActions()]);
+  yield all([watchUpdatePageProperties()]);
 }
