@@ -84,7 +84,11 @@ podTemplate(
 
         docker.init()
         helm.init()
-        utils.scheduleRepoPoll()
+        utils.scheduleRepoPoll([
+                booleanParam(name: 'ENABLE_SEALIGHTS', defaultValue: true, description: 'Whether Sealights instrumentation should be enabled',)
+        ])
+        def sealightsEnabled = params.get('ENABLE_SEALIGHTS', false)
+
 
         def sealightsToken = utils.execStdout("cat $sealightsTokenPath")
         def sealightsSession;
@@ -125,7 +129,7 @@ podTemplate(
 
             stage('Build Docker Image') {
                 container('docker') {
-                    sh "docker build -f Dockerfile-k8s --build-arg sealightsToken=$sealightsToken --build-arg sealightsSession=$sealightsSession -t quay.io/reportportal/service-ui:BUILD-${env.BUILD_NUMBER} ."
+                    sh "docker build -f Dockerfile-k8s --build-arg sealightsEnabled=$sealightsEnabled --build-arg sealightsToken=$sealightsToken --build-arg sealightsSession=$sealightsSession -t quay.io/reportportal/service-ui:BUILD-${env.BUILD_NUMBER} ."
                     sh "docker push quay.io/reportportal/service-ui:BUILD-${env.BUILD_NUMBER}"
                 }
             }
