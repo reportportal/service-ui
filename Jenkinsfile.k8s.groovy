@@ -84,7 +84,11 @@ podTemplate(
 
         docker.init()
         helm.init()
-        utils.scheduleRepoPoll()
+        utils.scheduleRepoPoll(params = [
+                string(name: 'COMMIT_HASH', defaultValue: "develop", description: 'Commit Hash or branch name', ),
+                booleanParam(name: 'ENABLE_SEALIGHTS', defaultValue: true, description: 'Whether Sealights instrumentation should be enabled',)
+
+        ])
         properties([
                 parameters([
                         string(name: 'ENABLE_SEALIGHTS', defaultValue: true, description: 'Whether Sealights instrumentation should be enabled',)
