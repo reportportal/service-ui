@@ -85,6 +85,13 @@ podTemplate(
         docker.init()
         helm.init()
         utils.scheduleRepoPoll()
+        properties([
+                parameters([
+                        string(name: 'ENABLE_SEALIGHTS', defaultValue: true, description: 'Whether Sealights instrumentation should be enabled',)
+                ])
+        ])
+        def sealightsEnabled = params.get('ENABLE_SEALIGHTS', 'develop')
+
 
         def sealightsToken = utils.execStdout("cat $sealightsTokenPath")
         def sealightsSession;
@@ -100,17 +107,21 @@ podTemplate(
                         stage('Build App') {
                             sh "npm run build && npm run test"
                         }
-                        stage ('Init Sealights') {
+
+
+                        stage('Init Sealights') {
                             sh "./node_modules/.bin/slnodejs config --tokenfile $sealightsTokenPath --appname service-ui --branch $branchToBuild --build $srvVersion"
                             sealightsSession = utils.execStdout("cat buildSessionId")
                             sh "./node_modules/.bin/slnodejs build --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession --workspacepath './src' --scm none --excludedpaths '**/*.test.js' --es6Modules"
                         }
-                        stage ('Start Sealights') {
-                            sh "./node_modules/.bin/slnodejs start --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession --testStage 'Unit Tests'"
-                            sh "./node_modules/.bin/jest --coverage --testResultsProcessor=$resultsProcessor"
-                            sh "./node_modules/.bin/slnodejs nycReport --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession"
-                            sh "./node_modules/.bin/slnodejs uploadReports --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession --reportFile junit.xml"
-                            sh "./node_modules/.bin/slnodejs end --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession"
+                        if (sealightsEnabled) {
+                            stage('Start Sealights') {
+                                sh "./node_modules/.bin/slnodejs start --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession --testStage 'Unit Tests'"
+                                sh "./node_modules/.bin/jest --coverage --testResultsProcessor=$resultsProcessor"
+                                sh "./node_modules/.bin/slnodejs nycReport --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession"
+                                sh "./node_modules/.bin/slnodejs uploadReports --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession --reportFile junit.xml"
+                                sh "./node_modules/.bin/slnodejs end --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession"
+                            }
                         }
                     }
                 }
