@@ -85,7 +85,7 @@ podTemplate(
         docker.init()
         helm.init()
 
-        var sealightsParams = [
+        def sealightsParams = [
                 booleanParam(name: 'ENABLE_SEALIGHTS', defaultValue: true, description: 'Whether Sealights instrumentation should be enabled',)
         ]
         utils.scheduleRepoPoll(sealightsParams)
