@@ -137,7 +137,7 @@ podTemplate(
 
             stage('Build Docker Image') {
                 container('docker') {
-                    sh "docker build -f Dockerfile-k8s --build-arg sealightsEnabled=$sealightsEnabled --build-arg sealightsToken=$sealightsToken --build-arg sealightsSession=$sealightsSession -t quay.io/reportportal/service-ui:BUILD-${env.BUILD_NUMBER} ."
+                    sh "docker build -f Dockerfile-k8s -t quay.io/reportportal/service-ui:BUILD-${env.BUILD_NUMBER} ."
                     sh "docker push quay.io/reportportal/service-ui:BUILD-${env.BUILD_NUMBER}"
                 }
             }
