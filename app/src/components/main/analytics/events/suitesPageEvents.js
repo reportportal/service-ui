@@ -18,7 +18,9 @@ import {
   getProceedValidItemsEvent,
   getRefreshPageActionEvent,
   getHistoryPageLinkEvent,
+  getRefineFiltersPanelEvents,
 } from './common/testItemPages/actionEventsCreators';
+import { getDeleteItemModalEvents } from './common/testItemPages/modalEventsCreators';
 
 export const SUITE_PAGE = 'suites';
 export const SUITES_PAGE_EVENTS = {
@@ -49,16 +51,8 @@ export const SUITES_PAGE_EVENTS = {
     action: 'Enter parameters to refine by name',
     label: 'Refine by name',
   },
-  REFINE_BTN_MORE: {
-    category: SUITE_PAGE,
-    action: 'Click on Refine Btn More',
-    label: 'Arise dropdown with parameters',
-  },
-  SELECT_REFINE_PARAMS: {
-    category: SUITE_PAGE,
-    action: 'Select parameters to refine',
-    label: 'Show parameters fields to refine',
-  },
+  // REFINE_FILTERS_PANEL
+  REFINE_FILTERS_PANEL_EVENTS: getRefineFiltersPanelEvents(SUITE_PAGE),
   EDIT_ICON_CLICK: {
     category: SUITE_PAGE,
     action: 'Click on item icon "edit"',
@@ -260,19 +254,6 @@ export const SUITES_PAGE_EVENTS = {
     action: 'Click on launch log view switcher',
     label: 'Open "Launch log view"',
   },
-  CLOSE_ICON_DELETE_ITEM_MODAL: {
-    category: SUITE_PAGE,
-    action: 'Click on Icon Close on Modal Delete Item',
-    label: 'Close Modal Delete Item',
-  },
-  CANCEL_BTN_DELETE_ITEM_MODAL: {
-    category: SUITE_PAGE,
-    action: 'Click on Btn Cancel on Modal Delete Item',
-    label: 'Close Modal Delete Item',
-  },
-  DELETE_BTN_DELETE_ITEM_MODAL: {
-    category: SUITE_PAGE,
-    action: 'Click on Btn Delete on Modal Delete Item',
-    label: 'Delete item',
-  },
+  // DELETE_ITEM_MODAL
+  DELETE_ITEM_MODAL_EVENTS: getDeleteItemModalEvents(SUITE_PAGE),
 };

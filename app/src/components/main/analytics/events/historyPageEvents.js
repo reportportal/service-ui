@@ -15,6 +15,7 @@
  */
 
 import {
+  getRefineFiltersPanelEvents,
   getDeleteActionEvent,
   getEditDefectActionEvent,
   getLinkIssueActionEvent,
@@ -60,10 +61,35 @@ export const HISTORY_PAGE_EVENTS = {
     action: 'Select "history depth"',
     label: 'Show parameter of selected "history depth"',
   },
+  SELECT_HISTORY_BASE: {
+    category: HISTORY_PAGE,
+    action: 'Select "history base"',
+    label: 'Show parameter of selected "history base"',
+  },
   CLICK_ON_ITEM: {
     category: HISTORY_PAGE,
     action: 'Click on item',
     label: 'Transition to "Item"',
+  },
+  COMPARE_WITH_FILTER_BTN: {
+    category: HISTORY_PAGE,
+    action: 'Click on button Compare',
+    label: 'Open a drop down with Filters for adding custom column on History table',
+  },
+  CHOOSE_FILTER_FOR_COMPARE: {
+    category: HISTORY_PAGE,
+    action: 'Choose filter for Custom column on History table',
+    label: 'Add new custom column on History table',
+  },
+  FILTERS_DROPDOWN_SEARCH_FILTER: {
+    category: HISTORY_PAGE,
+    action: 'Enter parameter for search in filters dropdown',
+    label: 'Show filters by parameter',
+  },
+  CLEAR_COMPARE_FILTER_CROSS_BTN: {
+    category: HISTORY_PAGE,
+    action: 'Click on Cross near Filter name',
+    label: 'Remove custom column on History table',
   },
   SELECT_HISTORY_ITEM: {
     category: HISTORY_PAGE,
@@ -75,7 +101,6 @@ export const HISTORY_PAGE_EVENTS = {
     action: 'Unselect history item',
     label: 'Remove item from the selected items',
   },
-
   REFRESH_BTN: getRefreshPageActionEvent(HISTORY_PAGE),
   EDIT_DEFECT_ACTION: getEditDefectActionEvent(HISTORY_PAGE),
   POST_ISSUE_ACTION: getPostIssueActionEvent(HISTORY_PAGE),
@@ -97,4 +122,6 @@ export const HISTORY_PAGE_EVENTS = {
   LINK_ISSUE_MODAL_EVENTS: getLinkIssueModalEvents(HISTORY_PAGE),
   // DELETE_ITEM_MODAL
   DELETE_ITEM_MODAL_EVENTS: getDeleteItemModalEvents(HISTORY_PAGE),
+  // REFINE_FILTERS_PANEL
+  REFINE_FILTERS_PANEL_EVENTS: getRefineFiltersPanelEvents(HISTORY_PAGE),
 };
