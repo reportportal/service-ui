@@ -31,6 +31,7 @@ import {
 } from 'controllers/testItem';
 import { defectTypesSelector } from 'controllers/project';
 import { activeProjectSelector } from 'controllers/user';
+import { SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
 import { PASSED, FAILED, SKIPPED, INTERRUPTED, IN_PROGRESS } from 'common/constants/testStatuses';
 import { formatAttribute } from 'common/utils/attributeUtils';
 import SearchIcon from 'common/img/search-icon-inline.svg';
@@ -50,7 +51,6 @@ const cx = classNames.bind(styles);
 
 const LEGEND_HEIGHT = 45;
 const PRINTED_LEGEND_HEIGHT = 80;
-const SCREEN_XS_MAX = 767;
 
 @injectIntl
 @connect(

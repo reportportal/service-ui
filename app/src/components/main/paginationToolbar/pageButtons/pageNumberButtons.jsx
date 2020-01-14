@@ -16,7 +16,7 @@
 
 import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { SCREEN_SM_MAX } from 'common/constants/screenSizeVariables';
+import { SCREEN_SM_MAX_MEDIA } from 'common/constants/screenSizeVariables';
 import { PageButton } from './pageButton';
 
 const DESKTOP_MAX_VISIBLE_PAGES = 10;
@@ -77,7 +77,7 @@ export class PageNumberButtons extends PureComponent {
   };
 
   componentDidMount() {
-    this.match = window.matchMedia(SCREEN_SM_MAX);
+    this.match = window.matchMedia(SCREEN_SM_MAX_MEDIA);
     this.match.addListener(this.setShownPages);
     this.setShownPages(this.match);
   }

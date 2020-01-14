@@ -29,7 +29,7 @@ import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { fetchAllUsersAction, toggleUserRoleFormAction } from 'controllers/administrate/allUsers';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
+import { SCREEN_XS_MAX_MEDIA } from 'common/constants/screenSizeVariables';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { RolesRow } from './rolesRow';
 import styles from './projectsAndRolesColumn.scss';
@@ -99,7 +99,7 @@ export class ProjectsAndRolesColumn extends Component {
   };
 
   componentDidMount() {
-    this.match = window.matchMedia(SCREEN_XS_MAX);
+    this.match = window.matchMedia(SCREEN_XS_MAX_MEDIA);
     this.match.addListener(this.setMobileView);
     this.setMobileView(this.match);
   }

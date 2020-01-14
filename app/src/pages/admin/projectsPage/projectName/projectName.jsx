@@ -22,7 +22,7 @@ import PropTypes from 'prop-types';
 import Link from 'redux-first-router-link';
 import { connect } from 'react-redux';
 import { ADMIN_PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
+import { SCREEN_XS_MAX_MEDIA } from 'common/constants/screenSizeVariables';
 import { navigateToProjectAction } from 'controllers/administrate/projects';
 import { showModalAction } from 'controllers/modal';
 import { PROJECT_PAGE } from 'controllers/pages';
@@ -62,7 +62,7 @@ export class ProjectName extends Component {
 
   onProjectClick = (event) => {
     const { tracking, intl, isAssigned } = this.props;
-    if (!isAssigned && window.matchMedia(SCREEN_XS_MAX).matches) {
+    if (!isAssigned && window.matchMedia(SCREEN_XS_MAX_MEDIA).matches) {
       event.preventDefault();
       return;
     }
