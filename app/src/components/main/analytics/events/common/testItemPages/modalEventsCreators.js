@@ -95,101 +95,97 @@ export const getEditToInvestigateSelectAllSimilarItemsEvent = (category) => ({
 });
 
 // UNLINK ISSUE MODAL
-export const getUnlinkIssueCancelButtonEvent = (page) => ({
-  category: page,
-  action: 'Click on Cancel in Unlink issue',
-  label: 'Close Modal "Unlink issue"',
-});
-
-export const getUnlinkIssueCloseIconEvent = (page) => ({
-  category: page,
-  action: 'Click on Close icon in Unlink issue',
-  label: 'Close Modal "Unlink issue"',
-});
-
-export const getUnlinkIssueUnlinkButtonEvent = (page) => ({
-  category: page,
-  action: 'Click on Unlink in Modal "Unlink issue"',
-  label: 'Unlink issues',
+export const getUnlinkIssueModalEvents = (category) => ({
+  CANCEL_BTN_UNLINK_ISSUE_MODAL: {
+    category,
+    action: 'Click on Cancel in Unlink issue',
+    label: 'Close Modal "Unlink issue"',
+  },
+  CLOSE_ICON_UNLINK_ISSUE_MODAL: {
+    category,
+    action: 'Click on Close icon in Unlink issue',
+    label: 'Close Modal "Unlink issue"',
+  },
+  UNLINK_BTN_UNLINK_ISSUE_MODAL: {
+    category,
+    action: 'Click on Unlink in Modal "Unlink issue"',
+    label: 'Unlink issues',
+  },
 });
 
 // POST ISSUE MODAL
-export const getPostIssueCloseIconEvent = (page) => ({
-  category: page,
-  action: 'Click on Icon Close on Modal Post Issue',
-  label: 'Close Modal Post Issue',
-});
-
-export const getPostIssueAttachmentsSwitcherEvent = (page) => ({
-  category: page,
-  action: 'Click on Attachments switcher on Modal Post Issue',
-  label: 'On/off Attachments in Modal Post Issue',
-});
-
-export const getPostIssueLogsSwitcherEvent = (page) => ({
-  category: page,
-  action: 'Click on Logs switcher on Modal Post Issue',
-  label: 'On/off Logs in Modal Post Issue',
-});
-
-export const getPostIssueCommentSwitcherEvent = (page) => ({
-  category: page,
-  action: 'Click on Comment switcher on Modal Post Issue',
-  label: 'On/off Comment in Modal Post Issue',
-});
-
-export const getPostIssueCancelButtonEvent = (page) => ({
-  category: page,
-  action: 'Click on Btn Cancel on Modal Post Issue',
-  label: 'Close Modal Post Issue',
-});
-
-export const getPostIssuePostButtonEvent = (page) => ({
-  category: page,
-  action: 'Click on Btn Post on Modal Post Issue',
-  label: 'Post bug',
+export const getPostIssueModalEvents = (category) => ({
+  CLOSE_ICON_POST_ISSUE_MODAL: {
+    category,
+    action: 'Click on Icon Close on Modal Post Issue',
+    label: 'Close Modal Post Issue',
+  },
+  ATTACHMENTS_SWITCHER_POST_ISSUE_MODAL: {
+    category,
+    action: 'Click on Attachments switcher on Modal Post Issue',
+    label: 'On/off Attachments in Modal Post Issue',
+  },
+  LOGS_SWITCHER_POST_ISSUE_MODAL: {
+    category,
+    action: 'Click on Logs switcher on Modal Post Issue',
+    label: 'On/off Logs in Modal Post Issue',
+  },
+  COMMENT_SWITCHER_POST_ISSUE_MODAL: {
+    category,
+    action: 'Click on Comment switcher on Modal Post Issue',
+    label: 'On/off Comment in Modal Post Issue',
+  },
+  CANCEL_BTN_POST_ISSUE_MODAL: {
+    category,
+    action: 'Click on Btn Cancel on Modal Post Issue',
+    label: 'Close Modal Post Issue',
+  },
+  POST_BTN_POST_ISSUE_MODAL: {
+    category,
+    action: 'Click on Btn Post on Modal Post Issue',
+    label: 'Post bug',
+  },
 });
 
 // LINK ISSUE MODAL
-export const getLinkIssueCloseIconEvent = (page) => ({
-  category: page,
-  action: 'Click on Icon Close on Modal Link Issue',
-  label: 'Close Modal Link Issue',
-});
-
-export const getLinkIssueAddNewIssueEvent = (page) => ({
-  category: page,
-  action: 'Click on Btn Add New Issue on Modal Link Issue',
-  label: 'Add input in Modal Link Issue',
-});
-
-export const getLinkIssueCancelButtonEvent = (page) => ({
-  category: page,
-  action: 'Click on Btn Cancel on Modal Link Issue',
-  label: 'Close Modal Modal Link Issue',
-});
-
-export const getLinkIssueLoadButtonEvent = (page) => ({
-  category: page,
-  action: 'Click on Btn Load on Modal Link Issue',
-  label: 'Link issue',
+export const getLinkIssueModalEvents = (category) => ({
+  CLOSE_ICON_LINK_ISSUE_MODAL: {
+    category,
+    action: 'Click on Icon Close on Modal Link Issue',
+    label: 'Close Modal Link Issue',
+  },
+  ADD_NEW_ISSUE_BTN_LINK_ISSUE_MODAL: {
+    category,
+    action: 'Click on Btn Add New Issue on Modal Link Issue',
+    label: 'Add input in Modal Link Issue',
+  },
+  CANCEL_BTN_LINK_ISSUE_MODAL: {
+    category,
+    action: 'Click on Btn Cancel on Modal Link Issue',
+    label: 'Close Modal Modal Link Issue',
+  },
+  LOAD_BTN_LINK_ISSUE_MODAL: {
+    category,
+    action: 'Click on Btn Load on Modal Link Issue',
+    label: 'Link issue',
+  },
 });
 
 // DELETE ITEM MODAL
-export const getDeleteItemCloseIconEvent = (page) => ({
-  category: page,
-  action: 'Click on Icon Close on Modal Delete Item',
-  label: 'Close Modal Delete Item',
-});
-
-export const getDeleteItemCancelButtonEvent = (page) => ({
-  category: page,
-  action: 'Click on Btn Cancel on Modal Delete Item',
-  label: 'Close Modal Delete Item',
-});
-
-export const getDeleteItemDeleteButtonEvent = (page) => ({
-  category: page,
-  action: 'Click on Btn Delete on Modal Delete Item',
-  label: 'Delete item',
+export const getDeleteItemModalEvents = (category) => ({
+  CLOSE_ICON_DELETE_ITEM_MODAL: {
+    category,
+    action: 'Click on Icon Close on Modal Delete Item',
+    label: 'Close Modal Delete Item',
+  },
+  CANCEL_BTN_DELETE_ITEM_MODAL: {
+    category,
+    action: 'Click on Btn Cancel on Modal Delete Item',
+    label: 'Close Modal Delete Item',
+  },
+  DELETE_BTN_DELETE_ITEM_MODAL: {
+    category,
+    action: 'Click on Btn Delete on Modal Delete Item',
+    label: 'Delete item',
+  },
 });

@@ -25,24 +25,12 @@ import {
 } from './common/testItemPages/actionEventsCreators';
 import {
   getEditDefectModalEvents,
-  getUnlinkIssueCancelButtonEvent,
-  getUnlinkIssueCloseIconEvent,
-  getUnlinkIssueUnlinkButtonEvent,
-  getPostIssueAttachmentsSwitcherEvent,
-  getPostIssueCancelButtonEvent,
-  getPostIssueCloseIconEvent,
-  getPostIssueCommentSwitcherEvent,
-  getPostIssueLogsSwitcherEvent,
-  getPostIssuePostButtonEvent,
-  getLinkIssueCloseIconEvent,
-  getLinkIssueAddNewIssueEvent,
-  getLinkIssueCancelButtonEvent,
-  getLinkIssueLoadButtonEvent,
-  getDeleteItemCancelButtonEvent,
-  getDeleteItemCloseIconEvent,
-  getDeleteItemDeleteButtonEvent,
   getEditToInvestigateChangeSearchModeEvent,
   getEditToInvestigateSelectAllSimilarItemsEvent,
+  getUnlinkIssueModalEvents,
+  getPostIssueModalEvents,
+  getLinkIssueModalEvents,
+  getDeleteItemModalEvents,
 } from './common/testItemPages/modalEventsCreators';
 
 export const STEP_PAGE = 'step';
@@ -207,32 +195,20 @@ export const STEP_PAGE_EVENTS = {
   LINK_ISSUE_ACTION: getLinkIssueActionEvent(STEP_PAGE),
   UNLINK_ISSUES_ACTION: getUnlinkIssueActionEvent(STEP_PAGE),
   DELETE_ACTION: getDeleteActionEvent(STEP_PAGE),
-  // UNLINK_ISSUE_MODAL
-  CANCEL_BTN_UNLINK_ISSUE_MODAL: getUnlinkIssueCancelButtonEvent(STEP_PAGE),
-  CLOSE_ICON_UNLINK_ISSUE_MODAL: getUnlinkIssueCloseIconEvent(STEP_PAGE),
-  UNLINK_BTN_UNLINK_ISSUE_MODAL: getUnlinkIssueUnlinkButtonEvent(STEP_PAGE),
   // EDIT_DEFECT_MODAL
   EDIT_DEFECT_MODAL_EVENTS: getEditDefectModalEvents(STEP_PAGE),
   SELECT_ALL_SIMILIAR_ITEMS_EDIT_DEFECT_MODAL: getEditToInvestigateSelectAllSimilarItemsEvent(
     STEP_PAGE,
   ),
   CHANGE_SEARCH_MODE_EDIT_DEFECT_MODAL: getEditToInvestigateChangeSearchModeEvent(STEP_PAGE),
+  // UNLINK_ISSUE_MODAL
+  UNLINK_ISSUE_MODAL_EVENTS: getUnlinkIssueModalEvents(STEP_PAGE),
   // POST_ISSUE_MODAL
-  CLOSE_ICON_POST_ISSUE_MODAL: getPostIssueCloseIconEvent(STEP_PAGE),
-  ATTACHMENTS_SWITCHER_POST_ISSUE_MODAL: getPostIssueAttachmentsSwitcherEvent(STEP_PAGE),
-  LOGS_SWITCHER_POST_ISSUE_MODAL: getPostIssueLogsSwitcherEvent(STEP_PAGE),
-  COMMENT_SWITCHER_POST_ISSUE_MODAL: getPostIssueCommentSwitcherEvent(STEP_PAGE),
-  CANCEL_BTN_POST_ISSUE_MODAL: getPostIssueCancelButtonEvent(STEP_PAGE),
-  POST_BTN_POST_ISSUE_MODAL: getPostIssuePostButtonEvent(STEP_PAGE),
+  POST_ISSUE_MODAL_EVENTS: getPostIssueModalEvents(STEP_PAGE),
   // LINK_ISSUE_MODAL
-  CLOSE_ICON_LINK_ISSUE_MODAL: getLinkIssueCloseIconEvent(STEP_PAGE),
-  ADD_NEW_ISSUE_BTN_LINK_ISSUE_MODAL: getLinkIssueAddNewIssueEvent(STEP_PAGE),
-  CANCEL_BTN_LINK_ISSUE_MODAL: getLinkIssueCancelButtonEvent(STEP_PAGE),
-  LOAD_BTN_LINK_ISSUE_MODAL: getLinkIssueLoadButtonEvent(STEP_PAGE),
+  LINK_ISSUE_MODAL_EVENTS: getLinkIssueModalEvents(STEP_PAGE),
   // DELETE_ITEM_MODAL
-  CLOSE_ICON_DELETE_ITEM_MODAL: getDeleteItemCloseIconEvent(STEP_PAGE),
-  CANCEL_BTN_DELETE_ITEM_MODAL: getDeleteItemCancelButtonEvent(STEP_PAGE),
-  DELETE_BTN_DELETE_ITEM_MODAL: getDeleteItemDeleteButtonEvent(STEP_PAGE),
+  DELETE_ITEM_MODAL_EVENTS: getDeleteItemModalEvents(STEP_PAGE),
 
   LOG_VIEW_SWITCHER: {
     category: STEP_PAGE,
