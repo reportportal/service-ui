@@ -32,6 +32,7 @@ if (!process.env.PROXY_PATH) {
 
 const defaultEnv = {
   dev: true,
+  sealights: false,
   production: false,
   storybook: false,
 };
@@ -62,6 +63,7 @@ export default (env = defaultEnv) => ({
       JEST: false,
       STORYBOOK: JSON.stringify(env.storybook),
       'process.env.production': JSON.stringify(env.production),
+      'process.env.sealights': JSON.stringify(env.sealights),
     }),
     new webpack.ProvidePlugin({
       React: 'react',
@@ -82,7 +84,7 @@ export default (env = defaultEnv) => ({
       template: path.resolve('src', 'index.tpl.html'),
       filename: 'index.html',
     }),
-    ...(env.production
+    ...(env.production || env.sealights
       ? [
           new CleanWebpackPlugin([path.resolve(__dirname, 'build')]),
           new UglifyJsPlugin({
@@ -173,7 +175,7 @@ export default (env = defaultEnv) => ({
       },
     ],
   },
-  devtool: 'source-map',
+  devtool: env.sealights ? 'source-map' : false,
   devServer: {
     contentBase: './build',
     hot: true,

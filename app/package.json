@@ -12,6 +12,7 @@
     "format": "npm run format:js && npm run format:scss && prettier --write */**/*.md",
     "dev": "webpack-dev-server --port 3000",
     "build": "webpack --env.production --define process.env.NODE_ENV=\"'production'\"",
+    "sealights": "webpack --env.sealights --define process.env.NODE_ENV=\"'sealights'\"",
     "storybook": "start-storybook -p 9001 -c .storybook",
     "storybook:build": "build-storybook -c .storybook -o .storybook_app",
     "test": "jest --notify",

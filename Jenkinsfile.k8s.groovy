@@ -103,11 +103,17 @@ podTemplate(
                         stage('Install Deps') {
                             sh "npm install"
                         }
-                        stage('Build App') {
-                            sh "npm run build && npm run test"
+
+                        if(!sealightsEnabled) {
+                            stage('Build App') {
+                                sh "npm run build && npm run test"
+                            }
                         }
 
                         if (sealightsEnabled) {
+                            stage('Build App') {
+                                sh "npm run sealights && npm run test"
+                            }
                             stage('Init Sealights') {
                                 sh "./node_modules/.bin/slnodejs config --tokenfile $sealightsTokenPath --appname service-ui --branch $branchToBuild --build $srvVersion"
                                 sealightsSession = utils.execStdout("cat buildSessionId")
