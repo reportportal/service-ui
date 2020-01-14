@@ -20,7 +20,7 @@ import classNames from 'classnames/bind';
 import { Attachments } from 'pages/inside/logsPage/logItemInfo/logItemInfoTabs/attachments';
 import { LOG_VIEW } from 'controllers/testItem';
 import { InfoPanel } from 'pages/inside/common/infoPanel';
-import { SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
+import { SCREEN_XS_MAX_MEDIA } from 'common/constants/screenSizeVariables';
 import styles from './testItemLogsToolbar.scss';
 
 const cx = classNames.bind(styles);
@@ -41,7 +41,7 @@ export class TestItemLogsToolbar extends Component {
   };
 
   componentDidMount() {
-    this.match = window.matchMedia(SCREEN_XS_MAX);
+    this.match = window.matchMedia(SCREEN_XS_MAX_MEDIA);
     this.match.addListener(this.setMobileView);
     this.setMobileView(this.match);
   }
