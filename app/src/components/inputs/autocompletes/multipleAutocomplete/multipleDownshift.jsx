@@ -37,7 +37,6 @@ export class MultipleDownshift extends Component {
         return {
           ...changes,
           highlightedIndex: state.highlightedIndex,
-          isOpen: true,
           inputValue: '',
         };
       default:

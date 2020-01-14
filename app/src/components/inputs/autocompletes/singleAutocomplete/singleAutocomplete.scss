@@ -28,6 +28,11 @@
   :active {
     border: 0;
   }
+  &.mobile-disabled {
+    @media (max-width: $SCREEN_XS_MAX) {
+      display: none;
+    }
+  }
 }
 
 .cross-icon {
@@ -84,15 +89,11 @@
     appearance: none;
     margin: 0;
   }
-}
-.disabled {
-  background-color: $COLOR--gray-91;
-  &:focus {
-    background-color: $COLOR--gray-91;
-  }
-}
-.mobile-disabled {
-  @media (max-width: $SCREEN_XS_MAX) {
-    background-color: $COLOR--gray-91;
+  &.mobile-disabled {
+    @media (max-width: $SCREEN_XS_MAX) {
+      background-color: $COLOR--gray-91;
+      padding-right: 10px;
+      pointer-events: none;
+    }
   }
 }

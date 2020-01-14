@@ -1,3 +1,8 @@
+@mixin disabled-item {
+  background-color: $COLOR--gray-60;
+  padding-right: 10px;
+}
+
 .selected-item {
   display: flex;
   justify-content: space-between;
@@ -12,8 +17,12 @@
   border-radius: 3px;
   box-sizing: border-box;
   &.disabled {
-    background-color: $COLOR--gray-60;
-    padding-right: 10px;
+    @include disabled-item;
+  }
+  &.mobile-disabled {
+    @media (max-width: $SCREEN_XS_MAX) {
+      @include disabled-item;
+    }
   }
 }
 
@@ -39,6 +48,11 @@
   padding: 0 6px;
   :active {
     border: 0;
+  }
+  &.mobile-disabled {
+    @media (max-width: $SCREEN_XS_MAX) {
+      display: none;
+    }
   }
 }
 

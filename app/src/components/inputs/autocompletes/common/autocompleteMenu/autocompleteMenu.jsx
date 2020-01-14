@@ -18,17 +18,15 @@ import React from 'react';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { AutocompletePrompt } from './../autocompletePrompt';
 import styles from './autocompleteMenu.scss';
 
 const cx = classNames.bind(styles);
 
 export const AutocompleteMenu = React.forwardRef(
-  ({ isOpen, promptMessage, children: itemsList }, ref) => (
-    <ul ref={ref} className={cx('menu', { opened: isOpen })}>
+  ({ isOpen, children: itemsList, ...menuProps }, ref) => (
+    <ul ref={ref} className={cx('menu', { opened: isOpen })} {...menuProps}>
       <ScrollWrapper autoHeight autoHeightMax={300}>
-        {isOpen &&
-          (promptMessage ? <AutocompletePrompt>{promptMessage}</AutocompletePrompt> : itemsList)}
+        {itemsList}
       </ScrollWrapper>
     </ul>
   ),
@@ -36,7 +34,6 @@ export const AutocompleteMenu = React.forwardRef(
 
 AutocompleteMenu.propTypes = {
   isOpen: PropTypes.bool,
-  promptMessage: PropTypes.node,
   children: PropTypes.node,
 };
 

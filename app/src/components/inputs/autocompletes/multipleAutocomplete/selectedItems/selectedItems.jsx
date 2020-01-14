@@ -24,11 +24,14 @@ import styles from './selectedItems.scss';
 
 const cx = classNames.bind(styles);
 
-const SelectedItem = ({ item, onRemoveItem, disabled, parseValueToString }) => (
-  <div className={cx('selected-item', { disabled })}>
+const SelectedItem = ({ item, onRemoveItem, disabled, mobileDisabled, parseValueToString }) => (
+  <div className={cx('selected-item', { disabled, 'mobile-disabled': mobileDisabled })}>
     <div className={cx('item-label')}>{parseValueToString(item)}</div>
     {!disabled && (
-      <button className={cx('remove-btn')} onClick={() => onRemoveItem(item)}>
+      <button
+        className={cx('remove-btn', { 'mobile-disabled': mobileDisabled })}
+        onClick={() => onRemoveItem(item)}
+      >
         <i className={cx('cross-icon')}>{Parser(CrossIcon)}</i>
       </button>
     )}
@@ -40,10 +43,12 @@ SelectedItem.propTypes = {
   onRemoveItem: PropTypes.func.isRequired,
   parseValueToString: PropTypes.func,
   disabled: PropTypes.bool,
+  mobileDisabled: PropTypes.bool,
 };
 
 SelectedItem.defaultProps = {
   disabled: false,
+  mobileDisabled: false,
   parseValueToString: (value) => value || '',
 };
 
@@ -55,11 +60,13 @@ SelectedItems.propTypes = {
   onRemoveItem: PropTypes.func,
   parseValueToString: PropTypes.func,
   disabled: PropTypes.bool,
+  mobileDisabled: PropTypes.bool,
 };
 
 SelectedItems.defaultProps = {
   items: [],
   onRemoveItem: () => {},
   disabled: false,
+  mobileDisabled: false,
   parseValueToString: (value) => value || '',
 };

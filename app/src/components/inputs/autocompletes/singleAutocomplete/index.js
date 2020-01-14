@@ -14,19 +14,4 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames/bind';
-import styles from './autocompletePrompt.scss';
-
-const cx = classNames.bind(styles);
-
-export const AutocompletePrompt = ({ children }) => <div className={cx('prompt')}>{children}</div>;
-
-AutocompletePrompt.propTypes = {
-  children: PropTypes.node,
-};
-
-AutocompletePrompt.defaultProps = {
-  children: null,
-};
+export { SingleAutocomplete } from './singleAutocomplete';
