@@ -129,7 +129,7 @@ podTemplate(
                                 sh "./node_modules/.bin/slnodejs end --tokenfile $sealightsTokenPath --buildsessionid $sealightsSession"
 
                                 sh "rm -rf build"
-                                sh "cp sl_instrumented/ build/"
+                                sh "cp -r sl_instrumented/ build/"
                             }
                         }
                     }
