@@ -4,7 +4,7 @@ Has no own size. Width = 100% of it's parent. Has possibility to select multiple
 
 ## Props:
 
-- **`getURI`**: `function. Default: () => ''`. Function wich gets search string, should return Uri for request to get options.
+- **`options`**: `array. Default: []`. The list of options.
 - **`value`**: `array. Default: [].` Selected options.
 - **`placeholder`**: `string. Default: ''.` Input placeholder.
 - **`creatable`**: `boolean. Default: false.` Defines user possibility to create new option.

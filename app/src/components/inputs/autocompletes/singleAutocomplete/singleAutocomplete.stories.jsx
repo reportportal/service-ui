@@ -17,14 +17,12 @@
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
-import axios from 'axios';
-import MockAdapter from 'axios-mock-adapter';
-import { AsyncAutocomplete } from './asyncAutocomplete';
+import { SingleAutocomplete } from './singleAutocomplete';
 import README from './README.md';
 
-const mockData = [
-  'best_of_the_best_test_project',
-  'best_test_project',
+const options = [
+  'best_of_the_best_project',
+  'best_project',
   'super_tester_project',
   'test',
   'test_project',
@@ -34,13 +32,7 @@ const mockData = [
   'test_project_4',
 ];
 
-const getProjectSearchUri = (searchTerm) => `/api/v1/project/names/search?term=${searchTerm}`;
-
-const mock = new MockAdapter(axios);
-const API_REQUEST = getProjectSearchUri('test');
-mock.onGet(API_REQUEST).reply(200, mockData);
-
-storiesOf('Components/Inputs/AsyncAutocomplete', module)
+storiesOf('Components/Inputs/SingleAutocomplete', module)
   .addDecorator(
     host({
       title: 'Async Autocomplete',
@@ -56,51 +48,51 @@ storiesOf('Components/Inputs/AsyncAutocomplete', module)
       sidebar: README,
     },
   })
-  .add('default state', () => <AsyncAutocomplete />)
-  .add('with mocked options', () => (
-    <AsyncAutocomplete
-      getURI={getProjectSearchUri}
-      placeholder="Type 'test'"
+  .add('default state', () => <SingleAutocomplete />)
+  .add('with options', () => (
+    <SingleAutocomplete
+      options={options}
+      placeholder="Type ..."
       onChange={action('Select project')}
     />
   ))
   .add('creatable', () => (
-    <AsyncAutocomplete
-      getURI={getProjectSearchUri}
-      placeholder="Type 'test'"
+    <SingleAutocomplete
+      options={options}
+      placeholder="Type ..."
       onChange={action('Select project')}
       creatable
     />
   ))
   .add('with value', () => (
-    <AsyncAutocomplete
-      getURI={getProjectSearchUri}
-      placeholder="Type 'test'"
+    <SingleAutocomplete
+      options={options}
+      placeholder="Type ..."
       onChange={action('Select project')}
       value="super_tester_project"
     />
   ))
   .add('With min length (3)', () => (
-    <AsyncAutocomplete
-      getURI={getProjectSearchUri}
-      placeholder="Type 'test'"
+    <SingleAutocomplete
+      options={options}
+      placeholder="Type ..."
       onChange={action('Select project')}
       minLength={3}
     />
   ))
   .add('disabled', () => (
-    <AsyncAutocomplete
-      getURI={getProjectSearchUri}
-      placeholder="Type 'test'"
+    <SingleAutocomplete
+      options={options}
+      placeholder="Type ..."
       onChange={action('Select project')}
       minLength={3}
       disabled
     />
   ))
   .add('disabled with value', () => (
-    <AsyncAutocomplete
-      getURI={getProjectSearchUri}
-      placeholder="Type 'test'"
+    <SingleAutocomplete
+      options={options}
+      placeholder="Type ..."
       onChange={action('Select project')}
       minLength={3}
       disabled

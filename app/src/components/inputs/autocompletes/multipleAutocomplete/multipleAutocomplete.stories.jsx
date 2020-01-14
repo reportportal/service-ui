@@ -17,14 +17,12 @@
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
-import axios from 'axios';
-import MockAdapter from 'axios-mock-adapter';
-import { AsyncMultipleAutocomplete } from './asyncMultipleAutocomplete';
+import { MultipleAutocomplete } from './multipleAutocomplete';
 import README from './README.md';
 
-const mockData = [
-  'best_of_the_best_test_project',
-  'best_test_project',
+const options = [
+  'best_of_the_best_project',
+  'best_project',
   'super_tester_project',
   'test',
   'test_project',
@@ -34,13 +32,7 @@ const mockData = [
   'test_project_4',
 ];
 
-const getProjectSearchUri = (searchTerm) => `/api/v1/project/names/search?term=${searchTerm}`;
-
-const mock = new MockAdapter(axios);
-const API_REQUEST = getProjectSearchUri('test');
-mock.onGet(API_REQUEST).reply(200, mockData);
-
-storiesOf('Components/Inputs/AsyncMultipleAutocomplete', module)
+storiesOf('Components/Inputs/MultipleAutocomplete', module)
   .addDecorator(
     host({
       title: 'Async Autocomplete',
@@ -56,60 +48,67 @@ storiesOf('Components/Inputs/AsyncMultipleAutocomplete', module)
       sidebar: README,
     },
   })
-  .add('default state', () => <AsyncMultipleAutocomplete />)
-  .add('with mocked options', () => (
-    <AsyncMultipleAutocomplete
-      getURI={getProjectSearchUri}
-      placeholder="Type 'test'"
-      onChange={action('Select project')}
+  .add('default state', () => <MultipleAutocomplete />)
+  .add('with options', () => (
+    <MultipleAutocomplete
+      options={options}
+      placeholder="Type ..."
+      onChange={action('Change project')}
+    />
+  ))
+  .add('with custom focus prompt', () => (
+    <MultipleAutocomplete
+      options={options}
+      placeholder="Type ..."
+      onChange={action('Change project')}
     />
   ))
   .add('creatable', () => (
-    <AsyncMultipleAutocomplete
-      getURI={getProjectSearchUri}
-      placeholder="Type 'test'"
-      onChange={action('Select project')}
+    <MultipleAutocomplete
+      options={options}
+      placeholder="Type ..."
+      onChange={action('Change project')}
       creatable
     />
   ))
   .add('with value', () => (
-    <AsyncMultipleAutocomplete
-      getURI={getProjectSearchUri}
-      placeholder="Type 'test'"
-      onChange={action('Select project')}
+    <MultipleAutocomplete
+      options={options}
+      placeholder="Type ..."
+      onChange={action('Change project')}
       value={['super_tester_project']}
     />
   ))
   .add('with multi values', () => (
-    <AsyncMultipleAutocomplete
-      getURI={getProjectSearchUri}
-      placeholder="Type 'test'"
-      onChange={action('Select project')}
+    <MultipleAutocomplete
+      options={options}
+      placeholder="Type ..."
+      onChange={action('Change project')}
       value={['super_tester_project', 'test']}
     />
   ))
   .add('With min length (3)', () => (
-    <AsyncMultipleAutocomplete
-      getURI={getProjectSearchUri}
-      placeholder="Type 'test'"
-      onChange={action('Select project')}
+    <MultipleAutocomplete
+      options={options}
+      placeholder="Type ..."
+      onChange={action('Change project')}
       minLength={3}
     />
   ))
   .add('disabled', () => (
-    <AsyncMultipleAutocomplete
-      getURI={getProjectSearchUri}
-      placeholder="Type 'test'"
-      onChange={action('Select project')}
+    <MultipleAutocomplete
+      options={options}
+      placeholder="Type ..."
+      onChange={action('Change project')}
       minLength={3}
       disabled
     />
   ))
   .add('disabled with value', () => (
-    <AsyncMultipleAutocomplete
-      getURI={getProjectSearchUri}
-      placeholder="Type 'test'"
-      onChange={action('Select project')}
+    <MultipleAutocomplete
+      options={options}
+      placeholder="Type ..."
+      onChange={action('Change project')}
       minLength={3}
       disabled
       value={['super_tester_project', 'test']}
