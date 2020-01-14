@@ -20,10 +20,12 @@ import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { Manager, Popper, Reference } from 'react-popper';
+import track from 'react-tracking';
 import { userIdSelector, activeProjectSelector } from 'controllers/user/selectors';
 import { debounce } from 'common/utils';
 import CompareIcon from 'common/img/compare-inline.svg';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
+import { HISTORY_PAGE_EVENTS } from 'components/main/analytics/events';
 import { GhostButton } from 'components/buttons/ghostButton';
 import {
   fetchFiltersConcatAction,
@@ -60,6 +62,7 @@ const messages = defineMessages({
   },
 )
 @injectIntl
+@track()
 export class CompareWithFilterControl extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
@@ -67,6 +70,10 @@ export class CompareWithFilterControl extends Component {
     pagination: PropTypes.object.isRequired,
     activeProject: PropTypes.string.isRequired,
     fetchFiltersConcatAction: PropTypes.func.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
     selectedFilter: PropTypes.object,
     filters: PropTypes.array,
     disabled: PropTypes.bool,
@@ -138,17 +145,13 @@ export class CompareWithFilterControl extends Component {
     this.setState({ page: page + 1, searchValue });
   };
 
-  handleSearchValueChange = debounce(
-    (value) =>
-      // TODO: add callback to track event here
-      // this.props.tracking.trackEvent(this.props.eventsInfo.enterSearchParams);
-      this.fetchFilter({ page: 1, searchValue: value }),
-    300,
-  );
+  handleSearchValueChange = debounce((value) => {
+    this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.FILTERS_DROPDOWN_SEARCH_FILTER);
+    return this.fetchFilter({ page: 1, searchValue: value });
+  }, 300);
 
   handleFilterListChange = (event) => {
-    // TODO: add callback to track event here
-    // this.props.tracking.trackEvent(this.props.eventsInfo.chooseFilter);
+    this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.CHOOSE_FILTER_FOR_COMPARE);
     const filter = this.getFilterById(event.target.value);
     this.props.onChangeActiveFilter(filter);
     this.toggleFilterList();
@@ -170,10 +173,15 @@ export class CompareWithFilterControl extends Component {
   };
 
   resetActiveFilter = () => {
+    this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.CLEAR_COMPARE_FILTER_CROSS_BTN);
     this.props.onChangeActiveFilter(null);
   };
 
   toggleFilterList = () => {
+    if (!this.state.filterListShown) {
+      this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.COMPARE_WITH_FILTER_BTN);
+    }
+
     this.setState({
       filterListShown: !this.state.filterListShown,
     });

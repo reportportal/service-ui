@@ -130,6 +130,7 @@ export class HistoryPage extends Component {
   };
 
   refreshPage = () => {
+    this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.SELECT_HISTORY_BASE);
     this.props.refreshHistoryAction({ historyBase: this.state.historyBase });
   };
 

@@ -16,6 +16,7 @@
 
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
+import { HISTORY_PAGE_EVENTS } from 'components/main/analytics/events';
 import { RefineFiltersPanel } from 'pages/inside/common/refineFiltersPanel';
 import { ActionPanel } from './actionPanel';
 import { ActionPanelWithGroupOperations } from './actionPanelWithGroupOperations';
@@ -55,6 +56,7 @@ export const HistoryToolbar = ({
       onFilterChange={onFilterChange}
       filterErrors={filterErrors}
       filterEntities={filterEntities}
+      events={HISTORY_PAGE_EVENTS.REFINE_FILTERS_PANEL_EVENTS}
     />
   </Fragment>
 );

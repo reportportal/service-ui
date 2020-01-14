@@ -22,6 +22,7 @@ import {
   getUnlinkIssueActionEvent,
   getHistoryPageLinkEvent,
   getRefreshPageActionEvent,
+  getRefineFiltersPanelEvents,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getEditDefectModalEvents,
@@ -47,16 +48,8 @@ export const STEP_PAGE_EVENTS = {
     action: 'Enter parameters to refine by name',
     label: 'Refine by name',
   },
-  REFINE_BTN_MORE: {
-    category: STEP_PAGE,
-    action: 'Click on Refine Btn More',
-    label: 'Arise dropdown with parameters',
-  },
-  SELECT_REFINE_PARAMS: {
-    category: STEP_PAGE,
-    action: 'Select parameters to refine',
-    label: 'Show parameters fields to refine',
-  },
+  // REFINE_FILTERS_PANEL
+  REFINE_FILTERS_PANEL_EVENTS: getRefineFiltersPanelEvents(STEP_PAGE),
   METHOD_TYPE_SWITCHER: {
     category: STEP_PAGE,
     action: 'Click on Method type switcher',
@@ -209,7 +202,6 @@ export const STEP_PAGE_EVENTS = {
   LINK_ISSUE_MODAL_EVENTS: getLinkIssueModalEvents(STEP_PAGE),
   // DELETE_ITEM_MODAL
   DELETE_ITEM_MODAL_EVENTS: getDeleteItemModalEvents(STEP_PAGE),
-
   LOG_VIEW_SWITCHER: {
     category: STEP_PAGE,
     action: 'Click on test log view switcher',

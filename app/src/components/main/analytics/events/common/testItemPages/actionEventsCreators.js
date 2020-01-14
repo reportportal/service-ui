@@ -20,44 +20,57 @@ export const getProceedValidItemsEvent = (page) => ({
   label: 'Remove invalid items from selection',
 });
 
-export const getEditDefectActionEvent = (page) => ({
-  category: page,
+export const getEditDefectActionEvent = (category) => ({
+  category,
   action: 'Click on Btn "Edit Defect"',
   label: 'Arise Modal "Edit Defect Type"',
 });
 
-export const getPostIssueActionEvent = (page) => ({
-  category: page,
+export const getPostIssueActionEvent = (category) => ({
+  category,
   action: 'Click on Btn "Post Issue"',
   label: 'Arise Modal "Post Issue"',
 });
 
-export const getLinkIssueActionEvent = (page) => ({
-  category: page,
+export const getLinkIssueActionEvent = (category) => ({
+  category,
   action: 'Click on Btn "Link Issue"',
   label: 'Arise Modal "Link Issue"',
 });
 
-export const getDeleteActionEvent = (page) => ({
-  category: page,
+export const getDeleteActionEvent = (category) => ({
+  category,
   action: 'Click on Btn "Delete"',
   label: 'Arise Modal "Delete Item"',
 });
 
-export const getUnlinkIssueActionEvent = (page) => ({
-  category: page,
+export const getUnlinkIssueActionEvent = (category) => ({
+  category,
   action: 'Click on Btn "Unlink Issue"',
   label: 'Arise Modal "Unlink Issue"',
 });
 
-export const getHistoryPageLinkEvent = (page) => ({
-  category: page,
+export const getHistoryPageLinkEvent = (category) => ({
+  category,
   action: 'Click on Btn "History"',
   label: 'Transition to History View Page',
 });
 
-export const getRefreshPageActionEvent = (page) => ({
-  category: page,
+export const getRefreshPageActionEvent = (category) => ({
+  category,
   action: 'Click on Btn "Refresh"',
   label: 'Refresh page',
+});
+
+export const getRefineFiltersPanelEvents = (category) => ({
+  REFINE_BTN_MORE: {
+    category,
+    action: 'Click on Refine Btn More',
+    label: 'Arise dropdown with parameters',
+  },
+  SELECT_REFINE_PARAMS: {
+    category,
+    action: 'Select parameters to refine',
+    label: 'Show parameters fields to refine',
+  },
 });

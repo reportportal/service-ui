@@ -42,7 +42,6 @@ const messages = defineMessages({
     if (filter && filter.length < 3) {
       return;
     }
-    props.onChangeSearchParams();
     props.onFilterChange(filter || undefined);
   },
 })
@@ -55,7 +54,6 @@ export class FiltersActionPanel extends Component {
     invalid: PropTypes.bool,
     customBlock: PropTypes.node,
     change: PropTypes.func,
-    onChangeSearchParams: PropTypes.func,
   };
 
   static defaultProps = {
@@ -66,7 +64,6 @@ export class FiltersActionPanel extends Component {
     filters: [],
     customBlock: null,
     change: () => {},
-    onChangeSearchParams: () => {},
   };
 
   componentDidMount() {

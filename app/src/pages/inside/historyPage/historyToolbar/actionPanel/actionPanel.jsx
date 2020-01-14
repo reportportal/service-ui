@@ -19,7 +19,9 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
+import track from 'react-tracking';
 import RefreshIcon from 'common/img/refresh-inline.svg';
+import { HISTORY_PAGE_EVENTS } from 'components/main/analytics/events';
 import { breadcrumbsSelector, restorePathAction } from 'controllers/testItem';
 import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
 import { GhostButton } from 'components/buttons/ghostButton';
@@ -36,8 +38,13 @@ const cx = classNames.bind(styles);
     restorePath: restorePathAction,
   },
 )
+@track()
 export class ActionPanel extends Component {
   static propTypes = {
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
     breadcrumbs: PropTypes.arrayOf(breadcrumbDescriptorShape),
     customBlock: PropTypes.node,
     buttons: PropTypes.array,
@@ -57,10 +64,14 @@ export class ActionPanel extends Component {
     restorePath: () => {},
   };
 
+  refreshItemsAction = () => {
+    this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.REFRESH_BTN);
+    this.props.onRefresh();
+  };
+
   render() {
     const {
       breadcrumbs,
-      onRefresh,
       restorePath,
       showBreadcrumbs,
       hasErrors,
@@ -84,7 +95,11 @@ export class ActionPanel extends Component {
               </div>
             ))}
           <div className={cx('action-button')}>
-            <GhostButton icon={RefreshIcon} onClick={onRefresh} disabled={!showBreadcrumbs}>
+            <GhostButton
+              icon={RefreshIcon}
+              onClick={this.refreshItemsAction}
+              disabled={!showBreadcrumbs}
+            >
               <FormattedMessage id="Common.refresh" defaultMessage="Refresh" />
             </GhostButton>
           </div>

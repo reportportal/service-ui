@@ -57,7 +57,6 @@ export class SearchableFilterList extends Component {
     filterListCustomClass: PropTypes.string,
     customActionBlock: PropTypes.node,
     onEditItem: PropTypes.func,
-    onChangeSearchParams: PropTypes.func,
     onSearchChange: PropTypes.func,
     onChangeActiveFilter: PropTypes.func,
     onLazyLoad: PropTypes.func,
@@ -74,7 +73,6 @@ export class SearchableFilterList extends Component {
     customActionBlock: null,
     onChangeActiveFilter: () => {},
     onEditItem: () => {},
-    onChangeSearchParams: () => {},
     onSearchChange: () => {},
     onLazyLoad: () => {},
   };
@@ -90,7 +88,6 @@ export class SearchableFilterList extends Component {
       customActionBlock,
       filterListCustomClass,
       onEditItem,
-      onChangeSearchParams,
       searchValue,
       activeFilter,
       onSearchChange,
@@ -104,7 +101,6 @@ export class SearchableFilterList extends Component {
           value={searchValue}
           onFilterChange={onSearchChange}
           customBlock={customActionBlock}
-          onChangeSearchParams={onChangeSearchParams}
         />
         <ActiveFilter filter={activeFilter} touched={touched} error={error || null} />
         <FiltersList
