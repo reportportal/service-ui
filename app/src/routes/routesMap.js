@@ -272,6 +272,7 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
   const isAdminCurrentPageType = !!adminPageNames[currentPageType];
 
   if (
+    hashProject &&
     userProjects &&
     (hashProject !== projectId || isAdminCurrentPageType) &&
     !isAdminNewPageType
