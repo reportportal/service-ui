@@ -158,7 +158,7 @@ export const STEP_PAGE_EVENTS = {
   CLOSE_ICON_SELECTED_ITEM: {
     category: STEP_PAGE,
     action: 'Click on icon "close" on selected item',
-    label: 'Unselect item',
+    label: 'Remove item from the selected items',
   },
   CLOSE_ICON_FOR_ALL_SELECTIONS: {
     category: STEP_PAGE,
