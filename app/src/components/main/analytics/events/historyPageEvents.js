@@ -93,13 +93,18 @@ export const HISTORY_PAGE_EVENTS = {
   },
   SELECT_HISTORY_ITEM: {
     category: HISTORY_PAGE,
-    action: 'Select history item',
-    label: 'Add item to the selected items',
+    action: 'Click on item icon "select one item"',
+    label: 'Select/unselect one item',
   },
-  UNSELECT_HISTORY_ITEM: {
+  CLICK_CLOSE_ICON_FROM_SELECTION: {
     category: HISTORY_PAGE,
-    action: 'Unselect history item',
+    action: 'Click on icon "close" on selected item',
     label: 'Remove item from the selected items',
+  },
+  CLICK_CLOSE_ICON_ALL_SELECTION: {
+    category: HISTORY_PAGE,
+    action: 'Click on Close Icon of all selection',
+    label: 'Close panel with selected items',
   },
   REFRESH_BTN: getRefreshPageActionEvent(HISTORY_PAGE),
   EDIT_DEFECT_ACTION: getEditDefectActionEvent(HISTORY_PAGE),

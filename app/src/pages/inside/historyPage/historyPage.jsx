@@ -115,8 +115,13 @@ export class HistoryPage extends Component {
   };
 
   onUnselectItem = (item) => {
-    this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.UNSELECT_HISTORY_ITEM);
+    this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.CLICK_CLOSE_ICON_FROM_SELECTION);
     this.props.toggleItemSelection(item);
+  };
+
+  onUnselectAllItems = () => {
+    this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.CLICK_CLOSE_ICON_ALL_SELECTION);
+    this.props.onUnselectAll();
   };
 
   getInfoLine = () => {
@@ -140,6 +145,7 @@ export class HistoryPage extends Component {
       parentItem,
       selectedItems,
       toggleItemSelection,
+      onUnselectAll,
       isStepLevel,
       isTestItemsList,
       ...rest
@@ -153,6 +159,7 @@ export class HistoryPage extends Component {
             onRefresh={this.refreshPage}
             infoLine={infoLine}
             onUnselect={this.onUnselectItem}
+            onUnselectAll={this.onUnselectAllItems}
             selectedItems={selectedItems}
             withGroupOperations={isStepLevel}
             {...rest}
