@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { Manager, Popper, Reference } from 'react-popper';
@@ -37,6 +37,13 @@ import { SearchableFilterList } from 'pages/inside/common/searchableFilterList';
 import styles from './compareWithFilterControl.scss';
 
 const cx = classNames.bind(styles);
+
+const messages = defineMessages({
+  compareTitle: {
+    id: 'CompareWithFilterControl.compareTitle',
+    defaultMessage: 'Add custom column with latest test executions from the chosen filter',
+  },
+});
 
 @connect(
   (state) => ({
@@ -173,7 +180,14 @@ export class CompareWithFilterControl extends Component {
   };
 
   render() {
-    const { filters, pagination, selectedFilter, loading, disabled } = this.props;
+    const {
+      intl: { formatMessage },
+      filters,
+      pagination,
+      selectedFilter,
+      loading,
+      disabled,
+    } = this.props;
     const { searchValue, filterListShown } = this.state;
 
     return (
@@ -194,7 +208,11 @@ export class CompareWithFilterControl extends Component {
                 }}
                 onClick={this.toggleFilterList}
               >
-                <GhostButton icon={CompareIcon} disabled={disabled}>
+                <GhostButton
+                  icon={CompareIcon}
+                  disabled={disabled}
+                  title={formatMessage(messages.compareTitle)}
+                >
                   <FormattedMessage id="Common.compare" defaultMessage="Compare" />
                 </GhostButton>
               </div>
