@@ -31,10 +31,10 @@ export const List = ({
   messages,
 }) => (
   <Fragment>
-    {data.map((item, id) => (
+    {data.map((item, index) => (
       <ListItem
-        key={`index_${id}`} // eslint-disable-line react/no-array-index-key
-        id={id}
+        key={`index_${index}`} // eslint-disable-line react/no-array-index-key
+        id={index}
         item={item}
         readOnly={readOnly}
         onToggle={onToggle}
