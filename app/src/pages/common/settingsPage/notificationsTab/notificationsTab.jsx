@@ -199,6 +199,20 @@ export class NotificationsTab extends Component {
     });
   };
 
+  onToggleHandler = (enabled, notificationCase, id) => {
+    const { cases: oldCases, updateNotificationsConfig, tracking } = this.props;
+    const updatedCases = [...oldCases];
+    updatedCases.splice(id, 1, { ...notificationCase, enabled });
+    const cases = updatedCases.map(convertNotificationCaseForSubmission);
+
+    tracking.trackEvent(
+      enabled
+        ? SETTINGS_PAGE_EVENTS.TURN_ON_NOTIFICATION_RULE_SWITCHER
+        : SETTINGS_PAGE_EVENTS.TURN_OFF_NOTIFICATION_RULE_SWITCHER,
+    );
+    updateNotificationsConfig({ cases });
+  };
+
   getPanelTitle = () => this.props.intl.formatMessage(messages.controlPanelName);
 
   getListItemContentData = (notificationCase) => {

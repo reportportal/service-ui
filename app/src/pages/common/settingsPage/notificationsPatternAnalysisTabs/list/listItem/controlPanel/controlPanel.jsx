@@ -52,9 +52,9 @@ export class ControlPanel extends Component {
   };
 
   onToggleActive = (enabled) => {
-    const { onToggle, item } = this.props;
+    const { onToggle, item, id } = this.props;
 
-    onToggle(enabled, item);
+    onToggle(enabled, item, id);
   };
 
   render() {

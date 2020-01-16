@@ -20,10 +20,13 @@ import { reduxForm } from 'redux-form';
 import className from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { ModalLayout, withModal } from 'components/main/modal';
+import { FieldProvider } from 'components/fields/fieldProvider';
+import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { validate, bindMessageToValidator } from 'common/utils/validation';
 import { NotificationCaseFormFields } from './notificationCaseFormFields';
 import styles from './addEditNotificationCaseModal.scss';
+import { ENABLED_FIELD_KEY } from '../../constants';
 
 const cx = className.bind(styles);
 
@@ -39,6 +42,10 @@ const messages = defineMessages({
   editRuleMessage: {
     id: 'AddEditNotificationCaseModal.editRuleMessage',
     defaultMessage: 'Edit',
+  },
+  active: {
+    id: 'PatternAnalysis.active',
+    defaultMessage: 'Active',
   },
 });
 
@@ -89,6 +96,19 @@ export class AddEditNotificationCaseModal extends Component {
     };
   };
 
+  renderHeaderElements = () => (
+    <div className={cx('header-active-switcher-container')}>
+      <div className={cx('header-active-switcher')}>
+        <FieldProvider name={ENABLED_FIELD_KEY} format={(value) => !!value}>
+          <InputSwitcher />
+        </FieldProvider>
+      </div>
+      <div className={cx('header-active-switcher-label')}>
+        {this.props.intl.formatMessage(messages.active)}
+      </div>
+    </div>
+  );
+
   render() {
     const {
       intl: { formatMessage },
@@ -115,6 +135,7 @@ export class AddEditNotificationCaseModal extends Component {
         closeConfirmation={this.getCloseConfirmationConfig()}
         className={cx('add-edit-notification-case-modal')}
         closeIconEventInfo={eventsInfo.closeIcon}
+        renderHeaderElements={this.renderHeaderElements}
       >
         <NotificationCaseFormFields />
       </ModalLayout>
