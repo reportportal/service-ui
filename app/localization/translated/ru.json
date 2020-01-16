@@ -253,6 +253,7 @@
   "ComponentHealthCheckControls.PassingRateFieldLabel": "Минимальный допустимый процент пройденных тестов для компонента",
   "ComponentHealthCheckControls.PassingRateValidationError": "Должен иметь значение от 50 до 100",
   "ComponentHealthCheckControls.attributesArrayValidationError": "Введите ключи аттрибута чье уникальное значение будет использоваться для группировки тестов",
+  "CompareWithFilterControl.compareTitle": "Добавьте дополнительный столбец с результатами о последних запусках тестов в выбранном фильтре",
   "Conditions.all": "Все",
   "Conditions.allShort": "Все",
   "Conditions.any": "Любой",

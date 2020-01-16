@@ -253,6 +253,7 @@
   "ComponentHealthCheckControls.PassingRateFieldLabel": "Мінімальны дапушчальны працэнт пройдзеных тэстаў для кампанента",
   "ComponentHealthCheckControls.PassingRateValidationError": "Павінен мець значэнне ад 50 да 100",
   "ComponentHealthCheckControls.attributesArrayValidationError": "Увядзіце ключы аттрыбута чые унікальнае значэнне будзе выкарыстоўвацца для групоўкі тэстаў",
+  "CompareWithFilterControl.compareTitle": "Дадайце дадатковы слупок з вынікамі аб апошніх запусках тэстаў у выбраным фільтры",
   "Conditions.all": "Усе",
   "Conditions.allShort": "Усе",
   "Conditions.any": "Любы",
