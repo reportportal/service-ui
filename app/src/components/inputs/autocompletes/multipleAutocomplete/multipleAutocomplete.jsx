@@ -20,7 +20,6 @@ import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import { Manager, Reference, Popper } from 'react-popper';
-import { AutocompleteOptions } from './../common/autocompleteOptions';
 import { AutocompleteMenu } from './../common/autocompleteMenu';
 import { SelectedItems } from './selectedItems';
 import { MultipleDownshift } from './multipleDownshift';
@@ -35,7 +34,7 @@ export class MultipleAutocomplete extends Component {
     onStateChange: PropTypes.func,
     value: PropTypes.array,
     placeholder: PropTypes.string,
-    error: PropTypes.string,
+    error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
     touched: PropTypes.bool,
     creatable: PropTypes.bool,
     onChange: PropTypes.func,
@@ -52,6 +51,8 @@ export class MultipleAutocomplete extends Component {
     async: PropTypes.bool,
     notFoundPrompt: PropTypes.node,
     beforeSearchPrompt: PropTypes.node,
+    showDynamicSearchPrompt: PropTypes.bool,
+    customClass: PropTypes.string,
   };
 
   static defaultProps = {
@@ -75,6 +76,7 @@ export class MultipleAutocomplete extends Component {
     createNewOption: (inputValue) => inputValue,
     minLength: 1,
     async: false,
+    customClass: '',
   };
 
   state = {
@@ -109,6 +111,7 @@ export class MultipleAutocomplete extends Component {
       value = [],
       inputProps,
       onStateChange,
+      customClass,
       ...props
     } = this.props;
     const { focused } = this.state;
@@ -136,7 +139,7 @@ export class MultipleAutocomplete extends Component {
                 {({ ref }) => (
                   <div
                     ref={ref}
-                    className={cx('autocomplete', {
+                    className={cx('autocomplete', customClass, {
                       'mobile-disabled': mobileDisabled,
                       error,
                       touched,
@@ -207,14 +210,16 @@ export class MultipleAutocomplete extends Component {
                 {({ placement, ref, style, scheduleUpdate }) => {
                   this.updatePosition = scheduleUpdate;
                   return (
-                    <AutocompleteMenu isOpen={isOpen} ref={ref} placement={placement} style={style}>
-                      <AutocompleteOptions
-                        inputValue={(inputValue || '').trim()}
-                        getItemProps={this.getOptionProps(getItemProps, highlightedIndex, value)}
-                        parseValueToString={parseValueToString}
-                        {...props}
-                      />
-                    </AutocompleteMenu>
+                    <AutocompleteMenu
+                      isOpen={isOpen}
+                      ref={ref}
+                      placement={placement}
+                      style={style}
+                      inputValue={(inputValue || '').trim()}
+                      getItemProps={this.getOptionProps(getItemProps, highlightedIndex, value)}
+                      parseValueToString={parseValueToString}
+                      {...props}
+                    />
                   );
                 }}
               </Popper>

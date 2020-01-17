@@ -18,26 +18,92 @@ import React from 'react';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { FormattedMessage } from 'react-intl';
+import { AutocompleteOptions } from './../autocompleteOptions';
+import { AutocompletePrompt } from './../autocompletePrompt';
 import styles from './autocompleteMenu.scss';
 
 const cx = classNames.bind(styles);
 
+const isReadyForSearch = (minLength, inputValue) =>
+  !minLength || minLength <= inputValue.trim().length;
+
+const getBeforeSearchPrompt = (
+  minLength,
+  inputValue,
+  beforeSearchPrompt,
+  showDynamicSearchPrompt,
+) => {
+  if (beforeSearchPrompt) {
+    return <AutocompletePrompt>{beforeSearchPrompt}</AutocompletePrompt>;
+  }
+
+  if (showDynamicSearchPrompt) {
+    const diff = minLength - inputValue.trim().length;
+    return (
+      <AutocompletePrompt>
+        <FormattedMessage
+          id={'AsyncAutocomplete.dynamicSearchPromptText'}
+          defaultMessage={'Please enter {length} or more characters'}
+          values={{ length: diff }}
+        />
+      </AutocompletePrompt>
+    );
+  }
+  return '';
+};
+
 export const AutocompleteMenu = React.forwardRef(
-  ({ isOpen, children: itemsList, ...menuProps }, ref) => (
-    <ul ref={ref} className={cx('menu', { opened: isOpen })} {...menuProps}>
-      <ScrollWrapper autoHeight autoHeightMax={300}>
-        {itemsList}
-      </ScrollWrapper>
-    </ul>
-  ),
+  (
+    {
+      isOpen,
+      placement,
+      style,
+      minLength,
+      inputValue,
+      beforeSearchPrompt,
+      showDynamicSearchPrompt,
+      ...props
+    },
+    ref,
+  ) => {
+    const menuContent = !isReadyForSearch(minLength, inputValue) ? (
+      getBeforeSearchPrompt(minLength, inputValue, beforeSearchPrompt, showDynamicSearchPrompt)
+    ) : (
+      <AutocompleteOptions inputValue={inputValue} {...props} />
+    );
+
+    return (
+      <ul
+        ref={ref}
+        className={cx('menu', { opened: isOpen && menuContent })}
+        placement={placement}
+        style={style}
+      >
+        <ScrollWrapper autoHeight autoHeightMax={300}>
+          {menuContent}
+        </ScrollWrapper>
+      </ul>
+    );
+  },
 );
 
 AutocompleteMenu.propTypes = {
   isOpen: PropTypes.bool,
-  children: PropTypes.node,
+  placement: PropTypes.string,
+  style: PropTypes.object,
+  minLength: PropTypes.number,
+  inputValue: PropTypes.string,
+  beforeSearchPrompt: PropTypes.node,
+  showDynamicSearchPrompt: PropTypes.bool,
 };
 
 AutocompleteMenu.defaultProps = {
   isOpen: false,
-  children: null,
+  placement: 'bottom-start',
+  style: {},
+  minLength: 1,
+  inputValue: '',
+  beforeSearchPrompt: null,
+  showDynamicSearchPrompt: false,
 };

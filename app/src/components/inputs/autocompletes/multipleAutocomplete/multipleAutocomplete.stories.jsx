@@ -56,11 +56,12 @@ storiesOf('Components/Inputs/MultipleAutocomplete', module)
       onChange={action('Change project')}
     />
   ))
-  .add('with custom focus prompt', () => (
+  .add('with dynamic prompt', () => (
     <MultipleAutocomplete
       options={options}
       placeholder="Type ..."
       onChange={action('Change project')}
+      showDynamicSearchPrompt
     />
   ))
   .add('creatable', () => (
