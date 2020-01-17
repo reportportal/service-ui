@@ -197,7 +197,9 @@ export class HistoryTable extends Component {
           ) : (
             <div className={cx('filter-cell-item')}>
               <i className={cx('compare-icon')}>{Parser(CompareIcon)}</i>
-              {selectedFilter.name}
+              <span className={cx('filter-name')} title={selectedFilter.name}>
+                {selectedFilter.name}
+              </span>
             </div>
           )}
         </HistoryCell>,
@@ -274,7 +276,7 @@ export class HistoryTable extends Component {
           !loading && <NoItemMessage message={formatMessage(messages.noHistoryItems)} />
         ) : (
           <ScrollWrapper autoHeight>
-            <table>
+            <table className={cx('history-table')}>
               <thead>
                 <tr>
                   <HistoryCell header first>
