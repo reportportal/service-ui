@@ -32,6 +32,7 @@ import {
   getPostIssueModalEvents,
   getLinkIssueModalEvents,
   getDeleteItemModalEvents,
+  getEditItemsModalEvents,
 } from './common/testItemPages/modalEventsCreators';
 
 export const STEP_PAGE = 'step';
@@ -130,31 +131,6 @@ export const STEP_PAGE_EVENTS = {
     action: 'Click on item icon "select one item"',
     label: 'Select/unselect one item',
   },
-  CLOSE_ICON_EDIT_ITEM_MODAL: {
-    category: STEP_PAGE,
-    action: 'Click on Close Icon on Modal "Edit Item"',
-    label: 'Close modal "Edit Item"',
-  },
-  EDIT_ITEM_DESCRIPTION: {
-    category: STEP_PAGE,
-    action: 'Edit description in Modal "Edit Item"',
-    label: 'Edit description',
-  },
-  BULK_EDIT_ITEMS_DESCRIPTION: {
-    category: STEP_PAGE,
-    action: 'Edit description in Modal "Edit Items" in a bulk',
-    label: 'Edit description in mode: ',
-  },
-  CANCEL_BTN_EDIT_ITEM_MODAL: {
-    category: STEP_PAGE,
-    action: 'Click on Btn Cancel on Modal "Edit Item',
-    label: 'Close modal "Edit Item"',
-  },
-  SAVE_BTN_EDIT_ITEM_MODAL: {
-    category: STEP_PAGE,
-    action: 'Click on Btn Save on Modal "Edit Item"',
-    label: 'Save changes',
-  },
   CLOSE_ICON_SELECTED_ITEM: {
     category: STEP_PAGE,
     action: 'Click on icon "close" on selected item',
@@ -202,6 +178,8 @@ export const STEP_PAGE_EVENTS = {
   LINK_ISSUE_MODAL_EVENTS: getLinkIssueModalEvents(STEP_PAGE),
   // DELETE_ITEM_MODAL
   DELETE_ITEM_MODAL_EVENTS: getDeleteItemModalEvents(STEP_PAGE),
+  // EDIT_ITEMS_MODAL
+  EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(STEP_PAGE),
   LOG_VIEW_SWITCHER: {
     category: STEP_PAGE,
     action: 'Click on test log view switcher',

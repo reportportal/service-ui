@@ -189,3 +189,32 @@ export const getDeleteItemModalEvents = (category) => ({
     label: 'Delete item',
   },
 });
+
+// EDIT ITEMS MODAL
+export const getEditItemsModalEvents = (category, itemType = 'Item') => ({
+  CLOSE_ICON_EDIT_ITEM_MODAL: {
+    category,
+    action: `Click on Close Icon on Modal "Edit ${itemType}"`,
+    label: `Close modal "Edit ${itemType}"`,
+  },
+  CANCEL_BTN_EDIT_ITEM_MODAL: {
+    category,
+    action: `Click on Btn Cancel on Modal "Edit ${itemType}`,
+    label: `Close modal "Edit ${itemType}"`,
+  },
+  SAVE_BTN_EDIT_ITEM_MODAL: {
+    category,
+    action: `Click on Btn Save on Modal "Edit ${itemType}"`,
+    label: 'Save changes',
+  },
+  EDIT_ITEM_DESCRIPTION: {
+    category,
+    action: `Edit description in Modal "Edit ${itemType}"`,
+    label: 'Edit description',
+  },
+  BULK_EDIT_ITEMS_DESCRIPTION: {
+    category,
+    action: `Edit description in Modal "Edit ${itemType}" in a bulk`,
+    label: 'Edit description in mode: ',
+  },
+});

@@ -199,6 +199,9 @@ export class TestItemPage extends Component {
   };
 
   onEditItem = (item) => {
+    const { level } = this.props;
+    const events = LEVEL_STEP === level ? STEP_PAGE_EVENTS : SUITES_PAGE_EVENTS;
+
     this.props.showModalAction({
       id: 'editItemModal',
       data: {
@@ -206,6 +209,7 @@ export class TestItemPage extends Component {
         type: LAUNCH_ITEM_TYPES.item,
         parentLaunch: this.props.parentLaunch,
         fetchFunc: this.props.fetchTestItemsAction,
+        eventsInfo: events.EDIT_ITEMS_MODAL_EVENTS,
       },
     });
   };
@@ -214,6 +218,7 @@ export class TestItemPage extends Component {
     const { level, tracking } = this.props;
     const events = LEVEL_STEP === level ? STEP_PAGE_EVENTS : SUITES_PAGE_EVENTS;
     tracking.trackEvent(events.EDIT_ITEMS_ACTION);
+
     this.props.showModalAction({
       id: 'editItemsModal',
       data: {
@@ -222,10 +227,10 @@ export class TestItemPage extends Component {
         type: LAUNCH_ITEM_TYPES.item,
         fetchFunc: this.unselectAndFetchItems,
         eventsInfo: {
-          cancelBtn: events.CANCEL_BTN_EDIT_ITEM_MODAL,
-          closeIcon: events.CLOSE_ICON_EDIT_ITEM_MODAL,
-          saveBtn: events.SAVE_BTN_EDIT_ITEM_MODAL,
-          editDescription: events.BULK_EDIT_ITEMS_DESCRIPTION,
+          cancelBtn: events.EDIT_ITEMS_MODAL_EVENTS.CANCEL_BTN_EDIT_ITEM_MODAL,
+          closeIcon: events.EDIT_ITEMS_MODAL_EVENTS.CLOSE_ICON_EDIT_ITEM_MODAL,
+          saveBtn: events.EDIT_ITEMS_MODAL_EVENTS.SAVE_BTN_EDIT_ITEM_MODAL,
+          editDescription: events.EDIT_ITEMS_MODAL_EVENTS.BULK_EDIT_ITEMS_DESCRIPTION,
         },
       },
     });

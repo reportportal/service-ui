@@ -32,30 +32,11 @@ import {
   getPostIssueModalEvents,
   getLinkIssueModalEvents,
   getDeleteItemModalEvents,
+  getEditItemsModalEvents,
 } from './common/testItemPages/modalEventsCreators';
 
 export const HISTORY_PAGE = 'history';
 export const HISTORY_PAGE_EVENTS = {
-  CLOSE_ICON_EDIT_ITEM_MODAL: {
-    category: HISTORY_PAGE,
-    action: 'Click on Close Icon on Modal "Edit Item"',
-    label: 'Close modal "Edit Item"',
-  },
-  CANCEL_BTN_EDIT_ITEM_MODAL: {
-    category: HISTORY_PAGE,
-    action: 'Click on Btn Cancel on Modal "Edit Item',
-    label: 'Close modal "Edit Item"',
-  },
-  SAVE_BTN_EDIT_ITEM_MODAL: {
-    category: HISTORY_PAGE,
-    action: 'Click on Btn Save on Modal "Edit Item"',
-    label: 'Save changes',
-  },
-  BULK_EDIT_ITEMS_DESCRIPTION: {
-    category: HISTORY_PAGE,
-    action: 'Edit description in Modal "Edit Items" in a bulk',
-    label: 'Edit description in mode: ',
-  },
   SELECT_HISTORY_DEPTH: {
     category: HISTORY_PAGE,
     action: 'Select "history depth"',
@@ -127,6 +108,8 @@ export const HISTORY_PAGE_EVENTS = {
   LINK_ISSUE_MODAL_EVENTS: getLinkIssueModalEvents(HISTORY_PAGE),
   // DELETE_ITEM_MODAL
   DELETE_ITEM_MODAL_EVENTS: getDeleteItemModalEvents(HISTORY_PAGE),
+  // EDIT_ITEMS_MODAL
+  EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(HISTORY_PAGE),
   // REFINE_FILTERS_PANEL
   REFINE_FILTERS_PANEL_EVENTS: getRefineFiltersPanelEvents(HISTORY_PAGE),
 };

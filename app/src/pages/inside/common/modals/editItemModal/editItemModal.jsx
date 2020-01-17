@@ -43,7 +43,6 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { MarkdownEditor, MarkdownViewer } from 'components/main/markdown';
 import { AttributeListField } from 'components/main/attributeList';
 import { AccordionContainer } from 'components/main/accordionContainer';
-import { SUITES_PAGE_EVENTS } from 'components/main/analytics/events/suitesPageEvents';
 import { canEditLaunch } from 'common/utils/permissions';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { TestParameters } from 'pages/inside/common/testParameters';
@@ -148,6 +147,7 @@ export class EditItemModal extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    eventsInfo: PropTypes.object.isRequired,
   };
 
   static defaultProps = {
@@ -191,8 +191,9 @@ export class EditItemModal extends Component {
   };
 
   updateItemAndCloseModal = (closeModal) => (formData, dispatch, props) => {
+    const { eventsInfo, tracking } = this.props;
     if (props.data.item.description !== formData.description) {
-      this.props.tracking.trackEvent(SUITES_PAGE_EVENTS.EDIT_ITEM_DESCRIPTION);
+      tracking.trackEvent(eventsInfo.EDIT_ITEM_DESCRIPTION);
     }
     this.props.dirty && this.updateItem(formData);
     closeModal();
@@ -240,17 +241,18 @@ export class EditItemModal extends Component {
       userProjectRole,
       userId,
       tracking,
+      eventsInfo,
     } = this.props;
     const okButton = {
       text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
       onClick: (closeModal) => {
-        tracking.trackEvent(SUITES_PAGE_EVENTS.SAVE_BTN_EDIT_ITEM_MODAL);
+        tracking.trackEvent(eventsInfo.SAVE_BTN_EDIT_ITEM_MODAL);
         handleSubmit(this.updateItemAndCloseModal(closeModal))();
       },
     };
     const cancelButton = {
       text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      eventInfo: SUITES_PAGE_EVENTS.CANCEL_BTN_EDIT_ITEM_MODAL,
+      eventInfo: eventsInfo.CANCEL_BTN_EDIT_ITEM_MODAL,
     };
 
     const editable = canEditLaunch(
@@ -265,7 +267,7 @@ export class EditItemModal extends Component {
         okButton={editable ? okButton : undefined}
         cancelButton={cancelButton}
         closeConfirmation={this.getCloseConfirmationConfig()}
-        closeIconEventInfo={SUITES_PAGE_EVENTS.CLOSE_ICON_EDIT_ITEM_MODAL}
+        closeIconEventInfo={eventsInfo.CLOSE_ICON_EDIT_ITEM_MODAL}
         warningMessage={
           type === LAUNCH_ITEM_TYPES.launch && editable && formatMessage(messages.launchWarning)
         }
