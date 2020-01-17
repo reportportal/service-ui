@@ -28,7 +28,7 @@ const newOptionCreator = (inputValue) => ({
   userLogin: inputValue,
 });
 const getURI = (isAdmin, projectId) => (input) =>
-  isAdmin ? URLS.searchUsers(input) : URLS.projectUserSearchUser(projectId, input);
+  isAdmin ? URLS.searchUsers(input) : URLS.projectUserSearchUser(projectId)(input);
 const makeOptions = (projectId) => ({ content: options }) =>
   options.map((option) => ({
     userName: option.fullName || '',

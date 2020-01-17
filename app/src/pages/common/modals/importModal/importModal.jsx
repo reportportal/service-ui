@@ -71,7 +71,6 @@ export class ImportModal extends Component {
 
   state = {
     files: [],
-    customBlockValue: undefined,
   };
 
   onDrop = (acceptedFiles, rejectedFiles) => {
@@ -167,12 +166,6 @@ export class ImportModal extends Component {
       incorrectFileFormat: !ACCEPT_FILE_MIME_TYPES[type].includes(file.type),
       incorrectFileSize: file.size > MAX_FILE_SIZES[type],
     };
-  };
-
-  handleCustomBlockChange = (customBlockValue) => {
-    this.setState({
-      customBlockValue,
-    });
   };
 
   formValidationMessage = (validationProperties) => {
@@ -295,16 +288,14 @@ export class ImportModal extends Component {
 
   uploadFile = (file) => {
     const {
-      data: { url, appendCustomBlockValue, customBlock },
+      data: { url },
     } = this.props;
-    const { customBlockValue } = this.state;
     const { id } = file;
-    const formData = customBlock ? appendCustomBlockValue(file.data, customBlockValue) : file.data;
 
     return fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'multipart/form-data;' },
-      data: formData,
+      data: file.data,
       abort: (cancelRequest) => {
         this.cancelRequests.push(cancelRequest);
       },
@@ -328,7 +319,7 @@ export class ImportModal extends Component {
   render() {
     const {
       intl,
-      data: { type, title, tip, noteMessage, eventsInfo, singleImport, customBlock: CustomBlock },
+      data: { type, title, tip, noteMessage, eventsInfo, singleImport },
     } = this.props;
     const { files } = this.state;
     const validFiles = this.getValidFiles();
@@ -380,12 +371,6 @@ export class ImportModal extends Component {
             <p className={cx('note-label')}>{intl.formatMessage(messages.note)}</p>
             <p className={cx('note-message')}>{Parser(noteMessage)}</p>
           </Fragment>
-        )}
-        {CustomBlock && (
-          <CustomBlock
-            value={this.state.customBlockValue}
-            onChange={this.handleCustomBlockChange}
-          />
         )}
       </ModalLayout>
     );

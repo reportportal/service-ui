@@ -35,14 +35,6 @@ const messages = defineMessages({
     id: 'PassingRatePerLaunchControls.LaunchNamePlaceholder',
     defaultMessage: 'Enter launch name',
   },
-  LaunchNameFocusPlaceholder: {
-    id: 'PassingRatePerLaunchControls.LaunchNameFocusPlaceholder',
-    defaultMessage: 'Please enter 3 or more characters',
-  },
-  LaunchNameNoMatches: {
-    id: 'PassingRatePerLaunchControls.LaunchNameNoMatches',
-    defaultMessage: 'No matches found.',
-  },
   LaunchNamesValidationError: {
     id: 'PassingRatePerLaunchControls.LaunchNamesValidationError',
     defaultMessage: 'You must select at least one item',
@@ -55,13 +47,13 @@ const validators = {
 
 @injectIntl
 @connect((state) => ({
-  launchNamesSearchUrl: URLS.launchNameSearch(activeProjectSelector(state)),
+  activeProject: activeProjectSelector(state),
 }))
 export class PassingRatePerLaunchControls extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     widgetSettings: PropTypes.object.isRequired,
-    launchNamesSearchUrl: PropTypes.string.isRequired,
+    activeProject: PropTypes.string.isRequired,
     initializeControlsForm: PropTypes.func.isRequired,
   };
 
@@ -81,40 +73,23 @@ export class PassingRatePerLaunchControls extends Component {
     });
   }
 
-  formatLaunchNameOptions = (values) => values.map((value) => ({ value, label: value }));
-
-  formatLaunchNames = (value) => (value ? { value, label: value } : null);
-  parseLaunchNames = (value) => {
-    if (value === null) return null;
-    if (value && value.value) return value.value;
-
-    return undefined;
-  };
-
   render() {
     const {
       intl: { formatMessage },
-      launchNamesSearchUrl,
+      activeProject,
     } = this.props;
 
     return (
       <Fragment>
         <FieldProvider
           name="contentParameters.widgetOptions.launchNameFilter"
-          format={this.formatLaunchNames}
-          parse={this.parseLaunchNames}
           validate={validators.launchNames(formatMessage)}
         >
           <TagsControl
             fieldLabel={formatMessage(messages.LaunchNameFieldLabel)}
             placeholder={formatMessage(messages.LaunchNamePlaceholder)}
-            focusPlaceholder={formatMessage(messages.LaunchNameFocusPlaceholder)}
-            nothingFound={formatMessage(messages.LaunchNameNoMatches)}
             minLength={3}
-            async
-            uri={launchNamesSearchUrl}
-            makeOptions={this.formatLaunchNameOptions}
-            removeSelected
+            getURI={URLS.launchNameSearch(activeProject)}
           />
         </FieldProvider>
         <FieldProvider name="contentParameters.widgetOptions.viewMode">

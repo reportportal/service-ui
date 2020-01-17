@@ -109,14 +109,10 @@ const messages = defineMessages({
     id: 'EventsGrid.userSearchPlaceholder',
     defaultMessage: 'Enter username',
   },
-  focusUserSearchPlaceholder: {
-    id: 'EventsGrid.focusUserSearchPlaceholder',
-    defaultMessage: 'At least 3 symbols required.',
-  },
 });
 @connect(
   (state) => ({
-    usersSearchUrl: URLS.projectUsernamesSearch(activeProjectSelector(state)),
+    activeProject: activeProjectSelector(state),
   }),
   {},
 )
@@ -126,7 +122,7 @@ export class EventsEntities extends Component {
     intl: PropTypes.object.isRequired,
     filterValues: PropTypes.object,
     render: PropTypes.func.isRequired,
-    usersSearchUrl: PropTypes.string.isRequired,
+    activeProject: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -136,7 +132,7 @@ export class EventsEntities extends Component {
   };
 
   getEntities = () => {
-    const { intl } = this.props;
+    const { intl, activeProject } = this.props;
     return [
       {
         id: ACTIVITIES,
@@ -408,9 +404,9 @@ export class EventsEntities extends Component {
         active: true,
         removable: false,
         customProps: {
-          uri: this.props.usersSearchUrl,
+          getURI: URLS.projectUsernamesSearch(activeProject),
           placeholder: intl.formatMessage(messages.userSearchPlaceholder),
-          focusPlaceholder: intl.formatMessage(messages.focusUserSearchPlaceholder),
+          minLength: 3,
         },
       },
     ];

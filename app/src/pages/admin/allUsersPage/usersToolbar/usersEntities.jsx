@@ -87,17 +87,15 @@ export class UsersEntities extends Component {
     intl: PropTypes.object.isRequired,
     filterValues: PropTypes.object,
     render: PropTypes.func.isRequired,
-    projectSearchUrl: PropTypes.string,
   };
 
   static defaultProps = {
     loading: false,
     events: [],
     filterValues: {},
-    projectSearchUrl: URLS.projectNameSearch(),
   };
   getEntities = () => {
-    const { intl, projectSearchUrl } = this.props;
+    const { intl } = this.props;
     return [
       {
         id: USERS,
@@ -227,10 +225,10 @@ export class UsersEntities extends Component {
         active: true,
         removable: false,
         customProps: {
-          uri: projectSearchUrl,
+          getURI: URLS.projectNameSearch,
           placeholder: null,
           creatable: false,
-          inputprops: {
+          inputProps: {
             maxlength: 256,
           },
         },

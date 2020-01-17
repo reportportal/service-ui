@@ -46,8 +46,6 @@ import {
   PROJECTS,
 } from 'common/constants/projectsObjectTypes';
 
-import { URLS } from 'common/urls';
-
 const messages = defineMessages({
   contains: { id: 'projectsGrid.contains', defaultMessage: 'Contains' },
   type: { id: 'projectsGrid.type', defaultMessage: 'Type' },
@@ -91,13 +89,11 @@ export class ProjectEntities extends Component {
     intl: PropTypes.object.isRequired,
     filterValues: PropTypes.object,
     render: PropTypes.func.isRequired,
-    projectSearchUrl: PropTypes.string,
   };
 
   static defaultProps = {
     loading: false,
     filterValues: {},
-    projectSearchUrl: URLS.projectNameSearch(),
   };
   getEntities = () => {
     const { intl } = this.props;
