@@ -12,11 +12,11 @@
   box-sizing: border-box;
   cursor: pointer;
   &:hover,
-  &.active {
-    background-color: $COLOR--tealish-hover;
-  }
   &.selected {
     background-color: $COLOR--gray-91;
+  }
+  &.active {
+    background-color: $COLOR--tealish-hover;
   }
   &.disabled {
     color: $COLOR--gray-60;

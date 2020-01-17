@@ -21,7 +21,6 @@ import CrossIcon from 'common/img/cross-icon-inline.svg';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { Manager, Reference, Popper } from 'react-popper';
-import { AutocompleteOptions } from './../common/autocompleteOptions';
 import { AutocompleteMenu } from './../common/autocompleteMenu';
 import styles from './singleAutocomplete.scss';
 
@@ -34,7 +33,7 @@ export class SingleAutocomplete extends Component {
     onStateChange: PropTypes.func,
     value: PropTypes.any,
     placeholder: PropTypes.string,
-    error: PropTypes.string,
+    error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
     touched: PropTypes.bool,
     creatable: PropTypes.bool,
     onChange: PropTypes.func,
@@ -51,6 +50,8 @@ export class SingleAutocomplete extends Component {
     async: PropTypes.bool,
     notFoundPrompt: PropTypes.node,
     beforeSearchPrompt: PropTypes.node,
+    showDynamicSearchPrompt: PropTypes.bool,
+    customClass: PropTypes.string,
   };
 
   static defaultProps = {
@@ -73,6 +74,7 @@ export class SingleAutocomplete extends Component {
     createNewOption: (inputValue) => inputValue,
     minLength: 1,
     async: false,
+    customClass: '',
   };
 
   getOptionProps = (getItemProps, highlightedIndex, selectedItem) => ({ item, index, ...rest }) =>
@@ -98,6 +100,7 @@ export class SingleAutocomplete extends Component {
       mobileDisabled,
       value,
       inputProps,
+      customClass,
       ...props
     } = this.props;
     return (
@@ -121,7 +124,7 @@ export class SingleAutocomplete extends Component {
             <div className={cx('autocomplete-container')}>
               <Reference>
                 {({ ref }) => (
-                  <div ref={ref} className={cx('autocomplete')}>
+                  <div ref={ref} className={cx('autocomplete', customClass)}>
                     <input
                       {...getInputProps({
                         placeholder: !disabled ? placeholder : '',
@@ -161,14 +164,16 @@ export class SingleAutocomplete extends Component {
                 }}
               >
                 {({ placement, ref, style }) => (
-                  <AutocompleteMenu isOpen={isOpen} ref={ref} placement={placement} style={style}>
-                    <AutocompleteOptions
-                      inputValue={(inputValue || '').trim()}
-                      getItemProps={this.getOptionProps(getItemProps, highlightedIndex, value)}
-                      parseValueToString={parseValueToString}
-                      {...props}
-                    />
-                  </AutocompleteMenu>
+                  <AutocompleteMenu
+                    isOpen={isOpen}
+                    placement={placement}
+                    style={style}
+                    ref={ref}
+                    inputValue={(inputValue || '').trim()}
+                    getItemProps={this.getOptionProps(getItemProps, highlightedIndex, value)}
+                    parseValueToString={parseValueToString}
+                    {...props}
+                  />
                 )}
               </Popper>
             </div>

@@ -64,6 +64,14 @@ storiesOf('Components/Inputs/SingleAutocomplete', module)
       creatable
     />
   ))
+  .add('with dynamic prompt', () => (
+    <SingleAutocomplete
+      options={options}
+      placeholder="Type ..."
+      onChange={action('Select project')}
+      showDynamicSearchPrompt
+    />
+  ))
   .add('with value', () => (
     <SingleAutocomplete
       options={options}

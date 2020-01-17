@@ -26,8 +26,6 @@ export class AutocompleteOptions extends Component {
     options: PropTypes.array,
     loading: PropTypes.bool,
     inputValue: PropTypes.string,
-    minLength: PropTypes.number,
-    renderItem: PropTypes.func.isRequired,
     createNewOption: PropTypes.func,
     creatable: PropTypes.bool,
     parseValueToString: PropTypes.func,
@@ -36,7 +34,6 @@ export class AutocompleteOptions extends Component {
     renderOption: PropTypes.func,
     async: PropTypes.bool,
     notFoundPrompt: PropTypes.node,
-    beforeSearchPrompt: PropTypes.node,
   };
 
   static defaultProps = {
@@ -44,7 +41,6 @@ export class AutocompleteOptions extends Component {
     options: [],
     loading: false,
     inputValue: '',
-    minLength: 1,
     creatable: false,
     createNewOption: (inputValue) => inputValue,
     parseValueToString: (value) => value || '',
@@ -53,7 +49,7 @@ export class AutocompleteOptions extends Component {
     renderOption: null,
     async: false,
     notFoundPrompt: (
-      <FormattedMessage id={'AsyncAutocomplete.notFound'} defaultMessage={'Nothing found'} />
+      <FormattedMessage id={'AsyncAutocomplete.notFound'} defaultMessage={'No matches found'} />
     ),
   };
 
@@ -65,26 +61,11 @@ export class AutocompleteOptions extends Component {
   };
 
   getPrompt = (options) => {
-    const { loading, minLength, inputValue, notFoundPrompt, beforeSearchPrompt } = this.props;
+    const { loading, notFoundPrompt } = this.props;
     if (loading) {
       return (
         <AutocompletePrompt>
           <FormattedMessage id={'AsyncAutocomplete.loading'} defaultMessage={'Loading ...'} />
-        </AutocompletePrompt>
-      );
-    }
-
-    const diff = minLength - inputValue.trim().length;
-    if (minLength && diff > 0) {
-      return (
-        <AutocompletePrompt>
-          {beforeSearchPrompt || (
-            <FormattedMessage
-              id={'AsyncAutocomplete.dynamicSearchPromptText'}
-              defaultMessage={'Please enter {length} or more characters'}
-              values={{ length: diff }}
-            />
-          )}
         </AutocompletePrompt>
       );
     }
@@ -100,6 +81,7 @@ export class AutocompleteOptions extends Component {
     const { creatable, inputValue, parseValueToString, isValidNewOption } = this.props;
     return (
       creatable &&
+      inputValue &&
       (!options.length || !options.some((option) => parseValueToString(option) === inputValue)) &&
       isValidNewOption(inputValue)
     );
@@ -131,14 +113,13 @@ export class AutocompleteOptions extends Component {
       );
     }
 
-    return options.map((item, index) => this.renderItem(item, index));
+    return options.length ? options.map((item, index) => this.renderItem(item, index)) : '';
   };
 
   render() {
     const options = this.props.async ? this.props.options : this.filterStaticOptions();
     const prompt = this.getPrompt(options);
     if (prompt) return prompt;
-
     return this.renderItems(options);
   }
 }
