@@ -52,6 +52,7 @@ export class SingleAutocomplete extends Component {
     beforeSearchPrompt: PropTypes.node,
     showDynamicSearchPrompt: PropTypes.bool,
     customClass: PropTypes.string,
+    isOptionUnique: PropTypes.func,
   };
 
   static defaultProps = {
@@ -75,6 +76,7 @@ export class SingleAutocomplete extends Component {
     minLength: 1,
     async: false,
     customClass: '',
+    isOptionUnique: null,
   };
 
   getOptionProps = (getItemProps, highlightedIndex, selectedItem) => ({ item, index, ...rest }) =>
