@@ -18,7 +18,7 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { ListItem } from './listItem';
 
-export const List = ({
+export const RuleList = ({
   data,
   readOnly,
   onToggle,
@@ -50,7 +50,7 @@ export const List = ({
   </Fragment>
 );
 
-List.propTypes = {
+RuleList.propTypes = {
   data: PropTypes.array,
   readOnly: PropTypes.bool,
   onToggle: PropTypes.func,
@@ -63,7 +63,7 @@ List.propTypes = {
   messages: PropTypes.object,
 };
 
-List.defaultProps = {
+RuleList.defaultProps = {
   data: [],
   readOnly: false,
   onToggle: () => {},

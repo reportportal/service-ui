@@ -49,8 +49,9 @@ export const ListItem = ({
       messages={messages}
     />
     <div className={cx('data')}>
-      {getListItemContentData(item).map((itemData) => (
-        <div key={itemData} className={cx('data-row')}>
+      {getListItemContentData(item).map((itemData, index) => (
+        // eslint-disable-next-line react/no-array-index-key
+        <div key={`${itemData.key}_${itemData.value}_${index}`} className={cx('data-row')}>
           <span className={cx('data-name')}>{itemData.key}</span>
           <span className={cx('data-value')}>{itemData.value}</span>
         </div>

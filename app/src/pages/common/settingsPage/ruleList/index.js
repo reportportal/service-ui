@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { List } from './list';
+export { RuleList } from './ruleList';
