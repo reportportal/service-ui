@@ -25,7 +25,7 @@ import { validate, bindMessageToValidator } from 'common/utils/validation';
 import { ToggleButton } from 'components/buttons/toggleButton';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { AccuracyFormBlock } from './accuracyFormBlock';
-import { NUMBER_OF_LOG_LINES, MIN_DOC_FREQ, MIN_SHOULD_MATCH, MIN_TERM_FREQ } from '../constants';
+import { NUMBER_OF_LOG_LINES, MIN_SHOULD_MATCH } from '../constants';
 import styles from './analysisForm.scss';
 
 const cx = classNames.bind(styles);
@@ -54,20 +54,14 @@ const selector = formValueSelector('analysisForm');
 const analysisModeConfig = {
   Classic: {
     [MIN_SHOULD_MATCH]: 95,
-    [MIN_DOC_FREQ]: 1,
-    [MIN_TERM_FREQ]: 1,
     [NUMBER_OF_LOG_LINES]: -1,
   },
   Moderate: {
     [MIN_SHOULD_MATCH]: 80,
-    [MIN_DOC_FREQ]: 1,
-    [MIN_TERM_FREQ]: 1,
     [NUMBER_OF_LOG_LINES]: 5,
   },
   Light: {
     [MIN_SHOULD_MATCH]: 60,
-    [MIN_DOC_FREQ]: 1,
-    [MIN_TERM_FREQ]: 1,
     [NUMBER_OF_LOG_LINES]: 3,
   },
 };
@@ -76,26 +70,15 @@ const DEFAULT_ANALYSIS_MODE = 'Classic';
 
 @reduxForm({
   form: 'analysisForm',
-  validate: ({ minShouldMatch, minTermFreq, minDocFreq }) => ({
+  validate: ({ minShouldMatch }) => ({
     minShouldMatch: bindMessageToValidator(
       validate.analyzerMinShouldMatch,
       'minShouldMatchHint',
     )(minShouldMatch),
-    minTermFreq: bindMessageToValidator(
-      validate.analyzerMinTermFreq,
-      'minTermFreqHint',
-    )(minTermFreq),
-    minDocFreq: bindMessageToValidator(validate.analyzerMinDocFreq, 'minTermFreqHint')(minDocFreq),
   }),
 })
 @connect((state) => ({
-  formInputsValues: selector(
-    state,
-    MIN_SHOULD_MATCH,
-    MIN_DOC_FREQ,
-    MIN_TERM_FREQ,
-    NUMBER_OF_LOG_LINES,
-  ),
+  formInputsValues: selector(state, MIN_SHOULD_MATCH, NUMBER_OF_LOG_LINES),
 }))
 @injectIntl
 @track()
@@ -142,8 +125,6 @@ export class AnalysisForm extends Component {
     const existingMode = analysisModeKeys.find(
       (key) =>
         analysisModeConfig[key][MIN_SHOULD_MATCH] === Number(modeConfig[MIN_SHOULD_MATCH]) &&
-        analysisModeConfig[key][MIN_DOC_FREQ] === Number(modeConfig[MIN_DOC_FREQ]) &&
-        analysisModeConfig[key][MIN_TERM_FREQ] === Number(modeConfig[MIN_TERM_FREQ]) &&
         analysisModeConfig[key][NUMBER_OF_LOG_LINES] === Number(modeConfig[NUMBER_OF_LOG_LINES]),
     );
     this.setState({
@@ -170,8 +151,6 @@ export class AnalysisForm extends Component {
     const { tracking, change } = this.props;
     tracking.trackEvent(SETTINGS_PAGE_EVENTS.TOGGLE_AUTO_ANALYSIS_MODE);
     change(MIN_SHOULD_MATCH, analysisModeConfig[newValue][MIN_SHOULD_MATCH]);
-    change(MIN_DOC_FREQ, analysisModeConfig[newValue][MIN_DOC_FREQ]);
-    change(MIN_TERM_FREQ, analysisModeConfig[newValue][MIN_TERM_FREQ]);
     change(NUMBER_OF_LOG_LINES, analysisModeConfig[newValue][NUMBER_OF_LOG_LINES]);
 
     this.setState({

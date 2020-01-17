@@ -89,14 +89,6 @@ const messages = defineMessages({
     id: 'AccuracyFormBlock.minShouldMatchHint',
     defaultMessage: 'The parameter should have value from 50 to 100',
   },
-  minDocFreqHint: {
-    id: 'AccuracyFormBlock.minDocFreqHint',
-    defaultMessage: 'The parameter should have value from 1 to 10',
-  },
-  minTermFreqHint: {
-    id: 'AccuracyFormBlock.minTermFreqHint',
-    defaultMessage: 'The parameter should have value from 1 to 10',
-  },
   profilePassword: {
     id: 'ChangePasswordModal.profilePassword',
     defaultMessage: 'Password should have size from 4 to 256 symbols',

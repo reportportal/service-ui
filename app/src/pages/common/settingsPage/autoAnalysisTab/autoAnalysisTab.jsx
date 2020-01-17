@@ -40,9 +40,7 @@ import { StrategyBlock } from './analysisForm/strategyBlock';
 import {
   INDEXING_RUNNING,
   NUMBER_OF_LOG_LINES,
-  MIN_DOC_FREQ,
   MIN_SHOULD_MATCH,
-  MIN_TERM_FREQ,
   ANALYZER_ENABLED,
   ANALYZER_MODE,
 } from './constants';
@@ -118,8 +116,6 @@ export class AutoAnalysisTab extends Component {
 
     return {
       [MIN_SHOULD_MATCH]: analyzerConfiguration[MIN_SHOULD_MATCH],
-      [MIN_DOC_FREQ]: analyzerConfiguration[MIN_DOC_FREQ],
-      [MIN_TERM_FREQ]: analyzerConfiguration[MIN_TERM_FREQ],
       [NUMBER_OF_LOG_LINES]: analyzerConfiguration[NUMBER_OF_LOG_LINES],
     };
   };
