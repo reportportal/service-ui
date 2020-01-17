@@ -53,6 +53,7 @@ export class MultipleAutocomplete extends Component {
     beforeSearchPrompt: PropTypes.node,
     showDynamicSearchPrompt: PropTypes.bool,
     customClass: PropTypes.string,
+    isOptionUnique: PropTypes.func,
   };
 
   static defaultProps = {
@@ -77,6 +78,7 @@ export class MultipleAutocomplete extends Component {
     minLength: 1,
     async: false,
     customClass: '',
+    isOptionUnique: null,
   };
 
   state = {

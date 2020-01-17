@@ -34,6 +34,7 @@ export class AutocompleteOptions extends Component {
     renderOption: PropTypes.func,
     async: PropTypes.bool,
     notFoundPrompt: PropTypes.node,
+    isOptionUnique: PropTypes.func,
   };
 
   static defaultProps = {
@@ -51,6 +52,7 @@ export class AutocompleteOptions extends Component {
     notFoundPrompt: (
       <FormattedMessage id={'AsyncAutocomplete.notFound'} defaultMessage={'No matches found'} />
     ),
+    isOptionUnique: null,
   };
 
   filterStaticOptions = () => {
@@ -77,12 +79,19 @@ export class AutocompleteOptions extends Component {
     return '';
   };
 
+  isOptionExist = (inputValue, options) =>
+    options.some((option) => this.props.parseValueToString(option) === inputValue);
+
+  isOptionUnique = (inputValue, options) =>
+    !this.props.isOptionUnique || this.props.isOptionUnique(inputValue, options);
+
   canCreateNewItem = (options) => {
-    const { creatable, inputValue, parseValueToString, isValidNewOption } = this.props;
+    const { creatable, inputValue, isValidNewOption } = this.props;
     return (
       creatable &&
       inputValue &&
-      (!options.length || !options.some((option) => parseValueToString(option) === inputValue)) &&
+      (!options.length || !this.isOptionExist(inputValue, options)) &&
+      this.isOptionUnique(inputValue, options) &&
       isValidNewOption(inputValue)
     );
   };
