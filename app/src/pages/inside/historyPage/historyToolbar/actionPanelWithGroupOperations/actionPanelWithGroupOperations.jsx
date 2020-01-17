@@ -35,6 +35,7 @@ import { showModalAction } from 'controllers/modal';
 import { launchSelector, deleteTestItemsAction } from 'controllers/testItem';
 import { isDefectGroupOperationAvailable } from 'controllers/step';
 import { getDefectTypeSelector } from 'controllers/project';
+import { HISTORY_PAGE_EVENTS } from 'components/main/analytics/events';
 import {
   availableBtsIntegrationsSelector,
   isBtsPluginsExistSelector,
@@ -130,6 +131,12 @@ export class ActionPanelWithGroupOperations extends Component {
         parentLaunch: this.props.parentLaunch,
         type: LAUNCH_ITEM_TYPES.item,
         fetchFunc: this.unselectAndRefreshItems,
+        eventsInfo: {
+          cancelBtn: HISTORY_PAGE_EVENTS.CANCEL_BTN_EDIT_ITEM_MODAL,
+          closeIcon: HISTORY_PAGE_EVENTS.CLOSE_ICON_EDIT_ITEM_MODAL,
+          saveBtn: HISTORY_PAGE_EVENTS.SAVE_BTN_EDIT_ITEM_MODAL,
+          editDescription: HISTORY_PAGE_EVENTS.BULK_EDIT_ITEMS_DESCRIPTION,
+        },
       },
     });
   };
