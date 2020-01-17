@@ -27,8 +27,9 @@ import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 import ImportIcon from 'common/img/import-inline.svg';
 import { URLS } from 'common/urls';
 import { MODAL_TYPE_UPLOAD_PLUGIN } from 'pages/common/modals/importModal/constants';
-import { UPLOAD, INITIAL_PARAMS_FIELD_KEY } from './constants';
 import styles from './actionPanel.scss';
+
+export const UPLOAD = 'upload';
 
 const cx = classNames.bind(styles);
 
@@ -90,16 +91,6 @@ export class ActionPanel extends Component {
       initialParamsValues.reduce((acc, item) => ({ ...acc, [item.key]: item.value }), {}),
     );
 
-  appendInitialParamsValue = (formData, initialParamsValues) => {
-    if (initialParamsValues && initialParamsValues.length) {
-      formData.append(
-        INITIAL_PARAMS_FIELD_KEY,
-        this.prepareInitialParamsValue(initialParamsValues),
-      );
-    }
-    return formData;
-  };
-
   openUploadModal = () => {
     const {
       intl: { formatMessage },
@@ -117,8 +108,6 @@ export class ActionPanel extends Component {
         tip: formatMessage(messages.uploadTip),
         incorrectFileSize: formatMessage(messages.incorrectFileSize),
         url: URLS.plugin(),
-        // customBlock: UploadCustomBlock,
-        // appendCustomBlockValue: this.appendInitialParamsValue,
         singleImport: true,
         eventsInfo: {
           okBtn: PLUGINS_PAGE_EVENTS.OK_BTN_UPLOAD_MODAL,

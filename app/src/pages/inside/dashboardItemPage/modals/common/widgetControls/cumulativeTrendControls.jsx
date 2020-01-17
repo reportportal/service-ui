@@ -93,7 +93,7 @@ const attributeKeyValidator = (formatMessage) =>
   ]);
 
 @connect((state) => ({
-  launchAttributeKeysSearch: URLS.launchAttributeKeysSearch(activeProjectSelector(state)),
+  activeProject: activeProjectSelector(state),
 }))
 @injectIntl
 export class CumulativeTrendControls extends Component {
@@ -103,7 +103,7 @@ export class CumulativeTrendControls extends Component {
     initializeControlsForm: PropTypes.func.isRequired,
     formAppearance: PropTypes.object.isRequired,
     onFormAppearanceChange: PropTypes.func.isRequired,
-    launchAttributeKeysSearch: PropTypes.string.isRequired,
+    activeProject: PropTypes.string.isRequired,
     eventsInfo: PropTypes.object,
   };
 
@@ -164,7 +164,7 @@ export class CumulativeTrendControls extends Component {
       fields={fields}
       fieldValidator={fieldValidator}
       maxAttributesAmount={MAX_ATTRIBUTES_AMOUNT}
-      url={this.props.launchAttributeKeysSearch}
+      getURI={URLS.launchAttributeKeysSearch(this.props.activeProject)}
       attributeKeyFieldViewLabels={[
         this.props.intl.formatMessage(messages.attributeKeyFieldLabelOverview),
         this.props.intl.formatMessage(messages.attributeKeyFieldLabelDetailedView),

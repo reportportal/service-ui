@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
-import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
+import { AsyncMultipleAutocomplete } from 'components/inputs/autocompletes/asyncMultipleAutocomplete';
 import {
   CONDITION_HAS,
   CONDITION_NOT_HAS,
@@ -44,7 +44,7 @@ export class InputConditionalTags extends Component {
     conditions: PropTypes.arrayOf(PropTypes.string),
     inputProps: PropTypes.object,
     placeholder: PropTypes.string,
-    uri: PropTypes.string.isRequired,
+    getURI: PropTypes.func.isRequired,
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
@@ -99,30 +99,23 @@ export class InputConditionalTags extends Component {
     }
   };
 
-  formatTags = (tags) =>
-    tags && !!tags.length ? tags.map((tag) => ({ value: tag, label: tag })) : [];
-
-  parseTags = (options) => options.map((option) => option.value).join(',');
+  parseTags = (options) => options.join(',');
 
   render() {
-    const { intl, value, uri, placeholder, inputProps } = this.props;
-    const formattedValue = value.value ? this.formatTags(value.value.split(',')) : [];
+    const { intl, value, getURI, placeholder, inputProps } = this.props;
+    const formattedValue = value.value ? value.value.split(',') : [];
     return (
       <div className={cx('input-conditional-tags', { opened: this.state.opened })}>
-        <InputTagsSearch
+        <AsyncMultipleAutocomplete
           placeholder={placeholder}
-          focusPlaceholder={intl.formatMessage(messages.tagsHint)}
+          beforeSearchPrompt={intl.formatMessage(messages.tagsHint)}
           minLength={1}
-          async
-          uri={uri}
-          makeOptions={this.formatTags}
+          getURI={getURI}
           creatable
-          showNewLabel
-          multi
-          removeSelected
-          value={formattedValue.length && formattedValue[0].value ? formattedValue : []}
+          value={formattedValue}
           onChange={this.onChangeTags}
           inputProps={inputProps}
+          customClass={cx('tags')}
         />
         <div className={cx('conditions-block')} ref={this.setConditionsBlockRef}>
           <div className={cx('conditions-selector')} onClick={this.onClickConditionBlock}>

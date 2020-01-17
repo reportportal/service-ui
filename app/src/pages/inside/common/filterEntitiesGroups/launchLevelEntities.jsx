@@ -174,10 +174,7 @@ const DEFECT_ENTITY_ID_BASE = 'statistics$defects$';
 @injectIntl
 @connect((state) => ({
   defectTypes: defectTypesSelector(state),
-  usersSearchUrl: URLS.launchOwnersSearch(activeProjectSelector(state)),
-  launchAttributeKeysSearch: URLS.launchAttributeKeysSearch(activeProjectSelector(state)),
   activeProject: activeProjectSelector(state),
-  launchAttributeValuesSearch: URLS.launchAttributeValuesSearch(activeProjectSelector(state)),
 }))
 export class LaunchLevelEntities extends Component {
   static propTypes = {
@@ -185,7 +182,6 @@ export class LaunchLevelEntities extends Component {
     defectTypes: PropTypes.object.isRequired,
     filterValues: PropTypes.object,
     render: PropTypes.func.isRequired,
-    usersSearchUrl: PropTypes.string.isRequired,
     launchAttributeKeysSearch: PropTypes.string.isRequired,
     activeProject: PropTypes.string.isRequired,
     visibleFilters: PropTypes.array,
@@ -198,7 +194,7 @@ export class LaunchLevelEntities extends Component {
     const { intl, filterValues, activeProject, visibleFilters } = this.props;
     const attributeKey = (filterValues[ENTITY_ATTRIBUTE_KEYS] || {}).value;
     const normalizeValue = (value) => (Array.isArray(value) ? value.join(',') : value);
-    const launchAttributeValuesSearch = URLS.launchAttributeValuesSearch(
+    const getLaunchAttributeValuesSearchURI = URLS.launchAttributeValuesSearch(
       activeProject,
       normalizeValue(attributeKey),
     );
@@ -258,7 +254,7 @@ export class LaunchLevelEntities extends Component {
         active: visibleFilters.includes(ENTITY_USER),
         removable: true,
         customProps: {
-          uri: this.props.usersSearchUrl,
+          getURI: URLS.launchOwnersSearch(activeProject),
           placeholder: intl.formatMessage(messages.OWNER_NAME_PLACEHOLDER),
         },
       },
@@ -283,7 +279,7 @@ export class LaunchLevelEntities extends Component {
         active: visibleFilters.includes(ENTITY_ATTRIBUTE_KEYS),
         removable: true,
         customProps: {
-          uri: this.props.launchAttributeKeysSearch,
+          getURI: URLS.launchAttributeKeysSearch(activeProject),
           placeholder: intl.formatMessage(messages.ATTRIBUTE_KEYS_PLACEHOLDER),
         },
       },
@@ -297,7 +293,7 @@ export class LaunchLevelEntities extends Component {
         active: visibleFilters.includes(ENTITY_ATTRIBUTE_VALUES),
         removable: true,
         customProps: {
-          uri: launchAttributeValuesSearch,
+          getURI: getLaunchAttributeValuesSearchURI,
           placeholder: intl.formatMessage(messages.ATTRIBUTE_VALUES_PLACEHOLDER),
         },
       },

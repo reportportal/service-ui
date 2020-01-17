@@ -138,7 +138,7 @@ export class ComponentHealthCheckControls extends Component {
         fieldValidator={fieldValidator}
         maxAttributesAmount={MAX_ATTRIBUTES_AMOUNT}
         showRemainingLevels
-        url={URLS.itemAttributeKeysAllSearch(
+        getURI={URLS.itemAttributeKeysAllSearch(
           activeProject,
           filterId,
           isLatest,

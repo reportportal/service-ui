@@ -32,7 +32,7 @@ import { ACCOUNT_ROLES_MAP, USER, ADMINISTRATOR } from 'common/constants/account
 import { ModalLayout, withModal, ModalField } from 'components/main/modal';
 import { SectionHeader } from 'components/main/sectionHeader';
 import { InputDropdown } from 'components/inputs/inputDropdown';
-import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
+import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import styles from './addUserModal.scss';
 
@@ -189,17 +189,6 @@ export class AddUserModal extends Component {
     };
   };
 
-  formatProjectNameOptions = (values) => values.map((value) => ({ value, label: value }));
-
-  formatValueProject = (value) => (value ? { value, label: value } : null);
-
-  parseValueProject = (value) => {
-    if (value === null) return null;
-    if (value && value.value) return value.value;
-
-    return undefined;
-  };
-
   render() {
     const {
       intl,
@@ -270,18 +259,11 @@ export class AddUserModal extends Component {
             label={intl.formatMessage(messages.userSelectAProjectLabel)}
             labelWidth={LABEL_WIDTH}
           >
-            <FieldProvider
-              name="defaultProject"
-              type="text"
-              format={this.formatValueProject}
-              parse={this.parseValueProject}
-            >
+            <FieldProvider name="defaultProject" type="text">
               <FieldErrorHint hintType="top">
-                <InputTagsSearch
+                <AsyncAutocomplete
                   placeholder={intl.formatMessage(messages.projectNamePlaceholder)}
-                  uri={URLS.projectNameSearch()}
-                  makeOptions={this.formatProjectNameOptions}
-                  async
+                  getURI={URLS.projectNameSearch}
                   minLength={1}
                 />
               </FieldErrorHint>

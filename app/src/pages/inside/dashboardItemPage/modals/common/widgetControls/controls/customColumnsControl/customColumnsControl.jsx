@@ -43,12 +43,12 @@ export class CustomColumnsControl extends Component {
     onChange: PropTypes.func.isRequired,
     value: PropTypes.array.isRequired,
     error: PropTypes.string,
-    uri: PropTypes.string,
+    getURI: PropTypes.func,
   };
 
   static defaultProps = {
     error: '',
-    uri: '',
+    getURI: () => '',
   };
 
   onChangeColumn = (itemValue, index) => {
@@ -67,7 +67,7 @@ export class CustomColumnsControl extends Component {
   };
 
   render() {
-    const { intl, value, error, uri } = this.props;
+    const { intl, value, error, getURI } = this.props;
     return (
       <div className={cx('custom-columns-control')}>
         {value.map((column, i) => (
@@ -77,7 +77,7 @@ export class CustomColumnsControl extends Component {
             name={column.name}
             attributeKey={column.value}
             last={value.length === i + 1}
-            uri={uri}
+            getURI={getURI}
             onChange={this.onChangeColumn}
             onRemove={this.removeColumn}
             noRemove={value.length === 1}

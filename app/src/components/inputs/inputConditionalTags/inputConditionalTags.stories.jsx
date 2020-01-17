@@ -105,11 +105,13 @@ storiesOf('Components/Inputs/InputConditionalTags', module)
   ))
   .add('with actions (type "de" in input, close DevTools, you get MOCK DATA)', () => {
     const mock = new MockAdapter(axios);
-    const API_REQUEST = '/api/v1/superadmin_personal/launch/tags?filter.cnt.tags=de';
+    const uri = '/api/v1/superadmin_personal/launch/tags?filter.cnt.tags=';
+    const API_REQUEST = `${uri}de`;
     mock.onGet(API_REQUEST).reply(200, ['demo', 'desktop']);
     return (
       <WithState state={state}>
         <InputConditionalTags
+          getURI={(term) => `${uri}${term}`}
           conditions={conditions}
           value={value}
           placeholder="Enter Login or Email"
