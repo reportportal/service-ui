@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { ListHeader } from './listHeader';
+export { RuleListHeader } from './ruleListHeader';

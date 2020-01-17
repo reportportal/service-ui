@@ -35,8 +35,8 @@ import { showModalAction } from 'controllers/modal';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { NoCasesBlock } from './../noCasesBlock';
 import styles from './notificationsTab.scss';
-import { ListHeader } from '../notificationsPatternAnalysisTabs/listHeader';
-import { List } from '../notificationsPatternAnalysisTabs/list';
+import { RuleListHeader } from '../ruleListHeader';
+import { RuleList } from '../ruleList';
 import {
   ATTRIBUTES_FIELD_KEY,
   DEFAULT_CASE_CONFIG,
@@ -244,7 +244,7 @@ export class NotificationsTab extends Component {
       <div className={cx('notifications-tab')}>
         {cases.length ? (
           <Fragment>
-            <ListHeader
+            <RuleListHeader
               readOnly={readOnlyNotificationsEnableForm}
               messages={messages}
               switcherValue={enabled}
@@ -252,7 +252,7 @@ export class NotificationsTab extends Component {
               onAddItem={this.addNotificationCase}
               onChangeSwitcher={this.toggleNotificationsEnabled}
             />
-            <List
+            <RuleList
               readOnly={readOnlyNotificationCaseList}
               data={cases}
               onToggle={this.onToggleHandler}

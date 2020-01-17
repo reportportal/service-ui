@@ -35,8 +35,8 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import PlusIcon from 'common/img/plus-button-inline.svg';
 import { canUpdateSettings } from 'common/utils/permissions';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
-import { ListHeader } from '../notificationsPatternAnalysisTabs/listHeader';
-import { List } from '../notificationsPatternAnalysisTabs/list';
+import { RuleListHeader } from '../ruleListHeader';
+import { RuleList } from '../ruleList';
 import { NoCasesBlock } from '../noCasesBlock';
 import styles from './patternAnalysisTab.scss';
 import { messages } from './messages';
@@ -215,14 +215,14 @@ export class PatternAnalysisTab extends Component {
       <div className={cx('pattern-analysis-tab')}>
         {patterns.length ? (
           <Fragment>
-            <ListHeader
+            <RuleListHeader
               readOnly={readOnly}
               messages={messages}
               switcherValue={PAState}
               onAddItem={this.onAddPattern}
               onChangeSwitcher={this.handleOnChangeSwitcher}
             />
-            <List
+            <RuleList
               readOnly={readOnly}
               data={patterns}
               onToggle={this.onToggleHandler}

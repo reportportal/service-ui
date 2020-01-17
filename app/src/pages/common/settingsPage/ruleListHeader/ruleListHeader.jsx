@@ -23,13 +23,13 @@ import track from 'react-tracking';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
 import { GhostButton } from 'components/buttons/ghostButton';
 import PlusIcon from 'common/img/plus-button-inline.svg';
-import styles from './listHeader.scss';
+import styles from './ruleListHeader.scss';
 
 const cx = classNames.bind(styles);
 
 @injectIntl
 @track()
-export class ListHeader extends Component {
+export class RuleListHeader extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     onAddItem: PropTypes.func,
