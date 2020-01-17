@@ -604,6 +604,7 @@ export class LaunchesPage extends Component {
         item: launch,
         type: LAUNCH_ITEM_TYPES.launch,
         fetchFunc: this.props.fetchLaunchesAction,
+        eventsInfo: LAUNCHES_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS,
       },
     });
   };

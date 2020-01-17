@@ -20,7 +20,10 @@ import {
   getHistoryPageLinkEvent,
   getRefineFiltersPanelEvents,
 } from './common/testItemPages/actionEventsCreators';
-import { getDeleteItemModalEvents } from './common/testItemPages/modalEventsCreators';
+import {
+  getDeleteItemModalEvents,
+  getEditItemsModalEvents,
+} from './common/testItemPages/modalEventsCreators';
 
 export const SUITE_PAGE = 'suites';
 export const SUITES_PAGE_EVENTS = {
@@ -84,31 +87,6 @@ export const SUITES_PAGE_EVENTS = {
     label: 'Unselect all items',
   },
   PROCEED_VALID_ITEMS: getProceedValidItemsEvent(SUITE_PAGE),
-  CLOSE_ICON_EDIT_ITEM_MODAL: {
-    category: SUITE_PAGE,
-    action: 'Click on Close Icon on Modal "Edit Item"',
-    label: 'Close modal "Edit Item"',
-  },
-  EDIT_ITEM_DESCRIPTION: {
-    category: SUITE_PAGE,
-    action: 'Edit description in Modal "Edit Item"',
-    label: 'Edit description',
-  },
-  BULK_EDIT_ITEMS_DESCRIPTION: {
-    category: SUITE_PAGE,
-    action: 'Edit description in Modal "Edit Items" in a bulk',
-    label: 'Edit description in mode: ',
-  },
-  CANCEL_BTN_EDIT_ITEM_MODAL: {
-    category: SUITE_PAGE,
-    action: 'Click on Btn Cancel on Modal "Edit Item"',
-    label: 'Close modal "Edit Item"',
-  },
-  SAVE_BTN_EDIT_ITEM_MODAL: {
-    category: SUITE_PAGE,
-    action: 'Click on Btn Save on Modal "Edit Item"',
-    label: 'Save changes',
-  },
   NAME_FILTER: {
     category: SUITE_PAGE,
     action: 'Click on icon "filter" on Name',
@@ -256,4 +234,6 @@ export const SUITES_PAGE_EVENTS = {
   },
   // DELETE_ITEM_MODAL
   DELETE_ITEM_MODAL_EVENTS: getDeleteItemModalEvents(SUITE_PAGE),
+  // EDIT_ITEMS_MODAL
+  EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(SUITE_PAGE),
 };

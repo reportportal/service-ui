@@ -247,10 +247,10 @@ export class StepPage extends Component {
         type: LAUNCH_ITEM_TYPES.item,
         fetchFunc: this.props.fetchTestItemsAction,
         eventsInfo: {
-          saveBtn: STEP_PAGE_EVENTS.SAVE_BTN_EDIT_ITEM_MODAL,
-          editDescription: STEP_PAGE_EVENTS.EDIT_ITEM_DESCRIPTION,
-          cancelBtn: STEP_PAGE_EVENTS.CANCEL_BTN_EDIT_ITEM_MODAL,
-          closeIcon: STEP_PAGE_EVENTS.CLOSE_ICON_EDIT_ITEM_MODAL,
+          saveBtn: STEP_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.SAVE_BTN_EDIT_ITEM_MODAL,
+          editDescription: STEP_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.EDIT_ITEM_DESCRIPTION,
+          cancelBtn: STEP_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.CANCEL_BTN_EDIT_ITEM_MODAL,
+          closeIcon: STEP_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.CLOSE_ICON_EDIT_ITEM_MODAL,
         },
       },
     });

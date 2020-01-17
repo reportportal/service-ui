@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { getEditItemsModalEvents } from 'components/main/analytics/events/common/testItemPages/modalEventsCreators';
+
 export const LAUNCHES_PAGE = 'launches';
 const LAUNCHES_MODAL = 'Modal launches';
 
@@ -277,31 +279,8 @@ export const LAUNCHES_PAGE_EVENTS = {
 };
 
 export const LAUNCHES_MODAL_EVENTS = {
-  CLOSE_ICON_EDIT_MODAL: {
-    category: LAUNCHES_MODAL,
-    action: 'Click on Close Icon on Modal "Edit Launch"',
-    label: 'Close modal "Edit Launch"',
-  },
-  EDIT_DESCRIPTION_EDIT_MODAL: {
-    category: LAUNCHES_MODAL,
-    action: 'Edit description in Modal "Edit Launch"',
-    label: 'Edit launch description',
-  },
-  CLICK_CANCEL_BTN_EDIT_MODAL: {
-    category: LAUNCHES_MODAL,
-    action: 'Click on Btn Cancel on Modal "Edit Launch"',
-    label: 'Close modal "Edit Launch"',
-  },
-  CLICK_SAVE_BTN_EDIT_MODAL: {
-    category: LAUNCHES_MODAL,
-    action: 'Click on Btn Save on Modal "Edit Launch"',
-    label: 'Save changes "Edit Launch"',
-  },
-  BULK_EDIT_LAUNCHES_DESCRIPTION: {
-    category: LAUNCHES_MODAL,
-    action: 'Edit description in Modal "Edit Launches" in a bulk',
-    label: 'Edit description in mode: ',
-  },
+  // EDIT_ITEMS_MODAL
+  EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(LAUNCHES_PAGE, 'Launch'),
   CLOSE_ICON_MOVE_MODAL: {
     category: LAUNCHES_MODAL,
     action: 'Click on Close Icon on Modal "Move to Debug"',
