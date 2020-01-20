@@ -61,7 +61,7 @@ function fetchReducer(state = {}, action) {
   }
 }
 
-function mutationReducer(state, action) {
+function mutationReducer(state = {}, action) {
   switch (action.type) {
     case CLEAR_NESTED_STEP: {
       const {
