@@ -44,7 +44,7 @@ func configureRouter(srv *server.RpServer, rpConf struct {
 }) {
 	srv.WithRouter(func(router *chi.Mux) {
 		//apply compression
-		router.Use(middleware.DefaultCompress)
+		//router.Use(middleware.DefaultCompress)
 		router.Use(middleware.Logger)
 		//content security policy
 		csp := map[string][]string{
