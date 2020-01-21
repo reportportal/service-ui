@@ -6,14 +6,14 @@ Every UI developer should fork our [GitHub repository](https://github.com/report
 
 Repositories definitions:
 
-* _`upstream`_ - remote repository of Report Portal.
-* _`origin`_ - your remote forked version of _`upstream`_.
-* _`local`_ - copy on your local machine.
+- _`upstream`_ - remote repository of Report Portal.
+- _`origin`_ - your remote forked version of _`upstream`_.
+- _`local`_ - copy on your local machine.
 
 Main branches:
 
-* `master` - release branch.
-* `v5` - main work branch.
+- `master` - release branch.
+- `v5` - main work branch.
 
 Main code reviewer is our key UI developer [Maxim Tumas](https://telescope.epam.com/who/Maxim_Tumas). His code review is mandatory for each PR. But every developer and contributor are able to provide review for others PRs, it will be very helpful for us.
 

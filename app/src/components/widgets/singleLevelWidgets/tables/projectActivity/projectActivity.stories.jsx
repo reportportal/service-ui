@@ -17,7 +17,7 @@
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 import { START_TIME_FORMAT_RELATIVE } from 'controllers/user';
-import { withReadme } from 'storybook-readme';
+
 // eslint-disable-next-line import/extensions, import/no-unresolved
 import { WithState } from 'storybook-decorators';
 import { ProjectActivity } from './projectActivity';
@@ -49,7 +49,11 @@ storiesOf('Components/Widgets/Tables/ProjectActivity', module)
       width: '100%',
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('with activity prop', () => (
     <WithState state={state}>
       <ProjectActivity widget={widget} />

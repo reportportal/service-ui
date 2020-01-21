@@ -16,7 +16,7 @@
 
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import { InvestigatedTrendChart } from './investigatedTrendChart';
 import { TEST_DATA } from './test-data';
 import README from './README.md';
@@ -38,7 +38,11 @@ storiesOf('Components/Widgets/Charts/investigatedTrendChart', module)
       width: 500,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('launch mode', () => (
     <InvestigatedTrendChart
       widget={TEST_DATA.launchMode}

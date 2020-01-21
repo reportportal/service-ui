@@ -17,7 +17,7 @@
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 // eslint-disable-next-line import/extensions, import/no-unresolved
 import { WithState } from 'storybook-decorators';
 import { Attachments } from './attachments';
@@ -73,7 +73,11 @@ storiesOf('Pages/Inside/LogsPage/LogItemInfo/LogItemInfoTabs/Attachments', modul
       height: 'auto',
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('With all icon types', () => (
     <WithState state={state}>
       <Attachments activeItemId={0} onChangeActiveItem={action('Change active item')} />

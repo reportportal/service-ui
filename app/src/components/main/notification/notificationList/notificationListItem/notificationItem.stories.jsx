@@ -18,7 +18,7 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 import { action } from '@storybook/addon-actions';
-import { withReadme } from 'storybook-readme';
+
 import { NotificationItem } from './notificationItem';
 import README from './README.md';
 
@@ -33,7 +33,11 @@ storiesOf('Components/Main/Notification', module)
       width: 600,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('default state', () => (
     <NotificationItem uid={1} onMessageClick={action('onMessageClick')} />
   ))

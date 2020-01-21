@@ -17,7 +17,7 @@
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import { MarkdownViewer } from '../';
 import README from './README.md';
 import TestImage from './testImg/test-image.png';
@@ -65,7 +65,11 @@ storiesOf('Components/Main/Markdown/MarkdownViewer', module)
       width: '70%',
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('default state', () => <MarkdownViewer />)
   .add('with bold markdown text', () => <MarkdownViewer value={boldMock} />)
   .add('with italic markdown text', () => <MarkdownViewer value={italicMock} />)

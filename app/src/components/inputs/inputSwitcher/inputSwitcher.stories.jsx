@@ -17,7 +17,7 @@
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import { InputSwitcher } from './inputSwitcher';
 import README from './README.md';
 
@@ -32,7 +32,11 @@ storiesOf('Components/Inputs/InputSwitcher', module)
       width: 300,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('default state', () => <InputSwitcher />)
   .add('with long text', () => (
     <InputSwitcher>

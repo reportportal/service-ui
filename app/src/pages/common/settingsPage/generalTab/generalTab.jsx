@@ -19,7 +19,7 @@ import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
@@ -65,7 +65,7 @@ const cx = classNames.bind(styles);
 @track()
 export class GeneralTab extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     projectId: PropTypes.string.isRequired,
     jobConfig: PropTypes.shape({

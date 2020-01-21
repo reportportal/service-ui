@@ -15,7 +15,7 @@
  */
 
 import React, { PureComponent } from 'react';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
@@ -80,7 +80,7 @@ const columnComponentsMap = {
 @injectIntl
 export class ProductStatus extends PureComponent {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     widget: PropTypes.object.isRequired,
     projectId: PropTypes.string.isRequired,
     changeActiveFilterAction: PropTypes.func.isRequired,

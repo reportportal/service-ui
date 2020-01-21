@@ -17,14 +17,13 @@
 import React, { Component } from 'react';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import ReactObserver from 'react-event-observer';
 import { NOTIFICATION_TYPES } from 'controllers/notification';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import PropTypes from 'prop-types';
-import { STATIC_CHARTS } from 'components/widgets';
 import { EmptyWidgetGrid } from './emptyWidgetGrid';
 import { Widget } from './widget';
 import styles from './widgetsGrid.scss';
@@ -44,7 +43,7 @@ const messages = defineMessages({
 @injectIntl
 export class WidgetsGrid extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     activeProject: PropTypes.string.isRequired,
     currentUser: PropTypes.string.isRequired,
     isFullscreen: PropTypes.bool,
@@ -77,7 +76,7 @@ export class WidgetsGrid extends Component {
     this.observer = ReactObserver();
 
     this.state = {
-      isMobile: false,
+      isMobile: window.innerWidth <= breakpoints.sm,
     };
   }
 
@@ -162,23 +161,20 @@ export class WidgetsGrid extends Component {
 
     if (!isSomeWidgetsWithSameYPosition) {
       // update new widgets Y positions that greater than deleted widget Y position
-      return newWidgets.map(
-        (item) =>
-          item.widgetPosition.positionY > widgetForDeleteYPosition
-            ? {
-                ...item,
-                widgetPosition: {
-                  ...item.widgetPosition,
-                  positionY: item.widgetPosition.positionY - widgetForDelete.widgetSize.height,
-                },
-              }
-            : item,
+      return newWidgets.map((item) =>
+        item.widgetPosition.positionY > widgetForDeleteYPosition
+          ? {
+              ...item,
+              widgetPosition: {
+                ...item.widgetPosition,
+                positionY: item.widgetPosition.positionY - widgetForDelete.widgetSize.height,
+              },
+            }
+          : item,
       );
     }
     return newWidgets;
   };
-
-  isStaticWidget = (widgetType) => STATIC_CHARTS[widgetType];
 
   renderItems = () => {
     const {
@@ -210,7 +206,6 @@ export class WidgetsGrid extends Component {
               minW: 4,
               minH: 4,
               i: String(widgetId),
-              isResizable: !this.isStaticWidget(widgetType),
             }}
           >
             <Widget

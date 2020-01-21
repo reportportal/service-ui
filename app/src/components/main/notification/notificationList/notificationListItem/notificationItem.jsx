@@ -17,7 +17,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { defineMessages, intlShape, injectIntl } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import Parser from 'html-react-parser';
 import { NOTIFICATION_TYPES } from 'controllers/notification/constants';
 import styles from './notificationItem.scss';
@@ -136,7 +136,7 @@ const messages = defineMessages({
 @injectIntl
 export class NotificationItem extends PureComponent {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     uid: PropTypes.number.isRequired,
     onMessageClick: PropTypes.func.isRequired,
     message: PropTypes.string,

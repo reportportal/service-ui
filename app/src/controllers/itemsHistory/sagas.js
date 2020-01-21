@@ -14,90 +14,179 @@
  * limitations under the License.
  */
 
-import { takeEvery, all, put, select, take } from 'redux-saga/effects';
-import { fetchDataAction } from 'controllers/fetch';
+import { takeEvery, all, put, call, select, take } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { getStorageItem } from 'common/utils';
+import { concatFetchDataAction, createFetchPredicate } from 'controllers/fetch';
 import { activeProjectSelector } from 'controllers/user';
-import { fetchTestItemsAction, SET_PAGE_LOADING } from 'controllers/testItem';
+import {
+  isTestItemsListSelector,
+  namespaceSelector,
+  fetchTestItemsAction,
+  SET_PAGE_LOADING,
+  DEFAULT_LAUNCHES_LIMIT,
+} from 'controllers/testItem';
+import {
+  testItemIdsArraySelector,
+  filterIdSelector,
+  launchIdSelector,
+  pagePropertiesSelector,
+} from 'controllers/pages';
 import {
   fetchItemsHistoryAction,
-  setItemsHistory,
-  setVisibleItemsCount,
-  resetHistory,
+  resetHistoryAction,
+  setHistoryPageLoadingAction,
+  fetchFilterHistoryAction,
 } from './actionCreators';
-import { itemsHistorySelector, visibleItemsCountSelector, historyItemsSelector } from './selectors';
+import { historyPaginationSelector, filterForCompareSelector, historySelector } from './selectors';
 import {
-  FETCH_ITEMS_HISTORY,
   HISTORY_ITEMS_TO_LOAD,
+  FETCH_ITEMS_HISTORY,
   HISTORY_DEPTH_CONFIG,
+  HISTORY_BASE_DEFAULT_VALUE,
   NAMESPACE,
+  FILTER_HISTORY_NAMESPACE,
   FETCH_HISTORY_PAGE_INFO,
-  RESET_FETCH_HISTORY,
+  REFRESH_HISTORY,
+  SET_FILTER_FOR_COMPARE,
+  FETCH_FILTER_HISTORY,
 } from './constants';
 
-function* getHistory({ payload }) {
-  const testItems = yield select(itemsHistorySelector);
-  const visibleItemsCount = yield select(visibleItemsCountSelector);
-  let startSliceIndex;
-  let endSliceIndex;
-  if (payload && payload.loadMore) {
-    startSliceIndex = visibleItemsCount;
-    endSliceIndex = visibleItemsCount + HISTORY_ITEMS_TO_LOAD;
-  } else {
-    const defaultVisibleItems =
-      (testItems.length <= HISTORY_ITEMS_TO_LOAD && testItems.length) || HISTORY_ITEMS_TO_LOAD;
-    startSliceIndex = 0;
-    endSliceIndex = defaultVisibleItems;
+function* getHistoryParams({ loadMore } = {}) {
+  const pagination = yield select(historyPaginationSelector);
+  const itemIdsArray = yield select(testItemIdsArraySelector);
+  const launchId = yield select(launchIdSelector);
+  const namespace = yield select(namespaceSelector);
+  const query = yield select(pagePropertiesSelector, namespace);
+  const isTestItemsList = yield select(isTestItemsListSelector);
+
+  const pageNumber = loadMore ? pagination.number + 1 : pagination.number;
+  const parentItemId = itemIdsArray.length > 1 ? itemIdsArray[itemIdsArray.length - 1] : undefined;
+  const params = {
+    ...query,
+    'page.page': pageNumber,
+    'page.size': pagination.size,
+  };
+  if (parentItemId) {
+    params['filter.eq.parentId'] = parentItemId;
+  } else if (launchId) {
+    params['filter.eq.launchId'] = launchId;
+  } else if (isTestItemsList) {
+    params.filterId = yield select(filterIdSelector);
+  }
+
+  return params;
+}
+
+function* fetchItemsHistory({ payload = {} }) {
+  if (payload.loadMore) {
+    yield put(setHistoryPageLoadingAction(true));
   }
   const activeProject = yield select(activeProjectSelector);
-  const itemsIds = testItems
-    .slice(startSliceIndex, endSliceIndex)
-    .map((item) => item && item.id)
-    .join(',');
+  const params = yield call(getHistoryParams, payload);
+
+  const historyDepth =
+    payload.historyDepth ||
+    getStorageItem(HISTORY_DEPTH_CONFIG.name) ||
+    HISTORY_DEPTH_CONFIG.defaultValue;
+  const historyBase = payload.historyBase || HISTORY_BASE_DEFAULT_VALUE;
+
   yield put(
-    fetchDataAction(NAMESPACE)(
-      URLS.testItemsHistory(
-        activeProject,
-        itemsIds,
-        (payload && payload.historyDepth) ||
-          getStorageItem(HISTORY_DEPTH_CONFIG.name) ||
-          HISTORY_DEPTH_CONFIG.defaultValue,
-      ),
+    concatFetchDataAction(NAMESPACE, payload.loadMore)(
+      URLS.testItemsHistory(activeProject, historyDepth, historyBase),
+      { params },
     ),
   );
-  yield put(
-    setVisibleItemsCount(
-      testItems.slice(startSliceIndex, endSliceIndex).length + visibleItemsCount,
-    ),
-  );
+
+  if (payload.loadMore) {
+    yield take(createFetchPredicate(NAMESPACE));
+    const filterForCompare = yield select(filterForCompareSelector);
+    if (filterForCompare) {
+      yield put(fetchFilterHistoryAction({ filter: filterForCompare, loadMore: payload.loadMore }));
+      yield take(createFetchPredicate(FILTER_HISTORY_NAMESPACE));
+    }
+    yield put(setHistoryPageLoadingAction(false));
+  }
 }
 
-function* getHistoryPageInfo() {
-  yield put(resetHistory());
+function* fetchHistoryPageInfo() {
+  yield put(setHistoryPageLoadingAction(true));
+
+  yield put(resetHistoryAction());
   yield put(fetchTestItemsAction());
   yield take((action) => action.type === SET_PAGE_LOADING && action.payload === false);
-  const historyItems = yield select(historyItemsSelector);
-  yield put(setItemsHistory(historyItems));
   yield put(fetchItemsHistoryAction());
+
+  yield take(createFetchPredicate(NAMESPACE));
+  yield put(setHistoryPageLoadingAction(false));
 }
 
-function* getNewHistory() {
-  yield put(resetHistory());
-  yield put(fetchItemsHistoryAction());
+function* refreshHistory({ payload }) {
+  yield put(setHistoryPageLoadingAction(true));
+  yield put(resetHistoryAction());
+  yield put(fetchItemsHistoryAction(payload || undefined));
+  yield take(createFetchPredicate(NAMESPACE));
+
+  const filterForCompare = yield select(filterForCompareSelector);
+  if (filterForCompare) {
+    yield put(fetchFilterHistoryAction({ filter: filterForCompare }));
+    yield take(createFetchPredicate(FILTER_HISTORY_NAMESPACE));
+  }
+  yield put(setHistoryPageLoadingAction(false));
+}
+
+function* fetchFilterHistory({ payload: { filter, loadMore } }) {
+  const activeProject = yield select(activeProjectSelector);
+  const itemsHistory = yield select(historySelector);
+
+  if (!itemsHistory.length) {
+    return;
+  }
+
+  const historyDepth = 1;
+  const params = {
+    filterId: filter.id,
+    launchesLimit: DEFAULT_LAUNCHES_LIMIT,
+    isLatest: true,
+  };
+  let items = itemsHistory;
+
+  if (loadMore) {
+    items = itemsHistory.slice(-HISTORY_ITEMS_TO_LOAD);
+  }
+  params['filter.in.testCaseHash'] = items.map((item) => item.testCaseHash).join(',');
+
+  yield put(
+    concatFetchDataAction(FILTER_HISTORY_NAMESPACE, loadMore)(
+      URLS.testItemsHistory(activeProject, historyDepth, 'comparing'),
+      {
+        params,
+      },
+    ),
+  );
 }
 
 function* watchFetchHistory() {
-  yield takeEvery(FETCH_ITEMS_HISTORY, getHistory);
+  yield takeEvery(FETCH_ITEMS_HISTORY, fetchItemsHistory);
 }
 
 function* watchFetchHistoryPageInfo() {
-  yield takeEvery(FETCH_HISTORY_PAGE_INFO, getHistoryPageInfo);
+  yield takeEvery(FETCH_HISTORY_PAGE_INFO, fetchHistoryPageInfo);
 }
 
-function* watchResetFetchHstory() {
-  yield takeEvery(RESET_FETCH_HISTORY, getNewHistory);
+function* watchRefreshHistory() {
+  yield takeEvery([REFRESH_HISTORY, SET_FILTER_FOR_COMPARE], refreshHistory);
 }
+
+function* watchFetchFilterHistory() {
+  yield takeEvery(FETCH_FILTER_HISTORY, fetchFilterHistory);
+}
+
 export function* historySagas() {
-  yield all([watchFetchHistory(), watchFetchHistoryPageInfo(), watchResetFetchHstory()]);
+  yield all([
+    watchFetchHistory(),
+    watchFetchHistoryPageInfo(),
+    watchRefreshHistory(),
+    watchFetchFilterHistory(),
+  ]);
 }

@@ -17,7 +17,7 @@
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import { MarkdownEditor } from '../';
 import README from './README.md';
 
@@ -57,7 +57,11 @@ storiesOf('Components/Main/Markdown/MarkdownEditor', module)
       width: '70%',
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('default state', () => <MarkdownEditor />)
   .add('with placeholder', () => (
     <MarkdownEditor placeholder="Some placeholder for markdown editor..." />

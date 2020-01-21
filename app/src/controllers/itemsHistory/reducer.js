@@ -15,46 +15,34 @@
  */
 
 import { combineReducers } from 'redux';
-import { FETCH_SUCCESS } from 'controllers/fetch';
-import { NAMESPACE, SET_ITEMS_HISTORY, SET_VISIBLE_ITEMS_COUNT, RESET_HISTORY } from './constants';
+import { queueReducers } from 'common/utils/queueReducers';
+import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
+import { groupOperationsReducer } from 'controllers/groupOperations';
+import { paginationReducer } from 'controllers/pagination';
+import { fetchReducer } from 'controllers/fetch';
+import { HISTORY_PAGE } from 'controllers/pages';
+import {
+  NAMESPACE,
+  FILTER_HISTORY_NAMESPACE,
+  RESET_HISTORY,
+  PAGINATION_INITIAL_STATE,
+  SET_HISTORY_PAGE_LOADING,
+  FETCH_HISTORY_PAGE_INFO,
+  FILTER_FOR_COMPARE_INITIAL_STATE,
+  SET_FILTER_FOR_COMPARE,
+} from './constants';
 
-const itemsReducer = (state = [], { type, payload }) => {
+export const historyPaginationReducer = (state = PAGINATION_INITIAL_STATE, { type }) => {
   switch (type) {
-    case SET_ITEMS_HISTORY:
-      return payload;
-    default:
-      return state;
-  }
-};
-
-const visibleItemsCountReducer = (state = 0, { type, payload }) => {
-  switch (type) {
-    case SET_VISIBLE_ITEMS_COUNT:
-      return payload;
     case RESET_HISTORY:
-      return 0;
+      return PAGINATION_INITIAL_STATE;
     default:
       return state;
   }
 };
 
-const historyReducer = (state = [], { type, payload, meta }) => {
-  if (meta && meta.namespace && meta.namespace !== NAMESPACE) {
-    return state;
-  }
-  let reversedPayload;
+export const historyReducer = (state = [], { type }) => {
   switch (type) {
-    case FETCH_SUCCESS:
-      if (state.length === 0) {
-        return payload.reverse();
-      }
-      reversedPayload = payload.reverse();
-      return state.map((item, index) => ({
-        ...item,
-        resources: item.resources.concat(
-          reversedPayload[index] && reversedPayload[index].resources,
-        ),
-      }));
     case RESET_HISTORY:
       return [];
     default:
@@ -62,8 +50,42 @@ const historyReducer = (state = [], { type, payload, meta }) => {
   }
 };
 
-export const itemsHistoryReducer = combineReducers({
-  history: historyReducer,
-  items: itemsReducer,
-  visibleItemsCount: visibleItemsCountReducer,
+export const loadingReducer = (state = false, { type, payload }) => {
+  switch (type) {
+    case SET_HISTORY_PAGE_LOADING:
+      return payload;
+    default:
+      return state;
+  }
+};
+
+export const filterForCompareReducer = (
+  state = FILTER_FOR_COMPARE_INITIAL_STATE,
+  { type, payload },
+) => {
+  switch (type) {
+    case SET_FILTER_FOR_COMPARE:
+      return payload;
+    case FETCH_HISTORY_PAGE_INFO:
+      return FILTER_FOR_COMPARE_INITIAL_STATE;
+    default:
+      return state;
+  }
+};
+
+const reducer = combineReducers({
+  history: queueReducers(historyReducer, fetchReducer(NAMESPACE, { contentPath: 'content' })),
+  loading: loadingReducer,
+  pagination: queueReducers(
+    historyPaginationReducer,
+    paginationReducer(NAMESPACE, PAGINATION_INITIAL_STATE),
+  ),
+  groupOperations: groupOperationsReducer(NAMESPACE),
+  filterForCompare: filterForCompareReducer,
+  filterHistory: queueReducers(
+    historyReducer,
+    fetchReducer(FILTER_HISTORY_NAMESPACE, { contentPath: 'content' }),
+  ),
 });
+
+export const itemsHistoryReducer = createPageScopedReducer(reducer, HISTORY_PAGE);

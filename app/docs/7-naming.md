@@ -4,9 +4,9 @@
 
 Use `camelCase` for naming. Exceptions:
 
-* react components: `PascalCase`
-* constants: `UPPER_SNAKE_CASE`
-* css classes: `kebab-case`
+- react components: `PascalCase`
+- constants: `UPPER_SNAKE_CASE`
+- css classes: `kebab-case`
 
 Event handler props should be named as `on<EventName>`. Example: `onClick`.
 

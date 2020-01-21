@@ -68,20 +68,19 @@ export class TestsTableRow extends Component {
       duration,
     } = this.props;
     const { total, uniqueId } = data;
-    const percentage = count !== null ? (count / total * 100).toFixed(2) : null;
+    const percentage = count !== null ? ((count / total) * 100).toFixed(2) : null;
 
     return (
       <div className={cx('row')}>
         <NavLink className={cx('col', 'col-name')} to={testCaseNameLink}>
           <span>{name}</span>
         </NavLink>
-        {Matrix &&
-          count && (
-            <div className={cx('col', 'col-count')}>
-              <Count count={count} total={total} />
-              <Matrix tests={matrixData} id={uniqueId} />
-            </div>
-          )}
+        {Matrix && count && (
+          <div className={cx('col', 'col-count')}>
+            <Count count={count} total={total} />
+            <Matrix tests={matrixData} id={uniqueId} />
+          </div>
+        )}
         {percentage && <div className={cx('col', 'col-percents')}>{percentage}%</div>}
         {status && <div className={cx('col', 'col-status')}>{status}</div>}
         {duration && <div className={cx('col', 'col-duration')}>{duration} s</div>}

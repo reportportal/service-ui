@@ -15,6 +15,8 @@
  */
 
 import { combineReducers } from 'redux';
+import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
+import { PROJECT_FILTERS_PAGE } from 'controllers/pages';
 import { fetchReducer } from 'controllers/fetch';
 import { paginationReducer } from 'controllers/pagination';
 import { loadingReducer } from 'controllers/loading';
@@ -26,6 +28,7 @@ import {
   UPDATE_FILTER_SUCCESS,
   REMOVE_FILTER,
   UPDATE_FILTER_ORDERS,
+  SET_PAGE_LOADING,
 } from './constants';
 import { updateFilter } from './utils';
 
@@ -67,10 +70,22 @@ export const launchesFiltersReadyReducer = (state = false, { type }) => {
   }
 };
 
-export const filterReducer = combineReducers({
+export const pageLoadingReducer = (state = false, { type, payload }) => {
+  switch (type) {
+    case SET_PAGE_LOADING:
+      return payload;
+    default:
+      return state;
+  }
+};
+
+const reducer = combineReducers({
   filters: fetchReducer(NAMESPACE, { contentPath: 'content' }),
   pagination: paginationReducer(NAMESPACE),
   loading: loadingReducer(NAMESPACE),
+  pageLoading: pageLoadingReducer,
   launchesFilters: launchesFiltersReducer,
   launchesFiltersReady: launchesFiltersReadyReducer,
 });
+
+export const filterReducer = createPageScopedReducer(reducer, PROJECT_FILTERS_PAGE);

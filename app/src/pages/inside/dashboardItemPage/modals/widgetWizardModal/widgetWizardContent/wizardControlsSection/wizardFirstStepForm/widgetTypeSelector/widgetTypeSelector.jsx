@@ -21,7 +21,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { initialize, touch } from 'redux-form';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { WidgetTypeItem } from './widgetTypeItem';
 import { WIDGET_WIZARD_FORM } from '../../../../../common/constants';
 import styles from './widgetTypeSelector.scss';
@@ -42,7 +42,7 @@ const messages = defineMessages({
 @track()
 export class WidgetTypeSelector extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     value: PropTypes.string,
     widgets: PropTypes.array,
     onChange: PropTypes.func.isRequired,

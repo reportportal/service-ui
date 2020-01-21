@@ -18,7 +18,7 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { withReadme } from 'storybook-readme';
+
 import { PageSection } from 'layouts/pageLayout';
 import { Page } from './page';
 import README from './README.md';
@@ -34,7 +34,11 @@ storiesOf('Components/Main/Page', module)
       width: 300,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('default state', () => <Page />)
   .add('with title', () => <Page title="Page title" />)
   .add('with title & children', () => (

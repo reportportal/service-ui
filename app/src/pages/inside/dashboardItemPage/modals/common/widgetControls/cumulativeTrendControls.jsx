@@ -17,7 +17,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import { FieldArray } from 'redux-form';
 import {
@@ -25,7 +25,7 @@ import {
   bindMessageToValidator,
   composeBoundValidators,
   commonValidators,
-} from 'common/utils';
+} from 'common/utils/validation';
 import { URLS } from 'common/urls';
 import { STATS_FAILED, STATS_PASSED, STATS_SKIPPED } from 'common/constants/statistics';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -98,7 +98,7 @@ const attributeKeyValidator = (formatMessage) =>
 @injectIntl
 export class CumulativeTrendControls extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     widgetSettings: PropTypes.object.isRequired,
     initializeControlsForm: PropTypes.func.isRequired,
     formAppearance: PropTypes.object.isRequired,

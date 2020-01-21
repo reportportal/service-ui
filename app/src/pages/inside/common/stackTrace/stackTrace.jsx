@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import track from 'react-tracking';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { NoItemMessage } from 'components/main/noItemMessage';
@@ -69,7 +69,7 @@ const LOAD_MORE_HEIGHT = 32;
 @track()
 export class StackTrace extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     items: PropTypes.array,
     loading: PropTypes.bool,
     fetchLogPageStackTrace: PropTypes.func,

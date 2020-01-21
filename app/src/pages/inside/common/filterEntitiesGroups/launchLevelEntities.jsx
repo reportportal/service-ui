@@ -16,9 +16,9 @@
 
 import { Component } from 'react';
 import { connect } from 'react-redux';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
-import { commonValidators } from 'common/utils';
+import { commonValidators } from 'common/utils/validation';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
 import {
@@ -181,7 +181,7 @@ const DEFECT_ENTITY_ID_BASE = 'statistics$defects$';
 }))
 export class LaunchLevelEntities extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     defectTypes: PropTypes.object.isRequired,
     filterValues: PropTypes.object,
     render: PropTypes.func.isRequired,

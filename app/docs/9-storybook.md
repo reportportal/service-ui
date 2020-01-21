@@ -14,8 +14,8 @@ Storybook structure:
 
 A component should have the following stories:
 
-* `default state` - a component without any props passed (if it possible)
-* `with actions` - a component with event handlers (use `action` from `@storybook/addon-actions`)
+- `default state` - a component without any props passed (if it possible)
+- `with actions` - a component with event handlers (use `action` from `@storybook/addon-actions`)
 
 Other stories depend on component's props.
 

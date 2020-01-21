@@ -56,7 +56,7 @@
   display: inline-block;
   line-height: 1.2;
 
-  @media(max-width: $SCREEN_SM_MAX) {
+  @media (max-width: $SCREEN_SM_MAX) {
     display: none;
   }
 }
@@ -66,7 +66,7 @@
   color: $COLOR--charcoal-grey;
   cursor: default;
 
-  @media(max-width: $SCREEN_SM_MAX) {
+  @media (max-width: $SCREEN_SM_MAX) {
     display: inline-block;
   }
 }

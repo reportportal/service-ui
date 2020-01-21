@@ -15,7 +15,7 @@
  */
 
 import { FormattedMessage } from 'react-intl';
-import { SAUCE_LABS, EMAIL, JIRA, RALLY, SAML } from 'common/constants/integrationNames';
+import { SAUCE_LABS, EMAIL, JIRA, RALLY, SAML, LDAP, AD } from 'common/constants/integrationNames';
 
 export const INTEGRATIONS_DESCRIPTIONS_MAP = {
   [SAUCE_LABS]: (
@@ -45,7 +45,19 @@ export const INTEGRATIONS_DESCRIPTIONS_MAP = {
   [SAML]: (
     <FormattedMessage
       id="Integrations.Saml.description"
-      defaultMessage="Integration with SAML, can be help to speed up the process user creation and  login to ReportPortal. Integration provides an exchange of information between ReportPortal and SAML, such as possibility to login to ReportPortal with SAML credentials."
+      defaultMessage="Integration with SAML, can be help to speed up the process user creation and login to ReportPortal. Integration provides an exchange of information between ReportPortal and SAML, such as possibility to login to ReportPortal with SAML credentials."
+    />
+  ),
+  [LDAP]: (
+    <FormattedMessage
+      id="Integrations.Ldap.description"
+      defaultMessage="Integration with LDAP, can be help to speed up the process user creation and login to ReportPortal. Integration provides an exchange of information between ReportPortal and LDAP, such as possibility to login to ReportPortal with LDAP credentials."
+    />
+  ),
+  [AD]: (
+    <FormattedMessage
+      id="Integrations.ActiveDirectory.description"
+      defaultMessage="Integration with Active Directory, can be help to speed up the process user creation and login to ReportPortal. Integration provides an exchange of information between ReportPortal and Active Directory, such as possibility to login to ReportPortal with Active Directory credentials."
     />
   ),
 };

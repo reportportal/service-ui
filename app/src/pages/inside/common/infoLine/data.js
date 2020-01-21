@@ -102,6 +102,7 @@ export const state = {
     payload: {
       projectId: 'amsterget_personal',
       filterId: 'all',
+      testItemIds: '1',
     },
     prev: {
       pathname: '/amsterget_personal/dashboard',
@@ -201,6 +202,17 @@ export const mockData = {
     },
   },
   status: 'FAILED',
-  tags: ['desktop', 'demo', 'build:3.0.1.10'],
+  attributes: [
+    {
+      value: 'desktop',
+    },
+    {
+      value: 'demo',
+    },
+    {
+      key: 'build',
+      value: '3.0.1.10',
+    },
+  ],
   startTime: 1534436195270,
 };

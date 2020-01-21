@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import Parser from 'html-react-parser';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { BigButton } from 'components/buttons/bigButton';
 import { GhostButton } from 'components/buttons/ghostButton';
 import PropTypes from 'prop-types';
@@ -47,7 +47,7 @@ const messages = defineMessages({
 @injectIntl
 export class WizardControlsSection extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     submitWidgetWizardForm: PropTypes.func.isRequired,
     step: PropTypes.number,
     widgets: PropTypes.array,

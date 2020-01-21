@@ -21,7 +21,7 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { Manager, Reference, Popper } from 'react-popper';
 import track from 'react-tracking';
-import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl';
+import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { ADMIN_ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { showModalAction } from 'controllers/modal';
@@ -29,7 +29,7 @@ import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { fetchAllUsersAction, toggleUserRoleFormAction } from 'controllers/administrate/allUsers';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
+import { SCREEN_XS_MAX_MEDIA } from 'common/constants/screenSizeVariables';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { RolesRow } from './rolesRow';
 import styles from './projectsAndRolesColumn.scss';
@@ -76,7 +76,7 @@ const messages = defineMessages({
 @injectIntl
 export class ProjectsAndRolesColumn extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     className: PropTypes.string.isRequired,
     value: PropTypes.object,
     tracking: PropTypes.shape({
@@ -99,7 +99,7 @@ export class ProjectsAndRolesColumn extends Component {
   };
 
   componentDidMount() {
-    this.match = window.matchMedia(SCREEN_XS_MAX);
+    this.match = window.matchMedia(SCREEN_XS_MAX_MEDIA);
     this.match.addListener(this.setMobileView);
     this.setMobileView(this.match);
   }

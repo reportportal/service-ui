@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { fetch } from 'common/utils';
+import { fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
 
 export const loginUnique = (login) =>

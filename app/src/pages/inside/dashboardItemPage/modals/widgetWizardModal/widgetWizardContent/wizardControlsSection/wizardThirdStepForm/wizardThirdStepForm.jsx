@@ -25,7 +25,7 @@ import {
   loadingSelector,
 } from 'controllers/dashboard';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { CommonWidgetControls } from '../../../../common/widgetControls';
 import { WIDGET_WIZARD_FORM } from '../../../../common/constants';
 
@@ -72,7 +72,7 @@ export class WizardThirdStepForm extends Component {
     activeDashboard: PropTypes.object,
     loading: PropTypes.bool,
     change: PropTypes.func.isRequired,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
   };
 
   static defaultProps = {

@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
-import { injectIntl, defineMessages, intlShape, FormattedMessage } from 'react-intl';
+import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import track from 'react-tracking';
 import { HEADER_EVENTS } from 'components/main/analytics/events';
 import { NavLink } from 'components/main/navLink';
@@ -79,7 +79,7 @@ export class AdminHeader extends Component {
     toggleSideMenu: PropTypes.func,
     currentPage: PropTypes.string,
     logout: PropTypes.func,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     projectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,

@@ -30,6 +30,7 @@ export {
   addFilterAction,
   updateFilterOrdersAction,
   updateFilterSuccessAction,
+  fetchFiltersPageAction,
 } from './actionCreators';
 export { filterReducer } from './reducer';
 export {
@@ -41,6 +42,7 @@ export {
   unsavedFilterIdsSelector,
   dirtyFilterIdsSelector,
   launchFiltersReadySelector,
+  pageLoadingSelector,
 } from './selectors';
 export { filterSagas } from './sagas';
 export {

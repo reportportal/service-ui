@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import { reduxForm, Field } from 'redux-form';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 
 import { Input } from 'components/inputs/input';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -33,7 +33,7 @@ import {
   bindMessageToValidator,
   composeBoundValidators,
   commonValidators,
-} from 'common/utils';
+} from 'common/utils/validation';
 
 import { defectTypeShape } from './defectTypeShape';
 import { messages } from './defectTypesMessages';
@@ -73,7 +73,7 @@ export class DefectSubTypeForm extends PureComponent {
     handleSubmit: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
     onConfirm: PropTypes.func.isRequired,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
   };
 
   render() {

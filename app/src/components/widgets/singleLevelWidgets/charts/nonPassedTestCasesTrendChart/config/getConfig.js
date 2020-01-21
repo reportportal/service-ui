@@ -29,7 +29,14 @@ const localMessages = defineMessages({
 });
 const FAILED_SKIPPED_TOTAL = '% (Failed+Skipped)/Total';
 
-export const getConfig = ({ content, isPreview, formatMessage, positionCallback, size }) => {
+export const getConfig = ({
+  content,
+  isPreview,
+  formatMessage,
+  positionCallback,
+  size,
+  onChartClick,
+}) => {
   const chartData = ['notPassed'];
   const itemsData = [];
 
@@ -46,6 +53,8 @@ export const getConfig = ({ content, isPreview, formatMessage, positionCallback,
       colors: {
         notPassed: COLOR_FAILEDSKIPPEDTOTAL,
       },
+      onclick: isPreview ? undefined : onChartClick,
+      itemsData,
     },
     point: {
       sensitivity: 1000,

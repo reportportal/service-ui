@@ -19,12 +19,12 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { reduxForm, formValueSelector } from 'redux-form';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { Input } from 'components/inputs/input';
-import { commonValidators, validateAsync } from 'common/utils';
+import { commonValidators, validateAsync } from 'common/utils/validation';
 import { URLS } from 'common/urls';
 import { ADMIN_ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { ROLES_MAP, MEMBER, PROJECT_MANAGER } from 'common/constants/projectRoles';
@@ -51,7 +51,7 @@ const messages = defineMessages({
   },
   userFullNameLabel: {
     id: 'AddUserForm.userFullNameLabel',
-    defaultMessage: 'Full Name',
+    defaultMessage: 'Full name',
   },
   userEmailLabel: {
     id: 'AddUserForm.userEmailLabel',
@@ -153,7 +153,7 @@ export class AddUserModal extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     handleSubmit: PropTypes.func,
     change: PropTypes.func,
     dirty: PropTypes.bool,

@@ -64,8 +64,6 @@ export const analyzerMinShouldMatch = composeValidators([
   isNotEmpty,
   regex(/^([5-9][0-9])$|^100$/i),
 ]);
-export const analyzerMinTermFreq = composeValidators([isNotEmpty, regex(/^[1-9]$|^10$/)]);
-export const analyzerMinDocFreq = composeValidators([isNotEmpty, regex(/^[1-9]$|^10$/)]);
 export const itemNameEntity = composeValidators([
   isNotEmpty,
   ({ value }) => composeValidators([isNotEmpty, lengthRange(3, 256)])(value),
@@ -83,6 +81,7 @@ export const port = range(1, 65535);
 
 export const searchFilter = (value) =>
   !value || composeValidators([isNotOnlySpaces, minLength(3)])(value);
+export const searchMembers = (value) => !value || isNotOnlySpaces(value);
 export const attributeKey = (value) =>
   !value || composeValidators([isNotOnlySpaces, maxLength(128)])(value);
 export const attributeValue = composeValidators([isNotEmpty, maxLength(128)]);

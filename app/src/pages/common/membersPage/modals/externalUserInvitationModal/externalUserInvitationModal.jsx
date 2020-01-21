@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import PropTypes from 'prop-types';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { withModal, ModalLayout, ModalField } from 'components/main/modal';
 import { Input } from 'components/inputs/input';
@@ -53,7 +53,7 @@ const messages = defineMessages({
 @injectIntl
 export class ExternalUserInvitationModal extends Component {
   static propTypes = {
-    intl: intlShape,
+    intl: PropTypes.object,
     data: PropTypes.shape({
       email: PropTypes.string,
       link: PropTypes.string,

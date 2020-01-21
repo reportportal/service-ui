@@ -16,8 +16,8 @@
 
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
-import { commonValidators } from 'common/utils';
+import { injectIntl, defineMessages } from 'react-intl';
+import { commonValidators } from 'common/utils/validation';
 import {
   EntityContains,
   EntityInputConditional,
@@ -88,7 +88,7 @@ const messages = defineMessages({
 @injectIntl
 export class ProjectEntities extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     filterValues: PropTypes.object,
     render: PropTypes.func.isRequired,
     projectSearchUrl: PropTypes.string,
@@ -165,6 +165,7 @@ export class ProjectEntities extends Component {
         customProps: {
           conditions: [CONDITION_EQ, CONDITION_GREATER_EQ, CONDITION_LESS_EQ],
           placeholder: null,
+          maxLength: 18,
         },
       },
       {
@@ -180,6 +181,7 @@ export class ProjectEntities extends Component {
         customProps: {
           conditions: [CONDITION_EQ, CONDITION_GREATER_EQ, CONDITION_LESS_EQ],
           placeholder: null,
+          maxLength: 18,
         },
       },
       {
@@ -193,6 +195,7 @@ export class ProjectEntities extends Component {
         removable: false,
         customProps: {
           placeholder: null,
+          maxLength: 256,
         },
       },
       {
@@ -206,6 +209,7 @@ export class ProjectEntities extends Component {
         removable: false,
         customProps: {
           placeholder: null,
+          maxLength: 256,
         },
       },
     ];

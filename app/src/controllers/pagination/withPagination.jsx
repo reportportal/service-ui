@@ -23,6 +23,8 @@ import { userIdSelector } from 'controllers/user';
 import { defaultPaginationSelector, totalElementsSelector, totalPagesSelector } from './selectors';
 import { PAGE_KEY, SIZE_KEY } from './constants';
 
+const normalizeValue = (value) => (value > 0 ? value : undefined);
+
 export const withPagination = ({
   paginationSelector = defaultPaginationSelector,
   namespace,
@@ -33,8 +35,8 @@ export const withPagination = ({
   const getTotalPages = totalPagesSelector(paginationSelector);
   @connectRouter(
     (query) => ({
-      page: query[PAGE_KEY] && Number(query[PAGE_KEY]),
-      size: query[SIZE_KEY] && Number(query[SIZE_KEY]),
+      page: query[PAGE_KEY] && normalizeValue(Number(query[PAGE_KEY])),
+      size: query[SIZE_KEY] && normalizeValue(Number(query[SIZE_KEY])),
     }),
     {
       updatePagination: (page, size) => ({ [PAGE_KEY]: page, [SIZE_KEY]: size }),

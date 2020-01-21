@@ -17,7 +17,7 @@
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import { DotsMenuButton } from './dotsMenuButton';
 import { SEPARATOR_ITEM, DANGER_ITEM } from './constants';
 import README from './README.md';
@@ -57,6 +57,10 @@ storiesOf('Components/Buttons/DotsMenuButton', module)
       width: 150,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('default state', () => <DotsMenuButton />)
   .add('with items & hr & actions', () => <DotsMenuButton items={items} />);

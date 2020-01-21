@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { defineMessages, injectIntl, intlShape, FormattedMessage } from 'react-intl';
+import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import {
   NOTIFICATION_GROUP_TYPE,
   BTS_GROUP_TYPE,
@@ -66,7 +66,7 @@ const titleMessagesMap = {
 @injectIntl
 export class InfoSection extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     image: PropTypes.string.isRequired,
     description: PropTypes.object.isRequired,
     title: PropTypes.string.isRequired,

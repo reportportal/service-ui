@@ -20,7 +20,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { showNotification } from 'controllers/notification';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
@@ -103,6 +103,20 @@ const messages = defineMessages({
   },
 });
 
+export const getDeleteItemsActionParameters = (items, formatMessage, rest = {}) => ({
+  header:
+    items.length === 1
+      ? formatMessage(messages.deleteModalHeader)
+      : formatMessage(messages.deleteModalMultipleHeader),
+  mainContent:
+    items.length === 1
+      ? formatMessage(messages.deleteModalContent, { name: items[0].name })
+      : formatMessage(messages.deleteModalMultipleContent),
+  warning:
+    items.length === 1 ? formatMessage(messages.warning) : formatMessage(messages.warningMultiple),
+  ...rest,
+});
+
 const STEPS_DELETE_ITEMS_MODAL_EVENTS = {
   closeIcon: STEP_PAGE_EVENTS.CLOSE_ICON_DELETE_ITEM_MODAL,
   cancelBtn: STEP_PAGE_EVENTS.CANCEL_BTN_DELETE_ITEM_MODAL,
@@ -153,7 +167,7 @@ const testItemPages = {
 @track()
 export class TestItemPage extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     activeProject: PropTypes.string.isRequired,
     namespace: PropTypes.string.isRequired,
     userId: PropTypes.string.isRequired,
@@ -207,12 +221,12 @@ export class TestItemPage extends Component {
         parentLaunch: this.props.parentLaunch,
         type: LAUNCH_ITEM_TYPES.item,
         fetchFunc: this.unselectAndFetchItems,
-        eventsInfo:{
+        eventsInfo: {
           cancelBtn: events.CANCEL_BTN_EDIT_ITEM_MODAL,
           closeIcon: events.CLOSE_ICON_EDIT_ITEM_MODAL,
           saveBtn: events.SAVE_BTN_EDIT_ITEM_MODAL,
           editDescription: events.BULK_EDIT_ITEMS_DESCRIPTION,
-        }
+        },
       },
     });
   };
@@ -223,30 +237,28 @@ export class TestItemPage extends Component {
   };
 
   deleteItems = (selectedItems) => {
-    const { intl, userId, tracking, level } = this.props;
+    const {
+      intl: { formatMessage },
+      userId,
+      tracking,
+      level,
+    } = this.props;
     tracking.trackEvent(
       LEVEL_STEP === level ? STEP_PAGE_EVENTS.DELETE_ACTION : SUITES_PAGE_EVENTS.DELETE_BTN,
     );
 
-    this.props.bulkDeleteTestItemsAction(LEVELS[level].namespace)(selectedItems, {
-      onConfirm: (items) => this.props.deleteTestItemsAction({ items, selectedItems }),
-      header:
-        selectedItems.length === 1
-          ? intl.formatMessage(messages.deleteModalHeader)
-          : intl.formatMessage(messages.deleteModalMultipleHeader),
-      mainContent:
-        selectedItems.length === 1
-          ? intl.formatMessage(messages.deleteModalContent, { name: selectedItems[0].name })
-          : intl.formatMessage(messages.deleteModalMultipleContent),
+    const parameters = getDeleteItemsActionParameters(selectedItems, formatMessage, {
+      onConfirm: (items) =>
+        this.props.deleteTestItemsAction({
+          items,
+          callback: this.props.fetchTestItemsAction,
+        }),
       userId,
-      currentLaunch: this.props.parentLaunch,
-      warning:
-        selectedItems.length === 1
-          ? intl.formatMessage(messages.warning)
-          : intl.formatMessage(messages.warningMultiple),
       eventsInfo:
         LEVEL_STEP === level ? STEPS_DELETE_ITEMS_MODAL_EVENTS : SUITES_DELETE_ITEMS_MODAL_EVENTS,
     });
+
+    this.props.bulkDeleteTestItemsAction(LEVELS[level].namespace)(selectedItems, parameters);
   };
 
   render() {

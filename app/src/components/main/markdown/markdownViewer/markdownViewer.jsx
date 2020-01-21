@@ -16,6 +16,7 @@
 
 import React, { Component } from 'react';
 import Parser from 'html-react-parser';
+import DOMPurify from 'dompurify';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './markdownViewer.scss';
@@ -51,14 +52,13 @@ export class MarkdownViewer extends Component {
     });
     this.container.querySelectorAll('a').forEach((elem) => {
       elem.setAttribute('target', '_blank');
+      elem.setAttribute('rel', 'noopener');
     });
     this.container.querySelectorAll('code').forEach((elem) => {
       const element = elem;
       element.innerHTML = elem.textContent;
     });
   };
-  escapeHtml = (string) => string.replace(/&/g, '&amp;').replace(/</g, '&lt;');
-  indentSpaces = (string) => string.replace(/^ +/gm, (str) => str.replace(/ /g, '&nbsp;'));
 
   render() {
     return (
@@ -68,11 +68,7 @@ export class MarkdownViewer extends Component {
         }}
         className={cx('markdown-viewer')}
       >
-        {Parser(
-          this.simpleMDE.markdown(
-            this.indentSpaces(this.escapeHtml(this.props.value)).replace('_', '&#95;'),
-          ),
-        )}
+        {Parser(DOMPurify.sanitize(this.simpleMDE.markdown(this.props.value)))}
       </div>
     );
   }

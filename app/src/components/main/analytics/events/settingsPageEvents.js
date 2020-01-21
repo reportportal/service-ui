@@ -98,6 +98,16 @@ export const SETTINGS_PAGE_EVENTS = {
     action: 'Click on tab Notifications in Settings',
     label: 'Open tab Notifications in Settings',
   },
+  TURN_ON_NOTIFICATION_RULE_SWITCHER: {
+    category: SETTINGS_PAGE,
+    action: 'Enable Notification Rule',
+    label: 'Enable Notification Rule',
+  },
+  TURN_OFF_NOTIFICATION_RULE_SWITCHER: {
+    category: SETTINGS_PAGE,
+    action: 'Disable Notification Rule',
+    label: 'Disable Notification Rule',
+  },
   CLICK_ON_DELETE_RULE_NOTIFICATIONS: {
     category: SETTINGS_PAGE,
     action: 'Click on icon Delete Rule on tab Notifications',

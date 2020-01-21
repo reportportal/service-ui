@@ -86,13 +86,18 @@ export class InfoPanel extends Component {
     this.props.navigate(link);
   };
 
+  renderInfoLineListView = () =>
+    !!this.props.currentFilter && (
+      <InfoLineListView data={this.props.currentFilter} currentUser={this.props.currentUser} />
+    );
+
   render() {
-    const { viewMode, data, events, currentFilter, currentUser, isTestItemsList } = this.props;
+    const { viewMode, data, events, isTestItemsList } = this.props;
 
     return (
       <div className={cx('info-panel')}>
         {isTestItemsList ? (
-          <InfoLineListView data={currentFilter} currentUser={currentUser} />
+          this.renderInfoLineListView()
         ) : (
           <Fragment>
             <LogViewSwitcher viewMode={viewMode} onToggleView={this.onToggleView} />

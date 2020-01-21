@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { activeProjectSelector } from 'controllers/user';
@@ -25,6 +25,7 @@ import {
   getChartDefaultProps,
   getDefaultTestItemLinkParams,
 } from 'components/widgets/common/utils';
+import { ALL } from 'common/constants/reservedFilterIds';
 import { getConfig } from './config/getConfig';
 import styles from './launchesDurationChart.scss';
 
@@ -41,7 +42,7 @@ const cx = classNames.bind(styles);
 )
 export class LaunchesDurationChart extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     navigate: PropTypes.func.isRequired,
     projectId: PropTypes.string.isRequired,
     widget: PropTypes.object.isRequired,
@@ -62,7 +63,7 @@ export class LaunchesDurationChart extends Component {
       widget: { content },
       projectId,
     } = this.props;
-    const link = getDefaultTestItemLinkParams(`${content.result[data.index].id}`, projectId);
+    const link = getDefaultTestItemLinkParams(projectId, ALL, `${content.result[data.index].id}`);
 
     this.props.navigate(link);
   };

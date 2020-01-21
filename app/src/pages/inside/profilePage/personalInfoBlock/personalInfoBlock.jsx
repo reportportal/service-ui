@@ -19,7 +19,7 @@ import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { INTERNAL, LDAP, UPSA } from 'common/constants/accountType';
@@ -94,7 +94,7 @@ export class PersonalInfoBlock extends Component {
   static propTypes = {
     userId: PropTypes.string,
     accountType: PropTypes.string,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     showModalAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
     logoutAction: PropTypes.func.isRequired,
@@ -214,16 +214,15 @@ export class PersonalInfoBlock extends Component {
                   </GhostButton>
                 </div>
               )}
-              {accountType !== INTERNAL &&
-                accountType !== LDAP && (
-                  <div className={cx('top-btn')}>
-                    <GhostButton disabled={forceUpdateInProgress} onClick={this.onForceUpdate}>
-                      {forceUpdateInProgress
-                        ? intl.formatMessage(messages.inProgress)
-                        : intl.formatMessage(messages.forceUpdate)}
-                    </GhostButton>
-                  </div>
-                )}
+              {accountType !== INTERNAL && accountType !== LDAP && (
+                <div className={cx('top-btn')}>
+                  <GhostButton disabled={forceUpdateInProgress} onClick={this.onForceUpdate}>
+                    {forceUpdateInProgress
+                      ? intl.formatMessage(messages.inProgress)
+                      : intl.formatMessage(messages.forceUpdate)}
+                  </GhostButton>
+                </div>
+              )}
             </div>
           </div>
         </BlockContainerBody>

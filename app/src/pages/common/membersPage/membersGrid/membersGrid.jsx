@@ -17,7 +17,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { Grid } from 'components/main/grid';
 import { PersonalInfo } from './personalInfo';
 import { LastLogin } from './lastLogin';
@@ -101,7 +101,7 @@ export class MembersGrid extends PureComponent {
   static propTypes = {
     data: PropTypes.arrayOf(PropTypes.object),
     fetchData: PropTypes.func,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     loading: PropTypes.bool,
   };
 

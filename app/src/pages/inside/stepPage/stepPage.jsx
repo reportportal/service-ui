@@ -46,6 +46,7 @@ import {
   editDefectsAction,
   linkIssueAction,
   postIssueAction,
+  isDefectGroupOperationAvailable,
 } from 'controllers/step';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
 import { ENTITY_START_TIME } from 'components/filterEntities/constants';
@@ -56,7 +57,6 @@ import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { LaunchFiltersSection } from 'pages/inside/common/launchFiltersSection';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { getDefectTypeSelector } from 'controllers/project';
-import { TO_INVESTIGATE } from 'common/constants/defectTypes';
 import { StepGrid } from './stepGrid';
 
 const UNLINK_MODAL_EVENTS_INFO = {
@@ -344,8 +344,15 @@ export class StepPage extends Component {
   };
 
   handleEditDefects = (eventData) => {
-    const items = eventData && eventData.id ? [eventData] : this.props.selectedItems;
-    if (this.isDefectGroupOperationAvailable(eventData)) {
+    const { selectedItems, getDefectType, debugMode } = this.props;
+    const items = eventData && eventData.id ? [eventData] : selectedItems;
+    const isDefectGroupOperation = isDefectGroupOperationAvailable({
+      editedData: eventData,
+      selectedItems,
+      getDefectType,
+      debugMode,
+    });
+    if (isDefectGroupOperation) {
       this.props.showModalAction({
         id: 'editToInvestigateDefectModal',
         data: {
@@ -377,18 +384,6 @@ export class StepPage extends Component {
         },
       });
     }
-  };
-
-  isDefectGroupOperationAvailable = (editedData) => {
-    const items = editedData && editedData.id ? [editedData] : this.props.selectedItems;
-    return (
-      items.length === 1 &&
-      items[0].issue &&
-      items[0].issue.issueType &&
-      this.props.getDefectType(items[0].issue.issueType).typeRef.toUpperCase() ===
-        TO_INVESTIGATE.toUpperCase() &&
-      !this.props.debugMode
-    );
   };
 
   unselectAndFetchItems = () => {
@@ -492,17 +487,16 @@ export class StepPage extends Component {
             sortingDirection={sortingDirection}
             rowHighlightingConfig={rowHighlightingConfig}
           />
-          {!!pageCount &&
-            !loading && (
-              <PaginationToolbar
-                activePage={activePage}
-                itemCount={itemCount}
-                pageCount={pageCount}
-                pageSize={pageSize}
-                onChangePage={onChangePage}
-                onChangePageSize={onChangePageSize}
-              />
-            )}
+          {!!pageCount && !loading && (
+            <PaginationToolbar
+              activePage={activePage}
+              itemCount={itemCount}
+              pageCount={pageCount}
+              pageSize={pageSize}
+              onChangePage={onChangePage}
+              onChangePageSize={onChangePageSize}
+            />
+          )}
         </PageSection>
       </PageLayout>
     );

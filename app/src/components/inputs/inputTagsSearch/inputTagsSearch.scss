@@ -79,8 +79,13 @@
         background-color: $COLOR--gray-91;
       }
     }
-    .new {
-      float: right;
+    .new-item-wrap {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: nowrap;
+    }
+    .label {
+      max-width: 70%;
     }
     .select2-search-tags {
       position: relative;

@@ -27,17 +27,24 @@ We render invisible retries to allocate space for the absolute-positioned retrie
 It is necessary to overcome table limitations.
 */
 
-export const RetriesBlock = forwardRef(({ testItemId, retries }, ref) => (
+export const RetriesBlock = forwardRef(({ testItemId, retries, collapsed }, ref) => (
   <div className={cx('retries-block')} ref={ref}>
     <div className={cx('retries-hidden-block')}>
-      <Retries retries={retries} testItemId={testItemId} selectedId={0} selectedIndex={0} />
+      <Retries
+        retries={retries}
+        testItemId={testItemId}
+        selectedId={0}
+        selectedIndex={0}
+        collapsed={collapsed}
+      />
     </div>
     <div className={cx('retries-visible-block')}>
-      <RetriesContainer testItemId={testItemId} retries={retries} />
+      <RetriesContainer testItemId={testItemId} retries={retries} collapsed={collapsed} />
     </div>
   </div>
 ));
 RetriesBlock.propTypes = {
   testItemId: PropTypes.number.isRequired,
   retries: PropTypes.arrayOf(PropTypes.object),
+  collapsed: PropTypes.bool.isRequired,
 };

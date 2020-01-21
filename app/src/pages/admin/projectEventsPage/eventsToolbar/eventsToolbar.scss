@@ -16,4 +16,8 @@
 
 .events-toolbar {
   padding: 15px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+  }
 }

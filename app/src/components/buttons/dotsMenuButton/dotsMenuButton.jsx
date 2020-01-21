@@ -124,13 +124,12 @@ export class DotsMenuButton extends Component {
   renderMenuItems = (items) =>
     items
       .filter((item) => !item.hidden)
-      .map(
-        (item) =>
-          item.type === SEPARATOR_ITEM ? (
-            <Separator key={`separator${item.value}`} />
-          ) : (
-            <MenuItem key={item.value} item={item} toggleMenu={this.toggleMenu} />
-          ),
+      .map((item) =>
+        item.type === SEPARATOR_ITEM ? (
+          <Separator key={`separator${item.value}`} />
+        ) : (
+          <MenuItem key={item.value} item={item} toggleMenu={this.toggleMenu} />
+        ),
       );
 
   render() {

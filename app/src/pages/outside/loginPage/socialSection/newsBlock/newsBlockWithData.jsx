@@ -23,7 +23,7 @@ export class NewsBlockWithData extends Component {
     tweets: [],
   };
 
-  componentWillMount() {
+  componentDidMount() {
     fetchJsonp('https://status.reportportal.io/twitter', {
       jsonpCallback: 'jsonp',
     })

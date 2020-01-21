@@ -15,9 +15,10 @@
  */
 
 import Parser from 'html-react-parser';
+import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import AAIcon from 'common/img/aa_activated-inline.svg';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import styles from './autoAnalyzedLabel.scss';
 
 const cx = classNames.bind(styles);
@@ -36,5 +37,5 @@ export const AutoAnalyzedLabel = injectIntl(({ intl }) => (
 ));
 
 AutoAnalyzedLabel.propTypes = {
-  intl: intlShape.isRequired,
+  intl: PropTypes.object.isRequired,
 };

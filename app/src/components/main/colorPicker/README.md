@@ -1,6 +1,6 @@
 ## **Color Picker**
 
-Color Picker based on React Color library http://casesandberg.github.io/react-color/  
+Color Picker based on React Color library http://casesandberg.github.io/react-color/
 
 ### Props:
 

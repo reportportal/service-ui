@@ -20,13 +20,12 @@ import { columnPropTypes } from '../propTypes';
 import { NestedGridRow } from './nestedGridRow';
 
 export const NestedGridBody = ({ data, ...rest }) =>
-  data.map(
-    (nodeData) =>
-      'hasContent' in nodeData ? (
-        <NestedGridRow data={nodeData} {...rest} key={nodeData.id} />
-      ) : (
-        <GridRow value={nodeData} {...rest} key={nodeData.id} />
-      ),
+  data.map((nodeData) =>
+    'hasContent' in nodeData ? (
+      <NestedGridRow data={nodeData} {...rest} key={nodeData.id} />
+    ) : (
+      <GridRow value={nodeData} {...rest} key={nodeData.id} />
+    ),
   );
 
 NestedGridBody.propTypes = {

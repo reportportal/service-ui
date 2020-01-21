@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { InputConditional } from 'components/inputs/inputConditional';
 import { FieldFilterEntity } from 'components/fields/fieldFilterEntity';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -31,7 +31,7 @@ const messages = defineMessages({
 @injectIntl
 export class EntityInputConditional extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     value: PropTypes.object.isRequired,
     title: PropTypes.string,
     smallSize: PropTypes.bool,

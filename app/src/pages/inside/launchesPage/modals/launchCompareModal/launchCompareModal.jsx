@@ -20,7 +20,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { fetch } from 'common/utils';
 import { connect } from 'react-redux';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import {
   STATS_AB_TOTAL,
   STATS_ND_TOTAL,
@@ -68,7 +68,7 @@ const contentParameters = {
 }))
 export class LaunchCompareModal extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     activeProject: PropTypes.string.isRequired,
     defectColors: PropTypes.object.isRequired,
     data: PropTypes.shape({

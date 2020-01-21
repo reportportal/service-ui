@@ -81,6 +81,10 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.clone',
     defaultMessage: 'Clone',
   },
+  COMPARE: {
+    id: 'Common.compare',
+    defaultMessage: 'Compare',
+  },
   ADD: {
     id: 'Common.add',
     defaultMessage: 'Add',
@@ -109,9 +113,21 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.login',
     defaultMessage: 'Login',
   },
+  BTS_INTEGRATION_NOT_CONFIGURED: {
+    id: 'Common.btsIntegrationIsNotConfigured',
+    defaultMessage: 'BTS integration is not configured. Connect with Admin',
+  },
   NO_BTS_INTEGRATION: {
     id: 'Common.notBtsIntegration',
-    defaultMessage: 'BTS integration is not configured. Connect with Admin',
+    defaultMessage: 'There is no BTS integration. Connect with Admin',
+  },
+  NO_BTS_PLUGIN: {
+    id: 'Common.notBtsPlugin',
+    defaultMessage: 'There is no BTS plugin. Connect with Admin',
+  },
+  NO_AVAILABLE_BTS_PLUGIN: {
+    id: 'Common.notAvailableBtsPlugin',
+    defaultMessage: 'BTS plugin is disabled. Contact Admin',
   },
   MOVE_TO_DEBUG: {
     id: 'Common.moveToDebug',
@@ -123,7 +139,7 @@ export const COMMON_LOCALE_KEYS = defineMessages({
   },
   FORCE_FINISH: {
     id: 'Common.forceFinish',
-    defaultMessage: 'Force Finish',
+    defaultMessage: 'Force finish',
   },
   ERROR: {
     id: 'Common.error',
@@ -132,5 +148,17 @@ export const COMMON_LOCALE_KEYS = defineMessages({
   BACK: {
     id: 'Common.back',
     defaultMessage: 'Back',
+  },
+  ACTIONS: {
+    id: 'Common.actions',
+    defaultMessage: 'Actions',
+  },
+  EDIT_ITEMS: {
+    id: 'Common.editItems',
+    defaultMessage: 'Edit items',
+  },
+  PROCEED_VALID_ITEMS: {
+    id: 'Common.proceedValidItems',
+    defaultMessage: 'Proceed Valid Items',
   },
 });

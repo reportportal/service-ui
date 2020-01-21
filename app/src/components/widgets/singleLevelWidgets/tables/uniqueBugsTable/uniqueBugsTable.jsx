@@ -15,7 +15,7 @@
  */
 
 import React, { PureComponent } from 'react';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { Grid } from 'components/main/grid';
@@ -94,7 +94,7 @@ const COLUMNS = [
 @injectIntl
 export class UniqueBugsTable extends PureComponent {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     widget: PropTypes.object.isRequired,
   };
 

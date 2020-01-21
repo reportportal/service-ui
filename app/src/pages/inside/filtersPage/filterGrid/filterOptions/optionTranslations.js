@@ -109,4 +109,12 @@ export const messages = defineMessages({
     id: 'FilterOptions.sort',
     defaultMessage: 'sorted by',
   },
+  any: {
+    id: 'FilterOptions.any',
+    defaultMessage: 'has any of',
+  },
+  not_any: {
+    id: 'FilterOptions.not_any',
+    defaultMessage: 'without any of',
+  },
 });

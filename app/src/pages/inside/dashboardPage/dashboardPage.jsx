@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import track from 'react-tracking';
 import { connect } from 'react-redux';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import {
@@ -92,7 +92,7 @@ const messages = defineMessages({
 @track({ page: DASHBOARD_PAGE })
 export class DashboardPage extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     showModal: PropTypes.func,
     deleteDashboard: PropTypes.func,
     editDashboard: PropTypes.func,

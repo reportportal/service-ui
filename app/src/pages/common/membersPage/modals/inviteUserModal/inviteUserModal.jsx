@@ -18,12 +18,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { reduxForm, formValueSelector } from 'redux-form';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { DEFAULT_PROJECT_ROLE, ROLES_MAP } from 'common/constants/projectRoles';
 import { URLS } from 'common/urls';
-import { fetch, commonValidators } from 'common/utils';
+import { fetch } from 'common/utils/fetch';
+import { commonValidators } from 'common/utils/validation';
 import { projectIdSelector } from 'controllers/pages';
 import { isAdminSelector } from 'controllers/user';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
@@ -110,7 +111,7 @@ const inviteFormSelector = formValueSelector('inviteUserForm');
 })
 export class InviteUserModal extends Component {
   static propTypes = {
-    intl: intlShape,
+    intl: PropTypes.object,
     data: PropTypes.shape({
       onInvite: PropTypes.func,
       isProjectSelector: PropTypes.bool,

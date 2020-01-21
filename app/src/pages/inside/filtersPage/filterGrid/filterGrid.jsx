@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl';
+import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import { ALIGN_CENTER, Grid } from 'components/main/grid';
 import { FILTERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
@@ -55,6 +55,8 @@ const NameColumn = ({ className, value, customProps }) => (
       isLink
       isBold
       noShareIcons
+      userRole={customProps.userRole}
+      projectRole={customProps.projectRole}
     />
   </div>
 );
@@ -159,7 +161,7 @@ DeleteColumn.defaultProps = {
 export class FilterGrid extends Component {
   static propTypes = {
     filters: PropTypes.arrayOf(PropTypes.object),
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     userFilters: PropTypes.arrayOf(PropTypes.object),
     onEdit: PropTypes.func,
     userId: PropTypes.string,
@@ -212,6 +214,8 @@ export class FilterGrid extends Component {
         },
         userId: this.props.userId,
         activeProject: this.props.activeProject,
+        userRole: this.props.accountRole,
+        projectRole: this.props.projectRole,
       },
     },
     {

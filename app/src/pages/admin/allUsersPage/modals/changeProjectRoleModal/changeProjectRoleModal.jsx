@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { ModalLayout, withModal } from 'components/main/modal';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 
 const messages = defineMessages({
   changeAccountRoleText: {
@@ -37,7 +37,7 @@ const messages = defineMessages({
 export class ChangeProjectRoleModal extends Component {
   static propTypes = {
     data: PropTypes.object,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
   };
 
   static defaultProps = {

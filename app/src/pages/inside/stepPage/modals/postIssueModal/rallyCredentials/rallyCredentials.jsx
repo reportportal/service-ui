@@ -15,7 +15,8 @@
  */
 
 import React, { Component } from 'react';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import PropTypes from 'prop-types';
+import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import { FormField } from 'components/fields/formField';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -34,7 +35,7 @@ const messages = defineMessages({
 @injectIntl
 export class RallyCredentials extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
   };
 
   render() {

@@ -15,13 +15,21 @@
  */
 
 import { combineReducers } from 'redux';
+import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
 import { fetchReducer } from 'controllers/fetch';
 import { paginationReducer } from 'controllers/pagination';
 import { loadingReducer } from 'controllers/loading';
+import { PROJECT_MEMBERS_PAGE, PROJECT_DETAILS_PAGE } from 'controllers/pages';
 import { NAMESPACE } from './constants';
 
-export const membersReducer = combineReducers({
+const reducer = combineReducers({
   members: fetchReducer(NAMESPACE, { contentPath: 'content' }),
   pagination: paginationReducer(NAMESPACE),
   loading: loadingReducer(NAMESPACE),
 });
+
+// we must clear the members state when the page has changed from PROJECT_DETAILS_PAGE, as it is used there
+export const membersReducer = createPageScopedReducer(reducer, [
+  PROJECT_MEMBERS_PAGE,
+  PROJECT_DETAILS_PAGE,
+]);

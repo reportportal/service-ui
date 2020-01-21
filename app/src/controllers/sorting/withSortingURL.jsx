@@ -16,7 +16,7 @@
 
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connectRouter } from 'common/utils';
+import { connectRouter } from 'common/utils/connectRouter';
 import { SORTING_DESC, SORTING_ASC, SORTING_KEY } from './constants';
 import { parseSortingString, formatSortingString } from './utils';
 

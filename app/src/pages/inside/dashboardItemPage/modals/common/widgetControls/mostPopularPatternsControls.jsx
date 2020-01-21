@@ -17,15 +17,14 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { URLS } from 'common/urls';
-import { validate } from 'common/utils';
 import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
 import { ModalField } from 'components/main/modal';
 import { activeProjectSelector } from 'controllers/user';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
-import { bindMessageToValidator, commonValidators } from 'common/utils/validation';
+import { bindMessageToValidator, commonValidators, validate } from 'common/utils/validation';
 import { FIELD_LABEL_WIDTH } from 'pages/inside/dashboardItemPage/modals/common/widgetControls/controls/constants';
 import { FiltersControl, InputControl, TogglerControl } from './controls';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
@@ -66,7 +65,7 @@ const attributeKeyValidator = (message) => bindMessageToValidator(validate.attri
 }))
 export class MostPopularPatternsControls extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     widgetSettings: PropTypes.object.isRequired,
     initializeControlsForm: PropTypes.func.isRequired,
     formAppearance: PropTypes.object.isRequired,

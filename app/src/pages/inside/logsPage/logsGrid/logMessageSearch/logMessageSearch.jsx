@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { InputSearch } from 'components/inputs/inputSearch/inputSearch';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './logMessageSearch.scss';
@@ -40,7 +40,7 @@ const messages = defineMessages({
 @track()
 export class LogMessageSearch extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     onFilterChange: PropTypes.func.isRequired,
     filter: PropTypes.string,
     tracking: PropTypes.shape({

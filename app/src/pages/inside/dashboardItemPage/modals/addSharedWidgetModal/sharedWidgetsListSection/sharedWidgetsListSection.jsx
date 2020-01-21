@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import track from 'react-tracking';
 import { URLS } from 'common/urls';
@@ -40,7 +40,7 @@ const messages = defineMessages({
 @track()
 export class SharedWidgetsListSection extends Component {
   static propTypes = {
-    intl: intlShape,
+    intl: PropTypes.object,
     projectId: PropTypes.string.isRequired,
     currentDashboard: PropTypes.object.isRequired,
     tracking: PropTypes.shape({

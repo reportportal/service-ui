@@ -19,10 +19,11 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
+import RefreshIcon from 'common/img/refresh-inline.svg';
 import { breadcrumbsSelector, restorePathAction } from 'controllers/testItem';
 import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
 import { GhostButton } from 'components/buttons/ghostButton';
-import RefreshIcon from 'common/img/refresh-inline.svg';
+import { CompareWithFilterControl } from './compareWithFilterControl';
 import styles from './actionPanel.scss';
 
 const cx = classNames.bind(styles);
@@ -37,26 +38,56 @@ const cx = classNames.bind(styles);
 )
 export class ActionPanel extends Component {
   static propTypes = {
-    onRefresh: PropTypes.func,
     breadcrumbs: PropTypes.arrayOf(breadcrumbDescriptorShape),
+    customBlock: PropTypes.node,
+    buttons: PropTypes.array,
+    hasErrors: PropTypes.bool,
+    showBreadcrumbs: PropTypes.bool,
+    onRefresh: PropTypes.func,
     restorePath: PropTypes.func,
   };
 
   static defaultProps = {
-    onRefresh: () => {},
     breadcrumbs: [],
+    customBlock: null,
+    buttons: [],
+    hasErrors: false,
+    showBreadcrumbs: true,
+    onRefresh: () => {},
     restorePath: () => {},
   };
 
   render() {
-    const { breadcrumbs, onRefresh, restorePath } = this.props;
+    const {
+      breadcrumbs,
+      onRefresh,
+      restorePath,
+      showBreadcrumbs,
+      hasErrors,
+      buttons,
+      customBlock,
+    } = this.props;
+
     return (
-      <div className={cx('action-panel')}>
-        <Breadcrumbs descriptors={breadcrumbs} onRestorePath={restorePath} />
-        <div className={cx('action-button')}>
-          <GhostButton icon={RefreshIcon} onClick={onRefresh}>
-            <FormattedMessage id="Common.refresh" defaultMessage="Refresh" />
-          </GhostButton>
+      <div className={cx('action-panel', { 'right-buttons-only': !showBreadcrumbs && !hasErrors })}>
+        {showBreadcrumbs && <Breadcrumbs descriptors={breadcrumbs} onRestorePath={restorePath} />}
+        {customBlock}
+        <div className={cx('action-buttons')}>
+          <div className={cx('action-button')}>
+            <CompareWithFilterControl disabled={!showBreadcrumbs} />
+          </div>
+          {!!buttons.length &&
+            buttons.map((button, index) => (
+              // eslint-disable-next-line react/no-array-index-key
+              <div key={index} className={cx('action-button')}>
+                {button}
+              </div>
+            ))}
+          <div className={cx('action-button')}>
+            <GhostButton icon={RefreshIcon} onClick={onRefresh} disabled={!showBreadcrumbs}>
+              <FormattedMessage id="Common.refresh" defaultMessage="Refresh" />
+            </GhostButton>
+          </div>
         </div>
       </div>
     );

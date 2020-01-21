@@ -19,7 +19,7 @@ import track from 'react-tracking';
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { INTERNAL } from 'common/constants/accountType';
@@ -75,7 +75,7 @@ export class PhotoControls extends Component {
     accountType: PropTypes.string,
     uploadNewImage: PropTypes.func,
     removeImage: PropTypes.func,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     showModalAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
     setPhotoTimeStampAction: PropTypes.func.isRequired,

@@ -18,14 +18,10 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { URLS } from 'common/urls';
-import {
-  arrayRemoveDoubles,
-  validate,
-  bindMessageToValidator,
-  commonValidators,
-} from 'common/utils';
+import { arrayRemoveDoubles } from 'common/utils/arrayRemoveDoubles';
+import { validate, bindMessageToValidator, commonValidators } from 'common/utils/validation';
 import { GROUP_TO_ACTION_MAP, ACTION_TO_GROUP_MAP } from 'common/constants/actionTypes';
 import { activeProjectSelector } from 'controllers/user';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
@@ -76,7 +72,7 @@ const actionTypeValidator = (message) => bindMessageToValidator(validate.isNotEm
 }))
 export class ProjectActivityControls extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     widgetSettings: PropTypes.object.isRequired,
     usernamesSearchUrl: PropTypes.string.isRequired,
     initializeControlsForm: PropTypes.func.isRequired,

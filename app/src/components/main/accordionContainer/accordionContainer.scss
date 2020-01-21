@@ -41,11 +41,11 @@
   width: 130px;
   height: 7px;
   margin: 0 auto;
-  background-image: url(common/img/accordion-toggle.svg);
+  background-image: url(~common/img/accordion-toggle.svg);
   cursor: pointer;
 
   &:hover {
-    background-image: url(common/img/accordion-toggle-hover.svg);
+    background-image: url(~common/img/accordion-toggle-hover.svg);
   }
 
   &.rotated {

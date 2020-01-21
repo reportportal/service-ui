@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import track from 'react-tracking';
 import {
@@ -71,7 +71,7 @@ const maxVersionLengthForTitle = 17;
 @track()
 export class PluginsItem extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     data: PropTypes.object.isRequired,
     onToggleActive: PropTypes.func.isRequired,
     showNotification: PropTypes.func,

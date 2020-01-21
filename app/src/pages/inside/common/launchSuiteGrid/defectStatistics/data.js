@@ -531,5 +531,5 @@ export const mockData = {
   customProps: {
     abbreviation: 'ab',
   },
-  itemId: '5b75a36397a1c00001ea3d4c',
+  itemId: 123,
 };

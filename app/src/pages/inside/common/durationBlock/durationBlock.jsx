@@ -18,7 +18,7 @@ import React, { Component, Fragment } from 'react';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { approximateTimeFormat, dateFormat, getDuration } from 'common/utils';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import InProgressGif from 'common/img/item-in-progress.gif';
@@ -69,7 +69,7 @@ const messages = defineMessages({
 @injectIntl
 export class DurationBlock extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     type: PropTypes.string,
     timing: PropTypes.shape({
       start: PropTypes.number,
@@ -156,10 +156,10 @@ export class DurationBlock extends Component {
   isInterrupted = () => this.props.status === 'INTERRUPTED';
 
   validateForApproximateTime = () => {
-    const { type } = this.props;
+    const { timing, type } = this.props;
     const isLaunch = type === 'LAUNCH' || !type;
 
-    return this.isInProgress() && isLaunch;
+    return this.isInProgress() && isLaunch && timing.approxTime > 0;
   };
 
   renderInProgressDuration = () => {
@@ -173,13 +173,12 @@ export class DurationBlock extends Component {
           <img src={InProgressGif} alt="In progress" />
         </span>
 
-        {timing.approxTime > 0 &&
-          !approxTimeIsOver && (
-            <span className={cx('duration')}>
-              ~{getDuration(Date.now(), timing.start + timing.approxTime * 1000)}{' '}
-              {intl.formatMessage(messages.left)}
-            </span>
-          )}
+        {timing.approxTime > 0 && !approxTimeIsOver && (
+          <span className={cx('duration')}>
+            ~{getDuration(Date.now(), timing.start + timing.approxTime * 1000)}{' '}
+            {intl.formatMessage(messages.left)}
+          </span>
+        )}
       </Fragment>
     );
   };

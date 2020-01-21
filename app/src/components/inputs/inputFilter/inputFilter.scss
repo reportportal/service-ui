@@ -37,6 +37,11 @@
   &.disabled {
     border-color: $COLOR--gray-80;
   }
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+    max-width: 400px;
+  }
 }
 
 .icon {
@@ -74,7 +79,7 @@
       cursor: pointer;
     }
 
-    @media(max-width: $SCREEN_SM_MAX) {
+    @media (max-width: $SCREEN_SM_MAX) {
       display: none;
     }
   }
@@ -96,7 +101,7 @@
 
 .input {
   flex-grow: 1;
-  padding: 6px 10px;
+  padding: 6px 65px 6px 10px;
   margin: 0;
   box-sizing: border-box;
   border: none;
@@ -114,15 +119,15 @@
 }
 
 .filters-container {
-    position: absolute;
-    display: inline-block;
-    width: 400px;
-    border: 1px solid $COLOR--gray-91;
-    border-radius: 2px;
-    margin-top: 4px;
-    background-color: $COLOR--white-two;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.09);
-    z-index: $Z-INDEX-POPUP;
+  position: absolute;
+  display: inline-block;
+  width: 400px;
+  border: 1px solid $COLOR--gray-91;
+  border-radius: 2px;
+  margin-top: 4px;
+  background-color: $COLOR--white-two;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.09);
+  z-index: $Z-INDEX-POPUP;
 }
 
 .filters {

@@ -19,9 +19,10 @@ import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { connect } from 'react-redux';
 import { reduxForm, stopSubmit } from 'redux-form';
-import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
+import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
 import Link from 'redux-first-router-link';
-import { commonValidators, isEmptyObject } from 'common/utils';
+import { isEmptyObject } from 'common/utils/isEmptyObject';
+import { commonValidators } from 'common/utils/validation';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { authExtensionsSelector } from 'controllers/appInfo';
 import { loginAction, lastFailedLoginTimeSelector, badCredentialsSelector } from 'controllers/auth';
@@ -84,7 +85,7 @@ const messages = defineMessages({
 @injectIntl
 export class LoginForm extends React.Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     authorize: PropTypes.func.isRequired,
     externalAuth: PropTypes.object,

@@ -19,7 +19,7 @@
   height: 300px;
   margin: 0 auto;
 
-  &~.arrow {
+  & ~ .arrow {
     width: 40px;
     height: 40px;
   }
@@ -28,7 +28,7 @@
 .thumbs-view {
   height: 80px;
 
-  &~.arrow {
+  & ~ .arrow {
     width: 20px;
     height: 20px;
   }

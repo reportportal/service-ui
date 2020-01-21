@@ -75,7 +75,7 @@ export class DonutChart extends Component {
     Object.keys(this.props.data).forEach((defect) => {
       if (defect !== 'total') {
         const val = defects[defect];
-        const percents = val / defects.total * 100;
+        const percents = (val / defects.total) * 100;
 
         chartData.push({
           id: defect,

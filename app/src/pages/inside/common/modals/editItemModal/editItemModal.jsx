@@ -17,14 +17,15 @@
 import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Parser from 'html-react-parser';
 import IconDuplicate from 'common/img/duplicate-inline.svg';
-import { fetch, validate } from 'common/utils';
+import { fetch } from 'common/utils/fetch';
+import { validate } from 'common/utils/validation';
 import { URLS } from 'common/urls';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
@@ -44,6 +45,8 @@ import { AttributeListField } from 'components/main/attributeList';
 import { AccordionContainer } from 'components/main/accordionContainer';
 import { SUITES_PAGE_EVENTS } from 'components/main/analytics/events/suitesPageEvents';
 import { canEditLaunch } from 'common/utils/permissions';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { TestParameters } from 'pages/inside/common/testParameters';
 import styles from './editItemModal.scss';
 
 const cx = classNames.bind(styles);
@@ -94,6 +97,10 @@ const messages = defineMessages({
     id: 'TestItemDetailsModal.description',
     defaultMessage: 'Description:',
   },
+  parametersLabel: {
+    id: 'TestItemDetailsModal.parametersLabel',
+    defaultMessage: 'Parameters:',
+  },
 });
 
 @withModal('editItemModal')
@@ -118,7 +125,7 @@ const messages = defineMessages({
 )
 export class EditItemModal extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     data: PropTypes.shape({
       item: PropTypes.object,
       parentLaunch: PropTypes.object,
@@ -291,6 +298,16 @@ export class EditItemModal extends Component {
                 </CopyToClipboard>
               </div>
             </ModalField>
+          )}
+          {item.parameters && (
+            <Fragment>
+              <div className={cx('label')}>{formatMessage(messages.parametersLabel)}</div>
+              <ModalField>
+                <ScrollWrapper autoHeight autoHeightMax={210}>
+                  <TestParameters parameters={item.parameters} />
+                </ScrollWrapper>
+              </ModalField>
+            </Fragment>
           )}
           {editable ? (
             <ModalField>

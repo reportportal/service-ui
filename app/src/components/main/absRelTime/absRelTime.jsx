@@ -17,9 +17,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { FormattedRelative } from 'react-intl';
+import { FormattedRelativeTime } from 'react-intl';
 import { START_TIME_FORMAT_RELATIVE, START_TIME_FORMAT_ABSOLUTE } from 'controllers/user';
-import { dateFormat } from 'common/utils';
+import { dateFormat, getRelativeUnits } from 'common/utils/timeDateUtils';
 import styles from './absRelTime.scss';
 
 const cx = classNames.bind(styles);
@@ -47,13 +47,14 @@ class AbsRelTime extends Component {
   isRelative = () => this.props.startTimeFormat === START_TIME_FORMAT_RELATIVE;
 
   render() {
+    const { value: startTime, unit } = getRelativeUnits(this.props.startTime);
     return (
       <div
         className={cx('abs-rel-time', { relative: this.isRelative() }, this.props.customClass)}
         onClick={this.toggleFormat}
       >
         <span className={cx('relative-time')}>
-          <FormattedRelative value={this.props.startTime} />
+          <FormattedRelativeTime value={startTime} unit={unit} numeric="auto" />
         </span>
         <span className={cx('absolute-time')}>{dateFormat(this.props.startTime)}</span>
       </div>

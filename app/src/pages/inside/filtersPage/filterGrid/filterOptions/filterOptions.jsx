@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import moment from 'moment';
 import { connect } from 'react-redux';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { defectTypesSelector } from 'controllers/project';
 import { parseDateTimeRange } from 'common/utils';
 import {
@@ -34,6 +34,8 @@ import {
   CONDITION_NOT_IN,
   CONDITION_NOT_EQ,
   ENTITY_NUMBER,
+  CONDITION_ANY,
+  CONDITION_NOT_ANY,
 } from 'components/filterEntities/constants';
 import { TIME_DATE_FORMAT } from 'common/constants/timeDateFormat';
 import { messages } from './optionTranslations';
@@ -56,7 +58,7 @@ export class FilterOptions extends Component {
     entities: PropTypes.array,
     sort: PropTypes.array,
     defectTypes: PropTypes.object.isRequired,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
   };
 
@@ -152,6 +154,12 @@ export class FilterOptions extends Component {
           break;
         case CONDITION_NOT_HAS:
           condition = this.props.intl.formatMessage(messages.not_has);
+          break;
+        case CONDITION_ANY:
+          condition = this.props.intl.formatMessage(messages.any);
+          break;
+        case CONDITION_NOT_ANY:
+          condition = this.props.intl.formatMessage(messages.not_any);
           break;
         default:
           condition = '';

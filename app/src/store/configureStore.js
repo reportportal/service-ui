@@ -21,9 +21,21 @@ import createSagaMiddleware from 'redux-saga';
 import queryString from 'qs';
 
 import { initAuthInterceptor } from 'common/utils/fetch';
+import { LOGOUT } from 'controllers/auth';
 import routesMap, { onBeforeRouteChange } from 'routes/routesMap';
 import reducers from './reducers';
 import { rootSagas } from './rootSaga';
+
+const createRootReducer = (appReducer) => (state, action) => {
+  let newState = state;
+
+  if (action.type === LOGOUT) {
+    const { appInfo, lang, initialDataReady, location } = state;
+    newState = { appInfo, lang, initialDataReady, location };
+  }
+
+  return appReducer(newState, action);
+};
 
 const composeEnhancers = (...args) =>
   typeof window !== 'undefined' ? composeWithDevTools({})(...args) : compose(...args);
@@ -35,7 +47,8 @@ export const configureStore = (history, preloadedState) => {
     initialDispatch: false,
   });
 
-  const rootReducer = combineReducers({ ...reducers, location: reducer });
+  const appReducer = combineReducers({ ...reducers, location: reducer });
+  const rootReducer = createRootReducer(appReducer);
   const saga = createSagaMiddleware();
   const middlewares = applyMiddleware(saga, middleware);
   const enhancers = composeEnhancers(enhancer, middlewares);
@@ -45,9 +58,10 @@ export const configureStore = (history, preloadedState) => {
 
   if (module.hot && process.env.NODE_ENV === 'development') {
     module.hot.accept('./reducers', () => {
-      const reducers2 = require('./reducers'); // eslint-disable-line global-require
-      const rootReducer2 = combineReducers({ ...reducers2, location: reducer });
-      store.replaceReducer(rootReducer2);
+      const newReducers = require('./reducers'); // eslint-disable-line global-require
+      const newAppReducer = combineReducers({ ...newReducers, location: reducer });
+      const newRootReducer = createRootReducer(newAppReducer);
+      store.replaceReducer(newRootReducer);
     });
   }
 

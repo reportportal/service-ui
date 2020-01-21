@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import track from 'react-tracking';
 import { ADMIN_ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -81,7 +81,7 @@ const messages = defineMessages({
 @injectIntl
 export class ActionPanel extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     users: PropTypes.arrayOf(PropTypes.object),
     filterEnities: PropTypes.object,
     showNotification: PropTypes.func.isRequired,
@@ -146,30 +146,32 @@ export class ActionPanel extends Component {
     });
   };
 
+  actionButtons = [
+    {
+      key: EXPORT,
+      icon: ExportIcon,
+      onClick: this.onExportUsers,
+    },
+    {
+      key: INVITE_USER,
+      icon: InviteUserIcon,
+      onClick: this.showInviteUserModal,
+    },
+    {
+      key: ADD_USER,
+      icon: AddUserIcon,
+      onClick: this.showAddUserModal,
+    },
+  ];
+
   renderHeaderButtons = () => {
     const {
       intl: { formatMessage },
     } = this.props;
-    const ACTION_BUTTONS = [
-      {
-        key: EXPORT,
-        icon: ExportIcon,
-        onClick: this.onExportUsers,
-      },
-      {
-        key: INVITE_USER,
-        icon: InviteUserIcon,
-        onClick: this.showInviteUserModal,
-      },
-      {
-        key: ADD_USER,
-        icon: AddUserIcon,
-        onClick: this.showAddUserModal,
-      },
-    ];
+
     return (
       <div className={cx('action-buttons')}>
-        {ACTION_BUTTONS.map(({ key, icon, onClick }) => (
+        {this.actionButtons.map(({ key, icon, onClick }) => (
           <div className={cx('action-button')} key={key}>
             <GhostButton icon={icon} onClick={onClick}>
               {formatMessage(messages[key])}

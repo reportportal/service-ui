@@ -20,7 +20,7 @@ import { connect } from 'react-redux';
 import track from 'react-tracking';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 
 import CircleCrossIcon from 'common/img/circle-cross-icon-inline.svg';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
@@ -52,12 +52,13 @@ const DefectTypeName = withHoverableTooltip({
   data: {
     placement: 'top',
     dynamicWidth: true,
+    tooltipTriggerClass: cx('defect-type-name-tooltip-trigger'),
   },
 })(({ color, longName }) => (
-  <span className={cx('defect-type-name-wrap')}>
+  <div className={cx('defect-type-name-wrap')}>
     <ColorMarker color={color} />
-    <span className={cx('defect-type-name')}>{longName}</span>
-  </span>
+    <div className={cx('defect-type-name')}>{longName}</div>
+  </div>
 ));
 
 DefectTypeName.propTypes = {
@@ -82,7 +83,7 @@ export class DefectSubType extends Component {
     isPossibleUpdateSettings: PropTypes.bool.isRequired,
     deleteDefectSubTypeAction: PropTypes.func.isRequired,
     updateDefectSubTypeAction: PropTypes.func.isRequired,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -220,27 +221,26 @@ export class DefectSubType extends Component {
               <ColorMarker color={color} />
             </div>
             <div className={cx('buttons-cell')}>
-              {!group &&
-                (isPossibleUpdateSettings && (
-                  <Fragment>
-                    <button
-                      className={cx('action-button', 'edit-button')}
-                      aria-label={intl.formatMessage(COMMON_LOCALE_KEYS.EDIT)}
-                      title={intl.formatMessage(COMMON_LOCALE_KEYS.EDIT)}
-                      onClick={this.setEditMode}
-                    >
-                      {Parser(PencilIcon)}
-                    </button>
-                    <button
-                      className={cx('action-button', 'delete-button')}
-                      aria-label={intl.formatMessage(COMMON_LOCALE_KEYS.DELETE)}
-                      title={intl.formatMessage(COMMON_LOCALE_KEYS.DELETE)}
-                      onClick={this.showDeleteConfirmationDialog}
-                    >
-                      {Parser(CircleCrossIcon)}
-                    </button>
-                  </Fragment>
-                ))}
+              {!group && isPossibleUpdateSettings && (
+                <Fragment>
+                  <button
+                    className={cx('action-button', 'edit-button')}
+                    aria-label={intl.formatMessage(COMMON_LOCALE_KEYS.EDIT)}
+                    title={intl.formatMessage(COMMON_LOCALE_KEYS.EDIT)}
+                    onClick={this.setEditMode}
+                  >
+                    {Parser(PencilIcon)}
+                  </button>
+                  <button
+                    className={cx('action-button', 'delete-button')}
+                    aria-label={intl.formatMessage(COMMON_LOCALE_KEYS.DELETE)}
+                    title={intl.formatMessage(COMMON_LOCALE_KEYS.DELETE)}
+                    onClick={this.showDeleteConfirmationDialog}
+                  >
+                    {Parser(CircleCrossIcon)}
+                  </button>
+                </Fragment>
+              )}
             </div>
           </Fragment>
         )}

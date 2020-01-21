@@ -80,6 +80,8 @@ export const isTestItemsListSelector = createSelector(
   (testItemIds) => testItemIds === TEST_ITEMS_TYPE_LIST,
 );
 
+export const isStepLevelSelector = (state) => levelSelector(state) === LEVEL_STEP;
+
 const isListView = (query, namespace) => {
   const namespacedQuery = extractNamespacedQuery(query, namespace);
   return namespacedQuery && 'filter.eq.hasChildren' in namespacedQuery;
@@ -277,6 +279,7 @@ export const statisticsLinkSelector = createSelector(
             'filter.eq.hasChildren': false,
             'filter.in.type': LEVEL_STEP,
             'filter.in.status': ownProps.statuses && ownProps.statuses.join(','),
+            'filter.in.launchId': ownProps.launchId,
             'filter.has.compositeAttribute': ownProps.compositeAttribute,
             launchesLimit,
             isLatest,
@@ -321,7 +324,10 @@ export const defectLinkSelector = createSelector(
           {
             'filter.eq.hasStats': true,
             'filter.eq.hasChildren': false,
+            'filter.in.type': ownProps.filterType && LEVEL_STEP,
             'filter.in.issueType': getDefectsString(ownProps.defects),
+            'filter.has.compositeAttribute': ownProps.compositeAttribute,
+            'filter.in.launchId': ownProps.launchId,
             launchesLimit,
             isLatest,
           },
@@ -366,9 +372,9 @@ const btsBackLinkBaseSelector = createSelector(payloadSelector, (payload) => {
 });
 
 export const btsIntegrationBackLinkSelector = (state, { path = '', launchId } = {}) => {
-  const testLevel = levelSelector(state);
+  const isStepLevel = isStepLevelSelector(state);
 
-  if (testLevel !== LEVEL_STEP) {
+  if (!isStepLevel) {
     return window.location.toString();
   }
 

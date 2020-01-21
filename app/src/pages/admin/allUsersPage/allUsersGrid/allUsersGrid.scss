@@ -19,7 +19,7 @@
   vertical-align: middle;
   font-size: 13px;
   text-transform: capitalize;
-  @media (max-width: $SCREEN_SM_MAX) {
+  @media (max-width: $SCREEN_XS_MAX) {
     width: 100%;
   }
 }
@@ -29,27 +29,62 @@
   font-size: 13px;
   text-transform: lowercase;
   @media (max-width: $SCREEN_XS_MAX) {
-    margin-left: 55px;
+    margin-left: 60px;
     width: 100%;
   }
 }
+
+.login-block {
+  display: inline-block;
+  max-width: 110px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    max-width: 80px;
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    max-width: 240px;
+  }
+}
+
 .email-col {
   width: 15%;
   vertical-align: middle;
   font-size: 13px;
-  color: $COLOR--windows-blue;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  @media (max-width: $SCREEN_SM_MAX) {
+  @media (max-width: $SCREEN_XS_MAX) {
     width: 100%;
   }
 }
+
+.email-block {
+  display: inline-block;
+  max-width: 130px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    max-width: 90px;
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    max-width: 245px;
+  }
+}
+
+.email-link {
+  color: $COLOR--windows-blue;
+  text-decoration: none;
+}
+
 .last-login-col {
   width: 15%;
   vertical-align: middle;
   font-size: 13px;
-  @media (max-width: $SCREEN_SM_MAX) {
+  @media (max-width: $SCREEN_XS_MAX) {
     width: 100%;
+    padding-bottom: 0;
   }
 }
 .projects-and-roles-col {
@@ -79,7 +114,7 @@
   text-transform: lowercase;
 }
 .avatar-wrapper {
-  display:inline-block;
+  display: inline-block;
   width: 40px;
   height: 40px;
   margin-right: 10px;
@@ -99,6 +134,11 @@
   @media (max-width: $SCREEN_XS_MAX) {
     margin-top: 3px;
   }
+}
+.last-login-time {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .shown-on-mobile {
   @media (max-width: $SCREEN_XS_MAX) {

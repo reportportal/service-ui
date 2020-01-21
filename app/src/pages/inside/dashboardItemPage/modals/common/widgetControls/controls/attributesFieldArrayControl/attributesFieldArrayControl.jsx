@@ -16,7 +16,7 @@
 
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
@@ -55,7 +55,7 @@ const messages = defineMessages({
 @injectIntl
 export class AttributesFieldArrayControl extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     fields: PropTypes.object.isRequired,
     fieldValidator: PropTypes.func.isRequired,
     maxAttributesAmount: PropTypes.number.isRequired,

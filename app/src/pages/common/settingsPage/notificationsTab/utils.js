@@ -17,11 +17,19 @@
 import { OWNER } from 'common/constants/permissions';
 
 export const convertNotificationCaseForSubmission = (obj) => {
-  const { informOwner, recipients, sendCase, launchNames = [], attributes = [] } = obj;
+  const {
+    informOwner,
+    recipients,
+    sendCase,
+    launchNames = [],
+    attributes = [],
+    enabled = true,
+  } = obj;
   return {
     recipients: informOwner ? [...recipients, OWNER] : recipients,
     sendCase,
     launchNames,
     attributes,
+    enabled,
   };
 };

@@ -17,6 +17,7 @@
 import { NOT_FOUND } from 'redux-first-router';
 
 export const UPDATE_PAGE_PROPERTIES = 'updatePagePropertiesAction';
+export const CLEAR_PAGE_STATE = 'clearPageStateAction';
 
 // undefined page
 export const NO_PAGE = undefined;

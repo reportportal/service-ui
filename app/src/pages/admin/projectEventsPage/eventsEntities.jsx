@@ -16,7 +16,7 @@
 
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
@@ -123,7 +123,7 @@ const messages = defineMessages({
 @injectIntl
 export class EventsEntities extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     filterValues: PropTypes.object,
     render: PropTypes.func.isRequired,
     usersSearchUrl: PropTypes.string.isRequired,

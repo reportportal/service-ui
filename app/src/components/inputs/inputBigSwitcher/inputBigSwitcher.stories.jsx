@@ -17,7 +17,7 @@
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import { InputBigSwitcher } from './inputBigSwitcher';
 import README from './README.md';
 
@@ -33,7 +33,11 @@ storiesOf('Components/Inputs/InputBigSwitcher', module)
       padding: 15,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('default state', () => <InputBigSwitcher />)
   .add('turned-on', () => <InputBigSwitcher value>Some text.</InputBigSwitcher>)
   .add('disabled', () => <InputBigSwitcher disabled>Some text.</InputBigSwitcher>)

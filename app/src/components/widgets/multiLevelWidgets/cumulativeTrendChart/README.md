@@ -2,9 +2,9 @@
 
 ### Props:
 
-* **intl**: _object_, required
-* **widget**: _object_, required
-* **isPreview**: _bool_, optional, default = false
-* **height**: _number_, optional, default = 0
-* **container**: _object_, required
-* **observer**: _object_, optional, default = null
+- **intl**: _object_, required
+- **widget**: _object_, required
+- **isPreview**: _bool_, optional, default = false
+- **height**: _number_, optional, default = 0
+- **container**: _object_, required
+- **observer**: _object_, optional, default = null

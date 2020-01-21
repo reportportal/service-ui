@@ -17,13 +17,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { SERVER_SETTINGS_TAB_PAGE, settingsTabSelector } from 'controllers/pages';
-import {
-  EMAIL_SERVER,
-  AUTHORIZATION_CONFIGURATION,
-  STATISTICS,
-} from 'common/constants/settingsTabs';
+import { AUTHORIZATION_CONFIGURATION, STATISTICS } from 'common/constants/settingsTabs';
 import { NavigationTabs } from 'components/main/navigationTabs';
 import { ADMIN_SERVER_SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { AuthConfigurationTab } from './authConfigurationTab';
@@ -51,12 +47,12 @@ const messages = defineMessages({
 @injectIntl
 export class ServerSettingsTabs extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     activeTab: PropTypes.string,
     onChangeTab: PropTypes.func,
   };
   static defaultProps = {
-    activeTab: EMAIL_SERVER,
+    activeTab: AUTHORIZATION_CONFIGURATION,
     onChangeTab: () => {},
   };
 

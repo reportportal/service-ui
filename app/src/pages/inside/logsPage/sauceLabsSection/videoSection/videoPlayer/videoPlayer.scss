@@ -36,14 +36,14 @@
         width: 2em;
         border: none;
         color: $COLOR--white-two;
-        transition: border-color .4s,outline .4s,background-color .4s;
+        transition: border-color 0.4s, outline 0.4s, background-color 0.4s;
         background-color: $COLOR--black-2;
         font-size: 3.5em;
         border-radius: 50%;
-        height: 2em!important;
-        line-height: 2em!important;
-        margin-top: -1em!important;
-        opacity: .85;
+        height: 2em !important;
+        line-height: 2em !important;
+        margin-top: -1em !important;
+        opacity: 0.85;
       }
     }
   }

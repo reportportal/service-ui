@@ -18,7 +18,7 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import Parser from 'html-react-parser';
 import { activeProjectSelector } from 'controllers/user';
 import {
@@ -26,7 +26,7 @@ import {
   commonValidators,
   bindMessageToValidator,
   composeBoundValidators,
-} from 'common/utils';
+} from 'common/utils/validation';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import CircleCrossIcon from 'common/img/circle-cross-icon-inline.svg';
 import CircleCheckIcon from 'common/img/circle-check-inline.svg';
@@ -66,7 +66,7 @@ export class AttributeEditor extends Component {
     invalid: PropTypes.bool,
     keyURLCreator: PropTypes.func,
     valueURLCreator: PropTypes.func,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     attribute: PropTypes.object,
   };
 

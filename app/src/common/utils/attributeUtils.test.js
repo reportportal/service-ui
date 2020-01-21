@@ -48,19 +48,42 @@ describe('attributeUtils', () => {
   describe('getUniqueAndCommonAttributes', () => {
     test('should return only common attributes', () => {
       const items = [
-        { attributes: [{ key: 'key', value: 'value' }, { key: 'key2', value: 'value2' }] },
-        { attributes: [{ key: 'key', value: 'value' }, { key: 'key2', value: 'value2' }] },
+        {
+          attributes: [
+            { key: 'key', value: 'value' },
+            { key: 'key2', value: 'value2' },
+          ],
+        },
+        {
+          attributes: [
+            { key: 'key', value: 'value' },
+            { key: 'key2', value: 'value2' },
+          ],
+        },
       ];
       const result = {
-        common: [{ key: 'key', value: 'value' }, { key: 'key2', value: 'value2' }],
+        common: [
+          { key: 'key', value: 'value' },
+          { key: 'key2', value: 'value2' },
+        ],
         unique: [],
       };
       expect(getUniqueAndCommonAttributes(items)).toEqual(result);
     });
     test('should return only unique attributes', () => {
       const items = [
-        { attributes: [{ key: 'key1', value: 'value1' }, { key: 'key2', value: 'value2' }] },
-        { attributes: [{ key: 'key3', value: 'value3' }, { key: 'key4', value: 'value4' }] },
+        {
+          attributes: [
+            { key: 'key1', value: 'value1' },
+            { key: 'key2', value: 'value2' },
+          ],
+        },
+        {
+          attributes: [
+            { key: 'key3', value: 'value3' },
+            { key: 'key4', value: 'value4' },
+          ],
+        },
       ];
       const result = {
         common: [],
@@ -75,13 +98,26 @@ describe('attributeUtils', () => {
     });
     test('should return one common and one unique attribute', () => {
       const items = [
-        { attributes: [{ key: 'key', value: 'value' }, { key: 'key1', value: 'value1' }] },
-        { attributes: [{ key: 'key', value: 'value' }, { key: 'key2', value: 'value2' }] },
+        {
+          attributes: [
+            { key: 'key', value: 'value' },
+            { key: 'key1', value: 'value1' },
+          ],
+        },
+        {
+          attributes: [
+            { key: 'key', value: 'value' },
+            { key: 'key2', value: 'value2' },
+          ],
+        },
         { attributes: [{ key: 'key', value: 'value' }] },
       ];
       const result = {
         common: [{ key: 'key', value: 'value' }],
-        unique: [{ key: 'key1', value: 'value1' }, { key: 'key2', value: 'value2' }],
+        unique: [
+          { key: 'key1', value: 'value1' },
+          { key: 'key2', value: 'value2' },
+        ],
       };
       expect(getUniqueAndCommonAttributes(items)).toEqual(result);
     });

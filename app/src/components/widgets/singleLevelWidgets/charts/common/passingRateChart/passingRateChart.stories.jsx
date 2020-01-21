@@ -16,7 +16,7 @@
 
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import { PassingRateChart } from './passingRateChart';
 import { passingRateBarData, passingRatePieData } from './demoData';
 import README from './README.md';
@@ -34,7 +34,11 @@ storiesOf('Components/Widgets/Charts/PassingRateChart', module)
       width: 500,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('launch bar mode', () => (
     <PassingRateChart widget={passingRateBarData} container={mockNode} />
   ))

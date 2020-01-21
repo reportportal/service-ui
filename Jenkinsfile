@@ -8,7 +8,7 @@ node {
 
         stage('Checkout') {
             checkout scm
-            sh 'git checkout develop'
+            sh 'git checkout v5.1'
             sh 'git pull'
         }
 
@@ -16,16 +16,16 @@ node {
             docker.withServer("$DOCKER_HOST") {
                 stage('Build Docker Image') {
                     withEnv(["NODE_OPTIONS=--max_old_space_size=4096"]) {
-                        sh """          
+                        sh """
                             MAJOR_VER=\$(cat VERSION)
                             BUILD_VER="\${MAJOR_VER}-${env.BUILD_NUMBER}"
-                            make build-image-dev v=\$BUILD_VER
+                            make IMAGE_NAME=reportportal-dev-5-1/service-ui build-image-dev v=\$BUILD_VER
                         """
                     }
                 }
 
                 stage('Deploy container') {
-                    sh "docker-compose -p reportportal5 -f $COMPOSE_FILE_RP_5 up -d --force-recreate ui"
+                    sh "docker-compose -p reportportal5-1 -f $COMPOSE_FILE_RP_5_1 up -d --force-recreate ui"
                 }
             }
     }

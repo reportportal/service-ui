@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-export { TOKEN_KEY, DEFAULT_TOKEN, SET_TOKEN } from './constants';
+export { TOKEN_KEY, DEFAULT_TOKEN, SET_TOKEN, LOGOUT } from './constants';
 export {
   loginAction,
   logoutAction,

@@ -17,14 +17,14 @@
 import { Component } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
+import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
 import { reduxForm, SubmissionError } from 'redux-form';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldBottomConstraints } from 'components/fields/fieldBottomConstraints';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputOutside } from 'components/inputs/inputOutside';
 import { BigButton } from 'components/buttons/bigButton';
-import { commonValidators } from 'common/utils';
+import { commonValidators } from 'common/utils/validation';
 import LoginIcon from './img/login-icon-inline.svg';
 import NameIcon from './img/name-icon-inline.svg';
 import EmailIcon from './img/email-icon-inline.svg';
@@ -79,7 +79,7 @@ export class RegistrationForm extends Component {
   static propTypes = {
     submitForm: PropTypes.func,
     reset: PropTypes.func.isRequired,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     autofill: PropTypes.func.isRequired,
     email: PropTypes.string,

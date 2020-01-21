@@ -16,7 +16,7 @@
 
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 // eslint-disable-next-line import/extensions, import/no-unresolved
 import { WithState } from 'storybook-decorators';
 import { ScreenLock } from './screenLock';
@@ -47,7 +47,11 @@ storiesOf('Components/Main/ScreenLock', module)
       width: 100,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .addDecorator(withScreenLock)
   .add('with pages', () => (
     <WithState state={state}>

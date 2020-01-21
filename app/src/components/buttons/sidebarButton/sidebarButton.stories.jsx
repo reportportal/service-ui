@@ -17,7 +17,7 @@
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import { SidebarButton } from './sidebarButton';
 import README from './README.md';
 import TestIcon from './img/test-icon-inline.svg';
@@ -33,7 +33,11 @@ storiesOf('Components/Buttons/SidebarButton', module)
       width: 150,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('default state', () => <SidebarButton />)
   .add('with icon', () => (
     <SidebarButton

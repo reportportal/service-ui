@@ -17,7 +17,7 @@
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import { PaginationToolbar } from './paginationToolbar';
 import README from './README.md';
 
@@ -32,7 +32,11 @@ storiesOf('Components/Main/PaginationToolbar', module)
       width: '100%',
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('with pages', () => (
     <PaginationToolbar itemCount={50} activePage={1} pageCount={5} pageSize={10} />
   ))

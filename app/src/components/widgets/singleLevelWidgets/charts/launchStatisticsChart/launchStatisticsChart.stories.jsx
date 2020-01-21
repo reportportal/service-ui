@@ -18,7 +18,7 @@ import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 // eslint-disable-next-line import/extensions, import/no-unresolved
 import { WithState } from 'storybook-decorators';
-import { withReadme } from 'storybook-readme';
+
 import { LaunchStatisticsChart } from './launchStatisticsChart';
 import README from './README.md';
 import {
@@ -48,7 +48,11 @@ storiesOf('Components/Widgets/Charts/LaunchStatisticsChart', module)
       width: '100%',
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('area view', () => (
     <WithState state={state}>
       <LaunchStatisticsChart widget={areaViewData} container={mockNode} observer={mockObserver} />

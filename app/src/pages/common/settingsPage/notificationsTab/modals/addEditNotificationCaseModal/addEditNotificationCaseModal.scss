@@ -18,3 +18,29 @@
   width: 750px;
   margin-left: -375px;
 }
+
+.header-active-switcher-container {
+  width: 90px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-top: -5px;
+}
+
+.header-active-switcher-label {
+  text-align: left;
+  text-transform: none;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+  color: $COLOR--charcoal-grey;
+  padding-left: 35px;
+}
+
+.header-active-switcher {
+  position: relative;
+  width: 30px;
+  top: 12px;
+  left: 0px;
+  &:hover {
+    cursor: pointer;
+  }
+}

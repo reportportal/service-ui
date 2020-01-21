@@ -17,7 +17,7 @@
 import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { ERROR_CANCELED } from 'common/utils/fetch';
 import InProgressGif from 'common/img/item-in-progress.gif';
 
@@ -51,7 +51,7 @@ const isResolved = (status) => status.toUpperCase() === STATUS_RESOLVED;
 @injectIntl
 export class IssueInfoTooltip extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     activeProject: PropTypes.string.isRequired,
     ticketId: PropTypes.string.isRequired,
     btsProject: PropTypes.string.isRequired,

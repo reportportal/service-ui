@@ -35,10 +35,11 @@ import {
   PROJECT_LOG_PAGE,
   filterIdSelector,
   updatePagePropertiesAction,
+  pageSelector,
 } from 'controllers/pages';
 import { PAGE_KEY } from 'controllers/pagination';
 import { URLS } from 'common/urls';
-import { fetch } from 'common/utils';
+import { fetch } from 'common/utils/fetch';
 import { createNamespacedQuery, mergeNamespacedQuery } from 'common/utils/routingUtils';
 import { LEVEL_NOT_FOUND } from 'common/constants/launchLevels';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
@@ -71,11 +72,12 @@ import {
 import { calculateLevel } from './utils';
 
 function* updateLaunchId(launchId) {
+  const page = yield select(pageSelector);
   const payload = yield select(payloadSelector);
   const query = yield select(pagePropertiesSelector);
   const testItemIdsArray = yield select(testItemIdsArraySelector);
   yield put({
-    type: TEST_ITEM_PAGE,
+    type: page || TEST_ITEM_PAGE,
     payload: {
       ...payload,
       testItemIds: [launchId, ...testItemIdsArray.slice(1)].join('/'),
@@ -95,8 +97,8 @@ function* restorePath() {
 export function* fetchParentItems() {
   const itemIds = yield select(testItemIdsArraySelector);
   const project = yield select(activeProjectSelector);
-  const urls = itemIds.map(
-    (id, i) => (i === 0 ? URLS.launch(project, id) : URLS.testItem(project, id)),
+  const urls = itemIds.map((id, i) =>
+    i === 0 ? URLS.launch(project, id) : URLS.testItem(project, id),
   );
   yield put(bulkFetchDataAction(PARENT_ITEMS_NAMESPACE, true)(urls));
   yield take(createFetchPredicate(PARENT_ITEMS_NAMESPACE));
@@ -107,7 +109,7 @@ function* fetchTestItems({ payload = {} }) {
   const filterId = yield select(filterIdSelector);
   const isPathNameChanged = yield select(pathnameChangedSelector);
   const isTestItemsList = yield select(isTestItemsListSelector);
-  if (isPathNameChanged && !payload.offset) {
+  if (isPathNameChanged && !offset) {
     yield put(setPageLoadingAction(true));
 
     if (!isTestItemsList) {
@@ -175,7 +177,7 @@ function* fetchTestItems({ payload = {} }) {
     level = LEVEL_NOT_FOUND;
   } else {
     const previousLevel = yield select(levelSelector);
-    level = calculateLevel(dataPayload.payload.content, previousLevel);
+    level = calculateLevel(dataPayload.payload.content, previousLevel, isTestItemsList);
   }
 
   if (LEVELS[level]) {
@@ -246,7 +248,7 @@ function* watchTestItemsFromLogPage() {
   yield takeEvery(FETCH_TEST_ITEMS_LOG_PAGE, fetchTestItemsFromLogPage);
 }
 
-function* deleteTestItems({ payload: { items, selectedItems } }) {
+function* deleteTestItems({ payload: { items, callback } }) {
   const ids = items.map((item) => item.id).join(',');
   const projectId = yield select(activeProjectSelector);
   yield put(showScreenLockAction());
@@ -255,11 +257,10 @@ function* deleteTestItems({ payload: { items, selectedItems } }) {
       method: 'delete',
     });
     yield put(hideScreenLockAction());
-    yield call(fetchTestItems, {});
+    yield call(callback);
     yield put(
       showNotification({
-        messageId:
-          selectedItems.length === 1 ? 'deleteTestItemSuccess' : 'deleteTestItemMultipleSuccess',
+        messageId: items.length === 1 ? 'deleteTestItemSuccess' : 'deleteTestItemMultipleSuccess',
         type: NOTIFICATION_TYPES.SUCCESS,
       }),
     );

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import * as utils from 'common/utils';
+import { fetch } from 'common/utils/fetch';
 import { fetchImageData, fetchData } from './sagas';
 
-jest.mock('common/utils', () => ({
+jest.mock('common/utils/fetch', () => ({
   fetch: jest.fn(),
 }));
 
@@ -30,11 +30,11 @@ describe('Attachments Sagas', () => {
   test('fetchImageData resolves image', () => {
     expect.assertions(1);
     fetchImageData(mockParams);
-    expect(utils.fetch).toBeCalledWith('/api/v1/data/test_project/abcd', { responseType: 'blob' });
+    expect(fetch).toBeCalledWith('/api/v1/data/test_project/abcd', { responseType: 'blob' });
   });
 
   test('fetchData resolves data', () => {
     fetchData(mockParams);
-    expect(utils.fetch).toBeCalledWith('/api/v1/data/test_project/abcd');
+    expect(fetch).toBeCalledWith('/api/v1/data/test_project/abcd');
   });
 });

@@ -15,10 +15,12 @@
  */
 
 import { combineReducers } from 'redux';
-import { queueReducers } from 'common/utils';
+import { queueReducers } from 'common/utils/queueReducers';
+import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
 import { fetchReducer } from 'controllers/fetch';
 import { paginationReducer } from 'controllers/pagination';
 import { loadingReducer } from 'controllers/loading';
+import { PROJECT_LOG_PAGE, PROJECT_USERDEBUG_LOG_PAGE } from 'controllers/pages';
 import {
   LOG_ITEMS_NAMESPACE,
   ACTIVITY_NAMESPACE,
@@ -58,13 +60,13 @@ const pageLoadingReducer = (state = false, { type, payload }) => {
   }
 };
 
-export const logReducer = combineReducers({
+const reducer = combineReducers({
   logItems: fetchReducer(LOG_ITEMS_NAMESPACE, { contentPath: 'content' }),
   pagination: paginationReducer(LOG_ITEMS_NAMESPACE),
   loading: loadingReducer(LOG_ITEMS_NAMESPACE),
   pageLoading: pageLoadingReducer,
   activity: fetchReducer(ACTIVITY_NAMESPACE, { contentPath: 'content' }),
-  historyEntries: fetchReducer(HISTORY_NAMESPACE),
+  historyEntries: fetchReducer(HISTORY_NAMESPACE, { contentPath: 'content' }),
   stackTrace: combineReducers({
     loading: loadingReducer(STACK_TRACE_NAMESPACE),
     pagination: queueReducers(
@@ -80,3 +82,8 @@ export const logReducer = combineReducers({
   sauceLabs: sauceLabsReducer,
   nestedSteps: nestedStepsReducer,
 });
+
+export const logReducer = createPageScopedReducer(reducer, [
+  PROJECT_LOG_PAGE,
+  PROJECT_USERDEBUG_LOG_PAGE,
+]);

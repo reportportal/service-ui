@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import {
@@ -26,10 +26,10 @@ import {
   filtersPaginationSelector,
   fetchFiltersAction,
   filtersSelector,
-  loadingSelector,
   removeFilterAction,
   createFilterAction,
   updateFilterSuccessAction,
+  pageLoadingSelector,
 } from 'controllers/filter';
 import {
   userIdSelector,
@@ -61,7 +61,7 @@ const messages = defineMessages({
   },
   filtersNotFound: {
     id: 'FiltersPage.notFound',
-    defaultMessage: "No filters found for '{filter}'",
+    defaultMessage: 'No filters found for "{filter}"',
   },
   filterUpdated: {
     id: 'FiltersPage.filterUpdated',
@@ -82,7 +82,7 @@ const messages = defineMessages({
     projectRole: activeProjectRoleSelector(state),
     accountRole: userAccountRoleSelector(state),
     filters: filtersSelector(state),
-    loading: loadingSelector(state),
+    loading: pageLoadingSelector(state),
   }),
   {
     showModalAction,
@@ -103,7 +103,7 @@ const messages = defineMessages({
 @track({ page: FILTERS_PAGE })
 export class FiltersPage extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     filters: PropTypes.arrayOf(PropTypes.object),
     activePage: PropTypes.number,
     itemCount: PropTypes.number,
@@ -259,17 +259,16 @@ export class FiltersPage extends Component {
             {...rest}
           />
           {!filters.length && !loading && this.renderNoFiltersBlock()}
-          {!!filters.length &&
-            !loading && (
-              <PaginationToolbar
-                activePage={activePage}
-                itemCount={itemCount}
-                pageCount={pageCount}
-                pageSize={pageSize}
-                onChangePage={onChangePage}
-                onChangePageSize={onChangePageSize}
-              />
-            )}
+          {!!filters.length && !loading && (
+            <PaginationToolbar
+              activePage={activePage}
+              itemCount={itemCount}
+              pageCount={pageCount}
+              pageSize={pageSize}
+              onChangePage={onChangePage}
+              onChangePageSize={onChangePageSize}
+            />
+          )}
         </PageSection>
       </PageLayout>
     );
