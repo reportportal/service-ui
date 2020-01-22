@@ -8,8 +8,6 @@ node {
 
         stage('Checkout') {
             checkout scm
-            sh 'git checkout v5.1'
-            sh 'git pull'
         }
 
 
@@ -19,13 +17,13 @@ node {
                         sh """
                             MAJOR_VER=\$(cat VERSION)
                             BUILD_VER="\${MAJOR_VER}-${env.BUILD_NUMBER}"
-                            make IMAGE_NAME=reportportal-dev-5-1/service-ui build-image-dev v=\$BUILD_VER
+                            make IMAGE_NAME=reportportal-dev/service-ui build-image-dev v=\$BUILD_VER
                         """
                     }
                 }
 
                 stage('Deploy container') {
-                    sh "docker-compose -p reportportal5-1 -f $COMPOSE_FILE_RP_5_1 up -d --force-recreate ui"
+                    sh "docker-compose -p reportportal -f $COMPOSE_FILE_RP up -d --force-recreate ui"
                 }
             }
     }
