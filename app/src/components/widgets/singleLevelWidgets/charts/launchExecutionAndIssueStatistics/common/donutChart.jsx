@@ -22,7 +22,7 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { TEST_ITEMS_TYPE_LIST } from 'controllers/testItem';
-import { launchFiltersSelector } from 'controllers/filter';
+import { userFiltersSelector } from 'controllers/project';
 import { activeProjectSelector } from 'controllers/user';
 import { TEST_ITEM_PAGE } from 'controllers/pages';
 import {
@@ -40,7 +40,7 @@ const cx = classNames.bind(styles);
 @connect(
   (state) => ({
     project: activeProjectSelector(state),
-    launchFilters: launchFiltersSelector(state),
+    launchFilters: userFiltersSelector(state),
   }),
   {
     navigate: (linkAction) => linkAction,
