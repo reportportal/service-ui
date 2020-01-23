@@ -56,6 +56,10 @@ const messages = defineMessages({
     id: 'EditItemModal.attributesLabel',
     defaultMessage: 'Attributes',
   },
+  uuidLabel: {
+    id: 'EditItemModal.uuidLabel',
+    defaultMessage: 'UUID:',
+  },
   descriptionPlaceholder: {
     id: 'EditItemModal.descriptionPlaceholder',
     defaultMessage: 'Enter {type} description',
@@ -280,6 +284,13 @@ export class EditItemModal extends Component {
               {type === LAUNCH_ITEM_TYPES.launch && ` #${item.number}`}
             </div>
           </ModalField>
+          {item.uuid && (
+            <ModalField label={formatMessage(messages.uuidLabel)}>
+              <div title={item.uuid} className={cx('item-uuid')}>
+                {formatItemName(item.uuid)}
+              </div>
+            </ModalField>
+          )}
           <ModalField label={formatMessage(messages.attributesLabel)}>
             <FieldProvider name="attributes">
               <AttributeListField
