@@ -151,17 +151,7 @@ podTemplate(
 
 
         stage('Deploy to Dev') {
-            // def valsFile = "merged.yml"
-            // container('yq') {
-            //     sh "yq m -x $k8sChartDir/values.yaml $ciDir/rp/values-ci.yml > $valsFile"
-            // }
-
-            container('helm') {
-                dir(k8sChartDir) {
-                    sh 'helm dependency update'
-                }
-                sh "helm upgrade -n reportportal --reuse-values --set serviceui.repository=$srvRepo --set serviceui.tag=$srvVersion --wait reportportal ./$k8sChartDir"
-            }
+            helm.deploy("./$k8sChartDir", ["serviceui.repository": srvRepo, "serviceui.tag": srvVersion], true) // with wait
         }
     }
 
