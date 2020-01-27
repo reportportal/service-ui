@@ -21,38 +21,34 @@ import styles from './inviteNewUserItem.scss';
 
 const cx = classNames.bind(styles);
 
-export const InviteNewUserItem = ({ option, onClick }) => (
-  <div className={cx('select-menu-outer')}>
-    <div className={cx('select-menu')} role="listbox">
-      <div onClick={onClick}>
-        <div className={cx('invite-new-user')}>
-          <div className={cx('msg-icon')} />
-          <div className={cx('invite-info')}>
-            <p className={cx('user-info')}>
-              <FormattedMessage
-                id={'InputUserSearch.inviteNewUser'}
-                defaultMessage={'Invite {userEmail}'}
-                values={{ userEmail: option.label }}
-              />
-            </p>
-            <p className={cx('action-info')}>
-              <FormattedMessage
-                id={'InputUserSearch.inviteNewUserInfo'}
-                defaultMessage={'Send invite via e-mail'}
-              />
-            </p>
-          </div>
-        </div>
+export const InviteNewUserItem = ({ option, itemProps }) => (
+  <li className={cx('item')} {...itemProps}>
+    <div className={cx('invite-new-user', { active: itemProps.isActive })}>
+      <div className={cx('msg-icon')} />
+      <div className={cx('invite-info')}>
+        <p className={cx('user-info')}>
+          <FormattedMessage
+            id={'InputUserSearch.inviteNewUser'}
+            defaultMessage={'Invite {userEmail}'}
+            values={{ userEmail: option.userLogin }}
+          />
+        </p>
+        <p className={cx('action-info')}>
+          <FormattedMessage
+            id={'InputUserSearch.inviteNewUserInfo'}
+            defaultMessage={'Send invite via e-mail'}
+          />
+        </p>
       </div>
     </div>
-  </div>
+  </li>
 );
 
 InviteNewUserItem.propTypes = {
   option: PropTypes.object,
-  onClick: PropTypes.func,
+  itemProps: PropTypes.object,
 };
 InviteNewUserItem.defaultProps = {
   option: {},
-  onClick: () => {},
+  itemProps: {},
 };

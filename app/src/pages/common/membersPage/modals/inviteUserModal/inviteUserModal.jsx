@@ -37,10 +37,10 @@ import { withModal, ModalLayout, ModalField } from 'components/main/modal';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { showModalAction } from 'controllers/modal';
-import { InputUserSearch } from 'components/inputs/inputUserSearch';
 import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { InputUserSearch } from './inputUserSearch';
 import styles from './inviteUserModal.scss';
 
 const cx = classNames.bind(styles);

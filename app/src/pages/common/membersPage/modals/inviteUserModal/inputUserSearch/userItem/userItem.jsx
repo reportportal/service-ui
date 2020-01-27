@@ -31,38 +31,36 @@ const messages = defineMessages({
 });
 
 export const UserItem = injectIntl(
-  ({ intl, userName, userLogin, userAvatar, isAssigned, onClick }) => (
-    <div
-      className={cx({ 'user-search-result-wrap': true, 'disabled-item': isAssigned })}
-      onClick={onClick}
+  ({ intl, option, itemProps: { isActive, isSelected, ...restItemProps } }) => (
+    <li
+      className={cx({
+        'user-search-result-wrap': true,
+        'disabled-item': restItemProps.disabled,
+        active: isActive,
+      })}
+      {...restItemProps}
     >
-      <Image className={cx('user-avatar')} src={userAvatar} fallback={DefaultUserImage} />
+      <Image className={cx('user-avatar')} src={option.userAvatar} fallback={DefaultUserImage} />
       <div className={cx('user-search-info')}>
-        <p className={cx('user-search-name')}>{userName}</p>
-        <p className={cx('user-search-login')}>{userLogin}</p>
+        <p className={cx('user-search-name')}>{option.userName}</p>
+        <p className={cx('user-search-login')}>{option.userLogin}</p>
       </div>
       <button
-        className={cx({ 'assign-btn': true, 'assigned-user': isAssigned })}
-        title={isAssigned ? intl.formatMessage(messages.isAssigned) : ''}
+        className={cx({ 'assign-btn': true, 'assigned-user': option.isAssigned })}
+        title={option.isAssigned ? intl.formatMessage(messages.isAssigned) : ''}
       />
-    </div>
+    </li>
   ),
 );
 
 UserItem.propTypes = {
   intl: PropTypes.object,
-  userName: PropTypes.string,
-  userLogin: PropTypes.string,
-  userAvatar: PropTypes.string,
-  isAssigned: PropTypes.bool,
-  onClick: PropTypes.func,
+  option: PropTypes.object,
+  itemProps: PropTypes.object,
 };
 
 UserItem.defaultProps = {
   intl: {},
-  userName: '',
-  userLogin: '',
-  userAvatar: '',
-  isAssigned: false,
-  onClick: () => {},
+  option: {},
+  itemProps: {},
 };
