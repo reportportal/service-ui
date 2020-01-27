@@ -153,9 +153,9 @@ podTemplate(
             helm.deploy("./$k8sChartDir", ["serviceui.repository": srvRepo, "serviceui.tag": srvVersion], true) // with wait
         }
 
-        stage('DVT Test') {
-            helm.testDeployment("reportportal", "reportportal-ui", srvVersion)
-        }
+//        stage('DVT Test') {
+//            helm.testDeployment("reportportal", "reportportal-ui", srvVersion)
+//        }
 
     }
 
