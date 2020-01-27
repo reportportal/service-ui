@@ -14,43 +14,43 @@
  * limitations under the License.
  */
 
-.user-search-result-wrap {
-  display: flex;
-  justify-content: stretch;
-  padding: 8px 20px 8px 15px;
+.invite-new-user {
+  padding: 12px 20px 12px 15px;
   overflow: hidden;
   white-space: normal;
-  &:hover {
+  display: flex;
+  justify-content: flex-start;
+  &.active {
     cursor: pointer;
     background: rgba(57, 194, 215, 0.2);
   }
 }
-.user-avatar {
+.msg-icon {
   flex: 0 0 24px;
   width: 24px;
   height: 34px;
   display: block;
   float: left;
   background-size: contain;
+  background-image: url('./img/ic_mail.svg');
   background-repeat: no-repeat;
+  background-position: center;
 }
-.user-search-info {
+.invite-info {
   display: inline-block;
-  flex: 1 1;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
-.user-search-name {
+.action-info {
   margin: -1px 0 0 20px;
   font-size: 13px;
   padding-right: 20px;
   position: relative;
   color: $COLOR--charcoal-grey;
-  text-transform: capitalize;
-  line-height: 1.42857143;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 20px;
+  white-space: nowrap;
 }
-.user-search-login {
+.user-info {
   margin: -1px 0 0 20px;
   font-size: 13px;
   padding-right: 20px;
@@ -60,37 +60,5 @@
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
-  line-height: 1.42857143;
-}
-.assign-btn {
-  flex: 0 0 20px;
-  outline: none;
-  width: 20px;
-  height: 20px;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-color: transparent;
-  float: right;
-  margin-top: 8px;
-  border: none;
-  background-image: url('./img/ic-invite.svg');
-  &:hover {
-    cursor: pointer;
-  }
-  &.assigned-user {
-    background-image: url('./img/ic-check-copy.svg');
-  }
-}
-.disabled-item {
-  .assign-btn {
-    cursor: default;
-  }
-  &:hover {
-    background: transparent;
-    cursor: default;
-  }
-  * {
-    cursor: default;
-    color: $COLOR--gray-60;
-  }
+  line-height: 20px;
 }

@@ -374,24 +374,6 @@ export const mockData = {
       },
     },
     {
-      userId: 'mac',
-      email: 'test.gmail.com@gmail.com',
-      fullName: 'MaCi',
-      accountType: 'INTERNAL',
-      userRole: USER,
-      lastLogin: 1496666014716,
-      photoLoaded: true,
-      defaultProject: 'gnu',
-      assignedProjects: {
-        gnu: { projectRole: MEMBER, proposedRole: MEMBER, entryType: 'INTERNAL' },
-        mac_personal: {
-          projectRole: PROJECT_MANAGER,
-          proposedRole: PROJECT_MANAGER,
-          entryType: 'PERSONAL',
-        },
-      },
-    },
-    {
       userId: 'member-01',
       email: 'member.test@gmail.com',
       fullName: MEMBER,

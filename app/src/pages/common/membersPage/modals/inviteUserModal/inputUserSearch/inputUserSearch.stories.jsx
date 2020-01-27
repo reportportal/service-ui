@@ -41,20 +41,29 @@ storiesOf('Components/Inputs/InputUserSearch', module)
     },
   })
   .add('default state', () => <InputUserSearch />)
-  .add(
-    'Admin,projectId="superadmin_personal",with actions(type "test" in input,close DevTools,you get MOCK DATA)',
-    () => {
-      const mock = new MockAdapter(axios);
-      const API_REQUEST =
-        '/api/v1/user/search?page.page=1&page.size=10&page.sort=login%2CASC&term=test';
-      mock.onGet(API_REQUEST).reply(200, mockData);
-      return (
-        <InputUserSearch
-          isAdmin
-          projectId="superadmin_personal"
-          placeholder="Enter Login or Email"
-          onChange={action('Select user')}
-        />
-      );
-    },
-  );
+  .add('non admin, projectId="superadmin_personal", with actions', () => {
+    const mock = new MockAdapter(axios);
+    const API_REQUEST =
+      '/api/v1/project/superadmin_personal/usernames/search?page.page=1&page.size=10&page.sort=user%2CASC&term=e';
+    mock.onGet(API_REQUEST).reply(200, mockData);
+    return (
+      <InputUserSearch
+        placeholder="Type 'e'"
+        onChange={action('Select user')}
+        projectId="superadmin_personal"
+      />
+    );
+  })
+  .add('Admin,projectId="superadmin_personal", with actions', () => {
+    const mock = new MockAdapter(axios);
+    const API_REQUEST = '/api/v1/user/search?term=e';
+    mock.onGet(API_REQUEST).reply(200, mockData);
+    return (
+      <InputUserSearch
+        isAdmin
+        projectId="superadmin_personal"
+        placeholder="Type 'e'"
+        onChange={action('Select user')}
+      />
+    );
+  });
