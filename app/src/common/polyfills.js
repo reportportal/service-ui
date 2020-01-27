@@ -24,12 +24,45 @@ import areIntlLocalesSupported from 'intl-locales-supported';
 
 // NodeList.prototype.forEach (https://developer.mozilla.org/en-US/docs/Web/API/NodeList/forEach#Polyfill)
 if (window.NodeList && !NodeList.prototype.forEach) {
-  NodeList.prototype.forEach = function (callback, thisArg) {
+  NodeList.prototype.forEach = function(callback, thisArg) {
     thisArg = thisArg || window;
     for (let i = 0; i < this.length; i++) {
       callback.call(thisArg, this[i], i, this);
     }
   };
+}
+
+// Object.assign for IE 11 (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign#Polyfill)
+// This polyfill was added due to problems with react-intl: dist version doesn't include the polyfill, so we have to duplicate it here
+if (typeof Object.assign !== 'function') {
+  // Must be writable: true, enumerable: false, configurable: true
+  Object.defineProperty(Object, 'assign', {
+    value: function assign(target, varArgs) {
+      // .length of function is 2
+      'use strict';
+      if (target === null || target === undefined) {
+        throw new TypeError('Cannot convert undefined or null to object');
+      }
+
+      const to = Object(target);
+
+      for (let index = 1; index < arguments.length; index++) {
+        const nextSource = arguments[index];
+
+        if (nextSource !== null && nextSource !== undefined) {
+          for (var nextKey in nextSource) {
+            // Avoid bugs when hasOwnProperty is shadowed
+            if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+              to[nextKey] = nextSource[nextKey];
+            }
+          }
+        }
+      }
+      return to;
+    },
+    writable: true,
+    configurable: true,
+  });
 }
 
 // Chrome Intl doesn't support 'be' locale, so we have to manually apply polyfill in this case
@@ -68,4 +101,3 @@ export const polyfillLocales = () =>
       },
     );
   });
-

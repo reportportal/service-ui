@@ -15,14 +15,14 @@
  */
 
 export function getStorageItem(key) {
-  return localStorage.getItem(key) ? JSON.parse(localStorage.getItem(key)) : null;
+  return localStorage && localStorage.getItem(key) ? JSON.parse(localStorage.getItem(key)) : null;
 }
 export function setStorageItem(key, value) {
-  return localStorage.setItem(key, JSON.stringify(value));
+  return localStorage && localStorage.setItem(key, JSON.stringify(value));
 }
 
 export function removeStorageItem(key) {
-  localStorage.removeItem(key);
+  localStorage && localStorage.removeItem(key);
 }
 
 export function updateStorageItem(key, value = {}) {
@@ -31,14 +31,16 @@ export function updateStorageItem(key, value = {}) {
 }
 
 export function getSessionItem(key) {
-  return sessionStorage.getItem(key) ? JSON.parse(sessionStorage.getItem(key)) : null;
+  return sessionStorage && sessionStorage.getItem(key)
+    ? JSON.parse(sessionStorage.getItem(key))
+    : null;
 }
 export function setSessionItem(key, value) {
-  return sessionStorage.setItem(key, JSON.stringify(value));
+  return sessionStorage && sessionStorage.setItem(key, JSON.stringify(value));
 }
 
 export function removeSessionItem(key) {
-  sessionStorage.removeItem(key);
+  sessionStorage && sessionStorage.removeItem(key);
 }
 
 export function updateSessionItem(key, value = {}) {

@@ -201,5 +201,8 @@
       "prettier --write",
       "git add"
     ]
-  }
+  },
+  "browserslist": [
+    "ie 11"
+  ]
 }

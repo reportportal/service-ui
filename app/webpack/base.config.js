@@ -22,10 +22,13 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 // const CircularDependencyPlugin = require('circular-dependency-plugin');
 
 module.exports = {
-  entry: [path.resolve(__dirname, '../src/index.jsx')],
+  entry: {
+    polyfills: path.resolve(__dirname, '../src/common/polyfills.js'),
+    main: path.resolve(__dirname, '../src/index.jsx'),
+  },
   output: {
     path: path.resolve(__dirname, '../build'),
-    filename: 'app.[hash:6].js',
+    filename: '[name].app.[hash:6].js',
     publicPath: '',
   },
   resolve: {
@@ -38,6 +41,7 @@ module.exports = {
       store: path.resolve(__dirname, '../src/store'),
       routes: path.resolve(__dirname, '../src/routes'),
       layouts: path.resolve(__dirname, '../src/layouts'),
+      'react-intl': path.resolve(__dirname, '../node_modules/react-intl/dist/react-intl.js'), // https://github.com/formatjs/react-intl/issues/1499#issuecomment-570151879
     },
   },
   module: {
