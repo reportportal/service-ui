@@ -77,7 +77,6 @@ podTemplate(
             }
         }
 
-        def test = load "${ciDir}/jenkins/scripts/test.groovy"
         def utils = load "${ciDir}/jenkins/scripts/util.groovy"
         def helm = load "${ciDir}/jenkins/scripts/helm.groovy"
         def docker = load "${ciDir}/jenkins/scripts/docker.groovy"
