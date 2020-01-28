@@ -40,7 +40,7 @@ import { showModalAction } from 'controllers/modal';
 import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { InputUserSearch } from './inputUserSearch';
+import { InputUserSearch } from 'components/inputs/inputUserSearch';
 import styles from './inviteUserModal.scss';
 
 const cx = classNames.bind(styles);
