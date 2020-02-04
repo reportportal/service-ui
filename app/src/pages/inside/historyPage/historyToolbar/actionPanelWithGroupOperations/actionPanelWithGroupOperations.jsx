@@ -282,7 +282,7 @@ export class ActionPanelWithGroupOperations extends Component {
   };
 
   handleEditDefects = (eventData) => {
-    const { selectedItems, getDefectType, debugMode, onEditDefects } = this.props;
+    const { selectedItems, getDefectType, debugMode, onEditDefects, tracking } = this.props;
     const items = eventData && eventData.id ? [eventData] : selectedItems;
     const isDefectGroupOperation = isDefectGroupOperationAvailable({
       editedData: eventData,
@@ -290,6 +290,8 @@ export class ActionPanelWithGroupOperations extends Component {
       getDefectType,
       debugMode,
     });
+    tracking.trackEvent(HISTORY_PAGE_EVENTS.EDIT_DEFECT_ACTION);
+
     if (isDefectGroupOperation) {
       this.props.showModalAction({
         id: 'editToInvestigateDefectModal',
