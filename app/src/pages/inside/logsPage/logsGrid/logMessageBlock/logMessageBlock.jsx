@@ -22,7 +22,7 @@ import { MarkdownViewer } from 'components/main/markdown';
 import styles from './logMessageBlock.scss';
 
 const cx = classNames.bind(styles);
-const MARKDOWN_MODE = '!!!MARKDOWN MODE!!!';
+const MARKDOWN_MODE = '!!!MARKDOWN_MODE!!!';
 const MARKDOWN_MODE_REG_EXP = new RegExp(MARKDOWN_MODE);
 
 export class LogMessageBlock extends Component {
