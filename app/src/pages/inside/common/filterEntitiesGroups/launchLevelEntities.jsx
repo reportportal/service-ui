@@ -182,7 +182,6 @@ export class LaunchLevelEntities extends Component {
     defectTypes: PropTypes.object.isRequired,
     filterValues: PropTypes.object,
     render: PropTypes.func.isRequired,
-    launchAttributeKeysSearch: PropTypes.string.isRequired,
     activeProject: PropTypes.string.isRequired,
     visibleFilters: PropTypes.array,
   };

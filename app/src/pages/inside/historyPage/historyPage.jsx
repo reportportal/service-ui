@@ -103,10 +103,14 @@ export class HistoryPage extends Component {
   }
 
   onChangeHistoryBase = (historyBase) => {
-    this.setState({
-      historyBase,
-    });
-    this.props.refreshHistoryAction({ historyBase });
+    this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.SELECT_HISTORY_BASE);
+
+    if (historyBase !== this.state.historyBase) {
+      this.setState({
+        historyBase,
+      });
+      this.props.refreshHistoryAction({ historyBase });
+    }
   };
 
   onSelectItem = (item) => {
@@ -135,7 +139,6 @@ export class HistoryPage extends Component {
   };
 
   refreshPage = () => {
-    this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.SELECT_HISTORY_BASE);
     this.props.refreshHistoryAction({ historyBase: this.state.historyBase });
   };
 
