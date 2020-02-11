@@ -604,7 +604,7 @@ export class LaunchesPage extends Component {
         item: launch,
         type: LAUNCH_ITEM_TYPES.launch,
         fetchFunc: this.props.fetchLaunchesAction,
-        eventsInfo: LAUNCHES_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS,
+        eventsInfo: LAUNCHES_MODAL_EVENTS.EDIT_ITEMS_MODAL_EVENTS,
       },
     });
   };
@@ -618,10 +618,11 @@ export class LaunchesPage extends Component {
         type: LAUNCH_ITEM_TYPES.launch,
         fetchFunc: this.unselectAndFetchLaunches,
         eventsInfo: {
-          cancelBtn: LAUNCHES_MODAL_EVENTS.CLICK_CANCEL_BTN_EDIT_MODAL,
-          closeIcon: LAUNCHES_MODAL_EVENTS.CLOSE_ICON_EDIT_MODAL,
-          saveBtn: LAUNCHES_MODAL_EVENTS.CLICK_SAVE_BTN_EDIT_MODAL,
-          editDescription: LAUNCHES_MODAL_EVENTS.BULK_EDIT_LAUNCHES_DESCRIPTION,
+          cancelBtn: LAUNCHES_MODAL_EVENTS.EDIT_ITEMS_MODAL_EVENTS.CANCEL_BTN_EDIT_ITEM_MODAL,
+          closeIcon: LAUNCHES_MODAL_EVENTS.EDIT_ITEMS_MODAL_EVENTS.CLOSE_ICON_EDIT_ITEM_MODAL,
+          saveBtn: LAUNCHES_MODAL_EVENTS.EDIT_ITEMS_MODAL_EVENTS.SAVE_BTN_EDIT_ITEM_MODAL,
+          editDescription:
+            LAUNCHES_MODAL_EVENTS.EDIT_ITEMS_MODAL_EVENTS.BULK_EDIT_ITEMS_DESCRIPTION,
         },
       },
     });

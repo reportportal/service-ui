@@ -134,6 +134,7 @@ export class EditItemModal extends Component {
       parentLaunch: PropTypes.object,
       type: PropTypes.string,
       fetchFunc: PropTypes.func,
+      eventsInfo: PropTypes.object,
     }).isRequired,
     userProjectRole: PropTypes.string,
     userAccountRole: PropTypes.string,
@@ -147,7 +148,6 @@ export class EditItemModal extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    eventsInfo: PropTypes.object.isRequired,
   };
 
   static defaultProps = {
@@ -191,7 +191,10 @@ export class EditItemModal extends Component {
   };
 
   updateItemAndCloseModal = (closeModal) => (formData, dispatch, props) => {
-    const { eventsInfo, tracking } = this.props;
+    const {
+      data: { eventsInfo },
+      tracking,
+    } = this.props;
     if (props.data.item.description !== formData.description) {
       tracking.trackEvent(eventsInfo.EDIT_ITEM_DESCRIPTION);
     }
@@ -235,13 +238,12 @@ export class EditItemModal extends Component {
   render() {
     const {
       intl: { formatMessage },
-      data: { item, parentLaunch, type },
+      data: { item, parentLaunch, type, eventsInfo },
       handleSubmit,
       userAccountRole,
       userProjectRole,
       userId,
       tracking,
-      eventsInfo,
     } = this.props;
     const okButton = {
       text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
