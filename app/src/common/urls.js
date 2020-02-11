@@ -91,7 +91,7 @@ export const URLS = {
     }filter.cnt.attributeValue=${searchTerm}`,
   launchNameSearch: (activeProject) => (searchTerm = '') =>
     `${urlBase}${activeProject}/launch/names?filter.cnt.name=${searchTerm}`,
-  launchOwnersSearch: (activeProject, searchTerm = '') =>
+  launchOwnersSearch: (activeProject) => (searchTerm = '') =>
     `${urlBase}${activeProject}/launch/owners?filter.cnt.user=${searchTerm}`,
   launches: (activeProject) => `${urlBase}${activeProject}/launch`,
   launchesLatest: (activeProject, ids) =>
