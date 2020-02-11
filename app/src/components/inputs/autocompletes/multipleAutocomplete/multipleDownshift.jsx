@@ -17,6 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Downshift from 'downshift';
+import isEqual from 'fast-deep-equal';
 
 export class MultipleDownshift extends Component {
   static propTypes = {
@@ -52,7 +53,7 @@ export class MultipleDownshift extends Component {
 
   removeItem = (removedItem, downshift) => {
     this.handleChange(
-      this.props.selectedItems.filter((item) => item !== removedItem),
+      this.props.selectedItems.filter((item) => !isEqual(item, removedItem)),
       downshift,
     );
   };
@@ -60,7 +61,8 @@ export class MultipleDownshift extends Component {
   removeAllItems = (downshift) => this.handleChange([], downshift);
 
   handleSelection = (selectedItem, downshift) => {
-    if (this.props.selectedItems.includes(selectedItem)) {
+    if (!selectedItem) return;
+    if (this.props.selectedItems.some((item) => isEqual(item, selectedItem))) {
       this.removeItem(selectedItem, downshift);
     } else {
       this.addSelectedItem(selectedItem, downshift);

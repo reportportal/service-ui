@@ -52,8 +52,15 @@ SelectedItem.defaultProps = {
   parseValueToString: (value) => value || '',
 };
 
-export const SelectedItems = ({ items, ...props }) =>
-  (items || []).map((item) => <SelectedItem key={item} item={item} {...props} />);
+export const SelectedItems = ({ items, parseValueToString, ...props }) =>
+  (items || []).map((item) => (
+    <SelectedItem
+      key={parseValueToString(item)}
+      item={item}
+      parseValueToString={parseValueToString}
+      {...props}
+    />
+  ));
 
 SelectedItems.propTypes = {
   items: PropTypes.array,

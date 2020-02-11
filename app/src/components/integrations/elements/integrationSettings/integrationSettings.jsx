@@ -56,7 +56,7 @@ export class IntegrationSettings extends Component {
     projectId: PropTypes.string,
     activeProject: PropTypes.string.isRequired,
     data: PropTypes.object.isRequired,
-    formFieldsComponent: PropTypes.func.isRequired,
+    formFieldsComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]).isRequired,
     goToPreviousPage: PropTypes.func.isRequired,
     onUpdate: PropTypes.func.isRequired,
     removeIntegrationAction: PropTypes.func.isRequired,

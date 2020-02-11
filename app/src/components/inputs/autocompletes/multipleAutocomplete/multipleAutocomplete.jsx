@@ -16,6 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import isEqual from 'fast-deep-equal';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
@@ -90,7 +91,7 @@ export class MultipleAutocomplete extends Component {
       item,
       index,
       isActive: highlightedIndex === index,
-      isSelected: selectedItems.indexOf(item) > -1,
+      isSelected: selectedItems.some((selectedItem) => isEqual(selectedItem, item)),
       ...rest,
     });
 

@@ -58,7 +58,10 @@ export class AutocompleteOptions extends Component {
   filterStaticOptions = () => {
     const { options, inputValue, parseValueToString } = this.props;
     return (options || []).filter(
-      (option) => parseValueToString(option).indexOf((inputValue || '').trim()) > -1,
+      (option) =>
+        parseValueToString(option)
+          .toUpperCase()
+          .indexOf((inputValue.toUpperCase() || '').trim()) > -1,
     );
   };
 
