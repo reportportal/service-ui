@@ -104,7 +104,7 @@ export class AllLatestDropdown extends Component {
   };
 
   handleClickOutside = (e) => {
-    if (!this.nodeRef.current.contains(e.target) && this.state.expanded) {
+    if (this.nodeRef.current && !this.nodeRef.current.contains(e.target) && this.state.expanded) {
       this.setState({ expanded: false });
     }
   };

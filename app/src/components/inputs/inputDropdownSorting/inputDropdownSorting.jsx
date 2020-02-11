@@ -79,7 +79,7 @@ export class InputDropdownSorting extends Component {
   };
 
   handleClickOutside = (e) => {
-    if (!this.node.contains(e.target) && this.state.opened) {
+    if (this.node && !this.node.contains(e.target) && this.state.opened) {
       this.setState({ opened: false });
       this.props.onBlur();
     }
