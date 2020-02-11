@@ -85,7 +85,7 @@ export class ChartContainer extends Component {
     const { isPreview, observer, isCustomTooltip } = this.props;
     if (!isPreview) {
       observer.unsubscribe('widgetResized', this.resizeChart);
-      !isCustomTooltip && this.node.removeEventListener('mousemove', this.setupCoords);
+      !isCustomTooltip && this.node && this.node.removeEventListener('mousemove', this.setupCoords);
     }
     this.chart = null;
   }
