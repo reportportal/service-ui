@@ -54,7 +54,7 @@ export class IntegrationForm extends Component {
     change: PropTypes.func.isRequired,
     reset: PropTypes.func.isRequired,
     dirty: PropTypes.bool.isRequired,
-    formFieldsComponent: PropTypes.func.isRequired,
+    formFieldsComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]).isRequired,
     connected: PropTypes.bool.isRequired,
     isEmptyConfiguration: PropTypes.bool.isRequired,
     pluginName: PropTypes.string.isRequired,

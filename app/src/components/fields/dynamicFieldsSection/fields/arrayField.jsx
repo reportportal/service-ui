@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { AsyncMultipleAutocomplete } from 'components/inputs/autocompletes/asyncMultipleAutocomplete';
+import { MultipleAutocomplete } from 'components/inputs/autocompletes/multipleAutocomplete';
 import { DynamicField } from '../dynamicField';
 
 export class ArrayField extends Component {
@@ -46,7 +46,7 @@ export class ArrayField extends Component {
     return this.formatOptions(values);
   };
 
-  parseValueToString = (option) => option.value;
+  parseValueToString = (option) => (option && option.value) || '';
 
   parseTags = (options) => (options && options.map(this.parseValueToString)) || undefined;
 
@@ -60,7 +60,7 @@ export class ArrayField extends Component {
         parse={this.parseTags}
         {...rest}
       >
-        <AsyncMultipleAutocomplete
+        <MultipleAutocomplete
           options={this.formatOptions(field.definedValues)}
           parseValueToString={this.parseValueToString}
           creatable={this.creatable}
