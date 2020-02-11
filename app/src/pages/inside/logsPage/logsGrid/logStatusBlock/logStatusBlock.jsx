@@ -127,7 +127,7 @@ export class LogStatusBlock extends Component {
   isCheckboxActive = (value) => this.getLogStatusArray().includes(value);
 
   handleClickOutside = (e) => {
-    if (!this.node.current.contains(e.target) && this.state.opened) {
+    if (this.node.current && !this.node.current.contains(e.target) && this.state.opened) {
       this.setState({ opened: false });
     }
   };

@@ -117,7 +117,7 @@ export class ModalLayout extends Component {
   };
   onClickModal = (e) => {
     const { closeConfirmation } = this.props;
-    if (!this.modal.contains(e.target)) {
+    if (this.modal && !this.modal.contains(e.target)) {
       if (!closeConfirmation) {
         this.closeModal();
       } else {
