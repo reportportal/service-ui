@@ -94,7 +94,7 @@ export class InputConditionalTags extends Component {
     return getInputConditions(conditions);
   };
   handleClickOutside = (e) => {
-    if (!this.conditionsBlock.contains(e.target) && this.state.opened) {
+    if (this.conditionsBlock && !this.conditionsBlock.contains(e.target) && this.state.opened) {
       this.setState({ opened: false });
     }
   };

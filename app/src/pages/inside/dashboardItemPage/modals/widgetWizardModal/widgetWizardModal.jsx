@@ -93,7 +93,7 @@ export class WidgetWizardModal extends Component {
   }
 
   onClickModal = (e) => {
-    if (!this.modal.contains(e.target)) {
+    if (this.modal && !this.modal.contains(e.target)) {
       if (this.props.formValues) {
         this.setState({ showConfirmation: true });
       } else {
