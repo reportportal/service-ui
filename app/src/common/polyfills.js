@@ -21,6 +21,7 @@ import 'array.findindex';
 import 'promise-polyfill/src/polyfill';
 import 'polyfill-array-includes';
 import areIntlLocalesSupported from 'intl-locales-supported';
+import objectValues from 'object.values';
 
 // NodeList.prototype.forEach (https://developer.mozilla.org/en-US/docs/Web/API/NodeList/forEach#Polyfill)
 if (window.NodeList && !NodeList.prototype.forEach) {
@@ -65,10 +66,21 @@ if (typeof Object.assign !== 'function') {
   });
 }
 
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isInteger
+Number.isInteger = Number.isInteger || function(value) {
+  return typeof value === 'number' &&
+    isFinite(value) &&
+    Math.floor(value) === value;
+};
+
+if (!Object.values) {
+  objectValues.shim();
+}
+
 // Chrome Intl doesn't support 'be' locale, so we have to manually apply polyfill in this case
 export const polyfillLocales = () =>
   new Promise((resolve) => {
-    if (areIntlLocalesSupported(['en', 'ru', 'be'])) {
+    if (window.Intl.PluralRules && window.Intl.RelativeTimeFormat && areIntlLocalesSupported(['en', 'ru', 'be'])) {
       resolve();
       return;
     }
