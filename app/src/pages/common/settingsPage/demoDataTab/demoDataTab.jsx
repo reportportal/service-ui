@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { fetch } from 'common/utils';
@@ -94,7 +94,7 @@ const messages = defineMessages({
 @track()
 export class DemoDataTab extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     projectId: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
     showDefaultErrorNotification: PropTypes.func.isRequired,

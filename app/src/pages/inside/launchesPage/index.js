@@ -16,7 +16,6 @@
 
 export { LaunchesPage } from './launchesPage';
 export {
-  LaunchEditModal,
   LaunchDeleteModal,
   MoveToDebugModal,
   LaunchCompareModal,

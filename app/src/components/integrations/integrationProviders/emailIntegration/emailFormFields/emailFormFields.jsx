@@ -19,13 +19,13 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { formValueSelector } from 'redux-form';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import {
   validate,
   commonValidators,
   bindMessageToValidator,
   composeBoundValidators,
-} from 'common/utils';
+} from 'common/utils/validation';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { Input } from 'components/inputs/input';
@@ -90,7 +90,7 @@ const portValidator = composeBoundValidators([
 @injectIntl
 export class EmailFormFields extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     initialize: PropTypes.func.isRequired,
     change: PropTypes.func.isRequired,
     disabled: PropTypes.bool,
@@ -109,7 +109,10 @@ export class EmailFormFields extends Component {
   constructor(props) {
     super(props);
     this.protocolOptions = [{ value: 'smtp', label: 'SMTP' }];
-    this.authOptions = [{ value: true, label: 'ON' }, { value: false, label: 'OFF' }];
+    this.authOptions = [
+      { value: true, label: 'ON' },
+      { value: false, label: 'OFF' },
+    ];
   }
 
   componentDidMount() {

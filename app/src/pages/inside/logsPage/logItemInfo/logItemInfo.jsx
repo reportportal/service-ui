@@ -19,11 +19,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { DefectType } from 'pages/inside/stepPage/stepGrid/defectType';
+import { getIssueTitle } from 'pages/inside/common/utils';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import {
   linkIssueAction,
   unlinkIssueAction,
@@ -42,7 +42,12 @@ import {
 import { getDefectTypeSelector } from 'controllers/project';
 import { TO_INVESTIGATE } from 'common/constants/defectTypes';
 import { MANY } from 'common/constants/launchStatuses';
-import { availableBtsIntegrationsSelector, isPostIssueActionAvailable } from 'controllers/plugins';
+import {
+  availableBtsIntegrationsSelector,
+  isPostIssueActionAvailable,
+  isBtsPluginsExistSelector,
+  enabledBtsPluginsSelector,
+} from 'controllers/plugins';
 import { connectRouter } from 'common/utils';
 import LinkIcon from 'common/img/link-inline.svg';
 import DownLeftArrowIcon from 'common/img/down-left-arrow-inline.svg';
@@ -92,19 +97,25 @@ const messages = defineMessages({
     defaultMessage: 'Retries',
   },
 });
-const POST_BUG_EVENTS_INFO = {
-  postBtn: LOG_PAGE_EVENTS.POST_BTN_POST_ISSUE_MODAL,
-  attachmentsSwitcher: LOG_PAGE_EVENTS.ATTACHMENTS_SWITCHER_POST_ISSUE_MODAL,
-  logsSwitcher: LOG_PAGE_EVENTS.LOGS_SWITCHER_POST_ISSUE_MODAL,
-  commentSwitcher: LOG_PAGE_EVENTS.COMMENT_SWITCHER_POST_ISSUE_MODAL,
-  cancelBtn: LOG_PAGE_EVENTS.CANCEL_BTN_POST_ISSUE_MODAL,
-  closeIcon: LOG_PAGE_EVENTS.CLOSE_ICON_POST_ISSUE_MODAL,
+const POST_ISSUE_EVENTS_INFO = {
+  postBtn: LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.POST_BTN_POST_ISSUE_MODAL,
+  attachmentsSwitcher:
+    LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.ATTACHMENTS_SWITCHER_POST_ISSUE_MODAL,
+  logsSwitcher: LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.LOGS_SWITCHER_POST_ISSUE_MODAL,
+  commentSwitcher: LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.COMMENT_SWITCHER_POST_ISSUE_MODAL,
+  cancelBtn: LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.CANCEL_BTN_POST_ISSUE_MODAL,
+  closeIcon: LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.CLOSE_ICON_POST_ISSUE_MODAL,
 };
 const LINK_ISSUE_EVENTS_INFO = {
-  loadBtn: LOG_PAGE_EVENTS.LOAD_BTN_LINK_ISSUE_MODAL,
-  cancelBtn: LOG_PAGE_EVENTS.CANCEL_BTN_LINK_ISSUE_MODAL,
-  addNewIssue: LOG_PAGE_EVENTS.ADD_NEW_ISSUE_LINK_ISSUE_MODAL,
-  closeIcon: LOG_PAGE_EVENTS.CLOSE_ICON_LINK_ISSUE_MODAL,
+  loadBtn: LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.LOAD_BTN_LINK_ISSUE_MODAL,
+  cancelBtn: LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_LINK_ISSUE_MODAL,
+  addNewIssue: LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.ADD_NEW_ISSUE_BTN_LINK_ISSUE_MODAL,
+  closeIcon: LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_LINK_ISSUE_MODAL,
+};
+const UNLINK_ISSUE_EVENTS_INFO = {
+  unlinkBtn: LOG_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.UNLINK_BTN_UNLINK_ISSUE_MODAL,
+  cancelBtn: LOG_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_UNLINK_ISSUE_MODAL,
+  closeIcon: LOG_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_UNLINK_ISSUE_MODAL,
 };
 
 @connect(
@@ -115,6 +126,8 @@ const LINK_ISSUE_EVENTS_INFO = {
     retryItemId: activeRetryIdSelector(state),
     retries: retriesSelector(state),
     getDefectType: getDefectTypeSelector(state),
+    isBtsPluginsExist: isBtsPluginsExistSelector(state),
+    enabledBtsPlugins: enabledBtsPluginsSelector(state),
   }),
   {
     linkIssueAction,
@@ -135,7 +148,7 @@ const LINK_ISSUE_EVENTS_INFO = {
 @injectIntl
 export class LogItemInfo extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     onChangePage: PropTypes.func.isRequired,
     onChangeLogLevel: PropTypes.func.isRequired,
     editDefectsAction: PropTypes.func.isRequired,
@@ -159,6 +172,8 @@ export class LogItemInfo extends Component {
     retryItemId: PropTypes.number,
     retries: PropTypes.arrayOf(PropTypes.object),
     getDefectType: PropTypes.func,
+    isBtsPluginsExist: PropTypes.bool,
+    enabledBtsPlugins: PropTypes.array,
   };
   static defaultProps = {
     logItem: null,
@@ -166,22 +181,30 @@ export class LogItemInfo extends Component {
     retryItemId: null,
     retries: [],
     getDefectType: () => {},
+    isBtsPluginsExist: false,
+    enabledBtsPlugins: [],
   };
 
-  getIssueActionTitle = (noIssueMessage, isBtsUnavailable) => {
+  getIssueActionTitle = (noIssueMessage, isPostIssueUnavailable) => {
     const {
       logItem,
       intl: { formatMessage },
+      btsIntegrations,
+      isBtsPluginsExist,
+      enabledBtsPlugins,
     } = this.props;
-    let title = '';
 
     if (!logItem.issue) {
-      title = formatMessage(noIssueMessage);
-    } else if (isBtsUnavailable) {
-      title = formatMessage(COMMON_LOCALE_KEYS.NO_BTS_INTEGRATION);
+      return formatMessage(noIssueMessage);
     }
 
-    return title;
+    return getIssueTitle(
+      formatMessage,
+      btsIntegrations,
+      isBtsPluginsExist,
+      enabledBtsPlugins,
+      isPostIssueUnavailable,
+    );
   };
 
   getCopyDefectButtonText = () => {
@@ -269,7 +292,7 @@ export class LogItemInfo extends Component {
   addExtraSpaceTop = () => this.isDefectTypeVisible() && this.hasRetries();
 
   handleLinkIssue = () => {
-    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.LINK_ISSUE_BTN);
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.LINK_ISSUE_ACTION);
     this.props.linkIssueAction([this.props.logItem], {
       fetchFunc: this.props.fetchFunc,
       eventsInfo: LINK_ISSUE_EVENTS_INFO,
@@ -290,23 +313,19 @@ export class LogItemInfo extends Component {
       },
     ];
 
-    tracking.trackEvent(LOG_PAGE_EVENTS.UNLINK_ISSUE);
+    tracking.trackEvent(LOG_PAGE_EVENTS.UNLINK_ISSUES_ACTION);
 
     this.props.unlinkIssueAction(items, {
       fetchFunc,
-      eventsInfo: {
-        unlinkBtn: LOG_PAGE_EVENTS.UNLINK_BTN_UNLINK_ISSUE_MODAL,
-        cancelBtn: LOG_PAGE_EVENTS.CANCEL_BTN_UNLINK_ISSUE_MODAL,
-        closeIcon: LOG_PAGE_EVENTS.CLOSE_ICON_UNLINK_ISSUE_MODAL,
-      },
+      eventsInfo: UNLINK_ISSUE_EVENTS_INFO,
     });
   };
 
   handlePostIssue = () => {
-    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.POST_ISSUE_BTN);
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.POST_ISSUE_ACTION);
     this.props.postIssueAction([this.props.logItem], {
       fetchFunc: this.props.fetchFunc,
-      eventsInfo: POST_BUG_EVENTS_INFO,
+      eventsInfo: POST_ISSUE_EVENTS_INFO,
     });
   };
 
@@ -319,10 +338,11 @@ export class LogItemInfo extends Component {
           item: logItem,
           fetchFunc: this.props.fetchFunc,
           eventsInfo: {
-            saveBtnDropdown: LOG_PAGE_EVENTS.SAVE_BTN_DROPDOWN_EDIT_ITEM_MODAL,
-            postBugBtn: LOG_PAGE_EVENTS.POST_BUG_BTN_EDIT_ITEM_MODAL,
-            linkIssueBtn: LOG_PAGE_EVENTS.LOAD_BUG_BTN_EDIT_ITEM_MODAL,
-            postBugEvents: POST_BUG_EVENTS_INFO,
+            changeSearchMode: LOG_PAGE_EVENTS.CHANGE_SEARCH_MODE_EDIT_DEFECT_MODAL,
+            selectAllSimilarItems: LOG_PAGE_EVENTS.SELECT_ALL_SIMILIAR_ITEMS_EDIT_DEFECT_MODAL,
+            editDefectsEvents: LOG_PAGE_EVENTS.EDIT_DEFECT_MODAL_EVENTS,
+            unlinkIssueEvents: UNLINK_ISSUE_EVENTS_INFO,
+            postIssueEvents: POST_ISSUE_EVENTS_INFO,
             linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
           },
         },
@@ -332,10 +352,9 @@ export class LogItemInfo extends Component {
         fetchFunc: this.props.fetchFunc,
         debugMode: this.props.debugMode,
         eventsInfo: {
-          saveBtnDropdown: LOG_PAGE_EVENTS.SAVE_BTN_DROPDOWN_EDIT_ITEM_MODAL,
-          postBugBtn: LOG_PAGE_EVENTS.POST_BUG_BTN_EDIT_ITEM_MODAL,
-          linkIssueBtn: LOG_PAGE_EVENTS.LOAD_BUG_BTN_EDIT_ITEM_MODAL,
-          postBugEvents: POST_BUG_EVENTS_INFO,
+          editDefectsEvents: LOG_PAGE_EVENTS.EDIT_DEFECT_MODAL_EVENTS,
+          unlinkIssueEvents: UNLINK_ISSUE_EVENTS_INFO,
+          postIssueEvents: POST_ISSUE_EVENTS_INFO,
           linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
         },
       });
@@ -385,8 +404,9 @@ export class LogItemInfo extends Component {
       debugMode,
       intl: { formatMessage },
     } = this.props;
-
     const isPostIssueUnavailable = !isPostIssueActionAvailable(this.props.btsIntegrations);
+    const copySendDefectTitle =
+      logItem && !logItem.issue ? formatMessage(messages.noDefectTypeToCopySendDefect) : null;
 
     return (
       logItem && (
@@ -412,7 +432,7 @@ export class LogItemInfo extends Component {
                       icon={DownLeftArrowIcon}
                       disabled={this.isCopySendButtonDisabled()}
                       onClick={this.showCopyDefectModal}
-                      title={this.getIssueActionTitle(messages.noDefectTypeToCopySendDefect)}
+                      title={copySendDefectTitle}
                     >
                       {this.getCopyDefectButtonText()}
                     </GhostButton>
@@ -421,7 +441,7 @@ export class LogItemInfo extends Component {
                       icon={UpRightArrowIcon}
                       disabled={this.isCopySendButtonDisabled()}
                       onClick={this.showSendDefectModal}
-                      title={this.getIssueActionTitle(messages.noDefectTypeToCopySendDefect)}
+                      title={copySendDefectTitle}
                     >
                       {this.getSendDefectButtonText()}
                     </GhostButton>
@@ -432,10 +452,14 @@ export class LogItemInfo extends Component {
                     icon={BugIcon}
                     disabled={!logItem.issue || isPostIssueUnavailable}
                     onClick={this.handlePostIssue}
-                    title={this.getIssueActionTitle(
-                      messages.noDefectTypeToPostIssue,
-                      !isPostIssueActionAvailable(btsIntegrations),
-                    )}
+                    title={
+                      !logItem.issue || isPostIssueUnavailable
+                        ? this.getIssueActionTitle(
+                            messages.noDefectTypeToPostIssue,
+                            isPostIssueUnavailable,
+                          )
+                        : ''
+                    }
                   >
                     {formatMessage(messages.postIssue)}
                   </GhostButton>
@@ -445,10 +469,14 @@ export class LogItemInfo extends Component {
                     icon={LinkIcon}
                     disabled={!logItem.issue || !btsIntegrations.length}
                     onClick={this.handleLinkIssue}
-                    title={this.getIssueActionTitle(
-                      messages.noDefectTypeToLinkIssue,
-                      !btsIntegrations.length,
-                    )}
+                    title={
+                      !logItem.issue || !btsIntegrations.length
+                        ? this.getIssueActionTitle(
+                            messages.noDefectTypeToLinkIssue,
+                            isPostIssueUnavailable,
+                          )
+                        : ''
+                    }
                   >
                     {formatMessage(messages.linkIssue)}
                   </GhostButton>

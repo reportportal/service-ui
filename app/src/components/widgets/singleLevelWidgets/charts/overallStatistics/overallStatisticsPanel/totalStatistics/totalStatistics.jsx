@@ -24,10 +24,11 @@ const cx = classNames.bind(styles);
 export class TotalStatistics extends React.PureComponent {
   static propTypes = {
     values: PropTypes.object.isRequired,
+    onChartClick: PropTypes.func.isRequired,
   };
 
   render() {
-    const { values } = this.props;
+    const { values, onChartClick } = this.props;
     const total = values.statistics$executions$total;
     const passed = values.statistics$executions$passed;
     const failed = values.statistics$executions$failed;
@@ -43,7 +44,7 @@ export class TotalStatistics extends React.PureComponent {
 
               <div>Total</div>
             </div>
-            <ProgressBar progressData={progressData} />
+            <ProgressBar onChartClick={onChartClick} progressData={progressData} />
           </div>
         )}
 

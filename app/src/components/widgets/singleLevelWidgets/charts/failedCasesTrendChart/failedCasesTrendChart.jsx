@@ -16,22 +16,41 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
+import { connect } from 'react-redux';
+import { statisticsLinkSelector } from 'controllers/testItem';
+import { activeProjectSelector } from 'controllers/user';
+import { FAILED, INTERRUPTED } from 'common/constants/testStatuses';
 import { STATS_FAILED } from 'common/constants/statistics';
 import { ChartContainer } from 'components/widgets/common/c3chart';
-import { getChartDefaultProps } from 'components/widgets/common/utils';
+import {
+  getChartDefaultProps,
+  getDefaultTestItemLinkParams,
+} from 'components/widgets/common/utils';
 import { getConfig } from './config/getConfig';
 import styles from './failedCasesTrendChart.scss';
 
 const cx = classNames.bind(styles);
 
 @injectIntl
+@connect(
+  (state) => ({
+    project: activeProjectSelector(state),
+    getStatisticsLink: statisticsLinkSelector(state),
+  }),
+  {
+    navigate: (linkAction) => linkAction,
+  },
+)
 export class FailedCasesTrendChart extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     widget: PropTypes.object.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
+    getStatisticsLink: PropTypes.func.isRequired,
+    navigate: PropTypes.func.isRequired,
+    project: PropTypes.string.isRequired,
     isPreview: PropTypes.bool,
     height: PropTypes.number,
     observer: PropTypes.object,
@@ -43,8 +62,24 @@ export class FailedCasesTrendChart extends Component {
     observer: {},
   };
 
+  onChartClick = (data) => {
+    const { widget, getStatisticsLink, project } = this.props;
+    const launchIds = widget.content.result.map((item) => item.id);
+    const link = getStatisticsLink({
+      statuses: [FAILED, INTERRUPTED],
+    });
+    const navigationParams = getDefaultTestItemLinkParams(
+      project,
+      widget.appliedFilters[0].id,
+      launchIds[data.index],
+    );
+
+    this.props.navigate(Object.assign(link, navigationParams));
+  };
+
   configData = {
     getConfig,
+    onChartClick: this.onChartClick,
     formatMessage: this.props.intl.formatMessage,
   };
 

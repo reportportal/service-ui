@@ -19,9 +19,9 @@ import {
   userAccountRoleSelector,
   activeProjectRoleSelector,
 } from 'controllers/user';
-import { launchSelector } from 'controllers/testItem';
 import { IN_PROGRESS } from 'common/constants/launchStatuses';
 import { canDeleteTestItem } from 'common/utils/permissions';
+import { launchSelector } from './selectors';
 
 export const validateDeleteItem = (item, items, state) => {
   const user = userInfoSelector(state);

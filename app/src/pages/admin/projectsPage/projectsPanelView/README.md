@@ -1,4 +1,4 @@
-## **Component to view  projects in panel view**
+## **Component to view projects in panel view**
 
 ### Props:
 

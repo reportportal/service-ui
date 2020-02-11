@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { fetch } from 'common/utils';
@@ -58,7 +58,7 @@ const messages = defineMessages({
 @track()
 export class NameColumn extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     showNotification: PropTypes.func.isRequired,
     className: PropTypes.string.isRequired,
     value: PropTypes.object,
@@ -121,6 +121,7 @@ export class NameColumn extends Component {
       className,
       currentUser,
     } = this.props;
+
     return (
       <div className={cx('name-col', className)}>
         <UserAvatar

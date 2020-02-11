@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-export { logSagas, collectLogPayload } from './sagas';
+export { logSagas } from './sagas';
 export {
   fetchLogPageData,
   refreshLogPageData,

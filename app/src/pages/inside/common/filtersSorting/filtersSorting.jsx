@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { InputDropdownSorting } from 'components/inputs/inputDropdownSorting';
 import {
   STATS_SKIPPED,
@@ -96,7 +96,7 @@ const options = [
 @injectIntl
 export class FiltersSorting extends Component {
   static propTypes = {
-    intl: intlShape,
+    intl: PropTypes.object,
     filter: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
     sortingString: PropTypes.string,

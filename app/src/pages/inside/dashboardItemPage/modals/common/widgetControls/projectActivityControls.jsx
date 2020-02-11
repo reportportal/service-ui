@@ -18,14 +18,10 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { URLS } from 'common/urls';
-import {
-  arrayRemoveDoubles,
-  validate,
-  bindMessageToValidator,
-  commonValidators,
-} from 'common/utils';
+import { arrayRemoveDoubles } from 'common/utils/arrayRemoveDoubles';
+import { validate, bindMessageToValidator, commonValidators } from 'common/utils/validation';
 import { GROUP_TO_ACTION_MAP, ACTION_TO_GROUP_MAP } from 'common/constants/actionTypes';
 import { activeProjectSelector } from 'controllers/user';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
@@ -50,14 +46,6 @@ const messages = defineMessages({
     id: 'ProjectActivityControls.UsersPlaceholder',
     defaultMessage: 'Enter user name',
   },
-  UsersFocusPlaceholder: {
-    id: 'ProjectActivityControls.UsersFocusPlaceholder',
-    defaultMessage: 'Please enter 3 or more characters',
-  },
-  UsersNoMatches: {
-    id: 'ProjectActivityControls.UsersNoMatches',
-    defaultMessage: 'No matches found.',
-  },
   ItemsValidationError: {
     id: 'ProjectActivityControls.ItemsValidationError',
     defaultMessage: 'Items count should have value from 1 to 600',
@@ -72,13 +60,13 @@ const actionTypeValidator = (message) => bindMessageToValidator(validate.isNotEm
 
 @injectIntl
 @connect((state) => ({
-  usernamesSearchUrl: URLS.projectUsernamesSearch(activeProjectSelector(state)),
+  activeProject: activeProjectSelector(state),
 }))
 export class ProjectActivityControls extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     widgetSettings: PropTypes.object.isRequired,
-    usernamesSearchUrl: PropTypes.string.isRequired,
+    activeProject: PropTypes.string.isRequired,
     initializeControlsForm: PropTypes.func.isRequired,
   };
 
@@ -122,27 +110,24 @@ export class ProjectActivityControls extends Component {
       .reduce((acc, val) => acc.concat(val), []);
   };
 
-  normalizeValue = (value) => value && `${value}`.replace(/\D+/g, '');
-
   formatUsernames = (values) =>
-    ((values.length && values.split && values.split(',')) || values || []).map((value) => ({
-      value,
-      label: value,
-    }));
+    (values.length && values.split && values.split(',')) || values || [];
 
   parseUsernames = (values) => {
     if (values === null) return null;
     if (values && Array.isArray(values)) {
-      return values.map((value) => value.value).join(',');
+      return values.join(',');
     }
 
     return undefined;
   };
 
+  normalizeValue = (value) => value && `${value}`.replace(/\D+/g, '');
+
   render() {
     const {
       intl: { formatMessage },
-      usernamesSearchUrl,
+      activeProject,
     } = this.props;
 
     return (
@@ -182,14 +167,10 @@ export class ProjectActivityControls extends Component {
           <TagsControl
             fieldLabel={formatMessage(messages.UsernameControlText)}
             placeholder={formatMessage(messages.UsersPlaceholder)}
-            focusPlaceholder={formatMessage(messages.UsersFocusPlaceholder)}
-            nothingFound={formatMessage(messages.UsersNoMatches)}
             minLength={3}
-            async
-            uri={usernamesSearchUrl}
+            getURI={URLS.projectUsernamesSearch(activeProject)}
             makeOptions={this.formatUsernames}
             multi
-            removeSelected
           />
         </FieldProvider>
       </Fragment>

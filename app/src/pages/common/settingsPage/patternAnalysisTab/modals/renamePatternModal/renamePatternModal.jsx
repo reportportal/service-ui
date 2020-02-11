@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import track from 'react-tracking';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { ModalLayout, ModalField, withModal } from 'components/main/modal';
@@ -26,7 +26,7 @@ import { Input } from 'components/inputs/input';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { commonValidators } from 'common/utils';
+import { commonValidators } from 'common/utils/validation';
 import { patternsSelector } from 'controllers/project';
 
 const LABEL_WIDTH = 110;
@@ -49,16 +49,17 @@ const messages = defineMessages({
 @reduxForm({
   form: 'renamePatternForm',
   validate: ({ name }, { patterns, data }) => ({
-    name: commonValidators.createPatternNameValidator(patterns, data.pattern && data.pattern.id)(
-      name,
-    ),
+    name: commonValidators.createPatternNameValidator(
+      patterns,
+      data.pattern && data.pattern.id,
+    )(name),
   }),
 })
 @injectIntl
 @track()
 export class RenamePatternModal extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     data: PropTypes.shape({
       pattern: PropTypes.object,
       onSave: PropTypes.func,

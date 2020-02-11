@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { PRODUCT_BUG, AUTOMATION_BUG, SYSTEM_ISSUE } from 'common/constants/defectTypes';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import styles from './infoLine.scss';
 import { BarChart } from './barChart';
 import { Duration } from './duration';
@@ -53,7 +53,7 @@ const normalizeExecutions = (executions) => ({
 @injectIntl
 export class InfoLine extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     data: PropTypes.object.isRequired,
     events: PropTypes.object,
   };
@@ -69,9 +69,9 @@ export class InfoLine extends Component {
     } = this.props;
     const defects = data.statistics.defects;
     const executions = normalizeExecutions(data.statistics.executions);
-    const passed = executions.passed / executions.total * 100 || 0;
-    const failed = executions.failed / executions.total * 100 || 0;
-    const skipped = executions.skipped / executions.total * 100 || 0;
+    const passed = (executions.passed / executions.total) * 100 || 0;
+    const failed = (executions.failed / executions.total) * 100 || 0;
+    const skipped = (executions.skipped / executions.total) * 100 || 0;
     const tooltipEventsInfo = {
       [PRODUCT_BUG]: events.PB_TOOLTIP,
       [SYSTEM_ISSUE]: events.SI_TOOLTIP,

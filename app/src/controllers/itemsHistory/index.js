@@ -16,10 +16,19 @@
 
 export { itemsHistoryReducer } from './reducer';
 export {
+  toggleHistoryItemSelectionAction,
+  selectHistoryItemsAction,
+  unselectAllHistoryItemsAction,
+  deleteHistoryItemsAction,
   fetchItemsHistoryAction,
-  fetchHistoryPageInfo,
-  setVisibleItemsCount,
-  refreshHistory,
+  fetchHistoryPageInfoAction,
+  refreshHistoryAction,
+  proceedWithValidItemsAction,
+  linkIssueHistoryAction,
+  unlinkIssueHistoryAction,
+  postIssueHistoryAction,
+  editDefectsHistoryAction,
+  setFilterForCompareAction,
 } from './actionCreators';
 export {
   FETCH_ITEMS_HISTORY,
@@ -27,12 +36,19 @@ export {
   HISTORY_ITEMS_TO_LOAD,
   RESET_HISTORY,
   HISTORY_DEPTH_CONFIG,
+  HISTORY_BASE_DEFAULT_VALUE,
 } from './constants';
 export { historySagas } from './sagas';
 export {
-  itemsHistorySelector,
+  selectedHistoryItemsSelector,
+  validationErrorsSelector,
+  lastOperationSelector,
   historySelector,
-  visibleItemsCountSelector,
+  totalItemsCountSelector,
+  historyPaginationSelector,
   loadingSelector,
-  historyItemsSelector,
+  historyPageLinkSelector,
+  filterForCompareSelector,
+  filterHistorySelector,
+  itemsHistorySelector,
 } from './selectors';

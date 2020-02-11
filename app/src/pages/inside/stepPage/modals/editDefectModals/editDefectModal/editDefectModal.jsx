@@ -19,14 +19,20 @@ import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
-import { availableBtsIntegrationsSelector, isPostIssueActionAvailable } from 'controllers/plugins';
+import {
+  availableBtsIntegrationsSelector,
+  isPostIssueActionAvailable,
+  isBtsPluginsExistSelector,
+  enabledBtsPluginsSelector,
+} from 'controllers/plugins';
 import { unlinkIssueAction, linkIssueAction, postIssueAction } from 'controllers/step';
 import { hideModalAction } from 'controllers/modal';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { fetch, setStorageItem, getStorageItem } from 'common/utils';
+import { getIssueTitle } from 'pages/inside/common/utils';
 import { URLS } from 'common/urls';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -47,6 +53,8 @@ const cx = classNames.bind(styles);
   (state) => ({
     btsIntegrations: availableBtsIntegrationsSelector(state),
     url: URLS.testItems(activeProjectSelector(state)),
+    isBtsPluginsExist: isBtsPluginsExistSelector(state),
+    enabledBtsPlugins: enabledBtsPluginsSelector(state),
   }),
   {
     showNotification,
@@ -59,7 +67,7 @@ const cx = classNames.bind(styles);
 @track()
 export class EditDefectModal extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     url: PropTypes.string.isRequired,
     btsIntegrations: PropTypes.array.isRequired,
     data: PropTypes.shape({
@@ -77,16 +85,28 @@ export class EditDefectModal extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    isBtsPluginsExist: PropTypes.bool.isRequired,
+    enabledBtsPlugins: PropTypes.array.isRequired,
   };
 
   constructor(props) {
     super(props);
     const {
-      intl,
+      intl: { formatMessage },
       btsIntegrations,
+      isBtsPluginsExist,
+      enabledBtsPlugins,
       data: { items },
     } = props;
     const initialState = {};
+    const isPostIssueUnavailable = !isPostIssueActionAvailable(btsIntegrations);
+    const issueTitle = getIssueTitle(
+      formatMessage,
+      btsIntegrations,
+      isBtsPluginsExist,
+      enabledBtsPlugins,
+      isPostIssueUnavailable,
+    );
 
     if (this.isBulkEditOperation()) {
       initialState.changeCommentMode =
@@ -101,19 +121,21 @@ export class EditDefectModal extends Component {
 
     this.multiActionButtonItems = [
       {
-        label: intl.formatMessage(messages.saveAndPostIssueMessage),
+        label: formatMessage(messages.saveAndPostIssueMessage),
         value: 'Post',
+        title: isPostIssueUnavailable ? issueTitle : '',
         onClick: () => this.onEditDefects(this.handlePostIssue, true),
-        disabled: !isPostIssueActionAvailable(btsIntegrations),
+        disabled: isPostIssueUnavailable,
       },
       {
-        label: intl.formatMessage(messages.saveAndLinkIssueMessage),
+        label: formatMessage(messages.saveAndLinkIssueMessage),
         value: 'Link',
+        title: btsIntegrations.length ? '' : issueTitle,
         onClick: () => this.onEditDefects(this.handleLinkIssue, true),
         disabled: !btsIntegrations.length,
       },
       {
-        label: intl.formatMessage(messages.saveAndUnlinkIssueMessage),
+        label: formatMessage(messages.saveAndUnlinkIssueMessage),
         value: 'Unlink',
         onClick: () => this.onEditDefects(this.handleUnlinkIssue, true),
         disabled: this.isBulkEditOperation()
@@ -125,15 +147,15 @@ export class EditDefectModal extends Component {
     this.changeCommentModeOptions = [
       {
         value: CHANGE_COMMENT_MODE.NOT_CHANGE,
-        label: intl.formatMessage(messages.notChangeCommentTitle),
+        label: formatMessage(messages.notChangeCommentTitle),
       },
       {
         value: CHANGE_COMMENT_MODE.REPLACE,
-        label: intl.formatMessage(messages.replaceCommentsTitle),
+        label: formatMessage(messages.replaceCommentsTitle),
       },
       {
         value: CHANGE_COMMENT_MODE.ADD_TO_EXISTING,
-        label: intl.formatMessage(messages.addToExistingCommentTitle),
+        label: formatMessage(messages.addToExistingCommentTitle),
       },
     ];
 
@@ -217,26 +239,32 @@ export class EditDefectModal extends Component {
   };
 
   handleUnlinkIssue = () => {
-    this.props.tracking.trackEvent(this.props.data.eventsInfo.unlinkIssueBtn);
+    const { editDefectsEvents, unlinkIssueEvents } = this.props.data.eventsInfo;
+
+    this.props.tracking.trackEvent(editDefectsEvents.unlinkIssueBtn);
     this.props.unlinkIssueAction(this.getItemsToTheNextAction(), {
       fetchFunc: this.props.data.fetchFunc,
-      eventsInfo: this.props.data.eventsInfo.unlinkModalEvents,
+      eventsInfo: unlinkIssueEvents,
     });
   };
 
   handleLinkIssue = () => {
-    this.props.tracking.trackEvent(this.props.data.eventsInfo.linkIssueBtn);
+    const { editDefectsEvents, linkIssueEvents } = this.props.data.eventsInfo;
+
+    this.props.tracking.trackEvent(editDefectsEvents.linkIssueBtn);
     return this.props.linkIssueAction(this.getItemsToTheNextAction(), {
       fetchFunc: this.props.data.fetchFunc,
-      eventsInfo: this.props.data.eventsInfo.linkIssueEvents,
+      eventsInfo: linkIssueEvents,
     });
   };
 
   handlePostIssue = () => {
-    this.props.tracking.trackEvent(this.props.data.eventsInfo.postBugBtn);
+    const { editDefectsEvents, postIssueEvents } = this.props.data.eventsInfo;
+
+    this.props.tracking.trackEvent(editDefectsEvents.postIssueBtn);
     this.props.postIssueAction(this.getItemsToTheNextAction(), {
       fetchFunc: this.props.data.fetchFunc,
-      eventsInfo: this.props.data.eventsInfo.postBugEvents,
+      eventsInfo: postIssueEvents,
     });
   };
 
@@ -297,10 +325,12 @@ export class EditDefectModal extends Component {
   };
 
   handleIgnoreAnalyzerChange = (newValue) => {
+    const { editDefectsEvents } = this.props.data.eventsInfo;
+
     this.props.tracking.trackEvent(
       newValue
-        ? STEP_PAGE_EVENTS.IGNORE_IN_AA_EDIT_DEFECT_MODAL
-        : STEP_PAGE_EVENTS.INCLUDE_IN_AA_EDIT_DEFECT_MODAL,
+        ? editDefectsEvents.IGNORE_IN_AA_EDIT_DEFECT_MODAL
+        : editDefectsEvents.INCLUDE_IN_AA_EDIT_DEFECT_MODAL,
     );
     this.setState({
       ignoreAnalyzer: newValue,
@@ -333,52 +363,59 @@ export class EditDefectModal extends Component {
       </div>
     );
 
-  renderMultiActionButton = ({ ...rest }) => (
-    <MultiActionButton {...rest} toggleMenuEventInfo={this.props.data.eventsInfo.saveBtnDropdown} />
-  );
+  renderMultiActionButton = ({ ...rest }) => {
+    const { editDefectsEvents } = this.props.data.eventsInfo;
+
+    return (
+      <MultiActionButton
+        {...rest}
+        toggleMenuEventInfo={editDefectsEvents.SAVE_BTN_DROPDOWN_EDIT_DEFECT_MODAL}
+      />
+    );
+  };
 
   render() {
     const {
-      intl,
-      data: { debugMode },
+      intl: { formatMessage },
+      data: { debugMode, eventsInfo },
     } = this.props;
     const customButton = {
       onClick: this.onEditDefects,
       buttonProps: {
         items: this.multiActionButtonItems,
-        title: intl.formatMessage(COMMON_LOCALE_KEYS.SAVE),
+        title: formatMessage(COMMON_LOCALE_KEYS.SAVE),
       },
       component: this.renderMultiActionButton,
     };
     const okButton = {
       onClick: this.onEditDefects,
-      text: intl.formatMessage(COMMON_LOCALE_KEYS.SAVE),
+      text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
     };
     const cancelButton = {
-      text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      eventInfo: STEP_PAGE_EVENTS.CANCEL_BTN_EDIT_DEFECT_MODAL,
+      text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      eventInfo: eventsInfo.editDefectsEvents.CANCEL_BTN_EDIT_DEFECT_MODAL,
     };
     return (
       <ModalLayout
-        title={intl.formatMessage(messages.title)}
+        title={formatMessage(messages.title)}
         customButton={debugMode ? null : customButton}
         okButton={debugMode ? okButton : null}
         cancelButton={cancelButton}
         closeConfirmation={this.getCloseConfirmationConfig()}
-        closeIconEventInfo={STEP_PAGE_EVENTS.CLOSE_ICON_EDIT_DEFECT_MODAL}
+        closeIconEventInfo={eventsInfo.editDefectsEvents.CLOSE_ICON_EDIT_DEFECT_MODAL}
         className={cx('modal-window')}
         renderFooterElements={this.renderFooter}
       >
         <div className={cx('edit-defect-content')}>
           <div className={cx('defect-type')}>
             <span className={cx('defect-type-title')}>
-              {intl.formatMessage(messages.defectTypeTitle)}
+              {formatMessage(messages.defectTypeTitle)}
             </span>
             <div className={cx('defect-type-selector-wrapper')}>
               <DefectTypeSelector
                 onChange={this.handleSelectDefectTypeChange}
                 value={this.state.defectType}
-                placeholder={intl.formatMessage(messages.defectTypeSelectorPlaceholder)}
+                placeholder={formatMessage(messages.defectTypeSelectorPlaceholder)}
               />
             </div>
           </div>
@@ -389,7 +426,7 @@ export class EditDefectModal extends Component {
                 onChange={this.handleIgnoreAnalyzerChange}
               >
                 <span className={cx('ignore-aa-title')}>
-                  {intl.formatMessage(messages.ignoreAaTitle)}
+                  {formatMessage(messages.ignoreAaTitle)}
                 </span>
               </InputSwitcher>
             </div>
@@ -403,7 +440,7 @@ export class EditDefectModal extends Component {
           >
             <MarkdownEditor
               value={this.state.markdownValue}
-              placeholder={intl.formatMessage(messages.defectCommentPlaceholder)}
+              placeholder={formatMessage(messages.defectCommentPlaceholder)}
               onChange={this.handleMarkdownChange}
             />
             <div className={cx('markdown-disable-cover')} />
@@ -412,11 +449,11 @@ export class EditDefectModal extends Component {
             <div className={cx('hot-keys-wrapper')}>
               <span className={cx('hot-keys')}>
                 <span className={cx('hot-key')}>Esc </span>
-                {intl.formatMessage(messages.hotKeyCancelCaption)}
+                {formatMessage(messages.hotKeyCancelCaption)}
               </span>
               <span className={cx('hot-keys')}>
                 <span className={cx('hot-key')}>Ctrl + Enter </span>
-                {intl.formatMessage(messages.hotKeySubmitCaption)}
+                {formatMessage(messages.hotKeySubmitCaption)}
               </span>
             </div>
           </div>

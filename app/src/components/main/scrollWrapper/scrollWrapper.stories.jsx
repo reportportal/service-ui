@@ -16,7 +16,7 @@
 
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import { ScrollWrapper } from './scrollWrapper';
 import README from './README.md';
 
@@ -52,7 +52,11 @@ storiesOf('Components/Main/ScrollWrapper', module)
       width: 400,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('default state', () => (
     <ScrollWrapper>
       <div>{shortText}</div>

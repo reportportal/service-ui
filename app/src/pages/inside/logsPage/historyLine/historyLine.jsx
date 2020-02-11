@@ -61,23 +61,26 @@ export class HistoryLine extends Component {
 
   checkIfTheItemLinkIsActive = (item) =>
     item.id !== this.props.activeItemId &&
-    (item.status.toLowerCase() !== MANY && item.status.toLowerCase() !== NOT_FOUND);
+    item.status.toLowerCase() !== MANY &&
+    item.status.toLowerCase() !== NOT_FOUND;
 
   render() {
+    const { historyItems, activeItemId, changeActiveItem, projectId } = this.props;
+
     return (
       <div className={cx('history-line')}>
-        {this.props.historyItems &&
-          this.props.historyItems.map((item, index) => (
+        {historyItems &&
+          historyItems.map((item, index) => (
             <HistoryLineItem
-              key={item.launchNumber}
-              active={item.id === this.props.activeItemId}
+              key={item.id}
+              active={item.id === activeItemId}
               isFirstItem={index === 0}
-              isLastItem={index === this.props.historyItems.length - 1}
+              isLastItem={index === historyItems.length - 1}
               onClick={() =>
-                this.checkIfTheItemLinkIsActive(item) ? this.props.changeActiveItem(item.id) : {}
+                this.checkIfTheItemLinkIsActive(item) ? changeActiveItem(item.id) : {}
               }
               path={item.path}
-              projectId={this.props.projectId}
+              projectId={projectId}
               {...item}
             />
           ))}

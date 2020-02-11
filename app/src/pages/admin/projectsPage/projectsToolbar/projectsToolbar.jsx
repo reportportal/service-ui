@@ -17,7 +17,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import track from 'react-tracking';
 import { InputFilter } from 'components/inputs/inputFilter';
@@ -48,15 +48,15 @@ import { fetch } from 'common/utils';
 import { PROJECTS } from 'common/constants/projectsObjectTypes';
 import { collectFilterEntities } from 'components/filterEntities/containers/utils';
 import { downloadFile } from 'common/utils/downloadFile';
+import { messages } from './../messages';
 import { ProjectEntities } from './projectEntities';
 import { ProjectsSorting } from './projectsSorting';
 import styles from './projectsToolbar.scss';
-import { messages } from './../messages';
 
 const cx = classNames.bind(styles);
 @connect(
   (state) => ({
-    filterEnities: collectFilterEntities(querySelector(state)),
+    filterEntities: collectFilterEntities(querySelector(state)),
     selectedProjects: selectedProjectsSelector(state),
     viewMode: viewModeSelector(state),
   }),
@@ -74,11 +74,11 @@ const cx = classNames.bind(styles);
 @track()
 export class ProjectsToolbar extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     viewMode: PropTypes.string,
     setViewMode: PropTypes.func.isRequired,
     selectedProjects: PropTypes.arrayOf(PropTypes.object),
-    filterEnities: PropTypes.object,
+    filterEntities: PropTypes.object,
     deleteItemsAction: PropTypes.func.isRequired,
     showScreenLockAction: PropTypes.func.isRequired,
     hideScreenLockAction: PropTypes.func.isRequired,
@@ -97,7 +97,7 @@ export class ProjectsToolbar extends Component {
   static defaultProps = {
     viewMode: GRID_VIEW,
     selectedProjects: [],
-    filterEnities: {},
+    filterEntities: {},
     sortingColumn: null,
     sortingDirection: null,
     onChangeSorting: () => {},
@@ -105,7 +105,7 @@ export class ProjectsToolbar extends Component {
 
   onExportProjects = () => {
     this.props.tracking.trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.EXPORT_BTN);
-    downloadFile(URLS.exportProjects(this.props.filterEnities));
+    downloadFile(URLS.exportProjects(this.props.filterEntities));
   };
 
   getSelectedProjectsNames = () =>

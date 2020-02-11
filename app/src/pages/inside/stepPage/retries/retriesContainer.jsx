@@ -31,6 +31,7 @@ export class RetriesContainer extends Component {
     testItemId: PropTypes.number.isRequired,
     activeProject: PropTypes.string,
     retries: PropTypes.arrayOf(PropTypes.object).isRequired,
+    collapsed: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -70,7 +71,7 @@ export class RetriesContainer extends Component {
 
   render() {
     const { logItem, selectedIndex, loading } = this.state;
-    const { testItemId, retries } = this.props;
+    const { testItemId, retries, collapsed } = this.props;
     if (!retries.length) {
       return null;
     }
@@ -84,6 +85,7 @@ export class RetriesContainer extends Component {
         selectedIndex={selectedIndex}
         loading={loading}
         onRetrySelect={this.handleRetrySelect}
+        collapsed={collapsed}
       />
     );
   }

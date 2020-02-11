@@ -16,7 +16,7 @@
 
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import { defectTypesSelector } from 'controllers/project';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -58,14 +58,6 @@ const messages = defineMessages({
   FiltersPlaceholder: {
     id: 'ProductStatusControls.FiltersPlaceholder',
     defaultMessage: 'Enter filter names',
-  },
-  FiltersFocusPlaceholder: {
-    id: 'ProductStatusControls.FiltersFocusPlaceholder',
-    defaultMessage: 'Please enter 3 or more characters',
-  },
-  FiltersNoMatches: {
-    id: 'ProductStatusControls.FiltersNoMatches',
-    defaultMessage: 'No matches found.',
   },
   StartTimeCriteria: {
     id: 'ProductStatusControls.StartTimeCriteria',
@@ -113,15 +105,15 @@ const validators = {
 @connect((state) => ({
   defectTypes: defectTypesSelector(state),
   filtersSearchUrl: URLS.filtersSearch(activeProjectSelector(state)),
-  attributesSearchUrl: URLS.launchAttributeKeysSearch(activeProjectSelector(state)),
+  activeProject: activeProjectSelector(state),
 }))
 export class ProductStatusControls extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     defectTypes: PropTypes.object.isRequired,
     widgetSettings: PropTypes.object.isRequired,
     filtersSearchUrl: PropTypes.string.isRequired,
-    attributesSearchUrl: PropTypes.string.isRequired,
+    activeProject: PropTypes.string.isRequired,
     initializeControlsForm: PropTypes.func.isRequired,
   };
 
@@ -149,16 +141,6 @@ export class ProductStatusControls extends Component {
     });
   }
 
-  formatFilterOptions = (values) =>
-    values.content.map((value) => ({ value: value.id, label: value.name }));
-
-  formatFilters = (values) => values.map((value) => ({ value: value.value, label: value.name }));
-
-  parseFilters = (values) =>
-    values.length > 0
-      ? values && values.map((value) => ({ value: value.value, name: value.label }))
-      : [];
-
   formatBasicColumns = (values) =>
     values.filter((value) => STATIC_BASE_COLUMNS.indexOf(value) === -1);
 
@@ -184,7 +166,7 @@ export class ProductStatusControls extends Component {
     const {
       intl: { formatMessage },
       filtersSearchUrl,
-      attributesSearchUrl,
+      activeProject,
     } = this.props;
 
     return (
@@ -199,14 +181,9 @@ export class ProductStatusControls extends Component {
           <TagsControl
             fieldLabel={formatMessage(messages.FiltersFieldLabel)}
             placeholder={formatMessage(messages.FiltersPlaceholder)}
-            focusPlaceholder={formatMessage(messages.FiltersFocusPlaceholder)}
-            nothingFound={formatMessage(messages.FiltersNoMatches)}
             minLength={3}
-            async
             multi
-            uri={filtersSearchUrl}
-            makeOptions={this.formatFilterOptions}
-            removeSelected
+            getURI={() => filtersSearchUrl}
           />
         </FieldProvider>
         <FieldProvider
@@ -227,7 +204,7 @@ export class ProductStatusControls extends Component {
           parse={this.parseCustomColumns}
           validate={validators.customColumns}
         >
-          <CustomColumnsControl uri={attributesSearchUrl} />
+          <CustomColumnsControl getURI={URLS.launchAttributeKeysSearch(activeProject)} />
         </FieldProvider>
         <FieldProvider name="contentParameters.widgetOptions.latest">
           <TogglerControl

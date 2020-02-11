@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -51,7 +51,7 @@ const messages = defineMessages({
 @injectIntl
 export class AddSharedWidgetModal extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     showScreenLockAction: PropTypes.func.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -96,6 +96,7 @@ export class AddSharedWidgetModal extends Component {
     this.props.showScreenLockAction();
     const widget = {
       widgetId: id,
+      widgetType,
       ...getDefaultWidgetConfig(widgetType),
     };
     onConfirm(widget, closeModal);

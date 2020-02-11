@@ -46,6 +46,7 @@
   }
 }
 .name-link {
+  padding-right: 5px;
   font-family: $FONT-SEMIBOLD;
   font-size: 14px;
   color: $COLOR--windows-blue;
@@ -54,6 +55,9 @@
   @media (max-width: $SCREEN_SM_MAX) {
     font-size: 16px;
   }
+}
+.name {
+  display: inline;
 }
 .edit-number-box {
   white-space: nowrap;

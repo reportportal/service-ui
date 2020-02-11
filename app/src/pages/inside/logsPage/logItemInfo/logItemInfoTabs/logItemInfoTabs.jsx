@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import track from 'react-tracking';
 import {
@@ -86,7 +86,7 @@ const ATTACHMENTS_TAB_ID = 'attachments';
 @track()
 export class LogItemInfoTabs extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     lastActivity: PropTypes.object,
     loading: PropTypes.bool.isRequired,
     onChangePage: PropTypes.func.isRequired,

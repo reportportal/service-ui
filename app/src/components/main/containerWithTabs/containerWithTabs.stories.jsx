@@ -16,7 +16,7 @@
 
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { ContainerWithTabs } from './containerWithTabs';
 import README from './README.md';
@@ -74,7 +74,11 @@ storiesOf('Components/Main/ContainerWithTabs', module)
       width: '70%',
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('default state (no provided info)', () => <ContainerWithTabs />)
   .add('with different data', () => (
     <div id="tooltip-root">

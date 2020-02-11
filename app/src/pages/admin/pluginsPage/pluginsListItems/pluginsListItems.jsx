@@ -17,7 +17,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import {
   ALL_GROUP_TYPE,
   NOTIFICATION_GROUP_TYPE,
@@ -61,7 +61,7 @@ const pluginTitle = defineMessages({
 @injectIntl
 export class PluginsListItems extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     title: PropTypes.string.isRequired,
     items: PropTypes.array.isRequired,
     onToggleActive: PropTypes.func.isRequired,

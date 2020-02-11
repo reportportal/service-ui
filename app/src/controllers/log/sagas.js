@@ -21,15 +21,12 @@ import {
   logPageOffsetSelector,
 } from 'controllers/testItem';
 import { URLS } from 'common/urls';
-import { activeProjectSelector, userIdSelector } from 'controllers/user';
-import {
-  logItemIdSelector,
-  pagePropertiesSelector,
-  pathnameChangedSelector,
-} from 'controllers/pages';
+import { activeProjectSelector } from 'controllers/user';
+import { logItemIdSelector, pathnameChangedSelector } from 'controllers/pages';
 import { debugModeSelector } from 'controllers/launch';
 import { createFetchPredicate, fetchDataAction } from 'controllers/fetch';
 import { isEmptyObject } from 'common/utils';
+import { collectLogPayload } from './sagaUtils';
 import {
   ACTIVITY_NAMESPACE,
   DEFAULT_HISTORY_DEPTH,
@@ -37,21 +34,14 @@ import {
   FETCH_LOG_PAGE_DATA,
   HISTORY_NAMESPACE,
   LOG_ITEMS_NAMESPACE,
-  LOG_LEVEL_FILTER_KEY,
-  WITH_ATTACHMENTS_FILTER_KEY,
-  NAMESPACE,
-  HIDE_PASSED_LOGS,
-  HIDE_EMPTY_STEPS,
   FETCH_LOG_PAGE_STACK_TRACE,
   STACK_TRACE_NAMESPACE,
   STACK_TRACE_PAGINATION_OFFSET,
   DETAILED_LOG_VIEW,
 } from './constants';
-
 import {
   activeLogIdSelector,
   prevActiveLogIdSelector,
-  querySelector,
   activeRetryIdSelector,
   prevActiveRetryIdSelector,
   logStackTracePaginationSelector,
@@ -65,12 +55,6 @@ import {
 } from './attachments';
 import { sauceLabsSagas } from './sauceLabs';
 import { nestedStepSagas, CLEAR_NESTED_STEPS } from './nestedSteps';
-import {
-  getWithAttachments,
-  getLogLevel,
-  getHidePassedLogs,
-  getHideEmptySteps,
-} from './storageUtils';
 import { clearLogPageStackTrace, setPageLoadingAction } from './actionCreators';
 
 function* fetchActivity() {
@@ -80,41 +64,6 @@ function* fetchActivity() {
     fetchDataAction(ACTIVITY_NAMESPACE)(URLS.logItemActivity(activeProject, activeLogItemId)),
   );
   yield take(createFetchPredicate(ACTIVITY_NAMESPACE));
-}
-export function* collectLogPayload() {
-  const activeProject = yield select(activeProjectSelector);
-  const userId = yield select(userIdSelector);
-  const query = yield select(querySelector, NAMESPACE);
-  const filterLevel = query[LOG_LEVEL_FILTER_KEY] || getLogLevel(userId).id;
-  const withAttachments = getWithAttachments(userId) || undefined;
-  const hidePassedLogs = getHidePassedLogs(userId) || undefined;
-  const hideEmptySteps = getHideEmptySteps(userId) || undefined;
-  const activeLogItemId = yield select(activeRetryIdSelector);
-  const fullParams = yield select(pagePropertiesSelector, NAMESPACE);
-  // prevent duplication of level params in query
-  let params = Object.keys(fullParams).reduce((acc, key) => {
-    if (key === LOG_LEVEL_FILTER_KEY) {
-      return acc;
-    }
-    return { ...acc, [key]: fullParams[key] };
-  }, {});
-  params = {
-    ...params,
-    [WITH_ATTACHMENTS_FILTER_KEY]: withAttachments,
-    [HIDE_PASSED_LOGS]: hidePassedLogs,
-    [HIDE_EMPTY_STEPS]: hideEmptySteps,
-  };
-  return {
-    activeProject,
-    userId,
-    params,
-    filterLevel,
-    withAttachments,
-    activeLogItemId,
-    query,
-    hidePassedLogs,
-    hideEmptySteps,
-  };
 }
 
 function* fetchLogItems(payload = {}) {
@@ -160,7 +109,7 @@ function* fetchHistoryEntries() {
   const logItemId = yield select(logItemIdSelector);
   yield put(
     fetchDataAction(HISTORY_NAMESPACE)(
-      URLS.testItemsHistory(activeProject, logItemId, DEFAULT_HISTORY_DEPTH),
+      URLS.testItemsHistory(activeProject, DEFAULT_HISTORY_DEPTH, 'line', logItemId),
     ),
   );
   yield take(createFetchPredicate(HISTORY_NAMESPACE));

@@ -19,7 +19,7 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import { redirect } from 'redux-first-router';
-import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
+import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import {
   showNotification,
@@ -32,7 +32,8 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputOutside } from 'components/inputs/inputOutside';
 import { BigButton } from 'components/buttons/bigButton';
-import { fetch, commonValidators } from 'common/utils';
+import { fetch } from 'common/utils/fetch';
+import { commonValidators } from 'common/utils/validation';
 import { URLS } from 'common/urls';
 import { LOGIN_PAGE } from 'controllers/pages';
 import EmailIcon from './img/email-icon-inline.svg';
@@ -69,7 +70,7 @@ const notifications = defineMessages({
 @injectIntl
 export class ForgotPasswordForm extends PureComponent {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     showScreenLockAction: PropTypes.func.isRequired,
     hideScreenLockAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,

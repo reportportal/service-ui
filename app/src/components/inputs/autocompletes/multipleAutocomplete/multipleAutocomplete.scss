@@ -1,0 +1,112 @@
+.autocomplete-container {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+.autocomplete {
+  position: relative;
+  border: 1px solid $COLOR--gray-80;
+  background-color: $COLOR--white-two;
+  box-shadow: none;
+  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  &:hover {
+    border-color: $COLOR--gray-47;
+  }
+  &.error.touched {
+    border-color: $COLOR--orange-red;
+    box-shadow: 0 0 2px 0 rgba($COLOR--orange-red, 0.7);
+  }
+  &.disabled {
+    background-color: $COLOR--gray-91;
+    border-color: $COLOR--gray-80;
+  }
+  &.focused {
+    border-color: $COLOR--topaz;
+    box-shadow: 0 0 2px 0 rgba($COLOR--topaz, 0.7);
+  }
+}
+
+.autocomplete-input {
+  position: relative;
+  display: inline-flex;
+  flex-wrap: wrap;
+  width: 100%;
+  box-sizing: border-box;
+  &.clearable {
+    padding-right: 20px;
+    &.mobile-disabled {
+      @media (max-width: $SCREEN_XS_MAX) {
+        padding-right: 0;
+      }
+    }
+  }
+}
+
+.input {
+  position: relative;
+  display: inline-block;
+  height: 30px;
+  width: 0;
+  min-width: 50px;
+  padding: 6px 10px 6px 10px;
+  margin: 0;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  line-height: 13px;
+  color: $COLOR--charcoal-grey;
+  box-sizing: border-box;
+  outline: none;
+  flex-grow: 1;
+  border: 0;
+  &.disabled {
+    background-color: $COLOR--gray-91;
+  }
+
+  &:-webkit-autofill {
+    box-shadow: 0 0 0 1000px #fdffeb inset; /* stylelint-disable-line color-no-hex */
+  }
+  &.type-number::-webkit-inner-spin-button,
+  &.type-number::-webkit-outer-spin-button {
+    appearance: none;
+    margin: 0;
+  }
+  &.mobile-disabled {
+    @media (max-width: $SCREEN_XS_MAX) {
+      background-color: $COLOR--gray-91;
+      pointer-events: none;
+    }
+  }
+}
+
+.input-control-btn {
+  background-color: transparent;
+  border: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  width: 25px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  outline: 0;
+  padding: 0 6px;
+  :active {
+    border: 0;
+  }
+  &.mobile-disabled {
+    @media (max-width: $SCREEN_XS_MAX) {
+      display: none;
+    }
+  }
+}
+
+.cross-icon {
+  position: relative;
+  box-sizing: border-box;
+  margin: auto;
+  width: 12px;
+  height: 12px;
+}

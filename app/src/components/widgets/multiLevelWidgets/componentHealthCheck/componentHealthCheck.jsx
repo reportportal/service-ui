@@ -16,7 +16,7 @@
 
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import isEqual from 'fast-deep-equal';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
@@ -70,7 +70,7 @@ const messages = defineMessages({
 )
 export class ComponentHealthCheck extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     widget: PropTypes.object.isRequired,
     fetchWidget: PropTypes.func,
     clearQueryParams: PropTypes.func,

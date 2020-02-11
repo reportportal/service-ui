@@ -18,10 +18,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import track from 'react-tracking';
 import { connect } from 'react-redux';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { pluginsSelector } from 'controllers/plugins';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
-import { AUTHORIZATION_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
 import { PLUGINS_PAGE } from 'components/main/analytics/events';
 import { PluginsTabs } from './pluginsTabs';
 
@@ -39,14 +38,11 @@ const messages = defineMessages({
 @injectIntl
 export class PluginsPage extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     plugins: PropTypes.array.isRequired,
   };
 
-  getFilterItems = () => [...new Set(this.getPlugins().map((item) => item.groupType))];
-
-  getPlugins = () =>
-    this.props.plugins.filter((item) => item.groupType !== AUTHORIZATION_GROUP_TYPE);
+  getFilterItems = () => [...new Set(this.props.plugins.map((item) => item.groupType))];
 
   breadcrumbs = [
     {
@@ -59,7 +55,7 @@ export class PluginsPage extends Component {
       <PageLayout>
         <PageHeader breadcrumbs={this.breadcrumbs} />
         <PageSection>
-          <PluginsTabs plugins={this.getPlugins()} filterItems={this.getFilterItems()} />
+          <PluginsTabs plugins={this.props.plugins} filterItems={this.getFilterItems()} />
         </PageSection>
       </PageLayout>
     );

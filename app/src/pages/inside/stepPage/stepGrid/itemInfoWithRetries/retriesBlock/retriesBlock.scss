@@ -17,7 +17,7 @@
 .retries-block {
   position: relative;
 
-  @media(max-width: $SCREEN_SM_MAX) {
+  @media (max-width: $SCREEN_SM_MAX) {
     display: none;
   }
 }
@@ -32,7 +32,7 @@
   top: 0;
   right: calc(-100% + 12px);
 
-  @media(max-width: $SCREEN_MD_MAX) {
+  @media (max-width: $SCREEN_MD_MAX) {
     right: calc(-100% + 55px);
   }
 }

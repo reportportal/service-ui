@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import track from 'react-tracking';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { addFilteringFieldToConditions } from 'controllers/filter';
 import { LEVEL_LAUNCH } from 'common/constants/launchLevels';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -35,7 +35,7 @@ const cx = classNames.bind(styles);
 @injectIntl
 export class AddEditFilter extends Component {
   static propTypes = {
-    intl: intlShape,
+    intl: PropTypes.object,
     filter: PropTypes.object.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,

@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import Parser from 'html-react-parser';
 import { Grid } from 'components/main/grid';
 import { dateFormat } from 'common/utils';
@@ -78,10 +78,9 @@ const AttachmentColumn = ({ className, value, customProps }) => (
       console: customProps.consoleView,
     })}
   >
-    {value.binaryContent &&
-      value.binaryContent.contentType && (
-        <AttachmentBlock customProps={customProps} value={value.binaryContent} />
-      )}
+    {value.binaryContent && value.binaryContent.contentType && (
+      <AttachmentBlock customProps={customProps} value={value.binaryContent} />
+    )}
   </div>
 );
 AttachmentColumn.propTypes = {
@@ -122,7 +121,7 @@ LogMessageSearchCell.defaultProps = {
 @injectIntl
 export class LogsGrid extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     logItems: PropTypes.arrayOf(PropTypes.object),
     loading: PropTypes.bool,
     filter: PropTypes.string,
@@ -317,8 +316,9 @@ export class LogsGrid extends Component {
           nestedStepHeader={NestedStepHeader}
           nestedView
         />
-        {!logItems.length &&
-          !loading && <NoItemMessage message={intl.formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />}
+        {!logItems.length && !loading && (
+          <NoItemMessage message={intl.formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />
+        )}
       </div>
     );
   }

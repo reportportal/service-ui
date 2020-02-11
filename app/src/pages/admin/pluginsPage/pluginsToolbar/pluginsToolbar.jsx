@@ -15,8 +15,9 @@
  */
 
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { InputSearch } from 'components/inputs/inputSearch';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { ActionPanel } from './actionPanel';
@@ -31,7 +32,7 @@ const messages = defineMessages({
 @injectIntl
 export class PluginsToolbar extends PureComponent {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
   };
 
   render() {

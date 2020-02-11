@@ -21,14 +21,14 @@ import PropTypes from 'prop-types';
 import { ModalLayout, withModal, ModalField } from 'components/main/modal';
 import { reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { Input } from 'components/inputs/input';
 import { InputTextArea } from 'components/inputs/inputTextArea';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
-import { validate, composeBoundValidators, bindMessageToValidator } from 'common/utils';
+import { validate, composeBoundValidators, bindMessageToValidator } from 'common/utils/validation';
 import { dashboardItemsSelector } from 'controllers/dashboard';
 import styles from './addEditModal.scss';
 
@@ -36,7 +36,7 @@ const cx = classNames.bind(styles);
 const messages = defineMessages({
   dashboardNamePlaceholder: {
     id: 'DashboardForm.dashboardNamePlaceholder',
-    defaultMessage: 'Enter Dashboard Name',
+    defaultMessage: 'Enter dashboard name',
   },
   dashboardNameLabel: {
     id: 'DashboardForm.dashboardNameLabel',
@@ -44,7 +44,7 @@ const messages = defineMessages({
   },
   dashboardDescriptionPlaceholder: {
     id: 'DashboardForm.dashboardDescriptionPlaceholder',
-    defaultMessage: 'Enter Dashboard Description',
+    defaultMessage: 'Enter dashboard description',
   },
   dashboardDescriptionLabel: {
     id: 'DashboardForm.dashboardDescriptionLabel',
@@ -107,7 +107,7 @@ export class AddEditModal extends Component {
       type: PropTypes.string,
       eventsInfo: PropTypes.object,
     }),
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     initialize: PropTypes.func,
     dirty: PropTypes.bool.isRequired,
     handleSubmit: PropTypes.func,

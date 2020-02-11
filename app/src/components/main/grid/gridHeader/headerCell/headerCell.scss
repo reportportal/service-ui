@@ -53,7 +53,7 @@
     display: none;
   }
 
-  @media(max-width: $SCREEN_XL_MAX) {
+  @media (max-width: $SCREEN_XL_MAX) {
     .title-full {
       display: none;
     }
@@ -112,7 +112,7 @@
     left: -15px;
 
     svg {
-      fill: rgba($COLOR--gray-47, .5);
+      fill: rgba($COLOR--gray-47, 0.5);
     }
 
     &:hover {

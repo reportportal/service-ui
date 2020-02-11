@@ -15,8 +15,9 @@
  */
 
 import React, { Component, Fragment } from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { PROJECT_MANAGER, OPERATOR, CUSTOMER, MEMBER } from 'common/constants/projectRoles';
 import { ALL } from 'common/constants/permissions';
 import { PERMISSIONS_MAP } from './permissions';
@@ -28,7 +29,7 @@ const cx = classNames.bind(styles);
 @injectIntl
 export class PermissionMap extends Component {
   static propTypes = {
-    intl: intlShape,
+    intl: PropTypes.object,
   };
   static defaultProps = {
     intl: {},

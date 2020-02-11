@@ -16,3 +16,4 @@
 
 export const MARKDOWN = 'markdown';
 export const DEFAULT = 'default';
+export const CONSOLE = 'console';

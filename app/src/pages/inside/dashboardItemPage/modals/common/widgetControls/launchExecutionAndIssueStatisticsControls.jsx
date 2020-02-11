@@ -17,7 +17,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { defectTypesSelector } from 'controllers/project';
 import { FiltersControl } from './controls';
@@ -30,7 +30,7 @@ import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 }))
 export class LaunchExecutionAndIssueStatisticsControls extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     defectTypes: PropTypes.object.isRequired,
     widgetSettings: PropTypes.object.isRequired,
     initializeControlsForm: PropTypes.func.isRequired,

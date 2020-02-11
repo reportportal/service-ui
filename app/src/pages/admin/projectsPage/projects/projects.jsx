@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import track from 'react-tracking';
 
 import { SIZE_KEY, withPagination, PAGE_KEY } from 'controllers/pagination';
@@ -72,7 +72,7 @@ export class Projects extends Component {
     sortingColumn: PropTypes.string,
     sortingDirection: PropTypes.string,
     onChangeSorting: PropTypes.func,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     viewMode: PropTypes.string,
     loading: PropTypes.bool,
     projects: PropTypes.arrayOf(PropTypes.object),
@@ -139,19 +139,19 @@ export class Projects extends Component {
           <ProjectsPanelView />
         )}
 
-        {!!pageCount &&
-          !loading && (
-            <PaginationToolbar
-              activePage={activePage}
-              itemCount={itemCount}
-              pageCount={pageCount}
-              pageSize={pageSize}
-              onChangePage={onChangePage}
-              onChangePageSize={onChangePageSize}
-            />
-          )}
-        {!projects.length &&
-          !loading && <NoItemMessage message={intl.formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />}
+        {!!pageCount && !loading && (
+          <PaginationToolbar
+            activePage={activePage}
+            itemCount={itemCount}
+            pageCount={pageCount}
+            pageSize={pageSize}
+            onChangePage={onChangePage}
+            onChangePageSize={onChangePageSize}
+          />
+        )}
+        {!projects.length && !loading && (
+          <NoItemMessage message={intl.formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />
+        )}
       </React.Fragment>
     );
   }

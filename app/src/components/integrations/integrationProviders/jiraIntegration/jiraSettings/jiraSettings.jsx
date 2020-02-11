@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { showModalAction, hideModalAction } from 'controllers/modal';
 import {
@@ -36,7 +36,7 @@ import { messages } from '../messages';
 @injectIntl
 export class JiraSettings extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     data: PropTypes.object.isRequired,
     goToPreviousPage: PropTypes.func.isRequired,
     onUpdate: PropTypes.func.isRequired,

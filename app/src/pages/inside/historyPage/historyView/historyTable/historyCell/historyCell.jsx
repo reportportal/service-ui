@@ -20,11 +20,13 @@ import styles from './historyCell.scss';
 
 const cx = classNames.bind(styles);
 
-export const HistoryCell = ({ status, header, children, onClick, first }) => {
+export const HistoryCell = ({ status, header, children, onClick, first, bottom, highlighted }) => {
   const prefix = header ? 'header' : 'body';
   const className = cx('table-cell', `table-${prefix}-cell`, {
     [`table-${prefix}-cell-${status}`]: status,
     [`table-${prefix}-cell-first`]: first,
+    [`table-${prefix}-cell-bottom`]: bottom,
+    highlighted,
   });
   return header ? (
     <th className={className} onClick={onClick}>
@@ -41,15 +43,19 @@ export const HistoryCell = ({ status, header, children, onClick, first }) => {
 HistoryCell.propTypes = {
   status: PropTypes.string,
   header: PropTypes.bool,
+  first: PropTypes.bool,
+  bottom: PropTypes.bool,
+  highlighted: PropTypes.bool,
   children: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
   onClick: PropTypes.func,
-  first: PropTypes.bool,
 };
 
 HistoryCell.defaultProps = {
   status: null,
   header: false,
+  first: false,
+  bottom: false,
+  highlighted: false,
   children: null,
   onClick: () => {},
-  first: false,
 };

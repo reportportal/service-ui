@@ -15,13 +15,20 @@
  */
 
 import { combineReducers } from 'redux';
+import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
 import { fetchReducer } from 'controllers/fetch';
 import { paginationReducer } from 'controllers/pagination';
 import { groupOperationsReducer } from 'controllers/groupOperations';
+import { TEST_ITEM_PAGE, PROJECT_USERDEBUG_TEST_ITEM_PAGE } from 'controllers/pages';
 import { NAMESPACE } from './constants';
 
-export const testReducer = combineReducers({
+const reducer = combineReducers({
   tests: fetchReducer(NAMESPACE, { contentPath: 'content' }),
   pagination: paginationReducer(NAMESPACE),
   groupOperations: groupOperationsReducer(NAMESPACE),
 });
+
+export const testReducer = createPageScopedReducer(reducer, [
+  TEST_ITEM_PAGE,
+  PROJECT_USERDEBUG_TEST_ITEM_PAGE,
+]);

@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import track from 'react-tracking';
 import { ADMIN_PROJECTS_PAGE_EVENTS, ADMIN_PROJECTS_PAGE } from 'components/main/analytics/events';
@@ -79,7 +79,7 @@ const HEADER_BUTTONS = [
 @track({ page: ADMIN_PROJECTS_PAGE })
 export class ProjectsPage extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     navigateToSection: PropTypes.func.isRequired,
     addProject: PropTypes.func.isRequired,
     showModal: PropTypes.func.isRequired,

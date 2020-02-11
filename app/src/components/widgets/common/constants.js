@@ -30,6 +30,10 @@ export const DEFECT_TYPES = [
 ];
 export const LAUNCHES_QUANTITY = 'launchesQuantity';
 
+export const EXECUTIONS = 'executions';
+export const DEFECTS = 'defects';
+export const TOTAL_KEY = 'total';
+
 export const COLORS = {
   [TO_INVESTIGATE]: AVAILABLE_COLORS[`COLOR_${TO_INVESTIGATE.toUpperCase()}`],
   [INVESTIGATED]: AVAILABLE_COLORS[`COLOR_${INVESTIGATED.toUpperCase()}`],

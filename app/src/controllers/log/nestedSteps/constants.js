@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 
-import { NAMESPACE } from '../constants';
-
-export const NESTED_STEPS_NAMESPACE = `${NAMESPACE}/nestedSteps`;
 export const CLEAR_NESTED_STEP = 'clearNestedStep';
 export const TOGGLE_NESTED_STEP = 'toggleNestedStep';
 export const CLEAR_NESTED_STEPS = 'clearNestedSteps';

@@ -28,7 +28,8 @@ export const ServiceVersionsBlock = ({ services }) => (
       <FormattedMessage
         id={'ServiceVersionsBlock.currentVersion'}
         defaultMessage={'Current version'}
-      />:
+      />
+      :
     </span>
     <span className={cx('versions-list')}>
       {Object.keys(services).map((objKey) => {

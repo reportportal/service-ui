@@ -16,13 +16,13 @@
 
 import React, { Component } from 'react';
 import track from 'react-tracking';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import Link from 'redux-first-router-link';
 import { connect } from 'react-redux';
 import { ADMIN_PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
+import { SCREEN_XS_MAX_MEDIA } from 'common/constants/screenSizeVariables';
 import { navigateToProjectAction } from 'controllers/administrate/projects';
 import { showModalAction } from 'controllers/modal';
 import { PROJECT_PAGE } from 'controllers/pages';
@@ -46,7 +46,7 @@ const cx = classNames.bind(styles);
 export class ProjectName extends Component {
   static propTypes = {
     project: PropTypes.object.isRequired,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     navigateToProject: PropTypes.func.isRequired,
     showModal: PropTypes.func.isRequired,
     isAssigned: PropTypes.bool,
@@ -62,7 +62,7 @@ export class ProjectName extends Component {
 
   onProjectClick = (event) => {
     const { tracking, intl, isAssigned } = this.props;
-    if (!isAssigned && window.matchMedia(SCREEN_XS_MAX).matches) {
+    if (!isAssigned && window.matchMedia(SCREEN_XS_MAX_MEDIA).matches) {
       event.preventDefault();
       return;
     }

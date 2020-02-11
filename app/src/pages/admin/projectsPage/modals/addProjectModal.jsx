@@ -16,12 +16,12 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { Input } from 'components/inputs/input';
-import { validate, bindMessageToValidator, validateAsync } from 'common/utils';
+import { validate, bindMessageToValidator, validateAsync } from 'common/utils/validation';
 import { ModalLayout, withModal, ModalField } from 'components/main/modal';
 import { SectionHeader } from 'components/main/sectionHeader';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -42,7 +42,7 @@ const LABEL_WIDTH = 105;
 })
 export class AddProjectModal extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     data: PropTypes.object,
     dirty: PropTypes.bool,
     handleSubmit: PropTypes.func,

@@ -18,6 +18,7 @@
   display: flex;
   justify-content: stretch;
   padding: 12px;
+  opacity: 1;
 }
 
 .list {
@@ -26,4 +27,8 @@
 
 .details {
   flex-grow: 2;
+}
+
+.collapsed {
+  opacity: 0;
 }

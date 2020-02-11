@@ -48,12 +48,12 @@
   border-radius: 6px;
   background-color: $COLOR--white;
   border: 1px solid $COLOR--gray-60;
-  transition: .4s;
+  transition: 0.4s;
   cursor: pointer;
 
   &:before {
     position: absolute;
-    content: "";
+    content: '';
     height: 12px;
     width: 12px;
     left: -1px;
@@ -61,7 +61,7 @@
     border-radius: 6px;
     background-color: $COLOR--white;
     border: 1px solid $COLOR--topaz;
-    transition: .4s;
+    transition: 0.4s;
     box-sizing: border-box;
   }
 

@@ -14,9 +14,14 @@
  * limitations under the License.
  */
 
-import { UPDATE_PAGE_PROPERTIES } from './constants';
+import { UPDATE_PAGE_PROPERTIES, CLEAR_PAGE_STATE } from './constants';
 
 export const updatePagePropertiesAction = (properties) => ({
   type: UPDATE_PAGE_PROPERTIES,
   payload: properties,
+});
+
+export const clearPageStateAction = (oldPage, newPage) => ({
+  type: CLEAR_PAGE_STATE,
+  payload: { oldPage, newPage },
 });

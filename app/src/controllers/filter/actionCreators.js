@@ -29,6 +29,8 @@ import {
   FETCH_USER_FILTERS_SUCCESS,
   REMOVE_LAUNCHES_FILTER,
   UPDATE_FILTER_ORDERS,
+  FETCH_FILTERS_PAGE,
+  SET_PAGE_LOADING,
 } from './constants';
 
 export const fetchFiltersAction = (params) => ({
@@ -107,4 +109,14 @@ export const updateFilterSuccessAction = (filter, oldId) => ({
   meta: {
     oldId,
   },
+});
+
+export const fetchFiltersPageAction = (refreshProjectSettings) => ({
+  type: FETCH_FILTERS_PAGE,
+  payload: refreshProjectSettings,
+});
+
+export const setPageLoadingAction = (isLoading) => ({
+  type: SET_PAGE_LOADING,
+  payload: isLoading,
 });

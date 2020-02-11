@@ -1,0 +1,50 @@
+/*!
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.filter-control {
+  position: absolute;
+  z-index: $Z-INDEX-DEFAULT;
+  width: 400px;
+  margin-top: 5px;
+  border: solid 1px $COLOR--gray-91;
+  background-color: $COLOR--white-two;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.filter-list {
+  height: 200px;
+  box-sizing: border-box;
+  padding: 5px;
+}
+
+.compare-with-filter-control {
+  display: flex;
+}
+
+.selected-filter-control {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.selected-filter-name {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 10px;
+  color: $COLOR--gray-60;
+  font-size: 12px;
+}

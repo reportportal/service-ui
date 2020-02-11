@@ -17,11 +17,12 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { reduxForm, formPropTypes, formValues } from 'redux-form';
 import { URLS } from 'common/urls';
-import { fetch, validate } from 'common/utils';
+import { fetch } from 'common/utils/fetch';
+import { validate } from 'common/utils/validation';
 import { getUniqueAndCommonAttributes } from 'common/utils/attributeUtils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
@@ -149,7 +150,7 @@ export class EditItemsModal extends Component {
     currentProject: PropTypes.string.isRequired,
     descriptionAction: PropTypes.string,
     uniqueAttributes: PropTypes.array,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     showNotification: PropTypes.func.isRequired,
     showDefaultErrorNotification: PropTypes.func.isRequired,
     tracking: PropTypes.shape({
@@ -298,8 +299,8 @@ export class EditItemsModal extends Component {
         : URLS.testItemsInfoUpdate(currentProject);
     const data = {
       ids,
-      attributes: attributes.filter(
-        (attribute) => (attribute.from ? Boolean(attribute.from.value) : true),
+      attributes: attributes.filter((attribute) =>
+        attribute.from ? Boolean(attribute.from.value) : true,
       ),
     };
 

@@ -19,7 +19,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
@@ -76,7 +76,7 @@ const messages = defineMessages({
 )
 export class LaunchFinishForceModal extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     url: PropTypes.string.isRequired,
     userId: PropTypes.string.isRequired,
     data: PropTypes.shape({

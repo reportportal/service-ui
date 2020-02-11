@@ -13,14 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export {
-  validate,
-  validateAsync,
-  commonValidators,
-  bindMessageToValidator,
-  composeBoundValidators,
-} from './validation';
-
 export { isEmptyObject } from './isEmptyObject';
 export { referenceDictionary } from './referenceDictionary';
 export { fetch, ERROR_CANCELED, ERROR_UNAUTHORIZED } from './fetch';
@@ -59,5 +51,6 @@ export { queueReducers } from './queueReducers';
 export { waitForSelector } from './waitForSelector';
 export { isEmptyValue } from './isEmptyValue';
 export { formatAttribute } from './attributeUtils';
+export { createNamespacedActionPredicate } from './createNamespacedActionPredicate';
 export { omit } from './omit';
 export { throttle } from './throttle';

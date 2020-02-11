@@ -135,11 +135,12 @@
     border-radius: 0.3rem;
   }
   :global {
-    code.lang-error {
+    code.language-error {
       position: relative;
       padding: 10px 15px;
       background: transparent;
       font-size: 13px;
+      color: $COLOR--charcoal-grey;
       line-height: 18px;
       box-sizing: border-box;
 

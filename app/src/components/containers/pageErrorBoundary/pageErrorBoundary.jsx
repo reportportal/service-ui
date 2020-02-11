@@ -16,7 +16,7 @@
 
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import {PageError} from './pageError';
+import { PageError } from './pageError';
 
 export class PageErrorBoundary extends Component {
   static propTypes = {

@@ -71,29 +71,26 @@ export const AttributeList = ({
   valueURLCreator,
 }) => (
   <Fragment>
-    {attributes
-      .filter(notSystemAttributePredicate)
-      .map((attribute, i, filteredAttributes) => (
-        <EditableAttribute
-          key={`${attribute.key}_${attribute.value}`}
-          attribute={attribute}
-          attributes={filteredAttributes}
-          editMode={attribute.edited}
-          onChange={createChangeHandler(attributes, i, onChange)}
-          onRemove={createRemoveHandler(attributes, i, onChange)}
-          onEdit={createEditHandler(attributes, i, onChange)}
-          onCancelEdit={createCancelEditHandler(attributes, i, onChange)}
-          disabled={disabled}
-          keyURLCreator={keyURLCreator}
-          valueURLCreator={valueURLCreator}
-        />
-      ))}
-    {!hasEditedAttribute(attributes) &&
-      (!disabled && (
-        <div className={cx('add-new-button')} onClick={onAddNew}>
-          + <FormattedMessage id="AttributeList.addNew" defaultMessage="Add new" />
-        </div>
-      ))}
+    {attributes.filter(notSystemAttributePredicate).map((attribute, i, filteredAttributes) => (
+      <EditableAttribute
+        key={`${attribute.key}_${attribute.value}`}
+        attribute={attribute}
+        attributes={filteredAttributes}
+        editMode={attribute.edited}
+        onChange={createChangeHandler(attributes, i, onChange)}
+        onRemove={createRemoveHandler(attributes, i, onChange)}
+        onEdit={createEditHandler(attributes, i, onChange)}
+        onCancelEdit={createCancelEditHandler(attributes, i, onChange)}
+        disabled={disabled}
+        keyURLCreator={keyURLCreator}
+        valueURLCreator={valueURLCreator}
+      />
+    ))}
+    {!hasEditedAttribute(attributes) && !disabled && (
+      <div className={cx('add-new-button')} onClick={onAddNew}>
+        + <FormattedMessage id="AttributeList.addNew" defaultMessage="Add new" />
+      </div>
+    )}
   </Fragment>
 );
 AttributeList.propTypes = {

@@ -19,10 +19,10 @@ import {
   DROPDOWN_TYPE,
   DATE_TYPE,
   TEXT_TYPE,
-  FIELDS_MAP,
   VALUE_ID_KEY,
   VALUE_NAME_KEY,
 } from './constants';
+import { FIELDS_MAP } from './dynamicFieldMap';
 
 const normalizeDefinedValue = (item) =>
   !item[VALUE_ID_KEY] ? { ...item, [VALUE_ID_KEY]: item[VALUE_NAME_KEY] } : item;

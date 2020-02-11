@@ -16,7 +16,7 @@
 
 import { takeLatest, call, put, all, select, take } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
-import { fetch } from 'common/utils';
+import { fetch } from 'common/utils/fetch';
 import { showModalAction, HIDE_MODAL } from 'controllers/modal';
 import { concatFetchDataAction, createFetchPredicate } from 'controllers/fetch';
 import { activeProjectSelector } from 'controllers/user';

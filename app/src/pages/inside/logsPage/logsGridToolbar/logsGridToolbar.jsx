@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import Parser from 'html-react-parser';
 import { MARKDOWN, CONSOLE, DEFAULT } from 'common/constants/logViewModes';
 import { userIdSelector } from 'controllers/user';
@@ -76,7 +76,7 @@ const messages = defineMessages({
 }))
 export class LogsGridToolbar extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     activePage: PropTypes.number.isRequired,
     pageCount: PropTypes.number.isRequired,
     onChangePage: PropTypes.func.isRequired,

@@ -1,0 +1,96 @@
+/*!
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.user-search-result-wrap {
+  display: flex;
+  justify-content: stretch;
+  padding: 8px 20px 8px 15px;
+  overflow: hidden;
+  white-space: normal;
+  &.active {
+    cursor: pointer;
+    background: rgba(57, 194, 215, 0.2);
+  }
+}
+.user-avatar {
+  flex: 0 0 24px;
+  width: 24px;
+  height: 34px;
+  display: block;
+  float: left;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.user-search-info {
+  display: inline-block;
+  flex: 1 1;
+  overflow: hidden;
+}
+.user-search-name {
+  margin: -1px 0 0 20px;
+  font-size: 13px;
+  padding-right: 20px;
+  position: relative;
+  color: $COLOR--charcoal-grey;
+  text-transform: capitalize;
+  line-height: 1.42857143;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.user-search-login {
+  margin: -1px 0 0 20px;
+  font-size: 13px;
+  padding-right: 20px;
+  position: relative;
+  color: $COLOR--charcoal-grey;
+  font-weight: 600;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.42857143;
+}
+.assign-btn {
+  flex: 0 0 20px;
+  outline: none;
+  width: 20px;
+  height: 20px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  float: right;
+  margin-top: 8px;
+  border: none;
+  background-image: url('./img/ic-invite.svg');
+  &:hover {
+    cursor: pointer;
+  }
+  &.assigned-user {
+    background-image: url('./img/ic-check-copy.svg');
+  }
+}
+.disabled-item {
+  .assign-btn {
+    cursor: default;
+  }
+  &.active {
+    background: transparent;
+    cursor: default;
+  }
+  * {
+    cursor: default;
+    color: $COLOR--gray-60;
+  }
+}

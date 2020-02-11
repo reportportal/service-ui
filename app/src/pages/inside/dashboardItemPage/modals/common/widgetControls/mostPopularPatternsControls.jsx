@@ -17,15 +17,14 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { URLS } from 'common/urls';
-import { validate } from 'common/utils';
-import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
+import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
 import { ModalField } from 'components/main/modal';
 import { activeProjectSelector } from 'controllers/user';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
-import { bindMessageToValidator, commonValidators } from 'common/utils/validation';
+import { bindMessageToValidator, commonValidators, validate } from 'common/utils/validation';
 import { FIELD_LABEL_WIDTH } from 'pages/inside/dashboardItemPage/modals/common/widgetControls/controls/constants';
 import { FiltersControl, InputControl, TogglerControl } from './controls';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
@@ -62,16 +61,16 @@ const attributeKeyValidator = (message) => bindMessageToValidator(validate.attri
 
 @injectIntl
 @connect((state) => ({
-  launchAttributeKeysSearch: URLS.launchAttributeKeysSearch(activeProjectSelector(state)),
+  activeProject: activeProjectSelector(state),
 }))
 export class MostPopularPatternsControls extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     widgetSettings: PropTypes.object.isRequired,
     initializeControlsForm: PropTypes.func.isRequired,
     formAppearance: PropTypes.object.isRequired,
     onFormAppearanceChange: PropTypes.func.isRequired,
-    launchAttributeKeysSearch: PropTypes.string.isRequired,
+    activeProject: PropTypes.string.isRequired,
     eventsInfo: PropTypes.object,
   };
 
@@ -100,26 +99,8 @@ export class MostPopularPatternsControls extends Component {
   formatFilterValue = (value) => value && value[0];
   parseFilterValue = (value) => value && [value];
 
-  makeAttributes = (attributes) =>
-    attributes ? attributes.map((attribute) => ({ value: attribute, label: attribute })) : null;
-
-  formatAttribute = (attribute) => (attribute ? { value: attribute, label: attribute } : null);
-
-  parseAttribute = (attribute) => {
-    if (attribute === null) return null;
-    if (attribute && attribute.value) return attribute.value;
-
-    return undefined;
-  };
-
   render() {
-    const {
-      intl,
-      formAppearance,
-      onFormAppearanceChange,
-      launchAttributeKeysSearch,
-      eventsInfo,
-    } = this.props;
+    const { intl, formAppearance, onFormAppearanceChange, activeProject, eventsInfo } = this.props;
     return (
       <Fragment>
         <FieldProvider name="filters" parse={this.parseFilterValue} format={this.formatFilterValue}>
@@ -158,21 +139,15 @@ export class MostPopularPatternsControls extends Component {
           labelWidth={FIELD_LABEL_WIDTH}
         >
           <FieldProvider
-            parse={this.parseAttribute}
-            format={this.formatAttribute}
             name="contentParameters.widgetOptions.attributeKey"
             validate={attributeKeyValidator(
               intl.formatMessage(messages.attributeKeyValidationError),
             )}
           >
-            <InputTagsSearch
-              uri={launchAttributeKeysSearch}
+            <AsyncAutocomplete
+              getURI={URLS.launchAttributeKeysSearch(activeProject)}
               minLength={1}
-              async
               creatable
-              showNewLabel
-              removeSelected
-              makeOptions={this.makeAttributes}
               placeholder={intl.formatMessage(messages.attributeKeyFieldPlaceholder)}
             />
           </FieldProvider>

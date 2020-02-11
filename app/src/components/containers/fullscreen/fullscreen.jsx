@@ -18,7 +18,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import CancelIcon from 'common/img/cross-icon-inline.svg';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import styles from './fullscreen.scss';
 
@@ -36,7 +36,7 @@ const messages = defineMessages({
 @injectIntl
 export class Fullscreen extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     children: PropTypes.node.isRequired,
     enabled: PropTypes.bool.isRequired,
     onChange: PropTypes.func,

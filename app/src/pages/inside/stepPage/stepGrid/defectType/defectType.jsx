@@ -20,6 +20,7 @@ import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
 import { MarkdownViewer } from 'components/main/markdown';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import { DefectTypeItem } from 'pages/inside/common/defectTypeItem';
 import { PatternAnalyzedLabel } from 'pages/inside/common/patternAnalyzedLabel';
@@ -82,7 +83,9 @@ export const DefectType = track()(
         <IssueList issues={issue.externalSystemIssues} onRemove={onRemove} />
       </div>
       <div className={cx('comment')}>
-        <MarkdownViewer value={issue.comment} />
+        <ScrollWrapper autoHeight autoHeightMax={35}>
+          <MarkdownViewer value={issue.comment} />
+        </ScrollWrapper>
       </div>
     </div>
   ),

@@ -39,10 +39,11 @@ const cx = classNames.bind(styles);
 export class HistoryLineItem extends Component {
   static propTypes = {
     projectId: PropTypes.string.isRequired,
-    launchNumber: PropTypes.string.isRequired,
+    defectTypes: PropTypes.object.isRequired,
+    launchNumber: PropTypes.number,
     path: PropTypes.string,
     launchId: PropTypes.number,
-    id: PropTypes.number,
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     status: PropTypes.string,
     active: PropTypes.bool,
     isFirstItem: PropTypes.bool,
@@ -53,11 +54,11 @@ export class HistoryLineItem extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    defectTypes: PropTypes.object.isRequired,
   };
 
   static defaultProps = {
     path: '',
+    launchNumber: null,
     launchId: 0,
     id: 0,
     status: '',
@@ -105,7 +106,6 @@ export class HistoryLineItem extends Component {
         </Link>
         <HistoryLineItemContent
           active={active}
-          launchNumber={launchNumber}
           hasChildren={rest.hasChildren}
           startTime={rest.startTime}
           endTime={rest.endTime}

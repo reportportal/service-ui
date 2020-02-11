@@ -18,7 +18,7 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import Parser from 'html-react-parser';
 import { activeProjectSelector } from 'controllers/user';
 import {
@@ -26,7 +26,7 @@ import {
   commonValidators,
   bindMessageToValidator,
   composeBoundValidators,
-} from 'common/utils';
+} from 'common/utils/validation';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import CircleCrossIcon from 'common/img/circle-cross-icon-inline.svg';
 import CircleCheckIcon from 'common/img/circle-check-inline.svg';
@@ -66,7 +66,7 @@ export class AttributeEditor extends Component {
     invalid: PropTypes.bool,
     keyURLCreator: PropTypes.func,
     valueURLCreator: PropTypes.func,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     attribute: PropTypes.object,
   };
 
@@ -103,20 +103,17 @@ export class AttributeEditor extends Component {
 
   byValueComparator = (attribute, item, key) => attribute.key === key && attribute.value === item;
 
-  formatValue = (value) => (value ? { value, label: value } : null);
-  parseValue = (value) => (value ? value.value : undefined);
-
   handleKeyChange = (key) => {
     this.setState((oldState) => ({
-      key: this.parseValue(key),
-      errors: this.getValidationErrors(this.parseValue(key), oldState.value),
+      key,
+      errors: this.getValidationErrors(key, oldState.value),
     }));
   };
 
   handleValueChange = (value) => {
     this.setState((oldState) => ({
-      value: this.parseValue(value),
-      errors: this.getValidationErrors(oldState.key, this.parseValue(value)),
+      value,
+      errors: this.getValidationErrors(oldState.key, value),
     }));
   };
 
@@ -153,16 +150,13 @@ export class AttributeEditor extends Component {
             <AttributeInput
               customClass={cx('input')}
               attributes={attributes}
-              async={!!keyURLCreator}
               minLength={1}
               attributeComparator={this.byKeyComparator}
-              uri={keyURLCreator ? keyURLCreator(projectId) : null}
+              getURI={keyURLCreator(projectId)}
               creatable
-              isClearable
-              showNewLabel
               placeholder={intl.formatMessage(messages.keyLabel)}
               onChange={this.handleKeyChange}
-              value={this.formatValue(this.state.key)}
+              value={this.state.key}
               attributeKey={this.state.key}
               attributeValue={this.state.value}
               onInputChange={this.handleAttributeKeyInputChange}
@@ -173,15 +167,13 @@ export class AttributeEditor extends Component {
           <FieldErrorHint error={this.state.errors.value} staticHint>
             <AttributeInput
               customClass={cx('input')}
-              async={!!valueURLCreator}
               minLength={1}
               attributes={attributes}
               attributeComparator={this.byValueComparator}
-              uri={valueURLCreator ? valueURLCreator(projectId, this.state.key) : null}
+              getURI={valueURLCreator(projectId, this.state.key)}
               creatable
-              showNewLabel
               onChange={this.handleValueChange}
-              value={this.formatValue(this.state.value)}
+              value={this.state.value}
               placeholder={intl.formatMessage(messages.valueLabel)}
               attributeKey={this.state.key}
               attributeValue={this.state.value}

@@ -16,14 +16,14 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { URLS } from 'common/urls';
 import { connect } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form';
 import { FormController } from 'pages/admin/serverSettingsPage/common/formController';
 import { ENABLED_KEY, messages } from 'pages/admin/serverSettingsPage/common/constants';
-import { commonValidators } from 'common/utils';
+import { commonValidators } from 'common/utils/validation';
 import { ADMIN_SERVER_SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { joinOrganizations, splitOrganizations } from './utils';
 import { GITHUB_AUTH_FORM, DEFAULT_FORM_CONFIG } from './constants';
@@ -57,7 +57,7 @@ const localMessages = defineMessages({
 @injectIntl
 export class GithubAuthForm extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     enabled: PropTypes.bool,
     initialize: PropTypes.func,
     handleSubmit: PropTypes.func,

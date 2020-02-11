@@ -19,5 +19,8 @@
   margin-bottom: 4px;
   overflow: hidden;
   font-family: $FONT-SEMIBOLD;
-  text-overflow: ellipsis;
+  word-break: break-all;
+  @supports (word-break: break-word) {
+    word-break: break-word;
+  }
 }

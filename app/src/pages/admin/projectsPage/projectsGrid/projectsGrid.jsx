@@ -17,7 +17,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { Grid } from 'components/main/grid';
 import {
@@ -68,7 +68,7 @@ const MENU_COLUMN = 'menu';
 @injectIntl
 export class ProjectsGrid extends PureComponent {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     projects: PropTypes.arrayOf(PropTypes.object),
     selectedProjects: PropTypes.arrayOf(PropTypes.object),
     loading: PropTypes.bool,

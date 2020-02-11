@@ -17,7 +17,7 @@
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import { START_TIME_FORMAT_RELATIVE, START_TIME_FORMAT_ABSOLUTE } from 'controllers/user';
 import { AbsRelTime } from './absRelTime';
 import README from './README.md';
@@ -33,7 +33,11 @@ storiesOf('Components/Main/AbsRelTime', module)
       width: 300,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('default state', () => <AbsRelTime setStartTimeFormatAction={action('Toggle format')} />)
   .add('relative time', () => (
     <AbsRelTime

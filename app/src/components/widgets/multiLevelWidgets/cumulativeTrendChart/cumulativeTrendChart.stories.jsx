@@ -16,7 +16,6 @@
 
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
 
 import testData from './testData';
 import { CumulativeTrendChart } from './cumulativeTrendChart';
@@ -39,7 +38,11 @@ storiesOf('Components/Widgets/Charts/CumulativeTrendChart', module)
       width: 640,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('default state', () => (
     <CumulativeTrendChart widget={testData} container={mockNode} observer={mockObserver} />
   ))

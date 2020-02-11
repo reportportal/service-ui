@@ -19,14 +19,16 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { reduxForm, FieldArray } from 'redux-form';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { namedAvailableBtsIntegrationsSelector } from 'controllers/plugins';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { URLS } from 'common/urls';
-import { validate, bindMessageToValidator, fetch, updateSessionItem } from 'common/utils';
+import { validate, bindMessageToValidator } from 'common/utils/validation';
+import { fetch } from 'common/utils/fetch';
+import { updateSessionItem } from 'common/utils/storageUtils';
 import { RALLY } from 'common/constants/integrationNames';
 import { BetaBadge } from 'pages/inside/common/betaBadge';
 import { BtsIntegrationSelector } from 'pages/inside/common/btsIntegrationSelector';
@@ -84,7 +86,7 @@ const messages = defineMessages({
 @injectIntl
 export class LinkIssueModal extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     userId: PropTypes.string.isRequired,
     requestUrl: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,

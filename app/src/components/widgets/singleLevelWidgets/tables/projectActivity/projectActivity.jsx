@@ -18,7 +18,7 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { START_TIME_FORMAT_ABSOLUTE } from 'controllers/user';
 import {
@@ -37,6 +37,7 @@ import {
   UPDATE_ANALYZER,
   CREATE_USER,
   UPDATE_PROJECT,
+  UPDATE_NOTIFICATIONS,
   CREATE_PATTERN,
   UPDATE_PATTERN,
   DELETE_PATTERN,
@@ -55,6 +56,7 @@ import { TestItem } from './activities/testItem';
 import { CreateUser } from './activities/createUser';
 import { CommonEntity } from './activities/commonEntity';
 import { DefectType } from './activities/defectType';
+import { Notifications } from './activities/notifications';
 import styles from './projectActivity.scss';
 
 const cx = classNames.bind(styles);
@@ -168,7 +170,7 @@ const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
 @injectIntl
 export class ProjectActivity extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     projectId: PropTypes.string.isRequired,
     widget: PropTypes.object,
     hasBts: PropTypes.bool,
@@ -266,7 +268,11 @@ export class ProjectActivity extends Component {
       case DELETE_LAUNCH:
         return <Launch activity={activity} />;
       case UPDATE_PROJECT:
-        return <DefaultProjectSettings activity={activity} />;
+        return activity.objectType === UPDATE_NOTIFICATIONS ? (
+          <Notifications activity={activity} />
+        ) : (
+          <DefaultProjectSettings activity={activity} />
+        );
       case CREATE_USER:
         return <CreateUser activity={activity} />;
       default:

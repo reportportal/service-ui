@@ -16,7 +16,7 @@
 
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import { ModalField } from 'components/main/modal';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -39,16 +39,16 @@ const messages = defineMessages({
 @injectIntl
 export class CustomColumnsControl extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
     value: PropTypes.array.isRequired,
     error: PropTypes.string,
-    uri: PropTypes.string,
+    getURI: PropTypes.func,
   };
 
   static defaultProps = {
     error: '',
-    uri: '',
+    getURI: () => '',
   };
 
   onChangeColumn = (itemValue, index) => {
@@ -67,7 +67,7 @@ export class CustomColumnsControl extends Component {
   };
 
   render() {
-    const { intl, value, error, uri } = this.props;
+    const { intl, value, error, getURI } = this.props;
     return (
       <div className={cx('custom-columns-control')}>
         {value.map((column, i) => (
@@ -77,7 +77,7 @@ export class CustomColumnsControl extends Component {
             name={column.name}
             attributeKey={column.value}
             last={value.length === i + 1}
-            uri={uri}
+            getURI={getURI}
             onChange={this.onChangeColumn}
             onRemove={this.removeColumn}
             noRemove={value.length === 1}
@@ -88,23 +88,18 @@ export class CustomColumnsControl extends Component {
             <FieldErrorHint error={error} active />
           </ModalField>
         )}
-        {value.length < 3 &&
-          !error && (
-            <Fragment>
-              <ModalField className={cx('tip-field')} label=" " labelWidth={FIELD_LABEL_WIDTH}>
-                <div className={cx('tip')}>{intl.formatMessage(messages.tip)}</div>
-              </ModalField>
-              <ModalField
-                className={cx('add-column-field')}
-                label=" "
-                labelWidth={FIELD_LABEL_WIDTH}
-              >
-                <div className={cx('add-column')} onClick={this.addColumn}>
-                  {intl.formatMessage(messages.addColumn)}
-                </div>
-              </ModalField>
-            </Fragment>
-          )}
+        {value.length < 3 && !error && (
+          <Fragment>
+            <ModalField className={cx('tip-field')} label=" " labelWidth={FIELD_LABEL_WIDTH}>
+              <div className={cx('tip')}>{intl.formatMessage(messages.tip)}</div>
+            </ModalField>
+            <ModalField className={cx('add-column-field')} label=" " labelWidth={FIELD_LABEL_WIDTH}>
+              <div className={cx('add-column')} onClick={this.addColumn}>
+                {intl.formatMessage(messages.addColumn)}
+              </div>
+            </ModalField>
+          </Fragment>
+        )}
       </div>
     );
   }

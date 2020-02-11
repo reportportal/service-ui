@@ -17,7 +17,7 @@
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import { GhostMenuButton } from './ghostMenuButton';
 import README from './README.md';
 
@@ -45,7 +45,11 @@ storiesOf('Components/Buttons/GhostMenuButton', module)
       width: 150,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('default state', () => <GhostMenuButton />)
   .add('with title', () => <GhostMenuButton title="Menu title" />)
   .add('with title & items & actions', () => <GhostMenuButton items={items} title="Menu title" />)

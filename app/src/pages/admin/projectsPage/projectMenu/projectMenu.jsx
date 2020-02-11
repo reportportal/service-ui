@@ -17,7 +17,7 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import track from 'react-tracking';
 import {
   assignToProjectAction,
@@ -53,7 +53,7 @@ import { messages } from '../messages';
 export class ProjectMenu extends Component {
   static propTypes = {
     project: PropTypes.object.isRequired,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     isAssigned: PropTypes.bool.isRequired,
     userId: PropTypes.string.isRequired,
     navigateToProjectSection: PropTypes.func.isRequired,

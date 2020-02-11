@@ -34,7 +34,16 @@ export class InputConditional extends Component {
       value: PropTypes.string,
       condition: PropTypes.string,
     }),
-    conditions: PropTypes.arrayOf(PropTypes.string),
+    conditions: PropTypes.arrayOf(
+      PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.shape({
+          value: PropTypes.string,
+          label: PropTypes.string,
+          shortLabel: PropTypes.string,
+        }),
+      ]),
+    ),
     conditionsBlockClassName: PropTypes.string,
     inputClassName: PropTypes.string,
     placeholder: PropTypes.string,
@@ -106,7 +115,7 @@ export class InputConditional extends Component {
     return isCustomConditions ? conditions : getInputConditions(conditions);
   };
   handleClickOutside = (e) => {
-    if (!this.conditionsBlock.contains(e.target) && this.state.opened) {
+    if (this.conditionsBlock && !this.conditionsBlock.contains(e.target) && this.state.opened) {
       this.setState({ opened: false });
     }
   };

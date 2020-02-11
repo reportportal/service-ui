@@ -18,7 +18,7 @@ import { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import track from 'react-tracking';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import Parser from 'html-react-parser';
 import ArrowDownIcon from 'common/img/arrow-down-inline.svg';
 import { ALL, LATEST } from 'common/constants/reservedFilterIds';
@@ -50,7 +50,7 @@ const messages = defineMessages({
 @track()
 export class AllLatestDropdown extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -104,7 +104,7 @@ export class AllLatestDropdown extends Component {
   };
 
   handleClickOutside = (e) => {
-    if (!this.nodeRef.current.contains(e.target) && this.state.expanded) {
+    if (this.nodeRef.current && !this.nodeRef.current.contains(e.target) && this.state.expanded) {
       this.setState({ expanded: false });
     }
   };

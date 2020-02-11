@@ -18,7 +18,7 @@ import React from 'react';
 import track from 'react-tracking';
 import ReactDOMServer from 'react-dom/server';
 import SimpleMDE from 'simplemde';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import 'simplemde/dist/simplemde.min.css';
@@ -92,7 +92,7 @@ export class MarkdownEditor extends React.Component {
     value: PropTypes.string,
     placeholder: PropTypes.string,
     onChange: PropTypes.func,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     onChangeEventInfo: PropTypes.object,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,

@@ -15,18 +15,21 @@
  */
 
 import { storiesOf } from '@storybook/react';
-import { withReadme } from 'storybook-readme';
 import { AttachmentCodeModal, AttachmentHarFileModal, AttachmentImageModal } from './index';
 import README from './README.md';
 import harData from './example.har';
 
 storiesOf('Pages/Inside/LogsPage/LogItemInfo/LogItemInfoTabs/Attachments/modal', module)
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('Code content with hljs', () => (
     <AttachmentCodeModal
       data={{
         language: 'javascript',
-        content: withReadme.toString(),
+        content: README,
       }}
     />
   ))

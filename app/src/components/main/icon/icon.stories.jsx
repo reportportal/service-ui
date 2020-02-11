@@ -17,7 +17,7 @@
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import { Icon } from './icon';
 import README from './README.md';
 
@@ -32,7 +32,11 @@ storiesOf('Components/Main/Icon', module)
       width: 100,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('default state', () => <Icon />)
   .add('type icon-check', () => <Icon type="icon-check" />)
   .add('type icon-pencil', () => <Icon type="icon-pencil" />)

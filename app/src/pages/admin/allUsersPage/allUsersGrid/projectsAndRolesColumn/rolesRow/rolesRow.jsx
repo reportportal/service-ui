@@ -17,11 +17,11 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import track from 'react-tracking';
 import { ADMIN_ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { InputDropdown } from 'components/inputs/inputDropdown';
-import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
+import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { TextTooltip } from 'components/main/tooltips/textTooltip';
 import { URLS } from 'common/urls';
@@ -74,7 +74,7 @@ const messages = defineMessages({
 @track()
 export class RolesRow extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     value: PropTypes.oneOf(PROJECT_ROLES),
     onChange: PropTypes.func,
     onDelete: PropTypes.func,
@@ -117,7 +117,7 @@ export class RolesRow extends Component {
     const { createNew } = this.props;
     if (createNew) {
       this.props.tracking.trackEvent(ADMIN_ALL_USERS_PAGE_EVENTS.ASSIGN_PROJECT_AND_ROLES);
-      this.props.onAssignProjectRole(project.value, value);
+      this.props.onAssignProjectRole(project, value);
     }
     this.props.onChange(project, value);
     this.props.tracking.trackEvent(ADMIN_ALL_USERS_PAGE_EVENTS.CHANGE_ROLE_PROJECT_AND_ROLES);
@@ -140,7 +140,6 @@ export class RolesRow extends Component {
       project,
     });
   };
-  formatValue = (values) => values.map((value) => ({ value, label: value }));
   capitalizeString = (string) => string[0].toUpperCase() + string.slice(1).toLowerCase();
   isDifferentFromInitial = () => this.props.value !== this.state.value;
   isPersonalProject = () => {
@@ -189,20 +188,16 @@ export class RolesRow extends Component {
   render() {
     const { createNew, intl, entryType } = this.props;
     const { value, project } = this.state;
-    const uri = URLS.projectNameSearch();
     return (
       <div className={cx('roles-row')}>
         <div className={cx('roles-row-item', 'roles-row-item-first')}>
           {createNew ? (
-            <InputTagsSearch
+            <AsyncAutocomplete
               value={project}
               minLength={1}
-              async
-              uri={uri}
-              makeOptions={this.formatValue}
+              getURI={URLS.projectNameSearch}
               onChange={this.projectSearchHandler}
               placeholder={intl.formatMessage(messages.projectSearchPlaceholder)}
-              removeSelected
             />
           ) : (
             <div className={cx('roles-row-label')}>

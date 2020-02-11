@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Parser from 'html-react-parser';
@@ -42,11 +42,15 @@ import { getDuration } from 'common/utils/timeDateUtils';
 import { AccordionContainer } from 'components/main/accordionContainer';
 import { AttributeListField } from 'components/main/attributeList';
 import { canEditLaunch } from 'common/utils/permissions';
-import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import {
+  showDefaultErrorNotification,
+  showNotification,
+  NOTIFICATION_TYPES,
+} from 'controllers/notification';
 import { TestItemStatus } from 'pages/inside/common/testItemStatus';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { TestParameters } from 'pages/inside/common/testParameters';
-import { validate } from 'common/utils';
+import { validate } from 'common/utils/validation';
 import { ContainerWithTabs } from 'components/main/containerWithTabs';
 import { StackTrace } from 'pages/inside/common/stackTrace';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events/stepPageEvents';
@@ -72,6 +76,7 @@ const cx = classNames.bind(styles);
   }),
   {
     showNotification,
+    showDefaultErrorNotification,
     clearLogPageStackTrace,
   },
 )
@@ -79,7 +84,7 @@ const cx = classNames.bind(styles);
 @injectIntl
 export class TestItemDetailsModal extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     data: PropTypes.shape({
       item: PropTypes.object,
       type: PropTypes.string,
@@ -95,6 +100,7 @@ export class TestItemDetailsModal extends Component {
     handleSubmit: PropTypes.func.isRequired,
     currentProject: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
+    showDefaultErrorNotification: PropTypes.func.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -172,13 +178,15 @@ export class TestItemDetailsModal extends Component {
     fetch(URLS.launchesItemsUpdate(currentProject, item.id, type), {
       method: 'put',
       data,
-    }).then(() => {
-      this.props.showNotification({
-        message: formatMessage(messages.itemUpdateSuccess),
-        type: NOTIFICATION_TYPES.SUCCESS,
-      });
-      fetchFunc();
-    });
+    })
+      .then(() => {
+        this.props.showNotification({
+          message: formatMessage(messages.itemUpdateSuccess),
+          type: NOTIFICATION_TYPES.SUCCESS,
+        });
+        fetchFunc();
+      })
+      .catch(this.props.showDefaultErrorNotification);
   };
 
   renderDetailsTab = (editable) => {
@@ -195,8 +203,11 @@ export class TestItemDetailsModal extends Component {
             <TestItemStatus status={item.status} />
           </div>
         </div>
-        <ModalField label={intl.formatMessage(messages.testCaseId)}>
+        <ModalField label={intl.formatMessage(messages.testCaseUId)}>
           <div className={cx('id')}>{item.uniqueId}</div>
+        </ModalField>
+        <ModalField label={intl.formatMessage(messages.testCaseId)}>
+          <div className={cx('id')}>{item.testCaseId}</div>
         </ModalField>
         <ModalField label={intl.formatMessage(messages.duration)}>
           {getDuration(item.startTime, item.endTime)}
@@ -208,7 +219,7 @@ export class TestItemDetailsModal extends Component {
               <CopyToClipboard
                 text={item.codeRef}
                 className={cx('copy')}
-                onCopy={() => trackEvent(STEP_PAGE_EVENTS.COPY_CODE_REFERENCE_EDIT_DEFECT_MODAL)}
+                onCopy={() => trackEvent(STEP_PAGE_EVENTS.COPY_CODE_REFERENCE_EDIT_ITEM_MODAL)}
               >
                 {Parser(IconDuplicate)}
               </CopyToClipboard>

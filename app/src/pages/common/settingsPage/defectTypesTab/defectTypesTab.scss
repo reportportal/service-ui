@@ -113,6 +113,7 @@ $DEFECT_NAME_PADDING: 70px;
   height: 12px;
   width: 12px;
   border-radius: 50%;
+  flex-shrink: 0;
 }
 
 .defect-type {
@@ -121,16 +122,23 @@ $DEFECT_NAME_PADDING: 70px;
   align-items: center;
 }
 
+.defect-type-name-tooltip-trigger {
+  max-width: 100%;
+}
+
 .defect-type-name-wrap {
   border: 1px solid $COLOR--gray-80;
   padding: 2px 7px;
   border-radius: 100px;
-  display: inline-flex;
+  display: flex;
   align-items: center;
 }
 
 .defect-type-name {
   margin-left: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .defect-type-chart {

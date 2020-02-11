@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import * as d3 from 'd3-selection';
 import classNames from 'classnames/bind';
 import { STATS_PASSED } from 'common/constants/statistics';
@@ -30,13 +30,14 @@ const cx = classNames.bind(styles);
 @injectIntl
 export class PassingRateChart extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     widget: PropTypes.object.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
     isPreview: PropTypes.bool,
     observer: PropTypes.object,
     filterNameTitle: PropTypes.object,
     filterName: PropTypes.string,
+    onChartClick: PropTypes.func,
   };
 
   static defaultProps = {
@@ -44,6 +45,7 @@ export class PassingRateChart extends Component {
     observer: {},
     filterNameTitle: {},
     filterName: '',
+    onChartClick: () => {},
   };
 
   onChartCreated = (node) => {
@@ -55,11 +57,13 @@ export class PassingRateChart extends Component {
     const {
       intl: { formatMessage },
       widget: { contentParameters },
+      onChartClick,
     } = this.props;
 
     return {
       formatMessage,
       getConfig,
+      onChartClick,
       viewMode: contentParameters.widgetOptions.viewMode,
       onRendered: this.resizeHelper,
     };

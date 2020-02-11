@@ -14,6 +14,4 @@
  * limitations under the License.
  */
 
-export {
-  ServiceVersionsBlockWithData as ServiceVersionsBlock,
-} from './serviceVersionsBlockWithData';
+export { ServiceVersionsBlockWithData as ServiceVersionsBlock } from './serviceVersionsBlockWithData';

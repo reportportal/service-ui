@@ -17,6 +17,8 @@
 import { combineReducers } from 'redux';
 import { getStorageItem } from 'common/utils';
 import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
+import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
+import { PROJECT_LAUNCHES_PAGE, PROJECT_USERDEBUG_PAGE } from 'controllers/pages';
 import { fetchReducer } from 'controllers/fetch';
 import { paginationReducer } from 'controllers/pagination';
 import { groupOperationsReducer } from 'controllers/groupOperations';
@@ -99,7 +101,7 @@ export const debugLocalFilterReducer = (state = {}, { type, payload }) => {
   }
 };
 
-export const launchReducer = combineReducers({
+const reducer = combineReducers({
   launches: queueReducers(
     fetchReducer(NAMESPACE, { contentPath: 'content' }),
     updateLaunchLocallyReducer,
@@ -113,3 +115,8 @@ export const launchReducer = combineReducers({
   debugLocalSorting: debugLocalSortingReducer,
   debugLocalFilter: debugLocalFilterReducer,
 });
+
+export const launchReducer = createPageScopedReducer(reducer, [
+  PROJECT_LAUNCHES_PAGE,
+  PROJECT_USERDEBUG_PAGE,
+]);

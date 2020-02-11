@@ -40,6 +40,7 @@ export {
   deletePatternAction,
   deletePatternSuccessAction,
   updatePAStateAction,
+  fetchProjectPreferencesAction,
 } from './actionCreators';
 export { projectReducer } from './reducer';
 export {

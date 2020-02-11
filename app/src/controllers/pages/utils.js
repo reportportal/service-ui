@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { isEmptyValue } from 'common/utils';
+import { isEmptyValue } from 'common/utils/isEmptyValue';
 
 export const stringToArray = (str = '', separator) => {
   if (isEmptyValue(str)) {

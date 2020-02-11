@@ -91,7 +91,7 @@ export const SuiteTestToolbar = ({
       onFilterChange={onFilterChange}
       filterErrors={filterErrors}
       filterEntities={filterEntities}
-      events={events}
+      events={events.REFINE_FILTERS_PANEL_EVENTS}
     />
   </Fragment>
 );
@@ -146,7 +146,9 @@ SuiteTestToolbar.defaultProps = {
   onFilterChange: () => {},
   filterErrors: {},
   filterEntities: [],
-  events: {},
+  events: {
+    REFINE_FILTERS_PANEL_EVENTS: {},
+  },
   currentFilter: null,
   isTestItemsList: false,
 };

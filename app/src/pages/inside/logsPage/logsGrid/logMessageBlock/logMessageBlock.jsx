@@ -22,6 +22,8 @@ import { MarkdownViewer } from 'components/main/markdown';
 import styles from './logMessageBlock.scss';
 
 const cx = classNames.bind(styles);
+const MARKDOWN_MODE = '!!!MARKDOWN_MODE!!!';
+const MARKDOWN_MODE_REG_EXP = new RegExp(MARKDOWN_MODE);
 
 export class LogMessageBlock extends Component {
   static propTypes = {
@@ -37,14 +39,15 @@ export class LogMessageBlock extends Component {
 
   render() {
     const { value, refFunction, customProps } = this.props;
+    const messageWithoutMarkdown = value.message.replace(MARKDOWN_MODE_REG_EXP, '');
 
     return (
       <div ref={refFunction} className={cx('log-message-block')}>
         {customProps.consoleView && <span className={cx('time')}>{dateFormat(value.time)}</span>}
         {customProps.markdownMode ? (
-          <MarkdownViewer value={value.message} />
+          <MarkdownViewer value={messageWithoutMarkdown} />
         ) : (
-          <div className={cx('log-message')}>{value.message}</div>
+          <div className={cx('log-message')}>{messageWithoutMarkdown}</div>
         )}
       </div>
     );

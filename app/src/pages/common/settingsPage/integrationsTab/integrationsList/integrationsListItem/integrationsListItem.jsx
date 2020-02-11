@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { INTEGRATIONS_IMAGES_MAP, INTEGRATION_NAMES_TITLES } from 'components/integrations';
 import styles from './integrationsListItem.scss';
@@ -26,7 +26,7 @@ const cx = classNames.bind(styles);
 @injectIntl
 export class IntegrationsListItem extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     integrationType: PropTypes.object.isRequired,
     onClick: PropTypes.func,
   };

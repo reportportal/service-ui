@@ -17,8 +17,7 @@
 import React, { Component, Fragment } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
-import { Input } from 'components/inputs/input';
+import { injectIntl, defineMessages } from 'react-intl';
 import { InputWithIcon } from 'components/inputs/inputWithIcon';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -33,14 +32,6 @@ const messages = defineMessages({
     id: 'AccuracyFormBlock.minimumShouldMatchTitle',
     defaultMessage: 'Minimum should match',
   },
-  minimumDocFreqTitle: {
-    id: 'AccuracyFormBlock.minimumDocFreqTitle',
-    defaultMessage: 'Minimum document frequency',
-  },
-  minimumTermFreqTitle: {
-    id: 'AccuracyFormBlock.minimumTermFreqTitle',
-    defaultMessage: 'Minimum term frequency',
-  },
   numberOfLogLinesTitle: {
     id: 'AccuracyFormBlock.numberOfLogLinesTitle',
     defaultMessage: 'Number of log lines',
@@ -49,16 +40,6 @@ const messages = defineMessages({
     id: 'AccuracyFormBlock.minimumShouldMatchDescription',
     defaultMessage:
       'Percent of words equality between analyzed log and particular log from the ElasticSearch. If a log from ElasticSearch has the value less then set, this log will be ignored for AA.',
-  },
-  minimumDocFreqDescription: {
-    id: 'AccuracyFormBlock.minimumDocFreqDescription',
-    defaultMessage:
-      'Set the minimum frequency of the saved logs in ElasticSearch (index) in which word from analyzed log should be used. If the log count is below the specified value, that word will be ignored for AA in the analyzed log. The more often the word appears in index, the lower it weights.',
-  },
-  minimumTermFreqDescription: {
-    id: 'AccuracyFormBlock.minimumTermFreqDescription',
-    defaultMessage:
-      'Set the minimum frequency of the word in the analyzed log. If the word count is below the specified value, this word will be ignored for AA. The more often the word appears in the analyzed log, the higher it weights.',
   },
   numberOfLogLinesDescription: {
     id: 'AccuracyFormBlock.numberOfLogLinesDescription',
@@ -79,7 +60,7 @@ const messages = defineMessages({
 export class AccuracyFormBlock extends Component {
   static propTypes = {
     disabled: PropTypes.bool,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     onInputChange: PropTypes.func,
   };
 
@@ -126,40 +107,6 @@ export class AccuracyFormBlock extends Component {
               maxLength="3"
               mobileDisabled
             />
-          </FieldErrorHint>
-        </FormField>
-
-        <FormField
-          name="minDocFreq"
-          fieldWrapperClassName={cx('accuracy-form-input-wrapper')}
-          label={intl.formatMessage(messages.minimumDocFreqTitle)}
-          onChange={this.props.onInputChange}
-          normalize={this.normalizeValue}
-          format={String}
-          customBlock={{
-            node: <p>{intl.formatMessage(messages.minimumDocFreqDescription)}</p>,
-          }}
-          disabled={disabled}
-        >
-          <FieldErrorHint>
-            <Input maxLength="2" mobileDisabled />
-          </FieldErrorHint>
-        </FormField>
-
-        <FormField
-          name="minTermFreq"
-          fieldWrapperClassName={cx('accuracy-form-input-wrapper')}
-          label={intl.formatMessage(messages.minimumTermFreqTitle)}
-          onChange={this.props.onInputChange}
-          normalize={this.normalizeValue}
-          format={String}
-          customBlock={{
-            node: <p>{intl.formatMessage(messages.minimumTermFreqDescription)}</p>,
-          }}
-          disabled={disabled}
-        >
-          <FieldErrorHint>
-            <Input maxLength="2" mobileDisabled />
           </FieldErrorHint>
         </FormField>
 

@@ -17,18 +17,16 @@
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
-import { getTestColumns } from 'pages/inside/logsPage/logsGrid/logsGrid';
-import { NestedStepHeader } from 'pages/inside/logsPage/logsGrid/nestedStepHeader';
+
 import { Grid } from './grid';
-import { SIMPLE_COLUMNS, SIMPLE_DATA, STEP_DATA } from './data';
+import { SIMPLE_COLUMNS, SIMPLE_DATA } from './data';
 import README from './README.md';
 
-const getLogRowClasses = (value) => ({
-  log: true,
-  'error-row': value.level === 'error' || value.level === 'fatal',
-  'row-console': false,
-});
+// const getLogRowClasses = (value) => ({
+//   log: true,
+//   'error-row': value.level === 'error' || value.level === 'fatal',
+//   'row-console': false,
+// });
 
 storiesOf('Components/Main/Grid', module)
   .addDecorator(
@@ -41,7 +39,11 @@ storiesOf('Components/Main/Grid', module)
       width: '100%',
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('default state', () => <Grid />)
   .add('with data', () => <Grid columns={SIMPLE_COLUMNS} data={SIMPLE_DATA} />)
   .add('with selection', () => (
@@ -60,7 +62,7 @@ storiesOf('Components/Main/Grid', module)
       onToggleSelectAll={action('toggleSelectAll')}
       onToggleSelection={action('toggleSelection')}
     />
-  ))
+  )); /*
   .add('with log data', () => (
     <Grid
       columns={getTestColumns()}
@@ -69,4 +71,4 @@ storiesOf('Components/Main/Grid', module)
       nestedStepHeader={NestedStepHeader}
       nestedView
     />
-  ));
+  )) */

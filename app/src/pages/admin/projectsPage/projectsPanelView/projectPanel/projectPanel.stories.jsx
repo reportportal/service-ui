@@ -16,7 +16,7 @@
 
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 // eslint-disable-next-line import/extensions, import/no-unresolved
 import { WithState } from 'storybook-decorators';
 import { ProjectPanel } from './projectPanel';
@@ -33,7 +33,11 @@ storiesOf('Pages/Admin/ProjectPanel', module)
       width: 270,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('with data', () => (
     <WithState state={state}>
       <ProjectPanel {...mockData} />

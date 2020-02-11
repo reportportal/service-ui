@@ -16,14 +16,14 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { FieldFilterEntity } from 'components/fields/fieldFilterEntity';
-import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
+import { AsyncMultipleAutocomplete } from 'components/inputs/autocompletes/asyncMultipleAutocomplete';
 
 @injectIntl
 export class EntitySearch extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     value: PropTypes.object.isRequired,
     title: PropTypes.string,
     smallSize: PropTypes.bool,
@@ -43,16 +43,15 @@ export class EntitySearch extends Component {
     customProps: {},
   };
 
-  onChange = (value) => {
+  onChange = (values) => {
     this.props.onChange({
       condition: this.props.value.condition,
-      value: value.map((val) => val.value).join(','),
+      value: values.join(','),
     });
   };
-  formatValue = (values) => values.map((value) => ({ value, label: value }));
   render() {
     const { value, onRemove, removable, title, smallSize, vertical, customProps } = this.props;
-    const formattedValue = this.formatValue(value.value.split(','));
+    const formattedValue = value.value.split(',');
     return (
       <FieldFilterEntity
         stretchable
@@ -62,15 +61,11 @@ export class EntitySearch extends Component {
         onRemove={onRemove}
         vertical={vertical}
       >
-        <InputTagsSearch
-          value={formattedValue.length && formattedValue[0].value ? formattedValue : []}
+        <AsyncMultipleAutocomplete
+          value={formattedValue.length && formattedValue[0] ? formattedValue : []}
           minLength={3}
-          async
-          makeOptions={this.formatValue}
           creatable
-          showNewLabel
-          multi
-          removeSelected
+          showDynamicSearchPrompt
           onChange={this.onChange}
           {...customProps}
         />

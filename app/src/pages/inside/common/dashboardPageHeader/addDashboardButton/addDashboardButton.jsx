@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import track from 'react-tracking';
 import { connect } from 'react-redux';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { GhostButton } from 'components/buttons/ghostButton';
@@ -43,7 +43,7 @@ const messages = defineMessages({
 @track()
 export class AddDashboardButton extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     showModal: PropTypes.func,
     addDashboard: PropTypes.func,
     eventsInfo: PropTypes.object,

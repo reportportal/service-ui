@@ -17,7 +17,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl';
+import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import { Grid } from 'components/main/grid';
 import { AbsRelTime } from 'components/main/absRelTime';
 import {
@@ -62,7 +62,11 @@ TypeColumn.defaultProps = {
 };
 
 const LoginColumn = ({ className, value }) => (
-  <div className={cx('login-col', className)}>{value.userId}</div>
+  <div className={cx('login-col', className)}>
+    <div className={cx('login-block')} title={value.userId}>
+      {value.userId}
+    </div>
+  </div>
 );
 LoginColumn.propTypes = {
   className: PropTypes.string.isRequired,
@@ -77,7 +81,11 @@ const EmailColumn = ({ className, value }) => (
     <span className={cx('mobile-label')}>
       <FormattedMessage id={'AllUsersGrid.emailCol'} defaultMessage={'Email'} />
     </span>
-    {value.email}
+    <div className={cx('email-block')} title={value.email}>
+      <a className={cx('email-link')} href={`mailto:${value.email}`}>
+        {value.email}
+      </a>
+    </div>
   </div>
 );
 EmailColumn.propTypes = {
@@ -93,7 +101,7 @@ const LastLoginColumn = ({ className, value }) => (
     <span className={cx('mobile-label', 'last-login-label')}>
       <FormattedMessage id={'AllUsersGrid.loginCol'} defaultMessage={'Login'} />
     </span>
-    <AbsRelTime startTime={value.metadata.last_login} />
+    <AbsRelTime startTime={value.metadata.last_login} customClass={cx('last-login-time')} />
   </div>
 );
 LastLoginColumn.propTypes = {
@@ -108,7 +116,7 @@ LastLoginColumn.defaultProps = {
 export class AllUsersGrid extends PureComponent {
   static propTypes = {
     data: PropTypes.arrayOf(PropTypes.object),
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     loading: PropTypes.bool,
     onToggleSelection: PropTypes.func,
     onToggleSelectAll: PropTypes.func,

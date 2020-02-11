@@ -15,7 +15,7 @@
  */
 
 import { all, call, put, select, takeEvery, take } from 'redux-saga/effects';
-import { fetch } from 'common/utils';
+import { fetch, updateToken } from 'common/utils/fetch';
 import {
   getSessionItem,
   getStorageItem,
@@ -25,14 +25,13 @@ import {
 } from 'common/utils/storageUtils';
 import { URLS } from 'common/urls';
 import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
-import { showNotification } from 'controllers/notification';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import {
   OAUTH_SUCCESS,
   pagePropertiesSelector,
   PROJECT_DASHBOARD_PAGE,
   LOGIN_PAGE,
 } from 'controllers/pages';
-import { NOTIFICATION_TYPES } from 'controllers/notification/constants';
 import {
   activeProjectSelector,
   FETCH_USER_ERROR,
@@ -45,7 +44,6 @@ import { FETCH_PROJECT_SUCCESS, fetchProjectAction } from 'controllers/project';
 import { fetchPluginsAction, fetchGlobalIntegrationsAction } from 'controllers/plugins';
 import { redirect, pathToAction } from 'redux-first-router';
 import qs, { stringify } from 'qs';
-import { fetchAppInfoAction } from 'controllers/appInfo';
 import routesMap from 'routes/routesMap';
 import {
   authSuccessAction,
@@ -66,6 +64,7 @@ import {
   ERROR_CODE_LOGIN_BAD_CREDENTIALS,
   ANONYMOUS_REDIRECT_PATH_STORAGE_KEY,
 } from './constants';
+import { tokenSelector } from './selectors';
 
 function* handleLogout() {
   yield put(resetTokenAction());
@@ -100,7 +99,6 @@ function* loginSuccessHandler({ payload }) {
       value: payload.value,
     }),
   );
-  yield put(fetchAppInfoAction());
   yield put(fetchUserAction());
   yield all([take([FETCH_USER_SUCCESS, FETCH_USER_ERROR]), take(SET_ACTIVE_PROJECT)]);
   const projectId = yield select(activeProjectSelector);
@@ -184,6 +182,8 @@ function* watchLogin() {
 }
 
 function* handleSetToken({ payload }) {
+  const tokenString = yield select(tokenSelector);
+  yield call(updateToken, tokenString);
   yield call(setStorageItem, TOKEN_KEY, payload);
 }
 

@@ -24,7 +24,7 @@ import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { withModal, ModalHeader } from 'components/main/modal';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { hideModalAction } from 'controllers/modal';
 import { WIDGET_WIZARD_FORM } from '../common/constants';
 import { WidgetWizardContent } from './widgetWizardContent';
@@ -52,7 +52,7 @@ const messages = defineMessages({
 @track()
 export class WidgetWizardModal extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     data: PropTypes.shape({
       onConfirm: PropTypes.func,
       eventsInfo: PropTypes.object,
@@ -93,7 +93,7 @@ export class WidgetWizardModal extends Component {
   }
 
   onClickModal = (e) => {
-    if (!this.modal.contains(e.target)) {
+    if (this.modal && !this.modal.contains(e.target)) {
       if (this.props.formValues) {
         this.setState({ showConfirmation: true });
       } else {

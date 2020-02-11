@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
+import { MultipleAutocomplete } from 'components/inputs/autocompletes/multipleAutocomplete';
 import { DynamicField } from '../dynamicField';
 
 export class ArrayField extends Component {
@@ -46,7 +46,9 @@ export class ArrayField extends Component {
     return this.formatOptions(values);
   };
 
-  parseTags = (options) => (options && options.map((option) => option.value)) || undefined;
+  parseValueToString = (option) => (option && option.value) || '';
+
+  parseTags = (options) => (options && options.map(this.parseValueToString)) || undefined;
 
   render() {
     const { field, ...rest } = this.props;
@@ -58,12 +60,11 @@ export class ArrayField extends Component {
         parse={this.parseTags}
         {...rest}
       >
-        <InputTagsSearch
+        <MultipleAutocomplete
           options={this.formatOptions(field.definedValues)}
+          parseValueToString={this.parseValueToString}
           creatable={this.creatable}
-          removeSelected
           mobileDisabled
-          multi
         />
       </DynamicField>
     );

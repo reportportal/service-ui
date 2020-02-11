@@ -35,6 +35,7 @@ export {
   setPhotoTimeStampAction,
   assignToProjectAction,
   assignToProjectErrorAction,
+  assignToProjectSuccessAction,
   unassignFromProjectAction,
 } from './actionCreators';
 export { userReducer } from './reducer';

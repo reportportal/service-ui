@@ -45,5 +45,7 @@ export {
   namedAvailableBtsIntegrationsSelector,
   availableIntegrationsByPluginNameSelector,
   isEmailIntegrationAvailableSelector,
+  isBtsPluginsExistSelector,
+  enabledBtsPluginsSelector,
 } from './selectors';
 export { pluginSagas } from './sagas';

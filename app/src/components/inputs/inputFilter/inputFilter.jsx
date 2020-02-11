@@ -110,10 +110,8 @@ export class InputFilter extends Component {
   };
 
   togglePopup = () =>
-    this.setState(
-      { opened: !this.state.opened },
-      () =>
-        this.state.opened ? this.props.tracking.trackEvent(this.props.eventsInfo.openFilter) : null,
+    this.setState({ opened: !this.state.opened }, () =>
+      this.state.opened ? this.props.tracking.trackEvent(this.props.eventsInfo.openFilter) : null,
     );
 
   render() {

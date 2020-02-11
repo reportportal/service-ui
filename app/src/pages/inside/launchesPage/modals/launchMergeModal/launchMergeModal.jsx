@@ -18,14 +18,16 @@ import { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { fetch, validate } from 'common/utils';
+import { fetch } from 'common/utils/fetch';
+import { validate } from 'common/utils/validation';
 import { bindMessageToValidator } from 'common/utils/validation/validatorHelpers';
 import { URLS } from 'common/urls';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { reduxForm, formValueSelector, getFormSyncErrors, getFormMeta } from 'redux-form';
 import { connect } from 'react-redux';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { showDefaultErrorNotification } from 'controllers/notification';
+import { injectIntl, defineMessages } from 'react-intl';
 import { SectionHeader } from 'components/main/sectionHeader';
 import { ModalLayout, withModal, ModalField } from 'components/main/modal';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -46,7 +48,7 @@ const MERGE_FORM = 'launchMergeForm';
 const MERGE_TYPE_DEEP = 'DEEP';
 const MERGE_TYPE_BASIC = 'BASIC';
 const FIELD_LABEL_WIDTH = 130;
-const DESCRIPTION_SEPARATOR = '\n≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡\n';
+const DESCRIPTION_SEPARATOR = '\n≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡\n\n';
 const cx = classNames.bind(styles);
 const messages = defineMessages({
   MergeLaunchHeader: {
@@ -111,9 +113,10 @@ const formSyncErrorsSelector = getFormSyncErrors(MERGE_FORM);
   validate: ({ name, description, mergeType, attributes }) => ({
     mergeType: !mergeType,
     name: bindMessageToValidator(validate.launchName, 'launchNameHint')(name),
-    description: bindMessageToValidator(validate.launchDescription, 'launchDescriptionHint')(
-      description,
-    ),
+    description: bindMessageToValidator(
+      validate.launchDescription,
+      'launchDescriptionHint',
+    )(description),
     attributes: !validate.attributesArray(attributes),
   }),
 })
@@ -130,14 +133,16 @@ const formSyncErrorsSelector = getFormSyncErrors(MERGE_FORM);
   {
     showScreenLockAction,
     hideScreenLockAction,
+    showDefaultErrorNotification,
   },
 )
 @track()
 export class LaunchMergeModal extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     showScreenLockAction: PropTypes.func.isRequired,
     hideScreenLockAction: PropTypes.func.isRequired,
+    showDefaultErrorNotification: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     activeProject: PropTypes.string.isRequired,
     user: PropTypes.object.isRequired,
@@ -214,11 +219,15 @@ export class LaunchMergeModal extends Component {
     fetch(URLS.launchesMerge(this.props.activeProject), {
       method: 'post',
       data: values,
-    }).then(() => {
-      this.props.data.fetchFunc();
-      closeModal();
-      this.props.hideScreenLockAction();
-    });
+    })
+      .then(() => {
+        this.props.data.fetchFunc();
+        closeModal();
+      })
+      .catch(this.props.showDefaultErrorNotification)
+      .then(() => {
+        this.props.hideScreenLockAction();
+      });
   };
 
   render() {

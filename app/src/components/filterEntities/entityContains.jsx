@@ -16,14 +16,14 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { FieldFilterEntity } from 'components/fields/fieldFilterEntity';
 import { Input } from 'components/inputs/input';
 
 @injectIntl
 export class EntityContains extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     value: PropTypes.object.isRequired,
     title: PropTypes.string,
     smallSize: PropTypes.bool,

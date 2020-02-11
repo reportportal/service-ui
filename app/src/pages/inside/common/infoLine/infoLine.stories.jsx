@@ -16,7 +16,7 @@
 
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 // eslint-disable-next-line import/extensions, import/no-unresolved
 import { WithState, withTooltipRoot } from 'storybook-decorators';
 import { InfoLine } from './infoLine';
@@ -34,7 +34,11 @@ storiesOf('Pages/Inside/Common/InfoLine', module)
       width: '100%',
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .addDecorator(withTooltipRoot)
   .add('with data', () => (
     <WithState state={state}>

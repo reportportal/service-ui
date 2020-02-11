@@ -17,10 +17,10 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { STATS_TOTAL, STATS_PASSED } from 'common/constants/statistics';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
-import { commonValidators } from 'common/utils';
+import { commonValidators } from 'common/utils/validation';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import { ITEMS_INPUT_WIDTH } from './constants';
 import { TogglerControl, FiltersControl, InputControl } from './controls';
@@ -40,7 +40,7 @@ const messages = defineMessages({
 @injectIntl
 export class PassingRateSummaryControls extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     widgetSettings: PropTypes.object.isRequired,
     initializeControlsForm: PropTypes.func.isRequired,
     formAppearance: PropTypes.object.isRequired,

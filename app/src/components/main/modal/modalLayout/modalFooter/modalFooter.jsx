@@ -34,10 +34,12 @@ export class ModalFooter extends Component {
       text: PropTypes.string.isRequired,
       disabled: PropTypes.bool,
       danger: PropTypes.bool,
+      onClick: PropTypes.func,
       eventInfo: PropTypes.object,
     }),
     cancelButton: PropTypes.shape({
       text: PropTypes.string.isRequired,
+      disabled: PropTypes.bool,
     }),
     customButton: PropTypes.oneOfType([
       PropTypes.node,

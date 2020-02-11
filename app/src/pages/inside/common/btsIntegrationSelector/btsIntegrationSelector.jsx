@@ -17,7 +17,7 @@
 import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { FormField } from 'components/fields/formField';
 import { INTEGRATION_NAMES_TITLES } from 'components/integrations';
@@ -39,7 +39,7 @@ const messages = defineMessages({
 @injectIntl
 export class BtsIntegrationSelector extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     namedBtsIntegrations: PropTypes.object.isRequired,
     pluginName: PropTypes.string.isRequired,
     integrationId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,

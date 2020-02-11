@@ -22,14 +22,13 @@ import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { fromNowFormat } from 'common/utils';
-import { LEVEL_STEP } from 'common/constants/launchLevels';
 import { SAUCE_LABS } from 'common/constants/integrationNames';
 import {
   activeProjectRoleSelector,
   userAccountRoleSelector,
   userIdSelector,
 } from 'controllers/user';
-import { levelSelector, formatItemName } from 'controllers/testItem';
+import { isStepLevelSelector, formatItemName } from 'controllers/testItem';
 import { availableIntegrationsByPluginNameSelector } from 'controllers/plugins';
 import { MarkdownViewer } from 'components/main/markdown';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -41,6 +40,8 @@ import RetryIcon from 'common/img/retry-inline.svg';
 import SauceLabsIcon from 'common/img/plugins/sauce-labs-gray.png';
 import { NameLink } from 'pages/inside/common/nameLink';
 import { DurationBlock } from 'pages/inside/common/durationBlock';
+import { withTooltip } from 'components/main/tooltips/tooltip';
+import { TextTooltip } from 'components/main/tooltips/textTooltip';
 import { AttributesBlock } from './attributesBlock';
 import { OwnerBlock } from './ownerBlock';
 import { RetriesCounter } from './retriesCounter';
@@ -55,13 +56,21 @@ const messages = defineMessages({
   },
 });
 
+const ItemNameTooltip = withTooltip({
+  TooltipComponent: TextTooltip,
+  data: {
+    dynamicWidth: true,
+    tooltipTriggerClass: cx('name'),
+  },
+})(({ children }) => children);
+
 @injectIntl
 @connect((state) => ({
   sauceLabsIntegrations: availableIntegrationsByPluginNameSelector(state, SAUCE_LABS),
   userAccountRole: userAccountRoleSelector(state),
   userProjectRole: activeProjectRoleSelector(state),
   userId: userIdSelector(state),
-  isStepLevel: levelSelector(state) === LEVEL_STEP,
+  isStepLevel: isStepLevelSelector(state),
 }))
 @track()
 export class ItemInfo extends Component {
@@ -91,6 +100,7 @@ export class ItemInfo extends Component {
       onEditItem: () => {},
       onClickAttribute: () => {},
       onOwnerClick: () => {},
+      events: {},
     },
     userId: '',
     userProjectRole: '',
@@ -145,7 +155,9 @@ export class ItemInfo extends Component {
             className={cx('name-link')}
             onClick={() => tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ITEM_NAME)}
           >
-            <span title={value.name}>{`${formatItemName(value.name)} `}</span>
+            <ItemNameTooltip tooltipContent={value.name}>
+              <span>{formatItemName(value.name)}</span>
+            </ItemNameTooltip>
           </NameLink>
           <span className={cx('edit-number-box')}>
             <NameLink
@@ -196,14 +208,13 @@ export class ItemInfo extends Component {
           )}
           {value.owner && <OwnerBlock owner={value.owner} onClick={customProps.onOwnerClick} />}
           {isStepLevel && this.renderSauceLabsLabel()}
-          {value.attributes &&
-            !!value.attributes.length && (
-              <AttributesBlock
-                attributes={value.attributes}
-                onClickAttribute={customProps.onClickAttribute}
-                isAttributeClickable
-              />
-            )}
+          {value.attributes && !!value.attributes.length && (
+            <AttributesBlock
+              attributes={value.attributes}
+              onClickAttribute={customProps.onClickAttribute}
+              isAttributeClickable
+            />
+          )}
           {isStepLevel && (
             <div className={cx('mobile-info')}>
               @{formatMethodType(intl.formatMessage, value.type)}
@@ -212,13 +223,11 @@ export class ItemInfo extends Component {
               </span>
             </div>
           )}
-          {isStepLevel &&
-            value.retries &&
-            value.retries.length > 0 && (
-              <div className={cx('retries-counter')}>
-                <RetriesCounter testItem={value} onLabelClick={onClickRetries} />
-              </div>
-            )}
+          {isStepLevel && value.retries && value.retries.length > 0 && (
+            <div className={cx('retries-counter')}>
+              <RetriesCounter testItem={value} onLabelClick={onClickRetries} />
+            </div>
+          )}
           {value.description && (
             <div className={cx('item-description')}>
               <MarkdownViewer value={value.description} />

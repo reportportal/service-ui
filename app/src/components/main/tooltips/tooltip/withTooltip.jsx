@@ -54,7 +54,7 @@ export const withTooltip = ({ TooltipComponent, data = {} }) => (WrappedComponen
             {({ ref }) => (
               <div
                 ref={ref}
-                className={cx('tooltip-trigger')}
+                className={cx('tooltip-trigger', data.tooltipTriggerClass)}
                 onMouseEnter={this.showTooltip}
                 onMouseLeave={this.hideTooltip}
               >

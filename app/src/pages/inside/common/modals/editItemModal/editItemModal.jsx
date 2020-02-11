@@ -17,14 +17,15 @@
 import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Parser from 'html-react-parser';
 import IconDuplicate from 'common/img/duplicate-inline.svg';
-import { fetch, validate } from 'common/utils';
+import { fetch } from 'common/utils/fetch';
+import { validate } from 'common/utils/validation';
 import { URLS } from 'common/urls';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
@@ -42,8 +43,9 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { MarkdownEditor, MarkdownViewer } from 'components/main/markdown';
 import { AttributeListField } from 'components/main/attributeList';
 import { AccordionContainer } from 'components/main/accordionContainer';
-import { SUITES_PAGE_EVENTS } from 'components/main/analytics/events/suitesPageEvents';
 import { canEditLaunch } from 'common/utils/permissions';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { TestParameters } from 'pages/inside/common/testParameters';
 import styles from './editItemModal.scss';
 
 const cx = classNames.bind(styles);
@@ -52,6 +54,10 @@ const messages = defineMessages({
   attributesLabel: {
     id: 'EditItemModal.attributesLabel',
     defaultMessage: 'Attributes',
+  },
+  uuidLabel: {
+    id: 'EditItemModal.uuidLabel',
+    defaultMessage: 'UUID:',
   },
   descriptionPlaceholder: {
     id: 'EditItemModal.descriptionPlaceholder',
@@ -94,6 +100,10 @@ const messages = defineMessages({
     id: 'TestItemDetailsModal.description',
     defaultMessage: 'Description:',
   },
+  parametersLabel: {
+    id: 'TestItemDetailsModal.parametersLabel',
+    defaultMessage: 'Parameters:',
+  },
 });
 
 @withModal('editItemModal')
@@ -118,12 +128,13 @@ const messages = defineMessages({
 )
 export class EditItemModal extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     data: PropTypes.shape({
       item: PropTypes.object,
       parentLaunch: PropTypes.object,
       type: PropTypes.string,
       fetchFunc: PropTypes.func,
+      eventsInfo: PropTypes.object,
     }).isRequired,
     userProjectRole: PropTypes.string,
     userAccountRole: PropTypes.string,
@@ -180,8 +191,12 @@ export class EditItemModal extends Component {
   };
 
   updateItemAndCloseModal = (closeModal) => (formData, dispatch, props) => {
+    const {
+      data: { eventsInfo },
+      tracking,
+    } = this.props;
     if (props.data.item.description !== formData.description) {
-      this.props.tracking.trackEvent(SUITES_PAGE_EVENTS.EDIT_ITEM_DESCRIPTION);
+      tracking.trackEvent(eventsInfo.EDIT_ITEM_DESCRIPTION);
     }
     this.props.dirty && this.updateItem(formData);
     closeModal();
@@ -223,7 +238,7 @@ export class EditItemModal extends Component {
   render() {
     const {
       intl: { formatMessage },
-      data: { item, parentLaunch, type },
+      data: { item, parentLaunch, type, eventsInfo },
       handleSubmit,
       userAccountRole,
       userProjectRole,
@@ -233,13 +248,13 @@ export class EditItemModal extends Component {
     const okButton = {
       text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
       onClick: (closeModal) => {
-        tracking.trackEvent(SUITES_PAGE_EVENTS.SAVE_BTN_EDIT_ITEM_MODAL);
+        tracking.trackEvent(eventsInfo.SAVE_BTN_EDIT_ITEM_MODAL);
         handleSubmit(this.updateItemAndCloseModal(closeModal))();
       },
     };
     const cancelButton = {
       text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      eventInfo: SUITES_PAGE_EVENTS.CANCEL_BTN_EDIT_ITEM_MODAL,
+      eventInfo: eventsInfo.CANCEL_BTN_EDIT_ITEM_MODAL,
     };
 
     const editable = canEditLaunch(
@@ -254,7 +269,7 @@ export class EditItemModal extends Component {
         okButton={editable ? okButton : undefined}
         cancelButton={cancelButton}
         closeConfirmation={this.getCloseConfirmationConfig()}
-        closeIconEventInfo={SUITES_PAGE_EVENTS.CLOSE_ICON_EDIT_ITEM_MODAL}
+        closeIconEventInfo={eventsInfo.CLOSE_ICON_EDIT_ITEM_MODAL}
         warningMessage={
           type === LAUNCH_ITEM_TYPES.launch && editable && formatMessage(messages.launchWarning)
         }
@@ -273,6 +288,13 @@ export class EditItemModal extends Component {
               {type === LAUNCH_ITEM_TYPES.launch && ` #${item.number}`}
             </div>
           </ModalField>
+          {item.uuid && (
+            <ModalField label={formatMessage(messages.uuidLabel)}>
+              <div title={item.uuid} className={cx('item-uuid')}>
+                {formatItemName(item.uuid)}
+              </div>
+            </ModalField>
+          )}
           <ModalField label={formatMessage(messages.attributesLabel)}>
             <FieldProvider name="attributes">
               <AttributeListField
@@ -291,6 +313,16 @@ export class EditItemModal extends Component {
                 </CopyToClipboard>
               </div>
             </ModalField>
+          )}
+          {item.parameters && (
+            <Fragment>
+              <div className={cx('label')}>{formatMessage(messages.parametersLabel)}</div>
+              <ModalField>
+                <ScrollWrapper autoHeight autoHeightMax={210}>
+                  <TestParameters parameters={item.parameters} />
+                </ScrollWrapper>
+              </ModalField>
+            </Fragment>
           )}
           {editable ? (
             <ModalField>

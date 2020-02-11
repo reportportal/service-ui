@@ -22,7 +22,7 @@ import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import { FilterOptions } from 'pages/inside/filtersPage/filterGrid/filterOptions';
 import { FilterName } from 'pages/inside/filtersPage/filterGrid/filterName';
 import { isEmptyObject } from 'common/utils';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import styles from './lockedActiveFilter.scss';
 
 const cx = classNames.bind(styles);
@@ -39,7 +39,7 @@ export class LockedActiveFilter extends PureComponent {
   static propTypes = {
     filter: PropTypes.object,
     onEdit: PropTypes.func.isRequired,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
   };
 
   static defaultProps = {

@@ -23,6 +23,18 @@
   align-items: center;
   min-height: 36px;
   padding: 15px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.entities-wrapper {
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+    margin-bottom: 15px;
+  }
 }
 
 .users-bulk-toolbar {

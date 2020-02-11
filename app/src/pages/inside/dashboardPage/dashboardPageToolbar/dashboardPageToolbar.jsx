@@ -17,9 +17,9 @@
 import React, { Component } from 'react';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
-import { validate, bindMessageToValidator } from 'common/utils';
+import { validate, bindMessageToValidator } from 'common/utils/validation';
 import { GhostButton } from 'components/buttons/ghostButton';
 import GridViewDashboardIcon from 'common/img/grid-inline.svg';
 import TableViewDashboardIcon from 'common/img/table-inline.svg';
@@ -45,17 +45,11 @@ const messages = defineMessages({
     filter: bindMessageToValidator(validate.searchFilter, 'dashboardNameSearchHint')(filter),
   }),
   enableReinitialize: true,
-  onChange: ({ filter }, dispatch, props) => {
-    if (validate.searchFilter(filter)) {
-      props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.ENTER_PARAM_FOR_SEARCH);
-      props.onFilterChange(filter);
-    }
-  },
 })
 @injectIntl
 export class DashboardPageToolbar extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     isSearchDisabled: PropTypes.bool,
     onGridViewToggle: PropTypes.func,
     onTableViewToggle: PropTypes.func,
@@ -64,12 +58,21 @@ export class DashboardPageToolbar extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    onFilterChange: PropTypes.func,
   };
   static defaultProps = {
     isSearchDisabled: false,
     onGridViewToggle: () => {},
     onTableViewToggle: () => {},
     gridType: '',
+    onFilterChange: () => {},
+  };
+
+  handleFilterChange = (e, filter) => {
+    if (validate.searchFilter(filter)) {
+      this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.ENTER_PARAM_FOR_SEARCH);
+      this.props.onFilterChange(filter);
+    }
   };
 
   render() {
@@ -78,7 +81,7 @@ export class DashboardPageToolbar extends Component {
     return (
       <div className={cx('tool-bar')}>
         <div className={cx('input')}>
-          <FieldProvider name="filter">
+          <FieldProvider name="filter" onChange={this.handleFilterChange}>
             <FieldErrorHint>
               <InputSearch
                 disabled={isSearchDisabled}

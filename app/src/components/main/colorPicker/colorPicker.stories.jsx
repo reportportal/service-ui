@@ -17,7 +17,7 @@
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import { ColorPicker } from './colorPicker';
 import README from './README.md';
 
@@ -31,7 +31,11 @@ storiesOf('Components/Main/ColorPicker', module)
       width: 100,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('default state', () => <ColorPicker />)
   .add('with color', () => <ColorPicker color="red" />)
   .add('with hex color', () => <ColorPicker color="#3BB8C3" />)

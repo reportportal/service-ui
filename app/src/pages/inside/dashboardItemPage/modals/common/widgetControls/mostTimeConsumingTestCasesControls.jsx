@@ -16,7 +16,7 @@
 
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { activeProjectSelector } from 'controllers/user';
@@ -44,14 +44,6 @@ const messages = defineMessages({
     id: 'MostTimeConsumingTestCasesControls.LaunchNamePlaceholder',
     defaultMessage: 'Enter launch name',
   },
-  LaunchNameFocusPlaceholder: {
-    id: 'MostTimeConsumingTestCasesControls.LaunchNameFocusPlaceholder',
-    defaultMessage: 'Please enter 3 or more characters',
-  },
-  LaunchNameNoMatches: {
-    id: 'MostTimeConsumingTestCasesControls.LaunchNameNoMatches',
-    defaultMessage: 'No matches found.',
-  },
   IncludeMethodsControlText: {
     id: 'MostTimeConsumingTestCasesControls.IncludeMethodsControlText',
     defaultMessage: 'Include Before and After methods',
@@ -74,13 +66,13 @@ const validators = {
 
 @injectIntl
 @connect((state) => ({
-  launchNamesSearchUrl: URLS.launchNameSearch(activeProjectSelector(state)),
+  activeProject: activeProjectSelector(state),
 }))
 export class MostTimeConsumingTestCasesControls extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     widgetSettings: PropTypes.object.isRequired,
-    launchNamesSearchUrl: PropTypes.string.isRequired,
+    activeProject: PropTypes.string.isRequired,
     initializeControlsForm: PropTypes.func.isRequired,
   };
 
@@ -103,18 +95,11 @@ export class MostTimeConsumingTestCasesControls extends Component {
   }
 
   formatLaunchNameOptions = (values) => values.map((value) => ({ value, label: value }));
-  formatLaunchNames = (value) => (value ? { value, label: value } : null);
-  parseLaunchNames = (value) => {
-    if (value === null) return null;
-    if (value && value.value) return value.value;
-
-    return undefined;
-  };
 
   render() {
     const {
       intl: { formatMessage },
-      launchNamesSearchUrl,
+      activeProject,
     } = this.props;
 
     return (
@@ -132,20 +117,13 @@ export class MostTimeConsumingTestCasesControls extends Component {
         </FieldProvider>
         <FieldProvider
           name="contentParameters.widgetOptions.launchNameFilter"
-          format={this.formatLaunchNames}
-          parse={this.parseLaunchNames}
           validate={validators.launchNames(formatMessage)}
         >
           <TagsControl
             fieldLabel={formatMessage(messages.LaunchNameFieldLabel)}
             placeholder={formatMessage(messages.LaunchNamePlaceholder)}
-            focusPlaceholder={formatMessage(messages.LaunchNameFocusPlaceholder)}
-            nothingFound={formatMessage(messages.LaunchNameNoMatches)}
             minLength={3}
-            async
-            uri={launchNamesSearchUrl}
-            makeOptions={this.formatLaunchNameOptions}
-            removeSelected
+            getURI={URLS.launchNameSearch(activeProject)}
           />
         </FieldProvider>
         <FieldProvider name="contentParameters.widgetOptions.viewMode">

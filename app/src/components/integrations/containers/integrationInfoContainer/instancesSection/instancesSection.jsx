@@ -17,7 +17,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
 import PlusIcon from 'common/img/plus-button-inline.svg';
@@ -132,7 +132,7 @@ const messages = defineMessages({
 @track()
 export class InstancesSection extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     instanceType: PropTypes.string.isRequired,
     projectId: PropTypes.string,
     onItemClick: PropTypes.func.isRequired,
@@ -287,27 +287,25 @@ export class InstancesSection extends Component {
 
     return (
       <div className={cx('instances-section')}>
-        {isProjectIntegrationsExists &&
-          !isGlobal && (
-            <Fragment>
-              <InstancesList
-                blocked={disabled}
-                title={formatMessage(
-                  this.multiple ? messages.projectIntegrations : messages.projectIntegration,
-                )}
-                items={projectIntegrations}
-                onItemClick={onItemClick}
-              />
-              {this.multiple &&
-                !disabled && (
-                  <div className={cx('add-integration-button')}>
-                    <GhostButton icon={PlusIcon} onClick={this.addProjectIntegrationClickHandler}>
-                      {formatMessage(messages.addIntegrationButtonTitle)}
-                    </GhostButton>
-                  </div>
-                )}
-            </Fragment>
-          )}
+        {isProjectIntegrationsExists && !isGlobal && (
+          <Fragment>
+            <InstancesList
+              blocked={disabled}
+              title={formatMessage(
+                this.multiple ? messages.projectIntegrations : messages.projectIntegration,
+              )}
+              items={projectIntegrations}
+              onItemClick={onItemClick}
+            />
+            {this.multiple && !disabled && (
+              <div className={cx('add-integration-button')}>
+                <GhostButton icon={PlusIcon} onClick={this.addProjectIntegrationClickHandler}>
+                  {formatMessage(messages.addIntegrationButtonTitle)}
+                </GhostButton>
+              </div>
+            )}
+          </Fragment>
+        )}
         <InstancesList
           blocked={!isGlobal}
           title={formatMessage(
@@ -330,59 +328,55 @@ export class InstancesSection extends Component {
             {formatMessage(messages.noGlobalIntegrationMessage)}
           </p>
         )}
-        {(this.multiple || !globalIntegrations.length) &&
-          !disabled &&
-          isGlobal && (
-            <div className={cx('add-integration-button')}>
-              <GhostButton icon={PlusIcon} onClick={this.addProjectIntegrationClickHandler}>
-                {formatMessage(messages.addIntegrationButtonTitle)}
-              </GhostButton>
-            </div>
-          )}
-        {isGlobal &&
-          !this.builtin && (
-            <Fragment>
-              <h3 className={cx('uninstall-plugin-title')}>
-                {formatMessage(messages.uninstallPluginTitle)}
-              </h3>
-              <p className={cx('uninstall-plugin-note')}>
-                {formatMessage(messages.uninstallPluginNote)}
-              </p>
-              <BigButton
-                className={cx('uninstall-plugin-button')}
-                color={'tomato'}
-                roundedCorners
-                onClick={this.removePluginClickHandler}
-              >
-                {formatMessage(COMMON_LOCALE_KEYS.UNINSTALL)}
-              </BigButton>
-            </Fragment>
-          )}
-        {!disabled &&
-          !isGlobal && (
-            <div className={cx('settings-action-block')}>
-              <GhostButton
-                onClick={
-                  isProjectIntegrationsExists
-                    ? this.returnToGlobalSettingsClickHandler
-                    : this.unlinkAndSetupManuallyClickHandler
-                }
-              >
-                {formatMessage(
-                  isProjectIntegrationsExists
-                    ? messages.resetToGlobalSettingsTitle
-                    : messages.unlinkAndSetupManuallyTitle,
-                )}
-              </GhostButton>
-              <p className={cx('action-description')}>
-                {formatMessage(
-                  isProjectIntegrationsExists
-                    ? messages.resetToGlobalSettingsDescription
-                    : messages.unlinkAndSetupManuallyDescription,
-                )}
-              </p>
-            </div>
-          )}
+        {(this.multiple || !globalIntegrations.length) && !disabled && isGlobal && (
+          <div className={cx('add-integration-button')}>
+            <GhostButton icon={PlusIcon} onClick={this.addProjectIntegrationClickHandler}>
+              {formatMessage(messages.addIntegrationButtonTitle)}
+            </GhostButton>
+          </div>
+        )}
+        {isGlobal && !this.builtin && (
+          <Fragment>
+            <h3 className={cx('uninstall-plugin-title')}>
+              {formatMessage(messages.uninstallPluginTitle)}
+            </h3>
+            <p className={cx('uninstall-plugin-note')}>
+              {formatMessage(messages.uninstallPluginNote)}
+            </p>
+            <BigButton
+              className={cx('uninstall-plugin-button')}
+              color={'tomato'}
+              roundedCorners
+              onClick={this.removePluginClickHandler}
+            >
+              {formatMessage(COMMON_LOCALE_KEYS.UNINSTALL)}
+            </BigButton>
+          </Fragment>
+        )}
+        {!disabled && !isGlobal && (
+          <div className={cx('settings-action-block')}>
+            <GhostButton
+              onClick={
+                isProjectIntegrationsExists
+                  ? this.returnToGlobalSettingsClickHandler
+                  : this.unlinkAndSetupManuallyClickHandler
+              }
+            >
+              {formatMessage(
+                isProjectIntegrationsExists
+                  ? messages.resetToGlobalSettingsTitle
+                  : messages.unlinkAndSetupManuallyTitle,
+              )}
+            </GhostButton>
+            <p className={cx('action-description')}>
+              {formatMessage(
+                isProjectIntegrationsExists
+                  ? messages.resetToGlobalSettingsDescription
+                  : messages.unlinkAndSetupManuallyDescription,
+              )}
+            </p>
+          </div>
+        )}
       </div>
     );
   }

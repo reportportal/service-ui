@@ -16,7 +16,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { intlShape, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import {
@@ -36,6 +36,7 @@ import {
   getDefaultTestItemLinkParams,
 } from 'components/widgets/common/utils';
 import * as STATUSES from 'common/constants/testStatuses';
+import { ALL } from 'common/constants/reservedFilterIds';
 import { ChartContainer } from 'components/widgets/common/c3chart';
 import { getConfig as getStatusPageModeConfig } from '../common/statusPageChartConfig';
 import { selectConfigFunction } from './config';
@@ -58,7 +59,7 @@ const cx = classNames.bind(styles);
 )
 export class InvestigatedTrendChart extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     navigate: PropTypes.func.isRequired,
     projectId: PropTypes.string.isRequired,
     widget: PropTypes.object.isRequired,
@@ -151,7 +152,7 @@ export class InvestigatedTrendChart extends Component {
   launchModeClickHandler = (data) => {
     const { widget, getDefectLink, getStatisticsLink, projectId } = this.props;
     const id = widget.content.result[data.index].id;
-    const defaultParams = getDefaultTestItemLinkParams(id, projectId);
+    const defaultParams = getDefaultTestItemLinkParams(projectId, ALL, id);
     const defectTypeLocators = this.getDefectTypeLocators(data.id, projectId);
     const link = defectTypeLocators
       ? getDefectLink({ defects: defectTypeLocators, itemId: id })

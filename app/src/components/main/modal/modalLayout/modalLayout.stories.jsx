@@ -18,7 +18,7 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 import { action } from '@storybook/addon-actions';
-import { withReadme } from 'storybook-readme';
+
 import { ModalLayout } from './modalLayout';
 import README from './README.md';
 
@@ -49,7 +49,11 @@ storiesOf('Components/Main/ModalLayout', module)
       width: '100%',
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('default state', () => <ModalLayout />)
   .add('with buttons', () => <ModalLayout okButton={okButton} cancelButton={cancelButton} />)
   .add('with danger okButton', () => (

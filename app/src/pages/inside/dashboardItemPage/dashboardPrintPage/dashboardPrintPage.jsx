@@ -19,7 +19,7 @@ import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { activeDashboardItemSelector } from 'controllers/dashboard';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { PageLayout } from 'layouts/pageLayout';
@@ -54,7 +54,7 @@ const messages = defineMessages({
 @track()
 export class DashboardPrintPage extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     activeProject: PropTypes.string.isRequired,
     currentUser: PropTypes.string.isRequired,
     dashboard: PropTypes.object.isRequired,

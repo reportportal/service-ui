@@ -16,7 +16,7 @@
 
 import React, { PureComponent } from 'react';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
@@ -71,7 +71,7 @@ import styles from './launchesTable.scss';
 const cx = classNames.bind(styles);
 
 const NameColumn = (
-  { className, value },
+  { className, value, ...rest },
   name,
   { linkPayload, onOwnerClick, onClickAttribute },
 ) => {
@@ -92,6 +92,7 @@ const NameColumn = (
   return (
     <div className={cx('name-col', className)}>
       <ItemInfo
+        {...rest}
         customProps={{ ownLinkParams, onOwnerClick, onClickAttribute }}
         value={itemPropValue}
         hideEdit
@@ -230,11 +231,18 @@ const COLUMNS_KEYS_MAP = {
   [TO_INVESTIGATE]: DEFECT_COLUMN_KEY,
 };
 
+const COLUMNS_PROPS_MAP = {
+  [NAME]: {
+    maxHeight: 150,
+  },
+};
+
 const getColumn = (name, customProps, fieldKeys) => ({
   id: name,
   title: COLUMN_NAMES_MAP[name],
   component: (data) =>
     columnComponentsMap[COLUMNS_KEYS_MAP[name]](data, name, customProps, fieldKeys),
+  ...COLUMNS_PROPS_MAP[name],
 });
 
 @connect(
@@ -248,7 +256,7 @@ const getColumn = (name, customProps, fieldKeys) => ({
 @injectIntl
 export class LaunchesTable extends PureComponent {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     widget: PropTypes.object.isRequired,
     projectId: PropTypes.string.isRequired,
     createFilterAction: PropTypes.func.isRequired,

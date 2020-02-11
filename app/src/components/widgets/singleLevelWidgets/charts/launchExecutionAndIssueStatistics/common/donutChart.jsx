@@ -16,12 +16,13 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import * as d3 from 'd3-selection';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
+import { ALL } from 'common/constants/reservedFilterIds';
 import { TEST_ITEMS_TYPE_LIST } from 'controllers/testItem';
-import { launchFiltersSelector } from 'controllers/filter';
+import { userFiltersSelector } from 'controllers/project';
 import { activeProjectSelector } from 'controllers/user';
 import { TEST_ITEM_PAGE } from 'controllers/pages';
 import {
@@ -39,7 +40,7 @@ const cx = classNames.bind(styles);
 @connect(
   (state) => ({
     project: activeProjectSelector(state),
-    launchFilters: launchFiltersSelector(state),
+    launchFilters: userFiltersSelector(state),
   }),
   {
     navigate: (linkAction) => linkAction,
@@ -48,7 +49,7 @@ const cx = classNames.bind(styles);
 @injectIntl
 export class DonutChart extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     widget: PropTypes.object.isRequired,
     isPreview: PropTypes.bool,
     navigate: PropTypes.func.isRequired,
@@ -93,8 +94,7 @@ export class DonutChart extends Component {
 
     this.renderTotalLabel();
 
-    d3
-      .select(chart.element)
+    d3.select(chart.element)
       .select('.c3-chart-arcs-title')
       .attr('dy', onStatusPageMode ? -5 : -15)
       .append('tspan')
@@ -141,7 +141,7 @@ export class DonutChart extends Component {
         isListType: false,
         itemId: id,
       };
-      navigationParams = getDefaultTestItemLinkParams(id, project);
+      navigationParams = getDefaultTestItemLinkParams(project, ALL, id);
     }
     const link = getLink(nameConfig, linkParams);
 

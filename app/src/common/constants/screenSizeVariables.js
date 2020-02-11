@@ -14,5 +14,7 @@
  * limitations under the License.
  */
 
-export const SCREEN_XS_MAX = '(max-width: 767px)';
-export const SCREEN_SM_MAX = '(max-width: 991px)';
+export const SCREEN_XS_MAX = 767;
+
+export const SCREEN_XS_MAX_MEDIA = `(max-width: ${SCREEN_XS_MAX}px)`;
+export const SCREEN_SM_MAX_MEDIA = '(max-width: 991px)';

@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { reduxForm, SubmissionError } from 'redux-form';
 import { ModalLayout, withModal, ModalField } from 'components/main/modal';
 import { FILTERS_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -28,7 +28,7 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { MarkdownEditor } from 'components/main/markdown';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
-import { commonValidators, validateAsync } from 'common/utils';
+import { commonValidators, validateAsync } from 'common/utils/validation';
 import { activeProjectSelector } from 'controllers/user';
 
 const messages = defineMessages({
@@ -77,7 +77,7 @@ const validateFilterNameUniqueness = (activeProject, id, name) =>
 @track()
 export class FilterEditModal extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     data: PropTypes.shape({
       filter: PropTypes.object,
       onEdit: PropTypes.func,

@@ -18,8 +18,8 @@ import PropTypes from 'prop-types';
 import track from 'react-tracking';
 import { reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
-import { validate, bindMessageToValidator } from 'common/utils';
+import { injectIntl, defineMessages } from 'react-intl';
+import { validate, bindMessageToValidator } from 'common/utils/validation';
 import AddFilterIcon from 'common/img/add-filter-inline.svg';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -47,25 +47,32 @@ const messages = defineMessages({
     filter: bindMessageToValidator(validate.searchFilter, 'filterNameError')(filter),
   }),
   enableReinitialize: true,
-  onChange: ({ filter }, dispatch, props) => {
-    if (validate.searchFilter(filter)) {
-      props.tracking.trackEvent(FILTERS_PAGE_EVENTS.SEARCH_FILTER);
-      props.onFilterChange(filter);
-    }
-  },
 })
 @injectIntl
 export class FilterPageToolbar extends React.Component {
   static propTypes = {
-    intl: intlShape,
+    intl: PropTypes.object,
     isSearchDisabled: PropTypes.bool,
     onAddFilter: PropTypes.func,
+    onFilterChange: PropTypes.func,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
     intl: {},
     isSearchDisabled: false,
     onAddFilter: () => {},
+    onFilterChange: () => {},
+  };
+
+  handleFilterChange = (e, filter) => {
+    if (validate.searchFilter(filter)) {
+      this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.SEARCH_FILTER);
+      this.props.onFilterChange(filter);
+    }
   };
 
   render() {
@@ -78,7 +85,7 @@ export class FilterPageToolbar extends React.Component {
     return (
       <div className={cx('filter-page-toolbar')}>
         <div className={cx('filter-search')}>
-          <FieldProvider name="filter">
+          <FieldProvider name="filter" onChange={this.handleFilterChange}>
             <FieldErrorHint>
               <InputSearch
                 disabled={isSearchDisabled}

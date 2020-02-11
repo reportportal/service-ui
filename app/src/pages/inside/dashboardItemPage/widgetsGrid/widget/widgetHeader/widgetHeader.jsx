@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
@@ -59,7 +59,7 @@ const messages = defineMessages({
 }))
 export class WidgetHeader extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     userId: PropTypes.string.isRequired,
     userRole: PropTypes.string,
     projectRole: PropTypes.string,
@@ -126,21 +126,19 @@ export class WidgetHeader extends Component {
                   <DescriptionTooltipIcon tooltipContent={data.description} />
                 </div>
               )}
-              {data.shared &&
-                isOwner && (
-                  <div className={cx('icon')} title={intl.formatMessage(messages.widgetIsShared)}>
-                    {Parser(ShareIcon)}
-                  </div>
-                )}
-              {data.shared &&
-                !isOwner && (
-                  <div
-                    className={cx('icon')}
-                    title={intl.formatMessage(messages.sharedWidget, { owner: data.owner })}
-                  >
-                    {Parser(GlobeIcon)}
-                  </div>
-                )}
+              {data.shared && isOwner && (
+                <div className={cx('icon')} title={intl.formatMessage(messages.widgetIsShared)}>
+                  {Parser(ShareIcon)}
+                </div>
+              )}
+              {data.shared && !isOwner && (
+                <div
+                  className={cx('icon')}
+                  title={intl.formatMessage(messages.sharedWidget, { owner: data.owner })}
+                >
+                  {Parser(GlobeIcon)}
+                </div>
+              )}
             </div>
           </div>
           <br />

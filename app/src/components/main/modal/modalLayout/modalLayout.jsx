@@ -22,7 +22,9 @@ import { connect } from 'react-redux';
 import { hideModalAction } from 'controllers/modal';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { ModalContent, ModalFooter, ModalHeader } from '../';
+import { ModalContent } from './modalContent';
+import { ModalFooter } from './modalFooter';
+import { ModalHeader } from './modalHeader';
 import styles from './modalLayout.scss';
 
 const cx = classNames.bind(styles);
@@ -115,7 +117,7 @@ export class ModalLayout extends Component {
   };
   onClickModal = (e) => {
     const { closeConfirmation } = this.props;
-    if (!this.modal.contains(e.target)) {
+    if (this.modal && !this.modal.contains(e.target)) {
       if (!closeConfirmation) {
         this.closeModal();
       } else {

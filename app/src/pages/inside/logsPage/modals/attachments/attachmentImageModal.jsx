@@ -18,7 +18,7 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import track from 'react-tracking';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import RotateImage from 'common/img/rotate-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -38,7 +38,7 @@ export class AttachmentImageModal extends Component {
     data: PropTypes.shape({
       image: PropTypes.string,
     }).isRequired,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,

@@ -38,7 +38,7 @@ export class ServiceVersionsBlockWithData extends Component {
     services: {},
   };
 
-  componentWillMount() {
+  componentDidMount() {
     fetchJsonp('https://status.reportportal.io/versions', {
       jsonpCallback: 'jsonp',
     })
@@ -64,13 +64,20 @@ export class ServiceVersionsBlockWithData extends Component {
 
       const latestVersion = latestServiceVersions[serviceValue.build.repo];
 
+      let isDeprecated;
+      try {
+        isDeprecated =
+          serviceValue.build.repo && latestVersion && semverDiff(currentVersion, latestVersion);
+      } catch (e) {
+        isDeprecated = false;
+      }
+
       services[serviceKey] = {
         name: serviceValue.build.name,
         version: serviceValue.build.version,
         newVersion: latestVersion || null,
         repo: serviceValue.build.repo || null,
-        isDeprecated:
-          serviceValue.build.repo && latestVersion && semverDiff(currentVersion, latestVersion),
+        isDeprecated,
       };
 
       return true;

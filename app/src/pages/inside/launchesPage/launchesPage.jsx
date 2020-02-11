@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import track from 'react-tracking';
 import isEqual from 'fast-deep-equal';
 import {
@@ -204,7 +204,7 @@ export class LaunchesPage extends Component {
     level: PropTypes.string,
     debugMode: PropTypes.bool.isRequired,
     userId: PropTypes.string.isRequired,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     launches: PropTypes.arrayOf(PropTypes.object),
     activePage: PropTypes.number,
     itemCount: PropTypes.number,
@@ -481,6 +481,11 @@ export class LaunchesPage extends Component {
     this.props.fetchLaunchesAction();
   };
 
+  unselectAndResetPage = () => {
+    this.props.unselectAllLaunchesAction();
+    this.resetPageNumber();
+  };
+
   deleteItem = (item) => this.deleteItems([item]);
 
   confirmDeleteItems = (items) => {
@@ -515,10 +520,21 @@ export class LaunchesPage extends Component {
       });
   };
 
+  isNotAllOwnLaunches = (launches) => {
+    const { userId } = this.props;
+    return launches.some((launch) => launch.owner !== userId);
+  };
+
   deleteItems = (launches) => {
     this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_DELETE_ACTION);
     const { intl, userId } = this.props;
     const selectedLaunches = launches || this.props.selectedLaunches;
+    const warning =
+      this.isNotAllOwnLaunches(selectedLaunches) &&
+      (selectedLaunches.length === 1
+        ? intl.formatMessage(messages.warning)
+        : intl.formatMessage(messages.warningMultiple));
+
     this.props.deleteItemsAction(selectedLaunches, {
       onConfirm: this.confirmDeleteItems,
       header:
@@ -530,10 +546,7 @@ export class LaunchesPage extends Component {
           ? intl.formatMessage(messages.deleteModalContent, { name: selectedLaunches[0].name })
           : intl.formatMessage(messages.deleteModalMultipleContent),
       userId,
-      warning:
-        selectedLaunches.length === 1
-          ? intl.formatMessage(messages.warning)
-          : intl.formatMessage(messages.warningMultiple),
+      warning,
       eventsInfo: {
         closeIcon: LAUNCHES_MODAL_EVENTS.CLOSE_ICON_DELETE_MODAL,
         cancelBtn: LAUNCHES_MODAL_EVENTS.CANCEL_BTN_DELETE_MODAL,
@@ -591,6 +604,7 @@ export class LaunchesPage extends Component {
         item: launch,
         type: LAUNCH_ITEM_TYPES.launch,
         fetchFunc: this.props.fetchLaunchesAction,
+        eventsInfo: LAUNCHES_MODAL_EVENTS.EDIT_ITEMS_MODAL_EVENTS,
       },
     });
   };
@@ -603,12 +617,13 @@ export class LaunchesPage extends Component {
         items: launches,
         type: LAUNCH_ITEM_TYPES.launch,
         fetchFunc: this.unselectAndFetchLaunches,
-        eventsInfo:{
-          cancelBtn: LAUNCHES_MODAL_EVENTS.CLICK_CANCEL_BTN_EDIT_MODAL,
-          closeIcon: LAUNCHES_MODAL_EVENTS.CLOSE_ICON_EDIT_MODAL,
-          saveBtn: LAUNCHES_MODAL_EVENTS.CLICK_SAVE_BTN_EDIT_MODAL,
-          editDescription: LAUNCHES_MODAL_EVENTS.BULK_EDIT_LAUNCHES_DESCRIPTION,
-        }
+        eventsInfo: {
+          cancelBtn: LAUNCHES_MODAL_EVENTS.EDIT_ITEMS_MODAL_EVENTS.CANCEL_BTN_EDIT_ITEM_MODAL,
+          closeIcon: LAUNCHES_MODAL_EVENTS.EDIT_ITEMS_MODAL_EVENTS.CLOSE_ICON_EDIT_ITEM_MODAL,
+          saveBtn: LAUNCHES_MODAL_EVENTS.EDIT_ITEMS_MODAL_EVENTS.SAVE_BTN_EDIT_ITEM_MODAL,
+          editDescription:
+            LAUNCHES_MODAL_EVENTS.EDIT_ITEMS_MODAL_EVENTS.BULK_EDIT_ITEMS_DESCRIPTION,
+        },
       },
     });
   };
@@ -677,7 +692,7 @@ export class LaunchesPage extends Component {
   mergeLaunches = () => {
     this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_MERGE_ACTION);
     this.props.mergeLaunchesAction(this.props.selectedLaunches, {
-      fetchFunc: this.unselectAndFetchLaunches,
+      fetchFunc: this.unselectAndResetPage,
     });
   };
 
@@ -742,28 +757,25 @@ export class LaunchesPage extends Component {
     return (
       <FilterEntitiesContainer
         level={LEVEL_LAUNCH}
-        filterId={activeFilterId}
-        key={activeFilterId}
         entities={activeFilterConditions}
         onChange={onChangeFilter}
         render={({ onFilterAdd, ...rest }) => (
           <PageLayout>
             <PageSection>
-              {!debugMode &&
-                !selectedLaunches.length && (
-                  <LaunchFiltersToolbar
-                    filters={launchFilters}
-                    activeFilterId={activeFilterId}
-                    activeFilter={activeFilter}
-                    onSelectFilter={onSelectFilter}
-                    onRemoveFilter={onRemoveFilter}
-                    onFilterAdd={onFilterAdd}
-                    onResetFilter={onResetFilter}
-                    onChangeSorting={onChangeSorting}
-                    sortingString={sortingColumn}
-                    {...rest}
-                  />
-                )}
+              {!debugMode && !selectedLaunches.length && (
+                <LaunchFiltersToolbar
+                  filters={launchFilters}
+                  activeFilterId={activeFilterId}
+                  activeFilter={activeFilter}
+                  onSelectFilter={onSelectFilter}
+                  onRemoveFilter={onRemoveFilter}
+                  onFilterAdd={onFilterAdd}
+                  onResetFilter={onResetFilter}
+                  onChangeSorting={onChangeSorting}
+                  sortingString={sortingColumn}
+                  {...rest}
+                />
+              )}
             </PageSection>
             <PageSection>
               <LaunchToolbar
@@ -782,7 +794,7 @@ export class LaunchesPage extends Component {
                 onImportLaunch={this.openImportModal}
                 debugMode={debugMode}
                 onDelete={this.deleteItems}
-                activeFilterId={debugMode ? activeFilterId : ALL}
+                activeFilterId={debugMode ? ALL : activeFilterId}
                 onAddNewWidget={this.showWidgetWizard}
                 finishedLaunchesCount={finishedLaunchesCount}
               />
@@ -814,17 +826,16 @@ export class LaunchesPage extends Component {
                 onPatternAnalysis={this.onPatternAnalysis}
                 rowHighlightingConfig={rowHighlightingConfig}
               />
-              {!!pageCount &&
-                !loading && (
-                  <PaginationToolbar
-                    activePage={activePage}
-                    itemCount={itemCount}
-                    pageCount={pageCount}
-                    pageSize={pageSize}
-                    onChangePage={onChangePage}
-                    onChangePageSize={onChangePageSize}
-                  />
-                )}
+              {!!pageCount && !loading && (
+                <PaginationToolbar
+                  activePage={activePage}
+                  itemCount={itemCount}
+                  pageCount={pageCount}
+                  pageSize={pageSize}
+                  onChangePage={onChangePage}
+                  onChangePageSize={onChangePageSize}
+                />
+              )}
             </PageSection>
           </PageLayout>
         )}

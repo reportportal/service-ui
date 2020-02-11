@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import { withTooltip } from 'components/main/tooltips/tooltip';
@@ -34,7 +34,7 @@ const cx = classNames.bind(styles);
 })
 export class SharedFilterIcon extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     share: PropTypes.bool,
     currentUser: PropTypes.string,
     owner: PropTypes.string,

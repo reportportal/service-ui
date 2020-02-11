@@ -21,9 +21,13 @@ export const messages = defineMessages({
     id: 'TestItemDetailsModal.title',
     defaultMessage: 'Test item details',
   },
+  testCaseUId: {
+    id: 'TestItemDetailsModal.testCaseUId',
+    defaultMessage: 'Unique test case id:',
+  },
   testCaseId: {
     id: 'TestItemDetailsModal.testCaseId',
-    defaultMessage: 'Unique test case id:',
+    defaultMessage: 'Test case id:',
   },
   duration: {
     id: 'TestItemDetailsModal.duration',

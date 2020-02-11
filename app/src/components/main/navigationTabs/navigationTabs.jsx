@@ -30,9 +30,9 @@ export class NavigationTabs extends Component {
     onChangeTab: PropTypes.func,
     config: PropTypes.objectOf(
       PropTypes.shape({
-        name: PropTypes.string,
+        name: PropTypes.node,
         link: PropTypes.object,
-        component: PropTypes.instanceOf(Element),
+        component: PropTypes.Element,
         eventInfo: PropTypes.object,
         mobileDisabled: PropTypes.bool,
       }),

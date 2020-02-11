@@ -16,7 +16,7 @@
 
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { loadingSelector, projectsSelector } from 'controllers/administrate/projects';
@@ -33,7 +33,7 @@ const cx = classNames.bind(styles);
 @injectIntl
 export class ProjectsPanelView extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     projects: PropTypes.array,
     loading: PropTypes.bool,
     onMembers: PropTypes.func,

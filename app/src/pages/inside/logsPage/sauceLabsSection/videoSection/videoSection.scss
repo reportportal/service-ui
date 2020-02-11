@@ -57,7 +57,7 @@
   padding: 15px 60px 20px 60px;
   font-size: 12px;
   font-family: $FONT-REGULAR;
-  color:  $COLOR--gray-60;
+  color: $COLOR--gray-60;
 
   &.full-screen {
     border-bottom: 1px solid $COLOR--gray-91;
@@ -75,7 +75,8 @@
   cursor: pointer;
 }
 
-.full-screen-button, .info-item {
+.full-screen-button,
+.info-item {
   svg {
     width: 17px;
     height: 17px;

@@ -16,9 +16,9 @@
 
 import { Component } from 'react';
 import { connect } from 'react-redux';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
-import { commonValidators } from 'common/utils';
+import { commonValidators } from 'common/utils/validation';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
 import { FAILED, PASSED, SKIPPED, INTERRUPTED, IN_PROGRESS } from 'common/constants/launchStatuses';
@@ -283,7 +283,7 @@ const messages = defineMessages({
 }))
 export class StepLevelEntities extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     defectTypes: PropTypes.object.isRequired,
     filterValues: PropTypes.object,
     render: PropTypes.func.isRequired,
@@ -546,7 +546,7 @@ export class StepLevelEntities extends Component {
         active: visibleFilters.includes(ENTITY_ATTRIBUTE_KEYS),
         removable: true,
         customProps: {
-          uri: URLS.testItemAttributeKeysSearch(projectId, launchId),
+          getURI: URLS.testItemAttributeKeysSearch(projectId, launchId),
           placeholder: intl.formatMessage(messages.ATTRIBUTE_KEYS_PLACEHOLDER),
         },
       },
@@ -560,7 +560,7 @@ export class StepLevelEntities extends Component {
         active: visibleFilters.includes(ENTITY_ATTRIBUTE_VALUES),
         removable: true,
         customProps: {
-          uri: URLS.testItemAttributeValuesSearch(
+          getURI: URLS.testItemAttributeValuesSearch(
             projectId,
             launchId,
             (filterValues[ENTITY_ATTRIBUTE_KEYS] || {}).value || '',

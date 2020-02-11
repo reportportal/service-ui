@@ -23,6 +23,7 @@ import {
   ASSIGN_TO_RROJECT,
   ASSIGN_TO_RROJECT_SUCCESS,
   ASSIGN_TO_RROJECT_ERROR,
+  assignToProjectSuccessAction,
 } from 'controllers/user';
 import { PROJECT_TYPE_INTERNAL } from 'common/constants/projectsObjectTypes';
 import { SETTINGS } from 'common/constants/projectSections';
@@ -38,7 +39,6 @@ import {
   GRID_VIEW,
   SET_PROJECTS_VIEW_MODE,
   ADD_PROJECT,
-  ADD_PROJECT_SUCCESS,
   DELETE_PROJECT,
   NAVIGATE_TO_PROJECT,
   ERROR_CODES,
@@ -80,14 +80,12 @@ function* addProject({ payload: projectName }) {
         projectName,
       },
     });
-    yield put({
-      type: ADD_PROJECT_SUCCESS,
-      payload: {
-        projectName,
-        projectRole: PROJECT_MANAGER,
-        entryType: PROJECT_TYPE_INTERNAL,
-      },
-    });
+    const projectInfo = {
+      projectName,
+      projectRole: PROJECT_MANAGER,
+      entryType: PROJECT_TYPE_INTERNAL,
+    };
+    yield put(assignToProjectSuccessAction(projectInfo));
     yield put(hideModalAction());
     yield put(
       showNotification({

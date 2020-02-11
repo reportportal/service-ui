@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import { DurationBlock } from 'pages/inside/common/durationBlock';
 import { AttributesBlock } from 'pages/inside/common/itemInfo/attributesBlock';
@@ -51,7 +51,7 @@ const messages = defineMessages({
 export class LogItemDetails extends Component {
   static propTypes = {
     logItem: PropTypes.object.isRequired,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
   };
 
   render() {
@@ -90,12 +90,11 @@ export class LogItemDetails extends Component {
                 <span className={cx('growth-duration')}>{logItem.growthDuration}</span>
               </span>
             )}
-            {logItem.attributes &&
-              !!logItem.attributes.length && (
-                <span className={cx('attribute')}>
-                  <AttributesBlock attributes={logItem.attributes} />
-                </span>
-              )}
+            {logItem.attributes && !!logItem.attributes.length && (
+              <span className={cx('attribute')}>
+                <AttributesBlock attributes={logItem.attributes} />
+              </span>
+            )}
           </div>
           {logItem.codeRef && (
             <div className={cx('code-ref')} title={logItem.codeRef}>

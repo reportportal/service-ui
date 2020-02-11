@@ -17,7 +17,7 @@
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import { InputConditional } from './inputConditional';
 import README from './README.md';
 
@@ -56,7 +56,11 @@ storiesOf('Components/Inputs/InputConditional', module)
       width: 300,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('default state', () => <InputConditional />)
   .add('touched & error state', () => <InputConditional touched error={'error'} />)
   .add('with value & conditions', () => (

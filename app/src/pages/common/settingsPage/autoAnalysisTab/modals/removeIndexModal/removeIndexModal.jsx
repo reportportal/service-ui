@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { URLS } from 'common/urls';
@@ -61,7 +61,7 @@ const messages = defineMessages({
 @injectIntl
 export class RemoveIndexModal extends Component {
   static propTypes = {
-    intl: intlShape,
+    intl: PropTypes.object,
     projectId: PropTypes.string,
     showNotification: PropTypes.func.isRequired,
     showDefaultErrorNotification: PropTypes.func.isRequired,

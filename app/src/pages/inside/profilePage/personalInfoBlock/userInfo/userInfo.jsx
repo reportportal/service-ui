@@ -19,7 +19,7 @@ import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import Parser from 'html-react-parser';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { showModalAction } from 'controllers/modal';
@@ -59,7 +59,7 @@ export class UserInfo extends Component {
     name: PropTypes.string,
     email: PropTypes.string,
     accountType: PropTypes.string,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     showModalAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
     fetchUserAction: PropTypes.func,
@@ -113,8 +113,8 @@ export class UserInfo extends Component {
     return (
       <Fragment>
         <div className={cx('login')}>{userId}</div>
-        <div className={cx('name')}>
-          {name}
+        <div className={cx('name-line')}>
+          <span className={cx('name')}>{name}</span>
           {accountType === INTERNAL && (
             <span
               className={cx('pencil-icon')}
@@ -127,8 +127,8 @@ export class UserInfo extends Component {
             </span>
           )}
         </div>
-        <div className={cx('email')}>
-          {email}
+        <div className={cx('email-line')}>
+          <span className={cx('email')}>{email}</span>
           {accountType === INTERNAL && (
             <div
               className={cx('pencil-icon')}
