@@ -1,4 +1,5 @@
 #!groovy
+@Library('commons') _
 
 //String podTemplateConcat = "${serviceName}-${buildNumber}-${uuid}"
 def label = "worker-${UUID.randomUUID().toString()}"
@@ -77,20 +78,15 @@ podTemplate(
             }
         }
 
-        def test = load "${ciDir}/jenkins/scripts/test.groovy"
-        def utils = load "${ciDir}/jenkins/scripts/util.groovy"
-        def helm = load "${ciDir}/jenkins/scripts/helm.groovy"
-        def docker = load "${ciDir}/jenkins/scripts/docker.groovy"
-
-        docker.init()
+        dockerUtil.init()
         helm.init()
-        utils.scheduleRepoPoll([
+        util.scheduleRepoPoll([
                 booleanParam(name: 'ENABLE_SEALIGHTS', defaultValue: true, description: 'Whether Sealights instrumentation should be enabled',)
         ])
         def sealightsEnabled = params.get('ENABLE_SEALIGHTS', false)
 
 
-        def sealightsToken = utils.execStdout("cat $sealightsTokenPath")
+        def sealightsToken = util.execStdout("cat $sealightsTokenPath")
         def sealightsSession;
         def resultsProcessor = "jest-junit"
 
@@ -109,7 +105,7 @@ podTemplate(
                         if (sealightsEnabled) {
                             stage('Init Sealights') {
                                 sh "./node_modules/.bin/slnodejs config --tokenfile $sealightsTokenPath --appname service-ui --branch $branchToBuild --build $srvVersion"
-                                sealightsSession = utils.execStdout("cat buildSessionId")
+                                sealightsSession = util.execStdout("cat buildSessionId")
                                 sh "./node_modules/.bin/slnodejs build --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession --workspacepath './src' --scm none --excludedpaths '**/*.test.js' --es6Modules"
                             }
 
@@ -136,6 +132,8 @@ podTemplate(
                     sh "docker push quay.io/reportportal/service-ui:BUILD-${env.BUILD_NUMBER}"
                 }
             }
+
+            sast('reportportal_services_sast', 'rp/carrier/config.yaml', 'service-ui', false)
         }
 
 
