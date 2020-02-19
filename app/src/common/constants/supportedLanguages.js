@@ -15,6 +15,7 @@
  */
 
 export const ENGLISH = 'en';
+export const UKRAINIAN = 'ua';
 export const RUSSIAN = 'ru';
 export const BELARUSIAN = 'be';
 
