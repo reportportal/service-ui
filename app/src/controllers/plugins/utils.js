@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { INTEGRATION_NAMES_BY_GROUP_TYPES_MAP } from 'common/constants/integrationNames';
 import { AUTHORIZATION_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
 
 export const filterIntegrationsByName = (integrations, integrationName) =>
@@ -37,6 +38,9 @@ export const groupItems = (items) =>
     }
     return groupedItems;
   }, {});
+
+export const isAuthorizationGroupType = (groupType) =>
+  INTEGRATION_NAMES_BY_GROUP_TYPES_MAP[AUTHORIZATION_GROUP_TYPE].includes(groupType);
 
 export const isPostIssueActionAvailable = (integrations) =>
   integrations.length &&

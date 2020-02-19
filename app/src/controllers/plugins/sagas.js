@@ -48,14 +48,18 @@ import {
   updateGlobalIntegrationSuccessAction,
   fetchGlobalIntegrationsSuccessAction,
 } from './actionCreators';
+import { isAuthorizationGroupType } from './utils';
 
 function* addIntegration({ payload: { data, isGlobal, pluginName, callback } }) {
   yield put(showScreenLockAction());
   try {
     const projectId = yield select(projectIdSelector);
-    const url = isGlobal
+    const integrationUrl = isGlobal
       ? URLS.newGlobalIntegration(pluginName)
       : URLS.newProjectIntegration(projectId, pluginName);
+    const url = isAuthorizationGroupType(pluginName)
+      ? URLS.authSettings(pluginName)
+      : integrationUrl;
     const response = yield call(fetch, url, {
       method: 'post',
       data,
