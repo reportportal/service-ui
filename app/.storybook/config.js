@@ -35,7 +35,7 @@ const messages = {
   be: localeBE,
 };
 setIntlConfig({
-  locales: ['en', 'ua', 'ru', 'be'],
+  locales: ['en', 'uk', 'ru', 'be'],
   defaultLocale: 'en',
   getMessages: (lang) => {
     return messages[lang];

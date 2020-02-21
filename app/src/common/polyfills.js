@@ -80,7 +80,7 @@ if (!Object.values) {
 // Chrome Intl doesn't support 'be' locale, so we have to manually apply polyfill in this case
 export const polyfillLocales = () =>
   new Promise((resolve) => {
-    if (window.Intl.PluralRules && window.Intl.RelativeTimeFormat && areIntlLocalesSupported(['en', 'ua', 'ru', 'be'])) {
+    if (window.Intl.PluralRules && window.Intl.RelativeTimeFormat && areIntlLocalesSupported(['en', 'uk', 'ru', 'be'])) {
       resolve();
       return;
     }
