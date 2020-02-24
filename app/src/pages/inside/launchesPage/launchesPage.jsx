@@ -483,7 +483,11 @@ export class LaunchesPage extends Component {
 
   unselectAndResetPage = () => {
     this.props.unselectAllLaunchesAction();
-    this.resetPageNumber();
+    if (this.props.activePage === 1) {
+      this.props.fetchLaunchesAction();
+    } else {
+      this.resetPageNumber();
+    }
   };
 
   deleteItem = (item) => this.deleteItems([item]);
