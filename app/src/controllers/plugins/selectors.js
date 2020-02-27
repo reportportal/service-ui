@@ -39,12 +39,15 @@ export const pluginsSelector = (state) => domainSelector(state).plugins;
 export const pluginByNameSelector = (state, name) =>
   pluginsSelector(state).find((plugin) => plugin.name === name);
 
-const globalIntegrationsSelector = (state) =>
+export const globalIntegrationsSelector = (state) =>
   domainSelector(state).integrations.globalIntegrations || [];
 const projectIntegrationsSelector = (state) =>
   domainSelector(state).integrations.projectIntegrations || [];
 
 export const availablePluginsSelector = createSelector(pluginsSelector, filterAvailablePlugins);
+export const availablePluginNamesSelector = createSelector(availablePluginsSelector, (plugins) =>
+  plugins.map((plugin) => plugin.name),
+);
 
 export const availableGroupedPluginsSelector = createSelector(
   availablePluginsSelector,
