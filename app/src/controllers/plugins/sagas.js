@@ -22,7 +22,7 @@ import {
   NOTIFICATION_TYPES,
 } from 'controllers/notification';
 import { projectIdSelector } from 'controllers/pages';
-import { fetchDataAction } from 'controllers/fetch';
+import { fetchDataAction, createFetchPredicate } from 'controllers/fetch';
 import { hideModalAction } from 'controllers/modal';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { fetch, omit } from 'common/utils';
@@ -50,6 +50,7 @@ import {
   updateGlobalIntegrationSuccessAction,
   fetchGlobalIntegrationsSuccessAction,
 } from './actionCreators';
+import { fetchUiExtensions } from './uiExtensions';
 
 function* addIntegration({ payload: { data, isGlobal, pluginName, callback }, meta }) {
   yield put(showScreenLockAction());
@@ -237,6 +238,10 @@ function* watchRemovePlugin() {
   yield takeEvery(REMOVE_PLUGIN, removePlugin);
 }
 
+function* watchPluginChange() {
+  yield takeEvery([createFetchPredicate(NAMESPACE)], fetchUiExtensions);
+}
+
 export function* pluginSagas() {
   yield all([
     watchAddIntegration(),
@@ -246,5 +251,6 @@ export function* pluginSagas() {
     watchFetchGlobalIntegrations(),
     watchFetchPlugins(),
     watchRemovePlugin(),
+    watchPluginChange(),
   ]);
 }
