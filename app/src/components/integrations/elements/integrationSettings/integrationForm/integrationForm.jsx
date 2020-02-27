@@ -91,7 +91,10 @@ export class IntegrationForm extends Component {
 
   updateMetaData = (metaData) => {
     this.setState({
-      metaData,
+      metaData: {
+        ...this.state.metaData,
+        ...metaData,
+      },
     });
   };
 

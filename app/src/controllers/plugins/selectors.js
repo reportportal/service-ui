@@ -36,6 +36,9 @@ import {
 const domainSelector = (state) => state.plugins || {};
 
 export const pluginsSelector = (state) => domainSelector(state).plugins;
+export const pluginByGroupTypeSelector = (state, groupType) =>
+  pluginsSelector(state).find((plugin) => plugin.groupType === groupType);
+
 const globalIntegrationsSelector = (state) =>
   domainSelector(state).integrations.globalIntegrations || [];
 const projectIntegrationsSelector = (state) =>

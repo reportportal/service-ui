@@ -50,6 +50,13 @@ export const isPostIssueActionAvailable = (integrations) =>
       item.integrationParameters.defectFormFields.length,
   );
 
-// TODO: remove check for AUTHORIZATION_GROUP_TYPE when designs and backend implementation will exist
 export const filterAvailablePlugins = (plugins = []) =>
   plugins.filter((item) => item.enabled && item.groupType !== AUTHORIZATION_GROUP_TYPE);
+
+export const clearSecretFields = (data, secretFields = []) =>
+  secretFields.reduce((acc, secretField) => {
+    const params = data.integrationParameters;
+    delete params[secretField];
+
+    return acc;
+  }, data);

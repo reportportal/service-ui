@@ -57,6 +57,10 @@ export class AddIntegrationModal extends Component {
     data: {},
   };
 
+  state = {
+    metaData: {},
+  };
+
   getCloseConfirmationConfig = () => {
     if (!this.props.dirty) {
       return null;
@@ -66,10 +70,23 @@ export class AddIntegrationModal extends Component {
     };
   };
 
+  updateMetaData = (metaData) => {
+    this.setState({
+      metaData: {
+        ...this.state.metaData,
+        ...metaData,
+      },
+    });
+  };
+
+  onSubmit = (data) => {
+    this.props.data.onConfirm(data, this.state.metaData);
+  };
+
   render() {
     const {
       intl: { formatMessage },
-      data: { onConfirm, instanceType, isGlobal, customProps = {}, eventsInfo = {} },
+      data: { instanceType, isGlobal, customProps = {}, eventsInfo = {} },
       handleSubmit,
       initialize,
       change,
@@ -85,7 +102,7 @@ export class AddIntegrationModal extends Component {
         title={customProps.editAuthMode ? formatMessage(messages.editAuthTitle) : createTitle}
         okButton={{
           text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
-          onClick: handleSubmit(onConfirm),
+          onClick: handleSubmit(this.onSubmit),
           eventInfo: eventsInfo.saveBtn,
         }}
         cancelButton={{
@@ -95,7 +112,13 @@ export class AddIntegrationModal extends Component {
         closeConfirmation={this.getCloseConfirmationConfig()}
         closeIconEventInfo={eventsInfo.closeIcon}
       >
-        <FieldsComponent initialize={initialize} change={change} lineAlign {...customProps} />
+        <FieldsComponent
+          initialize={initialize}
+          change={change}
+          updateMetaData={this.updateMetaData}
+          lineAlign
+          {...customProps}
+        />
       </ModalLayout>
     );
   }

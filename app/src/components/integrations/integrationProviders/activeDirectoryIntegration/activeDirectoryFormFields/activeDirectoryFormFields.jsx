@@ -18,12 +18,13 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
+import { validate, commonValidators, bindMessageToValidator } from 'common/utils/validation';
+import { isEmptyObject } from 'common/utils/isEmptyObject';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { Input } from 'components/inputs/input';
 import { InputConditional } from 'components/inputs/inputConditional';
 import { IntegrationFormField } from 'components/integrations/elements';
-import { validate, commonValidators, bindMessageToValidator } from 'common/utils/validation';
-import { isEmptyObject } from 'common/utils/isEmptyObject';
+
 import {
   DEFAULT_FORM_CONFIG,
   DOMAIN_KEY,

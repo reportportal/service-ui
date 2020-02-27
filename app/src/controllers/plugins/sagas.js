@@ -36,7 +36,10 @@ import {
   UPDATE_INTEGRATION,
   REMOVE_INTEGRATION,
   FETCH_GLOBAL_INTEGRATIONS,
+  SECRET_FIELDS_KEY,
 } from './constants';
+import { clearSecretFields } from './utils';
+import { pluginByGroupTypeSelector } from './selectors';
 import {
   removePluginSuccessAction,
   addProjectIntegrationSuccessAction,
@@ -50,7 +53,7 @@ import {
 } from './actionCreators';
 import { isAuthorizationGroupType } from './utils';
 
-function* addIntegration({ payload: { data, isGlobal, pluginName, callback } }) {
+function* addIntegration({ payload: { data, isGlobal, pluginName, callback }, meta }) {
   yield put(showScreenLockAction());
   try {
     const projectId = yield select(projectIdSelector);
@@ -64,13 +67,15 @@ function* addIntegration({ payload: { data, isGlobal, pluginName, callback } }) 
       method: 'post',
       data,
     });
+
+    const integrationType = yield select(
+      pluginByGroupTypeSelector,
+      GROUP_TYPES_BY_INTEGRATION_NAMES_MAP[pluginName],
+    );
     const newIntegration = {
-      ...data,
+      ...clearSecretFields(data, meta[SECRET_FIELDS_KEY]),
       id: response.id,
-      integrationType: {
-        name: pluginName,
-        groupType: GROUP_TYPES_BY_INTEGRATION_NAMES_MAP[pluginName],
-      },
+      integrationType,
     };
     const addIntegrationSuccessAction = isGlobal
       ? addGlobalIntegrationSuccessAction(newIntegration)
@@ -95,7 +100,7 @@ function* watchAddIntegration() {
   yield takeEvery(ADD_INTEGRATION, addIntegration);
 }
 
-function* updateIntegration({ payload: { data, isGlobal, id, callback } }) {
+function* updateIntegration({ payload: { data, isGlobal, id, callback }, meta }) {
   yield put(showScreenLockAction());
   try {
     const projectId = yield select(projectIdSelector);
@@ -106,9 +111,10 @@ function* updateIntegration({ payload: { data, isGlobal, id, callback } }) {
       data,
     });
 
+    const integration = clearSecretFields(data, meta[SECRET_FIELDS_KEY]);
     const updateIntegrationSuccessAction = isGlobal
-      ? updateGlobalIntegrationSuccessAction(data, id)
-      : updateProjectIntegrationSuccessAction(data, id);
+      ? updateGlobalIntegrationSuccessAction(integration, id)
+      : updateProjectIntegrationSuccessAction(integration, id);
     yield put(updateIntegrationSuccessAction);
     yield put(
       showNotification({

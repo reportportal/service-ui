@@ -45,7 +45,7 @@ export class IntegrationSettingsContainer extends Component {
     updatedParameters: {},
   };
 
-  updateIntegration = (formData, onConfirm) => {
+  updateIntegration = (formData, onConfirm, metaData) => {
     const {
       data: { id },
       isGlobal,
@@ -59,12 +59,18 @@ export class IntegrationSettingsContainer extends Component {
       data.name = formData.integrationName;
     }
 
-    this.props.updateIntegrationAction(data, isGlobal, id, () => {
-      this.setState({
-        updatedParameters: data,
-      });
-      onConfirm();
-    });
+    this.props.updateIntegrationAction(
+      data,
+      isGlobal,
+      id,
+      () => {
+        this.setState({
+          updatedParameters: data,
+        });
+        onConfirm();
+      },
+      metaData,
+    );
   };
 
   render() {

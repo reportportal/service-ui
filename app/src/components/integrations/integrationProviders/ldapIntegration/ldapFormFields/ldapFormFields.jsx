@@ -20,13 +20,14 @@ import { injectIntl, defineMessages } from 'react-intl';
 import { formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
+import { isEmptyObject } from 'common/utils/isEmptyObject';
+import { validate, commonValidators, bindMessageToValidator } from 'common/utils/validation';
+import { SECRET_FIELDS_KEY } from 'controllers/plugins';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { Input } from 'components/inputs/input';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { InputConditional } from 'components/inputs/inputConditional';
 import { IntegrationFormField, INTEGRATION_FORM } from 'components/integrations/elements';
-import { validate, commonValidators, bindMessageToValidator } from 'common/utils/validation';
-import { isEmptyObject } from 'common/utils/isEmptyObject';
 import {
   DEFAULT_FORM_CONFIG,
   MANAGER_DN_KEY,
@@ -121,6 +122,7 @@ export class LdapFormFields extends Component {
     lineAlign: PropTypes.bool,
     initialData: PropTypes.object,
     passwordEncoderType: PropTypes.string,
+    updateMetaData: PropTypes.func,
   };
 
   static defaultProps = {
@@ -128,6 +130,7 @@ export class LdapFormFields extends Component {
     lineAlign: false,
     initialData: DEFAULT_FORM_CONFIG,
     passwordEncoderType: '',
+    updateMetaData: () => {},
   };
 
   componentDidMount() {
@@ -135,6 +138,9 @@ export class LdapFormFields extends Component {
     const data = isEmptyObject(initialData) ? DEFAULT_FORM_CONFIG : initialData;
 
     initialize(data);
+    this.props.updateMetaData({
+      [SECRET_FIELDS_KEY]: [MANAGER_PASSWORD_KEY, PASSWORD_ATTRIBUTE_KEY],
+    });
   }
 
   onChangePasswordEncoderType = (event, value) => {
