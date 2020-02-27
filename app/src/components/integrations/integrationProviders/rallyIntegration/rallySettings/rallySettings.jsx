@@ -50,10 +50,10 @@ export class RallySettings extends Component {
   };
 
   onSubmit = (data, callback, metaData) => {
-    const { fields, checkedFieldsIds = {} } = metaData;
+    const { fields, checkedFieldsIds = {}, ...meta } = metaData;
     const defectFormFields = getDefectFormFields(fields, checkedFieldsIds, data);
 
-    this.props.onUpdate({ defectFormFields }, callback);
+    this.props.onUpdate({ defectFormFields }, callback, meta);
   };
 
   getEditAuthConfig = () => ({
@@ -81,7 +81,7 @@ export class RallySettings extends Component {
     this.props.showModalAction({
       id: 'addIntegrationModal',
       data: {
-        onConfirm: (data) => onUpdate(data, this.props.hideModalAction),
+        onConfirm: (data, metaData) => onUpdate(data, this.props.hideModalAction, metaData),
         instanceType: integrationType.name,
         customProps: {
           initialData: {

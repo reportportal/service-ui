@@ -17,6 +17,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
+import { SECRET_FIELDS_KEY } from 'controllers/plugins';
 import { commonValidators } from 'common/utils/validation';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputDropdown } from 'components/inputs/inputDropdown';
@@ -37,6 +38,7 @@ export class RallyConnectionFormFields extends Component {
     lineAlign: PropTypes.bool,
     initialData: PropTypes.object,
     editAuthMode: PropTypes.bool,
+    updateMetaData: PropTypes.func,
   };
 
   static defaultProps = {
@@ -45,6 +47,7 @@ export class RallyConnectionFormFields extends Component {
     lineAlign: false,
     initialData: DEFAULT_FORM_CONFIG,
     editAuthMode: false,
+    updateMetaData: () => {},
   };
 
   constructor(props) {
@@ -54,6 +57,9 @@ export class RallyConnectionFormFields extends Component {
 
   componentDidMount() {
     this.props.initialize(this.props.initialData);
+    this.props.updateMetaData({
+      [SECRET_FIELDS_KEY]: ['oauthAccessKey'],
+    });
   }
 
   render() {

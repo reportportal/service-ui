@@ -78,6 +78,7 @@ import {
   unselectAllLaunchesAction,
   launchDistinctSelector,
 } from 'controllers/launch';
+import { fetchPluginsAction, fetchGlobalIntegrationsAction } from 'controllers/plugins';
 import { fetchTestItemsAction, setLevelAction } from 'controllers/testItem';
 import { fetchFiltersPageAction } from 'controllers/filter';
 import { fetchMembersAction } from 'controllers/members';
@@ -136,10 +137,17 @@ const routesMap = {
     payload: { settingsTab: AUTHORIZATION_CONFIGURATION },
   })),
   [SERVER_SETTINGS_TAB_PAGE]: `/administrate/settings/:settingsTab(${AUTHORIZATION_CONFIGURATION}|${STATISTICS})`,
-  [PLUGINS_PAGE]: redirectRoute('/administrate/plugins', () => ({
-    type: PLUGINS_TAB_PAGE,
-    payload: { pluginsTab: INSTALLED },
-  })),
+  [PLUGINS_PAGE]: redirectRoute(
+    '/administrate/plugins',
+    () => ({
+      type: PLUGINS_TAB_PAGE,
+      payload: { pluginsTab: INSTALLED },
+    }),
+    (dispatch) => {
+      dispatch(fetchPluginsAction());
+      dispatch(fetchGlobalIntegrationsAction());
+    },
+  ),
   [PLUGINS_TAB_PAGE]: `/administrate/plugins/:pluginsTab(${INSTALLED}|${STORE})`,
 
   [PROJECT_PAGE]: {
