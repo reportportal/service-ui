@@ -26,7 +26,7 @@ import { projectIdSelector } from 'controllers/pages';
 import { fetchDataAction } from 'controllers/fetch';
 import { hideModalAction } from 'controllers/modal';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
-import { fetch } from 'common/utils';
+import { fetch, omit } from 'common/utils';
 import {
   NAMESPACE,
   FETCH_PLUGINS,
@@ -38,7 +38,7 @@ import {
   FETCH_GLOBAL_INTEGRATIONS,
   SECRET_FIELDS_KEY,
 } from './constants';
-import { clearSecretFields, isAuthorizationGroupType } from './utils';
+import { isAuthorizationGroupType } from './utils';
 import { pluginByGroupTypeSelector } from './selectors';
 import {
   removePluginSuccessAction,
@@ -72,7 +72,8 @@ function* addIntegration({ payload: { data, isGlobal, pluginName, callback }, me
       GROUP_TYPES_BY_INTEGRATION_NAMES_MAP[pluginName],
     );
     const newIntegration = {
-      ...clearSecretFields(data, meta[SECRET_FIELDS_KEY]),
+      ...data,
+      integrationParameters: omit(data.integrationParameters, meta[SECRET_FIELDS_KEY]),
       id: response.id,
       integrationType,
     };
@@ -110,7 +111,10 @@ function* updateIntegration({ payload: { data, isGlobal, id, callback }, meta })
       data,
     });
 
-    const integration = clearSecretFields(data, meta[SECRET_FIELDS_KEY]);
+    const integration = {
+      ...data,
+      integrationParameters: omit(data.integrationParameters, meta[SECRET_FIELDS_KEY]),
+    };
     const updateIntegrationSuccessAction = isGlobal
       ? updateGlobalIntegrationSuccessAction(integration, id)
       : updateProjectIntegrationSuccessAction(integration, id);
