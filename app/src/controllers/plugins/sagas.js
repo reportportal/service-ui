@@ -37,7 +37,7 @@ import {
   FETCH_GLOBAL_INTEGRATIONS,
   SECRET_FIELDS_KEY,
 } from './constants';
-import { isAuthorizationGroupType } from './utils';
+import { resolveIntegrationUrl } from './utils';
 import { pluginByNameSelector } from './selectors';
 import {
   removePluginSuccessAction,
@@ -58,9 +58,7 @@ function* addIntegration({ payload: { data, isGlobal, pluginName, callback }, me
     const integrationUrl = isGlobal
       ? URLS.newGlobalIntegration(pluginName)
       : URLS.newProjectIntegration(projectId, pluginName);
-    const url = isAuthorizationGroupType(pluginName)
-      ? URLS.authSettings(pluginName)
-      : integrationUrl;
+    const url = resolveIntegrationUrl(integrationUrl, pluginName);
     const response = yield call(fetch, url, {
       method: 'post',
       data,
@@ -96,11 +94,14 @@ function* watchAddIntegration() {
   yield takeEvery(ADD_INTEGRATION, addIntegration);
 }
 
-function* updateIntegration({ payload: { data, isGlobal, id, callback }, meta }) {
+function* updateIntegration({ payload: { data, isGlobal, pluginName, id, callback }, meta }) {
   yield put(showScreenLockAction());
   try {
     const projectId = yield select(projectIdSelector);
-    const url = isGlobal ? URLS.globalIntegration(id) : URLS.projectIntegration(projectId, id);
+    const integrationUrl = isGlobal
+      ? URLS.globalIntegration(id)
+      : URLS.projectIntegration(projectId, id);
+    const url = resolveIntegrationUrl(integrationUrl, pluginName);
 
     yield call(fetch, url, {
       method: 'put',
