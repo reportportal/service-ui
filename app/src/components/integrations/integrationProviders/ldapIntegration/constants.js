@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-const ENABLED_KEY = 'enabled';
 export const MANAGER_DN_KEY = 'managerDn';
 export const MANAGER_PASSWORD_KEY = 'managerPassword';
 export const USER_DN_PATTERN_KEY = 'userDnPattern';
@@ -24,19 +23,15 @@ export const GROUP_SEARCH_FILTER_KEY = 'groupSearchFilter';
 export const PASSWORD_ENCODER_TYPE_KEY = 'passwordEncoderType';
 export const PASSWORD_ATTRIBUTE_KEY = 'passwordAttribute';
 
-export const LDAP_ATTRIBUTES_KEY = 'ldapAttributes';
 export const URL_KEY = 'url';
 export const BASE_DN_KEY = 'baseDn';
-export const EMAIL_KEY = 'synchronizationAttributes.email';
-export const FULL_NAME_KEY = 'synchronizationAttributes.fullName';
-export const PHOTO_KEY = 'synchronizationAttributes.photo';
+export const EMAIL_KEY = 'email';
+export const FULL_NAME_KEY = 'fullName';
+export const PHOTO_KEY = 'photo';
 export const LDAP_PREFIX = 'ldap://';
 export const LDAPS_PREFIX = 'ldaps://';
 
 export const DEFAULT_FORM_CONFIG = {
-  [ENABLED_KEY]: false,
   [PASSWORD_ENCODER_TYPE_KEY]: '',
-  [LDAP_ATTRIBUTES_KEY]: {
-    [URL_KEY]: LDAP_PREFIX,
-  },
+  [URL_KEY]: LDAP_PREFIX,
 };

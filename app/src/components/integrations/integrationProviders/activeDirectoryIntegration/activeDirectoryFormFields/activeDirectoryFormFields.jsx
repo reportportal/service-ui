@@ -28,7 +28,6 @@ import { IntegrationFormField } from 'components/integrations/elements';
 import {
   DEFAULT_FORM_CONFIG,
   DOMAIN_KEY,
-  LDAP_ATTRIBUTES_KEY,
   URL_KEY,
   FULL_NAME_KEY,
   PHOTO_KEY,
@@ -111,7 +110,7 @@ export class ActiveDirectoryFormFields extends Component {
       },
       {
         fieldProps: {
-          name: `${LDAP_ATTRIBUTES_KEY}.${URL_KEY}`,
+          name: URL_KEY,
           validate: urlValidator,
           format: this.formatConditionalValue,
           parse: this.parseConditionalValue,
@@ -132,7 +131,7 @@ export class ActiveDirectoryFormFields extends Component {
       },
       {
         fieldProps: {
-          name: `${LDAP_ATTRIBUTES_KEY}.${BASE_DN_KEY}`,
+          name: BASE_DN_KEY,
           validate: commonValidators.requiredField,
           required: true,
         },
@@ -141,7 +140,7 @@ export class ActiveDirectoryFormFields extends Component {
       },
       {
         fieldProps: {
-          name: `${LDAP_ATTRIBUTES_KEY}.${EMAIL_KEY}`,
+          name: EMAIL_KEY,
           validate: commonValidators.requiredField,
           required: true,
         },
@@ -150,14 +149,14 @@ export class ActiveDirectoryFormFields extends Component {
       },
       {
         fieldProps: {
-          name: `${LDAP_ATTRIBUTES_KEY}.${FULL_NAME_KEY}`,
+          name: FULL_NAME_KEY,
         },
         label: messages.fullNameAttributeLabel,
         children: defaultField,
       },
       {
         fieldProps: {
-          name: `${LDAP_ATTRIBUTES_KEY}.${PHOTO_KEY}`,
+          name: PHOTO_KEY,
         },
         label: messages.photoAttributeLabel,
         children: defaultField,

@@ -275,17 +275,6 @@ describe('validate.ldapUrl', () => {
   });
 });
 
-describe('validate.ldapSynchronizationAttributes', () => {
-  test('validation should be correct', () => {
-    expect(validate.ldapSynchronizationAttributes({ email: 'example' })).toBe(true);
-  });
-  test('Validation should not be correct', () => {
-    expect(validate.ldapSynchronizationAttributes(undefined)).toBe(false);
-    expect(validate.ldapSynchronizationAttributes({})).toBe(false);
-    expect(validate.ldapSynchronizationAttributes({ email: '' })).toBe(false);
-  });
-});
-
 describe('validate.defectTypeLongName', () => {
   test('validation should be correct', () => {
     expect(validate.defectTypeLongName('abc')).toBe(true);

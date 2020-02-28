@@ -48,10 +48,6 @@ export const createWidgetNameUniqueValidator = (widgets, widgetId) => (value) =>
   !widgets.some((widget) => widget.widgetName === value && widget.widgetId !== widgetId);
 export const issueId = composeValidators([isNotEmpty, maxLength(128)]);
 export const ldapUrl = composeValidators([isNotEmpty, regex(/:\/\/.+/)]);
-export const ldapSynchronizationAttributes = composeValidators([
-  isNotEmpty,
-  (synchronizationAttributes) => isNotEmpty(synchronizationAttributes.email),
-]);
 export const defectTypeLongName = composeValidators([isNotEmpty, lengthRange(3, 55)]);
 export const defectTypeShortName = composeValidators([isNotEmpty, maxLength(4)]);
 export const projectName = composeValidators([isNotEmpty, regex(/^[0-9a-zA-Z-_]{3,256}$/)]);
