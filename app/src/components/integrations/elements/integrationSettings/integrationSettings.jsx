@@ -61,6 +61,7 @@ export class IntegrationSettings extends Component {
     onUpdate: PropTypes.func.isRequired,
     removeIntegrationAction: PropTypes.func.isRequired,
     editAuthConfig: PropTypes.object,
+    preventTestConnection: PropTypes.bool,
     isEmptyConfiguration: PropTypes.bool,
     isGlobal: PropTypes.bool,
     formKey: PropTypes.string,
@@ -69,14 +70,15 @@ export class IntegrationSettings extends Component {
   static defaultProps = {
     projectId: '',
     editAuthConfig: null,
+    preventTestConnection: false,
     isEmptyConfiguration: false,
     isGlobal: false,
     formKey: INTEGRATION_FORM,
   };
 
   state = {
-    connected: this.props.data.isNew,
-    loading: !this.props.data.isNew,
+    connected: this.props.data.isNew || this.props.preventTestConnection,
+    loading: !this.props.data.isNew && !this.props.preventTestConnection,
   };
 
   componentDidMount() {
