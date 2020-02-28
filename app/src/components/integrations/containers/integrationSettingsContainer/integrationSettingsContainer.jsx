@@ -47,7 +47,10 @@ export class IntegrationSettingsContainer extends Component {
 
   updateIntegration = (formData, onConfirm, metaData) => {
     const {
-      data: { id },
+      data: {
+        integrationType: { name: pluginName },
+        id,
+      },
       isGlobal,
     } = this.props;
     const data = {
@@ -63,6 +66,7 @@ export class IntegrationSettingsContainer extends Component {
       data,
       isGlobal,
       id,
+      pluginName,
       () => {
         this.setState({
           updatedParameters: data,

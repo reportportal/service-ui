@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { URLS } from 'common/urls';
 import { INTEGRATION_NAMES_BY_GROUP_TYPES_MAP } from 'common/constants/integrationNames';
 import { AUTHORIZATION_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
 
@@ -39,8 +40,11 @@ export const groupItems = (items) =>
     return groupedItems;
   }, {});
 
-export const isAuthorizationGroupType = (groupType) =>
-  INTEGRATION_NAMES_BY_GROUP_TYPES_MAP[AUTHORIZATION_GROUP_TYPE].includes(groupType);
+export const isAuthorizationIntegration = (name) =>
+  INTEGRATION_NAMES_BY_GROUP_TYPES_MAP[AUTHORIZATION_GROUP_TYPE].includes(name);
+
+export const resolveIntegrationUrl = (integrationUrl, pluginName) =>
+  isAuthorizationIntegration(pluginName) ? URLS.authSettings(pluginName) : integrationUrl;
 
 export const isPostIssueActionAvailable = (integrations) =>
   integrations.length &&

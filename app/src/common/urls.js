@@ -224,8 +224,6 @@ export const URLS = {
   getFileById: (projectId, dataId, loadThumbnail) =>
     `${urlBase}data/${projectId}/${dataId}${getQueryParams({ loadThumbnail })}`,
 
-  serverSettings: () => `${urlBase}settings`,
-  emailServerSettings: () => `${urlBase}settings/email`,
   authSettings: (authTypeOrId) => `${uatBase}settings/auth/${authTypeOrId}`,
   githubAuthSettings: () => `${uatBase}settings/oauth/github`,
   statisticsServerSettings: () => `${urlBase}settings/analytics`,

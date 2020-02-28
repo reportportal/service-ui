@@ -34,7 +34,7 @@ export {
   groupItems,
   sortItemsByGroupType,
   isPostIssueActionAvailable,
-  isAuthorizationGroupType,
+  isAuthorizationIntegration,
 } from './utils';
 export {
   pluginsSelector,
