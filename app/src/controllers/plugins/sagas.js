@@ -38,7 +38,7 @@ import {
   FETCH_GLOBAL_INTEGRATIONS,
   SECRET_FIELDS_KEY,
 } from './constants';
-import { clearSecretFields } from './utils';
+import { clearSecretFields, isAuthorizationGroupType } from './utils';
 import { pluginByGroupTypeSelector } from './selectors';
 import {
   removePluginSuccessAction,
@@ -51,7 +51,6 @@ import {
   updateGlobalIntegrationSuccessAction,
   fetchGlobalIntegrationsSuccessAction,
 } from './actionCreators';
-import { isAuthorizationGroupType } from './utils';
 
 function* addIntegration({ payload: { data, isGlobal, pluginName, callback }, meta }) {
   yield put(showScreenLockAction());
