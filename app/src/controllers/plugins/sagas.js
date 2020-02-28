@@ -16,7 +16,6 @@
 
 import { takeEvery, all, put, select, call } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
-import { GROUP_TYPES_BY_INTEGRATION_NAMES_MAP } from 'common/constants/integrationNames';
 import {
   showNotification,
   showDefaultErrorNotification,
@@ -39,7 +38,7 @@ import {
   SECRET_FIELDS_KEY,
 } from './constants';
 import { isAuthorizationGroupType } from './utils';
-import { pluginByGroupTypeSelector } from './selectors';
+import { pluginByNameSelector } from './selectors';
 import {
   removePluginSuccessAction,
   addProjectIntegrationSuccessAction,
@@ -67,10 +66,7 @@ function* addIntegration({ payload: { data, isGlobal, pluginName, callback }, me
       data,
     });
 
-    const integrationType = yield select(
-      pluginByGroupTypeSelector,
-      GROUP_TYPES_BY_INTEGRATION_NAMES_MAP[pluginName],
-    );
+    const integrationType = yield select(pluginByNameSelector, pluginName);
     const newIntegration = {
       ...data,
       integrationParameters: omit(data.integrationParameters, meta[SECRET_FIELDS_KEY]),

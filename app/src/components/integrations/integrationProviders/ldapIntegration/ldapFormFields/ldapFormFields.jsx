@@ -134,7 +134,9 @@ export class LdapFormFields extends Component {
 
   componentDidMount() {
     const { initialData, initialize } = this.props;
-    const data = isEmptyObject(initialData) ? DEFAULT_FORM_CONFIG : initialData;
+    const data = isEmptyObject(initialData)
+      ? DEFAULT_FORM_CONFIG
+      : { [PASSWORD_ENCODER_TYPE_KEY]: '', ...initialData };
 
     initialize(data);
     this.props.updateMetaData({
