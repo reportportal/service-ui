@@ -38,7 +38,6 @@ import {
   PASSWORD_ATTRIBUTE_KEY,
   PASSWORD_ENCODER_TYPE_KEY,
   MANAGER_PASSWORD_KEY,
-  LDAP_ATTRIBUTES_KEY,
   LDAP_PREFIX,
   LDAPS_PREFIX,
   URL_KEY,
@@ -156,7 +155,7 @@ export class LdapFormFields extends Component {
     const fields = [
       {
         fieldProps: {
-          name: `${LDAP_ATTRIBUTES_KEY}.${URL_KEY}`,
+          name: URL_KEY,
           validate: urlValidator,
           format: this.formatConditionalValue,
           parse: this.parseConditionalValue,
@@ -177,7 +176,7 @@ export class LdapFormFields extends Component {
       },
       {
         fieldProps: {
-          name: `${LDAP_ATTRIBUTES_KEY}.${BASE_DN_KEY}`,
+          name: BASE_DN_KEY,
           validate: commonValidators.requiredField,
           required: true,
         },
@@ -237,7 +236,7 @@ export class LdapFormFields extends Component {
       },
       {
         fieldProps: {
-          name: `${LDAP_ATTRIBUTES_KEY}.${EMAIL_KEY}`,
+          name: EMAIL_KEY,
           validate: commonValidators.requiredField,
           required: true,
         },
@@ -246,14 +245,14 @@ export class LdapFormFields extends Component {
       },
       {
         fieldProps: {
-          name: `${LDAP_ATTRIBUTES_KEY}.${FULL_NAME_KEY}`,
+          name: FULL_NAME_KEY,
         },
         label: messages.fullNameAttributeLabel,
         children: defaultField,
       },
       {
         fieldProps: {
-          name: `${LDAP_ATTRIBUTES_KEY}.${PHOTO_KEY}`,
+          name: PHOTO_KEY,
         },
         label: messages.photoAttributeLabel,
         children: defaultField,
