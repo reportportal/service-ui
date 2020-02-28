@@ -71,7 +71,7 @@ export class GithubAuthFormFields extends Component {
           labelClassName={cx('label')}
         >
           <FieldErrorHint>
-            <Input mobileDisabled />
+            <Input type="password" mobileDisabled />
           </FieldErrorHint>
         </FormField>
         <FieldArray name={ORGANIZATIONS_KEY} component={CategoriesList} />
