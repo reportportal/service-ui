@@ -133,7 +133,7 @@ podTemplate(
                 }
             }
 
-            sast(jobName: 'reportportal_services_sast', 'rp/carrier/config.yaml', 'service-ui', false)
+            sast('reportportal_services_sast', 'rp/carrier/config.yaml', 'service-ui', false)
         }
 
 
