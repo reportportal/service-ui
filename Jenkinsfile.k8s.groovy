@@ -101,6 +101,7 @@ podTemplate(
                             sh "npm run build && npm run test"
                         }
 
+                        sast('reportportal_services_sast', 'rp/carrier/config.yaml', 'service-ui', false)
 
                         if (sealightsEnabled) {
                             stage('Init Sealights') {
@@ -132,10 +133,7 @@ podTemplate(
                     sh "docker push quay.io/reportportal/service-ui:BUILD-${env.BUILD_NUMBER}"
                 }
             }
-
-            sast('reportportal_services_sast', 'rp/carrier/config.yaml', 'service-ui', false)
         }
-
 
         stage('Deploy to Dev') {
             // def valsFile = "merged.yml"
