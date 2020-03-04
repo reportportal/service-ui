@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
-import { enabledPluginNamesSelector } from '../selectors';
 import { EXTENSION_TYPE_SETTINGS_TAB } from './constants';
+import { enabledPluginNamesSelector } from '../selectors';
 import { uiExtensionMap } from './uiExtensionStorage';
 
 export const createUiExtensionSelectorByType = (type) =>
