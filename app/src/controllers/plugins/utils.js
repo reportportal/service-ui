@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { URLS } from 'common/urls';
+import { INTEGRATION_NAMES_BY_GROUP_TYPES_MAP } from 'common/constants/integrationNames';
 import { AUTHORIZATION_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
 
 export const filterIntegrationsByName = (integrations, integrationName) =>
@@ -38,6 +40,12 @@ export const groupItems = (items) =>
     return groupedItems;
   }, {});
 
+export const isAuthorizationIntegration = (name) =>
+  INTEGRATION_NAMES_BY_GROUP_TYPES_MAP[AUTHORIZATION_GROUP_TYPE].includes(name);
+
+export const resolveIntegrationUrl = (integrationUrl, pluginName) =>
+  isAuthorizationIntegration(pluginName) ? URLS.authSettings(pluginName) : integrationUrl;
+
 export const isPostIssueActionAvailable = (integrations) =>
   integrations.length &&
   integrations.some(
@@ -46,6 +54,5 @@ export const isPostIssueActionAvailable = (integrations) =>
       item.integrationParameters.defectFormFields.length,
   );
 
-// TODO: remove check for AUTHORIZATION_GROUP_TYPE when designs and backend implementation will exist
 export const filterAvailablePlugins = (plugins = []) =>
   plugins.filter((item) => item.enabled && item.groupType !== AUTHORIZATION_GROUP_TYPE);

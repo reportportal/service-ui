@@ -80,7 +80,7 @@ if (!Object.values) {
 // Chrome Intl doesn't support 'be' locale, so we have to manually apply polyfill in this case
 export const polyfillLocales = () =>
   new Promise((resolve) => {
-    if (window.Intl.PluralRules && window.Intl.RelativeTimeFormat && areIntlLocalesSupported(['en', 'ru', 'be'])) {
+    if (window.Intl.PluralRules && window.Intl.RelativeTimeFormat && areIntlLocalesSupported(['en', 'uk', 'ru', 'be'])) {
       resolve();
       return;
     }
@@ -88,10 +88,12 @@ export const polyfillLocales = () =>
       [
         '@formatjs/intl-pluralrules/dist/core',
         '@formatjs/intl-pluralrules/dist/locale-data/en.js',
+        '@formatjs/intl-pluralrules/dist/locale-data/uk.js',
         '@formatjs/intl-pluralrules/dist/locale-data/ru.js',
         '@formatjs/intl-pluralrules/dist/locale-data/be.js',
         '@formatjs/intl-relativetimeformat/dist/core',
         '@formatjs/intl-relativetimeformat/dist/locale-data/en.js',
+        '@formatjs/intl-relativetimeformat/dist/locale-data/uk.js',
         '@formatjs/intl-relativetimeformat/dist/locale-data/ru.js',
         '@formatjs/intl-relativetimeformat/dist/locale-data/be.js',
       ],
@@ -99,6 +101,7 @@ export const polyfillLocales = () =>
         const { PluralRules } = require('@formatjs/intl-pluralrules/dist/core');
         window.Intl.PluralRules = PluralRules;
         require('@formatjs/intl-pluralrules/dist/locale-data/en.js');
+        require('@formatjs/intl-pluralrules/dist/locale-data/uk.js');
         require('@formatjs/intl-pluralrules/dist/locale-data/ru.js');
         require('@formatjs/intl-pluralrules/dist/locale-data/be.js');
 
@@ -107,6 +110,7 @@ export const polyfillLocales = () =>
         } = require('@formatjs/intl-relativetimeformat/dist/core');
         window.Intl.RelativeTimeFormat = RelativeTimeFormat;
         require('@formatjs/intl-relativetimeformat/dist/locale-data/en.js');
+        require('@formatjs/intl-relativetimeformat/dist/locale-data/uk.js');
         require('@formatjs/intl-relativetimeformat/dist/locale-data/ru.js');
         require('@formatjs/intl-relativetimeformat/dist/locale-data/be.js');
         resolve();

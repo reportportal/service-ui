@@ -45,9 +45,12 @@ export class IntegrationSettingsContainer extends Component {
     updatedParameters: {},
   };
 
-  updateIntegration = (formData, onConfirm) => {
+  updateIntegration = (formData, onConfirm, metaData) => {
     const {
-      data: { id },
+      data: {
+        integrationType: { name: pluginName },
+        id,
+      },
       isGlobal,
     } = this.props;
     const data = {
@@ -59,12 +62,19 @@ export class IntegrationSettingsContainer extends Component {
       data.name = formData.integrationName;
     }
 
-    this.props.updateIntegrationAction(data, isGlobal, id, () => {
-      this.setState({
-        updatedParameters: data,
-      });
-      onConfirm();
-    });
+    this.props.updateIntegrationAction(
+      data,
+      isGlobal,
+      id,
+      pluginName,
+      () => {
+        this.setState({
+          updatedParameters: data,
+        });
+        onConfirm();
+      },
+      metaData,
+    );
   };
 
   render() {

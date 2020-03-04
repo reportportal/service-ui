@@ -25,6 +25,7 @@ import { updateStorageItem } from 'common/utils';
 import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
 import {
   ENGLISH,
+  UKRAINIAN,
   RUSSIAN,
   BELARUSIAN,
   DEFAULT_LANGUAGE,
@@ -34,6 +35,7 @@ import { InputDropdown } from 'components/inputs/inputDropdown';
 import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './localizationBlock.scss';
 import EnglishFlagIcon from './img/en-flag-inline.svg';
+import UkrainianFlagIcon from './img/ua-flag-inline.svg';
 import RussianFlagIcon from './img/ru-flag-inline.svg';
 import BelarusFlagIcon from './img/be-flag-inline.svg';
 
@@ -43,6 +45,10 @@ const messages = defineMessages({
   label: {
     id: 'LocalizationBlock.label',
     defaultMessage: 'Language',
+  },
+  ukrainian: {
+    id: 'LocalizationBlock.ukrainian',
+    defaultMessage: 'Ukrainian',
   },
   russian: {
     id: 'LocalizationBlock.russian',
@@ -86,6 +92,11 @@ const LANG_OPTIONS = [
     value: ENGLISH,
     icon: EnglishFlagIcon,
     label: messages.english,
+  },
+  {
+    value: UKRAINIAN,
+    icon: UkrainianFlagIcon,
+    label: messages.ukrainian,
   },
   {
     value: RUSSIAN,

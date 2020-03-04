@@ -25,6 +25,7 @@ export const ActiveDirectorySettings = ({ data, goToPreviousPage, onUpdate, isGl
     goToPreviousPage={goToPreviousPage}
     isGlobal={isGlobal}
     formFieldsComponent={ActiveDirectoryFormFields}
+    preventTestConnection
   />
 );
 

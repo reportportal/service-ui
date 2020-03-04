@@ -184,7 +184,7 @@ export class InstancesSection extends Component {
       data.name,
     );
 
-  addProjectIntegration = (formData) => {
+  addProjectIntegration = (formData, metaData) => {
     const { isGlobal, instanceType } = this.props;
     const data = {
       enabled: true,
@@ -192,7 +192,13 @@ export class InstancesSection extends Component {
       name: formData.integrationName || INTEGRATION_NAMES_TITLES[instanceType],
     };
 
-    this.props.addIntegrationAction(data, isGlobal, instanceType, this.navigateToNewIntegration);
+    this.props.addIntegrationAction(
+      data,
+      isGlobal,
+      instanceType,
+      this.navigateToNewIntegration,
+      metaData,
+    );
   };
 
   removePluginClickHandler = () => {
@@ -243,6 +249,7 @@ export class InstancesSection extends Component {
 
   showAddProjectIntegrationModal = () => {
     const { instanceType, pluginDetails, isGlobal } = this.props;
+
     this.props.showModalAction({
       id: 'addIntegrationModal',
       data: {
@@ -259,12 +266,14 @@ export class InstancesSection extends Component {
 
   addProjectIntegrationClickHandler = () => {
     const { instanceType, tracking } = this.props;
+
     tracking.trackEvent(getIntegrationAddClickEvent(instanceType));
     this.showAddProjectIntegrationModal();
   };
 
   unlinkAndSetupManuallyClickHandler = () => {
     const { instanceType, tracking } = this.props;
+
     tracking.trackEvent(getIntegrationUnlinkGlobalEvent(instanceType));
     this.showAddProjectIntegrationModal();
   };

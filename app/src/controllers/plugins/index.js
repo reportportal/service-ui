@@ -15,6 +15,7 @@
  */
 
 export { pluginsReducer } from './reducer';
+export { SECRET_FIELDS_KEY } from './constants';
 export {
   fetchPluginsAction,
   removePluginAction,
@@ -33,6 +34,7 @@ export {
   groupItems,
   sortItemsByGroupType,
   isPostIssueActionAvailable,
+  isAuthorizationIntegration,
 } from './utils';
 export {
   pluginsSelector,
