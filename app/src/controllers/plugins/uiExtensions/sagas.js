@@ -1,7 +1,7 @@
 import { select, call, all } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
-import { waitForSelector } from 'common/utils/waitForSelector';
+import { activeProjectSelector } from 'controllers/user';
 import { COMMAND_GET_FILE } from './constants';
 import { pluginsSelector, globalIntegrationsSelector } from '../selectors';
 import { filterIntegrationsByName } from '../utils';
@@ -15,8 +15,8 @@ export function* fetchUiExtensions() {
       plugin.details.binaryData &&
       plugin.details.allowedCommands.includes(COMMAND_GET_FILE),
   );
-  yield call(waitForSelector, globalIntegrationsSelector);
   const globalIntegrations = yield select(globalIntegrationsSelector);
+  const activeProject = yield select(activeProjectSelector);
   const calls = uiExtensionPlugins
     .map((plugin) => {
       const integration = filterIntegrationsByName(globalIntegrations, plugin.name)[0];
@@ -26,7 +26,7 @@ export function* fetchUiExtensions() {
       const fileKey = 'main';
       return call(
         fetch,
-        URLS.projectIntegrationByIdCommand('__global', integration.id, COMMAND_GET_FILE),
+        URLS.projectIntegrationByIdCommand(activeProject, integration.id, COMMAND_GET_FILE),
         {
           method: 'PUT',
           data: { fileKey },

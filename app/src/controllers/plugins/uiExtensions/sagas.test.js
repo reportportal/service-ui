@@ -26,6 +26,9 @@ describe('controllers/plugins/uiExtensions/sagas', () => {
     });
     test('should do nothing in case of no plugins with binaryData or getFile command found', async () => {
       const state = {
+        user: {
+          activeProject: 'testProject',
+        },
         plugins: [
           {
             name: 'plugin1',
@@ -83,25 +86,30 @@ describe('controllers/plugins/uiExtensions/sagas', () => {
     });
     test('should not send response for plugins without global integration', async () => {
       const state = {
-        plugins: [
-          {
-            name: 'plugin1',
-            enabled: true,
-            details: {
-              binaryData: {
-                main: 'main.js',
+        user: {
+          activeProject: 'testProject',
+        },
+        plugins: {
+          plugins: [
+            {
+              name: 'plugin1',
+              enabled: true,
+              details: {
+                binaryData: {
+                  main: 'main.js',
+                },
               },
             },
-          },
-          {
-            name: 'plugin2',
-            enabled: true,
-            details: {
-              allowedCommands: ['getFile'],
+            {
+              name: 'plugin2',
+              enabled: true,
+              details: {
+                allowedCommands: ['getFile'],
+              },
             },
-          },
-        ],
-        integrations: { globalIntegrations: [] },
+          ],
+          integrations: { globalIntegrations: [] },
+        },
       };
       await runSaga(
         {
@@ -113,6 +121,9 @@ describe('controllers/plugins/uiExtensions/sagas', () => {
     });
     test('should not execute getFile command for disabled plugins', async () => {
       const state = {
+        user: {
+          activeProject: 'testProject',
+        },
         plugins: {
           plugins: [
             {
@@ -150,6 +161,9 @@ describe('controllers/plugins/uiExtensions/sagas', () => {
     });
     test('should execute getFile command for plugins with a file', async () => {
       const state = {
+        user: {
+          activeProject: 'testProject',
+        },
         plugins: {
           plugins: [
             {
@@ -202,11 +216,11 @@ describe('controllers/plugins/uiExtensions/sagas', () => {
         fetchUiExtensions,
       ).done;
       expect(fetch).toHaveBeenCalledTimes(2);
-      expect(fetch).toHaveBeenCalledWith('/api/v1/integration/__global/123/getFile', {
+      expect(fetch).toHaveBeenCalledWith('/api/v1/integration/testProject/123/getFile', {
         method: 'PUT',
         data: { fileKey: 'main' },
       });
-      expect(fetch).toHaveBeenCalledWith('/api/v1/integration/__global/124/getFile', {
+      expect(fetch).toHaveBeenCalledWith('/api/v1/integration/testProject/124/getFile', {
         method: 'PUT',
         data: { fileKey: 'main' },
       });
