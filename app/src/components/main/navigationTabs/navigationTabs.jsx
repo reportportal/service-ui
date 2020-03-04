@@ -51,6 +51,13 @@ export class NavigationTabs extends Component {
     customBlock: null,
   };
 
+  createTrackingFunction = (eventInfo) => {
+    if (!eventInfo) {
+      return null;
+    }
+    return () => this.props.tracking.trackEvent(eventInfo);
+  };
+
   onChangeTab = (val) => {
     this.props.onChangeTab(this.props.config[val].link);
   };
@@ -92,9 +99,7 @@ export class NavigationTabs extends Component {
                   className={cx('tab')}
                   to={config[item].link}
                   activeClassName={cx('active-tab')}
-                  onClick={() => {
-                    this.props.tracking.trackEvent(this.props.config[item].eventInfo);
-                  }}
+                  onClick={this.createTrackingFunction(this.props.config[item].eventInfo)}
                 >
                   {config[item].name}
                 </NavLink>

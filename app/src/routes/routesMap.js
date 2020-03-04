@@ -52,17 +52,7 @@ import {
   clearPageStateAction,
   adminPageNames,
 } from 'controllers/pages';
-import {
-  GENERAL,
-  DEFECT,
-  DEMO_DATA,
-  INTEGRATIONS,
-  NOTIFICATIONS,
-  ANALYSIS,
-  AUTHORIZATION_CONFIGURATION,
-  STATISTICS,
-  PATTERN_ANALYSIS,
-} from 'common/constants/settingsTabs';
+import { GENERAL, AUTHORIZATION_CONFIGURATION, STATISTICS } from 'common/constants/settingsTabs';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { INSTALLED, STORE } from 'common/constants/pluginsTabs';
 import { SETTINGS, MEMBERS, EVENTS } from 'common/constants/projectSections';
@@ -123,7 +113,7 @@ const routesMap = {
     },
   },
   [PROJECT_DETAILS_PAGE]: {
-    path: `/administrate/projects/:projectId/:projectSection(${SETTINGS}|${MEMBERS}|${EVENTS})?/:settingsTab(${GENERAL}|${NOTIFICATIONS}|${INTEGRATIONS}|${DEFECT}|${ANALYSIS}|${PATTERN_ANALYSIS}|${DEMO_DATA})?`,
+    path: `/administrate/projects/:projectId/:projectSection(${SETTINGS}|${MEMBERS}|${EVENTS})?/:settingsTab?`,
     thunk: (dispatch) => {
       dispatch(fetchProjectDataAction());
     },
@@ -254,7 +244,7 @@ const routesMap = {
     type: PROJECT_SETTINGS_TAB_PAGE,
     payload: { ...payload, settingsTab: GENERAL },
   })),
-  PROJECT_SETTINGS_TAB_PAGE: `/:projectId/settings/:settingsTab(${GENERAL}|${NOTIFICATIONS}|${INTEGRATIONS}|${DEFECT}|${ANALYSIS}|${PATTERN_ANALYSIS}|${DEMO_DATA})`,
+  PROJECT_SETTINGS_TAB_PAGE: `/:projectId/settings/:settingsTab`,
   PROJECT_SANDBOX_PAGE: '/:projectId/sandbox',
   [TEST_ITEM_PAGE]: {
     path: '/:projectId/launches/:filterId/:testItemIds+',

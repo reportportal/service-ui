@@ -13,7 +13,8 @@ const createImportProps = () => ({ React, BigButton, GhostButton, useSelector, w
 // eslint-disable-next-line no-unused-vars
 const createPluginRegistrationFunction = (store) => (plugin) => {
   const { name, extensions } = plugin;
-  const wrappedExtensions = extensions.map((extension) => ({
+  const wrappedExtensions = extensions.map((extension, i) => ({
+    name: `${plugin.name}__${i}`,
     ...extension,
     component: <extension.component {...createImportProps()} />,
   }));
