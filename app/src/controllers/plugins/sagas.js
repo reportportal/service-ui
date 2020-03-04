@@ -36,6 +36,7 @@ import {
   REMOVE_INTEGRATION,
   FETCH_GLOBAL_INTEGRATIONS,
   SECRET_FIELDS_KEY,
+  FETCH_GLOBAL_INTEGRATIONS_SUCCESS,
 } from './constants';
 import { resolveIntegrationUrl } from './utils';
 import { pluginByNameSelector } from './selectors';
@@ -239,7 +240,10 @@ function* watchRemovePlugin() {
 }
 
 function* watchPluginChange() {
-  yield takeEvery([createFetchPredicate(NAMESPACE)], fetchUiExtensions);
+  yield takeEvery(
+    [createFetchPredicate(NAMESPACE), FETCH_GLOBAL_INTEGRATIONS_SUCCESS],
+    fetchUiExtensions,
+  );
 }
 
 export function* pluginSagas() {
