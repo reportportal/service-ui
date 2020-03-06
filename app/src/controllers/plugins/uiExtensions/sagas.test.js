@@ -211,6 +211,7 @@ describe('controllers/plugins/uiExtensions/sagas', () => {
       };
       await runSaga(
         {
+          dispatch: () => {},
           getState: () => state,
         },
         fetchUiExtensions,

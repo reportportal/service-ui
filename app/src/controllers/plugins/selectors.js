@@ -34,7 +34,7 @@ import {
   filterEnabledPlugins,
 } from './utils';
 
-const domainSelector = (state) => state.plugins || {};
+export const domainSelector = (state) => state.plugins || {};
 
 export const pluginsSelector = (state) => domainSelector(state).plugins;
 export const pluginByNameSelector = (state, name) =>

@@ -17,6 +17,7 @@
 import { combineReducers } from 'redux';
 import { fetchReducer } from 'controllers/fetch';
 import { queueReducers } from 'common/utils/queueReducers';
+import { uiExtensionsReducer } from './uiExtensions';
 import {
   NAMESPACE,
   SET_PROJECT_INTEGRATIONS,
@@ -116,4 +117,5 @@ export const integrationsReducer = (state = {}, { type, payload }) => {
 export const pluginsReducer = combineReducers({
   plugins: queueReducers(fetchReducer(NAMESPACE), updatePluginLocallyReducer),
   integrations: integrationsReducer,
+  uiExtensions: uiExtensionsReducer,
 });

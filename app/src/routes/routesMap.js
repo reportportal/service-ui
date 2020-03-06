@@ -51,6 +51,7 @@ import {
   pageSelector,
   clearPageStateAction,
   adminPageNames,
+  PLUGIN_UI_EXTENSION_ADMIN_PAGE,
 } from 'controllers/pages';
 import { GENERAL, AUTHORIZATION_CONFIGURATION, STATISTICS } from 'common/constants/settingsTabs';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
@@ -253,6 +254,7 @@ const routesMap = {
       dispatch(fetchTestItemsAction());
     },
   },
+  [PLUGIN_UI_EXTENSION_ADMIN_PAGE]: '/administrate/plugin/:pluginPage',
 };
 
 export const onBeforeRouteChange = (dispatch, getState, { action }) => {

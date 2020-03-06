@@ -9,3 +9,6 @@ export const EXTENSION_TYPES = [
 ];
 
 export const COMMAND_GET_FILE = 'getFile';
+
+export const EXTENSION_LOAD_START = 'extensionLoadStart';
+export const EXTENSION_LOAD_FINISH = 'extensionLoadFinish';
