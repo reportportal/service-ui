@@ -48,7 +48,9 @@ import {
   HISTORY_PAGE,
   PROJECT_DETAILS_PAGE,
   OAUTH_SUCCESS,
+  PLUGIN_UI_EXTENSION_ADMIN_PAGE,
 } from 'controllers/pages';
+import { AdminUiExtensionPage } from 'pages/admin/adminUiExtensionPage';
 
 export const ANONYMOUS_ACCESS = 'anonymous';
 export const ADMIN_ACCESS = 'admin';
@@ -93,4 +95,9 @@ export const pageRendering = {
   [PROJECT_LOG_PAGE]: { component: LogsPage, layout: AppLayout },
   [PROJECT_USERDEBUG_LOG_PAGE]: { component: LogsPage, layout: AppLayout },
   [HISTORY_PAGE]: { component: HistoryPage, layout: AppLayout },
+  [PLUGIN_UI_EXTENSION_ADMIN_PAGE]: {
+    component: AdminUiExtensionPage,
+    layout: AdminLayout,
+    access: ADMIN_ACCESS,
+  },
 };

@@ -1,10 +1,11 @@
-import { select, call, all } from 'redux-saga/effects';
+import { select, call, all, put } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
 import { activeProjectSelector } from 'controllers/user';
 import { COMMAND_GET_FILE } from './constants';
 import { pluginsSelector, globalIntegrationsSelector } from '../selectors';
 import { filterIntegrationsByName } from '../utils';
+import { extensionLoadFinishAction, extensionLoadStartAction } from './actions';
 
 export function* fetchUiExtensions() {
   const plugins = yield select(pluginsSelector);
@@ -34,6 +35,10 @@ export function* fetchUiExtensions() {
       );
     })
     .filter(Boolean);
+  if (calls.length === 0) {
+    return;
+  }
+  yield put(extensionLoadStartAction());
   const results = yield all(calls);
   try {
     results.forEach((r) => {
@@ -42,4 +47,5 @@ export function* fetchUiExtensions() {
   } catch (err) {
     console.error('Plugin load error'); // eslint-disable-line no-console
   }
+  yield put(extensionLoadFinishAction());
 }

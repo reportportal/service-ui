@@ -51,4 +51,9 @@ export {
   enabledBtsPluginsSelector,
 } from './selectors';
 export { pluginSagas } from './sagas';
-export { uiExtensionSettingsTabsSelector } from './uiExtensions';
+export {
+  uiExtensionSettingsTabsSelector,
+  uiExtensionAdminPagesSelector,
+  uiExtensionPagesSelector,
+  extensionsLoadedSelector,
+} from './uiExtensions';
