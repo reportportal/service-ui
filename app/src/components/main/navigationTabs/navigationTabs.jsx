@@ -51,6 +51,25 @@ export class NavigationTabs extends Component {
     customBlock: null,
   };
 
+  componentDidMount() {
+    this.correctActiveTab();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.activeTab === this.props.activeTab) {
+      return;
+    }
+    this.correctActiveTab();
+  }
+
+  correctActiveTab = () => {
+    const { activeTab, config } = this.props;
+    if (activeTab && !config[activeTab]) {
+      const firstTabName = Object.keys(config)[0];
+      this.onChangeTab(firstTabName);
+    }
+  };
+
   createTrackingFunction = (eventInfo) => {
     if (!eventInfo) {
       return null;
@@ -81,6 +100,7 @@ export class NavigationTabs extends Component {
 
   render = () => {
     const { config, activeTab, customBlock } = this.props;
+    const activeConfig = activeTab && config[activeTab];
     return (
       <div className={cx('navigation-tabs')}>
         <div className={cx('tabs-mobile', { 'custom-tabs-mobile-wrapper': customBlock })}>
@@ -109,11 +129,11 @@ export class NavigationTabs extends Component {
         </div>
         <div
           className={cx('content-wrapper', {
-            'mobile-disabled': activeTab && config[activeTab].mobileDisabled,
+            'mobile-disabled': activeConfig && activeConfig.mobileDisabled,
             'custom-content-wrapper': customBlock,
           })}
         >
-          {activeTab && config[activeTab].component}
+          {activeConfig && activeConfig.component}
         </div>
       </div>
     );
