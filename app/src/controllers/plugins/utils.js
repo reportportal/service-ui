@@ -57,4 +57,9 @@ export const isPostIssueActionAvailable = (integrations) =>
 export const filterEnabledPlugins = (plugins = []) => plugins.filter((item) => item.enabled);
 
 export const filterAvailablePlugins = (plugins = []) =>
-  plugins.filter((item) => item.enabled && item.groupType !== AUTHORIZATION_GROUP_TYPE);
+  plugins.filter(
+    (item) =>
+      item.enabled &&
+      item.groupType !== AUTHORIZATION_GROUP_TYPE &&
+      INTEGRATION_NAMES_BY_GROUP_TYPES_MAP[item.groupType].includes(item.name),
+  );
