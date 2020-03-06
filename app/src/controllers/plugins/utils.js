@@ -54,5 +54,7 @@ export const isPostIssueActionAvailable = (integrations) =>
       item.integrationParameters.defectFormFields.length,
   );
 
+export const filterEnabledPlugins = (plugins = []) => plugins.filter((item) => item.enabled);
+
 export const filterAvailablePlugins = (plugins = []) =>
   plugins.filter((item) => item.enabled && item.groupType !== AUTHORIZATION_GROUP_TYPE);
