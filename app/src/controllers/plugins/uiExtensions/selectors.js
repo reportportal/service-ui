@@ -1,9 +1,9 @@
 import { createSelector } from 'reselect';
-import { availablePluginNamesSelector } from '../selectors';
+import { enabledPluginNamesSelector } from '../selectors';
 import { uiExtensionMap } from './uiExtensionStorage';
 
 export const createUiExtensionSelectorByType = (type) =>
-  createSelector(availablePluginNamesSelector, (pluginNames) =>
+  createSelector(enabledPluginNamesSelector, (pluginNames) =>
     Array.from(uiExtensionMap.entries())
       .filter(([name]) => pluginNames.includes(name))
       .map(([, extensions]) => extensions)

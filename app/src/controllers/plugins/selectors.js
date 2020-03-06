@@ -31,6 +31,7 @@ import {
   sortItemsByGroupType,
   groupItems,
   filterIntegrationsByName,
+  filterEnabledPlugins,
 } from './utils';
 
 const domainSelector = (state) => state.plugins || {};
@@ -45,8 +46,8 @@ const projectIntegrationsSelector = (state) =>
   domainSelector(state).integrations.projectIntegrations || [];
 
 export const availablePluginsSelector = createSelector(pluginsSelector, filterAvailablePlugins);
-export const availablePluginNamesSelector = createSelector(availablePluginsSelector, (plugins) =>
-  plugins.map((plugin) => plugin.name),
+export const enabledPluginNamesSelector = createSelector(pluginsSelector, (plugins) =>
+  filterEnabledPlugins(plugins).map((plugin) => plugin.name),
 );
 
 export const availableGroupedPluginsSelector = createSelector(
