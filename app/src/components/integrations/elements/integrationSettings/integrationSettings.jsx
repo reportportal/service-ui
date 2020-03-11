@@ -25,7 +25,7 @@ import { projectIdSelector } from 'controllers/pages';
 import { activeProjectSelector } from 'controllers/user';
 import { removeIntegrationAction } from 'controllers/plugins';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { INTEGRATION_NAMES_TITLES } from '../../constants';
+import { PLUGIN_NAME_TITLES } from '../../constants';
 import { INTEGRATION_FORM } from './integrationForm/constants';
 import { ConnectionSection } from './connectionSection';
 import { IntegrationForm } from './integrationForm';
@@ -150,7 +150,7 @@ export class IntegrationSettings extends Component {
                 connected
                   ? null
                   : formatMessage(messages.failedConnectMessage, {
-                      pluginName: INTEGRATION_NAMES_TITLES[pluginName] || pluginName,
+                      pluginName: PLUGIN_NAME_TITLES[pluginName] || pluginName,
                       error: errorMessage,
                     })
               }

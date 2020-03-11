@@ -32,7 +32,7 @@ import {
   IntegrationInfoContainer,
   IntegrationSettingsContainer,
 } from 'components/integrations/containers';
-import { INTEGRATION_NAMES_TITLES } from 'components/integrations';
+import { PLUGIN_NAME_TITLES } from 'components/integrations';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import {
   INSTALLED_PLUGINS_SUBPAGE,
@@ -224,7 +224,7 @@ export class InstalledTab extends Component {
     this.changeSubPage({
       type: INSTALLED_PLUGINS_SUBPAGE,
       data: pageData,
-      title: INTEGRATION_NAMES_TITLES[pageData.name] || pageData.name,
+      title: PLUGIN_NAME_TITLES[pageData.name] || pageData.name,
     });
 
   renderFilterMobileBlock = () => (

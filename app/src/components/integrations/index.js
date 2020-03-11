@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-export { INTEGRATIONS_IMAGES_MAP, INTEGRATION_NAMES_TITLES } from './constants';
+export { PLUGIN_IMAGES_MAP, PLUGIN_NAME_TITLES } from './constants';
 export { INTEGRATIONS_SETTINGS_COMPONENTS_MAP } from './settingsComponentsMap';
 export { AddIntegrationModal } from './modals/addIntegrationModal';

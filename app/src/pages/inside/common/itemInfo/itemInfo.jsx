@@ -22,7 +22,7 @@ import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { fromNowFormat } from 'common/utils';
-import { SAUCE_LABS } from 'common/constants/integrationNames';
+import { SAUCE_LABS } from 'common/constants/pluginNames';
 import {
   activeProjectRoleSelector,
   userAccountRoleSelector,
@@ -32,7 +32,7 @@ import { isStepLevelSelector, formatItemName } from 'controllers/testItem';
 import { availableIntegrationsByPluginNameSelector } from 'controllers/plugins';
 import { MarkdownViewer } from 'components/main/markdown';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
-import { INTEGRATION_NAMES_TITLES } from 'components/integrations';
+import { PLUGIN_NAME_TITLES } from 'components/integrations';
 import { getSauceLabsConfig } from 'components/integrations/integrationProviders/sauceLabsIntegration/utils';
 import { formatMethodType, formatStatus } from 'common/utils/localizationUtils';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
@@ -126,8 +126,8 @@ export class ItemInfo extends Component {
         <img
           className={cx('sauce-labs-label')}
           src={SauceLabsIcon}
-          alt={INTEGRATION_NAMES_TITLES[SAUCE_LABS]}
-          title={INTEGRATION_NAMES_TITLES[SAUCE_LABS]}
+          alt={PLUGIN_NAME_TITLES[SAUCE_LABS]}
+          title={PLUGIN_NAME_TITLES[SAUCE_LABS]}
         />
       );
     }

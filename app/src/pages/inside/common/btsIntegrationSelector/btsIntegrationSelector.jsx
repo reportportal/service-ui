@@ -20,7 +20,7 @@ import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { FormField } from 'components/fields/formField';
-import { INTEGRATION_NAMES_TITLES } from 'components/integrations';
+import { PLUGIN_NAME_TITLES } from 'components/integrations';
 import styles from './btsIntegrationSelector.scss';
 
 const cx = classNames.bind(styles);
@@ -51,7 +51,7 @@ export class BtsIntegrationSelector extends Component {
     super(props);
     this.pluginNamesOptions = Object.keys(props.namedBtsIntegrations).map((key) => ({
       value: key,
-      label: INTEGRATION_NAMES_TITLES[key],
+      label: PLUGIN_NAME_TITLES[key],
     }));
   }
 

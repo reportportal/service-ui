@@ -26,6 +26,7 @@ import {
   ANALYZER_GROUP_TYPE,
   OTHER_GROUP_TYPE,
 } from 'common/constants/pluginsGroupTypes';
+import { isPluginSwitchable } from 'controllers/plugins';
 import styles from './pluginsListItems.scss';
 import { PluginsItem } from './pluginsItem/index';
 
@@ -90,9 +91,13 @@ export class PluginsListItems extends Component {
         {filterMobileBlock}
         <div className={cx('plugins-content-list')}>
           {items.map((item) => (
-            <Fragment key={item.type}>
-              <PluginsItem onClick={onItemClick} data={item} onToggleActive={onToggleActive} />
-            </Fragment>
+            <PluginsItem
+              key={item.type}
+              onClick={onItemClick}
+              data={item}
+              toggleable={isPluginSwitchable(item.name)}
+              onToggleActive={onToggleActive}
+            />
           ))}
         </div>
       </Fragment>

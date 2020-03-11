@@ -44,7 +44,7 @@ import {
   isIntegrationSupportsMultipleInstances,
   isPluginBuiltin,
 } from 'components/integrations/utils';
-import { INTEGRATION_NAMES_TITLES } from 'components/integrations/constants';
+import { PLUGIN_NAME_TITLES } from 'components/integrations/constants';
 import { InstancesList } from './instancesList';
 import styles from './instancesSection.scss';
 
@@ -189,7 +189,7 @@ export class InstancesSection extends Component {
     const data = {
       enabled: true,
       integrationParameters: formData,
-      name: formData.integrationName || INTEGRATION_NAMES_TITLES[instanceType],
+      name: formData.integrationName || PLUGIN_NAME_TITLES[instanceType],
     };
 
     this.props.addIntegrationAction(
@@ -213,7 +213,7 @@ export class InstancesSection extends Component {
       id: 'confirmationModal',
       data: {
         message: formatMessage(messages.uninstallPluginConfirmation, {
-          pluginName: INTEGRATION_NAMES_TITLES[instanceType],
+          pluginName: PLUGIN_NAME_TITLES[instanceType],
         }),
         onConfirm: this.removePlugin,
         title: formatMessage(messages.uninstallPluginTitle),

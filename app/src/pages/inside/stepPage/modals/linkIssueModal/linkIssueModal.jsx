@@ -29,7 +29,7 @@ import { URLS } from 'common/urls';
 import { validate, bindMessageToValidator } from 'common/utils/validation';
 import { fetch } from 'common/utils/fetch';
 import { updateSessionItem } from 'common/utils/storageUtils';
-import { RALLY } from 'common/constants/integrationNames';
+import { RALLY } from 'common/constants/pluginNames';
 import { BetaBadge } from 'pages/inside/common/betaBadge';
 import { BtsIntegrationSelector } from 'pages/inside/common/btsIntegrationSelector';
 import { getDefaultIssueModalConfig } from '../postIssueModal/utils';

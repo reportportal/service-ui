@@ -26,7 +26,7 @@ import {
 } from 'components/integrations/containers';
 import { showDefaultErrorNotification } from 'controllers/notification';
 import { availableGroupedPluginsSelector } from 'controllers/plugins';
-import { INTEGRATION_NAMES_TITLES } from 'components/integrations';
+import { PLUGIN_NAME_TITLES } from 'components/integrations';
 import { IntegrationsList } from './integrationsList';
 import { IntegrationBreadcrumbs } from './integrationBreadcrumbs';
 import {
@@ -108,7 +108,7 @@ export class IntegrationsTab extends Component {
               this.changeSubPage({
                 type: INTEGRATION_SUBPAGE,
                 data: pageData,
-                title: INTEGRATION_NAMES_TITLES[pageData.name] || pageData.name,
+                title: PLUGIN_NAME_TITLES[pageData.name] || pageData.name,
               });
               this.props.tracking.trackEvent(getIntegrationItemClickEvent(pageData.name));
             }}

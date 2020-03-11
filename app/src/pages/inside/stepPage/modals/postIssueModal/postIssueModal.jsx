@@ -23,7 +23,7 @@ import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { fetch, updateSessionItem, getSessionItem } from 'common/utils';
 import { URLS } from 'common/urls';
-import { JIRA, RALLY } from 'common/constants/integrationNames';
+import { JIRA, RALLY } from 'common/constants/pluginNames';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { namedAvailableBtsIntegrationsSelector } from 'controllers/plugins';
