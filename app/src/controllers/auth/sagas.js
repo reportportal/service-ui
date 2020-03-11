@@ -24,6 +24,10 @@ import {
   updateStorageItem,
 } from 'common/utils/storageUtils';
 import { URLS } from 'common/urls';
+import {
+  ERROR_CODE_LOGIN_BAD_CREDENTIALS,
+  ERROR_CODE_LOGIN_MAX_LIMIT,
+} from 'common/constants/apiErrorCodes';
 import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import {
@@ -60,8 +64,6 @@ import {
   GRANT_TYPES,
   SET_TOKEN,
   LOGIN_SUCCESS,
-  ERROR_CODE_LOGIN_MAX_LIMIT,
-  ERROR_CODE_LOGIN_BAD_CREDENTIALS,
   ANONYMOUS_REDIRECT_PATH_STORAGE_KEY,
 } from './constants';
 import { tokenSelector } from './selectors';
