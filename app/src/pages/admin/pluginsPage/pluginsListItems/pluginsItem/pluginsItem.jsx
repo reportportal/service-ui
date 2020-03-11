@@ -20,50 +20,22 @@ import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import track from 'react-tracking';
 import {
-  NOTIFICATION_GROUP_TYPE,
-  BTS_GROUP_TYPE,
-  OTHER_GROUP_TYPE,
-  AUTHORIZATION_GROUP_TYPE,
-  ANALYZER_GROUP_TYPE,
-} from 'common/constants/pluginsGroupTypes';
-import {
   getPluginItemClickEvent,
   getDisablePluginItemClickEvent,
 } from 'components/main/analytics/events';
-import { INTEGRATIONS_IMAGES_MAP, INTEGRATION_NAMES_TITLES } from 'components/integrations';
+import { PLUGIN_IMAGES_MAP, PLUGIN_NAME_TITLES } from 'components/integrations';
+import { PLUGIN_DISABLED_MESSAGES_BY_GROUP_TYPE } from 'components/integrations/messages';
 import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import styles from './pluginsItem.scss';
 
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
-  titleBts: {
-    id: 'PluginItem.titleBts',
-    defaultMessage:
-      'will be hidden on project settings. RP users won`t be able to post or link issue in BTS',
-  },
-  titleNotification: {
-    id: 'PluginItem.titleNotification',
-    defaultMessage:
-      'will be hidden on project settings. RP users won`t be able to receive notification about test results',
-  },
-  titleOthers: {
-    id: 'PluginItem.titleOthers',
-    defaultMessage: 'will be hidden on project settings',
-  },
   titleVersion: {
     id: 'PluginItem.titleVersion',
     defaultMessage: '{version}',
   },
 });
-
-const titleMessagesMap = {
-  [BTS_GROUP_TYPE]: messages.titleBts,
-  [NOTIFICATION_GROUP_TYPE]: messages.titleNotification,
-  [OTHER_GROUP_TYPE]: messages.titleOthers,
-  [AUTHORIZATION_GROUP_TYPE]: messages.titleOthers,
-  [ANALYZER_GROUP_TYPE]: messages.titleOthers,
-};
 
 const maxVersionLengthForTitle = 17;
 
@@ -74,6 +46,7 @@ export class PluginsItem extends Component {
     intl: PropTypes.object.isRequired,
     data: PropTypes.object.isRequired,
     onToggleActive: PropTypes.func.isRequired,
+    toggleable: PropTypes.bool,
     showNotification: PropTypes.func,
     onClick: PropTypes.func,
     tracking: PropTypes.shape({
@@ -83,6 +56,7 @@ export class PluginsItem extends Component {
   };
 
   static defaultProps = {
+    toggleable: true,
     showNotification: () => {},
     onClick: () => {},
   };
@@ -118,24 +92,24 @@ export class PluginsItem extends Component {
     const {
       intl: { formatMessage },
       data: { name, uploadedBy, enabled, groupType, details: { version } = {} },
+      toggleable,
     } = this.props;
+    const pluginName = PLUGIN_NAME_TITLES[name] || name;
 
     return (
       <div
         className={cx('plugins-list-item')}
         onClick={this.itemClickHandler}
         title={
-          !enabled
-            ? `${INTEGRATION_NAMES_TITLES[name] || name} ${formatMessage(
-                titleMessagesMap[groupType],
-              )}`
-            : ''
+          enabled
+            ? ''
+            : formatMessage(PLUGIN_DISABLED_MESSAGES_BY_GROUP_TYPE[groupType], { name: pluginName })
         }
       >
         <div className={cx('plugins-info-block')}>
-          <img className={cx('plugins-image')} src={INTEGRATIONS_IMAGES_MAP[name]} alt={name} />
+          <img className={cx('plugins-image')} src={PLUGIN_IMAGES_MAP[name]} alt={pluginName} />
           <div className={cx('plugins-info')}>
-            <span className={cx('plugins-name')}>{INTEGRATION_NAMES_TITLES[name] || name}</span>
+            <span className={cx('plugins-name')}>{pluginName}</span>
             <span className={cx('plugins-author')}>{`by ${uploadedBy || 'Report Portal'}`}</span>
             <span
               className={cx('plugins-version')}
@@ -148,9 +122,11 @@ export class PluginsItem extends Component {
           </div>
         </div>
         <div className={cx('plugins-additional-block')}>
-          <div className={cx('plugins-switcher')} onClick={(e) => e.stopPropagation()}>
-            <InputSwitcher value={this.state.isEnabled} onChange={this.onToggleActiveHandler} />
-          </div>
+          {toggleable && (
+            <div className={cx('plugins-switcher')} onClick={(e) => e.stopPropagation()}>
+              <InputSwitcher value={this.state.isEnabled} onChange={this.onToggleActiveHandler} />
+            </div>
+          )}
         </div>
       </div>
     );

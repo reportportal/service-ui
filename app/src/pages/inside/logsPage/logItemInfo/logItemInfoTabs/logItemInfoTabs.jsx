@@ -28,7 +28,7 @@ import {
   activeLogSelector,
 } from 'controllers/log';
 import { fetchFirstAttachmentsAction, attachmentItemsSelector } from 'controllers/log/attachments';
-import { SAUCE_LABS } from 'common/constants/integrationNames';
+import { SAUCE_LABS } from 'common/constants/pluginNames';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import StackTraceIcon from 'common/img/stack-trace-inline.svg';
 import AttachmentIcon from 'common/img/attachment-inline.svg';
