@@ -26,7 +26,6 @@ export const LaunchFiltersSection = () => (
       activeFilterId,
       activeFilter,
       activeFilterEntities,
-      onSelectFilter,
       onRemoveFilter,
       onChangeFilter,
       onResetFilter,
@@ -41,7 +40,6 @@ export const LaunchFiltersSection = () => (
             filters={launchFilters}
             activeFilterId={activeFilterId}
             activeFilter={activeFilter}
-            onSelectFilter={onSelectFilter}
             onRemoveFilter={onRemoveFilter}
             onFilterAdd={onTopFilterAdd}
             onResetFilter={onResetFilter}

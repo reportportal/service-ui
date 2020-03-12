@@ -20,7 +20,6 @@ import isEqual from 'fast-deep-equal';
 import { connect } from 'react-redux';
 import {
   launchFiltersSelector,
-  changeActiveFilterAction,
   updateFilterConditionsAction,
   activeFilterSelector,
   removeLaunchesFilterAction,
@@ -52,7 +51,6 @@ import { ENTITY_NUMBER } from 'components/filterEntities/constants';
     localSorting: localSortingSelector(state),
   }),
   {
-    changeActiveFilterAction,
     fetchLaunchesWithParamsAction,
     updateFilterConditionsAction,
     fetchLaunchesAction,
@@ -70,7 +68,6 @@ export class LaunchFiltersContainer extends Component {
     activeFilterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     activeFilter: PropTypes.object,
     render: PropTypes.func.isRequired,
-    changeActiveFilterAction: PropTypes.func,
     fetchLaunchesWithParamsAction: PropTypes.func,
     updateFilterConditionsAction: PropTypes.func,
     fetchLaunchesAction: PropTypes.func,
@@ -88,7 +85,6 @@ export class LaunchFiltersContainer extends Component {
     launchFilters: [],
     activeFilter: null,
     activeFilterId: null,
-    changeActiveFilterAction: () => {},
     fetchLaunchesWithParamsAction: () => {},
     updateFilterConditionsAction: () => {},
     fetchLaunchesAction: () => {},
@@ -180,10 +176,6 @@ export class LaunchFiltersContainer extends Component {
     this.props.removeLaunchesFilterAction(filter.id);
   };
 
-  handleFilterSelect = (filterId) => {
-    this.props.changeActiveFilterAction(filterId);
-  };
-
   updateFilter = (filterId, conditions) => {
     this.props.updateFilterConditionsAction(filterId, conditions);
   };
@@ -236,7 +228,6 @@ export class LaunchFiltersContainer extends Component {
       launchFilters,
       activeFilterId,
       activeFilter,
-      onSelectFilter: this.handleFilterSelect,
       onRemoveFilter: this.handleFilterRemove,
       onChangeFilter: this.handleFilterChange,
       activeFilterConditions: this.getConditions(),
