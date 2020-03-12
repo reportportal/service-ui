@@ -24,10 +24,10 @@ import styles from './filterList.scss';
 const cx = classNames.bind(styles);
 
 export const FilterList = ({
+  project,
   filters,
   activeFilterId,
   unsavedFilterIds,
-  onSelectFilter,
   onRemoveFilter,
   intl,
   allLatest,
@@ -36,14 +36,16 @@ export const FilterList = ({
     {filters.map((filter) => (
       <div key={filter.id} className={cx('item')}>
         <FilterItem
+          project={project}
+          id={filter.id}
           name={filter.name}
           description={filter.description}
           active={filter.id === activeFilterId}
           share={filter.share}
           unsaved={unsavedFilterIds.indexOf(filter.id) > -1}
-          onClick={() => onSelectFilter(activeFilterId === filter.id ? allLatest : filter.id)}
           onRemove={() => onRemoveFilter(filter)}
           owner={filter.owner}
+          allLatest={allLatest}
           intl={intl}
         />
       </div>
@@ -51,10 +53,10 @@ export const FilterList = ({
   </div>
 );
 FilterList.propTypes = {
+  project: PropTypes.string.isRequired,
   filters: PropTypes.arrayOf(filterShape),
   activeFilterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   unsavedFilterIds: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])),
-  onSelectFilter: PropTypes.func,
   onRemoveFilter: PropTypes.func,
   intl: PropTypes.object.isRequired,
   allLatest: PropTypes.string,
@@ -63,7 +65,6 @@ FilterList.defaultProps = {
   filters: [],
   unsavedFilterIds: [],
   activeFilterId: null,
-  onSelectFilter: () => {},
   onRemoveFilter: () => {},
   allLatest: ALL,
 };

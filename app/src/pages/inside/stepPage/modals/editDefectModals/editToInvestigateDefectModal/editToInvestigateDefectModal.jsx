@@ -471,6 +471,7 @@ export class EditToInvestigateDefectModal extends Component {
     const {
       intl: { formatMessage },
       currentFilter,
+      activeProject,
       data: { eventsInfo },
     } = this.props;
     const customButton = {
@@ -529,6 +530,7 @@ export class EditToInvestigateDefectModal extends Component {
             selectedItems={this.state.selectedItems}
             currentLaunch={this.getCurrentLaunch()}
             currentFilter={currentFilter}
+            activeProject={activeProject}
             searchMode={this.state.searchMode}
             loading={this.state.loading}
             onSelectAllToggle={this.handleSelectAllToggle}

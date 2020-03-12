@@ -729,7 +729,6 @@ export class LaunchesPage extends Component {
     activeFilterId,
     activeFilter,
     activeFilterConditions,
-    onSelectFilter,
     onRemoveFilter,
     onChangeFilter,
     onResetFilter,
@@ -771,7 +770,6 @@ export class LaunchesPage extends Component {
                   filters={launchFilters}
                   activeFilterId={activeFilterId}
                   activeFilter={activeFilter}
-                  onSelectFilter={onSelectFilter}
                   onRemoveFilter={onRemoveFilter}
                   onFilterAdd={onFilterAdd}
                   onResetFilter={onResetFilter}
