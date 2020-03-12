@@ -64,7 +64,7 @@ export class NavigationTabs extends Component {
 
   correctActiveTab = () => {
     const { activeTab, config } = this.props;
-    if (activeTab && !config[activeTab]) {
+    if (!activeTab || !config[activeTab]) {
       const firstTabName = Object.keys(config)[0];
       this.onChangeTab(firstTabName);
     }
