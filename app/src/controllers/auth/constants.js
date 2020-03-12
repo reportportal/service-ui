@@ -31,7 +31,4 @@ export const GRANT_TYPES = {
   PASSWORD: 'password',
 };
 
-export const ERROR_CODE_LOGIN_MAX_LIMIT = 4004;
-export const ERROR_CODE_LOGIN_BAD_CREDENTIALS = 4003;
-
 export const ANONYMOUS_REDIRECT_PATH_STORAGE_KEY = 'anonymousRedirectPath';

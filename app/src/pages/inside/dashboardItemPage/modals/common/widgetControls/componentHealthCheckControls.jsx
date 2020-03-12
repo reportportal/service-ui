@@ -127,7 +127,7 @@ export class ComponentHealthCheckControls extends Component {
       activeProject,
       widgetSettings: { contentParameters, filters },
     } = this.props;
-    const filterId = filters && filters[0].value;
+    const filterId = filters && filters.length && filters[0].value;
     const isLatest =
       (contentParameters && contentParameters.widgetOptions.latest) ||
       MODES_VALUES[CHART_MODES.ALL_LAUNCHES];

@@ -19,6 +19,7 @@ import { fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { PROJECT_MANAGER } from 'common/constants/projectRoles';
+import { ERROR_CODE_NOT_FOUND } from 'common/constants/apiErrorCodes';
 import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
 import { userIdSelector, userInfoSelector } from './selectors';
 import {
@@ -169,8 +170,10 @@ function* fetchApiToken() {
   try {
     const response = yield call(fetch, URLS.apiToken());
     yield put(setApiTokenAction(response));
-  } catch (err) {
-    yield put(generateApiTokenAction());
+  } catch ({ errorCode }) {
+    if (errorCode === ERROR_CODE_NOT_FOUND) {
+      yield put(generateApiTokenAction());
+    }
   }
 }
 
