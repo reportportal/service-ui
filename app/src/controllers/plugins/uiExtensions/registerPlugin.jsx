@@ -1,13 +1,7 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { BigButton } from 'components/buttons/bigButton';
-import { GhostButton } from 'components/buttons/ghostButton';
-import { withModal } from 'controllers/modal';
 import { uiExtensionMap } from './uiExtensionStorage';
+import { createImportProps } from './createImportProps';
 
 window.RP = {};
-
-const createImportProps = () => ({ React, BigButton, GhostButton, useSelector, withModal });
 
 // TODO store will be used later to add new routes
 // eslint-disable-next-line no-unused-vars

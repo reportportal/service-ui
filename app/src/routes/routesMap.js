@@ -254,7 +254,7 @@ const routesMap = {
       dispatch(fetchTestItemsAction());
     },
   },
-  [PLUGIN_UI_EXTENSION_ADMIN_PAGE]: '/administrate/plugin/:pluginPage',
+  [PLUGIN_UI_EXTENSION_ADMIN_PAGE]: '/administrate/plugin/:pluginPage/:pluginRoute*',
 };
 
 export const onBeforeRouteChange = (dispatch, getState, { action }) => {

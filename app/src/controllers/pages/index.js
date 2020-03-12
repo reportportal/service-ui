@@ -38,6 +38,7 @@ export {
   isInitialDispatchDoneSelector,
   currentPathSelector,
   pluginPageSelector,
+  pluginRouteSelector,
 } from './selectors';
 export { updatePagePropertiesAction, clearPageStateAction } from './actionCreators';
 
