@@ -98,18 +98,18 @@ import { SauceLabsSection } from './sauceLabsSection';
     },
     onChangeWithAttachments: (userId, withAttachments) => {
       setWithAttachments(userId, withAttachments);
-      return { [WITH_ATTACHMENTS_FILTER_KEY]: withAttachments || undefined };
+      return { [WITH_ATTACHMENTS_FILTER_KEY]: withAttachments };
     },
     onChangeHideEmptySteps: (userId, hideEmptySteps) => {
       setHideEmptySteps(userId, hideEmptySteps);
-      return { [HIDE_EMPTY_STEPS]: hideEmptySteps || undefined };
+      return { [HIDE_EMPTY_STEPS]: hideEmptySteps };
     },
     onChangeHidePassedLogs: (userId, hidePassedLogs) => {
       setHidePassedLogs(userId, hidePassedLogs);
-      return { [HIDE_PASSED_LOGS]: hidePassedLogs || undefined };
+      return { [HIDE_PASSED_LOGS]: hidePassedLogs };
     },
     onChangeLogStatusFilter: (status) => ({
-      [LOG_STATUS_FILTER_KEY]: status || undefined,
+      [LOG_STATUS_FILTER_KEY]: status,
     }),
   },
   { namespace: NAMESPACE },

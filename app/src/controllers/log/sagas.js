@@ -67,13 +67,10 @@ function* fetchActivity() {
 }
 
 function* fetchLogItems(payload = {}) {
-  const { activeProject, params, filterLevel, activeLogItemId, query } = yield call(
-    collectLogPayload,
-  );
+  const { activeProject, filterLevel, activeLogItemId, query } = yield call(collectLogPayload);
   const namespace = payload.namespace || LOG_ITEMS_NAMESPACE;
   const logLevel = payload.level || filterLevel;
   const fetchParams = {
-    ...params,
     ...payload.params,
     ...query,
   };
@@ -90,7 +87,7 @@ function* fetchLogItems(payload = {}) {
 }
 
 function* fetchStackTrace({ payload: logItem }) {
-  const { activeProject } = yield call(collectLogPayload);
+  const activeProject = yield select(activeProjectSelector);
   const page = yield select(logStackTracePaginationSelector);
   const { path } = logItem;
   let pageSize = STACK_TRACE_PAGINATION_OFFSET;
