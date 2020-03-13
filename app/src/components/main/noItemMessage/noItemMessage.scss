@@ -18,9 +18,18 @@
   padding: 25px 0;
   text-align: center;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
+
+.main-content {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .warning-icon {
   display: inline-block;
   width: 21px;
@@ -33,4 +42,10 @@
   font-family: $FONT-REGULAR;
   font-size: 17px;
   text-align: center;
+}
+
+.description {
+  padding: 25px 0;
+  color: $COLOR--gray-47;
+  font-size: 13px;
 }

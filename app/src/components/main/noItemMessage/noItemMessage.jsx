@@ -23,17 +23,25 @@ import styles from './noItemMessage.scss';
 
 const cx = classNames.bind(styles);
 
-export const NoItemMessage = ({ message }) => (
+export const NoItemMessage = ({ message, description, customBlock }) => (
   <div className={cx('no-item-message')}>
-    <div className={cx('warning-icon')}>{Parser(WarningIcon)}</div>
-    <div className={cx('message')}>{message}</div>
+    <div className={cx('main-content')}>
+      <div className={cx('warning-icon')}>{Parser(WarningIcon)}</div>
+      <div className={cx('message')}>{message}</div>
+    </div>
+    {description && <div className={cx('description')}>{description}</div>}
+    {customBlock}
   </div>
 );
 
 NoItemMessage.propTypes = {
   message: PropTypes.string,
+  description: PropTypes.string,
+  customBlock: PropTypes.element,
 };
 
 NoItemMessage.defaultProps = {
   message: '',
+  description: null,
+  customBlock: null,
 };
