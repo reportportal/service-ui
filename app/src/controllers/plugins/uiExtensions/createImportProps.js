@@ -16,21 +16,25 @@
 
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import moment from 'moment';
+import Parser from 'html-react-parser';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { BigButton } from 'components/buttons/bigButton';
 import { NavigationTabs } from 'components/main/navigationTabs';
 import { NoCasesBlock } from 'components/main/noCasesBlock';
+import { ItemList } from 'components/main/itemList';
 import { withModal } from 'controllers/modal';
 import { fetch } from 'common/utils/fetch';
 import { PLUGIN_UI_EXTENSION_ADMIN_PAGE, pluginRouteSelector } from 'controllers/pages';
 import PlusIcon from 'common/img/plus-button-inline.svg';
+import RemoveIcon from 'common/img/trashcan-inline.svg';
 
 export const createImportProps = () => ({
-  lib: { React, useSelector, useDispatch },
-  components: { GhostButton, BigButton, NavigationTabs, NoCasesBlock },
+  lib: { React, useSelector, useDispatch, moment, Parser },
+  components: { GhostButton, BigButton, NavigationTabs, NoCasesBlock, ItemList },
   hocs: { withModal },
   constants: { PLUGIN_UI_EXTENSION_ADMIN_PAGE },
   selectors: { pluginRouteSelector },
-  icons: { PlusIcon },
+  icons: { PlusIcon, RemoveIcon },
   utils: { fetch },
 });
