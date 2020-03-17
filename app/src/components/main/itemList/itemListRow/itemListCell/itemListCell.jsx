@@ -40,7 +40,7 @@ ItemListCell.defaultProps = {
   component: null,
   value: null,
   label: null,
-  formatter: defaultFormatter(),
+  formatter: defaultFormatter,
   align: null,
   withIcon: false,
   bold: false,

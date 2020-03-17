@@ -10,7 +10,7 @@ const createPluginRegistrationFunction = (store) => (plugin) => {
   const wrappedExtensions = extensions.map((extension, i) => ({
     name: `${plugin.name}__${i}`,
     ...extension,
-    component: <extension.component {...createImportProps()} />,
+    component: <extension.component {...createImportProps(plugin.name)} />,
   }));
   uiExtensionMap.set(name, wrappedExtensions);
 };

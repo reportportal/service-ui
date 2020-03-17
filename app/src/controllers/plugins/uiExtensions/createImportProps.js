@@ -25,16 +25,23 @@ import { NoCasesBlock } from 'components/main/noCasesBlock';
 import { ItemList } from 'components/main/itemList';
 import { withModal } from 'controllers/modal';
 import { fetch } from 'common/utils/fetch';
+import { activeProjectSelector } from 'controllers/user';
 import { PLUGIN_UI_EXTENSION_ADMIN_PAGE, pluginRouteSelector } from 'controllers/pages';
 import PlusIcon from 'common/img/plus-button-inline.svg';
 import RemoveIcon from 'common/img/trashcan-inline.svg';
+import { URLS } from 'common/urls';
+import { createGlobalNamedIntegrationsSelector } from '../selectors';
 
-export const createImportProps = () => ({
+export const createImportProps = (pluginName) => ({
   lib: { React, useSelector, useDispatch, moment, Parser },
   components: { GhostButton, BigButton, NavigationTabs, NoCasesBlock, ItemList },
   hocs: { withModal },
   constants: { PLUGIN_UI_EXTENSION_ADMIN_PAGE },
-  selectors: { pluginRouteSelector },
+  selectors: {
+    pluginRouteSelector,
+    activeProjectSelector,
+    globalIntegrationsSelector: createGlobalNamedIntegrationsSelector(pluginName),
+  },
   icons: { PlusIcon, RemoveIcon },
-  utils: { fetch },
+  utils: { fetch, URLS },
 });
