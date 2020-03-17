@@ -33,7 +33,7 @@ import {
 import { isEmailIntegrationAvailableSelector } from 'controllers/plugins';
 import { showModalAction } from 'controllers/modal';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
-import { NoCasesBlock } from './../noCasesBlock';
+import { NoCasesBlock } from 'components/main/noCasesBlock';
 import styles from './notificationsTab.scss';
 import { RuleListHeader } from '../ruleListHeader';
 import { RuleList } from '../ruleList';
