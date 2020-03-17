@@ -23,31 +23,25 @@ describe('isAuthorizationPlugin util function', () => {
 
   test('should return true in case of plugin with authorization group type', () => {
     const pluginToCheck = LDAP;
-    const withAuthGroupType = isPluginWithAuthGroupType(pluginToCheck);
+    const isAuth = isPluginWithAuthGroupType(pluginToCheck);
 
-    expect(isAuthorizationPlugin(pluginToCheck)).toBe(withAuthGroupType);
+    expect(isAuthorizationPlugin(pluginToCheck)).toBe(isAuth);
   });
 
   test('should return false in case of plugin with any other group type', () => {
     const pluginToCheck = JIRA;
-    const withNotAuthGroupType = isPluginWithAuthGroupType(pluginToCheck);
+    const isNotAuth = isPluginWithAuthGroupType(pluginToCheck);
 
-    expect(isAuthorizationPlugin(pluginToCheck)).toBe(withNotAuthGroupType);
+    expect(isAuthorizationPlugin(pluginToCheck)).toBe(isNotAuth);
   });
 });
 
 describe('isPluginSwitchable util function', () => {
   test('should return true in case of plugin switchable', () => {
-    const pluginToCheck = JIRA;
-    const withAuthGroupType = isAuthorizationPlugin(pluginToCheck);
-
-    expect(isPluginSwitchable(pluginToCheck)).toBe(!withAuthGroupType);
+    expect(isPluginSwitchable(JIRA)).toBe(true);
   });
 
   test('should return false in case of plugin not switchable', () => {
-    const pluginToCheck = JIRA;
-    const withNotAuthGroupType = isAuthorizationPlugin(pluginToCheck);
-
-    expect(isPluginSwitchable(pluginToCheck)).toBe(!withNotAuthGroupType);
+    expect(isPluginSwitchable(LDAP)).toBe(false);
   });
 });
