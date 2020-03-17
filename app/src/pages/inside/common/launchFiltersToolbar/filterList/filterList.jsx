@@ -16,27 +16,17 @@
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { ALL } from 'common/constants/reservedFilterIds';
 import { FilterItem } from './filterItem';
 import { filterShape } from '../propTypes';
 import styles from './filterList.scss';
 
 const cx = classNames.bind(styles);
 
-export const FilterList = ({
-  project,
-  filters,
-  activeFilterId,
-  unsavedFilterIds,
-  onRemoveFilter,
-  intl,
-  allLatest,
-}) => (
+export const FilterList = ({ filters, activeFilterId, unsavedFilterIds, onRemoveFilter, intl }) => (
   <div className={cx('filter-list')}>
     {filters.map((filter) => (
       <div key={filter.id} className={cx('item')}>
         <FilterItem
-          project={project}
           id={filter.id}
           name={filter.name}
           description={filter.description}
@@ -45,7 +35,6 @@ export const FilterList = ({
           unsaved={unsavedFilterIds.indexOf(filter.id) > -1}
           onRemove={() => onRemoveFilter(filter)}
           owner={filter.owner}
-          allLatest={allLatest}
           intl={intl}
         />
       </div>
@@ -53,18 +42,15 @@ export const FilterList = ({
   </div>
 );
 FilterList.propTypes = {
-  project: PropTypes.string.isRequired,
   filters: PropTypes.arrayOf(filterShape),
   activeFilterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   unsavedFilterIds: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])),
   onRemoveFilter: PropTypes.func,
   intl: PropTypes.object.isRequired,
-  allLatest: PropTypes.string,
 };
 FilterList.defaultProps = {
   filters: [],
   unsavedFilterIds: [],
   activeFilterId: null,
   onRemoveFilter: () => {},
-  allLatest: ALL,
 };
