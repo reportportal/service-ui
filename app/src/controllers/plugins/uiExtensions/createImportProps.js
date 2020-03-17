@@ -19,7 +19,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { BigButton } from 'components/buttons/bigButton';
 import { NavigationTabs } from 'components/main/navigationTabs';
-import { NoItemMessage } from 'components/main/noItemMessage';
+import { NoCasesBlock } from 'components/main/noCasesBlock';
 import { withModal } from 'controllers/modal';
 import { fetch } from 'common/utils/fetch';
 import { PLUGIN_UI_EXTENSION_ADMIN_PAGE, pluginRouteSelector } from 'controllers/pages';
@@ -27,7 +27,7 @@ import PlusIcon from 'common/img/plus-button-inline.svg';
 
 export const createImportProps = () => ({
   lib: { React, useSelector, useDispatch },
-  components: { GhostButton, BigButton, NavigationTabs, NoItemMessage },
+  components: { GhostButton, BigButton, NavigationTabs, NoCasesBlock },
   hocs: { withModal },
   constants: { PLUGIN_UI_EXTENSION_ADMIN_PAGE },
   selectors: { pluginRouteSelector },
