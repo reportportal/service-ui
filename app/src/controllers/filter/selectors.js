@@ -16,7 +16,13 @@
 
 import { createSelector } from 'reselect';
 import isEqual from 'fast-deep-equal';
-import { createQueryParametersSelector, filterIdSelector } from 'controllers/pages';
+import { activeProjectSelector } from 'controllers/user';
+import { launchDistinctSelector } from 'controllers/launch';
+import {
+  createQueryParametersSelector,
+  filterIdSelector,
+  PROJECT_LAUNCHES_PAGE,
+} from 'controllers/pages';
 import { userFiltersSelector } from '../project/selectors';
 
 const domainSelector = (state) => state.filters || {};
@@ -67,4 +73,20 @@ export const dirtyFilterIdsSelector = createSelector(
         return savedFilter && !isEqual(filter, savedFilter);
       })
       .map((item) => item.id),
+);
+
+export const getLaunchesPageLinkSelector = createSelector(
+  activeProjectSelector,
+  launchDistinctSelector,
+  (projectId, allLatest) => (filter, active) => {
+    const filterId = active ? allLatest : filter;
+
+    return {
+      type: PROJECT_LAUNCHES_PAGE,
+      payload: {
+        projectId,
+        filterId,
+      },
+    };
+  },
 );

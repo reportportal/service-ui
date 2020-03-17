@@ -20,8 +20,8 @@ import Parser from 'html-react-parser';
 import Link from 'redux-first-router-link';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import { connect } from 'react-redux';
+import { getLaunchesPageLinkSelector } from 'controllers/filter';
 import { userIdSelector } from 'controllers/user';
-import { PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
 import { SharedFilterIcon } from 'pages/inside/common/sharedFilterIcon';
 import { FilterDescriptionTooltipIcon } from './filterDescriptionTooltipIcon';
 import styles from './filterItem.scss';
@@ -37,20 +37,7 @@ const handleClick = (e) => {
   e.preventDefault();
 };
 
-const getLaunchesPageLink = (filter, projectId, allLatest, active) => {
-  const filterId = active ? allLatest : filter;
-
-  return {
-    type: PROJECT_LAUNCHES_PAGE,
-    payload: {
-      projectId,
-      filterId,
-    },
-  };
-};
-
 const FilterItemBase = ({
-  project,
   id,
   name,
   active,
@@ -61,13 +48,13 @@ const FilterItemBase = ({
   owner,
   userId,
   className,
-  allLatest,
   isDisabled,
+  getLaunchesPageLink,
 }) => (
   <Link
     className={cx('filter-item', className, { active })}
     onClick={isDisabled && handleClick}
-    to={getLaunchesPageLink(id, project, allLatest, active)}
+    to={getLaunchesPageLink(id, active)}
   >
     {share && (
       <div className={cx('icon-holder')}>
@@ -92,10 +79,12 @@ const FilterItemBase = ({
   </Link>
 );
 
-export const FilterItem = connect((state) => ({ userId: userIdSelector(state) }))(FilterItemBase);
+export const FilterItem = connect((state) => ({
+  userId: userIdSelector(state),
+  getLaunchesPageLink: getLaunchesPageLinkSelector(state),
+}))(FilterItemBase);
 
 FilterItemBase.propTypes = {
-  project: PropTypes.string.isRequired,
   id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   active: PropTypes.bool,
@@ -105,8 +94,8 @@ FilterItemBase.propTypes = {
   onRemove: PropTypes.func,
   owner: PropTypes.string.isRequired,
   userId: PropTypes.string.isRequired,
+  getLaunchesPageLink: PropTypes.func.isRequired,
   className: PropTypes.string,
-  allLatest: PropTypes.string,
   isDisabled: PropTypes.bool,
 };
 FilterItemBase.defaultProps = {

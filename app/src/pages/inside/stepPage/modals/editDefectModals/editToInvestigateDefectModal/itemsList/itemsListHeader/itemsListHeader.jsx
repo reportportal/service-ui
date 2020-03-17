@@ -42,7 +42,6 @@ const InfoTooltipIcon = withTooltip({
 export class ItemsListHeader extends React.Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    activeProject: PropTypes.string.isRequired,
     allSelected: PropTypes.bool,
     searchMode: PropTypes.string,
     currentLaunch: PropTypes.object,
@@ -109,7 +108,6 @@ export class ItemsListHeader extends React.Component {
       currentLaunch,
       currentFilter,
       onChangeSearchMode,
-      activeProject,
     } = this.props;
     const launchTitle =
       searchMode === SEARCH_MODES.CURRENT_LAUNCH
@@ -145,7 +143,6 @@ export class ItemsListHeader extends React.Component {
           <div className={cx('filter')}>
             <FilterItem
               isDisabled
-              project={activeProject}
               id={currentFilter.id}
               name={currentFilter.name}
               description={currentFilter.description}

@@ -30,11 +30,7 @@ import {
   dirtyFilterIdsSelector,
 } from 'controllers/filter';
 import { changeLaunchDistinctAction, launchDistinctSelector } from 'controllers/launch';
-import {
-  userInfoSelector,
-  activeProjectSelector,
-  activeProjectRoleSelector,
-} from 'controllers/user';
+import { userInfoSelector, activeProjectRoleSelector } from 'controllers/user';
 import { canEditFilter } from 'common/utils/permissions';
 import { isEmptyObject, isEmptyValue } from 'common/utils';
 import { GhostButton } from 'components/buttons/ghostButton';
@@ -57,7 +53,6 @@ const cx = classNames.bind(styles);
     launchDistinct: launchDistinctSelector(state),
     level: levelSelector(state),
     userInfo: userInfoSelector(state),
-    project: activeProjectSelector(state),
     projectRole: activeProjectRoleSelector(state),
   }),
   {
@@ -97,7 +92,6 @@ export class LaunchFiltersToolbar extends Component {
     launchDistinct: PropTypes.string,
     level: PropTypes.string,
     userInfo: PropTypes.object.isRequired,
-    project: PropTypes.string.isRequired,
     projectRole: PropTypes.string.isRequired,
     intl: PropTypes.object.isRequired,
   };
@@ -231,7 +225,6 @@ export class LaunchFiltersToolbar extends Component {
       unsavedFilterIds,
       level,
       intl,
-      project,
     } = this.props;
     return (
       <div className={cx('launch-filters-toolbar')}>
@@ -252,13 +245,11 @@ export class LaunchFiltersToolbar extends Component {
           </div>
           <div className={cx('filter-tickets-container')}>
             <FilterList
-              project={project}
               filters={filters}
               activeFilterId={activeFilterId}
               unsavedFilterIds={unsavedFilterIds}
               onRemoveFilter={onRemoveFilter}
               intl={intl}
-              allLatest={launchDistinct}
             />
           </div>
           {!!activeFilter && !level && (

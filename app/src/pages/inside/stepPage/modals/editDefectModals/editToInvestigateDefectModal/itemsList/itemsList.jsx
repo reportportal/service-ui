@@ -57,7 +57,6 @@ export const ItemsList = injectIntl(
     searchMode,
     currentLaunch,
     currentFilter,
-    activeProject,
     onSelectAllToggle,
     onToggleItemSelect,
     onChangeSearchMode,
@@ -70,7 +69,6 @@ export const ItemsList = injectIntl(
           allSelected={isAllSelected}
           currentLaunch={currentLaunch}
           currentFilter={currentFilter}
-          activeProject={activeProject}
           onSelectAllToggle={onSelectAllToggle}
           onChangeSearchMode={onChangeSearchMode}
         />
@@ -98,7 +96,6 @@ ItemsList.propTypes = {
   searchMode: PropTypes.string,
   currentLaunch: PropTypes.object,
   currentFilter: PropTypes.object,
-  activeProject: PropTypes.string.isRequired,
   onToggleItemSelect: PropTypes.func,
   onSelectAllToggle: PropTypes.func,
   onChangeSearchMode: PropTypes.func,
