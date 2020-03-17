@@ -74,6 +74,9 @@ export const createNamedIntegrationsSelector = (integrationName, integrationsSel
     filterIntegrationsByName(integrations, integrationName),
   );
 
+export const createGlobalNamedIntegrationsSelector = (name) =>
+  createNamedIntegrationsSelector(name, globalIntegrationsSelector);
+
 export const namedGlobalIntegrationsSelectorsMap = {
   [SAUCE_LABS]: createNamedIntegrationsSelector(SAUCE_LABS, globalIntegrationsSelector),
   [JIRA]: createNamedIntegrationsSelector(JIRA, globalIntegrationsSelector),
