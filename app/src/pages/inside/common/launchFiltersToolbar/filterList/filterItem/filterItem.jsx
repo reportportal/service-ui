@@ -20,7 +20,7 @@ import Parser from 'html-react-parser';
 import Link from 'redux-first-router-link';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import { connect } from 'react-redux';
-import { getLaunchesPageLinkSelector } from 'controllers/filter';
+import { getLaunchFilterLinkSelector } from 'controllers/launch';
 import { userIdSelector } from 'controllers/user';
 import { SharedFilterIcon } from 'pages/inside/common/sharedFilterIcon';
 import { FilterDescriptionTooltipIcon } from './filterDescriptionTooltipIcon';
@@ -49,12 +49,12 @@ const FilterItemBase = ({
   userId,
   className,
   isDisabled,
-  getLaunchesPageLink,
+  getLaunchFilterLink,
 }) => (
   <Link
     className={cx('filter-item', className, { active })}
     onClick={isDisabled && handleClick}
-    to={getLaunchesPageLink(id, active)}
+    to={getLaunchFilterLink(id, active)}
   >
     {share && (
       <div className={cx('icon-holder')}>
@@ -81,7 +81,7 @@ const FilterItemBase = ({
 
 export const FilterItem = connect((state) => ({
   userId: userIdSelector(state),
-  getLaunchesPageLink: getLaunchesPageLinkSelector(state),
+  getLaunchFilterLink: getLaunchFilterLinkSelector(state),
 }))(FilterItemBase);
 
 FilterItemBase.propTypes = {
@@ -94,7 +94,7 @@ FilterItemBase.propTypes = {
   onRemove: PropTypes.func,
   owner: PropTypes.string.isRequired,
   userId: PropTypes.string.isRequired,
-  getLaunchesPageLink: PropTypes.func.isRequired,
+  getLaunchFilterLink: PropTypes.func.isRequired,
   className: PropTypes.string,
   isDisabled: PropTypes.bool,
 };
