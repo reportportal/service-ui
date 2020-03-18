@@ -17,36 +17,15 @@
 import { select } from 'redux-saga/effects';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { activeRetryIdSelector, querySelector } from 'controllers/log/selectors';
-import {
-  HIDE_EMPTY_STEPS,
-  HIDE_PASSED_LOGS,
-  LOG_LEVEL_FILTER_KEY,
-  NAMESPACE,
-  WITH_ATTACHMENTS_FILTER_KEY,
-} from 'controllers/log/constants';
-import {
-  getHideEmptySteps,
-  getHidePassedLogs,
-  getLogLevel,
-  getWithAttachments,
-} from 'controllers/log/storageUtils';
+import { LOG_LEVEL_FILTER_KEY, NAMESPACE } from 'controllers/log/constants';
+import { getLogLevel } from 'controllers/log/storageUtils';
 
 export function* collectLogPayload() {
   const activeProject = yield select(activeProjectSelector);
   const userId = yield select(userIdSelector);
-  let query = yield select(querySelector, NAMESPACE);
+  const query = yield select(querySelector, NAMESPACE);
   const filterLevel = query[LOG_LEVEL_FILTER_KEY] || getLogLevel(userId).id;
-  const withAttachments = getWithAttachments(userId) || undefined;
-  const hidePassedLogs = getHidePassedLogs(userId) || undefined;
-  const hideEmptySteps = getHideEmptySteps(userId) || undefined;
   const activeLogItemId = yield select(activeRetryIdSelector);
-
-  query = {
-    ...query,
-    [WITH_ATTACHMENTS_FILTER_KEY]: withAttachments,
-    [HIDE_PASSED_LOGS]: hidePassedLogs,
-    [HIDE_EMPTY_STEPS]: hideEmptySteps,
-  };
 
   return {
     activeProject,
@@ -54,8 +33,5 @@ export function* collectLogPayload() {
     filterLevel,
     activeLogItemId,
     query,
-    withAttachments,
-    hidePassedLogs,
-    hideEmptySteps,
   };
 }
