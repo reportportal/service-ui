@@ -94,7 +94,10 @@ import {
   PATTERN_RULE,
 } from 'common/constants/eventsObjectTypes';
 
-import { actionMessages, objectTypesMessages } from 'common/constants/eventsLocalization';
+import {
+  actionMessages,
+  objectTypesMessages,
+} from 'common/constants/localization/eventsLocalization';
 
 const messages = defineMessages({
   timeCol: { id: 'EventsGrid.timeCol', defaultMessage: 'Time' },

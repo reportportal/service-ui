@@ -15,7 +15,7 @@
  */
 
 import { defineMessages } from 'react-intl';
-import * as methodTypes from './methodTypes';
+import * as methodTypes from '../methodTypes';
 
 export const methodTypesLocalization = defineMessages({
   [methodTypes.TEST]: {

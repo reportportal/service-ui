@@ -22,7 +22,7 @@ import classNames from 'classnames/bind';
 import { fetch } from 'common/utils';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { projectIdSelector } from 'controllers/pages';
-import { JIRA } from 'common/constants/integrationNames';
+import { JIRA } from 'common/constants/pluginNames';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { URLS } from 'common/urls';
 import { InputDropdown } from 'components/inputs/inputDropdown';

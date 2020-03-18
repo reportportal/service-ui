@@ -72,7 +72,6 @@ export class LaunchFiltersToolbar extends Component {
     activeFilter: PropTypes.object,
     unsavedFilterIds: PropTypes.array,
     dirtyFilterIds: PropTypes.array,
-    onSelectFilter: PropTypes.func,
     onRemoveFilter: PropTypes.func,
     onFilterAdd: PropTypes.func,
     onFilterRemove: PropTypes.func,
@@ -103,7 +102,6 @@ export class LaunchFiltersToolbar extends Component {
     activeFilter: null,
     unsavedFilterIds: [],
     dirtyFilterIds: [],
-    onSelectFilter: () => {},
     onRemoveFilter: () => {},
     onFilterAdd: () => {},
     onFilterRemove: () => {},
@@ -214,7 +212,6 @@ export class LaunchFiltersToolbar extends Component {
       activeFilterId,
       launchDistinct,
       activeFilter,
-      onSelectFilter,
       onRemoveFilter,
       filterEntities,
       filterErrors,
@@ -251,10 +248,8 @@ export class LaunchFiltersToolbar extends Component {
               filters={filters}
               activeFilterId={activeFilterId}
               unsavedFilterIds={unsavedFilterIds}
-              onSelectFilter={onSelectFilter}
               onRemoveFilter={onRemoveFilter}
               intl={intl}
-              allLatest={launchDistinct}
             />
           </div>
           {!!activeFilter && !level && (

@@ -142,6 +142,8 @@ export class ItemsListHeader extends React.Component {
         {searchMode === SEARCH_MODES.FILTER && (
           <div className={cx('filter')}>
             <FilterItem
+              isDisabled
+              id={currentFilter.id}
               name={currentFilter.name}
               description={currentFilter.description}
               owner={currentFilter.owner}

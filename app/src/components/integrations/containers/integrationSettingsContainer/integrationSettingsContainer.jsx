@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { updateIntegrationAction } from 'controllers/plugins';
-import { INTEGRATIONS_IMAGES_MAP } from 'components/integrations/constants';
+import { PLUGIN_IMAGES_MAP } from 'components/integrations/constants';
 import { INTEGRATIONS_SETTINGS_COMPONENTS_MAP } from 'components/integrations/settingsComponentsMap';
 import styles from './integrationSettingsContainer.scss';
 
@@ -81,7 +81,7 @@ export class IntegrationSettingsContainer extends Component {
     const { data, goToPreviousPage, isGlobal } = this.props;
     const { updatedParameters } = this.state;
     const instanceType = data.integrationType.name;
-    const image = INTEGRATIONS_IMAGES_MAP[instanceType];
+    const image = PLUGIN_IMAGES_MAP[instanceType];
     const IntegrationSettingsComponent = INTEGRATIONS_SETTINGS_COMPONENTS_MAP[instanceType];
     const updatedData = {
       ...data,

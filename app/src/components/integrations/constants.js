@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { JIRA, RALLY, EMAIL, SAUCE_LABS, SAML, LDAP, AD } from 'common/constants/integrationNames';
+import { JIRA, RALLY, EMAIL, SAUCE_LABS, SAML, LDAP, AD } from 'common/constants/pluginNames';
 import JiraIcon from 'common/img/plugins/jira.svg';
 import RallyIcon from 'common/img/plugins/rally.png';
 import EmailIcon from 'common/img/plugins/email.png';
@@ -23,7 +23,7 @@ import SamlIcon from 'common/img/plugins/saml.png';
 import LdapIcon from 'common/img/plugins/ldap.png';
 import ActiveDirectoryIcon from 'common/img/plugins/activeDirectory.png';
 
-export const INTEGRATION_NAMES_TITLES = {
+export const PLUGIN_NAME_TITLES = {
   [JIRA]: 'JIRA',
   [RALLY]: 'RALLY',
   [EMAIL]: 'Email Server',
@@ -33,7 +33,7 @@ export const INTEGRATION_NAMES_TITLES = {
   [AD]: 'Active Directory',
 };
 
-export const INTEGRATIONS_IMAGES_MAP = {
+export const PLUGIN_IMAGES_MAP = {
   [JIRA]: JiraIcon,
   [RALLY]: RallyIcon,
   [EMAIL]: EmailIcon,
@@ -43,6 +43,6 @@ export const INTEGRATIONS_IMAGES_MAP = {
   [AD]: ActiveDirectoryIcon,
 };
 
-export const INTEGRATIONS_SUPPORTS_MULTIPLE_INSTANCES = [JIRA, RALLY, SAML];
+export const PLUGINS_SUPPORTS_MULTIPLE_INSTANCES = [JIRA, RALLY, SAML];
 
 export const BUILTIN_PLUGINS = [EMAIL, SAML, LDAP, AD];

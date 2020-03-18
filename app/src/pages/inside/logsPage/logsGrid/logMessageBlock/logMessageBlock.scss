@@ -15,6 +15,9 @@
  */
 
 .log-message-block {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
   overflow: hidden;
   color: $COLOR--charcoal-grey;
   font-size: 11px;

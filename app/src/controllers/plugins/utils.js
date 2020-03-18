@@ -15,7 +15,7 @@
  */
 
 import { URLS } from 'common/urls';
-import { INTEGRATION_NAMES_BY_GROUP_TYPES_MAP } from 'common/constants/integrationNames';
+import { GROUP_TYPES_BY_PLUGIN_NAMES_MAP } from 'common/constants/pluginNames';
 import { AUTHORIZATION_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
 
 export const filterIntegrationsByName = (integrations, integrationName) =>
@@ -40,11 +40,11 @@ export const groupItems = (items) =>
     return groupedItems;
   }, {});
 
-export const isAuthorizationIntegration = (name) =>
-  INTEGRATION_NAMES_BY_GROUP_TYPES_MAP[AUTHORIZATION_GROUP_TYPE].includes(name);
+export const isAuthorizationPlugin = (name) =>
+  GROUP_TYPES_BY_PLUGIN_NAMES_MAP[name] === AUTHORIZATION_GROUP_TYPE;
 
 export const resolveIntegrationUrl = (integrationUrl, pluginName) =>
-  isAuthorizationIntegration(pluginName) ? URLS.authSettings(pluginName) : integrationUrl;
+  isAuthorizationPlugin(pluginName) ? URLS.authSettings(pluginName) : integrationUrl;
 
 export const isPostIssueActionAvailable = (integrations) =>
   integrations.length &&
@@ -54,6 +54,8 @@ export const isPostIssueActionAvailable = (integrations) =>
       item.integrationParameters.defectFormFields.length,
   );
 
+export const isPluginSwitchable = (pluginName) => !isAuthorizationPlugin(pluginName);
+
 export const filterEnabledPlugins = (plugins = []) => plugins.filter((item) => item.enabled);
 
 export const filterAvailablePlugins = (plugins = []) =>
@@ -61,5 +63,5 @@ export const filterAvailablePlugins = (plugins = []) =>
     (item) =>
       item.enabled &&
       item.groupType !== AUTHORIZATION_GROUP_TYPE &&
-      INTEGRATION_NAMES_BY_GROUP_TYPES_MAP[item.groupType].includes(item.name),
+      GROUP_TYPES_BY_PLUGIN_NAMES_MAP[item.name] === item.groupType,
   );

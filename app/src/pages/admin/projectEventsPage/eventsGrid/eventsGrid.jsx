@@ -20,7 +20,10 @@ import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { Grid } from 'components/main/grid';
 import { AbsRelTime } from 'components/main/absRelTime';
-import { actionMessages, objectTypesMessages } from 'common/constants/eventsLocalization';
+import {
+  actionMessages,
+  objectTypesMessages,
+} from 'common/constants/localization/eventsLocalization';
 import { NoItemMessage } from 'components/main/noItemMessage';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import {

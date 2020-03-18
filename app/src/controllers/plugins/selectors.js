@@ -24,8 +24,8 @@ import {
   SAML,
   LDAP,
   AD,
-  INTEGRATION_NAMES_BY_GROUP_TYPES_MAP,
-} from 'common/constants/integrationNames';
+  PLUGIN_NAMES_BY_GROUP_TYPES_MAP,
+} from 'common/constants/pluginNames';
 import {
   filterAvailablePlugins,
   sortItemsByGroupType,
@@ -111,7 +111,7 @@ export const availableIntegrationsByPluginNameSelector = (state, pluginName) => 
 };
 
 const namedAvailableIntegrationsByGroupTypeSelector = (groupType) => (state) => {
-  const availablePluginNames = INTEGRATION_NAMES_BY_GROUP_TYPES_MAP[groupType];
+  const availablePluginNames = PLUGIN_NAMES_BY_GROUP_TYPES_MAP[groupType];
 
   return availablePluginNames.reduce((acc, pluginName) => {
     const availableIntegrations = availableIntegrationsByPluginNameSelector(state, pluginName);

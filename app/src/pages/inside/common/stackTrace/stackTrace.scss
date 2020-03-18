@@ -37,6 +37,7 @@
   color: $COLOR--charcoal-grey;
   line-height: 1.82;
   font-family: $FONT-MENLO;
+  max-width: calc(100% - 25px);
 }
 
 .message-cell {

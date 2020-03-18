@@ -15,7 +15,7 @@
  */
 
 import { defineMessages } from 'react-intl';
-import * as statuses from './testStatuses';
+import * as statuses from '../testStatuses';
 
 export const statusLocalization = defineMessages({
   [statuses.PASSED]: {

@@ -17,8 +17,10 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
+import Link from 'redux-first-router-link';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import { connect } from 'react-redux';
+import { getLaunchFilterLinkSelector } from 'controllers/launch';
 import { userIdSelector } from 'controllers/user';
 import { SharedFilterIcon } from 'pages/inside/common/sharedFilterIcon';
 import { FilterDescriptionTooltipIcon } from './filterDescriptionTooltipIcon';
@@ -31,19 +33,29 @@ const stopPropagation = (func) => (e) => {
   func(e);
 };
 
+const handleClick = (e) => {
+  e.preventDefault();
+};
+
 const FilterItemBase = ({
+  id,
   name,
   active,
   share,
   description,
   unsaved,
-  onClick,
   onRemove,
   owner,
   userId,
   className,
+  isDisabled,
+  getLaunchFilterLink,
 }) => (
-  <div className={cx('filter-item', className, { active })} onClick={onClick}>
+  <Link
+    className={cx('filter-item', className, { active })}
+    onClick={isDisabled && handleClick}
+    to={getLaunchFilterLink(id, active)}
+  >
     {share && (
       <div className={cx('icon-holder')}>
         <SharedFilterIcon share={share} currentUser={userId} owner={owner} />
@@ -64,29 +76,34 @@ const FilterItemBase = ({
         {Parser(CrossIcon)}
       </div>
     )}
-  </div>
+  </Link>
 );
 
-export const FilterItem = connect((state) => ({ userId: userIdSelector(state) }))(FilterItemBase);
+export const FilterItem = connect((state) => ({
+  userId: userIdSelector(state),
+  getLaunchFilterLink: getLaunchFilterLinkSelector(state),
+}))(FilterItemBase);
 
 FilterItemBase.propTypes = {
+  id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   active: PropTypes.bool,
   description: PropTypes.string,
   share: PropTypes.bool,
   unsaved: PropTypes.bool,
-  onClick: PropTypes.func,
   onRemove: PropTypes.func,
   owner: PropTypes.string.isRequired,
   userId: PropTypes.string.isRequired,
+  getLaunchFilterLink: PropTypes.func.isRequired,
   className: PropTypes.string,
+  isDisabled: PropTypes.bool,
 };
 FilterItemBase.defaultProps = {
   active: false,
   description: null,
   share: false,
   unsaved: false,
-  onClick: () => {},
   onRemove: () => {},
   className: '',
+  isDisabled: false,
 };
