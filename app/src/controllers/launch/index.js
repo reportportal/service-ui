@@ -50,6 +50,7 @@ export {
   localSortingSelector,
   debugLocalSortingSelector,
   debugLocalFilterSelector,
+  getLaunchFilterLinkSelector,
 } from './selectors';
 export { launchReducer } from './reducer';
 export { launchSagas } from './sagas';
