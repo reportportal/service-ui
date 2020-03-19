@@ -15,9 +15,6 @@
  */
 
 .log-message-block {
-  display: table;
-  width: 100%;
-  table-layout: fixed;
   overflow: hidden;
   color: $COLOR--charcoal-grey;
   font-size: 11px;
@@ -26,7 +23,9 @@
   white-space: pre-wrap;
 
   .log-message {
-    display: inline;
+    display: table;
+    width: 100%;
+    table-layout: fixed;
     padding-bottom: 5px;
     line-height: 18px;
   }
