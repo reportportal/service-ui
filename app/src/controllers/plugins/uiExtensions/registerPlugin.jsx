@@ -1,5 +1,7 @@
+import { getModal, addModal } from 'controllers/modal';
 import { uiExtensionMap } from './uiExtensionStorage';
 import { createImportProps } from './createImportProps';
+import { EXTENSION_TYPE_MODAL } from './constants';
 
 window.RP = {};
 
@@ -12,6 +14,11 @@ const createPluginRegistrationFunction = (store) => (plugin) => {
     ...extension,
     component: <extension.component {...createImportProps(plugin.name)} />,
   }));
+  wrappedExtensions.forEach((ex) => {
+    if (ex.type === EXTENSION_TYPE_MODAL && !getModal({ id: ex.name })) {
+      addModal(ex.name, (p) => React.cloneElement(ex.component, p));
+    }
+  });
   uiExtensionMap.set(name, wrappedExtensions);
 };
 
