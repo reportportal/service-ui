@@ -18,26 +18,47 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 import Parser from 'html-react-parser';
+import { reduxForm, formValueSelector } from 'redux-form';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { BigButton } from 'components/buttons/bigButton';
 import { NavigationTabs } from 'components/main/navigationTabs';
 import { NoCasesBlock } from 'components/main/noCasesBlock';
 import { ItemList } from 'components/main/itemList';
-import { withModal } from 'controllers/modal';
+import { ModalLayout, ModalField } from 'components/main/modal';
+import { withModal, showModalAction } from 'controllers/modal';
 import { fetch } from 'common/utils/fetch';
 import { activeProjectSelector } from 'controllers/user';
 import { PLUGIN_UI_EXTENSION_ADMIN_PAGE, pluginRouteSelector } from 'controllers/pages';
 import PlusIcon from 'common/img/plus-button-inline.svg';
 import RemoveIcon from 'common/img/trashcan-inline.svg';
+import { Input } from 'components/inputs/input';
+import { InputDropdown } from 'components/inputs/inputDropdown';
 import { URLS } from 'common/urls';
+import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { FieldProvider } from 'components/fields/fieldProvider';
+import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { createGlobalNamedIntegrationsSelector } from '../selectors';
 
 export const createImportProps = (pluginName) => ({
-  lib: { React, useSelector, useDispatch, moment, Parser },
-  components: { GhostButton, BigButton, NavigationTabs, NoCasesBlock, ItemList, SpinningPreloader },
+  lib: { React, useSelector, useDispatch, moment, Parser, reduxForm, formValueSelector },
+  components: {
+    GhostButton,
+    BigButton,
+    NavigationTabs,
+    NoCasesBlock,
+    ItemList,
+    SpinningPreloader,
+    ModalLayout,
+    ModalField,
+    FieldProvider,
+    FieldErrorHint,
+    Input,
+    InputDropdown,
+  },
   hocs: { withModal },
   constants: { PLUGIN_UI_EXTENSION_ADMIN_PAGE },
+  actions: { showModalAction, showSuccessNotification, showErrorNotification },
   selectors: {
     pluginRouteSelector,
     activeProjectSelector,
