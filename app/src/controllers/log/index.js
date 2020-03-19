@@ -65,15 +65,4 @@ export {
   isLogPageWithNestedSteps,
   pageLoadingSelector,
 } from './selectors';
-export {
-  getWithAttachments,
-  setWithAttachments,
-  getLogLevel,
-  setLogLevel,
-  getLogViewMode,
-  setLogViewMode,
-  setHidePassedLogs,
-  getHidePassedLogs,
-  setHideEmptySteps,
-  getHideEmptySteps,
-} from './storageUtils';
+export { getLogLevel, setLogLevel, getLogViewMode, setLogViewMode } from './storageUtils';

@@ -33,9 +33,6 @@ import {
   HIDE_EMPTY_STEPS,
   getLogLevel,
   setLogLevel,
-  setWithAttachments,
-  setHideEmptySteps,
-  setHidePassedLogs,
   DETAILED_LOG_VIEW,
   logViewModeSelector,
   LOG_STATUS_FILTER_KEY,
@@ -90,22 +87,22 @@ import { SauceLabsSection } from './sauceLabsSection';
   (query) => ({
     logLevelId: query[LOG_LEVEL_FILTER_KEY],
     logStatus: query[LOG_STATUS_FILTER_KEY],
+    withAttachments: query[WITH_ATTACHMENTS_FILTER_KEY],
+    hideEmptySteps: query[HIDE_EMPTY_STEPS],
+    hidePassedLogs: query[HIDE_PASSED_LOGS],
   }),
   {
     onChangeLogLevel: (userId, logLevel) => {
       setLogLevel(userId, logLevel);
       return { [LOG_LEVEL_FILTER_KEY]: logLevel.id, [PAGE_KEY]: 1 };
     },
-    onChangeWithAttachments: (userId, withAttachments) => {
-      setWithAttachments(userId, withAttachments);
+    onChangeWithAttachments: (withAttachments) => {
       return { [WITH_ATTACHMENTS_FILTER_KEY]: withAttachments || undefined };
     },
-    onChangeHideEmptySteps: (userId, hideEmptySteps) => {
-      setHideEmptySteps(userId, hideEmptySteps);
+    onChangeHideEmptySteps: (hideEmptySteps) => {
       return { [HIDE_EMPTY_STEPS]: hideEmptySteps || undefined };
     },
-    onChangeHidePassedLogs: (userId, hidePassedLogs) => {
-      setHidePassedLogs(userId, hidePassedLogs);
+    onChangeHidePassedLogs: (hidePassedLogs) => {
       return { [HIDE_PASSED_LOGS]: hidePassedLogs || undefined };
     },
     onChangeLogStatusFilter: (status) => ({
@@ -148,6 +145,9 @@ export class LogsPage extends Component {
     logStatus: PropTypes.string,
     onChangeLogStatusFilter: PropTypes.func,
     isNestedStepView: PropTypes.bool,
+    withAttachments: PropTypes.string,
+    hideEmptySteps: PropTypes.string,
+    hidePassedLogs: PropTypes.string,
   };
 
   static defaultProps = {
@@ -175,6 +175,9 @@ export class LogsPage extends Component {
     logStatus: null,
     onChangeLogStatusFilter: () => {},
     isNestedStepView: false,
+    withAttachments: undefined,
+    hideEmptySteps: undefined,
+    hidePassedLogs: undefined,
   };
 
   state = {
@@ -223,6 +226,9 @@ export class LogsPage extends Component {
       logStatus,
       onChangeLogStatusFilter,
       isNestedStepView,
+      withAttachments,
+      hideEmptySteps,
+      hidePassedLogs,
     } = this.props;
 
     return (
@@ -258,6 +264,9 @@ export class LogsPage extends Component {
                     onChangePage={onChangePage}
                     logLevel={getLogLevel(userId, logLevelId)}
                     onChangeLogLevel={onChangeLogLevel}
+                    withAttachments={Boolean(withAttachments)}
+                    isEmptyStepsHidden={Boolean(hideEmptySteps)}
+                    isPassedLogsHidden={Boolean(hidePassedLogs)}
                     onChangeWithAttachments={onChangeWithAttachments}
                     onHideEmptySteps={onChangeHideEmptySteps}
                     onHidePassedLogs={onChangeHidePassedLogs}
