@@ -36,9 +36,9 @@ import { nestedStepSelector } from './selectors';
 
 function* fetchNestedStep({ payload = {} }) {
   const { id } = payload;
-  const { activeProject, params, filterLevel } = yield call(collectLogPayload);
+  const { activeProject, query, filterLevel } = yield call(collectLogPayload);
   const logLevel = filterLevel;
-  const paramsExcludingPagination = omit(params, [PAGE_KEY, SIZE_KEY]);
+  const paramsExcludingPagination = omit(query, [PAGE_KEY, SIZE_KEY]);
   const { page } = yield select(nestedStepSelector, id);
   let pageSize = PAGINATION_OFFSET;
   if (!isEmptyObject(page)) {

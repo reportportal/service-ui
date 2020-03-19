@@ -24,12 +24,9 @@ import Parser from 'html-react-parser';
 import { MARKDOWN, CONSOLE, DEFAULT } from 'common/constants/logViewModes';
 import { userIdSelector } from 'controllers/user';
 import {
-  getWithAttachments,
   LOG_LEVELS,
   getLogViewMode,
   setLogViewMode,
-  getHidePassedLogs,
-  getHideEmptySteps,
   DETAILED_LOG_VIEW,
   isLogPageWithOutNestedSteps,
   isLogPageWithNestedSteps,
@@ -97,6 +94,9 @@ export class LogsGridToolbar extends Component {
     logPageMode: PropTypes.string,
     isLogView: PropTypes.bool,
     isNestedStepsView: PropTypes.bool,
+    withAttachments: PropTypes.bool,
+    isEmptyStepsHidden: PropTypes.bool,
+    isPassedLogsHidden: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -108,13 +108,13 @@ export class LogsGridToolbar extends Component {
     logPageMode: DETAILED_LOG_VIEW,
     isLogView: true,
     isNestedStepsView: false,
+    withAttachments: false,
+    isEmptyStepsHidden: false,
+    isPassedLogsHidden: false,
   };
 
   state = {
     logViewMode: getLogViewMode(this.props.userId),
-    withAttachments: getWithAttachments(this.props.userId),
-    hidePassedLogs: getHidePassedLogs(this.props.userId),
-    hideEmptySteps: getHideEmptySteps(this.props.userId),
   };
 
   toggleLogViewMode = (targetViewMode) => {
@@ -142,43 +142,30 @@ export class LogsGridToolbar extends Component {
   };
 
   toggleWithAttachments = () => {
-    const { withAttachments } = this.state;
-    const { onChangeWithAttachments, userId } = this.props;
+    const { onChangeWithAttachments, withAttachments } = this.props;
 
     this.props.tracking.trackEvent(LOG_PAGE_EVENTS.LOG_WITH_ATTACHMENT_CHECKBOX);
-    onChangeWithAttachments(userId, !withAttachments);
-
-    this.setState({
-      withAttachments: !withAttachments,
-    });
+    onChangeWithAttachments(!withAttachments);
   };
 
   toggleHidePassedLogs = () => {
-    const { hidePassedLogs } = this.state;
-    const { onHidePassedLogs, userId } = this.props;
+    const { onHidePassedLogs, isPassedLogsHidden } = this.props;
 
-    onHidePassedLogs(userId, !hidePassedLogs);
-
-    this.setState({
-      hidePassedLogs: !hidePassedLogs,
-    });
+    onHidePassedLogs(!isPassedLogsHidden);
   };
 
   toggleHideEmptySteps = () => {
-    const { hideEmptySteps } = this.state;
-    const { onHideEmptySteps, userId } = this.props;
+    const { onHideEmptySteps, isEmptyStepsHidden } = this.props;
 
-    onHideEmptySteps(userId, !hideEmptySteps);
-
-    this.setState({
-      hideEmptySteps: !hideEmptySteps,
-    });
+    onHideEmptySteps(!isEmptyStepsHidden);
   };
+
   isConsoleViewMode = () => {
     const { isLogView } = this.props;
     const { logViewMode } = this.state;
     return logViewMode === CONSOLE && isLogView;
   };
+
   render() {
     const {
       intl,
@@ -190,8 +177,11 @@ export class LogsGridToolbar extends Component {
       logPageMode,
       isLogView,
       isNestedStepsView,
+      withAttachments,
+      isPassedLogsHidden,
     } = this.props;
-    const { logViewMode, withAttachments, hidePassedLogs } = this.state;
+    const { logViewMode } = this.state;
+
     return (
       <div className={cx('container')}>
         <div className={cx('panel')}>
@@ -208,13 +198,13 @@ export class LogsGridToolbar extends Component {
               <Fragment>
                 {isNestedStepsView && (
                   <div className={cx('aside-element')}>
-                    <InputCheckbox value={hidePassedLogs} onChange={this.toggleHidePassedLogs}>
+                    <InputCheckbox value={isPassedLogsHidden} onChange={this.toggleHidePassedLogs}>
                       {intl.formatMessage(messages.hidePassedLogs)}
                     </InputCheckbox>
                   </div>
                 )}
                 {/* <div className={cx('aside-element')}>
-                  <InputCheckbox value={hideEmptySteps} onChange={this.toggleHideEmptySteps}>
+                  <InputCheckbox value={isEmptyStepsHidden} onChange={this.toggleHideEmptySteps}>
                     {intl.formatMessage(messages.hideEmptySteps)}
                   </InputCheckbox>
                 </div> */}
