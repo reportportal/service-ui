@@ -53,7 +53,7 @@ export const setPageLoadingAction = (isLoading) => ({
   payload: isLoading,
 });
 
-export const updateHistoryEntryItemIssuesAction = (issues) => ({
+export const updateHistoryItemIssuesAction = (issues) => ({
   type: UPDATE_HISTORY_ITEM_ISSUES,
   payload: issues,
 });
