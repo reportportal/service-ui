@@ -91,7 +91,7 @@ export const getUpdatedLogQuery = (query, itemId, params = {}) => {
   return createNamespacedQuery(newLogQuery, NAMESPACE);
 };
 
-export const updateHistoryEntries = (entries, payload) => {
+export const updateHistoryEntries = (entries = [], payload) => {
   return entries.map((entry) => {
     if (entry.testCaseHash === payload.testCaseHash) {
       const resources = entry.resources.map((item) => {

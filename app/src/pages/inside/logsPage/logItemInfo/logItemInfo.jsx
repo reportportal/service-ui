@@ -336,6 +336,7 @@ export class LogItemInfo extends Component {
     const { logItem, fetchFunc } = this.props;
 
     if (data) {
+      // on log level user can change defect only for one item
       const issue = { issue: data[0].issue };
       this.props.updateHistoryEntryLocally(logItem.testCaseHash, logItem.id, issue);
     } else {
