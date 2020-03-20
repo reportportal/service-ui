@@ -36,7 +36,7 @@ import {
   historyItemsSelector,
   activeRetryIdSelector,
   retriesSelector,
-  updateHistoryEntryLocally,
+  updateHistoryEntryItemIssuesAction,
   RETRY_ID,
   NAMESPACE,
 } from 'controllers/log';
@@ -136,7 +136,7 @@ const UNLINK_ISSUE_EVENTS_INFO = {
     postIssueAction,
     editDefectsAction,
     showModalAction,
-    updateHistoryEntryLocally,
+    updateHistoryEntryItemIssues: updateHistoryEntryItemIssuesAction,
   },
 )
 @track()
@@ -161,7 +161,7 @@ export class LogItemInfo extends Component {
     btsIntegrations: PropTypes.array.isRequired,
     fetchFunc: PropTypes.func.isRequired,
     showModalAction: PropTypes.func.isRequired,
-    updateHistoryEntryLocally: PropTypes.func.isRequired,
+    updateHistoryEntryItemIssues: PropTypes.func.isRequired,
     onToggleSauceLabsIntegrationView: PropTypes.func.isRequired,
     isSauceLabsIntegrationView: PropTypes.bool.isRequired,
     debugMode: PropTypes.bool.isRequired,
@@ -332,13 +332,11 @@ export class LogItemInfo extends Component {
     });
   };
 
-  onDefectEdited = (data) => {
-    const { logItem, fetchFunc } = this.props;
+  onDefectEdited = (issues) => {
+    const { fetchFunc, updateHistoryEntryItemIssues } = this.props;
 
-    if (data) {
-      // on log level user can change defect only for one item
-      const issue = { issue: data[0].issue };
-      this.props.updateHistoryEntryLocally(logItem.testCaseHash, logItem.id, issue);
+    if (issues) {
+      updateHistoryEntryItemIssues(issues);
     } else {
       fetchFunc();
     }
