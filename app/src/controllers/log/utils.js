@@ -90,3 +90,27 @@ export const getUpdatedLogQuery = (query, itemId, params = {}) => {
   const newLogQuery = { ...previousLogQuery, ...params };
   return createNamespacedQuery(newLogQuery, NAMESPACE);
 };
+
+export const updateHistoryEntries = (entries, payload) => {
+  return entries.map((entry) => {
+    if (entry.testCaseHash === payload.testCaseHash) {
+      const resources = entry.resources.map((item) => {
+        if (item.id === payload.id) {
+          return {
+            ...item,
+            ...payload.data,
+          };
+        }
+
+        return item;
+      });
+
+      return {
+        ...entry,
+        resources,
+      };
+    }
+
+    return entry;
+  });
+};
