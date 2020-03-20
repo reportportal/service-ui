@@ -22,6 +22,7 @@ export {
   fetchLogPageStackTrace,
   setPageLoadingAction,
   clearLogPageStackTrace,
+  updateHistoryEntryLocally,
 } from './actionCreators';
 export { logReducer } from './reducer';
 export {

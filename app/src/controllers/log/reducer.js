@@ -28,10 +28,12 @@ import {
   STACK_TRACE_NAMESPACE,
   CLEAR_LOG_PAGE_STACK_TRACE,
   SET_LOG_PAGE_LOADING,
+  UPDATE_HISTORY_ENTRY_LOCALLY,
 } from './constants';
 import { attachmentsReducer } from './attachments';
 import { sauceLabsReducer } from './sauceLabs';
 import { nestedStepsReducer } from './nestedSteps';
+import { updateHistoryEntries } from './utils';
 
 const stackTracePaginationReducer = (state = {}, { type }) => {
   switch (type) {
@@ -60,13 +62,25 @@ const pageLoadingReducer = (state = false, { type, payload }) => {
   }
 };
 
+const historyEntriesReducer = (state = [], { type, payload }) => {
+  switch (type) {
+    case UPDATE_HISTORY_ENTRY_LOCALLY:
+      return updateHistoryEntries(state, payload);
+    default:
+      return state;
+  }
+};
+
 const reducer = combineReducers({
   logItems: fetchReducer(LOG_ITEMS_NAMESPACE, { contentPath: 'content' }),
   pagination: paginationReducer(LOG_ITEMS_NAMESPACE),
   loading: loadingReducer(LOG_ITEMS_NAMESPACE),
   pageLoading: pageLoadingReducer,
   activity: fetchReducer(ACTIVITY_NAMESPACE, { contentPath: 'content' }),
-  historyEntries: fetchReducer(HISTORY_NAMESPACE, { contentPath: 'content' }),
+  historyEntries: queueReducers(
+    fetchReducer(HISTORY_NAMESPACE, { contentPath: 'content' }),
+    historyEntriesReducer,
+  ),
   stackTrace: combineReducers({
     loading: loadingReducer(STACK_TRACE_NAMESPACE),
     pagination: queueReducers(

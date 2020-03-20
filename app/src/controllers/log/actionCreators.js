@@ -20,6 +20,7 @@ import {
   FETCH_LOG_PAGE_STACK_TRACE,
   CLEAR_LOG_PAGE_STACK_TRACE,
   SET_LOG_PAGE_LOADING,
+  UPDATE_HISTORY_ENTRY_LOCALLY,
 } from './constants';
 
 export const fetchLogPageData = () => ({
@@ -49,4 +50,9 @@ export const clearLogPageStackTrace = () => ({
 export const setPageLoadingAction = (isLoading) => ({
   type: SET_LOG_PAGE_LOADING,
   payload: isLoading,
+});
+
+export const updateHistoryEntryLocally = (testCaseHash, id, data) => ({
+  type: UPDATE_HISTORY_ENTRY_LOCALLY,
+  payload: { testCaseHash, id, data },
 });
