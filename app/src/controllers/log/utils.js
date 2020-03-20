@@ -72,10 +72,15 @@ export const getPreviousItem = (testItems = [], currentId) => {
 };
 
 export const getNextItem = (testItems = [], currentId) => {
+  const itemIndex = testItems.findIndex((item) => item.id === currentId);
+
   if (testItems.length < 2) {
+    if (itemIndex === -1) {
+      return testItems.length === 0 ? null : testItems[0];
+    }
+
     return null;
   }
-  const itemIndex = testItems.findIndex((item) => item.id === currentId);
   return testItems[itemIndex + 1] || null;
 };
 
