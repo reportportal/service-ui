@@ -21,7 +21,7 @@ export {
   fetchLogPageStackTrace,
   setPageLoadingAction,
   clearLogPageStackTrace,
-  updateHistoryEntryItemIssuesAction,
+  updateHistoryItemIssuesAction,
 } from './actionCreators';
 export { logReducer } from './reducer';
 export {

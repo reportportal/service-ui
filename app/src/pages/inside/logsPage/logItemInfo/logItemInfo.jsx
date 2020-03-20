@@ -36,7 +36,7 @@ import {
   historyItemsSelector,
   activeRetryIdSelector,
   retriesSelector,
-  updateHistoryEntryItemIssuesAction,
+  updateHistoryItemIssuesAction,
   RETRY_ID,
   NAMESPACE,
 } from 'controllers/log';
@@ -136,7 +136,7 @@ const UNLINK_ISSUE_EVENTS_INFO = {
     postIssueAction,
     editDefectsAction,
     showModalAction,
-    updateHistoryEntryItemIssues: updateHistoryEntryItemIssuesAction,
+    updateHistoryItemIssues: updateHistoryItemIssuesAction,
   },
 )
 @track()
@@ -161,7 +161,7 @@ export class LogItemInfo extends Component {
     btsIntegrations: PropTypes.array.isRequired,
     fetchFunc: PropTypes.func.isRequired,
     showModalAction: PropTypes.func.isRequired,
-    updateHistoryEntryItemIssues: PropTypes.func.isRequired,
+    updateHistoryItemIssues: PropTypes.func.isRequired,
     onToggleSauceLabsIntegrationView: PropTypes.func.isRequired,
     isSauceLabsIntegrationView: PropTypes.bool.isRequired,
     debugMode: PropTypes.bool.isRequired,
@@ -333,10 +333,10 @@ export class LogItemInfo extends Component {
   };
 
   onDefectEdited = (issues) => {
-    const { fetchFunc, updateHistoryEntryItemIssues } = this.props;
+    const { fetchFunc, updateHistoryItemIssues } = this.props;
 
     if (issues) {
-      updateHistoryEntryItemIssues(issues);
+      updateHistoryItemIssues(issues);
     } else {
       fetchFunc();
     }
