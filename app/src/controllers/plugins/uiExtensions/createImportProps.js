@@ -25,7 +25,7 @@ import { NavigationTabs } from 'components/main/navigationTabs';
 import { NoCasesBlock } from 'components/main/noCasesBlock';
 import { ItemList } from 'components/main/itemList';
 import { ModalLayout, ModalField } from 'components/main/modal';
-import { withModal, showModalAction } from 'controllers/modal';
+import { showModalAction } from 'controllers/modal';
 import { fetch } from 'common/utils/fetch';
 import { activeProjectSelector } from 'controllers/user';
 import { PLUGIN_UI_EXTENSION_ADMIN_PAGE, pluginRouteSelector } from 'controllers/pages';
@@ -56,7 +56,6 @@ export const createImportProps = (pluginName) => ({
     Input,
     InputDropdown,
   },
-  hocs: { withModal },
   constants: { PLUGIN_UI_EXTENSION_ADMIN_PAGE },
   actions: { showModalAction, showSuccessNotification, showErrorNotification },
   selectors: {
