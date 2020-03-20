@@ -91,26 +91,24 @@ export const getUpdatedLogQuery = (query, itemId, params = {}) => {
   return createNamespacedQuery(newLogQuery, NAMESPACE);
 };
 
-export const updateHistoryEntries = (entries = [], payload) => {
-  return entries.map((entry) => {
-    if (entry.testCaseHash === payload.testCaseHash) {
-      const resources = entry.resources.map((item) => {
-        if (item.id === payload.id) {
-          return {
-            ...item,
-            ...payload.data,
-          };
-        }
+export const normalizeHistoryItems = (items) => {
+  if (!items.length) return [];
+  const historyItems = items[0].resources.map(normalizeHistoryItem);
 
-        return item;
-      });
+  return calculateGrowthDuration(historyItems);
+};
 
+export const updateHistoryItemIssues = (items = [], issues) => {
+  return items.map((item) => {
+    const itemForUpdate = issues.find((issueForItem) => issueForItem.testItemId === item.id);
+
+    if (itemForUpdate) {
       return {
-        ...entry,
-        resources,
+        ...item,
+        issue: itemForUpdate.issue,
       };
     }
 
-    return entry;
+    return item;
   });
 };

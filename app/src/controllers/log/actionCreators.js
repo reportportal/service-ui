@@ -16,11 +16,11 @@
 
 import {
   FETCH_LOG_PAGE_DATA,
-  FETCH_HISTORY_ENTRIES,
   FETCH_LOG_PAGE_STACK_TRACE,
   CLEAR_LOG_PAGE_STACK_TRACE,
   SET_LOG_PAGE_LOADING,
-  UPDATE_HISTORY_ENTRY_LOCALLY,
+  FETCH_HISTORY_ITEMS_SUCCESS,
+  UPDATE_HISTORY_ITEM_ISSUES,
 } from './constants';
 
 export const fetchLogPageData = () => ({
@@ -34,8 +34,9 @@ export const refreshLogPageData = () => ({
   },
 });
 
-export const fetchHistoryEntriesAction = () => ({
-  type: FETCH_HISTORY_ENTRIES,
+export const fetchHistoryItemsSuccessAction = (items) => ({
+  type: FETCH_HISTORY_ITEMS_SUCCESS,
+  payload: items,
 });
 
 export const fetchLogPageStackTrace = (logItem) => ({
@@ -52,7 +53,7 @@ export const setPageLoadingAction = (isLoading) => ({
   payload: isLoading,
 });
 
-export const updateHistoryEntryLocally = (testCaseHash, id, data) => ({
-  type: UPDATE_HISTORY_ENTRY_LOCALLY,
-  payload: { testCaseHash, id, data },
+export const updateHistoryEntryItemIssuesAction = (issues) => ({
+  type: UPDATE_HISTORY_ITEM_ISSUES,
+  payload: issues,
 });

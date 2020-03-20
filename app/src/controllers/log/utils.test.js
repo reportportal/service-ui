@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { getPreviousItem, getNextItem, updateHistoryEntries } from './utils';
+import { getPreviousItem, getNextItem, updateHistoryItemIssues } from './utils';
 
 describe('log/utils', () => {
   const itemsArray = [{ id: 0 }, { id: 1 }, { id: 2 }];
@@ -47,30 +47,29 @@ describe('log/utils', () => {
     });
   });
 
-  describe('updateHistoryEntries', () => {
-    const entries = [
-      { testCaseHash: 1, resources: [{ id: 1 }] },
-      { testCaseHash: 2, resources: [{ id: 2 }] },
-    ];
+  describe('updateHistoryItemIssues', () => {
+    const items = [{ id: 1, issue: { key: 'issue' } }, { id: 2 }];
 
     test('should return empty array in case of empty parameters', () => {
-      expect(updateHistoryEntries()).toEqual([]);
+      expect(updateHistoryItemIssues()).toEqual([]);
     });
-    test('should return initial entries in case of unknown testCaseHash', () => {
-      expect(updateHistoryEntries(entries, { testCaseHash: 3, id: 1, issue: {} })).toEqual(entries);
+    test('should return initial items in case of unknown item id', () => {
+      expect(
+        updateHistoryItemIssues(items, [{ testItemId: 3, issue: { key: 'newIssue' } }]),
+      ).toEqual(items);
     });
-    test('should return initial entries in case of unknown item id', () => {
-      expect(updateHistoryEntries(entries, { testCaseHash: 1, id: 3, issue: {} })).toEqual(entries);
-    });
-    test('should return updated entries in case of correct payload', () => {
-      const expectedEntries = [
-        { testCaseHash: 1, resources: [{ id: 1, issue: {} }] },
-        { testCaseHash: 2, resources: [{ id: 2 }] },
+    test('should return updated items in case of correct payload', () => {
+      const expectedItems = [
+        { id: 1, issue: {} },
+        { id: 2, issue: { key: 'newIssue' } },
       ];
 
       expect(
-        updateHistoryEntries(entries, { testCaseHash: 1, id: 1, data: { issue: {} } }),
-      ).toEqual(expectedEntries);
+        updateHistoryItemIssues(items, [
+          { testItemId: 1, issue: {} },
+          { testItemId: 2, issue: { key: 'newIssue' } },
+        ]),
+      ).toEqual(expectedItems);
     });
   });
 });
