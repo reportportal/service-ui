@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-import { getPreviousItem, getNextItem } from './utils';
+import { getPreviousItem, getNextItem, updateHistoryEntries } from './utils';
 
 describe('log/utils', () => {
   const itemsArray = [{ id: 0 }, { id: 1 }, { id: 2 }];
+
   describe('getPreviousItem', () => {
     test('should return null in case of item array length < 2', () => {
       expect(getPreviousItem([], 1)).toBe(null);
@@ -31,6 +32,7 @@ describe('log/utils', () => {
       expect(getPreviousItem(itemsArray, 2)).toEqual({ id: 1 });
     });
   });
+
   describe('getNextItem', () => {
     test('should return null in case of item array length <= 1', () => {
       expect(getNextItem([], 0)).toBe(null);
@@ -42,6 +44,33 @@ describe('log/utils', () => {
     test('should return item if active item is not last', () => {
       expect(getNextItem(itemsArray, 0)).toEqual({ id: 1 });
       expect(getNextItem(itemsArray, 1)).toEqual({ id: 2 });
+    });
+  });
+
+  describe('updateHistoryEntries', () => {
+    const entries = [
+      { testCaseHash: 1, resources: [{ id: 1 }] },
+      { testCaseHash: 2, resources: [{ id: 2 }] },
+    ];
+
+    test('should return empty array in case of empty parameters', () => {
+      expect(updateHistoryEntries()).toEqual([]);
+    });
+    test('should return initial entries in case of unknown testCaseHash', () => {
+      expect(updateHistoryEntries(entries, { testCaseHash: 3, id: 1, issue: {} })).toEqual(entries);
+    });
+    test('should return initial entries in case of unknown item id', () => {
+      expect(updateHistoryEntries(entries, { testCaseHash: 1, id: 3, issue: {} })).toEqual(entries);
+    });
+    test('should return updated entries in case of correct payload', () => {
+      const expectedEntries = [
+        { testCaseHash: 1, resources: [{ id: 1, issue: {} }] },
+        { testCaseHash: 2, resources: [{ id: 2 }] },
+      ];
+
+      expect(
+        updateHistoryEntries(entries, { testCaseHash: 1, id: 1, data: { issue: {} } }),
+      ).toEqual(expectedEntries);
     });
   });
 });
