@@ -215,7 +215,7 @@ export const disableNextItemLinkSelector = createSelector(
   itemsSelector,
   ({ number, totalPages }, id, items) => {
     const isNoNextItem = getNextItem(items, id) === null;
-    const isLastPage = number === totalPages;
+    const isLastPage = totalPages ? number === totalPages : true;
     return isNoNextItem && isLastPage;
   },
 );
