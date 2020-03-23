@@ -17,6 +17,7 @@
 import { all, call, put, select, take, takeEvery } from 'redux-saga/effects';
 import {
   fetchParentItems,
+  itemsSelector,
   fetchTestItemsAction,
   logPageOffsetSelector,
 } from 'controllers/testItem';
@@ -115,10 +116,9 @@ function* fetchHistoryItems() {
   yield put(fetchHistoryItemsSuccessAction(response.content));
 }
 
-function* fetchDetailsLog(offset = 0) {
+function* fetchDetailsLog() {
   const fetchLogEffects = [
     put(clearAttachmentsAction()),
-    put(fetchTestItemsAction({ offset })),
     call(fetchLogItems),
     put(clearLogPageStackTrace()),
   ];
@@ -130,28 +130,29 @@ function* fetchDetailsLog(offset = 0) {
   yield all(fetchLogEffects);
 }
 
-function* fetchLaunchLog(offset = 0) {
-  yield all([
-    put(fetchTestItemsAction({ offset })),
-    call(fetchLogItems),
-    put(fetchFirstAttachmentsAction()),
-  ]);
+function* fetchLaunchLog() {
+  yield all([call(fetchLogItems), put(fetchFirstAttachmentsAction())]);
 }
 
-function* fetchLogs(offset = 0) {
+function* fetchLogs() {
   const logViewMode = yield select(logViewModeSelector);
   if (logViewMode === DETAILED_LOG_VIEW) {
-    yield call(fetchDetailsLog, offset);
+    yield call(fetchDetailsLog);
   } else {
-    yield call(fetchLaunchLog, offset);
+    yield call(fetchLaunchLog);
   }
 }
 
 function* fetchWholePage() {
   yield put(setPageLoadingAction(true));
   yield call(fetchParentItems);
-  const offset = yield select(logPageOffsetSelector);
-  yield call(fetchLogs, offset);
+  const testItems = yield select(itemsSelector);
+  if (!testItems.length) {
+    const offset = yield select(logPageOffsetSelector);
+
+    yield put(fetchTestItemsAction({ offset }));
+  }
+  yield call(fetchLogs);
   yield put(setPageLoadingAction(false));
 }
 
@@ -177,7 +178,7 @@ function* fetchLogPageData({ meta = {} }) {
   yield put({ type: CLEAR_NESTED_STEPS });
   if (meta.refresh) {
     const offset = yield select(logPageOffsetSelector);
-    yield call(fetchLogs, offset);
+    yield all([put(fetchTestItemsAction({ offset })), call(fetchLogs)]);
     return;
   }
   if (isPathNameChanged) {
