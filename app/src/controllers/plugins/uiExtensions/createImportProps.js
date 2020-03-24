@@ -27,10 +27,12 @@ import { ItemList } from 'components/main/itemList';
 import { ModalLayout, ModalField } from 'components/main/modal';
 import { showModalAction } from 'controllers/modal';
 import { fetch } from 'common/utils/fetch';
-import { activeProjectSelector } from 'controllers/user';
+import { activeProjectSelector, activeProjectRoleSelector } from 'controllers/user';
 import { PLUGIN_UI_EXTENSION_ADMIN_PAGE, pluginRouteSelector } from 'controllers/pages';
 import PlusIcon from 'common/img/plus-button-inline.svg';
 import RemoveIcon from 'common/img/trashcan-inline.svg';
+import CrossIcon from 'common/img/cross-icon-inline.svg';
+import ErrorIcon from 'common/img/error-inline.svg';
 import { Input } from 'components/inputs/input';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { URLS } from 'common/urls';
@@ -38,6 +40,7 @@ import { showSuccessNotification, showErrorNotification } from 'controllers/noti
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
+import { projectMembersSelector, projectInfoSelector } from 'controllers/project';
 import { createGlobalNamedIntegrationsSelector } from '../selectors';
 
 export const createImportProps = (pluginName) => ({
@@ -62,7 +65,10 @@ export const createImportProps = (pluginName) => ({
     pluginRouteSelector,
     activeProjectSelector,
     globalIntegrationsSelector: createGlobalNamedIntegrationsSelector(pluginName),
+    projectMembersSelector,
+    projectInfoSelector,
+    activeProjectRoleSelector,
   },
-  icons: { PlusIcon, RemoveIcon },
+  icons: { PlusIcon, RemoveIcon, CrossIcon, ErrorIcon },
   utils: { fetch, URLS },
 });
