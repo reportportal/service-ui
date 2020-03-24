@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-import { getPreviousItem, getNextItem } from './utils';
+import { getPreviousItem, getNextItem, updateHistoryItemIssues } from './utils';
 
 describe('log/utils', () => {
   const itemsArray = [{ id: 0 }, { id: 1 }, { id: 2 }];
+
   describe('getPreviousItem', () => {
     test('should return null in case of item array length < 2', () => {
       expect(getPreviousItem([], 1)).toBe(null);
@@ -31,6 +32,7 @@ describe('log/utils', () => {
       expect(getPreviousItem(itemsArray, 2)).toEqual({ id: 1 });
     });
   });
+
   describe('getNextItem', () => {
     test('should return null in case of item array length <= 1', () => {
       expect(getNextItem([], 0)).toBe(null);
@@ -42,6 +44,32 @@ describe('log/utils', () => {
     test('should return item if active item is not last', () => {
       expect(getNextItem(itemsArray, 0)).toEqual({ id: 1 });
       expect(getNextItem(itemsArray, 1)).toEqual({ id: 2 });
+    });
+  });
+
+  describe('updateHistoryItemIssues', () => {
+    const items = [{ id: 1, issue: { key: 'issue' } }, { id: 2 }];
+
+    test('should return empty array in case of empty parameters', () => {
+      expect(updateHistoryItemIssues()).toEqual([]);
+    });
+    test('should return initial items in case of unknown item id', () => {
+      expect(
+        updateHistoryItemIssues(items, [{ testItemId: 3, issue: { key: 'newIssue' } }]),
+      ).toEqual(items);
+    });
+    test('should return updated items in case of correct payload', () => {
+      const expectedItems = [
+        { id: 1, issue: {} },
+        { id: 2, issue: { key: 'newIssue' } },
+      ];
+
+      expect(
+        updateHistoryItemIssues(items, [
+          { testItemId: 1, issue: {} },
+          { testItemId: 2, issue: { key: 'newIssue' } },
+        ]),
+      ).toEqual(expectedItems);
     });
   });
 });

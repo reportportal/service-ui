@@ -36,6 +36,7 @@ import {
   historyItemsSelector,
   activeRetryIdSelector,
   retriesSelector,
+  updateHistoryItemIssuesAction,
   RETRY_ID,
   NAMESPACE,
 } from 'controllers/log';
@@ -135,6 +136,7 @@ const UNLINK_ISSUE_EVENTS_INFO = {
     postIssueAction,
     editDefectsAction,
     showModalAction,
+    updateHistoryItemIssues: updateHistoryItemIssuesAction,
   },
 )
 @track()
@@ -159,6 +161,7 @@ export class LogItemInfo extends Component {
     btsIntegrations: PropTypes.array.isRequired,
     fetchFunc: PropTypes.func.isRequired,
     showModalAction: PropTypes.func.isRequired,
+    updateHistoryItemIssues: PropTypes.func.isRequired,
     onToggleSauceLabsIntegrationView: PropTypes.func.isRequired,
     isSauceLabsIntegrationView: PropTypes.bool.isRequired,
     debugMode: PropTypes.bool.isRequired,
@@ -329,6 +332,16 @@ export class LogItemInfo extends Component {
     });
   };
 
+  onDefectEdited = (issues) => {
+    const { fetchFunc, updateHistoryItemIssues } = this.props;
+
+    if (issues) {
+      updateHistoryItemIssues(issues);
+    } else {
+      fetchFunc();
+    }
+  };
+
   handleEditDefect = () => {
     const { logItem } = this.props;
     if (this.isDefectGroupOperationAvailable()) {
@@ -336,7 +349,7 @@ export class LogItemInfo extends Component {
         id: 'editToInvestigateDefectModal',
         data: {
           item: logItem,
-          fetchFunc: this.props.fetchFunc,
+          fetchFunc: this.onDefectEdited,
           eventsInfo: {
             changeSearchMode: LOG_PAGE_EVENTS.CHANGE_SEARCH_MODE_EDIT_DEFECT_MODAL,
             selectAllSimilarItems: LOG_PAGE_EVENTS.SELECT_ALL_SIMILIAR_ITEMS_EDIT_DEFECT_MODAL,
@@ -349,7 +362,7 @@ export class LogItemInfo extends Component {
       });
     } else {
       this.props.editDefectsAction([this.props.logItem], {
-        fetchFunc: this.props.fetchFunc,
+        fetchFunc: this.onDefectEdited,
         debugMode: this.props.debugMode,
         eventsInfo: {
           editDefectsEvents: LOG_PAGE_EVENTS.EDIT_DEFECT_MODAL_EVENTS,

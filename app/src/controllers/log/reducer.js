@@ -24,14 +24,16 @@ import { PROJECT_LOG_PAGE, PROJECT_USERDEBUG_LOG_PAGE } from 'controllers/pages'
 import {
   LOG_ITEMS_NAMESPACE,
   ACTIVITY_NAMESPACE,
-  HISTORY_NAMESPACE,
   STACK_TRACE_NAMESPACE,
   CLEAR_LOG_PAGE_STACK_TRACE,
   SET_LOG_PAGE_LOADING,
+  FETCH_HISTORY_ITEMS_SUCCESS,
+  UPDATE_HISTORY_ITEM_ISSUES,
 } from './constants';
 import { attachmentsReducer } from './attachments';
 import { sauceLabsReducer } from './sauceLabs';
 import { nestedStepsReducer } from './nestedSteps';
+import { normalizeHistoryItems, updateHistoryItemIssues } from './utils';
 
 const stackTracePaginationReducer = (state = {}, { type }) => {
   switch (type) {
@@ -60,13 +62,24 @@ const pageLoadingReducer = (state = false, { type, payload }) => {
   }
 };
 
+const historyItemsReducer = (state = [], { type, payload }) => {
+  switch (type) {
+    case FETCH_HISTORY_ITEMS_SUCCESS:
+      return normalizeHistoryItems(payload);
+    case UPDATE_HISTORY_ITEM_ISSUES:
+      return updateHistoryItemIssues(state, payload);
+    default:
+      return state;
+  }
+};
+
 const reducer = combineReducers({
   logItems: fetchReducer(LOG_ITEMS_NAMESPACE, { contentPath: 'content' }),
   pagination: paginationReducer(LOG_ITEMS_NAMESPACE),
   loading: loadingReducer(LOG_ITEMS_NAMESPACE),
   pageLoading: pageLoadingReducer,
   activity: fetchReducer(ACTIVITY_NAMESPACE, { contentPath: 'content' }),
-  historyEntries: fetchReducer(HISTORY_NAMESPACE, { contentPath: 'content' }),
+  historyItems: historyItemsReducer,
   stackTrace: combineReducers({
     loading: loadingReducer(STACK_TRACE_NAMESPACE),
     pagination: queueReducers(

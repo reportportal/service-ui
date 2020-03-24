@@ -18,10 +18,10 @@ export { logSagas } from './sagas';
 export {
   fetchLogPageData,
   refreshLogPageData,
-  fetchHistoryEntriesAction,
   fetchLogPageStackTrace,
   setPageLoadingAction,
   clearLogPageStackTrace,
+  updateHistoryItemIssuesAction,
 } from './actionCreators';
 export { logReducer } from './reducer';
 export {

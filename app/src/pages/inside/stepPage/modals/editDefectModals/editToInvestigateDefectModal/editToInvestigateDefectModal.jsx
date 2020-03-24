@@ -312,7 +312,7 @@ export class EditToInvestigateDefectModal extends Component {
       },
     })
       .then(() => {
-        fetchFunc();
+        fetchFunc(issues);
         this.props.showNotification({
           message: intl.formatMessage(messages.updateDefectsSuccess),
           type: NOTIFICATION_TYPES.SUCCESS,

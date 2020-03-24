@@ -17,6 +17,7 @@
 import { all, call, put, select, take, takeEvery } from 'redux-saga/effects';
 import {
   fetchParentItems,
+  itemsSelector,
   fetchTestItemsAction,
   logPageOffsetSelector,
 } from 'controllers/testItem';
@@ -25,14 +26,12 @@ import { activeProjectSelector } from 'controllers/user';
 import { logItemIdSelector, pathnameChangedSelector } from 'controllers/pages';
 import { debugModeSelector } from 'controllers/launch';
 import { createFetchPredicate, fetchDataAction } from 'controllers/fetch';
-import { isEmptyObject } from 'common/utils';
+import { fetch, isEmptyObject } from 'common/utils';
 import { collectLogPayload } from './sagaUtils';
 import {
   ACTIVITY_NAMESPACE,
   DEFAULT_HISTORY_DEPTH,
-  FETCH_HISTORY_ENTRIES,
   FETCH_LOG_PAGE_DATA,
-  HISTORY_NAMESPACE,
   LOG_ITEMS_NAMESPACE,
   FETCH_LOG_PAGE_STACK_TRACE,
   STACK_TRACE_NAMESPACE,
@@ -55,7 +54,11 @@ import {
 } from './attachments';
 import { sauceLabsSagas } from './sauceLabs';
 import { nestedStepSagas, CLEAR_NESTED_STEPS } from './nestedSteps';
-import { clearLogPageStackTrace, setPageLoadingAction } from './actionCreators';
+import {
+  clearLogPageStackTrace,
+  setPageLoadingAction,
+  fetchHistoryItemsSuccessAction,
+} from './actionCreators';
 
 function* fetchActivity() {
   const activeProject = yield select(activeProjectSelector);
@@ -101,54 +104,55 @@ function* fetchStackTrace({ payload: logItem }) {
   yield take(createFetchPredicate(STACK_TRACE_NAMESPACE));
 }
 
-function* fetchHistoryEntries() {
+function* fetchHistoryItems() {
   const activeProject = yield select(activeProjectSelector);
   const logItemId = yield select(logItemIdSelector);
-  yield put(
-    fetchDataAction(HISTORY_NAMESPACE)(
-      URLS.testItemsHistory(activeProject, DEFAULT_HISTORY_DEPTH, 'line', logItemId),
-    ),
+
+  const response = yield call(
+    fetch,
+    URLS.testItemsHistory(activeProject, DEFAULT_HISTORY_DEPTH, 'line', logItemId),
   );
-  yield take(createFetchPredicate(HISTORY_NAMESPACE));
+
+  yield put(fetchHistoryItemsSuccessAction(response.content));
 }
 
-function* fetchDetailsLog(offset = 0) {
+function* fetchDetailsLog() {
   const fetchLogEffects = [
     put(clearAttachmentsAction()),
-    put(fetchTestItemsAction({ offset })),
     call(fetchLogItems),
     put(clearLogPageStackTrace()),
   ];
 
   const isDebugMode = yield select(debugModeSelector);
   if (!isDebugMode) {
-    fetchLogEffects.push(call(fetchHistoryEntries), call(fetchActivity));
+    fetchLogEffects.push(call(fetchHistoryItems), call(fetchActivity));
   }
   yield all(fetchLogEffects);
 }
 
-function* fetchLaunchLog(offset = 0) {
-  yield all([
-    put(fetchTestItemsAction({ offset })),
-    call(fetchLogItems),
-    put(fetchFirstAttachmentsAction()),
-  ]);
+function* fetchLaunchLog() {
+  yield all([call(fetchLogItems), put(fetchFirstAttachmentsAction())]);
 }
 
-function* fetchLogs(offset = 0) {
+function* fetchLogs() {
   const logViewMode = yield select(logViewModeSelector);
   if (logViewMode === DETAILED_LOG_VIEW) {
-    yield call(fetchDetailsLog, offset);
+    yield call(fetchDetailsLog);
   } else {
-    yield call(fetchLaunchLog, offset);
+    yield call(fetchLaunchLog);
   }
 }
 
 function* fetchWholePage() {
   yield put(setPageLoadingAction(true));
   yield call(fetchParentItems);
-  const offset = yield select(logPageOffsetSelector);
-  yield call(fetchLogs, offset);
+  const testItems = yield select(itemsSelector);
+  if (!testItems.length) {
+    const offset = yield select(logPageOffsetSelector);
+
+    yield put(fetchTestItemsAction({ offset }));
+  }
+  yield call(fetchLogs);
   yield put(setPageLoadingAction(false));
 }
 
@@ -174,7 +178,7 @@ function* fetchLogPageData({ meta = {} }) {
   yield put({ type: CLEAR_NESTED_STEPS });
   if (meta.refresh) {
     const offset = yield select(logPageOffsetSelector);
-    yield call(fetchLogs, offset);
+    yield all([put(fetchTestItemsAction({ offset })), call(fetchLogs)]);
     return;
   }
   if (isPathNameChanged) {
@@ -193,10 +197,6 @@ function* watchFetchLogPageData() {
   yield takeEvery(FETCH_LOG_PAGE_DATA, fetchLogPageData);
 }
 
-function* watchFetchHistoryEntries() {
-  yield takeEvery(FETCH_HISTORY_ENTRIES, fetchHistoryEntries);
-}
-
 function* watchFetchLogPageStackTrace() {
   yield takeEvery(FETCH_LOG_PAGE_STACK_TRACE, fetchStackTrace);
 }
@@ -204,7 +204,6 @@ function* watchFetchLogPageStackTrace() {
 export function* logSagas() {
   yield all([
     watchFetchLogPageData(),
-    watchFetchHistoryEntries(),
     watchFetchLogPageStackTrace(),
     attachmentSagas(),
     sauceLabsSagas(),

@@ -33,13 +33,7 @@ import {
 } from 'controllers/testItem';
 import { debugModeSelector } from 'controllers/launch';
 import { extractNamespacedQuery, createNamespacedQuery } from 'common/utils/routingUtils';
-import {
-  calculateGrowthDuration,
-  normalizeHistoryItem,
-  getPreviousItem,
-  getNextItem,
-  getUpdatedLogQuery,
-} from './utils';
+import { getPreviousItem, getNextItem, getUpdatedLogQuery } from './utils';
 import {
   NAMESPACE,
   DEFAULT_SORTING,
@@ -58,7 +52,6 @@ export const lastLogActivitySelector = createSelector(logActivitySelector, (acti
   activity.length ? activity[0] : null,
 );
 
-const historyEntriesSelector = (state) => logSelector(state).historyEntries || [];
 export const logItemsSelector = (state) => logSelector(state).logItems || [];
 export const logErrorItemsSelector = (state) => logSelector(state).errorLogItems || [];
 export const logPaginationSelector = (state) => logSelector(state).pagination;
@@ -76,12 +69,7 @@ export const querySelector = createQueryParametersSelector({
   defaultSorting: DEFAULT_SORTING,
 });
 
-export const historyItemsSelector = createSelector(historyEntriesSelector, (entriesFromState) => {
-  if (!entriesFromState.length) return [];
-  const historyItems = entriesFromState[0].resources.map(normalizeHistoryItem);
-
-  return calculateGrowthDuration(historyItems);
-});
+export const historyItemsSelector = (state) => logSelector(state).historyItems || [];
 
 const createActiveLogItemIdSelector = (
   pageQuerySelector,
@@ -227,7 +215,7 @@ export const disableNextItemLinkSelector = createSelector(
   itemsSelector,
   ({ number, totalPages }, id, items) => {
     const isNoNextItem = getNextItem(items, id) === null;
-    const isLastPage = number === totalPages;
+    const isLastPage = totalPages ? number === totalPages : true;
     return isNoNextItem && isLastPage;
   },
 );
