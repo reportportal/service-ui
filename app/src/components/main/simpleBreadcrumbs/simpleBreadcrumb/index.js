@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { IntegrationBreadcrumb } from './integrationBreadcrumb';
+export { SimpleBreadcrumb } from './simpleBreadcrumb';

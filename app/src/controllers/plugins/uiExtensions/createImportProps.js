@@ -41,6 +41,7 @@ import { showSuccessNotification, showErrorNotification } from 'controllers/noti
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
+import { SimpleBreadcrumbs } from 'components/main/simpleBreadcrumbs';
 import { projectMembersSelector, projectInfoSelector } from 'controllers/project';
 import { createGlobalNamedIntegrationsSelector } from '../selectors';
 
@@ -60,6 +61,7 @@ export const createImportProps = (pluginName) => ({
     Input,
     InputDropdown,
     InputRadio,
+    SimpleBreadcrumbs,
   },
   constants: { PLUGIN_UI_EXTENSION_ADMIN_PAGE },
   actions: { showModalAction, showSuccessNotification, showErrorNotification },

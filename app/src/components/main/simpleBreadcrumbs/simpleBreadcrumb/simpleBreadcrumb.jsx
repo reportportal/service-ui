@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2019 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,17 +14,24 @@
  * limitations under the License.
  */
 
-.integration-breadcrumbs {
-  display: flex;
-  flex-grow: 1;
-  flex-wrap: wrap;
-  align-items: center;
-  margin-bottom: 25px;
-}
+import PropTypes from 'prop-types';
+import classNames from 'classnames/bind';
 
-.separator {
-  width: 14px;
-  height: 14px;
-  fill: $COLOR--charcoal-grey;
-  flex-shrink: 0;
-}
+import styles from './simpleBreadcrumb.scss';
+
+const cx = classNames.bind(styles);
+
+export const SimpleBreadcrumb = ({ descriptor: { title }, active, onClick }) => (
+  <div className={cx('simple-breadcrumb', { active })} onClick={active ? onClick : null}>
+    {title}
+  </div>
+);
+SimpleBreadcrumb.propTypes = {
+  descriptor: PropTypes.object.isRequired,
+  active: PropTypes.bool,
+  onClick: PropTypes.func,
+};
+SimpleBreadcrumb.defaultProps = {
+  active: false,
+  onClick: () => {},
+};

@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright 2019 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,4 +14,17 @@
  * limitations under the License.
  */
 
-export { IntegrationBreadcrumbs } from './integrationBreadcrumbs';
+.simple-breadcrumbs {
+  display: flex;
+  flex-grow: 1;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.separator {
+  width: 14px;
+  height: 14px;
+  fill: $COLOR--charcoal-grey;
+  flex-shrink: 0;
+}
