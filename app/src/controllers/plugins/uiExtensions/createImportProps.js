@@ -35,6 +35,7 @@ import CrossIcon from 'common/img/cross-icon-inline.svg';
 import ErrorIcon from 'common/img/error-inline.svg';
 import { Input } from 'components/inputs/input';
 import { InputDropdown } from 'components/inputs/inputDropdown';
+import { InputRadio } from 'components/inputs/inputRadio';
 import { URLS } from 'common/urls';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -58,6 +59,7 @@ export const createImportProps = (pluginName) => ({
     FieldErrorHint,
     Input,
     InputDropdown,
+    InputRadio,
   },
   constants: { PLUGIN_UI_EXTENSION_ADMIN_PAGE },
   actions: { showModalAction, showSuccessNotification, showErrorNotification },

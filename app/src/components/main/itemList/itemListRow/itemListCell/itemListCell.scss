@@ -40,6 +40,10 @@
     text-align: right;
   }
 
+  &.align-center {
+    text-align: center;
+  }
+
   &.bold {
     font-family: $FONT_SEMIBOLD;
     font-size: 15px;
