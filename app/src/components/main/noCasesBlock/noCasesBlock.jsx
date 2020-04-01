@@ -38,5 +38,5 @@ NoCasesBlock.propTypes = {
 NoCasesBlock.defaultProps = {
   noItemsMessage: '',
   notificationsInfo: '',
-  children: {},
+  children: null,
 };
