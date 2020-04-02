@@ -63,9 +63,10 @@ export class ModalLayout extends Component {
     closeConfirmation: PropTypes.shape({
       closeConfirmedCallback: PropTypes.func,
       withCheckbox: PropTypes.bool,
-      confirmationMessage: PropTypes.string,
+      confirmationMessage: PropTypes.node,
       confirmationWarningClassName: PropTypes.string,
       confirmationWarning: PropTypes.string,
+      static: PropTypes.bool,
     }),
     closeIconEventInfo: PropTypes.object,
     renderHeaderElements: PropTypes.func,
@@ -93,7 +94,7 @@ export class ModalLayout extends Component {
   state = {
     shown: false,
     closeConfirmed: false,
-    showConfirmation: false,
+    showConfirmation: !!(this.props.closeConfirmation && this.props.closeConfirmation.static),
   };
   componentDidMount() {
     document.addEventListener('keydown', this.onKeydown, false);
