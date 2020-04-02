@@ -55,7 +55,7 @@ export class ModalFooter extends Component {
     onCloseConfirm: PropTypes.func,
     showConfirmation: PropTypes.bool,
     closeConfirmed: PropTypes.bool,
-    confirmationMessage: PropTypes.string,
+    confirmationMessage: PropTypes.node,
     confirmationWarning: PropTypes.string,
     confirmationWarningClassName: PropTypes.string,
     confirmWithCheckbox: PropTypes.bool,
