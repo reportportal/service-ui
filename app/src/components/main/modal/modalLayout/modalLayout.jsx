@@ -66,7 +66,7 @@ export class ModalLayout extends Component {
       confirmationMessage: PropTypes.node,
       confirmationWarningClassName: PropTypes.string,
       confirmationWarning: PropTypes.string,
-      static: PropTypes.bool,
+      confirmSubmit: PropTypes.bool,
     }),
     closeIconEventInfo: PropTypes.object,
     renderHeaderElements: PropTypes.func,
@@ -94,7 +94,9 @@ export class ModalLayout extends Component {
   state = {
     shown: false,
     closeConfirmed: false,
-    showConfirmation: !!(this.props.closeConfirmation && this.props.closeConfirmation.static),
+    showConfirmation: !!(
+      this.props.closeConfirmation && this.props.closeConfirmation.confirmSubmit
+    ),
   };
   componentDidMount() {
     document.addEventListener('keydown', this.onKeydown, false);
@@ -119,7 +121,7 @@ export class ModalLayout extends Component {
   onClickModal = (e) => {
     const { closeConfirmation } = this.props;
     if (this.modal && !this.modal.contains(e.target)) {
-      if (!closeConfirmation) {
+      if (!closeConfirmation || closeConfirmation.confirmSubmit) {
         this.closeModal();
       } else {
         this.setState({ showConfirmation: true });
@@ -143,18 +145,24 @@ export class ModalLayout extends Component {
   };
 
   closeModalWithOk = () => {
-    this.setState({ shown: false });
-  };
-
-  closeModal = () => {
     const { closeConfirmation } = this.props;
-
-    if (closeConfirmation) {
+    if (closeConfirmation && closeConfirmation.confirmSubmit) {
       this.closeModalWithConfirmation();
     } else {
       this.setState({ shown: false });
     }
   };
+
+  closeModal = () => {
+    const { closeConfirmation } = this.props;
+
+    if (closeConfirmation && !closeConfirmation.confirmSubmit) {
+      this.closeModalWithConfirmation();
+    } else {
+      this.setState({ shown: false });
+    }
+  };
+
   closeModalWithConfirmation = () => {
     const { closeConfirmed } = this.state;
     const { closeConfirmedCallback, withCheckbox } = this.props.closeConfirmation;
@@ -162,6 +170,7 @@ export class ModalLayout extends Component {
     if (withCheckbox && closeConfirmed) {
       closeConfirmedCallback && closeConfirmedCallback();
       this.setState({ shown: false });
+      return;
     }
 
     withCheckbox ? this.setState({ showConfirmation: true }) : this.setState({ shown: false });
@@ -192,6 +201,12 @@ export class ModalLayout extends Component {
       closeConfirmed: this.state.closeConfirmed,
       onCloseConfirm: this.onCloseConfirm,
       confirmWithCheckbox: closeConfirmation && closeConfirmation.withCheckbox,
+      submitConfirmed: !(
+        closeConfirmation &&
+        closeConfirmation.withCheckbox &&
+        closeConfirmation.confirmSubmit &&
+        !this.state.closeConfirmed
+      ),
     };
 
     return (
