@@ -20,9 +20,24 @@ import styles from './modalField.scss';
 
 const cx = classname.bind(styles);
 
-export const ModalField = ({ className, label, children, tip, labelWidth, alignLeft }) => (
+export const ModalField = ({
+  className,
+  label,
+  children,
+  tip,
+  labelWidth,
+  alignLeft,
+  noMinHeight,
+}) => (
   <div className={cx('modal-field', className)}>
-    {label && <Label label={label} labelWidth={labelWidth} alignLeft={alignLeft} />}
+    {label && (
+      <Label
+        label={label}
+        labelWidth={labelWidth}
+        alignLeft={alignLeft}
+        noMinHeight={noMinHeight}
+      />
+    )}
     <Content>
       {children}
       {tip && <Tip tip={tip} />}
@@ -36,6 +51,7 @@ ModalField.propTypes = {
   children: PropTypes.node,
   labelWidth: PropTypes.number,
   alignLeft: PropTypes.bool,
+  noMinHeight: PropTypes.bool,
 };
 ModalField.defaultProps = {
   className: '',
@@ -44,6 +60,7 @@ ModalField.defaultProps = {
   children: null,
   labelWidth: null,
   alignLeft: false,
+  noMinHeight: false,
 };
 
 const Tip = ({ tip }) => <div className={cx('modal-field-tip')}>{tip}</div>;
@@ -54,9 +71,12 @@ Tip.defaultProps = {
   tip: '',
 };
 
-const Label = ({ label, labelWidth, alignLeft }) => (
+const Label = ({ label, labelWidth, alignLeft, noMinHeight }) => (
   <div
-    className={cx('modal-field-label', { 'no-min-height': label === ' ', 'align-left': alignLeft })}
+    className={cx('modal-field-label', {
+      'no-min-height': label === ' ' || noMinHeight,
+      'align-left': alignLeft,
+    })}
     style={{ width: labelWidth || 'unset' }}
   >
     {label}
@@ -66,11 +86,13 @@ Label.propTypes = {
   label: PropTypes.string,
   labelWidth: PropTypes.number,
   alignLeft: PropTypes.bool,
+  noMinHeight: PropTypes.bool,
 };
 Label.defaultProps = {
   label: '',
   labelWidth: null,
   alignLeft: false,
+  noMinHeight: false,
 };
 
 const Content = ({ children }) => <div className={cx('modal-field-content')}>{children}</div>;
