@@ -59,10 +59,12 @@ export default class PageSwitcher extends React.PureComponent {
     if (!PageComponent) throw new Error(`Page ${page} does not exist`);
     if (!Layout) throw new Error(`Page ${page} is missing layout`);
 
+    const mode = process.env.NODE_ENV;
+
     return (
       <div className={styles.pageSwitcher}>
         <Layout>
-          {!process.env.production && <LocalizationSwitcher />}
+          {mode === 'development' && <LocalizationSwitcher />}
           <PageErrorBoundary key={page}>
             <PageComponent />
           </PageErrorBoundary>
