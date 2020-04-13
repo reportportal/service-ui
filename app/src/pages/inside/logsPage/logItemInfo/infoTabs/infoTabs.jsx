@@ -32,7 +32,7 @@ export class InfoTabs extends Component {
       PropTypes.shape({
         id: PropTypes.string.isRequired,
         label: PropTypes.string,
-        component: PropTypes.func,
+        component: PropTypes.elementType,
         componentProps: PropTypes.object,
         icon: PropTypes.node,
       }),
