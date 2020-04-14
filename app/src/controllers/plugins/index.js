@@ -57,4 +57,5 @@ export {
   uiExtensionAdminPagesSelector,
   uiExtensionPagesSelector,
   extensionsLoadedSelector,
+  uiExtensionHeaderComponentsSelector,
 } from './uiExtensions';

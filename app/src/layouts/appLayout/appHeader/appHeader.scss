@@ -65,6 +65,7 @@
 
 .nav-btn {
   position: relative;
+  margin-left: 30px;
   display: inline-block;
   height: 30px;
   width: 30px;
@@ -73,6 +74,10 @@
   background-size: 100%;
   vertical-align: top;
   transition: transform 200ms ease-in-out;
+
+  &.extension-component {
+    width: auto;
+  }
 
   @media (max-width: $SCREEN_XS_MAX) {
     margin: 0;
@@ -87,12 +92,10 @@
   }
 }
 .members-btn {
-  margin-left: 30px;
   background-image: url(./img/members-icon.svg);
   background-size: 20px;
 
   @media (max-width: $SCREEN_XS_MAX) {
-    margin: 0;
     background-size: 30px;
   }
 
@@ -102,17 +105,21 @@
   }
 }
 .settings-btn {
-  margin-left: 30px;
   background-image: url(./img/gear-icon.svg);
   background-size: 17px;
 
   @media (max-width: $SCREEN_XS_MAX) {
-    margin: 0;
     background-size: 25px;
   }
 
   &.active {
     transform: rotate(90deg);
     background-image: url(./img/gear-icon-active.svg);
+  }
+}
+
+.extension-component {
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
   }
 }
