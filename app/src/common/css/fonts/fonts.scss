@@ -38,4 +38,8 @@
   './OpenSansCondensed-Bold/OpenSans-CondBold-webfont',
   'open_sans_condensedbold'
 );
-@include font-face('Menlo-Regular', './Menlo-Regular/Menlo-Regular-webfont', 'menlo_regular');
+@include font-face(
+  'Roboto-Mono-Regular',
+  './Roboto-Mono-Regular/Roboto-Mono-Regular',
+  'RobotoMono'
+);
