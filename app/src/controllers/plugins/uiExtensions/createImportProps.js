@@ -19,6 +19,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 import Parser from 'html-react-parser';
 import { reduxForm, formValueSelector } from 'redux-form';
+import Link from 'redux-first-router-link';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { BigButton } from 'components/buttons/bigButton';
 import { NavigationTabs } from 'components/main/navigationTabs';
@@ -28,7 +29,11 @@ import { ModalLayout, ModalField } from 'components/main/modal';
 import { showModalAction } from 'controllers/modal';
 import { fetch } from 'common/utils/fetch';
 import { activeProjectSelector, activeProjectRoleSelector } from 'controllers/user';
-import { PLUGIN_UI_EXTENSION_ADMIN_PAGE, pluginRouteSelector } from 'controllers/pages';
+import {
+  PLUGIN_UI_EXTENSION_ADMIN_PAGE,
+  PROJECT_SETTINGS_TAB_PAGE,
+  pluginRouteSelector,
+} from 'controllers/pages';
 import PlusIcon from 'common/img/plus-button-inline.svg';
 import RemoveIcon from 'common/img/trashcan-inline.svg';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
@@ -62,8 +67,9 @@ export const createImportProps = (pluginName) => ({
     InputDropdown,
     InputRadio,
     SimpleBreadcrumbs,
+    Link,
   },
-  constants: { PLUGIN_UI_EXTENSION_ADMIN_PAGE },
+  constants: { PLUGIN_UI_EXTENSION_ADMIN_PAGE, PROJECT_SETTINGS_TAB_PAGE },
   actions: { showModalAction, showSuccessNotification, showErrorNotification },
   selectors: {
     pluginRouteSelector,
