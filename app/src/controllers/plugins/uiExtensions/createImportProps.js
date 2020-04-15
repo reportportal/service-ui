@@ -47,7 +47,12 @@ import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { SimpleBreadcrumbs } from 'components/main/simpleBreadcrumbs';
-import { projectMembersSelector, projectInfoSelector } from 'controllers/project';
+import {
+  projectMembersSelector,
+  projectInfoSelector,
+  fetchProjectAction,
+  projectInfoLoadingSelector,
+} from 'controllers/project';
 import { createGlobalNamedIntegrationsSelector } from '../selectors';
 
 export const createImportProps = (pluginName) => ({
@@ -70,7 +75,7 @@ export const createImportProps = (pluginName) => ({
     Link,
   },
   constants: { PLUGIN_UI_EXTENSION_ADMIN_PAGE, PROJECT_SETTINGS_TAB_PAGE },
-  actions: { showModalAction, showSuccessNotification, showErrorNotification },
+  actions: { showModalAction, showSuccessNotification, showErrorNotification, fetchProjectAction },
   selectors: {
     pluginRouteSelector,
     activeProjectSelector,
@@ -78,6 +83,7 @@ export const createImportProps = (pluginName) => ({
     projectMembersSelector,
     projectInfoSelector,
     activeProjectRoleSelector,
+    projectInfoLoadingSelector,
   },
   icons: { PlusIcon, RemoveIcon, CrossIcon, ErrorIcon },
   utils: { fetch, URLS },

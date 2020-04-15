@@ -29,6 +29,7 @@ import {
   ADD_PATTERN_SUCCESS,
   UPDATE_PATTERN_SUCCESS,
   DELETE_PATTERN_SUCCESS,
+  FETCH_PROJECT,
 } from './constants';
 
 export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, payload }) => {
@@ -145,7 +146,19 @@ export const projectPreferencesReducer = (
   }
 };
 
+export const projectInfoLoadingReducer = (state = false, { type }) => {
+  switch (type) {
+    case FETCH_PROJECT:
+      return true;
+    case FETCH_PROJECT_SUCCESS:
+      return false;
+    default:
+      return state;
+  }
+};
+
 export const projectReducer = combineReducers({
   info: projectInfoReducer,
   preferences: projectPreferencesReducer,
+  infoLoading: projectInfoLoadingReducer,
 });

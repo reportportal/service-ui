@@ -278,12 +278,12 @@ function* watchUpdatePAState() {
   yield takeEvery(UPDATE_PA_STATE, updatePAStateWithNotification);
 }
 
-function* fetchProject({ payload: { projectId, isAdminAccess } }) {
+function* fetchProject({ payload: { projectId, fetchInfoOnly } }) {
   try {
     const project = yield call(fetch, URLS.project(projectId));
     yield put(fetchProjectSuccessAction(project));
     yield put(setProjectIntegrationsAction(project.integrations));
-    if (!isAdminAccess) {
+    if (!fetchInfoOnly) {
       yield put(fetchProjectPreferencesAction(projectId));
     }
   } catch (error) {
