@@ -28,7 +28,11 @@ import { ItemList } from 'components/main/itemList';
 import { ModalLayout, ModalField } from 'components/main/modal';
 import { showModalAction } from 'controllers/modal';
 import { fetch } from 'common/utils/fetch';
-import { activeProjectSelector, activeProjectRoleSelector } from 'controllers/user';
+import {
+  activeProjectSelector,
+  activeProjectRoleSelector,
+  isAdminSelector,
+} from 'controllers/user';
 import {
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
   PROJECT_SETTINGS_TAB_PAGE,
@@ -84,6 +88,7 @@ export const createImportProps = (pluginName) => ({
     projectInfoSelector,
     activeProjectRoleSelector,
     projectInfoLoadingSelector,
+    isAdminSelector,
   },
   icons: { PlusIcon, RemoveIcon, CrossIcon, ErrorIcon },
   utils: { fetch, URLS },
