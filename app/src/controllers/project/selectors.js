@@ -28,6 +28,8 @@ const projectSelector = (state) => state.project || {};
 
 export const projectInfoSelector = (state) => projectSelector(state).info || {};
 
+export const projectInfoLoadingSelector = (state) => projectSelector(state).infoLoading;
+
 export const projectConfigSelector = (state) => projectInfoSelector(state).configuration || {};
 
 export const projectMembersSelector = (state) => projectInfoSelector(state).users || [];
