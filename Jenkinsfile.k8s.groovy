@@ -97,13 +97,13 @@ podTemplate(
                             sh "npm install"
                         }
 
-                        if(!sealightsEnabled) {
+                        if(sealightsEnabled) {
                             stage('Build App') {
-                                sh "npm run build && npm run test"
+                                sh "npm run sealights && npm run test"
                             }
                         } else {
                             stage('Build App') {
-                                sh "npm run sealights && npm run test"
+                                sh "npm run build && npm run test"
                             }
                         }
 
@@ -113,15 +113,15 @@ podTemplate(
                             stage('Init Sealights') {
                                 sh "./node_modules/.bin/slnodejs config --tokenfile $sealightsTokenPath --appname service-ui --branch $branchToBuild --build $srvVersion"
                                 sealightsSession = util.execStdout("cat buildSessionId")
-                                sh "./node_modules/.bin/slnodejs build --tokenfile $sealightsTokenPath --buildsessionid $sealightsSession --workspacepath build --instrumentForBrowsers --outputpath sl_instrumented --scm none --es6Modules --projectRoot ."
+                                sh "./node_modules/.bin/slnodejs build --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession --workspacepath build --excludedpaths '**/*.test.js' --instrumentForBrowsers --outputpath sl_instrumented --scm none --es6Modules --projectRoot ."
                             }
 
                             stage('Start Sealights') {
-                                sh "./node_modules/.bin/slnodejs start --tokenfile $sealightsTokenPath --buildsessionid $sealightsSession --testStage 'Unit Tests'"
+                                sh "./node_modules/.bin/slnodejs start --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession --testStage 'Unit Tests'"
                                 sh "./node_modules/.bin/jest --coverage --testResultsProcessor=$resultsProcessor"
-                                sh "./node_modules/.bin/slnodejs nycReport --tokenfile $sealightsTokenPath --buildsessionid $sealightsSession"
-                                sh "./node_modules/.bin/slnodejs uploadReports --tokenfile $sealightsTokenPath --buildsessionid $sealightsSession --reportFile junit.xml"
-                                sh "./node_modules/.bin/slnodejs end --tokenfile $sealightsTokenPath --buildsessionid $sealightsSession"
+                                sh "./node_modules/.bin/slnodejs nycReport --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession"
+                                sh "./node_modules/.bin/slnodejs uploadReports --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession --reportFile junit.xml"
+                                sh "./node_modules/.bin/slnodejs end --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession"
 
                                 sh "rm -rf build"
                                 sh "cp -r sl_instrumented/ build/"
@@ -138,7 +138,7 @@ podTemplate(
 
             stage('Build Docker Image') {
                 container('docker') {
-                    sh "docker build -f Dockerfile-k8s --build-arg sealightsEnabled=$sealightsEnabled --build-arg sealightsToken=$sealightsToken --build-arg sealightsSession=$sealightsSession -t quay.io/reportportal/service-ui:BUILD-${env.BUILD_NUMBER} ."
+                    sh "docker build -f Dockerfile-k8s -t quay.io/reportportal/service-ui:BUILD-${env.BUILD_NUMBER} ."
                     sh "docker push quay.io/reportportal/service-ui:BUILD-${env.BUILD_NUMBER}"
                 }
             }
