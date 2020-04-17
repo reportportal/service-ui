@@ -18,14 +18,14 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { projectIdSelector } from 'controllers/pages';
 import { activeProjectSelector } from 'controllers/user';
 import { removeIntegrationAction } from 'controllers/plugins';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { INTEGRATION_NAMES_TITLES } from '../../constants';
+import { PLUGIN_NAME_TITLES } from '../../constants';
 import { INTEGRATION_FORM } from './integrationForm/constants';
 import { ConnectionSection } from './connectionSection';
 import { IntegrationForm } from './integrationForm';
@@ -52,15 +52,16 @@ const messages = defineMessages({
 @injectIntl
 export class IntegrationSettings extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     projectId: PropTypes.string,
     activeProject: PropTypes.string.isRequired,
     data: PropTypes.object.isRequired,
-    formFieldsComponent: PropTypes.func.isRequired,
+    formFieldsComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]).isRequired,
     goToPreviousPage: PropTypes.func.isRequired,
     onUpdate: PropTypes.func.isRequired,
     removeIntegrationAction: PropTypes.func.isRequired,
     editAuthConfig: PropTypes.object,
+    preventTestConnection: PropTypes.bool,
     isEmptyConfiguration: PropTypes.bool,
     isGlobal: PropTypes.bool,
     formKey: PropTypes.string,
@@ -69,14 +70,15 @@ export class IntegrationSettings extends Component {
   static defaultProps = {
     projectId: '',
     editAuthConfig: null,
+    preventTestConnection: false,
     isEmptyConfiguration: false,
     isGlobal: false,
     formKey: INTEGRATION_FORM,
   };
 
   state = {
-    connected: this.props.data.isNew,
-    loading: !this.props.data.isNew,
+    connected: this.props.data.isNew || this.props.preventTestConnection,
+    loading: !this.props.data.isNew && !this.props.preventTestConnection,
   };
 
   componentDidMount() {
@@ -148,7 +150,7 @@ export class IntegrationSettings extends Component {
                 connected
                   ? null
                   : formatMessage(messages.failedConnectMessage, {
-                      pluginName: INTEGRATION_NAMES_TITLES[pluginName] || pluginName,
+                      pluginName: PLUGIN_NAME_TITLES[pluginName] || pluginName,
                       error: errorMessage,
                     })
               }

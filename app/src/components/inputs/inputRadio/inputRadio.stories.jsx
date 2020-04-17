@@ -16,7 +16,7 @@
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import { InputRadio } from './inputRadio';
 import README from './README.md';
 
@@ -33,7 +33,11 @@ storiesOf('Components/Inputs/InputRadio', module)
       width: 300,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('default state', () => <InputRadio />)
   .add('with value', () => <InputRadio value={value} />)
   .add('checked', () => <InputRadio ownValue={value} value={value} />)

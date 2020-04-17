@@ -15,7 +15,7 @@
  */
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import { action } from '@storybook/addon-actions';
 import { InputSlider } from './inputSlider';
 import README from './README.md';
@@ -33,7 +33,11 @@ storiesOf('Components/Inputs/InputSlider', module)
       width: 300,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('Default state', () => <InputSlider />)
   .add('With options', () => <InputSlider options={options} />)
   .add('With options, value="Info"', () => <InputSlider options={options} value={'Info'} />)

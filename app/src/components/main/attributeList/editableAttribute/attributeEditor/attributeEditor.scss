@@ -22,33 +22,11 @@
   .input {
     width: 130px;
     cursor: text;
-
-    :global {
-      .Select {
-        .Select-control {
-          border-top: none;
-          border-left: none;
-          border-right: none;
-          box-shadow: none;
-        }
-
-        .Select-value {
-          background-color: inherit;
-          background-image: none;
-          border: none;
-          box-shadow: none;
-        }
-
-        .Select-clear-zone {
-          display: none;
-        }
-      }
-
-      .Select.is-focused {
-        .Select-control {
-          box-shadow: none;
-        }
-      }
+    input {
+      border-top: 0;
+      border-left: 0;
+      border-right: 0;
+      box-shadow: none;
     }
   }
 }

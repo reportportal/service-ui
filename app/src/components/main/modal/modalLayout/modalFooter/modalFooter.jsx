@@ -34,10 +34,12 @@ export class ModalFooter extends Component {
       text: PropTypes.string.isRequired,
       disabled: PropTypes.bool,
       danger: PropTypes.bool,
+      onClick: PropTypes.func,
       eventInfo: PropTypes.object,
     }),
     cancelButton: PropTypes.shape({
       text: PropTypes.string.isRequired,
+      disabled: PropTypes.bool,
     }),
     customButton: PropTypes.oneOfType([
       PropTypes.node,
@@ -53,7 +55,7 @@ export class ModalFooter extends Component {
     onCloseConfirm: PropTypes.func,
     showConfirmation: PropTypes.bool,
     closeConfirmed: PropTypes.bool,
-    confirmationMessage: PropTypes.string,
+    confirmationMessage: PropTypes.node,
     confirmationWarning: PropTypes.string,
     confirmationWarningClassName: PropTypes.string,
     confirmWithCheckbox: PropTypes.bool,
@@ -62,6 +64,7 @@ export class ModalFooter extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    submitConfirmed: PropTypes.bool,
   };
   static defaultProps = {
     warningMessage: '',
@@ -78,6 +81,7 @@ export class ModalFooter extends Component {
     confirmationWarningClassName: '',
     confirmWithCheckbox: false,
     renderFooterElements: () => {},
+    submitConfirmed: false,
   };
   closeConfirmChangeHandler = () => {
     const { closeConfirmed } = this.props;
@@ -99,6 +103,7 @@ export class ModalFooter extends Component {
       closeConfirmed,
       confirmWithCheckbox,
       renderFooterElements,
+      submitConfirmed,
     } = this.props;
 
     return (
@@ -143,7 +148,7 @@ export class ModalFooter extends Component {
                   this.props.tracking.trackEvent(this.props.okButton.eventInfo);
                   okButton.onClick(onClickOk);
                 }}
-                disabled={okButton.disabled}
+                disabled={okButton.disabled || !submitConfirmed}
               >
                 {okButton.text}
               </BigButton>

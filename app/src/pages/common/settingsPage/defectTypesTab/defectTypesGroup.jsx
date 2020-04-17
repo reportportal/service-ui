@@ -19,14 +19,12 @@ import { connect } from 'react-redux';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 
 import { GhostButton } from 'components/buttons/ghostButton';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import PlusIcon from 'common/img/plus-button-inline.svg';
-import { canUpdateSettings } from 'common/utils/permissions';
 import { addDefectSubTypeAction } from 'controllers/project';
-import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 
 import { DefectSubType } from './defectSubType';
 import { defectTypeShape } from './defectTypeShape';
@@ -38,38 +36,32 @@ import styles from './defectTypesTab.scss';
 const cx = classNames.bind(styles);
 
 @track()
-@connect(
-  (state) => ({
-    accountRole: userAccountRoleSelector(state),
-    userRole: activeProjectRoleSelector(state),
-  }),
-  {
-    addDefectSubTypeAction,
-  },
-)
+@connect(null, {
+  addDefectSubTypeAction,
+})
 @injectIntl
 export class DefectTypesGroup extends Component {
   static propTypes = {
     group: PropTypes.arrayOf(defectTypeShape).isRequired,
     addDefectSubTypeAction: PropTypes.func.isRequired,
-    intl: intlShape.isRequired,
-    accountRole: PropTypes.string.isRequired,
-    userRole: PropTypes.string.isRequired,
+    intl: PropTypes.object.isRequired,
+    readonly: PropTypes.bool,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
   };
 
+  static defaultProps = {
+    readonly: false,
+  };
+
   constructor(props) {
     super(props);
-    const { accountRole, userRole } = this.props;
 
     this.state = {
       newSubType: false,
     };
-
-    this.isPossibleUpdateSettings = canUpdateSettings(accountRole, userRole);
   }
 
   showNewSubTypeForm = () => {
@@ -94,7 +86,7 @@ export class DefectTypesGroup extends Component {
   MAX_DEFECT_SUBTYPES_COUNT = 15;
 
   render() {
-    const { group, intl } = this.props;
+    const { group, intl, readonly } = this.props;
     const { newSubType } = this.state;
 
     return (
@@ -105,7 +97,7 @@ export class DefectTypesGroup extends Component {
             data={subType}
             parentType={group[0]}
             group={i === 0 ? group : null}
-            isPossibleUpdateSettings={this.isPossibleUpdateSettings}
+            isPossibleUpdateSettings={!readonly}
           />
         ))}
         {newSubType && (
@@ -123,7 +115,7 @@ export class DefectTypesGroup extends Component {
             />
           </div>
         )}
-        {this.isPossibleUpdateSettings && (
+        {!readonly && (
           <div className={cx('defect-type-group-footer')}>
             <GhostButton
               icon={PlusIcon}

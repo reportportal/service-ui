@@ -28,6 +28,8 @@ import 'common/css/fonts/fonts.scss';
 import 'common/css/common.scss';
 import 'c3/c3.css';
 
+import { initPluginRegistration } from 'controllers/plugins/uiExtensions/registerPlugin';
+
 import App from './app';
 import { configureStore } from './store';
 
@@ -49,6 +51,8 @@ if (!process.env.production) {
 const queryParseHistory = qhistory(createHashHistory({ hashType: 'noslash' }), stringify, parse);
 
 const { store, initialDispatch } = configureStore(queryParseHistory, window.REDUX_STATE);
+
+initPluginRegistration(store);
 
 const rerenderApp = (TheApp) => {
   render(

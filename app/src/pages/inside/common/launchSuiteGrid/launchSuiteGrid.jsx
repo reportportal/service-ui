@@ -15,7 +15,7 @@
  */
 
 import React, { PureComponent, Fragment } from 'react';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import {
@@ -212,7 +212,7 @@ TiColumn.propTypes = {
 @injectIntl
 export class LaunchSuiteGrid extends PureComponent {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     data: PropTypes.array,
     sortingColumn: PropTypes.string,
     sortingDirection: PropTypes.string,
@@ -491,8 +491,9 @@ export class LaunchSuiteGrid extends PureComponent {
           onFilterClick={onFilterClick}
           rowHighlightingConfig={rowHighlightingConfig}
         />
-        {!data.length &&
-          !loading && <NoItemMessage message={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />}
+        {!data.length && !loading && (
+          <NoItemMessage message={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />
+        )}
       </Fragment>
     );
   }

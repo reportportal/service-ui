@@ -18,7 +18,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import Parser from 'html-react-parser';
 import { showModalAction } from 'controllers/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -63,7 +63,7 @@ const messages = defineMessages({
 @injectIntl
 export class ConnectionSection extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     showModalAction: PropTypes.func.isRequired,
     onRemoveIntegration: PropTypes.func.isRequired,
     blocked: PropTypes.bool,

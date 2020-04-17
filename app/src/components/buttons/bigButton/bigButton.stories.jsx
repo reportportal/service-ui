@@ -17,7 +17,7 @@
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import { BigButton } from './bigButton';
 import README from './README.md';
 
@@ -32,7 +32,11 @@ storiesOf('Components/Buttons/BigButton', module)
       width: 200,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('default state', () => <BigButton />)
   .add('with text', () => <BigButton>Button title</BigButton>)
   .add('with roundedCorners & text', () => <BigButton roundedCorners>Button title</BigButton>)

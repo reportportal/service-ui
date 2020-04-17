@@ -17,7 +17,7 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { FilterItem } from 'pages/inside/common/launchFiltersToolbar/filterList/filterItem';
@@ -41,7 +41,7 @@ const InfoTooltipIcon = withTooltip({
 @injectIntl
 export class ItemsListHeader extends React.Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     allSelected: PropTypes.bool,
     searchMode: PropTypes.string,
     currentLaunch: PropTypes.object,
@@ -142,6 +142,8 @@ export class ItemsListHeader extends React.Component {
         {searchMode === SEARCH_MODES.FILTER && (
           <div className={cx('filter')}>
             <FilterItem
+              isDisabled
+              id={currentFilter.id}
               name={currentFilter.name}
               description={currentFilter.description}
               owner={currentFilter.owner}

@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -46,7 +46,7 @@ const messages = defineMessages({
 @injectIntl
 export class IntegrationForm extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     data: PropTypes.object.isRequired,
     onSubmit: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
@@ -54,7 +54,7 @@ export class IntegrationForm extends Component {
     change: PropTypes.func.isRequired,
     reset: PropTypes.func.isRequired,
     dirty: PropTypes.bool.isRequired,
-    formFieldsComponent: PropTypes.func.isRequired,
+    formFieldsComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]).isRequired,
     connected: PropTypes.bool.isRequired,
     isEmptyConfiguration: PropTypes.bool.isRequired,
     pluginName: PropTypes.string.isRequired,
@@ -91,7 +91,10 @@ export class IntegrationForm extends Component {
 
   updateMetaData = (metaData) => {
     this.setState({
-      metaData,
+      metaData: {
+        ...this.state.metaData,
+        ...metaData,
+      },
     });
   };
 

@@ -15,7 +15,7 @@
  */
 
 import React, { Component } from 'react';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
@@ -45,7 +45,7 @@ const messages = defineMessages({
 @injectIntl
 export class WizardInfoSection extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     projectId: PropTypes.string.isRequired,
     step: PropTypes.number,
     activeWidget: PropTypes.object,

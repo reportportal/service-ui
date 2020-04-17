@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { methodTypesLocalization } from 'common/constants/methodTypesLocalization';
-import { statusLocalization } from 'common/constants/statusLocalization';
+import { methodTypesLocalization } from 'common/constants/localization/methodTypesLocalization';
+import { statusLocalization } from 'common/constants/localization/statusLocalization';
 
 export const formatMethodType = (formatter, methodType) =>
   methodTypesLocalization[methodType] ? formatter(methodTypesLocalization[methodType]) : methodType;

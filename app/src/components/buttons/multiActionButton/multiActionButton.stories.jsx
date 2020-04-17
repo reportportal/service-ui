@@ -17,7 +17,7 @@
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import { MultiActionButton } from './multiActionButton';
 import README from './README.md';
 
@@ -51,7 +51,11 @@ storiesOf('Components/Buttons/MultiActionButton', module)
       width: 170,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('default state', () => <MultiActionButton />)
   .add('with title', () => <MultiActionButton title="Save" />)
   .add('with title & disabled', () => <MultiActionButton title="Save" disabled />)

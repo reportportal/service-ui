@@ -16,7 +16,7 @@
 
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import { LaunchesDurationChart } from './launchesDurationChart';
 import README from './README.md';
 import testData from './testData.json';
@@ -38,7 +38,11 @@ storiesOf('Components/Widgets/Charts/LaunchesDurationChart', module)
       width: 640,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('default state', () => (
     <LaunchesDurationChart widget={testData} container={mockNode} observer={mockObserver} />
   ))

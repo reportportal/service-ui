@@ -19,7 +19,7 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { activeProjectSelector, activeProjectRoleSelector } from 'controllers/user';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { Grid, ALIGN_CENTER } from 'components/main/grid';
 import { EmptyDashboards } from 'pages/inside/dashboardPage/dashboardList/EmptyDashboards';
 import {
@@ -67,7 +67,7 @@ const messages = defineMessages({
 }))
 export class DashboardTable extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     onDeleteItem: PropTypes.func,
     onEditItem: PropTypes.func,
     onAddItem: PropTypes.func,

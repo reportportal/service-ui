@@ -17,7 +17,7 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import ErrorIcon from 'common/img/error-inline.svg';
 import styles from './errorMessage.scss';
@@ -39,5 +39,5 @@ ErrorMessage.propTypes = {
     name: PropTypes.string.isRequired,
     message: PropTypes.string.isRequired,
   }).isRequired,
-  intl: intlShape.isRequired,
+  intl: PropTypes.object.isRequired,
 };

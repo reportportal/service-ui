@@ -16,7 +16,7 @@
 
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import { FieldErrorHint } from './fieldErrorHint';
 import README from './README.md';
 
@@ -31,7 +31,11 @@ storiesOf('Components/Fields/InputErrorHint', module)
       width: 382,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('default state', () => <FieldErrorHint />)
   .add('with error message without focus', () => <FieldErrorHint error={'test error message'} />)
   .add('with error message & focus', () => <FieldErrorHint error={'test error message'} active />);

@@ -79,17 +79,20 @@ export const URLS = {
   launch: (activeProject, id) => `${urlBase}${activeProject}/launch/${id}`,
   launchStatus: (activeProject, ids) => `${urlBase}${activeProject}/launch/status?ids=${ids}`,
   launchByIds: (activeProject, ids) => `${urlBase}${activeProject}/launch?filter.in.id=${ids}`,
-  launchAttributeKeysSearch: (activeProject) =>
-    `${urlBase}${activeProject}/launch/attribute/keys?filter.cnt.attributeKey=`,
-  itemAttributeKeysAllSearch: (activeProject, filterId, isLatest, launchesLimit) =>
-    `${urlBase}${activeProject}/item/attribute/keys/all?filterId=${filterId}&isLatest=${isLatest}&launchesLimit=${launchesLimit}&filter.cnt.attributeKey=`,
-  launchAttributeValuesSearch: (activeProject, key = '') =>
+  launchAttributeKeysSearch: (activeProject) => (searchTerm = '') =>
+    `${urlBase}${activeProject}/launch/attribute/keys?filter.cnt.attributeKey=${searchTerm}`,
+  itemAttributeKeysAllSearch: (activeProject, filterId, isLatest, launchesLimit) => (
+    searchTerm = '',
+  ) =>
+    `${urlBase}${activeProject}/item/attribute/keys/all?filterId=${filterId}&isLatest=${isLatest}&launchesLimit=${launchesLimit}&filter.cnt.attributeKey=${searchTerm}`,
+  launchAttributeValuesSearch: (activeProject, key = '') => (searchTerm = '') =>
     `${urlBase}${activeProject}/launch/attribute/values?${
       key ? `filter.eq.attributeKey=${key}&` : ''
-    }filter.cnt.attributeValue=`,
-  launchNameSearch: (activeProject) => `${urlBase}${activeProject}/launch/names?filter.cnt.name=`,
-  launchOwnersSearch: (activeProject) =>
-    `${urlBase}${activeProject}/launch/owners?filter.cnt.user=`,
+    }filter.cnt.attributeValue=${searchTerm}`,
+  launchNameSearch: (activeProject) => (searchTerm = '') =>
+    `${urlBase}${activeProject}/launch/names?filter.cnt.name=${searchTerm}`,
+  launchOwnersSearch: (activeProject) => (searchTerm = '') =>
+    `${urlBase}${activeProject}/launch/owners?filter.cnt.user=${searchTerm}`,
   launches: (activeProject) => `${urlBase}${activeProject}/launch`,
   launchesLatest: (activeProject, ids) =>
     `${urlBase}${activeProject}/launch/latest${getQueryParams({ ids })}`,
@@ -123,18 +126,18 @@ export const URLS = {
   projectPreferences: (activeProject, userId, filterId = '') =>
     `${urlBase}project/${activeProject}/preference/${userId}/${filterId}`,
   projectUsers: (activeProject) => `${urlBase}project/${activeProject}/users`,
-  projectUserSearchUser: (activeProject, input) =>
+  projectUserSearchUser: (activeProject) => (searchTerm) =>
     `${urlBase}project/${activeProject}/usernames/search${getQueryParams({
       'page.page': 1,
       'page.size': 10,
       'page.sort': 'user,ASC',
-      term: input,
+      term: searchTerm,
     })}`,
   projectAddPattern: (activeProject) => `${urlBase}${activeProject}/settings/pattern`,
   projectUpdatePattern: (activeProject, patternId) =>
     `${urlBase}${activeProject}/settings/pattern/${patternId}`,
-  projectUsernamesSearch: (activeProject) =>
-    `${urlBase}project/${activeProject}/usernames?filter.cnt.users=`,
+  projectUsernamesSearch: (activeProject) => (searchTerm = '') =>
+    `${urlBase}project/${activeProject}/usernames?filter.cnt.users=${searchTerm}`,
   projectIndex: (activeProject) => `${urlBase}project/${activeProject}/index`,
 
   projectStatus: (activeProject, interval) =>
@@ -142,7 +145,7 @@ export const URLS = {
       interval,
     })}`,
   projectSearch: () => `${urlBase}project/list?filter.cnt.name=`,
-  projectNameSearch: () => `${urlBase}project/names/search?term=`,
+  projectNameSearch: (searchTerm) => `${urlBase}project/names/search?term=${searchTerm}`,
 
   exportProjects: (filterEntities) =>
     `${urlBase}project/export${getQueryParams({
@@ -156,20 +159,21 @@ export const URLS = {
   testItems: (activeProject, ids) => `${urlBase}${activeProject}/item${getQueryParams({ ids })}`,
   testItem: (activeProject, id = '') => `${urlBase}${activeProject}/item/${id}`,
   testItemUpdate: (activeProject, id = '') => `${urlBase}${activeProject}/item/${id}/update`,
-  testItemsHistory: (activeProject, ids, historyDepth) =>
+  testItemsHistory: (activeProject, historyDepth, type, id) =>
     `${urlBase}${activeProject}/item/history${getQueryParams({
-      ids,
-      history_depth: historyDepth,
+      historyDepth,
+      type,
+      'filter.eq.id': id,
     })}`,
   testItemsInfoUpdate: (activeProject) => `${urlBase}${activeProject}/item/info`,
   testItemsLinkIssues: (activeProject) => `${urlBase}${activeProject}/item/issue/link`,
   testItemsUnlinkIssues: (activeProject) => `${urlBase}${activeProject}/item/issue/unlink`,
-  testItemAttributeKeysSearch: (activeProject, launch = '') =>
-    `${urlBase}${activeProject}/item/attribute/keys?launch=${launch}&filter.cnt.attributeKey=`,
-  testItemAttributeValuesSearch: (activeProject, launch = '', key = '') =>
+  testItemAttributeKeysSearch: (activeProject, launch = '') => (searchTerm = '') =>
+    `${urlBase}${activeProject}/item/attribute/keys?launch=${launch}&filter.cnt.attributeKey=${searchTerm}`,
+  testItemAttributeValuesSearch: (activeProject, launch = '', key = '') => (searchTerm = '') =>
     `${urlBase}${activeProject}/item/attribute/values?launch=${launch}${
       key ? `&filter.eq.attributeKey=${key}` : ''
-    }&filter.cnt.attributeValue=`,
+    }&filter.cnt.attributeValue=${searchTerm}`,
 
   logItem: (activeProject, itemId, level) =>
     `${urlBase}${activeProject}/log${getQueryParams({
@@ -220,8 +224,6 @@ export const URLS = {
   getFileById: (projectId, dataId, loadThumbnail) =>
     `${urlBase}data/${projectId}/${dataId}${getQueryParams({ loadThumbnail })}`,
 
-  serverSettings: () => `${urlBase}settings`,
-  emailServerSettings: () => `${urlBase}settings/email`,
   authSettings: (authTypeOrId) => `${uatBase}settings/auth/${authTypeOrId}`,
   githubAuthSettings: () => `${uatBase}settings/oauth/github`,
   statisticsServerSettings: () => `${urlBase}settings/analytics`,

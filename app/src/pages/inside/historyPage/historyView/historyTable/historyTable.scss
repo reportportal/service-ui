@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+.history-table {
+  border-collapse: unset;
+}
+
 .spinner-wrapper {
   width: 100%;
   margin-top: 20px;
@@ -60,4 +64,28 @@
   justify-content: flex-start;
   align-content: flex-start;
   align-items: center;
+}
+
+.filter-cell-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filter-name {
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.compare-icon {
+  display: inline-block;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+
+  g {
+    fill: $COLOR--topaz;
+  }
 }

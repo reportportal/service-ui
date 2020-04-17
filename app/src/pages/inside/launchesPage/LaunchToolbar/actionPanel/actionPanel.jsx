@@ -18,9 +18,9 @@ import React, { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { defineMessages, FormattedMessage, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import { canBulkEditLaunches } from 'common/utils/permissions';
+import { canBulkEditItems } from 'common/utils/permissions';
 import { CUSTOMER } from 'common/constants/projectRoles';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { GhostButton } from 'components/buttons/ghostButton';
@@ -36,14 +36,6 @@ import styles from './actionPanel.scss';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
-  actionsBtn: {
-    id: 'ActionPanel.actionsBtn',
-    defaultMessage: 'Actions',
-  },
-  actionCompare: {
-    id: 'ActionPanel.actionCompare',
-    defaultMessage: 'Compare',
-  },
   proceedButton: {
     id: 'ActionPanel.proceedButton',
     defaultMessage: 'Proceed Valid Items',
@@ -73,7 +65,7 @@ export class ActionPanel extends Component {
     selectedLaunches: PropTypes.array,
     hasErrors: PropTypes.bool,
     showBreadcrumb: PropTypes.bool,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     onImportLaunch: PropTypes.func,
     hasValidItems: PropTypes.bool,
     accountRole: PropTypes.string,
@@ -144,7 +136,7 @@ export class ActionPanel extends Component {
       {
         label: intl.formatMessage(COMMON_LOCALE_KEYS.EDIT),
         value: 'action-bulk-edit',
-        hidden: debugMode || !canBulkEditLaunches(accountRole, projectRole),
+        hidden: debugMode || !canBulkEditItems(accountRole, projectRole),
         onClick: () => {
           selectedLaunches.length > 1
             ? onEditItems(selectedLaunches)
@@ -158,7 +150,7 @@ export class ActionPanel extends Component {
         onClick: onMerge,
       },
       {
-        label: intl.formatMessage(messages.actionCompare),
+        label: intl.formatMessage(COMMON_LOCALE_KEYS.COMPARE),
         value: 'action-compare',
         hidden: debugMode,
         onClick: onCompare,
@@ -244,7 +236,7 @@ export class ActionPanel extends Component {
               tooltip={
                 !selectedLaunches.length ? intl.formatMessage(messages.actionsBtnTooltip) : null
               }
-              title={intl.formatMessage(messages.actionsBtn)}
+              title={intl.formatMessage(COMMON_LOCALE_KEYS.ACTIONS)}
               items={actionDescriptors}
               disabled={!selectedLaunches.length}
               onClick={this.onClickActionButton}

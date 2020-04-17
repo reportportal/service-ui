@@ -17,9 +17,9 @@
 import React, { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { ModalLayout, withModal, ModalField } from 'components/main/modal';
-import { commonValidators } from 'common/utils';
+import { commonValidators } from 'common/utils/validation';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -66,7 +66,7 @@ const messages = defineMessages({
 @track()
 export class EditPersonalInformationModal extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     data: PropTypes.shape({
       onEdit: PropTypes.func,
       info: PropTypes.object,

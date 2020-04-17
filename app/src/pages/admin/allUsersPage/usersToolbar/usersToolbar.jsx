@@ -17,7 +17,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { ADMIN_ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { InputFilter } from 'components/inputs/inputFilter';
 import { FilterEntitiesURLContainer } from 'components/filterEntities/containers';
@@ -38,7 +38,7 @@ const messages = defineMessages({
 @injectIntl
 export class UsersToolbar extends PureComponent {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     selectedUsers: PropTypes.arrayOf(PropTypes.object),
     onDelete: PropTypes.func,
   };
@@ -70,7 +70,7 @@ export class UsersToolbar extends PureComponent {
   render() {
     return (
       <div className={cx('users-toolbar')}>
-        <div>
+        <div className={cx('entities-wrapper')}>
           <FilterEntitiesURLContainer
             debounced={false}
             render={({ entities, onChange }) => (

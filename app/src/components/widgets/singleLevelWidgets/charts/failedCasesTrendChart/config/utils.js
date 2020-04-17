@@ -16,7 +16,7 @@
 
 import { range } from 'common/utils';
 import { FAILED } from 'common/constants/testStatuses';
-import { statusLocalization } from 'common/constants/statusLocalization';
+import { statusLocalization } from 'common/constants/localization/statusLocalization';
 import { messages } from 'components/widgets/common/messages';
 
 export const getTicks = (bottom, top) => {

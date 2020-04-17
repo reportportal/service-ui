@@ -30,7 +30,6 @@ export const USER_VIEW = 'projects_view_mode';
 export const SET_PROJECTS_VIEW_MODE = 'setProjectsViewMode';
 export const START_SET_VIEW_MODE = 'startSetProjectsViewMode';
 export const ADD_PROJECT = 'addProject';
-export const ADD_PROJECT_SUCCESS = 'addProjectSuccess';
 export const DELETE_PROJECT = 'deleteProject';
 export const DEFAULT_SORT_COLUMN = 'name';
 export const DEFAULT_SORTING = formatSortingString([DEFAULT_SORT_COLUMN], SORTING_ASC);

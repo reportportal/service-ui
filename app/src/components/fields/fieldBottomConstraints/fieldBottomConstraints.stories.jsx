@@ -16,7 +16,7 @@
 
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import { FieldBottomConstraints } from './fieldBottomConstraints';
 import README from './README.md';
 
@@ -31,7 +31,11 @@ storiesOf('Components/Fields/fieldBottomConstraints', module)
       width: 382,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('default state', () => <FieldBottomConstraints />)
   .add('with text', () => <FieldBottomConstraints text="Some constraints text" />)
   .add('with long text', () => (

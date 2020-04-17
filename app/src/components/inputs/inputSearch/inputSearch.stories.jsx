@@ -16,7 +16,7 @@
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import { InputSearch } from './inputSearch';
 import README from './README.md';
 
@@ -33,7 +33,11 @@ storiesOf('Components/Inputs/InputSearch', module)
       width: 280,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('default state', () => <InputSearch />)
   .add('with value', () => <InputSearch value={value} />)
   .add('with placeholder', () => <InputSearch placeholder="Placeholder test" />)

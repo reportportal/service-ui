@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { URLS } from 'common/urls';
+import { GROUP_TYPES_BY_PLUGIN_NAMES_MAP } from 'common/constants/pluginNames';
 import { AUTHORIZATION_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
 
 export const filterIntegrationsByName = (integrations, integrationName) =>
@@ -38,6 +40,12 @@ export const groupItems = (items) =>
     return groupedItems;
   }, {});
 
+export const isAuthorizationPlugin = (name) =>
+  GROUP_TYPES_BY_PLUGIN_NAMES_MAP[name] === AUTHORIZATION_GROUP_TYPE;
+
+export const resolveIntegrationUrl = (integrationUrl, pluginName) =>
+  isAuthorizationPlugin(pluginName) ? URLS.authSettings(pluginName) : integrationUrl;
+
 export const isPostIssueActionAvailable = (integrations) =>
   integrations.length &&
   integrations.some(
@@ -46,6 +54,14 @@ export const isPostIssueActionAvailable = (integrations) =>
       item.integrationParameters.defectFormFields.length,
   );
 
-// TODO: remove check for AUTHORIZATION_GROUP_TYPE when designs and backend implementation will exist
-export const filterAvailablePlugins = (plugins) =>
-  plugins.filter((item) => item.enabled && item.groupType !== AUTHORIZATION_GROUP_TYPE);
+export const isPluginSwitchable = (pluginName) => !isAuthorizationPlugin(pluginName);
+
+export const filterEnabledPlugins = (plugins = []) => plugins.filter((item) => item.enabled);
+
+export const filterAvailablePlugins = (plugins = []) =>
+  plugins.filter(
+    (item) =>
+      item.enabled &&
+      item.groupType !== AUTHORIZATION_GROUP_TYPE &&
+      GROUP_TYPES_BY_PLUGIN_NAMES_MAP[item.name] === item.groupType,
+  );

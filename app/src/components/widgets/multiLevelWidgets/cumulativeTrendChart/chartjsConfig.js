@@ -16,11 +16,9 @@
 
 import * as COLORS from 'common/constants/colors';
 import { messages } from './messages';
+import { EXECUTIONS, DEFECTS } from '../../common/constants';
 
 const Color = require('color');
-
-const EXECUTIONS = 'executions';
-const DEFECTS = 'defects';
 
 const getDefects = (fields) => fields.filter((item) => /defects/.test(item));
 
@@ -43,7 +41,7 @@ const convertIntoPercents = (datasets) => {
       dataset,
       {
         data: dataset.data.map(
-          (value, index) => -(-value / totalDataset.data[index] * 100).toFixed(2),
+          (value, index) => -((-value / totalDataset.data[index]) * 100).toFixed(2),
         ),
       },
     ),
@@ -98,13 +96,15 @@ const getScaleName = (widget, options) => {
 };
 
 const getChartOptions = (widget, options) => {
-  const { percentage, formatMessage, tooltipContents, showTotal } = options;
+  const { percentage, formatMessage, tooltipContents, showTotal, onResize } = options;
 
   return {
+    responsive: true,
+    maintainAspectRatio: true,
+    onResize,
     legend: {
       display: false,
     },
-    maintainAspectRatio: false,
     layout: {
       padding: {
         left: 0,
@@ -161,7 +161,7 @@ const getChartOptions = (widget, options) => {
             return '';
           }
           const totalValue = totalDataset.data[tooltipItem.index];
-          const percentageValue = -(-value / totalValue * 100).toFixed(2);
+          const percentageValue = -((-value / totalValue) * 100).toFixed(2);
           if (percentage) {
             return ` ${label}: ${percentageValue}%`;
           }

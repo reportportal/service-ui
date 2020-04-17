@@ -27,7 +27,7 @@ import { PageErrorBoundary } from 'components/containers/pageErrorBoundary';
 
 import { pageRendering } from './constants';
 
-import styles from './pageSwitcher.css';
+import styles from './pageSwitcher.scss';
 
 Object.keys(pageNames).forEach((page) => {
   if (!pageRendering[page]) {
@@ -39,7 +39,7 @@ Object.keys(pageNames).forEach((page) => {
   page: pageSelector(state),
   isInitialDispatchDone: isInitialDispatchDoneSelector(state),
 }))
-export default class PageSwitcher extends React.PureComponent {
+export default class PageSwitcher extends React.Component {
   static propTypes = {
     page: PropTypes.string,
     isInitialDispatchDone: PropTypes.bool,

@@ -16,17 +16,16 @@
 
 import { takeEvery, all, put, select, call } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
-import { GROUP_TYPES_BY_INTEGRATION_NAMES_MAP } from 'common/constants/integrationNames';
 import {
   showNotification,
   showDefaultErrorNotification,
   NOTIFICATION_TYPES,
 } from 'controllers/notification';
 import { projectIdSelector } from 'controllers/pages';
-import { fetchDataAction } from 'controllers/fetch';
+import { fetchDataAction, createFetchPredicate } from 'controllers/fetch';
 import { hideModalAction } from 'controllers/modal';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
-import { fetch } from 'common/utils';
+import { fetch, omit } from 'common/utils';
 import {
   NAMESPACE,
   FETCH_PLUGINS,
@@ -36,7 +35,11 @@ import {
   UPDATE_INTEGRATION,
   REMOVE_INTEGRATION,
   FETCH_GLOBAL_INTEGRATIONS,
+  SECRET_FIELDS_KEY,
+  FETCH_GLOBAL_INTEGRATIONS_SUCCESS,
 } from './constants';
+import { resolveIntegrationUrl } from './utils';
+import { pluginByNameSelector } from './selectors';
 import {
   removePluginSuccessAction,
   addProjectIntegrationSuccessAction,
@@ -48,25 +51,27 @@ import {
   updateGlobalIntegrationSuccessAction,
   fetchGlobalIntegrationsSuccessAction,
 } from './actionCreators';
+import { fetchUiExtensions } from './uiExtensions';
 
-function* addIntegration({ payload: { data, isGlobal, pluginName, callback } }) {
+function* addIntegration({ payload: { data, isGlobal, pluginName, callback }, meta }) {
   yield put(showScreenLockAction());
   try {
     const projectId = yield select(projectIdSelector);
-    const url = isGlobal
+    const integrationUrl = isGlobal
       ? URLS.newGlobalIntegration(pluginName)
       : URLS.newProjectIntegration(projectId, pluginName);
+    const url = resolveIntegrationUrl(integrationUrl, pluginName);
     const response = yield call(fetch, url, {
       method: 'post',
       data,
     });
+
+    const integrationType = yield select(pluginByNameSelector, pluginName);
     const newIntegration = {
       ...data,
+      integrationParameters: omit(data.integrationParameters, meta[SECRET_FIELDS_KEY]),
       id: response.id,
-      integrationType: {
-        name: pluginName,
-        groupType: GROUP_TYPES_BY_INTEGRATION_NAMES_MAP[pluginName],
-      },
+      integrationType,
     };
     const addIntegrationSuccessAction = isGlobal
       ? addGlobalIntegrationSuccessAction(newIntegration)
@@ -91,20 +96,27 @@ function* watchAddIntegration() {
   yield takeEvery(ADD_INTEGRATION, addIntegration);
 }
 
-function* updateIntegration({ payload: { data, isGlobal, id, callback } }) {
+function* updateIntegration({ payload: { data, isGlobal, pluginName, id, callback }, meta }) {
   yield put(showScreenLockAction());
   try {
     const projectId = yield select(projectIdSelector);
-    const url = isGlobal ? URLS.globalIntegration(id) : URLS.projectIntegration(projectId, id);
+    const integrationUrl = isGlobal
+      ? URLS.globalIntegration(id)
+      : URLS.projectIntegration(projectId, id);
+    const url = resolveIntegrationUrl(integrationUrl, pluginName);
 
     yield call(fetch, url, {
       method: 'put',
       data,
     });
 
+    const integration = {
+      ...data,
+      integrationParameters: omit(data.integrationParameters, meta[SECRET_FIELDS_KEY]),
+    };
     const updateIntegrationSuccessAction = isGlobal
-      ? updateGlobalIntegrationSuccessAction(data, id)
-      : updateProjectIntegrationSuccessAction(data, id);
+      ? updateGlobalIntegrationSuccessAction(integration, id)
+      : updateProjectIntegrationSuccessAction(integration, id);
     yield put(updateIntegrationSuccessAction);
     yield put(
       showNotification({
@@ -227,6 +239,13 @@ function* watchRemovePlugin() {
   yield takeEvery(REMOVE_PLUGIN, removePlugin);
 }
 
+function* watchPluginChange() {
+  yield takeEvery(
+    [createFetchPredicate(NAMESPACE), FETCH_GLOBAL_INTEGRATIONS_SUCCESS],
+    fetchUiExtensions,
+  );
+}
+
 export function* pluginSagas() {
   yield all([
     watchAddIntegration(),
@@ -236,5 +255,6 @@ export function* pluginSagas() {
     watchFetchGlobalIntegrations(),
     watchFetchPlugins(),
     watchRemovePlugin(),
+    watchPluginChange(),
   ]);
 }

@@ -22,16 +22,24 @@ import {
   namedProjectIntegrationsSelectorsMap,
   namedGlobalIntegrationsSelectorsMap,
 } from 'controllers/plugins';
-import { INTEGRATIONS_IMAGES_MAP, INTEGRATION_NAMES_TITLES } from '../../constants';
-import { INTEGRATIONS_DESCRIPTIONS_MAP } from '../../messages';
+import { PLUGIN_IMAGES_MAP, PLUGIN_NAME_TITLES } from '../../constants';
+import { PLUGIN_DESCRIPTIONS_MAP } from '../../messages';
 import { InfoSection } from './infoSection';
 import { InstancesSection } from './instancesSection';
 
+const emptySelector = () => [];
+
 @connect(
-  (state, ownProps) => ({
-    projectIntegrations: namedProjectIntegrationsSelectorsMap[ownProps.integrationType.name](state),
-    globalIntegrations: namedGlobalIntegrationsSelectorsMap[ownProps.integrationType.name](state),
-  }),
+  (state, ownProps) => {
+    const projectIntegrationSelector =
+      namedProjectIntegrationsSelectorsMap[ownProps.integrationType.name] || emptySelector;
+    const globalIntegrationSelector =
+      namedGlobalIntegrationsSelectorsMap[ownProps.integrationType.name] || emptySelector;
+    return {
+      projectIntegrations: projectIntegrationSelector(state),
+      globalIntegrations: globalIntegrationSelector(state),
+    };
+  },
   {
     showDefaultErrorNotification,
   },
@@ -69,9 +77,9 @@ export class IntegrationInfoContainer extends Component {
     return (
       <Fragment>
         <InfoSection
-          image={INTEGRATIONS_IMAGES_MAP[name]}
-          description={INTEGRATIONS_DESCRIPTIONS_MAP[name]}
-          title={INTEGRATION_NAMES_TITLES[name]}
+          image={PLUGIN_IMAGES_MAP[name]}
+          description={PLUGIN_DESCRIPTIONS_MAP[name]}
+          title={PLUGIN_NAME_TITLES[name]}
           version={details.version}
           data={integrationType}
           onToggleActive={onToggleActive}
@@ -86,7 +94,7 @@ export class IntegrationInfoContainer extends Component {
           pluginId={type}
           instanceType={name}
           isGlobal={isGlobal}
-          title={INTEGRATION_NAMES_TITLES[name]}
+          title={PLUGIN_NAME_TITLES[name]}
         />
       </Fragment>
     );

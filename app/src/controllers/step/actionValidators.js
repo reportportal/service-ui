@@ -15,7 +15,7 @@
  */
 
 export const validateIgnoreInAA = (item) => {
-  if (item.issue && !item.issue.issueType) {
+  if (!item.issue || !item.issue.issueType) {
     return 'noDefectType';
   }
   if (item.issue && item.issue.ignoreAnalyzer) {
@@ -25,7 +25,7 @@ export const validateIgnoreInAA = (item) => {
 };
 
 export const validateIncludeInAA = (item) => {
-  if (item.issue && !item.issue.issueType) {
+  if (!item.issue || !item.issue.issueType) {
     return 'noDefectType';
   }
   if (item.issue && !item.issue.ignoreAnalyzer) {

@@ -22,7 +22,7 @@ import ReactObserver from 'react-event-observer';
 import { Fullscreen } from 'components/containers/fullscreen';
 import { ReflexContainer, ReflexSplitter, ReflexElement } from 'react-reflex/dist/commonjs';
 import 'react-reflex/styles.css';
-import { SAUCE_LABS } from 'common/constants/integrationNames';
+import { SAUCE_LABS } from 'common/constants/pluginNames';
 import { activeLogSelector } from 'controllers/log';
 import { availableIntegrationsByPluginNameSelector } from 'controllers/plugins';
 import {

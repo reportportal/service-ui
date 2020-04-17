@@ -19,13 +19,15 @@ import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { showModalAction } from 'controllers/modal';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { canInviteInternalUser } from 'common/utils/permissions';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { InputSearch } from 'components/inputs/inputSearch';
+import { validate, bindMessageToValidator } from 'common/utils/validation';
+import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import PermissionMapIcon from 'common/img/permission-inline.svg';
 import InviteUserIcon from 'common/img/invite-inline.svg';
@@ -59,12 +61,15 @@ const messages = defineMessages({
 @reduxForm({
   form: 'filterSearch',
   enableReinitialize: true,
+  validate: ({ filter }) => ({
+    filter: bindMessageToValidator(validate.searchMembers, 'membersSearchHint')(filter),
+  }),
 })
 @injectIntl
 @track()
 export class MembersPageToolbar extends React.Component {
   static propTypes = {
-    intl: intlShape,
+    intl: PropTypes.object,
     showModalAction: PropTypes.func.isRequired,
     onInvite: PropTypes.func,
     projectRole: PropTypes.string,
@@ -73,6 +78,7 @@ export class MembersPageToolbar extends React.Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    onFilterChange: PropTypes.func,
   };
 
   static defaultProps = {
@@ -80,6 +86,13 @@ export class MembersPageToolbar extends React.Component {
     onInvite: () => {},
     projectRole: '',
     accountRole: '',
+    onFilterChange: () => {},
+  };
+
+  handleFilterChange = (e, filter) => {
+    if (validate.searchMembers(filter)) {
+      this.props.onFilterChange(filter);
+    }
   };
 
   showInviteUserModal = () => {
@@ -96,11 +109,13 @@ export class MembersPageToolbar extends React.Component {
     return (
       <div className={cx('members-page-toolbar')}>
         <div className={cx('search-input')}>
-          <FieldProvider name="filter">
-            <InputSearch
-              maxLength="128"
-              placeholder={this.props.intl.formatMessage(messages.searchInputPlaceholder)}
-            />
+          <FieldProvider name="filter" onChange={this.handleFilterChange}>
+            <FieldErrorHint>
+              <InputSearch
+                maxLength="128"
+                placeholder={this.props.intl.formatMessage(messages.searchInputPlaceholder)}
+              />
+            </FieldErrorHint>
           </FieldProvider>
         </div>
         <div className={cx('members-page-controls')}>

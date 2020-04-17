@@ -16,7 +16,7 @@
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import TestIcon from './img/test-icon-inline.svg';
 import { InputOutside } from './inputOutside';
 import README from './README.md';
@@ -32,7 +32,11 @@ storiesOf('Components/Inputs/InputOutside', module)
       width: 300,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('default state', () => <InputOutside />)
   .add('with placeholder', () => <InputOutside placeholder="Placeholder test" />)
   .add('with predefined value', () => <InputOutside value="Predefined text" />)

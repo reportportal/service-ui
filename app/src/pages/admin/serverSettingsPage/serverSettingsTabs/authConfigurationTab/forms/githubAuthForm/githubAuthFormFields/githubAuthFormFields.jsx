@@ -15,9 +15,10 @@
  */
 
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { FieldArray } from 'redux-form';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { FormField } from 'components/fields/formField';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { Input } from 'components/inputs/input';
@@ -41,7 +42,7 @@ const messages = defineMessages({
 @injectIntl
 export class GithubAuthFormFields extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
   };
 
   render() {
@@ -70,7 +71,7 @@ export class GithubAuthFormFields extends Component {
           labelClassName={cx('label')}
         >
           <FieldErrorHint>
-            <Input mobileDisabled />
+            <Input type="password" mobileDisabled />
           </FieldErrorHint>
         </FormField>
         <FieldArray name={ORGANIZATIONS_KEY} component={CategoriesList} />

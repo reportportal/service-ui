@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import { InputRadio } from 'components/inputs/inputRadio';
 import { OwnerBlock } from 'pages/inside/common/itemInfo/ownerBlock';
@@ -35,7 +35,7 @@ const messages = defineMessages({
 @injectIntl
 export class WidgetListItem extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     widget: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
     activeId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),

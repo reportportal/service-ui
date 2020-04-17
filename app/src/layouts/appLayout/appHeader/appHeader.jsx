@@ -27,6 +27,7 @@ import {
   activeProjectRoleSelector,
   userAccountRoleSelector,
 } from 'controllers/user';
+import { uiExtensionHeaderComponentsSelector } from 'controllers/plugins';
 import { canSeeMembers } from 'common/utils/permissions';
 import { PROJECT_MEMBERS_PAGE, PROJECT_SETTINGS_PAGE } from 'controllers/pages/constants';
 import { NavLink } from 'components/main/navLink';
@@ -43,6 +44,7 @@ const cx = classNames.bind(styles);
   assignedProjects: assignedProjectsSelector(state),
   accountRole: userAccountRoleSelector(state),
   userRole: activeProjectRoleSelector(state),
+  extensionComponents: uiExtensionHeaderComponentsSelector(state),
 }))
 @track()
 export class AppHeader extends Component {
@@ -58,6 +60,7 @@ export class AppHeader extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    extensionComponents: PropTypes.array,
   };
 
   static defaultProps = {
@@ -65,6 +68,7 @@ export class AppHeader extends Component {
     assignedProjects: {},
     sideMenuOpened: false,
     toggleSideMenu: () => {},
+    extensionComponents: [],
   };
 
   onClickLink = (eventInfo) => {
@@ -80,6 +84,7 @@ export class AppHeader extends Component {
       assignedProjects,
       accountRole,
       userRole,
+      extensionComponents,
     } = this.props;
     return (
       <header className={cx('header')}>
@@ -109,6 +114,11 @@ export class AppHeader extends Component {
             activeClassName={cx('active')}
             onClick={() => this.onClickLink(HEADER_EVENTS.CLICK_SETTINGS_BTN)}
           />
+          {extensionComponents.map((extensionComponent) => (
+            <div className={cx('nav-btn', 'extension-component')} key={extensionComponent.name}>
+              {extensionComponent.component}
+            </div>
+          ))}
         </div>
         <UserBlock user={user} />
       </header>

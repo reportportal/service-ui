@@ -15,7 +15,8 @@
  */
 
 import React, { Component } from 'react';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import PropTypes from 'prop-types';
+import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { withModal, ModalLayout } from 'components/main/modal';
@@ -34,7 +35,7 @@ const messages = defineMessages({
 @injectIntl
 export class PermissionMapModal extends Component {
   static propTypes = {
-    intl: intlShape,
+    intl: PropTypes.object,
   };
   static defaultProps = {
     intl: {},

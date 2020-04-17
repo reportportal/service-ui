@@ -16,7 +16,7 @@
 
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import {
   EntityContains,
   EntityInputConditional,
@@ -84,20 +84,18 @@ const messages = defineMessages({
 @injectIntl
 export class UsersEntities extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     filterValues: PropTypes.object,
     render: PropTypes.func.isRequired,
-    projectSearchUrl: PropTypes.string,
   };
 
   static defaultProps = {
     loading: false,
     events: [],
     filterValues: {},
-    projectSearchUrl: URLS.projectNameSearch(),
   };
   getEntities = () => {
-    const { intl, projectSearchUrl } = this.props;
+    const { intl } = this.props;
     return [
       {
         id: USERS,
@@ -227,10 +225,10 @@ export class UsersEntities extends Component {
         active: true,
         removable: false,
         customProps: {
-          uri: projectSearchUrl,
+          getURI: URLS.projectNameSearch,
           placeholder: null,
           creatable: false,
-          inputprops: {
+          inputProps: {
             maxlength: 256,
           },
         },

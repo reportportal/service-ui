@@ -17,10 +17,11 @@
 import React, { Component } from 'react';
 import track from 'react-tracking';
 import { ADMIN_PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { Icon } from 'components/main/icon/icon';
+import { getRelativeUnits } from 'common/utils/timeDateUtils';
 import { ProjectMenu } from '../../projectMenu';
 import { StatisticsItem } from './statisticsItem';
 import { ProjectTooltipIcon } from './projectTooltipIcon';
@@ -37,7 +38,7 @@ const cx = classNames.bind(styles);
 export class ProjectPanel extends Component {
   static propTypes = {
     project: PropTypes.object.isRequired,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -93,6 +94,7 @@ export class ProjectPanel extends Component {
       project: { projectName, entryType, lastRun, launchesQuantity, usersQuantity },
       intl,
     } = this.props;
+    const { value: relativeTime, unit } = getRelativeUnits(new Date(lastRun).getTime());
 
     return (
       <div className={cx('container')}>
@@ -110,7 +112,7 @@ export class ProjectPanel extends Component {
           {lastRun && (
             <div className={cx('gray-text')}>
               {intl.formatMessage(messages.lastLaunch, {
-                date: intl.formatRelative(new Date(lastRun).getTime()),
+                date: intl.formatRelativeTime(relativeTime, unit),
               })}
             </div>
           )}

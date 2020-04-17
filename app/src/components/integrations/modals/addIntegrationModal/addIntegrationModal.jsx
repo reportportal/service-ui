@@ -16,12 +16,12 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { INTEGRATION_FORM } from 'components/integrations/elements/integrationSettings';
-import { INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP } from '../../constants';
+import { INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP } from '../../formFieldComponentsMap';
 
 const messages = defineMessages({
   createManualTitle: {
@@ -45,7 +45,7 @@ const messages = defineMessages({
 @injectIntl
 export class AddIntegrationModal extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     data: PropTypes.object,
     handleSubmit: PropTypes.func.isRequired,
     initialize: PropTypes.func.isRequired,
@@ -57,6 +57,10 @@ export class AddIntegrationModal extends Component {
     data: {},
   };
 
+  state = {
+    metaData: {},
+  };
+
   getCloseConfirmationConfig = () => {
     if (!this.props.dirty) {
       return null;
@@ -66,10 +70,23 @@ export class AddIntegrationModal extends Component {
     };
   };
 
+  updateMetaData = (metaData) => {
+    this.setState({
+      metaData: {
+        ...this.state.metaData,
+        ...metaData,
+      },
+    });
+  };
+
+  onSubmit = (data) => {
+    this.props.data.onConfirm(data, this.state.metaData);
+  };
+
   render() {
     const {
       intl: { formatMessage },
-      data: { onConfirm, instanceType, isGlobal, customProps = {}, eventsInfo = {} },
+      data: { instanceType, isGlobal, customProps = {}, eventsInfo = {} },
       handleSubmit,
       initialize,
       change,
@@ -85,7 +102,7 @@ export class AddIntegrationModal extends Component {
         title={customProps.editAuthMode ? formatMessage(messages.editAuthTitle) : createTitle}
         okButton={{
           text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
-          onClick: handleSubmit(onConfirm),
+          onClick: handleSubmit(this.onSubmit),
           eventInfo: eventsInfo.saveBtn,
         }}
         cancelButton={{
@@ -95,7 +112,13 @@ export class AddIntegrationModal extends Component {
         closeConfirmation={this.getCloseConfirmationConfig()}
         closeIconEventInfo={eventsInfo.closeIcon}
       >
-        <FieldsComponent initialize={initialize} change={change} lineAlign {...customProps} />
+        <FieldsComponent
+          initialize={initialize}
+          change={change}
+          updateMetaData={this.updateMetaData}
+          lineAlign
+          {...customProps}
+        />
       </ModalLayout>
     );
   }

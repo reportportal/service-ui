@@ -17,11 +17,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import { ModalField } from 'components/main/modal';
 import { Input } from 'components/inputs/input';
-import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
+import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import { FIELD_LABEL_WIDTH } from '../../constants';
 import styles from './customColumnItem.scss';
@@ -45,9 +45,9 @@ const messages = defineMessages({
 @injectIntl
 export class CustomColumnItem extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     name: PropTypes.string,
-    uri: PropTypes.string,
+    getURI: PropTypes.func,
     attributeKey: PropTypes.object,
     index: PropTypes.number,
     last: PropTypes.bool,
@@ -57,7 +57,7 @@ export class CustomColumnItem extends Component {
   };
   static defaultProps = {
     name: '',
-    uri: '',
+    getURI: '',
     attributeKey: {},
     index: 0,
     last: false,
@@ -77,9 +77,8 @@ export class CustomColumnItem extends Component {
     const { index, onChange, name } = this.props;
     onChange({ name, value }, index);
   };
-  formatValue = (values) => values.map((value) => ({ value, label: value }));
   render() {
-    const { intl, name, uri, attributeKey, index, last, noRemove } = this.props;
+    const { intl, name, getURI, attributeKey, index, last, noRemove } = this.props;
     return (
       <ModalField
         className={cx({ 'last-custom-column-field': last })}
@@ -94,17 +93,13 @@ export class CustomColumnItem extends Component {
             onChange={this.onChangeName}
           />
           <div className={cx('attribute-key-input')}>
-            <InputTagsSearch
+            <AsyncAutocomplete
               value={attributeKey}
               placeholder={intl.formatMessage(messages.attributeKeyPlaceholder)}
-              makeOptions={this.formatValue}
               onChange={this.onChangeAttributeKey}
               minLength={1}
-              uri={uri}
-              async
+              getURI={getURI}
               creatable
-              showNewLabel
-              isClearable
             />
           </div>
           <div className={cx('remove-icon', { 'no-remove': noRemove })} onClick={this.onRemove}>

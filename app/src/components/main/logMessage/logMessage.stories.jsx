@@ -16,7 +16,7 @@
 
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import { LogMessage } from './logMessage';
 import README from './README.md';
 
@@ -31,7 +31,11 @@ storiesOf('Components/Main/LogMessage', module)
       width: 150,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('with item', () => {
     const item = {
       message: 'Some log message',

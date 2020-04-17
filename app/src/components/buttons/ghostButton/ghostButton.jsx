@@ -35,6 +35,7 @@ export const GhostButton = ({
   mobileDisabled,
   transparentBorder,
   large,
+  style,
 }) => {
   const classes = cx({
     'ghost-button': true,
@@ -48,7 +49,14 @@ export const GhostButton = ({
     'transparent-border': transparentBorder,
   });
   return (
-    <button type={type} disabled={disabled} className={classes} onClick={onClick} title={title}>
+    <button
+      style={style}
+      type={type}
+      disabled={disabled}
+      className={classes}
+      onClick={onClick}
+      title={title}
+    >
       {icon && (
         <i className={cx('icon', { 'only-icon': !children, 'icon-at-right': iconAtRight })}>
           {Parser(icon)}
@@ -73,6 +81,7 @@ GhostButton.propTypes = {
   onClick: PropTypes.func,
   transparentBorder: PropTypes.bool,
   large: PropTypes.bool,
+  style: PropTypes.object,
 };
 
 GhostButton.defaultProps = {
@@ -89,4 +98,5 @@ GhostButton.defaultProps = {
   onClick: () => {},
   transparentBorder: false,
   large: false,
+  style: null,
 };

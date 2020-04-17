@@ -37,44 +37,10 @@
       }
     }
   }
-
-  :global {
-    .Select-control {
-      padding-left: 55px;
-    }
-  }
 }
 
-.input {
-  position: relative;
-  display: inline-block;
-  height: 100%;
-  width: 100%;
-  padding: 6px 20px 6px 60px;
-  margin: 0;
-  box-sizing: border-box;
-  border: 1px solid $COLOR--gray-80;
-  outline: none;
-  background-color: $COLOR--white-two;
-  font-family: $FONT-REGULAR;
-  font-size: 13px;
-  line-height: 13px;
-  color: $COLOR--charcoal-grey;
-  box-shadow: none;
-  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
-
-  &:hover {
-    border-color: $COLOR--gray-47;
-  }
-  &:focus {
-    background-color: inherit;
-    border-color: $COLOR--topaz;
-    box-shadow: 0 0 2px 0 rgba($COLOR--topaz, 0.7);
-  }
-  &.error.touched {
-    border-color: $COLOR--orange-red;
-    box-shadow: 0 0 2px 0 rgba($COLOR--orange-red, 0.7);
-  }
+.tags {
+  padding-left: 55px;
 }
 
 .conditions-block {

@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
@@ -27,8 +27,9 @@ import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 import ImportIcon from 'common/img/import-inline.svg';
 import { URLS } from 'common/urls';
 import { MODAL_TYPE_UPLOAD_PLUGIN } from 'pages/common/modals/importModal/constants';
-import { UPLOAD, INITIAL_PARAMS_FIELD_KEY } from './constants';
 import styles from './actionPanel.scss';
+
+export const UPLOAD = 'upload';
 
 const cx = classNames.bind(styles);
 
@@ -72,7 +73,7 @@ const messages = defineMessages({
 @track()
 export class ActionPanel extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     showModalAction: PropTypes.func.isRequired,
     fetchPluginsAction: PropTypes.func.isRequired,
     tracking: PropTypes.shape({
@@ -89,16 +90,6 @@ export class ActionPanel extends Component {
     JSON.stringify(
       initialParamsValues.reduce((acc, item) => ({ ...acc, [item.key]: item.value }), {}),
     );
-
-  appendInitialParamsValue = (formData, initialParamsValues) => {
-    if (initialParamsValues && initialParamsValues.length) {
-      formData.append(
-        INITIAL_PARAMS_FIELD_KEY,
-        this.prepareInitialParamsValue(initialParamsValues),
-      );
-    }
-    return formData;
-  };
 
   openUploadModal = () => {
     const {
@@ -117,8 +108,6 @@ export class ActionPanel extends Component {
         tip: formatMessage(messages.uploadTip),
         incorrectFileSize: formatMessage(messages.incorrectFileSize),
         url: URLS.plugin(),
-        // customBlock: UploadCustomBlock,
-        // appendCustomBlockValue: this.appendInitialParamsValue,
         singleImport: true,
         eventsInfo: {
           okBtn: PLUGINS_PAGE_EVENTS.OK_BTN_UPLOAD_MODAL,

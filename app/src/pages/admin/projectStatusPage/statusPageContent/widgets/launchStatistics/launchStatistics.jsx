@@ -70,10 +70,10 @@ export class LaunchStatistics extends Component {
         date: key,
         name: interval === PERIOD_VALUES.ONE_MONTH ? key : getWeekRange(key),
         values: {
-          automationBug: (automationBug / total * 100).toFixed(2),
-          productBug: (productBug / total * 100).toFixed(2),
-          systemIssue: (systemIssue / total * 100).toFixed(2),
-          toInvestigate: (toInvestigate / total * 100).toFixed(2),
+          automationBug: ((automationBug / total) * 100).toFixed(2),
+          productBug: ((productBug / total) * 100).toFixed(2),
+          systemIssue: ((systemIssue / total) * 100).toFixed(2),
+          toInvestigate: ((toInvestigate / total) * 100).toFixed(2),
         },
       };
     });

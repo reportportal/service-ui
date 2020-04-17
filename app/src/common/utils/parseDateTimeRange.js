@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { getTimestampFromMinutes } from 'common/utils';
+import { getTimestampFromMinutes } from 'common/utils/timeDateUtils';
 
 export const parseDateTimeRange = (value) => {
   const dateString = value.value;

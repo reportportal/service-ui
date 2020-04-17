@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
@@ -27,12 +27,12 @@ import { ALL_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
 import { updatePluginSuccessAction } from 'controllers/plugins';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { getPluginFilterTabClickEvent } from 'components/main/analytics/events';
-import { IntegrationBreadcrumbs } from 'pages/common/settingsPage/integrationsTab/integrationBreadcrumbs';
+import { SimpleBreadcrumbs } from 'components/main/simpleBreadcrumbs';
 import {
   IntegrationInfoContainer,
   IntegrationSettingsContainer,
 } from 'components/integrations/containers';
-import { INTEGRATION_NAMES_TITLES } from 'components/integrations';
+import { PLUGIN_NAME_TITLES } from 'components/integrations';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import {
   INSTALLED_PLUGINS_SUBPAGE,
@@ -65,7 +65,7 @@ const messages = defineMessages({
 @track()
 export class InstalledTab extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     filterItems: PropTypes.array.isRequired,
     plugins: PropTypes.array.isRequired,
     updatePluginSuccessAction: PropTypes.func.isRequired,
@@ -224,7 +224,7 @@ export class InstalledTab extends Component {
     this.changeSubPage({
       type: INSTALLED_PLUGINS_SUBPAGE,
       data: pageData,
-      title: INTEGRATION_NAMES_TITLES[pageData.name] || pageData.name,
+      title: PLUGIN_NAME_TITLES[pageData.name] || pageData.name,
     });
 
   renderFilterMobileBlock = () => (
@@ -244,7 +244,7 @@ export class InstalledTab extends Component {
       <div className={cx('plugins-wrapper')}>
         <div className={cx('plugins-sub-content-wrapper')}>
           {subPage.type && (
-            <IntegrationBreadcrumbs
+            <SimpleBreadcrumbs
               descriptors={this.getBreadcrumbs()}
               onClickItem={this.changeSubPage}
             />

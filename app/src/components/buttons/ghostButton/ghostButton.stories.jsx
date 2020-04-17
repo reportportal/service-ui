@@ -17,7 +17,7 @@
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import TestIcon from './img/test-icon-inline.svg';
 import { GhostButton } from './ghostButton';
 import README from './README.md';
@@ -33,7 +33,11 @@ storiesOf('Components/Buttons/GhostButton', module)
       width: 200,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('default state', () => <GhostButton />)
   .add('with children', () => <GhostButton>Button title</GhostButton>)
   .add('with icon', () => <GhostButton icon={TestIcon} />)

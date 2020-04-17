@@ -37,8 +37,10 @@ export {
   querySelector,
   isInitialDispatchDoneSelector,
   currentPathSelector,
+  pluginPageSelector,
+  pluginRouteSelector,
 } from './selectors';
-export { updatePagePropertiesAction } from './actionCreators';
+export { updatePagePropertiesAction, clearPageStateAction } from './actionCreators';
 
 export {
   NO_PAGE,
@@ -75,6 +77,8 @@ export {
   adminPageNames,
   OAUTH_SUCCESS,
   HOME_PAGE,
+  CLEAR_PAGE_STATE,
+  PLUGIN_UI_EXTENSION_ADMIN_PAGE,
 } from './constants';
 export { NOT_FOUND } from 'redux-first-router';
 export { pageSagas } from './sagas';

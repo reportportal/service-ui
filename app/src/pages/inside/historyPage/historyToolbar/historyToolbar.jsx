@@ -15,21 +15,78 @@
  */
 
 import React, { Fragment } from 'react';
-import { InfoLine } from 'pages/inside/common/infoLine';
 import PropTypes from 'prop-types';
+import { HISTORY_PAGE_EVENTS } from 'components/main/analytics/events';
+import { RefineFiltersPanel } from 'pages/inside/common/refineFiltersPanel';
 import { ActionPanel } from './actionPanel';
+import { ActionPanelWithGroupOperations } from './actionPanelWithGroupOperations';
 
-export const HistoryToolbar = ({ parentItem, onRefresh }) => (
+export const HistoryToolbar = ({
+  selectedItems,
+  onUnselect,
+  onUnselectAll,
+  onRefresh,
+  onFilterAdd,
+  onFilterRemove,
+  onFilterValidate,
+  onFilterChange,
+  filterErrors,
+  filterEntities,
+  infoLine,
+  withGroupOperations,
+  userId,
+}) => (
   <Fragment>
-    <ActionPanel onRefresh={onRefresh} />
-    {parentItem && <InfoLine data={parentItem} />}
+    {withGroupOperations ? (
+      <ActionPanelWithGroupOperations
+        onRefresh={onRefresh}
+        selectedItems={selectedItems}
+        onUnselect={onUnselect}
+        onUnselectAll={onUnselectAll}
+        userId={userId}
+      />
+    ) : (
+      <ActionPanel onRefresh={onRefresh} selectedItems={selectedItems} />
+    )}
+    {infoLine}
+    <RefineFiltersPanel
+      onFilterAdd={onFilterAdd}
+      onFilterRemove={onFilterRemove}
+      onFilterValidate={onFilterValidate}
+      onFilterChange={onFilterChange}
+      filterErrors={filterErrors}
+      filterEntities={filterEntities}
+      events={HISTORY_PAGE_EVENTS.REFINE_FILTERS_PANEL_EVENTS}
+    />
   </Fragment>
 );
 HistoryToolbar.propTypes = {
-  parentItem: PropTypes.object,
+  selectedItems: PropTypes.arrayOf(PropTypes.object),
+  userId: PropTypes.string,
+  infoLine: PropTypes.node,
+  filterErrors: PropTypes.object,
+  filterEntities: PropTypes.array,
+  withGroupOperations: PropTypes.bool,
   onRefresh: PropTypes.func,
+  onFilterAdd: PropTypes.func,
+  onFilterRemove: PropTypes.func,
+  onFilterValidate: PropTypes.func,
+  onFilterChange: PropTypes.func,
+  onUnselect: PropTypes.func,
+  onUnselectAll: PropTypes.func,
 };
 HistoryToolbar.defaultProps = {
-  parentItem: null,
+  selectedItems: [],
+  userId: '',
+  infoLine: null,
+  filterErrors: {},
+  filterEntities: [],
+  withGroupOperations: false,
   onRefresh: () => {},
+  onFilterAdd: () => {},
+  onFilterRemove: () => {},
+  onFilterValidate: () => {},
+  onFilterChange: () => {},
+  onUnselect: () => {},
+  onUnselectAll: () => {},
 };

@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
-import { FETCH_USER_FILTERS_SUCCESS, UPDATE_FILTER_CONDITIONS } from './constants';
-import { launchesFiltersReducer, launchesFiltersReadyReducer } from './reducer';
+import {
+  FETCH_USER_FILTERS_SUCCESS,
+  UPDATE_FILTER_CONDITIONS,
+  SET_PAGE_LOADING,
+} from './constants';
+import { launchesFiltersReducer, launchesFiltersReadyReducer, pageLoadingReducer } from './reducer';
 
 describe('filter reducer', () => {
   describe('launchesFiltersReducer', () => {
-    test('should return old state in unknown action', () => {
+    test('should return old state on unknown action', () => {
       const oldState = [{ id: 0 }];
       expect(
         launchesFiltersReducer(oldState, {
@@ -80,7 +84,7 @@ describe('filter reducer', () => {
   });
 
   describe('launchesFiltersReadyReducer', () => {
-    test('should return old state in unknown action', () => {
+    test('should return old state on unknown action', () => {
       const oldState = true;
       expect(
         launchesFiltersReadyReducer(oldState, {
@@ -91,6 +95,26 @@ describe('filter reducer', () => {
 
     test('should return true on FETCH_USER_FILTERS_SUCCESS action', () => {
       expect(launchesFiltersReadyReducer(false, { type: FETCH_USER_FILTERS_SUCCESS })).toBe(true);
+    });
+  });
+
+  describe('pageLoadingReducer', () => {
+    test('should return initial state', () => {
+      expect(pageLoadingReducer(undefined, {})).toBe(false);
+    });
+
+    test('should return old state on unknown action', () => {
+      const oldState = false;
+      expect(pageLoadingReducer(oldState, { type: 'foo' })).toBe(oldState);
+    });
+
+    test('should handle SET_PAGE_LOADING', () => {
+      const payload = true;
+      const newState = pageLoadingReducer(SET_PAGE_LOADING, {
+        type: SET_PAGE_LOADING,
+        payload,
+      });
+      expect(newState).toEqual(payload);
     });
   });
 });

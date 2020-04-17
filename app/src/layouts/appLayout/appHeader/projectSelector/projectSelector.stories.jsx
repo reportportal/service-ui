@@ -16,7 +16,7 @@
 
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import { ProjectSelector } from './projectSelector';
 import README from './README.md';
 
@@ -60,7 +60,11 @@ storiesOf('Layouts/App/Header/ProjectSelector', module)
       width: '70%',
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('default state', () => <ProjectSelector />)
   .add('with data', () => (
     <ProjectSelector projects={mockProjectsList} activeProject="Default_active" />

@@ -17,7 +17,7 @@
 import { Component } from 'react';
 import track from 'react-tracking';
 import { connect } from 'react-redux';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
@@ -25,6 +25,7 @@ import { updateStorageItem } from 'common/utils';
 import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
 import {
   ENGLISH,
+  UKRAINIAN,
   RUSSIAN,
   BELARUSIAN,
   DEFAULT_LANGUAGE,
@@ -34,6 +35,7 @@ import { InputDropdown } from 'components/inputs/inputDropdown';
 import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './localizationBlock.scss';
 import EnglishFlagIcon from './img/en-flag-inline.svg';
+import UkrainianFlagIcon from './img/ua-flag-inline.svg';
 import RussianFlagIcon from './img/ru-flag-inline.svg';
 import BelarusFlagIcon from './img/be-flag-inline.svg';
 
@@ -43,6 +45,10 @@ const messages = defineMessages({
   label: {
     id: 'LocalizationBlock.label',
     defaultMessage: 'Language',
+  },
+  ukrainian: {
+    id: 'LocalizationBlock.ukrainian',
+    defaultMessage: 'Ukrainian',
   },
   russian: {
     id: 'LocalizationBlock.russian',
@@ -88,6 +94,11 @@ const LANG_OPTIONS = [
     label: messages.english,
   },
   {
+    value: UKRAINIAN,
+    icon: UkrainianFlagIcon,
+    label: messages.ukrainian,
+  },
+  {
     value: RUSSIAN,
     icon: RussianFlagIcon,
     label: messages.russian,
@@ -111,7 +122,7 @@ const LANG_OPTIONS = [
 @track()
 export class LocalizationBlock extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     lang: PropTypes.string.isRequired,
     setLangAction: PropTypes.func.isRequired,
     tracking: PropTypes.shape({

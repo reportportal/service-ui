@@ -16,7 +16,7 @@
 
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import Link from 'redux-first-router-link';
 import Parser from 'html-react-parser';
 import { connect } from 'react-redux';
@@ -53,7 +53,7 @@ const messages = defineMessages({
 }))
 export class HistoryItem extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     historyItem: PropTypes.shape({
       oldValue: PropTypes.string,
       newValue: PropTypes.string,
@@ -107,7 +107,7 @@ export class HistoryItem extends Component {
       return (
         <Fragment>
           {intl.formatMessage(messages.basedOn)}{' '}
-          <Link className={cx('link')} to={itemLink}>
+          <Link className={cx('link')} to={itemLink} target="_blank">
             {intl.formatMessage(messages.item)}
           </Link>
         </Fragment>

@@ -16,7 +16,7 @@
 
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import { FormattedMessage, intlShape } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { showModalAction } from 'controllers/modal';
@@ -72,7 +72,6 @@ export class LaunchFiltersToolbar extends Component {
     activeFilter: PropTypes.object,
     unsavedFilterIds: PropTypes.array,
     dirtyFilterIds: PropTypes.array,
-    onSelectFilter: PropTypes.func,
     onRemoveFilter: PropTypes.func,
     onFilterAdd: PropTypes.func,
     onFilterRemove: PropTypes.func,
@@ -94,7 +93,7 @@ export class LaunchFiltersToolbar extends Component {
     level: PropTypes.string,
     userInfo: PropTypes.object.isRequired,
     projectRole: PropTypes.string.isRequired,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
   };
 
   static defaultProps = {
@@ -103,7 +102,6 @@ export class LaunchFiltersToolbar extends Component {
     activeFilter: null,
     unsavedFilterIds: [],
     dirtyFilterIds: [],
-    onSelectFilter: () => {},
     onRemoveFilter: () => {},
     onFilterAdd: () => {},
     onFilterRemove: () => {},
@@ -214,7 +212,6 @@ export class LaunchFiltersToolbar extends Component {
       activeFilterId,
       launchDistinct,
       activeFilter,
-      onSelectFilter,
       onRemoveFilter,
       filterEntities,
       filterErrors,
@@ -251,49 +248,44 @@ export class LaunchFiltersToolbar extends Component {
               filters={filters}
               activeFilterId={activeFilterId}
               unsavedFilterIds={unsavedFilterIds}
-              onSelectFilter={onSelectFilter}
               onRemoveFilter={onRemoveFilter}
               intl={intl}
-              allLatest={launchDistinct}
             />
           </div>
-          {!!activeFilter &&
-            !level && (
-              <div className={cx('expand-toggle-container')}>
-                <ExpandToggler expanded={this.state.expanded} onToggleExpand={this.toggleExpand} />
-              </div>
-            )}
-        </div>
-        {this.state.expanded &&
-          !level &&
-          !!activeFilter && (
-            <div className={cx('filter-controls-container')}>
-              <div className={cx('filter-entities-container')}>
-                <EntitiesGroup
-                  onChange={onFilterChange}
-                  onValidate={onFilterValidate}
-                  onRemove={onFilterRemove}
-                  onAdd={onFilterAdd}
-                  errors={filterErrors}
-                  entities={filterEntities}
-                />
-              </div>
-              <FiltersActionBar
-                unsaved={this.isFilterUnsaved()}
-                discardDisabled={this.isDiscardDisabled()}
-                saveDisabled={this.isSaveDisabled()}
-                cloneDisabled={this.isNoFilterValues()}
-                editDisabled={this.isEditDisabled()}
-                onDiscard={this.handleFilterReset}
-                onEdit={this.handleFilterEdit}
-                onSave={this.updateActiveFilter}
-                onClone={this.handleFilterClone}
-                filter={activeFilter}
-                onChangeSorting={onChangeSorting}
-                sortingString={sortingString}
-              />
+          {!!activeFilter && !level && (
+            <div className={cx('expand-toggle-container')}>
+              <ExpandToggler expanded={this.state.expanded} onToggleExpand={this.toggleExpand} />
             </div>
           )}
+        </div>
+        {this.state.expanded && !level && !!activeFilter && (
+          <div className={cx('filter-controls-container')}>
+            <div className={cx('filter-entities-container')}>
+              <EntitiesGroup
+                onChange={onFilterChange}
+                onValidate={onFilterValidate}
+                onRemove={onFilterRemove}
+                onAdd={onFilterAdd}
+                errors={filterErrors}
+                entities={filterEntities}
+              />
+            </div>
+            <FiltersActionBar
+              unsaved={this.isFilterUnsaved()}
+              discardDisabled={this.isDiscardDisabled()}
+              saveDisabled={this.isSaveDisabled()}
+              cloneDisabled={this.isNoFilterValues()}
+              editDisabled={this.isEditDisabled()}
+              onDiscard={this.handleFilterReset}
+              onEdit={this.handleFilterEdit}
+              onSave={this.updateActiveFilter}
+              onClone={this.handleFilterClone}
+              filter={activeFilter}
+              onChangeSorting={onChangeSorting}
+              sortingString={sortingString}
+            />
+          </div>
+        )}
       </div>
     );
   }

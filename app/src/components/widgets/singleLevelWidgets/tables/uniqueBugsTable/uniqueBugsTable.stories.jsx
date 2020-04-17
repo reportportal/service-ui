@@ -16,7 +16,7 @@
 
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import { UniqueBugsTable } from './uniqueBugsTable';
 import { widgetData } from './storyData';
 import README from './README.md';
@@ -32,5 +32,9 @@ storiesOf('Components/Widgets/Tables/UniqueBugsTable', module)
       width: '100%',
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('default state', () => <UniqueBugsTable widget={widgetData} />);

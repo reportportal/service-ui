@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { userInfoSelector, userIdSelector } from 'controllers/user';
 import { ModalLayout, withModal } from 'components/main/modal';
 
@@ -54,7 +54,7 @@ export class ForceUpdateModal extends Component {
     data: PropTypes.shape({
       onForceUpdate: PropTypes.func,
     }).isRequired,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
   };
   static defaultProps = {
     accountType: '',

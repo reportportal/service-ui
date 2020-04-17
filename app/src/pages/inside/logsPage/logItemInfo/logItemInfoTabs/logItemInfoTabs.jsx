@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import track from 'react-tracking';
 import {
@@ -28,7 +28,7 @@ import {
   activeLogSelector,
 } from 'controllers/log';
 import { fetchFirstAttachmentsAction, attachmentItemsSelector } from 'controllers/log/attachments';
-import { SAUCE_LABS } from 'common/constants/integrationNames';
+import { SAUCE_LABS } from 'common/constants/pluginNames';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import StackTraceIcon from 'common/img/stack-trace-inline.svg';
 import AttachmentIcon from 'common/img/attachment-inline.svg';
@@ -86,7 +86,7 @@ const ATTACHMENTS_TAB_ID = 'attachments';
 @track()
 export class LogItemInfoTabs extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     lastActivity: PropTypes.object,
     loading: PropTypes.bool.isRequired,
     onChangePage: PropTypes.func.isRequired,

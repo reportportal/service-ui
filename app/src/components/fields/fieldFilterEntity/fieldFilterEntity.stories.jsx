@@ -17,7 +17,7 @@
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 import { action } from '@storybook/addon-actions';
-import { withReadme } from 'storybook-readme';
+
 import { InputConditional } from 'components/inputs/inputConditional';
 import { FieldFilterEntity } from './fieldFilterEntity';
 import README from './README.md';
@@ -57,7 +57,11 @@ storiesOf('Components/Fields/FieldFilterEntity', module)
       width: 260,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('default state', () => <FieldFilterEntity />)
   .add('without removable', () => <FieldFilterEntity removable={false} />)
   .add('with children', () => (

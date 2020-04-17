@@ -15,9 +15,15 @@
  */
 
 import { combineReducers } from 'redux';
-import { fetchReducer } from 'controllers/fetch/reducer';
+import { fetchReducer } from 'controllers/fetch';
 import { queueReducers } from 'common/utils/queueReducers';
+import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
 import { loadingReducer } from 'controllers/loading';
+import {
+  PROJECT_DASHBOARD_PAGE,
+  PROJECT_DASHBOARD_ITEM_PAGE,
+  PROJECT_DASHBOARD_PRINT_PAGE,
+} from 'controllers/pages';
 import {
   ADD_DASHBOARD_SUCCESS,
   CHANGE_FULL_SCREEN_MODE,
@@ -56,9 +62,15 @@ const fullScreenModeReducer = (state = INITIAL_STATE.fullScreenMode, { type, pay
   }
 };
 
-export const dashboardReducer = combineReducers({
+const reducer = combineReducers({
   dashboards: queueReducers(fetchReducer(NAMESPACE, { contentPath: 'content' }), dashboardsReducer),
   gridType: gridTypeReducer,
   fullScreenMode: fullScreenModeReducer,
   loading: loadingReducer(NAMESPACE),
 });
+
+export const dashboardReducer = createPageScopedReducer(reducer, [
+  PROJECT_DASHBOARD_PAGE,
+  PROJECT_DASHBOARD_ITEM_PAGE,
+  PROJECT_DASHBOARD_PRINT_PAGE,
+]);

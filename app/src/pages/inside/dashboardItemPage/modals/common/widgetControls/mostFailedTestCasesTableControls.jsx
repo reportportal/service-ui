@@ -19,9 +19,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { activeProjectSelector } from 'controllers/user';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { URLS } from 'common/urls';
-import { validate, bindMessageToValidator } from 'common/utils';
+import { validate, bindMessageToValidator } from 'common/utils/validation';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import {
   SKIPPED_FAILED_LAUNCHES_OPTIONS,
@@ -48,14 +48,6 @@ const messages = defineMessages({
     id: 'MostFailedTestCasesTableControls.LaunchNamePlaceholder',
     defaultMessage: 'Enter launch name',
   },
-  LaunchNameFocusPlaceholder: {
-    id: 'MostFailedTestCasesTableControls.LaunchNameFocusPlaceholder',
-    defaultMessage: 'Please enter 3 or more characters',
-  },
-  LaunchNameNoMatches: {
-    id: 'MostFailedTestCasesTableControls.LaunchNameNoMatches',
-    defaultMessage: 'No matches found.',
-  },
   IncludeMethodsControlText: {
     id: 'MostFailedTestCasesTableControls.IncludeMethodsControlText',
     defaultMessage: 'Include Before and After methods',
@@ -76,13 +68,13 @@ const validators = {
 
 @injectIntl
 @connect((state) => ({
-  launchNamesSearchUrl: URLS.launchNameSearch(activeProjectSelector(state)),
+  activeProject: activeProjectSelector(state),
 }))
 export class MostFailedTestCasesTableControls extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     widgetSettings: PropTypes.object.isRequired,
-    launchNamesSearchUrl: PropTypes.string.isRequired,
+    activeProject: PropTypes.string.isRequired,
     initializeControlsForm: PropTypes.func.isRequired,
   };
 
@@ -112,22 +104,13 @@ export class MostFailedTestCasesTableControls extends Component {
 
   normalizeValue = (value) => value && `${value}`.replace(/\D+/g, '');
 
-  formatLaunchNameOptions = (values) => values.map((value) => ({ value, label: value }));
-  formatLaunchNames = (value) => (value ? { value, label: value } : null);
-  parseLaunchNames = (value) => {
-    if (value === null) return null;
-    if (value && value.value) return value.value;
-
-    return undefined;
-  };
-
   formatFilterValue = (value) => value && value[0];
   parseFilterValue = (value) => value && [value];
 
   render() {
     const {
       intl: { formatMessage },
-      launchNamesSearchUrl,
+      activeProject,
     } = this.props;
 
     return (
@@ -156,20 +139,13 @@ export class MostFailedTestCasesTableControls extends Component {
         </FieldProvider>
         <FieldProvider
           name="contentParameters.widgetOptions.launchNameFilter"
-          format={this.formatLaunchNames}
-          parse={this.parseLaunchNames}
           validate={validators.launchNames(formatMessage(messages.LaunchNamesValidationError))}
         >
           <TagsControl
             fieldLabel={formatMessage(messages.LaunchNameFieldLabel)}
             placeholder={formatMessage(messages.LaunchNamePlaceholder)}
-            focusPlaceholder={formatMessage(messages.LaunchNameFocusPlaceholder)}
-            nothingFound={formatMessage(messages.LaunchNameNoMatches)}
             minLength={3}
-            async
-            uri={launchNamesSearchUrl}
-            makeOptions={this.formatLaunchNameOptions}
-            removeSelected
+            getURI={URLS.launchNameSearch(activeProject)}
           />
         </FieldProvider>
         <FieldProvider name="contentParameters.widgetOptions.includeMethods">

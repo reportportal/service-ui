@@ -16,7 +16,7 @@
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import { InputDropdownSorting } from './inputDropdownSorting';
 import README from './README.md';
 
@@ -59,7 +59,11 @@ storiesOf('Components/Inputs/InputDropdownSorting', module)
       width: 300,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   // Single dropdown
   .add('Single, default state', () => <InputDropdownSorting options={options} />)
   .add('Single, disabled', () => <InputDropdownSorting options={options} disabled />)

@@ -275,17 +275,6 @@ describe('validate.ldapUrl', () => {
   });
 });
 
-describe('validate.ldapSynchronizationAttributes', () => {
-  test('validation should be correct', () => {
-    expect(validate.ldapSynchronizationAttributes({ email: 'example' })).toBe(true);
-  });
-  test('Validation should not be correct', () => {
-    expect(validate.ldapSynchronizationAttributes(undefined)).toBe(false);
-    expect(validate.ldapSynchronizationAttributes({})).toBe(false);
-    expect(validate.ldapSynchronizationAttributes({ email: '' })).toBe(false);
-  });
-});
-
 describe('validate.defectTypeLongName', () => {
   test('validation should be correct', () => {
     expect(validate.defectTypeLongName('abc')).toBe(true);
@@ -391,48 +380,6 @@ describe('validate.analyzerMinShouldMatch', () => {
     expect(validate.analyzerMinShouldMatch('3')).toBe(false);
     expect(validate.analyzerMinShouldMatch('30')).toBe(false);
     expect(validate.analyzerMinShouldMatch('300')).toBe(false);
-  });
-});
-
-describe('validate.analyzerMinTermFreq', () => {
-  test('validation should be correct', () => {
-    expect(validate.analyzerMinTermFreq('1')).toBe(true);
-    expect(validate.analyzerMinTermFreq('10')).toBe(true);
-  });
-  test('Validation should not be correct', () => {
-    expect(validate.analyzerMinTermFreq(undefined)).toBe(false);
-    expect(validate.analyzerMinTermFreq('')).toBe(false);
-    expect(validate.analyzerMinTermFreq('  ')).toBe(false);
-    expect(validate.analyzerMinTermFreq('11')).toBe(false);
-    expect(validate.analyzerMinTermFreq('0')).toBe(false);
-  });
-});
-
-describe('validate.analyzerMinDocFreq', () => {
-  test('validation should be correct', () => {
-    expect(validate.analyzerMinDocFreq('1')).toBe(true);
-    expect(validate.analyzerMinDocFreq('10')).toBe(true);
-  });
-  test('Validation should not be correct', () => {
-    expect(validate.analyzerMinDocFreq(undefined)).toBe(false);
-    expect(validate.analyzerMinDocFreq('')).toBe(false);
-    expect(validate.analyzerMinDocFreq('  ')).toBe(false);
-    expect(validate.analyzerMinDocFreq('11')).toBe(false);
-    expect(validate.analyzerMinDocFreq('0')).toBe(false);
-  });
-});
-
-describe('validate.analyzerMinDocFreq', () => {
-  test('validation should be correct', () => {
-    expect(validate.analyzerMinDocFreq('1')).toBe(true);
-    expect(validate.analyzerMinDocFreq('10')).toBe(true);
-  });
-  test('Validation should not be correct', () => {
-    expect(validate.analyzerMinDocFreq(undefined)).toBe(false);
-    expect(validate.analyzerMinDocFreq('')).toBe(false);
-    expect(validate.analyzerMinDocFreq('  ')).toBe(false);
-    expect(validate.analyzerMinDocFreq('11')).toBe(false);
-    expect(validate.analyzerMinDocFreq('0')).toBe(false);
   });
 });
 

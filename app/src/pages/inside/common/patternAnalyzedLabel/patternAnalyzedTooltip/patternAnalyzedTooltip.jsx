@@ -17,7 +17,7 @@
 import { PureComponent } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import styles from './patternAnalyzedTooltip.scss';
 
 const cx = classNames.bind(styles);
@@ -32,7 +32,7 @@ const messages = defineMessages({
 @injectIntl
 export class PatternAnalyzedTooltip extends PureComponent {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     patternTemplates: PropTypes.array,
   };
   static defaultProps = {

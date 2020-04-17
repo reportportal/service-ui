@@ -18,12 +18,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { reduxForm, formValueSelector } from 'redux-form';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { DEFAULT_PROJECT_ROLE, ROLES_MAP } from 'common/constants/projectRoles';
 import { URLS } from 'common/urls';
-import { fetch, commonValidators } from 'common/utils';
+import { fetch } from 'common/utils/fetch';
+import { commonValidators } from 'common/utils/validation';
 import { projectIdSelector } from 'controllers/pages';
 import { isAdminSelector } from 'controllers/user';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
@@ -36,10 +37,10 @@ import { withModal, ModalLayout, ModalField } from 'components/main/modal';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { showModalAction } from 'controllers/modal';
-import { InputUserSearch } from 'components/inputs/inputUserSearch';
-import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
+import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { InputUserSearch } from 'components/inputs/inputUserSearch';
 import styles from './inviteUserModal.scss';
 
 const cx = classNames.bind(styles);
@@ -110,7 +111,7 @@ const inviteFormSelector = formValueSelector('inviteUserForm');
 })
 export class InviteUserModal extends Component {
   static propTypes = {
-    intl: intlShape,
+    intl: PropTypes.object,
     data: PropTypes.shape({
       onInvite: PropTypes.func,
       isProjectSelector: PropTypes.bool,
@@ -135,11 +136,6 @@ export class InviteUserModal extends Component {
     isAdmin: false,
     dirty: false,
   };
-
-  constructor(props) {
-    super(props);
-    this.projectSearchUrl = URLS.projectNameSearch();
-  }
 
   getCloseConfirmationConfig = () => {
     if (!this.props.dirty) {
@@ -230,18 +226,7 @@ export class InviteUserModal extends Component {
   };
   formatUser = (user) => (user && { value: user.userLogin, label: user.userLogin }) || null;
 
-  formatValueProject = (value) => (value ? { value, label: value } : null);
-
-  parseValueProject = (value) => {
-    if (value === null) return null;
-    if (value && value.value) return value.value;
-
-    return undefined;
-  };
-
-  formatValue = (values) => values.map((value) => ({ value, label: value }));
-
-  filterProject = ({ value }) =>
+  filterProject = (value) =>
     !(
       value &&
       this.props.selectedUser &&
@@ -286,17 +271,11 @@ export class InviteUserModal extends Component {
           </ModalField>
           {data.isProjectSelector && (
             <ModalField label="Project" name="project" labelWidth={LABEL_WIDTH}>
-              <FieldProvider
-                name="project"
-                format={this.formatValueProject}
-                parse={this.parseValueProject}
-              >
+              <FieldProvider name="project">
                 <FieldErrorHint hintType="top">
-                  <InputTagsSearch
+                  <AsyncAutocomplete
                     minLength={1}
-                    async
-                    uri={this.projectSearchUrl}
-                    makeOptions={this.formatValue}
+                    getURI={URLS.projectNameSearch}
                     filterOption={this.filterProject}
                   />
                 </FieldErrorHint>

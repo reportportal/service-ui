@@ -16,9 +16,9 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import Parser from 'html-react-parser';
-import { fetch } from 'common/utils';
+import { fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
@@ -85,7 +85,7 @@ const messages = defineMessages({
 @track()
 export class StatisticsTab extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     showNotification: PropTypes.func,
     fetchInfo: PropTypes.func,
     statisticsEnabled: PropTypes.bool,

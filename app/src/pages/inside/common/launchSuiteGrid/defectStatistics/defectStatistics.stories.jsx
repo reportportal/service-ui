@@ -16,7 +16,7 @@
 
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 // eslint-disable-next-line import/extensions, import/no-unresolved
 import { WithState } from 'storybook-decorators';
 import { DefectStatistics } from './defectStatistics';
@@ -34,7 +34,11 @@ storiesOf('Pages/Inside/Common/launchSuiteGrid/defectStatistics', module)
       width: 70,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('with data', () => (
     <WithState state={state}>
       <DefectStatistics {...mockData} />

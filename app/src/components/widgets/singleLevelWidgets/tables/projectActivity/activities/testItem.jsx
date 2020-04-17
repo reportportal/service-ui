@@ -17,7 +17,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import Link from 'redux-first-router-link';
 import { URLS } from 'common/urls';
 import { fetch, arrayDiffer } from 'common/utils';
@@ -53,7 +53,7 @@ const messages = defineMessages({
 @injectIntl
 export class TestItem extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     activity: PropTypes.object,
   };
   static defaultProps = {

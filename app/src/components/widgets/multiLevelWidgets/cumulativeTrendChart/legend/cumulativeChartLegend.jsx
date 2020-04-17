@@ -34,6 +34,7 @@ export class CumulativeChartLegend extends PureComponent {
     userSettings: PropTypes.object,
     isChartDataAvailable: PropTypes.bool,
     isPrintMode: PropTypes.bool,
+    isLegendControlsShown: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -44,6 +45,7 @@ export class CumulativeChartLegend extends PureComponent {
     userSettings: {},
     isChartDataAvailable: false,
     isPrintMode: false,
+    isLegendControlsShown: true,
   };
 
   onChangeFocusType = (e) => {
@@ -71,6 +73,7 @@ export class CumulativeChartLegend extends PureComponent {
       userSettings,
       isChartDataAvailable,
       isPrintMode,
+      isLegendControlsShown,
     } = this.props;
     const { defectTypes, showTotal, separate, percentage } = userSettings;
     return (
@@ -86,51 +89,51 @@ export class CumulativeChartLegend extends PureComponent {
           {isChartDataAvailable && (
             <Fragment>
               {!isPrintMode && <Legend className={cx('legend')} {...this.props} />}
+              {isLegendControlsShown && (
+                <div className={cx('controls')}>
+                  <div className={cx('control')}>
+                    <InputCheckbox value={defectTypes} onChange={this.onChangeFocusType}>
+                      Defect Types
+                    </InputCheckbox>
+                  </div>
 
-              <div className={cx('controls')}>
-                <div className={cx('control')}>
-                  <InputCheckbox value={defectTypes} onChange={this.onChangeFocusType}>
-                    Defect Types
-                  </InputCheckbox>
-                </div>
+                  <div className={cx('control')}>
+                    <InputCheckbox
+                      className={cx('control')}
+                      value={showTotal}
+                      onChange={this.onChangeTotals}
+                    >
+                      Totals
+                    </InputCheckbox>
+                  </div>
 
-                <div className={cx('control')}>
-                  <InputCheckbox
-                    className={cx('control')}
-                    value={showTotal}
-                    onChange={this.onChangeTotals}
+                  <div
+                    className={cx('control', 'separate', { 'separate-active': separate })}
+                    onClick={this.onChangeSeparate}
                   >
-                    Totals
-                  </InputCheckbox>
-                </div>
+                    <InputCheckbox className={cx('control')} value={separate}>
+                      Separate
+                    </InputCheckbox>
+                  </div>
 
-                <div
-                  className={cx('control', 'separate', { 'separate-active': separate })}
-                  onClick={this.onChangeSeparate}
-                >
-                  <InputCheckbox className={cx('control')} value={separate}>
-                    Separate
-                  </InputCheckbox>
+                  <div
+                    className={cx('control', 'percentage', { 'percentage-active': percentage })}
+                    onClick={this.onChangePercentage}
+                  >
+                    <InputCheckbox className={cx('control')} value={percentage}>
+                      Percentage
+                    </InputCheckbox>
+                  </div>
                 </div>
-
-                <div
-                  className={cx('control', 'percentage', { 'percentage-active': percentage })}
-                  onClick={this.onChangePercentage}
-                >
-                  <InputCheckbox className={cx('control')} value={percentage}>
-                    Percentage
-                  </InputCheckbox>
-                </div>
-              </div>
+              )}
             </Fragment>
           )}
         </div>
-        {isChartDataAvailable &&
-          isPrintMode && (
-            <div className={cx('legend-second-row')}>
-              <Legend className={cx('legend')} {...this.props} />
-            </div>
-          )}
+        {isChartDataAvailable && isPrintMode && (
+          <div className={cx('legend-second-row')}>
+            <Legend className={cx('legend')} {...this.props} />
+          </div>
+        )}
       </div>
     );
   }

@@ -86,9 +86,9 @@ export const fetchProjectPreferencesAction = (projectId) => ({
   payload: projectId,
 });
 
-export const fetchProjectAction = (projectId, isAdminAccess) => ({
+export const fetchProjectAction = (projectId, fetchInfoOnly) => ({
   type: FETCH_PROJECT,
-  payload: { projectId, isAdminAccess },
+  payload: { projectId, fetchInfoOnly },
 });
 
 export const fetchConfigurationAttributesAction = (projectId) => ({

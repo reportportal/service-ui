@@ -17,16 +17,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { IntlProvider, addLocaleData } from 'react-intl';
-import en from 'react-intl/locale-data/en';
-import ru from 'react-intl/locale-data/ru';
-import be from 'react-intl/locale-data/be';
+import { IntlProvider } from 'react-intl';
 import { langSelector } from 'controllers/lang';
+import { polyfillLocales } from 'common/polyfills';
 
+import localeUA from '../../../../localization/translated/uk.json';
 import localeRU from '../../../../localization/translated/ru.json';
 import localeBE from '../../../../localization/translated/be.json';
 
-addLocaleData([...en, ...ru, ...be]);
+const localesReadyPromise = polyfillLocales();
 
 @connect((state) => ({
   lang: langSelector(state),
@@ -36,36 +35,29 @@ export class LocalizationContainer extends React.Component {
     lang: PropTypes.string,
     children: PropTypes.node,
   };
+
   static defaultProps = {
     lang: 'be',
     children: null,
   };
+
   constructor(props) {
     super(props);
     this.messages = {
       ru: localeRU,
       be: localeBE,
+      uk: localeUA,
     };
-    if (!window.Intl) {
-      this.state = { ready: false };
-      require.ensure(
-        [
-          'intl',
-          'intl/locale-data/jsonp/en.js',
-          'intl/locale-data/jsonp/ru.js',
-          'intl/locale-data/jsonp/be.js',
-        ],
-        (require) => {
-          require('intl');
-          require('intl/locale-data/jsonp/en.js');
-          require('intl/locale-data/jsonp/ru.js');
-          require('intl/locale-data/jsonp/be.js');
-          this.setState({ ready: true });
-        },
-      );
-    } else {
-      this.state = { ready: true };
-    }
+  }
+
+  state = {
+    ready: false,
+  };
+
+  componentDidMount() {
+    localesReadyPromise.then(() => {
+      this.setState({ ready: true });
+    });
   }
 
   render() {
@@ -73,7 +65,11 @@ export class LocalizationContainer extends React.Component {
       return <div />;
     }
     return (
-      <IntlProvider locale={this.props.lang} messages={this.messages[this.props.lang]}>
+      <IntlProvider
+        defaultLocale={this.props.lang === 'be' ? 'be' : 'en'}
+        locale={this.props.lang}
+        messages={this.messages[this.props.lang]}
+      >
         {React.cloneElement(this.props.children, { key: this.props.lang })}
       </IntlProvider>
     );

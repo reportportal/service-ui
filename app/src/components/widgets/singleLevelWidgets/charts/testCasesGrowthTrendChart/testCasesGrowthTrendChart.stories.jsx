@@ -18,7 +18,7 @@ import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 // eslint-disable-next-line import/extensions, import/no-unresolved
 import { WithState } from 'storybook-decorators';
-import { withReadme } from 'storybook-readme';
+
 import 'c3/c3.css';
 import { TestCasesGrowthTrendChart } from './testCasesGrowthTrendChart';
 import { state, widgetData, widgetDataTimelineMode } from './storyData';
@@ -41,7 +41,11 @@ storiesOf('Components/Widgets/Charts/TestCasesGrowthTrendChart', module)
       width: 640,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('default state', () => (
     <WithState state={state}>
       <TestCasesGrowthTrendChart widget={widgetData} container={mockNode} observer={mockObserver} />

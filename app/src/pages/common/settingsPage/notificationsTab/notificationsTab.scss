@@ -15,9 +15,8 @@
  */
 
 .notifications-tab {
-  max-width: 1000px;
+  max-width: 970px;
   margin: 0 auto;
-  padding: 30px 0 60px 0;
   @media (max-width: $SCREEN_XS_MAX) {
     padding: 15px 10px;
   }

@@ -6,7 +6,7 @@ Width and height grows with components's content.
 
 > Hoverable when visible
 
-> Takes an object with the following format as an argument: { TooltipComponent: *React Component*, data: *Options*}
+> Takes an object with the following format as an argument: { TooltipComponent: _React Component_, data: _Options_}
 
 > data format:
 

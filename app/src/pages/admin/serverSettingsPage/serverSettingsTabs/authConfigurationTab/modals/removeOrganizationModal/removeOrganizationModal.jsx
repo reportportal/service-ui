@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { formValueSelector, change } from 'redux-form';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -67,7 +67,7 @@ const messages = defineMessages({
 @injectIntl
 export class RemoveOrganizationModal extends Component {
   static propTypes = {
-    intl: intlShape,
+    intl: PropTypes.object,
     formData: PropTypes.object.isRequired,
     data: PropTypes.object,
     change: PropTypes.func,

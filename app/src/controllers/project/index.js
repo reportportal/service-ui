@@ -40,6 +40,7 @@ export {
   deletePatternAction,
   deletePatternSuccessAction,
   updatePAStateAction,
+  fetchProjectPreferencesAction,
 } from './actionCreators';
 export { projectReducer } from './reducer';
 export {
@@ -61,6 +62,8 @@ export {
   PAStateSelector,
   getDefectTypeSelector,
   enabledPattersSelector,
+  projectInfoSelector,
+  projectInfoLoadingSelector,
 } from './selectors';
 export { normalizeAttributesWithPrefix } from './utils';
 export { projectSagas } from './sagas';

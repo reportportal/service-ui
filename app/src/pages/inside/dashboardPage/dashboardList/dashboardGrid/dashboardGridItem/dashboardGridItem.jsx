@@ -16,7 +16,7 @@
 
 import React, { Component, Fragment } from 'react';
 import track from 'react-tracking';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -52,7 +52,7 @@ export class DashboardGridItem extends Component {
 
   static propTypes = {
     projectId: PropTypes.string.isRequired,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     currentUser: PropTypes.object,
     item: PropTypes.object,
     onEdit: PropTypes.func,
@@ -124,17 +124,16 @@ export class DashboardGridItem extends Component {
           </div>
           <div className={cx('grid-cell', 'owner')}>{owner}</div>
           <div className={cx('grid-cell', 'shared')}>
-            {share &&
-              isOwner && (
-                <Fragment>
-                  <div className={cx('icon-holder')}>
-                    <Icon type="icon-tables" />
-                  </div>
-                  <span className={cx('shared-text')}>
-                    {intl.formatMessage(messages.dashboardIsShared)}
-                  </span>
-                </Fragment>
-              )}
+            {share && isOwner && (
+              <Fragment>
+                <div className={cx('icon-holder')}>
+                  <Icon type="icon-tables" />
+                </div>
+                <span className={cx('shared-text')}>
+                  {intl.formatMessage(messages.dashboardIsShared)}
+                </span>
+              </Fragment>
+            )}
             {!isOwner && (
               <Fragment>
                 <div className={cx('icon-holder')}>

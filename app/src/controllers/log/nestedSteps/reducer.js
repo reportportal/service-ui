@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { queueReducers } from 'common/utils';
 import { omit } from 'common/utils/omit';
 import {
   FETCH_NESTED_STEP_START,
@@ -24,7 +23,7 @@ import {
   TOGGLE_NESTED_STEP,
 } from './constants';
 
-function fetchReducer(state = {}, action) {
+export const nestedStepsReducer = (state = {}, action) => {
   switch (action.type) {
     case FETCH_NESTED_STEP_START: {
       const {
@@ -56,13 +55,6 @@ function fetchReducer(state = {}, action) {
         },
       };
     }
-    default:
-      return state;
-  }
-}
-
-function mutationReducer(state, action) {
-  switch (action.type) {
     case CLEAR_NESTED_STEP: {
       const {
         payload: { id },
@@ -86,6 +78,4 @@ function mutationReducer(state, action) {
     default:
       return state;
   }
-}
-
-export const nestedStepsReducer = queueReducers(fetchReducer, mutationReducer);
+};

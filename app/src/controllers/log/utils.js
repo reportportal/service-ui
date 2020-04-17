@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { PASSED, FAILED, MANY, NOT_FOUND } from 'common/constants/launchStatuses';
+import { PASSED, FAILED, NOT_FOUND } from 'common/constants/launchStatuses';
 import { extractNamespacedQuery, createNamespacedQuery } from 'common/utils/routingUtils';
 import { NAMESPACE } from './constants';
 
@@ -23,47 +23,44 @@ const validForGrowthDuration = (item) =>
 
 export const calculateGrowthDuration = (historyItems) => {
   const historyItemsLastIndex = historyItems.length - 1;
-  return historyItems
-    .reverse()
-    .map((item, index) => {
-      if (!validForGrowthDuration(item) || index >= historyItemsLastIndex) {
-        return item;
-      }
+  return historyItems.reverse().map((item, index) => {
+    if (!validForGrowthDuration(item) || index >= historyItemsLastIndex) {
+      return item;
+    }
 
-      const newItem = { ...item };
-      let prevItemIndex = index + 1;
-      while (
-        !validForGrowthDuration(historyItems[prevItemIndex]) &&
-        prevItemIndex < historyItemsLastIndex
-      ) {
-        prevItemIndex += 1;
+    const newItem = { ...item };
+    let prevItemIndex = index + 1;
+    while (
+      !validForGrowthDuration(historyItems[prevItemIndex]) &&
+      prevItemIndex < historyItemsLastIndex
+    ) {
+      prevItemIndex += 1;
+    }
+    if (prevItemIndex <= historyItemsLastIndex) {
+      const prevDuration =
+        historyItems[prevItemIndex].endTime - historyItems[prevItemIndex].startTime;
+      const currentDuration = item.endTime - item.startTime;
+      const growth = currentDuration / prevDuration - 1;
+      if (growth > 0) {
+        newItem.growthDuration = `+${Math.round(growth * 100)}%`;
       }
-      if (prevItemIndex <= historyItemsLastIndex) {
-        const prevDuration =
-          historyItems[prevItemIndex].endTime - historyItems[prevItemIndex].startTime;
-        const currentDuration = item.endTime - item.startTime;
-        const growth = currentDuration / prevDuration - 1;
-        growth > 0 && (newItem.growthDuration = `+${Math.round(growth * 100)}%`);
-      }
-      return newItem;
-    })
-    .reverse();
+    }
+    return newItem;
+  });
 };
 
-export const normalizeHistoryItem = (historyItem, filteredSameHistoryItems) => {
-  const itemProps = {
-    launchNumber: historyItem.launchNumber,
-    ...filteredSameHistoryItems[0],
-  };
-
-  if (!filteredSameHistoryItems.length) {
-    itemProps.status = NOT_FOUND.toUpperCase();
-  } else if (filteredSameHistoryItems.length > 1) {
-    itemProps.status = MANY.toUpperCase();
-    delete itemProps.issue;
-    delete itemProps.statistics;
+export const normalizeHistoryItem = (historyItem, index) => {
+  if (!historyItem) {
+    return {
+      status: NOT_FOUND.toUpperCase(),
+      id: `${NOT_FOUND}_${index}`,
+    };
   }
-  return itemProps;
+
+  return {
+    ...historyItem,
+    launchNumber: historyItem.pathNames.launchPathName.number,
+  };
 };
 
 export const getPreviousItem = (testItems = [], currentId) => {
@@ -75,10 +72,15 @@ export const getPreviousItem = (testItems = [], currentId) => {
 };
 
 export const getNextItem = (testItems = [], currentId) => {
+  const itemIndex = testItems.findIndex((item) => item.id === currentId);
+
   if (testItems.length < 2) {
+    if (itemIndex === -1) {
+      return testItems.length === 0 ? null : testItems[0];
+    }
+
     return null;
   }
-  const itemIndex = testItems.findIndex((item) => item.id === currentId);
   return testItems[itemIndex + 1] || null;
 };
 
@@ -92,4 +94,26 @@ export const getUpdatedLogQuery = (query, itemId, params = {}) => {
   }
   const newLogQuery = { ...previousLogQuery, ...params };
   return createNamespacedQuery(newLogQuery, NAMESPACE);
+};
+
+export const normalizeHistoryItems = (items) => {
+  if (!items.length) return [];
+  const historyItems = items[0].resources.map(normalizeHistoryItem);
+
+  return calculateGrowthDuration(historyItems);
+};
+
+export const updateHistoryItemIssues = (items = [], issues) => {
+  return items.map((item) => {
+    const itemForUpdate = issues.find((issueForItem) => issueForItem.testItemId === item.id);
+
+    if (itemForUpdate) {
+      return {
+        ...item,
+        issue: itemForUpdate.issue,
+      };
+    }
+
+    return item;
+  });
 };

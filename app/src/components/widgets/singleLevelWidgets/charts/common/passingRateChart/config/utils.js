@@ -16,7 +16,7 @@
 
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 
-export const getPercentage = (value, totalItems) => (value / totalItems * 100).toFixed(2);
+export const getPercentage = (value, totalItems) => ((value / totalItems) * 100).toFixed(2);
 
 export const getChartViewModeOptions = (viewMode, isPreview, totalItems) =>
   viewMode === MODES_VALUES[CHART_MODES.BAR_VIEW]

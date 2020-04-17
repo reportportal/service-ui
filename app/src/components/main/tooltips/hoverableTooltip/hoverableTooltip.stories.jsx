@@ -16,7 +16,7 @@
 
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 // eslint-disable-next-line import/extensions, import/no-unresolved
 import { withTooltipRoot } from 'storybook-decorators';
 import { withHoverableTooltip } from './withHoverableTooltip';
@@ -44,7 +44,11 @@ storiesOf('Components/Main/Tooltips/HoverableTooltip', module)
       width: 200,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .addDecorator(withTooltipRoot)
   .add('with placement = bottom', () => {
     const data = {

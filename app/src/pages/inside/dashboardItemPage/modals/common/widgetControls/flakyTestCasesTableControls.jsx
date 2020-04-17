@@ -19,9 +19,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { activeProjectSelector } from 'controllers/user';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { URLS } from 'common/urls';
-import { validate, bindMessageToValidator, commonValidators } from 'common/utils';
+import { validate, bindMessageToValidator, commonValidators } from 'common/utils/validation';
 import { ITEMS_INPUT_WIDTH } from './constants';
 import { InputControl, TagsControl, CheckboxControl } from './controls';
 
@@ -38,14 +38,6 @@ const messages = defineMessages({
   LaunchNamePlaceholder: {
     id: 'FlakyTestCasesTableControls.LaunchNamePlaceholder',
     defaultMessage: 'Enter launch name',
-  },
-  LaunchNameFocusPlaceholder: {
-    id: 'FlakyTestCasesTableControls.LaunchNameFocusPlaceholder',
-    defaultMessage: 'Please enter 3 or more characters',
-  },
-  LaunchNameNoMatches: {
-    id: 'FlakyTestCasesTableControls.LaunchNameNoMatches',
-    defaultMessage: 'No matches found.',
   },
   IncludeMethodsControlText: {
     id: 'FlakyTestCasesTableControls.IncludeMethodsControlText',
@@ -66,13 +58,13 @@ const itemsValidator = (message) =>
 
 @injectIntl
 @connect((state) => ({
-  launchNamesSearchUrl: URLS.launchNameSearch(activeProjectSelector(state)),
+  activeProject: activeProjectSelector(state),
 }))
 export class FlakyTestCasesTableControls extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     widgetSettings: PropTypes.object.isRequired,
-    launchNamesSearchUrl: PropTypes.string.isRequired,
+    activeProject: PropTypes.string.isRequired,
     initializeControlsForm: PropTypes.func.isRequired,
   };
 
@@ -93,19 +85,10 @@ export class FlakyTestCasesTableControls extends Component {
 
   normalizeValue = (value) => value && `${value}`.replace(/\D+/g, '');
 
-  formatLaunchNameOptions = (values) => values.map((value) => ({ value, label: value }));
-  formatLaunchNames = (value) => (value ? { value, label: value } : null);
-  parseLaunchNames = (value) => {
-    if (value === null) return null;
-    if (value && value.value) return value.value;
-
-    return undefined;
-  };
-
   render() {
     const {
       intl: { formatMessage },
-      launchNamesSearchUrl,
+      activeProject,
     } = this.props;
 
     return (
@@ -124,8 +107,6 @@ export class FlakyTestCasesTableControls extends Component {
         </FieldProvider>
         <FieldProvider
           name="contentParameters.widgetOptions.launchNameFilter"
-          format={this.formatLaunchNames}
-          parse={this.parseLaunchNames}
           validate={commonValidators.createWidgetContentFieldsValidator(
             formatMessage(messages.LaunchNamesValidationError),
           )}
@@ -133,13 +114,8 @@ export class FlakyTestCasesTableControls extends Component {
           <TagsControl
             fieldLabel={formatMessage(messages.LaunchNameFieldLabel)}
             placeholder={formatMessage(messages.LaunchNamePlaceholder)}
-            focusPlaceholder={formatMessage(messages.LaunchNameFocusPlaceholder)}
-            nothingFound={formatMessage(messages.LaunchNameNoMatches)}
             minLength={3}
-            async
-            uri={launchNamesSearchUrl}
-            makeOptions={this.formatLaunchNameOptions}
-            removeSelected
+            getURI={URLS.launchNameSearch(activeProject)}
           />
         </FieldProvider>
         <FieldProvider name="contentParameters.widgetOptions.includeMethods">

@@ -14,22 +14,10 @@
  * limitations under the License.
  */
 
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
-import Parser from 'html-react-parser';
-import {
-  SKIPPED,
-  RESETED,
-  FAILED,
-  MANY,
-  NOT_FOUND,
-  INTERRUPTED,
-} from 'common/constants/launchStatuses';
-import NoItemIcon from 'common/img/noItem-inline.svg';
-import EmptyItemIcon from 'common/img/emptyItem-inline.svg';
-import NotEyeIcon from 'common/img/notEyeItem-inline.svg';
+import { SKIPPED, FAILED, INTERRUPTED } from 'common/constants/launchStatuses';
 import CommentIcon from 'common/img/comment-inline.svg';
 import TagIcon from 'common/img/tag-inline.svg';
 import {
@@ -39,27 +27,15 @@ import {
   SYSTEM_ISSUE,
   TO_INVESTIGATE,
 } from 'common/constants/defectTypes';
+import { withTooltip } from 'components/main/tooltips/tooltip';
+import { ItemPathTooltip } from 'pages/inside/common/itemPathTooltip';
+import { InputCheckbox } from 'components/inputs/inputCheckbox';
 
 import { DefectBadge } from './defectBadge/defectBadge';
 import { MessageBadge } from './messageBadge/messageBadge';
 import styles from './historyItem.scss';
 
 const cx = classNames.bind(styles);
-
-const messages = defineMessages({
-  emptyItemCaption: {
-    id: 'HistoryItem.emptyItemCaption',
-    defaultMessage: 'Item is empty',
-  },
-  noItemCaption: {
-    id: 'HistoryItem.noItemCaption',
-    defaultMessage: 'No item<br/>in launch',
-  },
-  sameItemsCaption: {
-    id: 'HistoryItem.sameItemsCaption',
-    defaultMessage: "There're several items with the same UID meaning.",
-  },
-});
 
 const defectsTitleMap = {
   [AUTOMATION_BUG]: 'ab',
@@ -69,30 +45,47 @@ const defectsTitleMap = {
   [TO_INVESTIGATE]: 'ti',
 };
 
-@injectIntl
+const statusesWithDefect = [FAILED, SKIPPED, INTERRUPTED];
+
+@withTooltip({
+  TooltipComponent: ItemPathTooltip,
+  data: {
+    width: 235,
+    placement: 'right',
+    noArrow: true,
+    desktopOnly: true,
+    tooltipTriggerClass: cx('tooltip-wrapper'),
+  },
+})
 export class HistoryItem extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
-    status: PropTypes.string,
-    issue: PropTypes.object,
-    defects: PropTypes.object,
+    testItem: PropTypes.object,
+    selectedItems: PropTypes.arrayOf(PropTypes.object),
+    selectable: PropTypes.bool,
+    onSelectItem: PropTypes.func,
   };
 
   static defaultProps = {
-    status: '',
-    issue: {},
-    defects: {},
+    testItem: {},
+    selectedItems: [],
+    selectable: false,
+    onSelectItem: () => {},
   };
 
+  isItemSelected = () =>
+    this.props.selectedItems.some((item) => item.id === this.props.testItem.id);
+
   mapDefectsToBadges = () => {
-    const { defects } = this.props;
+    const {
+      statistics: { defects = {} },
+    } = this.props.testItem;
 
     return Object.keys(defects).map((key) => {
       let badge = '';
       if (defects[key].total) {
         badge = (
           <div key={key}>
-            <DefectBadge type={key} defectTitle={defectsTitleMap[key]} data={defects[key]} />
+            <DefectBadge defectTitle={defectsTitleMap[key]} />
           </div>
         );
       }
@@ -100,51 +93,28 @@ export class HistoryItem extends Component {
     });
   };
 
-  renderResetedTextContent = () => (
-    <Fragment>
-      <i className={cx('icon')}>{Parser(EmptyItemIcon)}</i>
-      <span>{this.props.intl.formatMessage(messages.emptyItemCaption)}</span>
-    </Fragment>
-  );
-
-  renderManyTextContent = () => (
-    <MessageBadge
-      data={[{ ticketId: this.props.intl.formatMessage(messages.sameItemsCaption) }]}
-      icon={NotEyeIcon}
-    />
-  );
-
-  renderNotFoundTextContent = () => (
-    <Fragment>
-      <i className={cx('icon', 'no-item-icon')}>{Parser(NoItemIcon)}</i>
-      <span>{Parser(this.props.intl.formatMessage(messages.noItemCaption))}</span>
-    </Fragment>
-  );
-
-  renderTextContent = () => {
-    switch (this.props.status.toLowerCase()) {
-      case RESETED:
-        return this.renderResetedTextContent();
-      case NOT_FOUND:
-        return this.renderNotFoundTextContent();
-      case MANY:
-        return this.renderManyTextContent();
-      default:
-        return '';
-    }
+  handleItemSelection = () => {
+    const { testItem, onSelectItem } = this.props;
+    onSelectItem(testItem);
   };
 
   render() {
-    const { status, issue } = this.props;
+    const { testItem, selectable } = this.props;
+    const { status, issue = {} } = testItem;
+    const selected = selectable ? this.isItemSelected() : false;
+
     return (
-      <div className={cx('item-content-wrapper')}>
-        {status.toLowerCase() === (FAILED || SKIPPED || INTERRUPTED) && this.mapDefectsToBadges()}
+      <div className={cx('history-item', { selectable, selected })}>
+        {selectable && (
+          <div className={cx('select-item-control')} onClick={(e) => e.stopPropagation()}>
+            <InputCheckbox value={selected} onChange={this.handleItemSelection} />
+          </div>
+        )}
+        {statusesWithDefect.indexOf(status.toLowerCase()) !== -1 && this.mapDefectsToBadges()}
         {issue.comment && <MessageBadge data={[{ ticketId: issue.comment }]} icon={CommentIcon} />}
-        {issue.externalSystemIssues &&
-          issue.externalSystemIssues.length > 0 && (
-            <MessageBadge data={issue.externalSystemIssues} icon={TagIcon} />
-          )}
-        <div className={cx('item-text-content')}>{this.renderTextContent()}</div>
+        {issue.externalSystemIssues && issue.externalSystemIssues.length > 0 && (
+          <MessageBadge data={issue.externalSystemIssues} icon={TagIcon} />
+        )}
       </div>
     );
   }

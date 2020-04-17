@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form';
 import className from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { ModalLayout, ModalField, withModal } from 'components/main/modal';
 import { Input } from 'components/inputs/input';
 import { InputDropdown } from 'components/inputs/inputDropdown';
@@ -28,7 +28,7 @@ import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { commonValidators } from 'common/utils';
+import { commonValidators } from 'common/utils/validation';
 import { PATTERN_TYPES, REGEX_PATTERN, STRING_PATTERN } from 'common/constants/patternTypes';
 import { patternsSelector } from 'controllers/project';
 import { RegExEditor } from 'components/inputs/regExEditor';
@@ -73,7 +73,7 @@ const createPatternFormSelector = formValueSelector('createPatternForm');
 @injectIntl
 export class CreatePatternModal extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     data: PropTypes.shape({
       pattern: PropTypes.object,
       onSave: PropTypes.func,

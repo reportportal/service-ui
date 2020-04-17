@@ -21,7 +21,7 @@ import { connect } from 'react-redux';
 import { Fullscreen } from 'components/containers/fullscreen';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import {
@@ -32,7 +32,6 @@ import {
 } from 'common/utils/permissions';
 import {
   activeDashboardItemSelector,
-  fetchDashboardAction,
   updateDashboardWidgetsAction,
   dashboardFullScreenModeSelector,
   changeFullScreenModeAction,
@@ -45,7 +44,11 @@ import {
   activeProjectSelector,
   activeProjectRoleSelector,
 } from 'controllers/user';
-import { PROJECT_DASHBOARD_PAGE, PROJECT_DASHBOARD_PRINT_PAGE } from 'controllers/pages';
+import {
+  PROJECT_DASHBOARD_PAGE,
+  PROJECT_DASHBOARD_PRINT_PAGE,
+  activeDashboardIdSelector,
+} from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { hideScreenLockAction } from 'controllers/screenLock';
@@ -128,10 +131,10 @@ const messages = defineMessages({
     userInfo: userInfoSelector(state),
     fullScreenMode: dashboardFullScreenModeSelector(state),
     projectRole: activeProjectRoleSelector(state),
+    activeDashboardId: activeDashboardIdSelector(state),
   }),
   {
     showModalAction,
-    fetchDashboardAction,
     updateDashboardWidgetsAction,
     showNotification,
     hideScreenLockAction,
@@ -144,9 +147,8 @@ const messages = defineMessages({
 @track()
 export class DashboardItemPage extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     showModalAction: PropTypes.func.isRequired,
-    fetchDashboardAction: PropTypes.func.isRequired,
     updateDashboardWidgetsAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
     hideScreenLockAction: PropTypes.func.isRequired,
@@ -163,22 +165,14 @@ export class DashboardItemPage extends Component {
     deleteDashboard: PropTypes.func.isRequired,
     editDashboard: PropTypes.func.isRequired,
     projectRole: PropTypes.string,
+    activeDashboardId: PropTypes.number,
   };
 
   static defaultProps = {
     fullScreenMode: false,
     projectRole: '',
+    activeDashboardId: undefined,
   };
-
-  componentDidMount() {
-    this.props.fetchDashboardAction();
-  }
-
-  componentDidUpdate({ dashboard }) {
-    if (this.props.dashboard.id && this.props.dashboard.id !== dashboard.id) {
-      this.props.fetchDashboardAction();
-    }
-  }
 
   onDeleteDashboard = () => {
     const {
@@ -396,7 +390,7 @@ export class DashboardItemPage extends Component {
                     type: PROJECT_DASHBOARD_PRINT_PAGE,
                     payload: {
                       projectId: this.props.activeProject,
-                      dashboardId: this.props.dashboard.id,
+                      dashboardId: this.props.activeDashboardId,
                     },
                   }}
                   target={'_blank'}
@@ -408,7 +402,9 @@ export class DashboardItemPage extends Component {
             </div>
             <Fullscreen enabled={fullScreenMode} onChange={changeFullScreenMode}>
               <WidgetsGrid
-                isModifiable={canResizeAndDragWidgets(userRole, projectRole, isOwner)}
+                isModifiable={
+                  canResizeAndDragWidgets(userRole, projectRole, isOwner) && !fullScreenMode
+                }
                 dashboard={dashboard}
                 isFullscreen={fullScreenMode}
                 showWidgetWizard={this.showWidgetWizard}

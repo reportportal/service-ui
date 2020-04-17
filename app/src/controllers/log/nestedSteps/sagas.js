@@ -15,10 +15,7 @@
  */
 
 import { all, call, put, select, takeEvery, cancelled } from 'redux-saga/effects';
-
-import { collectLogPayload } from 'controllers/log';
 import { handleError } from 'controllers/fetch';
-
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { URLS } from 'common/urls';
 import { omit, fetch, isEmptyObject } from 'common/utils';
@@ -34,13 +31,14 @@ import {
   fetchNestedStepErrorAction,
   toggleNestedStepAction,
 } from './actionCreators';
+import { collectLogPayload } from '../sagaUtils';
 import { nestedStepSelector } from './selectors';
 
 function* fetchNestedStep({ payload = {} }) {
   const { id } = payload;
-  const { activeProject, params, filterLevel } = yield call(collectLogPayload);
+  const { activeProject, query, filterLevel } = yield call(collectLogPayload);
   const logLevel = filterLevel;
-  const paramsExcludingPagination = omit(params, [PAGE_KEY, SIZE_KEY]);
+  const paramsExcludingPagination = omit(query, [PAGE_KEY, SIZE_KEY]);
   const { page } = yield select(nestedStepSelector, id);
   let pageSize = PAGINATION_OFFSET;
   if (!isEmptyObject(page)) {

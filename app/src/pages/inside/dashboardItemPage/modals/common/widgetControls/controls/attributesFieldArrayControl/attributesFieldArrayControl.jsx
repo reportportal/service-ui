@@ -16,14 +16,14 @@
 
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import { ModalField } from 'components/main/modal';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
+import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
 import { FIELD_LABEL_WIDTH } from '../constants';
 import styles from './attributesFieldArrayControl.scss';
 
@@ -55,11 +55,11 @@ const messages = defineMessages({
 @injectIntl
 export class AttributesFieldArrayControl extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     fields: PropTypes.object.isRequired,
     fieldValidator: PropTypes.func.isRequired,
     maxAttributesAmount: PropTypes.number.isRequired,
-    url: PropTypes.string.isRequired,
+    getURI: PropTypes.func.isRequired,
     attributeKeyFieldViewLabels: PropTypes.array,
     showRemainingLevels: PropTypes.bool,
   };
@@ -82,28 +82,13 @@ export class AttributesFieldArrayControl extends Component {
 
   getAttributes = () => this.props.fields.getAll() || [];
 
-  makeAttributes = (items) => {
-    const filteredItems = items.filter((item) => !this.getAttributes().includes(item));
-
-    return filteredItems ? filteredItems.map((item) => ({ value: item, label: item })) : null;
-  };
-
-  isOptionUnique = ({ option }) => !this.getAttributes().includes(option.value);
-
-  formatAttributes = (attribute) => (attribute ? { value: attribute, label: attribute } : null);
-
-  parseAttributes = (attribute) => {
-    if (attribute === null) return null;
-    if (attribute && attribute.value) return attribute.value;
-
-    return undefined;
-  };
+  filterAttribute = (item) => !this.getAttributes().includes(item);
 
   render() {
     const {
       intl: { formatMessage },
       fields,
-      url,
+      getURI,
       fieldValidator,
       maxAttributesAmount,
       attributeKeyFieldViewLabels,
@@ -126,27 +111,19 @@ export class AttributesFieldArrayControl extends Component {
               labelWidth={FIELD_LABEL_WIDTH}
               className={cx('attribute-modal-field')}
             >
-              <FieldProvider
-                parse={this.parseAttributes}
-                format={this.formatAttributes}
-                name={item}
-                validate={fieldValidator}
-              >
-                <FieldErrorHint hintType="top">
-                  <InputTagsSearch
-                    uri={url}
-                    minLength={1}
-                    placeholder={formatMessage(messages.attributeKeyFieldPlaceholder)}
-                    async
-                    creatable
-                    showNewLabel
-                    removeSelected
-                    makeOptions={this.makeAttributes}
-                    isOptionUnique={this.isOptionUnique}
-                    customClass={isFirstItem ? undefined : cx('attr-selector')}
-                  />
-                </FieldErrorHint>
-              </FieldProvider>
+              <div className={cx({ 'attr-selector': !isFirstItem })}>
+                <FieldProvider name={item} validate={fieldValidator}>
+                  <FieldErrorHint hintType="top">
+                    <AsyncAutocomplete
+                      getURI={getURI}
+                      minLength={1}
+                      placeholder={formatMessage(messages.attributeKeyFieldPlaceholder)}
+                      creatable
+                      filterOption={this.filterAttribute}
+                    />
+                  </FieldErrorHint>
+                </FieldProvider>
+              </div>
               {!isFirstItem && (
                 <span
                   className={cx('remove-icon')}

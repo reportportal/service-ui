@@ -17,10 +17,13 @@
 import React, { PureComponent, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { Grid } from 'components/main/grid';
 import { AbsRelTime } from 'components/main/absRelTime';
-import { actionMessages, objectTypesMessages } from 'common/constants/eventsLocalization';
+import {
+  actionMessages,
+  objectTypesMessages,
+} from 'common/constants/localization/eventsLocalization';
 import { NoItemMessage } from 'components/main/noItemMessage';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import {
@@ -142,7 +145,7 @@ ValueColumn.defaultProps = {
 export class EventsGrid extends PureComponent {
   static propTypes = {
     data: PropTypes.arrayOf(PropTypes.object),
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     loading: PropTypes.bool,
     sortingColumn: PropTypes.string,
     sortingDirection: PropTypes.string,
@@ -241,8 +244,9 @@ export class EventsGrid extends PureComponent {
           sortingDirection={sortingDirection}
           onChangeSorting={onChangeSorting}
         />
-        {!data.length &&
-          !loading && <NoItemMessage message={intl.formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />}
+        {!data.length && !loading && (
+          <NoItemMessage message={intl.formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />
+        )}
       </Fragment>
     );
   }

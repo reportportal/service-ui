@@ -68,14 +68,16 @@ export const setProjectIntegrationsAction = (projectIntegrations) => ({
   payload: projectIntegrations,
 });
 
-export const updateIntegrationAction = (data, isGlobal, id, callback) => ({
+export const updateIntegrationAction = (data, isGlobal, id, pluginName, callback, metaData) => ({
   type: UPDATE_INTEGRATION,
-  payload: { data, isGlobal, id, callback },
+  payload: { data, isGlobal, id, pluginName, callback },
+  meta: metaData,
 });
 
-export const addIntegrationAction = (data, isGlobal, pluginName, callback) => ({
+export const addIntegrationAction = (data, isGlobal, pluginName, callback, metaData) => ({
   type: ADD_INTEGRATION,
   payload: { data, isGlobal, pluginName, callback },
+  meta: metaData,
 });
 
 export const updateGlobalIntegrationSuccessAction = (data, id) => ({

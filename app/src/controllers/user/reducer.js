@@ -15,7 +15,6 @@
  */
 
 import { combineReducers } from 'redux';
-import { ADD_PROJECT_SUCCESS } from 'controllers/administrate/projects/constants';
 import {
   SET_ACTIVE_PROJECT,
   SET_START_TIME_FORMAT,
@@ -40,8 +39,7 @@ export const settingsReducer = (state = SETTINGS_INITIAL_STATE, { type, payload 
 
 export const userAssignedProjectReducer = (state = {}, { type, payload }) => {
   switch (type) {
-    case ASSIGN_TO_RROJECT_SUCCESS:
-    case ADD_PROJECT_SUCCESS: {
+    case ASSIGN_TO_RROJECT_SUCCESS: {
       const { projectName, projectRole, entryType } = payload;
       return {
         ...state,
@@ -75,7 +73,6 @@ export const userInfoReducer = (state = {}, { type, payload }) => {
       return payload;
     case ASSIGN_TO_RROJECT_SUCCESS:
     case UNASSIGN_FROM_PROJECT_SUCCESS:
-    case ADD_PROJECT_SUCCESS:
       return {
         ...state,
         assignedProjects: userAssignedProjectReducer(state.assignedProjects, { type, payload }),

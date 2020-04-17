@@ -1,14 +1,17 @@
 {
   "presets": [
-    "env",
-    "react"
+    "@babel/preset-react",
+    [
+      "@babel/preset-env",
+      {
+        "shippedProposals": true
+      }
+    ]
   ],
   "plugins": [
-    "react-hot-loader/babel",
-    "transform-runtime",
-    "transform-decorators-legacy",
-    "transform-class-properties",
-    "transform-object-rest-spread",
+    "@babel/plugin-transform-runtime",
+    ["@babel/plugin-proposal-decorators", { "legacy": true }],
+    ["@babel/plugin-proposal-class-properties", { "loose": true }],
     [
       "react-intl",
       {
@@ -16,15 +19,5 @@
         "enforceDescriptions": false
       }
     ]
-  ],
-  "env": {
-    "development": {
-      "presets": ["react-hmre"]
-    },
-    "production": {
-      "targets": {
-        "uglify": true
-      }
-    }
-  }
+  ]
 }

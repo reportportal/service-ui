@@ -15,8 +15,9 @@
  */
 
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import track from 'react-tracking';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { PROFILE_PAGE } from 'components/main/analytics/events';
@@ -39,7 +40,7 @@ const messages = defineMessages({
 @track({ page: PROFILE_PAGE })
 export class ProfilePage extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
   };
 
   getBreadcrumbs = () => [{ title: this.props.intl.formatMessage(messages.profilePageTitle) }];

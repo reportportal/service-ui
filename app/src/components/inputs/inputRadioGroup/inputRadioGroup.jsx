@@ -17,7 +17,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { InputRadio } from 'components/inputs/inputRadio';
 import styles from './inputRadioGroup.scss';
 
@@ -26,7 +26,7 @@ const cx = classNames.bind(styles);
 @injectIntl
 export class InputRadioGroup extends PureComponent {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     value: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
     options: PropTypes.arrayOf(

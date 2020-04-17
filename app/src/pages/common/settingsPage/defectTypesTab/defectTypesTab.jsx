@@ -18,11 +18,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 
 import { defectTypesSelector, updateDefectSubTypeAction } from 'controllers/project';
 import { showModalAction } from 'controllers/modal';
+import { userAccountRoleSelector, activeProjectRoleSelector } from 'controllers/user';
+import { canUpdateSettings } from 'common/utils/permissions';
 import { DEFECT_TYPES_SEQUENCE } from 'common/constants/defectTypes';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -40,6 +42,8 @@ const cx = classNames.bind(styles);
 @connect(
   (state) => ({
     subTypes: defectTypesSelector(state),
+    userAccountRole: userAccountRoleSelector(state),
+    userProjectRole: activeProjectRoleSelector(state),
   }),
   {
     showModal: showModalAction,
@@ -52,11 +56,13 @@ export class DefectTypesTab extends Component {
     subTypes: PropTypes.objectOf(PropTypes.arrayOf(defectTypeShape)).isRequired,
     showModal: PropTypes.func.isRequired,
     updateDefectSubTypeAction: PropTypes.func.isRequired,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    userAccountRole: PropTypes.string.isRequired,
+    userProjectRole: PropTypes.string.isRequired,
   };
 
   showResetColorsConfirmationDialog = () => {
@@ -103,8 +109,11 @@ export class DefectTypesTab extends Component {
     const {
       intl: { formatMessage },
       subTypes,
+      userAccountRole,
+      userProjectRole,
     } = this.props;
     const isResetDisabled = this.isOnlySystemDefectTypes();
+    const isEditable = canUpdateSettings(userAccountRole, userProjectRole);
 
     return (
       <div className={cx('defect-types-list')}>
@@ -127,21 +136,23 @@ export class DefectTypesTab extends Component {
               {formatMessage(messages[groupName.toLowerCase()])}
             </div>
             <div className={cx('group')}>
-              <DefectTypesGroup group={subTypes[groupName]} />
+              <DefectTypesGroup group={subTypes[groupName]} readonly={!isEditable} />
             </div>
           </React.Fragment>
         ))}
-        <div className={cx('reset-button-wrap')}>
-          <button
-            className={cx('reset-button')}
-            type="button"
-            onClick={isResetDisabled ? undefined : this.showResetColorsConfirmationDialog}
-            disabled={isResetDisabled}
-            title={isResetDisabled ? formatMessage(messages.noColorsToUpdate) : undefined}
-          >
-            {formatMessage(messages.resetColors)}
-          </button>
-        </div>
+        {isEditable && (
+          <div className={cx('reset-button-wrap')}>
+            <button
+              className={cx('reset-button')}
+              type="button"
+              onClick={isResetDisabled ? undefined : this.showResetColorsConfirmationDialog}
+              disabled={isResetDisabled}
+              title={isResetDisabled ? formatMessage(messages.noColorsToUpdate) : undefined}
+            >
+              {formatMessage(messages.resetColors)}
+            </button>
+          </div>
+        )}
       </div>
     );
   }

@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { canUpdateSettings } from 'common/utils/permissions';
@@ -40,9 +40,7 @@ import { StrategyBlock } from './analysisForm/strategyBlock';
 import {
   INDEXING_RUNNING,
   NUMBER_OF_LOG_LINES,
-  MIN_DOC_FREQ,
   MIN_SHOULD_MATCH,
-  MIN_TERM_FREQ,
   ANALYZER_ENABLED,
   ANALYZER_MODE,
 } from './constants';
@@ -88,7 +86,7 @@ const messages = defineMessages({
 @injectIntl
 export class AutoAnalysisTab extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     projectId: PropTypes.string,
     fetchConfigurationAttributesAction: PropTypes.func.isRequired,
     updateConfigurationAttributesAction: PropTypes.func.isRequired,
@@ -118,8 +116,6 @@ export class AutoAnalysisTab extends Component {
 
     return {
       [MIN_SHOULD_MATCH]: analyzerConfiguration[MIN_SHOULD_MATCH],
-      [MIN_DOC_FREQ]: analyzerConfiguration[MIN_DOC_FREQ],
-      [MIN_TERM_FREQ]: analyzerConfiguration[MIN_TERM_FREQ],
       [NUMBER_OF_LOG_LINES]: analyzerConfiguration[NUMBER_OF_LOG_LINES],
     };
   };

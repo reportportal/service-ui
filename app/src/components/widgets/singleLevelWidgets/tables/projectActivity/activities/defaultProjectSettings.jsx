@@ -16,7 +16,7 @@
 
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl';
+import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
 import Link from 'redux-first-router-link';
 import { PROJECT_SETTINGS_PAGE } from 'controllers/pages';
@@ -54,7 +54,7 @@ const messages = defineMessages({
 @injectIntl
 export class DefaultProjectSettings extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     activity: PropTypes.object,
   };
   static defaultProps = {

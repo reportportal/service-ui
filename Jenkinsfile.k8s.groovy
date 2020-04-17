@@ -1,4 +1,5 @@
 #!groovy
+@Library('commons') _
 
 //String podTemplateConcat = "${serviceName}-${buildNumber}-${uuid}"
 def label = "worker-${UUID.randomUUID().toString()}"
@@ -77,21 +78,14 @@ podTemplate(
             }
         }
 
-        def utils = load "${ciDir}/jenkins/scripts/util.groovy"
-        def helm = load "${ciDir}/jenkins/scripts/helm.groovy"
-        def docker = load "${ciDir}/jenkins/scripts/docker.groovy"
-
-        docker.init()
+        dockerUtil.init()
         helm.init()
-
-        def sealightsParams = [
-                booleanParam(name: 'ENABLE_SEALIGHTS', defaultValue: false, description: 'Whether Sealights instrumentation should be enabled',)
-        ]
-        utils.scheduleRepoPoll(sealightsParams)
+        util.scheduleRepoPoll([
+                booleanParam(name: 'ENABLE_SEALIGHTS', defaultValue: true, description: 'Whether Sealights instrumentation should be enabled',)
+        ])
         def sealightsEnabled = params.get('ENABLE_SEALIGHTS', false)
 
-
-        def sealightsToken = utils.execStdout("cat $sealightsTokenPath")
+        def sealightsToken = util.execStdout("cat $sealightsTokenPath")
         def sealightsSession;
         def resultsProcessor = "jest-junit"
 
@@ -107,19 +101,21 @@ podTemplate(
                             stage('Build App') {
                                 sh "npm run build && npm run test"
                             }
-                        }
-
-                        if (sealightsEnabled) {
+                        } else {
                             stage('Build App') {
                                 sh "npm run sealights && npm run test"
                             }
+                        }
+
+                        sast('reportportal_services_sast', 'rp/carrier/config.yaml', 'service-ui', false)
+
+                        if (sealightsEnabled) {
                             stage('Init Sealights') {
                                 sh "./node_modules/.bin/slnodejs config --tokenfile $sealightsTokenPath --appname service-ui --branch $branchToBuild --build $srvVersion"
-                                sealightsSession = utils.execStdout("cat buildSessionId")
-//                            sh "./node_modules/.bin/slnodejs build --tokenfile $sealightsTokenPath --buildSessionId $sealightsSession --workspacepath './src' --instrumentForBrowsers --outputpath './sl_instrumented' --scm none --es6Modules"
+                                sealightsSession = util.execStdout("cat buildSessionId")
                                 sh "./node_modules/.bin/slnodejs build --tokenfile $sealightsTokenPath --buildsessionid $sealightsSession --workspacepath build --instrumentForBrowsers --outputpath sl_instrumented --scm none --es6Modules --projectRoot ."
-//                            sh "./node_modules/.bin/slnodejs build --tokenfile $sealightsTokenPath --buildsessionid $sealightsSession --workspacepath './src' --scm none --es6Modules"
                             }
+
                             stage('Start Sealights') {
                                 sh "./node_modules/.bin/slnodejs start --tokenfile $sealightsTokenPath --buildsessionid $sealightsSession --testStage 'Unit Tests'"
                                 sh "./node_modules/.bin/jest --coverage --testResultsProcessor=$resultsProcessor"
@@ -142,12 +138,11 @@ podTemplate(
 
             stage('Build Docker Image') {
                 container('docker') {
-                    sh "docker build -f Dockerfile-k8s -t quay.io/reportportal/service-ui:BUILD-${env.BUILD_NUMBER} ."
+                    sh "docker build -f Dockerfile-k8s --build-arg sealightsEnabled=$sealightsEnabled --build-arg sealightsToken=$sealightsToken --build-arg sealightsSession=$sealightsSession -t quay.io/reportportal/service-ui:BUILD-${env.BUILD_NUMBER} ."
                     sh "docker push quay.io/reportportal/service-ui:BUILD-${env.BUILD_NUMBER}"
                 }
             }
         }
-
 
         stage('Deploy to Dev') {
             helm.deploy("./$k8sChartDir", ["serviceui.repository": srvRepo, "serviceui.tag": srvVersion], true) // with wait

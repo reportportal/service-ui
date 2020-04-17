@@ -25,6 +25,10 @@
   > :first-child {
     width: 100%;
   }
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+  }
 }
 
 .buttons {
@@ -70,8 +74,8 @@
   }
 }
 
-.mobile-hide{
+.mobile-hide {
   @media (max-width: $SCREEN_XS_MAX) {
-    display:none;
+    display: none;
   }
 }

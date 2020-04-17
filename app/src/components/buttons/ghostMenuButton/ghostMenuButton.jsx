@@ -96,24 +96,26 @@ export class GhostMenuButton extends Component {
         <span className={cx('title')}>{title}</span>
         <i className={cx('toggle-icon')}>{Parser(ArrowIcon)}</i>
         <div className={cx('menu')}>
-          {items.filter((item) => !item.hidden).map((item) => (
-            <div
-              key={item.value}
-              className={cx('menu-item', { disabled: item.disabled })}
-              title={item.title || ''}
-              onClick={
-                !item.disabled
-                  ? (e) => {
-                      e.stopPropagation();
-                      item.onClick();
-                      this.toggleMenu();
-                    }
-                  : null
-              }
-            >
-              <span>{item.label}</span>
-            </div>
-          ))}
+          {items
+            .filter((item) => !item.hidden)
+            .map((item) => (
+              <div
+                key={item.value}
+                className={cx('menu-item', { disabled: item.disabled })}
+                title={item.title || ''}
+                onClick={
+                  !item.disabled
+                    ? (e) => {
+                        e.stopPropagation();
+                        item.onClick();
+                        this.toggleMenu();
+                      }
+                    : null
+                }
+              >
+                <span>{item.label}</span>
+              </div>
+            ))}
         </div>
       </div>
     );

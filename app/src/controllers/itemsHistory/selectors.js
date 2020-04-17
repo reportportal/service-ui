@@ -15,21 +15,78 @@
  */
 
 import { createSelector } from 'reselect';
-import { itemsSelector } from 'controllers/testItem';
+import {
+  createSelectedItemsSelector,
+  createValidationErrorsSelector,
+  createLastOperationSelector,
+} from 'controllers/groupOperations';
+import { HISTORY_PAGE, payloadSelector, querySelector } from 'controllers/pages';
+import { normalizeHistoryItem, calculateMaxRowItemsCount } from './utils';
 
 const domainSelector = (state) => state.itemsHistory || {};
-export const itemsHistorySelector = (state) => domainSelector(state).items;
-export const historySelector = (state) => domainSelector(state).history;
-export const visibleItemsCountSelector = (state) => domainSelector(state).visibleItemsCount;
-export const loadingSelector = (state) => domainSelector(state).loading;
-export const historyItemsSelector = createSelector(itemsSelector, (testItems) => {
-  const launchesToRender = [];
+const groupOperationsSelector = (state) => domainSelector(state).groupOperations;
 
-  testItems.forEach((item) => {
-    const sameName = launchesToRender.filter((obj) => obj.uniqueId === item.uniqueId);
-    if (!sameName.length) {
-      launchesToRender.push(item);
-    }
-  });
-  return launchesToRender;
-});
+export const selectedHistoryItemsSelector = createSelectedItemsSelector(groupOperationsSelector);
+export const validationErrorsSelector = createValidationErrorsSelector(groupOperationsSelector);
+export const lastOperationSelector = createLastOperationSelector(groupOperationsSelector);
+
+export const itemsHistorySelector = (state) => domainSelector(state).history;
+
+export const historyPaginationSelector = (state) => domainSelector(state).pagination;
+
+export const totalItemsCountSelector = (state) => {
+  const pagination = historyPaginationSelector(state);
+  return pagination.totalElements;
+};
+
+export const loadingSelector = (state) => domainSelector(state).loading;
+
+export const filterForCompareSelector = (state) => domainSelector(state).filterForCompare;
+
+export const filterHistorySelector = (state) => domainSelector(state).filterHistory;
+
+export const historyPageLinkSelector = createSelector(
+  payloadSelector,
+  querySelector,
+  (payload, query) => ({
+    type: HISTORY_PAGE,
+    payload,
+    query: { ...query },
+  }),
+);
+
+export const historySelector = createSelector(
+  itemsHistorySelector,
+  filterForCompareSelector,
+  filterHistorySelector,
+  (itemsHistory, filterForCompare, filterHistory) => {
+    const maxRowItemsCount = calculateMaxRowItemsCount(itemsHistory);
+
+    return itemsHistory.map(({ testCaseHash, resources }) => {
+      const itemLastIndex = maxRowItemsCount - 1;
+      const itemResources = [...resources].reverse();
+      const historyItems = [];
+
+      for (let index = itemLastIndex; index >= 0; index -= 1) {
+        const historyItem = itemResources[index];
+
+        const normalizedHistoryItem = normalizeHistoryItem(historyItem, `${testCaseHash}_${index}`);
+        historyItems.push(normalizedHistoryItem);
+      }
+
+      if (filterForCompare) {
+        const filterHistoryRow = filterHistory.find((item) => item.testCaseHash === testCaseHash);
+        const filterHistoryItem = normalizeHistoryItem(
+          filterHistoryRow ? filterHistoryRow.resources[0] : undefined,
+          `${testCaseHash}_${maxRowItemsCount}`,
+        );
+        historyItems.unshift({ ...filterHistoryItem, isFilterItem: true });
+      }
+
+      return {
+        testCaseHash,
+        resources: historyItems,
+      };
+    });
+  },
+);

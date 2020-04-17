@@ -42,6 +42,7 @@ export class DefectStatistics extends Component {
       page: PropTypes.string,
     }),
   };
+
   static defaultProps = {
     type: '',
     projectDefects: {},
@@ -52,10 +53,18 @@ export class DefectStatistics extends Component {
     ownLinkParams: {},
   };
 
+  getDefectList = () => {
+    const { projectDefects, type } = this.props;
+    const defects = projectDefects[type.toUpperCase()];
+    if (!defects) {
+      return [];
+    }
+    return defects.map((item) => item.locator);
+  };
+
   render() {
     const {
       type,
-      projectDefects,
       data,
       customProps,
       itemId,
@@ -64,7 +73,7 @@ export class DefectStatistics extends Component {
       ownLinkParams,
     } = this.props;
 
-    const defectsList = projectDefects[type.toUpperCase()].map((item) => item.locator);
+    const defectList = this.getDefectList();
 
     return (
       <div className={cx('defect-statistics')}>
@@ -79,7 +88,7 @@ export class DefectStatistics extends Component {
                 itemId={itemId}
                 data={data}
                 type={type}
-                defects={defectsList}
+                defects={defectList}
                 viewBox={64}
                 strokeWidth={13}
                 eventInfo={eventInfo}
@@ -90,7 +99,7 @@ export class DefectStatistics extends Component {
             <div className={cx('desktop-hidden')}>
               <DefectLink
                 itemId={itemId}
-                defects={defectsList}
+                defects={defectList}
                 ownLinkParams={ownLinkParams}
                 eventInfo={eventInfo}
               >

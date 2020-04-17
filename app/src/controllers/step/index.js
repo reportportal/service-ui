@@ -35,3 +35,20 @@ export {
   linkIssueAction,
   postIssueAction,
 } from './actionCreators';
+export {
+  validateIgnoreInAA,
+  validateIncludeInAA,
+  validateLinkIssue,
+  validateUnlinkIssue,
+  validatePostIssue,
+  validateEditDefect,
+} from './actionValidators';
+export {
+  editDefect,
+  ignoreInAA,
+  includeInAA,
+  linkIssue,
+  postIssue,
+  unlinkIssue,
+  isDefectGroupOperationAvailable,
+} from './utils';

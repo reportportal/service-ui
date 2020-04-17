@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { ATTACHMENT_HAR_FILE_MODAL_ID } from 'controllers/log/attachments';
@@ -31,7 +31,7 @@ export class AttachmentHarFileModal extends Component {
     data: PropTypes.shape({
       harData: PropTypes.object.isRequired,
     }).isRequired,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
   };
 
   renderOkButton = () => ({

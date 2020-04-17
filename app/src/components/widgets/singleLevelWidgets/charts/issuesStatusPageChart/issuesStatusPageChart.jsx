@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3-selection';
 import classNames from 'classnames/bind';
-import { intlShape, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { createTooltipRenderer } from 'components/widgets/common/tooltip';
 import { getChartDefaultProps } from 'components/widgets/common/utils';
@@ -34,7 +34,7 @@ const cx = classNames.bind(styles);
 @injectIntl
 export class IssuesStatusPageChart extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     widget: PropTypes.object.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
     height: PropTypes.number,

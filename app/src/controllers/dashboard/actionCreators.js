@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { getStorageItem } from 'common/utils';
+import { getStorageItem } from 'common/utils/storageUtils';
 import {
   ADD_DASHBOARD,
   ADD_DASHBOARD_SUCCESS,

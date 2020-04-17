@@ -16,7 +16,7 @@
 
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 import { Breadcrumbs } from './breadcrumbs';
 import { errorDescriptors, descriptorsWithActive, listViewDescriptors } from './data';
 import README from './README.md';
@@ -32,7 +32,11 @@ storiesOf('Components/Main/Breadcrumbs', module)
       width: 300,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('default state', () => <Breadcrumbs />)
   .add('with listView descriptors', () => <Breadcrumbs descriptors={listViewDescriptors} />)
   .add('with active descriptors', () => <Breadcrumbs descriptors={descriptorsWithActive} />)

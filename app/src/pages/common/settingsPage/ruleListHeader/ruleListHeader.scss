@@ -1,0 +1,72 @@
+/*!
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.list-header {
+  position: sticky;
+  top: 0;
+  z-index: $Z_INDEX-STICKY-TOOLBAR;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 15px 0;
+  margin-bottom: -1px;
+  color: $COLOR--gray-47;
+  background-color: $COLOR--white-two;
+  font-size: 12px;
+  font-family: $FONT-REGULAR;
+  line-height: 27px;
+  box-shadow: 0 3px 1px -3px $COLOR--gray-91;
+  @media (max-width: $SCREEN_XS_MAX) {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 15px;
+  }
+}
+
+.caption {
+  width: 110px;
+  padding-right: 15px;
+  padding-left: 90px;
+  font-size: 13px;
+  color: $COLOR--charcoal-grey;
+  @media (max-width: $SCREEN_SM_MAX) {
+    padding-left: 15px;
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding-left: 0;
+  }
+}
+
+.description {
+  width: 220px;
+  flex-grow: 1;
+  flex-shrink: 1;
+  padding: 0 15px;
+  color: $COLOR--gray-60;
+  line-height: 14px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+    padding: 5px 0 0;
+  }
+}
+
+.create-button {
+  flex: 100px 0 1;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}

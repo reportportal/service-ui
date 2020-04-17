@@ -90,4 +90,28 @@ export const messages = defineMessages({
     id: 'NotificationCase.controlPanelName',
     defaultMessage: 'Rule',
   },
+  noItemsMessage: {
+    id: 'NoCasesBlock.noItemsMessage',
+    defaultMessage: 'No Email Notification Rules',
+  },
+  notificationsInfo: {
+    id: 'NoCasesBlock.notificationsInfo',
+    defaultMessage: 'After launches finish, system will notify selected people by email.',
+  },
+  create: {
+    id: 'AddNewCaseButton.addNewRuleButton',
+    defaultMessage: 'Create notification',
+  },
+  toggleLabel: {
+    id: 'NotificationsEnableForm.toggleNotificationsLabel',
+    defaultMessage: 'E-mail notification',
+  },
+  toggleNote: {
+    id: 'NotificationsEnableForm.toggleNotificationsNote',
+    defaultMessage: 'Send e-mail notifications about launches finished',
+  },
+  title: {
+    id: 'NotificationsEnableForm.title',
+    defaultMessage: 'No integrations with E-mail',
+  },
 });

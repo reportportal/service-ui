@@ -17,7 +17,7 @@
 import { cloneElement, Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import styles from './fieldErrorHint.scss';
 
 const cx = classNames.bind(styles);
@@ -88,14 +88,6 @@ const messages = defineMessages({
   minShouldMatchHint: {
     id: 'AccuracyFormBlock.minShouldMatchHint',
     defaultMessage: 'The parameter should have value from 50 to 100',
-  },
-  minDocFreqHint: {
-    id: 'AccuracyFormBlock.minDocFreqHint',
-    defaultMessage: 'The parameter should have value from 1 to 10',
-  },
-  minTermFreqHint: {
-    id: 'AccuracyFormBlock.minTermFreqHint',
-    defaultMessage: 'The parameter should have value from 1 to 10',
   },
   profilePassword: {
     id: 'ChangePasswordModal.profilePassword',
@@ -211,12 +203,16 @@ const messages = defineMessages({
     id: 'PostIssueModal.doubleFieldHint',
     defaultMessage: "This field must be of 'double' type",
   },
+  membersSearchHint: {
+    id: 'MembersPageToolbar.membersSearchHint',
+    defaultMessage: 'Member name must not be empty',
+  },
 });
 
 @injectIntl
 export class FieldErrorHint extends Component {
   static propTypes = {
-    intl: intlShape,
+    intl: PropTypes.object,
     hintType: PropTypes.string,
     children: PropTypes.node,
     error: PropTypes.string,

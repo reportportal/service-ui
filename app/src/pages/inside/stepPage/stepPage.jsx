@@ -46,6 +46,7 @@ import {
   editDefectsAction,
   linkIssueAction,
   postIssueAction,
+  isDefectGroupOperationAvailable,
 } from 'controllers/step';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
 import { ENTITY_START_TIME } from 'components/filterEntities/constants';
@@ -56,29 +57,29 @@ import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { LaunchFiltersSection } from 'pages/inside/common/launchFiltersSection';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { getDefectTypeSelector } from 'controllers/project';
-import { TO_INVESTIGATE } from 'common/constants/defectTypes';
 import { StepGrid } from './stepGrid';
 
-const UNLINK_MODAL_EVENTS_INFO = {
-  unlinkBtn: STEP_PAGE_EVENTS.UNLINK_BTN_UNLINK_ISSUE_MODAL,
-  cancelBtn: STEP_PAGE_EVENTS.CANCEL_BTN_UNLINK_ISSUE_MODAL,
-  closeIcon: STEP_PAGE_EVENTS.CLOSE_ICON_UNLINK_ISSUE_MODAL,
+const UNLINK_ISSUE_EVENTS_INFO = {
+  unlinkBtn: STEP_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.UNLINK_BTN_UNLINK_ISSUE_MODAL,
+  cancelBtn: STEP_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_UNLINK_ISSUE_MODAL,
+  closeIcon: STEP_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_UNLINK_ISSUE_MODAL,
 };
 
-const POST_BUG_EVENTS_INFO = {
-  postBtn: STEP_PAGE_EVENTS.POST_BTN_POST_ISSUE_MODAL,
-  attachmentsSwitcher: STEP_PAGE_EVENTS.ATTACHMENTS_SWITCHER_POST_ISSUE_MODAL,
-  logsSwitcher: STEP_PAGE_EVENTS.LOGS_SWITCHER_POST_ISSUE_MODAL,
-  commentSwitcher: STEP_PAGE_EVENTS.COMMENT_SWITCHER_POST_ISSUE_MODAL,
-  cancelBtn: STEP_PAGE_EVENTS.CANCEL_BTN_POST_ISSUE_MODAL,
-  closeIcon: STEP_PAGE_EVENTS.CLOSE_ICON_POST_ISSUE_MODAL,
+const POST_ISSUE_EVENTS_INFO = {
+  postBtn: STEP_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.POST_BTN_POST_ISSUE_MODAL,
+  attachmentsSwitcher:
+    STEP_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.ATTACHMENTS_SWITCHER_POST_ISSUE_MODAL,
+  logsSwitcher: STEP_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.LOGS_SWITCHER_POST_ISSUE_MODAL,
+  commentSwitcher: STEP_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.COMMENT_SWITCHER_POST_ISSUE_MODAL,
+  cancelBtn: STEP_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.CANCEL_BTN_POST_ISSUE_MODAL,
+  closeIcon: STEP_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.CLOSE_ICON_POST_ISSUE_MODAL,
 };
 
 const LINK_ISSUE_EVENTS_INFO = {
-  loadBtn: STEP_PAGE_EVENTS.LOAD_BTN_LINK_ISSUE_MODAL,
-  cancelBtn: STEP_PAGE_EVENTS.CANCEL_BTN_LINK_ISSUE_MODAL,
-  addNewIssue: STEP_PAGE_EVENTS.ADD_NEW_ISSUE_BTN_LINK_ISSUE_MODAL,
-  closeIcon: STEP_PAGE_EVENTS.CLOSE_ICON_LINK_ISSUE_MODAL,
+  loadBtn: STEP_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.LOAD_BTN_LINK_ISSUE_MODAL,
+  cancelBtn: STEP_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_LINK_ISSUE_MODAL,
+  addNewIssue: STEP_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.ADD_NEW_ISSUE_BTN_LINK_ISSUE_MODAL,
+  closeIcon: STEP_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_LINK_ISSUE_MODAL,
 };
 
 @connect(
@@ -246,10 +247,10 @@ export class StepPage extends Component {
         type: LAUNCH_ITEM_TYPES.item,
         fetchFunc: this.props.fetchTestItemsAction,
         eventsInfo: {
-          saveBtn: STEP_PAGE_EVENTS.SAVE_BTN_EDIT_ITEM_MODAL,
-          editDescription: STEP_PAGE_EVENTS.EDIT_ITEM_DESCRIPTION,
-          cancelBtn: STEP_PAGE_EVENTS.CANCEL_BTN_EDIT_ITEM_MODAL,
-          closeIcon: STEP_PAGE_EVENTS.CLOSE_ICON_EDIT_ITEM_MODAL,
+          saveBtn: STEP_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.SAVE_BTN_EDIT_ITEM_MODAL,
+          editDescription: STEP_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.EDIT_ITEM_DESCRIPTION,
+          cancelBtn: STEP_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.CANCEL_BTN_EDIT_ITEM_MODAL,
+          closeIcon: STEP_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.CLOSE_ICON_EDIT_ITEM_MODAL,
         },
       },
     });
@@ -284,7 +285,7 @@ export class StepPage extends Component {
     this.props.tracking.trackEvent(STEP_PAGE_EVENTS.UNLINK_ISSUES_ACTION);
     this.props.unlinkIssueAction(this.props.selectedItems, {
       fetchFunc: this.unselectAndFetchItems,
-      eventsInfo: UNLINK_MODAL_EVENTS_INFO,
+      eventsInfo: UNLINK_ISSUE_EVENTS_INFO,
     });
   };
 
@@ -303,7 +304,7 @@ export class StepPage extends Component {
     this.props.tracking.trackEvent(STEP_PAGE_EVENTS.UNLINK_SINGLE_ISSUE);
     this.props.unlinkIssueAction(items, {
       fetchFunc: this.unselectAndFetchItems,
-      eventsInfo: UNLINK_MODAL_EVENTS_INFO,
+      eventsInfo: UNLINK_ISSUE_EVENTS_INFO,
     });
   };
 
@@ -316,7 +317,7 @@ export class StepPage extends Component {
   handlePostIssue = () =>
     this.props.postIssueAction(this.props.selectedItems, {
       fetchFunc: this.unselectAndFetchItems,
-      eventsInfo: POST_BUG_EVENTS_INFO,
+      eventsInfo: POST_ISSUE_EVENTS_INFO,
     });
 
   handleIgnoreInAA = () => {
@@ -344,20 +345,26 @@ export class StepPage extends Component {
   };
 
   handleEditDefects = (eventData) => {
-    const items = eventData && eventData.id ? [eventData] : this.props.selectedItems;
-    if (this.isDefectGroupOperationAvailable(eventData)) {
+    const { selectedItems, getDefectType, debugMode } = this.props;
+    const items = eventData && eventData.id ? [eventData] : selectedItems;
+    const isDefectGroupOperation = isDefectGroupOperationAvailable({
+      editedData: eventData,
+      selectedItems,
+      getDefectType,
+      debugMode,
+    });
+    if (isDefectGroupOperation) {
       this.props.showModalAction({
         id: 'editToInvestigateDefectModal',
         data: {
           item: items[0],
           fetchFunc: this.unselectAndFetchItems,
           eventsInfo: {
-            saveBtnDropdown: STEP_PAGE_EVENTS.SAVE_BTN_DROPDOWN_EDIT_ITEM_MODAL,
-            postBugBtn: STEP_PAGE_EVENTS.POST_BUG_BTN_EDIT_ITEM_MODAL,
-            linkIssueBtn: STEP_PAGE_EVENTS.LOAD_BUG_BTN_EDIT_ITEM_MODAL,
-            unlinkIssueBtn: STEP_PAGE_EVENTS.UNLINK_ISSUE_BTN_EDIT_ITEM_MODAL,
-            unlinkModalEvents: UNLINK_MODAL_EVENTS_INFO,
-            postBugEvents: POST_BUG_EVENTS_INFO,
+            changeSearchMode: STEP_PAGE_EVENTS.CHANGE_SEARCH_MODE_EDIT_DEFECT_MODAL,
+            selectAllSimilarItems: STEP_PAGE_EVENTS.SELECT_ALL_SIMILIAR_ITEMS_EDIT_DEFECT_MODAL,
+            editDefectsEvents: STEP_PAGE_EVENTS.EDIT_DEFECT_MODAL_EVENTS,
+            unlinkIssueEvents: UNLINK_ISSUE_EVENTS_INFO,
+            postIssueEvents: POST_ISSUE_EVENTS_INFO,
             linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
           },
         },
@@ -367,28 +374,13 @@ export class StepPage extends Component {
         fetchFunc: this.unselectAndFetchItems,
         debugMode: this.props.debugMode,
         eventsInfo: {
-          saveBtnDropdown: STEP_PAGE_EVENTS.SAVE_BTN_DROPDOWN_EDIT_ITEM_MODAL,
-          postBugBtn: STEP_PAGE_EVENTS.POST_BUG_BTN_EDIT_ITEM_MODAL,
-          linkIssueBtn: STEP_PAGE_EVENTS.LOAD_BUG_BTN_EDIT_ITEM_MODAL,
-          unlinkIssueBtn: STEP_PAGE_EVENTS.UNLINK_ISSUE_BTN_EDIT_ITEM_MODAL,
-          unlinkModalEvents: UNLINK_MODAL_EVENTS_INFO,
-          postBugEvents: POST_BUG_EVENTS_INFO,
+          editDefectsEvents: STEP_PAGE_EVENTS.EDIT_DEFECT_MODAL_EVENTS,
+          unlinkIssueEvents: UNLINK_ISSUE_EVENTS_INFO,
+          postIssueEvents: POST_ISSUE_EVENTS_INFO,
           linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
         },
       });
     }
-  };
-
-  isDefectGroupOperationAvailable = (editedData) => {
-    const items = editedData && editedData.id ? [editedData] : this.props.selectedItems;
-    return (
-      items.length === 1 &&
-      items[0].issue &&
-      items[0].issue.issueType &&
-      this.props.getDefectType(items[0].issue.issueType).typeRef.toUpperCase() ===
-        TO_INVESTIGATE.toUpperCase() &&
-      !this.props.debugMode
-    );
   };
 
   unselectAndFetchItems = () => {
@@ -492,17 +484,16 @@ export class StepPage extends Component {
             sortingDirection={sortingDirection}
             rowHighlightingConfig={rowHighlightingConfig}
           />
-          {!!pageCount &&
-            !loading && (
-              <PaginationToolbar
-                activePage={activePage}
-                itemCount={itemCount}
-                pageCount={pageCount}
-                pageSize={pageSize}
-                onChangePage={onChangePage}
-                onChangePageSize={onChangePageSize}
-              />
-            )}
+          {!!pageCount && !loading && (
+            <PaginationToolbar
+              activePage={activePage}
+              itemCount={itemCount}
+              pageCount={pageCount}
+              pageSize={pageSize}
+              onChangePage={onChangePage}
+              onChangePageSize={onChangePageSize}
+            />
+          )}
         </PageSection>
       </PageLayout>
     );

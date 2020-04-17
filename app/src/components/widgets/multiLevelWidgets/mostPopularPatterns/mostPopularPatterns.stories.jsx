@@ -17,7 +17,7 @@
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 // eslint-disable-next-line import/extensions, import/no-unresolved
-import { withReadme } from 'storybook-readme';
+
 import { MostPopularPatterns } from './mostPopularPatterns';
 import { level1, level2 } from './data';
 import README from './README.md';
@@ -35,7 +35,11 @@ storiesOf('Components/Widgets/Tables/MostPopularPatterns', module)
       width: 400,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('with required props: launch, tests, nameClickHandler', () => (
     <MostPopularPatterns widget={level1} fetchWidget={fetchWidget} />
   ));

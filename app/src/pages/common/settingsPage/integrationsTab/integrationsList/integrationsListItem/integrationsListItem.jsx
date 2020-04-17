@@ -16,9 +16,9 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import { INTEGRATIONS_IMAGES_MAP, INTEGRATION_NAMES_TITLES } from 'components/integrations';
+import { PLUGIN_IMAGES_MAP, PLUGIN_NAME_TITLES } from 'components/integrations';
 import styles from './integrationsListItem.scss';
 
 const cx = classNames.bind(styles);
@@ -26,7 +26,7 @@ const cx = classNames.bind(styles);
 @injectIntl
 export class IntegrationsListItem extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     integrationType: PropTypes.object.isRequired,
     onClick: PropTypes.func,
   };
@@ -44,9 +44,9 @@ export class IntegrationsListItem extends Component {
 
     return (
       <div className={cx('integrations-list-item')} onClick={this.itemClickHandler}>
-        <img className={cx('integration-image')} src={INTEGRATIONS_IMAGES_MAP[name]} alt={name} />
+        <img className={cx('integration-image')} src={PLUGIN_IMAGES_MAP[name]} alt={name} />
         <div className={cx('integration-info-block')}>
-          <span className={cx('integration-name')}>{INTEGRATION_NAMES_TITLES[name] || name}</span>
+          <span className={cx('integration-name')}>{PLUGIN_NAME_TITLES[name] || name}</span>
           <span className={cx('plugin-author')}>{`by ${uploadedBy || 'Report Portal'}`}</span>
         </div>
       </div>

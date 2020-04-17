@@ -85,7 +85,7 @@ export class ChartContainer extends Component {
     const { isPreview, observer, isCustomTooltip } = this.props;
     if (!isPreview) {
       observer.unsubscribe('widgetResized', this.resizeChart);
-      !isCustomTooltip && this.node.removeEventListener('mousemove', this.setupCoords);
+      !isCustomTooltip && this.node && this.node.removeEventListener('mousemove', this.setupCoords);
     }
     this.chart = null;
   }
@@ -157,8 +157,16 @@ export class ChartContainer extends Component {
 
   getPosition = (d, width, height) => {
     const rect = this.node.getBoundingClientRect();
-    const left = this.x - rect.left - width / 2;
-    const top = this.y - rect.top - height;
+    let left = this.x - rect.left - width / 2;
+    if (left < 0) {
+      left = 0;
+    } else if (left + width > rect.width) {
+      left = rect.width - width;
+    }
+    let top = this.y - rect.top - height;
+    if (top < 0) {
+      top = this.y - rect.top + 8;
+    }
 
     return {
       top: top - 8,
@@ -214,17 +222,16 @@ export class ChartContainer extends Component {
         configCreationTimeStamp={this.configCreationTimeStamp}
         onChartCreated={this.onChartCreated}
       >
-        {!isPreview &&
-          showLegend && (
-            <Legend
-              items={customData.legendItems}
-              colors={config.data.colors}
-              {...legendProps}
-              onClick={this.onClickLegendItem}
-              onMouseOver={this.onLegendMouseOver}
-              onMouseOut={this.onLegendMouseOut}
-            />
-          )}
+        {!isPreview && showLegend && (
+          <Legend
+            items={customData.legendItems}
+            colors={config.data.colors}
+            {...legendProps}
+            onClick={this.onClickLegendItem}
+            onMouseOver={this.onLegendMouseOver}
+            onMouseOut={this.onLegendMouseOut}
+          />
+        )}
       </C3Chart>
     );
   }

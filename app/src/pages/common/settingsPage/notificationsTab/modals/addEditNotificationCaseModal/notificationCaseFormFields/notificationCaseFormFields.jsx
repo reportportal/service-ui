@@ -18,18 +18,18 @@ import React, { Component, Fragment } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import className from 'classnames/bind';
 import { URLS } from 'common/urls';
-import { validate } from 'common/utils';
+import { validate } from 'common/utils/validation';
 import { projectIdSelector } from 'controllers/pages';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { FormField } from 'components/fields/formField';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { AttributeListField } from 'components/main/attributeList';
+import { AsyncMultipleAutocomplete } from 'components/inputs/autocompletes/asyncMultipleAutocomplete';
 import {
   LAUNCH_CASES,
   LABEL_WIDTH,
@@ -46,23 +46,20 @@ const cx = className.bind(styles);
 
 @injectIntl
 @connect((state) => ({
-  projectUsernamesSearch: URLS.projectUsernamesSearch(projectIdSelector(state)),
-  launchNameSearch: URLS.launchNameSearch(projectIdSelector(state)),
+  activeProject: projectIdSelector(state),
 }))
 @track()
 export class NotificationCaseFormFields extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
-    projectUsernamesSearch: PropTypes.string,
-    launchNameSearch: PropTypes.string,
+    intl: PropTypes.object.isRequired,
+    activeProject: PropTypes.string,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
   };
   static defaultProps = {
-    projectUsernamesSearch: '',
-    launchNameSearch: '',
+    activeProject: '',
   };
 
   getDropdownInputConfig = () => {
@@ -98,18 +95,10 @@ export class NotificationCaseFormFields extends Component {
     ];
   };
 
-  formatOptions = (options) =>
-    options && options.map((option) => ({ value: option, label: option }));
-  parseOptions = (options) =>
-    (Array.isArray(options) && options.map((option) => option.value)) || undefined;
-  validateRecipientsNewItem = ({ label }) => validate.requiredEmail(label);
-  validateLaunchNamesNewItem = ({ label }) => validate.launchName(label);
-
   render() {
     const {
       intl: { formatMessage },
-      projectUsernamesSearch,
-      launchNameSearch,
+      activeProject,
       tracking,
     } = this.props;
 
@@ -118,8 +107,6 @@ export class NotificationCaseFormFields extends Component {
         <FormField
           label={formatMessage(messages.recipientsLabel)}
           name={RECIPIENTS_FIELD_KEY}
-          format={this.formatOptions}
-          parse={this.parseOptions}
           fieldWrapperClassName={cx('form-input')}
           labelClassName={cx('form-label')}
           onChange={() =>
@@ -127,19 +114,14 @@ export class NotificationCaseFormFields extends Component {
           }
         >
           <FieldErrorHint hintType="top">
-            <InputTagsSearch
+            <AsyncMultipleAutocomplete
               placeholder={formatMessage(messages.recipientsPlaceholder)}
-              nothingFound={formatMessage(messages.recipientsHint)}
+              notFoundPrompt={formatMessage(messages.recipientsHint)}
               minLength={3}
-              async
-              uri={projectUsernamesSearch}
-              makeOptions={this.formatOptions}
+              getURI={URLS.projectUsernamesSearch(activeProject)}
               creatable
-              multi
-              removeSelected
-              isValidNewOption={this.validateRecipientsNewItem}
-              dynamicSearchPromptText
-              autosize={false}
+              showDynamicSearchPrompt
+              isValidNewOption={validate.requiredEmail}
             />
           </FieldErrorHint>
         </FormField>
@@ -172,25 +154,19 @@ export class NotificationCaseFormFields extends Component {
             node: <p>{formatMessage(messages.launchNamesNote)}</p>,
           }}
           name={LAUNCH_NAMES_FIELD_KEY}
-          format={this.formatOptions}
-          parse={this.parseOptions}
           fieldWrapperClassName={cx('form-input')}
           labelClassName={cx('form-label')}
           onChange={() => tracking.trackEvent(SETTINGS_PAGE_EVENTS.LAUNCH_NAME_INPUT_NOTIFICATIONS)}
         >
           <FieldErrorHint hintType="top">
-            <InputTagsSearch
+            <AsyncMultipleAutocomplete
               placeholder={formatMessage(messages.launchNamesPlaceholder)}
-              focusPlaceholder={formatMessage(messages.launchNamesHint)}
-              async
+              notFoundPrompt={formatMessage(messages.launchNamesHint)}
               minLength={3}
-              uri={launchNameSearch}
-              makeOptions={this.formatOptions}
+              getURI={URLS.launchNameSearch(activeProject)}
               creatable
-              multi
-              removeSelected
-              isValidNewOption={this.validateLaunchNamesNewItem}
-              autosize={false}
+              isValidNewOption={validate.launchName}
+              showDynamicSearchPrompt
             />
           </FieldErrorHint>
         </FormField>

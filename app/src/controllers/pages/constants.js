@@ -17,6 +17,7 @@
 import { NOT_FOUND } from 'redux-first-router';
 
 export const UPDATE_PAGE_PROPERTIES = 'updatePagePropertiesAction';
+export const CLEAR_PAGE_STATE = 'clearPageStateAction';
 
 // undefined page
 export const NO_PAGE = undefined;
@@ -29,6 +30,7 @@ export const SERVER_SETTINGS_PAGE = 'SERVER_SETTINGS_PAGE';
 export const SERVER_SETTINGS_TAB_PAGE = 'SERVER_SETTINGS_TAB_PAGE';
 export const PLUGINS_PAGE = 'PLUGINS_PAGE';
 export const PLUGINS_TAB_PAGE = 'PLUGINS_TAB_PAGE';
+export const PLUGIN_UI_EXTENSION_ADMIN_PAGE = 'PLUGIN_UI_EXTENSION_ADMIN_PAGE';
 // inside
 export const API_PAGE = 'API_PAGE';
 export const PROJECT_PAGE = 'PROJECT_PAGE';
@@ -86,6 +88,7 @@ export const pageNames = {
   PROJECT_LOG_PAGE,
   PROJECT_USERDEBUG_LOG_PAGE,
   OAUTH_SUCCESS,
+  PLUGIN_UI_EXTENSION_ADMIN_PAGE,
 };
 
 export const adminPageNames = {
@@ -97,4 +100,5 @@ export const adminPageNames = {
   [SERVER_SETTINGS_TAB_PAGE]: SERVER_SETTINGS_TAB_PAGE,
   [PLUGINS_PAGE]: PLUGINS_PAGE,
   [PLUGINS_TAB_PAGE]: PLUGINS_TAB_PAGE,
+  [PLUGIN_UI_EXTENSION_ADMIN_PAGE]: PLUGIN_UI_EXTENSION_ADMIN_PAGE,
 };

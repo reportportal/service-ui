@@ -33,13 +33,7 @@ import {
 } from 'controllers/testItem';
 import { debugModeSelector } from 'controllers/launch';
 import { extractNamespacedQuery, createNamespacedQuery } from 'common/utils/routingUtils';
-import {
-  calculateGrowthDuration,
-  normalizeHistoryItem,
-  getPreviousItem,
-  getNextItem,
-  getUpdatedLogQuery,
-} from './utils';
+import { getPreviousItem, getNextItem, getUpdatedLogQuery } from './utils';
 import {
   NAMESPACE,
   DEFAULT_SORTING,
@@ -54,12 +48,10 @@ const logSelector = (state) => state.log || {};
 
 export const logActivitySelector = (state) => logSelector(state).activity || [];
 
-export const lastLogActivitySelector = createSelector(
-  logActivitySelector,
-  (activity) => (activity.length ? activity[0] : null),
+export const lastLogActivitySelector = createSelector(logActivitySelector, (activity) =>
+  activity.length ? activity[0] : null,
 );
 
-const historyEntriesSelector = (state) => logSelector(state).historyEntries || [];
 export const logItemsSelector = (state) => logSelector(state).logItems || [];
 export const logErrorItemsSelector = (state) => logSelector(state).errorLogItems || [];
 export const logPaginationSelector = (state) => logSelector(state).pagination;
@@ -77,37 +69,7 @@ export const querySelector = createQueryParametersSelector({
   defaultSorting: DEFAULT_SORTING,
 });
 
-export const historyItemsSelector = createSelector(
-  historyEntriesSelector,
-  logItemIdSelector,
-  (entriesFromState, logItemId) => {
-    if (!entriesFromState.length) return [];
-    const entries = [...entriesFromState].reverse();
-
-    const currentLaunch = entries.pop();
-    if (!currentLaunch) {
-      return [];
-    }
-    const currentLaunchItem = currentLaunch.resources.find((item) => item.id === logItemId);
-    if (!currentLaunchItem) {
-      return [];
-    }
-    const historyItems = entries.map((historyItem) => {
-      const filteredSameHistoryItems = historyItem.resources.filter(
-        (item) => item.uniqueId === currentLaunchItem.uniqueId,
-      );
-
-      return {
-        ...normalizeHistoryItem(historyItem, filteredSameHistoryItems),
-      };
-    });
-
-    currentLaunchItem.launchNumber = currentLaunch.launchNumber;
-    historyItems.push(currentLaunchItem);
-
-    return calculateGrowthDuration(historyItems);
-  },
-);
+export const historyItemsSelector = (state) => logSelector(state).historyItems || [];
 
 const createActiveLogItemIdSelector = (
   pageQuerySelector,
@@ -253,7 +215,7 @@ export const disableNextItemLinkSelector = createSelector(
   itemsSelector,
   ({ number, totalPages }, id, items) => {
     const isNoNextItem = getNextItem(items, id) === null;
-    const isLastPage = number === totalPages;
+    const isLastPage = totalPages ? number === totalPages : true;
     return isNoNextItem && isLastPage;
   },
 );

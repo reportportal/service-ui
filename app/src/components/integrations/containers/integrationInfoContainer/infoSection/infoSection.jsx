@@ -17,15 +17,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { defineMessages, injectIntl, intlShape, FormattedMessage } from 'react-intl';
-import {
-  NOTIFICATION_GROUP_TYPE,
-  BTS_GROUP_TYPE,
-  OTHER_GROUP_TYPE,
-  AUTHORIZATION_GROUP_TYPE,
-  ANALYZER_GROUP_TYPE,
-} from 'common/constants/pluginsGroupTypes';
+import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+import { isPluginSwitchable } from 'controllers/plugins';
 import { InputSwitcher } from 'components/inputs/inputSwitcher';
+import { PLUGIN_DISABLED_MESSAGES_BY_GROUP_TYPE } from 'components/integrations/messages';
 import styles from './infoSection.scss';
 
 const cx = classNames.bind(styles);
@@ -39,34 +34,12 @@ const messages = defineMessages({
     id: 'InfoSection.version',
     defaultMessage: 'version',
   },
-  titleBts: {
-    id: 'PluginItem.titleBts',
-    defaultMessage:
-      'will be hidden on project settings. RP users won`t be able to post or link issue in BTS',
-  },
-  titleNotification: {
-    id: 'PluginItem.titleNotification',
-    defaultMessage:
-      'will be hidden on project settings. RP users can not get notifications and send invitations for new users',
-  },
-  titleOthers: {
-    id: 'PluginItem.titleOthers',
-    defaultMessage: 'will be hidden on project settings',
-  },
 });
-
-const titleMessagesMap = {
-  [BTS_GROUP_TYPE]: messages.titleBts,
-  [NOTIFICATION_GROUP_TYPE]: messages.titleNotification,
-  [OTHER_GROUP_TYPE]: messages.titleOthers,
-  [AUTHORIZATION_GROUP_TYPE]: messages.titleOthers,
-  [ANALYZER_GROUP_TYPE]: messages.titleOthers,
-};
 
 @injectIntl
 export class InfoSection extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     image: PropTypes.string.isRequired,
     description: PropTypes.object.isRequired,
     title: PropTypes.string.isRequired,
@@ -128,7 +101,7 @@ export class InfoSection extends Component {
   render() {
     const {
       intl: { formatMessage },
-      data: { groupType },
+      data: { groupType, name },
       title,
       image,
       version,
@@ -137,6 +110,7 @@ export class InfoSection extends Component {
     } = this.props;
     const { expanded, withShowMore, isEnabled } = this.state;
     const isPartiallyShown = withShowMore && !expanded;
+    const toggleable = isPluginSwitchable(name);
 
     return (
       <div className={cx('info-section')}>
@@ -146,7 +120,7 @@ export class InfoSection extends Component {
           {version && (
             <span className={cx('version')}>{`${formatMessage(messages.version)} ${version}`}</span>
           )}
-          {isGlobal && (
+          {isGlobal && toggleable && (
             <div className={cx('switcher-block')}>
               <span className={cx('switcher-status')}>
                 {isEnabled ? (
@@ -157,7 +131,13 @@ export class InfoSection extends Component {
               </span>
               <div
                 className={cx('switcher')}
-                title={!isEnabled ? `${title} ${formatMessage(titleMessagesMap[groupType])}` : ''}
+                title={
+                  isEnabled
+                    ? ''
+                    : formatMessage(PLUGIN_DISABLED_MESSAGES_BY_GROUP_TYPE[groupType], {
+                        name: title,
+                      })
+                }
               >
                 <InputSwitcher value={isEnabled} onChange={this.onToggleActiveHandler} />
               </div>

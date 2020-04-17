@@ -17,12 +17,12 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { fetch } from 'common/utils';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { projectIdSelector } from 'controllers/pages';
-import { JIRA } from 'common/constants/integrationNames';
+import { JIRA } from 'common/constants/pluginNames';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { URLS } from 'common/urls';
 import { InputDropdown } from 'components/inputs/inputDropdown';
@@ -70,7 +70,7 @@ const messages = defineMessages({
 @injectIntl
 export class BtsPropertiesForIssueForm extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     instanceId: PropTypes.number.isRequired,
     projectId: PropTypes.string,
     pluginName: PropTypes.string,

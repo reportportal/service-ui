@@ -17,12 +17,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
-import { intlShape, injectIntl, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { change } from 'redux-form';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { userIdSelector, activeProjectSelector } from 'controllers/user/selectors';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import AddFilterIcon from 'common/img/add-filter-inline.svg';
 import { fetch, debounce } from 'common/utils';
 import { URLS } from 'common/urls';
 import {
@@ -34,11 +35,10 @@ import {
   updateFilterSuccessAction,
 } from 'controllers/filter';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
+import { GhostButton } from 'components/buttons/ghostButton';
+import { SearchableFilterList } from 'pages/inside/common/searchableFilterList';
 import { WIDGET_WIZARD_FORM } from '../../../constants';
 import { LockedActiveFilter } from './lockedActiveFilter';
-import { FiltersActionPanel } from './filtersActionPanel';
-import { ActiveFilter } from './activeFilter';
-import { FiltersList } from './filtersList';
 import { FilterEdit } from './filterEdit';
 import { FilterAdd } from './filterAdd';
 import {
@@ -80,6 +80,10 @@ const messages = defineMessages({
     id: 'FiltersControl.notFoundAdditionalInfo',
     defaultMessage: `Be the first to add a new filter`,
   },
+  addFilterButton: {
+    id: 'FiltersActionPanel.addFilterButton',
+    defaultMessage: 'Add filter',
+  },
 });
 
 @track()
@@ -102,7 +106,7 @@ const messages = defineMessages({
 @injectIntl
 export class FiltersControl extends Component {
   static propTypes = {
-    intl: intlShape,
+    intl: PropTypes.object,
     touched: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
     error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
@@ -167,6 +171,11 @@ export class FiltersControl extends Component {
     this.fetchFilter({ page });
     activeLaunchFilter && this.handleActiveFilterChange(activeLaunchFilter.id.toString());
   }
+
+  onFilterAdd = (event) => {
+    this.props.tracking.trackEvent(this.props.eventsInfo.addFilter);
+    this.handleFormAppearanceMode(event, FORM_APPEARANCE_MODE_ADD);
+  };
 
   getFormAppearanceComponent = (activeFilter) => {
     const {
@@ -235,6 +244,25 @@ export class FiltersControl extends Component {
 
     return filtersList;
   };
+
+  getCustomActionBlock = () => {
+    const {
+      intl: { formatMessage },
+    } = this.props;
+
+    return (
+      <GhostButton
+        icon={AddFilterIcon}
+        title={formatMessage(messages.addFilterButton)}
+        onClick={this.onFilterAdd}
+      >
+        {formatMessage(messages.addFilterButton)}
+      </GhostButton>
+    );
+  };
+
+  handleEditFilterListItem = (event, item) =>
+    this.handleFormAppearanceMode(event, FORM_APPEARANCE_MODE_EDIT, item);
 
   fetchFilter = ({ page, size, searchValue }) => {
     const { size: stateSize, page: statePage } = this.state;
@@ -387,33 +415,24 @@ export class FiltersControl extends Component {
       return this.getFormAppearanceComponent(activeFilter);
     }
 
-    const { loading, userId, filter, touched, error, eventsInfo } = this.props;
+    const { loading, touched, error } = this.props;
     const { searchValue } = this.state;
 
     return (
       <div className={cx('filters-control')}>
-        <FiltersActionPanel
-          filter={filter}
-          filters={filtersList}
-          value={searchValue}
-          onFilterChange={this.handleSearchValueChange}
-          onAdd={this.handleFormAppearanceMode}
-          eventsInfo={eventsInfo}
-        />
-        <ActiveFilter filter={activeFilter || null} touched={touched} error={error || null} />
-        <FiltersList
-          search={searchValue}
-          userId={userId}
-          filters={filtersList}
+        <SearchableFilterList
+          customActionBlock={this.getCustomActionBlock()}
+          activeFilter={activeFilter}
+          searchValue={searchValue}
           loading={loading}
-          activeId={activeFilterId}
-          onChange={this.handleFilterListChange}
-          onEdit={this.handleFormAppearanceMode}
+          touched={touched}
+          error={error}
           onLazyLoad={this.handleFiltersListLoad}
-          noItemsMessage={
-            searchValue ? messages.filtersNotFound : messages.filtersNotFoundOnProject
-          }
-          noItemsAdditionalMessage={searchValue ? null : messages.filtersNotFoundAdditional}
+          onChangeActiveFilter={this.handleFilterListChange}
+          onSearchChange={this.handleSearchValueChange}
+          filters={filtersList}
+          editable
+          onEditItem={this.handleEditFilterListItem}
         />
       </div>
     );

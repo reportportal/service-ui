@@ -117,8 +117,8 @@ Grid.propTypes = {
   rowClassMapper: PropTypes.func,
   grouped: PropTypes.bool,
   groupFunction: PropTypes.func,
-  groupHeader: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
-  nestedStepHeader: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
+  groupHeader: PropTypes.oneOfType([PropTypes.node, PropTypes.elementType]),
+  nestedStepHeader: PropTypes.oneOfType([PropTypes.node, PropTypes.elementType]),
   rowHighlightingConfig: PropTypes.shape({
     onGridRowHighlighted: PropTypes.func,
     isGridRowHighlighted: PropTypes.bool,

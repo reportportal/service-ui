@@ -19,12 +19,12 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { reduxForm, formValueSelector } from 'redux-form';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { Input } from 'components/inputs/input';
-import { commonValidators, validateAsync } from 'common/utils';
+import { commonValidators, validateAsync } from 'common/utils/validation';
 import { URLS } from 'common/urls';
 import { ADMIN_ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { ROLES_MAP, MEMBER, PROJECT_MANAGER } from 'common/constants/projectRoles';
@@ -32,7 +32,7 @@ import { ACCOUNT_ROLES_MAP, USER, ADMINISTRATOR } from 'common/constants/account
 import { ModalLayout, withModal, ModalField } from 'components/main/modal';
 import { SectionHeader } from 'components/main/sectionHeader';
 import { InputDropdown } from 'components/inputs/inputDropdown';
-import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
+import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import styles from './addUserModal.scss';
 
@@ -51,7 +51,7 @@ const messages = defineMessages({
   },
   userFullNameLabel: {
     id: 'AddUserForm.userFullNameLabel',
-    defaultMessage: 'Full Name',
+    defaultMessage: 'Full name',
   },
   userEmailLabel: {
     id: 'AddUserForm.userEmailLabel',
@@ -153,7 +153,7 @@ export class AddUserModal extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     handleSubmit: PropTypes.func,
     change: PropTypes.func,
     dirty: PropTypes.bool,
@@ -187,17 +187,6 @@ export class AddUserModal extends Component {
     return {
       confirmationWarning: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING),
     };
-  };
-
-  formatProjectNameOptions = (values) => values.map((value) => ({ value, label: value }));
-
-  formatValueProject = (value) => (value ? { value, label: value } : null);
-
-  parseValueProject = (value) => {
-    if (value === null) return null;
-    if (value && value.value) return value.value;
-
-    return undefined;
   };
 
   render() {
@@ -270,18 +259,11 @@ export class AddUserModal extends Component {
             label={intl.formatMessage(messages.userSelectAProjectLabel)}
             labelWidth={LABEL_WIDTH}
           >
-            <FieldProvider
-              name="defaultProject"
-              type="text"
-              format={this.formatValueProject}
-              parse={this.parseValueProject}
-            >
+            <FieldProvider name="defaultProject" type="text">
               <FieldErrorHint hintType="top">
-                <InputTagsSearch
+                <AsyncAutocomplete
                   placeholder={intl.formatMessage(messages.projectNamePlaceholder)}
-                  uri={URLS.projectNameSearch()}
-                  makeOptions={this.formatProjectNameOptions}
-                  async
+                  getURI={URLS.projectNameSearch}
                   minLength={1}
                 />
               </FieldErrorHint>

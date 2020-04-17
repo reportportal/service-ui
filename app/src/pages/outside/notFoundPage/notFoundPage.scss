@@ -84,7 +84,7 @@ $RING_MOBILE_DELTA_STEP_WIDTH: 12px;
     left: 50%;
     margin-left: -152px;
     content: '';
-    background-image: url('common/img/404/404.svg');
+    background-image: url('~common/img/404/404.svg');
     width: 294px;
     height: 119px;
     background-size: contain;
@@ -142,11 +142,11 @@ $RING_MOBILE_DELTA_STEP_WIDTH: 12px;
   left: 22px;
   width: 46px;
   height: 39px;
-  background: $COLOR--black-2 url('layouts/common/img/rp_logo.png') no-repeat 50% 60%;
+  background: $COLOR--black-2 url('~layouts/common/img/rp_logo.png') no-repeat 50% 60%;
   background-position: center center;
   cursor: pointer;
   @media (max-width: $SCREEN_XS_MAX) {
-    background-image: url('layouts/common/img/rp-mobile-logo.svg');
+    background-image: url('~layouts/common/img/rp-mobile-logo.svg');
     background-position: center;
     left: 0;
     top: 10px;
@@ -155,14 +155,14 @@ $RING_MOBILE_DELTA_STEP_WIDTH: 12px;
 }
 
 .red-planet div {
-  background-image: url('common/img/404/red-planet.svg');
+  background-image: url('~common/img/404/red-planet.svg');
   width: 50px;
   height: 45px;
   position: absolute;
   top: -20px;
 }
 .saturn div {
-  background-image: url('common/img/404/saturn.svg');
+  background-image: url('~common/img/404/saturn.svg');
   width: 90px;
   height: 60px;
   position: absolute;
@@ -170,7 +170,7 @@ $RING_MOBILE_DELTA_STEP_WIDTH: 12px;
   margin-top: 183px;
 }
 .orange-planet div {
-  background-image: url('common/img/404/yellow-planet.svg');
+  background-image: url('~common/img/404/yellow-planet.svg');
   width: 100px;
   height: 90px;
   position: absolute;
@@ -184,7 +184,7 @@ $RING_MOBILE_DELTA_STEP_WIDTH: 12px;
 }
 
 .rocket {
-  background-image: url('common/img/404/rocket.svg');
+  background-image: url('~common/img/404/rocket.svg');
   width: 70px;
   height: 25px;
   position: absolute;
@@ -249,7 +249,7 @@ $RING_MOBILE_DELTA_STEP_WIDTH: 12px;
 }
 
 .bones {
-  background-image: url(common/img/404/bones.svg);
+  background-image: url(~common/img/404/bones.svg);
   width: 210px;
   height: 90px;
   position: absolute;
@@ -275,7 +275,7 @@ $RING_MOBILE_DELTA_STEP_WIDTH: 12px;
 }
 
 .dog {
-  background-image: url(common/img/404/dog.svg);
+  background-image: url(~common/img/404/dog.svg);
   width: 150px;
   height: 120px;
   position: absolute;
@@ -305,7 +305,7 @@ $RING_MOBILE_DELTA_STEP_WIDTH: 12px;
 }
 .layer-1 {
   top: -38px;
-  background-image: url('common/img/404/stars1.svg');
+  background-image: url('~common/img/404/stars1.svg');
   width: 1083px;
   height: 488px;
   margin-left: -543px;
@@ -313,7 +313,7 @@ $RING_MOBILE_DELTA_STEP_WIDTH: 12px;
 }
 .layer-2 {
   top: -22px;
-  background-image: url('common/img/404/stars2.svg');
+  background-image: url('~common/img/404/stars2.svg');
   width: 1155px;
   height: 464px;
   margin-left: -577px;
@@ -373,7 +373,7 @@ $RING_MOBILE_DELTA_STEP_WIDTH: 12px;
   }
   .layer-1 {
     top: -93px;
-    background-image: url(common/img/404/Mobile_404_stars1.svg);
+    background-image: url(~common/img/404/Mobile_404_stars1.svg);
   }
   .stars {
     width: 320px;
@@ -383,11 +383,11 @@ $RING_MOBILE_DELTA_STEP_WIDTH: 12px;
   }
   .layer-2 {
     top: -93px;
-    background-image: url(common/img/404/Mobile_404_stars2.svg);
+    background-image: url(~common/img/404/Mobile_404_stars2.svg);
   }
   .content-logotip .logo {
     position: relative;
-    background-image: url(common/img/404/mobile-logo.svg);
+    background-image: url(~common/img/404/mobile-logo.svg);
     margin: 0 auto;
     left: 0;
     width: 150px;

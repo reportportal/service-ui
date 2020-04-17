@@ -101,7 +101,7 @@ export class InputDropdown extends Component {
   };
 
   handleClickOutside = (e) => {
-    if (!this.node.contains(e.target) && this.state.opened) {
+    if (this.node && !this.node.contains(e.target) && this.state.opened) {
       this.setState({ opened: false });
       this.props.onBlur();
     }
@@ -245,7 +245,9 @@ export class InputDropdown extends Component {
                   ref={ref}
                   style={style}
                   data-placement={placement}
-                  className={cx('select-list', customClasses.selectList, { opened: this.state.opened })}
+                  className={cx('select-list', customClasses.selectList, {
+                    opened: this.state.opened,
+                  })}
                 >
                   {multiple && selectAll && (
                     <div className={cx('select-all-block')} onClick={this.handleAllClick}>

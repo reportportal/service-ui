@@ -18,7 +18,7 @@ import { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { DEBUG, DEFAULT } from 'common/constants/common';
@@ -42,7 +42,7 @@ import { messages } from './translations';
 @track()
 export class MoveToDebugModal extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     url: PropTypes.string.isRequired,
     data: PropTypes.shape({
       fetchFunc: PropTypes.func,

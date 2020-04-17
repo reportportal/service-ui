@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import className from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
 import { fetchTestItemsAction } from 'controllers/testItem';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
@@ -56,7 +56,7 @@ const messages = defineMessages({
 export class StatusDropdown extends Component {
   static propTypes = {
     currentProject: PropTypes.string.isRequired,
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     itemId: PropTypes.number.isRequired,
     status: PropTypes.string.isRequired,
     attributes: PropTypes.array,

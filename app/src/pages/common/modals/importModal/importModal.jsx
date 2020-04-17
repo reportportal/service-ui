@@ -21,7 +21,7 @@ import Dropzone from 'react-dropzone';
 import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -56,7 +56,7 @@ const messages = defineMessages({
 @track()
 export class ImportModal extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     showNotification: PropTypes.func.isRequired,
     data: PropTypes.object,
     tracking: PropTypes.shape({
@@ -71,7 +71,6 @@ export class ImportModal extends Component {
 
   state = {
     files: [],
-    customBlockValue: undefined,
   };
 
   onDrop = (acceptedFiles, rejectedFiles) => {
@@ -169,12 +168,6 @@ export class ImportModal extends Component {
     };
   };
 
-  handleCustomBlockChange = (customBlockValue) => {
-    this.setState({
-      customBlockValue,
-    });
-  };
-
   formValidationMessage = (validationProperties) => {
     const {
       intl,
@@ -267,16 +260,18 @@ export class ImportModal extends Component {
   formDataForServerUploading() {
     const { files } = this.state;
 
-    return files.filter((item) => item.valid).map((item) => {
-      const formData = new FormData();
+    return files
+      .filter((item) => item.valid)
+      .map((item) => {
+        const formData = new FormData();
 
-      formData.append('file', item.file, item.file.name);
+        formData.append('file', item.file, item.file.name);
 
-      return {
-        data: formData,
-        id: item.id,
-      };
-    });
+        return {
+          data: formData,
+          id: item.id,
+        };
+      });
   }
 
   prepareDataForServerUploading() {
@@ -293,22 +288,20 @@ export class ImportModal extends Component {
 
   uploadFile = (file) => {
     const {
-      data: { url, appendCustomBlockValue, customBlock },
+      data: { url },
     } = this.props;
-    const { customBlockValue } = this.state;
     const { id } = file;
-    const formData = customBlock ? appendCustomBlockValue(file.data, customBlockValue) : file.data;
 
     return fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'multipart/form-data;' },
-      data: formData,
+      data: file.data,
       abort: (cancelRequest) => {
         this.cancelRequests.push(cancelRequest);
       },
       onUploadProgress: (progressEvent) => {
         const { files } = this.state;
-        const percentCompleted = Math.round(progressEvent.loaded * 100 / progressEvent.total);
+        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
 
         this.setState({
           files: files.map((item) => {
@@ -326,7 +319,7 @@ export class ImportModal extends Component {
   render() {
     const {
       intl,
-      data: { type, title, tip, noteMessage, eventsInfo, singleImport, customBlock: CustomBlock },
+      data: { type, title, tip, noteMessage, eventsInfo, singleImport },
     } = this.props;
     const { files } = this.state;
     const validFiles = this.getValidFiles();
@@ -378,12 +371,6 @@ export class ImportModal extends Component {
             <p className={cx('note-label')}>{intl.formatMessage(messages.note)}</p>
             <p className={cx('note-message')}>{Parser(noteMessage)}</p>
           </Fragment>
-        )}
-        {CustomBlock && (
-          <CustomBlock
-            value={this.state.customBlockValue}
-            onChange={this.handleCustomBlockChange}
-          />
         )}
       </ModalLayout>
     );

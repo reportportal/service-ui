@@ -16,12 +16,13 @@
 
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
+import { commonValidators } from 'common/utils/validation';
+import { SECRET_FIELDS_KEY } from 'controllers/plugins';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { Input } from 'components/inputs/input';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { IntegrationFormField } from 'components/integrations/elements';
-import { commonValidators } from 'common/utils';
 
 const messages = defineMessages({
   userNameTitle: {
@@ -41,13 +42,14 @@ const messages = defineMessages({
 @injectIntl
 export class SauceLabsFormFields extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     initialize: PropTypes.func.isRequired,
     change: PropTypes.func.isRequired,
     disabled: PropTypes.bool,
     lineAlign: PropTypes.bool,
     initialData: PropTypes.object,
     pluginDetails: PropTypes.object,
+    updateMetaData: PropTypes.func,
   };
 
   static defaultProps = {
@@ -57,6 +59,7 @@ export class SauceLabsFormFields extends Component {
     pluginDetails: {
       dataCenters: [],
     },
+    updateMetaData: () => {},
   };
 
   constructor(props) {
@@ -77,7 +80,11 @@ export class SauceLabsFormFields extends Component {
       dataCenter: dataCenters[0],
       ...initialData,
     };
+
     initialize(data);
+    this.props.updateMetaData({
+      [SECRET_FIELDS_KEY]: ['accessToken'],
+    });
   }
 
   render() {

@@ -20,7 +20,7 @@ import {
   createNamespacedQuery,
   extractNamespacedQuery,
   mergeNamespacedQuery,
-} from 'common/utils/routingUtils';
+} from './routingUtils';
 import { omit } from './omit';
 
 const takeAll = (x) => ({ ...x });

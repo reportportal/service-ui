@@ -16,7 +16,7 @@
 
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
+import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
 
 export class AttributeInput extends Component {
   static propTypes = {
@@ -33,30 +33,26 @@ export class AttributeInput extends Component {
     attributeComparator: () => {},
   };
 
-  isAttributeUnique = ({ option }) => {
+  isAttributeUnique = (value) => {
     const { attributes, attributeKey, attributeValue, attributeComparator } = this.props;
     return !attributes.find((attribute) =>
-      attributeComparator(attribute, option.value, attributeKey, attributeValue),
+      attributeComparator(attribute, value, attributeKey, attributeValue),
     );
   };
 
-  makeOptions = (items) => {
+  filterOption = (item) => {
     const { attributes, attributeKey, attributeValue, attributeComparator } = this.props;
-    const filteredItems = items.filter(
-      (item) =>
-        !attributes.find((attribute) =>
-          attributeComparator(attribute, item, attributeKey, attributeValue),
-        ),
+    return !attributes.find((attribute) =>
+      attributeComparator(attribute, item, attributeKey, attributeValue),
     );
-    return filteredItems.map((item) => ({ value: item, label: item }));
   };
 
   render() {
     const { attributes, attributeKey, attributeValue, attributeComparator, ...rest } = this.props;
     return (
-      <InputTagsSearch
+      <AsyncAutocomplete
         {...rest}
-        makeOptions={this.makeOptions}
+        filterOption={this.filterOption}
         isOptionUnique={this.isAttributeUnique}
       />
     );

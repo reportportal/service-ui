@@ -19,7 +19,7 @@ import { action } from '@storybook/addon-actions';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
+
 // eslint-disable-next-line import/extensions, import/no-unresolved
 import { WithState } from 'storybook-decorators';
 import { InputConditionalTags } from './inputConditionalTags';
@@ -71,7 +71,11 @@ storiesOf('Components/Inputs/InputConditionalTags', module)
       width: 300,
     }),
   )
-  .addDecorator(withReadme(README))
+  .addParameters({
+    readme: {
+      sidebar: README,
+    },
+  })
   .add('default state', () => (
     <WithState state={state}>
       <InputConditionalTags />
@@ -101,11 +105,13 @@ storiesOf('Components/Inputs/InputConditionalTags', module)
   ))
   .add('with actions (type "de" in input, close DevTools, you get MOCK DATA)', () => {
     const mock = new MockAdapter(axios);
-    const API_REQUEST = '/api/v1/superadmin_personal/launch/tags?filter.cnt.tags=de';
+    const uri = '/api/v1/superadmin_personal/launch/tags?filter.cnt.tags=';
+    const API_REQUEST = `${uri}de`;
     mock.onGet(API_REQUEST).reply(200, ['demo', 'desktop']);
     return (
       <WithState state={state}>
         <InputConditionalTags
+          getURI={(term) => `${uri}${term}`}
           conditions={conditions}
           value={value}
           placeholder="Enter Login or Email"

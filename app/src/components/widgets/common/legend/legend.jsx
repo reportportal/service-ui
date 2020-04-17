@@ -19,7 +19,7 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { defectTypesSelector } from 'controllers/project';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { getItemColor, getItemName, getItemNameConfig } from '../utils';
 import { messages } from '../messages';
@@ -33,7 +33,7 @@ const cx = classNames.bind(styles);
 @injectIntl
 export class Legend extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: PropTypes.object.isRequired,
     defectTypes: PropTypes.object.isRequired,
     items: PropTypes.array,
     colors: PropTypes.object,

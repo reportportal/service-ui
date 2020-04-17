@@ -55,7 +55,7 @@ export class ScrollWrapper extends Component {
     }).isRequired,
   };
   static defaultProps = {
-    children: {},
+    children: null,
     autoHide: false,
     autoHeight: false,
     autoHeightMin: 0,

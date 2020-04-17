@@ -14,6 +14,17 @@
  * limitations under the License.
  */
 
+import {
+  getProceedValidItemsEvent,
+  getRefreshPageActionEvent,
+  getHistoryPageLinkEvent,
+  getRefineFiltersPanelEvents,
+} from './common/testItemPages/actionEventsCreators';
+import {
+  getDeleteItemModalEvents,
+  getEditItemsModalEvents,
+} from './common/testItemPages/modalEventsCreators';
+
 export const SUITE_PAGE = 'suites';
 export const SUITES_PAGE_EVENTS = {
   PLUS_MINUS_BREADCRUMB: {
@@ -36,31 +47,15 @@ export const SUITES_PAGE_EVENTS = {
     action: 'Click on Btn Delete',
     label: 'Delete selected Items',
   },
-  HISTORY_BTN: {
-    category: SUITE_PAGE,
-    action: 'Click on Btn History',
-    label: 'Transition to History View Page',
-  },
-  REFRESH_BTN: {
-    category: SUITE_PAGE,
-    action: 'Click on Btn Refresh',
-    label: 'Refresh the page',
-  },
+  HISTORY_BTN: getHistoryPageLinkEvent(SUITE_PAGE),
+  REFRESH_BTN: getRefreshPageActionEvent(SUITE_PAGE),
   REFINE_BY_NAME: {
     category: SUITE_PAGE,
     action: 'Enter parameters to refine by name',
     label: 'Refine by name',
   },
-  REFINE_BTN_MORE: {
-    category: SUITE_PAGE,
-    action: 'Click on Refine Btn More',
-    label: 'Arise dropdown with parameters',
-  },
-  SELECT_REFINE_PARAMS: {
-    category: SUITE_PAGE,
-    action: 'Select parameters to refine',
-    label: 'Show parameters fields to refine',
-  },
+  // REFINE_FILTERS_PANEL
+  REFINE_FILTERS_PANEL_EVENTS: getRefineFiltersPanelEvents(SUITE_PAGE),
   EDIT_ICON_CLICK: {
     category: SUITE_PAGE,
     action: 'Click on item icon "edit"',
@@ -91,36 +86,7 @@ export const SUITES_PAGE_EVENTS = {
     action: 'Click on icon "close" of all selection',
     label: 'Unselect all items',
   },
-  PROCEED_VALID_ITEMS: {
-    category: SUITE_PAGE,
-    action: 'Click on Btn "Proceed Valid Items"',
-    label: 'Remove invalid items from selection',
-  },
-  CLOSE_ICON_EDIT_ITEM_MODAL: {
-    category: SUITE_PAGE,
-    action: 'Click on Close Icon on Modal "Edit Item"',
-    label: 'Close modal "Edit Item"',
-  },
-  EDIT_ITEM_DESCRIPTION: {
-    category: SUITE_PAGE,
-    action: 'Edit description in Modal "Edit Item"',
-    label: 'Edit description',
-  },
-  BULK_EDIT_ITEMS_DESCRIPTION: {
-    category: SUITE_PAGE,
-    action: 'Edit description in Modal "Edit Items" in a bulk',
-    label: 'Edit description in mode: ',
-  },
-  CANCEL_BTN_EDIT_ITEM_MODAL: {
-    category: SUITE_PAGE,
-    action: 'Click on Btn Cancel on Modal "Edit Item"',
-    label: 'Close modal "Edit Item"',
-  },
-  SAVE_BTN_EDIT_ITEM_MODAL: {
-    category: SUITE_PAGE,
-    action: 'Click on Btn Save on Modal "Edit Item"',
-    label: 'Save changes',
-  },
+  PROCEED_VALID_ITEMS: getProceedValidItemsEvent(SUITE_PAGE),
   NAME_FILTER: {
     category: SUITE_PAGE,
     action: 'Click on icon "filter" on Name',
@@ -266,19 +232,8 @@ export const SUITES_PAGE_EVENTS = {
     action: 'Click on launch log view switcher',
     label: 'Open "Launch log view"',
   },
-  CLOSE_ICON_DELETE_ITEM_MODAL: {
-    category: SUITE_PAGE,
-    action: 'Click on Icon Close on Modal Delete Item',
-    label: 'Close Modal Delete Item',
-  },
-  CANCEL_BTN_DELETE_ITEM_MODAL: {
-    category: SUITE_PAGE,
-    action: 'Click on Btn Cancel on Modal Delete Item',
-    label: 'Close Modal Delete Item',
-  },
-  DELETE_BTN_DELETE_ITEM_MODAL: {
-    category: SUITE_PAGE,
-    action: 'Click on Btn Delete on Modal Delete Item',
-    label: 'Delete item',
-  },
+  // DELETE_ITEM_MODAL
+  DELETE_ITEM_MODAL_EVENTS: getDeleteItemModalEvents(SUITE_PAGE),
+  // EDIT_ITEMS_MODAL
+  EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(SUITE_PAGE),
 };
