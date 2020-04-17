@@ -57,6 +57,9 @@ import {
   fetchProjectAction,
   projectInfoLoadingSelector,
 } from 'controllers/project';
+import { Grid } from 'components/main/grid';
+import { InputSearch } from 'components/inputs/inputSearch';
+import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { createGlobalNamedIntegrationsSelector } from '../selectors';
 
 export const createImportProps = (pluginName) => ({
@@ -77,6 +80,9 @@ export const createImportProps = (pluginName) => ({
     InputRadio,
     SimpleBreadcrumbs,
     Link,
+    Grid,
+    InputSearch,
+    PaginationToolbar,
   },
   constants: { PLUGIN_UI_EXTENSION_ADMIN_PAGE, PROJECT_SETTINGS_TAB_PAGE },
   actions: { showModalAction, showSuccessNotification, showErrorNotification, fetchProjectAction },
