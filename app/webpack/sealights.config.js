@@ -15,65 +15,83 @@
  */
 
 const path = require('path');
+const dotenv = require('dotenv');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 
-module.exports = {
-  devtool: 'source-map',
-  mode: 'development',
-  module: {
-    rules: [
-      {
-        test: /\.css$/,
-        include: /node_modules/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader'],
-      },
-      {
-        test: /\.(sa|sc)ss$/,
-        exclude: /node_modules/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              modules: {
-                localIdentName: '[name]__[local]--[hash:base64:5]',
-              },
-              importLoaders: 1,
-            },
-          },
-          'postcss-loader',
-          'sass-loader',
-          {
-            loader: 'sass-resources-loader',
-            options: {
-              resources: path.resolve(__dirname, '../src/common/css/variables/**/*.scss'),
-            },
-          },
-        ],
-      },
-    ],
-  },
-  optimization: {
-    splitChunks: {
-      cacheGroups: {
-        styles: {
-          name: 'styles',
+dotenv.config();
+
+module.exports = () => {
+  if (!process.env.PROXY_PATH) {
+    console.log('========== Specify the PROXY_PATH variable in the .env file =========');
+    process.exit(1);
+  }
+  return {
+    devtool: 'source-map',
+    mode: 'development',
+    module: {
+      rules: [
+        {
           test: /\.css$/,
-          chunks: 'all',
-          enforce: true,
+          include: /node_modules/,
+          use: [
+            'style-loader',
+            {
+              loader: 'css-loader',
+            },
+          ],
         },
-      },
+        {
+          test: /\.(sa|sc)ss$/,
+          exclude: /node_modules/,
+          use: [
+            'style-loader',
+            {
+              loader: 'css-loader',
+              options: {
+                modules: {
+                  localIdentName: '[name]__[local]--[hash:base64:5]',
+                },
+                importLoaders: 1,
+              },
+            },
+            'sass-loader',
+            {
+              loader: 'sass-resources-loader',
+              options: {
+                resources: path.resolve(__dirname, '../src/common/css/variables/**/*.scss'),
+              },
+            },
+          ],
+        },
+      ],
     },
-  },
-  plugins: [
-    new MiniCssExtractPlugin({
-      filename: '[name].[hash:6].css',
-    }),
-    new CompressionPlugin({
-      algorithm: 'gzip',
-      threshold: 10240,
-      minRatio: 0.8,
-    }),
-  ],
+    plugins: [
+      new MiniCssExtractPlugin({
+        filename: '[name].[hash:6].css',
+      }),
+      new CompressionPlugin({
+        algorithm: 'gzip',
+        threshold: 10240,
+        minRatio: 0.8,
+      }),
+    ],
+    devServer: {
+      contentBase: path.resolve(__dirname, '../build'),
+      hot: true,
+      historyApiFallback: true,
+      https: false,
+      host: '0.0.0.0',
+      port: 3000,
+      proxy: [
+        {
+          context: ['/composite', '/api/', '/uat/'],
+          target: process.env.PROXY_PATH,
+          bypass(req) {
+            console.log(`proxy url: ${req.url}`);
+          },
+        },
+      ],
+    },
+  };
 };
