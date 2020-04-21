@@ -61,6 +61,7 @@ import { Grid } from 'components/main/grid';
 import { InputSearch } from 'components/inputs/inputSearch';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { ProjectName } from 'pages/admin/projectsPage/projectName';
+import { debounce } from 'common/utils/debounce';
 import { createGlobalNamedIntegrationsSelector } from '../selectors';
 
 export const createImportProps = (pluginName) => ({
@@ -99,5 +100,5 @@ export const createImportProps = (pluginName) => ({
     isAdminSelector,
   },
   icons: { PlusIcon, RemoveIcon, CrossIcon, ErrorIcon },
-  utils: { fetch, URLS },
+  utils: { fetch, URLS, debounce },
 });
