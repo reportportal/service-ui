@@ -77,7 +77,7 @@ module.exports = () => {
       }),
     ],
     devServer: {
-      contentBase: path.resolve(__dirname, '../sl_instrumented'),
+      contentBase: path.resolve(__dirname, '../build'),
       hot: true,
       historyApiFallback: true,
       https: false,
