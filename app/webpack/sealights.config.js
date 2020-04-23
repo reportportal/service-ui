@@ -27,7 +27,7 @@ module.exports = () => {
     process.exit(1);
   }
   return {
-    devtool: 'source-map',
+    devtool: 'eval-sourcemap',
     mode: 'development',
     module: {
       rules: [
@@ -77,7 +77,7 @@ module.exports = () => {
       }),
     ],
     devServer: {
-      contentBase: path.resolve(__dirname, '../build'),
+      contentBase: path.resolve(__dirname, '../sl_instrumented'),
       hot: true,
       historyApiFallback: true,
       https: false,
