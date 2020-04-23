@@ -12,7 +12,7 @@
     "format": "npm run format:js && npm run format:scss && prettier --write */**/*.md",
     "dev": "cross-env NODE_ENV=development webpack-dev-server --port 3000",
     "build": "webpack -p",
-    "sealights": "cross-env NODE_ENV=sealights",
+    "sealights": "cross-env NODE_ENV=sealights webpack",
     "test": "jest --notify",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
@@ -92,6 +92,7 @@
     "reset-css": "2.2.1",
     "semver-diff": "2.1.0",
     "simplemde": "1.11.2",
+    "slnodejs-core": "^4.0.286",
     "swagger-ui": "3.10.0",
     "video.js": "7.4.1"
   },
@@ -150,7 +151,7 @@
     "regenerator-runtime": "0.13.3",
     "sass-loader": "8.0.0",
     "sass-resources-loader": "2.0.1",
-    "slnodejs": "3.5.259",
+    "slnodejs": "^4.0.294",
     "storybook-addon-intl": "2.4.1",
     "storybook-host": "5.1.0",
     "storybook-readme": "5.0.8",
@@ -206,5 +207,13 @@
   },
   "browserslist": [
     "ie 11"
-  ]
+  ],
+  "nyc": {
+    "exclude": [
+      "vendor*.js",
+      "runtime*.js",
+      "inline*.js",
+      "polyfills*.js"
+    ]
+  }
 }

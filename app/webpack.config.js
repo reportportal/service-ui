@@ -10,7 +10,7 @@ module.exports = () => {
     return merge(baseConfig, devConfig());
   }
   if (mode === 'sealights') {
-    return merge(baseConfig, sealightsConfig);
+    return sealightsConfig;
   }
   return merge(baseConfig, prodConfig);
 };

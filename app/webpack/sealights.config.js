@@ -15,83 +15,132 @@
  */
 
 const path = require('path');
-const dotenv = require('dotenv');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
+const WebpackNotifierPlugin = require('webpack-notifier');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 
-dotenv.config();
-
-module.exports = () => {
-  if (!process.env.PROXY_PATH) {
-    console.log('========== Specify the PROXY_PATH variable in the .env file =========');
-    process.exit(1);
-  }
-  return {
-    devtool: 'eval-sourcemap',
-    mode: 'development',
-    module: {
-      rules: [
-        {
-          test: /\.css$/,
-          include: /node_modules/,
-          use: [
-            'style-loader',
-            {
-              loader: 'css-loader',
-            },
-          ],
-        },
-        {
-          test: /\.(sa|sc)ss$/,
-          exclude: /node_modules/,
-          use: [
-            'style-loader',
-            {
-              loader: 'css-loader',
-              options: {
-                modules: {
-                  localIdentName: '[name]__[local]--[hash:base64:5]',
-                },
-                importLoaders: 1,
-              },
-            },
-            'sass-loader',
-            {
-              loader: 'sass-resources-loader',
-              options: {
-                resources: path.resolve(__dirname, '../src/common/css/variables/**/*.scss'),
-              },
-            },
-          ],
-        },
-      ],
+module.exports = {
+  entry: {
+    polyfills: path.resolve(__dirname, '../sl_instrumented/common/polyfills.js'),
+    main: path.resolve(__dirname, '../sl_instrumented/index.jsx'),
+  },
+  output: {
+    path: path.resolve(__dirname, '../build'),
+    filename: '[name].app.[hash:6].js',
+    publicPath: '',
+  },
+  resolve: {
+    extensions: ['.js', '.jsx', '.sass', '.scss', '.css'],
+    alias: {
+      components: path.resolve(__dirname, '../sl_instrumented/components'),
+      controllers: path.resolve(__dirname, '../sl_instrumented/controllers'),
+      common: path.resolve(__dirname, '../sl_instrumented/common'),
+      pages: path.resolve(__dirname, '../sl_instrumented/pages'),
+      store: path.resolve(__dirname, '../sl_instrumented/store'),
+      routes: path.resolve(__dirname, '../sl_instrumented/routes'),
+      layouts: path.resolve(__dirname, '../sl_instrumented/layouts'),
+      'react-intl': path.resolve(__dirname, '../node_modules/react-intl/dist/react-intl.js'), // https://github.com/formatjs/react-intl/issues/1499#issuecomment-570151879
     },
-    plugins: [
-      new MiniCssExtractPlugin({
-        filename: '[name].[hash:6].css',
-      }),
-      new CompressionPlugin({
-        algorithm: 'gzip',
-        threshold: 10240,
-        minRatio: 0.8,
-      }),
-    ],
-    devServer: {
-      contentBase: path.resolve(__dirname, '../build'),
-      hot: true,
-      historyApiFallback: true,
-      https: false,
-      host: '0.0.0.0',
-      port: 3000,
-      proxy: [
-        {
-          context: ['/composite', '/api/', '/uat/'],
-          target: process.env.PROXY_PATH,
-          bypass(req) {
-            console.log(`proxy url: ${req.url}`);
+  },
+  devtool: 'source-map',
+  mode: 'development',
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx|mjs)$/,
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              babelrc: true,
+            },
           },
+        ],
+        exclude: /node_modules/,
+      },
+      {
+        test: /\.(ico|jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)(\?.*)?$/,
+        loader: 'url-loader',
+        exclude: /\/*-inline.svg/,
+        options: {
+          limit: 1000,
+          name: 'media/[name].[ext]',
         },
-      ],
+      },
+      {
+        test: /\/*-inline.svg/,
+        loader: 'svg-inline-loader',
+      },
+      {
+        test: /\.css$/,
+        include: /node_modules/,
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+      },
+      {
+        test: /\.(sa|sc)ss$/,
+        exclude: /node_modules/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              modules: {
+                localIdentName: '[name]__[local]--[hash:base64:5]',
+              },
+              importLoaders: 1,
+            },
+          },
+          'postcss-loader',
+          'sass-loader',
+          {
+            loader: 'sass-resources-loader',
+            options: {
+              resources: path.resolve(
+                __dirname,
+                '../sl_instrumented/common/css/variables/**/*.scss',
+              ),
+            },
+          },
+        ],
+      },
+    ],
+  },
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        styles: {
+          name: 'styles',
+          test: /\.css$/,
+          chunks: 'all',
+          enforce: true,
+        },
+      },
     },
-  };
+  },
+  plugins: [
+    new CleanWebpackPlugin({
+      cleanOnceBeforeBuildPatterns: ['**/*', path.resolve(__dirname, '../localization/messages')],
+    }),
+    new WebpackNotifierPlugin({ skipFirstNotification: true }),
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, '../sl_instrumented/index.tpl.html'),
+      filename: 'index.html',
+      favicon: path.resolve(__dirname, '../sl_instrumented/common/img/favicon.ico'),
+    }),
+    new webpack.ProvidePlugin({
+      React: 'react',
+      Utils: 'common/utils',
+    }),
+    new MiniCssExtractPlugin({
+      filename: '[name].[hash:6].css',
+    }),
+    new CompressionPlugin({
+      algorithm: 'gzip',
+      threshold: 10240,
+      minRatio: 0.8,
+    }),
+  ],
 };
