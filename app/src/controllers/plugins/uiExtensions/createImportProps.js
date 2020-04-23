@@ -57,6 +57,11 @@ import {
   fetchProjectAction,
   projectInfoLoadingSelector,
 } from 'controllers/project';
+import { Grid } from 'components/main/grid';
+import { InputSearch } from 'components/inputs/inputSearch';
+import { PaginationToolbar } from 'components/main/paginationToolbar';
+import { ProjectName } from 'pages/admin/projectsPage/projectName';
+import { debounce } from 'common/utils/debounce';
 import { createGlobalNamedIntegrationsSelector } from '../selectors';
 
 export const createImportProps = (pluginName) => ({
@@ -77,6 +82,10 @@ export const createImportProps = (pluginName) => ({
     InputRadio,
     SimpleBreadcrumbs,
     Link,
+    Grid,
+    InputSearch,
+    PaginationToolbar,
+    ProjectName,
   },
   constants: { PLUGIN_UI_EXTENSION_ADMIN_PAGE, PROJECT_SETTINGS_TAB_PAGE },
   actions: { showModalAction, showSuccessNotification, showErrorNotification, fetchProjectAction },
@@ -91,5 +100,5 @@ export const createImportProps = (pluginName) => ({
     isAdminSelector,
   },
   icons: { PlusIcon, RemoveIcon, CrossIcon, ErrorIcon },
-  utils: { fetch, URLS },
+  utils: { fetch, URLS, debounce },
 });
