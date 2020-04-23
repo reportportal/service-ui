@@ -207,13 +207,5 @@
   },
   "browserslist": [
     "ie 11"
-  ],
-  "nyc": {
-    "exclude": [
-      "vendor*.js",
-      "runtime*.js",
-      "inline*.js",
-      "polyfills*.js"
-    ]
-  }
+  ]
 }
