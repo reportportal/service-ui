@@ -23,6 +23,7 @@ import { DurationBlock } from 'pages/inside/common/durationBlock';
 import ArrowIcon from 'common/img/arrow-right-inline.svg';
 import AttachmentIcon from 'common/img/attachment-inline.svg';
 import { TestItemStatus } from 'pages/inside/common/testItemStatus';
+import { MarkdownViewer } from 'components/main/markdown';
 import classNames from 'classnames/bind';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import styles from './nestedStepHeader.scss';
@@ -41,6 +42,7 @@ export class NestedStepHeader extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    markdownMode: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -49,6 +51,7 @@ export class NestedStepHeader extends Component {
     onToggle: () => {},
     level: 0,
     loading: false,
+    markdownMode: false,
   };
 
   onToggle = () => {
@@ -56,35 +59,40 @@ export class NestedStepHeader extends Component {
     if (collapsed) this.props.tracking.trackEvent(LOG_PAGE_EVENTS.NESTED_STEP_EXPAND);
     onToggle();
   };
+
   isAttachmentCountVisible = () => {
     const {
       data: { attachmentsCount = 0 },
     } = this.props;
     return attachmentsCount > 0;
   };
+
   renderName = () => {
     const {
       data,
       data: { hasContent = false },
       loading,
       collapsed,
+      markdownMode,
     } = this.props;
+    const name = markdownMode ? <MarkdownViewer value={data.name} /> : data.name;
     if (hasContent) {
       return (
         <div className={cx('step-name')} onClick={this.onToggle}>
           <div className={cx('arrow-icon', { expanded: !collapsed })}>
             {loading ? <SpinningPreloader /> : Parser(ArrowIcon)}
           </div>
-          <div>{data.name}</div>
+          <div>{name}</div>
         </div>
       );
     }
     return (
       <div className={cx('step-name', 'step-name-static')}>
-        <div>{data.name}</div>
+        <div>{name}</div>
       </div>
     );
   };
+
   render() {
     const { data, level } = this.props;
     return (

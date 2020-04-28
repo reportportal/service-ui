@@ -34,7 +34,7 @@ const linkMock = '[Report portal](http://reportportal.io/)';
 const quoteMock = '> This is a quote.';
 const codeMock = '`var example = "hello!";`';
 
-describe('<MarkdownViewer />', () => {
+describe('MarkdownViewer', () => {
   test('bold elements are rendering correctly', () => {
     const wrapper = mount(<MarkdownViewer value={boldMock} />);
     expect(wrapper.contains(<strong>bold</strong>)).toBeTruthy();
@@ -95,8 +95,12 @@ describe('<MarkdownViewer />', () => {
   });
   test('links are rendering correctly', () => {
     const wrapper = mount(<MarkdownViewer value={linkMock} />);
-    expect(wrapper.find('.markdown-viewer a')).toHaveLength(1);
-    expect(wrapper.find('.markdown-viewer a').prop('href')).toEqual('http://reportportal.io/');
+    const linkElement = wrapper.find('.markdown-viewer a');
+    expect(linkElement).toHaveLength(1);
+    const linkNode = linkElement.getDOMNode();
+    expect(linkNode).toHaveProperty('href', 'http://reportportal.io/');
+    expect(linkNode).toHaveProperty('target', '_blank');
+    expect(linkNode).toHaveProperty('rel', 'noreferrer noopener');
   });
   test('quote elements are rendering correctly', () => {
     const wrapper = mount(<MarkdownViewer value={quoteMock} />);
@@ -112,5 +116,11 @@ describe('<MarkdownViewer />', () => {
     const wrapper = mount(<MarkdownViewer value={codeMock} />);
     expect(wrapper.find('.markdown-viewer code')).toHaveLength(1);
     expect(wrapper.find('.markdown-viewer code').text()).toEqual('var example = "hello!";');
+  });
+  test('HTML elements in code blocks are rendering as a text', () => {
+    const code = '`<span>test code</span>`';
+    const wrapper = mount(<MarkdownViewer value={code} />);
+    expect(wrapper.find('.markdown-viewer code')).toHaveLength(1);
+    expect(wrapper.find('.markdown-viewer code').text()).toEqual('<span>test code</span>');
   });
 });

@@ -29,45 +29,49 @@ export class MarkdownViewer extends Component {
     value: PropTypes.string,
     onResize: PropTypes.func,
   };
+
   static defaultProps = {
     value: '',
     onResize: () => {},
   };
+
   constructor(props) {
     super(props);
     this.simpleMDE = SingletonMarkdownObject.getInstance();
+    this.container = React.createRef();
   }
+
   componentDidMount() {
     this.updateElements();
   }
-  componentDidUpdate() {
-    this.updateElements();
+
+  componentDidUpdate(prevProps) {
+    if (this.props.value !== prevProps.value || this.props.onResize !== prevProps.onResize) {
+      this.updateElements();
+    }
   }
+
   updateElements = () => {
-    this.container.querySelectorAll('img').forEach((elem) => {
-      const img = elem;
-      img.onload = () => {
-        this.props.onResize();
-      };
-    });
-    this.container.querySelectorAll('a').forEach((elem) => {
+    if (!this.container.current) {
+      return;
+    }
+    if (this.props.onResize) {
+      this.container.current.querySelectorAll('img').forEach((elem) => {
+        const img = elem;
+        img.onload = () => {
+          this.props.onResize();
+        };
+      });
+    }
+    this.container.current.querySelectorAll('a').forEach((elem) => {
       elem.setAttribute('target', '_blank');
-      elem.setAttribute('rel', 'noopener');
-    });
-    this.container.querySelectorAll('code').forEach((elem) => {
-      const element = elem;
-      element.innerHTML = elem.textContent;
+      elem.setAttribute('rel', 'noreferrer noopener');
     });
   };
 
   render() {
     return (
-      <div
-        ref={(container) => {
-          this.container = container;
-        }}
-        className={cx('markdown-viewer')}
-      >
+      <div ref={this.container} className={cx('markdown-viewer')}>
         {Parser(DOMPurify.sanitize(this.simpleMDE.markdown(this.props.value)))}
       </div>
     );
