@@ -291,6 +291,10 @@ export class LogsGrid extends Component {
     );
   };
 
+  renderNestedStepHeader = (props) => (
+    <NestedStepHeader {...props} markdownMode={this.props.markdownMode} />
+  );
+
   render() {
     const {
       intl,
@@ -313,7 +317,7 @@ export class LogsGrid extends Component {
           sortingDirection={sortingDirection}
           onChangeSorting={onChangeSorting}
           toggleAccordionEventInfo={LOG_PAGE_EVENTS.EXPAND_LOG_MSG}
-          nestedStepHeader={NestedStepHeader}
+          nestedStepHeader={this.renderNestedStepHeader}
           nestedView
         />
         {!logItems.length && !loading && (
