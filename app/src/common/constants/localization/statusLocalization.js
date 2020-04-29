@@ -50,4 +50,12 @@ export const statusLocalization = defineMessages({
     id: 'TestStatuses.cancelled',
     defaultMessage: 'Cancelled',
   },
+  [statuses.WARN]: {
+    id: 'TestStatuses.warn',
+    defaultMessage: 'Warn',
+  },
+  [statuses.INFO]: {
+    id: 'TestStatuses.info',
+    defaultMessage: 'Info',
+  },
 });
