@@ -44,7 +44,7 @@ func configureRouter(srv *server.RpServer, rpConf struct {
 }) {
 	srv.WithRouter(func(router *chi.Mux) {
 		//apply compression
-		//router.Use(middleware.DefaultCompress)
+		router.Use(middleware.DefaultCompress)
 		router.Use(middleware.Logger)
 		//content security policy
 		csp := map[string][]string{
@@ -56,8 +56,6 @@ func configureRouter(srv *server.RpServer, rpConf struct {
 				"status.reportportal.io",
 				"www.google-analytics.com",
 				"stats.g.doubleclick.net",
-				"s3-us-west-2.amazonaws.com",
-				"epam.sealights.co",
 				"*.saucelabs.com",
 				"*.epam.com",
 				"*.uservoice.com",
