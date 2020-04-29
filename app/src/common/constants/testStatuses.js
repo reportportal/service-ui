@@ -23,3 +23,5 @@ export const STOPPED = 'STOPPED';
 export const RESETED = 'RESETED';
 export const CANCELLED = 'CANCELLED';
 export const ALL_STATUSES = 'ALL_STATUSES';
+export const WARN = 'WARN';
+export const INFO = 'INFO';
