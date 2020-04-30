@@ -15,7 +15,3 @@
 ./localization/
 ./test/
 ./.storybook/
-vendor*.js
-runtime*.js
-inline*.js
-**/polyfills*.js

@@ -1,5 +1,6 @@
 build/
 */**/build/
+*/**/sl_instrumented/
 .gradle/
 
 */**/.idea/

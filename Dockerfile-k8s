@@ -1,4 +1,4 @@
-FROM alpine:3.10
+FROM alpine:3.11
 
 LABEL maintainer="Andrei Varabyeu <andrei_varabyeu@epam.com>"
 LABEL quay.expires-after=1w
@@ -6,6 +6,7 @@ LABEL quay.expires-after=1w
 
 COPY bin/service-ui /
 COPY app/build /public
+
 
 ENV RP_STATICS_PATH=/public
 
