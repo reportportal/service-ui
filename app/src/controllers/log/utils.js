@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-import { PASSED, FAILED, NOT_FOUND } from 'common/constants/launchStatuses';
+import { PASSED, FAILED, NOT_FOUND } from 'common/constants/testStatuses';
 import { extractNamespacedQuery, createNamespacedQuery } from 'common/utils/routingUtils';
 import { NAMESPACE } from './constants';
 
-const validForGrowthDuration = (item) =>
-  item.status === FAILED.toUpperCase() || item.status === PASSED.toUpperCase();
+const validForGrowthDuration = (item) => item.status === FAILED || item.status === PASSED;
 
 export const calculateGrowthDuration = (historyItems) => {
   const historyItemsLastIndex = historyItems.length - 1;
@@ -52,7 +51,7 @@ export const calculateGrowthDuration = (historyItems) => {
 export const normalizeHistoryItem = (historyItem, index) => {
   if (!historyItem) {
     return {
-      status: NOT_FOUND.toUpperCase(),
+      status: NOT_FOUND,
       id: `${NOT_FOUND}_${index}`,
     };
   }

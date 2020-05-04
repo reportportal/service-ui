@@ -17,7 +17,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { SKIPPED, RESETED, FAILED, NOT_FOUND } from 'common/constants/launchStatuses';
+import { SKIPPED, RESETED, FAILED, NOT_FOUND } from 'common/constants/testStatuses';
 import { COLOR_BLACK_2, COLOR_WHITE_TWO } from 'common/constants/colors';
 import Parser from 'html-react-parser';
 import styles from './historyLineItemBadges.scss';
@@ -78,7 +78,7 @@ export class HistoryLineItemBadges extends Component {
     const { status, growthDuration } = this.props;
     const badges = [];
     // eslint-disable-next-line default-case
-    switch (status.toLowerCase()) {
+    switch (status) {
       case FAILED:
       case SKIPPED: {
         badges.push(this.getDefectBadge());

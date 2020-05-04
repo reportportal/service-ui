@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { NOT_FOUND } from 'common/constants/launchStatuses';
+import { NOT_FOUND } from 'common/constants/testStatuses';
 
 export const normalizeHistoryItem = (historyItem, id) => {
   if (!historyItem) {
     return {
-      status: NOT_FOUND.toUpperCase(),
+      status: NOT_FOUND,
       id: `${NOT_FOUND}_${id}`,
     };
   }

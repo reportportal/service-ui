@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { SKIPPED, FAILED, INTERRUPTED } from 'common/constants/launchStatuses';
+import { SKIPPED, FAILED, INTERRUPTED } from 'common/constants/testStatuses';
 import CommentIcon from 'common/img/comment-inline.svg';
 import TagIcon from 'common/img/tag-inline.svg';
 import {
@@ -110,7 +110,7 @@ export class HistoryItem extends Component {
             <InputCheckbox value={selected} onChange={this.handleItemSelection} />
           </div>
         )}
-        {statusesWithDefect.indexOf(status.toLowerCase()) !== -1 && this.mapDefectsToBadges()}
+        {statusesWithDefect.indexOf(status) !== -1 && this.mapDefectsToBadges()}
         {issue.comment && <MessageBadge data={[{ ticketId: issue.comment }]} icon={CommentIcon} />}
         {issue.externalSystemIssues && issue.externalSystemIssues.length > 0 && (
           <MessageBadge data={issue.externalSystemIssues} icon={TagIcon} />

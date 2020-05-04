@@ -22,7 +22,7 @@ import Link from 'redux-first-router-link';
 import classNames from 'classnames/bind';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { payloadSelector, PROJECT_LOG_PAGE, PROJECT_USERDEBUG_LOG_PAGE } from 'controllers/pages';
-import { MANY, NOT_FOUND } from 'common/constants/launchStatuses';
+import { NOT_FOUND } from 'common/constants/testStatuses';
 import { debugModeSelector } from 'controllers/launch';
 import { defectTypesSelector } from 'controllers/project';
 import { HistoryLineItemContent } from './historyLineItemContent';
@@ -72,7 +72,7 @@ export class HistoryLineItem extends Component {
   checkIfTheLinkIsActive = () => {
     const { status, isLastItem } = this.props;
 
-    return !(status === NOT_FOUND.toUpperCase() || status === MANY.toUpperCase() || isLastItem);
+    return !(status === NOT_FOUND || isLastItem);
   };
 
   createHistoryLineItemLink = () => {

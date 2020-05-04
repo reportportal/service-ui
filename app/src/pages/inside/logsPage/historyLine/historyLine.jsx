@@ -20,7 +20,7 @@ import PropTypes from 'prop-types';
 import { activeProjectSelector } from 'controllers/user';
 import classNames from 'classnames/bind';
 import { historyItemsSelector, activeLogIdSelector, NAMESPACE } from 'controllers/log';
-import { MANY, NOT_FOUND } from 'common/constants/launchStatuses';
+import { NOT_FOUND } from 'common/constants/testStatuses';
 import { connectRouter } from 'common/utils';
 import { PAGE_KEY, DEFAULT_PAGINATION } from 'controllers/pagination';
 import { HistoryLineItem } from './historyLineItem';
@@ -60,9 +60,7 @@ export class HistoryLine extends Component {
   };
 
   checkIfTheItemLinkIsActive = (item) =>
-    item.id !== this.props.activeItemId &&
-    item.status.toLowerCase() !== MANY &&
-    item.status.toLowerCase() !== NOT_FOUND;
+    item.id !== this.props.activeItemId && item.status !== NOT_FOUND;
 
   render() {
     const { historyItems, activeItemId, changeActiveItem, projectId } = this.props;
