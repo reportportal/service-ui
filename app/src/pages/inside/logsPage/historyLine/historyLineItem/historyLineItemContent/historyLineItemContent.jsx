@@ -17,18 +17,9 @@
 import React, { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
-import { defineMessages, injectIntl } from 'react-intl';
-import {
-  PASSED,
-  FAILED,
-  SKIPPED,
-  NOT_FOUND,
-  RESETED,
-  INTERRUPTED,
-  IN_PROGRESS,
-  STOPPED,
-  CANCELLED,
-} from 'common/constants/launchStatuses';
+import { injectIntl } from 'react-intl';
+import { NOT_FOUND, IN_PROGRESS } from 'common/constants/testStatuses';
+import { statusLocalization } from 'common/constants/localization/statusLocalization';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { getDuration } from 'common/utils';
 import classNames from 'classnames/bind';
@@ -36,57 +27,6 @@ import { HistoryLineItemBadges } from './historyLineItemBadges';
 import styles from './historyLineItemContent.scss';
 
 const cx = classNames.bind(styles);
-
-const messages = defineMessages({
-  launchPassed: {
-    id: 'HistoryLineItemContent.launchPassed',
-    defaultMessage: 'Passed',
-  },
-  launchReseted: {
-    id: 'HistoryLineItemContent.launchReseted',
-    defaultMessage: 'Item is empty',
-  },
-  launchFailed: {
-    id: 'HistoryLineItemContent.launchFailed',
-    defaultMessage: 'Failed',
-  },
-  launchNotFound: {
-    id: 'HistoryLineItemContent.launchNotFound',
-    defaultMessage: 'No item in launch',
-  },
-  launchInterrupted: {
-    id: 'HistoryLineItemContent.launchInterrupted',
-    defaultMessage: 'Interrupted',
-  },
-  launchSkipped: {
-    id: 'HistoryLineItemContent.launchSkipped',
-    defaultMessage: 'Skipped',
-  },
-  launchInProgress: {
-    id: 'HistoryLineItemContent.launchInProgress',
-    defaultMessage: 'In progress',
-  },
-  launchStopped: {
-    id: 'HistoryLineItemContent.launchStopped',
-    defaultMessage: 'Stopped',
-  },
-  launchCancelled: {
-    id: 'HistoryLineItemContent.launchCancelled',
-    defaultMessage: 'Cancelled',
-  },
-});
-
-const blockTitleMessagesMap = {
-  [PASSED]: messages.launchPassed,
-  [FAILED]: messages.launchFailed,
-  [SKIPPED]: messages.launchSkipped,
-  [RESETED]: messages.launchReseted,
-  [INTERRUPTED]: messages.launchInterrupted,
-  [NOT_FOUND]: messages.launchNotFound,
-  [IN_PROGRESS]: messages.launchInProgress,
-  [STOPPED]: messages.launchStopped,
-  [CANCELLED]: messages.launchCancelled,
-};
 
 @injectIntl
 @track()
@@ -124,9 +64,12 @@ export class HistoryLineItemContent extends Component {
 
   getItemTitle = () => {
     const { intl, status, startTime, endTime } = this.props;
-    let itemTitle = intl.formatMessage(blockTitleMessagesMap[status.toLowerCase()]);
+    let itemTitle = statusLocalization[status]
+      ? intl.formatMessage(statusLocalization[status])
+      : status;
     const isThreeDecimalPlaces = true;
-    if (status.toLowerCase() !== NOT_FOUND && status.toLowerCase() !== IN_PROGRESS) {
+
+    if (status !== NOT_FOUND && status !== IN_PROGRESS) {
       itemTitle = itemTitle.concat(`; ${getDuration(startTime, endTime, isThreeDecimalPlaces)}`);
     }
     return itemTitle;

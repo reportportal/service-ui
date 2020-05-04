@@ -42,7 +42,6 @@ import {
 } from 'controllers/log';
 import { getDefectTypeSelector } from 'controllers/project';
 import { TO_INVESTIGATE } from 'common/constants/defectTypes';
-import { MANY } from 'common/constants/launchStatuses';
 import {
   availableBtsIntegrationsSelector,
   isPostIssueActionAvailable,
@@ -234,7 +233,7 @@ export class LogItemInfo extends Component {
     reversedHistoryItems.pop();
     reversedHistoryItems.reverse();
 
-    return reversedHistoryItems.find((item) => item.issue && item.status !== MANY.toUpperCase());
+    return reversedHistoryItems.find((item) => !!item.issue);
   };
 
   getLastHistoryItem = () => this.props.historyItems[this.props.historyItems.length - 1];
@@ -277,12 +276,7 @@ export class LogItemInfo extends Component {
 
   isCopySendButtonDisabled = () => {
     const lastHistoryItem = this.getLastHistoryItem();
-    return (
-      !this.props.logItem.issue ||
-      this.props.logItem.status === MANY.toUpperCase() ||
-      !lastHistoryItem.issue ||
-      !this.getLastWithDefect()
-    );
+    return !this.props.logItem.issue || !lastHistoryItem.issue || !this.getLastWithDefect();
   };
   hasRetries = () => {
     const { retries } = this.props;

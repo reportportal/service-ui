@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl } from 'react-intl';
 import Parser from 'html-react-parser';
-import { RESETED, NOT_FOUND } from 'common/constants/launchStatuses';
+import { RESETED, NOT_FOUND } from 'common/constants/testStatuses';
 import NoItemIcon from 'common/img/noItem-inline.svg';
 import EmptyItemIcon from 'common/img/emptyItem-inline.svg';
 import styles from './emptyHistoryItem.scss';
@@ -56,7 +56,7 @@ export class EmptyHistoryItem extends Component {
   );
 
   renderTextContent = () => {
-    switch (this.props.status.toLowerCase()) {
+    switch (this.props.status) {
       case RESETED:
         return this.renderResetedTextContent();
       case NOT_FOUND:
