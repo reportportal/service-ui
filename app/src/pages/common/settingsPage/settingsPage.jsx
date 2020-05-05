@@ -32,6 +32,7 @@ import {
 } from 'common/constants/settingsTabs';
 import { settingsTabSelector } from 'controllers/pages';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
+import { uiExtensionSettingsTabsSelector } from 'controllers/plugins';
 import { SETTINGS_PAGE, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { BetaBadge } from 'pages/inside/common/betaBadge';
 import { NavigationTabs } from 'components/main/navigationTabs';
@@ -81,6 +82,7 @@ const messages = defineMessages({
     activeTab: settingsTabSelector(state),
     accountRole: userAccountRoleSelector(state),
     userRole: activeProjectRoleSelector(state),
+    tabExtensions: uiExtensionSettingsTabsSelector(state),
   }),
   {
     onChangeTab: (linkAction) => linkAction,
@@ -97,10 +99,32 @@ export class SettingsPage extends Component {
     activeTab: PropTypes.string,
     accountRole: PropTypes.string.isRequired,
     userRole: PropTypes.string.isRequired,
+    tabExtensions: PropTypes.arrayOf(
+      PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        title: PropTypes.string.isRequired,
+        component: PropTypes.element.isRequired,
+      }),
+    ),
   };
   static defaultProps = {
     activeTab: GENERAL,
+    tabExtensions: [],
   };
+
+  createExtensionTabs = () =>
+    this.props.tabExtensions.reduce(
+      (acc, extension) => ({
+        ...acc,
+        [extension.name]: {
+          name: extension.title || extension.name,
+          link: this.props.createTabLink(extension.name),
+          component: extension.component,
+          mobileDisabled: true,
+        },
+      }),
+      {},
+    );
 
   createTabsConfig = () => {
     const tabsConfig = {
@@ -161,7 +185,7 @@ export class SettingsPage extends Component {
     if (!canSeeDemoData(this.props.accountRole, this.props.userRole)) {
       delete tabsConfig[DEMO_DATA];
     }
-    return tabsConfig;
+    return { ...tabsConfig, ...this.createExtensionTabs() };
   };
 
   render() {

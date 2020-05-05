@@ -21,7 +21,7 @@ import classNames from 'classnames/bind';
 import { defineMessages, injectIntl } from 'react-intl';
 import Parser from 'html-react-parser';
 import CompareIcon from 'common/img/compare-inline.svg';
-import { NOT_FOUND, RESETED } from 'common/constants/launchStatuses';
+import { NOT_FOUND, RESETED } from 'common/constants/testStatuses';
 import {
   historySelector,
   totalItemsCountSelector,
@@ -130,8 +130,8 @@ export class HistoryTable extends Component {
   renderCorrespondingHistoryItem = (historyItem, isLastRow) => {
     const { navigate, link, onSelectItem, selectedItems, withGroupOperations } = this.props;
     switch (historyItem.status) {
-      case NOT_FOUND.toUpperCase():
-      case RESETED.toUpperCase():
+      case NOT_FOUND:
+      case RESETED:
         return (
           <HistoryCell
             status={historyItem.status}

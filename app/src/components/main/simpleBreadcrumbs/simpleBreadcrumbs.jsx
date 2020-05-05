@@ -19,20 +19,20 @@ import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import RightArrowIcon from 'common/img/arrow-right-inline.svg';
-import { IntegrationBreadcrumb } from './integrationBreadcrumb';
-import styles from './integrationBreadcrumbs.scss';
+import { SimpleBreadcrumb } from './simpleBreadcrumb';
+import styles from './simpleBreadcrumbs.scss';
 
 const cx = classNames.bind(styles);
 
-export const IntegrationBreadcrumbs = ({ descriptors, onClickItem }) => {
+export const SimpleBreadcrumbs = ({ descriptors, onClickItem }) => {
   const descriptorsLastIndex = descriptors.length - 1;
 
   return (
-    <div className={cx('integration-breadcrumbs')}>
+    <div className={cx('simple-breadcrumbs')}>
       {descriptors.map((descriptor, i) => (
         <Fragment key={descriptor.type}>
           {i > 0 && <div className={cx('separator')}>{Parser(RightArrowIcon)}</div>}
-          <IntegrationBreadcrumb
+          <SimpleBreadcrumb
             descriptor={descriptor}
             active={i !== descriptorsLastIndex}
             onClick={() => onClickItem(descriptor)}
@@ -43,12 +43,12 @@ export const IntegrationBreadcrumbs = ({ descriptors, onClickItem }) => {
   );
 };
 
-IntegrationBreadcrumbs.propTypes = {
+SimpleBreadcrumbs.propTypes = {
   descriptors: PropTypes.array,
   onClickItem: PropTypes.func,
 };
 
-IntegrationBreadcrumbs.defaultProps = {
+SimpleBreadcrumbs.defaultProps = {
   descriptors: [],
   onClickItem: () => {},
 };

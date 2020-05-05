@@ -20,7 +20,8 @@ import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import Parser from 'html-react-parser';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
-import { PASSED, FAILED, SKIPPED, ALL_STATUSES } from 'common/constants/testStatuses';
+import { PASSED, FAILED, SKIPPED, ALL_STATUSES, WARN, INFO } from 'common/constants/testStatuses';
+import { formatStatus } from 'common/utils/localizationUtils';
 import ArrowIcon from 'common/img/arrow-down-inline.svg';
 
 import styles from './logStatusBlock.scss';
@@ -80,21 +81,25 @@ export class LogStatusBlock extends Component {
   };
 
   getStatusLabel = () => {
-    const { intl } = this.props;
     const arr = this.getLogStatusArray();
     if (!arr.length || arr.length === this.statusArray.length) {
-      return intl.formatMessage(messages[`status${ALL_STATUSES}`]).toUpperCase();
+      return this.formatStatus(ALL_STATUSES).toUpperCase();
     }
 
     return arr
-      .map((item) => intl.formatMessage(messages[`status${item}`]))
+      .map(this.formatStatus)
       .join(', ')
       .toUpperCase();
   };
 
+  formatStatus = (status) =>
+    messages[`status${status}`]
+      ? this.props.intl.formatMessage(messages[`status${status}`])
+      : formatStatus(this.props.intl.formatMessage, status);
+
   node = React.createRef();
 
-  statusArray = [PASSED, FAILED, SKIPPED];
+  statusArray = [PASSED, FAILED, SKIPPED, WARN, INFO];
 
   toggleDropdown = () => {
     this.setState((prevState) => ({
@@ -133,7 +138,6 @@ export class LogStatusBlock extends Component {
   };
 
   renderStatusList = () => {
-    const { intl } = this.props;
     return this.statusArray.map((status) => (
       <div className={cx('status-list-item')} key={status}>
         <InputCheckbox
@@ -142,7 +146,7 @@ export class LogStatusBlock extends Component {
             this.toggleCheckbox(status);
           }}
         >
-          {intl.formatMessage(messages[`status${status}`])}
+          {this.formatStatus(status)}
         </InputCheckbox>
       </div>
     ));

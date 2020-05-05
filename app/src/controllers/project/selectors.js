@@ -26,7 +26,9 @@ import {
 
 const projectSelector = (state) => state.project || {};
 
-const projectInfoSelector = (state) => projectSelector(state).info || {};
+export const projectInfoSelector = (state) => projectSelector(state).info || {};
+
+export const projectInfoLoadingSelector = (state) => projectSelector(state).infoLoading;
 
 export const projectConfigSelector = (state) => projectInfoSelector(state).configuration || {};
 

@@ -54,14 +54,16 @@ export class ProjectName extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    disableAnalytics: PropTypes.bool,
   };
 
   static defaultProps = {
     isAssigned: false,
+    disableAnalytics: false,
   };
 
   onProjectClick = (event) => {
-    const { tracking, intl, isAssigned } = this.props;
+    const { tracking, intl, isAssigned, disableAnalytics } = this.props;
     if (!isAssigned && window.matchMedia(SCREEN_XS_MAX_MEDIA).matches) {
       event.preventDefault();
       return;
@@ -80,7 +82,9 @@ export class ProjectName extends Component {
       project: this.props.project,
       confirmModalOptions: confirmAssignModalOpts,
     });
-    tracking.trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.PROJECT_NAME);
+    if (!disableAnalytics) {
+      tracking.trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.PROJECT_NAME);
+    }
     event.preventDefault();
   };
 

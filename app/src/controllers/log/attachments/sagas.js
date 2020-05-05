@@ -140,8 +140,8 @@ function* openAttachment({ payload: { id, contentType } }) {
       window.navigator.msSaveOrOpenBlob(data);
     } else {
       const url = URL.createObjectURL(data);
-      window.open(url);
-      URL.revokeObjectURL(url);
+      const newWindow = window.open(url);
+      newWindow.onbeforeunload = () => URL.revokeObjectURL(url);
     }
   }
 }

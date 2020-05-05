@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-import { HIDE_NOTIFICATION, SHOW_NOTIFICATION, SHOW_DEFAULT_ERROR_NOTIFICATION } from './constants';
+import {
+  HIDE_NOTIFICATION,
+  SHOW_NOTIFICATION,
+  SHOW_DEFAULT_ERROR_NOTIFICATION,
+  NOTIFICATION_TYPES,
+} from './constants';
 
 /**
  *
@@ -51,3 +56,8 @@ export const showDefaultErrorNotification = ({ message }) => ({
     error: message,
   },
 });
+
+export const showSuccessNotification = ({ message, messageId, values }) =>
+  showNotification({ message, messageId, values, type: NOTIFICATION_TYPES.SUCCESS });
+export const showErrorNotification = ({ message, messageId, values }) =>
+  showNotification({ message, messageId, values, type: NOTIFICATION_TYPES.ERROR });

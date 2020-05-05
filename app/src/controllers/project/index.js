@@ -62,6 +62,8 @@ export {
   PAStateSelector,
   getDefectTypeSelector,
   enabledPattersSelector,
+  projectInfoSelector,
+  projectInfoLoadingSelector,
 } from './selectors';
 export { normalizeAttributesWithPrefix } from './utils';
 export { projectSagas } from './sagas';

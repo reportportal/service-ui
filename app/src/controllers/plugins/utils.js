@@ -56,5 +56,12 @@ export const isPostIssueActionAvailable = (integrations) =>
 
 export const isPluginSwitchable = (pluginName) => !isAuthorizationPlugin(pluginName);
 
+export const filterEnabledPlugins = (plugins = []) => plugins.filter((item) => item.enabled);
+
 export const filterAvailablePlugins = (plugins = []) =>
-  plugins.filter((item) => item.enabled && item.groupType !== AUTHORIZATION_GROUP_TYPE);
+  plugins.filter(
+    (item) =>
+      item.enabled &&
+      item.groupType !== AUTHORIZATION_GROUP_TYPE &&
+      GROUP_TYPES_BY_PLUGIN_NAMES_MAP[item.name] === item.groupType,
+  );

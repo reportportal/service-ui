@@ -27,7 +27,7 @@ import { ALL_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
 import { updatePluginSuccessAction } from 'controllers/plugins';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { getPluginFilterTabClickEvent } from 'components/main/analytics/events';
-import { IntegrationBreadcrumbs } from 'pages/common/settingsPage/integrationsTab/integrationBreadcrumbs';
+import { SimpleBreadcrumbs } from 'components/main/simpleBreadcrumbs';
 import {
   IntegrationInfoContainer,
   IntegrationSettingsContainer,
@@ -244,7 +244,7 @@ export class InstalledTab extends Component {
       <div className={cx('plugins-wrapper')}>
         <div className={cx('plugins-sub-content-wrapper')}>
           {subPage.type && (
-            <IntegrationBreadcrumbs
+            <SimpleBreadcrumbs
               descriptors={this.getBreadcrumbs()}
               onClickItem={this.changeSubPage}
             />

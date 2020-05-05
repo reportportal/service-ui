@@ -39,7 +39,7 @@ Object.keys(pageNames).forEach((page) => {
   page: pageSelector(state),
   isInitialDispatchDone: isInitialDispatchDoneSelector(state),
 }))
-export default class PageSwitcher extends React.PureComponent {
+export default class PageSwitcher extends React.Component {
   static propTypes = {
     page: PropTypes.string,
     isInitialDispatchDone: PropTypes.bool,

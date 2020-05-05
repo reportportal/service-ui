@@ -14,29 +14,24 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import styles from './noCasesBlock.scss';
+
+import styles from './simpleBreadcrumb.scss';
 
 const cx = classNames.bind(styles);
 
-export const NoCasesBlock = ({ noItemsMessage, notificationsInfo, children }) => (
-  <div className={cx('no-cases-block')}>
-    <h3 className={cx('no-items-message')}>{noItemsMessage}</h3>
-    <div className={cx('notifications-info')}>{notificationsInfo}</div>
-    {children}
+export const SimpleBreadcrumb = ({ descriptor: { title }, active, onClick }) => (
+  <div className={cx('simple-breadcrumb', { active })} onClick={active ? onClick : null}>
+    {title}
   </div>
 );
-
-NoCasesBlock.propTypes = {
-  noItemsMessage: PropTypes.string,
-  notificationsInfo: PropTypes.string,
-  children: PropTypes.node,
+SimpleBreadcrumb.propTypes = {
+  descriptor: PropTypes.object.isRequired,
+  active: PropTypes.bool,
+  onClick: PropTypes.func,
 };
-
-NoCasesBlock.defaultProps = {
-  noItemsMessage: '',
-  notificationsInfo: '',
-  children: {},
+SimpleBreadcrumb.defaultProps = {
+  active: false,
+  onClick: () => {},
 };

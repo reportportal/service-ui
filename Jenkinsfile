@@ -24,6 +24,17 @@ node {
 
                 stage('Deploy container') {
                     sh "docker-compose -p reportportal -f $COMPOSE_FILE_RP up -d --force-recreate ui"
+                    stage('Push to ECR') {
+                       withEnv(["AWS_URI=${AWS_URI}", "AWS_REGION=${AWS_REGION}"]) {
+                           sh 'docker tag reportportal-dev/service-ui ${AWS_URI}/service-ui'
+                           def image = env.AWS_URI + '/service-ui'
+                           def url = 'https://' + env.AWS_URI
+                           def credentials = 'ecr:' + env.AWS_REGION + ':aws_credentials'
+                           docker.withRegistry(url, credentials) {
+                               docker.image(image).push('SNAPSHOT-${BUILD_NUMBER}')
+                           }
+                       }
+                    }
                 }
             }
     }

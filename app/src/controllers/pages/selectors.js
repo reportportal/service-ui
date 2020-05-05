@@ -51,6 +51,9 @@ export const logItemIdSelector = createSelector(
 export const settingsTabSelector = (state) => payloadSelector(state).settingsTab;
 export const pluginsTabSelector = (state) => payloadSelector(state).pluginsTab;
 
+export const pluginPageSelector = (state) => payloadSelector(state).pluginPage;
+export const pluginRouteSelector = (state) => payloadSelector(state).pluginRoute;
+
 export const pageSelector = (state) => pageNames[state.location.type] || NO_PAGE;
 export const projectSectionSelector = (state) => payloadSelector(state).projectSection || '';
 export const querySelector = createSelector(locationSelector, (location) => location.query || {});

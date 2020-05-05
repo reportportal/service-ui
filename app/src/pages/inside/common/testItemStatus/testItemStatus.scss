@@ -53,4 +53,10 @@
   &.many {
     background-color: $COLOR--light-yellow;
   }
+  &.warn {
+    background-color: $COLOR--status-warn;
+  }
+  &.info {
+    background-color: $COLOR--status-info;
+  }
 }

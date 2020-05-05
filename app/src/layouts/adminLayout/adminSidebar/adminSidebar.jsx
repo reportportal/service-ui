@@ -25,10 +25,12 @@ import {
   PLUGINS_PAGE,
   ALL_USERS_PAGE,
   PROJECTS_PAGE,
+  PLUGIN_UI_EXTENSION_ADMIN_PAGE,
 } from 'controllers/pages/constants';
 import { ALL } from 'common/constants/reservedFilterIds';
 import PropTypes from 'prop-types';
 import track from 'react-tracking';
+import { uiExtensionAdminPagesSelector } from 'controllers/plugins/uiExtensions';
 import { ADMIN_SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { Sidebar } from 'layouts/common/sidebar';
 import ProjectsIcon from './img/projects-inline.svg';
@@ -39,6 +41,7 @@ import ProfileIcon from './img/profile-inline.svg';
 
 @connect((state) => ({
   activeProject: activeProjectSelector(state),
+  extensions: uiExtensionAdminPagesSelector(state),
 }))
 @track()
 export class AdminSidebar extends Component {
@@ -49,42 +52,63 @@ export class AdminSidebar extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    extensions: PropTypes.arrayOf(
+      PropTypes.shape({
+        name: PropTypes.string,
+        buttonTitle: PropTypes.string,
+        buttonIcon: PropTypes.string,
+      }),
+    ),
   };
   static defaultProps = {
     onClickNavBtn: () => {},
+    extensions: [],
   };
 
   handleClickButton = (eventInfo) => () => {
     this.props.onClickNavBtn();
-    this.props.tracking.trackEvent(eventInfo);
+    if (eventInfo) {
+      this.props.tracking.trackEvent(eventInfo);
+    }
   };
 
-  createTopSidebarItems = () => [
-    {
-      onClick: this.handleClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_PROJECTS_BTN),
-      link: { type: PROJECTS_PAGE },
-      icon: ProjectsIcon,
-      message: <FormattedMessage id={'AdminSidebar.allProjects'} defaultMessage={'Projects'} />,
-    },
-    {
-      onClick: this.handleClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_ALL_USERS_BTN),
-      link: { type: ALL_USERS_PAGE },
-      icon: UsersIcon,
-      message: <FormattedMessage id={'AdminSidebar.allUsers'} defaultMessage={'All Users'} />,
-    },
-    {
-      onClick: this.handleClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_SERVER_SETTINGS_BTN),
-      link: { type: SERVER_SETTINGS_PAGE },
-      icon: SettingsIcon,
-      message: <FormattedMessage id={'AdminSidebar.settings'} defaultMessage={'Server settings'} />,
-    },
-    {
-      onClick: this.handleClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_PLUGINS_BTN),
-      link: { type: PLUGINS_PAGE },
-      icon: SettingsIcon,
-      message: <FormattedMessage id={'AdminSidebar.plugins'} defaultMessage={'Plugins'} />,
-    },
-  ];
+  createTopSidebarItems = () => {
+    const items = [
+      {
+        onClick: this.handleClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_PROJECTS_BTN),
+        link: { type: PROJECTS_PAGE },
+        icon: ProjectsIcon,
+        message: <FormattedMessage id={'AdminSidebar.allProjects'} defaultMessage={'Projects'} />,
+      },
+      {
+        onClick: this.handleClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_ALL_USERS_BTN),
+        link: { type: ALL_USERS_PAGE },
+        icon: UsersIcon,
+        message: <FormattedMessage id={'AdminSidebar.allUsers'} defaultMessage={'All Users'} />,
+      },
+      {
+        onClick: this.handleClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_SERVER_SETTINGS_BTN),
+        link: { type: SERVER_SETTINGS_PAGE },
+        icon: SettingsIcon,
+        message: (
+          <FormattedMessage id={'AdminSidebar.settings'} defaultMessage={'Server settings'} />
+        ),
+      },
+      {
+        onClick: this.handleClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_PLUGINS_BTN),
+        link: { type: PLUGINS_PAGE },
+        icon: SettingsIcon,
+        message: <FormattedMessage id={'AdminSidebar.plugins'} defaultMessage={'Plugins'} />,
+      },
+    ];
+    const extensionItems = this.props.extensions.map((extension) => ({
+      onClick: this.handleClickButton(),
+      link: { type: PLUGIN_UI_EXTENSION_ADMIN_PAGE, payload: { pluginPage: extension.name } },
+      icon: extension.buttonIcon,
+      message: extension.buttonLabel || extension.name,
+    }));
+    return [...items, ...extensionItems];
+  };
 
   createBottomSidebarItems = () => [
     {

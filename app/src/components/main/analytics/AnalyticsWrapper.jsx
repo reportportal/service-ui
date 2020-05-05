@@ -63,7 +63,7 @@ export class AnalyticsWrapper extends Component {
 
     ReactGA.initialize(GOOGLE_ANALYTICS_INSTANCE);
     ReactGA.pageview(window.location.pathname + window.location.search);
-    ReactGA.set({ dimension1: instanceId, appVersion });
+    ReactGA.set({ dimension1: instanceId, dimension2: appVersion });
   }
 
   render() {

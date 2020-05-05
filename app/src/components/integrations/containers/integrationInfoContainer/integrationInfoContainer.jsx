@@ -27,11 +27,19 @@ import { PLUGIN_DESCRIPTIONS_MAP } from '../../messages';
 import { InfoSection } from './infoSection';
 import { InstancesSection } from './instancesSection';
 
+const emptySelector = () => [];
+
 @connect(
-  (state, ownProps) => ({
-    projectIntegrations: namedProjectIntegrationsSelectorsMap[ownProps.integrationType.name](state),
-    globalIntegrations: namedGlobalIntegrationsSelectorsMap[ownProps.integrationType.name](state),
-  }),
+  (state, ownProps) => {
+    const projectIntegrationSelector =
+      namedProjectIntegrationsSelectorsMap[ownProps.integrationType.name] || emptySelector;
+    const globalIntegrationSelector =
+      namedGlobalIntegrationsSelectorsMap[ownProps.integrationType.name] || emptySelector;
+    return {
+      projectIntegrations: projectIntegrationSelector(state),
+      globalIntegrations: globalIntegrationSelector(state),
+    };
+  },
   {
     showDefaultErrorNotification,
   },

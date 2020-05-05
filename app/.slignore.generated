@@ -1,0 +1,17 @@
+**/*.test.js
+**/*.jsx
+**/app.*.js.gz
+**/app.*.js.map.gz
+**/*.app.*.js
+**/*.app.*.js.gz
+**/*.app.*.js.map
+**/*.app.*.js.map.gz
+**/*.svg
+**/*.svg*
+**/*.gz
+./node_modules/
+./docs/
+./build/media/*
+./localization/
+./test/
+./.storybook/
