@@ -7,7 +7,7 @@ require (
 	github.com/bombsimon/wsl v1.2.5 // indirect
 	github.com/codegangsta/negroni v1.0.0 // indirect
 	github.com/go-chi/chi v4.0.2+incompatible
-	github.com/golangci/golangci-lint v1.23.6 // indirect
+	github.com/golangci/golangci-lint v1.24.0 // indirect
 	github.com/juju/errgo v0.0.0-20140925100237-08cceb5d0b53 // indirect
 	github.com/mattn/go-runewidth v0.0.4 // indirect
 	github.com/reportportal/commons-go v5.0.5+incompatible
