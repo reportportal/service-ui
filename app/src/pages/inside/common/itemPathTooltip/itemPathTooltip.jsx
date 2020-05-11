@@ -20,10 +20,13 @@ import { TextTooltip } from 'components/main/tooltips/textTooltip';
 
 const getTooltipContent = (testItem = {}) => {
   const { itemPaths = [], launchPathName = {} } = testItem.pathNames;
+  const fullLaunchName = launchPathName.name
+    ? `${launchPathName.name} ${launchPathName.number}`
+    : testItem.launchName;
 
   return itemPaths.reduce(
     (path, item, index) => `${path} \n<b>Parent ${index + 1}:</b> ${item.name}`,
-    `<b>Launch:</b> ${launchPathName.name} ${launchPathName.number}`,
+    `<b>Launch:</b> ${fullLaunchName}`,
   );
 };
 
