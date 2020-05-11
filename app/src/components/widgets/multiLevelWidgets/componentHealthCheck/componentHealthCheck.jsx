@@ -59,15 +59,10 @@ const messages = defineMessages({
 });
 
 @injectIntl
-@connect(
-  (state) => ({
-    project: activeProjectSelector(state),
-    getStatisticsLink: statisticsLinkSelector(state),
-  }),
-  {
-    navigate: (linkAction) => linkAction,
-  },
-)
+@connect((state) => ({
+  project: activeProjectSelector(state),
+  getStatisticsLink: statisticsLinkSelector(state),
+}))
 export class ComponentHealthCheck extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
@@ -77,7 +72,6 @@ export class ComponentHealthCheck extends Component {
     container: PropTypes.instanceOf(Element).isRequired,
     getStatisticsLink: PropTypes.func.isRequired,
     project: PropTypes.string.isRequired,
-    navigate: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -157,7 +151,7 @@ export class ComponentHealthCheck extends Component {
       });
   };
 
-  onClickGroupIcon = (value) => {
+  getSpecificTestListLink = (value) => {
     const { widget, getStatisticsLink } = this.props;
     const { activeBreadcrumbId } = this.state;
     const activeAttributes = this.getNewActiveAttributes(
@@ -172,7 +166,7 @@ export class ComponentHealthCheck extends Component {
     });
     const navigationParams = this.getDefaultLinkParams(widget.appliedFilters[0].id);
 
-    this.props.navigate(Object.assign(link, navigationParams));
+    return Object.assign(link, navigationParams);
   };
 
   getDefaultLinkParams = (filterId) => ({
@@ -336,7 +330,7 @@ export class ComponentHealthCheck extends Component {
                 groups={groupItems.failedGroupItems}
                 colorCalculator={this.colorCalculator}
                 onClickGroupItem={this.onClickGroupItem}
-                onClickGroupIcon={this.onClickGroupIcon}
+                getSpecificTestListLink={this.getSpecificTestListLink}
                 isClickable={isClickableGroupItem}
               />
             )}
@@ -347,7 +341,7 @@ export class ComponentHealthCheck extends Component {
                 groups={groupItems.passedGroupItems}
                 colorCalculator={this.colorCalculator}
                 onClickGroupItem={this.onClickGroupItem}
-                onClickGroupIcon={this.onClickGroupIcon}
+                getSpecificTestListLink={this.getSpecificTestListLink}
                 isClickable={isClickableGroupItem}
               />
             )}

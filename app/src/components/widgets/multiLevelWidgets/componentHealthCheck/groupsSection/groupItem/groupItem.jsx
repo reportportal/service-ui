@@ -17,6 +17,7 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
+import Link from 'redux-first-router-link';
 import { messages } from 'components/widgets/common/messages';
 import AnotherPageIcon from 'common/img/go-to-another-page-inline.svg';
 import { groupItemPropTypes } from '../propTypes';
@@ -31,7 +32,7 @@ export const GroupItem = ({
   total,
   color,
   onClickGroupItem,
-  onClickGroupIcon,
+  getSpecificTestListLink,
   isClickable,
 }) => (
   <div
@@ -52,9 +53,14 @@ export const GroupItem = ({
         <span className={cx('stat-item-value')}>{total}</span>
       </div>
     </div>
-    <div className={cx('icon')} onClick={() => onClickGroupIcon(attributeValue)}>
+    <Link
+      className={cx('icon')}
+      to={getSpecificTestListLink(attributeValue)}
+      onClick={(event) => event.stopPropagation()}
+      target="_blank"
+    >
       {Parser(AnotherPageIcon)}
-    </div>
+    </Link>
   </div>
 );
 GroupItem.propTypes = {
