@@ -112,7 +112,11 @@ export class ForgotPasswordForm extends PureComponent {
         <div className={cx('email-field')}>
           <FieldProvider name="email">
             <FieldErrorHint>
-              <InputOutside icon={EmailIcon} placeholder={formatMessage(placeholders.email)} />
+              <InputOutside
+                icon={EmailIcon}
+                autoComplete="off"
+                placeholder={formatMessage(placeholders.email)}
+              />
             </FieldErrorHint>
           </FieldProvider>
         </div>

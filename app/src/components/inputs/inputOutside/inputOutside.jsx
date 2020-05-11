@@ -39,6 +39,7 @@ export class InputOutside extends Component {
     active: PropTypes.bool,
     touched: PropTypes.bool,
     error: PropTypes.string,
+    autoComplete: PropTypes.string,
   };
   static defaultProps = {
     type: 'text',
@@ -56,6 +57,7 @@ export class InputOutside extends Component {
     active: false,
     touched: false,
     error: '',
+    autoComplete: undefined,
   };
 
   state = {
@@ -92,6 +94,7 @@ export class InputOutside extends Component {
       error,
       active,
       touched,
+      autoComplete,
     } = this.props;
     return (
       <div
@@ -106,6 +109,7 @@ export class InputOutside extends Component {
           className={cx('input')}
           type={this.getInputType()}
           value={value}
+          autoComplete={autoComplete}
           placeholder={placeholder}
           maxLength={maxLength}
           disabled={disabled}
