@@ -59,15 +59,10 @@ const messages = defineMessages({
 });
 
 @injectIntl
-@connect(
-  (state) => ({
-    project: activeProjectSelector(state),
-    getStatisticsLink: statisticsLinkSelector(state),
-  }),
-  {
-    navigate: (linkAction) => linkAction,
-  },
-)
+@connect((state) => ({
+  project: activeProjectSelector(state),
+  getStatisticsLink: statisticsLinkSelector(state),
+}))
 export class ComponentHealthCheck extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
@@ -77,7 +72,6 @@ export class ComponentHealthCheck extends Component {
     container: PropTypes.instanceOf(Element).isRequired,
     getStatisticsLink: PropTypes.func.isRequired,
     project: PropTypes.string.isRequired,
-    navigate: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
