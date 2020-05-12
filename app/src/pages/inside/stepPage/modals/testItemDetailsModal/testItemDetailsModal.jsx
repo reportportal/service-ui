@@ -172,8 +172,13 @@ export class TestItemDetailsModal extends Component {
     const {
       intl: { formatMessage },
       currentProject,
-      data: { item, type, fetchFunc },
+      data: { item, type, fetchFunc, eventsInfo },
+      tracking,
     } = this.props;
+
+    if (item.description !== data.description) {
+      tracking.trackEvent(eventsInfo.editDescription);
+    }
 
     fetch(URLS.launchesItemsUpdate(currentProject, item.id, type), {
       method: 'put',
@@ -192,7 +197,7 @@ export class TestItemDetailsModal extends Component {
   renderDetailsTab = (editable) => {
     const {
       intl,
-      data: { item, eventsInfo },
+      data: { item },
       tracking: { trackEvent },
     } = this.props;
     return (
@@ -249,10 +254,7 @@ export class TestItemDetailsModal extends Component {
         {editable ? (
           <ModalField>
             <FieldProvider name="description">
-              <MarkdownEditor
-                onChangeEventInfo={eventsInfo.editDescription}
-                placeholder={intl.formatMessage(messages.descriptionPlaceholder)}
-              />
+              <MarkdownEditor placeholder={intl.formatMessage(messages.descriptionPlaceholder)} />
             </FieldProvider>
           </ModalField>
         ) : (
