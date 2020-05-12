@@ -41,7 +41,7 @@ const messages = defineMessages({
   },
   wrongAuthType: {
     id: 'MultipleAuthBlock.wrongAuthType',
-    defaultMessage: "Couldn't find '{authType}' auth type",
+    defaultMessage: "Couldn't find ''{authType}'' auth type",
   },
 });
 
