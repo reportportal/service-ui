@@ -22,7 +22,7 @@ import { injectIntl, defineMessages } from 'react-intl';
 const messages = defineMessages({
   changeAccountRoleText: {
     id: 'ChangeProjectRoleModal.changeAccountRoleText',
-    defaultMessage: "Are you sure you want to change the account role for the '{name}' ?",
+    defaultMessage: "Are you sure you want to change the account role for the ''{name}''?",
   },
   changeAccountRoleTitle: {
     id: 'ChangeProjectRoleModal.changeAccountRoleTitle',

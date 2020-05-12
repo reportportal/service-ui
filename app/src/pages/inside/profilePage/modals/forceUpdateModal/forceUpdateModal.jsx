@@ -29,7 +29,7 @@ const messages = defineMessages({
   text: {
     id: 'ForceUpdateModal.text',
     defaultMessage:
-      "Update data from {account}: Information for user '{user}' has been successfully synchronized.",
+      "Update data from {account}: Information for user ''{user}'' has been successfully synchronized.",
   },
   additionalText: {
     id: 'ForceUpdateModal.additionalText',

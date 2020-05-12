@@ -69,7 +69,7 @@ const messages = defineMessages({
   deleteModalContent: {
     id: 'TestItemsPage.deleteModalContent',
     defaultMessage:
-      "Are you sure you want to delete item <b>'{name}'</b>? It will no longer exist.",
+      "Are you sure you want to delete item <b>''{name}''</b>? It will no longer exist.",
   },
   deleteModalMultipleContent: {
     id: 'TestItemsPage.deleteModalMultipleContent',
