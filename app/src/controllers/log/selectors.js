@@ -87,7 +87,10 @@ export const prevActiveLogIdSelector = createActiveLogItemIdSelector(prevPagePro
 export const activeLogSelector = createSelector(
   historyItemsSelector,
   activeLogIdSelector,
-  (historyItems, logItemId) => historyItems.find((historyItem) => historyItem.id === logItemId),
+  debugModeSelector,
+  parentItemSelector,
+  (historyItems, logItemId, debugMode, parentItem) =>
+    debugMode ? parentItem : historyItems.find((historyItem) => historyItem.id === logItemId),
 );
 
 export const retriesSelector = createSelector(activeLogSelector, (logItem = {}) => {
