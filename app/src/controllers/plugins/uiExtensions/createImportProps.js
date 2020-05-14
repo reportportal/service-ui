@@ -62,13 +62,56 @@ import { InputSearch } from 'components/inputs/inputSearch';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { ProjectName } from 'pages/admin/projectsPage/projectName';
 import { debounce } from 'common/utils/debounce';
+import { DotsMenuButton } from 'components/buttons/dotsMenuButton';
+import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
+import { MultiActionButton } from 'components/buttons/multiActionButton';
+import { ToggleButton } from 'components/buttons/toggleButton';
+import { SingleAutocomplete } from 'components/inputs/autocompletes/singleAutocomplete';
+import { MultipleAutocomplete } from 'components/inputs/autocompletes/multipleAutocomplete';
+import { WithAsyncLoading } from 'components/inputs/autocompletes/withAsyncLoading';
+import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
+import { InputDropdownSorting } from 'components/inputs/inputDropdownSorting';
+import { InputSlider } from 'components/inputs/inputSlider';
+import { InputRadioGroup } from 'components/inputs/inputRadioGroup';
+import { InputSwitcher } from 'components/inputs/inputSwitcher';
+import { InputTextArea } from 'components/inputs/inputTextArea';
+import { InputTimeDateRange } from 'components/inputs/inputTimeDateRange';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { AbsRelTime } from 'components/main/absRelTime';
+import { MarkdownEditor, MarkdownViewer } from 'components/main/markdown';
 import { createGlobalNamedIntegrationsSelector } from '../selectors';
+
+const BUTTONS = {
+  GhostButton,
+  BigButton,
+  ToggleButton,
+  DotsMenuButton,
+  GhostMenuButton,
+  MultiActionButton,
+};
+
+const INPUTS = {
+  Input,
+  InputDropdown,
+  InputRadio,
+  InputRadioGroup,
+  InputBigSwitcher,
+  InputDropdownSorting,
+  InputSearch,
+  InputSlider,
+  InputSwitcher,
+  InputTextArea,
+  InputTimeDateRange,
+  SingleAutocomplete,
+  MultipleAutocomplete,
+  WithAsyncLoading,
+};
 
 export const createImportProps = (pluginName) => ({
   lib: { React, useSelector, useDispatch, moment, Parser, reduxForm, formValueSelector },
   components: {
-    GhostButton,
-    BigButton,
+    ...BUTTONS,
+    ...INPUTS,
     NavigationTabs,
     NoCasesBlock,
     ItemList,
@@ -77,15 +120,15 @@ export const createImportProps = (pluginName) => ({
     ModalField,
     FieldProvider,
     FieldErrorHint,
-    Input,
-    InputDropdown,
-    InputRadio,
     SimpleBreadcrumbs,
     Link,
     Grid,
-    InputSearch,
     PaginationToolbar,
     ProjectName,
+    ScrollWrapper,
+    AbsRelTime,
+    MarkdownEditor,
+    MarkdownViewer,
   },
   constants: { PLUGIN_UI_EXTENSION_ADMIN_PAGE, PROJECT_SETTINGS_TAB_PAGE },
   actions: { showModalAction, showSuccessNotification, showErrorNotification, fetchProjectAction },
