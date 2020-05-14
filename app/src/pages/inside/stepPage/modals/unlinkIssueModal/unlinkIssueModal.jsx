@@ -17,6 +17,7 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import track from 'react-tracking';
 import { injectIntl, defineMessages } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
 import { ModalLayout, withModal } from 'components/main/modal';
@@ -50,6 +51,7 @@ const messages = defineMessages({
 
 @withModal('unlinkIssueModal')
 @injectIntl
+@track()
 @connect(
   (state) => ({
     url: URLS.testItemsUnlinkIssues(activeProjectSelector(state)),
@@ -68,13 +70,18 @@ export class UnlinkIssueModal extends Component {
       fetchFunc: PropTypes.func,
       eventsInfo: PropTypes.object,
     }).isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   onUnlink = (closeModal) => {
     const {
       intl,
       url,
-      data: { items, fetchFunc },
+      data: { items, fetchFunc, eventsInfo },
+      tracking: { trackEvent },
     } = this.props;
     const dataToSend = items.reduce(
       (acc, item) => {
@@ -82,6 +89,9 @@ export class UnlinkIssueModal extends Component {
         acc.ticketIds = acc.ticketIds.concat(
           item.issue.externalSystemIssues.map((issue) => issue.ticketId),
         );
+        item.issue.autoAnalyzed
+          ? trackEvent(eventsInfo.unlinkAutoAnalyzedTrue)
+          : trackEvent(eventsInfo.unlinkAutoAnalyzedFalse);
         return acc;
       },
       {

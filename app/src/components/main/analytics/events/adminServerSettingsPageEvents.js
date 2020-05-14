@@ -63,10 +63,15 @@ export const ADMIN_SERVER_SETTINGS_PAGE_EVENTS = {
     action: 'Click on Btn Submit on LDAP block on tab Authorization Configuration',
     label: 'Submit changes for LDAP on tab Authorization Configuration',
   },
-  MAKE_RP_GREAT_AGAIN: {
+  MAKE_RP_GREAT_AGAIN_CHECK: {
     category: ADMIN_SERVER_SETTINGS_PAGE,
     action: 'Edit checkbox Help make ReportPortal better on tab Statistics',
-    label: 'Check/uncheck Help make ReportPortal better on tab Statistics',
+    label: 'Check Help make ReportPortal better on tab Statistics',
+  },
+  MAKE_RP_GREAT_AGAIN_UNCHECK: {
+    category: ADMIN_SERVER_SETTINGS_PAGE,
+    action: 'Edit checkbox Help make ReportPortal better on tab Statistics',
+    label: 'Uncheck Help make ReportPortal better on tab Statistics',
   },
   SUBMIT_STATISTICS_BTN: {
     category: ADMIN_SERVER_SETTINGS_PAGE,
