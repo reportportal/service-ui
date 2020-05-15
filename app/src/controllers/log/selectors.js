@@ -17,6 +17,7 @@
 import { createSelector } from 'reselect';
 import {
   logItemIdSelector,
+  searchStringSelector,
   pagePropertiesSelector,
   createQueryParametersSelector,
   PROJECT_LOG_PAGE,
@@ -53,7 +54,6 @@ export const lastLogActivitySelector = createSelector(logActivitySelector, (acti
 );
 
 export const logItemsSelector = (state) => logSelector(state).logItems || [];
-export const logErrorItemsSelector = (state) => logSelector(state).errorLogItems || [];
 export const logPaginationSelector = (state) => logSelector(state).pagination;
 export const loadingSelector = (state) => logSelector(state).loading || false;
 export const attachmentsSelector = (state) => logSelector(state).attachments || {};
@@ -115,12 +115,37 @@ export const activeRetrySelector = createSelector(
   (retries, retryId) => retries.filter((retry) => retry.id === retryId)[0],
 );
 
+const groupedTestItemsSelector = createSelector(
+  itemsSelector,
+  searchStringSelector,
+  (testItems, searchQuery) => {
+    const isListView = searchQuery.indexOf('filter.eq.hasChildren');
+
+    if (isListView) {
+      const groupedItems = testItems.reduce((groups, step) => {
+        const group = groups[step.parent] || [];
+        return {
+          ...groups,
+          [step.parent]: [...group, step],
+        };
+      }, {});
+
+      return Object.keys(groupedItems).reduce(
+        (acc, groupKey) => acc.concat(groupedItems[groupKey]),
+        [],
+      );
+    }
+
+    return testItems;
+  },
+);
+
 export const previousLogLinkSelector = createSelector(
   payloadSelector,
   pagePropertiesSelector,
   logItemIdSelector,
   debugModeSelector,
-  itemsSelector,
+  groupedTestItemsSelector,
   (payload, query, logId, debugMode, testItems) => {
     const previousItem = getPreviousItem(testItems, logId);
     if (!previousItem) {
@@ -147,7 +172,7 @@ export const nextLogLinkSelector = createSelector(
   pagePropertiesSelector,
   logItemIdSelector,
   debugModeSelector,
-  itemsSelector,
+  groupedTestItemsSelector,
   (payload, query, logId, debugMode, testItems) => {
     const nextItem = getNextItem(testItems, logId);
     if (!nextItem) {
@@ -170,13 +195,13 @@ export const nextLogLinkSelector = createSelector(
 );
 
 export const previousItemSelector = createSelector(
-  itemsSelector,
+  groupedTestItemsSelector,
   logItemIdSelector,
   (testItems, logId) => getPreviousItem(testItems, logId),
 );
 
 export const nextItemSelector = createSelector(
-  itemsSelector,
+  groupedTestItemsSelector,
   logItemIdSelector,
   (testItems, logId) => getNextItem(testItems, logId),
 );
@@ -204,7 +229,7 @@ export const retryLinkSelector = createSelector(
 export const disablePrevItemLinkSelector = createSelector(
   paginationSelector,
   logItemIdSelector,
-  itemsSelector,
+  groupedTestItemsSelector,
   ({ number }, id, items) => {
     const isNoPreviousItem = getPreviousItem(items, id) === null;
     const isFirstPage = number === 1;
@@ -215,7 +240,7 @@ export const disablePrevItemLinkSelector = createSelector(
 export const disableNextItemLinkSelector = createSelector(
   paginationSelector,
   logItemIdSelector,
-  itemsSelector,
+  groupedTestItemsSelector,
   ({ number, totalPages }, id, items) => {
     const isNoNextItem = getNextItem(items, id) === null;
     const isLastPage = totalPages ? number === totalPages : true;

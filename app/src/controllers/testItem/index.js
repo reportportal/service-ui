@@ -52,6 +52,6 @@ export {
   getLogItemLinkSelector,
   isTestItemsListSelector,
 } from './selectors';
-export { formatItemName, getQueryNamespace, getItemLevel } from './utils';
+export { formatItemName, getQueryNamespace, getItemLevel, isListView } from './utils';
 export { LOG_VIEW, LIST_VIEW, TEST_ITEMS_TYPE_LIST, DEFAULT_LAUNCHES_LIMIT } from './constants';
 export { LEVELS } from './levels';
