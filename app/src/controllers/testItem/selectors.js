@@ -34,11 +34,7 @@ import {
 import { activeProjectSelector } from 'controllers/user';
 import { activeFilterSelector } from 'controllers/filter';
 import { NAMESPACE as LAUNCH_NAMESPACE, debugModeSelector } from 'controllers/launch';
-import {
-  copyQuery,
-  extractNamespacedQuery,
-  createNamespacedQuery,
-} from 'common/utils/routingUtils';
+import { copyQuery, createNamespacedQuery } from 'common/utils/routingUtils';
 import { LEVEL_SUITE, LEVEL_TEST, LEVEL_STEP } from 'common/constants/launchLevels';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { FILTER_TITLES } from 'common/constants/reservedFilterTitles';
@@ -53,6 +49,7 @@ import {
   getDefectsString,
   normalizeTestItem,
   getNextPage,
+  isListView,
 } from './utils';
 
 const domainSelector = (state) => state.testItem || {};
@@ -81,11 +78,6 @@ export const isTestItemsListSelector = createSelector(
 );
 
 export const isStepLevelSelector = (state) => levelSelector(state) === LEVEL_STEP;
-
-const isListView = (query, namespace) => {
-  const namespacedQuery = extractNamespacedQuery(query, namespace);
-  return namespacedQuery && 'filter.eq.hasChildren' in namespacedQuery;
-};
 
 export const itemsSelector = (state) => {
   switch (levelSelector(state)) {
