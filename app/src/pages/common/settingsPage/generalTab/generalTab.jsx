@@ -53,7 +53,7 @@ const secondsToDays = (seconds, locale) =>
   moment
     .duration(seconds, 'seconds')
     .locale(locale)
-    .humanize();
+    .humanize({ d: Number.MAX_SAFE_INTEGER });
 
 @reduxForm({
   form: 'generalForm',
