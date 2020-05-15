@@ -249,7 +249,7 @@ export class ActionPanelWithGroupOperations extends Component {
   handlePostIssue = () => {
     this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.POST_ISSUE_ACTION);
     this.props.onPostIssue(this.props.selectedItems, {
-      fetchFunc: this.unselectAndFetchItems,
+      fetchFunc: this.unselectAndRefreshItems,
       eventsInfo: POST_ISSUE_EVENTS_INFO,
     });
   };
