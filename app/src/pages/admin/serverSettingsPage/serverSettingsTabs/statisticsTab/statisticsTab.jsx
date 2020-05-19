@@ -138,7 +138,11 @@ export class StatisticsTab extends Component {
   };
 
   toggleStatistics = () => {
-    this.props.tracking.trackEvent(ADMIN_SERVER_SETTINGS_PAGE_EVENTS.MAKE_RP_GREAT_AGAIN);
+    this.state.statisticsEnabled
+      ? this.props.tracking.trackEvent(
+          ADMIN_SERVER_SETTINGS_PAGE_EVENTS.MAKE_RP_GREAT_AGAIN_UNCHECK,
+        )
+      : this.props.tracking.trackEvent(ADMIN_SERVER_SETTINGS_PAGE_EVENTS.MAKE_RP_GREAT_AGAIN_CHECK);
     this.setState({ statisticsEnabled: !this.state.statisticsEnabled });
   };
 

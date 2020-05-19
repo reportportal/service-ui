@@ -28,6 +28,7 @@ import {
   getEditDefectModalEvents,
   getEditToInvestigateChangeSearchModeEvent,
   getEditToInvestigateSelectAllSimilarItemsEvent,
+  getEditToInvestigateSelectSpecificSimilarItemEvent,
   getUnlinkIssueModalEvents,
   getPostIssueModalEvents,
   getLinkIssueModalEvents,
@@ -166,7 +167,10 @@ export const STEP_PAGE_EVENTS = {
   DELETE_ACTION: getDeleteActionEvent(STEP_PAGE),
   // EDIT_DEFECT_MODAL
   EDIT_DEFECT_MODAL_EVENTS: getEditDefectModalEvents(STEP_PAGE),
-  SELECT_ALL_SIMILIAR_ITEMS_EDIT_DEFECT_MODAL: getEditToInvestigateSelectAllSimilarItemsEvent(
+  SELECT_ALL_SIMILAR_ITEMS_EDIT_DEFECT_MODAL: getEditToInvestigateSelectAllSimilarItemsEvent(
+    STEP_PAGE,
+  ),
+  SELECT_SPECIFIC_SIMILAR_ITEM_EDIT_DEFECT_MODAL: getEditToInvestigateSelectSpecificSimilarItemEvent(
     STEP_PAGE,
   ),
   CHANGE_SEARCH_MODE_EDIT_DEFECT_MODAL: getEditToInvestigateChangeSearchModeEvent(STEP_PAGE),

@@ -27,6 +27,7 @@ import {
 import {
   getEditDefectModalEvents,
   getEditToInvestigateSelectAllSimilarItemsEvent,
+  getEditToInvestigateSelectSpecificSimilarItemEvent,
   getEditToInvestigateChangeSearchModeEvent,
   getUnlinkIssueModalEvents,
   getPostIssueModalEvents,
@@ -96,7 +97,10 @@ export const HISTORY_PAGE_EVENTS = {
   PROCEED_VALID_ITEMS: getProceedValidItemsEvent(HISTORY_PAGE),
   // EDIT_DEFECT_MODAL
   EDIT_DEFECT_MODAL_EVENTS: getEditDefectModalEvents(HISTORY_PAGE),
-  SELECT_ALL_SIMILIAR_ITEMS_EDIT_DEFECT_MODAL: getEditToInvestigateSelectAllSimilarItemsEvent(
+  SELECT_ALL_SIMILAR_ITEMS_EDIT_DEFECT_MODAL: getEditToInvestigateSelectAllSimilarItemsEvent(
+    HISTORY_PAGE,
+  ),
+  SELECT_SPECIFIC_SIMILAR_ITEM_EDIT_DEFECT_MODAL: getEditToInvestigateSelectSpecificSimilarItemEvent(
     HISTORY_PAGE,
   ),
   CHANGE_SEARCH_MODE_EDIT_DEFECT_MODAL: getEditToInvestigateChangeSearchModeEvent(HISTORY_PAGE),

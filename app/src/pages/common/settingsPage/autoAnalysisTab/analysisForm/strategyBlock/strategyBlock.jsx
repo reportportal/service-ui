@@ -88,7 +88,9 @@ export class StrategyBlock extends Component {
     onFormSubmit({
       [ANALYZER_ENABLED]: value,
     });
-    tracking.trackEvent(SETTINGS_PAGE_EVENTS.AUTO_ANALYSIS_SWITCHER);
+    value
+      ? tracking.trackEvent(SETTINGS_PAGE_EVENTS.AUTO_ANALYSIS_SWITCHER_ON)
+      : tracking.trackEvent(SETTINGS_PAGE_EVENTS.AUTO_ANALYSIS_SWITCHER_OFF);
   };
 
   changeAnalyzerMode = (event) => {
