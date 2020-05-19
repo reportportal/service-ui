@@ -31,6 +31,7 @@ import {
   paginationSelector,
   parentItemSelector,
   parentItemsSelector,
+  groupItemsByParent,
 } from 'controllers/testItem';
 import { debugModeSelector } from 'controllers/launch';
 import { extractNamespacedQuery, createNamespacedQuery } from 'common/utils/routingUtils';
@@ -122,13 +123,7 @@ const groupedTestItemsSelector = createSelector(
     const isListView = searchQuery.indexOf('filter.eq.hasChildren');
 
     if (isListView) {
-      const groupedItems = testItems.reduce((groups, step) => {
-        const group = groups[step.parent] || [];
-        return {
-          ...groups,
-          [step.parent]: [...group, step],
-        };
-      }, {});
+      const groupedItems = groupItemsByParent(testItems);
 
       return Object.keys(groupedItems).reduce(
         (acc, groupKey) => acc.concat(groupedItems[groupKey]),

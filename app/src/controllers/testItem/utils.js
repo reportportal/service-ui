@@ -112,3 +112,12 @@ export const isListView = (query, namespace) => {
   const namespacedQuery = extractNamespacedQuery(query, namespace);
   return namespacedQuery && 'filter.eq.hasChildren' in namespacedQuery;
 };
+
+export const groupItemsByParent = (items) =>
+  items.reduce((groups, item) => {
+    const group = groups[item.parent] || [];
+    return {
+      ...groups,
+      [item.parent]: [...group, item],
+    };
+  }, {});
