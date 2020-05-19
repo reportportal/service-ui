@@ -21,6 +21,7 @@ import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { Grid } from 'components/main/grid';
 import { AbsRelTime } from 'components/main/absRelTime';
+import { groupItemsByParent } from 'controllers/testItem';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { formatMethodType } from 'common/utils/localizationUtils';
 import { FAILED } from 'common/constants/testStatuses';
@@ -320,15 +321,6 @@ export class StepGrid extends Component {
     [cx('failed')]: value.status === FAILED,
   });
 
-  groupStepItems = () =>
-    this.props.data.reduce((groups, step) => {
-      const group = groups[step.parent] || [];
-      return {
-        ...groups,
-        [step.parent]: [...group, step],
-      };
-    }, {});
-
   render() {
     const {
       intl: { formatMessage },
@@ -359,7 +351,7 @@ export class StepGrid extends Component {
           rowClassMapper={this.highlightFailedItems}
           loading={loading}
           groupHeader={GroupHeader}
-          groupFunction={this.groupStepItems}
+          groupFunction={groupItemsByParent}
           grouped={listView}
           onFilterClick={onFilterClick}
           onChangeSorting={onChangeSorting}
