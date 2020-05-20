@@ -25,11 +25,11 @@ import styles from './testsTable.scss';
 
 const cx = classNames.bind(styles);
 
-export const TestsTable = ({ tests, columns, launchId }) => (
+export const TestsTable = ({ tests, columns, launchId, widgetType }) => (
   <div className={cx('tests-table')}>
     <ScrollWrapper>
       <TestsTableHeader columns={columns} />
-      <TestsTableBody columns={columns} tests={tests} launchId={launchId} />
+      <TestsTableBody columns={columns} tests={tests} launchId={launchId} widgetType={widgetType} />
     </ScrollWrapper>
   </div>
 );
@@ -38,4 +38,9 @@ TestsTable.propTypes = {
   tests: PTTests.isRequired,
   columns: PTColumns.isRequired,
   launchId: oneOfType([number, string]).isRequired,
+  widgetType: string,
+};
+
+TestsTable.defaultProps = {
+  widgetType: '',
 };
