@@ -29,10 +29,12 @@ export class TestsTableBody extends React.Component {
     tests: PTTests,
     columns: PTColumns.isRequired,
     launchId: oneOfType([number, string]).isRequired,
+    widgetType: string,
   };
 
   static defaultProps = {
     tests: [],
+    widgetType: '',
   };
 
   constructor(props) {
@@ -42,7 +44,7 @@ export class TestsTableBody extends React.Component {
   }
 
   renderRow = (test) => {
-    const { columns, launchId } = this.props;
+    const { columns, launchId, widgetType } = this.props;
     const { name, date, count, status, duration } = columns;
 
     const rowProps = {
@@ -56,6 +58,7 @@ export class TestsTableBody extends React.Component {
       matrixComponent: this.matrixComponent,
       status: status && test[status.statusKey],
       duration: duration && test[duration.durationKey],
+      widgetType,
     };
 
     return <TestsTableRow {...rowProps} />;

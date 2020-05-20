@@ -22,11 +22,12 @@ import * as cfg from './flakyTestsCfg';
 const prepareWidgetData = ({ flaky }) =>
   flaky.map((item) => ({ ...item, statuses: [...item.statuses].reverse() }));
 
-export const FlakyTests = ({ widget: { content } }) => (
+export const FlakyTests = ({ widget: { content, widgetType } }) => (
   <TestsTableWidget
     tests={prepareWidgetData(content)}
     launch={content.latestLaunch}
     columns={cfg.columns}
+    widgetType={widgetType}
   />
 );
 
