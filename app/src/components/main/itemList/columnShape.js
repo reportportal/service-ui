@@ -23,5 +23,7 @@ export const columnShape = PropTypes.shape({
   align: PropTypes.string,
   withIcon: PropTypes.bool,
   bold: PropTypes.bool,
+  showInfoIcon: PropTypes.bool,
+  iconTitle: PropTypes.string,
   component: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
 });
