@@ -15,7 +15,7 @@
  */
 
 import * as React from 'react';
-import { object, element, bool, string } from 'prop-types';
+import { object, element, bool, func } from 'prop-types';
 import classNames from 'classnames/bind';
 import { LaunchInfoBlock } from './launchInfoBlock';
 import { TestsTable } from './testsTable';
@@ -29,7 +29,7 @@ export const TestsTableWidget = ({
   tests,
   issueType,
   columns,
-  widgetType,
+  getMaxtrixTooltip,
   hideInfoBlock,
 }) => {
   const launchName = launch.number ? `${launch.name} #${launch.number}` : launch.name;
@@ -38,7 +38,12 @@ export const TestsTableWidget = ({
     <div className={cx('tests-table-widget')}>
       <div className={cx('widget-wrapper')}>
         {!hideInfoBlock && <LaunchInfoBlock launchName={launchName} issueType={issueType} />}
-        <TestsTable columns={columns} tests={tests} launchId={launch.id} widgetType={widgetType} />
+        <TestsTable
+          columns={columns}
+          tests={tests}
+          launchId={launch.id}
+          getMaxtrixTooltip={getMaxtrixTooltip}
+        />
       </div>
     </div>
   );
@@ -49,12 +54,12 @@ TestsTableWidget.propTypes = {
   tests: PTTests.isRequired,
   issueType: element,
   columns: PTColumns.isRequired,
-  widgetType: string,
+  getMaxtrixTooltip: func,
   hideInfoBlock: bool,
 };
 
 TestsTableWidget.defaultProps = {
   issueType: null,
   hideInfoBlock: false,
-  widgetType: '',
+  getMaxtrixTooltip: null,
 };
