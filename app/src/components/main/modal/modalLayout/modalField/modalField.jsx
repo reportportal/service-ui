@@ -17,7 +17,7 @@
 import PropTypes from 'prop-types';
 import classname from 'classnames/bind';
 import Parser from 'html-react-parser';
-import FilterIcon from 'common/img/info-inline.svg';
+import InfoIcon from 'common/img/info-inline.svg';
 import styles from './modalField.scss';
 
 const cx = classname.bind(styles);
@@ -30,8 +30,7 @@ export const ModalField = ({
   labelWidth,
   alignLeft,
   noMinHeight,
-  showInfoIcon,
-  iconTitle,
+  labelTip,
 }) => (
   <div className={cx('modal-field', className)}>
     {label && (
@@ -40,8 +39,7 @@ export const ModalField = ({
         labelWidth={labelWidth}
         alignLeft={alignLeft}
         noMinHeight={noMinHeight}
-        showInfoIcon={showInfoIcon}
-        iconTitle={iconTitle}
+        labelTip={labelTip}
       />
     )}
     <Content>
@@ -58,8 +56,7 @@ ModalField.propTypes = {
   labelWidth: PropTypes.number,
   alignLeft: PropTypes.bool,
   noMinHeight: PropTypes.bool,
-  showInfoIcon: PropTypes.bool,
-  iconTitle: PropTypes.string,
+  labelTip: PropTypes.string,
 };
 ModalField.defaultProps = {
   className: '',
@@ -69,8 +66,7 @@ ModalField.defaultProps = {
   labelWidth: null,
   alignLeft: false,
   noMinHeight: false,
-  showInfoIcon: false,
-  iconTitle: '',
+  labelTip: '',
 };
 
 const Tip = ({ tip }) => <div className={cx('modal-field-tip')}>{tip}</div>;
@@ -81,7 +77,7 @@ Tip.defaultProps = {
   tip: '',
 };
 
-const Label = ({ label, labelWidth, alignLeft, noMinHeight, showInfoIcon, iconTitle }) => (
+const Label = ({ label, labelWidth, alignLeft, noMinHeight, labelTip }) => (
   <div
     className={cx('modal-field-label', {
       'no-min-height': label === ' ' || noMinHeight,
@@ -90,9 +86,9 @@ const Label = ({ label, labelWidth, alignLeft, noMinHeight, showInfoIcon, iconTi
     style={{ width: labelWidth || 'unset' }}
   >
     <span>{label}</span>
-    {showInfoIcon && (
-      <div className={cx('modal-field-label-icon')} title={iconTitle}>
-        {Parser(FilterIcon)}
+    {labelTip && (
+      <div className={cx('modal-field-label-icon')} title={labelTip}>
+        {Parser(InfoIcon)}
       </div>
     )}
   </div>
@@ -102,16 +98,14 @@ Label.propTypes = {
   labelWidth: PropTypes.number,
   alignLeft: PropTypes.bool,
   noMinHeight: PropTypes.bool,
-  showInfoIcon: PropTypes.bool,
-  iconTitle: PropTypes.string,
+  labelTip: PropTypes.string,
 };
 Label.defaultProps = {
   label: '',
   labelWidth: null,
   alignLeft: false,
   noMinHeight: false,
-  showInfoIcon: false,
-  iconTitle: '',
+  labelTip: '',
 };
 
 const Content = ({ children }) => <div className={cx('modal-field-content')}>{children}</div>;
