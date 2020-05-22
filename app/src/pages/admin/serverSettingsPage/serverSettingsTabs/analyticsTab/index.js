@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { StatisticsTab } from './statisticsTab';
+export { AnalyticsTab } from './analyticsTab';

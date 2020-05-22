@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-.statistics-settings-tab {
+.analytics-settings-tab {
   position: relative;
 
-  .statistics-settings-form {
+  .analytics-settings-form {
     width: 600px;
     margin: 0 auto 20px;
 
@@ -29,10 +29,10 @@
       width: 320px;
       height: 141px;
       margin: 30px auto 20px;
-      background-image: url(./img/serverSettingsStatistics.png);
+      background-image: url(./img/serverSettingsAnalytics.png);
     }
 
-    .statistics-info {
+    .analytics-info {
       width: 560px;
       margin: 0 16px 10px;
       font-size: 13px;
@@ -45,14 +45,14 @@
       }
     }
 
-    .statistics-list {
+    .analytics-list {
       margin: 0 0 20px 15px;
 
       @media (max-width: $SCREEN_XS_MAX) {
         margin-left: 0;
       }
 
-      .statistics-list-toggler {
+      .analytics-list-toggler {
         position: relative;
         font-family: $FONT-SEMIBOLD;
         font-size: 12px;
@@ -95,7 +95,7 @@
           margin-top: 10px;
         }
 
-        .statistics-point {
+        .analytics-point {
           position: relative;
           padding-left: 25px;
           line-height: 22px;

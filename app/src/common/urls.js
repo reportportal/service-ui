@@ -226,7 +226,7 @@ export const URLS = {
 
   authSettings: (authTypeOrId) => `${uatBase}settings/auth/${authTypeOrId}`,
   githubAuthSettings: () => `${uatBase}settings/oauth/github`,
-  statisticsServerSettings: () => `${urlBase}settings/analytics`,
+  analyticsServerSettings: () => `${urlBase}settings/analytics`,
   events: (projectId) => `${urlBase}${projectId}/activity`,
   allUsers: () => `${urlBase}user/all`,
   searchUsers: (term) =>

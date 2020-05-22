@@ -1472,7 +1472,7 @@
   "SearchDashboardForm.dashboardNameSearchHint": "Имя панели управления должно быть длиной от 3 до 128.",
   "ServerSettingsPage.title": "Настройки сервера",
   "ServerSettingsTabs.authConfiguration": "Настройки авторизации",
-  "ServerSettingsTabs.statistics": "Статистика",
+  "ServerSettingsTabs.analytics": "Аналитика",
   "ServerSettingsTabs.updateAuthSuccess": "Настройки интеграции OAuth обновлены",
   "ServiceVersionItem.newVersion": "Доступна новая версия: {newVersion}",
   "ServiceVersionsBlock.currentVersion": "Текущая версия",

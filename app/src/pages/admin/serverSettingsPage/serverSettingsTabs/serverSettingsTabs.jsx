@@ -19,11 +19,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import { SERVER_SETTINGS_TAB_PAGE, settingsTabSelector } from 'controllers/pages';
-import { AUTHORIZATION_CONFIGURATION, STATISTICS } from 'common/constants/settingsTabs';
+import { AUTHORIZATION_CONFIGURATION, ANALYTICS } from 'common/constants/settingsTabs';
 import { NavigationTabs } from 'components/main/navigationTabs';
 import { ADMIN_SERVER_SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { AuthConfigurationTab } from './authConfigurationTab';
-import { StatisticsTab } from './statisticsTab';
+import { AnalyticsTab } from './analyticsTab';
 
 const messages = defineMessages({
   authConfiguration: {
@@ -31,8 +31,8 @@ const messages = defineMessages({
     defaultMessage: 'Authorization configuration',
   },
   statistics: {
-    id: 'ServerSettingsTabs.statistics',
-    defaultMessage: 'Statistics',
+    id: 'ServerSettingsTabs.analytics',
+    defaultMessage: 'Analytics',
   },
 });
 
@@ -69,12 +69,12 @@ export class ServerSettingsTabs extends Component {
       mobileDisabled: true,
       eventInfo: ADMIN_SERVER_SETTINGS_PAGE_EVENTS.AUTHORIZATION_CONFIGURATION_TAB,
     },
-    [STATISTICS]: {
+    [ANALYTICS]: {
       name: this.props.intl.formatMessage(messages.statistics),
-      link: this.createTabLink(STATISTICS),
-      component: <StatisticsTab />,
+      link: this.createTabLink(ANALYTICS),
+      component: <AnalyticsTab />,
       mobileDisabled: true,
-      eventInfo: ADMIN_SERVER_SETTINGS_PAGE_EVENTS.STATISTICS_TAB,
+      eventInfo: ADMIN_SERVER_SETTINGS_PAGE_EVENTS.ANALYTICS_TAB,
     },
   });
 
