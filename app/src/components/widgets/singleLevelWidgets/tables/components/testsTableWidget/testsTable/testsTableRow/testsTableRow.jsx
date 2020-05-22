@@ -15,42 +15,18 @@
  */
 
 import { Component } from 'react';
-import PropTypes, { func, string, number, array, object, oneOfType } from 'prop-types';
+import { func, string, number, array, object, oneOfType } from 'prop-types';
 import classNames from 'classnames/bind';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { defineMessages, injectIntl } from 'react-intl';
 import { testCaseNameLinkSelector } from 'controllers/testItem';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { NavLink } from 'components/main/navLink';
-import { FLAKY_TEST_CASES_TABLE } from 'common/constants/widgetTypes';
 import { PTTest } from '../../pTypes';
 import { Count } from '../count';
 import styles from './testsTableRow.scss';
 
 const cx = classNames.bind(styles);
-
-const titleMessages = defineMessages({
-  [FLAKY_TEST_CASES_TABLE]: {
-    id: 'TestTableRow.flakyTestCasesTitle',
-    defaultMessage: '{statusNumber} {statusChange} from {possibleNumber} {possibleTimes}',
-  },
-  change: {
-    id: 'TestTableRow.flakyTestCasesTitleChange',
-    defaultMessage: 'status change',
-  },
-  changes: {
-    id: 'TestTableRow.flakyTestCasesTitleChanges',
-    defaultMessage: 'status changes',
-  },
-  possible: {
-    id: 'TestTableRow.flakyTestCasesTitlePossible',
-    defaultMessage: 'possible',
-  },
-  possibleTimes: {
-    id: 'TestTableRow.flakyTestCasesTitlePossibleTimes',
-    defaultMessage: 'possible times',
-  },
-});
 
 @injectIntl
 @connect((state, ownProps) => ({
@@ -61,7 +37,7 @@ const titleMessages = defineMessages({
 }))
 export class TestsTableRow extends Component {
   static propTypes = {
-    intl: PropTypes.object.isRequired,
+    intl: object.isRequired,
     launchId: oneOfType([number, string]).isRequired,
     testCaseNameLink: object.isRequired,
     data: PTTest.isRequired,
@@ -72,7 +48,7 @@ export class TestsTableRow extends Component {
     matrixComponent: func,
     status: array,
     duration: number,
-    widgetType: string,
+    getMaxtrixTooltip: func,
   };
 
   static defaultProps = {
@@ -81,7 +57,7 @@ export class TestsTableRow extends Component {
     matrixComponent: null,
     status: null,
     duration: null,
-    widgetType: '',
+    getMaxtrixTooltip: null,
   };
 
   render() {
@@ -95,11 +71,12 @@ export class TestsTableRow extends Component {
       matrixComponent: Matrix,
       status,
       duration,
-      widgetType,
+      getMaxtrixTooltip,
       intl: { formatMessage },
     } = this.props;
     const { total, uniqueId } = data;
     const percentage = count !== null ? ((count / total) * 100).toFixed(2) : null;
+    const matrixTooltip = getMaxtrixTooltip && getMaxtrixTooltip(count, total, formatMessage);
 
     return (
       <div className={cx('row')}>
@@ -107,23 +84,7 @@ export class TestsTableRow extends Component {
           <span>{name}</span>
         </NavLink>
         {Matrix && count && (
-          <div
-            className={cx('col', 'col-count')}
-            title={
-              widgetType
-                ? formatMessage(titleMessages[widgetType], {
-                    statusNumber: count,
-                    statusChange: formatMessage(
-                      count === 1 ? titleMessages.change : titleMessages.changes,
-                    ),
-                    possibleTimes: formatMessage(
-                      total === 1 ? titleMessages.possible : titleMessages.possibleTimes,
-                    ),
-                    possibleNumber: total,
-                  })
-                : ''
-            }
-          >
+          <div className={cx('col', 'col-count')} title={matrixTooltip}>
             <Count count={count} total={total} />
             <Matrix tests={matrixData} id={uniqueId} />
           </div>
