@@ -22,7 +22,7 @@ import 'common/css/fonts/fonts.scss';
 import 'common/css/common.scss';
 import 'c3/c3.css';
 
-import localeUA from '../localization/translated/uk.json';
+import localeUK from '../localization/translated/uk.json';
 import localeRU from '../localization/translated/ru.json';
 import localeBE from '../localization/translated/be.json';
 
@@ -30,7 +30,7 @@ import { Provider } from 'react-redux';
 import { store } from './store';
 
 const messages = {
-  uk: localeUA,
+  uk: localeUK,
   ru: localeRU,
   be: localeBE,
 };
