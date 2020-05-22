@@ -1472,7 +1472,7 @@
   "SearchDashboardForm.dashboardNameSearchHint": "Назва панэлі кіравання павінна мець памер ад 3 да 128.",
   "ServerSettingsPage.title": "Налады сервера",
   "ServerSettingsTabs.authConfiguration": "Налады аўтарызацыі",
-  "ServerSettingsTabs.statistics": "Статыстыка",
+  "ServerSettingsTabs.analytics": "Аналітыка",
   "ServerSettingsTabs.updateAuthSuccess": "Налады інтэграцыі OAuth абноўлены",
   "ServiceVersionItem.newVersion": "Даступны новыя версіі: {newVersion}",
   "ServiceVersionsBlock.currentVersion": "Бягучая версія",
