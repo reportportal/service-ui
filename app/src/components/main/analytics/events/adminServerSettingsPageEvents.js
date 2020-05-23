@@ -73,7 +73,7 @@ export const ADMIN_SERVER_SETTINGS_PAGE_EVENTS = {
     action: 'Edit checkbox Help make ReportPortal better on tab Analytics',
     label: 'Uncheck Help make ReportPortal better on tab Analytics',
   },
-  SUBMIT_STATISTICS_BTN: {
+  SUBMIT_ANALYTICS_BTN: {
     category: ADMIN_SERVER_SETTINGS_PAGE,
     action: 'Click on Bttn Submit on tab Analytics',
     label: 'Submit changes on tab Analytics',

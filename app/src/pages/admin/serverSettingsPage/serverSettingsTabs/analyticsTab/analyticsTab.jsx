@@ -41,33 +41,33 @@ const cx = classNames.bind(styles);
 
 const messages = defineMessages({
   analyticsInfo: {
-    id: 'StatisticsTab.analyticsInfo',
-    defaultMessage: `You can help us improve ReportPortal by opting to send usage analytics. While you're using the app, we'll gather data that might help us improve Report Portal performance and usability by tracking usage frequency of particular features. See below for details about what information is sent.`,
+    id: 'AnalyticsTab.analyticsInfo',
+    defaultMessage: `You can help us improve ReportPortal.<br/>While you're using the app, we'll gather analytics that might help us improve Report Portal performance and usability by tracking usage frequency of particular features.<br/>See below for details about what information is sent.`,
   },
   analyticsList: {
-    id: 'StatisticsTab.analyticsList',
-    defaultMessage: 'LIST OF SENT STATISTICS',
+    id: 'AnalyticsTab.analyticsList',
+    defaultMessage: 'LIST OF SENT ANALYTICS',
   },
   analyticsListMessage: {
-    id: 'StatisticsTab.analyticsListMessage',
-    defaultMessage: `Usage analytics reports usually won't include any personal information, but they might include:`,
+    id: 'AnalyticsTab.analyticsListMessage',
+    defaultMessage: `Usage analytics usually won't include any personal information, but it might include:`,
   },
   analyticsListPoint1: {
-    id: 'StatisticsTab.analyticsListPoint1',
+    id: 'AnalyticsTab.analyticsListPoint1',
     defaultMessage:
       'Device information - such as your hardware model, operating system version, screen resolution, browser version;',
   },
   analyticsListPoint2: {
-    id: 'StatisticsTab.analyticsListPoint2',
+    id: 'AnalyticsTab.analyticsListPoint2',
     defaultMessage:
-      'Log information - such as details of how you use ReportPortal, where you click and what actions you do, how long you leave app open.',
+      'Behavior information - such as details of how you use ReportPortal, where you click, and what actions you do, how long you leave the app open.',
   },
   analyticsEnabled: {
-    id: 'StatisticsTab.analyticsEnabled',
+    id: 'AnalyticsTab.analyticsEnabled',
     defaultMessage: 'Help make Report Portal better by automatically sending analytics to us',
   },
-  updateStatisticsEnabledSuccess: {
-    id: 'StatisticsTab.updateStatisticsEnabledSuccess',
+  updateAnalyticsEnabledSuccess: {
+    id: 'AnalyticsTab.updateAnalyticsEnabledSuccess',
     defaultMessage: 'Server settings were successfully updated',
   },
 });
@@ -103,10 +103,10 @@ export class AnalyticsTab extends Component {
   };
 
   static getDerivedStateFromProps(props, state) {
-    if (props.analyticsEnabled !== state.prevStatisticsEnabledValue) {
+    if (props.analyticsEnabled !== state.prevAnalyticsEnabledValue) {
       return {
         analyticsEnabled: props.analyticsEnabled,
-        prevStatisticsEnabledValue: state.analyticsEnabled,
+        prevAnalyticsEnabledValue: state.analyticsEnabled,
       };
     }
     return null;
@@ -119,7 +119,7 @@ export class AnalyticsTab extends Component {
       loading: false,
       listShown: false,
       analyticsEnabled: props.analyticsEnabled,
-      prevStatisticsEnabledValue: props.analyticsEnabled,
+      prevAnalyticsEnabledValue: props.analyticsEnabled,
     };
   }
 
@@ -130,7 +130,7 @@ export class AnalyticsTab extends Component {
   };
 
   submit = () => {
-    this.props.tracking.trackEvent(ADMIN_SERVER_SETTINGS_PAGE_EVENTS.SUBMIT_STATISTICS_BTN);
+    this.props.tracking.trackEvent(ADMIN_SERVER_SETTINGS_PAGE_EVENTS.SUBMIT_ANALYTICS_BTN);
     this.setState({
       loading: true,
     });
@@ -165,7 +165,7 @@ export class AnalyticsTab extends Component {
     } = this.props;
 
     this.props.showNotification({
-      message: formatMessage(messages.updateStatisticsEnabledSuccess),
+      message: formatMessage(messages.updateAnalyticsEnabledSuccess),
       type: NOTIFICATION_TYPES.SUCCESS,
     });
 
@@ -195,7 +195,7 @@ export class AnalyticsTab extends Component {
       <div className={cx('analytics-settings-tab')}>
         <div className={cx('analytics-settings-form')}>
           <div className={cx('image-holder')} />
-          <p className={cx('analytics-info')}>{formatMessage(messages.analyticsInfo)}</p>
+          <p className={cx('analytics-info')}>{Parser(formatMessage(messages.analyticsInfo))}</p>
 
           <div className={cx('analytics-list')}>
             <div className={cx('analytics-list-toggler')} onClick={this.onListClick}>
