@@ -149,6 +149,7 @@ export class GeneralTab extends Component {
     { label: this.props.intl.formatMessage(Messages.week3), value: daysToSeconds(21) },
     { label: this.props.intl.formatMessage(Messages.month1), value: daysToSeconds(30) },
     { label: this.props.intl.formatMessage(Messages.month3), value: daysToSeconds(90) },
+    { label: this.props.intl.formatMessage(Messages.month6), value: daysToSeconds(180) },
     { label: this.props.intl.formatMessage(Messages.forever), value: 0 },
   ];
 
