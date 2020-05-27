@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ANALYICS_INSTANCE_KEY, ANALYTICS_ALL_KEY } from './constants';
+import { ANALYICS_INSTANCE_KEY, ANALYTICS_ALL_KEY, OLD_HISTORY_KEY } from './constants';
 
 export const appInfoSelector = (state) => state.appInfo || {};
 const apiInfoSelector = (state) => appInfoSelector(state).api || {};
@@ -29,6 +29,8 @@ export const apiBuildVersionSelector = (state) => {
   const apiInfo = apiInfoSelector(state);
   return apiInfo.build ? apiInfo.build.version : '';
 };
+
+const environmentSelector = (state) => apiInfoSelector(state).environment || {};
 const extensionsSelector = (state) => apiInfoSelector(state).extensions || {};
 const extensionsConfigSelector = (state) => extensionsSelector(state).result || {};
 export const instanceIdSelector = (state) =>
@@ -37,3 +39,5 @@ export const analyticsEnabledSelector = (state) =>
   extensionsConfigSelector(state)[ANALYTICS_ALL_KEY] === 'true';
 export const analyzerExtensionsSelector = (state) => extensionsSelector(state).analyzers || [];
 export const authExtensionsSelector = (state) => uatInfoSelector(state).authExtensions || {};
+export const isOldHistorySelector = (state) =>
+  environmentSelector(state)[OLD_HISTORY_KEY] === 'true';
