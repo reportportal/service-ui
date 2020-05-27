@@ -48,3 +48,6 @@ export const PAGINATION_INITIAL_STATE = {
 };
 
 export const FILTER_FOR_COMPARE_INITIAL_STATE = null;
+
+export const TEST_CASE_HASH_GROUPING_FIELD = 'testCaseHash';
+export const UNIQUE_ID_GROUPING_FIELD = 'uniqueId';
