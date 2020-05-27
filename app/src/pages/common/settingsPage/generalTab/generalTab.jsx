@@ -39,7 +39,6 @@ import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { FormField } from 'components/fields/formField';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { projectIdSelector } from 'controllers/pages';
-import { authExtensionsSelector } from 'controllers/appInfo';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { langSelector } from 'controllers/lang';
 import styles from './generalTab.scss';
@@ -62,7 +61,6 @@ const secondsToDays = (seconds, locale) =>
   (state) => ({
     projectId: projectIdSelector(state),
     jobConfig: jobAttributesSelector(state),
-    isEpamInstance: !!authExtensionsSelector(state).epam,
     accountRole: userAccountRoleSelector(state),
     userRole: activeProjectRoleSelector(state),
     lang: langSelector(state),
@@ -85,7 +83,6 @@ export class GeneralTab extends Component {
       keepScreenshots: PropTypes.string.isRequired,
       keepLaunches: PropTypes.string.isRequired,
     }).isRequired,
-    isEpamInstance: PropTypes.bool.isRequired,
     showNotification: PropTypes.func.isRequired,
     updateConfigurationAttributesAction: PropTypes.func.isRequired,
     initialize: PropTypes.func.isRequired,
@@ -139,9 +136,6 @@ export class GeneralTab extends Component {
         });
       });
   };
-
-  filterOptions = (options) =>
-    this.props.isEpamInstance ? options.filter((item) => item.value !== 0) : options;
 
   retentionOptions = [
     { label: this.props.intl.formatMessage(Messages.week1), value: daysToSeconds(7) },
@@ -210,7 +204,7 @@ export class GeneralTab extends Component {
             disabled={!canUpdateSettings(accountRole, userRole)}
             format={this.formatRetention}
           >
-            <InputDropdown options={this.filterOptions(this.retentionOptions)} mobileDisabled />
+            <InputDropdown options={this.retentionOptions} mobileDisabled />
           </FormField>
           <FormField
             name="keepLogs"
@@ -223,7 +217,7 @@ export class GeneralTab extends Component {
             disabled={!canUpdateSettings(accountRole, userRole)}
             format={this.formatRetention}
           >
-            <InputDropdown options={this.filterOptions(this.retentionOptions)} mobileDisabled />
+            <InputDropdown options={this.retentionOptions} mobileDisabled />
           </FormField>
           <FormField
             name="keepScreenshots"
@@ -236,7 +230,7 @@ export class GeneralTab extends Component {
             disabled={!canUpdateSettings(accountRole, userRole)}
             format={this.formatRetention}
           >
-            <InputDropdown options={this.filterOptions(this.retentionOptions)} mobileDisabled />
+            <InputDropdown options={this.retentionOptions} mobileDisabled />
           </FormField>
           <FormField withoutProvider fieldWrapperClassName={cx('button-container')}>
             <div className={cx('submit-button')}>
