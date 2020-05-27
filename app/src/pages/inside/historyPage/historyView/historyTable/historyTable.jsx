@@ -215,7 +215,7 @@ export class HistoryTable extends Component {
       const isLastRow = index === history.length - 1;
 
       return (
-        <tr key={item.testCaseHash}>
+        <tr key={item.groupingField}>
           <HistoryCell first>
             <div className={cx('history-grid-name')}>
               <ItemNameBlock

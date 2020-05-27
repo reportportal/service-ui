@@ -32,6 +32,7 @@ import {
   launchIdSelector,
   pagePropertiesSelector,
 } from 'controllers/pages';
+import { isOldHistorySelector } from 'controllers/appInfo';
 import {
   fetchItemsHistoryAction,
   resetHistoryAction,
@@ -50,6 +51,8 @@ import {
   REFRESH_HISTORY,
   SET_FILTER_FOR_COMPARE,
   FETCH_FILTER_HISTORY,
+  UNIQUE_ID_GROUPING_FIELD,
+  TEST_CASE_HASH_GROUPING_FIELD,
 } from './constants';
 
 function* getHistoryParams({ loadMore } = {}) {
@@ -138,6 +141,10 @@ function* refreshHistory({ payload }) {
 function* fetchFilterHistory({ payload: { filter, loadMore } }) {
   const activeProject = yield select(activeProjectSelector);
   const itemsHistory = yield select(historySelector);
+  const isOldHistory = yield select(isOldHistorySelector);
+  const historyGroupingFieldKey = isOldHistory
+    ? UNIQUE_ID_GROUPING_FIELD
+    : TEST_CASE_HASH_GROUPING_FIELD;
 
   if (!itemsHistory.length) {
     return;
@@ -154,7 +161,9 @@ function* fetchFilterHistory({ payload: { filter, loadMore } }) {
   if (loadMore) {
     items = itemsHistory.slice(-HISTORY_ITEMS_TO_LOAD);
   }
-  params['filter.in.testCaseHash'] = items.map((item) => item.testCaseHash).join(',');
+  params[`filter.in.${historyGroupingFieldKey}`] = items
+    .map((item) => item.groupingField)
+    .join(',');
 
   yield put(
     concatFetchDataAction(FILTER_HISTORY_NAMESPACE, loadMore)(
