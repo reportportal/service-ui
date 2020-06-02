@@ -68,9 +68,9 @@ export const getRefineFiltersPanelEvents = (category) => ({
     action: 'Click on Refine Btn More',
     label: 'Arise dropdown with parameters',
   },
-  SELECT_REFINE_PARAMS: {
+  getSelectRefineParams: (parameter) => ({
     category,
-    action: 'Select parameters to refine',
-    label: 'Show parameters fields to refine',
-  },
+    action: `Select ${parameter} parameter to refine`,
+    label: `Show ${parameter} parameter field to refine`,
+  }),
 });

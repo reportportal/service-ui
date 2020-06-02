@@ -37,7 +37,10 @@ import {
   AFTER_GROUPS,
   AFTER_SUITE,
 } from 'common/constants/methodTypes';
-import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
+import {
+  STEP_PAGE_EVENTS,
+  getChangeRetryRefineFiltersEvent,
+} from 'components/main/analytics/events';
 import {
   EntityInputConditional,
   EntityItemStartTime,
@@ -67,6 +70,7 @@ import {
   CONDITION_EQ,
   ENTITY_PATTERN_NAME,
   ENTITY_ISSUE_ID,
+  ENTITY_RETRY,
 } from 'components/filterEntities/constants';
 import { defectTypesSelector, patternsSelector } from 'controllers/project';
 import { launchIdSelector } from 'controllers/pages';
@@ -87,6 +91,10 @@ const messages = defineMessages({
   StatusTitle: {
     id: 'StepLevelEntities.StatusTitle',
     defaultMessage: 'Status',
+  },
+  RetryTitle: {
+    id: 'StepLevelEntities.RetryTitle',
+    defaultMessage: 'Retry',
   },
   StartTimeTitle: {
     id: 'StepLevelEntities.StartTimeTitle',
@@ -143,6 +151,14 @@ const messages = defineMessages({
   AnalyseOption2: {
     id: 'StepLevelEntities.AnalyseOption2',
     defaultMessage: 'Without "AA" mark',
+  },
+  RetryOption1: {
+    id: 'StepLevelEntities.RetryOption1',
+    defaultMessage: 'Has retries',
+  },
+  RetryOption2: {
+    id: 'StepLevelEntities.RetryOption2',
+    defaultMessage: 'Has not retries',
   },
   LaunchStatusPassed: {
     id: 'StepLevelEntities.LaunchStatusPassed',
@@ -629,6 +645,31 @@ export class StepLevelEntities extends Component {
             },
             {
               label: intl.formatMessage(messages.BtsIssueOption2),
+              value: 'FALSE',
+            },
+          ],
+        },
+      },
+      {
+        id: ENTITY_RETRY,
+        component: EntityDropdown,
+        value: this.bindDefaultValue(ENTITY_RETRY, {
+          condition: CONDITION_EQ,
+        }),
+        title: intl.formatMessage(messages.RetryTitle),
+        active: visibleFilters.includes(ENTITY_RETRY),
+        removable: true,
+        customProps: {
+          eventsInfo: {
+            selectValue: getChangeRetryRefineFiltersEvent,
+          },
+          options: [
+            {
+              label: intl.formatMessage(messages.RetryOption1),
+              value: 'TRUE',
+            },
+            {
+              label: intl.formatMessage(messages.RetryOption2),
               value: 'FALSE',
             },
           ],
