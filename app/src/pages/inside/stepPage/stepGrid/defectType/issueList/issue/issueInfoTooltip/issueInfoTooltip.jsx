@@ -17,8 +17,12 @@
 import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
-import { ERROR_CANCELED } from 'common/utils/fetch';
+import { URLS } from 'common/urls';
+import { activeProjectSelector } from 'controllers/user';
+import { getStorageItem, updateStorageItem } from 'common/utils';
+import { ERROR_CANCELED, fetch } from 'common/utils/fetch';
 import InProgressGif from 'common/img/item-in-progress.gif';
 
 import styles from './issueInfoTooltip.scss';
@@ -47,7 +51,13 @@ const messages = defineMessages({
 });
 
 const isResolved = (status) => status.toUpperCase() === STATUS_RESOLVED;
+const getStorageKey = (activeProject) => `${activeProject}_tickets`;
 
+const FETCH_ISSUE_INTERVAL = 900000; // min request interval = 15 min
+
+@connect((state) => ({
+  activeProject: activeProjectSelector(state),
+}))
 @injectIntl
 export class IssueInfoTooltip extends Component {
   static propTypes = {
@@ -56,7 +66,6 @@ export class IssueInfoTooltip extends Component {
     ticketId: PropTypes.string.isRequired,
     btsProject: PropTypes.string.isRequired,
     btsUrl: PropTypes.string.isRequired,
-    fetchIssue: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -71,23 +80,58 @@ export class IssueInfoTooltip extends Component {
   };
 
   componentDidMount() {
-    this.fetchData();
+    this.setupIssueData();
   }
 
   componentWillUnmount() {
     this.cancelRequest();
   }
 
+  setupIssueData = () => {
+    const { issue, lastTime } = this.getIssueFromStorage();
+    const timeSinceLastExecution = Date.now() - lastTime;
+
+    if (!lastTime || timeSinceLastExecution >= FETCH_ISSUE_INTERVAL) {
+      this.fetchData();
+    } else {
+      this.setState({
+        loading: false,
+        issue,
+      });
+    }
+  };
+
+  getIssueFromStorage = () => {
+    const { activeProject, ticketId, btsProject } = this.props;
+    const storageKey = getStorageKey(activeProject);
+
+    const data = getStorageItem(storageKey) || {};
+    return data[`${btsProject}_${ticketId}`] || {};
+  };
+
+  updateIssueInStorage = (data = {}) => {
+    const { activeProject, btsProject, ticketId } = this.props;
+    const storageKey = getStorageKey(activeProject);
+
+    updateStorageItem(storageKey, { [`${btsProject}_${ticketId}`]: data });
+  };
+
   fetchData = () => {
+    const { activeProject, ticketId, btsProject, btsUrl } = this.props;
     const cancelRequestFunc = (cancel) => {
       this.cancelRequest = cancel;
     };
     this.setState({ loading: true });
-    this.props
-      .fetchIssue(cancelRequestFunc)
-      .then((issue) => this.setState({ loading: false, issue }))
+
+    fetch(URLS.btsTicket(activeProject, ticketId, btsProject, btsUrl), {
+      abort: cancelRequestFunc,
+    })
+      .then((issue) => {
+        this.updateIssueInStorage({ issue, lastTime: Date.now() });
+        this.setState({ loading: false, issue });
+      })
       .catch((err) => {
-        this.props.fetchIssue.reset();
+        this.updateIssueInStorage();
         if (err.message === ERROR_CANCELED) {
           return;
         }
