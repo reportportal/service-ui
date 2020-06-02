@@ -44,6 +44,12 @@ export const getChangeItemStatusEvent = (oldStatus, newStatus) => ({
   label: `Change status from ${oldStatus} to ${newStatus}`,
 });
 
+export const getChangeRetryRefineFiltersEvent = (retry) => ({
+  category: STEP_PAGE,
+  action: `Click on dropdown RETRY in the refine filters panel`,
+  label: `Select ${retry} in Retry filter`,
+});
+
 export const STEP_PAGE_EVENTS = {
   REFINE_BY_NAME: {
     category: STEP_PAGE,

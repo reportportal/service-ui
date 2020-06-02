@@ -62,7 +62,7 @@ export class EntitiesSelector extends Component {
   handleChange = (entity) => () => {
     const { tracking, events, onChange } = this.props;
     if (!entity.active) {
-      tracking.trackEvent(events.SELECT_REFINE_PARAMS);
+      tracking.trackEvent(events.getSelectRefineParams(entity.title || ''));
     }
     this.setState({ opened: !this.state.opened });
     onChange(entity.id);
