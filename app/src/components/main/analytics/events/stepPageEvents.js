@@ -23,6 +23,7 @@ import {
   getHistoryPageLinkEvent,
   getRefreshPageActionEvent,
   getRefineFiltersPanelEvents,
+  getChangeRetryFilterEvent,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getEditDefectModalEvents,
@@ -44,12 +45,6 @@ export const getChangeItemStatusEvent = (oldStatus, newStatus) => ({
   label: `Change status from ${oldStatus} to ${newStatus}`,
 });
 
-export const getChangeRetryRefineFiltersEvent = (retry) => ({
-  category: STEP_PAGE,
-  action: `Click on dropdown RETRY in the refine filters panel`,
-  label: `Select ${retry} in Retry filter`,
-});
-
 export const STEP_PAGE_EVENTS = {
   REFINE_BY_NAME: {
     category: STEP_PAGE,
@@ -57,7 +52,10 @@ export const STEP_PAGE_EVENTS = {
     label: 'Refine by name',
   },
   // REFINE_FILTERS_PANEL
-  REFINE_FILTERS_PANEL_EVENTS: getRefineFiltersPanelEvents(STEP_PAGE),
+  REFINE_FILTERS_PANEL_EVENTS: {
+    commonEvents: getRefineFiltersPanelEvents(STEP_PAGE),
+    getChangeRetryFilterEvent: getChangeRetryFilterEvent(STEP_PAGE),
+  },
   METHOD_TYPE_SWITCHER: {
     category: STEP_PAGE,
     action: 'Click on Method type switcher',

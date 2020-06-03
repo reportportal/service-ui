@@ -37,10 +37,7 @@ import {
   AFTER_GROUPS,
   AFTER_SUITE,
 } from 'common/constants/methodTypes';
-import {
-  STEP_PAGE_EVENTS,
-  getChangeRetryRefineFiltersEvent,
-} from 'components/main/analytics/events';
+import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import {
   EntityInputConditional,
   EntityItemStartTime,
@@ -660,9 +657,6 @@ export class StepLevelEntities extends Component {
         active: visibleFilters.includes(ENTITY_RETRY),
         removable: true,
         customProps: {
-          eventsInfo: {
-            selectValue: getChangeRetryRefineFiltersEvent,
-          },
           options: [
             {
               label: intl.formatMessage(messages.RetryOption1),

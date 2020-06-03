@@ -16,7 +16,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import track from 'react-tracking';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { Manager, Reference, Popper } from 'react-popper';
 import styles from './inputDropdown.scss';
@@ -24,13 +23,8 @@ import { DropdownOption } from './inputDropdownOption/inputDropdownOption';
 
 const cx = classNames.bind(styles);
 
-@track()
 export class InputDropdown extends Component {
   static propTypes = {
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
     value: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.array,
@@ -39,7 +33,6 @@ export class InputDropdown extends Component {
     ]),
     options: PropTypes.array,
     multiple: PropTypes.bool,
-    eventsInfo: PropTypes.object,
     selectAll: PropTypes.bool,
     disabled: PropTypes.bool,
     error: PropTypes.string,
@@ -55,7 +48,6 @@ export class InputDropdown extends Component {
   static defaultProps = {
     value: '',
     options: [],
-    eventsInfo: {},
     multiple: false,
     selectAll: false,
     disabled: false,
@@ -108,12 +100,6 @@ export class InputDropdown extends Component {
       : this.handleChange;
   };
 
-  getOptionLabelByValue = (value) => {
-    const { options } = this.props;
-
-    return options.filter((item) => item.value === value)[0].label;
-  };
-
   handleClickOutside = (e) => {
     if (this.node && !this.node.contains(e.target) && this.state.opened) {
       this.setState({ opened: false });
@@ -139,7 +125,7 @@ export class InputDropdown extends Component {
   }
 
   handleChange = (selectedValue) => {
-    const { multiple, value, onChange, eventsInfo, tracking } = this.props;
+    const { multiple, value, onChange } = this.props;
     if (multiple) {
       if (value.indexOf(selectedValue) > -1) {
         onChange(value.filter((item) => item !== selectedValue));
@@ -147,8 +133,6 @@ export class InputDropdown extends Component {
         onChange([...value, selectedValue]);
       }
     } else {
-      const label = this.getOptionLabelByValue(selectedValue);
-      tracking.trackEvent(eventsInfo.selectValue(label));
       onChange(selectedValue);
       this.setState({ opened: !this.state.opened });
     }
