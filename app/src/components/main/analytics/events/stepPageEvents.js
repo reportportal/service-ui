@@ -23,7 +23,7 @@ import {
   getHistoryPageLinkEvent,
   getRefreshPageActionEvent,
   getRefineFiltersPanelEvents,
-  getChangeRetryFilterEvent,
+  getChangeFilterEvent,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getEditDefectModalEvents,
@@ -54,7 +54,7 @@ export const STEP_PAGE_EVENTS = {
   // REFINE_FILTERS_PANEL
   REFINE_FILTERS_PANEL_EVENTS: {
     commonEvents: getRefineFiltersPanelEvents(STEP_PAGE),
-    getChangeRetryFilterEvent: getChangeRetryFilterEvent(STEP_PAGE),
+    getChangeFilterEvent: getChangeFilterEvent(STEP_PAGE),
   },
   METHOD_TYPE_SWITCHER: {
     category: STEP_PAGE,
