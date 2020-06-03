@@ -77,10 +77,11 @@ export class EntityDropdown extends Component {
       customProps: { multiple },
       events,
       tracking,
+      title,
     } = this.props;
-    if (!multiple) {
+    if (!multiple && events.getChangeFilterEvent) {
       const label = this.getOptionLabelByValue(value);
-      tracking.trackEvent(events.getChangeRetryFilterEvent(label));
+      tracking.trackEvent(events.getChangeFilterEvent(title, label));
     }
     this.props.onChange({
       condition: this.props.value.condition,
