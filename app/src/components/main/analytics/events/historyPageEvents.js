@@ -23,6 +23,7 @@ import {
   getPostIssueActionEvent,
   getProceedValidItemsEvent,
   getRefreshPageActionEvent,
+  getChangeRetryFilterEvent,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getEditDefectModalEvents,
@@ -115,5 +116,8 @@ export const HISTORY_PAGE_EVENTS = {
   // EDIT_ITEMS_MODAL
   EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(HISTORY_PAGE),
   // REFINE_FILTERS_PANEL
-  REFINE_FILTERS_PANEL_EVENTS: getRefineFiltersPanelEvents(HISTORY_PAGE),
+  REFINE_FILTERS_PANEL_EVENTS: {
+    commonEvents: getRefineFiltersPanelEvents(HISTORY_PAGE),
+    getChangeRetryFilterEvent: getChangeRetryFilterEvent(HISTORY_PAGE),
+  },
 };

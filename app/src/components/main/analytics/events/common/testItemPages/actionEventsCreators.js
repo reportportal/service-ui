@@ -62,6 +62,12 @@ export const getRefreshPageActionEvent = (category) => ({
   label: 'Refresh page',
 });
 
+export const getChangeRetryFilterEvent = (category) => (retry) => ({
+  category,
+  action: `Click on dropdown RETRY in the refine filters panel`,
+  label: `Select ${retry} in Retry filter`,
+});
+
 export const getRefineFiltersPanelEvents = (category) => ({
   REFINE_BTN_MORE: {
     category,

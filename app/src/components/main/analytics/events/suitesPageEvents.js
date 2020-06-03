@@ -55,7 +55,9 @@ export const SUITES_PAGE_EVENTS = {
     label: 'Refine by name',
   },
   // REFINE_FILTERS_PANEL
-  REFINE_FILTERS_PANEL_EVENTS: getRefineFiltersPanelEvents(SUITE_PAGE),
+  REFINE_FILTERS_PANEL_EVENTS: {
+    commonEvents: getRefineFiltersPanelEvents(SUITE_PAGE),
+  },
   EDIT_ICON_CLICK: {
     category: SUITE_PAGE,
     action: 'Click on item icon "edit"',
