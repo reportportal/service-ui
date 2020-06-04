@@ -28,7 +28,6 @@ import {
   LIST_VIEW,
 } from 'controllers/testItem';
 import { activeFilterSelector } from 'controllers/filter';
-import { userIdSelector } from 'controllers/user';
 import { LogViewSwitcher } from './logViewSwitcher';
 import styles from './infoPanel.scss';
 
@@ -36,7 +35,6 @@ const cx = classNames.bind(styles);
 
 @connect(
   (state) => ({
-    currentUser: userIdSelector(state),
     listViewLink: listViewLinkSelector(state),
     logViewLink: logViewLinkSelector(state),
     currentFilter: activeFilterSelector(state),
@@ -56,7 +54,6 @@ export class InfoPanel extends Component {
     listViewLink: PropTypes.object,
     currentFilter: PropTypes.object,
     navigate: PropTypes.func.isRequired,
-    currentUser: PropTypes.string,
     isTestItemsList: PropTypes.bool.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -71,7 +68,6 @@ export class InfoPanel extends Component {
     logViewLink: {},
     listViewLink: {},
     currentFilter: null,
-    currentUser: '',
   };
 
   onToggleView = (viewMode) => {
@@ -87,9 +83,7 @@ export class InfoPanel extends Component {
   };
 
   renderInfoLineListView = () =>
-    !!this.props.currentFilter && (
-      <InfoLineListView data={this.props.currentFilter} currentUser={this.props.currentUser} />
-    );
+    !!this.props.currentFilter && <InfoLineListView data={this.props.currentFilter} />;
 
   render() {
     const { viewMode, data, events, isTestItemsList } = this.props;
