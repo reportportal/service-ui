@@ -35,6 +35,7 @@ export const LIST_VIEW = 'LIST_VIEW';
 export const LOG_VIEW = 'LOG_VIEW';
 export const DEFAULT_LAUNCHES_LIMIT = 600;
 export const DELETE_TEST_ITEMS = 'DeleteTestItems';
+export const COMPOSITE_ATTRIBUTES_FILTER = 'filter.has.compositeAttribute';
 
 export const TEST_ITEM_TYPES_MAP = {
   [LEVEL_SUITE]: LEVEL_SUITE,
