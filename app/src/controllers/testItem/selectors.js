@@ -42,7 +42,7 @@ import { suitesSelector, suitePaginationSelector } from 'controllers/suite';
 import { testsSelector, testPaginationSelector } from 'controllers/test';
 import { stepsSelector, stepPaginationSelector } from 'controllers/step';
 import { defectTypesSelector } from 'controllers/project';
-import { DEFAULT_SORTING, TEST_ITEMS_TYPE_LIST } from './constants';
+import { DEFAULT_SORTING, TEST_ITEMS_TYPE_LIST, COMPOSITE_ATTRIBUTES_FILTER } from './constants';
 import {
   createLink,
   getQueryNamespace,
@@ -108,6 +108,9 @@ export const paginationSelector = (state) => {
       return {};
   }
 };
+
+export const compositeAttributesSelector = (state) =>
+  queryParametersSelector(state, namespaceSelector(state))[COMPOSITE_ATTRIBUTES_FILTER];
 
 export const isListViewSelector = (state, namespace) =>
   isListView(pagePropertiesSelector(state), namespace);
