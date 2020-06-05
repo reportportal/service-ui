@@ -51,6 +51,7 @@ export {
   logViewLinkSelector,
   getLogItemLinkSelector,
   isTestItemsListSelector,
+  compositeAttributesSelector,
 } from './selectors';
 export {
   formatItemName,
@@ -59,11 +60,5 @@ export {
   isListView,
   groupItemsByParent,
 } from './utils';
-export {
-  LOG_VIEW,
-  LIST_VIEW,
-  TEST_ITEMS_TYPE_LIST,
-  DEFAULT_LAUNCHES_LIMIT,
-  COMPOSITE_ATTRIBUTES_FILTER,
-} from './constants';
+export { LOG_VIEW, LIST_VIEW, TEST_ITEMS_TYPE_LIST, DEFAULT_LAUNCHES_LIMIT } from './constants';
 export { LEVELS } from './levels';

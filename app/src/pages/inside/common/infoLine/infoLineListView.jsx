@@ -19,11 +19,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
-import {
-  queryParametersSelector,
-  namespaceSelector,
-  COMPOSITE_ATTRIBUTES_FILTER,
-} from 'controllers/testItem';
+import { compositeAttributesSelector } from 'controllers/testItem';
 import styles from './infoLine.scss';
 
 const cx = classNames.bind(styles);
@@ -39,16 +35,17 @@ const messages = defineMessages({
 });
 
 @connect((state) => ({
-  queryParameters: queryParametersSelector(state, namespaceSelector(state)),
+  compositeAttributes: compositeAttributesSelector(state),
 }))
 @injectIntl
 export class InfoLineListView extends Component {
   static propTypes = {
-    queryParameters: PropTypes.object.isRequired,
+    compositeAttributes: PropTypes.string,
     intl: PropTypes.object.isRequired,
     data: PropTypes.object,
   };
   static defaultProps = {
+    compositeAttributes: '',
     currentUser: '',
     data: {},
   };
@@ -56,10 +53,9 @@ export class InfoLineListView extends Component {
   render() {
     const {
       data,
-      queryParameters,
+      compositeAttributes,
       intl: { formatMessage },
     } = this.props;
-    const compositeAttributes = queryParameters[COMPOSITE_ATTRIBUTES_FILTER];
 
     return (
       <div className={cx('info-line', 'info-line--list-view')}>
