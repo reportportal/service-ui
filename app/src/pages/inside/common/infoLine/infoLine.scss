@@ -147,7 +147,7 @@
 .item {
   display: inline-block;
   margin: 3px 5px;
-  padding: 4px 11px 3px 11px;
+  padding: 1px 11px;
   font-size: 13px;
   font-family: $FONT-REGULAR;
   color: $COLOR--charcoal;
@@ -156,5 +156,6 @@
 }
 
 .item-child {
-  max-width: 190px;
+  max-width: 185px;
+  line-height: normal;
 }
