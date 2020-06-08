@@ -155,7 +155,7 @@ const messages = defineMessages({
   },
   RetryOption2: {
     id: 'StepLevelEntities.RetryOption2',
-    defaultMessage: 'Has not retries',
+    defaultMessage: 'Has no retries',
   },
   LaunchStatusPassed: {
     id: 'StepLevelEntities.LaunchStatusPassed',
