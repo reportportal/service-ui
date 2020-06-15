@@ -110,7 +110,7 @@ export class ProjectActivityControls extends Component {
       .reduce((acc, val) => acc.concat(val), []);
   };
 
-  formatUsernames = (values) =>
+  formatUsernames = (values = '') =>
     (values.length && values.split && values.split(',')) || values || [];
 
   parseUsernames = (values) => {
