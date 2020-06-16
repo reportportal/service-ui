@@ -235,14 +235,28 @@ export class EditItemModal extends Component {
     return URLS.testItemAttributeValuesSearch(projectId, item.launchId || item.id, key);
   };
 
+  isItemOwner = () => {
+    const {
+      data: { item, parentLaunch },
+      userId,
+    } = this.props;
+
+    if (item.owner) {
+      return userId === item.owner;
+    } else if (parentLaunch && parentLaunch.owner) {
+      return userId === parentLaunch.owner;
+    }
+
+    return true;
+  };
+
   render() {
     const {
       intl: { formatMessage },
-      data: { item, parentLaunch, type, eventsInfo },
+      data: { item, type, eventsInfo },
       handleSubmit,
       userAccountRole,
       userProjectRole,
-      userId,
       tracking,
     } = this.props;
     const okButton = {
@@ -257,11 +271,7 @@ export class EditItemModal extends Component {
       eventInfo: eventsInfo.CANCEL_BTN_EDIT_ITEM_MODAL,
     };
 
-    const editable = canEditLaunch(
-      userAccountRole,
-      userProjectRole,
-      item.owner ? userId === item.owner : userId === parentLaunch.owner,
-    );
+    const editable = canEditLaunch(userAccountRole, userProjectRole, this.isItemOwner());
 
     return (
       <ModalLayout
