@@ -23,11 +23,6 @@ import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { fromNowFormat } from 'common/utils';
 import { SAUCE_LABS } from 'common/constants/pluginNames';
-import {
-  activeProjectRoleSelector,
-  userAccountRoleSelector,
-  userIdSelector,
-} from 'controllers/user';
 import { isStepLevelSelector, formatItemName } from 'controllers/testItem';
 import { availableIntegrationsByPluginNameSelector } from 'controllers/plugins';
 import { MarkdownViewer } from 'components/main/markdown';
@@ -67,9 +62,6 @@ const ItemNameTooltip = withTooltip({
 @injectIntl
 @connect((state) => ({
   sauceLabsIntegrations: availableIntegrationsByPluginNameSelector(state, SAUCE_LABS),
-  userAccountRole: userAccountRoleSelector(state),
-  userProjectRole: activeProjectRoleSelector(state),
-  userId: userIdSelector(state),
   isStepLevel: isStepLevelSelector(state),
 }))
 @track()
@@ -77,9 +69,6 @@ export class ItemInfo extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     sauceLabsIntegrations: PropTypes.array.isRequired,
-    userAccountRole: PropTypes.string.isRequired,
-    userProjectRole: PropTypes.string,
-    userId: PropTypes.string,
     value: PropTypes.object,
     refFunction: PropTypes.func,
     customProps: PropTypes.object,
@@ -102,8 +91,6 @@ export class ItemInfo extends Component {
       onOwnerClick: () => {},
       events: {},
     },
-    userId: '',
-    userProjectRole: '',
     isStepLevel: false,
     hideEdit: false,
     widgetView: false,
