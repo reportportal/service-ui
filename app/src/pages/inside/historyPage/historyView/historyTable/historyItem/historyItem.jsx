@@ -84,9 +84,12 @@ export class HistoryItem extends Component {
       let badge = '';
       if (defects[key].total) {
         badge = (
-          <div key={key}>
-            <DefectBadge defectTitle={defectsTitleMap[key]} />
-          </div>
+          <DefectBadge
+            key={key}
+            type={key}
+            defectTitle={defectsTitleMap[key]}
+            data={defects[key]}
+          />
         );
       }
       return badge;

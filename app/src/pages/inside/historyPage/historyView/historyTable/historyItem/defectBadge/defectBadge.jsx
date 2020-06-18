@@ -14,22 +14,44 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { DefectTypeTooltip } from 'pages/inside/common/defectTypeTooltip';
+import { withTooltip } from 'components/main/tooltips/tooltip';
 import styles from './defectBadge.scss';
 
 const cx = classNames.bind(styles);
 
-export const DefectBadge = ({ defectTitle }) => (
-  <div className={cx('defect-badge', defectTitle)}>
-    <span className={cx('defect-title')}>{defectTitle}</span>
-  </div>
-);
-DefectBadge.propTypes = {
-  defectTitle: PropTypes.string,
-};
+@withTooltip({
+  TooltipComponent: DefectTypeTooltip,
+  data: {
+    width: 235,
+    placement: 'left',
+    noArrow: true,
+    desktopOnly: true,
+  },
+})
+export class DefectBadge extends Component {
+  static propTypes = {
+    defectTitle: PropTypes.string,
+    type: PropTypes.string,
+    data: PropTypes.object,
+  };
 
-DefectBadge.defaultProps = {
-  defectTitle: '',
-};
+  static defaultProps = {
+    defectTitle: '',
+    type: '',
+    data: {},
+  };
+
+  render() {
+    const { defectTitle } = this.props;
+
+    return (
+      <div className={cx('defect-badge', defectTitle)}>
+        <span className={cx('defect-title')}>{defectTitle}</span>
+      </div>
+    );
+  }
+}
