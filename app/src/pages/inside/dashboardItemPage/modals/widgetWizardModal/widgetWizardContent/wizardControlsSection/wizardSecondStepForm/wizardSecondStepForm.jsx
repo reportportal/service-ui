@@ -18,6 +18,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, initialize, getFormValues } from 'redux-form';
 import PropTypes from 'prop-types';
+import { activeFilterSelector } from 'controllers/filter';
 import { WIDGET_WIZARD_FORM } from '../../../../common/constants';
 
 @reduxForm({
@@ -31,6 +32,7 @@ import { WIDGET_WIZARD_FORM } from '../../../../common/constants';
 @connect(
   (state) => ({
     widgetSettings: getFormValues(WIDGET_WIZARD_FORM)(state),
+    activeLaunchFilter: activeFilterSelector(state),
   }),
   {
     initializeWizardSecondStepForm: (data) =>
@@ -46,11 +48,13 @@ export class WizardSecondStepForm extends Component {
     onSubmit: PropTypes.func.isRequired,
     onDisableButtons: PropTypes.func.isRequired,
     eventsInfo: PropTypes.object,
+    activeLaunchFilter: PropTypes.object,
   };
 
   static defaultProps = {
     handleSubmit: () => {},
     eventsInfo: {},
+    activeLaunchFilter: null,
   };
 
   constructor(props) {
@@ -60,6 +64,7 @@ export class WizardSecondStepForm extends Component {
         mode: false,
         isMainControlsLocked: false,
         filter: {},
+        predefinedFilter: this.props.activeLaunchFilter || null,
       },
     };
   }
@@ -67,7 +72,9 @@ export class WizardSecondStepForm extends Component {
   handleFormAppearanceChange = (mode, filter) => {
     const { onDisableButtons } = this.props;
 
-    this.setState({ formAppearance: { mode, filter, isMainControlsLocked: !!mode } });
+    this.setState({
+      formAppearance: { ...this.state.formAppearance, mode, filter, isMainControlsLocked: !!mode },
+    });
     onDisableButtons(mode !== false);
   };
 

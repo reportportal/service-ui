@@ -113,6 +113,7 @@ export class EditWidgetModal extends Component {
         mode: FORM_APPEARANCE_MODE_LOCKED,
         isMainControlsLocked: false,
         filter: {},
+        predefinedFilter: widget.appliedFilters[0] || null,
       },
       previousFilter: this.initialValues.filters,
     };
@@ -178,7 +179,12 @@ export class EditWidgetModal extends Component {
 
   handleFormAppearanceChange = (mode, filter) =>
     this.setState({
-      formAppearance: { mode, filter, isMainControlsLocked: mode !== FORM_APPEARANCE_MODE_LOCKED },
+      formAppearance: {
+        ...this.state.formAppearance,
+        mode,
+        filter,
+        isMainControlsLocked: mode !== FORM_APPEARANCE_MODE_LOCKED,
+      },
       previousFilter: !mode ? this.props.widgetSettings.filters : this.state.previousFilter,
     });
 
