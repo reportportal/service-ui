@@ -36,6 +36,7 @@ import {
   CUMULATIVE_TREND,
   MOST_POPULAR_PATTERNS,
   COMPONENT_HEALTH_CHECK,
+  COMPONENT_HEALTH_CHECK_TABLE,
   // MOST_TIME_CONSUMING,
   /*
   PRODUCT_STATUS,
@@ -61,6 +62,7 @@ import {
   CumulativeTrendControls,
   MostPopularPatternsControls,
   ComponentHealthCheckControls,
+  ComponentHealthCheckTableViewControls,
   // MostTimeConsumingTestCasesControls,
   /*
   ProductStatusControls,
@@ -85,6 +87,7 @@ import FLAKY_TEST_CASES_TABLE_PREVIEW from './img/wdgt-flaky-test-cases-table-in
 import CUMULATIVE_TREND_PREVIEW from './img/wdgt-cumulative-trend-chart-inline.svg';
 import MOST_POPULAR_PATTERNS_PREVIEW from './img/wdgt-most-popular-patterns-inline.svg';
 import COMPONENT_HEALTH_CHECK_PREVIEW from './img/wdgt-component-health-check-inline.svg';
+import COMPONENT_HEALTH_CHECK_TABLE_PREVIEW from './img/wdgt-component-health-check-table-view-inline.svg';
 // import MOST_TIME_CONSUMING_PREVIEW from './img/wdgt-most-time-consuming-inline.svg';
 /*
 import PRODUCT_STATUS_PREVIEW from './img/wdgt-product-satus-inline.svg';
@@ -166,6 +169,10 @@ export const widgetTypesMessages = defineMessages({
   [COMPONENT_HEALTH_CHECK]: {
     id: 'Widgets.Name.componentHealthCheck',
     defaultMessage: 'Component health check',
+  },
+  [COMPONENT_HEALTH_CHECK_TABLE]: {
+    id: 'Widgets.Name.componentHealthCheckTable',
+    defaultMessage: 'Component health check (table view)',
   },
   // [MOST_TIME_CONSUMING]: {
   //   id: 'Widgets.Name.mostTimeConsuming',
@@ -435,6 +442,20 @@ export const getWidgets = (formatMessage) => [
     preview: Parser(COMPONENT_HEALTH_CHECK_PREVIEW),
     controls: ComponentHealthCheckControls,
   },
+  {
+    id: COMPONENT_HEALTH_CHECK_TABLE,
+    title: formatMessage(widgetTypesMessages[COMPONENT_HEALTH_CHECK_TABLE]),
+    description: (
+      <FormattedMessage
+        id={'Widgets.Description.componentHealthCheckTable'}
+        defaultMessage={
+          'Shows the detailed statistics of the application components which are indicated by the specified attributes. As far the widget contains complicated queries, the widget can be rendering some time (~10 min)'
+        }
+      />
+    ),
+    preview: Parser(COMPONENT_HEALTH_CHECK_TABLE_PREVIEW),
+    controls: ComponentHealthCheckTableViewControls,
+  },
   /*
   {
     id: PRODUCT_STATUS,
@@ -511,5 +532,6 @@ export const WIDGETS_STATIC_PREVIEWS = {
   [MOST_POPULAR_PATTERNS]: Parser(MOST_POPULAR_PATTERNS_PREVIEW),
   [CUMULATIVE_TREND]: Parser(CUMULATIVE_TREND_PREVIEW),
   [COMPONENT_HEALTH_CHECK]: Parser(COMPONENT_HEALTH_CHECK_PREVIEW),
+  [COMPONENT_HEALTH_CHECK_TABLE]: Parser(COMPONENT_HEALTH_CHECK_TABLE_PREVIEW),
   // [MOST_TIME_CONSUMING]: Parser(MOST_TIME_CONSUMING_PREVIEW),
 };

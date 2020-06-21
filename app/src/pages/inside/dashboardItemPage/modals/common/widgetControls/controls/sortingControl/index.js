@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2019 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,23 +14,4 @@
  * limitations under the License.
  */
 
-.launch-controls {
-  top: -4px;
-  right: 105px;
-}
-.zoom-container {
-  position: relative;
-}
-.attr-header,
-.component-header {
-  padding: 10px 10px;
-  background: $COLOR--white;
-  color: $COLOR--gray-47;
-  font-family: $FONT-SEMIBOLD;
-  font-size: 12px;
-  text-transform: uppercase;
-  margin-bottom: 20px;
-}
-.component-wrap {
-  margin-bottom: 20px;
-}
+export { SortingControl } from './sortingControl';
