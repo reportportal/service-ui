@@ -103,6 +103,10 @@
   box-shadow: 0 6px 12px $COLOR--gray-80;
   z-index: $Z-INDEX-POPUP;
   cursor: pointer;
+  &--top {
+    bottom: 100%;
+    top: auto;
+  }
 }
 .select-all-block {
   width: 100%;

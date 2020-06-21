@@ -14,23 +14,14 @@
  * limitations under the License.
  */
 
-.launch-controls {
-  top: -4px;
-  right: 105px;
+.caption {
+  font-family: $FONT-REGULAR;
+  color: $COLOR--black-2;
+  font-size: 13px;
+  padding-top: 3px;
 }
-.zoom-container {
-  position: relative;
-}
-.attr-header,
-.component-header {
-  padding: 10px 10px;
-  background: $COLOR--white;
-  color: $COLOR--gray-47;
-  font-family: $FONT-SEMIBOLD;
-  font-size: 12px;
-  text-transform: uppercase;
-  margin-bottom: 20px;
-}
-.component-wrap {
-  margin-bottom: 20px;
+.sorting-block {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }

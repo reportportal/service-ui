@@ -36,3 +36,4 @@ export { MostTimeConsumingTestCasesControls } from './mostTimeConsumingTestCases
 export { CommonWidgetControls } from './commonWidgetControls';
 export { MostPopularPatternsControls } from './mostPopularPatternsControls';
 export { ComponentHealthCheckControls } from './componentHealthCheckControls';
+export { ComponentHealthCheckTableViewControls } from './componentHealthCheckTableViewControls';

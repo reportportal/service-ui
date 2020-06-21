@@ -38,6 +38,7 @@ export class InputDropdownSorting extends Component {
     onBlur: PropTypes.func,
     mobileDisabled: PropTypes.bool,
     transparent: PropTypes.bool,
+    positionTop: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -53,6 +54,7 @@ export class InputDropdownSorting extends Component {
     onBlur: () => {},
     mobileDisabled: false,
     transparent: false,
+    positionTop: false,
   };
   state = {
     opened: false,
@@ -123,7 +125,15 @@ export class InputDropdownSorting extends Component {
   }
 
   render() {
-    const { error, touched, disabled, mobileDisabled, transparent, sortingMode } = this.props;
+    const {
+      error,
+      touched,
+      disabled,
+      mobileDisabled,
+      transparent,
+      sortingMode,
+      positionTop,
+    } = this.props;
     const { opened } = this.state;
 
     return (
@@ -141,7 +151,9 @@ export class InputDropdownSorting extends Component {
           <span className={cx('value')}>{this.displayedValue()}</span>
           <span className={cx('arrow', { asc: sortingMode })}>{Parser(ArrowIcon)}</span>
         </div>
-        <div className={cx('select-list')}>{this.renderOptions()}</div>
+        <div className={cx('select-list', { 'select-list--top': positionTop })}>
+          {this.renderOptions()}
+        </div>
       </div>
     );
   }
