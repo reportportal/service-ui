@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-export { CumulativeTrendChart } from './cumulativeTrendChart';
-export { MostPopularPatterns } from './mostPopularPatterns';
-export { ComponentHealthCheck } from './componentHealthCheck';
-export { ComponentHealthCheckTable } from './componentHealthCheckTable';
+import PropTypes from 'prop-types';
+
+export const groupItemPropTypes = {
+  attributeValue: PropTypes.string,
+  passingRate: PropTypes.number,
+  total: PropTypes.number,
+};

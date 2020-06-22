@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright 2019 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-export { CumulativeTrendChart } from './cumulativeTrendChart';
-export { MostPopularPatterns } from './mostPopularPatterns';
-export { ComponentHealthCheck } from './componentHealthCheck';
-export { ComponentHealthCheckTable } from './componentHealthCheckTable';
+.legend {
+  min-height: 100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 25px;
+  border-bottom: 1px solid $COLOR--white-four;
+  box-sizing: border-box;
+}

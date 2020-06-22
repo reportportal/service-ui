@@ -60,6 +60,7 @@ import { DashboardPageHeader } from 'pages/inside/common/dashboardPageHeader';
 import GlobeIcon from 'common/img/globe-icon-inline.svg';
 import AddWidgetIcon from 'common/img/add-widget-inline.svg';
 import ExportIcon from 'common/img/export-inline.svg';
+import { getMockData } from 'components/widgets/utils';
 import { getUpdatedWidgetsList } from './modals/common/utils';
 import AddSharedWidgetIcon from './img/add-shared-inline.svg';
 import EditIcon from './img/edit-inline.svg';
@@ -342,6 +343,7 @@ export class DashboardItemPage extends Component {
     } = this.props;
 
     const isOwner = this.hasOwnerActions();
+    dashboard.widgets = [getMockData()];
 
     return (
       <PageLayout>
