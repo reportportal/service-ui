@@ -47,10 +47,6 @@ const messages = defineMessages({
     id: 'SortingControl.sortByFailedItems',
     defaultMessage: 'Failed items',
   },
-  sortByStatus: {
-    id: 'SortingControl.sortByStatus',
-    defaultMessage: 'Status',
-  },
 });
 
 @injectIntl
@@ -88,11 +84,6 @@ export class SortingControl extends Component {
     {
       value: STATS_FAILED,
       label: this.props.intl.formatMessage(messages.sortByFailedItems),
-      disabled: false,
-    },
-    {
-      value: WIDGET_OPTIONS.SORT.STATUS,
-      label: this.props.intl.formatMessage(messages.sortByStatus),
       disabled: false,
     },
   ];

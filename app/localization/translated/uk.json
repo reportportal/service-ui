@@ -1515,7 +1515,6 @@
   "SortingControl.sortByTotal": "Загальна кількість",
   "SortingControl.sortByPassingRate": "Прохідний бал",
   "SortingControl.sortByFailedItems": "Невдалі пункти",
-  "SortingControl.sortByStatus": "Статус",
   "AnalyticsTab.analyticsEnabled": "Допоможіть нам зробити ReportPortal краще з допомогою автоматичної відправки аналітики",
   "AnalyticsTab.analyticsInfo": "Ви можете допомогти нам покращити ReportPortal.<br/>Під час використання програми ми збиратимемо аналітику, яка може допомогти нам покращити ефективність та зручність використання порталу звітів, відстежуючи частоту використання певних функцій.<br/>Докладніше див. Нижче про те, яка інформація надсилається.",
   "AnalyticsTab.analyticsList": "Список відправленої аналітики",

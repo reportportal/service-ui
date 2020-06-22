@@ -56,7 +56,6 @@ export const WIDGET_OPTIONS = {
   SORT: {
     CUSTOM_COLUMN: 'customColumn',
     PASSING_RATE: 'passingRate',
-    STATUS: 'status',
   },
 };
 
