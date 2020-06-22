@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component } from 'react';
+import React, { Component } from 'react';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -54,10 +54,13 @@ export class DonutChart extends Component {
     defectColors: PropTypes.object.isRequired,
     itemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     eventInfo: PropTypes.object,
-    launchesLimit: PropTypes.number,
-    compositeAttribute: PropTypes.string,
-    isLatest: PropTypes.bool,
-    filterType: PropTypes.bool,
+    target: PropTypes.string,
+    listViewLinkParams: PropTypes.shape({
+      launchesLimit: PropTypes.number,
+      compositeAttribute: PropTypes.string,
+      isLatest: PropTypes.bool,
+      filterType: PropTypes.bool,
+    }),
     ownLinkParams: PropTypes.shape({
       isOtherPage: PropTypes.bool,
       payload: PropTypes.object,
@@ -68,10 +71,8 @@ export class DonutChart extends Component {
     itemId: null,
     type: '',
     defects: [],
-    launchesLimit: null,
-    compositeAttribute: '',
-    isLatest: true,
-    filterType: true,
+    target: '',
+    listViewLinkParams: {},
     eventInfo: {},
     ownLinkParams: {},
   };
@@ -110,10 +111,8 @@ export class DonutChart extends Component {
       itemId,
       defectColors,
       eventInfo,
-      launchesLimit,
-      compositeAttribute,
-      isLatest,
-      filterType,
+      target,
+      listViewLinkParams,
       ownLinkParams,
     } = this.props;
     const diameter = viewBox / 2;
@@ -128,10 +127,8 @@ export class DonutChart extends Component {
         defects={defects}
         itemId={itemId}
         eventInfo={eventInfo}
-        launchesLimit={launchesLimit}
-        compositeAttribute={compositeAttribute}
-        isLatest={isLatest}
-        filterType={filterType}
+        target={target}
+        listViewLinkParams={listViewLinkParams}
         ownLinkParams={ownLinkParams}
       >
         <div className={cx('chart-container')}>

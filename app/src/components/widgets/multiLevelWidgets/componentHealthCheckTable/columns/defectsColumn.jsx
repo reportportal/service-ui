@@ -23,6 +23,7 @@ import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { TEST_ITEMS_TYPE_LIST, DEFAULT_LAUNCHES_LIMIT } from 'controllers/testItem';
 import { defaultDefectsMessages } from 'components/widgets/singleLevelWidgets/tables/components/messages';
 import { getItemNameConfig } from 'components/widgets/common/utils';
+import { TARGET } from '../constants';
 import styles from '../componentHealthCheckTable.scss';
 
 const cx = classNames.bind(styles);
@@ -52,10 +53,13 @@ export const DefectsColumn = (
     : getDefects(value.total.statistics, name);
   const defaultColumnProps = {
     itemId: TEST_ITEMS_TYPE_LIST,
-    isLatest,
-    launchesLimit: DEFAULT_LAUNCHES_LIMIT,
-    compositeAttribute: getCompositeAttributes(value.attributeValue),
-    filterType: true,
+    target: TARGET,
+    listViewLinkParams: {
+      isLatest,
+      launchesLimit: DEFAULT_LAUNCHES_LIMIT,
+      compositeAttribute: getCompositeAttributes(value.attributeValue),
+      filterType: true,
+    },
     ownLinkParams: {
       type: TEST_ITEM_PAGE,
       payload: linkPayload,

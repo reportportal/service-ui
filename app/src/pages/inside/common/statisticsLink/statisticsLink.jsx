@@ -25,17 +25,18 @@ export const StatisticsLink = connect((state) => ({
     getStatisticsLink,
     itemId,
     statistics,
-    launchesLimit,
-    compositeAttribute,
-    isLatest,
+    listViewLinkParams,
+    target,
     children,
     keepFilterParams,
     ownLinkParams,
     ...rest
   } = props;
-  const link = getStatisticsLink(props);
+  const params = { ...listViewLinkParams, ...props };
+
+  const link = getStatisticsLink(params);
   return (
-    <Link to={link} {...rest}>
+    <Link to={link} {...rest} target={target}>
       {children}
     </Link>
   );

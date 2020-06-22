@@ -23,6 +23,7 @@ import { ExecutionStatistics } from 'pages/inside/common/launchSuiteGrid/executi
 import { StatisticsLink } from 'pages/inside/common/statisticsLink';
 import { getStatisticsStatuses } from 'components/widgets/singleLevelWidgets/tables/components/utils';
 import { defaultStatisticsMessages } from 'components/widgets/singleLevelWidgets/tables/components/messages';
+import { TARGET } from '../constants';
 import styles from '../componentHealthCheckTable.scss';
 
 const cx = classNames.bind(styles);
@@ -36,10 +37,13 @@ export const StatisticsColumn = (
   const totalValue = Number(value.total && value.total.statistics[name]);
   const defaultColumnProps = {
     itemId: TEST_ITEMS_TYPE_LIST,
-    isLatest,
+    target: TARGET,
     statuses: getStatisticsStatuses(name),
-    launchesLimit: DEFAULT_LAUNCHES_LIMIT,
-    compositeAttribute: getCompositeAttributes(value.attributeValue),
+    listViewLinkParams: {
+      isLatest,
+      launchesLimit: DEFAULT_LAUNCHES_LIMIT,
+      compositeAttribute: getCompositeAttributes(value.attributeValue),
+    },
     ownLinkParams: {
       type: TEST_ITEM_PAGE,
       payload: linkPayload,

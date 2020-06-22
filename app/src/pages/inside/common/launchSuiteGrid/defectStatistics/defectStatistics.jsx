@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
@@ -34,10 +34,13 @@ export class DefectStatistics extends Component {
     projectDefects: PropTypes.object,
     data: PropTypes.object,
     customProps: PropTypes.object,
-    launchesLimit: PropTypes.number,
-    compositeAttribute: PropTypes.string,
-    isLatest: PropTypes.bool,
-    filterType: PropTypes.bool,
+    target: PropTypes.string,
+    listViewLinkParams: PropTypes.shape({
+      launchesLimit: PropTypes.number,
+      compositeAttribute: PropTypes.string,
+      isLatest: PropTypes.bool,
+      filterType: PropTypes.bool,
+    }),
     itemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     eventInfo: PropTypes.object,
     tooltipEventInfo: PropTypes.object,
@@ -52,10 +55,8 @@ export class DefectStatistics extends Component {
     projectDefects: {},
     customProps: {},
     data: {},
-    launchesLimit: null,
-    compositeAttribute: '',
-    isLatest: true,
-    filterType: true,
+    target: '',
+    listViewLinkParams: {},
     eventInfo: {},
     tooltipEventInfo: {},
     ownLinkParams: {},
@@ -79,10 +80,8 @@ export class DefectStatistics extends Component {
       eventInfo,
       tooltipEventInfo,
       ownLinkParams,
-      launchesLimit,
-      compositeAttribute,
-      isLatest,
-      filterType,
+      target,
+      listViewLinkParams,
     } = this.props;
 
     const defectList = this.getDefectList();
@@ -101,10 +100,8 @@ export class DefectStatistics extends Component {
                 data={data}
                 type={type}
                 defects={defectList}
-                launchesLimit={launchesLimit}
-                compositeAttribute={compositeAttribute}
-                isLatest={isLatest}
-                filterType={filterType}
+                target={target}
+                listViewLinkParams={listViewLinkParams}
                 viewBox={64}
                 strokeWidth={13}
                 eventInfo={eventInfo}
@@ -116,10 +113,8 @@ export class DefectStatistics extends Component {
               <DefectLink
                 itemId={itemId}
                 defects={defectList}
-                launchesLimit={launchesLimit}
-                compositeAttribute={compositeAttribute}
-                isLatest={isLatest}
-                filterType={filterType}
+                target={target}
+                listViewLinkParams={listViewLinkParams}
                 ownLinkParams={ownLinkParams}
                 eventInfo={eventInfo}
               >

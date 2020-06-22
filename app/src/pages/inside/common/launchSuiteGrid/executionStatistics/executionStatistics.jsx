@@ -27,9 +27,8 @@ export const ExecutionStatistics = ({
   title,
   bold,
   itemId,
-  isLatest,
-  launchesLimit,
-  compositeAttribute,
+  target,
+  listViewLinkParams,
   statuses,
   ownLinkParams,
 }) => (
@@ -39,9 +38,8 @@ export const ExecutionStatistics = ({
       <StatisticsLink
         itemId={itemId}
         statuses={statuses}
-        launchesLimit={launchesLimit}
-        compositeAttribute={compositeAttribute}
-        isLatest={isLatest}
+        target={target}
+        listViewLinkParams={listViewLinkParams}
         className={cx('value', { bold })}
         ownLinkParams={ownLinkParams}
       >
@@ -57,9 +55,12 @@ ExecutionStatistics.propTypes = {
   bold: PropTypes.bool,
   itemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   statuses: PropTypes.arrayOf(PropTypes.string).isRequired,
-  launchesLimit: PropTypes.number,
-  compositeAttribute: PropTypes.string,
-  isLatest: PropTypes.bool,
+  target: PropTypes.string,
+  listViewLinkParams: PropTypes.shape({
+    launchesLimit: PropTypes.number,
+    compositeAttribute: PropTypes.string,
+    isLatest: PropTypes.bool,
+  }),
   ownLinkParams: PropTypes.shape({
     payload: PropTypes.object,
     page: PropTypes.string,
@@ -69,8 +70,7 @@ ExecutionStatistics.defaultProps = {
   bold: false,
   title: {},
   value: null,
-  launchesLimit: null,
-  compositeAttribute: '',
-  isLatest: true,
+  target: '',
+  listViewLinkParams: {},
   ownLinkParams: {},
 };

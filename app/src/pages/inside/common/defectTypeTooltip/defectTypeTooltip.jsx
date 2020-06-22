@@ -54,10 +54,13 @@ export class DefectTypeTooltip extends Component {
     detailedView: PropTypes.bool,
     detailedData: PropTypes.object,
     isStepLevel: PropTypes.bool,
-    launchesLimit: PropTypes.number,
-    compositeAttribute: PropTypes.string,
-    isLatest: PropTypes.bool,
-    filterType: PropTypes.bool,
+    target: PropTypes.string,
+    listViewLinkParams: PropTypes.shape({
+      launchesLimit: PropTypes.number,
+      compositeAttribute: PropTypes.string,
+      isLatest: PropTypes.bool,
+      filterType: PropTypes.bool,
+    }),
   };
 
   static defaultProps = {
@@ -67,10 +70,8 @@ export class DefectTypeTooltip extends Component {
     detailedView: false,
     detailedData: {},
     isStepLevel: false,
-    launchesLimit: null,
-    compositeAttribute: '',
-    isLatest: true,
-    filterType: true,
+    target: '',
+    listViewLinkParams: {},
   };
 
   getFilteredBodyData = (config) => {
@@ -97,10 +98,8 @@ export class DefectTypeTooltip extends Component {
       data,
       itemId,
       ownLinkParams,
-      launchesLimit,
-      compositeAttribute,
-      isLatest,
-      filterType,
+      target,
+      listViewLinkParams,
       tooltipEventInfo,
       detailedView,
       detailedData,
@@ -117,6 +116,8 @@ export class DefectTypeTooltip extends Component {
           <DefectLink
             itemId={itemId}
             ownLinkParams={ownLinkParams}
+            target={target}
+            listViewLinkParams={listViewLinkParams}
             defects={defects}
             className={cx('value')}
             eventInfo={tooltipEventInfo}
@@ -128,10 +129,8 @@ export class DefectTypeTooltip extends Component {
               itemId={itemId}
               ownLinkParams={ownLinkParams}
               defects={defects.filter((defectKey) => !!detailedData[defectKey])}
-              launchesLimit={launchesLimit}
-              compositeAttribute={compositeAttribute}
-              isLatest={isLatest}
-              filterType={filterType}
+              target={target}
+              listViewLinkParams={listViewLinkParams}
               keepFilterParams
               className={cx('value', 'detailed')}
               eventInfo={tooltipEventInfo}
@@ -150,10 +149,8 @@ export class DefectTypeTooltip extends Component {
         itemId={itemId}
         ownLinkParams={ownLinkParams}
         defects={defects}
-        launchesLimit={launchesLimit}
-        compositeAttribute={compositeAttribute}
-        isLatest={isLatest}
-        filterType={filterType}
+        target={target}
+        listViewLinkParams={listViewLinkParams}
         className={cx('item')}
         eventInfo={tooltipEventInfo}
       >

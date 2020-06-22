@@ -99,6 +99,11 @@
   height: 100%;
   margin-right: 15px;
 }
+
+.controls-block-update {
+  width: auto;
+}
+
 .control {
   display: inline-block;
   width: 20px;
@@ -115,6 +120,45 @@
     transform: scale(1.2);
     svg {
       fill: $COLOR--gray-47;
+    }
+  }
+}
+
+.force-update {
+  justify-content: space-between;
+  display: flex;
+  align-items: center;
+  color: $COLOR--gray-60;
+  font-size: 12px;
+  font-family: $FONT-SEMIBOLD;
+
+  &-time {
+    display: inline-block;
+    margin-left: 8px;
+    color: $COLOR--charcoal-grey;
+  }
+
+  &-control {
+    width: 72px;
+    height: 100%;
+    margin: 0 28px 0 34px;
+    justify-content: space-between;
+    display: flex;
+    align-items: center;
+  }
+
+  &-label {
+    color: $COLOR--topaz;
+  }
+
+  svg {
+    width: 21px;
+    fill: $COLOR--topaz;
+  }
+
+  &:hover {
+    svg {
+      fill: $COLOR--topaz;
     }
   }
 }

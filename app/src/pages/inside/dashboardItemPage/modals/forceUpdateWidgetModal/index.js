@@ -14,11 +14,4 @@
  * limitations under the License.
  */
 
-export { DashboardItemPage } from './dashboardItemPage';
-export {
-  WidgetWizardModal,
-  AddSharedWidgetModal,
-  EditWidgetModal,
-  DeleteWidgetModal,
-  ForceUpdateWidgetModal,
-} from './modals';
+export { ForceUpdateWidgetModal } from './forceUpdateWidgetModal';

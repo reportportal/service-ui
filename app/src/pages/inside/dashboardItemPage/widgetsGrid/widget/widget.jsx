@@ -279,7 +279,7 @@ export class SimpleWidget extends Component {
       id: 'editWidgetModal',
       data: {
         widget: this.state.widget,
-        onConfirm: this.fetchWidget,
+        onConfirm: () => this.fetchWidget({ refresh: true }),
         eventsInfo: {
           closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_EDIT_WIDGET_MODAL,
           cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_EDIT_WIDGET_MODAL,
@@ -324,6 +324,15 @@ export class SimpleWidget extends Component {
     });
   };
 
+  showForceUpdateWidgetModal = () => {
+    this.props.showModalAction({
+      id: 'forceUpdateWidgetModal',
+      data: {
+        onConfirm: () => this.fetchWidget({ refresh: true }),
+      },
+    });
+  };
+
   render() {
     const { widget, visible } = this.state;
     const { isFullscreen, widgetType, isModifiable, isPrintMode, dashboardOwner } = this.props;
@@ -335,6 +344,14 @@ export class SimpleWidget extends Component {
       description: widget.description,
       type: widget.widgetType,
       meta: [widgetOptions.viewMode],
+      lastRefresh:
+        widget.contentParameters &&
+        widget.contentParameters.widgetOptions &&
+        widget.contentParameters.widgetOptions.lastRefresh,
+      state:
+        widget.contentParameters &&
+        widget.contentParameters.widgetOptions &&
+        widget.contentParameters.widgetOptions.state,
     };
     if (widgetOptions.latest || widgetType === CUMULATIVE_TREND) {
       headerData.meta.push(widgetOptions.latest || true);
@@ -352,6 +369,7 @@ export class SimpleWidget extends Component {
             onRefresh={this.refreshWidget}
             onDelete={this.showDeleteWidgetModal}
             onEdit={this.showEditWidgetModal}
+            onForceUpdate={this.showForceUpdateWidgetModal}
             customClass={cx('common-control')}
             isPrintMode={isPrintMode}
             dashboardOwner={dashboardOwner}

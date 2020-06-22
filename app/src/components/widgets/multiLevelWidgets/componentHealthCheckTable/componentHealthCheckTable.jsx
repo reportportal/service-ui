@@ -31,12 +31,14 @@ import {
   AUTOMATION_BUG,
   SYSTEM_ISSUE,
 } from 'common/constants/defectTypes';
-import { formatAttribute } from 'common/utils';
+import { formatAttribute, isEmptyObject } from 'common/utils';
 import { Grid, ALIGN_CENTER, ALIGN_RIGHT } from 'components/main/grid';
 import { TEST_ITEMS_TYPE_LIST } from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { Breadcrumbs } from 'components/widgets/multiLevelWidgets/common/breadcrumbs';
+import { NoDataAvailable } from 'components/widgets/noDataAvailable';
+import { SpinningPreloader } from 'components/preloaders/spinningPreloader/spinningPreloader';
 import {
   getNewActiveAttributes,
   getBreadcrumbs,
@@ -54,9 +56,11 @@ import {
   DEFECT_COLUMN_KEY,
   PASS_RATE,
   PASS_RATE_KEY,
-  WIDTH_MIDDLE,
+  SIZE_MIDDLE,
   BACKGROUND_COLOR_WHITE,
   BORDER,
+  STATE_RENDERING,
+  STATE_READY,
 } from './constants';
 import {
   NameColumn,
@@ -66,7 +70,7 @@ import {
   DefectsColumn,
   PassingRateColumn,
 } from './columns';
-import { COLUMN_NAMES_MAP } from './messages';
+import { COLUMN_NAMES_MAP, renderingMessages } from './messages';
 import styles from './componentHealthCheckTable.scss';
 
 const cx = classNames.bind(styles);
@@ -112,7 +116,7 @@ const getGridAlign = (type) => {
 
 const getColumn = (name, customProps, customColumn) => {
   const align = getGridAlign(COLUMNS_KEYS_MAP[name]);
-  const width = name === CUSTOM_COLUMN && WIDTH_MIDDLE;
+  const size = name === CUSTOM_COLUMN && SIZE_MIDDLE;
 
   return {
     id: name,
@@ -120,20 +124,15 @@ const getColumn = (name, customProps, customColumn) => {
     backgroundColor: BACKGROUND_COLOR_WHITE,
     border: BORDER,
     align,
-    width,
+    size,
     component: (data) => columnComponentsMap[COLUMNS_KEYS_MAP[name]](data, name, customProps),
   };
 };
 
 @injectIntl
-@connect(
-  (state) => ({
-    project: activeProjectSelector(state),
-  }),
-  {
-    navigate: (linkAction) => linkAction,
-  },
-)
+@connect((state) => ({
+  project: activeProjectSelector(state),
+}))
 export class ComponentHealthCheckTable extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
@@ -142,7 +141,6 @@ export class ComponentHealthCheckTable extends Component {
     clearQueryParams: PropTypes.func,
     container: PropTypes.instanceOf(Element).isRequired,
     project: PropTypes.string.isRequired,
-    navigate: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -245,7 +243,7 @@ export class ComponentHealthCheckTable extends Component {
     this.props.widget.contentParameters.widgetOptions.customColumn;
 
   getContentResult = () =>
-    this.props.widget.content && [
+    !isEmptyObject(this.props.widget.content) && [
       ...this.props.widget.content.result,
       { total: this.props.widget.content.total },
     ];
@@ -324,11 +322,40 @@ export class ComponentHealthCheckTable extends Component {
     this.props.clearQueryParams();
   };
 
+  renderNoDataComponent = (state, isLoading) => {
+    const {
+      intl: { formatMessage },
+    } = this.props;
+    if (state === STATE_RENDERING) {
+      return (
+        <div className={cx('rendering-wrap')}>
+          <div className={cx('rendering-spinner-wrap')}>
+            <SpinningPreloader />
+          </div>
+          <div className={cx('rendering-info-wrap')}>
+            <h3 className={cx('rendering-title')}>
+              {formatMessage(renderingMessages.renderingTitle)}
+            </h3>
+            <div className={cx('rendering-info')}>
+              {formatMessage(renderingMessages.renderingInfo)}
+            </div>
+          </div>
+        </div>
+      );
+    }
+    if (isLoading) {
+      return <SpinningPreloader />;
+    }
+
+    return <NoDataAvailable />;
+  };
+
   render() {
-    const { activeBreadcrumbs, activeBreadcrumbId } = this.state;
+    const { activeBreadcrumbs, activeBreadcrumbId, isLoading } = this.state;
     const {
       widget: { contentParameters },
     } = this.props;
+    const state = contentParameters && contentParameters.widgetOptions.state;
     const attributes = contentParameters && contentParameters.widgetOptions.attributeKeys;
     const breadcrumbs = getBreadcrumbs(attributes, activeBreadcrumbId);
     const columns = this.getColumns();
@@ -343,10 +370,14 @@ export class ComponentHealthCheckTable extends Component {
             onClickBreadcrumbs={this.onClickBreadcrumbs}
           />
         </div>
-        {columns && (
+        {data && state === STATE_READY && !isLoading ? (
           <Fragment>
             <Grid columns={columns} data={data} />
           </Fragment>
+        ) : (
+          <div className={cx('no-data-wrapper')}>
+            {this.renderNoDataComponent(state, isLoading)}
+          </div>
         )}
       </ScrollWrapper>
     );

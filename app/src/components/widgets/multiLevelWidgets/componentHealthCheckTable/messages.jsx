@@ -29,7 +29,6 @@ import {
   SYSTEM_ISSUE,
 } from 'common/constants/defectTypes';
 import {
-  defaultDefectsMessages,
   totalColumnFullTitle,
   skippedColumnShortTitle,
   skippedColumnFullTitle,
@@ -46,6 +45,30 @@ const statusColumnTitle = (
 );
 const passRateColumnTitle = (
   <FormattedMessage id={'ComponentHealthCheckTable.passRateColumn'} defaultMessage={'Pass rate'} />
+);
+const toInvestigateColumnTitle = (
+  <FormattedMessage
+    id={'ComponentHealthCheckTable.toInvestigateColumnTitle'}
+    defaultMessage={'To investigate'}
+  />
+);
+const productBugColumnTitle = (
+  <FormattedMessage
+    id={'ComponentHealthCheckTable.productBugColumnTitle'}
+    defaultMessage={'Product bug'}
+  />
+);
+const automationBugColumnTitle = (
+  <FormattedMessage
+    id={'ComponentHealthCheckTable.automationBugColumnTitle'}
+    defaultMessage={'Automation bug'}
+  />
+);
+const systemIssueColumnTitle = (
+  <FormattedMessage
+    id={'ComponentHealthCheckTable.systemIssueColumnTitle'}
+    defaultMessage={'System issue'}
+  />
 );
 
 export const COLUMN_NAMES_MAP = {
@@ -78,19 +101,19 @@ export const COLUMN_NAMES_MAP = {
     short: skippedColumnShortTitle,
   }),
   [TO_INVESTIGATE]: () => ({
-    full: defaultDefectsMessages[TO_INVESTIGATE],
+    full: toInvestigateColumnTitle,
     short: 'TI',
   }),
   [AUTOMATION_BUG]: () => ({
-    full: defaultDefectsMessages[AUTOMATION_BUG],
+    full: automationBugColumnTitle,
     short: 'AB',
   }),
   [PRODUCT_BUG]: () => ({
-    full: defaultDefectsMessages[PRODUCT_BUG],
+    full: productBugColumnTitle,
     short: 'PB',
   }),
   [SYSTEM_ISSUE]: () => ({
-    full: defaultDefectsMessages[SYSTEM_ISSUE],
+    full: systemIssueColumnTitle,
     short: 'SI',
   }),
   [PASS_RATE]: () => ({
@@ -115,5 +138,16 @@ export const hintMessages = defineMessages({
   nameTotal: {
     id: 'ComponentHealthCheckTable.nameTotal',
     defaultMessage: 'Total',
+  },
+});
+
+export const renderingMessages = defineMessages({
+  renderingTitle: {
+    id: 'ComponentHealthCheckTable.renderingTitle',
+    defaultMessage: 'Data Updating',
+  },
+  renderingInfo: {
+    id: 'ComponentHealthCheckTable.renderingInfo',
+    defaultMessage: 'Please wait, It could take up to 15 minutes.',
   },
 });

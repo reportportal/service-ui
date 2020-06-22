@@ -31,7 +31,7 @@ export const HeaderCell = track()(
   ({
     title,
     align,
-    width,
+    size,
     backgroundColor,
     border,
     sortable,
@@ -75,14 +75,14 @@ export const HeaderCell = track()(
             {Parser(FilterIcon)}
           </div>
           <span
-            className={cx('title-full', { [`title-full--${width}`]: width })}
-            title={width ? title.full : ''}
+            className={cx('title-full', { [`title-full--${size}`]: size })}
+            title={size ? title.full : ''}
           >
             {title.full}
           </span>
           <span
-            className={cx('title-short', { [`title-short--${width}`]: width })}
-            title={width ? title.full : ''}
+            className={cx('title-short', { [`title-short--${size}`]: size })}
+            title={size ? title.full : ''}
           >
             {title.short || title.full}
           </span>
@@ -110,7 +110,7 @@ HeaderCell.defaultProps = {
     full: '',
   },
   align: ALIGN_LEFT,
-  width: null,
+  size: null,
   sortable: false,
   backgroundColor: null,
   border: null,
