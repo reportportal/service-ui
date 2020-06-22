@@ -129,7 +129,7 @@ export class ComponentHealthCheckTableViewControls extends Component {
           attributeKeys: [],
           customColumn: '',
           sort: {
-            isAsc: false,
+            asc: false,
             sortingColumn: WIDGET_OPTIONS.SORT.PASSING_RATE,
           },
         },
@@ -147,12 +147,12 @@ export class ComponentHealthCheckTableViewControls extends Component {
   parseSortingValue = (value) => {
     const sortObj = this.getSortObj();
 
-    const isAsc = sortObj.sortingColumn === value ? !sortObj.isAsc : sortObj.isAsc;
+    const asc = sortObj.sortingColumn === value ? !sortObj.asc : sortObj.asc;
 
     return (
       value && {
         sortingColumn: value,
-        isAsc,
+        asc,
       }
     );
   };
@@ -266,7 +266,7 @@ export class ComponentHealthCheckTableViewControls extends Component {
             >
               <SortingControl
                 sortingColumn={sortObj && sortObj.sortingColumn}
-                sortingDirection={sortObj && sortObj.isAsc}
+                sortingDirection={sortObj && sortObj.asc}
               />
             </FieldProvider>
           </Fragment>
