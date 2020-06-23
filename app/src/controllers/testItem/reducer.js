@@ -17,7 +17,14 @@
 import { combineReducers } from 'redux';
 import { loadingReducer } from 'controllers/loading';
 import { fetchReducer } from 'controllers/fetch';
-import { NAMESPACE, SET_LEVEL, PARENT_ITEMS_NAMESPACE, SET_PAGE_LOADING } from './constants';
+import {
+  NAMESPACE,
+  SET_LEVEL,
+  PARENT_ITEMS_NAMESPACE,
+  FILTERED_ITEM_STATISTICS_NAMESPACE,
+  FILTERED_ITEM_STATISTICS_INITIAL_STATE,
+  SET_PAGE_LOADING,
+} from './constants';
 
 const levelReducer = (state = '', { type, payload }) => {
   switch (type) {
@@ -42,4 +49,7 @@ export const testItemReducer = combineReducers({
   loading: loadingReducer(NAMESPACE),
   pageLoading: pageLoadingReducer,
   parentItems: fetchReducer(PARENT_ITEMS_NAMESPACE, { initialState: [] }),
+  filteredItemStatistics: fetchReducer(FILTERED_ITEM_STATISTICS_NAMESPACE, {
+    initialState: FILTERED_ITEM_STATISTICS_INITIAL_STATE,
+  }),
 });

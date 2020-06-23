@@ -42,6 +42,9 @@ import { suitesSelector, suitePaginationSelector } from 'controllers/suite';
 import { testsSelector, testPaginationSelector } from 'controllers/test';
 import { stepsSelector, stepPaginationSelector } from 'controllers/step';
 import { defectTypesSelector } from 'controllers/project';
+import { omit } from 'common/utils';
+import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
+import { SORTING_KEY } from 'controllers/sorting';
 import { DEFAULT_SORTING, TEST_ITEMS_TYPE_LIST, COMPOSITE_ATTRIBUTES_FILTER } from './constants';
 import {
   createLink,
@@ -57,6 +60,9 @@ const domainSelector = (state) => state.testItem || {};
 export const levelSelector = (state) => domainSelector(state).level;
 export const loadingSelector = (state) => domainSelector(state).loading;
 export const pageLoadingSelector = (state) => domainSelector(state).pageLoading;
+export const filteredItemStatisticsSelector = (state) =>
+  domainSelector(state).filteredItemStatistics;
+
 export const namespaceSelector = (state, offset = 0) =>
   getQueryNamespace(testItemIdsArraySelector(state).length - 1 - offset);
 export const queryParametersSelector = createQueryParametersSelector({
@@ -76,6 +82,13 @@ export const isTestItemsListSelector = createSelector(
   testItemIdsSelector,
   (testItemIds) => testItemIds === TEST_ITEMS_TYPE_LIST,
 );
+
+export const isFilterParamsExistsSelector = (state) => {
+  const namespace = namespaceSelector(state);
+  const query = queryParametersSelector(state, namespace);
+
+  return !!Object.keys(omit(query, [PAGE_KEY, SIZE_KEY, SORTING_KEY])).length;
+};
 
 export const isStepLevelSelector = (state) => levelSelector(state) === LEVEL_STEP;
 
