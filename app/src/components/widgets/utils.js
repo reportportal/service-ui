@@ -40,8 +40,8 @@ export const getMockData = () => ({
   widgetType: 'componentHealthCheckTable',
   share: false,
   widgetPosition: {
-    x: 200,
-    y: 200,
+    positionX: 200,
+    positionY: 200,
   },
   widgetSize: {
     width: 300,
@@ -50,24 +50,27 @@ export const getMockData = () => ({
   content: {
     result: [
       {
-        attributeValue: '111',
-        passingRate: '50',
+        attributeValue: 'Component1Component1Component1Component1Component1',
+        passingRate: '90',
         statistics: {
           statistics$defects$automation_bug$ab001: 1,
           statistics$defects$automation_bug$total: 1,
           statistics$defects$product_bug$pb001: 2,
-          statistics$defects$product_bug$total: 2,
+          statistics$defects$product_bug$pb_1h7o5qfcimee9: 1,
+          statistics$defects$product_bug$total: 3,
           statistics$defects$to_investigate$ti001: 2,
           statistics$defects$to_investigate$total: 2,
-          statistics$executions$failed: 5,
-          statistics$executions$passed: 5,
-          statistics$executions$skipped: 0,
-          statistics$executions$total: 10,
+          statistics$defects$system_issue$si001: 1,
+          statistics$defects$system_issue$total: 1,
+          statistics$executions$failed: 545,
+          statistics$executions$passed: 522,
+          statistics$executions$skipped: 30,
+          statistics$executions$total: 10345,
         },
-        customColumn: ['first', 'second'],
+        customColumn: ['Mid', 'High', 'Mid', 'High'],
       },
       {
-        attributeValue: '222',
+        attributeValue: 'Component2',
         passingRate: '30',
         statistics: {
           statistics$defects$automation_bug$ab001: 4,
@@ -81,7 +84,7 @@ export const getMockData = () => ({
           statistics$executions$skipped: 0,
           statistics$executions$total: 10,
         },
-        customColumn: ['third', 'fourth'],
+        customColumn: ['Mid', 'High'],
       },
     ],
     total: {},
@@ -101,7 +104,7 @@ export const getMockData = () => ({
         customColumn: 'ASC',
       },
       latest: false,
-      minPassingRate: '100',
+      minPassingRate: '80',
     },
   },
 });

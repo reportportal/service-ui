@@ -29,7 +29,6 @@ import { showModalAction } from 'controllers/modal';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { ErrorMessage } from 'components/main/errorMessage';
-import { getMockData } from 'components/widgets/utils';
 import { CHARTS, MULTI_LEVEL_WIDGETS_MAP, NoDataAvailable } from 'components/widgets';
 import { isWidgetDataAvailable } from '../../modals/common/utils';
 import { WidgetHeader } from './widgetHeader';
@@ -326,8 +325,7 @@ export class SimpleWidget extends Component {
   };
 
   render() {
-    const { visible } = this.state;
-    const widget = getMockData();
+    const { widget, visible } = this.state;
     const { isFullscreen, widgetType, isModifiable, isPrintMode, dashboardOwner } = this.props;
     const widgetOptions = this.getWidgetOptions();
     const headerData = {

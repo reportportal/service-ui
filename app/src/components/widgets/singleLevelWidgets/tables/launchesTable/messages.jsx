@@ -22,6 +22,12 @@ import {
   STATS_FAILED,
   STATS_SKIPPED,
 } from 'common/constants/statistics';
+import {
+  PRODUCT_BUG,
+  TO_INVESTIGATE,
+  AUTOMATION_BUG,
+  SYSTEM_ISSUE,
+} from 'common/constants/defectTypes';
 import { STATS_SI, STATS_AB, STATS_TI, STATS_PB } from '../components/constants';
 import {
   defaultDefectsMessages,
@@ -114,6 +120,19 @@ export const COLUMN_NAMES_MAP = {
     full: defaultDefectsMessages[STATS_PB],
   },
   [STATS_SI]: {
+    full: defaultDefectsMessages[STATS_SI],
+  },
+  [TO_INVESTIGATE]: {
+    full: defaultDefectsMessages[STATS_TI],
+    short: 'to invest',
+  },
+  [AUTOMATION_BUG]: {
+    full: 'Auto bug',
+  },
+  [PRODUCT_BUG]: {
+    full: defaultDefectsMessages[STATS_PB],
+  },
+  [SYSTEM_ISSUE]: {
     full: defaultDefectsMessages[STATS_SI],
   },
 };
