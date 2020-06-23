@@ -23,9 +23,10 @@ export {
   createBulkDeleteTestItemsAction,
   setPageLoadingAction,
   fetchTestItemsFromLogPageAction,
+  setDefaultItemStatisticsAction,
 } from './actionCreators';
 export { fetchParentItems, testItemsSagas } from './sagas';
-export { SET_PAGE_LOADING } from './constants';
+export { SET_PAGE_LOADING, FILTERED_ITEM_STATISTICS_INITIAL_STATE } from './constants';
 export {
   launchSelector,
   levelSelector,
@@ -52,6 +53,8 @@ export {
   getLogItemLinkSelector,
   isTestItemsListSelector,
   compositeAttributesSelector,
+  filteredItemStatisticsSelector,
+  isFilterParamsExistsSelector,
 } from './selectors';
 export {
   formatItemName,

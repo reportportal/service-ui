@@ -755,7 +755,7 @@
   "IndexActionsBlock.title": "Індексом Дії з",
   "InfoLine.parent": "Батько",
   "InfoLine.passed": "Успешно {value}%",
-  "InfoLine.total": "Всего {value}",
+  "InfoLine.total": "Всего:",
   "InfoLineListView.filter": "Фільтр:",
   "InfoLineListView.filteredBy": "Відфільтрований:",
   "InfoSection.showMore": "Показати більше",

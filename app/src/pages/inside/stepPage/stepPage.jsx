@@ -54,7 +54,6 @@ import { withPagination, DEFAULT_PAGINATION, SIZE_KEY, PAGE_KEY } from 'controll
 import { prevTestItemSelector } from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
-import { LaunchFiltersSection } from 'pages/inside/common/launchFiltersSection';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { getDefectTypeSelector } from 'controllers/project';
 import { StepGrid } from './stepGrid';
@@ -444,7 +443,6 @@ export class StepPage extends Component {
 
     return (
       <PageLayout>
-        <PageSection>{!debugMode && <LaunchFiltersSection />}</PageSection>
         <PageSection>
           <SuiteTestToolbar
             onDelete={this.deleteItems}
