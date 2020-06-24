@@ -14,20 +14,9 @@
  * limitations under the License.
  */
 
-export const MAX_PASSING_RATE_VALUE = 100;
-
-export const NAME = 'attributeValue';
-export const CUSTOM_COLUMN = 'customColumn';
-export const STATUS = 'status';
-export const PASS_RATE = 'passingRate';
-
-export const NAME_KEY = 'attributeValue';
-export const DEFECT_COLUMN_KEY = 'defect';
-export const STATISTICS_COLUMN_KEY = 'statistics';
-export const STATUS_COLUMN_KEY = 'status';
-export const CUSTOM_COLUMN_KEY = 'customColumn';
-export const PASS_RATE_KEY = 'passingRate';
-
-export const WIDTH_MIDDLE = 'middle';
-export const BACKGROUND_COLOR_WHITE = 'white';
-export const BORDER = 'bottom';
+export { NameColumn } from './nameColumn';
+export { CustomColumn } from './customColumn';
+export { StatusColumn } from './statusColumn';
+export { StatisticsColumn } from './statisticsColumn';
+export { DefectsColumn } from './defectsColumn';
+export { PassingRateColumn } from './passingColumn';
