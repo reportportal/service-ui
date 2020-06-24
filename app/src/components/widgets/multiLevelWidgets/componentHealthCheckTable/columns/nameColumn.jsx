@@ -34,7 +34,7 @@ export const NameColumn = (
     <div className={cx('name-col', className)}>
       {value.attributeValue ? (
         <div
-          className={cx('name-attr')}
+          className={cx('name-attr', { 'cursor-pointer': isClickableAttribute })}
           onClick={
             isClickableAttribute
               ? () => onClickAttribute(value.attributeValue, value.passingRate, color)
