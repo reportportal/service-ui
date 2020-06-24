@@ -33,7 +33,6 @@ import { CHARTS, MULTI_LEVEL_WIDGETS_MAP, NoDataAvailable } from 'components/wid
 import { isWidgetDataAvailable } from '../../modals/common/utils';
 import { WidgetHeader } from './widgetHeader';
 import styles from './widget.scss';
-import { getMockData } from '../../../../../components/widgets/utils';
 
 const cx = classNames.bind(styles);
 
@@ -228,7 +227,6 @@ export class SimpleWidget extends Component {
   fetchWidget = (params = {}, silent = true, shouldClearQueryParams = true) => {
     const { isFullscreen } = this.props;
     const url = this.getWidgetUrl(params);
-    const dataWidget = getMockData();
     this.clearSilentUpdater();
 
     if (!silent) {
@@ -251,7 +249,7 @@ export class SimpleWidget extends Component {
         ) {
           this.setState({
             queryParameters,
-            widget: dataWidget,
+            widget,
             loading: false,
             hasError: false,
             error: null,

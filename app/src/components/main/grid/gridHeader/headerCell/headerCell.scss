@@ -49,6 +49,24 @@
     text-align: right;
   }
 
+  &.background-color-white {
+    background-color: $COLOR--white-two;
+  }
+
+  &.border-bottom {
+    border-bottom: 1px solid $COLOR--gray-91;
+  }
+
+  .title-full {
+    &--middle {
+      display: inline-block;
+      max-width: 120px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
   .title-short {
     display: none;
   }
@@ -59,6 +77,14 @@
     }
     .title-short {
       display: inline;
+
+      &--middle {
+        display: inline-block;
+        max-width: 120px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
   }
 
