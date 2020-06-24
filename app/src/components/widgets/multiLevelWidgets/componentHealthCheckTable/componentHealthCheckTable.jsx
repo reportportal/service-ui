@@ -18,6 +18,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
+import Link from 'redux-first-router-link';
 import { connect } from 'react-redux';
 import {
   STATS_TOTAL,
@@ -33,18 +34,17 @@ import {
 } from 'common/constants/defectTypes';
 import { FAILED, PASSED } from 'common/constants/testStatuses';
 import { Grid, ALIGN_CENTER, ALIGN_RIGHT } from 'components/main/grid';
-import { statisticsLinkSelector } from 'controllers/testItem';
+import { statisticsLinkSelector, TEST_ITEMS_TYPE_LIST } from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { ExecutionStatistics } from 'pages/inside/common/launchSuiteGrid/executionStatistics';
-import { StatisticsLink } from 'pages/inside/common/statisticsLink';
 import { DefectStatistics } from 'pages/inside/common/launchSuiteGrid/defectStatistics';
 import { DefectLink } from 'pages/inside/common/defectLink';
-import { getItemNameConfig } from 'components/widgets/common/utils';
+import { getItemNameConfig, getDefaultTestItemLinkParams } from 'components/widgets/common/utils';
 import {
   defaultDefectsMessages,
   defaultStatisticsMessages,
 } from 'components/widgets/singleLevelWidgets/tables/components/messages';
+import { getStatisticsStatuses } from 'components/widgets/singleLevelWidgets/tables/components/utils';
 import {
   NAME,
   NAME_KEY,
@@ -62,9 +62,15 @@ import styles from './componentHealthCheckTable.scss';
 
 const cx = classNames.bind(styles);
 
-const NameColumn = ({ className, value: { attributeValue } }) => (
-  <div className={cx('name-col', className)} title={attributeValue}>
-    <span>{attributeValue}</span>
+const NameColumn = ({ className, value }, name, { formatMessage }) => (
+  <div className={cx('name-col', className)} title={value.attributeValue}>
+    {value.attributeValue ? (
+      <span className={cx('name-attr')}>{value.attributeValue}</span>
+    ) : (
+      <span className={cx('name-total', 'total-item')}>
+        {formatMessage(hintMessages.nameTotal)}
+      </span>
+    )}
   </div>
 );
 NameColumn.propTypes = {
@@ -72,11 +78,15 @@ NameColumn.propTypes = {
   className: PropTypes.string.isRequired,
 };
 
-const CustomColumn = ({ className, value: { customColumn } }, name, { formatMessage }) => {
+const CustomColumn = ({ className, value }, name, { formatMessage }) => {
   return (
-    <div className={cx('custom-column-col', className)} title={customColumn}>
-      <span className={cx('mobile-hint')}>{formatMessage(hintMessages.customColumnHint)}</span>
-      <span className={cx('custom-column-item')}>{customColumn.join(', ')}</span>
+    <div className={cx('custom-column-col', className)} title={value.customColumn}>
+      {!!value.customColumn && (
+        <Fragment>
+          <span className={cx('mobile-hint')}>{formatMessage(hintMessages.customColumnHint)}</span>
+          <span className={cx('custom-column-item')}>{value.customColumn.join(', ')}</span>
+        </Fragment>
+      )}
     </div>
   );
 };
@@ -85,17 +95,17 @@ CustomColumn.propTypes = {
   className: PropTypes.string.isRequired,
 };
 
-const StatusColumn = (
-  { className, value: { passingRate } },
-  name,
-  { minPassingRate, formatMessage },
-) => {
-  const status = passingRate < minPassingRate ? FAILED : PASSED;
+const StatusColumn = ({ className, value }, name, { minPassingRate, formatMessage }) => {
+  const status = value.passingRate < minPassingRate ? FAILED : PASSED;
 
   return (
     <div className={cx('status-col', className)}>
-      <span className={cx('mobile-hint')}>{formatMessage(hintMessages.statusHint)}</span>
-      <span className={cx('status-item', status.toLowerCase())}>{status}</span>
+      {!!value.passingRate && (
+        <Fragment>
+          <span className={cx('mobile-hint')}>{formatMessage(hintMessages.statusHint)}</span>
+          <span className={cx('status-item', status.toLowerCase())}>{status}</span>
+        </Fragment>
+      )}
     </div>
   );
 };
@@ -104,23 +114,35 @@ StatusColumn.propTypes = {
   className: PropTypes.string.isRequired,
 };
 
-const StatisticsColumn = ({ className, value }, name) => {
-  const defaultColumnProps = {
-    className: 'text-alight-right',
-  };
-  const itemValue = Number(value.statistics[name]);
+const StatisticsColumn = ({ className, value }, name, { onStatisticsClick }) => {
+  const itemValue = Number(value.statistics && value.statistics[name]);
+  const statuses = getStatisticsStatuses(name);
 
   return (
     <div className={cx('statistics-col', className)}>
-      <div className={cx('desktop-block')}>
-        <ExecutionStatistics value={itemValue} {...defaultColumnProps} />
-      </div>
-      <div className={cx('mobile-block', `statistics-${name.split('$')[2]}`)}>
-        <div className={cx('block-content')}>
-          {!!itemValue && <StatisticsLink {...defaultColumnProps}>{itemValue}</StatisticsLink>}
-          <span className={cx('message')}>{defaultStatisticsMessages[name]}</span>
-        </div>
-      </div>
+      {value.statistics ? (
+        <Fragment>
+          <div className={cx('desktop-block')}>
+            {!!itemValue && (
+              <Link className={cx('link')} to={onStatisticsClick(statuses)} target="_blank">
+                {itemValue}
+              </Link>
+            )}
+          </div>
+          <div className={cx('mobile-block', `statistics-${name.split('$')[2]}`)}>
+            <div className={cx('block-content')}>
+              {!!itemValue && (
+                <Link className={cx('link')} to={onStatisticsClick(statuses)} target="_blank">
+                  {itemValue}
+                </Link>
+              )}
+              <span className={cx('message')}>{defaultStatisticsMessages[name]}</span>
+            </div>
+          </div>
+        </Fragment>
+      ) : (
+        <span className={cx('total-item')}>{Number(value.total && value.total[name])}</span>
+      )}
     </div>
   );
 };
@@ -129,35 +151,48 @@ StatisticsColumn.propTypes = {
   className: PropTypes.string.isRequired,
 };
 
-const DefectsColumn = ({ className, value: { statistics } }, name) => {
-  const defaultColumnProps = {};
-  const defects = Object.keys(statistics)
+const getDefects = (values, name) => {
+  const defects = Object.keys(values)
     .filter((item) => item.indexOf(name) !== -1)
     .map((defect) => {
-      const value = statistics[defect];
+      const value = values[defect];
       const { locator } = getItemNameConfig(defect);
 
       return {
         [locator]: value,
       };
     });
-  const data = Object.assign({}, ...defects);
+
+  return Object.assign({}, ...defects);
+};
+
+const DefectsColumn = ({ className, value }, name) => {
+  const defaultColumnProps = {};
+  const data = value.statistics
+    ? getDefects(value.statistics, name)
+    : getDefects(value.total, name);
 
   return (
     <div className={cx('defect-col', className)}>
-      <div className={cx('desktop-block')}>
-        <DefectStatistics type={name} data={data} {...defaultColumnProps} />
-      </div>
-      <div className={cx('mobile-block', `defect-${name}`)}>
-        <div className={cx('block-content')}>
-          {!!data.total && (
-            <DefectLink {...defaultColumnProps} defects={Object.keys(data)}>
-              {data.total}
-            </DefectLink>
-          )}
-          <span className={cx('message')}>{defaultDefectsMessages[name]}</span>
-        </div>
-      </div>
+      {value.statistics ? (
+        <Fragment>
+          <div className={cx('desktop-block')}>
+            <DefectStatistics type={name} data={data} {...defaultColumnProps} />
+          </div>
+          <div className={cx('mobile-block', `defect-${name}`)}>
+            <div className={cx('block-content')}>
+              {!!data.total && (
+                <DefectLink {...defaultColumnProps} defects={Object.keys(data)}>
+                  {data.total}
+                </DefectLink>
+              )}
+              <span className={cx('message')}>{defaultDefectsMessages[name]}</span>
+            </div>
+          </div>
+        </Fragment>
+      ) : (
+        <span className={cx('total-item')}>{data.total}</span>
+      )}
     </div>
   );
 };
@@ -166,10 +201,16 @@ DefectsColumn.propTypes = {
   className: PropTypes.string.isRequired,
 };
 
-const PassingRateColumn = ({ className, value: { passingRate } }, name, { formatMessage }) => (
+const PassingRateColumn = ({ className, value }, name, { formatMessage }) => (
   <div className={cx('passing-rate-col', className)}>
-    <span className={cx('mobile-hint')}>{formatMessage(hintMessages.passingRateHint)}</span>
-    <span className={cx('passing-rate-item')}>{passingRate}%</span>
+    {value.passingRate ? (
+      <Fragment>
+        <span className={cx('mobile-hint')}>{formatMessage(hintMessages.passingRateHint)}</span>
+        <span className={cx('passing-rate-item')}>{value.passingRate}%</span>
+      </Fragment>
+    ) : (
+      <span className={cx('total-item')}>{!!value.total && value.total.passingRate}%</span>
+    )}
   </div>
 );
 PassingRateColumn.propTypes = {
@@ -228,10 +269,15 @@ const getColumn = (name, customProps, customColumn) => {
 };
 
 @injectIntl
-@connect((state) => ({
-  project: activeProjectSelector(state),
-  getStatisticsLink: statisticsLinkSelector(state),
-}))
+@connect(
+  (state) => ({
+    project: activeProjectSelector(state),
+    getStatisticsLink: statisticsLinkSelector(state),
+  }),
+  {
+    navigate: (linkAction) => linkAction,
+  },
+)
 export class ComponentHealthCheckTable extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
@@ -241,19 +287,43 @@ export class ComponentHealthCheckTable extends Component {
     container: PropTypes.instanceOf(Element).isRequired,
     getStatisticsLink: PropTypes.func.isRequired,
     project: PropTypes.string.isRequired,
+    navigate: PropTypes.func.isRequired,
   };
 
   getCustomColumn = () =>
     this.props.widget.contentParameters &&
     this.props.widget.contentParameters.widgetOptions.customColumn;
 
-  getContentResult = () => this.props.widget.content && this.props.widget.content.result;
+  getContentResult = () =>
+    this.props.widget.content && [
+      ...this.props.widget.content.result,
+      { total: this.props.widget.content.total },
+    ];
 
   getPassingRateValue = () =>
     Number(
       this.props.widget.contentParameters &&
         this.props.widget.contentParameters.widgetOptions.minPassingRate,
     );
+
+  onStatisticsClick = (...statuses) => {
+    const { widget, getStatisticsLink, project } = this.props;
+
+    const launchesLimit = widget.contentParameters.itemsCount;
+    const isLatest = widget.contentParameters.widgetOptions.latest;
+    const link = getStatisticsLink({
+      statuses,
+      launchesLimit,
+      isLatest,
+    });
+    const navigationParams = getDefaultTestItemLinkParams(
+      project,
+      widget.appliedFilters[0].id,
+      TEST_ITEMS_TYPE_LIST,
+    );
+
+    return Object.assign(link, navigationParams);
+  };
 
   getColumns = () => {
     const {
@@ -262,9 +332,7 @@ export class ComponentHealthCheckTable extends Component {
     const customProps = {
       minPassingRate: this.getPassingRateValue(),
       formatMessage,
-      linkPayload: {},
-      onOwnerClick: () => {},
-      onClickAttribute: () => {},
+      onStatisticsClick: this.onStatisticsClick,
     };
     const customColumn = this.getCustomColumn();
 

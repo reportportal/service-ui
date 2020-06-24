@@ -119,4 +119,8 @@ export const hintMessages = defineMessages({
     id: 'ComponentHealthCheckTable.passingRateHint',
     defaultMessage: 'Pass rate:',
   },
+  nameTotal: {
+    id: 'ComponentHealthCheckTable.nameTotal',
+    defaultMessage: 'Total',
+  },
 });
