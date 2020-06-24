@@ -44,7 +44,7 @@ export const DefectsColumn = ({ className, value }, name) => {
   const defaultColumnProps = {};
   const data = value.statistics
     ? getDefects(value.statistics, name)
-    : getDefects(value.total, name);
+    : getDefects(value.total.statistics, name);
 
   return (
     <div className={cx('defect-col', className)}>

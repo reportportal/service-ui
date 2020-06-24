@@ -33,12 +33,15 @@
     max-width: 115px;
     font-family: $FONT-SEMIBOLD;
     color: $COLOR--windows-blue;
-    cursor: pointer;
     font-size: 12px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: 1.3;
+  }
+
+  .cursor-pointer {
+    cursor: pointer;
   }
 
   .name-total {

@@ -37,6 +37,11 @@ import { activeProjectSelector } from 'controllers/user';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { getDefaultTestItemLinkParams } from 'components/widgets/common/utils';
 import { Breadcrumbs } from 'components/widgets/multiLevelWidgets/common/breadcrumbs';
+import {
+  getNewActiveAttributes,
+  getBreadcrumbs,
+  getNewActiveBreadcrumbs,
+} from 'components/widgets/multiLevelWidgets/common/utils';
 import isEqual from 'fast-deep-equal';
 import {
   NAME,
@@ -161,12 +166,22 @@ export class ComponentHealthCheckTable extends Component {
   }
 
   onClickBreadcrumbs = (id) => {
-    const { activeBreadcrumbs } = this.state;
-    const newActiveAttributes = this.getNewActiveAttributes(
+    const { activeBreadcrumbs, activeAttributes, activeBreadcrumbId } = this.state;
+    const {
+      widget: { contentParameters },
+    } = this.props;
+    const attributes = contentParameters && contentParameters.widgetOptions.attributeKeys;
+    const newActiveAttributes = getNewActiveAttributes(
       activeBreadcrumbs[id].key,
       activeBreadcrumbs[id].additionalProperties.value,
+      activeAttributes,
     );
-    const newActiveBreadcrumbs = this.getNewActiveBreadcrumbs(id);
+    const newActiveBreadcrumbs = getNewActiveBreadcrumbs(
+      id,
+      activeBreadcrumbs,
+      activeBreadcrumbId,
+      attributes,
+    );
 
     this.setState({
       activeBreadcrumbs: newActiveBreadcrumbs,
@@ -186,20 +201,28 @@ export class ComponentHealthCheckTable extends Component {
   };
 
   onClickAttribute = (value, passingRate, color) => {
-    const { activeBreadcrumbId } = this.state;
+    const { activeBreadcrumbs, activeBreadcrumbId, activeAttributes } = this.state;
+    const {
+      widget: { contentParameters },
+    } = this.props;
+    const attributes = contentParameters && contentParameters.widgetOptions.attributeKeys;
     const newActiveBreadcrumbId = activeBreadcrumbId + 1;
     const additionalProperties = {
       value,
       passingRate,
       color,
     };
-    const newActiveBreadcrumbs = this.getNewActiveBreadcrumbs(
+    const newActiveBreadcrumbs = getNewActiveBreadcrumbs(
       newActiveBreadcrumbId,
+      activeBreadcrumbs,
+      activeBreadcrumbId,
+      attributes,
       additionalProperties,
     );
-    const newActiveAttributes = this.getNewActiveAttributes(
+    const newActiveAttributes = getNewActiveAttributes(
       newActiveBreadcrumbs[activeBreadcrumbId].key,
       value,
+      activeAttributes,
     );
 
     this.setState({
@@ -217,74 +240,6 @@ export class ComponentHealthCheckTable extends Component {
           isLoading: false,
         });
       });
-  };
-
-  getNewActiveAttributes = (key, value) => {
-    const { activeAttributes } = this.state;
-    const activeAttribute = {
-      key,
-      value,
-    };
-    const activeAttributeIndex =
-      activeAttributes && activeAttributes.findIndex((item) => item.key === key);
-
-    if (activeAttributeIndex !== -1) {
-      return activeAttributes.slice(0, activeAttributeIndex);
-    }
-
-    return [...activeAttributes, activeAttribute];
-  };
-
-  getBreadcrumbs = () =>
-    this.props.widget.contentParameters.widgetOptions.attributeKeys.map((item, index) => ({
-      id: index,
-      key: item,
-      isStatic: true,
-      isActive: this.state.activeBreadcrumbId === index,
-      additionalProperties: {
-        color: null,
-        value: null,
-        passingRate: null,
-      },
-    }));
-
-  getNewActiveBreadcrumbs = (id, additionalProperties) => {
-    const { activeBreadcrumbs } = this.state;
-    const actualBreadcrumbs = activeBreadcrumbs || this.getBreadcrumbs();
-
-    return (
-      actualBreadcrumbs &&
-      actualBreadcrumbs.map((item) => {
-        if (item.id === id) {
-          return {
-            ...item,
-            isStatic: true,
-            isActive: true,
-            additionalProperties: null,
-          };
-        }
-
-        if (additionalProperties && item.id === id - 1) {
-          return {
-            ...item,
-            isStatic: false,
-            isActive: false,
-            additionalProperties,
-          };
-        }
-
-        if (!additionalProperties && item.id > id) {
-          return {
-            ...item,
-            isStatic: true,
-            isActive: false,
-            additionalProperties: null,
-          };
-        }
-
-        return item;
-      })
-    );
   };
 
   getCustomColumn = () =>
@@ -324,7 +279,11 @@ export class ComponentHealthCheckTable extends Component {
 
   isClickableAttribute = () => {
     const { activeBreadcrumbs, activeBreadcrumbId } = this.state;
-    const breadcrumbs = this.getBreadcrumbs();
+    const {
+      widget: { contentParameters },
+    } = this.props;
+    const attributes = contentParameters && contentParameters.widgetOptions.attributeKeys;
+    const breadcrumbs = getBreadcrumbs(attributes, activeBreadcrumbId);
 
     return (
       breadcrumbs.length > 1 &&
@@ -341,7 +300,7 @@ export class ComponentHealthCheckTable extends Component {
       formatMessage,
       onStatisticsClick: this.onStatisticsClick,
       onClickAttribute: this.onClickAttribute,
-      isClickableAttribute: this.isClickableAttribute,
+      isClickableAttribute: this.isClickableAttribute(),
     };
     const customColumn = this.getCustomColumn();
 
@@ -365,8 +324,12 @@ export class ComponentHealthCheckTable extends Component {
   };
 
   render() {
-    const { activeBreadcrumbs } = this.state;
-    const breadcrumbs = this.getBreadcrumbs();
+    const { activeBreadcrumbs, activeBreadcrumbId } = this.state;
+    const {
+      widget: { contentParameters },
+    } = this.props;
+    const attributes = contentParameters && contentParameters.widgetOptions.attributeKeys;
+    const breadcrumbs = getBreadcrumbs(attributes, activeBreadcrumbId);
     const columns = this.getColumns();
     const data = this.getContentResult();
 
