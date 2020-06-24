@@ -44,7 +44,7 @@ import { NAME, CUSTOM_COLUMN, STATUS, PASS_RATE } from './constants';
 const getCustomColumnTitle = (name) => (
   <FormattedMessage
     id={'ComponentHealthCheckTable.customColumn'}
-    defaultMessage={'Cc {name}'}
+    defaultMessage={'Ccggggggggggggggggggggggggggggggggggggggggggggggg'}
     values={{ name }}
   />
 );
