@@ -31,11 +31,11 @@ import {
   AUTOMATION_BUG,
   SYSTEM_ISSUE,
 } from 'common/constants/defectTypes';
+import { formatAttribute } from 'common/utils';
 import { Grid, ALIGN_CENTER, ALIGN_RIGHT } from 'components/main/grid';
-import { statisticsLinkSelector, TEST_ITEMS_TYPE_LIST } from 'controllers/testItem';
+import { TEST_ITEMS_TYPE_LIST } from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { getDefaultTestItemLinkParams } from 'components/widgets/common/utils';
 import { Breadcrumbs } from 'components/widgets/multiLevelWidgets/common/breadcrumbs';
 import {
   getNewActiveAttributes,
@@ -129,7 +129,6 @@ const getColumn = (name, customProps, customColumn) => {
 @connect(
   (state) => ({
     project: activeProjectSelector(state),
-    getStatisticsLink: statisticsLinkSelector(state),
   }),
   {
     navigate: (linkAction) => linkAction,
@@ -142,7 +141,6 @@ export class ComponentHealthCheckTable extends Component {
     fetchWidget: PropTypes.func,
     clearQueryParams: PropTypes.func,
     container: PropTypes.instanceOf(Element).isRequired,
-    getStatisticsLink: PropTypes.func.isRequired,
     project: PropTypes.string.isRequired,
     navigate: PropTypes.func.isRequired,
   };
@@ -258,23 +256,18 @@ export class ComponentHealthCheckTable extends Component {
         this.props.widget.contentParameters.widgetOptions.minPassingRate,
     );
 
-  onStatisticsClick = (...statuses) => {
-    const { widget, getStatisticsLink, project } = this.props;
-
-    const launchesLimit = widget.contentParameters.itemsCount;
-    const isLatest = widget.contentParameters.widgetOptions.latest;
-    const link = getStatisticsLink({
-      statuses,
-      launchesLimit,
-      isLatest,
-    });
-    const navigationParams = getDefaultTestItemLinkParams(
-      project,
-      widget.appliedFilters[0].id,
-      TEST_ITEMS_TYPE_LIST,
+  getCompositeAttributes = (value) => {
+    const { activeBreadcrumbId, activeAttributes } = this.state;
+    const { widget } = this.props;
+    const attributes =
+      widget.contentParameters && widget.contentParameters.widgetOptions.attributeKeys;
+    const compositeAttributes = getNewActiveAttributes(
+      getBreadcrumbs(attributes, activeBreadcrumbId)[activeBreadcrumbId].key,
+      value,
+      activeAttributes,
     );
 
-    return Object.assign(link, navigationParams);
+    return compositeAttributes.map(formatAttribute).join(',');
   };
 
   isClickableAttribute = () => {
@@ -294,11 +287,19 @@ export class ComponentHealthCheckTable extends Component {
   getColumns = () => {
     const {
       intl: { formatMessage },
+      project,
+      widget,
     } = this.props;
     const customProps = {
       minPassingRate: this.getPassingRateValue(),
       formatMessage,
-      onStatisticsClick: this.onStatisticsClick,
+      isLatest: widget.contentParameters && widget.contentParameters.widgetOptions.latest,
+      linkPayload: {
+        projectId: project,
+        filterId: widget.appliedFilters[0].id,
+        testItemIds: TEST_ITEMS_TYPE_LIST,
+      },
+      getCompositeAttributes: this.getCompositeAttributes,
       onClickAttribute: this.onClickAttribute,
       isClickableAttribute: this.isClickableAttribute(),
     };

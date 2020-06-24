@@ -17,35 +17,48 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import Link from 'redux-first-router-link';
+import { TEST_ITEM_PAGE } from 'controllers/pages';
+import { TEST_ITEMS_TYPE_LIST, DEFAULT_LAUNCHES_LIMIT } from 'controllers/testItem';
+import { ExecutionStatistics } from 'pages/inside/common/launchSuiteGrid/executionStatistics';
+import { StatisticsLink } from 'pages/inside/common/statisticsLink';
 import { getStatisticsStatuses } from 'components/widgets/singleLevelWidgets/tables/components/utils';
 import { defaultStatisticsMessages } from 'components/widgets/singleLevelWidgets/tables/components/messages';
 import styles from '../componentHealthCheckTable.scss';
 
 const cx = classNames.bind(styles);
 
-export const StatisticsColumn = ({ className, value }, name, { onStatisticsClick }) => {
+export const StatisticsColumn = (
+  { className, value },
+  name,
+  { isLatest, getCompositeAttributes, linkPayload },
+) => {
   const itemValue = Number(value.statistics && value.statistics[name]);
   const totalValue = Number(value.total && value.total.statistics[name]);
-  const statuses = getStatisticsStatuses(name);
+  const defaultColumnProps = {
+    itemId: TEST_ITEMS_TYPE_LIST,
+    isLatest,
+    statuses: getStatisticsStatuses(name),
+    launchesLimit: DEFAULT_LAUNCHES_LIMIT,
+    compositeAttribute: getCompositeAttributes(value.attributeValue),
+    ownLinkParams: {
+      type: TEST_ITEM_PAGE,
+      payload: linkPayload,
+    },
+  };
 
   return (
     <div className={cx('statistics-col', className)}>
       {value.statistics ? (
         <Fragment>
           <div className={cx('desktop-block')}>
-            {!!itemValue && (
-              <Link className={cx('link')} to={onStatisticsClick(statuses)} target="_blank">
-                {itemValue}
-              </Link>
-            )}
+            {!!itemValue && <ExecutionStatistics value={itemValue} {...defaultColumnProps} />}
           </div>
           <div className={cx('mobile-block', `statistics-${name.split('$')[2]}`)}>
             <div className={cx('block-content')}>
               {!!itemValue && (
-                <Link className={cx('link')} to={onStatisticsClick(statuses)} target="_blank">
+                <StatisticsLink className={cx('link')} {...defaultColumnProps}>
                   {itemValue}
-                </Link>
+                </StatisticsLink>
               )}
               <span className={cx('message')}>{defaultStatisticsMessages[name]}</span>
             </div>

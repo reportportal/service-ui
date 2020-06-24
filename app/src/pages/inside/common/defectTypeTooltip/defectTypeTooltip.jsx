@@ -49,14 +49,22 @@ export class DefectTypeTooltip extends Component {
     projectConfig: PropTypes.object.isRequired,
     intl: PropTypes.object.isRequired,
     tooltipEventInfo: PropTypes.object,
-    itemId: PropTypes.number,
+    itemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     ownLinkParams: PropTypes.object,
+    launchesLimit: PropTypes.number,
+    compositeAttribute: PropTypes.string,
+    isLatest: PropTypes.bool,
+    filterType: PropTypes.bool,
   };
 
   static defaultProps = {
     itemId: null,
     tooltipEventInfo: {},
     ownLinkParams: null,
+    launchesLimit: null,
+    compositeAttribute: '',
+    isLatest: true,
+    filterType: true,
   };
 
   getFilteredBodyData = (config) => {
@@ -83,6 +91,10 @@ export class DefectTypeTooltip extends Component {
       data,
       itemId,
       ownLinkParams,
+      launchesLimit,
+      compositeAttribute,
+      isLatest,
+      filterType,
       tooltipEventInfo,
       type,
       projectConfig,
@@ -101,6 +113,10 @@ export class DefectTypeTooltip extends Component {
               <DefectLink
                 itemId={itemId}
                 ownLinkParams={ownLinkParams}
+                launchesLimit={launchesLimit}
+                compositeAttribute={compositeAttribute}
+                isLatest={isLatest}
+                filterType={filterType}
                 defects={Object.keys(data)}
                 className={cx('total-item')}
                 eventInfo={tooltipEventInfo}
@@ -127,6 +143,10 @@ export class DefectTypeTooltip extends Component {
                 key={locator}
                 itemId={itemId}
                 ownLinkParams={ownLinkParams}
+                launchesLimit={launchesLimit}
+                compositeAttribute={compositeAttribute}
+                isLatest={isLatest}
+                filterType={filterType}
                 defects={[locator]}
                 className={cx('item')}
                 eventInfo={tooltipEventInfo}
