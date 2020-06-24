@@ -52,7 +52,7 @@ export class DonutChart extends Component {
     viewBox: PropTypes.number.isRequired,
     strokeWidth: PropTypes.number.isRequired,
     defectColors: PropTypes.object.isRequired,
-    itemId: PropTypes.number.isRequired,
+    itemId: PropTypes.number,
     eventInfo: PropTypes.object,
     ownLinkParams: PropTypes.shape({
       isOtherPage: PropTypes.bool,
@@ -61,6 +61,7 @@ export class DonutChart extends Component {
     }),
   };
   static defaultProps = {
+    itemId: null,
     type: '',
     defects: [],
     eventInfo: {},

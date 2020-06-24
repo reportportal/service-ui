@@ -26,6 +26,7 @@ const cx = classNames.bind(styles);
 
 export const StatisticsColumn = ({ className, value }, name, { onStatisticsClick }) => {
   const itemValue = Number(value.statistics && value.statistics[name]);
+  const totalValue = Number(value.total && value.total.statistics[name]);
   const statuses = getStatisticsStatuses(name);
 
   return (
@@ -51,7 +52,7 @@ export const StatisticsColumn = ({ className, value }, name, { onStatisticsClick
           </div>
         </Fragment>
       ) : (
-        <span className={cx('total-item')}>{Number(value.total && value.total[name])}</span>
+        !!totalValue && <span className={cx('total-item')}>{totalValue}</span>
       )}
     </div>
   );

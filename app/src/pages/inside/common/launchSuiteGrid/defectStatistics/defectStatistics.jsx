@@ -34,7 +34,7 @@ export class DefectStatistics extends Component {
     projectDefects: PropTypes.object,
     data: PropTypes.object,
     customProps: PropTypes.object,
-    itemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    itemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     eventInfo: PropTypes.object,
     tooltipEventInfo: PropTypes.object,
     ownLinkParams: PropTypes.shape({
