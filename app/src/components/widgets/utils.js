@@ -32,7 +32,7 @@ export const componentHealthCheckFormatParams = (params = {}) => ({
 });
 
 export const getMockData = () => ({
-  appliedFilters: [],
+  appliedFilters: [{ id: 28 }],
   id: 1,
   description: 'hello',
   owner: 'superadmin',
@@ -87,7 +87,17 @@ export const getMockData = () => ({
         customColumn: ['Mid', 'High'],
       },
     ],
-    total: {},
+    total: {
+      passingRate: '35.2',
+      statistics$defects$automation_bug$total: 1,
+      statistics$defects$product_bug$total: 3,
+      statistics$defects$to_investigate$total: 2,
+      statistics$defects$system_issue$total: 1,
+      statistics$executions$failed: 545,
+      statistics$executions$passed: 522,
+      statistics$executions$skipped: 30,
+      statistics$executions$total: 10345,
+    },
   },
   contentParameters: {
     itemsCount: 600,
