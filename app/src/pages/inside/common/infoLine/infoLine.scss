@@ -71,7 +71,7 @@
   margin-right: 15px;
   color: $COLOR--charcoal-grey;
 
-  &--value {
+  .value {
     margin-left: 5px;
   }
 
@@ -168,11 +168,12 @@
   .total {
     font-family: $FONT-SEMIBOLD;
 
-    &--value {
+    .value {
       color: $COLOR--gray-80;
+      text-decoration: none;
     }
 
-    &--detailed_count {
+    .value-detailed {
       color: $COLOR--windows-blue;
 
       &::before {

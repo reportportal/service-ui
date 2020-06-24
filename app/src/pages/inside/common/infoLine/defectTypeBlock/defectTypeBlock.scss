@@ -57,11 +57,13 @@
 
 .detailed-view {
   .stats {
-    &--value {
+    .value {
       color: $COLOR--gray-80;
+      text-decoration: none;
     }
 
-    &--detailed_count {
+    .value-detailed {
+      text-decoration: none;
       color: $COLOR--windows-blue;
 
       &::before {
