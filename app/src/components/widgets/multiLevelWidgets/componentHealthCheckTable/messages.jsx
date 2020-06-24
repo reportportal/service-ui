@@ -41,13 +41,6 @@ import {
 } from 'components/widgets/singleLevelWidgets/tables/components/messages';
 import { NAME, CUSTOM_COLUMN, STATUS, PASS_RATE } from './constants';
 
-const getCustomColumnTitle = (name) => (
-  <FormattedMessage
-    id={'ComponentHealthCheckTable.customColumn'}
-    defaultMessage={'Ccggggggggggggggggggggggggggggggggggggggggggggggg'}
-    values={{ name }}
-  />
-);
 const statusColumnTitle = (
   <FormattedMessage id={'ComponentHealthCheckTable.statusColumn'} defaultMessage={'Status'} />
 );
@@ -61,8 +54,8 @@ export const COLUMN_NAMES_MAP = {
     short: '',
   }),
   [CUSTOM_COLUMN]: (name) => ({
-    full: getCustomColumnTitle(name),
-    short: getCustomColumnTitle(name),
+    full: name,
+    short: name,
   }),
   [STATUS]: () => ({
     full: statusColumnTitle,
