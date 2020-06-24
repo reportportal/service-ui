@@ -21,7 +21,17 @@ import { statisticsLinkSelector } from 'controllers/testItem';
 export const StatisticsLink = connect((state) => ({
   getStatisticsLink: statisticsLinkSelector(state),
 }))((props) => {
-  const { getStatisticsLink, itemId, statistics, children, ownLinkParams, ...rest } = props;
+  const {
+    getStatisticsLink,
+    itemId,
+    statistics,
+    launchesLimit,
+    compositeAttribute,
+    isLatest,
+    children,
+    ownLinkParams,
+    ...rest
+  } = props;
   const link = getStatisticsLink(props);
   return (
     <Link to={link} {...rest}>

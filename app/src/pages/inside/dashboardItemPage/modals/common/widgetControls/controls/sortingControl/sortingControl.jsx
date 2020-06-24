@@ -19,7 +19,6 @@ import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { STATS_TOTAL, STATS_FAILED } from 'common/constants/statistics';
-import { SORTING_ASC } from 'controllers/sorting';
 import { InputDropdownSorting } from 'components/inputs/inputDropdownSorting';
 import { WIDGET_OPTIONS } from '../../constants';
 import styles from './sortingControl.scss';
@@ -54,14 +53,14 @@ export class SortingControl extends Component {
   static propTypes = {
     intl: PropTypes.object,
     sortingColumn: PropTypes.string,
-    sortingDirection: PropTypes.string,
+    sortingDirection: PropTypes.bool,
     onChange: PropTypes.func,
   };
 
   static defaultProps = {
     intl: {},
     sortingColumn: null,
-    sortingDirection: SORTING_ASC,
+    sortingDirection: true,
     onChange: () => {},
   };
 
