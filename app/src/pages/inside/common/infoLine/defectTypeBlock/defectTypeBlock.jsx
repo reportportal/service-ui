@@ -61,9 +61,9 @@ export class DefectTypeBlock extends Component {
             <div className={cx('circle')} style={{ backgroundColor: defectType.color }} />
             <span className={cx('title')}>{defectType.shortName}</span>
             <div className={cx('stats')} style={{ borderColor: defectType.color }}>
-              <span className={cx('stats--value')}>{data.total}</span>
+              <span className={cx('value')}>{data.total}</span>
               {detailedView && (
-                <span className={cx('stats--detailed_count')}>{detailedData.total || 0}</span>
+                <span className={cx('value-detailed')}>{detailedData.total || 0}</span>
               )}
             </div>
           </Fragment>

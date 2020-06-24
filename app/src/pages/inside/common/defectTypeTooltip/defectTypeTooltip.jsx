@@ -51,12 +51,16 @@ export class DefectTypeTooltip extends Component {
     tooltipEventInfo: PropTypes.object,
     itemId: PropTypes.number,
     ownLinkParams: PropTypes.object,
+    detailedView: PropTypes.bool,
+    detailedData: PropTypes.object,
   };
 
   static defaultProps = {
     itemId: null,
     tooltipEventInfo: {},
     ownLinkParams: null,
+    detailedView: false,
+    detailedData: {},
   };
 
   getFilteredBodyData = (config) => {
@@ -86,6 +90,8 @@ export class DefectTypeTooltip extends Component {
       tooltipEventInfo,
       type,
       projectConfig,
+      detailedView,
+      detailedData,
       intl: { formatMessage },
     } = this.props;
 
@@ -122,22 +128,56 @@ export class DefectTypeTooltip extends Component {
              * Don't display defect sub types with zero defect's amount,
              * except system types (i.e. with index=0)
              */
-            filteredBodyData.map(({ locator, color, longName }) => (
-              <DefectLink
-                key={locator}
-                itemId={itemId}
-                ownLinkParams={ownLinkParams}
-                defects={[locator]}
-                className={cx('item')}
-                eventInfo={tooltipEventInfo}
-              >
-                <div className={cx('name')}>
-                  <div className={cx('circle')} style={{ backgroundColor: color }} />
-                  {longName}
+            filteredBodyData.map(({ locator, color, longName }) => {
+              return detailedView ? (
+                <div key={locator} className={cx('item')}>
+                  <div className={cx('name')}>
+                    <div className={cx('circle')} style={{ backgroundColor: color }} />
+                    {longName}
+                  </div>
+                  <span className={cx('value-container')}>
+                    <DefectLink
+                      itemId={itemId}
+                      ownLinkParams={ownLinkParams}
+                      defects={[locator]}
+                      className={cx('value')}
+                      eventInfo={tooltipEventInfo}
+                    >
+                      {data[locator]}
+                    </DefectLink>
+                    {detailedData[locator] ? (
+                      <DefectLink
+                        itemId={itemId}
+                        ownLinkParams={ownLinkParams}
+                        defects={[locator]}
+                        keepFilterParams
+                        className={cx('value', 'detailed')}
+                        eventInfo={tooltipEventInfo}
+                      >
+                        {detailedData[locator]}
+                      </DefectLink>
+                    ) : (
+                      <span className={cx('value', 'detailed', 'disabled')}>0</span>
+                    )}
+                  </span>
                 </div>
-                <span className={cx('value')}>{data[locator]}</span>
-              </DefectLink>
-            ))}
+              ) : (
+                <DefectLink
+                  key={locator}
+                  itemId={itemId}
+                  ownLinkParams={ownLinkParams}
+                  defects={[locator]}
+                  className={cx('item')}
+                  eventInfo={tooltipEventInfo}
+                >
+                  <div className={cx('name')}>
+                    <div className={cx('circle')} style={{ backgroundColor: color }} />
+                    {longName}
+                  </div>
+                  <span className={cx('value')}>{data[locator]}</span>
+                </DefectLink>
+              );
+            })}
           </Fragment>
         )}
       </div>

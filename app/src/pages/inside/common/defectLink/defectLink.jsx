@@ -36,6 +36,7 @@ export const DefectLink = track()(
       eventInfo,
       tracking,
       ownLinkParams,
+      keepFilterParams,
       refreshTestItemPage,
       ...rest
     } = props;

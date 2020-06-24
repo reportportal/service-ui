@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
+import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import { PRODUCT_BUG, AUTOMATION_BUG, SYSTEM_ISSUE } from 'common/constants/defectTypes';
-import { injectIntl, defineMessages } from 'react-intl';
+import { StatisticsLink } from 'pages/inside/common/statisticsLink';
 import { BarChart } from './barChart';
 import { Duration } from './duration';
 import { Owner } from './owner';
@@ -118,14 +119,21 @@ export class InfoLine extends Component {
         </div>
         <div className={cx('total')}>
           {formatMessage(messages.total)}
-          <span className={cx('total--value')}>{executions.total}</span>
-          {detailedView && (
-            <span className={cx('total--detailed_count')}>
-              {detailedStatistics.executions.total || 0}
-            </span>
+          {detailedView ? (
+            <Fragment>
+              <StatisticsLink omitFilterParams className={cx('value')}>
+                {executions.total}
+              </StatisticsLink>
+              {detailedView && (
+                <span className={cx('value-detailed')}>
+                  {detailedStatistics.executions.total || 0}
+                </span>
+              )}
+            </Fragment>
+          ) : (
+            <span className={cx('value')}>{executions.total}</span>
           )}
         </div>
-        {/* TODO: update tooltip to work with detailed defects */}
         <div className={cx('defect-types')}>
           {Object.keys(defects).map((key) => (
             <div key={key} className={cx('defect-type')}>

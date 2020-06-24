@@ -34,7 +34,11 @@ import {
 import { activeProjectSelector } from 'controllers/user';
 import { activeFilterSelector } from 'controllers/filter';
 import { NAMESPACE as LAUNCH_NAMESPACE, debugModeSelector } from 'controllers/launch';
-import { copyQuery, createNamespacedQuery } from 'common/utils/routingUtils';
+import {
+  copyQuery,
+  createNamespacedQuery,
+  extractNamespacedQuery,
+} from 'common/utils/routingUtils';
 import { LEVEL_SUITE, LEVEL_TEST, LEVEL_STEP } from 'common/constants/launchLevels';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { FILTER_TITLES } from 'common/constants/reservedFilterTitles';
@@ -275,12 +279,17 @@ export const statisticsLinkSelector = createSelector(
     const isLatest = ownProps.isLatest;
     const page =
       (ownProps.ownLinkParams && ownProps.ownLinkParams.page) || getNextPage(isDebugMode, true);
+    let levelIndex = 0;
+    if (testItemIdsArray.length >= 0) {
+      levelIndex = !ownProps.itemId ? testItemIdsArray.length - 1 : testItemIdsArray.length;
+    }
+
     return createLink(
       testItemIds,
       ownProps.itemId,
       linkPayload,
       {
-        ...query,
+        ...(ownProps.omitFilterParams ? {} : query),
         ...createNamespacedQuery(
           {
             'filter.eq.hasStats': true,
@@ -292,7 +301,7 @@ export const statisticsLinkSelector = createSelector(
             launchesLimit,
             isLatest,
           },
-          getQueryNamespace(testItemIdsArray ? testItemIdsArray.length : 0),
+          getQueryNamespace(levelIndex),
         ),
       },
       page,
@@ -321,6 +330,7 @@ export const defectLinkSelector = createSelector(
       nextPage = isDebugMode ? PROJECT_USERDEBUG_TEST_ITEM_PAGE : TEST_ITEM_PAGE;
     }
     const page = (ownProps.ownLinkParams && ownProps.ownLinkParams.page) || nextPage;
+    const queryNamespace = getQueryNamespace(levelIndex);
 
     return createLink(
       testItemIds,
@@ -330,6 +340,7 @@ export const defectLinkSelector = createSelector(
         ...query,
         ...createNamespacedQuery(
           {
+            ...(ownProps.keepFilterParams ? extractNamespacedQuery(query, queryNamespace) : {}),
             'filter.eq.hasStats': true,
             'filter.eq.hasChildren': false,
             'filter.in.type': ownProps.filterType && LEVEL_STEP,
@@ -339,7 +350,7 @@ export const defectLinkSelector = createSelector(
             launchesLimit,
             isLatest,
           },
-          getQueryNamespace(levelIndex),
+          queryNamespace,
         ),
       },
       page,
