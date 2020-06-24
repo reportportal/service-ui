@@ -49,11 +49,15 @@ export class DefectTypeTooltip extends Component {
     projectConfig: PropTypes.object.isRequired,
     intl: PropTypes.object.isRequired,
     tooltipEventInfo: PropTypes.object,
-    itemId: PropTypes.number,
+    itemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     ownLinkParams: PropTypes.object,
     detailedView: PropTypes.bool,
     detailedData: PropTypes.object,
     isStepLevel: PropTypes.bool,
+    launchesLimit: PropTypes.number,
+    compositeAttribute: PropTypes.string,
+    isLatest: PropTypes.bool,
+    filterType: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -63,6 +67,10 @@ export class DefectTypeTooltip extends Component {
     detailedView: false,
     detailedData: {},
     isStepLevel: false,
+    launchesLimit: null,
+    compositeAttribute: '',
+    isLatest: true,
+    filterType: true,
   };
 
   getFilteredBodyData = (config) => {
@@ -89,6 +97,10 @@ export class DefectTypeTooltip extends Component {
       data,
       itemId,
       ownLinkParams,
+      launchesLimit,
+      compositeAttribute,
+      isLatest,
+      filterType,
       tooltipEventInfo,
       detailedView,
       detailedData,
@@ -116,6 +128,10 @@ export class DefectTypeTooltip extends Component {
               itemId={itemId}
               ownLinkParams={ownLinkParams}
               defects={defects.filter((defectKey) => !!detailedData[defectKey])}
+              launchesLimit={launchesLimit}
+              compositeAttribute={compositeAttribute}
+              isLatest={isLatest}
+              filterType={filterType}
               keepFilterParams
               className={cx('value', 'detailed')}
               eventInfo={tooltipEventInfo}
@@ -134,6 +150,10 @@ export class DefectTypeTooltip extends Component {
         itemId={itemId}
         ownLinkParams={ownLinkParams}
         defects={defects}
+        launchesLimit={launchesLimit}
+        compositeAttribute={compositeAttribute}
+        isLatest={isLatest}
+        filterType={filterType}
         className={cx('item')}
         eventInfo={tooltipEventInfo}
       >

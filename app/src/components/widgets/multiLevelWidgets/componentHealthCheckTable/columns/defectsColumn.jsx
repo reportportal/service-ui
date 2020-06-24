@@ -19,6 +19,8 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { DefectStatistics } from 'pages/inside/common/launchSuiteGrid/defectStatistics';
 import { DefectLink } from 'pages/inside/common/defectLink';
+import { TEST_ITEM_PAGE } from 'controllers/pages';
+import { TEST_ITEMS_TYPE_LIST, DEFAULT_LAUNCHES_LIMIT } from 'controllers/testItem';
 import { defaultDefectsMessages } from 'components/widgets/singleLevelWidgets/tables/components/messages';
 import { getItemNameConfig } from 'components/widgets/common/utils';
 import styles from '../componentHealthCheckTable.scss';
@@ -40,11 +42,25 @@ const getDefects = (values, name) => {
   return Object.assign({}, ...defects);
 };
 
-export const DefectsColumn = ({ className, value }, name) => {
-  const defaultColumnProps = {};
+export const DefectsColumn = (
+  { className, value },
+  name,
+  { isLatest, getCompositeAttributes, linkPayload },
+) => {
   const data = value.statistics
     ? getDefects(value.statistics, name)
     : getDefects(value.total.statistics, name);
+  const defaultColumnProps = {
+    itemId: TEST_ITEMS_TYPE_LIST,
+    isLatest,
+    launchesLimit: DEFAULT_LAUNCHES_LIMIT,
+    compositeAttribute: getCompositeAttributes(value.attributeValue),
+    filterType: true,
+    ownLinkParams: {
+      type: TEST_ITEM_PAGE,
+      payload: linkPayload,
+    },
+  };
 
   return (
     <div className={cx('defect-col', className)}>
