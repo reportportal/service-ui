@@ -44,6 +44,7 @@ import {
   defaultDefectsMessages,
   defaultStatisticsMessages,
 } from 'components/widgets/singleLevelWidgets/tables/components/messages';
+import { Breadcrumbs } from 'components/widgets/multiLevelWidgets/common/breadcrumbs';
 import { getStatisticsStatuses } from 'components/widgets/singleLevelWidgets/tables/components/utils';
 import {
   NAME,
@@ -351,6 +352,7 @@ export class ComponentHealthCheckTable extends Component {
 
     return (
       <ScrollWrapper hideTracksWhenNotNeeded>
+        <Breadcrumbs />
         {columns && (
           <Fragment>
             <Grid columns={columns} data={data} />
