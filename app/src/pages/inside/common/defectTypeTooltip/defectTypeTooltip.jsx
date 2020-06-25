@@ -95,7 +95,7 @@ export class DefectTypeTooltip extends Component {
       isStepLevel,
     } = this.props;
 
-    return detailedView && isStepLevel ? (
+    return detailedView ? (
       <div key={dataKey} className={className}>
         <div className={cx('name')}>
           <div className={cx('circle')} style={{ backgroundColor: color }} />
