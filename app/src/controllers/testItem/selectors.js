@@ -334,6 +334,20 @@ export const defectLinkSelector = createSelector(
     }
     const page = (ownProps.ownLinkParams && ownProps.ownLinkParams.page) || nextPage;
     const queryNamespace = getQueryNamespace(levelIndex);
+    const params = {
+      ...(ownProps.keepFilterParams ? extractNamespacedQuery(query, queryNamespace) : {}),
+      'filter.eq.hasStats': true,
+      'filter.eq.hasChildren': false,
+      'filter.in.issueType': getDefectsString(ownProps.defects),
+      'filter.has.compositeAttribute': ownProps.compositeAttribute,
+      'filter.in.launchId': ownProps.launchId,
+      launchesLimit,
+      isLatest,
+    };
+
+    if (ownProps.filterType) {
+      params['filter.in.type'] = LEVEL_STEP;
+    }
 
     return createLink(
       testItemIds,
@@ -341,20 +355,7 @@ export const defectLinkSelector = createSelector(
       linkPayload,
       {
         ...query,
-        ...createNamespacedQuery(
-          {
-            ...(ownProps.keepFilterParams ? extractNamespacedQuery(query, queryNamespace) : {}),
-            'filter.eq.hasStats': true,
-            'filter.eq.hasChildren': false,
-            'filter.in.type': ownProps.filterType && LEVEL_STEP,
-            'filter.in.issueType': getDefectsString(ownProps.defects),
-            'filter.has.compositeAttribute': ownProps.compositeAttribute,
-            'filter.in.launchId': ownProps.launchId,
-            launchesLimit,
-            isLatest,
-          },
-          queryNamespace,
-        ),
+        ...createNamespacedQuery(params, queryNamespace),
       },
       page,
     );
