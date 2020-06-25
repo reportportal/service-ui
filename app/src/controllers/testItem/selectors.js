@@ -280,8 +280,23 @@ export const statisticsLinkSelector = createSelector(
     const page =
       (ownProps.ownLinkParams && ownProps.ownLinkParams.page) || getNextPage(isDebugMode, true);
     let levelIndex = 0;
-    if (testItemIdsArray.length >= 0) {
+    if (testItemIdsArray.length > 0) {
       levelIndex = !ownProps.itemId ? testItemIdsArray.length - 1 : testItemIdsArray.length;
+    }
+    const queryNamespace = getQueryNamespace(levelIndex);
+    const params = {
+      ...(ownProps.keepFilterParams ? extractNamespacedQuery(query, queryNamespace) : {}),
+      'filter.eq.hasStats': true,
+      'filter.eq.hasChildren': false,
+      'filter.in.type': LEVEL_STEP,
+      'filter.in.launchId': ownProps.launchId,
+      'filter.has.compositeAttribute': ownProps.compositeAttribute,
+      launchesLimit,
+      isLatest,
+    };
+
+    if (ownProps.statuses) {
+      params['filter.in.status'] = ownProps.statuses.join(',');
     }
 
     return createLink(
@@ -289,20 +304,8 @@ export const statisticsLinkSelector = createSelector(
       ownProps.itemId,
       linkPayload,
       {
-        ...(ownProps.omitFilterParams ? {} : query),
-        ...createNamespacedQuery(
-          {
-            'filter.eq.hasStats': true,
-            'filter.eq.hasChildren': false,
-            'filter.in.type': LEVEL_STEP,
-            'filter.in.status': ownProps.statuses && ownProps.statuses.join(','),
-            'filter.in.launchId': ownProps.launchId,
-            'filter.has.compositeAttribute': ownProps.compositeAttribute,
-            launchesLimit,
-            isLatest,
-          },
-          getQueryNamespace(levelIndex),
-        ),
+        ...query,
+        ...createNamespacedQuery(params, queryNamespace),
       },
       page,
     );
@@ -320,7 +323,7 @@ export const defectLinkSelector = createSelector(
     const launchesLimit = ownProps.launchesLimit;
     const isLatest = ownProps.isLatest;
     let levelIndex = 0;
-    if (testItemIdsArray.length >= 0) {
+    if (testItemIdsArray.length > 0) {
       levelIndex = !ownProps.itemId ? testItemIdsArray.length - 1 : testItemIdsArray.length;
     }
     let nextPage;

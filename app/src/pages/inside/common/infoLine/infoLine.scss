@@ -171,10 +171,19 @@
     .value {
       color: $COLOR--gray-80;
       text-decoration: none;
+
+      &:hover {
+        color: $COLOR--topaz;
+      }
     }
 
     .value-detailed {
-      color: $COLOR--windows-blue;
+      color: $COLOR--topaz;
+      text-decoration: none;
+
+      &.disabled {
+        color: $COLOR--charcoal-grey;
+      }
 
       &::before {
         content: '';

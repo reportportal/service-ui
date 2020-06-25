@@ -53,6 +53,7 @@ export class DefectTypeTooltip extends Component {
     ownLinkParams: PropTypes.object,
     detailedView: PropTypes.bool,
     detailedData: PropTypes.object,
+    isStepLevel: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -61,6 +62,7 @@ export class DefectTypeTooltip extends Component {
     ownLinkParams: null,
     detailedView: false,
     detailedData: {},
+    isStepLevel: false,
   };
 
   getFilteredBodyData = (config) => {
@@ -82,16 +84,73 @@ export class DefectTypeTooltip extends Component {
     );
   };
 
-  render() {
+  renderDefectItem = (color, name, defects, className, dataKey) => {
     const {
       data,
       itemId,
       ownLinkParams,
       tooltipEventInfo,
-      type,
-      projectConfig,
       detailedView,
       detailedData,
+      isStepLevel,
+    } = this.props;
+
+    return detailedView && isStepLevel ? (
+      <div key={dataKey} className={className}>
+        <div className={cx('name')}>
+          <div className={cx('circle')} style={{ backgroundColor: color }} />
+          {name}
+        </div>
+        <span className={cx('value-container')}>
+          <DefectLink
+            itemId={itemId}
+            ownLinkParams={ownLinkParams}
+            defects={defects}
+            className={cx('value')}
+            eventInfo={tooltipEventInfo}
+          >
+            {data[dataKey]}
+          </DefectLink>
+          {detailedData[dataKey] && isStepLevel ? (
+            <DefectLink
+              itemId={itemId}
+              ownLinkParams={ownLinkParams}
+              defects={defects.filter((defectKey) => !!detailedData[defectKey])}
+              keepFilterParams
+              className={cx('value', 'detailed')}
+              eventInfo={tooltipEventInfo}
+            >
+              {detailedData[dataKey]}
+            </DefectLink>
+          ) : (
+            <span className={cx('value', 'detailed', 'disabled')}>
+              {detailedData[dataKey] || 0}
+            </span>
+          )}
+        </span>
+      </div>
+    ) : (
+      <DefectLink
+        itemId={itemId}
+        ownLinkParams={ownLinkParams}
+        defects={defects}
+        className={cx('item')}
+        eventInfo={tooltipEventInfo}
+      >
+        <div className={cx('name')}>
+          <div className={cx('circle')} style={{ backgroundColor: color }} />
+          {name}
+        </div>
+        <span className={cx('value')}>{data[dataKey]}</span>
+      </DefectLink>
+    );
+  };
+
+  render() {
+    const {
+      data,
+      type,
+      projectConfig,
       intl: { formatMessage },
     } = this.props;
 
@@ -103,24 +162,14 @@ export class DefectTypeTooltip extends Component {
       <div className={cx('defect-type-tooltip')}>
         {defectConfig && (
           <Fragment>
-            {this.hasTotal(defectConfig, filteredBodyData) && (
-              <DefectLink
-                itemId={itemId}
-                ownLinkParams={ownLinkParams}
-                defects={Object.keys(data)}
-                className={cx('total-item')}
-                eventInfo={tooltipEventInfo}
-              >
-                <div className={cx('name')}>
-                  <div
-                    className={cx('circle')}
-                    style={{ backgroundColor: defectConfig[0].color }}
-                  />
-                  {formatMessage(messages[`${type.toLowerCase()}_total`])}
-                </div>
-                <span className={cx('value')}>{data.total}</span>
-              </DefectLink>
-            )}
+            {this.hasTotal(defectConfig, filteredBodyData) &&
+              this.renderDefectItem(
+                defectConfig[0].color,
+                formatMessage(messages[`${type.toLowerCase()}_total`]),
+                Object.keys(data),
+                cx('total-item'),
+                'total',
+              )}
             {/**
              * Display defect types in a proper order,
              * the first is the system type (Product Bug, To investigate, etc.)
@@ -129,54 +178,7 @@ export class DefectTypeTooltip extends Component {
              * except system types (i.e. with index=0)
              */
             filteredBodyData.map(({ locator, color, longName }) => {
-              return detailedView ? (
-                <div key={locator} className={cx('item')}>
-                  <div className={cx('name')}>
-                    <div className={cx('circle')} style={{ backgroundColor: color }} />
-                    {longName}
-                  </div>
-                  <span className={cx('value-container')}>
-                    <DefectLink
-                      itemId={itemId}
-                      ownLinkParams={ownLinkParams}
-                      defects={[locator]}
-                      className={cx('value')}
-                      eventInfo={tooltipEventInfo}
-                    >
-                      {data[locator]}
-                    </DefectLink>
-                    {detailedData[locator] ? (
-                      <DefectLink
-                        itemId={itemId}
-                        ownLinkParams={ownLinkParams}
-                        defects={[locator]}
-                        keepFilterParams
-                        className={cx('value', 'detailed')}
-                        eventInfo={tooltipEventInfo}
-                      >
-                        {detailedData[locator]}
-                      </DefectLink>
-                    ) : (
-                      <span className={cx('value', 'detailed', 'disabled')}>0</span>
-                    )}
-                  </span>
-                </div>
-              ) : (
-                <DefectLink
-                  key={locator}
-                  itemId={itemId}
-                  ownLinkParams={ownLinkParams}
-                  defects={[locator]}
-                  className={cx('item')}
-                  eventInfo={tooltipEventInfo}
-                >
-                  <div className={cx('name')}>
-                    <div className={cx('circle')} style={{ backgroundColor: color }} />
-                    {longName}
-                  </div>
-                  <span className={cx('value')}>{data[locator]}</span>
-                </DefectLink>
-              );
+              return this.renderDefectItem(color, longName, [locator], cx('item'), locator);
             })}
           </Fragment>
         )}
