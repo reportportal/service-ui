@@ -26,7 +26,7 @@ export const StatisticsLink = connect((state) => ({
     itemId,
     statistics,
     children,
-    omitFilterParams,
+    keepFilterParams,
     ownLinkParams,
     ...rest
   } = props;

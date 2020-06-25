@@ -52,7 +52,7 @@
   border: 1px solid;
   border-radius: 100px;
   background-color: $COLOR--white-two;
-  color: $COLOR--windows-blue;
+  color: $COLOR--charcoal-grey;
 }
 
 .detailed-view {
@@ -64,7 +64,6 @@
 
     .value-detailed {
       text-decoration: none;
-      color: $COLOR--windows-blue;
 
       &::before {
         content: '';
