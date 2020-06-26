@@ -17,6 +17,7 @@
 import React, { Component } from 'react';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
+import { injectIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
 import isEqual from 'fast-deep-equal';
 import { lazyload } from 'react-lazyload';
@@ -29,6 +30,7 @@ import { showModalAction } from 'controllers/modal';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { ErrorMessage } from 'components/main/errorMessage';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { CHARTS, MULTI_LEVEL_WIDGETS_MAP, NoDataAvailable } from 'components/widgets';
 import { isWidgetDataAvailable } from '../../modals/common/utils';
 import { WidgetHeader } from './widgetHeader';
@@ -36,9 +38,22 @@ import styles from './widget.scss';
 
 const cx = classNames.bind(styles);
 
+const messages = defineMessages({
+  forceUpdateWidgetTitle: {
+    id: 'Widget.forceUpdateWidgetTitle',
+    defaultMessage: 'Update widget data',
+  },
+  forceUpdateWidgetMessage: {
+    id: 'Widget.forceUpdateWidgetMessage',
+    defaultMessage:
+      'Are you sure you want to update data in this widget? It could take <b>up to 15 minutes</b> depend on a database size on the project.',
+  },
+});
+
 const SILENT_UPDATE_TIMEOUT = 60000;
 const SILENT_UPDATE_TIMEOUT_FULLSCREEN = 30000;
 
+@injectIntl
 @connect(
   (state) => ({
     activeProject: activeProjectSelector(state),
@@ -50,6 +65,7 @@ const SILENT_UPDATE_TIMEOUT_FULLSCREEN = 30000;
 @track()
 export class SimpleWidget extends Component {
   static propTypes = {
+    intl: PropTypes.object.isRequired,
     activeProject: PropTypes.string.isRequired,
     widgetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     widgetType: PropTypes.string.isRequired,
@@ -325,10 +341,17 @@ export class SimpleWidget extends Component {
   };
 
   showForceUpdateWidgetModal = () => {
+    const {
+      intl: { formatMessage },
+    } = this.props;
     this.props.showModalAction({
-      id: 'forceUpdateWidgetModal',
+      id: 'confirmationModal',
       data: {
+        message: formatMessage(messages.forceUpdateWidgetMessage),
         onConfirm: () => this.fetchWidget({ refresh: true }),
+        title: formatMessage(messages.forceUpdateWidgetTitle),
+        confirmText: formatMessage(COMMON_LOCALE_KEYS.UPDATE),
+        cancelText: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
       },
     });
   };

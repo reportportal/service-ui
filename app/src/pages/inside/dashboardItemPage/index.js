@@ -20,5 +20,4 @@ export {
   AddSharedWidgetModal,
   EditWidgetModal,
   DeleteWidgetModal,
-  ForceUpdateWidgetModal,
 } from './modals';
