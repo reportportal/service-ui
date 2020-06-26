@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2019 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,22 +14,4 @@
  * limitations under the License.
  */
 
-.edit-widget-info-section {
-  position: relative;
-  display: inline-block;
-  width: 320px;
-  box-sizing: border-box;
-  padding: 20px;
-  margin-right: 20px;
-  background-color: $COLOR--white;
-
-  &:after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -70px;
-    width: 100%;
-    height: 70px;
-    background-color: $COLOR--white;
-  }
-}
+export { getNewActiveAttributes, getBreadcrumbs, getNewActiveBreadcrumbs } from './utils';

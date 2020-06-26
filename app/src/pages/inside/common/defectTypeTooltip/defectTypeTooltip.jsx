@@ -49,11 +49,18 @@ export class DefectTypeTooltip extends Component {
     projectConfig: PropTypes.object.isRequired,
     intl: PropTypes.object.isRequired,
     tooltipEventInfo: PropTypes.object,
-    itemId: PropTypes.number,
+    itemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     ownLinkParams: PropTypes.object,
     detailedView: PropTypes.bool,
     detailedData: PropTypes.object,
     isStepLevel: PropTypes.bool,
+    target: PropTypes.string,
+    listViewLinkParams: PropTypes.shape({
+      launchesLimit: PropTypes.number,
+      compositeAttribute: PropTypes.string,
+      isLatest: PropTypes.bool,
+      filterType: PropTypes.bool,
+    }),
   };
 
   static defaultProps = {
@@ -63,6 +70,8 @@ export class DefectTypeTooltip extends Component {
     detailedView: false,
     detailedData: {},
     isStepLevel: false,
+    target: '',
+    listViewLinkParams: {},
   };
 
   getFilteredBodyData = (config) => {
@@ -89,6 +98,8 @@ export class DefectTypeTooltip extends Component {
       data,
       itemId,
       ownLinkParams,
+      target,
+      listViewLinkParams,
       tooltipEventInfo,
       detailedView,
       detailedData,
@@ -105,6 +116,8 @@ export class DefectTypeTooltip extends Component {
           <DefectLink
             itemId={itemId}
             ownLinkParams={ownLinkParams}
+            target={target}
+            listViewLinkParams={listViewLinkParams}
             defects={defects}
             className={cx('value')}
             eventInfo={tooltipEventInfo}
@@ -116,6 +129,8 @@ export class DefectTypeTooltip extends Component {
               itemId={itemId}
               ownLinkParams={ownLinkParams}
               defects={defects.filter((defectKey) => !!detailedData[defectKey])}
+              target={target}
+              listViewLinkParams={listViewLinkParams}
               keepFilterParams
               className={cx('value', 'detailed')}
               eventInfo={tooltipEventInfo}
@@ -134,6 +149,8 @@ export class DefectTypeTooltip extends Component {
         itemId={itemId}
         ownLinkParams={ownLinkParams}
         defects={defects}
+        target={target}
+        listViewLinkParams={listViewLinkParams}
         className={cx('item')}
         eventInfo={tooltipEventInfo}
       >
