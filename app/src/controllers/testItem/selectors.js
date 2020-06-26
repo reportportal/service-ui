@@ -34,7 +34,11 @@ import {
 import { activeProjectSelector } from 'controllers/user';
 import { activeFilterSelector } from 'controllers/filter';
 import { NAMESPACE as LAUNCH_NAMESPACE, debugModeSelector } from 'controllers/launch';
-import { copyQuery, createNamespacedQuery } from 'common/utils/routingUtils';
+import {
+  copyQuery,
+  createNamespacedQuery,
+  extractNamespacedQuery,
+} from 'common/utils/routingUtils';
 import { LEVEL_SUITE, LEVEL_TEST, LEVEL_STEP } from 'common/constants/launchLevels';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { FILTER_TITLES } from 'common/constants/reservedFilterTitles';
@@ -42,6 +46,9 @@ import { suitesSelector, suitePaginationSelector } from 'controllers/suite';
 import { testsSelector, testPaginationSelector } from 'controllers/test';
 import { stepsSelector, stepPaginationSelector } from 'controllers/step';
 import { defectTypesSelector } from 'controllers/project';
+import { omit } from 'common/utils';
+import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
+import { SORTING_KEY } from 'controllers/sorting';
 import { DEFAULT_SORTING, TEST_ITEMS_TYPE_LIST, COMPOSITE_ATTRIBUTES_FILTER } from './constants';
 import {
   createLink,
@@ -57,6 +64,9 @@ const domainSelector = (state) => state.testItem || {};
 export const levelSelector = (state) => domainSelector(state).level;
 export const loadingSelector = (state) => domainSelector(state).loading;
 export const pageLoadingSelector = (state) => domainSelector(state).pageLoading;
+export const filteredItemStatisticsSelector = (state) =>
+  domainSelector(state).filteredItemStatistics;
+
 export const namespaceSelector = (state, offset = 0) =>
   getQueryNamespace(testItemIdsArraySelector(state).length - 1 - offset);
 export const queryParametersSelector = createQueryParametersSelector({
@@ -76,6 +86,13 @@ export const isTestItemsListSelector = createSelector(
   testItemIdsSelector,
   (testItemIds) => testItemIds === TEST_ITEMS_TYPE_LIST,
 );
+
+export const isFilterParamsExistsSelector = (state) => {
+  const namespace = namespaceSelector(state);
+  const query = queryParametersSelector(state, namespace);
+
+  return !!Object.keys(omit(query, [PAGE_KEY, SIZE_KEY, SORTING_KEY])).length;
+};
 
 export const isStepLevelSelector = (state) => levelSelector(state) === LEVEL_STEP;
 
@@ -262,25 +279,33 @@ export const statisticsLinkSelector = createSelector(
     const isLatest = ownProps.isLatest;
     const page =
       (ownProps.ownLinkParams && ownProps.ownLinkParams.page) || getNextPage(isDebugMode, true);
+    let levelIndex = 0;
+    if (testItemIdsArray.length > 0) {
+      levelIndex = !ownProps.itemId ? testItemIdsArray.length - 1 : testItemIdsArray.length;
+    }
+    const queryNamespace = getQueryNamespace(levelIndex);
+    const params = {
+      ...(ownProps.keepFilterParams ? extractNamespacedQuery(query, queryNamespace) : {}),
+      'filter.eq.hasStats': true,
+      'filter.eq.hasChildren': false,
+      'filter.in.type': LEVEL_STEP,
+      'filter.in.launchId': ownProps.launchId,
+      'filter.has.compositeAttribute': ownProps.compositeAttribute,
+      launchesLimit,
+      isLatest,
+    };
+
+    if (ownProps.statuses) {
+      params['filter.in.status'] = ownProps.statuses.join(',');
+    }
+
     return createLink(
       testItemIds,
       ownProps.itemId,
       linkPayload,
       {
         ...query,
-        ...createNamespacedQuery(
-          {
-            'filter.eq.hasStats': true,
-            'filter.eq.hasChildren': false,
-            'filter.in.type': LEVEL_STEP,
-            'filter.in.status': ownProps.statuses && ownProps.statuses.join(','),
-            'filter.in.launchId': ownProps.launchId,
-            'filter.has.compositeAttribute': ownProps.compositeAttribute,
-            launchesLimit,
-            isLatest,
-          },
-          getQueryNamespace(testItemIdsArray ? testItemIdsArray.length : 0),
-        ),
+        ...createNamespacedQuery(params, queryNamespace),
       },
       page,
     );
@@ -298,7 +323,7 @@ export const defectLinkSelector = createSelector(
     const launchesLimit = ownProps.launchesLimit;
     const isLatest = ownProps.isLatest;
     let levelIndex = 0;
-    if (testItemIdsArray.length >= 0) {
+    if (testItemIdsArray.length > 0) {
       levelIndex = !ownProps.itemId ? testItemIdsArray.length - 1 : testItemIdsArray.length;
     }
     let nextPage;
@@ -308,6 +333,21 @@ export const defectLinkSelector = createSelector(
       nextPage = isDebugMode ? PROJECT_USERDEBUG_TEST_ITEM_PAGE : TEST_ITEM_PAGE;
     }
     const page = (ownProps.ownLinkParams && ownProps.ownLinkParams.page) || nextPage;
+    const queryNamespace = getQueryNamespace(levelIndex);
+    const params = {
+      ...(ownProps.keepFilterParams ? extractNamespacedQuery(query, queryNamespace) : {}),
+      'filter.eq.hasStats': true,
+      'filter.eq.hasChildren': false,
+      'filter.in.issueType': getDefectsString(ownProps.defects),
+      'filter.has.compositeAttribute': ownProps.compositeAttribute,
+      'filter.in.launchId': ownProps.launchId,
+      launchesLimit,
+      isLatest,
+    };
+
+    if (ownProps.filterType) {
+      params['filter.in.type'] = LEVEL_STEP;
+    }
 
     return createLink(
       testItemIds,
@@ -315,19 +355,7 @@ export const defectLinkSelector = createSelector(
       linkPayload,
       {
         ...query,
-        ...createNamespacedQuery(
-          {
-            'filter.eq.hasStats': true,
-            'filter.eq.hasChildren': false,
-            'filter.in.type': ownProps.filterType && LEVEL_STEP,
-            'filter.in.issueType': getDefectsString(ownProps.defects),
-            'filter.has.compositeAttribute': ownProps.compositeAttribute,
-            'filter.in.launchId': ownProps.launchId,
-            launchesLimit,
-            isLatest,
-          },
-          getQueryNamespace(levelIndex),
-        ),
+        ...createNamespacedQuery(params, queryNamespace),
       },
       page,
     );

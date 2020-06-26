@@ -71,8 +71,10 @@ export class MarkdownViewer extends Component {
 
   render() {
     return (
-      <div ref={this.container} className={cx('markdown-viewer')}>
-        {Parser(DOMPurify.sanitize(this.simpleMDE.markdown(this.props.value)))}
+      <div className={cx('viewer-wrapper')}>
+        <div ref={this.container} className={cx('markdown-viewer')}>
+          {Parser(DOMPurify.sanitize(this.simpleMDE.markdown(this.props.value)))}
+        </div>
       </div>
     );
   }

@@ -29,7 +29,6 @@ import { URLS } from 'common/urls';
 import {
   fetchFiltersConcatAction,
   filtersSelector,
-  activeFilterSelector,
   loadingSelector,
   filtersPaginationSelector,
   updateFilterSuccessAction,
@@ -92,7 +91,6 @@ const messages = defineMessages({
     userId: userIdSelector(state),
     activeProject: activeProjectSelector(state),
     filters: filtersSelector(state),
-    activeLaunchFilter: activeFilterSelector(state),
     pagination: filtersPaginationSelector(state),
     loading: loadingSelector(state),
   }),
@@ -116,11 +114,9 @@ export class FiltersControl extends Component {
       value: PropTypes.string,
       label: PropTypes.string,
     }),
-    filter: PropTypes.string,
     pagination: PropTypes.object.isRequired,
     formAppearance: PropTypes.object.isRequired,
     filters: PropTypes.array.isRequired,
-    activeLaunchFilter: PropTypes.object,
     changeWizardForm: PropTypes.func,
     fetchFiltersConcatAction: PropTypes.func,
     updateFilterSuccessAction: PropTypes.func,
@@ -140,11 +136,9 @@ export class FiltersControl extends Component {
     error: '',
     userId: '',
     value: {},
-    filter: '',
     activeProject: '',
     loading: false,
     filters: [],
-    activeLaunchFilter: null,
     pagination: {},
     changeWizardForm: () => {},
     fetchFiltersConcatAction: () => {},
@@ -166,10 +160,14 @@ export class FiltersControl extends Component {
 
   componentDidMount() {
     const { page } = this.state;
-    const { activeLaunchFilter } = this.props;
+    const { formAppearance } = this.props;
+    const { predefinedFilter } = formAppearance;
 
     this.fetchFilter({ page });
-    activeLaunchFilter && this.handleActiveFilterChange(activeLaunchFilter.id.toString());
+
+    if (predefinedFilter) {
+      this.handleActiveFilterChange(predefinedFilter.id.toString());
+    }
   }
 
   onFilterAdd = (event) => {
@@ -222,7 +220,7 @@ export class FiltersControl extends Component {
     return <div className={cx('filters-control-form')}>{component}</div>;
   };
 
-  getFilterById = (filterId) => this.props.filters.find((elem) => elem.id === Number(filterId));
+  getFilterById = (filterId) => this.getFiltersList().find((elem) => elem.id === Number(filterId));
 
   getActiveFilterId = () => this.props.value.value;
 
@@ -231,16 +229,17 @@ export class FiltersControl extends Component {
     conditions: filter.conditions.filter((item) => item.value.trim()),
   });
 
-  getFiltersList = (filters) => {
-    if (!filters.length) return [];
+  getFiltersList = () => {
+    const {
+      filters,
+      formAppearance: { predefinedFilter },
+    } = this.props;
 
-    const { activeLaunchFilter } = this.props;
+    if (!predefinedFilter) return filters;
 
-    if (!activeLaunchFilter) return filters;
+    const filtersList = filters.filter((el) => el.id !== predefinedFilter.id);
 
-    const filtersList = filters.filter((el) => el.id !== activeLaunchFilter.id);
-
-    filtersList.unshift(activeLaunchFilter);
+    filtersList.unshift(predefinedFilter);
 
     return filtersList;
   };
@@ -406,10 +405,10 @@ export class FiltersControl extends Component {
   };
 
   render() {
-    const { filters, formAppearance } = this.props;
+    const { formAppearance } = this.props;
     const activeFilterId = this.getActiveFilterId();
     const activeFilter = this.getFilterById(activeFilterId);
-    const filtersList = this.getFiltersList(filters);
+    const filtersList = this.getFiltersList();
 
     if (formAppearance.mode !== false) {
       return this.getFormAppearanceComponent(activeFilter);

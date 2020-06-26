@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { LogViewSwitcher } from './logViewSwitcher';
+export { Breadcrumbs } from './breadcrumbs';

@@ -31,6 +31,9 @@ import {
   parentItemSelector,
   isTestItemsListSelector,
   isStepLevelSelector,
+  isFilterParamsExistsSelector,
+  filteredItemStatisticsSelector,
+  FILTERED_ITEM_STATISTICS_INITIAL_STATE,
 } from 'controllers/testItem';
 import { HISTORY_PAGE_EVENTS } from 'components/main/analytics/events';
 import { InfoLine, InfoLineListView } from 'pages/inside/common/infoLine';
@@ -44,6 +47,8 @@ import { HistoryView } from './historyView';
     currentFilter: activeFilterSelector(state),
     isTestItemsList: isTestItemsListSelector(state),
     isStepLevel: isStepLevelSelector(state),
+    isFilterParamsExists: isFilterParamsExistsSelector(state),
+    filteredItemStatistics: filteredItemStatisticsSelector(state),
   }),
   {
     refreshHistoryAction,
@@ -66,6 +71,8 @@ export class HistoryPage extends Component {
     filterEntities: PropTypes.array,
     isTestItemsList: PropTypes.bool,
     isStepLevel: PropTypes.bool,
+    isFilterParamsExists: PropTypes.bool,
+    filteredItemStatistics: PropTypes.object,
     onFilterAdd: PropTypes.func,
     onFilterRemove: PropTypes.func,
     onFilterValidate: PropTypes.func,
@@ -82,6 +89,8 @@ export class HistoryPage extends Component {
     filterEntities: [],
     isTestItemsList: false,
     isStepLevel: false,
+    isFilterParamsExists: false,
+    filteredItemStatistics: FILTERED_ITEM_STATISTICS_INITIAL_STATE,
     onFilterAdd: () => {},
     onFilterRemove: () => {},
     onFilterValidate: () => {},
@@ -125,13 +134,27 @@ export class HistoryPage extends Component {
   };
 
   getInfoLine = () => {
-    const { isTestItemsList, currentFilter, parentItem } = this.props;
+    const {
+      isTestItemsList,
+      currentFilter,
+      parentItem,
+      isFilterParamsExists,
+      filteredItemStatistics,
+    } = this.props;
 
     if (isTestItemsList) {
       return !!currentFilter && <InfoLineListView data={currentFilter} />;
     }
 
-    return !!parentItem && <InfoLine data={parentItem} />;
+    return (
+      !!parentItem && (
+        <InfoLine
+          data={parentItem}
+          detailedView={isFilterParamsExists}
+          detailedStatistics={filteredItemStatistics}
+        />
+      )
+    );
   };
 
   refreshPage = () => {

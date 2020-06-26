@@ -71,6 +71,10 @@
   margin-right: 15px;
   color: $COLOR--charcoal-grey;
 
+  .value {
+    margin-left: 5px;
+  }
+
   @media (max-width: $SCREEN_SM_MAX) {
     &::after {
       content: '';
@@ -158,4 +162,38 @@
 .item-child {
   max-width: 185px;
   line-height: normal;
+}
+
+.detailed-view {
+  .total {
+    font-family: $FONT-SEMIBOLD;
+
+    .value {
+      color: $COLOR--gray-80;
+      text-decoration: none;
+
+      &:hover {
+        color: $COLOR--topaz;
+      }
+    }
+
+    .value-detailed {
+      color: $COLOR--topaz;
+      text-decoration: none;
+
+      &.disabled {
+        color: $COLOR--charcoal-grey;
+      }
+
+      &::before {
+        content: '';
+        display: inline-block;
+        width: 1px;
+        height: 12px;
+        margin: 0 5px;
+        vertical-align: middle;
+        background-color: $COLOR--gray-91;
+      }
+    }
+  }
 }

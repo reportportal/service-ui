@@ -52,8 +52,12 @@ export class DonutChart extends Component {
     viewBox: PropTypes.number.isRequired,
     strokeWidth: PropTypes.number.isRequired,
     defectColors: PropTypes.object.isRequired,
-    itemId: PropTypes.number.isRequired,
+    itemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     eventInfo: PropTypes.object,
+    launchesLimit: PropTypes.number,
+    compositeAttribute: PropTypes.string,
+    isLatest: PropTypes.bool,
+    filterType: PropTypes.bool,
     ownLinkParams: PropTypes.shape({
       isOtherPage: PropTypes.bool,
       payload: PropTypes.object,
@@ -61,8 +65,13 @@ export class DonutChart extends Component {
     }),
   };
   static defaultProps = {
+    itemId: null,
     type: '',
     defects: [],
+    launchesLimit: null,
+    compositeAttribute: '',
+    isLatest: true,
+    filterType: true,
     eventInfo: {},
     ownLinkParams: {},
   };
@@ -101,6 +110,10 @@ export class DonutChart extends Component {
       itemId,
       defectColors,
       eventInfo,
+      launchesLimit,
+      compositeAttribute,
+      isLatest,
+      filterType,
       ownLinkParams,
     } = this.props;
     const diameter = viewBox / 2;
@@ -115,6 +128,10 @@ export class DonutChart extends Component {
         defects={defects}
         itemId={itemId}
         eventInfo={eventInfo}
+        launchesLimit={launchesLimit}
+        compositeAttribute={compositeAttribute}
+        isLatest={isLatest}
+        filterType={filterType}
         ownLinkParams={ownLinkParams}
       >
         <div className={cx('chart-container')}>

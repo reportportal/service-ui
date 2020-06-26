@@ -21,11 +21,11 @@ import classNames from 'classnames/bind';
 import LogIcon from 'common/img/log-view-inline.svg';
 import ListIcon from 'common/img/list-view-tiny-inline.svg';
 import { LIST_VIEW, LOG_VIEW } from 'controllers/testItem';
-import styles from './logViewSwitcher.scss';
+import styles from './viewSwitcher.scss';
 
 const cx = classNames.bind(styles);
 
-export const LogViewSwitcher = ({ viewMode, onToggleView }) => (
+export const ViewSwitcher = ({ viewMode, onToggleView }) => (
   <div className={cx('view-switcher')}>
     <button
       className={cx('switcher-button', viewMode === LIST_VIEW ? 'list-view-active' : 'list-view')}
@@ -42,11 +42,11 @@ export const LogViewSwitcher = ({ viewMode, onToggleView }) => (
   </div>
 );
 
-LogViewSwitcher.propTypes = {
+ViewSwitcher.propTypes = {
   viewMode: PropTypes.string,
   onToggleView: PropTypes.func.isRequired,
 };
 
-LogViewSwitcher.defaultProps = {
+ViewSwitcher.defaultProps = {
   viewMode: LIST_VIEW,
 };

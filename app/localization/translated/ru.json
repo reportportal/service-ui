@@ -761,7 +761,7 @@
   "IndexActionsBlock.title": "Действия с индексом",
   "InfoLine.parent": "Родитель",
   "InfoLine.passed": "Успешно {value}%",
-  "InfoLine.total": "Всего {value}",
+  "InfoLine.total": "Всего:",
   "InfoLineListView.filter": "Фильтр:",
   "InfoLineListView.filteredBy": "Отфильтровано по:",
   "InfoSection.showMore": "Показать больше",

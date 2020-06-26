@@ -34,7 +34,11 @@ export class DefectStatistics extends Component {
     projectDefects: PropTypes.object,
     data: PropTypes.object,
     customProps: PropTypes.object,
-    itemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    launchesLimit: PropTypes.number,
+    compositeAttribute: PropTypes.string,
+    isLatest: PropTypes.bool,
+    filterType: PropTypes.bool,
+    itemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     eventInfo: PropTypes.object,
     tooltipEventInfo: PropTypes.object,
     ownLinkParams: PropTypes.shape({
@@ -48,6 +52,10 @@ export class DefectStatistics extends Component {
     projectDefects: {},
     customProps: {},
     data: {},
+    launchesLimit: null,
+    compositeAttribute: '',
+    isLatest: true,
+    filterType: true,
     eventInfo: {},
     tooltipEventInfo: {},
     ownLinkParams: {},
@@ -71,6 +79,10 @@ export class DefectStatistics extends Component {
       eventInfo,
       tooltipEventInfo,
       ownLinkParams,
+      launchesLimit,
+      compositeAttribute,
+      isLatest,
+      filterType,
     } = this.props;
 
     const defectList = this.getDefectList();
@@ -89,6 +101,10 @@ export class DefectStatistics extends Component {
                 data={data}
                 type={type}
                 defects={defectList}
+                launchesLimit={launchesLimit}
+                compositeAttribute={compositeAttribute}
+                isLatest={isLatest}
+                filterType={filterType}
                 viewBox={64}
                 strokeWidth={13}
                 eventInfo={eventInfo}
@@ -100,6 +116,10 @@ export class DefectStatistics extends Component {
               <DefectLink
                 itemId={itemId}
                 defects={defectList}
+                launchesLimit={launchesLimit}
+                compositeAttribute={compositeAttribute}
+                isLatest={isLatest}
+                filterType={filterType}
                 ownLinkParams={ownLinkParams}
                 eventInfo={eventInfo}
               >

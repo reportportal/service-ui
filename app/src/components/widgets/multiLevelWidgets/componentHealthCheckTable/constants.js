@@ -14,29 +14,20 @@
  * limitations under the License.
  */
 
-import { connect } from 'react-redux';
-import Link from 'redux-first-router-link';
-import { statisticsLinkSelector } from 'controllers/testItem';
+export const MAX_PASSING_RATE_VALUE = 100;
 
-export const StatisticsLink = connect((state) => ({
-  getStatisticsLink: statisticsLinkSelector(state),
-}))((props) => {
-  const {
-    getStatisticsLink,
-    itemId,
-    statistics,
-    launchesLimit,
-    compositeAttribute,
-    isLatest,
-    children,
-    keepFilterParams,
-    ownLinkParams,
-    ...rest
-  } = props;
-  const link = getStatisticsLink(props);
-  return (
-    <Link to={link} {...rest}>
-      {children}
-    </Link>
-  );
-});
+export const NAME = 'attributeValue';
+export const CUSTOM_COLUMN = 'customColumn';
+export const STATUS = 'status';
+export const PASS_RATE = 'passingRate';
+
+export const NAME_KEY = 'attributeValue';
+export const DEFECT_COLUMN_KEY = 'defect';
+export const STATISTICS_COLUMN_KEY = 'statistics';
+export const STATUS_COLUMN_KEY = 'status';
+export const CUSTOM_COLUMN_KEY = 'customColumn';
+export const PASS_RATE_KEY = 'passingRate';
+
+export const WIDTH_MIDDLE = 'middle';
+export const BACKGROUND_COLOR_WHITE = 'white';
+export const BORDER = 'bottom';

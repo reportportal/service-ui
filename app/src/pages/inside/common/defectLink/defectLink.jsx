@@ -34,8 +34,13 @@ export const DefectLink = track()(
       children,
       defects,
       eventInfo,
+      launchesLimit,
+      compositeAttribute,
+      isLatest,
+      filterType,
       tracking,
       ownLinkParams,
+      keepFilterParams,
       refreshTestItemPage,
       ...rest
     } = props;

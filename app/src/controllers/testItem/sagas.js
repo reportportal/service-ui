@@ -48,11 +48,16 @@ import {
   showDefaultErrorNotification,
   NOTIFICATION_TYPES,
 } from 'controllers/notification';
-import { setLevelAction, setPageLoadingAction } from './actionCreators';
+import {
+  setLevelAction,
+  setPageLoadingAction,
+  setDefaultItemStatisticsAction,
+} from './actionCreators';
 import {
   FETCH_TEST_ITEMS,
   NAMESPACE,
   PARENT_ITEMS_NAMESPACE,
+  FILTERED_ITEM_STATISTICS_NAMESPACE,
   RESTORE_PATH,
   FETCH_TEST_ITEMS_LOG_PAGE,
   DELETE_TEST_ITEMS,
@@ -68,8 +73,18 @@ import {
   logPageOffsetSelector,
   levelSelector,
   isTestItemsListSelector,
+  isFilterParamsExistsSelector,
 } from './selectors';
 import { calculateLevel } from './utils';
+
+function* fetchFilteredItemStatistics(project, params) {
+  yield put(
+    fetchDataAction(FILTERED_ITEM_STATISTICS_NAMESPACE)(URLS.testItemStatistics(project), {
+      params,
+    }),
+  );
+  yield take(createFetchPredicate(FILTERED_ITEM_STATISTICS_NAMESPACE));
+}
 
 function* updateLaunchId(launchId) {
   const page = yield select(pageSelector);
@@ -111,6 +126,7 @@ function* fetchTestItems({ payload = {} }) {
   const isTestItemsList = yield select(isTestItemsListSelector);
   if (isPathNameChanged && !offset) {
     yield put(setPageLoadingAction(true));
+    yield put(setDefaultItemStatisticsAction());
 
     if (!isTestItemsList) {
       yield call(fetchParentItems);
@@ -184,6 +200,11 @@ function* fetchTestItems({ payload = {} }) {
     yield put(fetchSuccessAction(LEVELS[level].namespace, dataPayload.payload));
   }
   yield put(setLevelAction(level));
+
+  const isFilterParamsExists = yield select(isFilterParamsExistsSelector);
+  if (!isTestItemsList && isFilterParamsExists) {
+    yield call(fetchFilteredItemStatistics, project, params);
+  }
   yield put(setPageLoadingAction(false));
 }
 

@@ -18,12 +18,12 @@ import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl } from 'react-intl';
-import styles from './componentHealthCheckBreadcrumbs.scss';
+import styles from './breadcrumbs.scss';
 
 const cx = classNames.bind(styles);
 
 @injectIntl
-export class ComponentHealthCheckBreadcrumbs extends PureComponent {
+export class Breadcrumbs extends PureComponent {
   static propTypes = {
     breadcrumbs: PropTypes.array,
     activeBreadcrumbs: PropTypes.array,
@@ -41,7 +41,7 @@ export class ComponentHealthCheckBreadcrumbs extends PureComponent {
     const actualBreadcrumbs = activeBreadcrumbs || breadcrumbs;
 
     return (
-      <ul className={cx('health-check-breadcrumbs')}>
+      <ul className={cx('breadcrumbs')}>
         {actualBreadcrumbs &&
           actualBreadcrumbs.map((item, i) => (
             <li className={cx('item', { active: item.isActive })} key={item.key}>

@@ -18,7 +18,7 @@ import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl } from 'react-intl';
-import { ComponentHealthCheckBreadcrumbs } from './componentHealthCheckBreadcrumbs';
+import { Breadcrumbs } from 'components/widgets/multiLevelWidgets/common/breadcrumbs';
 import { ComponentHealthCheckColorScheme } from './componentHealthCheckColorScheme';
 import styles from './componentHealthCheckLegend.scss';
 
@@ -46,7 +46,7 @@ export class ComponentHealthCheckLegend extends PureComponent {
 
     return (
       <div className={cx('legend')}>
-        <ComponentHealthCheckBreadcrumbs
+        <Breadcrumbs
           breadcrumbs={breadcrumbs}
           activeBreadcrumbs={activeBreadcrumbs}
           onClickBreadcrumbs={onClickBreadcrumbs}
