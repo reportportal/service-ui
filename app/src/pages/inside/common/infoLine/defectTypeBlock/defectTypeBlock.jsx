@@ -28,7 +28,7 @@ const cx = classNames.bind(styles);
 @withHoverableTooltip({
   TooltipComponent: DefectTypeTooltip,
   data: {
-    width: 235,
+    width: 255,
     placement: 'bottom-end',
     noArrow: true,
     desktopOnly: true,

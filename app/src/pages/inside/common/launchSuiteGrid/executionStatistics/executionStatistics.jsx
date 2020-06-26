@@ -17,17 +17,29 @@
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { StatisticsLink } from 'pages/inside/common/statisticsLink';
+import React from 'react';
 import styles from './executionStatistics.scss';
 
 const cx = classNames.bind(styles);
 
-export const ExecutionStatistics = ({ value, title, bold, itemId, statuses, ownLinkParams }) => (
+export const ExecutionStatistics = ({
+  value,
+  title,
+  bold,
+  itemId,
+  target,
+  listViewLinkParams,
+  statuses,
+  ownLinkParams,
+}) => (
   <div className={cx('execution-statistics')}>
     <span className={cx('title')}>{title.full}</span>
     {!!Number(value) && (
       <StatisticsLink
         itemId={itemId}
         statuses={statuses}
+        target={target}
+        listViewLinkParams={listViewLinkParams}
         className={cx('value', { bold })}
         ownLinkParams={ownLinkParams}
       >
@@ -43,6 +55,12 @@ ExecutionStatistics.propTypes = {
   bold: PropTypes.bool,
   itemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   statuses: PropTypes.arrayOf(PropTypes.string).isRequired,
+  target: PropTypes.string,
+  listViewLinkParams: PropTypes.shape({
+    launchesLimit: PropTypes.number,
+    compositeAttribute: PropTypes.string,
+    isLatest: PropTypes.bool,
+  }),
   ownLinkParams: PropTypes.shape({
     payload: PropTypes.object,
     page: PropTypes.string,
@@ -52,5 +70,7 @@ ExecutionStatistics.defaultProps = {
   bold: false,
   title: {},
   value: null,
+  target: '',
+  listViewLinkParams: {},
   ownLinkParams: {},
 };

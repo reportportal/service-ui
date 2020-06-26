@@ -31,6 +31,9 @@ export const HeaderCell = track()(
   ({
     title,
     align,
+    size,
+    backgroundColor,
+    border,
     sortable,
     id,
     sortingActive,
@@ -44,6 +47,8 @@ export const HeaderCell = track()(
   }) => {
     const displayedDirection = sortingActive ? sortingDirection : SORTING_ASC;
     const computedClassName = {
+      [`background-color-${backgroundColor}`]: backgroundColor,
+      [`border-${border}`]: border,
       [`align-${align}`]: align,
       [`sorting-${displayedDirection.toLowerCase()}`]: displayedDirection,
       sortable,
@@ -69,8 +74,18 @@ export const HeaderCell = track()(
           <div className={cx('filter')} onClick={filterClickHandler}>
             {Parser(FilterIcon)}
           </div>
-          <span className={cx('title-full')}>{title.full}</span>
-          <span className={cx('title-short')}>{title.short || title.full}</span>
+          <span
+            className={cx('title-full', { [`title-full--${size}`]: size })}
+            title={size ? title.full : ''}
+          >
+            {title.full}
+          </span>
+          <span
+            className={cx('title-short', { [`title-short--${size}`]: size })}
+            title={size ? title.full : ''}
+          >
+            {title.short || title.full}
+          </span>
           <div className={cx('arrow')}>{Parser(ArrowIcon)}</div>
         </div>
       </div>
@@ -95,7 +110,10 @@ HeaderCell.defaultProps = {
     full: '',
   },
   align: ALIGN_LEFT,
+  size: null,
   sortable: false,
+  backgroundColor: null,
+  border: null,
   id: '',
   withFilter: false,
   sortingDirection: 'DESC',
