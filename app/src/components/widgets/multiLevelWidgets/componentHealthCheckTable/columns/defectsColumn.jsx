@@ -85,7 +85,10 @@ export const DefectsColumn = (
           </div>
         </Fragment>
       ) : (
-        <span className={cx('total-item')}>{data.total}</span>
+        <Fragment>
+          <span className={cx('mobile-hint')}>{defaultDefectsMessages[name]}</span>
+          <span className={cx('total-item')}>{data.total}</span>
+        </Fragment>
       )}
     </div>
   );
