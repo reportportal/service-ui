@@ -45,35 +45,6 @@
   }
 }
 
-.type-pb {
-  background: $COLOR--product-bug;
-  & span {
-    color: $COLOR--white-two;
-  }
-}
-
-.type-ab {
-  background: $COLOR--automation-bug;
-}
-
-.type-si {
-  background: $COLOR--system-issue;
-  & span {
-    color: $COLOR--white-two;
-  }
-}
-
-.type-ti {
-  background: $COLOR--to-investigate;
-}
-
-.type-nd {
-  background: $COLOR--gray-47;
-  & span {
-    color: $COLOR--white-two;
-  }
-}
-
 .many-items-icon,
 .empty-item-icon,
 .no-item-icon {

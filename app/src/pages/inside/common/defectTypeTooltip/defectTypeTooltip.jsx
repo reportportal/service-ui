@@ -146,6 +146,7 @@ export class DefectTypeTooltip extends Component {
       </div>
     ) : (
       <DefectLink
+        key={dataKey}
         itemId={itemId}
         ownLinkParams={ownLinkParams}
         defects={defects}
