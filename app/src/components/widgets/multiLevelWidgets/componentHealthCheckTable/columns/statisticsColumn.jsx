@@ -69,7 +69,12 @@ export const StatisticsColumn = (
           </div>
         </Fragment>
       ) : (
-        !!totalValue && <span className={cx('total-item')}>{totalValue}</span>
+        !!totalValue && (
+          <Fragment>
+            <span className={cx('mobile-hint')}>{defaultStatisticsMessages[name]}</span>
+            <span className={cx('total-item')}>{totalValue}</span>
+          </Fragment>
+        )
       )}
     </div>
   );

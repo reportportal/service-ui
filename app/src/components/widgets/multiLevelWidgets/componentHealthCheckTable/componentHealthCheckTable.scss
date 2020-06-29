@@ -77,6 +77,12 @@
 
   .name-total {
     text-transform: uppercase;
+
+    @media (max-width: $SCREEN_SM_MAX) {
+      display: inline-block;
+      width: 100%;
+      text-align: center;
+    }
   }
 
   @media (max-width: $SCREEN_SM_MAX) {
@@ -101,39 +107,21 @@
   }
 
   .mobile-hint {
-    display: none;
-    padding-right: 2px;
-    font-family: $FONT-SEMIBOLD;
     vertical-align: text-top;
   }
 
   @media (max-width: $SCREEN_SM_MAX) {
     width: 100%;
     padding-left: 20px;
-
-    .mobile-hint {
-      display: inline;
-    }
   }
 }
 
 .status-col {
   width: 105px;
 
-  .mobile-hint {
-    display: none;
-    padding-right: 2px;
-    font-size: 12px;
-    font-family: $FONT-SEMIBOLD;
-  }
-
   @media (max-width: $SCREEN_SM_MAX) {
     width: 100%;
     padding-left: 20px;
-
-    .mobile-hint {
-      display: inline;
-    }
   }
 }
 
@@ -253,21 +241,12 @@
   width: 9%;
   font-family: $FONT-REGULAR;
   font-size: 12px;
+  line-height: normal;
   color: $COLOR--charcoal-grey;
-
-  .mobile-hint {
-    display: none;
-    padding-right: 2px;
-    font-family: $FONT-SEMIBOLD;
-  }
 
   @media (max-width: $SCREEN_SM_MAX) {
     width: 100%;
     text-align: center;
-
-    .mobile-hint {
-      display: inline;
-    }
   }
 }
 
@@ -325,10 +304,13 @@
   font-family: $FONT-SEMIBOLD;
   text-transform: uppercase;
   white-space: nowrap;
+}
 
-  @media (max-width: $SCREEN_SM_MAX) {
-    display: none;
-  }
+.mobile-hint {
+  display: none;
+  padding-right: 2px;
+  font-size: 12px;
+  font-family: $FONT-SEMIBOLD;
 }
 
 @media (max-width: $SCREEN_SM_MAX) {
@@ -345,5 +327,9 @@
 
   .mobile-block {
     display: block;
+  }
+
+  .mobile-hint {
+    display: inline;
   }
 }

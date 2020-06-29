@@ -30,7 +30,10 @@ export const PassingRateColumn = ({ className, value }, name, { formatMessage })
         <span className={cx('passing-rate-item')}>{value.passingRate}%</span>
       </Fragment>
     ) : (
-      <span className={cx('total-item')}>{!!value.total && value.total.passingRate}%</span>
+      <Fragment>
+        <span className={cx('mobile-hint')}>{formatMessage(hintMessages.passingRateHint)}</span>
+        <span className={cx('total-item')}>{!!value.total && value.total.passingRate}%</span>
+      </Fragment>
     )}
   </div>
 );
