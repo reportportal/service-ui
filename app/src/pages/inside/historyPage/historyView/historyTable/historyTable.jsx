@@ -33,6 +33,7 @@ import {
 import { nameLinkSelector } from 'controllers/testItem';
 import { PROJECT_LOG_PAGE } from 'controllers/pages';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { defectTypesSelector } from 'controllers/project';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { NoItemMessage } from 'components/main/noItemMessage';
 import { ItemNameBlock } from './itemNameBlock';
@@ -69,6 +70,7 @@ const messages = defineMessages({
     loading: loadingSelector(state),
     totalItemsCount: totalItemsCountSelector(state),
     selectedFilter: filterForCompareSelector(state),
+    defectTypes: defectTypesSelector(state),
     link: (ownProps) => nameLinkSelector(state, ownProps),
   }),
   {
@@ -82,6 +84,7 @@ export class HistoryTable extends Component {
     intl: PropTypes.object.isRequired,
     historyDepth: PropTypes.string.isRequired,
     historyBase: PropTypes.string.isRequired,
+    defectTypes: PropTypes.object.isRequired,
     selectedFilter: PropTypes.object,
     history: PropTypes.array,
     itemsHistory: PropTypes.array,
@@ -128,7 +131,14 @@ export class HistoryTable extends Component {
   };
 
   renderCorrespondingHistoryItem = (historyItem, isLastRow) => {
-    const { navigate, link, onSelectItem, selectedItems, withGroupOperations } = this.props;
+    const {
+      navigate,
+      link,
+      onSelectItem,
+      selectedItems,
+      withGroupOperations,
+      defectTypes,
+    } = this.props;
     switch (historyItem.status) {
       case NOT_FOUND:
       case RESETED:
@@ -160,9 +170,11 @@ export class HistoryTable extends Component {
           >
             <HistoryItem
               testItem={historyItem}
+              defectTypes={defectTypes}
               onSelectItem={onSelectItem}
               selectedItems={selectedItems}
               selectable={withGroupOperations && !historyItem.isFilterItem}
+              singleDefectView={withGroupOperations}
             />
           </HistoryCell>
         );

@@ -18,32 +18,18 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { SKIPPED, FAILED, INTERRUPTED } from 'common/constants/testStatuses';
+import { calculateFontColor } from 'common/utils';
 import CommentIcon from 'common/img/comment-inline.svg';
 import TagIcon from 'common/img/tag-inline.svg';
-import {
-  AUTOMATION_BUG,
-  NO_DEFECT,
-  PRODUCT_BUG,
-  SYSTEM_ISSUE,
-  TO_INVESTIGATE,
-} from 'common/constants/defectTypes';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { ItemPathTooltip } from 'pages/inside/common/itemPathTooltip';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
-
+import { COLOR_WHITE_TWO } from 'common/constants/colors';
 import { DefectBadge } from './defectBadge/defectBadge';
 import { MessageBadge } from './messageBadge/messageBadge';
 import styles from './historyItem.scss';
 
 const cx = classNames.bind(styles);
-
-const defectsTitleMap = {
-  [AUTOMATION_BUG]: 'ab',
-  [NO_DEFECT]: 'nd',
-  [PRODUCT_BUG]: 'pb',
-  [SYSTEM_ISSUE]: 'si',
-  [TO_INVESTIGATE]: 'ti',
-};
 
 const statusesWithDefect = [FAILED, SKIPPED, INTERRUPTED];
 
@@ -59,9 +45,11 @@ const statusesWithDefect = [FAILED, SKIPPED, INTERRUPTED];
 })
 export class HistoryItem extends Component {
   static propTypes = {
+    defectTypes: PropTypes.object.isRequired,
     testItem: PropTypes.object,
     selectedItems: PropTypes.arrayOf(PropTypes.object),
     selectable: PropTypes.bool,
+    singleDefectView: PropTypes.bool,
     onSelectItem: PropTypes.func,
   };
 
@@ -69,6 +57,7 @@ export class HistoryItem extends Component {
     testItem: {},
     selectedItems: [],
     selectable: false,
+    singleDefectView: false,
     onSelectItem: () => {},
   };
 
@@ -77,17 +66,35 @@ export class HistoryItem extends Component {
 
   mapDefectsToBadges = () => {
     const {
-      statistics: { defects = {} },
-    } = this.props.testItem;
+      defectTypes,
+      singleDefectView,
+      testItem: {
+        issue = {},
+        statistics: { defects = {} },
+      },
+    } = this.props;
 
     return Object.keys(defects).map((key) => {
       let badge = '';
       if (defects[key].total) {
+        const defectTypesGroup = defectTypes[key.toUpperCase()];
+        let defectType = {};
+        if (singleDefectView) {
+          defectType = defectTypesGroup.find((el) => el.locator === issue.issueType) || {};
+        } else {
+          // use the main defect group type
+          defectType = defectTypesGroup[0];
+        }
+        const { shortName, color: defectColor = COLOR_WHITE_TWO } = defectType;
+        const fontColor = calculateFontColor(defectColor);
+
         badge = (
           <DefectBadge
             key={key}
             type={key}
-            defectTitle={defectsTitleMap[key]}
+            defectTitle={shortName}
+            backgroundColor={defectColor}
+            color={fontColor}
             data={defects[key]}
           />
         );

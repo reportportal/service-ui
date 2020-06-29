@@ -18,13 +18,13 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { SKIPPED, RESETED, FAILED, NOT_FOUND } from 'common/constants/testStatuses';
-import { COLOR_BLACK_2, COLOR_WHITE_TWO } from 'common/constants/colors';
+import { calculateFontColor } from 'common/utils';
 import Parser from 'html-react-parser';
-import styles from './historyLineItemBadges.scss';
 import NoItemIcon from './img/noItem-inline.svg';
 import EmptyItemIcon from './img/emptyItem-inline.svg';
 import DurationIcon from './img/duration-icon-inline.svg';
 import InfoIcon from './img/info-icon-inline.svg';
+import styles from './historyLineItemBadges.scss';
 
 const cx = classNames.bind(styles);
 
@@ -52,17 +52,19 @@ export class HistoryLineItemBadges extends Component {
       defectTypes,
       issue: { issueType: issueLocator },
     } = this.props;
+    let badge = '';
     const defectType = Object.keys(defects).find((key) => defects[key].total);
-    const allDefectsList = Object.values(defectTypes).reduce(
-      (allDefects, nextGroup) => [...allDefects, ...nextGroup],
-      [],
-    );
-    const { shortName, color: defectColor = COLOR_WHITE_TWO } =
-      allDefectsList.find((el) => el.locator === issueLocator) || {};
-    const fontColor = this.calculateFontColor(defectColor);
 
-    return (
-      defectType && (
+    if (defectType) {
+      const allDefectsList = Object.values(defectTypes).reduce(
+        (allDefects, nextGroup) => [...allDefects, ...nextGroup],
+        [],
+      );
+      const { shortName, color: defectColor } =
+        allDefectsList.find((el) => el.locator === issueLocator) || {};
+      const fontColor = calculateFontColor(defectColor);
+
+      badge = (
         <div
           key={defectType}
           style={{ backgroundColor: defectColor }}
@@ -70,8 +72,10 @@ export class HistoryLineItemBadges extends Component {
         >
           <span style={{ color: fontColor }}>{shortName}</span>
         </div>
-      )
-    );
+      );
+    }
+
+    return badge;
   };
 
   getBadges = () => {
@@ -111,18 +115,6 @@ export class HistoryLineItemBadges extends Component {
       );
 
     return badges;
-  };
-
-  // calculate contrast of background - foreground colors using algorithm recommended by w3c.org
-  calculateFontColor = (color = '') => {
-    const hexcolor = color.slice(1);
-
-    const r = parseInt(hexcolor.substr(0, 2), 16);
-    const g = parseInt(hexcolor.substr(2, 2), 16);
-    const b = parseInt(hexcolor.substr(4, 2), 16);
-    const bgBrightnessLevel = (r * 299 + g * 587 + b * 114) / 1000;
-
-    return bgBrightnessLevel >= 125 ? COLOR_BLACK_2 : COLOR_WHITE_TWO;
   };
 
   render() {
