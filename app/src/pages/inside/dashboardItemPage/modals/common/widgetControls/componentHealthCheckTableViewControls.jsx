@@ -157,7 +157,11 @@ export class ComponentHealthCheckTableViewControls extends Component {
     );
   };
 
-  renderAttributesFieldArray = ({ fields, fieldValidator }) => {
+  getSortObj = () =>
+    this.props.widgetSettings.contentParameters &&
+    this.props.widgetSettings.contentParameters.widgetOptions.sort;
+
+  getItemAttributeKeysAllSearchURL = () => {
     const {
       activeProject,
       widgetSettings: { contentParameters, filters },
@@ -167,25 +171,27 @@ export class ComponentHealthCheckTableViewControls extends Component {
       (contentParameters && contentParameters.widgetOptions.latest) ||
       MODES_VALUES[CHART_MODES.ALL_LAUNCHES];
 
+    return URLS.itemAttributeKeysAllSearch(
+      activeProject,
+      filterId,
+      isLatest,
+      DEFAULT_LAUNCHES_LIMIT,
+    );
+  };
+
+  renderAttributesFieldArray = ({ fields, fieldValidator }) => {
+    const url = this.getItemAttributeKeysAllSearchURL();
+
     return (
       <AttributesFieldArrayControl
         fields={fields}
         fieldValidator={fieldValidator}
         maxAttributesAmount={MAX_ATTRIBUTES_AMOUNT}
         showRemainingLevels
-        getURI={URLS.itemAttributeKeysAllSearch(
-          activeProject,
-          filterId,
-          isLatest,
-          DEFAULT_LAUNCHES_LIMIT,
-        )}
+        getURI={url}
       />
     );
   };
-
-  getSortObj = () =>
-    this.props.widgetSettings.contentParameters &&
-    this.props.widgetSettings.contentParameters.widgetOptions.sort;
 
   render() {
     const {
@@ -193,8 +199,8 @@ export class ComponentHealthCheckTableViewControls extends Component {
       formAppearance,
       onFormAppearanceChange,
       eventsInfo,
-      activeProject,
     } = this.props;
+    const attrUrlKeys = this.getItemAttributeKeysAllSearchURL();
     const sortObj = this.getSortObj();
 
     return (
@@ -250,7 +256,7 @@ export class ComponentHealthCheckTableViewControls extends Component {
               >
                 <FieldErrorHint hintType="top">
                   <AsyncAutocomplete
-                    getURI={URLS.launchAttributeKeysSearch(activeProject)}
+                    getURI={attrUrlKeys}
                     minLength={1}
                     creatable
                     placeholder={formatMessage(messages.customColumnPlaceholder)}
