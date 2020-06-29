@@ -24,7 +24,6 @@ import TagIcon from 'common/img/tag-inline.svg';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { ItemPathTooltip } from 'pages/inside/common/itemPathTooltip';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
-import { COLOR_WHITE_TWO } from 'common/constants/colors';
 import { DefectBadge } from './defectBadge/defectBadge';
 import { MessageBadge } from './messageBadge/messageBadge';
 import styles from './historyItem.scss';
@@ -85,7 +84,7 @@ export class HistoryItem extends Component {
           // use the main defect group type
           defectType = defectTypesGroup[0];
         }
-        const { shortName, color: defectColor = COLOR_WHITE_TWO } = defectType;
+        const { shortName, color: defectColor } = defectType;
         const fontColor = calculateFontColor(defectColor);
 
         badge = (
