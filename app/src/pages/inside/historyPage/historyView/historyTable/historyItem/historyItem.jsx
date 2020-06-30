@@ -90,6 +90,7 @@ export class HistoryItem extends Component {
         badge = (
           <DefectBadge
             key={key}
+            singleDefectView={singleDefectView}
             type={key}
             defectTitle={shortName}
             backgroundColor={defectColor}

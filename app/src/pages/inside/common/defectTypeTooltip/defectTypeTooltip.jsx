@@ -54,6 +54,7 @@ export class DefectTypeTooltip extends Component {
     detailedView: PropTypes.bool,
     detailedData: PropTypes.object,
     isStepLevel: PropTypes.bool,
+    singleDefectView: PropTypes.bool,
     target: PropTypes.string,
     listViewLinkParams: PropTypes.shape({
       launchesLimit: PropTypes.number,
@@ -70,6 +71,7 @@ export class DefectTypeTooltip extends Component {
     detailedView: false,
     detailedData: {},
     isStepLevel: false,
+    singleDefectView: false,
     target: '',
     listViewLinkParams: {},
   };
@@ -169,6 +171,7 @@ export class DefectTypeTooltip extends Component {
       data,
       type,
       projectConfig,
+      singleDefectView,
       intl: { formatMessage },
     } = this.props;
 
@@ -180,7 +183,8 @@ export class DefectTypeTooltip extends Component {
       <div className={cx('defect-type-tooltip')}>
         {defectConfig && (
           <Fragment>
-            {this.hasTotal(defectConfig, filteredBodyData) &&
+            {!singleDefectView &&
+              this.hasTotal(defectConfig, filteredBodyData) &&
               this.renderDefectItem(
                 defectConfig[0].color,
                 formatMessage(messages[`${type.toLowerCase()}_total`]),
