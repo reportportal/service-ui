@@ -21,6 +21,9 @@ export const requiredField = bindMessageToValidator(validate.required, 'required
 
 export const attributeKey = bindMessageToValidator(validate.attributeKey, 'attributeKeyLengthHint');
 
+export const uniqueAttributeKey = (attributes) =>
+  bindMessageToValidator(validate.uniqueAttributeKey(attributes), 'uniqueAttributeKeyHint');
+
 export const filterName = bindMessageToValidator(validate.filterName, 'filterNameError');
 
 export const itemNameEntity = bindMessageToValidator(validate.itemNameEntity, 'itemNameEntityHint');

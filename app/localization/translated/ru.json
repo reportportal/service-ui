@@ -109,6 +109,7 @@
   "Attachments.noAttachmentsMessage": "Нет вложений для отображения",
   "AttributeEditor.attributeKeyLengthHint": "Ключ атрибута должен быть длиной от 1 до 128",
   "AttributeEditor.attributeValueLengthHint": "Значение атрибута должно быть длиной от 1 до 128",
+  "AttributeEditor.uniqueAttributeKeyHint": "Ключ атрибута должен быть уникальным",
   "AttributeEditor.keyLabel": "Ключ",
   "AttributeEditor.valueLabel": "Значение",
   "AttributeList.addNew": "Добавить",

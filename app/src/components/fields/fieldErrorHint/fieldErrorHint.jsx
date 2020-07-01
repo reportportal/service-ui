@@ -150,6 +150,10 @@ const messages = defineMessages({
     id: 'AttributeEditor.attributeValueLengthHint',
     defaultMessage: 'Attribute value should have size from 1 to 128',
   },
+  uniqueAttributeKeyHint: {
+    id: 'AttributeEditor.uniqueAttributeKeyHint',
+    defaultMessage: 'Attribute key should be unique',
+  },
   defectLongNameHint: {
     id: 'DefectTypesTab.defectLongNameHint',
     defaultMessage: "Full name should have size from '3' to '55'",
