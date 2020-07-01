@@ -83,13 +83,14 @@ const itemsValidator = (formatMessage) =>
     validate.cumulativeItemsValidation,
     formatMessage(messages.ItemsValidationError),
   );
-const attributeKeyValidator = (formatMessage) =>
+const attributeKeyValidator = (formatMessage) => (attributes) =>
   composeBoundValidators([
     bindMessageToValidator(
       validate.required,
       formatMessage(messages.attributesArrayValidationError),
     ),
     commonValidators.attributeKey,
+    commonValidators.uniqueAttributeKey(attributes),
   ]);
 
 @connect((state) => ({

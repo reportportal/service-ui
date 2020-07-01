@@ -109,6 +109,7 @@
   "Attachments.noAttachmentsMessage": "Няма ўкладанняў для адлюстравання",
   "AttributeEditor.attributeKeyLengthHint": "Ключ атрыбуту павінен мець памер ад 1 да 128",
   "AttributeEditor.attributeValueLengthHint": "Значэнне атрыбуту павінна мець памер ад 1 да 128",
+  "AttributeEditor.uniqueAttributeKeyHint": "Ключ атрыбуту павінен быць унікальным",
   "AttributeEditor.keyLabel": "Ключ",
   "AttributeEditor.valueLabel": "Значэнне",
   "AttributeList.addNew": "Дадаць новы",

@@ -109,6 +109,7 @@
   "Attachments.noAttachmentsMessage": "Немає вкладень для відображення",
   "AttributeEditor.attributeKeyLengthHint": "Ключ атрибута повинен бути довжиною від 1 до 128",
   "AttributeEditor.attributeValueLengthHint": "Значення атрибута повинно бути довжиною від 1 до 128",
+  "AttributeEditor.uniqueAttributeKeyHint": "Ключ атрибута повинен бути унікальним",
   "AttributeEditor.keyLabel": "Ключ",
   "AttributeEditor.valueLabel": "Значення",
   "AttributeList.addNew": "Додати",

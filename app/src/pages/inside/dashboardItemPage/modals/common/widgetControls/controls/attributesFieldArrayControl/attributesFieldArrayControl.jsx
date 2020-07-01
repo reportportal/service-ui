@@ -94,6 +94,7 @@ export class AttributesFieldArrayControl extends Component {
       attributeKeyFieldViewLabels,
       showRemainingLevels,
     } = this.props;
+    const attributes = this.getAttributes();
     const canAddNewItems = fields.length < maxAttributesAmount;
 
     return (
@@ -112,7 +113,7 @@ export class AttributesFieldArrayControl extends Component {
               className={cx('attribute-modal-field')}
             >
               <div className={cx({ 'attr-selector': !isFirstItem })}>
-                <FieldProvider name={item} validate={fieldValidator}>
+                <FieldProvider name={item} validate={fieldValidator(attributes)}>
                   <FieldErrorHint hintType="top">
                     <AsyncAutocomplete
                       getURI={getURI}
