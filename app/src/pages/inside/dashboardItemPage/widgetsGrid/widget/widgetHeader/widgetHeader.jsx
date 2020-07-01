@@ -129,8 +129,8 @@ export class WidgetHeader extends Component {
     const isDashboardOwner = dashboardOwner === userId;
     const isWidgetDeletable = canDeleteWidget(userRole, projectRole, isOwner || isDashboardOwner);
     const isForceUpdate = data.type === COMPONENT_HEALTH_CHECK_TABLE;
-    const relativeUnits = getRelativeUnits(data.lastRefresh);
     const isHideEditControl = isForceUpdate && data.state === STATE_RENDERING;
+    const { value: startTime, unit } = getRelativeUnits(data.lastRefresh);
 
     return (
       <div className={cx('widget-header')}>
@@ -177,11 +177,7 @@ export class WidgetHeader extends Component {
                     <Fragment>
                       {intl.formatMessage(messages.lastRefresh)}
                       <span className={cx('force-update-time')}>
-                        <FormattedRelativeTime
-                          value={relativeUnits.value.startTime}
-                          unit={relativeUnits.unit}
-                          numeric="auto"
-                        />
+                        <FormattedRelativeTime value={startTime} unit={unit} numeric="auto" />
                       </span>
                     </Fragment>
                   )}
