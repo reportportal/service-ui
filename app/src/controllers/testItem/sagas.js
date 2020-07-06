@@ -34,13 +34,12 @@ import {
   pathnameChangedSelector,
   PROJECT_LOG_PAGE,
   filterIdSelector,
-  updatePagePropertiesAction,
   pageSelector,
 } from 'controllers/pages';
 import { PAGE_KEY } from 'controllers/pagination';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
-import { createNamespacedQuery, mergeNamespacedQuery } from 'common/utils/routingUtils';
+import { createNamespacedQuery } from 'common/utils/routingUtils';
 import { LEVEL_NOT_FOUND } from 'common/constants/launchLevels';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import {
@@ -120,7 +119,7 @@ export function* fetchParentItems() {
 }
 
 function* fetchTestItems({ payload = {} }) {
-  const { offset = 0 } = payload;
+  const { offset = 0, params: payloadParams = {} } = payload;
   const filterId = yield select(filterIdSelector);
   const isPathNameChanged = yield select(pathnameChangedSelector);
   const isTestItemsList = yield select(isTestItemsListSelector);
@@ -163,7 +162,7 @@ function* fetchTestItems({ payload = {} }) {
   const params = isTestItemsList
     ? {
         filterId,
-        ...query,
+        ...{ ...query, ...payloadParams },
       }
     : {
         'filter.eq.launchId': launchId,
@@ -172,7 +171,7 @@ function* fetchTestItems({ payload = {} }) {
         'filter.under.path':
           noChildFilter && underPathItemsIds.length > 0 ? underPathItemsIds.join('.') : undefined,
         [uniqueIdFilterKey]: pageQuery[uniqueIdFilterKey],
-        ...query,
+        ...{ ...query, ...payloadParams },
       };
 
   if (isTestItemsList && !activeFilter) {
@@ -216,34 +215,23 @@ function* watchFetchTestItems() {
   yield takeEvery(FETCH_TEST_ITEMS, fetchTestItems);
 }
 
-function* updateStepPagination({ next = false, offset = 1 }) {
+function* calculateStepPagination({ next = false, offset = 1 }) {
   const namespace = yield select(namespaceSelector, offset);
   const namespaceQuery = yield select(queryParametersSelector, namespace);
   let page = parseInt(namespaceQuery[PAGE_KEY], 10) - 1;
   if (next) {
     page = parseInt(namespaceQuery[PAGE_KEY], 10) + 1;
   }
-  yield put(
-    updatePagePropertiesAction(
-      createNamespacedQuery(
-        mergeNamespacedQuery(
-          namespaceQuery,
-          {
-            [PAGE_KEY]: page,
-          },
-          namespace,
-        ),
-        namespace,
-      ),
-    ),
-  );
+  return {
+    [PAGE_KEY]: page,
+  };
 }
 
 export function* fetchTestItemsFromLogPage({ payload = {} }) {
   const { next = false } = payload;
   const offset = yield select(logPageOffsetSelector);
-  yield call(updateStepPagination, { next, offset });
-  yield call(fetchTestItems, { payload: { offset } });
+  const stepParams = yield call(calculateStepPagination, { next, offset });
+  yield call(fetchTestItems, { payload: { offset, params: stepParams } });
   const testItems = yield select(itemsSelector);
   const projectId = yield select(activeProjectSelector);
   const testItem = next ? testItems[0] : testItems[testItems.length - 1];
@@ -252,7 +240,11 @@ export function* fetchTestItemsFromLogPage({ payload = {} }) {
   const filterId = yield select(filterIdSelector);
   const namespace = yield select(namespaceSelector, offset);
   const namespaceQuery = yield select(queryParametersSelector, namespace);
-  const query = createNamespacedQuery(namespaceQuery, namespace);
+  const params = {
+    ...namespaceQuery,
+    ...stepParams,
+  };
+  const query = createNamespacedQuery(params, namespace);
   const link = {
     type: PROJECT_LOG_PAGE,
     payload: {
