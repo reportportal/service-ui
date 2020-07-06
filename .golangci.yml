@@ -38,6 +38,7 @@ linters:
   disable:
     - maligned
     - prealloc
+    - gochecknoglobals
     - stylecheck
     - dupl
     - deadcode
