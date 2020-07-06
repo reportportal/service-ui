@@ -49,7 +49,6 @@ linters:
     - unparam
     - goimports
     - varcheck
-    - wsl
     #    - structcheck
     - gocritic
 
