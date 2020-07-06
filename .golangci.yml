@@ -52,6 +52,7 @@ linters:
     #    - structcheck
     - wsl
     - gocritic
+    - gofumpt
 
 run:
   # default concurrency is a available CPU number
