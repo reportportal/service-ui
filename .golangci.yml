@@ -50,6 +50,7 @@ linters:
     - goimports
     - varcheck
     #    - structcheck
+    - wsl
     - gocritic
 
 run:
