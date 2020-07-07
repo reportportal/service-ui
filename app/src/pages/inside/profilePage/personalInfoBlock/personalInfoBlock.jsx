@@ -139,7 +139,7 @@ export class PersonalInfoBlock extends Component {
         });
       })
       .catch(() => {
-        showNotification({
+        this.props.showNotification({
           message: intl.formatMessage(messages.synchronizeError),
           type: NOTIFICATION_TYPES.ERROR,
         });
