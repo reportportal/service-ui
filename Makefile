@@ -38,8 +38,8 @@ checkstyle:
 
 fmt:
 	gofmt -l -w -s ${GOFILES_NOVENDOR}
-	gofumpt -l -w -s ${GOFILES_NOVENDOR}
-	gofumports -l -w ${GOFILES_NOVENDOR}
+#	gofumpt -l -w -s ${GOFILES_NOVENDOR}
+#	gofumports -l -w ${GOFILES_NOVENDOR}
 
 # Builds server
 build-server: checkstyle test
