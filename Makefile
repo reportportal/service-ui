@@ -7,7 +7,7 @@ GO = go
 BINARY_DIR=bin
 RELEASE_DIR=release
 
-BUILD_DEPS:= github.com/avarabyeu/releaser github.com/golangci/golangci-lint/cmd/golangci-lint
+BUILD_DEPS:= github.com/avarabyeu/releaser mvdan.cc/gofumpt/gofumports
 GODIRS_NOVENDOR = $(shell go list ./... | grep -v /vendor/)
 GOFILES_NOVENDOR = $(shell find . -type f -name '*.go' -not -path "./vendor/*")
 PACKAGE_COMMONS=github.com/reportportal/commons-go
@@ -26,6 +26,7 @@ help:
 	@echo "checkstyle - gofmt+golint+misspell"
 
 get-build-deps:
+	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b "$(shell go env GOPATH)/bin" v1.28.0
 	$(GO) get $(BUILD_DEPS)
 
 test:
@@ -37,6 +38,8 @@ checkstyle:
 
 fmt:
 	gofmt -l -w -s ${GOFILES_NOVENDOR}
+#	gofumpt -l -w -s ${GOFILES_NOVENDOR}
+#	gofumports -l -w ${GOFILES_NOVENDOR}
 
 # Builds server
 build-server: checkstyle test

@@ -1,0 +1,33 @@
+#!groovy
+
+node {
+
+    load "$JENKINS_HOME/jobvars.env"
+
+    dir('src/github.com/reportportal/service-ui') {
+
+        stage('Checkout') {
+            checkout scm
+        }
+
+
+        docker.withServer("$DOCKER_HOST") {
+            stage('Build Docker Image') {
+                withEnv(["NODE_OPTIONS=--max_old_space_size=4096", "AWS_URI=${AWS_URI}", "VERSION=${VERSION}"]) {
+                    sh "make IMAGE_NAME=${AWS_URI}/service-ui build-image-dev v=${VERSION}-RC-${env.BUILD_NUMBER}"
+                }
+            }
+            stage('Push to ECR') {
+                withEnv(["AWS_URI=${AWS_URI}", "AWS_REGION=${AWS_REGION}", "VERSION=${VERSION}"]) {
+                    def image = env.AWS_URI + '/service-ui'
+                    def url = 'https://' + env.AWS_URI
+                    def credentials = 'ecr:' + env.AWS_REGION + ':aws_credentials'
+                    docker.withRegistry(url, credentials) {
+                        docker.image(image).push('${VERSION}-RC-${BUILD_NUMBER}')
+                    }
+                }
+            }
+        }
+    }
+}
+

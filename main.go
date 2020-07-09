@@ -1,17 +1,18 @@
 package main
 
 import (
+	"log"
+	"net/http"
+	"os"
+	"path/filepath"
+	"strings"
+
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/reportportal/commons-go/commons"
 	"github.com/reportportal/commons-go/conf"
 	"github.com/reportportal/commons-go/server"
 	"github.com/unrolled/secure"
-	"log"
-	"net/http"
-	"os"
-	"path/filepath"
-	"strings"
 )
 
 func main() {
@@ -43,10 +44,10 @@ func configureRouter(srv *server.RpServer, rpConf struct {
 	StaticsPath string `env:"RP_STATICS_PATH"`
 }) {
 	srv.WithRouter(func(router *chi.Mux) {
-		//apply compression
+		// apply compression
 		router.Use(middleware.DefaultCompress)
 		router.Use(middleware.Logger)
-		//content security policy
+		// content security policy
 		csp := map[string][]string{
 			"default-src": {"'self'", "data:", "'unsafe-inline'", "*.uservoice.com"},
 			"script-src": {
@@ -68,7 +69,7 @@ func configureRouter(srv *server.RpServer, rpConf struct {
 			"img-src":        {"*", "'self'", "data:", "blob:"},
 			"object-src":     {"'self'"},
 		}
-		//apply content security policies
+		// apply content security policies
 		var STSSeconds int64 = 315360000
 		router.Use(func(next http.Handler) http.Handler {
 			return secure.New(secure.Options{
@@ -85,7 +86,7 @@ func configureRouter(srv *server.RpServer, rpConf struct {
 			log.Fatalf("Dir %s not found", rpConf.StaticsPath)
 		}
 		router.Handle("/*", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			//trim query params
+			// trim query params
 			ext := filepath.Ext(trimQuery(r.URL.String(), "?"))
 			// never cache html
 			if "/" == r.URL.String() || ".html" == ext {
@@ -123,7 +124,7 @@ func (hrw *redirectingRW) Header() http.Header {
 }
 
 func (hrw *redirectingRW) WriteHeader(status int) {
-	var notFoundStatusCode int = 404
+	notFoundStatusCode := 404
 	if notFoundStatusCode == status {
 		hrw.ignore = true
 		http.Redirect(hrw.ResponseWriter, hrw.Request, "/ui/#notfound", http.StatusTemporaryRedirect)
