@@ -1,0 +1,335 @@
+/*!
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.no-data-wrapper {
+  height: calc(100% - 105px);
+}
+
+.breadcrumbs-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 25px;
+  box-sizing: border-box;
+  min-height: 55px;
+}
+
+.rendering-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.rendering-info-wrap {
+  text-align: center;
+  margin: 20px;
+}
+
+.rendering-title {
+  font-size: 18px;
+  color: $COLOR--charcoal-grey;
+  font-family: $FONT-REGULAR;
+  margin-bottom: 10px;
+}
+
+.rendering-info {
+  font-size: 12px;
+  color: $COLOR--gray-47;
+  font-family: $FONT-REGULAR;
+}
+
+.name-col {
+  .name-attr {
+    display: inline-block;
+    max-width: 115px;
+    font-family: $FONT-SEMIBOLD;
+    color: $COLOR--windows-blue;
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+  }
+
+  .cursor-pointer {
+    cursor: pointer;
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+  }
+
+  .name-total {
+    text-transform: uppercase;
+
+    @media (max-width: $SCREEN_SM_MAX) {
+      display: inline-block;
+      width: 100%;
+      text-align: center;
+    }
+  }
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+  }
+}
+
+.custom-column-col {
+  display: inline-block;
+  font-family: $FONT-REGULAR;
+  font-size: 12px;
+  color: $COLOR--charcoal-grey;
+  white-space: nowrap;
+
+  .custom-column-item {
+    display: inline-block;
+    max-width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+  }
+
+  .mobile-hint {
+    vertical-align: text-top;
+  }
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+    padding-left: 20px;
+  }
+}
+
+.status-col {
+  width: 105px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+    padding-left: 20px;
+  }
+}
+
+.status-item {
+  display: inline-block;
+  width: 80px;
+  padding: 8px;
+  text-align: center;
+  box-sizing: border-box;
+  border-radius: 100px;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 12px;
+  text-transform: uppercase;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: auto;
+    padding: 0;
+  }
+}
+
+.failed {
+  background-color: rgba($COLOR--georgia-peach, 0.2);
+  color: $COLOR--dark-georgia-peach;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    background-color: transparent;
+  }
+}
+
+.passed {
+  background-color: rgba($COLOR--light-forest-green, 0.2);
+  color: $COLOR--forest-green;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    background-color: transparent;
+  }
+}
+
+.statistics-col {
+  width: 8%;
+  white-space: nowrap;
+
+  .link {
+    font-family: $FONT-REGULAR;
+    font-size: 13px;
+    line-height: 20px;
+    color: $COLOR--windows-blue;
+    text-decoration: none;
+  }
+
+  .mobile-block {
+    &.statistics-passed {
+      &:before {
+        background-color: $COLOR--passed;
+      }
+    }
+
+    &.statistics-failed {
+      &:before {
+        background-color: $COLOR--failed;
+      }
+    }
+
+    &.statistics-skipped {
+      &:before {
+        background-color: $COLOR--skipped;
+      }
+    }
+
+    &.statistics-total {
+      &:before {
+        background-color: $COLOR--windows-blue;
+      }
+    }
+  }
+}
+
+.defect-col {
+  width: 8%;
+
+  .mobile-block {
+    &.defect-to_investigate {
+      &:before {
+        background-color: $COLOR--to-investigate;
+      }
+    }
+
+    &.defect-system_issue {
+      &:before {
+        background-color: $COLOR--system-issue;
+      }
+    }
+
+    &.defect-product_bug {
+      &:before {
+        background-color: $COLOR--product-bug;
+      }
+    }
+
+    &.defect-automation_bug {
+      &:before {
+        background-color: $COLOR--automation-bug;
+      }
+    }
+
+    a {
+      font-family: $FONT-REGULAR;
+      font-size: 13px;
+      line-height: 20px;
+      color: $COLOR--windows-blue;
+      text-decoration: none;
+    }
+  }
+}
+
+.passing-rate-col {
+  width: 9%;
+  font-family: $FONT-REGULAR;
+  font-size: 12px;
+  line-height: normal;
+  color: $COLOR--charcoal-grey;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+.passing-rate-item {
+  display: inline-block;
+  width: 100%;
+  text-align: right;
+  white-space: nowrap;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: inline;
+  }
+}
+
+.mobile-block {
+  position: relative;
+  display: none;
+  width: 100%;
+  margin: 0 0 8px;
+  padding: 10px 5px 10px 15px;
+  box-sizing: border-box;
+  text-align: center;
+
+  .block-content {
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 2px;
+    box-sizing: border-box;
+    text-align: left;
+  }
+
+  .message {
+    margin-left: 3px;
+    font-family: $FONT-REGULAR;
+    font-size: 13px;
+    line-height: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: 1px;
+    left: 0;
+    width: 12px;
+    height: 100%;
+  }
+}
+
+.total-item {
+  display: inline-block;
+  color: $COLOR--charcoal-grey;
+  font-size: 12px;
+  font-family: $FONT-SEMIBOLD;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.mobile-hint {
+  display: none;
+  padding-right: 2px;
+  font-size: 12px;
+  font-family: $FONT-SEMIBOLD;
+}
+
+@media (max-width: $SCREEN_SM_MAX) {
+  .statistics-col,
+  .defect-col {
+    display: flex;
+    width: 25%;
+    padding: 0 0 0 20px;
+  }
+
+  .desktop-block {
+    display: none;
+  }
+
+  .mobile-block {
+    display: block;
+  }
+
+  .mobile-hint {
+    display: inline;
+  }
+}

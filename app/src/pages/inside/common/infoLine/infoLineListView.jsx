@@ -15,58 +15,73 @@
  */
 
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
-import { SharedFilterIcon } from 'pages/inside/common/sharedFilterIcon';
+import { compositeAttributesSelector } from 'controllers/testItem';
 import styles from './infoLine.scss';
-import { Owner } from './owner';
-import { Description } from './description';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
   filter: {
     id: 'InfoLineListView.filter',
-    defaultMessage: 'Filter',
+    defaultMessage: 'Filter:',
+  },
+  filteredBy: {
+    id: 'InfoLineListView.filteredBy',
+    defaultMessage: 'Filtered by:',
   },
 });
 
+@connect((state) => ({
+  compositeAttributes: compositeAttributesSelector(state),
+}))
 @injectIntl
 export class InfoLineListView extends Component {
   static propTypes = {
-    data: PropTypes.object,
+    compositeAttributes: PropTypes.string,
     intl: PropTypes.object.isRequired,
-    currentUser: PropTypes.string,
+    data: PropTypes.object,
   };
   static defaultProps = {
+    compositeAttributes: '',
     currentUser: '',
     data: {},
   };
 
   render() {
-    const { data, currentUser } = this.props;
-    const { formatMessage } = this.props.intl;
+    const {
+      data,
+      compositeAttributes,
+      intl: { formatMessage },
+    } = this.props;
 
     return (
-      <div className={cx('info-line')}>
+      <div className={cx('info-line', 'info-line--list-view')}>
         {data && data.name && (
           <div className={cx('filter-holder')}>
-            {formatMessage(messages.filter)}: {data.name}
+            <span>{formatMessage(messages.filter)}</span>
+            <span className={cx('filter-holder-name')} title={data.name}>
+              {data.name}
+            </span>
           </div>
         )}
-        {data && data.owner && (
-          <div className={cx('icon-holder')}>
-            <Owner owner={data.owner} />
-          </div>
-        )}
-        {data && data.share && (
-          <div className={cx('icon-holder', 'info-line-icon-holder')}>
-            <SharedFilterIcon share={data.share} currentUser={currentUser} owner={data.owner} />
-          </div>
-        )}
-        {data && data.description && (
-          <div className={cx('icon-holder')}>
-            <Description description={data.description} />
+        {compositeAttributes && (
+          <div className={cx('composite-attributes')}>
+            <span className={cx('label')}>{formatMessage(messages.filteredBy)}</span>
+            <ul className={cx('list')}>
+              {compositeAttributes.split(',').map((item) => {
+                const attribute = item.split(':');
+
+                return (
+                  <li key={item} className={cx('item')} title={item}>
+                    <span className={cx('item-child')}>{attribute[0]}</span>
+                    <span className={cx('item-child')}>{`:${attribute[1]}`}</span>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
         )}
       </div>

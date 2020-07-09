@@ -28,3 +28,14 @@
     text-align: center;
   }
 }
+.cell-icon {
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  margin-left: 4px;
+  vertical-align: middle;
+
+  svg {
+    fill: $COLOR--gray-60;
+  }
+}

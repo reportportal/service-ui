@@ -85,27 +85,27 @@ export const Messages = defineMessages({
   },
   week1: {
     id: 'GeneralTab.week1',
-    defaultMessage: '1 week',
+    defaultMessage: '7 days',
   },
   week2: {
     id: 'GeneralTab.week2',
-    defaultMessage: '2 weeks',
+    defaultMessage: '14 days',
   },
   week3: {
     id: 'GeneralTab.week3',
-    defaultMessage: '3 weeks',
+    defaultMessage: '21 days',
   },
   month1: {
     id: 'GeneralTab.month1',
-    defaultMessage: '1 month',
+    defaultMessage: '30 days',
   },
   month3: {
     id: 'GeneralTab.month3',
-    defaultMessage: '3 months',
+    defaultMessage: '90 days',
   },
   month6: {
     id: 'GeneralTab.month6',
-    defaultMessage: '6 months',
+    defaultMessage: '180 days',
   },
   forever: {
     id: 'GeneralTab.forever',

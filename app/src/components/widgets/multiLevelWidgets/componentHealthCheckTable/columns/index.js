@@ -14,4 +14,9 @@
  * limitations under the License.
  */
 
-export { LogViewSwitcher } from './logViewSwitcher';
+export { NameColumn } from './nameColumn';
+export { CustomColumn } from './customColumn';
+export { StatusColumn } from './statusColumn';
+export { StatisticsColumn } from './statisticsColumn';
+export { DefectsColumn } from './defectsColumn';
+export { PassingRateColumn } from './passingColumn';

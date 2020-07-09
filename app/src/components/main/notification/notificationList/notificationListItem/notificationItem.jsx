@@ -65,11 +65,11 @@ const messages = defineMessages({
   },
   addProjectSuccess: {
     id: 'ProjectsPage.addProjectSuccess',
-    defaultMessage: "The project '{name}' was successfully created",
+    defaultMessage: "The project ''{name}'' was successfully created",
   },
   projectExists: {
     id: 'ProjectsPage.projectExists',
-    defaultMessage: "The project '{name}' is already exists",
+    defaultMessage: "The project ''{name}'' is already exists",
   },
   resetToGlobalSuccess: {
     id: 'InstancesSection.resetToGlobalSuccess',

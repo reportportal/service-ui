@@ -158,6 +158,7 @@ export const URLS = {
 
   testItems: (activeProject, ids) => `${urlBase}${activeProject}/item${getQueryParams({ ids })}`,
   testItem: (activeProject, id = '') => `${urlBase}${activeProject}/item/${id}`,
+  testItemStatistics: (activeProject) => `${urlBase}${activeProject}/item/statistics`,
   testItemUpdate: (activeProject, id = '') => `${urlBase}${activeProject}/item/${id}/update`,
   testItemsHistory: (activeProject, historyDepth, type, id) =>
     `${urlBase}${activeProject}/item/history${getQueryParams({
@@ -226,7 +227,7 @@ export const URLS = {
 
   authSettings: (authTypeOrId) => `${uatBase}settings/auth/${authTypeOrId}`,
   githubAuthSettings: () => `${uatBase}settings/oauth/github`,
-  statisticsServerSettings: () => `${urlBase}settings/analytics`,
+  analyticsServerSettings: () => `${urlBase}settings/analytics`,
   events: (projectId) => `${urlBase}${projectId}/activity`,
   allUsers: () => `${urlBase}user/all`,
   searchUsers: (term) =>

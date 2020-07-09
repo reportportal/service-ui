@@ -41,12 +41,14 @@ import {
   cumulativeFormatParams,
   topPatternsFormatParams,
   componentHealthCheckFormatParams,
+  componentHealthCheckTableFormatParams,
 } from './utils';
 import { MostTimeConsumingTestCases } from './singleLevelWidgets/mostTimeConsumingTestCases';
 import {
   CumulativeTrendChart,
   MostPopularPatterns,
   ComponentHealthCheck,
+  ComponentHealthCheckTable,
 } from './multiLevelWidgets';
 
 const CHARTS = {
@@ -72,6 +74,7 @@ const CHARTS = {
   [widgetTypes.INVESTIGATED_PERCENTAGE_OF_LAUNCHES]: InvestigatedTrendChart,
   [widgetTypes.MOST_POPULAR_PATTERNS]: MostPopularPatterns,
   [widgetTypes.MOST_TIME_CONSUMING]: MostTimeConsumingTestCases,
+  [widgetTypes.COMPONENT_HEALTH_CHECK_TABLE]: ComponentHealthCheckTable,
 };
 
 const MULTI_LEVEL_WIDGETS_MAP = {
@@ -83,6 +86,9 @@ const MULTI_LEVEL_WIDGETS_MAP = {
   },
   [widgetTypes.COMPONENT_HEALTH_CHECK]: {
     formatter: componentHealthCheckFormatParams,
+  },
+  [widgetTypes.COMPONENT_HEALTH_CHECK_TABLE]: {
+    formatter: componentHealthCheckTableFormatParams,
   },
 };
 

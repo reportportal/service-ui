@@ -50,6 +50,10 @@ import { createStepActionDescriptors } from 'pages/inside/common/utils';
 import { ActionPanel } from '../actionPanel';
 
 const UNLINK_ISSUE_EVENTS_INFO = {
+  unlinkAutoAnalyzedFalse:
+    HISTORY_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.UNLINK_IN_UNLINK_ISSUE_MODAL_AUTO_ANALYZED_FALSE,
+  unlinkAutoAnalyzedTrue:
+    HISTORY_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.UNLINK_IN_UNLINK_ISSUE_MODAL_AUTO_ANALYZED_TRUE,
   unlinkBtn: HISTORY_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.UNLINK_BTN_UNLINK_ISSUE_MODAL,
   cancelBtn: HISTORY_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_UNLINK_ISSUE_MODAL,
   closeIcon: HISTORY_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_UNLINK_ISSUE_MODAL,
@@ -249,7 +253,7 @@ export class ActionPanelWithGroupOperations extends Component {
   handlePostIssue = () => {
     this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.POST_ISSUE_ACTION);
     this.props.onPostIssue(this.props.selectedItems, {
-      fetchFunc: this.unselectAndFetchItems,
+      fetchFunc: this.unselectAndRefreshItems,
       eventsInfo: POST_ISSUE_EVENTS_INFO,
     });
   };
@@ -300,7 +304,9 @@ export class ActionPanelWithGroupOperations extends Component {
           fetchFunc: this.unselectAndRefreshItems,
           eventsInfo: {
             changeSearchMode: HISTORY_PAGE_EVENTS.CHANGE_SEARCH_MODE_EDIT_DEFECT_MODAL,
-            selectAllSimilarItems: HISTORY_PAGE_EVENTS.SELECT_ALL_SIMILIAR_ITEMS_EDIT_DEFECT_MODAL,
+            selectAllSimilarItems: HISTORY_PAGE_EVENTS.SELECT_ALL_SIMILAR_ITEMS_EDIT_DEFECT_MODAL,
+            selectSpecificSimilarItem:
+              HISTORY_PAGE_EVENTS.SELECT_SPECIFIC_SIMILAR_ITEM_EDIT_DEFECT_MODAL,
             editDefectsEvents: HISTORY_PAGE_EVENTS.EDIT_DEFECT_MODAL_EVENTS,
             unlinkIssueEvents: UNLINK_ISSUE_EVENTS_INFO,
             postIssueEvents: POST_ISSUE_EVENTS_INFO,

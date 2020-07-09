@@ -14,20 +14,4 @@
  * limitations under the License.
  */
 
-export const throttle = (fn, time) => {
-  let lastTime;
-  let result;
-  const throttled = (...args) => {
-    const timeSinceLastExecution = Date.now() - lastTime;
-    if (!lastTime || timeSinceLastExecution >= time) {
-      result = fn.apply(this, ...args);
-      lastTime = Date.now();
-    }
-    return result;
-  };
-  throttled.reset = () => {
-    lastTime = 0;
-    result = undefined;
-  };
-  return throttled;
-};
+export { Breadcrumbs } from './breadcrumbs';

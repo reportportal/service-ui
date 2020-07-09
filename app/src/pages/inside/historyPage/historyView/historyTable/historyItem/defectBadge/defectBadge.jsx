@@ -35,12 +35,16 @@ const cx = classNames.bind(styles);
 export class DefectBadge extends Component {
   static propTypes = {
     defectTitle: PropTypes.string,
+    color: PropTypes.string,
+    backgroundColor: PropTypes.string,
     type: PropTypes.string,
     data: PropTypes.object,
   };
 
   static defaultProps = {
     defectTitle: '',
+    color: '',
+    backgroundColor: '',
     type: '',
     data: {},
   };
@@ -48,9 +52,13 @@ export class DefectBadge extends Component {
   render() {
     const { defectTitle } = this.props;
 
+    const { defectTitle, color, backgroundColor } = this.props;
+
     return (
-      <div className={cx('defect-badge', defectTitle)}>
-        <span className={cx('defect-title')}>{defectTitle}</span>
+      <div className={cx('defect-badge', defectTitle)} style={{ backgroundColor }}>
+        <span className={cx('defect-title')} style={{ color }}>
+          {defectTitle}
+        </span>
       </div>
     );
   }

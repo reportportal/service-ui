@@ -29,12 +29,19 @@ export const TEST_ITEMS_TYPE_LIST = 'list';
 export const RESTORE_PATH = 'restorePath';
 export const NAMESPACE = 'testItem';
 export const PARENT_ITEMS_NAMESPACE = `${NAMESPACE}/parentItems`;
+export const FILTERED_ITEM_STATISTICS_NAMESPACE = `${NAMESPACE}/filteredItemStatistics`;
 export const SET_PAGE_LOADING = `${NAMESPACE}/setPageLoading`;
 export const DEFAULT_SORTING = formatSortingString(['startTime'], SORTING_ASC);
 export const LIST_VIEW = 'LIST_VIEW';
 export const LOG_VIEW = 'LOG_VIEW';
 export const DEFAULT_LAUNCHES_LIMIT = 600;
 export const DELETE_TEST_ITEMS = 'DeleteTestItems';
+export const COMPOSITE_ATTRIBUTES_FILTER = 'filter.has.compositeAttribute';
+
+export const FILTERED_ITEM_STATISTICS_INITIAL_STATE = {
+  executions: {},
+  defects: {},
+};
 
 export const TEST_ITEM_TYPES_MAP = {
   [LEVEL_SUITE]: LEVEL_SUITE,

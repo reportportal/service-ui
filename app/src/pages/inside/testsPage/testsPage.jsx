@@ -43,7 +43,6 @@ import {
   loadingSelector,
 } from 'controllers/testItem';
 import { prevTestItemSelector } from 'controllers/pages';
-import { LaunchFiltersSection } from 'pages/inside/common/launchFiltersSection';
 import { ENTITY_START_TIME } from 'components/filterEntities/constants';
 
 @connect(
@@ -227,7 +226,6 @@ export class TestsPage extends Component {
 
     return (
       <PageLayout>
-        <PageSection>{!debugMode && <LaunchFiltersSection />}</PageSection>
         <PageSection>
           <SuiteTestToolbar
             selectedItems={selectedTests}

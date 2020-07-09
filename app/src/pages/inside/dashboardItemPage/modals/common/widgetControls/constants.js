@@ -52,6 +52,13 @@ export const CONTENT_FIELDS = {
   HISTORY: 'history',
 };
 
+export const WIDGET_OPTIONS = {
+  SORT: {
+    CUSTOM_COLUMN: 'customColumn',
+    PASSING_RATE: 'passingRate',
+  },
+};
+
 export const requestDataShape = PropTypes.shape({
   filters: PropTypes.array,
   description: PropTypes.string,

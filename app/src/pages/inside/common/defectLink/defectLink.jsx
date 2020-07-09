@@ -34,14 +34,20 @@ export const DefectLink = track()(
       children,
       defects,
       eventInfo,
+      listViewLinkParams,
+      target,
       tracking,
       ownLinkParams,
+      keepFilterParams,
       refreshTestItemPage,
       ...rest
     } = props;
+    const params = { ...listViewLinkParams, ...props };
+
     return (
       <Link
-        to={getDefectLink(props)}
+        to={getDefectLink(params)}
+        target={target}
         {...rest}
         onClick={() => {
           eventInfo && tracking.trackEvent(eventInfo);

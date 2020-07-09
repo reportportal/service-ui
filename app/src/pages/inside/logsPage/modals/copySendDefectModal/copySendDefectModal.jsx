@@ -97,6 +97,7 @@ export class CopySendDefectModal extends Component {
       {
         issue: {
           ...itemForCopy.issue,
+          autoAnalyzed: false,
           externalSystemIssues: itemForCopy.issue.externalSystemIssues || [],
         },
         testItemId: lastHistoryItem.id,

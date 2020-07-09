@@ -16,6 +16,7 @@
 
 import { defineGroupOperation } from 'controllers/groupOperations';
 import { showModalAction } from 'controllers/modal';
+import { fetchSuccessAction } from 'controllers/fetch';
 import { validateDeleteItem } from './actionValidators';
 import {
   FETCH_TEST_ITEMS,
@@ -24,6 +25,8 @@ import {
   SET_PAGE_LOADING,
   FETCH_TEST_ITEMS_LOG_PAGE,
   DELETE_TEST_ITEMS,
+  FILTERED_ITEM_STATISTICS_INITIAL_STATE,
+  FILTERED_ITEM_STATISTICS_NAMESPACE,
 } from './constants';
 
 export const setLevelAction = (level) => ({
@@ -74,3 +77,6 @@ export const createBulkDeleteTestItemsAction = (namespace) =>
       }),
     validateDeleteItem,
   );
+
+export const setDefaultItemStatisticsAction = () =>
+  fetchSuccessAction(FILTERED_ITEM_STATISTICS_NAMESPACE, FILTERED_ITEM_STATISTICS_INITIAL_STATE);

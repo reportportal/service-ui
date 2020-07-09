@@ -35,46 +35,46 @@ import {
   fetchAppInfoAction,
   ANALYTICS_ALL_KEY,
 } from 'controllers/appInfo';
-import styles from './statisticsTab.scss';
+import styles from './analyticsTab.scss';
 
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
-  statisticsInfo: {
-    id: 'StatisticsTab.statisticsInfo',
-    defaultMessage: `You can help us improve ReportPortal by opting to send usage statistics. While you're using the app, we'll gather data that might help us improve Report Portal performance and usability by tracking usage frequency of particular features. See below for details about what information is sent.`,
+  analyticsInfo: {
+    id: 'AnalyticsTab.analyticsInfo',
+    defaultMessage: `You can help us improve ReportPortal.<br/>While you're using the app, we'll gather analytics that might help us improve Report Portal performance and usability by tracking usage frequency of particular features.<br/>See below for details about what information is sent.`,
   },
-  statisticsList: {
-    id: 'StatisticsTab.statisticsList',
-    defaultMessage: 'LIST OF SENT STATISTICS',
+  analyticsList: {
+    id: 'AnalyticsTab.analyticsList',
+    defaultMessage: 'LIST OF SENT ANALYTICS',
   },
-  statisticsListMessage: {
-    id: 'StatisticsTab.statisticsListMessage',
-    defaultMessage: `Usage statistics reports usually won't include any personal information, but they might include:`,
+  analyticsListMessage: {
+    id: 'AnalyticsTab.analyticsListMessage',
+    defaultMessage: `Usage analytics usually won't include any personal information, but it might include:`,
   },
-  statisticsListPoint1: {
-    id: 'StatisticsTab.statisticsListPoint1',
+  analyticsListPoint1: {
+    id: 'AnalyticsTab.analyticsListPoint1',
     defaultMessage:
       'Device information - such as your hardware model, operating system version, screen resolution, browser version;',
   },
-  statisticsListPoint2: {
-    id: 'StatisticsTab.statisticsListPoint2',
+  analyticsListPoint2: {
+    id: 'AnalyticsTab.analyticsListPoint2',
     defaultMessage:
-      'Log information - such as details of how you use ReportPortal, where you click and what actions you do, how long you leave app open.',
+      'Behavior information - such as details of how you use ReportPortal, where you click, and what actions you do, how long you leave the app open.',
   },
-  statisticsEnabled: {
-    id: 'StatisticsTab.statisticsEnabled',
-    defaultMessage: 'Help make Report Portal better by automatically sending statistics to us',
+  analyticsEnabled: {
+    id: 'AnalyticsTab.analyticsEnabled',
+    defaultMessage: 'Help make Report Portal better by automatically sending analytics to us',
   },
-  updateStatisticsEnabledSuccess: {
-    id: 'StatisticsTab.updateStatisticsEnabledSuccess',
+  updateAnalyticsEnabledSuccess: {
+    id: 'AnalyticsTab.updateAnalyticsEnabledSuccess',
     defaultMessage: 'Server settings were successfully updated',
   },
 });
 
 @connect(
   (state) => ({
-    statisticsEnabled: analyticsEnabledSelector(state),
+    analyticsEnabled: analyticsEnabledSelector(state),
   }),
   {
     showNotification,
@@ -83,12 +83,12 @@ const messages = defineMessages({
 )
 @injectIntl
 @track()
-export class StatisticsTab extends Component {
+export class AnalyticsTab extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     showNotification: PropTypes.func,
     fetchInfo: PropTypes.func,
-    statisticsEnabled: PropTypes.bool,
+    analyticsEnabled: PropTypes.bool,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -99,14 +99,14 @@ export class StatisticsTab extends Component {
     change: () => {},
     showNotification: () => {},
     fetchInfo: () => {},
-    statisticsEnabled: false,
+    analyticsEnabled: false,
   };
 
   static getDerivedStateFromProps(props, state) {
-    if (props.statisticsEnabled !== state.prevStatisticsEnabledValue) {
+    if (props.analyticsEnabled !== state.prevAnalyticsEnabledValue) {
       return {
-        statisticsEnabled: props.statisticsEnabled,
-        prevStatisticsEnabledValue: state.statisticsEnabled,
+        analyticsEnabled: props.analyticsEnabled,
+        prevAnalyticsEnabledValue: state.analyticsEnabled,
       };
     }
     return null;
@@ -118,8 +118,8 @@ export class StatisticsTab extends Component {
     this.state = {
       loading: false,
       listShown: false,
-      statisticsEnabled: props.statisticsEnabled,
-      prevStatisticsEnabledValue: props.statisticsEnabled,
+      analyticsEnabled: props.analyticsEnabled,
+      prevAnalyticsEnabledValue: props.analyticsEnabled,
     };
   }
 
@@ -130,24 +130,28 @@ export class StatisticsTab extends Component {
   };
 
   submit = () => {
-    this.props.tracking.trackEvent(ADMIN_SERVER_SETTINGS_PAGE_EVENTS.SUBMIT_STATISTICS_BTN);
+    this.props.tracking.trackEvent(ADMIN_SERVER_SETTINGS_PAGE_EVENTS.SUBMIT_ANALYTICS_BTN);
     this.setState({
       loading: true,
     });
-    this.updateStatisticsConfig(this.state.statisticsEnabled);
+    this.updateStatisticsConfig(this.state.analyticsEnabled);
   };
 
   toggleStatistics = () => {
-    this.props.tracking.trackEvent(ADMIN_SERVER_SETTINGS_PAGE_EVENTS.MAKE_RP_GREAT_AGAIN);
-    this.setState({ statisticsEnabled: !this.state.statisticsEnabled });
+    this.state.analyticsEnabled
+      ? this.props.tracking.trackEvent(
+          ADMIN_SERVER_SETTINGS_PAGE_EVENTS.MAKE_RP_GREAT_AGAIN_UNCHECK,
+        )
+      : this.props.tracking.trackEvent(ADMIN_SERVER_SETTINGS_PAGE_EVENTS.MAKE_RP_GREAT_AGAIN_CHECK);
+    this.setState({ analyticsEnabled: !this.state.analyticsEnabled });
   };
 
-  updateStatisticsConfig = (statisticsEnabled) => {
-    fetch(URLS.statisticsServerSettings(), {
+  updateStatisticsConfig = (analyticsEnabled) => {
+    fetch(URLS.analyticsServerSettings(), {
       method: 'POST',
       data: {
         type: ANALYTICS_ALL_KEY,
-        enabled: statisticsEnabled,
+        enabled: analyticsEnabled,
       },
     })
       .then(this.updateSettingSuccess)
@@ -161,7 +165,7 @@ export class StatisticsTab extends Component {
     } = this.props;
 
     this.props.showNotification({
-      message: formatMessage(messages.updateStatisticsEnabledSuccess),
+      message: formatMessage(messages.updateAnalyticsEnabledSuccess),
       type: NOTIFICATION_TYPES.SUCCESS,
     });
 
@@ -188,27 +192,27 @@ export class StatisticsTab extends Component {
     } = this.props;
 
     return (
-      <div className={cx('statistics-settings-tab')}>
-        <div className={cx('statistics-settings-form')}>
+      <div className={cx('analytics-settings-tab')}>
+        <div className={cx('analytics-settings-form')}>
           <div className={cx('image-holder')} />
-          <p className={cx('statistics-info')}>{formatMessage(messages.statisticsInfo)}</p>
+          <p className={cx('analytics-info')}>{Parser(formatMessage(messages.analyticsInfo))}</p>
 
-          <div className={cx('statistics-list')}>
-            <div className={cx('statistics-list-toggler')} onClick={this.onListClick}>
-              <span>{formatMessage(messages.statisticsList)}</span>
+          <div className={cx('analytics-list')}>
+            <div className={cx('analytics-list-toggler')} onClick={this.onListClick}>
+              <span>{formatMessage(messages.analyticsList)}</span>
               <span className={cx('arrow', { rotated: this.state.listShown })}>
                 {Parser(ArrowRightIcon)}
               </span>
             </div>
 
             <div className={cx('list-message', { 'list-shown': this.state.listShown })}>
-              <p>{formatMessage(messages.statisticsListMessage)}</p>
+              <p>{formatMessage(messages.analyticsListMessage)}</p>
               <ul>
-                <li className={cx('statistics-point')}>
-                  {formatMessage(messages.statisticsListPoint1)}
+                <li className={cx('analytics-point')}>
+                  {formatMessage(messages.analyticsListPoint1)}
                 </li>
-                <li className={cx('statistics-point')}>
-                  {formatMessage(messages.statisticsListPoint2)}
+                <li className={cx('analytics-point')}>
+                  {formatMessage(messages.analyticsListPoint2)}
                 </li>
               </ul>
             </div>
@@ -220,10 +224,10 @@ export class StatisticsTab extends Component {
             <div className={cx('enabled-checkbox')}>
               <InputCheckbox
                 className={cx('enabled-checkbox')}
-                value={this.state.statisticsEnabled}
+                value={this.state.analyticsEnabled}
                 onChange={this.toggleStatistics}
               >
-                {formatMessage(messages.statisticsEnabled)}
+                {formatMessage(messages.analyticsEnabled)}
               </InputCheckbox>
             </div>
           )}

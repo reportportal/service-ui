@@ -39,7 +39,7 @@ const messages = defineMessages({
   makeAdminLabel: { id: 'NameColumn.makeAdminLabel', defaultMessage: 'make admin' },
   changeAccountRoleNotification: {
     id: 'NameColumn.changeAccountRoleNotification',
-    defaultMessage: "User role for '{name}' was changed.",
+    defaultMessage: "User role for ''{name}'' was changed.",
   },
 });
 

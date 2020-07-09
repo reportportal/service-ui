@@ -49,14 +49,31 @@ export class DefectTypeTooltip extends Component {
     projectConfig: PropTypes.object.isRequired,
     intl: PropTypes.object.isRequired,
     tooltipEventInfo: PropTypes.object,
-    itemId: PropTypes.number,
+    itemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     ownLinkParams: PropTypes.object,
+    detailedView: PropTypes.bool,
+    detailedData: PropTypes.object,
+    isStepLevel: PropTypes.bool,
+    singleDefectView: PropTypes.bool,
+    target: PropTypes.string,
+    listViewLinkParams: PropTypes.shape({
+      launchesLimit: PropTypes.number,
+      compositeAttribute: PropTypes.string,
+      isLatest: PropTypes.bool,
+      filterType: PropTypes.bool,
+    }),
   };
 
   static defaultProps = {
     itemId: null,
     tooltipEventInfo: {},
     ownLinkParams: null,
+    detailedView: false,
+    detailedData: {},
+    isStepLevel: false,
+    singleDefectView: false,
+    target: '',
+    listViewLinkParams: {},
   };
 
   getFilteredBodyData = (config) => {
@@ -78,14 +95,83 @@ export class DefectTypeTooltip extends Component {
     );
   };
 
-  render() {
+  renderDefectItem = (color, name, defects, className, dataKey) => {
     const {
       data,
       itemId,
       ownLinkParams,
+      target,
+      listViewLinkParams,
       tooltipEventInfo,
+      detailedView,
+      detailedData,
+      isStepLevel,
+    } = this.props;
+
+    return detailedView ? (
+      <div key={dataKey} className={className}>
+        <div className={cx('name')}>
+          <div className={cx('circle')} style={{ backgroundColor: color }} />
+          {name}
+        </div>
+        <span className={cx('value-container')}>
+          <DefectLink
+            itemId={itemId}
+            ownLinkParams={ownLinkParams}
+            target={target}
+            listViewLinkParams={listViewLinkParams}
+            defects={defects}
+            className={cx('value')}
+            eventInfo={tooltipEventInfo}
+          >
+            {data[dataKey]}
+          </DefectLink>
+          {detailedData[dataKey] && isStepLevel ? (
+            <DefectLink
+              itemId={itemId}
+              ownLinkParams={ownLinkParams}
+              defects={defects.filter((defectKey) => !!detailedData[defectKey])}
+              target={target}
+              listViewLinkParams={listViewLinkParams}
+              keepFilterParams
+              className={cx('value', 'detailed')}
+              eventInfo={tooltipEventInfo}
+            >
+              {detailedData[dataKey]}
+            </DefectLink>
+          ) : (
+            <span className={cx('value', 'detailed', 'disabled')}>
+              {detailedData[dataKey] || 0}
+            </span>
+          )}
+        </span>
+      </div>
+    ) : (
+      <DefectLink
+        key={dataKey}
+        itemId={itemId}
+        ownLinkParams={ownLinkParams}
+        defects={defects}
+        target={target}
+        listViewLinkParams={listViewLinkParams}
+        className={cx('item')}
+        eventInfo={tooltipEventInfo}
+      >
+        <div className={cx('name')}>
+          <div className={cx('circle')} style={{ backgroundColor: color }} />
+          {name}
+        </div>
+        <span className={cx('value')}>{data[dataKey]}</span>
+      </DefectLink>
+    );
+  };
+
+  render() {
+    const {
+      data,
       type,
       projectConfig,
+      singleDefectView,
       intl: { formatMessage },
     } = this.props;
 
@@ -97,24 +183,15 @@ export class DefectTypeTooltip extends Component {
       <div className={cx('defect-type-tooltip')}>
         {defectConfig && (
           <Fragment>
-            {this.hasTotal(defectConfig, filteredBodyData) && (
-              <DefectLink
-                itemId={itemId}
-                ownLinkParams={ownLinkParams}
-                defects={Object.keys(data)}
-                className={cx('total-item')}
-                eventInfo={tooltipEventInfo}
-              >
-                <div className={cx('name')}>
-                  <div
-                    className={cx('circle')}
-                    style={{ backgroundColor: defectConfig[0].color }}
-                  />
-                  {formatMessage(messages[`${type.toLowerCase()}_total`])}
-                </div>
-                <span className={cx('value')}>{data.total}</span>
-              </DefectLink>
-            )}
+            {!singleDefectView &&
+              this.hasTotal(defectConfig, filteredBodyData) &&
+              this.renderDefectItem(
+                defectConfig[0].color,
+                formatMessage(messages[`${type.toLowerCase()}_total`]),
+                Object.keys(data),
+                cx('total-item'),
+                'total',
+              )}
             {/**
              * Display defect types in a proper order,
              * the first is the system type (Product Bug, To investigate, etc.)
@@ -122,22 +199,9 @@ export class DefectTypeTooltip extends Component {
              * Don't display defect sub types with zero defect's amount,
              * except system types (i.e. with index=0)
              */
-            filteredBodyData.map(({ locator, color, longName }) => (
-              <DefectLink
-                key={locator}
-                itemId={itemId}
-                ownLinkParams={ownLinkParams}
-                defects={[locator]}
-                className={cx('item')}
-                eventInfo={tooltipEventInfo}
-              >
-                <div className={cx('name')}>
-                  <div className={cx('circle')} style={{ backgroundColor: color }} />
-                  {longName}
-                </div>
-                <span className={cx('value')}>{data[locator]}</span>
-              </DefectLink>
-            ))}
+            filteredBodyData.map(({ locator, color, longName }) => {
+              return this.renderDefectItem(color, longName, [locator], cx('item'), locator);
+            })}
           </Fragment>
         )}
       </div>

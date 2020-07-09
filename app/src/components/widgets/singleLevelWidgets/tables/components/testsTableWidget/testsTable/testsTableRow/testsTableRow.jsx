@@ -17,6 +17,7 @@
 import { Component } from 'react';
 import { func, string, number, array, object, oneOfType } from 'prop-types';
 import classNames from 'classnames/bind';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { testCaseNameLinkSelector } from 'controllers/testItem';
 import { AbsRelTime } from 'components/main/absRelTime';
@@ -27,6 +28,7 @@ import styles from './testsTableRow.scss';
 
 const cx = classNames.bind(styles);
 
+@injectIntl
 @connect((state, ownProps) => ({
   testCaseNameLink: testCaseNameLinkSelector(state, {
     uniqueId: ownProps.data.uniqueId,
@@ -35,6 +37,7 @@ const cx = classNames.bind(styles);
 }))
 export class TestsTableRow extends Component {
   static propTypes = {
+    intl: object.isRequired,
     launchId: oneOfType([number, string]).isRequired,
     testCaseNameLink: object.isRequired,
     data: PTTest.isRequired,
@@ -45,6 +48,7 @@ export class TestsTableRow extends Component {
     matrixComponent: func,
     status: array,
     duration: number,
+    getMaxtrixTooltip: func,
   };
 
   static defaultProps = {
@@ -53,6 +57,7 @@ export class TestsTableRow extends Component {
     matrixComponent: null,
     status: null,
     duration: null,
+    getMaxtrixTooltip: null,
   };
 
   render() {
@@ -66,9 +71,12 @@ export class TestsTableRow extends Component {
       matrixComponent: Matrix,
       status,
       duration,
+      getMaxtrixTooltip,
+      intl: { formatMessage },
     } = this.props;
     const { total, uniqueId } = data;
     const percentage = count !== null ? ((count / total) * 100).toFixed(2) : null;
+    const matrixTooltip = getMaxtrixTooltip && getMaxtrixTooltip(count, total, formatMessage);
 
     return (
       <div className={cx('row')}>
@@ -76,7 +84,7 @@ export class TestsTableRow extends Component {
           <span>{name}</span>
         </NavLink>
         {Matrix && count && (
-          <div className={cx('col', 'col-count')}>
+          <div className={cx('col', 'col-count')} title={matrixTooltip}>
             <Count count={count} total={total} />
             <Matrix tests={matrixData} id={uniqueId} />
           </div>

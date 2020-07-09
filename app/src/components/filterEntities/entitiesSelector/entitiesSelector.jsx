@@ -62,15 +62,17 @@ export class EntitiesSelector extends Component {
   handleChange = (entity) => () => {
     const { tracking, events, onChange } = this.props;
     if (!entity.active) {
-      tracking.trackEvent(events.SELECT_REFINE_PARAMS);
+      events.commonEvents &&
+        tracking.trackEvent(events.commonEvents.getSelectRefineParams(entity.title || ''));
     }
     this.setState({ opened: !this.state.opened });
     onChange(entity.id);
   };
 
   toggleMenu = () => {
+    const { tracking, events } = this.props;
     this.setState({ opened: !this.state.opened });
-    this.props.tracking.trackEvent(this.props.events.REFINE_BTN_MORE);
+    events.commonEvents && tracking.trackEvent(events.commonEvents.REFINE_BTN_MORE);
   };
 
   render() {

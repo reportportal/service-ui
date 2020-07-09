@@ -48,6 +48,7 @@ export {
   getSaveIntegrationModalEvents,
   getIntegrationAddClickEvent,
   getIntegrationEditAuthClickEvent,
+  getAutoAnalysisMinimumShouldMatchSubmitEvent,
 } from './settingsPageEvents';
 export { SUITE_PAGE, SUITES_PAGE_EVENTS } from './suitesPageEvents';
 export { STEP_PAGE, STEP_PAGE_EVENTS, getChangeItemStatusEvent } from './stepPageEvents';

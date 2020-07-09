@@ -40,10 +40,11 @@
   text-transform: uppercase;
   vertical-align: top;
 }
-.value {
+.stats {
   display: inline-block;
   position: relative;
   top: -1px;
+  right: -1px;
   height: 20px;
   box-sizing: border-box;
   margin-left: 7px;
@@ -51,5 +52,28 @@
   border: 1px solid;
   border-radius: 100px;
   background-color: $COLOR--white-two;
-  color: $COLOR--windows-blue;
+  color: $COLOR--charcoal-grey;
+}
+
+.detailed-view {
+  .stats {
+    .value {
+      color: $COLOR--gray-80;
+      text-decoration: none;
+    }
+
+    .value-detailed {
+      text-decoration: none;
+
+      &::before {
+        content: '';
+        display: inline-block;
+        width: 1px;
+        height: 12px;
+        margin: 0 5px;
+        vertical-align: middle;
+        background-color: $COLOR--gray-91;
+      }
+    }
+  }
 }

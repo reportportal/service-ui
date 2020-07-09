@@ -40,6 +40,11 @@ import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { NoDataAvailable } from 'components/widgets/noDataAvailable';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader/spinningPreloader';
+import {
+  getNewActiveAttributes,
+  getBreadcrumbs,
+  getNewActiveBreadcrumbs,
+} from 'components/widgets/multiLevelWidgets/common/utils';
 import { MAX_PASSING_RATE_VALUE } from './constants';
 import { ComponentHealthCheckLegend } from './legend/componentHealthCheckLegend';
 import { GroupsSection } from './groupsSection';
@@ -59,15 +64,10 @@ const messages = defineMessages({
 });
 
 @injectIntl
-@connect(
-  (state) => ({
-    project: activeProjectSelector(state),
-    getStatisticsLink: statisticsLinkSelector(state),
-  }),
-  {
-    navigate: (linkAction) => linkAction,
-  },
-)
+@connect((state) => ({
+  project: activeProjectSelector(state),
+  getStatisticsLink: statisticsLinkSelector(state),
+}))
 export class ComponentHealthCheck extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
@@ -77,7 +77,6 @@ export class ComponentHealthCheck extends Component {
     container: PropTypes.instanceOf(Element).isRequired,
     getStatisticsLink: PropTypes.func.isRequired,
     project: PropTypes.string.isRequired,
-    navigate: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -99,12 +98,22 @@ export class ComponentHealthCheck extends Component {
   }
 
   onClickBreadcrumbs = (id) => {
-    const { activeBreadcrumbs } = this.state;
-    const newActiveAttributes = this.getNewActiveAttributes(
+    const { activeBreadcrumbs, activeAttributes, activeBreadcrumbId } = this.state;
+    const {
+      widget: { contentParameters },
+    } = this.props;
+    const attributes = contentParameters && contentParameters.widgetOptions.attributeKeys;
+    const newActiveAttributes = getNewActiveAttributes(
       activeBreadcrumbs[id].key,
       activeBreadcrumbs[id].additionalProperties.value,
+      activeAttributes,
     );
-    const newActiveBreadcrumbs = this.getNewActiveBreadcrumbs(id);
+    const newActiveBreadcrumbs = getNewActiveBreadcrumbs(
+      id,
+      activeBreadcrumbs,
+      activeBreadcrumbId,
+      attributes,
+    );
 
     this.setState({
       activeBreadcrumbs: newActiveBreadcrumbs,
@@ -124,20 +133,28 @@ export class ComponentHealthCheck extends Component {
   };
 
   onClickGroupItem = (value, passingRate, color) => {
-    const { activeBreadcrumbId } = this.state;
+    const { activeBreadcrumbId, activeBreadcrumbs, activeAttributes } = this.state;
+    const {
+      widget: { contentParameters },
+    } = this.props;
+    const attributes = contentParameters && contentParameters.widgetOptions.attributeKeys;
     const newActiveBreadcrumbId = activeBreadcrumbId + 1;
     const additionalProperties = {
       value,
       passingRate,
       color,
     };
-    const newActiveBreadcrumbs = this.getNewActiveBreadcrumbs(
+    const newActiveBreadcrumbs = getNewActiveBreadcrumbs(
       newActiveBreadcrumbId,
+      activeBreadcrumbs,
+      activeBreadcrumbId,
+      attributes,
       additionalProperties,
     );
-    const newActiveAttributes = this.getNewActiveAttributes(
+    const newActiveAttributes = getNewActiveAttributes(
       newActiveBreadcrumbs[activeBreadcrumbId].key,
       value,
+      activeAttributes,
     );
 
     this.setState({
@@ -157,22 +174,25 @@ export class ComponentHealthCheck extends Component {
       });
   };
 
-  onClickGroupIcon = (value) => {
+  getSpecificTestListLink = (value) => {
     const { widget, getStatisticsLink } = this.props;
-    const { activeBreadcrumbId } = this.state;
-    const activeAttributes = this.getNewActiveAttributes(
-      this.getBreadcrumbs()[activeBreadcrumbId].key,
+    const { activeBreadcrumbId, activeAttributes } = this.state;
+    const attributes =
+      widget.contentParameters && widget.contentParameters.widgetOptions.attributeKeys;
+    const compositeAttributes = getNewActiveAttributes(
+      getBreadcrumbs(attributes, activeBreadcrumbId)[activeBreadcrumbId].key,
       value,
+      activeAttributes,
     );
     const link = getStatisticsLink({
       statuses: this.getLinkParametersStatuses(),
       launchesLimit: DEFAULT_LAUNCHES_LIMIT,
-      compositeAttribute: activeAttributes.map(formatAttribute).join(','),
+      compositeAttribute: compositeAttributes.map(formatAttribute).join(','),
       isLatest: widget.contentParameters.widgetOptions.latest,
     });
     const navigationParams = this.getDefaultLinkParams(widget.appliedFilters[0].id);
 
-    this.props.navigate(Object.assign(link, navigationParams));
+    return Object.assign(link, navigationParams);
   };
 
   getDefaultLinkParams = (filterId) => ({
@@ -185,74 +205,6 @@ export class ComponentHealthCheck extends Component {
   });
 
   getLinkParametersStatuses = () => [PASSED, FAILED, SKIPPED, INTERRUPTED, IN_PROGRESS];
-
-  getNewActiveAttributes = (key, value) => {
-    const { activeAttributes } = this.state;
-    const activeAttribute = {
-      key,
-      value,
-    };
-    const activeAttributeIndex =
-      activeAttributes && activeAttributes.findIndex((item) => item.key === key);
-
-    if (activeAttributeIndex !== -1) {
-      return activeAttributes.slice(0, activeAttributeIndex);
-    }
-
-    return [...activeAttributes, activeAttribute];
-  };
-
-  getNewActiveBreadcrumbs = (id, additionalProperties) => {
-    const { activeBreadcrumbs } = this.state;
-    const actualBreadcrumbs = activeBreadcrumbs || this.getBreadcrumbs();
-
-    return (
-      actualBreadcrumbs &&
-      actualBreadcrumbs.map((item) => {
-        if (item.id === id) {
-          return {
-            ...item,
-            isStatic: true,
-            isActive: true,
-            additionalProperties: null,
-          };
-        }
-
-        if (additionalProperties && item.id === id - 1) {
-          return {
-            ...item,
-            isStatic: false,
-            isActive: false,
-            additionalProperties,
-          };
-        }
-
-        if (!additionalProperties && item.id > id) {
-          return {
-            ...item,
-            isStatic: true,
-            isActive: false,
-            additionalProperties: null,
-          };
-        }
-
-        return item;
-      })
-    );
-  };
-
-  getBreadcrumbs = () =>
-    this.props.widget.contentParameters.widgetOptions.attributeKeys.map((item, index) => ({
-      id: index,
-      key: item,
-      isStatic: true,
-      isActive: this.state.activeBreadcrumbId === index,
-      additionalProperties: {
-        color: null,
-        value: null,
-        passingRate: null,
-      },
-    }));
 
   getPassingRateValue = () =>
     Number(this.props.widget.contentParameters.widgetOptions.minPassingRate);
@@ -312,8 +264,12 @@ export class ComponentHealthCheck extends Component {
   render() {
     const { intl } = this.props;
     const { activeBreadcrumbs, activeBreadcrumbId, isLoading } = this.state;
+    const {
+      widget: { contentParameters },
+    } = this.props;
+    const attributes = contentParameters && contentParameters.widgetOptions.attributeKeys;
     const groupItems = this.getGroupItems();
-    const breadcrumbs = this.getBreadcrumbs();
+    const breadcrumbs = getBreadcrumbs(attributes, activeBreadcrumbId);
     const isClickableGroupItem =
       breadcrumbs.length > 1 &&
       activeBreadcrumbId !== (activeBreadcrumbs && activeBreadcrumbs.length - 1);
@@ -336,7 +292,7 @@ export class ComponentHealthCheck extends Component {
                 groups={groupItems.failedGroupItems}
                 colorCalculator={this.colorCalculator}
                 onClickGroupItem={this.onClickGroupItem}
-                onClickGroupIcon={this.onClickGroupIcon}
+                getSpecificTestListLink={this.getSpecificTestListLink}
                 isClickable={isClickableGroupItem}
               />
             )}
@@ -347,7 +303,7 @@ export class ComponentHealthCheck extends Component {
                 groups={groupItems.passedGroupItems}
                 colorCalculator={this.colorCalculator}
                 onClickGroupItem={this.onClickGroupItem}
-                onClickGroupIcon={this.onClickGroupIcon}
+                getSpecificTestListLink={this.getSpecificTestListLink}
                 isClickable={isClickableGroupItem}
               />
             )}

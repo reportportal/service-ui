@@ -22,10 +22,10 @@ export const ADMIN_SERVER_SETTINGS_PAGE_EVENTS = {
     action: 'Click on tab Authorization Configuration',
     label: 'Open tab Authorization Configuration',
   },
-  STATISTICS_TAB: {
+  ANALYTICS_TAB: {
     category: ADMIN_SERVER_SETTINGS_PAGE,
-    action: 'Click on tab Statistics',
-    label: 'Open tab Statistics',
+    action: 'Click on tab Analytics',
+    label: 'Open tab Analytics',
   },
   ACTIVATE_GITHUB_SWITCHER: {
     category: ADMIN_SERVER_SETTINGS_PAGE,
@@ -63,14 +63,19 @@ export const ADMIN_SERVER_SETTINGS_PAGE_EVENTS = {
     action: 'Click on Btn Submit on LDAP block on tab Authorization Configuration',
     label: 'Submit changes for LDAP on tab Authorization Configuration',
   },
-  MAKE_RP_GREAT_AGAIN: {
+  MAKE_RP_GREAT_AGAIN_CHECK: {
     category: ADMIN_SERVER_SETTINGS_PAGE,
-    action: 'Edit checkbox Help make ReportPortal better on tab Statistics',
-    label: 'Check/uncheck Help make ReportPortal better on tab Statistics',
+    action: 'Edit checkbox Help make ReportPortal better on tab Analytics',
+    label: 'Check Help make ReportPortal better on tab Analytics',
   },
-  SUBMIT_STATISTICS_BTN: {
+  MAKE_RP_GREAT_AGAIN_UNCHECK: {
     category: ADMIN_SERVER_SETTINGS_PAGE,
-    action: 'Click on Bttn Submit on tab Statistics',
-    label: 'Submit changes on tab Statistics',
+    action: 'Edit checkbox Help make ReportPortal better on tab Analytics',
+    label: 'Uncheck Help make ReportPortal better on tab Analytics',
+  },
+  SUBMIT_ANALYTICS_BTN: {
+    category: ADMIN_SERVER_SETTINGS_PAGE,
+    action: 'Click on Bttn Submit on tab Analytics',
+    label: 'Submit changes on tab Analytics',
   },
 };

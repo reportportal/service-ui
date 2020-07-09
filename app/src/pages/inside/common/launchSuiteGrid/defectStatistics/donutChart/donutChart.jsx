@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component } from 'react';
+import React, { Component } from 'react';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -52,8 +52,15 @@ export class DonutChart extends Component {
     viewBox: PropTypes.number.isRequired,
     strokeWidth: PropTypes.number.isRequired,
     defectColors: PropTypes.object.isRequired,
-    itemId: PropTypes.number.isRequired,
+    itemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     eventInfo: PropTypes.object,
+    target: PropTypes.string,
+    listViewLinkParams: PropTypes.shape({
+      launchesLimit: PropTypes.number,
+      compositeAttribute: PropTypes.string,
+      isLatest: PropTypes.bool,
+      filterType: PropTypes.bool,
+    }),
     ownLinkParams: PropTypes.shape({
       isOtherPage: PropTypes.bool,
       payload: PropTypes.object,
@@ -61,8 +68,11 @@ export class DonutChart extends Component {
     }),
   };
   static defaultProps = {
+    itemId: null,
     type: '',
     defects: [],
+    target: '',
+    listViewLinkParams: {},
     eventInfo: {},
     ownLinkParams: {},
   };
@@ -101,6 +111,8 @@ export class DonutChart extends Component {
       itemId,
       defectColors,
       eventInfo,
+      target,
+      listViewLinkParams,
       ownLinkParams,
     } = this.props;
     const diameter = viewBox / 2;
@@ -115,6 +127,8 @@ export class DonutChart extends Component {
         defects={defects}
         itemId={itemId}
         eventInfo={eventInfo}
+        target={target}
+        listViewLinkParams={listViewLinkParams}
         ownLinkParams={ownLinkParams}
       >
         <div className={cx('chart-container')}>

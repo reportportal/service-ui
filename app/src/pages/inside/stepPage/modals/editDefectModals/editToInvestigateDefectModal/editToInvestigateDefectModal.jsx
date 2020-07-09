@@ -411,7 +411,10 @@ export class EditToInvestigateDefectModal extends Component {
   };
 
   handleToggleItemSelect = (item, selected) => {
+    const { selectSpecificSimilarItem } = this.props.data.eventsInfo;
+
     if (selected) {
+      this.props.tracking.trackEvent(selectSpecificSimilarItem);
       this.setState((state) => ({
         selectedItems: [...state.selectedItems, item],
       }));

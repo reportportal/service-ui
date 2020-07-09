@@ -31,6 +31,7 @@ import {
   addFilterAction,
   fetchUserFiltersSuccessAction,
   removeFilterAction,
+  activeFilterSelector,
 } from 'controllers/filter';
 
 import {
@@ -325,8 +326,11 @@ function* watchHideFilterOnLaunches() {
 }
 
 function* showFilterOnLaunches({ payload: filter }) {
-  yield put(addFilterAction(filter));
-  yield put(updateProjectFilterPreferencesAction(filter.id, 'PUT'));
+  const activeFilter = yield select(activeFilterSelector);
+  if (!activeFilter || filter.id !== activeFilter.id) {
+    yield put(addFilterAction(filter));
+    yield put(updateProjectFilterPreferencesAction(filter.id, 'PUT'));
+  }
 }
 
 function* watchShowFilterOnLaunches() {

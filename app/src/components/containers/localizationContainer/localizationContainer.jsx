@@ -21,7 +21,7 @@ import { IntlProvider } from 'react-intl';
 import { langSelector } from 'controllers/lang';
 import { polyfillLocales } from 'common/polyfills';
 
-import localeUA from '../../../../localization/translated/uk.json';
+import localeUK from '../../../../localization/translated/uk.json';
 import localeRU from '../../../../localization/translated/ru.json';
 import localeBE from '../../../../localization/translated/be.json';
 
@@ -46,7 +46,7 @@ export class LocalizationContainer extends React.Component {
     this.messages = {
       ru: localeRU,
       be: localeBE,
-      uk: localeUA,
+      uk: localeUK,
     };
   }
 
