@@ -616,7 +616,7 @@
   "FilterOptions.name": "Имя запуска",
   "FilterOptions.not_any": "без любого из",
   "FilterOptions.not_cnt": "не содержит",
-  "FilterOptions.not_has": "без любого из",
+  "FilterOptions.not_has": "не содержит",
   "FilterOptions.not_in": "не содержит",
   "FilterOptions.number": "Номер запуска",
   "FilterOptions.passed": "Успешно",

@@ -95,7 +95,7 @@ export const messages = defineMessages({
   },
   not_has: {
     id: 'FilterOptions.not_has',
-    defaultMessage: 'without any of',
+    defaultMessage: 'without all of',
   },
   attributeValue: {
     id: 'FilterOptions.attributeValue',
