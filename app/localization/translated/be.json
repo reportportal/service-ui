@@ -616,7 +616,7 @@
   "FilterOptions.name": "Імя запуску",
   "FilterOptions.not_any": "без любога з",
   "FilterOptions.not_cnt": "не ўтрымлівае",
-  "FilterOptions.not_has": "без любога з",
+  "FilterOptions.not_has": "не ўтрымлівае",
   "FilterOptions.not_in": "не ўтрымлівае",
   "FilterOptions.number": "Нумар запуску",
   "FilterOptions.passed": "Паспяхова",

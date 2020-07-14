@@ -616,7 +616,7 @@
   "FilterOptions.name": "Ім’я запуску",
   "FilterOptions.not_any": "без будь-якого з",
   "FilterOptions.not_cnt": "не містить",
-  "FilterOptions.not_has": "без будь-якого з",
+  "FilterOptions.not_has": "не містить",
   "FilterOptions.not_in": "не містить",
   "FilterOptions.number": "Номер запуску",
   "FilterOptions.passed": "Успішно",
