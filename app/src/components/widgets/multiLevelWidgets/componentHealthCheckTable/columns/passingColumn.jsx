@@ -27,12 +27,14 @@ export const PassingRateColumn = ({ className, value }, name, { formatMessage })
     {value.passingRate !== undefined ? (
       <Fragment>
         <span className={cx('mobile-hint')}>{formatMessage(hintMessages.passingRateHint)}</span>
-        <span className={cx('passing-rate-item')}>{value.passingRate}%</span>
+        <span className={cx('passing-rate-item')}>{value.passingRate.toFixed(2)}%</span>
       </Fragment>
     ) : (
       <Fragment>
         <span className={cx('mobile-hint')}>{formatMessage(hintMessages.passingRateHint)}</span>
-        <span className={cx('total-item')}>{!!value.total && value.total.passingRate}%</span>
+        <span className={cx('total-item')}>
+          {!!value.total && value.total.passingRate.toFixed(2)}%
+        </span>
       </Fragment>
     )}
   </div>
