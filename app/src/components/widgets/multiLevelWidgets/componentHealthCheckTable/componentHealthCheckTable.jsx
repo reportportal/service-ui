@@ -84,10 +84,25 @@ const columnComponentsMap = {
   [PASS_RATE_KEY]: PassingRateColumn,
 };
 
+const COLUMNS_SEQUENCE = [
+  NAME,
+  CUSTOM_COLUMN,
+  PASS_RATE,
+  STATS_TOTAL,
+  STATS_PASSED,
+  STATS_FAILED,
+  STATS_SKIPPED,
+  PRODUCT_BUG,
+  AUTOMATION_BUG,
+  SYSTEM_ISSUE,
+  TO_INVESTIGATE,
+  STATUS,
+];
+
 const COLUMNS_KEYS_MAP = {
   [NAME]: NAME_KEY,
   [CUSTOM_COLUMN]: CUSTOM_COLUMN_KEY,
-  [STATUS]: STATUS_COLUMN_KEY,
+  [PASS_RATE]: PASS_RATE_KEY,
   [STATS_TOTAL]: STATISTICS_COLUMN_KEY,
   [STATS_PASSED]: STATISTICS_COLUMN_KEY,
   [STATS_FAILED]: STATISTICS_COLUMN_KEY,
@@ -96,7 +111,7 @@ const COLUMNS_KEYS_MAP = {
   [AUTOMATION_BUG]: DEFECT_COLUMN_KEY,
   [SYSTEM_ISSUE]: DEFECT_COLUMN_KEY,
   [TO_INVESTIGATE]: DEFECT_COLUMN_KEY,
-  [PASS_RATE]: PASS_RATE_KEY,
+  [STATUS]: STATUS_COLUMN_KEY,
 };
 
 const getGridAlign = (type) => {
@@ -303,7 +318,7 @@ export class ComponentHealthCheckTable extends Component {
     };
     const customColumn = this.getCustomColumn();
 
-    return Object.keys(COLUMNS_KEYS_MAP).reduce((columns, item) => {
+    return COLUMNS_SEQUENCE.reduce((columns, item) => {
       if (!customColumn && item === CUSTOM_COLUMN) {
         return columns;
       }
