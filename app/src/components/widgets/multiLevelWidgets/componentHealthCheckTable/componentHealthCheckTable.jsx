@@ -87,6 +87,7 @@ const columnComponentsMap = {
 const COLUMNS_SEQUENCE = [
   NAME,
   CUSTOM_COLUMN,
+  STATUS,
   PASS_RATE,
   STATS_TOTAL,
   STATS_PASSED,
@@ -96,7 +97,6 @@ const COLUMNS_SEQUENCE = [
   AUTOMATION_BUG,
   SYSTEM_ISSUE,
   TO_INVESTIGATE,
-  STATUS,
 ];
 
 const COLUMNS_KEYS_MAP = {
