@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages, FormattedRelativeTime } from 'react-intl';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
@@ -31,16 +31,27 @@ import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import RefreshIcon from 'common/img/refresh-icon-inline.svg';
 import GlobeIcon from 'common/img/globe-icon-inline.svg';
 import ShareIcon from 'common/img/share-icon-inline.svg';
+import { getRelativeUnits } from 'common/utils/timeDateUtils';
 import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/common/widgets';
 import {
   widgetModeMessages,
   getWidgetModeByValue,
 } from 'pages/inside/dashboardItemPage/modals/common/widgetControls/utils/getWidgetModeOptions';
+import { STATE_RENDERING } from 'components/widgets/multiLevelWidgets/componentHealthCheckTable/constants';
+import { COMPONENT_HEALTH_CHECK_TABLE } from 'common/constants/widgetTypes';
 import { DescriptionTooltipIcon } from './descriptionTooltipIcon';
 import styles from './widgetHeader.scss';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
+  lastRefresh: {
+    id: 'WidgetHeader.lastRefresh',
+    defaultMessage: 'Updated:',
+  },
+  forceUpdate: {
+    id: 'WidgetHeader.forceUpdate',
+    defaultMessage: 'Update',
+  },
   widgetIsShared: {
     id: 'WidgetHeader.widgetIsShared',
     defaultMessage: 'Your widget is shared',
@@ -67,6 +78,7 @@ export class WidgetHeader extends Component {
     onRefresh: PropTypes.func,
     onDelete: PropTypes.func,
     onEdit: PropTypes.func,
+    onForceUpdate: PropTypes.func,
     customClass: PropTypes.string,
     isPrintMode: PropTypes.bool,
     dashboardOwner: PropTypes.string,
@@ -78,6 +90,7 @@ export class WidgetHeader extends Component {
     onRefresh: () => {},
     onDelete: () => {},
     onEdit: () => {},
+    onForceUpdate: () => {},
     customClass: null,
     isPrintMode: false,
     dashboardOwner: '',
@@ -106,6 +119,7 @@ export class WidgetHeader extends Component {
       onRefresh,
       onDelete,
       onEdit,
+      onForceUpdate,
       customClass,
       isPrintMode,
       dashboardOwner,
@@ -114,6 +128,9 @@ export class WidgetHeader extends Component {
     const isOwner = data.owner === userId;
     const isDashboardOwner = dashboardOwner === userId;
     const isWidgetDeletable = canDeleteWidget(userRole, projectRole, isOwner || isDashboardOwner);
+    const isForceUpdate = data.type === COMPONENT_HEALTH_CHECK_TABLE;
+    const isHideEditControl = isForceUpdate && data.state === STATE_RENDERING;
+    const { value: startTime, unit } = getRelativeUnits(data.lastRefresh);
 
     return (
       <div className={cx('widget-header')}>
@@ -153,16 +170,36 @@ export class WidgetHeader extends Component {
         </div>
         {!isPrintMode && (
           <div className={customClass}>
-            <div className={cx('controls-block')}>
-              {canEditWidget(userRole, projectRole, isOwner) && (
+            <div className={cx('controls-block', { 'controls-block-update': isForceUpdate })}>
+              {isForceUpdate && (
+                <div className={cx('force-update', 'mobile-hide')}>
+                  {data.lastRefresh && (
+                    <Fragment>
+                      {intl.formatMessage(messages.lastRefresh)}
+                      <span className={cx('force-update-time')}>
+                        <FormattedRelativeTime value={startTime} unit={unit} numeric="auto" />
+                      </span>
+                    </Fragment>
+                  )}
+                  <div className={cx('control', 'force-update-control')} onClick={onForceUpdate}>
+                    {Parser(RefreshIcon)}
+                    <span className={cx('force-update-label')}>
+                      {intl.formatMessage(messages.forceUpdate)}
+                    </span>
+                  </div>
+                </div>
+              )}
+              {canEditWidget(userRole, projectRole, isOwner) && !isHideEditControl && data.type && (
                 <div className={cx('control', 'mobile-hide')} onClick={onEdit}>
                   {Parser(PencilIcon)}
                 </div>
               )}
-              <div className={cx('control')} onClick={onRefresh}>
-                {Parser(RefreshIcon)}
-              </div>
-              {isWidgetDeletable && (
+              {!isForceUpdate && data.type && (
+                <div className={cx('control')} onClick={onRefresh}>
+                  {Parser(RefreshIcon)}
+                </div>
+              )}
+              {isWidgetDeletable && data.type && (
                 <div className={cx('control', 'mobile-hide')} onClick={onDelete}>
                   {Parser(CrossIcon)}
                 </div>

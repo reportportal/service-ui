@@ -28,7 +28,7 @@ const cx = classNames.bind(styles);
 @withHoverableTooltip({
   TooltipComponent: DefectTypeTooltip,
   data: {
-    width: 235,
+    width: 255,
     placement: 'bottom-end',
     noArrow: true,
     desktopOnly: true,
@@ -42,20 +42,29 @@ export class DefectTypeBlock extends Component {
     data: PropTypes.object.isRequired,
     projectConfig: PropTypes.object.isRequired,
     type: PropTypes.string.isRequired,
+    detailedView: PropTypes.bool.isRequired,
+    detailedData: PropTypes.object,
+  };
+
+  static defaultProps = {
+    detailedData: {},
   };
 
   render() {
-    const defectType =
-      this.props.projectConfig.subTypes &&
-      this.props.projectConfig.subTypes[this.props.type.toUpperCase()][0];
+    const { projectConfig, type, data, detailedView, detailedData } = this.props;
+    const defectType = projectConfig.subTypes && projectConfig.subTypes[type.toUpperCase()][0];
+
     return (
-      <div className={cx('defect-type-block')}>
+      <div className={cx('defect-type-block', { 'detailed-view': detailedView })}>
         {defectType && (
           <Fragment>
             <div className={cx('circle')} style={{ backgroundColor: defectType.color }} />
             <span className={cx('title')}>{defectType.shortName}</span>
-            <div className={cx('value')} style={{ borderColor: defectType.color }}>
-              {this.props.data.total}
+            <div className={cx('stats')} style={{ borderColor: defectType.color }}>
+              <span className={cx('value')}>{data.total}</span>
+              {detailedView && (
+                <span className={cx('value-detailed')}>{detailedData.total || 0}</span>
+              )}
             </div>
           </Fragment>
         )}

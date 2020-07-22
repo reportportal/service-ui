@@ -16,6 +16,8 @@
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import Parser from 'html-react-parser';
+import InfoIcon from 'common/img/info-inline.svg';
 import { columnShape } from '../columnShape';
 import styles from './itemListHeader.scss';
 
@@ -26,7 +28,12 @@ export const ItemListHeader = ({ columns }) => (
     <tr>
       {columns.map((column) => (
         <td className={cx('cell', `align-${column.align}`)} key={column.name}>
-          {column.label}
+          <span>{column.label}</span>
+          {column.labelTip && (
+            <div className={cx('cell-icon')} title={column.labelTip}>
+              {Parser(InfoIcon)}
+            </div>
+          )}
         </td>
       ))}
     </tr>

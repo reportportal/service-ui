@@ -123,11 +123,11 @@ class AttachmentsSlider extends Component {
   };
 
   render() {
-    const { isThumbsView, activeItemId, onClickItem } = this.props;
+    const { isThumbsView, attachments, activeItemId, onClickItem } = this.props;
     return (
       <Fragment>
         <Slider className={cx('slider', { 'thumbs-view': isThumbsView })}>
-          {this.props.attachments.map((attachment, index) => (
+          {attachments.map((attachment, index) => (
             <Slide index={index} key={attachment.id}>
               <div
                 className={cx('preview-container', { 'main-area': !isThumbsView })}

@@ -119,6 +119,7 @@ export class EntitiesGroup extends Component {
                 error={errors[id]}
                 vertical={vertical}
                 customProps={customProps}
+                events={events}
               />
             </div>
           );

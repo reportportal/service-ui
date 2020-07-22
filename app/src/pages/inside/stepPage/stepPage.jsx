@@ -54,12 +54,15 @@ import { withPagination, DEFAULT_PAGINATION, SIZE_KEY, PAGE_KEY } from 'controll
 import { prevTestItemSelector } from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
-import { LaunchFiltersSection } from 'pages/inside/common/launchFiltersSection';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { getDefectTypeSelector } from 'controllers/project';
 import { StepGrid } from './stepGrid';
 
 const UNLINK_ISSUE_EVENTS_INFO = {
+  unlinkAutoAnalyzedFalse:
+    STEP_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.UNLINK_IN_UNLINK_ISSUE_MODAL_AUTO_ANALYZED_FALSE,
+  unlinkAutoAnalyzedTrue:
+    STEP_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.UNLINK_IN_UNLINK_ISSUE_MODAL_AUTO_ANALYZED_TRUE,
   unlinkBtn: STEP_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.UNLINK_BTN_UNLINK_ISSUE_MODAL,
   cancelBtn: STEP_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_UNLINK_ISSUE_MODAL,
   closeIcon: STEP_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_UNLINK_ISSUE_MODAL,
@@ -361,7 +364,9 @@ export class StepPage extends Component {
           fetchFunc: this.unselectAndFetchItems,
           eventsInfo: {
             changeSearchMode: STEP_PAGE_EVENTS.CHANGE_SEARCH_MODE_EDIT_DEFECT_MODAL,
-            selectAllSimilarItems: STEP_PAGE_EVENTS.SELECT_ALL_SIMILIAR_ITEMS_EDIT_DEFECT_MODAL,
+            selectAllSimilarItems: STEP_PAGE_EVENTS.SELECT_ALL_SIMILAR_ITEMS_EDIT_DEFECT_MODAL,
+            selectSpecificSimilarItem:
+              STEP_PAGE_EVENTS.SELECT_SPECIFIC_SIMILAR_ITEM_EDIT_DEFECT_MODAL,
             editDefectsEvents: STEP_PAGE_EVENTS.EDIT_DEFECT_MODAL_EVENTS,
             unlinkIssueEvents: UNLINK_ISSUE_EVENTS_INFO,
             postIssueEvents: POST_ISSUE_EVENTS_INFO,
@@ -438,7 +443,6 @@ export class StepPage extends Component {
 
     return (
       <PageLayout>
-        <PageSection>{!debugMode && <LaunchFiltersSection />}</PageSection>
         <PageSection>
           <SuiteTestToolbar
             onDelete={this.deleteItems}

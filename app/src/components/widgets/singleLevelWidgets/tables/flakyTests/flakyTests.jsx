@@ -16,17 +16,53 @@
 
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { defineMessages } from 'react-intl';
 import { TestsTableWidget } from '../components/testsTableWidget';
 import * as cfg from './flakyTestsCfg';
 
+const titleMessages = defineMessages({
+  flakyTestsMatrixTooltip: {
+    id: 'flakyTests.flakyTestsMatrixTooltip',
+    defaultMessage: '{statusNumber} {statusChange} from {possibleNumber} {possibleTimes}',
+  },
+  change: {
+    id: 'flakyTests.flakyTestsMatrixTooltipChange',
+    defaultMessage: 'status change',
+  },
+  changes: {
+    id: 'flakyTests.flakyTestsMatrixTooltipChanges',
+    defaultMessage: 'status changes',
+  },
+  possible: {
+    id: 'flakyTests.flakyTestsMatrixTooltipPossible',
+    defaultMessage: 'possible',
+  },
+  possibleTimes: {
+    id: 'flakyTests.flakyTestsMatrixTooltipPossibleTimes',
+    defaultMessage: 'possible times',
+  },
+});
+
 const prepareWidgetData = ({ flaky }) =>
   flaky.map((item) => ({ ...item, statuses: [...item.statuses].reverse() }));
+
+const getMaxtrixTooltip = (count, total, formatMessage) => {
+  return formatMessage(titleMessages.flakyTestsMatrixTooltip, {
+    statusNumber: count,
+    statusChange: formatMessage(count === 1 ? titleMessages.change : titleMessages.changes),
+    possibleTimes: formatMessage(
+      total === 1 ? titleMessages.possible : titleMessages.possibleTimes,
+    ),
+    possibleNumber: total,
+  });
+};
 
 export const FlakyTests = ({ widget: { content } }) => (
   <TestsTableWidget
     tests={prepareWidgetData(content)}
     launch={content.latestLaunch}
     columns={cfg.columns}
+    getMaxtrixTooltip={getMaxtrixTooltip}
   />
 );
 

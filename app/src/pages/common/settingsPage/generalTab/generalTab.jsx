@@ -21,6 +21,7 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
+import moment from 'moment';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { canUpdateSettings } from 'common/utils/permissions';
@@ -38,12 +39,20 @@ import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { FormField } from 'components/fields/formField';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { projectIdSelector } from 'controllers/pages';
-import { authExtensionsSelector } from 'controllers/appInfo';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import { langSelector } from 'controllers/lang';
 import styles from './generalTab.scss';
 import { Messages } from './generalTabMessages';
 
 const cx = classNames.bind(styles);
+
+const hoursToSeconds = (hours) => moment.duration(hours, 'hours').asSeconds();
+const daysToSeconds = (days) => moment.duration(days, 'days').asSeconds();
+const secondsToDays = (seconds, locale) =>
+  moment
+    .duration(seconds, 'seconds')
+    .locale(locale)
+    .humanize({ d: Number.MAX_SAFE_INTEGER });
 
 @reduxForm({
   form: 'generalForm',
@@ -52,9 +61,9 @@ const cx = classNames.bind(styles);
   (state) => ({
     projectId: projectIdSelector(state),
     jobConfig: jobAttributesSelector(state),
-    isEpamInstance: !!authExtensionsSelector(state).epam,
     accountRole: userAccountRoleSelector(state),
     userRole: activeProjectRoleSelector(state),
+    lang: langSelector(state),
   }),
   {
     showNotification,
@@ -74,7 +83,6 @@ export class GeneralTab extends Component {
       keepScreenshots: PropTypes.string.isRequired,
       keepLaunches: PropTypes.string.isRequired,
     }).isRequired,
-    isEpamInstance: PropTypes.bool.isRequired,
     showNotification: PropTypes.func.isRequired,
     updateConfigurationAttributesAction: PropTypes.func.isRequired,
     initialize: PropTypes.func.isRequired,
@@ -84,20 +92,22 @@ export class GeneralTab extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    lang: PropTypes.string,
   };
 
   static defaultProps = {
     projectId: '',
     fetchProjectAction: () => {},
+    lang: 'en',
   };
 
   componentDidMount() {
     const { interruptJobTime, keepLogs, keepScreenshots, keepLaunches } = this.props.jobConfig;
     this.props.initialize({
-      interruptJobTime: interruptJobTime.toLowerCase(),
-      keepLaunches: keepLaunches.toLowerCase(),
-      keepLogs: keepLogs.toLowerCase(),
-      keepScreenshots: keepScreenshots.toLowerCase(),
+      interruptJobTime: Number(interruptJobTime),
+      keepLaunches: Number(keepLaunches),
+      keepLogs: Number(keepLogs),
+      keepScreenshots: Number(keepScreenshots),
     });
   }
 
@@ -127,39 +137,36 @@ export class GeneralTab extends Component {
       });
   };
 
-  filterOptions = (options) =>
-    this.props.isEpamInstance ? options.filter((item) => item.value !== 'forever') : options;
+  retentionOptions = [
+    { label: this.props.intl.formatMessage(Messages.week1), value: daysToSeconds(7) },
+    { label: this.props.intl.formatMessage(Messages.week2), value: daysToSeconds(14) },
+    { label: this.props.intl.formatMessage(Messages.week3), value: daysToSeconds(21) },
+    { label: this.props.intl.formatMessage(Messages.month1), value: daysToSeconds(30) },
+    { label: this.props.intl.formatMessage(Messages.month3), value: daysToSeconds(90) },
+    { label: this.props.intl.formatMessage(Messages.month6), value: daysToSeconds(180) },
+    { label: this.props.intl.formatMessage(Messages.forever), value: 0 },
+  ];
 
   interruptJobTime = [
-    { label: this.props.intl.formatMessage(Messages.hour1), value: '1 hour' },
-    { label: this.props.intl.formatMessage(Messages.hour3), value: '3 hours' },
-    { label: this.props.intl.formatMessage(Messages.hour6), value: '6 hours' },
-    { label: this.props.intl.formatMessage(Messages.hour12), value: '12 hours' },
-    { label: this.props.intl.formatMessage(Messages.day1), value: '1 day' },
-    { label: this.props.intl.formatMessage(Messages.week1), value: '1 week' },
+    { label: this.props.intl.formatMessage(Messages.hour1), value: hoursToSeconds(1) },
+    { label: this.props.intl.formatMessage(Messages.hour3), value: hoursToSeconds(3) },
+    { label: this.props.intl.formatMessage(Messages.hour6), value: hoursToSeconds(6) },
+    { label: this.props.intl.formatMessage(Messages.hour12), value: hoursToSeconds(12) },
+    { label: this.props.intl.formatMessage(Messages.day1), value: daysToSeconds(1) },
+    { label: this.props.intl.formatMessage(Messages.week1), value: daysToSeconds(7) },
   ];
-  keepLogs = [
-    { label: this.props.intl.formatMessage(Messages.week2), value: '2 weeks' },
-    { label: this.props.intl.formatMessage(Messages.month1), value: '1 month' },
-    { label: this.props.intl.formatMessage(Messages.month3), value: '3 months' },
-    { label: this.props.intl.formatMessage(Messages.month6), value: '6 months' },
-    { label: this.props.intl.formatMessage(Messages.forever), value: 'forever' },
-  ];
-  keepScreenshots = [
-    { label: this.props.intl.formatMessage(Messages.week1), value: '1 week' },
-    { label: this.props.intl.formatMessage(Messages.week2), value: '2 weeks' },
-    { label: this.props.intl.formatMessage(Messages.week3), value: '3 weeks' },
-    { label: this.props.intl.formatMessage(Messages.month1), value: '1 month' },
-    { label: this.props.intl.formatMessage(Messages.month3), value: '3 months' },
-    { label: this.props.intl.formatMessage(Messages.forever), value: 'forever' },
-  ];
-  keepLaunches = [
-    { label: this.props.intl.formatMessage(Messages.week2), value: '2 weeks' },
-    { label: this.props.intl.formatMessage(Messages.month1), value: '1 month' },
-    { label: this.props.intl.formatMessage(Messages.month3), value: '3 months' },
-    { label: this.props.intl.formatMessage(Messages.month6), value: '6 months' },
-    { label: this.props.intl.formatMessage(Messages.forever), value: 'forever' },
-  ];
+
+  createValueFormatter = (values) => (value) => {
+    const selectedOption = values.find((option) => option.value === value);
+    if (selectedOption) {
+      return selectedOption;
+    }
+    return { label: secondsToDays(value, this.props.lang), value };
+  };
+
+  formatRetention = this.createValueFormatter(this.retentionOptions);
+
+  formatInterruptJobTimes = this.createValueFormatter(this.interruptJobTime);
 
   render() {
     const { intl, accountRole, userRole, tracking } = this.props;
@@ -182,6 +189,7 @@ export class GeneralTab extends Component {
               node: <p>{intl.formatMessage(Messages.interruptedJobDescription)}</p>,
             }}
             disabled={!canUpdateSettings(accountRole, userRole)}
+            format={this.formatInterruptJobTimes}
           >
             <InputDropdown options={this.interruptJobTime} mobileDisabled />
           </FormField>
@@ -194,8 +202,9 @@ export class GeneralTab extends Component {
               node: <p>{intl.formatMessage(Messages.keepLaunchesDescription)}</p>,
             }}
             disabled={!canUpdateSettings(accountRole, userRole)}
+            format={this.formatRetention}
           >
-            <InputDropdown options={this.filterOptions(this.keepLaunches)} mobileDisabled />
+            <InputDropdown options={this.retentionOptions} mobileDisabled />
           </FormField>
           <FormField
             name="keepLogs"
@@ -206,8 +215,9 @@ export class GeneralTab extends Component {
               node: <p>{intl.formatMessage(Messages.keepLogsDescription)}</p>,
             }}
             disabled={!canUpdateSettings(accountRole, userRole)}
+            format={this.formatRetention}
           >
-            <InputDropdown options={this.filterOptions(this.keepLogs)} mobileDisabled />
+            <InputDropdown options={this.retentionOptions} mobileDisabled />
           </FormField>
           <FormField
             name="keepScreenshots"
@@ -218,8 +228,9 @@ export class GeneralTab extends Component {
               node: <p>{intl.formatMessage(Messages.keepScreenshotsDescription)}</p>,
             }}
             disabled={!canUpdateSettings(accountRole, userRole)}
+            format={this.formatRetention}
           >
-            <InputDropdown options={this.filterOptions(this.keepScreenshots)} mobileDisabled />
+            <InputDropdown options={this.retentionOptions} mobileDisabled />
           </FormField>
           <FormField withoutProvider fieldWrapperClassName={cx('button-container')}>
             <div className={cx('submit-button')}>

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { normalizeTestItem, formatItemName } from './utils';
+import { normalizeTestItem, formatItemName, groupItemsByParent } from './utils';
 
 describe('controllers/testItem/utils', () => {
   describe('normalizeTestItem', () => {
@@ -69,6 +69,33 @@ describe('controllers/testItem/utils', () => {
         'Long test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test...';
 
       expect(formatItemName(longItemName)).toBe(shortenItemName);
+    });
+  });
+
+  describe('groupItemsByParent', () => {
+    test('should return empty object in case of no items', () => {
+      const items = [];
+      const groupedItems = groupItemsByParent(items);
+
+      expect(groupedItems).toEqual({});
+    });
+
+    test('should group items by parent', () => {
+      const items = [
+        { parent: 123, name: 'item1' },
+        { parent: 124, name: 'item2' },
+        { parent: 123, name: 'item3' },
+      ];
+      const groupedItems = groupItemsByParent(items);
+      const expectedGroupedItems = {
+        123: [
+          { parent: 123, name: 'item1' },
+          { parent: 123, name: 'item3' },
+        ],
+        124: [{ parent: 124, name: 'item2' }],
+      };
+
+      expect(groupedItems).toEqual(expectedGroupedItems);
     });
   });
 });

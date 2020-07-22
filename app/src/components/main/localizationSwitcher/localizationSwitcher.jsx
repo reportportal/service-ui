@@ -54,6 +54,11 @@ export class LocalizationSwitcher extends PureComponent {
           currentLang="be"
           setLang={this.props.setLangAction}
         />
+        <LocalizationSwitcherItem
+          lang={this.props.lang}
+          currentLang="uk"
+          setLang={this.props.setLangAction}
+        />
       </ul>
     );
   }

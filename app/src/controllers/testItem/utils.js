@@ -22,6 +22,7 @@ import {
 } from 'controllers/pages';
 import * as launchLevels from 'common/constants/launchLevels';
 import * as methodTypes from 'common/constants/methodTypes';
+import { extractNamespacedQuery } from 'common/utils/routingUtils';
 import { TEST_ITEM_TYPES_MAP } from './constants';
 import { LEVELS } from './levels';
 
@@ -106,3 +107,17 @@ export const normalizeTestItem = (testItem, defectTypesConfig = {}) => {
 };
 
 export const formatItemName = (name) => (name.length > 256 ? `${name.substr(0, 256)}...` : name);
+
+export const isListView = (query, namespace) => {
+  const namespacedQuery = extractNamespacedQuery(query, namespace);
+  return namespacedQuery && 'filter.eq.hasChildren' in namespacedQuery;
+};
+
+export const groupItemsByParent = (items) =>
+  items.reduce((groups, item) => {
+    const group = groups[item.parent] || [];
+    return {
+      ...groups,
+      [item.parent]: [...group, item],
+    };
+  }, {});

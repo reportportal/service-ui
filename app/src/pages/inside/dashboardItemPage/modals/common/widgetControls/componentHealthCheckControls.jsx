@@ -72,13 +72,14 @@ const passingRateValidator = (formatMessage) =>
     validate.healthCheckWidgetPassingRate,
     formatMessage(messages.passingRateValidationError),
   );
-const attributeKeyValidator = (formatMessage) =>
+const attributeKeyValidator = (formatMessage) => (attributes) =>
   composeBoundValidators([
     bindMessageToValidator(
       validate.required,
       formatMessage(messages.attributesArrayValidationError),
     ),
     commonValidators.attributeKey,
+    commonValidators.uniqueAttributeKey(attributes),
   ]);
 
 @connect((state) => ({

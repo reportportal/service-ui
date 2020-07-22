@@ -35,3 +35,4 @@ export const PRODUCT_STATUS = 'productStatus';
 export const MOST_TIME_CONSUMING = 'mostTimeConsuming';
 export const MOST_POPULAR_PATTERNS = 'topPatternTemplates';
 export const COMPONENT_HEALTH_CHECK = 'componentHealthCheck';
+export const COMPONENT_HEALTH_CHECK_TABLE = 'componentHealthCheckTable';

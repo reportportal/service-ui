@@ -62,15 +62,21 @@ export const getRefreshPageActionEvent = (category) => ({
   label: 'Refresh page',
 });
 
+export const getChangeFilterEvent = (category) => (title, value) => ({
+  category,
+  action: `Click on dropdown ${title} in the refine filters panel`,
+  label: `Select ${value} in ${title} filter`,
+});
+
 export const getRefineFiltersPanelEvents = (category) => ({
   REFINE_BTN_MORE: {
     category,
     action: 'Click on Refine Btn More',
     label: 'Arise dropdown with parameters',
   },
-  SELECT_REFINE_PARAMS: {
+  getSelectRefineParams: (parameter) => ({
     category,
-    action: 'Select parameters to refine',
-    label: 'Show parameters fields to refine',
-  },
+    action: `Select ${parameter} parameter to refine`,
+    label: `Show ${parameter} parameter field to refine`,
+  }),
 });

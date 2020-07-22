@@ -90,8 +90,14 @@ export const getEditToInvestigateChangeSearchModeEvent = (category) => ({
 
 export const getEditToInvestigateSelectAllSimilarItemsEvent = (category) => ({
   category,
-  action: 'Click on checkbox Change Similiar Items in Modal "Edit Defect"',
-  label: 'Choose All similiar items in Modal "Edit Defect"',
+  action: 'Click on checkbox Change Similar Items in Modal "Edit Defect"',
+  label: 'Choose All similar items in Modal "Edit Defect"',
+});
+
+export const getEditToInvestigateSelectSpecificSimilarItemEvent = (category) => ({
+  category,
+  action: 'Select the specific item in Change Similar Items in Modal "Edit Defect"',
+  label: `Choose specific item in Modal "Edit Defect"`,
 });
 
 // UNLINK ISSUE MODAL
@@ -110,6 +116,16 @@ export const getUnlinkIssueModalEvents = (category) => ({
     category,
     action: 'Click on Unlink in Modal "Unlink issue"',
     label: 'Unlink issues',
+  },
+  UNLINK_IN_UNLINK_ISSUE_MODAL_AUTO_ANALYZED_TRUE: {
+    category,
+    action: 'Click on Unlink in Modal "Unlink issue"',
+    label: 'Unlink issues, autoAnalyzed is true',
+  },
+  UNLINK_IN_UNLINK_ISSUE_MODAL_AUTO_ANALYZED_FALSE: {
+    category,
+    action: 'Click on Unlink in Modal "Unlink issue"',
+    label: 'Unlink issues, autoAnalyzed is false',
   },
 });
 

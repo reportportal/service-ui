@@ -80,6 +80,8 @@ export const searchFilter = (value) =>
 export const searchMembers = (value) => !value || isNotOnlySpaces(value);
 export const attributeKey = (value) =>
   !value || composeValidators([isNotOnlySpaces, maxLength(128)])(value);
+export const uniqueAttributeKey = (attributes) => (value) =>
+  attributes.filter((attribute) => attribute === value).length <= 1;
 export const attributeValue = composeValidators([isNotEmpty, maxLength(128)]);
 export const attributesArray = (value) =>
   isEmpty(value) ||

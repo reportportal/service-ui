@@ -23,16 +23,15 @@ import {
   LOG_VIEW_MODE_STORAGE_KEY,
 } from './constants';
 
-const getLogPageUserSettingsFromStorage = (userId) => getStorageItem(`${userId}_settings`) || {};
+const getUserSettingsFromStorage = (userId) => getStorageItem(`${userId}_settings`) || {};
 
-const updateLogPageUserSettingsInStorage = (userId, data) =>
-  updateStorageItem(`${userId}_settings`, data);
+const updateUserSettingsInStorage = (userId, data) => updateStorageItem(`${userId}_settings`, data);
 
 const getLogLevelFromStorage = (userId) =>
-  getLogPageUserSettingsFromStorage(userId)[LOG_LEVEL_STORAGE_KEY];
+  getUserSettingsFromStorage(userId)[LOG_LEVEL_STORAGE_KEY];
 
 const getLogViewModeFromStorage = (userId) =>
-  getLogPageUserSettingsFromStorage(userId)[LOG_VIEW_MODE_STORAGE_KEY];
+  getUserSettingsFromStorage(userId)[LOG_VIEW_MODE_STORAGE_KEY];
 
 export const getLogLevelById = (logLevelId) =>
   LOG_LEVELS.find((logLevel) => logLevel.id === logLevelId);
@@ -46,9 +45,9 @@ export const getLogLevel = (userId, logLevelId) =>
   LOG_LEVELS[LOG_LEVELS.length - 1];
 
 export const setLogLevel = (userId, logLevel) =>
-  updateLogPageUserSettingsInStorage(userId, { [LOG_LEVEL_STORAGE_KEY]: logLevel.id });
+  updateUserSettingsInStorage(userId, { [LOG_LEVEL_STORAGE_KEY]: logLevel.id });
 
 export const getLogViewMode = (userId) => getLogViewModeFromStorage(userId) || MARKDOWN;
 
 export const setLogViewMode = (userId, viewMode) =>
-  updateLogPageUserSettingsInStorage(userId, { [LOG_VIEW_MODE_STORAGE_KEY]: viewMode });
+  updateUserSettingsInStorage(userId, { [LOG_VIEW_MODE_STORAGE_KEY]: viewMode });

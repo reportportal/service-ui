@@ -23,7 +23,10 @@ import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
 import { validate, bindMessageToValidator } from 'common/utils/validation';
 import { ToggleButton } from 'components/buttons/toggleButton';
-import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
+import {
+  SETTINGS_PAGE_EVENTS,
+  getAutoAnalysisMinimumShouldMatchSubmitEvent,
+} from 'components/main/analytics/events';
 import { AccuracyFormBlock } from './accuracyFormBlock';
 import { NUMBER_OF_LOG_LINES, MIN_SHOULD_MATCH } from '../constants';
 import styles from './analysisForm.scss';
@@ -160,6 +163,7 @@ export class AnalysisForm extends Component {
 
   submitHandler = (data) => {
     const { tracking, onFormSubmit } = this.props;
+    tracking.trackEvent(getAutoAnalysisMinimumShouldMatchSubmitEvent(data.minShouldMatch));
     tracking.trackEvent(SETTINGS_PAGE_EVENTS.SUBMIT_AUTO_ANALYSIS_SETTINGS);
     onFormSubmit(data);
   };

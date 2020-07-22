@@ -23,11 +23,17 @@
   border-bottom: 1px solid $COLOR--gray-91;
   background-color: $COLOR--white-two;
 
+  &--list-view {
+    display: flex;
+    align-items: center;
+  }
+
   @media (max-width: $SCREEN_SM_MAX) {
     padding-left: 15px;
     padding-right: 15px;
   }
 }
+
 .bar-chart-holder {
   display: inline-block;
   position: relative;
@@ -40,6 +46,7 @@
     display: none;
   }
 }
+
 .passed,
 .total,
 .parent-holder,
@@ -52,22 +59,21 @@
   vertical-align: middle;
   line-height: 28px;
 }
+
 .parent-holder,
 .icon-holder {
   margin-right: 10px;
   color: $COLOR--gray-60;
 }
-.filter-holder {
-  margin-left: 30px;
-  margin-right: 50px;
-  color: $COLOR--gray-60;
-  font-family: $FONT-SEMIBOLD;
-  text-transform: uppercase;
-}
+
 .passed,
 .total {
   margin-right: 15px;
   color: $COLOR--charcoal-grey;
+
+  .value {
+    margin-left: 5px;
+  }
 
   @media (max-width: $SCREEN_SM_MAX) {
     &::after {
@@ -78,11 +84,13 @@
     }
   }
 }
+
 .parent-holder {
   font-family: $FONT-SEMIBOLD;
   margin-left: 10px;
   text-transform: uppercase;
 }
+
 .defect-types {
   display: inline-block;
   vertical-align: middle;
@@ -91,6 +99,7 @@
     display: block;
   }
 }
+
 .defect-type {
   display: inline-block;
   margin-right: 15px;
@@ -100,6 +109,91 @@
   }
 }
 
-.info-line-icon-holder {
+.filter-holder {
+  display: flex;
+  margin-left: 15px;
+  margin-right: 30px;
+  color: $COLOR--gray-60;
+  font-family: $FONT-SEMIBOLD;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.filter-holder-name,
+.item-child {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.filter-holder-name {
+  max-width: 115px;
+}
+
+.composite-attributes {
+  display: flex;
+  align-items: center;
+}
+
+.label {
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+  color: $COLOR--charcoal-grey;
+  white-space: nowrap;
+}
+
+.list {
+  display: inline-block;
+  margin-left: 5px;
+}
+
+.item {
+  display: inline-block;
+  margin: 3px 5px;
+  padding: 1px 11px;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+  color: $COLOR--charcoal;
+  background-color: $COLOR--gray-91;
+  border-radius: 2px;
+}
+
+.item-child {
+  max-width: 185px;
   line-height: normal;
+}
+
+.detailed-view {
+  .total {
+    font-family: $FONT-SEMIBOLD;
+
+    .value {
+      color: $COLOR--gray-80;
+      text-decoration: none;
+
+      &:hover {
+        color: $COLOR--topaz;
+      }
+    }
+
+    .value-detailed {
+      color: $COLOR--topaz;
+      text-decoration: none;
+
+      &.disabled {
+        color: $COLOR--charcoal-grey;
+      }
+
+      &::before {
+        content: '';
+        display: inline-block;
+        width: 1px;
+        height: 12px;
+        margin: 0 5px;
+        vertical-align: middle;
+        background-color: $COLOR--gray-91;
+      }
+    }
+  }
 }

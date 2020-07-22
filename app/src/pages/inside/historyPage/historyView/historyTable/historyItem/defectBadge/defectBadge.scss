@@ -24,32 +24,3 @@
   font-family: $FONT-SEMIBOLD;
   color: $COLOR--black-2;
 }
-
-.pb {
-  background: $COLOR--product-bug;
-  & .defect-title {
-    color: $COLOR--white-two;
-  }
-}
-
-.ab {
-  background: $COLOR--automation-bug;
-}
-
-.si {
-  background: $COLOR--system-issue;
-  & .defect-title {
-    color: $COLOR--white-two;
-  }
-}
-
-.ti {
-  background: $COLOR--to-investigate;
-}
-
-.nd {
-  background: $COLOR--gray-47;
-  & .defect-title {
-    color: $COLOR--white-two;
-  }
-}

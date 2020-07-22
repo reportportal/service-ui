@@ -67,6 +67,12 @@ export const getSaveIntegrationModalEvents = (integrationName, isGlobal) => {
   };
 };
 
+export const getAutoAnalysisMinimumShouldMatchSubmitEvent = (value) => ({
+  category: SETTINGS_PAGE,
+  action: 'Submit Minimum should match in Auto-Analysis tab',
+  label: `Minimum should match ${value} percent`,
+});
+
 export const SETTINGS_PAGE_EVENTS = {
   GENERAL_TAB: {
     category: SETTINGS_PAGE,
@@ -303,10 +309,15 @@ export const SETTINGS_PAGE_EVENTS = {
     action: 'Click on tab Auto-Analysis in Settings',
     label: 'Open tab Auto-Analysis in Settings',
   },
-  AUTO_ANALYSIS_SWITCHER: {
+  AUTO_ANALYSIS_SWITCHER_ON: {
     category: SETTINGS_PAGE,
-    action: 'Click on Auto-Analysis on/off in Auto-Analysis tab',
-    label: 'Auto-Analysis on/off',
+    action: 'Click on Auto-Analysis ON in Auto-Analysis tab',
+    label: 'Auto-Analysis ON',
+  },
+  AUTO_ANALYSIS_SWITCHER_OFF: {
+    category: SETTINGS_PAGE,
+    action: 'Click on Auto-Analysis OFF in Auto-Analysis tab',
+    label: 'Auto-Analysis OFF',
   },
   AUTO_ANALYSIS_BASE_RADIO_BTN: {
     category: SETTINGS_PAGE,

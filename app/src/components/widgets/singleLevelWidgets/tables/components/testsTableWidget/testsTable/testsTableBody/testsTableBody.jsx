@@ -15,7 +15,7 @@
  */
 
 import * as React from 'react';
-import { number, string, oneOfType } from 'prop-types';
+import { number, string, oneOfType, func } from 'prop-types';
 import classNames from 'classnames/bind';
 import { PTTests, PTColumns } from '../../pTypes';
 import { TestsTableRow } from '../testsTableRow';
@@ -29,10 +29,12 @@ export class TestsTableBody extends React.Component {
     tests: PTTests,
     columns: PTColumns.isRequired,
     launchId: oneOfType([number, string]).isRequired,
+    getMaxtrixTooltip: func,
   };
 
   static defaultProps = {
     tests: [],
+    getMaxtrixTooltip: null,
   };
 
   constructor(props) {
@@ -42,7 +44,7 @@ export class TestsTableBody extends React.Component {
   }
 
   renderRow = (test) => {
-    const { columns, launchId } = this.props;
+    const { columns, launchId, getMaxtrixTooltip } = this.props;
     const { name, date, count, status, duration } = columns;
 
     const rowProps = {
@@ -56,6 +58,7 @@ export class TestsTableBody extends React.Component {
       matrixComponent: this.matrixComponent,
       status: status && test[status.statusKey],
       duration: duration && test[duration.durationKey],
+      getMaxtrixTooltip,
     };
 
     return <TestsTableRow {...rowProps} />;

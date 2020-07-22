@@ -14,20 +14,24 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
+import { injectIntl, defineMessages } from 'react-intl';
+import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { PRODUCT_BUG, AUTOMATION_BUG, SYSTEM_ISSUE } from 'common/constants/defectTypes';
-import { injectIntl, defineMessages } from 'react-intl';
-import styles from './infoLine.scss';
+import { StatisticsLink } from 'pages/inside/common/statisticsLink';
+import { isStepLevelSelector } from 'controllers/testItem';
 import { BarChart } from './barChart';
 import { Duration } from './duration';
 import { Owner } from './owner';
 import { Attributes } from './attributes';
 import { Description } from './description';
 import { DefectTypeBlock } from './defectTypeBlock';
+import styles from './infoLine.scss';
 
 const cx = classNames.bind(styles);
+
 const messages = defineMessages({
   parent: {
     id: 'InfoLine.parent',
@@ -39,7 +43,7 @@ const messages = defineMessages({
   },
   total: {
     id: 'InfoLine.total',
-    defaultMessage: 'Total {value}',
+    defaultMessage: 'Total:',
   },
 });
 
@@ -50,15 +54,23 @@ const normalizeExecutions = (executions) => ({
   skipped: executions.skipped || 0,
 });
 
+@connect((state) => ({
+  isStepLevel: isStepLevelSelector(state),
+}))
 @injectIntl
 export class InfoLine extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     data: PropTypes.object.isRequired,
+    isStepLevel: PropTypes.bool.isRequired,
+    detailedView: PropTypes.bool,
+    detailedStatistics: PropTypes.object,
     events: PropTypes.object,
   };
   static defaultProps = {
     events: {},
+    detailedView: false,
+    detailedStatistics: {},
   };
 
   render() {
@@ -66,6 +78,9 @@ export class InfoLine extends Component {
       intl: { formatMessage },
       events,
       data,
+      detailedView,
+      detailedStatistics,
+      isStepLevel,
     } = this.props;
     const defects = data.statistics.defects;
     const executions = normalizeExecutions(data.statistics.executions);
@@ -78,7 +93,7 @@ export class InfoLine extends Component {
       [AUTOMATION_BUG]: events.AB_TOOLTIP,
     };
     return (
-      <div className={cx('info-line')}>
+      <div className={cx('info-line', { 'detailed-view': detailedView })}>
         <div className={cx('parent-holder')}>{formatMessage(messages.parent)}:</div>
         <div className={cx('icon-holder')}>
           <Duration
@@ -110,7 +125,23 @@ export class InfoLine extends Component {
           {formatMessage(messages.passed, { value: passed.toFixed(2) })}
         </div>
         <div className={cx('total')}>
-          {formatMessage(messages.total, { value: executions.total })}
+          {formatMessage(messages.total)}
+          {detailedView ? (
+            <Fragment>
+              <StatisticsLink className={cx('value')}>{executions.total}</StatisticsLink>
+              {detailedStatistics.executions.total && isStepLevel ? (
+                <StatisticsLink keepFilterParams className={cx('value-detailed')}>
+                  {detailedStatistics.executions.total}
+                </StatisticsLink>
+              ) : (
+                <span className={cx('value-detailed', { disabled: !isStepLevel })}>
+                  {detailedStatistics.executions.total || 0}
+                </span>
+              )}
+            </Fragment>
+          ) : (
+            <span className={cx('value')}>{executions.total}</span>
+          )}
         </div>
         <div className={cx('defect-types')}>
           {Object.keys(defects).map((key) => (
@@ -118,6 +149,9 @@ export class InfoLine extends Component {
               <DefectTypeBlock
                 type={key}
                 data={defects[key]}
+                detailedView={detailedView}
+                detailedData={detailedStatistics.defects[key]}
+                isStepLevel={isStepLevel}
                 tooltipEventInfo={tooltipEventsInfo[key]}
               />
             </div>

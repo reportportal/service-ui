@@ -24,23 +24,26 @@ import {
   listViewLinkSelector,
   logViewLinkSelector,
   isTestItemsListSelector,
+  isFilterParamsExistsSelector,
+  filteredItemStatisticsSelector,
   LOG_VIEW,
   LIST_VIEW,
+  FILTERED_ITEM_STATISTICS_INITIAL_STATE,
 } from 'controllers/testItem';
 import { activeFilterSelector } from 'controllers/filter';
-import { userIdSelector } from 'controllers/user';
-import { LogViewSwitcher } from './logViewSwitcher';
+import { ViewSwitcher } from './viewSwitcher';
 import styles from './infoPanel.scss';
 
 const cx = classNames.bind(styles);
 
 @connect(
   (state) => ({
-    currentUser: userIdSelector(state),
     listViewLink: listViewLinkSelector(state),
     logViewLink: logViewLinkSelector(state),
     currentFilter: activeFilterSelector(state),
     isTestItemsList: isTestItemsListSelector(state),
+    isFilterParamsExists: isFilterParamsExistsSelector(state),
+    filteredItemStatistics: filteredItemStatisticsSelector(state),
   }),
   {
     navigate: (linkAction) => linkAction,
@@ -56,8 +59,9 @@ export class InfoPanel extends Component {
     listViewLink: PropTypes.object,
     currentFilter: PropTypes.object,
     navigate: PropTypes.func.isRequired,
-    currentUser: PropTypes.string,
     isTestItemsList: PropTypes.bool.isRequired,
+    isFilterParamsExists: PropTypes.bool,
+    filteredItemStatistics: PropTypes.object,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -71,7 +75,8 @@ export class InfoPanel extends Component {
     logViewLink: {},
     listViewLink: {},
     currentFilter: null,
-    currentUser: '',
+    isFilterParamsExists: false,
+    filteredItemStatistics: FILTERED_ITEM_STATISTICS_INITIAL_STATE,
   };
 
   onToggleView = (viewMode) => {
@@ -87,12 +92,17 @@ export class InfoPanel extends Component {
   };
 
   renderInfoLineListView = () =>
-    !!this.props.currentFilter && (
-      <InfoLineListView data={this.props.currentFilter} currentUser={this.props.currentUser} />
-    );
+    !!this.props.currentFilter && <InfoLineListView data={this.props.currentFilter} />;
 
   render() {
-    const { viewMode, data, events, isTestItemsList } = this.props;
+    const {
+      viewMode,
+      data,
+      events,
+      isTestItemsList,
+      isFilterParamsExists,
+      filteredItemStatistics,
+    } = this.props;
 
     return (
       <div className={cx('info-panel')}>
@@ -100,8 +110,13 @@ export class InfoPanel extends Component {
           this.renderInfoLineListView()
         ) : (
           <Fragment>
-            <LogViewSwitcher viewMode={viewMode} onToggleView={this.onToggleView} />
-            <InfoLine data={data} events={events} />
+            <ViewSwitcher viewMode={viewMode} onToggleView={this.onToggleView} />
+            <InfoLine
+              data={data}
+              events={events}
+              detailedView={isFilterParamsExists}
+              detailedStatistics={filteredItemStatistics}
+            />
           </Fragment>
         )}
       </div>

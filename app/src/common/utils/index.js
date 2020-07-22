@@ -53,4 +53,4 @@ export { isEmptyValue } from './isEmptyValue';
 export { formatAttribute } from './attributeUtils';
 export { createNamespacedActionPredicate } from './createNamespacedActionPredicate';
 export { omit } from './omit';
-export { throttle } from './throttle';
+export { calculateFontColor } from './calculateFontColor';

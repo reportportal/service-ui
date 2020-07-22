@@ -16,11 +16,17 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import track from 'react-tracking';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { FieldFilterEntity } from 'components/fields/fieldFilterEntity';
 
+@track()
 export class EntityDropdown extends Component {
   static propTypes = {
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
     value: PropTypes.object,
     entityId: PropTypes.string,
     title: PropTypes.string,
@@ -30,6 +36,7 @@ export class EntityDropdown extends Component {
     onChange: PropTypes.func,
     vertical: PropTypes.bool,
     customProps: PropTypes.object,
+    events: PropTypes.object,
   };
   static defaultProps = {
     entityId: '',
@@ -41,6 +48,7 @@ export class EntityDropdown extends Component {
     onChange: () => {},
     vertical: false,
     customProps: {},
+    events: {},
   };
 
   getValue = () => {
@@ -56,10 +64,25 @@ export class EntityDropdown extends Component {
     return value.value.split(',');
   };
 
+  getOptionLabelByValue = (value) => {
+    const {
+      customProps: { options },
+    } = this.props;
+
+    return options.filter((item) => item.value === value)[0].label;
+  };
+
   handleChange = (value) => {
     const {
       customProps: { multiple },
+      events,
+      tracking,
+      title,
     } = this.props;
+    if (!multiple && events.getChangeFilterEvent) {
+      const label = this.getOptionLabelByValue(value);
+      tracking.trackEvent(events.getChangeFilterEvent(title, label));
+    }
     this.props.onChange({
       condition: this.props.value.condition,
       value: multiple ? value.join(',') : value,

@@ -44,7 +44,7 @@
 
 .preview-container {
   margin: 15px 0 0 0;
-  img {
+  .preview {
     width: 100px;
     pointer-events: all;
     cursor: pointer;
@@ -62,7 +62,7 @@
     align-items: center;
     height: 300px;
 
-    img {
+    .preview {
       max-height: 100%;
       max-width: 100%;
       min-width: 150px;

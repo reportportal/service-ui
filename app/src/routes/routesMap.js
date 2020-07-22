@@ -53,7 +53,7 @@ import {
   adminPageNames,
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
 } from 'controllers/pages';
-import { GENERAL, AUTHORIZATION_CONFIGURATION, STATISTICS } from 'common/constants/settingsTabs';
+import { GENERAL, AUTHORIZATION_CONFIGURATION, ANALYTICS } from 'common/constants/settingsTabs';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { INSTALLED, STORE } from 'common/constants/pluginsTabs';
 import { SETTINGS, MEMBERS, EVENTS } from 'common/constants/projectSections';
@@ -127,7 +127,7 @@ const routesMap = {
     type: SERVER_SETTINGS_TAB_PAGE,
     payload: { settingsTab: AUTHORIZATION_CONFIGURATION },
   })),
-  [SERVER_SETTINGS_TAB_PAGE]: `/administrate/settings/:settingsTab(${AUTHORIZATION_CONFIGURATION}|${STATISTICS})`,
+  [SERVER_SETTINGS_TAB_PAGE]: `/administrate/settings/:settingsTab(${AUTHORIZATION_CONFIGURATION}|${ANALYTICS})`,
   [PLUGINS_PAGE]: redirectRoute(
     '/administrate/plugins',
     () => ({
