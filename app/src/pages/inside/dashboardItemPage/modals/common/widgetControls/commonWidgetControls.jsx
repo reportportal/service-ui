@@ -130,6 +130,7 @@ export class CommonWidgetControls extends Component {
         <ModalField label={formatMessage(messages.descriptionLabel)} labelWidth={FIELD_LABEL_WIDTH}>
           <FieldProvider
             name="description"
+            maxLength="1500"
             placeholder={formatMessage(messages.descriptionPlaceholder)}
             onChange={() => trackEvent(eventsInfo.changeDescription)}
           >
