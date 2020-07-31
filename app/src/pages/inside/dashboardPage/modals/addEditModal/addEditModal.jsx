@@ -202,6 +202,7 @@ export class AddEditModal extends Component {
           >
             <FieldProvider
               name="description"
+              maxLength="1500"
               placeholder={intl.formatMessage(messages.dashboardDescriptionPlaceholder)}
             >
               <InputTextArea />
