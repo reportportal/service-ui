@@ -14,15 +14,36 @@
  * limitations under the License.
  */
 
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { defineMessages } from 'react-intl';
 import { COLOR_CHART_DURATION, COLOR_INTERRUPTED } from 'common/constants/colors';
 import {
   getLaunchAxisTicks,
   transformCategoryLabelByDefault,
 } from 'components/widgets/common/utils';
 import { createTooltipRenderer } from 'components/widgets/common/tooltip';
-import { DURATION, isValueInterrupted, prepareChartData, calculateTooltipParams } from './utils';
+import {
+  DURATION,
+  TIME_TYPES,
+  isValueInterrupted,
+  prepareChartData,
+  calculateTooltipParams,
+} from './utils';
 import { LaunchesDurationTooltip } from './launchesDurationTooltip';
+
+const messages = defineMessages({
+  [TIME_TYPES.SECONDS]: {
+    id: 'LaunchesDurationChart.seconds',
+    defaultMessage: 'seconds',
+  },
+  [TIME_TYPES.MINUTES]: {
+    id: 'LaunchesDurationChart.minutes',
+    defaultMessage: 'minutes',
+  },
+  [TIME_TYPES.HOURS]: {
+    id: 'LaunchesDurationChart.hours',
+    defaultMessage: 'hours',
+  },
+});
 
 export const getConfig = ({
   content,
@@ -78,7 +99,7 @@ export const getConfig = ({
           bottom: 0,
         },
         label: {
-          text: formatMessage(COMMON_LOCALE_KEYS.SECONDS),
+          text: formatMessage(messages[timeType.type]),
           position: 'outer-center',
         },
       },

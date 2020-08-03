@@ -89,10 +89,6 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.add',
     defaultMessage: 'Add',
   },
-  SECONDS: {
-    id: 'Common.seconds',
-    defaultMessage: 'seconds',
-  },
   NO_RESULTS: {
     id: 'Common.noResults',
     defaultMessage: 'No results found',
