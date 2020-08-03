@@ -88,3 +88,45 @@
     display: none;
   }
 }
+
+.security-warning-bock {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  background-color: $COLOR--warning-light;
+
+  &:before {
+    content: '';
+    min-width: 7px;
+    height: 62px;
+    margin-right: 15px;
+    background-image: repeating-linear-gradient(
+      45deg,
+      $COLOR--warning,
+      $COLOR--warning 5px,
+      transparent 5px,
+      transparent 9px
+    );
+  }
+}
+
+.warning-image {
+  margin: 0 10px;
+}
+
+.warning-message {
+  padding: 10px;
+}
+
+.warning-header {
+  margin-bottom: 5px;
+  color: $COLOR--charcoal-grey;
+  font-size: 14px;
+  font-family: $FONT-SEMIBOLD;
+}
+
+.warning {
+  color: $COLOR--charcoal-grey;
+  font-size: 12px;
+  font-family: $FONT-REGULAR;
+}
