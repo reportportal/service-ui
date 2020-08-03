@@ -23,7 +23,11 @@ import {
   getPluginItemClickEvent,
   getDisablePluginItemClickEvent,
 } from 'components/main/analytics/events';
-import { PLUGIN_IMAGES_MAP, PLUGIN_NAME_TITLES } from 'components/integrations';
+import {
+  PLUGIN_IMAGES_MAP,
+  PLUGIN_NAME_TITLES,
+  PLUGIN_DEFAULT_IMAGE,
+} from 'components/integrations';
 import { PLUGIN_DISABLED_MESSAGES_BY_GROUP_TYPE } from 'components/integrations/messages';
 import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import styles from './pluginsItem.scss';
@@ -107,7 +111,11 @@ export class PluginsItem extends Component {
         }
       >
         <div className={cx('plugins-info-block')}>
-          <img className={cx('plugins-image')} src={PLUGIN_IMAGES_MAP[name]} alt={pluginName} />
+          <img
+            className={cx('plugins-image')}
+            src={PLUGIN_IMAGES_MAP[name] || PLUGIN_DEFAULT_IMAGE}
+            alt={pluginName}
+          />
           <div className={cx('plugins-info')}>
             <span className={cx('plugins-name')}>{pluginName}</span>
             <span className={cx('plugins-author')}>{`by ${uploadedBy || 'Report Portal'}`}</span>
