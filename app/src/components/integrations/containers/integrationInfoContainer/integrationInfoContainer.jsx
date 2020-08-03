@@ -22,7 +22,7 @@ import {
   namedProjectIntegrationsSelectorsMap,
   namedGlobalIntegrationsSelectorsMap,
 } from 'controllers/plugins';
-import { PLUGIN_IMAGES_MAP, PLUGIN_NAME_TITLES } from '../../constants';
+import { PLUGIN_IMAGES_MAP, PLUGIN_NAME_TITLES, PLUGIN_DEFAULT_IMAGE } from '../../constants';
 import { PLUGIN_DESCRIPTIONS_MAP } from '../../messages';
 import { InfoSection } from './infoSection';
 import { InstancesSection } from './instancesSection';
@@ -77,7 +77,7 @@ export class IntegrationInfoContainer extends Component {
     return (
       <Fragment>
         <InfoSection
-          image={PLUGIN_IMAGES_MAP[name]}
+          image={PLUGIN_IMAGES_MAP[name] || PLUGIN_DEFAULT_IMAGE}
           description={PLUGIN_DESCRIPTIONS_MAP[name]}
           title={PLUGIN_NAME_TITLES[name]}
           version={details.version}
