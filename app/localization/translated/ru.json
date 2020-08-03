@@ -5,6 +5,8 @@
   "AccessTokenBlock.regenerateSuccess": "Изменения успешно сохранены",
   "AccessTokenBlock.submitError": "Ошибка при пересоздании токена доступа",
   "AccessTokenBlock.text": "Чтобы обеспечить надежность вашего доменного пароля, вы можете использовать пользовательский токен доступа, чтобы подтвердить, что ваша учетная запись может загружаться агентом.",
+  "AccessTokenBlock.warningHeader": "Храните токен в безопасности!",
+  "AccessTokenBlock.warning": "Этот токен не должен передаваться или публиковаться в общедоступных источниках любого типа.",
   "AccuracyFormBlock.minShouldMatchHint": "Параметр принимает значения от '50' до '100'",
   "AccuracyFormBlock.minimumShouldMatchDescription": "Процент совпадения слов между анализируемым логом и логом, сохраненным в ElasticSearch. Логи из ElasticSearch c процентом ниже установленного будут игнорировать в Авто-Анализе.",
   "AccuracyFormBlock.minimumShouldMatchTitle": "Минимальный процент совпадения",

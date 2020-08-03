@@ -18,9 +18,10 @@ import React, { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { showModalAction } from 'controllers/modal';
 import classNames from 'classnames/bind';
+import { showModalAction } from 'controllers/modal';
 import { apiTokenValueSelector, generateApiTokenAction } from 'controllers/user';
+import WarningLockImage from 'common/img/warning-lock.png';
 import { Input } from 'components/inputs/input/input';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -43,6 +44,14 @@ const messages = defineMessages({
     id: 'AccessTokenBlock.text',
     defaultMessage:
       'In order to provide security for your own domain password, you can use a user token - to verify your account to be able to log with agent.',
+  },
+  warningHeader: {
+    id: 'AccessTokenBlock.warningHeader',
+    defaultMessage: 'Keep the token safe!',
+  },
+  warning: {
+    id: 'AccessTokenBlock.warning',
+    defaultMessage: "This token shouldn't be shared or published at any type of public sources.",
   },
   regenerateSuccess: {
     id: 'AccessTokenBlock.regenerateSuccess',
@@ -102,16 +111,19 @@ export class AccessTokenBlock extends Component {
   };
 
   render = () => {
-    const { intl } = this.props;
+    const {
+      intl: { formatMessage },
+    } = this.props;
+
     return (
       <div className={cx('access-token-block')}>
         <BlockContainerHeader>
-          <span className={cx('header-label')}>{intl.formatMessage(messages.header)}</span>
+          <span className={cx('header-label')}>{formatMessage(messages.header)}</span>
         </BlockContainerHeader>
         <BlockContainerBody>
           <div className={cx('body-wrapper')}>
             <div className={cx('field-wrapper')}>
-              <span className={cx('label')}>{intl.formatMessage(messages.header)}</span>
+              <span className={cx('label')}>{formatMessage(messages.header)}</span>
               <div className={cx('field')}>
                 <Input
                   readonly
@@ -123,12 +135,19 @@ export class AccessTokenBlock extends Component {
               <div className={cx('regenerate-btn')}>
                 <ButtonWithTooltip>
                   <GhostButton onClick={this.onGenerate}>
-                    {intl.formatMessage(messages.regenerate)}
+                    {formatMessage(messages.regenerate)}
                   </GhostButton>
                 </ButtonWithTooltip>
               </div>
             </div>
-            <p className={cx('tip')}>{intl.formatMessage(messages.text)}</p>
+            <p className={cx('tip')}>{formatMessage(messages.text)}</p>
+            <div className={cx('security-warning-bock')}>
+              <img src={WarningLockImage} alt="Warning" className={cx('warning-image')} />
+              <p className={cx('warning-message')}>
+                <h3 className={cx('warning-header')}>{formatMessage(messages.warningHeader)}</h3>
+                <p className={cx('warning')}>{formatMessage(messages.warning)}</p>
+              </p>
+            </div>
           </div>
         </BlockContainerBody>
       </div>
