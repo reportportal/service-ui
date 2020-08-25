@@ -37,7 +37,6 @@ import {
 } from 'controllers/project';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { FormField } from 'components/fields/formField';
-import { SpinningPreloader } from 'components/preloaders/spinningPreloader/spinningPreloader';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { projectIdSelector } from 'controllers/pages';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -94,7 +93,6 @@ export class GeneralTab extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     lang: PropTypes.string,
-    loading: PropTypes.bool,
     retention: PropTypes.number,
   };
 
@@ -102,7 +100,6 @@ export class GeneralTab extends Component {
     projectId: '',
     fetchProjectAction: () => {},
     lang: 'en',
-    loading: false,
     retention: null,
   };
 
@@ -110,22 +107,10 @@ export class GeneralTab extends Component {
     const { interruptJobTime, keepLogs, keepScreenshots, keepLaunches } = this.props.jobConfig;
     this.props.initialize({
       interruptJobTime: Number(interruptJobTime),
-      keepLaunches: Number(keepLaunches),
-      keepLogs: Number(keepLogs),
-      keepScreenshots: Number(keepScreenshots),
+      keepLaunches: Number(this.getMinRetentionValue(keepLaunches)),
+      keepLogs: Number(this.getMinRetentionValue(keepLogs)),
+      keepScreenshots: Number(this.getMinRetentionValue(keepScreenshots)),
     });
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.loading !== this.props.loading) {
-      const { interruptJobTime, keepLogs, keepScreenshots, keepLaunches } = this.props.jobConfig;
-      this.props.initialize({
-        interruptJobTime: Number(interruptJobTime),
-        keepLaunches: Number(this.getMinRetentionValue(keepLaunches)),
-        keepLogs: Number(this.getMinRetentionValue(keepLogs)),
-        keepScreenshots: Number(this.getMinRetentionValue(keepScreenshots)),
-      });
-    }
   }
 
   onFormSubmit = (formData) => {
@@ -176,7 +161,7 @@ export class GeneralTab extends Component {
   getMinRetentionValue = (value) => {
     const { retention } = this.props;
 
-    return retention > value || retention === 0 ? value : retention;
+    return retention === null || retention > value || retention === 0 ? value : retention;
   };
 
   getRetentionOptions = () => {
@@ -191,12 +176,7 @@ export class GeneralTab extends Component {
     );
 
     if ((options.length && options[options.length - 1].value !== retention) || !options.length) {
-      options.push({
-        label: this.props.intl.formatMessage(Messages.customDays, {
-          days: secondsToDays(retention, lang),
-        }),
-        value: retention,
-      });
+      options.push({ label: secondsToDays(retention, lang), value: retention });
     }
 
     return options;
@@ -215,10 +195,8 @@ export class GeneralTab extends Component {
   formatInterruptJobTimes = this.createValueFormatter(this.interruptJobTime);
 
   render() {
-    const { intl, accountRole, userRole, tracking, loading } = this.props;
-    return loading ? (
-      <SpinningPreloader />
-    ) : (
+    const { intl, accountRole, userRole, tracking } = this.props;
+    return (
       <div className={cx('general-tab')}>
         <form onSubmit={this.props.handleSubmit(this.onFormSubmit)}>
           <FormField
