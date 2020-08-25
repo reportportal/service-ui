@@ -107,6 +107,10 @@ export const Messages = defineMessages({
     id: 'GeneralTab.month6',
     defaultMessage: '180 days',
   },
+  customDays: {
+    id: 'GeneralTab.customDays',
+    defaultMessage: '{days}',
+  },
   forever: {
     id: 'GeneralTab.forever',
     defaultMessage: 'Forever',

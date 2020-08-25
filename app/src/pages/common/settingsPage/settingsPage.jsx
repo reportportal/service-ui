@@ -32,7 +32,10 @@ import {
 } from 'common/constants/settingsTabs';
 import { settingsTabSelector } from 'controllers/pages';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
-import { uiExtensionSettingsTabsSelector } from 'controllers/plugins';
+import {
+  uiExtensionSettingsTabsSelector,
+  uiExtensionSettingsGeneralTabSelector,
+} from 'controllers/plugins';
 import { SETTINGS_PAGE, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { BetaBadge } from 'pages/inside/common/betaBadge';
 import { NavigationTabs } from 'components/main/navigationTabs';
@@ -83,6 +86,7 @@ const messages = defineMessages({
     accountRole: userAccountRoleSelector(state),
     userRole: activeProjectRoleSelector(state),
     tabExtensions: uiExtensionSettingsTabsSelector(state),
+    generalTabExtension: uiExtensionSettingsGeneralTabSelector(state),
   }),
   {
     onChangeTab: (linkAction) => linkAction,
@@ -106,10 +110,17 @@ export class SettingsPage extends Component {
         component: PropTypes.element.isRequired,
       }),
     ),
+    generalTabExtension: PropTypes.arrayOf(
+      PropTypes.shape({
+        type: PropTypes.string.isRequired,
+        component: PropTypes.element.isRequired,
+      }),
+    ),
   };
   static defaultProps = {
     activeTab: GENERAL,
     tabExtensions: [],
+    generalTabExtension: {},
   };
 
   createExtensionTabs = () =>
@@ -126,12 +137,17 @@ export class SettingsPage extends Component {
       {},
     );
 
+  getGeneralTabComponent = () =>
+    (this.props.generalTabExtension[0] && this.props.generalTabExtension[0].component) || (
+      <GeneralTab />
+    );
+
   createTabsConfig = () => {
     const tabsConfig = {
       [GENERAL]: {
         name: this.props.intl.formatMessage(messages.general),
         link: this.props.createTabLink(GENERAL),
-        component: <GeneralTab />,
+        component: this.getGeneralTabComponent(),
         eventInfo: SETTINGS_PAGE_EVENTS.GENERAL_TAB,
         mobileDisabled: true,
       },

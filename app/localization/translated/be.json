@@ -721,6 +721,7 @@
   "GeneralTab.month1": "30 дзён",
   "GeneralTab.month3": "90 дзён",
   "GeneralTab.month6": "180 дзён",
+  "GeneralTab.customDays": "{days}",
   "GeneralTab.projectNameLabel": "Імя",
   "GeneralTab.updateErrorNotification": "Не ўдалося абнавіць налады праекта",
   "GeneralTab.updateSuccessNotification": "Налады праекта паспяхова абноўлены",

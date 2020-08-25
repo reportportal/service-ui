@@ -54,6 +54,7 @@ export {
 export { pluginSagas } from './sagas';
 export {
   uiExtensionSettingsTabsSelector,
+  uiExtensionSettingsGeneralTabSelector,
   uiExtensionAdminPagesSelector,
   uiExtensionPagesSelector,
   extensionsLoadedSelector,
