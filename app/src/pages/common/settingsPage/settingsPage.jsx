@@ -32,10 +32,7 @@ import {
 } from 'common/constants/settingsTabs';
 import { settingsTabSelector } from 'controllers/pages';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
-import {
-  uiExtensionSettingsTabsSelector,
-  uiExtensionSettingsGeneralTabSelector,
-} from 'controllers/plugins';
+import { uiExtensionSettingsTabsSelector } from 'controllers/plugins';
 import { SETTINGS_PAGE, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { BetaBadge } from 'pages/inside/common/betaBadge';
 import { NavigationTabs } from 'components/main/navigationTabs';
@@ -86,7 +83,6 @@ const messages = defineMessages({
     accountRole: userAccountRoleSelector(state),
     userRole: activeProjectRoleSelector(state),
     tabExtensions: uiExtensionSettingsTabsSelector(state),
-    generalTabExtension: uiExtensionSettingsGeneralTabSelector(state),
   }),
   {
     onChangeTab: (linkAction) => linkAction,
@@ -106,13 +102,7 @@ export class SettingsPage extends Component {
     tabExtensions: PropTypes.arrayOf(
       PropTypes.shape({
         name: PropTypes.string.isRequired,
-        title: PropTypes.string.isRequired,
-        component: PropTypes.element.isRequired,
-      }),
-    ),
-    generalTabExtension: PropTypes.arrayOf(
-      PropTypes.shape({
-        type: PropTypes.string.isRequired,
+        title: PropTypes.string,
         component: PropTypes.element.isRequired,
       }),
     ),
@@ -120,7 +110,6 @@ export class SettingsPage extends Component {
   static defaultProps = {
     activeTab: GENERAL,
     tabExtensions: [],
-    generalTabExtension: {},
   };
 
   createExtensionTabs = () =>
@@ -137,17 +126,13 @@ export class SettingsPage extends Component {
       {},
     );
 
-  getGeneralTabComponent = () =>
-    (this.props.generalTabExtension[0] && this.props.generalTabExtension[0].component) || (
-      <GeneralTab />
-    );
-
   createTabsConfig = () => {
+    const extensionTabs = this.createExtensionTabs();
     const tabsConfig = {
       [GENERAL]: {
         name: this.props.intl.formatMessage(messages.general),
         link: this.props.createTabLink(GENERAL),
-        component: this.getGeneralTabComponent(),
+        component: <GeneralTab />,
         eventInfo: SETTINGS_PAGE_EVENTS.GENERAL_TAB,
         mobileDisabled: true,
       },
@@ -201,7 +186,14 @@ export class SettingsPage extends Component {
     if (!canSeeDemoData(this.props.accountRole, this.props.userRole)) {
       delete tabsConfig[DEMO_DATA];
     }
-    return { ...tabsConfig, ...this.createExtensionTabs() };
+    Object.keys(extensionTabs).forEach((tab) => {
+      if (tabsConfig[tab]) {
+        tabsConfig[tab].component = extensionTabs[tab].component;
+
+        delete extensionTabs[tab];
+      }
+    });
+    return { ...tabsConfig, ...extensionTabs };
   };
 
   render() {
