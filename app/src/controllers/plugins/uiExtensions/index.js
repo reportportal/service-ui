@@ -1,6 +1,7 @@
 export { fetchUiExtensions } from './sagas';
 export {
   uiExtensionSettingsTabsSelector,
+  uiExtensionSettingsGeneralTabSelector,
   uiExtensionAdminPagesSelector,
   uiExtensionPagesSelector,
   extensionsLoadedSelector,

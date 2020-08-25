@@ -1,6 +1,7 @@
 import { createSelector } from 'reselect';
 import {
   EXTENSION_TYPE_SETTINGS_TAB,
+  EXTENSION_TYPE_SETTINGS_GENERAL_TAB,
   EXTENSION_TYPE_ADMIN_PAGE,
   EXTENSION_TYPE_PAGE,
   EXTENSION_TYPE_HEADER_COMPONENT,
@@ -22,6 +23,9 @@ export const createUiExtensionSelectorByType = (type) =>
 
 export const uiExtensionSettingsTabsSelector = createUiExtensionSelectorByType(
   EXTENSION_TYPE_SETTINGS_TAB,
+);
+export const uiExtensionSettingsGeneralTabSelector = createUiExtensionSelectorByType(
+  EXTENSION_TYPE_SETTINGS_GENERAL_TAB,
 );
 export const uiExtensionAdminPagesSelector = createUiExtensionSelectorByType(
   EXTENSION_TYPE_ADMIN_PAGE,
