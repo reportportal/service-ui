@@ -18,6 +18,7 @@ import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import track from 'react-tracking';
+import { FAILED } from 'common/constants/testStatuses';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { DurationBlock } from 'pages/inside/common/durationBlock';
 import ArrowIcon from 'common/img/arrow-right-inline.svg';
@@ -53,6 +54,15 @@ export class NestedStepHeader extends Component {
     loading: false,
     markdownMode: false,
   };
+
+  componentDidMount() {
+    const {
+      data: { status },
+      onToggle,
+    } = this.props;
+
+    status === FAILED && onToggle();
+  }
 
   onToggle = () => {
     const { onToggle, collapsed } = this.props;
