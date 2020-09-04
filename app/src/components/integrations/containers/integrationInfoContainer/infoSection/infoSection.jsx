@@ -40,6 +40,7 @@ const messages = defineMessages({
 export class InfoSection extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
+    showPluginModal: PropTypes.func.isRequired,
     image: PropTypes.string.isRequired,
     description: PropTypes.object.isRequired,
     title: PropTypes.string.isRequired,
@@ -65,7 +66,7 @@ export class InfoSection extends Component {
     this.checkIfTheExpandButtonNeeded();
   }
 
-  onToggleActiveHandler = () => {
+  toggleActiveHandler = () => {
     this.setState({
       isEnabled: !this.props.data.enabled,
     });
@@ -107,6 +108,7 @@ export class InfoSection extends Component {
       version,
       description,
       isGlobal,
+      showPluginModal,
     } = this.props;
     const { expanded, withShowMore, isEnabled } = this.state;
     const isPartiallyShown = withShowMore && !expanded;
@@ -116,7 +118,7 @@ export class InfoSection extends Component {
       <div className={cx('info-section')}>
         <img className={cx('logo')} src={image} alt={title} />
         <div className={cx('description-block')}>
-          <h2 className={cx('title')}>{title}</h2>
+          <h2 className={cx('title')}>{title || name}</h2>
           {version && (
             <span className={cx('version')}>{`${formatMessage(messages.version)} ${version}`}</span>
           )}
@@ -139,7 +141,12 @@ export class InfoSection extends Component {
                       })
                 }
               >
-                <InputSwitcher value={isEnabled} onChange={this.onToggleActiveHandler} />
+                <InputSwitcher
+                  value={isEnabled}
+                  onChange={() =>
+                    showPluginModal(isEnabled, title || name, this.toggleActiveHandler)
+                  }
+                />
               </div>
             </div>
           )}
