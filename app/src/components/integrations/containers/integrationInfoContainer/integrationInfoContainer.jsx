@@ -48,6 +48,7 @@ export class IntegrationInfoContainer extends Component {
   static propTypes = {
     onItemClick: PropTypes.func.isRequired,
     integrationType: PropTypes.object.isRequired,
+    showPluginModal: PropTypes.func.isRequired,
     projectIntegrations: PropTypes.array.isRequired,
     globalIntegrations: PropTypes.array.isRequired,
     showDefaultErrorNotification: PropTypes.func.isRequired,
@@ -72,6 +73,7 @@ export class IntegrationInfoContainer extends Component {
       removePluginSuccessCallback,
       onToggleActive,
       isGlobal,
+      showPluginModal,
     } = this.props;
 
     return (
@@ -83,6 +85,7 @@ export class IntegrationInfoContainer extends Component {
           version={details.version}
           data={integrationType}
           onToggleActive={onToggleActive}
+          showPluginModal={showPluginModal}
           isGlobal={isGlobal}
         />
         <InstancesSection
