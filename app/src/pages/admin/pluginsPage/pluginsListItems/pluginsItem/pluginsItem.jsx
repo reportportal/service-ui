@@ -50,7 +50,7 @@ export class PluginsItem extends Component {
     intl: PropTypes.object.isRequired,
     data: PropTypes.object.isRequired,
     onToggleActive: PropTypes.func.isRequired,
-    showPluginModal: PropTypes.func.isRequired,
+    showToggleConfirmationModal: PropTypes.func.isRequired,
     toggleable: PropTypes.bool,
     showNotification: PropTypes.func,
     onClick: PropTypes.func,
@@ -93,12 +93,21 @@ export class PluginsItem extends Component {
     this.props.onClick(this.props.data);
   };
 
+  onChangeHandler = () => {
+    const {
+      data: { name, enabled },
+      showToggleConfirmationModal,
+    } = this.props;
+    const pluginName = PLUGIN_NAME_TITLES[name] || name;
+
+    showToggleConfirmationModal(enabled, pluginName, this.toggleActiveHandler);
+  };
+
   render() {
     const {
       intl: { formatMessage },
       data: { name, uploadedBy, enabled, groupType, details: { version } = {} },
       toggleable,
-      showPluginModal,
     } = this.props;
     const pluginName = PLUGIN_NAME_TITLES[name] || name;
 
@@ -134,10 +143,7 @@ export class PluginsItem extends Component {
         <div className={cx('plugins-additional-block')}>
           {toggleable && (
             <div className={cx('plugins-switcher')} onClick={(e) => e.stopPropagation()}>
-              <InputSwitcher
-                value={this.state.isEnabled}
-                onChange={() => showPluginModal(enabled, pluginName, this.toggleActiveHandler)}
-              />
+              <InputSwitcher value={this.state.isEnabled} onChange={this.onChangeHandler} />
             </div>
           )}
         </div>

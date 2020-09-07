@@ -66,7 +66,7 @@ export class PluginsListItems extends Component {
     title: PropTypes.string.isRequired,
     items: PropTypes.array.isRequired,
     onToggleActive: PropTypes.func.isRequired,
-    showPluginModal: PropTypes.func.isRequired,
+    showToggleConfirmationModal: PropTypes.func.isRequired,
     onItemClick: PropTypes.func,
     filterMobileBlock: PropTypes.element,
   };
@@ -84,7 +84,7 @@ export class PluginsListItems extends Component {
       items,
       onToggleActive,
       filterMobileBlock,
-      showPluginModal,
+      showToggleConfirmationModal,
     } = this.props;
 
     return (
@@ -99,7 +99,7 @@ export class PluginsListItems extends Component {
               data={item}
               toggleable={isPluginSwitchable(item.name)}
               onToggleActive={onToggleActive}
-              showPluginModal={showPluginModal}
+              showToggleConfirmationModal={showToggleConfirmationModal}
             />
           ))}
         </div>
