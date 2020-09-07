@@ -40,7 +40,7 @@ const messages = defineMessages({
 export class InfoSection extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    showPluginModal: PropTypes.func.isRequired,
+    showToggleConfirmationModal: PropTypes.func.isRequired,
     image: PropTypes.string.isRequired,
     description: PropTypes.object.isRequired,
     title: PropTypes.string.isRequired,
@@ -99,6 +99,17 @@ export class InfoSection extends Component {
       expanded: true,
     });
 
+  onChangeHandler = () => {
+    const {
+      data: { name },
+      title,
+      showToggleConfirmationModal,
+    } = this.props;
+    const { isEnabled } = this.state;
+
+    showToggleConfirmationModal(isEnabled, title || name, this.toggleActiveHandler);
+  };
+
   render() {
     const {
       intl: { formatMessage },
@@ -108,7 +119,6 @@ export class InfoSection extends Component {
       version,
       description,
       isGlobal,
-      showPluginModal,
     } = this.props;
     const { expanded, withShowMore, isEnabled } = this.state;
     const isPartiallyShown = withShowMore && !expanded;
@@ -141,12 +151,7 @@ export class InfoSection extends Component {
                       })
                 }
               >
-                <InputSwitcher
-                  value={isEnabled}
-                  onChange={() =>
-                    showPluginModal(isEnabled, title || name, this.toggleActiveHandler)
-                  }
-                />
+                <InputSwitcher value={isEnabled} onChange={this.onChangeHandler} />
               </div>
             </div>
           )}

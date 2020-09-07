@@ -142,7 +142,7 @@ export class InstalledTab extends Component {
       id: 'confirmationModal',
       data: {
         message: formatMessage(messages.enablePluginMessage, { pluginName }),
-        onConfirm: () => callback(),
+        onConfirm: callback,
         title: formatMessage(messages.enablePluginTitle),
         confirmText: formatMessage(COMMON_LOCALE_KEYS.ENABLE),
         cancelText: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
@@ -159,7 +159,7 @@ export class InstalledTab extends Component {
       id: 'confirmationModal',
       data: {
         message: formatMessage(messages.disablePluginMessage, { pluginName }),
-        onConfirm: () => callback(),
+        onConfirm: callback,
         dangerConfirm: true,
         title: formatMessage(messages.disablePluginTitle),
         confirmText: formatMessage(COMMON_LOCALE_KEYS.DISABLE),
@@ -168,7 +168,7 @@ export class InstalledTab extends Component {
     });
   };
 
-  showPluginModal = (isEnabled, pluginName, callback) => {
+  showToggleConfirmationModal = (isEnabled, pluginName, callback) => {
     isEnabled
       ? this.showDisablePluginModal(pluginName, callback)
       : this.showEnablePluginModal(pluginName, callback);
@@ -190,7 +190,7 @@ export class InstalledTab extends Component {
             isGlobal
             onToggleActive={this.onToggleActive}
             onItemClick={this.installedPluginsSettingsSubPageHandler}
-            showPluginModal={this.showPluginModal}
+            showToggleConfirmationModal={this.showToggleConfirmationModal}
             removePluginSuccessCallback={this.goToMainPageHandler}
           />
         );
@@ -216,7 +216,7 @@ export class InstalledTab extends Component {
                 title={activeFilterItem}
                 items={this.getFilterPluginsList(activeFilterItem)}
                 filterMobileBlock={this.renderFilterMobileBlock()}
-                showPluginModal={this.showPluginModal}
+                showToggleConfirmationModal={this.showToggleConfirmationModal}
                 onToggleActive={this.onToggleActive}
                 onItemClick={this.installedPluginsSubPageHandler}
               />
