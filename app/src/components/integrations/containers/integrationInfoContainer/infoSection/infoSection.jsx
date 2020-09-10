@@ -40,19 +40,20 @@ const messages = defineMessages({
 export class InfoSection extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    showToggleConfirmationModal: PropTypes.func.isRequired,
     image: PropTypes.string.isRequired,
     description: PropTypes.object.isRequired,
     title: PropTypes.string.isRequired,
     version: PropTypes.string,
     data: PropTypes.object.isRequired,
     onToggleActive: PropTypes.func,
+    showToggleConfirmationModal: PropTypes.func,
     isGlobal: PropTypes.bool,
   };
 
   static defaultProps = {
     version: '',
     onToggleActive: () => {},
+    showToggleConfirmationModal: () => {},
     isGlobal: false,
   };
 
