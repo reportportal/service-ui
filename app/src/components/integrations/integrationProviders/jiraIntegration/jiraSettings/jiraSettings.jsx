@@ -76,16 +76,28 @@ export class JiraSettings extends Component {
     },
   ];
 
-  editAuthorizationClickHandler = () => {
+  getConfirmationFunc = (testConnection) => (data, metaData) => {
+    const { onUpdate } = this.props;
+
+    onUpdate(
+      data,
+      () => {
+        this.props.hideModalAction();
+        testConnection();
+      },
+      metaData,
+    );
+  };
+
+  editAuthorizationClickHandler = (testConnection) => {
     const {
       data: { name, integrationParameters, integrationType },
-      onUpdate,
     } = this.props;
 
     this.props.showModalAction({
       id: 'addIntegrationModal',
       data: {
-        onConfirm: (data, metaData) => onUpdate(data, this.props.hideModalAction, metaData),
+        onConfirm: this.getConfirmationFunc(testConnection),
         instanceType: integrationType.name,
         customProps: {
           initialData: {
