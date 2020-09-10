@@ -66,6 +66,7 @@ export class ConnectionSection extends Component {
     intl: PropTypes.object.isRequired,
     showModalAction: PropTypes.func.isRequired,
     onRemoveIntegration: PropTypes.func.isRequired,
+    testConnection: PropTypes.func.isRequired,
     blocked: PropTypes.bool,
     failedConnectionMessage: PropTypes.string,
     editAuthConfig: PropTypes.object,
@@ -93,6 +94,12 @@ export class ConnectionSection extends Component {
         dangerConfirm: true,
       },
     });
+  };
+
+  onEditAuth = () => {
+    const { editAuthConfig, testConnection } = this.props;
+
+    editAuthConfig.onClick(testConnection);
   };
 
   render() {
@@ -126,7 +133,7 @@ export class ConnectionSection extends Component {
               {editAuthConfig.content}
             </div>
             {!blocked && (
-              <button className={cx('connection-block-button')} onClick={editAuthConfig.onClick}>
+              <button className={cx('connection-block-button')} onClick={this.onEditAuth}>
                 <span className={cx('button-icon')}>{Parser(EditIcon)}</span>
                 {formatMessage(messages.editAuthorizationTitle)}
               </button>
