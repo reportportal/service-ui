@@ -154,6 +154,7 @@ export class IntegrationSettings extends Component {
                       error: errorMessage,
                     })
               }
+              testConnection={this.testIntegrationConnection}
               onRemoveIntegration={this.removeIntegration}
               editAuthConfig={editAuthConfig}
             />
