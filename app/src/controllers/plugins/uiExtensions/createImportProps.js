@@ -42,6 +42,7 @@ import PlusIcon from 'common/img/plus-button-inline.svg';
 import RemoveIcon from 'common/img/trashcan-inline.svg';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import ErrorIcon from 'common/img/error-inline.svg';
+import ExportIcon from 'common/img/export-inline.svg';
 import { Input } from 'components/inputs/input';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { InputRadio } from 'components/inputs/inputRadio';
@@ -75,7 +76,7 @@ import { InputSlider } from 'components/inputs/inputSlider';
 import { InputRadioGroup } from 'components/inputs/inputRadioGroup';
 import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import { InputTextArea } from 'components/inputs/inputTextArea';
-import { InputTimeDateRange } from 'components/inputs/inputTimeDateRange';
+import { InputTimeDateRange, InputTimeDateRangeMenu } from 'components/inputs/inputTimeDateRange';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { MarkdownEditor, MarkdownViewer } from 'components/main/markdown';
@@ -103,6 +104,7 @@ const INPUTS = {
   InputSwitcher,
   InputTextArea,
   InputTimeDateRange,
+  InputTimeDateRangeMenu,
   SingleAutocomplete,
   MultipleAutocomplete,
   WithAsyncLoading,
@@ -144,6 +146,6 @@ export const createImportProps = (pluginName) => ({
     projectInfoLoadingSelector,
     isAdminSelector,
   },
-  icons: { PlusIcon, RemoveIcon, CrossIcon, ErrorIcon },
+  icons: { PlusIcon, RemoveIcon, CrossIcon, ErrorIcon, ExportIcon },
   utils: { fetch, URLS, debounce },
 });

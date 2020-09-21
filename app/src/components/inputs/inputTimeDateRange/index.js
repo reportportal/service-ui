@@ -15,3 +15,4 @@
  */
 
 export { InputTimeDateRange } from './inputTimeDateRange';
+export { InputTimeDateRangeMenu } from './inputTimeDateRangeMenu';

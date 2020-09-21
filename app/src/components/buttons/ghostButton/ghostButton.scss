@@ -63,6 +63,7 @@
       }
     }
 
+    &.active,
     &:active,
     &:hover {
       path,
@@ -78,6 +79,7 @@
       color: $COLOR--white-two;
     }
 
+    &.active,
     &:active {
       background-color: $COLOR--topaz;
       border-color: $COLOR--topaz;
