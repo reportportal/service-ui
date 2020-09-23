@@ -70,6 +70,7 @@ export class Layout extends Component {
             />
           </div>
           <div className={cx('content')}>
+            <div className={cx('demo-banner')} />
             <ScrollWrapper withBackToTop withFooter>
               <div className={cx('scrolling-content')}>
                 <div className={cx('header-container')}>
