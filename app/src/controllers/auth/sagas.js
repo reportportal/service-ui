@@ -28,13 +28,16 @@ import {
   ERROR_CODE_LOGIN_BAD_CREDENTIALS,
   ERROR_CODE_LOGIN_MAX_LIMIT,
 } from 'common/constants/apiErrorCodes';
+import { ALL } from 'common/constants/reservedFilterIds';
 import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import { isDemoInstanceSelector } from 'controllers/appInfo';
 import {
   OAUTH_SUCCESS,
   pagePropertiesSelector,
   PROJECT_DASHBOARD_PAGE,
   LOGIN_PAGE,
+  PROJECT_LAUNCHES_PAGE,
 } from 'controllers/pages';
 import {
   activeProjectSelector,
@@ -119,12 +122,17 @@ function* loginSuccessHandler({ payload }) {
       removeSessionItem('anonymousRedirectPath');
     }
   } else {
-    yield put(
-      redirect({
-        type: PROJECT_DASHBOARD_PAGE,
-        payload: { projectId },
-      }),
-    );
+    const isDemoInstance = yield select(isDemoInstanceSelector);
+    const page = isDemoInstance
+      ? {
+          type: PROJECT_LAUNCHES_PAGE,
+          payload: { projectId, filterId: ALL },
+        }
+      : {
+          type: PROJECT_DASHBOARD_PAGE,
+          payload: { projectId },
+        };
+    yield put(redirect(page));
   }
 }
 
