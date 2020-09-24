@@ -42,5 +42,6 @@ export const analyzerExtensionsSelector = (state) => extensionsSelector(state).a
 export const authExtensionsSelector = (state) => uatInfoSelector(state).authExtensions || {};
 export const isOldHistorySelector = (state) =>
   environmentSelector(state)[OLD_HISTORY_KEY] === 'true';
+export const isDemoInstanceSelector = (state) => !!apiJobsSelector(state).flushingDataTrigger;
 export const flushDataInSelector = (state) =>
   (apiJobsSelector(state).flushingDataTrigger || {}).triggersIn || null;

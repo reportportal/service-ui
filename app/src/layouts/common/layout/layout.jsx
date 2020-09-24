@@ -65,21 +65,25 @@ export class Layout extends Component {
         <div className={cx('slide-container', { 'side-menu-opened': this.state.sideMenuOpened })}>
           <div className={cx('sidebar-container')}>
             <div className={cx('corner-area')} />
-            <Sidebar
-              onClickNavBtn={() => {
-                this.state.sideMenuOpened && this.setState({ sideMenuOpened: false });
-              }}
-            />
+            {Sidebar && (
+              <Sidebar
+                onClickNavBtn={() => {
+                  this.state.sideMenuOpened && this.setState({ sideMenuOpened: false });
+                }}
+              />
+            )}
           </div>
           <div className={cx('content')}>
-            <Banner />
+            {Banner && <Banner />}
             <ScrollWrapper withBackToTop withFooter>
               <div className={cx('scrolling-content')}>
                 <div className={cx('header-container')}>
-                  <Header
-                    isSideMenuOpened={this.state.sideMenuOpened}
-                    toggleSideMenu={this.toggleSideMenu}
-                  />
+                  {Header && (
+                    <Header
+                      isSideMenuOpened={this.state.sideMenuOpened}
+                      toggleSideMenu={this.toggleSideMenu}
+                    />
+                  )}
                 </div>
                 <div className={cx('page-container')}>{this.props.children}</div>
               </div>
