@@ -16,6 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import classNames from 'classnames/bind';
 import styles from './timer.scss';
 
@@ -36,17 +37,8 @@ export class Timer extends Component {
   constructor(props) {
     super(props);
 
-    // setStorageItem('flushing_time', getStorageItem('flushing_time') || props.timeLeft);
-    const flushingTime = props.timeLeft;
-
-    const hours = Math.floor(flushingTime / 3600 / 1000);
-    const minutes = Math.floor((flushingTime - hours * 3600 * 1000) / 60 / 1000);
-    const seconds = Math.floor((flushingTime - hours * 3600 * 1000 - minutes * 60 * 1000) / 1000);
     this.state = {
-      timeLeft: flushingTime,
-      hours,
-      minutes,
-      seconds,
+      timeLeft: props.timeLeft,
     };
   }
 
@@ -58,33 +50,37 @@ export class Timer extends Component {
     clearInterval(this.timer);
   }
 
+  calculateTimeUnits = () => {
+    const { timeLeft } = this.state;
+    const duration = moment.duration(timeLeft);
+    const hours = duration.hours();
+    const minutes = duration.minutes();
+    const seconds = duration.seconds();
+
+    return {
+      hours,
+      minutes,
+      seconds,
+    };
+  };
+
   startTimer = () => {
-    let flushingTime = this.state.timeLeft; // getStorageItem('flushing_time');
+    let { timeLeft } = this.state;
     this.timer = setInterval(() => {
-      flushingTime -= 1000;
-      if (flushingTime < 0) {
+      timeLeft -= 1000;
+      if (timeLeft < 0) {
         clearInterval(this.timer);
-        // clearStorage();
         this.props.onFinish();
       } else {
-        // setStorageItem('flushing_time', flushingTime);
-        const hours = Math.floor(flushingTime / 3600 / 1000);
-        const minutes = Math.floor((flushingTime - hours * 3600 * 1000) / 60 / 1000);
-        const seconds = Math.floor(
-          (flushingTime - hours * 3600 * 1000 - minutes * 60 * 1000) / 1000,
-        );
         this.setState({
-          timeLeft: flushingTime,
-          hours,
-          minutes,
-          seconds,
+          timeLeft,
         });
       }
     }, 1000);
   };
 
   render() {
-    const { hours, minutes, seconds } = this.state;
+    const { hours, minutes, seconds } = this.calculateTimeUnits();
     return (
       <div className={cx('timer')}>
         {this.props.caption} {`${hours}:${minutes}:${seconds}`}
