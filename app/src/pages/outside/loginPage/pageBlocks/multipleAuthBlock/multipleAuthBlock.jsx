@@ -25,7 +25,7 @@ import { LOGIN_PAGE } from 'controllers/pages';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { BigButton } from 'components/buttons/bigButton';
 import { PageBlockContainer } from 'pages/outside/common/pageBlockContainer';
-import { normalizePathWithPrefix, setWindowLocationToNewPath } from '../utils';
+import { normalizePathWithPrefix, setWindowLocationToNewPath } from 'pages/outside/common/utils';
 import styles from './multipleAuthBlock.scss';
 
 const cx = classNames.bind(styles);

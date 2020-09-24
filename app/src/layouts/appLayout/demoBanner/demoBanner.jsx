@@ -14,22 +14,43 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { flushDataInSelector, fetchAppInfoAction } from 'controllers/appInfo';
+import { INTERNAL, GITHUB } from 'common/constants/accountType';
+import {
+  flushDataInSelector,
+  fetchAppInfoAction,
+  authExtensionsSelector,
+} from 'controllers/appInfo';
+import { userInfoSelector } from 'controllers/user';
 import { logoutAction } from 'controllers/auth';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { Timer } from 'components/main/timer';
+import { normalizePathWithPrefix, setWindowLocationToNewPath } from 'pages/outside/common/utils';
 import styles from './demoBanner.scss';
 
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
-  description: {
-    id: 'DemoBanner.description',
+  descriptionGithub: {
+    id: 'DemoBanner.descriptionGithub',
     defaultMessage: 'You are using Personal GitHub Project.',
+  },
+  descriptionDefault: {
+    id: 'DemoBanner.descriptionDefault',
+    defaultMessage:
+      'Your are on the public Demo Account. For loading your sensitive data, please use ',
+  },
+  githubAuthTitle: {
+    id: 'DemoBanner.githubAuthTitle',
+    defaultMessage: 'GitHub authorization',
+  },
+  githubAuthNotFound: {
+    id: 'DemoBanner.githubAuthNotFound',
+    defaultMessage: 'GitHub authorization not configured. Contact your administrator',
   },
   timerCaption: {
     id: 'DemoBanner.timerCaption',
@@ -39,30 +60,75 @@ const messages = defineMessages({
 
 @connect(
   (state) => ({
+    authExtensions: authExtensionsSelector(state),
+    accountType: userInfoSelector(state).accountType,
     flushDataIn: flushDataInSelector(state),
   }),
   {
     logout: logoutAction,
     fetchAppInfo: fetchAppInfoAction,
+    showNotification,
   },
 )
 @injectIntl
 export class DemoBanner extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
+    authExtensions: PropTypes.object,
+    accountType: PropTypes.string,
     flushDataIn: PropTypes.number,
     logout: PropTypes.func,
     fetchAppInfo: PropTypes.func,
+    showNotification: PropTypes.func,
   };
   static defaultProps = {
+    authExtensions: {},
+    accountType: INTERNAL,
     flushDataIn: null,
     logout: () => {},
     fetchAppInfo: () => {},
+    showNotification: () => {},
   };
 
   componentDidMount() {
     this.props.fetchAppInfo();
   }
+
+  loginWithGitHub = () => {
+    const {
+      intl: { formatMessage },
+      authExtensions,
+    } = this.props;
+    const authPath = (authExtensions.github || {}).path;
+    if (authPath) {
+      setWindowLocationToNewPath(normalizePathWithPrefix(authPath));
+    } else {
+      this.props.showNotification({
+        type: NOTIFICATION_TYPES.ERROR,
+        message: formatMessage(messages.githubAuthNotFound),
+      });
+    }
+  };
+
+  getDescription = () => {
+    const {
+      intl: { formatMessage },
+      accountType,
+    } = this.props;
+
+    if (accountType === GITHUB) {
+      return formatMessage(messages.descriptionGithub);
+    }
+
+    return (
+      <Fragment>
+        {formatMessage(messages.descriptionDefault)}
+        <span className={cx('github-login')} onClick={this.loginWithGitHub}>
+          {formatMessage(messages.githubAuthTitle)}
+        </span>
+      </Fragment>
+    );
+  };
 
   render() {
     const {
@@ -74,7 +140,7 @@ export class DemoBanner extends Component {
     return (
       <div className={cx('demo-banner')}>
         <div className={cx('demo-info')}>
-          <span className={cx('description')}>{formatMessage(messages.description)}</span>
+          <span className={cx('description')}>{this.getDescription()}</span>
           <Timer
             caption={formatMessage(messages.timerCaption)}
             timeLeft={flushDataIn}
