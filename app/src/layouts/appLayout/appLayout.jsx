@@ -18,9 +18,10 @@ import PropTypes from 'prop-types';
 import { Layout } from 'layouts/common/layout';
 import { AppHeader } from './appHeader';
 import { AppSidebar } from './appSidebar';
+import { DemoBanner } from './demoBanner';
 
 export const AppLayout = ({ children }) => (
-  <Layout Header={AppHeader} Sidebar={AppSidebar}>
+  <Layout Header={AppHeader} Sidebar={AppSidebar} Banner={DemoBanner}>
     {children}
   </Layout>
 );

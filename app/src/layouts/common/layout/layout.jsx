@@ -25,11 +25,13 @@ const cx = classNames.bind(styles);
 export class Layout extends Component {
   static propTypes = {
     children: PropTypes.node,
+    Banner: PropTypes.elementType,
     Header: PropTypes.elementType,
     Sidebar: PropTypes.elementType,
   };
   static defaultProps = {
     children: null,
+    Banner: null,
     Header: null,
     Sidebar: null,
   };
@@ -57,7 +59,7 @@ export class Layout extends Component {
   };
 
   render() {
-    const { Header, Sidebar } = this.props;
+    const { Header, Sidebar, Banner } = this.props;
     return (
       <div className={cx('layout')}>
         <div className={cx('slide-container', { 'side-menu-opened': this.state.sideMenuOpened })}>
@@ -70,7 +72,7 @@ export class Layout extends Component {
             />
           </div>
           <div className={cx('content')}>
-            <div className={cx('demo-banner')} />
+            <Banner />
             <ScrollWrapper withBackToTop withFooter>
               <div className={cx('scrolling-content')}>
                 <div className={cx('header-container')}>
