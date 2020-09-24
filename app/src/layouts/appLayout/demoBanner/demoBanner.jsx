@@ -16,14 +16,26 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { defineMessages, injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { flushDataInSelector } from 'controllers/appInfo';
+import { flushDataInSelector, fetchAppInfoAction } from 'controllers/appInfo';
 import { logoutAction } from 'controllers/auth';
-import { Timer } from './timer';
+import { Timer } from 'components/main/timer';
 import styles from './demoBanner.scss';
 
 const cx = classNames.bind(styles);
+
+const messages = defineMessages({
+  description: {
+    id: 'DemoBanner.description',
+    defaultMessage: 'You are using Personal GitHub Project.',
+  },
+  timerCaption: {
+    id: 'DemoBanner.timerCaption',
+    defaultMessage: 'Data flush in',
+  },
+});
 
 @connect(
   (state) => ({
@@ -31,25 +43,44 @@ const cx = classNames.bind(styles);
   }),
   {
     logout: logoutAction,
+    fetchAppInfo: fetchAppInfoAction,
   },
 )
+@injectIntl
 export class DemoBanner extends Component {
   static propTypes = {
+    intl: PropTypes.object.isRequired,
     flushDataIn: PropTypes.number,
     logout: PropTypes.func,
+    fetchAppInfo: PropTypes.func,
   };
   static defaultProps = {
     flushDataIn: null,
     logout: () => {},
+    fetchAppInfo: () => {},
   };
 
+  componentDidMount() {
+    this.props.fetchAppInfo();
+  }
+
   render() {
-    const { flushDataIn, logout } = this.props;
+    const {
+      intl: { formatMessage },
+      flushDataIn,
+      logout,
+      fetchAppInfo,
+    } = this.props;
     return (
       <div className={cx('demo-banner')}>
         <div className={cx('demo-info')}>
-          <span className={cx('description')}>You are using Personal GitHub Project.</span>
-          <Timer caption="Data flush in" timeLeft={flushDataIn} onFinish={logout} />
+          <span className={cx('description')}>{formatMessage(messages.description)}</span>
+          <Timer
+            caption={formatMessage(messages.timerCaption)}
+            timeLeft={flushDataIn}
+            receiveUpdates={fetchAppInfo}
+            onFinish={logout}
+          />
         </div>
       </div>
     );

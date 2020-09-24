@@ -30,10 +30,6 @@ export function updateStorageItem(key, value = {}) {
   return setStorageItem(key, { ...previousItem, ...value });
 }
 
-export function clearStorage() {
-  localStorage.clear();
-}
-
 export function getSessionItem(key) {
   return sessionStorage && sessionStorage.getItem(key)
     ? JSON.parse(sessionStorage.getItem(key))
