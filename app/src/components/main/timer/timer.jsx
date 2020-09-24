@@ -15,6 +15,7 @@
  */
 
 import React, { Component } from 'react';
+import { defineMessages, injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import classNames from 'classnames/bind';
@@ -22,8 +23,25 @@ import styles from './timer.scss';
 
 const cx = classNames.bind(styles);
 
+const messages = defineMessages({
+  hours: {
+    id: 'Timer.hours',
+    defaultMessage: 'h',
+  },
+  minutes: {
+    id: 'Timer.minutes',
+    defaultMessage: 'm',
+  },
+  seconds: {
+    id: 'Timer.seconds',
+    defaultMessage: 's',
+  },
+});
+
+@injectIntl
 export class Timer extends Component {
   static propTypes = {
+    intl: PropTypes.object.isRequired,
     timeLeft: PropTypes.number,
     onFinish: PropTypes.func,
     caption: PropTypes.string,
@@ -82,18 +100,35 @@ export class Timer extends Component {
     const minutes = duration.minutes();
     const seconds = duration.seconds();
 
-    return {
-      hours,
-      minutes,
-      seconds,
-    };
+    return [
+      { id: 'h', value: hours, hint: messages.hours, withDelimiter: true },
+      { id: 'm', value: minutes, hint: messages.minutes, withDelimiter: true },
+      { id: 's', value: seconds, hint: messages.seconds },
+    ];
   };
 
   render() {
-    const { hours, minutes, seconds } = this.calculateTimeUnits();
+    const {
+      intl: { formatMessage },
+      caption,
+    } = this.props;
+    const timeUnits = this.calculateTimeUnits();
     return (
       <div className={cx('timer')}>
-        {this.props.caption} {`${hours}:${minutes}:${seconds}`}
+        {caption}
+        <div className={cx('time-units')}>
+          {timeUnits.map((unit) => {
+            return (
+              <div
+                key={unit.id}
+                className={cx('time-unit', { 'with-delimiter': unit.withDelimiter })}
+              >
+                {unit.value}
+                <span className={cx('unit-hint')}>{formatMessage(unit.hint)}</span>
+              </div>
+            );
+          })}
+        </div>
       </div>
     );
   }
