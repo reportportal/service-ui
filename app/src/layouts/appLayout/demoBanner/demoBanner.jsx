@@ -139,15 +139,13 @@ export class DemoBanner extends Component {
     } = this.props;
     return (
       <div className={cx('demo-banner')}>
-        <div className={cx('demo-info')}>
-          <span className={cx('description')}>{this.getDescription()}</span>
-          <Timer
-            caption={formatMessage(messages.timerCaption)}
-            timeLeft={flushDataIn}
-            receiveUpdates={fetchAppInfo}
-            onFinish={logout}
-          />
-        </div>
+        <span className={cx('description')}>{this.getDescription()}</span>
+        <Timer
+          caption={formatMessage(messages.timerCaption)}
+          timeLeft={flushDataIn}
+          receiveUpdates={fetchAppInfo}
+          onFinish={logout}
+        />
       </div>
     );
   }
