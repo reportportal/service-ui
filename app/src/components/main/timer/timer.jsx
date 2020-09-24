@@ -64,7 +64,7 @@ export class Timer extends Component {
         clearInterval(this.timerId);
         this.props.onFinish();
       } else {
-        this.updateTimeLeft();
+        this.updateTimeLeft(timeLeft);
       }
     }, 1000);
   };
