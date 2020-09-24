@@ -42,12 +42,12 @@ const messages = defineMessages({
 export class Timer extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    timeLeft: PropTypes.number,
+    remainingTime: PropTypes.number,
     onFinish: PropTypes.func,
     caption: PropTypes.string,
   };
   static defaultProps = {
-    timeLeft: null,
+    remainingTime: null,
     onFinish: () => {},
     caption: '',
   };
@@ -56,7 +56,7 @@ export class Timer extends Component {
     super(props);
 
     this.state = {
-      timeLeft: props.timeLeft,
+      remainingTime: props.remainingTime,
     };
   }
 
@@ -65,8 +65,8 @@ export class Timer extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.timeLeft !== this.props.timeLeft) {
-      this.updateTimeLeft(this.props.timeLeft);
+    if (prevProps.remainingTime !== this.props.remainingTime) {
+      this.updateRemainingTime(this.props.remainingTime);
     }
   }
 
@@ -75,27 +75,27 @@ export class Timer extends Component {
   }
 
   startTimer = () => {
-    let { timeLeft } = this.state;
+    let { remainingTime } = this.state;
     this.timerId = setInterval(() => {
-      timeLeft -= 1000;
-      if (timeLeft < 0) {
+      remainingTime -= 1000;
+      if (remainingTime < 0) {
         clearInterval(this.timerId);
         this.props.onFinish();
       } else {
-        this.updateTimeLeft(timeLeft);
+        this.updateRemainingTime(remainingTime);
       }
     }, 1000);
   };
 
-  updateTimeLeft = (timeLeft) => {
+  updateRemainingTime = (remainingTime) => {
     this.setState({
-      timeLeft,
+      remainingTime,
     });
   };
 
   calculateTimeUnits = () => {
-    const { timeLeft } = this.state;
-    const duration = moment.duration(timeLeft);
+    const { remainingTime } = this.state;
+    const duration = moment.duration(remainingTime);
     const hours = duration.hours();
     const minutes = duration.minutes();
     const seconds = duration.seconds();

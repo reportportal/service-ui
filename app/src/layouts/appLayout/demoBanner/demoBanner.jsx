@@ -142,7 +142,7 @@ export class DemoBanner extends Component {
         <span className={cx('description')}>{this.getDescription()}</span>
         <Timer
           caption={formatMessage(messages.timerCaption)}
-          timeLeft={flushDataIn}
+          remainingTime={flushDataIn}
           receiveUpdates={fetchAppInfo}
           onFinish={logout}
         />
