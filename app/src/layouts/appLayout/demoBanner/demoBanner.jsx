@@ -48,8 +48,8 @@ export class DemoBanner extends Component {
     return (
       <div className={cx('demo-banner')}>
         <div className={cx('demo-info')}>
-          <span>You are using Personal GitHub Project.</span>
-          <Timer endTime={flushDataIn} onFinish={logout} />
+          <span className={cx('description')}>You are using Personal GitHub Project.</span>
+          <Timer caption="Data flush in" timeLeft={flushDataIn} onFinish={logout} />
         </div>
       </div>
     );

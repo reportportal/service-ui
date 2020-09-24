@@ -17,31 +17,33 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { setStorageItem, getStorageItem, clearStorage } from 'common/utils';
 import styles from './timer.scss';
 
 const cx = classNames.bind(styles);
 
 export class Timer extends Component {
   static propTypes = {
-    endTime: PropTypes.number,
+    timeLeft: PropTypes.number,
     onFinish: PropTypes.func,
+    caption: PropTypes.string,
   };
   static defaultProps = {
-    endTime: null,
+    timeLeft: null,
     onFinish: () => {},
+    caption: '',
   };
 
   constructor(props) {
     super(props);
 
-    setStorageItem('flushing_time', getStorageItem('flushing_time') || props.endTime);
-    const flushingTime = getStorageItem('flushing_time');
+    // setStorageItem('flushing_time', getStorageItem('flushing_time') || props.timeLeft);
+    const flushingTime = props.timeLeft;
 
     const hours = Math.floor(flushingTime / 3600 / 1000);
     const minutes = Math.floor((flushingTime - hours * 3600 * 1000) / 60 / 1000);
     const seconds = Math.floor((flushingTime - hours * 3600 * 1000 - minutes * 60 * 1000) / 1000);
     this.state = {
+      timeLeft: flushingTime,
       hours,
       minutes,
       seconds,
@@ -57,21 +59,22 @@ export class Timer extends Component {
   }
 
   startTimer = () => {
-    let flushingTime = getStorageItem('flushing_time');
+    let flushingTime = this.state.timeLeft; // getStorageItem('flushing_time');
     this.timer = setInterval(() => {
       flushingTime -= 1000;
       if (flushingTime < 0) {
         clearInterval(this.timer);
-        clearStorage();
+        // clearStorage();
         this.props.onFinish();
       } else {
-        setStorageItem('flushing_time', flushingTime);
+        // setStorageItem('flushing_time', flushingTime);
         const hours = Math.floor(flushingTime / 3600 / 1000);
         const minutes = Math.floor((flushingTime - hours * 3600 * 1000) / 60 / 1000);
         const seconds = Math.floor(
           (flushingTime - hours * 3600 * 1000 - minutes * 60 * 1000) / 1000,
         );
         this.setState({
+          timeLeft: flushingTime,
           hours,
           minutes,
           seconds,
@@ -83,7 +86,9 @@ export class Timer extends Component {
   render() {
     const { hours, minutes, seconds } = this.state;
     return (
-      <div className={cx('demo-banner')}>Data flush in {`${hours}:${minutes}:${seconds}`}</div>
+      <div className={cx('timer')}>
+        {this.props.caption} {`${hours}:${minutes}:${seconds}`}
+      </div>
     );
   }
 }
