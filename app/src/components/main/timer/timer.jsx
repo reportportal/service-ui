@@ -46,9 +46,34 @@ export class Timer extends Component {
     this.startTimer();
   }
 
-  componentWillUnmount() {
-    clearInterval(this.timer);
+  componentDidUpdate(prevProps) {
+    if (prevProps.timeLeft !== this.props.timeLeft) {
+      this.updateTimeLeft(this.props.timeLeft);
+    }
   }
+
+  componentWillUnmount() {
+    clearInterval(this.timerId);
+  }
+
+  startTimer = () => {
+    let { timeLeft } = this.state;
+    this.timerId = setInterval(() => {
+      timeLeft -= 1000;
+      if (timeLeft < 0) {
+        clearInterval(this.timerId);
+        this.props.onFinish();
+      } else {
+        this.updateTimeLeft();
+      }
+    }, 1000);
+  };
+
+  updateTimeLeft = (timeLeft) => {
+    this.setState({
+      timeLeft,
+    });
+  };
 
   calculateTimeUnits = () => {
     const { timeLeft } = this.state;
@@ -62,21 +87,6 @@ export class Timer extends Component {
       minutes,
       seconds,
     };
-  };
-
-  startTimer = () => {
-    let { timeLeft } = this.state;
-    this.timer = setInterval(() => {
-      timeLeft -= 1000;
-      if (timeLeft < 0) {
-        clearInterval(this.timer);
-        this.props.onFinish();
-      } else {
-        this.setState({
-          timeLeft,
-        });
-      }
-    }, 1000);
   };
 
   render() {

@@ -20,7 +20,6 @@ export {
   getStorageItem,
   setStorageItem,
   removeStorageItem,
-  clearStorage,
   updateStorageItem,
   getSessionItem,
   setSessionItem,
