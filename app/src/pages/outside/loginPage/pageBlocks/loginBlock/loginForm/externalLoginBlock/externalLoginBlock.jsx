@@ -22,7 +22,7 @@ import Parser from 'html-react-parser';
 import { LOGIN_PAGE } from 'controllers/pages';
 import { BigButton } from 'components/buttons/bigButton';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { normalizePathWithPrefix, setWindowLocationToNewPath } from '../../../utils';
+import { normalizePathWithPrefix, setWindowLocationToNewPath } from 'pages/outside/common/utils';
 import styles from './externalLoginBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -39,27 +39,25 @@ export class ExternalLoginBlock extends PureComponent {
     authInProgress: false,
   };
 
-  externalAuthClickHandler = (path) => {
+  getExternalAuthClickHandler = (path) => () => {
     this.setState({ authInProgress: true });
     setWindowLocationToNewPath(normalizePathWithPrefix(path));
   };
 
   renderButtons = () => {
     const { externalAuth } = this.props;
-    return Object.keys(externalAuth).map((objKey) => {
-      const val = externalAuth[objKey];
+    return Object.keys(externalAuth).map((authType) => {
+      const val = externalAuth[authType];
 
       return (
-        <div className={cx('external-auth-btn')} key={objKey}>
+        <div className={cx('external-auth-btn')} key={authType}>
           <BigButton roundedCorners color="booger">
             {val.providers ? (
-              <Link to={{ type: LOGIN_PAGE, payload: { query: { multipleAuth: objKey } } }}>
+              <Link to={{ type: LOGIN_PAGE, payload: { query: { multipleAuth: authType } } }}>
                 {Parser(val.button)}
               </Link>
             ) : (
-              <span onClick={() => this.externalAuthClickHandler(val.path)}>
-                {Parser(val.button)}
-              </span>
+              <span onClick={this.getExternalAuthClickHandler(val.path)}>{Parser(val.button)}</span>
             )}
           </BigButton>
         </div>
