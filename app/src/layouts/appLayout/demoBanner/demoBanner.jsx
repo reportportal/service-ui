@@ -29,7 +29,7 @@ import { userInfoSelector } from 'controllers/user';
 import { logoutAction } from 'controllers/auth';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { Timer } from 'components/main/timer';
-import { normalizePathWithPrefix, setWindowLocationToNewPath } from 'pages/outside/common/utils';
+import { normalizePathWithPrefix } from 'pages/outside/common/utils';
 import styles from './demoBanner.scss';
 
 const cx = classNames.bind(styles);
@@ -94,21 +94,21 @@ export class DemoBanner extends Component {
     this.props.fetchAppInfo();
   }
 
-  loginWithGitHub = () => {
+  loginWithGitHub = (e) => {
     const {
       intl: { formatMessage },
-      authExtensions,
     } = this.props;
-    const authPath = (authExtensions.github || {}).path;
-    if (authPath) {
-      setWindowLocationToNewPath(normalizePathWithPrefix(authPath));
-    } else {
+
+    if (!this.getAuthPath()) {
+      e.preventDefault();
       this.props.showNotification({
         type: NOTIFICATION_TYPES.ERROR,
         message: formatMessage(messages.githubAuthNotFound),
       });
     }
   };
+
+  getAuthPath = () => (this.props.authExtensions.github || {}).path;
 
   getDescription = () => {
     const {
@@ -120,12 +120,14 @@ export class DemoBanner extends Component {
       return formatMessage(messages.descriptionGithub);
     }
 
+    const href = normalizePathWithPrefix(this.getAuthPath());
+
     return (
       <Fragment>
         {formatMessage(messages.descriptionDefault)}
-        <span className={cx('github-login')} onClick={this.loginWithGitHub}>
+        <a className={cx('github-login')} href={href} onClick={this.loginWithGitHub}>
           {formatMessage(messages.githubAuthTitle)}
-        </span>
+        </a>
       </Fragment>
     );
   };
@@ -135,7 +137,6 @@ export class DemoBanner extends Component {
       intl: { formatMessage },
       flushDataIn,
       logout,
-      fetchAppInfo,
     } = this.props;
     return (
       <div className={cx('demo-banner')}>
@@ -143,7 +144,6 @@ export class DemoBanner extends Component {
         <Timer
           caption={formatMessage(messages.timerCaption)}
           remainingTime={flushDataIn}
-          receiveUpdates={fetchAppInfo}
           onFinish={logout}
         />
       </div>
