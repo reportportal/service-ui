@@ -38,17 +38,6 @@
   }
 }
 
-.mobile-hint {
-  display: none;
-  color: $COLOR--charcoal-grey;
-  font-size: 14px;
-  line-height: 1.57;
-  text-align: left;
-  @media (max-width: $SCREEN_XS_MAX) {
-    display: inline-block;
-  }
-}
-
 .description-list {
   margin: 10px 0 0 34px;
   list-style-type: disc;
