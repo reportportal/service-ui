@@ -62,7 +62,8 @@
 
 .generate-button {
   display: inline-block;
-  width: 155px;
+  min-width: 155px;
+  width: auto;
   height: 30px;
   margin: 15px 0;
   box-sizing: border-box;
