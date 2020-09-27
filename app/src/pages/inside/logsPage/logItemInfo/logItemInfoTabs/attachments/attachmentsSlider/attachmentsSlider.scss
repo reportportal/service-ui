@@ -45,7 +45,9 @@
 .preview-container {
   margin: 15px 0 0 0;
   .preview {
-    width: 100px;
+    max-width: 100px;
+    max-height: 54px;
+    border: 1px solid transparent;
     pointer-events: all;
     cursor: pointer;
 
