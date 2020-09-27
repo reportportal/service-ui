@@ -14,18 +14,13 @@
  * limitations under the License.
  */
 
-.generate-demo-data-block {
-  display: flex;
-  flex-direction: column;
-}
-
 .mobile-hint {
   display: none;
   margin: 10px 0;
   color: $COLOR--charcoal-grey;
   font-size: 14px;
   @media (max-width: $SCREEN_XS_MAX) {
-    display: inline-block;
+    display: block;
   }
 }
 
