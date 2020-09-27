@@ -140,12 +140,12 @@ export class Attachments extends Component {
       {
         currentThumb: thumbConfig ? thumbConfig.currentThumb : this.state.currentThumb,
       },
-      () => this.loadNewItems(prevActiveItemId, thumbConfig),
+      () => this.loadNewItems(prevActiveItemId, activeItemId, thumbConfig),
     );
   };
 
-  loadNewItems = (prevActiveItemId, thumbConfig) => {
-    if (thumbConfig && this.props.activeItemId > prevActiveItemId) {
+  loadNewItems = (prevActiveItemId, activeItemId, thumbConfig) => {
+    if (thumbConfig && activeItemId > prevActiveItemId) {
       const {
         pagination: { totalElements },
         attachments,
