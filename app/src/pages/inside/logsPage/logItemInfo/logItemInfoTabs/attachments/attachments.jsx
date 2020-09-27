@@ -98,10 +98,15 @@ export class Attachments extends Component {
 
   static getDerivedStateFromProps(props, state) {
     if (props.activeItemId === null) {
-      const currentThumb = getCurrentThumb(props.activeItemId, state.visibleThumbs);
+      const visibleThumbs = getVisibleThumbs(props.isMobileView);
+      const currentThumb = getCurrentThumb(props.activeItemId, visibleThumbs);
       return {
         mainAreaVisible: false,
         currentThumb,
+      };
+    } else if (!state.mainAreaVisible) {
+      return {
+        mainAreaVisible: true,
       };
     }
     return null;
@@ -114,10 +119,10 @@ export class Attachments extends Component {
     const visibleThumbs = getVisibleThumbs(isMobileView);
     const currentThumb = getCurrentThumb(activeItemId, visibleThumbs);
 
+    this.size = visibleThumbs;
     this.state = {
       mainAreaVisible: activeItemId !== null,
       currentThumb,
-      size: visibleThumbs,
     };
   }
 
@@ -130,7 +135,6 @@ export class Attachments extends Component {
   onClickThumb = (itemIndex) => {
     this.props.tracking.trackEvent(LOG_PAGE_EVENTS.ATTACHMENT_THUMBNAIL);
     this.props.setActiveAttachmentAction(itemIndex);
-    this.setState({ mainAreaVisible: true });
   };
 
   changeActiveItem = (activeItemId, thumbConfig) => {
@@ -151,12 +155,11 @@ export class Attachments extends Component {
         attachments,
         loading,
       } = this.props;
-      const { size } = this.state;
-      const nextPage = Math.ceil((thumbConfig.currentThumb + 1) / size) + 1;
-      const lastLoadedPage = Math.ceil(attachments.length / size);
-      const lastPage = Math.ceil(totalElements / size);
+      const nextPage = Math.ceil((thumbConfig.currentThumb + 1) / this.size) + 1;
+      const lastLoadedPage = Math.ceil(attachments.length / this.size);
+      const lastPage = Math.ceil(totalElements / this.size);
       if (nextPage > lastLoadedPage && lastLoadedPage < lastPage && !loading) {
-        this.fetchAttachments({ page: nextPage, size });
+        this.fetchAttachments({ page: nextPage, size: this.size });
       }
     }
   };
@@ -168,9 +171,7 @@ export class Attachments extends Component {
       [SIZE_KEY]: size,
     };
 
-    const concat = page > 1;
-
-    this.props.fetchAttachmentsConcatAction({ params, concat });
+    this.props.fetchAttachmentsConcatAction({ params, concat: true });
   };
 
   renderAttachmentsContent = () => {
