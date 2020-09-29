@@ -15,7 +15,7 @@
  */
 
 import { fetch } from 'common/utils/fetch';
-import { fetchImageData, fetchData } from './sagas';
+import { fetchData } from './sagas';
 
 jest.mock('common/utils/fetch', () => ({
   fetch: jest.fn(),
@@ -27,12 +27,6 @@ const mockParams = {
 };
 
 describe('Attachments Sagas', () => {
-  test('fetchImageData resolves image', () => {
-    expect.assertions(1);
-    fetchImageData(mockParams);
-    expect(fetch).toBeCalledWith('/api/v1/data/test_project/abcd', { responseType: 'blob' });
-  });
-
   test('fetchData resolves data', () => {
     fetchData(mockParams);
     expect(fetch).toBeCalledWith('/api/v1/data/test_project/abcd');
