@@ -17,7 +17,7 @@
 import { takeLatest, call, put, all, select, take } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
-import { showModalAction, HIDE_MODAL } from 'controllers/modal';
+import { showModalAction } from 'controllers/modal';
 import { concatFetchDataAction, createFetchPredicate } from 'controllers/fetch';
 import { activeProjectSelector } from 'controllers/user';
 import {
@@ -31,7 +31,6 @@ import { DETAILED_LOG_VIEW } from 'controllers/log/constants';
 import { JSON as JSON_TYPE } from 'common/constants/fileTypes';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import {
-  ATTACHMENT_IMAGE_MODAL_ID,
   ATTACHMENT_CODE_MODAL_ID,
   ATTACHMENT_HAR_FILE_MODAL_ID,
   OPEN_ATTACHMENT_ACTION,
@@ -41,7 +40,6 @@ import {
   DEFAULT_LOADED_PAGES,
   FETCH_FIRST_ATTACHMENTS_ACTION,
 } from './constants';
-import { setActiveAttachmentAction } from './actionCreators';
 import { getAttachmentModalId, extractExtension, isTextWithJson } from './utils';
 
 function* getAttachmentURL() {
@@ -77,25 +75,11 @@ function* fetchFirstAttachments({ payload }) {
     [PAGE_KEY]: 1,
     ...payload.params,
   };
-  yield put(setActiveAttachmentAction(null));
   yield call(fetchAttachmentsConcat, { payload: { params } });
-}
-
-export function fetchImageData({ projectId, binaryId }) {
-  return fetch(URLS.getFileById(projectId, binaryId), { responseType: 'blob' });
 }
 
 export function fetchData({ projectId, binaryId }) {
   return fetch(URLS.getFileById(projectId, binaryId));
-}
-
-/* IMAGE */
-function* openImageModalsWorker({ projectId, binaryId }) {
-  const data = yield call(fetchImageData, { projectId, binaryId });
-  const imageURL = URL.createObjectURL(data);
-  yield put(showModalAction({ id: ATTACHMENT_IMAGE_MODAL_ID, data: { image: imageURL } }));
-  yield take(HIDE_MODAL);
-  URL.revokeObjectURL(imageURL);
 }
 
 /* HAR */
@@ -120,7 +104,6 @@ function* openBinaryModalsWorker(data) {
 }
 
 const ATTACHMENT_MODAL_WORKERS = {
-  [ATTACHMENT_IMAGE_MODAL_ID]: openImageModalsWorker,
   [ATTACHMENT_HAR_FILE_MODAL_ID]: openHarModalsWorker,
   [ATTACHMENT_CODE_MODAL_ID]: openBinaryModalsWorker,
 };

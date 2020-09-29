@@ -43,7 +43,7 @@ export const attachmentsPaginationReducer = (state = {}, { type }) => {
   }
 };
 
-export const activeAttachmentReducer = (state = null, { type, payload }) => {
+export const activeAttachmentReducer = (state = 0, { type, payload }) => {
   switch (type) {
     case SET_ACTIVE_ATTACHMENT_ACTION:
       return payload;
