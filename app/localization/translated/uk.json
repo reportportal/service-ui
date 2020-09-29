@@ -106,7 +106,6 @@
   "AsyncAutocomplete.loading": "Завантаження…",
   "AsyncAutocomplete.notFound": "Нічого не знайдено",
   "AttachmentModal.errorFileStructure": "Некоректна структура файлу",
-  "AttachmentModal.rotate": "Обертати",
   "AttachmentModal.title": "Вкладення",
   "Attachments.noAttachmentsMessage": "Немає вкладень для відображення",
   "AttributeEditor.attributeKeyLengthHint": "Ключ атрибута повинен бути довжиною від 1 до 128",

@@ -106,7 +106,6 @@
   "AsyncAutocomplete.loading": "Загрузка ...",
   "AsyncAutocomplete.notFound": "Нічога не знойдзена",
   "AttachmentModal.errorFileStructure": "Няправільная структура файла",
-  "AttachmentModal.rotate": "Круціць",
   "AttachmentModal.title": "Укладанне",
   "Attachments.noAttachmentsMessage": "Няма ўкладанняў для адлюстравання",
   "AttributeEditor.attributeKeyLengthHint": "Ключ атрыбуту павінен мець памер ад 1 да 128",
