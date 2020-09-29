@@ -179,15 +179,13 @@ export class ComponentHealthCheck extends Component {
     const { activeBreadcrumbId, activeAttributes } = this.state;
     const attributes =
       widget.contentParameters && widget.contentParameters.widgetOptions.attributeKeys;
-    const compositeAttributes = getNewActiveAttributes(
-      getBreadcrumbs(attributes, activeBreadcrumbId)[activeBreadcrumbId].key,
-      value,
-      activeAttributes,
-    );
+    const breadcrumbs = getBreadcrumbs(attributes, activeBreadcrumbId)[activeBreadcrumbId];
+    const compositeAttributes =
+      breadcrumbs && getNewActiveAttributes(breadcrumbs.key, value, activeAttributes);
     const link = getStatisticsLink({
       statuses: this.getLinkParametersStatuses(),
       launchesLimit: DEFAULT_LAUNCHES_LIMIT,
-      compositeAttribute: compositeAttributes.map(formatAttribute).join(','),
+      compositeAttribute: compositeAttributes && compositeAttributes.map(formatAttribute).join(','),
       isLatest: widget.contentParameters.widgetOptions.latest,
     });
     const navigationParams = this.getDefaultLinkParams(widget.appliedFilters[0].id);
