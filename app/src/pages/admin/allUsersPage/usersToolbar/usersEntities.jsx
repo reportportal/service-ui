@@ -32,7 +32,7 @@ import {
 } from 'components/filterEntities/constants';
 import { bindDefaultValue } from 'components/filterEntities/utils';
 import { USER, ADMINISTRATOR } from 'common/constants/accountRoles';
-import { INTERNAL, LDAP, UPSA, GITHUB } from 'common/constants/accountType';
+import { INTERNAL, LDAP, UPSA, GITHUB, SAML } from 'common/constants/accountType';
 import {
   EMAIL,
   FULL_NAME,
@@ -79,6 +79,10 @@ const messages = defineMessages({
     id: 'usersGrid.accountTypeGithub',
     defaultMessage: 'Github',
   },
+  accountTypeSaml: {
+    id: 'usersGrid.accountTypeSaml',
+    defaultMessage: 'Saml',
+  },
 });
 
 @injectIntl
@@ -95,13 +99,15 @@ export class UsersEntities extends Component {
     filterValues: {},
   };
   getEntities = () => {
-    const { intl } = this.props;
+    const {
+      intl: { formatMessage },
+    } = this.props;
     return [
       {
         id: USERS,
         component: EntityContains,
         value: this.bindDefaultValue(USERS),
-        title: intl.formatMessage(messages.contains),
+        title: formatMessage(messages.contains),
         active: true,
         removable: false,
       },
@@ -111,7 +117,7 @@ export class UsersEntities extends Component {
         value: this.bindDefaultValue(FULL_NAME, {
           condition: CONDITION_CNT,
         }),
-        title: intl.formatMessage(messages.name),
+        title: formatMessage(messages.name),
         active: true,
         removable: false,
         customProps: {
@@ -124,18 +130,18 @@ export class UsersEntities extends Component {
         value: this.bindDefaultValue(ROLE, {
           condition: CONDITION_IN,
         }),
-        title: intl.formatMessage(messages.role),
+        title: formatMessage(messages.role),
         active: true,
         removable: false,
         customProps: {
           options: [
             {
               value: ADMINISTRATOR,
-              label: intl.formatMessage(messages.roleAdmin),
+              label: formatMessage(messages.roleAdmin),
             },
             {
               value: USER,
-              label: intl.formatMessage(messages.roleNonAdmin),
+              label: formatMessage(messages.roleNonAdmin),
             },
           ],
           multiple: true,
@@ -148,26 +154,30 @@ export class UsersEntities extends Component {
         value: this.bindDefaultValue(TYPE, {
           condition: CONDITION_IN,
         }),
-        title: intl.formatMessage(messages.type),
+        title: formatMessage(messages.type),
         active: true,
         removable: false,
         customProps: {
           options: [
             {
-              label: intl.formatMessage(messages.accountTypeInternal),
+              label: formatMessage(messages.accountTypeInternal),
               value: INTERNAL,
             },
             {
-              label: intl.formatMessage(messages.accountTypeUpsa),
+              label: formatMessage(messages.accountTypeUpsa),
               value: UPSA,
             },
             {
-              label: intl.formatMessage(messages.accountTypeGithub),
+              label: formatMessage(messages.accountTypeGithub),
               value: GITHUB,
             },
             {
-              label: intl.formatMessage(messages.accountTypeLdap),
+              label: formatMessage(messages.accountTypeLdap),
               value: LDAP,
+            },
+            {
+              label: formatMessage(messages.accountTypeSaml),
+              value: SAML,
             },
           ],
           multiple: true,
@@ -180,7 +190,7 @@ export class UsersEntities extends Component {
         value: this.bindDefaultValue(LOGIN, {
           condition: CONDITION_CNT,
         }),
-        title: intl.formatMessage(messages.user),
+        title: formatMessage(messages.user),
         active: true,
         removable: false,
         customProps: {
@@ -193,7 +203,7 @@ export class UsersEntities extends Component {
         value: this.bindDefaultValue(EMAIL, {
           condition: CONDITION_CNT,
         }),
-        title: intl.formatMessage(messages.email),
+        title: formatMessage(messages.email),
         active: true,
         removable: false,
         customProps: {
@@ -208,7 +218,7 @@ export class UsersEntities extends Component {
           value: '',
           condition: CONDITION_BETWEEN,
         }),
-        title: intl.formatMessage(messages.lastLogin),
+        title: formatMessage(messages.lastLogin),
         active: true,
         removable: false,
         customProps: {
@@ -221,7 +231,7 @@ export class UsersEntities extends Component {
         value: this.bindDefaultValue(PROJECT, {
           condition: CONDITION_HAS,
         }),
-        title: intl.formatMessage(messages.project),
+        title: formatMessage(messages.project),
         active: true,
         removable: false,
         customProps: {
