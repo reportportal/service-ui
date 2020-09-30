@@ -47,7 +47,7 @@ export class HistoryView extends Component {
     historyDepth: getStorageItem(HISTORY_DEPTH_CONFIG.name) || HISTORY_DEPTH_CONFIG.defaultValue,
   };
 
-  onChangeHistoryDepth = (historyDepth) => {
+  changeHistoryDepth = (historyDepth) => {
     this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.SELECT_HISTORY_DEPTH);
 
     if (historyDepth !== this.state.historyDepth) {
@@ -76,7 +76,7 @@ export class HistoryView extends Component {
           historyDepth={historyDepth}
           historyBase={historyBase}
           onChangeHistoryBase={onChangeHistoryBase}
-          onChangeHistoryDepth={this.onChangeHistoryDepth}
+          onChangeHistoryDepth={this.changeHistoryDepth}
           isTestItemsList={isTestItemsList}
         />
         <HistoryTable
