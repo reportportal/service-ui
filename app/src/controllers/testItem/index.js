@@ -62,6 +62,7 @@ export {
   getItemLevel,
   isListView,
   groupItemsByParent,
+  isItemOwner,
 } from './utils';
 export { LOG_VIEW, LIST_VIEW, TEST_ITEMS_TYPE_LIST, DEFAULT_LAUNCHES_LIMIT } from './constants';
 export { LEVELS } from './levels';

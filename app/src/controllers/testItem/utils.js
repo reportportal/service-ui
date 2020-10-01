@@ -121,3 +121,13 @@ export const groupItemsByParent = (items) =>
       [item.parent]: [...group, item],
     };
   }, {});
+
+export const isItemOwner = (userId, item, launch) => {
+  if (item.owner) {
+    return userId === item.owner;
+  } else if (launch && launch.owner) {
+    return userId === launch.owner;
+  }
+
+  return true;
+};
