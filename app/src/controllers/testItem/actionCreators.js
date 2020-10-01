@@ -62,7 +62,7 @@ export const createBulkDeleteTestItemsAction = (namespace) =>
   defineGroupOperation(
     namespace,
     'deleteTestItems',
-    (items, { onConfirm, header, mainContent, userId, warning, eventsInfo }) =>
+    (items, { onConfirm, header, mainContent, warning, eventsInfo }) =>
       showModalAction({
         id: 'deleteItemsModal',
         data: {
@@ -70,7 +70,6 @@ export const createBulkDeleteTestItemsAction = (namespace) =>
           onConfirm,
           header,
           mainContent,
-          userId,
           warning,
           eventsInfo,
         },

@@ -36,7 +36,7 @@ import {
   userAccountRoleSelector,
   userIdSelector,
 } from 'controllers/user';
-import { formatItemName } from 'controllers/testItem';
+import { formatItemName, isItemOwner } from 'controllers/testItem';
 import { SectionHeader } from 'components/main/sectionHeader';
 import { ModalLayout, withModal, ModalField } from 'components/main/modal';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -235,25 +235,11 @@ export class EditItemModal extends Component {
     return URLS.testItemAttributeValuesSearch(projectId, item.launchId || item.id, key);
   };
 
-  isItemOwner = () => {
-    const {
-      data: { item, parentLaunch },
-      userId,
-    } = this.props;
-
-    if (item.owner) {
-      return userId === item.owner;
-    } else if (parentLaunch && parentLaunch.owner) {
-      return userId === parentLaunch.owner;
-    }
-
-    return true;
-  };
-
   render() {
     const {
       intl: { formatMessage },
-      data: { item, type, eventsInfo },
+      data: { item, type, parentLaunch, eventsInfo },
+      userId,
       handleSubmit,
       userAccountRole,
       userProjectRole,
@@ -271,7 +257,11 @@ export class EditItemModal extends Component {
       eventInfo: eventsInfo.CANCEL_BTN_EDIT_ITEM_MODAL,
     };
 
-    const editable = canEditLaunch(userAccountRole, userProjectRole, this.isItemOwner());
+    const editable = canEditLaunch(
+      userAccountRole,
+      userProjectRole,
+      isItemOwner(userId, item, parentLaunch),
+    );
 
     return (
       <ModalLayout

@@ -275,6 +275,7 @@ export class ActionPanelWithGroupOperations extends Component {
           callback: this.unselectAndRefreshItems,
         }),
       userId,
+      parentLaunch: this.props.parentLaunch,
       eventsInfo: {
         closeIcon: HISTORY_PAGE_EVENTS.DELETE_ITEM_MODAL_EVENTS.CLOSE_ICON_DELETE_ITEM_MODAL,
         cancelBtn: HISTORY_PAGE_EVENTS.DELETE_ITEM_MODAL_EVENTS.CANCEL_BTN_DELETE_ITEM_MODAL,
