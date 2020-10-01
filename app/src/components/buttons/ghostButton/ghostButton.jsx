@@ -35,6 +35,7 @@ export const GhostButton = ({
   notMinified,
   mobileDisabled,
   transparentBorder,
+  transparentBorderHover,
   large,
   style,
 }) => {
@@ -49,6 +50,7 @@ export const GhostButton = ({
     'mobile-minified': icon && children && !notMinified,
     'mobile-disabled': mobileDisabled,
     'transparent-border': transparentBorder,
+    'transparent-border-hover': transparentBorderHover,
   });
   return (
     <button
@@ -83,6 +85,7 @@ GhostButton.propTypes = {
   type: PropTypes.string,
   onClick: PropTypes.func,
   transparentBorder: PropTypes.bool,
+  transparentBorderHover: PropTypes.bool,
   large: PropTypes.bool,
   style: PropTypes.object,
 };
@@ -101,6 +104,7 @@ GhostButton.defaultProps = {
   type: 'button',
   onClick: () => {},
   transparentBorder: false,
+  transparentBorderHover: false,
   large: false,
   style: null,
 };
