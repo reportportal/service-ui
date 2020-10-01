@@ -30,7 +30,9 @@ export const selectedHistoryItemsSelector = createSelectedItemsSelector(groupOpe
 export const validationErrorsSelector = createValidationErrorsSelector(groupOperationsSelector);
 export const lastOperationSelector = createLastOperationSelector(groupOperationsSelector);
 
-export const itemsHistorySelector = (state) => domainSelector(state).history;
+export const itemsHistorySelector = (state) => domainSelector(state).history || [];
+
+export const isEmptyHistorySelector = (state) => !itemsHistorySelector(state).length;
 
 export const historyPaginationSelector = (state) => domainSelector(state).pagination;
 

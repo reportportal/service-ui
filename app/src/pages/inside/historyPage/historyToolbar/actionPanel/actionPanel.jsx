@@ -23,6 +23,7 @@ import track from 'react-tracking';
 import RefreshIcon from 'common/img/refresh-inline.svg';
 import { HISTORY_PAGE_EVENTS } from 'components/main/analytics/events';
 import { breadcrumbsSelector, restorePathAction } from 'controllers/testItem';
+import { isEmptyHistorySelector } from 'controllers/itemsHistory';
 import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { CompareWithFilterControl } from './compareWithFilterControl';
@@ -33,6 +34,7 @@ const cx = classNames.bind(styles);
 @connect(
   (state) => ({
     breadcrumbs: breadcrumbsSelector(state),
+    isEmptyHistory: isEmptyHistorySelector(state),
   }),
   {
     restorePath: restorePathAction,
@@ -50,6 +52,7 @@ export class ActionPanel extends Component {
     buttons: PropTypes.array,
     hasErrors: PropTypes.bool,
     showBreadcrumbs: PropTypes.bool,
+    isEmptyHistory: PropTypes.bool,
     onRefresh: PropTypes.func,
     restorePath: PropTypes.func,
   };
@@ -59,6 +62,7 @@ export class ActionPanel extends Component {
     customBlock: null,
     buttons: [],
     hasErrors: false,
+    isEmptyHistory: false,
     showBreadcrumbs: true,
     onRefresh: () => {},
     restorePath: () => {},
@@ -77,6 +81,7 @@ export class ActionPanel extends Component {
       hasErrors,
       buttons,
       customBlock,
+      isEmptyHistory,
     } = this.props;
 
     return (
@@ -85,7 +90,7 @@ export class ActionPanel extends Component {
         {customBlock}
         <div className={cx('action-buttons')}>
           <div className={cx('action-button')}>
-            <CompareWithFilterControl disabled={!showBreadcrumbs} />
+            <CompareWithFilterControl disabled={!showBreadcrumbs || isEmptyHistory} />
           </div>
           {!!buttons.length &&
             buttons.map((button, index) => (

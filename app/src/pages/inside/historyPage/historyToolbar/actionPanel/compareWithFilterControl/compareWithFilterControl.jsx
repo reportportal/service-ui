@@ -216,7 +216,7 @@ export class CompareWithFilterControl extends Component {
                   ref(node);
                   this.refNode = node;
                 }}
-                onClick={this.toggleFilterList}
+                onClick={disabled ? null : this.toggleFilterList}
               >
                 <GhostButton
                   icon={CompareIcon}
