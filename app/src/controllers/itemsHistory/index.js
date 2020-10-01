@@ -51,4 +51,5 @@ export {
   filterForCompareSelector,
   filterHistorySelector,
   itemsHistorySelector,
+  isEmptyHistorySelector,
 } from './selectors';
