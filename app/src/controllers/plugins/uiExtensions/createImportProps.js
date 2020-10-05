@@ -43,6 +43,7 @@ import RemoveIcon from 'common/img/trashcan-inline.svg';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import ErrorIcon from 'common/img/error-inline.svg';
 import ExportIcon from 'common/img/export-inline.svg';
+import ArrowIcon from 'common/img/arrow-down-inline.svg';
 import { Input } from 'components/inputs/input';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { InputRadio } from 'components/inputs/inputRadio';
@@ -146,6 +147,6 @@ export const createImportProps = (pluginName) => ({
     projectInfoLoadingSelector,
     isAdminSelector,
   },
-  icons: { PlusIcon, RemoveIcon, CrossIcon, ErrorIcon, ExportIcon },
+  icons: { PlusIcon, RemoveIcon, CrossIcon, ErrorIcon, ExportIcon, ArrowIcon },
   utils: { fetch, URLS, debounce },
 });
