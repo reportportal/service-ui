@@ -428,37 +428,38 @@ export class LaunchSuiteGrid extends PureComponent {
   }
 
   handleAttributeFilterClick = (attribute) => {
-    this.props.onFilterClick([
-      {
-        id: ENTITY_ATTRIBUTE_KEYS,
-        value: {
-          filteringField: ENTITY_ATTRIBUTE_KEYS,
-          condition: CONDITION_HAS,
-          value: attribute.key || '',
+    this.props.onFilterClick(
+      [
+        {
+          id: ENTITY_ATTRIBUTE_KEYS,
+          value: {
+            filteringField: ENTITY_ATTRIBUTE_KEYS,
+            condition: CONDITION_HAS,
+            value: attribute.key || '',
+          },
         },
-      },
-      {
-        id: ENTITY_ATTRIBUTE_VALUES,
-        value: {
-          filteringField: ENTITY_ATTRIBUTE_VALUES,
-          condition: CONDITION_HAS,
-          value: attribute.value || '',
+        {
+          id: ENTITY_ATTRIBUTE_VALUES,
+          value: {
+            filteringField: ENTITY_ATTRIBUTE_VALUES,
+            condition: CONDITION_HAS,
+            value: attribute.value || '',
+          },
         },
-      },
-    ]);
+      ],
+      true,
+    );
   };
 
   handleOwnerFilterClick = (owner) =>
-    this.props.onFilterClick([
-      {
-        id: ENTITY_USER,
-        value: {
-          filteringField: ENTITY_NAME,
-          condition: CONDITION_IN,
-          value: owner || '',
-        },
+    this.props.onFilterClick({
+      id: ENTITY_USER,
+      value: {
+        filteringField: ENTITY_NAME,
+        condition: CONDITION_IN,
+        value: owner || '',
       },
-    ]);
+    });
 
   renderNoItemsBlock = () => {
     const {

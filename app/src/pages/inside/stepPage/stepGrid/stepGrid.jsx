@@ -208,7 +208,14 @@ export class StepGrid extends Component {
 
   constructor(props) {
     super(props);
-    const { events, onUnlinkSingleTicket } = this.props;
+    const {
+      intl: { formatMessage },
+      tracking,
+      events,
+      onUnlinkSingleTicket,
+      onEditItem,
+      onEditDefect,
+    } = props;
     this.columns = [
       {
         id: 'predefinedFilterSwitcher',
@@ -225,7 +232,7 @@ export class StepGrid extends Component {
         sortable: true,
         component: MethodTypeColumn,
         customProps: {
-          formatMessage: props.intl.formatMessage,
+          formatMessage,
         },
         withFilter: true,
         filterEventInfo: events.METHOD_TYPE_FILTER,
@@ -240,7 +247,7 @@ export class StepGrid extends Component {
         component: NameColumn,
         maxHeight: 170,
         customProps: {
-          onEditItem: props.onEditItem,
+          onEditItem,
           onClickAttribute: this.handleAttributeFilterClick,
           events,
         },
@@ -256,9 +263,9 @@ export class StepGrid extends Component {
         sortable: true,
         component: StatusColumn,
         customProps: {
-          formatMessage: props.intl.formatMessage,
+          formatMessage,
           onChange: (oldStatus, newStatus) =>
-            props.tracking.trackEvent(getChangeItemStatusEvent(oldStatus, newStatus)),
+            tracking.trackEvent(getChangeItemStatusEvent(oldStatus, newStatus)),
         },
         withFilter: true,
         filterEventInfo: events.STATUS_FILTER,
@@ -284,8 +291,8 @@ export class StepGrid extends Component {
         component: DefectTypeColumn,
         customProps: {
           onEdit: (data) => {
-            props.tracking.trackEvent(STEP_PAGE_EVENTS.EDIT_DEFECT_TYPE_ICON);
-            props.onEditDefect(data);
+            tracking.trackEvent(STEP_PAGE_EVENTS.EDIT_DEFECT_TYPE_ICON);
+            onEditDefect(data);
           },
           onUnlinkSingleTicket,
         },
@@ -297,24 +304,27 @@ export class StepGrid extends Component {
   }
 
   handleAttributeFilterClick = (attribute) => {
-    this.props.onFilterClick([
-      {
-        id: ENTITY_ATTRIBUTE_KEYS,
-        value: {
-          filteringField: ENTITY_ATTRIBUTE_KEYS,
-          condition: CONDITION_HAS,
-          value: attribute.key || '',
+    this.props.onFilterClick(
+      [
+        {
+          id: ENTITY_ATTRIBUTE_KEYS,
+          value: {
+            filteringField: ENTITY_ATTRIBUTE_KEYS,
+            condition: CONDITION_HAS,
+            value: attribute.key || '',
+          },
         },
-      },
-      {
-        id: ENTITY_ATTRIBUTE_VALUES,
-        value: {
-          filteringField: ENTITY_ATTRIBUTE_VALUES,
-          condition: CONDITION_HAS,
-          value: attribute.value || '',
+        {
+          id: ENTITY_ATTRIBUTE_VALUES,
+          value: {
+            filteringField: ENTITY_ATTRIBUTE_VALUES,
+            condition: CONDITION_HAS,
+            value: attribute.value || '',
+          },
         },
-      },
-    ]);
+      ],
+      true,
+    );
   };
 
   highlightFailedItems = (value) => ({

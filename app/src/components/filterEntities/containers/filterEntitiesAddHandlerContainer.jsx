@@ -29,12 +29,15 @@ export class FilterEntitiesAddHandlerContainer extends Component {
     filterValues: PropTypes.object.isRequired,
   };
 
-  handleAdd = (entity) => {
+  handleAdd = (entity, ...rest) => {
     const { filterEntities, onFilterAdd } = this.props;
     if (typeof entity === 'string') {
-      onFilterAdd(filterEntities.find((item) => item.id === entity));
+      onFilterAdd(
+        filterEntities.find((item) => item.id === entity),
+        ...rest,
+      );
     } else {
-      onFilterAdd(entity);
+      onFilterAdd(entity, ...rest);
     }
   };
 
