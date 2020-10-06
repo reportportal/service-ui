@@ -26,7 +26,6 @@ import { NotificationContainer } from 'components/main/notification';
 import { PageErrorBoundary } from 'components/containers/pageErrorBoundary';
 
 import { pageRendering } from './constants';
-
 import styles from './pageSwitcher.scss';
 
 Object.keys(pageNames).forEach((page) => {

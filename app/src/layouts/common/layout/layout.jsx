@@ -38,11 +38,31 @@ export class Layout extends Component {
 
   state = {
     sideMenuOpened: false,
+    resetScroll: false,
   };
 
   componentDidMount() {
     window.addEventListener('resize', this.windowResizeHandler, false);
   }
+
+  componentDidUpdate(prevProps) {
+    // reset the scroll state in case of new page content
+    if (prevProps.children !== this.props.children) {
+      this.markScrollToReset();
+    }
+  }
+
+  markScrollToReset = () => {
+    this.setState({
+      resetScroll: true,
+    });
+  };
+
+  unmarkScrollToReset = () => {
+    this.setState({
+      resetScroll: false,
+    });
+  };
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.windowResizeHandler, false);
@@ -75,7 +95,12 @@ export class Layout extends Component {
           </div>
           <div className={cx('content')}>
             {Banner && <Banner />}
-            <ScrollWrapper withBackToTop withFooter>
+            <ScrollWrapper
+              withBackToTop
+              withFooter
+              resetRequired={this.state.resetScroll}
+              onReset={this.unmarkScrollToReset}
+            >
               <div className={cx('scrolling-content')}>
                 <div className={cx('header-container')}>
                   {Header && (
