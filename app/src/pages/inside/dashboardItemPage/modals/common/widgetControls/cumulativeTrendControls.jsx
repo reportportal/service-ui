@@ -29,6 +29,7 @@ import {
 import { URLS } from 'common/urls';
 import { STATS_FAILED, STATS_PASSED, STATS_SKIPPED } from 'common/constants/statistics';
 import { FieldProvider } from 'components/fields/fieldProvider';
+import { DEFAULT_LAUNCHES_LIMIT } from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
 import {
   FiltersControl,
@@ -53,7 +54,11 @@ const messages = defineMessages({
   },
   ItemsFieldLabel: {
     id: 'CumulativeTrendControls.ItemsFieldLabel',
-    defaultMessage: 'Items',
+    defaultMessage: 'Number of attributes',
+  },
+  LaunchesLimitFieldLabel: {
+    id: 'CumulativeTrendControls.LaunchesLimitFieldLabel',
+    defaultMessage: 'Number of launches',
   },
   attributesTitle: {
     id: 'CumulativeTrendControls.attributesTitle',
@@ -62,6 +67,10 @@ const messages = defineMessages({
   ItemsValidationError: {
     id: 'CumulativeTrendControls.ItemsValidationError',
     defaultMessage: 'Items count should have value from 1 to 15',
+  },
+  LaunchesLimitValidationError: {
+    id: 'CumulativeTrendControls.LaunchesLimitValidationError',
+    defaultMessage: 'Items count should have value from 1 to 10000',
   },
   attributeKeyFieldLabelOverview: {
     id: 'CumulativeTrendControls.attributeKeyFieldLabelOverview',
@@ -82,6 +91,11 @@ const itemsValidator = (formatMessage) =>
   bindMessageToValidator(
     validate.cumulativeItemsValidation,
     formatMessage(messages.ItemsValidationError),
+  );
+const launchesLimitValidator = (formatMessage) =>
+  bindMessageToValidator(
+    validate.cumulativeLaunchesLimitValidation,
+    formatMessage(messages.LaunchesLimitValidationError),
   );
 const attributeKeyValidator = (formatMessage) => (attributes) =>
   composeBoundValidators([
@@ -124,6 +138,7 @@ export class CumulativeTrendControls extends Component {
     initializeControlsForm({
       contentParameters: widgetSettings.contentParameters || {
         itemsCount: DEFAULT_ITEMS_COUNT,
+        launchesLimit: DEFAULT_LAUNCHES_LIMIT,
         contentFields: this.parseContentFields(this.criteria),
         widgetOptions: {
           attributes: [],
@@ -205,6 +220,19 @@ export class CumulativeTrendControls extends Component {
                 fieldLabel={formatMessage(messages.ItemsFieldLabel)}
                 inputWidth={ITEMS_INPUT_WIDTH}
                 maxLength="3"
+                hintType={'top-right'}
+              />
+            </FieldProvider>
+            <FieldProvider
+              name="contentParameters.launchesLimit"
+              validate={launchesLimitValidator(formatMessage)}
+              format={String}
+              normalize={this.normalizeValue}
+            >
+              <InputControl
+                fieldLabel={formatMessage(messages.LaunchesLimitFieldLabel)}
+                inputWidth={ITEMS_INPUT_WIDTH}
+                maxLength="6"
                 hintType={'top-right'}
               />
             </FieldProvider>
