@@ -28,7 +28,7 @@ export const AttributesBlock = ({ attributes, onClickAttribute, isAttributeClick
       <div
         key={formatAttribute(attribute)}
         className={cx('attribute', { cursor: isAttributeClickable })}
-        onClick={() => onClickAttribute(attribute)}
+        onClick={isAttributeClickable ? () => onClickAttribute(attribute) : null}
       >
         {formatAttribute(attribute)}
       </div>
