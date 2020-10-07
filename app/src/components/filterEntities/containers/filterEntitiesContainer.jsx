@@ -103,7 +103,7 @@ export class FilterEntitiesContainer extends Component {
   };
 
   mergeEntityValue = (oldEntity, newEntity) => {
-    if (oldEntity) {
+    if (oldEntity && oldEntity.value) {
       const oldEntityValue = oldEntity.value;
       const isNewValueValid =
         newEntity.value && oldEntityValue.split(',').indexOf(newEntity.value) === -1;
