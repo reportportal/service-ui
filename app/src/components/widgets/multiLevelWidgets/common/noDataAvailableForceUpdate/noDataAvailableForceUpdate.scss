@@ -14,21 +14,28 @@
  * limitations under the License.
  */
 
-.cumulative-trend-chart {
-  position: relative;
+.rendering-wrap {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  width: 100%;
+  align-items: center;
+  justify-content: center;
   height: 100%;
 }
 
-.popup-reference {
-  position: absolute;
-  width: 100px;
-  height: 1px;
+.rendering-info-wrap {
+  text-align: center;
+  margin: 20px;
 }
 
-.no-data-wrapper {
-  height: 100%;
+.rendering-title {
+  font-size: 18px;
+  color: $COLOR--charcoal-grey;
+  font-family: $FONT-REGULAR;
+  margin-bottom: 10px;
+}
+
+.rendering-info {
+  font-size: 12px;
+  color: $COLOR--gray-47;
+  font-family: $FONT-REGULAR;
 }

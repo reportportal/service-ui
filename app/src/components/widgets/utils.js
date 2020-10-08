@@ -17,6 +17,7 @@
 import { formatAttribute } from 'common/utils';
 
 export const cumulativeFormatParams = (params = {}) => ({
+  ...(params.refresh && { refresh: params.refresh }),
   attributes: (params.attributes || []).map(formatAttribute).join(','),
 });
 

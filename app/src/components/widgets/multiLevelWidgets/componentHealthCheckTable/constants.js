@@ -32,7 +32,4 @@ export const SIZE_MIDDLE = 'middle';
 export const BACKGROUND_COLOR_WHITE = 'white';
 export const BORDER = 'bottom';
 
-export const STATE_RENDERING = 'rendering';
-export const STATE_READY = 'ready';
-
 export const TARGET = '_blank';

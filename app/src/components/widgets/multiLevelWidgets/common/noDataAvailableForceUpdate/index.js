@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2019 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,21 +14,4 @@
  * limitations under the License.
  */
 
-.cumulative-trend-chart {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  width: 100%;
-  height: 100%;
-}
-
-.popup-reference {
-  position: absolute;
-  width: 100px;
-  height: 1px;
-}
-
-.no-data-wrapper {
-  height: 100%;
-}
+export { NoDataAvailableForceUpdate } from './noDataAvailableForceUpdate';

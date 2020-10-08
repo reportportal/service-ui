@@ -37,8 +37,8 @@ import {
   widgetModeMessages,
   getWidgetModeByValue,
 } from 'pages/inside/dashboardItemPage/modals/common/widgetControls/utils/getWidgetModeOptions';
-import { STATE_RENDERING } from 'components/widgets/multiLevelWidgets/componentHealthCheckTable/constants';
-import { COMPONENT_HEALTH_CHECK_TABLE } from 'common/constants/widgetTypes';
+import { STATE_RENDERING } from 'components/widgets/common/constants';
+import { FORCE_UPDATED_WIDGETS_MAP } from 'components/widgets';
 import { DescriptionTooltipIcon } from './descriptionTooltipIcon';
 import styles from './widgetHeader.scss';
 
@@ -128,8 +128,8 @@ export class WidgetHeader extends Component {
     const isOwner = data.owner === userId;
     const isDashboardOwner = dashboardOwner === userId;
     const isWidgetDeletable = canDeleteWidget(userRole, projectRole, isOwner || isDashboardOwner);
-    const isForceUpdate = data.type === COMPONENT_HEALTH_CHECK_TABLE;
-    const isHideEditControl = isForceUpdate && data.state === STATE_RENDERING;
+    const isForceUpdated = FORCE_UPDATED_WIDGETS_MAP.includes(data.type);
+    const isHideEditControl = isForceUpdated && data.state === STATE_RENDERING;
     const { value: startTime, unit } = getRelativeUnits(data.lastRefresh);
 
     return (
@@ -170,8 +170,8 @@ export class WidgetHeader extends Component {
         </div>
         {!isPrintMode && (
           <div className={customClass}>
-            <div className={cx('controls-block', { 'controls-block-update': isForceUpdate })}>
-              {isForceUpdate && (
+            <div className={cx('controls-block', { 'controls-block-update': isForceUpdated })}>
+              {isForceUpdated && (
                 <div className={cx('force-update', 'mobile-hide')}>
                   {data.lastRefresh && (
                     <Fragment>
@@ -194,7 +194,7 @@ export class WidgetHeader extends Component {
                   {Parser(PencilIcon)}
                 </div>
               )}
-              {!isForceUpdate && data.type && (
+              {!isForceUpdated && data.type && (
                 <div className={cx('control')} onClick={onRefresh}>
                   {Parser(RefreshIcon)}
                 </div>
