@@ -37,7 +37,7 @@ import { TEST_ITEMS_TYPE_LIST } from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { Breadcrumbs } from 'components/widgets/multiLevelWidgets/common/breadcrumbs';
-import { NoDataAvailableForceUpdate } from 'components/widgets/multiLevelWidgets/common/noDataAvailableForceUpdate';
+import { NoDataAvailableMaterializedView } from 'components/widgets/multiLevelWidgets/common/noDataAvailableMaterializedView';
 import {
   getNewActiveAttributes,
   getBreadcrumbs,
@@ -361,7 +361,7 @@ export class ComponentHealthCheckTable extends Component {
           </Fragment>
         ) : (
           <div className={cx('no-data-wrapper')}>
-            <NoDataAvailableForceUpdate state={state} isLoading={isLoading} />
+            <NoDataAvailableMaterializedView state={state} isLoading={isLoading} />
           </div>
         )}
       </ScrollWrapper>

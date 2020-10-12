@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { NoDataAvailableForceUpdate } from './noDataAvailableForceUpdate';
+export { NoDataAvailableMaterializedView } from './noDataAvailableMaterializedView';

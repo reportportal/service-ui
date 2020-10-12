@@ -21,11 +21,11 @@ import { STATE_RENDERING } from 'components/widgets/common/constants';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader/spinningPreloader';
 import { NoDataAvailable } from 'components/widgets/noDataAvailable';
 import PropTypes from 'prop-types';
-import styles from './noDataAvailableForceUpdate.scss';
+import styles from './noDataAvailableMaterializedView.scss';
 
 const cx = classNames.bind(styles);
 
-export const NoDataAvailableForceUpdate = ({ state, isLoading }) => {
+export const NoDataAvailableMaterializedView = ({ state, isLoading }) => {
   if (state === STATE_RENDERING) {
     return (
       <div className={cx('rendering-wrap')}>
@@ -35,13 +35,13 @@ export const NoDataAvailableForceUpdate = ({ state, isLoading }) => {
         <div className={cx('rendering-info-wrap')}>
           <h3 className={cx('rendering-title')}>
             <FormattedMessage
-              id="NoDataAvailableForceUpdate.renderingTitle"
+              id="NoDataAvailableMaterializedView.renderingTitle"
               defaultMessage="Please wait, It could take up to 15 minutes."
             />
           </h3>
           <div className={cx('rendering-info')}>
             <FormattedMessage
-              id="NoDataAvailableForceUpdate.renderingInfo"
+              id="NoDataAvailableMaterializedView.renderingInfo"
               defaultMessage="Please wait, It could take up to 15 minutes."
             />
           </div>
@@ -56,7 +56,7 @@ export const NoDataAvailableForceUpdate = ({ state, isLoading }) => {
   return <NoDataAvailable />;
 };
 
-NoDataAvailableForceUpdate.propTypes = {
+NoDataAvailableMaterializedView.propTypes = {
   state: PropTypes.string.isRequired,
   isLoading: PropTypes.bool.isRequired,
 };

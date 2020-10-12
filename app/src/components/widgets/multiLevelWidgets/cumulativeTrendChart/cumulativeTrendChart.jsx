@@ -20,7 +20,7 @@ import classNames from 'classnames/bind';
 import isEqual from 'fast-deep-equal';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
-import { NoDataAvailableForceUpdate } from 'components/widgets/multiLevelWidgets/common/noDataAvailableForceUpdate';
+import { NoDataAvailableMaterializedView } from 'components/widgets/multiLevelWidgets/common/noDataAvailableMaterializedView';
 import { VirtualPopup } from 'components/main/virtualPopup';
 import { ChartJS } from 'components/widgets/common/chartjs';
 import {
@@ -367,7 +367,7 @@ export class CumulativeTrendChart extends PureComponent {
           />
         ) : (
           <div className={cx('no-data-wrapper')}>
-            <NoDataAvailableForceUpdate state={widgetState} isLoading={isLoading} />
+            <NoDataAvailableMaterializedView state={widgetState} isLoading={isLoading} />
           </div>
         )}
         {isActionsPopupShown && (

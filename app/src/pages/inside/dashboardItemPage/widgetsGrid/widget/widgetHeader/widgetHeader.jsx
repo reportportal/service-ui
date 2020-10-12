@@ -38,7 +38,7 @@ import {
   getWidgetModeByValue,
 } from 'pages/inside/dashboardItemPage/modals/common/widgetControls/utils/getWidgetModeOptions';
 import { STATE_RENDERING } from 'components/widgets/common/constants';
-import { FORCE_UPDATED_WIDGETS_MAP } from 'components/widgets';
+import { MATERIALIZED_VIEW_WIDGETS } from 'components/widgets';
 import { DescriptionTooltipIcon } from './descriptionTooltipIcon';
 import styles from './widgetHeader.scss';
 
@@ -128,8 +128,8 @@ export class WidgetHeader extends Component {
     const isOwner = data.owner === userId;
     const isDashboardOwner = dashboardOwner === userId;
     const isWidgetDeletable = canDeleteWidget(userRole, projectRole, isOwner || isDashboardOwner);
-    const isForceUpdated = FORCE_UPDATED_WIDGETS_MAP.includes(data.type);
-    const isHideEditControl = isForceUpdated && data.state === STATE_RENDERING;
+    const isForceUpdateAvailable = MATERIALIZED_VIEW_WIDGETS.includes(data.type);
+    const isEditControlHidden = isForceUpdateAvailable && data.state === STATE_RENDERING;
     const { value: startTime, unit } = getRelativeUnits(data.lastRefresh);
 
     return (
@@ -170,8 +170,10 @@ export class WidgetHeader extends Component {
         </div>
         {!isPrintMode && (
           <div className={customClass}>
-            <div className={cx('controls-block', { 'controls-block-update': isForceUpdated })}>
-              {isForceUpdated && (
+            <div
+              className={cx('controls-block', { 'controls-block-update': isForceUpdateAvailable })}
+            >
+              {isForceUpdateAvailable && (
                 <div className={cx('force-update', 'mobile-hide')}>
                   {data.lastRefresh && (
                     <Fragment>
@@ -189,12 +191,12 @@ export class WidgetHeader extends Component {
                   </div>
                 </div>
               )}
-              {canEditWidget(userRole, projectRole, isOwner) && !isHideEditControl && data.type && (
+              {canEditWidget(userRole, projectRole, isOwner) && !isEditControlHidden && data.type && (
                 <div className={cx('control', 'mobile-hide')} onClick={onEdit}>
                   {Parser(PencilIcon)}
                 </div>
               )}
-              {!isForceUpdated && data.type && (
+              {!isForceUpdateAvailable && data.type && (
                 <div className={cx('control')} onClick={onRefresh}>
                   {Parser(RefreshIcon)}
                 </div>
