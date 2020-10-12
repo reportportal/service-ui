@@ -34,7 +34,7 @@
     vertical-align: middle;
     padding-right: 5px;
     &.col-name {
-      width: 40%;
+      width: 50%;
       font-size: 14px;
       font-family: $FONT-SEMIBOLD;
       color: $COLOR--windows-blue;
@@ -44,6 +44,10 @@
       text-decoration: none;
       span {
         cursor: pointer;
+      }
+
+      @media (max-width: $SCREEN_XS_MAX) {
+        width: 40%;
       }
     }
     &.col-count {
@@ -57,7 +61,7 @@
     &.col-percents,
     &.col-status,
     &.col-duration {
-      width: 20%;
+      width: 15%;
       color: $COLOR--charcoal-grey;
       @media (max-width: $SCREEN_XS_MAX) {
         width: 20%;
@@ -67,7 +71,7 @@
       text-transform: capitalize;
     }
     &.col-date {
-      width: 20%;
+      width: 15%;
       color: $COLOR--charcoal-grey;
       cursor: pointer;
       @media (max-width: $SCREEN_XS_MAX) {

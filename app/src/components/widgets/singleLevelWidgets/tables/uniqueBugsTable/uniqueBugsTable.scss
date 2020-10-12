@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-.bug-id-col,
 .submit-date-col,
 .submitter-col {
-  width: 20%;
-  font-size: 13px;
+  width: 10%;
 }
 
 .bug-id-col {
+  width: 15%;
   font-family: $FONT-SEMIBOLD;
   word-break: break-all;
 
@@ -34,7 +33,7 @@
 .submit-date-col {
   .mobile-hint {
     display: none;
-    padding-right: 2px;
+    padding-right: 5px;
     font-family: $FONT-SEMIBOLD;
   }
 
@@ -47,4 +46,14 @@
 
 .submitter-col {
   font-family: $FONT-SEMIBOLD;
+}
+
+.bug-id-col,
+.submit-date-col,
+.submitter-col {
+  font-size: 13px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+  }
 }

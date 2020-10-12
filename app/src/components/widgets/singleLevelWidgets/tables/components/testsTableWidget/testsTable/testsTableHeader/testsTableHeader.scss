@@ -29,7 +29,11 @@
     overflow: hidden;
     text-overflow: ellipsis;
     &.col-name {
-      width: 40%;
+      width: 50%;
+
+      @media (max-width: $SCREEN_XS_MAX) {
+        width: 40%;
+      }
     }
     &.col-count {
       width: 20%;
@@ -49,7 +53,7 @@
     &.col-percents,
     &.col-status,
     &.col-duration {
-      width: 20%;
+      width: 15%;
       .short {
         display: none;
       }
@@ -64,7 +68,7 @@
       }
     }
     &.col-date {
-      width: 20%;
+      width: 15%;
       @media (max-width: $SCREEN_XS_MAX) {
         display: none;
       }
