@@ -48,6 +48,7 @@ import { Input } from 'components/inputs/input';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { InputRadio } from 'components/inputs/inputRadio';
 import { URLS } from 'common/urls';
+import { isEmailIntegrationAvailableSelector } from 'controllers/plugins';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -145,6 +146,7 @@ export const createImportProps = (pluginName) => ({
     projectInfoSelector,
     activeProjectRoleSelector,
     projectInfoLoadingSelector,
+    isEmailIntegrationAvailableSelector,
     isAdminSelector,
   },
   icons: { PlusIcon, RemoveIcon, CrossIcon, ErrorIcon, ExportIcon, ArrowIcon },
