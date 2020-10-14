@@ -78,7 +78,7 @@ export class CommonWidgetControls extends Component {
     trackEvent: PropTypes.func,
     dashboards: PropTypes.arrayOf(PropTypes.object),
     activeDashboard: PropTypes.object,
-    onChange: PropTypes.func,
+    onChangeDashboard: PropTypes.func,
   };
 
   static defaultProps = {
@@ -88,7 +88,7 @@ export class CommonWidgetControls extends Component {
     trackEvent: () => {},
     dashboards: [],
     activeDashboard: {},
-    onChange: () => {},
+    onChangeDashboard: () => {},
     intl: {},
   };
 
@@ -109,7 +109,7 @@ export class CommonWidgetControls extends Component {
       trackEvent,
       eventsInfo,
       dashboards,
-      onChange,
+      onChangeDashboard,
       activeDashboard: { widgets = [] },
     } = this.props;
 
@@ -148,7 +148,11 @@ export class CommonWidgetControls extends Component {
           </FieldProvider>
         </ModalField>
         {this.isShowDashboardsList() && (
-          <FieldProvider name="selectedDashboard" dashboards={dashboards} onChange={onChange}>
+          <FieldProvider
+            name="selectedDashboard"
+            dashboards={dashboards}
+            onChange={onChangeDashboard}
+          >
             <DashboardControl />
           </FieldProvider>
         )}
