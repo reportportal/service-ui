@@ -364,7 +364,7 @@ export class LaunchesPage extends Component {
       },
     });
   };
-  onAddDashBoard = (dashboard) => {
+  onAddDashboard = (dashboard) => {
     const { activeProject } = this.props;
     if (dashboard.id) {
       return Promise.resolve(dashboard);
@@ -379,7 +379,7 @@ export class LaunchesPage extends Component {
       activeProject,
       intl: { formatMessage },
     } = this.props;
-    this.onAddDashBoard(dashboard).then(({ id }) => {
+    this.onAddDashboard(dashboard).then(({ id }) => {
       fetch(URLS.addDashboardWidget(activeProject, id), {
         method: 'put',
         data: { addWidget: widget },
@@ -402,7 +402,7 @@ export class LaunchesPage extends Component {
     const {
       tracking: { trackEvent },
     } = this.props;
-    trackEvent(LAUNCHES_PAGE.ADD_NEW_WIDGET_BTN);
+    trackEvent(LAUNCHES_PAGE_EVENTS.ADD_NEW_WIDGET_BTN);
     this.props.showModalAction({
       id: 'widgetWizardModal',
       data: {
