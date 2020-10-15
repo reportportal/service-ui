@@ -37,13 +37,13 @@ import { TEST_ITEMS_TYPE_LIST } from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { Breadcrumbs } from 'components/widgets/multiLevelWidgets/common/breadcrumbs';
-import { NoDataAvailable } from 'components/widgets/noDataAvailable';
-import { SpinningPreloader } from 'components/preloaders/spinningPreloader/spinningPreloader';
+import { NoDataAvailableMaterializedView } from 'components/widgets/multiLevelWidgets/common/noDataAvailableMaterializedView';
 import {
   getNewActiveAttributes,
   getBreadcrumbs,
   getNewActiveBreadcrumbs,
 } from 'components/widgets/multiLevelWidgets/common/utils';
+import { STATE_READY } from 'components/widgets/common/constants';
 import isEqual from 'fast-deep-equal';
 import {
   NAME,
@@ -59,8 +59,6 @@ import {
   SIZE_MIDDLE,
   BACKGROUND_COLOR_WHITE,
   BORDER,
-  STATE_RENDERING,
-  STATE_READY,
 } from './constants';
 import {
   NameColumn,
@@ -70,7 +68,7 @@ import {
   DefectsColumn,
   PassingRateColumn,
 } from './columns';
-import { COLUMN_NAMES_MAP, renderingMessages } from './messages';
+import { COLUMN_NAMES_MAP } from './messages';
 import styles from './componentHealthCheckTable.scss';
 
 const cx = classNames.bind(styles);
@@ -337,34 +335,6 @@ export class ComponentHealthCheckTable extends Component {
     this.props.clearQueryParams();
   };
 
-  renderNoDataComponent = (state, isLoading) => {
-    const {
-      intl: { formatMessage },
-    } = this.props;
-    if (state === STATE_RENDERING) {
-      return (
-        <div className={cx('rendering-wrap')}>
-          <div className={cx('rendering-spinner-wrap')}>
-            <SpinningPreloader />
-          </div>
-          <div className={cx('rendering-info-wrap')}>
-            <h3 className={cx('rendering-title')}>
-              {formatMessage(renderingMessages.renderingTitle)}
-            </h3>
-            <div className={cx('rendering-info')}>
-              {formatMessage(renderingMessages.renderingInfo)}
-            </div>
-          </div>
-        </div>
-      );
-    }
-    if (isLoading) {
-      return <SpinningPreloader />;
-    }
-
-    return <NoDataAvailable />;
-  };
-
   render() {
     const { activeBreadcrumbs, activeBreadcrumbId, isLoading } = this.state;
     const {
@@ -391,7 +361,7 @@ export class ComponentHealthCheckTable extends Component {
           </Fragment>
         ) : (
           <div className={cx('no-data-wrapper')}>
-            {this.renderNoDataComponent(state, isLoading)}
+            <NoDataAvailableMaterializedView state={state} isLoading={isLoading} />
           </div>
         )}
       </ScrollWrapper>
