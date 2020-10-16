@@ -127,7 +127,9 @@ export class WidgetHeader extends Component {
 
     const isOwner = data.owner === userId;
     const isDashboardOwner = dashboardOwner === userId;
-    const isWidgetDeletable = canDeleteWidget(userRole, projectRole, isOwner || isDashboardOwner);
+    const isWidgetDeletable = data.owner
+      ? canDeleteWidget(userRole, projectRole, isOwner || isDashboardOwner)
+      : true;
     const isForceUpdateAvailable = MATERIALIZED_VIEW_WIDGETS.includes(data.type);
     const isEditControlHidden = isForceUpdateAvailable && data.state === STATE_RENDERING;
     const { value: startTime, unit } = getRelativeUnits(data.lastRefresh);
@@ -201,7 +203,7 @@ export class WidgetHeader extends Component {
                   {Parser(RefreshIcon)}
                 </div>
               )}
-              {isWidgetDeletable && data.type && (
+              {isWidgetDeletable && (
                 <div className={cx('control', 'mobile-hide')} onClick={onDelete}>
                   {Parser(CrossIcon)}
                 </div>
