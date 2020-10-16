@@ -82,9 +82,9 @@ const messages = defineMessages({
   },
 });
 
-const launchesLimitValidator = (formatMessage) =>
+const itemsValidator = (formatMessage) =>
   bindMessageToValidator(
-    validate.cumulativeLaunchesLimitValidation,
+    validate.cumulativeItemsValidation,
     formatMessage(messages.LaunchesLimitValidationError),
   );
 const attributeKeyValidator = (formatMessage) => (attributes) =>
@@ -201,7 +201,7 @@ export class CumulativeTrendControls extends Component {
 
             <FieldProvider
               name="contentParameters.itemsCount"
-              validate={launchesLimitValidator(formatMessage)}
+              validate={itemsValidator(formatMessage)}
               format={String}
               normalize={this.normalizeValue}
             >
