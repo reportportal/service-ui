@@ -311,7 +311,6 @@
   "CreateUser.welcome": "Вітаємо в Report Portal!",
   "CumulativeChart.backToChart": "Повернутися до графіку",
   "CumulativeTrendControls.CriteriaFieldLabel": "Критерії для віджету",
-  "CumulativeTrendControls.ItemsFieldLabel": "Кількість атрибутів",
   "CumulativeTrendControls.ItemsValidationError": "Кількість елементів повинна бути від 1 до 15",
   "CumulativeTrendControls.LaunchesLimitFieldLabel": "Кількість запусків",
   "CumulativeTrendControls.LaunchesLimitValidationError": "Кількість елементів повинна бути від 1 до 10000",

@@ -44,17 +44,12 @@ import styles from './widgetControls.scss';
 const cx = classNames.bind(styles);
 
 const MAX_ATTRIBUTES_AMOUNT = 2;
-const DEFAULT_ITEMS_COUNT = '15';
 const STATIC_CONTENT_FIELDS = [STATS_FAILED, STATS_SKIPPED, STATS_PASSED];
 
 const messages = defineMessages({
   CriteriaFieldLabel: {
     id: 'CumulativeTrendControls.CriteriaFieldLabel',
     defaultMessage: 'Criteria for widget',
-  },
-  ItemsFieldLabel: {
-    id: 'CumulativeTrendControls.ItemsFieldLabel',
-    defaultMessage: 'Number of attributes',
   },
   LaunchesLimitFieldLabel: {
     id: 'CumulativeTrendControls.LaunchesLimitFieldLabel',
@@ -87,11 +82,6 @@ const messages = defineMessages({
   },
 });
 
-const itemsValidator = (formatMessage) =>
-  bindMessageToValidator(
-    validate.cumulativeItemsValidation,
-    formatMessage(messages.ItemsValidationError),
-  );
 const launchesLimitValidator = (formatMessage) =>
   bindMessageToValidator(
     validate.cumulativeLaunchesLimitValidation,
@@ -137,8 +127,7 @@ export class CumulativeTrendControls extends Component {
 
     initializeControlsForm({
       contentParameters: widgetSettings.contentParameters || {
-        itemsCount: DEFAULT_ITEMS_COUNT,
-        launchesLimit: DEFAULT_LAUNCHES_LIMIT,
+        itemsCount: DEFAULT_LAUNCHES_LIMIT,
         contentFields: this.parseContentFields(this.criteria),
         widgetOptions: {
           attributes: [],
@@ -212,19 +201,6 @@ export class CumulativeTrendControls extends Component {
 
             <FieldProvider
               name="contentParameters.itemsCount"
-              validate={itemsValidator(formatMessage)}
-              format={String}
-              normalize={this.normalizeValue}
-            >
-              <InputControl
-                fieldLabel={formatMessage(messages.ItemsFieldLabel)}
-                inputWidth={ITEMS_INPUT_WIDTH}
-                maxLength="3"
-                hintType={'top-right'}
-              />
-            </FieldProvider>
-            <FieldProvider
-              name="contentParameters.launchesLimit"
               validate={launchesLimitValidator(formatMessage)}
               format={String}
               normalize={this.normalizeValue}

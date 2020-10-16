@@ -309,7 +309,7 @@ export class CumulativeTrendChart extends PureComponent {
         defects: defectLocators,
         itemId: TEST_ITEMS_TYPE_LIST,
         compositeAttribute: activeAttributes.map(formatAttribute).join(','),
-        launchesLimit: widget.contentParameters.launchesLimit,
+        launchesLimit: widget.contentParameters.itemsCount,
         launchId: selectedItem.content.launchIds.join(),
         filterType: true,
       });
@@ -317,7 +317,7 @@ export class CumulativeTrendChart extends PureComponent {
       link = getStatisticsLink({
         statuses: [PASSED, FAILED, SKIPPED, INTERRUPTED, IN_PROGRESS],
         compositeAttribute: activeAttributes.map(formatAttribute).join(','),
-        launchesLimit: widget.contentParameters.launchesLimit,
+        launchesLimit: widget.contentParameters.itemsCount,
         launchId: selectedItem.content.launchIds.join(),
       });
     }
