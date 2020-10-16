@@ -180,13 +180,12 @@ export class InstalledTab extends Component {
       activeFilterItem,
     } = this.state;
     const { filterItems } = this.props;
-    const newData = this.props.plugins.find((item) => item.type === data.type);
 
     switch (type) {
       case INSTALLED_PLUGINS_SUBPAGE:
         return (
           <IntegrationInfoContainer
-            integrationType={newData}
+            integrationType={data}
             isGlobal
             onToggleActive={this.onToggleActive}
             onItemClick={this.installedPluginsSettingsSubPageHandler}

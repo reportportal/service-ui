@@ -40,6 +40,8 @@ export class PageErrorBoundary extends Component {
     if (!hasError) {
       return this.props.children;
     }
+    // eslint-disable-next-line no-console
+    console.error(error);
     return <PageError error={error} />;
   }
 }
