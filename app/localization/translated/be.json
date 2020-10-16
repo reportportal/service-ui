@@ -311,7 +311,6 @@
   "CreateUser.welcome": "Дабро запрашаем у Report Portal!",
   "CumulativeChart.backToChart": "Вярнуцца да графіку",
   "CumulativeTrendControls.CriteriaFieldLabel": "Крытэрыі для віджэта",
-  "CumulativeTrendControls.ItemsValidationError": "Колькасць айтемов павінна быць ад 1 да 15",
   "CumulativeTrendControls.LaunchesLimitFieldLabel": "Колькасць запускаў",
   "CumulativeTrendControls.LaunchesLimitValidationError": "Колькасць айтемов павінна быць ад 1 да 10000",
   "CumulativeTrendControls.attributeKeyFieldLabelDetailedView": "(дэталізаваны выгляд)",
