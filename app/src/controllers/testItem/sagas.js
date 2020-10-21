@@ -41,6 +41,7 @@ import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
 import { createNamespacedQuery } from 'common/utils/routingUtils';
 import { LEVEL_NOT_FOUND } from 'common/constants/launchLevels';
+import { FILTER_TITLES } from 'common/constants/reservedFilterTitles';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import {
   showNotification,
@@ -173,8 +174,8 @@ function* fetchTestItems({ payload = {} }) {
         [uniqueIdFilterKey]: pageQuery[uniqueIdFilterKey],
         ...{ ...query, ...payloadParams },
       };
-
-  if (isTestItemsList && !activeFilter) {
+  const isFilterNotReserved = !FILTER_TITLES[filterId];
+  if ((isTestItemsList || isFilterNotReserved) && !activeFilter) {
     const filter = yield call(fetch, URLS.filter(project, filterId));
 
     if (filter) {
