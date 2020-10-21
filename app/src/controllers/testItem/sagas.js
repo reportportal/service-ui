@@ -174,7 +174,8 @@ function* fetchTestItems({ payload = {} }) {
         [uniqueIdFilterKey]: pageQuery[uniqueIdFilterKey],
         ...{ ...query, ...payloadParams },
       };
-  if ((isTestItemsList || !FILTER_TITLES[filterId]) && !activeFilter) {
+  const isFilterNotReserved = !FILTER_TITLES[filterId];
+  if ((isTestItemsList || isFilterNotReserved) && !activeFilter) {
     const filter = yield call(fetch, URLS.filter(project, filterId));
 
     if (filter) {
