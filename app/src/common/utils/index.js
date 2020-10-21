@@ -37,6 +37,7 @@ export {
   getTimestampFromMinutes,
   getMinutesFromTimestamp,
   formatDuration,
+  secondsToDays,
 } from './timeDateUtils';
 export { connectRouter } from './connectRouter';
 export { uniqueId } from './uniqueId';

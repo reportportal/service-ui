@@ -152,3 +152,9 @@ export const getMinutesFromTimestamp = (timestamp) => {
     .unix();
   return parseInt((moment(timestamp).unix() - currentUnix) / 60, 10);
 };
+
+export const secondsToDays = (seconds, locale) =>
+  moment
+    .duration(seconds, 'seconds')
+    .locale(locale)
+    .humanize({ d: Number.MAX_SAFE_INTEGER });
