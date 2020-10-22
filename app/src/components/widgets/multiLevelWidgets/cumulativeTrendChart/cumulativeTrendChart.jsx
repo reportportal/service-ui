@@ -31,7 +31,7 @@ import {
 import { defectTypesSelector } from 'controllers/project';
 import { activeProjectSelector } from 'controllers/user';
 import { SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
-import { PASSED, FAILED, SKIPPED, INTERRUPTED, IN_PROGRESS } from 'common/constants/testStatuses';
+import { PASSED, FAILED, SKIPPED, INTERRUPTED } from 'common/constants/testStatuses';
 import { formatAttribute } from 'common/utils/attributeUtils';
 import { STATE_READY, DEFECTS, TOTAL_KEY } from 'components/widgets/common/constants';
 import SearchIcon from 'common/img/search-icon-inline.svg';
@@ -315,7 +315,7 @@ export class CumulativeTrendChart extends PureComponent {
       });
     } else {
       link = getStatisticsLink({
-        statuses: [PASSED, FAILED, SKIPPED, INTERRUPTED, IN_PROGRESS],
+        statuses: [PASSED, FAILED, SKIPPED, INTERRUPTED],
         compositeAttribute: activeAttributes.map(formatAttribute).join(','),
         launchesLimit: widget.contentParameters.itemsCount,
         launchId: selectedItem.content.launchIds.join(),
