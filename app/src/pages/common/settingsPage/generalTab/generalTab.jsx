@@ -23,7 +23,7 @@ import { injectIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import moment from 'moment';
 import { URLS } from 'common/urls';
-import { fetch } from 'common/utils';
+import { fetch, secondsToDays } from 'common/utils';
 import { canUpdateSettings } from 'common/utils/permissions';
 import { Input } from 'components/inputs/input';
 import { InputDropdown } from 'components/inputs/inputDropdown';
@@ -37,6 +37,7 @@ import {
 } from 'controllers/project';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { FormField } from 'components/fields/formField';
+
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { projectIdSelector } from 'controllers/pages';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -48,11 +49,6 @@ const cx = classNames.bind(styles);
 
 const hoursToSeconds = (hours) => moment.duration(hours, 'hours').asSeconds();
 const daysToSeconds = (days) => moment.duration(days, 'days').asSeconds();
-const secondsToDays = (seconds, locale) =>
-  moment
-    .duration(seconds, 'seconds')
-    .locale(locale)
-    .humanize({ d: Number.MAX_SAFE_INTEGER });
 
 @reduxForm({
   form: 'generalForm',

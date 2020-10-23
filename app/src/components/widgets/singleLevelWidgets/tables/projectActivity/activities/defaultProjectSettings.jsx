@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
 import Link from 'redux-first-router-link';
+import { secondsToDays } from 'common/utils';
 import { PROJECT_SETTINGS_PAGE } from 'controllers/pages';
 import styles from './common.scss';
 
@@ -56,9 +57,11 @@ export class DefaultProjectSettings extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     activity: PropTypes.object,
+    lang: PropTypes.string,
   };
   static defaultProps = {
     activity: {},
+    lang: 'en',
   };
 
   getActivityHistory = (activity) => {
@@ -70,8 +73,8 @@ export class DefaultProjectSettings extends Component {
         const activityName = messages[item.field]
           ? this.props.intl.formatMessage(messages[item.field])
           : '';
-        const oldValue = item.oldValue;
-        const newValue = item.newValue;
+        const oldValue = secondsToDays(item.oldValue, this.props.lang);
+        const newValue = secondsToDays(item.newValue, this.props.lang);
         activities.push(`${activityName} ${from} ${oldValue} ${to} ${newValue}`);
       }
     });
