@@ -750,6 +750,8 @@ mvdan.cc/gofumpt v0.0.0-20200709182408-4fd085cb6d5f h1:gi7cb8HTDZ6q8VqsUpkdoFi3v
 mvdan.cc/gofumpt v0.0.0-20200709182408-4fd085cb6d5f/go.mod h1:9VQ397fNXEnF84t90W4r4TRCQK+pg9f8ugVfyj+S26w=
 mvdan.cc/gofumpt v0.0.0-20200802201014-ab5a8192947d h1:t8TAw9WgTLghti7RYkpPmqk4JtQ3+wcP5GgZqgWeWLQ=
 mvdan.cc/gofumpt v0.0.0-20200802201014-ab5a8192947d/go.mod h1:bzrjFmaD6+xqohD3KYP0H2FEuxknnBmyyOxdhLdaIws=
+mvdan.cc/gofumpt v0.0.0-20200927160801-5bfeb2e70dd6 h1:z+/YqapuV7VZPvBb3GYmuEJbA88M3PFUxaHilHYVCpQ=
+mvdan.cc/gofumpt v0.0.0-20200927160801-5bfeb2e70dd6/go.mod h1:bzrjFmaD6+xqohD3KYP0H2FEuxknnBmyyOxdhLdaIws=
 mvdan.cc/interfacer v0.0.0-20180901003855-c20040233aed h1:WX1yoOaKQfddO/mLzdV4wptyWgoH/6hwLs7QHTixo0I=
 mvdan.cc/interfacer v0.0.0-20180901003855-c20040233aed/go.mod h1:Xkxe497xwlCKkIaQYRfC7CSLworTXY9RMqwhhCm+8Nc=
 mvdan.cc/lint v0.0.0-20170908181259-adc824a0674b h1:DxJ5nJdkhDlLok9K6qO+5290kphDJbHOQO1DFFFTeBo=

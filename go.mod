@@ -17,5 +17,5 @@ require (
 	github.com/ugorji/go/codec v0.0.0-20181204163529-d75b2dcb6bc8 // indirect
 	github.com/unrolled/secure v0.0.0-20170904132641-19a872c81779
 	gopkg.in/cheggaaa/pb.v1 v1.0.28 // indirect
-	mvdan.cc/gofumpt v0.0.0-20200802201014-ab5a8192947d // indirect
+	mvdan.cc/gofumpt v0.0.0-20200927160801-5bfeb2e70dd6 // indirect
 )
