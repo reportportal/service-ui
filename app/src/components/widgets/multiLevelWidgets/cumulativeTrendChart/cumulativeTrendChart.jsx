@@ -114,8 +114,8 @@ export class CumulativeTrendChart extends PureComponent {
   componentDidUpdate(prevProps) {
     if (
       !isEqual(
-        prevProps.widget.contentParameters.widgetOptions.attributes,
-        this.props.widget.contentParameters.widgetOptions.attributes,
+        prevProps.widget.contentParameters.widgetOptions,
+        this.props.widget.contentParameters.widgetOptions,
       )
     ) {
       this.clearAttributes();
