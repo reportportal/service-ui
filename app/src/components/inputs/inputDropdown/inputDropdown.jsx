@@ -231,6 +231,7 @@ export class InputDropdown extends Component {
           </Reference>
           <Popper
             placement="bottom-start"
+            eventsEnabled={false}
             modifiers={{
               preventOverflow: { enabled: true },
               flip: {
