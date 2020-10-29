@@ -17,8 +17,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { ALL } from 'common/constants/reservedFilterIds';
+import { activeProjectSelector } from 'controllers/user';
 import { TEST_ITEM_PAGE, PROJECT_LOG_PAGE } from 'controllers/pages/constants';
 import { ChartContainer } from 'components/widgets/common/c3chart';
 import { getChartDefaultProps } from 'components/widgets/common/utils';
@@ -28,6 +30,14 @@ import styles from './mostTimeConsumingTestCasesChart.scss';
 const cx = classNames.bind(styles);
 
 @injectIntl
+@connect(
+  (state) => ({
+    projectId: activeProjectSelector(state),
+  }),
+  {
+    navigate: (linkAction) => linkAction,
+  },
+)
 export class MostTimeConsumingTestCasesChart extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
