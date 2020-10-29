@@ -64,7 +64,7 @@ export const withTooltip = ({ TooltipComponent, data = {} }) => (WrappedComponen
           </Reference>
           {shown &&
             ReactDOM.createPortal(
-              <Popper placement={data.placement} modifiers={data.modifiers}>
+              <Popper placement={data.placement} modifiers={data.modifiers} eventsEnabled={false}>
                 {({ placement, ref, style, arrowProps }) => (
                   <div
                     className={cx('tooltip', {
