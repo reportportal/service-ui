@@ -17,9 +17,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import styles from './mostTimeConsumingTestCasesTable.scss';
 import { TestsTableWidget } from '../../tables/components/testsTableWidget';
 import * as cfg from './tableConfig';
+import styles from './mostTimeConsumingTestCasesTable.scss';
 
 const cx = classNames.bind(styles);
 
