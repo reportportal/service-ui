@@ -306,18 +306,13 @@ export class StepLevelEntities extends Component {
     launchId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     visibleFilters: PropTypes.array,
     patterns: PropTypes.array,
-    onFilterAdd: PropTypes.func,
-    onFilterRemove: PropTypes.func,
-    onFilterChange: PropTypes.func,
   };
   static defaultProps = {
     filterValues: {},
     visibleFilters: [],
     patterns: [],
-    onFilterAdd: () => {},
-    onFilterRemove: () => {},
-    onFilterChange: () => {},
   };
+
   getDefectTypeEntity = () => {
     const { intl, defectTypes, filterValues, visibleFilters } = this.props;
     let initChecked = [];
@@ -394,6 +389,7 @@ export class StepLevelEntities extends Component {
       },
     ];
   };
+
   getEntities = () => {
     const { intl, filterValues, projectId, launchId, visibleFilters } = this.props;
     return [
@@ -668,21 +664,12 @@ export class StepLevelEntities extends Component {
 
   bindDefaultValue = bindDefaultValue;
 
-  handleAdd = (entity, ...rest) => this.props.onFilterAdd(entity, ...rest);
-
-  handleChange = (entityId, value) => this.props.onFilterChange(entityId, value);
-
-  handleRemove = (entityId) => this.props.onFilterRemove(entityId);
-
   render() {
-    const { render, onFilterAdd, onFilterRemove, onFilterChange, ...rest } = this.props;
+    const { render, ...rest } = this.props;
 
     return render({
       ...rest,
       filterEntities: this.getEntities(),
-      onFilterAdd: this.handleAdd,
-      onFilterRemove: this.handleRemove,
-      onFilterChange: this.handleChange,
     });
   }
 }
