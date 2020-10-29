@@ -17,12 +17,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
-import { activeProjectSelector } from 'controllers/user';
-import { TEST_ITEM_PAGE } from 'controllers/pages/constants';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
-import { ALL } from 'common/constants/reservedFilterIds';
 import { MostTimeConsumingTestCasesChart } from './mostTimeConsumingTestCasesChart';
 import { MostTimeConsumingTestCasesTable } from './mostTimeConsumingTestCasesTable';
 import styles from './mostTimeConsumingTestCases.scss';
@@ -37,21 +33,12 @@ const localMessages = defineMessages({
 });
 
 @injectIntl
-@connect(
-  (state) => ({
-    projectId: activeProjectSelector(state),
-  }),
-  {
-    navigate: (linkAction) => linkAction,
-  },
-)
 export class MostTimeConsumingTestCases extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     widget: PropTypes.object.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
     projectId: PropTypes.string.isRequired,
-    navigate: PropTypes.func.isRequired,
     isPreview: PropTypes.bool,
     height: PropTypes.number,
     observer: PropTypes.object,
@@ -61,25 +48,6 @@ export class MostTimeConsumingTestCases extends Component {
     isPreview: false,
     height: 0,
     observer: {},
-  };
-
-  launchNameClickHandler = () => {
-    const {
-      projectId,
-      widget: { content: { latestLaunch = {} } = {} },
-      navigate,
-    } = this.props;
-
-    const navigationParams = {
-      payload: {
-        projectId,
-        filterId: ALL,
-        testItemIds: latestLaunch.id,
-      },
-      type: TEST_ITEM_PAGE,
-    };
-
-    navigate(navigationParams);
   };
 
   render() {
@@ -92,8 +60,6 @@ export class MostTimeConsumingTestCases extends Component {
       intl: { formatMessage },
       height,
       isPreview,
-      navigate,
-      projectId,
       observer,
       container,
     } = this.props;
@@ -102,7 +68,7 @@ export class MostTimeConsumingTestCases extends Component {
 
     return (
       <div className={cx('most-time-consuming')}>
-        <div className={cx('launch-name-block')} onClick={this.launchNameClickHandler}>
+        <div className={cx('launch-name-block')}>
           <span className={cx('launch-name-text')}>
             {`${formatMessage(localMessages.launchNameText)} `}
           </span>
@@ -113,8 +79,6 @@ export class MostTimeConsumingTestCases extends Component {
             widget={widget}
             height={height}
             isPreview={isPreview}
-            projectId={projectId}
-            navigate={navigate}
             observer={observer}
             container={container}
           />
