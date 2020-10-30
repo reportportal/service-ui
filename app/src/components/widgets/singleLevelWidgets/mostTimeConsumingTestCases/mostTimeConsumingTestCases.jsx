@@ -17,8 +17,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
+import { ALL } from 'common/constants/reservedFilterIds';
+import { activeProjectSelector } from 'controllers/user';
+import { TEST_ITEM_PAGE, PROJECT_LOG_PAGE } from 'controllers/pages/constants';
 import { MostTimeConsumingTestCasesChart } from './mostTimeConsumingTestCasesChart';
 import { MostTimeConsumingTestCasesTable } from './mostTimeConsumingTestCasesTable';
 import styles from './mostTimeConsumingTestCases.scss';
@@ -33,21 +37,61 @@ const localMessages = defineMessages({
 });
 
 @injectIntl
+@connect(
+  (state) => ({
+    projectId: activeProjectSelector(state),
+  }),
+  {
+    navigate: (linkAction) => linkAction,
+  },
+)
 export class MostTimeConsumingTestCases extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     widget: PropTypes.object.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
     projectId: PropTypes.string.isRequired,
+    navigate: PropTypes.func.isRequired,
     isPreview: PropTypes.bool,
-    height: PropTypes.number,
     observer: PropTypes.object,
   };
 
   static defaultProps = {
     isPreview: false,
-    height: 0,
     observer: {},
+  };
+
+  itemClickHandler = (id) => {
+    const {
+      projectId,
+      widget: {
+        content: { result, latestLaunch = {} },
+      },
+      navigate,
+    } = this.props;
+    const targetElement = result.find((el) => el.id === id) || {};
+    const { path } = targetElement;
+    let itemLink;
+    let pageType;
+
+    if (path) {
+      itemLink = `${latestLaunch.id}/${path.replace(/[.]/g, '/')}`;
+      pageType = PROJECT_LOG_PAGE;
+    } else {
+      itemLink = `${latestLaunch.id}`;
+      pageType = TEST_ITEM_PAGE;
+    }
+
+    const navigationParams = {
+      payload: {
+        projectId,
+        filterId: ALL,
+        testItemIds: itemLink,
+      },
+      type: pageType,
+    };
+
+    navigate(navigationParams);
   };
 
   render() {
@@ -58,7 +102,6 @@ export class MostTimeConsumingTestCases extends Component {
       },
       widget = {},
       intl: { formatMessage },
-      height,
       isPreview,
       observer,
       container,
@@ -77,13 +120,13 @@ export class MostTimeConsumingTestCases extends Component {
         {viewMode === MODES_VALUES[CHART_MODES.BAR_VIEW] ? (
           <MostTimeConsumingTestCasesChart
             widget={widget}
-            height={height}
             isPreview={isPreview}
             observer={observer}
             container={container}
+            onItemClick={this.itemClickHandler}
           />
         ) : (
-          <MostTimeConsumingTestCasesTable widget={widget} />
+          <MostTimeConsumingTestCasesTable widget={widget} onItemClick={this.itemClickHandler} />
         )}
       </div>
     );
