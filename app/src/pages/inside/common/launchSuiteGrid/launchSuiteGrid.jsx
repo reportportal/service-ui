@@ -236,6 +236,7 @@ export class LaunchSuiteGrid extends PureComponent {
       isGridRowHighlighted: PropTypes.bool,
       highlightedRowId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     }),
+    noItemsBlock: PropTypes.element,
   };
   static defaultProps = {
     data: [],
@@ -261,6 +262,7 @@ export class LaunchSuiteGrid extends PureComponent {
       isGridRowHighlighted: false,
       highlightedRowId: null,
     }),
+    noItemsBlock: null,
   };
   getColumns() {
     const hamburgerColumn = {
@@ -426,41 +428,54 @@ export class LaunchSuiteGrid extends PureComponent {
   }
 
   handleAttributeFilterClick = (attribute) => {
-    this.props.onFilterClick([
-      {
-        id: ENTITY_ATTRIBUTE_KEYS,
-        value: {
-          filteringField: ENTITY_ATTRIBUTE_KEYS,
-          condition: CONDITION_HAS,
-          value: attribute.key || '',
+    this.props.onFilterClick(
+      [
+        {
+          id: ENTITY_ATTRIBUTE_KEYS,
+          value: {
+            filteringField: ENTITY_ATTRIBUTE_KEYS,
+            condition: CONDITION_HAS,
+            value: attribute.key || '',
+          },
         },
-      },
-      {
-        id: ENTITY_ATTRIBUTE_VALUES,
-        value: {
-          filteringField: ENTITY_ATTRIBUTE_VALUES,
-          condition: CONDITION_HAS,
-          value: attribute.value || '',
+        {
+          id: ENTITY_ATTRIBUTE_VALUES,
+          value: {
+            filteringField: ENTITY_ATTRIBUTE_VALUES,
+            condition: CONDITION_HAS,
+            value: attribute.value || '',
+          },
         },
-      },
-    ]);
+      ],
+      true,
+    );
   };
 
   handleOwnerFilterClick = (owner) =>
-    this.props.onFilterClick([
-      {
-        id: ENTITY_USER,
-        value: {
-          filteringField: ENTITY_NAME,
-          condition: CONDITION_IN,
-          value: owner || '',
-        },
+    this.props.onFilterClick({
+      id: ENTITY_USER,
+      value: {
+        filteringField: ENTITY_NAME,
+        condition: CONDITION_IN,
+        value: owner || '',
       },
-    ]);
+    });
+
+  renderNoItemsBlock = () => {
+    const {
+      intl: { formatMessage },
+      noItemsBlock,
+    } = this.props;
+
+    if (noItemsBlock) {
+      return noItemsBlock;
+    }
+
+    return <NoItemMessage message={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />;
+  };
 
   render() {
     const {
-      intl: { formatMessage },
       data,
       onChangeSorting,
       sortingColumn,
@@ -491,9 +506,7 @@ export class LaunchSuiteGrid extends PureComponent {
           onFilterClick={onFilterClick}
           rowHighlightingConfig={rowHighlightingConfig}
         />
-        {!data.length && !loading && (
-          <NoItemMessage message={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />
-        )}
+        {!data.length && !loading && this.renderNoItemsBlock()}
       </Fragment>
     );
   }

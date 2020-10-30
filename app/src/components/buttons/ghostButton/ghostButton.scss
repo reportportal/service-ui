@@ -63,6 +63,7 @@
       }
     }
 
+    &.active,
     &:active,
     &:hover {
       path,
@@ -78,6 +79,7 @@
       color: $COLOR--white-two;
     }
 
+    &.active,
     &:active {
       background-color: $COLOR--topaz;
       border-color: $COLOR--topaz;
@@ -87,6 +89,20 @@
     &.transparent-border {
       border-color: transparent;
       border-radius: 2px;
+    }
+
+    &.transparent-border-hover {
+      &:hover {
+        background-color: transparent;
+        border-color: transparent;
+        color: $COLOR--topaz-hover;
+      }
+
+      &:active {
+        background-color: transparent;
+        border-color: transparent;
+        color: $COLOR--topaz-active;
+      }
     }
   }
 }

@@ -21,6 +21,7 @@ import EmailIcon from 'common/img/plugins/email.png';
 import SauceLabsIcon from 'common/img/plugins/sauce-labs.png';
 import SamlIcon from 'common/img/plugins/saml.png';
 import LdapIcon from 'common/img/plugins/ldap.png';
+import DefaultPluginIcon from 'common/img/plugins/default-plugin-icon.svg';
 import ActiveDirectoryIcon from 'common/img/plugins/activeDirectory.png';
 
 export const PLUGIN_NAME_TITLES = {
@@ -42,6 +43,8 @@ export const PLUGIN_IMAGES_MAP = {
   [LDAP]: LdapIcon,
   [AD]: ActiveDirectoryIcon,
 };
+
+export const PLUGIN_DEFAULT_IMAGE = DefaultPluginIcon;
 
 export const PLUGINS_SUPPORTS_MULTIPLE_INSTANCES = [JIRA, RALLY, SAML];
 

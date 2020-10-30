@@ -15,19 +15,28 @@
  */
 
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { Layout } from 'layouts/common/layout';
+import { isDemoInstanceSelector } from 'controllers/appInfo';
 import { AppHeader } from './appHeader';
 import { AppSidebar } from './appSidebar';
+import { DemoBanner } from './demoBanner';
 
-export const AppLayout = ({ children }) => (
-  <Layout Header={AppHeader} Sidebar={AppSidebar}>
+const AppLayoutComponent = ({ children, isDemoInstance }) => (
+  <Layout Header={AppHeader} Sidebar={AppSidebar} Banner={isDemoInstance ? DemoBanner : null}>
     {children}
   </Layout>
 );
 
-AppLayout.propTypes = {
+AppLayoutComponent.propTypes = {
   children: PropTypes.node,
+  isDemoInstance: PropTypes.bool,
 };
-AppLayout.defaultProps = {
+AppLayoutComponent.defaultProps = {
   children: null,
+  isDemoInstance: false,
 };
+
+export const AppLayout = connect((state) => ({
+  isDemoInstance: isDemoInstanceSelector(state),
+}))(AppLayoutComponent);

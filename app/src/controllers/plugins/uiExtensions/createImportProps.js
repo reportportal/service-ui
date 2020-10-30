@@ -42,10 +42,13 @@ import PlusIcon from 'common/img/plus-button-inline.svg';
 import RemoveIcon from 'common/img/trashcan-inline.svg';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import ErrorIcon from 'common/img/error-inline.svg';
+import ExportIcon from 'common/img/export-inline.svg';
+import ArrowIcon from 'common/img/arrow-down-inline.svg';
 import { Input } from 'components/inputs/input';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { InputRadio } from 'components/inputs/inputRadio';
 import { URLS } from 'common/urls';
+import { isEmailIntegrationAvailableSelector } from 'controllers/plugins';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -75,10 +78,11 @@ import { InputSlider } from 'components/inputs/inputSlider';
 import { InputRadioGroup } from 'components/inputs/inputRadioGroup';
 import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import { InputTextArea } from 'components/inputs/inputTextArea';
-import { InputTimeDateRange } from 'components/inputs/inputTimeDateRange';
+import { InputTimeDateRange, InputTimeDateRangeMenu } from 'components/inputs/inputTimeDateRange';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { MarkdownEditor, MarkdownViewer } from 'components/main/markdown';
+import { GeneralTab } from 'pages/common/settingsPage/generalTab';
 import { createGlobalNamedIntegrationsSelector } from '../selectors';
 
 const BUTTONS = {
@@ -102,6 +106,7 @@ const INPUTS = {
   InputSwitcher,
   InputTextArea,
   InputTimeDateRange,
+  InputTimeDateRangeMenu,
   SingleAutocomplete,
   MultipleAutocomplete,
   WithAsyncLoading,
@@ -129,6 +134,7 @@ export const createImportProps = (pluginName) => ({
     AbsRelTime,
     MarkdownEditor,
     MarkdownViewer,
+    GeneralTab,
   },
   constants: { PLUGIN_UI_EXTENSION_ADMIN_PAGE, PROJECT_SETTINGS_TAB_PAGE },
   actions: { showModalAction, showSuccessNotification, showErrorNotification, fetchProjectAction },
@@ -140,8 +146,9 @@ export const createImportProps = (pluginName) => ({
     projectInfoSelector,
     activeProjectRoleSelector,
     projectInfoLoadingSelector,
+    isEmailIntegrationAvailableSelector,
     isAdminSelector,
   },
-  icons: { PlusIcon, RemoveIcon, CrossIcon, ErrorIcon },
+  icons: { PlusIcon, RemoveIcon, CrossIcon, ErrorIcon, ExportIcon, ArrowIcon },
   utils: { fetch, URLS, debounce },
 });

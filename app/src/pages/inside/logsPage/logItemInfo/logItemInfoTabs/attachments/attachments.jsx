@@ -39,7 +39,7 @@ import { DEFAULT_VISIBLE_THUMBS, MOBILE_VISIBLE_THUMBS } from './constants';
 import { AttachmentsSlider } from './attachmentsSlider';
 import styles from './attachments.scss';
 
-export const messages = defineMessages({
+const messages = defineMessages({
   noAttachmentsMessage: {
     id: 'Attachments.noAttachmentsMessage',
     defaultMessage: 'No attachments to display',
@@ -89,23 +89,12 @@ export class Attachments extends Component {
     attachments: [],
     pagination: {},
     loading: false,
-    activeItemId: null,
+    activeItemId: 0,
     setActiveAttachmentAction: () => {},
     fetchAttachmentsConcatAction: () => {},
     openAttachmentAction: () => {},
     isMobileView: false,
   };
-
-  static getDerivedStateFromProps(props, state) {
-    if (props.activeItemId === null) {
-      const currentThumb = getCurrentThumb(props.activeItemId, state.visibleThumbs);
-      return {
-        mainAreaVisible: false,
-        currentThumb,
-      };
-    }
-    return null;
-  }
 
   constructor(props) {
     super(props);
@@ -114,10 +103,9 @@ export class Attachments extends Component {
     const visibleThumbs = getVisibleThumbs(isMobileView);
     const currentThumb = getCurrentThumb(activeItemId, visibleThumbs);
 
+    this.size = visibleThumbs;
     this.state = {
-      mainAreaVisible: activeItemId !== null,
       currentThumb,
-      size: visibleThumbs,
     };
   }
 
@@ -130,7 +118,6 @@ export class Attachments extends Component {
   onClickThumb = (itemIndex) => {
     this.props.tracking.trackEvent(LOG_PAGE_EVENTS.ATTACHMENT_THUMBNAIL);
     this.props.setActiveAttachmentAction(itemIndex);
-    this.setState({ mainAreaVisible: true });
   };
 
   changeActiveItem = (activeItemId, thumbConfig) => {
@@ -140,23 +127,22 @@ export class Attachments extends Component {
       {
         currentThumb: thumbConfig ? thumbConfig.currentThumb : this.state.currentThumb,
       },
-      () => this.loadNewItems(prevActiveItemId, thumbConfig),
+      () => this.loadNewItems(prevActiveItemId, activeItemId, thumbConfig),
     );
   };
 
-  loadNewItems = (prevActiveItemId, thumbConfig) => {
-    if (thumbConfig && this.props.activeItemId > prevActiveItemId) {
+  loadNewItems = (prevActiveItemId, activeItemId, thumbConfig) => {
+    if (thumbConfig && activeItemId > prevActiveItemId) {
       const {
         pagination: { totalElements },
         attachments,
         loading,
       } = this.props;
-      const { size } = this.state;
-      const nextPage = Math.ceil((thumbConfig.currentThumb + 1) / size) + 1;
-      const lastLoadedPage = Math.ceil(attachments.length / size);
-      const lastPage = Math.ceil(totalElements / size);
+      const nextPage = Math.ceil((thumbConfig.currentThumb + 1) / this.size) + 1;
+      const lastLoadedPage = Math.ceil(attachments.length / this.size);
+      const lastPage = Math.ceil(totalElements / this.size);
       if (nextPage > lastLoadedPage && lastLoadedPage < lastPage && !loading) {
-        this.fetchAttachments({ page: nextPage, size });
+        this.fetchAttachments({ page: nextPage, size: this.size });
       }
     }
   };
@@ -168,9 +154,7 @@ export class Attachments extends Component {
       [SIZE_KEY]: size,
     };
 
-    const concat = page > 1;
-
-    this.props.fetchAttachmentsConcatAction({ params, concat });
+    this.props.fetchAttachmentsConcatAction({ params, concat: true });
   };
 
   renderAttachmentsContent = () => {
@@ -184,31 +168,29 @@ export class Attachments extends Component {
       return <NoItemMessage message={intl.formatMessage(messages.noAttachmentsMessage)} />;
     }
 
-    const { currentThumb, mainAreaVisible } = this.state;
+    const { currentThumb } = this.state;
     const visibleThumbs = getVisibleThumbs(isMobileView);
 
     return (
       <Fragment>
-        {mainAreaVisible && (
-          <CarouselProvider
-            naturalSlideWidth={20}
-            naturalSlideHeight={30}
-            dragEnabled={false}
-            currentSlide={activeItemId}
-            totalSlides={attachments.length}
-            visibleSlides={1}
-            className={cx('main-carousel')}
-          >
-            <AttachmentsSlider
-              activeItemId={activeItemId}
-              currentThumb={currentThumb}
-              attachments={attachments}
-              onClickItem={this.onClickItem}
-              changeActiveItem={this.changeActiveItem}
-              visibleThumbs={visibleThumbs}
-            />
-          </CarouselProvider>
-        )}
+        <CarouselProvider
+          naturalSlideWidth={20}
+          naturalSlideHeight={30}
+          dragEnabled={false}
+          currentSlide={activeItemId}
+          totalSlides={attachments.length}
+          visibleSlides={1}
+          className={cx('main-carousel')}
+        >
+          <AttachmentsSlider
+            activeItemId={activeItemId}
+            currentThumb={currentThumb}
+            attachments={attachments}
+            onClickItem={this.onClickItem}
+            changeActiveItem={this.changeActiveItem}
+            visibleThumbs={visibleThumbs}
+          />
+        </CarouselProvider>
         <CarouselProvider
           naturalSlideWidth={10}
           naturalSlideHeight={15}
@@ -216,7 +198,7 @@ export class Attachments extends Component {
           dragEnabled={false}
           totalSlides={attachments.length}
           visibleSlides={visibleThumbs}
-          className={cx('thumbs-carousel', { 'show-separator': mainAreaVisible })}
+          className={cx('thumbs-carousel')}
         >
           <AttachmentsSlider
             activeItemId={activeItemId}

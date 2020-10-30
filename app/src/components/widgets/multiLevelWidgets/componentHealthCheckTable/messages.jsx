@@ -140,14 +140,3 @@ export const hintMessages = defineMessages({
     defaultMessage: 'Total',
   },
 });
-
-export const renderingMessages = defineMessages({
-  renderingTitle: {
-    id: 'ComponentHealthCheckTable.renderingTitle',
-    defaultMessage: 'Data Updating',
-  },
-  renderingInfo: {
-    id: 'ComponentHealthCheckTable.renderingInfo',
-    defaultMessage: 'Please wait, It could take up to 15 minutes.',
-  },
-});

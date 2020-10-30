@@ -87,7 +87,7 @@ export class SamlFormFields extends Component {
       { value: false, label: 'First & last name' },
     ];
     this.state = {
-      isFullNameAttributeMode: false,
+      isFullNameAttributeMode: !!props.initialData[FULL_NAME_ATTRIBUTE_KEY],
     };
   }
 

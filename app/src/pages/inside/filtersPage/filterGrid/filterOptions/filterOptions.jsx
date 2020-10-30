@@ -111,10 +111,10 @@ export class FilterOptions extends Component {
   };
 
   optionsToString = () => {
-    const { intl } = this.props;
+    const { intl, entities } = this.props;
     let optionName;
     let condition;
-    const result = this.props.entities.map((entity) => {
+    const result = entities.map((entity) => {
       const splitKey = entity.filteringField.split('$');
       const type = splitKey[0];
       if (type === OPTIONS.START_TIME) {

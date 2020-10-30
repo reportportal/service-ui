@@ -23,7 +23,7 @@ const getTooltipContent = (testItem = {}) => {
 
   return itemPaths.reduce(
     (path, item, index) => `${path} \n<b>Parent ${index + 1}:</b> ${item.name}`,
-    `<b>Launch:</b> ${launchPathName.name} ${launchPathName.number}`,
+    `<b>Launch:</b> ${launchPathName.name} #${launchPathName.number}`,
   );
 };
 

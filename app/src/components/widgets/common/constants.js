@@ -43,3 +43,6 @@ export const COLORS = {
 };
 
 export const CHART_OFFSET = 40.5;
+
+export const STATE_RENDERING = 'rendering';
+export const STATE_READY = 'ready';

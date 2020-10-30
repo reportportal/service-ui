@@ -25,22 +25,44 @@ const cx = classNames.bind(styles);
 export class Layout extends Component {
   static propTypes = {
     children: PropTypes.node,
+    Banner: PropTypes.elementType,
     Header: PropTypes.elementType,
     Sidebar: PropTypes.elementType,
   };
   static defaultProps = {
     children: null,
+    Banner: null,
     Header: null,
     Sidebar: null,
   };
 
   state = {
     sideMenuOpened: false,
+    resetScroll: false,
   };
 
   componentDidMount() {
     window.addEventListener('resize', this.windowResizeHandler, false);
   }
+
+  componentDidUpdate(prevProps) {
+    // reset the scroll state in case of new page content
+    if (prevProps.children !== this.props.children) {
+      this.markScrollToReset();
+    }
+  }
+
+  markScrollToReset = () => {
+    this.setState({
+      resetScroll: true,
+    });
+  };
+
+  unmarkScrollToReset = () => {
+    this.setState({
+      resetScroll: false,
+    });
+  };
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.windowResizeHandler, false);
@@ -57,26 +79,36 @@ export class Layout extends Component {
   };
 
   render() {
-    const { Header, Sidebar } = this.props;
+    const { Header, Sidebar, Banner } = this.props;
     return (
       <div className={cx('layout')}>
         <div className={cx('slide-container', { 'side-menu-opened': this.state.sideMenuOpened })}>
           <div className={cx('sidebar-container')}>
             <div className={cx('corner-area')} />
-            <Sidebar
-              onClickNavBtn={() => {
-                this.state.sideMenuOpened && this.setState({ sideMenuOpened: false });
-              }}
-            />
+            {Sidebar && (
+              <Sidebar
+                onClickNavBtn={() => {
+                  this.state.sideMenuOpened && this.setState({ sideMenuOpened: false });
+                }}
+              />
+            )}
           </div>
           <div className={cx('content')}>
-            <ScrollWrapper withBackToTop withFooter>
+            {Banner && <Banner />}
+            <ScrollWrapper
+              withBackToTop
+              withFooter
+              resetRequired={this.state.resetScroll}
+              onReset={this.unmarkScrollToReset}
+            >
               <div className={cx('scrolling-content')}>
                 <div className={cx('header-container')}>
-                  <Header
-                    isSideMenuOpened={this.state.sideMenuOpened}
-                    toggleSideMenu={this.toggleSideMenu}
-                  />
+                  {Header && (
+                    <Header
+                      isSideMenuOpened={this.state.sideMenuOpened}
+                      toggleSideMenu={this.toggleSideMenu}
+                    />
+                  )}
                 </div>
                 <div className={cx('page-container')}>{this.props.children}</div>
               </div>

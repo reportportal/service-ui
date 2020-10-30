@@ -102,7 +102,7 @@ export class SettingsPage extends Component {
     tabExtensions: PropTypes.arrayOf(
       PropTypes.shape({
         name: PropTypes.string.isRequired,
-        title: PropTypes.string.isRequired,
+        title: PropTypes.string,
         component: PropTypes.element.isRequired,
       }),
     ),
@@ -127,6 +127,7 @@ export class SettingsPage extends Component {
     );
 
   createTabsConfig = () => {
+    const extensionTabs = this.createExtensionTabs();
     const tabsConfig = {
       [GENERAL]: {
         name: this.props.intl.formatMessage(messages.general),
@@ -185,7 +186,14 @@ export class SettingsPage extends Component {
     if (!canSeeDemoData(this.props.accountRole, this.props.userRole)) {
       delete tabsConfig[DEMO_DATA];
     }
-    return { ...tabsConfig, ...this.createExtensionTabs() };
+    Object.keys(extensionTabs).forEach((tab) => {
+      if (tabsConfig[tab]) {
+        tabsConfig[tab].component = extensionTabs[tab].component;
+
+        delete extensionTabs[tab];
+      }
+    });
+    return { ...tabsConfig, ...extensionTabs };
   };
 
   render() {

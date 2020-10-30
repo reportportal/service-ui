@@ -17,7 +17,7 @@
 .checkbox-header-cell {
   display: table-cell;
   position: sticky;
-  top: 0;
+  top: -1px;
   z-index: $Z_INDEX-GRID_HEADER;
   height: 50px;
   padding-left: 10px;

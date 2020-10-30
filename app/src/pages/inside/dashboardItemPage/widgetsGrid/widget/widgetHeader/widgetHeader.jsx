@@ -37,8 +37,8 @@ import {
   widgetModeMessages,
   getWidgetModeByValue,
 } from 'pages/inside/dashboardItemPage/modals/common/widgetControls/utils/getWidgetModeOptions';
-import { STATE_RENDERING } from 'components/widgets/multiLevelWidgets/componentHealthCheckTable/constants';
-import { COMPONENT_HEALTH_CHECK_TABLE } from 'common/constants/widgetTypes';
+import { STATE_RENDERING } from 'components/widgets/common/constants';
+import { MATERIALIZED_VIEW_WIDGETS } from 'components/widgets';
 import { DescriptionTooltipIcon } from './descriptionTooltipIcon';
 import styles from './widgetHeader.scss';
 
@@ -127,9 +127,11 @@ export class WidgetHeader extends Component {
 
     const isOwner = data.owner === userId;
     const isDashboardOwner = dashboardOwner === userId;
-    const isWidgetDeletable = canDeleteWidget(userRole, projectRole, isOwner || isDashboardOwner);
-    const isForceUpdate = data.type === COMPONENT_HEALTH_CHECK_TABLE;
-    const isHideEditControl = isForceUpdate && data.state === STATE_RENDERING;
+    const isWidgetDeletable = data.owner
+      ? canDeleteWidget(userRole, projectRole, isOwner || isDashboardOwner)
+      : true;
+    const isForceUpdateAvailable = MATERIALIZED_VIEW_WIDGETS.includes(data.type);
+    const isEditControlHidden = isForceUpdateAvailable && data.state === STATE_RENDERING;
     const { value: startTime, unit } = getRelativeUnits(data.lastRefresh);
 
     return (
@@ -170,8 +172,10 @@ export class WidgetHeader extends Component {
         </div>
         {!isPrintMode && (
           <div className={customClass}>
-            <div className={cx('controls-block', { 'controls-block-update': isForceUpdate })}>
-              {isForceUpdate && (
+            <div
+              className={cx('controls-block', { 'controls-block-update': isForceUpdateAvailable })}
+            >
+              {isForceUpdateAvailable && (
                 <div className={cx('force-update', 'mobile-hide')}>
                   {data.lastRefresh && (
                     <Fragment>
@@ -189,17 +193,17 @@ export class WidgetHeader extends Component {
                   </div>
                 </div>
               )}
-              {canEditWidget(userRole, projectRole, isOwner) && !isHideEditControl && data.type && (
+              {canEditWidget(userRole, projectRole, isOwner) && !isEditControlHidden && data.type && (
                 <div className={cx('control', 'mobile-hide')} onClick={onEdit}>
                   {Parser(PencilIcon)}
                 </div>
               )}
-              {!isForceUpdate && data.type && (
+              {!isForceUpdateAvailable && data.type && (
                 <div className={cx('control')} onClick={onRefresh}>
                   {Parser(RefreshIcon)}
                 </div>
               )}
-              {isWidgetDeletable && data.type && (
+              {isWidgetDeletable && (
                 <div className={cx('control', 'mobile-hide')} onClick={onDelete}>
                   {Parser(CrossIcon)}
                 </div>

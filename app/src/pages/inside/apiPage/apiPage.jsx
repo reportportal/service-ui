@@ -86,7 +86,7 @@ export class ApiPage extends Component {
               <div className={cx('switcher-wrapper')}>
                 <ToggleButton
                   items={this.tabItems}
-                  value={this.state.apiType}
+                  value={apiType}
                   onChange={this.tabChangeHandler}
                 />
               </div>

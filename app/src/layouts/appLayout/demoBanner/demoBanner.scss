@@ -1,0 +1,35 @@
+.demo-banner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 60px;
+  color: $COLOR--charcoal-grey;
+  background-color: $COLOR--tealish-hover;
+  font-size: 14px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    height: 80px;
+    box-sizing: border-box;
+    padding: 5px;
+  }
+}
+
+.description {
+  margin-right: 5px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    margin-right: 0;
+  }
+}
+
+.github-login {
+  color: $COLOR--tealish;
+  text-decoration: none;
+  cursor: pointer;
+}

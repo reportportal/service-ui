@@ -32,6 +32,8 @@ import {
   IntegrationInfoContainer,
   IntegrationSettingsContainer,
 } from 'components/integrations/containers';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { showModalAction } from 'controllers/modal';
 import { PLUGIN_NAME_TITLES } from 'components/integrations';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import {
@@ -55,18 +57,37 @@ const messages = defineMessages({
     id: 'PluginItem.enabledPluginMessage',
     defaultMessage: 'Plugin has been enabled',
   },
+  disablePluginTitle: {
+    id: 'PluginItem.disablePluginTitle',
+    defaultMessage: 'Disable plugin',
+  },
+  disablePluginMessage: {
+    id: 'PluginItem.disablePluginMessage',
+    defaultMessage:
+      'Are you sure you want to disable a plugin {pluginName}? If you disable plugin, information about it will be hidden on the Project Settings and users can not interact with it',
+  },
+  enablePluginTitle: {
+    id: 'PluginItem.enablePluginTitle',
+    defaultMessage: 'Enable plugin',
+  },
+  enablePluginMessage: {
+    id: 'PluginItem.enablePluginMessage',
+    defaultMessage: 'Are you sure you want to enable a plugin {pluginName}?',
+  },
 });
 
 @injectIntl
 @connect(null, {
   showNotification,
   updatePluginSuccessAction,
+  showModalAction,
 })
 @track()
 export class InstalledTab extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     filterItems: PropTypes.array.isRequired,
+    showModalAction: PropTypes.func.isRequired,
     plugins: PropTypes.array.isRequired,
     updatePluginSuccessAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func,
@@ -112,22 +133,63 @@ export class InstalledTab extends Component {
     });
   };
 
+  showEnablePluginModal = (pluginName, callback) => {
+    const {
+      intl: { formatMessage },
+    } = this.props;
+
+    this.props.showModalAction({
+      id: 'confirmationModal',
+      data: {
+        message: formatMessage(messages.enablePluginMessage, { pluginName }),
+        onConfirm: callback,
+        title: formatMessage(messages.enablePluginTitle),
+        confirmText: formatMessage(COMMON_LOCALE_KEYS.ENABLE),
+        cancelText: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      },
+    });
+  };
+
+  showDisablePluginModal = (pluginName, callback) => {
+    const {
+      intl: { formatMessage },
+    } = this.props;
+
+    this.props.showModalAction({
+      id: 'confirmationModal',
+      data: {
+        message: formatMessage(messages.disablePluginMessage, { pluginName }),
+        onConfirm: callback,
+        dangerConfirm: true,
+        title: formatMessage(messages.disablePluginTitle),
+        confirmText: formatMessage(COMMON_LOCALE_KEYS.DISABLE),
+        cancelText: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      },
+    });
+  };
+
+  showToggleConfirmationModal = (isEnabled, pluginName, callback) => {
+    isEnabled
+      ? this.showDisablePluginModal(pluginName, callback)
+      : this.showEnablePluginModal(pluginName, callback);
+  };
+
   getPageContent = () => {
     const {
       subPage: { type, data, title },
       activeFilterItem,
     } = this.state;
     const { filterItems } = this.props;
-    const newData = this.props.plugins.find((item) => item.type === data.type);
 
     switch (type) {
       case INSTALLED_PLUGINS_SUBPAGE:
         return (
           <IntegrationInfoContainer
-            integrationType={newData}
+            integrationType={data}
             isGlobal
             onToggleActive={this.onToggleActive}
             onItemClick={this.installedPluginsSettingsSubPageHandler}
+            showToggleConfirmationModal={this.showToggleConfirmationModal}
             removePluginSuccessCallback={this.goToMainPageHandler}
           />
         );
@@ -153,6 +215,7 @@ export class InstalledTab extends Component {
                 title={activeFilterItem}
                 items={this.getFilterPluginsList(activeFilterItem)}
                 filterMobileBlock={this.renderFilterMobileBlock()}
+                showToggleConfirmationModal={this.showToggleConfirmationModal}
                 onToggleActive={this.onToggleActive}
                 onItemClick={this.installedPluginsSubPageHandler}
               />

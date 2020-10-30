@@ -675,21 +675,24 @@ export class StepLevelEntities extends Component {
 
   bindDefaultValue = bindDefaultValue;
 
-  handleAdd = (entity) => {
+  handleAdd = (entity, ...rest) => {
     if (entity.id === ENTITY_BTS_ISSUES && entity.value.value === 'FALSE') {
-      this.props.onFilterAdd([
-        entity,
-        {
-          id: ENTITY_ISSUE_ID,
-          filteringField: ENTITY_ISSUE_ID,
-          value: {
-            condition: CONDITION_EX,
-            value: 'TRUE',
+      this.props.onFilterAdd(
+        [
+          entity,
+          {
+            id: ENTITY_ISSUE_ID,
+            filteringField: ENTITY_ISSUE_ID,
+            value: {
+              condition: CONDITION_EX,
+              value: 'TRUE',
+            },
           },
-        },
-      ]);
+        ],
+        ...rest,
+      );
     } else {
-      this.props.onFilterAdd(entity);
+      this.props.onFilterAdd(entity, ...rest);
     }
   };
 

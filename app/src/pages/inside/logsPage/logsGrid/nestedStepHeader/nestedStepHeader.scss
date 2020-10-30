@@ -97,6 +97,9 @@ $LEVEL_OFFSET_STEP: 20px;
   cursor: pointer;
   transition: transform 0.2s ease 0s;
   fill: $COLOR--topaz;
+  svg {
+    min-width: 24px;
+  }
   &.expanded {
     transform: rotate(90deg);
   }

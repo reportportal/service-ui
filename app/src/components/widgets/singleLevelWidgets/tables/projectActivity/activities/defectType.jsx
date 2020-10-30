@@ -20,7 +20,7 @@ import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import Link from 'redux-first-router-link';
 import { DEFECT } from 'common/constants/settingsTabs';
-import { DELETE_DEFECT, UPDATE_DEFECT } from 'common/constants/actionTypes';
+import { DELETE_DEFECT, UPDATE_DEFECT, CREATE_DEFECT } from 'common/constants/actionTypes';
 import { getProjectSettingTabPageLink } from './utils';
 import styles from './common.scss';
 
@@ -33,7 +33,11 @@ const messages = defineMessages({
   },
   [UPDATE_DEFECT]: {
     id: 'DefectTypeChanges.update',
-    defaultMessage: 'updated',
+    defaultMessage: 'updated defect type',
+  },
+  [CREATE_DEFECT]: {
+    id: 'DefectTypeChanges.create',
+    defaultMessage: 'created defect type',
   },
   defectTypes: {
     id: 'DefectTypeChanges.defectTypes',
@@ -65,9 +69,7 @@ export class DefectType extends Component {
           className={cx('link')}
           target="_blank"
         >
-          {activity.actionType === DELETE_DEFECT
-            ? activity.details.objectName
-            : intl.formatMessage(messages.defectTypes)}
+          {activity.details.objectName || intl.formatMessage(messages.defectTypes)}
         </Link>
       </Fragment>
     );

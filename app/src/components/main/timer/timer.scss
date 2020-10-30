@@ -1,0 +1,40 @@
+.timer {
+  display: inline-block;
+  font-size: 14px;
+  color: $COLOR--failed;
+}
+
+.time-units {
+  display: inline-block;
+  margin-left: 5px;
+}
+
+.time-unit {
+  position: relative;
+  display: inline-block;
+  text-align: center;
+  width: 36px;
+  padding: 5px 0;
+  border-radius: 3px;
+  background-color: $COLOR--white-two;
+  font-family: $FONT-SEMIBOLD;
+
+  &:not(:last-child) {
+    margin-right: 15px;
+  }
+
+  &.with-delimiter {
+    &::after {
+      content: ':';
+      position: absolute;
+      top: 4px;
+      left: 41px;
+      color: $COLOR--charcoal-grey;
+    }
+  }
+}
+
+.unit-hint {
+  margin-left: 4px;
+  font-size: 10px;
+}

@@ -23,7 +23,7 @@ import { injectIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import moment from 'moment';
 import { URLS } from 'common/urls';
-import { fetch } from 'common/utils';
+import { fetch, secondsToDays } from 'common/utils';
 import { canUpdateSettings } from 'common/utils/permissions';
 import { Input } from 'components/inputs/input';
 import { InputDropdown } from 'components/inputs/inputDropdown';
@@ -37,6 +37,7 @@ import {
 } from 'controllers/project';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { FormField } from 'components/fields/formField';
+
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { projectIdSelector } from 'controllers/pages';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -48,11 +49,6 @@ const cx = classNames.bind(styles);
 
 const hoursToSeconds = (hours) => moment.duration(hours, 'hours').asSeconds();
 const daysToSeconds = (days) => moment.duration(days, 'days').asSeconds();
-const secondsToDays = (seconds, locale) =>
-  moment
-    .duration(seconds, 'seconds')
-    .locale(locale)
-    .humanize({ d: Number.MAX_SAFE_INTEGER });
 
 @reduxForm({
   form: 'generalForm',
@@ -93,21 +89,23 @@ export class GeneralTab extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     lang: PropTypes.string,
+    retention: PropTypes.number,
   };
 
   static defaultProps = {
     projectId: '',
     fetchProjectAction: () => {},
     lang: 'en',
+    retention: null,
   };
 
   componentDidMount() {
     const { interruptJobTime, keepLogs, keepScreenshots, keepLaunches } = this.props.jobConfig;
     this.props.initialize({
       interruptJobTime: Number(interruptJobTime),
-      keepLaunches: Number(keepLaunches),
-      keepLogs: Number(keepLogs),
-      keepScreenshots: Number(keepScreenshots),
+      keepLaunches: Number(this.getMinRetentionValue(keepLaunches)),
+      keepLogs: Number(this.getMinRetentionValue(keepLogs)),
+      keepScreenshots: Number(this.getMinRetentionValue(keepScreenshots)),
     });
   }
 
@@ -156,6 +154,30 @@ export class GeneralTab extends Component {
     { label: this.props.intl.formatMessage(Messages.week1), value: daysToSeconds(7) },
   ];
 
+  getMinRetentionValue = (value) => {
+    const { retention } = this.props;
+
+    return retention === null || retention > value || retention === 0 ? value : retention;
+  };
+
+  getRetentionOptions = () => {
+    const { retention, lang } = this.props;
+
+    if (!retention || retention === 0) {
+      return this.retentionOptions;
+    }
+
+    const options = this.retentionOptions.filter(
+      (option) => option.value <= retention && option.value !== 0,
+    );
+
+    if ((options.length && options[options.length - 1].value !== retention) || !options.length) {
+      options.push({ label: secondsToDays(retention, lang), value: retention });
+    }
+
+    return options;
+  };
+
   createValueFormatter = (values) => (value) => {
     const selectedOption = values.find((option) => option.value === value);
     if (selectedOption) {
@@ -164,7 +186,7 @@ export class GeneralTab extends Component {
     return { label: secondsToDays(value, this.props.lang), value };
   };
 
-  formatRetention = this.createValueFormatter(this.retentionOptions);
+  formatRetention = this.createValueFormatter(this.getRetentionOptions());
 
   formatInterruptJobTimes = this.createValueFormatter(this.interruptJobTime);
 
@@ -204,7 +226,7 @@ export class GeneralTab extends Component {
             disabled={!canUpdateSettings(accountRole, userRole)}
             format={this.formatRetention}
           >
-            <InputDropdown options={this.retentionOptions} mobileDisabled />
+            <InputDropdown options={this.getRetentionOptions()} mobileDisabled />
           </FormField>
           <FormField
             name="keepLogs"
@@ -217,7 +239,7 @@ export class GeneralTab extends Component {
             disabled={!canUpdateSettings(accountRole, userRole)}
             format={this.formatRetention}
           >
-            <InputDropdown options={this.retentionOptions} mobileDisabled />
+            <InputDropdown options={this.getRetentionOptions()} mobileDisabled />
           </FormField>
           <FormField
             name="keepScreenshots"
@@ -230,7 +252,7 @@ export class GeneralTab extends Component {
             disabled={!canUpdateSettings(accountRole, userRole)}
             format={this.formatRetention}
           >
-            <InputDropdown options={this.retentionOptions} mobileDisabled />
+            <InputDropdown options={this.getRetentionOptions()} mobileDisabled />
           </FormField>
           <FormField withoutProvider fieldWrapperClassName={cx('button-container')}>
             <div className={cx('submit-button')}>

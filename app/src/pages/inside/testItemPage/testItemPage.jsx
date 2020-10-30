@@ -42,6 +42,7 @@ import {
   launchSelector,
   fetchTestItemsAction,
   namespaceSelector,
+  isItemOwner,
   LEVELS,
 } from 'controllers/testItem';
 import { showModalAction } from 'controllers/modal';
@@ -103,19 +104,31 @@ const messages = defineMessages({
   },
 });
 
-export const getDeleteItemsActionParameters = (items, formatMessage, rest = {}) => ({
-  header:
-    items.length === 1
-      ? formatMessage(messages.deleteModalHeader)
-      : formatMessage(messages.deleteModalMultipleHeader),
-  mainContent:
-    items.length === 1
-      ? formatMessage(messages.deleteModalContent, { name: items[0].name })
-      : formatMessage(messages.deleteModalMultipleContent),
-  warning:
-    items.length === 1 ? formatMessage(messages.warning) : formatMessage(messages.warningMultiple),
-  ...rest,
-});
+export const getDeleteItemsActionParameters = (
+  items,
+  formatMessage,
+  { userId, parentLaunch, ...rest } = {},
+) => {
+  const isOwner = isItemOwner(userId, items[0], parentLaunch);
+
+  return {
+    header:
+      items.length === 1
+        ? formatMessage(messages.deleteModalHeader)
+        : formatMessage(messages.deleteModalMultipleHeader),
+    mainContent:
+      items.length === 1
+        ? formatMessage(messages.deleteModalContent, { name: items[0].name })
+        : formatMessage(messages.deleteModalMultipleContent),
+    warning:
+      (!isOwner &&
+        (items.length === 1
+          ? formatMessage(messages.warning)
+          : formatMessage(messages.warningMultiple))) ||
+      '',
+    ...rest,
+  };
+};
 
 const STEPS_DELETE_ITEMS_MODAL_EVENTS = {
   closeIcon: STEP_PAGE_EVENTS.DELETE_ITEM_MODAL_EVENTS.CLOSE_ICON_DELETE_ITEM_MODAL,
@@ -199,7 +212,7 @@ export class TestItemPage extends Component {
   };
 
   onEditItem = (item) => {
-    const { level } = this.props;
+    const { level, parentLaunch } = this.props;
     const events = LEVEL_STEP === level ? STEP_PAGE_EVENTS : SUITES_PAGE_EVENTS;
 
     this.props.showModalAction({
@@ -207,7 +220,7 @@ export class TestItemPage extends Component {
       data: {
         item,
         type: LAUNCH_ITEM_TYPES.item,
-        parentLaunch: this.props.parentLaunch,
+        parentLaunch,
         fetchFunc: this.props.fetchTestItemsAction,
         eventsInfo: events.EDIT_ITEMS_MODAL_EVENTS,
       },
@@ -215,7 +228,7 @@ export class TestItemPage extends Component {
   };
 
   onEditItems = (items) => {
-    const { level, tracking } = this.props;
+    const { level, parentLaunch, tracking } = this.props;
     const events = LEVEL_STEP === level ? STEP_PAGE_EVENTS : SUITES_PAGE_EVENTS;
     tracking.trackEvent(events.EDIT_ITEMS_ACTION);
 
@@ -223,7 +236,7 @@ export class TestItemPage extends Component {
       id: 'editItemsModal',
       data: {
         items,
-        parentLaunch: this.props.parentLaunch,
+        parentLaunch,
         type: LAUNCH_ITEM_TYPES.item,
         fetchFunc: this.unselectAndFetchItems,
         eventsInfo: {
@@ -245,6 +258,7 @@ export class TestItemPage extends Component {
     const {
       intl: { formatMessage },
       userId,
+      parentLaunch,
       tracking,
       level,
     } = this.props;
@@ -259,6 +273,7 @@ export class TestItemPage extends Component {
           callback: this.props.fetchTestItemsAction,
         }),
       userId,
+      parentLaunch,
       eventsInfo:
         LEVEL_STEP === level ? STEPS_DELETE_ITEMS_MODAL_EVENTS : SUITES_DELETE_ITEMS_MODAL_EVENTS,
     });

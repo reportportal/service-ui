@@ -21,6 +21,7 @@ import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { START_TIME_FORMAT_ABSOLUTE } from 'controllers/user';
+import { langSelector } from 'controllers/lang';
 import {
   ACTION_TO_GROUP_MAP,
   ACTIONS_WITH_ISSUES,
@@ -166,6 +167,7 @@ const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
 @connect((state) => ({
   hasBts: externalSystemSelector(state).length > 0,
   projectId: projectIdSelector(state),
+  lang: langSelector(state),
 }))
 @injectIntl
 export class ProjectActivity extends Component {
@@ -174,6 +176,7 @@ export class ProjectActivity extends Component {
     projectId: PropTypes.string.isRequired,
     widget: PropTypes.object,
     hasBts: PropTypes.bool,
+    lang: PropTypes.string,
   };
   static defaultProps = {
     widget: {
@@ -182,6 +185,7 @@ export class ProjectActivity extends Component {
       },
     },
     hasBts: false,
+    lang: 'en',
   };
 
   getActivities = () => {
@@ -271,7 +275,7 @@ export class ProjectActivity extends Component {
         return activity.objectType === UPDATE_NOTIFICATIONS ? (
           <Notifications activity={activity} />
         ) : (
-          <DefaultProjectSettings activity={activity} />
+          <DefaultProjectSettings activity={activity} lang={this.props.lang} />
         );
       case CREATE_USER:
         return <CreateUser activity={activity} />;

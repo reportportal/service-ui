@@ -77,6 +77,22 @@ if (!Object.values) {
   objectValues.shim();
 }
 
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries#Polyfill
+if (!Object.entries) {
+  Object.entries = function(obj) {
+    const ownProps = Object.keys(obj);
+    const resArray = new Array(ownProps.length); // preallocate the Array
+
+    let i = ownProps.length;
+
+    while (i--) {
+      resArray[i] = [ownProps[i], obj[ownProps[i]]];
+    }
+
+    return resArray;
+  };
+}
+
 // Chrome Intl doesn't support 'be' locale, so we have to manually apply polyfill in this case
 export const polyfillLocales = () =>
   new Promise((resolve) => {

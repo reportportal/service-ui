@@ -31,16 +31,15 @@
 .thumbs-carousel {
   width: 95%;
   margin: 0 auto;
-  &.show-separator {
-    &:before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 30px;
-      right: 30px;
-      height: 1px;
-      background-color: $COLOR--gray-91;
-    }
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 30px;
+    right: 30px;
+    height: 1px;
+    background-color: $COLOR--gray-91;
   }
 
   @media (max-width: $SCREEN_XS_MAX) {

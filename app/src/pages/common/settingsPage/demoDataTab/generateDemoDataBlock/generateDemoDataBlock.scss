@@ -1,0 +1,90 @@
+/*!
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.mobile-hint {
+  display: none;
+  margin: 10px 0;
+  color: $COLOR--charcoal-grey;
+  font-size: 14px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: block;
+  }
+}
+
+.warning-block {
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+
+.warning-icon {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  margin-right: 5px;
+  vertical-align: bottom;
+  svg {
+    fill: $COLOR--failed;
+  }
+}
+
+.warning-text {
+  display: inline-block;
+  color: $COLOR--failed;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+}
+
+.warning-info {
+  margin-top: 5px;
+  color: $COLOR--charcoal-grey;
+  font-size: 12px;
+  line-height: 1.17;
+}
+
+.generate-button {
+  display: inline-block;
+  min-width: 155px;
+  width: auto;
+  height: 30px;
+  margin: 15px 0;
+  box-sizing: border-box;
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin: 0 auto;
+  }
+}
+
+.generate-button-title {
+  width: 129px;
+  height: 18px;
+  font-size: 13px;
+}
+
+.preloader-block {
+  display: flex;
+  align-items: center;
+  margin-bottom: 35px;
+}
+
+.preloader-icon {
+  margin-right: 20px;
+}
+
+.preloader-info {
+  color: $COLOR--charcoal-grey;
+  font-size: 13px;
+  line-height: 1.85;
+}

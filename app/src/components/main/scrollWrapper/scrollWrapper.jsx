@@ -49,6 +49,8 @@ export class ScrollWrapper extends Component {
     thumbMinSize: PropTypes.number,
     withBackToTop: PropTypes.bool,
     withFooter: PropTypes.bool,
+    resetRequired: PropTypes.bool,
+    onReset: PropTypes.func,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -73,21 +75,30 @@ export class ScrollWrapper extends Component {
     thumbMinSize: 30,
     withBackToTop: false,
     withFooter: false,
+    resetRequired: false,
+    onReset: () => {},
   };
   state = {
     showButton: false,
   };
 
-  componentDidMount = () => {
+  componentDidMount() {
     if (this.props.withBackToTop) {
       this.springSystem = new SpringSystem();
       this.spring = this.springSystem.createSpring();
       this.spring.addListener({ onSpringUpdate: this.handleSpringUpdate });
       this.stopScroll = false;
     }
-  };
+  }
 
-  componentWillUnmount = () => {
+  componentDidUpdate() {
+    if (this.props.resetRequired) {
+      this.scrollbars.scrollTop(0);
+      this.props.onReset();
+    }
+  }
+
+  componentWillUnmount() {
     if (this.props.withBackToTop) {
       this.springSystem.deregisterSpring(this.spring);
       this.springSystem.removeAllListeners();
@@ -95,13 +106,9 @@ export class ScrollWrapper extends Component {
       this.spring.destroy();
       this.spring = undefined;
     }
-  };
+  }
 
   getScrollTop = () => this.scrollbars.getScrollTop();
-
-  getScrollHeight = () => this.scrollbars.getScrollHeight();
-
-  getHeight = () => this.scrollbars.getHeight();
 
   setupRef = (scrollbars) => {
     this.scrollbars = scrollbars;

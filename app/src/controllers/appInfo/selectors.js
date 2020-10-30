@@ -31,6 +31,7 @@ export const apiBuildVersionSelector = (state) => {
 };
 
 const environmentSelector = (state) => apiInfoSelector(state).environment || {};
+const apiJobsSelector = (state) => apiInfoSelector(state).jobs || {};
 const extensionsSelector = (state) => apiInfoSelector(state).extensions || {};
 const extensionsConfigSelector = (state) => extensionsSelector(state).result || {};
 export const instanceIdSelector = (state) =>
@@ -41,3 +42,6 @@ export const analyzerExtensionsSelector = (state) => extensionsSelector(state).a
 export const authExtensionsSelector = (state) => uatInfoSelector(state).authExtensions || {};
 export const isOldHistorySelector = (state) =>
   environmentSelector(state)[OLD_HISTORY_KEY] === 'true';
+export const isDemoInstanceSelector = (state) => !!apiJobsSelector(state).flushingDataTrigger;
+export const flushDataInSelector = (state) =>
+  (apiJobsSelector(state).flushingDataTrigger || {}).triggersIn || null;

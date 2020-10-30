@@ -17,9 +17,13 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
+const SriPlugin = require('webpack-subresource-integrity');
 
 module.exports = {
   mode: 'production',
+  output: {
+    crossOriginLoading: 'anonymous',
+  },
   module: {
     rules: [
       {
@@ -73,6 +77,9 @@ module.exports = {
       algorithm: 'gzip',
       threshold: 10240,
       minRatio: 0.8,
+    }),
+    new SriPlugin({
+      hashFuncNames: ['sha256', 'sha384'],
     }),
   ],
 };

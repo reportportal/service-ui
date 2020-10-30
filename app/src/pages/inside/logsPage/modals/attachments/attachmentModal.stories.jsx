@@ -15,7 +15,7 @@
  */
 
 import { storiesOf } from '@storybook/react';
-import { AttachmentCodeModal, AttachmentHarFileModal, AttachmentImageModal } from './index';
+import { AttachmentCodeModal, AttachmentHarFileModal } from './index';
 import README from './README.md';
 import harData from './example.har';
 
@@ -37,14 +37,6 @@ storiesOf('Pages/Inside/LogsPage/LogItemInfo/LogItemInfoTabs/Attachments/modal',
     <AttachmentHarFileModal
       data={{
         harData,
-      }}
-    />
-  ))
-  .add('Image content', () => (
-    <AttachmentImageModal
-      data={{
-        image:
-          'https://vignette.wikia.nocookie.net/despicableme/images/c/ca/Bob-from-the-minions-movie.jpg/revision/latest?cb=20151224154354',
       }}
     />
   ));

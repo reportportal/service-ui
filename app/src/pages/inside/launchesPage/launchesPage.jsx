@@ -35,6 +35,7 @@ import { levelSelector } from 'controllers/testItem';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { MODAL_TYPE_IMPORT_LAUNCH } from 'pages/common/modals/importModal/constants';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
+import { isDemoInstanceSelector } from 'controllers/appInfo';
 import { projectConfigSelector } from 'controllers/project';
 import { withPagination, DEFAULT_PAGINATION, SIZE_KEY, PAGE_KEY } from 'controllers/pagination';
 import { showModalAction } from 'controllers/modal';
@@ -64,15 +65,16 @@ import {
   updateLaunchesLocallyAction,
 } from 'controllers/launch';
 import { prevTestItemSelector } from 'controllers/pages';
+import { LEVEL_LAUNCH } from 'common/constants/launchLevels';
+import { ALL } from 'common/constants/reservedFilterIds';
+import { FilterEntitiesContainer } from 'components/filterEntities/containers';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { LaunchFiltersContainer } from 'pages/inside/common/launchFiltersContainer';
-import { LEVEL_LAUNCH } from 'common/constants/launchLevels';
-import { FilterEntitiesContainer } from 'components/filterEntities/containers';
 import { LaunchFiltersToolbar } from 'pages/inside/common/launchFiltersToolbar';
-import { ALL } from 'common/constants/reservedFilterIds';
 import { RefineFiltersPanel } from 'pages/inside/common/refineFiltersPanel';
-import { LaunchToolbar } from './LaunchToolbar';
 import { DebugFiltersContainer } from './debugFiltersContainer';
+import { LaunchToolbar } from './LaunchToolbar';
+import { NoItemsDemo } from './noItemsDemo';
 
 const messages = defineMessages({
   deleteModalHeader: {
@@ -172,6 +174,7 @@ const messages = defineMessages({
     level: levelSelector(state),
     projectSetting: projectConfigSelector(state),
     highlightItemId: prevTestItemSelector(state),
+    isDemoInstance: isDemoInstanceSelector(state),
   }),
   {
     showModalAction,
@@ -241,6 +244,7 @@ export class LaunchesPage extends Component {
     updateLaunchLocallyAction: PropTypes.func.isRequired,
     updateLaunchesLocallyAction: PropTypes.func.isRequired,
     highlightItemId: PropTypes.number,
+    isDemoInstance: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -270,6 +274,7 @@ export class LaunchesPage extends Component {
     fetchLaunchesAction: () => {},
     deleteItemsAction: () => {},
     highlightItemId: null,
+    isDemoInstance: false,
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -359,7 +364,7 @@ export class LaunchesPage extends Component {
       },
     });
   };
-  onAddDashBoard = (dashboard) => {
+  onAddDashboard = (dashboard) => {
     const { activeProject } = this.props;
     if (dashboard.id) {
       return Promise.resolve(dashboard);
@@ -374,7 +379,7 @@ export class LaunchesPage extends Component {
       activeProject,
       intl: { formatMessage },
     } = this.props;
-    this.onAddDashBoard(dashboard).then(({ id }) => {
+    this.onAddDashboard(dashboard).then(({ id }) => {
       fetch(URLS.addDashboardWidget(activeProject, id), {
         method: 'put',
         data: { addWidget: widget },
@@ -397,7 +402,7 @@ export class LaunchesPage extends Component {
     const {
       tracking: { trackEvent },
     } = this.props;
-    trackEvent(LAUNCHES_PAGE.ADD_NEW_WIDGET_BTN);
+    trackEvent(LAUNCHES_PAGE_EVENTS.ADD_NEW_WIDGET_BTN);
     this.props.showModalAction({
       id: 'widgetWizardModal',
       data: {
@@ -747,6 +752,7 @@ export class LaunchesPage extends Component {
       launches,
       loading,
       debugMode,
+      isDemoInstance,
     } = this.props;
 
     const rowHighlightingConfig = {
@@ -827,6 +833,9 @@ export class LaunchesPage extends Component {
                 onAnalysis={this.onAnalysis}
                 onPatternAnalysis={this.onPatternAnalysis}
                 rowHighlightingConfig={rowHighlightingConfig}
+                noItemsBlock={
+                  isDemoInstance ? <NoItemsDemo onGenerate={this.refreshLaunch} /> : undefined
+                }
               />
               {!!pageCount && !loading && (
                 <PaginationToolbar

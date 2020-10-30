@@ -33,6 +33,9 @@
   &.rounded-corners {
     border-radius: 3px;
   }
+  &.font-size-small {
+    font-size: 13px;
+  }
   &.disabled {
     opacity: 0.4;
     cursor: default;

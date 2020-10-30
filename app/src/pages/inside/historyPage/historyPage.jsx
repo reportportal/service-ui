@@ -107,7 +107,7 @@ export class HistoryPage extends Component {
     this.props.onUnselectAll();
   }
 
-  onChangeHistoryBase = (historyBase) => {
+  changeHistoryBase = (historyBase) => {
     this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.SELECT_HISTORY_BASE);
 
     if (historyBase !== this.state.historyBase) {
@@ -118,17 +118,17 @@ export class HistoryPage extends Component {
     }
   };
 
-  onSelectItem = (item) => {
+  selectItem = (item) => {
     this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.SELECT_HISTORY_ITEM);
     this.props.toggleItemSelection(item);
   };
 
-  onUnselectItem = (item) => {
+  unselectItem = (item) => {
     this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.CLICK_CLOSE_ICON_FROM_SELECTION);
     this.props.toggleItemSelection(item);
   };
 
-  onUnselectAllItems = () => {
+  unselectAllItems = () => {
     this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.CLICK_CLOSE_ICON_ALL_SELECTION);
     this.props.onUnselectAll();
   };
@@ -180,8 +180,8 @@ export class HistoryPage extends Component {
           <HistoryToolbar
             onRefresh={this.refreshPage}
             infoLine={infoLine}
-            onUnselect={this.onUnselectItem}
-            onUnselectAll={this.onUnselectAllItems}
+            onUnselect={this.unselectItem}
+            onUnselectAll={this.unselectAllItems}
             selectedItems={selectedItems}
             withGroupOperations={isStepLevel}
             {...rest}
@@ -189,8 +189,8 @@ export class HistoryPage extends Component {
           <HistoryView
             refreshHistory={this.refreshPage}
             historyBase={this.state.historyBase}
-            onChangeHistoryBase={this.onChangeHistoryBase}
-            onSelectItem={this.onSelectItem}
+            onChangeHistoryBase={this.changeHistoryBase}
+            onSelectItem={this.selectItem}
             selectedItems={selectedItems}
             withGroupOperations={isStepLevel}
             isTestItemsList={isTestItemsList}

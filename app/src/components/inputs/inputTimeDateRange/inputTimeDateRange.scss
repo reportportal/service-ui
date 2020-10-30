@@ -182,6 +182,14 @@
       }
     }
 
+    .hidden-popper {
+      .react-datepicker {
+        .react-datepicker__triangle {
+          display: none;
+        }
+      }
+    }
+
     .from-input,
     .to-input {
       height: 25px;

@@ -25,5 +25,7 @@ export {
   analyticsEnabledSelector,
   analyzerExtensionsSelector,
   isOldHistorySelector,
+  flushDataInSelector,
+  isDemoInstanceSelector,
 } from './selectors';
 export { ANALYTICS_ALL_KEY } from './constants';

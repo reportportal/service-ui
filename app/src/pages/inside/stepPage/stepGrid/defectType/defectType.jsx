@@ -83,7 +83,7 @@ export const DefectType = track()(
         <IssueList issues={issue.externalSystemIssues} onRemove={onRemove} />
       </div>
       <div className={cx('comment')}>
-        <ScrollWrapper autoHeight autoHeightMax={35}>
+        <ScrollWrapper autoHeight autoHeightMax={90}>
           <MarkdownViewer value={issue.comment} />
         </ScrollWrapper>
       </div>

@@ -102,26 +102,49 @@ export class FilterEntitiesContainer extends Component {
     }
   };
 
-  handleAdd = (entities) => {
+  mergeEntityValue = (oldEntity, newEntity) => {
+    if (oldEntity && oldEntity.value) {
+      const oldEntityValue = oldEntity.value;
+      const isNewValueValid =
+        newEntity.value && oldEntityValue.split(',').indexOf(newEntity.value) === -1;
+
+      return {
+        ...oldEntity,
+        value: isNewValueValid ? `${oldEntityValue},${newEntity.value}` : oldEntityValue,
+      };
+    }
+
+    return newEntity;
+  };
+
+  handleAdd = (entities, shouldValuesBeMerged = false) => {
     this.setState(
       (prevState) => {
         let entitiesObj;
-        let entitiesId;
-
+        let entityIds;
         if (Array.isArray(entities)) {
           entitiesObj = entities.reduce(
-            (acc, entity) => ({ ...acc, [entity.id]: entity.value }),
+            (acc, entity) => ({
+              ...acc,
+              [entity.id]: shouldValuesBeMerged
+                ? this.mergeEntityValue(prevState.values[entity.id], entity.value)
+                : entity.value,
+            }),
             {},
           );
-          entitiesId = entities.map((entity) => entity.id);
+          entityIds = entities.map((entity) => entity.id);
         } else {
-          entitiesObj = { [entities.id]: entities.value };
-          entitiesId = [entities.id];
+          entitiesObj = {
+            [entities.id]: shouldValuesBeMerged
+              ? this.mergeEntityValue(prevState.values[entities.id], entities.value)
+              : entities.value,
+          };
+          entityIds = [entities.id];
         }
 
         return {
           values: { ...prevState.values, ...entitiesObj },
-          visibleFilters: [...prevState.visibleFilters, ...entitiesId],
+          visibleFilters: [...prevState.visibleFilters, ...entityIds],
         };
       },
       () => this.props.onChange(this.collectEntities(this.state.values)),
