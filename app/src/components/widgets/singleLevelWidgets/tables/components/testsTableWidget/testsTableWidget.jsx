@@ -31,6 +31,7 @@ export const TestsTableWidget = ({
   columns,
   getMaxtrixTooltip,
   hideInfoBlock,
+  onItemClick,
 }) => {
   const launchName = launch.number ? `${launch.name} #${launch.number}` : launch.name;
 
@@ -41,8 +42,8 @@ export const TestsTableWidget = ({
         <TestsTable
           columns={columns}
           tests={tests}
-          launchId={launch.id}
           getMaxtrixTooltip={getMaxtrixTooltip}
+          onItemClick={onItemClick}
         />
       </div>
     </div>
@@ -55,6 +56,7 @@ TestsTableWidget.propTypes = {
   issueType: element,
   columns: PTColumns.isRequired,
   getMaxtrixTooltip: func,
+  onItemClick: func,
   hideInfoBlock: bool,
 };
 
@@ -62,4 +64,5 @@ TestsTableWidget.defaultProps = {
   issueType: null,
   hideInfoBlock: false,
   getMaxtrixTooltip: null,
+  onItemClick: null,
 };

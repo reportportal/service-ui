@@ -35,17 +35,22 @@ const prepareWidgetData = ({ result }) =>
     duration: el.duration,
   }));
 
-export const MostTimeConsumingTestCasesTable = ({ widget: { content } }) => (
+export const MostTimeConsumingTestCasesTable = ({ widget: { content }, onItemClick }) => (
   <div className={cx('most-time-consuming-table')}>
     <TestsTableWidget
       tests={prepareWidgetData(content)}
       hideInfoBlock
       launch={content.latestLaunch}
       columns={cfg.columns}
+      onItemClick={onItemClick}
     />
   </div>
 );
 
 MostTimeConsumingTestCasesTable.propTypes = {
   widget: PropTypes.object.isRequired,
+  onItemClick: PropTypes.func,
+};
+MostTimeConsumingTestCasesTable.defaultProps = {
+  onItemClick: () => {},
 };

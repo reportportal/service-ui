@@ -362,10 +362,10 @@ export const defectLinkSelector = createSelector(
   },
 );
 
-export const testCaseNameLinkSelector = (state, ownProps) => {
-  const activeProject = activeProjectSelector(state);
+export const testCaseNameLinkSelector = (state) => (ownProps) => {
+  const projectId = activeProjectSelector(state);
   const payload = {
-    projectId: activeProject,
+    projectId,
     filterId: ALL,
   };
 
