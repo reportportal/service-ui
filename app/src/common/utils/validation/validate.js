@@ -55,7 +55,10 @@ export const btsIntegrationName = composeValidators([isNotEmpty, maxLength(55)])
 export const btsProject = composeValidators([isNotEmpty, maxLength(55)]);
 export const patternNameLength = composeValidators([isNotEmpty, maxLength(55)]);
 export const createPatternNameUniqueValidator = (patternId, patterns) => (newPatternName) =>
-  !patterns.some(({ id, name: patternName }) => patternName === newPatternName && id !== patternId);
+  !patterns.some(
+    ({ id, name: patternName }) =>
+      patternName.toLowerCase() === newPatternName.toLowerCase() && id !== patternId,
+  );
 export const analyzerMinShouldMatch = composeValidators([
   isNotEmpty,
   regex(/^([5-9][0-9])$|^100$/i),
