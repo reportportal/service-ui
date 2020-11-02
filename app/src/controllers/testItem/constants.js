@@ -37,6 +37,7 @@ export const LOG_VIEW = 'LOG_VIEW';
 export const DEFAULT_LAUNCHES_LIMIT = 600;
 export const DELETE_TEST_ITEMS = 'DeleteTestItems';
 export const COMPOSITE_ATTRIBUTES_FILTER = 'filter.has.compositeAttribute';
+export const CURRENT_ITEM_LEVEL = 'currentItemLevel';
 
 export const FILTERED_ITEM_STATISTICS_INITIAL_STATE = {
   executions: {},
