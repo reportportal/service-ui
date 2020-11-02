@@ -1168,6 +1168,7 @@
   "MoveToDebugModal.moveToDebugSuccessMessage": "Запуск паспяхова перамешчаны ў Адладку",
   "MultipleAuthBlock.chooseAuth": "Калі ласка, выберыце неабходнага пастаўшчыка аўтарызацыі",
   "MultipleAuthBlock.externalLogin": "Знешняя аўтарызацыя",
+  "MultipleAuthBlock.loginWith": "вы можаце ўвайсці, выкарыстоўваючы тып аўтарызацыі '<b>{providerName}</b>'",
   "MultipleAuthBlock.wrongAuthType": "Немагчыма знайсці тып аўтарызацыі ''{authType}''",
   "NameColumn.adminLabel": "адмiн",
   "NameColumn.changeAccountRoleNotification": "Роля карыстальніка для ''{name}'' зменена",

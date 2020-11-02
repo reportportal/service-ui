@@ -1169,6 +1169,7 @@
   "MoveToDebugModal.moveToDebugSuccessMessage": "Запуск успішно перенесено в Налагодження",
   "MultipleAuthBlock.chooseAuth": "Будь ласка, виберіть потрібного постачальника авторизації",
   "MultipleAuthBlock.externalLogin": "Зовнішня авторизація",
+  "MultipleAuthBlock.loginWith": "ви можете увійти, використовуючи тип авторизації '<b>{providerName}</b>'",
   "MultipleAuthBlock.wrongAuthType": "Невозможно найти тип авторизации ''{authType}''",
   "NameColumn.adminLabel": "адмін",
   "NameColumn.changeAccountRoleNotification": "Роль пользователя для ''{name}'' изменена",
