@@ -69,8 +69,7 @@ export class MostTimeConsumingTestCases extends Component {
       },
       navigate,
     } = this.props;
-    const targetElement = result.find((el) => el.id === id) || {};
-    const { path } = targetElement;
+    const { path } = result.find((el) => el.id === id) || {};
     let itemLink;
     let pageType;
 
