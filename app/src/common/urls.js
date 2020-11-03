@@ -175,6 +175,8 @@ export const URLS = {
     `${urlBase}${activeProject}/item/attribute/values?launch=${launch}${
       key ? `&filter.eq.attributeKey=${key}` : ''
     }&filter.cnt.attributeValue=${searchTerm}`,
+  testItemBTSIssuesSearch: (activeProject) => (searchTerm = '') =>
+    `${urlBase}${activeProject}/item/ticket/ids/all?term=${searchTerm}`,
 
   logItem: (activeProject, itemId, level) =>
     `${urlBase}${activeProject}/log${getQueryParams({
