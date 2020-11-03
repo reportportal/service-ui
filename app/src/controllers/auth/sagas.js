@@ -31,7 +31,7 @@ import {
 import { ALL } from 'common/constants/reservedFilterIds';
 import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { isDemoInstanceSelector } from 'controllers/appInfo';
+import { fetchAppInfoAction, isDemoInstanceSelector } from 'controllers/appInfo';
 import {
   OAUTH_SUCCESS,
   pagePropertiesSelector,
@@ -73,6 +73,7 @@ import { tokenSelector } from './selectors';
 
 function* handleLogout() {
   yield put(resetTokenAction());
+  yield put(fetchAppInfoAction());
   yield put(
     redirect({
       type: LOGIN_PAGE,
