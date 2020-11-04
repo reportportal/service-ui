@@ -48,6 +48,7 @@ import {
   showDefaultErrorNotification,
   NOTIFICATION_TYPES,
 } from 'controllers/notification';
+import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
 import {
   setLevelAction,
   setPageLoadingAction,
@@ -61,6 +62,7 @@ import {
   RESTORE_PATH,
   FETCH_TEST_ITEMS_LOG_PAGE,
   DELETE_TEST_ITEMS,
+  CURRENT_ITEM_LEVEL,
 } from './constants';
 import { LEVELS } from './levels';
 import {
@@ -193,13 +195,20 @@ function* fetchTestItems({ payload = {} }) {
     level = LEVEL_NOT_FOUND;
   } else {
     const previousLevel = yield select(levelSelector);
-    level = calculateLevel(dataPayload.payload.content, previousLevel, isTestItemsList);
+    const currentItemLevel = getStorageItem(CURRENT_ITEM_LEVEL);
+    level = calculateLevel(
+      dataPayload.payload.content,
+      previousLevel,
+      currentItemLevel,
+      isTestItemsList,
+    );
   }
 
   if (LEVELS[level]) {
     yield put(fetchSuccessAction(LEVELS[level].namespace, dataPayload.payload));
   }
   yield put(setLevelAction(level));
+  yield call(setStorageItem, CURRENT_ITEM_LEVEL, level);
 
   const isFilterParamsExists = yield select(isFilterParamsExistsSelector);
   if (!isTestItemsList && isFilterParamsExists) {
