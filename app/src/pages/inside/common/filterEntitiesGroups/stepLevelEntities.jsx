@@ -633,6 +633,7 @@ export class StepLevelEntities extends Component {
         active: visibleFilters.includes(ENTITY_BTS_ISSUES),
         removable: true,
         customProps: {
+          getURI: URLS.testItemBTSIssuesSearch(projectId),
           placeholder: intl.formatMessage(messages.BTS_ISSUE_PLACEHOLDER),
         },
       },
