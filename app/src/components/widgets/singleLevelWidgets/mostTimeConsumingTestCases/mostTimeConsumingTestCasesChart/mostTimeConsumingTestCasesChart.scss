@@ -17,59 +17,25 @@
 .most-time-consuming-chart {
   :global {
     svg {
-      .c3-xgrid-focus {
-        display: block;
-      }
-
-      .c3-grid line {
-        stroke: $COLOR--gray-80;
-      }
-    }
-
-    .c3-chart-texts {
-      .c3-texts {
-        .c3-text {
-          fill: $COLOR--charcoal-grey !important;
-          font-family: $FONT-REGULAR;
-          font-size: 10px;
+      .c3-axis {
+        font-family: $FONT-REGULAR, sans-serif;
+        fill: $COLOR--charcoal-grey;
+        .c3-axis-y-label {
+          font-size: 12px;
+        }
+        &.c3-axis-y path.domain {
+          display: inline;
+          stroke: $COLOR--gray-80;
         }
       }
     }
-  }
-}
 
-.launch-start-time {
-  width: 100%;
-
-  &.timeline-mode {
-    font-family: $FONT-SEMIBOLD;
-  }
-}
-
-.item-wrapper {
-  width: 100%;
-  overflow: hidden;
-  white-space: nowrap;
-  position: relative;
-
-  .item-cases {
-    display: inline-block;
-    position: relative;
-    width: 100%;
-    overflow: hidden;
-
-    .item-cases-growth {
-      .increase {
-        color: $COLOR--dark-pastel-green;
-      }
-
-      .decrease {
-        color: $COLOR--orange-red;
-      }
+    .c3-grid line {
+      stroke: $COLOR--gray-80;
     }
-
-    span {
-      font-family: $FONT-SEMIBOLD;
+    .c3-xgrid,
+    .c3-ygrid {
+      stroke-dasharray: none;
     }
   }
 }

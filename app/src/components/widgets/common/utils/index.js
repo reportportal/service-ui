@@ -28,4 +28,5 @@ export {
   getChartDefaultProps,
   normalizeChartData,
   getDefaultTestItemLinkParams,
+  getTimeType,
 } from './utils';

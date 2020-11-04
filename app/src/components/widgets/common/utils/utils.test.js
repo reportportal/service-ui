@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 
-import { rangeMaxValue, transformCategoryLabelByDefault, getLaunchAxisTicks } from './utils';
+import {
+  rangeMaxValue,
+  transformCategoryLabelByDefault,
+  getLaunchAxisTicks,
+  getTimeType,
+} from './utils';
+import { TIME_TYPES } from '../constants';
 
 describe('chartUtils', () => {
   describe('rangeMaxValue', () => {
@@ -46,6 +52,23 @@ describe('chartUtils', () => {
       expect(getLaunchAxisTicks(7)).toEqual([0, 1, 2, 3, 4, 5, 6]);
       expect(getLaunchAxisTicks(22)).toEqual([0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20]);
       expect(getLaunchAxisTicks(37)).toEqual([0, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36]);
+    });
+  });
+
+  describe('getTimeType', () => {
+    test('works for a value of 0', () => {
+      const expected = { value: 3600000, type: TIME_TYPES.HOURS };
+      expect(getTimeType(0)).toEqual(expected);
+    });
+
+    test('works for values below 60.000', () => {
+      const expected = { value: 1000, type: TIME_TYPES.SECONDS };
+      expect(getTimeType(3600)).toEqual(expected);
+    });
+
+    test('works for values below 14.400.000', () => {
+      const expected = { value: 60000, type: TIME_TYPES.MINUTES };
+      expect(getTimeType(720000)).toEqual(expected);
     });
   });
 });
