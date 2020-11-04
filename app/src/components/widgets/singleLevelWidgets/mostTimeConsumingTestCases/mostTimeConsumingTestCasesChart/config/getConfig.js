@@ -50,14 +50,14 @@ export const getConfig = ({ content, positionCallback, size: { height }, onChart
       onclick: dataClickHandler,
     },
     grid: {
-      y: {
+      x: {
         show: true,
       },
     },
     axis: {
       rotated: true,
       x: {
-        show: true,
+        show: false,
         type: 'category',
         tick: {
           culling: {
