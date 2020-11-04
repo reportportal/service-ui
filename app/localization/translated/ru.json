@@ -1168,6 +1168,7 @@
   "MoveToDebugModal.moveToDebugSuccessMessage": "Запуск успешно перемещён в Отладку",
   "MultipleAuthBlock.chooseAuth": "Пожалуйста, выберите нужного поставщика авторизации",
   "MultipleAuthBlock.externalLogin": "Внешняя авторизация",
+  "MultipleAuthBlock.loginWith": "вы можете войти, используя тип авторизации '<b>{providerName}</b>'",
   "MultipleAuthBlock.wrongAuthType": "Невозможно найти тип авторизации ''{authType}''",
   "NameColumn.adminLabel": "админ",
   "NameColumn.changeAccountRoleNotification": "Роль пользователя для ''{name}'' изменена",
