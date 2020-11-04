@@ -111,12 +111,14 @@ export class MultipleAuthBlock extends Component {
     } = this.props;
 
     if (selectedAuthPath) {
-      return isSingleAuth ? null : (
-        <InputDropdown
-          options={authOptions}
-          value={selectedAuthPath}
-          onChange={this.authPathChangeHandler}
-        />
+      return (
+        !isSingleAuth && (
+          <InputDropdown
+            options={authOptions}
+            value={selectedAuthPath}
+            onChange={this.authPathChangeHandler}
+          />
+        )
       );
     }
 
