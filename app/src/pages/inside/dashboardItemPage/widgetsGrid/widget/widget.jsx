@@ -295,7 +295,7 @@ export class SimpleWidget extends Component {
       id: 'editWidgetModal',
       data: {
         widget: this.state.widget,
-        onConfirm: () => this.fetchWidget({ refresh: true }),
+        onConfirm: (isForceUpdated) => this.fetchWidget(isForceUpdated && { refresh: true }),
         eventsInfo: {
           closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_EDIT_WIDGET_MODAL,
           cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_EDIT_WIDGET_MODAL,
