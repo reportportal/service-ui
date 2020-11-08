@@ -133,7 +133,7 @@ export class EditWidgetModal extends Component {
     } = this.props;
 
     const data = prepareWidgetDataForSubmit(this.preprocessOutputData(widgetSettings));
-    const isForceUpdated =
+    const isForceUpdateNeeded =
       !isEqual(widget.contentParameters, data.contentParameters) ||
       !isEqual(
         widget.appliedFilters.map((filter) => filter.id.toString()),
@@ -148,7 +148,7 @@ export class EditWidgetModal extends Component {
       .then(() => {
         this.props.hideScreenLockAction();
         closeModal();
-        onConfirm(isForceUpdated);
+        onConfirm(isForceUpdateNeeded);
         this.props.showNotification({
           message: formatMessage(messages.editWidgetSuccess),
           type: NOTIFICATION_TYPES.SUCCESS,
