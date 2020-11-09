@@ -17,7 +17,7 @@
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import * as COLORS from 'common/constants/colors';
 import { createTooltipRenderer } from 'components/widgets/common/tooltip';
-import { getTimeType } from 'components/widgets/common/utils';
+import { getTimeType, convertSecondsToMilliseconds } from 'components/widgets/common/utils';
 import { DURATION } from 'components/widgets/common/constants';
 import { messages } from 'components/widgets/common/messages';
 import { MostTimeConsumingTestCasesTooltip } from './mostTimeConsumingTestCasesTooltip';
@@ -27,7 +27,7 @@ export const getConfig = ({ content, formatMessage, positionCallback, size, onCh
   const chartData = [DURATION];
   let maxDuration = 0;
   const itemsData = content.map((item) => {
-    const duration = item.duration * 1000;
+    const duration = convertSecondsToMilliseconds(item.duration);
     maxDuration = duration > maxDuration ? duration : maxDuration;
     chartData.push(duration);
 

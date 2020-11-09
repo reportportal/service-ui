@@ -29,4 +29,5 @@ export {
   normalizeChartData,
   getDefaultTestItemLinkParams,
   getTimeType,
+  convertSecondsToMilliseconds,
 } from './utils';

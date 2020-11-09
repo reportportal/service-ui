@@ -17,6 +17,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { convertSecondsToMilliseconds } from 'components/widgets/common/utils';
 import { TestsTableWidget } from '../../tables/components/testsTableWidget';
 import * as cfg from './tableConfig';
 import styles from './mostTimeConsumingTestCasesTable.scss';
@@ -32,7 +33,7 @@ const prepareWidgetData = ({ result }) =>
     uniqueId: el.uniqueId,
     startTime: el.startTime,
     status: [el.status.toLowerCase()],
-    duration: el.duration * 1000,
+    duration: convertSecondsToMilliseconds(el.duration),
   }));
 
 export const MostTimeConsumingTestCasesTable = ({ widget: { content }, onItemClick }) => (

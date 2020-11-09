@@ -155,3 +155,5 @@ export const getTimeType = (max) => {
   }
   return { value: 3600000, type: TIME_TYPES.HOURS };
 };
+
+export const convertSecondsToMilliseconds = (seconds) => seconds * 1000;
