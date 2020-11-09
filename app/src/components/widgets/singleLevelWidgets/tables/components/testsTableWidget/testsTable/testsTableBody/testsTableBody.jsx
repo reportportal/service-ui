@@ -17,6 +17,7 @@
 import * as React from 'react';
 import { func } from 'prop-types';
 import classNames from 'classnames/bind';
+import { formatDuration } from 'common/utils';
 import { PTTests, PTColumns } from '../../pTypes';
 import { TestsTableRow } from '../testsTableRow';
 import { matrixFactory } from '../matrixFactory';
@@ -57,7 +58,7 @@ export class TestsTableBody extends React.Component {
       matrixData: count && test[count.matrixKey],
       matrixComponent: this.matrixComponent,
       status: status && test[status.statusKey],
-      duration: duration && test[duration.durationKey],
+      duration: duration && formatDuration(test[duration.durationKey]),
       getMaxtrixTooltip,
       onItemClick,
     };
