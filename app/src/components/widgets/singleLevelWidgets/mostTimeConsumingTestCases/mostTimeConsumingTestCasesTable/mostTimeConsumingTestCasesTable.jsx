@@ -32,7 +32,7 @@ const prepareWidgetData = ({ result }) =>
     uniqueId: el.uniqueId,
     startTime: el.startTime,
     status: [el.status.toLowerCase()],
-    duration: el.duration,
+    duration: el.duration * 1000,
   }));
 
 export const MostTimeConsumingTestCasesTable = ({ widget: { content }, onItemClick }) => (

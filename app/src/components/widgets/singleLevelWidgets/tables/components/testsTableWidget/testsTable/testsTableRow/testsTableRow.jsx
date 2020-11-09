@@ -89,7 +89,7 @@ export class TestsTableRow extends Component {
         )}
         {percentage && <div className={cx('col', 'col-percents')}>{percentage}%</div>}
         {status && <div className={cx('col', 'col-status')}>{status}</div>}
-        {duration && <div className={cx('col', 'col-duration')}>{duration} s</div>}
+        {duration && <div className={cx('col', 'col-duration')}>{duration}</div>}
         <div className={cx('col', 'col-date')}>
           <AbsRelTime startTime={Array.isArray(time) ? time[time.length - 1] : time} />
         </div>
