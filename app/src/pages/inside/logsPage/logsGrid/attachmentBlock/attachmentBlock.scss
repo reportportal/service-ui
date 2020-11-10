@@ -14,8 +14,31 @@
  * limitations under the License.
  */
 
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-top: 3px;
+  visibility: hidden;
+}
+
+.action-item {
+  display: inline-block;
+  width: 15px;
+  cursor: pointer;
+}
+
 .attachment-block {
   float: right;
+
+  &:hover {
+    .actions {
+      visibility: visible;
+    }
+  }
+}
+
+.attachment-wrapper {
 }
 
 .image {
