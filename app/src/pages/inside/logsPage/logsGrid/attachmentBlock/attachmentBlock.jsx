@@ -21,6 +21,8 @@ import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { connect } from 'react-redux';
 import AttachIcon from 'common/img/attachment-inline.svg';
+import DownloadIcon from 'common/img/download-inline.svg';
+import OpenInIcon from 'common/img/open-in-inline.svg';
 import { Image } from 'components/main/image';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { openAttachmentAction, getFileIconSource } from 'controllers/log/attachments';
@@ -63,15 +65,21 @@ export class AttachmentBlock extends Component {
     } = this.props;
 
     return (
-      <div className={cx('attachment-block')} onClick={this.onClickAttachment}>
+      <div className={cx('attachment-block')}>
         {consoleView ? (
           <div className={cx('image', 'console-view')}>{Parser(AttachIcon)}</div>
         ) : (
-          <Image
-            className={cx('image')}
-            src={getFileIconSource(value, activeProject, true)}
-            alt={value.contentType}
-          />
+          <div className={cx('attachment-wrapper')}>
+            <Image
+              className={cx('image')}
+              src={getFileIconSource(value, activeProject, true)}
+              alt={value.contentType}
+            />
+            <div className={cx('actions')}>
+              <span className={cx('action-item')}>{Parser(OpenInIcon)}</span>
+              <span className={cx('action-item')}>{Parser(DownloadIcon)}</span>
+            </div>
+          </div>
         )}
       </div>
     );

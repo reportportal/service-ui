@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="15px" viewBox="0 0 16 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
+        <g id="Attachments-From-List" transform="translate(-1200.000000, -367.000000)">
+            <g id="Group-14-Copy-3" transform="translate(1201.000000, 367.000000)">
+                <polyline id="Path" stroke="#1A9CB0" points="12 6.5 12 14.5 0 14.5 1.13711124e-13 2.5 7 2.5"></polyline>
+                <line x1="7" y1="7.5" x2="14" y2="0.5" id="Path-3" stroke="#059CB1"></line>
+                <line x1="14" y1="0.5" x2="14" y2="4.5" id="Path-4" stroke="#059CB1"></line>
+                <line x1="14" y1="0.5" x2="10" y2="0.5" id="Path-5" stroke="#059CB1"></line>
+            </g>
+        </g>
+    </g>
+</svg>
