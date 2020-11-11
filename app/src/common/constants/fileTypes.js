@@ -23,6 +23,7 @@ export const CSV = 'csv';
 export const PHP = 'php';
 export const HAR = 'har';
 export const TXT = 'txt';
+export const PDF = 'pdf';
 export const ZIP = 'zip';
 export const RAR = 'rar';
 export const TGZ = 'tgz';

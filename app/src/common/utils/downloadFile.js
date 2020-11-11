@@ -16,11 +16,12 @@
 
 import { fetch } from 'common/utils/fetch';
 
-export const downloadFile = (url) => {
+export const downloadFile = (url, fileNameFallback) => {
   fetch(url, { responseType: 'blob' }, true).then((response) => {
     const data = response.data;
     const attachmentHeader = response.headers['content-disposition'];
-    const fileName = /filename=(.*?)(?:\s|$)/.exec(attachmentHeader)[1];
+    const extractedFileName = /filename=(.*?)(?:\s|$)/.exec(attachmentHeader);
+    const fileName = extractedFileName ? extractedFileName[1] : fileNameFallback;
     const objectURL = URL.createObjectURL(data);
     if ('msSaveOrOpenBlob' in navigator) {
       navigator.msSaveOrOpenBlob(data, fileName);
