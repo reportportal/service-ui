@@ -130,11 +130,14 @@ class AttachmentsSlider extends Component {
           {attachments.map((attachment, index) => (
             <Slide index={index} key={attachment.id}>
               <div
-                className={cx('preview-container', { 'main-area': !isThumbsView })}
+                className={cx('preview-container', {
+                  'main-area': !isThumbsView,
+                  active: isThumbsView && activeItemId === index,
+                })}
                 onClick={() => onClickItem(index)}
               >
                 <Image
-                  className={cx('preview', { active: isThumbsView && activeItemId === index })}
+                  className={cx('preview')}
                   src={
                     isThumbsView && attachment.isImage ? attachment.thumbnailSrc : attachment.src
                   }
