@@ -119,10 +119,20 @@ export const LOG_PAGE_EVENTS = {
     action: 'Click on icon Sorting on Time in Log Message',
     label: 'Sort logs',
   },
-  ATTACHMENT_IN_LOG_MSG: {
+  ATTACHMENT_IN_LOG_MSG_OPEN_PREVIEW: {
     category: LOG_PAGE,
     action: 'Click on Attachment in Log Message',
-    label: 'Open Attachment',
+    label: 'Open Attachment preview',
+  },
+  ATTACHMENT_IN_LOG_MSG_DOWNLOAD: {
+    category: LOG_PAGE,
+    action: 'Click on Download Attachment icon in Log Message',
+    label: 'Download Attachment',
+  },
+  ATTACHMENT_IN_LOG_MSG_OPEN_IN_NEW_TAB: {
+    category: LOG_PAGE,
+    action: 'Click on Open Attachment in new tab icon in Log Message',
+    label: 'Open Attachment in new browser tab',
   },
   EXPAND_LOG_MSG: {
     category: LOG_PAGE,

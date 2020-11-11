@@ -19,7 +19,7 @@ export {
   clearAttachmentsAction,
   fetchFirstAttachmentsAction,
   setActiveAttachmentAction,
-  openAttachmentAction,
+  openAttachmentInModalAction,
   downloadAttachmentAction,
   openAttachmentInBrowserAction,
 } from './actionCreators';
@@ -31,6 +31,7 @@ export {
   ATTACHMENTS_NAMESPACE,
   DOWNLOAD_ATTACHMENT_ACTION,
   OPEN_ATTACHMENT_IN_BROWSER_ACTION,
+  OPEN_ATTACHMENT_IN_MODAL_ACTION,
 } from './constants';
 export {
   getFileIconSource,

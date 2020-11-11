@@ -81,17 +81,20 @@ export const createAttachmentName = (id, contentType) => {
 };
 
 export const isFileActionAllowed = (contentType, action) => {
-  const allowedFileTypes = FILE_ACTIONS_MAP[action];
+  const allowedFileTypes = FILE_ACTIONS_MAP[action] || [];
 
   if (allowedFileTypes === ALL_ALLOWED) {
     return true;
   }
 
+  const [fileType] = getAttachmentTypeConfig(contentType);
+
+  if (fileType === IMAGE) {
+    return allowedFileTypes.includes(IMAGE);
+  }
+
   const extension = extractExtension(contentType);
   const extensionFromPattern = getExtensionFromPattern(extension);
 
-  return !!(
-    allowedFileTypes &&
-    allowedFileTypes.some((fileType) => fileType === extension || fileType === extensionFromPattern)
-  );
+  return !!allowedFileTypes.some((type) => type === extension || type === extensionFromPattern);
 };
