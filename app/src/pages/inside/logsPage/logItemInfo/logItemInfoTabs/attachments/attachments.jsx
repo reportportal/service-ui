@@ -26,7 +26,6 @@ import {
   attachmentItemsSelector,
   attachmentsLoadingSelector,
   openAttachmentInModalAction,
-  openAttachmentInBrowserAction,
   downloadAttachmentAction,
   fetchAttachmentsConcatAction,
   attachmentsPaginationSelector,
@@ -66,7 +65,6 @@ const getCurrentThumb = (activeItemId, visibleThumbs) =>
     fetchAttachmentsConcatAction,
     setActiveAttachmentAction,
     openAttachmentInModalAction,
-    openAttachmentInBrowserAction,
     downloadAttachmentAction,
   },
 )
@@ -86,8 +84,6 @@ export class Attachments extends Component {
     setActiveAttachmentAction: PropTypes.func,
     fetchAttachmentsConcatAction: PropTypes.func,
     openAttachmentInModalAction: PropTypes.func,
-    openAttachmentInBrowserAction: PropTypes.func,
-    downloadAttachmentAction: PropTypes.func,
     isMobileView: PropTypes.bool,
   };
 
@@ -98,10 +94,7 @@ export class Attachments extends Component {
     activeItemId: 0,
     setActiveAttachmentAction: () => {},
     fetchAttachmentsConcatAction: () => {},
-    openAttachmentAction: () => {},
     openAttachmentInModalAction: () => {},
-    openAttachmentInBrowserAction: PropTypes.func,
-    downloadAttachmentAction: PropTypes.func,
     isMobileView: false,
   };
 
