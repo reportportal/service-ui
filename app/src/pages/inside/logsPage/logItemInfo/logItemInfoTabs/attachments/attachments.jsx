@@ -25,7 +25,9 @@ import { CarouselProvider } from 'pure-react-carousel';
 import {
   attachmentItemsSelector,
   attachmentsLoadingSelector,
-  openAttachmentAction,
+  openAttachmentInModalAction,
+  openAttachmentInBrowserAction,
+  downloadAttachmentAction,
   fetchAttachmentsConcatAction,
   attachmentsPaginationSelector,
   setActiveAttachmentAction,
@@ -62,8 +64,10 @@ const getCurrentThumb = (activeItemId, visibleThumbs) =>
   }),
   {
     fetchAttachmentsConcatAction,
-    openAttachmentAction,
     setActiveAttachmentAction,
+    openAttachmentInModalAction,
+    openAttachmentInBrowserAction,
+    downloadAttachmentAction,
   },
 )
 @injectIntl
@@ -81,7 +85,9 @@ export class Attachments extends Component {
     loading: PropTypes.bool,
     setActiveAttachmentAction: PropTypes.func,
     fetchAttachmentsConcatAction: PropTypes.func,
-    openAttachmentAction: PropTypes.func,
+    openAttachmentInModalAction: PropTypes.func,
+    openAttachmentInBrowserAction: PropTypes.func,
+    downloadAttachmentAction: PropTypes.func,
     isMobileView: PropTypes.bool,
   };
 
@@ -93,6 +99,9 @@ export class Attachments extends Component {
     setActiveAttachmentAction: () => {},
     fetchAttachmentsConcatAction: () => {},
     openAttachmentAction: () => {},
+    openAttachmentInModalAction: () => {},
+    openAttachmentInBrowserAction: PropTypes.func,
+    downloadAttachmentAction: PropTypes.func,
     isMobileView: false,
   };
 
@@ -110,9 +119,8 @@ export class Attachments extends Component {
   }
 
   onClickItem = (itemIndex) => {
-    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.ATTACHMENT_CLICK);
-
-    return this.props.openAttachmentAction(this.props.attachments[itemIndex]);
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.ATTACHMENT_IN_CAROUSEL.OPEN_IN_MODAL);
+    return this.props.openAttachmentInModalAction(this.props.attachments[itemIndex]);
   };
 
   onClickThumb = (itemIndex) => {
@@ -189,6 +197,7 @@ export class Attachments extends Component {
             onClickItem={this.onClickItem}
             changeActiveItem={this.changeActiveItem}
             visibleThumbs={visibleThumbs}
+            withActions
           />
         </CarouselProvider>
         <CarouselProvider
