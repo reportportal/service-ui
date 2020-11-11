@@ -15,21 +15,8 @@
  */
 
 .actions {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
   margin-top: 3px;
   visibility: hidden;
-}
-
-.action-item {
-  display: inline-block;
-  width: 15px;
-  cursor: pointer;
-
-  &.hidden {
-    visibility: hidden;
-  }
 }
 
 .attachment-block {

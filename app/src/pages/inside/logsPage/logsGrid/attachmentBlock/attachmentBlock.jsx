@@ -21,37 +21,20 @@ import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { connect } from 'react-redux';
 import AttachIcon from 'common/img/attachment-inline.svg';
-import DownloadIcon from 'common/img/download-inline.svg';
-import OpenInIcon from 'common/img/open-in-inline.svg';
 import { Image } from 'components/main/image';
+import { activeProjectSelector } from 'controllers/user';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import {
   openAttachmentInModalAction,
   downloadAttachmentAction,
-  openAttachmentInBrowserAction,
   getFileIconSource,
-  DOWNLOAD_ATTACHMENT_ACTION,
-  OPEN_ATTACHMENT_IN_BROWSER_ACTION,
   OPEN_ATTACHMENT_IN_MODAL_ACTION,
   isFileActionAllowed,
 } from 'controllers/log/attachments';
-import { activeProjectSelector } from 'controllers/user';
+import { AttachmentActions } from 'pages/inside/logsPage/attachmentActions';
 import styles from './attachmentBlock.scss';
 
 const cx = classNames.bind(styles);
-
-const AttachmentActions = ({ items }) => (
-  <div className={cx('actions')}>
-    {items.map(({ id, icon, hidden, action }) => (
-      <span key={id} onClick={hidden ? null : action} className={cx('action-item', { hidden })}>
-        {Parser(icon)}
-      </span>
-    ))}
-  </div>
-);
-AttachmentActions.propTypes = {
-  items: PropTypes.array.isRequired,
-};
 
 @connect(
   (state) => ({
@@ -60,7 +43,6 @@ AttachmentActions.propTypes = {
   {
     openAttachmentInModalAction,
     downloadAttachmentAction,
-    openAttachmentInBrowserAction,
   },
 )
 @track()
@@ -70,7 +52,6 @@ export class AttachmentBlock extends Component {
     customProps: PropTypes.object,
     openAttachmentInModalAction: PropTypes.func,
     downloadAttachmentAction: PropTypes.func,
-    openAttachmentInBrowserAction: PropTypes.func,
     activeProject: PropTypes.string,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -86,34 +67,14 @@ export class AttachmentBlock extends Component {
   };
 
   openAttachmentInModal = () => {
-    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.ATTACHMENT_IN_LOG_MSG_OPEN_PREVIEW);
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.ATTACHMENT_IN_LOG_MSG.OPEN_IN_MODAL);
     this.props.openAttachmentInModalAction(this.props.value);
   };
 
   downloadAttachment = () => {
-    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.ATTACHMENT_IN_LOG_MSG_DOWNLOAD);
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.ATTACHMENT_IN_LOG_MSG.DOWNLOAD);
     this.props.downloadAttachmentAction(this.props.value);
   };
-
-  openAttachmentInNewTab = () => {
-    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.ATTACHMENT_IN_LOG_MSG_OPEN_IN_NEW_TAB);
-    this.props.openAttachmentInBrowserAction(this.props.value.id);
-  };
-
-  actionsConfig = [
-    {
-      id: OPEN_ATTACHMENT_IN_BROWSER_ACTION,
-      icon: OpenInIcon,
-      action: this.openAttachmentInNewTab,
-      hidden: !isFileActionAllowed(this.props.value.contentType, OPEN_ATTACHMENT_IN_BROWSER_ACTION),
-    },
-    {
-      id: DOWNLOAD_ATTACHMENT_ACTION,
-      icon: DownloadIcon,
-      action: this.downloadAttachment,
-      hidden: !isFileActionAllowed(this.props.value.contentType, DOWNLOAD_ATTACHMENT_ACTION),
-    },
-  ];
 
   render() {
     const {
@@ -140,7 +101,11 @@ export class AttachmentBlock extends Component {
               alt={value.contentType}
               onClick={isAttachmentModalAvailable ? this.openAttachmentInModal : null}
             />
-            <AttachmentActions items={this.actionsConfig} />
+            <AttachmentActions
+              value={value}
+              className={cx('actions')}
+              events={LOG_PAGE_EVENTS.ATTACHMENT_IN_LOG_MSG}
+            />
           </Fragment>
         )}
       </div>

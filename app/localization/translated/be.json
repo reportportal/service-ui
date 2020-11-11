@@ -107,6 +107,8 @@
   "AsyncAutocomplete.notFound": "Нічога не знойдзена",
   "AttachmentModal.errorFileStructure": "Няправільная структура файла",
   "AttachmentModal.title": "Укладанне",
+  "AttachmentActions.openInNewTab": "Адкрыць у новай ўкладцы",
+  "AttachmentActions.download": "Спампаваць",
   "Attachments.noAttachmentsMessage": "Няма ўкладанняў для адлюстравання",
   "AttributeEditor.attributeKeyLengthHint": "Ключ атрыбуту павінен мець памер ад 1 да 128",
   "AttributeEditor.attributeValueLengthHint": "Значэнне атрыбуту павінна мець памер ад 1 да 128",
