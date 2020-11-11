@@ -25,19 +25,51 @@ import DownloadIcon from 'common/img/download-inline.svg';
 import OpenInIcon from 'common/img/open-in-inline.svg';
 import { Image } from 'components/main/image';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
-import { openAttachmentAction, getFileIconSource } from 'controllers/log/attachments';
+import {
+  openAttachmentAction,
+  downloadAttachmentAction,
+  openAttachmentInBrowserAction,
+  getFileIconSource,
+  DOWNLOAD_ATTACHMENT_ACTION,
+  OPEN_ATTACHMENT_IN_BROWSER_ACTION,
+  isFileActionAllowed,
+} from 'controllers/log/attachments';
 import { activeProjectSelector } from 'controllers/user';
 import styles from './attachmentBlock.scss';
 
 const cx = classNames.bind(styles);
 
-@connect((state) => ({ activeProject: activeProjectSelector(state) }), { openAttachmentAction })
+const AttachmentActions = ({ items }) => (
+  <div className={cx('actions')}>
+    {items.map(({ id, icon, hidden, action }) => (
+      <span key={id} onClick={hidden ? null : action} className={cx('action-item', { hidden })}>
+        {Parser(icon)}
+      </span>
+    ))}
+  </div>
+);
+AttachmentActions.propTypes = {
+  items: PropTypes.array.isRequired,
+};
+
+@connect(
+  (state) => ({
+    activeProject: activeProjectSelector(state),
+  }),
+  {
+    openAttachmentAction,
+    downloadAttachmentAction,
+    openAttachmentInBrowserAction,
+  },
+)
 @track()
 export class AttachmentBlock extends Component {
   static propTypes = {
     value: PropTypes.object,
     customProps: PropTypes.object,
     openAttachmentAction: PropTypes.func,
+    downloadAttachmentAction: PropTypes.func,
+    openAttachmentInBrowserAction: PropTypes.func,
     activeProject: PropTypes.string,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -57,6 +89,31 @@ export class AttachmentBlock extends Component {
     this.props.openAttachmentAction(this.props.value);
   };
 
+  downloadAttachment = () => {
+    const { contentType, id } = this.props.value;
+
+    this.props.downloadAttachmentAction(id, contentType);
+  };
+
+  openAttachmentInNewTab = () => {
+    this.props.openAttachmentInBrowserAction(this.props.value.id);
+  };
+
+  actionsConfig = [
+    {
+      id: OPEN_ATTACHMENT_IN_BROWSER_ACTION,
+      icon: OpenInIcon,
+      action: this.openAttachmentInNewTab,
+      hidden: !isFileActionAllowed(this.props.value.contentType, OPEN_ATTACHMENT_IN_BROWSER_ACTION),
+    },
+    {
+      id: DOWNLOAD_ATTACHMENT_ACTION,
+      icon: DownloadIcon,
+      action: this.downloadAttachment,
+      hidden: !isFileActionAllowed(this.props.value.contentType, DOWNLOAD_ATTACHMENT_ACTION),
+    },
+  ];
+
   render() {
     const {
       value,
@@ -75,10 +132,7 @@ export class AttachmentBlock extends Component {
               src={getFileIconSource(value, activeProject, true)}
               alt={value.contentType}
             />
-            <div className={cx('actions')}>
-              <span className={cx('action-item')}>{Parser(OpenInIcon)}</span>
-              <span className={cx('action-item')}>{Parser(DownloadIcon)}</span>
-            </div>
+            <AttachmentActions items={this.actionsConfig} />
           </div>
         )}
       </div>

@@ -26,6 +26,10 @@
   display: inline-block;
   width: 15px;
   cursor: pointer;
+
+  &.hidden {
+    visibility: hidden;
+  }
 }
 
 .attachment-block {

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { takeLatest, call, put, all, select, take } from 'redux-saga/effects';
+import { takeLatest, takeEvery, call, put, all, select, take } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
 import { showModalAction } from 'controllers/modal';
@@ -28,6 +28,7 @@ import {
   activeLogIdSelector,
 } from 'controllers/log/selectors';
 import { DETAILED_LOG_VIEW } from 'controllers/log/constants';
+import { downloadFile } from 'common/utils/downloadFile';
 import { JSON as JSON_TYPE } from 'common/constants/fileTypes';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import {
@@ -39,8 +40,15 @@ import {
   DEFAULT_PAGE_SIZE,
   DEFAULT_LOADED_PAGES,
   FETCH_FIRST_ATTACHMENTS_ACTION,
+  DOWNLOAD_ATTACHMENT_ACTION,
+  OPEN_ATTACHMENT_IN_BROWSER_ACTION,
 } from './constants';
-import { getAttachmentModalId, extractExtension, isTextWithJson } from './utils';
+import {
+  getAttachmentModalId,
+  extractExtension,
+  isTextWithJson,
+  createAttachmentName,
+} from './utils';
 
 function* getAttachmentURL() {
   const activeProject = yield select(activeProjectSelector);
@@ -108,7 +116,7 @@ const ATTACHMENT_MODAL_WORKERS = {
   [ATTACHMENT_CODE_MODAL_ID]: openBinaryModalsWorker,
 };
 
-function* openAttachment({ payload: { id, contentType } }) {
+function* openAttachmentPreview({ payload: { id, contentType } }) {
   const modalId = getAttachmentModalId(contentType);
   const projectId = yield select(activeProjectSelector);
   if (modalId) {
@@ -129,6 +137,25 @@ function* openAttachment({ payload: { id, contentType } }) {
   }
 }
 
+function* downloadAttachment({ payload: { id, contentType } }) {
+  const projectId = yield select(activeProjectSelector);
+
+  downloadFile(URLS.getFileById(projectId, id), createAttachmentName(id, contentType));
+}
+
+function* openAttachmentInBrowser({ payload: id }) {
+  const projectId = yield select(activeProjectSelector);
+  const data = yield call(fetch, URLS.getFileById(projectId, id), { responseType: 'blob' });
+
+  if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+    window.navigator.msSaveOrOpenBlob(data);
+  } else {
+    const url = URL.createObjectURL(data);
+    const newWindow = window.open(url);
+    newWindow.onbeforeunload = () => URL.revokeObjectURL(url);
+  }
+}
+
 function* watchFetchAttachments() {
   yield takeLatest(FETCH_ATTACHMENTS_CONCAT_ACTION, fetchAttachmentsConcat);
 }
@@ -138,9 +165,23 @@ function* watchFetchFirstAttachments() {
 }
 
 function* watchOpenAttachment() {
-  yield takeLatest(OPEN_ATTACHMENT_ACTION, openAttachment);
+  yield takeLatest(OPEN_ATTACHMENT_ACTION, openAttachmentPreview);
+}
+
+function* watchDownloadAttachment() {
+  yield takeEvery(DOWNLOAD_ATTACHMENT_ACTION, downloadAttachment);
+}
+
+function* watchOpenAttachmentInBrowser() {
+  yield takeEvery(OPEN_ATTACHMENT_IN_BROWSER_ACTION, openAttachmentInBrowser);
 }
 
 export function* attachmentSagas() {
-  yield all([watchOpenAttachment(), watchFetchAttachments(), watchFetchFirstAttachments()]);
+  yield all([
+    watchOpenAttachment(),
+    watchOpenAttachmentInBrowser(),
+    watchDownloadAttachment(),
+    watchFetchAttachments(),
+    watchFetchFirstAttachments(),
+  ]);
 }
