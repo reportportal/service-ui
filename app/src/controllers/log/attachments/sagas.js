@@ -34,13 +34,13 @@ import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import {
   ATTACHMENT_CODE_MODAL_ID,
   ATTACHMENT_HAR_FILE_MODAL_ID,
-  OPEN_ATTACHMENT_ACTION,
   FETCH_ATTACHMENTS_CONCAT_ACTION,
   ATTACHMENTS_NAMESPACE,
   DEFAULT_PAGE_SIZE,
   DEFAULT_LOADED_PAGES,
   FETCH_FIRST_ATTACHMENTS_ACTION,
   DOWNLOAD_ATTACHMENT_ACTION,
+  OPEN_ATTACHMENT_IN_MODAL_ACTION,
   OPEN_ATTACHMENT_IN_BROWSER_ACTION,
 } from './constants';
 import {
@@ -86,19 +86,19 @@ function* fetchFirstAttachments({ payload }) {
   yield call(fetchAttachmentsConcat, { payload: { params } });
 }
 
-export function fetchData({ projectId, binaryId }) {
+export function fetchFileData({ projectId, binaryId }) {
   return fetch(URLS.getFileById(projectId, binaryId));
 }
 
 /* HAR */
-function* openHarModalsWorker(data) {
-  const harData = yield call(fetchData, data);
+function* openHarModalWorker(data) {
+  const harData = yield call(fetchFileData, data);
   yield put(showModalAction({ id: ATTACHMENT_HAR_FILE_MODAL_ID, data: { harData } }));
 }
 
 /* BINARY */
-function* openBinaryModalsWorker(data) {
-  const binaryData = yield call(fetchData, data);
+function* openBinaryModalWorker(data) {
+  const binaryData = yield call(fetchFileData, data);
   const content =
     data.extension === JSON_TYPE && !isTextWithJson(data.contentType)
       ? JSON.stringify(binaryData, null, 4)
@@ -112,28 +112,19 @@ function* openBinaryModalsWorker(data) {
 }
 
 const ATTACHMENT_MODAL_WORKERS = {
-  [ATTACHMENT_HAR_FILE_MODAL_ID]: openHarModalsWorker,
-  [ATTACHMENT_CODE_MODAL_ID]: openBinaryModalsWorker,
+  [ATTACHMENT_HAR_FILE_MODAL_ID]: openHarModalWorker,
+  [ATTACHMENT_CODE_MODAL_ID]: openBinaryModalWorker,
 };
 
-function* openAttachmentPreview({ payload: { id, contentType } }) {
+function* openAttachmentInModal({ payload: { id, contentType } }) {
   const modalId = getAttachmentModalId(contentType);
   const projectId = yield select(activeProjectSelector);
+
   if (modalId) {
     const data = { projectId, binaryId: id, extension: extractExtension(contentType), contentType };
     try {
       yield call(ATTACHMENT_MODAL_WORKERS[modalId], data);
     } catch (e) {} // eslint-disable-line no-empty
-  } else {
-    const data = yield call(fetch, URLS.getFileById(projectId, id), { responseType: 'blob' });
-
-    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-      window.navigator.msSaveOrOpenBlob(data);
-    } else {
-      const url = URL.createObjectURL(data);
-      const newWindow = window.open(url);
-      newWindow.onbeforeunload = () => URL.revokeObjectURL(url);
-    }
   }
 }
 
@@ -164,8 +155,8 @@ function* watchFetchFirstAttachments() {
   yield takeLatest(FETCH_FIRST_ATTACHMENTS_ACTION, fetchFirstAttachments);
 }
 
-function* watchOpenAttachment() {
-  yield takeLatest(OPEN_ATTACHMENT_ACTION, openAttachmentPreview);
+function* watchOpenAttachmentInModal() {
+  yield takeLatest(OPEN_ATTACHMENT_IN_MODAL_ACTION, openAttachmentInModal);
 }
 
 function* watchDownloadAttachment() {
@@ -178,7 +169,7 @@ function* watchOpenAttachmentInBrowser() {
 
 export function* attachmentSagas() {
   yield all([
-    watchOpenAttachment(),
+    watchOpenAttachmentInModal(),
     watchOpenAttachmentInBrowser(),
     watchDownloadAttachment(),
     watchFetchAttachments(),
