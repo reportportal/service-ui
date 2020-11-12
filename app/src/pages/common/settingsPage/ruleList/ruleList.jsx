@@ -29,6 +29,7 @@ export const RuleList = ({
   getListItemContentData,
   isCloned,
   messages,
+  isMovable,
 }) => (
   <Fragment>
     {data.map((item, index) => (
@@ -44,6 +45,7 @@ export const RuleList = ({
         getPanelTitle={getPanelTitle}
         getListItemContentData={getListItemContentData}
         isCloned={isCloned}
+        isMovable={isMovable}
         messages={messages}
       />
     ))}
@@ -60,6 +62,7 @@ RuleList.propTypes = {
   getPanelTitle: PropTypes.func,
   getListItemContentData: PropTypes.func,
   isCloned: PropTypes.bool,
+  isMovable: PropTypes.bool,
   messages: PropTypes.object,
 };
 
@@ -73,5 +76,6 @@ RuleList.defaultProps = {
   getPanelTitle: () => {},
   getListItemContentData: () => {},
   isCloned: false,
+  isMovable: false,
   messages: {},
 };

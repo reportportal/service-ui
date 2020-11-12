@@ -22,7 +22,6 @@
 
 .data-row {
   display: flex;
-  flex-direction: row;
   margin: 0 15px 15px 90px;
   font-size: 13px;
   font-family: $FONT-REGULAR;
@@ -38,10 +37,20 @@
 }
 
 .data-value {
-  flex: 300px 1 1;
+  flex: 300px;
   color: $COLOR--charcoal-grey;
   word-break: break-all;
+
+  &.multiple-data {
+    display: flex;
+    flex-direction: column;
+  }
+
   @supports (word-break: break-word) {
     word-break: break-word;
   }
+}
+
+.data-value-item {
+  flex: 22px;
 }
