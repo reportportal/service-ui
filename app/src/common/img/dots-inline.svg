@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="6px" height="16px" viewBox="0 0 6 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="dnd" stroke="none" stroke-width="1" fill-rule="evenodd">
+        <g id="Group-9" transform="translate(0.000000, 1.000000)">
+            <circle id="Oval" cx="1" cy="1" r="1"></circle>
+            <circle id="Oval-Copy-6" cx="5" cy="1" r="1"></circle>
+            <circle id="Oval-Copy" cx="1" cy="5" r="1"></circle>
+            <circle id="Oval-Copy-7" cx="5" cy="5" r="1"></circle>
+            <circle id="Oval-Copy-4" cx="1" cy="9" r="1"></circle>
+            <circle id="Oval-Copy-8" cx="5" cy="9" r="1"></circle>
+            <circle id="Oval-Copy-5" cx="1" cy="13" r="1"></circle>
+            <circle id="Oval-Copy-9" cx="5" cy="13" r="1"></circle>
+        </g>
+    </g>
+</svg>

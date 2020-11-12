@@ -33,6 +33,7 @@ export const ListItem = ({
   getPanelTitle,
   getListItemContentData,
   isCloned,
+  isMovable,
   messages,
 }) => (
   <div className={cx('list-item')}>
@@ -46,14 +47,23 @@ export const ListItem = ({
       onClone={onClone}
       getPanelTitle={getPanelTitle}
       isCloned={isCloned}
+      isMovable={isMovable}
       messages={messages}
     />
     <div className={cx('data')}>
       {getListItemContentData(item).map((itemData, index) => (
         // eslint-disable-next-line react/no-array-index-key
-        <div key={`${itemData.key}_${itemData.value}_${index}`} className={cx('data-row')}>
+        <div key={`${itemData.key}_${index}`} className={cx('data-row')}>
           <span className={cx('data-name')}>{itemData.key}</span>
-          <span className={cx('data-value')}>{itemData.value}</span>
+          {Array.isArray(itemData.value) ? (
+            <div className={cx('data-value', 'multiple-data')}>
+              {itemData.value.map((valueItem) => (
+                <span className={cx('data-value-item')}>{valueItem}</span>
+              ))}
+            </div>
+          ) : (
+            <span className={cx('data-value')}>{itemData.value}</span>
+          )}
         </div>
       ))}
     </div>
@@ -71,6 +81,7 @@ ListItem.propTypes = {
   getPanelTitle: PropTypes.func,
   getListItemContentData: PropTypes.func,
   isCloned: PropTypes.bool,
+  isMovable: PropTypes.bool,
   messages: PropTypes.object,
 };
 
@@ -85,5 +96,6 @@ ListItem.defaultProps = {
   getPanelTitle: () => {},
   getListItemContentData: () => {},
   isCloned: false,
+  isMovable: false,
   messages: {},
 };
