@@ -82,7 +82,7 @@ export class AttachmentBlock extends Component {
       customProps: { consoleView },
       activeProject,
     } = this.props;
-    const isAttachmentModalAvailable = isFileActionAllowed(
+    const isValidToOpenInModal = isFileActionAllowed(
       value.contentType,
       OPEN_ATTACHMENT_IN_MODAL_ACTION,
     );
@@ -99,7 +99,7 @@ export class AttachmentBlock extends Component {
               className={cx('attachment')}
               src={getFileIconSource(value, activeProject, true)}
               alt={value.contentType}
-              onClick={isAttachmentModalAvailable ? this.openAttachmentInModal : null}
+              onClick={isValidToOpenInModal ? this.openAttachmentInModal : null}
             />
             <AttachmentActions
               value={value}

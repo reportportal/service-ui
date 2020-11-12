@@ -31,6 +31,8 @@ import {
   attachmentsPaginationSelector,
   setActiveAttachmentAction,
   activeAttachmentIdSelector,
+  isFileActionAllowed,
+  OPEN_ATTACHMENT_IN_MODAL_ACTION,
 } from 'controllers/log/attachments';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { NoItemMessage } from 'components/main/noItemMessage';
@@ -112,8 +114,12 @@ export class Attachments extends Component {
   }
 
   onClickItem = (itemIndex) => {
-    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.ATTACHMENT_IN_CAROUSEL.OPEN_IN_MODAL);
-    return this.props.openAttachmentInModalAction(this.props.attachments[itemIndex]);
+    const attachment = this.props.attachments[itemIndex];
+
+    if (isFileActionAllowed(attachment.contentType, OPEN_ATTACHMENT_IN_MODAL_ACTION)) {
+      this.props.tracking.trackEvent(LOG_PAGE_EVENTS.ATTACHMENT_IN_CAROUSEL.OPEN_IN_MODAL);
+      this.props.openAttachmentInModalAction(attachment);
+    }
   };
 
   onClickThumb = (itemIndex) => {
