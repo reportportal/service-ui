@@ -165,4 +165,12 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.proceedValidItems',
     defaultMessage: 'Proceed Valid Items',
   },
+  DOWNLOAD: {
+    id: 'Common.download',
+    defaultMessage: 'Download',
+  },
+  OPEN_IN_NEW_TAB: {
+    id: 'Common.openInNewTab',
+    defaultMessage: 'Open in new tab',
+  },
 });
