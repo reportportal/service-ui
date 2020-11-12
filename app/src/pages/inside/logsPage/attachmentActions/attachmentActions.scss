@@ -3,22 +3,3 @@
   align-items: center;
   justify-content: space-around;
 }
-
-.action-item {
-  cursor: pointer;
-
-  &.hidden {
-    visibility: hidden;
-  }
-}
-
-.icon {
-  display: inline-block;
-  width: 15px;
-}
-
-.caption {
-  margin-left: 5px;
-  font-size: 13px;
-  color: $COLOR--topaz;
-}

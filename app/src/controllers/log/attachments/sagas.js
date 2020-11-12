@@ -86,8 +86,8 @@ function* fetchFirstAttachments({ payload }) {
   yield call(fetchAttachmentsConcat, { payload: { params } });
 }
 
-export function fetchFileData({ projectId, binaryId }) {
-  return fetch(URLS.getFileById(projectId, binaryId));
+export function fetchFileData({ projectId, id }) {
+  return fetch(URLS.getFileById(projectId, id));
 }
 
 /* HAR */
@@ -106,7 +106,7 @@ function* openBinaryModalWorker(data) {
   yield put(
     showModalAction({
       id: ATTACHMENT_CODE_MODAL_ID,
-      data: { extension: data.extension, content },
+      data: { extension: data.extension, content, id: data.id },
     }),
   );
 }
@@ -121,7 +121,7 @@ function* openAttachmentInModal({ payload: { id, contentType } }) {
   const projectId = yield select(activeProjectSelector);
 
   if (modalId) {
-    const data = { projectId, binaryId: id, extension: extractExtension(contentType), contentType };
+    const data = { projectId, id, extension: extractExtension(contentType), contentType };
     try {
       yield call(ATTACHMENT_MODAL_WORKERS[modalId], data);
     } catch (e) {} // eslint-disable-line no-empty

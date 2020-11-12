@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import Parser from 'html-react-parser';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
-import { defineMessages, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import {
   DOWNLOAD_ATTACHMENT_ACTION,
   downloadAttachmentAction,
@@ -14,20 +14,10 @@ import {
 } from 'controllers/log/attachments';
 import OpenInIcon from 'common/img/open-in-inline.svg';
 import DownloadIcon from 'common/img/download-inline.svg';
+import { ActionsItem } from './actionsItem';
 import styles from './attachmentActions.scss';
 
 const cx = classNames.bind(styles);
-
-const messages = defineMessages({
-  openInNewTab: {
-    id: 'AttachmentActions.openInNewTab',
-    defaultMessage: 'Open in new tab',
-  },
-  download: {
-    id: 'AttachmentActions.download',
-    defaultMessage: 'Download',
-  },
-});
 
 @connect(null, {
   downloadAttachmentAction,
@@ -68,14 +58,14 @@ export class AttachmentActions extends Component {
       {
         id: OPEN_ATTACHMENT_IN_BROWSER_ACTION,
         icon: OpenInIcon,
-        caption: formatMessage(messages.openInNewTab),
+        caption: formatMessage(COMMON_LOCALE_KEYS.OPEN_IN_NEW_TAB),
         action: this.openAttachmentInNewTab,
         hidden: !isFileActionAllowed(value.contentType, OPEN_ATTACHMENT_IN_BROWSER_ACTION),
       },
       {
         id: DOWNLOAD_ATTACHMENT_ACTION,
         icon: DownloadIcon,
-        caption: formatMessage(messages.download),
+        caption: formatMessage(COMMON_LOCALE_KEYS.DOWNLOAD),
         action: this.downloadAttachment,
         hidden: !isFileActionAllowed(value.contentType, DOWNLOAD_ATTACHMENT_ACTION),
       },
@@ -101,16 +91,8 @@ export class AttachmentActions extends Component {
 
     return (
       <div className={cx('attachment-actions', className)}>
-        {this.actionsConfig.map(({ id, icon, hidden, action, caption }) => (
-          <span
-            key={id}
-            title={caption}
-            onClick={hidden ? null : action}
-            className={cx('action-item', { hidden })}
-          >
-            <span className={cx('icon')}>{Parser(icon)}</span>
-            {showCaptions && <span className={cx('caption')}>{caption}</span>}
-          </span>
+        {this.actionsConfig.map(({ id, ...actionConfig }) => (
+          <ActionsItem key={id} showCaption={showCaptions} {...actionConfig} />
         ))}
       </div>
     );
