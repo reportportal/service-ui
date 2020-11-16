@@ -22,6 +22,7 @@ import styles from './listItem.scss';
 
 const cx = classNames.bind(styles);
 
+// TODO: disable move controls for special cases
 export const ListItem = ({
   item,
   id,
@@ -57,8 +58,11 @@ export const ListItem = ({
           <span className={cx('data-name')}>{itemData.key}</span>
           {Array.isArray(itemData.value) ? (
             <div className={cx('data-value', 'multiple-data')}>
-              {itemData.value.map((valueItem) => (
-                <span className={cx('data-value-item')}>{valueItem}</span>
+              {itemData.value.map((valueItem, valueIndex) => (
+                // eslint-disable-next-line react/no-array-index-key
+                <span key={valueIndex} className={cx('data-value-item')}>
+                  {valueItem}
+                </span>
               ))}
             </div>
           ) : (

@@ -23,7 +23,7 @@ jest.mock('common/utils/fetch', () => ({
 
 const mockParams = {
   projectId: 'test_project',
-  binaryId: 'abcd',
+  id: 'abcd',
 };
 
 describe('Attachments Sagas', () => {
