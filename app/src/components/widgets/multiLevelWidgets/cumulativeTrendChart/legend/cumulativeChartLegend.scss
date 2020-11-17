@@ -35,7 +35,7 @@
 
 .controls {
   display: flex;
-  min-width: 400px;
+  min-width: 305px;
 
   @media (max-width: $SCREEN_SM_MAX) {
     display: none;
@@ -66,6 +66,7 @@
 }
 
 .percentage {
+  display: none;
   background-image: url(~common/img/toggle-absolute.svg);
   background-position-y: center;
   background-repeat: no-repeat;
