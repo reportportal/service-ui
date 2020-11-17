@@ -33,6 +33,7 @@ import { activeProjectSelector } from 'controllers/user';
 import { SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
 import { PASSED, FAILED, SKIPPED, INTERRUPTED } from 'common/constants/testStatuses';
 import { formatAttribute } from 'common/utils/attributeUtils';
+import { BEFORE_AFTER_METHOD_TYPES_SEQUENCE } from 'common/constants/methodTypes';
 import { STATE_READY, DEFECTS, TOTAL_KEY } from 'components/widgets/common/constants';
 import SearchIcon from 'common/img/search-icon-inline.svg';
 import FiltersIcon from 'common/img/filters-icon-inline.svg';
@@ -311,6 +312,7 @@ export class CumulativeTrendChart extends PureComponent {
         compositeAttribute: activeAttributes.map(formatAttribute).join(','),
         launchesLimit: widget.contentParameters.itemsCount,
         launchId: selectedItem.content.launchIds.join(),
+        filterTypes: BEFORE_AFTER_METHOD_TYPES_SEQUENCE,
         filterType: true,
       });
     } else {
