@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { AttachmentActions } from './attachmentActions';
+export { DependentFieldsControl } from './dependentFieldsControl';

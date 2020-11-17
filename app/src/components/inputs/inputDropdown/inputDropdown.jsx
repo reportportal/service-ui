@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { Manager, Reference, Popper } from 'react-popper';
-import styles from './inputDropdown.scss';
 import { DropdownOption } from './inputDropdownOption/inputDropdownOption';
+import styles from './inputDropdown.scss';
 
 const cx = classNames.bind(styles);
 
