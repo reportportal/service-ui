@@ -346,7 +346,9 @@ export const defectLinkSelector = createSelector(
     };
 
     if (ownProps.filterType) {
-      params['filter.in.type'] = LEVEL_STEP;
+      params['filter.in.type'] = ownProps.filterTypes
+        ? [...ownProps.filterTypes, LEVEL_STEP].join(',')
+        : LEVEL_STEP;
     }
 
     return createLink(
