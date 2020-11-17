@@ -17,6 +17,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Parser from 'html-react-parser';
 import { showDefaultErrorNotification } from 'controllers/notification';
 import {
   namedProjectIntegrationsSelectorsMap,
@@ -80,7 +81,9 @@ export class IntegrationInfoContainer extends Component {
       <Fragment>
         <InfoSection
           image={PLUGIN_IMAGES_MAP[name] || PLUGIN_DEFAULT_IMAGE}
-          description={PLUGIN_DESCRIPTIONS_MAP[name]}
+          description={
+            PLUGIN_DESCRIPTIONS_MAP[name] || (details.description && Parser(details.description))
+          }
           title={PLUGIN_NAME_TITLES[name]}
           version={details.version}
           data={integrationType}
