@@ -41,7 +41,7 @@ export class InfoSection extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     image: PropTypes.string.isRequired,
-    description: PropTypes.object.isRequired,
+    description: PropTypes.oneOfType([PropTypes.object.isRequired, PropTypes.array.isRequired]),
     title: PropTypes.string.isRequired,
     version: PropTypes.string,
     data: PropTypes.object.isRequired,
