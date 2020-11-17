@@ -23,9 +23,9 @@ const Color = require('color');
 const getDefects = (fields) => fields.filter((item) => /defects/.test(item));
 
 const getExecutions = () => [
-  'statistics$executions$passed',
   'statistics$executions$failed',
   'statistics$executions$skipped',
+  'statistics$executions$passed',
 ];
 
 const getTotal = () => ['statistics$executions$total'];
