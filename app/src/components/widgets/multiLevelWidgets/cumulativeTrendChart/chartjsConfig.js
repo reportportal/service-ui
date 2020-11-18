@@ -151,24 +151,28 @@ const getChartOptions = (widget, options) => {
           return tooltipContents[tooltipItem[0].index];
         },
         label(tooltipItem, data) {
-          const defects = data.datasets.filter((item) => /defects/.test(item.label));
           const dataset = data.datasets[tooltipItem.datasetIndex];
           const totalDataset = data.datasets[0];
           const label = messages[dataset.label]
             ? formatMessage(messages[dataset.label])
             : dataset.label;
           const value = dataset.data[tooltipItem.index];
+          const isDefectType = /defects/.test(dataset.label);
           if (!value) {
             return '';
           }
-          const isDefectType = /defects/.test(dataset.label);
-          const totalDefectsValue = defects.reduce(
-            (total, defect) => total + defect.data[tooltipItem.index],
-            0,
-          );
-          const totalValue = isDefectType
-            ? totalDefectsValue
-            : totalDataset.data[tooltipItem.index];
+          let totalValue;
+
+          if (isDefectType) {
+            const defects = data.datasets.filter((item) => /defects/.test(item.label));
+
+            totalValue = defects.reduce(
+              (total, defect) => total + defect.data[tooltipItem.index],
+              0,
+            );
+          } else {
+            totalValue = totalDataset.data[tooltipItem.index];
+          }
           const percentageValue = -((-value / totalValue) * 100).toFixed(2);
           if (percentage) {
             return ` ${label}: ${percentageValue}%`;
