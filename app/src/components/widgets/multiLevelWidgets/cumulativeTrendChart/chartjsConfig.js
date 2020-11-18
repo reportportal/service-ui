@@ -151,6 +151,7 @@ const getChartOptions = (widget, options) => {
           return tooltipContents[tooltipItem[0].index];
         },
         label(tooltipItem, data) {
+          const defects = data.datasets.filter((item) => /defects/.test(item.label));
           const dataset = data.datasets[tooltipItem.datasetIndex];
           const totalDataset = data.datasets[0];
           const label = messages[dataset.label]
@@ -160,7 +161,14 @@ const getChartOptions = (widget, options) => {
           if (!value) {
             return '';
           }
-          const totalValue = totalDataset.data[tooltipItem.index];
+          const isDefectType = /defects/.test(dataset.label);
+          const totalDefectsValue = defects.reduce(
+            (total, defect) => total + defect.data[tooltipItem.index],
+            0,
+          );
+          const totalValue = isDefectType
+            ? totalDefectsValue
+            : totalDataset.data[tooltipItem.index];
           const percentageValue = -((-value / totalValue) * 100).toFixed(2);
           if (percentage) {
             return ` ${label}: ${percentageValue}%`;
