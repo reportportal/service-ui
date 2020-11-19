@@ -54,6 +54,11 @@
   font-size: 13px;
   line-height: 1.4;
   color: $COLOR--gray-60;
+
+  &.position-right {
+    width: auto;
+    margin-left: 30px;
+  }
 }
 
 .modal-field-content {

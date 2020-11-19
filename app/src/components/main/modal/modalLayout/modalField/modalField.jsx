@@ -22,11 +22,15 @@ import styles from './modalField.scss';
 
 const cx = classname.bind(styles);
 
+const TIP_POSITION_BOTTOM = 'bottom';
+const TIP_POSITION_RIGHT = 'right';
+
 export const ModalField = ({
   className,
   label,
   children,
   tip,
+  tipPosition,
   labelWidth,
   alignLeft,
   noMinHeight,
@@ -44,7 +48,7 @@ export const ModalField = ({
     )}
     <Content>
       {children}
-      {tip && <Tip tip={tip} />}
+      {tip && <Tip tipPosition={tipPosition} tip={tip} />}
     </Content>
   </div>
 );
@@ -52,6 +56,7 @@ ModalField.propTypes = {
   className: PropTypes.string,
   label: PropTypes.string,
   tip: PropTypes.string,
+  tipPosition: PropTypes.oneOf([TIP_POSITION_BOTTOM, TIP_POSITION_RIGHT]),
   children: PropTypes.node,
   labelWidth: PropTypes.number,
   alignLeft: PropTypes.bool,
@@ -62,6 +67,7 @@ ModalField.defaultProps = {
   className: '',
   label: '',
   tip: '',
+  tipPosition: TIP_POSITION_BOTTOM,
   children: null,
   labelWidth: null,
   alignLeft: false,
@@ -69,12 +75,16 @@ ModalField.defaultProps = {
   labelTip: '',
 };
 
-const Tip = ({ tip }) => <div className={cx('modal-field-tip')}>{tip}</div>;
+const Tip = ({ tip, tipPosition }) => (
+  <div className={cx('modal-field-tip', `position-${tipPosition}`)}>{tip}</div>
+);
 Tip.propTypes = {
   tip: PropTypes.string,
+  tipPosition: PropTypes.oneOf([TIP_POSITION_BOTTOM, TIP_POSITION_RIGHT]),
 };
 Tip.defaultProps = {
   tip: '',
+  tipPosition: TIP_POSITION_BOTTOM,
 };
 
 const Label = ({ label, labelWidth, alignLeft, noMinHeight, labelTip }) => (

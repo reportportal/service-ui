@@ -84,9 +84,9 @@
     background-image: url(~common/img/spinner.gif);
   }
 
-  &.inline {
+  &.variant-inline {
     border: none;
-    border-bottom: 1px solid $COLOR--gray-80;
+    border-left: 1px solid $COLOR--gray-80;
 
     &:focus,
     &.error.touched {
@@ -95,6 +95,7 @@
 
     &.readonly {
       border: none;
+      padding-left: 0;
     }
   }
 }

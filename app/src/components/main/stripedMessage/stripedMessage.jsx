@@ -25,7 +25,7 @@ const WARNING_TYPE = 'warning';
 const cx = classNames.bind(styles);
 
 export const StripedMessage = ({ image, header, type, children }) => (
-  <div className={cx('striped-message', type)}>
+  <div className={cx('striped-message', `type-${type}`)}>
     {image && <img src={image} alt={type} className={cx('image')} />}
     <div className={cx('message-content')}>
       {header && <h3 className={cx('header')}>{header}</h3>}

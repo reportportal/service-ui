@@ -21,7 +21,7 @@
   margin-top: 10px;
   padding-left: 15px;
 
-  &.warning {
+  &.type-warning {
     background-color: $COLOR--warning-light;
 
     &:before {
@@ -35,7 +35,7 @@
     }
   }
 
-  &.info {
+  &.type-info {
     background-color: $COLOR--info-light;
 
     &:before {

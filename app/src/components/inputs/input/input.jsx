@@ -49,7 +49,7 @@ export const Input = ({
     ref={refFunction}
     type={type}
     style={style}
-    className={cx('input', `type-${type}`, className, variant, {
+    className={cx('input', `type-${type}`, className, `variant-${variant}`, {
       'mobile-disabled': mobileDisabled,
       disabled,
       error,
