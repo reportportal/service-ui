@@ -752,6 +752,8 @@ mvdan.cc/gofumpt v0.0.0-20200802201014-ab5a8192947d h1:t8TAw9WgTLghti7RYkpPmqk4J
 mvdan.cc/gofumpt v0.0.0-20200802201014-ab5a8192947d/go.mod h1:bzrjFmaD6+xqohD3KYP0H2FEuxknnBmyyOxdhLdaIws=
 mvdan.cc/gofumpt v0.0.0-20200927160801-5bfeb2e70dd6 h1:z+/YqapuV7VZPvBb3GYmuEJbA88M3PFUxaHilHYVCpQ=
 mvdan.cc/gofumpt v0.0.0-20200927160801-5bfeb2e70dd6/go.mod h1:bzrjFmaD6+xqohD3KYP0H2FEuxknnBmyyOxdhLdaIws=
+mvdan.cc/gofumpt v0.0.0-20201107090320-a024667a00f1 h1:KYPCZAkhZoBOktjyX+LOwepZ+QYiOhb/KHmzkn0nCcs=
+mvdan.cc/gofumpt v0.0.0-20201107090320-a024667a00f1/go.mod h1:bzrjFmaD6+xqohD3KYP0H2FEuxknnBmyyOxdhLdaIws=
 mvdan.cc/interfacer v0.0.0-20180901003855-c20040233aed h1:WX1yoOaKQfddO/mLzdV4wptyWgoH/6hwLs7QHTixo0I=
 mvdan.cc/interfacer v0.0.0-20180901003855-c20040233aed/go.mod h1:Xkxe497xwlCKkIaQYRfC7CSLworTXY9RMqwhhCm+8Nc=
 mvdan.cc/lint v0.0.0-20170908181259-adc824a0674b h1:DxJ5nJdkhDlLok9K6qO+5290kphDJbHOQO1DFFFTeBo=
