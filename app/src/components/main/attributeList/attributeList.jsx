@@ -69,6 +69,7 @@ export const AttributeList = ({
   disabled,
   keyURLCreator,
   valueURLCreator,
+  newAttrMessage,
 }) => (
   <Fragment>
     {attributes.filter(notSystemAttributePredicate).map((attribute, i, filteredAttributes) => (
@@ -88,7 +89,8 @@ export const AttributeList = ({
     ))}
     {!hasEditedAttribute(attributes) && !disabled && (
       <div className={cx('add-new-button')} onClick={onAddNew}>
-        + <FormattedMessage id="AttributeList.addNew" defaultMessage="Add new" />
+        +{' '}
+        {newAttrMessage || <FormattedMessage id="AttributeList.addNew" defaultMessage="Add new" />}
       </div>
     )}
   </Fragment>
@@ -97,6 +99,7 @@ AttributeList.propTypes = {
   attributes: PropTypes.arrayOf(PropTypes.object),
   editedAttribute: PropTypes.object,
   disabled: PropTypes.bool,
+  newAttrMessage: PropTypes.string,
   onChange: PropTypes.func,
   onEdit: PropTypes.func,
   onAddNew: PropTypes.func,
@@ -108,10 +111,11 @@ AttributeList.defaultProps = {
   attributes: [],
   editedAttribute: null,
   disabled: false,
+  keyURLCreator: null,
+  valueURLCreator: null,
+  newAttrMessage: '',
   onChange: () => {},
   onRemove: () => {},
   onEdit: () => {},
   onAddNew: () => {},
-  keyURLCreator: null,
-  valueURLCreator: null,
 };

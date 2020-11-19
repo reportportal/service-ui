@@ -64,6 +64,8 @@ import {
   projectInfoLoadingSelector,
 } from 'controllers/project';
 import { Grid } from 'components/main/grid';
+import { AttributeListField } from 'components/main/attributeList';
+import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
 import { InputSearch } from 'components/inputs/inputSearch';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { ProjectName } from 'pages/admin/projectsPage/projectName';
@@ -144,6 +146,8 @@ export const createImportProps = (pluginName) => ({
     RuleList,
     RuleListHeader,
     StripedMessage,
+    AttributeListField,
+    AsyncAutocomplete,
   },
   constants: { PLUGIN_UI_EXTENSION_ADMIN_PAGE, PROJECT_SETTINGS_TAB_PAGE },
   actions: { showModalAction, showSuccessNotification, showErrorNotification, fetchProjectAction },
