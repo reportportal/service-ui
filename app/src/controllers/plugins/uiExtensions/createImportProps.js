@@ -81,8 +81,11 @@ import { InputTextArea } from 'components/inputs/inputTextArea';
 import { InputTimeDateRange, InputTimeDateRangeMenu } from 'components/inputs/inputTimeDateRange';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { AbsRelTime } from 'components/main/absRelTime';
+import { StripedMessage } from 'components/main/stripedMessage';
 import { MarkdownEditor, MarkdownViewer } from 'components/main/markdown';
 import { GeneralTab } from 'pages/common/settingsPage/generalTab';
+import { RuleList } from 'pages/common/settingsPage/ruleList';
+import { RuleListHeader } from 'pages/common/settingsPage/ruleListHeader';
 import { createGlobalNamedIntegrationsSelector } from '../selectors';
 
 const BUTTONS = {
@@ -135,6 +138,9 @@ export const createImportProps = (pluginName) => ({
     MarkdownEditor,
     MarkdownViewer,
     GeneralTab,
+    RuleList,
+    RuleListHeader,
+    StripedMessage,
   },
   constants: { PLUGIN_UI_EXTENSION_ADMIN_PAGE, PROJECT_SETTINGS_TAB_PAGE },
   actions: { showModalAction, showSuccessNotification, showErrorNotification, fetchProjectAction },
