@@ -34,8 +34,9 @@ import { uiExtensionAdminPagesSelector } from 'controllers/plugins/uiExtensions'
 import { ADMIN_SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { Sidebar } from 'layouts/common/sidebar';
 import ProjectsIcon from './img/projects-inline.svg';
-import UsersIcon from './img/users-inline.svg';
-import SettingsIcon from './img/settings-inline.svg';
+import UsersIcon from './img/all-users-inline.svg';
+import SettingsIcon from './img/server-settings-inline.svg';
+import PluginsIcon from './img/plugins-inline.svg';
 import BackIcon from './img/back-inline.svg';
 import ProfileIcon from './img/profile-inline.svg';
 
@@ -97,7 +98,7 @@ export class AdminSidebar extends Component {
       {
         onClick: this.handleClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_PLUGINS_BTN),
         link: { type: PLUGINS_PAGE },
-        icon: SettingsIcon,
+        icon: PluginsIcon,
         message: <FormattedMessage id={'AdminSidebar.plugins'} defaultMessage={'Plugins'} />,
       },
     ];
