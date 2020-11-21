@@ -91,33 +91,6 @@
     height: 100%;
   }
 }
-.members-btn {
-  background-image: url(./img/members-icon.svg);
-  background-size: 20px;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    background-size: 30px;
-  }
-
-  &.active {
-    transform: rotateY(0.5turn);
-    background-image: url(./img/members-icon-active.svg);
-  }
-}
-.settings-btn {
-  background-image: url(./img/gear-icon.svg);
-  background-size: 17px;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    background-size: 25px;
-  }
-
-  &.active {
-    transform: rotate(90deg);
-    background-image: url(./img/gear-icon-active.svg);
-  }
-}
-
 .extension-component {
   @media (max-width: $SCREEN_XS_MAX) {
     display: none;

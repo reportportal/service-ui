@@ -39,7 +39,7 @@ export const SidebarButton = ({ onClick, icon, children, link, bottom }) => {
       >
         <span className={cx('wrapper')}>
           <i className={cx('btn-icon')}>{Parser(icon)}</i>
-          <span className={cx('btn-title')}>{children}</span>
+          <span className={cx('btn-title-mobile')}>{children}</span>
         </span>
       </NavLink>
     </div>

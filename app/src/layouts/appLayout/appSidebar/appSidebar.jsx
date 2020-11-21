@@ -18,10 +18,15 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import track from 'react-tracking';
-import { activeProjectSelector, activeProjectRoleSelector } from 'controllers/user';
-import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
+import {
+  activeProjectSelector,
+  activeProjectRoleSelector,
+  userAccountRoleSelector,
+} from 'controllers/user';
+import { HEADER_EVENTS, SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { FormattedMessage } from 'react-intl';
 import { CUSTOMER } from 'common/constants/projectRoles';
+import { canSeeMembers } from 'common/utils/permissions';
 import { ALL } from 'common/constants/reservedFilterIds';
 import {
   PROJECT_DASHBOARD_PAGE,
@@ -30,6 +35,8 @@ import {
   PROJECT_FILTERS_PAGE,
   USER_PROFILE_PAGE,
   ADMINISTRATE_PAGE,
+  PROJECT_MEMBERS_PAGE,
+  PROJECT_SETTINGS_PAGE,
 } from 'controllers/pages/constants';
 import { Sidebar } from 'layouts/common/sidebar';
 import FiltersIcon from 'common/img/filters-icon-inline.svg';
@@ -38,21 +45,25 @@ import LaunchesIcon from './img/launches-icon-inline.svg';
 import DebugIcon from './img/debug-icon-inline.svg';
 import ProfileIcon from './img/profile-icon-inline.svg';
 import AdministrateIcon from './img/administrate-icon-inline.svg';
+import MembersIcon from './img/members-icon-inline.svg';
+import SettingsIcon from './img/settings-icon-inline.svg';
 
 @connect((state) => ({
   activeProject: activeProjectSelector(state),
   projectRole: activeProjectRoleSelector(state),
+  accountRole: userAccountRoleSelector(state),
 }))
 @track()
 export class AppSidebar extends Component {
   static propTypes = {
     projectRole: PropTypes.string.isRequired,
-    onClickNavBtn: PropTypes.func,
     activeProject: PropTypes.string.isRequired,
+    accountRole: PropTypes.string.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    onClickNavBtn: PropTypes.func,
   };
   static defaultProps = {
     onClickNavBtn: () => {},
@@ -63,38 +74,69 @@ export class AppSidebar extends Component {
     this.props.tracking.trackEvent(eventInfo);
   };
 
-  createTopSidebarItems = () => [
-    {
-      onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_DASHBOARD_BTN),
-      link: { type: PROJECT_DASHBOARD_PAGE, payload: { projectId: this.props.activeProject } },
-      icon: DashboardIcon,
-      message: <FormattedMessage id={'Sidebar.dashboardsBtn'} defaultMessage={'Dashboard'} />,
-    },
-    {
-      onClick: this.props.onClickNavBtn,
-      link: {
-        type: LAUNCHES_PAGE,
-        payload: { projectId: this.props.activeProject },
+  createTopSidebarItems = () => {
+    const { projectRole, accountRole, activeProject } = this.props;
+
+    const topItems = [
+      {
+        onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_DASHBOARD_BTN),
+        link: { type: PROJECT_DASHBOARD_PAGE, payload: { projectId: this.props.activeProject } },
+        icon: DashboardIcon,
+        message: <FormattedMessage id={'Sidebar.dashboardsBtn'} defaultMessage={'Dashboard'} />,
       },
-      icon: LaunchesIcon,
-      message: <FormattedMessage id={'Sidebar.launchesBtn'} defaultMessage={'Launches'} />,
-    },
-    {
-      onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_FILTERS_BTN),
-      link: { type: PROJECT_FILTERS_PAGE, payload: { projectId: this.props.activeProject } },
-      icon: FiltersIcon,
-      message: <FormattedMessage id={'Sidebar.filtersBtn'} defaultMessage={'Filters'} />,
-    },
-    {
-      onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_DEBUG_BTN),
-      link: {
-        type: PROJECT_USERDEBUG_PAGE,
-        payload: { projectId: this.props.activeProject, filterId: ALL },
+      {
+        onClick: this.props.onClickNavBtn,
+        link: {
+          type: LAUNCHES_PAGE,
+          payload: { projectId: this.props.activeProject },
+        },
+        icon: LaunchesIcon,
+        message: <FormattedMessage id={'Sidebar.launchesBtn'} defaultMessage={'Launches'} />,
       },
-      icon: DebugIcon,
-      message: <FormattedMessage id={'Sidebar.debugBtn'} defaultMessage={'Debug'} />,
-    },
-  ];
+      {
+        onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_FILTERS_BTN),
+        link: { type: PROJECT_FILTERS_PAGE, payload: { projectId: this.props.activeProject } },
+        icon: FiltersIcon,
+        message: <FormattedMessage id={'Sidebar.filtersBtn'} defaultMessage={'Filters'} />,
+      },
+    ];
+
+    if (projectRole !== CUSTOMER) {
+      topItems.push({
+        onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_DEBUG_BTN),
+        link: {
+          type: PROJECT_USERDEBUG_PAGE,
+          payload: { projectId: this.props.activeProject, filterId: ALL },
+        },
+        icon: DebugIcon,
+        message: <FormattedMessage id={'Sidebar.debugBtn'} defaultMessage={'Debug'} />,
+      });
+    }
+
+    if (canSeeMembers(accountRole, projectRole)) {
+      topItems.push({
+        onClick: () => this.onClickButton(HEADER_EVENTS.CLICK_MEMBERS_BTN),
+        link: {
+          type: PROJECT_MEMBERS_PAGE,
+          payload: { projectId: activeProject },
+        },
+        icon: MembersIcon,
+        message: 'Members',
+      });
+    }
+
+    topItems.push({
+      onClick: () => this.onClickButton(HEADER_EVENTS.CLICK_SETTINGS_BTN),
+      link: {
+        type: PROJECT_SETTINGS_PAGE,
+        payload: { projectId: activeProject },
+      },
+      icon: SettingsIcon,
+      message: 'Settings',
+    });
+
+    return topItems;
+  };
 
   createBottomSidebarItems = () => [
     {
@@ -112,12 +154,7 @@ export class AppSidebar extends Component {
   ];
 
   render() {
-    const { projectRole } = this.props;
-
     const topSidebarItems = this.createTopSidebarItems();
-    if (projectRole === CUSTOMER) {
-      topSidebarItems.pop();
-    }
     const bottomSidebarItems = this.createBottomSidebarItems();
 
     return <Sidebar topSidebarItems={topSidebarItems} bottomSidebarItems={bottomSidebarItems} />;
