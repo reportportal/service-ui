@@ -20,9 +20,18 @@
   height: 100%;
   background-color: $COLOR--charcoal-grey;
 }
+
 .top-block {
   width: 100%;
 }
+
+.sidebar-btn {
+  width: 100%;
+  height: 56px;
+  overflow: hidden;
+  letter-spacing: 0.4px;
+}
+
 .bottom-block {
   position: absolute;
   bottom: 0;
@@ -36,16 +45,5 @@
 
   .sidebar-btn {
     height: 45px;
-  }
-}
-.sidebar-btn {
-  width: 100%;
-  height: 78px;
-  border-bottom: 1px solid $COLOR--black-2;
-  overflow: hidden;
-  letter-spacing: 0.4px;
-
-  @media (max-width: $SCREEN_SM_MAX) {
-    height: 55px;
   }
 }
