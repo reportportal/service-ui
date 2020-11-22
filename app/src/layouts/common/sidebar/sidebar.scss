@@ -35,15 +35,17 @@
 .bottom-block {
   position: absolute;
   bottom: 0;
-  left: 0;
-  display: none;
   width: 100%;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    display: block;
-  }
+  min-height: 60px;
 
   .sidebar-btn {
+    display: none;
     height: 45px;
+  }
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    .sidebar-btn {
+      display: block;
+    }
   }
 }

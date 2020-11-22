@@ -19,21 +19,15 @@ import PropTypes from 'prop-types';
 import track from 'react-tracking';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
-import {
-  userInfoSelector,
-  activeProjectSelector,
-  assignedProjectsSelector,
-} from 'controllers/user';
+import { activeProjectSelector, assignedProjectsSelector } from 'controllers/user';
 import { uiExtensionHeaderComponentsSelector } from 'controllers/plugins';
 import { MobileHeader } from 'layouts/common/mobileHeader';
 import { ProjectSelector } from './projectSelector';
-import { UserBlock } from './userBlock';
 import styles from './appHeader.scss';
 
 const cx = classNames.bind(styles);
 
 @connect((state) => ({
-  user: userInfoSelector(state),
   activeProject: activeProjectSelector(state),
   assignedProjects: assignedProjectsSelector(state),
   extensionComponents: uiExtensionHeaderComponentsSelector(state),
@@ -42,7 +36,6 @@ const cx = classNames.bind(styles);
 export class AppHeader extends Component {
   static propTypes = {
     activeProject: PropTypes.string.isRequired,
-    user: PropTypes.object,
     assignedProjects: PropTypes.object,
     sideMenuOpened: PropTypes.bool,
     toggleSideMenu: PropTypes.func,
@@ -54,7 +47,6 @@ export class AppHeader extends Component {
   };
 
   static defaultProps = {
-    user: {},
     assignedProjects: {},
     sideMenuOpened: false,
     toggleSideMenu: () => {},
@@ -64,7 +56,6 @@ export class AppHeader extends Component {
   render() {
     const {
       sideMenuOpened,
-      user,
       toggleSideMenu,
       activeProject,
       assignedProjects,
@@ -87,7 +78,6 @@ export class AppHeader extends Component {
             </div>
           ))}
         </div>
-        <UserBlock user={user} />
       </header>
     );
   }
