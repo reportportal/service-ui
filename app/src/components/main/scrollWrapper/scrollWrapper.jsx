@@ -25,7 +25,7 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import { FOOTER_EVENTS } from 'components/main/analytics/events';
 import { forceCheck } from 'react-lazyload';
 import { Footer } from 'layouts/common/footer';
-import TopIcon from './img/top-inline.svg';
+import BackToTopIcon from './img/back-to-top-inline.svg';
 import styles from './scrollWrapper.scss';
 
 const cx = classNames.bind(styles);
@@ -187,8 +187,10 @@ export class ScrollWrapper extends Component {
         {this.state.showButton && (
           <div className={cx('back-to-top')}>
             <button className={cx('back-to-top-button')} onClick={this.scrollTop}>
-              <i className={cx('top-icon')}>{Parser(TopIcon)}</i>
-              <FormattedMessage id="ScrollWrapper.backToTop" defaultMessage="Back to top" />
+              <i className={cx('top-icon')}>{Parser(BackToTopIcon)}</i>
+              <div className={cx('message')}>
+                <FormattedMessage id="ScrollWrapper.backToTop" defaultMessage="Back to top" />
+              </div>
             </button>
           </div>
         )}
