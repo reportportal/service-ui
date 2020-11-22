@@ -18,6 +18,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { activeProjectSelector } from 'controllers/user';
 import { FormattedMessage } from 'react-intl';
+import classNames from 'classnames/bind';
+import Parser from 'html-react-parser';
+import Link from 'redux-first-router-link';
 import {
   PROJECT_LAUNCHES_PAGE,
   USER_PROFILE_PAGE,
@@ -39,6 +42,9 @@ import SettingsIcon from './img/server-settings-inline.svg';
 import PluginsIcon from './img/plugins-inline.svg';
 import BackIcon from './img/back-inline.svg';
 import ProfileIcon from './img/profile-inline.svg';
+import styles from './adminSidebar.scss';
+
+const cx = classNames.bind(styles);
 
 @connect((state) => ({
   activeProject: activeProjectSelector(state),
@@ -132,9 +138,27 @@ export class AdminSidebar extends Component {
   ];
 
   render() {
+    const { activeProject } = this.props;
     const topSidebarItems = this.createTopSidebarItems();
     const bottomSidebarItems = this.createBottomSidebarItems();
+    const mainBlock = (
+      <Link
+        className={cx('back-to-project')}
+        to={{
+          type: PROJECT_LAUNCHES_PAGE,
+          payload: { projectId: activeProject, filterId: ALL },
+        }}
+      >
+        <i className={cx('icon')}>{Parser(BackIcon)}</i>
+      </Link>
+    );
 
-    return <Sidebar topSidebarItems={topSidebarItems} bottomSidebarItems={bottomSidebarItems} />;
+    return (
+      <Sidebar
+        mainBlock={mainBlock}
+        topSidebarItems={topSidebarItems}
+        bottomSidebarItems={bottomSidebarItems}
+      />
+    );
   }
 }

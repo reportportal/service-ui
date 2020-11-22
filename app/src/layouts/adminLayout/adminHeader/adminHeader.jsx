@@ -20,12 +20,7 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import track from 'react-tracking';
-import { HEADER_EVENTS } from 'components/main/analytics/events';
-import { NavLink } from 'components/main/navLink';
-import { ALL } from 'common/constants/reservedFilterIds';
-import { logoutAction } from 'controllers/auth';
 import {
-  PROJECT_LAUNCHES_PAGE,
   PROJECTS_PAGE,
   PROJECT_DETAILS_PAGE,
   ALL_USERS_PAGE,
@@ -36,7 +31,6 @@ import {
   pageSelector,
   projectIdSelector,
 } from 'controllers/pages';
-import { activeProjectSelector } from 'controllers/user';
 import { MobileHeader } from 'layouts/common/mobileHeader';
 import styles from './adminHeader.scss';
 
@@ -60,25 +54,17 @@ const pageTitles = defineMessages({
     defaultMessage: 'Plugins',
   },
 });
-@connect(
-  (state) => ({
-    activeProject: activeProjectSelector(state),
-    currentPage: pageSelector(state),
-    projectId: projectIdSelector(state),
-  }),
-  {
-    logout: logoutAction,
-  },
-)
+@connect((state) => ({
+  currentPage: pageSelector(state),
+  projectId: projectIdSelector(state),
+}))
 @injectIntl
 @track()
 export class AdminHeader extends Component {
   static propTypes = {
-    activeProject: PropTypes.string.isRequired,
     sideMenuOpened: PropTypes.bool,
     toggleSideMenu: PropTypes.func,
     currentPage: PropTypes.string,
-    logout: PropTypes.func,
     intl: PropTypes.object.isRequired,
     projectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     tracking: PropTypes.shape({
@@ -90,14 +76,8 @@ export class AdminHeader extends Component {
   static defaultProps = {
     currentPage: '',
     sideMenuOpened: false,
-    logout: () => {},
     toggleSideMenu: () => {},
     projectId: '',
-  };
-
-  onClickLogout = () => {
-    this.props.logout();
-    this.props.tracking.trackEvent(HEADER_EVENTS.CLICK_LOGOUT_LINK);
   };
 
   getHeaderCrumbs = () => {
@@ -115,7 +95,7 @@ export class AdminHeader extends Component {
   };
 
   render() {
-    const { activeProject, sideMenuOpened, toggleSideMenu } = this.props;
+    const { sideMenuOpened, toggleSideMenu } = this.props;
     const headerCrumbs = this.getHeaderCrumbs();
     return (
       <header className={cx('header')}>
@@ -125,23 +105,6 @@ export class AdminHeader extends Component {
             <FormattedMessage id={'AdminHeader.header'} defaultMessage={'Management board'} />
             <span className={cx('header-crumb')}>{headerCrumbs ? ` / ${headerCrumbs}` : ''}</span>
           </h3>
-          <div className={cx('admin-header-controls')}>
-            <NavLink
-              className={cx('back-to-project', 'btn')}
-              to={{
-                type: PROJECT_LAUNCHES_PAGE,
-                payload: { projectId: activeProject, filterId: ALL },
-              }}
-            >
-              <FormattedMessage
-                id={'AdminHeader.btnToProject'}
-                defaultMessage={'Back to project'}
-              />
-            </NavLink>
-            <button className={cx('logout', 'btn')} onClick={this.onClickLogout}>
-              <FormattedMessage id={'AdminHeader.btnLogout'} defaultMessage={'Logout'} />
-            </button>
-          </div>
         </div>
       </header>
     );
