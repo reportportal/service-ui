@@ -24,8 +24,7 @@ import styles from './sidebarButton.scss';
 const cx = classNames.bind(styles);
 
 export const SidebarButton = ({ onClick, icon, children, link, bottom }) => {
-  const classes = cx({
-    'sidebar-nav-btn': true,
+  const classes = cx('sidebar-nav-btn', {
     'at-bottom': bottom,
   });
 
