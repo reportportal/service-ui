@@ -17,7 +17,6 @@
 .user-block {
   position: relative;
   display: block;
-  margin: 13px 10px;
   color: $COLOR--charcoal-grey;
   font-family: $FONT-CONDBOLD;
 
@@ -67,10 +66,7 @@
   height: 32px;
   overflow: hidden;
   background-color: transparent;
-
-  &.main {
-    cursor: pointer;
-  }
+  cursor: pointer;
 }
 .avatar {
   position: absolute;
@@ -82,9 +78,10 @@
 }
 
 .menu {
+  position: absolute;
+  bottom: 0;
+  left: 62px;
   width: 248px;
-  margin-top: 3px;
-  margin-left: 20px;
   border: 1px solid $COLOR--gray-80;
   background-color: $COLOR--white-two;
   box-sizing: border-box;
@@ -146,5 +143,33 @@
   &.active {
     background-color: $COLOR--gray-91;
     cursor: default;
+  }
+}
+
+.tooltip-trigger {
+  display: block;
+  height: 100%;
+
+  .avatar-wrapper {
+    margin: 13px 10px;
+  }
+}
+
+.user-tooltip {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  max-width: 200px;
+  height: 25px;
+  box-sizing: border-box;
+  font-size: 17px;
+  font-family: $FONT-SEMIBOLD;
+  white-space: pre;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  .username {
+    margin: 0 10px 0 0;
+    text-transform: uppercase;
   }
 }

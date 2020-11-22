@@ -15,7 +15,6 @@
  */
 
 import React, { Component } from 'react';
-import { Manager, Popper, Reference } from 'react-popper';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
@@ -24,6 +23,8 @@ import { connect } from 'react-redux';
 import DefaultUserImage from 'common/img/default-user-avatar.png';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { URLS } from 'common/urls';
+import { withTooltip } from 'components/main/tooltips/tooltip';
+import { TextTooltip } from 'components/main/tooltips/textTooltip';
 import { userInfoSelector, photoTimeStampSelector } from 'controllers/user';
 import { logoutAction } from 'controllers/auth';
 import { API_PAGE, ADMINISTRATE_PAGE, USER_PROFILE_PAGE } from 'controllers/pages/constants';
@@ -33,6 +34,33 @@ import { Image } from 'components/main/image';
 import styles from './userBlock.scss';
 
 const cx = classNames.bind(styles);
+
+const UserAvatar = ({ photoTimeStamp }) => (
+  <div className={cx('avatar-wrapper')}>
+    <Image
+      className={cx('avatar')}
+      src={URLS.dataPhoto(photoTimeStamp, true)}
+      alt="avatar"
+      fallback={DefaultUserImage}
+    />
+  </div>
+);
+UserAvatar.propTypes = {
+  photoTimeStamp: PropTypes.number,
+};
+UserAvatar.defaultProps = {
+  photoTimeStamp: null,
+};
+
+const UserAvatarWithTooltip = withTooltip({
+  TooltipComponent: TextTooltip,
+  data: {
+    dynamicWidth: true,
+    placement: 'right',
+    tooltipTriggerClass: cx('tooltip-trigger'),
+    dark: true,
+  },
+})(UserAvatar);
 
 @connect(
   (state) => ({
@@ -62,13 +90,13 @@ export class UserBlock extends Component {
     menuOpened: false,
   };
 
-  controlNode = null;
+  controlNode = React.createRef();
 
   componentDidMount() {
-    document.addEventListener('click', this.handleOutsideClick);
+    document.addEventListener('click', this.handleOutsideClick, false);
   }
   componentWillUnmount() {
-    document.removeEventListener('click', this.handleOutsideClick);
+    document.removeEventListener('click', this.handleOutsideClick, false);
   }
 
   onClickLink = (eventInfo) => {
@@ -81,7 +109,12 @@ export class UserBlock extends Component {
   };
 
   handleOutsideClick = (e) => {
-    if (this.controlNode && !this.controlNode.contains(e.target) && this.state.menuOpened) {
+    if (
+      this.controlNode &&
+      this.controlNode.current &&
+      !this.controlNode.current.contains(e.target) &&
+      this.state.menuOpened
+    ) {
       this.setState({ menuOpened: false });
     }
   };
@@ -92,88 +125,63 @@ export class UserBlock extends Component {
   };
 
   render() {
+    const userDetails = (
+      <>
+        {this.props.user.userRole === ADMINISTRATOR && (
+          <div className={cx('admin-badge')}>
+            <FormattedMessage id={'UserBlock.adminBadge'} defaultMessage={'admin'} />
+          </div>
+        )}
+        <div className={cx('username')}>{this.props.user.userId}</div>
+      </>
+    );
+
     return (
-      <div className={cx('user-block')}>
-        <Manager>
-          <Reference>
-            {({ ref }) => (
-              <div
-                ref={(node) => {
-                  ref(node);
-                  this.controlNode = node;
-                }}
-                className={cx('avatar-wrapper', 'main')}
-                onClick={this.toggleMenu}
+      <div className={cx('user-block')} ref={this.controlNode} onClick={this.toggleMenu}>
+        <UserAvatarWithTooltip
+          photoTimeStamp={this.props.photoTimeStamp}
+          className={cx('user-tooltip')}
+          tooltipContent={userDetails}
+          preventParsing
+        />
+        {this.state.menuOpened && (
+          <div className={cx('menu')}>
+            <div className={cx('user-wrapper')}>
+              <UserAvatar photoTimeStamp={this.props.photoTimeStamp} />
+              <div className={cx('details')}>{userDetails}</div>
+            </div>
+            <NavLink
+              to={{ type: USER_PROFILE_PAGE }}
+              className={cx('menu-item')}
+              activeClassName={cx('active')}
+              onClick={() => this.props.tracking.trackEvent(HEADER_EVENTS.CLICK_PROFILE_LINK)}
+            >
+              <FormattedMessage id={'UserBlock.profile'} defaultMessage={'Profile'} />
+            </NavLink>
+            {this.props.user.userRole === ADMINISTRATOR && (
+              <NavLink
+                to={{ type: ADMINISTRATE_PAGE }}
+                className={cx('menu-item')}
+                activeClassName={cx('active')}
+                onClick={() => this.onClickLink(HEADER_EVENTS.CLICK_ADMINISTRATE_LINK)}
               >
-                <Image
-                  className={cx('avatar')}
-                  src={URLS.dataPhoto(this.props.photoTimeStamp, true)}
-                  alt="avatar"
-                  fallback={DefaultUserImage}
-                />
-              </div>
+                <FormattedMessage id={'UserBlock.administrate'} defaultMessage={'Administrate'} />
+              </NavLink>
             )}
-          </Reference>
-          {this.state.menuOpened && (
-            <Popper placement="right-end" eventsEnabled={false}>
-              {({ ref, style, placement }) => (
-                <div className={cx('menu')} ref={ref} style={style} data-placement={placement}>
-                  <div className={cx('user-wrapper')}>
-                    <div className={cx('avatar-wrapper')}>
-                      <Image
-                        className={cx('avatar')}
-                        src={URLS.dataPhoto(this.props.photoTimeStamp, true)}
-                        alt="avatar"
-                        fallback={DefaultUserImage}
-                      />
-                    </div>
-                    <div className={cx('details')}>
-                      {this.props.user.userRole === ADMINISTRATOR && (
-                        <div className={cx('admin-badge')}>
-                          <FormattedMessage id={'UserBlock.adminBadge'} defaultMessage={'admin'} />
-                        </div>
-                      )}
-                      <div className={cx('username')}>{this.props.user.userId}</div>
-                    </div>
-                  </div>
-                  <NavLink
-                    to={{ type: USER_PROFILE_PAGE }}
-                    className={cx('menu-item')}
-                    activeClassName={cx('active')}
-                    onClick={() => this.props.tracking.trackEvent(HEADER_EVENTS.CLICK_PROFILE_LINK)}
-                  >
-                    <FormattedMessage id={'UserBlock.profile'} defaultMessage={'Profile'} />
-                  </NavLink>
-                  {this.props.user.userRole === ADMINISTRATOR && (
-                    <NavLink
-                      to={{ type: ADMINISTRATE_PAGE }}
-                      className={cx('menu-item')}
-                      activeClassName={cx('active')}
-                      onClick={() => this.onClickLink(HEADER_EVENTS.CLICK_ADMINISTRATE_LINK)}
-                    >
-                      <FormattedMessage
-                        id={'UserBlock.administrate'}
-                        defaultMessage={'Administrate'}
-                      />
-                    </NavLink>
-                  )}
-                  <NavLink
-                    to={{ type: API_PAGE }}
-                    className={cx('menu-item')}
-                    activeClassName={cx('active')}
-                    onClick={() => this.onClickLink(HEADER_EVENTS.CLICK_API_LINK)}
-                  >
-                    API
-                  </NavLink>
-                  <div className={cx('menu-item')} onClick={this.onClickLogout}>
-                    <FormattedMessage id={'UserBlock.logout'} defaultMessage={'Logout'} />
-                  </div>
-                  <div className={cx('menu-arrow')} />
-                </div>
-              )}
-            </Popper>
-          )}
-        </Manager>
+            <NavLink
+              to={{ type: API_PAGE }}
+              className={cx('menu-item')}
+              activeClassName={cx('active')}
+              onClick={() => this.onClickLink(HEADER_EVENTS.CLICK_API_LINK)}
+            >
+              API
+            </NavLink>
+            <div className={cx('menu-item')} onClick={this.onClickLogout}>
+              <FormattedMessage id={'UserBlock.logout'} defaultMessage={'Logout'} />
+            </div>
+            <div className={cx('menu-arrow')} />
+          </div>
+        )}
       </div>
     );
   }

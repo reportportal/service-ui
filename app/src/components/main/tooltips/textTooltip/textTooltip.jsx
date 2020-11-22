@@ -21,12 +21,18 @@ import styles from './textTooltip.scss';
 
 const cx = classNames.bind(styles);
 
-export const TextTooltip = ({ tooltipContent }) => (
-  <div className={cx('text-tooltip')}>{Parser(tooltipContent)}</div>
+export const TextTooltip = ({ tooltipContent, className, preventParsing }) => (
+  <div className={cx('text-tooltip', className)}>
+    {preventParsing ? tooltipContent : Parser(tooltipContent)}
+  </div>
 );
 TextTooltip.propTypes = {
-  tooltipContent: PropTypes.string,
+  tooltipContent: PropTypes.any,
+  className: PropTypes.string,
+  preventParsing: PropTypes.bool,
 };
 TextTooltip.defaultProps = {
   tooltipContent: '',
+  className: '',
+  preventParsing: false,
 };

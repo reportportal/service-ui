@@ -86,8 +86,6 @@
   }
   &.at-bottom {
     .nav-link {
-      box-shadow: inset 0 1px 0 0 $COLOR--brownish-grey;
-
       .btn-icon {
         width: 20px;
         height: 20px;
@@ -113,4 +111,18 @@
   @media (max-width: $SCREEN_XS_MAX) {
     white-space: nowrap;
   }
+}
+
+.tooltip-trigger {
+  display: block;
+  height: 100%;
+}
+
+.sidebar-tooltip {
+  display: inline-flex;
+  align-items: center;
+  height: 25px;
+  font-size: 17px;
+  font-family: $FONT-SEMIBOLD;
+  text-transform: uppercase;
 }

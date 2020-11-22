@@ -48,7 +48,7 @@ import ProfileIcon from './img/profile-icon-inline.svg';
 import AdministrateIcon from './img/administrate-icon-inline.svg';
 import MembersIcon from './img/members-icon-inline.svg';
 import SettingsIcon from './img/settings-icon-inline.svg';
-import { ProjectSelector } from '../../common/projectSelector';
+import { ProjectSelectorWithTooltip as ProjectSelector } from '../../common/projectSelector';
 
 @connect((state) => ({
   activeProject: activeProjectSelector(state),
@@ -80,27 +80,27 @@ export class AppSidebar extends Component {
   };
 
   createTopSidebarItems = () => {
-    const { projectRole, accountRole, activeProject } = this.props;
+    const { projectRole, accountRole, activeProject, onClickNavBtn } = this.props;
 
     const topItems = [
       {
         onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_DASHBOARD_BTN),
-        link: { type: PROJECT_DASHBOARD_PAGE, payload: { projectId: this.props.activeProject } },
+        link: { type: PROJECT_DASHBOARD_PAGE, payload: { projectId: activeProject } },
         icon: DashboardIcon,
-        message: <FormattedMessage id={'Sidebar.dashboardsBtn'} defaultMessage={'Dashboard'} />,
+        message: <FormattedMessage id={'Sidebar.dashboardsBtn'} defaultMessage={'Dashboards'} />,
       },
       {
-        onClick: this.props.onClickNavBtn,
+        onClick: onClickNavBtn,
         link: {
           type: LAUNCHES_PAGE,
-          payload: { projectId: this.props.activeProject },
+          payload: { projectId: activeProject },
         },
         icon: LaunchesIcon,
         message: <FormattedMessage id={'Sidebar.launchesBtn'} defaultMessage={'Launches'} />,
       },
       {
         onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_FILTERS_BTN),
-        link: { type: PROJECT_FILTERS_PAGE, payload: { projectId: this.props.activeProject } },
+        link: { type: PROJECT_FILTERS_PAGE, payload: { projectId: activeProject } },
         icon: FiltersIcon,
         message: <FormattedMessage id={'Sidebar.filtersBtn'} defaultMessage={'Filters'} />,
       },
@@ -111,7 +111,7 @@ export class AppSidebar extends Component {
         onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_DEBUG_BTN),
         link: {
           type: PROJECT_USERDEBUG_PAGE,
-          payload: { projectId: this.props.activeProject, filterId: ALL },
+          payload: { projectId: activeProject, filterId: ALL },
         },
         icon: DebugIcon,
         message: <FormattedMessage id={'Sidebar.debugBtn'} defaultMessage={'Debug'} />,
@@ -126,7 +126,7 @@ export class AppSidebar extends Component {
           payload: { projectId: activeProject },
         },
         icon: MembersIcon,
-        message: 'Members',
+        message: <FormattedMessage id={'Sidebar.membersBnt'} defaultMessage={'Project members'} />,
       });
     }
 
@@ -137,7 +137,7 @@ export class AppSidebar extends Component {
         payload: { projectId: activeProject },
       },
       icon: SettingsIcon,
-      message: 'Settings',
+      message: <FormattedMessage id={'Sidebar.settingsBnt'} defaultMessage={'Project settings'} />,
     });
 
     return topItems;

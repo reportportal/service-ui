@@ -35,6 +35,8 @@ import PropTypes from 'prop-types';
 import track from 'react-tracking';
 import { uiExtensionAdminPagesSelector } from 'controllers/plugins/uiExtensions';
 import { ADMIN_SIDEBAR_EVENTS } from 'components/main/analytics/events';
+import { withTooltip } from 'components/main/tooltips/tooltip';
+import { TextTooltip } from 'components/main/tooltips/textTooltip';
 import { Sidebar } from 'layouts/common/sidebar';
 import ProjectsIcon from './img/projects-inline.svg';
 import UsersIcon from './img/all-users-inline.svg';
@@ -45,6 +47,34 @@ import ProfileIcon from './img/profile-inline.svg';
 import styles from './adminSidebar.scss';
 
 const cx = classNames.bind(styles);
+
+const BackToProject = ({ activeProject }) => (
+  <Link
+    className={cx('back-to-project')}
+    to={{
+      type: PROJECT_LAUNCHES_PAGE,
+      payload: { projectId: activeProject, filterId: ALL },
+    }}
+  >
+    <i className={cx('icon')}>{Parser(BackIcon)}</i>
+  </Link>
+);
+BackToProject.propTypes = {
+  activeProject: PropTypes.string,
+};
+BackToProject.defaultProps = {
+  activeProject: '',
+};
+
+const BackToProjectWithTooltip = withTooltip({
+  TooltipComponent: TextTooltip,
+  data: {
+    dynamicWidth: true,
+    placement: 'right',
+    tooltipTriggerClass: cx('tooltip-trigger'),
+    dark: true,
+  },
+})(BackToProject);
 
 @connect((state) => ({
   activeProject: activeProjectSelector(state),
@@ -142,15 +172,14 @@ export class AdminSidebar extends Component {
     const topSidebarItems = this.createTopSidebarItems();
     const bottomSidebarItems = this.createBottomSidebarItems();
     const mainBlock = (
-      <Link
-        className={cx('back-to-project')}
-        to={{
-          type: PROJECT_LAUNCHES_PAGE,
-          payload: { projectId: activeProject, filterId: ALL },
-        }}
-      >
-        <i className={cx('icon')}>{Parser(BackIcon)}</i>
-      </Link>
+      <BackToProjectWithTooltip
+        activeProject={activeProject}
+        className={cx('back-to-project-tooltip')}
+        tooltipContent={
+          <FormattedMessage id={'AdminSidebar.btnToProject'} defaultMessage={'Back to project'} />
+        }
+        preventParsing
+      />
     );
 
     return (
