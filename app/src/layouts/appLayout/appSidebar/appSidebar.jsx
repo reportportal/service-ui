@@ -22,6 +22,7 @@ import {
   activeProjectSelector,
   activeProjectRoleSelector,
   userAccountRoleSelector,
+  assignedProjectsSelector,
 } from 'controllers/user';
 import { HEADER_EVENTS, SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { FormattedMessage } from 'react-intl';
@@ -47,9 +48,11 @@ import ProfileIcon from './img/profile-icon-inline.svg';
 import AdministrateIcon from './img/administrate-icon-inline.svg';
 import MembersIcon from './img/members-icon-inline.svg';
 import SettingsIcon from './img/settings-icon-inline.svg';
+import { ProjectSelector } from '../../common/projectSelector';
 
 @connect((state) => ({
   activeProject: activeProjectSelector(state),
+  assignedProjects: assignedProjectsSelector(state),
   projectRole: activeProjectRoleSelector(state),
   accountRole: userAccountRoleSelector(state),
 }))
@@ -63,9 +66,11 @@ export class AppSidebar extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    assignedProjects: PropTypes.object,
     onClickNavBtn: PropTypes.func,
   };
   static defaultProps = {
+    assignedProjects: {},
     onClickNavBtn: () => {},
   };
 
@@ -154,9 +159,22 @@ export class AppSidebar extends Component {
   ];
 
   render() {
+    const { assignedProjects, activeProject } = this.props;
     const topSidebarItems = this.createTopSidebarItems();
     const bottomSidebarItems = this.createBottomSidebarItems();
+    const mainBlock = (
+      <ProjectSelector
+        projects={Object.keys(assignedProjects).sort()}
+        activeProject={activeProject}
+      />
+    );
 
-    return <Sidebar topSidebarItems={topSidebarItems} bottomSidebarItems={bottomSidebarItems} />;
+    return (
+      <Sidebar
+        mainBlock={mainBlock}
+        topSidebarItems={topSidebarItems}
+        bottomSidebarItems={bottomSidebarItems}
+      />
+    );
   }
 }

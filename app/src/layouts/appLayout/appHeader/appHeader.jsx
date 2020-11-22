@@ -22,7 +22,7 @@ import classNames from 'classnames/bind';
 import { activeProjectSelector, assignedProjectsSelector } from 'controllers/user';
 import { uiExtensionHeaderComponentsSelector } from 'controllers/plugins';
 import { MobileHeader } from 'layouts/common/mobileHeader';
-import { ProjectSelector } from './projectSelector';
+import { ProjectSelector } from '../../common/projectSelector';
 import styles from './appHeader.scss';
 
 const cx = classNames.bind(styles);
@@ -68,9 +68,9 @@ export class AppHeader extends Component {
           <ProjectSelector
             projects={Object.keys(assignedProjects).sort()}
             activeProject={activeProject}
+            mobileOnly
           />
         </div>
-        <div className={cx('separator')} />
         <div className={cx('nav-btns-block')}>
           {extensionComponents.map((extensionComponent) => (
             <div className={cx('nav-btn', 'extension-component')} key={extensionComponent.name}>

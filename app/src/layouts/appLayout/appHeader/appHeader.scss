@@ -20,14 +20,10 @@
   height: 100%;
   max-width: 1370px;
   margin: 0 auto;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    background-color: $COLOR--charcoal-grey;
-  }
+  background-color: $COLOR--charcoal-grey;
 }
 .projects-block {
   display: inline-block;
-  height: 100%;
   max-width: 350px;
   min-width: 150px;
   margin-right: 30px;
@@ -41,18 +37,7 @@
     max-width: none;
   }
 }
-.separator {
-  display: inline-block;
-  position: relative;
-  top: 15px;
-  height: 30px;
-  width: 1px;
-  background-color: $COLOR--brownish-grey;
 
-  @media (max-width: $SCREEN_XS_MAX) {
-    display: none;
-  }
-}
 .nav-btns-block {
   display: inline-block;
 
