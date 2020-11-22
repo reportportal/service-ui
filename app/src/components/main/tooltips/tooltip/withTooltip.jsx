@@ -70,6 +70,7 @@ export const withTooltip = ({ TooltipComponent, data = {} }) => (WrappedComponen
                     className={cx('tooltip', {
                       'no-mobile': data.noMobile,
                       'desktop-only': data.desktopOnly,
+                      dark: data.dark,
                     })}
                     ref={ref}
                     style={{

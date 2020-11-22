@@ -15,3 +15,4 @@
  */
 
 export { ProjectSelector } from './projectSelector';
+export { ProjectSelectorWithTooltip } from './projectSelectorWithTooltip';

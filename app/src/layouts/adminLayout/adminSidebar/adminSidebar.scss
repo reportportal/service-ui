@@ -23,3 +23,17 @@
     }
   }
 }
+
+.tooltip-trigger {
+  display: block;
+  height: 100%;
+}
+
+.back-to-project-tooltip {
+  display: inline-flex;
+  align-items: center;
+  height: 25px;
+  font-size: 17px;
+  font-family: $FONT-SEMIBOLD;
+  text-transform: uppercase;
+}

@@ -22,9 +22,9 @@ import { FormattedMessage } from 'react-intl';
 import { SidebarButton } from 'components/buttons/sidebarButton/sidebarButton';
 import { LOGIN_PAGE } from 'controllers/pages/constants';
 import PropTypes from 'prop-types';
+import LogoutIcon from '../img/logout-inline.svg';
 import { UserBlock } from './userBlock';
 import styles from './sidebar.scss';
-import LogoutIcon from '../img/logout-inline.svg';
 
 const cx = classNames.bind(styles);
 

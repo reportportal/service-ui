@@ -19,11 +19,17 @@ import React from 'react';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { NavLink } from 'components/main/navLink';
+import { withTooltip } from 'components/main/tooltips/tooltip';
 import styles from './sidebarButton.scss';
 
 const cx = classNames.bind(styles);
 
-export const SidebarButton = ({ onClick, icon, children, link, bottom }) => {
+const SidebarTooltip = ({ children }) => <div className={cx('sidebar-tooltip')}>{children}</div>;
+SidebarTooltip.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
+const SidebarButtonComponent = ({ onClick, icon, children, link, bottom }) => {
   const classes = cx('sidebar-nav-btn', {
     'at-bottom': bottom,
   });
@@ -44,8 +50,7 @@ export const SidebarButton = ({ onClick, icon, children, link, bottom }) => {
     </div>
   );
 };
-
-SidebarButton.propTypes = {
+SidebarButtonComponent.propTypes = {
   link: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   icon: PropTypes.string,
   bottom: PropTypes.bool,
@@ -53,10 +58,21 @@ SidebarButton.propTypes = {
   onClick: PropTypes.func,
 };
 
-SidebarButton.defaultProps = {
+SidebarButtonComponent.defaultProps = {
   link: '/',
   icon: '',
   bottom: false,
   children: null,
   onClick: () => {},
 };
+
+export const SidebarButton = withTooltip({
+  TooltipComponent: SidebarTooltip,
+  data: {
+    dynamicWidth: true,
+    placement: 'right',
+    tooltipTriggerClass: cx('tooltip-trigger'),
+    noMobile: true,
+    dark: true,
+  },
+})(SidebarButtonComponent);
