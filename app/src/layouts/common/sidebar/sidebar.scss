@@ -25,6 +25,14 @@
   width: 100%;
 }
 
+.main-block {
+  height: 56px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+
 .sidebar-btn {
   width: 100%;
   height: 56px;

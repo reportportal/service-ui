@@ -30,7 +30,6 @@ import { API_PAGE, ADMINISTRATE_PAGE, USER_PROFILE_PAGE } from 'controllers/page
 import { HEADER_EVENTS } from 'components/main/analytics/events';
 import { NavLink } from 'components/main/navLink';
 import { Image } from 'components/main/image';
-
 import styles from './userBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -116,7 +115,7 @@ export class UserBlock extends Component {
             )}
           </Reference>
           {this.state.menuOpened && (
-            <Popper placement="right-end">
+            <Popper placement="right-end" eventsEnabled={false}>
               {({ ref, style, placement }) => (
                 <div className={cx('menu')} ref={ref} style={style} data-placement={placement}>
                   <div className={cx('user-wrapper')}>

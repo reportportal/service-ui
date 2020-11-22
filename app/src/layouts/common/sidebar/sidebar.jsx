@@ -33,21 +33,24 @@ const cx = classNames.bind(styles);
 })
 export class Sidebar extends Component {
   static propTypes = {
+    mainBlock: PropTypes.element,
     logout: PropTypes.func,
     topSidebarItems: PropTypes.array,
     bottomSidebarItems: PropTypes.array,
   };
   static defaultProps = {
+    mainBlock: null,
     logout: () => {},
     topSidebarItems: [],
     bottomSidebarItems: [],
   };
 
   render() {
-    const { topSidebarItems, bottomSidebarItems } = this.props;
+    const { mainBlock, topSidebarItems, bottomSidebarItems } = this.props;
 
     return (
       <aside className={cx('sidebar')}>
+        <div className={cx('main-block')}>{mainBlock}</div>
         <div className={cx('top-block')}>
           {topSidebarItems.map((item) => (
             <div key={item.link.type} className={cx('sidebar-btn')} onClick={item.onClick}>
