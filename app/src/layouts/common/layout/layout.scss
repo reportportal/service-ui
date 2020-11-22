@@ -67,6 +67,15 @@
   background: $COLOR--black-2 url(../img/rp_logo.png) no-repeat 50% 60%;
   cursor: pointer;
 
+  &:after {
+    content: '';
+    position: absolute;
+    bottom: 1px;
+    border-left: 28px solid transparent;
+    border-right: 28px solid transparent;
+    border-bottom: 5px solid $COLOR--charcoal-grey;
+  }
+
   @media (max-width: $SCREEN_XS_MAX) {
     background-image: none;
   }
