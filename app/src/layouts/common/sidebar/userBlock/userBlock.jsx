@@ -28,7 +28,7 @@ import { TextTooltip } from 'components/main/tooltips/textTooltip';
 import { userInfoSelector, photoTimeStampSelector } from 'controllers/user';
 import { logoutAction } from 'controllers/auth';
 import { API_PAGE, ADMINISTRATE_PAGE, USER_PROFILE_PAGE } from 'controllers/pages/constants';
-import { HEADER_EVENTS } from 'components/main/analytics/events';
+import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { NavLink } from 'components/main/navLink';
 import { Image } from 'components/main/image';
 import styles from './userBlock.scss';
@@ -105,7 +105,7 @@ export class UserBlock extends Component {
 
   onClickLogout = () => {
     this.props.logout();
-    this.props.tracking.trackEvent(HEADER_EVENTS.CLICK_LOGOUT_LINK);
+    this.props.tracking.trackEvent(SIDEBAR_EVENTS.CLICK_LOGOUT_LINK);
   };
 
   handleOutsideClick = (e) => {
@@ -121,7 +121,7 @@ export class UserBlock extends Component {
 
   toggleMenu = () => {
     this.setState({ menuOpened: !this.state.menuOpened });
-    !this.state.menuOpened && this.props.tracking.trackEvent(HEADER_EVENTS.CLICK_PROFILE_DROPDOWN);
+    !this.state.menuOpened && this.props.tracking.trackEvent(SIDEBAR_EVENTS.CLICK_PROFILE_DROPDOWN);
   };
 
   render() {
@@ -154,7 +154,7 @@ export class UserBlock extends Component {
               to={{ type: USER_PROFILE_PAGE }}
               className={cx('menu-item')}
               activeClassName={cx('active')}
-              onClick={() => this.props.tracking.trackEvent(HEADER_EVENTS.CLICK_PROFILE_LINK)}
+              onClick={() => this.props.tracking.trackEvent(SIDEBAR_EVENTS.CLICK_PROFILE_LINK)}
             >
               <FormattedMessage id={'UserBlock.profile'} defaultMessage={'Profile'} />
             </NavLink>
@@ -163,7 +163,7 @@ export class UserBlock extends Component {
                 to={{ type: ADMINISTRATE_PAGE }}
                 className={cx('menu-item')}
                 activeClassName={cx('active')}
-                onClick={() => this.onClickLink(HEADER_EVENTS.CLICK_ADMINISTRATE_LINK)}
+                onClick={() => this.onClickLink(SIDEBAR_EVENTS.CLICK_ADMINISTRATE_LINK)}
               >
                 <FormattedMessage id={'UserBlock.administrate'} defaultMessage={'Administrate'} />
               </NavLink>
@@ -172,7 +172,7 @@ export class UserBlock extends Component {
               to={{ type: API_PAGE }}
               className={cx('menu-item')}
               activeClassName={cx('active')}
-              onClick={() => this.onClickLink(HEADER_EVENTS.CLICK_API_LINK)}
+              onClick={() => this.onClickLink(SIDEBAR_EVENTS.CLICK_API_LINK)}
             >
               API
             </NavLink>
