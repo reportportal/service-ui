@@ -142,6 +142,7 @@ export class UserBlock extends Component {
           photoTimeStamp={this.props.photoTimeStamp}
           className={cx('user-tooltip')}
           tooltipContent={userDetails}
+          showTooltip={!this.state.menuOpened}
           preventParsing
         />
         {this.state.menuOpened && (
