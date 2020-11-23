@@ -20,7 +20,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Manager, Popper, Reference } from 'react-popper';
 import { PROJECT_PAGE } from 'controllers/pages/constants';
-import { HEADER_EVENTS } from 'components/main/analytics/events';
+import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { NavLink } from 'components/main/navLink';
 import styles from './projectSelector.scss';
@@ -57,11 +57,11 @@ export class ProjectSelector extends Component {
   }
 
   onClickProjectName = () => {
-    this.props.tracking.trackEvent(HEADER_EVENTS.CLICK_PROJECT_NAME_LINK);
+    this.props.tracking.trackEvent(SIDEBAR_EVENTS.CLICK_PROJECT_NAME_LINK);
   };
 
   toggleShowList = () => {
-    this.props.tracking.trackEvent(HEADER_EVENTS.CLICK_PROJECT_DROPDOWN);
+    this.props.tracking.trackEvent(SIDEBAR_EVENTS.CLICK_PROJECT_DROPDOWN);
     this.setState({ opened: !this.state.opened });
   };
 

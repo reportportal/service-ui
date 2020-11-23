@@ -16,6 +16,16 @@
 
 const SIDEBAR = 'sidebar';
 export const SIDEBAR_EVENTS = {
+  CLICK_MEMBERS_BTN: {
+    category: SIDEBAR,
+    action: 'Click on Menu Btn Members',
+    label: 'Transition on Members Page',
+  },
+  CLICK_SETTINGS_BTN: {
+    category: SIDEBAR,
+    action: 'Click on Menu Btn Settings',
+    label: 'Transition on Settings Page',
+  },
   CLICK_DASHBOARD_BTN: {
     category: SIDEBAR,
     action: 'Click on Menu button Dashboards',
@@ -30,6 +40,31 @@ export const SIDEBAR_EVENTS = {
     category: SIDEBAR,
     action: 'Click on Menu button Debug',
     label: 'Transition on Debug Page',
+  },
+  CLICK_PROFILE_DROPDOWN: {
+    category: SIDEBAR,
+    action: 'Click on Profile Dropdown',
+    label: 'Arise Dropdown Menu',
+  },
+  CLICK_PROFILE_LINK: {
+    category: SIDEBAR,
+    action: 'Click on Profile link on Dropdown',
+    label: 'Transition on Profile Page',
+  },
+  CLICK_ADMINISTRATE_LINK: {
+    category: SIDEBAR,
+    action: 'Click on Administrate link on Dropdown',
+    label: 'Transition to Administrate Mode',
+  },
+  CLICK_API_LINK: {
+    category: SIDEBAR,
+    action: 'Click on link API',
+    label: 'Transition to API page',
+  },
+  CLICK_LOGOUT_LINK: {
+    category: SIDEBAR,
+    action: 'Click on Logout link',
+    label: 'Logout and transition on Landing Page',
   },
 };
 
@@ -54,54 +89,15 @@ export const ADMIN_SIDEBAR_EVENTS = {
     action: 'Click on Menu Btn Plugins',
     label: 'Transition on Plugins Page',
   },
-};
-
-const HEADER = 'header';
-export const HEADER_EVENTS = {
-  CLICK_MEMBERS_BTN: {
-    category: HEADER,
-    action: 'Click on Menu Btn Members',
-    label: 'Transition on Members Page',
-  },
-  CLICK_SETTINGS_BTN: {
-    category: HEADER,
-    action: 'Click on Menu Btn Settings',
-    label: 'Transition on Settings Page',
-  },
-  CLICK_PROFILE_DROPDOWN: {
-    category: HEADER,
-    action: 'Click on Profile Dropdown',
-    label: 'Arise Dropdown Menu',
-  },
-  CLICK_PROFILE_LINK: {
-    category: HEADER,
-    action: 'Click on Profile link on Dropdown',
-    label: 'Transition on Profile Page',
-  },
-  CLICK_ADMINISTRATE_LINK: {
-    category: HEADER,
-    action: 'Click on Administrate link on Dropdown',
-    label: 'Transition to Administrate Mode',
-  },
-  CLICK_LOGOUT_LINK: {
-    category: HEADER,
-    action: 'Click on Logout link',
-    label: 'Logout and transition on Landing Page',
-  },
   CLICK_PROJECT_DROPDOWN: {
-    category: HEADER,
+    category: SIDEBAR,
     action: 'Click on Project Dropdown',
     label: 'Arise Dropdown with list of Projects',
   },
   CLICK_PROJECT_NAME_LINK: {
-    category: HEADER,
+    category: SIDEBAR,
     action: 'Click on Another Project Name',
     label: 'Transition to another project',
-  },
-  CLICK_API_LINK: {
-    category: HEADER,
-    action: 'Click on link API',
-    label: 'Transition to API page',
   },
 };
 

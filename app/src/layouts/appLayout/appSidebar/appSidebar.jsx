@@ -24,7 +24,7 @@ import {
   userAccountRoleSelector,
   assignedProjectsSelector,
 } from 'controllers/user';
-import { HEADER_EVENTS, SIDEBAR_EVENTS } from 'components/main/analytics/events';
+import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { FormattedMessage } from 'react-intl';
 import { CUSTOMER } from 'common/constants/projectRoles';
 import { canSeeMembers } from 'common/utils/permissions';
@@ -120,7 +120,7 @@ export class AppSidebar extends Component {
 
     if (canSeeMembers(accountRole, projectRole)) {
       topItems.push({
-        onClick: () => this.onClickButton(HEADER_EVENTS.CLICK_MEMBERS_BTN),
+        onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_MEMBERS_BTN),
         link: {
           type: PROJECT_MEMBERS_PAGE,
           payload: { projectId: activeProject },
@@ -131,7 +131,7 @@ export class AppSidebar extends Component {
     }
 
     topItems.push({
-      onClick: () => this.onClickButton(HEADER_EVENTS.CLICK_SETTINGS_BTN),
+      onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_SETTINGS_BTN),
       link: {
         type: PROJECT_SETTINGS_PAGE,
         payload: { projectId: activeProject },
