@@ -61,7 +61,7 @@ const messages = defineMessages({
   },
   LaunchesLimitValidationError: {
     id: 'CumulativeTrendControls.LaunchesLimitValidationError',
-    defaultMessage: 'Items count should have value from 1 to 10000',
+    defaultMessage: 'Items count should have value from 1 to 20000',
   },
   attributeKeyFieldLabelOverview: {
     id: 'CumulativeTrendControls.attributeKeyFieldLabelOverview',
