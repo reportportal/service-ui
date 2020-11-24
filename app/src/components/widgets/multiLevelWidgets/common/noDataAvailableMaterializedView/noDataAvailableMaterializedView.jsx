@@ -36,13 +36,13 @@ export const NoDataAvailableMaterializedView = ({ state, isLoading }) => {
           <h3 className={cx('rendering-title')}>
             <FormattedMessage
               id="NoDataAvailableMaterializedView.renderingTitle"
-              defaultMessage="Please wait, It could take up to 15 minutes."
+              defaultMessage="Please wait, It could take up to several minutes."
             />
           </h3>
           <div className={cx('rendering-info')}>
             <FormattedMessage
               id="NoDataAvailableMaterializedView.renderingInfo"
-              defaultMessage="Please wait, It could take up to 15 minutes."
+              defaultMessage="Please wait, It could take up to several minutes."
             />
           </div>
         </div>
