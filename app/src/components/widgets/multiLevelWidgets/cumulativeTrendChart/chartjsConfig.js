@@ -30,6 +30,19 @@ const getExecutions = () => [
 
 const getTotal = () => ['statistics$executions$total'];
 
+const getTotalValue = (totalDataset, datasets, label, index) => {
+  const isDefectType = /defects/.test(label);
+  let totalValue = totalDataset.data[index];
+
+  if (isDefectType) {
+    const defects = datasets.filter((item) => /defects/.test(item.label));
+
+    totalValue = defects.reduce((total, defect) => total + defect.data[index], 0);
+  }
+
+  return totalValue;
+};
+
 const convertIntoPercents = (datasets) => {
   const totalDataset = Object.assign({}, datasets[0]);
 
@@ -40,9 +53,11 @@ const convertIntoPercents = (datasets) => {
       },
       dataset,
       {
-        data: dataset.data.map(
-          (value, index) => -((-value / totalDataset.data[index]) * 100).toFixed(2),
-        ),
+        data: dataset.data.map((value, index) => {
+          const totalValue = getTotalValue(totalDataset, datasets, dataset.label, index);
+
+          return -((-value / totalValue) * 100).toFixed(2);
+        }),
       },
     ),
   );
@@ -157,22 +172,15 @@ const getChartOptions = (widget, options) => {
             ? formatMessage(messages[dataset.label])
             : dataset.label;
           const value = dataset.data[tooltipItem.index];
-          const isDefectType = /defects/.test(dataset.label);
           if (!value) {
             return '';
           }
-          let totalValue;
-
-          if (isDefectType) {
-            const defects = data.datasets.filter((item) => /defects/.test(item.label));
-
-            totalValue = defects.reduce(
-              (total, defect) => total + defect.data[tooltipItem.index],
-              0,
-            );
-          } else {
-            totalValue = totalDataset.data[tooltipItem.index];
-          }
+          const totalValue = getTotalValue(
+            totalDataset,
+            data.datasets,
+            dataset.label,
+            tooltipItem.index,
+          );
           const percentageValue = -((-value / totalValue) * 100).toFixed(2);
           if (percentage) {
             return ` ${label}: ${percentageValue}%`;
