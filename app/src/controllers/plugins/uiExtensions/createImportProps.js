@@ -38,6 +38,7 @@ import {
   PROJECT_SETTINGS_TAB_PAGE,
   pluginRouteSelector,
 } from 'controllers/pages';
+import { attributesArray } from 'common/utils/validation/validate';
 import PlusIcon from 'common/img/plus-button-inline.svg';
 import RemoveIcon from 'common/img/trashcan-inline.svg';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
@@ -174,4 +175,5 @@ export const createImportProps = (pluginName) => ({
     CircleCrossIcon,
   },
   utils: { fetch, URLS, debounce },
+  validators: { attributesArray },
 });
