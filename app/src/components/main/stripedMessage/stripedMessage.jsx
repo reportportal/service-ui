@@ -24,8 +24,8 @@ const WARNING_TYPE = 'warning';
 
 const cx = classNames.bind(styles);
 
-export const StripedMessage = ({ image, header, type, children }) => (
-  <div className={cx('striped-message', `type-${type}`)}>
+export const StripedMessage = ({ image, header, type, children, style }) => (
+  <div style={style} className={cx('striped-message', `type-${type}`)}>
     {image && <img src={image} alt={type} className={cx('image')} />}
     <div className={cx('message-content')}>
       {header && <h3 className={cx('header')}>{header}</h3>}
@@ -38,9 +38,11 @@ StripedMessage.propTypes = {
   type: PropTypes.oneOf([INFO_TYPE, WARNING_TYPE]),
   image: PropTypes.string,
   header: PropTypes.string,
+  style: PropTypes.object,
 };
 StripedMessage.defaultProps = {
   type: INFO_TYPE,
   image: null,
   header: '',
+  style: {},
 };

@@ -17,7 +17,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
-import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import track from 'react-tracking';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
@@ -27,11 +26,9 @@ import styles from './ruleListHeader.scss';
 
 const cx = classNames.bind(styles);
 
-@injectIntl
 @track()
 export class RuleListHeader extends Component {
   static propTypes = {
-    intl: PropTypes.object.isRequired,
     onAddItem: PropTypes.func,
     switcherValue: PropTypes.bool,
     messages: PropTypes.object.isRequired,
@@ -55,7 +52,6 @@ export class RuleListHeader extends Component {
 
   render() {
     const {
-      intl: { formatMessage },
       onAddItem,
       switcherValue,
       onChangeSwitcher,
@@ -65,7 +61,7 @@ export class RuleListHeader extends Component {
     } = this.props;
     return (
       <div className={cx('list-header')}>
-        <span className={cx('caption')}>{formatMessage(messages.toggleLabel)}</span>
+        <span className={cx('caption')}>{messages.toggleLabel}</span>
         <InputBigSwitcher
           disabled={readOnly}
           title={titleMessage}
@@ -73,10 +69,10 @@ export class RuleListHeader extends Component {
           value={switcherValue}
           onChange={onChangeSwitcher}
         />
-        <p className={cx('description')}>{Parser(formatMessage(messages.toggleNote))}</p>
+        <p className={cx('description')}>{Parser(messages.toggleNote)}</p>
         <span className={cx('create-button')}>
           <GhostButton disabled={readOnly} mobileDisabled icon={PlusIcon} onClick={onAddItem}>
-            {formatMessage(messages.create)}
+            {messages.create}
           </GhostButton>
         </span>
       </div>
