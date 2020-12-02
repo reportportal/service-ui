@@ -35,7 +35,6 @@ export const ListItem = ({
   getListItemContentData,
   isCloned,
   isMovable,
-  messages,
 }) => (
   <div className={cx('list-item')}>
     <ControlPanel
@@ -49,7 +48,6 @@ export const ListItem = ({
       getPanelTitle={getPanelTitle}
       isCloned={isCloned}
       isMovable={isMovable}
-      messages={messages}
     />
     <div className={cx('data')}>
       {getListItemContentData(item).map((itemData, index) => (
@@ -86,7 +84,6 @@ ListItem.propTypes = {
   getListItemContentData: PropTypes.func,
   isCloned: PropTypes.bool,
   isMovable: PropTypes.bool,
-  messages: PropTypes.object,
 };
 
 ListItem.defaultProps = {
@@ -97,9 +94,8 @@ ListItem.defaultProps = {
   onDelete: () => {},
   onEdit: () => {},
   onClone: () => {},
-  getPanelTitle: () => {},
+  getPanelTitle: (name) => name,
   getListItemContentData: () => {},
   isCloned: false,
   isMovable: false,
-  messages: {},
 };
