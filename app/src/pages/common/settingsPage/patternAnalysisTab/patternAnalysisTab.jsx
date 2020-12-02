@@ -196,8 +196,6 @@ export class PatternAnalysisTab extends Component {
     this.props.addPattern(pattern);
   };
 
-  getPanelTitle = (name) => name;
-
   getListItemContentData = (pattern) => [
     {
       key: this.props.intl.formatMessage(messages[pattern.type.toUpperCase()]),
@@ -238,10 +236,8 @@ export class PatternAnalysisTab extends Component {
               onDelete={this.showDeleteConfirmationDialog}
               onEdit={this.onRenamePattern}
               onClone={this.onClonePattern}
-              getPanelTitle={this.getPanelTitle}
               getListItemContentData={this.getListItemContentData}
               isCloned
-              messages={messages}
             />
           </Fragment>
         ) : (

@@ -270,7 +270,6 @@ export class NotificationsTab extends Component {
               onEdit={this.onEdit}
               getPanelTitle={this.getPanelTitle}
               getListItemContentData={this.getListItemContentData}
-              messages={messages}
             />
           </Fragment>
         ) : (

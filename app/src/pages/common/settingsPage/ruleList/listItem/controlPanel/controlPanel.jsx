@@ -53,7 +53,7 @@ export class ControlPanel extends Component {
     onClone: () => {},
     isCloned: false,
     isMovable: false,
-    getPanelTitle: () => {},
+    getPanelTitle: (name) => name,
   };
 
   constructor(props) {
@@ -62,26 +62,31 @@ export class ControlPanel extends Component {
 
     this.actions = [
       {
+        id: 'moveUp',
         icon: IconOrderArrowUp,
         action: this.moveUp,
         available: isMovable,
       },
       {
+        id: 'moveDown',
         icon: IconOrderArrowDown,
         action: this.moveDown,
         available: isMovable,
       },
       {
+        id: 'edit',
         action: this.editItem,
         icon: IconEdit,
         available: true,
       },
       {
+        id: 'clone',
         icon: IconDuplicate,
         action: this.cloneItem,
         available: isCloned,
       },
       {
+        id: 'delete',
         action: this.deleteItem,
         icon: IconDelete,
         available: true,
@@ -137,8 +142,8 @@ export class ControlPanel extends Component {
         <span className={cx('rule-name')}>{getPanelTitle(item.name || id)}</span>
         {!readOnly && (
           <div className={cx('rule-actions')}>
-            {availableActions.map(({ icon, action, filled }) => (
-              <button className={cx('rule-action', { filled })} onClick={action}>
+            {availableActions.map(({ icon, action, filled, id: key }) => (
+              <button key={key} className={cx('rule-action', { filled })} onClick={action}>
                 {Parser(icon)}
               </button>
             ))}
