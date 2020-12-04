@@ -18,37 +18,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { ControlPanel } from './controlPanel';
+import { ruleListItemPropTypes, ruleListItemDefaultProps } from '../constants';
 import styles from './listItem.scss';
 
 const cx = classNames.bind(styles);
 
-// TODO: disable move controls for special cases
-export const ListItem = ({
-  item,
-  id,
-  readOnly,
-  onToggle,
-  onDelete,
-  onEdit,
-  onClone,
-  getPanelTitle,
-  getListItemContentData,
-  isCloned,
-  isMovable,
-}) => (
+export const ListItem = ({ item, getListItemContentData, ...rest }) => (
   <div className={cx('list-item')}>
-    <ControlPanel
-      item={item}
-      id={id}
-      readOnly={readOnly}
-      onToggle={onToggle}
-      onDelete={onDelete}
-      onEdit={onEdit}
-      onClone={onClone}
-      getPanelTitle={getPanelTitle}
-      isCloned={isCloned}
-      isMovable={isMovable}
-    />
+    <ControlPanel item={item} {...rest} />
     <div className={cx('data')}>
       {getListItemContentData(item).map((itemData, index) => (
         // eslint-disable-next-line react/no-array-index-key
@@ -71,31 +48,15 @@ export const ListItem = ({
     </div>
   </div>
 );
-
 ListItem.propTypes = {
+  ...ruleListItemPropTypes,
   item: PropTypes.object,
   id: PropTypes.number,
-  readOnly: PropTypes.bool,
-  onToggle: PropTypes.func,
-  onDelete: PropTypes.func,
-  onEdit: PropTypes.func,
-  onClone: PropTypes.func,
-  getPanelTitle: PropTypes.func,
-  getListItemContentData: PropTypes.func,
-  isCloned: PropTypes.bool,
-  isMovable: PropTypes.bool,
+  maxItemOrder: PropTypes.number,
 };
-
 ListItem.defaultProps = {
+  ...ruleListItemDefaultProps,
   item: {},
   id: 0,
-  readOnly: false,
-  onToggle: () => {},
-  onDelete: () => {},
-  onEdit: () => {},
-  onClone: () => {},
-  getPanelTitle: (name) => name,
-  getListItemContentData: () => {},
-  isCloned: false,
-  isMovable: false,
+  maxItemOrder: 0,
 };

@@ -89,11 +89,31 @@
       stroke: $COLOR--black-2;
     }
   }
+
   &.filled {
     svg {
       fill: $COLOR--gray-60;
       &:hover {
         fill: $COLOR--black-2;
+      }
+    }
+  }
+
+  &.disabled {
+    cursor: default;
+    svg:not(.filled) {
+      stroke: $COLOR--gray-80;
+      &:hover {
+        stroke: $COLOR--gray-80;
+      }
+    }
+
+    &.filled {
+      svg {
+        fill: $COLOR--gray-80;
+        &:hover {
+          fill: $COLOR--gray-80;
+        }
       }
     }
   }
