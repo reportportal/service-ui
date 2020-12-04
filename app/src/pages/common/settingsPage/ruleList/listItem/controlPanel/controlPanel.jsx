@@ -39,8 +39,10 @@ export class ControlPanel extends Component {
     onEdit: PropTypes.func,
     onClone: PropTypes.func,
     isCloned: PropTypes.bool,
+    onMove: PropTypes.func,
     isMovable: PropTypes.bool,
     getPanelTitle: PropTypes.func,
+    maxItemOrder: PropTypes.number,
   };
 
   static defaultProps = {
@@ -52,26 +54,29 @@ export class ControlPanel extends Component {
     onEdit: () => {},
     onClone: () => {},
     isCloned: false,
+    onMove: () => {},
     isMovable: false,
     getPanelTitle: (name) => name,
+    maxItemOrder: 0,
   };
 
-  constructor(props) {
-    super(props);
-    const { isCloned, isMovable } = props;
+  getActions = () => {
+    const { item, isCloned, isMovable, maxItemOrder } = this.props;
 
-    this.actions = [
+    const actions = [
       {
         id: 'moveUp',
         icon: IconOrderArrowUp,
         action: this.moveUp,
         available: isMovable,
+        disabled: item.order === 0,
       },
       {
         id: 'moveDown',
         icon: IconOrderArrowDown,
         action: this.moveDown,
         available: isMovable,
+        disabled: item.order === maxItemOrder,
       },
       {
         id: 'edit',
@@ -93,13 +98,21 @@ export class ControlPanel extends Component {
         filled: true,
       },
     ];
-  }
 
-  // TODO: implement
-  moveUp = () => {};
+    return actions.filter((action) => action.available);
+  };
 
-  // TODO: implement
-  moveDown = () => {};
+  moveUp = () => {
+    const { onMove, item } = this.props;
+
+    onMove(item, item.order - 1);
+  };
+
+  moveDown = () => {
+    const { onMove, item } = this.props;
+
+    onMove(item, item.order + 1);
+  };
 
   onToggleActive = (enabled) => {
     const { onToggle, item, id } = this.props;
@@ -127,12 +140,12 @@ export class ControlPanel extends Component {
 
   render() {
     const { id, item, readOnly, getPanelTitle, isMovable } = this.props;
-    const availableActions = this.actions.filter((action) => action.available);
+    const availableActions = this.getActions();
 
     return (
       <div className={cx('rule-control-panel')}>
         {isMovable ? (
-          <span className={cx('move-control')}>{Parser(IconDots)}</span>
+          <span className={cx('move-control', 'draggable-field')}>{Parser(IconDots)}</span>
         ) : (
           <span className={cx('rule-number')}>{id + 1}</span>
         )}
@@ -142,8 +155,13 @@ export class ControlPanel extends Component {
         <span className={cx('rule-name')}>{getPanelTitle(item.name || id)}</span>
         {!readOnly && (
           <div className={cx('rule-actions')}>
-            {availableActions.map(({ icon, action, filled, id: key }) => (
-              <button key={key} className={cx('rule-action', { filled })} onClick={action}>
+            {availableActions.map(({ icon, action, disabled, filled, id: key }) => (
+              <button
+                key={key}
+                disabled={disabled}
+                className={cx('rule-action', { filled, disabled })}
+                onClick={action}
+              >
                 {Parser(icon)}
               </button>
             ))}

@@ -53,6 +53,7 @@ import { InputDropdown } from 'components/inputs/inputDropdown';
 import { InputRadio } from 'components/inputs/inputRadio';
 import { URLS } from 'common/urls';
 import { isEmailIntegrationAvailableSelector } from 'controllers/plugins';
+import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -151,7 +152,14 @@ export const createImportProps = (pluginName) => ({
     AsyncAutocomplete,
   },
   constants: { PLUGIN_UI_EXTENSION_ADMIN_PAGE, PROJECT_SETTINGS_TAB_PAGE },
-  actions: { showModalAction, showSuccessNotification, showErrorNotification, fetchProjectAction },
+  actions: {
+    showModalAction,
+    showSuccessNotification,
+    showErrorNotification,
+    fetchProjectAction,
+    showScreenLockAction,
+    hideScreenLockAction,
+  },
   selectors: {
     pluginRouteSelector,
     activeProjectSelector,
