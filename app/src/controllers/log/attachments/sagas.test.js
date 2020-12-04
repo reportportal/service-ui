@@ -15,7 +15,7 @@
  */
 
 import { fetch } from 'common/utils/fetch';
-import { fetchData } from './sagas';
+import { fetchFileData } from './sagas';
 
 jest.mock('common/utils/fetch', () => ({
   fetch: jest.fn(),
@@ -23,12 +23,12 @@ jest.mock('common/utils/fetch', () => ({
 
 const mockParams = {
   projectId: 'test_project',
-  binaryId: 'abcd',
+  id: 'abcd',
 };
 
 describe('Attachments Sagas', () => {
-  test('fetchData resolves data', () => {
-    fetchData(mockParams);
+  test('fetchFileData resolves data', () => {
+    fetchFileData(mockParams);
     expect(fetch).toBeCalledWith('/api/v1/data/test_project/abcd');
   });
 });

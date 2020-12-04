@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
@@ -22,20 +22,36 @@ import Parser from 'html-react-parser';
 import { connect } from 'react-redux';
 import AttachIcon from 'common/img/attachment-inline.svg';
 import { Image } from 'components/main/image';
-import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
-import { openAttachmentAction, getFileIconSource } from 'controllers/log/attachments';
 import { activeProjectSelector } from 'controllers/user';
+import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
+import {
+  openAttachmentInModalAction,
+  downloadAttachmentAction,
+  getFileIconSource,
+  OPEN_ATTACHMENT_IN_MODAL_ACTION,
+  isFileActionAllowed,
+} from 'controllers/log/attachments';
+import { AttachmentActions } from 'pages/inside/logsPage/attachmentActions';
 import styles from './attachmentBlock.scss';
 
 const cx = classNames.bind(styles);
 
-@connect((state) => ({ activeProject: activeProjectSelector(state) }), { openAttachmentAction })
+@connect(
+  (state) => ({
+    activeProject: activeProjectSelector(state),
+  }),
+  {
+    openAttachmentInModalAction,
+    downloadAttachmentAction,
+  },
+)
 @track()
 export class AttachmentBlock extends Component {
   static propTypes = {
     value: PropTypes.object,
     customProps: PropTypes.object,
-    openAttachmentAction: PropTypes.func,
+    openAttachmentInModalAction: PropTypes.func,
+    downloadAttachmentAction: PropTypes.func,
     activeProject: PropTypes.string,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -46,13 +62,18 @@ export class AttachmentBlock extends Component {
   static defaultProps = {
     value: {},
     customProps: {},
-    openAttachmentAction: () => {},
+    openAttachmentInModalAction: () => {},
     activeProject: '',
   };
 
-  onClickAttachment = () => {
-    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.ATTACHMENT_IN_LOG_MSG);
-    this.props.openAttachmentAction(this.props.value);
+  openAttachmentInModal = () => {
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.ATTACHMENT_IN_LOG_MSG.OPEN_IN_MODAL);
+    this.props.openAttachmentInModalAction(this.props.value);
+  };
+
+  downloadAttachment = () => {
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.ATTACHMENT_IN_LOG_MSG.DOWNLOAD);
+    this.props.downloadAttachmentAction(this.props.value);
   };
 
   render() {
@@ -61,17 +82,31 @@ export class AttachmentBlock extends Component {
       customProps: { consoleView },
       activeProject,
     } = this.props;
+    const isValidToOpenInModal = isFileActionAllowed(
+      value.contentType,
+      OPEN_ATTACHMENT_IN_MODAL_ACTION,
+    );
 
     return (
-      <div className={cx('attachment-block')} onClick={this.onClickAttachment}>
+      <div className={cx('attachment-block')}>
         {consoleView ? (
-          <div className={cx('image', 'console-view')}>{Parser(AttachIcon)}</div>
+          <div onClick={this.downloadAttachment} className={cx('attachment', 'console-view')}>
+            {Parser(AttachIcon)}
+          </div>
         ) : (
-          <Image
-            className={cx('image')}
-            src={getFileIconSource(value, activeProject, true)}
-            alt={value.contentType}
-          />
+          <Fragment>
+            <Image
+              className={cx('attachment')}
+              src={getFileIconSource(value, activeProject, true)}
+              alt={value.contentType}
+              onClick={isValidToOpenInModal ? this.openAttachmentInModal : null}
+            />
+            <AttachmentActions
+              value={value}
+              className={cx('actions')}
+              events={LOG_PAGE_EVENTS.ATTACHMENT_IN_LOG_MSG}
+            />
+          </Fragment>
         )}
       </div>
     );

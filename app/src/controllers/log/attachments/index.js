@@ -15,11 +15,13 @@
  */
 
 export {
-  openAttachmentAction,
   fetchAttachmentsConcatAction,
   clearAttachmentsAction,
   fetchFirstAttachmentsAction,
   setActiveAttachmentAction,
+  openAttachmentInModalAction,
+  downloadAttachmentAction,
+  openAttachmentInBrowserAction,
 } from './actionCreators';
 export {
   FILE_PREVIEWS_MAP,
@@ -27,8 +29,16 @@ export {
   ATTACHMENT_CODE_MODAL_ID,
   ATTACHMENT_HAR_FILE_MODAL_ID,
   ATTACHMENTS_NAMESPACE,
+  DOWNLOAD_ATTACHMENT_ACTION,
+  OPEN_ATTACHMENT_IN_BROWSER_ACTION,
+  OPEN_ATTACHMENT_IN_MODAL_ACTION,
 } from './constants';
-export { getFileIconSource, getAttachmentModalId, extractExtension } from './utils';
+export {
+  getFileIconSource,
+  getAttachmentModalId,
+  extractExtension,
+  isFileActionAllowed,
+} from './utils';
 export {
   attachmentItemsSelector,
   attachmentsLoadingSelector,

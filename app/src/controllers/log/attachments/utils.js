@@ -15,9 +15,15 @@
  */
 
 import { URLS } from 'common/urls';
-import { IMAGE } from 'common/constants/fileTypes';
+import { IMAGE, PLAIN, TXT } from 'common/constants/fileTypes';
 import attachment from 'common/img/attachments/attachment.svg';
-import { FILE_PREVIEWS_MAP, FILE_MODAL_IDS_MAP, FILE_PATTERNS_MAP } from './constants';
+import {
+  FILE_PREVIEWS_MAP,
+  FILE_MODAL_IDS_MAP,
+  FILE_PATTERNS_MAP,
+  FILE_ACTIONS_MAP,
+  ALL_ALLOWED,
+} from './constants';
 
 const getAttachmentTypeConfig = (contentType) =>
   (contentType && contentType.toLowerCase().split('/')) || '';
@@ -49,9 +55,10 @@ export const getFileIconSource = (item, projectId, loadThumbnail) => {
 };
 
 export const getAttachmentModalId = (contentType) => {
-  const [fileType, extension] = getAttachmentTypeConfig(contentType);
-  const extensionFromPattern = getExtensionFromPattern(extension || fileType);
-  return FILE_MODAL_IDS_MAP[extension || fileType] || FILE_MODAL_IDS_MAP[extensionFromPattern];
+  const extension = extractExtension(contentType);
+  const extensionFromPattern = getExtensionFromPattern(extension);
+
+  return FILE_MODAL_IDS_MAP[extension] || FILE_MODAL_IDS_MAP[extensionFromPattern];
 };
 
 export const createAttachment = (item, projectId) => {
@@ -65,4 +72,29 @@ export const createAttachment = (item, projectId) => {
     contentType: item.contentType,
     isImage,
   };
+};
+
+export const createAttachmentName = (id, contentType) => {
+  const extension = extractExtension(contentType);
+
+  return `attachment_${id}.${extension === PLAIN ? TXT : extension}`;
+};
+
+export const isFileActionAllowed = (contentType, action) => {
+  const allowedFileTypes = FILE_ACTIONS_MAP[action] || [];
+
+  if (allowedFileTypes === ALL_ALLOWED) {
+    return true;
+  }
+
+  const [fileType] = getAttachmentTypeConfig(contentType);
+
+  if (fileType === IMAGE) {
+    return allowedFileTypes.includes(IMAGE);
+  }
+
+  const extension = extractExtension(contentType);
+  const extensionFromPattern = getExtensionFromPattern(extension);
+
+  return !!allowedFileTypes.some((type) => type === extension || type === extensionFromPattern);
 };

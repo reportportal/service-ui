@@ -120,9 +120,38 @@ export const LOG_PAGE_EVENTS = {
     label: 'Sort logs',
   },
   ATTACHMENT_IN_LOG_MSG: {
-    category: LOG_PAGE,
-    action: 'Click on Attachment in Log Message',
-    label: 'Open Attachment',
+    OPEN_IN_MODAL: {
+      category: LOG_PAGE,
+      action: 'Click on Attachment in Log Message',
+      label: 'Open Attachment in modal',
+    },
+    DOWNLOAD: {
+      category: LOG_PAGE,
+      action: 'Click on Download Attachment icon in Log Message',
+      label: 'Download Attachment',
+    },
+    OPEN_IN_NEW_TAB: {
+      category: LOG_PAGE,
+      action: 'Click on Open Attachment in new tab icon in Log Message',
+      label: 'Open Attachment in new browser tab',
+    },
+  },
+  ATTACHMENT_IN_CAROUSEL: {
+    OPEN_IN_MODAL: {
+      category: LOG_PAGE,
+      action: 'Click on Attachment in Attachments section',
+      label: 'Open Attachment in modal',
+    },
+    DOWNLOAD: {
+      category: LOG_PAGE,
+      action: 'Click on Download Attachment icon in Attachments section',
+      label: 'Download Attachment',
+    },
+    OPEN_IN_NEW_TAB: {
+      category: LOG_PAGE,
+      action: 'Click on Open Attachment in new tab icon in Attachments section',
+      label: 'Open Attachment in new browser tab',
+    },
   },
   EXPAND_LOG_MSG: {
     category: LOG_PAGE,
@@ -159,11 +188,6 @@ export const LOG_PAGE_EVENTS = {
     action: 'Click on icon Next Attachment',
     label: 'Show Next Attachment',
   },
-  ATTACHMENT_CLICK: {
-    category: LOG_PAGE,
-    action: 'Click on opened Attachment',
-    label: 'Arise modal with Attachment',
-  },
   ATTACHMENT_THUMBNAIL: {
     category: LOG_PAGE,
     action: 'Click on thumbnail of Attachment',
@@ -173,11 +197,6 @@ export const LOG_PAGE_EVENTS = {
     category: LOG_PAGE,
     action: 'Click on icon Close on Modal Attachment',
     label: 'Close Modal Attachment',
-  },
-  ROTATE_ICON_ATTACHMENT_MODAL: {
-    category: LOG_PAGE,
-    action: 'Click on icon Rotate on Modal Attachment',
-    label: 'Rotate Attachment',
   },
   CLOSE_BTN_ATTACHMENT_MODAL: {
     category: LOG_PAGE,

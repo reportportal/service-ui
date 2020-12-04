@@ -23,6 +23,7 @@ import { WithStore, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-car
 import ArrowIcon from 'common/img/arrow-right-inline.svg';
 import { Image } from 'components/main/image';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
+import { AttachmentActions } from 'pages/inside/logsPage/attachmentActions';
 import { DEFAULT_VISIBLE_THUMBS } from '../constants';
 import styles from './attachmentsSlider.scss';
 
@@ -43,6 +44,7 @@ class AttachmentsSlider extends Component {
     isThumbsView: PropTypes.bool,
     visibleThumbs: PropTypes.number,
     carouselStore: PropTypes.object,
+    withActions: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -54,6 +56,7 @@ class AttachmentsSlider extends Component {
     isThumbsView: false,
     visibleThumbs: DEFAULT_VISIBLE_THUMBS,
     carouselStore: {},
+    withActions: false,
   };
 
   componentDidMount() {
@@ -123,18 +126,21 @@ class AttachmentsSlider extends Component {
   };
 
   render() {
-    const { isThumbsView, attachments, activeItemId, onClickItem } = this.props;
+    const { isThumbsView, attachments, activeItemId, onClickItem, withActions } = this.props;
     return (
       <Fragment>
         <Slider className={cx('slider', { 'thumbs-view': isThumbsView })}>
           {attachments.map((attachment, index) => (
             <Slide index={index} key={attachment.id}>
               <div
-                className={cx('preview-container', { 'main-area': !isThumbsView })}
+                className={cx('preview-container', {
+                  'main-area': !isThumbsView,
+                  active: isThumbsView && activeItemId === index,
+                })}
                 onClick={() => onClickItem(index)}
               >
                 <Image
-                  className={cx('preview', { active: isThumbsView && activeItemId === index })}
+                  className={cx('preview')}
                   src={
                     isThumbsView && attachment.isImage ? attachment.thumbnailSrc : attachment.src
                   }
@@ -142,6 +148,14 @@ class AttachmentsSlider extends Component {
                   isStatic={!attachment.isImage}
                 />
               </div>
+              {withActions && (
+                <AttachmentActions
+                  value={attachment}
+                  showCaptions
+                  className={cx('actions')}
+                  events={LOG_PAGE_EVENTS.ATTACHMENT_IN_CAROUSEL}
+                />
+              )}
             </Slide>
           ))}
         </Slider>

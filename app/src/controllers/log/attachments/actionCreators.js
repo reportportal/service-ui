@@ -16,10 +16,12 @@
 
 import {
   FETCH_ATTACHMENTS_CONCAT_ACTION,
-  OPEN_ATTACHMENT_ACTION,
   CLEAR_ATTACHMENTS_ACTION,
   FETCH_FIRST_ATTACHMENTS_ACTION,
   SET_ACTIVE_ATTACHMENT_ACTION,
+  DOWNLOAD_ATTACHMENT_ACTION,
+  OPEN_ATTACHMENT_IN_MODAL_ACTION,
+  OPEN_ATTACHMENT_IN_BROWSER_ACTION,
 } from './constants';
 
 export const fetchAttachmentsConcatAction = (payload) => ({
@@ -36,12 +38,22 @@ export const clearAttachmentsAction = () => ({
   type: CLEAR_ATTACHMENTS_ACTION,
 });
 
-export const openAttachmentAction = (payload) => ({
-  type: OPEN_ATTACHMENT_ACTION,
-  payload,
-});
-
 export const setActiveAttachmentAction = (attachmentId) => ({
   type: SET_ACTIVE_ATTACHMENT_ACTION,
   payload: attachmentId,
+});
+
+export const openAttachmentInModalAction = (payload) => ({
+  type: OPEN_ATTACHMENT_IN_MODAL_ACTION,
+  payload,
+});
+
+export const downloadAttachmentAction = (payload) => ({
+  type: DOWNLOAD_ATTACHMENT_ACTION,
+  payload,
+});
+
+export const openAttachmentInBrowserAction = (id) => ({
+  type: OPEN_ATTACHMENT_IN_BROWSER_ACTION,
+  payload: id,
 });

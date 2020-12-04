@@ -25,11 +25,14 @@ import { CarouselProvider } from 'pure-react-carousel';
 import {
   attachmentItemsSelector,
   attachmentsLoadingSelector,
-  openAttachmentAction,
+  openAttachmentInModalAction,
+  downloadAttachmentAction,
   fetchAttachmentsConcatAction,
   attachmentsPaginationSelector,
   setActiveAttachmentAction,
   activeAttachmentIdSelector,
+  isFileActionAllowed,
+  OPEN_ATTACHMENT_IN_MODAL_ACTION,
 } from 'controllers/log/attachments';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { NoItemMessage } from 'components/main/noItemMessage';
@@ -62,8 +65,9 @@ const getCurrentThumb = (activeItemId, visibleThumbs) =>
   }),
   {
     fetchAttachmentsConcatAction,
-    openAttachmentAction,
     setActiveAttachmentAction,
+    openAttachmentInModalAction,
+    downloadAttachmentAction,
   },
 )
 @injectIntl
@@ -81,7 +85,7 @@ export class Attachments extends Component {
     loading: PropTypes.bool,
     setActiveAttachmentAction: PropTypes.func,
     fetchAttachmentsConcatAction: PropTypes.func,
-    openAttachmentAction: PropTypes.func,
+    openAttachmentInModalAction: PropTypes.func,
     isMobileView: PropTypes.bool,
   };
 
@@ -92,7 +96,7 @@ export class Attachments extends Component {
     activeItemId: 0,
     setActiveAttachmentAction: () => {},
     fetchAttachmentsConcatAction: () => {},
-    openAttachmentAction: () => {},
+    openAttachmentInModalAction: () => {},
     isMobileView: false,
   };
 
@@ -110,9 +114,12 @@ export class Attachments extends Component {
   }
 
   onClickItem = (itemIndex) => {
-    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.ATTACHMENT_CLICK);
+    const attachment = this.props.attachments[itemIndex];
 
-    return this.props.openAttachmentAction(this.props.attachments[itemIndex]);
+    if (isFileActionAllowed(attachment.contentType, OPEN_ATTACHMENT_IN_MODAL_ACTION)) {
+      this.props.tracking.trackEvent(LOG_PAGE_EVENTS.ATTACHMENT_IN_CAROUSEL.OPEN_IN_MODAL);
+      this.props.openAttachmentInModalAction(attachment);
+    }
   };
 
   onClickThumb = (itemIndex) => {
@@ -189,6 +196,7 @@ export class Attachments extends Component {
             onClickItem={this.onClickItem}
             changeActiveItem={this.changeActiveItem}
             visibleThumbs={visibleThumbs}
+            withActions
           />
         </CarouselProvider>
         <CarouselProvider

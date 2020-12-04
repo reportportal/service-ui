@@ -26,14 +26,18 @@ import txt from 'common/img/attachments/txt.svg';
 import archive from 'common/img/attachments/archive.svg';
 import * as FILE_TYPES from 'common/constants/fileTypes';
 
+export const ALL_ALLOWED = '*';
 export const ATTACHMENTS_NAMESPACE = 'log/attachments';
 export const FETCH_ATTACHMENTS_CONCAT_ACTION = 'fetchAttachmentsConcatAction';
 export const CLEAR_ATTACHMENTS_ACTION = 'clearAttachmentsAction';
-export const OPEN_ATTACHMENT_ACTION = 'openAttachmentAction';
 export const ATTACHMENT_HAR_FILE_MODAL_ID = 'attachmentHarFileModal';
 export const ATTACHMENT_CODE_MODAL_ID = 'attachmentCodeModal';
 export const FETCH_FIRST_ATTACHMENTS_ACTION = 'fetchFirstAttachments';
 export const SET_ACTIVE_ATTACHMENT_ACTION = 'setActiveAttachment';
+
+export const DOWNLOAD_ATTACHMENT_ACTION = 'downloadAttachmentAction';
+export const OPEN_ATTACHMENT_IN_MODAL_ACTION = 'openAttachmentInModalAction';
+export const OPEN_ATTACHMENT_IN_BROWSER_ACTION = 'openAttachmentInBrowserAction';
 
 export const FILE_PREVIEWS_MAP = {
   [FILE_TYPES.XML]: xml,
@@ -68,5 +72,32 @@ export const FILE_MODAL_IDS_MAP = {
   [FILE_TYPES.PHP]: ATTACHMENT_CODE_MODAL_ID,
   [FILE_TYPES.HAR]: ATTACHMENT_HAR_FILE_MODAL_ID,
 };
+
+export const FILE_ACTIONS_MAP = {
+  [DOWNLOAD_ATTACHMENT_ACTION]: ALL_ALLOWED,
+  [OPEN_ATTACHMENT_IN_BROWSER_ACTION]: [
+    FILE_TYPES.XML,
+    FILE_TYPES.JAVASCRIPT,
+    FILE_TYPES.JSON,
+    FILE_TYPES.CSS,
+    FILE_TYPES.PHP,
+    FILE_TYPES.HAR,
+    FILE_TYPES.TXT,
+    FILE_TYPES.PLAIN,
+    FILE_TYPES.HTML,
+    FILE_TYPES.CSV,
+    FILE_TYPES.PDF,
+    FILE_TYPES.IMAGE,
+  ],
+  [OPEN_ATTACHMENT_IN_MODAL_ACTION]: [
+    FILE_TYPES.XML,
+    FILE_TYPES.JAVASCRIPT,
+    FILE_TYPES.JSON,
+    FILE_TYPES.CSS,
+    FILE_TYPES.PHP,
+    FILE_TYPES.HAR,
+  ],
+};
+
 export const DEFAULT_PAGE_SIZE = 6;
 export const DEFAULT_LOADED_PAGES = 2;

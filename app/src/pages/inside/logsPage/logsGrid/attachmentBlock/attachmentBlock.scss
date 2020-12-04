@@ -14,11 +14,22 @@
  * limitations under the License.
  */
 
-.attachment-block {
-  float: right;
+.actions {
+  margin-top: 3px;
+  visibility: hidden;
 }
 
-.image {
+.attachment-block {
+  float: right;
+
+  &:hover {
+    .actions {
+      visibility: visible;
+    }
+  }
+}
+
+.attachment {
   display: inline-block;
   width: 100%;
   min-width: 60px;
