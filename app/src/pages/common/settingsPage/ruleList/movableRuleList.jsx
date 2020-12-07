@@ -61,6 +61,7 @@ export const MovableRuleList = ({ data, onMove, ...rest }) => {
         isDraggable
         isResizable={false}
         onDragStop={updateItemsOrder}
+        onLayoutChange={setLayout}
         cols={1}
         useCSSTransforms={!isFirefox}
         draggableHandle=".draggable-field"
