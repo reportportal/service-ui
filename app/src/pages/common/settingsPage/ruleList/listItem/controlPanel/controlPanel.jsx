@@ -145,7 +145,9 @@ export class ControlPanel extends Component {
     return (
       <div className={cx('rule-control-panel')}>
         {isMovable ? (
-          <span className={cx('move-control', 'draggable-field')}>{Parser(IconDots)}</span>
+          <span className={cx('move-control', 'draggable-field', { disabled: readOnly })}>
+            {Parser(IconDots)}
+          </span>
         ) : (
           <span className={cx('rule-number')}>{id + 1}</span>
         )}

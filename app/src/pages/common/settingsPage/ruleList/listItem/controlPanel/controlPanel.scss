@@ -46,6 +46,14 @@
       fill: $COLOR--black-2;
     }
   }
+
+  &.disabled {
+    cursor: default;
+    pointer-events: none;
+    svg {
+      fill: $COLOR--gray-80;
+    }
+  }
 }
 
 .switcher {
