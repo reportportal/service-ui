@@ -63,6 +63,8 @@ import {
   FETCH_TEST_ITEMS_LOG_PAGE,
   DELETE_TEST_ITEMS,
   CURRENT_ITEM_LEVEL,
+  PROVIDER_TYPE_LAUNCH,
+  PROVIDER_TYPE_FILTER,
 } from './constants';
 import { LEVELS } from './levels';
 import {
@@ -77,7 +79,7 @@ import {
   isTestItemsListSelector,
   isFilterParamsExistsSelector,
 } from './selectors';
-import { calculateLevel } from './utils';
+import { calculateLevel, getProviderTypeInfo } from './utils';
 
 function* fetchFilteredItemStatistics(project, params) {
   yield put(
@@ -164,11 +166,11 @@ function* fetchTestItems({ payload = {} }) {
   const underPathItemsIds = itemIds.filter((item) => item !== launchId);
   const params = isTestItemsList
     ? {
-        filterId,
+        ...getProviderTypeInfo(query.providerType, PROVIDER_TYPE_FILTER, filterId),
         ...{ ...query, ...payloadParams },
       }
     : {
-        'filter.eq.launchId': launchId,
+        ...getProviderTypeInfo(query.providerType, PROVIDER_TYPE_LAUNCH, launchId),
         'filter.eq.parentId': !noChildFilter ? parentId : undefined,
         'filter.level.path': !parentId && !noChildFilter ? 1 : undefined,
         'filter.under.path':

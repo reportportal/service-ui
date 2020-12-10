@@ -31,6 +31,7 @@ export {
   FILTERED_ITEM_STATISTICS_INITIAL_STATE,
   PROVIDER_TYPE_WIDGET,
   PROVIDER_TYPE_LAUNCH,
+  PROVIDER_TYPE_FILTER,
   PROVIDER_TYPE_MODIFIERS_ID_MAP,
   LOG_VIEW,
   LIST_VIEW,
@@ -73,5 +74,6 @@ export {
   isListView,
   groupItemsByParent,
   isItemOwner,
+  getProviderTypeInfo,
 } from './utils';
 export { LEVELS } from './levels';

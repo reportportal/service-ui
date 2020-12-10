@@ -40,8 +40,10 @@ export const COMPOSITE_ATTRIBUTES_FILTER = 'compositeAttribute';
 export const CURRENT_ITEM_LEVEL = 'currentItemLevel';
 export const PROVIDER_TYPE_WIDGET = 'widget';
 export const PROVIDER_TYPE_LAUNCH = 'launch';
+export const PROVIDER_TYPE_FILTER = 'filter';
 export const PROVIDER_TYPE_WIDGET_ID = 'widgetId';
 export const PROVIDER_TYPE_LAUNCH_ID = 'launchId';
+export const PROVIDER_TYPE_FILTER_ID = 'filterId';
 
 export const FILTERED_ITEM_STATISTICS_INITIAL_STATE = {
   executions: {},
@@ -51,6 +53,7 @@ export const FILTERED_ITEM_STATISTICS_INITIAL_STATE = {
 export const PROVIDER_TYPE_MODIFIERS_ID_MAP = {
   [PROVIDER_TYPE_WIDGET]: PROVIDER_TYPE_WIDGET_ID,
   [PROVIDER_TYPE_LAUNCH]: PROVIDER_TYPE_LAUNCH_ID,
+  [PROVIDER_TYPE_FILTER]: PROVIDER_TYPE_FILTER_ID,
 };
 
 export const TEST_ITEM_TYPES_MAP = {
