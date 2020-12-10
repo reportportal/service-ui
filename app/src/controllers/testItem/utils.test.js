@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-import { normalizeTestItem, formatItemName, groupItemsByParent } from './utils';
+import {
+  normalizeTestItem,
+  formatItemName,
+  groupItemsByParent,
+  getProviderTypeInfo,
+} from './utils';
 
 describe('controllers/testItem/utils', () => {
   describe('normalizeTestItem', () => {
@@ -96,6 +101,26 @@ describe('controllers/testItem/utils', () => {
       };
 
       expect(groupedItems).toEqual(expectedGroupedItems);
+    });
+  });
+
+  describe('getProviderTypeInfo', () => {
+    test('should return empty object in case of queryProviderType exists', () => {
+      const providerTypeInfo = getProviderTypeInfo({ providerType: 'initial' });
+
+      expect(providerTypeInfo).toEqual({});
+    });
+
+    test('should return providerTypeInfo object with filter', () => {
+      const providerTypeInfo = getProviderTypeInfo(undefined, 'filter', 'filterId');
+
+      expect(providerTypeInfo).toEqual({ providerType: 'filter', filterId: 'filterId' });
+    });
+
+    test('should return providerTypeInfo object with launch', () => {
+      const providerTypeInfo = getProviderTypeInfo(undefined, 'launch', 'launchId');
+
+      expect(providerTypeInfo).toEqual({ providerType: 'launch', launchId: 'launchId' });
     });
   });
 });
