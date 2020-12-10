@@ -26,7 +26,17 @@ export {
   setDefaultItemStatisticsAction,
 } from './actionCreators';
 export { fetchParentItems, testItemsSagas } from './sagas';
-export { SET_PAGE_LOADING, FILTERED_ITEM_STATISTICS_INITIAL_STATE } from './constants';
+export {
+  SET_PAGE_LOADING,
+  FILTERED_ITEM_STATISTICS_INITIAL_STATE,
+  PROVIDER_TYPE_WIDGET,
+  PROVIDER_TYPE_LAUNCH,
+  PROVIDER_TYPE_MODIFIERS_ID_MAP,
+  LOG_VIEW,
+  LIST_VIEW,
+  TEST_ITEMS_TYPE_LIST,
+  DEFAULT_LAUNCHES_LIMIT,
+} from './constants';
 export {
   launchSelector,
   levelSelector,
@@ -64,5 +74,4 @@ export {
   groupItemsByParent,
   isItemOwner,
 } from './utils';
-export { LOG_VIEW, LIST_VIEW, TEST_ITEMS_TYPE_LIST, DEFAULT_LAUNCHES_LIMIT } from './constants';
 export { LEVELS } from './levels';

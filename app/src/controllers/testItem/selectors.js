@@ -49,7 +49,12 @@ import { defectTypesSelector } from 'controllers/project';
 import { omit } from 'common/utils';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { SORTING_KEY } from 'controllers/sorting';
-import { DEFAULT_SORTING, TEST_ITEMS_TYPE_LIST, COMPOSITE_ATTRIBUTES_FILTER } from './constants';
+import {
+  DEFAULT_SORTING,
+  TEST_ITEMS_TYPE_LIST,
+  COMPOSITE_ATTRIBUTES_FILTER,
+  PROVIDER_TYPE_MODIFIERS_ID_MAP,
+} from './constants';
 import {
   createLink,
   getQueryNamespace,
@@ -276,6 +281,9 @@ export const statisticsLinkSelector = createSelector(
   (query, payload, testItemIds, isDebugMode, testItemIdsArray) => (ownProps) => {
     const linkPayload = (ownProps.ownLinkParams && ownProps.ownLinkParams.payload) || payload;
     const launchesLimit = ownProps.launchesLimit;
+    const compositeAttribute = ownProps.compositeAttribute;
+    const providerType = ownProps.providerType;
+    const providerTypeModifierId = PROVIDER_TYPE_MODIFIERS_ID_MAP[providerType];
     const isLatest = ownProps.isLatest;
     const page =
       (ownProps.ownLinkParams && ownProps.ownLinkParams.page) || getNextPage(isDebugMode, true);
@@ -290,7 +298,9 @@ export const statisticsLinkSelector = createSelector(
       'filter.eq.hasChildren': false,
       'filter.in.type': LEVEL_STEP,
       'filter.in.launchId': ownProps.launchId,
-      'filter.has.compositeAttribute': ownProps.compositeAttribute,
+      providerType,
+      [providerTypeModifierId]: ownProps[providerTypeModifierId],
+      compositeAttribute,
       launchesLimit,
       isLatest,
     };
@@ -321,6 +331,9 @@ export const defectLinkSelector = createSelector(
   (query, payload, testItemIds, isDebugMode, testItemIdsArray) => (ownProps) => {
     const linkPayload = (ownProps.ownLinkParams && ownProps.ownLinkParams.payload) || payload;
     const launchesLimit = ownProps.launchesLimit;
+    const compositeAttribute = ownProps.compositeAttribute;
+    const providerType = ownProps.providerType;
+    const providerTypeModifierId = PROVIDER_TYPE_MODIFIERS_ID_MAP[providerType];
     const isLatest = ownProps.isLatest;
     let levelIndex = 0;
     if (testItemIdsArray.length > 0) {
@@ -339,8 +352,10 @@ export const defectLinkSelector = createSelector(
       'filter.eq.hasStats': true,
       'filter.eq.hasChildren': false,
       'filter.in.issueType': getDefectsString(ownProps.defects),
-      'filter.has.compositeAttribute': ownProps.compositeAttribute,
       'filter.in.launchId': ownProps.launchId,
+      providerType,
+      [providerTypeModifierId]: ownProps[providerTypeModifierId],
+      compositeAttribute,
       launchesLimit,
       isLatest,
     };
