@@ -12,7 +12,11 @@ const createPluginRegistrationFunction = (store) => (plugin) => {
   const wrappedExtensions = extensions.map((extension, i) => ({
     name: `${plugin.name}__${i}`,
     ...extension,
-    component: <extension.component {...createImportProps(plugin.name)} />,
+    component: extension.factory ? (
+      extension.component(createImportProps(plugin.name))
+    ) : (
+      <extension.component {...createImportProps(plugin.name)} />
+    ),
   }));
   wrappedExtensions.forEach((ex) => {
     if (ex.type === EXTENSION_TYPE_MODAL && !getModal({ id: ex.name })) {

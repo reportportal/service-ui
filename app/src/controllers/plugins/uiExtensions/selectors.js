@@ -4,6 +4,7 @@ import {
   EXTENSION_TYPE_ADMIN_PAGE,
   EXTENSION_TYPE_PAGE,
   EXTENSION_TYPE_HEADER_COMPONENT,
+  EXTENSION_TYPE_LAUNCH_ITEM_COMPONENT,
 } from './constants';
 import { domainSelector, enabledPluginNamesSelector } from '../selectors';
 import { uiExtensionMap } from './uiExtensionStorage';
@@ -29,4 +30,7 @@ export const uiExtensionAdminPagesSelector = createUiExtensionSelectorByType(
 export const uiExtensionPagesSelector = createUiExtensionSelectorByType(EXTENSION_TYPE_PAGE);
 export const uiExtensionHeaderComponentsSelector = createUiExtensionSelectorByType(
   EXTENSION_TYPE_HEADER_COMPONENT,
+);
+export const uiExtensionLaunchItemComponentsSelector = createUiExtensionSelectorByType(
+  EXTENSION_TYPE_LAUNCH_ITEM_COMPONENT,
 );
