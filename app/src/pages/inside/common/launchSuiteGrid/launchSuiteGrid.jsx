@@ -265,17 +265,26 @@ export class LaunchSuiteGrid extends PureComponent {
     noItemsBlock: null,
   };
   getColumns() {
+    const {
+      events,
+      withHamburger,
+      onEditItem,
+      onDeleteItem,
+      onMove,
+      onForceFinish,
+      onAnalysis,
+      onPatternAnalysis,
+    } = this.props;
     const hamburgerColumn = {
       component: HamburgerColumn,
       customProps: {
-        onDeleteItem: this.props.onDeleteItem,
-        onMove: this.props.onMove,
-        onForceFinish: this.props.onForceFinish,
-        onAnalysis: this.props.onAnalysis,
-        onPatternAnalysis: this.props.onPatternAnalysis,
+        onDeleteItem,
+        onMove,
+        onForceFinish,
+        onAnalysis,
+        onPatternAnalysis,
       },
     };
-    const { events } = this.props;
     const columns = [
       {
         id: ENTITY_NAME,
@@ -289,10 +298,11 @@ export class LaunchSuiteGrid extends PureComponent {
         withFilter: true,
         filterEventInfo: events.NAME_FILTER,
         customProps: {
-          onEditItem: this.props.onEditItem,
+          onEditItem,
           onClickAttribute: this.handleAttributeFilterClick,
           onOwnerClick: this.handleOwnerFilterClick,
           events,
+          withExtensions: withHamburger, // Use extensions for launch level only
         },
         sortingEventInfo: events.NAME_SORTING,
       },
@@ -421,7 +431,7 @@ export class LaunchSuiteGrid extends PureComponent {
         sortingEventInfo: events.TI_SORTING,
       },
     ];
-    if (this.props.withHamburger) {
+    if (withHamburger) {
       columns.splice(0, 0, hamburgerColumn);
     }
     return columns;
