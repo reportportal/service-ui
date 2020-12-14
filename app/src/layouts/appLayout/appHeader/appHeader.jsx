@@ -74,7 +74,7 @@ export class AppHeader extends Component {
         <div className={cx('nav-btns-block')}>
           {extensionComponents.map((extensionComponent) => (
             <div className={cx('nav-btn', 'extension-component')} key={extensionComponent.name}>
-              {extensionComponent.component}
+              <extensionComponent.component />
             </div>
           ))}
         </div>
