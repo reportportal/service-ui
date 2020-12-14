@@ -119,7 +119,7 @@ export class SettingsPage extends Component {
         [extension.name]: {
           name: extension.title || extension.name,
           link: this.props.createTabLink(extension.name),
-          component: extension.component,
+          component: <extension.component />,
           mobileDisabled: true,
         },
       }),
