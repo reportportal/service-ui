@@ -23,41 +23,52 @@ const cx = classNames.bind(styles);
 
 const fieldShape = {
   id: PropTypes.string,
+  prefix: PropTypes.string,
   postfix: PropTypes.string,
   component: PropTypes.node,
+  dependentFields: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      fields: PropTypes.array,
+    }),
+  ),
 };
 
-const Field = ({ component, postfix }) => (
+const Field = ({ component, prefix, postfix }) => (
   <div className={cx('dependent-control-field')}>
+    {prefix && <span className={cx('field-caption')}>{prefix}</span>}
     {component}
-    <span className={cx('field-caption')}>{postfix}</span>
+    {postfix && <span className={cx('field-caption')}>{postfix}</span>}
   </div>
 );
 Field.propTypes = fieldShape;
 Field.defaultProps = {
   id: '',
+  prefix: '',
   postfix: '',
   component: null,
 };
 
-export const DependentFieldsControl = ({ prefix, mainControl, value, dependentFields }) => {
-  const fields = (dependentFields.find((item) => item.value === value) || {}).fields || [];
+function renderFieldsRecursively(fields, values) {
+  return fields.map(({ id, prefix, postfix, component, dependentFields = [] }) => {
+    const value = values[id];
+    const nestedFields = (dependentFields.find((item) => item.value === value) || {}).fields || [];
 
-  return (
-    <div className={cx('dependent-fields-control')}>
-      <span className={cx('field-caption')}>{prefix}</span>
-      <Field component={mainControl.component} postfix={mainControl.postfix} />
-      {fields.map((field) => (
-        <Field key={field.id} component={field.component} postfix={field.postfix} />
-      ))}
-    </div>
-  );
-};
+    return (
+      <React.Fragment key={id}>
+        <Field component={component} prefix={prefix} postfix={postfix} />
+        {renderFieldsRecursively(nestedFields, values)}
+      </React.Fragment>
+    );
+  });
+}
+
+export const DependentFieldsControl = ({ values, fields }) => (
+  <div className={cx('dependent-fields-control')}>{renderFieldsRecursively(fields, values)}</div>
+);
 DependentFieldsControl.propTypes = {
-  prefix: PropTypes.string,
-  value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  mainControl: PropTypes.shape(fieldShape),
-  dependentFields: PropTypes.arrayOf(
+  values: PropTypes.object,
+  fields: PropTypes.arrayOf(
     PropTypes.shape({
       value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       fields: PropTypes.arrayOf(fieldShape),
@@ -65,8 +76,6 @@ DependentFieldsControl.propTypes = {
   ),
 };
 DependentFieldsControl.defaultProps = {
-  prefix: '',
-  value: '',
-  mainControl: {},
-  dependentFields: [],
+  values: {},
+  fields: [],
 };
