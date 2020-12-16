@@ -62,7 +62,6 @@ import {
   normalizeTestItem,
   getNextPage,
   isListView,
-  getProviderTypeInfo,
 } from './utils';
 
 const domainSelector = (state) => state.testItem || {};
@@ -298,7 +297,8 @@ export const statisticsLinkSelector = createSelector(
       'filter.eq.hasStats': true,
       'filter.eq.hasChildren': false,
       'filter.in.type': LEVEL_STEP,
-      ...getProviderTypeInfo(query.providerType, providerType, ownProps[providerTypeModifierId]),
+      providerType,
+      [providerTypeModifierId]: ownProps[providerTypeModifierId],
       compositeAttribute,
       launchesLimit,
       isLatest,
@@ -351,7 +351,8 @@ export const defectLinkSelector = createSelector(
       'filter.eq.hasStats': true,
       'filter.eq.hasChildren': false,
       'filter.in.issueType': getDefectsString(ownProps.defects),
-      ...getProviderTypeInfo(query.providerType, providerType, ownProps[providerTypeModifierId]),
+      providerType,
+      [providerTypeModifierId]: ownProps[providerTypeModifierId],
       compositeAttribute,
       launchesLimit,
       isLatest,
