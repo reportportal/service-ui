@@ -74,6 +74,5 @@ export {
   isListView,
   groupItemsByParent,
   isItemOwner,
-  getProviderTypeInfo,
 } from './utils';
 export { LEVELS } from './levels';

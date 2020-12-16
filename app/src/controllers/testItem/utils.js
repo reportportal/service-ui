@@ -23,7 +23,7 @@ import {
 import * as launchLevels from 'common/constants/launchLevels';
 import * as methodTypes from 'common/constants/methodTypes';
 import { extractNamespacedQuery } from 'common/utils/routingUtils';
-import { PROVIDER_TYPE_MODIFIERS_ID_MAP, TEST_ITEM_TYPES_MAP } from './constants';
+import { TEST_ITEM_TYPES_MAP } from './constants';
 import { LEVELS } from './levels';
 
 export const getItemLevel = (type) => {
@@ -131,15 +131,4 @@ export const isItemOwner = (userId, item, launch) => {
   }
 
   return true;
-};
-
-export const getProviderTypeInfo = (queryProviderType, providerType, id) => {
-  if (queryProviderType) {
-    return {};
-  }
-  const providerTypeModifierId = PROVIDER_TYPE_MODIFIERS_ID_MAP[providerType];
-  return {
-    providerType,
-    [providerTypeModifierId]: id,
-  };
 };
