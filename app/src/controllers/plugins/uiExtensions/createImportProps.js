@@ -18,7 +18,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 import Parser from 'html-react-parser';
-import { reduxForm, formValueSelector } from 'redux-form';
+import { reduxForm, FieldArray, formValueSelector } from 'redux-form';
 import Link from 'redux-first-router-link';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { BigButton } from 'components/buttons/bigButton';
@@ -152,6 +152,7 @@ export const createImportProps = (pluginName) => ({
     AttributeListField,
     AsyncAutocomplete,
     DependentFieldsControl,
+    FieldArray,
   },
   constants: { PLUGIN_UI_EXTENSION_ADMIN_PAGE, PROJECT_SETTINGS_TAB_PAGE },
   actions: {
