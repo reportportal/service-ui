@@ -90,6 +90,7 @@ import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { StripedMessage } from 'components/main/stripedMessage';
 import { MarkdownEditor, MarkdownViewer } from 'components/main/markdown';
+import { DependentFieldsControl } from 'components/main/dependentFieldsControl';
 import { GeneralTab } from 'pages/common/settingsPage/generalTab';
 import { RuleList } from 'pages/common/settingsPage/ruleList';
 import { RuleListHeader } from 'pages/common/settingsPage/ruleListHeader';
@@ -150,6 +151,7 @@ export const createImportProps = (pluginName) => ({
     StripedMessage,
     AttributeListField,
     AsyncAutocomplete,
+    DependentFieldsControl,
   },
   constants: { PLUGIN_UI_EXTENSION_ADMIN_PAGE, PROJECT_SETTINGS_TAB_PAGE },
   actions: {

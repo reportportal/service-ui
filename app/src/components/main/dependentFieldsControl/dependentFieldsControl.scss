@@ -23,6 +23,11 @@
   margin: 0 10px;
   font-size: 13px;
   color: $COLOR--gray-60;
+
+  &:first-child {
+    margin: 0;
+    width: 26px;
+  }
 }
 
 .dependent-control-field {
