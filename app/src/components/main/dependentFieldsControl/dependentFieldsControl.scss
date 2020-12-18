@@ -17,21 +17,43 @@
 .dependent-fields-control {
   display: flex;
   align-items: center;
+  min-height: 40px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 .field-caption {
-  margin: 0 10px;
+  margin-right: 10px;
   font-size: 13px;
   color: $COLOR--gray-60;
 
-  &:first-child {
-    margin: 0;
-    width: 26px;
+  &:last-child {
+    margin-right: 0;
+    margin-left: 10px;
   }
 }
 
 .dependent-control-field {
   display: flex;
   align-items: center;
-  flex-basis: 200px;
+  margin-right: 10px;
+
+  &:last-child {
+    margin-right: 0;
+  }
+
+  &:first-child {
+    .field-caption {
+      margin: 0;
+      min-width: 26px;
+    }
+  }
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
 }

@@ -26,6 +26,7 @@ const fieldShape = {
   prefix: PropTypes.string,
   postfix: PropTypes.string,
   component: PropTypes.node,
+  valueSelector: PropTypes.func,
   dependentFields: PropTypes.arrayOf(
     PropTypes.shape({
       value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -50,8 +51,8 @@ Field.defaultProps = {
 };
 
 function renderFieldsRecursively(fields, values) {
-  return fields.map(({ id, prefix, postfix, component, dependentFields = [] }) => {
-    const value = values[id];
+  return fields.map(({ id, prefix, postfix, component, valueSelector, dependentFields = [] }) => {
+    const value = valueSelector ? valueSelector(values) : values[id];
     const nestedFields = (dependentFields.find((item) => item.value === value) || {}).fields || [];
 
     return (
