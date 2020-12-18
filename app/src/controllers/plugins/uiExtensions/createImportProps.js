@@ -16,6 +16,7 @@
 
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useIntl } from 'react-intl';
 import moment from 'moment';
 import Parser from 'html-react-parser';
 import { reduxForm, FieldArray, formValueSelector } from 'redux-form';
@@ -39,6 +40,7 @@ import {
   pluginRouteSelector,
 } from 'controllers/pages';
 import { attributesArray } from 'common/utils/validation/validate';
+import { requiredField } from 'common/utils/validation/commonValidators';
 import PlusIcon from 'common/img/plus-button-inline.svg';
 import RemoveIcon from 'common/img/trashcan-inline.svg';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
@@ -64,6 +66,7 @@ import {
   projectInfoSelector,
   fetchProjectAction,
   projectInfoLoadingSelector,
+  defectTypesSelector,
 } from 'controllers/project';
 import { Grid } from 'components/main/grid';
 import { AttributeListField } from 'components/main/attributeList';
@@ -94,6 +97,7 @@ import { DependentFieldsControl } from 'components/main/dependentFieldsControl';
 import { GeneralTab } from 'pages/common/settingsPage/generalTab';
 import { RuleList } from 'pages/common/settingsPage/ruleList';
 import { RuleListHeader } from 'pages/common/settingsPage/ruleListHeader';
+import { getGroupedDefectTypesOptions } from 'pages/inside/dashboardItemPage/modals/common/widgetControls/utils/getWidgetCriteriaOptions';
 import { createGlobalNamedIntegrationsSelector } from '../selectors';
 
 const BUTTONS = {
@@ -124,7 +128,7 @@ const INPUTS = {
 };
 
 export const createImportProps = (pluginName) => ({
-  lib: { React, useSelector, useDispatch, moment, Parser, reduxForm, formValueSelector },
+  lib: { React, useSelector, useDispatch, useIntl, moment, Parser, reduxForm, formValueSelector },
   components: {
     ...BUTTONS,
     ...INPUTS,
@@ -173,6 +177,7 @@ export const createImportProps = (pluginName) => ({
     projectInfoLoadingSelector,
     isEmailIntegrationAvailableSelector,
     isAdminSelector,
+    defectTypesSelector,
   },
   icons: {
     PlusIcon,
@@ -185,6 +190,6 @@ export const createImportProps = (pluginName) => ({
     CircleCheckIcon,
     CircleCrossIcon,
   },
-  utils: { fetch, URLS, debounce },
-  validators: { attributesArray },
+  utils: { fetch, URLS, debounce, getGroupedDefectTypesOptions },
+  validators: { attributesArray, requiredField },
 });
