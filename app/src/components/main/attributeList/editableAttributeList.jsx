@@ -31,6 +31,7 @@ export class EditableAttributeList extends Component {
     onChange: PropTypes.func,
     keyURLCreator: PropTypes.func,
     valueURLCreator: PropTypes.func,
+    maxLength: PropTypes.number,
   };
 
   static defaultProps = {
@@ -40,6 +41,7 @@ export class EditableAttributeList extends Component {
     onChange: () => {},
     keyURLCreator: null,
     valueURLCreator: null,
+    maxLength: Infinity,
   };
 
   handleAddNew = () => {
@@ -52,7 +54,14 @@ export class EditableAttributeList extends Component {
   };
 
   render() {
-    const { attributes, disabled, keyURLCreator, valueURLCreator, newAttrMessage } = this.props;
+    const {
+      attributes,
+      disabled,
+      keyURLCreator,
+      valueURLCreator,
+      newAttrMessage,
+      maxLength,
+    } = this.props;
     return (
       <AttributeList
         attributes={attributes}
@@ -63,6 +72,7 @@ export class EditableAttributeList extends Component {
         disabled={disabled}
         keyURLCreator={keyURLCreator}
         valueURLCreator={valueURLCreator}
+        maxLength={maxLength}
       />
     );
   }

@@ -70,6 +70,7 @@ export const AttributeList = ({
   keyURLCreator,
   valueURLCreator,
   newAttrMessage,
+  maxLength,
 }) => (
   <Fragment>
     {attributes.filter(notSystemAttributePredicate).map((attribute, i, filteredAttributes) => (
@@ -87,7 +88,7 @@ export const AttributeList = ({
         valueURLCreator={valueURLCreator}
       />
     ))}
-    {!hasEditedAttribute(attributes) && !disabled && (
+    {!hasEditedAttribute(attributes) && !disabled && attributes.length < maxLength && (
       <div className={cx('add-new-button')} onClick={onAddNew}>
         +{' '}
         {newAttrMessage || <FormattedMessage id="AttributeList.addNew" defaultMessage="Add new" />}
@@ -100,6 +101,7 @@ AttributeList.propTypes = {
   editedAttribute: PropTypes.object,
   disabled: PropTypes.bool,
   newAttrMessage: PropTypes.string,
+  maxLength: PropTypes.number,
   onChange: PropTypes.func,
   onEdit: PropTypes.func,
   onAddNew: PropTypes.func,
@@ -114,6 +116,7 @@ AttributeList.defaultProps = {
   keyURLCreator: null,
   valueURLCreator: null,
   newAttrMessage: '',
+  maxLength: Infinity,
   onChange: () => {},
   onRemove: () => {},
   onEdit: () => {},
