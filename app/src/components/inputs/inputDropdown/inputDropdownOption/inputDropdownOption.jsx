@@ -13,9 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import React from 'react';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { InputRadio } from 'components/inputs/inputRadio';
 import styles from './inputDropdownOption.scss';
 
 const cx = classNames.bind(styles);
@@ -28,9 +31,41 @@ export const DropdownOption = ({
   subOption,
   onChange,
   value,
+  independentSelection,
 }) => {
   const onChangeHandler = () => {
     onChange && onChange(value);
+  };
+
+  const renderOptionComponent = () => {
+    let component;
+    if (multiple) {
+      component = (
+        <InputCheckbox value={selected} disabled={disabled} onChange={onChangeHandler}>
+          <span className={cx('option-label')}>{label}</span>
+        </InputCheckbox>
+      );
+    } else if (independentSelection) {
+      component = (
+        <InputRadio
+          name="dropdownOption"
+          disabled={disabled}
+          value={selected ? value : null}
+          ownValue={value}
+          onChange={onChangeHandler}
+        >
+          <span className={cx('option-label')}>{label}</span>
+        </InputRadio>
+      );
+    } else {
+      component = (
+        <div className={cx('single-option')} onClick={onChangeHandler}>
+          {label}
+        </div>
+      );
+    }
+
+    return component;
   };
   return (
     <div
@@ -40,15 +75,7 @@ export const DropdownOption = ({
         'sub-option': subOption,
       })}
     >
-      {multiple ? (
-        <InputCheckbox value={selected} disabled={disabled} onChange={onChangeHandler}>
-          <span className={cx('option-label')}>{label}</span>
-        </InputCheckbox>
-      ) : (
-        <div className={cx('single-option')} onClick={onChangeHandler}>
-          {label}
-        </div>
-      )}
+      {renderOptionComponent()}
     </div>
   );
 };
@@ -60,6 +87,7 @@ DropdownOption.propTypes = {
   disabled: PropTypes.bool,
   subOption: PropTypes.bool,
   selected: PropTypes.bool,
+  independentSelection: PropTypes.bool,
   onChange: PropTypes.func,
 };
 
@@ -70,5 +98,6 @@ DropdownOption.defaultProps = {
   disabled: false,
   subOption: false,
   selected: false,
+  independentSelection: false,
   onChange: () => {},
 };

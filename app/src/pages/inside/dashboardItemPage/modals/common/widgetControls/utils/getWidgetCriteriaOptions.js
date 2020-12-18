@@ -267,7 +267,7 @@ const getToInvestigateStatisticsOption = (formatMessage) => [
   { value: STATS_TI_TOTAL, label: formatMessage(messages[TO_INVESTIGATE]) },
 ];
 
-const getGroupedDefectTypesOptions = (defectTypes, formatMessage) => {
+export const getGroupedDefectTypesOptions = (defectTypes, formatMessage) => {
   let defectTypesOptions = [];
   DEFECT_TYPES_SEQUENCE.forEach((defectTypeId) => {
     const defectTypeGroup = defectTypes[defectTypeId];

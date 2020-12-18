@@ -44,11 +44,13 @@ export const Input = ({
   asyncValidating,
   variant,
   style,
+  title,
 }) => (
   <input
     ref={refFunction}
     type={type}
     style={style}
+    title={title}
     className={cx('input', `type-${type}`, className, `variant-${variant}`, {
       'mobile-disabled': mobileDisabled,
       disabled,
@@ -84,6 +86,7 @@ Input.propTypes = {
   asyncValidating: PropTypes.bool,
   variant: PropTypes.oneOf([VARIANT_STANDARD, VARIANT_INLINE]),
   style: PropTypes.object,
+  title: PropTypes.string,
   onChange: PropTypes.func,
   onFocus: PropTypes.func,
   onBlur: PropTypes.func,
@@ -106,6 +109,7 @@ Input.defaultProps = {
   asyncValidating: false,
   variant: VARIANT_STANDARD,
   style: {},
+  title: '',
   onChange: () => {},
   onFocus: () => {},
   onBlur: () => {},
