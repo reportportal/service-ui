@@ -17,6 +17,7 @@
 .dependent-fields-control {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   min-height: 40px;
 
   @media (max-width: $SCREEN_XS_MAX) {
@@ -40,6 +41,7 @@
   display: flex;
   align-items: center;
   margin-right: 10px;
+  margin-bottom: 10px;
 
   &:last-child {
     margin-right: 0;
@@ -54,6 +56,5 @@
 
   @media (max-width: $SCREEN_XS_MAX) {
     margin-right: 0;
-    margin-bottom: 10px;
   }
 }

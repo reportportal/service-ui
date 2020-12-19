@@ -35,8 +35,9 @@ export const ModalField = ({
   alignLeft,
   noMinHeight,
   labelTip,
+  middleBaseline,
 }) => (
-  <div className={cx('modal-field', className)}>
+  <div className={cx('modal-field', className, { 'middle-baseline': middleBaseline })}>
     {label && (
       <Label
         label={label}
@@ -46,10 +47,10 @@ export const ModalField = ({
         labelTip={labelTip}
       />
     )}
-    <Content>
+    <div className={cx('modal-field-content')}>
       {children}
-      {tip && <Tip tipPosition={tipPosition} tip={tip} />}
-    </Content>
+      {tip && <div className={cx('modal-field-tip', `position-${tipPosition}`)}>{tip}</div>}
+    </div>
   </div>
 );
 ModalField.propTypes = {
@@ -62,6 +63,7 @@ ModalField.propTypes = {
   alignLeft: PropTypes.bool,
   noMinHeight: PropTypes.bool,
   labelTip: PropTypes.string,
+  middleBaseline: PropTypes.bool,
 };
 ModalField.defaultProps = {
   className: '',
@@ -73,18 +75,7 @@ ModalField.defaultProps = {
   alignLeft: false,
   noMinHeight: false,
   labelTip: '',
-};
-
-const Tip = ({ tip, tipPosition }) => (
-  <div className={cx('modal-field-tip', `position-${tipPosition}`)}>{tip}</div>
-);
-Tip.propTypes = {
-  tip: PropTypes.string,
-  tipPosition: PropTypes.oneOf([TIP_POSITION_BOTTOM, TIP_POSITION_RIGHT]),
-};
-Tip.defaultProps = {
-  tip: '',
-  tipPosition: TIP_POSITION_BOTTOM,
+  middleBaseline: false,
 };
 
 const Label = ({ label, labelWidth, alignLeft, noMinHeight, labelTip }) => (
@@ -116,12 +107,4 @@ Label.defaultProps = {
   alignLeft: false,
   noMinHeight: false,
   labelTip: '',
-};
-
-const Content = ({ children }) => <div className={cx('modal-field-content')}>{children}</div>;
-Content.propTypes = {
-  children: PropTypes.node,
-};
-Content.defaultProps = {
-  children: null,
 };
