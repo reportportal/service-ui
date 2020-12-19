@@ -111,7 +111,7 @@ const messages = defineMessages({
   },
   AUTOMATION_BUG_TOTAL: {
     id: 'WidgetCriteriaOption.AUTOMATION_BUG_TOTAL',
-    defaultMessage: 'Total automation bug',
+    defaultMessage: 'Total automation bugs',
   },
   SYSTEM_ISSUE_TOTAL: {
     id: 'WidgetCriteriaOption.SYSTEM_ISSUE_TOTAL',
