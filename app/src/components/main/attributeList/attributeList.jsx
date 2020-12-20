@@ -71,6 +71,7 @@ export const AttributeList = ({
   valueURLCreator,
   newAttrMessage,
   maxLength,
+  customClass,
 }) => (
   <Fragment>
     {attributes.filter(notSystemAttributePredicate).map((attribute, i, filteredAttributes) => (
@@ -86,6 +87,7 @@ export const AttributeList = ({
         disabled={disabled}
         keyURLCreator={keyURLCreator}
         valueURLCreator={valueURLCreator}
+        customClass={customClass}
       />
     ))}
     {!hasEditedAttribute(attributes) && !disabled && attributes.length < maxLength && (
@@ -102,6 +104,7 @@ AttributeList.propTypes = {
   disabled: PropTypes.bool,
   newAttrMessage: PropTypes.string,
   maxLength: PropTypes.number,
+  customClass: PropTypes.string,
   onChange: PropTypes.func,
   onEdit: PropTypes.func,
   onAddNew: PropTypes.func,
@@ -117,6 +120,7 @@ AttributeList.defaultProps = {
   valueURLCreator: null,
   newAttrMessage: '',
   maxLength: Infinity,
+  customClass: '',
   onChange: () => {},
   onRemove: () => {},
   onEdit: () => {},
