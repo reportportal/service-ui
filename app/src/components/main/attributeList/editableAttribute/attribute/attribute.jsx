@@ -28,8 +28,11 @@ const createRemoveClickHandler = (clickHandler) => (e) => {
   clickHandler();
 };
 
-export const Attribute = ({ attribute, onClick, onRemove, disabled }) => (
-  <div className={cx('attribute', { disabled })} onClick={disabled ? undefined : onClick}>
+export const Attribute = ({ attribute, onClick, onRemove, disabled, customClass }) => (
+  <div
+    className={cx('attribute', customClass, { disabled })}
+    onClick={disabled ? undefined : onClick}
+  >
     {!disabled && (
       <div className={cx('remove-icon')} onClick={createRemoveClickHandler(onRemove)}>
         {Parser(CrossIcon)}
@@ -41,6 +44,7 @@ export const Attribute = ({ attribute, onClick, onRemove, disabled }) => (
 
 Attribute.propTypes = {
   attribute: PropTypes.object,
+  customClass: PropTypes.string,
   disabled: PropTypes.bool,
   onClick: PropTypes.func,
   onRemove: PropTypes.func,
@@ -48,6 +52,7 @@ Attribute.propTypes = {
 
 Attribute.defaultProps = {
   attribute: {},
+  customClass: '',
   disabled: false,
   onClick: () => {},
   onRemove: () => {},

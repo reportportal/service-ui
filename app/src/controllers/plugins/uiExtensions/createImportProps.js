@@ -29,6 +29,7 @@ import { ItemList } from 'components/main/itemList';
 import { ModalLayout, ModalField } from 'components/main/modal';
 import { showModalAction } from 'controllers/modal';
 import { fetch } from 'common/utils/fetch';
+import { isEmptyObject } from 'common/utils/isEmptyObject';
 import {
   activeProjectSelector,
   activeProjectRoleSelector,
@@ -190,6 +191,6 @@ export const createImportProps = (pluginName) => ({
     CircleCheckIcon,
     CircleCrossIcon,
   },
-  utils: { fetch, URLS, debounce, getGroupedDefectTypesOptions },
+  utils: { fetch, URLS, debounce, getGroupedDefectTypesOptions, isEmptyObject },
   validators: { attributesArray, requiredField },
 });
