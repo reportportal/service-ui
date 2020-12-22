@@ -68,6 +68,7 @@ import {
   fetchProjectAction,
   projectInfoLoadingSelector,
   defectTypesSelector,
+  getDefectTypeSelector,
 } from 'controllers/project';
 import { Grid } from 'components/main/grid';
 import { AttributeListField } from 'components/main/attributeList';
@@ -179,6 +180,7 @@ export const createImportProps = (pluginName) => ({
     isEmailIntegrationAvailableSelector,
     isAdminSelector,
     defectTypesSelector,
+    getDefectTypeSelector,
   },
   icons: {
     PlusIcon,
