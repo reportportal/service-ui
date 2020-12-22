@@ -197,7 +197,7 @@ function* fetchTestItems({ payload = {} }) {
     }
   }
   yield put(
-    fetchDataAction(NAMESPACE)(URLS.testItems(project), {
+    fetchDataAction(NAMESPACE)(URLS.testItems(project, 'v2'), {
       params,
     }),
   );
@@ -288,7 +288,7 @@ function* deleteTestItems({ payload: { items, callback } }) {
   const projectId = yield select(activeProjectSelector);
   yield put(showScreenLockAction());
   try {
-    yield call(fetch, URLS.testItems(projectId, ids), {
+    yield call(fetch, URLS.testItems(projectId, '', ids), {
       method: 'delete',
     });
     yield put(hideScreenLockAction());
