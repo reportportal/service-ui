@@ -25,7 +25,9 @@ function* getTests({ payload }) {
   const activeProject = yield select(activeProjectSelector);
   const launchId = yield select(launchIdSelector);
   const suiteId = yield select(suiteIdSelector);
-  yield put(fetchDataAction(NAMESPACE)(URLS.testItems(activeProject, launchId, suiteId), payload));
+  yield put(
+    fetchDataAction(NAMESPACE)(URLS.testItems(activeProject, 'v2', launchId, suiteId), payload),
+  );
 }
 
 function* watchFetchTests() {
