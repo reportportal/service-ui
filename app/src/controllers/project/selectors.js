@@ -42,6 +42,8 @@ export const userFiltersSelector = (state) => projectPreferencesSelector(state).
 
 export const subTypesSelector = (state) => projectConfigSelector(state).subTypes || [];
 
+export const attributesSelector = (state) => projectConfigSelector(state).attributes || {};
+
 export const defectTypesSelector = createSelector(subTypesSelector, (subTypes) =>
   DEFECT_TYPES_SEQUENCE.reduce(
     (types, type) => (subTypes[type] ? { ...types, [type]: subTypes[type] } : types),
@@ -71,8 +73,6 @@ export const orderedContentFieldsSelector = createSelector(
     ...orderedDefectFields,
   ],
 );
-
-const attributesSelector = (state) => projectConfigSelector(state).attributes || {};
 
 const createPrefixedAttributesSelector = (prefix) =>
   createSelector(attributesSelector, (attributes) =>
