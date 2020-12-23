@@ -65,6 +65,7 @@ import { SimpleBreadcrumbs } from 'components/main/simpleBreadcrumbs';
 import {
   projectMembersSelector,
   projectInfoSelector,
+  attributesSelector,
   fetchProjectAction,
   projectInfoLoadingSelector,
   defectTypesSelector,
@@ -174,6 +175,7 @@ export const createImportProps = (pluginName) => ({
     globalIntegrationsSelector: createGlobalNamedIntegrationsSelector(pluginName),
     projectMembersSelector,
     projectInfoSelector,
+    attributesSelector,
     activeProjectRoleSelector,
     projectInfoLoadingSelector,
     isEmailIntegrationAvailableSelector,
