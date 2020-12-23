@@ -156,8 +156,9 @@ export const URLS = {
     `${urlBase}project/${activeProject}/notification`,
   suite: (activeProject, suiteId) => `${urlBase}${activeProject}/item/${suiteId}`,
 
-  testItems: (activeProject, version = '', ids) =>
-    `${urlBase}${activeProject}/item/${version}${getQueryParams({ ids })}`,
+  testItems: (activeProject, ids) => `${urlBase}${activeProject}/item/${getQueryParams({ ids })}`,
+  testItemsWithProviderType: (activeProject, ids) =>
+    `${urlBase}${activeProject}/item/v2${getQueryParams({ ids })}`,
   testItem: (activeProject, id = '') => `${urlBase}${activeProject}/item/${id}`,
   testItemStatistics: (activeProject) => `${urlBase}${activeProject}/item/statistics`,
   testItemUpdate: (activeProject, id = '') => `${urlBase}${activeProject}/item/${id}/update`,
