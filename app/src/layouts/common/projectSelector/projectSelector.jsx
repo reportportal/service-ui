@@ -73,10 +73,9 @@ export class ProjectSelector extends Component {
 
   getProjectName = () => {
     const { activeProject, mobileOnly } = this.props;
+    const projectName = activeProject.toString();
 
-    return mobileOnly
-      ? activeProject
-      : `${activeProject[0]}${activeProject[activeProject.length - 1]}`;
+    return mobileOnly ? projectName : `${projectName[0]}${projectName[projectName.length - 1]}`;
   };
 
   render() {

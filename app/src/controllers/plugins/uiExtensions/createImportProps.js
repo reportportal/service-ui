@@ -65,10 +65,11 @@ import { SimpleBreadcrumbs } from 'components/main/simpleBreadcrumbs';
 import {
   projectMembersSelector,
   projectInfoSelector,
-  attributesSelector,
+  projectAttributesSelector,
   fetchProjectAction,
   projectInfoLoadingSelector,
   defectTypesSelector,
+  updateConfigurationAttributesAction,
 } from 'controllers/project';
 import { Grid } from 'components/main/grid';
 import { AttributeListField } from 'components/main/attributeList';
@@ -168,6 +169,7 @@ export const createImportProps = (pluginName) => ({
     fetchProjectAction,
     showScreenLockAction,
     hideScreenLockAction,
+    updateConfigurationAttributesAction,
   },
   selectors: {
     pluginRouteSelector,
@@ -175,7 +177,7 @@ export const createImportProps = (pluginName) => ({
     globalIntegrationsSelector: createGlobalNamedIntegrationsSelector(pluginName),
     projectMembersSelector,
     projectInfoSelector,
-    attributesSelector,
+    projectAttributesSelector,
     activeProjectRoleSelector,
     projectInfoLoadingSelector,
     isEmailIntegrationAvailableSelector,
