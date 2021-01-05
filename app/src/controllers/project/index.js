@@ -64,7 +64,7 @@ export {
   enabledPattersSelector,
   projectInfoSelector,
   projectInfoLoadingSelector,
-  attributesSelector,
+  projectAttributesSelector,
 } from './selectors';
 export { normalizeAttributesWithPrefix } from './utils';
 export { projectSagas } from './sagas';

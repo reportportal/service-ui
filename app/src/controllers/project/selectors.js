@@ -42,7 +42,7 @@ export const userFiltersSelector = (state) => projectPreferencesSelector(state).
 
 export const subTypesSelector = (state) => projectConfigSelector(state).subTypes || [];
 
-export const attributesSelector = (state) => projectConfigSelector(state).attributes || {};
+export const projectAttributesSelector = (state) => projectConfigSelector(state).attributes || {};
 
 export const defectTypesSelector = createSelector(subTypesSelector, (subTypes) =>
   DEFECT_TYPES_SEQUENCE.reduce(
@@ -75,7 +75,7 @@ export const orderedContentFieldsSelector = createSelector(
 );
 
 const createPrefixedAttributesSelector = (prefix) =>
-  createSelector(attributesSelector, (attributes) =>
+  createSelector(projectAttributesSelector, (attributes) =>
     Object.keys(attributes).reduce(
       (result, attribute) =>
         attribute.match(`${prefix}${PROJECT_ATTRIBUTES_DELIMITER}`)
@@ -139,7 +139,7 @@ export const getDefectTypeSelector = createSelector(subTypesSelector, (subTypes)
 
 export const patternsSelector = (state) => projectConfigSelector(state).patterns || [];
 export const PAStateSelector = (state) =>
-  !!(attributesSelector(state)[PA_ATTRIBUTE_ENABLED_KEY].toString() === 'true');
+  !!(projectAttributesSelector(state)[PA_ATTRIBUTE_ENABLED_KEY].toString() === 'true');
 export const enabledPattersSelector = createSelector(patternsSelector, (patterns) =>
   patterns.filter((pattern) => pattern.enabled),
 );
