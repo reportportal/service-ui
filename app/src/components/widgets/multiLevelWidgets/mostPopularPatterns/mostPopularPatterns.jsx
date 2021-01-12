@@ -117,7 +117,7 @@ export class MostPopularPatterns extends Component {
           'filter.eq.hasStats': true,
           'filter.eq.hasChildren': false,
           'filter.any.patternName': patternName,
-          compositeAttribute,
+          'filter.has.compositeAttribute': compositeAttribute,
           isLatest,
           launchesLimit,
         },

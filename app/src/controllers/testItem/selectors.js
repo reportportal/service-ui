@@ -281,7 +281,6 @@ export const statisticsLinkSelector = createSelector(
   (query, payload, testItemIds, isDebugMode, testItemIdsArray) => (ownProps) => {
     const linkPayload = (ownProps.ownLinkParams && ownProps.ownLinkParams.payload) || payload;
     const launchesLimit = ownProps.launchesLimit;
-    const compositeAttribute = ownProps.compositeAttribute;
     const providerType = ownProps.providerType;
     const providerTypeModifierId = PROVIDER_TYPE_MODIFIERS_ID_MAP[providerType];
     const isLatest = ownProps.isLatest;
@@ -297,9 +296,9 @@ export const statisticsLinkSelector = createSelector(
       'filter.eq.hasStats': true,
       'filter.eq.hasChildren': false,
       'filter.in.type': LEVEL_STEP,
+      'filter.has.compositeAttribute': ownProps.compositeAttribute,
       providerType,
       [providerTypeModifierId]: ownProps[providerTypeModifierId],
-      compositeAttribute,
       launchesLimit,
       isLatest,
     };
@@ -330,7 +329,6 @@ export const defectLinkSelector = createSelector(
   (query, payload, testItemIds, isDebugMode, testItemIdsArray) => (ownProps) => {
     const linkPayload = (ownProps.ownLinkParams && ownProps.ownLinkParams.payload) || payload;
     const launchesLimit = ownProps.launchesLimit;
-    const compositeAttribute = ownProps.compositeAttribute;
     const providerType = ownProps.providerType;
     const providerTypeModifierId = PROVIDER_TYPE_MODIFIERS_ID_MAP[providerType];
     const isLatest = ownProps.isLatest;
@@ -351,9 +349,9 @@ export const defectLinkSelector = createSelector(
       'filter.eq.hasStats': true,
       'filter.eq.hasChildren': false,
       'filter.in.issueType': getDefectsString(ownProps.defects),
+      'filter.has.compositeAttribute': ownProps.compositeAttribute,
       providerType,
       [providerTypeModifierId]: ownProps[providerTypeModifierId],
-      compositeAttribute,
       launchesLimit,
       isLatest,
     };
