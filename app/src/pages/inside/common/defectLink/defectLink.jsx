@@ -49,7 +49,10 @@ export const DefectLink = track()(
         to={getDefectLink(params)}
         target={target}
         {...rest}
-        onClick={() => {
+        onClick={(e) => {
+          if (e.ctrlKey || e.metaKey) {
+            return;
+          }
           eventInfo && tracking.trackEvent(eventInfo);
           refreshTestItemPage();
         }}
