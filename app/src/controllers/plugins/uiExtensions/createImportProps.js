@@ -72,6 +72,7 @@ import {
   updateConfigurationAttributesAction,
 } from 'controllers/project';
 import { Grid } from 'components/main/grid';
+import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { AttributeListField } from 'components/main/attributeList';
 import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
 import { InputSearch } from 'components/inputs/inputSearch';
@@ -125,6 +126,7 @@ const INPUTS = {
   InputTextArea,
   InputTimeDateRange,
   InputTimeDateRangeMenu,
+  InputCheckbox,
   SingleAutocomplete,
   MultipleAutocomplete,
   WithAsyncLoading,
