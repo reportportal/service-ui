@@ -22,7 +22,6 @@ import classNames from 'classnames/bind';
 import { PRODUCT_BUG, AUTOMATION_BUG, SYSTEM_ISSUE } from 'common/constants/defectTypes';
 import { StatisticsLink } from 'pages/inside/common/statisticsLink';
 import { isStepLevelSelector } from 'controllers/testItem';
-import { BarChart } from './barChart';
 import { DefectTypeBlock } from './defectTypeBlock';
 import styles from './infoLine.scss';
 
@@ -77,8 +76,6 @@ export class InfoLine extends Component {
     const defects = data.statistics.defects;
     const executions = normalizeExecutions(data.statistics.executions);
     const passed = (executions.passed / executions.total) * 100 || 0;
-    const failed = (executions.failed / executions.total) * 100 || 0;
-    const skipped = (executions.skipped / executions.total) * 100 || 0;
     const tooltipEventsInfo = {
       [PRODUCT_BUG]: events.PB_TOOLTIP,
       [SYSTEM_ISSUE]: events.SI_TOOLTIP,
@@ -86,9 +83,6 @@ export class InfoLine extends Component {
     };
     return (
       <div className={cx('info-line', { 'detailed-view': detailedView })}>
-        <div className={cx('bar-chart-holder')}>
-          <BarChart passed={passed} failed={failed} skipped={skipped} />
-        </div>
         <div className={cx('passed')}>
           {formatMessage(messages.passed, { value: passed.toFixed(2) })}
         </div>

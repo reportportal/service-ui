@@ -30,19 +30,6 @@
   }
 }
 
-.bar-chart-holder {
-  display: inline-block;
-  position: relative;
-  width: 100px;
-  height: 28px;
-  margin: 0 15px;
-  vertical-align: middle;
-
-  @media (max-width: $SCREEN_SM_MAX) {
-    display: none;
-  }
-}
-
 .passed,
 .total,
 .filter-holder {

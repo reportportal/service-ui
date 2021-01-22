@@ -17,10 +17,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { Duration } from '../duration';
-import { Owner } from '../owner';
-import { Attributes } from '../attributes';
-import { Description } from '../description';
+import { Duration } from './duration';
+import { Owner } from './owner';
+import { Attributes } from './attributes';
+import { Description } from './description';
 import styles from './parentInfo.scss';
 
 const cx = classNames.bind(styles);
