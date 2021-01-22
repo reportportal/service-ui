@@ -18,6 +18,7 @@ import React, { Component } from 'react';
 import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { injectIntl, defineMessages } from 'react-intl';
 import Link from 'redux-first-router-link';
 import classNames from 'classnames/bind';
 import LogIcon from 'common/img/log-view-inline.svg';
@@ -37,14 +38,35 @@ import styles from './viewTabs.scss';
 
 const cx = classNames.bind(styles);
 
+const messages = defineMessages({
+  [LIST_VIEW]: {
+    id: 'ViewTabs.listView',
+    defaultMessage: 'List view',
+  },
+  [LOG_VIEW]: {
+    id: 'ViewTabs.logView',
+    defaultMessage: 'Log view',
+  },
+  [UNIQUE_ERRORS_VIEW]: {
+    id: 'ViewTabs.uniqueErrorsView',
+    defaultMessage: 'Unique errors',
+  },
+  [HISTORY_VIEW]: {
+    id: 'ViewTabs.historyView',
+    defaultMessage: 'History',
+  },
+});
+
 @connect((state) => ({
   debugMode: debugModeSelector(state),
   listViewLink: listViewLinkSelector(state),
   logViewLink: logViewLinkSelector(state),
   historyViewLink: historyViewLinkSelector(state),
 }))
+@injectIntl
 export class ViewTabs extends Component {
   static propTypes = {
+    intl: PropTypes.object.isRequired,
     debugMode: PropTypes.bool,
     isTestItemsList: PropTypes.bool,
     viewMode: PropTypes.string,
@@ -63,33 +85,40 @@ export class ViewTabs extends Component {
   };
 
   getPages = () => {
-    const { listViewLink, logViewLink, historyViewLink, debugMode, isTestItemsList } = this.props;
+    const {
+      listViewLink,
+      logViewLink,
+      historyViewLink,
+      debugMode,
+      isTestItemsList,
+      intl: { formatMessage },
+    } = this.props;
 
     const pages = [
       {
         id: LIST_VIEW,
-        title: 'List view',
+        title: formatMessage(messages[LIST_VIEW]),
         link: listViewLink,
         icon: ListIcon,
         available: true,
       },
       {
         id: UNIQUE_ERRORS_VIEW,
-        title: 'Unique errors',
+        title: formatMessage(messages[UNIQUE_ERRORS_VIEW]),
         link: listViewLink,
         icon: ListIcon,
         available: !isTestItemsList,
       },
       {
         id: LOG_VIEW,
-        title: 'Parent logs',
+        title: formatMessage(messages[LOG_VIEW]),
         link: logViewLink,
         icon: LogIcon,
         available: !isTestItemsList,
       },
       {
         id: HISTORY_VIEW,
-        title: 'History',
+        title: formatMessage(messages[HISTORY_VIEW]),
         link: historyViewLink,
         icon: HistoryIcon,
         available: !debugMode,
