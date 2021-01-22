@@ -110,6 +110,7 @@ export class InfoPanel extends Component {
           this.renderInfoLineListView()
         ) : (
           <Fragment>
+            {/* Navigation here */}
             <ViewSwitcher viewMode={viewMode} onToggleView={this.onToggleView} />
             <InfoLine
               data={data}

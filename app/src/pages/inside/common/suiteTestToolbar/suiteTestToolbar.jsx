@@ -79,6 +79,7 @@ export const SuiteTestToolbar = ({
         onEditItems={onEditItems}
         onDelete={onDelete}
         deleteDisabled={!selectedItems.length}
+        parentItem={parentItem}
       />
     </div>
     {(parentItem || isTestItemsList) && (

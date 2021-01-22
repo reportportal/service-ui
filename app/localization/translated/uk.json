@@ -785,7 +785,6 @@
   "IndexActionsBlock.removeIndexButtonCaption": "Видалити Індекс",
   "IndexActionsBlock.removeIndexDescription": "Вся інформація буде видалена з прикладу подібного. Для генерації даних заново Ви можете почати аналізувати тестові результати вручну або автоматично згенерувати дані",
   "IndexActionsBlock.title": "Індексом Дії з",
-  "InfoLine.parent": "Батько",
   "InfoLine.passed": "Успешно {value}%",
   "InfoLine.total": "Всего:",
   "InfoLineListView.filter": "Фільтр:",

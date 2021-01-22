@@ -1,5 +1,5 @@
-/*!
- * Copyright 2019 EPAM Systems
+/*
+ * Copyright 2020 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,4 @@
  * limitations under the License.
  */
 
-.info-panel {
-  display: flex;
-  justify-content: space-between;
-  border-top: 1px solid $COLOR--gray-91;
-  border-bottom: 1px solid $COLOR--gray-91;
-  padding: 0 10px;
-}
+export { ParentInfo } from './parentInfo';

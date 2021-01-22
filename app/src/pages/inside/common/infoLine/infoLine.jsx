@@ -23,20 +23,12 @@ import { PRODUCT_BUG, AUTOMATION_BUG, SYSTEM_ISSUE } from 'common/constants/defe
 import { StatisticsLink } from 'pages/inside/common/statisticsLink';
 import { isStepLevelSelector } from 'controllers/testItem';
 import { BarChart } from './barChart';
-import { Duration } from './duration';
-import { Owner } from './owner';
-import { Attributes } from './attributes';
-import { Description } from './description';
 import { DefectTypeBlock } from './defectTypeBlock';
 import styles from './infoLine.scss';
 
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
-  parent: {
-    id: 'InfoLine.parent',
-    defaultMessage: 'Parent',
-  },
   passed: {
     id: 'InfoLine.passed',
     defaultMessage: 'Passed {value}%',
@@ -94,30 +86,6 @@ export class InfoLine extends Component {
     };
     return (
       <div className={cx('info-line', { 'detailed-view': detailedView })}>
-        <div className={cx('parent-holder')}>{formatMessage(messages.parent)}:</div>
-        <div className={cx('icon-holder')}>
-          <Duration
-            status={data.status}
-            startTime={data.startTime}
-            endTime={data.endTime}
-            approxTime={data.approximateDuration}
-          />
-        </div>
-        {data.owner && (
-          <div className={cx('icon-holder')}>
-            <Owner owner={data.owner} />
-          </div>
-        )}
-        {data.attributes.length > 0 && (
-          <div className={cx('icon-holder')}>
-            <Attributes attributes={data.attributes} />
-          </div>
-        )}
-        {data.description && (
-          <div className={cx('icon-holder')}>
-            <Description description={data.description} />
-          </div>
-        )}
         <div className={cx('bar-chart-holder')}>
           <BarChart passed={passed} failed={failed} skipped={skipped} />
         </div>
