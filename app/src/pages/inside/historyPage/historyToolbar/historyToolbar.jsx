@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import { HISTORY_PAGE_EVENTS } from 'components/main/analytics/events';
 import { RefineFiltersPanel } from 'pages/inside/common/refineFiltersPanel';
 import { InfoPanel } from 'pages/inside/common/infoPanel';
+import { HISTORY_VIEW } from 'controllers/testItem';
 import { ActionPanel } from './actionPanel';
 import { ActionPanelWithGroupOperations } from './actionPanelWithGroupOperations';
 
@@ -51,7 +52,7 @@ export const HistoryToolbar = ({
     ) : (
       <ActionPanel onRefresh={onRefresh} selectedItems={selectedItems} parentItem={parentItem} />
     )}
-    {(parentItem || isTestItemsList) && <InfoPanel data={parentItem} />}
+    {(parentItem || isTestItemsList) && <InfoPanel viewMode={HISTORY_VIEW} data={parentItem} />}
     <RefineFiltersPanel
       onFilterAdd={onFilterAdd}
       onFilterRemove={onFilterRemove}

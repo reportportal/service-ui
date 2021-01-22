@@ -30,6 +30,7 @@ import {
   searchStringSelector,
   querySelector,
   filterIdSelector,
+  HISTORY_PAGE,
 } from 'controllers/pages';
 import { activeProjectSelector } from 'controllers/user';
 import { activeFilterSelector } from 'controllers/filter';
@@ -461,6 +462,16 @@ export const logViewLinkSelector = createSelector(
       },
     };
   },
+);
+
+export const historyViewLinkSelector = createSelector(
+  payloadSelector,
+  querySelector,
+  (payload, query) => ({
+    type: HISTORY_PAGE,
+    payload,
+    query: { ...query },
+  }),
 );
 
 export const getLogItemLinkSelector = createSelector(

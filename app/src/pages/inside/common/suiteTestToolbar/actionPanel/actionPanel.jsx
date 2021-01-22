@@ -22,7 +22,6 @@ import { connect } from 'react-redux';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { breadcrumbsSelector, levelSelector, restorePathAction } from 'controllers/testItem';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
-import { historyPageLinkSelector } from 'controllers/itemsHistory';
 import {
   availableBtsIntegrationsSelector,
   isBtsPluginsExistSelector,
@@ -52,7 +51,6 @@ const cx = classNames.bind(styles);
     projectRole: activeProjectRoleSelector(state),
     isBtsPluginsExist: isBtsPluginsExistSelector(state),
     enabledBtsPlugins: enabledBtsPluginsSelector(state),
-    historyPageLink: historyPageLinkSelector(state),
   }),
   {
     restorePath: restorePathAction,
@@ -93,7 +91,6 @@ export class ActionPanel extends Component {
     }).isRequired,
     isBtsPluginsExist: PropTypes.bool,
     enabledBtsPlugins: PropTypes.array,
-    historyPageLink: PropTypes.object.isRequired,
     parentItem: PropTypes.object,
   };
 

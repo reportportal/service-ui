@@ -35,6 +35,8 @@ export {
   PROVIDER_TYPE_MODIFIERS_ID_MAP,
   LOG_VIEW,
   LIST_VIEW,
+  HISTORY_VIEW,
+  UNIQUE_ERRORS_VIEW,
   TEST_ITEMS_TYPE_LIST,
   DEFAULT_LAUNCHES_LIMIT,
 } from './constants';
@@ -61,6 +63,7 @@ export {
   logPageOffsetSelector,
   listViewLinkSelector,
   logViewLinkSelector,
+  historyViewLinkSelector,
   getLogItemLinkSelector,
   isTestItemsListSelector,
   compositeAttributesSelector,
