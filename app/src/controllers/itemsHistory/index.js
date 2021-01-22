@@ -47,7 +47,6 @@ export {
   totalItemsCountSelector,
   historyPaginationSelector,
   loadingSelector,
-  historyPageLinkSelector,
   filterForCompareSelector,
   filterHistorySelector,
   itemsHistorySelector,
