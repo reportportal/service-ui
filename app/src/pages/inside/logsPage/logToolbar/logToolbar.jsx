@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
@@ -42,7 +42,7 @@ import {
   disableNextItemLinkSelector,
   DETAILED_LOG_VIEW,
 } from 'controllers/log';
-
+import { ParentInfo } from 'pages/inside/common/infoLine/parentInfo';
 import { stepPaginationSelector } from 'controllers/step';
 import styles from './logToolbar.scss';
 
@@ -89,6 +89,7 @@ export class LogToolbar extends Component {
     fetchTestItems: PropTypes.func,
     logViewMode: PropTypes.string,
     restorePath: PropTypes.func,
+    parentItem: PropTypes.object,
   };
 
   static defaultProps = {
@@ -105,6 +106,7 @@ export class LogToolbar extends Component {
     fetchTestItems: () => {},
     logViewMode: DETAILED_LOG_VIEW,
     restorePath: () => {},
+    parentItem: null,
   };
 
   handleBackClick = () => {
@@ -136,6 +138,7 @@ export class LogToolbar extends Component {
       nextLinkDisable,
       logViewMode,
       restorePath,
+      parentItem,
     } = this.props;
     return (
       <div className={cx('log-toolbar', { 'with-border': logViewMode === DETAILED_LOG_VIEW })}>
@@ -147,7 +150,7 @@ export class LogToolbar extends Component {
           onRestorePath={restorePath}
         />
         <div className={cx('action-buttons')}>
-          {logViewMode === DETAILED_LOG_VIEW && (
+          {logViewMode === DETAILED_LOG_VIEW ? (
             <div className={cx('action-button')}>
               <div className={cx('left-arrow-button')}>
                 <GhostButton
@@ -164,6 +167,8 @@ export class LogToolbar extends Component {
                 onClick={this.handleForwardClick}
               />
             </div>
+          ) : (
+            parentItem && <ParentInfo parentItem={parentItem} />
           )}
           <div className={cx('action-button')}>
             <GhostButton icon={RefreshIcon} onClick={onRefresh}>

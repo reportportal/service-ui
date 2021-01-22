@@ -46,8 +46,8 @@ import { withSortingURL, SORTING_ASC } from 'controllers/sorting';
 import { userIdSelector } from 'controllers/user';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { LOG_PAGE, LOG_PAGE_EVENTS } from 'components/main/analytics/events';
-import { TestItemLogsToolbar } from 'pages/inside/testItemLogsToolbar';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { TestItemLogsToolbar } from './testItemLogsToolbar';
 import { LogToolbar } from './logToolbar';
 import { HistoryLine } from './historyLine';
 import { LogItemInfo } from './logItemInfo';
@@ -237,7 +237,11 @@ export class LogsPage extends Component {
           {pageLoading && <SpinningPreloader />}
           {!pageLoading && (
             <Fragment>
-              <LogToolbar onRefresh={this.handleRefresh} logViewMode={logViewMode} />
+              <LogToolbar
+                onRefresh={this.handleRefresh}
+                logViewMode={logViewMode}
+                parentItem={parentItem}
+              />
               {logViewMode === DETAILED_LOG_VIEW ? (
                 <Fragment>
                   {!debugMode && <HistoryLine />}
