@@ -53,10 +53,18 @@ export class Sidebar extends Component {
         <div className={cx('main-block')}>{mainBlock}</div>
         <div className={cx('top-block')}>
           {topSidebarItems.map((item) => (
-            <div key={item.link.type} className={cx('sidebar-btn')} onClick={item.onClick}>
-              <SidebarButton link={item.link} icon={item.icon}>
-                {item.message}
-              </SidebarButton>
+            <div
+              key={item.component ? item.name : item.link.type}
+              className={cx('sidebar-btn')}
+              onClick={item.onClick}
+            >
+              {item.component ? (
+                <item.component />
+              ) : (
+                <SidebarButton link={item.link} icon={item.icon}>
+                  {item.message}
+                </SidebarButton>
+              )}
             </div>
           ))}
         </div>

@@ -103,7 +103,7 @@ export class SettingsPage extends Component {
       PropTypes.shape({
         name: PropTypes.string.isRequired,
         title: PropTypes.string,
-        component: PropTypes.element.isRequired,
+        component: PropTypes.func.isRequired,
       }),
     ),
   };

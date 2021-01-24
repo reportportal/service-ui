@@ -20,12 +20,6 @@
   height: 20px;
   margin: 0 10px;
   vertical-align: middle;
-
-  path,
-  rect,
-  polygon {
-    fill: $COLOR--white-two;
-  }
 }
 
 .btn-title-mobile {
@@ -44,6 +38,7 @@
   }
 }
 
+.link,
 .nav-link {
   display: inline-block;
   width: 100%;
@@ -53,6 +48,12 @@
   text-decoration: none;
   text-align: center;
 
+  @media (max-width: $SCREEN_XS_MAX) {
+    text-align: left;
+  }
+}
+
+.nav-link {
   &.active {
     color: $COLOR--booger;
     background-color: $COLOR--black-2;
@@ -65,8 +66,12 @@
     }
   }
 
-  @media (max-width: $SCREEN_XS_MAX) {
-    text-align: left;
+  .btn-icon {
+    path,
+    rect,
+    polygon {
+      fill: $COLOR--white-two;
+    }
   }
 }
 
@@ -83,9 +88,15 @@
 
   @media (max-width: $SCREEN_XS_MAX) {
     font-size: 12px;
+
+    &.mobile-hidden {
+      display: none;
+    }
   }
+
   &.at-bottom {
-    .nav-link {
+    .nav-link,
+    .link {
       .btn-icon {
         width: 20px;
         height: 20px;
