@@ -98,6 +98,7 @@ import { AbsRelTime } from 'components/main/absRelTime';
 import { StripedMessage } from 'components/main/stripedMessage';
 import { MarkdownEditor, MarkdownViewer } from 'components/main/markdown';
 import { DependentFieldsControl } from 'components/main/dependentFieldsControl';
+import { SidebarButton } from 'components/buttons/sidebarButton';
 import { GeneralTab } from 'pages/common/settingsPage/generalTab';
 import { RuleList } from 'pages/common/settingsPage/ruleList';
 import { RuleListHeader } from 'pages/common/settingsPage/ruleListHeader';
@@ -111,6 +112,7 @@ const BUTTONS = {
   DotsMenuButton,
   GhostMenuButton,
   MultiActionButton,
+  SidebarButton,
 };
 
 const INPUTS = {

@@ -20,7 +20,6 @@ import track from 'react-tracking';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { activeProjectSelector, assignedProjectsSelector } from 'controllers/user';
-import { uiExtensionHeaderComponentsSelector } from 'controllers/plugins';
 import { MobileHeader } from 'layouts/common/mobileHeader';
 import { ProjectSelector } from '../../common/projectSelector';
 import styles from './appHeader.scss';
@@ -30,7 +29,6 @@ const cx = classNames.bind(styles);
 @connect((state) => ({
   activeProject: activeProjectSelector(state),
   assignedProjects: assignedProjectsSelector(state),
-  extensionComponents: uiExtensionHeaderComponentsSelector(state),
 }))
 @track()
 export class AppHeader extends Component {
@@ -43,24 +41,16 @@ export class AppHeader extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    extensionComponents: PropTypes.array,
   };
 
   static defaultProps = {
     assignedProjects: {},
     sideMenuOpened: false,
     toggleSideMenu: () => {},
-    extensionComponents: [],
   };
 
   render() {
-    const {
-      sideMenuOpened,
-      toggleSideMenu,
-      activeProject,
-      assignedProjects,
-      extensionComponents,
-    } = this.props;
+    const { sideMenuOpened, toggleSideMenu, activeProject, assignedProjects } = this.props;
     return (
       <header className={cx('header')}>
         <MobileHeader opened={sideMenuOpened} toggleSideMenu={toggleSideMenu} />
@@ -70,13 +60,6 @@ export class AppHeader extends Component {
             activeProject={activeProject}
             mobileOnly
           />
-        </div>
-        <div className={cx('nav-btns-block')}>
-          {extensionComponents.map((extensionComponent) => (
-            <div className={cx('nav-btn', 'extension-component')} key={extensionComponent.name}>
-              <extensionComponent.component />
-            </div>
-          ))}
         </div>
       </header>
     );
