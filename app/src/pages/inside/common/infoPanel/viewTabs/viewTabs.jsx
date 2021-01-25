@@ -32,6 +32,7 @@ import {
   listViewLinkSelector,
   logViewLinkSelector,
   historyViewLinkSelector,
+  isStepLevelSelector,
 } from 'controllers/testItem';
 import { debugModeSelector } from 'controllers/launch';
 import styles from './viewTabs.scss';
@@ -58,6 +59,7 @@ const messages = defineMessages({
 });
 
 @connect((state) => ({
+  isStepLevel: isStepLevelSelector(state),
   debugMode: debugModeSelector(state),
   listViewLink: listViewLinkSelector(state),
   logViewLink: logViewLinkSelector(state),
@@ -67,6 +69,7 @@ const messages = defineMessages({
 export class ViewTabs extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
+    isStepLevel: PropTypes.bool,
     debugMode: PropTypes.bool,
     isTestItemsList: PropTypes.bool,
     viewMode: PropTypes.string,
@@ -76,6 +79,7 @@ export class ViewTabs extends Component {
   };
 
   static defaultProps = {
+    isStepLevel: false,
     debugMode: false,
     isTestItemsList: false,
     viewMode: LIST_VIEW,
@@ -90,6 +94,7 @@ export class ViewTabs extends Component {
       logViewLink,
       historyViewLink,
       debugMode,
+      isStepLevel,
       isTestItemsList,
       intl: { formatMessage },
     } = this.props;
@@ -107,7 +112,7 @@ export class ViewTabs extends Component {
         title: formatMessage(messages[UNIQUE_ERRORS_VIEW]),
         link: listViewLink,
         icon: ListIcon,
-        available: !isTestItemsList,
+        available: isStepLevel && !isTestItemsList,
       },
       {
         id: LOG_VIEW,
