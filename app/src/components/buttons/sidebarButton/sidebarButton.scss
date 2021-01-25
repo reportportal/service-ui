@@ -54,6 +54,14 @@
 }
 
 .nav-link {
+  .btn-icon {
+    path,
+    rect,
+    polygon {
+      fill: $COLOR--white-two;
+    }
+  }
+
   &.active {
     color: $COLOR--booger;
     background-color: $COLOR--black-2;
@@ -63,14 +71,6 @@
     rect,
     polygon {
       fill: $COLOR--booger;
-    }
-  }
-
-  .btn-icon {
-    path,
-    rect,
-    polygon {
-      fill: $COLOR--white-two;
     }
   }
 }
