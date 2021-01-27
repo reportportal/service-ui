@@ -29,6 +29,7 @@
   "ActiveDirectoryAuthForm.formHeader": "Активна директорія",
   "ActiveDirectoryAuthForm.switcherLabel": "Авторизація в Активній директорії",
   "ActiveDirectoryFormFields.baseDnLabel": "Базовий DN",
+  "ActiveDirectoryFormFields.searchFilter": "Фільтр пошуку",
   "ActiveDirectoryFormFields.domainLabel": "Домен",
   "ActiveDirectoryFormFields.emailAttributeLabel": "Атрибут поштової адреси",
   "ActiveDirectoryFormFields.fullNameAttributeLabel": "Атрибут повного імені",
