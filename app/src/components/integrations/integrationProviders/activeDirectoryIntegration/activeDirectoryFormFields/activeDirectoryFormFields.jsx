@@ -32,6 +32,7 @@ import {
   FULL_NAME_KEY,
   PHOTO_KEY,
   BASE_DN_KEY,
+  SEARCH_FILTER_KEY,
   EMAIL_KEY,
   LDAP_PREFIX,
   LDAPS_PREFIX,
@@ -52,6 +53,10 @@ const messages = defineMessages({
   baseDnLabel: {
     id: 'ActiveDirectoryFormFields.baseDnLabel',
     defaultMessage: 'Base DN',
+  },
+  searchFilterLabel: {
+    id: 'ActiveDirectoryFormFields.searchFilter',
+    defaultMessage: 'Search filter',
   },
   emailAttributeLabel: {
     id: 'ActiveDirectoryFormFields.emailAttributeLabel',
@@ -137,6 +142,13 @@ export class ActiveDirectoryFormFields extends Component {
         },
         label: messages.baseDnLabel,
         children: <FieldErrorHint>{defaultField}</FieldErrorHint>,
+      },
+      {
+        fieldProps: {
+          name: SEARCH_FILTER_KEY,
+        },
+        label: messages.searchFilterLabel,
+        children: defaultField,
       },
       {
         fieldProps: {
