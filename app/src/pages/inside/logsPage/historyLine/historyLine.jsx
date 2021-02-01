@@ -17,12 +17,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { activeProjectSelector } from 'controllers/user';
 import classNames from 'classnames/bind';
 import { historyItemsSelector, activeLogIdSelector, NAMESPACE } from 'controllers/log';
 import { NOT_FOUND } from 'common/constants/testStatuses';
 import { connectRouter } from 'common/utils';
 import { PAGE_KEY, DEFAULT_PAGINATION } from 'controllers/pagination';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { HistoryLineItem } from './historyLineItem';
 import styles from './historyLine.scss';
 
@@ -40,20 +40,17 @@ const cx = classNames.bind(styles);
   { namespace: NAMESPACE },
 )
 @connect((state) => ({
-  projectId: activeProjectSelector(state),
   historyItems: historyItemsSelector(state),
   activeItemId: activeLogIdSelector(state),
 }))
 export class HistoryLine extends Component {
   static propTypes = {
-    projectId: PropTypes.string,
     historyItems: PropTypes.array,
     activeItemId: PropTypes.number,
     changeActiveItem: PropTypes.func,
   };
 
   static defaultProps = {
-    projectId: '',
     historyItems: [],
     activeItemId: 0,
     changeActiveItem: () => {},
@@ -63,25 +60,25 @@ export class HistoryLine extends Component {
     item.id !== this.props.activeItemId && item.status !== NOT_FOUND;
 
   render() {
-    const { historyItems, activeItemId, changeActiveItem, projectId } = this.props;
+    const { historyItems, activeItemId, changeActiveItem } = this.props;
 
     return (
       <div className={cx('history-line')}>
-        {historyItems &&
-          historyItems.map((item, index) => (
-            <HistoryLineItem
-              key={item.id}
-              active={item.id === activeItemId}
-              isFirstItem={index === 0}
-              isLastItem={index === historyItems.length - 1}
-              onClick={() =>
-                this.checkIfTheItemLinkIsActive(item) ? changeActiveItem(item.id) : {}
-              }
-              path={item.path}
-              projectId={projectId}
-              {...item}
-            />
-          ))}
+        <ScrollWrapper autoHeight hideTracksWhenNotNeeded>
+          <div className={cx('history-line-items')}>
+            {historyItems.map((item, index) => (
+              <HistoryLineItem
+                key={item.id}
+                active={item.id === activeItemId}
+                isLastItem={index === historyItems.length - 1}
+                onClick={() =>
+                  this.checkIfTheItemLinkIsActive(item) ? changeActiveItem(item.id) : {}
+                }
+                {...item}
+              />
+            ))}
+          </div>
+        </ScrollWrapper>
       </div>
     );
   }

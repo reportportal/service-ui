@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { HistoryLineItemContent } from './historyLineItemContent';
+export { HistoryLineItemBadge } from './historyLineItemBadge';

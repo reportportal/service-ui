@@ -16,101 +16,108 @@
 
 import React, { Component } from 'react';
 import track from 'react-tracking';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import Link from 'redux-first-router-link';
 import classNames from 'classnames/bind';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
-import { payloadSelector, PROJECT_LOG_PAGE, PROJECT_USERDEBUG_LOG_PAGE } from 'controllers/pages';
-import { NOT_FOUND } from 'common/constants/testStatuses';
-import { debugModeSelector } from 'controllers/launch';
+import { IN_PROGRESS, NOT_FOUND } from 'common/constants/testStatuses';
 import { defectTypesSelector } from 'controllers/project';
-import { HistoryLineItemContent } from './historyLineItemContent';
+import { statusLocalization } from 'common/constants/localization/statusLocalization';
+import { getDuration } from 'common/utils';
+import { HistoryLineItemBadge } from './historyLineItemBadges';
 import styles from './historyLineItem.scss';
 
 const cx = classNames.bind(styles);
 
 @connect((state) => ({
-  pagePayload: payloadSelector(state),
-  debugMode: debugModeSelector(state),
   defectTypes: defectTypesSelector(state),
 }))
+@injectIntl
 @track()
 export class HistoryLineItem extends Component {
   static propTypes = {
-    projectId: PropTypes.string.isRequired,
+    intl: PropTypes.object.isRequired,
     defectTypes: PropTypes.object.isRequired,
     launchNumber: PropTypes.number,
-    path: PropTypes.string,
     launchId: PropTypes.number,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     status: PropTypes.string,
     active: PropTypes.bool,
-    isFirstItem: PropTypes.bool,
     isLastItem: PropTypes.bool,
-    pagePayload: PropTypes.object,
-    debugMode: PropTypes.bool,
+    statistics: PropTypes.shape({
+      defects: PropTypes.object,
+    }),
+    hasChildren: PropTypes.bool,
+    startTime: PropTypes.number,
+    endTime: PropTypes.number,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    onClick: PropTypes.func,
   };
 
   static defaultProps = {
-    path: '',
     launchNumber: null,
     launchId: 0,
     id: 0,
     status: '',
     active: false,
-    isFirstItem: false,
     isLastItem: false,
-    debugMode: false,
-    pagePayload: {},
+    statistics: {},
+    hasChildren: false,
+    startTime: null,
+    endTime: null,
+    onClick: () => {},
   };
 
-  checkIfTheLinkIsActive = () => {
-    const { status, isLastItem } = this.props;
+  getItemTitle = () => {
+    const { intl, status, startTime, endTime } = this.props;
+    let itemTitle = statusLocalization[status]
+      ? intl.formatMessage(statusLocalization[status])
+      : status;
+    const isThreeDecimalPlaces = true;
 
-    return !(status === NOT_FOUND || isLastItem);
-  };
-
-  createHistoryLineItemLink = () => {
-    const { pagePayload, path, launchId, debugMode } = this.props;
-
-    const parentIds = path.split('.');
-
-    return {
-      type: debugMode ? PROJECT_USERDEBUG_LOG_PAGE : PROJECT_LOG_PAGE,
-      payload: {
-        ...pagePayload,
-        testItemIds: [launchId, ...parentIds].join('/'),
-      },
-    };
+    if (status !== NOT_FOUND && status !== IN_PROGRESS) {
+      itemTitle = itemTitle.concat(`; ${getDuration(startTime, endTime, isThreeDecimalPlaces)}`);
+    }
+    return itemTitle;
   };
 
   render() {
-    const { launchNumber, active, ...rest } = this.props;
+    const {
+      intl,
+      launchNumber,
+      status,
+      active,
+      isLastItem,
+      statistics,
+      onClick,
+      tracking,
+      ...rest
+    } = this.props;
+    const isNotEmpty = !this.props.hasChildren ? Object.keys(statistics.defects).length : false;
 
     return (
-      <div className={cx('history-line-item', { active })}>
-        <Link
-          className={cx('history-line-item-title', {
-            'active-link': this.checkIfTheLinkIsActive(),
-          })}
-          to={this.checkIfTheLinkIsActive() ? this.createHistoryLineItemLink() : ''}
-          onClick={() => this.props.tracking.trackEvent(LOG_PAGE_EVENTS.HISTORY_LINE_ITEM)}
-        >
-          <span className={cx('launch-title')}>{'launch '}</span>
-          <span>#{launchNumber}</span>
-        </Link>
-        <HistoryLineItemContent
-          active={active}
-          hasChildren={rest.hasChildren}
-          startTime={rest.startTime}
-          endTime={rest.endTime}
-          {...rest}
-        />
+      <div
+        className={cx('history-line-item', { active, 'last-item': isLastItem })}
+        onClick={() => {
+          tracking.trackEvent(LOG_PAGE_EVENTS.HISTORY_LINE_ITEM);
+          onClick();
+        }}
+      >
+        <div className={cx('status-block', `status-${status}`)} title={this.getItemTitle()}>
+          #{launchNumber}
+        </div>
+        <div className={cx('defect-block', { 'not-empty': isNotEmpty })}>
+          <HistoryLineItemBadge
+            active={active}
+            status={status}
+            defects={!this.props.hasChildren ? statistics.defects : {}}
+            {...rest}
+          />
+        </div>
       </div>
     );
   }
