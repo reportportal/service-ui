@@ -45,6 +45,7 @@ IssueWithTooltip.propTypes = {
   url: PropTypes.string.isRequired,
   btsProject: PropTypes.string.isRequired,
   btsUrl: PropTypes.string.isRequired,
+  showTooltip: PropTypes.bool.isRequired,
   onRemove: PropTypes.func,
 };
 IssueWithTooltip.defaultProps = {
