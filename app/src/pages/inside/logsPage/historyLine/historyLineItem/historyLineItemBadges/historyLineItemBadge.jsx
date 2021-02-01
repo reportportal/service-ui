@@ -18,17 +18,14 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { SKIPPED, RESETED, FAILED, NOT_FOUND } from 'common/constants/testStatuses';
-import { calculateFontColor } from 'common/utils';
 import Parser from 'html-react-parser';
 import NoItemIcon from './img/noItem-inline.svg';
 import EmptyItemIcon from './img/emptyItem-inline.svg';
-import DurationIcon from './img/duration-icon-inline.svg';
-import InfoIcon from './img/info-icon-inline.svg';
-import styles from './historyLineItemBadges.scss';
+import styles from './historyLineItemBadge.scss';
 
 const cx = classNames.bind(styles);
 
-export class HistoryLineItemBadges extends Component {
+export class HistoryLineItemBadge extends Component {
   static propTypes = {
     active: PropTypes.bool,
     status: PropTypes.string,
@@ -62,71 +59,52 @@ export class HistoryLineItemBadges extends Component {
       );
       const { shortName, color: defectColor } =
         allDefectsList.find((el) => el.locator === issueLocator) || {};
-      const fontColor = calculateFontColor(defectColor);
 
       badge = (
-        <div
-          key={defectType}
-          style={{ backgroundColor: defectColor }}
-          className={cx('defect-badge')}
-        >
-          <span style={{ color: fontColor }}>{shortName}</span>
-        </div>
+        <Fragment key={defectType}>
+          <span className={cx('defect-badge')} style={{ backgroundColor: defectColor }} />
+          <span className={cx('defect-name')}>{shortName}</span>
+        </Fragment>
       );
     }
 
     return badge;
   };
 
-  getBadges = () => {
-    const { status, growthDuration } = this.props;
-    const badges = [];
-    // eslint-disable-next-line default-case
+  getBadge = () => {
+    const { status } = this.props;
+    let badge = null;
+
     switch (status) {
       case FAILED:
       case SKIPPED: {
-        badges.push(this.getDefectBadge());
+        badge = this.getDefectBadge();
         break;
       }
       case RESETED: {
-        badges.push(
+        badge = (
           <i key={status} className={cx('empty-item-icon')}>
             {Parser(EmptyItemIcon)}
-          </i>,
+          </i>
         );
         break;
       }
       case NOT_FOUND: {
-        badges.push(
+        badge = (
           <i key={status} className={cx('no-item-icon')}>
             {Parser(NoItemIcon)}
-          </i>,
+          </i>
         );
         break;
       }
+      default:
+        break;
     }
 
-    growthDuration &&
-      badges.push(
-        <div key={growthDuration} title={growthDuration} className={cx('growth-duration')}>
-          <i className={cx('duration-icon')}>{Parser(DurationIcon)}</i>
-          <span className={cx('duration-text')}>{growthDuration}</span>
-        </div>,
-      );
-
-    return badges;
+    return badge;
   };
 
   render() {
-    const { active, issue } = this.props;
-
-    return (
-      <Fragment>
-        <div className={cx('badges-container')}>{this.getBadges()}</div>
-        {(issue.comment || (issue.externalSystemIssues && issue.externalSystemIssues.length)) && (
-          <i className={cx('info-icon', { 'active-icon': active })}>{Parser(InfoIcon)}</i>
-        )}
-      </Fragment>
-    );
+    return <div className={cx('badge-container')}>{this.getBadge()}</div>;
   }
 }

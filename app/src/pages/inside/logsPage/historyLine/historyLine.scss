@@ -15,13 +15,18 @@
  */
 
 .history-line {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  margin-bottom: 5px;
-  padding: 5px 15px 15px 15px;
+  max-width: 100%;
+  margin: 5px 25px 20px 25px;
 
   @media (max-width: $SCREEN_SM_MAX) {
     display: none;
   }
+}
+
+.history-line-items {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 15px 0;
 }
