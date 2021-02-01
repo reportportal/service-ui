@@ -24,7 +24,7 @@ const cx = classNames.bind(styles);
 export const IssueList = ({ issues, onRemove }) =>
   issues.map((issue) => (
     <div className={cx('issue-list-item')} key={`${issue.btsProject}_${issue.ticketId}`}>
-      <Issue {...issue} onRemove={onRemove} />
+      <Issue {...issue} showTooltip onRemove={onRemove} />
     </div>
   ));
 
