@@ -35,7 +35,11 @@ export const URLS = {
     `${urlBase}data/${activeProject}/userphoto${getQueryParams({ id, loadThumbnail })}`,
 
   dashboard: (activeProject, id) => `${urlBase}${activeProject}/dashboard/${id}`,
-  dashboards: (activeProject) => `${urlBase}${activeProject}/dashboard`,
+  dashboards: (activeProject) =>
+    `${urlBase}${activeProject}/dashboard${getQueryParams({
+      'page.page': 1,
+      'page.size': 300,
+    })}`,
   dashboardsShared: (activeProject) =>
     `${urlBase}${activeProject}/dashboard/shared${getQueryParams({
       'page.page': 1,
