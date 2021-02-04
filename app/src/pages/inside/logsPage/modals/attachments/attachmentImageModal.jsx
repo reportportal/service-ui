@@ -88,11 +88,10 @@ export class AttachmentImageModal extends Component {
   generateRotationCommand = (amount) => `rotate(${amount}deg)`;
 
   rotateImageHandler = () => {
-    const rotationA = this.state.rotationAmount;
     this.props.tracking.trackEvent(LOG_PAGE_EVENTS.ROTATE_ICON_ATTACHMENT_MODAL);
-    this.setState({
-      rotationAmount: rotationA + 90,
-    });
+    this.setState((state) => ({
+      rotationAmount: state.rotationAmount + 90,
+    }));
   };
 
   imageRef = React.createRef();
