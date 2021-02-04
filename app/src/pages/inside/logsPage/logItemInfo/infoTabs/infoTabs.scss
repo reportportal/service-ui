@@ -15,11 +15,10 @@
  */
 
 .tabs-container {
+  margin-top: 25px;
   .tabs {
     position: relative;
     display: flex;
-    background-color: $COLOR--white;
-    border-top: 1px solid $COLOR--gray-91;
 
     @media (max-width: $SCREEN_XS_MAX) {
       flex-direction: column;
@@ -108,7 +107,6 @@
 }
 
 .tabs-content {
-  border-top: 1px solid $COLOR--gray-91;
   background: $COLOR--white-two;
 
   &.mobile {

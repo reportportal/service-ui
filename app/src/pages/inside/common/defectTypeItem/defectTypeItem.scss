@@ -45,6 +45,14 @@
   font-size: 12px;
 }
 
+.thin {
+  border: none;
+  cursor: default;
+  &:hover {
+    border: none;
+  }
+}
+
 .defect-type-circle {
   display: inline-block;
   min-width: 12px;
