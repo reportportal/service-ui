@@ -55,10 +55,12 @@ export const getFileIconSource = (item, projectId, loadThumbnail) => {
 };
 
 export const getAttachmentModalId = (contentType) => {
-  const extension = extractExtension(contentType);
-  const extensionFromPattern = getExtensionFromPattern(extension);
-
-  return FILE_MODAL_IDS_MAP[extension] || FILE_MODAL_IDS_MAP[extensionFromPattern];
+  const [fileType, extension] = getAttachmentTypeConfig(contentType);
+  const extensionFromPattern = getExtensionFromPattern(extension || fileType);
+  return (
+    FILE_MODAL_IDS_MAP[fileType === IMAGE ? IMAGE : extension || fileType] ||
+    FILE_MODAL_IDS_MAP[extensionFromPattern]
+  );
 };
 
 export const createAttachment = (item, projectId) => {

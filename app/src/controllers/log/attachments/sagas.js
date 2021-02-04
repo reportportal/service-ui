@@ -17,7 +17,7 @@
 import { takeLatest, takeEvery, call, put, all, select, take } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
-import { showModalAction } from 'controllers/modal';
+import { showModalAction, HIDE_MODAL } from 'controllers/modal';
 import { concatFetchDataAction, createFetchPredicate } from 'controllers/fetch';
 import { activeProjectSelector } from 'controllers/user';
 import {
@@ -34,6 +34,7 @@ import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import {
   ATTACHMENT_CODE_MODAL_ID,
   ATTACHMENT_HAR_FILE_MODAL_ID,
+  ATTACHMENT_IMAGE_MODAL_ID,
   FETCH_ATTACHMENTS_CONCAT_ACTION,
   ATTACHMENTS_NAMESPACE,
   DEFAULT_PAGE_SIZE,
@@ -86,14 +87,23 @@ function* fetchFirstAttachments({ payload }) {
   yield call(fetchAttachmentsConcat, { payload: { params } });
 }
 
-export function fetchFileData({ projectId, id }) {
-  return fetch(URLS.getFileById(projectId, id));
+export function fetchFileData({ projectId, id }, params) {
+  return fetch(URLS.getFileById(projectId, id), params);
 }
 
 /* HAR */
 function* openHarModalWorker(data) {
   const harData = yield call(fetchFileData, data);
   yield put(showModalAction({ id: ATTACHMENT_HAR_FILE_MODAL_ID, data: { harData } }));
+}
+
+/* IMAGE */
+function* openImageModalsWorker(data) {
+  const imageData = yield call(fetchFileData, data, { responseType: 'blob' });
+  const imageURL = URL.createObjectURL(imageData);
+  yield put(showModalAction({ id: ATTACHMENT_IMAGE_MODAL_ID, data: { image: imageURL } }));
+  yield take(HIDE_MODAL);
+  URL.revokeObjectURL(imageURL);
 }
 
 /* BINARY */
@@ -112,6 +122,7 @@ function* openBinaryModalWorker(data) {
 }
 
 const ATTACHMENT_MODAL_WORKERS = {
+  [ATTACHMENT_IMAGE_MODAL_ID]: openImageModalsWorker,
   [ATTACHMENT_HAR_FILE_MODAL_ID]: openHarModalWorker,
   [ATTACHMENT_CODE_MODAL_ID]: openBinaryModalWorker,
 };
