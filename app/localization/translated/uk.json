@@ -106,6 +106,7 @@
   "AsyncAutocomplete.loading": "Завантаження…",
   "AsyncAutocomplete.notFound": "Нічого не знайдено",
   "AttachmentModal.errorFileStructure": "Некоректна структура файлу",
+  "AttachmentModal.rotate": "Обертати",
   "AttachmentModal.title": "Вкладення",
   "Common.openInNewTab": "Відкрити в новій вкладці",
   "Common.download": "Завантажити",
