@@ -33,28 +33,29 @@ export class DefectTypeItem extends Component {
     onClick: PropTypes.func,
     noBorder: PropTypes.bool,
     lesserFont: PropTypes.bool,
+    thin: PropTypes.bool,
   };
 
   static defaultProps = {
     onClick: () => {},
     noBorder: false,
     lesserFont: false,
-  };
-
-  handleChange = () => {
-    const { type, onClick } = this.props;
-    onClick(type);
+    thin: false,
   };
 
   render() {
-    const { noBorder, lesserFont, onClick } = this.props;
+    const { noBorder, lesserFont, thin, onClick } = this.props;
     const defectType = this.props.getDefectType(this.props.type);
     if (!defectType) {
       return null;
     }
     return (
       <div
-        className={cx('defect-type-item', { 'no-border': noBorder, 'lesser-Font': lesserFont })}
+        className={cx('defect-type-item', {
+          'no-border': noBorder,
+          'lesser-Font': lesserFont,
+          thin,
+        })}
         title={defectType.longName}
         onClick={onClick}
       >
