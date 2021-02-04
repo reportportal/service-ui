@@ -75,6 +75,10 @@ export const descriptionEntity = composeValidators([
   isNotEmpty,
   ({ value }) => composeValidators([isNotEmpty, maxLength(18)])(value),
 ]);
+export const descriptionStepLevelEntity = composeValidators([
+  isNotEmpty,
+  ({ value }) => composeValidators([isNotEmpty, maxLength(256)])(value),
+]);
 
 export const port = range(1, 65535);
 

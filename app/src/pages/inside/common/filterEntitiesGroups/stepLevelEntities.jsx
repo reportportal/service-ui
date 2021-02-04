@@ -477,12 +477,12 @@ export class StepLevelEntities extends Component {
           condition: CONDITION_CNT,
         }),
         title: intl.formatMessage(messages.DescriptionTitle),
-        validationFunc: commonValidators.descriptionEntity,
+        validationFunc: commonValidators.descriptionStepLevelEntity,
         active: visibleFilters.includes(ENTITY_DESCRIPTION),
         removable: true,
         customProps: {
           placeholder: intl.formatMessage(messages.DescriptionPlaceholder),
-          maxLength: 18,
+          maxLength: 256,
         },
       },
       {

@@ -911,6 +911,7 @@
   "LaunchLevelEntities.TO_INVESTIGATE_totalTitle": "Усяго To Investigate",
   "LaunchLevelEntities.TotalTitle": "Усяго",
   "LaunchLevelEntities.descriptionEntityHint": "Апісанне павінна мець памер ад 3 да 18.",
+  "LaunchLevelEntities.descriptionStepLevelEntityHint": "Апісанне павінна мець памер ад 1 да 256.",
   "LaunchLevelEntities.descriptionPlaceholder": "Увядзіце апісанне",
   "LaunchLevelEntities.entityItemAttributeKeys.placeholder": "Увядзіце ключы атрыбуту",
   "LaunchLevelEntities.entityItemAttributeValues.placeholder": "Увядзіце значэнні атрыбуту",
