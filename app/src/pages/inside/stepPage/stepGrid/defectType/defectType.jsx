@@ -37,19 +37,19 @@ const messages = defineMessages({
   },
 });
 
-const IgnoredInAALabel = injectIntl(({ intl }) => (
+export const IgnoredInAALabel = injectIntl(({ intl }) => (
   <div className={cx('ignore-aa-label')} title={intl.formatMessage(messages.ignoreAATooltip)}>
     <FormattedMessage id="StepGrid.ignoreAAShort" defaultMessage="Ignore AA" />
   </div>
 ));
 
-const AALabel = () => (
+export const AALabel = () => (
   <div className={cx('aa-label')}>
     <AutoAnalyzedLabel />
   </div>
 );
 
-const PALabel = ({ patternTemplates }) => (
+export const PALabel = ({ patternTemplates }) => (
   <div className={cx('pa-label')}>
     <PatternAnalyzedLabel patternTemplates={patternTemplates} />
   </div>

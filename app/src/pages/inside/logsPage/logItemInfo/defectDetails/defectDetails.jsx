@@ -41,7 +41,6 @@ import {
   enabledBtsPluginsSelector,
 } from 'controllers/plugins';
 import { DefectTypeItem } from 'pages/inside/common/defectTypeItem';
-import LinkIcon from 'common/img/link-inline.svg';
 import PlusIcon from 'common/img/plus-button-inline.svg';
 import CommentIcon from 'common/img/comment-inline.svg';
 import ArrowDownIcon from 'common/img/arrow-down-inline.svg';
@@ -49,6 +48,11 @@ import BugIcon from 'common/img/bug-inline.svg';
 import { IssueList } from 'pages/inside/stepPage/stepGrid/defectType/issueList';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { MarkdownViewer } from 'components/main/markdown';
+import {
+  AALabel,
+  IgnoredInAALabel,
+  PALabel,
+} from 'pages/inside/stepPage/stepGrid/defectType/defectType';
 import styles from './defectDetails.scss';
 
 const cx = classNames.bind(styles);
@@ -385,16 +389,17 @@ export class DefectDetails extends Component {
                   </span>
                 </div>
               )}
+              {logItem.issue.ignoreAnalyzer && <IgnoredInAALabel />}
+              {logItem.issue.autoAnalyzed && <AALabel />}
+              {!!logItem.patternTemplates.length && (
+                <PALabel patternTemplates={logItem.patternTemplates} />
+              )}
               <DefectTypeItem type={logItem.issue.issueType} noBorder onClick={null} thin />
             </Fragment>
           )}
           {!debugMode && (
             <div className={cx('make-decision-action')}>
-              <GhostButton
-                icon={LinkIcon}
-                disabled={!logItem.issue}
-                onClick={this.handleEditDefect}
-              >
+              <GhostButton disabled={!logItem.issue} onClick={this.handleEditDefect}>
                 {formatMessage(messages.makeDecision)}
               </GhostButton>
             </div>

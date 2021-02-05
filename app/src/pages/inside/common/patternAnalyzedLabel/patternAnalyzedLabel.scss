@@ -16,10 +16,19 @@
 
 .pa-label {
   display: inline-block;
+  box-sizing: border-box;
+  height: 20px;
+  width: 30px;
+  border-radius: 100px;
+  border: solid 1px $COLOR--gray-80;
+  color: $COLOR--charcoal-grey;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 12px;
+  line-height: 18px;
+  text-align: center;
+  cursor: pointer;
+
   svg {
     fill: $COLOR--white-two;
   }
-  height: 20px;
-  width: 30px;
-  cursor: pointer;
 }

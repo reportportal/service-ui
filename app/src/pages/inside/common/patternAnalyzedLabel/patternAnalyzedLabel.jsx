@@ -17,8 +17,6 @@
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { withTooltip } from 'components/main/tooltips/tooltip';
-import Parser from 'html-react-parser';
-import PAIcon from 'common/img/pa_icon-inline.svg';
 import { PatternAnalyzedTooltip } from './patternAnalyzedTooltip';
 import styles from './patternAnalyzedLabel.scss';
 
@@ -29,7 +27,7 @@ export const PatternAnalyzedLabel = withTooltip({
   data: {
     dynamicWidth: true,
   },
-})(() => <div className={cx('pa-label')}>{Parser(PAIcon)}</div>);
+})(() => <div className={cx('pa-label')}>PA</div>);
 
 PatternAnalyzedLabel.propTypes = {
   patternTemplates: PropTypes.array,
