@@ -16,10 +16,6 @@
 
 .history-line-item {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   margin-right: 37px;
 
   &:after {
@@ -31,6 +27,19 @@
     border-bottom: 5px solid transparent;
     border-top: 5px solid transparent;
   }
+}
+
+.history-line-item-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.triangles-wrapper {
+  position: absolute;
+  top: -16px;
 }
 
 .status-block {

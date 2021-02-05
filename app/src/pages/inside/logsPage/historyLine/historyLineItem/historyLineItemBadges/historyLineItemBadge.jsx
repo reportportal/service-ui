@@ -30,7 +30,6 @@ export class HistoryLineItemBadge extends Component {
     active: PropTypes.bool,
     status: PropTypes.string,
     issue: PropTypes.object,
-    growthDuration: PropTypes.string,
     defects: PropTypes.object,
     defectTypes: PropTypes.object.isRequired,
   };
@@ -39,7 +38,6 @@ export class HistoryLineItemBadge extends Component {
     active: false,
     status: '',
     issue: {},
-    growthDuration: '',
     defects: {},
   };
 
