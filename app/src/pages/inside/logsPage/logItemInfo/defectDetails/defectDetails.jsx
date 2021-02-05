@@ -394,7 +394,12 @@ export class DefectDetails extends Component {
               {!!logItem.patternTemplates.length && (
                 <PALabel patternTemplates={logItem.patternTemplates} />
               )}
-              <DefectTypeItem type={logItem.issue.issueType} noBorder onClick={null} thin />
+              <DefectTypeItem
+                type={logItem.issue.issueType}
+                noBorder
+                onClick={null}
+                className={cx('defect-item')}
+              />
             </Fragment>
           )}
           {!debugMode && (

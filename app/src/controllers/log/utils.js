@@ -41,7 +41,7 @@ export const calculateGrowthDuration = (historyItems) => {
       const currentDuration = item.endTime - item.startTime;
       const growth = currentDuration / prevDuration - 1;
       if (growth > 0) {
-        newItem.growthDuration = `+${Math.round(growth * 100)}%`;
+        newItem.growthDuration = Math.round(growth * 100);
       }
     }
     return newItem;

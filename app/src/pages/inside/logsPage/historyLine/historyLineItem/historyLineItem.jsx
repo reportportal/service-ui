@@ -21,14 +21,77 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
-import { IN_PROGRESS, NOT_FOUND } from 'common/constants/testStatuses';
 import { defectTypesSelector } from 'controllers/project';
-import { statusLocalization } from 'common/constants/localization/statusLocalization';
-import { getDuration } from 'common/utils';
+import { withTooltip } from 'components/main/tooltips/tooltip';
+import { HistoryLineItemTooltip } from './historyLineItemTooltip';
 import { HistoryLineItemBadge } from './historyLineItemBadges';
+import { Triangles } from './triangles';
 import styles from './historyLineItem.scss';
 
 const cx = classNames.bind(styles);
+
+const HistoryLineItemContent = ({
+  active,
+  status,
+  statistics,
+  launchNumber,
+  hasChildren,
+  growthDuration,
+  ...rest
+}) => {
+  const isNotEmpty = !hasChildren ? Object.keys(statistics.defects).length : false;
+
+  return (
+    <div className={cx('history-line-item-content')}>
+      <div className={cx('triangles-wrapper')}>
+        <Triangles growthDuration={growthDuration} />
+      </div>
+      <div className={cx('status-block', `status-${status}`)}>#{launchNumber}</div>
+      <div className={cx('defect-block', { 'not-empty': isNotEmpty })}>
+        <HistoryLineItemBadge
+          active={active}
+          status={status}
+          defects={!hasChildren ? statistics.defects : {}}
+          {...rest}
+        />
+      </div>
+    </div>
+  );
+};
+HistoryLineItemContent.propTypes = {
+  active: PropTypes.bool,
+  status: PropTypes.string,
+  hasChildren: PropTypes.bool,
+  statistics: PropTypes.shape({
+    defects: PropTypes.object,
+  }),
+  launchNumber: PropTypes.number,
+  growthDuration: PropTypes.number,
+};
+HistoryLineItemContent.defaultProps = {
+  active: false,
+  status: '',
+  hasChildren: false,
+  statistics: {
+    defects: {},
+  },
+  launchNumber: 0,
+  growthDuration: null,
+};
+
+const HistoryLineItemContentWithTooltip = withTooltip({
+  TooltipComponent: HistoryLineItemTooltip,
+  data: {
+    dynamicWidth: true,
+    placement: 'bottom',
+    noMobile: true,
+    dark: true,
+    modifiers: {
+      preventOverflow: { enabled: false },
+      hide: { enabled: false },
+    },
+  },
+})(HistoryLineItemContent);
 
 @connect((state) => ({
   defectTypes: defectTypesSelector(state),
@@ -72,32 +135,8 @@ export class HistoryLineItem extends Component {
     onClick: () => {},
   };
 
-  getItemTitle = () => {
-    const { intl, status, startTime, endTime } = this.props;
-    let itemTitle = statusLocalization[status]
-      ? intl.formatMessage(statusLocalization[status])
-      : status;
-    const isThreeDecimalPlaces = true;
-
-    if (status !== NOT_FOUND && status !== IN_PROGRESS) {
-      itemTitle = itemTitle.concat(`; ${getDuration(startTime, endTime, isThreeDecimalPlaces)}`);
-    }
-    return itemTitle;
-  };
-
   render() {
-    const {
-      intl,
-      launchNumber,
-      status,
-      active,
-      isLastItem,
-      statistics,
-      onClick,
-      tracking,
-      ...rest
-    } = this.props;
-    const isNotEmpty = !this.props.hasChildren ? Object.keys(statistics.defects).length : false;
+    const { intl, active, isLastItem, onClick, tracking, ...rest } = this.props;
 
     return (
       <div
@@ -107,17 +146,7 @@ export class HistoryLineItem extends Component {
           onClick();
         }}
       >
-        <div className={cx('status-block', `status-${status}`)} title={this.getItemTitle()}>
-          #{launchNumber}
-        </div>
-        <div className={cx('defect-block', { 'not-empty': isNotEmpty })}>
-          <HistoryLineItemBadge
-            active={active}
-            status={status}
-            defects={!this.props.hasChildren ? statistics.defects : {}}
-            {...rest}
-          />
-        </div>
+        <HistoryLineItemContentWithTooltip active={active} {...rest} />
       </div>
     );
   }
