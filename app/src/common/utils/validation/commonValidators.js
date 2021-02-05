@@ -36,11 +36,6 @@ export const descriptionEntity = bindMessageToValidator(
   'descriptionEntityHint',
 );
 
-export const descriptionStepLevelEntity = bindMessageToValidator(
-  validate.descriptionStepLevelEntity,
-  'descriptionStepLevelEntityHint',
-);
-
 export const btsUrl = bindMessageToValidator(validate.url, 'btsUrlHint');
 export const btsIntegrationName = bindMessageToValidator(
   validate.btsIntegrationName,

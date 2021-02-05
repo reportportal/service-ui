@@ -12,5 +12,5 @@
       "layouts/*": ["src/layouts/*"]
     }
   },
-  "exclude": ["build"]
+  "exclude": ["build", "node_modules"]
 }
