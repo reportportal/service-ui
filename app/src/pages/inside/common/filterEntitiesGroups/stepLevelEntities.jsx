@@ -18,7 +18,7 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
-import { commonValidators } from 'common/utils/validation';
+import { commonValidators, bindMessageToValidator, validate } from 'common/utils/validation';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
 import { FAILED, PASSED, SKIPPED, INTERRUPTED, IN_PROGRESS } from 'common/constants/launchStatuses';
@@ -289,6 +289,11 @@ const messages = defineMessages({
   },
 });
 
+const descriptionStepLevelEntity = bindMessageToValidator(
+  validate.descriptionStepLevelEntity,
+  'descriptionStepLevelEntityHint',
+);
+
 @injectIntl
 @connect((state) => ({
   defectTypes: defectTypesSelector(state),
@@ -477,12 +482,12 @@ export class StepLevelEntities extends Component {
           condition: CONDITION_CNT,
         }),
         title: intl.formatMessage(messages.DescriptionTitle),
-        validationFunc: commonValidators.descriptionEntity,
+        validationFunc: descriptionStepLevelEntity,
         active: visibleFilters.includes(ENTITY_DESCRIPTION),
         removable: true,
         customProps: {
           placeholder: intl.formatMessage(messages.DescriptionPlaceholder),
-          maxLength: 18,
+          maxLength: 256,
         },
       },
       {
