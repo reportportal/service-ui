@@ -17,7 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { SKIPPED, FAILED, INTERRUPTED } from 'common/constants/testStatuses';
+import { SKIPPED, FAILED, INTERRUPTED, UNTESTED } from 'common/constants/testStatuses';
 import { calculateFontColor } from 'common/utils';
 import CommentIcon from 'common/img/comment-inline.svg';
 import TagIcon from 'common/img/tag-inline.svg';
@@ -30,7 +30,7 @@ import styles from './historyItem.scss';
 
 const cx = classNames.bind(styles);
 
-const statusesWithDefect = [FAILED, SKIPPED, INTERRUPTED];
+const statusesWithDefect = [FAILED, SKIPPED, INTERRUPTED, UNTESTED];
 
 @withTooltip({
   TooltipComponent: ItemPathTooltip,
