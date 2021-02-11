@@ -179,7 +179,8 @@ export class ItemInfo extends Component {
         </div>
 
         <div className={cx('additional-info')}>
-          {customProps.withExtensions &&
+          {value.status !== 'IN_PROGRESS' &&
+            customProps.withExtensions &&
             extensionComponents.map((extensionComponent) => (
               <extensionComponent.component key={extensionComponent.name} item={value} />
             ))}
