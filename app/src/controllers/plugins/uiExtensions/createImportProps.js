@@ -42,6 +42,7 @@ import {
 } from 'controllers/pages';
 import { attributesArray } from 'common/utils/validation/validate';
 import { requiredField } from 'common/utils/validation/commonValidators';
+import RefreshIcon from 'common/img/refresh-inline.svg';
 import PlusIcon from 'common/img/plus-button-inline.svg';
 import RemoveIcon from 'common/img/trashcan-inline.svg';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
@@ -198,6 +199,7 @@ export const createImportProps = (pluginName) => ({
     PencilIcon,
     CircleCheckIcon,
     CircleCrossIcon,
+    RefreshIcon,
   },
   utils: { fetch, URLS, debounce, getGroupedDefectTypesOptions, isEmptyObject },
   validators: { attributesArray, requiredField },
