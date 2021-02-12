@@ -19,4 +19,8 @@
   flex-direction: column;
   margin: 8px 0;
   padding-left: 90px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    margin-left: 15px;
+  }
 }
