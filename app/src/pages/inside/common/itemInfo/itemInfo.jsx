@@ -28,7 +28,7 @@ import {
   availableIntegrationsByPluginNameSelector,
   uiExtensionLaunchItemComponentsSelector,
 } from 'controllers/plugins';
-import { IN_PROGRESS } from 'common/constants/launchStatuses';
+import { IN_PROGRESS } from 'common/constants/testStatuses';
 import { MarkdownViewer } from 'components/main/markdown';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { PLUGIN_NAME_TITLES } from 'components/integrations';
