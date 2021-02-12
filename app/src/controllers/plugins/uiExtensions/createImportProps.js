@@ -101,7 +101,7 @@ import { MarkdownEditor, MarkdownViewer } from 'components/main/markdown';
 import { DependentFieldsControl } from 'components/main/dependentFieldsControl';
 import { SidebarButton } from 'components/buttons/sidebarButton';
 import { GeneralTab } from 'pages/common/settingsPage/generalTab';
-import { RuleList } from 'pages/common/settingsPage/ruleList';
+import { RuleList, ItemContent } from 'pages/common/settingsPage/ruleList';
 import { RuleListHeader } from 'pages/common/settingsPage/ruleListHeader';
 import { getGroupedDefectTypesOptions } from 'pages/inside/dashboardItemPage/modals/common/widgetControls/utils/getWidgetCriteriaOptions';
 import { createGlobalNamedIntegrationsSelector } from '../selectors';
@@ -160,6 +160,7 @@ export const createImportProps = (pluginName) => ({
     GeneralTab,
     RuleList,
     RuleListHeader,
+    ItemContent,
     StripedMessage,
     AttributeListField,
     AsyncAutocomplete,

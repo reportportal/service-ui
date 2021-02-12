@@ -28,6 +28,7 @@ import {
   availableIntegrationsByPluginNameSelector,
   uiExtensionLaunchItemComponentsSelector,
 } from 'controllers/plugins';
+import { IN_PROGRESS } from 'common/constants/launchStatuses';
 import { MarkdownViewer } from 'components/main/markdown';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { PLUGIN_NAME_TITLES } from 'components/integrations';
@@ -179,7 +180,7 @@ export class ItemInfo extends Component {
         </div>
 
         <div className={cx('additional-info')}>
-          {value.status !== 'IN_PROGRESS' &&
+          {value.status !== IN_PROGRESS &&
             customProps.withExtensions &&
             extensionComponents.map((extensionComponent) => (
               <extensionComponent.component key={extensionComponent.name} item={value} />

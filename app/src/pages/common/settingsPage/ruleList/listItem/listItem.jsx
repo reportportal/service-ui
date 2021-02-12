@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { ControlPanel } from './controlPanel';
 import { ruleListItemPropTypes, ruleListItemDefaultProps } from '../constants';
+import { ItemContent } from './itemContent';
 import styles from './listItem.scss';
 
 const cx = classNames.bind(styles);
@@ -29,21 +30,7 @@ export const ListItem = ({ item, getListItemContentData, ...rest }) => (
     <div className={cx('data')}>
       {getListItemContentData(item).map((itemData, index) => (
         // eslint-disable-next-line react/no-array-index-key
-        <div key={`${itemData.key}_${index}`} className={cx('data-row')}>
-          <span className={cx('data-name')}>{itemData.key}</span>
-          {Array.isArray(itemData.value) ? (
-            <div className={cx('data-value', 'multiple-data')}>
-              {itemData.value.map((valueItem, valueIndex) => (
-                // eslint-disable-next-line react/no-array-index-key
-                <span key={valueIndex} className={cx('data-value-item')}>
-                  {valueItem}
-                </span>
-              ))}
-            </div>
-          ) : (
-            <span className={cx('data-value')}>{itemData.value}</span>
-          )}
-        </div>
+        <ItemContent key={`${itemData.key}_${index}`} data={itemData} />
       ))}
     </div>
   </div>
