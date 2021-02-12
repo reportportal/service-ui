@@ -19,9 +19,6 @@
   margin: 0 15px 15px 0;
   font-size: 13px;
   font-family: $FONT-REGULAR;
-  @media (max-width: $SCREEN_SM_MAX) {
-    margin-left: 15px;
-  }
 }
 
 .data-name {
