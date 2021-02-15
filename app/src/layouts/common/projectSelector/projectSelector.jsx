@@ -23,9 +23,40 @@ import { PROJECT_PAGE } from 'controllers/pages/constants';
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { NavLink } from 'components/main/navLink';
+import { withTooltip } from 'components/main/tooltips/tooltip';
 import styles from './projectSelector.scss';
 
 const cx = classNames.bind(styles);
+
+const Tooltip = ({ activeProject }) => (
+  <div className={cx('project-selector-tooltip')}>{activeProject}</div>
+);
+Tooltip.propTypes = {
+  activeProject: PropTypes.string.isRequired,
+};
+
+const CurrentProjectBlock = ({ getProjectName }) => {
+  return (
+    <>
+      <div className={cx('current-project-name')}>{getProjectName()}</div>
+      <div className={cx('show-list-icon')} />
+    </>
+  );
+};
+
+CurrentProjectBlock.propTypes = {
+  getProjectName: PropTypes.func.isRequired,
+};
+
+const CurrentProjectNameWithTooltip = withTooltip({
+  TooltipComponent: Tooltip,
+  data: {
+    dynamicWidth: true,
+    placement: 'right',
+    tooltipTriggerClass: cx('tooltip-trigger'),
+    dark: true,
+  },
+})(CurrentProjectBlock);
 
 @track()
 export class ProjectSelector extends Component {
@@ -49,9 +80,11 @@ export class ProjectSelector extends Component {
   state = {
     opened: false,
   };
+
   componentDidMount() {
     document.addEventListener('click', this.handleOutsideClick);
   }
+
   componentWillUnmount() {
     document.removeEventListener('click', this.handleOutsideClick);
   }
@@ -79,7 +112,8 @@ export class ProjectSelector extends Component {
   };
 
   render() {
-    const { projects, mobileOnly } = this.props;
+    const { projects, mobileOnly, activeProject } = this.props;
+    const { opened } = this.state;
 
     return (
       <div
@@ -96,8 +130,11 @@ export class ProjectSelector extends Component {
                 className={cx('current-project-block')}
                 onClick={this.toggleShowList}
               >
-                <div className={cx('current-project-name')}>{this.getProjectName()}</div>
-                <div className={cx('show-list-icon')} />
+                <CurrentProjectNameWithTooltip
+                  getProjectName={this.getProjectName}
+                  activeProject={activeProject}
+                  showTooltip={!opened && !mobileOnly}
+                />
               </div>
             )}
           </Reference>
