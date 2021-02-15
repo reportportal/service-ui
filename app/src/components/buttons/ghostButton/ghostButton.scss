@@ -205,6 +205,10 @@
         }
       }
     }
+
+    &.transparent-background:not(:hover) {
+      background: transparent;
+    }
   }
 }
 .icon {

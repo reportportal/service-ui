@@ -19,7 +19,11 @@
   padding-top: 15px;
   padding-left: 15px;
   padding-right: 15px;
-  border-bottom: 1px solid $COLOR--gray-91;
+  background-color: $COLOR--white-two;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    border-bottom: 1px solid $COLOR--gray-91;
+  }
 }
 
 .label {

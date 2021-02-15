@@ -42,7 +42,7 @@ export const LaunchToolbar = ({
   activeFilterId,
   finishedLaunchesCount,
 }) => (
-  <div className={cx('launch-toolbar', { 'sticky-toolbar': selectedLaunches.length })}>
+  <div className={cx({ 'sticky-toolbar': selectedLaunches.length })}>
     {!!selectedLaunches.length && (
       <SelectedItems
         selectedItems={selectedLaunches}

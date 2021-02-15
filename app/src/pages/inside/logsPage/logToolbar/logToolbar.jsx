@@ -141,7 +141,7 @@ export class LogToolbar extends Component {
       parentItem,
     } = this.props;
     return (
-      <div className={cx('log-toolbar', { 'with-border': logViewMode === DETAILED_LOG_VIEW })}>
+      <div className={cx('log-toolbar')}>
         <Breadcrumbs
           descriptors={breadcrumbs}
           togglerEventInfo={LOG_PAGE_EVENTS.PLUS_MINUS_BREADCRUMB}
@@ -158,6 +158,7 @@ export class LogToolbar extends Component {
                   disabled={previousLinkDisable}
                   title={previousItem && previousItem.name}
                   onClick={this.handleBackClick}
+                  transparentBackground
                 />
               </div>
               <GhostButton
@@ -165,13 +166,14 @@ export class LogToolbar extends Component {
                 disabled={nextLinkDisable}
                 title={nextItem && nextItem.name}
                 onClick={this.handleForwardClick}
+                transparentBackground
               />
             </div>
           ) : (
             parentItem && <ParentInfo parentItem={parentItem} />
           )}
           <div className={cx('action-button')}>
-            <GhostButton icon={RefreshIcon} onClick={onRefresh}>
+            <GhostButton icon={RefreshIcon} onClick={onRefresh} transparentBackground>
               <FormattedMessage id="Common.refresh" defaultMessage="Refresh" />
             </GhostButton>
           </div>

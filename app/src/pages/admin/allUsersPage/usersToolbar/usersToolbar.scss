@@ -22,6 +22,7 @@
   align-content: stretch;
   align-items: center;
   min-height: 36px;
+  background-color: $COLOR--white-two;
   padding: 15px;
 
   @media (max-width: $SCREEN_SM_MAX) {
