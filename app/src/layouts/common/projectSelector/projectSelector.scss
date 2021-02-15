@@ -16,8 +16,6 @@
 
 .project-selector {
   display: flex;
-  align-items: center;
-  justify-content: center;
   height: 100%;
 
   @media (max-width: $SCREEN_XS_MAX) {
@@ -26,6 +24,8 @@
 }
 .current-project-block {
   position: relative;
+  width: 100%;
+  height: 100%;
   color: $COLOR--white-two;
   cursor: pointer;
 
@@ -67,8 +67,8 @@
 .projects-list {
   display: none;
   max-width: 250px;
-  margin-top: -50px;
-  margin-left: 20px;
+  margin-top: -65px;
+  margin-left: 2px;
   border: 1px solid $COLOR--gray-80;
   box-sizing: border-box;
   font-family: $FONT-CONDBOLD;
@@ -79,7 +79,7 @@
   @media (max-width: $SCREEN_XS_MAX) {
     width: 100%;
     border: none;
-    margin-top: 11px;
+    margin-top: 0;
     margin-left: -23px;
     max-width: 100%;
   }
@@ -139,4 +139,30 @@
   .show-list-icon {
     transform: rotate(180deg);
   }
+}
+
+.tooltip-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    justify-content: flex-start;
+  }
+}
+
+.project-selector-tooltip {
+  display: inline-block;
+  max-width: 200px;
+  height: 25px;
+  box-sizing: border-box;
+  padding-top: 5px;
+  font-size: 17px;
+  font-family: $FONT-SEMIBOLD;
+  text-transform: uppercase;
+  white-space: pre;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

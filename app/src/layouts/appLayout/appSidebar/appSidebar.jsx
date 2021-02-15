@@ -49,7 +49,7 @@ import ProfileIcon from './img/profile-icon-inline.svg';
 import AdministrateIcon from './img/administrate-icon-inline.svg';
 import MembersIcon from './img/members-icon-inline.svg';
 import SettingsIcon from './img/settings-icon-inline.svg';
-import { ProjectSelectorWithTooltip as ProjectSelector } from '../../common/projectSelector';
+import { ProjectSelector } from '../../common/projectSelector';
 
 @connect((state) => ({
   activeProject: activeProjectSelector(state),
