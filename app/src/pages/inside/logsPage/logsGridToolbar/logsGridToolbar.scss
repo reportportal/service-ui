@@ -21,6 +21,7 @@
 .panel {
   display: flex;
   justify-content: space-between;
+  background-color: $COLOR--white-two;
   padding: 15px;
   @media (max-width: $SCREEN_XS_MAX) {
     display: none;
