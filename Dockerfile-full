@@ -1,10 +1,11 @@
-FROM golang:1.12.9 as build-backend
+FROM golang:1.15.7 as build-backend
 WORKDIR /go/src/github.com/reportportal/service-ui/
-ARG service
-ARG version
+
 ENV GO111MODULE=on
 COPY ./Makefile ./go.mod .golangci.yml ./
 RUN make get-build-deps
+
+ARG version
 
 COPY ./main.go ./
 RUN make fmt
