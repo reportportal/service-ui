@@ -17,6 +17,7 @@
 .history-line-item {
   position: relative;
   margin-right: 37px;
+  opacity: 0.3;
 
   &:after {
     content: '';
@@ -76,11 +77,11 @@
 .status-FAILED,
 .status-STOPPED,
 .status-INTERRUPTED {
-  background-color: $COLOR--failed-2;
+  background-color: $COLOR--failed;
 }
 
 .status-PASSED {
-  background-color: $COLOR--passed-2;
+  background-color: $COLOR--passed;
 }
 
 .status-SKIPPED {
@@ -102,6 +103,8 @@
 }
 
 .active {
+  opacity: 1;
+
   &:before {
     content: '';
     position: absolute;

@@ -22,11 +22,11 @@
   border-top-right-radius: 2px;
 
   &.status-passed {
-    background-color: $COLOR--passed-2;
+    background-color: $COLOR--passed;
   }
 
   &.status-failed {
-    background-color: $COLOR--failed-2;
+    background-color: $COLOR--failed;
   }
 
   &.status-skipped {
