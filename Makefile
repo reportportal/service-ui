@@ -10,7 +10,7 @@ RELEASE_DIR=release
 BUILD_DEPS:= github.com/avarabyeu/releaser mvdan.cc/gofumpt/gofumports
 GODIRS_NOVENDOR = $(shell go list ./... | grep -v /vendor/)
 GOFILES_NOVENDOR = $(shell find . -type f -name '*.go' -not -path "./vendor/*")
-PACKAGE_COMMONS=github.com/reportportal/commons-go
+PACKAGE_COMMONS=github.com/reportportal/commons-go/v5
 REPO_NAME=reportportal/service-ui
 
 UI_BUILD_REACT=app/
