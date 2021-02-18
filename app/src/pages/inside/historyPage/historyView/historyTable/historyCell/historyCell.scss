@@ -52,15 +52,15 @@
 
 .table-body-cell-FAILED,
 .table-body-cell-INTERRUPTED {
-  background-color: $COLOR--blush;
+  background-color: rgba($COLOR--failed, 0.3);
 }
 
 .table-body-cell-SKIPPED {
-  background-color: $COLOR--silver;
+  background-color: rgba($COLOR--skipped, 0.3);
 }
 
 .table-body-cell-PASSED {
-  background-color: $COLOR--greenish-grey;
+  background-color: rgba($COLOR--passed, 0.3);
 }
 
 .table-body-cell-RESETED {

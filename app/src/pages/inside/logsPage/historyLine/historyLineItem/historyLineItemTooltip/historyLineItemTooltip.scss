@@ -22,11 +22,11 @@
     margin-left: 5px;
 
     &.status-passed {
-      color: $COLOR--passed-2;
+      color: $COLOR--passed;
     }
 
     &.status-failed {
-      color: $COLOR--failed-2;
+      color: $COLOR--failed;
     }
 
     &.status-skipped {

@@ -17,18 +17,14 @@
 /* stylelint-disable color-no-hex */
 
 $COLOR--system-issue: #0274d1;
-/* After a global change of status colors, only one color should remain */
-$COLOR--passed: #87b77b;
-$COLOR--passed-2: #56b985;
+$COLOR--passed: #56b985;
 $COLOR--product-bug: #ec3900;
 $COLOR--automation-bug: #f7d63e;
 $COLOR--to-investigate: #ffb743;
 $COLOR--no-defect: #aaaaaa;
 $COLOR--to-investigate-counter: #ffa00b;
-/* After a global change of status colors, only one color should remain */
-$COLOR--failed: #f36c4a;
-$COLOR--failed-2: #f65e5e;
-$COLOR--skipped: #bdc7cc;
+$COLOR--failed: #f65e5e;
+$COLOR--skipped: #6d6d6d;
 $COLOR--black-2: #393939;
 $COLOR--charcoal-grey: #464547;
 $COLOR--charcoal: #4a4a4a;
