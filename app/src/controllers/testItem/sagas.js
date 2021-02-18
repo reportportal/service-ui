@@ -35,6 +35,7 @@ import {
   PROJECT_LOG_PAGE,
   filterIdSelector,
   pageSelector,
+  testItemIdsSelector,
 } from 'controllers/pages';
 import { PAGE_KEY } from 'controllers/pagination';
 import { URLS } from 'common/urls';
@@ -49,6 +50,7 @@ import {
   NOTIFICATION_TYPES,
 } from 'controllers/notification';
 import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
+import { ALL } from 'common/constants/reservedFilterIds';
 import {
   setLevelAction,
   setPageLoadingAction,
@@ -190,10 +192,25 @@ function* fetchTestItems({ payload = {} }) {
 
   const isFilterNotReserved = !FILTER_TITLES[filterId];
   if ((isTestItemsList || isFilterNotReserved) && !activeFilter) {
-    const filter = yield call(fetch, URLS.filter(project, filterId));
-
-    if (filter) {
-      yield put(showFilterOnLaunchesAction(filter));
+    try {
+      const filter = yield call(fetch, URLS.filter(project, filterId));
+      if (filter) {
+        yield put(showFilterOnLaunchesAction(filter));
+      }
+    } catch {
+      const testItemIds = yield select(testItemIdsSelector);
+      const link = {
+        type: TEST_ITEM_PAGE,
+        payload: {
+          filterId: ALL,
+          projectId: project,
+          testItemIds,
+        },
+        meta: {
+          query: pageQuery,
+        },
+      };
+      yield put(redirect(link));
     }
   }
   yield put(
