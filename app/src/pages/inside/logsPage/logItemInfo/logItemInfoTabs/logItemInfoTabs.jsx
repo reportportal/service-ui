@@ -243,11 +243,20 @@ export class LogItemInfoTabs extends Component {
     ) : null;
   };
 
+  getActiveTabId = () => {
+    const { activeTabId } = this.state;
+    const tabs = this.makeTabs();
+    if (tabs.find((tab) => tab.id === activeTabId)) {
+      return activeTabId;
+    }
+    return null;
+  };
+
   render() {
     return (
       <InfoTabs
         tabs={this.makeTabs()}
-        activeTabId={this.state.activeTabId}
+        activeTabId={this.getActiveTabId()}
         setActiveTab={this.setActiveTab}
         panelContent={this.renderPanelContent()}
         thirdPartyIntegrationControl={this.renderSauceLabsIntegrationButton()}
