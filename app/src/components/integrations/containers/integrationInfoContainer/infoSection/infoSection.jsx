@@ -69,10 +69,10 @@ export class InfoSection extends Component {
 
   toggleActiveHandler = () => {
     this.setState({
-      isEnabled: !this.props.data.enabled,
+      isEnabled: !this.state.isEnabled,
     });
 
-    this.props.onToggleActive(this.props.data).catch(() => {
+    this.props.onToggleActive({ ...this.props.data, enabled: this.state.isEnabled }).catch(() => {
       this.setState({
         isEnabled: this.props.data.enabled,
       });
