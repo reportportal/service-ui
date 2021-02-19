@@ -236,7 +236,11 @@ export class ActionPanel extends Component {
           />
         )}
         {hasErrors && (
-          <GhostButton disabled={!hasValidItems} onClick={onProceedValidItems}>
+          <GhostButton
+            disabled={!hasValidItems}
+            onClick={onProceedValidItems}
+            transparentBackground
+          >
             {intl.formatMessage(COMMON_LOCALE_KEYS.PROCEED_VALID_ITEMS)}
           </GhostButton>
         )}
@@ -248,6 +252,7 @@ export class ActionPanel extends Component {
                 title={intl.formatMessage(COMMON_LOCALE_KEYS.ACTIONS)}
                 items={stepActionDescriptors}
                 disabled={!selectedItems.length}
+                transparentBackground
               />
             </div>
           )}
@@ -265,6 +270,7 @@ export class ActionPanel extends Component {
               disabled={!!selectedItems.length}
               icon={RefreshIcon}
               onClick={this.onClickRefresh}
+              transparentBackground
             >
               <FormattedMessage id="Common.refresh" defaultMessage="Refresh" />
             </GhostButton>

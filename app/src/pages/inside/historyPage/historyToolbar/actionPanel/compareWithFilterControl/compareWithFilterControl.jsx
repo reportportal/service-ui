@@ -207,6 +207,7 @@ export class CompareWithFilterControl extends Component {
               icon={CrossIcon}
               disabled={disabled}
               onClick={this.resetActiveFilter}
+              transparentBackground
             />
           </div>
         )}
@@ -224,6 +225,7 @@ export class CompareWithFilterControl extends Component {
                   icon={CompareIcon}
                   disabled={disabled}
                   title={formatMessage(messages.compareTitle)}
+                  transparentBackground
                 >
                   <FormattedMessage id="Common.compare" defaultMessage="Compare" />
                 </GhostButton>

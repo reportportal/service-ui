@@ -109,6 +109,7 @@ export class ActionPanel extends Component {
               icon={RefreshIcon}
               onClick={this.refreshItemsAction}
               disabled={!showBreadcrumbs}
+              transparentBackground
             >
               <FormattedMessage id="Common.refresh" defaultMessage="Refresh" />
             </GhostButton>

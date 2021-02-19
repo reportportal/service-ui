@@ -219,7 +219,7 @@ export class ActionPanel extends Component {
         <div className={cx('action-buttons')}>
           {this.isShowImportButton() && (
             <div className={cx('action-button', 'mobile-hidden')}>
-              <GhostButton icon={ImportIcon} onClick={onImportLaunch}>
+              <GhostButton icon={ImportIcon} onClick={onImportLaunch} transparentBackground>
                 <FormattedMessage id="LaunchesPage.import" defaultMessage="Import" />
               </GhostButton>
             </div>
@@ -240,6 +240,7 @@ export class ActionPanel extends Component {
               items={actionDescriptors}
               disabled={!selectedLaunches.length}
               onClick={this.onClickActionButton}
+              transparentBackground
             />
           </div>
           <div className={cx('action-button')}>
@@ -247,6 +248,7 @@ export class ActionPanel extends Component {
               disabled={!!selectedLaunches.length}
               icon={RefreshIcon}
               onClick={onRefresh}
+              transparentBackground
             >
               <FormattedMessage id="LaunchesPage.refresh" defaultMessage="Refresh" />
             </GhostButton>

@@ -16,14 +16,11 @@
 
 import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames/bind';
 import { Attachments } from 'pages/inside/logsPage/logItemInfo/logItemInfoTabs/attachments';
 import { LOG_VIEW } from 'controllers/testItem';
 import { InfoPanel } from 'pages/inside/common/infoPanel';
 import { SCREEN_XS_MAX_MEDIA } from 'common/constants/screenSizeVariables';
-import styles from './testItemLogsToolbar.scss';
 
-const cx = classNames.bind(styles);
 export class TestItemLogsToolbar extends Component {
   static propTypes = {
     parentItem: PropTypes.object,
@@ -64,7 +61,6 @@ export class TestItemLogsToolbar extends Component {
       <Fragment>
         <InfoPanel viewMode={LOG_VIEW} data={parentItem} />
         <Attachments isMobileView={isMobileView} />
-        <hr className={cx('separator')} />
       </Fragment>
     );
   }
