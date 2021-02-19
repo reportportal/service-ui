@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { messages } from 'components/widgets/common/messages';
-import { FAILED, PASSED, INTERRUPTED, SKIPPED, IN_PROGRESS } from 'common/constants/testStatuses';
+import { FAILED, PASSED, INTERRUPTED, SKIPPED } from 'common/constants/testStatuses';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { getDefaultTestItemLinkParams } from 'components/widgets/common/utils';
 import { statisticsLinkSelector } from 'controllers/testItem';
@@ -50,7 +50,7 @@ export class PassingRatePerLaunch extends Component {
     const { widget, getStatisticsLink, project } = this.props;
     const launchId = widget.content.result.id;
     const link = getStatisticsLink({
-      statuses: data.id === STATS_PASSED ? [PASSED] : [FAILED, INTERRUPTED, SKIPPED, IN_PROGRESS],
+      statuses: data.id === STATS_PASSED ? [PASSED] : [FAILED, INTERRUPTED, SKIPPED],
     });
     const navigationParams = getDefaultTestItemLinkParams(project, ALL, launchId);
 
