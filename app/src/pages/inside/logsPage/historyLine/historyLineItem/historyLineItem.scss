@@ -17,7 +17,6 @@
 .history-line-item {
   position: relative;
   margin-right: 37px;
-  opacity: 0.3;
 
   &:after {
     content: '';
@@ -103,8 +102,6 @@
 }
 
 .active {
-  opacity: 1;
-
   &:before {
     content: '';
     position: absolute;
