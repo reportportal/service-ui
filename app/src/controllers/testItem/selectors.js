@@ -307,6 +307,9 @@ export const statisticsLinkSelector = createSelector(
     if (ownProps.statuses) {
       params['filter.in.status'] = ownProps.statuses.join(',');
     }
+    if (ownProps.types === null) {
+      delete params['filter.in.type'];
+    }
 
     return createLink(
       testItemIds,
