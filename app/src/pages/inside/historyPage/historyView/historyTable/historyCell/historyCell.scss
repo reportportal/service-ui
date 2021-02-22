@@ -59,6 +59,8 @@
   background-color: $COLOR--skipped;
 }
 
+.table-body-cell-WARN,
+.table-body-cell-INFO,
 .table-body-cell-PASSED {
   background-color: $COLOR--passed;
 }

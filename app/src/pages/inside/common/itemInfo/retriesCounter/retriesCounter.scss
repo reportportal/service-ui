@@ -30,6 +30,8 @@
   margin-right: 3px;
   vertical-align: middle;
 
+  &.status-warn,
+  &.status-info,
   &.status-passed {
     background-color: $COLOR--passed;
   }

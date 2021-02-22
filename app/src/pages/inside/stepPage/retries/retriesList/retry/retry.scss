@@ -51,6 +51,8 @@
   height: 7px;
   width: 7px;
 
+  &.status-warn,
+  &.status-info,
   &.status-passed {
     background-color: $COLOR--passed;
   }

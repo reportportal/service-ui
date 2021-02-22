@@ -79,6 +79,8 @@
   background-color: $COLOR--failed;
 }
 
+.status-WARN,
+.status-INFO,
 .status-PASSED {
   background-color: $COLOR--passed;
 }
