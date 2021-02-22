@@ -19,7 +19,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import moment from 'moment';
 import Parser from 'html-react-parser';
-import { reduxForm, FieldArray, formValueSelector } from 'redux-form';
+import {
+  reduxForm,
+  FieldArray,
+  formValueSelector,
+  getFormValues,
+  destroy,
+  change,
+} from 'redux-form';
 import Link from 'redux-first-router-link';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { BigButton } from 'components/buttons/bigButton';
@@ -136,7 +143,19 @@ const INPUTS = {
 };
 
 export const createImportProps = (pluginName) => ({
-  lib: { React, useSelector, useDispatch, useIntl, moment, Parser, reduxForm, formValueSelector },
+  lib: {
+    React,
+    useSelector,
+    useDispatch,
+    useIntl,
+    moment,
+    Parser,
+    reduxForm,
+    formValueSelector,
+    getFormValues,
+    destroy,
+    change,
+  },
   components: {
     ...BUTTONS,
     ...INPUTS,
