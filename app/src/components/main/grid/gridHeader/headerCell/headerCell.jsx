@@ -54,6 +54,7 @@ export const HeaderCell = track()(
       sortable,
       'sorting-active': sortingActive,
       'with-filter': withFilter,
+      [`size-${size}`]: size,
     };
     const filterClickHandler = (e) => {
       e.stopPropagation();
