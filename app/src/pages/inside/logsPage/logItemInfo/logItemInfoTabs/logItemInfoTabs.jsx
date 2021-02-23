@@ -243,9 +243,8 @@ export class LogItemInfoTabs extends Component {
     ) : null;
   };
 
-  getActiveTabId = () => {
+  getActiveTabId = (tabs) => {
     const { activeTabId } = this.state;
-    const tabs = this.makeTabs();
     if (tabs.find((tab) => tab.id === activeTabId)) {
       return activeTabId;
     }
@@ -253,10 +252,13 @@ export class LogItemInfoTabs extends Component {
   };
 
   render() {
+    const tabs = this.makeTabs();
+    const activeTabId = this.getActiveTabId(tabs);
+
     return (
       <InfoTabs
-        tabs={this.makeTabs()}
-        activeTabId={this.getActiveTabId()}
+        tabs={tabs}
+        activeTabId={activeTabId}
         setActiveTab={this.setActiveTab}
         panelContent={this.renderPanelContent()}
         thirdPartyIntegrationControl={this.renderSauceLabsIntegrationButton()}
