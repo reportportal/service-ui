@@ -30,12 +30,14 @@ class AbsRelTime extends Component {
     startTimeFormat: PropTypes.oneOf([START_TIME_FORMAT_RELATIVE, START_TIME_FORMAT_ABSOLUTE]),
     setStartTimeFormatAction: PropTypes.func.isRequired,
     customClass: PropTypes.string,
+    styles: PropTypes.object,
   };
 
   static defaultProps = {
     startTime: 0,
     startTimeFormat: START_TIME_FORMAT_RELATIVE,
     customClass: '',
+    styles: {},
   };
 
   toggleFormat = () => {
@@ -52,6 +54,7 @@ class AbsRelTime extends Component {
       <div
         className={cx('abs-rel-time', { relative: this.isRelative() }, this.props.customClass)}
         onClick={this.toggleFormat}
+        style={this.props.styles}
       >
         <span className={cx('relative-time')}>
           <FormattedRelativeTime value={startTime} unit={unit} numeric="auto" />
