@@ -17,6 +17,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { ControlPanel } from './controlPanel';
 import { ruleListItemPropTypes, ruleListItemDefaultProps } from '../constants';
 import { ItemContent } from './itemContent';
@@ -28,10 +29,12 @@ export const ListItem = ({ item, getListItemContentData, ...rest }) => (
   <div className={cx('list-item')}>
     <ControlPanel item={item} {...rest} />
     <div className={cx('data')}>
-      {getListItemContentData(item).map((itemData, index) => (
-        // eslint-disable-next-line react/no-array-index-key
-        <ItemContent key={`${itemData.key}_${index}`} data={itemData} />
-      ))}
+      <ScrollWrapper autoHeight autoHeightMax={90} hideTracksWhenNotNeeded>
+        {getListItemContentData(item).map((itemData, index) => (
+          // eslint-disable-next-line react/no-array-index-key
+          <ItemContent key={`${itemData.key}_${index}`} data={itemData} />
+        ))}
+      </ScrollWrapper>
     </div>
   </div>
 );
