@@ -27,7 +27,7 @@ const cx = classNames.bind(styles);
 const ReactGridLayout = WidthProvider(RGL);
 
 const calculateLayout = (data) =>
-  data.map((item) => ({ x: 0, y: item.order, w: 1, h: 2, i: String(item.id) }));
+  data.map((item) => ({ x: 0, y: item.order, w: 1, h: 1, i: String(item.id) }));
 
 export const MovableRuleList = ({ data, onMove, ...rest }) => {
   const isFirefox = typeof InstallTrigger !== 'undefined';
