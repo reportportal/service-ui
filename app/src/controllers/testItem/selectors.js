@@ -297,18 +297,25 @@ export const statisticsLinkSelector = createSelector(
       'filter.eq.hasStats': true,
       'filter.eq.hasChildren': false,
       'filter.in.type': LEVEL_STEP,
+      'filter.has.attributeKey': ownProps.key,
+      'filter.has.attributeValue': ownProps.value,
       'filter.has.compositeAttribute': ownProps.compositeAttribute,
       providerType,
       [providerTypeModifierId]: ownProps[providerTypeModifierId],
       launchesLimit,
       isLatest,
     };
-
     if (ownProps.statuses) {
       params['filter.in.status'] = ownProps.statuses.join(',');
     }
     if (ownProps.types === null) {
       delete params['filter.in.type'];
+    }
+    if (ownProps.key === null) {
+      delete params['filter.has.attributeKey'];
+    }
+    if (ownProps.value === null) {
+      delete params['filter.has.attributeValue'];
     }
 
     return createLink(
