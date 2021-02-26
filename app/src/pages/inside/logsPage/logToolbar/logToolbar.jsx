@@ -44,6 +44,7 @@ import {
 } from 'controllers/log';
 import { ParentInfo } from 'pages/inside/common/infoLine/parentInfo';
 import { stepPaginationSelector } from 'controllers/step';
+import { InputCheckbox } from 'components/inputs/inputCheckbox/inputCheckbox';
 import styles from './logToolbar.scss';
 
 const cx = classNames.bind(styles);
@@ -71,6 +72,12 @@ const cx = classNames.bind(styles);
 })
 @track()
 export class LogToolbar extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isChecked: false,
+    };
+  }
   static propTypes = {
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -149,6 +156,14 @@ export class LogToolbar extends Component {
           allEventClick={LOG_PAGE_EVENTS.ALL_LABEL_BREADCRUMB}
           onRestorePath={restorePath}
         />
+        <InputCheckbox
+          onChange={() => {
+            this.setState({ isChecked: !this.state.isChecked });
+          }}
+          value={this.state.isChecked}
+        >
+          History Across All Launches
+        </InputCheckbox>
         <div className={cx('action-buttons')}>
           {logViewMode === DETAILED_LOG_VIEW ? (
             <div className={cx('action-button')}>
