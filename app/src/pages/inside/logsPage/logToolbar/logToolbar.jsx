@@ -51,8 +51,8 @@ import styles from './logToolbar.scss';
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
-  checkboxLabel: {
-    id: 'LogToolbar.historyarossalllaunches',
+  historyAllLaunchesLabel: {
+    id: 'LogToolbar.historyAcrossAllLaunches',
     defaultMessage: 'History Across All Launches',
   },
 });
@@ -173,7 +173,7 @@ export class LogToolbar extends Component {
           }}
           value={this.state.includeAllLaunches}
         >
-          {intl.formatMessage(messages.checkboxLabel)}
+          {intl.formatMessage(messages.historyAllLaunchesLabel)}
         </InputCheckbox>
         <div className={cx('action-buttons')}>
           {logViewMode === DETAILED_LOG_VIEW ? (
