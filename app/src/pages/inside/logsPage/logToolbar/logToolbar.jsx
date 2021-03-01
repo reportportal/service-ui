@@ -17,9 +17,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
+import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { FormattedMessage } from 'react-intl';
+
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { Breadcrumbs } from 'components/main/breadcrumbs';
 import { GhostButton } from 'components/buttons/ghostButton';
@@ -41,7 +42,6 @@ import {
   disablePrevItemLinkSelector,
   disableNextItemLinkSelector,
   DETAILED_LOG_VIEW,
-  LOG_PAGE_CHECKBOX_LABEL,
 } from 'controllers/log';
 import { ParentInfo } from 'pages/inside/common/infoLine/parentInfo';
 import { stepPaginationSelector } from 'controllers/step';
@@ -50,6 +50,14 @@ import styles from './logToolbar.scss';
 
 const cx = classNames.bind(styles);
 
+const messages = defineMessages({
+  checkboxLabel: {
+    id: 'LogToolbar.historyarossalllaunches',
+    defaultMessage: 'History Across All Launches',
+  },
+});
+
+@injectIntl
 @connect(
   (state) => ({
     breadcrumbs: breadcrumbsSelector(state),
@@ -76,10 +84,11 @@ export class LogToolbar extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isChecked: false,
+      includeAllLaunches: false,
     };
   }
   static propTypes = {
+    intl: PropTypes.object.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -138,6 +147,7 @@ export class LogToolbar extends Component {
 
   render() {
     const {
+      intl,
       breadcrumbs,
       previousItem,
       nextItem,
@@ -159,11 +169,11 @@ export class LogToolbar extends Component {
         />
         <InputCheckbox
           onChange={() => {
-            this.setState({ isChecked: !this.state.isChecked });
+            this.setState({ includeAllLaunches: !this.state.includeAllLaunches });
           }}
-          value={this.state.isChecked}
+          value={this.state.includeAllLaunches}
         >
-          {LOG_PAGE_CHECKBOX_LABEL}
+          {intl.formatMessage(messages.checkboxLabel)}
         </InputCheckbox>
         <div className={cx('action-buttons')}>
           {logViewMode === DETAILED_LOG_VIEW ? (
