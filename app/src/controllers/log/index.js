@@ -36,6 +36,7 @@ export {
   DETAILED_LOG_VIEW,
   LAUNCH_LOG_VIEW,
   LOG_STATUS_FILTER_KEY,
+  LOG_PAGE_CHECKBOX_LABEL,
 } from './constants';
 export {
   historyItemsSelector,
