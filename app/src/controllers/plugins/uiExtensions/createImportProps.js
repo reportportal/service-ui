@@ -111,6 +111,7 @@ import { GeneralTab } from 'pages/common/settingsPage/generalTab';
 import { RuleList, ItemContent } from 'pages/common/settingsPage/ruleList';
 import { RuleListHeader } from 'pages/common/settingsPage/ruleListHeader';
 import { getGroupedDefectTypesOptions } from 'pages/inside/dashboardItemPage/modals/common/widgetControls/utils/getWidgetCriteriaOptions';
+import { DEFECT_TYPES_SEQUENCE, TO_INVESTIGATE } from 'common/constants/defectTypes';
 import { createGlobalNamedIntegrationsSelector } from '../selectors';
 
 const BUTTONS = {
@@ -186,7 +187,12 @@ export const createImportProps = (pluginName) => ({
     DependentFieldsControl,
     FieldArray,
   },
-  constants: { PLUGIN_UI_EXTENSION_ADMIN_PAGE, PROJECT_SETTINGS_TAB_PAGE },
+  constants: {
+    PLUGIN_UI_EXTENSION_ADMIN_PAGE,
+    PROJECT_SETTINGS_TAB_PAGE,
+    DEFECT_TYPES_SEQUENCE,
+    TO_INVESTIGATE,
+  },
   actions: {
     showModalAction,
     showSuccessNotification,
