@@ -1062,7 +1062,7 @@
   "LogsGridToolbar.hidePassedLogs": "Скрыть пройденные логи",
   "LogsGridToolbar.markdownMode": "Режим разметки",
   "LogsGridToolbar.withAttachments": "Логи с вложениями",
-  "LogToolbar.historyarossalllaunches": "История всех запусков",
+  "LogToolbar.historyAcrossAllLaunches": "История всех запусков",
   "MarkdownEditor.bold": "Жирное начертание",
   "MarkdownEditor.cleanBlock": "Очистить блок",
   "MarkdownEditor.code": "Добавить код",
