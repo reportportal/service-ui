@@ -37,10 +37,7 @@ export const MovableRuleList = ({ data, onMove, ...rest }) => {
   const updateItemsOrder = (newLayout, oldPosition, newPosition) => {
     const isItemOrderChanged = oldPosition.y !== newPosition.y;
     if (isItemOrderChanged) {
-      const updatedData = data.map((item, index) => ({
-        ...item,
-        order: newLayout[index].y / newLayout[index].h,
-      }));
+      const updatedData = data.map((item, index) => ({ ...item, order: newLayout[index].y }));
       onMove(updatedData);
     }
   };
@@ -75,7 +72,7 @@ export const MovableRuleList = ({ data, onMove, ...rest }) => {
           <div key={item.id || index}>
             <ListItem
               id={index}
-              item={{ ...item, order: layout[index].y / layout[index].h }}
+              item={{ ...item, order: layout[index].y }}
               onMove={moveItem}
               maxItemOrder={maxItemOrder}
               {...rest}
