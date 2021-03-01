@@ -40,6 +40,8 @@ export {
   LOG_PAGE_CHECKBOX_LABEL,
   FETCH_HISTORY_LINE,
   HISTORY_LINE_DEFAULT_VALUE,
+  TABLE,
+  LINE,
 } from './constants';
 export {
   historyItemsSelector,

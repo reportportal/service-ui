@@ -43,6 +43,8 @@ import {
   disablePrevItemLinkSelector,
   disableNextItemLinkSelector,
   DETAILED_LOG_VIEW,
+  LINE,
+  TABLE,
 } from 'controllers/log';
 import { ParentInfo } from 'pages/inside/common/infoLine/parentInfo';
 import { stepPaginationSelector } from 'controllers/step';
@@ -150,7 +152,7 @@ export class LogToolbar extends Component {
 
   changeTypeOfHistory = (type) => {
     const { tracking } = this.props;
-    tracking.trackEvent(LOG_PAGE_EVENTS.CHECKBOX_CLICK);
+    tracking.trackEvent(LOG_PAGE_EVENTS.HISTORY_LINE_MODE_CHB);
     this.props.fetchLineHistoryAction(type);
   };
 
@@ -178,6 +180,9 @@ export class LogToolbar extends Component {
         />
         <InputCheckbox
           onChange={() => {
+            !this.state.includeAllLaunches
+              ? this.changeTypeOfHistory(TABLE)
+              : this.changeTypeOfHistory(LINE);
             this.setState({ includeAllLaunches: !this.state.includeAllLaunches });
           }}
           value={this.state.includeAllLaunches}
