@@ -42,6 +42,9 @@ export const LAUNCH_LOG_VIEW = 'LAUNCH_LOG_VIEW';
 export const SET_LOG_PAGE_LOADING = 'SET_LOG_PAGE_LOADING';
 export const FETCH_HISTORY_ITEMS_SUCCESS = 'FETCH_HISTORY_ITEMS_SUCCESS';
 export const UPDATE_HISTORY_ITEM_ISSUES = 'UPDATE_HISTORY_ITEM_ISSUES';
+export const LOG_PAGE_CHECKBOX_LABEL = 'History Across All Launches';
+export const FETCH_HISTORY_LINE = 'fetchHistoryLine';
+export const HISTORY_LINE_DEFAULT_VALUE = 'line';
 
 export const LOG_LEVELS = [
   {

@@ -20,7 +20,6 @@ import track from 'react-tracking';
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { Breadcrumbs } from 'components/main/breadcrumbs';
 import { GhostButton } from 'components/buttons/ghostButton';
@@ -35,6 +34,8 @@ import {
 } from 'controllers/testItem';
 import { withPagination, DEFAULT_PAGINATION, PAGE_KEY } from 'controllers/pagination';
 import {
+  LOG_PAGE_CHECKBOX_LABEL,
+  fetchLineHistoryAction,
   nextLogLinkSelector,
   previousLogLinkSelector,
   previousItemSelector,
@@ -45,7 +46,7 @@ import {
 } from 'controllers/log';
 import { ParentInfo } from 'pages/inside/common/infoLine/parentInfo';
 import { stepPaginationSelector } from 'controllers/step';
-import { InputCheckbox } from 'components/inputs/inputCheckbox/inputCheckbox';
+import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import styles from './logToolbar.scss';
 
 const cx = classNames.bind(styles);
@@ -69,6 +70,7 @@ const messages = defineMessages({
     nextLinkDisable: disableNextItemLinkSelector(state),
   }),
   {
+    fetchLineHistoryAction,
     navigate: (linkAction) => linkAction,
     fetchTestItems: fetchTestItemsFromLogPageAction,
     restorePath: restorePathAction,
@@ -89,6 +91,7 @@ export class LogToolbar extends Component {
   }
   static propTypes = {
     intl: PropTypes.object.isRequired,
+    fetchLineHistoryAction: PropTypes.func.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -143,6 +146,12 @@ export class LogToolbar extends Component {
       return navigate(nextLink);
     }
     return fetchTestItems({ next: true });
+  };
+
+  changeTypeOfHistory = (type) => {
+    const { tracking } = this.props;
+    tracking.trackEvent(LOG_PAGE_EVENTS.CHECKBOX_CLICK);
+    this.props.fetchLineHistoryAction(type);
   };
 
   render() {

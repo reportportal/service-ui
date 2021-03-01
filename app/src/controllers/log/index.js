@@ -22,6 +22,7 @@ export {
   setPageLoadingAction,
   clearLogPageStackTrace,
   updateHistoryItemIssuesAction,
+  fetchLineHistoryAction,
 } from './actionCreators';
 export { logReducer } from './reducer';
 export {
@@ -36,6 +37,9 @@ export {
   DETAILED_LOG_VIEW,
   LAUNCH_LOG_VIEW,
   LOG_STATUS_FILTER_KEY,
+  LOG_PAGE_CHECKBOX_LABEL,
+  FETCH_HISTORY_LINE,
+  HISTORY_LINE_DEFAULT_VALUE,
 } from './constants';
 export {
   historyItemsSelector,

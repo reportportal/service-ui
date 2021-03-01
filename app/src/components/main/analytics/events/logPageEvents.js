@@ -69,6 +69,11 @@ export const LOG_PAGE_EVENTS = {
     action: 'Click on History execution tab',
     label: 'Transition to item log page',
   },
+  CHECKBOX_CLICK: {
+    category: LOG_PAGE,
+    action: 'Click on History line checkbox',
+    label: 'Change type of History line',
+  },
   STACK_TRACE_TAB: {
     category: LOG_PAGE,
     action: 'Click on Stack Trace tab',

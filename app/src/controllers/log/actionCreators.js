@@ -21,6 +21,7 @@ import {
   SET_LOG_PAGE_LOADING,
   FETCH_HISTORY_ITEMS_SUCCESS,
   UPDATE_HISTORY_ITEM_ISSUES,
+  FETCH_HISTORY_LINE,
 } from './constants';
 
 export const fetchLogPageData = () => ({
@@ -37,6 +38,11 @@ export const refreshLogPageData = () => ({
 export const fetchHistoryItemsSuccessAction = (items) => ({
   type: FETCH_HISTORY_ITEMS_SUCCESS,
   payload: items,
+});
+
+export const fetchLineHistoryAction = (type) => ({
+  type: FETCH_HISTORY_LINE,
+  payload: type,
 });
 
 export const fetchLogPageStackTrace = (logItem) => ({
