@@ -41,6 +41,7 @@ import {
   disablePrevItemLinkSelector,
   disableNextItemLinkSelector,
   DETAILED_LOG_VIEW,
+  LOG_PAGE_CHECKBOX_LABEL,
 } from 'controllers/log';
 import { ParentInfo } from 'pages/inside/common/infoLine/parentInfo';
 import { stepPaginationSelector } from 'controllers/step';
@@ -162,7 +163,7 @@ export class LogToolbar extends Component {
           }}
           value={this.state.isChecked}
         >
-          History Across All Launches
+          {LOG_PAGE_CHECKBOX_LABEL}
         </InputCheckbox>
         <div className={cx('action-buttons')}>
           {logViewMode === DETAILED_LOG_VIEW ? (
