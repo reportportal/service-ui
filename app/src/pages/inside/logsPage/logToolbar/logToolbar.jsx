@@ -34,7 +34,6 @@ import {
 } from 'controllers/testItem';
 import { withPagination, DEFAULT_PAGINATION, PAGE_KEY } from 'controllers/pagination';
 import {
-  LOG_PAGE_CHECKBOX_LABEL,
   fetchLineHistoryAction,
   nextLogLinkSelector,
   previousLogLinkSelector,
@@ -43,8 +42,8 @@ import {
   disablePrevItemLinkSelector,
   disableNextItemLinkSelector,
   DETAILED_LOG_VIEW,
-  LINE,
-  TABLE,
+  HISTORY_LINE_TABLE_MODE,
+  HISTORY_LINE_LINE_MODE,
 } from 'controllers/log';
 import { ParentInfo } from 'pages/inside/common/infoLine/parentInfo';
 import { stepPaginationSelector } from 'controllers/step';
@@ -181,8 +180,8 @@ export class LogToolbar extends Component {
         <InputCheckbox
           onChange={() => {
             !this.state.includeAllLaunches
-              ? this.changeTypeOfHistory(TABLE)
-              : this.changeTypeOfHistory(LINE);
+              ? this.changeTypeOfHistory(HISTORY_LINE_TABLE_MODE)
+              : this.changeTypeOfHistory(HISTORY_LINE_LINE_MODE);
             this.setState({ includeAllLaunches: !this.state.includeAllLaunches });
           }}
           value={this.state.includeAllLaunches}
