@@ -755,6 +755,7 @@
   "HistoryControls.historyBaseTitle": "База",
   "HistoryControls.historyBaseAll": "Всі Запуски",
   "HistoryControls.historyBaseSameName": "Запуски з однаковими іменами",
+  "HistoryLineItemTooltip.launchName": "Ім’я запуску",
   "EmptyHistoryItem.emptyItemCaption": "Елемент порожній",
   "HistoryTable.itemNamesHeaderTitle": "Ім’я",
   "HistoryTable.launchNumberTitle": "Запуск №",

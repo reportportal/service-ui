@@ -57,8 +57,21 @@
   }
 }
 
+.launch-name-value {
+  width: 279px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: $FONT-SEMIBOLD;
+  word-wrap: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow-y: hidden;
+}
+
 .duration-block,
 .defect-type-block,
+.launch-name-block,
 .defect-asset {
   margin-top: 15px;
 }

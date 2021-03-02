@@ -51,6 +51,10 @@ const messages = defineMessages({
     id: 'HistoryLineItemTooltip.bts',
     defaultMessage: 'BTS Links Included',
   },
+  lauchName: {
+    id: 'HistoryLineItemTooltip.launchName',
+    defaultMessage: 'Launch Name',
+  },
 });
 
 export const HistoryLineItemTooltip = injectIntl(
@@ -62,6 +66,12 @@ export const HistoryLineItemTooltip = injectIntl(
           {statusLocalization[status] ? formatMessage(statusLocalization[status]) : status}
         </span>
       </span>
+      <div className={cx('launch-name-block')}>
+        <span className={cx('title')}>{formatMessage(messages.lauchName)}:</span>
+        <span className={cx('launch-name-value')}>
+          {pathNames.launchPathName.name} #{pathNames.launchPathName.number}
+        </span>
+      </div>
       {issue && issue.issueType && (
         <div className={cx('defect-type-block')}>
           <span className={cx('title')}>{formatMessage(messages.defectType)}</span>
