@@ -22,8 +22,7 @@ export {
   setPageLoadingAction,
   clearLogPageStackTrace,
   updateHistoryItemIssuesAction,
-  fetchLineHistoryAction,
-  setIncludeAllLaunches,
+  setIncludeAllLaunchesAction,
 } from './actionCreators';
 export { logReducer } from './reducer';
 export {

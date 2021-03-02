@@ -21,7 +21,6 @@ import {
   SET_LOG_PAGE_LOADING,
   FETCH_HISTORY_ITEMS_SUCCESS,
   UPDATE_HISTORY_ITEM_ISSUES,
-  FETCH_HISTORY_LINE,
   SET_INCLUDE_ALL_LAUNCHES,
 } from './constants';
 
@@ -41,10 +40,6 @@ export const fetchHistoryItemsSuccessAction = (items) => ({
   payload: items,
 });
 
-export const fetchLineHistoryAction = () => ({
-  type: FETCH_HISTORY_LINE,
-});
-
 export const fetchLogPageStackTrace = (logItem) => ({
   type: FETCH_LOG_PAGE_STACK_TRACE,
   payload: logItem,
@@ -59,7 +54,7 @@ export const setPageLoadingAction = (isLoading) => ({
   payload: isLoading,
 });
 
-export const setIncludeAllLaunches = (includeAllLaunches) => ({
+export const setIncludeAllLaunchesAction = (includeAllLaunches) => ({
   type: SET_INCLUDE_ALL_LAUNCHES,
   payload: includeAllLaunches,
 });

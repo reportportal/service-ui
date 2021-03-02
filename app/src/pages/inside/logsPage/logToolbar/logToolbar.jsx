@@ -34,7 +34,6 @@ import {
 } from 'controllers/testItem';
 import { withPagination, DEFAULT_PAGINATION, PAGE_KEY } from 'controllers/pagination';
 import {
-  fetchLineHistoryAction,
   nextLogLinkSelector,
   previousLogLinkSelector,
   previousItemSelector,
@@ -42,7 +41,7 @@ import {
   disablePrevItemLinkSelector,
   disableNextItemLinkSelector,
   DETAILED_LOG_VIEW,
-  setIncludeAllLaunches,
+  setIncludeAllLaunchesAction,
   includeAllLaunchesSelector,
 } from 'controllers/log';
 import { ParentInfo } from 'pages/inside/common/infoLine/parentInfo';
@@ -72,8 +71,7 @@ const messages = defineMessages({
     includeAllLaunches: includeAllLaunchesSelector(state),
   }),
   {
-    fetchLineHistoryAction,
-    setIncludeAllLaunches,
+    setIncludeAllLaunchesAction,
     navigate: (linkAction) => linkAction,
     fetchTestItems: fetchTestItemsFromLogPageAction,
     restorePath: restorePathAction,
@@ -88,8 +86,7 @@ const messages = defineMessages({
 export class LogToolbar extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    fetchLineHistoryAction: PropTypes.func.isRequired,
-    setIncludeAllLaunches: PropTypes.func.isRequired,
+    setIncludeAllLaunchesAction: PropTypes.func.isRequired,
     includeAllLaunches: PropTypes.bool,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -150,8 +147,7 @@ export class LogToolbar extends Component {
   changeHistoryLineMode = () => {
     const { tracking, includeAllLaunches } = this.props;
     tracking.trackEvent(LOG_PAGE_EVENTS.HISTORY_LINE_MODE_CHB);
-    this.props.setIncludeAllLaunches(!includeAllLaunches);
-    this.props.fetchLineHistoryAction();
+    this.props.setIncludeAllLaunchesAction(!includeAllLaunches);
   };
 
   render() {

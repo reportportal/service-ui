@@ -39,6 +39,7 @@ import {
   STACK_TRACE_PAGINATION_OFFSET,
   DETAILED_LOG_VIEW,
   HISTORY_LINE_TABLE_MODE,
+  SET_INCLUDE_ALL_LAUNCHES,
 } from './constants';
 import {
   activeLogIdSelector,
@@ -111,15 +112,10 @@ function* fetchHistoryItems() {
   const activeProject = yield select(activeProjectSelector);
   const logItemId = yield select(logItemIdSelector);
   const isAllLaunches = yield select(includeAllLaunchesSelector);
-  let payload;
-  if (isAllLaunches) {
-    payload = HISTORY_LINE_TABLE_MODE;
-  } else {
-    payload = HISTORY_LINE_DEFAULT_VALUE;
-  }
+  const historyLineMode = isAllLaunches ? HISTORY_LINE_TABLE_MODE : HISTORY_LINE_DEFAULT_VALUE;
   const response = yield call(
     fetch,
-    URLS.testItemsHistory(activeProject, DEFAULT_HISTORY_DEPTH, payload, logItemId),
+    URLS.testItemsHistory(activeProject, DEFAULT_HISTORY_DEPTH, historyLineMode, logItemId),
   );
 
   yield put(fetchHistoryItemsSuccessAction(response.content));
@@ -211,7 +207,7 @@ function* watchFetchLogPageStackTrace() {
 }
 
 function* watchFetchLineHistory() {
-  yield takeEvery(FETCH_HISTORY_LINE, fetchHistoryItems);
+  yield takeEvery([FETCH_HISTORY_LINE, SET_INCLUDE_ALL_LAUNCHES], fetchHistoryItems);
 }
 
 export function* logSagas() {
