@@ -43,7 +43,7 @@ import {
   disableNextItemLinkSelector,
   DETAILED_LOG_VIEW,
   HISTORY_LINE_TABLE_MODE,
-  HISTORY_LINE_LINE_MODE,
+  HISTORY_LINE_DEFAULT_VALUE,
 } from 'controllers/log';
 import { ParentInfo } from 'pages/inside/common/infoLine/parentInfo';
 import { stepPaginationSelector } from 'controllers/step';
@@ -181,7 +181,7 @@ export class LogToolbar extends Component {
           onChange={() => {
             !this.state.includeAllLaunches
               ? this.changeTypeOfHistory(HISTORY_LINE_TABLE_MODE)
-              : this.changeTypeOfHistory(HISTORY_LINE_LINE_MODE);
+              : this.changeTypeOfHistory(HISTORY_LINE_DEFAULT_VALUE);
             this.setState({ includeAllLaunches: !this.state.includeAllLaunches });
           }}
           value={this.state.includeAllLaunches}

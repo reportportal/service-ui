@@ -105,14 +105,13 @@ function* fetchStackTrace({ payload: logItem }) {
   yield take(createFetchPredicate(STACK_TRACE_NAMESPACE));
 }
 
-function* fetchHistoryItems(action) {
-  const payload = (action && action.payload) || HISTORY_LINE_DEFAULT_VALUE;
+function* fetchHistoryItems(action = { payload: HISTORY_LINE_DEFAULT_VALUE }) {
   const activeProject = yield select(activeProjectSelector);
   const logItemId = yield select(logItemIdSelector);
 
   const response = yield call(
     fetch,
-    URLS.testItemsHistory(activeProject, DEFAULT_HISTORY_DEPTH, payload, logItemId),
+    URLS.testItemsHistory(activeProject, DEFAULT_HISTORY_DEPTH, action.payload, logItemId),
   );
 
   yield put(fetchHistoryItemsSuccessAction(response.content));
