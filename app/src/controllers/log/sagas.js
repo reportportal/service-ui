@@ -27,7 +27,7 @@ import { logItemIdSelector, pathnameChangedSelector } from 'controllers/pages';
 import { debugModeSelector } from 'controllers/launch';
 import { createFetchPredicate, fetchDataAction } from 'controllers/fetch';
 import { fetch, isEmptyObject } from 'common/utils';
-import { FETCH_HISTORY_LINE, HISTORY_LINE_DEFAULT_VALUE } from 'controllers/log';
+import { HISTORY_LINE_DEFAULT_VALUE } from 'controllers/log';
 import { collectLogPayload } from './sagaUtils';
 import {
   ACTIVITY_NAMESPACE,
@@ -207,7 +207,7 @@ function* watchFetchLogPageStackTrace() {
 }
 
 function* watchFetchLineHistory() {
-  yield takeEvery([FETCH_HISTORY_LINE, SET_INCLUDE_ALL_LAUNCHES], fetchHistoryItems);
+  yield takeEvery(SET_INCLUDE_ALL_LAUNCHES, fetchHistoryItems);
 }
 
 export function* logSagas() {

@@ -173,9 +173,11 @@ export class LogToolbar extends Component {
           allEventClick={LOG_PAGE_EVENTS.ALL_LABEL_BREADCRUMB}
           onRestorePath={restorePath}
         />
-        <InputCheckbox onChange={this.changeHistoryLineMode} value={includeAllLaunches}>
-          {intl.formatMessage(messages.historyAllLaunchesLabel)}
-        </InputCheckbox>
+        {logViewMode === DETAILED_LOG_VIEW && (
+          <InputCheckbox onChange={this.changeHistoryLineMode} value={includeAllLaunches}>
+            {intl.formatMessage(messages.historyAllLaunchesLabel)}
+          </InputCheckbox>
+        )}
         <div className={cx('action-buttons')}>
           {logViewMode === DETAILED_LOG_VIEW ? (
             <div className={cx('action-button')}>
