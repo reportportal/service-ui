@@ -25,28 +25,39 @@ import styles from './listItem.scss';
 
 const cx = classNames.bind(styles);
 
-export const ListItem = ({ item, getListItemContentData, ...rest }) => (
-  <div className={cx('list-item')}>
-    <ControlPanel item={item} {...rest} />
-    <div className={cx('data')}>
-      <ScrollWrapper autoHeight autoHeightMax={90} hideTracksWhenNotNeeded>
-        {getListItemContentData(item).map((itemData, index) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <ItemContent key={`${itemData.key}_${index}`} data={itemData} />
-        ))}
-      </ScrollWrapper>
+export const ListItem = ({ item, getListItemContentData, contentWithScroll, ...rest }) => {
+  const content = getListItemContentData(item).map((itemData, index) => (
+    // eslint-disable-next-line react/no-array-index-key
+    <ItemContent key={`${itemData.key}_${index}`} data={itemData} />
+  ));
+
+  return (
+    <div className={cx('list-item')}>
+      <ControlPanel item={item} {...rest} />
+      <div className={cx('data')}>
+        {contentWithScroll ? (
+          <ScrollWrapper autoHeight autoHeightMax={90} hideTracksWhenNotNeeded>
+            {content}
+          </ScrollWrapper>
+        ) : (
+          content
+        )}
+      </div>
     </div>
-  </div>
-);
+  );
+};
+
 ListItem.propTypes = {
   ...ruleListItemPropTypes,
   item: PropTypes.object,
   id: PropTypes.number,
   maxItemOrder: PropTypes.number,
+  contentWithScroll: PropTypes.bool,
 };
 ListItem.defaultProps = {
   ...ruleListItemDefaultProps,
   item: {},
   id: 0,
   maxItemOrder: 0,
+  contentWithScroll: false,
 };

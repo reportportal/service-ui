@@ -75,6 +75,7 @@ export const MovableRuleList = ({ data, onMove, ...rest }) => {
               item={{ ...item, order: layout[index].y }}
               onMove={moveItem}
               maxItemOrder={maxItemOrder}
+              contentWithScroll
               {...rest}
             />
           </div>
