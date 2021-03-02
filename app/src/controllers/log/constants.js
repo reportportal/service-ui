@@ -46,6 +46,7 @@ export const LOG_PAGE_CHECKBOX_LABEL = 'History Across All Launches';
 export const FETCH_HISTORY_LINE = 'fetchHistoryLine';
 export const HISTORY_LINE_DEFAULT_VALUE = 'line';
 export const HISTORY_LINE_TABLE_MODE = 'table';
+export const SET_INCLUDE_ALL_LAUNCHES = 'SET_INCLUDE_ALL_LAUNCHES';
 
 export const LOG_LEVELS = [
   {

@@ -42,8 +42,8 @@ import {
   disablePrevItemLinkSelector,
   disableNextItemLinkSelector,
   DETAILED_LOG_VIEW,
-  HISTORY_LINE_TABLE_MODE,
-  HISTORY_LINE_DEFAULT_VALUE,
+  setIncludeAllLaunches,
+  includeAllLaunchesSelector,
 } from 'controllers/log';
 import { ParentInfo } from 'pages/inside/common/infoLine/parentInfo';
 import { stepPaginationSelector } from 'controllers/step';
@@ -69,9 +69,11 @@ const messages = defineMessages({
     nextItem: nextItemSelector(state),
     previousLinkDisable: disablePrevItemLinkSelector(state),
     nextLinkDisable: disableNextItemLinkSelector(state),
+    includeAllLaunches: includeAllLaunchesSelector(state),
   }),
   {
     fetchLineHistoryAction,
+    setIncludeAllLaunches,
     navigate: (linkAction) => linkAction,
     fetchTestItems: fetchTestItemsFromLogPageAction,
     restorePath: restorePathAction,
@@ -84,15 +86,11 @@ const messages = defineMessages({
 })
 @track()
 export class LogToolbar extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      includeAllLaunches: false,
-    };
-  }
   static propTypes = {
     intl: PropTypes.object.isRequired,
     fetchLineHistoryAction: PropTypes.func.isRequired,
+    setIncludeAllLaunches: PropTypes.func.isRequired,
+    includeAllLaunches: PropTypes.bool,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -149,10 +147,11 @@ export class LogToolbar extends Component {
     return fetchTestItems({ next: true });
   };
 
-  changeTypeOfHistory = (type) => {
-    const { tracking } = this.props;
+  changeHistoryLineMode = () => {
+    const { tracking, includeAllLaunches } = this.props;
     tracking.trackEvent(LOG_PAGE_EVENTS.HISTORY_LINE_MODE_CHB);
-    this.props.fetchLineHistoryAction(type);
+    this.props.setIncludeAllLaunches(!includeAllLaunches);
+    this.props.fetchLineHistoryAction();
   };
 
   render() {
@@ -167,6 +166,7 @@ export class LogToolbar extends Component {
       logViewMode,
       restorePath,
       parentItem,
+      includeAllLaunches,
     } = this.props;
     return (
       <div className={cx('log-toolbar')}>
@@ -177,15 +177,7 @@ export class LogToolbar extends Component {
           allEventClick={LOG_PAGE_EVENTS.ALL_LABEL_BREADCRUMB}
           onRestorePath={restorePath}
         />
-        <InputCheckbox
-          onChange={() => {
-            !this.state.includeAllLaunches
-              ? this.changeTypeOfHistory(HISTORY_LINE_TABLE_MODE)
-              : this.changeTypeOfHistory(HISTORY_LINE_DEFAULT_VALUE);
-            this.setState({ includeAllLaunches: !this.state.includeAllLaunches });
-          }}
-          value={this.state.includeAllLaunches}
-        >
+        <InputCheckbox onChange={this.changeHistoryLineMode} value={includeAllLaunches}>
           {intl.formatMessage(messages.historyAllLaunchesLabel)}
         </InputCheckbox>
         <div className={cx('action-buttons')}>

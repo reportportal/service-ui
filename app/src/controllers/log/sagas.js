@@ -38,6 +38,7 @@ import {
   STACK_TRACE_NAMESPACE,
   STACK_TRACE_PAGINATION_OFFSET,
   DETAILED_LOG_VIEW,
+  HISTORY_LINE_TABLE_MODE,
 } from './constants';
 import {
   activeLogIdSelector,
@@ -47,6 +48,7 @@ import {
   logStackTracePaginationSelector,
   logViewModeSelector,
   isLaunchLogSelector,
+  includeAllLaunchesSelector,
 } from './selectors';
 import {
   attachmentSagas,
@@ -105,13 +107,19 @@ function* fetchStackTrace({ payload: logItem }) {
   yield take(createFetchPredicate(STACK_TRACE_NAMESPACE));
 }
 
-function* fetchHistoryItems(action = { payload: HISTORY_LINE_DEFAULT_VALUE }) {
+function* fetchHistoryItems() {
   const activeProject = yield select(activeProjectSelector);
   const logItemId = yield select(logItemIdSelector);
-
+  const isAllLaunches = yield select(includeAllLaunchesSelector);
+  let payload;
+  if (isAllLaunches) {
+    payload = HISTORY_LINE_TABLE_MODE;
+  } else {
+    payload = HISTORY_LINE_DEFAULT_VALUE;
+  }
   const response = yield call(
     fetch,
-    URLS.testItemsHistory(activeProject, DEFAULT_HISTORY_DEPTH, action.payload, logItemId),
+    URLS.testItemsHistory(activeProject, DEFAULT_HISTORY_DEPTH, payload, logItemId),
   );
 
   yield put(fetchHistoryItemsSuccessAction(response.content));
