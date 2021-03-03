@@ -45,6 +45,7 @@ export const UPDATE_HISTORY_ITEM_ISSUES = 'UPDATE_HISTORY_ITEM_ISSUES';
 export const HISTORY_LINE_DEFAULT_VALUE = 'line';
 export const HISTORY_LINE_TABLE_MODE = 'table';
 export const SET_INCLUDE_ALL_LAUNCHES = 'SET_INCLUDE_ALL_LAUNCHES';
+export const HISTORY_LINE_LOAD_MORE_BTN_TITLE = '+9 More';
 
 export const LOG_LEVELS = [
   {

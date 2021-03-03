@@ -18,13 +18,21 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { historyItemsSelector, activeLogIdSelector, NAMESPACE } from 'controllers/log';
+import {
+  historyItemsSelector,
+  activeLogIdSelector,
+  NAMESPACE,
+  HISTORY_LINE_LOAD_MORE_BTN_TITLE,
+} from 'controllers/log';
 import { NOT_FOUND } from 'common/constants/testStatuses';
 import { connectRouter } from 'common/utils';
 import { PAGE_KEY, DEFAULT_PAGINATION } from 'controllers/pagination';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { HistoryLineItem } from './historyLineItem';
+import { GhostButton } from 'components/buttons/ghostButton/ghostButton';
+import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { DEFAULT_HISTORY_DEPTH } from 'controllers/log/constants';
 import styles from './historyLine.scss';
+import { HistoryLineItem } from './historyLineItem';
 
 const cx = classNames.bind(styles);
 
@@ -44,6 +52,10 @@ const cx = classNames.bind(styles);
   activeItemId: activeLogIdSelector(state),
 }))
 export class HistoryLine extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { isLoading: false };
+  }
   static propTypes = {
     historyItems: PropTypes.array,
     activeItemId: PropTypes.number,
@@ -66,6 +78,29 @@ export class HistoryLine extends Component {
       <div className={cx('history-line')}>
         <ScrollWrapper autoHeight hideTracksWhenNotNeeded>
           <div className={cx('history-line-items')}>
+            {historyItems.length === DEFAULT_HISTORY_DEPTH && (
+              <GhostButton
+                style={{
+                  width: '76px',
+                  height: '57px',
+                  padding: '11px 21px 10px',
+                  marginRight: '20px',
+                  fontSize: '13px',
+                  fontWeight: '600',
+                  border: 'none',
+                  borderRadius: '4px',
+                  boxShadow: '0 2px 6px 0 rgba(0, 0, 0, 0.07)',
+                }}
+              >
+                {this.state.isLoading ? (
+                  <div className={cx('spinner-wrapper')}>
+                    <SpinningPreloader />
+                  </div>
+                ) : (
+                  HISTORY_LINE_LOAD_MORE_BTN_TITLE
+                )}
+              </GhostButton>
+            )}
             {historyItems.map((item, index) => (
               <HistoryLineItem
                 key={item.id}

@@ -40,6 +40,7 @@ export {
   HISTORY_LINE_DEFAULT_VALUE,
   HISTORY_LINE_TABLE_MODE,
   SET_INCLUDE_ALL_LAUNCHES,
+  HISTORY_LINE_LOAD_MORE_BTN_TITLE,
 } from './constants';
 export {
   historyItemsSelector,
