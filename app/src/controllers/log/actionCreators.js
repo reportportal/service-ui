@@ -21,6 +21,7 @@ import {
   SET_LOG_PAGE_LOADING,
   FETCH_HISTORY_ITEMS_SUCCESS,
   UPDATE_HISTORY_ITEM_ISSUES,
+  SET_INCLUDE_ALL_LAUNCHES,
 } from './constants';
 
 export const fetchLogPageData = () => ({
@@ -51,6 +52,11 @@ export const clearLogPageStackTrace = () => ({
 export const setPageLoadingAction = (isLoading) => ({
   type: SET_LOG_PAGE_LOADING,
   payload: isLoading,
+});
+
+export const setIncludeAllLaunchesAction = (includeAllLaunches) => ({
+  type: SET_INCLUDE_ALL_LAUNCHES,
+  payload: includeAllLaunches,
 });
 
 export const updateHistoryItemIssuesAction = (issues) => ({

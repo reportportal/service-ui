@@ -20,7 +20,6 @@ import track from 'react-tracking';
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { Breadcrumbs } from 'components/main/breadcrumbs';
 import { GhostButton } from 'components/buttons/ghostButton';
@@ -42,10 +41,12 @@ import {
   disablePrevItemLinkSelector,
   disableNextItemLinkSelector,
   DETAILED_LOG_VIEW,
+  setIncludeAllLaunchesAction,
+  includeAllLaunchesSelector,
 } from 'controllers/log';
 import { ParentInfo } from 'pages/inside/common/infoLine/parentInfo';
 import { stepPaginationSelector } from 'controllers/step';
-import { InputCheckbox } from 'components/inputs/inputCheckbox/inputCheckbox';
+import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import styles from './logToolbar.scss';
 
 const cx = classNames.bind(styles);
@@ -67,8 +68,10 @@ const messages = defineMessages({
     nextItem: nextItemSelector(state),
     previousLinkDisable: disablePrevItemLinkSelector(state),
     nextLinkDisable: disableNextItemLinkSelector(state),
+    includeAllLaunches: includeAllLaunchesSelector(state),
   }),
   {
+    setIncludeAllLaunchesAction,
     navigate: (linkAction) => linkAction,
     fetchTestItems: fetchTestItemsFromLogPageAction,
     restorePath: restorePathAction,
@@ -81,14 +84,10 @@ const messages = defineMessages({
 })
 @track()
 export class LogToolbar extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      includeAllLaunches: false,
-    };
-  }
   static propTypes = {
     intl: PropTypes.object.isRequired,
+    setIncludeAllLaunchesAction: PropTypes.func.isRequired,
+    includeAllLaunches: PropTypes.bool,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -145,6 +144,12 @@ export class LogToolbar extends Component {
     return fetchTestItems({ next: true });
   };
 
+  changeHistoryLineMode = () => {
+    const { tracking, includeAllLaunches } = this.props;
+    tracking.trackEvent(LOG_PAGE_EVENTS.HISTORY_LINE_MODE_CHB);
+    this.props.setIncludeAllLaunchesAction(!includeAllLaunches);
+  };
+
   render() {
     const {
       intl,
@@ -157,6 +162,7 @@ export class LogToolbar extends Component {
       logViewMode,
       restorePath,
       parentItem,
+      includeAllLaunches,
     } = this.props;
     return (
       <div className={cx('log-toolbar')}>
@@ -167,34 +173,31 @@ export class LogToolbar extends Component {
           allEventClick={LOG_PAGE_EVENTS.ALL_LABEL_BREADCRUMB}
           onRestorePath={restorePath}
         />
-        <InputCheckbox
-          onChange={() => {
-            this.setState({ includeAllLaunches: !this.state.includeAllLaunches });
-          }}
-          value={this.state.includeAllLaunches}
-        >
-          {intl.formatMessage(messages.historyAllLaunchesLabel)}
-        </InputCheckbox>
         <div className={cx('action-buttons')}>
           {logViewMode === DETAILED_LOG_VIEW ? (
-            <div className={cx('action-button')}>
-              <div className={cx('left-arrow-button')}>
+            <>
+              <InputCheckbox onChange={this.changeHistoryLineMode} value={includeAllLaunches}>
+                {intl.formatMessage(messages.historyAllLaunchesLabel)}
+              </InputCheckbox>
+              <div className={cx('action-button')}>
+                <div className={cx('left-arrow-button')}>
+                  <GhostButton
+                    icon={LeftArrowIcon}
+                    disabled={previousLinkDisable}
+                    title={previousItem && previousItem.name}
+                    onClick={this.handleBackClick}
+                    transparentBackground
+                  />
+                </div>
                 <GhostButton
-                  icon={LeftArrowIcon}
-                  disabled={previousLinkDisable}
-                  title={previousItem && previousItem.name}
-                  onClick={this.handleBackClick}
+                  icon={RightArrowIcon}
+                  disabled={nextLinkDisable}
+                  title={nextItem && nextItem.name}
+                  onClick={this.handleForwardClick}
                   transparentBackground
                 />
               </div>
-              <GhostButton
-                icon={RightArrowIcon}
-                disabled={nextLinkDisable}
-                title={nextItem && nextItem.name}
-                onClick={this.handleForwardClick}
-                transparentBackground
-              />
-            </div>
+            </>
           ) : (
             parentItem && <ParentInfo parentItem={parentItem} />
           )}

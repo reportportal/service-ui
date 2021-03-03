@@ -27,6 +27,7 @@ import { logItemIdSelector, pathnameChangedSelector } from 'controllers/pages';
 import { debugModeSelector } from 'controllers/launch';
 import { createFetchPredicate, fetchDataAction } from 'controllers/fetch';
 import { fetch, isEmptyObject } from 'common/utils';
+import { HISTORY_LINE_DEFAULT_VALUE } from 'controllers/log';
 import { collectLogPayload } from './sagaUtils';
 import {
   ACTIVITY_NAMESPACE,
@@ -37,6 +38,8 @@ import {
   STACK_TRACE_NAMESPACE,
   STACK_TRACE_PAGINATION_OFFSET,
   DETAILED_LOG_VIEW,
+  HISTORY_LINE_TABLE_MODE,
+  SET_INCLUDE_ALL_LAUNCHES,
 } from './constants';
 import {
   activeLogIdSelector,
@@ -46,6 +49,7 @@ import {
   logStackTracePaginationSelector,
   logViewModeSelector,
   isLaunchLogSelector,
+  includeAllLaunchesSelector,
 } from './selectors';
 import {
   attachmentSagas,
@@ -107,10 +111,11 @@ function* fetchStackTrace({ payload: logItem }) {
 function* fetchHistoryItems() {
   const activeProject = yield select(activeProjectSelector);
   const logItemId = yield select(logItemIdSelector);
-
+  const isAllLaunches = yield select(includeAllLaunchesSelector);
+  const historyLineMode = isAllLaunches ? HISTORY_LINE_TABLE_MODE : HISTORY_LINE_DEFAULT_VALUE;
   const response = yield call(
     fetch,
-    URLS.testItemsHistory(activeProject, DEFAULT_HISTORY_DEPTH, 'line', logItemId),
+    URLS.testItemsHistory(activeProject, DEFAULT_HISTORY_DEPTH, historyLineMode, logItemId),
   );
 
   yield put(fetchHistoryItemsSuccessAction(response.content));
@@ -201,10 +206,15 @@ function* watchFetchLogPageStackTrace() {
   yield takeEvery(FETCH_LOG_PAGE_STACK_TRACE, fetchStackTrace);
 }
 
+function* watchFetchLineHistory() {
+  yield takeEvery(SET_INCLUDE_ALL_LAUNCHES, fetchHistoryItems);
+}
+
 export function* logSagas() {
   yield all([
     watchFetchLogPageData(),
     watchFetchLogPageStackTrace(),
+    watchFetchLineHistory(),
     attachmentSagas(),
     sauceLabsSagas(),
     nestedStepSagas(),
