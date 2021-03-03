@@ -57,8 +57,28 @@
   }
 }
 
+.launch-name-value {
+  max-width: 279px;
+  font-size: 13px;
+  font-family: $FONT-SEMIBOLD;
+  word-wrap: break-word;
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  @supports (display: -webkit-box) {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow-y: hidden;
+    text-overflow: initial;
+    white-space: normal;
+  }
+}
+
 .duration-block,
 .defect-type-block,
+.launch-name-block,
 .defect-asset {
   margin-top: 15px;
 }
