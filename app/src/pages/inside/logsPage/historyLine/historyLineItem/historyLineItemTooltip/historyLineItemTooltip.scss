@@ -58,7 +58,7 @@
 }
 
 .launch-name-value {
-  width: 279px;
+  max-width: 279px;
   font-size: 13px;
   font-family: $FONT-SEMIBOLD;
   word-wrap: break-word;
@@ -71,6 +71,8 @@
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow-y: hidden;
+    text-overflow: initial;
+    white-space: normal;
   }
 }
 
