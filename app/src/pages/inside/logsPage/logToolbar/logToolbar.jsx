@@ -173,31 +173,31 @@ export class LogToolbar extends Component {
           allEventClick={LOG_PAGE_EVENTS.ALL_LABEL_BREADCRUMB}
           onRestorePath={restorePath}
         />
-        {logViewMode === DETAILED_LOG_VIEW && (
-          <InputCheckbox onChange={this.changeHistoryLineMode} value={includeAllLaunches}>
-            {intl.formatMessage(messages.historyAllLaunchesLabel)}
-          </InputCheckbox>
-        )}
         <div className={cx('action-buttons')}>
           {logViewMode === DETAILED_LOG_VIEW ? (
-            <div className={cx('action-button')}>
-              <div className={cx('left-arrow-button')}>
+            <>
+              <InputCheckbox onChange={this.changeHistoryLineMode} value={includeAllLaunches}>
+                {intl.formatMessage(messages.historyAllLaunchesLabel)}
+              </InputCheckbox>
+              <div className={cx('action-button')}>
+                <div className={cx('left-arrow-button')}>
+                  <GhostButton
+                    icon={LeftArrowIcon}
+                    disabled={previousLinkDisable}
+                    title={previousItem && previousItem.name}
+                    onClick={this.handleBackClick}
+                    transparentBackground
+                  />
+                </div>
                 <GhostButton
-                  icon={LeftArrowIcon}
-                  disabled={previousLinkDisable}
-                  title={previousItem && previousItem.name}
-                  onClick={this.handleBackClick}
+                  icon={RightArrowIcon}
+                  disabled={nextLinkDisable}
+                  title={nextItem && nextItem.name}
+                  onClick={this.handleForwardClick}
                   transparentBackground
                 />
               </div>
-              <GhostButton
-                icon={RightArrowIcon}
-                disabled={nextLinkDisable}
-                title={nextItem && nextItem.name}
-                onClick={this.handleForwardClick}
-                transparentBackground
-              />
-            </div>
+            </>
           ) : (
             parentItem && <ParentInfo parentItem={parentItem} />
           )}
