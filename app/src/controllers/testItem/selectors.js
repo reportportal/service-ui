@@ -354,6 +354,8 @@ export const defectLinkSelector = createSelector(
       'filter.eq.hasStats': true,
       'filter.eq.hasChildren': false,
       'filter.in.issueType': getDefectsString(ownProps.defects),
+      'filter.has.attributeKey': ownProps.attributeKey,
+      'filter.has.attributeValue': ownProps.attributeValue,
       'filter.has.compositeAttribute': ownProps.compositeAttribute,
       providerType,
       [providerTypeModifierId]: ownProps[providerTypeModifierId],

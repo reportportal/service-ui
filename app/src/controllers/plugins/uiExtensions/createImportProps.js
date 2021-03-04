@@ -39,10 +39,10 @@ import { fetch } from 'common/utils/fetch';
 import { isEmptyObject } from 'common/utils/isEmptyObject';
 import {
   STATS_PB_TOTAL,
-  STATS_AB,
-  STATS_ND,
-  STATS_SI,
-  STATS_TI,
+  STATS_AB_TOTAL,
+  STATS_ND_TOTAL,
+  STATS_SI_TOTAL,
+  STATS_TI_TOTAL,
 } from 'common/constants/statistics';
 import { PASSED, FAILED, INTERRUPTED, SKIPPED } from 'common/constants/testStatuses';
 import {
@@ -207,10 +207,10 @@ export const createImportProps = (pluginName) => ({
     DEFECT_TYPES_SEQUENCE,
     TO_INVESTIGATE,
     STATS_PB_TOTAL,
-    STATS_AB,
-    STATS_ND,
-    STATS_SI,
-    STATS_TI,
+    STATS_AB_TOTAL,
+    STATS_ND_TOTAL,
+    STATS_SI_TOTAL,
+    STATS_TI_TOTAL,
     PASSED,
     FAILED,
     INTERRUPTED,
