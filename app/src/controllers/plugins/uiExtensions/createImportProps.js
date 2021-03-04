@@ -47,8 +47,12 @@ import {
   PROJECT_SETTINGS_TAB_PAGE,
   pluginRouteSelector,
 } from 'controllers/pages';
-import { attributesArray } from 'common/utils/validation/validate';
+import { attributesArray, isNotEmptyArray } from 'common/utils/validation/validate';
 import { requiredField } from 'common/utils/validation/commonValidators';
+import {
+  composeValidators,
+  bindMessageToValidator,
+} from 'common/utils/validation/validatorHelpers';
 import RefreshIcon from 'common/img/refresh-inline.svg';
 import PlusIcon from 'common/img/plus-button-inline.svg';
 import RemoveIcon from 'common/img/trashcan-inline.svg';
@@ -228,5 +232,10 @@ export const createImportProps = (pluginName) => ({
     RefreshIcon,
   },
   utils: { fetch, URLS, debounce, getGroupedDefectTypesOptions, isEmptyObject },
-  validators: { attributesArray, requiredField },
+  validators: {
+    attributesArray,
+    isNotEmptyArray,
+    requiredField,
+    helpers: { composeValidators, bindMessageToValidator },
+  },
 });
