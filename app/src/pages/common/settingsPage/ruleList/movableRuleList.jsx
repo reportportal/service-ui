@@ -67,7 +67,7 @@ export const MovableRuleList = ({ data, onMove, ...rest }) => {
         draggableHandle=".draggable-field"
         measureBeforeMount
         layout={layout}
-        rowHeight={162}
+        rowHeight={164}
       >
         {data.map((item, index) => (
           <div key={item.id || index}>

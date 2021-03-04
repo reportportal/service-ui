@@ -36,7 +36,7 @@ export const ListItem = ({ item, getListItemContentData, contentWithScroll, ...r
       <ControlPanel item={item} {...rest} />
       <div className={cx('data')}>
         {contentWithScroll ? (
-          <ScrollWrapper autoHeight autoHeightMax={102} hideTracksWhenNotNeeded>
+          <ScrollWrapper autoHeight autoHeightMax={106} hideTracksWhenNotNeeded>
             {content}
           </ScrollWrapper>
         ) : (
