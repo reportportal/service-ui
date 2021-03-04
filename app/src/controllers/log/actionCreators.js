@@ -41,8 +41,9 @@ export const fetchHistoryItemsSuccessAction = (items) => ({
   payload: items,
 });
 
-export const fetchMoreItemsHistoryAction = () => ({
+export const fetchMoreItemsHistoryAction = (loadMore) => ({
   type: HISTORY_LINE_FETCH_MORE_ITEMS,
+  payload: loadMore,
 });
 
 export const fetchLogPageStackTrace = (logItem) => ({

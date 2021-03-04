@@ -90,16 +90,15 @@ export class HistoryLine extends Component {
 
   loadMoreItems = () => {
     this.setState({ isLoading: true });
-    this.props.fetchMoreItemsHistoryAction();
+    this.props.fetchMoreItemsHistoryAction(true);
     this.setState({ isLoading: false });
   };
 
   render() {
     const { historyItems, activeItemId, changeActiveItem, intl } = this.props;
     const shouldShowLoadMore =
-      historyItems.length === DEFAULT_HISTORY_DEPTH ||
+      (historyItems.length !== 30 && historyItems.length === DEFAULT_HISTORY_DEPTH) ||
       (historyItems.length - DEFAULT_HISTORY_DEPTH) % NUMBER_OF_ITEMS_TO_LOAD === 0;
-
     return (
       <div className={cx('history-line')}>
         <ScrollWrapper autoHeight hideTracksWhenNotNeeded>
