@@ -40,6 +40,8 @@ import {
   DETAILED_LOG_VIEW,
   HISTORY_LINE_TABLE_MODE,
   SET_INCLUDE_ALL_LAUNCHES,
+  HISTORY_LINE_FETCH_MORE_ITEMS,
+  NUMBER_OF_ITEMS_TO_LOAD,
 } from './constants';
 import {
   activeLogIdSelector,
@@ -50,6 +52,7 @@ import {
   logViewModeSelector,
   isLaunchLogSelector,
   includeAllLaunchesSelector,
+  historyItemsSelector,
 } from './selectors';
 import {
   attachmentSagas,
@@ -71,6 +74,20 @@ function* fetchActivity() {
     fetchDataAction(ACTIVITY_NAMESPACE)(URLS.logItemActivity(activeProject, activeLogItemId)),
   );
   yield take(createFetchPredicate(ACTIVITY_NAMESPACE));
+}
+
+function* fetchMoreHistoryItems() {
+  const activeProject = yield select(activeProjectSelector);
+  const logItemId = yield select(logItemIdSelector);
+  const countOfHistoryItems = yield select(historyItemsSelector);
+  const historyDepth = countOfHistoryItems.length + NUMBER_OF_ITEMS_TO_LOAD;
+  const isAllLaunches = yield select(includeAllLaunchesSelector);
+  const historyLineMode = isAllLaunches ? HISTORY_LINE_TABLE_MODE : HISTORY_LINE_DEFAULT_VALUE;
+  const response = yield call(
+    fetch,
+    URLS.testItemsHistory(activeProject, historyDepth, historyLineMode, logItemId),
+  );
+  yield put(fetchHistoryItemsSuccessAction(response.content));
 }
 
 function* fetchLogItems(payload = {}) {
@@ -202,6 +219,10 @@ function* watchFetchLogPageData() {
   yield takeEvery(FETCH_LOG_PAGE_DATA, fetchLogPageData);
 }
 
+function* watchFetchMoreLineHistoryItems() {
+  yield takeEvery(HISTORY_LINE_FETCH_MORE_ITEMS, fetchMoreHistoryItems);
+}
+
 function* watchFetchLogPageStackTrace() {
   yield takeEvery(FETCH_LOG_PAGE_STACK_TRACE, fetchStackTrace);
 }
@@ -218,5 +239,6 @@ export function* logSagas() {
     attachmentSagas(),
     sauceLabsSagas(),
     nestedStepSagas(),
+    watchFetchMoreLineHistoryItems(),
   ]);
 }

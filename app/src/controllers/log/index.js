@@ -23,6 +23,7 @@ export {
   clearLogPageStackTrace,
   updateHistoryItemIssuesAction,
   setIncludeAllLaunchesAction,
+  fetchMoreItemsHistoryAction,
 } from './actionCreators';
 export { logReducer } from './reducer';
 export {
@@ -40,7 +41,7 @@ export {
   HISTORY_LINE_DEFAULT_VALUE,
   HISTORY_LINE_TABLE_MODE,
   SET_INCLUDE_ALL_LAUNCHES,
-  HISTORY_LINE_LOAD_MORE_BTN_TITLE,
+  NUMBER_OF_ITEMS_TO_LOAD,
 } from './constants';
 export {
   historyItemsSelector,
