@@ -26,14 +26,17 @@ const DEFAULT_TOOLTIP_WIDTH = 300;
 
 export const withTooltip = ({ TooltipComponent, data = {} }) => (WrappedComponent) =>
   class Wrapper extends Component {
-    static propTypes = {
-      showTooltip: PropTypes.bool,
-      children: PropTypes.node,
-    };
-    static defaultProps = {
-      showTooltip: true,
-      children: null,
-    };
+    constructor(props) {
+      super(props);
+      Wrapper.propTypes = {
+        showTooltip: PropTypes.bool,
+        children: PropTypes.node,
+      };
+      Wrapper.defaultProps = {
+        showTooltip: true,
+        children: null,
+      };
+    }
     state = {
       shown: false,
     };
