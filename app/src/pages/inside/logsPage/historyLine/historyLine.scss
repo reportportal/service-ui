@@ -44,14 +44,13 @@
   padding: 11px 21px 10px;
   margin-right: 20px;
   font-size: 13px;
-  font-weight: 600;
   border: none;
   color: $COLOR--topaz;
   border-radius: 4px;
   box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.07);
   outline: none;
   box-sizing: border-box;
-  font-family: $FONT-REGULAR;
+  font-family: $FONT-SEMIBOLD;
   letter-spacing: normal;
   line-height: 28px;
   white-space: nowrap;
@@ -62,13 +61,6 @@
   &:hover {
     background-color: lighten($COLOR--topaz, 10%);
     border-color: lighten($COLOR--topaz, 10%);
-    color: $COLOR--white-two;
-  }
-
-  &.active,
-  &:active {
-    background-color: $COLOR--topaz;
-    border-color: $COLOR--topaz;
     color: $COLOR--white-two;
   }
 }

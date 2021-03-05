@@ -111,22 +111,24 @@ function* fetchStackTrace({ payload: logItem }) {
   yield take(createFetchPredicate(STACK_TRACE_NAMESPACE));
 }
 
-function* fetchHistoryItems({ payload } = { payload: false }) {
+function* fetchHistoryItems(action = {}) {
+  const { payload = {} } = action;
+  const { loadMore = false, setLoading = () => {} } = payload;
   const activeProject = yield select(activeProjectSelector);
   const logItemId = yield select(logItemIdSelector);
-  const countOfHistoryItems = yield select(historyItemsSelector);
+  const historyItems = yield select(historyItemsSelector);
   const isAllLaunches = yield select(includeAllLaunchesSelector);
   const historyLineMode = isAllLaunches ? HISTORY_LINE_TABLE_MODE : HISTORY_LINE_DEFAULT_VALUE;
-  let historyDepth;
-  payload
-    ? (historyDepth = countOfHistoryItems.length + NUMBER_OF_ITEMS_TO_LOAD)
-    : (historyDepth = DEFAULT_HISTORY_DEPTH);
+  const historyDepth = loadMore
+    ? historyItems.length + NUMBER_OF_ITEMS_TO_LOAD
+    : DEFAULT_HISTORY_DEPTH;
   const response = yield call(
     fetch,
     URLS.testItemsHistory(activeProject, historyDepth, historyLineMode, logItemId),
   );
 
   yield put(fetchHistoryItemsSuccessAction(response.content));
+  setLoading(false);
 }
 
 function* fetchDetailsLog() {
