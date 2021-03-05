@@ -16,17 +16,34 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { injectIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { historyItemsSelector, activeLogIdSelector, NAMESPACE } from 'controllers/log';
+import {
+  historyItemsSelector,
+  activeLogIdSelector,
+  NAMESPACE,
+  NUMBER_OF_ITEMS_TO_LOAD,
+  fetchHistoryItemsAction,
+  HISTORY_DEPTH_LIMIT,
+} from 'controllers/log';
 import { NOT_FOUND } from 'common/constants/testStatuses';
 import { connectRouter } from 'common/utils';
 import { PAGE_KEY, DEFAULT_PAGINATION } from 'controllers/pagination';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { HistoryLineItem } from './historyLineItem';
+import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { DEFAULT_HISTORY_DEPTH } from 'controllers/log/constants';
 import styles from './historyLine.scss';
+import { HistoryLineItem } from './historyLineItem';
 
 const cx = classNames.bind(styles);
+
+const messages = defineMessages({
+  loadMoreItemsTitle: {
+    id: 'HistoryLine.loadMore',
+    defaultMessage: '+{number} More',
+  },
+});
 
 @connectRouter(
   undefined,
@@ -39,33 +56,70 @@ const cx = classNames.bind(styles);
   },
   { namespace: NAMESPACE },
 )
-@connect((state) => ({
-  historyItems: historyItemsSelector(state),
-  activeItemId: activeLogIdSelector(state),
-}))
+@connect(
+  (state) => ({
+    historyItems: historyItemsSelector(state),
+    activeItemId: activeLogIdSelector(state),
+  }),
+  {
+    fetchHistoryItemsAction,
+  },
+)
+@injectIntl
 export class HistoryLine extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { isLoading: false };
+  }
   static propTypes = {
+    intl: PropTypes.object.isRequired,
     historyItems: PropTypes.array,
     activeItemId: PropTypes.number,
     changeActiveItem: PropTypes.func,
+    fetchHistoryItemsAction: PropTypes.func,
   };
 
   static defaultProps = {
     historyItems: [],
     activeItemId: 0,
     changeActiveItem: () => {},
+    fetchHistoryItemsAction: () => {},
   };
 
   checkIfTheItemLinkIsActive = (item) =>
     item.id !== this.props.activeItemId && item.status !== NOT_FOUND;
 
-  render() {
-    const { historyItems, activeItemId, changeActiveItem } = this.props;
+  setLoading = (isLoading = false) => this.setState({ isLoading });
 
+  loadMoreItems = () => {
+    this.setState({ isLoading: true });
+    this.props.fetchHistoryItemsAction({ loadMore: true, setLoading: this.setLoading });
+  };
+
+  render() {
+    const { historyItems, activeItemId, changeActiveItem, intl } = this.props;
+    const loadedItems = historyItems.length - DEFAULT_HISTORY_DEPTH;
+    const shouldShowLoadMore =
+      historyItems.length < HISTORY_DEPTH_LIMIT &&
+      loadedItems >= 0 &&
+      loadedItems % NUMBER_OF_ITEMS_TO_LOAD === 0;
     return (
       <div className={cx('history-line')}>
-        <ScrollWrapper autoHeight hideTracksWhenNotNeeded>
+        <ScrollWrapper autoHeight hideTracksWhenNotNeeded scrollToRight>
           <div className={cx('history-line-items')}>
+            {shouldShowLoadMore && (
+              <button className={cx('load-more')} onClick={this.loadMoreItems}>
+                {this.state.isLoading ? (
+                  <div className={cx('spinner-wrapper')}>
+                    <SpinningPreloader />
+                  </div>
+                ) : (
+                  intl.formatMessage(messages.loadMoreItemsTitle, {
+                    number: NUMBER_OF_ITEMS_TO_LOAD,
+                  })
+                )}
+              </button>
+            )}
             {historyItems.map((item, index) => (
               <HistoryLineItem
                 key={item.id}

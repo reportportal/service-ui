@@ -30,3 +30,37 @@
   box-sizing: border-box;
   padding: 15px 0;
 }
+
+.spinner-wrapper {
+  margin-top: -8px;
+}
+
+.load-more {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  width: 76px;
+  height: 57px;
+  padding: 11px 21px 10px;
+  margin-right: 20px;
+  font-size: 13px;
+  border: none;
+  color: $COLOR--topaz;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.07);
+  outline: none;
+  box-sizing: border-box;
+  font-family: $FONT-SEMIBOLD;
+  letter-spacing: normal;
+  line-height: 28px;
+  white-space: nowrap;
+  text-shadow: none;
+  vertical-align: top;
+  background-color: $COLOR--white-two;
+  cursor: pointer;
+  &:hover {
+    background-color: lighten($COLOR--topaz, 10%);
+    border-color: lighten($COLOR--topaz, 10%);
+    color: $COLOR--white-two;
+  }
+}
