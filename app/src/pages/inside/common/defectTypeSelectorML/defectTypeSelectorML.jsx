@@ -25,8 +25,8 @@ import styles from './defectTypeSelectorML.scss';
 
 const cx = classNames.bind(styles);
 
-export const DefectTypeSelectorML = ({ onClickSelectDefectType, selectedItem }) => {
-  const defectTypes = useSelector((state) => defectTypesSelector(state));
+export const DefectTypeSelectorML = ({ selectDefectType, selectedItem }) => {
+  const defectTypes = useSelector(defectTypesSelector);
 
   return (
     <>
@@ -39,7 +39,7 @@ export const DefectTypeSelectorML = ({ onClickSelectDefectType, selectedItem }) 
                   <DefectTypeItemML
                     defectType={defectType}
                     isSelected={defectType.locator === selectedItem}
-                    onClick={() => onClickSelectDefectType(defectType.locator)}
+                    onClick={() => selectDefectType(defectType.locator)}
                   />
                 </div>
               ))}
@@ -51,10 +51,10 @@ export const DefectTypeSelectorML = ({ onClickSelectDefectType, selectedItem }) 
   );
 };
 DefectTypeSelectorML.propTypes = {
-  onClickSelectDefectType: PropTypes.func,
+  selectDefectType: PropTypes.func,
   selectedItem: PropTypes.string,
 };
 DefectTypeSelectorML.defaultProps = {
-  onClickSelectDefectType: null,
+  selectDefectType: null,
   selectedItem: '',
 };

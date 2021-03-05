@@ -59,7 +59,7 @@ storiesOf('Pages/Inside/Common/DefectTypeSelectorML', module)
   .add('with action', () => (
     <div>
       <WithState state={state}>
-        <DefectTypeSelectorML onClickSelectDefectType={action('onClick')} selectedItem={value} />
+        <DefectTypeSelectorML selectDefectType={action('onClick')} selectedItem={value} />
       </WithState>
     </div>
   ));
