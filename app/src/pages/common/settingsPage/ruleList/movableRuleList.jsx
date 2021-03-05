@@ -77,6 +77,7 @@ export const MovableRuleList = ({ data, onMove, ...rest }) => {
               onMove={moveItem}
               maxItemOrder={maxItemOrder}
               contentWithScroll
+              lineHeightVariant="large"
               {...rest}
             />
           </div>

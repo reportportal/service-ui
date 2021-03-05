@@ -21,8 +21,8 @@ import styles from './itemContent.scss';
 
 const cx = classNames.bind(styles);
 
-export const ItemContent = ({ data }) => (
-  <div className={cx('item-content')}>
+export const ItemContent = ({ data, lineHeightVariant }) => (
+  <div className={cx('item-content', { [`line-height-${lineHeightVariant}`]: lineHeightVariant })}>
     <span className={cx('data-name')}>{data.key}</span>
     {Array.isArray(data.value) ? (
       <div className={cx('data-value', 'multiple-data')}>
@@ -43,10 +43,12 @@ ItemContent.propTypes = {
     key: PropTypes.any,
     value: PropTypes.oneOfType([PropTypes.array, PropTypes.any]),
   }),
+  lineHeightVariant: PropTypes.string,
 };
-ItemContent.propTypes = {
+ItemContent.defaultProps = {
   data: {
     key: '',
     value: '',
   },
+  lineHeightVariant: '',
 };

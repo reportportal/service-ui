@@ -16,21 +16,19 @@
 
 .item-content {
   display: flex;
-  margin: 0 15px 5px 0;
+  margin: 0 15px 15px 0;
   font-size: 13px;
   font-family: $FONT-REGULAR;
 }
 
 .data-name {
   flex: 150px 0 0;
-  line-height: 26px;
   margin-right: 20px;
   color: $COLOR--gray-60;
 }
 
 .data-value {
   flex: 300px;
-  line-height: 26px;
   color: $COLOR--charcoal-grey;
   word-break: break-all;
 
@@ -46,5 +44,9 @@
 
 .data-value-item {
   flex: 22px;
+}
+
+.line-height-large {
+  margin: 0 15px 5px 0;
   line-height: 26px;
 }
