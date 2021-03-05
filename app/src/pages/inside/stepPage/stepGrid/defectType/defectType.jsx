@@ -51,7 +51,7 @@ export const AALabel = () => (
 
 export const PALabel = ({ patternTemplates }) => (
   <div className={cx('pa-label')}>
-    <PatternAnalyzedLabel patternTemplates={patternTemplates} />
+    <PatternAnalyzedLabel patternTemplates={patternTemplates} showTooltip />
   </div>
 );
 
