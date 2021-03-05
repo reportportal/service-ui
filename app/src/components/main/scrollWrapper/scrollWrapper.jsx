@@ -33,6 +33,7 @@ const cx = classNames.bind(styles);
 @track()
 export class ScrollWrapper extends Component {
   static propTypes = {
+    scrollToRight: PropTypes.bool,
     children: PropTypes.node,
     autoHide: PropTypes.bool,
     autoHeight: PropTypes.bool,
@@ -57,6 +58,7 @@ export class ScrollWrapper extends Component {
     }).isRequired,
   };
   static defaultProps = {
+    scrollToRight: false,
     children: null,
     autoHide: false,
     autoHeight: false,
@@ -83,6 +85,7 @@ export class ScrollWrapper extends Component {
   };
 
   componentDidMount() {
+    this.props.scrollToRight && this.scrollbars.scrollToRight();
     if (this.props.withBackToTop) {
       this.springSystem = new SpringSystem();
       this.spring = this.springSystem.createSpring();

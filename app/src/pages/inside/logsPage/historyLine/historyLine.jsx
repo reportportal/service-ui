@@ -68,7 +68,7 @@ const messages = defineMessages({
 export class HistoryLine extends Component {
   constructor(props) {
     super(props);
-    this.state = { isLoading: false };
+    this.state = { isLoading: false, scrollToRight: true };
   }
   static propTypes = {
     intl: PropTypes.object.isRequired,
@@ -89,6 +89,7 @@ export class HistoryLine extends Component {
     item.id !== this.props.activeItemId && item.status !== NOT_FOUND;
 
   loadMoreItems = () => {
+    this.setState({ scrollToRight: false });
     this.setState({ isLoading: true });
     this.props.fetchMoreItemsHistoryAction(true);
     this.setState({ isLoading: false });
@@ -101,7 +102,7 @@ export class HistoryLine extends Component {
       (historyItems.length - DEFAULT_HISTORY_DEPTH) % NUMBER_OF_ITEMS_TO_LOAD === 0;
     return (
       <div className={cx('history-line')}>
-        <ScrollWrapper autoHeight hideTracksWhenNotNeeded>
+        <ScrollWrapper autoHeight hideTracksWhenNotNeeded scrollToRight>
           <div className={cx('history-line-items')}>
             {shouldShowLoadMore && (
               <button className={cx('load-more')} onClick={this.loadMoreItems}>
