@@ -8,4 +8,4 @@ Has height and width adjusted by content.
 
 ### Events:
 
-- **onClickSelectDefectType**
+- **selectDefectType**
