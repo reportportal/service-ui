@@ -113,7 +113,7 @@ function* fetchStackTrace({ payload: logItem }) {
 
 function* fetchHistoryItems(action = {}) {
   const { payload = {} } = action;
-  const { loadMore = false, setLoading = () => {} } = payload;
+  const { loadMore = false, setLoading = null } = payload;
   const activeProject = yield select(activeProjectSelector);
   const logItemId = yield select(logItemIdSelector);
   const historyItems = yield select(historyItemsSelector);
@@ -128,7 +128,7 @@ function* fetchHistoryItems(action = {}) {
   );
 
   yield put(fetchHistoryItemsSuccessAction(response.content));
-  setLoading(false);
+  setLoading && setLoading(false);
 }
 
 function* fetchDetailsLog() {

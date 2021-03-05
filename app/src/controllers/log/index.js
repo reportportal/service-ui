@@ -23,7 +23,7 @@ export {
   clearLogPageStackTrace,
   updateHistoryItemIssuesAction,
   setIncludeAllLaunchesAction,
-  fetchMoreHistoryItemsAction,
+  fetchHistoryItemsAction,
 } from './actionCreators';
 export { logReducer } from './reducer';
 export {

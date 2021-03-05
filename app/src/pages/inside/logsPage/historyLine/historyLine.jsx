@@ -24,7 +24,7 @@ import {
   activeLogIdSelector,
   NAMESPACE,
   NUMBER_OF_ITEMS_TO_LOAD,
-  fetchMoreHistoryItemsAction,
+  fetchHistoryItemsAction,
 } from 'controllers/log';
 import { NOT_FOUND } from 'common/constants/testStatuses';
 import { connectRouter } from 'common/utils';
@@ -61,28 +61,28 @@ const messages = defineMessages({
     activeItemId: activeLogIdSelector(state),
   }),
   {
-    fetchMoreHistoryItemsAction,
+    fetchHistoryItemsAction,
   },
 )
 @injectIntl
 export class HistoryLine extends Component {
   constructor(props) {
     super(props);
-    this.state = { isLoading: false, scrollToRight: true };
+    this.state = { isLoading: false };
   }
   static propTypes = {
     intl: PropTypes.object.isRequired,
     historyItems: PropTypes.array,
     activeItemId: PropTypes.number,
     changeActiveItem: PropTypes.func,
-    fetchMoreHistoryItemsAction: PropTypes.func,
+    fetchHistoryItemsAction: PropTypes.func,
   };
 
   static defaultProps = {
     historyItems: [],
     activeItemId: 0,
     changeActiveItem: () => {},
-    fetchMoreHistoryItemsAction: () => {},
+    fetchHistoryItemsAction: () => {},
   };
 
   checkIfTheItemLinkIsActive = (item) =>
@@ -91,9 +91,8 @@ export class HistoryLine extends Component {
   setLoading = (isLoading = false) => this.setState({ isLoading });
 
   loadMoreItems = () => {
-    this.setState({ scrollToRight: false });
     this.setState({ isLoading: true });
-    this.props.fetchMoreHistoryItemsAction({ loadMore: true, setLoading: this.setLoading });
+    this.props.fetchHistoryItemsAction({ loadMore: true, setLoading: this.setLoading });
   };
 
   render() {

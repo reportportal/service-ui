@@ -41,7 +41,7 @@ export const fetchHistoryItemsSuccessAction = (items) => ({
   payload: items,
 });
 
-export const fetchMoreHistoryItemsAction = (payload) => ({
+export const fetchHistoryItemsAction = (payload) => ({
   type: HISTORY_LINE_FETCH_MORE_ITEMS,
   payload,
 });
