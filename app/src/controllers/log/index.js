@@ -42,6 +42,7 @@ export {
   HISTORY_LINE_TABLE_MODE,
   SET_INCLUDE_ALL_LAUNCHES,
   NUMBER_OF_ITEMS_TO_LOAD,
+  HISTORY_DEPTH_LIMIT,
 } from './constants';
 export {
   historyItemsSelector,

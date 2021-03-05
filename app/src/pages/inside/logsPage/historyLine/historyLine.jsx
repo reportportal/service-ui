@@ -25,6 +25,7 @@ import {
   NAMESPACE,
   NUMBER_OF_ITEMS_TO_LOAD,
   fetchHistoryItemsAction,
+  HISTORY_DEPTH_LIMIT,
 } from 'controllers/log';
 import { NOT_FOUND } from 'common/constants/testStatuses';
 import { connectRouter } from 'common/utils';
@@ -97,9 +98,11 @@ export class HistoryLine extends Component {
 
   render() {
     const { historyItems, activeItemId, changeActiveItem, intl } = this.props;
+    const loadedItems = historyItems.length - DEFAULT_HISTORY_DEPTH;
     const shouldShowLoadMore =
-      (historyItems.length !== 30 && historyItems.length === DEFAULT_HISTORY_DEPTH) ||
-      (historyItems.length - DEFAULT_HISTORY_DEPTH) % NUMBER_OF_ITEMS_TO_LOAD === 0;
+      historyItems.length < HISTORY_DEPTH_LIMIT &&
+      loadedItems >= 0 &&
+      loadedItems % NUMBER_OF_ITEMS_TO_LOAD === 0;
     return (
       <div className={cx('history-line')}>
         <ScrollWrapper autoHeight hideTracksWhenNotNeeded scrollToRight>
