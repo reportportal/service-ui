@@ -25,10 +25,20 @@ import styles from './listItem.scss';
 
 const cx = classNames.bind(styles);
 
-export const ListItem = ({ item, getListItemContentData, contentWithScroll, ...rest }) => {
+export const ListItem = ({
+  item,
+  getListItemContentData,
+  contentWithScroll,
+  lineHeightVariant,
+  ...rest
+}) => {
   const content = getListItemContentData(item).map((itemData, index) => (
-    // eslint-disable-next-line react/no-array-index-key
-    <ItemContent key={`${itemData.key}_${index}`} data={itemData} />
+    <ItemContent
+      // eslint-disable-next-line react/no-array-index-key
+      key={`${itemData.key}_${index}`}
+      data={itemData}
+      lineHeightVariant={lineHeightVariant}
+    />
   ));
 
   return (
@@ -36,7 +46,7 @@ export const ListItem = ({ item, getListItemContentData, contentWithScroll, ...r
       <ControlPanel item={item} {...rest} />
       <div className={cx('data')}>
         {contentWithScroll ? (
-          <ScrollWrapper autoHeight autoHeightMax={102} hideTracksWhenNotNeeded>
+          <ScrollWrapper autoHeight autoHeightMax={106} hideTracksWhenNotNeeded>
             {content}
           </ScrollWrapper>
         ) : (
@@ -53,6 +63,7 @@ ListItem.propTypes = {
   id: PropTypes.number,
   maxItemOrder: PropTypes.number,
   contentWithScroll: PropTypes.bool,
+  lineHeightVariant: PropTypes.string,
 };
 ListItem.defaultProps = {
   ...ruleListItemDefaultProps,
@@ -60,4 +71,5 @@ ListItem.defaultProps = {
   id: 0,
   maxItemOrder: 0,
   contentWithScroll: false,
+  lineHeightVariant: '',
 };
