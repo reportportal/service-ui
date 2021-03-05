@@ -43,6 +43,7 @@ export {
   SET_INCLUDE_ALL_LAUNCHES,
   NUMBER_OF_ITEMS_TO_LOAD,
   HISTORY_DEPTH_LIMIT,
+  DEFAULT_HISTORY_DEPTH,
 } from './constants';
 export {
   historyItemsSelector,

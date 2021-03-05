@@ -24,15 +24,15 @@ import {
   activeLogIdSelector,
   NAMESPACE,
   NUMBER_OF_ITEMS_TO_LOAD,
-  fetchHistoryItemsAction,
+  DEFAULT_HISTORY_DEPTH,
   HISTORY_DEPTH_LIMIT,
+  fetchHistoryItemsAction,
 } from 'controllers/log';
 import { NOT_FOUND } from 'common/constants/testStatuses';
 import { connectRouter } from 'common/utils';
 import { PAGE_KEY, DEFAULT_PAGINATION } from 'controllers/pagination';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { DEFAULT_HISTORY_DEPTH } from 'controllers/log/constants';
 import styles from './historyLine.scss';
 import { HistoryLineItem } from './historyLineItem';
 
@@ -89,11 +89,16 @@ export class HistoryLine extends Component {
   checkIfTheItemLinkIsActive = (item) =>
     item.id !== this.props.activeItemId && item.status !== NOT_FOUND;
 
-  setLoading = (isLoading = false) => this.setState({ isLoading });
+  finishLoading = () => {
+    this.setState({ isLoading: false });
+  };
 
   loadMoreItems = () => {
+    if (this.state.isLoading) {
+      return;
+    }
     this.setState({ isLoading: true });
-    this.props.fetchHistoryItemsAction({ loadMore: true, setLoading: this.setLoading });
+    this.props.fetchHistoryItemsAction(true, this.finishLoading);
   };
 
   render() {
@@ -105,14 +110,12 @@ export class HistoryLine extends Component {
       loadedItems % NUMBER_OF_ITEMS_TO_LOAD === 0;
     return (
       <div className={cx('history-line')}>
-        <ScrollWrapper autoHeight hideTracksWhenNotNeeded scrollToRight>
+        <ScrollWrapper autoHeight hideTracksWhenNotNeeded initialScrollRight>
           <div className={cx('history-line-items')}>
             {shouldShowLoadMore && (
               <button className={cx('load-more')} onClick={this.loadMoreItems}>
                 {this.state.isLoading ? (
-                  <div className={cx('spinner-wrapper')}>
-                    <SpinningPreloader />
-                  </div>
+                  <SpinningPreloader />
                 ) : (
                   intl.formatMessage(messages.loadMoreItemsTitle, {
                     number: NUMBER_OF_ITEMS_TO_LOAD,

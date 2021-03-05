@@ -40,7 +40,7 @@ import {
   DETAILED_LOG_VIEW,
   HISTORY_LINE_TABLE_MODE,
   SET_INCLUDE_ALL_LAUNCHES,
-  HISTORY_LINE_FETCH_MORE_ITEMS,
+  FETCH_HISTORY_LINE_ITEMS,
   NUMBER_OF_ITEMS_TO_LOAD,
 } from './constants';
 import {
@@ -111,9 +111,8 @@ function* fetchStackTrace({ payload: logItem }) {
   yield take(createFetchPredicate(STACK_TRACE_NAMESPACE));
 }
 
-function* fetchHistoryItems(action = {}) {
-  const { payload = {} } = action;
-  const { loadMore = false, setLoading = null } = payload;
+function* fetchHistoryItems({ payload } = { payload: {} }) {
+  const { loadMore, callback } = payload;
   const activeProject = yield select(activeProjectSelector);
   const logItemId = yield select(logItemIdSelector);
   const historyItems = yield select(historyItemsSelector);
@@ -128,7 +127,7 @@ function* fetchHistoryItems(action = {}) {
   );
 
   yield put(fetchHistoryItemsSuccessAction(response.content));
-  setLoading && setLoading(false);
+  callback && callback();
 }
 
 function* fetchDetailsLog() {
@@ -217,7 +216,7 @@ function* watchFetchLogPageStackTrace() {
 }
 
 function* watchFetchLineHistory() {
-  yield takeEvery([SET_INCLUDE_ALL_LAUNCHES, HISTORY_LINE_FETCH_MORE_ITEMS], fetchHistoryItems);
+  yield takeEvery([SET_INCLUDE_ALL_LAUNCHES, FETCH_HISTORY_LINE_ITEMS], fetchHistoryItems);
 }
 
 export function* logSagas() {

@@ -22,7 +22,7 @@ import {
   FETCH_HISTORY_ITEMS_SUCCESS,
   UPDATE_HISTORY_ITEM_ISSUES,
   SET_INCLUDE_ALL_LAUNCHES,
-  HISTORY_LINE_FETCH_MORE_ITEMS,
+  FETCH_HISTORY_LINE_ITEMS,
 } from './constants';
 
 export const fetchLogPageData = () => ({
@@ -41,9 +41,9 @@ export const fetchHistoryItemsSuccessAction = (items) => ({
   payload: items,
 });
 
-export const fetchHistoryItemsAction = (payload) => ({
-  type: HISTORY_LINE_FETCH_MORE_ITEMS,
-  payload,
+export const fetchHistoryItemsAction = (loadMore = false, callback) => ({
+  type: FETCH_HISTORY_LINE_ITEMS,
+  payload: { loadMore, callback },
 });
 
 export const fetchLogPageStackTrace = (logItem) => ({
