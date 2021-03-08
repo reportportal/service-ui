@@ -41,8 +41,21 @@ storiesOf('Pages/Inside/Common/Accordion', module)
       <Accordion renderedData={data} />
     </div>
   ))
-  .add('firstTabActive', () => (
-    <div>
-      <Accordion renderedData={data} firstTabActive />
-    </div>
-  ));
+  .add('with isActive true for all tabs', () => {
+    const changedData = data.map((tab) => ({ ...tab, isActive: true }));
+    return (
+      <div>
+        <Accordion renderedData={changedData} />
+      </div>
+    );
+  })
+  .add('renderedData without isActive field', () => {
+    const changedData = data.map((tab) =>
+      Object.fromEntries(Object.entries(tab).filter(([key]) => key !== 'isActive')),
+    );
+    return (
+      <div>
+        <Accordion renderedData={changedData} />
+      </div>
+    );
+  });

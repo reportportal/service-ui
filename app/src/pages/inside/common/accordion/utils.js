@@ -14,18 +14,7 @@
  * limitations under the License.
  */
 
-export const data = [
-  {
-    id: '0',
-    isActive: false,
-    title: 'first tab',
-    content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rerum, tempora!',
-  },
-  {
-    id: 1,
-    isActive: false,
-    title: 'second tab',
-    content:
-      'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores, excepturi itaque nobis recusandae rerum voluptatibus voluptatum. Beatae fugiat harum magnam.',
-  },
-];
+export const getTabsState = (data) =>
+  data.reduce((obj, { id, isActive }) => {
+    return { ...obj, [id]: isActive || false };
+  }, {});

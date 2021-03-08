@@ -22,44 +22,41 @@ import styles from './accordionTab.scss';
 const cx = classNames.bind(styles);
 
 export const AccordionTab = ({
-  section,
-  activeTabIdx,
-  setActiveTabIdx,
-  currentTabIdx,
+  tab,
+  tabsState,
+  setTabsState,
   headerClassNames,
   contentClassNames,
 }) => {
-  const { title, content } = section;
+  const { id, title, content } = tab;
   const clickHandler = () =>
-    activeTabIdx === currentTabIdx ? setActiveTabIdx(null) : setActiveTabIdx(currentTabIdx);
+    tabsState[id]
+      ? setTabsState({ ...tabsState, [id]: false })
+      : setTabsState({ ...tabsState, [id]: true });
 
   return (
     <>
       <div
-        className={cx('header', { open: activeTabIdx === currentTabIdx }, headerClassNames)}
+        className={cx('header', { open: tabsState[id] }, headerClassNames)}
         onClick={clickHandler}
       >
         {title}
       </div>
-      <div className={cx('content', { show: activeTabIdx === currentTabIdx }, contentClassNames)}>
-        {content}
-      </div>
+      <div className={cx('content', { show: tabsState[id] }, contentClassNames)}>{content}</div>
     </>
   );
 };
 AccordionTab.propTypes = {
-  section: PropTypes.object,
-  activeTabIdx: PropTypes.oneOfType([PropTypes.number, PropTypes.instanceOf(null)]),
-  setActiveTabIdx: PropTypes.func,
-  currentTabIdx: PropTypes.number,
+  tab: PropTypes.object,
+  tabsState: PropTypes.objectOf(PropTypes.bool),
+  setTabsState: PropTypes.func,
   headerClassNames: PropTypes.string,
   contentClassNames: PropTypes.string,
 };
 AccordionTab.defautProps = {
-  section: {},
-  activeTabIdx: null,
-  setActiveTabIdx: null,
-  currentTabIdx: 0,
+  tab: {},
+  tabsState: {},
+  setTabsState: null,
   headerClassNames: '',
   contentClassNames: '',
 };

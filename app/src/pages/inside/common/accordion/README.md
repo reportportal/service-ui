@@ -1,14 +1,12 @@
 ## **Accordion component**
 
 Has height and width adjusted by content.
-By default, all tabs a collapsed.
-Only one tab can be open at the same time.
+All tabs a collapsed by default.
 Have no paddings, margins, background.
 Content align by tab title.
 
 ### Props:
 
-- **renderedData**: _array_ [{title<text | component>, content<text | component>}]
-- **firstTabActive**: _boolean_, optional, default = false
+- **renderedData**: _array_ [{id, isActive<boolean>, title<text | component>, content<text | component>}]
 - **headerClassNames**: _string_, optional, default = ''
 - **contentClassNames**: _string_, optional, default = ''

@@ -17,29 +17,25 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { getTabsState } from 'pages/inside/common/accordion/utils';
 import { AccordionTab } from './accordionTab';
 import styles from './accordion.scss';
 
 const cx = classNames.bind(styles);
 
-export const Accordion = ({
-  renderedData,
-  firstTabActive,
-  headerClassNames,
-  contentClassNames,
-}) => {
-  const [activeTabIdx, setActiveTabIdx] = useState(firstTabActive ? 0 : null);
+export const Accordion = ({ renderedData, headerClassNames, contentClassNames }) => {
+  const initialTabsState = getTabsState(renderedData);
+  const [tabsState, setTabsState] = useState(initialTabsState);
 
   return (
     <div className={cx('accordion')}>
-      {renderedData &&
-        renderedData.map((section, index) => (
+      {renderedData.length > 0 &&
+        renderedData.map((tab) => (
           <AccordionTab
-            section={section}
-            activeTabIdx={activeTabIdx}
-            setActiveTabIdx={setActiveTabIdx}
-            key={index.toString()}
-            currentTabIdx={index}
+            tab={tab}
+            tabsState={tabsState}
+            setTabsState={setTabsState}
+            key={tab.id}
             headerClassNames={headerClassNames}
             contentClassNames={contentClassNames}
           />
@@ -49,13 +45,11 @@ export const Accordion = ({
 };
 Accordion.propTypes = {
   renderedData: PropTypes.array,
-  firstTabActive: PropTypes.bool,
   headerClassNames: PropTypes.string,
   contentClassNames: PropTypes.string,
 };
 Accordion.defaultProps = {
   renderedData: [],
-  firstTabActive: false,
   headerClassNames: '',
   contentClassNames: '',
 };

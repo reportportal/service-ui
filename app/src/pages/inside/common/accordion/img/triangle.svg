@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="8px" height="12px" viewBox="0 0 8 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>Triangle</title>
-    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Triangle" fill="#1A9CB0">
-            <path d="M4.8,3.06666667 L8.8,8.4 C9.13137085,8.8418278 9.0418278,9.46862915 8.6,9.8 C8.42690383,9.92982213 8.21637021,10 8,10 L8.8817842e-16,10 C-0.55228475,10 -1,9.55228475 -1,9 C-1,8.78362979 -0.929822128,8.57309617 -0.8,8.4 L3.2,3.06666667 C3.53137085,2.62483887 4.1581722,2.53529582 4.6,2.86666667 C4.67580567,2.92352092 4.74314575,2.990861 4.8,3.06666667 Z" transform="translate(4.000000, 6.000000) rotate(-270.000000) translate(-4.000000, -6.000000) "></path>
-        </g>
-    </g>
-</svg>

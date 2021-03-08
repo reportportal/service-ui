@@ -31,10 +31,10 @@
   &:before {
     content: '';
     position: absolute;
-    background-image: url(./../img/triangle.svg);
-    width: 8px;
-    height: 12px;
     left: 5px;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 8px solid $COLOR--topaz;
     transition: all 0.2s ease;
   }
 }
