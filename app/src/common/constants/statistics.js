@@ -24,3 +24,8 @@ export const STATS_TOTAL = 'statistics$executions$total';
 export const STATS_FAILED = 'statistics$executions$failed';
 export const STATS_PASSED = 'statistics$executions$passed';
 export const STATS_SKIPPED = 'statistics$executions$skipped';
+
+export const STATS_AB = 'statistics$defects$automation_bug';
+export const STATS_SI = 'statistics$defects$system_issue';
+export const STATS_TI = 'statistics$defects$to_investigate';
+export const STATS_ND = 'statistics$defects$no_defect';
