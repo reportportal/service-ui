@@ -69,7 +69,11 @@ const messages = defineMessages({
 export class HistoryLine extends Component {
   constructor(props) {
     super(props);
-    this.state = { isLoading: false };
+    this.state = {
+      isLoading: false,
+      prevItemsCount: DEFAULT_HISTORY_DEPTH,
+      shouldShowLoadMore: false,
+    };
   }
   static propTypes = {
     intl: PropTypes.object.isRequired,
@@ -90,29 +94,38 @@ export class HistoryLine extends Component {
     item.id !== this.props.activeItemId && item.status !== NOT_FOUND;
 
   finishLoading = () => {
-    this.setState({ isLoading: false });
-  };
-
-  loadMoreItems = () => {
-    if (this.state.isLoading) {
-      return;
-    }
-    this.setState({ isLoading: true });
-    this.props.fetchHistoryItemsAction(true, this.finishLoading);
-  };
-
-  render() {
-    const { historyItems, activeItemId, changeActiveItem, intl } = this.props;
+    const { historyItems } = this.props;
     const loadedItems = historyItems.length - DEFAULT_HISTORY_DEPTH;
     const shouldShowLoadMore =
+      this.state.prevItemsCount !== historyItems.length &&
       historyItems.length < HISTORY_DEPTH_LIMIT &&
       loadedItems >= 0 &&
       loadedItems % NUMBER_OF_ITEMS_TO_LOAD === 0;
+    this.setState({ isLoading: false, shouldShowLoadMore });
+  };
+
+  loadMoreItems = () => {
+    const { historyItems } = this.props;
+    if (this.state.isLoading) {
+      return;
+    }
+    this.setState({ isLoading: true, prevItemsCount: historyItems.length });
+    this.props.fetchHistoryItemsAction(true, this.finishLoading);
+  };
+
+  componentDidMount() {
+    const { historyItems } = this.props;
+    const loadedItems = historyItems.length - DEFAULT_HISTORY_DEPTH;
+    this.setState({ shouldShowLoadMore: loadedItems === 0 });
+  }
+
+  render() {
+    const { historyItems, activeItemId, changeActiveItem, intl } = this.props;
     return (
       <div className={cx('history-line')}>
         <ScrollWrapper autoHeight hideTracksWhenNotNeeded initialScrollRight>
           <div className={cx('history-line-items')}>
-            {shouldShowLoadMore && (
+            {this.state.shouldShowLoadMore && (
               <button className={cx('load-more')} onClick={this.loadMoreItems}>
                 {this.state.isLoading ? (
                   <SpinningPreloader />
