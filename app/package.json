@@ -40,7 +40,7 @@
     "core-js": "2.5.7",
     "d3": "5.9.2",
     "d3-selection": "1.4.0",
-    "dompurify": "2.0.7",
+    "dompurify": "2.0.17",
     "dotenv": "5.0.1",
     "downshift": "3.4.8",
     "fast-deep-equal": "2.0.1",
