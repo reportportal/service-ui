@@ -270,6 +270,6 @@ export const createImportProps = (pluginName) => ({
     attributesArray,
     isNotEmptyArray,
     requiredField,
+    helpers: { composeValidators, bindMessageToValidator },
   },
-  helpers: { composeValidators, bindMessageToValidator },
 });
