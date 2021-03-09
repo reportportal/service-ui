@@ -69,7 +69,11 @@ const messages = defineMessages({
 export class HistoryLine extends Component {
   constructor(props) {
     super(props);
-    this.state = { isLoading: false, prevItems: DEFAULT_HISTORY_DEPTH, shouldShowLoadMore: false };
+    this.state = {
+      isLoading: false,
+      prevItemsCount: DEFAULT_HISTORY_DEPTH,
+      shouldShowLoadMore: false,
+    };
   }
   static propTypes = {
     intl: PropTypes.object.isRequired,
@@ -90,7 +94,14 @@ export class HistoryLine extends Component {
     item.id !== this.props.activeItemId && item.status !== NOT_FOUND;
 
   finishLoading = () => {
-    this.setState({ isLoading: false });
+    const { historyItems } = this.props;
+    const loadedItems = historyItems.length - DEFAULT_HISTORY_DEPTH;
+    const shouldShowLoadMore =
+      this.state.prevItemsCount !== historyItems.length &&
+      historyItems.length < HISTORY_DEPTH_LIMIT &&
+      loadedItems >= 0 &&
+      loadedItems % NUMBER_OF_ITEMS_TO_LOAD === 0;
+    this.setState({ isLoading: false, shouldShowLoadMore });
   };
 
   loadMoreItems = () => {
@@ -98,16 +109,8 @@ export class HistoryLine extends Component {
     if (this.state.isLoading) {
       return;
     }
-    this.setState({ isLoading: true });
-    this.setState({ prevItems: historyItems.length });
+    this.setState({ isLoading: true, prevItemsCount: historyItems.length });
     this.props.fetchHistoryItemsAction(true, this.finishLoading);
-    const loadedItems = historyItems.length - DEFAULT_HISTORY_DEPTH;
-    const shouldShowLoadMore =
-      this.state.prevItems !== historyItems.length &&
-      historyItems.length < HISTORY_DEPTH_LIMIT &&
-      loadedItems >= 0 &&
-      loadedItems % NUMBER_OF_ITEMS_TO_LOAD === 0;
-    this.setState({ shouldShowLoadMore });
   };
 
   componentDidMount() {
