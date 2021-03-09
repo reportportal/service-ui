@@ -56,7 +56,7 @@ AccordionTab.propTypes = {
 AccordionTab.defautProps = {
   tab: {},
   tabsState: {},
-  setTabsState: null,
+  setTabsState: () => {},
   headerClassNames: '',
   contentClassNames: '',
 };

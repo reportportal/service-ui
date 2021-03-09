@@ -1,7 +1,7 @@
 ## **Accordion component**
 
 Has height and width adjusted by content.
-All tabs a collapsed by default.
+All tabs are collapsed by default.
 Have no paddings, margins, background.
 Content align by tab title.
 
