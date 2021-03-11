@@ -56,6 +56,10 @@ const messages = defineMessages({
     id: 'ViewTabs.historyView',
     defaultMessage: 'History',
   },
+  uniqueErrorsViewTooltip: {
+    id: 'ViewTabs.uniqueErrorsViewTooltip',
+    defaultMessage: 'A new functionality will be available in the next version',
+  },
 });
 
 @connect((state) => ({
@@ -110,7 +114,7 @@ export class ViewTabs extends Component {
       {
         id: UNIQUE_ERRORS_VIEW,
         title: formatMessage(messages[UNIQUE_ERRORS_VIEW]),
-        link: listViewLink,
+        link: {},
         icon: ListIcon,
         available: isStepLevel && !isTestItemsList,
       },
@@ -134,7 +138,10 @@ export class ViewTabs extends Component {
   };
 
   render() {
-    const { viewMode } = this.props;
+    const {
+      viewMode,
+      intl: { formatMessage },
+    } = this.props;
     const pages = this.getPages();
 
     return (
@@ -143,7 +150,13 @@ export class ViewTabs extends Component {
           <Link
             key={page.id}
             to={page.link}
-            className={cx('view-tab-link', { active: viewMode === page.id })}
+            title={
+              page.id === UNIQUE_ERRORS_VIEW && formatMessage(messages.uniqueErrorsViewTooltip)
+            }
+            className={cx('view-tab-link', {
+              active: viewMode === page.id && page.id !== UNIQUE_ERRORS_VIEW,
+              disabled: page.id === UNIQUE_ERRORS_VIEW,
+            })}
           >
             {page.icon && <i className={cx('icon')}>{Parser(page.icon)}</i>}
             {page.title}
