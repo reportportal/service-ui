@@ -1031,6 +1031,8 @@
   "LogItemInfo.ignoreAA": "Ігнараваць пры Аўта-аналіз",
   "LogItemInfo.item": "элемент",
   "LogItemInfo.linkIssue": "Прымацаваць памылку",
+  "LogItemInfo.makeDecision": "Прыняць рашэнне",
+  "LogItemInfo.makeDecisionTooltip": "Дзеянне недаступна для элемента без дэфекту",
   "LogItemInfo.noDefectTypeToCopySendDefect": "Вы не можаце капіяваць/адправіць памылку, калі элемент не мае дэфекту",
   "LogItemInfo.noDefectTypeToLinkIssue": "Вы не можаце прымацаваць памылку, калі элемент не мае дэфекту",
   "LogItemInfo.noDefectTypeToPostIssue": "Вы не можаце паведаміць аб праблеме, калі элемент не мае дэфекту",

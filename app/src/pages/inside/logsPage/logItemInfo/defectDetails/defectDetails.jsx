@@ -70,6 +70,10 @@ const messages = defineMessages({
     id: 'LogItemInfo.makeDecision',
     defaultMessage: 'Make decision',
   },
+  makeDecisionTooltip: {
+    id: 'LogItemInfo.makeDecisionTooltip',
+    defaultMessage: 'Action is unavailable for item with no defect type',
+  },
   more: {
     id: 'LogItemInfo.more',
     defaultMessage: 'More',
@@ -404,7 +408,11 @@ export class DefectDetails extends Component {
           )}
           {!debugMode && (
             <div className={cx('make-decision-action')}>
-              <GhostButton disabled={!logItem.issue} onClick={this.handleEditDefect}>
+              <GhostButton
+                disabled={!logItem.issue}
+                onClick={this.handleEditDefect}
+                title={!logItem.issue && formatMessage(messages.makeDecisionTooltip)}
+              >
                 {formatMessage(messages.makeDecision)}
               </GhostButton>
             </div>

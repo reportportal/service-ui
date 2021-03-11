@@ -1030,6 +1030,8 @@
   "LogItemInfo.ignoreAA": "Игнорировать при Авто-Анализе",
   "LogItemInfo.item": "элемент",
   "LogItemInfo.linkIssue": "Прикрепить ошибку",
+  "LogItemInfo.makeDecision": "Принять решение",
+  "LogItemInfo.makeDecisionTooltip": "Действие недоступно для элемента без дефекта",
   "LogItemInfo.noDefectTypeToCopySendDefect": "Вы не можете скопировать/отправить ошибку, если элемент не имеет дефекта",
   "LogItemInfo.noDefectTypeToLinkIssue": "Вы не можете прикрепить ошибку, если элемент не имеет дефекта",
   "LogItemInfo.noDefectTypeToPostIssue": "Вы не можете отправить ошибку, если элемент не имеет дефекта",
