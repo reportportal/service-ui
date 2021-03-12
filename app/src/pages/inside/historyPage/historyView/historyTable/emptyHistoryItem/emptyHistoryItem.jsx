@@ -22,6 +22,8 @@ import Parser from 'html-react-parser';
 import { RESETED, NOT_FOUND } from 'common/constants/testStatuses';
 import NoItemIcon from 'common/img/noItem-inline.svg';
 import EmptyItemIcon from 'common/img/emptyItem-inline.svg';
+import { withTooltip } from 'components/main/tooltips/tooltip';
+import { TextTooltip } from 'components/main/tooltips/textTooltip';
 import styles from './emptyHistoryItem.scss';
 
 const cx = classNames.bind(styles);
@@ -31,7 +33,18 @@ const messages = defineMessages({
     id: 'EmptyHistoryItem.emptyItemCaption',
     defaultMessage: 'Item is empty',
   },
+  emptyItemTooltip: {
+    id: 'EmptyHistoryItem.emptyItemTooltip',
+    defaultMessage: 'No execution of the Test Case',
+  },
 });
+const EmptyHistoryItemTooltip = withTooltip({
+  TooltipComponent: TextTooltip,
+  data: {
+    dynamicWidth: true,
+    tooltipTriggerClass: cx('empty-history-item'),
+  },
+})(({ children }) => children);
 
 @injectIntl
 export class EmptyHistoryItem extends Component {
@@ -67,10 +80,15 @@ export class EmptyHistoryItem extends Component {
   };
 
   render() {
+    const {
+      intl: { formatMessage },
+    } = this.props;
     return (
-      <div className={cx('empty-history-item')}>
-        <div className={cx('item-text-content')}>{this.renderTextContent()}</div>
-      </div>
+      <EmptyHistoryItemTooltip tooltipContent={formatMessage(messages.emptyItemTooltip)}>
+        <div className={cx('empty-history-item')}>
+          <div className={cx('item-text-content')}>{this.renderTextContent()}</div>
+        </div>
+      </EmptyHistoryItemTooltip>
     );
   }
 }

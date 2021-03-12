@@ -517,6 +517,7 @@
   "EmailFormFields.portLabel": "Порт",
   "EmailFormFields.protocolLabel": "Протокол",
   "EmailFormFields.usernameLabel": "Имя пользователя",
+  "EmptyHistoryItem.emptyItemTooltip": "Тестовый сценарий не запускался",
   "EntitiesSelector.more": "Ещё",
   "EntityItemStartTime.last2days": "Последние 2 дня",
   "EntityItemStartTime.last30days": "Последние 30 дней",

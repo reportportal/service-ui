@@ -518,6 +518,7 @@
   "EmailFormFields.portLabel": "Порт",
   "EmailFormFields.protocolLabel": "Пратакол",
   "EmailFormFields.usernameLabel": "Імя карыстальніка",
+  "EmptyHistoryItem.emptyItemTooltip": "Тэставы сцэнар не запушчаны",
   "EntitiesSelector.more": "Больш",
   "EntityItemStartTime.last2days": "Апошнія 2 дні",
   "EntityItemStartTime.last30days": "Апошнія 30 дзён",
