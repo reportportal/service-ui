@@ -1,5 +1,5 @@
-/*!
- * Copyright 2019 EPAM Systems
+/*
+ * Copyright 2021 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,27 +14,4 @@
  * limitations under the License.
  */
 
-.no-item-message {
-  padding: 25px 0;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: $COLOR--white-two;
-}
-.warning-icon {
-  display: inline-block;
-  width: 21px;
-  height: 21px;
-  fill: $COLOR--gray-47;
-}
-.message {
-  padding-left: 8px;
-  color: $COLOR--gray-47;
-  font-family: $FONT-REGULAR;
-  font-size: 17px;
-  text-align: center;
-}
-.transparent-background {
-  background-color: transparent;
-}
+export { LogItem } from './logItem';

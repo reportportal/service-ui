@@ -34,7 +34,6 @@
 .cell {
   padding: 12px 16px;
   font-size: 11px;
-  color: $COLOR--charcoal-grey;
   line-height: 1.82;
   font-family: $FONT-MONOSPACE;
   max-width: calc(100% - 25px);
@@ -81,4 +80,15 @@
 }
 .load-more-container.loading .load-more-label {
   color: $COLOR--gray-80;
+}
+.alternate-design.row {
+  margin-bottom: 2px;
+  padding-left: 22px;
+  border-bottom: none;
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding-left: 0;
+  }
+}
+.alternate-design.load-more-container {
+  border-top: none;
 }
