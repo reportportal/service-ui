@@ -518,6 +518,7 @@
   "EmailFormFields.portLabel": "Порт",
   "EmailFormFields.protocolLabel": "Протокол",
   "EmailFormFields.usernameLabel": "Ім’я користувача",
+  "EmptyHistoryItem.emptyItemTooltip": "Тестовий сценарій не запускався",
   "EntitiesSelector.more": "Ще",
   "EntityItemStartTime.last2days": "Останні 2 дня",
   "EntityItemStartTime.last30days": "Останні 30 днів",
