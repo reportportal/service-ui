@@ -64,9 +64,16 @@ export class EmptyHistoryItem extends Component {
     </Fragment>
   );
 
-  renderNotFoundTextContent = () => (
-    <i className={cx('icon', 'no-item-icon')}>{Parser(NoItemIcon)}</i>
-  );
+  renderNotFoundTextContent = () => {
+    const {
+      intl: { formatMessage },
+    } = this.props;
+    return (
+      <EmptyHistoryItemTooltip tooltipContent={formatMessage(messages.emptyItemTooltip)}>
+        <i className={cx('icon', 'no-item-icon')}>{Parser(NoItemIcon)}</i>
+      </EmptyHistoryItemTooltip>
+    );
+  };
 
   renderTextContent = () => {
     switch (this.props.status) {
@@ -80,15 +87,10 @@ export class EmptyHistoryItem extends Component {
   };
 
   render() {
-    const {
-      intl: { formatMessage },
-    } = this.props;
     return (
-      <EmptyHistoryItemTooltip tooltipContent={formatMessage(messages.emptyItemTooltip)}>
-        <div className={cx('empty-history-item')}>
-          <div className={cx('item-text-content')}>{this.renderTextContent()}</div>
-        </div>
-      </EmptyHistoryItemTooltip>
+      <div className={cx('empty-history-item')}>
+        <div className={cx('item-text-content')}>{this.renderTextContent()}</div>
+      </div>
     );
   }
 }
