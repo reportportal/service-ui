@@ -111,16 +111,16 @@ export class ViewTabs extends Component {
         icon: ListIcon,
         available: true,
         disabled: false,
-        hint: false,
+        hint: '',
       },
       {
         id: UNIQUE_ERRORS_VIEW,
         title: formatMessage(messages[UNIQUE_ERRORS_VIEW]),
-        link: {},
+        link: listViewLink,
         icon: ListIcon,
         available: isStepLevel && !isTestItemsList,
         disabled: true,
-        hint: true,
+        hint: formatMessage(messages.disabledTabTooltip),
       },
       {
         id: LOG_VIEW,
@@ -129,7 +129,7 @@ export class ViewTabs extends Component {
         icon: LogIcon,
         available: !isTestItemsList,
         disabled: false,
-        hint: false,
+        hint: '',
       },
       {
         id: HISTORY_VIEW,
@@ -138,7 +138,7 @@ export class ViewTabs extends Component {
         icon: HistoryIcon,
         available: !debugMode,
         disabled: false,
-        hint: false,
+        hint: '',
       },
     ];
 
@@ -146,10 +146,7 @@ export class ViewTabs extends Component {
   };
 
   render() {
-    const {
-      viewMode,
-      intl: { formatMessage },
-    } = this.props;
+    const { viewMode } = this.props;
     const pages = this.getPages();
 
     return (
@@ -159,7 +156,8 @@ export class ViewTabs extends Component {
             <Link
               key={page.id}
               to={page.link}
-              title={page.hint && formatMessage(messages.disabledTabTooltip)}
+              title={page.hint}
+              shouldDispatch={!page.disabled}
               className={cx('view-tab-link', {
                 active: viewMode === page.id && !page.disabled,
                 disabled: page.disabled,
