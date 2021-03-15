@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
@@ -24,7 +25,7 @@ import Link from 'redux-first-router-link';
 import { isEmptyObject } from 'common/utils/isEmptyObject';
 import { commonValidators } from 'common/utils/validation';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { authExtensionsSelector } from 'controllers/appInfo';
+import { authExtensionsSelector, isDemoInstanceSelector } from 'controllers/appInfo';
 import { loginAction, lastFailedLoginTimeSelector, badCredentialsSelector } from 'controllers/auth';
 import { LOGIN_PAGE } from 'controllers/pages';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -35,6 +36,7 @@ import WarningIcon from 'common/img/error-inline.svg';
 import LoginIcon from './img/login-field-icon-inline.svg';
 import PasswordIcon from './img/password-field-icon-inline.svg';
 import { ExternalLoginBlock } from './externalLoginBlock';
+import { DEFAULT_USER_CREDENTIALS } from './constants';
 import styles from './loginForm.scss';
 
 const cx = classNames.bind(styles);
@@ -70,6 +72,7 @@ const messages = defineMessages({
     externalAuth: authExtensionsSelector(state),
     lastFailedLoginTime: lastFailedLoginTimeSelector(state),
     badCredentials: badCredentialsSelector(state),
+    isDemoInstance: isDemoInstanceSelector(state),
   }),
   {
     authorize: loginAction,
@@ -93,16 +96,27 @@ export class LoginForm extends React.Component {
     badCredentials: PropTypes.bool.isRequired,
     form: PropTypes.string.isRequired,
     dispatch: PropTypes.func.isRequired,
+    isDemoInstance: PropTypes.bool,
+    initialize: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
     externalAuth: {},
     lastFailedLoginTime: null,
+    isDemoInstance: false,
   };
 
   constructor(props) {
     super(props);
     this.state = this.calculateLoginLimitState();
+  }
+
+  componentDidMount() {
+    const { isDemoInstance, initialize } = this.props;
+
+    if (isDemoInstance) {
+      initialize(DEFAULT_USER_CREDENTIALS);
+    }
   }
 
   componentDidUpdate(prevProps) {
