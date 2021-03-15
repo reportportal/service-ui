@@ -146,22 +146,23 @@ export class ViewTabs extends Component {
 
     return (
       <div className={cx('view-tabs')}>
-        {pages.map((page) => (
-          <Link
-            key={page.id}
-            to={page.link}
-            title={
-              page.id === UNIQUE_ERRORS_VIEW && formatMessage(messages.uniqueErrorsViewTooltip)
-            }
-            className={cx('view-tab-link', {
-              active: viewMode === page.id && page.id !== UNIQUE_ERRORS_VIEW,
-              disabled: page.id === UNIQUE_ERRORS_VIEW,
-            })}
-          >
-            {page.icon && <i className={cx('icon')}>{Parser(page.icon)}</i>}
-            {page.title}
-          </Link>
-        ))}
+        {pages.map((page) => {
+          const isUniqueErrorsViewTab = page.id === UNIQUE_ERRORS_VIEW;
+          return (
+            <Link
+              key={page.id}
+              to={page.link}
+              title={isUniqueErrorsViewTab && formatMessage(messages.uniqueErrorsViewTooltip)}
+              className={cx('view-tab-link', {
+                active: viewMode === page.id && !isUniqueErrorsViewTab,
+                disabled: isUniqueErrorsViewTab,
+              })}
+            >
+              {page.icon && <i className={cx('icon')}>{Parser(page.icon)}</i>}
+              {page.title}
+            </Link>
+          );
+        })}
       </div>
     );
   }
