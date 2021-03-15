@@ -307,7 +307,7 @@ export class ComponentHealthCheckTable extends Component {
       isLatest: widget.contentParameters && widget.contentParameters.widgetOptions.latest,
       linkPayload: {
         projectId: project,
-        filterId: widget.appliedFilters[0].id,
+        filterId: widget.appliedFilters[0] && widget.appliedFilters[0].id,
         testItemIds: TEST_ITEMS_TYPE_LIST,
       },
       getCompositeAttributes: this.getCompositeAttributes,
