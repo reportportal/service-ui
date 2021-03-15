@@ -42,7 +42,6 @@ const EmptyHistoryItemTooltip = withTooltip({
   TooltipComponent: TextTooltip,
   data: {
     dynamicWidth: true,
-    tooltipTriggerClass: cx('empty-history-item'),
   },
 })(({ children }) => children);
 
