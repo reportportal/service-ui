@@ -43,6 +43,9 @@ import {
   DETAILED_LOG_VIEW,
   setIncludeAllLaunchesAction,
   includeAllLaunchesSelector,
+  DEFAULT_HISTORY_DEPTH,
+  historyItemsSelector,
+  setShouldShowLoadMoreAction,
 } from 'controllers/log';
 import { ParentInfo } from 'pages/inside/common/infoLine/parentInfo';
 import { stepPaginationSelector } from 'controllers/step';
@@ -69,12 +72,14 @@ const messages = defineMessages({
     previousLinkDisable: disablePrevItemLinkSelector(state),
     nextLinkDisable: disableNextItemLinkSelector(state),
     includeAllLaunches: includeAllLaunchesSelector(state),
+    historyItems: historyItemsSelector(state),
   }),
   {
     setIncludeAllLaunchesAction,
     navigate: (linkAction) => linkAction,
     fetchTestItems: fetchTestItemsFromLogPageAction,
     restorePath: restorePathAction,
+    setShouldShowLoadMoreAction,
   },
 )
 @withPagination({
@@ -106,6 +111,8 @@ export class LogToolbar extends Component {
     logViewMode: PropTypes.string,
     restorePath: PropTypes.func,
     parentItem: PropTypes.object,
+    historyItems: PropTypes.array,
+    setShouldShowLoadMoreAction: PropTypes.func,
   };
 
   static defaultProps = {
@@ -123,6 +130,8 @@ export class LogToolbar extends Component {
     logViewMode: DETAILED_LOG_VIEW,
     restorePath: () => {},
     parentItem: null,
+    historyItems: [],
+    setShouldShowLoadMoreAction: () => {},
   };
 
   handleBackClick = () => {
@@ -144,10 +153,16 @@ export class LogToolbar extends Component {
     return fetchTestItems({ next: true });
   };
 
+  finishLoading = () => {
+    const { historyItems } = this.props;
+    const loadedItems = historyItems.length - DEFAULT_HISTORY_DEPTH;
+    this.props.setShouldShowLoadMoreAction(loadedItems >= 0);
+  };
+
   changeHistoryLineMode = () => {
     const { tracking, includeAllLaunches } = this.props;
     tracking.trackEvent(LOG_PAGE_EVENTS.HISTORY_LINE_MODE_CHB);
-    this.props.setIncludeAllLaunchesAction(!includeAllLaunches);
+    this.props.setIncludeAllLaunchesAction(!includeAllLaunches, this.finishLoading);
   };
 
   render() {
