@@ -30,6 +30,7 @@ import {
   FETCH_HISTORY_ITEMS_SUCCESS,
   UPDATE_HISTORY_ITEM_ISSUES,
   SET_INCLUDE_ALL_LAUNCHES,
+  SET_SHOULD_SHOW_LOAD_MORE,
 } from './constants';
 import { attachmentsReducer } from './attachments';
 import { sauceLabsReducer } from './sauceLabs';
@@ -77,6 +78,15 @@ const historyItemsReducer = (state = [], { type, payload }) => {
 const includeAllLaunchesReducer = (state = false, { type, payload }) => {
   switch (type) {
     case SET_INCLUDE_ALL_LAUNCHES:
+      return payload.includeAllLaunches;
+    default:
+      return state;
+  }
+};
+
+const shouldShowLoadMoreReducer = (state = false, { type, payload }) => {
+  switch (type) {
+    case SET_SHOULD_SHOW_LOAD_MORE:
       return payload;
     default:
       return state;
@@ -84,6 +94,7 @@ const includeAllLaunchesReducer = (state = false, { type, payload }) => {
 };
 
 const reducer = combineReducers({
+  shouldShowLoadMore: shouldShowLoadMoreReducer,
   includeAllLaunches: includeAllLaunchesReducer,
   logItems: fetchReducer(LOG_ITEMS_NAMESPACE, { contentPath: 'content' }),
   pagination: paginationReducer(LOG_ITEMS_NAMESPACE),

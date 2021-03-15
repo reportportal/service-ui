@@ -23,16 +23,18 @@ import {
   UPDATE_HISTORY_ITEM_ISSUES,
   SET_INCLUDE_ALL_LAUNCHES,
   FETCH_HISTORY_LINE_ITEMS,
+  SET_SHOULD_SHOW_LOAD_MORE,
 } from './constants';
 
 export const fetchLogPageData = () => ({
   type: FETCH_LOG_PAGE_DATA,
 });
 
-export const refreshLogPageData = () => ({
+export const refreshLogPageData = (callback) => ({
   type: FETCH_LOG_PAGE_DATA,
   meta: {
     refresh: true,
+    callback,
   },
 });
 
@@ -60,9 +62,14 @@ export const setPageLoadingAction = (isLoading) => ({
   payload: isLoading,
 });
 
-export const setIncludeAllLaunchesAction = (includeAllLaunches) => ({
+export const setIncludeAllLaunchesAction = (includeAllLaunches, callback) => ({
   type: SET_INCLUDE_ALL_LAUNCHES,
-  payload: includeAllLaunches,
+  payload: { includeAllLaunches, callback },
+});
+
+export const setShouldShowLoadMoreAction = (shouldShowLoadMore) => ({
+  type: SET_SHOULD_SHOW_LOAD_MORE,
+  payload: shouldShowLoadMore,
 });
 
 export const updateHistoryItemIssuesAction = (issues) => ({

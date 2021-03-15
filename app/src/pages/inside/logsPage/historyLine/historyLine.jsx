@@ -27,6 +27,8 @@ import {
   DEFAULT_HISTORY_DEPTH,
   HISTORY_DEPTH_LIMIT,
   fetchHistoryItemsAction,
+  setShouldShowLoadMoreAction,
+  shouldShowLoadMoreSelector,
 } from 'controllers/log';
 import { NOT_FOUND } from 'common/constants/testStatuses';
 import { connectRouter } from 'common/utils';
@@ -60,9 +62,11 @@ const messages = defineMessages({
   (state) => ({
     historyItems: historyItemsSelector(state),
     activeItemId: activeLogIdSelector(state),
+    shouldShowLoadMore: shouldShowLoadMoreSelector(state),
   }),
   {
     fetchHistoryItemsAction,
+    setShouldShowLoadMoreAction,
   },
 )
 @injectIntl
@@ -72,22 +76,25 @@ export class HistoryLine extends Component {
     this.state = {
       isLoading: false,
       prevItemsCount: DEFAULT_HISTORY_DEPTH,
-      shouldShowLoadMore: false,
     };
   }
   static propTypes = {
     intl: PropTypes.object.isRequired,
     historyItems: PropTypes.array,
     activeItemId: PropTypes.number,
+    shouldShowLoadMore: PropTypes.bool,
     changeActiveItem: PropTypes.func,
     fetchHistoryItemsAction: PropTypes.func,
+    setShouldShowLoadMoreAction: PropTypes.func,
   };
 
   static defaultProps = {
     historyItems: [],
     activeItemId: 0,
+    shouldShowLoadMore: false,
     changeActiveItem: () => {},
     fetchHistoryItemsAction: () => {},
+    setShouldShowLoadMoreAction: () => {},
   };
 
   checkIfTheItemLinkIsActive = (item) =>
@@ -101,7 +108,8 @@ export class HistoryLine extends Component {
       historyItems.length < HISTORY_DEPTH_LIMIT &&
       loadedItems >= 0 &&
       loadedItems % NUMBER_OF_ITEMS_TO_LOAD === 0;
-    this.setState({ isLoading: false, shouldShowLoadMore });
+    this.setState({ isLoading: false });
+    this.props.setShouldShowLoadMoreAction(shouldShowLoadMore);
   };
 
   loadMoreItems = () => {
@@ -116,16 +124,16 @@ export class HistoryLine extends Component {
   componentDidMount() {
     const { historyItems } = this.props;
     const loadedItems = historyItems.length - DEFAULT_HISTORY_DEPTH;
-    this.setState({ shouldShowLoadMore: loadedItems === 0 });
+    this.props.setShouldShowLoadMoreAction(loadedItems === 0);
   }
 
   render() {
-    const { historyItems, activeItemId, changeActiveItem, intl } = this.props;
+    const { historyItems, activeItemId, changeActiveItem, intl, shouldShowLoadMore } = this.props;
     return (
       <div className={cx('history-line')}>
         <ScrollWrapper autoHeight hideTracksWhenNotNeeded initialScrollRight>
           <div className={cx('history-line-items')}>
-            {this.state.shouldShowLoadMore && (
+            {shouldShowLoadMore && (
               <button className={cx('load-more')} onClick={this.loadMoreItems}>
                 {this.state.isLoading ? (
                   <SpinningPreloader />

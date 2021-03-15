@@ -193,6 +193,7 @@ function* fetchLogPageData({ meta = {} }) {
   if (meta.refresh) {
     const offset = yield select(logPageOffsetSelector);
     yield all([put(fetchTestItemsAction({ offset })), call(fetchLogs)]);
+    meta.callback && meta.callback();
     return;
   }
   if (isPathNameChanged) {
