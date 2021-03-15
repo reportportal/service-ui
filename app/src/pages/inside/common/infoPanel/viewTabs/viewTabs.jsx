@@ -56,8 +56,8 @@ const messages = defineMessages({
     id: 'ViewTabs.historyView',
     defaultMessage: 'History',
   },
-  uniqueErrorsViewTooltip: {
-    id: 'ViewTabs.uniqueErrorsViewTooltip',
+  disabledTabTooltip: {
+    id: 'ViewTabs.disabledTabTooltip',
     defaultMessage: 'A new functionality will be available in the next version',
   },
 });
@@ -110,6 +110,8 @@ export class ViewTabs extends Component {
         link: listViewLink,
         icon: ListIcon,
         available: true,
+        disabled: false,
+        hint: false,
       },
       {
         id: UNIQUE_ERRORS_VIEW,
@@ -117,6 +119,8 @@ export class ViewTabs extends Component {
         link: {},
         icon: ListIcon,
         available: isStepLevel && !isTestItemsList,
+        disabled: true,
+        hint: true,
       },
       {
         id: LOG_VIEW,
@@ -124,6 +128,8 @@ export class ViewTabs extends Component {
         link: logViewLink,
         icon: LogIcon,
         available: !isTestItemsList,
+        disabled: false,
+        hint: false,
       },
       {
         id: HISTORY_VIEW,
@@ -131,6 +137,8 @@ export class ViewTabs extends Component {
         link: historyViewLink,
         icon: HistoryIcon,
         available: !debugMode,
+        disabled: false,
+        hint: false,
       },
     ];
 
@@ -147,15 +155,14 @@ export class ViewTabs extends Component {
     return (
       <div className={cx('view-tabs')}>
         {pages.map((page) => {
-          const isUniqueErrorsViewTab = page.id === UNIQUE_ERRORS_VIEW;
           return (
             <Link
               key={page.id}
               to={page.link}
-              title={isUniqueErrorsViewTab && formatMessage(messages.uniqueErrorsViewTooltip)}
+              title={page.hint && formatMessage(messages.disabledTabTooltip)}
               className={cx('view-tab-link', {
-                active: viewMode === page.id && !isUniqueErrorsViewTab,
-                disabled: isUniqueErrorsViewTab,
+                active: viewMode === page.id && !page.disabled,
+                disabled: page.disabled,
               })}
             >
               {page.icon && <i className={cx('icon')}>{Parser(page.icon)}</i>}

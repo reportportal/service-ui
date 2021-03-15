@@ -1747,7 +1747,7 @@
   "UserBlock.profile": "Профіль",
   "UserInfo.submitError": "Ошибка! Не удается созранить изменения",
   "UserInfo.submitSuccess": "Змены паспяхова захаваны",
-  "ViewTabs.uniqueErrorsViewTooltip": "Новы функцыянал будзе даступны ў наступнай версіі.",
+  "ViewTabs.disabledTabTooltip": "Новы функцыянал будзе даступны ў наступнай версіі.",
   "WarningTooltip.description": "Калі вы хочаце абнавіць ваш токен доступу, націсніце 'стварыць новы', каб атрымаць новы..",
   "WarningTooltip.warning": "Увага!",
   "WarningTooltip.warningDescription": "Усе настроеныя агенты са старымі токенаў доступу не будуць працаваць пасля гэтага",
