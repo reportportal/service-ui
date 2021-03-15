@@ -1749,6 +1749,7 @@
   "UserBlock.profile": "Профіль",
   "UserInfo.submitError": "Помилка! Не вдається зберегти зміни",
   "UserInfo.submitSuccess": "Зміни успішно збережено",
+  "ViewTabs.disabledTabTooltip": "Новий функціонал буде доступний в наступній версії.",
   "WarningTooltip.description": "Якщо ви хочете оновити ваш токен доступу, натисніть кнопку 'створити', щоб отримати новий.",
   "WarningTooltip.warning": "Увага!",
   "WarningTooltip.warningDescription": "Всі налаштовані агенти зі старими токеном доступу не будуть працювати після цього",

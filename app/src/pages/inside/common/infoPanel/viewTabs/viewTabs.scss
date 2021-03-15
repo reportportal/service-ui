@@ -83,3 +83,16 @@
     }
   }
 }
+
+.view-tab-link.disabled {
+  cursor: default;
+
+  &:hover {
+    color: $COLOR--gray-47;
+
+    svg {
+      fill: $COLOR--gray-80;
+      stroke: $COLOR--gray-80;
+    }
+  }
+}

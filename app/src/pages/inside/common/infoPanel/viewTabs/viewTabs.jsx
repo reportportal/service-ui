@@ -56,6 +56,10 @@ const messages = defineMessages({
     id: 'ViewTabs.historyView',
     defaultMessage: 'History',
   },
+  disabledTabTooltip: {
+    id: 'ViewTabs.disabledTabTooltip',
+    defaultMessage: 'A new functionality will be available in the next version',
+  },
 });
 
 @connect((state) => ({
@@ -106,6 +110,8 @@ export class ViewTabs extends Component {
         link: listViewLink,
         icon: ListIcon,
         available: true,
+        disabled: false,
+        hint: '',
       },
       {
         id: UNIQUE_ERRORS_VIEW,
@@ -113,6 +119,8 @@ export class ViewTabs extends Component {
         link: listViewLink,
         icon: ListIcon,
         available: isStepLevel && !isTestItemsList,
+        disabled: true,
+        hint: formatMessage(messages.disabledTabTooltip),
       },
       {
         id: LOG_VIEW,
@@ -120,6 +128,8 @@ export class ViewTabs extends Component {
         link: logViewLink,
         icon: LogIcon,
         available: !isTestItemsList,
+        disabled: false,
+        hint: '',
       },
       {
         id: HISTORY_VIEW,
@@ -127,6 +137,8 @@ export class ViewTabs extends Component {
         link: historyViewLink,
         icon: HistoryIcon,
         available: !debugMode,
+        disabled: false,
+        hint: '',
       },
     ];
 
@@ -139,16 +151,23 @@ export class ViewTabs extends Component {
 
     return (
       <div className={cx('view-tabs')}>
-        {pages.map((page) => (
-          <Link
-            key={page.id}
-            to={page.link}
-            className={cx('view-tab-link', { active: viewMode === page.id })}
-          >
-            {page.icon && <i className={cx('icon')}>{Parser(page.icon)}</i>}
-            {page.title}
-          </Link>
-        ))}
+        {pages.map((page) => {
+          return (
+            <Link
+              key={page.id}
+              to={page.link}
+              title={page.hint}
+              shouldDispatch={!page.disabled}
+              className={cx('view-tab-link', {
+                active: viewMode === page.id && !page.disabled,
+                disabled: page.disabled,
+              })}
+            >
+              {page.icon && <i className={cx('icon')}>{Parser(page.icon)}</i>}
+              {page.title}
+            </Link>
+          );
+        })}
       </div>
     );
   }
