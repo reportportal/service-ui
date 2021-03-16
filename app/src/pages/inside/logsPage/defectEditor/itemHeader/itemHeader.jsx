@@ -20,7 +20,7 @@ import Link from 'redux-first-router-link';
 import Parser from 'html-react-parser';
 import { IssueList } from 'pages/inside/stepPage/stepGrid/defectType/issueList';
 import { DefectTypeItem } from 'pages/inside/common/defectTypeItem';
-import ExternalLink from 'common/img/go-to-another-page-inline.svg';
+import ExternalLinkIcon from 'common/img/go-to-another-page-inline.svg';
 import classNames from 'classnames/bind';
 import styles from './itemHeader.scss';
 
@@ -36,17 +36,17 @@ export const ItemHeader = ({ item, selectItem, isSelected, nameLink }) => {
   return (
     <div
       className={cx('item-info', { selected: isSelected })}
-      onClick={() => (isSelected ? selectItem(null) : selectItem(id))}
+      onClick={() => selectItem(isSelected ? null : id)}
     >
       <div className={cx('header')}>
-        <Link to={nameLink} target="_blank" className={cx('title')}>
+        <Link to={nameLink} target="_blank" className={cx('item-name')}>
           {name}
-          <div className={cx('icon')}>{Parser(ExternalLink)}</div>
+          <div className={cx('icon')}>{Parser(ExternalLinkIcon)}</div>
         </Link>
-        <DefectTypeItem type={issueType} className={cx('defect-type-override')} />
+        <DefectTypeItem type={issueType} className={cx('defect-type')} />
       </div>
       <div className={cx('bts-row')}>
-        <IssueList issues={externalSystemIssues} className={cx('issue-style-override')} readOnly />
+        <IssueList issues={externalSystemIssues} className={cx('issue')} readOnly />
       </div>
     </div>
   );

@@ -104,7 +104,7 @@
   }
 }
 
-.alternate-design.row-wrapper {
+.design-mode-dark.row-wrapper {
   border-left: 3px solid $COLOR--orange-red;
   background-image: linear-gradient(
     to right,
@@ -123,11 +123,11 @@
     );
   }
 }
-.alternate-design.row {
+.design-mode-dark.row {
   color: $COLOR--dark-gray;
   border: none;
 }
-.alternate-design.accordion-block {
+.design-mode-dark.accordion-block {
   background-color: transparent;
   box-shadow: none;
   &.expanded {

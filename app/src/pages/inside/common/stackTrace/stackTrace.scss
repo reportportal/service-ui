@@ -81,7 +81,7 @@
 .load-more-container.loading .load-more-label {
   color: $COLOR--gray-80;
 }
-.alternate-design.row {
+.design-mode-dark.row {
   margin-bottom: 2px;
   padding-left: 22px;
   border-bottom: none;
@@ -89,6 +89,6 @@
     padding-left: 0;
   }
 }
-.alternate-design.load-more-container {
+.design-mode-dark.load-more-container {
   border-top: none;
 }

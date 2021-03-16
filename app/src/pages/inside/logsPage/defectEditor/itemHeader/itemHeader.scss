@@ -37,7 +37,7 @@
   margin-bottom: 12px;
 }
 
-.title {
+.item-name {
   display: flex;
   align-items: center;
   color: $COLOR--topaz;
@@ -63,7 +63,7 @@
   }
 }
 
-.defect-type-override {
+.defect-type {
   border: none;
   background-color: transparent;
   font-family: $FONT-REGULAR;
@@ -79,7 +79,7 @@
   min-height: 22px;
 }
 
-.issue-style-override {
+.issue {
   height: 18px;
   border: 1px solid $COLOR--dirty-black;
   background-color: $COLOR--black-3;

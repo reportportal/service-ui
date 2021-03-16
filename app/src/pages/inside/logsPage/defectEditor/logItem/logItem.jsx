@@ -21,7 +21,7 @@ import { getLogItemLinkSelector } from 'controllers/testItem/selectors';
 import { StackTrace } from 'pages/inside/common/stackTrace';
 import { ItemHeader } from '../itemHeader';
 
-export const LogItem = ({ item, showErrorLogs, selectedItem, setSelectedItem }) => {
+export const LogItem = ({ item, showErrorLogs, selectedItem, selectItem }) => {
   const getLogItemLink = useSelector(getLogItemLinkSelector);
   const link = getLogItemLink(item);
 
@@ -29,11 +29,11 @@ export const LogItem = ({ item, showErrorLogs, selectedItem, setSelectedItem }) 
     <>
       <ItemHeader
         item={item}
-        selectItem={setSelectedItem}
+        selectItem={selectItem}
         isSelected={selectedItem === item.id}
         nameLink={link}
       />
-      {showErrorLogs && <StackTrace logItem={item} alternateDesign transparentBackground />}
+      {showErrorLogs && <StackTrace logItem={item} designMode="dark" transparentBackground />}
     </>
   );
 };
@@ -41,10 +41,10 @@ LogItem.propTypes = {
   item: PropTypes.object.isRequired,
   showErrorLogs: PropTypes.bool,
   selectedItem: PropTypes.number,
-  setSelectedItem: PropTypes.func,
+  selectItem: PropTypes.func,
 };
 LogItem.defaultProps = {
   showErrorLogs: false,
   selectedItem: null,
-  setSelectedItem: () => {},
+  selectItem: () => {},
 };

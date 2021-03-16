@@ -81,7 +81,7 @@ export class StackTrace extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    alternateDesign: PropTypes.bool,
+    designMode: PropTypes.string,
     transparentBackground: PropTypes.bool,
   };
 
@@ -93,7 +93,7 @@ export class StackTrace extends Component {
     logItem: {},
     hideTime: false,
     minHeight: SCROLL_HEIGHT,
-    alternateDesign: false,
+    alternateDesign: '',
     transparentBackground: false,
   };
 
@@ -129,16 +129,16 @@ export class StackTrace extends Component {
   };
 
   renderStackTraceMessage = () => {
-    const { items, loadMore, loading, intl, hideTime, alternateDesign } = this.props;
+    const { items, loadMore, loading, intl, hideTime, designMode } = this.props;
     return (
       <React.Fragment>
         <ScrollWrapper autoHeight autoHeightMax={this.getScrolledHeight()}>
           {items.map((item) => (
-            <div key={item.id} className={cx('row', { 'alternate-design': alternateDesign })}>
+            <div key={item.id} className={cx('row', { [`design-mode-${designMode}`]: designMode })}>
               <StackTraceMessageBlock
                 level={item.level}
                 maxHeight={this.getMaxRowHeight()}
-                alternateDesign={alternateDesign}
+                designMode={designMode}
               >
                 <div className={cx('message-container')}>
                   <div className={cx('cell', 'message-cell')}>{item.message}</div>
@@ -154,7 +154,7 @@ export class StackTrace extends Component {
           <div
             className={cx('load-more-container', {
               loading,
-              'alternate-design': alternateDesign,
+              [`design-mode-${designMode}`]: designMode,
             })}
           >
             <div className={cx('load-more-label')} onClick={this.loadMore}>

@@ -30,14 +30,14 @@ export class StackTraceMessageBlock extends Component {
     children: PropTypes.any,
     maxHeight: PropTypes.number,
     level: PropTypes.string,
-    alternateDesign: PropTypes.bool,
+    designMode: PropTypes.string,
   };
 
   static defaultProps = {
     children: '',
     maxHeight: MAX_ROW_HEIGHT,
     level: ERROR,
-    alternateDesign: false,
+    designMode: '',
   };
 
   constructor(props) {
@@ -92,7 +92,7 @@ export class StackTraceMessageBlock extends Component {
   };
 
   render() {
-    const { children, level, alternateDesign } = this.props;
+    const { children, level, designMode } = this.props;
     const { expanded, withAccordion, maxHeight } = this.state;
 
     return (
@@ -101,7 +101,7 @@ export class StackTraceMessageBlock extends Component {
           'row-wrapper',
           { 'with-accordion': withAccordion },
           `level-${level.toLowerCase()}`,
-          { 'alternate-design': alternateDesign },
+          { [`design-mode-${designMode}`]: designMode },
         )}
       >
         {withAccordion && (
@@ -113,7 +113,7 @@ export class StackTraceMessageBlock extends Component {
           </div>
         )}
         <div
-          className={cx('row', { 'alternate-design': alternateDesign })}
+          className={cx('row', { [`design-mode-${designMode}`]: designMode })}
           ref={this.overflowCell}
           style={{ maxHeight }}
         >
@@ -124,7 +124,7 @@ export class StackTraceMessageBlock extends Component {
             <div
               className={cx('accordion-block', {
                 expanded: this.state.expanded,
-                'alternate-design': alternateDesign,
+                [`design-mode-${designMode}`]: designMode,
               })}
             >
               <div

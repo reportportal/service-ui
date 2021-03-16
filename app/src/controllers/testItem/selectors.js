@@ -490,7 +490,7 @@ export const getLogItemLinkSelector = createSelector(
 
     const testItemPath = testItem.path.split('.').slice(0, -1);
     const testItemIds = [testItem.launchId, ...testItemPath].join('/');
-    const itemId = testItem.id ? testItem.id : testItem.itemId;
+    const itemId = testItem.id || testItem.itemId;
 
     return createLink(testItemIds, itemId, payload, {}, PROJECT_LOG_PAGE);
   },
