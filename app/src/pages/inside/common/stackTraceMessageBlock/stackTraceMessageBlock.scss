@@ -103,3 +103,34 @@
     transform: scaleY(-1);
   }
 }
+
+.design-mode-dark.row-wrapper {
+  border-left: 3px solid $COLOR--orange-red;
+  background-image: linear-gradient(
+    to right,
+    rgba($COLOR--orange-red, 0.25),
+    rgba($COLOR--orange-red, 0.25)
+  );
+  background-size: 8px 100%;
+  background-position: 1px 0;
+  padding-left: 9px;
+  &.level-fatal {
+    border-left: 3px solid $COLOR--fatal;
+    background-image: linear-gradient(
+      to right,
+      rgba($COLOR--fatal, 0.25),
+      rgba($COLOR--fatal, 0.25)
+    );
+  }
+}
+.design-mode-dark.row {
+  color: $COLOR--dark-gray;
+  border: none;
+}
+.design-mode-dark.accordion-block {
+  background-color: transparent;
+  box-shadow: none;
+  &.expanded {
+    box-shadow: none;
+  }
+}

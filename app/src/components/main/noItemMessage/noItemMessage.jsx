@@ -23,8 +23,8 @@ import styles from './noItemMessage.scss';
 
 const cx = classNames.bind(styles);
 
-export const NoItemMessage = ({ message }) => (
-  <div className={cx('no-item-message')}>
+export const NoItemMessage = ({ message, transparentBackground }) => (
+  <div className={cx('no-item-message', { 'transparent-background': transparentBackground })}>
     <div className={cx('warning-icon')}>{Parser(WarningIcon)}</div>
     <div className={cx('message')}>{message}</div>
   </div>
@@ -32,8 +32,10 @@ export const NoItemMessage = ({ message }) => (
 
 NoItemMessage.propTypes = {
   message: PropTypes.string,
+  transparentBackground: PropTypes.bool,
 };
 
 NoItemMessage.defaultProps = {
   message: '',
+  transparentBackground: false,
 };
