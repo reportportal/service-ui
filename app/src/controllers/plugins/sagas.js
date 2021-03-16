@@ -124,7 +124,7 @@ function* updateIntegration({ payload: { data, isGlobal, pluginName, id, callbac
         type: NOTIFICATION_TYPES.SUCCESS,
       }),
     );
-    yield call(callback);
+    yield call(callback, integration);
   } catch (error) {
     yield put(showDefaultErrorNotification(error));
   } finally {

@@ -21,8 +21,6 @@ import { connect } from 'react-redux';
 import { updateIntegrationAction } from 'controllers/plugins';
 import { PLUGIN_IMAGES_MAP } from 'components/integrations/constants';
 import { INTEGRATIONS_SETTINGS_COMPONENTS_MAP } from 'components/integrations/settingsComponentsMap';
-import { omit } from 'common/utils';
-import { OMIT_KEYS } from 'components/integrations/containers/integrationSettingsContainer/constants';
 import styles from './integrationSettingsContainer.scss';
 
 const cx = classNames.bind(styles);
@@ -59,7 +57,6 @@ export class IntegrationSettingsContainer extends Component {
       enabled: true,
       integrationParameters: formData,
     };
-    const integrationParameters = omit(data.integrationParameters, OMIT_KEYS);
 
     if (formData.integrationName) {
       data.name = formData.integrationName;
@@ -70,9 +67,9 @@ export class IntegrationSettingsContainer extends Component {
       isGlobal,
       id,
       pluginName,
-      () => {
+      (normalizedData) => {
         this.setState({
-          updatedParameters: { ...data, integrationParameters },
+          updatedParameters: normalizedData,
         });
         onConfirm();
       },
