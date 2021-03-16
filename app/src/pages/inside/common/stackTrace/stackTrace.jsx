@@ -93,7 +93,7 @@ export class StackTrace extends Component {
     logItem: {},
     hideTime: false,
     minHeight: SCROLL_HEIGHT,
-    alternateDesign: '',
+    designMode: '',
     transparentBackground: false,
   };
 
