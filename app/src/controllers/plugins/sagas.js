@@ -26,12 +26,6 @@ import { fetchDataAction, createFetchPredicate } from 'controllers/fetch';
 import { hideModalAction } from 'controllers/modal';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { fetch, omit } from 'common/utils';
-import { SAML } from 'common/constants/pluginNames';
-import {
-  FIRST_NAME_ATTRIBUTE_KEY,
-  FULL_NAME_ATTRIBUTE_KEY,
-  LAST_NAME_ATTRIBUTE_KEY,
-} from 'components/integrations/integrationProviders/samlIntegration/constants';
 import {
   NAMESPACE,
   FETCH_PLUGINS,
@@ -120,15 +114,6 @@ function* updateIntegration({ payload: { data, isGlobal, pluginName, id, callbac
       ...data,
       integrationParameters: omit(data.integrationParameters, meta[SECRET_FIELDS_KEY]),
     };
-
-    const integrationParametersPath = integration.integrationParameters;
-    if (pluginName === SAML && integrationParametersPath[FULL_NAME_ATTRIBUTE_KEY]) {
-      integrationParametersPath[FIRST_NAME_ATTRIBUTE_KEY] = '';
-      integrationParametersPath[LAST_NAME_ATTRIBUTE_KEY] = '';
-    } else if (pluginName === SAML && !integrationParametersPath[FULL_NAME_ATTRIBUTE_KEY]) {
-      integrationParametersPath[FULL_NAME_ATTRIBUTE_KEY] = '';
-    }
-
     const updateIntegrationSuccessAction = isGlobal
       ? updateGlobalIntegrationSuccessAction(integration, id)
       : updateProjectIntegrationSuccessAction(integration, id);
