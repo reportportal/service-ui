@@ -30,7 +30,7 @@ import styles from './historyLineItem.scss';
 
 const cx = classNames.bind(styles);
 
-const HistoryLineItemContent = ({
+export const HistoryLineItemContent = ({
   active,
   status,
   statistics,

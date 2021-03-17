@@ -1,5 +1,5 @@
-/*
- * Copyright 2019 EPAM Systems
+/*!
+ * Copyright 2021 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,4 +14,19 @@
  * limitations under the License.
  */
 
-export { HistoryLineItem, HistoryLineItemContent } from './historyLineItem';
+.history-line-container {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  max-width: 100%;
+  padding: 0 12px;
+  background-color: transparent;
+}
+
+.history-line-item {
+  margin-right: 8px;
+
+  & div:nth-child(2) {
+    cursor: default;
+  }
+}

@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { HistoryLineItem, HistoryLineItemContent } from './historyLineItem';
+export { DefectEditorHistoryLine } from './defectEditorHistoryLine';
