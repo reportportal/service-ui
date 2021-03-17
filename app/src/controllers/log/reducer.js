@@ -78,7 +78,7 @@ const historyItemsReducer = (state = [], { type, payload }) => {
 const includeAllLaunchesReducer = (state = false, { type, payload }) => {
   switch (type) {
     case SET_INCLUDE_ALL_LAUNCHES:
-      return payload.includeAllLaunches;
+      return payload;
     default:
       return state;
   }

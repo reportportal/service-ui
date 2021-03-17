@@ -37,9 +37,6 @@ import {
   logViewModeSelector,
   LOG_STATUS_FILTER_KEY,
   isLogPageWithNestedSteps,
-  historyItemsSelector,
-  setShouldShowLoadMoreAction,
-  DEFAULT_HISTORY_DEPTH,
 } from 'controllers/log';
 import { parentItemSelector } from 'controllers/testItem';
 import { withFilter } from 'controllers/filter';
@@ -68,11 +65,9 @@ import { SauceLabsSection } from './sauceLabsSection';
     logViewMode: logViewModeSelector(state),
     parentItem: parentItemSelector(state),
     isNestedStepView: isLogPageWithNestedSteps(state),
-    historyItems: historyItemsSelector(state),
   }),
   {
     refresh: refreshLogPageData,
-    setShouldShowLoadMoreAction,
   },
 )
 @withSortingURL({
@@ -198,18 +193,12 @@ export class LogsPage extends Component {
       isSauceLabsIntegrationView: !this.state.isSauceLabsIntegrationView,
     });
 
-  finishLoading = () => {
-    const { historyItems } = this.props;
-    const loadedItems = historyItems.length - DEFAULT_HISTORY_DEPTH;
-    this.props.setShouldShowLoadMoreAction(loadedItems >= 0);
-  };
-
   handleRefresh = () => {
     this.props.tracking.trackEvent(LOG_PAGE_EVENTS.REFRESH_BTN);
     if (this.state.isSauceLabsIntegrationView) {
       this.toggleSauceLabsIntegrationView();
     }
-    this.props.refresh(this.finishLoading);
+    this.props.refresh();
   };
 
   render() {
