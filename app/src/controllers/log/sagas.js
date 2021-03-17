@@ -65,6 +65,7 @@ import {
   clearLogPageStackTrace,
   setPageLoadingAction,
   fetchHistoryItemsSuccessAction,
+  setShouldShowLoadMoreAction,
 } from './actionCreators';
 
 function* fetchActivity() {
@@ -127,6 +128,9 @@ function* fetchHistoryItems({ payload } = { payload: {} }) {
   );
 
   yield put(fetchHistoryItemsSuccessAction(response.content));
+  const currentItems = yield select(historyItemsSelector);
+  const loadedItems = currentItems.length - DEFAULT_HISTORY_DEPTH;
+  yield put(setShouldShowLoadMoreAction(loadedItems >= 0));
   callback && callback();
 }
 
@@ -193,7 +197,6 @@ function* fetchLogPageData({ meta = {} }) {
   if (meta.refresh) {
     const offset = yield select(logPageOffsetSelector);
     yield all([put(fetchTestItemsAction({ offset })), call(fetchLogs)]);
-    meta.callback && meta.callback();
     return;
   }
   if (isPathNameChanged) {

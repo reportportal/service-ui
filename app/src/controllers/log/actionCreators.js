@@ -30,11 +30,10 @@ export const fetchLogPageData = () => ({
   type: FETCH_LOG_PAGE_DATA,
 });
 
-export const refreshLogPageData = (callback) => ({
+export const refreshLogPageData = () => ({
   type: FETCH_LOG_PAGE_DATA,
   meta: {
     refresh: true,
-    callback,
   },
 });
 
@@ -62,9 +61,9 @@ export const setPageLoadingAction = (isLoading) => ({
   payload: isLoading,
 });
 
-export const setIncludeAllLaunchesAction = (includeAllLaunches, callback) => ({
+export const setIncludeAllLaunchesAction = (includeAllLaunches) => ({
   type: SET_INCLUDE_ALL_LAUNCHES,
-  payload: { includeAllLaunches, callback },
+  payload: includeAllLaunches,
 });
 
 export const setShouldShowLoadMoreAction = (shouldShowLoadMore) => ({
