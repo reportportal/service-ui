@@ -155,7 +155,7 @@ export class ProjectSelector extends Component {
                       activeClassName={cx('active')}
                       onClick={this.onClickProjectName}
                     >
-                      {project}
+                      <span title={project}>{project}</span>
                     </NavLink>
                   ))}
                 </ScrollWrapper>
