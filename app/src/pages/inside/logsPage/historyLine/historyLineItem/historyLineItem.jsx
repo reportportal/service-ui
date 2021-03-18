@@ -37,6 +37,7 @@ export const HistoryLineItemContent = ({
   launchNumber,
   hasChildren,
   growthDuration,
+  showTriangles,
   ...rest
 }) => {
   const isNotEmpty = !hasChildren ? Object.keys(statistics.defects).length : false;
@@ -44,7 +45,7 @@ export const HistoryLineItemContent = ({
   return (
     <div className={cx('history-line-item-content')}>
       <div className={cx('triangles-wrapper')}>
-        <Triangles growthDuration={growthDuration} />
+        <Triangles growthDuration={growthDuration} showTriangles />
       </div>
       <div className={cx('status-block', `status-${status}`)}>#{launchNumber}</div>
       <div className={cx('defect-block', { 'not-empty': isNotEmpty })}>
@@ -67,6 +68,7 @@ HistoryLineItemContent.propTypes = {
   }),
   launchNumber: PropTypes.number,
   growthDuration: PropTypes.number,
+  showTriangles: PropTypes.bool,
 };
 HistoryLineItemContent.defaultProps = {
   active: false,
@@ -77,6 +79,7 @@ HistoryLineItemContent.defaultProps = {
   },
   launchNumber: 0,
   growthDuration: null,
+  showTriangles: true,
 };
 
 const HistoryLineItemContentWithTooltip = withTooltip({

@@ -1,14 +1,9 @@
 export const state = {
   className: '',
-  status: 'PASSED',
-  hasChildren: false,
-  statistics: {
-    defects: { product_bug: { total: 1, pb001: 1 } },
-  },
   isSelected: true,
   selectedItem: 552853,
   selectItem: () => {},
-  nameLink: {},
+  showTriangles: false,
   project: {
     info: {
       configuration: {

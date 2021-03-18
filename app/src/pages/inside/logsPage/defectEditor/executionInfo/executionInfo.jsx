@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2021 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,61 +18,39 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { defectTypesSelector } from 'controllers/project';
 import { useSelector } from 'react-redux';
-import styles from './defectEditorHistoryLine.scss';
+import styles from './executionInfo.scss';
 import { ItemHeader } from '../itemHeader';
 import { HistoryLineItemContent } from '../../historyLine/historyLineItem';
 
 const cx = classNames.bind(styles);
 
-export const DefectEditorHistoryLine = ({
-  className,
-  status,
-  hasChildren,
-  statistics,
-  item,
-  selectItem,
-  selectedItem,
-}) => {
+export const ExecutionInfo = ({ className, item, selectItem, selectedItem, showTriangles }) => {
   const defectTypes = useSelector(defectTypesSelector);
 
   return (
     <div className={cx('history-line-container', className)}>
       <div className={cx('history-line-item')}>
-        <HistoryLineItemContent
-          defectTypes={defectTypes}
-          status={status}
-          hasChildren={hasChildren}
-          statistics={statistics}
-          {...item}
-        />
+        <HistoryLineItemContent defectTypes={defectTypes} showTriangles={showTriangles} {...item} />
       </div>
       <ItemHeader item={item} selectItem={selectItem} isSelected={selectedItem === item.id} />
     </div>
   );
 };
-DefectEditorHistoryLine.propTypes = {
+ExecutionInfo.propTypes = {
   defectTypes: PropTypes.object.isRequired,
   className: PropTypes.string,
-  status: PropTypes.string,
-  hasChildren: PropTypes.bool,
-  statistics: PropTypes.shape({
-    defects: PropTypes.object,
-  }),
   item: PropTypes.object.isRequired,
   isSelected: PropTypes.bool,
   selectItem: PropTypes.func,
   selectedItem: PropTypes.number,
+  showTriangles: PropTypes.bool,
 };
 
-DefectEditorHistoryLine.defaultProps = {
+ExecutionInfo.defaultProps = {
   className: '',
-  status: '',
-  hasChildren: false,
-  statistics: {
-    defects: {},
-  },
   item: {},
   isSelected: false,
   selectedItem: null,
   selectItem: () => {},
+  showTriangles: false,
 };

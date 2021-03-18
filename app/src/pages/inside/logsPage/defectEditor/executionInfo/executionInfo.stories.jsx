@@ -20,14 +20,14 @@ import { host } from 'storybook-host';
 
 // eslint-disable-next-line import/extensions, import/no-unresolved
 import { WithState } from 'storybook-decorators';
-import { DefectEditorHistoryLine } from './defectEditorHistoryLine';
+import { ExecutionInfo } from './executionInfo';
 import README from './README.md';
 import { item, state } from './data';
 
-storiesOf('Pages/Inside/LogsPage/DefectEditorHistoryLine', module)
+storiesOf('Pages/Inside/LogsPage/ExecutionInfo', module)
   .addDecorator(
     host({
-      title: 'Defect editor History Line component',
+      title: 'Defect editor ExecutionInfo component',
       align: 'center top',
       backdrop: 'rgba(70, 69, 71, 0.2)',
       background: '#000000',
@@ -43,21 +43,21 @@ storiesOf('Pages/Inside/LogsPage/DefectEditorHistoryLine', module)
   .add('default state', () => (
     <div>
       <WithState state={state}>
-        <DefectEditorHistoryLine item={item} />
+        <ExecutionInfo item={item} />
       </WithState>
     </div>
   ))
   .add('with selected state true', () => (
     <div>
       <WithState state={state}>
-        <DefectEditorHistoryLine item={item} selectedItem={item.id} />
+        <ExecutionInfo item={item} selectedItem={item.id} />
       </WithState>
     </div>
   ))
   .add('with action', () => (
     <div>
       <WithState state={state}>
-        <DefectEditorHistoryLine item={item} setSelectedItem={action('onClick')} />
+        <ExecutionInfo item={item} setSelectedItem={action('onClick')} />
       </WithState>
     </div>
   ));
