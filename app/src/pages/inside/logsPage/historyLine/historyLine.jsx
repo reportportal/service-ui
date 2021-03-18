@@ -101,7 +101,6 @@ export class HistoryLine extends Component {
     item.id !== this.props.activeItemId && item.status !== NOT_FOUND;
 
   finishLoading = () => {
-    this.setState({ isLoading: false });
     const { historyItems } = this.props;
     const loadedItems = historyItems.length - DEFAULT_HISTORY_DEPTH;
     const shouldShowLoadMore =

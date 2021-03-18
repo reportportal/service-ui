@@ -128,9 +128,11 @@ function* fetchHistoryItems({ payload } = { payload: {} }) {
   );
 
   yield put(fetchHistoryItemsSuccessAction(response.content));
-  const currentItems = yield select(historyItemsSelector);
-  const loadedItems = currentItems.length - DEFAULT_HISTORY_DEPTH;
-  yield put(setShouldShowLoadMoreAction(loadedItems >= 0));
+  if (!loadMore) {
+    const currentItems = yield select(historyItemsSelector);
+    const loadedItems = currentItems.length - DEFAULT_HISTORY_DEPTH;
+    yield put(setShouldShowLoadMoreAction(loadedItems >= 0));
+  }
   callback && callback();
 }
 
