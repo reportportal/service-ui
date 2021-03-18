@@ -92,6 +92,9 @@ export class PassingRateChart extends Component {
 
     // eslint-disable-next-line func-names
     d3.selectAll(nodeElement.querySelectorAll('.bar .c3-chart-texts .c3-text')).each(function(d) {
+      if (d.value === 0) {
+        this.textContent = '';
+      }
       const selector = `c3-target-${d.id}`;
       const barBox = d3
         .selectAll(nodeElement.getElementsByClassName(selector))
