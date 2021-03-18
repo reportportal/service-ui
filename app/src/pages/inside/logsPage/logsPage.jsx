@@ -148,8 +148,6 @@ export class LogsPage extends Component {
     withAttachments: PropTypes.string,
     hideEmptySteps: PropTypes.string,
     hidePassedLogs: PropTypes.string,
-    historyItems: PropTypes.array,
-    setShouldShowLoadMoreAction: PropTypes.func,
   };
 
   static defaultProps = {
@@ -180,8 +178,6 @@ export class LogsPage extends Component {
     withAttachments: undefined,
     hideEmptySteps: undefined,
     hidePassedLogs: undefined,
-    historyItems: [],
-    setShouldShowLoadMoreAction: () => {},
   };
 
   state = {
