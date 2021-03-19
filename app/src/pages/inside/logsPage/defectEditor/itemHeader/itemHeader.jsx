@@ -17,6 +17,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Link from 'redux-first-router-link';
+import { useSelector } from 'react-redux';
+import { getLogItemLinkSelector } from 'controllers/testItem/selectors';
 import Parser from 'html-react-parser';
 import { IssueList } from 'pages/inside/stepPage/stepGrid/defectType/issueList';
 import { DefectTypeItem } from 'pages/inside/common/defectTypeItem';
@@ -26,12 +28,15 @@ import styles from './itemHeader.scss';
 
 const cx = classNames.bind(styles);
 
-export const ItemHeader = ({ item, selectItem, isSelected, nameLink }) => {
+export const ItemHeader = ({ item, selectItem, isSelected }) => {
   const {
     id,
     name,
     issue: { issueType, externalSystemIssues },
   } = item;
+
+  const getLogItemLink = useSelector(getLogItemLinkSelector);
+  const link = getLogItemLink(item);
 
   return (
     <div
@@ -39,7 +44,7 @@ export const ItemHeader = ({ item, selectItem, isSelected, nameLink }) => {
       onClick={() => selectItem(isSelected ? null : id)}
     >
       <div className={cx('header')}>
-        <Link to={nameLink} target="_blank" className={cx('item-name')}>
+        <Link to={link} target="_blank" className={cx('item-name')}>
           {name}
           <div className={cx('icon')}>{Parser(ExternalLinkIcon)}</div>
         </Link>

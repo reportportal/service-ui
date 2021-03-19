@@ -16,23 +16,13 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
-import { getLogItemLinkSelector } from 'controllers/testItem/selectors';
 import { StackTrace } from 'pages/inside/common/stackTrace';
 import { ItemHeader } from '../itemHeader';
 
 export const LogItem = ({ item, showErrorLogs, selectedItem, selectItem }) => {
-  const getLogItemLink = useSelector(getLogItemLinkSelector);
-  const link = getLogItemLink(item);
-
   return (
     <>
-      <ItemHeader
-        item={item}
-        selectItem={selectItem}
-        isSelected={selectedItem === item.id}
-        nameLink={link}
-      />
+      <ItemHeader item={item} selectItem={selectItem} isSelected={selectedItem === item.id} />
       {showErrorLogs && <StackTrace logItem={item} designMode="dark" transparentBackground />}
     </>
   );
