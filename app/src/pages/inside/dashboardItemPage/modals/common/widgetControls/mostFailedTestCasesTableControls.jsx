@@ -145,6 +145,7 @@ export class MostFailedTestCasesTableControls extends Component {
             fieldLabel={formatMessage(messages.LaunchNameFieldLabel)}
             placeholder={formatMessage(messages.LaunchNamePlaceholder)}
             minLength={3}
+            maxLength={256}
             getURI={URLS.launchNameSearch(activeProject)}
           />
         </FieldProvider>

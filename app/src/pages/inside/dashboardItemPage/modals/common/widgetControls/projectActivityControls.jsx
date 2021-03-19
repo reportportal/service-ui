@@ -168,6 +168,7 @@ export class ProjectActivityControls extends Component {
             fieldLabel={formatMessage(messages.UsernameControlText)}
             placeholder={formatMessage(messages.UsersPlaceholder)}
             minLength={3}
+            maxLength={256}
             getURI={URLS.projectUsernamesSearch(activeProject)}
             makeOptions={this.formatUsernames}
             multi
