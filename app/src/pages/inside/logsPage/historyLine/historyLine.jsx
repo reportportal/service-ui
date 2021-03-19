@@ -35,8 +35,8 @@ import { connectRouter } from 'common/utils';
 import { PAGE_KEY, DEFAULT_PAGINATION } from 'controllers/pagination';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import styles from './historyLine.scss';
 import { HistoryLineItem } from './historyLineItem';
+import styles from './historyLine.scss';
 
 const cx = classNames.bind(styles);
 
@@ -131,7 +131,7 @@ export class HistoryLine extends Component {
     const { historyItems, activeItemId, changeActiveItem, intl, shouldShowLoadMore } = this.props;
     return (
       <div className={cx('history-line')}>
-        <ScrollWrapper autoHeight hideTracksWhenNotNeeded initialScrollRight>
+        <ScrollWrapper autoHeight hideTracksWhenNotNeeded autoHide initialScrollRight>
           <div className={cx('history-line-items')}>
             {shouldShowLoadMore && (
               <button className={cx('load-more')} onClick={this.loadMoreItems}>
