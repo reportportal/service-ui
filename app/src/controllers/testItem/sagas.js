@@ -81,6 +81,7 @@ import {
   levelSelector,
   isTestItemsListSelector,
   isFilterParamsExistsSelector,
+  launchSelector,
 } from './selectors';
 import { calculateLevel } from './utils';
 
@@ -140,8 +141,13 @@ function* fetchTestItems({ payload = {} }) {
     }
   }
   const itemIdsArray = yield select(testItemIdsArraySelector);
-  const itemIds = offset ? itemIdsArray.slice(0, itemIdsArray.length - offset) : itemIdsArray;
   let launchId = yield select(launchIdSelector);
+  if (isNaN(Number(launchId))) {
+    const launch = yield select(launchSelector);
+    launchId = launch.id;
+    itemIdsArray[0] = launch.id;
+  }
+  const itemIds = offset ? itemIdsArray.slice(0, itemIdsArray.length - offset) : itemIdsArray;
   const isLostLaunch = yield select(isLostLaunchSelector);
   let parentId;
   if (isLostLaunch) {
