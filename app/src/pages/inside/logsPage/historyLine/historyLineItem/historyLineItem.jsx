@@ -44,9 +44,11 @@ export const HistoryLineItemContent = ({
 
   return (
     <div className={cx('history-line-item-content')}>
-      <div className={cx('triangles-wrapper')}>
-        <Triangles growthDuration={growthDuration} showTriangles />
-      </div>
+      {showTriangles && (
+        <div className={cx('triangles-wrapper')}>
+          <Triangles growthDuration={growthDuration} />
+        </div>
+      )}
       <div className={cx('status-block', `status-${status}`)}>#{launchNumber}</div>
       <div className={cx('defect-block', { 'not-empty': isNotEmpty })}>
         <HistoryLineItemBadge

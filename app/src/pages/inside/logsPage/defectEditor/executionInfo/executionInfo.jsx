@@ -24,13 +24,13 @@ import { HistoryLineItemContent } from '../../historyLine/historyLineItem';
 
 const cx = classNames.bind(styles);
 
-export const ExecutionInfo = ({ className, item, selectItem, selectedItem, showTriangles }) => {
+export const ExecutionInfo = ({ className, item, selectItem, selectedItem }) => {
   const defectTypes = useSelector(defectTypesSelector);
 
   return (
-    <div className={cx('history-line-container', className)}>
+    <div className={cx('execution-info-container', className)}>
       <div className={cx('history-line-item')}>
-        <HistoryLineItemContent defectTypes={defectTypes} showTriangles={showTriangles} {...item} />
+        <HistoryLineItemContent defectTypes={defectTypes} showTriangles={false} {...item} />
       </div>
       <ItemHeader item={item} selectItem={selectItem} isSelected={selectedItem === item.id} />
     </div>
@@ -43,14 +43,13 @@ ExecutionInfo.propTypes = {
   isSelected: PropTypes.bool,
   selectItem: PropTypes.func,
   selectedItem: PropTypes.number,
-  showTriangles: PropTypes.bool,
 };
 
 ExecutionInfo.defaultProps = {
+  defectTypes: {},
   className: '',
   item: {},
   isSelected: false,
   selectedItem: null,
   selectItem: () => {},
-  showTriangles: false,
 };

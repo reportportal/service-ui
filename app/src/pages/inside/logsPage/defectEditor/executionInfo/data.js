@@ -3,7 +3,6 @@ export const state = {
   isSelected: true,
   selectedItem: 552853,
   selectItem: () => {},
-  showTriangles: false,
   project: {
     info: {
       configuration: {

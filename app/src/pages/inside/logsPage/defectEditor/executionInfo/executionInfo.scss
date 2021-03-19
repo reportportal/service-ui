@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-.history-line-container {
+.execution-info-container {
   display: flex;
   align-items: center;
   box-sizing: border-box;
@@ -26,7 +26,7 @@
 .history-line-item {
   margin-right: 8px;
 
-  & div:nth-child(2) {
+  & div:nth-child(1) {
     cursor: default;
   }
 }

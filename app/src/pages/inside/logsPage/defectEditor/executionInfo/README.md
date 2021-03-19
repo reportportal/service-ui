@@ -1,4 +1,4 @@
-## **History Line component**
+## **ExecutionInfo component**
 
 Has width & height adjusted by content.
 
@@ -9,8 +9,7 @@ Has width & height adjusted by content.
 - **defectTypes**: _object_, required
 - **className**: _string_, optional, default = ''
 - **isSelected**: _boolean_, optional, default=false
-- **showTriangles**: _boolean_, optional, default=false
 
 ### Events:
 
-- **setSelectedItem**
+- **selectItem**

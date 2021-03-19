@@ -57,7 +57,7 @@ storiesOf('Pages/Inside/LogsPage/ExecutionInfo', module)
   .add('with action', () => (
     <div>
       <WithState state={state}>
-        <ExecutionInfo item={item} setSelectedItem={action('onClick')} />
+        <ExecutionInfo item={item} selectItem={action('onClick')} />
       </WithState>
     </div>
   ));
