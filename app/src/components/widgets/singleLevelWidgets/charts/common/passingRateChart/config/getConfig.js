@@ -52,7 +52,7 @@ export const getConfig = ({
     },
     labels: {
       show: !isPreview,
-      format: (value) => (isPreview ? '' : `${getPercentage(value, totalItems)}%`),
+      format: (value) => (isPreview || value === 0 ? '' : `${getPercentage(value, totalItems)}%`),
     },
     onclick: isPreview ? undefined : onChartClick,
   };
