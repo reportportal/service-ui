@@ -43,3 +43,4 @@ export const DEFAULT_FILTER = {
     { isAsc: false, sortingColumn: 'number' },
   ],
 };
+export const COPY_PREFIX = 'Copy';

@@ -48,6 +48,7 @@ import {
   SAVE_NEW_FILTER,
   RESET_FILTER,
   FETCH_FILTERS_PAGE,
+  COPY_PREFIX,
 } from './constants';
 import { querySelector, launchFiltersSelector } from './selectors';
 import {
@@ -126,11 +127,14 @@ function* createFilter({ payload: filter = {} }) {
     (acc, launchFilter) => (launchFilter.id < acc ? launchFilter.id : acc),
     0,
   );
+  const isCopyOperation = Object.keys(filter).length > 0;
   const newFilter = {
     ...DEFAULT_FILTER,
     ...filter,
     id: lastNewFilterId - 1,
-    name: `${NEW_FILTER_PREFIX} ${-(lastNewFilterId - 1)}`,
+    name: isCopyOperation
+      ? `${COPY_PREFIX} ${filter.name}`
+      : `${NEW_FILTER_PREFIX} ${-(lastNewFilterId - 1)}`,
     owner: userId,
   };
   yield put(addFilterAction(newFilter));
