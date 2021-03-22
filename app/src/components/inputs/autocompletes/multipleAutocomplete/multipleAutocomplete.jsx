@@ -49,6 +49,7 @@ export class MultipleAutocomplete extends Component {
     renderOption: PropTypes.func,
     createNewOption: PropTypes.func,
     minLength: PropTypes.number,
+    maxLength: PropTypes.number,
     async: PropTypes.bool,
     notFoundPrompt: PropTypes.node,
     beforeSearchPrompt: PropTypes.node,
@@ -77,6 +78,7 @@ export class MultipleAutocomplete extends Component {
     renderOption: null,
     createNewOption: (inputValue) => inputValue,
     minLength: 1,
+    maxLength: null,
     async: false,
     customClass: '',
     isOptionUnique: null,
@@ -115,6 +117,7 @@ export class MultipleAutocomplete extends Component {
       inputProps,
       onStateChange,
       customClass,
+      maxLength,
       ...props
     } = this.props;
     const { focused } = this.state;
@@ -166,6 +169,7 @@ export class MultipleAutocomplete extends Component {
                       <input
                         {...getInputProps({
                           placeholder: !disabled ? placeholder : '',
+                          maxLength,
                           onFocus: () => {
                             this.setState({
                               focused: true,
