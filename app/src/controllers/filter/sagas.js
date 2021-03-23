@@ -127,12 +127,11 @@ function* createFilter({ payload: filter = {} }) {
     (acc, launchFilter) => (launchFilter.id < acc ? launchFilter.id : acc),
     0,
   );
-  const isCopyOperation = Object.keys(filter).length > 0;
   const newFilter = {
     ...DEFAULT_FILTER,
     ...filter,
     id: lastNewFilterId - 1,
-    name: isCopyOperation
+    name: filter.name
       ? `${COPY_PREFIX} ${filter.name}`
       : `${NEW_FILTER_PREFIX} ${-(lastNewFilterId - 1)}`,
     owner: userId,
