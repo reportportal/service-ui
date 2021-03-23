@@ -208,7 +208,7 @@ export class DefectSubType extends Component {
           <DefectSubTypeForm
             form={data.locator}
             initialValues={data}
-            onDelete={this.showDeleteConfirmationDialog}
+            onDelete={this.stopEditing}
             onConfirm={this.updateDefectSubType}
           />
         ) : (
