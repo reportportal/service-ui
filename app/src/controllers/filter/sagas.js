@@ -48,6 +48,7 @@ import {
   SAVE_NEW_FILTER,
   RESET_FILTER,
   FETCH_FILTERS_PAGE,
+  COPY_PREFIX,
 } from './constants';
 import { querySelector, launchFiltersSelector } from './selectors';
 import {
@@ -130,7 +131,9 @@ function* createFilter({ payload: filter = {} }) {
     ...DEFAULT_FILTER,
     ...filter,
     id: lastNewFilterId - 1,
-    name: `${NEW_FILTER_PREFIX} ${-(lastNewFilterId - 1)}`,
+    name: filter.name
+      ? `${COPY_PREFIX} ${filter.name}`
+      : `${NEW_FILTER_PREFIX} ${-(lastNewFilterId - 1)}`,
     owner: userId,
   };
   yield put(addFilterAction(newFilter));
