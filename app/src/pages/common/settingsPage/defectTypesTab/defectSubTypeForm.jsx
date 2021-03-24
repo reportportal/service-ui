@@ -108,9 +108,9 @@ export class DefectSubTypeForm extends PureComponent {
             {Parser(CircleCheckIcon)}
           </button>
           <button
-            className={cx('action-button', 'delete-button')}
-            aria-label={intl.formatMessage(COMMON_LOCALE_KEYS.DELETE)}
-            title={intl.formatMessage(COMMON_LOCALE_KEYS.DELETE)}
+            className={cx('action-button', 'cancel-button')}
+            aria-label={intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
+            title={intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
             onClick={onCancel}
           >
             {Parser(CircleCrossIcon)}
