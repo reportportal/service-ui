@@ -1,25 +1,28 @@
 # Responsible Persons
 
-**Project Manager & Project Owner.** - [Dzmitry Humianiuk](https://telescope.epam.com/who/Dzmitry_Humianiuk)<br/>
-Product delivery. Promotion.
+**Product Owner** - [Dmitriy Gumeniuk](https://telescope.epam.com/who/Dmitriy_Gumeniuk)<br/>
+Product related questions. Promotion.
 
-**Project Coordinator & Scrum Master** - [Julia Moiseyenkova](https://telescope.epam.com/who/Julia_Moiseyenkova)<br/>
-Organization & coordination questions.
+**Project Manager & Delivery Manager** - [Ilya Nazarov](https://telescope.epam.com/who/Ilya_Nazarov)<br/>
+Organization & delivery questions.
 
 **Business Analyst** - [Yauheniya Labanava](https://telescope.epam.com/who/Yauheniya_Labanava)<br/>
 Requirements related questions. Responsible for task descriptions.
 
-**UI Team Leader** - [Maxim Tumas](https://telescope.epam.com/who/Maxim_Tumas)<br/>
-UI related questions. Github account - [DiscoElevator](https://github.com/DiscoElevator)
-
-**WS Team Leader & Solution Architect** - [Andrei Varabyeu](https://telescope.epam.com/who/Andrei_Varabyeu)<br/>
+**Solution Architect** - [Andrei Varabyeu](https://telescope.epam.com/who/Andrei_Varabyeu)<br/>
 WS architecture related questions. Github account - [avarabyeu](https://github.com/avarabyeu)
+
+**WS Team Leader** - [Maksim Antonov](https://telescope.epam.com/who/Maksim_Antonov)<br/>
+WS related questions. Github account - [miracle8484](https://github.com/miracle8484)
 
 **WS Key Developer** - [Pavel Bortnik](https://telescope.epam.com/who/Pavel_Bortnik)<br/>
 WS development related questions. Github account - [pbortnik](https://github.com/pbortnik)
 
-**UX Designer** - [Oleksandra Yurchenko](https://telescope.epam.com/who/Oleksandra_Yurchenko)<br/>
+**UI Team Leader** - [Ilya Hancharyk](https://telescope.epam.com/who/Ilya_Hancharyk)<br/>
+UI related questions. Github account - [AmsterGet](https://github.com/AmsterGet)
+
+**UX Design Team Leader** - [Vitalii Oleksiuk](https://telescope.epam.com/who/Vitalii_Oleksiuk)<br/>
 UX & Design related questions.
 
-**QA Team Leader** - [Volha Yermalovich](https://telescope.epam.com/who/Volha_Yermalovich)<br/>
+**QA Team Leader** - [Valentina Svettsova](https://telescope.epam.com/who/Valentina_Svettsova)<br/>
 Testing & Project functionality related questions.
