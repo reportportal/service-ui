@@ -71,13 +71,13 @@ export class DefectSubTypeForm extends PureComponent {
   static propTypes = {
     initialValues: defectTypeShape.isRequired,
     handleSubmit: PropTypes.func.isRequired,
-    onDelete: PropTypes.func.isRequired,
+    onCancel: PropTypes.func.isRequired,
     onConfirm: PropTypes.func.isRequired,
     intl: PropTypes.object.isRequired,
   };
 
   render() {
-    const { handleSubmit, onDelete, onConfirm, intl } = this.props;
+    const { handleSubmit, onCancel, onConfirm, intl } = this.props;
 
     return (
       <Fragment>
@@ -111,7 +111,7 @@ export class DefectSubTypeForm extends PureComponent {
             className={cx('action-button', 'delete-button')}
             aria-label={intl.formatMessage(COMMON_LOCALE_KEYS.DELETE)}
             title={intl.formatMessage(COMMON_LOCALE_KEYS.DELETE)}
-            onClick={onDelete}
+            onClick={onCancel}
           >
             {Parser(CircleCrossIcon)}
           </button>
