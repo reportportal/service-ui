@@ -6,7 +6,7 @@ On our project we are using [SCSS syntax](https://sass-lang.com/guide) and [CSS 
 
 '/src/common/css/fonts/' - fonts.
 
-'/src/common/css/variables/' - color, font and screen breakpoint variables.
+'/src/common/css/variables/' - color, font, z-index and screen breakpoint variables.
 
 As far as usually components has small size, it's preferable to do not use css selectors nesting (exclude pseudo elements, pseudo classes and state-classes).
 

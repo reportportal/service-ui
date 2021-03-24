@@ -2,8 +2,8 @@
 
 To store designed UI wireframes, we are using [Zeplin](https://zeplin.io/).
 
-To get access to Report Portal workspace, please contact our UX Designer [Oleksandra Yurchenko](https://telescope.epam.com/who/Oleksandra_Yurchenko).
-Also you can discuss all design-related questions with her.
+To get access to Report Portal workspace, please contact our UX Designer [Vitalii Oleksiuk](https://telescope.epam.com/who/Vitalii_Oleksiuk).
+Also you can discuss all design-related questions with him.
 
 We already have stable style guide, witch includes colors palette, fonts, common elements and ect.
 Strongly required to follow it! Color and font variables you can find in `/src/common/css/` folder.
@@ -15,10 +15,10 @@ sometimes it's can be very hard to keep all wireframes in Zeplin up-to-date.
 So, above reasons cause the fact, that we have two sources of knowledge at single moment:
 
 - Zeplin wireframes
-- Existing and running application based on BackboneJS.
+- Existing and running application.
 
 So, it's really necessary to be sure that there are no differences between task requirements,
-zeplin wireframe and Backbone app version.
+zeplin wireframe and app version.
 If you have some misunderstanding related to design or you see such differences -
 it's a strong reason to contact UX Designer and resolve all issues, before implementation process will be started.
 
