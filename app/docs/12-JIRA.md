@@ -2,13 +2,11 @@
 
 To track bugs, handle tasks and agile project management we are using EPAM's JIRA system.
 
-You can get invitation to Report Portal workspace from [Dzmitry Humianiuk](https://telescope.epam.com/who/Dzmitry_Humianiuk) or [Julia Moiseyenkova](https://telescope.epam.com/who/Julia_Moiseyenkova).
+You can get invitation to Report Portal workspace from [Ilya Nazarov](https://telescope.epam.com/who/Ilya_Nazarov).
 
 Once you'll get some tasks, after planning session, workflow is:
 
-1.  Estimate it in hours.
 1.  Move in 'In Progress' column.
-1.  Each day you should log your work in hours until task will be completed.
 1.  Send Pull Request (next PR) in GitHub.
 1.  Change task status to "Code review" in JIRA.
 1.  Wait (work with other tasks) until you PR will be reviewed.

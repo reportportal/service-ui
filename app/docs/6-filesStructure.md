@@ -8,7 +8,7 @@
 
 `/src/` - application sources:
 
-- `/src/common/` - common constants, common css, css variables, fonts, images, icons, utils, polyfils, urls.
+- `/src/common/` - common constants, common css, css variables, fonts, images, icons, utils, polyfills, urls.
 - `/src/components/` - common, reusable components base.
 - `/src/controllers/` - stuff related to Redux(reducers, sagas, action creators, selectors and ect.).
 - `/src/layouts/` - application layouts.
