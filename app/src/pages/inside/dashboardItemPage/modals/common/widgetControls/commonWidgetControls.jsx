@@ -110,7 +110,7 @@ export class CommonWidgetControls extends Component {
       eventsInfo,
       dashboards,
       onChangeDashboard,
-      activeDashboard: { widgets = [] },
+      activeDashboard: { widgets = [], share },
     } = this.props;
 
     return (
@@ -142,9 +142,11 @@ export class CommonWidgetControls extends Component {
             name="share"
             format={Boolean}
             parse={Boolean}
-            onChange={() => trackEvent(eventsInfo.shareWidget)}
+            onChange={() => {
+              !share && trackEvent(eventsInfo.shareWidget);
+            }}
           >
-            <InputBigSwitcher />
+            <InputBigSwitcher disabled={share} />
           </FieldProvider>
         </ModalField>
         {this.isShowDashboardsList() && (
