@@ -210,6 +210,30 @@
       background: transparent;
     }
   }
+  &.appearance-topaz:not(.disabled) {
+    border-radius: 2px;
+    border-color: transparent;
+    color: $COLOR--white-two;
+    background-color: $COLOR--topaz;
+    &.transparent-background:not(:hover) {
+      color: $COLOR--topaz;
+      background: transparent;
+    }
+    &.transparent-background:hover {
+      background: transparent;
+      color: $COLOR--topaz-hover;
+    }
+  }
+  &.appearance-topaz.disabled {
+    border-radius: 2px;
+    border-color: transparent;
+    color: $COLOR--gray-60;
+    background-color: $COLOR--topaz-disabled;
+    &.transparent-background {
+      color: $COLOR--topaz-disabled;
+      background: transparent;
+    }
+  }
 }
 .icon {
   display: inline-block;

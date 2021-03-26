@@ -1,5 +1,5 @@
 /*!
- * Copyright 2019 EPAM Systems
+ * Copyright 2021 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,52 @@
  * limitations under the License.
  */
 
-.log-toolbar {
+.header {
+  position: relative;
   display: flex;
   align-items: center;
+  padding: 0 24px;
+  margin-bottom: 25px;
+  font-family: $FONT-REGULAR;
+  font-size: 24px;
+  color: $COLOR--white-two;
+}
+
+.header-content {
+  display: flex;
   justify-content: space-between;
-  padding: 10px 15px;
-  margin-bottom: 10px;
+  align-items: center;
+  width: 100%;
+  padding-right: 40px;
+  box-sizing: border-box;
 }
 
-.action-buttons {
+.header-elements {
+  display: flex;
+  flex-grow: 0;
+  width: auto;
+}
+
+.title {
+  flex-grow: 1;
+  text-overflow: ellipsis;
+  line-height: 30px;
+}
+
+.close-icon {
   display: flex;
   align-items: center;
+  width: 58px;
+  height: 30px;
+  cursor: pointer;
+
+  svg {
+    fill: $COLOR--topaz;
+  }
 }
 
-.action-button {
-  padding-left: 10px;
-  display: flex;
-}
-
-.left-arrow-button {
-  margin-right: -1px;
-}
-
-.inactive {
-  opacity: 0.3;
+.close-icon-prefix {
+  margin-right: 7px;
+  color: $COLOR--dark-gray;
+  font-size: 11px;
 }

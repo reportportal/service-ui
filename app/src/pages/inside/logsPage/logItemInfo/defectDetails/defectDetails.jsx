@@ -53,6 +53,7 @@ import {
   IgnoredInAALabel,
   PALabel,
 } from 'pages/inside/stepPage/stepGrid/defectType/defectType';
+import { DEFECT_EDITOR_MODAL } from 'pages/inside/stepPage/modals/editDefectModals/constants';
 import styles from './defectDetails.scss';
 
 const cx = classNames.bind(styles);
@@ -245,36 +246,22 @@ export class DefectDetails extends Component {
 
   handleEditDefect = () => {
     const { logItem } = this.props;
-    if (this.isDefectGroupOperationAvailable()) {
-      this.props.showModalAction({
-        id: 'editToInvestigateDefectModal',
-        data: {
-          item: logItem,
-          fetchFunc: this.onDefectEdited,
-          eventsInfo: {
-            changeSearchMode: LOG_PAGE_EVENTS.CHANGE_SEARCH_MODE_EDIT_DEFECT_MODAL,
-            selectAllSimilarItems: LOG_PAGE_EVENTS.SELECT_ALL_SIMILAR_ITEMS_EDIT_DEFECT_MODAL,
-            selectSpecificSimilarItem:
-              LOG_PAGE_EVENTS.SELECT_SPECIFIC_SIMILAR_ITEM_EDIT_DEFECT_MODAL,
-            editDefectsEvents: LOG_PAGE_EVENTS.EDIT_DEFECT_MODAL_EVENTS,
-            unlinkIssueEvents: UNLINK_ISSUE_EVENTS_INFO,
-            postIssueEvents: POST_ISSUE_EVENTS_INFO,
-            linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
-          },
-        },
-      });
-    } else {
-      this.props.editDefectsAction([this.props.logItem], {
+    this.props.showModalAction({
+      id: DEFECT_EDITOR_MODAL,
+      data: {
+        item: logItem,
         fetchFunc: this.onDefectEdited,
-        debugMode: this.props.debugMode,
         eventsInfo: {
+          changeSearchMode: LOG_PAGE_EVENTS.CHANGE_SEARCH_MODE_EDIT_DEFECT_MODAL,
+          selectAllSimilarItems: LOG_PAGE_EVENTS.SELECT_ALL_SIMILAR_ITEMS_EDIT_DEFECT_MODAL,
+          selectSpecificSimilarItem: LOG_PAGE_EVENTS.SELECT_SPECIFIC_SIMILAR_ITEM_EDIT_DEFECT_MODAL,
           editDefectsEvents: LOG_PAGE_EVENTS.EDIT_DEFECT_MODAL_EVENTS,
           unlinkIssueEvents: UNLINK_ISSUE_EVENTS_INFO,
           postIssueEvents: POST_ISSUE_EVENTS_INFO,
           linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
         },
-      });
-    }
+      },
+    });
   };
 
   toggleExpanded = () => {

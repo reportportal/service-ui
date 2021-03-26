@@ -86,6 +86,10 @@
       border: 1px solid $COLOR--gray-60;
     }
   }
+  &.label-first {
+    right: 0;
+    left: auto;
+  }
 }
 .children-container {
   position: relative;
@@ -101,5 +105,9 @@
   box-sizing: border-box;
   &.readonly {
     cursor: default;
+  }
+  &.label-first {
+    padding-left: 0;
+    padding-right: 30px;
   }
 }
