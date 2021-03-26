@@ -24,6 +24,7 @@
   padding-right: 20px;
   text-align: right;
   vertical-align: middle;
+  background-color: $COLOR--primary-gray;
 
   @media (max-width: $SCREEN_SM_MAX) {
     display: none;
