@@ -89,4 +89,28 @@ export const messages = defineMessages({
     id: 'EditDefectModal.noItems',
     defaultMessage: 'No similar items',
   },
+  decisionForTest: {
+    id: 'EditDefectModal.decisionForTest',
+    defaultMessage: 'Decision for the test #{launchNumber}',
+  },
+  selectDefectTypeManually: {
+    id: 'EditDefectModal.selectDefectTypeManually',
+    defaultMessage: 'Select defect type manually',
+  },
+  machineLearningSuggestions: {
+    id: 'EditDefectModal.machineLearningSuggestions',
+    defaultMessage: 'Machine learning suggestions',
+  },
+  applyImmediately: {
+    id: 'EditDefectModal.applyImmediately',
+    defaultMessage: 'Apply Immediately',
+  },
+  applyWithOptions: {
+    id: 'EditDefectModal.applyWithOptions',
+    defaultMessage: 'Apply with Options',
+  },
+  defaultNoteMessage: {
+    id: 'EditDefectModal.defaultNoteMessage',
+    defaultMessage: 'You have unsaved changes',
+  },
 });

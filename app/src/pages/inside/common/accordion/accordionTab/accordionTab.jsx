@@ -38,7 +38,7 @@ export const AccordionTab = ({
     <>
       <div
         className={cx('header', { open: tabsState[id] }, headerClassNames)}
-        onClick={clickHandler}
+        onClick={content && clickHandler}
       >
         {title}
       </div>

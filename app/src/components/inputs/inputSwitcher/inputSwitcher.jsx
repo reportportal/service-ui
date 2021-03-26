@@ -20,12 +20,22 @@ import styles from './inputSwitcher.scss';
 
 const cx = classNames.bind(styles);
 
-export const InputSwitcher = ({ children, value, onChange, onFocus, onBlur, readOnly }) => {
+export const InputSwitcher = ({
+  children,
+  value,
+  onChange,
+  onFocus,
+  onBlur,
+  readOnly,
+  className,
+  labelFirst,
+}) => {
   const sliderClasses = cx({
     'switcher-slider': true,
     centered: !children,
     on: value,
     readonly: readOnly,
+    'label-first': labelFirst,
   });
   const onChangeHandler = (e) => {
     if (!readOnly) onChange(e.target.checked);
@@ -33,7 +43,7 @@ export const InputSwitcher = ({ children, value, onChange, onFocus, onBlur, read
 
   return (
     // eslint-disable-next-line
-    <label className={cx('input-switcher')} onFocus={onFocus} onBlur={onBlur} tabIndex="1">
+    <label className={cx('input-switcher', className)} onFocus={onFocus} onBlur={onBlur} tabIndex="1">
       <input
         type="checkbox"
         className={cx('input')}
@@ -41,8 +51,17 @@ export const InputSwitcher = ({ children, value, onChange, onFocus, onBlur, read
         checked={value}
         onChange={onChangeHandler}
       />
+      {labelFirst && (
+        <span
+          className={cx('children-container', { readonly: readOnly, 'label-first': labelFirst })}
+        >
+          {children}
+        </span>
+      )}
       <span className={sliderClasses} />
-      <span className={cx('children-container', { readonly: readOnly })}>{children}</span>
+      {!labelFirst && (
+        <span className={cx('children-container', { readonly: readOnly })}>{children}</span>
+      )}
     </label>
   );
 };
@@ -54,6 +73,8 @@ InputSwitcher.propTypes = {
   onFocus: PropTypes.func,
   onBlur: PropTypes.func,
   readOnly: PropTypes.bool,
+  className: PropTypes.string,
+  labelFirst: PropTypes.bool,
 };
 
 InputSwitcher.defaultProps = {
@@ -63,4 +84,6 @@ InputSwitcher.defaultProps = {
   onFocus: () => {},
   onBlur: () => {},
   readOnly: false,
+  className: '',
+  labelFirst: false,
 };

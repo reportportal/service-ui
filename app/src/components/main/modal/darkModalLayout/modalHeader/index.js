@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2021 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,4 @@
  * limitations under the License.
  */
 
-export const SEARCH_MODES = {
-  CURRENT_LAUNCH: 'currentLaunch',
-  LAUNCH_NAME: 'launchName',
-  FILTER: 'filter',
-};
-export const CHANGE_COMMENT_MODE = {
-  NOT_CHANGE: 'NOT_CHANGE',
-  REPLACE: 'REPLACE',
-  ADD_TO_EXISTING: 'ADD_TO_EXISTING',
-};
-export const CURRENT_CHANGE_DEFECT_COMMENT_MODE = 'currentChangeDefectCommentMode';
-export const DEFECT_EDITOR_MODAL = 'defectEditorModal';
+export { ModalHeader } from './modalHeader';

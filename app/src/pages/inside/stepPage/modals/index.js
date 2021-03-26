@@ -22,3 +22,4 @@ export { LinkIssueModal } from './linkIssueModal';
 export { PostIssueModal } from './postIssueModal';
 export { EditDefectModal } from './editDefectModals';
 export { EditToInvestigateDefectModal } from './editDefectModals';
+export { DefectEditorModal } from './editDefectModals';

@@ -124,6 +124,7 @@ export class HistoryLineItem extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     onClick: PropTypes.func,
+    isDefectEditorOpen: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -138,14 +139,19 @@ export class HistoryLineItem extends Component {
     startTime: null,
     endTime: null,
     onClick: () => {},
+    isDefectEditorOpen: false,
   };
 
   render() {
-    const { intl, active, isLastItem, onClick, tracking, ...rest } = this.props;
+    const { intl, active, isLastItem, onClick, tracking, isDefectEditorOpen, ...rest } = this.props;
 
     return (
       <div
-        className={cx('history-line-item', { active, 'last-item': isLastItem })}
+        className={cx('history-line-item', {
+          active,
+          'last-item': isLastItem,
+          inactive: !active && isDefectEditorOpen,
+        })}
         onClick={() => {
           tracking.trackEvent(LOG_PAGE_EVENTS.HISTORY_LINE_ITEM);
           onClick();

@@ -16,3 +16,4 @@
 
 export { EditDefectModal } from './editDefectModal';
 export { EditToInvestigateDefectModal } from './editToInvestigateDefectModal';
+export { DefectEditorModal } from './defectEditorModal/defectEditorModal';
