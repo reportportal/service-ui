@@ -169,8 +169,7 @@ const MakeDecision = ({ data }) => {
       renderHeaderElements={renderHeaderElements}
       modalHasChanges={hasChanges}
       hotKeyAction={hotKeyAction}
-      applyChangesImmediately={applyChangesImmediately}
-      defaultNoteMessage={formatMessage(messages.defaultNoteMessage)}
+      modalNote={formatMessage(messages.modalNote)}
     >
       <Accordion renderedData={accordionData} />
     </DarkModalLayout>

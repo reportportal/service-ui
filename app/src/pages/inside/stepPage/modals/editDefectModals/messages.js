@@ -113,8 +113,8 @@ export const messages = defineMessages({
     id: 'MakeDecisionModal.applyWithOptions',
     defaultMessage: 'Apply with Options',
   },
-  defaultNoteMessage: {
-    id: 'MakeDecisionModal.defaultNoteMessage',
+  modalNote: {
+    id: 'MakeDecisionModal.modalNote',
     defaultMessage: 'You have unsaved changes',
   },
   disabledTabTooltip: {
