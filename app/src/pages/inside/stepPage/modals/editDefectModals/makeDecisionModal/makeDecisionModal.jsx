@@ -32,12 +32,12 @@ import { fetch } from 'common/utils';
 import classNames from 'classnames/bind';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { messages } from './../messages';
-import { DEFECT_EDITOR_MODAL } from '../constants';
-import styles from './defectEditorModal.scss';
+import { MAKE_DECISION_MODAL } from '../constants';
+import styles from './makeDecisionModal.scss';
 
 const cx = classNames.bind(styles);
 
-const DefectEditor = ({ data }) => {
+const MakeDecision = ({ data }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const activeProject = useSelector(activeProjectSelector);
@@ -114,7 +114,7 @@ const DefectEditor = ({ data }) => {
         >
           {formatMessage(messages.applyImmediately)}
         </GhostButton>
-        <GhostButton disabled appearance="topaz">
+        <GhostButton disabled color="''" appearance="topaz">
           {formatMessage(messages.applyWithOptions)}
         </GhostButton>
       </>
@@ -125,7 +125,7 @@ const DefectEditor = ({ data }) => {
       id: 0,
       isActive: false,
       title: (
-        <div title="A new functionality will be available in next versions">
+        <div title={formatMessage(messages.disabledTabTooltip)}>
           {formatMessage(messages.machineLearningSuggestions)}
         </div>
       ),
@@ -141,9 +141,10 @@ const DefectEditor = ({ data }) => {
             value={state.issue.ignoreAnalyzer}
             onChange={handleIgnoreAnalyzerChange}
             className={cx('ignore-analysis')}
-            labelFirst
+            childrenFirst
+            childrenClassName={cx('input-switcher-children')}
           >
-            <span>{formatMessage(messages.ignoreAaTitle)}</span>
+            <span>{formatMessage(messages.ignoreAa)}</span>
           </InputSwitcher>
           <ScrollWrapper autoHeight autoHeightMax={220}>
             <DefectTypeSelectorML
@@ -175,11 +176,11 @@ const DefectEditor = ({ data }) => {
     </DarkModalLayout>
   );
 };
-DefectEditor.propTypes = {
+MakeDecision.propTypes = {
   data: PropTypes.shape({
     item: PropTypes.object,
     fetchFunc: PropTypes.func,
     eventsInfo: PropTypes.object,
   }).isRequired,
 };
-export const DefectEditorModal = withModal(DEFECT_EDITOR_MODAL)(DefectEditor);
+export const MakeDecisionModal = withModal(MAKE_DECISION_MODAL)(MakeDecision);

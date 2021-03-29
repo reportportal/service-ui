@@ -210,12 +210,16 @@
       background: transparent;
     }
   }
-  &.appearance-topaz:not(.disabled) {
+  &.appearance-topaz {
     border-radius: 2px;
     border-color: transparent;
+    min-width: 173px;
     color: $COLOR--white-two;
     background-color: $COLOR--topaz;
-    &.transparent-background:not(:hover) {
+    &:hover {
+      background-color: $COLOR--topaz-hover;
+    }
+    &.transparent-background {
       color: $COLOR--topaz;
       background: transparent;
     }

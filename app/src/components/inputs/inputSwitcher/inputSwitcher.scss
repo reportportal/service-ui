@@ -86,7 +86,7 @@
       border: 1px solid $COLOR--gray-60;
     }
   }
-  &.label-first {
+  &.children-first {
     right: 0;
     left: auto;
   }
@@ -106,7 +106,7 @@
   &.readonly {
     cursor: default;
   }
-  &.label-first {
+  &.children-first {
     padding-left: 0;
     padding-right: 30px;
   }

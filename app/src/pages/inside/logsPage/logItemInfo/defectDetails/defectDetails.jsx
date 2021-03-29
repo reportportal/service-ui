@@ -53,7 +53,7 @@ import {
   IgnoredInAALabel,
   PALabel,
 } from 'pages/inside/stepPage/stepGrid/defectType/defectType';
-import { DEFECT_EDITOR_MODAL } from 'pages/inside/stepPage/modals/editDefectModals/constants';
+import { MAKE_DECISION_MODAL } from 'pages/inside/stepPage/modals/editDefectModals/constants';
 import styles from './defectDetails.scss';
 
 const cx = classNames.bind(styles);
@@ -247,7 +247,7 @@ export class DefectDetails extends Component {
   handleEditDefect = () => {
     const { logItem } = this.props;
     this.props.showModalAction({
-      id: DEFECT_EDITOR_MODAL,
+      id: MAKE_DECISION_MODAL,
       data: {
         item: logItem,
         fetchFunc: this.onDefectEdited,
