@@ -73,7 +73,12 @@ export class MarkdownViewer extends Component {
     return (
       <div className={cx('viewer-wrapper')}>
         <div ref={this.container} className={cx('markdown-viewer')}>
-          {Parser(DOMPurify.sanitize(this.simpleMDE.markdown(this.props.value)))}
+          {Parser(
+            DOMPurify.sanitize(this.simpleMDE.markdown(this.props.value), {
+              // Configuration details https://github.com/cure53/DOMPurify#can-i-configure-dompurify
+              ALLOW_UNKNOWN_PROTOCOLS: true,
+            }),
+          )}
         </div>
       </div>
     );
