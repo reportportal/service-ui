@@ -36,7 +36,7 @@ import { PAGE_KEY, DEFAULT_PAGINATION } from 'controllers/pagination';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { activeModalSelector } from 'controllers/modal';
-import { DEFECT_EDITOR_MODAL } from 'pages/inside/stepPage/modals/editDefectModals/constants';
+import { MAKE_DECISION_MODAL } from 'pages/inside/stepPage/modals/editDefectModals/constants';
 import { HistoryLineItem } from './historyLineItem';
 import styles from './historyLine.scss';
 
@@ -160,7 +160,7 @@ export class HistoryLine extends Component {
               <HistoryLineItem
                 key={item.id}
                 active={item.id === activeItemId}
-                isDefectEditorOpen={activeModal && activeModal.id === DEFECT_EDITOR_MODAL}
+                isDefectEditorOpen={activeModal && activeModal.id === MAKE_DECISION_MODAL}
                 isLastItem={index === historyItems.length - 1}
                 onClick={() =>
                   this.checkIfTheItemLinkIsActive(item) ? changeActiveItem(item.id) : {}

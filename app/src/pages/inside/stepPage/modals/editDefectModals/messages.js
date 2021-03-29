@@ -89,28 +89,36 @@ export const messages = defineMessages({
     id: 'EditDefectModal.noItems',
     defaultMessage: 'No similar items',
   },
+  ignoreAa: {
+    id: 'MakeDecisionModal.ignoreAa',
+    defaultMessage: 'Ignore in Auto Analysis',
+  },
   decisionForTest: {
-    id: 'EditDefectModal.decisionForTest',
+    id: 'MakeDecisionModal.decisionForTest',
     defaultMessage: 'Decision for the test #{launchNumber}',
   },
   selectDefectTypeManually: {
-    id: 'EditDefectModal.selectDefectTypeManually',
+    id: 'MakeDecisionModal.selectDefectTypeManually',
     defaultMessage: 'Select defect type manually',
   },
   machineLearningSuggestions: {
-    id: 'EditDefectModal.machineLearningSuggestions',
+    id: 'MakeDecisionModal.machineLearningSuggestions',
     defaultMessage: 'Machine learning suggestions',
   },
   applyImmediately: {
-    id: 'EditDefectModal.applyImmediately',
+    id: 'MakeDecisionModal.applyImmediately',
     defaultMessage: 'Apply Immediately',
   },
   applyWithOptions: {
-    id: 'EditDefectModal.applyWithOptions',
+    id: 'MakeDecisionModal.applyWithOptions',
     defaultMessage: 'Apply with Options',
   },
   defaultNoteMessage: {
-    id: 'EditDefectModal.defaultNoteMessage',
+    id: 'MakeDecisionModal.defaultNoteMessage',
     defaultMessage: 'You have unsaved changes',
+  },
+  disabledTabTooltip: {
+    id: 'MakeDecisionModal.disabledTabTooltip',
+    defaultMessage: 'A new functionality will be available in the next version',
   },
 });

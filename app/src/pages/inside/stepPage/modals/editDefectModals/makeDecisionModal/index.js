@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2021 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,10 +14,4 @@
  * limitations under the License.
  */
 
-.ignore-analysis {
-  position: absolute;
-  top: -32px;
-  right: 20px;
-  width: auto;
-  height: 22px;
-}
+export { MakeDecisionModal } from './makeDecisionModal';

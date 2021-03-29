@@ -43,12 +43,18 @@
 
 :global {
   .window-animation-enter {
-    bottom: 1000px;
-    padding-bottom: 0;
+    opacity: 0;
   }
   .window-animation-enter-active {
-    bottom: 0;
-    transition: all 300ms linear;
+    opacity: 1;
+    transition: opacity 200ms;
+  }
+  .window-animation-exit {
+    opacity: 1;
+  }
+  .window-animation-exit-active {
+    opacity: 0;
+    transition: opacity 200ms;
   }
 }
 

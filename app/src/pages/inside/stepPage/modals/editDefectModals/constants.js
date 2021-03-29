@@ -25,4 +25,4 @@ export const CHANGE_COMMENT_MODE = {
   ADD_TO_EXISTING: 'ADD_TO_EXISTING',
 };
 export const CURRENT_CHANGE_DEFECT_COMMENT_MODE = 'currentChangeDefectCommentMode';
-export const DEFECT_EDITOR_MODAL = 'defectEditorModal';
+export const MAKE_DECISION_MODAL = 'makeDecisionModal';

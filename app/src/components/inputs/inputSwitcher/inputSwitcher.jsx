@@ -28,14 +28,15 @@ export const InputSwitcher = ({
   onBlur,
   readOnly,
   className,
-  labelFirst,
+  childrenFirst,
+  childrenClassName,
 }) => {
   const sliderClasses = cx({
     'switcher-slider': true,
     centered: !children,
     on: value,
     readonly: readOnly,
-    'label-first': labelFirst,
+    'children-first': childrenFirst,
   });
   const onChangeHandler = (e) => {
     if (!readOnly) onChange(e.target.checked);
@@ -51,15 +52,19 @@ export const InputSwitcher = ({
         checked={value}
         onChange={onChangeHandler}
       />
-      {labelFirst && (
+      {childrenFirst && (
         <span
-          className={cx('children-container', { readonly: readOnly, 'label-first': labelFirst })}
+          className={cx(
+            'children-container',
+            { readonly: readOnly, 'children-first': childrenFirst },
+            childrenClassName,
+          )}
         >
           {children}
         </span>
       )}
       <span className={sliderClasses} />
-      {!labelFirst && (
+      {!childrenFirst && (
         <span className={cx('children-container', { readonly: readOnly })}>{children}</span>
       )}
     </label>
@@ -74,7 +79,8 @@ InputSwitcher.propTypes = {
   onBlur: PropTypes.func,
   readOnly: PropTypes.bool,
   className: PropTypes.string,
-  labelFirst: PropTypes.bool,
+  childrenFirst: PropTypes.bool,
+  childrenClassName: PropTypes.string,
 };
 
 InputSwitcher.defaultProps = {
@@ -85,5 +91,6 @@ InputSwitcher.defaultProps = {
   onBlur: () => {},
   readOnly: false,
   className: '',
-  labelFirst: false,
+  childrenFirst: false,
+  childrenClassName: '',
 };

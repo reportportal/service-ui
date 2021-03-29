@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright 2021 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import PropTypes from 'prop-types';
+.ignore-analysis {
+  position: absolute;
+  top: -32px;
+  right: 20px;
+  width: auto;
+  height: 22px;
+}
 
-export const ModalContent = ({ children }) => {
-  return <>{children}</>;
-};
-ModalContent.propTypes = {
-  children: PropTypes.node,
-};
-ModalContent.defaultProps = {
-  children: null,
-};
+.input-switcher-children {
+  color: $COLOR--dark-gray;
+}

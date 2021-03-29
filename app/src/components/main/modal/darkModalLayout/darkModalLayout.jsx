@@ -23,7 +23,6 @@ import { hideModalAction } from 'controllers/modal';
 import ErrorInlineIcon from 'common/img/error-inline.svg';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { ModalNote } from './modalNote';
-import { ModalContent } from './modalContent';
 import { ModalHeader } from './modalHeader';
 import styles from './darkModalLayout.scss';
 
@@ -44,7 +43,6 @@ export const DarkModalLayout = ({
 
   const closeModalWindow = () => {
     setIsShown(false);
-    dispatch(hideModalAction());
   };
   const handleClickOutside = (event) => {
     if (wrapperRef && !wrapperRef.current.contains(event.target)) {
@@ -66,19 +64,21 @@ export const DarkModalLayout = ({
   };
   useEffect(() => {
     setIsShown(true);
+  }, []);
+  useEffect(() => {
     document.addEventListener('keydown', onKeydown, false);
     return () => {
       document.removeEventListener('keydown', onKeydown, false);
     };
-  });
+  }, [modalHasChanges]);
 
   return (
     <div className={cx('container')} onClick={handleClickOutside}>
       <CSSTransition
-        timeout={300}
+        timeout={200}
         in={isShown}
         classNames={cx('window-animation')}
-        onExited={closeModalWindow}
+        onExited={() => dispatch(hideModalAction())}
       >
         {(status) => (
           <div ref={wrapperRef} className={cx('wrapper')}>
@@ -89,7 +89,7 @@ export const DarkModalLayout = ({
                 renderHeaderElements={renderHeaderElements}
               />
               <ScrollWrapper hideTracksWhenNotNeeded autoHide>
-                <ModalContent>{status !== 'exited' ? children : null}</ModalContent>
+                {status !== 'exited' ? children : null}
               </ScrollWrapper>
               <div className={cx('note-row')}>
                 {modalHasChanges && clickOutside && defaultNoteMessage && (
