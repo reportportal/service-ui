@@ -34,10 +34,11 @@ export const DarkModalLayout = ({
   children,
   modalHasChanges,
   hotKeyAction,
-  defaultNoteMessage,
+  modalNote,
 }) => {
   const [isShown, setIsShown] = useState(false);
   const [clickOutside, setClickOutside] = useState(false);
+  const [isCtrlEnterPress, setIsCtrlEnterPress] = useState(false);
   const dispatch = useDispatch();
   const wrapperRef = useRef();
 
@@ -50,8 +51,6 @@ export const DarkModalLayout = ({
       if (!modalHasChanges) {
         closeModalWindow();
       }
-    } else {
-      setClickOutside(false);
     }
   };
   const onKeydown = (e) => {
@@ -59,18 +58,26 @@ export const DarkModalLayout = ({
       closeModalWindow();
     }
     if ((e.ctrlKey && e.keyCode === 13) || (e.metaKey && e.keyCode === 13)) {
-      hotKeyAction.ctrlEnter();
+      setIsCtrlEnterPress(true);
+    }
+  };
+  const onKeyup = (e) => {
+    if ((e.ctrlKey && e.keyCode === 13) || (e.metaKey && e.keyCode === 13)) {
+      setIsCtrlEnterPress(false);
     }
   };
   useEffect(() => {
     setIsShown(true);
+    document.addEventListener('keydown', onKeydown);
+    document.addEventListener('keyup', onKeyup);
+    return () => {
+      document.removeEventListener('keydown', onKeydown);
+      document.removeEventListener('keyup', onKeyup);
+    };
   }, []);
   useEffect(() => {
-    document.addEventListener('keydown', onKeydown, false);
-    return () => {
-      document.removeEventListener('keydown', onKeydown, false);
-    };
-  }, [modalHasChanges]);
+    isCtrlEnterPress && hotKeyAction.ctrlEnter();
+  }, [isCtrlEnterPress]);
 
   return (
     <div className={cx('container')} onClick={handleClickOutside}>
@@ -92,8 +99,8 @@ export const DarkModalLayout = ({
                 {status !== 'exited' ? children : null}
               </ScrollWrapper>
               <div className={cx('note-row')}>
-                {modalHasChanges && clickOutside && defaultNoteMessage && (
-                  <ModalNote message={defaultNoteMessage} icon={ErrorInlineIcon} status={'error'} />
+                {modalHasChanges && clickOutside && modalNote && (
+                  <ModalNote message={modalNote} icon={ErrorInlineIcon} status={'error'} />
                 )}
               </div>
             </div>
@@ -109,7 +116,7 @@ DarkModalLayout.propTypes = {
   children: PropTypes.node,
   modalHasChanges: PropTypes.bool,
   hotKeyAction: PropTypes.objectOf(PropTypes.func),
-  defaultNoteMessage: PropTypes.string,
+  modalNote: PropTypes.string,
 };
 DarkModalLayout.defaultProps = {
   title: '',
@@ -117,5 +124,5 @@ DarkModalLayout.defaultProps = {
   children: null,
   modalHasChanges: false,
   hotKeyAction: {},
-  defaultNoteMessage: '',
+  modalNote: '',
 };
