@@ -56,6 +56,7 @@ import { showModalAction } from 'controllers/modal';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { getDefectTypeSelector } from 'controllers/project';
+import { MAKE_DECISION_MODAL } from 'pages/inside/stepPage/modals/editDefectModals/constants';
 import { StepGrid } from './stepGrid';
 
 const UNLINK_ISSUE_EVENTS_INFO = {
@@ -358,7 +359,7 @@ export class StepPage extends Component {
     });
     if (isDefectGroupOperation) {
       this.props.showModalAction({
-        id: 'editToInvestigateDefectModal',
+        id: MAKE_DECISION_MODAL,
         data: {
           item: items[0],
           fetchFunc: this.unselectAndFetchItems,

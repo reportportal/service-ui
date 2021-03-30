@@ -58,9 +58,10 @@ const MakeDecision = ({ data }) => {
   const isBtsPluginsExist = useSelector(isBtsPluginsExistSelector);
   const enabledBtsPlugins = useSelector(enabledBtsPluginsSelector);
   const isPostIssueUnavailable = !isPostIssueActionAvailable(btsIntegrations);
-  const itemData = data.item;
+  const itemsData = data.items && data.items.length === 1 ? data.items[0] : data.items;
+  const itemData = data.item ? data.item : itemsData;
   const [state, setState] = useState({
-    issue: itemData.issue,
+    issue: itemData.issue || null,
   });
   const [modalHasChanges, setModalHasChanges] = useState(false);
   const [issueAction, setIssueAction] = useState({});
@@ -248,7 +249,7 @@ const MakeDecision = ({ data }) => {
       content: (
         <>
           <InputSwitcher
-            value={state.issue.ignoreAnalyzer}
+            value={state.issue ? state.issue.ignoreAnalyzer : false}
             onChange={handleIgnoreAnalyzerChange}
             className={cx('ignore-analysis')}
             childrenFirst
@@ -259,7 +260,7 @@ const MakeDecision = ({ data }) => {
           <ScrollWrapper autoHeight autoHeightMax={220}>
             <DefectTypeSelectorML
               selectDefectType={selectDefectType}
-              selectedItem={state.issue.issueType}
+              selectedItem={state.issue ? state.issue.issueType : ''}
             />
           </ScrollWrapper>
           <ActionButtonsBar actionItems={getActionItems()} />
@@ -275,7 +276,7 @@ const MakeDecision = ({ data }) => {
   return (
     <DarkModalLayout
       title={formatMessage(messages.decisionForTest, {
-        launchNumber: itemData.launchNumber,
+        launchNumber: itemData.launchNumber && `#${itemData.launchNumber}`,
       })}
       renderHeaderElements={renderHeaderElements}
       modalHasChanges={modalHasChanges}
@@ -289,6 +290,7 @@ const MakeDecision = ({ data }) => {
 MakeDecision.propTypes = {
   data: PropTypes.shape({
     item: PropTypes.object,
+    items: PropTypes.array,
     fetchFunc: PropTypes.func,
     eventsInfo: PropTypes.object,
   }).isRequired,
