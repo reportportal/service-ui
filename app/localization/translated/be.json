@@ -1069,7 +1069,7 @@
   "LogsGridToolbar.withAttachments": "Логі з ўкладаннямі",
   "MakeDecisionModal.applyImmediately": "Ужыць неадкладна",
   "MakeDecisionModal.applyWithOptions": "Прымяніць з опцыямі",
-  "MakeDecisionModal.decisionForTest": "Рашэнне для тэсту #{launchNumber}",
+  "MakeDecisionModal.decisionForTest": "Рашэнне для тэсту {launchNumber}",
   "MakeDecisionModal.disabledTabTooltip": "Новы функцыянал будзе даступны ў наступнай версіі",
   "MakeDecisionModal.ignoreAa": "Ігнараваць пры Аўта-аналіз",
   "MakeDecisionModal.linkIssueNote": "Пасля адпраўкі тыпу дэфекту вы зможаце выбраць параметры для прывязкі новай памылкі",

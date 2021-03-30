@@ -95,7 +95,7 @@ export const messages = defineMessages({
   },
   decisionForTest: {
     id: 'MakeDecisionModal.decisionForTest',
-    defaultMessage: 'Decision for the test #{launchNumber}',
+    defaultMessage: 'Decision for the test {launchNumber}',
   },
   selectDefectTypeManually: {
     id: 'MakeDecisionModal.selectDefectTypeManually',
