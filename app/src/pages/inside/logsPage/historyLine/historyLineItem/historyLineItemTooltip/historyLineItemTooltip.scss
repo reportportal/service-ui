@@ -76,11 +76,32 @@
   }
 }
 
+.attributes-block,
 .duration-block,
 .defect-type-block,
 .launch-name-block,
 .defect-asset {
   margin-top: 15px;
+}
+
+.loader {
+  margin-top: 10px;
+}
+
+.attributes-block {
+  max-width: 210px;
+}
+
+.attribute-item {
+  display: inline-block;
+  padding: 0 6px 2px 6px;
+  margin: 3px 8px 0 0;
+  border: 1px solid $COLOR--dirty-black;
+  background-color: $COLOR--black-3;
+  font-size: 12px;
+  line-height: normal;
+  font-family: $FONT-REGULAR;
+  color: $COLOR--dirty-gray;
 }
 
 .growth-duration {

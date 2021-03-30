@@ -24,6 +24,7 @@ import {
   SET_INCLUDE_ALL_LAUNCHES,
   FETCH_HISTORY_LINE_ITEMS,
   SET_SHOULD_SHOW_LOAD_MORE,
+  UPDATE_HISTORY_ITEM_LAUNCH_ATTRIBUTES,
 } from './constants';
 
 export const fetchLogPageData = () => ({
@@ -74,4 +75,9 @@ export const setShouldShowLoadMoreAction = (shouldShowLoadMore) => ({
 export const updateHistoryItemIssuesAction = (issues) => ({
   type: UPDATE_HISTORY_ITEM_ISSUES,
   payload: issues,
+});
+
+export const updateHistoryItemLaunchAttributesAction = (launch) => ({
+  type: UPDATE_HISTORY_ITEM_LAUNCH_ATTRIBUTES,
+  payload: launch,
 });

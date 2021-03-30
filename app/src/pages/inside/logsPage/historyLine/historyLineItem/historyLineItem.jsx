@@ -124,6 +124,7 @@ export class HistoryLineItem extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     onClick: PropTypes.func,
+    launchAttributes: PropTypes.array,
   };
 
   static defaultProps = {
@@ -138,6 +139,7 @@ export class HistoryLineItem extends Component {
     startTime: null,
     endTime: null,
     onClick: () => {},
+    launchAttributes: null,
   };
 
   render() {
