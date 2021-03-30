@@ -29,13 +29,18 @@ import {
   SET_LOG_PAGE_LOADING,
   FETCH_HISTORY_ITEMS_SUCCESS,
   UPDATE_HISTORY_ITEM_ISSUES,
+  UPDATE_HISTORY_ITEM_LAUNCH_ATTRIBUTES,
   SET_INCLUDE_ALL_LAUNCHES,
   SET_SHOULD_SHOW_LOAD_MORE,
 } from './constants';
 import { attachmentsReducer } from './attachments';
 import { sauceLabsReducer } from './sauceLabs';
 import { nestedStepsReducer } from './nestedSteps';
-import { normalizeHistoryItems, updateHistoryItemIssues } from './utils';
+import {
+  normalizeHistoryItems,
+  updateHistoryItemIssues,
+  updateHistoryItemLaunchAttributes,
+} from './utils';
 
 const stackTracePaginationReducer = (state = {}, { type }) => {
   switch (type) {
@@ -70,6 +75,8 @@ const historyItemsReducer = (state = [], { type, payload }) => {
       return normalizeHistoryItems(payload);
     case UPDATE_HISTORY_ITEM_ISSUES:
       return updateHistoryItemIssues(state, payload);
+    case UPDATE_HISTORY_ITEM_LAUNCH_ATTRIBUTES:
+      return updateHistoryItemLaunchAttributes(state, payload);
     default:
       return state;
   }
