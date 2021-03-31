@@ -23,32 +23,32 @@ import styles from './actionButton.scss';
 
 const cx = classNames.bind(styles);
 
-export const ActionButton = ({ icon, btnLabel, btnHint, isSelected, handleClick, disabled }) => (
+export const ActionButton = ({ icon, label, hint, isSelected, handleClick, disabled }) => (
   <button
     className={cx('button', { selected: isSelected, disabled })}
     onClick={handleClick}
-    title={btnHint}
+    title={hint}
     disabled={disabled}
   >
     <i className={cx('icon', { selected: isSelected })}>
       {isSelected ? Parser(DoneIcon) : icon && Parser(icon)}
     </i>
-    <span className={cx('text', { selected: isSelected })}>{btnLabel}</span>
+    <span className={cx('text', { selected: isSelected })}>{label}</span>
   </button>
 );
 
 ActionButton.propTypes = {
   icon: PropTypes.string,
-  btnLabel: PropTypes.string,
-  btnHint: PropTypes.string,
+  label: PropTypes.string,
+  hint: PropTypes.string,
   isSelected: PropTypes.bool,
   handleClick: PropTypes.func,
   disabled: PropTypes.bool,
 };
 ActionButton.defaultProps = {
   icon: '',
-  btnLabel: '',
-  btnHint: '',
+  label: '',
+  hint: '',
   isSelected: false,
   handleClick: () => {},
   disabled: false,

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
@@ -24,32 +24,22 @@ import styles from './actionButtonsBar.scss';
 
 const cx = classNames.bind(styles);
 
-export const ActionButtonsBar = ({ actionButtonItems }) => {
+export const ActionButtonsBar = ({ actionItems }) => {
   const [selectedItem, setSelectedItem] = useState(null);
-  const [noteMsg, setNoteMsg] = useState(null);
-
-  useEffect(() => {
-    if (selectedItem !== null) {
-      const text = actionButtonItems.find((item) => item.id === selectedItem).noteMsg;
-      setNoteMsg(text);
-    } else {
-      setNoteMsg(null);
-    }
-  }, [selectedItem]);
 
   return (
     <>
       <div className={cx('buttons-bar')}>
-        {actionButtonItems.map(({ icon, btnLabel, btnHint, id, onClick, disabled }) => {
+        {actionItems.map(({ icon, label, hint, id, onClick, disabled }) => {
           const handleClick = () => {
             onClick && onClick();
-            selectedItem === id ? setSelectedItem(null) : setSelectedItem(id);
+            setSelectedItem(selectedItem === id ? null : id);
           };
           return (
             <ActionButton
               icon={icon}
-              btnLabel={btnLabel}
-              btnHint={btnHint}
+              label={label}
+              hint={hint}
               isSelected={selectedItem === id}
               handleClick={handleClick}
               disabled={disabled}
@@ -58,21 +48,21 @@ export const ActionButtonsBar = ({ actionButtonItems }) => {
           );
         })}
       </div>
-      {noteMsg && (
+      {actionItems[selectedItem] && (
         <div className={cx('note')}>
           {Parser(AttentionIcon)}
-          {noteMsg}
+          {actionItems[selectedItem].noteMsg}
         </div>
       )}
     </>
   );
 };
 ActionButtonsBar.propTypes = {
-  actionButtonItems: PropTypes.arrayOf(
+  actionItems: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,
-      btnLabel: PropTypes.string,
-      btnHint: PropTypes.string,
+      label: PropTypes.string,
+      hint: PropTypes.string,
       noteMsg: PropTypes.string,
       icon: PropTypes.any,
       disabled: PropTypes.bool,
@@ -81,8 +71,8 @@ ActionButtonsBar.propTypes = {
   ),
 };
 ActionButtonsBar.defaulProps = {
-  btnLabel: '',
-  btnHint: '',
+  label: '',
+  hint: '',
   noteMsg: '',
   icon: '',
   disabled: false,

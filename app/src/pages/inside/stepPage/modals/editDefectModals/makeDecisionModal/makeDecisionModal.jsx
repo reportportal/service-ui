@@ -63,11 +63,13 @@ const MakeDecision = ({ data }) => {
     issue: itemData.issue,
   });
   const [modalHasChanges, setModalHasChanges] = useState(false);
-  const [actionButtonEvent, setActionButtonEvent] = useState({});
+  const [issueAction, setIssueAction] = useState({});
 
   useEffect(() => {
-    setModalHasChanges(!isEqual(itemData.issue, state.issue) || !!actionButtonEvent.actionName);
-  }, [state, actionButtonEvent]);
+    setModalHasChanges(
+      !isEqual(itemData.issue, state.issue) || Object.keys(issueAction).length > 0,
+    );
+  }, [state, issueAction]);
 
   const handleIgnoreAnalyzerChange = (value) => {
     const issue = { ...state.issue, ignoreAnalyzer: value };
@@ -124,8 +126,8 @@ const MakeDecision = ({ data }) => {
   };
   const applyChangesImmediately = () => {
     modalHasChanges && saveDefect();
-    !modalHasChanges && !!actionButtonEvent.actionName && dispatch(hideModalAction());
-    actionButtonEvent.nextAction && actionButtonEvent.nextAction();
+    !modalHasChanges && !!issueAction.nextAction && dispatch(hideModalAction());
+    issueAction.nextAction && issueAction.nextAction();
   };
   const renderHeaderElements = () => {
     return (
@@ -172,7 +174,7 @@ const MakeDecision = ({ data }) => {
       }),
     );
   };
-  const getActionButtonItems = () => {
+  const getActionItems = () => {
     const issueTitle = getIssueTitle(
       formatMessage,
       btsIntegrations,
@@ -183,30 +185,30 @@ const MakeDecision = ({ data }) => {
     const actionButtonItems = [
       {
         id: 0,
-        btnLabel: formatMessage(actionMessages[POST_ISSUE]),
-        btnHint: isPostIssueUnavailable ? issueTitle : '',
+        label: formatMessage(actionMessages[POST_ISSUE]),
+        hint: isPostIssueUnavailable ? issueTitle : '',
         noteMsg: formatMessage(messages.postIssueNote),
         icon: PlusIcon,
         onClick: () => {
-          if (actionButtonEvent.actionName === POST_ISSUE) {
-            setActionButtonEvent({});
+          if (issueAction.actionName === POST_ISSUE) {
+            setIssueAction({});
           } else {
-            setActionButtonEvent({ actionName: POST_ISSUE, nextAction: handlePostIssue });
+            setIssueAction({ actionName: POST_ISSUE, nextAction: handlePostIssue });
           }
         },
         disabled: isPostIssueUnavailable,
       },
       {
         id: 1,
-        btnLabel: formatMessage(actionMessages[LINK_ISSUE]),
-        btnHint: btsIntegrations.length ? '' : issueTitle,
+        label: formatMessage(actionMessages[LINK_ISSUE]),
+        hint: btsIntegrations.length ? '' : issueTitle,
         noteMsg: formatMessage(messages.linkIssueNote),
         icon: PlusIcon,
         onClick: () => {
-          if (actionButtonEvent.actionName === LINK_ISSUE) {
-            setActionButtonEvent({});
+          if (issueAction.actionName === LINK_ISSUE) {
+            setIssueAction({});
           } else {
-            setActionButtonEvent({ actionName: LINK_ISSUE, nextAction: handleLinkIssue });
+            setIssueAction({ actionName: LINK_ISSUE, nextAction: handleLinkIssue });
           }
         },
         disabled: !btsIntegrations.length,
@@ -216,14 +218,14 @@ const MakeDecision = ({ data }) => {
     if (itemData.issue && itemData.issue.externalSystemIssues.length > 0) {
       actionButtonItems.push({
         id: 2,
-        btnLabel: formatMessage(actionMessages[UNLINK_ISSUE]),
+        label: formatMessage(actionMessages[UNLINK_ISSUE]),
         noteMsg: formatMessage(messages.unlinkIssueNote),
         icon: UnlinkIcon,
         onClick: () => {
-          if (actionButtonEvent.actionName === UNLINK_ISSUE) {
-            setActionButtonEvent({});
+          if (issueAction.actionName === UNLINK_ISSUE) {
+            setIssueAction({});
           } else {
-            setActionButtonEvent({ actionName: UNLINK_ISSUE, nextAction: handleUnlinkIssue });
+            setIssueAction({ actionName: UNLINK_ISSUE, nextAction: handleUnlinkIssue });
           }
         },
       });
@@ -262,7 +264,7 @@ const MakeDecision = ({ data }) => {
               selectedItem={state.issue.issueType}
             />
           </ScrollWrapper>
-          <ActionButtonsBar actionButtonItems={getActionButtonItems()} />
+          <ActionButtonsBar actionItems={getActionItems()} />
         </>
       ),
     },
