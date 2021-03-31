@@ -65,11 +65,45 @@
 }
 
 .defect-type {
+  padding-left: 7px;
   border: none;
   background-color: transparent;
   font-family: $FONT-REGULAR;
   color: $COLOR--gray-light;
   cursor: default;
+}
+
+.defect-block {
+  display: flex;
+  height: 20px;
+
+  & > div:not(:last-child) {
+    margin-right: 10px;
+  }
+}
+
+.ignore-aa-label,
+.pa-label {
+  border: solid 1px $COLOR--dirty-black;
+  background-color: $COLOR--black-3;
+  color: $COLOR--dirty-gray;
+}
+
+.aa-label {
+  svg {
+    fill: $COLOR--black-3;
+    rect {
+      stroke: $COLOR--dirty-black;
+    }
+    g path,
+    g g polygon {
+      fill: $COLOR--dirty-gray;
+    }
+    g g path {
+      stroke: $COLOR--dirty-gray;
+      fill: none;
+    }
+  }
 }
 
 .selected {

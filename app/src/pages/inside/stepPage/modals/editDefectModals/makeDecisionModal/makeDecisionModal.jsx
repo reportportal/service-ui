@@ -43,13 +43,28 @@ import {
 } from 'controllers/plugins';
 import { getIssueTitle } from 'pages/inside/common/utils';
 import { LINK_ISSUE, POST_ISSUE, UNLINK_ISSUE } from 'common/constants/actionTypes';
+import { ExecutionInfo } from 'pages/inside/logsPage/defectEditor/executionInfo';
+import { historyItemsSelector } from 'controllers/log';
 import { ActionButtonsBar } from './actionButtonsBar';
 import { messages } from './../messages';
-import { MAKE_DECISION_MODAL, CONFIGURATION, OPTIONS } from '../constants';
-import styles from './makeDecisionModal.scss';
+import {
+  CONFIGURATION,
+  COPY_FROM_HISTORY_LINE,
+  MACHINE_LEARNING_SUGGESTIONS,
+  MAKE_DECISION_MODAL,
+  OPTIONS,
+  SELECT_DEFECT_MANUALLY,
+} from '../constants';
 import { OptionsStepForm } from './optionsStepForm';
+import styles from './makeDecisionModal.scss';
 
 const cx = classNames.bind(styles);
+
+const TABS_ID = {
+  [MACHINE_LEARNING_SUGGESTIONS]: 0,
+  [COPY_FROM_HISTORY_LINE]: 1,
+  [SELECT_DEFECT_MANUALLY]: 2,
+};
 
 const MakeDecision = ({ data }) => {
   const { formatMessage } = useIntl();
@@ -58,62 +73,80 @@ const MakeDecision = ({ data }) => {
   const btsIntegrations = useSelector(availableBtsIntegrationsSelector);
   const isBtsPluginsExist = useSelector(isBtsPluginsExistSelector);
   const enabledBtsPlugins = useSelector(enabledBtsPluginsSelector);
+  const historyItems = useSelector(historyItemsSelector);
   const isPostIssueUnavailable = !isPostIssueActionAvailable(btsIntegrations);
   const isBulkOperation = data.items && data.items.length > 1;
   const itemData = isBulkOperation ? data.items : data.items[0];
-  const [state, setState] = useState({
+  const [selectDefectTypeState, setSelectDefectTypeState] = useState({
     issue: isBulkOperation ? {} : itemData.issue,
   });
-  const [modalHasChanges, setModalHasChanges] = useState(false);
+  const [copyFromHistoryState, setCopyFromHistoryState] = useState({});
   const [issueAction, setIssueAction] = useState({});
+  const [accordionTabsState, setAccordionTabsState] = useState({
+    [TABS_ID[MACHINE_LEARNING_SUGGESTIONS]]: false,
+    [TABS_ID[COPY_FROM_HISTORY_LINE]]: false,
+    [TABS_ID[SELECT_DEFECT_MANUALLY]]: true,
+  });
   const [step, setFormStep] = useState(CONFIGURATION);
+  const [modalHasChanges, setModalHasChanges] = useState(false);
 
   useEffect(() => {
     setModalHasChanges(
-      (isBulkOperation ? !isEmptyObject(state.issue) : !isEqual(itemData.issue, state.issue)) ||
-        !isEmptyObject(issueAction),
+      (isBulkOperation
+        ? !isEmptyObject(selectDefectTypeState.issue)
+        : !isEqual(itemData.issue, selectDefectTypeState.issue)) ||
+        !isEmptyObject(issueAction) ||
+        !isEmptyObject(copyFromHistoryState),
     );
-  }, [state, issueAction]);
+  }, [issueAction, selectDefectTypeState, copyFromHistoryState]);
 
+  const collapseTabsExceptCurr = (currentTab) => {
+    const newTabsState = Object.fromEntries(
+      Object.entries(accordionTabsState).map(([id]) =>
+        +id === currentTab ? [id, true] : [id, false],
+      ),
+    );
+    setAccordionTabsState(newTabsState);
+  };
   const handleIgnoreAnalyzerChange = (value) => {
-    setState({
-      ...state,
-      issue: { ...state.issue, ignoreAnalyzer: value },
+    const issue = { ...selectDefectTypeState.issue, ignoreAnalyzer: value };
+    setSelectDefectTypeState({
+      ...selectDefectTypeState,
+      issue,
     });
+    setCopyFromHistoryState({});
+    collapseTabsExceptCurr(TABS_ID[SELECT_DEFECT_MANUALLY]);
   };
-  const selectDefectType = (value) => {
-    setState({
-      ...state,
-      issue: { ...state.issue, issueType: value },
-    });
-  };
-
   const prepareDataToSend = (isIssueAction = false) => {
-    const { items } = data;
-    let issues = null;
-
     if (isBulkOperation) {
-      issues = items.map((item) => ({
+      const { items } = data;
+      return items.map((item) => ({
         ...(isIssueAction ? item : {}),
         testItemId: item.id,
         issue: {
           ...item.issue,
-          ...state.issue,
+          ...selectDefectTypeState.issue,
           autoAnalyzed: false,
         },
       }));
-    } else {
-      issues = [
+    }
+    if (!isEmptyObject(copyFromHistoryState)) {
+      return [
         {
           ...(isIssueAction ? itemData : {}),
+          issue: { ...copyFromHistoryState.issue, autoAnalyzed: false },
           testItemId: itemData.id,
-          issue: state.issue,
         },
       ];
     }
-    return issues;
+    return [
+      {
+        ...(isIssueAction ? itemData : {}),
+        testItemId: itemData.id,
+        issue: selectDefectTypeState.issue,
+      },
+    ];
   };
-
   const saveDefect = () => {
     const { fetchFunc } = data;
     const issues = prepareDataToSend();
@@ -145,9 +178,16 @@ const MakeDecision = ({ data }) => {
     dispatch(hideModalAction());
   };
   const applyChangesImmediately = () => {
-    modalHasChanges && saveDefect();
-    !modalHasChanges && !!issueAction.nextAction && dispatch(hideModalAction());
-    issueAction.nextAction && issueAction.nextAction();
+    if (isBulkOperation) {
+      modalHasChanges && !isEmptyObject(selectDefectTypeState.issue) && saveDefect();
+      !isEmptyObject(issueAction) && dispatch(hideModalAction());
+      issueAction.nextAction && issueAction.nextAction();
+    } else {
+      modalHasChanges && !isEqual(itemData.issue, selectDefectTypeState.issue) && saveDefect();
+      modalHasChanges && !isEmptyObject(copyFromHistoryState) && saveDefect();
+      !isEmptyObject(issueAction) && dispatch(hideModalAction());
+      issueAction.nextAction && issueAction.nextAction();
+    }
   };
   const moveToOptionsStep = () => {
     setFormStep(OPTIONS);
@@ -237,8 +277,11 @@ const MakeDecision = ({ data }) => {
           } else {
             setIssueAction({ actionName: POST_ISSUE, nextAction: handlePostIssue });
           }
+          !isEmptyObject(copyFromHistoryState) && setCopyFromHistoryState({});
+          collapseTabsExceptCurr(TABS_ID.selectDefectManually);
         },
         disabled: isPostIssueUnavailable,
+        isSelected: issueAction.actionName === POST_ISSUE,
       },
       {
         id: 1,
@@ -252,12 +295,19 @@ const MakeDecision = ({ data }) => {
           } else {
             setIssueAction({ actionName: LINK_ISSUE, nextAction: handleLinkIssue });
           }
+          !isEmptyObject(copyFromHistoryState) && setCopyFromHistoryState({});
+          collapseTabsExceptCurr(TABS_ID.selectDefectManually);
         },
         disabled: !btsIntegrations.length,
+        isSelected: issueAction.actionName === LINK_ISSUE,
       },
     ];
 
-    if (isBulkOperation || (itemData.issue && itemData.issue.externalSystemIssues.length > 0)) {
+    if (
+      isBulkOperation
+        ? itemData.some((item) => item.issue.externalSystemIssues.length > 0)
+        : itemData.issue && itemData.issue.externalSystemIssues.length > 0
+    ) {
       actionButtonItems.push({
         id: 2,
         label: formatMessage(actionMessages[UNLINK_ISSUE]),
@@ -269,10 +319,100 @@ const MakeDecision = ({ data }) => {
           } else {
             setIssueAction({ actionName: UNLINK_ISSUE, nextAction: handleUnlinkIssue });
           }
+          !isEmptyObject(copyFromHistoryState) && setCopyFromHistoryState({});
+          collapseTabsExceptCurr(TABS_ID[SELECT_DEFECT_MANUALLY]);
         },
+        isSelected: issueAction.actionName === UNLINK_ISSUE,
       });
     }
     return actionButtonItems;
+  };
+  const preparedHistoryLineItems = historyItems.filter(
+    (item) => item.issue && item.id !== itemData.id,
+  );
+  const selectHistoryLineItem = (itemId) => {
+    if (itemId) {
+      const historyItem = preparedHistoryLineItems.find((item) => item.id === itemId);
+      setCopyFromHistoryState(historyItem);
+      setSelectDefectTypeState({ issue: itemData.issue });
+      collapseTabsExceptCurr(TABS_ID[COPY_FROM_HISTORY_LINE]);
+    } else {
+      setCopyFromHistoryState({});
+    }
+    setIssueAction({});
+  };
+  const selectDefectTypeManually = (value) => {
+    const issue = { ...selectDefectTypeState.issue, issueType: value };
+    setSelectDefectTypeState({
+      ...selectDefectTypeState,
+      issue,
+    });
+    setCopyFromHistoryState({});
+    collapseTabsExceptCurr(TABS_ID[SELECT_DEFECT_MANUALLY]);
+  };
+  const accordionData = () => {
+    const tabsData = [
+      {
+        id: TABS_ID[MACHINE_LEARNING_SUGGESTIONS],
+        shouldShow: !isBulkOperation,
+        title: (
+          <div title={formatMessage(messages.disabledTabTooltip)}>
+            {formatMessage(messages.machineLearningSuggestions)}
+          </div>
+        ),
+        content: null,
+      },
+      {
+        id: TABS_ID[SELECT_DEFECT_MANUALLY],
+        shouldShow: true,
+        title: formatMessage(messages.selectDefectTypeManually),
+        content: (
+          <>
+            {!isBulkOperation && (
+              <InputSwitcher
+                value={selectDefectTypeState.issue.ignoreAnalyzer || false}
+                onChange={handleIgnoreAnalyzerChange}
+                className={cx('ignore-analysis')}
+                childrenFirst
+                childrenClassName={cx('input-switcher-children')}
+              >
+                <span>{formatMessage(messages.ignoreAa)}</span>
+              </InputSwitcher>
+            )}
+            <DefectTypeSelectorML
+              selectDefectType={selectDefectTypeManually}
+              selectedItem={selectDefectTypeState.issue.issueType || ''}
+            />
+            <ActionButtonsBar actionItems={getActionItems()} />
+          </>
+        ),
+      },
+    ];
+    if (preparedHistoryLineItems.length > 0) {
+      tabsData.splice(1, 0, {
+        id: TABS_ID[COPY_FROM_HISTORY_LINE],
+        shouldShow: true,
+        title: formatMessage(messages.copyFromHistoryLine),
+        content: (
+          <>
+            <div className={cx('execution-header')}>
+              <span>{`${formatMessage(messages.execution)} #`}</span>
+              <span>{formatMessage(messages.defectType)}</span>
+            </div>
+            {preparedHistoryLineItems.map((item) => (
+              <div className={cx('execution-item')} key={item.id}>
+                <ExecutionInfo
+                  item={item}
+                  selectedItem={copyFromHistoryState.id}
+                  selectItem={selectHistoryLineItem}
+                />
+              </div>
+            ))}
+          </>
+        ),
+      });
+    }
+    return tabsData;
   };
 
   const renderOptionsStepHeaderElements = () => {
@@ -299,45 +439,6 @@ const MakeDecision = ({ data }) => {
       </>
     );
   };
-  const accordionData = [
-    {
-      id: 0,
-      isActive: false,
-      shouldShow: !isBulkOperation,
-      title: (
-        <div title={formatMessage(messages.disabledTabTooltip)}>
-          {formatMessage(messages.machineLearningSuggestions)}
-        </div>
-      ),
-      content: null,
-    },
-    {
-      id: 1,
-      isActive: true,
-      shouldShow: true,
-      title: formatMessage(messages.selectDefectTypeManually),
-      content: (
-        <>
-          {!isBulkOperation && (
-            <InputSwitcher
-              value={state.issue.ignoreAnalyzer || false}
-              onChange={handleIgnoreAnalyzerChange}
-              className={cx('ignore-analysis')}
-              childrenFirst
-              childrenClassName={cx('input-switcher-children')}
-            >
-              <span>{formatMessage(messages.ignoreAa)}</span>
-            </InputSwitcher>
-          )}
-          <DefectTypeSelectorML
-            selectDefectType={selectDefectType}
-            selectedItem={state.issue.issueType || ''}
-          />
-          <ActionButtonsBar actionItems={getActionItems()} />
-        </>
-      ),
-    },
-  ];
 
   const hotKeyAction = {
     ctrlEnter: () => applyChangesImmediately(),
@@ -360,7 +461,13 @@ const MakeDecision = ({ data }) => {
       modalNote={formatMessage(messages.modalNote)}
     >
       {step === CONFIGURATION ? (
-        <Accordion renderedData={accordionData} />
+        <Accordion
+          renderedData={accordionData()}
+          tabsStateOutside={{
+            state: accordionTabsState,
+            setState: setAccordionTabsState,
+          }}
+        />
       ) : (
         <OptionsStepForm accordionData={accordionData} />
       )}

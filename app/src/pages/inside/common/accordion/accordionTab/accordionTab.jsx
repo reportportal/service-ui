@@ -30,9 +30,7 @@ export const AccordionTab = ({
 }) => {
   const { id, title, content } = tab;
   const clickHandler = () =>
-    tabsState[id]
-      ? setTabsState({ ...tabsState, [id]: false })
-      : setTabsState({ ...tabsState, [id]: true });
+    setTabsState(tabsState[id] ? { ...tabsState, [id]: false } : { ...tabsState, [id]: true });
 
   return (
     <>

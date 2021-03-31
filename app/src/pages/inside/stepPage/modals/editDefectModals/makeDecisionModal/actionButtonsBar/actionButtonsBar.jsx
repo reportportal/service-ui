@@ -30,11 +30,13 @@ export const ActionButtonsBar = ({ actionItems }) => {
   return (
     <>
       <div className={cx('buttons-bar')}>
-        {actionItems.map(({ icon, label, hint, id, onClick, disabled }) => {
+        {actionItems.map(({ icon, label, hint, id, onClick, disabled, isSelected }) => {
+          selectedItem === id && !isSelected && setSelectedItem(null);
           const handleClick = () => {
             onClick && onClick();
-            setSelectedItem(selectedItem === id ? null : id);
+            setSelectedItem(selectedItem === id && isSelected ? null : id);
           };
+
           return (
             <ActionButton
               icon={icon}
@@ -67,6 +69,7 @@ ActionButtonsBar.propTypes = {
       icon: PropTypes.any,
       disabled: PropTypes.bool,
       onClick: PropTypes.func,
+      isSelected: PropTypes.bool,
     }),
   ),
 };
@@ -77,4 +80,5 @@ ActionButtonsBar.defaulProps = {
   icon: '',
   disabled: false,
   onClick: () => {},
+  isSelected: false,
 };

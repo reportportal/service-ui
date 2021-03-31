@@ -37,11 +37,21 @@ const messages = defineMessages({
   },
 });
 
-export const IgnoredInAALabel = injectIntl(({ intl }) => (
-  <div className={cx('ignore-aa-label')} title={intl.formatMessage(messages.ignoreAATooltip)}>
+export const IgnoredInAALabel = injectIntl(({ intl, className }) => (
+  <div
+    className={cx('ignore-aa-label', className)}
+    title={intl.formatMessage(messages.ignoreAATooltip)}
+  >
     <FormattedMessage id="StepGrid.ignoreAAShort" defaultMessage="Ignore AA" />
   </div>
 ));
+IgnoredInAALabel.propTypes = {
+  intl: PropTypes.object.isRequired,
+  className: PropTypes.string,
+};
+IgnoredInAALabel.defaultProps = {
+  className: '',
+};
 
 export const AALabel = () => (
   <div className={cx('aa-label')}>

@@ -28,3 +28,6 @@ export const CURRENT_CHANGE_DEFECT_COMMENT_MODE = 'currentChangeDefectCommentMod
 export const MAKE_DECISION_MODAL = 'makeDecisionModal';
 export const CONFIGURATION = 'configuration';
 export const OPTIONS = 'options';
+export const SELECT_DEFECT_MANUALLY = 'selectDefectManually';
+export const COPY_FROM_HISTORY_LINE = 'copyFromHistoryLine';
+export const MACHINE_LEARNING_SUGGESTIONS = 'machineLearningSuggestions';
