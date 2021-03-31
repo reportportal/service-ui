@@ -46,6 +46,7 @@ import { ActionButtonsBar } from './actionButtonsBar';
 import { messages } from './../messages';
 import { MAKE_DECISION_MODAL } from '../constants';
 import styles from './makeDecisionModal.scss';
+import { OptionsStepForm } from './optionsStepForm';
 
 const cx = classNames.bind(styles);
 
@@ -64,6 +65,7 @@ const MakeDecision = ({ data }) => {
   });
   const [modalHasChanges, setModalHasChanges] = useState(false);
   const [issueAction, setIssueAction] = useState({});
+  const [step, setFormStep] = useState('configuration');
 
   useEffect(() => {
     setModalHasChanges(
@@ -146,6 +148,14 @@ const MakeDecision = ({ data }) => {
     !modalHasChanges && !!issueAction.nextAction && dispatch(hideModalAction());
     issueAction.nextAction && issueAction.nextAction();
   };
+  const moveToOptionsStep = () => {
+    setFormStep('options');
+  };
+
+  const moveToConfigurationStep = () => {
+    setFormStep('configuration');
+  };
+
   const renderHeaderElements = () => {
     return (
       <>
@@ -161,8 +171,8 @@ const MakeDecision = ({ data }) => {
           </GhostButton>
         )}
         <GhostButton
-          onClick={applyChangesImmediately}
-          disabled={isBulkOperation ? !modalHasChanges : true}
+          onClick={isBulkOperation ? applyChangesImmediately : moveToOptionsStep}
+          disabled={isBulkOperation ? !modalHasChanges : false}
           color="''"
           appearance="topaz"
         >
@@ -260,6 +270,30 @@ const MakeDecision = ({ data }) => {
     }
     return actionButtonItems;
   };
+
+  const renderOptionsStepHeaderElements = () => {
+    return (
+      <>
+        <GhostButton
+          onClick={moveToConfigurationStep}
+          disabled={false}
+          transparentBorder
+          transparentBackground
+          appearance="topaz"
+        >
+          {`< \u00A0 ${formatMessage(messages.backToConfiguration)}`}
+        </GhostButton>
+        <GhostButton
+          onClick={applyChangesImmediately}
+          disabled={!modalHasChanges}
+          color="''"
+          appearance="topaz"
+        >
+          {formatMessage(messages.apply)}
+        </GhostButton>
+      </>
+    );
+  };
   const accordionData = [
     {
       id: 0,
@@ -313,12 +347,18 @@ const MakeDecision = ({ data }) => {
               launchNumber: itemData.launchNumber && `#${itemData.launchNumber}`,
             })
       }
-      renderHeaderElements={renderHeaderElements}
+      renderHeaderElements={
+        step === 'configuration' ? renderHeaderElements : renderOptionsStepHeaderElements
+      }
       modalHasChanges={modalHasChanges}
       hotKeyAction={hotKeyAction}
       modalNote={formatMessage(messages.modalNote)}
     >
-      <Accordion renderedData={accordionData} />
+      {step === 'configuration' ? (
+        <Accordion renderedData={accordionData} />
+      ) : (
+        <OptionsStepForm accordionData={accordionData} />
+      )}
     </DarkModalLayout>
   );
 };
