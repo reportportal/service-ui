@@ -43,12 +43,4 @@ export {
   validatePostIssue,
   validateEditDefect,
 } from './actionValidators';
-export {
-  editDefect,
-  ignoreInAA,
-  includeInAA,
-  linkIssue,
-  postIssue,
-  unlinkIssue,
-  isDefectGroupOperationAvailable,
-} from './utils';
+export { editDefect, ignoreInAA, includeInAA, linkIssue, postIssue, unlinkIssue } from './utils';
