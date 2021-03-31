@@ -1069,6 +1069,8 @@
   "LogsGridToolbar.withAttachments": "Логи с вложениями",
   "MakeDecisionModal.applyImmediately": "Применить немедленно",
   "MakeDecisionModal.applyWithOptions": "Применить с параметрами",
+  "MakeDecisionModal.applyTo": "Применить для {itemsCount} элементов",
+  "MakeDecisionModal.bulkOperationDecision": "Групповое решение",
   "MakeDecisionModal.decisionForTest": "Решение для теста {launchNumber}",
   "MakeDecisionModal.disabledTabTooltip": "Новый функционал будет доступен в следующей версии",
   "MakeDecisionModal.ignoreAa": "Игнорировать при Авто-Анализе",

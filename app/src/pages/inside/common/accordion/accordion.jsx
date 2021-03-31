@@ -36,8 +36,8 @@ export const Accordion = ({ renderedData, headerClassNames, contentClassNames })
             tabsState={tabsState}
             setTabsState={setTabsState}
             key={tab.id}
-            headerClassNames={headerClassNames}
-            contentClassNames={contentClassNames}
+            headerClassNames={tab.shouldShow ? headerClassNames : 'hidden'}
+            contentClassNames={tab.shouldShow ? contentClassNames : 'hidden'}
           />
         ))}
     </div>

@@ -66,7 +66,9 @@ const MakeDecision = ({ data }) => {
   const [issueAction, setIssueAction] = useState({});
 
   useEffect(() => {
-    setModalHasChanges(!isEqual(itemData.issue, state.issue) || !isEmptyObject(issueAction));
+    setModalHasChanges(
+      state.issue ? !isEqual(itemData.issue, state.issue) || !isEmptyObject(issueAction) : false,
+    );
   }, [state, issueAction]);
 
   const handleIgnoreAnalyzerChange = (value) => {
@@ -92,9 +94,27 @@ const MakeDecision = ({ data }) => {
       },
     ];
   };
+  const prepareDataToSend = () => {
+    const { items } = data;
+
+    const issues = items.map((item) => {
+      const dataToSend = {
+        testItemId: item.id,
+        issue: {
+          ...item.issue,
+          autoAnalyzed: false,
+          ignoreAnalyzer: false,
+          ...state.issue,
+        },
+      };
+      return dataToSend;
+    });
+    return issues;
+  };
+
   const saveDefect = () => {
     const { fetchFunc } = data;
-    const issues = composeDataToSend();
+    const issues = Array.isArray(itemData) ? prepareDataToSend() : composeDataToSend();
     const url = URLS.testItems(activeProject);
 
     fetch(url, {
@@ -137,10 +157,19 @@ const MakeDecision = ({ data }) => {
           transparentBackground
           appearance="topaz"
         >
-          {formatMessage(messages.applyImmediately)}
+          {!Array.isArray(itemData) && formatMessage(messages.applyImmediately)}
         </GhostButton>
-        <GhostButton disabled color="''" appearance="topaz">
-          {formatMessage(messages.applyWithOptions)}
+        <GhostButton
+          onClick={applyChangesImmediately}
+          disabled={Array.isArray(itemData) ? !hasChanges : true}
+          color="''"
+          appearance="topaz"
+        >
+          {Array.isArray(itemData)
+            ? formatMessage(messages.applyTo, {
+                itemsCount: itemData.length,
+              })
+            : formatMessage(messages.applyWithOptions)}
         </GhostButton>
       </>
     );
@@ -234,6 +263,7 @@ const MakeDecision = ({ data }) => {
     {
       id: 0,
       isActive: false,
+      shouldShow: !Array.isArray(itemData),
       title: (
         <div title={formatMessage(messages.disabledTabTooltip)}>
           {formatMessage(messages.machineLearningSuggestions)}
@@ -244,6 +274,7 @@ const MakeDecision = ({ data }) => {
     {
       id: 1,
       isActive: true,
+      shouldShow: true,
       title: formatMessage(messages.selectDefectTypeManually),
       content: (
         <>
@@ -272,9 +303,13 @@ const MakeDecision = ({ data }) => {
 
   return (
     <DarkModalLayout
-      title={formatMessage(messages.decisionForTest, {
-        launchNumber: itemData.launchNumber && `#${itemData.launchNumber}`,
-      })}
+      title={
+        Array.isArray(itemData)
+          ? formatMessage(messages.bulkOperationDecision)
+          : formatMessage(messages.decisionForTest, {
+              launchNumber: itemData.launchNumber && `#${itemData.launchNumber}`,
+            })
+      }
       renderHeaderElements={renderHeaderElements}
       modalHasChanges={modalHasChanges}
       hotKeyAction={hotKeyAction}

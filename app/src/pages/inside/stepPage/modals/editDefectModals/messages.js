@@ -97,6 +97,14 @@ export const messages = defineMessages({
     id: 'MakeDecisionModal.decisionForTest',
     defaultMessage: 'Decision for the test {launchNumber}',
   },
+  bulkOperationDecision: {
+    id: 'MakeDecisionModal.bulkOperationDecision',
+    defaultMessage: 'Bulk Operation Decision',
+  },
+  applyTo: {
+    id: 'MakeDecisionModal.applyTo',
+    defaultMessage: 'Apply to {itemsCount} Items',
+  },
   selectDefectTypeManually: {
     id: 'MakeDecisionModal.selectDefectTypeManually',
     defaultMessage: 'Select defect type manually',

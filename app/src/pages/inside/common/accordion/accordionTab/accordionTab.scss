@@ -38,6 +38,10 @@
     border-left: 8px solid $COLOR--topaz;
     transition: all 0.2s ease;
   }
+
+  &.hidden {
+    display: none;
+  }
 }
 
 .header.open {
@@ -60,6 +64,10 @@
   transform: scaleY(0);
   transform-origin: top;
   transition: transform 0.2s ease;
+
+  &.hidden {
+    display: none;
+  }
 }
 
 .show {
