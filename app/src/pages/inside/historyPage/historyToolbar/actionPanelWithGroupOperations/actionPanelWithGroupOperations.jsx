@@ -34,7 +34,6 @@ import {
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { launchSelector, deleteTestItemsAction } from 'controllers/testItem';
-import { isDefectGroupOperationAvailable } from 'controllers/step';
 import { getDefectTypeSelector } from 'controllers/project';
 import {
   availableBtsIntegrationsSelector,
@@ -289,46 +288,18 @@ export class ActionPanelWithGroupOperations extends Component {
   };
 
   handleEditDefects = (eventData) => {
-    const { selectedItems, getDefectType, debugMode, onEditDefects, tracking } = this.props;
+    const { selectedItems, debugMode, onEditDefects } = this.props;
     const items = eventData && eventData.id ? [eventData] : selectedItems;
-    const isDefectGroupOperation = isDefectGroupOperationAvailable({
-      editedData: eventData,
-      selectedItems,
-      getDefectType,
+    onEditDefects(items, {
+      fetchFunc: this.unselectAndRefreshItems,
       debugMode,
+      eventsInfo: {
+        editDefectsEvents: HISTORY_PAGE_EVENTS.EDIT_DEFECT_MODAL_EVENTS,
+        unlinkIssueEvents: UNLINK_ISSUE_EVENTS_INFO,
+        postIssueEvents: POST_ISSUE_EVENTS_INFO,
+        linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
+      },
     });
-    tracking.trackEvent(HISTORY_PAGE_EVENTS.EDIT_DEFECT_ACTION);
-
-    if (isDefectGroupOperation) {
-      this.props.showModalAction({
-        id: 'editToInvestigateDefectModal',
-        data: {
-          item: items[0],
-          fetchFunc: this.unselectAndRefreshItems,
-          eventsInfo: {
-            changeSearchMode: HISTORY_PAGE_EVENTS.CHANGE_SEARCH_MODE_EDIT_DEFECT_MODAL,
-            selectAllSimilarItems: HISTORY_PAGE_EVENTS.SELECT_ALL_SIMILAR_ITEMS_EDIT_DEFECT_MODAL,
-            selectSpecificSimilarItem:
-              HISTORY_PAGE_EVENTS.SELECT_SPECIFIC_SIMILAR_ITEM_EDIT_DEFECT_MODAL,
-            editDefectsEvents: HISTORY_PAGE_EVENTS.EDIT_DEFECT_MODAL_EVENTS,
-            unlinkIssueEvents: UNLINK_ISSUE_EVENTS_INFO,
-            postIssueEvents: POST_ISSUE_EVENTS_INFO,
-            linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
-          },
-        },
-      });
-    } else {
-      onEditDefects(items, {
-        fetchFunc: this.unselectAndRefreshItems,
-        debugMode,
-        eventsInfo: {
-          editDefectsEvents: HISTORY_PAGE_EVENTS.EDIT_DEFECT_MODAL_EVENTS,
-          unlinkIssueEvents: UNLINK_ISSUE_EVENTS_INFO,
-          postIssueEvents: POST_ISSUE_EVENTS_INFO,
-          linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
-        },
-      });
-    }
   };
 
   proceedWithValidItems = () => {
