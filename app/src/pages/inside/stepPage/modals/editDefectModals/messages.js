@@ -121,4 +121,18 @@ export const messages = defineMessages({
     id: 'MakeDecisionModal.disabledTabTooltip',
     defaultMessage: 'A new functionality will be available in the next version',
   },
+  postIssueNote: {
+    id: 'MakeDecisionModal.postIssueNote',
+    defaultMessage:
+      'After a defect type submission, you will be able to choose parameters for a new issue posting',
+  },
+  linkIssueNote: {
+    id: 'MakeDecisionModal.linkIssueNote',
+    defaultMessage:
+      'After a defect type submission, you will be able to choose parameters for a new issue linking',
+  },
+  unlinkIssueNote: {
+    id: 'MakeDecisionModal.unlinkIssueNote',
+    defaultMessage: 'After a defect type submission, the current links will be unlink',
+  },
 });

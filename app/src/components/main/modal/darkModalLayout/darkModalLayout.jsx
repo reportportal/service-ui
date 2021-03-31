@@ -99,7 +99,7 @@ export const DarkModalLayout = ({
                 {status !== 'exited' ? children : null}
               </ScrollWrapper>
               <div className={cx('note-row')}>
-                {modalHasChanges && clickOutside && modalNote && (
+                {modalNote && clickOutside && modalHasChanges && (
                   <ModalNote message={modalNote} icon={ErrorInlineIcon} status={'error'} />
                 )}
               </div>
