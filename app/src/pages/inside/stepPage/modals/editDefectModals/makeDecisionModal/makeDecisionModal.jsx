@@ -28,7 +28,7 @@ import { DefectTypeSelectorML } from 'pages/inside/common/defectTypeSelectorML';
 import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import isEqual from 'fast-deep-equal';
 import { URLS } from 'common/urls';
-import { fetch } from 'common/utils';
+import { fetch, isEmptyObject } from 'common/utils';
 import classNames from 'classnames/bind';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import PlusIcon from 'common/img/plus-button-inline.svg';
@@ -66,9 +66,7 @@ const MakeDecision = ({ data }) => {
   const [issueAction, setIssueAction] = useState({});
 
   useEffect(() => {
-    setModalHasChanges(
-      !isEqual(itemData.issue, state.issue) || Object.keys(issueAction).length > 0,
-    );
+    setModalHasChanges(!isEqual(itemData.issue, state.issue) || !isEmptyObject(issueAction));
   }, [state, issueAction]);
 
   const handleIgnoreAnalyzerChange = (value) => {
@@ -85,14 +83,17 @@ const MakeDecision = ({ data }) => {
       issue,
     });
   };
-  const composeDataToSend = () => {
-    return [
-      {
-        id: itemData.id,
-        testItemId: itemData.id,
-        issue: state.issue,
-      },
-    ];
+  const composeDataToSend = (isIssueAction = false) => {
+    const issues = [];
+    isIssueAction
+      ? issues.push({
+          ...itemData,
+          issue: state.issue,
+          testItemId: itemData.id,
+        })
+      : issues.push({ issue: state.issue, testItemId: itemData.id });
+
+    return issues;
   };
   const saveDefect = () => {
     const { fetchFunc } = data;
@@ -150,7 +151,7 @@ const MakeDecision = ({ data }) => {
   const handlePostIssue = () => {
     const { postIssueEvents } = data.eventsInfo;
     dispatch(
-      postIssueAction(composeDataToSend(), {
+      postIssueAction(composeDataToSend(true), {
         fetchFunc: data.fetchFunc,
         eventsInfo: postIssueEvents,
       }),
@@ -159,7 +160,7 @@ const MakeDecision = ({ data }) => {
   const handleLinkIssue = () => {
     const { linkIssueEvents } = data.eventsInfo;
     dispatch(
-      linkIssueAction(composeDataToSend(), {
+      linkIssueAction(composeDataToSend(true), {
         fetchFunc: data.fetchFunc,
         eventsInfo: linkIssueEvents,
       }),
@@ -168,7 +169,7 @@ const MakeDecision = ({ data }) => {
   const handleUnlinkIssue = () => {
     const { unlinkIssueEvents } = data.eventsInfo;
     dispatch(
-      unlinkIssueAction(composeDataToSend(), {
+      unlinkIssueAction(composeDataToSend(true), {
         fetchFunc: data.fetchFunc,
         eventsInfo: unlinkIssueEvents,
       }),
