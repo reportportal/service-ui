@@ -1070,7 +1070,7 @@
   "MakeDecisionModal.applyImmediately": "Применить немедленно",
   "MakeDecisionModal.applyWithOptions": "Применить с параметрами",
   "MakeDecisionModal.applyTo": "Применить для {itemsCount} элементов",
-  "MakeDecisionModal.bulkOperationDecision": "Групповое решение",
+  "MakeDecisionModal.bulkOperationDecision": "Решение для нескольких тестов",
   "MakeDecisionModal.decisionForTest": "Решение для теста {launchNumber}",
   "MakeDecisionModal.disabledTabTooltip": "Новый функционал будет доступен в следующей версии",
   "MakeDecisionModal.ignoreAa": "Игнорировать при Авто-Анализе",
