@@ -84,16 +84,13 @@ const MakeDecision = ({ data }) => {
     });
   };
   const composeDataToSend = (isIssueAction = false) => {
-    const issues = [];
-    isIssueAction
-      ? issues.push({
-          ...itemData,
-          issue: state.issue,
-          testItemId: itemData.id,
-        })
-      : issues.push({ issue: state.issue, testItemId: itemData.id });
-
-    return issues;
+    return [
+      {
+        ...(isIssueAction ? itemData : {}),
+        testItemId: itemData.id,
+        issue: state.issue,
+      },
+    ];
   };
   const saveDefect = () => {
     const { fetchFunc } = data;
