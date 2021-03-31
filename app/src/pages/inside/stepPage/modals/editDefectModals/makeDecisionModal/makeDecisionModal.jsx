@@ -88,7 +88,7 @@ const MakeDecision = ({ data }) => {
   const composeDataToSend = () => {
     return [
       {
-        ...itemData,
+        id: itemData.id,
         testItemId: itemData.id,
         issue: state.issue,
       },

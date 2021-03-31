@@ -48,10 +48,10 @@ export const ActionButtonsBar = ({ actionItems }) => {
           );
         })}
       </div>
-      {actionItems[selectedItem] && (
+      {selectedItem !== null && (
         <div className={cx('note')}>
           {Parser(AttentionIcon)}
-          {actionItems[selectedItem].noteMsg}
+          {actionItems.find(({ id }) => id === selectedItem).noteMsg}
         </div>
       )}
     </>
