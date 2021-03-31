@@ -59,7 +59,7 @@ const MakeDecision = ({ data }) => {
   const enabledBtsPlugins = useSelector(enabledBtsPluginsSelector);
   const isPostIssueUnavailable = !isPostIssueActionAvailable(btsIntegrations);
   const itemsData = data.items && data.items.length === 1 ? data.items[0] : data.items;
-  const itemData = data.item ? data.item : itemsData;
+  const itemData = data.item || itemsData;
   const [state, setState] = useState({
     issue: itemData.issue || null,
   });
