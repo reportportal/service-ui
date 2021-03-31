@@ -85,7 +85,6 @@ const LINK_ISSUE_EVENTS_INFO = {
 
 @connect(
   (state) => ({
-    debugMode: debugModeSelector(state),
     parentItem: parentItemSelector(state),
     steps: stepsSelector(state),
     lastOperation: lastOperationSelector(state),
@@ -125,7 +124,6 @@ export class StepPage extends Component {
   static propTypes = {
     deleteItems: PropTypes.func,
     onEditItems: PropTypes.func,
-    debugMode: PropTypes.bool.isRequired,
     steps: PropTypes.arrayOf(PropTypes.object),
     parentItem: PropTypes.object,
     selectedItems: PropTypes.arrayOf(PropTypes.object),
@@ -390,7 +388,6 @@ export class StepPage extends Component {
       pageSize,
       onChangePage,
       onChangePageSize,
-      debugMode,
       onFilterAdd,
       onFilterRemove,
       onFilterValidate,
@@ -422,7 +419,6 @@ export class StepPage extends Component {
             onUnselectAll={this.unselectAllItems}
             onProceedValidItems={this.proceedWithValidItems}
             onRefresh={this.props.fetchTestItemsAction}
-            debugMode={debugMode}
             onEditDefects={this.handleEditDefects}
             onIgnoreInAA={this.handleIgnoreInAA}
             onIncludeInAA={this.handleIncludeInAA}
