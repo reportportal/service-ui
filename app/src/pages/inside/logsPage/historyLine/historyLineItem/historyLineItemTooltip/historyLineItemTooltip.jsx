@@ -29,9 +29,9 @@ import { fetch, getDuration } from 'common/utils';
 import { URLS } from 'common/urls';
 import { statusLocalization } from 'common/constants/localization/statusLocalization';
 import { IN_PROGRESS, NOT_FOUND } from 'common/constants/testStatuses';
+import { DottedPreloader } from 'components/preloaders/dottedPreloader';
 import BugIcon from 'common/img/bug-inline.svg';
 import CommentIcon from 'common/img/comment-inline.svg';
-import LoadingGif from 'common/img/item-loading.gif';
 import { DefectTypeItem } from 'pages/inside/common/defectTypeItem';
 
 import { Triangles } from '../triangles';
@@ -142,7 +142,7 @@ export class HistoryLineItemTooltip extends Component {
     if (loading) {
       return (
         <div className={cx('loader')}>
-          <img src={LoadingGif} alt="Loading" />
+          <DottedPreloader />
         </div>
       );
     }
