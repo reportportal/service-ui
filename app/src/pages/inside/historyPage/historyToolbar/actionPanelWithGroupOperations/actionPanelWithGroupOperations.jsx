@@ -288,8 +288,9 @@ export class ActionPanelWithGroupOperations extends Component {
   };
 
   handleEditDefects = (eventData) => {
-    const { selectedItems, debugMode, onEditDefects } = this.props;
+    const { selectedItems, debugMode, onEditDefects, tracking } = this.props;
     const items = eventData && eventData.id ? [eventData] : selectedItems;
+    tracking.trackEvent(HISTORY_PAGE_EVENTS.EDIT_DEFECT_ACTION);
     onEditDefects(items, {
       fetchFunc: this.unselectAndRefreshItems,
       debugMode,
