@@ -67,7 +67,9 @@ const MakeDecision = ({ data }) => {
 
   useEffect(() => {
     setModalHasChanges(
-      state.issue ? !isEqual(itemData.issue, state.issue) || !isEmptyObject(issueAction) : false,
+      state.issue
+        ? !isEqual(itemData.issue, state.issue) || !isEmptyObject(issueAction)
+        : false || !isEmptyObject(issueAction),
     );
   }, [state, issueAction]);
 
@@ -94,16 +96,16 @@ const MakeDecision = ({ data }) => {
       },
     ];
   };
-  const prepareDataToSend = () => {
+  const prepareDataToSend = (isIssueAction = false) => {
     const { items } = data;
 
     const issues = items.map((item) => {
       const dataToSend = {
+        ...(isIssueAction ? item : {}),
         testItemId: item.id,
         issue: {
           ...item.issue,
           autoAnalyzed: false,
-          ignoreAnalyzer: false,
           ...state.issue,
         },
       };
@@ -177,7 +179,7 @@ const MakeDecision = ({ data }) => {
   const handlePostIssue = () => {
     const { postIssueEvents } = data.eventsInfo;
     dispatch(
-      postIssueAction(composeDataToSend(true), {
+      postIssueAction(Array.isArray(itemData) ? prepareDataToSend(true) : composeDataToSend(true), {
         fetchFunc: data.fetchFunc,
         eventsInfo: postIssueEvents,
       }),
@@ -186,7 +188,7 @@ const MakeDecision = ({ data }) => {
   const handleLinkIssue = () => {
     const { linkIssueEvents } = data.eventsInfo;
     dispatch(
-      linkIssueAction(composeDataToSend(true), {
+      linkIssueAction(Array.isArray(itemData) ? prepareDataToSend(true) : composeDataToSend(true), {
         fetchFunc: data.fetchFunc,
         eventsInfo: linkIssueEvents,
       }),
@@ -195,10 +197,13 @@ const MakeDecision = ({ data }) => {
   const handleUnlinkIssue = () => {
     const { unlinkIssueEvents } = data.eventsInfo;
     dispatch(
-      unlinkIssueAction(composeDataToSend(true), {
-        fetchFunc: data.fetchFunc,
-        eventsInfo: unlinkIssueEvents,
-      }),
+      unlinkIssueAction(
+        Array.isArray(itemData) ? prepareDataToSend(true) : composeDataToSend(true),
+        {
+          fetchFunc: data.fetchFunc,
+          eventsInfo: unlinkIssueEvents,
+        },
+      ),
     );
   };
   const getActionItems = () => {
@@ -278,15 +283,17 @@ const MakeDecision = ({ data }) => {
       title: formatMessage(messages.selectDefectTypeManually),
       content: (
         <>
-          <InputSwitcher
-            value={state.issue ? state.issue.ignoreAnalyzer : false}
-            onChange={handleIgnoreAnalyzerChange}
-            className={cx('ignore-analysis')}
-            childrenFirst
-            childrenClassName={cx('input-switcher-children')}
-          >
-            <span>{formatMessage(messages.ignoreAa)}</span>
-          </InputSwitcher>
+          {!Array.isArray(itemData) && (
+            <InputSwitcher
+              value={state.issue ? state.issue.ignoreAnalyzer : false}
+              onChange={handleIgnoreAnalyzerChange}
+              className={cx('ignore-analysis')}
+              childrenFirst
+              childrenClassName={cx('input-switcher-children')}
+            >
+              <span>{formatMessage(messages.ignoreAa)}</span>
+            </InputSwitcher>
+          )}
           <DefectTypeSelectorML
             selectDefectType={selectDefectType}
             selectedItem={state.issue ? state.issue.issueType : ''}
