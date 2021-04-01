@@ -115,7 +115,7 @@ export const messages = defineMessages({
   },
   modalNote: {
     id: 'MakeDecisionModal.modalNote',
-    defaultMessage: 'You have unsaved changes',
+    defaultMessage: 'You have to save changes or cancel them before closing the window',
   },
   disabledTabTooltip: {
     id: 'MakeDecisionModal.disabledTabTooltip',

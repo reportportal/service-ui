@@ -1074,7 +1074,7 @@
   "MakeDecisionModal.ignoreAa": "Ігнараваць пры Аўта-аналіз",
   "MakeDecisionModal.linkIssueNote": "Пасля адпраўкі тыпу дэфекту вы зможаце выбраць параметры для прывязкі новай памылкі",
   "MakeDecisionModal.machineLearningSuggestions": "Прапановы машыннага навучання",
-  "MakeDecisionModal.modalNote": "У вас ёсць незахаваныя змены",
+  "MakeDecisionModal.modalNote": "Вы павінны захаваць змены альбо адмяніць іх перад закрыццём акна",
   "MakeDecisionModal.postIssueNote": "Пасля адпраўкі тыпу дэфекту вы зможаце выбраць параметры для публікацыі новай памылкі",
   "MakeDecisionModal.selectDefectTypeManually": "Выберыце тып дэфекту ўручную",
   "MakeDecisionModal.unlinkIssueNote": "Пасля адпраўкі тыпу дэфекту бягучыя спасылкі будуць выдаленыя",

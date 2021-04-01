@@ -30,7 +30,6 @@ import isEqual from 'fast-deep-equal';
 import { URLS } from 'common/urls';
 import { fetch, isEmptyObject } from 'common/utils';
 import classNames from 'classnames/bind';
-import { ScrollWrapper } from 'components/main/scrollWrapper';
 import PlusIcon from 'common/img/plus-button-inline.svg';
 import UnlinkIcon from 'common/img/unlink-inline.svg';
 import { linkIssueAction, postIssueAction, unlinkIssueAction } from 'controllers/step';
@@ -257,12 +256,10 @@ const MakeDecision = ({ data }) => {
           >
             <span>{formatMessage(messages.ignoreAa)}</span>
           </InputSwitcher>
-          <ScrollWrapper autoHeight autoHeightMax={220}>
-            <DefectTypeSelectorML
-              selectDefectType={selectDefectType}
-              selectedItem={state.issue ? state.issue.issueType : ''}
-            />
-          </ScrollWrapper>
+          <DefectTypeSelectorML
+            selectDefectType={selectDefectType}
+            selectedItem={state.issue ? state.issue.issueType : ''}
+          />
           <ActionButtonsBar actionItems={getActionItems()} />
         </>
       ),
