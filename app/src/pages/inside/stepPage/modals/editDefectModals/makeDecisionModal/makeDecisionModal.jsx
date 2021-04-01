@@ -57,66 +57,63 @@ const MakeDecision = ({ data }) => {
   const isBtsPluginsExist = useSelector(isBtsPluginsExistSelector);
   const enabledBtsPlugins = useSelector(enabledBtsPluginsSelector);
   const isPostIssueUnavailable = !isPostIssueActionAvailable(btsIntegrations);
-  const itemsData = data.items && data.items.length === 1 ? data.items[0] : data.items;
-  const itemData = data.item || itemsData;
+  const isBulkOperation = data.items && data.items.length > 1;
+  const itemData = isBulkOperation ? data.items : data.items[0];
   const [state, setState] = useState({
-    issue: itemData.issue || null,
+    issue: isBulkOperation ? {} : itemData.issue,
   });
   const [modalHasChanges, setModalHasChanges] = useState(false);
   const [issueAction, setIssueAction] = useState({});
 
   useEffect(() => {
     setModalHasChanges(
-      state.issue
-        ? !isEqual(itemData.issue, state.issue) || !isEmptyObject(issueAction)
-        : false || !isEmptyObject(issueAction),
+      (isBulkOperation ? !isEmptyObject(state.issue) : !isEqual(itemData.issue, state.issue)) ||
+        !isEmptyObject(issueAction),
     );
   }, [state, issueAction]);
 
   const handleIgnoreAnalyzerChange = (value) => {
-    const issue = { ...state.issue, ignoreAnalyzer: value };
     setState({
       ...state,
-      issue,
+      issue: { ...state.issue, ignoreAnalyzer: value },
     });
   };
   const selectDefectType = (value) => {
-    const issue = { ...state.issue, issueType: value };
     setState({
       ...state,
-      issue,
+      issue: { ...state.issue, issueType: value },
     });
   };
-  const composeDataToSend = (isIssueAction = false) => {
-    return [
-      {
-        ...(isIssueAction ? itemData : {}),
-        testItemId: itemData.id,
-        issue: state.issue,
-      },
-    ];
-  };
+
   const prepareDataToSend = (isIssueAction = false) => {
     const { items } = data;
+    let issues = null;
 
-    const issues = items.map((item) => {
-      const dataToSend = {
+    if (isBulkOperation) {
+      issues = items.map((item) => ({
         ...(isIssueAction ? item : {}),
         testItemId: item.id,
         issue: {
           ...item.issue,
-          autoAnalyzed: false,
           ...state.issue,
+          autoAnalyzed: false,
         },
-      };
-      return dataToSend;
-    });
+      }));
+    } else {
+      issues = [
+        {
+          ...(isIssueAction ? itemData : {}),
+          testItemId: itemData.id,
+          issue: state.issue,
+        },
+      ];
+    }
     return issues;
   };
 
   const saveDefect = () => {
     const { fetchFunc } = data;
-    const issues = Array.isArray(itemData) ? prepareDataToSend() : composeDataToSend();
+    const issues = prepareDataToSend();
     const url = URLS.testItems(activeProject);
 
     fetch(url, {
@@ -126,7 +123,7 @@ const MakeDecision = ({ data }) => {
       },
     })
       .then(() => {
-        fetchFunc([{ testItemId: itemData.id, issue: state.issue }]);
+        fetchFunc(issues);
         dispatch(
           showNotification({
             message: formatMessage(messages.updateDefectsSuccess),
@@ -152,22 +149,24 @@ const MakeDecision = ({ data }) => {
   const renderHeaderElements = () => {
     return (
       <>
+        {!isBulkOperation && (
+          <GhostButton
+            onClick={applyChangesImmediately}
+            disabled={!modalHasChanges}
+            transparentBorder
+            transparentBackground
+            appearance="topaz"
+          >
+            {formatMessage(messages.applyImmediately)}
+          </GhostButton>
+        )}
         <GhostButton
           onClick={applyChangesImmediately}
-          disabled={!modalHasChanges}
-          transparentBorder
-          transparentBackground
-          appearance="topaz"
-        >
-          {!Array.isArray(itemData) && formatMessage(messages.applyImmediately)}
-        </GhostButton>
-        <GhostButton
-          onClick={applyChangesImmediately}
-          disabled={Array.isArray(itemData) ? !modalHasChanges : true}
+          disabled={isBulkOperation ? !modalHasChanges : true}
           color="''"
           appearance="topaz"
         >
-          {Array.isArray(itemData)
+          {isBulkOperation
             ? formatMessage(messages.applyTo, {
                 itemsCount: itemData.length,
               })
@@ -179,7 +178,7 @@ const MakeDecision = ({ data }) => {
   const handlePostIssue = () => {
     const { postIssueEvents } = data.eventsInfo;
     dispatch(
-      postIssueAction(Array.isArray(itemData) ? prepareDataToSend(true) : composeDataToSend(true), {
+      postIssueAction(prepareDataToSend(true), {
         fetchFunc: data.fetchFunc,
         eventsInfo: postIssueEvents,
       }),
@@ -188,7 +187,7 @@ const MakeDecision = ({ data }) => {
   const handleLinkIssue = () => {
     const { linkIssueEvents } = data.eventsInfo;
     dispatch(
-      linkIssueAction(Array.isArray(itemData) ? prepareDataToSend(true) : composeDataToSend(true), {
+      linkIssueAction(prepareDataToSend(true), {
         fetchFunc: data.fetchFunc,
         eventsInfo: linkIssueEvents,
       }),
@@ -197,13 +196,10 @@ const MakeDecision = ({ data }) => {
   const handleUnlinkIssue = () => {
     const { unlinkIssueEvents } = data.eventsInfo;
     dispatch(
-      unlinkIssueAction(
-        Array.isArray(itemData) ? prepareDataToSend(true) : composeDataToSend(true),
-        {
-          fetchFunc: data.fetchFunc,
-          eventsInfo: unlinkIssueEvents,
-        },
-      ),
+      unlinkIssueAction(prepareDataToSend(true), {
+        fetchFunc: data.fetchFunc,
+        eventsInfo: unlinkIssueEvents,
+      }),
     );
   };
   const getActionItems = () => {
@@ -247,7 +243,7 @@ const MakeDecision = ({ data }) => {
       },
     ];
 
-    if (itemData.issue && itemData.issue.externalSystemIssues.length > 0) {
+    if (isBulkOperation || (itemData.issue && itemData.issue.externalSystemIssues.length > 0)) {
       actionButtonItems.push({
         id: 2,
         label: formatMessage(actionMessages[UNLINK_ISSUE]),
@@ -268,7 +264,7 @@ const MakeDecision = ({ data }) => {
     {
       id: 0,
       isActive: false,
-      shouldShow: !Array.isArray(itemData),
+      shouldShow: !isBulkOperation,
       title: (
         <div title={formatMessage(messages.disabledTabTooltip)}>
           {formatMessage(messages.machineLearningSuggestions)}
@@ -283,9 +279,9 @@ const MakeDecision = ({ data }) => {
       title: formatMessage(messages.selectDefectTypeManually),
       content: (
         <>
-          {!Array.isArray(itemData) && (
+          {!isBulkOperation && (
             <InputSwitcher
-              value={state.issue ? state.issue.ignoreAnalyzer : false}
+              value={state.issue.ignoreAnalyzer || false}
               onChange={handleIgnoreAnalyzerChange}
               className={cx('ignore-analysis')}
               childrenFirst
@@ -296,7 +292,7 @@ const MakeDecision = ({ data }) => {
           )}
           <DefectTypeSelectorML
             selectDefectType={selectDefectType}
-            selectedItem={state.issue ? state.issue.issueType : ''}
+            selectedItem={state.issue.issueType || ''}
           />
           <ActionButtonsBar actionItems={getActionItems()} />
         </>
@@ -311,7 +307,7 @@ const MakeDecision = ({ data }) => {
   return (
     <DarkModalLayout
       title={
-        Array.isArray(itemData)
+        isBulkOperation
           ? formatMessage(messages.bulkOperationDecision)
           : formatMessage(messages.decisionForTest, {
               launchNumber: itemData.launchNumber && `#${itemData.launchNumber}`,
