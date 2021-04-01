@@ -1,0 +1,77 @@
+/*!
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.dotted-preloader {
+  display: inline-block;
+  position: relative;
+  width: 53px;
+  height: 4px;
+}
+
+.preloader-part {
+  position: absolute;
+  top: 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: $COLOR--white-two;
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+
+.preloader-part:nth-child(1) {
+  left: 0;
+  animation: dotted-preloader1 0.6s infinite;
+}
+
+.preloader-part:nth-child(2) {
+  left: 0;
+  animation: dotted-preloader2 0.6s infinite;
+}
+
+.preloader-part:nth-child(3) {
+  left: 24px;
+  animation: dotted-preloader2 0.6s infinite;
+}
+
+.preloader-part:nth-child(4) {
+  left: 48px;
+  animation: dotted-preloader3 0.6s infinite;
+}
+
+@keyframes dotted-preloader1 {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes dotted-preloader3 {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes dotted-preloader2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(24px, 0);
+  }
+}
