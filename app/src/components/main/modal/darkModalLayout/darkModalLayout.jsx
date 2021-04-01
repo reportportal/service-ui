@@ -97,12 +97,12 @@ export const DarkModalLayout = ({
               />
               <ScrollWrapper hideTracksWhenNotNeeded autoHide>
                 {status !== 'exited' ? children : null}
+                <div className={cx('note-row')}>
+                  {modalNote && clickOutside && modalHasChanges && (
+                    <ModalNote message={modalNote} icon={ErrorInlineIcon} status={'error'} />
+                  )}
+                </div>
               </ScrollWrapper>
-              <div className={cx('note-row')}>
-                {modalNote && clickOutside && modalHasChanges && (
-                  <ModalNote message={modalNote} icon={ErrorInlineIcon} status={'error'} />
-                )}
-              </div>
             </div>
           </div>
         )}

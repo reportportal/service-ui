@@ -20,23 +20,21 @@
   left: 0;
   width: 100%;
   height: 100%;
+  overflow: hidden;
 }
 
 .wrapper {
-  position: absolute;
-  top: 165px;
-  right: 0;
-  bottom: 0;
-  left: 56px;
+  height: calc(100% - 165px);
   display: flex;
+  margin: 165px 0 0 56px;
   justify-content: center;
-  padding-bottom: 100px;
   background-color: rgba($COLOR--dark-modal, 0.95);
   overflow: hidden;
 }
 
 .layout {
   width: 100%;
+  height: calc(100% - 100px);
   max-width: 920px;
   margin: 30px 15px 15px 15px;
 }
