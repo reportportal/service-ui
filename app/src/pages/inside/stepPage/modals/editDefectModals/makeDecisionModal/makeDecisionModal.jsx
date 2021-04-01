@@ -161,7 +161,7 @@ const MakeDecision = ({ data }) => {
         </GhostButton>
         <GhostButton
           onClick={applyChangesImmediately}
-          disabled={Array.isArray(itemData) ? !hasChanges : true}
+          disabled={Array.isArray(itemData) ? !modalHasChanges : true}
           color="''"
           appearance="topaz"
         >
