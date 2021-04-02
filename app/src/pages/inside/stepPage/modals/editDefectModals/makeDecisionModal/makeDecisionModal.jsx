@@ -32,6 +32,7 @@ import { fetch, isEmptyObject } from 'common/utils';
 import classNames from 'classnames/bind';
 import PlusIcon from 'common/img/plus-button-inline.svg';
 import UnlinkIcon from 'common/img/unlink-inline.svg';
+import LeftArrowIcon from 'common/img/arrow-left-small-inline.svg';
 import { linkIssueAction, postIssueAction, unlinkIssueAction } from 'controllers/step';
 import { actionMessages } from 'common/constants/localization/eventsLocalization';
 import {
@@ -44,7 +45,7 @@ import { getIssueTitle } from 'pages/inside/common/utils';
 import { LINK_ISSUE, POST_ISSUE, UNLINK_ISSUE } from 'common/constants/actionTypes';
 import { ActionButtonsBar } from './actionButtonsBar';
 import { messages } from './../messages';
-import { MAKE_DECISION_MODAL } from '../constants';
+import { MAKE_DECISION_MODAL, CONFIGURATION, OPTIONS } from '../constants';
 import styles from './makeDecisionModal.scss';
 import { OptionsStepForm } from './optionsStepForm';
 
@@ -65,7 +66,7 @@ const MakeDecision = ({ data }) => {
   });
   const [modalHasChanges, setModalHasChanges] = useState(false);
   const [issueAction, setIssueAction] = useState({});
-  const [step, setFormStep] = useState('configuration');
+  const [step, setFormStep] = useState(CONFIGURATION);
 
   useEffect(() => {
     setModalHasChanges(
@@ -149,11 +150,11 @@ const MakeDecision = ({ data }) => {
     issueAction.nextAction && issueAction.nextAction();
   };
   const moveToOptionsStep = () => {
-    setFormStep('options');
+    setFormStep(OPTIONS);
   };
 
   const moveToConfigurationStep = () => {
-    setFormStep('configuration');
+    setFormStep(CONFIGURATION);
   };
 
   const renderHeaderElements = () => {
@@ -277,11 +278,12 @@ const MakeDecision = ({ data }) => {
         <GhostButton
           onClick={moveToConfigurationStep}
           disabled={false}
+          icon={LeftArrowIcon}
           transparentBorder
           transparentBackground
           appearance="topaz"
         >
-          {`< \u00A0 ${formatMessage(messages.backToConfiguration)}`}
+          {formatMessage(messages.backToConfiguration)}
         </GhostButton>
         <GhostButton
           onClick={applyChangesImmediately}
@@ -348,13 +350,13 @@ const MakeDecision = ({ data }) => {
             })
       }
       renderHeaderElements={
-        step === 'configuration' ? renderHeaderElements : renderOptionsStepHeaderElements
+        step === CONFIGURATION ? renderHeaderElements : renderOptionsStepHeaderElements
       }
       modalHasChanges={modalHasChanges}
       hotKeyAction={hotKeyAction}
       modalNote={formatMessage(messages.modalNote)}
     >
-      {step === 'configuration' ? (
+      {step === CONFIGURATION ? (
         <Accordion renderedData={accordionData} />
       ) : (
         <OptionsStepForm accordionData={accordionData} />

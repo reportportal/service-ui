@@ -26,3 +26,5 @@ export const CHANGE_COMMENT_MODE = {
 };
 export const CURRENT_CHANGE_DEFECT_COMMENT_MODE = 'currentChangeDefectCommentMode';
 export const MAKE_DECISION_MODAL = 'makeDecisionModal';
+export const CONFIGURATION = 'configuration';
+export const OPTIONS = 'options';
