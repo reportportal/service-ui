@@ -493,7 +493,11 @@ const MakeDecision = ({ data }) => {
       {step === CONFIGURATION ? (
         <Accordion tabs={getAccordionTabs()} toggleTab={toggleAccordionTab} />
       ) : (
-        <OptionsStepForm accordionData={getAccordionTabs()} />
+        <OptionsStepForm
+          accordionData={getAccordionTabs()}
+          state={state}
+          // copyFromHistoryState={copyFromHistoryState}
+        />
       )}
     </DarkModalLayout>
   );

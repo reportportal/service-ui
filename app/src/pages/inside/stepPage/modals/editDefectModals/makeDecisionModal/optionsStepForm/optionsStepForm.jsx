@@ -15,7 +15,81 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
+import classNames from 'classnames/bind';
+import CommentIcon from 'common/img/comment-inline.svg';
+import { DefectTypeItemML } from 'pages/inside/common/defectTypeItemML';
+import { useSelector } from 'react-redux';
+import { defectTypesSelector } from 'controllers/project';
+import Parser from 'html-react-parser';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { ExecutionInfo } from 'pages/inside/logsPage/defectEditor/executionInfo';
+import { useIntl } from 'react-intl';
+import { messages } from './../../messages';
+import styles from './optionsStepForm.scss';
 
-export const OptionsStepForm = () => {
-  return <div />;
+const cx = classNames.bind(styles);
+
+export const OptionsStepForm = ({ accordionData, state, copyFromHistoryState }) => {
+  const { formatMessage } = useIntl();
+  const defectTypes = Object.values(useSelector(defectTypesSelector)).flat();
+  const defectType = defectTypes.filter((type) => type.locator === state.issue.issueType)[0];
+  const activeAccordionDataId = accordionData.filter((data) => data.isActive === true)[0].id;
+  const renderCommentBlock = () => {
+    return (
+      <div className={cx('comment-block')}>
+        <span className={cx('icon')}>{Parser(CommentIcon)}</span>
+        <ScrollWrapper
+          className={cx('scroll')}
+          autoHeight
+          hideTracksWhenNotNeeded
+          autoHeightMax={80}
+        >
+          <p className={cx('comment')}>{state.issue.comment || 'Comment'}</p>
+        </ScrollWrapper>
+      </div>
+    );
+  };
+  return (
+    <>
+      <div className={cx('header')}>{formatMessage(messages.initialDetailsTitle)}</div>
+      <div className={cx('content')}>
+        {activeAccordionDataId === 1 && (
+          <div className={cx('execution-info-content')}>
+            <div className={cx('execution-item')}>
+              <ExecutionInfo item={copyFromHistoryState} />
+            </div>
+            {renderCommentBlock()}
+          </div>
+        )}
+        {activeAccordionDataId === 2 && (
+          <div className={cx('defect-type-content')}>
+            <DefectTypeItemML
+              className={cx('initial-details-defect-type')}
+              isSelected={false}
+              defectType={defectType}
+            />
+            <div className={cx('defect-type-description')}>
+              {renderCommentBlock()}
+              {
+                <div className={cx('analys-block')}>
+                  <span className={cx('analys-icon')}>AA</span>
+                  <p>
+                    {state.issue.ignoreAnalyzer
+                      ? formatMessage(messages.excludedFromAa)
+                      : formatMessage(messages.includedToAa)}
+                  </p>
+                </div>
+              }
+            </div>
+          </div>
+        )}
+      </div>
+    </>
+  );
+};
+OptionsStepForm.propTypes = {
+  accordionData: PropTypes.array,
+  state: PropTypes.object,
+  copyFromHistoryState: PropTypes.object,
 };
