@@ -125,6 +125,7 @@ export class HistoryLineItem extends Component {
     }).isRequired,
     onClick: PropTypes.func,
     isDefectEditorOpen: PropTypes.bool,
+    launchAttributes: PropTypes.array,
   };
 
   static defaultProps = {
@@ -140,6 +141,7 @@ export class HistoryLineItem extends Component {
     endTime: null,
     onClick: () => {},
     isDefectEditorOpen: false,
+    launchAttributes: null,
   };
 
   render() {

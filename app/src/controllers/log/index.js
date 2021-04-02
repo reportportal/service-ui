@@ -25,6 +25,7 @@ export {
   setIncludeAllLaunchesAction,
   fetchHistoryItemsAction,
   setShouldShowLoadMoreAction,
+  updateHistoryItemLaunchAttributesAction,
 } from './actionCreators';
 export { logReducer } from './reducer';
 export {

@@ -116,3 +116,16 @@ export const updateHistoryItemIssues = (items = [], issues) => {
     return item;
   });
 };
+
+export const updateHistoryItemLaunchAttributes = (items = [], launch) => {
+  return items.map((item) => {
+    if (item.launchId === launch.id) {
+      return {
+        ...item,
+        launchAttributes: launch.attributes,
+      };
+    }
+
+    return item;
+  });
+};

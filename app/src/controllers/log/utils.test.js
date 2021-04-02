@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-import { getPreviousItem, getNextItem, updateHistoryItemIssues } from './utils';
+import {
+  getPreviousItem,
+  getNextItem,
+  updateHistoryItemIssues,
+  updateHistoryItemLaunchAttributes,
+} from './utils';
 
 describe('log/utils', () => {
   const itemsArray = [{ id: 0 }, { id: 1 }, { id: 2 }];
@@ -69,6 +74,30 @@ describe('log/utils', () => {
           { testItemId: 1, issue: {} },
           { testItemId: 2, issue: { key: 'newIssue' } },
         ]),
+      ).toEqual(expectedItems);
+    });
+  });
+
+  describe('updateHistoryItemLaunchAttributes', () => {
+    const items = [{ launchId: 1 }, { launchId: 2 }];
+
+    test('should return empty array in case of empty parameters', () => {
+      expect(updateHistoryItemLaunchAttributes()).toEqual([]);
+    });
+    test('should return initial items in case of mismatch of launchIds', () => {
+      expect(updateHistoryItemLaunchAttributes(items, { id: 3 })).toEqual(items);
+    });
+    test('should return updated items in case of matching launchIds', () => {
+      const expectedItems = [
+        { launchId: 1 },
+        { launchId: 2, launchAttributes: [{ key: 'attrKey', value: 'attrValue' }] },
+      ];
+
+      expect(
+        updateHistoryItemLaunchAttributes(items, {
+          id: 2,
+          attributes: [{ key: 'attrKey', value: 'attrValue' }],
+        }),
       ).toEqual(expectedItems);
     });
   });
