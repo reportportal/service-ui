@@ -25,7 +25,6 @@ import { NAMESPACE } from './constants';
 import {
   validateIgnoreInAA,
   validateIncludeInAA,
-  validateUnlinkIssue,
   validateEditDefect,
   validateLinkIssue,
   validatePostIssue,
@@ -52,12 +51,7 @@ export const includeInAutoAnalysisAction = defineGroupOperation(
   validateIncludeInAA,
 );
 
-export const unlinkIssueAction = defineGroupOperation(
-  NAMESPACE,
-  'unlink-issue',
-  unlinkIssue,
-  validateUnlinkIssue,
-);
+export const unlinkIssueAction = defineGroupOperation(NAMESPACE, 'unlink-issue', unlinkIssue);
 
 export const editDefectsAction = defineGroupOperation(
   NAMESPACE,
