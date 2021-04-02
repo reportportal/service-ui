@@ -113,6 +113,10 @@ export const messages = defineMessages({
     id: 'MakeDecisionModal.machineLearningSuggestions',
     defaultMessage: 'Machine learning suggestions',
   },
+  apply: {
+    id: 'MakeDecisionModal.apply',
+    defaultMessage: 'Apply',
+  },
   applyImmediately: {
     id: 'MakeDecisionModal.applyImmediately',
     defaultMessage: 'Apply Immediately',
@@ -120,6 +124,10 @@ export const messages = defineMessages({
   applyWithOptions: {
     id: 'MakeDecisionModal.applyWithOptions',
     defaultMessage: 'Apply with Options',
+  },
+  backToConfiguration: {
+    id: 'MakeDecisionModal.backToConfiguration',
+    defaultMessage: 'Back to configuration',
   },
   modalNote: {
     id: 'MakeDecisionModal.modalNote',
