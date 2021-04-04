@@ -206,8 +206,11 @@ const MakeDecision = ({ data }) => {
   };
   const handleUnlinkIssue = () => {
     const { unlinkIssueEvents } = data.eventsInfo;
+    const selectedItems = isBulkOperation
+      ? prepareDataToSend(true).filter((item) => item.issue.externalSystemIssues.length > 0)
+      : prepareDataToSend(true);
     dispatch(
-      unlinkIssueAction(prepareDataToSend(true), {
+      unlinkIssueAction(selectedItems, {
         fetchFunc: data.fetchFunc,
         eventsInfo: unlinkIssueEvents,
       }),
