@@ -30,11 +30,11 @@ import styles from './optionsStepForm.scss';
 
 const cx = classNames.bind(styles);
 
-export const OptionsStepForm = ({ accordionData, state, copyFromHistoryState }) => {
+export const OptionsStepForm = ({ state }) => {
   const { formatMessage } = useIntl();
   const defectTypes = Object.values(useSelector(defectTypesSelector)).flat();
   const defectType = defectTypes.filter((type) => type.locator === state.issue.issueType)[0];
-  const activeAccordionDataId = accordionData.filter((data) => data.isActive === true)[0].id;
+
   const renderCommentBlock = () => {
     return (
       <div className={cx('comment-block')}>
@@ -54,15 +54,14 @@ export const OptionsStepForm = ({ accordionData, state, copyFromHistoryState }) 
     <>
       <div className={cx('header')}>{formatMessage(messages.initialDetailsTitle)}</div>
       <div className={cx('content')}>
-        {activeAccordionDataId === 1 && (
+        {state.id ? (
           <div className={cx('execution-info-content')}>
             <div className={cx('execution-item')}>
-              <ExecutionInfo item={copyFromHistoryState} />
+              <ExecutionInfo item={state} />
             </div>
             {renderCommentBlock()}
           </div>
-        )}
-        {activeAccordionDataId === 2 && (
+        ) : (
           <div className={cx('defect-type-content')}>
             <DefectTypeItemML
               className={cx('initial-details-defect-type')}
@@ -89,7 +88,5 @@ export const OptionsStepForm = ({ accordionData, state, copyFromHistoryState }) 
   );
 };
 OptionsStepForm.propTypes = {
-  accordionData: PropTypes.array,
   state: PropTypes.object,
-  copyFromHistoryState: PropTypes.object,
 };
