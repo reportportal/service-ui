@@ -77,11 +77,13 @@ const MakeDecision = ({ data }) => {
   const isPostIssueUnavailable = !isPostIssueActionAvailable(btsIntegrations);
   const isBulkOperation = data.items && data.items.length > 1;
   const itemData = isBulkOperation ? data.items : data.items[0];
-  const [selectDefectTypeState, setSelectDefectTypeState] = useState({
-    issue: isBulkOperation ? {} : itemData.issue,
+  const [modalState, setModalState] = useState({
+    [COPY_FROM_HISTORY_LINE]: {},
+    [SELECT_DEFECT_MANUALLY]: {
+      issue: isBulkOperation ? {} : itemData.issue,
+    },
+    issueAction: {},
   });
-  const [copyFromHistoryState, setCopyFromHistoryState] = useState({});
-  const [issueAction, setIssueAction] = useState({});
   const [accordionTabsState, setAccordionTabsState] = useState({
     [TABS_ID[MACHINE_LEARNING_SUGGESTIONS]]: false,
     [TABS_ID[COPY_FROM_HISTORY_LINE]]: false,
@@ -93,12 +95,12 @@ const MakeDecision = ({ data }) => {
   useEffect(() => {
     setModalHasChanges(
       (isBulkOperation
-        ? !isEmptyObject(selectDefectTypeState.issue)
-        : !isEqual(itemData.issue, selectDefectTypeState.issue)) ||
-        !isEmptyObject(issueAction) ||
-        !isEmptyObject(copyFromHistoryState),
+        ? !isEmptyObject(modalState[SELECT_DEFECT_MANUALLY].issue)
+        : !isEqual(itemData.issue, modalState[SELECT_DEFECT_MANUALLY].issue)) ||
+        !isEmptyObject(modalState.issueAction) ||
+        !isEmptyObject(modalState[COPY_FROM_HISTORY_LINE]),
     );
-  }, [issueAction, selectDefectTypeState, copyFromHistoryState]);
+  }, [modalState]);
 
   const collapseTabsExceptCurr = (currentTab) => {
     const newTabsState = Object.fromEntries(
@@ -109,12 +111,14 @@ const MakeDecision = ({ data }) => {
     setAccordionTabsState(newTabsState);
   };
   const handleIgnoreAnalyzerChange = (value) => {
-    const issue = { ...selectDefectTypeState.issue, ignoreAnalyzer: value };
-    setSelectDefectTypeState({
-      ...selectDefectTypeState,
-      issue,
+    const issue = { ...modalState[SELECT_DEFECT_MANUALLY].issue, ignoreAnalyzer: value };
+    setModalState({
+      ...modalState,
+      [COPY_FROM_HISTORY_LINE]: {},
+      [SELECT_DEFECT_MANUALLY]: {
+        issue,
+      },
     });
-    setCopyFromHistoryState({});
     collapseTabsExceptCurr(TABS_ID[SELECT_DEFECT_MANUALLY]);
   };
   const prepareDataToSend = (isIssueAction = false) => {
@@ -125,16 +129,15 @@ const MakeDecision = ({ data }) => {
         testItemId: item.id,
         issue: {
           ...item.issue,
-          ...selectDefectTypeState.issue,
+          ...modalState[SELECT_DEFECT_MANUALLY].issue,
           autoAnalyzed: false,
         },
       }));
     }
-    if (!isEmptyObject(copyFromHistoryState)) {
+    if (!isEmptyObject(modalState[COPY_FROM_HISTORY_LINE]) && !isIssueAction) {
       return [
         {
-          ...(isIssueAction ? itemData : {}),
-          issue: { ...copyFromHistoryState.issue, autoAnalyzed: false },
+          issue: { ...modalState[COPY_FROM_HISTORY_LINE].issue, autoAnalyzed: false },
           testItemId: itemData.id,
         },
       ];
@@ -143,7 +146,7 @@ const MakeDecision = ({ data }) => {
       {
         ...(isIssueAction ? itemData : {}),
         testItemId: itemData.id,
-        issue: selectDefectTypeState.issue,
+        issue: modalState[SELECT_DEFECT_MANUALLY].issue,
       },
     ];
   };
@@ -179,14 +182,17 @@ const MakeDecision = ({ data }) => {
   };
   const applyChangesImmediately = () => {
     if (isBulkOperation) {
-      modalHasChanges && !isEmptyObject(selectDefectTypeState.issue) && saveDefect();
-      !isEmptyObject(issueAction) && dispatch(hideModalAction());
-      issueAction.nextAction && issueAction.nextAction();
+      modalHasChanges && !isEmptyObject(modalState[SELECT_DEFECT_MANUALLY].issue) && saveDefect();
+      !isEmptyObject(modalState.issueAction) &&
+        dispatch(hideModalAction()) &&
+        modalState.issueAction.nextAction();
     } else {
-      modalHasChanges && !isEqual(itemData.issue, selectDefectTypeState.issue) && saveDefect();
-      modalHasChanges && !isEmptyObject(copyFromHistoryState) && saveDefect();
-      !isEmptyObject(issueAction) && dispatch(hideModalAction());
-      issueAction.nextAction && issueAction.nextAction();
+      modalHasChanges &&
+        !isEqual(itemData.issue, modalState[SELECT_DEFECT_MANUALLY].issue) &&
+        saveDefect();
+      modalHasChanges && !isEmptyObject(modalState[COPY_FROM_HISTORY_LINE]) && saveDefect();
+      !isEmptyObject(modalState.issueAction) && dispatch(hideModalAction());
+      !isEmptyObject(modalState.issueAction) && modalState.issueAction.nextAction();
     }
   };
   const moveToOptionsStep = () => {
@@ -272,16 +278,22 @@ const MakeDecision = ({ data }) => {
         noteMsg: formatMessage(messages.postIssueNote),
         icon: PlusIcon,
         onClick: () => {
-          if (issueAction.actionName === POST_ISSUE) {
-            setIssueAction({});
+          if (modalState.issueAction.actionName === POST_ISSUE) {
+            setModalState({
+              ...modalState,
+              issueAction: {},
+            });
           } else {
-            setIssueAction({ actionName: POST_ISSUE, nextAction: handlePostIssue });
+            setModalState({
+              ...modalState,
+              [COPY_FROM_HISTORY_LINE]: {},
+              issueAction: { actionName: POST_ISSUE, nextAction: handlePostIssue },
+            });
           }
-          !isEmptyObject(copyFromHistoryState) && setCopyFromHistoryState({});
           collapseTabsExceptCurr(TABS_ID.selectDefectManually);
         },
         disabled: isPostIssueUnavailable,
-        isSelected: issueAction.actionName === POST_ISSUE,
+        isSelected: modalState.issueAction.actionName === POST_ISSUE,
       },
       {
         id: 1,
@@ -290,16 +302,22 @@ const MakeDecision = ({ data }) => {
         noteMsg: formatMessage(messages.linkIssueNote),
         icon: PlusIcon,
         onClick: () => {
-          if (issueAction.actionName === LINK_ISSUE) {
-            setIssueAction({});
+          if (modalState.issueAction.actionName === LINK_ISSUE) {
+            setModalState({
+              ...modalState,
+              issueAction: {},
+            });
           } else {
-            setIssueAction({ actionName: LINK_ISSUE, nextAction: handleLinkIssue });
+            setModalState({
+              ...modalState,
+              [COPY_FROM_HISTORY_LINE]: {},
+              issueAction: { actionName: LINK_ISSUE, nextAction: handleLinkIssue },
+            });
           }
-          !isEmptyObject(copyFromHistoryState) && setCopyFromHistoryState({});
           collapseTabsExceptCurr(TABS_ID.selectDefectManually);
         },
         disabled: !btsIntegrations.length,
-        isSelected: issueAction.actionName === LINK_ISSUE,
+        isSelected: modalState.issueAction.actionName === LINK_ISSUE,
       },
     ];
 
@@ -314,15 +332,24 @@ const MakeDecision = ({ data }) => {
         noteMsg: formatMessage(messages.unlinkIssueNote),
         icon: UnlinkIcon,
         onClick: () => {
-          if (issueAction.actionName === UNLINK_ISSUE) {
-            setIssueAction({});
+          if (modalState.issueAction.actionName === UNLINK_ISSUE) {
+            setModalState({
+              ...modalState,
+              issueAction: {},
+            });
           } else {
-            setIssueAction({ actionName: UNLINK_ISSUE, nextAction: handleUnlinkIssue });
+            setModalState({
+              ...modalState,
+              [COPY_FROM_HISTORY_LINE]: {},
+              issueAction: {
+                actionName: UNLINK_ISSUE,
+                nextAction: handleUnlinkIssue,
+              },
+            });
           }
-          !isEmptyObject(copyFromHistoryState) && setCopyFromHistoryState({});
           collapseTabsExceptCurr(TABS_ID[SELECT_DEFECT_MANUALLY]);
         },
-        isSelected: issueAction.actionName === UNLINK_ISSUE,
+        isSelected: modalState.issueAction.actionName === UNLINK_ISSUE,
       });
     }
     return actionButtonItems;
@@ -333,21 +360,24 @@ const MakeDecision = ({ data }) => {
   const selectHistoryLineItem = (itemId) => {
     if (itemId) {
       const historyItem = preparedHistoryLineItems.find((item) => item.id === itemId);
-      setCopyFromHistoryState(historyItem);
-      setSelectDefectTypeState({ issue: itemData.issue });
+      setModalState({
+        ...modalState,
+        [COPY_FROM_HISTORY_LINE]: historyItem,
+        [SELECT_DEFECT_MANUALLY]: { issue: itemData.issue },
+        issueAction: {},
+      });
       collapseTabsExceptCurr(TABS_ID[COPY_FROM_HISTORY_LINE]);
     } else {
-      setCopyFromHistoryState({});
+      setModalState({ ...modalState, [COPY_FROM_HISTORY_LINE]: {} });
     }
-    setIssueAction({});
   };
   const selectDefectTypeManually = (value) => {
-    const issue = { ...selectDefectTypeState.issue, issueType: value };
-    setSelectDefectTypeState({
-      ...selectDefectTypeState,
-      issue,
+    const issue = { ...modalState[SELECT_DEFECT_MANUALLY].issue, issueType: value };
+    setModalState({
+      ...modalState,
+      [COPY_FROM_HISTORY_LINE]: {},
+      [SELECT_DEFECT_MANUALLY]: { issue },
     });
-    setCopyFromHistoryState({});
     collapseTabsExceptCurr(TABS_ID[SELECT_DEFECT_MANUALLY]);
   };
   const accordionData = () => {
@@ -370,7 +400,7 @@ const MakeDecision = ({ data }) => {
           <>
             {!isBulkOperation && (
               <InputSwitcher
-                value={selectDefectTypeState.issue.ignoreAnalyzer || false}
+                value={modalState[SELECT_DEFECT_MANUALLY].issue.ignoreAnalyzer || false}
                 onChange={handleIgnoreAnalyzerChange}
                 className={cx('ignore-analysis')}
                 childrenFirst
@@ -381,7 +411,7 @@ const MakeDecision = ({ data }) => {
             )}
             <DefectTypeSelectorML
               selectDefectType={selectDefectTypeManually}
-              selectedItem={selectDefectTypeState.issue.issueType || ''}
+              selectedItem={modalState[SELECT_DEFECT_MANUALLY].issue.issueType || ''}
             />
             <ActionButtonsBar actionItems={getActionItems()} />
           </>
@@ -403,7 +433,7 @@ const MakeDecision = ({ data }) => {
               <div className={cx('execution-item')} key={item.id}>
                 <ExecutionInfo
                   item={item}
-                  selectedItem={copyFromHistoryState.id}
+                  selectedItem={modalState[COPY_FROM_HISTORY_LINE].id}
                   selectItem={selectHistoryLineItem}
                 />
               </div>

@@ -45,7 +45,6 @@ export const Accordion = ({
             key={tab.id}
             headerClassNames={tab.shouldShow ? headerClassNames : 'hidden'}
             contentClassNames={tab.shouldShow ? contentClassNames : 'hidden'}
-            tabsStateOutside={tabsStateOutside}
           />
         ))}
     </div>
