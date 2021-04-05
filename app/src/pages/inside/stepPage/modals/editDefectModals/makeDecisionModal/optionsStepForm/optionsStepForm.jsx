@@ -30,10 +30,10 @@ import styles from './optionsStepForm.scss';
 
 const cx = classNames.bind(styles);
 
-export const OptionsStepForm = ({ state }) => {
+export const OptionsStepForm = ({ info }) => {
   const { formatMessage } = useIntl();
   const defectTypes = Object.values(useSelector(defectTypesSelector)).flat();
-  const defectType = defectTypes.filter((type) => type.locator === state.issue.issueType)[0];
+  const defectType = defectTypes.filter((type) => type.locator === info.issue.issueType)[0];
 
   const renderCommentBlock = () => {
     return (
@@ -45,7 +45,7 @@ export const OptionsStepForm = ({ state }) => {
           hideTracksWhenNotNeeded
           autoHeightMax={80}
         >
-          <p className={cx('comment')}>{state.issue.comment || 'Comment'}</p>
+          <p className={cx('comment')}>{info.issue.comment || 'Comment'}</p>
         </ScrollWrapper>
       </div>
     );
@@ -54,10 +54,10 @@ export const OptionsStepForm = ({ state }) => {
     <>
       <div className={cx('header')}>{formatMessage(messages.initialDetailsTitle)}</div>
       <div className={cx('content')}>
-        {state.id ? (
+        {info.id ? (
           <div className={cx('execution-info-content')}>
             <div className={cx('execution-item')}>
-              <ExecutionInfo item={state} />
+              <ExecutionInfo item={info} />
             </div>
             {renderCommentBlock()}
           </div>
@@ -74,7 +74,7 @@ export const OptionsStepForm = ({ state }) => {
                 <div className={cx('analys-block')}>
                   <span className={cx('analys-icon')}>AA</span>
                   <p>
-                    {state.issue.ignoreAnalyzer
+                    {info.issue.ignoreAnalyzer
                       ? formatMessage(messages.excludedFromAa)
                       : formatMessage(messages.includedToAa)}
                   </p>
@@ -88,5 +88,5 @@ export const OptionsStepForm = ({ state }) => {
   );
 };
 OptionsStepForm.propTypes = {
-  state: PropTypes.object,
+  info: PropTypes.object,
 };

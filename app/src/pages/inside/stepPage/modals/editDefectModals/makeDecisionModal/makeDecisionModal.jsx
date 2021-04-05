@@ -494,7 +494,7 @@ const MakeDecision = ({ data }) => {
         <Accordion tabs={getAccordionTabs()} toggleTab={toggleAccordionTab} />
       ) : (
         <OptionsStepForm
-        //  state={isEmptyObject(copyFromHistoryState) ? selectDefectTypeState : copyFromHistoryState}
+        //  info={isEmptyObject(copyFromHistoryState) ? selectDefectTypeState : copyFromHistoryState}
         />
       )}
     </DarkModalLayout>
