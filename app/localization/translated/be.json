@@ -758,7 +758,7 @@
   "HistoryControls.historyBaseSameName": "Запускі з аднолькавымі імёнамі",
   "HistoryLine.loadMore": "+{number} Яшчэ",
   "HistoryLineItemTooltip.launchName": "Імя запуску",
-  "HistoryLineItemTooltip.attributes": "Атрыбуты:",
+  "HistoryLineItemTooltip.launchAttributes": "Атрыбуты запуску:",
   "EmptyHistoryItem.emptyItemCaption": "Элемент пусты",
   "HistoryTable.itemNamesHeaderTitle": "Імя",
   "HistoryTable.launchNumberTitle": "Запуск №",
