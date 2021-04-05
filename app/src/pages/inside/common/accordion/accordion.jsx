@@ -14,35 +14,23 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { getTabsState } from 'pages/inside/common/accordion/utils';
-import { isEmptyObject } from 'common/utils';
 import { AccordionTab } from './accordionTab';
 import styles from './accordion.scss';
 
 const cx = classNames.bind(styles);
 
-export const Accordion = ({
-  renderedData,
-  headerClassNames,
-  contentClassNames,
-  tabsStateOutside,
-}) => {
-  const initialTabsState = getTabsState(renderedData);
-  const [tabsState, setTabsState] = useState(initialTabsState);
-  const isManagedSateOutside = !isEmptyObject(tabsStateOutside);
-
+export const Accordion = ({ tabs, headerClassNames, contentClassNames, toggleTab }) => {
   return (
     <div className={cx('accordion')}>
-      {renderedData.length > 0 &&
-        renderedData.map((tab) => (
+      {tabs.length > 0 &&
+        tabs.map((tab) => (
           <AccordionTab
-            tab={tab}
-            tabsState={isManagedSateOutside ? tabsStateOutside.state : tabsState}
-            setTabsState={isManagedSateOutside ? tabsStateOutside.setState : setTabsState}
             key={tab.id}
+            tab={tab}
+            onClick={() => toggleTab(tab.id)}
             headerClassNames={tab.shouldShow ? headerClassNames : 'hidden'}
             contentClassNames={tab.shouldShow ? contentClassNames : 'hidden'}
           />
@@ -51,14 +39,14 @@ export const Accordion = ({
   );
 };
 Accordion.propTypes = {
-  renderedData: PropTypes.array,
+  tabs: PropTypes.array,
   headerClassNames: PropTypes.string,
   contentClassNames: PropTypes.string,
-  tabsStateOutside: PropTypes.object,
+  toggleTab: PropTypes.func,
 };
 Accordion.defaultProps = {
-  renderedData: [],
+  tabs: [],
   headerClassNames: '',
   contentClassNames: '',
-  tabsStateOutside: {},
+  toggleTab: () => {},
 };

@@ -60,12 +60,6 @@ import styles from './makeDecisionModal.scss';
 
 const cx = classNames.bind(styles);
 
-const TABS_ID = {
-  [MACHINE_LEARNING_SUGGESTIONS]: 0,
-  [COPY_FROM_HISTORY_LINE]: 1,
-  [SELECT_DEFECT_MANUALLY]: 2,
-};
-
 const MakeDecision = ({ data }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
@@ -85,9 +79,9 @@ const MakeDecision = ({ data }) => {
     issueActionType: '',
   });
   const [accordionTabsState, setAccordionTabsState] = useState({
-    [TABS_ID[MACHINE_LEARNING_SUGGESTIONS]]: false,
-    [TABS_ID[COPY_FROM_HISTORY_LINE]]: false,
-    [TABS_ID[SELECT_DEFECT_MANUALLY]]: true,
+    [MACHINE_LEARNING_SUGGESTIONS]: false,
+    [COPY_FROM_HISTORY_LINE]: false,
+    [SELECT_DEFECT_MANUALLY]: true,
   });
   const [step, setFormStep] = useState(CONFIGURATION);
   const [modalHasChanges, setModalHasChanges] = useState(false);
@@ -104,10 +98,9 @@ const MakeDecision = ({ data }) => {
   }, [modalState]);
 
   const collapseTabsExceptCurr = (currentTab) => {
-    const newTabsState = Object.fromEntries(
-      Object.entries(accordionTabsState).map(([id]) =>
-        +id === currentTab ? [id, true] : [id, false],
-      ),
+    const newTabsState = Object.keys(accordionTabsState).reduce(
+      (acc, id) => ({ ...acc, [id]: currentTab === id }),
+      {},
     );
     setAccordionTabsState(newTabsState);
   };
@@ -121,7 +114,7 @@ const MakeDecision = ({ data }) => {
       source: { issue },
       decisionType: SELECT_DEFECT_MANUALLY,
     });
-    collapseTabsExceptCurr(TABS_ID[SELECT_DEFECT_MANUALLY]);
+    collapseTabsExceptCurr(SELECT_DEFECT_MANUALLY);
   };
   const prepareDataToSend = (isIssueAction = false) => {
     if (isBulkOperation) {
@@ -245,30 +238,28 @@ const MakeDecision = ({ data }) => {
     };
     const actionButtonItems = [
       {
-        id: 0,
+        id: POST_ISSUE,
         label: formatMessage(actionMessages[POST_ISSUE]),
         hint: isPostIssueUnavailable ? issueTitle : '',
         noteMsg: formatMessage(messages.postIssueNote),
         icon: PlusIcon,
         onClick: () => {
           setIssueActionType(POST_ISSUE);
-          collapseTabsExceptCurr(TABS_ID.selectDefectManually);
+          collapseTabsExceptCurr(SELECT_DEFECT_MANUALLY);
         },
         disabled: isPostIssueUnavailable,
-        isSelected: modalState.issueActionType === POST_ISSUE,
       },
       {
-        id: 1,
+        id: LINK_ISSUE,
         label: formatMessage(actionMessages[LINK_ISSUE]),
         hint: btsIntegrations.length ? '' : issueTitle,
         noteMsg: formatMessage(messages.linkIssueNote),
         icon: PlusIcon,
         onClick: () => {
           setIssueActionType(LINK_ISSUE);
-          collapseTabsExceptCurr(TABS_ID.selectDefectManually);
+          collapseTabsExceptCurr(SELECT_DEFECT_MANUALLY);
         },
         disabled: !btsIntegrations.length,
-        isSelected: modalState.issueActionType === LINK_ISSUE,
       },
     ];
 
@@ -278,15 +269,14 @@ const MakeDecision = ({ data }) => {
         : itemData.issue && itemData.issue.externalSystemIssues.length > 0
     ) {
       actionButtonItems.push({
-        id: 2,
+        id: UNLINK_ISSUE,
         label: formatMessage(actionMessages[UNLINK_ISSUE]),
         noteMsg: formatMessage(messages.unlinkIssueNote),
         icon: UnlinkIcon,
         onClick: () => {
           setIssueActionType(UNLINK_ISSUE);
-          collapseTabsExceptCurr(TABS_ID[SELECT_DEFECT_MANUALLY]);
+          collapseTabsExceptCurr(SELECT_DEFECT_MANUALLY);
         },
-        isSelected: modalState.issueActionType === UNLINK_ISSUE,
       });
     }
     return actionButtonItems;
@@ -303,7 +293,7 @@ const MakeDecision = ({ data }) => {
         decisionType: COPY_FROM_HISTORY_LINE,
         issueActionType: '',
       });
-      collapseTabsExceptCurr(TABS_ID[COPY_FROM_HISTORY_LINE]);
+      collapseTabsExceptCurr(COPY_FROM_HISTORY_LINE);
     } else {
       setModalState({ ...modalState, source: { issue: itemData.issue }, decisionType: '' });
     }
@@ -318,8 +308,9 @@ const MakeDecision = ({ data }) => {
       source: { issue },
       decisionType: SELECT_DEFECT_MANUALLY,
     });
-    collapseTabsExceptCurr(TABS_ID[SELECT_DEFECT_MANUALLY]);
+    collapseTabsExceptCurr(SELECT_DEFECT_MANUALLY);
   };
+
   const getIssueAction = () => {
     switch (modalState.issueActionType) {
       case POST_ISSUE:
@@ -372,11 +363,15 @@ const MakeDecision = ({ data }) => {
       </>
     );
   };
-  const accordionData = () => {
+  const toggleAccordionTab = (tabId) => {
+    setAccordionTabsState({ ...accordionTabsState, [tabId]: !accordionTabsState[tabId] });
+  };
+  const getAccordionTabs = () => {
     const tabsData = [
       {
-        id: TABS_ID[MACHINE_LEARNING_SUGGESTIONS],
+        id: MACHINE_LEARNING_SUGGESTIONS,
         shouldShow: !isBulkOperation,
+        isOpen: accordionTabsState[MACHINE_LEARNING_SUGGESTIONS],
         title: (
           <div title={formatMessage(messages.disabledTabTooltip)}>
             {formatMessage(messages.machineLearningSuggestions)}
@@ -385,8 +380,9 @@ const MakeDecision = ({ data }) => {
         content: null,
       },
       {
-        id: TABS_ID[SELECT_DEFECT_MANUALLY],
+        id: SELECT_DEFECT_MANUALLY,
         shouldShow: true,
+        isOpen: accordionTabsState[SELECT_DEFECT_MANUALLY],
         title: formatMessage(messages.selectDefectTypeManually),
         content: (
           <>
@@ -413,15 +409,19 @@ const MakeDecision = ({ data }) => {
                   : itemData.issue.issueType
               }
             />
-            <ActionButtonsBar actionItems={getActionItems()} />
+            <ActionButtonsBar
+              actionItems={getActionItems()}
+              selectedItem={modalState.issueActionType}
+            />
           </>
         ),
       },
     ];
     if (preparedHistoryLineItems.length > 0) {
       tabsData.splice(1, 0, {
-        id: TABS_ID[COPY_FROM_HISTORY_LINE],
-        shouldShow: true,
+        id: COPY_FROM_HISTORY_LINE,
+        shouldShow: !isBulkOperation,
+        isOpen: accordionTabsState[COPY_FROM_HISTORY_LINE],
         title: formatMessage(messages.copyFromHistoryLine),
         content: (
           <>
@@ -491,22 +491,15 @@ const MakeDecision = ({ data }) => {
       modalNote={formatMessage(messages.modalNote)}
     >
       {step === CONFIGURATION ? (
-        <Accordion
-          renderedData={accordionData()}
-          tabsStateOutside={{
-            state: accordionTabsState,
-            setState: setAccordionTabsState,
-          }}
-        />
+        <Accordion tabs={getAccordionTabs()} toggleTab={toggleAccordionTab} />
       ) : (
-        <OptionsStepForm accordionData={accordionData} />
+        <OptionsStepForm accordionData={getAccordionTabs()} />
       )}
     </DarkModalLayout>
   );
 };
 MakeDecision.propTypes = {
   data: PropTypes.shape({
-    item: PropTypes.object,
     items: PropTypes.array,
     fetchFunc: PropTypes.func,
     eventsInfo: PropTypes.object,
