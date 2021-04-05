@@ -113,6 +113,10 @@ export const messages = defineMessages({
     id: 'MakeDecisionModal.machineLearningSuggestions',
     defaultMessage: 'Machine learning suggestions',
   },
+  copyFromHistoryLine: {
+    id: 'MakeDecisionModal.copyFromHistoryLine',
+    defaultMessage: 'Copy from history line',
+  },
   apply: {
     id: 'MakeDecisionModal.apply',
     defaultMessage: 'Apply',
@@ -150,5 +154,13 @@ export const messages = defineMessages({
   unlinkIssueNote: {
     id: 'MakeDecisionModal.unlinkIssueNote',
     defaultMessage: 'After a defect type submission, the current links will be unlink',
+  },
+  execution: {
+    id: 'MakeDecisionModal.execution',
+    defaultMessage: 'Execution',
+  },
+  defectType: {
+    id: 'MakeDecisionModal.defectType',
+    defaultMessage: 'Defect type',
   },
 });

@@ -23,10 +23,10 @@ import styles from './actionButton.scss';
 
 const cx = classNames.bind(styles);
 
-export const ActionButton = ({ icon, label, hint, isSelected, handleClick, disabled }) => (
+export const ActionButton = ({ icon, label, hint, isSelected, onClick, disabled }) => (
   <button
     className={cx('button', { selected: isSelected, disabled })}
-    onClick={handleClick}
+    onClick={onClick}
     title={hint}
     disabled={disabled}
   >
@@ -42,7 +42,7 @@ ActionButton.propTypes = {
   label: PropTypes.string,
   hint: PropTypes.string,
   isSelected: PropTypes.bool,
-  handleClick: PropTypes.func,
+  onClick: PropTypes.func,
   disabled: PropTypes.bool,
 };
 ActionButton.defaultProps = {
@@ -50,6 +50,6 @@ ActionButton.defaultProps = {
   label: '',
   hint: '',
   isSelected: false,
-  handleClick: () => {},
+  onClick: () => {},
   disabled: false,
 };

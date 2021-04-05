@@ -22,41 +22,27 @@ import styles from './accordionTab.scss';
 const cx = classNames.bind(styles);
 
 export const AccordionTab = ({
-  tab,
-  tabsState,
-  setTabsState,
+  tab: { title, content, isOpen },
+  onClick,
   headerClassNames,
   contentClassNames,
-}) => {
-  const { id, title, content } = tab;
-  const clickHandler = () =>
-    tabsState[id]
-      ? setTabsState({ ...tabsState, [id]: false })
-      : setTabsState({ ...tabsState, [id]: true });
-
-  return (
-    <>
-      <div
-        className={cx('header', { open: tabsState[id] }, headerClassNames)}
-        onClick={content && clickHandler}
-      >
-        {title}
-      </div>
-      <div className={cx('content', { show: tabsState[id] }, contentClassNames)}>{content}</div>
-    </>
-  );
-};
+}) => (
+  <>
+    <div className={cx('header', { open: isOpen }, headerClassNames)} onClick={content && onClick}>
+      {title}
+    </div>
+    <div className={cx('content', { show: isOpen }, contentClassNames)}>{content}</div>
+  </>
+);
 AccordionTab.propTypes = {
   tab: PropTypes.object,
-  tabsState: PropTypes.objectOf(PropTypes.bool),
-  setTabsState: PropTypes.func,
+  onClick: PropTypes.func,
   headerClassNames: PropTypes.string,
   contentClassNames: PropTypes.string,
 };
 AccordionTab.defautProps = {
   tab: {},
-  tabsState: {},
-  setTabsState: () => {},
+  onClick: () => {},
   headerClassNames: '',
   contentClassNames: '',
 };

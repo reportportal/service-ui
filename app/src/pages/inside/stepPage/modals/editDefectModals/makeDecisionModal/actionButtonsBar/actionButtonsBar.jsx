@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
@@ -24,43 +24,35 @@ import styles from './actionButtonsBar.scss';
 
 const cx = classNames.bind(styles);
 
-export const ActionButtonsBar = ({ actionItems }) => {
-  const [selectedItem, setSelectedItem] = useState(null);
-
-  return (
-    <>
-      <div className={cx('buttons-bar')}>
-        {actionItems.map(({ icon, label, hint, id, onClick, disabled }) => {
-          const handleClick = () => {
-            onClick && onClick();
-            setSelectedItem(selectedItem === id ? null : id);
-          };
-          return (
-            <ActionButton
-              icon={icon}
-              label={label}
-              hint={hint}
-              isSelected={selectedItem === id}
-              handleClick={handleClick}
-              disabled={disabled}
-              key={id}
-            />
-          );
-        })}
+export const ActionButtonsBar = ({ actionItems, selectedItem }) => (
+  <>
+    <div className={cx('buttons-bar')}>
+      {actionItems.map(({ icon, label, hint, id, onClick, disabled }) => {
+        return (
+          <ActionButton
+            icon={icon}
+            label={label}
+            hint={hint}
+            isSelected={selectedItem === id}
+            onClick={onClick}
+            disabled={disabled}
+            key={id}
+          />
+        );
+      })}
+    </div>
+    {selectedItem && (
+      <div className={cx('note')}>
+        {Parser(AttentionIcon)}
+        {actionItems.find(({ id }) => id === selectedItem).noteMsg}
       </div>
-      {selectedItem !== null && (
-        <div className={cx('note')}>
-          {Parser(AttentionIcon)}
-          {actionItems.find(({ id }) => id === selectedItem).noteMsg}
-        </div>
-      )}
-    </>
-  );
-};
+    )}
+  </>
+);
 ActionButtonsBar.propTypes = {
   actionItems: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number.isRequired,
+      id: PropTypes.string.isRequired,
       label: PropTypes.string,
       hint: PropTypes.string,
       noteMsg: PropTypes.string,
@@ -69,12 +61,9 @@ ActionButtonsBar.propTypes = {
       onClick: PropTypes.func,
     }),
   ),
+  selectedItem: PropTypes.string,
 };
 ActionButtonsBar.defaulProps = {
-  label: '',
-  hint: '',
-  noteMsg: '',
-  icon: '',
-  disabled: false,
-  onClick: () => {},
+  actionItems: [],
+  selectedItem: '',
 };

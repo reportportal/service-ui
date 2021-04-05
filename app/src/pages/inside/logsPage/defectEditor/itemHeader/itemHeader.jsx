@@ -24,6 +24,9 @@ import { IssueList } from 'pages/inside/stepPage/stepGrid/defectType/issueList';
 import { DefectTypeItem } from 'pages/inside/common/defectTypeItem';
 import ExternalLinkIcon from 'common/img/go-to-another-page-inline.svg';
 import classNames from 'classnames/bind';
+import { IgnoredInAALabel } from 'pages/inside/stepPage/stepGrid/defectType/defectType';
+import { PatternAnalyzedLabel } from 'pages/inside/common/patternAnalyzedLabel';
+import { AutoAnalyzedLabel } from 'pages/inside/stepPage/stepGrid/defectType/autoAnalyzedLabel';
 import styles from './itemHeader.scss';
 
 const cx = classNames.bind(styles);
@@ -32,7 +35,8 @@ export const ItemHeader = ({ item, selectItem, isSelected }) => {
   const {
     id,
     name,
-    issue: { issueType, externalSystemIssues },
+    issue: { autoAnalyzed, ignoreAnalyzer, issueType, externalSystemIssues },
+    patternTemplates,
   } = item;
 
   const getLogItemLink = useSelector(getLogItemLinkSelector);
@@ -48,7 +52,18 @@ export const ItemHeader = ({ item, selectItem, isSelected }) => {
           {name}
           <div className={cx('icon')}>{Parser(ExternalLinkIcon)}</div>
         </Link>
-        <DefectTypeItem type={issueType} className={cx('defect-type')} />
+        <div className={cx('defect-block')}>
+          {ignoreAnalyzer && <IgnoredInAALabel className={cx('ignore-aa-label')} />}
+          {autoAnalyzed && <AutoAnalyzedLabel className={cx('aa-label')} />}
+          {!!patternTemplates.length && (
+            <PatternAnalyzedLabel
+              patternTemplates={patternTemplates}
+              className={cx('pa-label')}
+              showTooltip
+            />
+          )}
+          <DefectTypeItem type={issueType} className={cx('defect-type')} />
+        </div>
       </div>
       <div className={cx('bts-row')}>
         <IssueList issues={externalSystemIssues} className={cx('issue')} readOnly />
