@@ -52,6 +52,7 @@ export class ScrollWrapper extends Component {
     withFooter: PropTypes.bool,
     resetRequired: PropTypes.bool,
     onReset: PropTypes.func,
+    className: PropTypes.string,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -59,6 +60,7 @@ export class ScrollWrapper extends Component {
   };
   static defaultProps = {
     initialScrollRight: false,
+    className: '',
     children: null,
     autoHide: false,
     autoHeight: false,
@@ -170,7 +172,7 @@ export class ScrollWrapper extends Component {
       // base props are defined. For more info see https://github.com/malte-wessel/react-custom-scrollbars/blob/master/docs/API.md
       <Scrollbars
         ref={this.setupRef}
-        className={cx('scroll-component')}
+        className={cx('scroll-component', this.props.className)}
         autoHide={this.props.autoHide}
         autoHeight={this.props.autoHeight}
         autoHeightMin={this.props.autoHeightMin}

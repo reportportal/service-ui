@@ -38,7 +38,6 @@ export const ItemHeader = ({ item, selectItem, isSelected }) => {
     issue: { autoAnalyzed, ignoreAnalyzer, issueType, externalSystemIssues },
     patternTemplates,
   } = item;
-
   const getLogItemLink = useSelector(getLogItemLinkSelector);
   const link = getLogItemLink(item);
 

@@ -1080,6 +1080,8 @@
   "MakeDecisionModal.disabledTabTooltip": "Новый функционал будет доступен в следующей версии",
   "MakeDecisionModal.execution": "Исполнение",
   "MakeDecisionModal.ignoreAa": "Игнорировать при Авто-Анализе",
+  "MakeDecisionModal.includedToAa": "Включено в Авто-Анализ",
+  "MakeDecisionModal.excludedFromAa": "Исключено из Авто-Анализа",
   "MakeDecisionModal.linkIssueNote": "После отправки типа дефекта вы сможете выбрать параметры для привязки новой ошибки",
   "MakeDecisionModal.machineLearningSuggestions": "Предложения по машинному обучению",
   "MakeDecisionModal.modalNote": "Вы должны сохранить изменения или отменить их перед закрытием окна",

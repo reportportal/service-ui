@@ -1,0 +1,82 @@
+.header {
+  width: 100%;
+  height: 22px;
+  padding: 0 24px;
+  margin-top: 16px;
+  color: $COLOR--white-two;
+  font-family: $FONT-REGULAR;
+  font-size: 16px;
+  text-transform: initial;
+}
+
+.content {
+  padding: 0 24px;
+}
+
+.defect-type-content {
+  display: flex;
+  margin-top: 14px;
+  width: 100%;
+}
+
+.defect-type-description {
+  display: flex;
+  flex-direction: column;
+  margin-left: 29px;
+  padding-top: 7px;
+  color: $COLOR--dark-gray;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  line-height: 1.54;
+  letter-spacing: normal;
+}
+
+.comment-block {
+  display: flex;
+  max-width: 630px;
+}
+
+.comment {
+  word-wrap: break-word;
+}
+
+.analysis-block {
+  display: flex;
+  margin-top: 23px;
+}
+
+.icon {
+  display: inline-block;
+  width: 19px;
+  height: 19px;
+  margin-right: 19px;
+
+  svg {
+    fill: $COLOR--gray-60;
+  }
+}
+
+.analysis-icon {
+  color: $COLOR--gray-60;
+  font-size: 13px;
+  font-weight: bold;
+  margin-right: 19px;
+}
+
+.source-details-defect-type {
+  cursor: default;
+  min-width: 173px;
+}
+
+.execution-info-content {
+  margin-top: 14px;
+
+  & .comment-block {
+    margin: 16px 0 0 100px;
+    color: $COLOR--dark-gray;
+    font-family: $FONT-REGULAR;
+    font-size: 13px;
+    line-height: 1.54;
+    letter-spacing: normal;
+  }
+}

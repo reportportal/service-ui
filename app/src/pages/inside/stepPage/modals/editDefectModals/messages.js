@@ -21,9 +21,21 @@ export const messages = defineMessages({
     id: 'EditDefectModal.ignoreAaTitle',
     defaultMessage: 'Ignore in Auto Analysis',
   },
+  includedToAa: {
+    id: 'MakeDecisionModal.includedToAa',
+    defaultMessage: 'Included to Auto-Analysis',
+  },
+  excludedFromAa: {
+    id: 'MakeDecisionModal.excludedFromAa',
+    defaultMessage: 'Excluded from Auto-Analysis',
+  },
   title: {
     id: 'EditDefectModal.title',
     defaultMessage: 'Edit defect type',
+  },
+  sourceDetails: {
+    id: 'MakeDecisionModal.sourceDetails',
+    defaultMessage: 'Source details',
   },
   notChangeCommentTitle: {
     id: 'EditDefectModal.notChangeCommentTitle',
