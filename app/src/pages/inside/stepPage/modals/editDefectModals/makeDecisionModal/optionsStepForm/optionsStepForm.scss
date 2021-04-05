@@ -33,14 +33,14 @@
 
 .comment-block {
   display: flex;
-
-  & .scroll div:first-child {
-    margin-right: -23px !important;
-    margin-bottom: -23px !important;
-  }
+  max-width: 630px;
 }
 
-.analys-block {
+.comment {
+  word-wrap: break-word;
+}
+
+.analysis-block {
   display: flex;
   margin-top: 23px;
 }
@@ -56,19 +56,14 @@
   }
 }
 
-.analys-icon {
+.analysis-icon {
   color: $COLOR--gray-60;
   font-size: 13px;
   font-weight: bold;
   margin-right: 19px;
 }
 
-.comment {
-  max-width: 630px;
-  word-wrap: break-word;
-}
-
-.initial-details-defect-type {
+.source-details-defect-type {
   cursor: default;
   min-width: 173px;
 }

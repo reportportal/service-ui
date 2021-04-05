@@ -33,9 +33,9 @@ export const messages = defineMessages({
     id: 'EditDefectModal.title',
     defaultMessage: 'Edit defect type',
   },
-  initialDetailsTitle: {
-    id: 'MakeDecisionModal.initialDetailsTitle',
-    defaultMessage: 'Initial test details',
+  sourceDetails: {
+    id: 'MakeDecisionModal.sourceDetails',
+    defaultMessage: 'Source details',
   },
   notChangeCommentTitle: {
     id: 'EditDefectModal.notChangeCommentTitle',

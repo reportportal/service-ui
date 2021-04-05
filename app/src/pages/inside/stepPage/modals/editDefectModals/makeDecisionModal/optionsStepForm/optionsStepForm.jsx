@@ -16,15 +16,15 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
+import Parser from 'html-react-parser';
+import { useIntl } from 'react-intl';
 import CommentIcon from 'common/img/comment-inline.svg';
 import { DefectTypeItemML } from 'pages/inside/common/defectTypeItemML';
-import { useSelector } from 'react-redux';
 import { defectTypesSelector } from 'controllers/project';
-import Parser from 'html-react-parser';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { ExecutionInfo } from 'pages/inside/logsPage/defectEditor/executionInfo';
-import { useIntl } from 'react-intl';
 import { messages } from './../../messages';
 import styles from './optionsStepForm.scss';
 
@@ -39,20 +39,17 @@ export const OptionsStepForm = ({ info }) => {
     return (
       <div className={cx('comment-block')}>
         <span className={cx('icon')}>{Parser(CommentIcon)}</span>
-        <ScrollWrapper
-          className={cx('scroll')}
-          autoHeight
-          hideTracksWhenNotNeeded
-          autoHeightMax={80}
-        >
-          <p className={cx('comment')}>{info.issue.comment || 'Comment'}</p>
-        </ScrollWrapper>
+        {info.issue.comment && (
+          <ScrollWrapper autoHeight hideTracksWhenNotNeeded autoHeightMax={80}>
+            <p className={cx('comment')}>{info.issue.comment}</p>
+          </ScrollWrapper>
+        )}
       </div>
     );
   };
   return (
     <>
-      <div className={cx('header')}>{formatMessage(messages.initialDetailsTitle)}</div>
+      <div className={cx('header')}>{formatMessage(messages.sourceDetails)}</div>
       <div className={cx('content')}>
         {info.id ? (
           <div className={cx('execution-info-content')}>
@@ -64,22 +61,20 @@ export const OptionsStepForm = ({ info }) => {
         ) : (
           <div className={cx('defect-type-content')}>
             <DefectTypeItemML
-              className={cx('initial-details-defect-type')}
+              className={cx('source-details-defect-type')}
               isSelected={false}
               defectType={defectType}
             />
             <div className={cx('defect-type-description')}>
               {renderCommentBlock()}
-              {
-                <div className={cx('analys-block')}>
-                  <span className={cx('analys-icon')}>AA</span>
-                  <p>
-                    {info.issue.ignoreAnalyzer
-                      ? formatMessage(messages.excludedFromAa)
-                      : formatMessage(messages.includedToAa)}
-                  </p>
-                </div>
-              }
+              <div className={cx('analysis-block')}>
+                <span className={cx('analysis-icon')}>AA</span>
+                <p>
+                  {info.issue.ignoreAnalyzer
+                    ? formatMessage(messages.excludedFromAa)
+                    : formatMessage(messages.includedToAa)}
+                </p>
+              </div>
             </div>
           </div>
         )}

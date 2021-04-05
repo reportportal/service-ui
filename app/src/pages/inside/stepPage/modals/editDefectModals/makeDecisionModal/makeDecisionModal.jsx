@@ -450,7 +450,6 @@ const MakeDecision = ({ data }) => {
       <>
         <GhostButton
           onClick={moveToConfigurationStep}
-          disabled={false}
           icon={LeftArrowIcon}
           transparentBorder
           transparentBackground
@@ -493,9 +492,7 @@ const MakeDecision = ({ data }) => {
       {step === CONFIGURATION ? (
         <Accordion tabs={getAccordionTabs()} toggleTab={toggleAccordionTab} />
       ) : (
-        <OptionsStepForm
-        //  info={isEmptyObject(copyFromHistoryState) ? selectDefectTypeState : copyFromHistoryState}
-        />
+        <OptionsStepForm info={modalState.source} />
       )}
     </DarkModalLayout>
   );
