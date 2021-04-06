@@ -39,11 +39,9 @@ export const OptionsStepForm = ({ info }) => {
     return (
       <div className={cx('comment-block')}>
         <span className={cx('icon')}>{Parser(CommentIcon)}</span>
-        {info.issue.comment && (
-          <ScrollWrapper autoHeight hideTracksWhenNotNeeded autoHeightMax={80}>
-            <p className={cx('comment')}>{info.issue.comment}</p>
-          </ScrollWrapper>
-        )}
+        <ScrollWrapper autoHeight hideTracksWhenNotNeeded autoHeightMax={80}>
+          <p className={cx('comment')}>{info.issue.comment}</p>
+        </ScrollWrapper>
       </div>
     );
   };
@@ -56,7 +54,7 @@ export const OptionsStepForm = ({ info }) => {
             <div className={cx('execution-item')}>
               <ExecutionInfo item={info} />
             </div>
-            {renderCommentBlock()}
+            {info.issue.comment && renderCommentBlock()}
           </div>
         ) : (
           <div className={cx('defect-type-content')}>
@@ -66,7 +64,7 @@ export const OptionsStepForm = ({ info }) => {
               defectType={defectType}
             />
             <div className={cx('defect-type-description')}>
-              {renderCommentBlock()}
+              {info.issue.comment && renderCommentBlock()}
               <div className={cx('analysis-block')}>
                 <span className={cx('analysis-icon')}>AA</span>
                 <p>
