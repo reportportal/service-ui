@@ -44,9 +44,9 @@ const messages = defineMessages({
     id: 'HistoryLineItemTooltip.launch',
     defaultMessage: 'Launch',
   },
-  attributes: {
-    id: 'HistoryLineItemTooltip.attributes',
-    defaultMessage: 'Attributes:',
+  launchAttributes: {
+    id: 'HistoryLineItemTooltip.launchAttributes',
+    defaultMessage: 'Launch attributes:',
   },
   defectType: {
     id: 'HistoryLineItemTooltip.defectType',
@@ -151,7 +151,7 @@ export class HistoryLineItemTooltip extends Component {
       launchAttributes &&
       launchAttributes.length && (
         <div className={cx('attributes-block')}>
-          <span className={cx('title')}>{formatMessage(messages.attributes)}</span>
+          <span className={cx('title')}>{formatMessage(messages.launchAttributes)}</span>
           {launchAttributes.map((attribute) => {
             return (
               <span className={cx('attribute-item')}>

@@ -764,7 +764,7 @@
   "HistoryLineItemTooltip.duration": "Duration:",
   "HistoryLineItemTooltip.launch": "Launch",
   "HistoryLineItemTooltip.launchName": "Імя запуску",
-  "HistoryLineItemTooltip.attributes": "Атрыбуты:",
+  "HistoryLineItemTooltip.launchAttributes": "Атрыбуты запуску:",
   "HistoryTable.itemNamesHeaderTitle": "Імя",
   "HistoryTable.launchNumberTitle": "Запуск №",
   "HistoryTable.loadMoreHistoryItemsTitle": "Пстрыкніце тут, каб загрузіць больш элементаў",
