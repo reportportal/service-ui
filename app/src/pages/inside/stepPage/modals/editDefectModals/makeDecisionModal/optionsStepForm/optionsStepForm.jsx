@@ -37,14 +37,16 @@ export const OptionsStepForm = ({ info }) => {
 
   const renderCommentBlock = () => {
     return (
-      <div className={cx('comment-block')}>
-        <span className={cx('icon')}>{Parser(CommentIcon)}</span>
+      <>
         {info.issue.comment && (
-          <ScrollWrapper autoHeight hideTracksWhenNotNeeded autoHeightMax={80}>
-            <p className={cx('comment')}>{info.issue.comment}</p>
-          </ScrollWrapper>
+          <div className={cx('comment-block')}>
+            <span className={cx('icon')}>{Parser(CommentIcon)}</span>
+            <ScrollWrapper autoHeight hideTracksWhenNotNeeded autoHeightMax={80}>
+              <p className={cx('comment')}>{info.issue.comment}</p>
+            </ScrollWrapper>
+          </div>
         )}
-      </div>
+      </>
     );
   };
   return (
