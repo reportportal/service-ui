@@ -218,6 +218,9 @@
     background-color: $COLOR--topaz;
     &:hover {
       background-color: $COLOR--topaz-hover;
+      & svg * {
+        fill: $COLOR--topaz-hover;
+      }
     }
     &.transparent-background {
       color: $COLOR--topaz;
@@ -226,6 +229,9 @@
     &.transparent-background:hover {
       background: transparent;
       color: $COLOR--topaz-hover;
+    }
+    & svg * {
+      fill: $COLOR--topaz;
     }
   }
   &.appearance-topaz.disabled {

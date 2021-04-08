@@ -129,11 +129,21 @@ const MakeDecision = ({ data }) => {
         },
       }));
     }
+    let comment = '';
+    if (itemData.issue.comment === modalState.source.issue.comment) {
+      comment = modalState.source.issue.comment;
+    } else {
+      comment = `${itemData.issue.comment || ''}\n${modalState.source.issue.comment || ''}`.trim();
+    }
     return [
       {
         ...(isIssueAction ? itemData : {}),
         testItemId: itemData.id,
-        issue: { ...modalState.source.issue, autoAnalyzed: false },
+        issue: {
+          ...modalState.source.issue,
+          comment,
+          autoAnalyzed: false,
+        },
       },
     ];
   };
@@ -355,7 +365,7 @@ const MakeDecision = ({ data }) => {
           appearance="topaz"
         >
           {isBulkOperation
-            ? formatMessage(messages.applyTo, {
+            ? formatMessage(messages.applyToItems, {
                 itemsCount: itemData.length,
               })
             : formatMessage(messages.applyWithOptions)}
@@ -363,8 +373,8 @@ const MakeDecision = ({ data }) => {
       </>
     );
   };
-  const toggleAccordionTab = (tabId) => {
-    setAccordionTabsState({ ...accordionTabsState, [tabId]: !accordionTabsState[tabId] });
+  const toggleAccordionTab = (tabId, tabState, setTabState) => {
+    setTabState({ ...tabState, [tabId]: !tabState[tabId] });
   };
   const getAccordionTabs = () => {
     const tabsData = [
@@ -451,6 +461,7 @@ const MakeDecision = ({ data }) => {
         <GhostButton
           onClick={moveToConfigurationStep}
           icon={LeftArrowIcon}
+          color="''"
           transparentBorder
           transparentBackground
           appearance="topaz"
@@ -490,9 +501,18 @@ const MakeDecision = ({ data }) => {
       modalNote={formatMessage(messages.modalNote)}
     >
       {step === CONFIGURATION ? (
-        <Accordion tabs={getAccordionTabs()} toggleTab={toggleAccordionTab} />
+        <Accordion
+          tabs={getAccordionTabs()}
+          toggleTab={(tabId) =>
+            toggleAccordionTab(tabId, accordionTabsState, setAccordionTabsState)
+          }
+        />
       ) : (
-        <OptionsStepForm info={modalState.source} />
+        <OptionsStepForm
+          info={modalState.source}
+          toggleAccordionTab={toggleAccordionTab}
+          itemData={itemData}
+        />
       )}
     </DarkModalLayout>
   );
