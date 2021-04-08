@@ -41,6 +41,8 @@ import {
   SET_HISTORY_PAGE_LOADING,
   SET_FILTER_FOR_COMPARE,
   FETCH_FILTER_HISTORY,
+  SET_BASE_ALL_LAUNCHES,
+  UPDATE_ITEMS_HISTORY_LAUNCH_ATTRIBUTES,
 } from './constants';
 
 export const toggleHistoryItemSelectionAction = toggleItemSelectionAction(NAMESPACE);
@@ -108,4 +110,14 @@ export const setFilterForCompareAction = (payload) => ({
 export const fetchFilterHistoryAction = ({ filter, loadMore } = {}) => ({
   type: FETCH_FILTER_HISTORY,
   payload: { filter, loadMore },
+});
+
+export const setBaseAllLaunchesAction = (includeAllLaunches) => ({
+  type: SET_BASE_ALL_LAUNCHES,
+  payload: includeAllLaunches,
+});
+
+export const updateItemsHistoryLaunchAttributesAction = (launch) => ({
+  type: UPDATE_ITEMS_HISTORY_LAUNCH_ATTRIBUTES,
+  payload: launch,
 });

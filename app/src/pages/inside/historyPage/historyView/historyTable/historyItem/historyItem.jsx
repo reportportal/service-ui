@@ -35,10 +35,14 @@ const statusesWithDefect = [FAILED, SKIPPED, INTERRUPTED];
 @withTooltip({
   TooltipComponent: ItemPathTooltip,
   data: {
-    width: 235,
-    placement: 'right',
-    noArrow: true,
-    desktopOnly: true,
+    dynamicWidth: true,
+    placement: 'bottom',
+    noMobile: true,
+    dark: true,
+    modifiers: {
+      preventOverflow: { enabled: false },
+      hide: { enabled: false },
+    },
     tooltipTriggerClass: cx('tooltip-wrapper'),
   },
 })

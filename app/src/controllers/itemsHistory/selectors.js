@@ -30,6 +30,8 @@ export const validationErrorsSelector = createValidationErrorsSelector(groupOper
 export const lastOperationSelector = createLastOperationSelector(groupOperationsSelector);
 
 export const itemsHistorySelector = (state) => domainSelector(state).history || [];
+export const isHistoryBaseAllLaunchesSelector = (state) =>
+  domainSelector(state).historyBaseIsAllLaunches;
 
 export const isEmptyHistorySelector = (state) => !itemsHistorySelector(state).length;
 

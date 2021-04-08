@@ -30,7 +30,10 @@ import {
   FETCH_HISTORY_PAGE_INFO,
   FILTER_FOR_COMPARE_INITIAL_STATE,
   SET_FILTER_FOR_COMPARE,
+  SET_BASE_ALL_LAUNCHES,
+  UPDATE_ITEMS_HISTORY_LAUNCH_ATTRIBUTES,
 } from './constants';
+import { updateHistoryItemLaunchAttributes } from './utils';
 
 export const historyPaginationReducer = (state = PAGINATION_INITIAL_STATE, { type }) => {
   switch (type) {
@@ -59,6 +62,15 @@ export const loadingReducer = (state = false, { type, payload }) => {
   }
 };
 
+export const updateHistoryItemLaunchAttributesReducer = (state = [], { type, payload }) => {
+  switch (type) {
+    case UPDATE_ITEMS_HISTORY_LAUNCH_ATTRIBUTES:
+      return updateHistoryItemLaunchAttributes(state, payload);
+    default:
+      return state;
+  }
+};
+
 export const filterForCompareReducer = (
   state = FILTER_FOR_COMPARE_INITIAL_STATE,
   { type, payload },
@@ -73,8 +85,22 @@ export const filterForCompareReducer = (
   }
 };
 
+const includeAllLaunchesReducer = (state = true, { type, payload }) => {
+  switch (type) {
+    case SET_BASE_ALL_LAUNCHES:
+      return payload;
+    default:
+      return state;
+  }
+};
+
 const reducer = combineReducers({
-  history: queueReducers(historyReducer, fetchReducer(NAMESPACE, { contentPath: 'content' })),
+  historyBaseIsAllLaunches: includeAllLaunchesReducer,
+  history: queueReducers(
+    historyReducer,
+    fetchReducer(NAMESPACE, { contentPath: 'content' }),
+    updateHistoryItemLaunchAttributesReducer,
+  ),
   loading: loadingReducer,
   pagination: queueReducers(
     historyPaginationReducer,
