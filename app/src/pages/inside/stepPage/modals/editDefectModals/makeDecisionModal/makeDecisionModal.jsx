@@ -23,7 +23,7 @@ import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { DarkModalLayout } from 'components/main/modal/darkModalLayout';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { activeProjectSelector } from 'controllers/user';
-import { Accordion } from 'pages/inside/common/accordion';
+import { Accordion, useAccordionTabsState } from 'pages/inside/common/accordion';
 import { DefectTypeSelectorML } from 'pages/inside/common/defectTypeSelectorML';
 import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import isEqual from 'fast-deep-equal';
@@ -78,7 +78,7 @@ const MakeDecision = ({ data }) => {
     decisionType: SELECT_DEFECT_MANUALLY,
     issueActionType: '',
   });
-  const [accordionTabsState, setAccordionTabsState] = useState({
+  const [tabs, toggleTab, collapseTabsExceptCurr] = useAccordionTabsState({
     [MACHINE_LEARNING_SUGGESTIONS]: false,
     [COPY_FROM_HISTORY_LINE]: false,
     [SELECT_DEFECT_MANUALLY]: true,
@@ -97,13 +97,6 @@ const MakeDecision = ({ data }) => {
     );
   }, [modalState]);
 
-  const collapseTabsExceptCurr = (currentTab) => {
-    const newTabsState = Object.keys(accordionTabsState).reduce(
-      (acc, id) => ({ ...acc, [id]: currentTab === id }),
-      {},
-    );
-    setAccordionTabsState(newTabsState);
-  };
   const handleIgnoreAnalyzerChange = (value) => {
     const issue =
       modalState.decisionType === SELECT_DEFECT_MANUALLY
@@ -129,11 +122,19 @@ const MakeDecision = ({ data }) => {
         },
       }));
     }
+    let comment = itemData.issue.comment || '';
+    if (itemData.issue.comment !== modalState.source.issue.comment) {
+      comment = `${comment}\n${modalState.source.issue.comment || ''}`.trim();
+    }
     return [
       {
         ...(isIssueAction ? itemData : {}),
         testItemId: itemData.id,
-        issue: { ...modalState.source.issue, autoAnalyzed: false },
+        issue: {
+          ...modalState.source.issue,
+          comment,
+          autoAnalyzed: false,
+        },
       },
     ];
   };
@@ -355,7 +356,7 @@ const MakeDecision = ({ data }) => {
           appearance="topaz"
         >
           {isBulkOperation
-            ? formatMessage(messages.applyTo, {
+            ? formatMessage(messages.applyToItems, {
                 itemsCount: itemData.length,
               })
             : formatMessage(messages.applyWithOptions)}
@@ -363,15 +364,13 @@ const MakeDecision = ({ data }) => {
       </>
     );
   };
-  const toggleAccordionTab = (tabId) => {
-    setAccordionTabsState({ ...accordionTabsState, [tabId]: !accordionTabsState[tabId] });
-  };
+
   const getAccordionTabs = () => {
     const tabsData = [
       {
         id: MACHINE_LEARNING_SUGGESTIONS,
         shouldShow: !isBulkOperation,
-        isOpen: accordionTabsState[MACHINE_LEARNING_SUGGESTIONS],
+        isOpen: tabs[MACHINE_LEARNING_SUGGESTIONS],
         title: (
           <div title={formatMessage(messages.disabledTabTooltip)}>
             {formatMessage(messages.machineLearningSuggestions)}
@@ -382,7 +381,7 @@ const MakeDecision = ({ data }) => {
       {
         id: SELECT_DEFECT_MANUALLY,
         shouldShow: true,
-        isOpen: accordionTabsState[SELECT_DEFECT_MANUALLY],
+        isOpen: tabs[SELECT_DEFECT_MANUALLY],
         title: formatMessage(messages.selectDefectTypeManually),
         content: (
           <>
@@ -421,7 +420,7 @@ const MakeDecision = ({ data }) => {
       tabsData.splice(1, 0, {
         id: COPY_FROM_HISTORY_LINE,
         shouldShow: !isBulkOperation,
-        isOpen: accordionTabsState[COPY_FROM_HISTORY_LINE],
+        isOpen: tabs[COPY_FROM_HISTORY_LINE],
         title: formatMessage(messages.copyFromHistoryLine),
         content: (
           <>
@@ -451,6 +450,7 @@ const MakeDecision = ({ data }) => {
         <GhostButton
           onClick={moveToConfigurationStep}
           icon={LeftArrowIcon}
+          color="''"
           transparentBorder
           transparentBackground
           appearance="topaz"
@@ -490,9 +490,9 @@ const MakeDecision = ({ data }) => {
       modalNote={formatMessage(messages.modalNote)}
     >
       {step === CONFIGURATION ? (
-        <Accordion tabs={getAccordionTabs()} toggleTab={toggleAccordionTab} />
+        <Accordion tabs={getAccordionTabs()} toggleTab={toggleTab} />
       ) : (
-        <OptionsStepForm info={modalState.source} />
+        <OptionsStepForm info={modalState.source} itemData={itemData} />
       )}
     </DarkModalLayout>
   );

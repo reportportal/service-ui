@@ -31,3 +31,5 @@ export const OPTIONS = 'options';
 export const SELECT_DEFECT_MANUALLY = 'selectDefectManually';
 export const COPY_FROM_HISTORY_LINE = 'copyFromHistoryLine';
 export const MACHINE_LEARNING_SUGGESTIONS = 'machineLearningSuggestions';
+export const SOURCE_DETAILS = 'sourceDetails';
+export const CURRENT_EXECUTION_ONLY = 'currentExecutionOnly';

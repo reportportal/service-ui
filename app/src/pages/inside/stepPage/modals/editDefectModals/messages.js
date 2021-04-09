@@ -113,8 +113,8 @@ export const messages = defineMessages({
     id: 'MakeDecisionModal.bulkOperationDecision',
     defaultMessage: 'Bulk Operation Decision',
   },
-  applyTo: {
-    id: 'MakeDecisionModal.applyTo',
+  applyToItems: {
+    id: 'MakeDecisionModal.applyToItems',
     defaultMessage: 'Apply to {itemsCount} Items',
   },
   selectDefectTypeManually: {
@@ -174,5 +174,17 @@ export const messages = defineMessages({
   defectType: {
     id: 'MakeDecisionModal.defectType',
     defaultMessage: 'Defect type',
+  },
+  applyTo: {
+    id: 'MakeDecisionModal.applyTo',
+    defaultMessage: 'Apply to',
+  },
+  applyToSimilarItems: {
+    id: 'MakeDecisionModal.applyToSimilarItems',
+    defaultMessage: 'You can also apply this decision to other similar items in',
+  },
+  currentExecutionOnly: {
+    id: 'MakeDecisionModal.currentExecutionOnly',
+    defaultMessage: 'Current execution only',
   },
 });

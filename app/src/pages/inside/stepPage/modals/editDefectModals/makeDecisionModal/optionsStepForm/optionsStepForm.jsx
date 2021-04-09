@@ -14,72 +14,86 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
-import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
-import CommentIcon from 'common/img/comment-inline.svg';
-import { DefectTypeItemML } from 'pages/inside/common/defectTypeItemML';
 import { defectTypesSelector } from 'controllers/project';
-import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { ExecutionInfo } from 'pages/inside/logsPage/defectEditor/executionInfo';
+import { Accordion, useAccordionTabsState } from 'pages/inside/common/accordion';
+import {
+  CURRENT_EXECUTION_ONLY,
+  SOURCE_DETAILS,
+} from 'pages/inside/stepPage/modals/editDefectModals/constants';
+import { InputRadioGroup } from 'components/inputs/inputRadioGroup';
+import { LogItem } from 'pages/inside/logsPage/defectEditor/logItem';
+import { SourceDetails } from './sourceDetails';
 import { messages } from './../../messages';
 import styles from './optionsStepForm.scss';
 
 const cx = classNames.bind(styles);
 
-export const OptionsStepForm = ({ info }) => {
+export const OptionsStepForm = ({ info, itemData }) => {
   const { formatMessage } = useIntl();
   const defectTypes = Object.values(useSelector(defectTypesSelector)).flat();
-  const defectType = defectTypes.filter((type) => type.locator === info.issue.issueType)[0];
 
-  const renderCommentBlock = () => {
-    return (
-      <div className={cx('comment-block')}>
-        <span className={cx('icon')}>{Parser(CommentIcon)}</span>
-        <ScrollWrapper autoHeight hideTracksWhenNotNeeded autoHeightMax={80}>
-          <p className={cx('comment')}>{info.issue.comment}</p>
-        </ScrollWrapper>
-      </div>
-    );
-  };
+  const [tab, toggleTab] = useAccordionTabsState({
+    [SOURCE_DETAILS]: true,
+  });
+  const [optionValue, setOptionValue] = useState(CURRENT_EXECUTION_ONLY);
+  const options = [
+    {
+      ownValue: CURRENT_EXECUTION_ONLY,
+      label: {
+        id: CURRENT_EXECUTION_ONLY,
+        defaultMessage: formatMessage(messages.currentExecutionOnly),
+      },
+    },
+  ];
+
+  const tabsData = [
+    {
+      id: SOURCE_DETAILS,
+      shouldShow: true,
+      isOpen: tab[SOURCE_DETAILS],
+      title: formatMessage(messages.sourceDetails),
+      content: <SourceDetails info={info} defectTypes={defectTypes} />,
+    },
+  ];
+
   return (
     <>
-      <div className={cx('header')}>{formatMessage(messages.sourceDetails)}</div>
-      <div className={cx('content')}>
-        {info.id ? (
-          <div className={cx('execution-info-content')}>
-            <div className={cx('execution-item')}>
-              <ExecutionInfo item={info} />
-            </div>
-            {info.issue.comment && renderCommentBlock()}
-          </div>
-        ) : (
-          <div className={cx('defect-type-content')}>
-            <DefectTypeItemML
-              className={cx('source-details-defect-type')}
-              isSelected={false}
-              defectType={defectType}
+      <Accordion tabs={tabsData} toggleTab={toggleTab} />
+      <div className={cx('options-section')}>
+        <div className={cx('header-block')}>
+          <span className={cx('header')}>{formatMessage(messages.applyTo)}</span>
+          <span className={cx('subheader')}>{formatMessage(messages.applyToSimilarItems)}:</span>
+        </div>
+        <div className={cx('options-block')}>
+          <div className={cx('options')}>
+            <InputRadioGroup
+              value={optionValue}
+              onChange={setOptionValue}
+              options={options}
+              inputGroupClassName={cx('radio-input-group')}
+              inputClassNames={{
+                togglerClassName: cx('input-toggler'),
+                childrenClassName: cx('input-children'),
+              }}
             />
-            <div className={cx('defect-type-description')}>
-              {info.issue.comment && renderCommentBlock()}
-              <div className={cx('analysis-block')}>
-                <span className={cx('analysis-icon')}>AA</span>
-                <p>
-                  {info.issue.ignoreAnalyzer
-                    ? formatMessage(messages.excludedFromAa)
-                    : formatMessage(messages.includedToAa)}
-                </p>
-              </div>
-            </div>
           </div>
-        )}
+          <div className={cx('items-list')}>
+            {optionValue === CURRENT_EXECUTION_ONLY && (
+              <LogItem item={itemData} showErrorLogs preselected />
+            )}
+          </div>
+        </div>
       </div>
     </>
   );
 };
 OptionsStepForm.propTypes = {
   info: PropTypes.object,
+  toggleAccordionTab: PropTypes.func,
+  itemData: PropTypes.object,
 };

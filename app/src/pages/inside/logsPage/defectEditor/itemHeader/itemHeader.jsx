@@ -31,7 +31,7 @@ import styles from './itemHeader.scss';
 
 const cx = classNames.bind(styles);
 
-export const ItemHeader = ({ item, selectItem, isSelected }) => {
+export const ItemHeader = ({ item, selectItem, isSelected, preselected }) => {
   const {
     id,
     name,
@@ -43,7 +43,7 @@ export const ItemHeader = ({ item, selectItem, isSelected }) => {
 
   return (
     <div
-      className={cx('item-info', { selected: isSelected })}
+      className={cx('item-info', { selected: isSelected, preselected })}
       onClick={() => selectItem(isSelected ? null : id)}
     >
       <div className={cx('header')}>
@@ -75,5 +75,12 @@ ItemHeader.propTypes = {
   isSelected: PropTypes.bool,
   selectItem: PropTypes.func,
   nameLink: PropTypes.object,
+  preselected: PropTypes.bool,
 };
-ItemHeader.defaultProps = { item: {}, isSelected: false, selectItem: () => {}, nameLink: {} };
+ItemHeader.defaultProps = {
+  item: {},
+  isSelected: false,
+  selectItem: () => {},
+  nameLink: {},
+  preselected: false,
+};

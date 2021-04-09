@@ -28,6 +28,7 @@
   font-size: 16px;
   text-transform: initial;
   cursor: pointer;
+  user-select: none;
 
   &:before {
     content: '';

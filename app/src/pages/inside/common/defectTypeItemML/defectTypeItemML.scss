@@ -30,8 +30,12 @@
   line-height: 17px;
   cursor: pointer;
 
-  &:hover:not(.selected) {
+  &:hover {
     border: solid 2px rgba($COLOR--topaz, 0.25);
+  }
+
+  &.selected {
+    border: solid 2px $COLOR--topaz;
   }
 }
 
@@ -50,8 +54,4 @@
   word-break: break-all;
   white-space: nowrap;
   text-overflow: ellipsis;
-}
-
-.selected {
-  border: solid 2px $COLOR--topaz;
 }

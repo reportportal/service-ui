@@ -19,10 +19,15 @@ import PropTypes from 'prop-types';
 import { StackTrace } from 'pages/inside/common/stackTrace';
 import { ItemHeader } from '../itemHeader';
 
-export const LogItem = ({ item, showErrorLogs, selectedItem, selectItem }) => {
+export const LogItem = ({ item, showErrorLogs, selectedItem, selectItem, preselected }) => {
   return (
     <>
-      <ItemHeader item={item} selectItem={selectItem} isSelected={selectedItem === item.id} />
+      <ItemHeader
+        item={item}
+        selectItem={selectItem}
+        isSelected={selectedItem === item.id}
+        preselected={preselected}
+      />
       {showErrorLogs && <StackTrace logItem={item} designMode="dark" transparentBackground />}
     </>
   );
@@ -32,9 +37,11 @@ LogItem.propTypes = {
   showErrorLogs: PropTypes.bool,
   selectedItem: PropTypes.number,
   selectItem: PropTypes.func,
+  preselected: PropTypes.bool,
 };
 LogItem.defaultProps = {
   showErrorLogs: false,
   selectedItem: null,
   selectItem: () => {},
+  preselected: false,
 };

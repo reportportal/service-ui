@@ -14,5 +14,4 @@
  * limitations under the License.
  */
 
-export { Accordion } from './accordion';
-export { useAccordionTabsState } from './useAccordionTabsState';
+export { SourceDetails } from './sourceDetails';

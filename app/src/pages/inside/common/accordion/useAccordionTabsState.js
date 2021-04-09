@@ -14,5 +14,19 @@
  * limitations under the License.
  */
 
-export { Accordion } from './accordion';
-export { useAccordionTabsState } from './useAccordionTabsState';
+import { useState } from 'react';
+
+export const useAccordionTabsState = (initialState) => {
+  const [tabsState, setTabsState] = useState(initialState);
+  const toggleTab = (tabId) => {
+    setTabsState({ ...tabsState, [tabId]: !tabsState[tabId] });
+  };
+  const collapseTabsExceptCurr = (currentTab) => {
+    const newTabsState = Object.keys(tabsState).reduce(
+      (acc, id) => ({ ...acc, [id]: currentTab === id }),
+      {},
+    );
+    setTabsState(newTabsState);
+  };
+  return [tabsState, toggleTab, collapseTabsExceptCurr];
+};
