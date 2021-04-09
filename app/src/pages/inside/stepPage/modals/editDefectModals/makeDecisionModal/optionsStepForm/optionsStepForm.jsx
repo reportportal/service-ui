@@ -20,24 +20,24 @@ import { useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { defectTypesSelector } from 'controllers/project';
-import { Accordion } from 'pages/inside/common/accordion';
+import { Accordion, useAccordionTabsState } from 'pages/inside/common/accordion';
 import {
   CURRENT_EXECUTION_ONLY,
   SOURCE_DETAILS,
 } from 'pages/inside/stepPage/modals/editDefectModals/constants';
 import { InputRadioGroup } from 'components/inputs/inputRadioGroup';
 import { LogItem } from 'pages/inside/logsPage/defectEditor/logItem';
-import { SourceDetails } from 'pages/inside/stepPage/modals/editDefectModals/makeDecisionModal/optionsStepForm/sourceDetails';
+import { SourceDetails } from './sourceDetails';
 import { messages } from './../../messages';
 import styles from './optionsStepForm.scss';
 
 const cx = classNames.bind(styles);
 
-export const OptionsStepForm = ({ info, toggleAccordionTab, itemData }) => {
+export const OptionsStepForm = ({ info, itemData }) => {
   const { formatMessage } = useIntl();
   const defectTypes = Object.values(useSelector(defectTypesSelector)).flat();
 
-  const [accordionTabsState, setAccordionTabsState] = useState({
+  const [tab, toggleTab] = useAccordionTabsState({
     [SOURCE_DETAILS]: true,
   });
   const [optionValue, setOptionValue] = useState(CURRENT_EXECUTION_ONLY);
@@ -55,7 +55,7 @@ export const OptionsStepForm = ({ info, toggleAccordionTab, itemData }) => {
     {
       id: SOURCE_DETAILS,
       shouldShow: true,
-      isOpen: accordionTabsState[SOURCE_DETAILS],
+      isOpen: tab[SOURCE_DETAILS],
       title: formatMessage(messages.sourceDetails),
       content: <SourceDetails info={info} defectTypes={defectTypes} />,
     },
@@ -63,10 +63,7 @@ export const OptionsStepForm = ({ info, toggleAccordionTab, itemData }) => {
 
   return (
     <>
-      <Accordion
-        tabs={tabsData}
-        toggleTab={(tabId) => toggleAccordionTab(tabId, accordionTabsState, setAccordionTabsState)}
-      />
+      <Accordion tabs={tabsData} toggleTab={toggleTab} />
       <div className={cx('options-section')}>
         <div className={cx('header-block')}>
           <span className={cx('header')}>{formatMessage(messages.applyTo)}</span>

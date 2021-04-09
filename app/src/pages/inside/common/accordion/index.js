@@ -15,3 +15,4 @@
  */
 
 export { Accordion } from './accordion';
+export { useAccordionTabsState } from './useAccordionTabsState';

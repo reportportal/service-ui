@@ -28,9 +28,5 @@ export const useAccordionTabsState = (initialState) => {
     );
     setTabsState(newTabsState);
   };
-  return {
-    tabs: tabsState,
-    toggleTab,
-    collapseTabsExceptCurr,
-  };
+  return [tabsState, toggleTab, collapseTabsExceptCurr];
 };
