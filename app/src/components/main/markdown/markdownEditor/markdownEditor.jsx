@@ -89,11 +89,12 @@ const toolbarTitles = defineMessages({
 @track()
 export class MarkdownEditor extends React.Component {
   static propTypes = {
+    intl: PropTypes.object.isRequired,
     value: PropTypes.string,
     placeholder: PropTypes.string,
     onChange: PropTypes.func,
-    intl: PropTypes.object.isRequired,
     onChangeEventInfo: PropTypes.object,
+    mode: PropTypes.string,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -104,11 +105,20 @@ export class MarkdownEditor extends React.Component {
     placeholder: '',
     onChange: () => {},
     onChangeEventInfo: {},
+    mode: 'default',
+  };
+
+  state = {
+    isPreview: false,
   };
 
   componentDidMount() {
-    const { formatMessage } = this.props.intl;
-    this.holder.value = this.props.value;
+    const {
+      intl: { formatMessage },
+      value,
+      mode,
+    } = this.props;
+    this.holder.value = value;
     this.simpleMDE = new SimpleMDE({
       element: this.holder,
       status: false,
@@ -199,7 +209,12 @@ export class MarkdownEditor extends React.Component {
         '|',
         {
           name: 'preview',
-          action: SimpleMDE.togglePreview,
+          action: (...props) => {
+            this.setState((state) => ({
+              isPreview: !state.isPreview,
+            }));
+            return SimpleMDE.togglePreview(...props);
+          },
           className: 'icon-preview no-disable',
           title: formatMessage(toolbarTitles.preview),
         },
@@ -212,7 +227,7 @@ export class MarkdownEditor extends React.Component {
         code: '`',
       },
       previewRender: (plainText) =>
-        ReactDOMServer.renderToStaticMarkup(<MarkdownViewer value={plainText} />),
+        ReactDOMServer.renderToStaticMarkup(<MarkdownViewer value={plainText} mode={mode} />),
     });
     this.simpleMDE.codemirror.on('change', this.onChangeHandler);
   }
@@ -225,14 +240,21 @@ export class MarkdownEditor extends React.Component {
   };
 
   render() {
+    const { value, onChange, mode } = this.props;
     return (
-      <div className={cx('markdown-editor')}>
+      <div
+        className={cx(
+          'markdown-editor',
+          { [`mode-${mode}`]: mode },
+          { preview: this.state.isPreview },
+        )}
+      >
         <textarea
           ref={(holder) => {
             this.holder = holder;
           }}
-          value={this.props.value}
-          onChange={this.props.onChange}
+          value={value}
+          onChange={onChange}
         />
       </div>
     );

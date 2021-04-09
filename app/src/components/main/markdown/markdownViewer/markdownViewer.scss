@@ -177,4 +177,8 @@
   b {
     font-family: $FONT-SEMIBOLD;
   }
+
+  &.mode-dark {
+    color: $COLOR--gray-light;
+  }
 }
