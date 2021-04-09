@@ -48,6 +48,10 @@
     border-color: $COLOR--gray-91;
     cursor: default;
   }
+
+  &.transparent-background:not(.checked) {
+    background-color: transparent;
+  }
 }
 .icon {
   position: absolute;

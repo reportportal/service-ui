@@ -30,6 +30,8 @@ export const InputSwitcher = ({
   className,
   childrenFirst,
   childrenClassName,
+  size,
+  mode,
 }) => {
   const sliderClasses = cx({
     'switcher-slider': true,
@@ -37,6 +39,8 @@ export const InputSwitcher = ({
     on: value,
     readonly: readOnly,
     'children-first': childrenFirst,
+    [`size-${size}`]: size,
+    [`mode-${mode}`]: mode,
   });
   const onChangeHandler = (e) => {
     if (!readOnly) onChange(e.target.checked);
@@ -56,7 +60,7 @@ export const InputSwitcher = ({
         <span
           className={cx(
             'children-container',
-            { readonly: readOnly, 'children-first': childrenFirst },
+            { readonly: readOnly, 'children-first': childrenFirst, [`size-${size}`]: size },
             childrenClassName,
           )}
         >
@@ -81,6 +85,8 @@ InputSwitcher.propTypes = {
   className: PropTypes.string,
   childrenFirst: PropTypes.bool,
   childrenClassName: PropTypes.string,
+  size: PropTypes.string,
+  mode: PropTypes.string,
 };
 
 InputSwitcher.defaultProps = {
@@ -93,4 +99,6 @@ InputSwitcher.defaultProps = {
   className: '',
   childrenFirst: false,
   childrenClassName: '',
+  size: '',
+  mode: '',
 };

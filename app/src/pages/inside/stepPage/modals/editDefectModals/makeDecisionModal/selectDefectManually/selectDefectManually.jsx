@@ -167,6 +167,8 @@ export const SelectDefectManually = ({
           className={cx('ignore-analysis')}
           childrenFirst
           childrenClassName={cx('input-switcher-children')}
+          size="medium"
+          mode="dark"
         >
           <span>{formatMessage(messages.ignoreAa)}</span>
         </InputSwitcher>

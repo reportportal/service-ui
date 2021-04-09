@@ -44,37 +44,6 @@
   margin-top: 28px;
 }
 
-.options {
-  flex: 0 0 310px;
-  height: min-content;
-  border-right: 1px solid $COLOR--dark-gray;
-  margin-right: 32px;
-}
-
 .items-list {
   flex: 1 0;
-}
-
-.radio-input-group {
-  & > div:not(:last-child) {
-    margin-bottom: 24px;
-  }
-}
-
-.input-toggler {
-  width: 20px;
-  height: 20px;
-  border-color: $COLOR--dark-gray-2;
-  background-color: transparent;
-
-  &::after {
-    width: 12px;
-    height: 12px;
-  }
-}
-
-.input-children {
-  max-width: 280px;
-  color: $COLOR--dirty-gray;
-  white-space: nowrap;
 }

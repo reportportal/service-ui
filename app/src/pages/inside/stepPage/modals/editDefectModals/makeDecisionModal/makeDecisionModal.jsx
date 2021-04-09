@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { hideModalAction, withModal } from 'controllers/modal';
@@ -31,14 +31,21 @@ import { historyItemsSelector } from 'controllers/log';
 import LeftArrowIcon from 'common/img/arrow-left-small-inline.svg';
 import { linkIssueAction, postIssueAction, unlinkIssueAction } from 'controllers/step';
 import { LINK_ISSUE, POST_ISSUE, UNLINK_ISSUE } from 'common/constants/actionTypes';
+import { ERROR } from 'common/constants/logLevels';
+import { activeFilterSelector } from 'controllers/filter';
 import { messages } from './../messages';
 import {
   CONFIGURATION,
   COPY_FROM_HISTORY_LINE,
+  CURRENT_EXECUTION_ONLY,
+  LAST_TEN_LAUNCHES,
   MACHINE_LEARNING_SUGGESTIONS,
   MAKE_DECISION_MODAL,
   OPTIONS,
+  SEARCH_MODES,
   SELECT_DEFECT_MANUALLY,
+  SIMILAR_TI_CURRENT_LAUNCH,
+  WITH_FILTER,
 } from '../constants';
 import { OptionsStepForm } from './optionsStepForm';
 import { SelectDefectManually } from './selectDefectManually';
@@ -48,15 +55,21 @@ const MakeDecision = ({ data }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const activeProject = useSelector(activeProjectSelector);
+  const activeFilter = useSelector(activeFilterSelector);
   const historyItems = useSelector(historyItemsSelector);
   const isBulkOperation = data.items && data.items.length > 1;
   const itemData = isBulkOperation ? data.items : data.items[0];
-  const [modalState, setModalState] = useState({
+  const [modalState, setModalState] = useReducer((state, newState) => ({ ...state, ...newState }), {
     source: {
       issue: isBulkOperation ? { comment: '' } : itemData.issue,
     },
     decisionType: SELECT_DEFECT_MANUALLY,
     issueActionType: '',
+    optionValue: CURRENT_EXECUTION_ONLY,
+    searchMode: '',
+    loading: false,
+    testItems: [],
+    selectedItems: [],
   });
   const [tabs, toggleTab, collapseTabsExceptCurr] = useAccordionTabsState({
     [MACHINE_LEARNING_SUGGESTIONS]: false,
@@ -90,6 +103,27 @@ const MakeDecision = ({ data }) => {
           testItemId: item.id,
           issue: {
             ...item.issue,
+            ...issue,
+            comment,
+            autoAnalyzed: false,
+          },
+        };
+      });
+    }
+    if (step === OPTIONS) {
+      return modalState.selectedItems.map((item, i) => {
+        let comment = issue.comment || '';
+        if (
+          comment !== item.issue.comment &&
+          (modalState.decisionType === COPY_FROM_HISTORY_LINE || i !== 0)
+        ) {
+          comment = `${item.issue.comment || ''}\n${comment}`.trim();
+        }
+        return {
+          ...(isIssueAction ? item : {}),
+          id: item.id || item.itemId,
+          testItemId: item.id || item.itemId,
+          issue: {
             ...issue,
             comment,
             autoAnalyzed: false,
@@ -138,12 +172,93 @@ const MakeDecision = ({ data }) => {
       });
     dispatch(hideModalAction());
   };
+  const fetchCurrentItemLogs = () => {
+    setModalState({
+      loading: true,
+    });
+    const currentItemLogUrl = URLS.logItems(activeProject, itemData.id, ERROR);
+    fetch(currentItemLogUrl)
+      .then((response) => {
+        const logs = response.content;
+        setModalState({
+          loading: false,
+          testItems: [{ ...itemData, logs }],
+          selectedItems: [{ ...itemData, logs }],
+        });
+      })
+      .catch(({ message }) => {
+        setModalState({
+          loading: false,
+        });
+        dispatch(
+          showNotification({
+            message,
+            type: NOTIFICATION_TYPES.ERROR,
+          }),
+        );
+      });
+  };
+  const fetchSimilarItems = (searchMode) => {
+    const requestData = {
+      searchMode,
+    };
+    if (searchMode === SEARCH_MODES.FILTER) {
+      requestData.filterId = activeFilter.id;
+    }
+    setModalState({
+      loading: true,
+    });
+    const similarItemsUrl = URLS.logSearch(activeProject, itemData.id);
 
+    fetch(similarItemsUrl, {
+      method: 'post',
+      data: requestData,
+    })
+      .then((response) => {
+        const similarItems = [...response];
+        if ([SEARCH_MODES.LAUNCH_NAME, SEARCH_MODES.FILTER].includes(searchMode)) {
+          similarItems.length = 0;
+          const launches = new Set();
+          for (let i = 0; i < response.length; i += 1) {
+            launches.add(response[i].launchId);
+            similarItems.push(response[i]);
+            if (launches.size === 10) {
+              break;
+            }
+          }
+        }
+        setModalState({
+          loading: false,
+          testItems: [modalState.testItems[0], ...similarItems],
+          selectedItems: [modalState.testItems[0], ...similarItems],
+        });
+      })
+      .catch(({ message }) => {
+        setModalState({
+          loading: false,
+          testItems: [],
+          selectedItems: [],
+        });
+        dispatch(
+          showNotification({
+            message,
+            type: NOTIFICATION_TYPES.ERROR,
+          }),
+        );
+      });
+  };
   const moveToOptionsStep = () => {
     setFormStep(OPTIONS);
+    fetchCurrentItemLogs();
   };
   const moveToConfigurationStep = () => {
     setFormStep(CONFIGURATION);
+    setModalState({
+      optionValue: CURRENT_EXECUTION_ONLY,
+      searchMode: '',
+      testItems: [],
+      selectedItems: [],
+    });
   };
 
   const handlePostIssue = () => {
@@ -314,11 +429,37 @@ const MakeDecision = ({ data }) => {
           color="''"
           appearance="topaz"
         >
-          {formatMessage(messages.apply)}
+          {formatMessage(messages.applyToItems, {
+            itemsCount: modalState.selectedItems.length,
+          })}
         </GhostButton>
       </>
     );
   };
+  const onChangeOption = (value) => {
+    let searchMode;
+    switch (value) {
+      case SIMILAR_TI_CURRENT_LAUNCH:
+        searchMode = SEARCH_MODES.CURRENT_LAUNCH;
+        break;
+      case LAST_TEN_LAUNCHES:
+        searchMode = SEARCH_MODES.LAUNCH_NAME;
+        break;
+      case WITH_FILTER:
+        searchMode = SEARCH_MODES.FILTER;
+        break;
+      default:
+        searchMode = '';
+    }
+    setModalState({
+      optionValue: value,
+      searchMode,
+      testItems: modalState.testItems.slice(0, 1),
+      selectedItems: modalState.testItems.slice(0, 1),
+    });
+    searchMode && fetchSimilarItems(searchMode);
+  };
+
   const hotKeyAction = {
     ctrlEnter: applyChanges,
   };
@@ -342,7 +483,16 @@ const MakeDecision = ({ data }) => {
       {step === CONFIGURATION ? (
         <Accordion tabs={getAccordionTabs()} toggleTab={toggleTab} />
       ) : (
-        <OptionsStepForm info={modalState.source} itemData={itemData} />
+        <OptionsStepForm
+          info={modalState.source}
+          currentTestItem={itemData}
+          optionValue={modalState.optionValue}
+          onChangeOption={onChangeOption}
+          loading={modalState.loading}
+          testItems={modalState.testItems}
+          selectedItems={modalState.selectedItems}
+          setModalState={setModalState}
+        />
       )}
     </DarkModalLayout>
   );

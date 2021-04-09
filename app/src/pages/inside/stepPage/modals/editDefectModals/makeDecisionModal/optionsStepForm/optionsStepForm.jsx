@@ -14,86 +14,87 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
-import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
-import { defectTypesSelector } from 'controllers/project';
 import { Accordion, useAccordionTabsState } from 'pages/inside/common/accordion';
-import {
-  CURRENT_EXECUTION_ONLY,
-  SOURCE_DETAILS,
-} from 'pages/inside/stepPage/modals/editDefectModals/constants';
-import { InputRadioGroup } from 'components/inputs/inputRadioGroup';
-import { LogItem } from 'pages/inside/logsPage/defectEditor/logItem';
+import { SOURCE_DETAILS } from '../../constants';
 import { SourceDetails } from './sourceDetails';
+import { ItemsList } from './itemsList';
+import { OptionsBlock } from './optionsBlock';
+import { OptionsSection } from './optionsSection';
 import { messages } from './../../messages';
-import styles from './optionsStepForm.scss';
 
-const cx = classNames.bind(styles);
-
-export const OptionsStepForm = ({ info, itemData }) => {
+export const OptionsStepForm = ({
+  info,
+  currentTestItem,
+  optionValue,
+  onChangeOption,
+  loading,
+  testItems,
+  selectedItems,
+  setModalState,
+}) => {
   const { formatMessage } = useIntl();
-  const defectTypes = Object.values(useSelector(defectTypesSelector)).flat();
-
-  const [tab, toggleTab] = useAccordionTabsState({
+  const [tab, toggleTab, collapseTabsExceptCurr] = useAccordionTabsState({
     [SOURCE_DETAILS]: true,
   });
-  const [optionValue, setOptionValue] = useState(CURRENT_EXECUTION_ONLY);
-  const options = [
-    {
-      ownValue: CURRENT_EXECUTION_ONLY,
-      label: {
-        id: CURRENT_EXECUTION_ONLY,
-        defaultMessage: formatMessage(messages.currentExecutionOnly),
-      },
-    },
-  ];
-
   const tabsData = [
     {
       id: SOURCE_DETAILS,
       shouldShow: true,
       isOpen: tab[SOURCE_DETAILS],
       title: formatMessage(messages.sourceDetails),
-      content: <SourceDetails info={info} defectTypes={defectTypes} />,
+      content: <SourceDetails info={info} />,
     },
   ];
+  const changeOption = (value) => {
+    onChangeOption(value);
+    collapseTabsExceptCurr();
+  };
 
   return (
     <>
       <Accordion tabs={tabsData} toggleTab={toggleTab} />
-      <div className={cx('options-section')}>
-        <div className={cx('header-block')}>
-          <span className={cx('header')}>{formatMessage(messages.applyTo)}</span>
-          <span className={cx('subheader')}>{formatMessage(messages.applyToSimilarItems)}:</span>
-        </div>
-        <div className={cx('options-block')}>
-          <div className={cx('options')}>
-            <InputRadioGroup
-              value={optionValue}
-              onChange={setOptionValue}
-              options={options}
-              inputGroupClassName={cx('radio-input-group')}
-              inputClassNames={{
-                togglerClassName: cx('input-toggler'),
-                childrenClassName: cx('input-children'),
-              }}
-            />
-          </div>
-          <div className={cx('items-list')}>
-            {optionValue === CURRENT_EXECUTION_ONLY && (
-              <LogItem item={itemData} showErrorLogs preselected />
-            )}
-          </div>
-        </div>
-      </div>
+      <OptionsSection
+        optionsBlock={
+          <OptionsBlock
+            optionValue={optionValue}
+            onChange={changeOption}
+            currentTestItem={currentTestItem}
+            loading={loading}
+          />
+        }
+        itemsListBlock={
+          <ItemsList
+            setModalState={setModalState}
+            testItems={testItems}
+            selectedItems={selectedItems}
+            loading={loading}
+            optionValue={optionValue}
+          />
+        }
+      />
     </>
   );
 };
 OptionsStepForm.propTypes = {
   info: PropTypes.object,
-  toggleAccordionTab: PropTypes.func,
-  itemData: PropTypes.object,
+  currentTestItem: PropTypes.object,
+  optionValue: PropTypes.string,
+  onChangeOption: PropTypes.func,
+  loading: PropTypes.bool,
+  testItems: PropTypes.array,
+  selectedItems: PropTypes.array,
+  setModalState: PropTypes.func,
+};
+OptionsStepForm.defaultProps = {
+  info: {},
+  currentTestItem: {},
+  optionValue: '',
+  onChangeOption: () => {},
+  loading: false,
+  testItems: [],
+  selectedItems: [],
+  setModalState: () => {},
 };

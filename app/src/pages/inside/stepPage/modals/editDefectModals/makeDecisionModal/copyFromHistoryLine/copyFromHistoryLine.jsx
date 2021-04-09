@@ -35,7 +35,7 @@ export const CopyFromHistoryLine = ({
   const { formatMessage } = useIntl();
 
   const selectHistoryLineItem = (itemId) => {
-    if (itemId) {
+    if (itemId && itemId !== modalState.source.id) {
       const historyItem = items.find((item) => item.id === itemId);
       setModalState({
         ...modalState,
