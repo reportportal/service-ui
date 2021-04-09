@@ -23,6 +23,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import 'simplemde/dist/simplemde.min.css';
 import { MarkdownViewer } from '../markdownViewer/markdownViewer';
+import { MODE_DEFAULT } from '../constants';
 import styles from './markdownEditor.scss';
 
 const cx = classNames.bind(styles);
@@ -105,7 +106,7 @@ export class MarkdownEditor extends React.Component {
     placeholder: '',
     onChange: () => {},
     onChangeEventInfo: {},
-    mode: 'default',
+    mode: MODE_DEFAULT,
   };
 
   state = {
