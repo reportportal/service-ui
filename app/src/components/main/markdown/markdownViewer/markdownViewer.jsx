@@ -19,8 +19,9 @@ import Parser from 'html-react-parser';
 import DOMPurify from 'dompurify';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import styles from './markdownViewer.scss';
 import { SingletonMarkdownObject } from '../singletonMarkdownObject';
+import { MODE_DEFAULT } from '../constants';
+import styles from './markdownViewer.scss';
 
 const cx = classNames.bind(styles);
 
@@ -33,7 +34,7 @@ export class MarkdownViewer extends Component {
 
   static defaultProps = {
     value: '',
-    mode: 'default',
+    mode: MODE_DEFAULT,
     onResize: () => {},
   };
 
