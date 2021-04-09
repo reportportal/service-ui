@@ -39,19 +39,19 @@ export class InputRadioGroup extends PureComponent {
       }),
     ),
     inline: PropTypes.bool,
-    classNameGroup: PropTypes.string,
-    classNameInput: PropTypes.shape({
-      toggler: PropTypes.string,
-      children: PropTypes.string,
+    inputGroupClassName: PropTypes.string,
+    inputClassNames: PropTypes.shape({
+      togglerClassName: PropTypes.string,
+      childrenClassName: PropTypes.string,
     }),
   };
   static defaultProps = {
     options: [],
     inline: false,
-    classNameGroup: '',
-    classNameInput: {
-      toggler: '',
-      children: '',
+    inputGroupClassName: '',
+    inputClassNames: {
+      togglerClassName: '',
+      childrenClassName: '',
     },
   };
   renderRadioInputs = () => {
@@ -59,7 +59,7 @@ export class InputRadioGroup extends PureComponent {
       options,
       value,
       intl: { formatMessage },
-      classNameInput,
+      inputClassNames,
     } = this.props;
     return options.map((item, index) => {
       const { label, ownValue, ...rest } = item;
@@ -78,7 +78,7 @@ export class InputRadioGroup extends PureComponent {
             value={value}
             ownValue={ownValue}
             onChange={onChange}
-            classNameInput={classNameInput}
+            inputClassNames={inputClassNames}
             {...rest}
           >
             {formatMessage(label)}
@@ -88,7 +88,7 @@ export class InputRadioGroup extends PureComponent {
     });
   };
   render() {
-    const { inline, classNameGroup } = this.props;
+    const { inline, inputGroupClassName } = this.props;
     return (
       <div
         className={cx(
@@ -96,7 +96,7 @@ export class InputRadioGroup extends PureComponent {
           {
             'radio-group-inline': inline,
           },
-          classNameGroup,
+          inputGroupClassName,
         )}
       >
         {this.renderRadioInputs()}

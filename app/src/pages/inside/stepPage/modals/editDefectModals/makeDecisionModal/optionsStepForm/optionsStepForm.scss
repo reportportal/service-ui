@@ -14,23 +14,6 @@
  * limitations under the License.
  */
 
-.defect-type-content {
-  display: flex;
-  width: 100%;
-}
-
-.defect-type-description {
-  display: flex;
-  flex-direction: column;
-  margin-left: 29px;
-  padding-top: 7px;
-  color: $COLOR--dark-gray;
-  font-family: $FONT-REGULAR;
-  font-size: 13px;
-  line-height: 1.54;
-  letter-spacing: normal;
-}
-
 .comment-block {
   display: flex;
   max-width: 630px;
@@ -41,10 +24,6 @@
   word-wrap: break-word;
 }
 
-.analysis-block {
-  display: flex;
-}
-
 .icon {
   display: inline-block;
   width: 19px;
@@ -53,35 +32,6 @@
 
   svg {
     fill: $COLOR--gray-60;
-  }
-}
-
-.analysis-icon {
-  color: $COLOR--gray-60;
-  font-size: 13px;
-  font-weight: bold;
-  margin-right: 19px;
-}
-
-.source-details-defect-type {
-  cursor: default;
-  min-width: 173px;
-
-  &:hover {
-    border-color: transparent;
-  }
-}
-
-.execution-info-content {
-  margin-top: 14px;
-
-  & .comment-block {
-    margin: 16px 0 0 100px;
-    color: $COLOR--dark-gray;
-    font-family: $FONT-REGULAR;
-    font-size: 13px;
-    line-height: 1.54;
-    letter-spacing: normal;
   }
 }
 

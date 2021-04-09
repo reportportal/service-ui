@@ -45,6 +45,7 @@ import { getIssueTitle } from 'pages/inside/common/utils';
 import { LINK_ISSUE, POST_ISSUE, UNLINK_ISSUE } from 'common/constants/actionTypes';
 import { ExecutionInfo } from 'pages/inside/logsPage/defectEditor/executionInfo';
 import { historyItemsSelector } from 'controllers/log';
+import { useAccordionTabsState } from 'common/hooks/useAccordionTabsState';
 import { ActionButtonsBar } from './actionButtonsBar';
 import { messages } from './../messages';
 import {
@@ -78,7 +79,7 @@ const MakeDecision = ({ data }) => {
     decisionType: SELECT_DEFECT_MANUALLY,
     issueActionType: '',
   });
-  const [accordionTabsState, setAccordionTabsState] = useState({
+  const { tabs, toggleTab, collapseTabsExceptCurr } = useAccordionTabsState({
     [MACHINE_LEARNING_SUGGESTIONS]: false,
     [COPY_FROM_HISTORY_LINE]: false,
     [SELECT_DEFECT_MANUALLY]: true,
@@ -97,13 +98,6 @@ const MakeDecision = ({ data }) => {
     );
   }, [modalState]);
 
-  const collapseTabsExceptCurr = (currentTab) => {
-    const newTabsState = Object.keys(accordionTabsState).reduce(
-      (acc, id) => ({ ...acc, [id]: currentTab === id }),
-      {},
-    );
-    setAccordionTabsState(newTabsState);
-  };
   const handleIgnoreAnalyzerChange = (value) => {
     const issue =
       modalState.decisionType === SELECT_DEFECT_MANUALLY
@@ -129,11 +123,11 @@ const MakeDecision = ({ data }) => {
         },
       }));
     }
-    let comment = '';
+    let comment = itemData.issue.comment || '';
     if (itemData.issue.comment === modalState.source.issue.comment) {
       comment = modalState.source.issue.comment;
     } else {
-      comment = `${itemData.issue.comment || ''}\n${modalState.source.issue.comment || ''}`.trim();
+      comment = `${comment}\n${modalState.source.issue.comment || ''}`.trim();
     }
     return [
       {
@@ -381,7 +375,7 @@ const MakeDecision = ({ data }) => {
       {
         id: MACHINE_LEARNING_SUGGESTIONS,
         shouldShow: !isBulkOperation,
-        isOpen: accordionTabsState[MACHINE_LEARNING_SUGGESTIONS],
+        isOpen: tabs[MACHINE_LEARNING_SUGGESTIONS],
         title: (
           <div title={formatMessage(messages.disabledTabTooltip)}>
             {formatMessage(messages.machineLearningSuggestions)}
@@ -392,7 +386,7 @@ const MakeDecision = ({ data }) => {
       {
         id: SELECT_DEFECT_MANUALLY,
         shouldShow: true,
-        isOpen: accordionTabsState[SELECT_DEFECT_MANUALLY],
+        isOpen: tabs[SELECT_DEFECT_MANUALLY],
         title: formatMessage(messages.selectDefectTypeManually),
         content: (
           <>
@@ -431,7 +425,7 @@ const MakeDecision = ({ data }) => {
       tabsData.splice(1, 0, {
         id: COPY_FROM_HISTORY_LINE,
         shouldShow: !isBulkOperation,
-        isOpen: accordionTabsState[COPY_FROM_HISTORY_LINE],
+        isOpen: tabs[COPY_FROM_HISTORY_LINE],
         title: formatMessage(messages.copyFromHistoryLine),
         content: (
           <>
@@ -501,12 +495,7 @@ const MakeDecision = ({ data }) => {
       modalNote={formatMessage(messages.modalNote)}
     >
       {step === CONFIGURATION ? (
-        <Accordion
-          tabs={getAccordionTabs()}
-          toggleTab={(tabId) =>
-            toggleAccordionTab(tabId, accordionTabsState, setAccordionTabsState)
-          }
-        />
+        <Accordion tabs={getAccordionTabs()} toggleTab={toggleTab} />
       ) : (
         <OptionsStepForm
           info={modalState.source}
