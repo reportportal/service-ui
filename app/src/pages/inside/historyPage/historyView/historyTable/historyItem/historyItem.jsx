@@ -15,6 +15,7 @@
  */
 
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { SKIPPED, FAILED, INTERRUPTED } from 'common/constants/testStatuses';
@@ -22,7 +23,11 @@ import { calculateFontColor } from 'common/utils';
 import CommentIcon from 'common/img/comment-inline.svg';
 import TagIcon from 'common/img/tag-inline.svg';
 import { withTooltip } from 'components/main/tooltips/tooltip';
-import { ItemPathTooltip } from 'pages/inside/common/itemPathTooltip';
+import { HistoryLineItemTooltip } from 'pages/inside/logsPage/historyLine/historyLineItem/historyLineItemTooltip';
+import {
+  isHistoryBaseAllLaunchesSelector,
+  updateItemsHistoryLaunchAttributesAction,
+} from 'controllers/itemsHistory';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { DefectBadge } from './defectBadge/defectBadge';
 import { MessageBadge } from './messageBadge/messageBadge';
@@ -32,8 +37,14 @@ const cx = classNames.bind(styles);
 
 const statusesWithDefect = [FAILED, SKIPPED, INTERRUPTED];
 
+@connect(
+  (state) => ({
+    includeAllLaunches: isHistoryBaseAllLaunchesSelector(state),
+  }),
+  { updateLaunchAttributes: updateItemsHistoryLaunchAttributesAction },
+)
 @withTooltip({
-  TooltipComponent: ItemPathTooltip,
+  TooltipComponent: HistoryLineItemTooltip,
   data: {
     dynamicWidth: true,
     placement: 'bottom',
@@ -54,6 +65,8 @@ export class HistoryItem extends Component {
     selectable: PropTypes.bool,
     singleDefectView: PropTypes.bool,
     onSelectItem: PropTypes.func,
+    includeAllLaunches: PropTypes.bool,
+    updateAttributes: PropTypes.func,
   };
 
   static defaultProps = {

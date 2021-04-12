@@ -16,9 +16,21 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { HistoryLineItemTooltip } from 'pages/inside/logsPage/historyLine/historyLineItem/historyLineItemTooltip';
+import { TextTooltip } from 'components/main/tooltips/textTooltip';
 
-export const ItemPathTooltip = ({ testItem }) => <HistoryLineItemTooltip {...testItem} />;
+const getTooltipContent = (testItem = {}) => {
+  const { itemPaths = [], launchPathName = {} } = testItem.pathNames;
+
+  return itemPaths.reduce(
+    (path, item, index) => `${path} \n<b>Parent ${index + 1}:</b> ${item.name}`,
+    `<b>Launch:</b> ${launchPathName.name} #${launchPathName.number}`,
+  );
+};
+
+export const ItemPathTooltip = ({ testItem }) => (
+  <TextTooltip tooltipContent={getTooltipContent(testItem)} />
+);
+
 ItemPathTooltip.propTypes = {
   testItem: PropTypes.object,
 };

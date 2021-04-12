@@ -21,15 +21,6 @@ import { injectIntl, defineMessages } from 'react-intl';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { activeProjectSelector } from 'controllers/user';
-import {
-  updateHistoryItemLaunchAttributesAction,
-  includeAllLaunchesSelector,
-} from 'controllers/log';
-import {
-  isHistoryBaseAllLaunchesSelector,
-  updateItemsHistoryLaunchAttributesAction,
-} from 'controllers/itemsHistory';
-import { pageSelector, PROJECT_LOG_PAGE } from 'controllers/pages';
 import { fetch, getDuration } from 'common/utils';
 import { URLS } from 'common/urls';
 import { statusLocalization } from 'common/constants/localization/statusLocalization';
@@ -38,7 +29,6 @@ import { DottedPreloader } from 'components/preloaders/dottedPreloader';
 import BugIcon from 'common/img/bug-inline.svg';
 import CommentIcon from 'common/img/comment-inline.svg';
 import { DefectTypeItem } from 'pages/inside/common/defectTypeItem';
-import { STEP } from 'common/constants/methodTypes';
 import { Triangles } from '../triangles';
 import styles from './historyLineItemTooltip.scss';
 
@@ -75,52 +65,21 @@ const messages = defineMessages({
   },
 });
 
-@connect(
-  (state) => {
-    const currentPage = pageSelector(state);
-    return {
-      activeProject: activeProjectSelector(state),
-      includeAllLaunches:
-        currentPage === PROJECT_LOG_PAGE
-          ? includeAllLaunchesSelector(state)
-          : isHistoryBaseAllLaunchesSelector(state),
-    };
-  },
-  {
-    updateHistoryItemLaunchAttributes: updateHistoryItemLaunchAttributesAction,
-    updateItemsHistoryLaunchAttributes: updateItemsHistoryLaunchAttributesAction,
-  },
-)
+@connect((state) => ({
+  activeProject: activeProjectSelector(state),
+}))
 @injectIntl
 export class HistoryLineItemTooltip extends Component {
   static propTypes = {
+    testItem: PropTypes.object.isRequired,
     intl: PropTypes.object.isRequired,
     activeProject: PropTypes.string.isRequired,
-    updateHistoryItemLaunchAttributes: PropTypes.func,
-    launchId: PropTypes.number,
-    launchAttributes: PropTypes.array,
-    issue: PropTypes.object,
-    pathNames: PropTypes.object,
-    status: PropTypes.string,
-    startTime: PropTypes.number,
-    endTime: PropTypes.number,
-    growthDuration: PropTypes.number,
+    updateLaunchAttributes: PropTypes.func,
     includeAllLaunches: PropTypes.bool,
-    updateItemsHistoryLaunchAttributes: PropTypes.func,
-    type: PropTypes.string,
-    children: PropTypes.array,
   };
 
   static defaultProps = {
     updateHistoryItemLaunchAttributes: () => {},
-    launchAttributes: null,
-    launchId: 0,
-    issue: null,
-    pathNames: {},
-    status: '',
-    startTime: null,
-    endTime: null,
-    growthDuration: null,
   };
 
   state = {
@@ -128,7 +87,7 @@ export class HistoryLineItemTooltip extends Component {
   };
 
   componentDidMount() {
-    const { launchAttributes } = this.props;
+    const { launchAttributes } = this.props.testItem;
 
     if (!launchAttributes) {
       this.fetchLaunch();
@@ -136,14 +95,13 @@ export class HistoryLineItemTooltip extends Component {
   }
 
   fetchLaunch = () => {
-    const { activeProject, launchId, type, children } = this.props;
+    const { activeProject, testItem } = this.props;
+    const { launchId } = testItem;
     this.setState({ loading: true });
 
     fetch(URLS.launch(activeProject, launchId))
       .then((launch) => {
-        (type === STEP && children) || children === null
-          ? this.props.updateHistoryItemLaunchAttributes(launch)
-          : this.props.updateItemsHistoryLaunchAttributes(launch);
+        this.props.updateLaunchAttributes(launch);
         this.setState({ loading: false });
       })
       .catch(() => this.setState({ loading: false }));
@@ -152,8 +110,9 @@ export class HistoryLineItemTooltip extends Component {
   renderAttributes = () => {
     const {
       intl: { formatMessage },
-      launchAttributes,
+      testItem,
     } = this.props;
+    const { launchAttributes } = testItem;
     const { loading } = this.state;
 
     if (loading) {
@@ -185,14 +144,10 @@ export class HistoryLineItemTooltip extends Component {
   render() {
     const {
       intl: { formatMessage },
-      issue,
-      pathNames,
-      status,
-      startTime,
-      endTime,
-      growthDuration,
+      testItem,
       includeAllLaunches,
     } = this.props;
+    const { issue, pathNames, status, startTime, endTime, growthDuration } = testItem;
     return (
       <div className={cx('history-line-item-tooltip')}>
         <span className={cx('launch')}>
