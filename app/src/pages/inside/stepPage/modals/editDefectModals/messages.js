@@ -85,10 +85,6 @@ export const messages = defineMessages({
     id: 'EditDefectModal.defectTypeSelectorPlaceholder',
     defaultMessage: 'Choose defect type',
   },
-  defectCommentPlaceholder: {
-    id: 'EditDefectModal.defectCommentPlaceholder',
-    defaultMessage: 'Leave comment to defect type',
-  },
   selectedCount: {
     id: 'EditDefectModal.selectedCount',
     defaultMessage: '{count}/{total} selected items',
@@ -100,6 +96,22 @@ export const messages = defineMessages({
   noItems: {
     id: 'EditDefectModal.noItems',
     defaultMessage: 'No similar items',
+  },
+  defectCommentPlaceholder: {
+    id: 'MakeDecisionModal.defectCommentPlaceholder',
+    defaultMessage: 'Defect comment',
+  },
+  defectCommentBulkOperationPlaceholder: {
+    id: 'MakeDecisionModal.defectCommentBulkOperationPlaceholder',
+    defaultMessage: 'Add new data to existing comments',
+  },
+  clearCommentsAndApply: {
+    id: 'MakeDecisionModal.clearCommentsAndApply',
+    defaultMessage: 'Clear Comments and Apply',
+  },
+  replaceCommentsAndApply: {
+    id: 'MakeDecisionModal.replaceCommentsAndApply',
+    defaultMessage: 'Replace Comments and Apply',
   },
   ignoreAa: {
     id: 'MakeDecisionModal.ignoreAa',

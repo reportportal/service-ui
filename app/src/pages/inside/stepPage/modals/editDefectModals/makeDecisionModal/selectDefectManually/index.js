@@ -1,0 +1,1 @@
+export { SelectDefectManually } from './selectDefectManually';

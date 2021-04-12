@@ -72,7 +72,7 @@ SourceDetails.propTypes = {
   info: PropTypes.object,
   defectTypes: PropTypes.array,
 };
-SourceDetails.propTypes = {
+SourceDetails.defaultProps = {
   info: {},
   defectTypes: [],
 };

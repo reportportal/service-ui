@@ -24,28 +24,13 @@ import { DarkModalLayout } from 'components/main/modal/darkModalLayout';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { activeProjectSelector } from 'controllers/user';
 import { Accordion, useAccordionTabsState } from 'pages/inside/common/accordion';
-import { DefectTypeSelectorML } from 'pages/inside/common/defectTypeSelectorML';
-import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import isEqual from 'fast-deep-equal';
 import { URLS } from 'common/urls';
 import { fetch, isEmptyObject } from 'common/utils';
-import classNames from 'classnames/bind';
-import PlusIcon from 'common/img/plus-button-inline.svg';
-import UnlinkIcon from 'common/img/unlink-inline.svg';
+import { historyItemsSelector } from 'controllers/log';
 import LeftArrowIcon from 'common/img/arrow-left-small-inline.svg';
 import { linkIssueAction, postIssueAction, unlinkIssueAction } from 'controllers/step';
-import { actionMessages } from 'common/constants/localization/eventsLocalization';
-import {
-  availableBtsIntegrationsSelector,
-  enabledBtsPluginsSelector,
-  isBtsPluginsExistSelector,
-  isPostIssueActionAvailable,
-} from 'controllers/plugins';
-import { getIssueTitle } from 'pages/inside/common/utils';
 import { LINK_ISSUE, POST_ISSUE, UNLINK_ISSUE } from 'common/constants/actionTypes';
-import { ExecutionInfo } from 'pages/inside/logsPage/defectEditor/executionInfo';
-import { historyItemsSelector } from 'controllers/log';
-import { ActionButtonsBar } from './actionButtonsBar';
 import { messages } from './../messages';
 import {
   CONFIGURATION,
@@ -56,24 +41,19 @@ import {
   SELECT_DEFECT_MANUALLY,
 } from '../constants';
 import { OptionsStepForm } from './optionsStepForm';
-import styles from './makeDecisionModal.scss';
-
-const cx = classNames.bind(styles);
+import { SelectDefectManually } from './selectDefectManually';
+import { CopyFromHistoryLine } from './copyFromHistoryLine';
 
 const MakeDecision = ({ data }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const activeProject = useSelector(activeProjectSelector);
-  const btsIntegrations = useSelector(availableBtsIntegrationsSelector);
-  const isBtsPluginsExist = useSelector(isBtsPluginsExistSelector);
-  const enabledBtsPlugins = useSelector(enabledBtsPluginsSelector);
   const historyItems = useSelector(historyItemsSelector);
-  const isPostIssueUnavailable = !isPostIssueActionAvailable(btsIntegrations);
   const isBulkOperation = data.items && data.items.length > 1;
   const itemData = isBulkOperation ? data.items : data.items[0];
   const [modalState, setModalState] = useState({
     source: {
-      issue: isBulkOperation ? {} : itemData.issue,
+      issue: isBulkOperation ? { comment: '' } : itemData.issue,
     },
     decisionType: SELECT_DEFECT_MANUALLY,
     issueActionType: '',
@@ -97,50 +77,40 @@ const MakeDecision = ({ data }) => {
     );
   }, [modalState]);
 
-  const handleIgnoreAnalyzerChange = (value) => {
-    const issue =
-      modalState.decisionType === SELECT_DEFECT_MANUALLY
-        ? { ...modalState.source.issue, ignoreAnalyzer: value }
-        : { ...itemData.issue, ignoreAnalyzer: value };
-    setModalState({
-      ...modalState,
-      source: { issue },
-      decisionType: SELECT_DEFECT_MANUALLY,
-    });
-    collapseTabsExceptCurr(SELECT_DEFECT_MANUALLY);
-  };
-  const prepareDataToSend = (isIssueAction = false) => {
+  const prepareDataToSend = ({ isIssueAction, replaceComment } = {}) => {
+    const { issue } = modalState.source;
     if (isBulkOperation) {
       const { items } = data;
-      return items.map((item) => ({
-        ...(isIssueAction ? item : {}),
-        testItemId: item.id,
-        issue: {
-          ...item.issue,
-          ...modalState.source.issue,
-          autoAnalyzed: false,
-        },
-      }));
-    }
-    let comment = itemData.issue.comment || '';
-    if (itemData.issue.comment !== modalState.source.issue.comment) {
-      comment = `${comment}\n${modalState.source.issue.comment || ''}`.trim();
+      return items.map((item) => {
+        const comment = replaceComment
+          ? issue.comment
+          : `${item.issue.comment}\n${issue.comment}`.trim();
+        return {
+          ...(isIssueAction ? item : {}),
+          testItemId: item.id,
+          issue: {
+            ...item.issue,
+            ...issue,
+            comment,
+            autoAnalyzed: false,
+          },
+        };
+      });
     }
     return [
       {
         ...(isIssueAction ? itemData : {}),
         testItemId: itemData.id,
         issue: {
-          ...modalState.source.issue,
-          comment,
+          ...issue,
           autoAnalyzed: false,
         },
       },
     ];
   };
-  const saveDefect = () => {
+  const saveDefect = (options) => {
     const { fetchFunc } = data;
-    const issues = prepareDataToSend();
+    const issues = prepareDataToSend(options);
     const url = URLS.testItems(activeProject);
 
     fetch(url, {
@@ -172,7 +142,6 @@ const MakeDecision = ({ data }) => {
   const moveToOptionsStep = () => {
     setFormStep(OPTIONS);
   };
-
   const moveToConfigurationStep = () => {
     setFormStep(CONFIGURATION);
   };
@@ -180,7 +149,7 @@ const MakeDecision = ({ data }) => {
   const handlePostIssue = () => {
     const { postIssueEvents } = data.eventsInfo;
     dispatch(
-      postIssueAction(prepareDataToSend(true), {
+      postIssueAction(prepareDataToSend({ isIssueAction: true }), {
         fetchFunc: data.fetchFunc,
         eventsInfo: postIssueEvents,
       }),
@@ -189,7 +158,7 @@ const MakeDecision = ({ data }) => {
   const handleLinkIssue = () => {
     const { linkIssueEvents } = data.eventsInfo;
     dispatch(
-      linkIssueAction(prepareDataToSend(true), {
+      linkIssueAction(prepareDataToSend({ isIssueAction: true }), {
         fetchFunc: data.fetchFunc,
         eventsInfo: linkIssueEvents,
       }),
@@ -198,118 +167,16 @@ const MakeDecision = ({ data }) => {
   const handleUnlinkIssue = () => {
     const { unlinkIssueEvents } = data.eventsInfo;
     const selectedItems = isBulkOperation
-      ? prepareDataToSend(true).filter((item) => item.issue.externalSystemIssues.length > 0)
-      : prepareDataToSend(true);
+      ? prepareDataToSend({ isIssueAction: true }).filter(
+          (item) => item.issue.externalSystemIssues.length > 0,
+        )
+      : prepareDataToSend({ isIssueAction: true });
     dispatch(
       unlinkIssueAction(selectedItems, {
         fetchFunc: data.fetchFunc,
         eventsInfo: unlinkIssueEvents,
       }),
     );
-  };
-  const getActionItems = () => {
-    const issueTitle = getIssueTitle(
-      formatMessage,
-      btsIntegrations,
-      isBtsPluginsExist,
-      enabledBtsPlugins,
-      isPostIssueUnavailable,
-    );
-    const setIssueActionType = (issueActionType) => {
-      if (modalState.issueActionType === issueActionType) {
-        setModalState({
-          ...modalState,
-          issueActionType: '',
-        });
-      } else {
-        setModalState(
-          modalState.decisionType === SELECT_DEFECT_MANUALLY
-            ? {
-                ...modalState,
-                issueActionType,
-              }
-            : {
-                ...modalState,
-                source: { issue: itemData.issue },
-                decisionType: SELECT_DEFECT_MANUALLY,
-                issueActionType,
-              },
-        );
-      }
-    };
-    const actionButtonItems = [
-      {
-        id: POST_ISSUE,
-        label: formatMessage(actionMessages[POST_ISSUE]),
-        hint: isPostIssueUnavailable ? issueTitle : '',
-        noteMsg: formatMessage(messages.postIssueNote),
-        icon: PlusIcon,
-        onClick: () => {
-          setIssueActionType(POST_ISSUE);
-          collapseTabsExceptCurr(SELECT_DEFECT_MANUALLY);
-        },
-        disabled: isPostIssueUnavailable,
-      },
-      {
-        id: LINK_ISSUE,
-        label: formatMessage(actionMessages[LINK_ISSUE]),
-        hint: btsIntegrations.length ? '' : issueTitle,
-        noteMsg: formatMessage(messages.linkIssueNote),
-        icon: PlusIcon,
-        onClick: () => {
-          setIssueActionType(LINK_ISSUE);
-          collapseTabsExceptCurr(SELECT_DEFECT_MANUALLY);
-        },
-        disabled: !btsIntegrations.length,
-      },
-    ];
-
-    if (
-      isBulkOperation
-        ? itemData.some((item) => item.issue.externalSystemIssues.length > 0)
-        : itemData.issue && itemData.issue.externalSystemIssues.length > 0
-    ) {
-      actionButtonItems.push({
-        id: UNLINK_ISSUE,
-        label: formatMessage(actionMessages[UNLINK_ISSUE]),
-        noteMsg: formatMessage(messages.unlinkIssueNote),
-        icon: UnlinkIcon,
-        onClick: () => {
-          setIssueActionType(UNLINK_ISSUE);
-          collapseTabsExceptCurr(SELECT_DEFECT_MANUALLY);
-        },
-      });
-    }
-    return actionButtonItems;
-  };
-  const preparedHistoryLineItems = historyItems.filter(
-    (item) => item.issue && item.id !== itemData.id,
-  );
-  const selectHistoryLineItem = (itemId) => {
-    if (itemId) {
-      const historyItem = preparedHistoryLineItems.find((item) => item.id === itemId);
-      setModalState({
-        ...modalState,
-        source: historyItem,
-        decisionType: COPY_FROM_HISTORY_LINE,
-        issueActionType: '',
-      });
-      collapseTabsExceptCurr(COPY_FROM_HISTORY_LINE);
-    } else {
-      setModalState({ ...modalState, source: { issue: itemData.issue }, decisionType: '' });
-    }
-  };
-  const selectDefectTypeManually = (value) => {
-    const issue =
-      modalState.decisionType === SELECT_DEFECT_MANUALLY
-        ? { ...modalState.source.issue, issueType: value }
-        : { ...itemData.issue, issueType: value };
-    setModalState({
-      ...modalState,
-      source: { issue },
-      decisionType: SELECT_DEFECT_MANUALLY,
-    });
-    collapseTabsExceptCurr(SELECT_DEFECT_MANUALLY);
   };
 
   const getIssueAction = () => {
@@ -324,33 +191,44 @@ const MakeDecision = ({ data }) => {
         return false;
     }
   };
-  const applyChangesImmediately = () => {
+  const applyChangesImmediately = (options) => {
     if (isBulkOperation) {
-      modalHasChanges && !isEmptyObject(modalState.source.issue) && saveDefect();
+      modalHasChanges && !isEmptyObject(modalState.source.issue) && saveDefect(options);
     } else {
-      modalHasChanges && !isEqual(itemData.issue, modalState.source.issue) && saveDefect();
+      modalHasChanges && !isEqual(itemData.issue, modalState.source.issue) && saveDefect(options);
     }
     modalState.decisionType === COPY_FROM_HISTORY_LINE &&
       isEqual(itemData.issue, modalState.source.issue) &&
       dispatch(hideModalAction());
     modalState.issueActionType && dispatch(hideModalAction()) && getIssueAction();
   };
+  const applyImmediatelyWithComment = () => {
+    applyChangesImmediately({ replaceComment: true });
+  };
+  const applyChanges = () => applyChangesImmediately();
+
+  const getApplyImmediatelyButtonCaption = () => {
+    if (isBulkOperation) {
+      return modalState.source.issue.comment
+        ? messages.replaceCommentsAndApply
+        : messages.clearCommentsAndApply;
+    }
+    return messages.applyImmediately;
+  };
   const renderHeaderElements = () => {
     return (
       <>
-        {!isBulkOperation && (
-          <GhostButton
-            onClick={applyChangesImmediately}
-            disabled={!modalHasChanges}
-            transparentBorder
-            transparentBackground
-            appearance="topaz"
-          >
-            {formatMessage(messages.applyImmediately)}
-          </GhostButton>
-        )}
         <GhostButton
-          onClick={isBulkOperation ? applyChangesImmediately : moveToOptionsStep}
+          onClick={isBulkOperation ? applyImmediatelyWithComment : applyChanges}
+          disabled={!modalHasChanges}
+          transparentBorder
+          transparentBackground
+          appearance="topaz"
+        >
+          {formatMessage(getApplyImmediatelyButtonCaption())}
+        </GhostButton>
+        <GhostButton
+          onClick={isBulkOperation ? applyChanges : moveToOptionsStep}
           disabled={isBulkOperation ? !modalHasChanges : false}
           color="''"
           appearance="topaz"
@@ -366,6 +244,9 @@ const MakeDecision = ({ data }) => {
   };
 
   const getAccordionTabs = () => {
+    const preparedHistoryLineItems = historyItems.filter(
+      (item) => item.issue && item.id !== itemData.id,
+    );
     const tabsData = [
       {
         id: MACHINE_LEARNING_SUGGESTIONS,
@@ -384,35 +265,13 @@ const MakeDecision = ({ data }) => {
         isOpen: tabs[SELECT_DEFECT_MANUALLY],
         title: formatMessage(messages.selectDefectTypeManually),
         content: (
-          <>
-            {!isBulkOperation && (
-              <InputSwitcher
-                value={
-                  modalState.decisionType === SELECT_DEFECT_MANUALLY
-                    ? modalState.source.issue.ignoreAnalyzer
-                    : itemData.issue.ignoreAnalyzer
-                }
-                onChange={handleIgnoreAnalyzerChange}
-                className={cx('ignore-analysis')}
-                childrenFirst
-                childrenClassName={cx('input-switcher-children')}
-              >
-                <span>{formatMessage(messages.ignoreAa)}</span>
-              </InputSwitcher>
-            )}
-            <DefectTypeSelectorML
-              selectDefectType={selectDefectTypeManually}
-              selectedItem={
-                modalState.decisionType === SELECT_DEFECT_MANUALLY
-                  ? modalState.source.issue.issueType || ''
-                  : itemData.issue.issueType
-              }
-            />
-            <ActionButtonsBar
-              actionItems={getActionItems()}
-              selectedItem={modalState.issueActionType}
-            />
-          </>
+          <SelectDefectManually
+            itemData={itemData}
+            modalState={modalState}
+            setModalState={setModalState}
+            isBulkOperation={isBulkOperation}
+            collapseTabsExceptCurr={collapseTabsExceptCurr}
+          />
         ),
       },
     ];
@@ -423,21 +282,13 @@ const MakeDecision = ({ data }) => {
         isOpen: tabs[COPY_FROM_HISTORY_LINE],
         title: formatMessage(messages.copyFromHistoryLine),
         content: (
-          <>
-            <div className={cx('execution-header')}>
-              <span>{`${formatMessage(messages.execution)} #`}</span>
-              <span>{formatMessage(messages.defectType)}</span>
-            </div>
-            {preparedHistoryLineItems.map((item) => (
-              <div className={cx('execution-item')} key={item.id}>
-                <ExecutionInfo
-                  item={item}
-                  selectedItem={modalState.source.id}
-                  selectItem={selectHistoryLineItem}
-                />
-              </div>
-            ))}
-          </>
+          <CopyFromHistoryLine
+            items={preparedHistoryLineItems}
+            itemData={itemData}
+            modalState={modalState}
+            setModalState={setModalState}
+            collapseTabsExceptCurr={collapseTabsExceptCurr}
+          />
         ),
       });
     }
@@ -458,7 +309,7 @@ const MakeDecision = ({ data }) => {
           {formatMessage(messages.backToConfiguration)}
         </GhostButton>
         <GhostButton
-          onClick={applyChangesImmediately}
+          onClick={applyChanges}
           disabled={!modalHasChanges}
           color="''"
           appearance="topaz"
@@ -468,9 +319,8 @@ const MakeDecision = ({ data }) => {
       </>
     );
   };
-
   const hotKeyAction = {
-    ctrlEnter: () => applyChangesImmediately(),
+    ctrlEnter: applyChanges,
   };
 
   return (
