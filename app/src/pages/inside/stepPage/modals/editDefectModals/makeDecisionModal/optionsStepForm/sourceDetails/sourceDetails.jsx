@@ -24,6 +24,7 @@ import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import CommentIcon from 'common/img/comment-inline.svg';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { MarkdownViewer } from 'components/main/markdown';
 import styles from './sourceDetails.scss';
 
 const cx = classNames.bind(styles);
@@ -36,7 +37,7 @@ export const SourceDetails = ({ info, defectTypes }) => {
       <div className={cx('comment-block')}>
         <span className={cx('icon')}>{Parser(CommentIcon)}</span>
         <ScrollWrapper autoHeight hideTracksWhenNotNeeded autoHeightMax={80}>
-          <p className={cx('comment')}>{info.issue.comment}</p>
+          <MarkdownViewer value={info.issue.comment} mode="dark" />
         </ScrollWrapper>
       </div>
     );
