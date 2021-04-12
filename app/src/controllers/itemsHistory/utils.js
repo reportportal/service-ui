@@ -15,6 +15,7 @@
  */
 
 import { NOT_FOUND } from 'common/constants/testStatuses';
+import { updateHistoryItemLaunchAttributes } from 'controllers/log/utils';
 
 export const normalizeHistoryItem = (historyItem, id) => {
   if (!historyItem) {
@@ -32,3 +33,10 @@ export const calculateMaxRowItemsCount = (history) =>
     (count, item) => (item.resources.length > count ? item.resources.length : count),
     0,
   );
+
+export const updateItemsHistoryLaunchAttributes = (items = [], launch) => {
+  return items.map((item) => {
+    const resources = updateHistoryItemLaunchAttributes(item.resources, launch);
+    return { ...item, resources };
+  });
+};

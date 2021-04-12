@@ -22,6 +22,10 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { defectTypesSelector } from 'controllers/project';
+import {
+  includeAllLaunchesSelector,
+  updateHistoryItemLaunchAttributesAction,
+} from 'controllers/log';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { HistoryLineItemTooltip } from './historyLineItemTooltip';
 import { HistoryLineItemBadge } from './historyLineItemBadges';
@@ -30,16 +34,8 @@ import styles from './historyLineItem.scss';
 
 const cx = classNames.bind(styles);
 
-export const HistoryLineItemContent = ({
-  active,
-  status,
-  statistics,
-  launchNumber,
-  hasChildren,
-  growthDuration,
-  showTriangles,
-  ...rest
-}) => {
+export const HistoryLineItemContent = ({ active, showTriangles, testItem, defectTypes }) => {
+  const { status, hasChildren, growthDuration, launchNumber, statistics } = testItem;
   const isNotEmpty = !hasChildren ? Object.keys(statistics.defects).length : false;
 
   return (
@@ -53,9 +49,9 @@ export const HistoryLineItemContent = ({
       <div className={cx('defect-block', { 'not-empty': isNotEmpty })}>
         <HistoryLineItemBadge
           active={active}
-          status={status}
+          defectTypes={defectTypes}
           defects={!hasChildren ? statistics.defects : {}}
-          {...rest}
+          {...testItem}
         />
       </div>
     </div>
@@ -63,25 +59,17 @@ export const HistoryLineItemContent = ({
 };
 HistoryLineItemContent.propTypes = {
   active: PropTypes.bool,
-  status: PropTypes.string,
-  hasChildren: PropTypes.bool,
-  statistics: PropTypes.shape({
-    defects: PropTypes.object,
-  }),
-  launchNumber: PropTypes.number,
-  growthDuration: PropTypes.number,
+  defectTypes: PropTypes.object.isRequired,
+  testItem: PropTypes.object.isRequired,
   showTriangles: PropTypes.bool,
+  includeAllLaunches: PropTypes.bool,
+  updateLaunchAttributes: PropTypes.func,
 };
 HistoryLineItemContent.defaultProps = {
   active: false,
-  status: '',
-  hasChildren: false,
-  statistics: {
-    defects: {},
-  },
-  launchNumber: 0,
-  growthDuration: null,
   showTriangles: true,
+  includeAllLaunches: false,
+  updateLaunchAttributes: () => {},
 };
 
 const HistoryLineItemContentWithTooltip = withTooltip({
@@ -98,9 +86,15 @@ const HistoryLineItemContentWithTooltip = withTooltip({
   },
 })(HistoryLineItemContent);
 
-@connect((state) => ({
-  defectTypes: defectTypesSelector(state),
-}))
+@connect(
+  (state) => ({
+    includeAllLaunches: includeAllLaunchesSelector(state),
+    defectTypes: defectTypesSelector(state),
+  }),
+  {
+    updateLaunchAttributes: updateHistoryItemLaunchAttributesAction,
+  },
+)
 @injectIntl
 @track()
 export class HistoryLineItem extends Component {
@@ -126,6 +120,8 @@ export class HistoryLineItem extends Component {
     onClick: PropTypes.func,
     isDefectEditorOpen: PropTypes.bool,
     launchAttributes: PropTypes.array,
+    includeAllLaunches: PropTypes.bool,
+    updateLaunchAttributes: PropTypes.func,
   };
 
   static defaultProps = {
@@ -142,10 +138,23 @@ export class HistoryLineItem extends Component {
     onClick: () => {},
     isDefectEditorOpen: false,
     launchAttributes: null,
+    includeAllLaunches: false,
+    updateLaunchAttributes: () => {},
   };
 
   render() {
-    const { intl, active, isLastItem, onClick, tracking, isDefectEditorOpen, ...rest } = this.props;
+    const {
+      intl,
+      active,
+      isLastItem,
+      onClick,
+      tracking,
+      isDefectEditorOpen,
+      defectTypes,
+      includeAllLaunches,
+      updateLaunchAttributes,
+      ...rest
+    } = this.props;
 
     return (
       <div
@@ -159,7 +168,13 @@ export class HistoryLineItem extends Component {
           onClick();
         }}
       >
-        <HistoryLineItemContentWithTooltip active={active} {...rest} />
+        <HistoryLineItemContentWithTooltip
+          includeAllLaunches={includeAllLaunches}
+          active={active}
+          defectTypes={defectTypes}
+          testItem={rest}
+          updateLaunchAttributes={updateLaunchAttributes}
+        />
       </div>
     );
   }
