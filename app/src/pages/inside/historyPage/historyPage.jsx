@@ -25,8 +25,6 @@ import {
   toggleHistoryItemSelectionAction,
   unselectAllHistoryItemsAction,
   HISTORY_BASE_DEFAULT_VALUE,
-  setBaseAllLaunchesAction,
-  isHistoryBaseAllLaunchesSelector,
 } from 'controllers/itemsHistory';
 import {
   parentItemSelector,
@@ -43,10 +41,8 @@ import { HistoryView } from './historyView';
     parentItem: parentItemSelector(state),
     isTestItemsList: isTestItemsListSelector(state),
     isStepLevel: isStepLevelSelector(state),
-    includeAllLaunches: isHistoryBaseAllLaunchesSelector(state),
   }),
   {
-    setBaseAllLaunchesAction,
     refreshHistoryAction,
     toggleItemSelection: toggleHistoryItemSelectionAction,
     onUnselectAll: unselectAllHistoryItemsAction,
@@ -56,8 +52,6 @@ import { HistoryView } from './historyView';
 export class HistoryPage extends Component {
   static propTypes = {
     refreshHistoryAction: PropTypes.func.isRequired,
-    setBaseAllLaunchesAction: PropTypes.func.isRequired,
-    includeAllLaunches: PropTypes.bool,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -106,7 +100,6 @@ export class HistoryPage extends Component {
       this.setState({
         historyBase,
       });
-      this.props.setBaseAllLaunchesAction(!this.props.includeAllLaunches);
       this.props.refreshHistoryAction({ historyBase });
     }
   };

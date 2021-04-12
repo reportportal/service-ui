@@ -30,7 +30,6 @@ import {
   FETCH_HISTORY_PAGE_INFO,
   FILTER_FOR_COMPARE_INITIAL_STATE,
   SET_FILTER_FOR_COMPARE,
-  SET_BASE_ALL_LAUNCHES,
   UPDATE_ITEMS_HISTORY_LAUNCH_ATTRIBUTES,
 } from './constants';
 import { updateHistoryItemLaunchAttributes } from './utils';
@@ -85,17 +84,7 @@ export const filterForCompareReducer = (
   }
 };
 
-const includeAllLaunchesReducer = (state = true, { type, payload }) => {
-  switch (type) {
-    case SET_BASE_ALL_LAUNCHES:
-      return payload;
-    default:
-      return state;
-  }
-};
-
 const reducer = combineReducers({
-  historyBaseIsAllLaunches: includeAllLaunchesReducer,
   history: queueReducers(
     historyReducer,
     fetchReducer(NAMESPACE, { contentPath: 'content' }),
