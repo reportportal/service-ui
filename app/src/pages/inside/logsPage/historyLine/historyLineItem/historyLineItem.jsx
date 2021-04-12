@@ -63,11 +63,13 @@ HistoryLineItemContent.propTypes = {
   testItem: PropTypes.object.isRequired,
   showTriangles: PropTypes.bool,
   includeAllLaunches: PropTypes.bool,
-  updateAttributes: PropTypes.func,
+  updateLaunchAttributes: PropTypes.func,
 };
 HistoryLineItemContent.defaultProps = {
   active: false,
   showTriangles: true,
+  includeAllLaunches: false,
+  updateLaunchAttributes: () => {},
 };
 
 const HistoryLineItemContentWithTooltip = withTooltip({
@@ -134,6 +136,8 @@ export class HistoryLineItem extends Component {
     endTime: null,
     onClick: () => {},
     launchAttributes: null,
+    includeAllLaunches: false,
+    updateLaunchAttributes: () => {},
   };
 
   render() {

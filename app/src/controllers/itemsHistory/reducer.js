@@ -32,7 +32,7 @@ import {
   SET_FILTER_FOR_COMPARE,
   UPDATE_ITEMS_HISTORY_LAUNCH_ATTRIBUTES,
 } from './constants';
-import { updateHistoryItemLaunchAttributes } from './utils';
+import { updateItemsHistoryLaunchAttributes } from './utils';
 
 export const historyPaginationReducer = (state = PAGINATION_INITIAL_STATE, { type }) => {
   switch (type) {
@@ -64,7 +64,7 @@ export const loadingReducer = (state = false, { type, payload }) => {
 export const updateHistoryItemLaunchAttributesReducer = (state = [], { type, payload }) => {
   switch (type) {
     case UPDATE_ITEMS_HISTORY_LAUNCH_ATTRIBUTES:
-      return updateHistoryItemLaunchAttributes(state, payload);
+      return updateItemsHistoryLaunchAttributes(state, payload);
     default:
       return state;
   }
