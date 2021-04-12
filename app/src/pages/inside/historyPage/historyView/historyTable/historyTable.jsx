@@ -29,6 +29,7 @@ import {
   fetchItemsHistoryAction,
   filterForCompareSelector,
   itemsHistorySelector,
+  HISTORY_BASE_DEFAULT_VALUE,
 } from 'controllers/itemsHistory';
 import { nameLinkSelector } from 'controllers/testItem';
 import { PROJECT_LOG_PAGE } from 'controllers/pages';
@@ -138,6 +139,7 @@ export class HistoryTable extends Component {
       selectedItems,
       withGroupOperations,
       defectTypes,
+      historyBase,
     } = this.props;
     switch (historyItem.status) {
       case NOT_FOUND:
@@ -169,6 +171,7 @@ export class HistoryTable extends Component {
             key={historyItem.id}
           >
             <HistoryItem
+              includeAllLaunches={historyBase === HISTORY_BASE_DEFAULT_VALUE}
               testItem={historyItem}
               defectTypes={defectTypes}
               onSelectItem={onSelectItem}
