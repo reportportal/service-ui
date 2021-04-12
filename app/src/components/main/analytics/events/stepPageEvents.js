@@ -106,11 +106,6 @@ export const STEP_PAGE_EVENTS = {
     action: 'Click on icon "filter" Defect type',
     label: 'Arises active "Defect type" input',
   },
-  DEFECT_TYPE_SORTING: {
-    category: STEP_PAGE,
-    action: 'Click on icon "sorting" Defect type',
-    label: 'Sort items by Defect type',
-  },
   EDIT_ICON_CLICK: {
     category: STEP_PAGE,
     action: 'Click on item icon "edit"',
