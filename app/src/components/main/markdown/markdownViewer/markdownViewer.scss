@@ -17,6 +17,7 @@
 .viewer-wrapper {
   display: grid;
   width: 100%;
+  min-height: 19px;
 }
 
 .markdown-viewer {
@@ -179,6 +180,6 @@
   }
 
   &.mode-dark {
-    color: $COLOR--gray-light;
+    color: $COLOR--dark-gray;
   }
 }
