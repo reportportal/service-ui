@@ -209,8 +209,9 @@ export class GeneralTab extends Component {
     }
     const newOptions = this.retentionOptions.map((elem) => {
       const disabled =
-        elem.value !== 0 &&
-        (elem.value > formValues.keepLaunches || elem.value < formValues.keepScreenshots);
+        elem.value === 0
+          ? elem.value !== formValues.keepLaunches
+          : elem.value > formValues.keepLaunches || elem.value < formValues.keepScreenshots;
       return { ...elem, disabled };
     });
     this.formatRetention = this.createValueFormatter(this.getRetentionOptions(newOptions));
@@ -223,8 +224,9 @@ export class GeneralTab extends Component {
     }
     const newOptions = this.retentionOptions.map((elem) => {
       const disabled =
-        elem.value !== 0 &&
-        (elem.value > formValues.keepLaunches || elem.value > formValues.keepLogs);
+        elem.value === 0
+          ? elem.value !== formValues.keepLaunches && elem.value !== formValues.keepLogs
+          : elem.value > formValues.keepLaunches || elem.value > formValues.keepLogs;
       return { ...elem, disabled };
     });
     this.formatRetention = this.createValueFormatter(this.getRetentionOptions(newOptions));
