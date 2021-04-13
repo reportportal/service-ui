@@ -193,63 +193,42 @@ export class GeneralTab extends Component {
     if (!formValues) {
       return [];
     }
-    if (
-      formValues.keepLaunches !== 0 &&
-      (formValues.keepLogs > formValues.keepLaunches ||
-        formValues.keepScreenshots > formValues.keepLaunches)
-    ) {
-      const newOptions = this.retentionOptions.map((elem) => {
-        const disabled =
-          elem.value !== 0 &&
-          (elem.value < formValues.keepLogs || elem.value < formValues.keepScreenshots);
-        return { ...elem, disabled };
-      });
-      this.formatRetention = this.createValueFormatter(this.getRetentionOptions(newOptions));
-      return this.getRetentionOptions(newOptions);
-    }
-    return this.getRetentionOptions(this.retentionOptions);
+    const newOptions = this.retentionOptions.map((elem) => {
+      const disabled =
+        elem.value !== 0 &&
+        (elem.value < formValues.keepLogs || elem.value < formValues.keepScreenshots);
+      return { ...elem, disabled };
+    });
+    this.formatRetention = this.createValueFormatter(this.getRetentionOptions(newOptions));
+    return this.getRetentionOptions(newOptions);
   };
 
   getLogOptions = (formValues) => {
     if (!formValues) {
       return [];
     }
-    if (
-      formValues.keepLogs !== 0 &&
-      (formValues.keepLogs > formValues.keepLaunches ||
-        formValues.keepLogs < formValues.keepScreenshots)
-    ) {
-      const newOptions = this.retentionOptions.map((elem) => {
-        const disabled =
-          elem.value !== 0 &&
-          (elem.value > formValues.keepLaunches || elem.value < formValues.keepScreenshots);
-        return { ...elem, disabled };
-      });
-      this.formatRetention = this.createValueFormatter(this.getRetentionOptions(newOptions));
-      return this.getRetentionOptions(newOptions);
-    }
-    return this.getRetentionOptions(this.retentionOptions);
+    const newOptions = this.retentionOptions.map((elem) => {
+      const disabled =
+        elem.value !== 0 &&
+        (elem.value > formValues.keepLaunches || elem.value < formValues.keepScreenshots);
+      return { ...elem, disabled };
+    });
+    this.formatRetention = this.createValueFormatter(this.getRetentionOptions(newOptions));
+    return this.getRetentionOptions(newOptions);
   };
 
   getScreenshotsOptions = (formValues) => {
     if (!formValues) {
       return [];
     }
-    if (
-      formValues.keepScreenshots !== 0 &&
-      (formValues.keepScreenshots > formValues.keepLaunches ||
-        formValues.keepScreenshots > formValues.keepLogs)
-    ) {
-      const newOptions = this.retentionOptions.map((elem) => {
-        const disabled =
-          elem.value !== 0 &&
-          (elem.value > formValues.keepLaunches || elem.value > formValues.keepLogs);
-        return { ...elem, disabled };
-      });
-      this.formatRetention = this.createValueFormatter(this.getRetentionOptions(newOptions));
-      return this.getRetentionOptions(newOptions);
-    }
-    return this.getRetentionOptions(this.retentionOptions);
+    const newOptions = this.retentionOptions.map((elem) => {
+      const disabled =
+        elem.value !== 0 &&
+        (elem.value > formValues.keepLaunches || elem.value > formValues.keepLogs);
+      return { ...elem, disabled };
+    });
+    this.formatRetention = this.createValueFormatter(this.getRetentionOptions(newOptions));
+    return this.getRetentionOptions(newOptions);
   };
 
   formatInterruptJobTimes = this.createValueFormatter(this.interruptJobTime);
