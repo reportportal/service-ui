@@ -30,7 +30,7 @@ export const ExecutionInfo = ({ className, item, selectItem, selectedItem, prese
   return (
     <div className={cx('execution-info-container', className)}>
       <div className={cx('history-line-item')}>
-        <HistoryLineItemContent defectTypes={defectTypes} showTriangles={false} {...item} />
+        <HistoryLineItemContent defectTypes={defectTypes} showTriangles={false} testItem={item} />
       </div>
       <ItemHeader
         item={item}
