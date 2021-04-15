@@ -34,31 +34,23 @@ export const ItemsListHeader = ({
   onShowErrorLogsChange,
 }) => {
   const { formatMessage } = useIntl();
-  const [checkBoxValue, setCheckBoxValue] = useState(selectedItems.length === testItems.length);
+  const [isAllSelected, setIsAllSelected] = useState(selectedItems.length === testItems.length);
   useEffect(() => {
-    setCheckBoxValue(selectedItems.length === testItems.length);
+    setIsAllSelected(selectedItems.length === testItems.length);
   }, [selectedItems]);
 
   const onCheckboxChange = () => {
     if (testItems.length === 1) {
       return;
     }
-    if (checkBoxValue) {
-      const newData = testItems.slice(0, 1);
-      setModalState({
-        selectedItems: newData,
-      });
-    }
-    if (!checkBoxValue) {
-      setModalState({
-        selectedItems: testItems,
-      });
-    }
+    setModalState({
+      selectedItems: isAllSelected ? testItems.slice(0, 1) : testItems,
+    });
   };
 
   return (
     <div className={cx('header-row')}>
-      <InputCheckbox value={checkBoxValue} onChange={onCheckboxChange} iconTransparentBackground>
+      <InputCheckbox value={isAllSelected} onChange={onCheckboxChange} iconTransparentBackground>
         <span className={cx('checkbox-label')}>
           {formatMessage(messages.selectedItemCount, {
             selected: selectedItemsLength,

@@ -19,8 +19,7 @@ import PropTypes from 'prop-types';
 import { ItemHeader } from 'pages/inside/logsPage/defectEditor/itemHeader';
 import { StackTraceMessageBlock } from 'pages/inside/common/stackTraceMessageBlock';
 import classNames from 'classnames/bind';
-import { isEmptyObject, uniqueId } from 'common/utils';
-import { isNotEmptyArray } from 'common/utils/validation/validate';
+import { uniqueId } from 'common/utils';
 import styles from './itemsListBody.scss';
 
 const cx = classNames.bind(styles);
@@ -35,9 +34,48 @@ const Log = ({ log }) => (
 Log.propTypes = {
   log: PropTypes.object.isRequired,
 };
+const SimilarItemsList = ({ testItems, selectedItems, selectItem, showErrorLogs }) => {
+  return (
+    <>
+      {testItems.length > 0 &&
+        testItems.map((item, i) => {
+          let composeItem = item;
+          if (i !== 0) {
+            const { itemId: id, itemName: name, issue, patternTemplates } = item;
+            composeItem = {
+              ...item,
+              id,
+              name,
+              issue,
+              patternTemplates,
+            };
+          }
+          const selected =
+            !!selectedItems.find((selectedItem) => selectedItem.itemId === item.itemId) || false;
+          return (
+            <div key={item.id || item.itemId}>
+              <ItemHeader
+                item={composeItem}
+                selectItem={i !== 0 ? selectItem : undefined}
+                isSelected={selected}
+                preselected={i === 0}
+              />
+              {showErrorLogs &&
+                item.logs.slice(0, 5).map((log) => <Log log={log} key={uniqueId()} />)}
+            </div>
+          );
+        })}
+    </>
+  );
+};
+SimilarItemsList.propTypes = {
+  testItems: PropTypes.array.isRequired,
+  selectedItems: PropTypes.array.isRequired,
+  selectItem: PropTypes.func.isRequired,
+  showErrorLogs: PropTypes.bool.isRequired,
+};
 
 export const ItemsListBody = ({ testItems, selectedItems, setModalState, showErrorLogs }) => {
-  const [currentTestItem, ...restItems] = testItems;
   const selectItem = (id) => {
     setModalState({
       selectedItems: selectedItems.find((item) => item.itemId === id)
@@ -47,39 +85,14 @@ export const ItemsListBody = ({ testItems, selectedItems, setModalState, showErr
   };
 
   return (
-    <>
-      {
-        <div className={cx('items-list')}>
-          {!isEmptyObject(currentTestItem) && (
-            <div key={uniqueId()}>
-              <ItemHeader item={currentTestItem} preselected />
-              {showErrorLogs &&
-                currentTestItem.logs.slice(0, 5).map((log) => <Log log={log} key={uniqueId()} />)}
-            </div>
-          )}
-          {isNotEmptyArray(restItems) &&
-            restItems.map((item) => {
-              const { itemId: id, itemName: name, issue, patternTemplates } = item;
-              const composeItem = {
-                ...item,
-                id,
-                name,
-                issue,
-                patternTemplates,
-              };
-              const selected =
-                selectedItems.find((selectedItem) => selectedItem.itemId === item.itemId) || false;
-              return (
-                <div key={uniqueId()}>
-                  <ItemHeader item={composeItem} selectItem={selectItem} isSelected={!!selected} />
-                  {showErrorLogs &&
-                    item.logs.slice(0, 5).map((log) => <Log log={log} key={uniqueId()} />)}
-                </div>
-              );
-            })}
-        </div>
-      }
-    </>
+    <div className={cx('items-list')}>
+      <SimilarItemsList
+        testItems={testItems}
+        selectedItems={selectedItems}
+        selectItem={selectItem}
+        showErrorLogs={showErrorLogs}
+      />
+    </div>
   );
 };
 ItemsListBody.propTypes = {

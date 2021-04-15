@@ -19,11 +19,21 @@ import PropTypes from 'prop-types';
 import { messages } from 'pages/inside/stepPage/modals/editDefectModals/messages';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
+import { OptionsBlock } from 'pages/inside/stepPage/modals/editDefectModals/makeDecisionModal/optionsStepForm/optionsBlock';
+import { ItemsList } from 'pages/inside/stepPage/modals/editDefectModals/makeDecisionModal/optionsStepForm/itemsList';
 import styles from './optionsSection.scss';
 
 const cx = classNames.bind(styles);
 
-export const OptionsSection = ({ optionsBlock, itemsListBlock }) => {
+export const OptionsSection = ({
+  currentTestItem,
+  setModalState,
+  testItems,
+  selectedItems,
+  optionValue,
+  loading,
+  collapseTabsExceptCurr,
+}) => {
   const { formatMessage } = useIntl();
 
   return (
@@ -33,17 +43,41 @@ export const OptionsSection = ({ optionsBlock, itemsListBlock }) => {
         <span className={cx('subheader')}>{formatMessage(messages.applyToSimilarItems)}:</span>
       </div>
       <div className={cx('options-block')}>
-        {optionsBlock}
-        <div className={cx('items-list')}>{itemsListBlock}</div>
+        <OptionsBlock
+          optionValue={optionValue}
+          currentTestItem={currentTestItem}
+          loading={loading}
+          collapseTabsExceptCurr={collapseTabsExceptCurr}
+          setModalState={setModalState}
+        />
+        <div className={cx('items-list')}>
+          <ItemsList
+            setModalState={setModalState}
+            testItems={testItems}
+            selectedItems={selectedItems}
+            loading={loading}
+            optionValue={optionValue}
+          />
+        </div>
       </div>
     </div>
   );
 };
 OptionsSection.propTypes = {
-  optionsBlock: PropTypes.node,
-  itemsListBlock: PropTypes.node,
+  currentTestItem: PropTypes.object,
+  setModalState: PropTypes.func,
+  testItems: PropTypes.array,
+  selectedItems: PropTypes.array,
+  optionValue: PropTypes.string,
+  loading: PropTypes.bool,
+  collapseTabsExceptCurr: PropTypes.func,
 };
 OptionsSection.defaultProps = {
-  optionsBlock: null,
-  itemsListBlock: null,
+  currentTestItem: {},
+  setModalState: () => {},
+  testItems: [],
+  selectedItems: [],
+  optionValue: '',
+  loading: false,
+  collapseTabsExceptCurr: () => {},
 };

@@ -43,26 +43,10 @@
   }
 }
 
-.comment-block {
-  display: flex;
-  max-width: 630px;
-  margin-bottom: 23px;
-}
-
 .comment {
   word-wrap: break-word;
 }
 
-.icon {
-  display: inline-block;
-  width: 19px;
-  height: 19px;
-  margin-right: 19px;
-
-  svg {
-    fill: $COLOR--gray-60;
-  }
-}
 .defect-type-content {
   display: flex;
   width: 100%;

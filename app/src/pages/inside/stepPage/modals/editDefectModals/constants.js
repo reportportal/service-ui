@@ -15,9 +15,9 @@
  */
 
 export const SEARCH_MODES = {
-  CURRENT_LAUNCH: 'currentLaunch',
-  LAUNCH_NAME: 'launchName',
-  FILTER: 'filter',
+  SIMILAR_TI_CURRENT_LAUNCH: 'currentLaunch',
+  LAST_TEN_LAUNCHES: 'launchName',
+  WITH_FILTER: 'filter',
 };
 export const CHANGE_COMMENT_MODE = {
   NOT_CHANGE: 'NOT_CHANGE',

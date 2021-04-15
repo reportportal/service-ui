@@ -26,6 +26,7 @@ import { defectTypesSelector } from 'controllers/project';
 import {
   CURRENT_EXECUTION_ONLY,
   LAST_TEN_LAUNCHES,
+  SEARCH_MODES,
   SIMILAR_TI_CURRENT_LAUNCH,
   WITH_FILTER,
 } from '../../../constants';
@@ -34,12 +35,19 @@ import styles from './optionsBlock.scss';
 
 const cx = classNames.bind(styles);
 
-export const OptionsBlock = ({ optionValue, onChange, currentTestItem, loading }) => {
+export const OptionsBlock = ({
+  optionValue,
+  collapseTabsExceptCurr,
+  currentTestItem,
+  loading,
+  setModalState,
+}) => {
   const { formatMessage } = useIntl();
   const activeFilter = useSelector(activeFilterSelector);
-  const defectTypes = Object.values(useSelector(defectTypesSelector)).flat();
+  const defectTypes = useSelector(defectTypesSelector);
+  const TIDefectsGroup = defectTypes[TO_INVESTIGATE.toUpperCase()];
   const getOptions = () => {
-    const currentDefectType = defectTypes.find(
+    const currentItemFromTIGroup = TIDefectsGroup.find(
       (type) => type.locator === currentTestItem.issue.issueType,
     );
     const options = [
@@ -51,7 +59,7 @@ export const OptionsBlock = ({ optionValue, onChange, currentTestItem, loading }
         },
       },
     ];
-    if (currentDefectType.typeRef === TO_INVESTIGATE.toUpperCase()) {
+    if (currentItemFromTIGroup) {
       const optionalOptions = [
         {
           ownValue: SIMILAR_TI_CURRENT_LAUNCH,
@@ -78,16 +86,39 @@ export const OptionsBlock = ({ optionValue, onChange, currentTestItem, loading }
             }),
           },
         });
-      return [...options, ...optionalOptions];
+      options.push(...optionalOptions);
     }
     return options;
+  };
+  const onChangeOption = (value) => {
+    let searchMode;
+    switch (value) {
+      case SIMILAR_TI_CURRENT_LAUNCH:
+        searchMode = SEARCH_MODES.SIMILAR_TI_CURRENT_LAUNCH;
+        break;
+      case LAST_TEN_LAUNCHES:
+        searchMode = SEARCH_MODES.LAST_TEN_LAUNCHES;
+        break;
+      case WITH_FILTER:
+        searchMode = SEARCH_MODES.WITH_FILTER;
+        break;
+      default:
+        searchMode = '';
+    }
+    setModalState({
+      optionValue: value,
+      searchMode,
+      testItems: [],
+      selectedItems: [],
+    });
+    collapseTabsExceptCurr();
   };
 
   return (
     <div className={cx('options', { loading })}>
       <InputRadioGroup
         value={optionValue}
-        onChange={onChange}
+        onChange={onChangeOption}
         options={getOptions()}
         inputGroupClassName={cx('radio-input-group')}
         inputClassNames={{
@@ -100,12 +131,14 @@ export const OptionsBlock = ({ optionValue, onChange, currentTestItem, loading }
 };
 OptionsBlock.propTypes = {
   optionValue: PropTypes.string.isRequired,
-  onChange: PropTypes.func,
+  collapseTabsExceptCurr: PropTypes.func,
   currentTestItem: PropTypes.object,
   loading: PropTypes.bool,
+  setModalState: PropTypes.func,
 };
 OptionsBlock.defaultProps = {
-  onChange: PropTypes.func,
+  collapseTabsExceptCurr: () => {},
   currentTestItem: {},
   loading: false,
+  setModalState: () => {},
 };
