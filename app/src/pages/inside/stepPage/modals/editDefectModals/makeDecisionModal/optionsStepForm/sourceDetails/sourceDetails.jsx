@@ -17,6 +17,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
+import { useSelector } from 'react-redux';
 import { ExecutionInfo } from 'pages/inside/logsPage/defectEditor/executionInfo';
 import { DefectTypeItemML } from 'pages/inside/common/defectTypeItemML';
 import { messages } from 'pages/inside/stepPage/modals/editDefectModals/messages';
@@ -25,12 +26,14 @@ import Parser from 'html-react-parser';
 import CommentIcon from 'common/img/comment-inline.svg';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { MarkdownViewer } from 'components/main/markdown';
+import { defectTypesSelector } from 'controllers/project';
 import styles from './sourceDetails.scss';
 
 const cx = classNames.bind(styles);
 
-export const SourceDetails = ({ info, defectTypes }) => {
+export const SourceDetails = ({ info }) => {
   const { formatMessage } = useIntl();
+  const defectTypes = Object.values(useSelector(defectTypesSelector)).flat();
   const defectType = defectTypes.filter((type) => type.locator === info.issue.issueType)[0];
   const renderCommentBlock = () => {
     return (
@@ -71,9 +74,7 @@ export const SourceDetails = ({ info, defectTypes }) => {
 };
 SourceDetails.propTypes = {
   info: PropTypes.object,
-  defectTypes: PropTypes.array,
 };
 SourceDetails.defaultProps = {
   info: {},
-  defectTypes: [],
 };

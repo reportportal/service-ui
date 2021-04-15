@@ -14,42 +14,82 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
-import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
-import { defectTypesSelector } from 'controllers/project';
 import { Accordion, useAccordionTabsState } from 'pages/inside/common/accordion';
-import {
-  CURRENT_EXECUTION_ONLY,
-  SOURCE_DETAILS,
-} from 'pages/inside/stepPage/modals/editDefectModals/constants';
-import { InputRadioGroup } from 'components/inputs/inputRadioGroup';
-import { LogItem } from 'pages/inside/logsPage/defectEditor/logItem';
-import { SourceDetails } from './sourceDetails';
+import { URLS } from 'common/urls';
+import { ERROR } from 'common/constants/logLevels';
+import { fetch } from 'common/utils';
+import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
+import { useDispatch, useSelector } from 'react-redux';
+import { activeProjectSelector } from 'controllers/user';
+import { activeFilterSelector } from 'controllers/filter';
+import { FAILED, SKIPPED } from 'common/constants/testStatuses';
 import { messages } from './../../messages';
-import styles from './optionsStepForm.scss';
+import { OptionsSection } from './optionsSection';
+import { SourceDetails } from './sourceDetails';
+import { SEARCH_MODES, SOURCE_DETAILS } from '../../constants';
 
-const cx = classNames.bind(styles);
-
-export const OptionsStepForm = ({ info, itemData }) => {
+export const OptionsStepForm = ({ currentTestItem, modalState, setModalState }) => {
   const { formatMessage } = useIntl();
-  const defectTypes = Object.values(useSelector(defectTypesSelector)).flat();
-
-  const [tab, toggleTab] = useAccordionTabsState({
+  const dispatch = useDispatch();
+  const activeProject = useSelector(activeProjectSelector);
+  const activeFilter = useSelector(activeFilterSelector);
+  const [tab, toggleTab, collapseTabsExceptCurr] = useAccordionTabsState({
     [SOURCE_DETAILS]: true,
   });
-  const [optionValue, setOptionValue] = useState(CURRENT_EXECUTION_ONLY);
-  const options = [
-    {
-      ownValue: CURRENT_EXECUTION_ONLY,
-      label: {
-        id: CURRENT_EXECUTION_ONLY,
-        defaultMessage: formatMessage(messages.currentExecutionOnly),
-      },
-    },
-  ];
+  const [loading, setLoading] = useState(false);
+  const { source, optionValue, testItems, selectedItems } = modalState;
+  useEffect(() => {
+    const fetchLogs = (searchMode) => {
+      const requestData = {
+        searchMode,
+      };
+      if (searchMode === SEARCH_MODES.WITH_FILTER) {
+        requestData.filterId = activeFilter.id;
+      }
+      setLoading(true);
+      const currentItemLogRequest = fetch(URLS.logItems(activeProject, currentTestItem.id, ERROR), {
+        params: { 'filter.in.status': [FAILED, SKIPPED].join(',') },
+      });
+      const similarItemsRequest =
+        searchMode &&
+        fetch(URLS.logSearch(activeProject, currentTestItem.id), {
+          method: 'post',
+          data: requestData,
+        });
+      const requests = searchMode
+        ? [currentItemLogRequest, similarItemsRequest]
+        : [currentItemLogRequest];
+      Promise.all(requests)
+        .then((responses) => {
+          const [currentItemRes, similarItemsRes] = responses;
+          const currentItemLogs = currentItemRes.content;
+          const items = [{ ...currentTestItem, logs: currentItemLogs }, ...(similarItemsRes || [])];
+          setModalState({
+            testItems: items,
+            selectedItems: items,
+          });
+          setLoading(false);
+        })
+        .catch(({ message }) => {
+          setModalState({
+            testItems: [],
+            selectedItems: [],
+          });
+          setLoading(false);
+          dispatch(
+            showNotification({
+              message,
+              type: NOTIFICATION_TYPES.ERROR,
+            }),
+          );
+        });
+    };
+
+    fetchLogs(modalState.searchMode);
+  }, [optionValue]);
 
   const tabsData = [
     {
@@ -57,43 +97,32 @@ export const OptionsStepForm = ({ info, itemData }) => {
       shouldShow: true,
       isOpen: tab[SOURCE_DETAILS],
       title: formatMessage(messages.sourceDetails),
-      content: <SourceDetails info={info} defectTypes={defectTypes} />,
+      content: <SourceDetails info={source} />,
     },
   ];
 
   return (
     <>
       <Accordion tabs={tabsData} toggleTab={toggleTab} />
-      <div className={cx('options-section')}>
-        <div className={cx('header-block')}>
-          <span className={cx('header')}>{formatMessage(messages.applyTo)}</span>
-          <span className={cx('subheader')}>{formatMessage(messages.applyToSimilarItems)}:</span>
-        </div>
-        <div className={cx('options-block')}>
-          <div className={cx('options')}>
-            <InputRadioGroup
-              value={optionValue}
-              onChange={setOptionValue}
-              options={options}
-              inputGroupClassName={cx('radio-input-group')}
-              inputClassNames={{
-                togglerClassName: cx('input-toggler'),
-                childrenClassName: cx('input-children'),
-              }}
-            />
-          </div>
-          <div className={cx('items-list')}>
-            {optionValue === CURRENT_EXECUTION_ONLY && (
-              <LogItem item={itemData} showErrorLogs preselected />
-            )}
-          </div>
-        </div>
-      </div>
+      <OptionsSection
+        currentTestItem={currentTestItem}
+        setModalState={setModalState}
+        testItems={testItems}
+        selectedItems={selectedItems}
+        optionValue={optionValue}
+        loading={loading}
+        collapseTabsExceptCurr={collapseTabsExceptCurr}
+      />
     </>
   );
 };
 OptionsStepForm.propTypes = {
-  info: PropTypes.object,
-  toggleAccordionTab: PropTypes.func,
-  itemData: PropTypes.object,
+  currentTestItem: PropTypes.object,
+  modalState: PropTypes.object,
+  setModalState: PropTypes.func,
+};
+OptionsStepForm.defaultProps = {
+  currentTestItem: {},
+  modalState: {},
+  setModalState: () => {},
 };

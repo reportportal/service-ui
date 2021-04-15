@@ -113,7 +113,7 @@
   );
   background-size: 8px 100%;
   background-position: 1px 0;
-  padding-left: 9px;
+  padding-left: 26px;
   &.level-fatal {
     border-left: 3px solid $COLOR--fatal;
     background-image: linear-gradient(
@@ -128,6 +128,8 @@
   border: none;
 }
 .design-mode-dark.accordion-block {
+  display: flex;
+  align-items: center;
   background-color: transparent;
   box-shadow: none;
   &.expanded {

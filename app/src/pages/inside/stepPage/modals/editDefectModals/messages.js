@@ -141,10 +141,6 @@ export const messages = defineMessages({
     id: 'MakeDecisionModal.copyFromHistoryLine',
     defaultMessage: 'Copy from history line',
   },
-  apply: {
-    id: 'MakeDecisionModal.apply',
-    defaultMessage: 'Apply',
-  },
   applyImmediately: {
     id: 'MakeDecisionModal.applyImmediately',
     defaultMessage: 'Apply Immediately',
@@ -198,5 +194,25 @@ export const messages = defineMessages({
   currentExecutionOnly: {
     id: 'MakeDecisionModal.currentExecutionOnly',
     defaultMessage: 'Current execution only',
+  },
+  similarTICurrentLaunch: {
+    id: 'MakeDecisionModal.similarTICurrentLaunch',
+    defaultMessage: 'Similar TI in the current launch',
+  },
+  lastTenLaunches: {
+    id: 'MakeDecisionModal.lastTenLaunches',
+    defaultMessage: 'Last 10 launches',
+  },
+  withFilter: {
+    id: 'MakeDecisionModal.withFilter',
+    defaultMessage: 'Filter {filterName}',
+  },
+  showErrorLogs: {
+    id: 'MakeDecisionModal.showErrorLogs',
+    defaultMessage: 'Show Error Logs',
+  },
+  selectedItemCount: {
+    id: 'MakeDecisionModal.selectedItemCount',
+    defaultMessage: '{selected}/{total} items selected',
   },
 });

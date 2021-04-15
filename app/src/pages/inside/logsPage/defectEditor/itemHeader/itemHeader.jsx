@@ -44,7 +44,7 @@ export const ItemHeader = ({ item, selectItem, isSelected, preselected }) => {
   return (
     <div
       className={cx('item-info', { selected: isSelected, preselected })}
-      onClick={() => selectItem(isSelected ? null : id)}
+      onClick={() => selectItem(id)}
     >
       <div className={cx('header')}>
         <Link to={link} target="_blank" className={cx('item-name')}>

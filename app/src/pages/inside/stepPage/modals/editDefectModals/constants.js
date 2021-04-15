@@ -15,9 +15,9 @@
  */
 
 export const SEARCH_MODES = {
-  CURRENT_LAUNCH: 'currentLaunch',
-  LAUNCH_NAME: 'launchName',
-  FILTER: 'filter',
+  SIMILAR_TI_CURRENT_LAUNCH: 'currentLaunch',
+  LAST_TEN_LAUNCHES: 'launchName',
+  WITH_FILTER: 'filter',
 };
 export const CHANGE_COMMENT_MODE = {
   NOT_CHANGE: 'NOT_CHANGE',
@@ -33,3 +33,6 @@ export const COPY_FROM_HISTORY_LINE = 'copyFromHistoryLine';
 export const MACHINE_LEARNING_SUGGESTIONS = 'machineLearningSuggestions';
 export const SOURCE_DETAILS = 'sourceDetails';
 export const CURRENT_EXECUTION_ONLY = 'currentExecutionOnly';
+export const SIMILAR_TI_CURRENT_LAUNCH = 'similarTICurrentLaunch';
+export const LAST_TEN_LAUNCHES = 'lastTenLaunches';
+export const WITH_FILTER = 'withFilter';

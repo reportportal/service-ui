@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { hideModalAction, withModal } from 'controllers/modal';
@@ -35,6 +35,7 @@ import { messages } from './../messages';
 import {
   CONFIGURATION,
   COPY_FROM_HISTORY_LINE,
+  CURRENT_EXECUTION_ONLY,
   MACHINE_LEARNING_SUGGESTIONS,
   MAKE_DECISION_MODAL,
   OPTIONS,
@@ -51,12 +52,16 @@ const MakeDecision = ({ data }) => {
   const historyItems = useSelector(historyItemsSelector);
   const isBulkOperation = data.items && data.items.length > 1;
   const itemData = isBulkOperation ? data.items : data.items[0];
-  const [modalState, setModalState] = useState({
+  const [modalState, setModalState] = useReducer((state, newState) => ({ ...state, ...newState }), {
     source: {
       issue: isBulkOperation ? { comment: '' } : itemData.issue,
     },
     decisionType: SELECT_DEFECT_MANUALLY,
     issueActionType: '',
+    optionValue: CURRENT_EXECUTION_ONLY,
+    searchMode: '',
+    testItems: [],
+    selectedItems: [],
   });
   const [tabs, toggleTab, collapseTabsExceptCurr] = useAccordionTabsState({
     [MACHINE_LEARNING_SUGGESTIONS]: false,
@@ -90,6 +95,27 @@ const MakeDecision = ({ data }) => {
           testItemId: item.id,
           issue: {
             ...item.issue,
+            ...issue,
+            comment,
+            autoAnalyzed: false,
+          },
+        };
+      });
+    }
+    if (step === OPTIONS) {
+      return modalState.selectedItems.map((item, i) => {
+        let comment = issue.comment || '';
+        if (
+          comment !== item.issue.comment &&
+          (modalState.decisionType === COPY_FROM_HISTORY_LINE || i !== 0)
+        ) {
+          comment = `${item.issue.comment || ''}\n${comment}`.trim();
+        }
+        return {
+          ...(isIssueAction ? item : {}),
+          id: item.id || item.itemId,
+          testItemId: item.id || item.itemId,
+          issue: {
             ...issue,
             comment,
             autoAnalyzed: false,
@@ -138,12 +164,17 @@ const MakeDecision = ({ data }) => {
       });
     dispatch(hideModalAction());
   };
-
   const moveToOptionsStep = () => {
     setFormStep(OPTIONS);
   };
   const moveToConfigurationStep = () => {
     setFormStep(CONFIGURATION);
+    setModalState({
+      optionValue: CURRENT_EXECUTION_ONLY,
+      searchMode: '',
+      testItems: [],
+      selectedItems: [],
+    });
   };
 
   const handlePostIssue = () => {
@@ -314,11 +345,14 @@ const MakeDecision = ({ data }) => {
           color="''"
           appearance="topaz"
         >
-          {formatMessage(messages.apply)}
+          {formatMessage(messages.applyToItems, {
+            itemsCount: modalState.selectedItems.length,
+          })}
         </GhostButton>
       </>
     );
   };
+
   const hotKeyAction = {
     ctrlEnter: applyChanges,
   };
@@ -342,7 +376,11 @@ const MakeDecision = ({ data }) => {
       {step === CONFIGURATION ? (
         <Accordion tabs={getAccordionTabs()} toggleTab={toggleTab} />
       ) : (
-        <OptionsStepForm info={modalState.source} itemData={itemData} />
+        <OptionsStepForm
+          currentTestItem={itemData}
+          modalState={modalState}
+          setModalState={setModalState}
+        />
       )}
     </DarkModalLayout>
   );

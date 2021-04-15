@@ -57,7 +57,10 @@ export const InputRadio = ({
       )}
     />
     {children && (
-      <span className={cx('children-container', inputClassNames.childrenClassName)}>
+      <span
+        className={cx('children-container', inputClassNames.childrenClassName)}
+        title={children}
+      >
         {children}
       </span>
     )}

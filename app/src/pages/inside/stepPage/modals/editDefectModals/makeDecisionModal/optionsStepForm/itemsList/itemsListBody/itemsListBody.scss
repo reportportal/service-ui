@@ -14,19 +14,15 @@
  * limitations under the License.
  */
 
-.ignore-analysis {
-  position: absolute;
-  top: -32px;
-  right: 20px;
-  width: auto;
-  height: 12px;
+.items-list {
+  padding-right: 10px;
+
+  & > div:not(:last-child) {
+    margin-bottom: 12px;
+  }
 }
 
-.input-switcher-children {
-  color: $COLOR--dark-gray;
-}
-
-.defect-comment {
-  margin-top: 20px;
-  width: 630px;
+.error-log {
+  padding-left: 20px;
+  margin-bottom: 10px;
 }

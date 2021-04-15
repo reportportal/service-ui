@@ -14,19 +14,37 @@
  * limitations under the License.
  */
 
-.ignore-analysis {
-  position: absolute;
-  top: -32px;
-  right: 20px;
-  width: auto;
-  height: 12px;
+.options {
+  flex: 0 0 30%;
+  height: min-content;
+  border-right: 1px solid $COLOR--dark-gray;
+  margin-right: 32px;
+
+  &.loading {
+    pointer-events: none;
+  }
 }
 
-.input-switcher-children {
-  color: $COLOR--dark-gray;
+.radio-input-group {
+  & > div:not(:last-child) {
+    margin-bottom: 24px;
+  }
 }
 
-.defect-comment {
-  margin-top: 20px;
-  width: 630px;
+.input-toggler {
+  width: 20px;
+  height: 20px;
+  border-color: $COLOR--dark-gray-2;
+  background-color: transparent;
+
+  &::after {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+.input-children {
+  max-width: 220px;
+  color: $COLOR--dirty-gray;
+  white-space: nowrap;
 }

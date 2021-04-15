@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2021 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,19 +14,4 @@
  * limitations under the License.
  */
 
-.ignore-analysis {
-  position: absolute;
-  top: -32px;
-  right: 20px;
-  width: auto;
-  height: 12px;
-}
-
-.input-switcher-children {
-  color: $COLOR--dark-gray;
-}
-
-.defect-comment {
-  margin-top: 20px;
-  width: 630px;
-}
+export { ItemsList } from './itemsList';
