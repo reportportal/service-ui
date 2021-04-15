@@ -60,7 +60,6 @@ const MakeDecision = ({ data }) => {
     issueActionType: '',
     optionValue: CURRENT_EXECUTION_ONLY,
     searchMode: '',
-    loading: false,
     testItems: [],
     selectedItems: [],
   });

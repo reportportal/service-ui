@@ -77,6 +77,7 @@ export const OptionsBlock = ({
         },
       ];
       activeFilter &&
+        activeFilter.id > 0 &&
         optionalOptions.push({
           ownValue: WITH_FILTER,
           label: {

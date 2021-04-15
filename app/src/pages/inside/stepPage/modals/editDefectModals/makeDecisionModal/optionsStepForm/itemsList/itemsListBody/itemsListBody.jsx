@@ -39,10 +39,10 @@ const SimilarItemsList = ({ testItems, selectedItems, selectItem, showErrorLogs 
     <>
       {testItems.length > 0 &&
         testItems.map((item, i) => {
-          let composeItem = item;
+          let composedItem = item;
           if (i !== 0) {
             const { itemId: id, itemName: name, issue, patternTemplates } = item;
-            composeItem = {
+            composedItem = {
               ...item,
               id,
               name,
@@ -50,12 +50,13 @@ const SimilarItemsList = ({ testItems, selectedItems, selectItem, showErrorLogs 
               patternTemplates,
             };
           }
-          const selected =
-            !!selectedItems.find((selectedItem) => selectedItem.itemId === item.itemId) || false;
+          const selected = !!selectedItems.find(
+            (selectedItem) => selectedItem.itemId === item.itemId,
+          );
           return (
             <div key={item.id || item.itemId}>
               <ItemHeader
-                item={composeItem}
+                item={composedItem}
                 selectItem={i !== 0 ? selectItem : undefined}
                 isSelected={selected}
                 preselected={i === 0}

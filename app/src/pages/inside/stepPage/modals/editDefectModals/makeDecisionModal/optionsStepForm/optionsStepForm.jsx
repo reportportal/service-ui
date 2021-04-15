@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { Accordion, useAccordionTabsState } from 'pages/inside/common/accordion';
@@ -25,6 +25,7 @@ import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { useDispatch, useSelector } from 'react-redux';
 import { activeProjectSelector } from 'controllers/user';
 import { activeFilterSelector } from 'controllers/filter';
+import { FAILED, SKIPPED } from 'common/constants/testStatuses';
 import { messages } from './../../messages';
 import { OptionsSection } from './optionsSection';
 import { SourceDetails } from './sourceDetails';
@@ -38,7 +39,8 @@ export const OptionsStepForm = ({ currentTestItem, modalState, setModalState }) 
   const [tab, toggleTab, collapseTabsExceptCurr] = useAccordionTabsState({
     [SOURCE_DETAILS]: true,
   });
-  const { source, optionValue, loading, testItems, selectedItems } = modalState;
+  const [loading, setLoading] = useState(false);
+  const { source, optionValue, testItems, selectedItems } = modalState;
   useEffect(() => {
     const fetchLogs = (searchMode) => {
       const requestData = {
@@ -47,10 +49,10 @@ export const OptionsStepForm = ({ currentTestItem, modalState, setModalState }) 
       if (searchMode === SEARCH_MODES.WITH_FILTER) {
         requestData.filterId = activeFilter.id;
       }
-      setModalState({
-        loading: true,
+      setLoading(true);
+      const currentItemLogRequest = fetch(URLS.logItems(activeProject, currentTestItem.id, ERROR), {
+        params: { 'filter.in.status': [FAILED, SKIPPED].join(',') },
       });
-      const currentItemLogRequest = fetch(URLS.logItems(activeProject, currentTestItem.id, ERROR));
       const similarItemsRequest =
         searchMode &&
         fetch(URLS.logSearch(activeProject, currentTestItem.id), {
@@ -64,30 +66,19 @@ export const OptionsStepForm = ({ currentTestItem, modalState, setModalState }) 
         .then((responses) => {
           const [currentItemRes, similarItemsRes] = responses;
           const currentItemLogs = currentItemRes.content;
-          const similarItems = [];
-          if ([SEARCH_MODES.LAST_TEN_LAUNCHES, SEARCH_MODES.WITH_FILTER].includes(searchMode)) {
-            const launches = new Set();
-            for (let i = 0; i < similarItemsRes.length; i += 1) {
-              launches.add(similarItemsRes[i].launchId);
-              similarItems.push(similarItemsRes[i]);
-              if (launches.size === 10) {
-                break;
-              }
-            }
-          }
-          const items = [{ ...currentTestItem, logs: currentItemLogs }, ...similarItems];
+          const items = [{ ...currentTestItem, logs: currentItemLogs }, ...(similarItemsRes || [])];
           setModalState({
-            loading: false,
             testItems: items,
             selectedItems: items,
           });
+          setLoading(false);
         })
         .catch(({ message }) => {
           setModalState({
-            loading: false,
             testItems: [],
             selectedItems: [],
           });
+          setLoading(false);
           dispatch(
             showNotification({
               message,
