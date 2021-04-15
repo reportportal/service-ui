@@ -20,7 +20,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
-import { reduxForm } from 'redux-form';
+import { formValueSelector, reduxForm } from 'redux-form';
 import moment from 'moment';
 import { URLS } from 'common/urls';
 import { fetch, secondsToDays } from 'common/utils';
@@ -42,7 +42,6 @@ import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/
 import { projectIdSelector } from 'controllers/pages';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { langSelector } from 'controllers/lang';
-import { getGeneralFormValuesSelector } from 'controllers/form';
 import styles from './generalTab.scss';
 import { Messages } from './generalTabMessages';
 
@@ -50,6 +49,7 @@ const cx = classNames.bind(styles);
 
 const hoursToSeconds = (hours) => moment.duration(hours, 'hours').asSeconds();
 const daysToSeconds = (days) => moment.duration(days, 'days').asSeconds();
+const selector = formValueSelector('generalForm');
 
 @reduxForm({
   form: 'generalForm',
@@ -61,7 +61,7 @@ const daysToSeconds = (days) => moment.duration(days, 'days').asSeconds();
     accountRole: userAccountRoleSelector(state),
     userRole: activeProjectRoleSelector(state),
     lang: langSelector(state),
-    formValues: getGeneralFormValuesSelector(state),
+    formValues: selector(state, 'keepLaunches', 'keepLogs', 'keepScreenshots'),
   }),
   {
     showNotification,
@@ -163,7 +163,7 @@ export class GeneralTab extends Component {
     return retention === null || retention > value || retention === 0 ? value : retention;
   };
 
-  getRetentionOptions = (newOptions) => {
+  getRetentionOptions = (newOptions = this.retentionOptions) => {
     const { retention, lang } = this.props;
 
     if (!retention || retention === 0) {
@@ -187,56 +187,82 @@ export class GeneralTab extends Component {
     return { label: secondsToDays(value, this.props.lang), value };
   };
 
-  formatRetention = this.createValueFormatter(this.getRetentionOptions(this.retentionOptions));
+  formatRetention = this.createValueFormatter(this.getRetentionOptions());
 
-  getLaunchesOptions = (formValues) => {
+  getLaunchesOptions = () => {
+    const { formValues } = this.props;
     if (!formValues) {
       return [];
     }
+    const arrValues = Object.entries(formValues).map((elem) => {
+      const [key, value] = elem;
+      return value === 0 ? [key, Infinity] : elem;
+    });
+    const mapValues = new Map(arrValues);
+    const inputValues = Object.fromEntries(mapValues);
     const newOptions = this.retentionOptions.map((elem) => {
       const disabled =
         elem.value !== 0 &&
-        (elem.value < formValues.keepLogs || elem.value < formValues.keepScreenshots);
+        (elem.value < inputValues.keepLogs || elem.value < inputValues.keepScreenshots);
       return { ...elem, disabled };
     });
-    this.formatRetention = this.createValueFormatter(this.getRetentionOptions(newOptions));
-    return this.getRetentionOptions(newOptions);
+    const options = this.getRetentionOptions(newOptions);
+    return options;
   };
 
-  getLogOptions = (formValues) => {
+  getLogOptions = () => {
+    const { formValues } = this.props;
     if (!formValues) {
       return [];
     }
+    const arrValues = Object.entries(formValues).map((elem) => {
+      const [key, value] = elem;
+      return value === 0 ? [key, Infinity] : elem;
+    });
+    const mapValues = new Map(arrValues);
+    const inputValues = Object.fromEntries(mapValues);
     const newOptions = this.retentionOptions.map((elem) => {
-      const disabled =
+      const condition =
         elem.value === 0
-          ? elem.value !== formValues.keepLaunches
-          : elem.value > formValues.keepLaunches || elem.value < formValues.keepScreenshots;
+          ? elem.value !== inputValues.keepLaunches
+          : elem.value > inputValues.keepLaunches || elem.value < inputValues.keepScreenshots;
+      const disabled = inputValues.keepLaunches === Infinity ? false : condition;
       return { ...elem, disabled };
     });
-    this.formatRetention = this.createValueFormatter(this.getRetentionOptions(newOptions));
-    return this.getRetentionOptions(newOptions);
+    const options = this.getRetentionOptions(newOptions);
+    return options;
   };
 
-  getScreenshotsOptions = (formValues) => {
+  getScreenshotsOptions = () => {
+    const { formValues } = this.props;
     if (!formValues) {
       return [];
     }
+    const arrValues = Object.entries(formValues).map((elem) => {
+      const [key, value] = elem;
+      return value === 0 ? [key, Infinity] : elem;
+    });
+    const mapValues = new Map(arrValues);
+    const inputValues = Object.fromEntries(mapValues);
     const newOptions = this.retentionOptions.map((elem) => {
-      const disabled =
+      const condition =
         elem.value === 0
-          ? elem.value !== formValues.keepLaunches && elem.value !== formValues.keepLogs
-          : elem.value > formValues.keepLaunches || elem.value > formValues.keepLogs;
+          ? elem.value !== inputValues.keepLaunches && elem.value !== inputValues.keepLogs
+          : elem.value > inputValues.keepLaunches || elem.value > inputValues.keepLogs;
+      const disabled =
+        inputValues.keepLaunches === Infinity && inputValues.keepLogs === Infinity
+          ? false
+          : condition;
       return { ...elem, disabled };
     });
-    this.formatRetention = this.createValueFormatter(this.getRetentionOptions(newOptions));
-    return this.getRetentionOptions(newOptions);
+    const options = this.getRetentionOptions(newOptions);
+    return options;
   };
 
   formatInterruptJobTimes = this.createValueFormatter(this.interruptJobTime);
 
   render() {
-    const { intl, accountRole, userRole, tracking, formValues } = this.props;
+    const { intl, accountRole, userRole, tracking } = this.props;
     return (
       <div className={cx('general-tab')}>
         <form onSubmit={this.props.handleSubmit(this.onFormSubmit)}>
@@ -271,7 +297,7 @@ export class GeneralTab extends Component {
             disabled={!canUpdateSettings(accountRole, userRole)}
             format={this.formatRetention}
           >
-            <InputDropdown options={this.getLaunchesOptions(formValues)} mobileDisabled />
+            <InputDropdown options={this.getLaunchesOptions()} mobileDisabled />
           </FormField>
           <FormField
             name="keepLogs"
@@ -284,7 +310,7 @@ export class GeneralTab extends Component {
             disabled={!canUpdateSettings(accountRole, userRole)}
             format={this.formatRetention}
           >
-            <InputDropdown options={this.getLogOptions(formValues)} mobileDisabled />
+            <InputDropdown options={this.getLogOptions()} mobileDisabled />
           </FormField>
           <FormField
             name="keepScreenshots"
@@ -297,7 +323,7 @@ export class GeneralTab extends Component {
             disabled={!canUpdateSettings(accountRole, userRole)}
             format={this.formatRetention}
           >
-            <InputDropdown options={this.getScreenshotsOptions(formValues)} mobileDisabled />
+            <InputDropdown options={this.getScreenshotsOptions()} mobileDisabled />
           </FormField>
           <FormField withoutProvider fieldWrapperClassName={cx('button-container')}>
             <div className={cx('submit-button')}>
