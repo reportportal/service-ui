@@ -435,7 +435,7 @@ export const logPageOffsetSelector = createSelector(
     const parentFromBreadcrumbs = breadcrumbs.find((item) => item.listView);
     if (parentFromBreadcrumbs) {
       const { id } = parentFromBreadcrumbs;
-      offset = [...testItems].reverse().indexOf(id);
+      offset = [...testItems].reverse().indexOf(String(id));
     }
     return offset;
   },
