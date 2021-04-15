@@ -126,6 +126,8 @@
 .design-mode-dark.row {
   color: $COLOR--dark-gray;
   border: none;
+  word-break: break-word;
+  white-space: pre-wrap;
 }
 .design-mode-dark.accordion-block {
   display: flex;

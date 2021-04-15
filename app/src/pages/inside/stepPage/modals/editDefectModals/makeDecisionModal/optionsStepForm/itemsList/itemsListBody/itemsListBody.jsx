@@ -20,6 +20,8 @@ import { ItemHeader } from 'pages/inside/logsPage/defectEditor/itemHeader';
 import { StackTraceMessageBlock } from 'pages/inside/common/stackTraceMessageBlock';
 import classNames from 'classnames/bind';
 import { uniqueId } from 'common/utils';
+import { ExecutionInfo } from 'pages/inside/logsPage/defectEditor/executionInfo';
+import { ALL_LOADED_TI_FROM_HISTORY_LINE, ERROR_LOGS_SIZE } from '../../../../constants';
 import styles from './itemsListBody.scss';
 
 const cx = classNames.bind(styles);
@@ -62,7 +64,9 @@ const SimilarItemsList = ({ testItems, selectedItems, selectItem, showErrorLogs 
                 preselected={i === 0}
               />
               {showErrorLogs &&
-                item.logs.slice(0, 5).map((log) => <Log log={log} key={uniqueId()} />)}
+                item.logs
+                  .slice(0, ERROR_LOGS_SIZE)
+                  .map((log) => <Log log={log} key={uniqueId()} />)}
             </div>
           );
         })}
@@ -76,7 +80,33 @@ SimilarItemsList.propTypes = {
   showErrorLogs: PropTypes.bool.isRequired,
 };
 
-export const ItemsListBody = ({ testItems, selectedItems, setModalState, showErrorLogs }) => {
+const HistoryLineItemsList = ({ testItems, selectedItems, selectItem }) => {
+  return (
+    testItems.length > 0 &&
+    testItems.map((item, i) => (
+      <ExecutionInfo
+        item={item}
+        selectItem={i !== 0 ? selectItem : undefined}
+        isSelected={!!selectedItems.find((selectedItem) => selectedItem.id === item.id)}
+        preselected={i === 0}
+        key={item.id}
+      />
+    ))
+  );
+};
+HistoryLineItemsList.propTypes = {
+  testItems: PropTypes.array.isRequired,
+  selectedItems: PropTypes.array.isRequired,
+  selectItem: PropTypes.func.isRequired,
+};
+
+export const ItemsListBody = ({
+  testItems,
+  selectedItems,
+  setModalState,
+  showErrorLogs,
+  optionValue,
+}) => {
   const selectItem = (id) => {
     setModalState({
       selectedItems: selectedItems.find((item) => item.itemId === id)
@@ -87,12 +117,20 @@ export const ItemsListBody = ({ testItems, selectedItems, setModalState, showErr
 
   return (
     <div className={cx('items-list')}>
-      <SimilarItemsList
-        testItems={testItems}
-        selectedItems={selectedItems}
-        selectItem={selectItem}
-        showErrorLogs={showErrorLogs}
-      />
+      {optionValue === ALL_LOADED_TI_FROM_HISTORY_LINE ? (
+        <HistoryLineItemsList
+          testItems={testItems}
+          selectedItems={selectedItems}
+          selectItem={selectItem}
+        />
+      ) : (
+        <SimilarItemsList
+          testItems={testItems}
+          selectedItems={selectedItems}
+          selectItem={selectItem}
+          showErrorLogs={showErrorLogs}
+        />
+      )}
     </div>
   );
 };
@@ -101,10 +139,12 @@ ItemsListBody.propTypes = {
   selectedItems: PropTypes.array,
   setModalState: PropTypes.func,
   showErrorLogs: PropTypes.bool,
+  optionValue: PropTypes.string,
 };
 ItemsListBody.defaultProps = {
   testItems: [],
   selectedItems: [],
   setModalState: () => {},
   showErrorLogs: false,
+  optionValue: '',
 };

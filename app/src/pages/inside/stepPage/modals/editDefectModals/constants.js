@@ -36,3 +36,5 @@ export const CURRENT_EXECUTION_ONLY = 'currentExecutionOnly';
 export const SIMILAR_TI_CURRENT_LAUNCH = 'similarTICurrentLaunch';
 export const LAST_TEN_LAUNCHES = 'lastTenLaunches';
 export const WITH_FILTER = 'withFilter';
+export const ALL_LOADED_TI_FROM_HISTORY_LINE = 'allLoadedTIFromHistoryLine';
+export const ERROR_LOGS_SIZE = 5;

@@ -24,7 +24,7 @@ import { HistoryLineItemContent } from '../../historyLine/historyLineItem';
 
 const cx = classNames.bind(styles);
 
-export const ExecutionInfo = ({ className, item, selectItem, selectedItem, preselected }) => {
+export const ExecutionInfo = ({ className, item, selectItem, isSelected, preselected }) => {
   const defectTypes = useSelector(defectTypesSelector);
 
   return (
@@ -35,7 +35,7 @@ export const ExecutionInfo = ({ className, item, selectItem, selectedItem, prese
       <ItemHeader
         item={item}
         selectItem={selectItem}
-        isSelected={selectedItem === item.id}
+        isSelected={isSelected}
         preselected={preselected}
       />
     </div>
@@ -47,7 +47,6 @@ ExecutionInfo.propTypes = {
   item: PropTypes.object.isRequired,
   isSelected: PropTypes.bool,
   selectItem: PropTypes.func,
-  selectedItem: PropTypes.number,
   preselected: PropTypes.bool,
 };
 
@@ -56,7 +55,6 @@ ExecutionInfo.defaultProps = {
   className: '',
   item: {},
   isSelected: false,
-  selectedItem: null,
   selectItem: () => {},
   preselected: false,
 };

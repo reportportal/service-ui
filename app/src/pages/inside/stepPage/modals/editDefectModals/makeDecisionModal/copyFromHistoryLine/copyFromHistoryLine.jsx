@@ -61,6 +61,7 @@ export const CopyFromHistoryLine = ({
             item={item}
             selectedItem={modalState.source.id}
             selectItem={selectHistoryLineItem}
+            isSelected={modalState.source.id === item.id}
           />
         </div>
       ))}

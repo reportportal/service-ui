@@ -345,9 +345,11 @@ const MakeDecision = ({ data }) => {
           color="''"
           appearance="topaz"
         >
-          {formatMessage(messages.applyToItems, {
-            itemsCount: modalState.selectedItems.length,
-          })}
+          {modalState.selectedItems.length > 1
+            ? formatMessage(messages.applyToItems, {
+                itemsCount: modalState.selectedItems.length,
+              })
+            : formatMessage(messages.applyToTheItem)}
         </GhostButton>
       </>
     );

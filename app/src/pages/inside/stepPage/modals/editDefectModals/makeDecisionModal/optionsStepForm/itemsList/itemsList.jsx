@@ -18,6 +18,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { CURRENT_EXECUTION_ONLY } from 'pages/inside/stepPage/modals/editDefectModals/constants';
 import { ItemsListHeader } from './itemsListHeader';
 import { ItemsListBody } from './itemsListBody';
 
@@ -32,20 +33,24 @@ export const ItemsList = ({ testItems, selectedItems, setModalState, loading, op
   ) : (
     testItems.length > 0 && (
       <>
-        <ItemsListHeader
-          testItems={testItems}
-          setModalState={setModalState}
-          selectedItems={selectedItems}
-          selectedItemsLength={selectedItems.length}
-          showErrorLogs={showErrorLogs}
-          onShowErrorLogsChange={setShowErrorLogs}
-        />
+        {optionValue !== CURRENT_EXECUTION_ONLY && (
+          <ItemsListHeader
+            testItems={testItems}
+            setModalState={setModalState}
+            selectedItems={selectedItems}
+            selectedItemsLength={selectedItems.length}
+            showErrorLogs={showErrorLogs}
+            onShowErrorLogsChange={setShowErrorLogs}
+            optionValue={optionValue}
+          />
+        )}
         <ScrollWrapper autoHeight autoHeightMax={515} hideTracksWhenNotNeeded>
           <ItemsListBody
             testItems={testItems}
             selectedItems={selectedItems}
             setModalState={setModalState}
-            showErrorLogs={showErrorLogs}
+            showErrorLogs={optionValue === CURRENT_EXECUTION_ONLY ? true : showErrorLogs}
+            optionValue={optionValue}
           />
         </ScrollWrapper>
       </>
