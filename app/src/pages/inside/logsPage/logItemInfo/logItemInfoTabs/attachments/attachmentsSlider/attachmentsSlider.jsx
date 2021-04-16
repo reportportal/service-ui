@@ -146,6 +146,7 @@ class AttachmentsSlider extends Component {
                   }
                   alt={attachment.alt}
                   isStatic={!attachment.isImage}
+                  preloaderColor="charcoal"
                 />
               </div>
               {withActions && (

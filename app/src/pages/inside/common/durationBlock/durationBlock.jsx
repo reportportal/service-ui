@@ -21,7 +21,7 @@ import { approximateTimeFormat, dateFormat, getDuration } from 'common/utils';
 import { defineMessages, injectIntl } from 'react-intl';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import InProgressGif from 'common/img/item-in-progress.gif';
+import { DottedPreloader } from 'components/preloaders/dottedPreloader';
 import ClockIcon from './img/clock-icon-inline.svg';
 
 import styles from './durationBlock.scss';
@@ -170,7 +170,7 @@ export class DurationBlock extends Component {
     return (
       <Fragment>
         <span className={cx('in-progress')}>
-          <img src={InProgressGif} alt="In progress" />
+          <DottedPreloader color="charcoal" />
         </span>
 
         {timing.approxTime > 0 && !approxTimeIsOver && (

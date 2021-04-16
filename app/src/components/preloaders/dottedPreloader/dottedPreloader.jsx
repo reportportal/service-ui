@@ -14,16 +14,23 @@
  * limitations under the License.
  */
 
+import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './dottedPreloader.scss';
 
 const cx = classNames.bind(styles);
 
-export const DottedPreloader = () => (
+export const DottedPreloader = ({ color }) => (
   <div className={cx('dotted-preloader')}>
-    <div className={cx('preloader-part')} />
-    <div className={cx('preloader-part')} />
-    <div className={cx('preloader-part')} />
-    <div className={cx('preloader-part')} />
+    <div className={cx('preloader-part', { [`color-${color}`]: color })} />
+    <div className={cx('preloader-part', { [`color-${color}`]: color })} />
+    <div className={cx('preloader-part', { [`color-${color}`]: color })} />
+    <div className={cx('preloader-part', { [`color-${color}`]: color })} />
   </div>
 );
+DottedPreloader.propTypes = {
+  color: PropTypes.string,
+};
+DottedPreloader.defaultProps = {
+  color: '',
+};
