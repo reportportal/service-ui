@@ -96,23 +96,11 @@
   border: solid 1px $COLOR--dirty-black;
   background-color: $COLOR--black-3;
   color: $COLOR--dirty-gray;
+  font-family: $FONT-REGULAR;
 }
 
 .aa-label {
-  svg {
-    fill: $COLOR--black-3;
-    rect {
-      stroke: $COLOR--dirty-black;
-    }
-    g path,
-    g g polygon {
-      fill: $COLOR--dirty-gray;
-    }
-    g g path {
-      stroke: $COLOR--dirty-gray;
-      fill: none;
-    }
-  }
+  background-color: $COLOR--black-3;
 }
 
 .bts-row {
