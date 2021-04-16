@@ -1,0 +1,150 @@
+/*!
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$LEVEL_OFFSET_STEP: 20px;
+
+@mixin levels($noMobile) {
+  @for $level from 1 to 20 {
+    &.level-#{$level} {
+      border-left-width: $level * $LEVEL_OFFSET_STEP;
+      @if ($noMobile) {
+        @media (max-width: $SCREEN_SM_MAX) {
+          border-left-width: 0;
+        }
+      }
+    }
+  }
+}
+
+.header-container {
+  display: table-row-group;
+}
+
+.row {
+  min-height: 45px;
+  position: relative;
+  display: table-row;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 13px;
+  border-left-color: $COLOR--gray-91;
+  border-left-style: solid;
+  border-left-width: 0;
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    @include levels(false);
+  }
+  background-color: $COLOR--white-two;
+  &:hover {
+    background-color: $COLOR--tealish-hover;
+  }
+  transition: background-color 0.2s ease 0s;
+}
+
+.row-cell {
+  display: table-cell;
+  vertical-align: middle;
+  height: 45px;
+  border-bottom: 4px solid $COLOR--gray-91;
+  border-top: 4px solid $COLOR--gray-91;
+  @media (max-width: $SCREEN_SM_MAX) {
+    padding: 0 0 5px 40px;
+  }
+}
+
+.first-col-wrapper {
+  border-left-color: $COLOR--gray-91;
+  border-left-style: solid;
+  border-left-width: 0;
+  width: 78%;
+  @include levels(true);
+}
+
+.step-name {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  cursor: pointer;
+  padding: 10px;
+  @media (max-width: $SCREEN_SM_MAX) {
+    padding: 10px 10px 5px 10px;
+  }
+}
+
+.step-name-static {
+  cursor: default;
+}
+
+.arrow-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease 0s;
+  fill: $COLOR--topaz;
+  svg {
+    min-width: 24px;
+  }
+  &.expanded {
+    transform: rotate(90deg);
+  }
+}
+
+.status-container {
+  min-width: 120px;
+}
+
+.statistics {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10px;
+  @media (max-width: $SCREEN_SM_MAX) {
+    padding: 0;
+  }
+}
+
+.attachments {
+  display: flex;
+  padding-right: 15px;
+  align-items: center;
+  width: 50px;
+  font-family: $FONT-REGULAR;
+  font-size: 12px;
+  color: $COLOR--gray-60;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    font-size: 15px;
+  }
+}
+
+.attachment-icon {
+  padding-right: 5px;
+  svg {
+    width: 15px;
+    height: 15px;
+    fill: $COLOR--gray-60;
+    @media (max-width: $SCREEN_SM_MAX) {
+      height: 18px;
+      width: 18px;
+    }
+  }
+}
+
+.header-container + .header-container .row-cell {
+  border-top-width: 0px;
+}

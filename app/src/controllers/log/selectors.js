@@ -67,6 +67,7 @@ export const logStackTraceLoadingSelector = (state) => logStackTraceSelector(sta
 export const pageLoadingSelector = (state) => logSelector(state).pageLoading;
 export const includeAllLaunchesSelector = (state) => logSelector(state).includeAllLaunches;
 export const shouldShowLoadMoreSelector = (state) => logSelector(state).shouldShowLoadMore;
+export const activeTabIdSelector = (state) => logSelector(state).activeTabId;
 
 export const querySelector = createQueryParametersSelector({
   defaultSorting: DEFAULT_SORTING,

@@ -1,0 +1,199 @@
+/*!
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.logs-grid {
+  position: relative;
+}
+
+.message-column {
+  position: relative;
+
+  &.console {
+    &:before {
+      left: -30px;
+    }
+  }
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 72%;
+    &.console {
+      width: 100%;
+      &:before {
+        left: -25px;
+      }
+    }
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    position: static;
+    padding-bottom: 0;
+    &.console {
+      &:before {
+        left: 0;
+      }
+    }
+  }
+  @media (min-width: $SCREEN_XS_MAX) {
+    &.console {
+      padding: 5px 0;
+    }
+  }
+
+  &:before {
+    content: '';
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    display: block;
+    width: 3px;
+    border-top: 1px solid $COLOR--gray-91;
+    border-left: 1px solid $COLOR--white-two;
+  }
+  &.level-FATAL {
+    padding-bottom: 18px;
+    &:before {
+      background-color: $COLOR--fatal;
+    }
+  }
+  &.level-ERROR {
+    padding-bottom: 18px;
+    &:before {
+      background-color: $COLOR--orange-red;
+    }
+  }
+  &.level-WARN {
+    &:before {
+      background-color: $COLOR--to-investigate;
+    }
+  }
+  &.level-TRACE {
+    &:before {
+      background-color: $COLOR--gray-91;
+    }
+  }
+  &.level-INFO {
+    &:before {
+      background-color: $COLOR--topaz;
+    }
+  }
+  &.level-DEBUG {
+    &:before {
+      background-color: $COLOR--gray-60;
+    }
+  }
+}
+
+.mobile {
+  display: none;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: block;
+  }
+}
+
+.no-header {
+  display: none;
+}
+
+.attachment-column {
+  width: 8%;
+
+  &.console {
+    width: 30px;
+    padding: 5px 8px;
+  }
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 13%;
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+
+    &.mobile {
+      display: block;
+      width: 25%;
+    }
+  }
+}
+
+.time-column {
+  width: 1%;
+  font-family: $FONT-MONOSPACE;
+  font-size: 12px;
+  white-space: nowrap;
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 75%;
+    font-family: $FONT-REGULAR;
+    font-size: 14px;
+    line-height: 31px;
+    word-spacing: 12px;
+  }
+}
+
+.console-view-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+
+.time-header {
+  position: relative;
+  padding-right: 98px;
+  color: $COLOR--gray-47;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 12px;
+  text-transform: uppercase;
+
+  &.sorting-active {
+    .arrow {
+      display: inline-block;
+    }
+  }
+
+  &.sorting-asc {
+    .arrow {
+      svg {
+        transform: translateX(3px) rotate(180deg);
+      }
+    }
+  }
+
+  &:hover {
+    cursor: pointer;
+
+    .arrow {
+      display: inline-block;
+    }
+  }
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    padding-right: 95px;
+  }
+}
+
+.arrow {
+  display: none;
+  position: absolute;
+  width: 7px;
+  top: -2px;
+
+  svg {
+    fill: $COLOR--gray-47;
+    transform: translateX(3px);
+  }
+}

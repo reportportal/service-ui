@@ -19,9 +19,8 @@ import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { connectRouter } from 'common/utils';
-import { PageLayout, PageSection } from 'layouts/pageLayout';
 import {
-  refreshLogPageData,
+  logItemsSelector,
   logPaginationSelector,
   loadingSelector,
   pageLoadingSelector,
@@ -30,35 +29,32 @@ import {
   WITH_ATTACHMENTS_FILTER_KEY,
   HIDE_PASSED_LOGS,
   HIDE_EMPTY_STEPS,
+  getLogLevel,
   setLogLevel,
   DETAILED_LOG_VIEW,
   logViewModeSelector,
   LOG_STATUS_FILTER_KEY,
+  isLogPageWithNestedSteps,
 } from 'controllers/log';
-import { parentItemSelector } from 'controllers/testItem';
 import { withFilter } from 'controllers/filter';
-import { debugModeSelector } from 'controllers/launch';
-import { withPagination, PAGE_KEY } from 'controllers/pagination';
+import { withPagination, PAGE_KEY, DEFAULT_PAGINATION, SIZE_KEY } from 'controllers/pagination';
 import { withSortingURL, SORTING_ASC } from 'controllers/sorting';
 import { userIdSelector } from 'controllers/user';
-import { LOG_PAGE, LOG_PAGE_EVENTS } from 'components/main/analytics/events';
-import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { TestItemLogsToolbar } from './testItemLogsToolbar';
-import { LogToolbar } from './logToolbar';
-import { HistoryLine } from './historyLine';
-import { LogItemInfo } from './logItemInfo';
+import { PaginationToolbar } from 'components/main/paginationToolbar';
+import { LogsGrid } from './logsGrid';
+import { LogsGridToolbar } from './logsGridToolbar';
+import { SauceLabsSection } from '../sauceLabsSection';
+
 @connect(
   (state) => ({
+    logItems: logItemsSelector(state),
     loading: loadingSelector(state),
     pageLoading: pageLoadingSelector(state),
     userId: userIdSelector(state),
-    debugMode: debugModeSelector(state),
     logViewMode: logViewModeSelector(state),
-    parentItem: parentItemSelector(state),
+    isNestedStepView: isLogPageWithNestedSteps(state),
   }),
-  {
-    refresh: refreshLogPageData,
-  },
+  null,
 )
 @withSortingURL({
   defaultFields: ['logTime'],
@@ -101,110 +97,152 @@ import { LogItemInfo } from './logItemInfo';
   },
   { namespace: NAMESPACE },
 )
-@track({ page: LOG_PAGE })
-export class LogsPage extends Component {
+@track()
+export class LogsTabContent extends Component {
   static propTypes = {
-    refresh: PropTypes.func.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
     userId: PropTypes.string.isRequired,
-    debugMode: PropTypes.bool.isRequired,
+    logItems: PropTypes.array,
+    activePage: PropTypes.number,
+    itemCount: PropTypes.number,
+    pageCount: PropTypes.number,
+    pageSize: PropTypes.number,
     onChangePage: PropTypes.func,
+    onChangePageSize: PropTypes.func,
     loading: PropTypes.bool,
     pageLoading: PropTypes.bool,
+    filter: PropTypes.string,
     logLevelId: PropTypes.string,
+    onFilterChange: PropTypes.func,
+    sortingColumn: PropTypes.string,
+    sortingDirection: PropTypes.string,
+    onChangeSorting: PropTypes.func,
     onChangeLogLevel: PropTypes.func,
     onChangeWithAttachments: PropTypes.func,
     onChangeHideEmptySteps: PropTypes.func,
     onChangeHidePassedLogs: PropTypes.func,
     logViewMode: PropTypes.string,
-    parentItem: PropTypes.object,
     logStatus: PropTypes.string,
     onChangeLogStatusFilter: PropTypes.func,
+    isNestedStepView: PropTypes.bool,
     withAttachments: PropTypes.string,
     hideEmptySteps: PropTypes.string,
     hidePassedLogs: PropTypes.string,
+    isSauceLabsIntegrationView: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
+    logItems: [],
+    activePage: DEFAULT_PAGINATION[PAGE_KEY],
+    itemCount: 0,
+    pageCount: 0,
+    pageSize: DEFAULT_PAGINATION[SIZE_KEY],
     onChangePage: () => {},
+    onChangePageSize: () => {},
     loading: false,
     pageLoading: false,
+    filter: '',
     logLevelId: null,
+    onFilterChange: () => {},
+    sortingColumn: '',
+    sortingDirection: '',
+    onChangeSorting: () => {},
     onChangeLogLevel: () => {},
     onChangeWithAttachments: () => {},
     onChangeHideEmptySteps: () => {},
     onChangeHidePassedLogs: () => {},
     logViewMode: DETAILED_LOG_VIEW,
-    parentItem: {},
+    logStatus: null,
     onChangeLogStatusFilter: () => {},
+    isNestedStepView: false,
     withAttachments: undefined,
     hideEmptySteps: undefined,
     hidePassedLogs: undefined,
   };
 
-  state = {
-    isSauceLabsIntegrationView: false,
-  };
-
-  toggleSauceLabsIntegrationView = () =>
-    this.setState({
-      isSauceLabsIntegrationView: !this.state.isSauceLabsIntegrationView,
-    });
-
-  handleRefresh = () => {
-    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.REFRESH_BTN);
-    if (this.state.isSauceLabsIntegrationView) {
-      this.toggleSauceLabsIntegrationView();
-    }
-    this.props.refresh();
-  };
-
   render() {
     const {
-      refresh,
-      debugMode,
+      logItems,
+      userId,
+      activePage,
+      itemCount,
+      pageCount,
+      pageSize,
       onChangePage,
+      onChangePageSize,
       loading,
-      pageLoading,
+      filter,
+      logLevelId,
+      onFilterChange,
+      sortingColumn,
+      sortingDirection,
+      onChangeSorting,
       onChangeLogLevel,
+      onChangeWithAttachments,
+      onChangeHideEmptySteps,
+      onChangeHidePassedLogs,
       logViewMode,
-      parentItem,
+      logStatus,
+      onChangeLogStatusFilter,
+      isNestedStepView,
+      withAttachments,
+      hideEmptySteps,
+      hidePassedLogs,
+      isSauceLabsIntegrationView,
     } = this.props;
-
     return (
-      <PageLayout>
-        <PageSection>
-          {pageLoading && <SpinningPreloader />}
-          {!pageLoading && (
-            <Fragment>
-              <LogToolbar
-                onRefresh={this.handleRefresh}
-                logViewMode={logViewMode}
-                parentItem={parentItem}
-              />
-              {logViewMode === DETAILED_LOG_VIEW ? (
-                <Fragment>
-                  {!debugMode && <HistoryLine />}
-                  <LogItemInfo
-                    onChangeLogLevel={onChangeLogLevel}
-                    onChangePage={onChangePage}
-                    onToggleSauceLabsIntegrationView={this.toggleSauceLabsIntegrationView}
-                    isSauceLabsIntegrationView={this.state.isSauceLabsIntegrationView}
-                    fetchFunc={refresh}
-                    debugMode={debugMode}
-                    loading={loading}
-                  />
-                </Fragment>
-              ) : (
-                <TestItemLogsToolbar parentItem={parentItem} />
+      <>
+        {isSauceLabsIntegrationView ? (
+          <SauceLabsSection />
+        ) : (
+          <Fragment>
+            <LogsGridToolbar
+              activePage={activePage}
+              pageCount={pageCount}
+              onChangePage={onChangePage}
+              logLevel={getLogLevel(userId, logLevelId)}
+              onChangeLogLevel={onChangeLogLevel}
+              withAttachments={Boolean(withAttachments)}
+              isEmptyStepsHidden={Boolean(hideEmptySteps)}
+              isPassedLogsHidden={Boolean(hidePassedLogs)}
+              onChangeWithAttachments={onChangeWithAttachments}
+              onHideEmptySteps={onChangeHideEmptySteps}
+              onHidePassedLogs={onChangeHidePassedLogs}
+              logPageMode={logViewMode}
+            >
+              {({ markdownMode, consoleView }) => (
+                <LogsGrid
+                  logItems={logItems}
+                  loading={loading}
+                  filter={filter}
+                  onFilterChange={onFilterChange}
+                  sortingColumn={sortingColumn}
+                  sortingDirection={sortingDirection}
+                  onChangeSorting={onChangeSorting}
+                  markdownMode={markdownMode}
+                  logStatus={logStatus}
+                  onChangeLogStatusFilter={onChangeLogStatusFilter}
+                  consoleView={consoleView}
+                  isNestedStepView={isNestedStepView}
+                />
               )}
-            </Fragment>
-          )}
-        </PageSection>
-      </PageLayout>
+            </LogsGridToolbar>
+            {!!pageCount && logItems && !!logItems.length && !loading && (
+              <PaginationToolbar
+                activePage={activePage}
+                itemCount={itemCount}
+                pageCount={pageCount}
+                pageSize={pageSize}
+                onChangePage={onChangePage}
+                onChangePageSize={onChangePageSize}
+              />
+            )}
+          </Fragment>
+        )}
+      </>
     );
   }
 }
