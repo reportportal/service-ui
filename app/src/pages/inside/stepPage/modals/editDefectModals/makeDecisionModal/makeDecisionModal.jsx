@@ -282,6 +282,7 @@ const MakeDecision = ({ data }) => {
       {
         id: MACHINE_LEARNING_SUGGESTIONS,
         shouldShow: !isBulkOperation,
+        disabled: true,
         isOpen: tabs[MACHINE_LEARNING_SUGGESTIONS],
         title: (
           <div title={formatMessage(messages.disabledTabTooltip)}>
@@ -293,6 +294,7 @@ const MakeDecision = ({ data }) => {
       {
         id: SELECT_DEFECT_MANUALLY,
         shouldShow: true,
+        disabled: false,
         isOpen: tabs[SELECT_DEFECT_MANUALLY],
         title: formatMessage(messages.selectDefectTypeManually),
         content: (
@@ -310,6 +312,7 @@ const MakeDecision = ({ data }) => {
       tabsData.splice(1, 0, {
         id: COPY_FROM_HISTORY_LINE,
         shouldShow: !isBulkOperation,
+        disabled: false,
         isOpen: tabs[COPY_FROM_HISTORY_LINE],
         title: formatMessage(messages.copyFromHistoryLine),
         content: (

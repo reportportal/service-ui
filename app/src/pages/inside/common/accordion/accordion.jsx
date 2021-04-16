@@ -31,7 +31,10 @@ export const Accordion = ({ tabs, headerClassNames, contentClassNames, toggleTab
             key={tab.id}
             tab={tab}
             onClick={() => toggleTab(tab.id)}
-            headerClassNames={tab.shouldShow ? headerClassNames : 'hidden'}
+            headerClassNames={cx(headerClassNames, {
+              hidden: !tab.shouldShow,
+              disabled: tab.disabled && tab.shouldShow,
+            })}
             contentClassNames={tab.shouldShow ? contentClassNames : 'hidden'}
           />
         ))}
