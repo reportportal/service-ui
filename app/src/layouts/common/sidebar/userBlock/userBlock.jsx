@@ -35,21 +35,24 @@ import styles from './userBlock.scss';
 
 const cx = classNames.bind(styles);
 
-const UserAvatar = ({ photoTimeStamp }) => (
+const UserAvatar = ({ photoTimeStamp, preloaderColor }) => (
   <div className={cx('avatar-wrapper')}>
     <Image
       className={cx('avatar')}
       src={URLS.dataPhoto(photoTimeStamp, true)}
       alt="avatar"
       fallback={DefaultUserImage}
+      preloaderColor={preloaderColor}
     />
   </div>
 );
 UserAvatar.propTypes = {
   photoTimeStamp: PropTypes.number,
+  preloaderColor: PropTypes.string,
 };
 UserAvatar.defaultProps = {
   photoTimeStamp: null,
+  preloaderColor: '',
 };
 
 const UserAvatarWithTooltip = withTooltip({
@@ -148,7 +151,7 @@ export class UserBlock extends Component {
         {this.state.menuOpened && (
           <div className={cx('menu')}>
             <div className={cx('user-wrapper')}>
-              <UserAvatar photoTimeStamp={this.props.photoTimeStamp} />
+              <UserAvatar photoTimeStamp={this.props.photoTimeStamp} preloaderColor="charcoal" />
               <div className={cx('details')}>{userDetails}</div>
             </div>
             <NavLink

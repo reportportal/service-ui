@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
@@ -23,7 +23,7 @@ import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
 import { getStorageItem, updateStorageItem } from 'common/utils';
 import { ERROR_CANCELED, fetch } from 'common/utils/fetch';
-import InProgressGif from 'common/img/item-in-progress.gif';
+import { DottedPreloader } from 'components/preloaders/dottedPreloader';
 
 import styles from './issueInfoTooltip.scss';
 
@@ -148,7 +148,7 @@ export class IssueInfoTooltip extends Component {
     if (loading) {
       return (
         <div className={cx('progressbar')}>
-          <img src={InProgressGif} alt="Loading" />
+          <DottedPreloader color="charcoal" />
         </div>
       );
     }
