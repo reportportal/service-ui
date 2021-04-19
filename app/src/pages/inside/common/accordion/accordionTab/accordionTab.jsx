@@ -22,27 +22,28 @@ import styles from './accordionTab.scss';
 const cx = classNames.bind(styles);
 
 export const AccordionTab = ({
-  tab: { title, content, isOpen },
+  tab: { title, content, isOpen, shouldShow, disabled },
   onClick,
-  headerClassNames,
-  contentClassNames,
 }) => (
   <>
-    <div className={cx('header', { open: isOpen }, headerClassNames)} onClick={content && onClick}>
+    <div
+      className={cx('header', {
+        open: isOpen,
+        hidden: !shouldShow,
+        disabled: disabled && shouldShow,
+      })}
+      onClick={content && onClick}
+    >
       {title}
     </div>
-    <div className={cx('content', { show: isOpen }, contentClassNames)}>{content}</div>
+    <div className={cx('content', { show: isOpen, hidden: !shouldShow })}>{content}</div>
   </>
 );
 AccordionTab.propTypes = {
   tab: PropTypes.object,
   onClick: PropTypes.func,
-  headerClassNames: PropTypes.string,
-  contentClassNames: PropTypes.string,
 };
 AccordionTab.defautProps = {
   tab: {},
   onClick: () => {},
-  headerClassNames: '',
-  contentClassNames: '',
 };
