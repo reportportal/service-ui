@@ -111,12 +111,13 @@ export const OptionsBlock = ({
       currentTestItem,
       ...historyItems
         .reduce((items, item) => {
+          if (!item.issue || item.id === currentTestItem.id) {
+            return items;
+          }
           const currentDefectType =
             (item.issue && TIDefectsGroup.find((type) => type.locator === item.issue.issueType)) ||
             {};
-          return currentDefectType.typeRef === TO_INVESTIGATE.toUpperCase() &&
-            item.issue &&
-            item.id !== currentTestItem.id
+          return currentDefectType.typeRef === TO_INVESTIGATE.toUpperCase()
             ? [...items, { ...item, itemId: item.id }]
             : items;
         }, [])

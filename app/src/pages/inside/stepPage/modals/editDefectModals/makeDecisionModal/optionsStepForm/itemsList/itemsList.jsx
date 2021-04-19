@@ -49,7 +49,7 @@ export const ItemsList = ({ testItems, selectedItems, setModalState, loading, op
             testItems={testItems}
             selectedItems={selectedItems}
             setModalState={setModalState}
-            showErrorLogs={optionValue === CURRENT_EXECUTION_ONLY ? true : showErrorLogs}
+            showErrorLogs={optionValue === CURRENT_EXECUTION_ONLY || showErrorLogs}
             optionValue={optionValue}
           />
         </ScrollWrapper>
