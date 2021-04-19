@@ -129,6 +129,10 @@ export const messages = defineMessages({
     id: 'MakeDecisionModal.applyToItems',
     defaultMessage: 'Apply to {itemsCount} Items',
   },
+  applyToTheItem: {
+    id: 'MakeDecisionModal.applyToTheItem',
+    defaultMessage: 'Apply to the Item',
+  },
   selectDefectTypeManually: {
     id: 'MakeDecisionModal.selectDefectTypeManually',
     defaultMessage: 'Select defect type manually',
@@ -214,5 +218,9 @@ export const messages = defineMessages({
   selectedItemCount: {
     id: 'MakeDecisionModal.selectedItemCount',
     defaultMessage: '{selected}/{total} items selected',
+  },
+  allLoadedTIFromHistoryLine: {
+    id: 'MakeDecisionModal.allLoadedTIFromHistoryLine',
+    defaultMessage: 'All loaded TI from the history line',
   },
 });

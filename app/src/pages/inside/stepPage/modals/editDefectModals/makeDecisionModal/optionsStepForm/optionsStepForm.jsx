@@ -19,17 +19,20 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { Accordion, useAccordionTabsState } from 'pages/inside/common/accordion';
 import { URLS } from 'common/urls';
-import { ERROR } from 'common/constants/logLevels';
 import { fetch } from 'common/utils';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { useDispatch, useSelector } from 'react-redux';
 import { activeProjectSelector } from 'controllers/user';
 import { activeFilterSelector } from 'controllers/filter';
-import { FAILED, SKIPPED } from 'common/constants/testStatuses';
 import { messages } from './../../messages';
 import { OptionsSection } from './optionsSection';
 import { SourceDetails } from './sourceDetails';
-import { SEARCH_MODES, SOURCE_DETAILS } from '../../constants';
+import {
+  ALL_LOADED_TI_FROM_HISTORY_LINE,
+  ERROR_LOGS_SIZE,
+  SEARCH_MODES,
+  SOURCE_DETAILS,
+} from '../../constants';
 
 export const OptionsStepForm = ({ currentTestItem, modalState, setModalState }) => {
   const { formatMessage } = useIntl();
@@ -50,9 +53,9 @@ export const OptionsStepForm = ({ currentTestItem, modalState, setModalState }) 
         requestData.filterId = activeFilter.id;
       }
       setLoading(true);
-      const currentItemLogRequest = fetch(URLS.logItems(activeProject, currentTestItem.id, ERROR), {
-        params: { 'filter.in.status': [FAILED, SKIPPED].join(',') },
-      });
+      const currentItemLogRequest = fetch(
+        URLS.logItemStackTrace(activeProject, currentTestItem.path, ERROR_LOGS_SIZE),
+      );
       const similarItemsRequest =
         searchMode &&
         fetch(URLS.logSearch(activeProject, currentTestItem.id), {
@@ -88,7 +91,7 @@ export const OptionsStepForm = ({ currentTestItem, modalState, setModalState }) 
         });
     };
 
-    fetchLogs(modalState.searchMode);
+    optionValue !== ALL_LOADED_TI_FROM_HISTORY_LINE && fetchLogs(modalState.searchMode);
   }, [optionValue]);
 
   const tabsData = [

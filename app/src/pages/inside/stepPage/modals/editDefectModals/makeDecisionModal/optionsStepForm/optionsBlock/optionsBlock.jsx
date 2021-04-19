@@ -23,7 +23,9 @@ import { TO_INVESTIGATE } from 'common/constants/defectTypes';
 import { useSelector } from 'react-redux';
 import { activeFilterSelector } from 'controllers/filter';
 import { defectTypesSelector } from 'controllers/project';
+import { historyItemsSelector } from 'controllers/log';
 import {
+  ALL_LOADED_TI_FROM_HISTORY_LINE,
   CURRENT_EXECUTION_ONLY,
   LAST_TEN_LAUNCHES,
   SEARCH_MODES,
@@ -45,6 +47,7 @@ export const OptionsBlock = ({
   const { formatMessage } = useIntl();
   const activeFilter = useSelector(activeFilterSelector);
   const defectTypes = useSelector(defectTypesSelector);
+  const historyItems = useSelector(historyItemsSelector);
   const TIDefectsGroup = defectTypes[TO_INVESTIGATE.toUpperCase()];
   const getOptions = () => {
     const currentItemFromTIGroup = TIDefectsGroup.find(
@@ -89,7 +92,43 @@ export const OptionsBlock = ({
         });
       options.push(...optionalOptions);
     }
+    historyItems.length > 0 &&
+      historyItems.some(
+        (item) =>
+          item.issue && TIDefectsGroup.find((type) => type.locator === item.issue.issueType),
+      ) &&
+      options.push({
+        ownValue: ALL_LOADED_TI_FROM_HISTORY_LINE,
+        label: {
+          id: ALL_LOADED_TI_FROM_HISTORY_LINE,
+          defaultMessage: formatMessage(messages.allLoadedTIFromHistoryLine),
+        },
+      });
     return options;
+  };
+  const setItemsFromHistoryLine = (value) => {
+    const preparedHistoryItems = [
+      currentTestItem,
+      ...historyItems
+        .reduce((items, item) => {
+          if (!item.issue || item.id === currentTestItem.id) {
+            return items;
+          }
+          const currentDefectType =
+            (item.issue && TIDefectsGroup.find((type) => type.locator === item.issue.issueType)) ||
+            {};
+          return currentDefectType.typeRef === TO_INVESTIGATE.toUpperCase()
+            ? [...items, { ...item, itemId: item.id }]
+            : items;
+        }, [])
+        .reverse(),
+    ];
+    setModalState({
+      optionValue: value,
+      searchMode: '',
+      testItems: preparedHistoryItems,
+      selectedItems: preparedHistoryItems,
+    });
   };
   const onChangeOption = (value) => {
     let searchMode;
@@ -106,12 +145,15 @@ export const OptionsBlock = ({
       default:
         searchMode = '';
     }
-    setModalState({
-      optionValue: value,
-      searchMode,
-      testItems: [],
-      selectedItems: [],
-    });
+    value === ALL_LOADED_TI_FROM_HISTORY_LINE
+      ? setItemsFromHistoryLine(value)
+      : setModalState({
+          optionValue: value,
+          searchMode,
+          testItems: [],
+          selectedItems: [],
+        });
+
     collapseTabsExceptCurr();
   };
 

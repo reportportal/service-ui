@@ -21,6 +21,7 @@ import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import classNames from 'classnames/bind';
 import { messages } from './../../../../messages';
+import { ALL_LOADED_TI_FROM_HISTORY_LINE } from '../../../../constants';
 import styles from './itemsListHeader.scss';
 
 const cx = classNames.bind(styles);
@@ -32,6 +33,7 @@ export const ItemsListHeader = ({
   selectedItems,
   showErrorLogs,
   onShowErrorLogsChange,
+  optionValue,
 }) => {
   const { formatMessage } = useIntl();
   const [isAllSelected, setIsAllSelected] = useState(selectedItems.length === testItems.length);
@@ -58,17 +60,19 @@ export const ItemsListHeader = ({
           })}
         </span>
       </InputCheckbox>
-      <InputSwitcher
-        className={cx('switcher')}
-        childrenClassName={cx('switcher-children')}
-        value={showErrorLogs}
-        onChange={onShowErrorLogsChange}
-        childrenFirst
-        size="medium"
-        mode="dark"
-      >
-        {formatMessage(messages.showErrorLogs)}
-      </InputSwitcher>
+      {optionValue !== ALL_LOADED_TI_FROM_HISTORY_LINE && (
+        <InputSwitcher
+          className={cx('switcher')}
+          childrenClassName={cx('switcher-children')}
+          value={showErrorLogs}
+          onChange={onShowErrorLogsChange}
+          childrenFirst
+          size="medium"
+          mode="dark"
+        >
+          {formatMessage(messages.showErrorLogs)}
+        </InputSwitcher>
+      )}
     </div>
   );
 };
@@ -79,6 +83,7 @@ ItemsListHeader.propTypes = {
   selectedItems: PropTypes.array,
   showErrorLogs: PropTypes.bool,
   onShowErrorLogsChange: PropTypes.func,
+  optionValue: PropTypes.string,
 };
 ItemsListHeader.defaultProps = {
   setModalState: () => {},
@@ -87,4 +92,5 @@ ItemsListHeader.defaultProps = {
   selectedItems: [],
   showErrorLogs: false,
   onShowErrorLogsChange: () => {},
+  optionValue: '',
 };
