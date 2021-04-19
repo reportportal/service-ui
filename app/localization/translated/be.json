@@ -1043,6 +1043,7 @@
   "LogItemInfoTabs.attachmentsTab": "Укладанні",
   "LogItemInfoTabs.detailsTab": "Апісанне элемента",
   "LogItemInfoTabs.historyTab": "Гісторыя дзеянняў",
+  "LogItemInfoTabs.logsTab": "Усе логі",
   "LogItemInfoTabs.stackTab": "Трасіроўка стэка",
   "LogMessageSearch.searchHint": "Па меншай меры 3 сімвала патрабуецца.",
   "LogMessageSearch.searchTitle": "Змест лога",
