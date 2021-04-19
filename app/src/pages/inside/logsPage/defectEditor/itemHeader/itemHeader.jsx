@@ -53,7 +53,7 @@ export const ItemHeader = ({ item, selectItem, isSelected, preselected }) => {
         </Link>
         <div className={cx('defect-block')}>
           {ignoreAnalyzer && <IgnoredInAALabel className={cx('ignore-aa-label')} />}
-          {autoAnalyzed && <AutoAnalyzedLabel className={cx('aa-label')} shortLabel />}
+          {autoAnalyzed && <AutoAnalyzedLabel className={cx('aa-label')} />}
           {!!patternTemplates.length && (
             <PatternAnalyzedLabel
               patternTemplates={patternTemplates}
