@@ -22,6 +22,7 @@ import { connectRouter } from 'common/utils';
 import { PageLayout, PageSection } from 'layouts/pageLayout';
 import {
   refreshLogPageData,
+  logItemsSelector,
   logPaginationSelector,
   loadingSelector,
   pageLoadingSelector,
@@ -30,31 +31,40 @@ import {
   WITH_ATTACHMENTS_FILTER_KEY,
   HIDE_PASSED_LOGS,
   HIDE_EMPTY_STEPS,
+  getLogLevel,
   setLogLevel,
   DETAILED_LOG_VIEW,
   logViewModeSelector,
   LOG_STATUS_FILTER_KEY,
+  isLogPageWithNestedSteps,
 } from 'controllers/log';
 import { parentItemSelector } from 'controllers/testItem';
 import { withFilter } from 'controllers/filter';
 import { debugModeSelector } from 'controllers/launch';
-import { withPagination, PAGE_KEY } from 'controllers/pagination';
+import { withPagination, PAGE_KEY, DEFAULT_PAGINATION, SIZE_KEY } from 'controllers/pagination';
 import { withSortingURL, SORTING_ASC } from 'controllers/sorting';
 import { userIdSelector } from 'controllers/user';
+import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { LOG_PAGE, LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { TestItemLogsToolbar } from './testItemLogsToolbar';
 import { LogToolbar } from './logToolbar';
 import { HistoryLine } from './historyLine';
 import { LogItemInfo } from './logItemInfo';
+import { LogsGrid } from './logsGrid/logsGrid';
+import { LogsGridToolbar } from './logsGridToolbar';
+import { SauceLabsSection } from './sauceLabsSection';
+
 @connect(
   (state) => ({
+    logItems: logItemsSelector(state),
     loading: loadingSelector(state),
     pageLoading: pageLoadingSelector(state),
     userId: userIdSelector(state),
     debugMode: debugModeSelector(state),
     logViewMode: logViewModeSelector(state),
     parentItem: parentItemSelector(state),
+    isNestedStepView: isLogPageWithNestedSteps(state),
   }),
   {
     refresh: refreshLogPageData,
@@ -111,10 +121,21 @@ export class LogsPage extends Component {
     }).isRequired,
     userId: PropTypes.string.isRequired,
     debugMode: PropTypes.bool.isRequired,
+    logItems: PropTypes.array,
+    activePage: PropTypes.number,
+    itemCount: PropTypes.number,
+    pageCount: PropTypes.number,
+    pageSize: PropTypes.number,
     onChangePage: PropTypes.func,
+    onChangePageSize: PropTypes.func,
     loading: PropTypes.bool,
     pageLoading: PropTypes.bool,
+    filter: PropTypes.string,
     logLevelId: PropTypes.string,
+    onFilterChange: PropTypes.func,
+    sortingColumn: PropTypes.string,
+    sortingDirection: PropTypes.string,
+    onChangeSorting: PropTypes.func,
     onChangeLogLevel: PropTypes.func,
     onChangeWithAttachments: PropTypes.func,
     onChangeHideEmptySteps: PropTypes.func,
@@ -123,23 +144,37 @@ export class LogsPage extends Component {
     parentItem: PropTypes.object,
     logStatus: PropTypes.string,
     onChangeLogStatusFilter: PropTypes.func,
+    isNestedStepView: PropTypes.bool,
     withAttachments: PropTypes.string,
     hideEmptySteps: PropTypes.string,
     hidePassedLogs: PropTypes.string,
   };
 
   static defaultProps = {
+    logItems: [],
+    activePage: DEFAULT_PAGINATION[PAGE_KEY],
+    itemCount: 0,
+    pageCount: 0,
+    pageSize: DEFAULT_PAGINATION[SIZE_KEY],
     onChangePage: () => {},
+    onChangePageSize: () => {},
     loading: false,
     pageLoading: false,
+    filter: '',
     logLevelId: null,
+    onFilterChange: () => {},
+    sortingColumn: '',
+    sortingDirection: '',
+    onChangeSorting: () => {},
     onChangeLogLevel: () => {},
     onChangeWithAttachments: () => {},
     onChangeHideEmptySteps: () => {},
     onChangeHidePassedLogs: () => {},
     logViewMode: DETAILED_LOG_VIEW,
     parentItem: {},
+    logStatus: null,
     onChangeLogStatusFilter: () => {},
+    isNestedStepView: false,
     withAttachments: undefined,
     hideEmptySteps: undefined,
     hidePassedLogs: undefined,
@@ -165,13 +200,35 @@ export class LogsPage extends Component {
   render() {
     const {
       refresh,
+      logItems,
+      userId,
       debugMode,
+      activePage,
+      itemCount,
+      pageCount,
+      pageSize,
       onChangePage,
+      onChangePageSize,
       loading,
       pageLoading,
+      filter,
+      logLevelId,
+      onFilterChange,
+      sortingColumn,
+      sortingDirection,
+      onChangeSorting,
       onChangeLogLevel,
+      onChangeWithAttachments,
+      onChangeHideEmptySteps,
+      onChangeHidePassedLogs,
       logViewMode,
       parentItem,
+      logStatus,
+      onChangeLogStatusFilter,
+      isNestedStepView,
+      withAttachments,
+      hideEmptySteps,
+      hidePassedLogs,
     } = this.props;
 
     return (
@@ -199,7 +256,56 @@ export class LogsPage extends Component {
                   />
                 </Fragment>
               ) : (
-                <TestItemLogsToolbar parentItem={parentItem} />
+                <>
+                  <TestItemLogsToolbar parentItem={parentItem} />
+                  {this.state.isSauceLabsIntegrationView ? (
+                    <SauceLabsSection />
+                  ) : (
+                    <Fragment>
+                      <LogsGridToolbar
+                        activePage={activePage}
+                        pageCount={pageCount}
+                        onChangePage={onChangePage}
+                        logLevel={getLogLevel(userId, logLevelId)}
+                        onChangeLogLevel={onChangeLogLevel}
+                        withAttachments={Boolean(withAttachments)}
+                        isEmptyStepsHidden={Boolean(hideEmptySteps)}
+                        isPassedLogsHidden={Boolean(hidePassedLogs)}
+                        onChangeWithAttachments={onChangeWithAttachments}
+                        onHideEmptySteps={onChangeHideEmptySteps}
+                        onHidePassedLogs={onChangeHidePassedLogs}
+                        logPageMode={logViewMode}
+                      >
+                        {({ markdownMode, consoleView }) => (
+                          <LogsGrid
+                            logItems={logItems}
+                            loading={loading}
+                            filter={filter}
+                            onFilterChange={onFilterChange}
+                            sortingColumn={sortingColumn}
+                            sortingDirection={sortingDirection}
+                            onChangeSorting={onChangeSorting}
+                            markdownMode={markdownMode}
+                            logStatus={logStatus}
+                            onChangeLogStatusFilter={onChangeLogStatusFilter}
+                            consoleView={consoleView}
+                            isNestedStepView={isNestedStepView}
+                          />
+                        )}
+                      </LogsGridToolbar>
+                      {!!pageCount && logItems && !!logItems.length && !loading && (
+                        <PaginationToolbar
+                          activePage={activePage}
+                          itemCount={itemCount}
+                          pageCount={pageCount}
+                          pageSize={pageSize}
+                          onChangePage={onChangePage}
+                          onChangePageSize={onChangePageSize}
+                        />
+                      )}
+                    </Fragment>
+                  )}
+                </>
               )}
             </Fragment>
           )}

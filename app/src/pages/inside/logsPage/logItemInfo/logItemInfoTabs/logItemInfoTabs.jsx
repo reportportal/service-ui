@@ -129,7 +129,7 @@ export class LogItemInfoTabs extends Component {
   static getDerivedStateFromProps(props) {
     return props.loading
       ? {
-          activeTabId: 'logs',
+          activeTabId: 'stack',
         }
       : null;
   }
@@ -201,7 +201,7 @@ export class LogItemInfoTabs extends Component {
         id: 'logs',
         label: formatMessage(messages.logsTab),
         icon: LogIcon,
-        eventInfo: LOG_PAGE_EVENTS.STACK_TRACE_TAB,
+        eventInfo: LOG_PAGE_EVENTS.LOGS_TAB,
         component: LogsTabContent,
         componentProps: {
           onChangePage,
@@ -264,8 +264,9 @@ export class LogItemInfoTabs extends Component {
   };
 
   getActiveTabId = (tabs) => {
-    if (tabs.find((tab) => tab.id === this.props.activeTabId)) {
-      return this.props.activeTabId;
+    const { activeTabId } = this.props;
+    if (tabs.find((tab) => tab.id === activeTabId)) {
+      return activeTabId;
     }
     return null;
   };
