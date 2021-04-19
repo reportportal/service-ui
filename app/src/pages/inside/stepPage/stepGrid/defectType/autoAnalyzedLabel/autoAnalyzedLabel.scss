@@ -22,17 +22,3 @@
     fill: $COLOR--white-two;
   }
 }
-
-.short-label {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 30px;
-  height: 20px;
-  box-sizing: border-box;
-  border: 1px solid $COLOR--orange-red;
-  border-radius: 10px;
-  color: $COLOR--orange-red;
-  font-size: 12px;
-  font-family: $FONT-REGULAR;
-}

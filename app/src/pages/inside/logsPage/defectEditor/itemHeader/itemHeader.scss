@@ -96,11 +96,12 @@
   border: solid 1px $COLOR--dirty-black;
   background-color: $COLOR--black-3;
   color: $COLOR--dirty-gray;
-  font-family: $FONT-REGULAR;
 }
 
 .aa-label {
-  background-color: $COLOR--black-3;
+  svg {
+    fill: $COLOR--black-3;
+  }
 }
 
 .bts-row {
