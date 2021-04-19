@@ -47,7 +47,7 @@ import { LogItemActivity } from './logItemActivity';
 import { Attachments } from './attachments';
 import { getActionMessage } from '../utils/getActionMessage';
 import styles from './logItemInfoTabs.scss';
-import { LogsTabContent } from '../../logsTabContent/logsTabContent';
+import { LogsGridWrapper } from '../../logsGridWrapper';
 
 const cx = classNames.bind(styles);
 
@@ -202,7 +202,7 @@ export class LogItemInfoTabs extends Component {
         label: formatMessage(messages.logsTab),
         icon: LogIcon,
         eventInfo: LOG_PAGE_EVENTS.LOGS_TAB,
-        component: LogsTabContent,
+        component: LogsGridWrapper,
         componentProps: {
           onChangePage,
           onChangeLogLevel,

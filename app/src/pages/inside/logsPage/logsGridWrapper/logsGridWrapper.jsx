@@ -98,7 +98,7 @@ import { SauceLabsSection } from '../sauceLabsSection';
   { namespace: NAMESPACE },
 )
 @track()
-export class LogsTabContent extends Component {
+export class LogsGridWrapper extends Component {
   static propTypes = {
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,

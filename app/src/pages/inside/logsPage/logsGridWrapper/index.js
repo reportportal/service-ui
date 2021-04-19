@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { LogsTabContent } from './logsTabContent';
+export { LogsGridWrapper } from './logsGridWrapper';
