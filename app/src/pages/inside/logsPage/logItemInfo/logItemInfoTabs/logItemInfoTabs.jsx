@@ -129,7 +129,7 @@ export class LogItemInfoTabs extends Component {
   static getDerivedStateFromProps(props) {
     return props.loading
       ? {
-          activeTabId: 'stack',
+          activeTabId: null,
         }
       : null;
   }
