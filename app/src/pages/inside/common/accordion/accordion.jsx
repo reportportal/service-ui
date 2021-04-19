@@ -22,7 +22,7 @@ import styles from './accordion.scss';
 
 const cx = classNames.bind(styles);
 
-export const Accordion = ({ tabs, headerClassNames, contentClassNames, toggleTab }) => {
+export const Accordion = ({ tabs, toggleTab }) => {
   return (
     <div className={cx('accordion')}>
       {tabs.length > 0 &&
@@ -31,11 +31,11 @@ export const Accordion = ({ tabs, headerClassNames, contentClassNames, toggleTab
             key={tab.id}
             tab={tab}
             onClick={() => toggleTab(tab.id)}
-            headerClassNames={cx(headerClassNames, {
+            headerClassNames={cx({
               hidden: !tab.shouldShow,
               disabled: tab.disabled && tab.shouldShow,
             })}
-            contentClassNames={tab.shouldShow ? contentClassNames : 'hidden'}
+            contentClassNames={!tab.shouldShow && 'hidden'}
           />
         ))}
     </div>
@@ -43,13 +43,9 @@ export const Accordion = ({ tabs, headerClassNames, contentClassNames, toggleTab
 };
 Accordion.propTypes = {
   tabs: PropTypes.array,
-  headerClassNames: PropTypes.string,
-  contentClassNames: PropTypes.string,
   toggleTab: PropTypes.func,
 };
 Accordion.defaultProps = {
   tabs: [],
-  headerClassNames: '',
-  contentClassNames: '',
   toggleTab: () => {},
 };
