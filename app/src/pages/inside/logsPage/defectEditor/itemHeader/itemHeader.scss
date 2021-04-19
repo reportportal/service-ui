@@ -101,17 +101,6 @@
 .aa-label {
   svg {
     fill: $COLOR--black-3;
-    rect {
-      stroke: $COLOR--dirty-black;
-    }
-    g path,
-    g g polygon {
-      fill: $COLOR--dirty-gray;
-    }
-    g g path {
-      stroke: $COLOR--dirty-gray;
-      fill: none;
-    }
   }
 }
 
