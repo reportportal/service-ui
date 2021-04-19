@@ -41,8 +41,8 @@ import { withPagination, PAGE_KEY, DEFAULT_PAGINATION, SIZE_KEY } from 'controll
 import { withSortingURL, SORTING_ASC } from 'controllers/sorting';
 import { userIdSelector } from 'controllers/user';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
-import { LogsGrid } from './logsGrid';
-import { LogsGridToolbar } from './logsGridToolbar';
+import { LogsGrid } from '../logsGrid';
+import { LogsGridToolbar } from '../logsGridToolbar';
 import { SauceLabsSection } from '../sauceLabsSection';
 
 @connect(
