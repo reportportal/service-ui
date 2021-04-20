@@ -1041,6 +1041,7 @@
   "LogItemInfoTabs.attachmentsTab": "Вкладення",
   "LogItemInfoTabs.detailsTab": "Опис елемента",
   "LogItemInfoTabs.historyTab": "Історія дій",
+  "LogItemInfoTabs.logsTab": "Всі логи",
   "LogItemInfoTabs.stackTab": "Трасування стека",
   "LogMessageSearch.searchHint": "Необхідно мінімум 3 символи.",
   "LogMessageSearch.searchTitle": "Зміст лода",

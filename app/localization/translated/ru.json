@@ -1041,6 +1041,7 @@
   "LogItemInfoTabs.attachmentsTab": "Вложения",
   "LogItemInfoTabs.detailsTab": "Описание элемента",
   "LogItemInfoTabs.historyTab": "История действий",
+  "LogItemInfoTabs.logsTab": "Все логи",
   "LogItemInfoTabs.stackTab": "Трассировка стека",
   "LogMessageSearch.searchHint": "Необходимо минимум 3 символа.",
   "LogMessageSearch.searchTitle": "Содержание лога",
