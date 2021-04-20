@@ -27,13 +27,9 @@ import {
   pageLoadingSelector,
   NAMESPACE,
   LOG_LEVEL_FILTER_KEY,
-  WITH_ATTACHMENTS_FILTER_KEY,
-  HIDE_PASSED_LOGS,
-  HIDE_EMPTY_STEPS,
   setLogLevel,
   DETAILED_LOG_VIEW,
   logViewModeSelector,
-  LOG_STATUS_FILTER_KEY,
 } from 'controllers/log';
 import { parentItemSelector } from 'controllers/testItem';
 import { withFilter } from 'controllers/filter';
@@ -76,30 +72,12 @@ import { LogsGridWrapper } from './logsGridWrapper';
   namespace: NAMESPACE,
 })
 @connectRouter(
-  (query) => ({
-    logLevelId: query[LOG_LEVEL_FILTER_KEY],
-    logStatus: query[LOG_STATUS_FILTER_KEY],
-    withAttachments: query[WITH_ATTACHMENTS_FILTER_KEY],
-    hideEmptySteps: query[HIDE_EMPTY_STEPS],
-    hidePassedLogs: query[HIDE_PASSED_LOGS],
-  }),
+  () => ({}),
   {
     onChangeLogLevel: (userId, logLevel) => {
       setLogLevel(userId, logLevel);
       return { [LOG_LEVEL_FILTER_KEY]: logLevel.id, [PAGE_KEY]: 1 };
     },
-    onChangeWithAttachments: (withAttachments) => {
-      return { [WITH_ATTACHMENTS_FILTER_KEY]: withAttachments || undefined };
-    },
-    onChangeHideEmptySteps: (hideEmptySteps) => {
-      return { [HIDE_EMPTY_STEPS]: hideEmptySteps || undefined };
-    },
-    onChangeHidePassedLogs: (hidePassedLogs) => {
-      return { [HIDE_PASSED_LOGS]: hidePassedLogs || undefined };
-    },
-    onChangeLogStatusFilter: (status) => ({
-      [LOG_STATUS_FILTER_KEY]: status || undefined,
-    }),
   },
   { namespace: NAMESPACE },
 )
@@ -116,35 +94,18 @@ export class LogsPage extends Component {
     onChangePage: PropTypes.func,
     loading: PropTypes.bool,
     pageLoading: PropTypes.bool,
-    logLevelId: PropTypes.string,
     onChangeLogLevel: PropTypes.func,
-    onChangeWithAttachments: PropTypes.func,
-    onChangeHideEmptySteps: PropTypes.func,
-    onChangeHidePassedLogs: PropTypes.func,
     logViewMode: PropTypes.string,
     parentItem: PropTypes.object,
-    logStatus: PropTypes.string,
-    onChangeLogStatusFilter: PropTypes.func,
-    withAttachments: PropTypes.string,
-    hideEmptySteps: PropTypes.string,
-    hidePassedLogs: PropTypes.string,
   };
 
   static defaultProps = {
     onChangePage: () => {},
     loading: false,
     pageLoading: false,
-    logLevelId: null,
     onChangeLogLevel: () => {},
-    onChangeWithAttachments: () => {},
-    onChangeHideEmptySteps: () => {},
-    onChangeHidePassedLogs: () => {},
     logViewMode: DETAILED_LOG_VIEW,
     parentItem: {},
-    onChangeLogStatusFilter: () => {},
-    withAttachments: undefined,
-    hideEmptySteps: undefined,
-    hidePassedLogs: undefined,
   };
 
   state = {

@@ -19,6 +19,7 @@
   .tabs {
     position: relative;
     display: flex;
+    margin-bottom: 15px;
 
     @media (max-width: $SCREEN_XS_MAX) {
       flex-direction: column;
