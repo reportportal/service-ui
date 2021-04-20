@@ -31,6 +31,10 @@
   animation-timing-function: cubic-bezier(0, 1, 1, 0);
 }
 
+.color-charcoal {
+  background: $COLOR--charcoal-grey;
+}
+
 .preloader-part:nth-child(1) {
   left: 0;
   animation: dotted-preloader1 0.6s infinite;
