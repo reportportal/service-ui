@@ -22,7 +22,6 @@ import { connectRouter } from 'common/utils';
 import { PageLayout, PageSection } from 'layouts/pageLayout';
 import {
   refreshLogPageData,
-  logPaginationSelector,
   loadingSelector,
   pageLoadingSelector,
   NAMESPACE,
@@ -32,10 +31,8 @@ import {
   logViewModeSelector,
 } from 'controllers/log';
 import { parentItemSelector } from 'controllers/testItem';
-import { withFilter } from 'controllers/filter';
 import { debugModeSelector } from 'controllers/launch';
-import { withPagination, PAGE_KEY } from 'controllers/pagination';
-import { withSortingURL, SORTING_ASC } from 'controllers/sorting';
+import { PAGE_KEY } from 'controllers/pagination';
 import { userIdSelector } from 'controllers/user';
 import { LOG_PAGE, LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -58,21 +55,8 @@ import { LogsGridWrapper } from './logsGridWrapper';
     refresh: refreshLogPageData,
   },
 )
-@withSortingURL({
-  defaultFields: ['logTime'],
-  defaultDirection: SORTING_ASC,
-  namespace: NAMESPACE,
-})
-@withFilter({
-  filterKey: 'filter.cnt.message',
-  namespace: NAMESPACE,
-})
-@withPagination({
-  paginationSelector: logPaginationSelector,
-  namespace: NAMESPACE,
-})
 @connectRouter(
-  () => ({}),
+  undefined,
   {
     onChangeLogLevel: (userId, logLevel) => {
       setLogLevel(userId, logLevel);
