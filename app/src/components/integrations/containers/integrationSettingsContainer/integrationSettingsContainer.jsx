@@ -67,9 +67,9 @@ export class IntegrationSettingsContainer extends Component {
       isGlobal,
       id,
       pluginName,
-      () => {
+      (normalizedData) => {
         this.setState({
-          updatedParameters: data,
+          updatedParameters: normalizedData,
         });
         onConfirm();
       },

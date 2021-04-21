@@ -196,8 +196,6 @@ export class PatternAnalysisTab extends Component {
     this.props.addPattern(pattern);
   };
 
-  getPanelTitle = (name) => name;
-
   getListItemContentData = (pattern) => [
     {
       key: this.props.intl.formatMessage(messages[pattern.type.toUpperCase()]),
@@ -208,7 +206,16 @@ export class PatternAnalysisTab extends Component {
   isAbleToEditForm = () => canUpdateSettings(this.props.userRole, this.props.projectRole);
 
   render() {
-    const { intl, patterns, PAState } = this.props;
+    const {
+      intl: { formatMessage },
+      patterns,
+      PAState,
+    } = this.props;
+    const headerMessages = {
+      toggleLabel: formatMessage(messages.toggleLabel),
+      toggleNote: formatMessage(messages.toggleNote),
+      create: formatMessage(messages.create),
+    };
     const readOnly = !this.isAbleToEditForm();
 
     return (
@@ -217,7 +224,7 @@ export class PatternAnalysisTab extends Component {
           <Fragment>
             <RuleListHeader
               readOnly={readOnly}
-              messages={messages}
+              messages={headerMessages}
               switcherValue={PAState}
               onAddItem={this.onAddPattern}
               onChangeSwitcher={this.handleOnChangeSwitcher}
@@ -229,20 +236,18 @@ export class PatternAnalysisTab extends Component {
               onDelete={this.showDeleteConfirmationDialog}
               onEdit={this.onRenamePattern}
               onClone={this.onClonePattern}
-              getPanelTitle={this.getPanelTitle}
               getListItemContentData={this.getListItemContentData}
               isCloned
-              messages={messages}
             />
           </Fragment>
         ) : (
           <NoCasesBlock
-            noItemsMessage={intl.formatMessage(messages.noItemsMessage)}
-            notificationsInfo={intl.formatMessage(messages.notificationsInfo)}
+            noItemsMessage={formatMessage(messages.noItemsMessage)}
+            notificationsInfo={formatMessage(messages.notificationsInfo)}
           >
             <div className={cx('create-pattern-button')}>
               <GhostButton disabled={readOnly} icon={PlusIcon} onClick={this.onAddPattern}>
-                {intl.formatMessage(messages.create)}
+                {formatMessage(messages.create)}
               </GhostButton>
             </div>
           </NoCasesBlock>

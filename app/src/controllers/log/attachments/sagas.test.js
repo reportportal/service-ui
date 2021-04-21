@@ -28,7 +28,8 @@ const mockParams = {
 
 describe('Attachments Sagas', () => {
   test('fetchFileData resolves data', () => {
-    fetchFileData(mockParams);
-    expect(fetch).toBeCalledWith('/api/v1/data/test_project/abcd');
+    const params = { responseType: 'blob' };
+    fetchFileData(mockParams, params);
+    expect(fetch).toBeCalledWith('/api/v1/data/test_project/abcd', params);
   });
 });

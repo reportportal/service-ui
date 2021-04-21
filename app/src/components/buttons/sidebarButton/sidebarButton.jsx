@@ -18,46 +18,77 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
+import Link from 'redux-first-router-link';
 import { NavLink } from 'components/main/navLink';
+import { withTooltip } from 'components/main/tooltips/tooltip';
 import styles from './sidebarButton.scss';
 
 const cx = classNames.bind(styles);
 
-export const SidebarButton = ({ onClick, icon, children, link, bottom }) => {
-  const classes = cx({
-    'sidebar-nav-btn': true,
+const SidebarTooltip = ({ children }) => <div className={cx('sidebar-tooltip')}>{children}</div>;
+SidebarTooltip.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
+const SidebarButtonComponent = ({ onClick, icon, children, link, bottom, isNav, mobileHidden }) => {
+  const classes = cx('sidebar-nav-btn', {
     'at-bottom': bottom,
+    'mobile-hidden': mobileHidden,
   });
+
+  const linkBody = (
+    <span className={cx('wrapper')}>
+      <i className={cx('btn-icon')}>{Parser(icon)}</i>
+      <span className={cx('btn-title-mobile')}>{children}</span>
+    </span>
+  );
 
   return (
     <div className={classes}>
-      <NavLink
-        to={link}
-        className={cx('nav-link')}
-        activeClassName={cx('active')}
-        onClick={onClick}
-      >
-        <span className={cx('wrapper')}>
-          <i className={cx('btn-icon')}>{Parser(icon)}</i>
-          <span className={cx('btn-title')}>{children}</span>
-        </span>
-      </NavLink>
+      {isNav ? (
+        <NavLink
+          to={link}
+          className={cx('nav-link')}
+          activeClassName={cx('active')}
+          onClick={onClick}
+        >
+          {linkBody}
+        </NavLink>
+      ) : (
+        <Link to={link} className={cx('link')} onClick={onClick}>
+          {linkBody}
+        </Link>
+      )}
     </div>
   );
 };
-
-SidebarButton.propTypes = {
+SidebarButtonComponent.propTypes = {
   link: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   icon: PropTypes.string,
   bottom: PropTypes.bool,
   children: PropTypes.node,
+  isNav: PropTypes.bool,
+  mobileHidden: PropTypes.bool,
   onClick: PropTypes.func,
 };
 
-SidebarButton.defaultProps = {
+SidebarButtonComponent.defaultProps = {
   link: '/',
   icon: '',
   bottom: false,
   children: null,
+  isNav: true,
+  mobileHidden: false,
   onClick: () => {},
 };
+
+export const SidebarButton = withTooltip({
+  TooltipComponent: SidebarTooltip,
+  data: {
+    dynamicWidth: true,
+    placement: 'right',
+    tooltipTriggerClass: cx('tooltip-trigger'),
+    noMobile: true,
+    dark: true,
+  },
+})(SidebarButtonComponent);

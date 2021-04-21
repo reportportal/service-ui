@@ -25,6 +25,7 @@
   box-sizing: border-box;
   border: 1px solid $COLOR--gray-80;
   border-radius: 100px;
+  color: $COLOR--charcoal-grey;
   background-color: $COLOR--white-two;
   font-family: $FONT-SEMIBOLD;
   font-size: 13px;
@@ -56,10 +57,9 @@
   display: inline-block;
   padding-left: 5px;
   vertical-align: top;
-  color: $COLOR--charcoal-grey;
   word-break: break-all;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 200px;
+  max-width: 160px;
 }

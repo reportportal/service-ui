@@ -19,6 +19,9 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './input.scss';
 
+const VARIANT_STANDARD = 'standard';
+const VARIANT_INLINE = 'inline';
+
 const cx = classNames.bind(styles);
 
 export const Input = ({
@@ -39,11 +42,16 @@ export const Input = ({
   onKeyPress,
   touched,
   asyncValidating,
+  variant,
+  style,
+  title,
 }) => (
   <input
     ref={refFunction}
     type={type}
-    className={cx('input', `type-${type}`, className, {
+    style={style}
+    title={title}
+    className={cx('input', `type-${type}`, className, `variant-${variant}`, {
       'mobile-disabled': mobileDisabled,
       disabled,
       error,
@@ -74,14 +82,17 @@ Input.propTypes = {
   readonly: PropTypes.bool,
   className: PropTypes.string,
   error: PropTypes.string,
+  touched: PropTypes.bool,
+  asyncValidating: PropTypes.bool,
+  variant: PropTypes.oneOf([VARIANT_STANDARD, VARIANT_INLINE]),
+  style: PropTypes.object,
+  title: PropTypes.string,
   onChange: PropTypes.func,
   onFocus: PropTypes.func,
   onBlur: PropTypes.func,
   onKeyUp: PropTypes.func,
   onKeyPress: PropTypes.func,
   refFunction: PropTypes.func,
-  touched: PropTypes.bool,
-  asyncValidating: PropTypes.bool,
 };
 
 Input.defaultProps = {
@@ -96,6 +107,9 @@ Input.defaultProps = {
   error: '',
   touched: false,
   asyncValidating: false,
+  variant: VARIANT_STANDARD,
+  style: {},
+  title: '',
   onChange: () => {},
   onFocus: () => {},
   onBlur: () => {},

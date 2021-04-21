@@ -18,6 +18,7 @@ import React, { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { showModalAction } from 'controllers/modal';
 import { apiTokenValueSelector, generateApiTokenAction } from 'controllers/user';
@@ -25,7 +26,7 @@ import WarningLockImage from 'common/img/warning-lock.png';
 import { Input } from 'components/inputs/input/input';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
-import { defineMessages, injectIntl } from 'react-intl';
+import { StripedMessage } from 'components/main/stripedMessage';
 import { ButtonWithTooltip } from './buttonWithTooltip';
 import styles from './accessTokenBlock.scss';
 import { BlockContainerHeader, BlockContainerBody } from '../blockContainer';
@@ -141,13 +142,13 @@ export class AccessTokenBlock extends Component {
               </div>
             </div>
             <p className={cx('tip')}>{formatMessage(messages.text)}</p>
-            <div className={cx('security-warning-bock')}>
-              <img src={WarningLockImage} alt="Warning" className={cx('warning-image')} />
-              <p className={cx('warning-message')}>
-                <h3 className={cx('warning-header')}>{formatMessage(messages.warningHeader)}</h3>
-                <p className={cx('warning')}>{formatMessage(messages.warning)}</p>
-              </p>
-            </div>
+            <StripedMessage
+              header={formatMessage(messages.warningHeader)}
+              image={WarningLockImage}
+              type="warning"
+            >
+              {formatMessage(messages.warning)}
+            </StripedMessage>
           </div>
         </BlockContainerBody>
       </div>

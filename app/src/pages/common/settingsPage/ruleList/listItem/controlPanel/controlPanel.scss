@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-.pattern-control-panel {
+.rule-control-panel {
   padding: 7px 15px;
-  margin: 0px 1px 20px 1px;
+  margin: 0 1px 15px 1px;
   background-color: $COLOR--white-four;
   line-height: 25px;
   border-radius: 5px;
@@ -28,10 +28,34 @@
   justify-content: stretch;
   align-items: center;
 }
-.pattern-number {
-  flex: 40px 0 0;
+
+.rule-number {
+  flex: 30px 0 0;
   font-size: 13px;
 }
+
+.move-control {
+  display: inline-flex;
+  flex: 30px 0 0;
+  cursor: move;
+
+  svg {
+    width: 6px;
+    fill: $COLOR--gray-60;
+    &:hover {
+      fill: $COLOR--black-2;
+    }
+  }
+
+  &.disabled {
+    cursor: default;
+    pointer-events: none;
+    svg {
+      fill: $COLOR--gray-80;
+    }
+  }
+}
+
 .switcher {
   flex: 20px 0 0;
   padding-right: 15px;
@@ -42,21 +66,21 @@
     cursor: default;
   }
 }
-.pattern-name {
+.rule-name {
   font-size: 13px;
   font-weight: 600;
   flex: 300px 1 1;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.panel-buttons {
-  flex: 100px 0 0;
+.rule-actions {
+  flex: 130px 0 0;
   text-align: right;
   @media (max-width: $SCREEN_XS_MAX) {
     display: none;
   }
 }
-.panel-button {
+.rule-action {
   height: 16px;
   width: 16px;
   padding: 0;
@@ -66,17 +90,38 @@
   background: none;
   cursor: pointer;
   vertical-align: middle;
+
   svg {
     stroke: $COLOR--gray-60;
     &:hover {
       stroke: $COLOR--black-2;
     }
   }
+
   &.filled {
     svg {
       fill: $COLOR--gray-60;
       &:hover {
         fill: $COLOR--black-2;
+      }
+    }
+  }
+
+  &.disabled {
+    cursor: default;
+    svg:not(.filled) {
+      stroke: $COLOR--gray-80;
+      &:hover {
+        stroke: $COLOR--gray-80;
+      }
+    }
+
+    &.filled {
+      svg {
+        fill: $COLOR--gray-80;
+        &:hover {
+          fill: $COLOR--gray-80;
+        }
       }
     }
   }

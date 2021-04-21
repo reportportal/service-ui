@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component } from 'react';
+import React, { Component } from 'react';
 import track from 'react-tracking';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -24,7 +24,11 @@ import Parser from 'html-react-parser';
 import { fromNowFormat } from 'common/utils';
 import { SAUCE_LABS } from 'common/constants/pluginNames';
 import { isStepLevelSelector, formatItemName } from 'controllers/testItem';
-import { availableIntegrationsByPluginNameSelector } from 'controllers/plugins';
+import {
+  availableIntegrationsByPluginNameSelector,
+  uiExtensionLaunchItemComponentsSelector,
+} from 'controllers/plugins';
+import { IN_PROGRESS } from 'common/constants/testStatuses';
 import { MarkdownViewer } from 'components/main/markdown';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { PLUGIN_NAME_TITLES } from 'components/integrations';
@@ -62,6 +66,7 @@ const ItemNameTooltip = withTooltip({
 @injectIntl
 @connect((state) => ({
   sauceLabsIntegrations: availableIntegrationsByPluginNameSelector(state, SAUCE_LABS),
+  extensionComponents: uiExtensionLaunchItemComponentsSelector(state),
   isStepLevel: isStepLevelSelector(state),
 }))
 @track()
@@ -75,6 +80,7 @@ export class ItemInfo extends Component {
     isStepLevel: PropTypes.bool,
     hideEdit: PropTypes.bool,
     widgetView: PropTypes.bool,
+    extensionComponents: PropTypes.array,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -90,12 +96,14 @@ export class ItemInfo extends Component {
       onClickAttribute: () => {},
       onOwnerClick: () => {},
       events: {},
+      withExtensions: false,
     },
     isStepLevel: false,
     hideEdit: false,
     widgetView: false,
     onClickRetries: () => {},
     refFunction: null,
+    extensionComponents: [],
   };
 
   handleEditItem = () => {
@@ -131,6 +139,7 @@ export class ItemInfo extends Component {
       tracking,
       onClickRetries,
       customProps,
+      extensionComponents,
     } = this.props;
 
     return (
@@ -171,6 +180,11 @@ export class ItemInfo extends Component {
         </div>
 
         <div className={cx('additional-info')}>
+          {value.status !== IN_PROGRESS &&
+            customProps.withExtensions &&
+            extensionComponents.map((extensionComponent) => (
+              <extensionComponent.component key={extensionComponent.name} item={value} />
+            ))}
           {value.startTime && (
             <span className={cx('duration-block')}>
               <DurationBlock

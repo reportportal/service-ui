@@ -32,7 +32,7 @@
     display: inline-block;
     max-width: 115px;
     font-family: $FONT-SEMIBOLD;
-    color: $COLOR--windows-blue;
+    color: $COLOR--topaz;
     font-size: 12px;
     white-space: nowrap;
     overflow: hidden;
@@ -142,7 +142,7 @@
     font-family: $FONT-REGULAR;
     font-size: 13px;
     line-height: 20px;
-    color: $COLOR--windows-blue;
+    color: $COLOR--topaz;
     text-decoration: none;
   }
 
@@ -167,7 +167,7 @@
 
     &.statistics-total {
       &:before {
-        background-color: $COLOR--windows-blue;
+        background-color: $COLOR--topaz;
       }
     }
   }
@@ -205,7 +205,7 @@
       font-family: $FONT-REGULAR;
       font-size: 13px;
       line-height: 20px;
-      color: $COLOR--windows-blue;
+      color: $COLOR--topaz;
       text-decoration: none;
     }
   }

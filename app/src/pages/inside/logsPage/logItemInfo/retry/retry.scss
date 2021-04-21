@@ -15,8 +15,11 @@
  */
 
 .status-indicator {
-  height: 7px;
-  width: 7px;
+  width: 45px;
+  height: 4px;
+  margin-top: 8px;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
 
   &.status-passed {
     background-color: $COLOR--passed;
@@ -31,28 +34,32 @@
   }
 }
 
+.name {
+  font-size: 13px;
+  font-family: $FONT-SEMIBOLD;
+}
+
 .retry {
   display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
-  align-content: flex-start;
+  flex-direction: column;
+  justify-content: flex-end;
   align-items: center;
-  height: 20px;
-  border: 1px solid $COLOR--gray-91;
-  margin: 2px 5px 2px 0;
-  padding: 0 12px 0 13px;
-  background-color: $COLOR--white-two;
+  margin-right: 5px;
+  color: $COLOR--topaz;
   cursor: pointer;
   user-select: none;
+
+  &:last-child {
+    margin-right: 0;
+  }
 }
 
 .selected {
-  background-color: $COLOR--gray-91;
-  color: $COLOR--topaz;
+  color: $COLOR--gray-47;
   cursor: default;
-}
 
-.name {
-  margin-left: 3px;
+  .status-indicator {
+    height: 8px;
+    margin-top: 4px;
+  }
 }

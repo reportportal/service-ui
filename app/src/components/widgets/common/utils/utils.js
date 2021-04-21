@@ -19,6 +19,7 @@ import * as COLORS from 'common/constants/colors';
 import { ENTITY_START_TIME, CONDITION_BETWEEN } from 'components/filterEntities/constants';
 import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { messages } from '../messages';
+import { TIME_TYPES } from '../constants';
 
 export const DEFECTS = 'defects';
 
@@ -143,3 +144,16 @@ export const getDefaultTestItemLinkParams = (projectId, filterId, testItemIds) =
   },
   type: TEST_ITEM_PAGE,
 });
+
+export const getTimeType = (max) => {
+  if (max > 0) {
+    if (max < 60000) {
+      return { value: 1000, type: TIME_TYPES.SECONDS };
+    } else if (max <= 2 * 3600000) {
+      return { value: 60000, type: TIME_TYPES.MINUTES };
+    }
+  }
+  return { value: 3600000, type: TIME_TYPES.HOURS };
+};
+
+export const convertSecondsToMilliseconds = (seconds) => seconds * 1000;

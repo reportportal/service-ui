@@ -165,4 +165,62 @@ $ARROW_WIDTH: 16px;
     }
   }
 }
+
+.dark {
+  .tooltip-content {
+    padding: 15px 20px 16px 20px;
+    border: none;
+    border-radius: 6px;
+    color: $COLOR--white-two;
+    box-shadow: 0 2px 13px 0 rgba(0, 0, 0, 0.15);
+    background-color: rgba(0, 0, 0, 0.75);
+  }
+
+  .tooltip-arrow {
+    opacity: 0.75;
+    &[data-placement*='bottom'] {
+      &::before {
+        border-color: transparent transparent rgba(0, 0, 0, 0.75);
+      }
+
+      &::after {
+        top: 0;
+        border-color: transparent transparent rgba(0, 0, 0, 0.75);
+      }
+    }
+
+    &[data-placement*='top'] {
+      &::before {
+        border-color: rgba(0, 0, 0, 0.75) transparent transparent;
+      }
+
+      &::after {
+        bottom: 0;
+        border-color: rgba(0, 0, 0, 0.75) transparent transparent;
+      }
+    }
+
+    &[data-placement*='left'] {
+      &::before {
+        border-color: transparent transparent transparent rgba(0, 0, 0, 0.75);
+      }
+
+      &::after {
+        right: 0;
+        border-color: transparent transparent transparent rgba(0, 0, 0, 0.75);
+      }
+    }
+
+    &[data-placement*='right'] {
+      &::before {
+        border-color: transparent rgba(0, 0, 0, 0.75) transparent transparent;
+      }
+
+      &::after {
+        left: 0;
+        border-color: transparent rgba(0, 0, 0, 0.75) transparent transparent;
+      }
+    }
+  }
+}
 /* stylelint-enable selector-max-attribute */

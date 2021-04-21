@@ -15,8 +15,8 @@
  */
 
 .row {
-  display: table;
-  table-layout: fixed;
+  display: flex;
+  align-items: center;
   margin-right: 0;
   margin-left: 0;
   height: 45px;
@@ -30,14 +30,11 @@
     border-bottom: none;
   }
   .col {
-    display: table-cell;
-    vertical-align: middle;
-    padding-right: 5px;
     &.col-name {
       width: 50%;
       font-size: 14px;
       font-family: $FONT-SEMIBOLD;
-      color: $COLOR--windows-blue;
+      color: $COLOR--topaz;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -52,7 +49,7 @@
     }
     &.col-count {
       width: 20%;
-      padding: 5px 5px 5px 0;
+      padding: 5px;
       position: relative;
       @media (max-width: $SCREEN_XS_MAX) {
         width: 40%;

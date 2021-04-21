@@ -10,7 +10,7 @@ RELEASE_DIR=release
 BUILD_DEPS:= github.com/avarabyeu/releaser mvdan.cc/gofumpt/gofumports
 GODIRS_NOVENDOR = $(shell go list ./... | grep -v /vendor/)
 GOFILES_NOVENDOR = $(shell find . -type f -name '*.go' -not -path "./vendor/*")
-PACKAGE_COMMONS=github.com/reportportal/commons-go
+PACKAGE_COMMONS=github.com/reportportal/commons-go/v5
 REPO_NAME=reportportal/service-ui
 
 UI_BUILD_REACT=app/
@@ -18,7 +18,7 @@ UI_BUILD_REACT=app/
 BUILD_INFO_LDFLAGS=-ldflags "-extldflags '"-static"' -X ${PACKAGE_COMMONS}/commons.repo=${REPO_NAME} -X ${PACKAGE_COMMONS}/commons.branch=${COMMIT_HASH} -X ${PACKAGE_COMMONS}/commons.buildDate=${BUILD_DATE} -X ${PACKAGE_COMMONS}/commons.version=${v}"
 IMAGE_NAME=reportportal-dev-5/service-ui$(IMAGE_POSTFIX)
 
-.PHONY: get-build-deps test build
+.PHONY: get-build-deps test checkstyle lint build
 
 help:
 	@echo "build      - go build"
@@ -26,8 +26,9 @@ help:
 	@echo "checkstyle - gofmt+golint+misspell"
 
 get-build-deps:
-	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b "$(shell go env GOPATH)/bin" v1.28.0
+	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b "$(shell go env GOPATH)/bin" v1.36.0
 	$(GO) get $(BUILD_DEPS)
+	$(GO) mod download
 
 test:
 	$(GO) test ${GODIRS_NOVENDOR}
@@ -35,6 +36,8 @@ test:
 
 checkstyle:
 	golangci-lint run --deadline 10m
+lint: checkstyle
+
 
 fmt:
 	gofmt -l -w -s ${GOFILES_NOVENDOR}

@@ -22,6 +22,10 @@ export {
   setPageLoadingAction,
   clearLogPageStackTrace,
   updateHistoryItemIssuesAction,
+  setIncludeAllLaunchesAction,
+  fetchHistoryItemsAction,
+  setShouldShowLoadMoreAction,
+  updateHistoryItemLaunchAttributesAction,
 } from './actionCreators';
 export { logReducer } from './reducer';
 export {
@@ -36,6 +40,13 @@ export {
   DETAILED_LOG_VIEW,
   LAUNCH_LOG_VIEW,
   LOG_STATUS_FILTER_KEY,
+  HISTORY_LINE_DEFAULT_VALUE,
+  HISTORY_LINE_TABLE_MODE,
+  SET_INCLUDE_ALL_LAUNCHES,
+  NUMBER_OF_ITEMS_TO_LOAD,
+  HISTORY_DEPTH_LIMIT,
+  DEFAULT_HISTORY_DEPTH,
+  SET_SHOULD_SHOW_LOAD_MORE,
 } from './constants';
 export {
   historyItemsSelector,
@@ -64,5 +75,7 @@ export {
   isLogPageWithOutNestedSteps,
   isLogPageWithNestedSteps,
   pageLoadingSelector,
+  includeAllLaunchesSelector,
+  shouldShowLoadMoreSelector,
 } from './selectors';
 export { getLogLevel, setLogLevel, getLogViewMode, setLogViewMode } from './storageUtils';

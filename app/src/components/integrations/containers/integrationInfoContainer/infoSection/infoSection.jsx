@@ -41,7 +41,7 @@ export class InfoSection extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     image: PropTypes.string.isRequired,
-    description: PropTypes.object.isRequired,
+    description: PropTypes.oneOfType([PropTypes.object.isRequired, PropTypes.array.isRequired]),
     title: PropTypes.string.isRequired,
     version: PropTypes.string,
     data: PropTypes.object.isRequired,
@@ -69,10 +69,10 @@ export class InfoSection extends Component {
 
   toggleActiveHandler = () => {
     this.setState({
-      isEnabled: !this.props.data.enabled,
+      isEnabled: !this.state.isEnabled,
     });
 
-    this.props.onToggleActive(this.props.data).catch(() => {
+    this.props.onToggleActive({ ...this.props.data, enabled: this.state.isEnabled }).catch(() => {
       this.setState({
         isEnabled: this.props.data.enabled,
       });

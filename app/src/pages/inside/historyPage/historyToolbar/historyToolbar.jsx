@@ -18,6 +18,8 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { HISTORY_PAGE_EVENTS } from 'components/main/analytics/events';
 import { RefineFiltersPanel } from 'pages/inside/common/refineFiltersPanel';
+import { InfoPanel } from 'pages/inside/common/infoPanel';
+import { HISTORY_VIEW } from 'controllers/testItem';
 import { ActionPanel } from './actionPanel';
 import { ActionPanelWithGroupOperations } from './actionPanelWithGroupOperations';
 
@@ -32,9 +34,10 @@ export const HistoryToolbar = ({
   onFilterChange,
   filterErrors,
   filterEntities,
-  infoLine,
+  isTestItemsList,
   withGroupOperations,
   userId,
+  parentItem,
 }) => (
   <Fragment>
     {withGroupOperations ? (
@@ -44,11 +47,12 @@ export const HistoryToolbar = ({
         onUnselect={onUnselect}
         onUnselectAll={onUnselectAll}
         userId={userId}
+        parentItem={parentItem}
       />
     ) : (
-      <ActionPanel onRefresh={onRefresh} selectedItems={selectedItems} />
+      <ActionPanel onRefresh={onRefresh} selectedItems={selectedItems} parentItem={parentItem} />
     )}
-    {infoLine}
+    {(parentItem || isTestItemsList) && <InfoPanel viewMode={HISTORY_VIEW} data={parentItem} />}
     <RefineFiltersPanel
       onFilterAdd={onFilterAdd}
       onFilterRemove={onFilterRemove}
@@ -63,10 +67,11 @@ export const HistoryToolbar = ({
 HistoryToolbar.propTypes = {
   selectedItems: PropTypes.arrayOf(PropTypes.object),
   userId: PropTypes.string,
-  infoLine: PropTypes.node,
+  isTestItemsList: PropTypes.bool,
   filterErrors: PropTypes.object,
   filterEntities: PropTypes.array,
   withGroupOperations: PropTypes.bool,
+  parentItem: PropTypes.object,
   onRefresh: PropTypes.func,
   onFilterAdd: PropTypes.func,
   onFilterRemove: PropTypes.func,
@@ -78,10 +83,11 @@ HistoryToolbar.propTypes = {
 HistoryToolbar.defaultProps = {
   selectedItems: [],
   userId: '',
-  infoLine: null,
+  isTestItemsList: false,
   filterErrors: {},
   filterEntities: [],
   withGroupOperations: false,
+  parentItem: null,
   onRefresh: () => {},
   onFilterAdd: () => {},
   onFilterRemove: () => {},

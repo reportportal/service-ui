@@ -1,0 +1,98 @@
+/*!
+ * Copyright 2020 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.icon {
+  display: inline-block;
+  width: 18px;
+  height: 20px;
+  margin-right: 5px;
+}
+
+.view-tabs {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.view-tab-link {
+  display: flex;
+  align-items: center;
+  border: none;
+  padding: 0;
+  color: $COLOR--gray-47;
+  font-size: 12px;
+  font-family: $FONT-SEMIBOLD;
+  white-space: nowrap;
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: pointer;
+
+  svg {
+    fill: $COLOR--gray-80;
+    stroke: $COLOR--gray-80;
+  }
+
+  &:hover {
+    color: $COLOR--topaz;
+
+    svg {
+      fill: lighten($COLOR--topaz, 10%);
+      stroke: lighten($COLOR--topaz, 10%);
+    }
+  }
+
+  &:not(:last-child) {
+    &:after {
+      content: '';
+      display: inline-block;
+      width: 1px;
+      height: 20px;
+      margin: 0 12px;
+      background-color: $COLOR--gray-91;
+    }
+  }
+}
+
+.view-tab-link.active {
+  color: $COLOR--topaz;
+
+  svg {
+    fill: $COLOR--topaz;
+    stroke: $COLOR--topaz;
+  }
+
+  &:hover {
+    color: lighten($COLOR--topaz, 10%);
+
+    svg {
+      fill: lighten($COLOR--topaz, 10%);
+      stroke: lighten($COLOR--topaz, 10%);
+    }
+  }
+}
+
+.view-tab-link.disabled {
+  cursor: default;
+
+  &:hover {
+    color: $COLOR--gray-47;
+
+    svg {
+      fill: $COLOR--gray-80;
+      stroke: $COLOR--gray-80;
+    }
+  }
+}

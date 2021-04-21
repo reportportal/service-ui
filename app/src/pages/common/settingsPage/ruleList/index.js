@@ -15,3 +15,4 @@
  */
 
 export { RuleList } from './ruleList';
+export { ItemContent } from './listItem/itemContent';

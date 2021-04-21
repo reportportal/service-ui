@@ -68,6 +68,7 @@ export class NonPassedTestCasesTrendChart extends Component {
     const launchIds = widget.content.result.map((item) => item.id);
     const link = getStatisticsLink({
       statuses: [FAILED, SKIPPED, INTERRUPTED],
+      types: null,
     });
     const navigationParams = getDefaultTestItemLinkParams(
       project,

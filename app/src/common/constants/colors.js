@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-export const COLOR_FAILED = '#f36c4a';
+export const COLOR_FAILED = '#f65e5e';
 export const COLOR_FAILEDSKIPPEDTOTAL = '#f36c4a';
-export const COLOR_PASSED = '#87b77b';
-export const COLOR_SKIPPED = '#bdc7cc';
+export const COLOR_PASSED = '#56b985';
+export const COLOR_SKIPPED = '#6d6d6d';
 export const COLOR_TOTAL = '#489beb';
 export const COLOR_AUTOMATION_BUG = '#f7d63e';
 export const COLOR_PRODUCT_BUG = '#ec3900';

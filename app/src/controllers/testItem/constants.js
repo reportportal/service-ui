@@ -32,15 +32,31 @@ export const PARENT_ITEMS_NAMESPACE = `${NAMESPACE}/parentItems`;
 export const FILTERED_ITEM_STATISTICS_NAMESPACE = `${NAMESPACE}/filteredItemStatistics`;
 export const SET_PAGE_LOADING = `${NAMESPACE}/setPageLoading`;
 export const DEFAULT_SORTING = formatSortingString(['startTime'], SORTING_ASC);
-export const LIST_VIEW = 'LIST_VIEW';
-export const LOG_VIEW = 'LOG_VIEW';
 export const DEFAULT_LAUNCHES_LIMIT = 600;
 export const DELETE_TEST_ITEMS = 'DeleteTestItems';
 export const COMPOSITE_ATTRIBUTES_FILTER = 'filter.has.compositeAttribute';
+export const CURRENT_ITEM_LEVEL = 'currentItemLevel';
+export const PROVIDER_TYPE_WIDGET = 'widget';
+export const PROVIDER_TYPE_LAUNCH = 'launch';
+export const PROVIDER_TYPE_FILTER = 'filter';
+export const PROVIDER_TYPE_WIDGET_ID = 'widgetId';
+export const PROVIDER_TYPE_LAUNCH_ID = 'launchId';
+export const PROVIDER_TYPE_FILTER_ID = 'filterId';
+
+export const LIST_VIEW = 'LIST_VIEW';
+export const LOG_VIEW = 'PARENT_LOG_VIEW';
+export const HISTORY_VIEW = 'HISTORY_VIEW';
+export const UNIQUE_ERRORS_VIEW = 'UNIQUE_ERRORS_VIEW';
 
 export const FILTERED_ITEM_STATISTICS_INITIAL_STATE = {
   executions: {},
   defects: {},
+};
+
+export const PROVIDER_TYPE_MODIFIERS_ID_MAP = {
+  [PROVIDER_TYPE_WIDGET]: PROVIDER_TYPE_WIDGET_ID,
+  [PROVIDER_TYPE_LAUNCH]: PROVIDER_TYPE_LAUNCH_ID,
+  [PROVIDER_TYPE_FILTER]: PROVIDER_TYPE_FILTER_ID,
 };
 
 export const TEST_ITEM_TYPES_MAP = {

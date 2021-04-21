@@ -235,10 +235,20 @@ export class NotificationsTab extends Component {
   };
 
   render() {
-    const { enabled, cases, intl, isEmailIntegrationAvailable } = this.props;
+    const {
+      intl: { formatMessage },
+      enabled,
+      cases,
+      isEmailIntegrationAvailable,
+    } = this.props;
     const readOnlyNotificationsEnableForm = !this.isAbleToEditNotificationsEnableForm();
     const readOnlyNotificationCaseList = !this.isAbleToEditNotificationCaseList();
-    const titleMessage = !isEmailIntegrationAvailable ? intl.formatMessage(messages.title) : '';
+    const headerMessages = {
+      toggleLabel: formatMessage(messages.toggleLabel),
+      toggleNote: formatMessage(messages.toggleNote),
+      create: formatMessage(messages.create),
+    };
+    const titleMessage = !isEmailIntegrationAvailable ? formatMessage(messages.title) : '';
 
     return (
       <div className={cx('notifications-tab')}>
@@ -246,7 +256,7 @@ export class NotificationsTab extends Component {
           <Fragment>
             <RuleListHeader
               readOnly={readOnlyNotificationsEnableForm}
-              messages={messages}
+              messages={headerMessages}
               switcherValue={enabled}
               titleMessage={titleMessage}
               onAddItem={this.addNotificationCase}
@@ -260,13 +270,12 @@ export class NotificationsTab extends Component {
               onEdit={this.onEdit}
               getPanelTitle={this.getPanelTitle}
               getListItemContentData={this.getListItemContentData}
-              messages={messages}
             />
           </Fragment>
         ) : (
           <NoCasesBlock
-            noItemsMessage={intl.formatMessage(messages.noItemsMessage)}
-            notificationsInfo={intl.formatMessage(messages.notificationsInfo)}
+            noItemsMessage={formatMessage(messages.noItemsMessage)}
+            notificationsInfo={formatMessage(messages.notificationsInfo)}
           >
             <GhostButton
               mobileDisabled
@@ -274,7 +283,7 @@ export class NotificationsTab extends Component {
               icon={PlusIcon}
               onClick={this.addNotificationCase}
             >
-              {intl.formatMessage(messages.create)}
+              {formatMessage(messages.create)}
             </GhostButton>
           </NoCasesBlock>
         )}

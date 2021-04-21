@@ -20,7 +20,6 @@
   z-index: $Z_INDEX-GRID_HEADER;
   display: table-cell;
   color: $COLOR--gray-47;
-  background-color: $COLOR--white;
   font-family: $FONT-SEMIBOLD;
   font-size: 12px;
   height: 50px;
@@ -28,6 +27,7 @@
   padding-left: 10px;
   text-transform: uppercase;
   vertical-align: middle;
+  background-color: $COLOR--primary-gray;
 
   &:first-child {
     padding-left: 20px;
@@ -152,5 +152,9 @@
     .filter {
       display: block;
     }
+  }
+
+  &.size-small {
+    height: 35px;
   }
 }

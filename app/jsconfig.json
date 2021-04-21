@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "experimentalDecorators": true,
+    "paths": {
+      "components/*": ["src/components/*"],
+      "controllers/*": ["src/controllers/*"],
+      "common/*": ["src/common/*"],
+      "pages/*": ["src/pages/*"],
+      "store/*": ["src/store/*"],
+      "routes/*": ["src/routes/*"],
+      "layouts/*": ["src/layouts/*"]
+    }
+  },
+  "exclude": ["build", "node_modules"]
+}

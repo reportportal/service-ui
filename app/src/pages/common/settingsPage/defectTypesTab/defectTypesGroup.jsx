@@ -110,7 +110,7 @@ export class DefectTypesGroup extends Component {
                 color: group[0].color,
                 typeRef: group[0].typeRef,
               }}
-              onDelete={this.closeNewSubTypeForm}
+              onCancel={this.closeNewSubTypeForm}
               onConfirm={this.addDefectSubType}
             />
           </div>

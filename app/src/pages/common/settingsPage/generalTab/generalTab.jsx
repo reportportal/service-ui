@@ -20,7 +20,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
-import { reduxForm } from 'redux-form';
+import { formValueSelector, reduxForm } from 'redux-form';
 import moment from 'moment';
 import { URLS } from 'common/urls';
 import { fetch, secondsToDays } from 'common/utils';
@@ -49,6 +49,7 @@ const cx = classNames.bind(styles);
 
 const hoursToSeconds = (hours) => moment.duration(hours, 'hours').asSeconds();
 const daysToSeconds = (days) => moment.duration(days, 'days').asSeconds();
+const selector = formValueSelector('generalForm');
 
 @reduxForm({
   form: 'generalForm',
@@ -60,6 +61,7 @@ const daysToSeconds = (days) => moment.duration(days, 'days').asSeconds();
     accountRole: userAccountRoleSelector(state),
     userRole: activeProjectRoleSelector(state),
     lang: langSelector(state),
+    formValues: selector(state, 'keepLaunches', 'keepLogs', 'keepScreenshots'),
   }),
   {
     showNotification,
@@ -90,6 +92,7 @@ export class GeneralTab extends Component {
     }).isRequired,
     lang: PropTypes.string,
     retention: PropTypes.number,
+    formValues: PropTypes.object,
   };
 
   static defaultProps = {
@@ -160,16 +163,14 @@ export class GeneralTab extends Component {
     return retention === null || retention > value || retention === 0 ? value : retention;
   };
 
-  getRetentionOptions = () => {
+  getRetentionOptions = (newOptions = this.retentionOptions) => {
     const { retention, lang } = this.props;
 
     if (!retention || retention === 0) {
-      return this.retentionOptions;
+      return newOptions;
     }
 
-    const options = this.retentionOptions.filter(
-      (option) => option.value <= retention && option.value !== 0,
-    );
+    const options = newOptions.filter((option) => option.value <= retention && option.value !== 0);
 
     if ((options.length && options[options.length - 1].value !== retention) || !options.length) {
       options.push({ label: secondsToDays(retention, lang), value: retention });
@@ -187,6 +188,76 @@ export class GeneralTab extends Component {
   };
 
   formatRetention = this.createValueFormatter(this.getRetentionOptions());
+
+  getLaunchesOptions = () => {
+    const { formValues } = this.props;
+    if (!formValues) {
+      return [];
+    }
+    const arrValues = Object.entries(formValues).map((elem) => {
+      const [key, value] = elem;
+      return value === 0 ? [key, Infinity] : elem;
+    });
+    const mapValues = new Map(arrValues);
+    const inputValues = Object.fromEntries(mapValues);
+    const newOptions = this.retentionOptions.map((elem) => {
+      const disabled =
+        elem.value !== 0 &&
+        (elem.value < inputValues.keepLogs || elem.value < inputValues.keepScreenshots);
+      return { ...elem, disabled };
+    });
+    const options = this.getRetentionOptions(newOptions);
+    return options;
+  };
+
+  getLogOptions = () => {
+    const { formValues } = this.props;
+    if (!formValues) {
+      return [];
+    }
+    const arrValues = Object.entries(formValues).map((elem) => {
+      const [key, value] = elem;
+      return value === 0 ? [key, Infinity] : elem;
+    });
+    const mapValues = new Map(arrValues);
+    const inputValues = Object.fromEntries(mapValues);
+    const newOptions = this.retentionOptions.map((elem) => {
+      const condition =
+        elem.value === 0
+          ? elem.value !== inputValues.keepLaunches
+          : elem.value > inputValues.keepLaunches || elem.value < inputValues.keepScreenshots;
+      const disabled = inputValues.keepLaunches === Infinity ? false : condition;
+      return { ...elem, disabled };
+    });
+    const options = this.getRetentionOptions(newOptions);
+    return options;
+  };
+
+  getScreenshotsOptions = () => {
+    const { formValues } = this.props;
+    if (!formValues) {
+      return [];
+    }
+    const arrValues = Object.entries(formValues).map((elem) => {
+      const [key, value] = elem;
+      return value === 0 ? [key, Infinity] : elem;
+    });
+    const mapValues = new Map(arrValues);
+    const inputValues = Object.fromEntries(mapValues);
+    const newOptions = this.retentionOptions.map((elem) => {
+      const condition =
+        elem.value === 0
+          ? elem.value !== inputValues.keepLaunches && elem.value !== inputValues.keepLogs
+          : elem.value > inputValues.keepLaunches || elem.value > inputValues.keepLogs;
+      const disabled =
+        inputValues.keepLaunches === Infinity && inputValues.keepLogs === Infinity
+          ? false
+          : condition;
+      return { ...elem, disabled };
+    });
+    const options = this.getRetentionOptions(newOptions);
+    return options;
+  };
 
   formatInterruptJobTimes = this.createValueFormatter(this.interruptJobTime);
 
@@ -226,7 +297,7 @@ export class GeneralTab extends Component {
             disabled={!canUpdateSettings(accountRole, userRole)}
             format={this.formatRetention}
           >
-            <InputDropdown options={this.getRetentionOptions()} mobileDisabled />
+            <InputDropdown options={this.getLaunchesOptions()} mobileDisabled />
           </FormField>
           <FormField
             name="keepLogs"
@@ -239,7 +310,7 @@ export class GeneralTab extends Component {
             disabled={!canUpdateSettings(accountRole, userRole)}
             format={this.formatRetention}
           >
-            <InputDropdown options={this.getRetentionOptions()} mobileDisabled />
+            <InputDropdown options={this.getLogOptions()} mobileDisabled />
           </FormField>
           <FormField
             name="keepScreenshots"
@@ -252,7 +323,7 @@ export class GeneralTab extends Component {
             disabled={!canUpdateSettings(accountRole, userRole)}
             format={this.formatRetention}
           >
-            <InputDropdown options={this.getRetentionOptions()} mobileDisabled />
+            <InputDropdown options={this.getScreenshotsOptions()} mobileDisabled />
           </FormField>
           <FormField withoutProvider fieldWrapperClassName={cx('button-container')}>
             <div className={cx('submit-button')}>

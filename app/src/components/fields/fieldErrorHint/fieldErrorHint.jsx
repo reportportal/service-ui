@@ -118,6 +118,10 @@ const messages = defineMessages({
     id: 'LaunchLevelEntities.descriptionEntityHint',
     defaultMessage: 'Description should have size from 3 to 18',
   },
+  descriptionStepLevelEntityHint: {
+    id: 'LaunchLevelEntities.descriptionStepLevelEntityHint',
+    defaultMessage: 'Description should have size from 1 to 256',
+  },
   demoDataPostfixHint: {
     id: 'DemoDataTabForm.demoDataPostfixHint',
     defaultMessage: 'Postfix should have size from 1 to 90',

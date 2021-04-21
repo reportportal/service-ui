@@ -68,6 +68,7 @@ export class AttributeEditor extends Component {
     valueURLCreator: PropTypes.func,
     intl: PropTypes.object.isRequired,
     attribute: PropTypes.object,
+    customClass: PropTypes.string,
   };
 
   static defaultProps = {
@@ -80,6 +81,7 @@ export class AttributeEditor extends Component {
     valueURLCreator: null,
     invalid: false,
     attribute: {},
+    customClass: '',
   };
 
   constructor(props) {
@@ -142,9 +144,17 @@ export class AttributeEditor extends Component {
   handleAttributeKeyInputChange = (text) => this.setState({ isKeyEdited: !!text });
 
   render() {
-    const { projectId, attributes, onCancel, keyURLCreator, valueURLCreator, intl } = this.props;
+    const {
+      projectId,
+      attributes,
+      onCancel,
+      keyURLCreator,
+      valueURLCreator,
+      customClass,
+      intl,
+    } = this.props;
     return (
-      <div className={cx('attribute-editor')}>
+      <div className={cx('attribute-editor', customClass)}>
         <div className={cx('control')}>
           <FieldErrorHint error={this.state.errors.key} staticHint>
             <AttributeInput

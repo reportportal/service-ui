@@ -30,12 +30,14 @@ export class StackTraceMessageBlock extends Component {
     children: PropTypes.any,
     maxHeight: PropTypes.number,
     level: PropTypes.string,
+    designMode: PropTypes.string,
   };
 
   static defaultProps = {
     children: '',
     maxHeight: MAX_ROW_HEIGHT,
     level: ERROR,
+    designMode: '',
   };
 
   constructor(props) {
@@ -90,7 +92,7 @@ export class StackTraceMessageBlock extends Component {
   };
 
   render() {
-    const { children, level } = this.props;
+    const { children, level, designMode } = this.props;
     const { expanded, withAccordion, maxHeight } = this.state;
 
     return (
@@ -99,6 +101,7 @@ export class StackTraceMessageBlock extends Component {
           'row-wrapper',
           { 'with-accordion': withAccordion },
           `level-${level.toLowerCase()}`,
+          { [`design-mode-${designMode}`]: designMode },
         )}
       >
         {withAccordion && (
@@ -109,12 +112,21 @@ export class StackTraceMessageBlock extends Component {
             />
           </div>
         )}
-        <div className={cx('row')} ref={this.overflowCell} style={{ maxHeight }}>
+        <div
+          className={cx('row', { [`design-mode-${designMode}`]: designMode })}
+          ref={this.overflowCell}
+          style={{ maxHeight }}
+        >
           {children}
         </div>
         {this.state.withAccordion && (
           <div className={cx('accordion-wrapper')}>
-            <div className={cx('accordion-block', { expanded: this.state.expanded })}>
+            <div
+              className={cx('accordion-block', {
+                expanded: this.state.expanded,
+                [`design-mode-${designMode}`]: designMode,
+              })}
+            >
               <div
                 className={cx('accordion-toggler', { rotated: this.state.expanded })}
                 onClick={this.toggleAccordion}

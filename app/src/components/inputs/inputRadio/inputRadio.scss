@@ -16,6 +16,8 @@
 
 .input-radio {
   display: flex;
+  align-items: center;
+  height: 100%;
   outline: none;
   cursor: pointer;
 
@@ -85,10 +87,13 @@
   }
 }
 .children-container {
-  width: 100%;
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
   font-family: $FONT-REGULAR;
   font-size: 13px;
   color: $COLOR--charcoal-grey;
   line-height: 18px;
   word-break: break-all;
+  text-overflow: ellipsis;
 }

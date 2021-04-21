@@ -27,9 +27,11 @@ const DEFAULT_TOOLTIP_WIDTH = 300;
 export const withTooltip = ({ TooltipComponent, data = {} }) => (WrappedComponent) =>
   class Wrapper extends Component {
     static propTypes = {
+      showTooltip: PropTypes.bool,
       children: PropTypes.node,
     };
     static defaultProps = {
+      showTooltip: true,
       children: null,
     };
     state = {
@@ -63,6 +65,7 @@ export const withTooltip = ({ TooltipComponent, data = {} }) => (WrappedComponen
             )}
           </Reference>
           {shown &&
+            this.props.showTooltip &&
             ReactDOM.createPortal(
               <Popper placement={data.placement} modifiers={data.modifiers} eventsEnabled={false}>
                 {({ placement, ref, style, arrowProps }) => (
@@ -70,6 +73,7 @@ export const withTooltip = ({ TooltipComponent, data = {} }) => (WrappedComponen
                     className={cx('tooltip', {
                       'no-mobile': data.noMobile,
                       'desktop-only': data.desktopOnly,
+                      dark: data.dark,
                     })}
                     ref={ref}
                     style={{

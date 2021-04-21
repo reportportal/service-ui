@@ -1,0 +1,175 @@
+/*!
+ * Copyright 2019 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.user-block {
+  position: relative;
+  display: block;
+  color: $COLOR--charcoal-grey;
+  font-family: $FONT-CONDBOLD;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+.user-wrapper {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 10px 20px;
+  border-bottom: solid 1px $COLOR--gray-91;
+}
+.details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-left: 10px;
+}
+.admin-badge {
+  display: inline-block;
+  height: 12px;
+  padding: 0 5px;
+  border-radius: 100px;
+  background-color: $COLOR--orange-red;
+  color: $COLOR--white-two;
+  font-size: 10px;
+  text-align: center;
+  line-height: 12px;
+  text-overflow: ellipsis;
+}
+.username {
+  display: block;
+  max-width: 170px;
+  margin-top: 6px;
+  overflow: hidden;
+  font-size: 13px;
+  line-height: 15px;
+  font-family: $FONT-SEMIBOLD;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+}
+.avatar-wrapper {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  overflow: hidden;
+  background-color: transparent;
+  cursor: pointer;
+}
+.avatar {
+  position: absolute;
+  max-width: 100%;
+  max-height: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.menu {
+  position: absolute;
+  bottom: 0;
+  left: 62px;
+  width: 248px;
+  border: 1px solid $COLOR--gray-80;
+  background-color: $COLOR--white-two;
+  box-sizing: border-box;
+  box-shadow: 0 6px 12px $COLOR--gray-80;
+  z-index: $Z_INDEX-USER_BLOCK_DROPDOWN;
+}
+
+.menu-arrow {
+  position: absolute;
+  bottom: 21px;
+  left: -14px;
+  width: 19px;
+  height: 6px;
+
+  &::before,
+  &::after {
+    content: '';
+    margin: auto;
+    display: block;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 8px 7px 8px 0;
+  }
+
+  &::before {
+    border-color: transparent $COLOR--gray-80 transparent transparent;
+  }
+
+  &::after {
+    position: absolute;
+    top: 0;
+    left: 7px;
+    border-color: transparent $COLOR--white-two transparent transparent;
+  }
+}
+
+.menu-item {
+  display: block;
+  width: 100%;
+  height: 45px;
+  padding: 0 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background-color: $COLOR--white-two;
+  font-family: $FONT-CONDBOLD;
+  font-size: 17px;
+  color: $COLOR--charcoal-grey;
+  line-height: 45px;
+  box-sizing: border-box;
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: pointer;
+
+  &:hover:not(.active) {
+    background-color: $COLOR--tealish-hover;
+  }
+  &.active {
+    background-color: $COLOR--gray-91;
+    cursor: default;
+  }
+}
+
+.tooltip-trigger {
+  display: block;
+  height: 100%;
+
+  .avatar-wrapper {
+    margin: 13px 10px;
+  }
+}
+
+.user-tooltip {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  max-width: 200px;
+  height: 25px;
+  box-sizing: border-box;
+  font-size: 17px;
+  font-family: $FONT-SEMIBOLD;
+  white-space: pre;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  .username {
+    margin: 0 10px 0 0;
+    text-transform: uppercase;
+  }
+}

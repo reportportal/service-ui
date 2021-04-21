@@ -18,30 +18,9 @@
   display: flex;
   flex-direction: column;
   margin: 8px 0;
-}
+  padding-left: 90px;
 
-.data-row {
-  display: flex;
-  flex-direction: row;
-  margin: 0 15px 15px 90px;
-  font-size: 13px;
-  font-family: $FONT-REGULAR;
   @media (max-width: $SCREEN_SM_MAX) {
     margin-left: 15px;
-  }
-}
-
-.data-name {
-  flex: 150px 0 0;
-  margin-right: 20px;
-  color: $COLOR--gray-60;
-}
-
-.data-value {
-  flex: 300px 1 1;
-  color: $COLOR--charcoal-grey;
-  word-break: break-all;
-  @supports (word-break: break-word) {
-    word-break: break-word;
   }
 }

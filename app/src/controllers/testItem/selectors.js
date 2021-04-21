@@ -30,6 +30,7 @@ import {
   searchStringSelector,
   querySelector,
   filterIdSelector,
+  HISTORY_PAGE,
 } from 'controllers/pages';
 import { activeProjectSelector } from 'controllers/user';
 import { activeFilterSelector } from 'controllers/filter';
@@ -49,7 +50,12 @@ import { defectTypesSelector } from 'controllers/project';
 import { omit } from 'common/utils';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { SORTING_KEY } from 'controllers/sorting';
-import { DEFAULT_SORTING, TEST_ITEMS_TYPE_LIST, COMPOSITE_ATTRIBUTES_FILTER } from './constants';
+import {
+  DEFAULT_SORTING,
+  TEST_ITEMS_TYPE_LIST,
+  COMPOSITE_ATTRIBUTES_FILTER,
+  PROVIDER_TYPE_MODIFIERS_ID_MAP,
+} from './constants';
 import {
   createLink,
   getQueryNamespace,
@@ -276,6 +282,8 @@ export const statisticsLinkSelector = createSelector(
   (query, payload, testItemIds, isDebugMode, testItemIdsArray) => (ownProps) => {
     const linkPayload = (ownProps.ownLinkParams && ownProps.ownLinkParams.payload) || payload;
     const launchesLimit = ownProps.launchesLimit;
+    const providerType = ownProps.providerType;
+    const providerTypeModifierId = PROVIDER_TYPE_MODIFIERS_ID_MAP[providerType];
     const isLatest = ownProps.isLatest;
     const page =
       (ownProps.ownLinkParams && ownProps.ownLinkParams.page) || getNextPage(isDebugMode, true);
@@ -289,14 +297,19 @@ export const statisticsLinkSelector = createSelector(
       'filter.eq.hasStats': true,
       'filter.eq.hasChildren': false,
       'filter.in.type': LEVEL_STEP,
-      'filter.in.launchId': ownProps.launchId,
+      'filter.has.attributeKey': ownProps.attributeKey,
+      'filter.has.attributeValue': ownProps.attributeValue,
       'filter.has.compositeAttribute': ownProps.compositeAttribute,
+      providerType,
+      [providerTypeModifierId]: ownProps[providerTypeModifierId],
       launchesLimit,
       isLatest,
     };
-
     if (ownProps.statuses) {
       params['filter.in.status'] = ownProps.statuses.join(',');
+    }
+    if (ownProps.types === null) {
+      delete params['filter.in.type'];
     }
 
     return createLink(
@@ -321,6 +334,8 @@ export const defectLinkSelector = createSelector(
   (query, payload, testItemIds, isDebugMode, testItemIdsArray) => (ownProps) => {
     const linkPayload = (ownProps.ownLinkParams && ownProps.ownLinkParams.payload) || payload;
     const launchesLimit = ownProps.launchesLimit;
+    const providerType = ownProps.providerType;
+    const providerTypeModifierId = PROVIDER_TYPE_MODIFIERS_ID_MAP[providerType];
     const isLatest = ownProps.isLatest;
     let levelIndex = 0;
     if (testItemIdsArray.length > 0) {
@@ -339,8 +354,11 @@ export const defectLinkSelector = createSelector(
       'filter.eq.hasStats': true,
       'filter.eq.hasChildren': false,
       'filter.in.issueType': getDefectsString(ownProps.defects),
+      'filter.has.attributeKey': ownProps.attributeKey,
+      'filter.has.attributeValue': ownProps.attributeValue,
       'filter.has.compositeAttribute': ownProps.compositeAttribute,
-      'filter.in.launchId': ownProps.launchId,
+      providerType,
+      [providerTypeModifierId]: ownProps[providerTypeModifierId],
       launchesLimit,
       isLatest,
     };
@@ -364,10 +382,10 @@ export const defectLinkSelector = createSelector(
   },
 );
 
-export const testCaseNameLinkSelector = (state, ownProps) => {
-  const activeProject = activeProjectSelector(state);
+export const testCaseNameLinkSelector = (state) => (ownProps) => {
+  const projectId = activeProjectSelector(state);
   const payload = {
-    projectId: activeProject,
+    projectId,
     filterId: ALL,
   };
 
@@ -417,7 +435,7 @@ export const logPageOffsetSelector = createSelector(
     const parentFromBreadcrumbs = breadcrumbs.find((item) => item.listView);
     if (parentFromBreadcrumbs) {
       const { id } = parentFromBreadcrumbs;
-      offset = [...testItems].reverse().indexOf(id);
+      offset = [...testItems].reverse().indexOf(String(id));
     }
     return offset;
   },
@@ -452,6 +470,16 @@ export const logViewLinkSelector = createSelector(
   },
 );
 
+export const historyViewLinkSelector = createSelector(
+  payloadSelector,
+  querySelector,
+  (payload, query) => ({
+    type: HISTORY_PAGE,
+    payload,
+    query: { ...query },
+  }),
+);
+
 export const getLogItemLinkSelector = createSelector(
   activeProjectSelector,
   (activeProject) => (testItem) => {
@@ -462,7 +490,8 @@ export const getLogItemLinkSelector = createSelector(
 
     const testItemPath = testItem.path.split('.').slice(0, -1);
     const testItemIds = [testItem.launchId, ...testItemPath].join('/');
+    const itemId = testItem.id || testItem.itemId;
 
-    return createLink(testItemIds, testItem.itemId, payload, {}, PROJECT_LOG_PAGE);
+    return createLink(testItemIds, itemId, payload, {}, PROJECT_LOG_PAGE);
   },
 );

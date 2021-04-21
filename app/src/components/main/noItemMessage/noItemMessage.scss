@@ -20,6 +20,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: $COLOR--white-two;
 }
 .warning-icon {
   display: inline-block;
@@ -33,4 +34,7 @@
   font-family: $FONT-REGULAR;
   font-size: 17px;
   text-align: center;
+}
+.transparent-background {
+  background-color: transparent;
 }

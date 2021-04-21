@@ -26,6 +26,7 @@ import { breadcrumbsSelector, restorePathAction } from 'controllers/testItem';
 import { isEmptyHistorySelector } from 'controllers/itemsHistory';
 import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
 import { GhostButton } from 'components/buttons/ghostButton';
+import { ParentInfo } from 'pages/inside/common/infoLine/parentInfo';
 import { CompareWithFilterControl } from './compareWithFilterControl';
 import styles from './actionPanel.scss';
 
@@ -53,6 +54,7 @@ export class ActionPanel extends Component {
     hasErrors: PropTypes.bool,
     showBreadcrumbs: PropTypes.bool,
     isEmptyHistory: PropTypes.bool,
+    parentItem: PropTypes.object,
     onRefresh: PropTypes.func,
     restorePath: PropTypes.func,
   };
@@ -64,6 +66,7 @@ export class ActionPanel extends Component {
     hasErrors: false,
     isEmptyHistory: false,
     showBreadcrumbs: true,
+    parentItem: null,
     onRefresh: () => {},
     restorePath: () => {},
   };
@@ -82,6 +85,7 @@ export class ActionPanel extends Component {
       buttons,
       customBlock,
       isEmptyHistory,
+      parentItem,
     } = this.props;
 
     return (
@@ -89,6 +93,7 @@ export class ActionPanel extends Component {
         {showBreadcrumbs && <Breadcrumbs descriptors={breadcrumbs} onRestorePath={restorePath} />}
         {customBlock}
         <div className={cx('action-buttons')}>
+          {parentItem && <ParentInfo parentItem={parentItem} />}
           <div className={cx('action-button')}>
             <CompareWithFilterControl disabled={!showBreadcrumbs || isEmptyHistory} />
           </div>
@@ -104,6 +109,7 @@ export class ActionPanel extends Component {
               icon={RefreshIcon}
               onClick={this.refreshItemsAction}
               disabled={!showBreadcrumbs}
+              transparentBackground
             >
               <FormattedMessage id="Common.refresh" defaultMessage="Refresh" />
             </GhostButton>

@@ -87,7 +87,7 @@ export class LogItemDetails extends Component {
             </span>
             {logItem.growthDuration && (
               <span className={cx('attribute')}>
-                <span className={cx('growth-duration')}>{logItem.growthDuration}</span>
+                <span className={cx('growth-duration')}>+{logItem.growthDuration}%</span>
               </span>
             )}
             {logItem.attributes && !!logItem.attributes.length && (

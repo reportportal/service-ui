@@ -26,18 +26,20 @@ const cx = classNames.bind(styles);
 
 export const IssueWithTooltip = withTooltip({
   TooltipComponent: IssueInfoTooltip,
-})(({ ticketId, url, onRemove }) => (
-  <a href={url} className={cx('issue')}>
+})(({ ticketId, url, onRemove, className, readOnly }) => (
+  <a href={url} className={cx('issue', className)}>
     <div className={cx('title')}>{ticketId}</div>
-    <div
-      className={cx('cross')}
-      onClick={(event) => {
-        event.preventDefault();
-        onRemove(ticketId);
-      }}
-    >
-      {Parser(CrossIcon)}
-    </div>
+    {!readOnly && (
+      <div
+        className={cx('cross')}
+        onClick={(event) => {
+          event.preventDefault();
+          onRemove(ticketId);
+        }}
+      >
+        {Parser(CrossIcon)}
+      </div>
+    )}
   </a>
 ));
 IssueWithTooltip.propTypes = {
@@ -45,8 +47,13 @@ IssueWithTooltip.propTypes = {
   url: PropTypes.string.isRequired,
   btsProject: PropTypes.string.isRequired,
   btsUrl: PropTypes.string.isRequired,
+  showTooltip: PropTypes.bool.isRequired,
   onRemove: PropTypes.func,
+  className: PropTypes.string,
+  readOnly: PropTypes.bool,
 };
 IssueWithTooltip.defaultProps = {
   onRemove: () => {},
+  className: '',
+  readOnly: false,
 };

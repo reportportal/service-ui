@@ -39,6 +39,10 @@ const messages = defineMessages({
     id: 'MultipleAuthBlock.chooseAuth',
     defaultMessage: 'please choose the necessary auth provider',
   },
+  loginWith: {
+    id: 'MultipleAuthBlock.loginWith',
+    defaultMessage: "you can login with '<b>{providerName}</b>' provider",
+  },
   wrongAuthType: {
     id: 'MultipleAuthBlock.wrongAuthType',
     defaultMessage: "Couldn't find ''{authType}'' auth type",
@@ -99,23 +103,42 @@ export class MultipleAuthBlock extends Component {
   externalAuthClickHandler = () =>
     setWindowLocationToNewPath(normalizePathWithPrefix(this.state.selectedAuthPath));
 
-  render() {
+  renderProviders = (isSingleAuth) => {
     const { selectedAuthPath, authOptions } = this.state;
     const {
       intl: { formatMessage },
       multipleAuthKey,
     } = this.props;
-    return (
-      <PageBlockContainer header={messages.externalLogin} hint={messages.chooseAuth}>
-        {selectedAuthPath ? (
+
+    if (selectedAuthPath) {
+      return (
+        !isSingleAuth && (
           <InputDropdown
             options={authOptions}
             value={selectedAuthPath}
             onChange={this.authPathChangeHandler}
           />
-        ) : (
-          formatMessage(messages.wrongAuthType, { authType: multipleAuthKey })
-        )}
+        )
+      );
+    }
+
+    return formatMessage(messages.wrongAuthType, { authType: multipleAuthKey });
+  };
+
+  render() {
+    const { selectedAuthPath, authOptions } = this.state;
+    const {
+      intl: { formatMessage },
+    } = this.props;
+    const isSingleAuth = authOptions.length === 1;
+
+    return (
+      <PageBlockContainer
+        header={messages.externalLogin}
+        hint={isSingleAuth ? messages.loginWith : messages.chooseAuth}
+        hintParams={{ providerName: authOptions[0] ? authOptions[0].label : '' }}
+      >
+        {this.renderProviders(isSingleAuth)}
         <div className={cx('actions-block')}>
           <div className={cx('actions-block-button')}>
             <Link to={{ type: LOGIN_PAGE }}>

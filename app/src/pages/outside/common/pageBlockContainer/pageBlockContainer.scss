@@ -19,6 +19,10 @@
   padding: 60px 50px;
   box-sizing: border-box;
 
+  b {
+    font-family: $FONT-SEMIBOLD;
+  }
+
   @media (max-width: $SCREEN_SM_MAX) {
     height: auto;
     width: 100%;

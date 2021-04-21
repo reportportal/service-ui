@@ -23,6 +23,7 @@ export const HOST_KEY = 'host';
 export const PORT_KEY = 'port';
 export const USERNAME_KEY = 'username';
 export const PASSWORD_KEY = 'password';
+const RP_HOST = 'rpHost';
 
 export const DEFAULT_FORM_CONFIG = {
   [AUTH_ENABLED_KEY]: false,
@@ -31,4 +32,5 @@ export const DEFAULT_FORM_CONFIG = {
   [TLS_KEY]: false,
   [USERNAME_KEY]: '',
   [PASSWORD_KEY]: '',
+  [RP_HOST]: window.location.origin,
 };

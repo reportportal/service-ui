@@ -22,8 +22,8 @@
   text-align: center;
   color: $COLOR--white;
   padding: 10px;
-  background: $COLOR--windows-blue;
-  text-shadow: 0 1px 1px darken($COLOR--windows-blue, 10%);
+  background: $COLOR--topaz;
+  text-shadow: 0 1px 1px darken($COLOR--topaz, 10%);
   &.success {
     background: $COLOR--dark-pastel-green;
     text-shadow: 0 1px 1px darken($COLOR--dark-pastel-green, 10%);

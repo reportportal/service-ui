@@ -35,6 +35,7 @@ import {
   PROJECT_LOG_PAGE,
   filterIdSelector,
   pageSelector,
+  testItemIdsSelector,
 } from 'controllers/pages';
 import { PAGE_KEY } from 'controllers/pagination';
 import { URLS } from 'common/urls';
@@ -48,6 +49,8 @@ import {
   showDefaultErrorNotification,
   NOTIFICATION_TYPES,
 } from 'controllers/notification';
+import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
+import { ALL } from 'common/constants/reservedFilterIds';
 import {
   setLevelAction,
   setPageLoadingAction,
@@ -61,6 +64,10 @@ import {
   RESTORE_PATH,
   FETCH_TEST_ITEMS_LOG_PAGE,
   DELETE_TEST_ITEMS,
+  CURRENT_ITEM_LEVEL,
+  PROVIDER_TYPE_LAUNCH,
+  PROVIDER_TYPE_FILTER,
+  PROVIDER_TYPE_MODIFIERS_ID_MAP,
 } from './constants';
 import { LEVELS } from './levels';
 import {
@@ -74,6 +81,7 @@ import {
   levelSelector,
   isTestItemsListSelector,
   isFilterParamsExistsSelector,
+  launchSelector,
 } from './selectors';
 import { calculateLevel } from './utils';
 
@@ -133,8 +141,13 @@ function* fetchTestItems({ payload = {} }) {
     }
   }
   const itemIdsArray = yield select(testItemIdsArraySelector);
-  const itemIds = offset ? itemIdsArray.slice(0, itemIdsArray.length - offset) : itemIdsArray;
   let launchId = yield select(launchIdSelector);
+  if (isNaN(Number(launchId))) {
+    const launch = yield select(launchSelector);
+    launchId = launch && launch.id;
+    itemIdsArray[0] = launch && launch.id;
+  }
+  const itemIds = offset ? itemIdsArray.slice(0, itemIdsArray.length - offset) : itemIdsArray;
   const isLostLaunch = yield select(isLostLaunchSelector);
   let parentId;
   if (isLostLaunch) {
@@ -162,11 +175,9 @@ function* fetchTestItems({ payload = {} }) {
   const underPathItemsIds = itemIds.filter((item) => item !== launchId);
   const params = isTestItemsList
     ? {
-        filterId,
         ...{ ...query, ...payloadParams },
       }
     : {
-        'filter.eq.launchId': launchId,
         'filter.eq.parentId': !noChildFilter ? parentId : undefined,
         'filter.level.path': !parentId && !noChildFilter ? 1 : undefined,
         'filter.under.path':
@@ -174,16 +185,42 @@ function* fetchTestItems({ payload = {} }) {
         [uniqueIdFilterKey]: pageQuery[uniqueIdFilterKey],
         ...{ ...query, ...payloadParams },
       };
+
+  if (!query.providerType) {
+    const [providerType, id] = isTestItemsList
+      ? [PROVIDER_TYPE_FILTER, filterId]
+      : [PROVIDER_TYPE_LAUNCH, launchId];
+    const providerTypeModifierId = PROVIDER_TYPE_MODIFIERS_ID_MAP[providerType];
+
+    params.providerType = providerType;
+    params[providerTypeModifierId] = id;
+  }
+
   const isFilterNotReserved = !FILTER_TITLES[filterId];
   if ((isTestItemsList || isFilterNotReserved) && !activeFilter) {
-    const filter = yield call(fetch, URLS.filter(project, filterId));
-
-    if (filter) {
-      yield put(showFilterOnLaunchesAction(filter));
+    try {
+      const filter = yield call(fetch, URLS.filter(project, filterId));
+      if (filter) {
+        yield put(showFilterOnLaunchesAction(filter));
+      }
+    } catch {
+      const testItemIds = yield select(testItemIdsSelector);
+      const link = {
+        type: TEST_ITEM_PAGE,
+        payload: {
+          filterId: ALL,
+          projectId: project,
+          testItemIds,
+        },
+        meta: {
+          query: pageQuery,
+        },
+      };
+      yield put(redirect(link));
     }
   }
   yield put(
-    fetchDataAction(NAMESPACE)(URLS.testItems(project), {
+    fetchDataAction(NAMESPACE)(URLS.testItemsWithProviderType(project), {
       params,
     }),
   );
@@ -193,13 +230,20 @@ function* fetchTestItems({ payload = {} }) {
     level = LEVEL_NOT_FOUND;
   } else {
     const previousLevel = yield select(levelSelector);
-    level = calculateLevel(dataPayload.payload.content, previousLevel, isTestItemsList);
+    const currentItemLevel = getStorageItem(CURRENT_ITEM_LEVEL);
+    level = calculateLevel(
+      dataPayload.payload.content,
+      previousLevel,
+      currentItemLevel,
+      isTestItemsList,
+    );
   }
 
   if (LEVELS[level]) {
     yield put(fetchSuccessAction(LEVELS[level].namespace, dataPayload.payload));
   }
   yield put(setLevelAction(level));
+  yield call(setStorageItem, CURRENT_ITEM_LEVEL, level);
 
   const isFilterParamsExists = yield select(isFilterParamsExistsSelector);
   if (!isTestItemsList && isFilterParamsExists) {

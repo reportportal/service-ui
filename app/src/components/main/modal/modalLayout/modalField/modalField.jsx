@@ -22,17 +22,22 @@ import styles from './modalField.scss';
 
 const cx = classname.bind(styles);
 
+const TIP_POSITION_BOTTOM = 'bottom';
+const TIP_POSITION_RIGHT = 'right';
+
 export const ModalField = ({
   className,
   label,
   children,
   tip,
+  tipPosition,
   labelWidth,
   alignLeft,
   noMinHeight,
   labelTip,
+  middleBaseline,
 }) => (
-  <div className={cx('modal-field', className)}>
+  <div className={cx('modal-field', className, { 'middle-baseline': middleBaseline })}>
     {label && (
       <Label
         label={label}
@@ -42,39 +47,35 @@ export const ModalField = ({
         labelTip={labelTip}
       />
     )}
-    <Content>
+    <div className={cx('modal-field-content')}>
       {children}
-      {tip && <Tip tip={tip} />}
-    </Content>
+      {tip && <div className={cx('modal-field-tip', `position-${tipPosition}`)}>{tip}</div>}
+    </div>
   </div>
 );
 ModalField.propTypes = {
   className: PropTypes.string,
   label: PropTypes.string,
   tip: PropTypes.string,
+  tipPosition: PropTypes.oneOf([TIP_POSITION_BOTTOM, TIP_POSITION_RIGHT]),
   children: PropTypes.node,
   labelWidth: PropTypes.number,
   alignLeft: PropTypes.bool,
   noMinHeight: PropTypes.bool,
   labelTip: PropTypes.string,
+  middleBaseline: PropTypes.bool,
 };
 ModalField.defaultProps = {
   className: '',
   label: '',
   tip: '',
+  tipPosition: TIP_POSITION_BOTTOM,
   children: null,
   labelWidth: null,
   alignLeft: false,
   noMinHeight: false,
   labelTip: '',
-};
-
-const Tip = ({ tip }) => <div className={cx('modal-field-tip')}>{tip}</div>;
-Tip.propTypes = {
-  tip: PropTypes.string,
-};
-Tip.defaultProps = {
-  tip: '',
+  middleBaseline: false,
 };
 
 const Label = ({ label, labelWidth, alignLeft, noMinHeight, labelTip }) => (
@@ -106,12 +107,4 @@ Label.defaultProps = {
   alignLeft: false,
   noMinHeight: false,
   labelTip: '',
-};
-
-const Content = ({ children }) => <div className={cx('modal-field-content')}>{children}</div>;
-Content.propTypes = {
-  children: PropTypes.node,
-};
-Content.defaultProps = {
-  children: null,
 };

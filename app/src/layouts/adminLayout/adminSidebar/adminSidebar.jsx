@@ -18,6 +18,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { activeProjectSelector } from 'controllers/user';
 import { FormattedMessage } from 'react-intl';
+import classNames from 'classnames/bind';
+import Parser from 'html-react-parser';
+import Link from 'redux-first-router-link';
 import {
   PROJECT_LAUNCHES_PAGE,
   USER_PROFILE_PAGE,
@@ -32,12 +35,46 @@ import PropTypes from 'prop-types';
 import track from 'react-tracking';
 import { uiExtensionAdminPagesSelector } from 'controllers/plugins/uiExtensions';
 import { ADMIN_SIDEBAR_EVENTS } from 'components/main/analytics/events';
+import { withTooltip } from 'components/main/tooltips/tooltip';
+import { TextTooltip } from 'components/main/tooltips/textTooltip';
 import { Sidebar } from 'layouts/common/sidebar';
 import ProjectsIcon from './img/projects-inline.svg';
-import UsersIcon from './img/users-inline.svg';
-import SettingsIcon from './img/settings-inline.svg';
+import UsersIcon from './img/all-users-inline.svg';
+import SettingsIcon from './img/server-settings-inline.svg';
+import PluginsIcon from './img/plugins-inline.svg';
 import BackIcon from './img/back-inline.svg';
 import ProfileIcon from './img/profile-inline.svg';
+import styles from './adminSidebar.scss';
+
+const cx = classNames.bind(styles);
+
+const BackToProject = ({ activeProject }) => (
+  <Link
+    className={cx('back-to-project')}
+    to={{
+      type: PROJECT_LAUNCHES_PAGE,
+      payload: { projectId: activeProject, filterId: ALL },
+    }}
+  >
+    <i className={cx('icon')}>{Parser(BackIcon)}</i>
+  </Link>
+);
+BackToProject.propTypes = {
+  activeProject: PropTypes.string,
+};
+BackToProject.defaultProps = {
+  activeProject: '',
+};
+
+const BackToProjectWithTooltip = withTooltip({
+  TooltipComponent: TextTooltip,
+  data: {
+    dynamicWidth: true,
+    placement: 'right',
+    tooltipTriggerClass: cx('tooltip-trigger'),
+    dark: true,
+  },
+})(BackToProject);
 
 @connect((state) => ({
   activeProject: activeProjectSelector(state),
@@ -97,7 +134,7 @@ export class AdminSidebar extends Component {
       {
         onClick: this.handleClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_PLUGINS_BTN),
         link: { type: PLUGINS_PAGE },
-        icon: SettingsIcon,
+        icon: PluginsIcon,
         message: <FormattedMessage id={'AdminSidebar.plugins'} defaultMessage={'Plugins'} />,
       },
     ];
@@ -131,9 +168,26 @@ export class AdminSidebar extends Component {
   ];
 
   render() {
+    const { activeProject } = this.props;
     const topSidebarItems = this.createTopSidebarItems();
     const bottomSidebarItems = this.createBottomSidebarItems();
+    const mainBlock = (
+      <BackToProjectWithTooltip
+        activeProject={activeProject}
+        className={cx('back-to-project-tooltip')}
+        tooltipContent={
+          <FormattedMessage id={'AdminSidebar.btnToProject'} defaultMessage={'Back to project'} />
+        }
+        preventParsing
+      />
+    );
 
-    return <Sidebar topSidebarItems={topSidebarItems} bottomSidebarItems={bottomSidebarItems} />;
+    return (
+      <Sidebar
+        mainBlock={mainBlock}
+        topSidebarItems={topSidebarItems}
+        bottomSidebarItems={bottomSidebarItems}
+      />
+    );
   }
 }

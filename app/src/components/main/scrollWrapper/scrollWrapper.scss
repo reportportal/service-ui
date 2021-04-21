@@ -72,15 +72,16 @@
 .back-to-top {
   position: fixed;
   left: 10px;
-  bottom: 20px;
+  bottom: 65px;
   padding: 0;
   font-size: 12px;
   font-family: $FONT-LIGHT;
+
   @media (max-width: $SCREEN_SM_MAX) {
     position: sticky;
     z-index: $Z_INDEX-STICKY-TOOLBAR;
-    bottom: 0px;
-    left: 0px;
+    bottom: 0;
+    left: 0;
     text-align: center;
     margin-right: 15px;
     margin-left: 15px;
@@ -88,46 +89,71 @@
     background-color: $COLOR--white-two;
     height: 35px;
   }
+
   @media (max-width: $SCREEN_XS_MAX) {
-    margin-right: 0px;
-    margin-left: 0px;
+    margin-right: 0;
+    margin-left: 0;
   }
 
   @media print {
     display: none;
   }
 }
+
 .back-to-top-button {
   border: none;
   color: darken($COLOR--gray-91, 25%);
   cursor: pointer;
   outline: none;
   background: none;
+
   &:hover {
     color: $COLOR--gray-91;
   }
   @media (max-width: $SCREEN_SM_MAX) {
-    padding: 0px;
+    padding: 0;
     width: 100%;
+    margin-bottom: 1px;
     line-height: 34px;
     color: $COLOR--gray-47;
     background-color: $COLOR--white-two;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+
     &:hover {
       color: $COLOR--gray-47;
     }
-    margin-bottom: 1px;
   }
 }
-.top-icon {
+
+.message {
   display: none;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: inline-block;
+  }
+}
+
+.top-icon {
+  width: 20px;
+  margin-right: 5px;
+  display: inline-block;
+
+  svg {
+    fill: $COLOR--white-two;
+  }
+
+  &:hover {
+    svg {
+      fill: $COLOR--gray-80;
+    }
+  }
+
   @media (max-width: $SCREEN_SM_MAX) {
     width: 15px;
-    margin-right: 5px;
-    display: inline-block;
-    vertical-align: middle;
+    vertical-align: sub;
+
     svg {
-      width: 100%;
+      fill: $COLOR--gray-47;
     }
   }
 }

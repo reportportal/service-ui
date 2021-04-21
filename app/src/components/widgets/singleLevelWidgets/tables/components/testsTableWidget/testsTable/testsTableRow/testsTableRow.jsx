@@ -18,10 +18,7 @@ import { Component } from 'react';
 import { func, string, number, array, object, oneOfType } from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl } from 'react-intl';
-import { connect } from 'react-redux';
-import { testCaseNameLinkSelector } from 'controllers/testItem';
 import { AbsRelTime } from 'components/main/absRelTime';
-import { NavLink } from 'components/main/navLink';
 import { PTTest } from '../../pTypes';
 import { Count } from '../count';
 import styles from './testsTableRow.scss';
@@ -29,17 +26,9 @@ import styles from './testsTableRow.scss';
 const cx = classNames.bind(styles);
 
 @injectIntl
-@connect((state, ownProps) => ({
-  testCaseNameLink: testCaseNameLinkSelector(state, {
-    uniqueId: ownProps.data.uniqueId,
-    testItemIds: ownProps.launchId,
-  }),
-}))
 export class TestsTableRow extends Component {
   static propTypes = {
     intl: object.isRequired,
-    launchId: oneOfType([number, string]).isRequired,
-    testCaseNameLink: object.isRequired,
     data: PTTest.isRequired,
     name: string.isRequired,
     time: oneOfType([number, array]).isRequired,
@@ -49,6 +38,7 @@ export class TestsTableRow extends Component {
     status: array,
     duration: number,
     getMaxtrixTooltip: func,
+    onItemClick: func,
   };
 
   static defaultProps = {
@@ -58,11 +48,19 @@ export class TestsTableRow extends Component {
     status: null,
     duration: null,
     getMaxtrixTooltip: null,
+    onItemClick: null,
+  };
+
+  itemClickHandler = () => {
+    const { onItemClick, data } = this.props;
+
+    if (onItemClick) {
+      onItemClick(data.id || data.uniqueId);
+    }
   };
 
   render() {
     const {
-      testCaseNameLink,
       data,
       name,
       time,
@@ -80,9 +78,9 @@ export class TestsTableRow extends Component {
 
     return (
       <div className={cx('row')}>
-        <NavLink className={cx('col', 'col-name')} to={testCaseNameLink}>
+        <div className={cx('col', 'col-name')} onClick={this.itemClickHandler}>
           <span>{name}</span>
-        </NavLink>
+        </div>
         {Matrix && count && (
           <div className={cx('col', 'col-count')} title={matrixTooltip}>
             <Count count={count} total={total} />
@@ -91,7 +89,7 @@ export class TestsTableRow extends Component {
         )}
         {percentage && <div className={cx('col', 'col-percents')}>{percentage}%</div>}
         {status && <div className={cx('col', 'col-status')}>{status}</div>}
-        {duration && <div className={cx('col', 'col-duration')}>{duration} s</div>}
+        {duration && <div className={cx('col', 'col-duration')}>{duration}</div>}
         <div className={cx('col', 'col-date')}>
           <AbsRelTime startTime={Array.isArray(time) ? time[time.length - 1] : time} />
         </div>

@@ -189,7 +189,8 @@ $DEFECT_NAME_PADDING: 70px;
 }
 
 .edit-button,
-.delete-button {
+.delete-button,
+.cancel-button {
   path {
     fill: $COLOR--gray-60;
   }
@@ -209,7 +210,7 @@ $DEFECT_NAME_PADDING: 70px;
   background: none;
   border: none;
   outline: none;
-  color: $COLOR--windows-blue;
+  color: $COLOR--topaz;
   font-size: 13px;
   font-family: inherit;
   cursor: pointer;

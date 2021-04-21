@@ -3,7 +3,8 @@ import {
   EXTENSION_TYPE_SETTINGS_TAB,
   EXTENSION_TYPE_ADMIN_PAGE,
   EXTENSION_TYPE_PAGE,
-  EXTENSION_TYPE_HEADER_COMPONENT,
+  EXTENSION_TYPE_SIDEBAR_COMPONENT,
+  EXTENSION_TYPE_LAUNCH_ITEM_COMPONENT,
 } from './constants';
 import { domainSelector, enabledPluginNamesSelector } from '../selectors';
 import { uiExtensionMap } from './uiExtensionStorage';
@@ -27,6 +28,9 @@ export const uiExtensionAdminPagesSelector = createUiExtensionSelectorByType(
   EXTENSION_TYPE_ADMIN_PAGE,
 );
 export const uiExtensionPagesSelector = createUiExtensionSelectorByType(EXTENSION_TYPE_PAGE);
-export const uiExtensionHeaderComponentsSelector = createUiExtensionSelectorByType(
-  EXTENSION_TYPE_HEADER_COMPONENT,
+export const uiExtensionSidebarComponentsSelector = createUiExtensionSelectorByType(
+  EXTENSION_TYPE_SIDEBAR_COMPONENT,
+);
+export const uiExtensionLaunchItemComponentsSelector = createUiExtensionSelectorByType(
+  EXTENSION_TYPE_LAUNCH_ITEM_COMPONENT,
 );

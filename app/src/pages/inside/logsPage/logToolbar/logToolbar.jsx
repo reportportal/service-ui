@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { Component } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
+import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { FormattedMessage } from 'react-intl';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { Breadcrumbs } from 'components/main/breadcrumbs';
 import { GhostButton } from 'components/buttons/ghostButton';
@@ -41,13 +41,24 @@ import {
   disablePrevItemLinkSelector,
   disableNextItemLinkSelector,
   DETAILED_LOG_VIEW,
+  setIncludeAllLaunchesAction,
+  includeAllLaunchesSelector,
 } from 'controllers/log';
-
+import { ParentInfo } from 'pages/inside/common/infoLine/parentInfo';
 import { stepPaginationSelector } from 'controllers/step';
+import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import styles from './logToolbar.scss';
 
 const cx = classNames.bind(styles);
 
+const messages = defineMessages({
+  historyAllLaunchesLabel: {
+    id: 'LogToolbar.historyAcrossAllLaunches',
+    defaultMessage: 'History Across All Launches',
+  },
+});
+
+@injectIntl
 @connect(
   (state) => ({
     breadcrumbs: breadcrumbsSelector(state),
@@ -57,8 +68,10 @@ const cx = classNames.bind(styles);
     nextItem: nextItemSelector(state),
     previousLinkDisable: disablePrevItemLinkSelector(state),
     nextLinkDisable: disableNextItemLinkSelector(state),
+    includeAllLaunches: includeAllLaunchesSelector(state),
   }),
   {
+    setIncludeAllLaunchesAction,
     navigate: (linkAction) => linkAction,
     fetchTestItems: fetchTestItemsFromLogPageAction,
     restorePath: restorePathAction,
@@ -72,6 +85,9 @@ const cx = classNames.bind(styles);
 @track()
 export class LogToolbar extends Component {
   static propTypes = {
+    intl: PropTypes.object.isRequired,
+    setIncludeAllLaunchesAction: PropTypes.func.isRequired,
+    includeAllLaunches: PropTypes.bool,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -89,6 +105,7 @@ export class LogToolbar extends Component {
     fetchTestItems: PropTypes.func,
     logViewMode: PropTypes.string,
     restorePath: PropTypes.func,
+    parentItem: PropTypes.object,
   };
 
   static defaultProps = {
@@ -105,6 +122,7 @@ export class LogToolbar extends Component {
     fetchTestItems: () => {},
     logViewMode: DETAILED_LOG_VIEW,
     restorePath: () => {},
+    parentItem: null,
   };
 
   handleBackClick = () => {
@@ -126,8 +144,15 @@ export class LogToolbar extends Component {
     return fetchTestItems({ next: true });
   };
 
+  changeHistoryLineMode = () => {
+    const { tracking, includeAllLaunches } = this.props;
+    tracking.trackEvent(LOG_PAGE_EVENTS.HISTORY_LINE_MODE_CHB);
+    this.props.setIncludeAllLaunchesAction(!includeAllLaunches);
+  };
+
   render() {
     const {
+      intl,
       breadcrumbs,
       previousItem,
       nextItem,
@@ -136,9 +161,11 @@ export class LogToolbar extends Component {
       nextLinkDisable,
       logViewMode,
       restorePath,
+      parentItem,
+      includeAllLaunches,
     } = this.props;
     return (
-      <div className={cx('log-toolbar', { 'with-border': logViewMode === DETAILED_LOG_VIEW })}>
+      <div className={cx('log-toolbar')}>
         <Breadcrumbs
           descriptors={breadcrumbs}
           togglerEventInfo={LOG_PAGE_EVENTS.PLUS_MINUS_BREADCRUMB}
@@ -147,26 +174,35 @@ export class LogToolbar extends Component {
           onRestorePath={restorePath}
         />
         <div className={cx('action-buttons')}>
-          {logViewMode === DETAILED_LOG_VIEW && (
-            <div className={cx('action-button')}>
-              <div className={cx('left-arrow-button')}>
+          {logViewMode === DETAILED_LOG_VIEW ? (
+            <>
+              <InputCheckbox onChange={this.changeHistoryLineMode} value={includeAllLaunches}>
+                {intl.formatMessage(messages.historyAllLaunchesLabel)}
+              </InputCheckbox>
+              <div className={cx('action-button')}>
+                <div className={cx('left-arrow-button')}>
+                  <GhostButton
+                    icon={LeftArrowIcon}
+                    disabled={previousLinkDisable}
+                    title={previousItem && previousItem.name}
+                    onClick={this.handleBackClick}
+                    transparentBackground
+                  />
+                </div>
                 <GhostButton
-                  icon={LeftArrowIcon}
-                  disabled={previousLinkDisable}
-                  title={previousItem && previousItem.name}
-                  onClick={this.handleBackClick}
+                  icon={RightArrowIcon}
+                  disabled={nextLinkDisable}
+                  title={nextItem && nextItem.name}
+                  onClick={this.handleForwardClick}
+                  transparentBackground
                 />
               </div>
-              <GhostButton
-                icon={RightArrowIcon}
-                disabled={nextLinkDisable}
-                title={nextItem && nextItem.name}
-                onClick={this.handleForwardClick}
-              />
-            </div>
+            </>
+          ) : (
+            parentItem && <ParentInfo parentItem={parentItem} />
           )}
           <div className={cx('action-button')}>
-            <GhostButton icon={RefreshIcon} onClick={onRefresh}>
+            <GhostButton icon={RefreshIcon} onClick={onRefresh} transparentBackground>
               <FormattedMessage id="Common.refresh" defaultMessage="Refresh" />
             </GhostButton>
           </div>

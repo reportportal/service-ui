@@ -22,8 +22,9 @@ import { FormattedMessage } from 'react-intl';
 import { SidebarButton } from 'components/buttons/sidebarButton/sidebarButton';
 import { LOGIN_PAGE } from 'controllers/pages/constants';
 import PropTypes from 'prop-types';
-import styles from './sidebar.scss';
 import LogoutIcon from '../img/logout-inline.svg';
+import { UserBlock } from './userBlock';
+import styles from './sidebar.scss';
 
 const cx = classNames.bind(styles);
 
@@ -32,27 +33,38 @@ const cx = classNames.bind(styles);
 })
 export class Sidebar extends Component {
   static propTypes = {
+    mainBlock: PropTypes.element,
     logout: PropTypes.func,
     topSidebarItems: PropTypes.array,
     bottomSidebarItems: PropTypes.array,
   };
   static defaultProps = {
+    mainBlock: null,
     logout: () => {},
     topSidebarItems: [],
     bottomSidebarItems: [],
   };
 
   render() {
-    const { topSidebarItems, bottomSidebarItems } = this.props;
+    const { mainBlock, topSidebarItems, bottomSidebarItems } = this.props;
 
     return (
       <aside className={cx('sidebar')}>
+        <div className={cx('main-block')}>{mainBlock}</div>
         <div className={cx('top-block')}>
           {topSidebarItems.map((item) => (
-            <div key={item.link.type} className={cx('sidebar-btn')} onClick={item.onClick}>
-              <SidebarButton link={item.link} icon={item.icon}>
-                {item.message}
-              </SidebarButton>
+            <div
+              key={item.component ? item.name : item.link.type}
+              className={cx('sidebar-btn')}
+              onClick={item.onClick}
+            >
+              {item.component ? (
+                <item.component />
+              ) : (
+                <SidebarButton link={item.link} icon={item.icon}>
+                  {item.message}
+                </SidebarButton>
+              )}
             </div>
           ))}
         </div>
@@ -69,6 +81,7 @@ export class Sidebar extends Component {
               <FormattedMessage id={'Sidebar.logoutBtn'} defaultMessage={'Logout'} />
             </SidebarButton>
           </div>
+          <UserBlock />
         </div>
       </aside>
     );

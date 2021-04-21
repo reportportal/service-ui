@@ -1,0 +1,63 @@
+/*!
+ * Copyright 2020 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.badge-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  height: 100%;
+  padding: 0 5px;
+}
+
+.defect-badge {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 3px;
+  border-radius: 50%;
+}
+.defect-name {
+  color: $COLOR--gray-47;
+  font-size: 11px;
+  font-family: $FONT-SEMIBOLD;
+  text-transform: uppercase;
+}
+
+.empty-item-icon,
+.no-item-icon {
+  display: inline-block;
+  width: 19px;
+  height: 18px;
+  vertical-align: middle;
+
+  svg {
+    fill: $COLOR--white-two;
+  }
+}
+
+.empty-item-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.no-item-icon {
+  svg {
+    path {
+      fill: $COLOR--gray-60;
+    }
+  }
+}

@@ -39,10 +39,28 @@
     border-color: $COLOR--gray-91;
     cursor: default;
 
-    path,
-    polygon,
-    rect {
-      fill: $COLOR--gray-60;
+    &.filled-icon:not(.stroked-icon) {
+      path,
+      polygon,
+      rect {
+        fill: $COLOR--gray-60;
+      }
+    }
+    &.stroked-icon {
+      svg {
+        stroke: $COLOR--gray-60;
+      }
+
+      &.filled-icon {
+        svg {
+          fill: $COLOR--gray-60;
+        }
+      }
+    }
+
+    &.transparent-border-hover {
+      background-color: transparent;
+      border-color: transparent;
     }
   }
 
@@ -50,9 +68,22 @@
     border-color: $COLOR--topaz;
     color: $COLOR--topaz;
 
-    path,
-    polygon {
-      fill: $COLOR--topaz;
+    &.filled-icon:not(.stroked-icon) {
+      path,
+      polygon {
+        fill: $COLOR--topaz;
+      }
+    }
+    &.stroked-icon {
+      svg {
+        stroke: $COLOR--topaz;
+      }
+
+      &.filled-icon {
+        svg {
+          fill: $COLOR--topaz;
+        }
+      }
     }
 
     &.mobile-disabled {
@@ -60,16 +91,47 @@
         color: $COLOR--gray-60;
         background-color: $COLOR--white;
         border-color: $COLOR--gray-91;
+
+        &.filled-icon:not(.stroked-icon) {
+          path,
+          polygon,
+          rect {
+            fill: $COLOR--gray-60;
+          }
+        }
+        &.stroked-icon {
+          svg {
+            stroke: $COLOR--gray-60;
+          }
+
+          &.filled-icon {
+            svg {
+              fill: $COLOR--gray-60;
+            }
+          }
+        }
       }
     }
 
     &.active,
     &:active,
     &:hover {
-      path,
-      polygon,
-      rect {
-        fill: $COLOR--white-two;
+      &.filled-icon:not(.stroked-icon) {
+        path,
+        polygon {
+          fill: $COLOR--white-two;
+        }
+      }
+      &.stroked-icon {
+        svg {
+          stroke: $COLOR--white-two;
+        }
+
+        &.filled-icon {
+          svg {
+            fill: $COLOR--white-two;
+          }
+        }
       }
     }
 
@@ -96,13 +158,56 @@
         background-color: transparent;
         border-color: transparent;
         color: $COLOR--topaz-hover;
+
+        &.filled-icon:not(.stroked-icon) {
+          path,
+          polygon,
+          rect {
+            fill: $COLOR--topaz-hover;
+          }
+        }
+        &.stroked-icon {
+          svg {
+            stroke: $COLOR--topaz-hover;
+          }
+
+          &.filled-icon {
+            svg {
+              fill: $COLOR--topaz-hover;
+            }
+          }
+        }
       }
 
+      &.active,
       &:active {
         background-color: transparent;
         border-color: transparent;
         color: $COLOR--topaz-active;
+
+        &.filled-icon:not(.stroked-icon) {
+          path,
+          polygon,
+          rect {
+            fill: $COLOR--topaz-active;
+          }
+        }
+        &.stroked-icon {
+          svg {
+            stroke: $COLOR--topaz-active;
+          }
+
+          &.filled-icon {
+            svg {
+              fill: $COLOR--topaz-active;
+            }
+          }
+        }
       }
+    }
+
+    &.transparent-background:not(:hover) {
+      background: transparent;
     }
   }
 }

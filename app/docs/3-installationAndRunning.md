@@ -2,7 +2,7 @@
 
 ## Starting dev server
 
-For development, you need a [node.js](https://nodejs.org).
+For development, you need a [node.js](https://nodejs.org). The recommended version is 10.13.0 or higher.
 
 1.  open console from the project root
 1.  run the command `cd app`
@@ -27,7 +27,7 @@ For development, you need a [node.js](https://nodejs.org).
 
 `npm run dev` - launch the development environment (default url is `http://localhost:3000`)
 
-`npm run build` - build the product version in the `dist` folder
+`npm run build` - build the product version in the `build` folder
 
 `npm run storybook` - launch the development environment for storybook (default url is `http://localhost:9001`)
 

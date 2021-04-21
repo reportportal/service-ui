@@ -54,6 +54,12 @@
   font-size: 13px;
   line-height: 1.4;
   color: $COLOR--gray-60;
+
+  &.position-right {
+    width: auto;
+    margin-top: 0;
+    margin-left: 30px;
+  }
 }
 
 .modal-field-content {
@@ -69,5 +75,16 @@
 
   svg {
     fill: $COLOR--gray-60;
+  }
+}
+
+.middle-baseline {
+  .modal-field-label {
+    align-self: auto;
+  }
+
+  .modal-field-content {
+    display: flex;
+    align-items: center;
   }
 }

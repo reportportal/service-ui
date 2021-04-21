@@ -22,7 +22,7 @@
 .markdown-viewer {
   width: 100%;
   height: auto;
-  font-family: monospace;
+  font-family: $FONT-MONOSPACE;
   color: $COLOR--charcoal-grey;
   font-size: 12px;
   overflow: hidden;
@@ -133,7 +133,7 @@
   }
   code {
     padding: 2px 4px;
-    font-family: monospace;
+    font-family: $FONT-MONOSPACE;
     font-size: 90%;
     color: $COLOR--khaki-green;
     background-color: $COLOR--has-permission;

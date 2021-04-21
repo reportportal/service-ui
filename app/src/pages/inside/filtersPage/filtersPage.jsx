@@ -42,7 +42,6 @@ import { withPagination, DEFAULT_PAGINATION, SIZE_KEY, PAGE_KEY } from 'controll
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { showModalAction } from 'controllers/modal';
-
 import {
   userFiltersSelector,
   showFilterOnLaunchesAction,

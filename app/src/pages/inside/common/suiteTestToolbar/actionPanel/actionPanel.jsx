@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component } from 'react';
+import React, { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
@@ -22,7 +22,6 @@ import { connect } from 'react-redux';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { breadcrumbsSelector, levelSelector, restorePathAction } from 'controllers/testItem';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
-import { historyPageLinkSelector } from 'controllers/itemsHistory';
 import {
   availableBtsIntegrationsSelector,
   isBtsPluginsExistSelector,
@@ -37,8 +36,8 @@ import { LEVEL_STEP, LEVEL_SUITE, LEVEL_TEST } from 'common/constants/launchLeve
 import { canBulkEditItems } from 'common/utils/permissions';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import RefreshIcon from 'common/img/refresh-inline.svg';
-import HistoryIcon from 'common/img/history-inline.svg';
 import { createStepActionDescriptors } from 'pages/inside/common/utils';
+import { ParentInfo } from 'pages/inside/common/infoLine/parentInfo';
 import styles from './actionPanel.scss';
 
 const cx = classNames.bind(styles);
@@ -52,7 +51,6 @@ const cx = classNames.bind(styles);
     projectRole: activeProjectRoleSelector(state),
     isBtsPluginsExist: isBtsPluginsExistSelector(state),
     enabledBtsPlugins: enabledBtsPluginsSelector(state),
-    historyPageLink: historyPageLinkSelector(state),
   }),
   {
     restorePath: restorePathAction,
@@ -93,7 +91,7 @@ export class ActionPanel extends Component {
     }).isRequired,
     isBtsPluginsExist: PropTypes.bool,
     enabledBtsPlugins: PropTypes.array,
-    historyPageLink: PropTypes.object.isRequired,
+    parentItem: PropTypes.object,
   };
 
   static defaultProps = {
@@ -122,15 +120,7 @@ export class ActionPanel extends Component {
     deleteDisabled: false,
     isBtsPluginsExist: false,
     enabledBtsPlugins: [],
-  };
-
-  onClickHistory = () => {
-    this.props.tracking.trackEvent(
-      this.props.level === LEVEL_STEP
-        ? STEP_PAGE_EVENTS.HISTORY_BTN
-        : SUITES_PAGE_EVENTS.HISTORY_BTN,
-    );
-    this.props.navigate(this.props.historyPageLink);
+    parentItem: null,
   };
 
   onClickRefresh = () => {
@@ -226,8 +216,8 @@ export class ActionPanel extends Component {
       hasValidItems,
       onProceedValidItems,
       selectedItems,
-      debugMode,
       level,
+      parentItem,
     } = this.props;
     const stepActionDescriptors = this.getStepActionDescriptors();
     const suiteActionDescriptors = this.createSuiteActionDescriptors();
@@ -246,17 +236,23 @@ export class ActionPanel extends Component {
           />
         )}
         {hasErrors && (
-          <GhostButton disabled={!hasValidItems} onClick={onProceedValidItems}>
+          <GhostButton
+            disabled={!hasValidItems}
+            onClick={onProceedValidItems}
+            transparentBackground
+          >
             {intl.formatMessage(COMMON_LOCALE_KEYS.PROCEED_VALID_ITEMS)}
           </GhostButton>
         )}
         <div className={cx('action-buttons')}>
+          {parentItem && <ParentInfo parentItem={parentItem} />}
           {this.checkVisibility([LEVEL_STEP]) && (
             <div className={cx('action-button', 'mobile-hidden')}>
               <GhostMenuButton
                 title={intl.formatMessage(COMMON_LOCALE_KEYS.ACTIONS)}
                 items={stepActionDescriptors}
                 disabled={!selectedItems.length}
+                transparentBackground
               />
             </div>
           )}
@@ -269,22 +265,12 @@ export class ActionPanel extends Component {
               />
             </div>
           )}
-          {!debugMode && (
-            <div className={cx('action-button', 'mobile-hidden')}>
-              <GhostButton
-                disabled={!!selectedItems.length}
-                icon={HistoryIcon}
-                onClick={this.onClickHistory}
-              >
-                <FormattedMessage id="ActionPanel.history" defaultMessage="History" />
-              </GhostButton>
-            </div>
-          )}
           <div className={cx('action-button')}>
             <GhostButton
               disabled={!!selectedItems.length}
               icon={RefreshIcon}
               onClick={this.onClickRefresh}
+              transparentBackground
             >
               <FormattedMessage id="Common.refresh" defaultMessage="Refresh" />
             </GhostButton>

@@ -25,7 +25,7 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import { FOOTER_EVENTS } from 'components/main/analytics/events';
 import { forceCheck } from 'react-lazyload';
 import { Footer } from 'layouts/common/footer';
-import TopIcon from './img/top-inline.svg';
+import BackToTopIcon from './img/back-to-top-inline.svg';
 import styles from './scrollWrapper.scss';
 
 const cx = classNames.bind(styles);
@@ -33,6 +33,7 @@ const cx = classNames.bind(styles);
 @track()
 export class ScrollWrapper extends Component {
   static propTypes = {
+    initialScrollRight: PropTypes.bool,
     children: PropTypes.node,
     autoHide: PropTypes.bool,
     autoHeight: PropTypes.bool,
@@ -57,6 +58,7 @@ export class ScrollWrapper extends Component {
     }).isRequired,
   };
   static defaultProps = {
+    initialScrollRight: false,
     children: null,
     autoHide: false,
     autoHeight: false,
@@ -83,6 +85,7 @@ export class ScrollWrapper extends Component {
   };
 
   componentDidMount() {
+    this.props.initialScrollRight && this.scrollbars.scrollToRight();
     if (this.props.withBackToTop) {
       this.springSystem = new SpringSystem();
       this.spring = this.springSystem.createSpring();
@@ -187,8 +190,10 @@ export class ScrollWrapper extends Component {
         {this.state.showButton && (
           <div className={cx('back-to-top')}>
             <button className={cx('back-to-top-button')} onClick={this.scrollTop}>
-              <i className={cx('top-icon')}>{Parser(TopIcon)}</i>
-              <FormattedMessage id="ScrollWrapper.backToTop" defaultMessage="Back to top" />
+              <i className={cx('top-icon')}>{Parser(BackToTopIcon)}</i>
+              <div className={cx('message')}>
+                <FormattedMessage id="ScrollWrapper.backToTop" defaultMessage="Back to top" />
+              </div>
             </button>
           </div>
         )}

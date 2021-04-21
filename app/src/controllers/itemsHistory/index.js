@@ -29,6 +29,7 @@ export {
   postIssueHistoryAction,
   editDefectsHistoryAction,
   setFilterForCompareAction,
+  updateItemsHistoryLaunchAttributesAction,
 } from './actionCreators';
 export {
   FETCH_ITEMS_HISTORY,
@@ -37,6 +38,7 @@ export {
   RESET_HISTORY,
   HISTORY_DEPTH_CONFIG,
   HISTORY_BASE_DEFAULT_VALUE,
+  UPDATE_ITEMS_HISTORY_LAUNCH_ATTRIBUTES,
 } from './constants';
 export { historySagas } from './sagas';
 export {
@@ -47,7 +49,6 @@ export {
   totalItemsCountSelector,
   historyPaginationSelector,
   loadingSelector,
-  historyPageLinkSelector,
   filterForCompareSelector,
   filterHistorySelector,
   itemsHistorySelector,

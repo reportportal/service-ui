@@ -17,6 +17,7 @@
 export const DOMAIN_KEY = 'domain';
 export const URL_KEY = 'url';
 export const BASE_DN_KEY = 'baseDn';
+export const SEARCH_FILTER_KEY = 'searchFilter';
 export const EMAIL_KEY = 'email';
 export const FULL_NAME_KEY = 'fullName';
 export const PHOTO_KEY = 'photo';

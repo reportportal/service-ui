@@ -17,25 +17,11 @@
 import * as STATUSES from 'common/constants/testStatuses';
 import { duration as calculateDuration } from 'moment';
 import { messages } from 'components/widgets/common/messages';
-
-export const DURATION = 'duration';
-export const TIME_TYPES = {
-  SECONDS: 'seconds',
-  MINUTES: 'minutes',
-  HOURS: 'hours',
-};
+import { getTimeType } from 'components/widgets/common/utils';
+import { DURATION } from 'components/widgets/common/constants';
 
 export const isValueInterrupted = (item) => item.status === STATUSES.INTERRUPTED;
-export const getTimeType = (max) => {
-  if (max > 0) {
-    if (max < 60000) {
-      return { value: 1000, type: TIME_TYPES.SECONDS };
-    } else if (max <= 2 * 3600000) {
-      return { value: 60000, type: TIME_TYPES.MINUTES };
-    }
-  }
-  return { value: 3600000, type: TIME_TYPES.HOURS };
-};
+
 export const getListAverage = (data) => {
   let count = 0;
   let sum = 0; // sum of not-interrupted launches duration
@@ -51,13 +37,11 @@ export const getListAverage = (data) => {
 export const prepareChartData = (data) => {
   const chartData = [DURATION];
   const itemsData = [];
-  let max = 0;
+  let maxDuration = 0;
   const average = getListAverage(data);
   data.forEach((item) => {
-    const duration = parseInt(item.duration, 10);
-    const { id, name, number } = item;
-    const { status, startTime, endTime } = item;
-    max = duration > max ? duration : max;
+    const { id, name, number, status, startTime, endTime, duration } = item;
+    maxDuration = duration > maxDuration ? duration : maxDuration;
     itemsData.push({
       id,
       name,
@@ -71,7 +55,7 @@ export const prepareChartData = (data) => {
     chartData.push(isValueInterrupted(item) ? average : duration);
   });
   return {
-    timeType: getTimeType(max),
+    timeType: getTimeType(maxDuration),
     chartData,
     itemsData,
   };

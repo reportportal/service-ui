@@ -23,7 +23,8 @@ export const ACTIVITY_NAMESPACE = `${NAMESPACE}/activity`;
 export const STACK_TRACE_NAMESPACE = `${NAMESPACE}/stackTrace`;
 export const FETCH_LOG_PAGE_DATA = 'fetchLogPageData';
 export const FETCH_LOG_PAGE_STACK_TRACE = 'fetchLogPageStackTrace';
-export const DEFAULT_HISTORY_DEPTH = 10;
+export const DEFAULT_HISTORY_DEPTH = 12;
+export const HISTORY_DEPTH_LIMIT = 30;
 export const DEFAULT_LOG_LEVEL = logLevels.TRACE;
 export const LOG_LEVEL_STORAGE_KEY = 'logFilteringLevel';
 export const LOG_LEVEL_FILTER_KEY = 'filter.gte.level';
@@ -42,6 +43,13 @@ export const LAUNCH_LOG_VIEW = 'LAUNCH_LOG_VIEW';
 export const SET_LOG_PAGE_LOADING = 'SET_LOG_PAGE_LOADING';
 export const FETCH_HISTORY_ITEMS_SUCCESS = 'FETCH_HISTORY_ITEMS_SUCCESS';
 export const UPDATE_HISTORY_ITEM_ISSUES = 'UPDATE_HISTORY_ITEM_ISSUES';
+export const UPDATE_HISTORY_ITEM_LAUNCH_ATTRIBUTES = 'UPDATE_HISTORY_ITEM_LAUNCH_ATTRIBUTES';
+export const HISTORY_LINE_DEFAULT_VALUE = 'line';
+export const HISTORY_LINE_TABLE_MODE = 'table';
+export const SET_INCLUDE_ALL_LAUNCHES = 'SET_INCLUDE_ALL_LAUNCHES';
+export const SET_SHOULD_SHOW_LOAD_MORE = 'SET_SHOULD_SHOW_LOAD_MORE';
+export const FETCH_HISTORY_LINE_ITEMS = 'FETCH_HISTORY_LINE_ITEMS';
+export const NUMBER_OF_ITEMS_TO_LOAD = 9;
 
 export const LOG_LEVELS = [
   {

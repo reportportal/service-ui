@@ -35,7 +35,11 @@ export const URLS = {
     `${urlBase}data/${activeProject}/userphoto${getQueryParams({ id, loadThumbnail })}`,
 
   dashboard: (activeProject, id) => `${urlBase}${activeProject}/dashboard/${id}`,
-  dashboards: (activeProject) => `${urlBase}${activeProject}/dashboard`,
+  dashboards: (activeProject) =>
+    `${urlBase}${activeProject}/dashboard${getQueryParams({
+      'page.page': 1,
+      'page.size': 300,
+    })}`,
   dashboardsShared: (activeProject) =>
     `${urlBase}${activeProject}/dashboard/shared${getQueryParams({
       'page.page': 1,
@@ -89,6 +93,17 @@ export const URLS = {
     `${urlBase}${activeProject}/launch/attribute/values?${
       key ? `filter.eq.attributeKey=${key}&` : ''
     }filter.cnt.attributeValue=${searchTerm}`,
+  itemAttributeKeysByLaunchName: (activeProject, launchName) => (searchTerm = '') =>
+    `${urlBase}${activeProject}/item/step/attribute/keys${getQueryParams({
+      'filter.eq.name': launchName || undefined,
+      'filter.cnt.attributeKey': searchTerm,
+    })}`,
+  itemAttributeValuesByLaunchName: (activeProject, launchName, key) => (searchTerm = '') =>
+    `${urlBase}${activeProject}/item/step/attribute/values${getQueryParams({
+      'filter.eq.name': launchName || undefined,
+      'filter.eq.attributeKey': key || undefined,
+      'filter.cnt.attributeValue': searchTerm,
+    })}`,
   launchNameSearch: (activeProject) => (searchTerm = '') =>
     `${urlBase}${activeProject}/launch/names?filter.cnt.name=${searchTerm}`,
   launchOwnersSearch: (activeProject) => (searchTerm = '') =>
@@ -156,7 +171,9 @@ export const URLS = {
     `${urlBase}project/${activeProject}/notification`,
   suite: (activeProject, suiteId) => `${urlBase}${activeProject}/item/${suiteId}`,
 
-  testItems: (activeProject, ids) => `${urlBase}${activeProject}/item${getQueryParams({ ids })}`,
+  testItems: (activeProject, ids) => `${urlBase}${activeProject}/item/${getQueryParams({ ids })}`,
+  testItemsWithProviderType: (activeProject, ids) =>
+    `${urlBase}${activeProject}/item/v2${getQueryParams({ ids })}`,
   testItem: (activeProject, id = '') => `${urlBase}${activeProject}/item/${id}`,
   testItemStatistics: (activeProject) => `${urlBase}${activeProject}/item/statistics`,
   testItemUpdate: (activeProject, id = '') => `${urlBase}${activeProject}/item/${id}/update`,
@@ -175,6 +192,8 @@ export const URLS = {
     `${urlBase}${activeProject}/item/attribute/values?launch=${launch}${
       key ? `&filter.eq.attributeKey=${key}` : ''
     }&filter.cnt.attributeValue=${searchTerm}`,
+  testItemBTSIssuesSearch: (activeProject) => (searchTerm = '') =>
+    `${urlBase}${activeProject}/item/ticket/ids/all?term=${searchTerm}`,
 
   logItem: (activeProject, itemId, level) =>
     `${urlBase}${activeProject}/log${getQueryParams({
@@ -225,7 +244,7 @@ export const URLS = {
   getFileById: (projectId, dataId, loadThumbnail) =>
     `${urlBase}data/${projectId}/${dataId}${getQueryParams({ loadThumbnail })}`,
 
-  authSettings: (authTypeOrId) => `${uatBase}settings/auth/${authTypeOrId}`,
+  authSettings: (authTypeOrId, id = '') => `${uatBase}settings/auth/${authTypeOrId}/${id}`,
   githubAuthSettings: () => `${uatBase}settings/oauth/github`,
   analyticsServerSettings: () => `${urlBase}settings/analytics`,
   events: (projectId) => `${urlBase}${projectId}/activity`,

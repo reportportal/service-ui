@@ -26,7 +26,6 @@ export const CONDITION_HAS = 'has';
 export const CONDITION_NOT_HAS = '!has';
 export const CONDITION_IN = 'in';
 export const CONDITION_NOT_IN = '!in';
-export const CONDITION_EX = 'ex';
 export const CONDITION_ANY = 'any';
 export const CONDITION_NOT_ANY = '!any';
 
@@ -51,5 +50,4 @@ export const ENTITY_IGNORE_ANALYZER = 'ignoreAnalyzer';
 export const ENTITY_AUTOANALYZE = 'autoAnalyzed';
 export const ENTITY_CREATION_DATE = 'creationDate';
 export const ENTITY_PATTERN_NAME = 'patternName';
-export const ENTITY_ISSUE_ID = 'issueId';
 export const ENTITY_RETRY = 'hasRetries';

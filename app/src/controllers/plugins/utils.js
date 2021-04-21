@@ -43,8 +43,8 @@ export const groupItems = (items) =>
 export const isAuthorizationPlugin = (name) =>
   GROUP_TYPES_BY_PLUGIN_NAMES_MAP[name] === AUTHORIZATION_GROUP_TYPE;
 
-export const resolveIntegrationUrl = (integrationUrl, pluginName) =>
-  isAuthorizationPlugin(pluginName) ? URLS.authSettings(pluginName) : integrationUrl;
+export const resolveIntegrationUrl = (integrationUrl, pluginName, id) =>
+  isAuthorizationPlugin(pluginName) ? URLS.authSettings(pluginName, id) : integrationUrl;
 
 export const isPostIssueActionAvailable = (integrations) =>
   integrations.length &&

@@ -24,7 +24,9 @@ import { FETCH_SUITES, NAMESPACE } from './constants';
 function* getSuites({ payload }) {
   const activeProject = yield select(activeProjectSelector);
   const launchId = yield select(launchIdSelector);
-  yield put(fetchDataAction(NAMESPACE)(URLS.testItems(activeProject, launchId), payload));
+  yield put(
+    fetchDataAction(NAMESPACE)(URLS.testItemsWithProviderType(activeProject, launchId), payload),
+  );
 }
 
 function* watchFetchSuites() {

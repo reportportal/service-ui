@@ -32,6 +32,7 @@ export const FETCH_ATTACHMENTS_CONCAT_ACTION = 'fetchAttachmentsConcatAction';
 export const CLEAR_ATTACHMENTS_ACTION = 'clearAttachmentsAction';
 export const ATTACHMENT_HAR_FILE_MODAL_ID = 'attachmentHarFileModal';
 export const ATTACHMENT_CODE_MODAL_ID = 'attachmentCodeModal';
+export const ATTACHMENT_IMAGE_MODAL_ID = 'attachmentImageModal';
 export const FETCH_FIRST_ATTACHMENTS_ACTION = 'fetchFirstAttachments';
 export const SET_ACTIVE_ATTACHMENT_ACTION = 'setActiveAttachment';
 
@@ -71,6 +72,7 @@ export const FILE_MODAL_IDS_MAP = {
   [FILE_TYPES.CSS]: ATTACHMENT_CODE_MODAL_ID,
   [FILE_TYPES.PHP]: ATTACHMENT_CODE_MODAL_ID,
   [FILE_TYPES.HAR]: ATTACHMENT_HAR_FILE_MODAL_ID,
+  [FILE_TYPES.IMAGE]: ATTACHMENT_IMAGE_MODAL_ID,
 };
 
 export const FILE_ACTIONS_MAP = {
@@ -96,6 +98,7 @@ export const FILE_ACTIONS_MAP = {
     FILE_TYPES.CSS,
     FILE_TYPES.PHP,
     FILE_TYPES.HAR,
+    FILE_TYPES.IMAGE,
   ],
 };
 

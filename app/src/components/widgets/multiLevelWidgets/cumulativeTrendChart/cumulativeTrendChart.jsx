@@ -27,6 +27,7 @@ import {
   defectLinkSelector,
   statisticsLinkSelector,
   TEST_ITEMS_TYPE_LIST,
+  PROVIDER_TYPE_WIDGET,
 } from 'controllers/testItem';
 import { defectTypesSelector } from 'controllers/project';
 import { activeProjectSelector } from 'controllers/user';
@@ -309,9 +310,10 @@ export class CumulativeTrendChart extends PureComponent {
       link = getDefectLink({
         defects: defectLocators,
         itemId: TEST_ITEMS_TYPE_LIST,
+        providerType: PROVIDER_TYPE_WIDGET,
+        widgetId: widget.id,
         compositeAttribute: activeAttributes.map(formatAttribute).join(','),
         launchesLimit: widget.contentParameters.itemsCount,
-        launchId: selectedItem.content.launchIds.join(),
         filterTypes: BEFORE_AFTER_METHOD_TYPES_SEQUENCE,
         filterType: true,
       });
@@ -320,7 +322,8 @@ export class CumulativeTrendChart extends PureComponent {
         statuses: [PASSED, FAILED, SKIPPED, INTERRUPTED],
         compositeAttribute: activeAttributes.map(formatAttribute).join(','),
         launchesLimit: widget.contentParameters.itemsCount,
-        launchId: selectedItem.content.launchIds.join(),
+        providerType: PROVIDER_TYPE_WIDGET,
+        widgetId: widget.id,
       });
     }
 

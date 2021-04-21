@@ -4,6 +4,7 @@ export {
   uiExtensionAdminPagesSelector,
   uiExtensionPagesSelector,
   extensionsLoadedSelector,
-  uiExtensionHeaderComponentsSelector,
+  uiExtensionSidebarComponentsSelector,
+  uiExtensionLaunchItemComponentsSelector,
 } from './selectors';
 export { uiExtensionsReducer } from './reducer';

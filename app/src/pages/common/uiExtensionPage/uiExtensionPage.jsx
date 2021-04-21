@@ -24,7 +24,7 @@ export const UiExtensionPage = ({ extensions, activePluginPage, isExtensionsLoad
   if (!isExtensionsLoaded) {
     component = <SpinningPreloader />;
   } else if (isExtensionsLoaded && extension && extension.component) {
-    component = extension.component;
+    component = <extension.component />;
   } else {
     component = <div>Plugin not found</div>;
   }

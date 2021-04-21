@@ -23,7 +23,7 @@ export const calculateTooltipParams = (data, color, customProps) => {
 
   return {
     itemName: name,
-    duration: duration * 1000,
+    duration,
     date: moment(startTime).format(DATETIME_FORMAT_TOOLTIP),
   };
 };

@@ -14,19 +14,42 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { testCaseNameLinkSelector } from 'controllers/testItem';
 import { TestsTableWidget } from '../components/testsTableWidget';
 import * as cfg from './mostFailedTestsCfg';
 
-export class MostFailedTests extends React.Component {
+@connect(
+  (state) => ({
+    getTestCaseNameLink: testCaseNameLinkSelector(state),
+  }),
+  { navigate: (linkAction) => linkAction },
+)
+export class MostFailedTests extends Component {
   static propTypes = {
     widget: PropTypes.object.isRequired,
+    navigate: PropTypes.func.isRequired,
+    getTestCaseNameLink: PropTypes.func.isRequired,
   };
 
   getIssueTypeMessage = (issueType) => {
     const type = issueType.split('$')[2];
     return cfg.issueTypes[type];
+  };
+
+  itemClickHandler = (uniqueId) => {
+    const {
+      widget: {
+        content: { latestLaunch },
+      },
+      getTestCaseNameLink,
+      navigate,
+    } = this.props;
+    const link = getTestCaseNameLink({ uniqueId, testItemIds: latestLaunch.id });
+
+    navigate(link);
   };
 
   render() {
@@ -45,6 +68,7 @@ export class MostFailedTests extends React.Component {
         launch={content.latestLaunch}
         issueType={this.getIssueTypeMessage(issueType)}
         columns={cfg.columns}
+        onItemClick={this.itemClickHandler}
       />
     );
   }

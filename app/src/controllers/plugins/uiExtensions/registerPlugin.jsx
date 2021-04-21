@@ -12,11 +12,11 @@ const createPluginRegistrationFunction = (store) => (plugin) => {
   const wrappedExtensions = extensions.map((extension, i) => ({
     name: `${plugin.name}__${i}`,
     ...extension,
-    component: <extension.component {...createImportProps(plugin.name)} />,
+    component: (props) => <extension.component {...createImportProps(plugin.name)} {...props} />,
   }));
   wrappedExtensions.forEach((ex) => {
     if (ex.type === EXTENSION_TYPE_MODAL && !getModal({ id: ex.name })) {
-      addModal(ex.name, (p) => React.cloneElement(ex.component, p));
+      addModal(ex.name, ex.component);
     }
   });
   uiExtensionMap.set(name, wrappedExtensions);

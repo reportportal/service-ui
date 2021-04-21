@@ -15,8 +15,9 @@
  */
 
 import * as React from 'react';
-import { number, string, oneOfType, func } from 'prop-types';
+import { func } from 'prop-types';
 import classNames from 'classnames/bind';
+import { formatDuration } from 'common/utils';
 import { PTTests, PTColumns } from '../../pTypes';
 import { TestsTableRow } from '../testsTableRow';
 import { matrixFactory } from '../matrixFactory';
@@ -28,13 +29,14 @@ export class TestsTableBody extends React.Component {
   static propTypes = {
     tests: PTTests,
     columns: PTColumns.isRequired,
-    launchId: oneOfType([number, string]).isRequired,
     getMaxtrixTooltip: func,
+    onItemClick: func,
   };
 
   static defaultProps = {
     tests: [],
     getMaxtrixTooltip: null,
+    onItemClick: null,
   };
 
   constructor(props) {
@@ -44,12 +46,11 @@ export class TestsTableBody extends React.Component {
   }
 
   renderRow = (test) => {
-    const { columns, launchId, getMaxtrixTooltip } = this.props;
+    const { columns, getMaxtrixTooltip, onItemClick } = this.props;
     const { name, date, count, status, duration } = columns;
 
     const rowProps = {
       key: `row-${test.uniqueId}-${test.id}`,
-      launchId,
       data: test,
       name: test[name.nameKey],
       time: test[date.dateKey],
@@ -57,8 +58,9 @@ export class TestsTableBody extends React.Component {
       matrixData: count && test[count.matrixKey],
       matrixComponent: this.matrixComponent,
       status: status && test[status.statusKey],
-      duration: duration && test[duration.durationKey],
+      duration: duration && formatDuration(test[duration.durationKey]),
       getMaxtrixTooltip,
+      onItemClick,
     };
 
     return <TestsTableRow {...rowProps} />;

@@ -103,7 +103,7 @@ function* updateIntegration({ payload: { data, isGlobal, pluginName, id, callbac
     const integrationUrl = isGlobal
       ? URLS.globalIntegration(id)
       : URLS.projectIntegration(projectId, id);
-    const url = resolveIntegrationUrl(integrationUrl, pluginName);
+    const url = resolveIntegrationUrl(integrationUrl, pluginName, id);
 
     yield call(fetch, url, {
       method: 'put',
@@ -124,7 +124,7 @@ function* updateIntegration({ payload: { data, isGlobal, pluginName, id, callbac
         type: NOTIFICATION_TYPES.SUCCESS,
       }),
     );
-    yield call(callback);
+    yield call(callback, integration);
   } catch (error) {
     yield put(showDefaultErrorNotification(error));
   } finally {

@@ -99,36 +99,41 @@ export class DefectSubType extends Component {
     isEditMode: false,
   };
 
-  getChartConfig = () => ({
-    data: {
-      columns: this.props.group.map(({ locator }) => [locator, 100]),
-      colors: this.props.group.reduce((acc, { locator, color }) => {
-        acc[locator] = color;
-        return acc;
-      }, {}),
-      type: 'donut',
-    },
-    donut: {
-      expand: false,
-      width: 12,
-      label: {
+  configCreationTimeStamp = null;
+
+  getChartConfig = () => {
+    this.configCreationTimeStamp = Date.now();
+    return {
+      data: {
+        columns: this.props.group.map(({ locator }) => [locator, 100]),
+        colors: this.props.group.reduce((acc, { locator, color }) => {
+          acc[locator] = color;
+          return acc;
+        }, {}),
+        type: 'donut',
+      },
+      donut: {
+        expand: false,
+        width: 12,
+        label: {
+          show: false,
+        },
+      },
+      interaction: {
+        enabled: false,
+      },
+      legend: {
         show: false,
       },
-    },
-    interaction: {
-      enabled: false,
-    },
-    legend: {
-      show: false,
-    },
-    tooltip: {
-      show: false,
-    },
-    size: {
-      width: 56,
-      height: 56,
-    },
-  });
+      tooltip: {
+        show: false,
+      },
+      size: {
+        width: 56,
+        height: 56,
+      },
+    };
+  };
 
   setEditMode = () => {
     this.props.tracking.trackEvent(SETTINGS_PAGE_EVENTS.EDIT_DEFECT_TAG_DEFECT_TYPES);
@@ -208,7 +213,7 @@ export class DefectSubType extends Component {
           <DefectSubTypeForm
             form={data.locator}
             initialValues={data}
-            onDelete={this.showDeleteConfirmationDialog}
+            onCancel={this.stopEditing}
             onConfirm={this.updateDefectSubType}
           />
         ) : (
@@ -247,7 +252,11 @@ export class DefectSubType extends Component {
 
         {group && (
           <div className={cx('diagram-cell')}>
-            <C3Chart className={cx('defect-type-chart')} config={this.getChartConfig()} />
+            <C3Chart
+              className={cx('defect-type-chart')}
+              configCreationTimeStamp={this.configCreationTimeStamp}
+              config={this.getChartConfig()}
+            />
           </div>
         )}
       </div>

@@ -19,10 +19,10 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
-import { activeProjectSelector } from 'controllers/user';
-import { TEST_ITEM_PAGE } from 'controllers/pages/constants';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { ALL } from 'common/constants/reservedFilterIds';
+import { activeProjectSelector } from 'controllers/user';
+import { TEST_ITEM_PAGE, PROJECT_LOG_PAGE } from 'controllers/pages/constants';
 import { MostTimeConsumingTestCasesChart } from './mostTimeConsumingTestCasesChart';
 import { MostTimeConsumingTestCasesTable } from './mostTimeConsumingTestCasesTable';
 import styles from './mostTimeConsumingTestCases.scss';
@@ -53,30 +53,41 @@ export class MostTimeConsumingTestCases extends Component {
     projectId: PropTypes.string.isRequired,
     navigate: PropTypes.func.isRequired,
     isPreview: PropTypes.bool,
-    height: PropTypes.number,
     observer: PropTypes.object,
   };
 
   static defaultProps = {
     isPreview: false,
-    height: 0,
     observer: {},
   };
 
-  launchNameClickHandler = () => {
+  itemClickHandler = (id) => {
     const {
       projectId,
-      widget: { content: { latestLaunch = {} } = {} },
+      widget: {
+        content: { result, latestLaunch = {} },
+      },
       navigate,
     } = this.props;
+    const { path } = result.find((el) => el.id === id) || {};
+    let itemLink;
+    let pageType;
+
+    if (path) {
+      itemLink = `${latestLaunch.id}/${path.replace(/[.]/g, '/')}`;
+      pageType = PROJECT_LOG_PAGE;
+    } else {
+      itemLink = `${latestLaunch.id}`;
+      pageType = TEST_ITEM_PAGE;
+    }
 
     const navigationParams = {
       payload: {
         projectId,
         filterId: ALL,
-        testItemIds: latestLaunch.id,
+        testItemIds: itemLink,
       },
-      type: TEST_ITEM_PAGE,
+      type: pageType,
     };
 
     navigate(navigationParams);
@@ -90,10 +101,7 @@ export class MostTimeConsumingTestCases extends Component {
       },
       widget = {},
       intl: { formatMessage },
-      height,
       isPreview,
-      navigate,
-      projectId,
       observer,
       container,
     } = this.props;
@@ -102,7 +110,7 @@ export class MostTimeConsumingTestCases extends Component {
 
     return (
       <div className={cx('most-time-consuming')}>
-        <div className={cx('launch-name-block')} onClick={this.launchNameClickHandler}>
+        <div className={cx('launch-name-block')}>
           <span className={cx('launch-name-text')}>
             {`${formatMessage(localMessages.launchNameText)} `}
           </span>
@@ -111,15 +119,13 @@ export class MostTimeConsumingTestCases extends Component {
         {viewMode === MODES_VALUES[CHART_MODES.BAR_VIEW] ? (
           <MostTimeConsumingTestCasesChart
             widget={widget}
-            height={height}
             isPreview={isPreview}
-            projectId={projectId}
-            navigate={navigate}
             observer={observer}
             container={container}
+            onItemClick={this.itemClickHandler}
           />
         ) : (
-          <MostTimeConsumingTestCasesTable widget={widget} />
+          <MostTimeConsumingTestCasesTable widget={widget} onItemClick={this.itemClickHandler} />
         )}
       </div>
     );

@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { Manager, Reference, Popper } from 'react-popper';
-import styles from './inputDropdown.scss';
 import { DropdownOption } from './inputDropdownOption/inputDropdownOption';
+import styles from './inputDropdown.scss';
 
 const cx = classNames.bind(styles);
 
@@ -172,12 +173,13 @@ export class InputDropdown extends Component {
   };
 
   renderOptions() {
-    return this.props.options.map((option) => {
-      let selected;
-      this.props.multiple
-        ? (selected = this.props.value.indexOf(option.value) > -1)
-        : (selected = option.value === this.props.value);
-      if (!this.props.independentGroupSelection && option.groupId) {
+    const { options, multiple, value, independentGroupSelection } = this.props;
+
+    return options.map((option) => {
+      let selected = multiple
+        ? this.props.value.indexOf(option.value) > -1
+        : option.value === value;
+      if (!independentGroupSelection && option.groupId) {
         selected = this.isGroupOptionSelected(option.groupId);
       }
       return (
@@ -187,7 +189,8 @@ export class InputDropdown extends Component {
           disabled={option.disabled}
           selected={selected}
           label={option.label}
-          multiple={this.props.multiple}
+          multiple={multiple}
+          independentSelection={independentGroupSelection}
           subOption={!!option.groupRef}
           onChange={this.getOptionChangeHandler(option)}
         />

@@ -22,6 +22,7 @@ import {
   PRODUCT_BUG,
   SYSTEM_ISSUE,
   TO_INVESTIGATE,
+  TIME_TYPES,
 } from './constants';
 
 export const messages = defineMessages({
@@ -96,5 +97,17 @@ export const messages = defineMessages({
   launchInterrupted: {
     id: `Charts.launchInterrupted`,
     defaultMessage: 'Run interrupted',
+  },
+  [TIME_TYPES.SECONDS]: {
+    id: 'Charts.seconds',
+    defaultMessage: 'seconds',
+  },
+  [TIME_TYPES.MINUTES]: {
+    id: 'Charts.minutes',
+    defaultMessage: 'minutes',
+  },
+  [TIME_TYPES.HOURS]: {
+    id: 'LaunchesDurationChart.hours',
+    defaultMessage: 'hours',
   },
 });

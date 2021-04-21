@@ -111,7 +111,7 @@ const messages = defineMessages({
   },
   AUTOMATION_BUG_TOTAL: {
     id: 'WidgetCriteriaOption.AUTOMATION_BUG_TOTAL',
-    defaultMessage: 'Total automation bug',
+    defaultMessage: 'Total automation bugs',
   },
   SYSTEM_ISSUE_TOTAL: {
     id: 'WidgetCriteriaOption.SYSTEM_ISSUE_TOTAL',
@@ -267,9 +267,13 @@ const getToInvestigateStatisticsOption = (formatMessage) => [
   { value: STATS_TI_TOTAL, label: formatMessage(messages[TO_INVESTIGATE]) },
 ];
 
-const getGroupedDefectTypesOptions = (defectTypes, formatMessage) => {
+export const getGroupedDefectTypesOptions = (
+  defectTypes,
+  formatMessage,
+  defectTypesSequence = DEFECT_TYPES_SEQUENCE,
+) => {
   let defectTypesOptions = [];
-  DEFECT_TYPES_SEQUENCE.forEach((defectTypeId) => {
+  defectTypesSequence.forEach((defectTypeId) => {
     const defectTypeGroup = defectTypes[defectTypeId];
     const hasSubTypes = defectTypeGroup.length > 1;
     if (hasSubTypes) {

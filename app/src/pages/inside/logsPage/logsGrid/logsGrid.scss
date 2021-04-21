@@ -86,7 +86,7 @@
   }
   &.level-INFO {
     &:before {
-      background-color: $COLOR--windows-blue;
+      background-color: $COLOR--topaz;
     }
   }
   &.level-DEBUG {
@@ -145,7 +145,6 @@
   display: flex;
   align-items: center;
   width: 100%;
-  background-color: $COLOR--white;
 
   @media (max-width: $SCREEN_XS_MAX) {
     display: none;

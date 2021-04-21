@@ -37,7 +37,7 @@
   height: 50px;
   vertical-align: middle;
   padding: 0 10px;
-  background-color: $COLOR--white;
+  background-color: $COLOR--primary-gray;
 }
 
 .status-list-item {
@@ -50,7 +50,6 @@
 
 .status-label {
   color: $COLOR--topaz;
-  background-color: $COLOR--white;
   font-family: $FONT-SEMIBOLD;
   font-size: 12px;
   white-space: nowrap;

@@ -17,13 +17,23 @@
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import * as COLORS from 'common/constants/colors';
 import { createTooltipRenderer } from 'components/widgets/common/tooltip';
+import { getTimeType, convertSecondsToMilliseconds } from 'components/widgets/common/utils';
+import { DURATION } from 'components/widgets/common/constants';
+import { messages } from 'components/widgets/common/messages';
 import { MostTimeConsumingTestCasesTooltip } from './mostTimeConsumingTestCasesTooltip';
 import { calculateTooltipParams } from './utils';
 
-export const getConfig = ({ content, positionCallback, size: { height }, onChartClick }) => {
-  const itemsData = [...content]
-    .sort((a, b) => b.duration - a.duration)
-    .map((item, index) => ({ ...item, tickIndex: 30 - index, index }));
+export const getConfig = ({ content, formatMessage, positionCallback, size, onChartClick }) => {
+  const chartData = [DURATION];
+  let maxDuration = 0;
+  const itemsData = content.map((item) => {
+    const duration = convertSecondsToMilliseconds(item.duration);
+    maxDuration = duration > maxDuration ? duration : maxDuration;
+    chartData.push(duration);
+
+    return { ...item, duration };
+  });
+  const timeType = getTimeType(maxDuration);
 
   const getItemColor = (color, { index }) => {
     const status = itemsData[index] && itemsData[index].status;
@@ -31,48 +41,46 @@ export const getConfig = ({ content, positionCallback, size: { height }, onChart
     return COLORS[`COLOR_${status}`];
   };
 
-  const dataClickHandler = (d) => {
-    const targetItem = itemsData.find((item) => item.index === d.index) || {};
+  const dataClickHandler = ({ index }) => {
+    const targetItem = itemsData[index] || {};
 
     onChartClick(targetItem.id);
   };
 
   return {
     data: {
-      json: itemsData,
-      keys: {
-        x: 'tickIndex',
-        value: ['duration'],
-      },
+      columns: [chartData],
       type: MODES_VALUES[CHART_MODES.BAR_VIEW],
-      order: null,
       color: getItemColor,
       onclick: dataClickHandler,
     },
+    bar: {
+      width: {
+        ratio: 0.8,
+      },
+    },
     grid: {
-      y: {
+      x: {
         show: true,
       },
     },
     axis: {
       rotated: true,
       x: {
-        show: true,
-        type: 'category',
-        tick: {
-          culling: {
-            max: 6,
-          },
-          centered: true,
-          inner: true,
-          multiline: true,
-          outer: false,
-        },
+        show: false,
       },
       y: {
         show: true,
+        tick: {
+          format: (d) => (parseInt(d, 10) / timeType.value).toFixed(2),
+        },
         padding: {
           top: 0,
+          bottom: 0,
+        },
+        label: {
+          text: formatMessage(messages[timeType.type]),
+          position: 'outer-center',
         },
       },
     },
@@ -95,11 +103,9 @@ export const getConfig = ({ content, positionCallback, size: { height }, onChart
         itemsData,
       }),
     },
-    size: {
-      height,
-    },
     point: {
       show: false,
     },
+    size,
   };
 };

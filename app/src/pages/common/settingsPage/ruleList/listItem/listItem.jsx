@@ -17,73 +17,59 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { ControlPanel } from './controlPanel';
+import { ruleListItemPropTypes, ruleListItemDefaultProps } from '../constants';
+import { ItemContent } from './itemContent';
 import styles from './listItem.scss';
 
 const cx = classNames.bind(styles);
 
 export const ListItem = ({
   item,
-  id,
-  readOnly,
-  onToggle,
-  onDelete,
-  onEdit,
-  onClone,
-  getPanelTitle,
   getListItemContentData,
-  isCloned,
-  messages,
-}) => (
-  <div className={cx('list-item')}>
-    <ControlPanel
-      item={item}
-      id={id}
-      readOnly={readOnly}
-      onToggle={onToggle}
-      onDelete={onDelete}
-      onEdit={onEdit}
-      onClone={onClone}
-      getPanelTitle={getPanelTitle}
-      isCloned={isCloned}
-      messages={messages}
+  contentWithScroll,
+  lineHeightVariant,
+  ...rest
+}) => {
+  const content = getListItemContentData(item).map((itemData, index) => (
+    <ItemContent
+      // eslint-disable-next-line react/no-array-index-key
+      key={`${itemData.key}_${index}`}
+      data={itemData}
+      lineHeightVariant={lineHeightVariant}
     />
-    <div className={cx('data')}>
-      {getListItemContentData(item).map((itemData, index) => (
-        // eslint-disable-next-line react/no-array-index-key
-        <div key={`${itemData.key}_${itemData.value}_${index}`} className={cx('data-row')}>
-          <span className={cx('data-name')}>{itemData.key}</span>
-          <span className={cx('data-value')}>{itemData.value}</span>
-        </div>
-      ))}
-    </div>
-  </div>
-);
+  ));
 
-ListItem.propTypes = {
-  item: PropTypes.object,
-  id: PropTypes.number,
-  readOnly: PropTypes.bool,
-  onToggle: PropTypes.func,
-  onDelete: PropTypes.func,
-  onEdit: PropTypes.func,
-  onClone: PropTypes.func,
-  getPanelTitle: PropTypes.func,
-  getListItemContentData: PropTypes.func,
-  isCloned: PropTypes.bool,
-  messages: PropTypes.object,
+  return (
+    <div className={cx('list-item')}>
+      <ControlPanel item={item} {...rest} />
+      <div className={cx('data')}>
+        {contentWithScroll ? (
+          <ScrollWrapper autoHeight autoHeightMax={106} hideTracksWhenNotNeeded>
+            {content}
+          </ScrollWrapper>
+        ) : (
+          content
+        )}
+      </div>
+    </div>
+  );
 };
 
+ListItem.propTypes = {
+  ...ruleListItemPropTypes,
+  item: PropTypes.object,
+  id: PropTypes.number,
+  maxItemOrder: PropTypes.number,
+  contentWithScroll: PropTypes.bool,
+  lineHeightVariant: PropTypes.string,
+};
 ListItem.defaultProps = {
+  ...ruleListItemDefaultProps,
   item: {},
   id: 0,
-  readOnly: false,
-  onToggle: () => {},
-  onDelete: () => {},
-  onEdit: () => {},
-  onClone: () => {},
-  getPanelTitle: () => {},
-  getListItemContentData: () => {},
-  isCloned: false,
-  messages: {},
+  maxItemOrder: 0,
+  contentWithScroll: false,
+  lineHeightVariant: '',
 };

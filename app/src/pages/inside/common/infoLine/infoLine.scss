@@ -16,12 +16,8 @@
 
 .info-line {
   position: relative;
-  width: 100%;
   min-height: 30px;
   box-sizing: border-box;
-  border-top: 1px solid $COLOR--gray-91;
-  border-bottom: 1px solid $COLOR--gray-91;
-  background-color: $COLOR--white-two;
 
   &--list-view {
     display: flex;
@@ -34,36 +30,15 @@
   }
 }
 
-.bar-chart-holder {
-  display: inline-block;
-  position: relative;
-  width: 100px;
-  height: 28px;
-  margin: 0 15px;
-  vertical-align: middle;
-
-  @media (max-width: $SCREEN_SM_MAX) {
-    display: none;
-  }
-}
-
 .passed,
 .total,
-.parent-holder,
-.filter-holder,
-.icon-holder {
+.filter-holder {
   display: inline-block;
   font-family: $FONT-REGULAR;
   font-size: 12px;
   text-transform: capitalize;
   vertical-align: middle;
   line-height: 28px;
-}
-
-.parent-holder,
-.icon-holder {
-  margin-right: 10px;
-  color: $COLOR--gray-60;
 }
 
 .passed,
@@ -83,12 +58,6 @@
       border-right: 1px solid $COLOR--gray-91;
     }
   }
-}
-
-.parent-holder {
-  font-family: $FONT-SEMIBOLD;
-  margin-left: 10px;
-  text-transform: uppercase;
 }
 
 .defect-types {

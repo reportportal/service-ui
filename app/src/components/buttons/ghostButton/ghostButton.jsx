@@ -36,21 +36,26 @@ export const GhostButton = ({
   mobileDisabled,
   transparentBorder,
   transparentBorderHover,
+  strokedIcon,
+  filledIcon,
   large,
   style,
+  transparentBackground,
 }) => {
-  const classes = cx({
-    'ghost-button': true,
+  const classes = cx('ghost-button', {
     disabled,
     tiny,
     large,
     active,
     [`color-${color}`]: color,
     'with-icon': icon,
+    'stroked-icon': strokedIcon,
+    'filled-icon': filledIcon,
     'mobile-minified': icon && children && !notMinified,
     'mobile-disabled': mobileDisabled,
     'transparent-border': transparentBorder,
     'transparent-border-hover': transparentBorderHover,
+    'transparent-background': transparentBackground,
   });
   return (
     <button
@@ -88,6 +93,9 @@ GhostButton.propTypes = {
   transparentBorderHover: PropTypes.bool,
   large: PropTypes.bool,
   style: PropTypes.object,
+  filledIcon: PropTypes.bool,
+  strokedIcon: PropTypes.bool,
+  transparentBackground: PropTypes.bool,
 };
 
 GhostButton.defaultProps = {
@@ -107,4 +115,7 @@ GhostButton.defaultProps = {
   transparentBorderHover: false,
   large: false,
   style: null,
+  filledIcon: true,
+  strokedIcon: false,
+  transparentBackground: false,
 };

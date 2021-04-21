@@ -202,10 +202,13 @@ export class CompareWithFilterControl extends Component {
       <div className={cx('compare-with-filter-control')}>
         {!!selectedFilter && (
           <div className={cx('selected-filter-control')}>
-            <span className={cx('selected-filter-name')} title={selectedFilter.name}>
-              {selectedFilter.name}
-            </span>
-            <GhostButton icon={CrossIcon} disabled={disabled} onClick={this.resetActiveFilter} />
+            <GhostButton
+              title={selectedFilter.name}
+              icon={CrossIcon}
+              disabled={disabled}
+              onClick={this.resetActiveFilter}
+              transparentBackground
+            />
           </div>
         )}
         <Manager>
@@ -222,6 +225,7 @@ export class CompareWithFilterControl extends Component {
                   icon={CompareIcon}
                   disabled={disabled}
                   title={formatMessage(messages.compareTitle)}
+                  transparentBackground
                 >
                   <FormattedMessage id="Common.compare" defaultMessage="Compare" />
                 </GhostButton>

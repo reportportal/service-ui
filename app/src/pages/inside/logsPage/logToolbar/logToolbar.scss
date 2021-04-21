@@ -19,10 +19,12 @@
   align-items: center;
   justify-content: space-between;
   padding: 10px 15px;
+  margin-bottom: 10px;
 }
 
 .action-buttons {
   display: flex;
+  align-items: center;
 }
 
 .action-button {
@@ -32,9 +34,4 @@
 
 .left-arrow-button {
   margin-right: -1px;
-}
-
-.with-border {
-  margin-bottom: 10px;
-  border-bottom: 1px solid $COLOR--gray-91;
 }

@@ -37,6 +37,11 @@
   &:hover:not(.disabled) {
     background-color: $COLOR--gray-91;
   }
+
+  &.without-indentation {
+    margin-bottom: 0;
+    margin-right: 0;
+  }
 }
 
 .label {

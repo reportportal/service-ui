@@ -81,6 +81,8 @@ export class StackTrace extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    designMode: PropTypes.string,
+    transparentBackground: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -91,6 +93,8 @@ export class StackTrace extends Component {
     logItem: {},
     hideTime: false,
     minHeight: SCROLL_HEIGHT,
+    designMode: '',
+    transparentBackground: false,
   };
 
   componentDidMount() {
@@ -125,13 +129,17 @@ export class StackTrace extends Component {
   };
 
   renderStackTraceMessage = () => {
-    const { items, loadMore, loading, intl, hideTime } = this.props;
+    const { items, loadMore, loading, intl, hideTime, designMode } = this.props;
     return (
       <React.Fragment>
         <ScrollWrapper autoHeight autoHeightMax={this.getScrolledHeight()}>
           {items.map((item) => (
-            <div key={item.id} className={cx('row')}>
-              <StackTraceMessageBlock level={item.level} maxHeight={this.getMaxRowHeight()}>
+            <div key={item.id} className={cx('row', { [`design-mode-${designMode}`]: designMode })}>
+              <StackTraceMessageBlock
+                level={item.level}
+                maxHeight={this.getMaxRowHeight()}
+                designMode={designMode}
+              >
                 <div className={cx('message-container')}>
                   <div className={cx('cell', 'message-cell')}>{item.message}</div>
                   {!hideTime && (
@@ -146,6 +154,7 @@ export class StackTrace extends Component {
           <div
             className={cx('load-more-container', {
               loading,
+              [`design-mode-${designMode}`]: designMode,
             })}
           >
             <div className={cx('load-more-label')} onClick={this.loadMore}>
@@ -163,7 +172,7 @@ export class StackTrace extends Component {
   };
 
   renderStackTrace = () => {
-    const { intl, loading } = this.props;
+    const { intl, loading, transparentBackground } = this.props;
 
     if (loading && !this.isItemsExist()) {
       return <SpinningPreloader />;
@@ -171,7 +180,12 @@ export class StackTrace extends Component {
     if (this.isItemsExist()) {
       return this.renderStackTraceMessage();
     }
-    return <NoItemMessage message={intl.formatMessage(messages.noStackTrace)} />;
+    return (
+      <NoItemMessage
+        message={intl.formatMessage(messages.noStackTrace)}
+        transparentBackground={transparentBackground}
+      />
+    );
   };
 
   render() {

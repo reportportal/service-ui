@@ -26,18 +26,24 @@ const NEW_ATTRIBUTE = {
 export class EditableAttributeList extends Component {
   static propTypes = {
     attributes: PropTypes.arrayOf(PropTypes.object),
-    onChange: PropTypes.func,
     disabled: PropTypes.bool,
+    newAttrMessage: PropTypes.string,
+    onChange: PropTypes.func,
     keyURLCreator: PropTypes.func,
     valueURLCreator: PropTypes.func,
+    maxLength: PropTypes.number,
+    customClass: PropTypes.string,
   };
 
   static defaultProps = {
     attributes: [],
-    onChange: () => {},
     disabled: false,
+    newAttrMessage: '',
+    onChange: () => {},
     keyURLCreator: null,
     valueURLCreator: null,
+    maxLength: Infinity,
+    customClass: '',
   };
 
   handleAddNew = () => {
@@ -50,15 +56,27 @@ export class EditableAttributeList extends Component {
   };
 
   render() {
+    const {
+      attributes,
+      disabled,
+      keyURLCreator,
+      valueURLCreator,
+      newAttrMessage,
+      maxLength,
+      customClass,
+    } = this.props;
     return (
       <AttributeList
-        attributes={this.props.attributes}
+        attributes={attributes}
         onChange={this.handleChange}
         onRemove={this.handleChange}
         onAddNew={this.handleAddNew}
-        disabled={this.props.disabled}
-        keyURLCreator={this.props.keyURLCreator}
-        valueURLCreator={this.props.valueURLCreator}
+        newAttrMessage={newAttrMessage}
+        disabled={disabled}
+        keyURLCreator={keyURLCreator}
+        valueURLCreator={valueURLCreator}
+        maxLength={maxLength}
+        customClass={customClass}
       />
     );
   }

@@ -29,6 +29,10 @@
       box-shadow: none;
     }
   }
+
+  &.without-indentation {
+    padding-bottom: 0;
+  }
 }
 
 .control {

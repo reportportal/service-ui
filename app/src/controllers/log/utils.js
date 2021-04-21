@@ -41,7 +41,7 @@ export const calculateGrowthDuration = (historyItems) => {
       const currentDuration = item.endTime - item.startTime;
       const growth = currentDuration / prevDuration - 1;
       if (growth > 0) {
-        newItem.growthDuration = `+${Math.round(growth * 100)}%`;
+        newItem.growthDuration = Math.round(growth * 100);
       }
     }
     return newItem;
@@ -110,6 +110,19 @@ export const updateHistoryItemIssues = (items = [], issues) => {
       return {
         ...item,
         issue: itemForUpdate.issue,
+      };
+    }
+
+    return item;
+  });
+};
+
+export const updateHistoryItemLaunchAttributes = (items = [], launch) => {
+  return items.map((item) => {
+    if (item.launchId === launch.id) {
+      return {
+        ...item,
+        launchAttributes: launch.attributes,
       };
     }
 

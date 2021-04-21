@@ -14,36 +14,17 @@
  * limitations under the License.
  */
 
-import { defineMessages } from 'react-intl';
 import { COLOR_CHART_DURATION, COLOR_INTERRUPTED } from 'common/constants/colors';
 import {
   getLaunchAxisTicks,
   transformCategoryLabelByDefault,
 } from 'components/widgets/common/utils';
 import { createTooltipRenderer } from 'components/widgets/common/tooltip';
-import {
-  DURATION,
-  TIME_TYPES,
-  isValueInterrupted,
-  prepareChartData,
-  calculateTooltipParams,
-} from './utils';
+import { messages } from 'components/widgets/common/messages';
+import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
+import { DURATION } from 'components/widgets/common/constants';
+import { isValueInterrupted, prepareChartData, calculateTooltipParams } from './utils';
 import { LaunchesDurationTooltip } from './launchesDurationTooltip';
-
-const messages = defineMessages({
-  [TIME_TYPES.SECONDS]: {
-    id: 'LaunchesDurationChart.seconds',
-    defaultMessage: 'seconds',
-  },
-  [TIME_TYPES.MINUTES]: {
-    id: 'LaunchesDurationChart.minutes',
-    defaultMessage: 'minutes',
-  },
-  [TIME_TYPES.HOURS]: {
-    id: 'LaunchesDurationChart.hours',
-    defaultMessage: 'hours',
-  },
-});
 
 export const getConfig = ({
   content,
@@ -58,7 +39,7 @@ export const getConfig = ({
   return {
     data: {
       columns: [chartData],
-      type: 'bar',
+      type: MODES_VALUES[CHART_MODES.BAR_VIEW],
       groups: [[DURATION]],
       color: (color, d) => {
         const item = itemsData[d.index];

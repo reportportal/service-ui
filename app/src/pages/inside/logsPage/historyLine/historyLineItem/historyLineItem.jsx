@@ -16,100 +16,157 @@
 
 import React, { Component } from 'react';
 import track from 'react-tracking';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import Link from 'redux-first-router-link';
 import classNames from 'classnames/bind';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
-import { payloadSelector, PROJECT_LOG_PAGE, PROJECT_USERDEBUG_LOG_PAGE } from 'controllers/pages';
-import { NOT_FOUND } from 'common/constants/testStatuses';
-import { debugModeSelector } from 'controllers/launch';
 import { defectTypesSelector } from 'controllers/project';
-import { HistoryLineItemContent } from './historyLineItemContent';
+import {
+  includeAllLaunchesSelector,
+  updateHistoryItemLaunchAttributesAction,
+} from 'controllers/log';
+import { withTooltip } from 'components/main/tooltips/tooltip';
+import { HistoryLineItemTooltip } from './historyLineItemTooltip';
+import { HistoryLineItemBadge } from './historyLineItemBadges';
+import { Triangles } from './triangles';
 import styles from './historyLineItem.scss';
 
 const cx = classNames.bind(styles);
 
-@connect((state) => ({
-  pagePayload: payloadSelector(state),
-  debugMode: debugModeSelector(state),
-  defectTypes: defectTypesSelector(state),
-}))
+export const HistoryLineItemContent = ({ active, showTriangles, testItem, defectTypes }) => {
+  const { status, hasChildren, growthDuration, launchNumber, statistics } = testItem;
+  const isNotEmpty = !hasChildren ? Object.keys(statistics.defects).length : false;
+
+  return (
+    <div className={cx('history-line-item-content')}>
+      {showTriangles && (
+        <div className={cx('triangles-wrapper')}>
+          <Triangles growthDuration={growthDuration} />
+        </div>
+      )}
+      <div className={cx('status-block', `status-${status}`)}>#{launchNumber}</div>
+      <div className={cx('defect-block', { 'not-empty': isNotEmpty })}>
+        <HistoryLineItemBadge
+          active={active}
+          defectTypes={defectTypes}
+          defects={!hasChildren ? statistics.defects : {}}
+          {...testItem}
+        />
+      </div>
+    </div>
+  );
+};
+HistoryLineItemContent.propTypes = {
+  active: PropTypes.bool,
+  defectTypes: PropTypes.object.isRequired,
+  testItem: PropTypes.object.isRequired,
+  showTriangles: PropTypes.bool,
+  includeAllLaunches: PropTypes.bool,
+  updateLaunchAttributes: PropTypes.func,
+};
+HistoryLineItemContent.defaultProps = {
+  active: false,
+  showTriangles: true,
+  includeAllLaunches: false,
+  updateLaunchAttributes: () => {},
+};
+
+const HistoryLineItemContentWithTooltip = withTooltip({
+  TooltipComponent: HistoryLineItemTooltip,
+  data: {
+    dynamicWidth: true,
+    placement: 'bottom',
+    noMobile: true,
+    dark: true,
+    modifiers: {
+      preventOverflow: { enabled: false },
+      hide: { enabled: false },
+    },
+  },
+})(HistoryLineItemContent);
+
+@connect(
+  (state) => ({
+    includeAllLaunches: includeAllLaunchesSelector(state),
+    defectTypes: defectTypesSelector(state),
+  }),
+  {
+    updateLaunchAttributes: updateHistoryItemLaunchAttributesAction,
+  },
+)
+@injectIntl
 @track()
 export class HistoryLineItem extends Component {
   static propTypes = {
-    projectId: PropTypes.string.isRequired,
+    intl: PropTypes.object.isRequired,
     defectTypes: PropTypes.object.isRequired,
     launchNumber: PropTypes.number,
-    path: PropTypes.string,
     launchId: PropTypes.number,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     status: PropTypes.string,
     active: PropTypes.bool,
-    isFirstItem: PropTypes.bool,
     isLastItem: PropTypes.bool,
-    pagePayload: PropTypes.object,
-    debugMode: PropTypes.bool,
+    statistics: PropTypes.shape({
+      defects: PropTypes.object,
+    }),
+    hasChildren: PropTypes.bool,
+    startTime: PropTypes.number,
+    endTime: PropTypes.number,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    onClick: PropTypes.func,
+    launchAttributes: PropTypes.array,
+    includeAllLaunches: PropTypes.bool,
+    updateLaunchAttributes: PropTypes.func,
   };
 
   static defaultProps = {
-    path: '',
     launchNumber: null,
     launchId: 0,
     id: 0,
     status: '',
     active: false,
-    isFirstItem: false,
     isLastItem: false,
-    debugMode: false,
-    pagePayload: {},
-  };
-
-  checkIfTheLinkIsActive = () => {
-    const { status, isLastItem } = this.props;
-
-    return !(status === NOT_FOUND || isLastItem);
-  };
-
-  createHistoryLineItemLink = () => {
-    const { pagePayload, path, launchId, debugMode } = this.props;
-
-    const parentIds = path.split('.');
-
-    return {
-      type: debugMode ? PROJECT_USERDEBUG_LOG_PAGE : PROJECT_LOG_PAGE,
-      payload: {
-        ...pagePayload,
-        testItemIds: [launchId, ...parentIds].join('/'),
-      },
-    };
+    statistics: {},
+    hasChildren: false,
+    startTime: null,
+    endTime: null,
+    onClick: () => {},
+    launchAttributes: null,
+    includeAllLaunches: false,
+    updateLaunchAttributes: () => {},
   };
 
   render() {
-    const { launchNumber, active, ...rest } = this.props;
+    const {
+      intl,
+      active,
+      isLastItem,
+      onClick,
+      tracking,
+      defectTypes,
+      includeAllLaunches,
+      updateLaunchAttributes,
+      ...rest
+    } = this.props;
 
     return (
-      <div className={cx('history-line-item', { active })}>
-        <Link
-          className={cx('history-line-item-title', {
-            'active-link': this.checkIfTheLinkIsActive(),
-          })}
-          to={this.checkIfTheLinkIsActive() ? this.createHistoryLineItemLink() : ''}
-          onClick={() => this.props.tracking.trackEvent(LOG_PAGE_EVENTS.HISTORY_LINE_ITEM)}
-        >
-          <span className={cx('launch-title')}>{'launch '}</span>
-          <span>#{launchNumber}</span>
-        </Link>
-        <HistoryLineItemContent
+      <div
+        className={cx('history-line-item', { active, 'last-item': isLastItem })}
+        onClick={() => {
+          tracking.trackEvent(LOG_PAGE_EVENTS.HISTORY_LINE_ITEM);
+          onClick();
+        }}
+      >
+        <HistoryLineItemContentWithTooltip
+          includeAllLaunches={includeAllLaunches}
           active={active}
-          hasChildren={rest.hasChildren}
-          startTime={rest.startTime}
-          endTime={rest.endTime}
-          {...rest}
+          defectTypes={defectTypes}
+          testItem={rest}
+          updateLaunchAttributes={updateLaunchAttributes}
         />
       </div>
     );

@@ -45,7 +45,7 @@ AdminUiExtensionPage.propTypes = {
     PropTypes.shape({
       name: PropTypes.string,
       title: PropTypes.string,
-      component: PropTypes.element,
+      component: PropTypes.func,
     }),
   ),
   activePluginPage: PropTypes.string,

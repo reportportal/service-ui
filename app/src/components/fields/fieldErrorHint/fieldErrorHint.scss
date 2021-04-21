@@ -46,6 +46,13 @@
     bottom: 100%;
     width: 193%;
   }
+
+  &.type-bottom-left {
+    right: auto;
+    left: 0;
+    top: 100%;
+    width: 260%;
+  }
 }
 
 .hint-content {

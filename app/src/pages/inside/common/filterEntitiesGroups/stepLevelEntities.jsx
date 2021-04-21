@@ -18,7 +18,7 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
-import { commonValidators } from 'common/utils/validation';
+import { commonValidators, bindMessageToValidator, validate } from 'common/utils/validation';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
 import { FAILED, PASSED, SKIPPED, INTERRUPTED, IN_PROGRESS } from 'common/constants/launchStatuses';
@@ -50,7 +50,6 @@ import {
   CONDITION_BETWEEN,
   CONDITION_HAS,
   CONDITION_IN,
-  CONDITION_EX,
   CONDITION_ANY,
   ENTITY_NAME,
   ENTITY_START_TIME,
@@ -66,7 +65,6 @@ import {
   ENTITY_AUTOANALYZE,
   CONDITION_EQ,
   ENTITY_PATTERN_NAME,
-  ENTITY_ISSUE_ID,
   ENTITY_RETRY,
 } from 'components/filterEntities/constants';
 import { defectTypesSelector, patternsSelector } from 'controllers/project';
@@ -281,11 +279,20 @@ const messages = defineMessages({
     id: 'StepLevelEntities.entityItemAttributeValues.placeholder',
     defaultMessage: 'Enter attribute values',
   },
+  BTS_ISSUE_PLACEHOLDER: {
+    id: 'StepLevelEntities.entityItemBTSIssue.placeholder',
+    defaultMessage: 'Enter Issue in BTS',
+  },
   PatternNameTitle: {
     id: 'StepLevelEntities.PatternNameTitle',
     defaultMessage: 'Pattern name',
   },
 });
+
+const descriptionStepLevelEntity = bindMessageToValidator(
+  validate.descriptionStepLevelEntity,
+  'descriptionStepLevelEntityHint',
+);
 
 @injectIntl
 @connect((state) => ({
@@ -304,18 +311,13 @@ export class StepLevelEntities extends Component {
     launchId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     visibleFilters: PropTypes.array,
     patterns: PropTypes.array,
-    onFilterAdd: PropTypes.func,
-    onFilterRemove: PropTypes.func,
-    onFilterChange: PropTypes.func,
   };
   static defaultProps = {
     filterValues: {},
     visibleFilters: [],
     patterns: [],
-    onFilterAdd: () => {},
-    onFilterRemove: () => {},
-    onFilterChange: () => {},
   };
+
   getDefectTypeEntity = () => {
     const { intl, defectTypes, filterValues, visibleFilters } = this.props;
     let initChecked = [];
@@ -392,6 +394,7 @@ export class StepLevelEntities extends Component {
       },
     ];
   };
+
   getEntities = () => {
     const { intl, filterValues, projectId, launchId, visibleFilters } = this.props;
     return [
@@ -479,12 +482,12 @@ export class StepLevelEntities extends Component {
           condition: CONDITION_CNT,
         }),
         title: intl.formatMessage(messages.DescriptionTitle),
-        validationFunc: commonValidators.descriptionEntity,
+        validationFunc: descriptionStepLevelEntity,
         active: visibleFilters.includes(ENTITY_DESCRIPTION),
         removable: true,
         customProps: {
           placeholder: intl.formatMessage(messages.DescriptionPlaceholder),
-          maxLength: 18,
+          maxLength: 256,
         },
       },
       {
@@ -627,24 +630,16 @@ export class StepLevelEntities extends Component {
       },
       {
         id: ENTITY_BTS_ISSUES,
-        component: EntityDropdown,
+        component: EntityInputConditionalTags,
         value: this.bindDefaultValue(ENTITY_BTS_ISSUES, {
-          condition: CONDITION_EX,
+          condition: CONDITION_HAS,
         }),
         title: intl.formatMessage(messages.BtsIssueTitle),
         active: visibleFilters.includes(ENTITY_BTS_ISSUES),
         removable: true,
         customProps: {
-          options: [
-            {
-              label: intl.formatMessage(messages.BtsIssueOption1),
-              value: 'TRUE',
-            },
-            {
-              label: intl.formatMessage(messages.BtsIssueOption2),
-              value: 'FALSE',
-            },
-          ],
+          getURI: URLS.testItemBTSIssuesSearch(projectId),
+          placeholder: intl.formatMessage(messages.BTS_ISSUE_PLACEHOLDER),
         },
       },
       {
@@ -675,60 +670,12 @@ export class StepLevelEntities extends Component {
 
   bindDefaultValue = bindDefaultValue;
 
-  handleAdd = (entity, ...rest) => {
-    if (entity.id === ENTITY_BTS_ISSUES && entity.value.value === 'FALSE') {
-      this.props.onFilterAdd(
-        [
-          entity,
-          {
-            id: ENTITY_ISSUE_ID,
-            filteringField: ENTITY_ISSUE_ID,
-            value: {
-              condition: CONDITION_EX,
-              value: 'TRUE',
-            },
-          },
-        ],
-        ...rest,
-      );
-    } else {
-      this.props.onFilterAdd(entity, ...rest);
-    }
-  };
-
-  handleChange = (entityId, value) => {
-    this.props.onFilterChange(entityId, value);
-    if (entityId === ENTITY_BTS_ISSUES && value.value === 'FALSE') {
-      this.props.onFilterAdd({
-        id: ENTITY_ISSUE_ID,
-        filteringField: ENTITY_ISSUE_ID,
-        value: {
-          condition: CONDITION_EX,
-          value: 'TRUE',
-        },
-      });
-    } else if (ENTITY_ISSUE_ID in this.props.filterValues) {
-      this.props.onFilterRemove(ENTITY_ISSUE_ID);
-    }
-  };
-
-  handleRemove = (entityId) => {
-    if (entityId === ENTITY_BTS_ISSUES) {
-      this.props.onFilterRemove([entityId, ENTITY_ISSUE_ID]);
-    } else {
-      this.props.onFilterRemove(entityId);
-    }
-  };
-
   render() {
-    const { render, onFilterAdd, onFilterRemove, onFilterChange, ...rest } = this.props;
+    const { render, ...rest } = this.props;
 
     return render({
       ...rest,
       filterEntities: this.getEntities(),
-      onFilterAdd: this.handleAdd,
-      onFilterRemove: this.handleRemove,
-      onFilterChange: this.handleChange,
     });
   }
 }

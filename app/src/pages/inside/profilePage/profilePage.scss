@@ -16,6 +16,7 @@
 
 .container {
   display: flex;
+  background-color: $COLOR--white-two;
   @media (max-width: $SCREEN_SM_MAX) {
     flex-direction: column;
   }

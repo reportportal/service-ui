@@ -287,7 +287,7 @@ export class StepGrid extends Component {
         title: {
           full: 'defect type',
         },
-        sortable: true,
+        sortable: false,
         component: DefectTypeColumn,
         customProps: {
           onEdit: (data) => {
@@ -298,7 +298,6 @@ export class StepGrid extends Component {
         },
         withFilter: true,
         filterEventInfo: events.DEFECT_TYPE_FILTER,
-        sortingEventInfo: events.DEFECT_TYPE_SORTING,
       },
     ];
   }

@@ -21,6 +21,10 @@ import {
   SET_LOG_PAGE_LOADING,
   FETCH_HISTORY_ITEMS_SUCCESS,
   UPDATE_HISTORY_ITEM_ISSUES,
+  SET_INCLUDE_ALL_LAUNCHES,
+  FETCH_HISTORY_LINE_ITEMS,
+  SET_SHOULD_SHOW_LOAD_MORE,
+  UPDATE_HISTORY_ITEM_LAUNCH_ATTRIBUTES,
 } from './constants';
 
 export const fetchLogPageData = () => ({
@@ -39,6 +43,11 @@ export const fetchHistoryItemsSuccessAction = (items) => ({
   payload: items,
 });
 
+export const fetchHistoryItemsAction = (loadMore = false, callback) => ({
+  type: FETCH_HISTORY_LINE_ITEMS,
+  payload: { loadMore, callback },
+});
+
 export const fetchLogPageStackTrace = (logItem) => ({
   type: FETCH_LOG_PAGE_STACK_TRACE,
   payload: logItem,
@@ -53,7 +62,22 @@ export const setPageLoadingAction = (isLoading) => ({
   payload: isLoading,
 });
 
+export const setIncludeAllLaunchesAction = (includeAllLaunches) => ({
+  type: SET_INCLUDE_ALL_LAUNCHES,
+  payload: includeAllLaunches,
+});
+
+export const setShouldShowLoadMoreAction = (shouldShowLoadMore) => ({
+  type: SET_SHOULD_SHOW_LOAD_MORE,
+  payload: shouldShowLoadMore,
+});
+
 export const updateHistoryItemIssuesAction = (issues) => ({
   type: UPDATE_HISTORY_ITEM_ISSUES,
   payload: issues,
+});
+
+export const updateHistoryItemLaunchAttributesAction = (launch) => ({
+  type: UPDATE_HISTORY_ITEM_LAUNCH_ATTRIBUTES,
+  payload: launch,
 });

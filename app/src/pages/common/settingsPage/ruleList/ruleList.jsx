@@ -17,61 +17,32 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { ListItem } from './listItem';
+import { MovableRuleList } from './movableRuleList';
+import { ruleListItemPropTypes, ruleListItemDefaultProps } from './constants';
 
-export const RuleList = ({
-  data,
-  readOnly,
-  onToggle,
-  onDelete,
-  onEdit,
-  onClone,
-  getPanelTitle,
-  getListItemContentData,
-  isCloned,
-  messages,
-}) => (
+const PlainRuleList = ({ data, ...rest }) => (
   <Fragment>
     {data.map((item, index) => (
-      <ListItem
-        key={`index_${index}`} // eslint-disable-line react/no-array-index-key
-        id={index}
-        item={item}
-        readOnly={readOnly}
-        onToggle={onToggle}
-        onDelete={onDelete}
-        onEdit={onEdit}
-        onClone={onClone}
-        getPanelTitle={getPanelTitle}
-        getListItemContentData={getListItemContentData}
-        isCloned={isCloned}
-        messages={messages}
-      />
+      <ListItem key={item.id || index} id={index} item={item} {...rest} />
     ))}
   </Fragment>
 );
-
-RuleList.propTypes = {
+PlainRuleList.propTypes = {
+  ...ruleListItemPropTypes,
   data: PropTypes.array,
-  readOnly: PropTypes.bool,
-  onToggle: PropTypes.func,
-  onDelete: PropTypes.func,
-  onEdit: PropTypes.func,
-  onClone: PropTypes.func,
-  getPanelTitle: PropTypes.func,
-  getListItemContentData: PropTypes.func,
-  isCloned: PropTypes.bool,
-  messages: PropTypes.object,
+};
+PlainRuleList.defaultProps = {
+  ...ruleListItemDefaultProps,
+  data: [],
 };
 
+export const RuleList = ({ isMovable, ...rest }) =>
+  isMovable ? <MovableRuleList {...rest} /> : <PlainRuleList {...rest} />;
+RuleList.propTypes = {
+  data: PropTypes.array,
+  ...ruleListItemPropTypes,
+};
 RuleList.defaultProps = {
+  ...ruleListItemDefaultProps,
   data: [],
-  readOnly: false,
-  onToggle: () => {},
-  onDelete: () => {},
-  onEdit: () => {},
-  onClone: () => {},
-  getPanelTitle: () => {},
-  getListItemContentData: () => {},
-  isCloned: false,
-  messages: {},
 };

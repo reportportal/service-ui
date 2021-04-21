@@ -47,6 +47,7 @@ export class PassingRateSummary extends Component {
     const link = getStatisticsLink({
       statuses: data.id === STATS_PASSED ? [PASSED] : [FAILED, INTERRUPTED, SKIPPED],
       launchesLimit: widget.contentParameters.itemsCount,
+      types: null,
     });
     const navigationParams = getDefaultTestItemLinkParams(
       project,

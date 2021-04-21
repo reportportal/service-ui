@@ -14,6 +14,67 @@
  * limitations under the License.
  */
 
+.btn-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin: 0 10px;
+  vertical-align: middle;
+}
+
+.btn-title-mobile {
+  display: none;
+  width: 100%;
+  max-width: 75px;
+  overflow: hidden;
+  vertical-align: middle;
+  text-transform: uppercase;
+  line-height: 15px;
+  text-overflow: ellipsis;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: inline-block;
+    max-width: 145px;
+  }
+}
+
+.link,
+.nav-link {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  color: $COLOR--white-two;
+  text-decoration: none;
+  text-align: center;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    text-align: left;
+  }
+}
+
+.nav-link {
+  .btn-icon {
+    path,
+    rect,
+    polygon {
+      fill: $COLOR--white-two;
+    }
+  }
+
+  &.active {
+    color: $COLOR--booger;
+    background-color: $COLOR--black-2;
+    box-shadow: none;
+
+    path,
+    rect,
+    polygon {
+      fill: $COLOR--booger;
+    }
+  }
+}
+
 .sidebar-nav-btn {
   display: inline-block;
   width: 100%;
@@ -27,10 +88,22 @@
 
   @media (max-width: $SCREEN_XS_MAX) {
     font-size: 12px;
+
+    &.mobile-hidden {
+      display: none;
+    }
   }
+
   &.at-bottom {
-    .nav-link {
-      box-shadow: inset 0 1px 0 0 $COLOR--brownish-grey;
+    .nav-link,
+    .link {
+      .btn-icon {
+        width: 20px;
+        height: 20px;
+      }
+      .btn-title {
+        text-transform: none;
+      }
 
       &.active {
         box-shadow: none;
@@ -38,30 +111,7 @@
     }
   }
 }
-.nav-link {
-  display: inline-block;
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-  color: $COLOR--white-two;
-  text-decoration: none;
-  text-align: center;
-  box-shadow: inset 0 1px 0 0 $COLOR--brownish-grey, inset 0 -1px 0 0 $COLOR--black-2;
 
-  &.active {
-    color: $COLOR--booger;
-    background-color: $COLOR--black-2;
-    box-shadow: none;
-
-    svg {
-      fill: $COLOR--booger;
-    }
-  }
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    text-align: left;
-  }
-}
 .wrapper {
   width: 100%;
   display: inline-block;
@@ -73,44 +123,17 @@
     white-space: nowrap;
   }
 }
-.btn-icon {
-  display: inline-block;
-  width: 25px;
+
+.tooltip-trigger {
+  display: block;
+  height: 100%;
+}
+
+.sidebar-tooltip {
+  display: inline-flex;
+  align-items: center;
   height: 25px;
-  margin: 0 10px;
-  vertical-align: middle;
-
-  svg {
-    fill: $COLOR--white-two;
-  }
-}
-.btn-title {
-  display: inline-block;
-  width: 100%;
-  max-width: 75px;
-  overflow: hidden;
-  vertical-align: middle;
+  font-size: 17px;
+  font-family: $FONT-SEMIBOLD;
   text-transform: uppercase;
-  line-height: 15px;
-  text-overflow: ellipsis;
-
-  @media (max-width: $SCREEN_SM_MAX) {
-    display: none;
-  }
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    display: inline-block;
-    max-width: 145px;
-  }
-}
-.at-bottom {
-  .nav-link {
-    .btn-icon {
-      width: 20px;
-      height: 20px;
-    }
-    .btn-title {
-      text-transform: none;
-    }
-  }
 }

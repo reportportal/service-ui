@@ -33,6 +33,20 @@ if (window.NodeList && !NodeList.prototype.forEach) {
   };
 }
 
+// String.startsWith for IE 11 (https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith#polyfill)
+// This polyfill was added due to problems with swagger-ui-react: dist version doesn't include the polyfill, so we have to duplicate it here
+if (!String.prototype.startsWith) {
+  Object.defineProperty(String.prototype, 'startsWith', {
+    enumerable: false,
+    configurable: false,
+    writable: false,
+    value: function(searchString, position) {
+      position = position || 0;
+      return this.indexOf(searchString, position) === position;
+    }
+  });
+}
+
 // Object.assign for IE 11 (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign#Polyfill)
 // This polyfill was added due to problems with react-intl: dist version doesn't include the polyfill, so we have to duplicate it here
 if (typeof Object.assign !== 'function') {

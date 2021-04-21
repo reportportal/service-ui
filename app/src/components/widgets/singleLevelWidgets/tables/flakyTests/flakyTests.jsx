@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { defineMessages } from 'react-intl';
+import { connect } from 'react-redux';
+import { testCaseNameLinkSelector } from 'controllers/testItem';
 import { TestsTableWidget } from '../components/testsTableWidget';
 import * as cfg from './flakyTestsCfg';
 
@@ -43,29 +45,59 @@ const titleMessages = defineMessages({
   },
 });
 
-const prepareWidgetData = ({ flaky }) =>
-  flaky.map((item) => ({ ...item, statuses: [...item.statuses].reverse() }));
+@connect(
+  (state) => ({
+    getTestCaseNameLink: testCaseNameLinkSelector(state),
+  }),
+  { navigate: (linkAction) => linkAction },
+)
+export class FlakyTests extends Component {
+  static propTypes = {
+    widget: PropTypes.object.isRequired,
+    navigate: PropTypes.func.isRequired,
+    getTestCaseNameLink: PropTypes.func.isRequired,
+  };
 
-const getMaxtrixTooltip = (count, total, formatMessage) => {
-  return formatMessage(titleMessages.flakyTestsMatrixTooltip, {
-    statusNumber: count,
-    statusChange: formatMessage(count === 1 ? titleMessages.change : titleMessages.changes),
-    possibleTimes: formatMessage(
-      total === 1 ? titleMessages.possible : titleMessages.possibleTimes,
-    ),
-    possibleNumber: total,
-  });
-};
+  prepareWidgetData = ({ flaky }) =>
+    flaky.map((item) => ({ ...item, statuses: [...item.statuses].reverse() }));
 
-export const FlakyTests = ({ widget: { content } }) => (
-  <TestsTableWidget
-    tests={prepareWidgetData(content)}
-    launch={content.latestLaunch}
-    columns={cfg.columns}
-    getMaxtrixTooltip={getMaxtrixTooltip}
-  />
-);
+  getMaxtrixTooltip = (count, total, formatMessage) => {
+    return formatMessage(titleMessages.flakyTestsMatrixTooltip, {
+      statusNumber: count,
+      statusChange: formatMessage(count === 1 ? titleMessages.change : titleMessages.changes),
+      possibleTimes: formatMessage(
+        total === 1 ? titleMessages.possible : titleMessages.possibleTimes,
+      ),
+      possibleNumber: total,
+    });
+  };
 
-FlakyTests.propTypes = {
-  widget: PropTypes.object.isRequired,
-};
+  itemClickHandler = (uniqueId) => {
+    const {
+      widget: {
+        content: { latestLaunch },
+      },
+      getTestCaseNameLink,
+      navigate,
+    } = this.props;
+    const link = getTestCaseNameLink({ uniqueId, testItemIds: latestLaunch.id });
+
+    navigate(link);
+  };
+
+  render() {
+    const {
+      widget: { content },
+    } = this.props;
+
+    return (
+      <TestsTableWidget
+        tests={this.prepareWidgetData(content)}
+        launch={content.latestLaunch}
+        columns={cfg.columns}
+        getMaxtrixTooltip={this.getMaxtrixTooltip}
+        onItemClick={this.itemClickHandler}
+      />
+    );
+  }
+}

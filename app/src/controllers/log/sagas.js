@@ -27,6 +27,7 @@ import { logItemIdSelector, pathnameChangedSelector } from 'controllers/pages';
 import { debugModeSelector } from 'controllers/launch';
 import { createFetchPredicate, fetchDataAction } from 'controllers/fetch';
 import { fetch, isEmptyObject } from 'common/utils';
+import { HISTORY_LINE_DEFAULT_VALUE } from 'controllers/log';
 import { collectLogPayload } from './sagaUtils';
 import {
   ACTIVITY_NAMESPACE,
@@ -37,6 +38,10 @@ import {
   STACK_TRACE_NAMESPACE,
   STACK_TRACE_PAGINATION_OFFSET,
   DETAILED_LOG_VIEW,
+  HISTORY_LINE_TABLE_MODE,
+  SET_INCLUDE_ALL_LAUNCHES,
+  FETCH_HISTORY_LINE_ITEMS,
+  NUMBER_OF_ITEMS_TO_LOAD,
 } from './constants';
 import {
   activeLogIdSelector,
@@ -46,6 +51,8 @@ import {
   logStackTracePaginationSelector,
   logViewModeSelector,
   isLaunchLogSelector,
+  includeAllLaunchesSelector,
+  historyItemsSelector,
 } from './selectors';
 import {
   attachmentSagas,
@@ -58,6 +65,7 @@ import {
   clearLogPageStackTrace,
   setPageLoadingAction,
   fetchHistoryItemsSuccessAction,
+  setShouldShowLoadMoreAction,
 } from './actionCreators';
 
 function* fetchActivity() {
@@ -104,16 +112,28 @@ function* fetchStackTrace({ payload: logItem }) {
   yield take(createFetchPredicate(STACK_TRACE_NAMESPACE));
 }
 
-function* fetchHistoryItems() {
+function* fetchHistoryItems({ payload } = { payload: {} }) {
+  const { loadMore, callback } = payload;
   const activeProject = yield select(activeProjectSelector);
   const logItemId = yield select(logItemIdSelector);
-
+  const historyItems = yield select(historyItemsSelector);
+  const isAllLaunches = yield select(includeAllLaunchesSelector);
+  const historyLineMode = isAllLaunches ? HISTORY_LINE_TABLE_MODE : HISTORY_LINE_DEFAULT_VALUE;
+  const historyDepth = loadMore
+    ? historyItems.length + NUMBER_OF_ITEMS_TO_LOAD
+    : DEFAULT_HISTORY_DEPTH;
   const response = yield call(
     fetch,
-    URLS.testItemsHistory(activeProject, DEFAULT_HISTORY_DEPTH, 'line', logItemId),
+    URLS.testItemsHistory(activeProject, historyDepth, historyLineMode, logItemId),
   );
 
   yield put(fetchHistoryItemsSuccessAction(response.content));
+  if (!loadMore) {
+    const currentItems = yield select(historyItemsSelector);
+    const loadedItems = currentItems.length - DEFAULT_HISTORY_DEPTH;
+    yield put(setShouldShowLoadMoreAction(loadedItems >= 0));
+  }
+  callback && callback();
 }
 
 function* fetchDetailsLog() {
@@ -201,10 +221,15 @@ function* watchFetchLogPageStackTrace() {
   yield takeEvery(FETCH_LOG_PAGE_STACK_TRACE, fetchStackTrace);
 }
 
+function* watchFetchLineHistory() {
+  yield takeEvery([SET_INCLUDE_ALL_LAUNCHES, FETCH_HISTORY_LINE_ITEMS], fetchHistoryItems);
+}
+
 export function* logSagas() {
   yield all([
     watchFetchLogPageData(),
     watchFetchLogPageStackTrace(),
+    watchFetchLineHistory(),
     attachmentSagas(),
     sauceLabsSagas(),
     nestedStepSagas(),

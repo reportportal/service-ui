@@ -48,9 +48,9 @@ Used technology stack: [React](https://reactjs.org/), [Redux](https://redux.js.o
 
 ## Development Tools
 
-* [why-did-you-update](https://github.com/maicki/why-did-you-update) - tool for checking why certain component rerender.
+- [why-did-you-update](https://github.com/maicki/why-did-you-update) - tool for checking why certain component rerender.
 
-To use it add to the url ?whyDidYouUpdateComponent=^Component$ (with regex as query value)
+To use it add to the url ?whyDidYouUpdateComponent=^Component\$ (with regex as query value)
 
 **before:** http://localhost:3000/#artem/launches
 

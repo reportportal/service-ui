@@ -15,13 +15,44 @@
  */
 
 .history-line {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  margin-bottom: 5px;
-  padding: 5px 15px 15px 15px;
+  max-width: 100%;
+  margin: 5px 25px 20px 25px;
 
   @media (max-width: $SCREEN_SM_MAX) {
     display: none;
+  }
+}
+
+.history-line-items {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 15px 0;
+  margin-bottom: 8px;
+}
+
+.load-more {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 76px;
+  height: 57px;
+  padding: 11px 21px 10px;
+  margin-right: 20px;
+  box-sizing: border-box;
+  font-size: 13px;
+  border: none;
+  color: $COLOR--topaz;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.07);
+  outline: none;
+  font-family: $FONT-SEMIBOLD;
+  background-color: $COLOR--white-two;
+  cursor: pointer;
+  &:hover {
+    background-color: lighten($COLOR--topaz, 10%);
+    border-color: lighten($COLOR--topaz, 10%);
+    color: $COLOR--white-two;
   }
 }

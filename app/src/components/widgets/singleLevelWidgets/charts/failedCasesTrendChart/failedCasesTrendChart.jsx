@@ -67,6 +67,7 @@ export class FailedCasesTrendChart extends Component {
     const launchIds = widget.content.result.map((item) => item.id);
     const link = getStatisticsLink({
       statuses: [FAILED, INTERRUPTED],
+      types: null,
     });
     const navigationParams = getDefaultTestItemLinkParams(
       project,
