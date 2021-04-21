@@ -24,14 +24,16 @@ import { messages } from 'pages/inside/stepPage/modals/editDefectModals/messages
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import CommentIcon from 'common/img/comment-inline.svg';
+import BugIcon from 'common/img/bug-inline.svg';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { MarkdownViewer } from 'components/main/markdown';
 import { defectTypesSelector } from 'controllers/project';
+import { LINK_ISSUE, POST_ISSUE, UNLINK_ISSUE } from 'common/constants/actionTypes';
 import styles from './sourceDetails.scss';
 
 const cx = classNames.bind(styles);
 
-export const SourceDetails = ({ info }) => {
+export const SourceDetails = ({ info, issueActionType }) => {
   const { formatMessage } = useIntl();
   const defectTypes = Object.values(useSelector(defectTypesSelector)).flat();
   const defectType = defectTypes.filter((type) => type.locator === info.issue.issueType)[0];
@@ -46,18 +48,33 @@ export const SourceDetails = ({ info }) => {
     );
   };
 
+  const renderIssueActionBlock = () => {
+    return (
+      <div className={cx('issue-action-block')}>
+        <span className={cx('icon')}>{Parser(BugIcon)}</span>
+        <p>
+          {(issueActionType === POST_ISSUE && formatMessage(messages.postIssueNote)) ||
+            (issueActionType === LINK_ISSUE && formatMessage(messages.linkIssueNote)) ||
+            (issueActionType === UNLINK_ISSUE && formatMessage(messages.unlinkIssueNote))}
+        </p>
+      </div>
+    );
+  };
+
   return (
     <>
       {info.id ? (
         <div className={cx('execution-info-content')}>
           <ExecutionInfo item={info} />
           {info.issue.comment && renderCommentBlock()}
+          {issueActionType && renderIssueActionBlock()}
         </div>
       ) : (
         <div className={cx('defect-type-content')}>
           <DefectTypeItemML className={cx('source-details-defect-type')} defectType={defectType} />
           <div className={cx('defect-type-description')}>
             {info.issue.comment && renderCommentBlock()}
+            {issueActionType && renderIssueActionBlock()}
             <div className={cx('analysis-block')}>
               <span className={cx('analysis-icon')}>AA</span>
               <p>
@@ -74,7 +91,9 @@ export const SourceDetails = ({ info }) => {
 };
 SourceDetails.propTypes = {
   info: PropTypes.object,
+  issueActionType: PropTypes.string,
 };
 SourceDetails.defaultProps = {
   info: {},
+  issueActionType: '',
 };

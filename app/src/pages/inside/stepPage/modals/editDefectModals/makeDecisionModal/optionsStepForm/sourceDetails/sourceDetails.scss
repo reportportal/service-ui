@@ -77,6 +77,11 @@
   display: flex;
 }
 
+.issue-action-block {
+  display: flex;
+  margin-bottom: 25px;
+}
+
 .analysis-icon {
   color: $COLOR--gray-60;
   font-size: 13px;

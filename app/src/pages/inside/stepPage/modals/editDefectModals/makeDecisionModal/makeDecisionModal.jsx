@@ -40,6 +40,7 @@ import {
   MAKE_DECISION_MODAL,
   OPTIONS,
   SELECT_DEFECT_MANUALLY,
+  SIMILAR_TI_CURRENT_LAUNCH,
 } from '../constants';
 import { OptionsStepForm } from './optionsStepForm';
 import { SelectDefectManually } from './selectDefectManually';
@@ -58,7 +59,9 @@ const MakeDecision = ({ data }) => {
     },
     decisionType: SELECT_DEFECT_MANUALLY,
     issueActionType: '',
-    optionValue: CURRENT_EXECUTION_ONLY,
+    optionValue: itemData.issue.issueType.startsWith('ti')
+      ? SIMILAR_TI_CURRENT_LAUNCH
+      : CURRENT_EXECUTION_ONLY,
     searchMode: '',
     testItems: [],
     selectedItems: [],
@@ -170,7 +173,9 @@ const MakeDecision = ({ data }) => {
   const moveToConfigurationStep = () => {
     setFormStep(CONFIGURATION);
     setModalState({
-      optionValue: CURRENT_EXECUTION_ONLY,
+      optionValue: itemData.issue.issueType.startsWith('ti')
+        ? SIMILAR_TI_CURRENT_LAUNCH
+        : CURRENT_EXECUTION_ONLY,
       searchMode: '',
       testItems: [],
       selectedItems: [],

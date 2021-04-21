@@ -43,7 +43,7 @@ export const OptionsStepForm = ({ currentTestItem, modalState, setModalState }) 
     [SOURCE_DETAILS]: true,
   });
   const [loading, setLoading] = useState(false);
-  const { source, optionValue, testItems, selectedItems } = modalState;
+  const { source, optionValue, testItems, selectedItems, issueActionType } = modalState;
   useEffect(() => {
     const fetchLogs = (searchMode) => {
       const requestData = {
@@ -100,7 +100,7 @@ export const OptionsStepForm = ({ currentTestItem, modalState, setModalState }) 
       shouldShow: true,
       isOpen: tab[SOURCE_DETAILS],
       title: formatMessage(messages.sourceDetails),
-      content: <SourceDetails info={source} />,
+      content: <SourceDetails info={source} issueActionType={issueActionType} />,
     },
   ];
 
