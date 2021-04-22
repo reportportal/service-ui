@@ -32,7 +32,6 @@ export const OptionsSection = ({
   selectedItems,
   optionValue,
   loading,
-  collapseTabsExceptCurr,
 }) => {
   const { formatMessage } = useIntl();
 
@@ -47,7 +46,6 @@ export const OptionsSection = ({
           optionValue={optionValue}
           currentTestItem={currentTestItem}
           loading={loading}
-          collapseTabsExceptCurr={collapseTabsExceptCurr}
           setModalState={setModalState}
         />
         <div className={cx('items-list')}>
@@ -70,7 +68,6 @@ OptionsSection.propTypes = {
   selectedItems: PropTypes.array,
   optionValue: PropTypes.string,
   loading: PropTypes.bool,
-  collapseTabsExceptCurr: PropTypes.func,
 };
 OptionsSection.defaultProps = {
   currentTestItem: {},
@@ -79,5 +76,4 @@ OptionsSection.defaultProps = {
   selectedItems: [],
   optionValue: '',
   loading: false,
-  collapseTabsExceptCurr: () => {},
 };
