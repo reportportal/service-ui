@@ -28,7 +28,6 @@ import BugIcon from 'common/img/bug-inline.svg';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { MarkdownViewer } from 'components/main/markdown';
 import { defectTypesSelector } from 'controllers/project';
-import { LINK_ISSUE, POST_ISSUE, UNLINK_ISSUE } from 'common/constants/actionTypes';
 import styles from './sourceDetails.scss';
 
 const cx = classNames.bind(styles);
@@ -53,9 +52,9 @@ export const SourceDetails = ({ info, issueActionType }) => {
       <div className={cx('issue-action-block')}>
         <span className={cx('icon')}>{Parser(BugIcon)}</span>
         <p>
-          {(issueActionType === POST_ISSUE && formatMessage(messages.postIssueNote)) ||
-            (issueActionType === LINK_ISSUE && formatMessage(messages.linkIssueNote)) ||
-            (issueActionType === UNLINK_ISSUE && formatMessage(messages.unlinkIssueNote))}
+          {messages[`${issueActionType}Note`]
+            ? formatMessage(messages[`${issueActionType}Note`])
+            : ''}
         </p>
       </div>
     );

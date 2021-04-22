@@ -42,6 +42,7 @@ import {
   SEARCH_MODES,
   SELECT_DEFECT_MANUALLY,
   SIMILAR_TI_CURRENT_LAUNCH,
+  TO_INVESTIGATE_LOCATOR_PREFIX,
 } from '../constants';
 import { OptionsStepForm } from './optionsStepForm';
 import { SelectDefectManually } from './selectDefectManually';
@@ -60,10 +61,10 @@ const MakeDecision = ({ data }) => {
     },
     decisionType: SELECT_DEFECT_MANUALLY,
     issueActionType: '',
-    optionValue: itemData.issue.issueType.startsWith('ti')
+    optionValue: itemData.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)
       ? SIMILAR_TI_CURRENT_LAUNCH
       : CURRENT_EXECUTION_ONLY,
-    searchMode: itemData.issue.issueType.startsWith('ti')
+    searchMode: itemData.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)
       ? SEARCH_MODES.SIMILAR_TI_CURRENT_LAUNCH
       : '',
     testItems: [],
@@ -176,10 +177,10 @@ const MakeDecision = ({ data }) => {
   const moveToConfigurationStep = () => {
     setFormStep(CONFIGURATION);
     setModalState({
-      optionValue: itemData.issue.issueType.startsWith('ti')
+      optionValue: itemData.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)
         ? SIMILAR_TI_CURRENT_LAUNCH
         : CURRENT_EXECUTION_ONLY,
-      searchMode: itemData.issue.issueType.startsWith('ti')
+      searchMode: itemData.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)
         ? SEARCH_MODES.SIMILAR_TI_CURRENT_LAUNCH
         : '',
       testItems: [],
