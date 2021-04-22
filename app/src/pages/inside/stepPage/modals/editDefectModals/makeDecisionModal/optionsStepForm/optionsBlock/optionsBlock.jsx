@@ -37,13 +37,7 @@ import styles from './optionsBlock.scss';
 
 const cx = classNames.bind(styles);
 
-export const OptionsBlock = ({
-  optionValue,
-  collapseTabsExceptCurr,
-  currentTestItem,
-  loading,
-  setModalState,
-}) => {
+export const OptionsBlock = ({ optionValue, currentTestItem, loading, setModalState }) => {
   const { formatMessage } = useIntl();
   const activeFilter = useSelector(activeFilterSelector);
   const defectTypes = useSelector(defectTypesSelector);
@@ -153,8 +147,6 @@ export const OptionsBlock = ({
           testItems: [],
           selectedItems: [],
         });
-
-    collapseTabsExceptCurr();
   };
 
   return (
@@ -174,13 +166,11 @@ export const OptionsBlock = ({
 };
 OptionsBlock.propTypes = {
   optionValue: PropTypes.string.isRequired,
-  collapseTabsExceptCurr: PropTypes.func,
   currentTestItem: PropTypes.object,
   loading: PropTypes.bool,
   setModalState: PropTypes.func,
 };
 OptionsBlock.defaultProps = {
-  collapseTabsExceptCurr: () => {},
   currentTestItem: {},
   loading: false,
   setModalState: () => {},

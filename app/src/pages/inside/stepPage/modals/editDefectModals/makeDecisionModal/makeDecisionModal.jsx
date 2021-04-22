@@ -39,6 +39,7 @@ import {
   MACHINE_LEARNING_SUGGESTIONS,
   MAKE_DECISION_MODAL,
   OPTIONS,
+  SEARCH_MODES,
   SELECT_DEFECT_MANUALLY,
   SIMILAR_TI_CURRENT_LAUNCH,
 } from '../constants';
@@ -62,7 +63,9 @@ const MakeDecision = ({ data }) => {
     optionValue: itemData.issue.issueType.startsWith('ti')
       ? SIMILAR_TI_CURRENT_LAUNCH
       : CURRENT_EXECUTION_ONLY,
-    searchMode: '',
+    searchMode: itemData.issue.issueType.startsWith('ti')
+      ? SEARCH_MODES.SIMILAR_TI_CURRENT_LAUNCH
+      : '',
     testItems: [],
     selectedItems: [],
   });
@@ -176,7 +179,9 @@ const MakeDecision = ({ data }) => {
       optionValue: itemData.issue.issueType.startsWith('ti')
         ? SIMILAR_TI_CURRENT_LAUNCH
         : CURRENT_EXECUTION_ONLY,
-      searchMode: '',
+      searchMode: itemData.issue.issueType.startsWith('ti')
+        ? SEARCH_MODES.SIMILAR_TI_CURRENT_LAUNCH
+        : '',
       testItems: [],
       selectedItems: [],
     });

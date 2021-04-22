@@ -39,7 +39,7 @@ export const OptionsStepForm = ({ currentTestItem, modalState, setModalState }) 
   const dispatch = useDispatch();
   const activeProject = useSelector(activeProjectSelector);
   const activeFilter = useSelector(activeFilterSelector);
-  const [tab, toggleTab, collapseTabsExceptCurr] = useAccordionTabsState({
+  const [tab, toggleTab] = useAccordionTabsState({
     [SOURCE_DETAILS]: true,
   });
   const [loading, setLoading] = useState(false);
@@ -114,7 +114,6 @@ export const OptionsStepForm = ({ currentTestItem, modalState, setModalState }) 
         selectedItems={selectedItems}
         optionValue={optionValue}
         loading={loading}
-        collapseTabsExceptCurr={collapseTabsExceptCurr}
       />
     </>
   );
