@@ -61,12 +61,14 @@ const MakeDecision = ({ data }) => {
     },
     decisionType: SELECT_DEFECT_MANUALLY,
     issueActionType: '',
-    optionValue: itemData.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)
-      ? SIMILAR_TI_CURRENT_LAUNCH
-      : CURRENT_EXECUTION_ONLY,
-    searchMode: itemData.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)
-      ? SEARCH_MODES.SIMILAR_TI_CURRENT_LAUNCH
-      : '',
+    optionValue:
+      itemData.issue && itemData.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)
+        ? SIMILAR_TI_CURRENT_LAUNCH
+        : CURRENT_EXECUTION_ONLY,
+    searchMode:
+      itemData.issue && itemData.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)
+        ? SEARCH_MODES.SIMILAR_TI_CURRENT_LAUNCH
+        : '',
     testItems: [],
     selectedItems: [],
   });
