@@ -211,7 +211,7 @@ export class ModalLayout extends Component {
 
     return (
       <div className={cx('modal-layout')}>
-        <div className={cx('scrolling-content')} onClick={this.onClickModal}>
+        <div className={cx('scrolling-content')} onMouseDown={this.onClickModal}>
           <Scrollbars>
             <span>
               <CSSTransition
