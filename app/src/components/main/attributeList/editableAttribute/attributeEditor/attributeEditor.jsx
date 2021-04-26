@@ -97,7 +97,7 @@ export class AttributeEditor extends Component {
 
   getValidationErrors = (key, value) => ({
     key: attributeKeyValidator(key),
-    value: attributeValueValidator(value),
+    value: this.props.onCancel.length ? attributeValueValidator(value) : '',
   });
 
   byKeyComparator = (attribute, item, key, value) =>
@@ -141,18 +141,13 @@ export class AttributeEditor extends Component {
     });
   };
 
+  clearInputValues = () => this.setState({ key: '', value: '' });
+
+  handleCancel = () => this.props.onCancel() || this.clearInputValues();
   handleAttributeKeyInputChange = (text) => this.setState({ isKeyEdited: !!text });
 
   render() {
-    const {
-      projectId,
-      attributes,
-      onCancel,
-      keyURLCreator,
-      valueURLCreator,
-      customClass,
-      intl,
-    } = this.props;
+    const { projectId, attributes, keyURLCreator, valueURLCreator, customClass, intl } = this.props;
     return (
       <div className={cx('attribute-editor', customClass)}>
         <div className={cx('control')}>
@@ -199,7 +194,7 @@ export class AttributeEditor extends Component {
           </div>
         </div>
         <div className={cx('control')}>
-          <div className={cx('icon')} onClick={onCancel}>
+          <div className={cx('icon')} onClick={this.handleCancel}>
             {Parser(CircleCrossIcon)}
           </div>
         </div>

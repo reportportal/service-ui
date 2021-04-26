@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2021 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,4 @@
  * limitations under the License.
  */
 
-export function bindDefaultValue(key, options = {}) {
-  let { filterValues } = this.props;
-  if (filterValues.attribute) {
-    filterValues = { ...filterValues, ...filterValues.attribute };
-    delete filterValues.attribute;
-  }
-  if (key in filterValues) {
-    return filterValues[key];
-  }
-  return {
-    filteringField: key,
-    value: '',
-    ...options,
-  };
-}
+export { KeyValueAttributesInput } from './keyValueAttributesInput';

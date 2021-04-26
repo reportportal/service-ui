@@ -34,6 +34,7 @@ import {
   EntityInputConditionalTags,
   EntitySearch,
   EntityContains,
+  EntityInputConditionalKeyValue,
 } from 'components/filterEntities';
 import { bindDefaultValue } from 'components/filterEntities/utils';
 import {
@@ -51,6 +52,7 @@ import {
   ENTITY_ATTRIBUTE_VALUES,
   CONDITION_LESS_EQ,
   CONDITION_EQ,
+  ENTITY_ATTRIBUTE,
 } from 'components/filterEntities/constants';
 import { defectTypesSelector } from 'controllers/project';
 
@@ -82,6 +84,10 @@ const messages = defineMessages({
   AttributeValuesTitle: {
     id: 'LaunchLevelEntities.AttributeValuesTitle',
     defaultMessage: 'Attribute values',
+  },
+  AttributeTitle: {
+    id: 'LaunchLevelEntities.AttributeTitle',
+    defaultMessage: 'Attribute',
   },
   TotalTitle: {
     id: 'LaunchLevelEntities.TotalTitle',
@@ -189,6 +195,14 @@ export class LaunchLevelEntities extends Component {
     filterValues: {},
     visibleFilters: [],
   };
+  getAttributesValue = () => {
+    const conditionArr = [ENTITY_ATTRIBUTE_KEYS, ENTITY_ATTRIBUTE_VALUES].map((key) =>
+      this.bindDefaultValue(key, {
+        condition: CONDITION_HAS,
+      }),
+    );
+    return { [ENTITY_ATTRIBUTE_KEYS]: conditionArr[0], [ENTITY_ATTRIBUTE_VALUES]: conditionArr[1] };
+  };
   getStaticEntities = () => {
     const { intl, filterValues, activeProject, visibleFilters } = this.props;
     const attributeKey = (filterValues[ENTITY_ATTRIBUTE_KEYS] || {}).value;
@@ -294,6 +308,19 @@ export class LaunchLevelEntities extends Component {
         customProps: {
           getURI: getLaunchAttributeValuesSearchURI,
           placeholder: intl.formatMessage(messages.ATTRIBUTE_VALUES_PLACEHOLDER),
+        },
+      },
+      {
+        id: ENTITY_ATTRIBUTE,
+        component: EntityInputConditionalKeyValue,
+        value: this.getAttributesValue(),
+        title: intl.formatMessage(messages.AttributeTitle),
+        active: visibleFilters.includes(ENTITY_ATTRIBUTE),
+        removable: true,
+        customProps: {
+          keyURLCreator: URLS.launchAttributeKeysSearch,
+          valueURLCreator: URLS.launchAttributeValuesSearch,
+          projectId: activeProject,
         },
       },
       {
@@ -446,7 +473,6 @@ export class LaunchLevelEntities extends Component {
 
     const entities = this.getStaticEntities().concat(this.getDynamicEntities());
     const lostEntities = this.collectLostEntities(entities);
-
     return render({
       ...rest,
       filterEntities: [...entities, ...lostEntities],

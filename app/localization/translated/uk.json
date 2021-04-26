@@ -896,6 +896,7 @@
   "LaunchLevelEntities.AUTOMATION_BUG_title": "Помилка Автоматизації",
   "LaunchLevelEntities.AUTOMATION_BUG_totalTitle": "Автоматизація Всього Помилок",
   "LaunchLevelEntities.AttributeKeysTitle": "Ключі атрибутів",
+  "LaunchLevelEntities.AttributeTitle": "Атрибути",
   "LaunchLevelEntities.AttributeValuesTitle": "Значення атрибутів",
   "LaunchLevelEntities.DescriptionTitle": "Опис",
   "LaunchLevelEntities.FailedTitle": "Невдало",
