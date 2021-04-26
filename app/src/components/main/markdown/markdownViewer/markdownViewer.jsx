@@ -19,19 +19,22 @@ import Parser from 'html-react-parser';
 import DOMPurify from 'dompurify';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import styles from './markdownViewer.scss';
 import { SingletonMarkdownObject } from '../singletonMarkdownObject';
+import { MODE_DEFAULT } from '../constants';
+import styles from './markdownViewer.scss';
 
 const cx = classNames.bind(styles);
 
 export class MarkdownViewer extends Component {
   static propTypes = {
     value: PropTypes.string,
+    mode: PropTypes.string,
     onResize: PropTypes.func,
   };
 
   static defaultProps = {
     value: '',
+    mode: MODE_DEFAULT,
     onResize: () => {},
   };
 
@@ -70,10 +73,11 @@ export class MarkdownViewer extends Component {
   };
 
   render() {
+    const { value, mode } = this.props;
     return (
       <div className={cx('viewer-wrapper')}>
-        <div ref={this.container} className={cx('markdown-viewer')}>
-          {Parser(DOMPurify.sanitize(this.simpleMDE.markdown(this.props.value)))}
+        <div ref={this.container} className={cx('markdown-viewer', { [`mode-${mode}`]: mode })}>
+          {Parser(DOMPurify.sanitize(this.simpleMDE.markdown(value)))}
         </div>
       </div>
     );

@@ -24,31 +24,45 @@ import { IssueList } from 'pages/inside/stepPage/stepGrid/defectType/issueList';
 import { DefectTypeItem } from 'pages/inside/common/defectTypeItem';
 import ExternalLinkIcon from 'common/img/go-to-another-page-inline.svg';
 import classNames from 'classnames/bind';
+import { IgnoredInAALabel } from 'pages/inside/stepPage/stepGrid/defectType/defectType';
+import { PatternAnalyzedLabel } from 'pages/inside/common/patternAnalyzedLabel';
+import { AutoAnalyzedLabel } from 'pages/inside/stepPage/stepGrid/defectType/autoAnalyzedLabel';
 import styles from './itemHeader.scss';
 
 const cx = classNames.bind(styles);
 
-export const ItemHeader = ({ item, selectItem, isSelected }) => {
+export const ItemHeader = ({ item, selectItem, isSelected, preselected }) => {
   const {
     id,
     name,
-    issue: { issueType, externalSystemIssues },
+    issue: { autoAnalyzed, ignoreAnalyzer, issueType, externalSystemIssues },
+    patternTemplates,
   } = item;
-
   const getLogItemLink = useSelector(getLogItemLinkSelector);
   const link = getLogItemLink(item);
 
   return (
     <div
-      className={cx('item-info', { selected: isSelected })}
-      onClick={() => selectItem(isSelected ? null : id)}
+      className={cx('item-info', { selected: isSelected, preselected })}
+      onClick={() => selectItem(id)}
     >
       <div className={cx('header')}>
         <Link to={link} target="_blank" className={cx('item-name')}>
           {name}
           <div className={cx('icon')}>{Parser(ExternalLinkIcon)}</div>
         </Link>
-        <DefectTypeItem type={issueType} className={cx('defect-type')} />
+        <div className={cx('defect-block')}>
+          {ignoreAnalyzer && <IgnoredInAALabel className={cx('ignore-aa-label')} />}
+          {autoAnalyzed && <AutoAnalyzedLabel className={cx('aa-label')} />}
+          {!!patternTemplates.length && (
+            <PatternAnalyzedLabel
+              patternTemplates={patternTemplates}
+              className={cx('pa-label')}
+              showTooltip
+            />
+          )}
+          <DefectTypeItem type={issueType} className={cx('defect-type')} />
+        </div>
       </div>
       <div className={cx('bts-row')}>
         <IssueList issues={externalSystemIssues} className={cx('issue')} readOnly />
@@ -61,5 +75,12 @@ ItemHeader.propTypes = {
   isSelected: PropTypes.bool,
   selectItem: PropTypes.func,
   nameLink: PropTypes.object,
+  preselected: PropTypes.bool,
 };
-ItemHeader.defaultProps = { item: {}, isSelected: false, selectItem: () => {}, nameLink: {} };
+ItemHeader.defaultProps = {
+  item: {},
+  isSelected: false,
+  selectItem: () => {},
+  nameLink: {},
+  preselected: false,
+};

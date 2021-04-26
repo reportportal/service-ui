@@ -32,6 +32,7 @@ import {
   UPDATE_HISTORY_ITEM_LAUNCH_ATTRIBUTES,
   SET_INCLUDE_ALL_LAUNCHES,
   SET_SHOULD_SHOW_LOAD_MORE,
+  SET_ACTIVE_TAB_ID,
 } from './constants';
 import { attachmentsReducer } from './attachments';
 import { sauceLabsReducer } from './sauceLabs';
@@ -100,7 +101,17 @@ const shouldShowLoadMoreReducer = (state = false, { type, payload }) => {
   }
 };
 
+const activeTabIdReducer = (state = 'logs', { type, payload }) => {
+  switch (type) {
+    case SET_ACTIVE_TAB_ID:
+      return payload;
+    default:
+      return state;
+  }
+};
+
 const reducer = combineReducers({
+  activeTabId: activeTabIdReducer,
   shouldShowLoadMore: shouldShowLoadMoreReducer,
   includeAllLaunches: includeAllLaunchesReducer,
   logItems: fetchReducer(LOG_ITEMS_NAMESPACE, { contentPath: 'content' }),

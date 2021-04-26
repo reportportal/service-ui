@@ -118,6 +118,7 @@ export class HistoryLineItem extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     onClick: PropTypes.func,
+    isDefectEditorOpen: PropTypes.bool,
     launchAttributes: PropTypes.array,
     includeAllLaunches: PropTypes.bool,
     updateLaunchAttributes: PropTypes.func,
@@ -135,6 +136,7 @@ export class HistoryLineItem extends Component {
     startTime: null,
     endTime: null,
     onClick: () => {},
+    isDefectEditorOpen: false,
     launchAttributes: null,
     includeAllLaunches: false,
     updateLaunchAttributes: () => {},
@@ -147,6 +149,7 @@ export class HistoryLineItem extends Component {
       isLastItem,
       onClick,
       tracking,
+      isDefectEditorOpen,
       defectTypes,
       includeAllLaunches,
       updateLaunchAttributes,
@@ -155,7 +158,11 @@ export class HistoryLineItem extends Component {
 
     return (
       <div
-        className={cx('history-line-item', { active, 'last-item': isLastItem })}
+        className={cx('history-line-item', {
+          active,
+          'last-item': isLastItem,
+          inactive: !active && isDefectEditorOpen,
+        })}
         onClick={() => {
           tracking.trackEvent(LOG_PAGE_EVENTS.HISTORY_LINE_ITEM);
           onClick();

@@ -14,42 +14,29 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { getTabsState } from 'pages/inside/common/accordion/utils';
 import { AccordionTab } from './accordionTab';
 import styles from './accordion.scss';
 
 const cx = classNames.bind(styles);
 
-export const Accordion = ({ renderedData, headerClassNames, contentClassNames }) => {
-  const initialTabsState = getTabsState(renderedData);
-  const [tabsState, setTabsState] = useState(initialTabsState);
-
+export const Accordion = ({ tabs, toggleTab }) => {
   return (
     <div className={cx('accordion')}>
-      {renderedData.length > 0 &&
-        renderedData.map((tab) => (
-          <AccordionTab
-            tab={tab}
-            tabsState={tabsState}
-            setTabsState={setTabsState}
-            key={tab.id}
-            headerClassNames={headerClassNames}
-            contentClassNames={contentClassNames}
-          />
+      {tabs.length > 0 &&
+        tabs.map((tab) => (
+          <AccordionTab key={tab.id} tab={tab} onClick={() => toggleTab(tab.id)} />
         ))}
     </div>
   );
 };
 Accordion.propTypes = {
-  renderedData: PropTypes.array,
-  headerClassNames: PropTypes.string,
-  contentClassNames: PropTypes.string,
+  tabs: PropTypes.array,
+  toggleTab: PropTypes.func,
 };
 Accordion.defaultProps = {
-  renderedData: [],
-  headerClassNames: '',
-  contentClassNames: '',
+  tabs: [],
+  toggleTab: () => {},
 };

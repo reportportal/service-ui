@@ -210,6 +210,40 @@
       background: transparent;
     }
   }
+  &.appearance-topaz {
+    border-radius: 2px;
+    border-color: transparent;
+    min-width: 173px;
+    color: $COLOR--white-two;
+    background-color: $COLOR--topaz;
+    &:hover {
+      background-color: $COLOR--topaz-hover;
+      & svg * {
+        fill: $COLOR--topaz-hover;
+      }
+    }
+    &.transparent-background {
+      color: $COLOR--topaz;
+      background: transparent;
+    }
+    &.transparent-background:hover {
+      background: transparent;
+      color: $COLOR--topaz-hover;
+    }
+    & svg * {
+      fill: $COLOR--topaz;
+    }
+  }
+  &.appearance-topaz.disabled {
+    border-radius: 2px;
+    border-color: transparent;
+    color: $COLOR--gray-60;
+    background-color: $COLOR--topaz-disabled;
+    &.transparent-background {
+      color: $COLOR--topaz-disabled;
+      background: transparent;
+    }
+  }
 }
 .icon {
   display: inline-block;

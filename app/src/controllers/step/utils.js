@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { TO_INVESTIGATE } from 'common/constants/defectTypes';
 import { showModalAction } from 'controllers/modal';
+import { MAKE_DECISION_MODAL } from 'pages/inside/stepPage/modals/editDefectModals/constants';
 
 export const ignoreInAA = (items, { fetchFunc, eventsInfo }) =>
   showModalAction({ id: 'ignoreInAAModal', data: { items, fetchFunc, eventsInfo } });
@@ -32,21 +32,4 @@ export const postIssue = (items, { fetchFunc, eventsInfo }) =>
   showModalAction({ id: 'postIssueModal', data: { items, fetchFunc, eventsInfo } });
 
 export const editDefect = (items, { fetchFunc, debugMode, eventsInfo }) =>
-  showModalAction({ id: 'editDefectModal', data: { items, fetchFunc, debugMode, eventsInfo } });
-
-export const isDefectGroupOperationAvailable = ({
-  editedData,
-  selectedItems,
-  getDefectType,
-  debugMode,
-}) => {
-  const items = editedData && editedData.id ? [editedData] : selectedItems;
-  return (
-    items.length === 1 &&
-    items[0].issue &&
-    items[0].issue.issueType &&
-    getDefectType(items[0].issue.issueType).typeRef.toUpperCase() ===
-      TO_INVESTIGATE.toUpperCase() &&
-    !debugMode
-  );
-};
+  showModalAction({ id: MAKE_DECISION_MODAL, data: { items, fetchFunc, debugMode, eventsInfo } });

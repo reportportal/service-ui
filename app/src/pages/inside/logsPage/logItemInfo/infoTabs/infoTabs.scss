@@ -19,6 +19,7 @@
   .tabs {
     position: relative;
     display: flex;
+    margin-bottom: 15px;
 
     @media (max-width: $SCREEN_XS_MAX) {
       flex-direction: column;
@@ -79,6 +80,12 @@
   svg {
     width: 20px;
     height: 20px;
+  }
+  path {
+    fill: $COLOR--gray-80;
+  }
+  text {
+    fill: $COLOR--gray-47;
   }
 }
 

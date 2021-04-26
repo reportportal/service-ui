@@ -79,6 +79,11 @@ export const LOG_PAGE_EVENTS = {
     action: 'Click on Stack Trace tab',
     label: 'Open Stack Trace tab',
   },
+  LOGS_TAB: {
+    category: LOG_PAGE,
+    action: 'Click on Logs tab',
+    label: 'Open Logs tab',
+  },
   ATTACHMENT_TAB: {
     category: LOG_PAGE,
     action: 'Click on Attachments tab',

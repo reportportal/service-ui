@@ -14,7 +14,4 @@
  * limitations under the License.
  */
 
-export const getTabsState = (data) =>
-  data.reduce((obj, { id, isActive }) => {
-    return { ...obj, [id]: isActive || false };
-  }, {});
+export { OptionsBlock } from './optionsBlock';

@@ -21,9 +21,21 @@ export const messages = defineMessages({
     id: 'EditDefectModal.ignoreAaTitle',
     defaultMessage: 'Ignore in Auto Analysis',
   },
+  includedToAa: {
+    id: 'MakeDecisionModal.includedToAa',
+    defaultMessage: 'Included to Auto-Analysis',
+  },
+  excludedFromAa: {
+    id: 'MakeDecisionModal.excludedFromAa',
+    defaultMessage: 'Excluded from Auto-Analysis',
+  },
   title: {
     id: 'EditDefectModal.title',
     defaultMessage: 'Edit defect type',
+  },
+  sourceDetails: {
+    id: 'MakeDecisionModal.sourceDetails',
+    defaultMessage: 'Source details',
   },
   notChangeCommentTitle: {
     id: 'EditDefectModal.notChangeCommentTitle',
@@ -73,10 +85,6 @@ export const messages = defineMessages({
     id: 'EditDefectModal.defectTypeSelectorPlaceholder',
     defaultMessage: 'Choose defect type',
   },
-  defectCommentPlaceholder: {
-    id: 'EditDefectModal.defectCommentPlaceholder',
-    defaultMessage: 'Leave comment to defect type',
-  },
   selectedCount: {
     id: 'EditDefectModal.selectedCount',
     defaultMessage: '{count}/{total} selected items',
@@ -88,5 +96,131 @@ export const messages = defineMessages({
   noItems: {
     id: 'EditDefectModal.noItems',
     defaultMessage: 'No similar items',
+  },
+  defectCommentPlaceholder: {
+    id: 'MakeDecisionModal.defectCommentPlaceholder',
+    defaultMessage: 'Defect comment',
+  },
+  defectCommentBulkOperationPlaceholder: {
+    id: 'MakeDecisionModal.defectCommentBulkOperationPlaceholder',
+    defaultMessage: 'Add new data to existing comments',
+  },
+  clearCommentsAndApply: {
+    id: 'MakeDecisionModal.clearCommentsAndApply',
+    defaultMessage: 'Clear Comments and Apply',
+  },
+  replaceCommentsAndApply: {
+    id: 'MakeDecisionModal.replaceCommentsAndApply',
+    defaultMessage: 'Replace Comments and Apply',
+  },
+  ignoreAa: {
+    id: 'MakeDecisionModal.ignoreAa',
+    defaultMessage: 'Ignore in Auto Analysis',
+  },
+  decisionForTest: {
+    id: 'MakeDecisionModal.decisionForTest',
+    defaultMessage: 'Decision for the test {launchNumber}',
+  },
+  bulkOperationDecision: {
+    id: 'MakeDecisionModal.bulkOperationDecision',
+    defaultMessage: 'Bulk Operation Decision',
+  },
+  applyToItems: {
+    id: 'MakeDecisionModal.applyToItems',
+    defaultMessage: 'Apply to {itemsCount} Items',
+  },
+  applyToTheItem: {
+    id: 'MakeDecisionModal.applyToTheItem',
+    defaultMessage: 'Apply to the Item',
+  },
+  selectDefectTypeManually: {
+    id: 'MakeDecisionModal.selectDefectTypeManually',
+    defaultMessage: 'Select defect type manually',
+  },
+  machineLearningSuggestions: {
+    id: 'MakeDecisionModal.machineLearningSuggestions',
+    defaultMessage: 'Machine learning suggestions',
+  },
+  copyFromHistoryLine: {
+    id: 'MakeDecisionModal.copyFromHistoryLine',
+    defaultMessage: 'Copy from history line',
+  },
+  applyImmediately: {
+    id: 'MakeDecisionModal.applyImmediately',
+    defaultMessage: 'Apply Immediately',
+  },
+  applyWithOptions: {
+    id: 'MakeDecisionModal.applyWithOptions',
+    defaultMessage: 'Apply with Options',
+  },
+  backToConfiguration: {
+    id: 'MakeDecisionModal.backToConfiguration',
+    defaultMessage: 'Back to configuration',
+  },
+  modalNote: {
+    id: 'MakeDecisionModal.modalNote',
+    defaultMessage: 'You have to save changes or cancel them before closing the window',
+  },
+  disabledTabTooltip: {
+    id: 'MakeDecisionModal.disabledTabTooltip',
+    defaultMessage: 'A new functionality will be available in the next version',
+  },
+  postIssueNote: {
+    id: 'MakeDecisionModal.postIssueNote',
+    defaultMessage:
+      'After a defect type submission, you will be able to choose parameters for a new issue posting',
+  },
+  linkIssueNote: {
+    id: 'MakeDecisionModal.linkIssueNote',
+    defaultMessage:
+      'After a defect type submission, you will be able to choose parameters for a new issue linking',
+  },
+  unlinkIssueNote: {
+    id: 'MakeDecisionModal.unlinkIssueNote',
+    defaultMessage: 'After a defect type submission, the current links will be unlink',
+  },
+  execution: {
+    id: 'MakeDecisionModal.execution',
+    defaultMessage: 'Execution',
+  },
+  defectType: {
+    id: 'MakeDecisionModal.defectType',
+    defaultMessage: 'Defect type',
+  },
+  applyTo: {
+    id: 'MakeDecisionModal.applyTo',
+    defaultMessage: 'Apply to',
+  },
+  applyToSimilarItems: {
+    id: 'MakeDecisionModal.applyToSimilarItems',
+    defaultMessage: 'You can also apply this decision to other similar items in',
+  },
+  currentExecutionOnly: {
+    id: 'MakeDecisionModal.currentExecutionOnly',
+    defaultMessage: 'Current execution only',
+  },
+  similarTICurrentLaunch: {
+    id: 'MakeDecisionModal.similarTICurrentLaunch',
+    defaultMessage: 'Similar TI in the current launch',
+  },
+  lastTenLaunches: {
+    id: 'MakeDecisionModal.lastTenLaunches',
+    defaultMessage: 'Last 10 launches',
+  },
+  withFilter: {
+    id: 'MakeDecisionModal.withFilter',
+    defaultMessage: 'Filter {filterName}',
+  },
+  showErrorLogs: {
+    id: 'MakeDecisionModal.showErrorLogs',
+    defaultMessage: 'Show Error Logs',
+  },
+  selectedItemCount: {
+    id: 'MakeDecisionModal.selectedItemCount',
+    defaultMessage: '{selected}/{total} items selected',
+  },
+  allLoadedTIFromHistoryLine: {
+    id: 'MakeDecisionModal.allLoadedTIFromHistoryLine',
+    defaultMessage: 'All loaded TI from the history line',
   },
 });

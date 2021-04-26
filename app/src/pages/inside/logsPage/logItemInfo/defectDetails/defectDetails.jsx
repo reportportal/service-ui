@@ -30,10 +30,7 @@ import {
   postIssueAction,
   editDefectsAction,
 } from 'controllers/step';
-import { showModalAction } from 'controllers/modal';
-import { historyItemsSelector, updateHistoryItemIssuesAction } from 'controllers/log';
-import { getDefectTypeSelector } from 'controllers/project';
-import { TO_INVESTIGATE } from 'common/constants/defectTypes';
+import { updateHistoryItemIssuesAction } from 'controllers/log';
 import {
   availableBtsIntegrationsSelector,
   isPostIssueActionAvailable,
@@ -118,9 +115,7 @@ const UNLINK_ISSUE_EVENTS_INFO = {
 
 @connect(
   (state) => ({
-    historyItems: historyItemsSelector(state),
     btsIntegrations: availableBtsIntegrationsSelector(state),
-    getDefectType: getDefectTypeSelector(state),
     isBtsPluginsExist: isBtsPluginsExistSelector(state),
     enabledBtsPlugins: enabledBtsPluginsSelector(state),
   }),
@@ -129,7 +124,6 @@ const UNLINK_ISSUE_EVENTS_INFO = {
     unlinkIssueAction,
     postIssueAction,
     editDefectsAction,
-    showModalAction,
     updateHistoryItemIssues: updateHistoryItemIssuesAction,
   },
 )
@@ -142,10 +136,8 @@ export class DefectDetails extends Component {
     linkIssueAction: PropTypes.func.isRequired,
     unlinkIssueAction: PropTypes.func.isRequired,
     postIssueAction: PropTypes.func.isRequired,
-    historyItems: PropTypes.array.isRequired,
     btsIntegrations: PropTypes.array.isRequired,
     fetchFunc: PropTypes.func.isRequired,
-    showModalAction: PropTypes.func.isRequired,
     updateHistoryItemIssues: PropTypes.func.isRequired,
     debugMode: PropTypes.bool.isRequired,
     tracking: PropTypes.shape({
@@ -153,13 +145,11 @@ export class DefectDetails extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     logItem: PropTypes.object,
-    getDefectType: PropTypes.func,
     isBtsPluginsExist: PropTypes.bool,
     enabledBtsPlugins: PropTypes.array,
   };
   static defaultProps = {
     logItem: null,
-    getDefectType: () => {},
     isBtsPluginsExist: false,
     enabledBtsPlugins: [],
   };
@@ -245,53 +235,24 @@ export class DefectDetails extends Component {
 
   handleEditDefect = () => {
     const { logItem } = this.props;
-    if (this.isDefectGroupOperationAvailable()) {
-      this.props.showModalAction({
-        id: 'editToInvestigateDefectModal',
-        data: {
-          item: logItem,
-          fetchFunc: this.onDefectEdited,
-          eventsInfo: {
-            changeSearchMode: LOG_PAGE_EVENTS.CHANGE_SEARCH_MODE_EDIT_DEFECT_MODAL,
-            selectAllSimilarItems: LOG_PAGE_EVENTS.SELECT_ALL_SIMILAR_ITEMS_EDIT_DEFECT_MODAL,
-            selectSpecificSimilarItem:
-              LOG_PAGE_EVENTS.SELECT_SPECIFIC_SIMILAR_ITEM_EDIT_DEFECT_MODAL,
-            editDefectsEvents: LOG_PAGE_EVENTS.EDIT_DEFECT_MODAL_EVENTS,
-            unlinkIssueEvents: UNLINK_ISSUE_EVENTS_INFO,
-            postIssueEvents: POST_ISSUE_EVENTS_INFO,
-            linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
-          },
-        },
-      });
-    } else {
-      this.props.editDefectsAction([this.props.logItem], {
-        fetchFunc: this.onDefectEdited,
-        debugMode: this.props.debugMode,
-        eventsInfo: {
-          editDefectsEvents: LOG_PAGE_EVENTS.EDIT_DEFECT_MODAL_EVENTS,
-          unlinkIssueEvents: UNLINK_ISSUE_EVENTS_INFO,
-          postIssueEvents: POST_ISSUE_EVENTS_INFO,
-          linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
-        },
-      });
-    }
+    this.props.editDefectsAction([logItem], {
+      fetchFunc: this.onDefectEdited,
+      eventsInfo: {
+        changeSearchMode: LOG_PAGE_EVENTS.CHANGE_SEARCH_MODE_EDIT_DEFECT_MODAL,
+        selectAllSimilarItems: LOG_PAGE_EVENTS.SELECT_ALL_SIMILAR_ITEMS_EDIT_DEFECT_MODAL,
+        selectSpecificSimilarItem: LOG_PAGE_EVENTS.SELECT_SPECIFIC_SIMILAR_ITEM_EDIT_DEFECT_MODAL,
+        editDefectsEvents: LOG_PAGE_EVENTS.EDIT_DEFECT_MODAL_EVENTS,
+        unlinkIssueEvents: UNLINK_ISSUE_EVENTS_INFO,
+        postIssueEvents: POST_ISSUE_EVENTS_INFO,
+        linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
+      },
+    });
   };
 
   toggleExpanded = () => {
     this.setState((state) => ({
       expanded: !state.expanded,
     }));
-  };
-
-  isDefectGroupOperationAvailable = () => {
-    const { logItem } = this.props;
-    return (
-      logItem.issue &&
-      logItem.issue.issueType &&
-      this.props.getDefectType(logItem.issue.issueType).typeRef.toUpperCase() ===
-        TO_INVESTIGATE.toUpperCase() &&
-      !this.props.debugMode
-    );
   };
 
   render() {

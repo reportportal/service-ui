@@ -25,8 +25,17 @@
   cursor: pointer;
   box-sizing: border-box;
 
-  &:hover:not(.selected) {
+  &:hover {
     border-color: rgba($COLOR--topaz, 0.25);
+  }
+
+  &.selected {
+    border: 2px solid $COLOR--topaz;
+  }
+
+  &.preselected {
+    border-color: rgba($COLOR--topaz, 0.25);
+    cursor: default;
   }
 }
 
@@ -65,6 +74,7 @@
 }
 
 .defect-type {
+  padding-left: 7px;
   border: none;
   background-color: transparent;
   font-family: $FONT-REGULAR;
@@ -72,8 +82,26 @@
   cursor: default;
 }
 
-.selected {
-  border: 2px solid $COLOR--topaz;
+.defect-block {
+  display: flex;
+  height: 20px;
+
+  & > div:not(:last-child) {
+    margin-right: 10px;
+  }
+}
+
+.ignore-aa-label,
+.pa-label {
+  border: solid 1px $COLOR--dirty-black;
+  background-color: $COLOR--black-3;
+  color: $COLOR--dirty-gray;
+}
+
+.aa-label {
+  svg {
+    fill: $COLOR--black-3;
+  }
 }
 
 .bts-row {

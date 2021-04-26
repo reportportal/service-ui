@@ -41,6 +41,7 @@ export const GhostButton = ({
   large,
   style,
   transparentBackground,
+  appearance,
 }) => {
   const classes = cx('ghost-button', {
     disabled,
@@ -48,6 +49,7 @@ export const GhostButton = ({
     large,
     active,
     [`color-${color}`]: color,
+    [`appearance-${appearance}`]: appearance,
     'with-icon': icon,
     'stroked-icon': strokedIcon,
     'filled-icon': filledIcon,
@@ -96,6 +98,7 @@ GhostButton.propTypes = {
   filledIcon: PropTypes.bool,
   strokedIcon: PropTypes.bool,
   transparentBackground: PropTypes.bool,
+  appearance: PropTypes.string,
 };
 
 GhostButton.defaultProps = {
@@ -118,4 +121,5 @@ GhostButton.defaultProps = {
   filledIcon: true,
   strokedIcon: false,
   transparentBackground: false,
+  appearance: '',
 };

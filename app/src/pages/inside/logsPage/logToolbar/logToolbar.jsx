@@ -44,6 +44,8 @@ import {
   setIncludeAllLaunchesAction,
   includeAllLaunchesSelector,
 } from 'controllers/log';
+import { activeModalSelector } from 'controllers/modal';
+import { MAKE_DECISION_MODAL } from 'pages/inside/stepPage/modals/editDefectModals/constants';
 import { ParentInfo } from 'pages/inside/common/infoLine/parentInfo';
 import { stepPaginationSelector } from 'controllers/step';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
@@ -69,6 +71,7 @@ const messages = defineMessages({
     previousLinkDisable: disablePrevItemLinkSelector(state),
     nextLinkDisable: disableNextItemLinkSelector(state),
     includeAllLaunches: includeAllLaunchesSelector(state),
+    activeModal: activeModalSelector(state),
   }),
   {
     setIncludeAllLaunchesAction,
@@ -106,6 +109,7 @@ export class LogToolbar extends Component {
     logViewMode: PropTypes.string,
     restorePath: PropTypes.func,
     parentItem: PropTypes.object,
+    activeModal: PropTypes.object,
   };
 
   static defaultProps = {
@@ -123,6 +127,7 @@ export class LogToolbar extends Component {
     logViewMode: DETAILED_LOG_VIEW,
     restorePath: () => {},
     parentItem: null,
+    activeModal: {},
   };
 
   handleBackClick = () => {
@@ -163,9 +168,14 @@ export class LogToolbar extends Component {
       restorePath,
       parentItem,
       includeAllLaunches,
+      activeModal,
     } = this.props;
     return (
-      <div className={cx('log-toolbar')}>
+      <div
+        className={cx('log-toolbar', {
+          inactive: activeModal && activeModal.id === MAKE_DECISION_MODAL,
+        })}
+      >
         <Breadcrumbs
           descriptors={breadcrumbs}
           togglerEventInfo={LOG_PAGE_EVENTS.PLUS_MINUS_BREADCRUMB}

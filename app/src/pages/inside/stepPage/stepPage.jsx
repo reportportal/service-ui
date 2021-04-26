@@ -28,8 +28,8 @@ import {
   isTestItemsListSelector,
   namespaceSelector,
 } from 'controllers/testItem';
-import { debugModeSelector } from 'controllers/launch';
 import { STEP_PAGE_EVENTS, STEP_PAGE } from 'components/main/analytics/events';
+import { debugModeSelector } from 'controllers/launch';
 import {
   stepsSelector,
   selectedStepsSelector,
@@ -46,7 +46,6 @@ import {
   editDefectsAction,
   linkIssueAction,
   postIssueAction,
-  isDefectGroupOperationAvailable,
 } from 'controllers/step';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
 import { ENTITY_START_TIME } from 'components/filterEntities/constants';
@@ -55,7 +54,6 @@ import { prevTestItemSelector } from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
-import { getDefectTypeSelector } from 'controllers/project';
 import { StepGrid } from './stepGrid';
 
 const UNLINK_ISSUE_EVENTS_INFO = {
@@ -96,7 +94,6 @@ const LINK_ISSUE_EVENTS_INFO = {
     loading: loadingSelector(state),
     listView: isListViewSelector(state, namespaceSelector(state)),
     highlightItemId: prevTestItemSelector(state),
-    getDefectType: getDefectTypeSelector(state),
     isTestItemsList: isTestItemsListSelector(state),
   }),
   {
@@ -168,7 +165,6 @@ export class StepPage extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     highlightItemId: PropTypes.number,
-    getDefectType: PropTypes.func,
     isTestItemsList: PropTypes.bool,
   };
 
@@ -209,7 +205,6 @@ export class StepPage extends Component {
     filterErrors: {},
     filterEntities: [],
     highlightItemId: null,
-    getDefectType: () => {},
     isTestItemsList: false,
   };
 
@@ -348,44 +343,17 @@ export class StepPage extends Component {
   };
 
   handleEditDefects = (eventData) => {
-    const { selectedItems, getDefectType, debugMode } = this.props;
+    const { selectedItems } = this.props;
     const items = eventData && eventData.id ? [eventData] : selectedItems;
-    const isDefectGroupOperation = isDefectGroupOperationAvailable({
-      editedData: eventData,
-      selectedItems,
-      getDefectType,
-      debugMode,
+    this.props.editDefectsAction(items, {
+      fetchFunc: this.unselectAndFetchItems,
+      eventsInfo: {
+        editDefectsEvents: STEP_PAGE_EVENTS.EDIT_DEFECT_MODAL_EVENTS,
+        unlinkIssueEvents: UNLINK_ISSUE_EVENTS_INFO,
+        postIssueEvents: POST_ISSUE_EVENTS_INFO,
+        linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
+      },
     });
-    if (isDefectGroupOperation) {
-      this.props.showModalAction({
-        id: 'editToInvestigateDefectModal',
-        data: {
-          item: items[0],
-          fetchFunc: this.unselectAndFetchItems,
-          eventsInfo: {
-            changeSearchMode: STEP_PAGE_EVENTS.CHANGE_SEARCH_MODE_EDIT_DEFECT_MODAL,
-            selectAllSimilarItems: STEP_PAGE_EVENTS.SELECT_ALL_SIMILAR_ITEMS_EDIT_DEFECT_MODAL,
-            selectSpecificSimilarItem:
-              STEP_PAGE_EVENTS.SELECT_SPECIFIC_SIMILAR_ITEM_EDIT_DEFECT_MODAL,
-            editDefectsEvents: STEP_PAGE_EVENTS.EDIT_DEFECT_MODAL_EVENTS,
-            unlinkIssueEvents: UNLINK_ISSUE_EVENTS_INFO,
-            postIssueEvents: POST_ISSUE_EVENTS_INFO,
-            linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
-          },
-        },
-      });
-    } else {
-      this.props.editDefectsAction(items, {
-        fetchFunc: this.unselectAndFetchItems,
-        debugMode: this.props.debugMode,
-        eventsInfo: {
-          editDefectsEvents: STEP_PAGE_EVENTS.EDIT_DEFECT_MODAL_EVENTS,
-          unlinkIssueEvents: UNLINK_ISSUE_EVENTS_INFO,
-          postIssueEvents: POST_ISSUE_EVENTS_INFO,
-          linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
-        },
-      });
-    }
   };
 
   unselectAndFetchItems = () => {

@@ -31,6 +31,7 @@ export const InputRadio = ({
   onFocus,
   onBlur,
   mobileDisabled,
+  inputClassNames,
 }) => (
   // eslint-disable-next-line
   <label
@@ -48,8 +49,21 @@ export const InputRadio = ({
       checked={value === ownValue}
       name={name}
     />
-    <span className={cx('toggler', { checked: value === ownValue, 'at-top': circleAtTop })} />
-    {children && <span className={cx('children-container')}>{children}</span>}
+    <span
+      className={cx(
+        'toggler',
+        { checked: value === ownValue, 'at-top': circleAtTop },
+        inputClassNames.togglerClassName,
+      )}
+    />
+    {children && (
+      <span
+        className={cx('children-container', inputClassNames.childrenClassName)}
+        title={children}
+      >
+        {children}
+      </span>
+    )}
   </label>
 );
 InputRadio.propTypes = {
@@ -63,6 +77,10 @@ InputRadio.propTypes = {
   onChange: PropTypes.func,
   onFocus: PropTypes.func,
   onBlur: PropTypes.func,
+  inputClassNames: PropTypes.shape({
+    togglerClassName: PropTypes.string,
+    childrenClassName: PropTypes.string,
+  }),
 };
 InputRadio.defaultProps = {
   children: '',
@@ -75,4 +93,8 @@ InputRadio.defaultProps = {
   onChange: () => {},
   onFocus: () => {},
   onBlur: () => {},
+  inputClassNames: {
+    togglerClassName: '',
+    childrenClassName: '',
+  },
 };

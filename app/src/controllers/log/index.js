@@ -26,6 +26,7 @@ export {
   fetchHistoryItemsAction,
   setShouldShowLoadMoreAction,
   updateHistoryItemLaunchAttributesAction,
+  setActiveTabIdAction,
 } from './actionCreators';
 export { logReducer } from './reducer';
 export {
@@ -47,6 +48,7 @@ export {
   HISTORY_DEPTH_LIMIT,
   DEFAULT_HISTORY_DEPTH,
   SET_SHOULD_SHOW_LOAD_MORE,
+  SET_ACTIVE_TAB_ID,
 } from './constants';
 export {
   historyItemsSelector,
@@ -77,5 +79,6 @@ export {
   pageLoadingSelector,
   includeAllLaunchesSelector,
   shouldShowLoadMoreSelector,
+  activeTabIdSelector,
 } from './selectors';
 export { getLogLevel, setLogLevel, getLogViewMode, setLogViewMode } from './storageUtils';
