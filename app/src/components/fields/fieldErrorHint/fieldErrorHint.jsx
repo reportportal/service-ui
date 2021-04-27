@@ -66,11 +66,11 @@ const messages = defineMessages({
     defaultMessage: 'Value should have size from 3 to 256.',
   },
   launchNameHint: {
-    id: '  LaunchMergeModal.launchNameHint',
+    id: 'LaunchMergeModal.launchNameHint',
     defaultMessage: 'Launch name should have size from 1 to 256.',
   },
   launchDescriptionHint: {
-    id: '  LaunchMergeModal.launchDescriptionHint',
+    id: 'LaunchMergeModal.launchDescriptionHint',
     defaultMessage: 'Description should have size not more than 1024 symbols.',
   },
   dashboardNameHint: {

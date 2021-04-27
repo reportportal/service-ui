@@ -1,6 +1,6 @@
 {
-  "  LaunchMergeModal.launchDescriptionHint": "Description should have size not more than 1024 symbols.",
-  "  LaunchMergeModal.launchNameHint": "Launch name should have size from 1 to 256.",
+  "LaunchMergeModal.launchDescriptionHint": "Description should have size not more than 1024 symbols.",
+  "LaunchMergeModal.launchNameHint": "Launch name should have size from 1 to 256.",
   "AALabel.investigatedByAA": "Проаналізовано Авто-Аналізом",
   "AccessTokenBlock.header": "Токен доступу",
   "AccessTokenBlock.regenerate": "Створити Новий",
