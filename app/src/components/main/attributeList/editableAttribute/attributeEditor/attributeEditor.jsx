@@ -97,7 +97,7 @@ export class AttributeEditor extends Component {
 
   getValidationErrors = (key, value) => ({
     key: attributeKeyValidator(key),
-    value: this.props.onCancel.length ? attributeValueValidator(value) : '',
+    value: this.props.attribute.edited && attributeValueValidator(value),
   });
 
   byKeyComparator = (attribute, item, key, value) =>

@@ -72,6 +72,7 @@ export const AttributeList = ({
   newAttrMessage,
   maxLength,
   customClass,
+  showButton,
 }) => (
   <Fragment>
     {attributes.filter(notSystemAttributePredicate).map((attribute, i, filteredAttributes) => (
@@ -90,7 +91,7 @@ export const AttributeList = ({
         customClass={customClass}
       />
     ))}
-    {!hasEditedAttribute(attributes) && !disabled && attributes.length < maxLength && (
+    {!hasEditedAttribute(attributes) && !disabled && showButton && attributes.length < maxLength && (
       <div className={cx('add-new-button')} onClick={onAddNew}>
         +{' '}
         {newAttrMessage || <FormattedMessage id="AttributeList.addNew" defaultMessage="Add new" />}
@@ -111,6 +112,7 @@ AttributeList.propTypes = {
   onRemove: PropTypes.func,
   keyURLCreator: PropTypes.func,
   valueURLCreator: PropTypes.func,
+  showButton: PropTypes.bool,
 };
 AttributeList.defaultProps = {
   attributes: [],
@@ -125,4 +127,5 @@ AttributeList.defaultProps = {
   onRemove: () => {},
   onEdit: () => {},
   onAddNew: () => {},
+  showButton: true,
 };

@@ -23,22 +23,16 @@ import {
   CONDITION_NOT_HAS,
   CONDITION_ANY,
   CONDITION_NOT_ANY,
-  ENTITY_ATTRIBUTE_VALUES,
-  ENTITY_ATTRIBUTE_KEYS,
 } from 'components/filterEntities/constants';
 import { getInputConditions } from 'common/constants/inputConditions';
-import { AttributeEditor } from 'components/main/attributeList/editableAttribute/attributeEditor/attributeEditor';
-import { Attribute } from 'components/main/attributeList/editableAttribute/attribute/attribute';
-import { activeFilterSelector } from 'controllers/filter';
-import { connect } from 'react-redux';
-import styles from './keyValueAttributesInput.scss';
+import { AttributeEditor } from 'components/main/attributeList/editableAttribute/attributeEditor';
+import { AttributeListField } from 'components/main/attributeList';
+import styles from './inputConditionalAttributes.scss';
 
 const cx = classNames.bind(styles);
-@connect((state) => ({
-  filteredAttributes: activeFilterSelector(state),
-}))
+
 @injectIntl
-export class KeyValueAttributesInput extends Component {
+export class InputConditionalAttributes extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     value: PropTypes.object,
@@ -49,7 +43,6 @@ export class KeyValueAttributesInput extends Component {
     valueURLCreator: PropTypes.func,
     keyURLCreator: PropTypes.func,
     projectId: PropTypes.string,
-    filteredAttributes: PropTypes.object,
   };
 
   static defaultProps = {
@@ -61,10 +54,10 @@ export class KeyValueAttributesInput extends Component {
     keyURLCreator: () => {},
     conditions: [CONDITION_HAS, CONDITION_NOT_HAS, CONDITION_ANY, CONDITION_NOT_ANY],
     projectId: '',
-    filteredAttributes: {},
   };
   state = {
     opened: false,
+    attributes: this.props.value.attributes,
   };
 
   componentDidMount() {
@@ -82,17 +75,20 @@ export class KeyValueAttributesInput extends Component {
   onClickConditionItem = (condition) => {
     if (condition.value !== this.props.value.condition) {
       this.setState({ opened: false });
-      this.props.onChange({ value: this.props.value.value, condition: condition.value });
+      this.props.onChange({
+        value: this.props.value.value,
+        condition: condition.value,
+      });
     }
   };
 
   onChangeTags = (tags) => {
+    this.state.attributes.push({ key: tags.key, value: tags.value });
+    this.setState({ attributes: this.state.attributes });
     this.props.onChange({
-      [tags.value ? ENTITY_ATTRIBUTE_VALUES : ENTITY_ATTRIBUTE_KEYS]: {
-        filteringField: tags.value ? ENTITY_ATTRIBUTE_VALUES : ENTITY_ATTRIBUTE_KEYS,
-        value: this.parseTags(Array.of(tags.value || tags.key)),
-        condition: this.props.value.attributeKey.condition,
-      },
+      attributes: this.state.attributes,
+      value: this.parseTags(Array.of(tags.value || tags.key)),
+      condition: this.props.value.condition,
     });
   };
 
@@ -109,24 +105,22 @@ export class KeyValueAttributesInput extends Component {
     }
   };
 
+  onRemove = (attributes) => {
+    this.setState({ attributes }, () => this.props.onChange({ attributes: this.state.attributes }));
+  };
+
   parseTags = (options) => options.join(',');
 
   render() {
-    const { value, keyURLCreator, valueURLCreator, filteredAttributes, projectId } = this.props;
+    const { value, keyURLCreator, valueURLCreator, projectId } = this.props;
     return (
       <>
         <div className={cx('attributes-block')}>
-          {filteredAttributes &&
-            filteredAttributes.conditions.map(
-              (item) =>
-                (item.attributeKey.value || item.attributeKey.value) && (
-                  <Attribute
-                    key={item.filteringField}
-                    attribute={{ key: item.attributeKey.value, value: item.attributeValue.value }}
-                    onRemove={() => {}}
-                  />
-                ),
-            )}
+          <AttributeListField
+            value={value.attributes}
+            showButton={false}
+            onChange={this.onRemove}
+          />
         </div>
         <div className={cx('input-conditional-tags', { opened: this.state.opened })}>
           <AttributeEditor
@@ -140,11 +134,9 @@ export class KeyValueAttributesInput extends Component {
               <span className={cx('condition-selected')}>
                 {this.getConditions().length &&
                   value &&
-                  value.attributeKey &&
-                  value.attributeKey.condition &&
-                  this.getConditions().filter(
-                    (condition) => condition.value === value.attributeKey.condition,
-                  )[0].shortLabel}
+                  value.condition &&
+                  this.getConditions().filter((condition) => condition.value === value.condition)[0]
+                    .shortLabel}
               </span>
               <i className={cx('arrow', { rotated: this.state.opened })} />
             </div>

@@ -15,11 +15,7 @@
  */
 
 export function bindDefaultValue(key, options = {}) {
-  let { filterValues } = this.props;
-  if (filterValues.attribute) {
-    filterValues = { ...filterValues, ...filterValues.attribute };
-    delete filterValues.attribute;
-  }
+  const { filterValues } = this.props;
   if (key in filterValues) {
     return filterValues[key];
   }

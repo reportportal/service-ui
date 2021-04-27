@@ -17,7 +17,7 @@
 import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { FieldFilterEntity } from 'components/fields/fieldFilterEntity';
-import { KeyValueAttributesInput } from 'components/inputs/keyValueAttributesInput';
+import { InputConditionalAttributes } from 'components/inputs/inputConditionalAttributes';
 import { injectIntl } from 'react-intl';
 
 @injectIntl
@@ -53,7 +53,7 @@ export class EntityInputConditionalKeyValue extends PureComponent {
         onRemove={onRemove}
         stretchable
       >
-        <KeyValueAttributesInput
+        <InputConditionalAttributes
           value={value}
           onChange={onChange}
           keyURLCreator={keyURLCreator}

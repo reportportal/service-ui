@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { KeyValueAttributesInput } from './keyValueAttributesInput';
+export { InputConditionalAttributes } from './inputConditionalAttributes';

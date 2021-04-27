@@ -195,14 +195,7 @@ export class LaunchLevelEntities extends Component {
     filterValues: {},
     visibleFilters: [],
   };
-  getAttributesValue = () => {
-    const conditionArr = [ENTITY_ATTRIBUTE_KEYS, ENTITY_ATTRIBUTE_VALUES].map((key) =>
-      this.bindDefaultValue(key, {
-        condition: CONDITION_HAS,
-      }),
-    );
-    return { [ENTITY_ATTRIBUTE_KEYS]: conditionArr[0], [ENTITY_ATTRIBUTE_VALUES]: conditionArr[1] };
-  };
+
   getStaticEntities = () => {
     const { intl, filterValues, activeProject, visibleFilters } = this.props;
     const attributeKey = (filterValues[ENTITY_ATTRIBUTE_KEYS] || {}).value;
@@ -313,7 +306,10 @@ export class LaunchLevelEntities extends Component {
       {
         id: ENTITY_ATTRIBUTE,
         component: EntityInputConditionalKeyValue,
-        value: this.getAttributesValue(),
+        value: this.bindDefaultValue(ENTITY_ATTRIBUTE, {
+          condition: CONDITION_HAS,
+          attributes: [],
+        }),
         title: intl.formatMessage(messages.AttributeTitle),
         active: visibleFilters.includes(ENTITY_ATTRIBUTE),
         removable: true,

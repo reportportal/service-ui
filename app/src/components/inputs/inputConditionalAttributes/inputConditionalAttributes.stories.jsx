@@ -19,20 +19,12 @@ import { host } from 'storybook-host';
 
 // eslint-disable-next-line import/extensions, import/no-unresolved
 import { WithState } from 'storybook-decorators';
-import { KeyValueAttributesInput } from './keyValueAttributesInput';
+import { InputConditionalAttributes } from './inputConditionalAttributes';
 import README from './README.md';
 
 const value = {
-  attributeKey: {
-    condition: 'has',
-    filteringField: 'attributeKey',
-    value: '',
-  },
-  attributeValue: {
-    condition: 'has',
-    filteringField: 'attributeValue',
-    value: '',
-  },
+  attributes: [{ key: 'platform', value: 'windows' }],
+  condition: 'has',
 };
 
 const state = {
@@ -52,8 +44,9 @@ const state = {
         name: 'DEMO_FILTER',
         conditions: [
           {
-            filteringField: 'attributeValue',
+            filteringField: 'attribute',
             condition: 'has',
+            attributes: [],
             value: '',
           },
         ],
@@ -70,10 +63,10 @@ const state = {
   },
 };
 
-storiesOf('Components/Inputs/KeyValueAttributesInput', module)
+storiesOf('Components/Inputs/InputConditionalAttributes', module)
   .addDecorator(
     host({
-      title: 'Key/value attributes input component',
+      title: 'Input Conditional Attributes component',
       align: 'center middle',
       backdrop: 'rgba(189, 178, 201, 0.2)',
       background: '#ffffff',
@@ -88,12 +81,16 @@ storiesOf('Components/Inputs/KeyValueAttributesInput', module)
   })
   .add('default state', () => (
     <WithState state={state}>
-      <KeyValueAttributesInput projectId="" keyURLCreator={() => {}} valueURLCreator={() => {}} />
+      <InputConditionalAttributes
+        projectId=""
+        keyURLCreator={() => {}}
+        valueURLCreator={() => {}}
+      />
     </WithState>
   ))
   .add('with conditions', () => (
     <WithState state={state}>
-      <KeyValueAttributesInput
+      <InputConditionalAttributes
         projectId=""
         keyURLCreator={() => {}}
         valueURLCreator={() => {}}

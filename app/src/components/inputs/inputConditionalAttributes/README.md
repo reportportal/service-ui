@@ -1,4 +1,4 @@
-## **Key/value attributes input with tags**
+## **Input Conditional Attributes**
 
 Has 30px min-height & width adjusted by content.
 
