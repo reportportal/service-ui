@@ -34,7 +34,7 @@
   padding: 0 10px;
   cursor: pointer;
   color: $COLOR--gray-47;
-  fill: $COLOR--gray-47;
+  fill: $COLOR--gray-60;
   transition: fill 0.2s, color 0.2s;
   height: 40px;
   box-sizing: border-box;
@@ -46,6 +46,9 @@
   &:focus {
     color: $COLOR--charcoal-grey;
     fill: $COLOR--charcoal-grey;
+  }
+  &:nth-child(2):hover svg {
+    stroke: $COLOR--charcoal-grey;
   }
 
   &:after {
@@ -62,10 +65,19 @@
     }
   }
 
+  &:nth-child(2) svg {
+    stroke: $COLOR--gray-60;
+  }
+
   &.active,
   &.active:hover {
     color: $COLOR--topaz;
     fill: $COLOR--topaz;
+  }
+
+  &:nth-child(2).active svg,
+  &:nth-child(2).active:hover svg {
+    stroke: $COLOR--topaz;
   }
 
   @media (max-width: $SCREEN_XS_MAX) {
@@ -80,12 +92,6 @@
   svg {
     width: 20px;
     height: 20px;
-  }
-  path {
-    fill: $COLOR--gray-80;
-  }
-  text {
-    fill: $COLOR--gray-47;
   }
 }
 
