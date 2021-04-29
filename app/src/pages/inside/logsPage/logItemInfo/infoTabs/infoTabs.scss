@@ -47,7 +47,7 @@
     color: $COLOR--charcoal-grey;
     fill: $COLOR--charcoal-grey;
   }
-  &:nth-child(2):hover svg {
+  &.stroked:hover svg {
     stroke: $COLOR--charcoal-grey;
   }
 
@@ -65,7 +65,7 @@
     }
   }
 
-  &:nth-child(2) svg {
+  &.stroked svg {
     stroke: $COLOR--gray-60;
   }
 
@@ -75,8 +75,8 @@
     fill: $COLOR--topaz;
   }
 
-  &:nth-child(2).active svg,
-  &:nth-child(2).active:hover svg {
+  &.stroked.active svg,
+  &.stroked.active:hover svg {
     stroke: $COLOR--topaz;
   }
 
