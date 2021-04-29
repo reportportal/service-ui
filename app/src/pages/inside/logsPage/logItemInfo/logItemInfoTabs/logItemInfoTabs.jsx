@@ -152,7 +152,6 @@ export class LogItemInfoTabs extends Component {
       onToggleSauceLabsIntegrationView,
       fetchFirstAttachments,
       attachments,
-      activeTabId,
       setActiveTabId,
     } = this.props;
     if (isSauceLabsIntegrationView && tabId) {
@@ -161,7 +160,7 @@ export class LogItemInfoTabs extends Component {
     if (tabId === ATTACHMENTS_TAB_ID && !attachments.length) {
       fetchFirstAttachments();
     }
-    setActiveTabId(activeTabId === tabId && activeTabId !== null ? null : tabId);
+    setActiveTabId(tabId);
   };
 
   isHistoryTabVisible = () => {
