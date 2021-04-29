@@ -34,7 +34,7 @@ import {
   EntityInputConditionalTags,
   EntitySearch,
   EntityContains,
-  EntityInputConditionalKeyValue,
+  EntityInputConditionalAttributes,
 } from 'components/filterEntities';
 import { bindDefaultValue } from 'components/filterEntities/utils';
 import {
@@ -305,7 +305,7 @@ export class LaunchLevelEntities extends Component {
       },
       {
         id: ENTITY_ATTRIBUTE,
-        component: EntityInputConditionalKeyValue,
+        component: EntityInputConditionalAttributes,
         value: this.bindDefaultValue(ENTITY_ATTRIBUTE, {
           condition: CONDITION_HAS,
           attributes: [],

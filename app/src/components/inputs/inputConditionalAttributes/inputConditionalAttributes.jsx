@@ -83,10 +83,10 @@ export class InputConditionalAttributes extends Component {
   };
 
   onChangeTags = (tags) => {
-    this.state.attributes.push({ key: tags.key, value: tags.value });
-    this.setState({ attributes: this.state.attributes });
+    const newAttributes = [...this.state.attributes, { key: tags.key, value: tags.value }];
+    this.setState({ attributes: newAttributes });
     this.props.onChange({
-      attributes: this.state.attributes,
+      attributes: newAttributes,
       value: this.parseTags(Array.of(tags.value || tags.key)),
       condition: this.props.value.condition,
     });
@@ -113,6 +113,7 @@ export class InputConditionalAttributes extends Component {
 
   render() {
     const { value, keyURLCreator, valueURLCreator, projectId } = this.props;
+    const inputConditions = this.getConditions();
     return (
       <>
         <div className={cx('attributes-block')}>
@@ -132,17 +133,17 @@ export class InputConditionalAttributes extends Component {
           <div className={cx('conditions-block')} ref={this.setConditionsBlockRef}>
             <div className={cx('conditions-selector')} onClick={this.onClickConditionBlock}>
               <span className={cx('condition-selected')}>
-                {this.getConditions().length &&
+                {inputConditions.length &&
                   value &&
                   value.condition &&
-                  this.getConditions().filter((condition) => condition.value === value.condition)[0]
+                  inputConditions.filter((condition) => condition.value === value.condition)[0]
                     .shortLabel}
               </span>
               <i className={cx('arrow', { rotated: this.state.opened })} />
             </div>
             <div className={cx('conditions-list', { visible: this.state.opened })}>
-              {this.getConditions() &&
-                this.getConditions().map((condition) => (
+              {inputConditions &&
+                inputConditions.map((condition) => (
                   <div
                     key={condition.value}
                     className={cx('condition', {

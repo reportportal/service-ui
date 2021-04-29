@@ -21,7 +21,7 @@ import { InputConditionalAttributes } from 'components/inputs/inputConditionalAt
 import { injectIntl } from 'react-intl';
 
 @injectIntl
-export class EntityInputConditionalKeyValue extends PureComponent {
+export class EntityInputConditionalAttributes extends PureComponent {
   static propTypes = {
     value: PropTypes.object.isRequired,
     title: PropTypes.string,
