@@ -201,6 +201,7 @@ export class LogItemInfoTabs extends Component {
         id: 'logs',
         label: formatMessage(messages.logsTab),
         icon: LogIcon,
+        stroked: true,
         eventInfo: LOG_PAGE_EVENTS.LOGS_TAB,
         component: LogsGridWrapper,
         componentProps: {

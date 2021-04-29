@@ -35,6 +35,7 @@ export class InfoTabs extends Component {
         component: PropTypes.elementType,
         componentProps: PropTypes.object,
         icon: PropTypes.node,
+        stroked: PropTypes.bool,
       }),
     ),
     activeTabId: PropTypes.string,
@@ -105,7 +106,7 @@ export class InfoTabs extends Component {
           {tabs.map((tab) => (
             <Fragment key={tab.id}>
               <button
-                className={cx('tab', { active: this.isActiveTab(tab) })}
+                className={cx('tab', { active: this.isActiveTab(tab), stroked: tab.stroked })}
                 onClick={() => {
                   tracking.trackEvent(tab.eventInfo);
                   setActiveTab(tab.id);
