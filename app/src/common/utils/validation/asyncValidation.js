@@ -25,7 +25,7 @@ export const emailUnique = (email) =>
 
 export const projectNameUnique = (projectName) =>
   fetch(URLS.searchProjectNames(), { params: { term: projectName } }).then((names) => {
-    if (names.indexOf(projectName) > -1) {
+    if (names.indexOf(projectName.toLowerCase()) > -1) {
       // eslint-disable-next-line no-throw-literal
       throw {
         projectName: 'projectDuplicateHint',
