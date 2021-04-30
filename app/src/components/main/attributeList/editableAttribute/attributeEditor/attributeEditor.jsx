@@ -139,6 +139,7 @@ export class AttributeEditor extends Component {
       key,
       value,
     });
+    this.clearInputValues();
   };
 
   clearInputValues = () => this.setState({ key: '', value: '' });

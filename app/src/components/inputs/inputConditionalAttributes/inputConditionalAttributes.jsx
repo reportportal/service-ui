@@ -115,52 +115,52 @@ export class InputConditionalAttributes extends Component {
     const { value, keyURLCreator, valueURLCreator, projectId } = this.props;
     const inputConditions = this.getConditions();
     return (
-      <>
+      <div className={cx('input-conditional-tags', { opened: this.state.opened })}>
         <div className={cx('attributes-block')}>
           <AttributeListField
             value={value.attributes}
             showButton={false}
+            editable={false}
             onChange={this.onRemove}
+            customClass={cx('not-editable')}
           />
-        </div>
-        <div className={cx('input-conditional-tags', { opened: this.state.opened })}>
           <AttributeEditor
             keyURLCreator={keyURLCreator}
             valueURLCreator={valueURLCreator}
             projectId={projectId}
             onConfirm={this.onChangeTags}
           />
-          <div className={cx('conditions-block')} ref={this.setConditionsBlockRef}>
-            <div className={cx('conditions-selector')} onClick={this.onClickConditionBlock}>
-              <span className={cx('condition-selected')}>
-                {inputConditions.length &&
-                  value &&
-                  value.condition &&
-                  inputConditions.filter((condition) => condition.value === value.condition)[0]
-                    .shortLabel}
-              </span>
-              <i className={cx('arrow', { rotated: this.state.opened })} />
-            </div>
-            <div className={cx('conditions-list', { visible: this.state.opened })}>
-              {inputConditions &&
-                inputConditions.map((condition) => (
-                  <div
-                    key={condition.value}
-                    className={cx('condition', {
-                      active: condition.value === value.condition,
-                      disabled: condition.disabled,
-                    })}
-                    onClick={() => {
-                      !condition.disabled && this.onClickConditionItem(condition);
-                    }}
-                  >
-                    {condition.label}
-                  </div>
-                ))}
-            </div>
+        </div>
+        <div className={cx('conditions-block')} ref={this.setConditionsBlockRef}>
+          <div className={cx('conditions-selector')} onClick={this.onClickConditionBlock}>
+            <span className={cx('condition-selected')}>
+              {inputConditions.length &&
+                value &&
+                value.condition &&
+                inputConditions.filter((condition) => condition.value === value.condition)[0]
+                  .shortLabel}
+            </span>
+            <i className={cx('arrow', { rotated: this.state.opened })} />
+          </div>
+          <div className={cx('conditions-list', { visible: this.state.opened })}>
+            {inputConditions &&
+              inputConditions.map((condition) => (
+                <div
+                  key={condition.value}
+                  className={cx('condition', {
+                    active: condition.value === value.condition,
+                    disabled: condition.disabled,
+                  })}
+                  onClick={() => {
+                    !condition.disabled && this.onClickConditionItem(condition);
+                  }}
+                >
+                  {condition.label}
+                </div>
+              ))}
           </div>
         </div>
-      </>
+      </div>
     );
   }
 }

@@ -73,6 +73,7 @@ export const AttributeList = ({
   maxLength,
   customClass,
   showButton,
+  editable,
 }) => (
   <Fragment>
     {attributes.filter(notSystemAttributePredicate).map((attribute, i, filteredAttributes) => (
@@ -83,7 +84,7 @@ export const AttributeList = ({
         editMode={attribute.edited}
         onChange={createChangeHandler(attributes, i, onChange)}
         onRemove={createRemoveHandler(attributes, i, onChange)}
-        onEdit={createEditHandler(attributes, i, onChange)}
+        onEdit={editable && createEditHandler(attributes, i, onChange)}
         onCancelEdit={createCancelEditHandler(attributes, i, onChange)}
         disabled={disabled}
         keyURLCreator={keyURLCreator}
@@ -113,6 +114,7 @@ AttributeList.propTypes = {
   keyURLCreator: PropTypes.func,
   valueURLCreator: PropTypes.func,
   showButton: PropTypes.bool,
+  editable: PropTypes.bool,
 };
 AttributeList.defaultProps = {
   attributes: [],
@@ -128,4 +130,5 @@ AttributeList.defaultProps = {
   onEdit: () => {},
   onAddNew: () => {},
   showButton: true,
+  editable: true,
 };

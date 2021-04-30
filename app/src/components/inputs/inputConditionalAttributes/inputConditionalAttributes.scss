@@ -21,12 +21,6 @@
   box-sizing: border-box;
   background-color: $COLOR--white-two;
 
-  & > div:first-child {
-    align-items: center;
-    margin-left: 60px;
-    padding-bottom: 0px;
-  }
-
   &.disabled {
     .conditions-block {
       cursor: default;
@@ -146,7 +140,12 @@
 }
 
 .attributes-block {
-  position: absolute;
-  margin-top: -30px;
-  margin-left: 80px;
+  display: flex;
+  align-items: center;
+  margin-left: 60px;
+
+  & > div {
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+  }
 }

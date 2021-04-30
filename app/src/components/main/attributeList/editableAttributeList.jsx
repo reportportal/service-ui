@@ -34,6 +34,7 @@ export class EditableAttributeList extends Component {
     maxLength: PropTypes.number,
     customClass: PropTypes.string,
     showButton: PropTypes.bool,
+    editable: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -46,6 +47,7 @@ export class EditableAttributeList extends Component {
     maxLength: Infinity,
     customClass: '',
     showButton: true,
+    editable: true,
   };
 
   handleAddNew = () => {
@@ -67,6 +69,7 @@ export class EditableAttributeList extends Component {
       maxLength,
       customClass,
       showButton,
+      editable,
     } = this.props;
     return (
       <AttributeList
@@ -81,6 +84,7 @@ export class EditableAttributeList extends Component {
         maxLength={maxLength}
         customClass={customClass}
         showButton={showButton}
+        editable={editable}
       />
     );
   }

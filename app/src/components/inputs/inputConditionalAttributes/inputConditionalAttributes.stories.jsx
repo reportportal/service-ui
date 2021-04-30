@@ -14,18 +14,22 @@
  * limitations under the License.
  */
 
+import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 
 // eslint-disable-next-line import/extensions, import/no-unresolved
 import { WithState } from 'storybook-decorators';
+import {
+  CONDITION_HAS,
+  CONDITION_NOT_HAS,
+  CONDITION_ANY,
+  CONDITION_NOT_ANY,
+} from 'components/filterEntities/constants';
 import { InputConditionalAttributes } from './inputConditionalAttributes';
 import README from './README.md';
 
-const value = {
-  attributes: [{ key: 'platform', value: 'windows' }],
-  condition: 'has',
-};
+const conditions = [CONDITION_HAS, CONDITION_NOT_HAS, CONDITION_ANY, CONDITION_NOT_ANY];
 
 const state = {
   user: {
@@ -70,8 +74,9 @@ storiesOf('Components/Inputs/InputConditionalAttributes', module)
       align: 'center middle',
       backdrop: 'rgba(189, 178, 201, 0.2)',
       background: '#ffffff',
-      height: 32,
-      width: 300,
+      position: 'relative',
+      display: 'flex',
+      flexDirection: 'column',
     }),
   )
   .addParameters({
@@ -88,13 +93,27 @@ storiesOf('Components/Inputs/InputConditionalAttributes', module)
       />
     </WithState>
   ))
-  .add('with conditions', () => (
-    <WithState state={state}>
-      <InputConditionalAttributes
-        projectId=""
-        keyURLCreator={() => {}}
-        valueURLCreator={() => {}}
-        value={value}
-      />
-    </WithState>
-  ));
+  .add('with conditions and actions', () =>
+    React.createElement(() => {
+      const [value, setValue] = React.useState({
+        attributes: [],
+        condition: 'has',
+        value: '',
+      });
+      const onChange = (newValue) => {
+        setValue({ ...value, ...newValue });
+      };
+      return (
+        <WithState state={state}>
+          <InputConditionalAttributes
+            projectId=""
+            keyURLCreator={() => {}}
+            valueURLCreator={() => {}}
+            value={value}
+            conditions={conditions}
+            onChange={onChange}
+          />
+        </WithState>
+      );
+    }),
+  );
