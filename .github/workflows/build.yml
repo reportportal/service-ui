@@ -18,13 +18,14 @@ env:
   UI_BUILD_REACT: 'app/'
   GODIRS_NOVENDOR: '$(shell go list ./... | grep -v /vendor/)'
   PACKAGE_COMMONS: 'github.com/reportportal/commons-go/v5'
+  BUILD_DATE: '`date +%FT%T%z`'
   BINARY_DIR: 'bin'
   BUILD_INFO_LDFLAGS: >-
     -ldflags "-extldflags '"-static"'
-    -X ${{ env.PACKAGE_COMMONS }}/commons.repo=${GITHUB_REPOSITORY}
-    -X ${{ env.PACKAGE_COMMONS }}/commons.branch=${GITHUB_SHA}
-    -X ${{ env.PACKAGE_COMMONS }}/commons.buildDate=`date +%FT%T%z`
-    -X ${{ env.PACKAGE_COMMONS }}/commons.version=${v}"'
+    -X ${PACKAGE_COMMONS}/commons.repo=${GITHUB_REPOSITORY}
+    -X ${PACKAGE_COMMONS}/commons.branch=${GITHUB_SHA}
+    -X ${PACKAGE_COMMONS}/commons.buildDate=${BUILD_DATE}
+    -X ${PACKAGE_COMMONS}/commons.version=${VERSION}"'
 
 jobs:
   build:
