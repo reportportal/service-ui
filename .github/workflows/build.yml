@@ -57,7 +57,7 @@ jobs:
       - name: Go Linter
         uses: golangci/golangci-lint-action@v2
         with:
-          version: v1.36.0
+          version: v1.39.0
           skip-go-installation: true
           args: '--deadline 10m'
 
@@ -68,7 +68,4 @@ jobs:
         env:
           CGO_ENABLED: 0
           GOOS: linux
-        run: |
-          export LDFLAGS=`echo ${{ env.BUILD_INFO_LDFLAGS }}`
-          echo ${LDFLAGS}
-          go build ${LDFLAGS} -o ${{ env.BINARY_DIR }}/service-ui ./
+        run: 'go build ${{ env.BUILD_INFO_LDFLAGS }} -o ${{ env.BINARY_DIR }}/service-ui ./'
