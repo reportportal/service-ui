@@ -25,7 +25,7 @@ env:
     -X ${PACKAGE_COMMONS}/commons.repo=${GITHUB_REPOSITORY}
     -X ${PACKAGE_COMMONS}/commons.branch=${GITHUB_SHA}
     -X ${PACKAGE_COMMONS}/commons.buildDate=${BUILD_DATE}
-    -X ${PACKAGE_COMMONS}/commons.version=${VERSION}"'
+    -X ${PACKAGE_COMMONS}/commons.version=${VERSION}"
 
 jobs:
   build:
@@ -54,7 +54,7 @@ jobs:
           npm --prefix ${{ env.UI_BUILD_REACT }} run test:coverage
           npm --prefix ${{ env.UI_BUILD_REACT }} run build
 
-      - name: Go Style Check
+      - name: Go Linter
         uses: golangci/golangci-lint-action@v2
         with:
           version: v1.36.0
