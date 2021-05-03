@@ -74,6 +74,4 @@ jobs:
         run: 'go build ${{ env.BUILD_INFO_LDFLAGS }} -o ${{ env.BINARY_DIR }}/service-ui ./'
 
       - name: Codecov report
-        run: |
-          npm install -g codecov
-          codecov
+        uses: codecov/codecov-action@v1
