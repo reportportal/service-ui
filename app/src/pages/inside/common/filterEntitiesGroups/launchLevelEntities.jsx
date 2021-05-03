@@ -34,7 +34,6 @@ import {
   EntityInputConditionalTags,
   EntitySearch,
   EntityContains,
-  EntityInputConditionalAttributes,
 } from 'components/filterEntities';
 import { bindDefaultValue } from 'components/filterEntities/utils';
 import {
@@ -52,7 +51,6 @@ import {
   ENTITY_ATTRIBUTE_VALUES,
   CONDITION_LESS_EQ,
   CONDITION_EQ,
-  ENTITY_ATTRIBUTE,
 } from 'components/filterEntities/constants';
 import { defectTypesSelector } from 'controllers/project';
 
@@ -84,10 +82,6 @@ const messages = defineMessages({
   AttributeValuesTitle: {
     id: 'LaunchLevelEntities.AttributeValuesTitle',
     defaultMessage: 'Attribute values',
-  },
-  AttributeTitle: {
-    id: 'LaunchLevelEntities.AttributeTitle',
-    defaultMessage: 'Attribute',
   },
   TotalTitle: {
     id: 'LaunchLevelEntities.TotalTitle',
@@ -301,22 +295,6 @@ export class LaunchLevelEntities extends Component {
         customProps: {
           getURI: getLaunchAttributeValuesSearchURI,
           placeholder: intl.formatMessage(messages.ATTRIBUTE_VALUES_PLACEHOLDER),
-        },
-      },
-      {
-        id: ENTITY_ATTRIBUTE,
-        component: EntityInputConditionalAttributes,
-        value: this.bindDefaultValue(ENTITY_ATTRIBUTE, {
-          condition: CONDITION_HAS,
-          attributes: [],
-        }),
-        title: intl.formatMessage(messages.AttributeTitle),
-        active: visibleFilters.includes(ENTITY_ATTRIBUTE),
-        removable: true,
-        customProps: {
-          keyURLCreator: URLS.launchAttributeKeysSearch,
-          valueURLCreator: URLS.launchAttributeValuesSearch,
-          projectId: activeProject,
         },
       },
       {

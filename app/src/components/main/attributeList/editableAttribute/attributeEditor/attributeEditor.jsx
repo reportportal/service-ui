@@ -30,6 +30,7 @@ import {
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import CircleCrossIcon from 'common/img/circle-cross-icon-inline.svg';
 import CircleCheckIcon from 'common/img/circle-check-inline.svg';
+import { isEmpty } from 'common/utils/validation/validatorHelpers';
 import { AttributeInput } from './attributeInput';
 import styles from './attributeEditor.scss';
 
@@ -124,10 +125,13 @@ export class AttributeEditor extends Component {
       (attribute) => attribute.key === this.state.key && attribute.value === this.state.value,
     );
 
+  isAttributeEmpty = () => isEmpty(this.state.key) && isEmpty(this.state.value);
+
   isFormValid = () =>
     !this.state.errors.key &&
     !this.state.errors.value &&
     this.isAttributeUnique() &&
+    !this.isAttributeEmpty() &&
     !this.state.isKeyEdited;
 
   handleSubmit = () => {

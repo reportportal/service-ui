@@ -22,4 +22,3 @@ export { EntityRadioGroup } from './entityRadioGroup';
 export { EntityInputConditional } from './entityInputConditional';
 export { EntitySearch } from './entitySearch';
 export { EntityInputConditionalTags } from './entityInputConditionalTags';
-export { EntityInputConditionalAttributes } from './entityInputConditionalAttributes';
