@@ -746,6 +746,7 @@
   "GithubAuthFormFields.clientIdLabel": "Ідентифікатор клієнта",
   "GithubAuthFormFields.clientSecretLabel": "Секрет клієнта",
   "Hamburger.analysis": "Аналізувати",
+  "Hamburger.createRule": "Створіть хоча б одне правило",
   "Hamburger.export": "Експортувати:",
   "Hamburger.launchFinished": "Запуск вже завершено",
   "Hamburger.launchInProgress": "Запуск не повинен бути в змозі В ПРОЦЕСІ!",
