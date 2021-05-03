@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2021 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages } from 'react-intl';
-import { AsyncMultipleAutocomplete } from 'components/inputs/autocompletes/asyncMultipleAutocomplete';
+import { injectIntl } from 'react-intl';
 import {
   CONDITION_HAS,
   CONDITION_NOT_HAS,
@@ -26,41 +25,39 @@ import {
   CONDITION_NOT_ANY,
 } from 'components/filterEntities/constants';
 import { getInputConditions } from 'common/constants/inputConditions';
-import styles from './inputConditionalTags.scss';
+import { AttributeEditor } from 'components/main/attributeList/editableAttribute/attributeEditor';
+import { AttributeListField } from 'components/main/attributeList';
+import styles from './inputConditionalAttributes.scss';
 
 const cx = classNames.bind(styles);
-const messages = defineMessages({
-  tagsHint: {
-    id: 'InputConditionalTags.tagsHint',
-    defaultMessage: 'Please enter 1 or more characters',
-  },
-});
 
 @injectIntl
-export class InputConditionalTags extends Component {
+export class InputConditionalAttributes extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     value: PropTypes.object,
     conditions: PropTypes.arrayOf(PropTypes.string),
-    inputProps: PropTypes.object,
-    placeholder: PropTypes.string,
-    getURI: PropTypes.func.isRequired,
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
+    valueURLCreator: PropTypes.func,
+    keyURLCreator: PropTypes.func,
+    projectId: PropTypes.string,
   };
 
   static defaultProps = {
     value: {},
-    inputProps: {},
-    placeholder: '',
     onChange: () => {},
     onFocus: () => {},
     onBlur: () => {},
+    valueURLCreator: () => {},
+    keyURLCreator: () => {},
     conditions: [CONDITION_HAS, CONDITION_NOT_HAS, CONDITION_ANY, CONDITION_NOT_ANY],
+    projectId: '',
   };
   state = {
     opened: false,
+    attributes: this.props.value.attributes,
   };
 
   componentDidMount() {
@@ -78,12 +75,21 @@ export class InputConditionalTags extends Component {
   onClickConditionItem = (condition) => {
     if (condition.value !== this.props.value.condition) {
       this.setState({ opened: false });
-      this.props.onChange({ value: this.props.value.value, condition: condition.value });
+      this.props.onChange({
+        value: this.props.value.value,
+        condition: condition.value,
+      });
     }
   };
 
   onChangeTags = (tags) => {
-    this.props.onChange({ value: this.parseTags(tags), condition: this.props.value.condition });
+    const newAttributes = [...this.state.attributes, { key: tags.key, value: tags.value }];
+    this.setState({ attributes: newAttributes });
+    this.props.onChange({
+      attributes: newAttributes,
+      value: this.parseTags(Array.of(tags.value || tags.key)),
+      condition: this.props.value.condition,
+    });
   };
 
   setConditionsBlockRef = (conditionsBlock) => {
@@ -99,33 +105,40 @@ export class InputConditionalTags extends Component {
     }
   };
 
+  onRemove = (attributes) => {
+    this.setState({ attributes }, () => this.props.onChange({ attributes: this.state.attributes }));
+  };
+
   parseTags = (options) => options.join(',');
 
   render() {
-    const { intl, value, getURI, placeholder, inputProps } = this.props;
-    const formattedValue = value.value ? value.value.split(',') : [];
-
+    const { value, keyURLCreator, valueURLCreator, projectId } = this.props;
     const inputConditions = this.getConditions();
-    const selectedCondition =
-      value.condition && inputConditions.find((condition) => condition.value === value.condition);
-
     return (
-      <div className={cx('input-conditional-tags', { opened: this.state.opened })}>
-        <AsyncMultipleAutocomplete
-          placeholder={placeholder}
-          beforeSearchPrompt={intl.formatMessage(messages.tagsHint)}
-          minLength={1}
-          getURI={getURI}
-          creatable
-          value={formattedValue}
-          onChange={this.onChangeTags}
-          inputProps={inputProps}
-          customClass={cx('tags')}
-        />
+      <div className={cx('input-conditional-attributes', { opened: this.state.opened })}>
+        <div className={cx('attributes-block')}>
+          <AttributeListField
+            value={value.attributes}
+            showButton={false}
+            editable={false}
+            onChange={this.onRemove}
+            customClass={cx('not-editable')}
+          />
+          <AttributeEditor
+            keyURLCreator={keyURLCreator}
+            valueURLCreator={valueURLCreator}
+            projectId={projectId}
+            onConfirm={this.onChangeTags}
+          />
+        </div>
         <div className={cx('conditions-block')} ref={this.setConditionsBlockRef}>
           <div className={cx('conditions-selector')} onClick={this.onClickConditionBlock}>
             <span className={cx('condition-selected')}>
-              {selectedCondition && selectedCondition.shortLabel}
+              {inputConditions.length &&
+                value &&
+                value.condition &&
+                inputConditions.filter((condition) => condition.value === value.condition)[0]
+                  .shortLabel}
             </span>
             <i className={cx('arrow', { rotated: this.state.opened })} />
           </div>

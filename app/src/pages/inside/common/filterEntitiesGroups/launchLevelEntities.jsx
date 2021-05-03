@@ -189,6 +189,7 @@ export class LaunchLevelEntities extends Component {
     filterValues: {},
     visibleFilters: [],
   };
+
   getStaticEntities = () => {
     const { intl, filterValues, activeProject, visibleFilters } = this.props;
     const attributeKey = (filterValues[ENTITY_ATTRIBUTE_KEYS] || {}).value;
@@ -446,7 +447,6 @@ export class LaunchLevelEntities extends Component {
 
     const entities = this.getStaticEntities().concat(this.getDynamicEntities());
     const lostEntities = this.collectLostEntities(entities);
-
     return render({
       ...rest,
       filterEntities: [...entities, ...lostEntities],

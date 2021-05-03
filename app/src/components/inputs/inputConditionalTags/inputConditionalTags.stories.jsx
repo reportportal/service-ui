@@ -22,35 +22,19 @@ import { host } from 'storybook-host';
 
 // eslint-disable-next-line import/extensions, import/no-unresolved
 import { WithState } from 'storybook-decorators';
+import {
+  CONDITION_CNT,
+  CONDITION_NOT_CNT,
+  CONDITION_EQ,
+  CONDITION_NOT_EQ,
+} from 'components/filterEntities/constants';
 import { InputConditionalTags } from './inputConditionalTags';
 import README from './README.md';
 
-const conditions = [
-  {
-    value: 'cnt',
-    label: 'contains',
-    shortLabel: 'cnt',
-  },
-  {
-    value: '!cnt',
-    label: 'not contains',
-    shortLabel: '!cnt',
-    disabled: true,
-  },
-  {
-    value: 'eq',
-    label: 'equals',
-    shortLabel: 'eq',
-  },
-  {
-    value: '!eq',
-    label: 'not equals',
-    shortLabel: '!eq',
-  },
-];
+const conditions = [CONDITION_CNT, CONDITION_NOT_CNT, CONDITION_EQ, CONDITION_NOT_EQ];
 
 const value = {
-  condition: '!eq',
+  condition: CONDITION_NOT_EQ,
   value: 'some entered value',
 };
 

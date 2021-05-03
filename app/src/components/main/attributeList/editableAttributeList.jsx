@@ -33,6 +33,8 @@ export class EditableAttributeList extends Component {
     valueURLCreator: PropTypes.func,
     maxLength: PropTypes.number,
     customClass: PropTypes.string,
+    showButton: PropTypes.bool,
+    editable: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -44,6 +46,8 @@ export class EditableAttributeList extends Component {
     valueURLCreator: null,
     maxLength: Infinity,
     customClass: '',
+    showButton: true,
+    editable: true,
   };
 
   handleAddNew = () => {
@@ -64,6 +68,8 @@ export class EditableAttributeList extends Component {
       newAttrMessage,
       maxLength,
       customClass,
+      showButton,
+      editable,
     } = this.props;
     return (
       <AttributeList
@@ -77,6 +83,8 @@ export class EditableAttributeList extends Component {
         valueURLCreator={valueURLCreator}
         maxLength={maxLength}
         customClass={customClass}
+        showButton={showButton}
+        editable={editable}
       />
     );
   }
