@@ -44,6 +44,10 @@ const messages = defineMessages({
     id: 'Hamburger.analysis',
     defaultMessage: 'Analysis',
   },
+  createRule: {
+    id: 'Hamburger.createRule',
+    defaultMessage: 'Create at least one rule',
+  },
   patternAnalysis: {
     id: 'Hamburger.patternAnalysis',
     defaultMessage: 'Pattern analysis',
@@ -270,6 +274,7 @@ export class Hamburger extends Component {
             )}
             <HamburgerMenuItem
               text={intl.formatMessage(messages.patternAnalysis)}
+              title={!enabledPatterns.length && intl.formatMessage(messages.createRule)}
               onClick={() => {
                 tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_PATTERN_ANALYSIS_LAUNCH_MENU);
                 customProps.onPatternAnalysis(launch);
