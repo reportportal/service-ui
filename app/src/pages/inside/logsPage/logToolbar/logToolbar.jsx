@@ -110,6 +110,7 @@ export class LogToolbar extends Component {
     restorePath: PropTypes.func,
     parentItem: PropTypes.object,
     activeModal: PropTypes.object,
+    debugMode: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -169,6 +170,7 @@ export class LogToolbar extends Component {
       parentItem,
       includeAllLaunches,
       activeModal,
+      debugMode,
     } = this.props;
     return (
       <div
@@ -186,9 +188,11 @@ export class LogToolbar extends Component {
         <div className={cx('action-buttons')}>
           {logViewMode === DETAILED_LOG_VIEW ? (
             <>
-              <InputCheckbox onChange={this.changeHistoryLineMode} value={includeAllLaunches}>
-                {intl.formatMessage(messages.historyAllLaunchesLabel)}
-              </InputCheckbox>
+              {!debugMode && (
+                <InputCheckbox onChange={this.changeHistoryLineMode} value={includeAllLaunches}>
+                  {intl.formatMessage(messages.historyAllLaunchesLabel)}
+                </InputCheckbox>
+              )}
               <div className={cx('action-button')}>
                 <div className={cx('left-arrow-button')}>
                   <GhostButton
