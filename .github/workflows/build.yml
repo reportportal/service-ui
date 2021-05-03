@@ -65,4 +65,7 @@ jobs:
         run: 'go test ${{ env.GODIRS_NOVENDOR }}'
 
       - name: Go Build
+        env:
+          CGO_ENABLED: 0
+          GOOS: linux
         run: 'go build ${{ env.BUILD_INFO_LDFLAGS }} -o ${{ env.BINARY_DIR }}/service-ui ./'
