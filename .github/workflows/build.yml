@@ -7,6 +7,7 @@ on:
       - '!master'
     paths-ignore:
       - readme.md
+      - README.md
       - CHANGELOG.md
 
   pull_request:
@@ -18,7 +19,7 @@ env:
   UI_BUILD_REACT: 'app/'
   GODIRS_NOVENDOR: '`go list ./... | grep -v /vendor/`'
   PACKAGE_COMMONS: 'github.com/reportportal/commons-go/v5'
-  BUILD_DATE: '`date +%FT%T%z`'
+  BUILD_DATE: '$(date +%FT%T%z)'
   BINARY_DIR: 'bin'
   BUILD_INFO_LDFLAGS: >-
     -ldflags "-extldflags '"-static"'
