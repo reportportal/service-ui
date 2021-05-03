@@ -19,7 +19,6 @@ env:
   UI_BUILD_REACT: 'app/'
   GODIRS_NOVENDOR: '`go list ./... | grep -v /vendor/`'
   PACKAGE_COMMONS: 'github.com/reportportal/commons-go/v5'
-  BUILD_DATE: '$(date +%FT%T%z)'
   BINARY_DIR: 'bin'
   BUILD_INFO_LDFLAGS: >-
     -ldflags "-extldflags '"-static"'
@@ -33,6 +32,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Get Date
+        run: 'echo "BUILD_DATE=`date +%FT%T%z`" >> $GITHUB_ENV'
+
       - uses: actions/checkout@v2
 
       - name: Setup NodeJS
