@@ -131,6 +131,7 @@ export class LogsPage extends Component {
                 onRefresh={this.handleRefresh}
                 logViewMode={logViewMode}
                 parentItem={parentItem}
+                debugMode={debugMode}
               />
               {logViewMode === DETAILED_LOG_VIEW ? (
                 <Fragment>
