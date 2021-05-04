@@ -30,6 +30,10 @@
   font-family: $FONT-REGULAR;
   cursor: pointer;
   outline: none;
+
+  &.hint {
+    display: none;
+  }
 }
 .photo-controls {
   position: relative;
