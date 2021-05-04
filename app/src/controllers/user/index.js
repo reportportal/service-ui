@@ -52,5 +52,6 @@ export {
   photoTimeStampSelector,
   apiTokenValueSelector,
   apiTokenStringSelector,
+  photoIdSelector,
 } from './selectors';
 export { userSagas } from './sagas';

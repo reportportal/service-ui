@@ -23,6 +23,7 @@ export const defaultProjectSelector = (state) => userInfoSelector(state).default
 export const activeProjectSelector = (state) =>
   userSelector(state).activeProject || defaultProjectSelector(state) || '';
 export const userIdSelector = (state) => userInfoSelector(state).userId;
+export const photoIdSelector = (state) => userInfoSelector(state).photoId;
 export const settingsSelector = (state) => userSelector(state).settings || {};
 export const startTimeFormatSelector = (state) =>
   settingsSelector(state).startTimeFormat || START_TIME_FORMAT_RELATIVE;

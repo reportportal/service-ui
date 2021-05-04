@@ -25,7 +25,7 @@ import { URLS } from 'common/urls';
 import { INTERNAL } from 'common/constants/accountType';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { showModalAction } from 'controllers/modal';
-import { setPhotoTimeStampAction } from 'controllers/user';
+import { photoIdSelector, setPhotoTimeStampAction } from 'controllers/user';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './photoControls.scss';
@@ -67,12 +67,18 @@ const messages = defineMessages({
   },
 });
 
-@connect(null, { showNotification, showModalAction, setPhotoTimeStampAction })
+@connect(
+  (state) => ({
+    photoId: photoIdSelector(state),
+  }),
+  { showNotification, showModalAction, setPhotoTimeStampAction },
+)
 @injectIntl
 @track()
 export class PhotoControls extends Component {
   static propTypes = {
     accountType: PropTypes.string,
+    photoId: PropTypes.string,
     uploadNewImage: PropTypes.func,
     removeImage: PropTypes.func,
     intl: PropTypes.object.isRequired,
@@ -94,6 +100,7 @@ export class PhotoControls extends Component {
     newPhotoLoaded: false,
     isValidImage: true,
     image: null,
+    isDefaultImage: !this.props.photoId,
   };
 
   onRemove = () => {
@@ -114,6 +121,7 @@ export class PhotoControls extends Component {
           type: NOTIFICATION_TYPES.SUCCESS,
         });
         this.props.setPhotoTimeStampAction(Date.now());
+        this.setState({ isDefaultImage: false });
       })
       .catch(() => {
         this.props.showNotification({
@@ -162,6 +170,7 @@ export class PhotoControls extends Component {
       .then(() => {
         this.props.removeImage();
         this.props.setPhotoTimeStampAction(Date.now());
+        this.setState({ isDefaultImage: true });
         this.props.showNotification({
           message: this.props.intl.formatMessage(messages.wasDeleted),
           type: NOTIFICATION_TYPES.SUCCESS,
@@ -212,7 +221,10 @@ export class PhotoControls extends Component {
                   </GhostButton>
                 </div>
                 <div className={cx('photo-btn')}>
-                  <button className={cx('remove')} onClick={this.onRemove}>
+                  <button
+                    className={cx('remove', { hint: this.state.isDefaultImage })}
+                    onClick={this.onRemove}
+                  >
                     {intl.formatMessage(messages.removePhoto)}
                   </button>
                 </div>
