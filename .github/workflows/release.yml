@@ -26,7 +26,6 @@ env:
     -X ${PACKAGE_COMMONS}/commons.buildDate=${BUILD_DATE}
     -X ${PACKAGE_COMMONS}/commons.version=${VERSION}"
 
-
 jobs:
   build:
     runs-on: ubuntu-latest
