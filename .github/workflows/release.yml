@@ -62,6 +62,9 @@ jobs:
       - name: Go Tests
         run: 'go test ${{ env.GODIRS_NOVENDOR }}'
 
+      - name: Go Dependencies
+        run: 'go mod download'
+
       - name: Go Build Linux
         env:
           CGO_ENABLED: 0
