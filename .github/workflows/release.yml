@@ -6,10 +6,6 @@ on:
       version:
         description: 'Release version'
         required: true
-      branch:
-        description: 'A branch to release from'
-        required: true
-        default: 'master'
 
 env:
   UI_BUILD_REACT: 'app/'
@@ -35,8 +31,6 @@ jobs:
         run: 'echo "BUILD_DATE=`date +%FT%T%z`" >> $GITHUB_ENV'
 
       - uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.inputs.branch }}
 
       - name: Setup NodeJS
         uses: actions/setup-node@v2
