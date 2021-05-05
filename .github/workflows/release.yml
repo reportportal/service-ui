@@ -70,6 +70,7 @@ jobs:
           CGO_ENABLED: 0
           GOOS: linux
           GOARCH: amd64
+          VERSION: ${{ github.event.inputs.version }}
         run: 'go build ${{ env.BUILD_INFO_LDFLAGS }} -o ${{ env.RELEASE_DIR }}/${{ env.LINUX_ARTIFACT_NAME }} ./'
 
       - name: Go Build Windows
@@ -77,6 +78,7 @@ jobs:
           CGO_ENABLED: 0
           GOOS: windows
           GOARCH: amd64
+          VERSION: ${{ github.event.inputs.version }}
         run: 'go build ${{ env.BUILD_INFO_LDFLAGS }} -o ${{ env.RELEASE_DIR }}/${{ env.WINDOWS_ARTIFACT_NAME }} ./'
 
       - name: Setup git credentials
@@ -126,7 +128,7 @@ jobs:
           asset_content_type: application/octet-stream
 
       - name: UI assets compress
-        run: 'cd ${{ env.UI_BUILD_REACT }}build && tar -czvf "${GITHUB_WORKSPACE}/${{ env.RELEASE_DIR }}/${{ env.UI_ARTIFACT_NAME }}" ./'
+        run: 'cd ${{ env.UI_BUILD_REACT }}build && tar -czvf "${{ github.workspace }}/${{ env.RELEASE_DIR }}/${{ env.UI_ARTIFACT_NAME }}" ./'
 
       - name: Upload UI Asset
         id: upload-ui-asset
@@ -135,6 +137,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.createRelease.outputs.upload_url }}
-          asset_path: "${GITHUB_WORKSPACE}/${{ env.RELEASE_DIR }}/${{ env.UI_ARTIFACT_NAME }}"
+          asset_path: "${{ github.workspace }}/${{ env.RELEASE_DIR }}/${{ env.UI_ARTIFACT_NAME }}"
           asset_name: ${{ env.UI_ARTIFACT_NAME }}
           asset_content_type: application/gzip
