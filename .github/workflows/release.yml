@@ -1,0 +1,137 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version'
+        required: true
+      branch:
+        description: 'A branch to release from'
+        required: true
+        default: 'master'
+
+env:
+  UI_BUILD_REACT: 'app/'
+  GODIRS_NOVENDOR: '`go list ./... | grep -v /vendor/`'
+  PACKAGE_COMMONS: 'github.com/reportportal/commons-go/v5'
+  RELEASE_DIR: 'release'
+  LINUX_ARTIFACT_NAME: 'service-ui_linux_amd64'
+  WINDOWS_ARTIFACT_NAME: 'service-ui_win_amd64.exe'
+  UI_ARTIFACT_NAME: 'ui.tar.gz'
+  BUILD_INFO_LDFLAGS: >-
+    -ldflags "-extldflags '"-static"'
+    -X ${PACKAGE_COMMONS}/commons.repo=${GITHUB_REPOSITORY}
+    -X ${PACKAGE_COMMONS}/commons.branch=${GITHUB_SHA}
+    -X ${PACKAGE_COMMONS}/commons.buildDate=${BUILD_DATE}
+    -X ${PACKAGE_COMMONS}/commons.version=${VERSION}"
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get Date
+        run: 'echo "BUILD_DATE=`date +%FT%T%z`" >> $GITHUB_ENV'
+
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v2
+        with:
+          node-version: '10.13.0'
+
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: '^1.14.1'
+
+      - name: JS Build
+        env:
+          NODE_OPTIONS: '--max_old_space_size=4096'
+
+        run: |
+          npm --prefix ${{ env.UI_BUILD_REACT }} ci
+          npm --prefix ${{ env.UI_BUILD_REACT }} run lint
+          npm --prefix ${{ env.UI_BUILD_REACT }} run test:coverage
+          npm --prefix ${{ env.UI_BUILD_REACT }} run build
+
+      - name: Go Linter
+        uses: golangci/golangci-lint-action@v2
+        with:
+          version: v1.36.0
+          skip-go-installation: true
+          args: '--deadline 10m'
+
+      - name: Go Tests
+        run: 'go test ${{ env.GODIRS_NOVENDOR }}'
+
+      - name: Go Build Linux
+        env:
+          CGO_ENABLED: 0
+          GOOS: linux
+          GOARCH: amd64
+        run: 'go build ${{ env.BUILD_INFO_LDFLAGS }} -o ${{ env.RELEASE_DIR }}/${{ env.LINUX_ARTIFACT_NAME }} ./'
+
+      - name: Go Build Windows
+        env:
+          CGO_ENABLED: 0
+          GOOS: windows
+          GOARCH: amd64
+        run: 'go build ${{ env.BUILD_INFO_LDFLAGS }} -o ${{ env.RELEASE_DIR }}/${{ env.WINDOWS_ARTIFACT_NAME }} ./'
+
+      - name: Tag release
+        id: tagRelease
+        run: |
+          git tag -a v${{ github.event.inputs.version }} -m 'Release ${{ github.event.inputs.version }}'
+          git push --tags
+
+      - name: Create Release
+        id: createRelease
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.event.inputs.version }}
+          release_name: Release ${{ github.event.inputs.version }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Linix Binary Asset
+        id: upload-linux-binary-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ env.RELEASE_DIR }}/${{ env.LINUX_ARTIFACT_NAME }}
+          asset_name: ${{ env.LINUX_ARTIFACT_NAME }}
+          asset_content_type: application/octet-stream
+
+      - name: Upload Windows Binary Asset
+        id: upload-windows-binary-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ env.RELEASE_DIR }}/${{ env.WINDOWS_ARTIFACT_NAME }}
+          asset_name: ${{ env.WINDOWS_ARTIFACT_NAME }}
+          asset_content_type: application/octet-stream
+
+      - name: UI assets compress
+        run: 'cd ${{ env.UI_BUILD_REACT }}/build && tar -czvf "${{ env.GITHUB_WORKSPACE }}/${{ env.RELEASE_DIR }}/${{ env.UI_ARTIFACT_NAME }}" ./'
+
+      - name: Upload UI Asset
+        id: upload-ui-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: "${{ env.GITHUB_WORKSPACE }}/${{ env.RELEASE_DIR }}/${{ env.UI_ARTIFACT_NAME }}"
+          asset_name: ${{ env.UI_ARTIFACT_NAME }}
+          asset_content_type: application/gzip
