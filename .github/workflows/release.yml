@@ -79,6 +79,13 @@ jobs:
           GOARCH: amd64
         run: 'go build ${{ env.BUILD_INFO_LDFLAGS }} -o ${{ env.RELEASE_DIR }}/${{ env.WINDOWS_ARTIFACT_NAME }} ./'
 
+      - name: Setup git credentials
+        uses: oleksiyrudenko/gha-git-credentials@v2
+        with:
+          name: 'reportportal.io'
+          email: 'support@reportportal.io'
+          token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Tag release
         id: tagRelease
         run: |
