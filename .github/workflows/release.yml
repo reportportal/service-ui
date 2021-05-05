@@ -71,7 +71,9 @@ jobs:
           GOOS: linux
           GOARCH: amd64
           VERSION: ${{ github.event.inputs.version }}
-        run: 'go build ${{ env.BUILD_INFO_LDFLAGS }} -o ${{ env.RELEASE_DIR }}/${{ env.LINUX_ARTIFACT_NAME }} ./'
+        run: |
+          go build ${{ env.BUILD_INFO_LDFLAGS }} -o ${{ env.RELEASE_DIR }}/${{ env.LINUX_ARTIFACT_NAME }} ./
+          file ${{ env.RELEASE_DIR }}/${{ env.LINUX_ARTIFACT_NAME }}
 
       - name: Go Build Windows
         env:
@@ -79,7 +81,9 @@ jobs:
           GOOS: windows
           GOARCH: amd64
           VERSION: ${{ github.event.inputs.version }}
-        run: 'go build ${{ env.BUILD_INFO_LDFLAGS }} -o ${{ env.RELEASE_DIR }}/${{ env.WINDOWS_ARTIFACT_NAME }} ./'
+        run: |
+          go build ${{ env.BUILD_INFO_LDFLAGS }} -o ${{ env.RELEASE_DIR }}/${{ env.WINDOWS_ARTIFACT_NAME }} ./
+          file ${{ env.RELEASE_DIR }}/${{ env.WINDOWS_ARTIFACT_NAME }}
 
       - name: Setup git credentials
         uses: oleksiyrudenko/gha-git-credentials@v2
@@ -140,3 +144,16 @@ jobs:
           asset_path: "${{ github.workspace }}/${{ env.RELEASE_DIR }}/${{ env.UI_ARTIFACT_NAME }}"
           asset_name: ${{ env.UI_ARTIFACT_NAME }}
           asset_content_type: application/gzip
+
+      - name: Bump version
+        uses: HardNorth/github-version-generate@v1.1.0
+        with:
+          version: ${{ github.event.inputs.version }}-SNAPSHOT
+          next-version-increment-patch: true
+
+      - name: Commit version
+        run: |
+          echo ${{  env.NEXT_VERSION  }} > ${{ github.workspace }}/VERSION
+          git add ${{ github.workspace }}/VERSION
+          git commit -m 'Bump new snapshot version'
+          git push
