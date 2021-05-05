@@ -134,7 +134,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          upload_url: ${{ steps.createRelease.outputs.upload_url }}
           asset_path: "${GITHUB_WORKSPACE}/${{ env.RELEASE_DIR }}/${{ env.UI_ARTIFACT_NAME }}"
           asset_name: ${{ env.UI_ARTIFACT_NAME }}
           asset_content_type: application/gzip
