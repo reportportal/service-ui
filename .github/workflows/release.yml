@@ -126,7 +126,7 @@ jobs:
           asset_content_type: application/octet-stream
 
       - name: UI assets compress
-        run: 'cd ${{ env.UI_BUILD_REACT }}/build && tar -czvf "${{ env.GITHUB_WORKSPACE }}/${{ env.RELEASE_DIR }}/${{ env.UI_ARTIFACT_NAME }}" ./'
+        run: 'cd ${{ env.UI_BUILD_REACT }}build && tar -czvf "${GITHUB_WORKSPACE}/${{ env.RELEASE_DIR }}/${{ env.UI_ARTIFACT_NAME }}" ./'
 
       - name: Upload UI Asset
         id: upload-ui-asset
@@ -135,6 +135,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: "${{ env.GITHUB_WORKSPACE }}/${{ env.RELEASE_DIR }}/${{ env.UI_ARTIFACT_NAME }}"
+          asset_path: "${GITHUB_WORKSPACE}/${{ env.RELEASE_DIR }}/${{ env.UI_ARTIFACT_NAME }}"
           asset_name: ${{ env.UI_ARTIFACT_NAME }}
           asset_content_type: application/gzip
