@@ -88,6 +88,9 @@ jobs:
           go build ${{ env.BUILD_INFO_LDFLAGS }} -o ${{ env.RELEASE_DIR }}/${{ env.WINDOWS_ARTIFACT_NAME }} ./
           file ${{ env.RELEASE_DIR }}/${{ env.WINDOWS_ARTIFACT_NAME }}
 
+      - name: UI assets compress
+        run: 'cd ${{ env.UI_BUILD_REACT }}build && tar -czvf "${{ github.workspace }}/${{ env.RELEASE_DIR }}/${{ env.UI_ARTIFACT_NAME }}" ./'
+
       - name: Setup git credentials
         uses: oleksiyrudenko/gha-git-credentials@v2
         with:
@@ -142,9 +145,6 @@ jobs:
           asset_path: ${{ env.RELEASE_DIR }}/${{ env.WINDOWS_ARTIFACT_NAME }}
           asset_name: ${{ env.WINDOWS_ARTIFACT_NAME }}
           asset_content_type: application/octet-stream
-
-      - name: UI assets compress
-        run: 'cd ${{ env.UI_BUILD_REACT }}build && tar -czvf "${{ github.workspace }}/${{ env.RELEASE_DIR }}/${{ env.UI_ARTIFACT_NAME }}" ./'
 
       - name: Upload UI Asset
         id: upload-ui-asset
