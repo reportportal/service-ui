@@ -15,6 +15,9 @@ env:
   LINUX_ARTIFACT_NAME: 'service-ui_linux_amd64'
   WINDOWS_ARTIFACT_NAME: 'service-ui_win_amd64.exe'
   UI_ARTIFACT_NAME: 'ui.tar.gz'
+  VERSION_PLACEHOLDER: '{{.version}}'
+  DOCKER_TEMPLATE_FILE: 'docker/DockerfileTmpl'
+  DOCKER_BUILD_FILE: 'Dockerfile'
   BUILD_INFO_LDFLAGS: >-
     -ldflags "-extldflags '"-static"'
     -X ${PACKAGE_COMMONS}/commons.repo=${GITHUB_REPOSITORY}
@@ -144,6 +147,13 @@ jobs:
           asset_path: "${{ github.workspace }}/${{ env.RELEASE_DIR }}/${{ env.UI_ARTIFACT_NAME }}"
           asset_name: ${{ env.UI_ARTIFACT_NAME }}
           asset_content_type: application/gzip
+
+      - name: Update Dockerfile
+        id: dockerfileUpdate
+        run: |
+          sed 's/${{env.VERSION_PLACEHOLDER}}/${{env.RELEASE_VERSION}}/g' ${{env.DOCKER_TEMPLATE_FILE}} > ${{env.DOCKER_BUILD_FILE}}
+          git add ${{env.DOCKER_BUILD_FILE}}
+          git commit -m "Dockerfile update"
 
       - name: Bump version
         uses: HardNorth/github-version-generate@v1.1.0
