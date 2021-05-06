@@ -153,7 +153,8 @@ jobs:
         run: |
           sed 's/${{ env.VERSION_PLACEHOLDER }}/${{ github.event.inputs.version }}/g' ${{ env.DOCKER_TEMPLATE_FILE }} > ${{ env.DOCKER_BUILD_FILE }}
           git add ${{ env.DOCKER_BUILD_FILE }}
-          git commit -m "Dockerfile update"
+          export CHANGED=`git status | grep ${{ env.DOCKER_BUILD_FILE }} | xargs`
+          [ -z "${CHANGED}" ] || git commit -m "Dockerfile update"
 
       - name: Bump version
         uses: HardNorth/github-version-generate@v1.1.0
