@@ -163,14 +163,16 @@ export class GeneralTab extends Component {
     return retention === null || retention > value || retention === 0 ? value : retention;
   };
 
-  getRetentionOptions = (newOptions = this.retentionOptions) => {
+  getRetentionOptions = () => {
     const { retention, lang } = this.props;
 
     if (!retention || retention === 0) {
-      return newOptions;
+      return this.retentionOptions;
     }
 
-    const options = newOptions.filter((option) => option.value <= retention && option.value !== 0);
+    const options = this.retentionOptions.filter(
+      (option) => option.value <= retention && option.value !== 0,
+    );
 
     if ((options.length && options[options.length - 1].value !== retention) || !options.length) {
       options.push({ label: secondsToDays(retention, lang), value: retention });
@@ -189,7 +191,7 @@ export class GeneralTab extends Component {
 
   formatRetention = this.createValueFormatter(this.getRetentionOptions());
 
-  getLaunchesOptions = () => {
+  formatInputValues = () => {
     const { formValues } = this.props;
     if (!formValues) {
       return [];
@@ -200,63 +202,48 @@ export class GeneralTab extends Component {
     });
     const mapValues = new Map(arrValues);
     const inputValues = Object.fromEntries(mapValues);
-    const newOptions = this.retentionOptions.map((elem) => {
+    return inputValues;
+  };
+
+  getLaunchesOptions = () => {
+    const inputValues = this.formatInputValues();
+    const options = this.getRetentionOptions();
+    const newOptions = options.map((elem) => {
       const disabled =
         elem.value !== 0 &&
         (elem.value < inputValues.keepLogs || elem.value < inputValues.keepScreenshots);
       return { ...elem, disabled };
     });
-    const options = this.getRetentionOptions(newOptions);
-    return options;
+    return newOptions;
   };
 
   getLogOptions = () => {
-    const { formValues } = this.props;
-    if (!formValues) {
-      return [];
-    }
-    const arrValues = Object.entries(formValues).map((elem) => {
-      const [key, value] = elem;
-      return value === 0 ? [key, Infinity] : elem;
-    });
-    const mapValues = new Map(arrValues);
-    const inputValues = Object.fromEntries(mapValues);
-    const newOptions = this.retentionOptions.map((elem) => {
-      const condition =
+    const inputValues = this.formatInputValues();
+    const options = this.getRetentionOptions();
+    const newOptions = options.map((elem) => {
+      const disabled =
         elem.value === 0
-          ? elem.value !== inputValues.keepLaunches
-          : elem.value > inputValues.keepLaunches || elem.value < inputValues.keepScreenshots;
-      const disabled = inputValues.keepLaunches === Infinity ? false : condition;
-      return { ...elem, disabled };
+          ? inputValues.keepLaunches !== Infinity
+          : elem.value < inputValues.keepScreenshots;
+      const hidden =
+        elem.value === 0
+          ? inputValues.keepLaunches !== Infinity
+          : elem.value > inputValues.keepLaunches;
+      return { ...elem, disabled, hidden };
     });
-    const options = this.getRetentionOptions(newOptions);
-    return options;
+    return newOptions;
   };
 
   getScreenshotsOptions = () => {
-    const { formValues } = this.props;
-    if (!formValues) {
-      return [];
-    }
-    const arrValues = Object.entries(formValues).map((elem) => {
-      const [key, value] = elem;
-      return value === 0 ? [key, Infinity] : elem;
+    const inputValues = this.formatInputValues();
+    const options = this.getRetentionOptions();
+    const newOptions = options.map((elem) => {
+      const isHidden =
+        elem.value === 0 ? elem.value !== inputValues.keepLogs : elem.value > inputValues.keepLogs;
+      const hidden = inputValues.keepLogs === Infinity ? false : isHidden;
+      return { ...elem, hidden };
     });
-    const mapValues = new Map(arrValues);
-    const inputValues = Object.fromEntries(mapValues);
-    const newOptions = this.retentionOptions.map((elem) => {
-      const condition =
-        elem.value === 0
-          ? elem.value !== inputValues.keepLaunches && elem.value !== inputValues.keepLogs
-          : elem.value > inputValues.keepLaunches || elem.value > inputValues.keepLogs;
-      const disabled =
-        inputValues.keepLaunches === Infinity && inputValues.keepLogs === Infinity
-          ? false
-          : condition;
-      return { ...elem, disabled };
-    });
-    const options = this.getRetentionOptions(newOptions);
-    return options;
+    return newOptions;
   };
 
   formatInterruptJobTimes = this.createValueFormatter(this.interruptJobTime);
