@@ -55,6 +55,9 @@ jobs:
           npm --prefix ${{ env.UI_BUILD_REACT }} run test:coverage
           npm --prefix ${{ env.UI_BUILD_REACT }} run build
 
+      - name: UI assets compress
+        run: 'cd ${{ env.UI_BUILD_REACT }}build && tar -czvf "${{ github.workspace }}/${{ env.RELEASE_DIR }}/${{ env.UI_ARTIFACT_NAME }}" ./'
+
       - name: Go Linter
         uses: golangci/golangci-lint-action@v2
         with:
@@ -87,9 +90,6 @@ jobs:
         run: |
           go build ${{ env.BUILD_INFO_LDFLAGS }} -o ${{ env.RELEASE_DIR }}/${{ env.WINDOWS_ARTIFACT_NAME }} ./
           file ${{ env.RELEASE_DIR }}/${{ env.WINDOWS_ARTIFACT_NAME }}
-
-      - name: UI assets compress
-        run: 'cd ${{ env.UI_BUILD_REACT }}build && tar -czvf "${{ github.workspace }}/${{ env.RELEASE_DIR }}/${{ env.UI_ARTIFACT_NAME }}" ./'
 
       - name: Setup git credentials
         uses: oleksiyrudenko/gha-git-credentials@v2
