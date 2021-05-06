@@ -165,5 +165,6 @@ jobs:
         run: |
           echo ${{  env.NEXT_VERSION  }} > ${{ github.workspace }}/VERSION
           git add ${{ github.workspace }}/VERSION
-          git commit -m 'Bump new snapshot version'
+          export CHANGED=`git status | grep VERSION | xargs`
+          [ -z "${CHANGED}" ] || git commit -m 'Bump new snapshot version'
           git push
