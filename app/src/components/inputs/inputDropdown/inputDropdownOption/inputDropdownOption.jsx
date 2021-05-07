@@ -27,6 +27,7 @@ export const DropdownOption = ({
   multiple,
   label,
   disabled,
+  hidden,
   selected,
   subOption,
   onChange,
@@ -72,6 +73,7 @@ export const DropdownOption = ({
       className={cx('dropdown-option', {
         selected: !multiple && selected,
         disabled,
+        hidden,
         'sub-option': subOption,
       })}
     >
@@ -85,6 +87,7 @@ DropdownOption.propTypes = {
   multiple: PropTypes.bool,
   label: PropTypes.node,
   disabled: PropTypes.bool,
+  hidden: PropTypes.bool,
   subOption: PropTypes.bool,
   selected: PropTypes.bool,
   independentSelection: PropTypes.bool,
@@ -96,6 +99,7 @@ DropdownOption.defaultProps = {
   multiple: false,
   label: '',
   disabled: false,
+  hidden: false,
   subOption: false,
   selected: false,
   independentSelection: false,

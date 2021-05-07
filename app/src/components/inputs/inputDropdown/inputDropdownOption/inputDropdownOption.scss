@@ -42,6 +42,9 @@
   &.sub-option {
     padding-left: 40px;
   }
+  &.hidden {
+    display: none;
+  }
 }
 .option-label {
   white-space: nowrap;

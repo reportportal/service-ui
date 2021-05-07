@@ -187,6 +187,7 @@ export class InputDropdown extends Component {
           key={option.value}
           value={option.value}
           disabled={option.disabled}
+          hidden={option.hidden}
           selected={selected}
           label={option.label}
           multiple={multiple}
