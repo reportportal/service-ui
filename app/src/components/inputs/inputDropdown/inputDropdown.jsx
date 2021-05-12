@@ -190,6 +190,7 @@ export class InputDropdown extends Component {
           hidden={option.hidden}
           selected={selected}
           label={option.label}
+          title={option.title}
           multiple={multiple}
           independentSelection={independentGroupSelection}
           subOption={!!option.groupRef}

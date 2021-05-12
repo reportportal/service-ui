@@ -33,6 +33,7 @@ export const DropdownOption = ({
   onChange,
   value,
   independentSelection,
+  title,
 }) => {
   const onChangeHandler = () => {
     onChange && onChange(value);
@@ -76,6 +77,7 @@ export const DropdownOption = ({
         hidden,
         'sub-option': subOption,
       })}
+      title={disabled && title}
     >
       {renderOptionComponent()}
     </div>
@@ -92,6 +94,7 @@ DropdownOption.propTypes = {
   selected: PropTypes.bool,
   independentSelection: PropTypes.bool,
   onChange: PropTypes.func,
+  title: PropTypes.string,
 };
 
 DropdownOption.defaultProps = {
@@ -104,4 +107,5 @@ DropdownOption.defaultProps = {
   selected: false,
   independentSelection: false,
   onChange: () => {},
+  title: '',
 };
