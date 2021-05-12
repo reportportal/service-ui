@@ -42,10 +42,18 @@ export const Messages = defineMessages({
     defaultMessage:
       'How long to keep old launches. A launch and all it descendants (suites, tests, steps, logs) will be deleted. Launch will be deleted from filters and widgets.',
   },
+  keepLaunchesTooltip: {
+    id: 'GeneralTab.keepLaunchesTooltip',
+    defaultMessage: 'Not possible to select value less than for "Keep logs" or "Keep attachments"',
+  },
   keepLogsDescription: {
     id: 'GeneralTab.keepLogsDescription',
     defaultMessage:
       'How long to keep old logs in launches. Related launches structure will be saved, in order to keep statistics',
+  },
+  keepLogsTooltip: {
+    id: 'GeneralTab.keepLogsTooltip',
+    defaultMessage: 'Not possible to select value less than for "Keep attachments"',
   },
   keepScreenshots: {
     id: 'GeneralTab.keepScreenshots',
