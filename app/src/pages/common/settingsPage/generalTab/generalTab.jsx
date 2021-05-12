@@ -212,7 +212,11 @@ export class GeneralTab extends Component {
       const disabled =
         elem.value !== 0 &&
         (elem.value < inputValues.keepLogs || elem.value < inputValues.keepScreenshots);
-      return { ...elem, disabled };
+      return {
+        ...elem,
+        disabled,
+        title: this.props.intl.formatMessage(Messages.keepLaunchesTooltip),
+      };
     });
     return newOptions;
   };
@@ -229,7 +233,12 @@ export class GeneralTab extends Component {
         elem.value === 0
           ? inputValues.keepLaunches !== Infinity
           : elem.value > inputValues.keepLaunches;
-      return { ...elem, disabled, hidden };
+      return {
+        ...elem,
+        disabled,
+        hidden,
+        title: this.props.intl.formatMessage(Messages.keepLogsTooltip),
+      };
     });
     return newOptions;
   };
