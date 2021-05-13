@@ -68,9 +68,11 @@ func configureRouter(srv *server.RpServer, rpConf struct {
 			"worker-src":     {"'self'", "blob:"},
 			"font-src":       {"'self'", "data:", "fonts.googleapis.com", "fonts.gstatic.com", "*.rawgit.com"},
 			"style-src-elem": {"'self'", "data:", "'unsafe-inline'", "*.googleapis.com", "*.rawgit.com"},
+			"style-src":      {"'self'", "'unsafe-inline'", "https://tagmanager.google.com"},
 			"media-src":      {"'self'", "*.saucelabs.com", "blob:"},
-			"img-src":        {"*", "'self'", "data:", "blob:"},
+			"img-src":        {"*", "'self'", "'unsafe-inline'", "data:", "blob:", "http:", "https:", "www.google-analytics.com"},
 			"object-src":     {"'self'"},
+			"connect-src":    {"'self'", "https://www.google-analytics.com", "https://stats.g.doubleclick.net"},
 		}
 		// apply content security policies
 		var STSSeconds int64 = 315360000
