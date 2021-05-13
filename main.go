@@ -71,7 +71,7 @@ func configureRouter(srv *server.RpServer, rpConf struct {
 			"media-src":      {"'self'", "*.saucelabs.com", "blob:"},
 			"img-src":        {"*", "'self'", "data:", "blob:"},
 			"object-src":     {"'self'"},
-			"connect-src":    {"'self'", "'unsafe-inline'", "www.google-analytics.com", "www.stats.g.doubleclick.net"},
+			"connect-src":    {"'self'", "'unsafe-inline'", "www.google-analytics.com", "stats.g.doubleclick.net"},
 		}
 		// apply content security policies
 		var STSSeconds int64 = 315360000
