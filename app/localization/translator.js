@@ -31,14 +31,14 @@ const ESCAPED_CHARS = {
   '}': '\\}',
 };
 
-const ESAPE_CHARS_REGEXP = /\\#|[{}\\]/g;
+const ESCAPE_CHARS_REGEXP = /\\#|[{}\\]/g;
 
 export default function printICUMessage(ast) {
   return ast.elements.reduce((message, el) => {
     const { format, id, type, value } = el;
 
     if (type === 'messageTextElement') {
-      return message + value.replace(ESAPE_CHARS_REGEXP, char => ESCAPED_CHARS[char]);
+      return message + value.replace(ESCAPE_CHARS_REGEXP, char => ESCAPED_CHARS[char]);
     }
 
     if (!format) {
