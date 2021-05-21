@@ -23,6 +23,9 @@
 .post-issue-form {
   margin-bottom: 10px;
   box-sizing: border-box;
+  &.dark-view {
+    max-width: 600px;
+  }
 }
 
 .no-default-properties-message {
@@ -57,6 +60,9 @@
   color: $COLOR--charcoal-grey;
   font-size: 13px;
   font-family: $FONT-REGULAR;
+  &.dark-view {
+    color: $COLOR--dirty-gray;
+  }
 }
 
 .form-block-header {
@@ -67,6 +73,9 @@
   margin-bottom: 20px;
   padding: 10px;
   background-color: $COLOR--white-four;
+  &.dark-view {
+    background-color: transparent;
+  }
 }
 
 .header-text {
@@ -76,6 +85,9 @@
   color: $COLOR--gray-47;
   font-family: $FONT-SEMIBOLD;
   text-transform: uppercase;
+  &.dark-view {
+    color: $COLOR--dirty-gray;
+  }
 }
 
 .credentials-block {

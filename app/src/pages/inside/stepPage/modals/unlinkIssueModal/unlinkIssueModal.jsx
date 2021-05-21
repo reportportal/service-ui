@@ -29,11 +29,18 @@ import {
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
+import { DarkModalLayout } from 'components/main/modal/darkModalLayout';
+import { GhostButton } from 'components/buttons/ghostButton';
+import { hideModalAction } from 'controllers/modal';
 
 const messages = defineMessages({
   unlinkButton: {
     id: 'UnlinkIssueModal.unlinkButton',
     defaultMessage: 'Unlink',
+  },
+  unlinkIssue: {
+    id: 'UnlinkIssueModal.unlinkIssue',
+    defaultMessage: 'Unlink Issue',
   },
   title: {
     id: 'UnlinkIssueModal.title',
@@ -47,6 +54,14 @@ const messages = defineMessages({
     id: 'UnlinkIssueModal.unlinkSuccessMessage',
     defaultMessage: 'Completed successfully!',
   },
+  unlinkIssueForTheTest: {
+    id: 'UnlinkIssueModal.unlinkIssueForTheTest',
+    defaultMessage: 'Unlink Issue for the test {launchNumber}',
+  },
+  cancel: {
+    id: 'UnlinkIssueModal.cancel',
+    defaultMessage: 'Cancel',
+  },
 });
 
 @withModal('unlinkIssueModal')
@@ -58,6 +73,7 @@ const messages = defineMessages({
   }),
   {
     showNotification,
+    hideModalAction,
   },
 )
 export class UnlinkIssueModal extends Component {
@@ -74,6 +90,8 @@ export class UnlinkIssueModal extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    darkView: PropTypes.bool,
+    hideModalAction: PropTypes.func,
   };
 
   onUnlink = (closeModal) => {
@@ -106,7 +124,7 @@ export class UnlinkIssueModal extends Component {
     })
       .then(() => {
         fetchFunc();
-        closeModal();
+        this.props.darkView ? this.props.hideModalAction() : closeModal();
         this.props.showNotification({
           message: intl.formatMessage(messages.unlinkSuccessMessage),
           type: NOTIFICATION_TYPES.SUCCESS,
@@ -114,11 +132,44 @@ export class UnlinkIssueModal extends Component {
       })
       .catch(showDefaultErrorNotification);
   };
+  renderIssueFormHeaderElements = () => {
+    const {
+      intl: { formatMessage },
+    } = this.props;
+    return (
+      <>
+        <GhostButton
+          onClick={() => this.props.hideModalAction()}
+          disabled={false}
+          transparentBorder
+          transparentBackground
+          appearance="topaz"
+        >
+          {formatMessage(messages.cancel)}
+        </GhostButton>
+        <GhostButton onClick={this.onUnlink} disabled={false} color="''" appearance="topaz">
+          {formatMessage(messages.unlinkIssue)}
+        </GhostButton>
+      </>
+    );
+  };
+  renderTitle = (collapsedRightSection) => {
+    const {
+      data: { items },
+      intl: { formatMessage },
+    } = this.props;
+    return collapsedRightSection
+      ? formatMessage(messages.unlinkIssueForTheTest, {
+          launchNumber: items.launchNumber && `#${items.launchNumber}`,
+        })
+      : formatMessage(messages.unlinkIssue);
+  };
 
   render() {
     const {
       intl,
       data: { eventsInfo = {} },
+      darkView,
     } = this.props;
     const okButton = {
       text: intl.formatMessage(messages.unlinkButton),
@@ -129,7 +180,18 @@ export class UnlinkIssueModal extends Component {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
       eventInfo: eventsInfo.cancelBtn,
     };
-    return (
+    return darkView ? (
+      <DarkModalLayout
+        renderHeaderElements={this.renderIssueFormHeaderElements}
+        renderTitle={this.renderTitle}
+      >
+        {() => (
+          <p style={{ color: '#ffffff' }}>
+            {intl.formatMessage(messages.unlinkModalConfirmationText)}
+          </p>
+        )}
+      </DarkModalLayout>
+    ) : (
       <ModalLayout
         title={intl.formatMessage(messages.title)}
         okButton={okButton}

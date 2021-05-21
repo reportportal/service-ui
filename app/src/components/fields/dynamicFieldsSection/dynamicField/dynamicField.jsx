@@ -29,6 +29,7 @@ export const DynamicField = ({
   customFieldWrapper: FieldWrapper,
   withValidation,
   children,
+  darkView,
   ...rest
 }) => {
   const fieldChildren = withValidation ? <FieldErrorHint>{children}</FieldErrorHint> : children;
@@ -48,7 +49,7 @@ export const DynamicField = ({
       {...fieldCommonProps}
       fieldWrapperClassName={cx('field-wrapper')}
       containerClassName={cx('form-field-item')}
-      labelClassName={cx('form-group-label')}
+      labelClassName={cx('form-group-label', { 'dark-view': darkView })}
     >
       {fieldChildren}
     </FormField>
@@ -61,6 +62,7 @@ DynamicField.propTypes = {
   customFieldWrapper: PropTypes.func,
   withValidation: PropTypes.bool,
   children: PropTypes.any,
+  darkView: PropTypes.bool,
 };
 
 DynamicField.defaultProps = {
@@ -69,4 +71,5 @@ DynamicField.defaultProps = {
   customFieldWrapper: null,
   withValidation: false,
   children: null,
+  darkView: false,
 };

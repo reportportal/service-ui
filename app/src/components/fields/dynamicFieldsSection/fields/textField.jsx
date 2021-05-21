@@ -22,6 +22,7 @@ import { DynamicField } from '../dynamicField';
 export class TextField extends Component {
   static propTypes = {
     field: PropTypes.object.isRequired,
+    darkView: PropTypes.bool,
   };
 
   formatInputValue = (value) => value && value[0];
@@ -29,7 +30,7 @@ export class TextField extends Component {
   parseInputValue = (value) => (value ? [value] : []);
 
   render() {
-    const { field, ...rest } = this.props;
+    const { field, darkView, ...rest } = this.props;
     return (
       <DynamicField
         field={field}
@@ -37,7 +38,7 @@ export class TextField extends Component {
         parse={this.parseInputValue}
         {...rest}
       >
-        <Input mobileDisabled />
+        <Input className={darkView && 'dark-view'} mobileDisabled />
       </DynamicField>
     );
   }

@@ -30,6 +30,12 @@
   font-size: 13px;
   font-family: $FONT-REGULAR;
   text-align: right;
+  &.dark-view {
+    min-width: 140px;
+    padding-right: 36px;
+    text-align: left;
+    color: $COLOR--dirty-gray;
+  }
   @media (max-width: $SCREEN_XS_MAX) {
     width: 100%;
     margin-bottom: 8px;
