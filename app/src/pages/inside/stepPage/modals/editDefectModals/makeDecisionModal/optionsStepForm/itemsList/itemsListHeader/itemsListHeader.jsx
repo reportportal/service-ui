@@ -20,7 +20,7 @@ import { useIntl } from 'react-intl';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import classNames from 'classnames/bind';
-import { messages } from './../../../../messages';
+import { messages } from '../../../../messages';
 import { ALL_LOADED_TI_FROM_HISTORY_LINE } from '../../../../constants';
 import styles from './itemsListHeader.scss';
 
@@ -34,6 +34,8 @@ export const ItemsListHeader = ({
   showErrorLogs,
   onShowErrorLogsChange,
   optionValue,
+  isShownLess,
+  isBulkOperation,
 }) => {
   const { formatMessage } = useIntl();
   const [isAllSelected, setIsAllSelected] = useState(selectedItems.length === testItems.length);
@@ -41,12 +43,19 @@ export const ItemsListHeader = ({
     setIsAllSelected(selectedItems.length === testItems.length);
   }, [selectedItems]);
 
+  const setSelectedItems = () => {
+    if (isAllSelected) {
+      return isBulkOperation ? [] : testItems.slice(0, 1);
+    } else {
+      return testItems;
+    }
+  };
   const onCheckboxChange = () => {
     if (testItems.length === 1) {
       return;
     }
     setModalState({
-      selectedItems: isAllSelected ? testItems.slice(0, 1) : testItems,
+      selectedItems: setSelectedItems(),
     });
   };
 
@@ -62,7 +71,7 @@ export const ItemsListHeader = ({
       </InputCheckbox>
       {optionValue !== ALL_LOADED_TI_FROM_HISTORY_LINE && (
         <InputSwitcher
-          className={cx('switcher')}
+          className={cx('switcher', { 'shown-less': isShownLess })}
           childrenClassName={cx('switcher-children')}
           value={showErrorLogs}
           onChange={onShowErrorLogsChange}
@@ -84,6 +93,8 @@ ItemsListHeader.propTypes = {
   showErrorLogs: PropTypes.bool,
   onShowErrorLogsChange: PropTypes.func,
   optionValue: PropTypes.string,
+  isBulkOperation: PropTypes.bool,
+  isShownLess: PropTypes.bool,
 };
 ItemsListHeader.defaultProps = {
   setModalState: () => {},
@@ -93,4 +104,6 @@ ItemsListHeader.defaultProps = {
   showErrorLogs: false,
   onShowErrorLogsChange: () => {},
   optionValue: '',
+  isBulkOperation: false,
+  isShownLess: true,
 };
