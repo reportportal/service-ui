@@ -21,7 +21,7 @@ import styles from './defectTypeItemML.scss';
 
 const cx = classNames.bind(styles);
 
-export const DefectTypeItemML = ({ defectType, onClick, isSelected, className }) => {
+export const DefectTypeItemML = ({ defectType, onClick, isSelected, className, isShownLess }) => {
   return (
     <div
       onClick={onClick}
@@ -29,13 +29,16 @@ export const DefectTypeItemML = ({ defectType, onClick, isSelected, className })
         'defect-type-item',
         {
           selected: isSelected,
+          'shown-more': !isShownLess,
         },
         className,
       )}
       title={defectType.longName}
     >
       <div className={cx('defect-type-circle')} style={{ backgroundColor: defectType.color }} />
-      <div className={cx('defect-type-name')}>{defectType.longName}</div>
+      <div className={cx('defect-type-name')} title={!isShownLess && defectType.longName}>
+        {isShownLess ? defectType.longName : defectType.shortName}
+      </div>
     </div>
   );
 };
@@ -44,9 +47,11 @@ DefectTypeItemML.propTypes = {
   onClick: PropTypes.func,
   isSelected: PropTypes.bool,
   className: PropTypes.string,
+  isShownLess: PropTypes.bool,
 };
 DefectTypeItemML.defaultProps = {
   onClick: () => {},
   isSelected: false,
   className: 'PropTypes.string',
+  isShownLess: true,
 };
