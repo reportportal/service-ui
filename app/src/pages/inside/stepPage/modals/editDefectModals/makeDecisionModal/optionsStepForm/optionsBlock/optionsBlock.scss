@@ -17,8 +17,9 @@
 .options {
   flex: 0 0 30%;
   height: min-content;
-  border-right: 1px solid $COLOR--dark-gray;
-  margin-right: 32px;
+  border-bottom: 1px solid $COLOR--dark-gray;
+  margin-bottom: 25px;
+  padding-bottom: 25px;
 
   &.loading {
     pointer-events: none;

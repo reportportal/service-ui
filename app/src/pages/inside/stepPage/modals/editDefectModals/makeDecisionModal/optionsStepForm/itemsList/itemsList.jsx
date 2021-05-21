@@ -22,7 +22,15 @@ import { CURRENT_EXECUTION_ONLY } from 'pages/inside/stepPage/modals/editDefectM
 import { ItemsListHeader } from './itemsListHeader';
 import { ItemsListBody } from './itemsListBody';
 
-export const ItemsList = ({ testItems, selectedItems, setModalState, loading, optionValue }) => {
+export const ItemsList = ({
+  testItems,
+  selectedItems,
+  setModalState,
+  loading,
+  optionValue,
+  isShownLess,
+  isBulkOperation,
+}) => {
   const [showErrorLogs, setShowErrorLogs] = useState(false);
   useEffect(() => {
     setShowErrorLogs(false);
@@ -42,6 +50,8 @@ export const ItemsList = ({ testItems, selectedItems, setModalState, loading, op
             showErrorLogs={showErrorLogs}
             onShowErrorLogsChange={setShowErrorLogs}
             optionValue={optionValue}
+            isShownLess={isShownLess}
+            isBulkOperation={isBulkOperation}
           />
         )}
         <ScrollWrapper autoHeight autoHeightMax={515} hideTracksWhenNotNeeded>
@@ -51,6 +61,8 @@ export const ItemsList = ({ testItems, selectedItems, setModalState, loading, op
             setModalState={setModalState}
             showErrorLogs={optionValue === CURRENT_EXECUTION_ONLY || showErrorLogs}
             optionValue={optionValue}
+            isShownLess={isShownLess}
+            isBulkOperation={isBulkOperation}
           />
         </ScrollWrapper>
       </>
@@ -64,6 +76,8 @@ ItemsList.propTypes = {
   setModalState: PropTypes.func,
   optionValue: PropTypes.string,
   selectAllItems: PropTypes.func,
+  isBulkOperation: PropTypes.bool,
+  isShownLess: PropTypes.bool,
 };
 ItemsList.defaultProps = {
   testItems: [],
@@ -72,4 +86,6 @@ ItemsList.defaultProps = {
   setModalState: () => {},
   optionValue: '',
   selectAllItems: () => {},
+  isBulkOperation: false,
+  isShownLess: true,
 };
