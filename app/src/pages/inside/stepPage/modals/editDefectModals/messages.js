@@ -121,6 +121,17 @@ export const messages = defineMessages({
     id: 'MakeDecisionModal.decisionForTest',
     defaultMessage: 'Decision for the test {launchNumber}',
   },
+  test: {
+    id: 'MakeDecisionModal.test',
+    defaultMessage: 'Test {launchNumber}',
+  },
+  currentSelection: {
+    id: 'MakeDecisionModal.currentSelection',
+    defaultMessage: 'Current selection',
+  },
+  seeMore: { id: 'MakeDecisionModal.seeMore', defaultMessage: 'See more' },
+  seeLess: { id: 'MakeDecisionModal.seeLess', defaultMessage: 'See less' },
+  bulk: { id: 'MakeDecisionModal.bulk', defaultMessage: 'Bulk' },
   bulkOperationDecision: {
     id: 'MakeDecisionModal.bulkOperationDecision',
     defaultMessage: 'Bulk Operation Decision',
@@ -149,9 +160,9 @@ export const messages = defineMessages({
     id: 'MakeDecisionModal.applyImmediately',
     defaultMessage: 'Apply Immediately',
   },
-  applyWithOptions: {
-    id: 'MakeDecisionModal.applyWithOptions',
-    defaultMessage: 'Apply with Options',
+  applyAndContinue: {
+    id: 'MakeDecisionModal.applyAndContinue',
+    defaultMessage: 'Apply & Continue',
   },
   backToConfiguration: {
     id: 'MakeDecisionModal.backToConfiguration',
@@ -187,13 +198,13 @@ export const messages = defineMessages({
     id: 'MakeDecisionModal.defectType',
     defaultMessage: 'Defect type',
   },
-  applyTo: {
-    id: 'MakeDecisionModal.applyTo',
-    defaultMessage: 'Apply to',
+  applyDefectFor: {
+    id: 'MakeDecisionModal.applyDefectFor',
+    defaultMessage: 'Apply defect for:',
   },
   applyToSimilarItems: {
     id: 'MakeDecisionModal.applyToSimilarItems',
-    defaultMessage: 'You can also apply this decision to other similar items in',
+    defaultMessage: 'You can also apply this changes to other similar items in',
   },
   currentExecutionOnly: {
     id: 'MakeDecisionModal.currentExecutionOnly',
