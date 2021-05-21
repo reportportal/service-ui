@@ -28,25 +28,27 @@ import isEqual from 'fast-deep-equal';
 import { URLS } from 'common/urls';
 import { fetch, isEmptyObject } from 'common/utils';
 import { historyItemsSelector } from 'controllers/log';
-import LeftArrowIcon from 'common/img/arrow-left-small-inline.svg';
 import { linkIssueAction, postIssueAction, unlinkIssueAction } from 'controllers/step';
 import { LINK_ISSUE, POST_ISSUE, UNLINK_ISSUE } from 'common/constants/actionTypes';
+import classNames from 'classnames/bind';
+import { CSSTransition } from 'react-transition-group';
 import { messages } from './../messages';
 import {
-  CONFIGURATION,
   COPY_FROM_HISTORY_LINE,
   CURRENT_EXECUTION_ONLY,
   MACHINE_LEARNING_SUGGESTIONS,
   MAKE_DECISION_MODAL,
-  OPTIONS,
   SEARCH_MODES,
   SELECT_DEFECT_MANUALLY,
   SIMILAR_TI_CURRENT_LAUNCH,
   TO_INVESTIGATE_LOCATOR_PREFIX,
 } from '../constants';
-import { OptionsStepForm } from './optionsStepForm';
 import { SelectDefectManually } from './selectDefectManually';
 import { CopyFromHistoryLine } from './copyFromHistoryLine';
+import styles from './makeDecisionModal.scss';
+import { OptionsSection } from './optionsStepForm/optionsSection';
+
+const cx = classNames.bind(styles);
 
 const MakeDecision = ({ data }) => {
   const { formatMessage } = useIntl();
@@ -77,8 +79,13 @@ const MakeDecision = ({ data }) => {
     [COPY_FROM_HISTORY_LINE]: false,
     [SELECT_DEFECT_MANUALLY]: true,
   });
-  const [step, setFormStep] = useState(CONFIGURATION);
   const [modalHasChanges, setModalHasChanges] = useState(false);
+  const [isShownLess, setIsShown] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    setIsOpen(true);
+  }, []);
 
   useEffect(() => {
     setModalHasChanges(
@@ -94,7 +101,7 @@ const MakeDecision = ({ data }) => {
   const prepareDataToSend = ({ isIssueAction, replaceComment } = {}) => {
     const { issue } = modalState.source;
     if (isBulkOperation) {
-      const { items } = data;
+      const items = modalState.selectedItems;
       return items.map((item) => {
         const comment = replaceComment
           ? issue.comment
@@ -111,37 +118,25 @@ const MakeDecision = ({ data }) => {
         };
       });
     }
-    if (step === OPTIONS) {
-      return modalState.selectedItems.map((item, i) => {
-        let comment = issue.comment || '';
-        if (
-          comment !== item.issue.comment &&
-          (modalState.decisionType === COPY_FROM_HISTORY_LINE || i !== 0)
-        ) {
-          comment = `${item.issue.comment || ''}\n${comment}`.trim();
-        }
-        return {
-          ...(isIssueAction ? item : {}),
-          id: item.id || item.itemId,
-          testItemId: item.id || item.itemId,
-          issue: {
-            ...issue,
-            comment,
-            autoAnalyzed: false,
-          },
-        };
-      });
-    }
-    return [
-      {
-        ...(isIssueAction ? itemData : {}),
-        testItemId: itemData.id,
+    return modalState.selectedItems.map((item, i) => {
+      let comment = issue.comment || '';
+      if (
+        comment !== item.issue.comment &&
+        (modalState.decisionType === COPY_FROM_HISTORY_LINE || i !== 0)
+      ) {
+        comment = `${item.issue.comment || ''}\n${comment}`.trim();
+      }
+      return {
+        ...(isIssueAction ? item : {}),
+        id: item.id || item.itemId,
+        testItemId: item.id || item.itemId,
         issue: {
           ...issue,
+          comment,
           autoAnalyzed: false,
         },
-      },
-    ];
+      };
+    });
   };
   const saveDefect = (options) => {
     const { fetchFunc } = data;
@@ -172,22 +167,6 @@ const MakeDecision = ({ data }) => {
         );
       });
     dispatch(hideModalAction());
-  };
-  const moveToOptionsStep = () => {
-    setFormStep(OPTIONS);
-  };
-  const moveToConfigurationStep = () => {
-    setFormStep(CONFIGURATION);
-    setModalState({
-      optionValue: itemData.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)
-        ? SIMILAR_TI_CURRENT_LAUNCH
-        : CURRENT_EXECUTION_ONLY,
-      searchMode: itemData.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)
-        ? SEARCH_MODES.SIMILAR_TI_CURRENT_LAUNCH
-        : '',
-      testItems: [],
-      selectedItems: [],
-    });
   };
 
   const handlePostIssue = () => {
@@ -251,37 +230,35 @@ const MakeDecision = ({ data }) => {
   };
   const applyChanges = () => applyChangesImmediately();
 
-  const getApplyImmediatelyButtonCaption = () => {
-    if (isBulkOperation) {
-      return modalState.source.issue.comment
-        ? messages.replaceCommentsAndApply
-        : messages.clearCommentsAndApply;
-    }
-    return messages.applyImmediately;
-  };
   const renderHeaderElements = () => {
     return (
       <>
+        {isBulkOperation && (
+          <GhostButton
+            onClick={applyImmediatelyWithComment}
+            disabled={!modalHasChanges}
+            transparentBorder
+            transparentBackground
+            appearance="topaz"
+          >
+            {formatMessage(
+              modalState.source.issue.comment
+                ? messages.replaceCommentsAndApply
+                : messages.clearCommentsAndApply,
+            )}
+          </GhostButton>
+        )}
         <GhostButton
-          onClick={isBulkOperation ? applyImmediatelyWithComment : applyChanges}
-          disabled={!modalHasChanges}
-          transparentBorder
-          transparentBackground
-          appearance="topaz"
-        >
-          {formatMessage(getApplyImmediatelyButtonCaption())}
-        </GhostButton>
-        <GhostButton
-          onClick={isBulkOperation ? applyChanges : moveToOptionsStep}
-          disabled={isBulkOperation ? !modalHasChanges : false}
+          onClick={applyChanges}
+          disabled={modalState.selectedItems.length === 0 || !modalHasChanges}
           color="''"
           appearance="topaz"
         >
-          {isBulkOperation
+          {modalState.selectedItems.length > 1
             ? formatMessage(messages.applyToItems, {
-                itemsCount: itemData.length,
+                itemsCount: modalState.selectedItems.length,
               })
-            : formatMessage(messages.applyWithOptions)}
+            : formatMessage(messages.applyAndContinue)}
         </GhostButton>
       </>
     );
@@ -317,6 +294,7 @@ const MakeDecision = ({ data }) => {
             setModalState={setModalState}
             isBulkOperation={isBulkOperation}
             collapseTabsExceptCurr={collapseTabsExceptCurr}
+            isShownLess={isShownLess}
           />
         ),
       },
@@ -342,65 +320,58 @@ const MakeDecision = ({ data }) => {
     return tabsData;
   };
 
-  const renderOptionsStepHeaderElements = () => {
-    return (
-      <>
-        <GhostButton
-          onClick={moveToConfigurationStep}
-          icon={LeftArrowIcon}
-          color="''"
-          transparentBorder
-          transparentBackground
-          appearance="topaz"
-        >
-          {formatMessage(messages.backToConfiguration)}
-        </GhostButton>
-        <GhostButton
-          onClick={applyChanges}
-          disabled={!modalHasChanges}
-          color="''"
-          appearance="topaz"
-        >
-          {modalState.selectedItems.length > 1
-            ? formatMessage(messages.applyToItems, {
-                itemsCount: modalState.selectedItems.length,
-              })
-            : formatMessage(messages.applyToTheItem)}
-        </GhostButton>
-      </>
-    );
-  };
-
   const hotKeyAction = {
     ctrlEnter: applyChanges,
   };
 
+  const renderTitle = () => {
+    if (isBulkOperation) {
+      return !isShownLess
+        ? formatMessage(messages.bulk)
+        : formatMessage(messages.bulkOperationDecision);
+    } else {
+      return !isShownLess
+        ? formatMessage(messages.test, {
+            launchNumber: itemData.launchNumber && `#${itemData.launchNumber}`,
+          })
+        : formatMessage(messages.decisionForTest, {
+            launchNumber: itemData.launchNumber && `#${itemData.launchNumber}`,
+          });
+    }
+  };
+
   return (
-    <DarkModalLayout
-      title={
-        isBulkOperation
-          ? formatMessage(messages.bulkOperationDecision)
-          : formatMessage(messages.decisionForTest, {
-              launchNumber: itemData.launchNumber && `#${itemData.launchNumber}`,
-            })
-      }
-      renderHeaderElements={
-        step === CONFIGURATION ? renderHeaderElements : renderOptionsStepHeaderElements
-      }
-      modalHasChanges={modalHasChanges}
-      hotKeyAction={hotKeyAction}
-      modalNote={formatMessage(messages.modalNote)}
+    <CSSTransition
+      timeout={300}
+      in={isOpen}
+      classNames={cx('window-animation')}
+      onExited={() => dispatch(hideModalAction())}
     >
-      {step === CONFIGURATION ? (
-        <Accordion tabs={getAccordionTabs()} toggleTab={toggleTab} />
-      ) : (
-        <OptionsStepForm
-          currentTestItem={itemData}
-          modalState={modalState}
-          setModalState={setModalState}
-        />
+      {(status) => (
+        <div className={cx('modal-content')}>
+          <DarkModalLayout
+            title={renderTitle()}
+            renderHeaderElements={renderHeaderElements}
+            modalHasChanges={modalHasChanges}
+            hotKeyAction={hotKeyAction}
+            modalNote={formatMessage(messages.modalNote)}
+            isShownLess={isShownLess}
+            setIsOpen={setIsOpen}
+            status={status}
+          >
+            <Accordion tabs={getAccordionTabs()} toggleTab={toggleTab} />
+          </DarkModalLayout>
+          <OptionsSection
+            currentTestItem={itemData}
+            modalState={modalState}
+            setModalState={setModalState}
+            isShownLess={isShownLess}
+            setIsShown={setIsShown}
+            isBulkOperation={isBulkOperation}
+          />
+        </div>
       )}
-    </DarkModalLayout>
+    </CSSTransition>
   );
 };
 MakeDecision.propTypes = {
