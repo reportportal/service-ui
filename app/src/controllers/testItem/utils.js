@@ -23,7 +23,6 @@ import {
 import * as launchLevels from 'common/constants/launchLevels';
 import * as methodTypes from 'common/constants/methodTypes';
 import { extractNamespacedQuery } from 'common/utils/routingUtils';
-import { escapeBackslashes } from 'common/utils/escapeBackslashes';
 import { TEST_ITEM_TYPES_MAP } from './constants';
 import { LEVELS } from './levels';
 
@@ -133,12 +132,3 @@ export const isItemOwner = (userId, item, launch) => {
 
   return true;
 };
-
-export const escapeTestItemStringContent = (items) =>
-  items.map((item) => ({
-    ...item,
-    name: escapeBackslashes(item.name),
-    codeRef: escapeBackslashes(item.codeRef),
-    description: escapeBackslashes(item.description),
-    testCaseId: escapeBackslashes(item.testCaseId),
-  }));

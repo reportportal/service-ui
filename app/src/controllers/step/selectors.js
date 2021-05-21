@@ -20,7 +20,7 @@ import {
   createValidationErrorsSelector,
   createLastOperationSelector,
 } from 'controllers/groupOperations';
-import { escapeTestItemStringContent } from 'controllers/testItem/utils';
+import { escapeTestItemStringContent } from 'common/utils/escapeBackslashes';
 
 const domainSelector = (state) => state.step;
 

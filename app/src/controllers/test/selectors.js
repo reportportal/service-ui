@@ -20,7 +20,7 @@ import {
   createSelectedItemsSelector,
   createLastOperationSelector,
 } from 'controllers/groupOperations';
-import { escapeTestItemStringContent } from 'controllers/testItem/utils';
+import { escapeTestItemStringContent } from 'common/utils/escapeBackslashes';
 
 const domainSelector = (state) => state.tests || {};
 const groupOperationsSelector = (state) => domainSelector(state).groupOperations;
