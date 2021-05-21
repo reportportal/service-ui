@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
+import { createSelector } from 'reselect';
 import {
   createSelectedItemsSelector,
   createValidationErrorsSelector,
   createLastOperationSelector,
 } from 'controllers/groupOperations';
+import { escapeTestItemStringContent } from 'controllers/testItem/utils';
 
 const domainSelector = (state) => state.step;
 
@@ -28,5 +30,6 @@ export const selectedStepsSelector = createSelectedItemsSelector(groupOperations
 export const validationErrorsSelector = createValidationErrorsSelector(groupOperationsSelector);
 export const lastOperationSelector = createLastOperationSelector(groupOperationsSelector);
 
-export const stepsSelector = (state) => domainSelector(state).steps || [];
+const stepsBaseSelectgor = (state) => domainSelector(state).steps || [];
+export const stepsSelector = createSelector(stepsBaseSelectgor, escapeTestItemStringContent);
 export const stepPaginationSelector = (state) => domainSelector(state).pagination;
