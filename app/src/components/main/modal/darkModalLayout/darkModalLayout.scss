@@ -46,3 +46,28 @@
 .note-row {
   margin-top: 10px;
 }
+
+.modal-content {
+  position: absolute;
+  height: 100%;
+  display: flex;
+  width: 100%;
+  top: 0;
+}
+
+:global {
+  .window-animation-enter {
+    opacity: 0;
+  }
+  .window-animation-enter-active {
+    opacity: 1;
+    transition: opacity 300ms;
+  }
+  .window-animation-exit {
+    opacity: 1;
+  }
+  .window-animation-exit-active {
+    opacity: 0;
+    transition: opacity 300ms;
+  }
+}

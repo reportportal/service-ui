@@ -30,8 +30,6 @@ import { fetch, isEmptyObject } from 'common/utils';
 import { historyItemsSelector } from 'controllers/log';
 import { linkIssueAction, postIssueAction, unlinkIssueAction } from 'controllers/step';
 import { LINK_ISSUE, POST_ISSUE, UNLINK_ISSUE } from 'common/constants/actionTypes';
-import classNames from 'classnames/bind';
-import { CSSTransition } from 'react-transition-group';
 import { messages } from './../messages';
 import {
   COPY_FROM_HISTORY_LINE,
@@ -45,10 +43,7 @@ import {
 } from '../constants';
 import { SelectDefectManually } from './selectDefectManually';
 import { CopyFromHistoryLine } from './copyFromHistoryLine';
-import styles from './makeDecisionModal.scss';
 import { OptionsSection } from './optionsStepForm/optionsSection';
-
-const cx = classNames.bind(styles);
 
 const MakeDecision = ({ data }) => {
   const { formatMessage } = useIntl();
@@ -81,11 +76,6 @@ const MakeDecision = ({ data }) => {
   });
   const [modalHasChanges, setModalHasChanges] = useState(false);
   const [isShownLess, setIsShown] = useState(true);
-  const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    setIsOpen(true);
-  }, []);
 
   useEffect(() => {
     setModalHasChanges(
@@ -340,38 +330,31 @@ const MakeDecision = ({ data }) => {
     }
   };
 
+  const renderSideSection = () => {
+    return (
+      <OptionsSection
+        currentTestItem={itemData}
+        modalState={modalState}
+        setModalState={setModalState}
+        isShownLess={isShownLess}
+        setIsShown={setIsShown}
+        isBulkOperation={isBulkOperation}
+      />
+    );
+  };
+
   return (
-    <CSSTransition
-      timeout={300}
-      in={isOpen}
-      classNames={cx('window-animation')}
-      onExited={() => dispatch(hideModalAction())}
+    <DarkModalLayout
+      title={renderTitle()}
+      renderHeaderElements={renderHeaderElements}
+      modalHasChanges={modalHasChanges}
+      hotKeyAction={hotKeyAction}
+      modalNote={formatMessage(messages.modalNote)}
+      isShownLess={isShownLess}
+      renderSideSection={renderSideSection}
     >
-      {(status) => (
-        <div className={cx('modal-content')}>
-          <DarkModalLayout
-            title={renderTitle()}
-            renderHeaderElements={renderHeaderElements}
-            modalHasChanges={modalHasChanges}
-            hotKeyAction={hotKeyAction}
-            modalNote={formatMessage(messages.modalNote)}
-            isShownLess={isShownLess}
-            setIsOpen={setIsOpen}
-            status={status}
-          >
-            <Accordion tabs={getAccordionTabs()} toggleTab={toggleTab} />
-          </DarkModalLayout>
-          <OptionsSection
-            currentTestItem={itemData}
-            modalState={modalState}
-            setModalState={setModalState}
-            isShownLess={isShownLess}
-            setIsShown={setIsShown}
-            isBulkOperation={isBulkOperation}
-          />
-        </div>
-      )}
-    </CSSTransition>
+      <Accordion tabs={getAccordionTabs()} toggleTab={toggleTab} />
+    </DarkModalLayout>
   );
 };
 MakeDecision.propTypes = {

@@ -28,6 +28,7 @@ import { activeFilterSelector } from 'controllers/filter';
 import ShowLess from 'common/img/show-less-inline.svg';
 import ShowMore from 'common/img/show-more-inline.svg';
 import Parser from 'html-react-parser';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
 import styles from './optionsSection.scss';
 import { ItemsList } from './itemsList';
 import { OptionsBlock } from './optionsBlock';
@@ -132,43 +133,47 @@ export const OptionsSection = ({
 
   return (
     <div className={cx('options-section', { 'shown-less': isShownLess })}>
-      <div className={cx('header-block')}>
-        <button className={cx('button')} onClick={() => setIsShown(!isShownLess)}>
-          <i className={cx('show-icon')}>{Parser(isShownLess ? ShowMore : ShowLess)}</i>{' '}
-          <span className={cx('show-icon-prefix')}>
-            {isShownLess ? formatMessage(messages.seeMore) : formatMessage(messages.seeLess)}
-          </span>
-        </button>
-        {isBulkOperation ? (
-          <span className={cx('header')}>{formatMessage(messages.currentSelection)}</span>
-        ) : (
-          <>
-            <span className={cx('header')}>{formatMessage(messages.applyDefectFor)}</span>
-            <span className={cx('subheader')}>{formatMessage(messages.applyToSimilarItems)}:</span>
-          </>
-        )}
-      </div>
-      <div className={cx('options-block')}>
-        {!isBulkOperation && (
-          <OptionsBlock
-            optionValue={optionValue}
-            currentTestItem={currentTestItem}
-            loading={loading}
-            setModalState={setModalState}
-          />
-        )}
-        <div className={cx('items-list')}>
-          <ItemsList
-            setModalState={setModalState}
-            testItems={testItems}
-            selectedItems={selectedItems}
-            loading={loading}
-            optionValue={!isBulkOperation && optionValue}
-            isShownLess={isShownLess}
-            isBulkOperation={isBulkOperation}
-          />
+      <ScrollWrapper hideTracksWhenNotNeeded autoHide>
+        <div className={cx('header-block')}>
+          <button className={cx('button')} onClick={() => setIsShown(!isShownLess)}>
+            <i className={cx('show-icon')}>{Parser(isShownLess ? ShowMore : ShowLess)}</i>{' '}
+            <span className={cx('show-icon-prefix')}>
+              {isShownLess ? formatMessage(messages.seeMore) : formatMessage(messages.seeLess)}
+            </span>
+          </button>
+          {isBulkOperation ? (
+            <span className={cx('header')}>{formatMessage(messages.currentSelection)}</span>
+          ) : (
+            <>
+              <span className={cx('header')}>{formatMessage(messages.applyDefectFor)}</span>
+              <span className={cx('subheader')}>
+                {formatMessage(messages.applyToSimilarItems)}:
+              </span>
+            </>
+          )}
         </div>
-      </div>
+        <div className={cx('options-block')}>
+          {!isBulkOperation && (
+            <OptionsBlock
+              optionValue={optionValue}
+              currentTestItem={currentTestItem}
+              loading={loading}
+              setModalState={setModalState}
+            />
+          )}
+          <div className={cx('items-list')}>
+            <ItemsList
+              setModalState={setModalState}
+              testItems={testItems}
+              selectedItems={selectedItems}
+              loading={loading}
+              optionValue={!isBulkOperation && optionValue}
+              isShownLess={isShownLess}
+              isBulkOperation={isBulkOperation}
+            />
+          </div>
+        </div>
+      </ScrollWrapper>
     </div>
   );
 };

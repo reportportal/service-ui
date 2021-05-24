@@ -17,6 +17,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { CSSTransition } from 'react-transition-group';
+import { useDispatch } from 'react-redux';
+import { hideModalAction } from 'controllers/modal';
 import ErrorInlineIcon from 'common/img/error-inline.svg';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { ModalNote } from './modalNote';
@@ -33,11 +36,12 @@ export const DarkModalLayout = ({
   hotKeyAction,
   modalNote,
   isShownLess,
-  setIsOpen,
-  status,
+  renderSideSection,
 }) => {
   const [clickOutside, setClickOutside] = useState(false);
   const [isCtrlEnterPress, setIsCtrlEnterPress] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const dispatch = useDispatch();
   const wrapperRef = useRef();
 
   const closeModalWindow = () => {
@@ -65,6 +69,7 @@ export const DarkModalLayout = ({
     }
   };
   useEffect(() => {
+    setIsOpen(true);
     document.addEventListener('keydown', onKeydown);
     document.addEventListener('keyup', onKeyup);
     return () => {
@@ -77,25 +82,40 @@ export const DarkModalLayout = ({
   }, [isCtrlEnterPress]);
 
   return (
-    <div className={cx('container', { 'shown-more': !isShownLess })} onClick={handleClickOutside}>
-      <div ref={wrapperRef} className={cx('wrapper', { 'shown-more': !isShownLess })}>
-        <div className={cx('layout', { 'shown-more': !isShownLess })}>
-          <ModalHeader
-            text={title}
-            onClose={closeModalWindow}
-            renderHeaderElements={renderHeaderElements}
-          />
-          <ScrollWrapper hideTracksWhenNotNeeded autoHide>
-            {status !== 'exited' ? children : null}
-            <div className={cx('note-row')}>
-              {modalNote && clickOutside && modalHasChanges && (
-                <ModalNote message={modalNote} icon={ErrorInlineIcon} status={'error'} />
-              )}
+    <CSSTransition
+      timeout={300}
+      in={isOpen}
+      classNames={cx('window-animation')}
+      onExited={() => dispatch(hideModalAction())}
+    >
+      {(status) => (
+        <div className={cx('modal-content')}>
+          <div
+            className={cx('container', { 'shown-more': !isShownLess })}
+            onClick={handleClickOutside}
+          >
+            <div ref={wrapperRef} className={cx('wrapper', { 'shown-more': !isShownLess })}>
+              <div className={cx('layout', { 'shown-more': !isShownLess })}>
+                <ModalHeader
+                  text={title}
+                  onClose={closeModalWindow}
+                  renderHeaderElements={renderHeaderElements}
+                />
+                <ScrollWrapper hideTracksWhenNotNeeded autoHide>
+                  {status !== 'exited' ? children : null}
+                  <div className={cx('note-row')}>
+                    {modalNote && clickOutside && modalHasChanges && (
+                      <ModalNote message={modalNote} icon={ErrorInlineIcon} status={'error'} />
+                    )}
+                  </div>
+                </ScrollWrapper>
+              </div>
             </div>
-          </ScrollWrapper>
+          </div>
+          {renderSideSection()}
         </div>
-      </div>
-    </div>
+      )}
+    </CSSTransition>
   );
 };
 DarkModalLayout.propTypes = {
@@ -105,9 +125,8 @@ DarkModalLayout.propTypes = {
   modalHasChanges: PropTypes.bool,
   hotKeyAction: PropTypes.objectOf(PropTypes.func),
   modalNote: PropTypes.string,
-  status: PropTypes.string,
   isShownLess: PropTypes.bool,
-  setIsOpen: PropTypes.func,
+  renderSideSection: PropTypes.func,
 };
 DarkModalLayout.defaultProps = {
   title: '',
@@ -116,7 +135,6 @@ DarkModalLayout.defaultProps = {
   modalHasChanges: false,
   hotKeyAction: {},
   modalNote: '',
-  status: '',
   isShownLess: true,
-  setIsOpen: () => {},
+  renderSideSection: () => {},
 };

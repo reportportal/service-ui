@@ -26,7 +26,7 @@ export const DefectTypeItemML = ({
   onClick,
   isSelected,
   className,
-  isShownLess: isShownMore,
+  isShownLess: isShowMore,
 }) => {
   return (
     <div
@@ -35,15 +35,15 @@ export const DefectTypeItemML = ({
         'defect-type-item',
         {
           selected: isSelected,
-          'shown-less': !isShownMore,
+          'shown-less': !isShowMore,
         },
         className,
       )}
       title={defectType.longName}
     >
       <div className={cx('defect-type-circle')} style={{ backgroundColor: defectType.color }} />
-      <div className={cx('defect-type-name')} title={!isShownMore && defectType.longName}>
-        {isShownMore ? defectType.longName : defectType.shortName}
+      <div className={cx('defect-type-name')} title={!isShowMore && defectType.longName}>
+        {isShowMore ? defectType.longName : defectType.shortName}
       </div>
     </div>
   );
