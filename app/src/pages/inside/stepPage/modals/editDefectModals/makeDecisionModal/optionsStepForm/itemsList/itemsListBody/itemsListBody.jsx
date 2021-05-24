@@ -62,7 +62,7 @@ const SimilarItemsList = ({
           const selected = !!selectedItems.find((selectedItem) =>
             isBulkOperation ? selectedItem.id === item.id : selectedItem.itemId === item.itemId,
           );
-          const setSelectItem = () => {
+          const getSelectedItem = () => {
             if (isBulkOperation) {
               return selectItem;
             }
@@ -72,7 +72,7 @@ const SimilarItemsList = ({
             <div key={item.id || item.itemId}>
               <ItemHeader
                 item={composedItem}
-                selectItem={setSelectItem()}
+                selectItem={getSelectedItem()}
                 isSelected={selected}
                 preselected={!isBulkOperation ? i === 0 : null}
                 isShownLess={isShownLess}

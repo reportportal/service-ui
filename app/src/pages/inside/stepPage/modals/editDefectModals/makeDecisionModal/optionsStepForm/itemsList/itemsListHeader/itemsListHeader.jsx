@@ -43,19 +43,13 @@ export const ItemsListHeader = ({
     setIsAllSelected(selectedItems.length === testItems.length);
   }, [selectedItems]);
 
-  const setSelectedItems = () => {
-    if (isAllSelected) {
-      return isBulkOperation ? [] : testItems.slice(0, 1);
-    } else {
-      return testItems;
-    }
-  };
   const onCheckboxChange = () => {
     if (testItems.length === 1) {
       return;
     }
+    const isAllSelectedCondition = isBulkOperation ? [] : testItems.slice(0, 1);
     setModalState({
-      selectedItems: setSelectedItems(),
+      selectedItems: isAllSelected ? isAllSelectedCondition : testItems,
     });
   };
 
