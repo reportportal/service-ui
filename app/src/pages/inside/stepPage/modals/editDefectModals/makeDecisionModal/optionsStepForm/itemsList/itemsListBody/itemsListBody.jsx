@@ -128,17 +128,11 @@ export const ItemsListBody = ({
   isBulkOperation,
 }) => {
   const selectItem = (id) => {
-    isBulkOperation
-      ? setModalState({
-          selectedItems: selectedItems.find((item) => item.id === id)
-            ? selectedItems.filter((item) => item.id !== id)
-            : [...selectedItems, testItems.find((item) => item.id === id)],
-        })
-      : setModalState({
-          selectedItems: selectedItems.find((item) => item.itemId === id)
-            ? selectedItems.filter((item) => item.itemId !== id)
-            : [...selectedItems, testItems.find((item) => item.itemId === id)],
-        });
+    setModalState({
+      selectedItems: selectedItems.find((item) => item.itemId === id)
+        ? selectedItems.filter((item) => item.itemId !== id)
+        : [...selectedItems, testItems.find((item) => item.itemId === id)],
+    });
   };
 
   return (

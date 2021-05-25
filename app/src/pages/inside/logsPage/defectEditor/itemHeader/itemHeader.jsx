@@ -84,5 +84,5 @@ ItemHeader.defaultProps = {
   selectItem: () => {},
   nameLink: {},
   preselected: false,
-  isShownLess: true,
+  isShownLess: false,
 };

@@ -316,17 +316,11 @@ const MakeDecision = ({ data }) => {
 
   const renderTitle = () => {
     if (isBulkOperation) {
-      return !isShownLess
-        ? formatMessage(messages.bulk)
-        : formatMessage(messages.bulkOperationDecision);
+      return formatMessage(isShownLess ? messages.bulkOperationDecision : messages.bulk);
     } else {
-      return !isShownLess
-        ? formatMessage(messages.test, {
-            launchNumber: itemData.launchNumber && `#${itemData.launchNumber}`,
-          })
-        : formatMessage(messages.decisionForTest, {
-            launchNumber: itemData.launchNumber && `#${itemData.launchNumber}`,
-          });
+      return formatMessage(isShownLess ? messages.decisionForTest : messages.test, {
+        launchNumber: itemData.launchNumber && `#${itemData.launchNumber}`,
+      });
     }
   };
 
@@ -350,7 +344,7 @@ const MakeDecision = ({ data }) => {
       modalHasChanges={modalHasChanges}
       hotKeyAction={hotKeyAction}
       modalNote={formatMessage(messages.modalNote)}
-      isShownLess={isShownLess}
+      isShownLess={!isShownLess}
       renderSideSection={renderSideSection}
     >
       <Accordion tabs={getAccordionTabs()} toggleTab={toggleTab} />

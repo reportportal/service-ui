@@ -33,7 +33,7 @@ export const DefectTypeSelectorML = ({ selectDefectType, selectedItem, isShownLe
       {Object.keys(defectTypes).length > 0 && (
         <div className={cx('defect-options')}>
           {DEFECT_TYPES_SEQUENCE.map((option) => (
-            <div key={option} className={cx('select-option-group', { 'shown-more': !isShownLess })}>
+            <div key={option} className={cx('select-option-group', { 'shown-less': isShownLess })}>
               {defectTypes[option].map((defectType) => (
                 <div key={defectType.locator} className={cx('select-option')}>
                   <DefectTypeItemML
@@ -59,5 +59,5 @@ DefectTypeSelectorML.propTypes = {
 DefectTypeSelectorML.defaultProps = {
   selectDefectType: null,
   selectedItem: '',
-  isShownLess: true,
+  isShownLess: false,
 };

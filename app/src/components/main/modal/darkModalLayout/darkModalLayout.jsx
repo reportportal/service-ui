@@ -90,12 +90,9 @@ export const DarkModalLayout = ({
     >
       {(status) => (
         <div className={cx('modal-content')}>
-          <div
-            className={cx('container', { 'shown-more': !isShownLess })}
-            onClick={handleClickOutside}
-          >
-            <div ref={wrapperRef} className={cx('wrapper', { 'shown-more': !isShownLess })}>
-              <div className={cx('layout', { 'shown-more': !isShownLess })}>
+          <div className={cx('container')} onClick={handleClickOutside}>
+            <div ref={wrapperRef} className={cx('wrapper')}>
+              <div className={cx('layout', { 'shown-less': isShownLess })}>
                 <ModalHeader
                   text={title}
                   onClose={closeModalWindow}
@@ -135,6 +132,6 @@ DarkModalLayout.defaultProps = {
   modalHasChanges: false,
   hotKeyAction: {},
   modalNote: '',
-  isShownLess: true,
+  isShownLess: false,
   renderSideSection: () => {},
 };

@@ -64,7 +64,7 @@
   & span {
     display: block;
     white-space: nowrap;
-    width: 260px;
+    max-width: 160px;
     overflow: hidden;
     text-overflow: ellipsis;
   }
