@@ -75,7 +75,7 @@ const MakeDecision = ({ data }) => {
     [SELECT_DEFECT_MANUALLY]: true,
   });
   const [modalHasChanges, setModalHasChanges] = useState(false);
-  const [isShownLess, setIsShown] = useState(true);
+  const [rightSectionIsLess, setIsShown] = useState(true);
 
   useEffect(() => {
     setModalHasChanges(
@@ -284,7 +284,7 @@ const MakeDecision = ({ data }) => {
             setModalState={setModalState}
             isBulkOperation={isBulkOperation}
             collapseTabsExceptCurr={collapseTabsExceptCurr}
-            isShownLess={isShownLess}
+            rightSectionIsLess={rightSectionIsLess}
           />
         ),
       },
@@ -316,9 +316,9 @@ const MakeDecision = ({ data }) => {
 
   const renderTitle = () => {
     if (isBulkOperation) {
-      return formatMessage(isShownLess ? messages.bulkOperationDecision : messages.bulk);
+      return formatMessage(rightSectionIsLess ? messages.bulkOperationDecision : messages.bulk);
     } else {
-      return formatMessage(isShownLess ? messages.decisionForTest : messages.test, {
+      return formatMessage(rightSectionIsLess ? messages.decisionForTest : messages.test, {
         launchNumber: itemData.launchNumber && `#${itemData.launchNumber}`,
       });
     }
@@ -330,7 +330,7 @@ const MakeDecision = ({ data }) => {
         currentTestItem={itemData}
         modalState={modalState}
         setModalState={setModalState}
-        isShownLess={isShownLess}
+        rightSectionIsLess={rightSectionIsLess}
         setIsShown={setIsShown}
         isBulkOperation={isBulkOperation}
       />
@@ -344,7 +344,7 @@ const MakeDecision = ({ data }) => {
       modalHasChanges={modalHasChanges}
       hotKeyAction={hotKeyAction}
       modalNote={formatMessage(messages.modalNote)}
-      isShownLess={!isShownLess}
+      rightSectionIsLess={rightSectionIsLess}
       renderSideSection={renderSideSection}
     >
       <Accordion tabs={getAccordionTabs()} toggleTab={toggleTab} />

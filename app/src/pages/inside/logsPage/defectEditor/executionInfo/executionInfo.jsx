@@ -30,7 +30,7 @@ export const ExecutionInfo = ({
   selectItem,
   isSelected,
   preselected,
-  isShownLess,
+  rightSectionIsLess,
 }) => {
   const defectTypes = useSelector(defectTypesSelector);
 
@@ -44,7 +44,7 @@ export const ExecutionInfo = ({
         selectItem={selectItem}
         isSelected={isSelected}
         preselected={preselected}
-        isShownLess={isShownLess}
+        rightSectionIsLess={rightSectionIsLess}
       />
     </div>
   );
@@ -56,7 +56,7 @@ ExecutionInfo.propTypes = {
   isSelected: PropTypes.bool,
   selectItem: PropTypes.func,
   preselected: PropTypes.bool,
-  isShownLess: PropTypes.bool,
+  rightSectionIsLess: PropTypes.bool,
 };
 
 ExecutionInfo.defaultProps = {
@@ -66,5 +66,5 @@ ExecutionInfo.defaultProps = {
   isSelected: false,
   selectItem: () => {},
   preselected: false,
-  isShownLess: true,
+  rightSectionIsLess: true,
 };

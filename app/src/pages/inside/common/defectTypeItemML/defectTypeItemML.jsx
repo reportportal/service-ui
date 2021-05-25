@@ -26,7 +26,7 @@ export const DefectTypeItemML = ({
   onClick,
   isSelected,
   className,
-  isShownLess: isShowMore,
+  rightSectionIsLess,
 }) => {
   return (
     <div
@@ -35,15 +35,15 @@ export const DefectTypeItemML = ({
         'defect-type-item',
         {
           selected: isSelected,
-          'shown-less': !isShowMore,
+          'shown-less': !rightSectionIsLess,
         },
         className,
       )}
       title={defectType.longName}
     >
       <div className={cx('defect-type-circle')} style={{ backgroundColor: defectType.color }} />
-      <div className={cx('defect-type-name')} title={!isShowMore && defectType.longName}>
-        {isShowMore ? defectType.longName : defectType.shortName}
+      <div className={cx('defect-type-name')} title={!rightSectionIsLess && defectType.longName}>
+        {rightSectionIsLess ? defectType.longName : defectType.shortName}
       </div>
     </div>
   );
@@ -53,11 +53,11 @@ DefectTypeItemML.propTypes = {
   onClick: PropTypes.func,
   isSelected: PropTypes.bool,
   className: PropTypes.string,
-  isShownLess: PropTypes.bool,
+  rightSectionIsLess: PropTypes.bool,
 };
 DefectTypeItemML.defaultProps = {
   onClick: () => {},
   isSelected: false,
   className: 'PropTypes.string',
-  isShownLess: true,
+  rightSectionIsLess: true,
 };

@@ -41,7 +41,7 @@ const SimilarItemsList = ({
   selectedItems,
   selectItem,
   showErrorLogs,
-  isShownLess,
+  rightSectionIsLess,
   isBulkOperation,
 }) => {
   return (
@@ -75,10 +75,10 @@ const SimilarItemsList = ({
                 selectItem={getSelectedItem()}
                 isSelected={selected}
                 preselected={!isBulkOperation ? i === 0 : null}
-                isShownLess={isShownLess}
+                rightSectionIsLess={rightSectionIsLess}
               />
               {showErrorLogs &&
-                !isShownLess &&
+                !rightSectionIsLess &&
                 item.logs
                   .slice(0, ERROR_LOGS_SIZE)
                   .map((log) => <Log log={log} key={uniqueId()} />)}
@@ -94,10 +94,10 @@ SimilarItemsList.propTypes = {
   selectItem: PropTypes.func.isRequired,
   showErrorLogs: PropTypes.bool.isRequired,
   isBulkOperation: PropTypes.bool,
-  isShownLess: PropTypes.bool,
+  rightSectionIsLess: PropTypes.bool,
 };
 
-const HistoryLineItemsList = ({ testItems, selectedItems, selectItem, isShownLess }) => {
+const HistoryLineItemsList = ({ testItems, selectedItems, selectItem, rightSectionIsLess }) => {
   return (
     testItems.length > 0 &&
     testItems.map((item, i) => (
@@ -107,7 +107,7 @@ const HistoryLineItemsList = ({ testItems, selectedItems, selectItem, isShownLes
         isSelected={!!selectedItems.find((selectedItem) => selectedItem.id === item.id)}
         preselected={i === 0}
         key={item.id}
-        isShownLess={isShownLess}
+        rightSectionIsLess={rightSectionIsLess}
       />
     ))
   );
@@ -124,7 +124,7 @@ export const ItemsListBody = ({
   setModalState,
   showErrorLogs,
   optionValue,
-  isShownLess,
+  rightSectionIsLess,
   isBulkOperation,
 }) => {
   const selectItem = (id) => {
@@ -142,7 +142,7 @@ export const ItemsListBody = ({
           testItems={testItems}
           selectedItems={selectedItems}
           selectItem={selectItem}
-          isShownLess={isShownLess}
+          rightSectionIsLess={rightSectionIsLess}
         />
       ) : (
         <SimilarItemsList
@@ -150,7 +150,7 @@ export const ItemsListBody = ({
           selectedItems={selectedItems}
           selectItem={selectItem}
           showErrorLogs={showErrorLogs}
-          isShownLess={isShownLess}
+          rightSectionIsLess={rightSectionIsLess}
           isBulkOperation={isBulkOperation}
         />
       )}
@@ -162,9 +162,9 @@ ItemsListBody.propTypes = {
   selectedItems: PropTypes.array,
   setModalState: PropTypes.func,
   showErrorLogs: PropTypes.bool,
-  optionValue: PropTypes.string,
+  optionValue: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   isBulkOperation: PropTypes.bool,
-  isShownLess: PropTypes.bool,
+  rightSectionIsLess: PropTypes.bool,
 };
 ItemsListBody.defaultProps = {
   testItems: [],
@@ -173,5 +173,5 @@ ItemsListBody.defaultProps = {
   showErrorLogs: false,
   optionValue: '',
   isBulkOperation: false,
-  isShownLess: true,
+  rightSectionIsLess: true,
 };

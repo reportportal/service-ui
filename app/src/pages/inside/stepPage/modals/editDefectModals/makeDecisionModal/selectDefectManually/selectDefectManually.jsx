@@ -46,7 +46,7 @@ export const SelectDefectManually = ({
   isBulkOperation,
   setModalState,
   collapseTabsExceptCurr,
-  isShownLess,
+  rightSectionIsLess,
 }) => {
   const { formatMessage } = useIntl();
   const btsIntegrations = useSelector(availableBtsIntegrationsSelector);
@@ -181,7 +181,7 @@ export const SelectDefectManually = ({
             ? modalState.source.issue.issueType || ''
             : itemData.issue.issueType
         }
-        isShownLess={isShownLess}
+        rightSectionIsLess={rightSectionIsLess}
       />
       <div className={cx('defect-comment')}>
         <MarkdownEditor
@@ -209,5 +209,5 @@ SelectDefectManually.propTypes = {
   isBulkOperation: PropTypes.bool.isRequired,
   setModalState: PropTypes.func.isRequired,
   collapseTabsExceptCurr: PropTypes.func.isRequired,
-  isShownLess: PropTypes.bool,
+  rightSectionIsLess: PropTypes.bool,
 };

@@ -34,7 +34,7 @@ export const ItemsListHeader = ({
   showErrorLogs,
   onShowErrorLogsChange,
   optionValue,
-  isShownLess,
+  rightSectionIsLess,
   isBulkOperation,
 }) => {
   const { formatMessage } = useIntl();
@@ -65,7 +65,7 @@ export const ItemsListHeader = ({
       </InputCheckbox>
       {optionValue !== ALL_LOADED_TI_FROM_HISTORY_LINE && (
         <InputSwitcher
-          className={cx('switcher', { 'shown-less': isShownLess })}
+          className={cx('switcher', { 'shown-less': rightSectionIsLess })}
           childrenClassName={cx('switcher-children')}
           value={showErrorLogs}
           onChange={onShowErrorLogsChange}
@@ -86,9 +86,9 @@ ItemsListHeader.propTypes = {
   selectedItems: PropTypes.array,
   showErrorLogs: PropTypes.bool,
   onShowErrorLogsChange: PropTypes.func,
-  optionValue: PropTypes.string,
+  optionValue: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   isBulkOperation: PropTypes.bool,
-  isShownLess: PropTypes.bool,
+  rightSectionIsLess: PropTypes.bool,
 };
 ItemsListHeader.defaultProps = {
   setModalState: () => {},
@@ -99,5 +99,5 @@ ItemsListHeader.defaultProps = {
   onShowErrorLogsChange: () => {},
   optionValue: '',
   isBulkOperation: false,
-  isShownLess: true,
+  rightSectionIsLess: true,
 };

@@ -31,7 +31,7 @@ import styles from './itemHeader.scss';
 
 const cx = classNames.bind(styles);
 
-export const ItemHeader = ({ item, selectItem, isSelected, preselected, isShownLess }) => {
+export const ItemHeader = ({ item, selectItem, isSelected, preselected, rightSectionIsLess }) => {
   const {
     id,
     name,
@@ -46,12 +46,12 @@ export const ItemHeader = ({ item, selectItem, isSelected, preselected, isShownL
       className={cx('item-info', { selected: isSelected, preselected })}
       onClick={() => selectItem(id)}
     >
-      <div className={cx('header', { 'shown-less': isShownLess })}>
+      <div className={cx('header', { 'shown-less': rightSectionIsLess })}>
         <Link to={link} target="_blank" className={cx('item-name')}>
           <span title={name}>{name}</span>
           <div className={cx('icon')}>{Parser(ExternalLinkIcon)}</div>
         </Link>
-        <div className={cx('defect-block', { 'shown-less': isShownLess })}>
+        <div className={cx('defect-block', { 'shown-less': rightSectionIsLess })}>
           {ignoreAnalyzer && <IgnoredInAALabel className={cx('ignore-aa-label')} />}
           {autoAnalyzed && <AutoAnalyzedLabel className={cx('aa-label')} />}
           {!!patternTemplates.length && (
@@ -64,7 +64,7 @@ export const ItemHeader = ({ item, selectItem, isSelected, preselected, isShownL
           <DefectTypeItem type={issueType} className={cx('defect-type')} />
         </div>
       </div>
-      <div className={cx('bts-row', { 'shown-less': isShownLess })}>
+      <div className={cx('bts-row', { 'shown-less': rightSectionIsLess })}>
         <IssueList issues={externalSystemIssues} className={cx('issue')} readOnly />
       </div>
     </div>
@@ -76,7 +76,7 @@ ItemHeader.propTypes = {
   selectItem: PropTypes.func,
   nameLink: PropTypes.object,
   preselected: PropTypes.bool,
-  isShownLess: PropTypes.bool,
+  rightSectionIsLess: PropTypes.bool,
 };
 ItemHeader.defaultProps = {
   item: {},
@@ -84,5 +84,5 @@ ItemHeader.defaultProps = {
   selectItem: () => {},
   nameLink: {},
   preselected: false,
-  isShownLess: false,
+  rightSectionIsLess: false,
 };

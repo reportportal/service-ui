@@ -25,7 +25,7 @@ import styles from './defectTypeSelectorML.scss';
 
 const cx = classNames.bind(styles);
 
-export const DefectTypeSelectorML = ({ selectDefectType, selectedItem, isShownLess }) => {
+export const DefectTypeSelectorML = ({ selectDefectType, selectedItem, rightSectionIsLess }) => {
   const defectTypes = useSelector(defectTypesSelector);
 
   return (
@@ -33,14 +33,17 @@ export const DefectTypeSelectorML = ({ selectDefectType, selectedItem, isShownLe
       {Object.keys(defectTypes).length > 0 && (
         <div className={cx('defect-options')}>
           {DEFECT_TYPES_SEQUENCE.map((option) => (
-            <div key={option} className={cx('select-option-group', { 'shown-less': isShownLess })}>
+            <div
+              key={option}
+              className={cx('select-option-group', { 'shown-less': rightSectionIsLess })}
+            >
               {defectTypes[option].map((defectType) => (
                 <div key={defectType.locator} className={cx('select-option')}>
                   <DefectTypeItemML
                     defectType={defectType}
                     isSelected={defectType.locator === selectedItem}
                     onClick={() => selectDefectType(defectType.locator)}
-                    isShownLess={isShownLess}
+                    rightSectionIsLess={rightSectionIsLess}
                   />
                 </div>
               ))}
@@ -54,10 +57,10 @@ export const DefectTypeSelectorML = ({ selectDefectType, selectedItem, isShownLe
 DefectTypeSelectorML.propTypes = {
   selectDefectType: PropTypes.func,
   selectedItem: PropTypes.string,
-  isShownLess: PropTypes.bool,
+  rightSectionIsLess: PropTypes.bool,
 };
 DefectTypeSelectorML.defaultProps = {
   selectDefectType: null,
   selectedItem: '',
-  isShownLess: false,
+  rightSectionIsLess: false,
 };

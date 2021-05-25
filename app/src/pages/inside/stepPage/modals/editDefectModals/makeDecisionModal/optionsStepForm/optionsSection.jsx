@@ -40,7 +40,7 @@ export const OptionsSection = ({
   currentTestItem,
   setModalState,
   modalState,
-  isShownLess,
+  rightSectionIsLess,
   setIsShown,
   isBulkOperation,
 }) => {
@@ -136,13 +136,15 @@ export const OptionsSection = ({
   }, [optionValue]);
 
   return (
-    <div className={cx('options-section', { 'shown-less': isShownLess })}>
+    <div className={cx('options-section', { 'shown-less': rightSectionIsLess })}>
       <ScrollWrapper hideTracksWhenNotNeeded autoHide>
         <div className={cx('header-block')}>
-          <button className={cx('button')} onClick={() => setIsShown(!isShownLess)}>
-            <i className={cx('show-icon')}>{Parser(isShownLess ? ShowMore : ShowLess)}</i>{' '}
+          <button className={cx('button')} onClick={() => setIsShown(!rightSectionIsLess)}>
+            <i className={cx('show-icon')}>{Parser(rightSectionIsLess ? ShowMore : ShowLess)}</i>{' '}
             <span className={cx('show-icon-prefix')}>
-              {isShownLess ? formatMessage(messages.seeMore) : formatMessage(messages.seeLess)}
+              {rightSectionIsLess
+                ? formatMessage(messages.seeMore)
+                : formatMessage(messages.seeLess)}
             </span>
           </button>
           {isBulkOperation ? (
@@ -172,7 +174,7 @@ export const OptionsSection = ({
               selectedItems={selectedItems}
               loading={loading}
               optionValue={!isBulkOperation && optionValue}
-              isShownLess={isShownLess}
+              rightSectionIsLess={rightSectionIsLess}
               isBulkOperation={isBulkOperation}
             />
           </div>
@@ -182,14 +184,14 @@ export const OptionsSection = ({
   );
 };
 OptionsSection.propTypes = {
-  currentTestItem: PropTypes.object,
+  currentTestItem: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   setModalState: PropTypes.func,
   testItems: PropTypes.array,
   selectedItems: PropTypes.array,
-  optionValue: PropTypes.string,
+  optionValue: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   loading: PropTypes.bool,
   isBulkOperation: PropTypes.bool,
-  isShownLess: PropTypes.bool,
+  rightSectionIsLess: PropTypes.bool,
   setIsShown: PropTypes.func,
   modalState: PropTypes.object,
 };
@@ -201,7 +203,7 @@ OptionsSection.defaultProps = {
   optionValue: '',
   loading: false,
   isBulkOperation: false,
-  isShownLess: true,
+  rightSectionIsLess: true,
   setIsShown: () => {},
   modalState: {},
 };

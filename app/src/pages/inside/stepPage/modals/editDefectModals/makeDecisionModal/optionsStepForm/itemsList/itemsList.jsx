@@ -28,7 +28,7 @@ export const ItemsList = ({
   setModalState,
   loading,
   optionValue,
-  isShownLess,
+  rightSectionIsLess,
   isBulkOperation,
 }) => {
   const [showErrorLogs, setShowErrorLogs] = useState(false);
@@ -50,7 +50,7 @@ export const ItemsList = ({
             showErrorLogs={showErrorLogs}
             onShowErrorLogsChange={setShowErrorLogs}
             optionValue={optionValue}
-            isShownLess={isShownLess}
+            rightSectionIsLess={rightSectionIsLess}
             isBulkOperation={isBulkOperation}
           />
         )}
@@ -61,7 +61,7 @@ export const ItemsList = ({
             setModalState={setModalState}
             showErrorLogs={optionValue === CURRENT_EXECUTION_ONLY || showErrorLogs}
             optionValue={optionValue}
-            isShownLess={isShownLess}
+            rightSectionIsLess={rightSectionIsLess}
             isBulkOperation={isBulkOperation}
           />
         </ScrollWrapper>
@@ -74,10 +74,10 @@ ItemsList.propTypes = {
   selectedItems: PropTypes.array,
   loading: PropTypes.bool,
   setModalState: PropTypes.func,
-  optionValue: PropTypes.string,
+  optionValue: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   selectAllItems: PropTypes.func,
   isBulkOperation: PropTypes.bool,
-  isShownLess: PropTypes.bool,
+  rightSectionIsLess: PropTypes.bool,
 };
 ItemsList.defaultProps = {
   testItems: [],
@@ -87,5 +87,5 @@ ItemsList.defaultProps = {
   optionValue: '',
   selectAllItems: () => {},
   isBulkOperation: false,
-  isShownLess: true,
+  rightSectionIsLess: true,
 };
