@@ -34,19 +34,18 @@ import styles from './darkModalLayout.scss';
 const cx = classNames.bind(styles);
 
 export const DarkModalLayout = ({
-  title,
+  renderTitle,
   renderHeaderElements,
   children,
   modalHasChanges,
   hotKeyAction,
   modalNote,
-  collapsedRightSection,
-  setRightSectionCollapsed,
   renderRightSection,
 }) => {
   const [clickOutside, setClickOutside] = useState(false);
   const [isCtrlEnterPress, setIsCtrlEnterPress] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [collapsedRightSection, setRightSectionCollapsed] = useState(true);
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const wrapperRef = useRef();
@@ -101,12 +100,12 @@ export const DarkModalLayout = ({
             <div ref={wrapperRef} className={cx('wrapper')}>
               <div className={cx('layout', { 'narrow-view': !collapsedRightSection })}>
                 <ModalHeader
-                  text={title}
+                  text={renderTitle(collapsedRightSection)}
                   onClose={closeModalWindow}
                   renderHeaderElements={renderHeaderElements}
                 />
                 <ScrollWrapper hideTracksWhenNotNeeded autoHide>
-                  {status !== 'exited' ? children : null}
+                  {status !== 'exited' ? children({ collapsedRightSection }) : null}
                   <div className={cx('note-row')}>
                     {modalNote && clickOutside && modalHasChanges && (
                       <ModalNote message={modalNote} icon={ErrorInlineIcon} status={'error'} />
@@ -133,7 +132,7 @@ export const DarkModalLayout = ({
                   </span>
                 </button>
               </div>
-              {renderRightSection()}
+              {renderRightSection(collapsedRightSection)}
             </ScrollWrapper>
           </div>
         </div>
@@ -142,24 +141,20 @@ export const DarkModalLayout = ({
   );
 };
 DarkModalLayout.propTypes = {
-  title: PropTypes.string,
+  renderTitle: PropTypes.func,
   renderHeaderElements: PropTypes.func,
-  children: PropTypes.node,
+  children: PropTypes.func,
   modalHasChanges: PropTypes.bool,
   hotKeyAction: PropTypes.objectOf(PropTypes.func),
   modalNote: PropTypes.string,
-  collapsedRightSection: PropTypes.bool,
   renderRightSection: PropTypes.func,
-  setRightSectionCollapsed: PropTypes.func,
 };
 DarkModalLayout.defaultProps = {
-  title: '',
+  renderTitle: () => {},
   renderHeaderElements: () => {},
-  children: null,
+  children: () => {},
   modalHasChanges: false,
   hotKeyAction: {},
   modalNote: '',
-  collapsedRightSection: false,
   renderRightSection: () => {},
-  setRightSectionCollapsed: () => {},
 };

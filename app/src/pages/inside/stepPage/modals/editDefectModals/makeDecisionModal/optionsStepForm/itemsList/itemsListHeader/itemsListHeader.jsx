@@ -47,9 +47,9 @@ export const ItemsListHeader = ({
     if (testItems.length === 1) {
       return;
     }
-    const isAllSelectedCondition = isBulkOperation ? [] : testItems.slice(0, 1);
+    const allSelectedItems = isBulkOperation ? [] : testItems.slice(0, 1);
     setModalState({
-      selectedItems: isAllSelected ? isAllSelectedCondition : testItems,
+      selectedItems: isAllSelected ? allSelectedItems : testItems,
     });
   };
 

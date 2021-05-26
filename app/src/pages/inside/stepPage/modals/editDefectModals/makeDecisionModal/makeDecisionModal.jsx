@@ -75,7 +75,6 @@ const MakeDecision = ({ data }) => {
     [SELECT_DEFECT_MANUALLY]: true,
   });
   const [modalHasChanges, setModalHasChanges] = useState(false);
-  const [collapsedRightSection, setRightSectionCollapsed] = useState(true);
 
   useEffect(() => {
     setModalHasChanges(
@@ -253,7 +252,7 @@ const MakeDecision = ({ data }) => {
     );
   };
 
-  const getAccordionTabs = () => {
+  const getAccordionTabs = (collapsedRightSection) => {
     const preparedHistoryLineItems = historyItems.filter(
       (item) => item.issue && item.id !== itemData.id,
     );
@@ -313,7 +312,7 @@ const MakeDecision = ({ data }) => {
     ctrlEnter: applyChanges,
   };
 
-  const renderTitle = () => {
+  const renderTitle = (collapsedRightSection) => {
     if (isBulkOperation) {
       return formatMessage(collapsedRightSection ? messages.bulkOperationDecision : messages.bulk);
     } else {
@@ -323,7 +322,7 @@ const MakeDecision = ({ data }) => {
     }
   };
 
-  const renderRightSection = () => {
+  const renderRightSection = (collapsedRightSection) => {
     return (
       <OptionsSection
         currentTestItem={itemData}
@@ -337,16 +336,16 @@ const MakeDecision = ({ data }) => {
 
   return (
     <DarkModalLayout
-      title={renderTitle()}
+      renderTitle={renderTitle}
       renderHeaderElements={renderHeaderElements}
       modalHasChanges={modalHasChanges}
       hotKeyAction={hotKeyAction}
       modalNote={formatMessage(messages.modalNote)}
-      collapsedRightSection={collapsedRightSection}
-      setRightSectionCollapsed={setRightSectionCollapsed}
       renderRightSection={renderRightSection}
     >
-      <Accordion tabs={getAccordionTabs()} toggleTab={toggleTab} />
+      {({ collapsedRightSection }) => (
+        <Accordion tabs={getAccordionTabs(collapsedRightSection)} toggleTab={toggleTab} />
+      )}
     </DarkModalLayout>
   );
 };
