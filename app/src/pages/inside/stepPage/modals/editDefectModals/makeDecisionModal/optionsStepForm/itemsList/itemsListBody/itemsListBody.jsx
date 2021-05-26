@@ -59,8 +59,8 @@ const SimilarItemsList = ({
               patternTemplates,
             };
           }
-          const selected = !!selectedItems.find((selectedItem) =>
-            isBulkOperation ? selectedItem.id === item.id : selectedItem.itemId === item.itemId,
+          const selected = !!selectedItems.find(
+            (selectedItem) => selectedItem.itemId === item.itemId,
           );
           const getSelectedItem = () => {
             if (isBulkOperation) {

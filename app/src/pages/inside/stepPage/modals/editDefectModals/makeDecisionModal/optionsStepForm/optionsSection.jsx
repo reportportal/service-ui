@@ -108,7 +108,11 @@ export const OptionsSection = ({
               })
             : items.push({ ...currentTestItem, logs: currentItemLogs }, ...(similarItemsRes || []));
           setModalState({
-            testItems: items,
+            testItems: isBulkOperation
+              ? items.map((item) => {
+                  return { ...item, itemId: item.id };
+                })
+              : items,
             selectedItems: isBulkOperation
               ? items.map((item) => {
                   return { ...item, itemId: item.id };
