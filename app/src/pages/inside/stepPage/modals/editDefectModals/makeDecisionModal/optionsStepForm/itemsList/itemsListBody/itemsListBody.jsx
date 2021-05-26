@@ -41,7 +41,7 @@ const SimilarItemsList = ({
   selectedItems,
   selectItem,
   showErrorLogs,
-  rightSectionIsLess,
+  isNarrowView,
   isBulkOperation,
 }) => {
   return (
@@ -75,10 +75,10 @@ const SimilarItemsList = ({
                 selectItem={getSelectedItem()}
                 isSelected={selected}
                 preselected={!isBulkOperation ? i === 0 : null}
-                rightSectionIsLess={rightSectionIsLess}
+                isNarrowView={isNarrowView}
               />
               {showErrorLogs &&
-                !rightSectionIsLess &&
+                !isNarrowView &&
                 item.logs
                   .slice(0, ERROR_LOGS_SIZE)
                   .map((log) => <Log log={log} key={uniqueId()} />)}
@@ -94,10 +94,10 @@ SimilarItemsList.propTypes = {
   selectItem: PropTypes.func.isRequired,
   showErrorLogs: PropTypes.bool.isRequired,
   isBulkOperation: PropTypes.bool,
-  rightSectionIsLess: PropTypes.bool,
+  isNarrowView: PropTypes.bool,
 };
 
-const HistoryLineItemsList = ({ testItems, selectedItems, selectItem, rightSectionIsLess }) => {
+const HistoryLineItemsList = ({ testItems, selectedItems, selectItem, isNarrowView }) => {
   return (
     testItems.length > 0 &&
     testItems.map((item, i) => (
@@ -107,7 +107,7 @@ const HistoryLineItemsList = ({ testItems, selectedItems, selectItem, rightSecti
         isSelected={!!selectedItems.find((selectedItem) => selectedItem.id === item.id)}
         preselected={i === 0}
         key={item.id}
-        rightSectionIsLess={rightSectionIsLess}
+        isNarrowView={isNarrowView}
       />
     ))
   );
@@ -124,7 +124,7 @@ export const ItemsListBody = ({
   setModalState,
   showErrorLogs,
   optionValue,
-  rightSectionIsLess,
+  isNarrowView,
   isBulkOperation,
 }) => {
   const selectItem = (id) => {
@@ -142,7 +142,7 @@ export const ItemsListBody = ({
           testItems={testItems}
           selectedItems={selectedItems}
           selectItem={selectItem}
-          rightSectionIsLess={rightSectionIsLess}
+          isNarrowView={isNarrowView}
         />
       ) : (
         <SimilarItemsList
@@ -150,7 +150,7 @@ export const ItemsListBody = ({
           selectedItems={selectedItems}
           selectItem={selectItem}
           showErrorLogs={showErrorLogs}
-          rightSectionIsLess={rightSectionIsLess}
+          isNarrowView={isNarrowView}
           isBulkOperation={isBulkOperation}
         />
       )}
@@ -164,7 +164,7 @@ ItemsListBody.propTypes = {
   showErrorLogs: PropTypes.bool,
   optionValue: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   isBulkOperation: PropTypes.bool,
-  rightSectionIsLess: PropTypes.bool,
+  isNarrowView: PropTypes.bool,
 };
 ItemsListBody.defaultProps = {
   testItems: [],
@@ -173,5 +173,5 @@ ItemsListBody.defaultProps = {
   showErrorLogs: false,
   optionValue: '',
   isBulkOperation: false,
-  rightSectionIsLess: true,
+  isNarrowView: true,
 };

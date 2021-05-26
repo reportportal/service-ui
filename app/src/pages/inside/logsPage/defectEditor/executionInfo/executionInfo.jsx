@@ -30,7 +30,7 @@ export const ExecutionInfo = ({
   selectItem,
   isSelected,
   preselected,
-  rightSectionIsLess,
+  isNarrowView,
 }) => {
   const defectTypes = useSelector(defectTypesSelector);
 
@@ -44,7 +44,7 @@ export const ExecutionInfo = ({
         selectItem={selectItem}
         isSelected={isSelected}
         preselected={preselected}
-        rightSectionIsLess={rightSectionIsLess}
+        isNarrowView={isNarrowView}
       />
     </div>
   );
@@ -56,7 +56,7 @@ ExecutionInfo.propTypes = {
   isSelected: PropTypes.bool,
   selectItem: PropTypes.func,
   preselected: PropTypes.bool,
-  rightSectionIsLess: PropTypes.bool,
+  isNarrowView: PropTypes.bool,
 };
 
 ExecutionInfo.defaultProps = {
@@ -66,5 +66,5 @@ ExecutionInfo.defaultProps = {
   isSelected: false,
   selectItem: () => {},
   preselected: false,
-  rightSectionIsLess: true,
+  isNarrowView: false,
 };

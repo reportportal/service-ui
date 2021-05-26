@@ -25,10 +25,6 @@ import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { useDispatch, useSelector } from 'react-redux';
 import { activeProjectSelector } from 'controllers/user';
 import { activeFilterSelector } from 'controllers/filter';
-import ShowLess from 'common/img/show-less-inline.svg';
-import ShowMore from 'common/img/show-more-inline.svg';
-import Parser from 'html-react-parser';
-import { ScrollWrapper } from 'components/main/scrollWrapper';
 import styles from './optionsSection.scss';
 import { ItemsList } from './itemsList';
 import { OptionsBlock } from './optionsBlock';
@@ -40,8 +36,7 @@ export const OptionsSection = ({
   currentTestItem,
   setModalState,
   modalState,
-  rightSectionIsLess,
-  setIsShown,
+  isNarrowView,
   isBulkOperation,
 }) => {
   const { formatMessage } = useIntl();
@@ -140,51 +135,39 @@ export const OptionsSection = ({
   }, [optionValue]);
 
   return (
-    <div className={cx('options-section', { 'shown-less': rightSectionIsLess })}>
-      <ScrollWrapper hideTracksWhenNotNeeded autoHide>
-        <div className={cx('header-block')}>
-          <button className={cx('button')} onClick={() => setIsShown(!rightSectionIsLess)}>
-            <i className={cx('show-icon')}>{Parser(rightSectionIsLess ? ShowMore : ShowLess)}</i>{' '}
-            <span className={cx('show-icon-prefix')}>
-              {rightSectionIsLess
-                ? formatMessage(messages.seeMore)
-                : formatMessage(messages.seeLess)}
-            </span>
-          </button>
-          {isBulkOperation ? (
-            <span className={cx('header')}>{formatMessage(messages.currentSelection)}</span>
-          ) : (
-            <>
-              <span className={cx('header')}>{formatMessage(messages.applyDefectFor)}</span>
-              <span className={cx('subheader')}>
-                {formatMessage(messages.applyToSimilarItems)}:
-              </span>
-            </>
-          )}
+    <>
+      <div className={cx('header-block')}>
+        {isBulkOperation ? (
+          <span className={cx('header')}>{formatMessage(messages.currentSelection)}</span>
+        ) : (
+          <>
+            <span className={cx('header')}>{formatMessage(messages.applyDefectFor)}</span>
+            <span className={cx('subheader')}>{formatMessage(messages.applyToSimilarItems)}:</span>
+          </>
+        )}
+      </div>
+      <div className={cx('options-block')}>
+        {!isBulkOperation && (
+          <OptionsBlock
+            optionValue={optionValue}
+            currentTestItem={currentTestItem}
+            loading={loading}
+            setModalState={setModalState}
+          />
+        )}
+        <div className={cx('items-list')}>
+          <ItemsList
+            setModalState={setModalState}
+            testItems={testItems}
+            selectedItems={selectedItems}
+            loading={loading}
+            optionValue={!isBulkOperation && optionValue}
+            isNarrowView={isNarrowView}
+            isBulkOperation={isBulkOperation}
+          />
         </div>
-        <div className={cx('options-block')}>
-          {!isBulkOperation && (
-            <OptionsBlock
-              optionValue={optionValue}
-              currentTestItem={currentTestItem}
-              loading={loading}
-              setModalState={setModalState}
-            />
-          )}
-          <div className={cx('items-list')}>
-            <ItemsList
-              setModalState={setModalState}
-              testItems={testItems}
-              selectedItems={selectedItems}
-              loading={loading}
-              optionValue={!isBulkOperation && optionValue}
-              rightSectionIsLess={rightSectionIsLess}
-              isBulkOperation={isBulkOperation}
-            />
-          </div>
-        </div>
-      </ScrollWrapper>
-    </div>
+      </div>
+    </>
   );
 };
 OptionsSection.propTypes = {
@@ -195,8 +178,7 @@ OptionsSection.propTypes = {
   optionValue: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   loading: PropTypes.bool,
   isBulkOperation: PropTypes.bool,
-  rightSectionIsLess: PropTypes.bool,
-  setIsShown: PropTypes.func,
+  isNarrowView: PropTypes.bool,
   modalState: PropTypes.object,
 };
 OptionsSection.defaultProps = {
@@ -207,7 +189,6 @@ OptionsSection.defaultProps = {
   optionValue: '',
   loading: false,
   isBulkOperation: false,
-  rightSectionIsLess: true,
-  setIsShown: () => {},
+  isNarrowView: true,
   modalState: {},
 };

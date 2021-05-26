@@ -21,13 +21,7 @@ import styles from './defectTypeItemML.scss';
 
 const cx = classNames.bind(styles);
 
-export const DefectTypeItemML = ({
-  defectType,
-  onClick,
-  isSelected,
-  className,
-  rightSectionIsLess,
-}) => {
+export const DefectTypeItemML = ({ defectType, onClick, isSelected, className, isNarrowView }) => {
   return (
     <div
       onClick={onClick}
@@ -35,15 +29,15 @@ export const DefectTypeItemML = ({
         'defect-type-item',
         {
           selected: isSelected,
-          'shown-less': !rightSectionIsLess,
+          'narrow-view': isNarrowView,
         },
         className,
       )}
       title={defectType.longName}
     >
       <div className={cx('defect-type-circle')} style={{ backgroundColor: defectType.color }} />
-      <div className={cx('defect-type-name')} title={!rightSectionIsLess && defectType.longName}>
-        {rightSectionIsLess ? defectType.longName : defectType.shortName}
+      <div className={cx('defect-type-name')} title={isNarrowView && defectType.longName}>
+        {!isNarrowView ? defectType.longName : defectType.shortName}
       </div>
     </div>
   );
@@ -53,11 +47,11 @@ DefectTypeItemML.propTypes = {
   onClick: PropTypes.func,
   isSelected: PropTypes.bool,
   className: PropTypes.string,
-  rightSectionIsLess: PropTypes.bool,
+  isNarrowView: PropTypes.bool,
 };
 DefectTypeItemML.defaultProps = {
   onClick: () => {},
   isSelected: false,
   className: 'PropTypes.string',
-  rightSectionIsLess: true,
+  isNarrowView: false,
 };

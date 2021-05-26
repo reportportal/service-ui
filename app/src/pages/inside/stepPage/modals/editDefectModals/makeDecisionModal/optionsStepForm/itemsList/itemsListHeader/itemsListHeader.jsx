@@ -34,7 +34,7 @@ export const ItemsListHeader = ({
   showErrorLogs,
   onShowErrorLogsChange,
   optionValue,
-  rightSectionIsLess,
+  isNarrowView,
   isBulkOperation,
 }) => {
   const { formatMessage } = useIntl();
@@ -63,9 +63,9 @@ export const ItemsListHeader = ({
           })}
         </span>
       </InputCheckbox>
-      {optionValue !== ALL_LOADED_TI_FROM_HISTORY_LINE && (
+      {optionValue !== ALL_LOADED_TI_FROM_HISTORY_LINE && !isNarrowView && (
         <InputSwitcher
-          className={cx('switcher', { 'shown-less': rightSectionIsLess })}
+          className={cx('switcher')}
           childrenClassName={cx('switcher-children')}
           value={showErrorLogs}
           onChange={onShowErrorLogsChange}
@@ -88,7 +88,7 @@ ItemsListHeader.propTypes = {
   onShowErrorLogsChange: PropTypes.func,
   optionValue: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   isBulkOperation: PropTypes.bool,
-  rightSectionIsLess: PropTypes.bool,
+  isNarrowView: PropTypes.bool,
 };
 ItemsListHeader.defaultProps = {
   setModalState: () => {},
@@ -99,5 +99,5 @@ ItemsListHeader.defaultProps = {
   onShowErrorLogsChange: () => {},
   optionValue: '',
   isBulkOperation: false,
-  rightSectionIsLess: true,
+  isNarrowView: false,
 };

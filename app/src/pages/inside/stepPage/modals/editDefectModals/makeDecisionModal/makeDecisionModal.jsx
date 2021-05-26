@@ -75,7 +75,7 @@ const MakeDecision = ({ data }) => {
     [SELECT_DEFECT_MANUALLY]: true,
   });
   const [modalHasChanges, setModalHasChanges] = useState(false);
-  const [rightSectionIsLess, setIsShown] = useState(true);
+  const [collapsedRightSection, setRightSectionCollapsed] = useState(true);
 
   useEffect(() => {
     setModalHasChanges(
@@ -91,7 +91,7 @@ const MakeDecision = ({ data }) => {
   const prepareDataToSend = ({ isIssueAction, replaceComment } = {}) => {
     const { issue } = modalState.source;
     if (isBulkOperation) {
-      const items = modalState.selectedItems;
+      const { selectedItems: items } = modalState;
       return items.map((item) => {
         const comment = replaceComment
           ? issue.comment
@@ -109,13 +109,12 @@ const MakeDecision = ({ data }) => {
       });
     }
     return modalState.selectedItems.map((item, i) => {
-      let comment = issue.comment || '';
-      if (
-        comment !== item.issue.comment &&
+      const comment =
+        issue.comment !== item.issue.comment &&
         (modalState.decisionType === COPY_FROM_HISTORY_LINE || i !== 0)
-      ) {
-        comment = `${item.issue.comment || ''}\n${comment}`.trim();
-      }
+          ? `${item.issue.comment || ''}\n${issue.comment}`.trim()
+          : issue.comment || '';
+
       return {
         ...(isIssueAction ? item : {}),
         id: item.id || item.itemId,
@@ -284,7 +283,7 @@ const MakeDecision = ({ data }) => {
             setModalState={setModalState}
             isBulkOperation={isBulkOperation}
             collapseTabsExceptCurr={collapseTabsExceptCurr}
-            rightSectionIsLess={rightSectionIsLess}
+            isNarrowView={!collapsedRightSection}
           />
         ),
       },
@@ -316,22 +315,21 @@ const MakeDecision = ({ data }) => {
 
   const renderTitle = () => {
     if (isBulkOperation) {
-      return formatMessage(rightSectionIsLess ? messages.bulkOperationDecision : messages.bulk);
+      return formatMessage(collapsedRightSection ? messages.bulkOperationDecision : messages.bulk);
     } else {
-      return formatMessage(rightSectionIsLess ? messages.decisionForTest : messages.test, {
+      return formatMessage(collapsedRightSection ? messages.decisionForTest : messages.test, {
         launchNumber: itemData.launchNumber && `#${itemData.launchNumber}`,
       });
     }
   };
 
-  const renderSideSection = () => {
+  const renderRightSection = () => {
     return (
       <OptionsSection
         currentTestItem={itemData}
         modalState={modalState}
         setModalState={setModalState}
-        rightSectionIsLess={rightSectionIsLess}
-        setIsShown={setIsShown}
+        isNarrowView={collapsedRightSection}
         isBulkOperation={isBulkOperation}
       />
     );
@@ -344,8 +342,9 @@ const MakeDecision = ({ data }) => {
       modalHasChanges={modalHasChanges}
       hotKeyAction={hotKeyAction}
       modalNote={formatMessage(messages.modalNote)}
-      rightSectionIsLess={rightSectionIsLess}
-      renderSideSection={renderSideSection}
+      collapsedRightSection={collapsedRightSection}
+      setRightSectionCollapsed={setRightSectionCollapsed}
+      renderRightSection={renderRightSection}
     >
       <Accordion tabs={getAccordionTabs()} toggleTab={toggleTab} />
     </DarkModalLayout>
