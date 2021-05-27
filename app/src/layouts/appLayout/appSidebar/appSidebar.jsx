@@ -34,6 +34,7 @@ import {
   PROJECT_USERDEBUG_PAGE,
   LAUNCHES_PAGE,
   PROJECT_FILTERS_PAGE,
+  PROJECT_TESTRUNNER_PAGE,
   USER_PROFILE_PAGE,
   ADMINISTRATE_PAGE,
   PROJECT_MEMBERS_PAGE,
@@ -113,6 +114,12 @@ export class AppSidebar extends Component {
         link: { type: PROJECT_FILTERS_PAGE, payload: { projectId: activeProject } },
         icon: FiltersIcon,
         message: <FormattedMessage id={'Sidebar.filtersBtn'} defaultMessage={'Filters'} />,
+      },
+      {
+        onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_TESTRUNNER_BTN),
+        link: { type: PROJECT_TESTRUNNER_PAGE, payload: { projectId: activeProject } },
+        icon: LaunchesIcon,
+        message: <FormattedMessage id={'Sidebar.testRunnerBtn'} defaultMessage={'Test Runner'} />,
       },
     ];
 

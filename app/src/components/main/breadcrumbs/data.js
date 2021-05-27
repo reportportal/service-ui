@@ -71,6 +71,20 @@ export const descriptors = [
     listView: false,
     active: false,
   },
+  {
+    title: 'title5',
+    id: 'link5',
+    link: {
+      type: 'PROJECT_TESTRUNNER_PAGE',
+      payload: {
+        filterId: 'all',
+        projectId: 'amsterget_personal',
+      },
+    },
+    error: false,
+    listView: false,
+    active: false,
+  },
 ];
 
 export const errorDescriptors = descriptors.map((item) => ({ ...item, error: true }));

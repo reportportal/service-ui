@@ -36,6 +36,11 @@ export const SIDEBAR_EVENTS = {
     action: 'Click on Menu button Filters',
     label: 'Transition on Filters Page',
   },
+  CLICK_TESTRUNNER_BTN: {
+    category: SIDEBAR,
+    action: 'Click on Menu button Test Runner',
+    label: 'Transition on Test Runner Page',
+  },
   CLICK_DEBUG_BTN: {
     category: SIDEBAR,
     action: 'Click on Menu button Debug',

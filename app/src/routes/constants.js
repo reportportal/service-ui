@@ -29,6 +29,7 @@ import { DashboardPage } from 'pages/inside/dashboardPage';
 import { DashboardItemPage } from 'pages/inside/dashboardItemPage';
 import { DashboardPrintPage } from 'pages/inside/dashboardItemPage/dashboardPrintPage';
 import { FiltersPage } from 'pages/inside/filtersPage';
+import { TestRunnerPage } from 'pages/inside/testRunnerPage';
 import { LaunchesPage } from 'pages/inside/launchesPage';
 import { ProfilePage } from 'pages/inside/profilePage';
 import { SandboxPage } from 'pages/inside/sandboxPage';
@@ -67,6 +68,7 @@ export const pageRendering = {
   PROJECT_DASHBOARD_ITEM_PAGE: { component: DashboardItemPage, layout: AppLayout },
   PROJECT_DASHBOARD_PRINT_PAGE: { component: DashboardPrintPage, layout: EmptyLayout },
   PROJECT_FILTERS_PAGE: { component: FiltersPage, layout: AppLayout },
+  PROJECT_TESTRUNNER_PAGE: { component: TestRunnerPage, layout: AppLayout },
   [LAUNCHES_PAGE]: { component: LaunchesPage, layout: AppLayout },
   PROJECT_LAUNCHES_PAGE: { component: LaunchesPage, layout: AppLayout },
   PROJECT_MEMBERS_PAGE: { component: ProjectMembersPageContainer, layout: AppLayout },

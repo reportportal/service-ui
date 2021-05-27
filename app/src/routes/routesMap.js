@@ -208,6 +208,9 @@ const routesMap = {
       dispatch(fetchFiltersPageAction(location.kind !== 'load'));
     },
   },
+  PROJECT_TESTRUNNER_PAGE: {
+    path: '/:projectId/testrunner',
+  },
   [PROJECT_LOG_PAGE]: {
     path: '/:projectId/launches/:filterId/:testItemIds+/log',
     thunk: (dispatch) => {

@@ -1,0 +1,25 @@
+.test-runner {
+  h1 {
+    font-size: 25px;
+  }
+}
+
+.form-row {
+  margin: 40px 20px;
+
+  span {
+    display: inline-block;
+    width: 150px;
+  }
+
+  select {
+    padding: 6px;
+    font-size: 16px;
+    width: 300px;
+  }
+}
+
+.form-button {
+  margin: 20px;
+  padding: 8px 30px;
+}

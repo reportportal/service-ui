@@ -458,6 +458,9 @@ export const state = {
       PROJECT_FILTERS_PAGE: {
         path: '/:projectId/filters',
       },
+      PROJECT_TESTRUNNER_PAGE: {
+        path: '/:projectId/testrunner',
+      },
       PROJECT_USERDEBUG_PAGE: {
         path: '/:projectId/userdebug/:filterId',
       },

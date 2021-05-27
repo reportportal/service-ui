@@ -124,6 +124,9 @@ export const state = {
       PROJECT_FILTERS_PAGE: {
         path: '/:projectId/filters',
       },
+      PROJECT_TESTRUNNER_PAGE: {
+        path: '/:projectId/testrunner',
+      },
       PROJECT_LOG_PAGE: {
         path: '/:projectId/launches/:filterId/:testItemIds+/log',
       },
