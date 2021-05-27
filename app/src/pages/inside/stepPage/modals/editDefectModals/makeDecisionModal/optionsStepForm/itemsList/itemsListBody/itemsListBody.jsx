@@ -36,13 +36,20 @@ const Log = ({ log }) => (
 Log.propTypes = {
   log: PropTypes.object.isRequired,
 };
-const SimilarItemsList = ({ testItems, selectedItems, selectItem, showErrorLogs }) => {
+const SimilarItemsList = ({
+  testItems,
+  selectedItems,
+  selectItem,
+  showErrorLogs,
+  isNarrowView,
+  isBulkOperation,
+}) => {
   return (
     <>
       {testItems.length > 0 &&
         testItems.map((item, i) => {
           let composedItem = item;
-          if (i !== 0) {
+          if (!isBulkOperation && i !== 0) {
             const { itemId: id, itemName: name, issue, patternTemplates } = item;
             composedItem = {
               ...item,
@@ -55,15 +62,23 @@ const SimilarItemsList = ({ testItems, selectedItems, selectItem, showErrorLogs 
           const selected = !!selectedItems.find(
             (selectedItem) => selectedItem.itemId === item.itemId,
           );
+          const getSelectedItem = () => {
+            if (isBulkOperation) {
+              return selectItem;
+            }
+            return i !== 0 ? selectItem : undefined;
+          };
           return (
             <div key={item.id || item.itemId}>
               <ItemHeader
                 item={composedItem}
-                selectItem={i !== 0 ? selectItem : undefined}
+                selectItem={getSelectedItem()}
                 isSelected={selected}
-                preselected={i === 0}
+                preselected={!isBulkOperation ? i === 0 : null}
+                isNarrowView={isNarrowView}
               />
               {showErrorLogs &&
+                !isNarrowView &&
                 item.logs
                   .slice(0, ERROR_LOGS_SIZE)
                   .map((log) => <Log log={log} key={uniqueId()} />)}
@@ -78,9 +93,11 @@ SimilarItemsList.propTypes = {
   selectedItems: PropTypes.array.isRequired,
   selectItem: PropTypes.func.isRequired,
   showErrorLogs: PropTypes.bool.isRequired,
+  isBulkOperation: PropTypes.bool,
+  isNarrowView: PropTypes.bool,
 };
 
-const HistoryLineItemsList = ({ testItems, selectedItems, selectItem }) => {
+const HistoryLineItemsList = ({ testItems, selectedItems, selectItem, isNarrowView }) => {
   return (
     testItems.length > 0 &&
     testItems.map((item, i) => (
@@ -90,6 +107,7 @@ const HistoryLineItemsList = ({ testItems, selectedItems, selectItem }) => {
         isSelected={!!selectedItems.find((selectedItem) => selectedItem.id === item.id)}
         preselected={i === 0}
         key={item.id}
+        isNarrowView={isNarrowView}
       />
     ))
   );
@@ -106,6 +124,8 @@ export const ItemsListBody = ({
   setModalState,
   showErrorLogs,
   optionValue,
+  isNarrowView,
+  isBulkOperation,
 }) => {
   const selectItem = (id) => {
     setModalState({
@@ -122,6 +142,7 @@ export const ItemsListBody = ({
           testItems={testItems}
           selectedItems={selectedItems}
           selectItem={selectItem}
+          isNarrowView={isNarrowView}
         />
       ) : (
         <SimilarItemsList
@@ -129,6 +150,8 @@ export const ItemsListBody = ({
           selectedItems={selectedItems}
           selectItem={selectItem}
           showErrorLogs={showErrorLogs}
+          isNarrowView={isNarrowView}
+          isBulkOperation={isBulkOperation}
         />
       )}
     </div>
@@ -139,7 +162,9 @@ ItemsListBody.propTypes = {
   selectedItems: PropTypes.array,
   setModalState: PropTypes.func,
   showErrorLogs: PropTypes.bool,
-  optionValue: PropTypes.string,
+  optionValue: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+  isBulkOperation: PropTypes.bool,
+  isNarrowView: PropTypes.bool,
 };
 ItemsListBody.defaultProps = {
   testItems: [],
@@ -147,4 +172,6 @@ ItemsListBody.defaultProps = {
   setModalState: () => {},
   showErrorLogs: false,
   optionValue: '',
+  isBulkOperation: false,
+  isNarrowView: true,
 };

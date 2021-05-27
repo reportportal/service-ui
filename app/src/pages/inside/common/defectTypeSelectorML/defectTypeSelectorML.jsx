@@ -25,7 +25,7 @@ import styles from './defectTypeSelectorML.scss';
 
 const cx = classNames.bind(styles);
 
-export const DefectTypeSelectorML = ({ selectDefectType, selectedItem }) => {
+export const DefectTypeSelectorML = ({ selectDefectType, selectedItem, isNarrowView }) => {
   const defectTypes = useSelector(defectTypesSelector);
 
   return (
@@ -33,13 +33,17 @@ export const DefectTypeSelectorML = ({ selectDefectType, selectedItem }) => {
       {Object.keys(defectTypes).length > 0 && (
         <div className={cx('defect-options')}>
           {DEFECT_TYPES_SEQUENCE.map((option) => (
-            <div key={option} className={cx('select-option-group')}>
+            <div
+              key={option}
+              className={cx('select-option-group', { 'narrow-view': isNarrowView })}
+            >
               {defectTypes[option].map((defectType) => (
                 <div key={defectType.locator} className={cx('select-option')}>
                   <DefectTypeItemML
                     defectType={defectType}
                     isSelected={defectType.locator === selectedItem}
                     onClick={() => selectDefectType(defectType.locator)}
+                    isNarrowView={isNarrowView}
                   />
                 </div>
               ))}
@@ -53,8 +57,10 @@ export const DefectTypeSelectorML = ({ selectDefectType, selectedItem }) => {
 DefectTypeSelectorML.propTypes = {
   selectDefectType: PropTypes.func,
   selectedItem: PropTypes.string,
+  isNarrowView: PropTypes.bool,
 };
 DefectTypeSelectorML.defaultProps = {
   selectDefectType: null,
   selectedItem: '',
+  isNarrowView: false,
 };

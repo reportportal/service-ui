@@ -15,7 +15,6 @@
  */
 
 .container {
-  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
@@ -24,9 +23,9 @@
 }
 
 .wrapper {
-  height: calc(100% - 165px);
+  height: 100%;
   display: flex;
-  margin: 165px 0 0 56px;
+  margin-left: 56px;
   justify-content: center;
   background-color: rgba($COLOR--dark-modal, 0.95);
   overflow: hidden;
@@ -36,7 +35,24 @@
   width: 100%;
   height: calc(100% - 100px);
   max-width: 920px;
-  margin: 30px 15px 15px 15px;
+  padding: 80px 15px 15px 15px;
+
+  &.narrow-view {
+    box-sizing: border-box;
+    padding-left: 32px;
+  }
+}
+
+.note-row {
+  margin-top: 10px;
+}
+
+.modal-content {
+  position: absolute;
+  height: 100%;
+  display: flex;
+  width: 100%;
+  top: 0;
 }
 
 :global {
@@ -45,17 +61,53 @@
   }
   .window-animation-enter-active {
     opacity: 1;
-    transition: opacity 200ms;
+    transition: opacity 300ms;
   }
   .window-animation-exit {
     opacity: 1;
   }
   .window-animation-exit-active {
     opacity: 0;
-    transition: opacity 200ms;
+    transition: opacity 300ms;
   }
 }
 
-.note-row {
-  margin-top: 10px;
+.right-section {
+  box-sizing: border-box;
+  display: flex;
+  max-width: 617px;
+  min-width: 617px;
+  height: 100%;
+  flex-direction: column;
+  padding: 84px 20px 20px 32px;
+  background-color: $COLOR--dark-modal;
+  &.narrow-view {
+    min-width: 364px;
+  }
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+}
+
+.button {
+  background: $COLOR--dark-modal;
+  border: none;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  width: 80px;
+  padding: 0;
+}
+
+.show-icon {
+  margin-right: 8px;
+  width: 24px;
+}
+
+.show-icon-prefix {
+  color: $COLOR--dark-gray;
+  font-size: 11px;
+  line-height: 15px;
 }

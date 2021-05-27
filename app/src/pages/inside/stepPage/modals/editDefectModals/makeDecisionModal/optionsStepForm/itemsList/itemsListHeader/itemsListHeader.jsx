@@ -20,7 +20,7 @@ import { useIntl } from 'react-intl';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import classNames from 'classnames/bind';
-import { messages } from './../../../../messages';
+import { messages } from '../../../../messages';
 import { ALL_LOADED_TI_FROM_HISTORY_LINE } from '../../../../constants';
 import styles from './itemsListHeader.scss';
 
@@ -34,6 +34,8 @@ export const ItemsListHeader = ({
   showErrorLogs,
   onShowErrorLogsChange,
   optionValue,
+  isNarrowView,
+  isBulkOperation,
 }) => {
   const { formatMessage } = useIntl();
   const [isAllSelected, setIsAllSelected] = useState(selectedItems.length === testItems.length);
@@ -45,8 +47,9 @@ export const ItemsListHeader = ({
     if (testItems.length === 1) {
       return;
     }
+    const allSelectedItems = isBulkOperation ? [] : testItems.slice(0, 1);
     setModalState({
-      selectedItems: isAllSelected ? testItems.slice(0, 1) : testItems,
+      selectedItems: isAllSelected ? allSelectedItems : testItems,
     });
   };
 
@@ -60,7 +63,7 @@ export const ItemsListHeader = ({
           })}
         </span>
       </InputCheckbox>
-      {optionValue !== ALL_LOADED_TI_FROM_HISTORY_LINE && (
+      {optionValue !== ALL_LOADED_TI_FROM_HISTORY_LINE && !isNarrowView && (
         <InputSwitcher
           className={cx('switcher')}
           childrenClassName={cx('switcher-children')}
@@ -83,7 +86,9 @@ ItemsListHeader.propTypes = {
   selectedItems: PropTypes.array,
   showErrorLogs: PropTypes.bool,
   onShowErrorLogsChange: PropTypes.func,
-  optionValue: PropTypes.string,
+  optionValue: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+  isBulkOperation: PropTypes.bool,
+  isNarrowView: PropTypes.bool,
 };
 ItemsListHeader.defaultProps = {
   setModalState: () => {},
@@ -93,4 +98,6 @@ ItemsListHeader.defaultProps = {
   showErrorLogs: false,
   onShowErrorLogsChange: () => {},
   optionValue: '',
+  isBulkOperation: false,
+  isNarrowView: false,
 };

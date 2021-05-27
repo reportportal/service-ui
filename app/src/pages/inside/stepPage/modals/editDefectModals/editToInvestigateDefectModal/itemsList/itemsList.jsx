@@ -60,6 +60,7 @@ export const ItemsList = injectIntl(
     onSelectAllToggle,
     onToggleItemSelect,
     onChangeSearchMode,
+    isBulkOperation,
   }) => {
     const isAllSelected = !!testItems.length && testItems.length === selectedItems.length;
     return (
@@ -71,6 +72,7 @@ export const ItemsList = injectIntl(
           currentFilter={currentFilter}
           onSelectAllToggle={onSelectAllToggle}
           onChangeSearchMode={onChangeSearchMode}
+          isBulkOperation={isBulkOperation}
         />
         {testItems.length ? (
           <ItemsListBody
@@ -99,6 +101,7 @@ ItemsList.propTypes = {
   onToggleItemSelect: PropTypes.func,
   onSelectAllToggle: PropTypes.func,
   onChangeSearchMode: PropTypes.func,
+  isBulkOperation: PropTypes.bool,
 };
 ItemsList.defaultProps = {
   testItems: [],
@@ -109,4 +112,5 @@ ItemsList.defaultProps = {
   onToggleItemSelect: () => {},
   onSelectAllToggle: () => {},
   onChangeSearchMode: () => {},
+  isBulkOperation: false,
 };

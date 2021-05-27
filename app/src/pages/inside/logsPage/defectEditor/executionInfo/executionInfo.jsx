@@ -24,7 +24,14 @@ import { HistoryLineItemContent } from '../../historyLine/historyLineItem';
 
 const cx = classNames.bind(styles);
 
-export const ExecutionInfo = ({ className, item, selectItem, isSelected, preselected }) => {
+export const ExecutionInfo = ({
+  className,
+  item,
+  selectItem,
+  isSelected,
+  preselected,
+  isNarrowView,
+}) => {
   const defectTypes = useSelector(defectTypesSelector);
 
   return (
@@ -37,6 +44,7 @@ export const ExecutionInfo = ({ className, item, selectItem, isSelected, presele
         selectItem={selectItem}
         isSelected={isSelected}
         preselected={preselected}
+        isNarrowView={isNarrowView}
       />
     </div>
   );
@@ -48,6 +56,7 @@ ExecutionInfo.propTypes = {
   isSelected: PropTypes.bool,
   selectItem: PropTypes.func,
   preselected: PropTypes.bool,
+  isNarrowView: PropTypes.bool,
 };
 
 ExecutionInfo.defaultProps = {
@@ -57,4 +66,5 @@ ExecutionInfo.defaultProps = {
   isSelected: false,
   selectItem: () => {},
   preselected: false,
+  isNarrowView: false,
 };

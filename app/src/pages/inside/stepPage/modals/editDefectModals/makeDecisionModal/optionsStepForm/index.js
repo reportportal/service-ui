@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { OptionsStepForm } from './optionsStepForm';
+export { OptionsSection } from './optionsSection';

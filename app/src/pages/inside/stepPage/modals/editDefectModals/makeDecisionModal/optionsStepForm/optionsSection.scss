@@ -15,10 +15,17 @@
  */
 
 .options-section {
+  box-sizing: border-box;
   display: flex;
+  max-width: 617px;
+  min-width: 617px;
+  height: 100%;
   flex-direction: column;
-  margin-top: 30px;
-  padding-left: 24px;
+  padding: 84px 20px 20px 32px;
+  background-color: $COLOR--dark-modal;
+  &.narrow-view {
+    min-width: 364px;
+  }
 }
 
 .header-block {
@@ -30,6 +37,7 @@
   color: $COLOR--white-two;
   font-size: 16px;
   line-height: 22px;
+  margin-top: 44px;
 }
 
 .subheader {
@@ -42,6 +50,7 @@
 .options-block {
   display: flex;
   margin-top: 28px;
+  flex-direction: column;
 }
 
 .items-list {

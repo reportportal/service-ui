@@ -31,7 +31,7 @@ import styles from './itemHeader.scss';
 
 const cx = classNames.bind(styles);
 
-export const ItemHeader = ({ item, selectItem, isSelected, preselected }) => {
+export const ItemHeader = ({ item, selectItem, isSelected, preselected, isNarrowView }) => {
   const {
     id,
     name,
@@ -46,12 +46,12 @@ export const ItemHeader = ({ item, selectItem, isSelected, preselected }) => {
       className={cx('item-info', { selected: isSelected, preselected })}
       onClick={() => selectItem(id)}
     >
-      <div className={cx('header')}>
+      <div className={cx('header', { 'narrow-view': isNarrowView })}>
         <Link to={link} target="_blank" className={cx('item-name')}>
-          {name}
+          <span title={name}>{name}</span>
           <div className={cx('icon')}>{Parser(ExternalLinkIcon)}</div>
         </Link>
-        <div className={cx('defect-block')}>
+        <div className={cx('defect-block', { 'narrow-view': isNarrowView })}>
           {ignoreAnalyzer && <IgnoredInAALabel className={cx('ignore-aa-label')} />}
           {autoAnalyzed && <AutoAnalyzedLabel className={cx('aa-label')} />}
           {!!patternTemplates.length && (
@@ -64,7 +64,7 @@ export const ItemHeader = ({ item, selectItem, isSelected, preselected }) => {
           <DefectTypeItem type={issueType} className={cx('defect-type')} />
         </div>
       </div>
-      <div className={cx('bts-row')}>
+      <div className={cx('bts-row', { 'narrow-view': isNarrowView })}>
         <IssueList issues={externalSystemIssues} className={cx('issue')} readOnly />
       </div>
     </div>
@@ -76,6 +76,7 @@ ItemHeader.propTypes = {
   selectItem: PropTypes.func,
   nameLink: PropTypes.object,
   preselected: PropTypes.bool,
+  isNarrowView: PropTypes.bool,
 };
 ItemHeader.defaultProps = {
   item: {},
@@ -83,4 +84,5 @@ ItemHeader.defaultProps = {
   selectItem: () => {},
   nameLink: {},
   preselected: false,
+  isNarrowView: false,
 };
