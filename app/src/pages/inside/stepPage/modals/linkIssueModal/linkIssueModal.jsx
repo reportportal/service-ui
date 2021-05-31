@@ -22,7 +22,8 @@ import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { namedAvailableBtsIntegrationsSelector } from 'controllers/plugins';
-import { ModalLayout, withModal } from 'components/main/modal';
+import { withModal } from 'components/main/modal';
+import { ItemsList } from 'pages/inside/stepPage/modals/editDefectModals/makeDecisionModal/optionsStepForm/itemsList';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { URLS } from 'common/urls';
@@ -30,7 +31,6 @@ import { validate, bindMessageToValidator } from 'common/utils/validation';
 import { fetch } from 'common/utils/fetch';
 import { updateSessionItem } from 'common/utils/storageUtils';
 import { RALLY } from 'common/constants/pluginNames';
-import { BetaBadge } from 'pages/inside/common/betaBadge';
 import { BtsIntegrationSelector } from 'pages/inside/common/btsIntegrationSelector';
 import { DarkModalLayout } from 'components/main/modal/darkModalLayout';
 import { GhostButton } from 'components/buttons/ghostButton';
@@ -116,7 +116,6 @@ export class LinkIssueModal extends Component {
       fetchFunc: PropTypes.func,
       eventsInfo: PropTypes.object,
     }).isRequired,
-    darkView: PropTypes.bool,
     hideModalAction: PropTypes.func,
     invalid: PropTypes.bool,
   };
@@ -129,9 +128,15 @@ export class LinkIssueModal extends Component {
     },
   };
 
+  isBulkOperation = this.props.data.items.length > 1;
+
   constructor(props) {
     super(props);
-    const { namedBtsIntegrations, userId } = props;
+    const {
+      namedBtsIntegrations,
+      userId,
+      data: { items },
+    } = props;
     const { pluginName, integration } = getDefaultIssueModalConfig(namedBtsIntegrations, userId);
 
     this.props.initialize({
@@ -140,6 +145,18 @@ export class LinkIssueModal extends Component {
     this.state = {
       pluginName,
       integrationId: integration.id,
+      modalState: {
+        testItems: this.isBulkOperation
+          ? items.map((item) => {
+              return { ...item, itemId: item.id };
+            })
+          : items,
+        selectedItems: this.isBulkOperation
+          ? items.map((item) => {
+              return { ...item, itemId: item.id };
+            })
+          : items,
+      },
     };
   }
 
@@ -148,14 +165,18 @@ export class LinkIssueModal extends Component {
       intl,
       userId,
       requestUrl,
-      data: { items, fetchFunc },
+      data: { fetchFunc },
       namedBtsIntegrations,
     } = this.props;
-    const { pluginName, integrationId } = this.state;
+    const {
+      pluginName,
+      integrationId,
+      modalState: { selectedItems },
+    } = this.state;
     const {
       integrationParameters: { project, url },
     } = namedBtsIntegrations[pluginName].find((item) => item.id === integrationId);
-    const testItemIds = items.map((item) => item.id);
+    const testItemIds = selectedItems.map((item) => item.id);
     const issues = formData.issues.map((issue) => ({
       ticketId: issue.issueId,
       url: issue.issueLink,
@@ -171,7 +192,7 @@ export class LinkIssueModal extends Component {
       },
     })
       .then(() => {
-        this.props.darkView ? this.props.hideModalAction() : this.closeModal();
+        this.props.hideModalAction();
         fetchFunc();
         const sessionConfig = {
           pluginName,
@@ -192,8 +213,8 @@ export class LinkIssueModal extends Component {
       });
   };
 
-  onLink = () => (closeModal) => {
-    this.props.darkView ? this.props.hideModalAction() : (this.closeModal = closeModal);
+  onLink = () => () => {
+    this.props.hideModalAction();
     this.props.handleSubmit(this.onFormSubmit)();
   };
 
@@ -223,35 +244,10 @@ export class LinkIssueModal extends Component {
     };
   };
 
-  renderModalContent = (darkView) => {
-    const {
-      namedBtsIntegrations,
-      data: { eventsInfo = {} },
-    } = this.props;
-    return (
-      <form>
-        <BtsIntegrationSelector
-          namedBtsIntegrations={namedBtsIntegrations}
-          pluginName={this.state.pluginName}
-          integrationId={this.state.integrationId}
-          onChangeIntegration={this.onChangeIntegration}
-          onChangePluginName={this.onChangePlugin}
-          darkView={darkView}
-        />
-        <FieldArray
-          name="issues"
-          change={this.props.change}
-          component={LinkIssueFields}
-          addEventInfo={eventsInfo.addNewIssue}
-          withAutocomplete={this.state.pluginName !== RALLY}
-          darkView={darkView}
-        />
-      </form>
-    );
-  };
   renderIssueFormHeaderElements = () => {
     const {
       intl: { formatMessage },
+      invalid,
     } = this.props;
     return (
       <>
@@ -264,12 +260,7 @@ export class LinkIssueModal extends Component {
         >
           {formatMessage(messages.cancel)}
         </GhostButton>
-        <GhostButton
-          onClick={this.onLink()}
-          disabled={this.props.invalid}
-          color="''"
-          appearance="topaz"
-        >
+        <GhostButton onClick={this.onLink()} disabled={invalid} color="''" appearance="topaz">
           {formatMessage(messages.linkIssue)}
         </GhostButton>
       </>
@@ -287,46 +278,67 @@ export class LinkIssueModal extends Component {
       : formatMessage(messages.linkIssue);
   };
 
+  setModalState = (newModalState) => {
+    this.setState({
+      modalState: {
+        ...this.state.modalState,
+        ...newModalState,
+      },
+    });
+  };
+
+  renderRightSection = (collapsedRightSection) => {
+    const {
+      modalState: { testItems, selectedItems },
+    } = this.state;
+    return (
+      <div className={cx('items-list')}>
+        <ItemsList
+          setModalState={this.setModalState}
+          testItems={testItems}
+          selectedItems={selectedItems}
+          isNarrowView={collapsedRightSection}
+          isBulkOperation={this.isBulkOperation}
+        />
+      </div>
+    );
+  };
+
   render() {
     const {
-      intl,
+      namedBtsIntegrations,
       data: { eventsInfo = {} },
-      darkView,
+      change,
     } = this.props;
-    const okButton = {
-      text: intl.formatMessage(messages.linkButton),
-      onClick: this.onLink(),
-      eventInfo: eventsInfo.loadBtn,
-    };
-    const cancelButton = {
-      text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      eventInfo: eventsInfo.cancelBtn,
-    };
+    const { pluginName, integrationId } = this.state;
 
-    return darkView ? (
+    return (
       <DarkModalLayout
         renderHeaderElements={this.renderIssueFormHeaderElements}
         renderTitle={this.renderTitle}
+        renderRightSection={this.renderRightSection}
       >
-        {() => this.renderModalContent(darkView)}
+        {() => (
+          <form>
+            <BtsIntegrationSelector
+              namedBtsIntegrations={namedBtsIntegrations}
+              pluginName={pluginName}
+              integrationId={integrationId}
+              onChangeIntegration={this.onChangeIntegration}
+              onChangePluginName={this.onChangePlugin}
+              darkView
+            />
+            <FieldArray
+              name="issues"
+              change={change}
+              component={LinkIssueFields}
+              addEventInfo={eventsInfo.addNewIssue}
+              withAutocomplete={pluginName !== RALLY}
+              darkView
+            />
+          </form>
+        )}
       </DarkModalLayout>
-    ) : (
-      <ModalLayout
-        title={
-          <span className={cx('link-issue-title')}>
-            {intl.formatMessage(messages.title)}
-            <BetaBadge />
-          </span>
-        }
-        okButton={okButton}
-        cancelButton={cancelButton}
-        closeConfirmation={this.getCloseConfirmationConfig()}
-        closeIconEventInfo={eventsInfo.closeIcon}
-      >
-        <h4 className={cx('add-issue-id-title')}>{intl.formatMessage(messages.addIssueIdTitle)}</h4>
-        <div className={cx('link-issue-form-wrapper')} />
-        {this.renderModalContent()}
-      </ModalLayout>
     );
   }
 }

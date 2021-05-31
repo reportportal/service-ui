@@ -22,17 +22,17 @@ export const ignoreInAA = (items, { fetchFunc, eventsInfo }) =>
 export const includeInAA = (items, { fetchFunc, eventsInfo }) =>
   showModalAction({ id: 'includeInAAModal', data: { items, fetchFunc, eventsInfo } });
 
-export const linkIssue = (items, { currentModal, fetchFunc, eventsInfo }) =>
-  showModalAction({ id: currentModal || 'linkIssueModal', data: { items, fetchFunc, eventsInfo } });
+export const linkIssue = (items, { fetchFunc, eventsInfo }) =>
+  showModalAction({ id: 'linkIssueModal', data: { items, fetchFunc, eventsInfo } });
 
-export const unlinkIssue = (items, { currentModal, fetchFunc, eventsInfo }) =>
+export const unlinkIssue = (items, { fetchFunc, eventsInfo }) =>
   showModalAction({
-    id: currentModal || 'unlinkIssueModal',
+    id: 'unlinkIssueModal',
     data: { items, fetchFunc, eventsInfo },
   });
 
-export const postIssue = (items, { currentModal, fetchFunc, eventsInfo }) =>
-  showModalAction({ id: currentModal || 'postIssueModal', data: { items, fetchFunc, eventsInfo } });
+export const postIssue = (items, { fetchFunc, eventsInfo }) =>
+  showModalAction({ id: 'postIssueModal', data: { items, fetchFunc, eventsInfo } });
 
 export const editDefect = (items, { fetchFunc, debugMode, eventsInfo }) =>
   showModalAction({ id: MAKE_DECISION_MODAL, data: { items, fetchFunc, debugMode, eventsInfo } });

@@ -20,18 +20,22 @@ import { connect } from 'react-redux';
 import track from 'react-tracking';
 import { injectIntl, defineMessages } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
-import { ModalLayout, withModal } from 'components/main/modal';
+import { withModal } from 'components/main/modal';
+import { ItemsList } from 'pages/inside/stepPage/modals/editDefectModals/makeDecisionModal/optionsStepForm/itemsList';
 import {
   showNotification,
   showDefaultErrorNotification,
   NOTIFICATION_TYPES,
 } from 'controllers/notification';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { DarkModalLayout } from 'components/main/modal/darkModalLayout';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { hideModalAction } from 'controllers/modal';
+import classNames from 'classnames/bind';
+import styles from './unlinkIssueModal.scss';
+
+const cx = classNames.bind(styles);
 
 const messages = defineMessages({
   unlinkButton: {
@@ -90,18 +94,43 @@ export class UnlinkIssueModal extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    darkView: PropTypes.bool,
     hideModalAction: PropTypes.func,
   };
 
-  onUnlink = (closeModal) => {
+  isBulkOperation = this.props.data.items.length > 1;
+
+  constructor(props) {
+    super(props);
+    const {
+      data: { items },
+    } = props;
+    this.state = {
+      modalState: {
+        testItems: this.isBulkOperation
+          ? items.map((item) => {
+              return { ...item, itemId: item.id };
+            })
+          : items,
+        selectedItems: this.isBulkOperation
+          ? items.map((item) => {
+              return { ...item, itemId: item.id };
+            })
+          : items,
+      },
+    };
+  }
+
+  onUnlink = () => {
     const {
       intl,
       url,
-      data: { items, fetchFunc, eventsInfo },
+      data: { fetchFunc, eventsInfo },
       tracking: { trackEvent },
     } = this.props;
-    const dataToSend = items.reduce(
+    const {
+      modalState: { selectedItems },
+    } = this.state;
+    const dataToSend = selectedItems.reduce(
       (acc, item) => {
         acc.testItemIds.push(item.id);
         acc.ticketIds = acc.ticketIds.concat(
@@ -124,7 +153,7 @@ export class UnlinkIssueModal extends Component {
     })
       .then(() => {
         fetchFunc();
-        this.props.darkView ? this.props.hideModalAction() : closeModal();
+        this.props.hideModalAction();
         this.props.showNotification({
           message: intl.formatMessage(messages.unlinkSuccessMessage),
           type: NOTIFICATION_TYPES.SUCCESS,
@@ -165,41 +194,47 @@ export class UnlinkIssueModal extends Component {
       : formatMessage(messages.unlinkIssue);
   };
 
-  render() {
+  setModalState = (newModalState) => {
+    this.setState({
+      modalState: {
+        ...this.state.modalState,
+        ...newModalState,
+      },
+    });
+  };
+
+  renderRightSection = (collapsedRightSection) => {
     const {
-      intl,
-      data: { eventsInfo = {} },
-      darkView,
-    } = this.props;
-    const okButton = {
-      text: intl.formatMessage(messages.unlinkButton),
-      onClick: this.onUnlink,
-      eventInfo: eventsInfo.unlinkBtn,
-    };
-    const cancelButton = {
-      text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      eventInfo: eventsInfo.cancelBtn,
-    };
-    return darkView ? (
+      modalState: { testItems, selectedItems },
+    } = this.state;
+    return (
+      <div className={cx('items-list')}>
+        <ItemsList
+          setModalState={this.setModalState}
+          testItems={testItems}
+          selectedItems={selectedItems}
+          isNarrowView={collapsedRightSection}
+          isBulkOperation={this.isBulkOperation}
+        />
+      </div>
+    );
+  };
+
+  render() {
+    const { intl } = this.props;
+
+    return (
       <DarkModalLayout
         renderHeaderElements={this.renderIssueFormHeaderElements}
         renderTitle={this.renderTitle}
+        renderRightSection={this.renderRightSection}
       >
         {() => (
-          <p style={{ color: '#ffffff' }}>
+          <p className={cx('main-text')}>
             {intl.formatMessage(messages.unlinkModalConfirmationText)}
           </p>
         )}
       </DarkModalLayout>
-    ) : (
-      <ModalLayout
-        title={intl.formatMessage(messages.title)}
-        okButton={okButton}
-        cancelButton={cancelButton}
-        closeIconEventInfo={eventsInfo.closeIcon}
-      >
-        {intl.formatMessage(messages.unlinkModalConfirmationText)}
-      </ModalLayout>
     );
   }
 }

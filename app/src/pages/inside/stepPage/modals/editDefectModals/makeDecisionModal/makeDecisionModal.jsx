@@ -44,9 +44,6 @@ import {
 import { SelectDefectManually } from './selectDefectManually';
 import { CopyFromHistoryLine } from './copyFromHistoryLine';
 import { OptionsSection } from './optionsStepForm/optionsSection';
-import { PostIssueModal } from '../../postIssueModal';
-import { LinkIssueModal } from '../../linkIssueModal';
-import { UnlinkIssueModal } from '../../unlinkIssueModal';
 
 const MakeDecision = ({ data }) => {
   const { formatMessage } = useIntl();
@@ -78,7 +75,6 @@ const MakeDecision = ({ data }) => {
     [SELECT_DEFECT_MANUALLY]: true,
   });
   const [modalHasChanges, setModalHasChanges] = useState(false);
-  const [issueActionType, setIssueActionType] = useState('');
 
   useEffect(() => {
     setModalHasChanges(
@@ -167,10 +163,8 @@ const MakeDecision = ({ data }) => {
       postIssueAction(prepareDataToSend({ isIssueAction: true }), {
         fetchFunc: data.fetchFunc,
         eventsInfo: postIssueEvents,
-        currentModal: MAKE_DECISION_MODAL,
       }),
     );
-    setIssueActionType(POST_ISSUE);
   };
   const handleLinkIssue = () => {
     const { linkIssueEvents } = data.eventsInfo;
@@ -178,10 +172,8 @@ const MakeDecision = ({ data }) => {
       linkIssueAction(prepareDataToSend({ isIssueAction: true }), {
         fetchFunc: data.fetchFunc,
         eventsInfo: linkIssueEvents,
-        currentModal: MAKE_DECISION_MODAL,
       }),
     );
-    setIssueActionType(LINK_ISSUE);
   };
   const handleUnlinkIssue = () => {
     const { unlinkIssueEvents } = data.eventsInfo;
@@ -194,10 +186,8 @@ const MakeDecision = ({ data }) => {
       unlinkIssueAction(selectedItems, {
         fetchFunc: data.fetchFunc,
         eventsInfo: unlinkIssueEvents,
-        currentModal: MAKE_DECISION_MODAL,
       }),
     );
-    setIssueActionType(UNLINK_ISSUE);
   };
 
   const getIssueAction = () => {
@@ -221,7 +211,7 @@ const MakeDecision = ({ data }) => {
     modalState.decisionType === COPY_FROM_HISTORY_LINE &&
       isEqual(itemData.issue, modalState.source.issue) &&
       dispatch(hideModalAction());
-    modalState.issueActionType && getIssueAction();
+    modalState.issueActionType && dispatch(hideModalAction()) && getIssueAction();
   };
   const applyImmediatelyWithComment = () => {
     applyChangesImmediately({ replaceComment: true });
@@ -344,22 +334,7 @@ const MakeDecision = ({ data }) => {
     );
   };
 
-  const renderIssueModal = (typeIssueAction) => {
-    switch (typeIssueAction) {
-      case POST_ISSUE:
-        return <PostIssueModal darkView data={data} />;
-      case LINK_ISSUE:
-        return <LinkIssueModal darkView data={data} />;
-      case UNLINK_ISSUE:
-        return <UnlinkIssueModal darkView data={data} />;
-      default:
-        return null;
-    }
-  };
-
-  return issueActionType ? (
-    renderIssueModal(issueActionType)
-  ) : (
+  return (
     <DarkModalLayout
       renderTitle={renderTitle}
       renderHeaderElements={renderHeaderElements}
