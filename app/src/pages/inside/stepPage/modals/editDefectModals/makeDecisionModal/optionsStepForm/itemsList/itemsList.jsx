@@ -33,8 +33,8 @@ export const ItemsList = ({
 }) => {
   const [showErrorLogs, setShowErrorLogs] = useState(false);
   useEffect(() => {
-    setShowErrorLogs(false);
-  }, [optionValue]);
+    isNarrowView ? setShowErrorLogs(false) : setShowErrorLogs(true);
+  }, [optionValue, isNarrowView]);
 
   return loading ? (
     <SpinningPreloader />
