@@ -218,17 +218,6 @@ const MakeDecision = ({ data }) => {
   };
   const applyChanges = () => applyChangesImmediately();
 
-  const buttonTitle = () => {
-    if (modalState.selectedItems.length > 1) {
-      return formatMessage(messages.applyToItems, {
-        itemsCount: modalState.selectedItems.length,
-      });
-    }
-    return modalState.issueActionType
-      ? formatMessage(messages.applyAndContinue)
-      : formatMessage(messages.apply);
-  };
-
   const renderHeaderElements = () => {
     return (
       <>
@@ -253,7 +242,13 @@ const MakeDecision = ({ data }) => {
           color="''"
           appearance="topaz"
         >
-          {buttonTitle()}
+          {modalState.selectedItems.length > 1
+            ? formatMessage(messages.applyToItems, {
+                itemsCount: modalState.selectedItems.length,
+              })
+            : formatMessage(
+                modalState.issueActionType ? messages.applyAndContinue : messages.apply,
+              )}
         </GhostButton>
       </>
     );
