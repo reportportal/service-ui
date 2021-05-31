@@ -156,6 +156,10 @@ export const messages = defineMessages({
     id: 'MakeDecisionModal.copyFromHistoryLine',
     defaultMessage: 'Copy from history line',
   },
+  apply: {
+    id: 'MakeDecisionModal.apply',
+    defaultMessage: 'Apply',
+  },
   applyImmediately: {
     id: 'MakeDecisionModal.applyImmediately',
     defaultMessage: 'Apply Immediately',
