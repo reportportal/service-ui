@@ -23,6 +23,7 @@ export class DropdownField extends Component {
   static propTypes = {
     field: PropTypes.object.isRequired,
     defaultOptionValueKey: PropTypes.string.isRequired,
+    darkView: PropTypes.bool,
   };
 
   getInputOptions = (values = []) =>
@@ -36,15 +37,26 @@ export class DropdownField extends Component {
   formatDropdownValue = (value) => value && value[0];
 
   render() {
-    const { field, ...rest } = this.props;
+    const { field, darkView, ...rest } = this.props;
     return (
       <DynamicField
         field={field}
         parse={this.parseDropdownValue}
         format={this.formatDropdownValue}
+        darkView={darkView}
         {...rest}
       >
-        <InputDropdown mobileDisabled options={this.getInputOptions(field.definedValues)} />
+        <InputDropdown
+          mobileDisabled
+          options={this.getInputOptions(field.definedValues)}
+          customClasses={
+            darkView && {
+              selectBlock: 'dark-view',
+              value: 'dark-view',
+              arrow: 'dark-view',
+            }
+          }
+        />
       </DynamicField>
     );
   }

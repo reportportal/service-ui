@@ -36,6 +36,7 @@ export class TextField extends Component {
         field={field}
         format={this.formatInputValue}
         parse={this.parseInputValue}
+        darkView={darkView}
         {...rest}
       >
         <Input className={darkView && 'dark-view'} mobileDisabled />
