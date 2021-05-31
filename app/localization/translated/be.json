@@ -1072,6 +1072,7 @@
   "LogsGridToolbar.markdownMode": "Рэжым разметкі",
   "LogsGridToolbar.withAttachments": "Логі з ўкладаннямі",
   "MakeDecisionModal.allLoadedTIFromHistoryLine": "Усе загружаныя TI з гісторыі",
+  "MakeDecisionModal.apply": "Прымяніць",
   "MakeDecisionModal.applyImmediately": "Ужыць неадкладна",
   "MakeDecisionModal.applyDefectFor": "Прымяніць дэфект для",
   "MakeDecisionModal.applyToItems": "Прымяніць для {itemsCount} элементаў",

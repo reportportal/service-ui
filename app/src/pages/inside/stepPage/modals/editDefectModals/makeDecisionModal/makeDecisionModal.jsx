@@ -246,7 +246,9 @@ const MakeDecision = ({ data }) => {
             ? formatMessage(messages.applyToItems, {
                 itemsCount: modalState.selectedItems.length,
               })
-            : formatMessage(messages.applyAndContinue)}
+            : formatMessage(
+                modalState.issueActionType ? messages.applyAndContinue : messages.apply,
+              )}
         </GhostButton>
       </>
     );
