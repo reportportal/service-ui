@@ -292,8 +292,8 @@ export class LinkIssueModal extends Component {
           this.setState({
             testItems: [],
             selectedItems: [],
+            loading: false,
           });
-          this.setState({ loading: false });
           this.props.showNotification({
             message: intl.formatMessage(messages.linkIssueFailed),
             type: NOTIFICATION_TYPES.ERROR,
