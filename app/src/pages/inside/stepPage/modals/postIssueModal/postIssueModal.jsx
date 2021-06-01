@@ -60,6 +60,7 @@ import {
   getDefaultIssueModalConfig,
 } from './utils';
 import styles from './postIssueModal.scss';
+import { ERROR_LOGS_SIZE } from '../editDefectModals/constants';
 
 const cx = classNames.bind(styles);
 
@@ -201,6 +202,11 @@ export class PostIssueModal extends Component {
     } = integration;
     const systemAuthConfig = this.getSystemAuthDefaultConfig(pluginName, config);
     const fields = this.initIntegrationFields(defectFormFields, systemAuthConfig, pluginName);
+    const currentItems = this.isBulkOperation
+      ? items.map((item) => {
+          return { ...item, itemId: item.id };
+        })
+      : items;
 
     this.state = {
       fields,
@@ -208,22 +214,15 @@ export class PostIssueModal extends Component {
       integrationId: id,
       expanded: true,
       wasExpanded: false,
+      loading: false,
       modalState: {
-        testItems: this.isBulkOperation
-          ? items.map((item) => {
-              return { ...item, itemId: item.id };
-            })
-          : items,
-        selectedItems: this.isBulkOperation
-          ? items.map((item) => {
-              return { ...item, itemId: item.id };
-            })
-          : items,
+        testItems: currentItems,
+        selectedItems: currentItems,
       },
     };
   }
 
-  onPost = () => () => {
+  onPost = () => {
     this.props.hideModalAction();
     this.props.handleSubmit(this.prepareDataToSend)();
   };
@@ -436,6 +435,64 @@ export class PostIssueModal extends Component {
     });
   };
 
+  componentDidMount() {
+    const { intl, activeProject } = this.props;
+    const {
+      modalState: { testItems },
+    } = this.state;
+    const fetchLogs = () => {
+      this.setState({ loading: true });
+      let testItemLogRequest = [];
+      let requests;
+      if (this.isBulkOperation) {
+        testItems.map((elem) => {
+          return testItemLogRequest.push(
+            fetch(URLS.logItemStackTrace(activeProject, elem.path, ERROR_LOGS_SIZE)),
+          );
+        });
+        requests = testItemLogRequest;
+      } else {
+        testItemLogRequest = fetch(
+          URLS.logItemStackTrace(activeProject, testItems.path, ERROR_LOGS_SIZE),
+        );
+        requests = [testItemLogRequest];
+      }
+
+      Promise.all(requests)
+        .then((responses) => {
+          const [testItemRes] = responses;
+          const testItemLogs = this.isBulkOperation
+            ? responses.map((item) => item.content)
+            : testItemRes.content;
+          const items = [];
+          this.isBulkOperation
+            ? testItems.map((elem, i) => {
+                return items.push({ ...elem, logs: testItemLogs[i] });
+              })
+            : items.push({ ...testItems, logs: testItemLogs });
+          this.setState({
+            modalState: {
+              ...this.state.modalState,
+              testItems: items,
+            },
+            loading: false,
+          });
+        })
+        .catch(() => {
+          this.setState({
+            testItems: [],
+            selectedItems: [],
+          });
+          this.setState({ loading: false });
+          this.props.showNotification({
+            message: intl.formatMessage(messages.linkIssueFailed),
+            type: NOTIFICATION_TYPES.ERROR,
+          });
+        });
+    };
+    fetchLogs();
+  }
+
   isBulkOperation = this.props.data.items.length > 1;
 
   renderIssueFormHeaderElements = () => {
@@ -454,7 +511,7 @@ export class PostIssueModal extends Component {
           {formatMessage(messages.cancel)}
         </GhostButton>
         <GhostButton
-          onClick={this.onPost()}
+          onClick={this.onPost}
           disabled={this.props.invalid}
           color="''"
           appearance="topaz"

@@ -38,6 +38,7 @@ import { hideModalAction } from 'controllers/modal';
 import { LinkIssueFields } from './linkIssueFields';
 import { getDefaultIssueModalConfig } from '../postIssueModal/utils';
 import styles from './linkIssueModal.scss';
+import { ERROR_LOGS_SIZE } from '../editDefectModals/constants';
 
 const cx = classNames.bind(styles);
 
@@ -93,6 +94,7 @@ const messages = defineMessages({
     userId: userIdSelector(state),
     requestUrl: URLS.testItemsLinkIssues(activeProjectSelector(state)),
     namedBtsIntegrations: namedAvailableBtsIntegrationsSelector(state),
+    activeProject: activeProjectSelector(state),
   }),
   {
     showNotification,
@@ -105,6 +107,7 @@ export class LinkIssueModal extends Component {
     intl: PropTypes.object.isRequired,
     userId: PropTypes.string.isRequired,
     requestUrl: PropTypes.string.isRequired,
+    activeProject: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
     namedBtsIntegrations: PropTypes.object.isRequired,
     initialize: PropTypes.func.isRequired,
@@ -138,6 +141,11 @@ export class LinkIssueModal extends Component {
       data: { items },
     } = props;
     const { pluginName, integration } = getDefaultIssueModalConfig(namedBtsIntegrations, userId);
+    const currentItems = this.isBulkOperation
+      ? items.map((item) => {
+          return { ...item, itemId: item.id };
+        })
+      : items;
 
     this.props.initialize({
       issues: [{}],
@@ -145,17 +153,10 @@ export class LinkIssueModal extends Component {
     this.state = {
       pluginName,
       integrationId: integration.id,
+      loading: false,
       modalState: {
-        testItems: this.isBulkOperation
-          ? items.map((item) => {
-              return { ...item, itemId: item.id };
-            })
-          : items,
-        selectedItems: this.isBulkOperation
-          ? items.map((item) => {
-              return { ...item, itemId: item.id };
-            })
-          : items,
+        testItems: currentItems,
+        selectedItems: currentItems,
       },
     };
   }
@@ -213,7 +214,7 @@ export class LinkIssueModal extends Component {
       });
   };
 
-  onLink = () => () => {
+  onLink = () => {
     this.props.hideModalAction();
     this.props.handleSubmit(this.onFormSubmit)();
   };
@@ -244,6 +245,64 @@ export class LinkIssueModal extends Component {
     };
   };
 
+  componentDidMount() {
+    const { intl, activeProject } = this.props;
+    const {
+      modalState: { testItems },
+    } = this.state;
+    const fetchLogs = () => {
+      this.setState({ loading: true });
+      let testItemLogRequest = [];
+      let requests;
+      if (this.isBulkOperation) {
+        testItems.map((elem) => {
+          return testItemLogRequest.push(
+            fetch(URLS.logItemStackTrace(activeProject, elem.path, ERROR_LOGS_SIZE)),
+          );
+        });
+        requests = testItemLogRequest;
+      } else {
+        testItemLogRequest = fetch(
+          URLS.logItemStackTrace(activeProject, testItems.path, ERROR_LOGS_SIZE),
+        );
+        requests = [testItemLogRequest];
+      }
+
+      Promise.all(requests)
+        .then((responses) => {
+          const [testItemRes] = responses;
+          const testItemLogs = this.isBulkOperation
+            ? responses.map((item) => item.content)
+            : testItemRes.content;
+          const items = [];
+          this.isBulkOperation
+            ? testItems.map((elem, i) => {
+                return items.push({ ...elem, logs: testItemLogs[i] });
+              })
+            : items.push({ ...testItems, logs: testItemLogs });
+          this.setState({
+            modalState: {
+              ...this.state.modalState,
+              testItems: items,
+            },
+            loading: false,
+          });
+        })
+        .catch(() => {
+          this.setState({
+            testItems: [],
+            selectedItems: [],
+          });
+          this.setState({ loading: false });
+          this.props.showNotification({
+            message: intl.formatMessage(messages.linkIssueFailed),
+            type: NOTIFICATION_TYPES.ERROR,
+          });
+        });
+    };
+    fetchLogs();
+  }
+
   renderIssueFormHeaderElements = () => {
     const {
       intl: { formatMessage },
@@ -260,7 +319,7 @@ export class LinkIssueModal extends Component {
         >
           {formatMessage(messages.cancel)}
         </GhostButton>
-        <GhostButton onClick={this.onLink()} disabled={invalid} color="''" appearance="topaz">
+        <GhostButton onClick={this.onLink} disabled={invalid} color="''" appearance="topaz">
           {formatMessage(messages.linkIssue)}
         </GhostButton>
       </>

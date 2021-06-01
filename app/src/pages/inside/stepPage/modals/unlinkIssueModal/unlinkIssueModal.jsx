@@ -34,6 +34,7 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import { hideModalAction } from 'controllers/modal';
 import classNames from 'classnames/bind';
 import styles from './unlinkIssueModal.scss';
+import { ERROR_LOGS_SIZE } from '../editDefectModals/constants';
 
 const cx = classNames.bind(styles);
 
@@ -74,6 +75,7 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     url: URLS.testItemsUnlinkIssues(activeProjectSelector(state)),
+    activeProject: activeProjectSelector(state),
   }),
   {
     showNotification,
@@ -85,6 +87,7 @@ export class UnlinkIssueModal extends Component {
     intl: PropTypes.object.isRequired,
     url: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
+    activeProject: PropTypes.string.isRequired,
     data: PropTypes.shape({
       items: PropTypes.array,
       fetchFunc: PropTypes.func,
@@ -104,18 +107,16 @@ export class UnlinkIssueModal extends Component {
     const {
       data: { items },
     } = props;
+    const currentItems = this.isBulkOperation
+      ? items.map((item) => {
+          return { ...item, itemId: item.id };
+        })
+      : items;
     this.state = {
+      loading: false,
       modalState: {
-        testItems: this.isBulkOperation
-          ? items.map((item) => {
-              return { ...item, itemId: item.id };
-            })
-          : items,
-        selectedItems: this.isBulkOperation
-          ? items.map((item) => {
-              return { ...item, itemId: item.id };
-            })
-          : items,
+        testItems: currentItems,
+        selectedItems: currentItems,
       },
     };
   }
@@ -161,6 +162,64 @@ export class UnlinkIssueModal extends Component {
       })
       .catch(showDefaultErrorNotification);
   };
+  componentDidMount() {
+    const { intl, activeProject } = this.props;
+    const {
+      modalState: { testItems },
+    } = this.state;
+    const fetchLogs = () => {
+      this.setState({ loading: true });
+      let testItemLogRequest = [];
+      let requests;
+      if (this.isBulkOperation) {
+        testItems.map((elem) => {
+          return testItemLogRequest.push(
+            fetch(URLS.logItemStackTrace(activeProject, elem.path, ERROR_LOGS_SIZE)),
+          );
+        });
+        requests = testItemLogRequest;
+      } else {
+        testItemLogRequest = fetch(
+          URLS.logItemStackTrace(activeProject, testItems.path, ERROR_LOGS_SIZE),
+        );
+        requests = [testItemLogRequest];
+      }
+
+      Promise.all(requests)
+        .then((responses) => {
+          const [testItemRes] = responses;
+          const testItemLogs = this.isBulkOperation
+            ? responses.map((item) => item.content)
+            : testItemRes.content;
+          const items = [];
+          this.isBulkOperation
+            ? testItems.map((elem, i) => {
+                return items.push({ ...elem, logs: testItemLogs[i] });
+              })
+            : items.push({ ...testItems, logs: testItemLogs });
+          this.setState({
+            modalState: {
+              ...this.state.modalState,
+              testItems: items,
+            },
+            loading: false,
+          });
+        })
+        .catch(() => {
+          this.setState({
+            testItems: [],
+            selectedItems: [],
+          });
+          this.setState({ loading: false });
+          this.props.showNotification({
+            message: intl.formatMessage(messages.linkIssueFailed),
+            type: NOTIFICATION_TYPES.ERROR,
+          });
+        });
+    };
+    fetchLogs();
+  }
+
   renderIssueFormHeaderElements = () => {
     const {
       intl: { formatMessage },
