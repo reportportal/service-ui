@@ -202,7 +202,7 @@ export class PostIssueModal extends Component {
     } = integration;
     const systemAuthConfig = this.getSystemAuthDefaultConfig(pluginName, config);
     const fields = this.initIntegrationFields(defectFormFields, systemAuthConfig, pluginName);
-    const currentItems = this.isBulkOperation
+    const selectedItems = this.isBulkOperation
       ? items.map((item) => {
           return { ...item, itemId: item.id };
         })
@@ -215,10 +215,8 @@ export class PostIssueModal extends Component {
       expanded: true,
       wasExpanded: false,
       loading: false,
-      modalState: {
-        testItems: currentItems,
-        selectedItems: currentItems,
-      },
+      testItems: selectedItems,
+      selectedItems,
     };
   }
 
@@ -325,9 +323,7 @@ export class PostIssueModal extends Component {
   prepareDataToSend = (formData) => {
     const { getBtsIntegrationBackLink } = this.props;
 
-    const {
-      modalState: { selectedItems },
-    } = this.state;
+    const { selectedItems } = this.state;
 
     const fields = this.state.fields.map((field) => ({ ...field, value: formData[field.id] }));
     const backLinks = selectedItems.reduce(
@@ -361,11 +357,7 @@ export class PostIssueModal extends Component {
       activeProject,
       userId,
     } = this.props;
-    const {
-      pluginName,
-      integrationId,
-      modalState: { selectedItems },
-    } = this.state;
+    const { pluginName, integrationId, selectedItems } = this.state;
 
     this.props.showScreenLockAction();
 
@@ -437,9 +429,7 @@ export class PostIssueModal extends Component {
 
   componentDidMount() {
     const { intl, activeProject } = this.props;
-    const {
-      modalState: { testItems },
-    } = this.state;
+    const { testItems } = this.state;
     const fetchLogs = () => {
       this.setState({ loading: true });
       let testItemLogRequest = [];
@@ -471,10 +461,7 @@ export class PostIssueModal extends Component {
               })
             : items.push({ ...testItems, logs: testItemLogs });
           this.setState({
-            modalState: {
-              ...this.state.modalState,
-              testItems: items,
-            },
+            testItems: items,
             loading: false,
           });
         })
@@ -533,23 +520,16 @@ export class PostIssueModal extends Component {
       : formatMessage(messages.postIssue);
   };
 
-  setModalState = (newModalState) => {
-    this.setState({
-      modalState: {
-        ...this.state.modalState,
-        ...newModalState,
-      },
-    });
+  setItems = (newState) => {
+    this.setState({ newState });
   };
 
   renderRightSection = (collapsedRightSection) => {
-    const {
-      modalState: { testItems, selectedItems },
-    } = this.state;
+    const { testItems, selectedItems } = this.state;
     return (
       <div className={cx('items-list')}>
         <ItemsList
-          setModalState={this.setModalState}
+          setItems={this.setItems}
           testItems={testItems}
           selectedItems={selectedItems}
           isNarrowView={collapsedRightSection}

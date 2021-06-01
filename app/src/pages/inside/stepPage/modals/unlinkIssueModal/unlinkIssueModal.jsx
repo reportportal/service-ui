@@ -107,17 +107,15 @@ export class UnlinkIssueModal extends Component {
     const {
       data: { items },
     } = props;
-    const currentItems = this.isBulkOperation
+    const selectedItems = this.isBulkOperation
       ? items.map((item) => {
           return { ...item, itemId: item.id };
         })
       : items;
     this.state = {
       loading: false,
-      modalState: {
-        testItems: currentItems,
-        selectedItems: currentItems,
-      },
+      testItems: selectedItems,
+      selectedItems,
     };
   }
 
@@ -128,9 +126,7 @@ export class UnlinkIssueModal extends Component {
       data: { fetchFunc, eventsInfo },
       tracking: { trackEvent },
     } = this.props;
-    const {
-      modalState: { selectedItems },
-    } = this.state;
+    const { selectedItems } = this.state;
     const dataToSend = selectedItems.reduce(
       (acc, item) => {
         acc.testItemIds.push(item.id);
@@ -164,9 +160,7 @@ export class UnlinkIssueModal extends Component {
   };
   componentDidMount() {
     const { intl, activeProject } = this.props;
-    const {
-      modalState: { testItems },
-    } = this.state;
+    const { testItems } = this.state;
     const fetchLogs = () => {
       this.setState({ loading: true });
       let testItemLogRequest = [];
@@ -198,10 +192,7 @@ export class UnlinkIssueModal extends Component {
               })
             : items.push({ ...testItems, logs: testItemLogs });
           this.setState({
-            modalState: {
-              ...this.state.modalState,
-              testItems: items,
-            },
+            testItems: items,
             loading: false,
           });
         })
@@ -253,23 +244,16 @@ export class UnlinkIssueModal extends Component {
       : formatMessage(messages.unlinkIssue);
   };
 
-  setModalState = (newModalState) => {
-    this.setState({
-      modalState: {
-        ...this.state.modalState,
-        ...newModalState,
-      },
-    });
+  setItems = (newState) => {
+    this.setState({ newState });
   };
 
   renderRightSection = (collapsedRightSection) => {
-    const {
-      modalState: { testItems, selectedItems },
-    } = this.state;
+    const { testItems, selectedItems } = this.state;
     return (
       <div className={cx('items-list')}>
         <ItemsList
-          setModalState={this.setModalState}
+          setItems={this.setItems}
           testItems={testItems}
           selectedItems={selectedItems}
           isNarrowView={collapsedRightSection}

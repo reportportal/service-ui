@@ -154,10 +154,8 @@ export class LinkIssueModal extends Component {
       pluginName,
       integrationId: integration.id,
       loading: false,
-      modalState: {
-        testItems: currentItems,
-        selectedItems: currentItems,
-      },
+      testItems: currentItems,
+      selectedItems: currentItems,
     };
   }
 
@@ -169,11 +167,7 @@ export class LinkIssueModal extends Component {
       data: { fetchFunc },
       namedBtsIntegrations,
     } = this.props;
-    const {
-      pluginName,
-      integrationId,
-      modalState: { selectedItems },
-    } = this.state;
+    const { pluginName, integrationId, selectedItems } = this.state;
     const {
       integrationParameters: { project, url },
     } = namedBtsIntegrations[pluginName].find((item) => item.id === integrationId);
@@ -247,9 +241,7 @@ export class LinkIssueModal extends Component {
 
   componentDidMount() {
     const { intl, activeProject } = this.props;
-    const {
-      modalState: { testItems },
-    } = this.state;
+    const { testItems } = this.state;
     const fetchLogs = () => {
       this.setState({ loading: true });
       let testItemLogRequest = [];
@@ -281,10 +273,7 @@ export class LinkIssueModal extends Component {
               })
             : items.push({ ...testItems, logs: testItemLogs });
           this.setState({
-            modalState: {
-              ...this.state.modalState,
-              testItems: items,
-            },
+            testItems: items,
             loading: false,
           });
         })
@@ -337,23 +326,16 @@ export class LinkIssueModal extends Component {
       : formatMessage(messages.linkIssue);
   };
 
-  setModalState = (newModalState) => {
-    this.setState({
-      modalState: {
-        ...this.state.modalState,
-        ...newModalState,
-      },
-    });
+  setItems = (newState) => {
+    this.setState({ newState });
   };
 
   renderRightSection = (collapsedRightSection) => {
-    const {
-      modalState: { testItems, selectedItems },
-    } = this.state;
+    const { testItems, selectedItems } = this.state;
     return (
       <div className={cx('items-list')}>
         <ItemsList
-          setModalState={this.setModalState}
+          setItems={this.setItems}
           testItems={testItems}
           selectedItems={selectedItems}
           isNarrowView={collapsedRightSection}
