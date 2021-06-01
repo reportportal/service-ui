@@ -327,7 +327,7 @@ export class LinkIssueModal extends Component {
   };
 
   setItems = (newState) => {
-    this.setState({ newState });
+    this.setState(newState);
   };
 
   renderRightSection = (collapsedRightSection) => {

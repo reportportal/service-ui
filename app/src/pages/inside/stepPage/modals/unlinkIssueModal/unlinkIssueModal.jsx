@@ -245,7 +245,7 @@ export class UnlinkIssueModal extends Component {
   };
 
   setItems = (newState) => {
-    this.setState({ newState });
+    this.setState(newState);
   };
 
   renderRightSection = (collapsedRightSection) => {
