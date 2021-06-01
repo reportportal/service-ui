@@ -22,9 +22,11 @@ import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { hideModalAction } from 'controllers/modal';
 import ErrorInlineIcon from 'common/img/error-inline.svg';
-import { ScrollWrapper } from 'components/main/scrollWrapper';
 import ShowLess from 'common/img/show-less-inline.svg';
 import ShowMore from 'common/img/show-more-inline.svg';
+import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
+import { updateStorageItem, getStorageItem } from 'common/utils';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
 import Parser from 'html-react-parser';
 import { messages } from 'pages/inside/stepPage/modals/editDefectModals/messages';
 import { ModalHeader } from './modalHeader';
@@ -42,13 +44,26 @@ export const DarkModalLayout = ({
   modalNote,
   renderRightSection,
 }) => {
+  const applicationSettings = getStorageItem(APPLICATION_SETTINGS);
+  const collapsedRightSectionInitialState = applicationSettings
+    ? applicationSettings.darkModalCollapsedRightSection
+    : true;
   const [clickOutside, setClickOutside] = useState(false);
   const [isCtrlEnterPress, setIsCtrlEnterPress] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [collapsedRightSection, setRightSectionCollapsed] = useState(true);
+  const [collapsedRightSection, setRightSectionCollapsed] = useState(
+    collapsedRightSectionInitialState,
+  );
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const wrapperRef = useRef();
+
+  const collapseRightSection = () => {
+    setRightSectionCollapsed(!collapsedRightSection);
+    updateStorageItem(APPLICATION_SETTINGS, {
+      darkModalCollapsedRightSection: !collapsedRightSection,
+    });
+  };
 
   const closeModalWindow = () => {
     setIsOpen(false);
@@ -118,10 +133,7 @@ export const DarkModalLayout = ({
           <div className={cx('right-section', { 'narrow-view': collapsedRightSection })}>
             <ScrollWrapper hideTracksWhenNotNeeded autoHide>
               <div className={cx('header')}>
-                <button
-                  className={cx('button')}
-                  onClick={() => setRightSectionCollapsed(!collapsedRightSection)}
-                >
+                <button className={cx('button')} onClick={collapseRightSection}>
                   <i className={cx('show-icon')}>
                     {Parser(collapsedRightSection ? ShowMore : ShowLess)}
                   </i>{' '}
