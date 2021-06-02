@@ -121,7 +121,7 @@ export const OptionsBlock = ({ optionValue, currentTestItem, loading, setModalSt
       optionValue: value,
       searchMode: '',
       testItems: preparedHistoryItems,
-      selectedItems: preparedHistoryItems,
+      selectedItems: [preparedHistoryItems[0]],
     });
   };
   const onChangeOption = (value) => {
