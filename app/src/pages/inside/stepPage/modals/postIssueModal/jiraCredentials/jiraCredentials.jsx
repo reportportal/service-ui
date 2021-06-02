@@ -55,7 +55,7 @@ export class JiraCredentials extends Component {
           required
         >
           <FieldErrorHint>
-            <Input className={cx(darkView && 'dark-view')} type="text" mobileDisabled />
+            <Input className={darkView && 'dark-view'} type="text" mobileDisabled />
           </FieldErrorHint>
         </FormField>
         <FormField
@@ -66,7 +66,7 @@ export class JiraCredentials extends Component {
           required
         >
           <FieldErrorHint>
-            <Input className={cx(darkView && 'dark-view')} type="password" mobileDisabled />
+            <Input className={darkView && 'dark-view'} type="password" mobileDisabled />
           </FieldErrorHint>
         </FormField>
       </div>
