@@ -53,7 +53,7 @@ export class RallyCredentials extends Component {
           type="text"
         >
           <FieldErrorHint>
-            <InputTextArea />
+            <InputTextArea className={darkView && 'dark-view'} />
           </FieldErrorHint>
         </FormField>
       </div>

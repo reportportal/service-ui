@@ -34,10 +34,11 @@ export const InputTextArea = ({
   onBlur,
   onKeyUp,
   touched,
+  className,
 }) => (
   <textarea
     ref={refFunction}
-    className={cx('input-text-area', {
+    className={cx('input-text-area', className, {
       'mobile-disabled': mobileDisabled,
       disabled,
       error,
@@ -71,6 +72,7 @@ InputTextArea.propTypes = {
   onBlur: PropTypes.func,
   onKeyUp: PropTypes.func,
   refFunction: PropTypes.func,
+  className: PropTypes.string,
 };
 
 InputTextArea.defaultProps = {
@@ -82,6 +84,7 @@ InputTextArea.defaultProps = {
   readonly: false,
   error: '',
   touched: false,
+  className: '',
   onChange: () => {},
   onFocus: () => {},
   onBlur: () => {},
