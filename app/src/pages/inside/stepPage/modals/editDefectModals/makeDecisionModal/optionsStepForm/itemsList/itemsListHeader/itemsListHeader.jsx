@@ -28,7 +28,7 @@ const cx = classNames.bind(styles);
 
 export const ItemsListHeader = ({
   testItems,
-  setModalState,
+  setItems,
   selectedItemsLength,
   selectedItems,
   showErrorLogs,
@@ -48,7 +48,7 @@ export const ItemsListHeader = ({
       return;
     }
     const allSelectedItems = isBulkOperation ? [] : testItems.slice(0, 1);
-    setModalState({
+    setItems({
       selectedItems: isAllSelected ? allSelectedItems : testItems,
     });
   };
@@ -81,7 +81,7 @@ export const ItemsListHeader = ({
 };
 ItemsListHeader.propTypes = {
   testItems: PropTypes.array,
-  setModalState: PropTypes.func,
+  setItems: PropTypes.func,
   selectedItemsLength: PropTypes.number,
   selectedItems: PropTypes.array,
   showErrorLogs: PropTypes.bool,
@@ -91,7 +91,7 @@ ItemsListHeader.propTypes = {
   isNarrowView: PropTypes.bool,
 };
 ItemsListHeader.defaultProps = {
-  setModalState: () => {},
+  setItems: () => {},
   selectedItemsLength: 0,
   testItems: [],
   selectedItems: [],

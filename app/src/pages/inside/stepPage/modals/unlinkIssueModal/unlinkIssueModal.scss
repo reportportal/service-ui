@@ -1,5 +1,5 @@
 /*!
- * Copyright 2019 EPAM Systems
+ * Copyright 2021 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,10 @@
  * limitations under the License.
  */
 
-.add-issue-id-title {
-  margin: 0;
-  padding: 10px;
-  color: $COLOR--gray-47;
-  background-color: $COLOR--white-four;
-  font-size: 12px;
-  font-family: $FONT-SEMIBOLD;
-  text-transform: uppercase;
-}
-
-.link-issue-form-wrapper {
-  padding: 17px 9px 0 12px;
-  margin-bottom: 10px;
-  box-sizing: border-box;
-}
-
-.link-issue-title {
-  position: relative;
-  display: inline-block;
-  padding-right: 15px;
-}
-
 .items-list {
   margin-top: 42px;
+}
+
+.main-text {
+  color: $COLOR--white-two;
 }

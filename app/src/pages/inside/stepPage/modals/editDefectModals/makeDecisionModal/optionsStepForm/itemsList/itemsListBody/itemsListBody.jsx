@@ -121,14 +121,14 @@ HistoryLineItemsList.propTypes = {
 export const ItemsListBody = ({
   testItems,
   selectedItems,
-  setModalState,
+  setItems,
   showErrorLogs,
   optionValue,
   isNarrowView,
   isBulkOperation,
 }) => {
   const selectItem = (id) => {
-    setModalState({
+    setItems({
       selectedItems: selectedItems.find((item) => item.itemId === id)
         ? selectedItems.filter((item) => item.itemId !== id)
         : [...selectedItems, testItems.find((item) => item.itemId === id)],
@@ -160,7 +160,7 @@ export const ItemsListBody = ({
 ItemsListBody.propTypes = {
   testItems: PropTypes.array,
   selectedItems: PropTypes.array,
-  setModalState: PropTypes.func,
+  setItems: PropTypes.func,
   showErrorLogs: PropTypes.bool,
   optionValue: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   isBulkOperation: PropTypes.bool,
@@ -169,7 +169,7 @@ ItemsListBody.propTypes = {
 ItemsListBody.defaultProps = {
   testItems: [],
   selectedItems: [],
-  setModalState: () => {},
+  setItems: () => {},
   showErrorLogs: false,
   optionValue: '',
   isBulkOperation: false,

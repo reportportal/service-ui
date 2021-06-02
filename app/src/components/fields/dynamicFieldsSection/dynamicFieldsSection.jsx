@@ -35,6 +35,7 @@ export class DynamicFieldsSection extends Component {
     customFieldWrapper: PropTypes.func,
     // default field property to use as value (depends on different sets of fields)
     defaultOptionValueKey: PropTypes.oneOf([VALUE_ID_KEY, VALUE_NAME_KEY]),
+    darkView: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -43,6 +44,7 @@ export class DynamicFieldsSection extends Component {
     customBlockCreator: null,
     customFieldWrapper: null,
     defaultOptionValueKey: VALUE_NAME_KEY,
+    darkView: false,
   };
 
   getCustomBlockConfig = (field) => {
@@ -54,7 +56,13 @@ export class DynamicFieldsSection extends Component {
   };
 
   createFields = () => {
-    const { fields = [], customFieldWrapper, withValidation, defaultOptionValueKey } = this.props;
+    const {
+      fields = [],
+      customFieldWrapper,
+      withValidation,
+      defaultOptionValueKey,
+      darkView,
+    } = this.props;
 
     return fields.map((field) => {
       const FieldComponent = getFieldComponent(field);
@@ -67,6 +75,7 @@ export class DynamicFieldsSection extends Component {
           withValidation={withValidation}
           customFieldWrapper={customFieldWrapper}
           defaultOptionValueKey={defaultOptionValueKey}
+          darkView={darkView}
         />
       );
     });

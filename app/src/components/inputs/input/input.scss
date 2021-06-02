@@ -32,6 +32,25 @@
   box-shadow: none;
   flex-grow: 1;
   transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  &.dark-view {
+    border: 1px solid $COLOR--dark-gray;
+    border-radius: 4px;
+    box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.07);
+    background-color: $COLOR--black-1;
+    &::placeholder {
+      color: $COLOR--dirty-gray;
+    }
+    &.touched {
+      color: $COLOR--white-two;
+    }
+    &.disabled {
+      background-color: transparent;
+      border: solid 1px $COLOR--dark-gray;
+      &::placeholder {
+        color: $COLOR--dirty-gray;
+      }
+    }
+  }
 
   &:hover {
     border-color: $COLOR--gray-47;
@@ -45,6 +64,9 @@
   &.error.touched {
     border-color: $COLOR--orange-red;
     box-shadow: 0 0 2px 0 rgba($COLOR--orange-red, 0.7);
+    &.dark-view {
+      color: $COLOR--white-two;
+    }
   }
   &.disabled {
     background-color: $COLOR--gray-91;

@@ -25,7 +25,7 @@ import { ItemsListBody } from './itemsListBody';
 export const ItemsList = ({
   testItems,
   selectedItems,
-  setModalState,
+  setItems,
   loading,
   optionValue,
   isNarrowView,
@@ -44,7 +44,7 @@ export const ItemsList = ({
         {optionValue !== CURRENT_EXECUTION_ONLY && (
           <ItemsListHeader
             testItems={testItems}
-            setModalState={setModalState}
+            setItems={setItems}
             selectedItems={selectedItems}
             selectedItemsLength={selectedItems.length}
             showErrorLogs={showErrorLogs}
@@ -58,7 +58,7 @@ export const ItemsList = ({
           <ItemsListBody
             testItems={testItems}
             selectedItems={selectedItems}
-            setModalState={setModalState}
+            setItems={setItems}
             showErrorLogs={optionValue === CURRENT_EXECUTION_ONLY || showErrorLogs}
             optionValue={optionValue}
             isNarrowView={isNarrowView}
@@ -73,7 +73,7 @@ ItemsList.propTypes = {
   testItems: PropTypes.array,
   selectedItems: PropTypes.array,
   loading: PropTypes.bool,
-  setModalState: PropTypes.func,
+  setItems: PropTypes.func,
   optionValue: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   selectAllItems: PropTypes.func,
   isBulkOperation: PropTypes.bool,
@@ -83,7 +83,7 @@ ItemsList.defaultProps = {
   testItems: [],
   selectedItems: [],
   loading: false,
-  setModalState: () => {},
+  setItems: () => {},
   optionValue: '',
   selectAllItems: () => {},
   isBulkOperation: false,

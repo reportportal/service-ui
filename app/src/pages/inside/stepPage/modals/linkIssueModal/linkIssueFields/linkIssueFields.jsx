@@ -62,6 +62,7 @@ export class LinkIssueFields extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     withAutocomplete: PropTypes.bool,
+    darkView: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -79,7 +80,7 @@ export class LinkIssueFields extends Component {
   };
 
   render() {
-    const { fields, addEventInfo, tracking, withAutocomplete } = this.props;
+    const { fields, addEventInfo, tracking, withAutocomplete, darkView } = this.props;
     return (
       <ul className={cx('link-issue-fields')}>
         {fields.map((issue, index) => (
@@ -97,28 +98,32 @@ export class LinkIssueFields extends Component {
               fieldWrapperClassName={cx('field-wrapper')}
               label={this.props.intl.formatMessage(messages.issueLinkLabel)}
               onChange={withAutocomplete ? this.updateIssueId : null}
-              labelClassName={cx('label')}
+              labelClassName={cx('label', { 'dark-view': darkView })}
             >
               <FieldErrorHint>
-                <Input placeholder={this.props.intl.formatMessage(messages.issueLinkPlaceholder)} />
+                <Input
+                  className={darkView && 'dark-view'}
+                  placeholder={this.props.intl.formatMessage(messages.issueLinkPlaceholder)}
+                />
               </FieldErrorHint>
             </FormField>
             <FormField
               name={`${issue}.issueId`}
               fieldWrapperClassName={cx('field-wrapper')}
               label={this.props.intl.formatMessage(messages.issueIdLabel)}
-              labelClassName={cx('label')}
+              labelClassName={cx('label', { 'dark-view': darkView })}
             >
               <FieldErrorHint>
                 <Input
                   maxLength="128"
                   placeholder={this.props.intl.formatMessage(messages.issueIdLabel)}
+                  className={darkView && 'dark-view'}
                 />
               </FieldErrorHint>
             </FormField>
           </li>
         ))}
-        <li className={cx('add-issue-button')}>
+        <li className={cx('add-issue-button', { 'dark-view': darkView })}>
           <GhostButton
             type="button"
             notMinified
@@ -127,6 +132,7 @@ export class LinkIssueFields extends Component {
               fields.push({});
             }}
             icon={PlusIcon}
+            appearance={darkView && 'gray'}
           >
             {this.props.intl.formatMessage(messages.addIssueButtonTitle)}
           </GhostButton>

@@ -26,7 +26,10 @@ export const linkIssue = (items, { fetchFunc, eventsInfo }) =>
   showModalAction({ id: 'linkIssueModal', data: { items, fetchFunc, eventsInfo } });
 
 export const unlinkIssue = (items, { fetchFunc, eventsInfo }) =>
-  showModalAction({ id: 'unlinkIssueModal', data: { items, fetchFunc, eventsInfo } });
+  showModalAction({
+    id: 'unlinkIssueModal',
+    data: { items, fetchFunc, eventsInfo },
+  });
 
 export const postIssue = (items, { fetchFunc, eventsInfo }) =>
   showModalAction({ id: 'postIssueModal', data: { items, fetchFunc, eventsInfo } });

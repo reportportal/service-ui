@@ -22,7 +22,8 @@ import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { namedAvailableBtsIntegrationsSelector } from 'controllers/plugins';
-import { ModalLayout, withModal } from 'components/main/modal';
+import { withModal } from 'components/main/modal';
+import { ItemsList } from 'pages/inside/stepPage/modals/editDefectModals/makeDecisionModal/optionsStepForm/itemsList';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { URLS } from 'common/urls';
@@ -30,11 +31,14 @@ import { validate, bindMessageToValidator } from 'common/utils/validation';
 import { fetch } from 'common/utils/fetch';
 import { updateSessionItem } from 'common/utils/storageUtils';
 import { RALLY } from 'common/constants/pluginNames';
-import { BetaBadge } from 'pages/inside/common/betaBadge';
 import { BtsIntegrationSelector } from 'pages/inside/common/btsIntegrationSelector';
-import { getDefaultIssueModalConfig } from '../postIssueModal/utils';
+import { DarkModalLayout } from 'components/main/modal/darkModalLayout';
+import { GhostButton } from 'components/buttons/ghostButton';
+import { hideModalAction } from 'controllers/modal';
 import { LinkIssueFields } from './linkIssueFields';
+import { getDefaultIssueModalConfig } from '../postIssueModal/utils';
 import styles from './linkIssueModal.scss';
+import { ERROR_LOGS_SIZE } from '../editDefectModals/constants';
 
 const cx = classNames.bind(styles);
 
@@ -42,6 +46,10 @@ const messages = defineMessages({
   linkButton: {
     id: 'LinkIssueModal.linkButton',
     defaultMessage: 'Link',
+  },
+  linkIssue: {
+    id: 'LinkIssueModal.linkIssue',
+    defaultMessage: 'Link Issue',
   },
   title: {
     id: 'LinkIssueModal.title',
@@ -55,9 +63,17 @@ const messages = defineMessages({
     id: 'LinkIssueModal.linkIssueSuccess',
     defaultMessage: 'Defect link successfully added',
   },
+  linkIssueForTheTest: {
+    id: 'LinkIssueModal.linkIssueForTheTest',
+    defaultMessage: 'Link Issue for the test {launchNumber}',
+  },
   linkIssueFailed: {
     id: 'LinkIssueModal.linkIssueFailed',
     defaultMessage: 'Failed to link issue',
+  },
+  cancel: {
+    id: 'LinkIssueModal.cancel',
+    defaultMessage: 'Cancel',
   },
 });
 
@@ -78,9 +94,11 @@ const messages = defineMessages({
     userId: userIdSelector(state),
     requestUrl: URLS.testItemsLinkIssues(activeProjectSelector(state)),
     namedBtsIntegrations: namedAvailableBtsIntegrationsSelector(state),
+    activeProject: activeProjectSelector(state),
   }),
   {
     showNotification,
+    hideModalAction,
   },
 )
 @injectIntl
@@ -89,6 +107,7 @@ export class LinkIssueModal extends Component {
     intl: PropTypes.object.isRequired,
     userId: PropTypes.string.isRequired,
     requestUrl: PropTypes.string.isRequired,
+    activeProject: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
     namedBtsIntegrations: PropTypes.object.isRequired,
     initialize: PropTypes.func.isRequired,
@@ -100,6 +119,8 @@ export class LinkIssueModal extends Component {
       fetchFunc: PropTypes.func,
       eventsInfo: PropTypes.object,
     }).isRequired,
+    hideModalAction: PropTypes.func,
+    invalid: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -110,10 +131,21 @@ export class LinkIssueModal extends Component {
     },
   };
 
+  isBulkOperation = this.props.data.items.length > 1;
+
   constructor(props) {
     super(props);
-    const { namedBtsIntegrations, userId } = props;
+    const {
+      namedBtsIntegrations,
+      userId,
+      data: { items },
+    } = props;
     const { pluginName, integration } = getDefaultIssueModalConfig(namedBtsIntegrations, userId);
+    const currentItems = this.isBulkOperation
+      ? items.map((item) => {
+          return { ...item, itemId: item.id };
+        })
+      : items;
 
     this.props.initialize({
       issues: [{}],
@@ -121,6 +153,9 @@ export class LinkIssueModal extends Component {
     this.state = {
       pluginName,
       integrationId: integration.id,
+      loading: false,
+      testItems: currentItems,
+      selectedItems: currentItems,
     };
   }
 
@@ -129,14 +164,14 @@ export class LinkIssueModal extends Component {
       intl,
       userId,
       requestUrl,
-      data: { items, fetchFunc },
+      data: { fetchFunc },
       namedBtsIntegrations,
     } = this.props;
-    const { pluginName, integrationId } = this.state;
+    const { pluginName, integrationId, selectedItems } = this.state;
     const {
       integrationParameters: { project, url },
     } = namedBtsIntegrations[pluginName].find((item) => item.id === integrationId);
-    const testItemIds = items.map((item) => item.id);
+    const testItemIds = selectedItems.map((item) => item.id);
     const issues = formData.issues.map((issue) => ({
       ticketId: issue.issueId,
       url: issue.issueLink,
@@ -152,7 +187,7 @@ export class LinkIssueModal extends Component {
       },
     })
       .then(() => {
-        this.closeModal();
+        this.props.hideModalAction();
         fetchFunc();
         const sessionConfig = {
           pluginName,
@@ -173,8 +208,8 @@ export class LinkIssueModal extends Component {
       });
   };
 
-  onLink = () => (closeModal) => {
-    this.closeModal = closeModal;
+  onLink = () => {
+    this.props.hideModalAction();
     this.props.handleSubmit(this.onFormSubmit)();
   };
 
@@ -204,55 +239,147 @@ export class LinkIssueModal extends Component {
     };
   };
 
+  componentDidMount() {
+    const { intl, activeProject } = this.props;
+    const { testItems } = this.state;
+    const fetchLogs = () => {
+      this.setState({ loading: true });
+      let testItemLogRequest = [];
+      let requests;
+      if (this.isBulkOperation) {
+        testItems.map((elem) => {
+          return testItemLogRequest.push(
+            fetch(URLS.logItemStackTrace(activeProject, elem.path, ERROR_LOGS_SIZE)),
+          );
+        });
+        requests = testItemLogRequest;
+      } else {
+        testItemLogRequest = fetch(
+          URLS.logItemStackTrace(activeProject, testItems.path, ERROR_LOGS_SIZE),
+        );
+        requests = [testItemLogRequest];
+      }
+
+      Promise.all(requests)
+        .then((responses) => {
+          const [testItemRes] = responses;
+          const testItemLogs = this.isBulkOperation
+            ? responses.map((item) => item.content)
+            : testItemRes.content;
+          const items = [];
+          this.isBulkOperation
+            ? testItems.map((elem, i) => {
+                return items.push({ ...elem, logs: testItemLogs[i] });
+              })
+            : items.push({ ...testItems, logs: testItemLogs });
+          this.setState({
+            testItems: items,
+            loading: false,
+          });
+        })
+        .catch(() => {
+          this.setState({
+            testItems: [],
+            selectedItems: [],
+            loading: false,
+          });
+          this.props.showNotification({
+            message: intl.formatMessage(messages.linkIssueFailed),
+            type: NOTIFICATION_TYPES.ERROR,
+          });
+        });
+    };
+    fetchLogs();
+  }
+
+  renderIssueFormHeaderElements = () => {
+    const {
+      intl: { formatMessage },
+      invalid,
+    } = this.props;
+    return (
+      <>
+        <GhostButton
+          onClick={() => this.props.hideModalAction()}
+          disabled={false}
+          transparentBorder
+          transparentBackground
+          appearance="topaz"
+        >
+          {formatMessage(messages.cancel)}
+        </GhostButton>
+        <GhostButton onClick={this.onLink} disabled={invalid} color="''" appearance="topaz">
+          {formatMessage(messages.linkIssue)}
+        </GhostButton>
+      </>
+    );
+  };
+  renderTitle = (collapsedRightSection) => {
+    const {
+      data: { items },
+      intl: { formatMessage },
+    } = this.props;
+    return collapsedRightSection
+      ? formatMessage(messages.linkIssueForTheTest, {
+          launchNumber: items.launchNumber && `#${items.launchNumber}`,
+        })
+      : formatMessage(messages.linkIssue);
+  };
+
+  setItems = (newState) => {
+    this.setState(newState);
+  };
+
+  renderRightSection = (collapsedRightSection) => {
+    const { testItems, selectedItems } = this.state;
+    return (
+      <div className={cx('items-list')}>
+        <ItemsList
+          setItems={this.setItems}
+          testItems={testItems}
+          selectedItems={selectedItems}
+          isNarrowView={collapsedRightSection}
+          isBulkOperation={this.isBulkOperation}
+        />
+      </div>
+    );
+  };
+
   render() {
     const {
-      intl,
       namedBtsIntegrations,
       data: { eventsInfo = {} },
+      change,
     } = this.props;
-    const okButton = {
-      text: intl.formatMessage(messages.linkButton),
-      onClick: this.onLink(),
-      eventInfo: eventsInfo.loadBtn,
-    };
-    const cancelButton = {
-      text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      eventInfo: eventsInfo.cancelBtn,
-    };
+    const { pluginName, integrationId } = this.state;
 
     return (
-      <ModalLayout
-        title={
-          <span className={cx('link-issue-title')}>
-            {intl.formatMessage(messages.title)}
-            <BetaBadge />
-          </span>
-        }
-        okButton={okButton}
-        cancelButton={cancelButton}
-        closeConfirmation={this.getCloseConfirmationConfig()}
-        closeIconEventInfo={eventsInfo.closeIcon}
+      <DarkModalLayout
+        renderHeaderElements={this.renderIssueFormHeaderElements}
+        renderTitle={this.renderTitle}
+        renderRightSection={this.renderRightSection}
       >
-        <h4 className={cx('add-issue-id-title')}>{intl.formatMessage(messages.addIssueIdTitle)}</h4>
-        <div className={cx('link-issue-form-wrapper')}>
+        {() => (
           <form>
             <BtsIntegrationSelector
               namedBtsIntegrations={namedBtsIntegrations}
-              pluginName={this.state.pluginName}
-              integrationId={this.state.integrationId}
+              pluginName={pluginName}
+              integrationId={integrationId}
               onChangeIntegration={this.onChangeIntegration}
               onChangePluginName={this.onChangePlugin}
+              darkView
             />
             <FieldArray
               name="issues"
-              change={this.props.change}
+              change={change}
               component={LinkIssueFields}
               addEventInfo={eventsInfo.addNewIssue}
-              withAutocomplete={this.state.pluginName !== RALLY}
+              withAutocomplete={pluginName !== RALLY}
+              darkView
             />
           </form>
-        </div>
-      </ModalLayout>
+        )}
+      </DarkModalLayout>
     );
   }
 }

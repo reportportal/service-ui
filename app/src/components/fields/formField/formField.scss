@@ -61,6 +61,12 @@
   line-height: 13px;
   color: $COLOR--charcoal-grey;
   box-sizing: border-box;
+  &.dark-view {
+    color: $COLOR--dirty-gray;
+    min-width: 140px;
+    text-align: left;
+    padding-right: 36px;
+  }
 
   &.required {
     position: relative;
