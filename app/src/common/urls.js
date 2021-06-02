@@ -164,10 +164,11 @@ export const URLS = {
   projectSearch: () => `${urlBase}project/list?filter.cnt.name=`,
   projectNameSearch: (searchTerm) => `${urlBase}project/names/search?term=${searchTerm}`,
 
-  exportProjects: (filterEntities) =>
+  exportProjects: (filterEntities, sortingEntities = {}) =>
     `${urlBase}project/export${getQueryParams({
       view: CSV,
       ...createFilterQuery(filterEntities),
+      ...sortingEntities,
     })}`,
   projectNotificationConfiguration: (activeProject) =>
     `${urlBase}project/${activeProject}/notification`,

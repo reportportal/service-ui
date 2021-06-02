@@ -104,8 +104,17 @@ export class ProjectsToolbar extends Component {
   };
 
   onExportProjects = () => {
-    this.props.tracking.trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.EXPORT_BTN);
-    downloadFile(URLS.exportProjects(this.props.filterEntities));
+    const { filterEntities, sortingColumn, sortingDirection, tracking } = this.props;
+    tracking.trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.EXPORT_BTN);
+    downloadFile(
+      URLS.exportProjects(
+        filterEntities,
+        sortingColumn &&
+          sortingDirection && {
+            'page.sort': `${sortingColumn},${sortingDirection}`,
+          },
+      ),
+    );
   };
 
   getSelectedProjectsNames = () =>
