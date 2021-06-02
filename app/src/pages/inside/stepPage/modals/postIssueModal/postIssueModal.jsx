@@ -459,7 +459,7 @@ export class PostIssueModal extends Component {
             ? testItems.map((elem, i) => {
                 return items.push({ ...elem, logs: testItemLogs[i] });
               })
-            : items.push({ ...testItems, logs: testItemLogs });
+            : items.push({ ...testItems[0], logs: testItemLogs });
           this.setState({
             testItems: items,
             loading: false,

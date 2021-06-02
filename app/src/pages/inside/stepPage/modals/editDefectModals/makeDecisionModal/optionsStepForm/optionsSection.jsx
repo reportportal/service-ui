@@ -157,7 +157,7 @@ export const OptionsSection = ({
         )}
         <div className={cx('items-list')}>
           <ItemsList
-            setModalState={setModalState}
+            setItems={setModalState}
             testItems={testItems}
             selectedItems={selectedItems}
             loading={loading}
