@@ -112,7 +112,7 @@ export const OptionsSection = ({
               ? items.map((item) => {
                   return { ...item, itemId: item.id };
                 })
-              : items,
+              : [items[0]],
           });
           setLoading(false);
         })
