@@ -55,23 +55,6 @@
   top: 0;
 }
 
-:global {
-  .window-animation-enter {
-    opacity: 0;
-  }
-  .window-animation-enter-active {
-    opacity: 1;
-    transition: opacity 300ms;
-  }
-  .window-animation-exit {
-    opacity: 1;
-  }
-  .window-animation-exit-active {
-    opacity: 0;
-    transition: opacity 300ms;
-  }
-}
-
 .right-section {
   box-sizing: border-box;
   display: flex;
