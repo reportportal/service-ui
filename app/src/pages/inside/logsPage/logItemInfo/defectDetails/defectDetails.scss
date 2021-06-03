@@ -86,13 +86,24 @@
 .collapsed-info {
   display: flex;
   align-items: center;
-  margin-right: 25px;
+  margin-right: 10px;
+
+  & > span:after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    right: 0;
+    width: 1px;
+    height: 22px;
+    background: $COLOR--light-gray;
+  }
 }
 
 .issues-info {
+  position: relative;
   display: inline-flex;
   align-items: center;
-  margin-right: 10px;
+  padding: 0 15px 0 12px;
   color: $COLOR--gray-47;
   font-size: 13px;
 
@@ -102,6 +113,9 @@
 }
 
 .expand-more {
+  position: relative;
+  line-height: 16px;
+  padding-right: 16px;
   color: $COLOR--topaz;
   font-size: 13px;
   font-family: $FONT-SEMIBOLD;

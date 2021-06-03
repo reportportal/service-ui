@@ -344,13 +344,13 @@ export class DefectDetails extends Component {
             <Fragment>
               {expanded ? null : (
                 <div className={cx('collapsed-info')}>
-                  <span className={cx('issues-info')}>
-                    <span className={cx('icon')}>{Parser(BugIcon)}</span>
-                    {logItem.issue.externalSystemIssues.length}
-                  </span>
                   <span className={cx('expand-more')} onClick={this.toggleExpanded}>
                     <span className={cx('icon')}>{Parser(ArrowDownIcon)}</span>
                     {formatMessage(messages.more)}
+                  </span>
+                  <span className={cx('issues-info')}>
+                    <span className={cx('icon')}>{Parser(BugIcon)}</span>
+                    {logItem.issue.externalSystemIssues.length}
                   </span>
                 </div>
               )}
