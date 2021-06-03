@@ -196,6 +196,7 @@ export class PersonalInfoBlock extends Component {
                 src={this.state.avatarSource}
                 alt="Profile avatar"
                 fallback={DefaultUserImage}
+                preloaderColor="charcoal"
               />
             </div>
             <div className={cx('info')}>
