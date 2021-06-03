@@ -16,7 +16,6 @@
 
 .link-issue-fields {
   .issue-fields-list-item {
-    display: inline-block;
     position: relative;
     margin-bottom: 18px;
   }
@@ -55,7 +54,7 @@
 
 .remove-issue-fields-button {
   position: absolute;
-  right: -50px;
+  left: 450px;
   top: 35px;
   width: 17px;
   height: 17px;
