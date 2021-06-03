@@ -72,16 +72,12 @@ const SYSTEM_CREDENTIALS_BLOCKS = {
 let validationConfig = null;
 
 const messages = defineMessages({
-  postButton: {
-    id: 'PostIssueModal.postButton',
+  post: {
+    id: 'PostIssueModal.post',
     defaultMessage: 'Post',
   },
   postIssue: {
     id: 'PostIssueModal.postIssue',
-    defaultMessage: 'Post Issue',
-  },
-  title: {
-    id: 'PostIssueModal.title',
     defaultMessage: 'Post issue',
   },
   systemUrlInfo: {
@@ -517,7 +513,7 @@ export class PostIssueModal extends Component {
       ? formatMessage(messages.postIssueForTheTest, {
           launchNumber: items.launchNumber && `#${items.launchNumber}`,
         })
-      : formatMessage(messages.postIssue);
+      : formatMessage(messages.post);
   };
 
   setItems = (newState) => {
