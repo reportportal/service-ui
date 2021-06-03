@@ -39,16 +39,12 @@ import { ERROR_LOGS_SIZE } from '../editDefectModals/constants';
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
-  unlinkButton: {
-    id: 'UnlinkIssueModal.unlinkButton',
+  unlink: {
+    id: 'UnlinkIssueModal.unlink',
     defaultMessage: 'Unlink',
   },
   unlinkIssue: {
     id: 'UnlinkIssueModal.unlinkIssue',
-    defaultMessage: 'Unlink Issue',
-  },
-  title: {
-    id: 'UnlinkIssueModal.title',
     defaultMessage: 'Unlink issue',
   },
   unlinkModalConfirmationText: {
@@ -241,7 +237,7 @@ export class UnlinkIssueModal extends Component {
       ? formatMessage(messages.unlinkIssueForTheTest, {
           launchNumber: items.launchNumber && `#${items.launchNumber}`,
         })
-      : formatMessage(messages.unlinkIssue);
+      : formatMessage(messages.unlink);
   };
 
   setItems = (newState) => {

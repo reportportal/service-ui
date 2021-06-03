@@ -43,16 +43,12 @@ import { ERROR_LOGS_SIZE } from '../editDefectModals/constants';
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
-  linkButton: {
-    id: 'LinkIssueModal.linkButton',
+  link: {
+    id: 'LinkIssueModal.link',
     defaultMessage: 'Link',
   },
   linkIssue: {
     id: 'LinkIssueModal.linkIssue',
-    defaultMessage: 'Link Issue',
-  },
-  title: {
-    id: 'LinkIssueModal.title',
     defaultMessage: 'Link issue',
   },
   addIssueIdTitle: {
@@ -323,7 +319,7 @@ export class LinkIssueModal extends Component {
       ? formatMessage(messages.linkIssueForTheTest, {
           launchNumber: items.launchNumber && `#${items.launchNumber}`,
         })
-      : formatMessage(messages.linkIssue);
+      : formatMessage(messages.link);
   };
 
   setItems = (newState) => {
