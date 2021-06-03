@@ -106,6 +106,8 @@
       }
       .separator {
         vertical-align: middle;
+        border-left: none;
+        border-color: $COLOR--dark-gray;
       }
     }
     .CodeMirror {
