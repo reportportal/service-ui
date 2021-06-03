@@ -38,7 +38,7 @@ import {
   MAKE_DECISION_MODAL,
   SEARCH_MODES,
   SELECT_DEFECT_MANUALLY,
-  SIMILAR_TI_CURRENT_LAUNCH,
+  CURRENT_LAUNCH,
   TO_INVESTIGATE_LOCATOR_PREFIX,
 } from '../constants';
 import { SelectDefectManually } from './selectDefectManually';
@@ -60,7 +60,7 @@ const MakeDecision = ({ data }) => {
     issueActionType: '',
     optionValue:
       itemData.issue && itemData.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)
-        ? SIMILAR_TI_CURRENT_LAUNCH
+        ? CURRENT_LAUNCH
         : CURRENT_EXECUTION_ONLY,
     searchMode:
       itemData.issue && itemData.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)

@@ -36,6 +36,10 @@ export class InputRadioGroup extends PureComponent {
           id: PropTypes.string.isRequired,
           defaultMessage: PropTypes.string.isRequired,
         }),
+        tooltip: PropTypes.shape({
+          id: PropTypes.string.isRequired,
+          defaultMessage: PropTypes.string.isRequired,
+        }),
       }),
     ),
     inline: PropTypes.bool,
@@ -62,7 +66,7 @@ export class InputRadioGroup extends PureComponent {
       inputClassNames,
     } = this.props;
     return options.map((item, index) => {
-      const { label, ownValue, ...rest } = item;
+      const { label, ownValue, tooltip, ...rest } = item;
       const onChange = () => this.props.onChange(ownValue);
       return (
         <div
@@ -79,6 +83,7 @@ export class InputRadioGroup extends PureComponent {
             ownValue={ownValue}
             onChange={onChange}
             inputClassNames={inputClassNames}
+            tooltip={(tooltip && formatMessage(tooltip)) || formatMessage(label)}
             {...rest}
           >
             {formatMessage(label)}

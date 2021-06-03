@@ -32,6 +32,7 @@ export const InputRadio = ({
   onBlur,
   mobileDisabled,
   inputClassNames,
+  tooltip,
 }) => (
   // eslint-disable-next-line
   <label
@@ -57,10 +58,7 @@ export const InputRadio = ({
       )}
     />
     {children && (
-      <span
-        className={cx('children-container', inputClassNames.childrenClassName)}
-        title={children}
-      >
+      <span className={cx('children-container', inputClassNames.childrenClassName)} title={tooltip}>
         {children}
       </span>
     )}
@@ -81,6 +79,7 @@ InputRadio.propTypes = {
     togglerClassName: PropTypes.string,
     childrenClassName: PropTypes.string,
   }),
+  tooltip: PropTypes.string,
 };
 InputRadio.defaultProps = {
   children: '',
@@ -97,4 +96,5 @@ InputRadio.defaultProps = {
     togglerClassName: '',
     childrenClassName: '',
   },
+  tooltip: '',
 };

@@ -14,11 +14,6 @@
  * limitations under the License.
  */
 
-export const SEARCH_MODES = {
-  SIMILAR_TI_CURRENT_LAUNCH: 'currentLaunch',
-  LAST_TEN_LAUNCHES: 'launchName',
-  WITH_FILTER: 'filter',
-};
 export const CHANGE_COMMENT_MODE = {
   NOT_CHANGE: 'NOT_CHANGE',
   REPLACE: 'REPLACE',
@@ -33,9 +28,15 @@ export const COPY_FROM_HISTORY_LINE = 'copyFromHistoryLine';
 export const MACHINE_LEARNING_SUGGESTIONS = 'machineLearningSuggestions';
 export const SOURCE_DETAILS = 'sourceDetails';
 export const CURRENT_EXECUTION_ONLY = 'currentExecutionOnly';
-export const SIMILAR_TI_CURRENT_LAUNCH = 'similarTICurrentLaunch';
-export const LAST_TEN_LAUNCHES = 'lastTenLaunches';
-export const WITH_FILTER = 'withFilter';
+export const CURRENT_LAUNCH = 'currentLaunch';
+export const LAST_TEN_LAUNCHES = 'launchName';
+export const WITH_FILTER = 'filter';
 export const ALL_LOADED_TI_FROM_HISTORY_LINE = 'allLoadedTIFromHistoryLine';
 export const ERROR_LOGS_SIZE = 5;
 export const TO_INVESTIGATE_LOCATOR_PREFIX = 'ti';
+
+export const SEARCH_MODES = {
+  CURRENT_LAUNCH,
+  LAST_TEN_LAUNCHES,
+  WITH_FILTER,
+};
