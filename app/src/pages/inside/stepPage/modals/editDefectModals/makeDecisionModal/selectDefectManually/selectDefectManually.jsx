@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
@@ -53,6 +53,7 @@ export const SelectDefectManually = ({
   const isBtsPluginsExist = useSelector(isBtsPluginsExistSelector);
   const enabledBtsPlugins = useSelector(enabledBtsPluginsSelector);
   const isPostIssueUnavailable = !isPostIssueActionAvailable(btsIntegrations);
+  const [editor, setEditor] = useState(null);
 
   const handleManualChange = (value = {}) => {
     const issue = {
@@ -67,6 +68,7 @@ export const SelectDefectManually = ({
       decisionType: SELECT_DEFECT_MANUALLY,
     });
     collapseTabsExceptCurr(SELECT_DEFECT_MANUALLY);
+    !issue.comment && editor.focus();
   };
 
   const selectDefectTypeManually = (value) => {
@@ -190,6 +192,7 @@ export const SelectDefectManually = ({
               ? modalState.source.issue.comment
               : itemData.issue.comment
           }
+          manipulateEditorOutside={setEditor}
           onChange={handleDefectCommentChange}
           placeholder={formatMessage(
             isBulkOperation

@@ -100,6 +100,7 @@ export class MarkdownEditor extends React.Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    manipulateEditorOutside: PropTypes.func,
   };
   static defaultProps = {
     value: '',
@@ -107,6 +108,7 @@ export class MarkdownEditor extends React.Component {
     onChange: () => {},
     onChangeEventInfo: {},
     mode: MODE_DEFAULT,
+    manipulateEditorOutside: () => {},
   };
 
   state = {
@@ -118,6 +120,7 @@ export class MarkdownEditor extends React.Component {
       intl: { formatMessage },
       value,
       mode,
+      manipulateEditorOutside,
     } = this.props;
     this.holder.value = value;
     this.simpleMDE = new SimpleMDE({
@@ -231,6 +234,7 @@ export class MarkdownEditor extends React.Component {
         ReactDOMServer.renderToStaticMarkup(<MarkdownViewer value={plainText} mode={mode} />),
     });
     this.simpleMDE.codemirror.on('change', this.onChangeHandler);
+    manipulateEditorOutside(this.simpleMDE.codemirror);
   }
   componentWillUnmount() {
     this.simpleMDE.codemirror.off('change', this.onChangeHandler);
@@ -238,6 +242,7 @@ export class MarkdownEditor extends React.Component {
   onChangeHandler = () => {
     this.props.onChange(this.simpleMDE.value());
     this.props.onChangeEventInfo && this.props.tracking.trackEvent(this.props.onChangeEventInfo);
+    this.props.manipulateEditorOutside(this.simpleMDE.codemirror);
   };
 
   render() {
