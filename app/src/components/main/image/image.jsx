@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { Component } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { fetch } from 'common/utils/fetch';
-import ImgLoading from 'common/img/img-loading.gif';
+import { DottedPreloader } from 'components/preloaders/dottedPreloader';
 import styles from './image.scss';
 
 const cx = classNames.bind(styles);
@@ -29,12 +29,14 @@ export class Image extends Component {
     alt: PropTypes.string,
     isStatic: PropTypes.bool,
     fallback: PropTypes.string,
+    preloaderColor: PropTypes.string,
   };
 
   static defaultProps = {
     alt: '',
     isStatic: false,
     fallback: null,
+    preloaderColor: '',
   };
 
   constructor(props) {
@@ -103,12 +105,12 @@ export class Image extends Component {
   };
 
   render() {
-    const { src, alt, fallback, isStatic, ...rest } = this.props;
+    const { src, alt, fallback, isStatic, preloaderColor, ...rest } = this.props;
     const { loading } = this.state;
 
     return loading && !isStatic ? (
       <div className={cx('loader')}>
-        <img src={ImgLoading} alt={alt} />
+        <DottedPreloader color={preloaderColor} />
       </div>
     ) : (
       <img src={this.getURL()} onLoad={this.revokeURL} alt={alt} {...rest} />

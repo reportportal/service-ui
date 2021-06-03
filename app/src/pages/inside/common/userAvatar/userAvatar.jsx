@@ -31,6 +31,7 @@ export const UserAvatar = ({ className, projectId, userId }) => (
       src={URLS.dataUserPhoto(projectId, userId, true)}
       alt="avatar"
       fallback={DefaultUserImage}
+      preloaderColor="charcoal"
     />
   </div>
 );
