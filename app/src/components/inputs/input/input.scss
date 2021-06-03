@@ -36,10 +36,11 @@
     border: 1px solid $COLOR--dark-gray;
     border-radius: 4px;
     box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.07);
-    background-color: $COLOR--black-1;
+    background-color: transparent;
     color: $COLOR--white-two;
     &.touched {
       border: none;
+      background-color: $COLOR--black-1;
     }
     &.error.touched {
       background-color: transparent;
