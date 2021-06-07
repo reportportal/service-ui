@@ -35,8 +35,6 @@ import { connectRouter } from 'common/utils';
 import { PAGE_KEY, DEFAULT_PAGINATION } from 'controllers/pagination';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { activeModalSelector } from 'controllers/modal';
-import { MAKE_DECISION_MODAL } from 'pages/inside/stepPage/modals/makeDecisionModal/constants';
 import { HistoryLineItem } from './historyLineItem';
 import styles from './historyLine.scss';
 
@@ -65,7 +63,6 @@ const messages = defineMessages({
     historyItems: historyItemsSelector(state),
     activeItemId: activeLogIdSelector(state),
     shouldShowLoadMore: shouldShowLoadMoreSelector(state),
-    activeModal: activeModalSelector(state),
   }),
   {
     fetchHistoryItemsAction,
@@ -89,7 +86,6 @@ export class HistoryLine extends Component {
     changeActiveItem: PropTypes.func,
     fetchHistoryItemsAction: PropTypes.func,
     setShouldShowLoadMoreAction: PropTypes.func,
-    activeModal: PropTypes.object,
   };
 
   static defaultProps = {
@@ -99,7 +95,6 @@ export class HistoryLine extends Component {
     changeActiveItem: () => {},
     fetchHistoryItemsAction: () => {},
     setShouldShowLoadMoreAction: () => {},
-    activeModal: {},
   };
 
   checkIfTheItemLinkIsActive = (item) =>
@@ -133,14 +128,7 @@ export class HistoryLine extends Component {
   }
 
   render() {
-    const {
-      historyItems,
-      activeItemId,
-      changeActiveItem,
-      intl,
-      shouldShowLoadMore,
-      activeModal,
-    } = this.props;
+    const { historyItems, activeItemId, changeActiveItem, intl, shouldShowLoadMore } = this.props;
     return (
       <div className={cx('history-line')}>
         <ScrollWrapper autoHeight hideTracksWhenNotNeeded autoHide initialScrollRight>
@@ -160,7 +148,6 @@ export class HistoryLine extends Component {
               <HistoryLineItem
                 key={item.id}
                 active={item.id === activeItemId}
-                isDefectEditorOpen={activeModal && activeModal.id === MAKE_DECISION_MODAL}
                 isLastItem={index === historyItems.length - 1}
                 onClick={() =>
                   this.checkIfTheItemLinkIsActive(item) ? changeActiveItem(item.id) : {}
