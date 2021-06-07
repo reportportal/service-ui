@@ -18,10 +18,10 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
+import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
 import { withModal } from 'components/main/modal';
-import { ItemsList } from 'pages/inside/stepPage/modals/editDefectModals/makeDecisionModal/optionsStepForm/itemsList';
 import {
   showNotification,
   showDefaultErrorNotification,
@@ -32,9 +32,9 @@ import { URLS } from 'common/urls';
 import { DarkModalLayout } from 'components/main/modal/darkModalLayout';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { hideModalAction } from 'controllers/modal';
-import classNames from 'classnames/bind';
+import { ItemsList } from '../makeDecisionModal/optionsSection/itemsList';
+import { ERROR_LOGS_SIZE } from '../makeDecisionModal/constants';
 import styles from './unlinkIssueModal.scss';
-import { ERROR_LOGS_SIZE } from '../editDefectModals/constants';
 
 const cx = classNames.bind(styles);
 

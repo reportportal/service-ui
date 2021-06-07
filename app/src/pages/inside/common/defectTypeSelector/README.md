@@ -1,15 +1,11 @@
 ## **Defect type selector component**
 
-Has 30px height & width adjusted by content.
+Has height and width adjusted by content.
 
 ### Props:
 
-- **value**: _string_, optional, default = ""
-- **placeholder**: _string_, optional, default = ""
-- **defectTypes**: _object_, required
+- **selectedItem**: _string_, optional, default = ""
 
 ### Events:
 
-- **onFocus**
-- **onBlur**
-- **onChange** - returns { value: _string_ }
+- **selectDefectType**

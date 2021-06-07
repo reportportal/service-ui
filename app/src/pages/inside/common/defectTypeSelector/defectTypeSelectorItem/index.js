@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2021 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,4 @@
  * limitations under the License.
  */
 
-export { TestItemDetailsModal } from './testItemDetailsModal';
-export { IgnoreInAAModal } from './ignoreInAAModal';
-export { IncludeInAAModal } from './includeInAAModal';
-export { UnlinkIssueModal } from './unlinkIssueModal';
-export { LinkIssueModal } from './linkIssueModal';
-export { PostIssueModal } from './postIssueModal';
-export { MakeDecisionModal } from './makeDecisionModal';
+export { DefectTypeSelectorItem } from './defectTypeSelectorItem';

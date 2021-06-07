@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2021 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
@@ -23,7 +24,7 @@ import { DefectTypeSelector } from './defectTypeSelector';
 import README from './README.md';
 import { state } from './data';
 
-const value = 'AB001';
+const value = 'PB001';
 
 storiesOf('Pages/Inside/Common/DefectTypeSelector', module)
   .addDecorator(
@@ -33,7 +34,7 @@ storiesOf('Pages/Inside/Common/DefectTypeSelector', module)
       backdrop: 'rgba(70, 69, 71, 0.2)',
       background: '#ffffff',
       height: 400,
-      width: 580,
+      width: 650,
     }),
   )
   .addParameters({
@@ -42,34 +43,23 @@ storiesOf('Pages/Inside/Common/DefectTypeSelector', module)
     },
   })
   .add('default state', () => (
-    <div style={{ width: '100%', position: 'relative' }}>
+    <div>
       <WithState state={state}>
         <DefectTypeSelector />
       </WithState>
     </div>
   ))
-  .add('with placeholder', () => (
-    <div style={{ width: '100%', position: 'relative' }}>
+  .add('with selectedItem', () => (
+    <div>
       <WithState state={state}>
-        <DefectTypeSelector placeholder="Choose defect type" />
+        <DefectTypeSelector selectedItem={value} />
       </WithState>
     </div>
   ))
-  .add('with value', () => (
-    <div style={{ width: '100%', position: 'relative' }}>
+  .add('with action', () => (
+    <div>
       <WithState state={state}>
-        <DefectTypeSelector value={value} />
-      </WithState>
-    </div>
-  ))
-  .add('with actions', () => (
-    <div style={{ width: '100%', position: 'relative' }}>
-      <WithState state={state}>
-        <DefectTypeSelector
-          onChange={action('onchange')}
-          placeholder="Choose defect type"
-          value={value}
-        />
+        <DefectTypeSelector selectDefectType={action('onClick')} selectedItem={value} />
       </WithState>
     </div>
   ));

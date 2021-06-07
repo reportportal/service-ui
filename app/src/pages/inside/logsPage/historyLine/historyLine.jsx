@@ -36,7 +36,7 @@ import { PAGE_KEY, DEFAULT_PAGINATION } from 'controllers/pagination';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { activeModalSelector } from 'controllers/modal';
-import { MAKE_DECISION_MODAL } from 'pages/inside/stepPage/modals/editDefectModals/constants';
+import { MAKE_DECISION_MODAL } from 'pages/inside/stepPage/modals/makeDecisionModal/constants';
 import { HistoryLineItem } from './historyLineItem';
 import styles from './historyLine.scss';
 

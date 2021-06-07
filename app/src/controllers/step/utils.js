@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import { showModalAction } from 'controllers/modal';
-import { MAKE_DECISION_MODAL } from 'pages/inside/stepPage/modals/editDefectModals/constants';
 
 export const ignoreInAA = (items, { fetchFunc, eventsInfo }) =>
   showModalAction({ id: 'ignoreInAAModal', data: { items, fetchFunc, eventsInfo } });
@@ -35,4 +34,4 @@ export const postIssue = (items, { fetchFunc, eventsInfo }) =>
   showModalAction({ id: 'postIssueModal', data: { items, fetchFunc, eventsInfo } });
 
 export const editDefect = (items, { fetchFunc, debugMode, eventsInfo }) =>
-  showModalAction({ id: MAKE_DECISION_MODAL, data: { items, fetchFunc, debugMode, eventsInfo } });
+  showModalAction({ id: 'makeDecisionModal', data: { items, fetchFunc, debugMode, eventsInfo } });
