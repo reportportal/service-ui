@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { SEARCH_MODES } from 'pages/inside/stepPage/modals/editDefectModals/constants';
+import { SEARCH_MODES } from 'pages/inside/stepPage/modals/makeDecisionModal/constants';
 
 // EDIT DEFECT MODAL
 export const getEditDefectModalEvents = (category) => ({

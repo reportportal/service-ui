@@ -40,11 +40,12 @@ import { VALUE_ID_KEY, VALUE_NAME_KEY } from 'components/fields/dynamicFieldsSec
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { ISSUE_TYPE_FIELD_KEY } from 'components/integrations/elements/bts/constants';
-import { ItemsList } from 'pages/inside/stepPage/modals/editDefectModals/makeDecisionModal/optionsStepForm/itemsList';
 import { BtsIntegrationSelector } from 'pages/inside/common/btsIntegrationSelector';
 import { DarkModalLayout } from 'components/main/modal/darkModalLayout';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { hideModalAction } from 'controllers/modal';
+import { ItemsList } from '../makeDecisionModal/optionsSection/itemsList';
+import { ERROR_LOGS_SIZE } from '../makeDecisionModal/constants';
 import { JiraCredentials } from './jiraCredentials';
 import { RallyCredentials } from './rallyCredentials';
 import {
@@ -60,7 +61,6 @@ import {
   getDefaultIssueModalConfig,
 } from './utils';
 import styles from './postIssueModal.scss';
-import { ERROR_LOGS_SIZE } from '../editDefectModals/constants';
 
 const cx = classNames.bind(styles);
 

@@ -23,7 +23,6 @@ import { injectIntl, defineMessages } from 'react-intl';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { namedAvailableBtsIntegrationsSelector } from 'controllers/plugins';
 import { withModal } from 'components/main/modal';
-import { ItemsList } from 'pages/inside/stepPage/modals/editDefectModals/makeDecisionModal/optionsStepForm/itemsList';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { URLS } from 'common/urls';
@@ -35,10 +34,11 @@ import { BtsIntegrationSelector } from 'pages/inside/common/btsIntegrationSelect
 import { DarkModalLayout } from 'components/main/modal/darkModalLayout';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { hideModalAction } from 'controllers/modal';
-import { LinkIssueFields } from './linkIssueFields';
+import { ItemsList } from '../makeDecisionModal/optionsSection/itemsList';
 import { getDefaultIssueModalConfig } from '../postIssueModal/utils';
+import { ERROR_LOGS_SIZE } from '../makeDecisionModal/constants';
+import { LinkIssueFields } from './linkIssueFields';
 import styles from './linkIssueModal.scss';
-import { ERROR_LOGS_SIZE } from '../editDefectModals/constants';
 
 const cx = classNames.bind(styles);
 

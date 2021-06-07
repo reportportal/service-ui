@@ -45,7 +45,7 @@ import {
   includeAllLaunchesSelector,
 } from 'controllers/log';
 import { activeModalSelector } from 'controllers/modal';
-import { MAKE_DECISION_MODAL } from 'pages/inside/stepPage/modals/editDefectModals/constants';
+import { MAKE_DECISION_MODAL } from 'pages/inside/stepPage/modals/makeDecisionModal/constants';
 import { ParentInfo } from 'pages/inside/common/infoLine/parentInfo';
 import { stepPaginationSelector } from 'controllers/step';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
