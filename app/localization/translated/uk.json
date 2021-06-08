@@ -1084,7 +1084,6 @@
   "MakeDecisionModal.selectDefectTypeManually": "Виберіть тип дефекту вручну",
   "MakeDecisionModal.selectedItemCount": "{selected}/{total} елементів вибрано",
   "MakeDecisionModal.showErrorLogs": "Показати журнал помилок",
-  "MakeDecisionModal.similarTICurrentLaunch": "Аналогічні TI в поточному запуску",
   "MakeDecisionModal.test": "Тест {launchNumber}",
   "MakeDecisionModal.unlinkIssueNote": "Після відправки типу дефекту поточні посилання будуть видалені",
   "MakeDecisionModal.withFilter": "Подібні помилки в фільтрі {filterName}",
