@@ -83,7 +83,7 @@ export class InputRadioGroup extends PureComponent {
             ownValue={ownValue}
             onChange={onChange}
             inputClassNames={inputClassNames}
-            tooltip={(tooltip && formatMessage(tooltip)) || formatMessage(label)}
+            title={(tooltip && formatMessage(tooltip)) || formatMessage(label)}
             {...rest}
           >
             {formatMessage(label)}

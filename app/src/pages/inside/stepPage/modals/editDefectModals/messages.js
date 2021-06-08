@@ -140,10 +140,6 @@ export const messages = defineMessages({
     id: 'MakeDecisionModal.applyToItems',
     defaultMessage: 'Apply to {itemsCount} Items',
   },
-  applyToTheItem: {
-    id: 'MakeDecisionModal.applyToTheItem',
-    defaultMessage: 'Apply to the Item',
-  },
   selectDefectTypeManually: {
     id: 'MakeDecisionModal.selectDefectTypeManually',
     defaultMessage: 'Select defect type manually',
@@ -160,17 +156,9 @@ export const messages = defineMessages({
     id: 'MakeDecisionModal.apply',
     defaultMessage: 'Apply',
   },
-  applyImmediately: {
-    id: 'MakeDecisionModal.applyImmediately',
-    defaultMessage: 'Apply Immediately',
-  },
   applyAndContinue: {
     id: 'MakeDecisionModal.applyAndContinue',
     defaultMessage: 'Apply & Continue',
-  },
-  backToConfiguration: {
-    id: 'MakeDecisionModal.backToConfiguration',
-    defaultMessage: 'Back to configuration',
   },
   modalNote: {
     id: 'MakeDecisionModal.modalNote',
