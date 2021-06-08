@@ -97,3 +97,32 @@
   word-break: break-all;
   text-overflow: ellipsis;
 }
+
+.mode-dark {
+  &.toggler {
+    width: 20px;
+    height: 20px;
+    border-color: $COLOR--dark-gray-2;
+    background-color: transparent;
+
+    &::after {
+      width: 12px;
+      height: 12px;
+    }
+  }
+
+  &.children-container {
+    max-width: 90%;
+    color: $COLOR--dirty-gray;
+    white-space: nowrap;
+  }
+
+  &.disabled {
+    opacity: 0.3;
+
+    .toggler {
+      background-color: transparent;
+      border-color: $COLOR--dark-gray-2;
+    }
+  }
+}

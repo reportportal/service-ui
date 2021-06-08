@@ -30,6 +30,7 @@ import { fetch, isEmptyObject } from 'common/utils';
 import { historyItemsSelector } from 'controllers/log';
 import { linkIssueAction, postIssueAction, unlinkIssueAction } from 'controllers/step';
 import { LINK_ISSUE, POST_ISSUE, UNLINK_ISSUE } from 'common/constants/actionTypes';
+import { analyzerExtensionsSelector } from 'controllers/appInfo';
 import { messages } from './messages';
 import {
   COPY_FROM_HISTORY_LINE,
@@ -50,6 +51,9 @@ const MakeDecision = ({ data }) => {
   const dispatch = useDispatch();
   const activeProject = useSelector(activeProjectSelector);
   const historyItems = useSelector(historyItemsSelector);
+  const isAnalyzerAvailable = useSelector(analyzerExtensionsSelector).find(
+    ({ analyzer }) => analyzer === 'analyzer',
+  );
   const isBulkOperation = data.items && data.items.length > 1;
   const itemData = isBulkOperation ? data.items : data.items[0];
   const [modalState, setModalState] = useReducer((state, newState) => ({ ...state, ...newState }), {
@@ -59,12 +63,16 @@ const MakeDecision = ({ data }) => {
     decisionType: SELECT_DEFECT_MANUALLY,
     issueActionType: '',
     optionValue:
-      itemData.issue && itemData.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)
+      isAnalyzerAvailable &&
+      itemData.issue &&
+      itemData.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)
         ? CURRENT_LAUNCH
         : CURRENT_EXECUTION_ONLY,
     searchMode:
-      itemData.issue && itemData.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)
-        ? SEARCH_MODES.SIMILAR_TI_CURRENT_LAUNCH
+      isAnalyzerAvailable &&
+      itemData.issue &&
+      itemData.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)
+        ? SEARCH_MODES.CURRENT_LAUNCH
         : '',
     testItems: [],
     selectedItems: [],
@@ -262,10 +270,14 @@ const MakeDecision = ({ data }) => {
       {
         id: MACHINE_LEARNING_SUGGESTIONS,
         shouldShow: !isBulkOperation,
-        disabled: true,
+        disabled: !isAnalyzerAvailable || true,
         isOpen: tabs[MACHINE_LEARNING_SUGGESTIONS],
         title: (
-          <div title={formatMessage(messages.disabledTabTooltip)}>
+          <div
+            title={formatMessage(
+              isAnalyzerAvailable ? messages.disabledTabTooltip : messages.analyzerUnavailable,
+            )}
+          >
             {formatMessage(messages.machineLearningSuggestions)}
           </div>
         ),

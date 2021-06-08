@@ -167,4 +167,16 @@ export const messages = defineMessages({
     id: 'MakeDecisionModal.allLoadedTIFromHistoryLine',
     defaultMessage: 'All loaded TI from the history line',
   },
+  analyzerUnavailable: {
+    id: 'MakeDecisionModal.analyzerUnavailable',
+    defaultMessage: 'Service Analyzer is not running',
+  },
+  updateDefectsSuccess: {
+    id: 'MakeDecisionModal.updateDefectsSuccess',
+    defaultMessage: 'Defects have been updated',
+  },
+  updateDefectsFailed: {
+    id: 'MakeDecisionModal.updateDefectsFailed',
+    defaultMessage: 'Failed to update defects',
+  },
 });

@@ -24,6 +24,7 @@ import { useSelector } from 'react-redux';
 import { activeFilterSelector } from 'controllers/filter';
 import { defectTypesSelector } from 'controllers/project';
 import { historyItemsSelector } from 'controllers/log';
+import { analyzerExtensionsSelector } from 'controllers/appInfo';
 import {
   ALL_LOADED_TI_FROM_HISTORY_LINE,
   CURRENT_EXECUTION_ONLY,
@@ -42,6 +43,9 @@ export const OptionsBlock = ({ optionValue, currentTestItem, loading, setModalSt
   const activeFilter = useSelector(activeFilterSelector);
   const defectTypes = useSelector(defectTypesSelector);
   const historyItems = useSelector(historyItemsSelector);
+  const isAnalyzerAvailable = useSelector(analyzerExtensionsSelector).find(
+    ({ analyzer }) => analyzer === 'analyzer',
+  );
   const TIDefectsGroup = defectTypes[TO_INVESTIGATE.toUpperCase()];
   const getOptions = () => {
     const currentItemFromTIGroup = TIDefectsGroup.find(
@@ -50,53 +54,41 @@ export const OptionsBlock = ({ optionValue, currentTestItem, loading, setModalSt
     const options = [
       {
         ownValue: CURRENT_EXECUTION_ONLY,
-        label: {
-          id: CURRENT_EXECUTION_ONLY,
-          defaultMessage: formatMessage(messages.currentExecutionOnly),
-        },
+        label: formatMessage(messages.currentExecutionOnly),
       },
     ];
     if (currentItemFromTIGroup) {
       const optionalOptions = [
         {
           ownValue: CURRENT_LAUNCH,
-          label: {
-            id: CURRENT_LAUNCH,
-            defaultMessage: formatMessage(messages.currentLaunch),
-          },
-          tooltip: {
-            id: messages.currentLaunchTooltip.id,
-            defaultMessage: formatMessage(messages.currentLaunchTooltip),
-          },
+          label: formatMessage(messages.currentLaunch),
+          disabled: !isAnalyzerAvailable,
+          tooltip: formatMessage(
+            isAnalyzerAvailable ? messages.currentLaunchTooltip : messages.analyzerUnavailable,
+          ),
         },
         {
           ownValue: LAST_TEN_LAUNCHES,
-          label: {
-            id: LAST_TEN_LAUNCHES,
-            defaultMessage: formatMessage(messages.lastTenLaunches),
-          },
-          tooltip: {
-            id: messages.lastTenLaunchesTooltip.id,
-            defaultMessage: formatMessage(messages.lastTenLaunchesTooltip),
-          },
+          label: formatMessage(messages.lastTenLaunches),
+          disabled: !isAnalyzerAvailable,
+          tooltip: formatMessage(
+            isAnalyzerAvailable ? messages.lastTenLaunchesTooltip : messages.analyzerUnavailable,
+          ),
         },
       ];
       activeFilter &&
         activeFilter.id > 0 &&
         optionalOptions.push({
           ownValue: WITH_FILTER,
-          label: {
-            id: WITH_FILTER,
-            defaultMessage: formatMessage(messages.withFilter, {
-              filterName: activeFilter.name,
-            }),
-          },
-          tooltip: {
-            id: messages.withFilterTooltip.id,
-            defaultMessage: formatMessage(messages.withFilterTooltip, {
-              filterName: activeFilter.name,
-            }),
-          },
+          label: formatMessage(messages.withFilter, {
+            filterName: activeFilter.name,
+          }),
+          disabled: !isAnalyzerAvailable,
+          tooltip: isAnalyzerAvailable
+            ? formatMessage(messages.withFilterTooltip, {
+                filterName: activeFilter.name,
+              })
+            : formatMessage(messages.analyzerUnavailable),
         });
       options.push(...optionalOptions);
     }
@@ -107,10 +99,7 @@ export const OptionsBlock = ({ optionValue, currentTestItem, loading, setModalSt
       ) &&
       options.push({
         ownValue: ALL_LOADED_TI_FROM_HISTORY_LINE,
-        label: {
-          id: ALL_LOADED_TI_FROM_HISTORY_LINE,
-          defaultMessage: formatMessage(messages.allLoadedTIFromHistoryLine),
-        },
+        label: formatMessage(messages.allLoadedTIFromHistoryLine),
       });
     return options;
   };
@@ -170,10 +159,7 @@ export const OptionsBlock = ({ optionValue, currentTestItem, loading, setModalSt
         onChange={onChangeOption}
         options={getOptions()}
         inputGroupClassName={cx('radio-input-group')}
-        inputClassNames={{
-          togglerClassName: cx('input-toggler'),
-          childrenClassName: cx('input-children'),
-        }}
+        mode="dark"
       />
     </div>
   );
