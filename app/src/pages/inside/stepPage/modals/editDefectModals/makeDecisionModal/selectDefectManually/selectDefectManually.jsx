@@ -53,7 +53,7 @@ export const SelectDefectManually = ({
   const isBtsPluginsExist = useSelector(isBtsPluginsExistSelector);
   const enabledBtsPlugins = useSelector(enabledBtsPluginsSelector);
   const isPostIssueUnavailable = !isPostIssueActionAvailable(btsIntegrations);
-  const [editor, setEditor] = useState(null);
+  const [commentEditor, setCommentEditor] = useState(null);
 
   const handleManualChange = (value = {}) => {
     const issue = {
@@ -68,7 +68,7 @@ export const SelectDefectManually = ({
       decisionType: SELECT_DEFECT_MANUALLY,
     });
     collapseTabsExceptCurr(SELECT_DEFECT_MANUALLY);
-    !issue.comment && editor.focus();
+    !issue.comment && commentEditor.focus();
   };
 
   const selectDefectTypeManually = (value) => {
@@ -192,7 +192,7 @@ export const SelectDefectManually = ({
               ? modalState.source.issue.comment
               : itemData.issue.comment
           }
-          manipulateEditorOutside={setEditor}
+          manipulateEditorOutside={setCommentEditor}
           onChange={handleDefectCommentChange}
           placeholder={formatMessage(
             isBulkOperation
