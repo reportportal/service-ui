@@ -29,7 +29,7 @@ import {
   CURRENT_EXECUTION_ONLY,
   LAST_TEN_LAUNCHES,
   SEARCH_MODES,
-  SIMILAR_TI_CURRENT_LAUNCH,
+  CURRENT_LAUNCH,
   WITH_FILTER,
 } from '../../../constants';
 import { messages } from '../../../messages';
@@ -59,10 +59,14 @@ export const OptionsBlock = ({ optionValue, currentTestItem, loading, setModalSt
     if (currentItemFromTIGroup) {
       const optionalOptions = [
         {
-          ownValue: SIMILAR_TI_CURRENT_LAUNCH,
+          ownValue: CURRENT_LAUNCH,
           label: {
-            id: SIMILAR_TI_CURRENT_LAUNCH,
-            defaultMessage: formatMessage(messages.similarTICurrentLaunch),
+            id: CURRENT_LAUNCH,
+            defaultMessage: formatMessage(messages.currentLaunch),
+          },
+          tooltip: {
+            id: messages.currentLaunchTooltip.id,
+            defaultMessage: formatMessage(messages.currentLaunchTooltip),
           },
         },
         {
@@ -70,6 +74,10 @@ export const OptionsBlock = ({ optionValue, currentTestItem, loading, setModalSt
           label: {
             id: LAST_TEN_LAUNCHES,
             defaultMessage: formatMessage(messages.lastTenLaunches),
+          },
+          tooltip: {
+            id: messages.lastTenLaunchesTooltip.id,
+            defaultMessage: formatMessage(messages.lastTenLaunchesTooltip),
           },
         },
       ];
@@ -80,6 +88,12 @@ export const OptionsBlock = ({ optionValue, currentTestItem, loading, setModalSt
           label: {
             id: WITH_FILTER,
             defaultMessage: formatMessage(messages.withFilter, {
+              filterName: activeFilter.name,
+            }),
+          },
+          tooltip: {
+            id: messages.withFilterTooltip.id,
+            defaultMessage: formatMessage(messages.withFilterTooltip, {
               filterName: activeFilter.name,
             }),
           },
@@ -127,8 +141,8 @@ export const OptionsBlock = ({ optionValue, currentTestItem, loading, setModalSt
   const onChangeOption = (value) => {
     let searchMode;
     switch (value) {
-      case SIMILAR_TI_CURRENT_LAUNCH:
-        searchMode = SEARCH_MODES.SIMILAR_TI_CURRENT_LAUNCH;
+      case CURRENT_LAUNCH:
+        searchMode = SEARCH_MODES.CURRENT_LAUNCH;
         break;
       case LAST_TEN_LAUNCHES:
         searchMode = SEARCH_MODES.LAST_TEN_LAUNCHES;

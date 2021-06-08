@@ -129,8 +129,6 @@ export const messages = defineMessages({
     id: 'MakeDecisionModal.currentSelection',
     defaultMessage: 'Current selection',
   },
-  seeMore: { id: 'MakeDecisionModal.seeMore', defaultMessage: 'See more' },
-  seeLess: { id: 'MakeDecisionModal.seeLess', defaultMessage: 'See less' },
   bulk: { id: 'MakeDecisionModal.bulk', defaultMessage: 'Bulk' },
   bulkOperationDecision: {
     id: 'MakeDecisionModal.bulkOperationDecision',
@@ -139,10 +137,6 @@ export const messages = defineMessages({
   applyToItems: {
     id: 'MakeDecisionModal.applyToItems',
     defaultMessage: 'Apply to {itemsCount} Items',
-  },
-  applyToTheItem: {
-    id: 'MakeDecisionModal.applyToTheItem',
-    defaultMessage: 'Apply to the Item',
   },
   selectDefectTypeManually: {
     id: 'MakeDecisionModal.selectDefectTypeManually',
@@ -160,17 +154,9 @@ export const messages = defineMessages({
     id: 'MakeDecisionModal.apply',
     defaultMessage: 'Apply',
   },
-  applyImmediately: {
-    id: 'MakeDecisionModal.applyImmediately',
-    defaultMessage: 'Apply Immediately',
-  },
   applyAndContinue: {
     id: 'MakeDecisionModal.applyAndContinue',
     defaultMessage: 'Apply & Continue',
-  },
-  backToConfiguration: {
-    id: 'MakeDecisionModal.backToConfiguration',
-    defaultMessage: 'Back to configuration',
   },
   modalNote: {
     id: 'MakeDecisionModal.modalNote',
@@ -214,17 +200,32 @@ export const messages = defineMessages({
     id: 'MakeDecisionModal.currentExecutionOnly',
     defaultMessage: 'Current execution only',
   },
-  similarTICurrentLaunch: {
-    id: 'MakeDecisionModal.similarTICurrentLaunch',
-    defaultMessage: 'Similar TI in the current launch',
+  currentLaunch: {
+    id: 'MakeDecisionModal.currentLaunch',
+    defaultMessage: 'Similar errors in the current launch',
+  },
+  currentLaunchTooltip: {
+    id: 'MakeDecisionModal.currentLaunchTooltip',
+    defaultMessage:
+      'Tests with To Investigate defect type with error logs matching selected item on 98% and more',
   },
   lastTenLaunches: {
     id: 'MakeDecisionModal.lastTenLaunches',
-    defaultMessage: 'Last 10 launches',
+    defaultMessage: 'Similar errors in last 10 launches',
+  },
+  lastTenLaunchesTooltip: {
+    id: 'MakeDecisionModal.lastTenLaunchesTooltip',
+    defaultMessage:
+      'Tests with To Investigate defect type from last 10 launches with error logs matching selected item on 98% and more',
   },
   withFilter: {
     id: 'MakeDecisionModal.withFilter',
-    defaultMessage: 'Filter {filterName}',
+    defaultMessage: 'Similar errors in {filterName}',
+  },
+  withFilterTooltip: {
+    id: 'MakeDecisionModal.withFilterTooltip',
+    defaultMessage:
+      'Tests with To Investigate defect type from last 10 launches of the filter {filterName} with error logs matching selected item on 98% and more',
   },
   showErrorLogs: {
     id: 'MakeDecisionModal.showErrorLogs',
