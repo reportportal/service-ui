@@ -129,8 +129,6 @@ export const messages = defineMessages({
     id: 'MakeDecisionModal.currentSelection',
     defaultMessage: 'Current selection',
   },
-  seeMore: { id: 'MakeDecisionModal.seeMore', defaultMessage: 'See details & error logs' },
-  seeLess: { id: 'MakeDecisionModal.seeLess', defaultMessage: 'See less' },
   bulk: { id: 'MakeDecisionModal.bulk', defaultMessage: 'Bulk' },
   bulkOperationDecision: {
     id: 'MakeDecisionModal.bulkOperationDecision',

@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { CSSTransition } from 'react-transition-group';
 import { useDispatch } from 'react-redux';
-import { useIntl } from 'react-intl';
+import { useIntl, defineMessages } from 'react-intl';
 import { hideModalAction } from 'controllers/modal';
 import ErrorInlineIcon from 'common/img/error-inline.svg';
 import ShowLess from 'common/img/show-less-inline.svg';
@@ -28,12 +28,16 @@ import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
 import { updateStorageItem, getStorageItem } from 'common/utils';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import Parser from 'html-react-parser';
-import { messages } from 'pages/inside/stepPage/modals/editDefectModals/messages';
 import { ModalHeader } from './modalHeader';
 import { ModalNote } from './modalNote';
 import styles from './darkModalLayout.scss';
 
 const cx = classNames.bind(styles);
+
+const messages = defineMessages({
+  seeMore: { id: 'DarkModalLayout.seeMore', defaultMessage: 'See details & error logs' },
+  seeLess: { id: 'DarkModalLayout.seeLess', defaultMessage: 'See less' },
+});
 
 export const DarkModalLayout = ({
   renderTitle,
