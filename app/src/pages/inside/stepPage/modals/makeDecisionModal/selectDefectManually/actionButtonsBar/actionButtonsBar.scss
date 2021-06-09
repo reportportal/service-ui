@@ -20,16 +20,8 @@
 }
 
 .note {
-  display: flex;
-  align-items: center;
   margin-top: 30px;
   font-family: $FONT-REGULAR;
   font-size: 13px;
   color: $COLOR--dark-gray;
-
-  & svg {
-    width: 20px;
-    height: 20px;
-    padding-right: 10px;
-  }
 }
