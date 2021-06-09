@@ -17,7 +17,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
-import DoneIcon from 'common/img/done-inline.svg';
 import classNames from 'classnames/bind';
 import styles from './actionButton.scss';
 
@@ -30,9 +29,7 @@ export const ActionButton = ({ icon, label, hint, isSelected, onClick, disabled 
     title={hint}
     disabled={disabled}
   >
-    <i className={cx('icon', { selected: isSelected })}>
-      {isSelected ? Parser(DoneIcon) : icon && Parser(icon)}
-    </i>
+    <i className={cx('icon')}>{icon && Parser(icon)}</i>
     <span className={cx('text', { selected: isSelected })}>{label}</span>
   </button>
 );
