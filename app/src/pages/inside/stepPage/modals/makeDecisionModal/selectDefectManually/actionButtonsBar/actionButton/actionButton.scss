@@ -41,7 +41,6 @@
 
   &.selected {
     border-color: $COLOR--topaz;
-    color: $COLOR--white-two;
   }
 }
 
@@ -52,16 +51,6 @@
     width: 19px;
     height: 27px;
     fill: $COLOR--topaz;
-  }
-
-  &.selected {
-    svg {
-      height: 16px;
-
-      & g {
-        stroke: $COLOR--white-two;
-      }
-    }
   }
 }
 
