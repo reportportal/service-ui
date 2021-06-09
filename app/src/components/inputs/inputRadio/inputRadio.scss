@@ -25,9 +25,6 @@
     cursor: default;
 
     .toggler {
-      background-color: $COLOR--white;
-      border-color: $COLOR--gray-91;
-
       &::after {
         background-color: $COLOR--gray-60;
       }
@@ -47,19 +44,18 @@
     }
   }
 }
+
 .input {
   display: none;
 }
+
 .toggler {
   display: flex;
-  width: 13px;
-  height: 13px;
-  min-width: 13px;
   box-sizing: border-box;
   margin: auto 10px auto 0;
-  border: 1px solid $COLOR--gray-60;
   border-radius: 100%;
-  background-color: $COLOR--white-two;
+  border-width: 1px;
+  border-style: solid;
   line-height: 18;
 
   &.at-top {
@@ -69,8 +65,6 @@
   &::after {
     content: '';
     display: block;
-    width: 7px;
-    height: 7px;
     border-radius: 100%;
     margin: auto;
     background-color: $COLOR--topaz;
@@ -86,16 +80,42 @@
     }
   }
 }
+
 .children-container {
   display: inline-block;
-  max-width: 100%;
   overflow: hidden;
   font-family: $FONT-REGULAR;
   font-size: 13px;
-  color: $COLOR--charcoal-grey;
   line-height: 18px;
   word-break: break-all;
   text-overflow: ellipsis;
+}
+
+.mode-default {
+  &.toggler {
+    width: 13px;
+    height: 13px;
+    min-width: 13px;
+    border-color: $COLOR--gray-60;
+    background-color: $COLOR--white-two;
+
+    &::after {
+      width: 7px;
+      height: 7px;
+    }
+  }
+
+  &.children-container {
+    max-width: 100%;
+    color: $COLOR--charcoal-grey;
+  }
+
+  &.disabled {
+    .toggler {
+      background-color: $COLOR--white;
+      border-color: $COLOR--gray-91;
+    }
+  }
 }
 
 .mode-dark {

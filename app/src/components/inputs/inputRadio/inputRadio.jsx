@@ -97,5 +97,5 @@ InputRadio.defaultProps = {
   onFocus: () => {},
   onBlur: () => {},
   title: '',
-  mode: '',
+  mode: 'default',
 };
