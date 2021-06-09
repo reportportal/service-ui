@@ -17,8 +17,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import Parser from 'html-react-parser';
-import AttentionIcon from 'common/img/attention-inline.svg';
 import { ActionButton } from './actionButton';
 import styles from './actionButtonsBar.scss';
 
@@ -42,10 +40,7 @@ export const ActionButtonsBar = ({ actionItems, selectedItem }) => (
       })}
     </div>
     {selectedItem && (
-      <div className={cx('note')}>
-        {Parser(AttentionIcon)}
-        {actionItems.find(({ id }) => id === selectedItem).noteMsg}
-      </div>
+      <p className={cx('note')}>{actionItems.find(({ id }) => id === selectedItem).noteMsg}</p>
     )}
   </>
 );
