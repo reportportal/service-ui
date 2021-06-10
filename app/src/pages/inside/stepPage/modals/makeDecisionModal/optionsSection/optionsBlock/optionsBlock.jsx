@@ -43,9 +43,7 @@ export const OptionsBlock = ({ optionValue, currentTestItem, loading, setModalSt
   const activeFilter = useSelector(activeFilterSelector);
   const defectTypes = useSelector(defectTypesSelector);
   const historyItems = useSelector(historyItemsSelector);
-  const isAnalyzerAvailable = useSelector(analyzerExtensionsSelector).find(
-    ({ analyzer }) => analyzer === 'analyzer',
-  );
+  const isAnalyzerAvailable = !!useSelector(analyzerExtensionsSelector).length;
   const TIDefectsGroup = defectTypes[TO_INVESTIGATE.toUpperCase()];
   const getOptions = () => {
     const currentItemFromTIGroup = TIDefectsGroup.find(

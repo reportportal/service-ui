@@ -51,9 +51,7 @@ const MakeDecision = ({ data }) => {
   const dispatch = useDispatch();
   const activeProject = useSelector(activeProjectSelector);
   const historyItems = useSelector(historyItemsSelector);
-  const isAnalyzerAvailable = useSelector(analyzerExtensionsSelector).find(
-    ({ analyzer }) => analyzer === 'analyzer',
-  );
+  const isAnalyzerAvailable = !!useSelector(analyzerExtensionsSelector).length;
   const isBulkOperation = data.items && data.items.length > 1;
   const itemData = isBulkOperation ? data.items : data.items[0];
   const [modalState, setModalState] = useReducer((state, newState) => ({ ...state, ...newState }), {

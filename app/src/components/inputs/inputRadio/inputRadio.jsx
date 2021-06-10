@@ -83,7 +83,7 @@ InputRadio.propTypes = {
   onFocus: PropTypes.func,
   onBlur: PropTypes.func,
   title: PropTypes.string,
-  mode: PropTypes.string,
+  mode: PropTypes.oneOf(['default', 'dark']),
 };
 InputRadio.defaultProps = {
   children: '',
