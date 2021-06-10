@@ -11,6 +11,8 @@ Has no own size. Width and Height = 100% of it's parent.
 - **disabled**: _bool_, optional, default = false
 - **mobileDisabled**: _bool_, optional, default = false
 - **circleAtTop**: _bool_, optional, default = false
+- **title**: _string_, optional, default = children
+- **mode**: _string_, optional("default" || "dark"), default = "default"
 
 ### Events:
 
