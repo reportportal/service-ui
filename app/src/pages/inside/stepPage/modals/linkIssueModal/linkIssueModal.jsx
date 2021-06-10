@@ -251,7 +251,7 @@ export class LinkIssueModal extends Component {
         requests = testItemLogRequest;
       } else {
         testItemLogRequest = fetch(
-          URLS.logItemStackTrace(activeProject, testItems.path, ERROR_LOGS_SIZE),
+          URLS.logItemStackTrace(activeProject, testItems[0].path, ERROR_LOGS_SIZE),
         );
         requests = [testItemLogRequest];
       }
@@ -327,7 +327,7 @@ export class LinkIssueModal extends Component {
   };
 
   renderRightSection = (collapsedRightSection) => {
-    const { testItems, selectedItems } = this.state;
+    const { testItems, selectedItems, loading } = this.state;
     return (
       <div className={cx('items-list')}>
         <ItemsList
@@ -336,6 +336,7 @@ export class LinkIssueModal extends Component {
           selectedItems={selectedItems}
           isNarrowView={collapsedRightSection}
           isBulkOperation={this.isBulkOperation}
+          loading={loading}
         />
       </div>
     );
