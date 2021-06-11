@@ -230,6 +230,9 @@
       background: transparent;
       color: $COLOR--topaz-hover;
     }
+    &.transparent-less-width {
+      min-width: 90px;
+    }
     & svg * {
       fill: $COLOR--topaz;
     }

@@ -489,6 +489,7 @@ export class PostIssueModal extends Component {
           disabled={false}
           transparentBorder
           transparentBackground
+          transparentLessWidth
           appearance="topaz"
         >
           {formatMessage(messages.cancel)}
