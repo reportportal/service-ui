@@ -11,6 +11,7 @@ const createPluginRegistrationFunction = (store) => (plugin) => {
   const { name, extensions } = plugin;
   const wrappedExtensions = extensions.map((extension, i) => ({
     name: `${plugin.name}__${i}`,
+    pluginName: name,
     ...extension,
     component: (props) => <extension.component {...createImportProps(plugin.name)} {...props} />,
   }));

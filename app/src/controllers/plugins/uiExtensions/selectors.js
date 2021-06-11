@@ -5,6 +5,8 @@ import {
   EXTENSION_TYPE_PAGE,
   EXTENSION_TYPE_SIDEBAR_COMPONENT,
   EXTENSION_TYPE_LAUNCH_ITEM_COMPONENT,
+  EXTENSION_TYPE_INTEGRATION_FORM_FIELDS,
+  EXTENSION_TYPE_INTEGRATION_SETTINGS,
 } from './constants';
 import { domainSelector, enabledPluginNamesSelector } from '../selectors';
 import { uiExtensionMap } from './uiExtensionStorage';
@@ -33,4 +35,10 @@ export const uiExtensionSidebarComponentsSelector = createUiExtensionSelectorByT
 );
 export const uiExtensionLaunchItemComponentsSelector = createUiExtensionSelectorByType(
   EXTENSION_TYPE_LAUNCH_ITEM_COMPONENT,
+);
+export const uiExtensionIntegrationFormFieldsSelector = createUiExtensionSelectorByType(
+  EXTENSION_TYPE_INTEGRATION_FORM_FIELDS,
+);
+export const uiExtensionIntegrationSettingsSelector = createUiExtensionSelectorByType(
+  EXTENSION_TYPE_INTEGRATION_SETTINGS,
 );

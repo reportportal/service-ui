@@ -21,6 +21,8 @@ import { reduxForm } from 'redux-form';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { INTEGRATION_FORM } from 'components/integrations/elements/integrationSettings';
+import { connect } from 'react-redux';
+import { uiExtensionIntegrationFormFieldsSelector } from 'controllers/plugins/uiExtensions/selectors';
 import { INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP } from '../../formFieldComponentsMap';
 
 const messages = defineMessages({
@@ -42,18 +44,30 @@ const messages = defineMessages({
 @reduxForm({
   form: INTEGRATION_FORM,
 })
+@connect((state) => ({
+  fieldsExtensions: uiExtensionIntegrationFormFieldsSelector(state),
+}))
 @injectIntl
 export class AddIntegrationModal extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    data: PropTypes.object,
     handleSubmit: PropTypes.func.isRequired,
     initialize: PropTypes.func.isRequired,
     change: PropTypes.func.isRequired,
     dirty: PropTypes.bool.isRequired,
+    fieldsExtensions: PropTypes.arrayOf(
+      PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        pluginName: PropTypes.string.isRequired,
+        title: PropTypes.string,
+        component: PropTypes.func.isRequired,
+      }),
+    ),
+    data: PropTypes.object,
   };
 
   static defaultProps = {
+    fieldsExtensions: [],
     data: {},
   };
 
@@ -90,12 +104,18 @@ export class AddIntegrationModal extends Component {
       handleSubmit,
       initialize,
       change,
+      fieldsExtensions,
     } = this.props;
 
     const createTitle = isGlobal
       ? formatMessage(messages.createGlobalTitle)
       : formatMessage(messages.createManualTitle);
-    const FieldsComponent = INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP[instanceType];
+    const integrationFieldsExtension = fieldsExtensions.find(
+      (ext) => ext.pluginName === instanceType,
+    );
+    const FieldsComponent =
+      INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP[instanceType] ||
+      (integrationFieldsExtension && integrationFieldsExtension.component);
 
     return (
       <ModalLayout
