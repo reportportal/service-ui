@@ -16,16 +16,7 @@
 
 import { createSelector } from 'reselect';
 import { BTS_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
-import {
-  JIRA,
-  RALLY,
-  EMAIL,
-  SAUCE_LABS,
-  SAML,
-  LDAP,
-  AD,
-  PLUGIN_NAMES_BY_GROUP_TYPES_MAP,
-} from 'common/constants/pluginNames';
+import { EMAIL, PLUGIN_NAMES_BY_GROUP_TYPES_MAP } from 'common/constants/pluginNames';
 import {
   filterAvailablePlugins,
   sortItemsByGroupType,
@@ -77,25 +68,30 @@ export const createNamedIntegrationsSelector = (integrationName, integrationsSel
 export const createGlobalNamedIntegrationsSelector = (name) =>
   createNamedIntegrationsSelector(name, globalIntegrationsSelector);
 
-export const namedGlobalIntegrationsSelectorsMap = {
-  [SAUCE_LABS]: createNamedIntegrationsSelector(SAUCE_LABS, globalIntegrationsSelector),
-  [JIRA]: createNamedIntegrationsSelector(JIRA, globalIntegrationsSelector),
-  [RALLY]: createNamedIntegrationsSelector(RALLY, globalIntegrationsSelector),
-  [EMAIL]: createNamedIntegrationsSelector(EMAIL, globalIntegrationsSelector),
-  [SAML]: createNamedIntegrationsSelector(SAML, globalIntegrationsSelector),
-  [LDAP]: createNamedIntegrationsSelector(LDAP, globalIntegrationsSelector),
-  [AD]: createNamedIntegrationsSelector(AD, globalIntegrationsSelector),
+export const createIntegrationsMapSelector = (integrationsSelector) => {
+  return createSelector(integrationsSelector, (integrations) => {
+    const integrationNames = integrations.map((item) => item.integrationType.name);
+    const integrationNamesSet = new Set(integrationNames);
+
+    return [...integrationNamesSet].reduce(
+      (acc, name) => ({
+        ...acc,
+        [name]: filterIntegrationsByName(integrations, name).filter(
+          // TODO: make it more reliable
+          (item) => item.creator !== 'SYSTEM',
+        ),
+      }),
+      {},
+    );
+  });
 };
 
-export const namedProjectIntegrationsSelectorsMap = {
-  [SAUCE_LABS]: createNamedIntegrationsSelector(SAUCE_LABS, projectIntegrationsSelector),
-  [JIRA]: createNamedIntegrationsSelector(JIRA, projectIntegrationsSelector),
-  [RALLY]: createNamedIntegrationsSelector(RALLY, projectIntegrationsSelector),
-  [EMAIL]: createNamedIntegrationsSelector(EMAIL, projectIntegrationsSelector),
-  [SAML]: createNamedIntegrationsSelector(SAML, projectIntegrationsSelector),
-  [LDAP]: createNamedIntegrationsSelector(LDAP, projectIntegrationsSelector),
-  [AD]: createNamedIntegrationsSelector(AD, projectIntegrationsSelector),
-};
+export const namedGlobalIntegrationsSelector = createIntegrationsMapSelector(
+  globalIntegrationsSelector,
+);
+export const namedProjectIntegrationsSelector = createIntegrationsMapSelector(
+  projectIntegrationsSelector,
+);
 
 export const availableIntegrationsByPluginNameSelector = (state, pluginName) => {
   const availablePlugins = availablePluginsSelector(state);
@@ -103,9 +99,9 @@ export const availableIntegrationsByPluginNameSelector = (state, pluginName) => 
   if (!selectedPlugin) {
     return [];
   }
-  let availableIntegrations = namedProjectIntegrationsSelectorsMap[pluginName](state);
+  let availableIntegrations = namedProjectIntegrationsSelector(state)[pluginName];
   if (!availableIntegrations.length) {
-    availableIntegrations = namedGlobalIntegrationsSelectorsMap[pluginName](state);
+    availableIntegrations = namedGlobalIntegrationsSelector(state)[pluginName];
   }
   return availableIntegrations.filter((item) => item.enabled);
 };

@@ -20,25 +20,23 @@ import { connect } from 'react-redux';
 import Parser from 'html-react-parser';
 import { showDefaultErrorNotification } from 'controllers/notification';
 import {
-  namedProjectIntegrationsSelectorsMap,
-  namedGlobalIntegrationsSelectorsMap,
+  namedProjectIntegrationsSelector,
+  namedGlobalIntegrationsSelector,
 } from 'controllers/plugins';
 import { PLUGIN_IMAGES_MAP, PLUGIN_NAME_TITLES, PLUGIN_DEFAULT_IMAGE } from '../../constants';
 import { PLUGIN_DESCRIPTIONS_MAP } from '../../messages';
 import { InfoSection } from './infoSection';
 import { InstancesSection } from './instancesSection';
 
-const emptySelector = () => [];
-
 @connect(
   (state, ownProps) => {
-    const projectIntegrationSelector =
-      namedProjectIntegrationsSelectorsMap[ownProps.integrationType.name] || emptySelector;
-    const globalIntegrationSelector =
-      namedGlobalIntegrationsSelectorsMap[ownProps.integrationType.name] || emptySelector;
+    const projectIntegrations =
+      namedProjectIntegrationsSelector(state)[ownProps.integrationType.name] || [];
+    const globalIntegrations =
+      namedGlobalIntegrationsSelector(state)[ownProps.integrationType.name] || [];
     return {
-      projectIntegrations: projectIntegrationSelector(state),
-      globalIntegrations: globalIntegrationSelector(state),
+      projectIntegrations,
+      globalIntegrations,
     };
   },
   {
@@ -76,6 +74,7 @@ export class IntegrationInfoContainer extends Component {
       isGlobal,
       showToggleConfirmationModal,
     } = this.props;
+    const pluginTitle = PLUGIN_NAME_TITLES[name] || name;
 
     return (
       <Fragment>
@@ -84,7 +83,7 @@ export class IntegrationInfoContainer extends Component {
           description={
             PLUGIN_DESCRIPTIONS_MAP[name] || (details.description && Parser(details.description))
           }
-          title={PLUGIN_NAME_TITLES[name]}
+          title={pluginTitle}
           version={details.version}
           data={integrationType}
           onToggleActive={onToggleActive}
@@ -100,7 +99,7 @@ export class IntegrationInfoContainer extends Component {
           pluginId={type}
           instanceType={name}
           isGlobal={isGlobal}
-          title={PLUGIN_NAME_TITLES[name]}
+          title={pluginTitle}
         />
       </Fragment>
     );

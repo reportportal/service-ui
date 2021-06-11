@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
@@ -77,9 +77,11 @@ export class IntegrationsList extends Component {
             </div>
             <div className={cx('integrations-group-items')}>
               {availableIntegrations[key].map((item) => (
-                <Fragment key={item.name}>
-                  <IntegrationsListItem onClick={onItemClick} integrationType={item} />
-                </Fragment>
+                <IntegrationsListItem
+                  key={item.name}
+                  onClick={onItemClick}
+                  integrationType={item}
+                />
               ))}
             </div>
           </div>

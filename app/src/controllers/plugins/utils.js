@@ -59,9 +59,11 @@ export const isPluginSwitchable = (pluginName) => !isAuthorizationPlugin(pluginN
 export const filterEnabledPlugins = (plugins = []) => plugins.filter((item) => item.enabled);
 
 export const filterAvailablePlugins = (plugins = []) =>
-  plugins.filter(
-    (item) =>
-      item.enabled &&
-      item.groupType !== AUTHORIZATION_GROUP_TYPE &&
-      GROUP_TYPES_BY_PLUGIN_NAMES_MAP[item.name] === item.groupType,
-  );
+  plugins.filter((item) => {
+    const { details } = item;
+    const isEmbedded =
+      GROUP_TYPES_BY_PLUGIN_NAMES_MAP[item.name] === item.groupType ||
+      (details && details.metadata && details.metadata.embedded);
+
+    return item.enabled && item.groupType !== AUTHORIZATION_GROUP_TYPE && isEmbedded;
+  });
