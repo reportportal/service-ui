@@ -47,7 +47,11 @@ export const ItemHeader = ({ item, selectItem, isSelected, preselected, isNarrow
       onClick={() => selectItem(id)}
     >
       <div className={cx('header', { 'narrow-view': isNarrowView })}>
-        <Link to={link} target="_blank" className={cx('item-name')}>
+        <Link
+          to={link}
+          target="_blank"
+          className={cx('item-name', { 'narrow-view': isNarrowView })}
+        >
           <span title={name}>{name}</span>
           <div className={cx('icon')}>{Parser(ExternalLinkIcon)}</div>
         </Link>
