@@ -106,7 +106,7 @@ export const messages = defineMessages({
   },
   unlinkIssueNote: {
     id: 'MakeDecisionModal.unlinkIssueNote',
-    defaultMessage: 'After a defect type submission, the current links will be unlink',
+    defaultMessage: 'After a defect type submission, the current links will be unlinked',
   },
   execution: {
     id: 'MakeDecisionModal.execution',
