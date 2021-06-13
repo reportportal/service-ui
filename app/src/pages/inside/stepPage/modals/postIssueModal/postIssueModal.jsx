@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
@@ -44,6 +44,7 @@ import { BtsIntegrationSelector } from 'pages/inside/common/btsIntegrationSelect
 import { DarkModalLayout } from 'components/main/modal/darkModalLayout';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { hideModalAction } from 'controllers/modal';
+import WarningIcon from 'common/img/ic-warning.svg';
 import { ItemsList } from '../makeDecisionModal/optionsSection/itemsList';
 import { ERROR_LOGS_SIZE } from '../makeDecisionModal/constants';
 import { JiraCredentials } from './jiraCredentials';
@@ -568,11 +569,12 @@ export class PostIssueModal extends Component {
               />
             ) : (
               <div className={cx('no-default-properties-message')}>
-                {formatMessage(messages.noDefaultPropertiesMessage)}
+                <img className={cx('icon')} src={WarningIcon} alt="WarningIcon" />
+                <p>{formatMessage(messages.noDefaultPropertiesMessage)}</p>
               </div>
             )}
             {!this.isBulkOperation && (
-              <Fragment>
+              <div className={cx('include-block-wrapper')}>
                 <h4 className={cx('form-block-header', 'dark-view')}>
                   <span className={cx('header-text', 'dark-view')}>
                     {formatMessage(messages.includeDataHeader)}
@@ -592,7 +594,7 @@ export class PostIssueModal extends Component {
                     </FieldProvider>
                   ))}
                 </div>
-              </Fragment>
+              </div>
             )}
             <div className={cx('credentials-block-wrapper', { expanded })}>
               <h4 className={cx('form-block-header', 'dark-view')}>
