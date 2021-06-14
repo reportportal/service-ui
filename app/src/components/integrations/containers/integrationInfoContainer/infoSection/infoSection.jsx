@@ -41,7 +41,7 @@ export class InfoSection extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     image: PropTypes.string.isRequired,
-    description: PropTypes.oneOfType([PropTypes.object.isRequired, PropTypes.array.isRequired]),
+    description: PropTypes.oneOfType([PropTypes.object, PropTypes.array, PropTypes.string]),
     title: PropTypes.string.isRequired,
     version: PropTypes.string,
     data: PropTypes.object.isRequired,
@@ -51,6 +51,7 @@ export class InfoSection extends Component {
   };
 
   static defaultProps = {
+    description: '',
     version: '',
     onToggleActive: () => {},
     showToggleConfirmationModal: () => {},
@@ -129,7 +130,7 @@ export class InfoSection extends Component {
       <div className={cx('info-section')}>
         <img className={cx('logo')} src={image} alt={title} />
         <div className={cx('description-block')}>
-          <h2 className={cx('title')}>{title || name}</h2>
+          <h2 className={cx('title')}>{title}</h2>
           {version && (
             <span className={cx('version')}>{`${formatMessage(messages.version)} ${version}`}</span>
           )}

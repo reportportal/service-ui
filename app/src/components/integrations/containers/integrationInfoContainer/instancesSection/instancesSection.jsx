@@ -165,9 +165,14 @@ export class InstancesSection extends Component {
     pluginId: null,
   };
 
-  multiple = isIntegrationSupportsMultipleInstances(this.props.instanceType);
-
-  builtin = isPluginBuiltin(this.props.instanceType);
+  constructor(props) {
+    super(props);
+    const { instanceType, pluginDetails } = props;
+    this.multiple =
+      isIntegrationSupportsMultipleInstances(instanceType) ||
+      (pluginDetails && pluginDetails.metadata && pluginDetails.metadata.multiple);
+    this.builtin = isPluginBuiltin(instanceType);
+  }
 
   removePlugin = () =>
     this.props.removePluginAction(this.props.pluginId, this.props.removePluginSuccessCallback);
