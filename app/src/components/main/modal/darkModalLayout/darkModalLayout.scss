@@ -33,14 +33,10 @@
 
 .layout {
   width: 100%;
-  height: calc(100% - 100px);
+  height: calc(100% - 50px);
   max-width: 920px;
-  padding: 80px 15px 15px 15px;
-
-  &.narrow-view {
-    box-sizing: border-box;
-    padding-left: 32px;
-  }
+  padding: 80px 10px 15px 10px;
+  box-sizing: border-box;
 }
 
 .note-row {

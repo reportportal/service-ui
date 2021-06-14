@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
+.form {
+  padding-left: 24px;
+}
+
 .add-issue-id-title {
   margin: 0;
   padding: 10px;
   color: $COLOR--gray-47;
   background-color: $COLOR--white-four;
   font-size: 12px;
-  font-family: $FONT-SEMIBOLD;
+  font-family: $FONT-REGULAR;
   text-transform: uppercase;
 }
 
