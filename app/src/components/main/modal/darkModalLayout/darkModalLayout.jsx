@@ -107,7 +107,7 @@ export const DarkModalLayout = ({
     <div className={cx('modal-content')}>
       <div className={cx('container')} onClick={handleClickOutside}>
         <div ref={wrapperRef} className={cx('wrapper')}>
-          <div className={cx('layout', { 'narrow-view': !collapsedRightSection })}>
+          <div className={cx('layout')}>
             <ModalHeader
               text={renderTitle(collapsedRightSection)}
               onClose={closeModalWindow}

@@ -357,7 +357,7 @@ export class LinkIssueModal extends Component {
         renderRightSection={this.renderRightSection}
       >
         {() => (
-          <form>
+          <form className={cx('form')}>
             <BtsIntegrationSelector
               namedBtsIntegrations={namedBtsIntegrations}
               pluginName={pluginName}
