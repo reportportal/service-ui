@@ -225,6 +225,7 @@
     &.transparent-background {
       color: $COLOR--topaz;
       background: transparent;
+      min-width: 90px;
     }
     &.transparent-background:hover {
       background: transparent;
