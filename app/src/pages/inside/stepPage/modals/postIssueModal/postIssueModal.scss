@@ -45,9 +45,12 @@
 
 .icon {
   display: inline-block;
-  width: 16px;
-  height: 16px;
   margin-right: 5px;
+  svg {
+    width: 16px;
+    height: 16px;
+    fill: $COLOR--error;
+  }
 }
 
 .include-block-wrapper {

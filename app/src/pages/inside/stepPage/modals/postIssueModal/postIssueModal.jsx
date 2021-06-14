@@ -44,7 +44,8 @@ import { BtsIntegrationSelector } from 'pages/inside/common/btsIntegrationSelect
 import { DarkModalLayout } from 'components/main/modal/darkModalLayout';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { hideModalAction } from 'controllers/modal';
-import WarningIcon from 'common/img/ic-warning.svg';
+import ErrorInlineIcon from 'common/img/error-inline.svg';
+import Parser from 'html-react-parser';
 import { ItemsList } from '../makeDecisionModal/optionsSection/itemsList';
 import { ERROR_LOGS_SIZE } from '../makeDecisionModal/constants';
 import { JiraCredentials } from './jiraCredentials';
@@ -569,8 +570,8 @@ export class PostIssueModal extends Component {
               />
             ) : (
               <div className={cx('no-default-properties-message')}>
-                <img className={cx('icon')} src={WarningIcon} alt="WarningIcon" />
-                <p>{formatMessage(messages.noDefaultPropertiesMessage)}</p>
+                <div className={cx('icon')}>{Parser(ErrorInlineIcon)}</div>
+                <span>{formatMessage(messages.noDefaultPropertiesMessage)}</span>
               </div>
             )}
             {!this.isBulkOperation && (
