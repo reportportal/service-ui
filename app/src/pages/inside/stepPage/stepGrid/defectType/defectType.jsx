@@ -94,7 +94,7 @@ export const DefectType = track()(
       </div>
       <div className={cx('comment')}>
         <ScrollWrapper autoHeight autoHeightMax={90}>
-          <MarkdownViewer value={issue.comment} />
+          <MarkdownViewer value={issue.comment === 'undefined' ? '' : issue.comment} />
         </ScrollWrapper>
       </div>
     </div>
