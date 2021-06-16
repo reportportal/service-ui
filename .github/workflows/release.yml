@@ -72,7 +72,9 @@ jobs:
         run: 'go test ${{ env.GODIRS_NOVENDOR }}'
 
       - name: Go Dependencies
-        run: 'go mod download'
+        run: |
+          go mod download
+          go mod tidy
 
       - name: Go Build Linux
         env:
