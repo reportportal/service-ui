@@ -61,7 +61,7 @@ const messages = defineMessages({
   },
   linkIssueForTheTest: {
     id: 'LinkIssueModal.linkIssueForTheTest',
-    defaultMessage: 'Link Issue for the test {launchNumber}',
+    defaultMessage: 'Link Issue to the test {launchNumber}',
   },
   linkIssueFailed: {
     id: 'LinkIssueModal.linkIssueFailed',
