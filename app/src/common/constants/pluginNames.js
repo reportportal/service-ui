@@ -29,6 +29,7 @@ export const SAML = 'saml';
 export const LDAP = 'ldap';
 export const AD = 'ad';
 
+// TODO: calculate it dynamically
 export const PLUGIN_NAMES_BY_GROUP_TYPES_MAP = {
   [BTS_GROUP_TYPE]: [JIRA, RALLY],
   [NOTIFICATION_GROUP_TYPE]: [EMAIL],
@@ -36,6 +37,7 @@ export const PLUGIN_NAMES_BY_GROUP_TYPES_MAP = {
   [AUTHORIZATION_GROUP_TYPE]: [SAML, LDAP, AD],
 };
 
+// TODO: calculate it dynamically
 export const GROUP_TYPES_BY_PLUGIN_NAMES_MAP = {
   [JIRA]: BTS_GROUP_TYPE,
   [RALLY]: BTS_GROUP_TYPE,

@@ -19,24 +19,39 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { updateIntegrationAction } from 'controllers/plugins';
+import { uiExtensionIntegrationSettingsSelector } from 'controllers/plugins/uiExtensions/selectors';
 import { PLUGIN_IMAGES_MAP } from 'components/integrations/constants';
 import { INTEGRATIONS_SETTINGS_COMPONENTS_MAP } from 'components/integrations/settingsComponentsMap';
 import styles from './integrationSettingsContainer.scss';
 
 const cx = classNames.bind(styles);
 
-@connect(null, {
-  updateIntegrationAction,
-})
+@connect(
+  (state) => ({
+    settingsExtensions: uiExtensionIntegrationSettingsSelector(state),
+  }),
+  {
+    updateIntegrationAction,
+  },
+)
 export class IntegrationSettingsContainer extends Component {
   static propTypes = {
     goToPreviousPage: PropTypes.func.isRequired,
     updateIntegrationAction: PropTypes.func.isRequired,
+    settingsExtensions: PropTypes.arrayOf(
+      PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        pluginName: PropTypes.string.isRequired,
+        title: PropTypes.string,
+        component: PropTypes.func.isRequired,
+      }),
+    ),
     data: PropTypes.object,
     isGlobal: PropTypes.bool,
   };
 
   static defaultProps = {
+    settingsExtensions: [],
     data: {},
     isGlobal: false,
   };
@@ -78,11 +93,16 @@ export class IntegrationSettingsContainer extends Component {
   };
 
   render() {
-    const { data, goToPreviousPage, isGlobal } = this.props;
+    const { data, goToPreviousPage, isGlobal, settingsExtensions } = this.props;
     const { updatedParameters } = this.state;
     const instanceType = data.integrationType.name;
     const image = PLUGIN_IMAGES_MAP[instanceType];
-    const IntegrationSettingsComponent = INTEGRATIONS_SETTINGS_COMPONENTS_MAP[instanceType];
+    const integrationSettingsExtension = settingsExtensions.find(
+      (ext) => ext.pluginName === instanceType,
+    );
+    const IntegrationSettingsComponent =
+      INTEGRATIONS_SETTINGS_COMPONENTS_MAP[instanceType] ||
+      (integrationSettingsExtension && integrationSettingsExtension.component);
     const updatedData = {
       ...data,
       name: updatedParameters.name || data.name,
