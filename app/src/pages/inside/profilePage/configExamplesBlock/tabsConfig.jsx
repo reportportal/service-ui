@@ -63,7 +63,7 @@ const rubyConfig = (token, activeProject, login) => ({
   ),
 });
 const soapUiConfig = (token, activeProject, login) => ({
-  name: 'SoupUI',
+  name: 'SoapUI',
   content: (
     <div className={cx('content-wrapper')}>
       <h1 className={cx('h1')}>
