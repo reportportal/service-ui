@@ -47,6 +47,7 @@ export const SelectDefectManually = ({
   setModalState,
   collapseTabsExceptCurr,
   isNarrowView,
+  debugMode,
 }) => {
   const { formatMessage } = useIntl();
   const btsIntegrations = useSelector(availableBtsIntegrationsSelector);
@@ -202,7 +203,12 @@ export const SelectDefectManually = ({
           mode="dark"
         />
       </div>
-      <ActionButtonsBar actionItems={getActionItems()} selectedItem={modalState.issueActionType} />
+      {!debugMode && (
+        <ActionButtonsBar
+          actionItems={getActionItems()}
+          selectedItem={modalState.issueActionType}
+        />
+      )}
     </>
   );
 };
@@ -213,4 +219,5 @@ SelectDefectManually.propTypes = {
   setModalState: PropTypes.func.isRequired,
   collapseTabsExceptCurr: PropTypes.func.isRequired,
   isNarrowView: PropTypes.bool,
+  debugMode: PropTypes.bool,
 };
