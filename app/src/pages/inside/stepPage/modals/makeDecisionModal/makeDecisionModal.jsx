@@ -100,7 +100,7 @@ const MakeDecision = ({ data }) => {
       return items.map((item) => {
         const comment = replaceComment
           ? issue.comment
-          : `${item.issue.comment}\n${issue.comment}`.trim();
+          : `${item.issue.comment || ''}\n${issue.comment}`.trim();
         return {
           ...(isIssueAction ? item : {}),
           testItemId: item.id,
