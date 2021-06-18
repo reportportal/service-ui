@@ -46,6 +46,25 @@ The `component` property should contain a regular React component.
 
 All loaded extensions can be used in application core via [selectors](https://github.com/reportportal/service-ui/blob/master/app/src/controllers/plugins/uiExtensions/selectors.js) by corresponding extension type.
 
+#### Extension types description
+
+**Note:** Every extension type is prefixed by `:uiExtension`, f.e. `uiExtension:modal`.
+
+| Extension type        | Description                                                                                                                                                                                                                                                                           |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| settingsTab           | Adds the new tab on project settings page (_https://your_server/ui/#{projectName}/settings/{tabName}_).                                                                                                                                                                               |
+| modal                 | Adds the new modal component to the system (can be shown by calling `showModalAction` with corresponding modal `name`).                                                                                                                                                               |
+| adminPage             | Adds the new page to the _administrate_ section.                                                                                                                                                                                                                                      |
+| integrationFormFields | Provides the fields to the integration creation modal on project integrations page (_https://your_server/ui/#{projectName}/settings/integrations_).<br/>**Note:** Integration settings for the plugin will be available only if plugin provides `embedded` property in its `details`. |
+| integrationSettings   | Provides the integration settings component on project integrations page (_https://your_server/ui/#{projectName}/settings/integrations_).<br/>**Note:** Integration settings for the plugin will be available only if plugin provides `embedded` property in its `details`.           |
+| sidebarComponent      | Adds a component to the application sidebar.                                                                                                                                                                                                                                          |
+| launchItemComponent   | Adds a component to the every launch entity on launches page (component will be displayed under the launch name).                                                                                                                                                                     |
+
+#### Permissions
+
+For `integrations` page permissions are applied according to permission map (PM and Admin can edit settings on this page, other users have readonly access).<br/>
+For all other extensions, permissions can be controlled by checking the appropriate user role (can be accessed through `activeProjectRoleSelector` and `isAdminSelector` selectors in plugin).
+
 ### Use dependencies in plugin
 
 Since the plugin is written in a separate codebase, it requires some dependencies from the core [UI](https://github.com/reportportal/service-ui).<br/>
