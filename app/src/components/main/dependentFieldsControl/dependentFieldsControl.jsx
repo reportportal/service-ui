@@ -23,7 +23,7 @@ const cx = classNames.bind(styles);
 
 const fieldShape = {
   id: PropTypes.string,
-  prefix: PropTypes.string,
+  prefix: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   postfix: PropTypes.string,
   component: PropTypes.node,
   valueSelector: PropTypes.func,

@@ -74,6 +74,7 @@ export const AttributeList = ({
   customClass,
   showButton,
   editable,
+  withBackground,
 }) => (
   <Fragment>
     {attributes.filter(notSystemAttributePredicate).map((attribute, i, filteredAttributes) => (
@@ -90,6 +91,7 @@ export const AttributeList = ({
         keyURLCreator={keyURLCreator}
         valueURLCreator={valueURLCreator}
         customClass={customClass}
+        withBackground={withBackground}
       />
     ))}
     {!hasEditedAttribute(attributes) && !disabled && showButton && attributes.length < maxLength && (
@@ -115,6 +117,7 @@ AttributeList.propTypes = {
   valueURLCreator: PropTypes.func,
   showButton: PropTypes.bool,
   editable: PropTypes.bool,
+  withBackground: PropTypes.bool,
 };
 AttributeList.defaultProps = {
   attributes: [],
@@ -131,4 +134,5 @@ AttributeList.defaultProps = {
   onAddNew: () => {},
   showButton: true,
   editable: true,
+  withBackground: false,
 };

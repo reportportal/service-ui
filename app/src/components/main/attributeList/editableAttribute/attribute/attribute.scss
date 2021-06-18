@@ -31,6 +31,10 @@
 
     & .label {
       color: $COLOR--gray-60;
+
+      &.with-background {
+        color: $COLOR--charcoal;
+      }
     }
   }
 
@@ -41,6 +45,10 @@
   &.without-indentation {
     margin-bottom: 0;
     margin-right: 0;
+  }
+
+  &.with-background {
+    background-color: $COLOR--gray-91;
   }
 }
 

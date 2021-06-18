@@ -19,12 +19,20 @@
   margin: 0 15px 15px 0;
   font-size: 13px;
   font-family: $FONT-REGULAR;
+
+  &.direction-column {
+    flex-direction: column;
+  }
 }
 
 .data-name {
   flex: 150px 0 0;
   margin-right: 20px;
   color: $COLOR--gray-60;
+
+  &.direction-column {
+    flex: 0;
+  }
 }
 
 .data-value {
@@ -35,6 +43,17 @@
   &.multiple-data {
     display: flex;
     flex-direction: column;
+  }
+
+  &.direction-column {
+    flex: 0;
+    margin-left: 26px;
+    color: $COLOR--black-2;
+    font-weight: 600;
+  }
+
+  & > :first-child {
+    margin-right: 5px;
   }
 
   @supports (word-break: break-word) {
