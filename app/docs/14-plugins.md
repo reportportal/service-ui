@@ -9,6 +9,8 @@ Information on how to create the entire plugin and integrate it with the API can
 
 ### How the core UI and plugin UI are linked during application run
 
+**Preconditions**: The `.jar` plugin file must be uploaded to the Report Portal.
+
 **Note:** It's important to keep all the assembled UI code in the `main.js` file on the plugin side.
 
 When accessing the application through a browser, the core UI sends a request to the API to get the `main.js` file with the UI from the plugin.
@@ -68,5 +70,4 @@ When using subcomponents, you need to pass `extensionProps` to those components 
 
 ## Plugin sample
 
-Sample plugin to demonstrate how it can be written.
-_Link will be provided later_
+Sample [plugin](https://github.com/reportportal/plugin-example) to demonstrate how it can be written.
