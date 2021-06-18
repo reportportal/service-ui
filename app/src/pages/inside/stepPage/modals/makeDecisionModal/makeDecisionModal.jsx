@@ -31,7 +31,6 @@ import { historyItemsSelector } from 'controllers/log';
 import { linkIssueAction, postIssueAction, unlinkIssueAction } from 'controllers/step';
 import { LINK_ISSUE, POST_ISSUE, UNLINK_ISSUE } from 'common/constants/actionTypes';
 import { analyzerExtensionsSelector } from 'controllers/appInfo';
-import { debugModeSelector } from 'controllers/launch';
 import { messages } from './messages';
 import {
   COPY_FROM_HISTORY_LINE,
@@ -52,7 +51,6 @@ const MakeDecision = ({ data }) => {
   const dispatch = useDispatch();
   const activeProject = useSelector(activeProjectSelector);
   const historyItems = useSelector(historyItemsSelector);
-  const debugMode = useSelector(debugModeSelector);
   const isAnalyzerAvailable = !!useSelector(analyzerExtensionsSelector).length;
   const isBulkOperation = data.items && data.items.length > 1;
   const itemData = isBulkOperation ? data.items : data.items[0];
@@ -297,7 +295,6 @@ const MakeDecision = ({ data }) => {
             isBulkOperation={isBulkOperation}
             collapseTabsExceptCurr={collapseTabsExceptCurr}
             isNarrowView={!collapsedRightSection}
-            debugMode={debugMode}
           />
         ),
       },
