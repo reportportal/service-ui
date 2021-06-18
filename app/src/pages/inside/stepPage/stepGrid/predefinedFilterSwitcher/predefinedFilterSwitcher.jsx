@@ -25,11 +25,11 @@ import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 const messages = defineMessages({
   collapse: {
     id: 'StepGrid.showPreconditionMethods',
-    defaultMessage: 'Collapse precondition methods',
+    defaultMessage: 'Collapse PASSED methods and tests',
   },
   expand: {
     id: 'StepGrid.hidePreconditionMethods',
-    defaultMessage: 'Expand precondition methods',
+    defaultMessage: 'Expand PASSED methods and tests',
   },
 });
 
