@@ -298,41 +298,45 @@ export class DefectDetails extends Component {
                       onRemove={this.handleUnlinkTicket}
                     />
                   </div>
-                  <GhostButton
-                    tiny
-                    icon={PlusIcon}
-                    transparentBorder
-                    transparentBorderHover
-                    disabled={!logItem.issue || isPostIssueUnavailable}
-                    onClick={this.handlePostIssue}
-                    title={
-                      !logItem.issue || isPostIssueUnavailable
-                        ? this.getIssueActionTitle(
-                            messages.noDefectTypeToPostIssue,
-                            isPostIssueUnavailable,
-                          )
-                        : ''
-                    }
-                  >
-                    {formatMessage(messages.postIssue)}
-                  </GhostButton>
-                  <GhostButton
-                    icon={PlusIcon}
-                    transparentBorder
-                    transparentBorderHover
-                    disabled={!logItem.issue || !btsIntegrations.length}
-                    onClick={this.handleLinkIssue}
-                    title={
-                      !logItem.issue || !btsIntegrations.length
-                        ? this.getIssueActionTitle(
-                            messages.noDefectTypeToLinkIssue,
-                            isPostIssueUnavailable,
-                          )
-                        : ''
-                    }
-                  >
-                    {formatMessage(messages.linkIssue)}
-                  </GhostButton>
+                  {!debugMode && (
+                    <>
+                      <GhostButton
+                        tiny
+                        icon={PlusIcon}
+                        transparentBorder
+                        transparentBorderHover
+                        disabled={!logItem.issue || isPostIssueUnavailable}
+                        onClick={this.handlePostIssue}
+                        title={
+                          !logItem.issue || isPostIssueUnavailable
+                            ? this.getIssueActionTitle(
+                                messages.noDefectTypeToPostIssue,
+                                isPostIssueUnavailable,
+                              )
+                            : ''
+                        }
+                      >
+                        {formatMessage(messages.postIssue)}
+                      </GhostButton>
+                      <GhostButton
+                        icon={PlusIcon}
+                        transparentBorder
+                        transparentBorderHover
+                        disabled={!logItem.issue || !btsIntegrations.length}
+                        onClick={this.handleLinkIssue}
+                        title={
+                          !logItem.issue || !btsIntegrations.length
+                            ? this.getIssueActionTitle(
+                                messages.noDefectTypeToLinkIssue,
+                                isPostIssueUnavailable,
+                              )
+                            : ''
+                        }
+                      >
+                        {formatMessage(messages.linkIssue)}
+                      </GhostButton>
+                    </>
+                  )}
                 </Fragment>
               )}
             </div>

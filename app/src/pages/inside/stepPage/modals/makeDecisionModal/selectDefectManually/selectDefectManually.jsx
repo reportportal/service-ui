@@ -33,6 +33,7 @@ import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import { MarkdownEditor } from 'components/main/markdown';
 import { getIssueTitle } from 'pages/inside/common/utils';
 import { DefectTypeSelector } from 'pages/inside/common/defectTypeSelector';
+import { debugModeSelector } from 'controllers/launch';
 import { SELECT_DEFECT_MANUALLY } from '../constants';
 import { messages } from '../messages';
 import { ActionButtonsBar } from './actionButtonsBar';
@@ -52,6 +53,7 @@ export const SelectDefectManually = ({
   const btsIntegrations = useSelector(availableBtsIntegrationsSelector);
   const isBtsPluginsExist = useSelector(isBtsPluginsExistSelector);
   const enabledBtsPlugins = useSelector(enabledBtsPluginsSelector);
+  const debugMode = useSelector(debugModeSelector);
   const isPostIssueUnavailable = !isPostIssueActionAvailable(btsIntegrations);
   const [commentEditor, setCommentEditor] = useState(null);
 
@@ -202,7 +204,12 @@ export const SelectDefectManually = ({
           mode="dark"
         />
       </div>
-      <ActionButtonsBar actionItems={getActionItems()} selectedItem={modalState.issueActionType} />
+      {!debugMode && (
+        <ActionButtonsBar
+          actionItems={getActionItems()}
+          selectedItem={modalState.issueActionType}
+        />
+      )}
     </>
   );
 };
