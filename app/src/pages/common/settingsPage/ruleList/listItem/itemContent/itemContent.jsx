@@ -21,11 +21,15 @@ import styles from './itemContent.scss';
 
 const cx = classNames.bind(styles);
 
-export const ItemContent = ({ data, lineHeightVariant }) => (
-  <div className={cx('item-content', { [`line-height-${lineHeightVariant}`]: lineHeightVariant })}>
-    <span className={cx('data-name')}>{data.key}</span>
+export const ItemContent = ({ data, lineHeightVariant, elementsDirection }) => (
+  <div
+    className={cx('item-content', `direction-${elementsDirection}`, {
+      [`line-height-${lineHeightVariant}`]: lineHeightVariant,
+    })}
+  >
+    <span className={cx('data-name', `direction-${elementsDirection}`)}>{data.key}</span>
     {Array.isArray(data.value) ? (
-      <div className={cx('data-value', 'multiple-data')}>
+      <div className={cx('data-value', 'multiple-data', `direction-${elementsDirection}`)}>
         {data.value.map((valueItem, valueIndex) => (
           // eslint-disable-next-line react/no-array-index-key
           <span key={valueIndex} className={cx('data-value-item')}>
@@ -34,7 +38,7 @@ export const ItemContent = ({ data, lineHeightVariant }) => (
         ))}
       </div>
     ) : (
-      <span className={cx('data-value')}>{data.value}</span>
+      <span className={cx('data-value', `direction-${elementsDirection}`)}>{data.value}</span>
     )}
   </div>
 );
@@ -44,6 +48,7 @@ ItemContent.propTypes = {
     value: PropTypes.oneOfType([PropTypes.array, PropTypes.any]),
   }),
   lineHeightVariant: PropTypes.string,
+  elementsDirection: PropTypes.oneOf(['row', 'column']),
 };
 ItemContent.defaultProps = {
   data: {
@@ -51,4 +56,5 @@ ItemContent.defaultProps = {
     value: '',
   },
   lineHeightVariant: '',
+  elementsDirection: 'row',
 };

@@ -70,6 +70,7 @@ export class EditableAttributeList extends Component {
       customClass,
       showButton,
       editable,
+      ...rest
     } = this.props;
     return (
       <AttributeList
@@ -85,6 +86,7 @@ export class EditableAttributeList extends Component {
         customClass={customClass}
         showButton={showButton}
         editable={editable}
+        {...rest}
       />
     );
   }
