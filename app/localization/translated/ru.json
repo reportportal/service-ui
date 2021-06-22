@@ -1086,6 +1086,8 @@
   "MakeDecisionModal.selectDefectTypeManually": "Выбрать тип дефекта вручную",
   "MakeDecisionModal.selectedItemCount": "{selected}/{total} элементов выбрано",
   "MakeDecisionModal.showErrorLogs": "Показать журнал ошибок",
+  "MakeDecisionModal.similarity": "Сходство",
+  "MakeDecisionModal.suggestedTest": "Предлагаемый тест в качестве источника",
   "MakeDecisionModal.test": "Тест {launchNumber}",
   "MakeDecisionModal.unlinkIssueNote": "После отправки типа дефекта текущие ссылки будут удалены",
   "MakeDecisionModal.updateDefectsFailed": "Не удалось обновить дефекты",

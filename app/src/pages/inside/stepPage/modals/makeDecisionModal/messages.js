@@ -76,7 +76,7 @@ export const messages = defineMessages({
   },
   machineLearningSuggestions: {
     id: 'MakeDecisionModal.machineLearningSuggestions',
-    defaultMessage: 'Machine learning suggestions',
+    defaultMessage: 'Choose among ML suggestions',
   },
   copyFromHistoryLine: {
     id: 'MakeDecisionModal.copyFromHistoryLine',
@@ -182,5 +182,13 @@ export const messages = defineMessages({
   updateDefectsFailed: {
     id: 'MakeDecisionModal.updateDefectsFailed',
     defaultMessage: 'Failed to update defects',
+  },
+  similarity: {
+    id: 'MakeDecisionModal.similarity',
+    defaultMessage: 'Similarity',
+  },
+  suggestedTest: {
+    id: 'MakeDecisionModal.suggestedTest',
+    defaultMessage: 'Suggested test as a source',
   },
 });

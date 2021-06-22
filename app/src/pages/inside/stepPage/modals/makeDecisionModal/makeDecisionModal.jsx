@@ -31,6 +31,7 @@ import { historyItemsSelector } from 'controllers/log';
 import { linkIssueAction, postIssueAction, unlinkIssueAction } from 'controllers/step';
 import { LINK_ISSUE, POST_ISSUE, UNLINK_ISSUE } from 'common/constants/actionTypes';
 import { analyzerExtensionsSelector } from 'controllers/appInfo';
+import { MachineLearningSuggestions } from 'pages/inside/stepPage/modals/makeDecisionModal/machineLearningSuggestions';
 import { SCREEN_MD_MAX } from 'common/constants/screenSizeVariables';
 import { messages } from './messages';
 import {
@@ -90,9 +91,37 @@ const MakeDecision = ({ data }) => {
         : modalState.decisionType === SELECT_DEFECT_MANUALLY &&
           !isEqual(itemData.issue, modalState.source.issue)) ||
         modalState.decisionType === COPY_FROM_HISTORY_LINE ||
-        !!modalState.issueActionType,
+        !!modalState.issueActionType ||
+        modalState.decisionType === MACHINE_LEARNING_SUGGESTIONS,
     );
   }, [modalState]);
+
+  const fakeData = [...historyItems].map((item) => {
+    return {
+      ...item,
+      score: 100,
+      issue: {
+        issueType: 'ti001',
+        autoAnalyzed: false,
+        ignoreAnalyzer: false,
+        externalSystemIssues: [],
+      },
+      logs: [
+        {
+          binaryContent: {
+            contentType: 'text/plain',
+            id: '124649',
+          },
+          id: 1845974,
+          itemId: 1162359,
+          level: 'ERROR',
+          message:
+            '14:05:56.621 [TestNG-tests-1] ERROR o.s.test.context.TestContextManager - Caught exception while allowing TestExecutionListener [org.springframework.test.context.support.DependencyInjectionTestExecutionListener@7398c5e9] to prepare test instance [com.epam.ta.reportportal.qa.ws.tests.email_settings.EmailServerSettingsTest@5cc5b667]\njava.lang.IllegalStateException: Failed to load ApplicationContext\n\tat org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:124)\n\tat org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:83)\n\tat org.springframework.test.context.support.DependencyInjectionTestExecutionListener.injectDependencies(DependencyInjectionTestExecutionListener.java:117)\n\tat org.springframework.test.context.support.DependencyInjectionTestExecutionListener.prepareTestInstance(DependencyInjectionTestExecutionListener.java:83)\n\tat org.springframework.test.context.TestContextManager.prepareTestInstance(TestContextManager.java:228)\n\tat org.springframework.test.context.testng.AbstractTestNGSpringContextTests.springTestContextPrepareTestInstance(AbstractTestNGSpringContextTests.java:149)\n\tat sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.lang.reflect.Method.invoke(Method.java:498)\n\tat org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:108)\n\tat org.testng.internal.Invoker.invokeConfigurationMethod(Invoker.java:523)\n\tat org.testng.internal.Invoker.invokeConfigurations(Invoker.java:224)\n\tat org.testng.internal.Invoker.invokeConfigurations(Invoker.java:146)\n\tat org.testng.internal.TestMethodWorker.invokeBeforeClassMethods(TestMethodWorker.java:166)\n\tat org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:105)\n\tat org.testng.TestRunner.privateRun(TestRunner.java:744)\n\tat org.testng.TestRunner.run(TestRunner.java:602)\n\tat org.testng.SuiteRunner.runTest(SuiteRunner.java:380)\n\tat org.testng.SuiteRunner.access$000(SuiteRunner.java:39)\n\tat org.testng.SuiteRunner$SuiteWorker.run(SuiteRunner.java:414)\n\tat org.testng.internal.thread.ThreadUtil$1.call(ThreadUtil.java:52)\n\tat java.util.concurrent.FutureTask.run(FutureTask.java:266)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)\n\tat java.lang.Thread.run(Thread.java:748)',
+          time: 1624267295074,
+        },
+      ],
+    };
+  });
 
   const prepareDataToSend = ({ isIssueAction, replaceComment } = {}) => {
     const { issue } = modalState.source;
@@ -215,7 +244,7 @@ const MakeDecision = ({ data }) => {
     } else {
       modalHasChanges && !isEqual(itemData.issue, modalState.source.issue) && saveDefect(options);
     }
-    modalState.decisionType === COPY_FROM_HISTORY_LINE &&
+    modalState.decisionType === (COPY_FROM_HISTORY_LINE || MACHINE_LEARNING_SUGGESTIONS) &&
       isEqual(itemData.issue, modalState.source.issue) &&
       dispatch(hideModalAction());
     modalState.issueActionType && dispatch(hideModalAction()) && getIssueAction();
@@ -269,7 +298,8 @@ const MakeDecision = ({ data }) => {
       {
         id: MACHINE_LEARNING_SUGGESTIONS,
         shouldShow: !isBulkOperation,
-        disabled: !isAnalyzerAvailable || true,
+        // disabled: !isAnalyzerAvailable || true,
+        disabled: false,
         isOpen: tabs[MACHINE_LEARNING_SUGGESTIONS],
         title: (
           <div
@@ -280,7 +310,16 @@ const MakeDecision = ({ data }) => {
             {formatMessage(messages.machineLearningSuggestions)}
           </div>
         ),
-        content: null,
+        content: (
+          <MachineLearningSuggestions
+            items={fakeData}
+            modalState={modalState}
+            setModalState={setModalState}
+            itemData={itemData}
+            collapseTabsExceptCurr={collapseTabsExceptCurr}
+            isNarrowView={!collapsedRightSection}
+          />
+        ),
       },
       {
         id: SELECT_DEFECT_MANUALLY,
