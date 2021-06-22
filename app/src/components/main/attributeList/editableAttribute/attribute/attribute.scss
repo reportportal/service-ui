@@ -32,7 +32,7 @@
     & .label {
       color: $COLOR--gray-60;
 
-      &.with-background {
+      &.background-dark {
         color: $COLOR--charcoal;
       }
     }
@@ -47,7 +47,7 @@
     margin-right: 0;
   }
 
-  &.with-background {
+  &.background-dark {
     background-color: $COLOR--gray-91;
   }
 }
