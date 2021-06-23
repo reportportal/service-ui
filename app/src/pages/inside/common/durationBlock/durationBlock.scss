@@ -42,12 +42,9 @@
 .in-progress {
   display: inline-block;
   height: 15px;
-  line-height: 15px;
+  line-height: 8px;
   margin-left: 5px;
-
-  img {
-    vertical-align: middle;
-  }
+  vertical-align: middle;
 }
 .duration {
   font-family: $FONT-REGULAR;
