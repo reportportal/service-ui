@@ -25,14 +25,16 @@
   line-height: 15px;
   &-text {
     display: flex;
-  }
-  span:first-child {
-    margin-right: 33px;
+    align-self: flex-end;
+    span:first-child {
+      margin-right: 33px;
+    }
   }
 }
 
 .show-error-logs {
   width: auto;
+  margin-bottom: 10px;
 }
 
 .suggestion-item {
@@ -75,6 +77,7 @@
 
 .input-switcher-children {
   color: $COLOR--dark-gray;
+  margin-right: 0;
 }
 
 .error-log {

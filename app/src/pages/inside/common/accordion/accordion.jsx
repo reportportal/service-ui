@@ -23,12 +23,15 @@ import styles from './accordion.scss';
 const cx = classNames.bind(styles);
 
 export const Accordion = ({ tabs, toggleTab }) => {
+  const onClickTab = (tab) => {
+    if (!tab.disabled) {
+      toggleTab(tab.id);
+    }
+  };
   return (
     <div className={cx('accordion')}>
       {tabs.length > 0 &&
-        tabs.map((tab) => (
-          <AccordionTab key={tab.id} tab={tab} onClick={() => toggleTab(tab.id)} />
-        ))}
+        tabs.map((tab) => <AccordionTab key={tab.id} tab={tab} onClick={() => onClickTab(tab)} />)}
     </div>
   );
 };

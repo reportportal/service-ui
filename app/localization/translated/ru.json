@@ -1079,7 +1079,7 @@
   "MakeDecisionModal.lastTenLaunches": "Подобные ошибки за последние 10 запусков",
   "MakeDecisionModal.lastTenLaunchesTooltip": "Тесты с типом дефекта To Investigate из последних 10 запусков с журналами ошибок, соответствующими выбранному элементу на 98% и более",
   "MakeDecisionModal.linkIssueNote": "После отправки типа дефекта вы сможете выбрать параметры для привязки новой ошибки",
-  "MakeDecisionModal.machineLearningSuggestions": "Предложения по машинному обучению",
+  "MakeDecisionModal.machineLearningSuggestions": "Выберите среди ML подсказок",
   "MakeDecisionModal.modalNote": "Вы должны сохранить изменения или отменить их перед закрытием окна",
   "MakeDecisionModal.postIssueNote": "После отправки типа дефекта вы сможете выбрать параметры для публикации новой ошибки",
   "MakeDecisionModal.replaceCommentsAndApply": "Заменить комментарии и применить",

@@ -1079,7 +1079,7 @@
   "MakeDecisionModal.lastTenLaunches": "Падобныя памылкі за апошнія 10 запускаў",
   "MakeDecisionModal.lastTenLaunchesTooltip": "Тэсты з тыпам дэфекту To Investigate з апошніх 10 запускаў з часопісамі памылак, адпаведнымі выбраным элементу на 98% і больш",
   "MakeDecisionModal.linkIssueNote": "Пасля адпраўкі тыпу дэфекту вы зможаце выбраць параметры для прывязкі новай памылкі",
-  "MakeDecisionModal.machineLearningSuggestions": "Прапановы машыннага навучання",
+  "MakeDecisionModal.machineLearningSuggestions": "Выберыце сярод ML прапаноў",
   "MakeDecisionModal.modalNote": "Вы павінны захаваць змены альбо адмяніць іх перад закрыццём акна",
   "MakeDecisionModal.postIssueNote": "Пасля адпраўкі тыпу дэфекту вы зможаце выбраць параметры для публікацыі новай памылкі",
   "MakeDecisionModal.replaceCommentsAndApply": "Замяніць каментары і ужыць",

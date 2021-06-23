@@ -24,7 +24,6 @@ import {
   ERROR_LOGS_SIZE,
   MACHINE_LEARNING_SUGGESTIONS,
 } from 'pages/inside/stepPage/modals/makeDecisionModal/constants';
-import { uniqueId } from 'common/utils';
 import { StackTraceMessageBlock } from 'pages/inside/common/stackTraceMessageBlock';
 import styles from './machineLearningSuggestions.scss';
 import { messages } from '../messages';
@@ -37,7 +36,6 @@ export const MachineLearningSuggestions = ({
   setModalState,
   itemData,
   collapseTabsExceptCurr,
-  isNarrowView,
 }) => {
   const [showErrorLogs, setShowErrorLogs] = useState(false);
 
@@ -103,11 +101,10 @@ export const MachineLearningSuggestions = ({
                   selectItem={selectMachineLearningSuggestionItem}
                   isSelected={modalState.source.id === item.id}
                   selectedItem={modalState.source.id}
-                  isNarrowView={isNarrowView}
                 />
                 {showErrorLogs &&
                   item.logs.slice(0, ERROR_LOGS_SIZE).map((log) => (
-                    <div key={uniqueId()} className={cx('error-log')}>
+                    <div key={log.id} className={cx('error-log')}>
                       <StackTraceMessageBlock level={log.level} designMode="dark" maxHeight={70}>
                         <div>{log.message}</div>
                       </StackTraceMessageBlock>
@@ -127,8 +124,9 @@ MachineLearningSuggestions.propTypes = {
   setModalState: PropTypes.func.isRequired,
   itemData: PropTypes.object,
   collapseTabsExceptCurr: PropTypes.func.isRequired,
-  isNarrowView: PropTypes.bool,
 };
 MachineLearningSuggestions.defaultProps = {
   items: [],
+  itemData: {},
+  collapseTabsExceptCurr: () => {},
 };

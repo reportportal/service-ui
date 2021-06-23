@@ -78,7 +78,7 @@ const MakeDecision = ({ data }) => {
     selectedItems: [],
   });
   const [tabs, toggleTab, collapseTabsExceptCurr] = useAccordionTabsState({
-    [MACHINE_LEARNING_SUGGESTIONS]: false,
+    [MACHINE_LEARNING_SUGGESTIONS]: isAnalyzerAvailable,
     [COPY_FROM_HISTORY_LINE]: false,
     [SELECT_DEFECT_MANUALLY]: true,
   });
@@ -298,15 +298,10 @@ const MakeDecision = ({ data }) => {
       {
         id: MACHINE_LEARNING_SUGGESTIONS,
         shouldShow: !isBulkOperation,
-        // disabled: !isAnalyzerAvailable || true,
-        disabled: false,
+        disabled: !isAnalyzerAvailable,
         isOpen: tabs[MACHINE_LEARNING_SUGGESTIONS],
         title: (
-          <div
-            title={formatMessage(
-              isAnalyzerAvailable ? messages.disabledTabTooltip : messages.analyzerUnavailable,
-            )}
-          >
+          <div title={!isAnalyzerAvailable ? formatMessage(messages.analyzerUnavailable) : ''}>
             {formatMessage(messages.machineLearningSuggestions)}
           </div>
         ),
@@ -317,7 +312,6 @@ const MakeDecision = ({ data }) => {
             setModalState={setModalState}
             itemData={itemData}
             collapseTabsExceptCurr={collapseTabsExceptCurr}
-            isNarrowView={!collapsedRightSection}
           />
         ),
       },
