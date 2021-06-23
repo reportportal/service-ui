@@ -18,11 +18,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import {
-  PLUGIN_IMAGES_MAP,
-  PLUGIN_DEFAULT_IMAGE,
-  PLUGIN_NAME_TITLES,
-} from 'components/integrations';
+import { PLUGIN_NAME_TITLES } from 'components/integrations/constants';
+import { PluginIcon } from 'components/integrations/elements/pluginIcon';
 import styles from './integrationsListItem.scss';
 
 const cx = classNames.bind(styles);
@@ -44,15 +41,12 @@ export class IntegrationsListItem extends Component {
   render() {
     const {
       integrationType: { name, uploadedBy },
+      integrationType,
     } = this.props;
 
     return (
       <div className={cx('integrations-list-item')} onClick={this.itemClickHandler}>
-        <img
-          className={cx('integration-image')}
-          src={PLUGIN_IMAGES_MAP[name] || PLUGIN_DEFAULT_IMAGE}
-          alt={name}
-        />
+        <PluginIcon className={cx('integration-image')} pluginData={integrationType} alt={name} />
         <div className={cx('integration-info-block')}>
           <span className={cx('integration-name')}>{PLUGIN_NAME_TITLES[name] || name}</span>
           <span className={cx('plugin-author')}>{`by ${uploadedBy || 'Report Portal'}`}</span>
