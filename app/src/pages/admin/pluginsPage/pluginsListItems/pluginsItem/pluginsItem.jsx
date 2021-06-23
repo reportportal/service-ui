@@ -23,13 +23,10 @@ import {
   getPluginItemClickEvent,
   getDisablePluginItemClickEvent,
 } from 'components/main/analytics/events';
-import {
-  PLUGIN_IMAGES_MAP,
-  PLUGIN_NAME_TITLES,
-  PLUGIN_DEFAULT_IMAGE,
-} from 'components/integrations';
+import { PLUGIN_NAME_TITLES } from 'components/integrations/constants';
 import { PLUGIN_DISABLED_MESSAGES_BY_GROUP_TYPE } from 'components/integrations/messages';
 import { InputSwitcher } from 'components/inputs/inputSwitcher';
+import { PluginIcon } from 'components/integrations/elements/pluginIcon';
 import styles from './pluginsItem.scss';
 
 const cx = classNames.bind(styles);
@@ -122,9 +119,9 @@ export class PluginsItem extends Component {
         }
       >
         <div className={cx('plugins-info-block')}>
-          <img
+          <PluginIcon
             className={cx('plugins-image')}
-            src={PLUGIN_IMAGES_MAP[name] || PLUGIN_DEFAULT_IMAGE}
+            pluginData={this.props.data}
             alt={pluginName}
           />
           <div className={cx('plugins-info')}>
