@@ -128,5 +128,4 @@ MachineLearningSuggestions.propTypes = {
 MachineLearningSuggestions.defaultProps = {
   items: [],
   itemData: {},
-  collapseTabsExceptCurr: () => {},
 };
