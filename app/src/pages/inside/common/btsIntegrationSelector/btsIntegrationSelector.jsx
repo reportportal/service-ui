@@ -52,7 +52,7 @@ export class BtsIntegrationSelector extends Component {
     super(props);
     this.pluginNamesOptions = Object.keys(props.namedBtsIntegrations).map((key) => ({
       value: key,
-      label: PLUGIN_NAME_TITLES[key],
+      label: PLUGIN_NAME_TITLES[key] || key,
     }));
   }
 

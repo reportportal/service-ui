@@ -16,7 +16,7 @@
 
 import { createSelector } from 'reselect';
 import { BTS_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
-import { EMAIL, PLUGIN_NAMES_BY_GROUP_TYPES_MAP } from 'common/constants/pluginNames';
+import { EMAIL } from 'common/constants/pluginNames';
 import {
   filterAvailablePlugins,
   sortItemsByGroupType,
@@ -107,11 +107,13 @@ export const availableIntegrationsByPluginNameSelector = (state, pluginName) => 
 };
 
 const namedAvailableIntegrationsByGroupTypeSelector = (groupType) => (state) => {
-  const availablePluginNames = PLUGIN_NAMES_BY_GROUP_TYPES_MAP[groupType];
+  const availablePlugins = (availablePluginsSelector(state) || []).filter(
+    (plugin) => plugin.groupType === groupType,
+  );
 
-  return availablePluginNames.reduce((acc, pluginName) => {
-    const availableIntegrations = availableIntegrationsByPluginNameSelector(state, pluginName);
-    return availableIntegrations.length ? { ...acc, [pluginName]: availableIntegrations } : acc;
+  return availablePlugins.reduce((acc, plugin) => {
+    const availableIntegrations = availableIntegrationsByPluginNameSelector(state, plugin.name);
+    return availableIntegrations.length ? { ...acc, [plugin.name]: availableIntegrations } : acc;
   }, {});
 };
 
