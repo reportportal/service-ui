@@ -22,6 +22,8 @@
 
   &.direction-column {
     flex-direction: column;
+    margin: 0;
+    font-family: $FONT-SEMIBOLD;
   }
 }
 
