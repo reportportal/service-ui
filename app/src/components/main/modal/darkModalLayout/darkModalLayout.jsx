@@ -28,6 +28,7 @@ import { updateStorageItem, getStorageItem } from 'common/utils';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import Parser from 'html-react-parser';
 import { useWindowResize } from 'common/hooks';
+import { SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
 import { ModalHeader } from './modalHeader';
 import { ModalNote } from './modalNote';
 import styles from './darkModalLayout.scss';
@@ -38,11 +39,6 @@ const messages = defineMessages({
   seeMore: { id: 'DarkModalLayout.seeMore', defaultMessage: 'See details & error logs' },
   seeLess: { id: 'DarkModalLayout.seeLess', defaultMessage: 'See less' },
 });
-
-const BREAKPOINTS = {
-  HIDE_RIGHT_SECTION: 720,
-  HIDE_RIGHT_SECTION_BTN: 900,
-};
 
 export const DarkModalLayout = ({
   renderTitle,
@@ -110,11 +106,11 @@ export const DarkModalLayout = ({
     isCtrlEnterPress && hotKeyAction.ctrlEnter();
   }, [isCtrlEnterPress]);
   useEffect(() => {
-    if (width && width < BREAKPOINTS.HIDE_RIGHT_SECTION_BTN && !collapsedRightSection) {
+    if (width && width < SCREEN_XS_MAX && !collapsedRightSection) {
       setRightSectionCollapsed(true);
     }
   }, [windowSize]);
-  const visibilityRightSectionButton = () => windowSize.width < BREAKPOINTS.HIDE_RIGHT_SECTION_BTN;
+  const visibilityRightSectionButton = () => width < SCREEN_XS_MAX;
 
   return (
     <div className={cx('modal-content')}>
@@ -137,7 +133,7 @@ export const DarkModalLayout = ({
           </div>
         </div>
       </div>
-      {width > BREAKPOINTS.HIDE_RIGHT_SECTION && (
+      {width > SCREEN_XS_MAX && (
         <div className={cx('right-section', { 'narrow-view': collapsedRightSection })}>
           <ScrollWrapper hideTracksWhenNotNeeded autoHide>
             <div className={cx('header')}>

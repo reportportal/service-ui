@@ -59,14 +59,18 @@
   box-sizing: border-box;
   display: flex;
   flex: 0 0 auto;
-  width: 50%;
+  width: 45%;
   height: 100%;
   flex-direction: column;
   padding: 84px 20px 20px 32px;
   background-color: $COLOR--dark-modal;
 
   &.narrow-view {
-    width: 364px;
+    max-width: 364px;
+  }
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    padding: 84px 10px 20px 16px;
   }
 }
 

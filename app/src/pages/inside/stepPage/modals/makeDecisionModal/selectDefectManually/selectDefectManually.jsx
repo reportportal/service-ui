@@ -34,21 +34,13 @@ import { MarkdownEditor } from 'components/main/markdown';
 import { getIssueTitle } from 'pages/inside/common/utils';
 import { DefectTypeSelector } from 'pages/inside/common/defectTypeSelector';
 import { debugModeSelector } from 'controllers/launch';
+import { SCREEN_LG_MAX, SCREEN_SM_MAX, SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
 import { SELECT_DEFECT_MANUALLY } from '../constants';
 import { messages } from '../messages';
 import { ActionButtonsBar } from './actionButtonsBar';
 import styles from './selectDefectManually.scss';
 
 const cx = classNames.bind(styles);
-
-const BREAKPOINTS = {
-  HIDE_IGNORE_AA: 810,
-  SCREEN_XS_MAX: 767,
-  SHORT_DEFECT_TYPE_FULL_VIEW: 1300,
-  SHORT_DEFECT_TYPE_NARROW_VIEW: 1100,
-  SHORT_MSG_FULL_VIEW: 1024,
-  SHORT_MSG_NARROW_VIEW: 880,
-};
 
 export const SelectDefectManually = ({
   modalState,
@@ -171,14 +163,12 @@ export const SelectDefectManually = ({
   const { width } = windowSize;
 
   const getDefectTypeNarrowView = () =>
-    (width < BREAKPOINTS.SHORT_DEFECT_TYPE_NARROW_VIEW &&
-      collapsedRightSection &&
-      width > BREAKPOINTS.SCREEN_XS_MAX) ||
-    (width < BREAKPOINTS.SHORT_DEFECT_TYPE_FULL_VIEW && !collapsedRightSection);
+    (width < SCREEN_SM_MAX && collapsedRightSection && width > SCREEN_XS_MAX) ||
+    (width < SCREEN_LG_MAX && !collapsedRightSection);
 
   return (
     <>
-      {!isBulkOperation && width > BREAKPOINTS.HIDE_IGNORE_AA && (
+      {!isBulkOperation && (
         <InputSwitcher
           value={
             modalState.decisionType === SELECT_DEFECT_MANUALLY
@@ -193,12 +183,7 @@ export const SelectDefectManually = ({
           mode="dark"
         >
           <span>
-            {formatMessage(
-              (width < BREAKPOINTS.SHORT_MSG_FULL_VIEW && !collapsedRightSection) ||
-                (width < BREAKPOINTS.SHORT_MSG_NARROW_VIEW && collapsedRightSection)
-                ? messages.ignoreAaShort
-                : messages.ignoreAa,
-            )}
+            {formatMessage(width < SCREEN_SM_MAX ? messages.ignoreAaShort : messages.ignoreAa)}
           </span>
         </InputSwitcher>
       )}

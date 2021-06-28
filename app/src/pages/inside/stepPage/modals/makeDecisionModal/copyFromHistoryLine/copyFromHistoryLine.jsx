@@ -18,14 +18,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
+import { SCREEN_SM_MAX, SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
 import { ExecutionInfo } from '../elements/executionInfo';
 import { COPY_FROM_HISTORY_LINE } from '../constants';
 import { messages } from '../messages';
 import styles from './copyFromHistoryLine.scss';
 
 const cx = classNames.bind(styles);
-
-const HIDE_LABEL_BREAKPOINT = 850;
 
 export const CopyFromHistoryLine = ({
   items,
@@ -54,7 +53,7 @@ export const CopyFromHistoryLine = ({
   const hideLabels = () => {
     if (!windowSize) return false;
     const { width } = windowSize;
-    return width < HIDE_LABEL_BREAKPOINT;
+    return width < SCREEN_SM_MAX && width > SCREEN_XS_MAX;
   };
 
   return (

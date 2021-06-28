@@ -31,6 +31,7 @@ import { historyItemsSelector } from 'controllers/log';
 import { linkIssueAction, postIssueAction, unlinkIssueAction } from 'controllers/step';
 import { LINK_ISSUE, POST_ISSUE, UNLINK_ISSUE } from 'common/constants/actionTypes';
 import { analyzerExtensionsSelector } from 'controllers/appInfo';
+import { SCREEN_LG_MAX } from 'common/constants/screenSizeVariables';
 import { messages } from './messages';
 import {
   COPY_FROM_HISTORY_LINE,
@@ -45,10 +46,6 @@ import {
 import { SelectDefectManually } from './selectDefectManually';
 import { CopyFromHistoryLine } from './copyFromHistoryLine';
 import { OptionsSection } from './optionsSection/optionsSection';
-
-const BREAKPOINTS = {
-  SHORT_MSG: 1050,
-};
 
 const MakeDecision = ({ data }) => {
   const { formatMessage } = useIntl();
@@ -336,9 +333,7 @@ const MakeDecision = ({ data }) => {
       return formatMessage(collapsedRightSection ? messages.bulkOperationDecision : messages.bulk);
     } else {
       return formatMessage(
-        collapsedRightSection && width > BREAKPOINTS.SHORT_MSG
-          ? messages.decisionForTest
-          : messages.test,
+        collapsedRightSection && width > SCREEN_LG_MAX ? messages.decisionForTest : messages.test,
         {
           launchNumber: itemData.launchNumber && `#${itemData.launchNumber}`,
         },
