@@ -1074,6 +1074,7 @@
   "MakeDecisionModal.excludedFromAa": "Виключено з Авто-Аналіза",
   "MakeDecisionModal.execution": "Виконання",
   "MakeDecisionModal.ignoreAa": "Ігнорувати при Авто-Аналізі",
+  "MakeDecisionModal.ignoreAaShort": "Ігнорувати при АА",
   "MakeDecisionModal.includedToAa": "Включено в Авто-Аналіз",
   "MakeDecisionModal.lastTenLaunches": "Подібні помилки за останні 10 запусків",
   "MakeDecisionModal.lastTenLaunchesTooltip": "Тести з типом дефекту To Investigate з останніх 10 запусків з журналами помилок, що відповідають обраному елементу на 98% і більше",

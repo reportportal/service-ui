@@ -46,6 +46,10 @@ import { SelectDefectManually } from './selectDefectManually';
 import { CopyFromHistoryLine } from './copyFromHistoryLine';
 import { OptionsSection } from './optionsSection/optionsSection';
 
+const BREAKPOINTS = {
+  SHORT_MSG: 1050,
+};
+
 const MakeDecision = ({ data }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
@@ -260,7 +264,7 @@ const MakeDecision = ({ data }) => {
     );
   };
 
-  const getAccordionTabs = (collapsedRightSection) => {
+  const getAccordionTabs = (collapsedRightSection, windowSize) => {
     const preparedHistoryLineItems = historyItems.filter(
       (item) => item.issue && item.id !== itemData.id,
     );
@@ -294,7 +298,8 @@ const MakeDecision = ({ data }) => {
             setModalState={setModalState}
             isBulkOperation={isBulkOperation}
             collapseTabsExceptCurr={collapseTabsExceptCurr}
-            isNarrowView={!collapsedRightSection}
+            collapsedRightSection={collapsedRightSection}
+            windowSize={windowSize}
           />
         ),
       },
@@ -313,6 +318,7 @@ const MakeDecision = ({ data }) => {
             modalState={modalState}
             setModalState={setModalState}
             collapseTabsExceptCurr={collapseTabsExceptCurr}
+            windowSize={windowSize}
           />
         ),
       });
@@ -324,13 +330,19 @@ const MakeDecision = ({ data }) => {
     ctrlEnter: applyChanges,
   };
 
-  const renderTitle = (collapsedRightSection) => {
+  const renderTitle = (collapsedRightSection, windowSize) => {
+    const { width } = windowSize;
     if (isBulkOperation) {
       return formatMessage(collapsedRightSection ? messages.bulkOperationDecision : messages.bulk);
     } else {
-      return formatMessage(collapsedRightSection ? messages.decisionForTest : messages.test, {
-        launchNumber: itemData.launchNumber && `#${itemData.launchNumber}`,
-      });
+      return formatMessage(
+        collapsedRightSection && width > BREAKPOINTS.SHORT_MSG
+          ? messages.decisionForTest
+          : messages.test,
+        {
+          launchNumber: itemData.launchNumber && `#${itemData.launchNumber}`,
+        },
+      );
     }
   };
 
@@ -355,8 +367,11 @@ const MakeDecision = ({ data }) => {
       modalNote={formatMessage(messages.modalNote)}
       renderRightSection={renderRightSection}
     >
-      {({ collapsedRightSection }) => (
-        <Accordion tabs={getAccordionTabs(collapsedRightSection)} toggleTab={toggleTab} />
+      {({ collapsedRightSection, windowSize }) => (
+        <Accordion
+          tabs={getAccordionTabs(collapsedRightSection, windowSize)}
+          toggleTab={toggleTab}
+        />
       )}
     </DarkModalLayout>
   );

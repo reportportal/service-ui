@@ -31,6 +31,7 @@ export const ExecutionInfo = ({
   isSelected,
   preselected,
   isNarrowView,
+  hideLabels,
 }) => {
   const defectTypes = useSelector(defectTypesSelector);
 
@@ -45,6 +46,7 @@ export const ExecutionInfo = ({
         isSelected={isSelected}
         preselected={preselected}
         isNarrowView={isNarrowView}
+        hideLabels={hideLabels}
       />
     </div>
   );
@@ -57,6 +59,7 @@ ExecutionInfo.propTypes = {
   selectItem: PropTypes.func,
   preselected: PropTypes.bool,
   isNarrowView: PropTypes.bool,
+  hideLabels: PropTypes.bool,
 };
 
 ExecutionInfo.defaultProps = {
@@ -67,4 +70,5 @@ ExecutionInfo.defaultProps = {
   selectItem: () => {},
   preselected: false,
   isNarrowView: false,
+  hideLabels: false,
 };

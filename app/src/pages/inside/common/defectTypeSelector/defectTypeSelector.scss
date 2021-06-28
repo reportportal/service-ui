@@ -28,10 +28,7 @@
   flex-direction: column;
   flex-grow: 1;
   flex-basis: 0;
-
-  &.narrow-view {
-    flex-grow: 0;
-  }
+  min-width: 55px;
 
   &:not(:last-child) {
     margin-right: 8px;

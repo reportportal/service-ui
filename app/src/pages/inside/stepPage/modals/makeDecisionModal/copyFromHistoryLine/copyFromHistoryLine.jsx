@@ -25,12 +25,15 @@ import styles from './copyFromHistoryLine.scss';
 
 const cx = classNames.bind(styles);
 
+const HIDE_LABEL_BREAKPOINT = 850;
+
 export const CopyFromHistoryLine = ({
   items,
   modalState,
   itemData,
   setModalState,
   collapseTabsExceptCurr,
+  windowSize,
 }) => {
   const { formatMessage } = useIntl();
 
@@ -48,6 +51,11 @@ export const CopyFromHistoryLine = ({
       setModalState({ ...modalState, source: { issue: itemData.issue }, decisionType: '' });
     }
   };
+  const hideLabels = () => {
+    if (!windowSize) return false;
+    const { width } = windowSize;
+    return width < HIDE_LABEL_BREAKPOINT;
+  };
 
   return (
     <>
@@ -62,6 +70,7 @@ export const CopyFromHistoryLine = ({
             selectedItem={modalState.source.id}
             selectItem={selectHistoryLineItem}
             isSelected={modalState.source.id === item.id}
+            hideLabels={hideLabels()}
           />
         </div>
       ))}
@@ -74,7 +83,9 @@ CopyFromHistoryLine.propTypes = {
   itemData: PropTypes.object,
   setModalState: PropTypes.func.isRequired,
   collapseTabsExceptCurr: PropTypes.func.isRequired,
+  windowSize: PropTypes.object,
 };
 CopyFromHistoryLine.defaultProps = {
   items: [],
+  windowSize: {},
 };

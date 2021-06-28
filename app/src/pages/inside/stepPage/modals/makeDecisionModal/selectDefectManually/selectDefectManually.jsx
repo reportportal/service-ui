@@ -41,13 +41,23 @@ import styles from './selectDefectManually.scss';
 
 const cx = classNames.bind(styles);
 
+const BREAKPOINTS = {
+  HIDE_IGNORE_AA: 810,
+  SCREEN_XS_MAX: 767,
+  SHORT_DEFECT_TYPE_FULL_VIEW: 1300,
+  SHORT_DEFECT_TYPE_NARROW_VIEW: 1100,
+  SHORT_MSG_FULL_VIEW: 1024,
+  SHORT_MSG_NARROW_VIEW: 880,
+};
+
 export const SelectDefectManually = ({
   modalState,
   itemData,
   isBulkOperation,
   setModalState,
   collapseTabsExceptCurr,
-  isNarrowView,
+  windowSize,
+  collapsedRightSection,
 }) => {
   const { formatMessage } = useIntl();
   const btsIntegrations = useSelector(availableBtsIntegrationsSelector);
@@ -158,10 +168,17 @@ export const SelectDefectManually = ({
     }
     return actionButtonItems;
   };
+  const { width } = windowSize;
+
+  const getDefectTypeNarrowView = () =>
+    (width < BREAKPOINTS.SHORT_DEFECT_TYPE_NARROW_VIEW &&
+      collapsedRightSection &&
+      width > BREAKPOINTS.SCREEN_XS_MAX) ||
+    (width < BREAKPOINTS.SHORT_DEFECT_TYPE_FULL_VIEW && !collapsedRightSection);
 
   return (
     <>
-      {!isBulkOperation && (
+      {!isBulkOperation && width > BREAKPOINTS.HIDE_IGNORE_AA && (
         <InputSwitcher
           value={
             modalState.decisionType === SELECT_DEFECT_MANUALLY
@@ -175,7 +192,14 @@ export const SelectDefectManually = ({
           size="medium"
           mode="dark"
         >
-          <span>{formatMessage(messages.ignoreAa)}</span>
+          <span>
+            {formatMessage(
+              (width < BREAKPOINTS.SHORT_MSG_FULL_VIEW && !collapsedRightSection) ||
+                (width < BREAKPOINTS.SHORT_MSG_NARROW_VIEW && collapsedRightSection)
+                ? messages.ignoreAaShort
+                : messages.ignoreAa,
+            )}
+          </span>
         </InputSwitcher>
       )}
       <DefectTypeSelector
@@ -185,7 +209,7 @@ export const SelectDefectManually = ({
             ? modalState.source.issue.issueType || ''
             : itemData.issue.issueType
         }
-        isNarrowView={isNarrowView}
+        isNarrowView={getDefectTypeNarrowView()}
       />
       <div className={cx('defect-comment')}>
         <MarkdownEditor
@@ -219,5 +243,6 @@ SelectDefectManually.propTypes = {
   isBulkOperation: PropTypes.bool.isRequired,
   setModalState: PropTypes.func.isRequired,
   collapseTabsExceptCurr: PropTypes.func.isRequired,
-  isNarrowView: PropTypes.bool,
+  windowSize: PropTypes.bool.isRequired,
+  collapsedRightSection: PropTypes.bool.isRequired,
 };
