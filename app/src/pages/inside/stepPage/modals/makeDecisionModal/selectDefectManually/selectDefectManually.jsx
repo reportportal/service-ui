@@ -34,7 +34,7 @@ import { MarkdownEditor } from 'components/main/markdown';
 import { getIssueTitle } from 'pages/inside/common/utils';
 import { DefectTypeSelector } from 'pages/inside/common/defectTypeSelector';
 import { debugModeSelector } from 'controllers/launch';
-import { SCREEN_LG_MAX, SCREEN_SM_MAX, SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
+import { SCREEN_MD_MAX, SCREEN_SM_MAX, SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
 import { SELECT_DEFECT_MANUALLY } from '../constants';
 import { messages } from '../messages';
 import { ActionButtonsBar } from './actionButtonsBar';
@@ -164,7 +164,7 @@ export const SelectDefectManually = ({
 
   const getDefectTypeNarrowView = () =>
     (width < SCREEN_SM_MAX && collapsedRightSection && width > SCREEN_XS_MAX) ||
-    (width < SCREEN_LG_MAX && !collapsedRightSection);
+    (width < SCREEN_MD_MAX && !collapsedRightSection);
 
   return (
     <>
