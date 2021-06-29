@@ -104,6 +104,8 @@ export const URLS = {
       'filter.eq.attributeKey': key || undefined,
       'filter.cnt.attributeValue': searchTerm,
     })}`,
+  getMLSuggestions: (activeProject, itemId) => `${urlBase}${activeProject}/item/suggest/${itemId}`,
+  choiceSuggestedItems: (activeProject) => `${urlBase}${activeProject}/item/suggest/choice`,
   launchNameSearch: (activeProject) => (searchTerm = '') =>
     `${urlBase}${activeProject}/launch/names?filter.cnt.name=${searchTerm}`,
   launchOwnersSearch: (activeProject) => (searchTerm = '') =>

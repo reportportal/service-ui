@@ -96,7 +96,7 @@ export const messages = defineMessages({
   },
   disabledTabTooltip: {
     id: 'MakeDecisionModal.disabledTabTooltip',
-    defaultMessage: 'A new functionality will be available in the next version',
+    defaultMessage: 'No similar failures in previous runs',
   },
   postIssueNote: {
     id: 'MakeDecisionModal.postIssueNote',
@@ -190,5 +190,13 @@ export const messages = defineMessages({
   suggestedTest: {
     id: 'MakeDecisionModal.suggestedTest',
     defaultMessage: 'Suggested test as a source',
+  },
+  suggestedChoiceSuccess: {
+    id: 'MakeDecisionModal.suggestedChoiceSuccess',
+    defaultMessage: 'User choice of suggested item was sent for handling to ML',
+  },
+  suggestedChoiceFailed: {
+    id: 'MakeDecisionModal.suggestedChoiceFailed',
+    defaultMessage: 'The proposed item selected by the user has not been sent for processing to ML',
   },
 });

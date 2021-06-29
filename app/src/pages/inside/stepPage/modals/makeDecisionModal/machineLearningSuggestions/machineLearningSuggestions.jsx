@@ -25,21 +25,25 @@ import {
   MACHINE_LEARNING_SUGGESTIONS,
 } from 'pages/inside/stepPage/modals/makeDecisionModal/constants';
 import { StackTraceMessageBlock } from 'pages/inside/common/stackTraceMessageBlock';
+import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import styles from './machineLearningSuggestions.scss';
 import { messages } from '../messages';
 
 const cx = classNames.bind(styles);
 
 export const MachineLearningSuggestions = ({
-  items,
   modalState,
   setModalState,
   itemData,
   collapseTabsExceptCurr,
+  loadingMLSuggest,
 }) => {
   const [showErrorLogs, setShowErrorLogs] = useState(false);
 
   const { formatMessage } = useIntl();
+
+  const { suggestedItems } = modalState;
+
   const getInfoStatus = (score) => {
     if (score === 100) {
       return 'SAME';
@@ -52,10 +56,12 @@ export const MachineLearningSuggestions = ({
 
   const selectMachineLearningSuggestionItem = (itemId) => {
     if (itemId && itemId !== modalState.source.id) {
-      const suggestionItem = items.find((item) => item.id === itemId);
+      const { testItemResource } = suggestedItems.find(
+        (item) => item.testItemResource.id === itemId,
+      );
       setModalState({
         ...modalState,
-        source: suggestionItem,
+        source: testItemResource,
         decisionType: MACHINE_LEARNING_SUGGESTIONS,
         issueActionType: '',
       });
@@ -65,7 +71,9 @@ export const MachineLearningSuggestions = ({
     }
   };
 
-  return (
+  return loadingMLSuggest ? (
+    <SpinningPreloader />
+  ) : (
     <>
       <div className={cx('suggestion-header')}>
         <div className={cx('suggestion-header-text')}>
@@ -85,25 +93,28 @@ export const MachineLearningSuggestions = ({
         </InputSwitcher>
       </div>
 
-      {items.map(
-        (item) =>
-          item.score >= 40 && (
-            <div key={item.id} className={cx('suggestion-item')}>
+      {suggestedItems.map(
+        ({ suggestRs, logs, testItemResource }) =>
+          suggestRs.matchScore >= 40 && (
+            <div key={testItemResource.id} className={cx('suggestion-item')}>
               <div className={cx('suggestion-info')}>
-                <span className={cx('suggestion-info-number')}>{item.score}</span>
-                <span className={cx('suggestion-info-status', { 'color-low': item.score < 70 })}>
-                  {getInfoStatus(item.score)}
+                <span className={cx('suggestion-info-number')}>{suggestRs.matchScore}</span>
+                <span
+                  className={cx('suggestion-info-status', {
+                    'color-low': suggestRs.matchScore < 70,
+                  })}
+                >
+                  {getInfoStatus(suggestRs.matchScore)}
                 </span>
               </div>
-              <div className={cx('suggestion-item-wrapper')} key={item.id || item.itemId}>
+              <div className={cx('suggestion-item-wrapper')} key={testItemResource.id}>
                 <ItemHeader
-                  item={item}
+                  item={testItemResource}
                   selectItem={selectMachineLearningSuggestionItem}
-                  isSelected={modalState.source.id === item.id}
-                  selectedItem={modalState.source.id}
+                  isSelected={modalState.source.id === testItemResource.id}
                 />
                 {showErrorLogs &&
-                  item.logs.slice(0, ERROR_LOGS_SIZE).map((log) => (
+                  logs.slice(0, ERROR_LOGS_SIZE).map((log) => (
                     <div key={log.id} className={cx('error-log')}>
                       <StackTraceMessageBlock level={log.level} designMode="dark" maxHeight={70}>
                         <div>{log.message}</div>
@@ -119,13 +130,14 @@ export const MachineLearningSuggestions = ({
 };
 
 MachineLearningSuggestions.propTypes = {
-  items: PropTypes.array,
   modalState: PropTypes.object.isRequired,
   setModalState: PropTypes.func.isRequired,
   itemData: PropTypes.object,
   collapseTabsExceptCurr: PropTypes.func.isRequired,
+  loadingMLSuggest: PropTypes.bool,
 };
 MachineLearningSuggestions.defaultProps = {
   items: [],
   itemData: {},
+  loadingMLSuggest: false,
 };
