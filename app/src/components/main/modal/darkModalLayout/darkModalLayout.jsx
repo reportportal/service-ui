@@ -27,6 +27,8 @@ import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
 import { updateStorageItem, getStorageItem } from 'common/utils';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import Parser from 'html-react-parser';
+import { useWindowResize } from 'common/hooks';
+import { SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
 import { ModalHeader } from './modalHeader';
 import { ModalNote } from './modalNote';
 import styles from './darkModalLayout.scss';
@@ -59,13 +61,14 @@ export const DarkModalLayout = ({
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const wrapperRef = useRef();
-
+  const windowSize = useWindowResize();
   const collapseRightSection = () => {
     setRightSectionCollapsed(!collapsedRightSection);
     updateStorageItem(APPLICATION_SETTINGS, {
       darkModalCollapsedRightSection: !collapsedRightSection,
     });
   };
+  const { width } = windowSize;
 
   const closeModalWindow = () => {
     dispatch(hideModalAction());
@@ -102,6 +105,12 @@ export const DarkModalLayout = ({
   useEffect(() => {
     isCtrlEnterPress && hotKeyAction.ctrlEnter();
   }, [isCtrlEnterPress]);
+  useEffect(() => {
+    if (width && width < SCREEN_XS_MAX && !collapsedRightSection) {
+      setRightSectionCollapsed(true);
+    }
+  }, [windowSize]);
+  const visibilityRightSectionButton = () => width < SCREEN_XS_MAX;
 
   return (
     <div className={cx('modal-content')}>
@@ -109,12 +118,12 @@ export const DarkModalLayout = ({
         <div ref={wrapperRef} className={cx('wrapper')}>
           <div className={cx('layout')}>
             <ModalHeader
-              text={renderTitle(collapsedRightSection)}
+              text={renderTitle(collapsedRightSection, windowSize)}
               onClose={closeModalWindow}
               renderHeaderElements={renderHeaderElements}
             />
             <ScrollWrapper hideTracksWhenNotNeeded autoHide>
-              {children({ collapsedRightSection })}
+              {children({ collapsedRightSection, windowSize })}
               <div className={cx('note-row')}>
                 {modalNote && clickOutside && modalHasChanges && (
                   <ModalNote message={modalNote} icon={ErrorInlineIcon} status={'error'} />
@@ -124,23 +133,30 @@ export const DarkModalLayout = ({
           </div>
         </div>
       </div>
-      <div className={cx('right-section', { 'narrow-view': collapsedRightSection })}>
-        <ScrollWrapper hideTracksWhenNotNeeded autoHide>
-          <div className={cx('header')}>
-            <button className={cx('button')} onClick={collapseRightSection}>
-              <i className={cx('show-icon')}>
-                {Parser(collapsedRightSection ? ShowMore : ShowLess)}
-              </i>{' '}
-              <span className={cx('show-icon-prefix')}>
-                {collapsedRightSection
-                  ? formatMessage(messages.seeMore)
-                  : formatMessage(messages.seeLess)}
-              </span>
-            </button>
-          </div>
-          {renderRightSection(collapsedRightSection)}
-        </ScrollWrapper>
-      </div>
+      {width > SCREEN_XS_MAX && (
+        <div className={cx('right-section', { 'narrow-view': collapsedRightSection })}>
+          <ScrollWrapper hideTracksWhenNotNeeded autoHide>
+            <div className={cx('header')}>
+              <button
+                className={cx('button', {
+                  hidden: visibilityRightSectionButton(),
+                })}
+                onClick={collapseRightSection}
+              >
+                <i className={cx('show-icon')}>
+                  {Parser(collapsedRightSection ? ShowMore : ShowLess)}
+                </i>{' '}
+                <span className={cx('show-icon-prefix')}>
+                  {collapsedRightSection
+                    ? formatMessage(messages.seeMore)
+                    : formatMessage(messages.seeLess)}
+                </span>
+              </button>
+            </div>
+            {renderRightSection(collapsedRightSection)}
+          </ScrollWrapper>
+        </div>
+      )}
     </div>
   );
 };

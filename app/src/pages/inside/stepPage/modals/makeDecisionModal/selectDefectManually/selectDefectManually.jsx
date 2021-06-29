@@ -34,6 +34,7 @@ import { MarkdownEditor } from 'components/main/markdown';
 import { getIssueTitle } from 'pages/inside/common/utils';
 import { DefectTypeSelector } from 'pages/inside/common/defectTypeSelector';
 import { debugModeSelector } from 'controllers/launch';
+import { SCREEN_MD_MAX, SCREEN_SM_MAX, SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
 import { SELECT_DEFECT_MANUALLY } from '../constants';
 import { messages } from '../messages';
 import { ActionButtonsBar } from './actionButtonsBar';
@@ -47,7 +48,8 @@ export const SelectDefectManually = ({
   isBulkOperation,
   setModalState,
   collapseTabsExceptCurr,
-  isNarrowView,
+  windowSize,
+  collapsedRightSection,
 }) => {
   const { formatMessage } = useIntl();
   const btsIntegrations = useSelector(availableBtsIntegrationsSelector);
@@ -158,6 +160,11 @@ export const SelectDefectManually = ({
     }
     return actionButtonItems;
   };
+  const { width } = windowSize;
+
+  const getDefectTypeNarrowView = () =>
+    (width < SCREEN_SM_MAX && collapsedRightSection && width > SCREEN_XS_MAX) ||
+    (width < SCREEN_MD_MAX && !collapsedRightSection);
 
   return (
     <>
@@ -175,7 +182,9 @@ export const SelectDefectManually = ({
           size="medium"
           mode="dark"
         >
-          <span>{formatMessage(messages.ignoreAa)}</span>
+          <span>
+            {formatMessage(width < SCREEN_SM_MAX ? messages.ignoreAaShort : messages.ignoreAa)}
+          </span>
         </InputSwitcher>
       )}
       <DefectTypeSelector
@@ -185,7 +194,7 @@ export const SelectDefectManually = ({
             ? modalState.source.issue.issueType || ''
             : itemData.issue.issueType
         }
-        isNarrowView={isNarrowView}
+        isNarrowView={getDefectTypeNarrowView()}
       />
       <div className={cx('defect-comment')}>
         <MarkdownEditor
@@ -219,5 +228,6 @@ SelectDefectManually.propTypes = {
   isBulkOperation: PropTypes.bool.isRequired,
   setModalState: PropTypes.func.isRequired,
   collapseTabsExceptCurr: PropTypes.func.isRequired,
-  isNarrowView: PropTypes.bool,
+  windowSize: PropTypes.bool.isRequired,
+  collapsedRightSection: PropTypes.bool.isRequired,
 };

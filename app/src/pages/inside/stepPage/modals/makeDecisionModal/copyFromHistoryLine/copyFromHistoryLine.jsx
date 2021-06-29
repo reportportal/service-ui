@@ -18,6 +18,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
+import { SCREEN_SM_MAX, SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
 import { ExecutionInfo } from '../elements/executionInfo';
 import { COPY_FROM_HISTORY_LINE } from '../constants';
 import { messages } from '../messages';
@@ -31,6 +32,7 @@ export const CopyFromHistoryLine = ({
   itemData,
   setModalState,
   collapseTabsExceptCurr,
+  windowSize,
 }) => {
   const { formatMessage } = useIntl();
 
@@ -48,6 +50,11 @@ export const CopyFromHistoryLine = ({
       setModalState({ ...modalState, source: { issue: itemData.issue }, decisionType: '' });
     }
   };
+  const hideLabels = () => {
+    if (!windowSize) return false;
+    const { width } = windowSize;
+    return width < SCREEN_SM_MAX && width > SCREEN_XS_MAX;
+  };
 
   return (
     <>
@@ -62,6 +69,7 @@ export const CopyFromHistoryLine = ({
             selectedItem={modalState.source.id}
             selectItem={selectHistoryLineItem}
             isSelected={modalState.source.id === item.id}
+            hideLabels={hideLabels()}
           />
         </div>
       ))}
@@ -74,7 +82,9 @@ CopyFromHistoryLine.propTypes = {
   itemData: PropTypes.object,
   setModalState: PropTypes.func.isRequired,
   collapseTabsExceptCurr: PropTypes.func.isRequired,
+  windowSize: PropTypes.object,
 };
 CopyFromHistoryLine.defaultProps = {
   items: [],
+  windowSize: {},
 };

@@ -18,7 +18,6 @@
   display: flex;
   align-items: center;
   box-sizing: border-box;
-  max-width: 156px;
   height: 36px;
   padding: 0 12px;
   border-radius: 4px;
@@ -29,10 +28,6 @@
   font-size: 12px;
   line-height: 17px;
   cursor: pointer;
-
-  &.narrow-view {
-    max-width: 88px;
-  }
 
   &:hover {
     border: solid 2px rgba($COLOR--topaz, 0.25);
@@ -53,7 +48,6 @@
 .defect-type-name {
   display: inline-block;
   overflow: hidden;
-  max-width: 170px;
   padding-left: 8px;
   word-break: break-all;
   white-space: nowrap;

@@ -35,7 +35,6 @@ export const DefectTypeSelectorItem = ({
         'defect-type-selector-item',
         {
           selected: isSelected,
-          'narrow-view': isNarrowView,
         },
         className,
       )}

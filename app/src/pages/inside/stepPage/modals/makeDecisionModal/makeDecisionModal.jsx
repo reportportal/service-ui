@@ -31,6 +31,7 @@ import { historyItemsSelector } from 'controllers/log';
 import { linkIssueAction, postIssueAction, unlinkIssueAction } from 'controllers/step';
 import { LINK_ISSUE, POST_ISSUE, UNLINK_ISSUE } from 'common/constants/actionTypes';
 import { analyzerExtensionsSelector } from 'controllers/appInfo';
+import { SCREEN_MD_MAX } from 'common/constants/screenSizeVariables';
 import { messages } from './messages';
 import {
   COPY_FROM_HISTORY_LINE,
@@ -260,7 +261,7 @@ const MakeDecision = ({ data }) => {
     );
   };
 
-  const getAccordionTabs = (collapsedRightSection) => {
+  const getAccordionTabs = (collapsedRightSection, windowSize) => {
     const preparedHistoryLineItems = historyItems.filter(
       (item) => item.issue && item.id !== itemData.id,
     );
@@ -294,7 +295,8 @@ const MakeDecision = ({ data }) => {
             setModalState={setModalState}
             isBulkOperation={isBulkOperation}
             collapseTabsExceptCurr={collapseTabsExceptCurr}
-            isNarrowView={!collapsedRightSection}
+            collapsedRightSection={collapsedRightSection}
+            windowSize={windowSize}
           />
         ),
       },
@@ -313,6 +315,7 @@ const MakeDecision = ({ data }) => {
             modalState={modalState}
             setModalState={setModalState}
             collapseTabsExceptCurr={collapseTabsExceptCurr}
+            windowSize={windowSize}
           />
         ),
       });
@@ -324,13 +327,17 @@ const MakeDecision = ({ data }) => {
     ctrlEnter: applyChanges,
   };
 
-  const renderTitle = (collapsedRightSection) => {
+  const renderTitle = (collapsedRightSection, windowSize) => {
+    const { width } = windowSize;
     if (isBulkOperation) {
       return formatMessage(collapsedRightSection ? messages.bulkOperationDecision : messages.bulk);
     } else {
-      return formatMessage(collapsedRightSection ? messages.decisionForTest : messages.test, {
-        launchNumber: itemData.launchNumber && `#${itemData.launchNumber}`,
-      });
+      return formatMessage(
+        collapsedRightSection && width > SCREEN_MD_MAX ? messages.decisionForTest : messages.test,
+        {
+          launchNumber: itemData.launchNumber && `#${itemData.launchNumber}`,
+        },
+      );
     }
   };
 
@@ -355,8 +362,11 @@ const MakeDecision = ({ data }) => {
       modalNote={formatMessage(messages.modalNote)}
       renderRightSection={renderRightSection}
     >
-      {({ collapsedRightSection }) => (
-        <Accordion tabs={getAccordionTabs(collapsedRightSection)} toggleTab={toggleTab} />
+      {({ collapsedRightSection, windowSize }) => (
+        <Accordion
+          tabs={getAccordionTabs(collapsedRightSection, windowSize)}
+          toggleTab={toggleTab}
+        />
       )}
     </DarkModalLayout>
   );

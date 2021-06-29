@@ -45,6 +45,10 @@ export const messages = defineMessages({
     id: 'MakeDecisionModal.ignoreAa',
     defaultMessage: 'Ignore in Auto Analysis',
   },
+  ignoreAaShort: {
+    id: 'MakeDecisionModal.ignoreAaShort',
+    defaultMessage: 'Ignore in AA',
+  },
   decisionForTest: {
     id: 'MakeDecisionModal.decisionForTest',
     defaultMessage: 'Decision for the test {launchNumber}',

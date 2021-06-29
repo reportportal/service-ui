@@ -17,7 +17,8 @@
 .button {
   display: flex;
   align-items: center;
-  flex: 0 0 20%;
+  flex: 1;
+  min-width: 0;
   max-width: 170px;
   height: 36px;
   border-radius: 4px;

@@ -31,7 +31,14 @@ import styles from './itemHeader.scss';
 
 const cx = classNames.bind(styles);
 
-export const ItemHeader = ({ item, selectItem, isSelected, preselected, isNarrowView }) => {
+export const ItemHeader = ({
+  item,
+  selectItem,
+  isSelected,
+  preselected,
+  isNarrowView,
+  hideLabels,
+}) => {
   const {
     id,
     name,
@@ -56,9 +63,9 @@ export const ItemHeader = ({ item, selectItem, isSelected, preselected, isNarrow
           <div className={cx('icon')}>{Parser(ExternalLinkIcon)}</div>
         </Link>
         <div className={cx('defect-block', { 'narrow-view': isNarrowView })}>
-          {ignoreAnalyzer && <IgnoredInAALabel className={cx('ignore-aa-label')} />}
-          {autoAnalyzed && <AutoAnalyzedLabel className={cx('aa-label')} />}
-          {!!patternTemplates.length && (
+          {!hideLabels && ignoreAnalyzer && <IgnoredInAALabel className={cx('ignore-aa-label')} />}
+          {!hideLabels && autoAnalyzed && <AutoAnalyzedLabel className={cx('aa-label')} />}
+          {!hideLabels && !!patternTemplates.length && (
             <PatternAnalyzedLabel
               patternTemplates={patternTemplates}
               className={cx('pa-label')}
@@ -81,6 +88,7 @@ ItemHeader.propTypes = {
   nameLink: PropTypes.object,
   preselected: PropTypes.bool,
   isNarrowView: PropTypes.bool,
+  hideLabels: PropTypes.bool,
 };
 ItemHeader.defaultProps = {
   item: {},
@@ -89,4 +97,5 @@ ItemHeader.defaultProps = {
   nameLink: {},
   preselected: false,
   isNarrowView: false,
+  hideLabels: false,
 };
