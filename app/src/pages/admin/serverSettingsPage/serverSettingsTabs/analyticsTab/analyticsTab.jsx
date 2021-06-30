@@ -22,7 +22,10 @@ import { fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
-import { ADMIN_SERVER_SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
+import {
+  ADMIN_SERVER_SETTINGS_PAGE_EVENTS,
+  submitAnalyticsBtn,
+} from 'components/main/analytics/events';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import classNames from 'classnames/bind';
@@ -130,20 +133,22 @@ export class AnalyticsTab extends Component {
   };
 
   submit = () => {
-    this.props.tracking.trackEvent(ADMIN_SERVER_SETTINGS_PAGE_EVENTS.SUBMIT_ANALYTICS_BTN);
     this.setState({
       loading: true,
     });
     this.updateStatisticsConfig(this.state.analyticsEnabled);
+    this.props.tracking.trackEvent(
+      submitAnalyticsBtn(this.state.analyticsEnabled ? 'active' : 'disable'),
+    );
   };
 
   toggleStatistics = () => {
+    this.setState({ analyticsEnabled: !this.state.analyticsEnabled });
     this.state.analyticsEnabled
       ? this.props.tracking.trackEvent(
           ADMIN_SERVER_SETTINGS_PAGE_EVENTS.MAKE_RP_GREAT_AGAIN_UNCHECK,
         )
       : this.props.tracking.trackEvent(ADMIN_SERVER_SETTINGS_PAGE_EVENTS.MAKE_RP_GREAT_AGAIN_CHECK);
-    this.setState({ analyticsEnabled: !this.state.analyticsEnabled });
   };
 
   updateStatisticsConfig = (analyticsEnabled) => {

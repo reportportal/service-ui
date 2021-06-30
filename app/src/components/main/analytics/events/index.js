@@ -55,4 +55,5 @@ export { ADMIN_PROJECTS_PAGE_EVENTS, ADMIN_PROJECTS_PAGE } from './adminProjects
 export {
   ADMIN_SERVER_SETTINGS_PAGE,
   ADMIN_SERVER_SETTINGS_PAGE_EVENTS,
+  submitAnalyticsBtn,
 } from './adminServerSettingsPageEvents';
