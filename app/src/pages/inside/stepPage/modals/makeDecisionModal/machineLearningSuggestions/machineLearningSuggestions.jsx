@@ -22,7 +22,10 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import {
   ERROR_LOGS_SIZE,
+  HIGH,
+  LOW,
   MACHINE_LEARNING_SUGGESTIONS,
+  SAME,
 } from 'pages/inside/stepPage/modals/makeDecisionModal/constants';
 import { StackTraceMessageBlock } from 'pages/inside/common/stackTraceMessageBlock';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -45,9 +48,9 @@ export const MachineLearningSuggestions = ({
   const { suggestedItems } = modalState;
 
   const getInfoStatus = (score) => {
-    if (score === 100) {
+    if (score === SAME) {
       return 'SAME';
-    } else if (score < 100 && score >= 70) {
+    } else if (score < SAME && score >= HIGH) {
       return 'HIGH';
     } else {
       return 'LOW';
@@ -95,13 +98,13 @@ export const MachineLearningSuggestions = ({
 
       {suggestedItems.map(
         ({ suggestRs, logs, testItemResource }) =>
-          suggestRs.matchScore >= 40 && (
+          suggestRs.matchScore >= LOW && (
             <div key={testItemResource.id} className={cx('suggestion-item')}>
               <div className={cx('suggestion-info')}>
                 <span className={cx('suggestion-info-number')}>{suggestRs.matchScore}</span>
                 <span
                   className={cx('suggestion-info-status', {
-                    'color-low': suggestRs.matchScore < 70,
+                    'color-low': suggestRs.matchScore < HIGH,
                   })}
                 >
                   {getInfoStatus(suggestRs.matchScore)}

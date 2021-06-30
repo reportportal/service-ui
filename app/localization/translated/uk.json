@@ -1087,7 +1087,7 @@
   "MakeDecisionModal.selectedItemCount": "{selected}/{total} елементів вибрано",
   "MakeDecisionModal.showErrorLogs": "Показати журнал помилок",
   "MakeDecisionModal.similarity": "Подібність",
-  "MakeDecisionModal.suggestedChoiceFailed": "Пропонований елемент, вибраний користувачем, не відправлено на обробку в ML",
+  "MakeDecisionModal.suggestedChoiceFailed": "Пропонований елемент, вибраний користувачем, не було надіслано на обробку в ML",
   "MakeDecisionModal.suggestedChoiceSuccess": "Обраний користувачем запропонований елемент відправлений на обробку в ML",
   "MakeDecisionModal.suggestedTest": "Запропонований тест як джерело",
   "MakeDecisionModal.test": "Тест {launchNumber}",

@@ -102,18 +102,15 @@ const MakeDecision = ({ data }) => {
       setLoadingMLSuggest(true);
       fetch(URLS.getMLSuggestions(activeProject, itemData.id))
         .then((resp) => {
+          resp.length === 0
+            ? collapseTabsExceptCurr(SELECT_DEFECT_MANUALLY)
+            : setModalState({ suggestedItems: resp });
           setLoadingMLSuggest(false);
-          setModalState({ suggestedItems: resp });
-          if (resp.length === 0) {
-            collapseTabsExceptCurr(SELECT_DEFECT_MANUALLY);
-          }
         })
         .catch(() => {
           setLoadingMLSuggest(false);
           collapseTabsExceptCurr(SELECT_DEFECT_MANUALLY);
         });
-    } else {
-      collapseTabsExceptCurr(SELECT_DEFECT_MANUALLY);
     }
   }, []);
 
@@ -157,44 +154,44 @@ const MakeDecision = ({ data }) => {
     });
   };
   const sendSuggestResponse = () => {
-    if (modalState.decisionType === 'machineLearningSuggestions') {
-      const dataToSend = modalState.suggestedItems.map((item) => {
-        if (modalState.source.id === item.testItemResource.id) {
-          return {
-            ...item.suggestRs,
-            userChoice: 1,
-          };
-        }
-        return item.suggestRs;
-      });
-      fetch(URLS.choiceSuggestedItems(activeProject), {
-        method: 'put',
-        data: dataToSend,
+    const dataToSend = modalState.suggestedItems.map((item) => {
+      if (modalState.source.id === item.testItemResource.id) {
+        return {
+          ...item.suggestRs,
+          userChoice: 1,
+        };
+      }
+      return item.suggestRs;
+    });
+    fetch(URLS.choiceSuggestedItems(activeProject), {
+      method: 'put',
+      data: dataToSend,
+    })
+      .then(() => {
+        dispatch(
+          showNotification({
+            message: formatMessage(messages.suggestedChoiceSuccess),
+            type: NOTIFICATION_TYPES.SUCCESS,
+          }),
+        );
       })
-        .then(() => {
-          dispatch(
-            showNotification({
-              message: formatMessage(messages.suggestedChoiceSuccess),
-              type: NOTIFICATION_TYPES.SUCCESS,
-            }),
-          );
-        })
-        .catch(() => {
-          dispatch(
-            showNotification({
-              message: formatMessage(messages.suggestedChoiceFailed),
-              type: NOTIFICATION_TYPES.ERROR,
-            }),
-          );
-        });
-    }
+      .catch(() => {
+        dispatch(
+          showNotification({
+            message: formatMessage(messages.suggestedChoiceFailed),
+            type: NOTIFICATION_TYPES.ERROR,
+          }),
+        );
+      });
   };
   const saveDefect = (options) => {
     const { fetchFunc } = data;
     const issues = prepareDataToSend(options);
     const url = URLS.testItems(activeProject);
 
-    sendSuggestResponse();
+    if (modalState.decisionType === MACHINE_LEARNING_SUGGESTIONS) {
+      sendSuggestResponse();
+    }
 
     fetch(url, {
       method: 'put',
