@@ -233,6 +233,7 @@ export class DashboardItemPage extends Component {
           type: PROJECT_DASHBOARD_PAGE,
           payload: { projectId: activeProject },
         },
+        eventInfo: DASHBOARD_PAGE_EVENTS.BREADCRUMB_ALL_DASHBOARD,
       },
       {
         title: this.getDashboardName(),

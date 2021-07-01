@@ -17,25 +17,32 @@
 import React from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
+import track from 'react-tracking';
 import { Icon } from 'components/main/icon';
 import { PROJECT_DASHBOARD_ITEM_PAGE } from 'controllers/pages';
 import { NavLink } from 'components/main/navLink';
 import { canEditDashboard, canDeleteDashboard } from 'common/utils/permissions';
+import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './dashboardTable.scss';
 
 const cx = classNames.bind(styles);
 
-export const NameColumn = ({ value, customProps: { projectId }, className }) => {
-  const { id: dashboardId, name } = value;
-  return (
-    <NavLink
-      className={cx(className, 'name')}
-      to={{ type: PROJECT_DASHBOARD_ITEM_PAGE, payload: { projectId, dashboardId } }}
-    >
-      {name}
-    </NavLink>
-  );
-};
+export const NameColumn = track()(
+  ({ value, customProps: { projectId }, className, tracking: { trackEvent } }) => {
+    const { id: dashboardId, name } = value;
+    return (
+      <NavLink
+        className={cx(className, 'name')}
+        to={{ type: PROJECT_DASHBOARD_ITEM_PAGE, payload: { projectId, dashboardId } }}
+        onClick={() => {
+          trackEvent(DASHBOARD_PAGE_EVENTS.DASHBOARD_NAME_CLICK);
+        }}
+      >
+        {name}
+      </NavLink>
+    );
+  },
+);
 NameColumn.propTypes = {
   value: PropTypes.object,
   customProps: PropTypes.object,

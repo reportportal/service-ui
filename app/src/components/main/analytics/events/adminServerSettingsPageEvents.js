@@ -16,6 +16,12 @@
 
 export const ADMIN_SERVER_SETTINGS_PAGE = 'Server settings';
 
+export const submitAnalyticsBtn = (label) => ({
+  category: ADMIN_SERVER_SETTINGS_PAGE,
+  action: 'Click on Bttn Submit on tab Analytics',
+  label,
+});
+
 export const ADMIN_SERVER_SETTINGS_PAGE_EVENTS = {
   AUTHORIZATION_CONFIGURATION_TAB: {
     category: ADMIN_SERVER_SETTINGS_PAGE,
@@ -72,10 +78,5 @@ export const ADMIN_SERVER_SETTINGS_PAGE_EVENTS = {
     category: ADMIN_SERVER_SETTINGS_PAGE,
     action: 'Edit checkbox Help make ReportPortal better on tab Analytics',
     label: 'Uncheck Help make ReportPortal better on tab Analytics',
-  },
-  SUBMIT_ANALYTICS_BTN: {
-    category: ADMIN_SERVER_SETTINGS_PAGE,
-    action: 'Click on Bttn Submit on tab Analytics',
-    label: 'Submit changes on tab Analytics',
   },
 };
