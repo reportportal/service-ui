@@ -31,6 +31,7 @@ import { historyItemsSelector } from 'controllers/log';
 import { linkIssueAction, postIssueAction, unlinkIssueAction } from 'controllers/step';
 import { LINK_ISSUE, POST_ISSUE, UNLINK_ISSUE } from 'common/constants/actionTypes';
 import { analyzerExtensionsSelector } from 'controllers/appInfo';
+import { MachineLearningSuggestions } from 'pages/inside/stepPage/modals/makeDecisionModal/machineLearningSuggestions';
 import { SCREEN_MD_MAX } from 'common/constants/screenSizeVariables';
 import { messages } from './messages';
 import {
@@ -75,14 +76,15 @@ const MakeDecision = ({ data }) => {
         : '',
     testItems: [],
     selectedItems: [],
+    suggestedItems: [],
   });
   const [tabs, toggleTab, collapseTabsExceptCurr] = useAccordionTabsState({
-    [MACHINE_LEARNING_SUGGESTIONS]: false,
+    [MACHINE_LEARNING_SUGGESTIONS]: isAnalyzerAvailable,
     [COPY_FROM_HISTORY_LINE]: false,
     [SELECT_DEFECT_MANUALLY]: true,
   });
   const [modalHasChanges, setModalHasChanges] = useState(false);
-
+  const [loadingMLSuggest, setLoadingMLSuggest] = useState(false);
   useEffect(() => {
     setModalHasChanges(
       (isBulkOperation
@@ -90,9 +92,27 @@ const MakeDecision = ({ data }) => {
         : modalState.decisionType === SELECT_DEFECT_MANUALLY &&
           !isEqual(itemData.issue, modalState.source.issue)) ||
         modalState.decisionType === COPY_FROM_HISTORY_LINE ||
-        !!modalState.issueActionType,
+        !!modalState.issueActionType ||
+        modalState.decisionType === MACHINE_LEARNING_SUGGESTIONS,
     );
   }, [modalState]);
+
+  useEffect(() => {
+    if (!isBulkOperation) {
+      setLoadingMLSuggest(true);
+      fetch(URLS.getMLSuggestions(activeProject, itemData.id))
+        .then((resp) => {
+          resp.length === 0
+            ? collapseTabsExceptCurr(SELECT_DEFECT_MANUALLY)
+            : setModalState({ suggestedItems: resp });
+          setLoadingMLSuggest(false);
+        })
+        .catch(() => {
+          setLoadingMLSuggest(false);
+          collapseTabsExceptCurr(SELECT_DEFECT_MANUALLY);
+        });
+    }
+  }, []);
 
   const prepareDataToSend = ({ isIssueAction, replaceComment } = {}) => {
     const { issue } = modalState.source;
@@ -133,10 +153,45 @@ const MakeDecision = ({ data }) => {
       };
     });
   };
+  const sendSuggestResponse = () => {
+    const dataToSend = modalState.suggestedItems.map((item) => {
+      if (modalState.source.id === item.testItemResource.id) {
+        return {
+          ...item.suggestRs,
+          userChoice: 1,
+        };
+      }
+      return item.suggestRs;
+    });
+    fetch(URLS.choiceSuggestedItems(activeProject), {
+      method: 'put',
+      data: dataToSend,
+    })
+      .then(() => {
+        dispatch(
+          showNotification({
+            message: formatMessage(messages.suggestedChoiceSuccess),
+            type: NOTIFICATION_TYPES.SUCCESS,
+          }),
+        );
+      })
+      .catch(() => {
+        dispatch(
+          showNotification({
+            message: formatMessage(messages.suggestedChoiceFailed),
+            type: NOTIFICATION_TYPES.ERROR,
+          }),
+        );
+      });
+  };
   const saveDefect = (options) => {
     const { fetchFunc } = data;
     const issues = prepareDataToSend(options);
     const url = URLS.testItems(activeProject);
+
+    if (modalState.decisionType === MACHINE_LEARNING_SUGGESTIONS) {
+      sendSuggestResponse();
+    }
 
     fetch(url, {
       method: 'put',
@@ -215,7 +270,8 @@ const MakeDecision = ({ data }) => {
     } else {
       modalHasChanges && !isEqual(itemData.issue, modalState.source.issue) && saveDefect(options);
     }
-    modalState.decisionType === COPY_FROM_HISTORY_LINE &&
+    (modalState.decisionType === COPY_FROM_HISTORY_LINE ||
+      modalState.decisionType === MACHINE_LEARNING_SUGGESTIONS) &&
       isEqual(itemData.issue, modalState.source.issue) &&
       dispatch(hideModalAction());
     modalState.issueActionType && dispatch(hideModalAction()) && getIssueAction();
@@ -265,22 +321,36 @@ const MakeDecision = ({ data }) => {
     const preparedHistoryLineItems = historyItems.filter(
       (item) => item.issue && item.id !== itemData.id,
     );
+    const disabledMLTooltip = () => {
+      if (!isAnalyzerAvailable) {
+        return formatMessage(messages.analyzerUnavailable);
+      } else if (modalState.suggestedItems.length === 0) {
+        return formatMessage(messages.disabledTabTooltip);
+      } else {
+        return '';
+      }
+    };
     const tabsData = [
       {
         id: MACHINE_LEARNING_SUGGESTIONS,
         shouldShow: !isBulkOperation,
-        disabled: !isAnalyzerAvailable || true,
+        disabled:
+          !isAnalyzerAvailable || (!loadingMLSuggest && modalState.suggestedItems.length === 0),
         isOpen: tabs[MACHINE_LEARNING_SUGGESTIONS],
         title: (
-          <div
-            title={formatMessage(
-              isAnalyzerAvailable ? messages.disabledTabTooltip : messages.analyzerUnavailable,
-            )}
-          >
+          <div title={disabledMLTooltip()}>
             {formatMessage(messages.machineLearningSuggestions)}
           </div>
         ),
-        content: null,
+        content: (
+          <MachineLearningSuggestions
+            modalState={modalState}
+            setModalState={setModalState}
+            itemData={itemData}
+            collapseTabsExceptCurr={collapseTabsExceptCurr}
+            loadingMLSuggest={loadingMLSuggest}
+          />
+        ),
       },
       {
         id: SELECT_DEFECT_MANUALLY,

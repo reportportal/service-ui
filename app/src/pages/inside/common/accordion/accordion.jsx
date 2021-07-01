@@ -27,7 +27,7 @@ export const Accordion = ({ tabs, toggleTab }) => {
     <div className={cx('accordion')}>
       {tabs.length > 0 &&
         tabs.map((tab) => (
-          <AccordionTab key={tab.id} tab={tab} onClick={() => toggleTab(tab.id)} />
+          <AccordionTab key={tab.id} tab={tab} onClick={() => !tab.disabled && toggleTab(tab.id)} />
         ))}
     </div>
   );

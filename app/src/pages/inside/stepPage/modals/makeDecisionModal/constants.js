@@ -25,6 +25,9 @@ export const WITH_FILTER = 'filter';
 export const ALL_LOADED_TI_FROM_HISTORY_LINE = 'allLoadedTIFromHistoryLine';
 export const ERROR_LOGS_SIZE = 5;
 export const TO_INVESTIGATE_LOCATOR_PREFIX = 'ti';
+export const SAME = 100;
+export const HIGH = 70;
+export const LOW = 40;
 
 export const SEARCH_MODES = {
   CURRENT_LAUNCH,

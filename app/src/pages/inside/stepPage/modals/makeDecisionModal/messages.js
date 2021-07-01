@@ -76,7 +76,7 @@ export const messages = defineMessages({
   },
   machineLearningSuggestions: {
     id: 'MakeDecisionModal.machineLearningSuggestions',
-    defaultMessage: 'Machine learning suggestions',
+    defaultMessage: 'Choose among ML suggestions',
   },
   copyFromHistoryLine: {
     id: 'MakeDecisionModal.copyFromHistoryLine',
@@ -96,7 +96,7 @@ export const messages = defineMessages({
   },
   disabledTabTooltip: {
     id: 'MakeDecisionModal.disabledTabTooltip',
-    defaultMessage: 'A new functionality will be available in the next version',
+    defaultMessage: 'No similar failures in previous runs',
   },
   postIssueNote: {
     id: 'MakeDecisionModal.postIssueNote',
@@ -182,5 +182,21 @@ export const messages = defineMessages({
   updateDefectsFailed: {
     id: 'MakeDecisionModal.updateDefectsFailed',
     defaultMessage: 'Failed to update defects',
+  },
+  similarity: {
+    id: 'MakeDecisionModal.similarity',
+    defaultMessage: 'Similarity',
+  },
+  suggestedTest: {
+    id: 'MakeDecisionModal.suggestedTest',
+    defaultMessage: 'Suggested test as a source',
+  },
+  suggestedChoiceSuccess: {
+    id: 'MakeDecisionModal.suggestedChoiceSuccess',
+    defaultMessage: 'User choice of suggested item was sent for handling to ML',
+  },
+  suggestedChoiceFailed: {
+    id: 'MakeDecisionModal.suggestedChoiceFailed',
+    defaultMessage: 'The proposed item selected by the user has not been sent for processing to ML',
   },
 });
