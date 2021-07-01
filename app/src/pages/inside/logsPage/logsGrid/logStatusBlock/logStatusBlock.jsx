@@ -19,11 +19,13 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import Parser from 'html-react-parser';
+import track from 'react-tracking';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { PASSED, FAILED, SKIPPED, ALL_STATUSES, WARN, INFO } from 'common/constants/testStatuses';
 import { formatStatus } from 'common/utils/localizationUtils';
 import ArrowIcon from 'common/img/arrow-down-inline.svg';
 
+import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './logStatusBlock.scss';
 
 const messages = defineMessages({
@@ -52,11 +54,16 @@ const messages = defineMessages({
 const cx = classNames.bind(styles);
 
 @injectIntl
+@track()
 export class LogStatusBlock extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     onChangeLogStatusFilter: PropTypes.func.isRequired,
     logStatus: PropTypes.string,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -105,6 +112,7 @@ export class LogStatusBlock extends Component {
     this.setState((prevState) => ({
       opened: !prevState.opened,
     }));
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.ALL_STATUSES);
   };
 
   toggleCheckbox = (value) => {

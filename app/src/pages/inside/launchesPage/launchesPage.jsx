@@ -676,6 +676,7 @@ export class LaunchesPage extends Component {
       finishedLaunchesCount: null,
     });
     this.props.fetchLaunchesAction();
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.REFRESH_BTN);
   };
 
   handleAllLaunchesSelection = () => {

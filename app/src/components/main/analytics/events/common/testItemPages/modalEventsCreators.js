@@ -233,4 +233,19 @@ export const getEditItemsModalEvents = (category, itemType = 'Item') => ({
     action: `Edit description in Modal "Edit ${itemType}" in a bulk`,
     label: 'Edit description in mode: ',
   },
+  DETAILS_TAB_EVENT: {
+    category,
+    action: `Click on tab "Details" on modal "Test item details"`,
+    label: 'Open tab "Details"',
+  },
+  STACK_TRACE_TAB_EVENT: {
+    category,
+    action: `Click on tab "Stack trace" on modal "Test item details"`,
+    label: 'Open tab "Stack trace"',
+  },
+  ADD_ATTRIBUTE: {
+    category,
+    action: 'Click on add new attributes on modal "Test item details"',
+    label: 'Add attributes',
+  },
 });

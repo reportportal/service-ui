@@ -33,7 +33,11 @@ import {
 } from 'controllers/log';
 import { InputSlider } from 'components/inputs/inputSlider';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
-import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
+import {
+  getHideAllPassedLogs,
+  LOG_PAGE_EVENTS,
+  LogViewMode,
+} from 'components/main/analytics/events';
 import ConsoleIcon from 'common/img/console-inline.svg';
 import MarkdownIcon from 'common/img/markdown-inline.svg';
 import { Pagination } from './pagination';
@@ -123,6 +127,12 @@ export class LogsGridToolbar extends Component {
     const newLogViewMode = logViewMode === targetViewMode ? DEFAULT : targetViewMode;
     setLogViewMode(this.props.userId, newLogViewMode);
 
+    if (targetViewMode === MARKDOWN) {
+      this.props.tracking.trackEvent(LogViewMode(newLogViewMode === MARKDOWN, MARKDOWN));
+    } else if (targetViewMode === CONSOLE) {
+      this.props.tracking.trackEvent(LogViewMode(newLogViewMode === CONSOLE, CONSOLE));
+    }
+
     this.setState({
       logViewMode: newLogViewMode,
     });
@@ -152,6 +162,7 @@ export class LogsGridToolbar extends Component {
     const { onHidePassedLogs, isPassedLogsHidden } = this.props;
 
     onHidePassedLogs(!isPassedLogsHidden);
+    this.props.tracking.trackEvent(getHideAllPassedLogs(!isPassedLogsHidden));
   };
 
   toggleHideEmptySteps = () => {

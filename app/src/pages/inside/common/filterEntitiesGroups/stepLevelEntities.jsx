@@ -37,7 +37,6 @@ import {
   AFTER_GROUPS,
   AFTER_SUITE,
 } from 'common/constants/methodTypes';
-import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import {
   EntityInputConditional,
   EntityItemStartTime,
@@ -69,6 +68,8 @@ import {
 } from 'components/filterEntities/constants';
 import { defectTypesSelector, patternsSelector } from 'controllers/project';
 import { launchIdSelector } from 'controllers/pages';
+import { levelSelector } from 'controllers/testItem';
+import { pageEventsMap } from 'components/main/analytics';
 
 const messages = defineMessages({
   NameTitle: {
@@ -300,6 +301,7 @@ const descriptionStepLevelEntity = bindMessageToValidator(
   projectId: activeProjectSelector(state),
   launchId: launchIdSelector(state),
   patterns: patternsSelector(state),
+  level: levelSelector(state),
 }))
 export class StepLevelEntities extends Component {
   static propTypes = {
@@ -311,11 +313,13 @@ export class StepLevelEntities extends Component {
     launchId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     visibleFilters: PropTypes.array,
     patterns: PropTypes.array,
+    level: PropTypes.string,
   };
   static defaultProps = {
     filterValues: {},
     visibleFilters: [],
     patterns: [],
+    level: '',
   };
 
   getDefectTypeEntity = () => {
@@ -409,7 +413,7 @@ export class StepLevelEntities extends Component {
         active: true,
         removable: false,
         static: true,
-        eventInfo: STEP_PAGE_EVENTS.REFINE_BY_NAME,
+        eventInfo: pageEventsMap[this.props.level].REFINE_BY_NAME,
       },
       {
         id: ENTITY_METHOD_TYPE,
@@ -535,6 +539,9 @@ export class StepLevelEntities extends Component {
         title: intl.formatMessage(messages.StartTimeTitle),
         active: visibleFilters.includes(ENTITY_START_TIME),
         removable: true,
+        customProps: {
+          events: pageEventsMap[this.props.level].REFINE_FILTERS_PANEL_EVENTS.commonEvents,
+        },
       },
       this.getDefectTypeEntity(),
       {

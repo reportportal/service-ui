@@ -49,7 +49,8 @@ import {
 } from 'components/filterEntities/constants';
 import { defectTypesSelector } from 'controllers/project';
 import { launchIdSelector } from 'controllers/pages';
-import { SUITES_PAGE_EVENTS } from 'components/main/analytics/events';
+import { pageEventsMap } from 'components/main/analytics';
+import { levelSelector } from 'controllers/testItem';
 
 const messages = defineMessages({
   NameTitle: {
@@ -161,6 +162,7 @@ const DEFECT_ENTITY_ID_BASE = 'statistics$defects$';
   defectTypes: defectTypesSelector(state),
   projectId: activeProjectSelector(state),
   launchId: launchIdSelector(state),
+  level: levelSelector(state),
 }))
 export class SuiteLevelEntities extends Component {
   static propTypes = {
@@ -171,10 +173,12 @@ export class SuiteLevelEntities extends Component {
     projectId: PropTypes.string.isRequired,
     launchId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     visibleFilters: PropTypes.array,
+    level: PropTypes.string,
   };
   static defaultProps = {
     filterValues: {},
     visibleFilters: [],
+    level: '',
   };
 
   getStaticEntities = () => {
@@ -191,7 +195,7 @@ export class SuiteLevelEntities extends Component {
         active: true,
         removable: false,
         static: true,
-        eventInfo: SUITES_PAGE_EVENTS.REFINE_BY_NAME,
+        eventInfo: pageEventsMap[this.props.level].REFINE_BY_NAME,
         customProps: {
           placeholder: intl.formatMessage(messages.SUITE_NAME_PLACEHOLDER),
         },
@@ -206,6 +210,9 @@ export class SuiteLevelEntities extends Component {
         title: intl.formatMessage(messages.StartTimeTitle),
         active: visibleFilters.includes(ENTITY_START_TIME),
         removable: true,
+        customProps: {
+          events: pageEventsMap[this.props.level].REFINE_FILTERS_PANEL_EVENTS.commonEvents,
+        },
       },
       {
         id: ENTITY_DESCRIPTION,

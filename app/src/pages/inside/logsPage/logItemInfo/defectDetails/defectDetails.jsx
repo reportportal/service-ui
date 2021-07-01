@@ -250,9 +250,16 @@ export class DefectDetails extends Component {
   };
 
   toggleExpanded = () => {
-    this.setState((state) => ({
-      expanded: !state.expanded,
-    }));
+    this.setState(
+      (state) => ({
+        expanded: !state.expanded,
+      }),
+      () => {
+        this.props.tracking.trackEvent(
+          this.state.expanded ? LOG_PAGE_EVENTS.MORE : LOG_PAGE_EVENTS.SHOW_LESS,
+        );
+      },
+    );
   };
 
   render() {
