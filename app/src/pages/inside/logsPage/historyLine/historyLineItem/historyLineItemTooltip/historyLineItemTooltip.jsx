@@ -125,7 +125,7 @@ export class HistoryLineItemTooltip extends Component {
 
     return (
       launchAttributes &&
-      launchAttributes.length && (
+      launchAttributes.length !== 0 && (
         <div className={cx('attributes-block')}>
           <span className={cx('title')}>{formatMessage(messages.launchAttributes)}</span>
           {launchAttributes.map((attribute) => {
