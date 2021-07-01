@@ -28,6 +28,8 @@ import { showDefaultErrorNotification } from 'controllers/notification';
 import { activeProjectSelector } from 'controllers/user';
 import { fetchDashboardsAction } from 'controllers/dashboard';
 import { getWidgets } from 'pages/inside/dashboardItemPage/modals/common/widgets';
+import { provideEcGA } from 'components/main/analytics';
+import { activeDashboardIdSelector, pageSelector } from 'controllers/pages';
 import { WIDGET_WIZARD_FORM } from '../../common/constants';
 import { prepareWidgetDataForSubmit, getDefaultWidgetConfig } from '../../common/utils';
 import { WizardInfoSection } from './wizardInfoSection';
@@ -40,6 +42,8 @@ const cx = classNames.bind(styles);
 @connect(
   (state) => ({
     projectId: activeProjectSelector(state),
+    activeDashboardId: activeDashboardIdSelector(state),
+    currentPage: pageSelector(state),
   }),
   {
     submitWidgetWizardForm: () => submit(WIDGET_WIZARD_FORM),
@@ -68,6 +72,8 @@ export class WidgetWizardContent extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     fetchDashboards: PropTypes.func,
+    activeDashboardId: PropTypes.number,
+    currentPage: PropTypes.string,
   };
   static defaultProps = {
     formValues: {
@@ -76,6 +82,8 @@ export class WidgetWizardContent extends Component {
     eventsInfo: {},
     onConfirm: () => {},
     fetchDashboards: () => {},
+    activeDashboardId: undefined,
+    currentPage: '',
   };
 
   constructor(props) {
@@ -91,6 +99,19 @@ export class WidgetWizardContent extends Component {
   onClickNextStep = () => {
     this.props.tracking.trackEvent(this.props.eventsInfo.nextStep);
     this.props.submitWidgetWizardForm();
+    if (this.state.step === 0) {
+      const { formValues } = this.props;
+      provideEcGA({
+        name: 'addProduct',
+        data: {
+          name: formValues.widgetType,
+          variant: this.props.currentPage,
+          category: 'diagram/unassigned',
+        },
+        action: 'detail',
+        additionalData: { list: this.props.activeDashboardId || 'noID' },
+      });
+    }
   };
 
   onClickPrevStep = () => {
@@ -106,7 +127,6 @@ export class WidgetWizardContent extends Component {
       onConfirm,
     } = this.props;
     const { selectedDashboard, ...rest } = formData;
-
     const data = prepareWidgetDataForSubmit(this.preprocessOutputData(rest));
 
     trackEvent(addWidget);
@@ -123,6 +143,17 @@ export class WidgetWizardContent extends Component {
           ...getDefaultWidgetConfig(data.widgetType),
         };
         onConfirm(newWidget, this.props.closeModal, selectedDashboard);
+        provideEcGA({
+          name: 'addProduct',
+          data: {
+            id,
+            name: data.widgetType,
+            category: `diagram/${data.contentParameters.widgetOptions.viewMode || 'unclassified'}`,
+            variant: this.props.currentPage,
+          },
+          action: 'add',
+          additionalData: { list: selectedDashboard.id },
+        });
       })
       .catch((err) => {
         this.props.hideScreenLockAction();

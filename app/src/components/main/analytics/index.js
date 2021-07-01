@@ -15,4 +15,5 @@
  */
 
 export { AnalyticsWrapper } from './AnalyticsWrapper';
-export { pageEventsMap } from './utils';
+export { pageEventsMap } from './constants';
+export { provideEcGA } from './utils';
