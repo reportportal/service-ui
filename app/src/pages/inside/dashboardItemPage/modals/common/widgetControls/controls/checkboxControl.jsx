@@ -16,19 +16,37 @@
 
 import PropTypes from 'prop-types';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
+import { useTracking } from 'react-tracking';
 import { ModalField } from 'components/main/modal';
 import { FIELD_LABEL_WIDTH } from './constants';
 
-export const CheckboxControl = ({ fieldLabel, text, ...rest }) => (
-  <ModalField label={fieldLabel} labelWidth={FIELD_LABEL_WIDTH}>
-    <InputCheckbox {...rest}>{text}</InputCheckbox>
-  </ModalField>
-);
+export const CheckboxControl = ({ fieldLabel, text, eventInfo, onChange, ...rest }) => {
+  const { trackEvent } = useTracking();
+  const onChangeCheckbox = (e) => {
+    if (eventInfo.onChangeCheckboxEvent) {
+      trackEvent(eventInfo.onChangeCheckboxEvent(!rest.value));
+    }
+    onChange(e);
+  };
+
+  return (
+    <ModalField label={fieldLabel} labelWidth={FIELD_LABEL_WIDTH}>
+      <InputCheckbox {...rest} onChange={onChangeCheckbox}>
+        {text}
+      </InputCheckbox>
+    </ModalField>
+  );
+};
+
 CheckboxControl.propTypes = {
   fieldLabel: PropTypes.string,
   text: PropTypes.string,
+  eventInfo: PropTypes.object,
+  onChange: PropTypes.func,
 };
 CheckboxControl.defaultProps = {
   fieldLabel: '',
   text: 'null',
+  eventInfo: {},
+  onChange: () => {},
 };

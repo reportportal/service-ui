@@ -32,7 +32,7 @@ import {
 } from 'controllers/pages/constants';
 import { ALL } from 'common/constants/reservedFilterIds';
 import PropTypes from 'prop-types';
-import track from 'react-tracking';
+import track, { useTracking } from 'react-tracking';
 import { uiExtensionAdminPagesSelector } from 'controllers/plugins/uiExtensions';
 import { ADMIN_SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { withTooltip } from 'components/main/tooltips/tooltip';
@@ -48,17 +48,21 @@ import styles from './adminSidebar.scss';
 
 const cx = classNames.bind(styles);
 
-const BackToProject = ({ activeProject }) => (
-  <Link
-    className={cx('back-to-project')}
-    to={{
-      type: PROJECT_LAUNCHES_PAGE,
-      payload: { projectId: activeProject, filterId: ALL },
-    }}
-  >
-    <i className={cx('icon')}>{Parser(BackIcon)}</i>
-  </Link>
-);
+const BackToProject = ({ activeProject }) => {
+  const { trackEvent } = useTracking();
+  return (
+    <Link
+      className={cx('back-to-project')}
+      onClick={() => trackEvent(ADMIN_SIDEBAR_EVENTS.CLICK_BACK_TO_PROJECT_BTN)}
+      to={{
+        type: PROJECT_LAUNCHES_PAGE,
+        payload: { projectId: activeProject, filterId: ALL },
+      }}
+    >
+      <i className={cx('icon')}>{Parser(BackIcon)}</i>
+    </Link>
+  );
+};
 BackToProject.propTypes = {
   activeProject: PropTypes.string,
 };

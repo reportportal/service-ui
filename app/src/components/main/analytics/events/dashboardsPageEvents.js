@@ -14,6 +14,16 @@
  * limitations under the License.
  */
 
+import {
+  getChooseRadioBtnShareWidget,
+  getClickZoomAddWidgetArea,
+  getClickZoomEditWidgetArea,
+  getSelectCriteriaEditWidget,
+  getSelectCriteriaNewWidget,
+  getSelectSortingFilterAddWidgetModal,
+  getSortingForNewFilterEditWidgetModal,
+} from 'components/main/analytics/events/common/dashboardPages/actionEventCreators';
+
 export const DASHBOARD_PAGE = 'dashboards';
 export const DASHBOARD_PAGE_EVENTS = {
   ADD_NEW_DASHBOARD_BTN: {
@@ -206,11 +216,9 @@ export const DASHBOARD_PAGE_EVENTS = {
     action: 'Select parameters of filter in Modal Add New Widget',
     label: 'Show parameters of filter in Modal Add New Widget',
   },
-  SELECT_SORTING_FILTER_ADD_WIDGET_MODAL: {
-    category: DASHBOARD_PAGE,
-    action: 'Select parameters of sorting in filter on Modal Add New Widget',
-    label: 'Show parameters of sorting in filter on Modal Add New Widget',
-  },
+  SELECT_SORTING_FILTER_ADD_WIDGET_MODAL: getSelectSortingFilterAddWidgetModal(DASHBOARD_PAGE),
+  CLICK_ZOOM_ADD_WIDGET_AREA: getClickZoomAddWidgetArea(DASHBOARD_PAGE),
+  CLICK_ZOOM_EDIT_WIDGET_AREA: getClickZoomEditWidgetArea(DASHBOARD_PAGE),
   CANCEL_BTN_ADD_NEW_FILTER_ADD_WIDGET_MODAL: {
     category: DASHBOARD_PAGE,
     action: 'Click on Btn Cancel in Add new filter in Modal Add New Widget',
@@ -271,11 +279,7 @@ export const DASHBOARD_PAGE_EVENTS = {
     action: 'Click on icon Close on Modal Add Shared Widget',
     label: 'Close Modal Add Shared Widget',
   },
-  WIDGET_TYPE_SHARE_WIDGET_MODAL: {
-    category: DASHBOARD_PAGE,
-    action: 'Choose radio Btn of Widget type in Modal Add Shared Widget',
-    label: 'Choose Widget type in Modal Add Shared Widget',
-  },
+  WIDGET_TYPE_SHARE_WIDGET_MODAL: getChooseRadioBtnShareWidget(DASHBOARD_PAGE),
   SCROLL_WIDGET_SHARE_WIDGET_MODAL: {
     category: DASHBOARD_PAGE,
     action: 'Scroll widgets in Modal Add Shared Widget',
@@ -351,11 +355,7 @@ export const DASHBOARD_PAGE_EVENTS = {
     action: 'Select parameters of filter in Modal Edit Widget',
     label: 'Show parameters of filter in Modal Edit Widget',
   },
-  SORTING_FOR_NEW_FILTER_EDIT_WIDGET_MODAL: {
-    category: DASHBOARD_PAGE,
-    action: 'Select parameters of sorting in new filter in Modal Edit Widget',
-    label: 'Show parameters of sorting of new filter in Modal Edit Widget',
-  },
+  SORTING_FOR_NEW_FILTER_EDIT_WIDGET_MODAL: getSortingForNewFilterEditWidgetModal(DASHBOARD_PAGE),
   CANCEL_BTN_ADD_NEW_FILTER_EDIT_WIDGET_MODAL: {
     category: DASHBOARD_PAGE,
     action: 'Click on Btn Cancel in add new filter in Modal Edit Widget',
@@ -416,4 +416,6 @@ export const DASHBOARD_PAGE_EVENTS = {
     action: 'Click on Btn Add New Dashboard on empty page',
     label: 'Arise Modal Add New Dashboard',
   },
+  SELECT_CRITERIA_ADD_NEW_WIDGET_MODAL: getSelectCriteriaNewWidget(DASHBOARD_PAGE),
+  SELECT_CRITERIA_EDIT_WIDGET_MODAL: getSelectCriteriaEditWidget(DASHBOARD_PAGE),
 };

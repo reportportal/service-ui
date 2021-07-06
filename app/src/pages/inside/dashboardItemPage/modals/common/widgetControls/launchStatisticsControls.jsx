@@ -178,7 +178,11 @@ export class LaunchStatisticsControls extends Component {
             </FieldProvider>
             <div className={cx('zoom-container')}>
               <FieldProvider name="contentParameters.widgetOptions.zoom">
-                <CheckboxControl fieldLabel=" " text={formatMessage(messages.ZoomControlText)} />
+                <CheckboxControl
+                  eventInfo={{ onChangeCheckboxEvent: this.props.eventsInfo.clickOnZoomWidgetArea }}
+                  fieldLabel=" "
+                  text={formatMessage(messages.ZoomControlText)}
+                />
               </FieldProvider>
               <BetaBadge className={cx('launch-controls')} />
             </div>

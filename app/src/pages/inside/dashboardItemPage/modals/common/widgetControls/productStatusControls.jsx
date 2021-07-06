@@ -73,11 +73,11 @@ const messages = defineMessages({
   },
 });
 
-const PRODUCT_BUG = 'statistics$defects$product_bug$pb001';
-const AUTOMATION_BUG = 'statistics$defects$automation_bug$ab001';
-const SYSTEM_ISSUE = 'statistics$defects$system_issue$si001';
-const NO_DEFECT = 'statistics$defects$no_defect$nd001';
-const TO_INVESTIGATE = 'statistics$defects$to_investigate$ti001';
+export const PRODUCT_BUG = 'statistics$defects$product_bug$pb001';
+export const AUTOMATION_BUG = 'statistics$defects$automation_bug$ab001';
+export const SYSTEM_ISSUE = 'statistics$defects$system_issue$si001';
+export const NO_DEFECT = 'statistics$defects$no_defect$nd001';
+export const TO_INVESTIGATE = 'statistics$defects$to_investigate$ti001';
 const STATIC_BASE_COLUMNS = [STATS_TOTAL, STATS_PASSED, STATS_FAILED, STATS_SKIPPED];
 const BASE_COLUMNS_ORDER = [
   ENTITY_START_TIME,

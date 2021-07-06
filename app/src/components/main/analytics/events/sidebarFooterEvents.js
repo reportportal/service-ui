@@ -31,6 +31,11 @@ export const SIDEBAR_EVENTS = {
     action: 'Click on Menu button Dashboards',
     label: 'Transition on Dashboards Page',
   },
+  CLICK_LAUNCHES_BTN: {
+    category: SIDEBAR,
+    action: 'Click on Menu Button Launches',
+    label: 'Transition to Launches Page',
+  },
   CLICK_FILTERS_BTN: {
     category: SIDEBAR,
     action: 'Click on Menu button Filters',
@@ -69,6 +74,11 @@ export const SIDEBAR_EVENTS = {
 };
 
 export const ADMIN_SIDEBAR_EVENTS = {
+  CLICK_BACK_TO_PROJECT_BTN: {
+    category: SIDEBAR,
+    action: 'Click on Menu Button Back to project',
+    label: 'Transition to Launches Page',
+  },
   CLICK_PROJECTS_BTN: {
     category: SIDEBAR,
     action: 'Click on Menu Btn Projects',
