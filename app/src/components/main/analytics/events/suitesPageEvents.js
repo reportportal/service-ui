@@ -236,7 +236,6 @@ export const SUITES_PAGE_EVENTS = {
   DELETE_ITEM_MODAL_EVENTS: getDeleteItemModalEvents(SUITE_PAGE),
   // EDIT_ITEMS_MODAL
   EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(SUITE_PAGE),
-  // VIEWS
   LIST_VIEW_TAB: getListViewTabEvent(SUITE_PAGE),
   LOG_VIEW_TAB: getLogViewTabEvent(SUITE_PAGE),
   HISTORY_VIEW_TAB: getHistoryTabEvent(SUITE_PAGE),

@@ -236,7 +236,6 @@ export const STEP_PAGE_EVENTS = {
     action: 'Click on Cancel in Modal "Include items in AA"',
     label: 'Close Modal "Include items in AA"',
   },
-  // TABS
   LIST_VIEW_TAB: getListViewTabEvent(STEP_PAGE),
   LOG_VIEW_TAB: getLogViewTabEvent(STEP_PAGE),
   HISTORY_VIEW_TAB: getHistoryTabEvent(STEP_PAGE),
