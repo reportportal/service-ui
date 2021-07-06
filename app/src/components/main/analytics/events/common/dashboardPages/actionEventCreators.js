@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2021 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,21 @@
  * limitations under the License.
  */
 
-import { getClearNameSelectSortingWidgetModal } from 'components/main/analytics/events/common/dashboardPages/utils';
-import { getSelectCriteriaFields } from 'components/main/analytics/events/common/dashboardPages/utils/utils';
+import {
+  getSelectCriteriaFields,
+  SORTING_ENTITY_MAP,
+} from 'components/main/analytics/events/common/dashboardPages/utils/utils';
 
 export const getSelectSortingFilterAddWidgetModal = (category) => (value, tab) => ({
   category,
   action: 'Select Parameters of Sorting in Filter on Modal Add New Widget',
-  label: `${tab} ${getClearNameSelectSortingWidgetModal(value)}`,
+  label: `${tab} ${SORTING_ENTITY_MAP[value]}`,
 });
 
 export const getSortingForNewFilterEditWidgetModal = (category) => (value, tab) => ({
   category,
   action: 'Select parameters of sorting in filter in Modal Edit Widget',
-  label: `${tab} ${getClearNameSelectSortingWidgetModal(value)}`,
+  label: `${tab} ${SORTING_ENTITY_MAP[value]}`,
 });
 
 export const getClickZoomAddWidgetArea = (category) => (value) => ({
@@ -41,16 +43,16 @@ export const getClickZoomEditWidgetArea = (category) => (value) => ({
   label: value ? 'Add check mark' : 'Remove check mark',
 });
 
-export const getSelectCriteriaNewWidget = (category) => (value) => ({
+export const getSelectCriteriaNewWidget = (category) => (values) => ({
   category,
   action: 'Select criteria for widget in Modal New Widget',
-  label: getSelectCriteriaFields(value),
+  label: getSelectCriteriaFields(values),
 });
 
-export const getSelectCriteriaEditWidget = (category) => (value) => ({
+export const getSelectCriteriaEditWidget = (category) => (values) => ({
   category,
   action: 'Select criteria for widget in Modal Edit Widget',
-  label: getSelectCriteriaFields(value),
+  label: getSelectCriteriaFields(values),
 });
 
 export const getChooseRadioBtnShareWidget = (category) => (value) => ({

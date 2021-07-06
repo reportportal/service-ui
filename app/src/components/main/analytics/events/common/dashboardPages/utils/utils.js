@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2021 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,57 +24,35 @@ import {
   STATS_SKIPPED,
   STATS_TI_TOTAL,
   STATS_TOTAL,
-} from 'common/constants/statistics';
-import {
-  AUTOMATION_BUG,
-  NO_DEFECT,
   PRODUCT_BUG,
+  AUTOMATION_BUG,
   SYSTEM_ISSUE,
+  NO_DEFECT,
   TO_INVESTIGATE,
-} from 'pages/inside/dashboardItemPage/modals/common/widgetControls/productStatusControls';
+} from 'common/constants/statistics';
 
-export const getClearNameSelectSortingWidgetModal = (name) => {
-  switch (name) {
-    case ENTITY_NAME:
-      return 'Launch Name';
-    case ENTITY_START_TIME:
-      return 'Start Time';
-    case STATS_TOTAL:
-      return 'Total';
-    case STATS_PASSED:
-      return 'Passed';
-    case STATS_FAILED:
-      return 'Failed';
-    case STATS_SKIPPED:
-      return 'Skipped';
-    case STATS_PB_TOTAL:
-      return 'Product Bug';
-    case STATS_AB_TOTAL:
-      return 'Auto Bug';
-    case STATS_SI_TOTAL:
-      return 'System Issue';
-    case STATS_TI_TOTAL:
-      return 'To Investigate';
-    case PRODUCT_BUG:
-      return 'Product Bug';
-    case AUTOMATION_BUG:
-      return 'Automation Bug';
-    case SYSTEM_ISSUE:
-      return 'System Issue';
-    case NO_DEFECT:
-      return 'No Defect';
-    case TO_INVESTIGATE:
-      return 'To Investigate';
-    default:
-      return '';
-  }
+export const SORTING_ENTITY_MAP = {
+  [ENTITY_NAME]: 'Launch Name',
+  [ENTITY_START_TIME]: 'Start Time',
+  [STATS_TOTAL]: 'Total',
+  [STATS_PASSED]: 'Passed',
+  [STATS_FAILED]: 'Failed',
+  [STATS_SKIPPED]: 'Skipped',
+  [STATS_PB_TOTAL]: 'Product Bug',
+  [STATS_AB_TOTAL]: 'Auto Bug',
+  [STATS_SI_TOTAL]: 'System Issue',
+  [STATS_TI_TOTAL]: 'To Investigate',
+  [PRODUCT_BUG]: 'Product Bug',
+  [AUTOMATION_BUG]: 'Automation Bug',
+  [SYSTEM_ISSUE]: 'System Issue',
+  [NO_DEFECT]: 'No Defect',
+  [TO_INVESTIGATE]: 'To Investigate',
 };
 
-export const getSelectCriteriaFields = (value) => {
-  const result = value
-    .map((v) => {
-      return getClearNameSelectSortingWidgetModal(v);
+export const getSelectCriteriaFields = (values) => {
+  return values
+    .map((key) => {
+      return SORTING_ENTITY_MAP[`${key}`];
     })
     .join('#');
-  return result;
 };

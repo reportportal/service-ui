@@ -24,7 +24,7 @@ export const CheckboxControl = ({ fieldLabel, text, eventInfo, onChange, ...rest
   const { trackEvent } = useTracking();
   const onChangeCheckbox = (e) => {
     if (eventInfo.onChangeCheckboxEvent) {
-      trackEvent(eventInfo.onChangeCheckboxEvent(!rest.value));
+      trackEvent(eventInfo.onChangeCheckboxEvent(e.target.checked));
     }
     onChange(e);
   };

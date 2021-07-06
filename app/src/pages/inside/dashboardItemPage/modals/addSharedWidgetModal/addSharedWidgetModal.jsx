@@ -83,11 +83,10 @@ export class AddSharedWidgetModal extends Component {
     const {
       tracking,
       data: { eventsInfo = {} },
-      intl: { formatMessage },
     } = this.props;
 
     tracking.trackEvent(
-      eventsInfo.chooseRadioBtn(formatMessage(widgetTypesMessages[selectedWidget.widgetType])),
+      eventsInfo.chooseRadioBtn(widgetTypesMessages[selectedWidget.widgetType].defaultMessage),
     );
     return this.setState({ selectedWidget });
   };
