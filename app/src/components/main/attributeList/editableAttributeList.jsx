@@ -35,6 +35,7 @@ export class EditableAttributeList extends Component {
     customClass: PropTypes.string,
     showButton: PropTypes.bool,
     editable: PropTypes.bool,
+    eventsInfo: PropTypes.object,
   };
 
   static defaultProps = {
@@ -48,6 +49,7 @@ export class EditableAttributeList extends Component {
     customClass: '',
     showButton: true,
     editable: true,
+    eventsInfo: {},
   };
 
   handleAddNew = () => {
@@ -70,6 +72,7 @@ export class EditableAttributeList extends Component {
       customClass,
       showButton,
       editable,
+      eventsInfo,
       ...rest
     } = this.props;
     return (
@@ -86,6 +89,7 @@ export class EditableAttributeList extends Component {
         customClass={customClass}
         showButton={showButton}
         editable={editable}
+        eventsInfo={eventsInfo}
         {...rest}
       />
     );

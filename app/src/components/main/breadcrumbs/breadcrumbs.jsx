@@ -70,7 +70,8 @@ export class Breadcrumbs extends Component {
     return descriptors[1] && descriptors[1].lost;
   };
   toggleExpand = () => {
-    this.props.togglerEventInfo && this.props.tracking.trackEvent(this.props.togglerEventInfo);
+    this.props.togglerEventInfo &&
+      this.props.tracking.trackEvent(this.props.togglerEventInfo(this.state.expanded));
     this.setState({ expanded: !this.state.expanded });
   };
   renderSeparator = (item, index) => {

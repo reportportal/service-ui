@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
+import track from 'react-tracking';
 import { showModalAction } from 'controllers/modal';
 import {
   updateFilterAction,
@@ -37,6 +38,7 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import { levelSelector } from 'controllers/testItem';
 import { EntitiesGroup } from 'components/filterEntities/entitiesGroup';
 import AddFilterIcon from 'common/img/add-filter-inline.svg';
+import { getCriteriaToggler } from 'components/main/analytics/events';
 import { FilterList } from './filterList';
 import { FiltersActionBar } from './filtersActionBar';
 import { ExpandToggler } from './expandToggler';
@@ -46,6 +48,7 @@ import styles from './launchFiltersToolbar.scss';
 
 const cx = classNames.bind(styles);
 
+@track()
 @connect(
   (state) => ({
     unsavedFilterIds: unsavedFilterIdsSelector(state),
@@ -94,6 +97,10 @@ export class LaunchFiltersToolbar extends Component {
     userInfo: PropTypes.object.isRequired,
     projectRole: PropTypes.string.isRequired,
     intl: PropTypes.object.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -176,7 +183,10 @@ export class LaunchFiltersToolbar extends Component {
     } = this.props;
     return !conditions.some((filter) => !isEmptyValue(filter.value));
   };
-  toggleExpand = () => this.setState({ expanded: !this.state.expanded });
+  toggleExpand = () => {
+    this.props.tracking.trackEvent(getCriteriaToggler(this.state.expanded));
+    return this.setState({ expanded: !this.state.expanded });
+  };
   isNewFilter = () => {
     const { activeFilterId } = this.props;
     return activeFilterId < 0;

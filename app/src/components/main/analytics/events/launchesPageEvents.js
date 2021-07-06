@@ -15,6 +15,10 @@
  */
 
 import { getEditItemsModalEvents } from 'components/main/analytics/events/common/testItemPages/modalEventsCreators';
+import {
+  getRefineFiltersPanelEvents,
+  getRefreshPageActionEvent,
+} from 'components/main/analytics/events/common/testItemPages/actionEventsCreators';
 
 export const LAUNCHES_PAGE = 'launches';
 const LAUNCHES_MODAL = 'Modal launches';
@@ -39,6 +43,11 @@ export const getRunAnalysisAnalysisModalEvent = (analyzeItemsMode) =>
   getAnalyzeItemEvent('Analyze Launch', analyzeItemsMode);
 export const getRunAnalysisPatternAnalysisModalEvent = (analyzeItemsMode) =>
   getAnalyzeItemEvent('Pattern Analyze Launch', analyzeItemsMode);
+export const getCriteriaToggler = (state) => ({
+  category: LAUNCHES_PAGE,
+  action: 'Click on icon Show/Hide Criteria',
+  label: state ? 'Hide' : 'Show',
+});
 
 export const LAUNCHES_PAGE_EVENTS = {
   CLICK_ITEM_NAME: {
@@ -275,6 +284,10 @@ export const LAUNCHES_PAGE_EVENTS = {
     category: LAUNCHES_PAGE,
     action: 'Click on Btn Add New Widget on Dashboard',
     label: 'Arise Modal Add New Widget',
+  },
+  REFRESH_BTN: getRefreshPageActionEvent(LAUNCHES_PAGE),
+  REFINE_FILTERS_PANEL_EVENTS: {
+    commonEvents: getRefineFiltersPanelEvents(LAUNCHES_PAGE),
   },
 };
 

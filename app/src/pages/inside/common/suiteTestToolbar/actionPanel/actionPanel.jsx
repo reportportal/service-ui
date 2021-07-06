@@ -38,6 +38,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import RefreshIcon from 'common/img/refresh-inline.svg';
 import { createStepActionDescriptors } from 'pages/inside/common/utils';
 import { ParentInfo } from 'pages/inside/common/infoLine/parentInfo';
+import { pageEventsMap } from 'components/main/analytics';
 import styles from './actionPanel.scss';
 
 const cx = classNames.bind(styles);
@@ -124,11 +125,7 @@ export class ActionPanel extends Component {
   };
 
   onClickRefresh = () => {
-    this.props.tracking.trackEvent(
-      this.props.level === LEVEL_STEP
-        ? STEP_PAGE_EVENTS.REFRESH_BTN
-        : SUITES_PAGE_EVENTS.REFRESH_BTN,
-    );
+    this.props.tracking.trackEvent(pageEventsMap[this.props.level].REFRESH_BTN);
     this.props.onRefresh();
   };
 
@@ -226,7 +223,7 @@ export class ActionPanel extends Component {
       <div className={cx('action-panel', { 'right-buttons-only': !showBreadcrumbs && !hasErrors })}>
         {showBreadcrumbs && (
           <Breadcrumbs
-            togglerEventInfo={level !== LEVEL_STEP ? SUITES_PAGE_EVENTS.PLUS_MINUS_BREADCRUMB : {}}
+            togglerEventInfo={pageEventsMap[level].plusMinusBreadcrumb}
             breadcrumbEventInfo={
               level !== LEVEL_STEP ? SUITES_PAGE_EVENTS.ITEM_NAME_BREADCRUMB_CLICK : {}
             }
