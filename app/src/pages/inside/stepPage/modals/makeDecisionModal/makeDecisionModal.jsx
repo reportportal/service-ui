@@ -189,7 +189,7 @@ const MakeDecision = ({ data }) => {
     const issues = prepareDataToSend(options);
     const url = URLS.testItems(activeProject);
 
-    if (modalState.decisionType === MACHINE_LEARNING_SUGGESTIONS) {
+    if (modalState.suggestedItems.length > 0) {
       sendSuggestResponse();
     }
 
