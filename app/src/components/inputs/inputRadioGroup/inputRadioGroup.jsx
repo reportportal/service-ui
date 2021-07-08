@@ -64,7 +64,7 @@ export class InputRadioGroup extends PureComponent {
             ownValue={ownValue}
             onChange={onChange}
             mode={mode}
-            title={tooltip}
+            title={tooltip || label}
             {...rest}
           >
             {label}

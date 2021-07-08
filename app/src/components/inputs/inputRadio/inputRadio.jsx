@@ -62,10 +62,7 @@ export const InputRadio = ({
       })}
     />
     {children && (
-      <span
-        className={cx('children-container', { [`mode-${mode}`]: mode })}
-        title={title || children}
-      >
+      <span className={cx('children-container', { [`mode-${mode}`]: mode })} title={title}>
         {children}
       </span>
     )}
@@ -96,6 +93,6 @@ InputRadio.defaultProps = {
   onChange: () => {},
   onFocus: () => {},
   onBlur: () => {},
-  title: '',
+  title: undefined,
   mode: 'default',
 };
