@@ -19,9 +19,11 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
+import track from 'react-tracking';
 import Parser from 'html-react-parser';
 import { showModalAction } from 'controllers/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { PLUGINS_PAGE_EVENTS, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import InfoIcon from 'common/img/info-inline.svg';
 import CheckIcon from 'common/img/check-inline.svg';
 import TrashIcon from 'common/img/trashcan-inline.svg';
@@ -60,6 +62,7 @@ const messages = defineMessages({
 @connect(null, {
   showModalAction,
 })
+@track()
 @injectIntl
 export class ConnectionSection extends Component {
   static propTypes = {
@@ -70,18 +73,35 @@ export class ConnectionSection extends Component {
     blocked: PropTypes.bool,
     failedConnectionMessage: PropTypes.string,
     editAuthConfig: PropTypes.object,
+    integrationType: PropTypes.string,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
+    isGlobal: PropTypes.bool,
   };
 
   static defaultProps = {
     blocked: false,
     failedConnectionMessage: null,
     editAuthConfig: null,
+    integrationType: null,
+    isGlobal: false,
   };
 
   removeIntegrationHandler = () => {
     const {
       intl: { formatMessage },
+      tracking,
+      integrationType,
+      isGlobal,
     } = this.props;
+
+    tracking.trackEvent(
+      isGlobal
+        ? PLUGINS_PAGE_EVENTS.pluginRemoveIntegrationClick(integrationType)
+        : SETTINGS_PAGE_EVENTS.pluginRemoveIntegrationClick(integrationType),
+    );
 
     this.props.showModalAction({
       id: 'confirmationModal',
@@ -97,8 +117,12 @@ export class ConnectionSection extends Component {
   };
 
   onEditAuth = () => {
-    const { editAuthConfig, testConnection } = this.props;
-
+    const { editAuthConfig, testConnection, tracking, integrationType, isGlobal } = this.props;
+    tracking.trackEvent(
+      isGlobal
+        ? PLUGINS_PAGE_EVENTS.pluginEditAuthorizationClick(integrationType)
+        : SETTINGS_PAGE_EVENTS.pluginEditAuthorizationClick(integrationType),
+    );
     editAuthConfig.onClick(testConnection);
   };
 

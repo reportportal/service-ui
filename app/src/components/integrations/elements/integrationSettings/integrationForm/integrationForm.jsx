@@ -18,11 +18,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
 import { reduxForm } from 'redux-form';
+import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { BigButton } from 'components/buttons/bigButton';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { isIntegrationSupportsMultipleInstances } from 'components/integrations/utils';
+import { PLUGINS_PAGE_EVENTS, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './integrationForm.scss';
 
 const cx = classNames.bind(styles);
@@ -43,6 +45,7 @@ const messages = defineMessages({
 });
 
 @reduxForm()
+@track()
 @injectIntl
 export class IntegrationForm extends Component {
   static propTypes = {
@@ -59,6 +62,10 @@ export class IntegrationForm extends Component {
     isEmptyConfiguration: PropTypes.bool.isRequired,
     pluginName: PropTypes.string.isRequired,
     isGlobal: PropTypes.bool,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -78,6 +85,11 @@ export class IntegrationForm extends Component {
     if (this.props.dirty && !this.state.disabled) {
       this.props.reset();
     }
+    this.props.tracking.trackEvent(
+      this.props.isGlobal
+        ? PLUGINS_PAGE_EVENTS.pluginConfigureClick(this.props.data.integrationType.name)
+        : SETTINGS_PAGE_EVENTS.pluginConfigureClick(this.props.data.integrationType.name),
+    );
     this.setState({ disabled: !this.state.disabled });
   };
 
@@ -87,6 +99,11 @@ export class IntegrationForm extends Component {
 
   submitIntegration = (formData) => {
     this.props.onSubmit(formData, this.submitIntegrationSuccess, this.state.metaData);
+    this.props.tracking.trackEvent(
+      this.props.isGlobal
+        ? PLUGINS_PAGE_EVENTS.pluginConfigureClickSubmit(this.props.data.integrationType.name)
+        : SETTINGS_PAGE_EVENTS.pluginConfigureClickSubmit(this.props.data.integrationType.name),
+    );
   };
 
   updateMetaData = (metaData) => {

@@ -310,6 +310,7 @@ export class InstancesSection extends Component {
               )}
               items={projectIntegrations}
               onItemClick={onItemClick}
+              isGlobal={isGlobal}
             />
             {this.multiple && !disabled && (
               <div className={cx('add-integration-button')}>
@@ -330,6 +331,7 @@ export class InstancesSection extends Component {
           )}
           items={globalIntegrations}
           onItemClick={onItemClick}
+          isGlobal={isGlobal}
           {...(isGlobal
             ? {}
             : {
