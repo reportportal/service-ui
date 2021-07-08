@@ -72,6 +72,7 @@ export class AnalyticsWrapper extends Component {
       dimension3: userId,
       dimension4: Date.now(),
     });
+    ReactGA.ga()('require', 'ec');
   }
 
   render() {

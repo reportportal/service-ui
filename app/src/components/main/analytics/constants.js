@@ -14,22 +14,11 @@
  * limitations under the License.
  */
 
-import ReactGA from 'react-ga';
+import { LEVEL_STEP, LEVEL_SUITE, LEVEL_TEST } from 'common/constants/launchLevels';
+import { STEP_PAGE_EVENTS, SUITES_PAGE_EVENTS, TESTS_PAGE_EVENTS } from './events';
 
-export const provideEcGA = ({
-  name,
-  data,
-  action,
-  command = 'send',
-  hitType = 'event',
-  eventName = 'ecommerce',
-  additionalData,
-}) => {
-  const ga = ReactGA.ga();
-
-  ga(`ec:${name}`, data);
-  if (additionalData) {
-    ga('ec:setAction', action, additionalData);
-  }
-  ga(command, hitType, eventName, action);
+export const pageEventsMap = {
+  [LEVEL_STEP]: STEP_PAGE_EVENTS,
+  [LEVEL_TEST]: TESTS_PAGE_EVENTS,
+  [LEVEL_SUITE]: SUITES_PAGE_EVENTS,
 };
