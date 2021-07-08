@@ -35,7 +35,8 @@ import {
   ENTITY_ATTRIBUTE_VALUES,
 } from 'components/filterEntities/constants';
 import { NoItemMessage } from 'components/main/noItemMessage';
-import { STEP_PAGE_EVENTS, getChangeItemStatusEvent } from 'components/main/analytics/events';
+import { getChangeItemStatusEvent } from 'components/main/analytics/events';
+import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import { StatusDropdown } from '../../common/statusDropdown/statusDropdown';
 import { PredefinedFilterSwitcher } from './predefinedFilterSwitcher';
 import { DefectType } from './defectType';
@@ -291,7 +292,11 @@ export class StepGrid extends Component {
         component: DefectTypeColumn,
         customProps: {
           onEdit: (data) => {
-            tracking.trackEvent(STEP_PAGE_EVENTS.EDIT_DEFECT_TYPE_ICON);
+            tracking.trackEvent(
+              events.MAKE_DECISION_MODAL_EVENTS.openModal(
+                data.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
+              ),
+            );
             onEditDefect(data);
           },
           onUnlinkSingleTicket,

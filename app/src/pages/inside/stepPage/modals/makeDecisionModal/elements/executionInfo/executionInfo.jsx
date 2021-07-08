@@ -32,6 +32,7 @@ export const ExecutionInfo = ({
   preselected,
   isNarrowView,
   hideLabels,
+  onClickLinkEvent,
 }) => {
   const defectTypes = useSelector(defectTypesSelector);
 
@@ -47,6 +48,7 @@ export const ExecutionInfo = ({
         preselected={preselected}
         isNarrowView={isNarrowView}
         hideLabels={hideLabels}
+        onClickLinkEvent={onClickLinkEvent}
       />
     </div>
   );
@@ -60,6 +62,7 @@ ExecutionInfo.propTypes = {
   preselected: PropTypes.bool,
   isNarrowView: PropTypes.bool,
   hideLabels: PropTypes.bool,
+  onClickLinkEvent: PropTypes.func,
 };
 
 ExecutionInfo.defaultProps = {
@@ -71,4 +74,5 @@ ExecutionInfo.defaultProps = {
   preselected: false,
   isNarrowView: false,
   hideLabels: false,
+  onClickLinkEvent: () => {},
 };

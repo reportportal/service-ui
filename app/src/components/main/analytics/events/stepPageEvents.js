@@ -38,6 +38,7 @@ import {
   getLinkIssueModalEvents,
   getDeleteItemModalEvents,
   getEditItemsModalEvents,
+  getMakeDecisionModalEvents,
 } from './common/testItemPages/modalEventsCreators';
 
 export const STEP_PAGE = 'step';
@@ -239,4 +240,5 @@ export const STEP_PAGE_EVENTS = {
   LIST_VIEW_TAB: getListViewTabEvent(STEP_PAGE),
   LOG_VIEW_TAB: getLogViewTabEvent(STEP_PAGE),
   HISTORY_VIEW_TAB: getHistoryTabEvent(STEP_PAGE),
+  MAKE_DECISION_MODAL_EVENTS: getMakeDecisionModalEvents(STEP_PAGE),
 };

@@ -20,6 +20,7 @@ import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import { ItemHeader } from 'pages/inside/stepPage/modals/makeDecisionModal/elements/itemHeader';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import {
   ERROR_LOGS_SIZE,
   HIGH,
@@ -29,6 +30,7 @@ import {
 } from 'pages/inside/stepPage/modals/makeDecisionModal/constants';
 import { StackTraceMessageBlock } from 'pages/inside/common/stackTraceMessageBlock';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import styles from './machineLearningSuggestions.scss';
 import { messages } from '../messages';
 
@@ -40,12 +42,15 @@ export const MachineLearningSuggestions = ({
   itemData,
   collapseTabsExceptCurr,
   loadingMLSuggest,
+  eventsInfo,
 }) => {
+  const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const [showErrorLogs, setShowErrorLogs] = useState(false);
 
-  const { formatMessage } = useIntl();
-
   const { suggestedItems } = modalState;
+  const defectFromTIGroup =
+    itemData.issue && itemData.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
 
   const getInfoStatus = (score) => {
     if (score === SAME) {
@@ -74,6 +79,19 @@ export const MachineLearningSuggestions = ({
     }
   };
 
+  const onChange = (value) => {
+    setShowErrorLogs(value);
+    const { toggleMLSwitcher } = eventsInfo;
+    trackEvent(toggleMLSwitcher(defectFromTIGroup, value));
+  };
+
+  const onClickExternalLinkEvent = () => {
+    const { onClickExternalLink } = eventsInfo;
+    trackEvent(
+      onClickExternalLink(defectFromTIGroup, messages[MACHINE_LEARNING_SUGGESTIONS].defaultMessage),
+    );
+  };
+
   return loadingMLSuggest ? (
     <SpinningPreloader />
   ) : (
@@ -85,7 +103,7 @@ export const MachineLearningSuggestions = ({
         </div>
         <InputSwitcher
           value={showErrorLogs}
-          onChange={setShowErrorLogs}
+          onChange={onChange}
           className={cx('show-error-logs')}
           childrenFirst
           childrenClassName={cx('input-switcher-children')}
@@ -115,11 +133,20 @@ export const MachineLearningSuggestions = ({
                   item={testItemResource}
                   selectItem={selectMachineLearningSuggestionItem}
                   isSelected={modalState.source.id === testItemResource.id}
+                  onClickLinkEvent={onClickExternalLinkEvent}
                 />
                 {showErrorLogs &&
                   logs.slice(0, ERROR_LOGS_SIZE).map((log) => (
                     <div key={log.id} className={cx('error-log')}>
-                      <StackTraceMessageBlock level={log.level} designMode="dark" maxHeight={70}>
+                      <StackTraceMessageBlock
+                        level={log.level}
+                        designMode="dark"
+                        maxHeight={70}
+                        eventsInfo={{
+                          onOpenStackTraceEvent: () =>
+                            eventsInfo.onOpenStackTrace(defectFromTIGroup),
+                        }}
+                      >
                         <div>{log.message}</div>
                       </StackTraceMessageBlock>
                     </div>
@@ -138,9 +165,11 @@ MachineLearningSuggestions.propTypes = {
   itemData: PropTypes.object,
   collapseTabsExceptCurr: PropTypes.func.isRequired,
   loadingMLSuggest: PropTypes.bool,
+  eventsInfo: PropTypes.object,
 };
 MachineLearningSuggestions.defaultProps = {
   items: [],
   itemData: {},
   loadingMLSuggest: false,
+  eventsInfo: {},
 };

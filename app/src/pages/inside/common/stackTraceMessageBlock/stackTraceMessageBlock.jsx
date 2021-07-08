@@ -17,6 +17,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import track from 'react-tracking';
 import { ERROR } from 'common/constants/logLevels';
 import styles from './stackTraceMessageBlock.scss';
 
@@ -25,12 +26,18 @@ const cx = classNames.bind(styles);
 const MAX_ROW_HEIGHT = 65;
 const TOGGLER_HEIGHT = 22;
 
+@track()
 export class StackTraceMessageBlock extends Component {
   static propTypes = {
     children: PropTypes.any,
     maxHeight: PropTypes.number,
     level: PropTypes.string,
     designMode: PropTypes.string,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
+    eventsInfo: PropTypes.object,
   };
 
   static defaultProps = {
@@ -38,6 +45,7 @@ export class StackTraceMessageBlock extends Component {
     maxHeight: MAX_ROW_HEIGHT,
     level: ERROR,
     designMode: '',
+    eventsInfo: {},
   };
 
   constructor(props) {
@@ -83,6 +91,11 @@ export class StackTraceMessageBlock extends Component {
   toggleAccordion = () => {
     if (!this.overflowCell) {
       return;
+    }
+
+    if (!this.state.expanded) {
+      const { onOpenStackTraceEvent } = this.props.eventsInfo;
+      onOpenStackTraceEvent && this.props.tracking.trackEvent(onOpenStackTraceEvent());
     }
 
     this.setState({

@@ -50,6 +50,7 @@ import {
   IgnoredInAALabel,
   PALabel,
 } from 'pages/inside/stepPage/stepGrid/defectType/defectType';
+import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import styles from './defectDetails.scss';
 
 const cx = classNames.bind(styles);
@@ -241,12 +242,17 @@ export class DefectDetails extends Component {
         changeSearchMode: LOG_PAGE_EVENTS.CHANGE_SEARCH_MODE_EDIT_DEFECT_MODAL,
         selectAllSimilarItems: LOG_PAGE_EVENTS.SELECT_ALL_SIMILAR_ITEMS_EDIT_DEFECT_MODAL,
         selectSpecificSimilarItem: LOG_PAGE_EVENTS.SELECT_SPECIFIC_SIMILAR_ITEM_EDIT_DEFECT_MODAL,
-        editDefectsEvents: LOG_PAGE_EVENTS.EDIT_DEFECT_MODAL_EVENTS,
+        editDefectsEvents: LOG_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS,
         unlinkIssueEvents: UNLINK_ISSUE_EVENTS_INFO,
         postIssueEvents: POST_ISSUE_EVENTS_INFO,
         linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
       },
     });
+    this.props.tracking.trackEvent(
+      LOG_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS.openModal(
+        logItem.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
+      ),
+    );
   };
 
   toggleExpanded = () => {
