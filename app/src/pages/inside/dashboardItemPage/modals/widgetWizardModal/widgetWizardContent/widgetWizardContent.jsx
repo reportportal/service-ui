@@ -97,10 +97,13 @@ export class WidgetWizardContent extends Component {
   }
 
   onClickNextStep = () => {
-    this.props.tracking.trackEvent(this.props.eventsInfo.nextStep);
-    this.props.submitWidgetWizardForm();
+    const { tracking, eventsInfo, formValues, submitWidgetWizardForm } = this.props;
+    tracking.trackEvent(eventsInfo.nextStep);
+    if (formValues.contentParameters) {
+      tracking.trackEvent(eventsInfo.selectCriteria(formValues.contentParameters.contentFields));
+    }
+    submitWidgetWizardForm();
     if (this.state.step === 0) {
-      const { formValues } = this.props;
       provideEcGA({
         name: 'addProduct',
         data: {

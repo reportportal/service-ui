@@ -48,7 +48,7 @@ export class AnalyticsWrapper extends Component {
     instanceId: PropTypes.string.isRequired,
     buildVersion: PropTypes.string.isRequired,
     children: PropTypes.node,
-    userId: PropTypes.string.isRequired,
+    userId: PropTypes.number.isRequired,
   };
 
   static defaultProps = {

@@ -48,8 +48,12 @@ export class FilterEdit extends Component {
   };
 
   onFilterSave = () => {
-    this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.SUBMIT_EDIT_FILTER_EDIT_WIDGET_MODAL);
-    this.props.onSave(this.props.filter);
+    const { eventsInfo, filter, tracking, onSave } = this.props;
+    tracking.trackEvent(eventsInfo.addNewFilter);
+    tracking.trackEvent(
+      eventsInfo.sortingSelectParameters(filter.orders[0].sortingColumn, 'Tab edit filter'),
+    );
+    onSave(this.props.filter);
   };
 
   onFilterCancel = () => {

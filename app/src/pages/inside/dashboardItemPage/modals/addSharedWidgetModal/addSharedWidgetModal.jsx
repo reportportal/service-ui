@@ -24,6 +24,7 @@ import { activeProjectSelector } from 'controllers/user';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { showScreenLockAction } from 'controllers/screenLock';
+import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/common/widgets';
 import { getDefaultWidgetConfig } from '../common/utils';
 import { SharedWidgetInfoSection } from './sharedWidgetInfoSection';
 import { SharedWidgetsListSection } from './sharedWidgetsListSection';
@@ -84,7 +85,9 @@ export class AddSharedWidgetModal extends Component {
       data: { eventsInfo = {} },
     } = this.props;
 
-    tracking.trackEvent(eventsInfo.chooseRadioBtn);
+    tracking.trackEvent(
+      eventsInfo.chooseRadioBtn(widgetTypesMessages[selectedWidget.widgetType].defaultMessage),
+    );
     return this.setState({ selectedWidget });
   };
 

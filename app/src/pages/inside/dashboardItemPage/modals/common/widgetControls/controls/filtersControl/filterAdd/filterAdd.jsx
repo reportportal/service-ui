@@ -124,8 +124,12 @@ export class FilterAdd extends Component {
   };
 
   handlerFilterSubmit = () => {
-    this.props.tracking.trackEvent(this.props.eventsInfo.addNewFilter);
-    this.props.onSave();
+    const { eventsInfo, filter, tracking, onSave } = this.props;
+    tracking.trackEvent(eventsInfo.addNewFilter);
+    tracking.trackEvent(
+      eventsInfo.sortingSelectParameters(filter.orders[0].sortingColumn, 'Tab add new filter'),
+    );
+    onSave();
   };
 
   render() {

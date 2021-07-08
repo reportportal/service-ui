@@ -15,6 +15,7 @@
  */
 
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import isEqual from 'fast-deep-equal';
@@ -64,6 +65,7 @@ const messages = defineMessages({
     destroyWizardForm: () => destroy(WIDGET_WIZARD_FORM),
   },
 )
+@track()
 @injectIntl
 export class EditWidgetModal extends Component {
   static propTypes = {
@@ -81,6 +83,10 @@ export class EditWidgetModal extends Component {
       eventsInfo: PropTypes.object,
     }),
     projectId: PropTypes.string,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -158,6 +164,12 @@ export class EditWidgetModal extends Component {
         this.props.hideScreenLockAction();
         this.props.showNotification({ message: err.message, type: NOTIFICATION_TYPES.ERROR });
       });
+
+    if (widgetSettings.contentParameters) {
+      this.props.tracking.trackEvent(
+        this.props.data.eventsInfo.selectCriteria(widgetSettings.contentParameters.contentFields),
+      );
+    }
   };
 
   getCloseConfirmationConfig = () => {

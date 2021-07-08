@@ -85,7 +85,7 @@ export class AddEditFilter extends Component {
   };
 
   handleOrdersChange = (newSortingColumn) => {
-    const { filter, onChange, tracking, eventsInfo } = this.props;
+    const { filter, onChange } = this.props;
     const { orders } = filter;
 
     const currentOrder = filter.orders.length ? filter.orders[0] : {};
@@ -101,8 +101,6 @@ export class AddEditFilter extends Component {
     if (numberColumnIndex >= 0) {
       newOrders.push(orders[numberColumnIndex]);
     }
-
-    tracking.trackEvent(eventsInfo.sortingSelectParameters);
     onChange({
       ...filter,
       orders: newOrders,

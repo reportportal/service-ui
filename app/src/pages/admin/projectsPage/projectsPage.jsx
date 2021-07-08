@@ -97,6 +97,9 @@ export class ProjectsPage extends Component {
   };
 
   onHeaderButtonClick = (section) => () => {
+    this.props.tracking.trackEvent(
+      ADMIN_PROJECTS_PAGE_EVENTS[`CLICK_${section.toUpperCase()}_BTN`],
+    );
     this.props.navigateToSection(this.props.projectId, section);
   };
 
