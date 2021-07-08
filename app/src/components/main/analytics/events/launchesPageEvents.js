@@ -16,6 +16,7 @@
 
 import { getEditItemsModalEvents } from 'components/main/analytics/events/common/testItemPages/modalEventsCreators';
 import {
+  getClickOnPlusMinusEvents,
   getRefineFiltersPanelEvents,
   getRefreshPageActionEvent,
 } from 'components/main/analytics/events/common/testItemPages/actionEventsCreators';
@@ -50,6 +51,7 @@ export const getCriteriaToggler = (state) => ({
 });
 
 export const LAUNCHES_PAGE_EVENTS = {
+  plusMinusBreadcrumb: getClickOnPlusMinusEvents(LAUNCHES_PAGE),
   CLICK_ITEM_NAME: {
     category: LAUNCHES_PAGE,
     action: 'Click on Item Name',

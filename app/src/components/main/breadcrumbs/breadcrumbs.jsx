@@ -34,7 +34,7 @@ export class Breadcrumbs extends Component {
   static propTypes = {
     descriptors: PropTypes.arrayOf(breadcrumbDescriptorShape),
     onRestorePath: PropTypes.func,
-    togglerEventInfo: PropTypes.object,
+    togglerEventInfo: PropTypes.func,
     breadcrumbEventInfo: PropTypes.object,
     allEventClick: PropTypes.object,
     tracking: PropTypes.shape({
@@ -45,7 +45,7 @@ export class Breadcrumbs extends Component {
   static defaultProps = {
     descriptors: [],
     onRestorePath: () => {},
-    togglerEventInfo: {},
+    togglerEventInfo: () => {},
     breadcrumbEventInfo: {},
     allEventClick: {},
   };
@@ -114,7 +114,7 @@ export class Breadcrumbs extends Component {
               <Breadcrumb
                 descriptor={descriptor}
                 expanded={this.state.expanded}
-                onClick={(idx) => this.onClickBreadcrumbItem(idx)}
+                onClick={() => this.onClickBreadcrumbItem(i)}
               />
               {this.renderCloseListView(descriptor, i)}
             </Fragment>

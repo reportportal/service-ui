@@ -28,7 +28,6 @@ import {
   enabledBtsPluginsSelector,
 } from 'controllers/plugins';
 import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
-import { SUITES_PAGE_EVENTS } from 'components/main/analytics/events/suitesPageEvents';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
@@ -224,10 +223,8 @@ export class ActionPanel extends Component {
         {showBreadcrumbs && (
           <Breadcrumbs
             togglerEventInfo={pageEventsMap[level].plusMinusBreadcrumb}
-            breadcrumbEventInfo={
-              level !== LEVEL_STEP ? SUITES_PAGE_EVENTS.ITEM_NAME_BREADCRUMB_CLICK : {}
-            }
-            allEventClick={level !== LEVEL_STEP ? SUITES_PAGE_EVENTS.ALL_LABEL_BREADCRUMB : {}}
+            breadcrumbEventInfo={pageEventsMap[level].ITEM_NAME_BREADCRUMB_CLICK}
+            allEventClick={pageEventsMap[level].ALL_LABEL_BREADCRUMB}
             descriptors={breadcrumbs}
             onRestorePath={restorePath}
           />
