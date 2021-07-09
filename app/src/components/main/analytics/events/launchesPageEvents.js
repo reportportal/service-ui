@@ -19,6 +19,10 @@ import {
   getRefineFiltersPanelEvents,
   getRefreshPageActionEvent,
 } from 'components/main/analytics/events/common/testItemPages/actionEventsCreators';
+import {
+  getSelectCriteriaNewWidget,
+  getSelectSortingFilterAddWidgetModal,
+} from 'components/main/analytics/events/common/widgetPages/actionEventCreators';
 
 export const LAUNCHES_PAGE = 'launches';
 const LAUNCHES_MODAL = 'Modal launches';
@@ -429,4 +433,6 @@ export const LAUNCHES_MODAL_EVENTS = {
     action: 'Click on Btn Add in Modal Add New Widget',
     label: 'Submit changes in filter in Modal Add New Widget',
   },
+  SELECT_CRITERIA_ADD_NEW_WIDGET_MODAL: getSelectCriteriaNewWidget(LAUNCHES_MODAL),
+  SELECT_SORTING_FILTER_ADD_WIDGET_MODAL: getSelectSortingFilterAddWidgetModal(LAUNCHES_PAGE),
 };

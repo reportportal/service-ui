@@ -22,7 +22,7 @@ import {
   getSelectCriteriaNewWidget,
   getSelectSortingFilterAddWidgetModal,
   getSortingForNewFilterEditWidgetModal,
-} from 'components/main/analytics/events/common/dashboardPages/actionEventCreators';
+} from 'components/main/analytics/events/common/widgetPages/actionEventCreators';
 
 export const DASHBOARD_PAGE = 'dashboards';
 export const DASHBOARD_PAGE_EVENTS = {
