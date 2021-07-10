@@ -161,6 +161,16 @@ export const STEP_PAGE_EVENTS = {
     label: 'Arise Modal "Unlink issue"',
   },
   plusMinusBreadcrumb: getClickOnPlusMinusEvents(STEP_PAGE),
+  ALL_LABEL_BREADCRUMB: {
+    category: STEP_PAGE,
+    action: 'Click on Bread Crumb All',
+    label: 'Transition to Launches Page',
+  },
+  ITEM_NAME_BREADCRUMB_CLICK: {
+    category: STEP_PAGE,
+    action: 'Click on Bread Crumb Item name',
+    label: 'Transition to Item',
+  },
   REFRESH_BTN: getRefreshPageActionEvent(STEP_PAGE),
   PROCEED_VALID_ITEMS: getProceedValidItemsEvent(STEP_PAGE),
   EDIT_DEFECT_ACTION: getEditDefectActionEvent(STEP_PAGE),

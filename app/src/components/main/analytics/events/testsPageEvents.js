@@ -27,6 +27,16 @@ export const TEST_PAGE = 'test';
 export const TESTS_PAGE_EVENTS = {
   REFRESH_BTN: getRefreshPageActionEvent(TEST_PAGE),
   plusMinusBreadcrumb: getClickOnPlusMinusEvents(TEST_PAGE),
+  ALL_LABEL_BREADCRUMB: {
+    category: TEST_PAGE,
+    action: 'Click on Bread Crumb All',
+    label: 'Transition to Launches Page',
+  },
+  ITEM_NAME_BREADCRUMB_CLICK: {
+    category: TEST_PAGE,
+    action: 'Click on Bread Crumb Item name',
+    label: 'Transition to Item',
+  },
   LIST_VIEW_TAB: getListViewTabEvent(TEST_PAGE),
   LOG_VIEW_TAB: getLogViewTabEvent(TEST_PAGE),
   HISTORY_VIEW_TAB: getHistoryTabEvent(TEST_PAGE),
