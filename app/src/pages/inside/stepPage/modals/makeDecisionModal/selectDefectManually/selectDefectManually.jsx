@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
+import { useTracking } from 'react-tracking';
 import { actionMessages } from 'common/constants/localization/eventsLocalization';
 import { LINK_ISSUE, POST_ISSUE, UNLINK_ISSUE } from 'common/constants/actionTypes';
 import PlusIcon from 'common/img/plus-button-inline.svg';
@@ -35,6 +36,7 @@ import { getIssueTitle } from 'pages/inside/common/utils';
 import { DefectTypeSelector } from 'pages/inside/common/defectTypeSelector';
 import { debugModeSelector } from 'controllers/launch';
 import { SCREEN_MD_MAX, SCREEN_SM_MAX, SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
+import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import { SELECT_DEFECT_MANUALLY } from '../constants';
 import { messages } from '../messages';
 import { ActionButtonsBar } from './actionButtonsBar';
@@ -50,14 +52,18 @@ export const SelectDefectManually = ({
   collapseTabsExceptCurr,
   windowSize,
   collapsedRightSection,
+  eventsInfo,
 }) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const btsIntegrations = useSelector(availableBtsIntegrationsSelector);
   const isBtsPluginsExist = useSelector(isBtsPluginsExistSelector);
   const enabledBtsPlugins = useSelector(enabledBtsPluginsSelector);
   const debugMode = useSelector(debugModeSelector);
   const isPostIssueUnavailable = !isPostIssueActionAvailable(btsIntegrations);
   const [commentEditor, setCommentEditor] = useState(null);
+  const defectFromTIGroup =
+    itemData.issue && itemData.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
 
   const handleManualChange = (value = {}) => {
     const issue = {
@@ -80,6 +86,8 @@ export const SelectDefectManually = ({
   };
   const handleIgnoreAnalyzerChange = (value) => {
     handleManualChange({ ignoreAnalyzer: value });
+    const { toggleIgnoreAASwitcher } = eventsInfo;
+    trackEvent(toggleIgnoreAASwitcher(defectFromTIGroup, value));
   };
   const handleDefectCommentChange = (value) => {
     handleManualChange({ comment: value });
@@ -115,6 +123,7 @@ export const SelectDefectManually = ({
         );
       }
     };
+    const { onClickIssueBtn } = eventsInfo;
     const actionButtonItems = [
       {
         id: POST_ISSUE,
@@ -125,6 +134,7 @@ export const SelectDefectManually = ({
         onClick: () => {
           setIssueActionType(POST_ISSUE);
           collapseTabsExceptCurr(SELECT_DEFECT_MANUALLY);
+          trackEvent(onClickIssueBtn(defectFromTIGroup, actionMessages[POST_ISSUE].defaultMessage));
         },
         disabled: isPostIssueUnavailable,
       },
@@ -137,6 +147,7 @@ export const SelectDefectManually = ({
         onClick: () => {
           setIssueActionType(LINK_ISSUE);
           collapseTabsExceptCurr(SELECT_DEFECT_MANUALLY);
+          trackEvent(onClickIssueBtn(defectFromTIGroup, actionMessages[LINK_ISSUE].defaultMessage));
         },
         disabled: !btsIntegrations.length,
       },
@@ -155,6 +166,9 @@ export const SelectDefectManually = ({
         onClick: () => {
           setIssueActionType(UNLINK_ISSUE);
           collapseTabsExceptCurr(SELECT_DEFECT_MANUALLY);
+          trackEvent(
+            onClickIssueBtn(defectFromTIGroup, actionMessages[UNLINK_ISSUE].defaultMessage),
+          );
         },
       });
     }
@@ -228,6 +242,10 @@ SelectDefectManually.propTypes = {
   isBulkOperation: PropTypes.bool.isRequired,
   setModalState: PropTypes.func.isRequired,
   collapseTabsExceptCurr: PropTypes.func.isRequired,
-  windowSize: PropTypes.bool.isRequired,
+  windowSize: PropTypes.object.isRequired,
   collapsedRightSection: PropTypes.bool.isRequired,
+  eventsInfo: PropTypes.object,
+};
+SelectDefectManually.defaultProps = {
+  eventsInfo: {},
 };

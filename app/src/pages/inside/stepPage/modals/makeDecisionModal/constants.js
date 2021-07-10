@@ -15,7 +15,7 @@
  */
 
 export const MAKE_DECISION_MODAL = 'makeDecisionModal';
-export const SELECT_DEFECT_MANUALLY = 'selectDefectManually';
+export const SELECT_DEFECT_MANUALLY = 'selectDefectTypeManually';
 export const COPY_FROM_HISTORY_LINE = 'copyFromHistoryLine';
 export const MACHINE_LEARNING_SUGGESTIONS = 'machineLearningSuggestions';
 export const CURRENT_EXECUTION_ONLY = 'currentExecutionOnly';
@@ -24,7 +24,6 @@ export const LAST_TEN_LAUNCHES = 'launchName';
 export const WITH_FILTER = 'filter';
 export const ALL_LOADED_TI_FROM_HISTORY_LINE = 'allLoadedTIFromHistoryLine';
 export const ERROR_LOGS_SIZE = 5;
-export const TO_INVESTIGATE_LOCATOR_PREFIX = 'ti';
 export const SAME = 100;
 export const HIGH = 70;
 export const LOW = 40;

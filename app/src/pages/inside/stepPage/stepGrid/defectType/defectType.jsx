@@ -15,7 +15,6 @@
  */
 
 import PropTypes from 'prop-types';
-import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
@@ -69,48 +68,36 @@ PALabel.propTypes = {
   patternTemplates: PropTypes.array.isRequired,
 };
 
-export const DefectType = track()(
-  ({ issue, onEdit, onRemove, tracking, editEventInfo, patternTemplates }) => (
-    <div className={cx('defect-type')}>
-      <div className={cx('defect-type-labels')}>
-        {issue.ignoreAnalyzer && <IgnoredInAALabel />}
-        {issue.autoAnalyzed && <AALabel />}
-        {!!patternTemplates.length && <PALabel patternTemplates={patternTemplates} />}
-        {issue.issueType && (
-          <DefectTypeItem
-            type={issue.issueType}
-            onClick={() => {
-              tracking.trackEvent(editEventInfo);
-              onEdit();
-            }}
-          />
-        )}
-        <div className={cx('edit-icon')} onClick={onEdit}>
-          {Parser(PencilIcon)}
-        </div>
-      </div>
-      <div className={cx('issues')}>
-        <IssueList issues={issue.externalSystemIssues} onRemove={onRemove} />
-      </div>
-      <div className={cx('comment')}>
-        <ScrollWrapper autoHeight autoHeightMax={90}>
-          <MarkdownViewer value={issue.comment} />
-        </ScrollWrapper>
+export const DefectType = ({ issue, onEdit, onRemove, patternTemplates }) => (
+  <div className={cx('defect-type')}>
+    <div className={cx('defect-type-labels')}>
+      {issue.ignoreAnalyzer && <IgnoredInAALabel />}
+      {issue.autoAnalyzed && <AALabel />}
+      {!!patternTemplates.length && <PALabel patternTemplates={patternTemplates} />}
+      {issue.issueType && <DefectTypeItem type={issue.issueType} onClick={onEdit} />}
+      <div className={cx('edit-icon')} onClick={onEdit}>
+        {Parser(PencilIcon)}
       </div>
     </div>
-  ),
+    <div className={cx('issues')}>
+      <IssueList issues={issue.externalSystemIssues} onRemove={onRemove} />
+    </div>
+    <div className={cx('comment')}>
+      <ScrollWrapper autoHeight autoHeightMax={90}>
+        <MarkdownViewer value={issue.comment} />
+      </ScrollWrapper>
+    </div>
+  </div>
 );
 
 DefectType.propTypes = {
   issue: PropTypes.object.isRequired,
   onEdit: PropTypes.func,
   onRemove: PropTypes.func,
-  editEventInfo: PropTypes.object,
   patternTemplates: PropTypes.array,
 };
 DefectType.defaultProps = {
   onEdit: () => {},
   onRemove: () => {},
-  editEventInfo: {},
   patternTemplates: [],
 };

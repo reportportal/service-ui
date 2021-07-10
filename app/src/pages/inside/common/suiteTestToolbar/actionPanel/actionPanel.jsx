@@ -39,6 +39,7 @@ import RefreshIcon from 'common/img/refresh-inline.svg';
 import { createStepActionDescriptors } from 'pages/inside/common/utils';
 import { ParentInfo } from 'pages/inside/common/infoLine/parentInfo';
 import { pageEventsMap } from 'components/main/analytics';
+import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import styles from './actionPanel.scss';
 
 const cx = classNames.bind(styles);
@@ -129,10 +130,17 @@ export class ActionPanel extends Component {
     this.props.onRefresh();
   };
 
-  onEditDefects = (data) => {
-    const { tracking, onEditDefects } = this.props;
-    tracking.trackEvent(STEP_PAGE_EVENTS.EDIT_DEFECT_ACTION);
-    onEditDefects(data);
+  onEditDefects = () => {
+    const { tracking, selectedItems, onEditDefects } = this.props;
+    if (selectedItems.length === 1) {
+      tracking.trackEvent(
+        pageEventsMap[this.props.level].MAKE_DECISION_MODAL_EVENTS.openModal(
+          selectedItems[0].issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
+          true,
+        ),
+      );
+    }
+    onEditDefects(this.props.selectedItems);
   };
 
   onPostIssue = () => {

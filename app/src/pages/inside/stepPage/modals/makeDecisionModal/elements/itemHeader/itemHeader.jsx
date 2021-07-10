@@ -38,6 +38,7 @@ export const ItemHeader = ({
   preselected,
   isNarrowView,
   hideLabels,
+  onClickLinkEvent,
 }) => {
   const {
     id,
@@ -58,6 +59,7 @@ export const ItemHeader = ({
           to={link}
           target="_blank"
           className={cx('item-name', { 'narrow-view': isNarrowView })}
+          onClick={onClickLinkEvent}
         >
           <span title={name}>{name}</span>
           <div className={cx('icon')}>{Parser(ExternalLinkIcon)}</div>
@@ -89,6 +91,7 @@ ItemHeader.propTypes = {
   preselected: PropTypes.bool,
   isNarrowView: PropTypes.bool,
   hideLabels: PropTypes.bool,
+  onClickLinkEvent: PropTypes.func,
 };
 ItemHeader.defaultProps = {
   item: {},
@@ -98,4 +101,5 @@ ItemHeader.defaultProps = {
   preselected: false,
   isNarrowView: false,
   hideLabels: false,
+  onClickLinkEvent: () => {},
 };

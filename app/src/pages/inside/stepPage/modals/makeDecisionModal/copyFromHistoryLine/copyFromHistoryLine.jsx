@@ -18,7 +18,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
+import { useTracking } from 'react-tracking';
 import { SCREEN_SM_MAX, SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
+import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import { ExecutionInfo } from '../elements/executionInfo';
 import { COPY_FROM_HISTORY_LINE } from '../constants';
 import { messages } from '../messages';
@@ -33,8 +35,10 @@ export const CopyFromHistoryLine = ({
   setModalState,
   collapseTabsExceptCurr,
   windowSize,
+  eventsInfo,
 }) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
 
   const selectHistoryLineItem = (itemId) => {
     if (itemId && itemId !== modalState.source.id) {
@@ -55,6 +59,13 @@ export const CopyFromHistoryLine = ({
     const { width } = windowSize;
     return width < SCREEN_SM_MAX && width > SCREEN_XS_MAX;
   };
+  const onClickExternalLinkEvent = () => {
+    const { onClickExternalLink } = eventsInfo;
+    const defectFromTIGroup = itemData.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
+    trackEvent(
+      onClickExternalLink(defectFromTIGroup, messages[COPY_FROM_HISTORY_LINE].defaultMessage),
+    );
+  };
 
   return (
     <>
@@ -70,6 +81,7 @@ export const CopyFromHistoryLine = ({
             selectItem={selectHistoryLineItem}
             isSelected={modalState.source.id === item.id}
             hideLabels={hideLabels()}
+            onClickLinkEvent={onClickExternalLinkEvent}
           />
         </div>
       ))}
@@ -83,8 +95,10 @@ CopyFromHistoryLine.propTypes = {
   setModalState: PropTypes.func.isRequired,
   collapseTabsExceptCurr: PropTypes.func.isRequired,
   windowSize: PropTypes.object,
+  eventsInfo: PropTypes.object,
 };
 CopyFromHistoryLine.defaultProps = {
   items: [],
   windowSize: {},
+  eventsInfo: {},
 };

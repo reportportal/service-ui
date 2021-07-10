@@ -27,3 +27,5 @@ export const DEFECT_TYPES_SEQUENCE = [
   NO_DEFECT.toUpperCase(),
   TO_INVESTIGATE.toUpperCase(),
 ];
+
+export const TO_INVESTIGATE_LOCATOR_PREFIX = 'ti';

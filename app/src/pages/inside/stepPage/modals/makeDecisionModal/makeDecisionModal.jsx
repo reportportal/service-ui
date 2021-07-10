@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { hideModalAction, withModal } from 'controllers/modal';
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { DarkModalLayout } from 'components/main/modal/darkModalLayout';
 import { GhostButton } from 'components/buttons/ghostButton';
@@ -33,6 +34,7 @@ import { LINK_ISSUE, POST_ISSUE, UNLINK_ISSUE } from 'common/constants/actionTyp
 import { analyzerExtensionsSelector } from 'controllers/appInfo';
 import { MachineLearningSuggestions } from 'pages/inside/stepPage/modals/makeDecisionModal/machineLearningSuggestions';
 import { SCREEN_MD_MAX } from 'common/constants/screenSizeVariables';
+import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import { messages } from './messages';
 import {
   COPY_FROM_HISTORY_LINE,
@@ -42,7 +44,6 @@ import {
   SEARCH_MODES,
   SELECT_DEFECT_MANUALLY,
   CURRENT_LAUNCH,
-  TO_INVESTIGATE_LOCATOR_PREFIX,
 } from './constants';
 import { SelectDefectManually } from './selectDefectManually';
 import { CopyFromHistoryLine } from './copyFromHistoryLine';
@@ -50,30 +51,23 @@ import { OptionsSection } from './optionsSection/optionsSection';
 
 const MakeDecision = ({ data }) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const dispatch = useDispatch();
   const activeProject = useSelector(activeProjectSelector);
   const historyItems = useSelector(historyItemsSelector);
   const isAnalyzerAvailable = !!useSelector(analyzerExtensionsSelector).length;
   const isBulkOperation = data.items && data.items.length > 1;
   const itemData = isBulkOperation ? data.items : data.items[0];
+  const defectFromTIGroup =
+    itemData.issue && itemData.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
   const [modalState, setModalState] = useReducer((state, newState) => ({ ...state, ...newState }), {
     source: {
       issue: isBulkOperation ? { comment: '' } : itemData.issue,
     },
     decisionType: SELECT_DEFECT_MANUALLY,
     issueActionType: '',
-    optionValue:
-      isAnalyzerAvailable &&
-      itemData.issue &&
-      itemData.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)
-        ? CURRENT_LAUNCH
-        : CURRENT_EXECUTION_ONLY,
-    searchMode:
-      isAnalyzerAvailable &&
-      itemData.issue &&
-      itemData.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)
-        ? SEARCH_MODES.CURRENT_LAUNCH
-        : '',
+    optionValue: isAnalyzerAvailable && defectFromTIGroup ? CURRENT_LAUNCH : CURRENT_EXECUTION_ONLY,
+    searchMode: isAnalyzerAvailable && defectFromTIGroup ? SEARCH_MODES.CURRENT_LAUNCH : '',
     testItems: [],
     selectedItems: [],
     suggestedItems: [],
@@ -264,11 +258,22 @@ const MakeDecision = ({ data }) => {
         return false;
     }
   };
+  const getOnApplyEvent = () => {
+    const {
+      eventsInfo: {
+        editDefectsEvents: { onApply },
+      },
+    } = data;
+    const { decisionType, suggestedItems } = modalState;
+    const hasSuggestions = !!suggestedItems.length;
+    return onApply(messages[decisionType].defaultMessage, defectFromTIGroup, hasSuggestions);
+  };
   const applyChangesImmediately = (options) => {
     if (isBulkOperation) {
       modalHasChanges && !isEmptyObject(modalState.source.issue) && saveDefect(options);
     } else {
       modalHasChanges && !isEqual(itemData.issue, modalState.source.issue) && saveDefect(options);
+      trackEvent(getOnApplyEvent());
     }
     (modalState.decisionType === COPY_FROM_HISTORY_LINE ||
       modalState.decisionType === MACHINE_LEARNING_SUGGESTIONS) &&
@@ -349,6 +354,7 @@ const MakeDecision = ({ data }) => {
             itemData={itemData}
             collapseTabsExceptCurr={collapseTabsExceptCurr}
             loadingMLSuggest={loadingMLSuggest}
+            eventsInfo={data.eventsInfo.editDefectsEvents}
           />
         ),
       },
@@ -367,6 +373,7 @@ const MakeDecision = ({ data }) => {
             collapseTabsExceptCurr={collapseTabsExceptCurr}
             collapsedRightSection={collapsedRightSection}
             windowSize={windowSize}
+            eventsInfo={data.eventsInfo.editDefectsEvents}
           />
         ),
       },
@@ -386,6 +393,7 @@ const MakeDecision = ({ data }) => {
             setModalState={setModalState}
             collapseTabsExceptCurr={collapseTabsExceptCurr}
             windowSize={windowSize}
+            eventsInfo={data.eventsInfo.editDefectsEvents}
           />
         ),
       });

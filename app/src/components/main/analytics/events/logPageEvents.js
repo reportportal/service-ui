@@ -28,6 +28,7 @@ import {
   getEditToInvestigateSelectAllSimilarItemsEvent,
   getEditToInvestigateSelectSpecificSimilarItemEvent,
   getLinkIssueModalEvents,
+  getMakeDecisionModalEvents,
   getPostIssueModalEvents,
   getUnlinkIssueModalEvents,
 } from './common/testItemPages/modalEventsCreators';
@@ -292,4 +293,5 @@ export const LOG_PAGE_EVENTS = {
     action: 'Click on Play button on Sauce Labs video',
     label: 'Play Sauce Labs video',
   },
+  MAKE_DECISION_MODAL_EVENTS: getMakeDecisionModalEvents(LOG_PAGE),
 };

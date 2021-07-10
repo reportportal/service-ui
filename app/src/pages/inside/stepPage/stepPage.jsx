@@ -351,7 +351,7 @@ export class StepPage extends Component {
     this.props.editDefectsAction(items, {
       fetchFunc: this.unselectAndFetchItems,
       eventsInfo: {
-        editDefectsEvents: STEP_PAGE_EVENTS.EDIT_DEFECT_MODAL_EVENTS,
+        editDefectsEvents: STEP_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS,
         unlinkIssueEvents: UNLINK_ISSUE_EVENTS_INFO,
         postIssueEvents: POST_ISSUE_EVENTS_INFO,
         linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
