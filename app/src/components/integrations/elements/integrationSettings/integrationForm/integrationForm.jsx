@@ -86,9 +86,9 @@ export class IntegrationForm extends Component {
       this.props.reset();
     }
     this.props.tracking.trackEvent(
-      this.props.isGlobal
-        ? PLUGINS_PAGE_EVENTS.pluginConfigureClick(this.props.data.integrationType.name)
-        : SETTINGS_PAGE_EVENTS.pluginConfigureClick(this.props.data.integrationType.name),
+      (this.props.isGlobal ? PLUGINS_PAGE_EVENTS : SETTINGS_PAGE_EVENTS).pluginConfigureClick(
+        this.props.data.integrationType.name,
+      ),
     );
     this.setState({ disabled: !this.state.disabled });
   };
@@ -100,9 +100,9 @@ export class IntegrationForm extends Component {
   submitIntegration = (formData) => {
     this.props.onSubmit(formData, this.submitIntegrationSuccess, this.state.metaData);
     this.props.tracking.trackEvent(
-      this.props.isGlobal
-        ? PLUGINS_PAGE_EVENTS.pluginConfigureClickSubmit(this.props.data.integrationType.name)
-        : SETTINGS_PAGE_EVENTS.pluginConfigureClickSubmit(this.props.data.integrationType.name),
+      (this.props.isGlobal ? PLUGINS_PAGE_EVENTS : SETTINGS_PAGE_EVENTS).pluginConfigureClickSubmit(
+        this.props.data.integrationType.name,
+      ),
     );
   };
 

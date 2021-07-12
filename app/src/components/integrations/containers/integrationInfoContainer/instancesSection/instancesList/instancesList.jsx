@@ -36,9 +36,9 @@ export const InstancesList = ({
   const { trackEvent } = useTracking();
   const onClick = (item) => {
     trackEvent(
-      isGlobal
-        ? PLUGINS_PAGE_EVENTS.pluginInstanceItemClick(item.integrationType.name)
-        : SETTINGS_PAGE_EVENTS.pluginInstanceItemClick(item.integrationType.name),
+      (isGlobal ? PLUGINS_PAGE_EVENTS : SETTINGS_PAGE_EVENTS).pluginInstanceItemClick(
+        item.integrationType.name,
+      ),
     );
     onItemClick({ ...item, blocked }, title);
   };

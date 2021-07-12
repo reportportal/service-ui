@@ -73,7 +73,7 @@ export class ConnectionSection extends Component {
     blocked: PropTypes.bool,
     failedConnectionMessage: PropTypes.string,
     editAuthConfig: PropTypes.object,
-    integrationType: PropTypes.string,
+    pluginName: PropTypes.string,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -85,7 +85,7 @@ export class ConnectionSection extends Component {
     blocked: false,
     failedConnectionMessage: null,
     editAuthConfig: null,
-    integrationType: null,
+    pluginName: null,
     isGlobal: false,
   };
 
@@ -93,14 +93,14 @@ export class ConnectionSection extends Component {
     const {
       intl: { formatMessage },
       tracking,
-      integrationType,
+      pluginName,
       isGlobal,
     } = this.props;
 
     tracking.trackEvent(
-      isGlobal
-        ? PLUGINS_PAGE_EVENTS.pluginRemoveIntegrationClick(integrationType)
-        : SETTINGS_PAGE_EVENTS.pluginRemoveIntegrationClick(integrationType),
+      (isGlobal ? PLUGINS_PAGE_EVENTS : SETTINGS_PAGE_EVENTS).pluginRemoveIntegrationClick(
+        pluginName,
+      ),
     );
 
     this.props.showModalAction({
@@ -117,11 +117,11 @@ export class ConnectionSection extends Component {
   };
 
   onEditAuth = () => {
-    const { editAuthConfig, testConnection, tracking, integrationType, isGlobal } = this.props;
+    const { editAuthConfig, testConnection, tracking, pluginName, isGlobal } = this.props;
     tracking.trackEvent(
-      isGlobal
-        ? PLUGINS_PAGE_EVENTS.pluginEditAuthorizationClick(integrationType)
-        : SETTINGS_PAGE_EVENTS.pluginEditAuthorizationClick(integrationType),
+      (isGlobal ? PLUGINS_PAGE_EVENTS : SETTINGS_PAGE_EVENTS).pluginEditAuthorizationClick(
+        pluginName,
+      ),
     );
     editAuthConfig.onClick(testConnection);
   };

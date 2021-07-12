@@ -137,12 +137,10 @@ export class BtsPropertiesForIssueForm extends Component {
 
   onChangeFieldCheckbox = (fieldId, fieldName) => {
     this.props.tracking.trackEvent(
-      this.props.isGlobal
-        ? PLUGINS_PAGE_EVENTS.pluginChoosePropertiesCheckboxClick(this.props.pluginName, fieldName)
-        : SETTINGS_PAGE_EVENTS.pluginChoosePropertiesCheckboxClick(
-            this.props.pluginName,
-            fieldName,
-          ),
+      (this.props.isGlobal
+        ? PLUGINS_PAGE_EVENTS
+        : SETTINGS_PAGE_EVENTS
+      ).pluginChoosePropertiesCheckboxClick(this.props.pluginName, fieldName),
     );
     const fieldsIds = {
       ...this.state.checkedFieldsIds,

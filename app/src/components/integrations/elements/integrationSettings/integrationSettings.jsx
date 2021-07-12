@@ -166,7 +166,7 @@ export class IntegrationSettings extends Component {
               testConnection={this.testIntegrationConnection}
               onRemoveIntegration={this.removeIntegration}
               editAuthConfig={editAuthConfig}
-              integrationType={this.props.data.integrationType.name}
+              pluginName={this.props.data.integrationType.name}
               isGlobal={isGlobal}
             />
             <IntegrationForm
