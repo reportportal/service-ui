@@ -80,8 +80,7 @@ export const getRefineFiltersPanelEvents = (category) => ({
   }),
   getStartTimeCustomRange: (date) => ({
     category,
-    action:
-      'Choose time for filter by start time on Launches and click on checkbox "Dynamic update"',
+    action: 'Choose time for filter by start time on Launches',
     label: date,
   }),
   getStartTimeDynamicUpdate: (state) => ({
