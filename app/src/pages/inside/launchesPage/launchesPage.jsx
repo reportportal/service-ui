@@ -415,6 +415,8 @@ export class LaunchesPage extends Component {
           changeDescription: LAUNCHES_MODAL_EVENTS.ENTER_WIDGET_DESCRIPTION_ADD_WIDGET_MODAL,
           shareWidget: LAUNCHES_MODAL_EVENTS.SHARE_WIDGET_ADD_WIDGET_MODAL,
           addWidget: LAUNCHES_MODAL_EVENTS.ADD_BTN_ADD_WIDGET_MODAL,
+          selectCriteria: LAUNCHES_MODAL_EVENTS.SELECT_CRITERIA_ADD_NEW_WIDGET_MODAL,
+          sortingSelectParameters: LAUNCHES_MODAL_EVENTS.SELECT_SORTING_FILTER_ADD_WIDGET_MODAL,
         },
       },
     });

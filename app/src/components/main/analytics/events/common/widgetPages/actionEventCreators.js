@@ -17,7 +17,7 @@
 import {
   getSelectCriteriaFields,
   SORTING_ENTITY_MAP,
-} from 'components/main/analytics/events/common/dashboardPages/utils/utils';
+} from 'components/main/analytics/events/common/widgetPages/utils/utils';
 
 export const getSelectSortingFilterAddWidgetModal = (category) => (value, tab) => ({
   category,
