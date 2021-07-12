@@ -64,7 +64,7 @@ export class EntitiesGroup extends Component {
   getActiveEntities = () => this.props.entities.filter((entity) => entity.active);
 
   handleChange = (entity, value, isConditionChange = false) => {
-    this.props.tracking.trackEvent(entity.eventInfo);
+    entity.eventInfo && this.props.tracking.trackEvent(entity.eventInfo);
     if (!isConditionChange) {
       this.validateEntity(entity, value.value);
     }
