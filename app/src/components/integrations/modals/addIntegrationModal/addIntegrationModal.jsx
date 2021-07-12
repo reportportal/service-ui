@@ -18,9 +18,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
+import track from 'react-tracking';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { INTEGRATION_FORM } from 'components/integrations/elements/integrationSettings';
+import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { connect } from 'react-redux';
 import { uiExtensionIntegrationFormFieldsSelector } from 'controllers/plugins/uiExtensions/selectors';
 import { INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP } from '../../formFieldComponentsMap';
@@ -48,6 +50,7 @@ const messages = defineMessages({
   fieldsExtensions: uiExtensionIntegrationFormFieldsSelector(state),
 }))
 @injectIntl
+@track()
 export class AddIntegrationModal extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
@@ -64,6 +67,10 @@ export class AddIntegrationModal extends Component {
       }),
     ),
     data: PropTypes.object,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -95,6 +102,9 @@ export class AddIntegrationModal extends Component {
 
   onSubmit = (data) => {
     this.props.data.onConfirm(data, this.state.metaData);
+    this.props.tracking.trackEvent(
+      PLUGINS_PAGE_EVENTS.clickSaveEditAuthorizationBtn(this.props.data.instanceType),
+    );
   };
 
   render() {

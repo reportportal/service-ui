@@ -14,6 +14,15 @@
  * limitations under the License.
  */
 
+import {
+  getPluginChoosePropertiesCheckboxClickEvent,
+  getPluginConfigureClickEvent,
+  getPluginConfigureClickSubmitEvent,
+  getPluginEditAuthorizationClickEvent,
+  getPluginInstanceItemClickEvent,
+  getPluginRemoveIntegrationClickEvent,
+} from 'components/main/analytics/events/common/pluginsPage/actionEventCreators';
+
 export const SETTINGS_PAGE = 'settings';
 
 export const getSaveNewPatternEvent = (patternType) => ({
@@ -444,4 +453,10 @@ export const SETTINGS_PAGE_EVENTS = {
     action: 'Click on Btn Save on Modal Rename Pattern',
     label: 'Rename Pattern',
   },
+  pluginInstanceItemClick: getPluginInstanceItemClickEvent(SETTINGS_PAGE),
+  pluginEditAuthorizationClick: getPluginEditAuthorizationClickEvent(SETTINGS_PAGE),
+  pluginRemoveIntegrationClick: getPluginRemoveIntegrationClickEvent(SETTINGS_PAGE),
+  pluginConfigureClick: getPluginConfigureClickEvent(SETTINGS_PAGE),
+  pluginChoosePropertiesCheckboxClick: getPluginChoosePropertiesCheckboxClickEvent(SETTINGS_PAGE),
+  pluginConfigureClickSubmit: getPluginConfigureClickSubmitEvent(SETTINGS_PAGE),
 };

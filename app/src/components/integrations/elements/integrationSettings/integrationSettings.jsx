@@ -19,12 +19,14 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
+import track from 'react-tracking';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { projectIdSelector } from 'controllers/pages';
 import { activeProjectSelector } from 'controllers/user';
 import { removeIntegrationAction } from 'controllers/plugins';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { PLUGIN_NAME_TITLES } from '../../constants';
 import { INTEGRATION_FORM } from './integrationForm/constants';
 import { ConnectionSection } from './connectionSection';
@@ -50,6 +52,7 @@ const messages = defineMessages({
   },
 )
 @injectIntl
+@track()
 export class IntegrationSettings extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
@@ -65,6 +68,10 @@ export class IntegrationSettings extends Component {
     isEmptyConfiguration: PropTypes.bool,
     isGlobal: PropTypes.bool,
     formKey: PropTypes.string,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -116,11 +123,13 @@ export class IntegrationSettings extends Component {
 
   removeIntegration = () => {
     const {
-      data: { id },
+      data: { id, integrationType },
       isGlobal,
       goToPreviousPage,
+      tracking,
     } = this.props;
 
+    tracking.trackEvent(PLUGINS_PAGE_EVENTS.clickDeleteBtnRemoveIntegration(integrationType.name));
     this.props.removeIntegrationAction(id, isGlobal, goToPreviousPage);
   };
 
@@ -157,6 +166,8 @@ export class IntegrationSettings extends Component {
               testConnection={this.testIntegrationConnection}
               onRemoveIntegration={this.removeIntegration}
               editAuthConfig={editAuthConfig}
+              pluginName={this.props.data.integrationType.name}
+              isGlobal={isGlobal}
             />
             <IntegrationForm
               form={formKey}

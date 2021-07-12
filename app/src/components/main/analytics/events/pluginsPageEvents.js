@@ -14,6 +14,17 @@
  * limitations under the License.
  */
 
+import {
+  getClickDeleteBtnRemoveIntegrationEvent,
+  getClickSaveBtnEditAuthorizationEvent,
+  getPluginChoosePropertiesCheckboxClickEvent,
+  getPluginConfigureClickEvent,
+  getPluginConfigureClickSubmitEvent,
+  getPluginEditAuthorizationClickEvent,
+  getPluginInstanceItemClickEvent,
+  getPluginRemoveIntegrationClickEvent,
+} from 'components/main/analytics/events/common/pluginsPage/actionEventCreators';
+
 export const PLUGINS_PAGE = 'plugins';
 
 export const getPluginFilterTabClickEvent = (tabKey) => ({
@@ -38,6 +49,7 @@ export const getUninstallPluginBtnClickEvent = (pluginName) => ({
 });
 
 const PLUGINS_MODAL = 'Modal plugins';
+
 export const PLUGINS_PAGE_EVENTS = {
   CLICK_UPLOAD_BTN: {
     category: PLUGINS_MODAL,
@@ -85,4 +97,12 @@ export const PLUGINS_PAGE_EVENTS = {
     action: 'Click on Btn Uninstall on Modal "Uninstall Plugin"',
     label: 'Uninstall Plugin',
   },
+  clickSaveEditAuthorizationBtn: getClickSaveBtnEditAuthorizationEvent(PLUGINS_MODAL),
+  clickDeleteBtnRemoveIntegration: getClickDeleteBtnRemoveIntegrationEvent(PLUGINS_MODAL),
+  pluginInstanceItemClick: getPluginInstanceItemClickEvent(PLUGINS_PAGE),
+  pluginEditAuthorizationClick: getPluginEditAuthorizationClickEvent(PLUGINS_PAGE),
+  pluginRemoveIntegrationClick: getPluginRemoveIntegrationClickEvent(PLUGINS_PAGE),
+  pluginConfigureClick: getPluginConfigureClickEvent(PLUGINS_PAGE),
+  pluginChoosePropertiesCheckboxClick: getPluginChoosePropertiesCheckboxClickEvent(PLUGINS_PAGE),
+  pluginConfigureClickSubmit: getPluginConfigureClickSubmitEvent(PLUGINS_PAGE),
 };
