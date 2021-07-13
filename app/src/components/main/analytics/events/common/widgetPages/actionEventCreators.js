@@ -60,3 +60,27 @@ export const getChooseRadioBtnShareWidget = (category) => (value) => ({
   action: 'Choose Radio Btn of Widget Type in Modal Add Shared Widget',
   label: value,
 });
+
+export const getChooseFilterAddWidgetModal = (category) => ({
+  category,
+  action: 'Click on radio Btn of Filter in Modal Add New Widget',
+  label: 'Choose filter',
+});
+
+export const getAddFilterBtnAddWidgetModal = (category) => ({
+  category,
+  action: 'Click on Btn Add Filter in Modal Add New Widget',
+  label: 'Arise fields for adding new filter',
+});
+
+export const getAddBtnAddNewFilterAddWidgetModal = (category) => ({
+  category,
+  action: 'Click on Btn Add in Add new filter in Modal Add New Widget',
+  label: 'Add new filter in Modal Add New Widget',
+});
+
+export const getCancelBtnAddNewFilterAddWidgetModal = (category) => ({
+  category,
+  action: 'Click on Btn Cancel in Add new filter in Modal Add New Widget',
+  label: 'Cancel adding new filter in Modal Add New Widget',
+});

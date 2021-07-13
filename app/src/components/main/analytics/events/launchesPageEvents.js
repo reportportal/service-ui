@@ -21,6 +21,10 @@ import {
   getRefreshPageActionEvent,
 } from 'components/main/analytics/events/common/testItemPages/actionEventsCreators';
 import {
+  getAddBtnAddNewFilterAddWidgetModal,
+  getAddFilterBtnAddWidgetModal,
+  getCancelBtnAddNewFilterAddWidgetModal,
+  getChooseFilterAddWidgetModal,
   getSelectCriteriaNewWidget,
   getSelectSortingFilterAddWidgetModal,
 } from 'components/main/analytics/events/common/widgetPages/actionEventCreators';
@@ -410,6 +414,12 @@ export const LAUNCHES_MODAL_EVENTS = {
     action: 'Choose radio Btn of Widget type in Modal Add New Widget',
     label: 'Choose Widget type in Modal Add New Widget',
   },
+  CHOOSE_FILTER_ADD_WIDGET_MODAL: getChooseFilterAddWidgetModal(LAUNCHES_MODAL),
+  ADD_FILTER_BTN_ADD_WIDGET_MODAL: getAddFilterBtnAddWidgetModal(LAUNCHES_MODAL),
+  ADD_BTN_ADD_NEW_FILTER_ADD_WIDGET_MODAL: getAddBtnAddNewFilterAddWidgetModal(LAUNCHES_MODAL),
+  CANCEL_BTN_ADD_NEW_FILTER_ADD_WIDGET_MODAL: getCancelBtnAddNewFilterAddWidgetModal(
+    LAUNCHES_MODAL,
+  ),
   NEXT_STEP_ADD_WIDGET_MODAL: {
     category: LAUNCHES_MODAL,
     action: 'Click on Btn Next Step on Modal Add New Widget',

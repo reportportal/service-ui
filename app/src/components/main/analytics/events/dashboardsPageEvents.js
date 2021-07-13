@@ -15,6 +15,10 @@
  */
 
 import {
+  getAddBtnAddNewFilterAddWidgetModal,
+  getAddFilterBtnAddWidgetModal,
+  getCancelBtnAddNewFilterAddWidgetModal,
+  getChooseFilterAddWidgetModal,
   getChooseRadioBtnShareWidget,
   getClickZoomAddWidgetArea,
   getClickZoomEditWidgetArea,
@@ -191,16 +195,8 @@ export const DASHBOARD_PAGE_EVENTS = {
     action: 'Enter parameter for search',
     label: 'Show filter by parameter',
   },
-  ADD_FILTER_BTN_ADD_WIDGET_MODAL: {
-    category: DASHBOARD_PAGE,
-    action: 'Click on Btn Add Filter in Modal Add New Widget',
-    label: 'Arise fields for adding new filter',
-  },
-  CHOOSE_FILTER_ADD_WIDGET_MODAL: {
-    category: DASHBOARD_PAGE,
-    action: 'Click on radio Btn of Filter in Modal Add New Widget',
-    label: 'Choose filter',
-  },
+  ADD_FILTER_BTN_ADD_WIDGET_MODAL: getAddFilterBtnAddWidgetModal(DASHBOARD_PAGE),
+  CHOOSE_FILTER_ADD_WIDGET_MODAL: getChooseFilterAddWidgetModal(DASHBOARD_PAGE),
   EDIT_FILTER_ADD_WIDGET_MODAL: {
     category: DASHBOARD_PAGE,
     action: 'Click on icon Edit Filter in Modal Add New Widget',
@@ -219,16 +215,10 @@ export const DASHBOARD_PAGE_EVENTS = {
   SELECT_SORTING_FILTER_ADD_WIDGET_MODAL: getSelectSortingFilterAddWidgetModal(DASHBOARD_PAGE),
   CLICK_ZOOM_ADD_WIDGET_AREA: getClickZoomAddWidgetArea(DASHBOARD_PAGE),
   CLICK_ZOOM_EDIT_WIDGET_AREA: getClickZoomEditWidgetArea(DASHBOARD_PAGE),
-  CANCEL_BTN_ADD_NEW_FILTER_ADD_WIDGET_MODAL: {
-    category: DASHBOARD_PAGE,
-    action: 'Click on Btn Cancel in Add new filter in Modal Add New Widget',
-    label: 'Cancel adding new filter in Modal Add New Widget',
-  },
-  ADD_BTN_ADD_NEW_FILTER_ADD_WIDGET_MODAL: {
-    category: DASHBOARD_PAGE,
-    action: 'Click on Btn Add in Add new filter in Modal Add New Widget',
-    label: 'Add new filter in Modal Add New Widget',
-  },
+  CANCEL_BTN_ADD_NEW_FILTER_ADD_WIDGET_MODAL: getCancelBtnAddNewFilterAddWidgetModal(
+    DASHBOARD_PAGE,
+  ),
+  ADD_BTN_ADD_NEW_FILTER_ADD_WIDGET_MODAL: getAddBtnAddNewFilterAddWidgetModal(DASHBOARD_PAGE),
   EDIT_FILTER_NAME_ADD_WIDGET_MODAL: {
     category: DASHBOARD_PAGE,
     action: 'Edit filter name in Modal Add New Widget',
