@@ -23,7 +23,6 @@
   &.direction-column {
     flex-direction: column;
     margin: 0;
-    font-family: $FONT-SEMIBOLD;
   }
 }
 
@@ -51,7 +50,7 @@
     flex: 0;
     margin-left: 26px;
     color: $COLOR--black-2;
-    font-weight: 600;
+    font-family: $FONT-SEMIBOLD;
   }
 
   & > :first-child {
