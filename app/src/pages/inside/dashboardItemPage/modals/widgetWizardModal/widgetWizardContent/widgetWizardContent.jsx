@@ -99,7 +99,7 @@ export class WidgetWizardContent extends Component {
   onClickNextStep = () => {
     const { tracking, eventsInfo, formValues, submitWidgetWizardForm } = this.props;
     tracking.trackEvent(eventsInfo.nextStep);
-    if (formValues.contentParameters) {
+    if (this.state.step === 1 && formValues.contentParameters.contentFields) {
       tracking.trackEvent(eventsInfo.selectCriteria(formValues.contentParameters.contentFields));
     }
     submitWidgetWizardForm();
