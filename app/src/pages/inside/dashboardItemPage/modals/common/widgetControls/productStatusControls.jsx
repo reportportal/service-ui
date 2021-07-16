@@ -31,6 +31,7 @@ import {
   SYSTEM_ISSUE,
   NO_DEFECT,
   TO_INVESTIGATE,
+  STATS_UNTESTED,
 } from 'common/constants/statistics';
 import { ENTITY_START_TIME, ENTITY_STATUS } from 'components/filterEntities/constants';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
@@ -78,7 +79,13 @@ const messages = defineMessages({
   },
 });
 
-const STATIC_BASE_COLUMNS = [STATS_TOTAL, STATS_PASSED, STATS_FAILED, STATS_SKIPPED];
+const STATIC_BASE_COLUMNS = [
+  STATS_TOTAL,
+  STATS_PASSED,
+  STATS_FAILED,
+  STATS_SKIPPED,
+  STATS_UNTESTED,
+];
 const BASE_COLUMNS_ORDER = [
   ENTITY_START_TIME,
   ENTITY_STATUS,
@@ -86,6 +93,7 @@ const BASE_COLUMNS_ORDER = [
   STATS_PASSED,
   STATS_FAILED,
   STATS_SKIPPED,
+  STATS_UNTESTED,
   PRODUCT_BUG,
   AUTOMATION_BUG,
   SYSTEM_ISSUE,
