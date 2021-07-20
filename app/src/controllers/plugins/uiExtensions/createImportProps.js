@@ -34,7 +34,7 @@ import { NavigationTabs } from 'components/main/navigationTabs';
 import { NoCasesBlock } from 'components/main/noCasesBlock';
 import { ItemList } from 'components/main/itemList';
 import { ModalLayout, ModalField } from 'components/main/modal';
-import { showModalAction } from 'controllers/modal';
+import { showModalAction, hideModalAction } from 'controllers/modal';
 import { fetch } from 'common/utils/fetch';
 import { isEmptyObject } from 'common/utils/isEmptyObject';
 import {
@@ -56,7 +56,12 @@ import {
   pluginRouteSelector,
 } from 'controllers/pages';
 import { attributesArray, isNotEmptyArray } from 'common/utils/validation/validate';
-import { requiredField } from 'common/utils/validation/commonValidators';
+import {
+  requiredField,
+  btsUrl,
+  btsProject,
+  btsIntegrationName,
+} from 'common/utils/validation/commonValidators';
 import {
   composeValidators,
   bindMessageToValidator,
@@ -130,7 +135,12 @@ import {
   getItemNameConfig,
   getDefectTypeLocators,
 } from 'components/widgets/common/utils';
-import { IntegrationSettings, IntegrationFormField } from 'components/integrations/elements';
+import {
+  IntegrationSettings,
+  IntegrationFormField,
+  BtsAuthFieldsInfo,
+  BtsPropertiesForIssueForm,
+} from 'components/integrations/elements';
 import { createGlobalNamedIntegrationsSelector } from '../selectors';
 
 const BUTTONS = {
@@ -207,6 +217,8 @@ export const createImportProps = (pluginName) => ({
     FieldArray,
     IntegrationSettings,
     IntegrationFormField,
+    BtsAuthFieldsInfo,
+    BtsPropertiesForIssueForm,
   },
   constants: {
     PLUGIN_UI_EXTENSION_ADMIN_PAGE,
@@ -225,6 +237,7 @@ export const createImportProps = (pluginName) => ({
   },
   actions: {
     showModalAction,
+    hideModalAction,
     showSuccessNotification,
     showErrorNotification,
     fetchProjectAction,
@@ -273,6 +286,9 @@ export const createImportProps = (pluginName) => ({
     attributesArray,
     isNotEmptyArray,
     requiredField,
+    btsUrl,
+    btsProject,
+    btsIntegrationName,
     helpers: { composeValidators, bindMessageToValidator },
   },
 });
