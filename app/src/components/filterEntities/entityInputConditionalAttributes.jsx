@@ -43,7 +43,7 @@ export class EntityInputConditionalAttributes extends PureComponent {
 
   render() {
     const { value, onRemove, onChange, removable, title, smallSize, customProps } = this.props;
-    const { projectId, keyURLCreator, valueURLCreator } = customProps;
+    const { projectId, launchId, keyURLCreator, valueURLCreator } = customProps;
 
     return (
       <FieldFilterEntity
@@ -55,6 +55,7 @@ export class EntityInputConditionalAttributes extends PureComponent {
       >
         <InputConditionalAttributes
           value={value}
+          launchId={launchId}
           onChange={onChange}
           keyURLCreator={keyURLCreator}
           valueURLCreator={valueURLCreator}

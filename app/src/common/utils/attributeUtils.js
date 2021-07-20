@@ -18,6 +18,9 @@ export const getAttributeValue = ({ key, value } = {}) => value || key;
 
 export const formatAttribute = ({ key, value } = {}) => {
   if (key && value) {
+    if (key.includes(':')) {
+      return `${key}${value}`;
+    }
     return `${key}:${value}`;
   }
   return getAttributeValue({ key, value }) || '';
