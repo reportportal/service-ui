@@ -60,6 +60,7 @@ const attributeValueValidator = composeBoundValidators([
 export class AttributeEditor extends Component {
   static propTypes = {
     projectId: PropTypes.string,
+    launchId: PropTypes.string,
     attributes: PropTypes.array,
     onConfirm: PropTypes.func,
     onCancel: PropTypes.func,
@@ -74,6 +75,7 @@ export class AttributeEditor extends Component {
 
   static defaultProps = {
     projectId: null,
+    launchId: null,
     attributes: [],
     handleSubmit: () => {},
     onConfirm: () => {},
@@ -152,7 +154,15 @@ export class AttributeEditor extends Component {
   handleAttributeKeyInputChange = (text) => this.setState({ isKeyEdited: !!text });
 
   render() {
-    const { projectId, attributes, keyURLCreator, valueURLCreator, customClass, intl } = this.props;
+    const {
+      projectId,
+      launchId,
+      attributes,
+      keyURLCreator,
+      valueURLCreator,
+      customClass,
+      intl,
+    } = this.props;
     return (
       <div className={cx('attribute-editor', customClass)}>
         <div className={cx('control')}>
@@ -162,7 +172,7 @@ export class AttributeEditor extends Component {
               attributes={attributes}
               minLength={1}
               attributeComparator={this.byKeyComparator}
-              getURI={keyURLCreator(projectId)}
+              getURI={keyURLCreator(projectId, launchId)}
               creatable
               placeholder={intl.formatMessage(messages.keyLabel)}
               onChange={this.handleKeyChange}
@@ -180,7 +190,11 @@ export class AttributeEditor extends Component {
               minLength={1}
               attributes={attributes}
               attributeComparator={this.byValueComparator}
-              getURI={valueURLCreator(projectId, this.state.key)}
+              getURI={
+                launchId
+                  ? valueURLCreator(projectId, launchId, this.state.key)
+                  : valueURLCreator(projectId, this.state.key)
+              }
               creatable
               onChange={this.handleValueChange}
               value={this.state.value}
