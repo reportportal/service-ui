@@ -17,6 +17,9 @@
 export const getAttributeValue = ({ key, value } = {}) => value || key;
 
 export const formatAttribute = ({ key, value } = {}) => {
+  if (key && !value) {
+    return `${key}:`;
+  }
   if (key && value) {
     return `${key}:${value}`;
   }

@@ -32,11 +32,10 @@ import { ItemInfo } from 'pages/inside/common/itemInfo';
 import {
   ENTITY_START_TIME,
   ENTITY_NAME,
-  ENTITY_ATTRIBUTE_KEYS,
-  ENTITY_ATTRIBUTE_VALUES,
   CONDITION_HAS,
   CONDITION_IN,
   ENTITY_USER,
+  ENTITY_ATTRIBUTE,
 } from 'components/filterEntities/constants';
 import { NoItemMessage } from 'components/main/noItemMessage';
 import {
@@ -264,6 +263,7 @@ export class LaunchSuiteGrid extends PureComponent {
     }),
     noItemsBlock: null,
   };
+
   getColumns() {
     const {
       events,
@@ -441,19 +441,13 @@ export class LaunchSuiteGrid extends PureComponent {
     this.props.onFilterClick(
       [
         {
-          id: ENTITY_ATTRIBUTE_KEYS,
+          id: ENTITY_ATTRIBUTE,
           value: {
-            filteringField: ENTITY_ATTRIBUTE_KEYS,
+            filteringField: ENTITY_ATTRIBUTE,
             condition: CONDITION_HAS,
-            value: attribute.key || '',
-          },
-        },
-        {
-          id: ENTITY_ATTRIBUTE_VALUES,
-          value: {
-            filteringField: ENTITY_ATTRIBUTE_VALUES,
-            condition: CONDITION_HAS,
-            value: attribute.value || '',
+            value: `${attribute.key ? `${attribute.key}:` : ''}${
+              attribute.value ? attribute.value : ''
+            }`,
           },
         },
       ],
