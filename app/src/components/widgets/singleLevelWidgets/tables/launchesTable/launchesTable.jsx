@@ -38,11 +38,10 @@ import { createFilterAction } from 'controllers/filter';
 import { Grid } from 'components/main/grid';
 import { AbsRelTime } from 'components/main/absRelTime';
 import {
-  ENTITY_ATTRIBUTE_KEYS,
-  ENTITY_ATTRIBUTE_VALUES,
   CONDITION_HAS,
   CONDITION_IN,
   ENTITY_USER,
+  ENTITY_ATTRIBUTE,
 } from 'components/filterEntities/constants';
 import { ItemInfo } from 'pages/inside/common/itemInfo';
 import { ExecutionStatistics } from 'pages/inside/common/launchSuiteGrid/executionStatistics';
@@ -292,13 +291,10 @@ export class LaunchesTable extends PureComponent {
       conditions: [
         {
           condition: CONDITION_HAS,
-          filteringField: ENTITY_ATTRIBUTE_KEYS,
-          value: attribute.key || '',
-        },
-        {
-          condition: CONDITION_HAS,
-          filteringField: ENTITY_ATTRIBUTE_VALUES,
-          value: attribute.value || '',
+          filteringField: ENTITY_ATTRIBUTE,
+          value: `${attribute.key ? `${attribute.key}:` : ''}${
+            attribute.value ? attribute.value : ''
+          }`,
         },
       ],
     };

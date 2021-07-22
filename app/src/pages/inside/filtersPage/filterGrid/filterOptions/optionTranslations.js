@@ -105,6 +105,10 @@ export const messages = defineMessages({
     id: 'FilterOptions.attributeKey',
     defaultMessage: 'Attribute key',
   },
+  compositeAttribute: {
+    id: 'FilterOptions.compositeAttribute',
+    defaultMessage: 'Attribute',
+  },
   sort: {
     id: 'FilterOptions.sort',
     defaultMessage: 'sorted by',

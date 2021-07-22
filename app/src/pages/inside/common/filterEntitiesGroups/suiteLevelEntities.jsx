@@ -170,6 +170,14 @@ export class SuiteLevelEntities extends Component {
 
   getStaticEntities = () => {
     const { intl, projectId, launchId, visibleFilters } = this.props;
+
+    const getTestItemAttributeValuesSearch = (project, key) => {
+      return URLS.testItemAttributeValuesSearch(projectId, launchId, key);
+    };
+
+    const getTestItemAttributeKeysSearch = () => {
+      return URLS.testItemAttributeKeysSearch(projectId, launchId);
+    };
     return [
       {
         id: ENTITY_NAME,
@@ -228,8 +236,8 @@ export class SuiteLevelEntities extends Component {
         customProps: {
           projectId,
           launchId,
-          keyURLCreator: URLS.testItemAttributeKeysSearch,
-          valueURLCreator: URLS.testItemAttributeValuesSearch,
+          keyURLCreator: getTestItemAttributeKeysSearch,
+          valueURLCreator: getTestItemAttributeValuesSearch,
         },
       },
       {
