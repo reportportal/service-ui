@@ -47,7 +47,6 @@ import { hideModalAction } from 'controllers/modal';
 import ErrorInlineIcon from 'common/img/error-inline.svg';
 import Parser from 'html-react-parser';
 import { ItemsList } from '../makeDecisionModal/optionsSection/itemsList';
-import { ERROR_LOGS_SIZE } from '../makeDecisionModal/constants';
 import { JiraCredentials } from './jiraCredentials';
 import { RallyCredentials } from './rallyCredentials';
 import {
@@ -430,34 +429,18 @@ export class PostIssueModal extends Component {
     const { testItems } = this.state;
     const fetchLogs = () => {
       this.setState({ loading: true });
-      let testItemLogRequest = [];
-      let requests;
-      if (this.isBulkOperation) {
-        testItems.map((elem) => {
-          return testItemLogRequest.push(
-            fetch(URLS.logItemStackTrace(activeProject, elem.path, ERROR_LOGS_SIZE)),
-          );
-        });
-        requests = testItemLogRequest;
-      } else {
-        testItemLogRequest = fetch(
-          URLS.logItemStackTrace(activeProject, testItems[0].path, ERROR_LOGS_SIZE),
-        );
-        requests = [testItemLogRequest];
-      }
+      const itemIds = testItems.map((item) => item.id);
 
-      Promise.all(requests)
-        .then((responses) => {
-          const [testItemRes] = responses;
-          const testItemLogs = this.isBulkOperation
-            ? responses.map((item) => item.content)
-            : testItemRes.content;
+      fetch(URLS.bulkLastLogs(activeProject), {
+        method: 'post',
+        data: { itemIds, logLevel: 'ERROR' },
+      })
+        .then((response) => {
+          const testItemLogs = response.content;
           const items = [];
-          this.isBulkOperation
-            ? testItems.map((elem, i) => {
-                return items.push({ ...elem, logs: testItemLogs[i] });
-              })
-            : items.push({ ...testItems[0], logs: testItemLogs });
+          testItems.forEach((elem) => {
+            items.push({ ...elem, logs: testItemLogs[elem.id] });
+          });
           this.setState({
             testItems: items,
             loading: false,
