@@ -24,7 +24,7 @@ import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { useDispatch, useSelector } from 'react-redux';
 import { activeProjectSelector } from 'controllers/user';
 import { activeFilterSelector } from 'controllers/filter';
-import { ALL_LOADED_TI_FROM_HISTORY_LINE, ERROR_LOGS_SIZE, SEARCH_MODES } from '../constants';
+import { ALL_LOADED_TI_FROM_HISTORY_LINE, SEARCH_MODES } from '../constants';
 import { messages } from '../messages';
 import styles from './optionsSection.scss';
 import { ItemsList } from './itemsList';
@@ -54,54 +54,45 @@ export const OptionsSection = ({
         requestData.filterId = activeFilter.id;
       }
       setLoading(true);
-      let currentItemLogRequest = [];
-      let similarItemsRequest = [];
-      let requests;
+      const itemIds = [];
+      const requests = [];
       if (isBulkOperation) {
-        currentTestItem.map((elem) => {
-          currentItemLogRequest.push(
-            fetch(URLS.logItemStackTrace(activeProject, elem.path, ERROR_LOGS_SIZE)),
-          );
-          return (
-            searchMode &&
-            similarItemsRequest.push(
-              fetch(URLS.logSearch(activeProject, elem.id), {
-                method: 'post',
-                data: requestData,
-              }),
-            )
+        currentTestItem.forEach((elem) => {
+          itemIds.push(elem.id);
+        });
+      } else {
+        itemIds.push(currentTestItem.id);
+      }
+      requests.push(
+        fetch(URLS.bulkLastLogs(activeProject), {
+          method: 'post',
+          data: { itemIds, logLevel: 'ERROR' },
+        }),
+      );
+      if (searchMode) {
+        itemIds.forEach((id) => {
+          requests.push(
+            fetch(URLS.logSearch(activeProject, id), {
+              method: 'post',
+              data: requestData,
+            }),
           );
         });
-        requests = searchMode
-          ? currentItemLogRequest.concat(similarItemsRequest)
-          : currentItemLogRequest;
-      } else {
-        currentItemLogRequest = fetch(
-          URLS.logItemStackTrace(activeProject, currentTestItem.path, ERROR_LOGS_SIZE),
-        );
-        similarItemsRequest =
-          searchMode &&
-          fetch(URLS.logSearch(activeProject, currentTestItem.id), {
-            method: 'post',
-            data: requestData,
-          });
-        requests = searchMode
-          ? [currentItemLogRequest, similarItemsRequest]
-          : [currentItemLogRequest];
       }
 
       Promise.all(requests)
         .then((responses) => {
-          const [currentItemRes, similarItemsRes] = responses;
-          const currentItemLogs = isBulkOperation
-            ? responses.map((item) => item.content)
-            : currentItemRes.content;
+          // TODO: similarItemsRes used only for single test item
+          const [currentItemLogs, similarItemsRes] = responses;
           const items = [];
           isBulkOperation
-            ? currentTestItem.map((elem, i) => {
-                return items.push({ ...elem, logs: currentItemLogs[i] });
+            ? currentTestItem.map((elem) => {
+                return items.push({ ...elem, logs: currentItemLogs[elem.id] });
               })
-            : items.push({ ...currentTestItem, logs: currentItemLogs }, ...(similarItemsRes || []));
+            : items.push(
+                { ...currentTestItem, logs: currentItemLogs[currentTestItem.id] },
+                ...(similarItemsRes || []),
+              );
           setModalState({
             testItems: isBulkOperation
               ? items.map((item) => {

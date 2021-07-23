@@ -230,6 +230,7 @@ export const URLS = {
       'page.sort': 'logTime,DESC',
     })}`,
   logSearch: (activeProject, itemId) => `${urlBase}${activeProject}/log/search/${itemId}`,
+  bulkLastLogs: (activeProject) => `${urlBase}${activeProject}/log/under`,
   user: () => `${urlBase}user`,
   userRegistration: () => `${urlBase}user/registration`,
   userValidateRegistrationInfo: () => `${urlBase}user/registration/info`,
