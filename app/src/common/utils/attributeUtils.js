@@ -65,9 +65,9 @@ export const getUniqueAndCommonAttributes = (items) => {
     });
 };
 
-export const parseQueryAttributes = (value) => {
-  if (!value.value) return [];
-  const attributes = value.value.split(',').map((item) => {
+export const parseQueryAttributes = ({ value }) => {
+  if (!value) return [];
+  const attributes = value.split(',').map((item) => {
     if (item.includes(':')) {
       if (item.indexOf(':') === item.length - 1) {
         return {

@@ -391,11 +391,11 @@ export class StepLevelEntities extends Component {
     const { intl, projectId, launchId, visibleFilters } = this.props;
 
     const getTestItemAttributeValuesSearch = (project, key) => {
-      return URLS.testItemAttributeValuesSearch(projectId, launchId, key);
+      return URLS.testItemAttributeValuesSearch(project, launchId, key);
     };
 
-    const getTestItemAttributeKeysSearch = () => {
-      return URLS.testItemAttributeKeysSearch(projectId, launchId);
+    const getTestItemAttributeKeysSearch = (project) => {
+      return URLS.testItemAttributeKeysSearch(project, launchId);
     };
 
     return [
