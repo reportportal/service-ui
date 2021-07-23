@@ -48,6 +48,7 @@ import {
   STATS_SI_TOTAL,
   STATS_TI_TOTAL,
 } from 'common/constants/statistics';
+import { formatAttribute } from 'common/utils';
 import { Hamburger } from './hamburger';
 import { ExecutionStatistics } from './executionStatistics';
 import { DefectStatistics } from './defectStatistics';
@@ -445,9 +446,7 @@ export class LaunchSuiteGrid extends PureComponent {
           value: {
             filteringField: ENTITY_ATTRIBUTE,
             condition: CONDITION_HAS,
-            value: `${attribute.key ? `${attribute.key}:` : ''}${
-              attribute.value ? attribute.value : ''
-            }`,
+            value: formatAttribute(attribute),
           },
         },
       ],

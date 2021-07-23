@@ -235,7 +235,6 @@ export class SuiteLevelEntities extends Component {
         removable: true,
         customProps: {
           projectId,
-          launchId,
           keyURLCreator: getTestItemAttributeKeysSearch,
           valueURLCreator: getTestItemAttributeValuesSearch,
         },

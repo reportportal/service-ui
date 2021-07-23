@@ -27,6 +27,8 @@ import {
 import { getInputConditions } from 'common/constants/inputConditions';
 import { AttributeEditor } from 'components/main/attributeList/editableAttribute/attributeEditor';
 import { AttributeListField } from 'components/main/attributeList';
+import { formatAttribute } from 'common/utils';
+import { parseQueryAttributes } from 'common/utils/attributeUtils';
 import styles from './inputConditionalAttributes.scss';
 
 const cx = classNames.bind(styles);
@@ -60,7 +62,7 @@ export class InputConditionalAttributes extends Component {
     super(props);
     this.state = {
       opened: false,
-      attributes: this.parseQueryAttributes(this.props.value),
+      attributes: parseQueryAttributes(props.value),
     };
   }
 
@@ -79,7 +81,7 @@ export class InputConditionalAttributes extends Component {
   }
 
   updateStateAttributes = () => {
-    this.setState({ attributes: this.parseQueryAttributes(this.props.value) });
+    this.setState({ attributes: parseQueryAttributes(this.props.value) });
   };
 
   onClickConditionBlock = () => {
@@ -96,33 +98,8 @@ export class InputConditionalAttributes extends Component {
     }
   };
 
-  parseQueryAttributes = (value) => {
-    if (!value.value) return [];
-    const attributes = value.value.split(',').map((item) => {
-      if (item.includes(':')) {
-        if (item.indexOf(':') === item.length - 1) {
-          return {
-            key: item.slice(0, -1),
-            value: '',
-          };
-        } else {
-          const values = item.split(':');
-          return {
-            key: `${values[0]}`,
-            value: values[1],
-          };
-        }
-      } else {
-        return {
-          key: '',
-          value: item,
-        };
-      }
-    });
-    return attributes;
-  };
-
   onChangeTags = (tags) => {
+    const { value } = this.props.value;
     const newAttributes = [
       ...this.state.attributes,
       { key: tags.key || '', value: tags.value || '' },
@@ -130,9 +107,10 @@ export class InputConditionalAttributes extends Component {
     this.setState({ attributes: newAttributes });
     this.props.onChange({
       attributes: newAttributes,
-      value: `${
-        this.props.value.value.length > 0 ? `${this.props.value.value},` : ''
-      }${this.parseTags(tags.key, tags.value)}`,
+      value: `${value.length > 0 ? `${value},` : ''}${formatAttribute({
+        key: tags.key,
+        value: tags.value,
+      })}`,
       condition: this.props.value.condition,
     });
   };
@@ -151,7 +129,7 @@ export class InputConditionalAttributes extends Component {
   };
 
   parseTagsToString = (attributes) => {
-    return attributes.map((attr) => `${attr.key}:${attr.value}`).join(',');
+    return attributes.map((attr) => formatAttribute(attr)).join(',');
   };
 
   onRemove = (attributes) => {
@@ -161,19 +139,6 @@ export class InputConditionalAttributes extends Component {
         value: this.parseTagsToString(attributes),
       }),
     );
-  };
-
-  parseTags = (key, value) => {
-    if (key && value) {
-      return `${key}:${value}`;
-    }
-    if (key) {
-      return `${key}:`;
-    }
-    if (value) {
-      return `${value}`;
-    }
-    return '';
   };
 
   render() {

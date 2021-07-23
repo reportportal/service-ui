@@ -567,7 +567,6 @@ export class StepLevelEntities extends Component {
         removable: true,
         customProps: {
           projectId,
-          launchId,
           keyURLCreator: getTestItemAttributeKeysSearch,
           valueURLCreator: getTestItemAttributeValuesSearch,
         },

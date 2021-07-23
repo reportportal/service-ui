@@ -36,6 +36,7 @@ import {
 import { NoItemMessage } from 'components/main/noItemMessage';
 import { getChangeItemStatusEvent } from 'components/main/analytics/events';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
+import { formatAttribute } from 'common/utils';
 import { StatusDropdown } from '../../common/statusDropdown/statusDropdown';
 import { PredefinedFilterSwitcher } from './predefinedFilterSwitcher';
 import { DefectType } from './defectType';
@@ -314,9 +315,7 @@ export class StepGrid extends Component {
           value: {
             filteringField: ENTITY_ATTRIBUTE,
             condition: CONDITION_HAS,
-            value: `${attribute.key ? `${attribute.key}:` : ''}${
-              attribute.value ? attribute.value : ''
-            }`,
+            value: formatAttribute(attribute),
           },
         },
       ],

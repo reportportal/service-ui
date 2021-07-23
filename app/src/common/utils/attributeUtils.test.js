@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-import { formatAttribute, getAttributeValue, getUniqueAndCommonAttributes } from './attributeUtils';
+import {
+  formatAttribute,
+  getAttributeValue,
+  getUniqueAndCommonAttributes,
+  parseQueryAttributes,
+} from './attributeUtils';
 
 describe('attributeUtils', () => {
   describe('getAttributeValue', () => {
@@ -43,6 +48,38 @@ describe('attributeUtils', () => {
     });
     test('should return formatted value if both key and value specified', () => {
       expect(formatAttribute({ key: 'foo', value: 'bar' })).toBe('foo:bar');
+    });
+  });
+  describe('parseQueryAttributes', () => {
+    test('should return an empty array if value.value is empty', () => {
+      const value = {
+        condition: 'has',
+        filteringField: 'compositeAttribute',
+        value: '',
+      };
+      expect(parseQueryAttributes(value)).toEqual([]);
+    });
+    test('should return array of objects if value.value is not empty', () => {
+      const value = {
+        condition: 'has',
+        filteringField: 'compositeAttribute',
+        value: 'key1:value1,key2:,value3',
+      };
+      const result = [
+        {
+          key: 'key1',
+          value: 'value1',
+        },
+        {
+          key: 'key2',
+          value: '',
+        },
+        {
+          key: '',
+          value: 'value3',
+        },
+      ];
+      expect(parseQueryAttributes(value)).toEqual(result);
     });
   });
   describe('getUniqueAndCommonAttributes', () => {
