@@ -51,7 +51,7 @@ describe('attributeUtils', () => {
     });
   });
   describe('parseQueryAttributes', () => {
-    test('should return an empty array if value.value is empty', () => {
+    test('should return an empty array if object value property is empty', () => {
       const value = {
         condition: 'has',
         filteringField: 'compositeAttribute',
@@ -59,7 +59,35 @@ describe('attributeUtils', () => {
       };
       expect(parseQueryAttributes(value)).toEqual([]);
     });
-    test('should return array of objects if value.value is not empty', () => {
+    test('should return an array with attribute (with value and empty key) if object value property contains only attribute value', () => {
+      const value = {
+        condition: 'has',
+        filteringField: 'compositeAttribute',
+        value: 'justAttrValue',
+      };
+      const result = [
+        {
+          key: '',
+          value: 'justAttrValue',
+        },
+      ];
+      expect(parseQueryAttributes(value)).toEqual(result);
+    });
+    test('should return an array with attribute if object value property contains only one attribute', () => {
+      const value = {
+        condition: 'has',
+        filteringField: 'compositeAttribute',
+        value: 'key:value',
+      };
+      const result = [
+        {
+          key: 'key',
+          value: 'value',
+        },
+      ];
+      expect(parseQueryAttributes(value)).toEqual(result);
+    });
+    test('should return an array of attributes if object value property contains several attributes', () => {
       const value = {
         condition: 'has',
         filteringField: 'compositeAttribute',
