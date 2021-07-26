@@ -27,6 +27,7 @@ import {
 import { getInputConditions } from 'common/constants/inputConditions';
 import { AttributeEditor } from 'components/main/attributeList/editableAttribute/attributeEditor';
 import { AttributeListField } from 'components/main/attributeList';
+import { formatAttribute, parseQueryAttributes } from 'common/utils/attributeUtils';
 import styles from './inputConditionalAttributes.scss';
 
 const cx = classNames.bind(styles);
@@ -55,10 +56,14 @@ export class InputConditionalAttributes extends Component {
     conditions: [CONDITION_HAS, CONDITION_NOT_HAS, CONDITION_ANY, CONDITION_NOT_ANY],
     projectId: '',
   };
-  state = {
-    opened: false,
-    attributes: this.props.value.attributes,
-  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      opened: false,
+      attributes: parseQueryAttributes(props.value),
+    };
+  }
 
   componentDidMount() {
     document.addEventListener('click', this.handleClickOutside);
@@ -67,6 +72,16 @@ export class InputConditionalAttributes extends Component {
   componentWillUnmount() {
     document.removeEventListener('click', this.handleClickOutside);
   }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.value.value !== this.props.value.value) {
+      this.updateStateAttributes();
+    }
+  }
+
+  updateStateAttributes = () => {
+    this.setState({ attributes: parseQueryAttributes(this.props.value) });
+  };
 
   onClickConditionBlock = () => {
     this.setState({ opened: !this.state.opened });
@@ -82,12 +97,19 @@ export class InputConditionalAttributes extends Component {
     }
   };
 
-  onChangeTags = (tags) => {
-    const newAttributes = [...this.state.attributes, { key: tags.key, value: tags.value }];
+  onChangeAttributes = (attribute) => {
+    const { value } = this.props.value;
+    const newAttributes = [
+      ...this.state.attributes,
+      { key: attribute.key || '', value: attribute.value || '' },
+    ];
     this.setState({ attributes: newAttributes });
     this.props.onChange({
       attributes: newAttributes,
-      value: this.parseTags(Array.of(tags.value || tags.key)),
+      value: `${value.length > 0 ? `${value},` : ''}${formatAttribute({
+        key: attribute.key,
+        value: attribute.value,
+      })}`,
       condition: this.props.value.condition,
     });
   };
@@ -105,11 +127,18 @@ export class InputConditionalAttributes extends Component {
     }
   };
 
-  onRemove = (attributes) => {
-    this.setState({ attributes }, () => this.props.onChange({ attributes: this.state.attributes }));
+  formatAttributesToString = (attributes) => {
+    return attributes.map((attr) => formatAttribute(attr)).join(',');
   };
 
-  parseTags = (options) => options.join(',');
+  onRemove = (attributes) => {
+    this.setState({ attributes }, () =>
+      this.props.onChange({
+        attributes: this.state.attributes,
+        value: this.formatAttributesToString(attributes),
+      }),
+    );
+  };
 
   render() {
     const { value, keyURLCreator, valueURLCreator, projectId } = this.props;
@@ -118,7 +147,7 @@ export class InputConditionalAttributes extends Component {
       <div className={cx('input-conditional-attributes', { opened: this.state.opened })}>
         <div className={cx('attributes-block')}>
           <AttributeListField
-            value={value.attributes}
+            value={this.state.attributes}
             showButton={false}
             editable={false}
             onChange={this.onRemove}
@@ -128,7 +157,7 @@ export class InputConditionalAttributes extends Component {
             keyURLCreator={keyURLCreator}
             valueURLCreator={valueURLCreator}
             projectId={projectId}
-            onConfirm={this.onChangeTags}
+            onConfirm={this.onChangeAttributes}
           />
         </div>
         <div className={cx('conditions-block')} ref={this.setConditionsBlockRef}>

@@ -31,9 +31,9 @@ import { DEFECT_TYPES_SEQUENCE, NO_DEFECT } from 'common/constants/defectTypes';
 import {
   EntityInputConditional,
   EntityItemStartTime,
-  EntityInputConditionalTags,
   EntitySearch,
   EntityContains,
+  EntityInputConditionalAttributes,
 } from 'components/filterEntities';
 import { bindDefaultValue } from 'components/filterEntities/utils';
 import {
@@ -47,10 +47,9 @@ import {
   ENTITY_USER,
   ENTITY_START_TIME,
   ENTITY_DESCRIPTION,
-  ENTITY_ATTRIBUTE_KEYS,
-  ENTITY_ATTRIBUTE_VALUES,
   CONDITION_LESS_EQ,
   CONDITION_EQ,
+  ENTITY_ATTRIBUTE,
 } from 'components/filterEntities/constants';
 import { defectTypesSelector } from 'controllers/project';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -76,13 +75,9 @@ const messages = defineMessages({
     id: 'LaunchLevelEntities.OwnerTitle',
     defaultMessage: 'Owner',
   },
-  AttributeKeysTitle: {
-    id: 'LaunchLevelEntities.AttributeKeysTitle',
-    defaultMessage: 'Attribute keys',
-  },
-  AttributeValuesTitle: {
-    id: 'LaunchLevelEntities.AttributeValuesTitle',
-    defaultMessage: 'Attribute values',
+  Attribute: {
+    id: 'LaunchLevelEntities.AttributeTitle',
+    defaultMessage: 'Attribute',
   },
   TotalTitle: {
     id: 'LaunchLevelEntities.TotalTitle',
@@ -148,14 +143,6 @@ const messages = defineMessages({
     id: 'LaunchLevelEntities.descriptionPlaceholder',
     defaultMessage: 'Enter description',
   },
-  ATTRIBUTE_KEYS_PLACEHOLDER: {
-    id: 'LaunchLevelEntities.entityItemAttributeKeys.placeholder',
-    defaultMessage: 'Enter attribute keys',
-  },
-  ATTRIBUTE_VALUES_PLACEHOLDER: {
-    id: 'LaunchLevelEntities.entityItemAttributeValues.placeholder',
-    defaultMessage: 'Enter attribute values',
-  },
   STATS_PLACEHOLDER: {
     id: 'LaunchLevelEntities.entityItemStatistics.placeholder',
     defaultMessage: 'Enter quantity',
@@ -192,13 +179,7 @@ export class LaunchLevelEntities extends Component {
   };
 
   getStaticEntities = () => {
-    const { intl, filterValues, activeProject, visibleFilters } = this.props;
-    const attributeKey = (filterValues[ENTITY_ATTRIBUTE_KEYS] || {}).value;
-    const normalizeValue = (value) => (Array.isArray(value) ? value.join(',') : value);
-    const getLaunchAttributeValuesSearchURI = URLS.launchAttributeValuesSearch(
-      activeProject,
-      normalizeValue(attributeKey),
-    );
+    const { intl, activeProject, visibleFilters } = this.props;
     return [
       {
         id: ENTITY_NAME,
@@ -274,31 +255,18 @@ export class LaunchLevelEntities extends Component {
         },
       },
       {
-        id: ENTITY_ATTRIBUTE_KEYS,
-        component: EntityInputConditionalTags,
-        value: this.bindDefaultValue(ENTITY_ATTRIBUTE_KEYS, {
+        id: ENTITY_ATTRIBUTE,
+        component: EntityInputConditionalAttributes,
+        value: this.bindDefaultValue(ENTITY_ATTRIBUTE, {
           condition: CONDITION_HAS,
         }),
-        title: intl.formatMessage(messages.AttributeKeysTitle),
-        active: visibleFilters.includes(ENTITY_ATTRIBUTE_KEYS),
+        title: intl.formatMessage(messages.Attribute),
+        active: visibleFilters.includes(ENTITY_ATTRIBUTE),
         removable: true,
         customProps: {
-          getURI: URLS.launchAttributeKeysSearch(activeProject),
-          placeholder: intl.formatMessage(messages.ATTRIBUTE_KEYS_PLACEHOLDER),
-        },
-      },
-      {
-        id: ENTITY_ATTRIBUTE_VALUES,
-        component: EntityInputConditionalTags,
-        value: this.bindDefaultValue(ENTITY_ATTRIBUTE_VALUES, {
-          condition: CONDITION_HAS,
-        }),
-        title: intl.formatMessage(messages.AttributeValuesTitle),
-        active: visibleFilters.includes(ENTITY_ATTRIBUTE_VALUES),
-        removable: true,
-        customProps: {
-          getURI: getLaunchAttributeValuesSearchURI,
-          placeholder: intl.formatMessage(messages.ATTRIBUTE_VALUES_PLACEHOLDER),
+          projectId: activeProject,
+          keyURLCreator: URLS.launchAttributeKeysSearch,
+          valueURLCreator: URLS.launchAttributeValuesSearch,
         },
       },
       {
