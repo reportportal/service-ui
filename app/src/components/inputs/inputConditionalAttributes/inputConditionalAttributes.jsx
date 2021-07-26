@@ -27,8 +27,7 @@ import {
 import { getInputConditions } from 'common/constants/inputConditions';
 import { AttributeEditor } from 'components/main/attributeList/editableAttribute/attributeEditor';
 import { AttributeListField } from 'components/main/attributeList';
-import { formatAttribute } from 'common/utils';
-import { parseQueryAttributes } from 'common/utils/attributeUtils';
+import { formatAttribute, parseQueryAttributes } from 'common/utils/attributeUtils';
 import styles from './inputConditionalAttributes.scss';
 
 const cx = classNames.bind(styles);
@@ -98,18 +97,18 @@ export class InputConditionalAttributes extends Component {
     }
   };
 
-  onChangeTags = (tags) => {
+  onChangeAttributes = (attribute) => {
     const { value } = this.props.value;
     const newAttributes = [
       ...this.state.attributes,
-      { key: tags.key || '', value: tags.value || '' },
+      { key: attribute.key || '', value: attribute.value || '' },
     ];
     this.setState({ attributes: newAttributes });
     this.props.onChange({
       attributes: newAttributes,
       value: `${value.length > 0 ? `${value},` : ''}${formatAttribute({
-        key: tags.key,
-        value: tags.value,
+        key: attribute.key,
+        value: attribute.value,
       })}`,
       condition: this.props.value.condition,
     });
@@ -128,7 +127,7 @@ export class InputConditionalAttributes extends Component {
     }
   };
 
-  parseTagsToString = (attributes) => {
+  formatAttributesToString = (attributes) => {
     return attributes.map((attr) => formatAttribute(attr)).join(',');
   };
 
@@ -136,7 +135,7 @@ export class InputConditionalAttributes extends Component {
     this.setState({ attributes }, () =>
       this.props.onChange({
         attributes: this.state.attributes,
-        value: this.parseTagsToString(attributes),
+        value: this.formatAttributesToString(attributes),
       }),
     );
   };
@@ -158,7 +157,7 @@ export class InputConditionalAttributes extends Component {
             keyURLCreator={keyURLCreator}
             valueURLCreator={valueURLCreator}
             projectId={projectId}
-            onConfirm={this.onChangeTags}
+            onConfirm={this.onChangeAttributes}
           />
         </div>
         <div className={cx('conditions-block')} ref={this.setConditionsBlockRef}>
