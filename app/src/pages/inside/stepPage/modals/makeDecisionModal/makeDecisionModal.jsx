@@ -27,7 +27,7 @@ import { activeProjectSelector } from 'controllers/user';
 import { Accordion, useAccordionTabsState } from 'pages/inside/common/accordion';
 import isEqual from 'fast-deep-equal';
 import { URLS } from 'common/urls';
-import { fetch, isEmptyObject } from 'common/utils';
+import { fetch } from 'common/utils';
 import { historyItemsSelector } from 'controllers/log';
 import { linkIssueAction, postIssueAction, unlinkIssueAction } from 'controllers/step';
 import { LINK_ISSUE, POST_ISSUE, UNLINK_ISSUE } from 'common/constants/actionTypes';
@@ -82,7 +82,7 @@ const MakeDecision = ({ data }) => {
   useEffect(() => {
     setModalHasChanges(
       (isBulkOperation
-        ? !isEmptyObject(modalState.source.issue)
+        ? !!modalState.source.issue.issueType || !!modalState.source.issue.comment
         : modalState.decisionType === SELECT_DEFECT_MANUALLY &&
           !isEqual(itemData.issue, modalState.source.issue)) ||
         modalState.decisionType === COPY_FROM_HISTORY_LINE ||
@@ -268,11 +268,13 @@ const MakeDecision = ({ data }) => {
     const hasSuggestions = !!suggestedItems.length;
     return onApply(messages[decisionType].defaultMessage, defectFromTIGroup, hasSuggestions);
   };
-  const applyChangesImmediately = (options) => {
+  const applyChangesImmediately = () => {
     if (isBulkOperation) {
-      modalHasChanges && !isEmptyObject(modalState.source.issue) && saveDefect(options);
+      modalHasChanges &&
+        (!!modalState.source.issue.issueType || !!modalState.source.issue.comment) &&
+        saveDefect();
     } else {
-      modalHasChanges && !isEqual(itemData.issue, modalState.source.issue) && saveDefect(options);
+      modalHasChanges && !isEqual(itemData.issue, modalState.source.issue) && saveDefect();
       trackEvent(getOnApplyEvent());
     }
     (modalState.decisionType === COPY_FROM_HISTORY_LINE ||
@@ -282,7 +284,7 @@ const MakeDecision = ({ data }) => {
     modalState.issueActionType && dispatch(hideModalAction()) && getIssueAction();
   };
   const applyImmediatelyWithComment = () => {
-    applyChangesImmediately({ replaceComment: true });
+    saveDefect({ replaceComment: true });
   };
   const applyChanges = () => applyChangesImmediately();
 
@@ -292,7 +294,11 @@ const MakeDecision = ({ data }) => {
         {isBulkOperation && (
           <GhostButton
             onClick={applyImmediatelyWithComment}
-            disabled={!modalHasChanges}
+            disabled={
+              modalState.source.issue.comment
+                ? false
+                : !modalState.selectedItems.some(({ issue }) => !!issue.comment)
+            }
             transparentBorder
             transparentBackground
             appearance="topaz"
@@ -347,7 +353,7 @@ const MakeDecision = ({ data }) => {
             {formatMessage(messages.machineLearningSuggestions)}
           </div>
         ),
-        content: (
+        content: !isBulkOperation && (
           <MachineLearningSuggestions
             modalState={modalState}
             setModalState={setModalState}
