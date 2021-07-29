@@ -31,7 +31,7 @@ export class InputBigSwitcher extends Component {
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
-    onChangeEventInfo: PropTypes.object,
+    onChangeEventInfo: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -74,7 +74,11 @@ export class InputBigSwitcher extends Component {
     });
     const handlerOnChange = (e) => {
       onChange(e.target.checked);
-      onChangeEventInfo && tracking.trackEvent(onChangeEventInfo);
+      const event =
+        typeof onChangeEventInfo === 'function'
+          ? onChangeEventInfo(e.target.checked)
+          : onChangeEventInfo;
+      onChangeEventInfo && tracking.trackEvent(event);
     };
     return (
       // eslint-disable-next-line
