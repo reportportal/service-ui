@@ -81,6 +81,16 @@ export const ADMIN_PROJECTS_PAGE_EVENTS = {
     action: 'Click on Members in Project Menu',
     label: 'Transition to Members page',
   },
+  CLICK_MEMBERS_BTN: {
+    category: ADMIN_PROJECTS_PAGE,
+    action: 'Click on button Members',
+    label: 'Transition to Members Page',
+  },
+  CLICK_SETTINGS_BTN: {
+    category: ADMIN_PROJECTS_PAGE,
+    action: 'Click on button Settings',
+    label: 'Transition to Settings Tabs',
+  },
   PROJECT_MENU: {
     category: ADMIN_PROJECTS_PAGE,
     action: 'Click on Menu (3 points)',

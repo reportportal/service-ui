@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { SEARCH_MODES } from 'pages/inside/stepPage/modals/editDefectModals/constants';
+import { SEARCH_MODES } from 'pages/inside/stepPage/modals/makeDecisionModal/constants';
 
 // EDIT DEFECT MODAL
 export const getEditDefectModalEvents = (category) => ({
@@ -233,4 +233,65 @@ export const getEditItemsModalEvents = (category, itemType = 'Item') => ({
     action: `Edit description in Modal "Edit ${itemType}" in a bulk`,
     label: 'Edit description in mode: ',
   },
+  DETAILS_TAB_EVENT: {
+    category,
+    action: `Click on tab "Details" on modal "Test item details"`,
+    label: 'Open tab "Details"',
+  },
+  STACK_TRACE_TAB_EVENT: {
+    category,
+    action: `Click on tab "Stack trace" on modal "Test item details"`,
+    label: 'Open tab "Stack trace"',
+  },
+  ADD_ATTRIBUTE: {
+    category,
+    action: 'Click on add new attributes on modal "Test item details"',
+    label: 'Add attributes',
+  },
+});
+
+const MODAL_MAKE_DECISION = 'Modal Make decision';
+const getOpenModalEvent = (page) => (isTIGroup, actionMenu = false) => ({
+  category: MODAL_MAKE_DECISION,
+  action: 'Open Modal "Make decision"',
+  label: `${page}${actionMenu ? '#ActionMenu' : ''}#${isTIGroup ? 'TI' : 'NoTI'}`,
+});
+const getApplyBtnEvent = (page) => (section, isTIGroup, hasSuggestions) => ({
+  category: MODAL_MAKE_DECISION,
+  action: `Click on button "Apply" after selecting ${section}`,
+  label: `${page}#${isTIGroup ? 'TI' : 'NoTI'}#${hasSuggestions ? 'withML' : 'withoutML'}`,
+});
+const getMLSwitcherEvent = (page) => (isTIGroup, state) => ({
+  category: MODAL_MAKE_DECISION,
+  action: 'Switch Show Error Logs in ML Suggestions',
+  label: `${page}#${isTIGroup ? 'TI' : 'NoTI'}#${state ? 'ON' : 'OFF'}`,
+});
+const getIgnoreAASwitcherEvent = (page) => (isTIGroup, state) => ({
+  category: MODAL_MAKE_DECISION,
+  action: 'Switch Ignore in Auto Analysis on modal "Make decision"',
+  label: `${page}#${isTIGroup ? 'TI' : 'NoTI'}#${state ? 'ON' : 'OFF'}`,
+});
+const getOnClickIssueEvent = (page) => (isTIGroup, label) => ({
+  category: MODAL_MAKE_DECISION,
+  action: `Click on button "+${label}" on modal "Make decision"`,
+  label: `${page}#${isTIGroup ? 'TI' : 'NoTI'}`,
+});
+const getOnClickExternalLink = (page) => (isTIGroup, section) => ({
+  category: MODAL_MAKE_DECISION,
+  action: 'Click on issue link and open page Log',
+  label: `${page}#${isTIGroup ? 'TI' : 'NoTI'}#in ${section}`,
+});
+const getOpenStackTraceEvent = (page) => (isTIGroup) => ({
+  category: MODAL_MAKE_DECISION,
+  action: 'Open Error Logs in ML Suggestions',
+  label: `${page}#${isTIGroup ? 'TI' : 'NoTI'}`,
+});
+export const getMakeDecisionModalEvents = (page) => ({
+  openModal: getOpenModalEvent(page),
+  onApply: getApplyBtnEvent(page),
+  toggleMLSwitcher: getMLSwitcherEvent(page),
+  toggleIgnoreAASwitcher: getIgnoreAASwitcherEvent(page),
+  onClickIssueBtn: getOnClickIssueEvent(page),
+  onClickExternalLink: getOnClickExternalLink(page),
+  onOpenStackTrace: getOpenStackTraceEvent(page),
 });

@@ -136,15 +136,18 @@ export class TestItemDetailsModal extends Component {
   getTabsConfig = (editable) => {
     const {
       intl: { formatMessage },
+      data: { eventsInfo },
     } = this.props;
     return [
       {
         name: formatMessage(messages.detailsTabTitle),
         content: this.renderDetailsTab(editable),
+        eventInfo: eventsInfo.detailsTab,
       },
       {
         name: formatMessage(messages.stackTraceTabTitle),
         content: this.renderStackTraceTab(),
+        eventInfo: eventsInfo.stackTraceTab,
       },
     ];
   };
@@ -237,6 +240,7 @@ export class TestItemDetailsModal extends Component {
               disabled={!editable}
               keyURLCreator={this.testItemAttributeKeyURLCreator}
               valueURLCreator={this.testItemAttributeValueURLCreator}
+              eventsInfo={this.props.data.eventsInfo}
             />
           </FieldProvider>
         </ModalField>

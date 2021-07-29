@@ -31,6 +31,10 @@
 
     & .label {
       color: $COLOR--gray-60;
+
+      &.background-dark {
+        color: $COLOR--charcoal;
+      }
     }
   }
 
@@ -41,6 +45,10 @@
   &.without-indentation {
     margin-bottom: 0;
     margin-right: 0;
+  }
+
+  &.background-dark {
+    background-color: $COLOR--gray-91;
   }
 }
 
@@ -68,4 +76,8 @@
   svg {
     fill: $COLOR--gray-60;
   }
+}
+
+.not-editable .label {
+  cursor: default;
 }

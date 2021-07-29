@@ -20,7 +20,15 @@ import { CheckIcon } from './checkIcon';
 
 const cx = classNames.bind(styles);
 
-export const InputCheckbox = ({ children, value, disabled, onChange, onFocus, onBlur }) => (
+export const InputCheckbox = ({
+  children,
+  value,
+  disabled,
+  onChange,
+  onFocus,
+  onBlur,
+  iconTransparentBackground,
+}) => (
   // eslint-disable-next-line
   <label className={cx('input-checkbox')} onFocus={onFocus} onBlur={onBlur} tabIndex="1">
     <input
@@ -30,7 +38,12 @@ export const InputCheckbox = ({ children, value, disabled, onChange, onFocus, on
       disabled={disabled}
       onChange={onChange}
     />
-    <CheckIcon disabled={disabled} centered={!children} checked={value} />
+    <CheckIcon
+      disabled={disabled}
+      centered={!children}
+      checked={value}
+      transparentBackground={iconTransparentBackground}
+    />
     {children && <span className={cx('children-container', { disabled })}>{children}</span>}
   </label>
 );
@@ -41,6 +54,7 @@ InputCheckbox.propTypes = {
   onChange: PropTypes.func,
   onFocus: PropTypes.func,
   onBlur: PropTypes.func,
+  iconTransparentBackground: PropTypes.bool,
 };
 InputCheckbox.defaultProps = {
   children: '',
@@ -49,4 +63,5 @@ InputCheckbox.defaultProps = {
   onChange: () => {},
   onFocus: () => {},
   onBlur: () => {},
+  iconTransparentBackground: false,
 };

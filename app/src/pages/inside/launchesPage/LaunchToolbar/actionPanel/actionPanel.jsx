@@ -210,7 +210,13 @@ export class ActionPanel extends Component {
 
     return (
       <div className={cx('action-panel', { 'right-buttons-only': !showBreadcrumb && !hasErrors })}>
-        {showBreadcrumb && <Breadcrumbs descriptors={breadcrumbs} onRestorePath={restorePath} />}
+        {showBreadcrumb && (
+          <Breadcrumbs
+            descriptors={breadcrumbs}
+            onRestorePath={restorePath}
+            togglerEventInfo={LAUNCHES_PAGE_EVENTS.plusMinusBreadcrumb}
+          />
+        )}
         {hasErrors && (
           <GhostButton disabled={!hasValidItems} onClick={onProceedValidItems}>
             {intl.formatMessage(messages.proceedButton)}

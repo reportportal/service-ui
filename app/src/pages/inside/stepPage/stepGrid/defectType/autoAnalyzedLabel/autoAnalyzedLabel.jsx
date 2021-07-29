@@ -30,12 +30,16 @@ const messages = defineMessages({
   },
 });
 
-export const AutoAnalyzedLabel = injectIntl(({ intl }) => (
-  <div className={cx('aa-label')} title={intl.formatMessage(messages.investigatedByAA)}>
+export const AutoAnalyzedLabel = injectIntl(({ intl, className }) => (
+  <div className={cx('aa-label', className)} title={intl.formatMessage(messages.investigatedByAA)}>
     {Parser(AAIcon)}
   </div>
 ));
 
 AutoAnalyzedLabel.propTypes = {
   intl: PropTypes.object.isRequired,
+  className: PropTypes.string,
+};
+AutoAnalyzedLabel.defaultProps = {
+  className: '',
 };

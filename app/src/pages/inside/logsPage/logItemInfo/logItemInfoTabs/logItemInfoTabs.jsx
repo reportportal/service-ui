@@ -26,6 +26,8 @@ import {
   activeLogIdSelector,
   activeRetryIdSelector,
   activeLogSelector,
+  activeTabIdSelector,
+  setActiveTabIdAction,
 } from 'controllers/log';
 import { fetchFirstAttachmentsAction, attachmentItemsSelector } from 'controllers/log/attachments';
 import { SAUCE_LABS } from 'common/constants/pluginNames';
@@ -34,6 +36,7 @@ import StackTraceIcon from 'common/img/stack-trace-inline.svg';
 import AttachmentIcon from 'common/img/attachment-inline.svg';
 import InfoIcon from 'common/img/info-inline.svg';
 import ClockIcon from 'common/img/clock-inline.svg';
+import LogIcon from 'common/img/log-view-inline.svg';
 import { getSauceLabsConfig } from 'components/integrations/integrationProviders/sauceLabsIntegration/utils';
 import { availableIntegrationsByPluginNameSelector } from 'controllers/plugins';
 import { StackTrace } from 'pages/inside/common/stackTrace';
@@ -44,6 +47,7 @@ import { LogItemActivity } from './logItemActivity';
 import { Attachments } from './attachments';
 import { getActionMessage } from '../utils/getActionMessage';
 import styles from './logItemInfoTabs.scss';
+import { LogsGridWrapper } from '../../logsGridWrapper';
 
 const cx = classNames.bind(styles);
 
@@ -51,6 +55,10 @@ const messages = defineMessages({
   stackTab: {
     id: 'LogItemInfoTabs.stackTab',
     defaultMessage: 'Stack trace',
+  },
+  logsTab: {
+    id: 'LogItemInfoTabs.logsTab',
+    defaultMessage: 'All logs',
   },
   attachmentsTab: {
     id: 'LogItemInfoTabs.attachmentsTab',
@@ -78,9 +86,11 @@ const ATTACHMENTS_TAB_ID = 'attachments';
     logItem: activeLogSelector(state),
     sauceLabsIntegrations: availableIntegrationsByPluginNameSelector(state, SAUCE_LABS),
     attachments: attachmentItemsSelector(state),
+    activeTabId: activeTabIdSelector(state),
   }),
   {
     fetchFirstAttachments: fetchFirstAttachmentsAction,
+    setActiveTabId: setActiveTabIdAction,
   },
 )
 @track()
@@ -99,17 +109,21 @@ export class LogItemInfoTabs extends Component {
     isSauceLabsIntegrationView: PropTypes.bool.isRequired,
     sauceLabsIntegrations: PropTypes.array.isRequired,
     fetchFirstAttachments: PropTypes.func,
+    setActiveTabId: PropTypes.func,
     attachments: PropTypes.array,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    activeTabId: PropTypes.string,
   };
 
   static defaultProps = {
     lastActivity: null,
     fetchFirstAttachments: () => {},
     attachments: [],
+    activeTabId: 'logs',
+    setActiveTabId: () => {},
   };
 
   static getDerivedStateFromProps(props) {
@@ -119,10 +133,6 @@ export class LogItemInfoTabs extends Component {
         }
       : null;
   }
-
-  state = {
-    activeTabId: null,
-  };
 
   componentDidUpdate() {
     if (this.props.loading && this.props.isSauceLabsIntegrationView) {
@@ -136,25 +146,21 @@ export class LogItemInfoTabs extends Component {
     }
   }
 
-  setActiveTab = (activeTabId) => {
+  setActiveTab = (tabId) => {
     const {
       isSauceLabsIntegrationView,
       onToggleSauceLabsIntegrationView,
       fetchFirstAttachments,
       attachments,
+      setActiveTabId,
     } = this.props;
-    if (isSauceLabsIntegrationView && activeTabId) {
+    if (isSauceLabsIntegrationView && tabId) {
       onToggleSauceLabsIntegrationView();
     }
-    if (activeTabId === ATTACHMENTS_TAB_ID && !attachments.length) {
+    if (tabId === ATTACHMENTS_TAB_ID && !attachments.length) {
       fetchFirstAttachments();
     }
-    this.setState({
-      activeTabId:
-        this.state.activeTabId === activeTabId && this.state.activeTabId !== null
-          ? null
-          : activeTabId,
-    });
+    setActiveTabId(tabId);
   };
 
   isHistoryTabVisible = () => {
@@ -191,6 +197,20 @@ export class LogItemInfoTabs extends Component {
         },
       },
       {
+        id: 'logs',
+        label: formatMessage(messages.logsTab),
+        icon: LogIcon,
+        stroked: true,
+        eventInfo: LOG_PAGE_EVENTS.LOGS_TAB,
+        component: LogsGridWrapper,
+        componentProps: {
+          onChangePage,
+          onChangeLogLevel,
+          logItem,
+          isSauceLabsIntegrationView: this.props.isSauceLabsIntegrationView,
+        },
+      },
+      {
         id: ATTACHMENTS_TAB_ID,
         label: formatMessage(messages.attachmentsTab),
         icon: AttachmentIcon,
@@ -216,7 +236,7 @@ export class LogItemInfoTabs extends Component {
 
   toggleSauceLabsIntegrationContent = () => {
     this.props.tracking.trackEvent(LOG_PAGE_EVENTS.SAUCE_LABS_BTN);
-    this.setActiveTab(null);
+    this.props.setActiveTabId('logs');
     this.props.onToggleSauceLabsIntegrationView();
   };
 
@@ -244,7 +264,7 @@ export class LogItemInfoTabs extends Component {
   };
 
   getActiveTabId = (tabs) => {
-    const { activeTabId } = this.state;
+    const { activeTabId } = this.props;
     if (tabs.find((tab) => tab.id === activeTabId)) {
       return activeTabId;
     }

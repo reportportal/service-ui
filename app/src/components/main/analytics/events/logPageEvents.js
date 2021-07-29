@@ -19,6 +19,7 @@ import {
   getLinkIssueActionEvent,
   getPostIssueActionEvent,
   getUnlinkIssueActionEvent,
+  getClickOnPlusMinusEvents,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getDeleteItemModalEvents,
@@ -27,17 +28,31 @@ import {
   getEditToInvestigateSelectAllSimilarItemsEvent,
   getEditToInvestigateSelectSpecificSimilarItemEvent,
   getLinkIssueModalEvents,
+  getMakeDecisionModalEvents,
   getPostIssueModalEvents,
   getUnlinkIssueModalEvents,
 } from './common/testItemPages/modalEventsCreators';
 
 export const LOG_PAGE = 'log';
+
+export const LogViewMode = (state, view) => ({
+  category: LOG_PAGE,
+  action: `Click on icon "${view.charAt(0).toUpperCase() + view.slice(1)} Mode"`,
+  label: state ? 'On' : 'Off',
+});
+export const getHideAllPassedLogs = (state) => ({
+  category: LOG_PAGE,
+  action: 'Click on checkbox "Hide All Passed Logs"',
+  label: state ? 'On' : 'Off',
+});
+export const getHistoryLineCheckbox = (state) => ({
+  category: LOG_PAGE,
+  action: 'Click on History line checkbox',
+  label: state ? 'On' : 'Off',
+});
+
 export const LOG_PAGE_EVENTS = {
-  PLUS_MINUS_BREADCRUMB: {
-    category: LOG_PAGE,
-    action: 'Click on Bread Crumb icon Plus/Minus',
-    label: 'Show/Hide all names of items',
-  },
+  plusMinusBreadcrumb: getClickOnPlusMinusEvents(LOG_PAGE),
   ALL_LABEL_BREADCRUMB: {
     category: LOG_PAGE,
     action: 'Click on Bread Crumb All',
@@ -69,15 +84,15 @@ export const LOG_PAGE_EVENTS = {
     action: 'Click on History execution tab',
     label: 'Transition to item log page',
   },
-  HISTORY_LINE_MODE_CHB: {
-    category: LOG_PAGE,
-    action: 'Click on History line checkbox',
-    label: 'Change type of History line',
-  },
   STACK_TRACE_TAB: {
     category: LOG_PAGE,
     action: 'Click on Stack Trace tab',
     label: 'Open Stack Trace tab',
+  },
+  LOGS_TAB: {
+    category: LOG_PAGE,
+    action: 'Click on Logs tab',
+    label: 'Open Logs tab',
   },
   ATTACHMENT_TAB: {
     category: LOG_PAGE,
@@ -118,6 +133,11 @@ export const LOG_PAGE_EVENTS = {
     category: LOG_PAGE,
     action: 'Enter filter parameter in Log message input',
     label: 'Filter log messages by parameter',
+  },
+  ALL_STATUSES: {
+    category: LOG_PAGE,
+    action: 'Click on Icon Sorting on "All Statuses" in Log Message',
+    label: 'Sort Logs',
   },
   TIME_SORTING: {
     category: LOG_PAGE,
@@ -183,6 +203,16 @@ export const LOG_PAGE_EVENTS = {
   LINK_ISSUE_MODAL_EVENTS: getLinkIssueModalEvents(LOG_PAGE),
   // DELETE_ITEM_MODAL
   DELETE_ITEM_MODAL_EVENTS: getDeleteItemModalEvents(LOG_PAGE),
+  MORE: {
+    category: LOG_PAGE,
+    action: 'Click on button "More"',
+    label: 'Container with defects shows',
+  },
+  SHOW_LESS: {
+    category: LOG_PAGE,
+    action: 'Click on button "Show Less"',
+    label: 'Container with defects hides',
+  },
   PREVIOUS_ATTACHMENT_ICON: {
     category: LOG_PAGE,
     action: 'Click on icon Previous Attachment',
@@ -263,4 +293,5 @@ export const LOG_PAGE_EVENTS = {
     action: 'Click on Play button on Sauce Labs video',
     label: 'Play Sauce Labs video',
   },
+  MAKE_DECISION_MODAL_EVENTS: getMakeDecisionModalEvents(LOG_PAGE),
 };

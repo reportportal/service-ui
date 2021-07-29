@@ -104,6 +104,8 @@ export const URLS = {
       'filter.eq.attributeKey': key || undefined,
       'filter.cnt.attributeValue': searchTerm,
     })}`,
+  getMLSuggestions: (activeProject, itemId) => `${urlBase}${activeProject}/item/suggest/${itemId}`,
+  choiceSuggestedItems: (activeProject) => `${urlBase}${activeProject}/item/suggest/choice`,
   launchNameSearch: (activeProject) => (searchTerm = '') =>
     `${urlBase}${activeProject}/launch/names?filter.cnt.name=${searchTerm}`,
   launchOwnersSearch: (activeProject) => (searchTerm = '') =>
@@ -227,6 +229,7 @@ export const URLS = {
       'page.sort': 'logTime,DESC',
     })}`,
   logSearch: (activeProject, itemId) => `${urlBase}${activeProject}/log/search/${itemId}`,
+  bulkLastLogs: (activeProject) => `${urlBase}${activeProject}/log/under`,
   user: () => `${urlBase}user`,
   userRegistration: () => `${urlBase}user/registration`,
   userValidateRegistrationInfo: () => `${urlBase}user/registration/info`,

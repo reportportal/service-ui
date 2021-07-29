@@ -29,3 +29,9 @@ export const STATS_AB = 'statistics$defects$automation_bug';
 export const STATS_SI = 'statistics$defects$system_issue';
 export const STATS_TI = 'statistics$defects$to_investigate';
 export const STATS_ND = 'statistics$defects$no_defect';
+
+export const PRODUCT_BUG = 'statistics$defects$product_bug$pb001';
+export const AUTOMATION_BUG = 'statistics$defects$automation_bug$ab001';
+export const SYSTEM_ISSUE = 'statistics$defects$system_issue$si001';
+export const NO_DEFECT = 'statistics$defects$no_defect$nd001';
+export const TO_INVESTIGATE = 'statistics$defects$to_investigate$ti001';

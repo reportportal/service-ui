@@ -30,6 +30,7 @@ export class Image extends Component {
     isStatic: PropTypes.bool,
     fallback: PropTypes.string,
     preloaderColor: PropTypes.string,
+    requestParams: PropTypes.object,
   };
 
   static defaultProps = {
@@ -37,6 +38,7 @@ export class Image extends Component {
     isStatic: false,
     fallback: null,
     preloaderColor: '',
+    requestParams: {},
   };
 
   constructor(props) {
@@ -86,7 +88,7 @@ export class Image extends Component {
         loading: true,
       });
 
-      fetch(this.props.src, { responseType: 'blob' })
+      fetch(this.props.src, { responseType: 'blob', ...this.props.requestParams })
         .then(this.createURL)
         .catch(() => {
           this.setState({ error: true, loading: false });
@@ -94,8 +96,18 @@ export class Image extends Component {
     }
   };
 
-  createURL = (file) =>
-    this.setState({ loading: false, fileURL: URL.createObjectURL(file), error: false });
+  normalizeFileTypeForSvg = (file) => {
+    if (file.type === 'text/xml') {
+      return new Blob([file], { type: 'image/svg+xml' });
+    }
+
+    return file;
+  };
+
+  createURL = (file) => {
+    const normalizedFile = this.normalizeFileTypeForSvg(file);
+    this.setState({ loading: false, fileURL: URL.createObjectURL(normalizedFile), error: false });
+  };
 
   revokeURL = () => {
     if (!this.state.fileURL) {
@@ -105,7 +117,7 @@ export class Image extends Component {
   };
 
   render() {
-    const { src, alt, fallback, isStatic, preloaderColor, ...rest } = this.props;
+    const { src, alt, fallback, isStatic, preloaderColor, requestParams, ...rest } = this.props;
     const { loading } = this.state;
 
     return loading && !isStatic ? (

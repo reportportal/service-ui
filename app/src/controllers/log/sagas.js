@@ -53,6 +53,7 @@ import {
   isLaunchLogSelector,
   includeAllLaunchesSelector,
   historyItemsSelector,
+  activeLogSelector,
 } from './selectors';
 import {
   attachmentSagas,
@@ -66,6 +67,7 @@ import {
   setPageLoadingAction,
   fetchHistoryItemsSuccessAction,
   setShouldShowLoadMoreAction,
+  fetchLogPageStackTrace,
 } from './actionCreators';
 
 function* fetchActivity() {
@@ -195,10 +197,16 @@ function* fetchHistoryItemData() {
 
 function* fetchLogPageData({ meta = {} }) {
   const isPathNameChanged = yield select(pathnameChangedSelector);
+  const logItem = yield select(activeLogSelector);
   yield put({ type: CLEAR_NESTED_STEPS });
   if (meta.refresh) {
     const offset = yield select(logPageOffsetSelector);
-    yield all([put(fetchTestItemsAction({ offset })), call(fetchLogs)]);
+    yield all([
+      put(fetchTestItemsAction({ offset })),
+      put(fetchLogPageStackTrace(logItem)),
+      put(fetchFirstAttachmentsAction()),
+      call(fetchLogs),
+    ]);
     return;
   }
   if (isPathNameChanged) {

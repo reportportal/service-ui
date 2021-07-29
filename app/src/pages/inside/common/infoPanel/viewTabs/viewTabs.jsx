@@ -21,6 +21,7 @@ import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
 import Link from 'redux-first-router-link';
 import classNames from 'classnames/bind';
+import track from 'react-tracking';
 import LogIcon from 'common/img/log-view-inline.svg';
 import HistoryIcon from 'common/img/history-inline.svg';
 import ListIcon from 'common/img/stack-trace-inline.svg';
@@ -33,8 +34,10 @@ import {
   logViewLinkSelector,
   historyViewLinkSelector,
   isStepLevelSelector,
+  levelSelector,
 } from 'controllers/testItem';
 import { debugModeSelector } from 'controllers/launch';
+import { pageEventsMap } from 'components/main/analytics';
 import styles from './viewTabs.scss';
 
 const cx = classNames.bind(styles);
@@ -62,12 +65,14 @@ const messages = defineMessages({
   },
 });
 
+@track()
 @connect((state) => ({
   isStepLevel: isStepLevelSelector(state),
   debugMode: debugModeSelector(state),
   listViewLink: listViewLinkSelector(state),
   logViewLink: logViewLinkSelector(state),
   historyViewLink: historyViewLinkSelector(state),
+  level: levelSelector(state),
 }))
 @injectIntl
 export class ViewTabs extends Component {
@@ -80,6 +85,11 @@ export class ViewTabs extends Component {
     logViewLink: PropTypes.object,
     listViewLink: PropTypes.object,
     historyViewLink: PropTypes.object,
+    level: PropTypes.string,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -90,6 +100,7 @@ export class ViewTabs extends Component {
     logViewLink: {},
     listViewLink: {},
     historyViewLink: {},
+    level: '',
   };
 
   getPages = () => {
@@ -101,6 +112,7 @@ export class ViewTabs extends Component {
       isStepLevel,
       isTestItemsList,
       intl: { formatMessage },
+      level,
     } = this.props;
 
     const pages = [
@@ -112,6 +124,7 @@ export class ViewTabs extends Component {
         available: true,
         disabled: false,
         hint: '',
+        event: pageEventsMap[level].LIST_VIEW_TAB,
       },
       {
         id: UNIQUE_ERRORS_VIEW,
@@ -130,6 +143,7 @@ export class ViewTabs extends Component {
         available: !isTestItemsList,
         disabled: false,
         hint: '',
+        event: pageEventsMap[level].LOG_VIEW_TAB,
       },
       {
         id: HISTORY_VIEW,
@@ -139,6 +153,7 @@ export class ViewTabs extends Component {
         available: !debugMode,
         disabled: false,
         hint: '',
+        event: pageEventsMap[level].HISTORY_VIEW_TAB,
       },
     ];
 
@@ -162,6 +177,7 @@ export class ViewTabs extends Component {
                 active: viewMode === page.id && !page.disabled,
                 disabled: page.disabled,
               })}
+              onClick={() => this.props.tracking.trackEvent(page.event)}
             >
               {page.icon && <i className={cx('icon')}>{Parser(page.icon)}</i>}
               {page.title}

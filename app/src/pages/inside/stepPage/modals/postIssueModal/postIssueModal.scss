@@ -23,30 +23,46 @@
 .post-issue-form {
   margin-bottom: 10px;
   box-sizing: border-box;
+  &.dark-view {
+    max-width: 600px;
+    padding: 0 24px;
+  }
 }
 
 .no-default-properties-message {
   box-sizing: border-box;
-  padding: 15px;
-  margin: 20px 5px;
-  border: 1px solid $COLOR--blush;
-  border-radius: 4px;
-  color: $COLOR--fatal;
-  background-color: $COLOR--light-red;
+  display: flex;
+  width: 280px;
+  margin-left: 142px;
+  color: $COLOR--error;
+  background-color: transparent;
   font-family: $FONT-REGULAR;
-  font-size: 13px;
+  font-size: 10px;
+  line-height: 18px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-left: 0;
+  }
+}
+
+.icon {
+  display: inline-block;
+  margin-right: 5px;
+  svg {
+    width: 16px;
+    height: 16px;
+    fill: $COLOR--error;
+  }
+}
+
+.include-block-wrapper {
+  display: flex;
+  margin: 24px 0;
 }
 
 .include-data-block {
   display: flex;
-  justify-content: center;
   flex-wrap: wrap;
-  width: 69%;
-  margin-left: 120px;
-  margin-bottom: 30px;
-  @media (max-width: $SCREEN_SM_MAX) {
-    margin-left: 130px;
-  }
+  margin-left: 60px;
   @media (max-width: $SCREEN_XS_MAX) {
     margin-left: 50px;
   }
@@ -57,16 +73,19 @@
   color: $COLOR--charcoal-grey;
   font-size: 13px;
   font-family: $FONT-REGULAR;
+  &.dark-view {
+    color: $COLOR--dirty-gray;
+  }
 }
 
 .form-block-header {
   display: block;
-  width: 100%;
-  height: 30px;
   box-sizing: border-box;
-  margin-bottom: 20px;
-  padding: 10px;
+  padding: 10px 0;
   background-color: $COLOR--white-four;
+  &.dark-view {
+    background-color: transparent;
+  }
 }
 
 .header-text {
@@ -74,13 +93,17 @@
   opacity: 0.9;
   font-size: 12px;
   color: $COLOR--gray-47;
-  font-family: $FONT-SEMIBOLD;
+  font-family: $FONT-REGULAR;
   text-transform: uppercase;
+  &.dark-view {
+    color: $COLOR--dirty-gray;
+  }
 }
 
 .credentials-block {
   height: 0;
   overflow: hidden;
+  margin-top: 20px;
 }
 
 .credentials-block-wrapper {
@@ -88,7 +111,7 @@
     &:after {
       content: '+';
       position: absolute;
-      right: -16px;
+      right: -48px;
       top: -4px;
       font-size: 24px;
     }
@@ -100,7 +123,7 @@
       &:after {
         content: '-';
         top: -6px;
-        right: -13px;
+        right: -45px;
       }
     }
 
@@ -142,4 +165,8 @@
   100% {
     height: 0;
   }
+}
+
+.items-list {
+  margin-top: 42px;
 }

@@ -42,6 +42,12 @@
   border: 1px solid $COLOR--gray-80;
   background-color: $COLOR--white-two;
   cursor: pointer;
+  &.dark-view {
+    border: none;
+    border-radius: 4px;
+    box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.07);
+    background-color: $COLOR--black-1;
+  }
 
   &:hover {
     border-color: $COLOR--gray-47;
@@ -55,6 +61,12 @@
   &.disabled {
     background-color: $COLOR--gray-91;
     cursor: default;
+    & .value.dark-view {
+      color: $COLOR--dirty-gray;
+    }
+    &.dark-view {
+      background-color: $COLOR--black-1;
+    }
     &:hover {
       border-color: $COLOR--gray-80;
     }
@@ -71,6 +83,9 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   color: $COLOR--charcoal-grey;
+  &.dark-view {
+    color: $COLOR--white-two;
+  }
 }
 .arrow {
   position: absolute;
@@ -86,6 +101,9 @@
   box-sizing: border-box;
   color: $COLOR--charcoal-grey;
   transition: transform 200ms linear;
+  &.dark-view {
+    color: $COLOR--white-two;
+  }
 }
 .select-list {
   position: absolute;

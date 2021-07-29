@@ -40,32 +40,33 @@ const messages = defineMessages({
 export class JiraCredentials extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
+    darkView: PropTypes.bool,
   };
 
   render() {
-    const { intl } = this.props;
+    const { intl, darkView } = this.props;
     return (
       <div className={cx('jira-credentials')}>
         <FormField
           name="username"
           fieldWrapperClassName={cx('field-wrapper')}
           label={intl.formatMessage(messages.usernameLabel)}
-          labelClassName={cx('field-title')}
+          labelClassName={cx('field-title', { 'dark-view': darkView })}
           required
         >
           <FieldErrorHint>
-            <Input type="text" mobileDisabled />
+            <Input className={darkView && 'dark-view'} type="text" mobileDisabled />
           </FieldErrorHint>
         </FormField>
         <FormField
           name="password"
           fieldWrapperClassName={cx('field-wrapper')}
           label={intl.formatMessage(messages.passwordLabel)}
-          labelClassName={cx('field-title')}
+          labelClassName={cx('field-title', { 'dark-view': darkView })}
           required
         >
           <FieldErrorHint>
-            <Input type="password" mobileDisabled />
+            <Input className={darkView && 'dark-view'} type="password" mobileDisabled />
           </FieldErrorHint>
         </FormField>
       </div>

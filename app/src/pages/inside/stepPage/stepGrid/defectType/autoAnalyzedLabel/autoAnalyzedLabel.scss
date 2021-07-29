@@ -17,7 +17,7 @@
 .aa-label {
   display: inline-block;
   height: 20px;
-  width: 43px;
+  min-width: 43px;
   svg {
     fill: $COLOR--white-two;
   }

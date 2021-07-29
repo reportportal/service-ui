@@ -17,41 +17,37 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl } from 'react-intl';
 import { InputRadio } from 'components/inputs/inputRadio';
 import styles from './inputRadioGroup.scss';
 
 const cx = classNames.bind(styles);
 
-@injectIntl
 export class InputRadioGroup extends PureComponent {
   static propTypes = {
-    intl: PropTypes.object.isRequired,
     value: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
     options: PropTypes.arrayOf(
       PropTypes.shape({
         ownValue: PropTypes.string.isRequired,
-        label: PropTypes.shape({
-          id: PropTypes.string.isRequired,
-          defaultMessage: PropTypes.string.isRequired,
-        }),
+        label: PropTypes.string.isRequired,
+        disabled: PropTypes.bool,
+        tooltip: PropTypes.string,
       }),
     ),
     inline: PropTypes.bool,
+    inputGroupClassName: PropTypes.string,
+    mode: PropTypes.string,
   };
   static defaultProps = {
     options: [],
     inline: false,
+    inputGroupClassName: '',
+    mode: '',
   };
   renderRadioInputs = () => {
-    const {
-      options,
-      value,
-      intl: { formatMessage },
-    } = this.props;
+    const { options, value, mode } = this.props;
     return options.map((item, index) => {
-      const { label, ownValue, ...rest } = item;
+      const { label, ownValue, tooltip, ...rest } = item;
       const onChange = () => this.props.onChange(ownValue);
       return (
         <div
@@ -61,22 +57,33 @@ export class InputRadioGroup extends PureComponent {
               'radio-group-item-first': index === 0,
             },
           ])}
-          key={label.id}
+          key={ownValue}
         >
-          <InputRadio value={value} ownValue={ownValue} onChange={onChange} {...rest}>
-            {formatMessage(label)}
+          <InputRadio
+            value={value}
+            ownValue={ownValue}
+            onChange={onChange}
+            mode={mode}
+            title={tooltip || label}
+            {...rest}
+          >
+            {label}
           </InputRadio>
         </div>
       );
     });
   };
   render() {
-    const { inline } = this.props;
+    const { inline, inputGroupClassName } = this.props;
     return (
       <div
-        className={cx(['radio-group'], {
-          'radio-group-inline': inline,
-        })}
+        className={cx(
+          ['radio-group'],
+          {
+            'radio-group-inline': inline,
+          },
+          inputGroupClassName,
+        )}
       >
         {this.renderRadioInputs()}
       </div>

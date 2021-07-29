@@ -19,7 +19,7 @@ export {
   IgnoreInAAModal,
   IncludeInAAModal,
   TestItemDetailsModal,
-  EditDefectModal,
   LinkIssueModal,
   UnlinkIssueModal,
+  MakeDecisionModal,
 } from './modals';

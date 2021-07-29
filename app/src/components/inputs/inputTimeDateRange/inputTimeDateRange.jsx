@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
+import track from 'react-tracking';
 import { TIME_DATE_FORMAT } from 'common/constants/timeDateFormat';
 import { InputTimeDateRangeMenu } from './inputTimeDateRangeMenu';
 import styles from './inputTimeDateRange.scss';
@@ -40,6 +41,7 @@ const messages = defineMessages({
   },
 });
 
+@track()
 @injectIntl
 export class InputTimeDateRange extends Component {
   static propTypes = {
@@ -50,6 +52,11 @@ export class InputTimeDateRange extends Component {
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
     withoutDynamic: PropTypes.bool,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
+    events: PropTypes.object,
   };
 
   static defaultProps = {
@@ -59,10 +66,12 @@ export class InputTimeDateRange extends Component {
     onFocus: () => {},
     onBlur: () => {},
     withoutDynamic: false,
+    events: {},
   };
 
   state = {
     opened: false,
+    customRangeVisited: false,
   };
 
   componentDidMount() {
@@ -80,7 +89,7 @@ export class InputTimeDateRange extends Component {
   };
 
   onClickPreset = (preset) => {
-    this.setState({ opened: false });
+    this.setState({ opened: false, customRangeVisited: false });
     this.props.onChange(preset.getValue());
   };
 
@@ -99,7 +108,15 @@ export class InputTimeDateRange extends Component {
 
   handleClickOutside = (e) => {
     if (this.node && !this.node.contains(e.target) && this.state.opened) {
-      this.setState({ opened: false });
+      const {
+        tracking,
+        events,
+        value: { start, end },
+      } = this.props;
+      const days = Math.floor(moment.duration(end - start).asDays());
+      this.state.customRangeVisited &&
+        tracking.trackEvent(events.getStartTimeCustomRange(`${days + 1}`));
+      this.setState({ opened: false, customRangeVisited: false });
       this.props.onBlur();
     }
   };
@@ -111,6 +128,7 @@ export class InputTimeDateRange extends Component {
       end: end || DEFAULT_DISPLAY_END_DATE,
       dynamic,
     });
+    this.setState({ customRangeVisited: true });
   };
 
   handleChangeTo = (m) => {
@@ -120,6 +138,7 @@ export class InputTimeDateRange extends Component {
       end: moment(m).valueOf(),
       dynamic,
     });
+    this.setState({ customRangeVisited: true });
   };
 
   handleChangeDynamic = (e) => {
@@ -129,6 +148,8 @@ export class InputTimeDateRange extends Component {
       end: end || DEFAULT_DISPLAY_END_DATE,
       dynamic: e.target.checked,
     });
+    this.props.tracking.trackEvent(this.props.events.getStartTimeDynamicUpdate(e.target.checked));
+    this.setState({ customRangeVisited: false });
   };
 
   render() {

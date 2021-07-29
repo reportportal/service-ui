@@ -27,7 +27,7 @@ export const PatternAnalyzedLabel = withTooltip({
   data: {
     dynamicWidth: true,
   },
-})(() => <div className={cx('pa-label')}>PA</div>);
+})(({ className = '' }) => <div className={cx('pa-label', className)}>PA</div>);
 
 PatternAnalyzedLabel.propTypes = {
   patternTemplates: PropTypes.array,

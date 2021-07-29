@@ -20,6 +20,7 @@ import { connect } from 'react-redux';
 import { instanceIdSelector, apiBuildVersionSelector } from 'controllers/appInfo';
 import track from 'react-tracking';
 import ReactGA from 'react-ga';
+import { idSelector } from 'controllers/user/selectors';
 
 const PAGE_VIEW = 'pageview';
 const GOOGLE_ANALYTICS_INSTANCE = 'UA-96321031-1';
@@ -27,6 +28,7 @@ const GOOGLE_ANALYTICS_INSTANCE = 'UA-96321031-1';
 @connect((state) => ({
   instanceId: instanceIdSelector(state),
   buildVersion: apiBuildVersionSelector(state),
+  userId: idSelector(state),
 }))
 @track(
   {},
@@ -46,6 +48,7 @@ export class AnalyticsWrapper extends Component {
     instanceId: PropTypes.string.isRequired,
     buildVersion: PropTypes.string.isRequired,
     children: PropTypes.node,
+    userId: PropTypes.number.isRequired,
   };
 
   static defaultProps = {
@@ -53,7 +56,7 @@ export class AnalyticsWrapper extends Component {
   };
 
   componentDidMount() {
-    const { instanceId, buildVersion } = this.props;
+    const { instanceId, buildVersion, userId } = this.props;
     const appVersion =
       buildVersion &&
       buildVersion
@@ -63,7 +66,13 @@ export class AnalyticsWrapper extends Component {
 
     ReactGA.initialize(GOOGLE_ANALYTICS_INSTANCE);
     ReactGA.pageview(window.location.pathname + window.location.search);
-    ReactGA.set({ dimension1: instanceId, dimension2: appVersion });
+    ReactGA.set({
+      dimension1: instanceId,
+      dimension2: appVersion,
+      dimension3: userId,
+      dimension4: Date.now(),
+    });
+    ReactGA.ga()('require', 'ec');
   }
 
   render() {

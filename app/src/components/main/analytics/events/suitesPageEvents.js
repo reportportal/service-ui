@@ -17,8 +17,11 @@
 import {
   getProceedValidItemsEvent,
   getRefreshPageActionEvent,
-  getHistoryPageLinkEvent,
   getRefineFiltersPanelEvents,
+  getClickOnPlusMinusEvents,
+  getListViewTabEvent,
+  getLogViewTabEvent,
+  getHistoryTabEvent,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getDeleteItemModalEvents,
@@ -27,11 +30,7 @@ import {
 
 export const SUITE_PAGE = 'suites';
 export const SUITES_PAGE_EVENTS = {
-  PLUS_MINUS_BREADCRUMB: {
-    category: SUITE_PAGE,
-    action: 'Click on Bread Crumb icon Plus/Minus',
-    label: 'Show/Hide all names of items',
-  },
+  plusMinusBreadcrumb: getClickOnPlusMinusEvents(SUITE_PAGE),
   ALL_LABEL_BREADCRUMB: {
     category: SUITE_PAGE,
     action: 'Click on Bread Crumb All',
@@ -47,7 +46,6 @@ export const SUITES_PAGE_EVENTS = {
     action: 'Click on Btn Delete',
     label: 'Delete selected Items',
   },
-  HISTORY_BTN: getHistoryPageLinkEvent(SUITE_PAGE),
   REFRESH_BTN: getRefreshPageActionEvent(SUITE_PAGE),
   REFINE_BY_NAME: {
     category: SUITE_PAGE,
@@ -238,4 +236,7 @@ export const SUITES_PAGE_EVENTS = {
   DELETE_ITEM_MODAL_EVENTS: getDeleteItemModalEvents(SUITE_PAGE),
   // EDIT_ITEMS_MODAL
   EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(SUITE_PAGE),
+  LIST_VIEW_TAB: getListViewTabEvent(SUITE_PAGE),
+  LOG_VIEW_TAB: getLogViewTabEvent(SUITE_PAGE),
+  HISTORY_VIEW_TAB: getHistoryTabEvent(SUITE_PAGE),
 };

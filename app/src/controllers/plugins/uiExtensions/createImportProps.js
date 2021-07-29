@@ -130,6 +130,7 @@ import {
   getItemNameConfig,
   getDefectTypeLocators,
 } from 'components/widgets/common/utils';
+import { IntegrationSettings, IntegrationFormField } from 'components/integrations/elements';
 import { createGlobalNamedIntegrationsSelector } from '../selectors';
 
 const BUTTONS = {
@@ -204,6 +205,8 @@ export const createImportProps = (pluginName) => ({
     AsyncAutocomplete,
     DependentFieldsControl,
     FieldArray,
+    IntegrationSettings,
+    IntegrationFormField,
   },
   constants: {
     PLUGIN_UI_EXTENSION_ADMIN_PAGE,

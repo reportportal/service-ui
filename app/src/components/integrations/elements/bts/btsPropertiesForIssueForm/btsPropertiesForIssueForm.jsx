@@ -18,6 +18,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
+import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { fetch } from 'common/utils';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -34,6 +35,7 @@ import {
   mergeFields,
 } from 'components/fields/dynamicFieldsSection/utils';
 import { VALUE_ID_KEY, VALUE_NAME_KEY } from 'components/fields/dynamicFieldsSection/constants';
+import { PLUGINS_PAGE_EVENTS, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { IntegrationFormField } from '../../integrationFormField';
 import { ISSUE_TYPE_FIELD_KEY } from '../constants';
 import styles from './btsPropertiesForIssueForm.scss';
@@ -68,6 +70,7 @@ const messages = defineMessages({
   },
 )
 @injectIntl
+@track()
 export class BtsPropertiesForIssueForm extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
@@ -81,6 +84,10 @@ export class BtsPropertiesForIssueForm extends Component {
     disabled: PropTypes.bool.isRequired,
     updateMetaData: PropTypes.func,
     isGlobal: PropTypes.bool,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -128,7 +135,13 @@ export class BtsPropertiesForIssueForm extends Component {
     }
   }
 
-  onChangeFieldCheckbox = (fieldId) => {
+  onChangeFieldCheckbox = (fieldId, fieldName) => {
+    this.props.tracking.trackEvent(
+      (this.props.isGlobal
+        ? PLUGINS_PAGE_EVENTS
+        : SETTINGS_PAGE_EVENTS
+      ).pluginChoosePropertiesCheckboxClick(this.props.pluginName, fieldName),
+    );
     const fieldsIds = {
       ...this.state.checkedFieldsIds,
       [fieldId]: !this.state.checkedFieldsIds[fieldId],
@@ -176,7 +189,7 @@ export class BtsPropertiesForIssueForm extends Component {
   getCustomBLockConfig = (field) => {
     const customBlock = (
       <InputCheckbox
-        onChange={() => this.onChangeFieldCheckbox(field.id)}
+        onChange={() => this.onChangeFieldCheckbox(field.id, field.fieldName)}
         value={field.checked}
         disabled={field.required || this.props.disabled}
       />

@@ -20,7 +20,7 @@ import track from 'react-tracking';
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
+import { getHistoryLineCheckbox, LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { Breadcrumbs } from 'components/main/breadcrumbs';
 import { GhostButton } from 'components/buttons/ghostButton';
 import LeftArrowIcon from 'common/img/arrow-left-small-inline.svg';
@@ -106,6 +106,7 @@ export class LogToolbar extends Component {
     logViewMode: PropTypes.string,
     restorePath: PropTypes.func,
     parentItem: PropTypes.object,
+    debugMode: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -146,7 +147,7 @@ export class LogToolbar extends Component {
 
   changeHistoryLineMode = () => {
     const { tracking, includeAllLaunches } = this.props;
-    tracking.trackEvent(LOG_PAGE_EVENTS.HISTORY_LINE_MODE_CHB);
+    tracking.trackEvent(getHistoryLineCheckbox(!includeAllLaunches));
     this.props.setIncludeAllLaunchesAction(!includeAllLaunches);
   };
 
@@ -163,12 +164,13 @@ export class LogToolbar extends Component {
       restorePath,
       parentItem,
       includeAllLaunches,
+      debugMode,
     } = this.props;
     return (
       <div className={cx('log-toolbar')}>
         <Breadcrumbs
           descriptors={breadcrumbs}
-          togglerEventInfo={LOG_PAGE_EVENTS.PLUS_MINUS_BREADCRUMB}
+          togglerEventInfo={LOG_PAGE_EVENTS.plusMinusBreadcrumb}
           breadcrumbEventInfo={LOG_PAGE_EVENTS.ITEM_NAME_BREADCRUMB_CLICK}
           allEventClick={LOG_PAGE_EVENTS.ALL_LABEL_BREADCRUMB}
           onRestorePath={restorePath}
@@ -176,9 +178,11 @@ export class LogToolbar extends Component {
         <div className={cx('action-buttons')}>
           {logViewMode === DETAILED_LOG_VIEW ? (
             <>
-              <InputCheckbox onChange={this.changeHistoryLineMode} value={includeAllLaunches}>
-                {intl.formatMessage(messages.historyAllLaunchesLabel)}
-              </InputCheckbox>
+              {!debugMode && (
+                <InputCheckbox onChange={this.changeHistoryLineMode} value={includeAllLaunches}>
+                  {intl.formatMessage(messages.historyAllLaunchesLabel)}
+                </InputCheckbox>
+              )}
               <div className={cx('action-button')}>
                 <div className={cx('left-arrow-button')}>
                   <GhostButton

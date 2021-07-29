@@ -28,9 +28,16 @@ const createRemoveClickHandler = (clickHandler) => (e) => {
   clickHandler();
 };
 
-export const Attribute = ({ attribute, onClick, onRemove, disabled, customClass }) => (
+export const Attribute = ({
+  attribute,
+  onClick,
+  onRemove,
+  disabled,
+  customClass,
+  backgroundDark,
+}) => (
   <div
-    className={cx('attribute', customClass, { disabled })}
+    className={cx('attribute', customClass, { disabled }, { [`background-dark`]: backgroundDark })}
     onClick={disabled ? undefined : onClick}
   >
     {!disabled && (
@@ -38,7 +45,9 @@ export const Attribute = ({ attribute, onClick, onRemove, disabled, customClass 
         {Parser(CrossIcon)}
       </div>
     )}
-    <div className={cx('label')}>{formatAttribute(attribute)}</div>
+    <div className={cx('label', { [`background-dark`]: backgroundDark })}>
+      {formatAttribute(attribute)}
+    </div>
   </div>
 );
 
@@ -48,6 +57,7 @@ Attribute.propTypes = {
   disabled: PropTypes.bool,
   onClick: PropTypes.func,
   onRemove: PropTypes.func,
+  backgroundDark: PropTypes.bool,
 };
 
 Attribute.defaultProps = {
@@ -56,4 +66,5 @@ Attribute.defaultProps = {
   disabled: false,
   onClick: () => {},
   onRemove: () => {},
+  backgroundDark: false,
 };

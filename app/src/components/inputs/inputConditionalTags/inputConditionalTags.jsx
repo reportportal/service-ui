@@ -104,6 +104,11 @@ export class InputConditionalTags extends Component {
   render() {
     const { intl, value, getURI, placeholder, inputProps } = this.props;
     const formattedValue = value.value ? value.value.split(',') : [];
+
+    const inputConditions = this.getConditions();
+    const selectedCondition =
+      value.condition && inputConditions.find((condition) => condition.value === value.condition);
+
     return (
       <div className={cx('input-conditional-tags', { opened: this.state.opened })}>
         <AsyncMultipleAutocomplete
@@ -120,16 +125,13 @@ export class InputConditionalTags extends Component {
         <div className={cx('conditions-block')} ref={this.setConditionsBlockRef}>
           <div className={cx('conditions-selector')} onClick={this.onClickConditionBlock}>
             <span className={cx('condition-selected')}>
-              {this.getConditions().length &&
-                value.condition &&
-                this.getConditions().filter((condition) => condition.value === value.condition)[0]
-                  .shortLabel}
+              {selectedCondition && selectedCondition.shortLabel}
             </span>
             <i className={cx('arrow', { rotated: this.state.opened })} />
           </div>
           <div className={cx('conditions-list', { visible: this.state.opened })}>
-            {this.getConditions() &&
-              this.getConditions().map((condition) => (
+            {inputConditions &&
+              inputConditions.map((condition) => (
                 <div
                   key={condition.value}
                   className={cx('condition', {

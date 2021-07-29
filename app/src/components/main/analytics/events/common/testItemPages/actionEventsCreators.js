@@ -50,15 +50,9 @@ export const getUnlinkIssueActionEvent = (category) => ({
   label: 'Arise Modal "Unlink Issue"',
 });
 
-export const getHistoryPageLinkEvent = (category) => ({
-  category,
-  action: 'Click on Btn "History"',
-  label: 'Transition to History View Page',
-});
-
 export const getRefreshPageActionEvent = (category) => ({
   category,
-  action: 'Click on Btn "Refresh"',
+  action: 'Click on button "Refresh"',
   label: 'Refresh page',
 });
 
@@ -79,4 +73,44 @@ export const getRefineFiltersPanelEvents = (category) => ({
     action: `Select ${parameter} parameter to refine`,
     label: `Show ${parameter} parameter field to refine`,
   }),
+  getChosenDate: (date) => ({
+    category,
+    action: 'Choose time for filter by start time on Launches.',
+    label: date,
+  }),
+  getStartTimeCustomRange: (date) => ({
+    category,
+    action: 'Choose time for filter by start time on Launches',
+    label: date,
+  }),
+  getStartTimeDynamicUpdate: (state) => ({
+    category,
+    action:
+      'Choose time for filter by start time on Launches and click on checkbox "Dynamic update"',
+    label: state ? 'Add checkmark' : 'Remove checkmark',
+  }),
+});
+
+export const getClickOnPlusMinusEvents = (page) => (state) => ({
+  category: page,
+  action: 'Click on Bread Crumb icon Plus/Minus',
+  label: state ? 'Minus' : 'Plus',
+});
+
+export const getListViewTabEvent = (page) => ({
+  category: page,
+  action: 'Click on tab "List view"',
+  label: 'User redirects to the List view page',
+});
+
+export const getLogViewTabEvent = (page) => ({
+  category: page,
+  action: 'Click on tab "Log view"',
+  label: 'User redirects to the Log view page',
+});
+
+export const getHistoryTabEvent = (page) => ({
+  category: page,
+  action: 'Click on tab "History"',
+  label: 'User redirects to the History page',
 });

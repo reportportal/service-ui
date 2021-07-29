@@ -30,6 +30,7 @@ import {
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import CircleCrossIcon from 'common/img/circle-cross-icon-inline.svg';
 import CircleCheckIcon from 'common/img/circle-check-inline.svg';
+import { isEmpty } from 'common/utils/validation/validatorHelpers';
 import { AttributeInput } from './attributeInput';
 import styles from './attributeEditor.scss';
 
@@ -97,7 +98,7 @@ export class AttributeEditor extends Component {
 
   getValidationErrors = (key, value) => ({
     key: attributeKeyValidator(key),
-    value: attributeValueValidator(value),
+    value: this.props.attribute.edited && attributeValueValidator(value),
   });
 
   byKeyComparator = (attribute, item, key, value) =>
@@ -124,10 +125,13 @@ export class AttributeEditor extends Component {
       (attribute) => attribute.key === this.state.key && attribute.value === this.state.value,
     );
 
+  isAttributeEmpty = () => isEmpty(this.state.key) && isEmpty(this.state.value);
+
   isFormValid = () =>
     !this.state.errors.key &&
     !this.state.errors.value &&
     this.isAttributeUnique() &&
+    !this.isAttributeEmpty() &&
     !this.state.isKeyEdited;
 
   handleSubmit = () => {
@@ -139,20 +143,16 @@ export class AttributeEditor extends Component {
       key,
       value,
     });
+    this.clearInputValues();
   };
 
+  clearInputValues = () => this.setState({ key: '', value: '' });
+
+  handleCancel = () => this.props.onCancel() || this.clearInputValues();
   handleAttributeKeyInputChange = (text) => this.setState({ isKeyEdited: !!text });
 
   render() {
-    const {
-      projectId,
-      attributes,
-      onCancel,
-      keyURLCreator,
-      valueURLCreator,
-      customClass,
-      intl,
-    } = this.props;
+    const { projectId, attributes, keyURLCreator, valueURLCreator, customClass, intl } = this.props;
     return (
       <div className={cx('attribute-editor', customClass)}>
         <div className={cx('control')}>
@@ -199,7 +199,7 @@ export class AttributeEditor extends Component {
           </div>
         </div>
         <div className={cx('control')}>
-          <div className={cx('icon')} onClick={onCancel}>
+          <div className={cx('icon')} onClick={this.handleCancel}>
             {Parser(CircleCrossIcon)}
           </div>
         </div>

@@ -19,11 +19,13 @@ import { Responsive, WidthProvider } from 'react-grid-layout';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import ReactObserver from 'react-event-observer';
+import track from 'react-tracking';
 import { NOTIFICATION_TYPES } from 'controllers/notification';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import PropTypes from 'prop-types';
+import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { EmptyWidgetGrid } from './emptyWidgetGrid';
 import { Widget } from './widget';
 import styles from './widgetsGrid.scss';
@@ -40,6 +42,7 @@ const messages = defineMessages({
   },
 });
 
+@track()
 @injectIntl
 export class WidgetsGrid extends Component {
   static propTypes = {
@@ -57,6 +60,10 @@ export class WidgetsGrid extends Component {
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       owner: PropTypes.string,
     }),
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -123,6 +130,7 @@ export class WidgetsGrid extends Component {
   };
 
   onResizeStart = (layout, oldItem) => {
+    this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.RESIZE_WIDGET);
     this.observer.publish(`${oldItem.i}_resizeStarted`);
   };
 
@@ -233,6 +241,7 @@ export class WidgetsGrid extends Component {
       rowHeight={rowHeight}
       breakpoints={breakpoints}
       onBreakpointChange={this.onBreakpointChange}
+      onDragStart={() => this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.DRAG_WIDGET)}
       onDragStop={this.onGridItemChange}
       onResizeStart={this.onResizeStart}
       onResizeStop={this.onResizeStop}

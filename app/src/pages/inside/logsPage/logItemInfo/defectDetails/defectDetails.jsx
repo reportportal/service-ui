@@ -30,10 +30,7 @@ import {
   postIssueAction,
   editDefectsAction,
 } from 'controllers/step';
-import { showModalAction } from 'controllers/modal';
-import { historyItemsSelector, updateHistoryItemIssuesAction } from 'controllers/log';
-import { getDefectTypeSelector } from 'controllers/project';
-import { TO_INVESTIGATE } from 'common/constants/defectTypes';
+import { updateHistoryItemIssuesAction } from 'controllers/log';
 import {
   availableBtsIntegrationsSelector,
   isPostIssueActionAvailable,
@@ -53,6 +50,7 @@ import {
   IgnoredInAALabel,
   PALabel,
 } from 'pages/inside/stepPage/stepGrid/defectType/defectType';
+import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import styles from './defectDetails.scss';
 
 const cx = classNames.bind(styles);
@@ -118,9 +116,7 @@ const UNLINK_ISSUE_EVENTS_INFO = {
 
 @connect(
   (state) => ({
-    historyItems: historyItemsSelector(state),
     btsIntegrations: availableBtsIntegrationsSelector(state),
-    getDefectType: getDefectTypeSelector(state),
     isBtsPluginsExist: isBtsPluginsExistSelector(state),
     enabledBtsPlugins: enabledBtsPluginsSelector(state),
   }),
@@ -129,7 +125,6 @@ const UNLINK_ISSUE_EVENTS_INFO = {
     unlinkIssueAction,
     postIssueAction,
     editDefectsAction,
-    showModalAction,
     updateHistoryItemIssues: updateHistoryItemIssuesAction,
   },
 )
@@ -142,10 +137,8 @@ export class DefectDetails extends Component {
     linkIssueAction: PropTypes.func.isRequired,
     unlinkIssueAction: PropTypes.func.isRequired,
     postIssueAction: PropTypes.func.isRequired,
-    historyItems: PropTypes.array.isRequired,
     btsIntegrations: PropTypes.array.isRequired,
     fetchFunc: PropTypes.func.isRequired,
-    showModalAction: PropTypes.func.isRequired,
     updateHistoryItemIssues: PropTypes.func.isRequired,
     debugMode: PropTypes.bool.isRequired,
     tracking: PropTypes.shape({
@@ -153,13 +146,11 @@ export class DefectDetails extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     logItem: PropTypes.object,
-    getDefectType: PropTypes.func,
     isBtsPluginsExist: PropTypes.bool,
     enabledBtsPlugins: PropTypes.array,
   };
   static defaultProps = {
     logItem: null,
-    getDefectType: () => {},
     isBtsPluginsExist: false,
     enabledBtsPlugins: [],
   };
@@ -245,52 +236,35 @@ export class DefectDetails extends Component {
 
   handleEditDefect = () => {
     const { logItem } = this.props;
-    if (this.isDefectGroupOperationAvailable()) {
-      this.props.showModalAction({
-        id: 'editToInvestigateDefectModal',
-        data: {
-          item: logItem,
-          fetchFunc: this.onDefectEdited,
-          eventsInfo: {
-            changeSearchMode: LOG_PAGE_EVENTS.CHANGE_SEARCH_MODE_EDIT_DEFECT_MODAL,
-            selectAllSimilarItems: LOG_PAGE_EVENTS.SELECT_ALL_SIMILAR_ITEMS_EDIT_DEFECT_MODAL,
-            selectSpecificSimilarItem:
-              LOG_PAGE_EVENTS.SELECT_SPECIFIC_SIMILAR_ITEM_EDIT_DEFECT_MODAL,
-            editDefectsEvents: LOG_PAGE_EVENTS.EDIT_DEFECT_MODAL_EVENTS,
-            unlinkIssueEvents: UNLINK_ISSUE_EVENTS_INFO,
-            postIssueEvents: POST_ISSUE_EVENTS_INFO,
-            linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
-          },
-        },
-      });
-    } else {
-      this.props.editDefectsAction([this.props.logItem], {
-        fetchFunc: this.onDefectEdited,
-        debugMode: this.props.debugMode,
-        eventsInfo: {
-          editDefectsEvents: LOG_PAGE_EVENTS.EDIT_DEFECT_MODAL_EVENTS,
-          unlinkIssueEvents: UNLINK_ISSUE_EVENTS_INFO,
-          postIssueEvents: POST_ISSUE_EVENTS_INFO,
-          linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
-        },
-      });
-    }
+    this.props.editDefectsAction([logItem], {
+      fetchFunc: this.onDefectEdited,
+      eventsInfo: {
+        changeSearchMode: LOG_PAGE_EVENTS.CHANGE_SEARCH_MODE_EDIT_DEFECT_MODAL,
+        selectAllSimilarItems: LOG_PAGE_EVENTS.SELECT_ALL_SIMILAR_ITEMS_EDIT_DEFECT_MODAL,
+        selectSpecificSimilarItem: LOG_PAGE_EVENTS.SELECT_SPECIFIC_SIMILAR_ITEM_EDIT_DEFECT_MODAL,
+        editDefectsEvents: LOG_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS,
+        unlinkIssueEvents: UNLINK_ISSUE_EVENTS_INFO,
+        postIssueEvents: POST_ISSUE_EVENTS_INFO,
+        linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
+      },
+    });
+    this.props.tracking.trackEvent(
+      LOG_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS.openModal(
+        logItem.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
+      ),
+    );
   };
 
   toggleExpanded = () => {
-    this.setState((state) => ({
-      expanded: !state.expanded,
-    }));
-  };
-
-  isDefectGroupOperationAvailable = () => {
-    const { logItem } = this.props;
-    return (
-      logItem.issue &&
-      logItem.issue.issueType &&
-      this.props.getDefectType(logItem.issue.issueType).typeRef.toUpperCase() ===
-        TO_INVESTIGATE.toUpperCase() &&
-      !this.props.debugMode
+    this.setState(
+      (state) => ({
+        expanded: !state.expanded,
+      }),
+      () => {
+        this.props.tracking.trackEvent(
+          this.state.expanded ? LOG_PAGE_EVENTS.MORE : LOG_PAGE_EVENTS.SHOW_LESS,
+        );
+      },
     );
   };
 
@@ -337,41 +311,45 @@ export class DefectDetails extends Component {
                       onRemove={this.handleUnlinkTicket}
                     />
                   </div>
-                  <GhostButton
-                    tiny
-                    icon={PlusIcon}
-                    transparentBorder
-                    transparentBorderHover
-                    disabled={!logItem.issue || isPostIssueUnavailable}
-                    onClick={this.handlePostIssue}
-                    title={
-                      !logItem.issue || isPostIssueUnavailable
-                        ? this.getIssueActionTitle(
-                            messages.noDefectTypeToPostIssue,
-                            isPostIssueUnavailable,
-                          )
-                        : ''
-                    }
-                  >
-                    {formatMessage(messages.postIssue)}
-                  </GhostButton>
-                  <GhostButton
-                    icon={PlusIcon}
-                    transparentBorder
-                    transparentBorderHover
-                    disabled={!logItem.issue || !btsIntegrations.length}
-                    onClick={this.handleLinkIssue}
-                    title={
-                      !logItem.issue || !btsIntegrations.length
-                        ? this.getIssueActionTitle(
-                            messages.noDefectTypeToLinkIssue,
-                            isPostIssueUnavailable,
-                          )
-                        : ''
-                    }
-                  >
-                    {formatMessage(messages.linkIssue)}
-                  </GhostButton>
+                  {!debugMode && (
+                    <>
+                      <GhostButton
+                        tiny
+                        icon={PlusIcon}
+                        transparentBorder
+                        transparentBorderHover
+                        disabled={!logItem.issue || isPostIssueUnavailable}
+                        onClick={this.handlePostIssue}
+                        title={
+                          !logItem.issue || isPostIssueUnavailable
+                            ? this.getIssueActionTitle(
+                                messages.noDefectTypeToPostIssue,
+                                isPostIssueUnavailable,
+                              )
+                            : ''
+                        }
+                      >
+                        {formatMessage(messages.postIssue)}
+                      </GhostButton>
+                      <GhostButton
+                        icon={PlusIcon}
+                        transparentBorder
+                        transparentBorderHover
+                        disabled={!logItem.issue || !btsIntegrations.length}
+                        onClick={this.handleLinkIssue}
+                        title={
+                          !logItem.issue || !btsIntegrations.length
+                            ? this.getIssueActionTitle(
+                                messages.noDefectTypeToLinkIssue,
+                                isPostIssueUnavailable,
+                              )
+                            : ''
+                        }
+                      >
+                        {formatMessage(messages.linkIssue)}
+                      </GhostButton>
+                    </>
+                  )}
                 </Fragment>
               )}
             </div>
@@ -383,13 +361,13 @@ export class DefectDetails extends Component {
             <Fragment>
               {expanded ? null : (
                 <div className={cx('collapsed-info')}>
-                  <span className={cx('issues-info')}>
-                    <span className={cx('icon')}>{Parser(BugIcon)}</span>
-                    {logItem.issue.externalSystemIssues.length}
-                  </span>
                   <span className={cx('expand-more')} onClick={this.toggleExpanded}>
                     <span className={cx('icon')}>{Parser(ArrowDownIcon)}</span>
                     {formatMessage(messages.more)}
+                  </span>
+                  <span className={cx('issues-info')}>
+                    <span className={cx('icon')}>{Parser(BugIcon)}</span>
+                    {logItem.issue.externalSystemIssues.length}
                   </span>
                 </div>
               )}

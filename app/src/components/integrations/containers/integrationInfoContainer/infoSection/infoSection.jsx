@@ -21,6 +21,7 @@ import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { isPluginSwitchable } from 'controllers/plugins';
 import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import { PLUGIN_DISABLED_MESSAGES_BY_GROUP_TYPE } from 'components/integrations/messages';
+import { PluginIcon } from 'components/integrations/elements/pluginIcon';
 import styles from './infoSection.scss';
 
 const cx = classNames.bind(styles);
@@ -40,8 +41,7 @@ const messages = defineMessages({
 export class InfoSection extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    image: PropTypes.string.isRequired,
-    description: PropTypes.oneOfType([PropTypes.object.isRequired, PropTypes.array.isRequired]),
+    description: PropTypes.oneOfType([PropTypes.object, PropTypes.array, PropTypes.string]),
     title: PropTypes.string.isRequired,
     version: PropTypes.string,
     data: PropTypes.object.isRequired,
@@ -51,6 +51,7 @@ export class InfoSection extends Component {
   };
 
   static defaultProps = {
+    description: '',
     version: '',
     onToggleActive: () => {},
     showToggleConfirmationModal: () => {},
@@ -116,7 +117,6 @@ export class InfoSection extends Component {
       intl: { formatMessage },
       data: { groupType, name },
       title,
-      image,
       version,
       description,
       isGlobal,
@@ -127,9 +127,9 @@ export class InfoSection extends Component {
 
     return (
       <div className={cx('info-section')}>
-        <img className={cx('logo')} src={image} alt={title} />
+        <PluginIcon className={cx('logo')} pluginData={this.props.data} alt={title} />
         <div className={cx('description-block')}>
-          <h2 className={cx('title')}>{title || name}</h2>
+          <h2 className={cx('title')}>{title}</h2>
           {version && (
             <span className={cx('version')}>{`${formatMessage(messages.version)} ${version}`}</span>
           )}

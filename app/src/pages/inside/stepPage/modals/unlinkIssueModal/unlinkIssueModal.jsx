@@ -18,25 +18,32 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
+import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
-import { ModalLayout, withModal } from 'components/main/modal';
+import { withModal } from 'components/main/modal';
 import {
   showNotification,
   showDefaultErrorNotification,
   NOTIFICATION_TYPES,
 } from 'controllers/notification';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
+import { DarkModalLayout } from 'components/main/modal/darkModalLayout';
+import { GhostButton } from 'components/buttons/ghostButton';
+import { hideModalAction } from 'controllers/modal';
+import { ItemsList } from '../makeDecisionModal/optionsSection/itemsList';
+import styles from './unlinkIssueModal.scss';
+
+const cx = classNames.bind(styles);
 
 const messages = defineMessages({
-  unlinkButton: {
-    id: 'UnlinkIssueModal.unlinkButton',
+  unlink: {
+    id: 'UnlinkIssueModal.unlink',
     defaultMessage: 'Unlink',
   },
-  title: {
-    id: 'UnlinkIssueModal.title',
+  unlinkIssue: {
+    id: 'UnlinkIssueModal.unlinkIssue',
     defaultMessage: 'Unlink issue',
   },
   unlinkModalConfirmationText: {
@@ -47,6 +54,14 @@ const messages = defineMessages({
     id: 'UnlinkIssueModal.unlinkSuccessMessage',
     defaultMessage: 'Completed successfully!',
   },
+  unlinkIssueForTheTest: {
+    id: 'UnlinkIssueModal.unlinkIssueForTheTest',
+    defaultMessage: 'Unlink Issue for the test {launchNumber}',
+  },
+  cancel: {
+    id: 'UnlinkIssueModal.cancel',
+    defaultMessage: 'Cancel',
+  },
 });
 
 @withModal('unlinkIssueModal')
@@ -55,9 +70,11 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     url: URLS.testItemsUnlinkIssues(activeProjectSelector(state)),
+    activeProject: activeProjectSelector(state),
   }),
   {
     showNotification,
+    hideModalAction,
   },
 )
 export class UnlinkIssueModal extends Component {
@@ -65,6 +82,7 @@ export class UnlinkIssueModal extends Component {
     intl: PropTypes.object.isRequired,
     url: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
+    activeProject: PropTypes.string.isRequired,
     data: PropTypes.shape({
       items: PropTypes.array,
       fetchFunc: PropTypes.func,
@@ -74,16 +92,37 @@ export class UnlinkIssueModal extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    hideModalAction: PropTypes.func,
   };
 
-  onUnlink = (closeModal) => {
+  isBulkOperation = this.props.data.items.length > 1;
+
+  constructor(props) {
+    super(props);
+    const {
+      data: { items },
+    } = props;
+    const selectedItems = this.isBulkOperation
+      ? items.map((item) => {
+          return { ...item, itemId: item.id };
+        })
+      : items;
+    this.state = {
+      loading: false,
+      testItems: selectedItems,
+      selectedItems,
+    };
+  }
+
+  onUnlink = () => {
     const {
       intl,
       url,
-      data: { items, fetchFunc, eventsInfo },
+      data: { fetchFunc, eventsInfo },
       tracking: { trackEvent },
     } = this.props;
-    const dataToSend = items.reduce(
+    const { selectedItems } = this.state;
+    const dataToSend = selectedItems.reduce(
       (acc, item) => {
         acc.testItemIds.push(item.id);
         acc.ticketIds = acc.ticketIds.concat(
@@ -106,7 +145,7 @@ export class UnlinkIssueModal extends Component {
     })
       .then(() => {
         fetchFunc();
-        closeModal();
+        this.props.hideModalAction();
         this.props.showNotification({
           message: intl.formatMessage(messages.unlinkSuccessMessage),
           type: NOTIFICATION_TYPES.SUCCESS,
@@ -114,30 +153,110 @@ export class UnlinkIssueModal extends Component {
       })
       .catch(showDefaultErrorNotification);
   };
+  componentDidMount() {
+    const { intl, activeProject } = this.props;
+    const { testItems } = this.state;
+    const fetchLogs = () => {
+      this.setState({ loading: true });
+      const itemIds = testItems.map((item) => item.id);
+
+      fetch(URLS.bulkLastLogs(activeProject), {
+        method: 'post',
+        data: { itemIds, logLevel: 'ERROR' },
+      })
+        .then((testItemLogs) => {
+          const items = [];
+          testItems.forEach((elem) => {
+            items.push({ ...elem, logs: testItemLogs[elem.id] });
+          });
+          this.setState({
+            testItems: items,
+            loading: false,
+          });
+        })
+        .catch(() => {
+          this.setState({
+            testItems: [],
+            selectedItems: [],
+            loading: false,
+          });
+          this.props.showNotification({
+            message: intl.formatMessage(messages.linkIssueFailed),
+            type: NOTIFICATION_TYPES.ERROR,
+          });
+        });
+    };
+    fetchLogs();
+  }
+
+  renderIssueFormHeaderElements = () => {
+    const {
+      intl: { formatMessage },
+    } = this.props;
+    return (
+      <>
+        <GhostButton
+          onClick={() => this.props.hideModalAction()}
+          disabled={false}
+          transparentBorder
+          transparentBackground
+          appearance="topaz"
+        >
+          {formatMessage(messages.cancel)}
+        </GhostButton>
+        <GhostButton onClick={this.onUnlink} disabled={false} color="''" appearance="topaz">
+          {formatMessage(messages.unlinkIssue)}
+        </GhostButton>
+      </>
+    );
+  };
+  renderTitle = (collapsedRightSection) => {
+    const {
+      data: { items },
+      intl: { formatMessage },
+    } = this.props;
+    return collapsedRightSection
+      ? formatMessage(messages.unlinkIssueForTheTest, {
+          launchNumber: items.launchNumber && `#${items.launchNumber}`,
+        })
+      : formatMessage(messages.unlink);
+  };
+
+  setItems = (newState) => {
+    this.setState(newState);
+  };
+
+  renderRightSection = (collapsedRightSection) => {
+    const { testItems, selectedItems, loading } = this.state;
+    return (
+      <div className={cx('items-list')}>
+        <ItemsList
+          setItems={this.setItems}
+          testItems={testItems}
+          selectedItems={selectedItems}
+          isNarrowView={collapsedRightSection}
+          isBulkOperation={this.isBulkOperation}
+          loading={loading}
+        />
+      </div>
+    );
+  };
 
   render() {
-    const {
-      intl,
-      data: { eventsInfo = {} },
-    } = this.props;
-    const okButton = {
-      text: intl.formatMessage(messages.unlinkButton),
-      onClick: this.onUnlink,
-      eventInfo: eventsInfo.unlinkBtn,
-    };
-    const cancelButton = {
-      text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      eventInfo: eventsInfo.cancelBtn,
-    };
+    const { intl } = this.props;
+
     return (
-      <ModalLayout
-        title={intl.formatMessage(messages.title)}
-        okButton={okButton}
-        cancelButton={cancelButton}
-        closeIconEventInfo={eventsInfo.closeIcon}
+      <DarkModalLayout
+        renderHeaderElements={this.renderIssueFormHeaderElements}
+        renderTitle={this.renderTitle}
+        renderRightSection={this.renderRightSection}
       >
-        {intl.formatMessage(messages.unlinkModalConfirmationText)}
-      </ModalLayout>
+        {() => (
+          <p className={cx('main-text')}>
+            {intl.formatMessage(messages.unlinkModalConfirmationText)}
+          </p>
+        )}
+      </DarkModalLayout>
     );
   }
 }

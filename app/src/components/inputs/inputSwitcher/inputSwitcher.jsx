@@ -20,12 +20,27 @@ import styles from './inputSwitcher.scss';
 
 const cx = classNames.bind(styles);
 
-export const InputSwitcher = ({ children, value, onChange, onFocus, onBlur, readOnly }) => {
+export const InputSwitcher = ({
+  children,
+  value,
+  onChange,
+  onFocus,
+  onBlur,
+  readOnly,
+  className,
+  childrenFirst,
+  childrenClassName,
+  size,
+  mode,
+}) => {
   const sliderClasses = cx({
     'switcher-slider': true,
     centered: !children,
     on: value,
     readonly: readOnly,
+    'children-first': childrenFirst,
+    [`size-${size}`]: size,
+    [`mode-${mode}`]: mode,
   });
   const onChangeHandler = (e) => {
     if (!readOnly) onChange(e.target.checked);
@@ -33,7 +48,7 @@ export const InputSwitcher = ({ children, value, onChange, onFocus, onBlur, read
 
   return (
     // eslint-disable-next-line
-    <label className={cx('input-switcher')} onFocus={onFocus} onBlur={onBlur} tabIndex="1">
+    <label className={cx('input-switcher', className)} onFocus={onFocus} onBlur={onBlur} tabIndex="1">
       <input
         type="checkbox"
         className={cx('input')}
@@ -41,8 +56,21 @@ export const InputSwitcher = ({ children, value, onChange, onFocus, onBlur, read
         checked={value}
         onChange={onChangeHandler}
       />
+      {childrenFirst && (
+        <span
+          className={cx(
+            'children-container',
+            { readonly: readOnly, 'children-first': childrenFirst, [`size-${size}`]: size },
+            childrenClassName,
+          )}
+        >
+          {children}
+        </span>
+      )}
       <span className={sliderClasses} />
-      <span className={cx('children-container', { readonly: readOnly })}>{children}</span>
+      {!childrenFirst && (
+        <span className={cx('children-container', { readonly: readOnly })}>{children}</span>
+      )}
     </label>
   );
 };
@@ -54,6 +82,11 @@ InputSwitcher.propTypes = {
   onFocus: PropTypes.func,
   onBlur: PropTypes.func,
   readOnly: PropTypes.bool,
+  className: PropTypes.string,
+  childrenFirst: PropTypes.bool,
+  childrenClassName: PropTypes.string,
+  size: PropTypes.string,
+  mode: PropTypes.string,
 };
 
 InputSwitcher.defaultProps = {
@@ -63,4 +96,9 @@ InputSwitcher.defaultProps = {
   onFocus: () => {},
   onBlur: () => {},
   readOnly: false,
+  className: '',
+  childrenFirst: false,
+  childrenClassName: '',
+  size: '',
+  mode: '',
 };

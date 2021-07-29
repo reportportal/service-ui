@@ -36,10 +36,11 @@ const messages = defineMessages({
 export class RallyCredentials extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
+    darkView: PropTypes.bool,
   };
 
   render() {
-    const { intl } = this.props;
+    const { intl, darkView } = this.props;
     return (
       <div className={cx('rally-credentials')}>
         <FormField
@@ -47,12 +48,12 @@ export class RallyCredentials extends Component {
           containerClassName={cx('text-area-container')}
           fieldWrapperClassName={cx('field-wrapper')}
           label={intl.formatMessage(messages.apiKeyLabel)}
-          labelClassName={cx('text-area-label')}
+          labelClassName={cx('text-area-label', { 'dark-view': darkView })}
           required
           type="text"
         >
           <FieldErrorHint>
-            <InputTextArea />
+            <InputTextArea className={darkView && 'dark-view'} />
           </FieldErrorHint>
         </FormField>
       </div>

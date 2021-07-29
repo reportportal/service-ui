@@ -37,6 +37,13 @@
   font-size: 13px;
   font-family: $FONT-REGULAR;
   text-align: right;
+  &.dark-view {
+    color: $COLOR--dirty-gray;
+    min-width: 140px;
+    text-align: left;
+    padding-right: 36px;
+  }
+
   @media (max-width: $SCREEN_XS_MAX) {
     width: 100%;
     margin-bottom: 8px;
@@ -47,8 +54,8 @@
 
 .remove-issue-fields-button {
   position: absolute;
-  right: -4px;
-  top: 25px;
+  left: 450px;
+  top: 35px;
   width: 17px;
   height: 17px;
   vertical-align: middle;
@@ -74,6 +81,9 @@
 
 .add-issue-button {
   margin-left: 180px;
+  &.dark-view {
+    margin-left: 140px;
+  }
   @media (max-width: $SCREEN_XS_MAX) {
     margin-left: 0;
   }

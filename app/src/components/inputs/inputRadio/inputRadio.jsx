@@ -31,10 +31,16 @@ export const InputRadio = ({
   onFocus,
   onBlur,
   mobileDisabled,
+  title,
+  mode,
 }) => (
   // eslint-disable-next-line
   <label
-    className={cx('input-radio', { disabled, 'mobile-disabled': mobileDisabled })}
+    className={cx(
+      'input-radio',
+      { disabled, 'mobile-disabled': mobileDisabled },
+      { [`mode-${mode}`]: mode },
+    )}
     onFocus={onFocus}
     onBlur={onBlur}
     tabIndex="1"
@@ -48,8 +54,18 @@ export const InputRadio = ({
       checked={value === ownValue}
       name={name}
     />
-    <span className={cx('toggler', { checked: value === ownValue, 'at-top': circleAtTop })} />
-    {children && <span className={cx('children-container')}>{children}</span>}
+    <span
+      className={cx('toggler', {
+        checked: value === ownValue,
+        'at-top': circleAtTop,
+        [`mode-${mode}`]: mode,
+      })}
+    />
+    {children && (
+      <span className={cx('children-container', { [`mode-${mode}`]: mode })} title={title}>
+        {children}
+      </span>
+    )}
   </label>
 );
 InputRadio.propTypes = {
@@ -63,6 +79,8 @@ InputRadio.propTypes = {
   onChange: PropTypes.func,
   onFocus: PropTypes.func,
   onBlur: PropTypes.func,
+  title: PropTypes.string,
+  mode: PropTypes.oneOf(['default', 'dark']),
 };
 InputRadio.defaultProps = {
   children: '',
@@ -75,4 +93,6 @@ InputRadio.defaultProps = {
   onChange: () => {},
   onFocus: () => {},
   onBlur: () => {},
+  title: undefined,
+  mode: 'default',
 };

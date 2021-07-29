@@ -19,6 +19,7 @@
   .tabs {
     position: relative;
     display: flex;
+    margin-bottom: 15px;
 
     @media (max-width: $SCREEN_XS_MAX) {
       flex-direction: column;
@@ -33,7 +34,7 @@
   padding: 0 10px;
   cursor: pointer;
   color: $COLOR--gray-47;
-  fill: $COLOR--gray-47;
+  fill: $COLOR--gray-60;
   transition: fill 0.2s, color 0.2s;
   height: 40px;
   box-sizing: border-box;
@@ -45,6 +46,9 @@
   &:focus {
     color: $COLOR--charcoal-grey;
     fill: $COLOR--charcoal-grey;
+  }
+  &.stroked:hover svg {
+    stroke: $COLOR--charcoal-grey;
   }
 
   &:after {
@@ -61,10 +65,19 @@
     }
   }
 
+  &.stroked svg {
+    stroke: $COLOR--gray-60;
+  }
+
   &.active,
   &.active:hover {
     color: $COLOR--topaz;
     fill: $COLOR--topaz;
+  }
+
+  &.stroked.active svg,
+  &.stroked.active:hover svg {
+    stroke: $COLOR--topaz;
   }
 
   @media (max-width: $SCREEN_XS_MAX) {

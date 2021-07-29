@@ -18,17 +18,21 @@ import { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
+import track from 'react-tracking';
 import { notSystemAttributePredicate } from 'common/utils/attributeUtils';
 import { EditableAttribute } from './editableAttribute';
 import styles from './attributeList.scss';
 
 const cx = classNames.bind(styles);
 
-const createChangeHandler = (attributes, index, onChange) => (attribute) => {
+const createChangeHandler = (attributes, index, onChange, tracking, eventsInfo) => (attribute) => {
   const newAttributes = [...attributes];
   const { edited, ...newAttribute } = attribute;
   newAttributes[index] = newAttribute;
   onChange(newAttributes);
+  if (Object.keys(eventsInfo).length > 0) {
+    tracking.trackEvent(eventsInfo.addAttribute);
+  }
 };
 
 const createRemoveHandler = (attributes, index, onChange) => () => {
@@ -62,41 +66,51 @@ const createEditHandler = (attributes, index, onChange) => () => {
   onChange(newAttributes);
 };
 
-export const AttributeList = ({
-  attributes,
-  onChange,
-  onAddNew,
-  disabled,
-  keyURLCreator,
-  valueURLCreator,
-  newAttrMessage,
-  maxLength,
-  customClass,
-}) => (
-  <Fragment>
-    {attributes.filter(notSystemAttributePredicate).map((attribute, i, filteredAttributes) => (
-      <EditableAttribute
-        key={`${attribute.key}_${attribute.value}`}
-        attribute={attribute}
-        attributes={filteredAttributes}
-        editMode={attribute.edited}
-        onChange={createChangeHandler(attributes, i, onChange)}
-        onRemove={createRemoveHandler(attributes, i, onChange)}
-        onEdit={createEditHandler(attributes, i, onChange)}
-        onCancelEdit={createCancelEditHandler(attributes, i, onChange)}
-        disabled={disabled}
-        keyURLCreator={keyURLCreator}
-        valueURLCreator={valueURLCreator}
-        customClass={customClass}
-      />
-    ))}
-    {!hasEditedAttribute(attributes) && !disabled && attributes.length < maxLength && (
-      <div className={cx('add-new-button')} onClick={onAddNew}>
-        +{' '}
-        {newAttrMessage || <FormattedMessage id="AttributeList.addNew" defaultMessage="Add new" />}
-      </div>
-    )}
-  </Fragment>
+export const AttributeList = track()(
+  ({
+    attributes,
+    onChange,
+    onAddNew,
+    disabled,
+    keyURLCreator,
+    valueURLCreator,
+    newAttrMessage,
+    maxLength,
+    customClass,
+    showButton,
+    editable,
+    backgroundDark,
+    tracking,
+    eventsInfo,
+  }) => (
+    <Fragment>
+      {attributes.filter(notSystemAttributePredicate).map((attribute, i, filteredAttributes) => (
+        <EditableAttribute
+          key={`${attribute.key}_${attribute.value}`}
+          attribute={attribute}
+          attributes={filteredAttributes}
+          editMode={attribute.edited}
+          onChange={createChangeHandler(attributes, i, onChange, tracking, eventsInfo)}
+          onRemove={createRemoveHandler(attributes, i, onChange)}
+          onEdit={editable && createEditHandler(attributes, i, onChange)}
+          onCancelEdit={createCancelEditHandler(attributes, i, onChange)}
+          disabled={disabled}
+          keyURLCreator={keyURLCreator}
+          valueURLCreator={valueURLCreator}
+          customClass={customClass}
+          backgroundDark={backgroundDark}
+        />
+      ))}
+      {!hasEditedAttribute(attributes) && !disabled && showButton && attributes.length < maxLength && (
+        <div className={cx('add-new-button')} onClick={onAddNew}>
+          +{' '}
+          {newAttrMessage || (
+            <FormattedMessage id="AttributeList.addNew" defaultMessage="Add new" />
+          )}
+        </div>
+      )}
+    </Fragment>
+  ),
 );
 AttributeList.propTypes = {
   attributes: PropTypes.arrayOf(PropTypes.object),
@@ -111,6 +125,14 @@ AttributeList.propTypes = {
   onRemove: PropTypes.func,
   keyURLCreator: PropTypes.func,
   valueURLCreator: PropTypes.func,
+  showButton: PropTypes.bool,
+  editable: PropTypes.bool,
+  backgroundDark: PropTypes.bool,
+  tracking: PropTypes.shape({
+    trackEvent: PropTypes.func,
+    getTrackingData: PropTypes.func,
+  }).isRequired,
+  eventsInfo: PropTypes.object,
 };
 AttributeList.defaultProps = {
   attributes: [],
@@ -125,4 +147,8 @@ AttributeList.defaultProps = {
   onRemove: () => {},
   onEdit: () => {},
   onAddNew: () => {},
+  showButton: true,
+  editable: true,
+  backgroundDark: false,
+  eventsInfo: {},
 };

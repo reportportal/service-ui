@@ -15,6 +15,19 @@
  */
 
 import { getEditItemsModalEvents } from 'components/main/analytics/events/common/testItemPages/modalEventsCreators';
+import {
+  getClickOnPlusMinusEvents,
+  getRefineFiltersPanelEvents,
+  getRefreshPageActionEvent,
+} from 'components/main/analytics/events/common/testItemPages/actionEventsCreators';
+import {
+  getAddBtnAddNewFilterAddWidgetModal,
+  getAddFilterBtnAddWidgetModal,
+  getCancelBtnAddNewFilterAddWidgetModal,
+  getChooseFilterAddWidgetModal,
+  getSelectCriteriaNewWidget,
+  getSelectSortingFilterAddWidgetModal,
+} from 'components/main/analytics/events/common/widgetPages/actionEventCreators';
 
 export const LAUNCHES_PAGE = 'launches';
 const LAUNCHES_MODAL = 'Modal launches';
@@ -39,8 +52,14 @@ export const getRunAnalysisAnalysisModalEvent = (analyzeItemsMode) =>
   getAnalyzeItemEvent('Analyze Launch', analyzeItemsMode);
 export const getRunAnalysisPatternAnalysisModalEvent = (analyzeItemsMode) =>
   getAnalyzeItemEvent('Pattern Analyze Launch', analyzeItemsMode);
+export const getCriteriaToggler = (state) => ({
+  category: LAUNCHES_PAGE,
+  action: 'Click on icon Show/Hide Criteria',
+  label: state ? 'Hide' : 'Show',
+});
 
 export const LAUNCHES_PAGE_EVENTS = {
+  plusMinusBreadcrumb: getClickOnPlusMinusEvents(LAUNCHES_PAGE),
   CLICK_ITEM_NAME: {
     category: LAUNCHES_PAGE,
     action: 'Click on Item Name',
@@ -276,6 +295,10 @@ export const LAUNCHES_PAGE_EVENTS = {
     action: 'Click on Btn Add New Widget on Dashboard',
     label: 'Arise Modal Add New Widget',
   },
+  REFRESH_BTN: getRefreshPageActionEvent(LAUNCHES_PAGE),
+  REFINE_FILTERS_PANEL_EVENTS: {
+    commonEvents: getRefineFiltersPanelEvents(LAUNCHES_PAGE),
+  },
 };
 
 export const LAUNCHES_MODAL_EVENTS = {
@@ -391,6 +414,12 @@ export const LAUNCHES_MODAL_EVENTS = {
     action: 'Choose radio Btn of Widget type in Modal Add New Widget',
     label: 'Choose Widget type in Modal Add New Widget',
   },
+  CHOOSE_FILTER_ADD_WIDGET_MODAL: getChooseFilterAddWidgetModal(LAUNCHES_MODAL),
+  ADD_FILTER_BTN_ADD_WIDGET_MODAL: getAddFilterBtnAddWidgetModal(LAUNCHES_MODAL),
+  ADD_BTN_ADD_NEW_FILTER_ADD_WIDGET_MODAL: getAddBtnAddNewFilterAddWidgetModal(LAUNCHES_MODAL),
+  CANCEL_BTN_ADD_NEW_FILTER_ADD_WIDGET_MODAL: getCancelBtnAddNewFilterAddWidgetModal(
+    LAUNCHES_MODAL,
+  ),
   NEXT_STEP_ADD_WIDGET_MODAL: {
     category: LAUNCHES_MODAL,
     action: 'Click on Btn Next Step on Modal Add New Widget',
@@ -416,4 +445,6 @@ export const LAUNCHES_MODAL_EVENTS = {
     action: 'Click on Btn Add in Modal Add New Widget',
     label: 'Submit changes in filter in Modal Add New Widget',
   },
+  SELECT_CRITERIA_ADD_NEW_WIDGET_MODAL: getSelectCriteriaNewWidget(LAUNCHES_MODAL),
+  SELECT_SORTING_FILTER_ADD_WIDGET_MODAL: getSelectSortingFilterAddWidgetModal(LAUNCHES_PAGE),
 };

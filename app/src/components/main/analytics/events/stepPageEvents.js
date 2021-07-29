@@ -20,10 +20,13 @@ import {
   getLinkIssueActionEvent,
   getPostIssueActionEvent,
   getUnlinkIssueActionEvent,
-  getHistoryPageLinkEvent,
   getRefreshPageActionEvent,
   getRefineFiltersPanelEvents,
   getChangeFilterEvent,
+  getClickOnPlusMinusEvents,
+  getListViewTabEvent,
+  getLogViewTabEvent,
+  getHistoryTabEvent,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getEditDefectModalEvents,
@@ -35,6 +38,7 @@ import {
   getLinkIssueModalEvents,
   getDeleteItemModalEvents,
   getEditItemsModalEvents,
+  getMakeDecisionModalEvents,
 } from './common/testItemPages/modalEventsCreators';
 
 export const STEP_PAGE = 'step';
@@ -156,7 +160,17 @@ export const STEP_PAGE_EVENTS = {
     action: 'Click on Cross icon in issue block',
     label: 'Arise Modal "Unlink issue"',
   },
-  HISTORY_BTN: getHistoryPageLinkEvent(STEP_PAGE),
+  plusMinusBreadcrumb: getClickOnPlusMinusEvents(STEP_PAGE),
+  ALL_LABEL_BREADCRUMB: {
+    category: STEP_PAGE,
+    action: 'Click on Bread Crumb All',
+    label: 'Transition to Launches Page',
+  },
+  ITEM_NAME_BREADCRUMB_CLICK: {
+    category: STEP_PAGE,
+    action: 'Click on Bread Crumb Item name',
+    label: 'Transition to Item',
+  },
   REFRESH_BTN: getRefreshPageActionEvent(STEP_PAGE),
   PROCEED_VALID_ITEMS: getProceedValidItemsEvent(STEP_PAGE),
   EDIT_DEFECT_ACTION: getEditDefectActionEvent(STEP_PAGE),
@@ -233,4 +247,8 @@ export const STEP_PAGE_EVENTS = {
     action: 'Click on Cancel in Modal "Include items in AA"',
     label: 'Close Modal "Include items in AA"',
   },
+  LIST_VIEW_TAB: getListViewTabEvent(STEP_PAGE),
+  LOG_VIEW_TAB: getLogViewTabEvent(STEP_PAGE),
+  HISTORY_VIEW_TAB: getHistoryTabEvent(STEP_PAGE),
+  MAKE_DECISION_MODAL_EVENTS: getMakeDecisionModalEvents(STEP_PAGE),
 };

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
@@ -30,7 +30,7 @@ import { namedAvailableBtsIntegrationsSelector } from 'controllers/plugins';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { btsIntegrationBackLinkSelector } from 'controllers/testItem';
-import { ModalLayout, withModal } from 'components/main/modal';
+import { withModal } from 'components/main/modal';
 import { DynamicFieldsSection } from 'components/fields/dynamicFieldsSection';
 import {
   normalizeFieldsWithOptions,
@@ -40,8 +40,13 @@ import { VALUE_ID_KEY, VALUE_NAME_KEY } from 'components/fields/dynamicFieldsSec
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { ISSUE_TYPE_FIELD_KEY } from 'components/integrations/elements/bts/constants';
-import { BetaBadge } from 'pages/inside/common/betaBadge';
 import { BtsIntegrationSelector } from 'pages/inside/common/btsIntegrationSelector';
+import { DarkModalLayout } from 'components/main/modal/darkModalLayout';
+import { GhostButton } from 'components/buttons/ghostButton';
+import { hideModalAction } from 'controllers/modal';
+import ErrorInlineIcon from 'common/img/error-inline.svg';
+import Parser from 'html-react-parser';
+import { ItemsList } from '../makeDecisionModal/optionsSection/itemsList';
 import { JiraCredentials } from './jiraCredentials';
 import { RallyCredentials } from './rallyCredentials';
 import {
@@ -68,12 +73,12 @@ const SYSTEM_CREDENTIALS_BLOCKS = {
 let validationConfig = null;
 
 const messages = defineMessages({
-  postButton: {
-    id: 'PostIssueModal.postButton',
+  post: {
+    id: 'PostIssueModal.post',
     defaultMessage: 'Post',
   },
-  title: {
-    id: 'PostIssueModal.title',
+  postIssue: {
+    id: 'PostIssueModal.postIssue',
     defaultMessage: 'Post issue',
   },
   systemUrlInfo: {
@@ -108,9 +113,17 @@ const messages = defineMessages({
     id: 'PostIssueModal.postIssueSuccess',
     defaultMessage: 'Ticket has been created.',
   },
+  postIssueForTheTest: {
+    id: 'PostIssueModal.postIssueForTheTest',
+    defaultMessage: 'Post Issue for the test {launchNumber}',
+  },
   postIssueFailed: {
     id: 'PostIssueModal.postIssueFailed',
     defaultMessage: 'Failed to post issue',
+  },
+  cancel: {
+    id: 'PostIssueModal.cancel',
+    defaultMessage: 'Cancel',
   },
 });
 
@@ -131,6 +144,7 @@ const messages = defineMessages({
     showScreenLockAction,
     hideScreenLockAction,
     showNotification,
+    hideModalAction,
   },
 )
 @injectIntl
@@ -157,6 +171,8 @@ export class PostIssueModal extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    hideModalAction: PropTypes.func,
+    invalid: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -169,6 +185,9 @@ export class PostIssueModal extends Component {
 
   constructor(props) {
     super(props);
+    const {
+      data: { items },
+    } = props;
     const { pluginName, integration, ...config } = getDefaultIssueModalConfig(
       props.namedBtsIntegrations,
       props.userId,
@@ -180,6 +199,11 @@ export class PostIssueModal extends Component {
     } = integration;
     const systemAuthConfig = this.getSystemAuthDefaultConfig(pluginName, config);
     const fields = this.initIntegrationFields(defectFormFields, systemAuthConfig, pluginName);
+    const selectedItems = this.isBulkOperation
+      ? items.map((item) => {
+          return { ...item, itemId: item.id };
+        })
+      : items;
 
     this.state = {
       fields,
@@ -187,11 +211,14 @@ export class PostIssueModal extends Component {
       integrationId: id,
       expanded: true,
       wasExpanded: false,
+      loading: false,
+      testItems: selectedItems,
+      selectedItems,
     };
   }
 
-  onPost = () => (closeModal) => {
-    this.closeModal = closeModal;
+  onPost = () => {
+    this.props.hideModalAction();
     this.props.handleSubmit(this.prepareDataToSend)();
   };
 
@@ -291,13 +318,12 @@ export class PostIssueModal extends Component {
   };
 
   prepareDataToSend = (formData) => {
-    const {
-      data: { items },
-      getBtsIntegrationBackLink,
-    } = this.props;
+    const { getBtsIntegrationBackLink } = this.props;
+
+    const { selectedItems } = this.state;
 
     const fields = this.state.fields.map((field) => ({ ...field, value: formData[field.id] }));
-    const backLinks = items.reduce(
+    const backLinks = selectedItems.reduce(
       (acc, item) => ({ ...acc, [item.id]: getBtsIntegrationBackLink(item) }),
       {},
     );
@@ -306,7 +332,7 @@ export class PostIssueModal extends Component {
       [INCLUDE_ATTACHMENTS_KEY]: formData[INCLUDE_ATTACHMENTS_KEY],
       [INCLUDE_LOGS_KEY]: formData[INCLUDE_LOGS_KEY],
       logQuantity: LOG_QUANTITY,
-      item: items[0].id,
+      item: selectedItems[0].id,
       fields,
       backLinks,
     };
@@ -323,16 +349,16 @@ export class PostIssueModal extends Component {
   sendRequest = (data) => {
     const {
       intl: { formatMessage },
-      data: { items, fetchFunc },
+      data: { fetchFunc },
       namedBtsIntegrations,
       activeProject,
       userId,
     } = this.props;
-    const { pluginName, integrationId } = this.state;
+    const { pluginName, integrationId, selectedItems } = this.state;
 
     this.props.showScreenLockAction();
 
-    fetch(URLS.btsIntegrationPostTicket(activeProject, this.state.integrationId), {
+    fetch(URLS.btsIntegrationPostTicket(activeProject, integrationId), {
       method: 'post',
       data,
     })
@@ -340,7 +366,7 @@ export class PostIssueModal extends Component {
         const {
           integrationParameters: { project, url },
         } = namedBtsIntegrations[pluginName].find((item) => item.id === integrationId);
-        const issues = items.map(({ id, issue = {} }) => ({
+        const issues = selectedItems.map(({ id, issue = {} }) => ({
           testItemId: id,
           issue: {
             ...issue,
@@ -364,7 +390,7 @@ export class PostIssueModal extends Component {
       .then(() => {
         fetchFunc();
         this.props.hideScreenLockAction();
-        this.closeModal();
+        this.props.hideModalAction();
         const sessionConfig = {
           pluginName,
           integrationId,
@@ -398,95 +424,176 @@ export class PostIssueModal extends Component {
     });
   };
 
+  componentDidMount() {
+    const { intl, activeProject } = this.props;
+    const { testItems } = this.state;
+    const fetchLogs = () => {
+      this.setState({ loading: true });
+      const itemIds = testItems.map((item) => item.id);
+
+      fetch(URLS.bulkLastLogs(activeProject), {
+        method: 'post',
+        data: { itemIds, logLevel: 'ERROR' },
+      })
+        .then((testItemLogs) => {
+          const items = [];
+          testItems.forEach((elem) => {
+            items.push({ ...elem, logs: testItemLogs[elem.id] });
+          });
+          this.setState({
+            testItems: items,
+            loading: false,
+          });
+        })
+        .catch(() => {
+          this.setState({
+            testItems: [],
+            selectedItems: [],
+            loading: false,
+          });
+          this.props.showNotification({
+            message: intl.formatMessage(messages.linkIssueFailed),
+            type: NOTIFICATION_TYPES.ERROR,
+          });
+        });
+    };
+    fetchLogs();
+  }
+
   isBulkOperation = this.props.data.items.length > 1;
+
+  renderIssueFormHeaderElements = () => {
+    const {
+      intl: { formatMessage },
+    } = this.props;
+    return (
+      <>
+        <GhostButton
+          onClick={() => this.props.hideModalAction()}
+          disabled={false}
+          transparentBorder
+          transparentBackground
+          appearance="topaz"
+        >
+          {formatMessage(messages.cancel)}
+        </GhostButton>
+        <GhostButton
+          onClick={this.onPost}
+          disabled={this.props.invalid}
+          color="''"
+          appearance="topaz"
+        >
+          {formatMessage(messages.postIssue)}
+        </GhostButton>
+      </>
+    );
+  };
+  renderTitle = (collapsedRightSection) => {
+    const {
+      data: { items },
+      intl: { formatMessage },
+    } = this.props;
+    return collapsedRightSection
+      ? formatMessage(messages.postIssueForTheTest, {
+          launchNumber: items.launchNumber && `#${items.launchNumber}`,
+        })
+      : formatMessage(messages.post);
+  };
+
+  setItems = (newState) => {
+    this.setState(newState);
+  };
+
+  renderRightSection = (collapsedRightSection) => {
+    const { testItems, selectedItems, loading } = this.state;
+    return (
+      <div className={cx('items-list')}>
+        <ItemsList
+          setItems={this.setItems}
+          testItems={testItems}
+          selectedItems={selectedItems}
+          isNarrowView={collapsedRightSection}
+          isBulkOperation={this.isBulkOperation}
+          loading={loading}
+        />
+      </div>
+    );
+  };
 
   render() {
     const {
-      intl: { formatMessage },
       namedBtsIntegrations,
-      data: { eventsInfo = {} },
+      intl: { formatMessage },
     } = this.props;
-    const okButton = {
-      text: formatMessage(messages.postButton),
-      disabled: !this.state.fields.length,
-      onClick: this.onPost(),
-      eventInfo: eventsInfo.postBtn,
-    };
-    const cancelButton = {
-      text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      eventInfo: eventsInfo.cancelBtn,
-    };
-    const CredentialsComponent = SYSTEM_CREDENTIALS_BLOCKS[this.state.pluginName];
-
+    const { pluginName, integrationId, fields, expanded, wasExpanded } = this.state;
+    const CredentialsComponent = SYSTEM_CREDENTIALS_BLOCKS[pluginName];
     return (
-      <ModalLayout
-        title={
-          <span className={cx('post-issue-title')}>
-            {formatMessage(messages.title)}
-            <BetaBadge />
-          </span>
-        }
-        okButton={okButton}
-        cancelButton={cancelButton}
-        closeConfirmation={this.getCloseConfirmationConfig()}
-        closeIconEventInfo={eventsInfo.closeIcon}
+      <DarkModalLayout
+        renderHeaderElements={this.renderIssueFormHeaderElements}
+        renderTitle={this.renderTitle}
+        renderRightSection={this.renderRightSection}
       >
-        <form className={cx('post-issue-form')}>
-          <BtsIntegrationSelector
-            namedBtsIntegrations={namedBtsIntegrations}
-            pluginName={this.state.pluginName}
-            integrationId={this.state.integrationId}
-            onChangeIntegration={this.onChangeIntegration}
-            onChangePluginName={this.onChangePlugin}
-          />
-          {this.state.fields.length ? (
-            <DynamicFieldsSection
-              withValidation
-              fields={this.state.fields}
-              defaultOptionValueKey={this.getDefaultOptionValueKey()}
+        {() => (
+          <form className={cx('post-issue-form', 'dark-view')}>
+            <BtsIntegrationSelector
+              namedBtsIntegrations={namedBtsIntegrations}
+              pluginName={pluginName}
+              integrationId={integrationId}
+              onChangeIntegration={this.onChangeIntegration}
+              onChangePluginName={this.onChangePlugin}
+              darkView
             />
-          ) : (
-            <div className={cx('no-default-properties-message')}>
-              {formatMessage(messages.noDefaultPropertiesMessage)}
-            </div>
-          )}
-          {!this.isBulkOperation && (
-            <Fragment>
-              <h4 className={cx('form-block-header')}>
-                <span className={cx('header-text')}>
-                  {formatMessage(messages.includeDataHeader)}
+            {fields.length ? (
+              <DynamicFieldsSection
+                withValidation
+                fields={fields}
+                defaultOptionValueKey={this.getDefaultOptionValueKey()}
+                darkView
+              />
+            ) : (
+              <div className={cx('no-default-properties-message')}>
+                <div className={cx('icon')}>{Parser(ErrorInlineIcon)}</div>
+                <span>{formatMessage(messages.noDefaultPropertiesMessage)}</span>
+              </div>
+            )}
+            {!this.isBulkOperation && (
+              <div className={cx('include-block-wrapper')}>
+                <h4 className={cx('form-block-header', 'dark-view')}>
+                  <span className={cx('header-text', 'dark-view')}>
+                    {formatMessage(messages.includeDataHeader)}
+                  </span>
+                </h4>
+                <div className={cx('include-data-block')}>
+                  {this.dataFieldsConfig.map((item) => (
+                    <FieldProvider
+                      key={item.name}
+                      name={item.name}
+                      format={Boolean}
+                      onChange={() => this.onChangeCheckbox(item.trackEvent)}
+                    >
+                      <InputCheckbox>
+                        <span className={cx('switch-field-label', 'dark-view')}>{item.title}</span>
+                      </InputCheckbox>
+                    </FieldProvider>
+                  ))}
+                </div>
+              </div>
+            )}
+            <div className={cx('credentials-block-wrapper', { expanded })}>
+              <h4 className={cx('form-block-header', 'dark-view')}>
+                <span onClick={this.expandCredentials} className={cx('header-text', 'dark-view')}>
+                  {formatMessage(messages.credentialsHeader, {
+                    system: pluginName,
+                  })}
                 </span>
               </h4>
-              <div className={cx('include-data-block')}>
-                {this.dataFieldsConfig.map((item) => (
-                  <FieldProvider
-                    key={item.name}
-                    name={item.name}
-                    format={Boolean}
-                    onChange={() => this.onChangeCheckbox(item.trackEvent)}
-                  >
-                    <InputCheckbox>
-                      <span className={cx('switch-field-label')}>{item.title}</span>
-                    </InputCheckbox>
-                  </FieldProvider>
-                ))}
+              <div className={cx('credentials-block', { expand: wasExpanded })}>
+                <CredentialsComponent darkView />
               </div>
-            </Fragment>
-          )}
-          <div className={cx('credentials-block-wrapper', { expanded: this.state.expanded })}>
-            <h4 className={cx('form-block-header')}>
-              <span onClick={this.expandCredentials} className={cx('header-text')}>
-                {formatMessage(messages.credentialsHeader, {
-                  system: this.state.pluginName,
-                })}
-              </span>
-            </h4>
-            <div className={cx('credentials-block', { expand: this.state.wasExpanded })}>
-              <CredentialsComponent />
             </div>
-          </div>
-        </form>
-      </ModalLayout>
+          </form>
+        )}
+      </DarkModalLayout>
     );
   }
 }

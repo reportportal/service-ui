@@ -71,7 +71,7 @@ const messages = defineMessages({
   },
   noIssue: {
     id: 'LaunchesPage.noIssue',
-    defaultMessage: 'Item has not issue for edit',
+    defaultMessage: 'Item has no issue for edit',
   },
 });
 

@@ -28,7 +28,6 @@ import {
   enabledBtsPluginsSelector,
 } from 'controllers/plugins';
 import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
-import { SUITES_PAGE_EVENTS } from 'components/main/analytics/events/suitesPageEvents';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
@@ -38,6 +37,8 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import RefreshIcon from 'common/img/refresh-inline.svg';
 import { createStepActionDescriptors } from 'pages/inside/common/utils';
 import { ParentInfo } from 'pages/inside/common/infoLine/parentInfo';
+import { pageEventsMap } from 'components/main/analytics';
+import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import styles from './actionPanel.scss';
 
 const cx = classNames.bind(styles);
@@ -124,18 +125,21 @@ export class ActionPanel extends Component {
   };
 
   onClickRefresh = () => {
-    this.props.tracking.trackEvent(
-      this.props.level === LEVEL_STEP
-        ? STEP_PAGE_EVENTS.REFRESH_BTN
-        : SUITES_PAGE_EVENTS.REFRESH_BTN,
-    );
+    this.props.tracking.trackEvent(pageEventsMap[this.props.level].REFRESH_BTN);
     this.props.onRefresh();
   };
 
-  onEditDefects = (data) => {
-    const { tracking, onEditDefects } = this.props;
-    tracking.trackEvent(STEP_PAGE_EVENTS.EDIT_DEFECT_ACTION);
-    onEditDefects(data);
+  onEditDefects = () => {
+    const { tracking, selectedItems, onEditDefects } = this.props;
+    if (selectedItems.length === 1) {
+      tracking.trackEvent(
+        pageEventsMap[this.props.level].MAKE_DECISION_MODAL_EVENTS.openModal(
+          selectedItems[0].issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
+          true,
+        ),
+      );
+    }
+    onEditDefects(this.props.selectedItems);
   };
 
   onPostIssue = () => {
@@ -226,11 +230,9 @@ export class ActionPanel extends Component {
       <div className={cx('action-panel', { 'right-buttons-only': !showBreadcrumbs && !hasErrors })}>
         {showBreadcrumbs && (
           <Breadcrumbs
-            togglerEventInfo={level !== LEVEL_STEP ? SUITES_PAGE_EVENTS.PLUS_MINUS_BREADCRUMB : {}}
-            breadcrumbEventInfo={
-              level !== LEVEL_STEP ? SUITES_PAGE_EVENTS.ITEM_NAME_BREADCRUMB_CLICK : {}
-            }
-            allEventClick={level !== LEVEL_STEP ? SUITES_PAGE_EVENTS.ALL_LABEL_BREADCRUMB : {}}
+            togglerEventInfo={pageEventsMap[level].plusMinusBreadcrumb}
+            breadcrumbEventInfo={pageEventsMap[level].ITEM_NAME_BREADCRUMB_CLICK}
+            allEventClick={pageEventsMap[level].ALL_LABEL_BREADCRUMB}
             descriptors={breadcrumbs}
             onRestorePath={restorePath}
           />

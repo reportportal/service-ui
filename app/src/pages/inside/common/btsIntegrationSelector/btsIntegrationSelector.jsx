@@ -45,13 +45,14 @@ export class BtsIntegrationSelector extends Component {
     integrationId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     onChangePluginName: PropTypes.func.isRequired,
     onChangeIntegration: PropTypes.func.isRequired,
+    darkView: PropTypes.bool,
   };
 
   constructor(props) {
     super(props);
     this.pluginNamesOptions = Object.keys(props.namedBtsIntegrations).map((key) => ({
       value: key,
-      label: PLUGIN_NAME_TITLES[key],
+      label: PLUGIN_NAME_TITLES[key] || key,
     }));
   }
 
@@ -67,14 +68,21 @@ export class BtsIntegrationSelector extends Component {
     this.props.namedBtsIntegrations[this.props.pluginName].length > 1;
 
   render() {
-    const { intl, pluginName, onChangePluginName, integrationId, onChangeIntegration } = this.props;
+    const {
+      intl,
+      pluginName,
+      onChangePluginName,
+      integrationId,
+      onChangeIntegration,
+      darkView,
+    } = this.props;
 
     return (
       <Fragment>
         <FormField
           fieldWrapperClassName={cx('field-wrapper')}
           label={intl.formatMessage(messages.btsTitle)}
-          labelClassName={cx('label')}
+          labelClassName={cx('label', { 'dark-view': darkView })}
           withoutProvider
         >
           <InputDropdown
@@ -82,12 +90,19 @@ export class BtsIntegrationSelector extends Component {
             options={this.pluginNamesOptions}
             onChange={onChangePluginName}
             disabled={!this.isMultipleBtsPlugins()}
+            customClasses={
+              darkView && {
+                selectBlock: 'dark-view',
+                value: 'dark-view',
+                arrow: 'dark-view',
+              }
+            }
           />
         </FormField>
         <FormField
           fieldWrapperClassName={cx('field-wrapper')}
           label={intl.formatMessage(messages.integrationNameTitle)}
-          labelClassName={cx('label')}
+          labelClassName={cx('label', { 'dark-view': darkView })}
           withoutProvider
         >
           <InputDropdown
@@ -95,6 +110,13 @@ export class BtsIntegrationSelector extends Component {
             options={this.getIntegrationNamesOptions()}
             onChange={onChangeIntegration}
             disabled={!this.isMultipleBtsIntegrations()}
+            customClasses={
+              darkView && {
+                selectBlock: 'dark-view',
+                value: 'dark-view',
+                arrow: 'dark-view',
+              }
+            }
           />
         </FormField>
       </Fragment>

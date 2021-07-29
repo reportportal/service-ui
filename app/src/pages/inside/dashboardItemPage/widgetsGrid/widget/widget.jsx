@@ -32,6 +32,8 @@ import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { ErrorMessage } from 'components/main/errorMessage';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { CHARTS, MULTI_LEVEL_WIDGETS_MAP, NoDataAvailable } from 'components/widgets';
+import { provideEcGA } from 'components/main/analytics';
+import { activeDashboardIdSelector } from 'controllers/pages';
 import { isWidgetDataAvailable } from '../../modals/common/utils';
 import { WidgetHeader } from './widgetHeader';
 import styles from './widget.scss';
@@ -57,6 +59,7 @@ const SILENT_UPDATE_TIMEOUT_FULLSCREEN = 30000;
 @connect(
   (state) => ({
     activeProject: activeProjectSelector(state),
+    activeDashboardId: activeDashboardIdSelector(state),
   }),
   {
     showModalAction,
@@ -81,6 +84,7 @@ export class SimpleWidget extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     dashboardOwner: PropTypes.string,
+    activeDashboardId: PropTypes.number.isRequired,
   };
 
   static defaultProps = {
@@ -315,6 +319,8 @@ export class SimpleWidget extends Component {
           selectParamsForFilter: DASHBOARD_PAGE_EVENTS.PARAMS_FOR_FILTER_EDIT_WIDGET_MODAL,
           submitChanges: DASHBOARD_PAGE_EVENTS.SUBMIT_CHANGES_EDIT_WIDGET_MODAL,
           cancelEditFilter: DASHBOARD_PAGE_EVENTS.CANCEL_EDIT_FILTER_EDIT_WIDGET_MODAL,
+          clickOnZoomWidgetArea: DASHBOARD_PAGE_EVENTS.CLICK_ZOOM_EDIT_WIDGET_AREA,
+          selectCriteria: DASHBOARD_PAGE_EVENTS.SELECT_CRITERIA_EDIT_WIDGET_MODAL,
         },
       },
     });
@@ -327,11 +333,28 @@ export class SimpleWidget extends Component {
 
   showDeleteWidgetModal = () => {
     this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.REMOVE_WIDGET);
+    const onConfirm = () => {
+      const { widgetId, activeDashboardId } = this.props;
+      const {
+        widget: { id, widgetType, contentParameters },
+      } = this.state;
+      this.props.onDelete(widgetId);
+      provideEcGA({
+        name: 'addProduct',
+        data: {
+          id,
+          name: widgetType,
+          category: `diagram/${contentParameters.widgetOptions.viewMode || 'unclassified'}`,
+        },
+        action: 'remove',
+        additionalData: { list: activeDashboardId },
+      });
+    };
     this.props.showModalAction({
       id: 'deleteWidgetModal',
       data: {
         widget: this.state.widget,
-        onConfirm: () => this.props.onDelete(this.props.widgetId),
+        onConfirm,
         eventsInfo: {
           closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_DELETE_WIDGET_MODAL,
           cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_DELETE_WIDGET_MODAL,
