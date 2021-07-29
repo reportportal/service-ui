@@ -18,11 +18,13 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import { MarkdownViewer } from 'components/main/markdown';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import { DefectTypeItem } from 'pages/inside/common/defectTypeItem';
 import { PatternAnalyzedLabel } from 'pages/inside/common/patternAnalyzedLabel';
+import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import { AutoAnalyzedLabel } from './autoAnalyzedLabel';
 import { IssueList } from './issueList';
 import styles from './defectType.scss';
@@ -68,36 +70,55 @@ PALabel.propTypes = {
   patternTemplates: PropTypes.array.isRequired,
 };
 
-export const DefectType = ({ issue, onEdit, onRemove, patternTemplates }) => (
-  <div className={cx('defect-type')}>
-    <div className={cx('defect-type-labels')}>
-      {issue.ignoreAnalyzer && <IgnoredInAALabel />}
-      {issue.autoAnalyzed && <AALabel />}
-      {!!patternTemplates.length && <PALabel patternTemplates={patternTemplates} />}
-      {issue.issueType && <DefectTypeItem type={issue.issueType} onClick={onEdit} />}
-      <div className={cx('edit-icon')} onClick={onEdit}>
-        {Parser(PencilIcon)}
+export const DefectType = ({ issue, onEdit, onRemove, patternTemplates, events }) => {
+  const { trackEvent } = useTracking();
+  const eventData = issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
+  const onClickEdit = (event, cb) => {
+    event && trackEvent(event);
+    cb();
+  };
+
+  return (
+    <div className={cx('defect-type')}>
+      <div className={cx('defect-type-labels')}>
+        {issue.ignoreAnalyzer && <IgnoredInAALabel />}
+        {issue.autoAnalyzed && <AALabel />}
+        {!!patternTemplates.length && <PALabel patternTemplates={patternTemplates} />}
+        {issue.issueType && (
+          <DefectTypeItem
+            type={issue.issueType}
+            onClick={() => onClickEdit(events.onEditEvent(eventData), onEdit)}
+          />
+        )}
+        <div
+          className={cx('edit-icon')}
+          onClick={() => onClickEdit(events.onEditEvent(eventData, 'Edit'), onEdit)}
+        >
+          {Parser(PencilIcon)}
+        </div>
+      </div>
+      <div className={cx('issues')}>
+        <IssueList issues={issue.externalSystemIssues} onRemove={onRemove} />
+      </div>
+      <div className={cx('comment')}>
+        <ScrollWrapper autoHeight autoHeightMax={90}>
+          <MarkdownViewer value={issue.comment} />
+        </ScrollWrapper>
       </div>
     </div>
-    <div className={cx('issues')}>
-      <IssueList issues={issue.externalSystemIssues} onRemove={onRemove} />
-    </div>
-    <div className={cx('comment')}>
-      <ScrollWrapper autoHeight autoHeightMax={90}>
-        <MarkdownViewer value={issue.comment} />
-      </ScrollWrapper>
-    </div>
-  </div>
-);
+  );
+};
 
 DefectType.propTypes = {
   issue: PropTypes.object.isRequired,
   onEdit: PropTypes.func,
   onRemove: PropTypes.func,
   patternTemplates: PropTypes.array,
+  events: PropTypes.object,
 };
 DefectType.defaultProps = {
   onEdit: () => {},
   onRemove: () => {},
   patternTemplates: [],
+  events: {},
 };
