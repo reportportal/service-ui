@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-export { FILTERS_PAGE_EVENTS, FILTERS_PAGE } from './filtersPageEvents';
+export {
+  FILTERS_PAGE_EVENTS,
+  FILTERS_PAGE,
+  getAddEditFilterModalEvents,
+} from './filtersPageEvents';
 export {
   LAUNCHES_PAGE_EVENTS,
   LAUNCHES_MODAL_EVENTS,
