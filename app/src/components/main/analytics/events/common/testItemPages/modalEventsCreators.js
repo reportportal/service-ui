@@ -251,10 +251,10 @@ export const getEditItemsModalEvents = (category, itemType = 'Item') => ({
 });
 
 const MODAL_MAKE_DECISION = 'Modal Make decision';
-const getOpenModalEvent = (page) => (isTIGroup, actionMenu = false) => ({
+const getOpenModalEvent = (page) => (isTIGroup, actionPlace = '') => ({
   category: MODAL_MAKE_DECISION,
   action: 'Open Modal "Make decision"',
-  label: `${page}${actionMenu ? '#ActionMenu' : ''}#${isTIGroup ? 'TI' : 'NoTI'}`,
+  label: `${page}${actionPlace && `#${actionPlace}`}#${isTIGroup ? 'TI' : 'NoTI'}`,
 });
 const getApplyBtnEvent = (page) => (section, isTIGroup, hasSuggestions) => ({
   category: MODAL_MAKE_DECISION,
