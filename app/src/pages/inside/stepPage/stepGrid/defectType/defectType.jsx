@@ -73,9 +73,9 @@ PALabel.propTypes = {
 export const DefectType = ({ issue, onEdit, onRemove, patternTemplates, events }) => {
   const { trackEvent } = useTracking();
   const eventData = issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
-  const onClickEdit = (event, cb) => {
+  const onClickEdit = (event) => {
     event && trackEvent(event);
-    cb();
+    onEdit();
   };
 
   return (
@@ -87,12 +87,12 @@ export const DefectType = ({ issue, onEdit, onRemove, patternTemplates, events }
         {issue.issueType && (
           <DefectTypeItem
             type={issue.issueType}
-            onClick={() => onClickEdit(events.onEditEvent(eventData), onEdit)}
+            onClick={() => onClickEdit(events.onEditEvent(eventData))}
           />
         )}
         <div
           className={cx('edit-icon')}
-          onClick={() => onClickEdit(events.onEditEvent(eventData, 'Edit'), onEdit)}
+          onClick={() => onClickEdit(events.onEditEvent(eventData, 'Edit'))}
         >
           {Parser(PencilIcon)}
         </div>
