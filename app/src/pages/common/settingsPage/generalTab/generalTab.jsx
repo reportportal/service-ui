@@ -255,10 +255,15 @@ export class GeneralTab extends Component {
     return newOptions;
   };
 
+  createTrackingFunction = (createEvent, formatValue = this.formatRetention) => (value) => {
+    const label = formatValue(value).label;
+    this.props.tracking.trackEvent(createEvent(label));
+  };
+
   formatInterruptJobTimes = this.createValueFormatter(this.interruptJobTime);
 
   render() {
-    const { intl, accountRole, userRole, tracking } = this.props;
+    const { intl, accountRole, userRole } = this.props;
     return (
       <div className={cx('general-tab')}>
         <form onSubmit={this.props.handleSubmit(this.onFormSubmit)}>
@@ -273,7 +278,10 @@ export class GeneralTab extends Component {
             name="interruptJobTime"
             fieldWrapperClassName={cx('field-input')}
             label={intl.formatMessage(Messages.interruptedJob)}
-            onChange={() => tracking.trackEvent(SETTINGS_PAGE_EVENTS.INACTIVITY_TIMEOUT_GENERAL)}
+            onChange={this.createTrackingFunction(
+              SETTINGS_PAGE_EVENTS.inactivityTimeoutGeneral,
+              this.formatInterruptJobTimes,
+            )}
             customBlock={{
               node: <p>{intl.formatMessage(Messages.interruptedJobDescription)}</p>,
             }}
@@ -286,7 +294,7 @@ export class GeneralTab extends Component {
             name="keepLaunches"
             fieldWrapperClassName={cx('field-input')}
             label={intl.formatMessage(Messages.keepLaunches)}
-            onChange={() => tracking.trackEvent(SETTINGS_PAGE_EVENTS.INACTIVITY_TIMEOUT_GENERAL)}
+            onChange={this.createTrackingFunction(SETTINGS_PAGE_EVENTS.keepLaunchesGeneral)}
             customBlock={{
               node: <p>{intl.formatMessage(Messages.keepLaunchesDescription)}</p>,
             }}
@@ -299,7 +307,7 @@ export class GeneralTab extends Component {
             name="keepLogs"
             fieldWrapperClassName={cx('field-input')}
             label={intl.formatMessage(Messages.keepLogs)}
-            onChange={() => tracking.trackEvent(SETTINGS_PAGE_EVENTS.KEEP_LOGS_GENERAL)}
+            onChange={this.createTrackingFunction(SETTINGS_PAGE_EVENTS.keepLogsGeneral)}
             customBlock={{
               node: <p>{intl.formatMessage(Messages.keepLogsDescription)}</p>,
             }}
@@ -312,7 +320,7 @@ export class GeneralTab extends Component {
             name="keepScreenshots"
             fieldWrapperClassName={cx('field-input')}
             label={intl.formatMessage(Messages.keepScreenshots)}
-            onChange={() => tracking.trackEvent(SETTINGS_PAGE_EVENTS.KEEP_SCREENSHOTS_GENERAL)}
+            onChange={this.createTrackingFunction(SETTINGS_PAGE_EVENTS.keepScreenshotsGeneral)}
             customBlock={{
               node: <p>{intl.formatMessage(Messages.keepScreenshotsDescription)}</p>,
             }}
