@@ -65,7 +65,9 @@ export class DefectTypesGroup extends Component {
   }
 
   showNewSubTypeForm = () => {
-    this.props.tracking.trackEvent(SETTINGS_PAGE_EVENTS.ADD_DEFECT_TYPE_BTN);
+    this.props.tracking.trackEvent(
+      SETTINGS_PAGE_EVENTS.addDefectTypeButton(this.props.group[0].longName),
+    );
     this.setState({ newSubType: true });
   };
 

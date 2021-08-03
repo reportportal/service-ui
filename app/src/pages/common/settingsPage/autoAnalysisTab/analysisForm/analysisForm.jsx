@@ -152,7 +152,7 @@ export class AnalysisForm extends Component {
 
   tabChangeHandle = (newValue) => {
     const { tracking, change } = this.props;
-    tracking.trackEvent(SETTINGS_PAGE_EVENTS.TOGGLE_AUTO_ANALYSIS_MODE);
+    tracking.trackEvent(SETTINGS_PAGE_EVENTS.toggleAutoAnalysisMode(newValue));
     change(MIN_SHOULD_MATCH, analysisModeConfig[newValue][MIN_SHOULD_MATCH]);
     change(NUMBER_OF_LOG_LINES, analysisModeConfig[newValue][NUMBER_OF_LOG_LINES]);
 
@@ -163,8 +163,15 @@ export class AnalysisForm extends Component {
 
   submitHandler = (data) => {
     const { tracking, onFormSubmit } = this.props;
-    tracking.trackEvent(getAutoAnalysisMinimumShouldMatchSubmitEvent(data.minShouldMatch));
-    tracking.trackEvent(SETTINGS_PAGE_EVENTS.SUBMIT_AUTO_ANALYSIS_SETTINGS);
+    const { minShouldMatch, numberOfLogLines } = data;
+    tracking.trackEvent(getAutoAnalysisMinimumShouldMatchSubmitEvent(minShouldMatch));
+    tracking.trackEvent(
+      SETTINGS_PAGE_EVENTS.submitAutoAnalysisSettings(
+        minShouldMatch,
+        numberOfLogLines,
+        this.state.autoAnalysisMode,
+      ),
+    );
     onFormSubmit(data);
   };
 
