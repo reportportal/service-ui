@@ -17,8 +17,10 @@
 import { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
+import { pageSelector } from 'controllers/pages';
 import { Input } from 'components/inputs/input';
 import { FOOTER_EVENTS } from 'components/main/analytics/events';
 import styles from './pageSizeControl.scss';
@@ -27,15 +29,19 @@ const cx = classNames.bind(styles);
 
 const MAX_SIZE = 300;
 
+@connect((state) => ({
+  page: pageSelector(state),
+}))
 @track()
 export class PageSizeControl extends Component {
   static propTypes = {
     pageSize: PropTypes.number.isRequired,
-    onChangePageSize: PropTypes.func,
+    page: PropTypes.string.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    onChangePageSize: PropTypes.func,
   };
 
   static defaultProps = {
@@ -57,7 +63,9 @@ export class PageSizeControl extends Component {
     });
 
   handleChange = (e) => {
-    this.props.tracking.trackEvent(FOOTER_EVENTS.EDIT_NUMBER_PER_PAGE);
+    this.props.tracking.trackEvent(
+      FOOTER_EVENTS.editNumberPerPage(e.target.value, this.props.page),
+    );
     this.setState({ inputValue: e.target.value });
   };
 
