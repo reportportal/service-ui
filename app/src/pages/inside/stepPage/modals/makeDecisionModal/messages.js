@@ -141,8 +141,8 @@ export const messages = defineMessages({
     defaultMessage:
       'Tests with To Investigate defect type with error logs matching selected item on 98% and more',
   },
-  lastTenLaunches: {
-    id: 'MakeDecisionModal.lastTenLaunches',
+  launchName: {
+    id: 'MakeDecisionModal.launchName',
     defaultMessage: 'Similar errors in last 10 launches',
   },
   lastTenLaunchesTooltip: {
@@ -150,8 +150,8 @@ export const messages = defineMessages({
     defaultMessage:
       'Tests with To Investigate defect type from last 10 launches with error logs matching selected item on 98% and more',
   },
-  withFilter: {
-    id: 'MakeDecisionModal.withFilter',
+  filter: {
+    id: 'MakeDecisionModal.filter',
     defaultMessage: 'Similar errors in {filterName}',
   },
   withFilterTooltip: {

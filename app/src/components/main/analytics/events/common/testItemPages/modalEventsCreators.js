@@ -251,47 +251,150 @@ export const getEditItemsModalEvents = (category, itemType = 'Item') => ({
 });
 
 const MODAL_MAKE_DECISION = 'Modal Make decision';
-const getOpenModalEvent = (page) => (isTIGroup, actionPlace = '') => ({
-  category: MODAL_MAKE_DECISION,
-  action: 'Open Modal "Make decision"',
-  label: `${page}${actionPlace && `#${actionPlace}`}#${isTIGroup ? 'TI' : 'NoTI'}`,
-});
-const getApplyBtnEvent = (page) => (section, isTIGroup, hasSuggestions) => ({
-  category: MODAL_MAKE_DECISION,
-  action: `Click on button "Apply" after selecting ${section}`,
-  label: `${page}#${isTIGroup ? 'TI' : 'NoTI'}#${hasSuggestions ? 'withML' : 'withoutML'}`,
-});
-const getMLSwitcherEvent = (page) => (isTIGroup, state) => ({
-  category: MODAL_MAKE_DECISION,
-  action: 'Switch Show Error Logs in ML Suggestions',
-  label: `${page}#${isTIGroup ? 'TI' : 'NoTI'}#${state ? 'ON' : 'OFF'}`,
-});
-const getIgnoreAASwitcherEvent = (page) => (isTIGroup, state) => ({
-  category: MODAL_MAKE_DECISION,
-  action: 'Switch Ignore in Auto Analysis on modal "Make decision"',
-  label: `${page}#${isTIGroup ? 'TI' : 'NoTI'}#${state ? 'ON' : 'OFF'}`,
-});
-const getOnClickIssueEvent = (page) => (isTIGroup, label) => ({
-  category: MODAL_MAKE_DECISION,
-  action: `Click on button "+${label}" on modal "Make decision"`,
-  label: `${page}#${isTIGroup ? 'TI' : 'NoTI'}`,
-});
-const getOnClickExternalLink = (page) => (isTIGroup, section) => ({
-  category: MODAL_MAKE_DECISION,
-  action: 'Click on issue link and open page Log',
-  label: `${page}#${isTIGroup ? 'TI' : 'NoTI'}#in ${section}`,
-});
-const getOpenStackTraceEvent = (page) => (isTIGroup) => ({
-  category: MODAL_MAKE_DECISION,
-  action: 'Open Error Logs in ML Suggestions',
-  label: `${page}#${isTIGroup ? 'TI' : 'NoTI'}`,
-});
+const getOpenModalEvent = (page) => (isTIGroup, actionPlace = '') => {
+  const defectGroup = isTIGroup ? 'TI' : 'NoTI';
+  return {
+    category: MODAL_MAKE_DECISION,
+    action: 'Open Modal "Make decision"',
+    label: `${page}${actionPlace && `#${actionPlace}`}#${defectGroup}`,
+  };
+};
+const getCloseModalEvent = (page) => (isTIGroup, hasSuggestions, timestamp) => {
+  const defectGroup = isTIGroup ? 'TI' : 'NoTI';
+  const suggestionsStatus = hasSuggestions ? 'withML' : 'withoutML';
+  return {
+    category: MODAL_MAKE_DECISION,
+    action: 'Close modal "Make decisions"',
+    label: [page, defectGroup, suggestionsStatus, timestamp].join('#'),
+  };
+};
+const getApplyBtnEvent = (page) => (
+  section,
+  isTIGroup,
+  hasSuggestions,
+  optionLabel,
+  itemsLength,
+  timestamp,
+) => {
+  const defectGroup = isTIGroup ? 'TI' : 'NoTI';
+  const suggestionsStatus = hasSuggestions ? 'withML' : 'withoutML';
+  const selectedOption = optionLabel.replace(/{([A-Za-z]+)}/, 'filter');
+  return {
+    category: MODAL_MAKE_DECISION,
+    action: `Click on button "Apply" after selecting ${section}`,
+    label: [page, defectGroup, suggestionsStatus, selectedOption, itemsLength, timestamp].join('#'),
+  };
+};
+const getApplyAndContinueBtnEvent = (page) => (isTIGroup, hasSuggestions, issueBtn) => {
+  const defectGroup = isTIGroup ? 'TI' : 'NoTI';
+  const suggestionsStatus = hasSuggestions ? 'withML' : 'withoutML';
+  return {
+    category: MODAL_MAKE_DECISION,
+    action: `Click on button "Apply & Continue" on modal "Make decision"`,
+    label: [page, defectGroup, suggestionsStatus, `after "+${issueBtn}"`].join('#'),
+  };
+};
+const getShowErrLogsSwitcherEvent = (page) => (isTIGroup, state, isMlSection = false) => {
+  const action = isMlSection
+    ? 'Switch Show Error Logs in ML Suggestions'
+    : 'Switch "Show Error Logs" in Apply defect for';
+  const defectGroup = isTIGroup ? 'TI' : 'NoTI';
+  const switcher = state ? 'ON' : 'OFF';
+  return {
+    category: MODAL_MAKE_DECISION,
+    action,
+    label: [page, defectGroup, switcher].join('#'),
+  };
+};
+const getIgnoreAASwitcherEvent = (page) => (isTIGroup, state) => {
+  const defectGroup = isTIGroup ? 'TI' : 'NoTI';
+  const switcher = state ? 'ON' : 'OFF';
+  return {
+    category: MODAL_MAKE_DECISION,
+    action: 'Switch Ignore in Auto Analysis on modal "Make decision"',
+    label: [page, defectGroup, switcher].join('#'),
+  };
+};
+const getOnClickIssueEvent = (page) => (isTIGroup, label) => {
+  const defectGroup = isTIGroup ? 'TI' : 'NoTI';
+  return {
+    category: MODAL_MAKE_DECISION,
+    action: `Click on button "+${label}" on modal "Make decision"`,
+    label: `${page}#${defectGroup}`,
+  };
+};
+const getOnClickExternalLink = (page) => (isTIGroup, section = '') => {
+  const action = section
+    ? 'Click on issue link and open page Log'
+    : 'Click on issue Link from Apply defect for';
+  const defectGroup = isTIGroup ? 'TI' : 'NoTI';
+  return {
+    category: MODAL_MAKE_DECISION,
+    action,
+    label: `${page}#${defectGroup}${section && `#in ${section}`}`,
+  };
+};
+const getOpenStackTraceEvent = (page) => (isTIGroup, isMlSection = false) => {
+  const action = isMlSection
+    ? 'Open Error Logs in ML Suggestions'
+    : 'Open Error Logs in Apply defect for';
+  const defectGroup = isTIGroup ? 'TI' : 'NoTI';
+  return {
+    category: MODAL_MAKE_DECISION,
+    action,
+    label: `${page}#${defectGroup}`,
+  };
+};
+const getOpenCloseRightSectionEvent = (page) => (isTIGroup, isOpen) => {
+  const iconLabel = isOpen ? 'Show more' : 'Show less';
+  const defectGroup = isTIGroup ? 'TI' : 'NoTI';
+  const btnLabel = isOpen ? 'See details and error logs' : 'See less';
+  return {
+    category: MODAL_MAKE_DECISION,
+    action: `Click icon ${iconLabel} on modal "Make decision"`,
+    label: [page, defectGroup, btnLabel].join('#'),
+  };
+};
+const getOnDecisionOptionEvent = (page) => (isTIGroup, optionLabel) => {
+  const defectGroup = isTIGroup ? 'TI' : 'NoTI';
+  const selectedOption = optionLabel.replace(/{([A-Za-z]+)}/, 'filter');
+  return {
+    category: MODAL_MAKE_DECISION,
+    action: 'Choose radio button "Apply defect for"',
+    label: [page, defectGroup, selectedOption].join('#'),
+  };
+};
+const getOnSelectAllEvent = (page) => (isTIGroup, state, optionLabel) => {
+  const defectGroup = isTIGroup ? 'TI' : 'NoTI';
+  const switcher = state ? 'OFF' : 'ON';
+  const selectedOption = optionLabel.replace(/{([A-Za-z]+)}/, 'filter');
+  return {
+    category: MODAL_MAKE_DECISION,
+    action: 'Checkmark box "Item selected" in Apply defect for',
+    label: [page, defectGroup, switcher, selectedOption].join('#'),
+  };
+};
+const getOnClickEditorIconEvent = (page) => (isTIGroup) => {
+  const defectGroup = isTIGroup ? 'TI' : 'NoTI';
+  return {
+    category: MODAL_MAKE_DECISION,
+    action: 'Click on icons Editor in toolbar',
+    label: `${page}#${defectGroup}`,
+  };
+};
+
 export const getMakeDecisionModalEvents = (page) => ({
   openModal: getOpenModalEvent(page),
+  closeModal: getCloseModalEvent(page),
   onApply: getApplyBtnEvent(page),
-  toggleMLSwitcher: getMLSwitcherEvent(page),
+  onApplyAndContinue: getApplyAndContinueBtnEvent(page),
+  toggleShowErrLogsSwitcher: getShowErrLogsSwitcherEvent(page),
   toggleIgnoreAASwitcher: getIgnoreAASwitcherEvent(page),
   onClickIssueBtn: getOnClickIssueEvent(page),
   onClickExternalLink: getOnClickExternalLink(page),
   onOpenStackTrace: getOpenStackTraceEvent(page),
+  openCloseRightSection: getOpenCloseRightSectionEvent(page),
+  onDecisionOption: getOnDecisionOptionEvent(page),
+  onSelectAllItems: getOnSelectAllEvent(page),
+  onClickEditorIcon: getOnClickEditorIconEvent(page),
 });

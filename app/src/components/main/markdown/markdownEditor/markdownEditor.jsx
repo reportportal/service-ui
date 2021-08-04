@@ -94,7 +94,7 @@ export class MarkdownEditor extends React.Component {
     value: PropTypes.string,
     placeholder: PropTypes.string,
     onChange: PropTypes.func,
-    onChangeEventInfo: PropTypes.object,
+    eventsInfo: PropTypes.object,
     mode: PropTypes.string,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -106,7 +106,7 @@ export class MarkdownEditor extends React.Component {
     value: '',
     placeholder: '',
     onChange: () => {},
-    onChangeEventInfo: {},
+    eventsInfo: {},
     mode: MODE_DEFAULT,
     manipulateEditorOutside: () => {},
   };
@@ -121,108 +121,123 @@ export class MarkdownEditor extends React.Component {
       value,
       mode,
       manipulateEditorOutside,
+      eventsInfo,
     } = this.props;
     this.holder.value = value;
+
+    const toolbarActionWrapper = (action) => (...args) => {
+      action(...args);
+      this.props.tracking.trackEvent(eventsInfo.onClickToolbarIconEventInfo);
+    };
+
+    let toolbar = [
+      {
+        name: 'heading-1',
+        action: SimpleMDE.toggleHeading1,
+        className: 'icon-header-1',
+        title: formatMessage(toolbarTitles.heading1),
+      },
+      {
+        name: 'heading-2',
+        action: SimpleMDE.toggleHeading2,
+        className: 'icon-header-2',
+        title: formatMessage(toolbarTitles.heading2),
+      },
+      {
+        name: 'heading-3',
+        action: SimpleMDE.toggleHeading3,
+        className: 'icon-header-3',
+        title: formatMessage(toolbarTitles.heading3),
+      },
+      {
+        name: 'clean-block',
+        action: SimpleMDE.cleanBlock,
+        className: 'icon-clean-block',
+        title: formatMessage(toolbarTitles.cleanBlock),
+      },
+      '|',
+      {
+        name: 'bold',
+        action: SimpleMDE.toggleBold,
+        className: 'icon-bold',
+        title: formatMessage(toolbarTitles.bold),
+      },
+      {
+        name: 'italic',
+        action: SimpleMDE.toggleItalic,
+        className: 'icon-italic',
+        title: formatMessage(toolbarTitles.italic),
+      },
+      {
+        name: 'strikethrough',
+        action: SimpleMDE.toggleStrikethrough,
+        className: 'icon-strikethrough',
+        title: formatMessage(toolbarTitles.strikethrough),
+      },
+      '|',
+      {
+        name: 'unordered-list',
+        action: SimpleMDE.toggleUnorderedList,
+        className: 'icon-unordered-list',
+        title: formatMessage(toolbarTitles.unorderedList),
+      },
+      {
+        name: 'ordered-list',
+        action: SimpleMDE.toggleOrderedList,
+        className: 'icon-ordered-list',
+        title: formatMessage(toolbarTitles.orderedList),
+      },
+      '|',
+      {
+        name: 'image',
+        action: SimpleMDE.drawImage,
+        className: 'icon-image',
+        title: formatMessage(toolbarTitles.image),
+      },
+      {
+        name: 'link',
+        action: SimpleMDE.drawLink,
+        className: 'icon-link',
+        title: formatMessage(toolbarTitles.link),
+      },
+      '|',
+      {
+        name: 'quote',
+        action: SimpleMDE.toggleBlockquote,
+        className: 'icon-quote',
+        title: formatMessage(toolbarTitles.quote),
+      },
+      {
+        name: 'code',
+        action: SimpleMDE.toggleCodeBlock,
+        className: 'icon-code',
+        title: formatMessage(toolbarTitles.code),
+      },
+      '|',
+      {
+        name: 'preview',
+        action: (...props) => {
+          this.setState((state) => ({
+            isPreview: !state.isPreview,
+          }));
+          return SimpleMDE.togglePreview(...props);
+        },
+        className: 'icon-preview no-disable',
+        title: formatMessage(toolbarTitles.preview),
+      },
+    ];
+
+    if (eventsInfo.onClickToolbarIconEventInfo) {
+      toolbar = toolbar.map((item) =>
+        item === '|' ? item : { ...item, action: toolbarActionWrapper(item.action) },
+      );
+    }
+
     this.simpleMDE = new SimpleMDE({
       element: this.holder,
       status: false,
       autoDownloadFontAwesome: false,
-      toolbar: [
-        {
-          name: 'heading-1',
-          action: SimpleMDE.toggleHeading1,
-          className: 'icon-header-1',
-          title: formatMessage(toolbarTitles.heading1),
-        },
-        {
-          name: 'heading-2',
-          action: SimpleMDE.toggleHeading2,
-          className: 'icon-header-2',
-          title: formatMessage(toolbarTitles.heading2),
-        },
-        {
-          name: 'heading-3',
-          action: SimpleMDE.toggleHeading3,
-          className: 'icon-header-3',
-          title: formatMessage(toolbarTitles.heading3),
-        },
-        {
-          name: 'clean-block',
-          action: SimpleMDE.cleanBlock,
-          className: 'icon-clean-block',
-          title: formatMessage(toolbarTitles.cleanBlock),
-        },
-        '|',
-        {
-          name: 'bold',
-          action: SimpleMDE.toggleBold,
-          className: 'icon-bold',
-          title: formatMessage(toolbarTitles.bold),
-        },
-        {
-          name: 'italic',
-          action: SimpleMDE.toggleItalic,
-          className: 'icon-italic',
-          title: formatMessage(toolbarTitles.italic),
-        },
-        {
-          name: 'strikethrough',
-          action: SimpleMDE.toggleStrikethrough,
-          className: 'icon-strikethrough',
-          title: formatMessage(toolbarTitles.strikethrough),
-        },
-        '|',
-        {
-          name: 'unordered-list',
-          action: SimpleMDE.toggleUnorderedList,
-          className: 'icon-unordered-list',
-          title: formatMessage(toolbarTitles.unorderedList),
-        },
-        {
-          name: 'ordered-list',
-          action: SimpleMDE.toggleOrderedList,
-          className: 'icon-ordered-list',
-          title: formatMessage(toolbarTitles.orderedList),
-        },
-        '|',
-        {
-          name: 'image',
-          action: SimpleMDE.drawImage,
-          className: 'icon-image',
-          title: formatMessage(toolbarTitles.image),
-        },
-        {
-          name: 'link',
-          action: SimpleMDE.drawLink,
-          className: 'icon-link',
-          title: formatMessage(toolbarTitles.link),
-        },
-        '|',
-        {
-          name: 'quote',
-          action: SimpleMDE.toggleBlockquote,
-          className: 'icon-quote',
-          title: formatMessage(toolbarTitles.quote),
-        },
-        {
-          name: 'code',
-          action: SimpleMDE.toggleCodeBlock,
-          className: 'icon-code',
-          title: formatMessage(toolbarTitles.code),
-        },
-        '|',
-        {
-          name: 'preview',
-          action: (...props) => {
-            this.setState((state) => ({
-              isPreview: !state.isPreview,
-            }));
-            return SimpleMDE.togglePreview(...props);
-          },
-          className: 'icon-preview no-disable',
-          title: formatMessage(toolbarTitles.preview),
-        },
-      ],
+      toolbar,
       placeholder: this.props.placeholder || '',
       spellChecker: false,
       blockStyles: {
@@ -241,7 +256,8 @@ export class MarkdownEditor extends React.Component {
   }
   onChangeHandler = () => {
     this.props.onChange(this.simpleMDE.value());
-    this.props.onChangeEventInfo && this.props.tracking.trackEvent(this.props.onChangeEventInfo);
+    this.props.eventsInfo.onChangeEventInfo &&
+      this.props.tracking.trackEvent(this.props.eventsInfo.onChangeEventInfo);
     this.props.manipulateEditorOutside(this.simpleMDE.codemirror);
   };
 

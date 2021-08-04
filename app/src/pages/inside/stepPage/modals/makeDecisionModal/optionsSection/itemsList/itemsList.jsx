@@ -30,6 +30,7 @@ export const ItemsList = ({
   optionValue,
   isNarrowView,
   isBulkOperation,
+  eventsInfo,
 }) => {
   const [showErrorLogs, setShowErrorLogs] = useState(false);
   useEffect(() => {
@@ -52,6 +53,7 @@ export const ItemsList = ({
             optionValue={optionValue}
             isNarrowView={isNarrowView}
             isBulkOperation={isBulkOperation}
+            eventsInfo={eventsInfo}
           />
         )}
         <ScrollWrapper autoHeight autoHeightMax={515} hideTracksWhenNotNeeded>
@@ -63,6 +65,7 @@ export const ItemsList = ({
             optionValue={optionValue}
             isNarrowView={isNarrowView}
             isBulkOperation={isBulkOperation}
+            eventsInfo={eventsInfo}
           />
         </ScrollWrapper>
       </>
@@ -78,6 +81,7 @@ ItemsList.propTypes = {
   selectAllItems: PropTypes.func,
   isBulkOperation: PropTypes.bool,
   isNarrowView: PropTypes.bool,
+  eventsInfo: PropTypes.object,
 };
 ItemsList.defaultProps = {
   testItems: [],
@@ -88,4 +92,5 @@ ItemsList.defaultProps = {
   selectAllItems: () => {},
   isBulkOperation: false,
   isNarrowView: true,
+  eventsInfo: {},
 };

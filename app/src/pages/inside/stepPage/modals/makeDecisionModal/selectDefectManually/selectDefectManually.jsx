@@ -219,6 +219,9 @@ export const SelectDefectManually = ({
           }
           manipulateEditorOutside={setCommentEditor}
           onChange={handleDefectCommentChange}
+          eventsInfo={{
+            onClickToolbarIconEventInfo: eventsInfo.onClickEditorIcon(defectFromTIGroup),
+          }}
           placeholder={formatMessage(
             isBulkOperation
               ? messages.defectCommentBulkOperationPlaceholder
