@@ -120,7 +120,7 @@ export class AutoAnalysisTab extends Component {
     };
   };
 
-  getStrategyBlockValues = () => {
+  getAnalysisBaseSettings = () => {
     const { analyzerConfiguration } = this.props;
 
     return {
@@ -182,17 +182,19 @@ export class AutoAnalysisTab extends Component {
   render() {
     const { accountRole, userRole, showGenerateIndexModal, analyzerExtensions } = this.props;
     const disabled = !canUpdateSettings(accountRole, userRole);
+    const analysisBaseSettings = this.getAnalysisBaseSettings();
 
     return (
       <div className={cx('auto-analysis-tab')}>
         <StrategyBlock
           disabled={disabled}
-          data={this.getStrategyBlockValues()}
+          data={analysisBaseSettings}
           onFormSubmit={this.updateProjectConfig}
         />
         <AnalysisForm
           disabled={disabled}
           initialValues={this.getAnalysisFormValues()}
+          analysisBaseSettings={analysisBaseSettings}
           onFormSubmit={this.updateProjectConfig}
         />
         <IndexActionsBlock

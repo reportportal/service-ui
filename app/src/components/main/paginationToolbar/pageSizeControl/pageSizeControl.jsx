@@ -63,9 +63,6 @@ export class PageSizeControl extends Component {
     });
 
   handleChange = (e) => {
-    this.props.tracking.trackEvent(
-      FOOTER_EVENTS.editNumberPerPage(e.target.value, this.props.page),
-    );
     this.setState({ inputValue: e.target.value });
   };
 
@@ -91,6 +88,7 @@ export class PageSizeControl extends Component {
     if (e.keyCode === 13) {
       this.setState({ inputVisible: false, inputValue: '' });
       this.props.onChangePageSize(Number(this.normalizeInput(value)));
+      this.props.tracking.trackEvent(FOOTER_EVENTS.editNumberPerPage(value, this.props.page));
     }
   };
 
