@@ -87,26 +87,28 @@ const DEFAULT_ANALYSIS_MODE = 'Classic';
 @track()
 export class AnalysisForm extends Component {
   static propTypes = {
-    disabled: PropTypes.bool,
     intl: PropTypes.object.isRequired,
-    initialValues: PropTypes.object,
-    change: PropTypes.func,
-    handleSubmit: PropTypes.func,
-    onFormSubmit: PropTypes.func,
-    formInputsValues: PropTypes.object,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    disabled: PropTypes.bool,
+    initialValues: PropTypes.object,
+    formInputsValues: PropTypes.object,
+    analysisBaseSettings: PropTypes.object,
+    change: PropTypes.func,
+    handleSubmit: PropTypes.func,
+    onFormSubmit: PropTypes.func,
   };
 
   static defaultProps = {
     disabled: false,
     initialValues: {},
+    formInputsValues: {},
+    analysisBaseSettings: {},
     change: () => {},
     handleSubmit: () => {},
     onFormSubmit: () => {},
-    formInputsValues: {},
   };
 
   state = {
@@ -162,11 +164,15 @@ export class AnalysisForm extends Component {
   };
 
   submitHandler = (data) => {
-    const { tracking, onFormSubmit } = this.props;
+    const { tracking, onFormSubmit, analysisBaseSettings } = this.props;
     const { minShouldMatch, numberOfLogLines } = data;
+    const { autoAnalyzerMode: base, isAutoAnalyzerEnabled } = analysisBaseSettings;
+
     tracking.trackEvent(getAutoAnalysisMinimumShouldMatchSubmitEvent(minShouldMatch));
     tracking.trackEvent(
       SETTINGS_PAGE_EVENTS.submitAutoAnalysisSettings(
+        isAutoAnalyzerEnabled,
+        base,
         minShouldMatch,
         numberOfLogLines,
         this.state.autoAnalysisMode,

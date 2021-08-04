@@ -343,11 +343,12 @@ export const SETTINGS_PAGE_EVENTS = {
     action: 'Toggle Mode of Auto-Analysis Accuracy',
     label: mode,
   }),
-  submitAutoAnalysisSettings: (minShouldMatch, numberOfLogLines, mode) => ({
+  submitAutoAnalysisSettings: (enabled, base, minShouldMatch, numberOfLogLines, mode) => ({
     category: SETTINGS_PAGE,
     action: 'Click on Btn Submit in Auto-Analysis tab',
-    label: `${minShouldMatch} %#${numberOfLogLines > -1 ? numberOfLogLines : 'All'}#${mode ||
-      'Custom'}`,
+    label: `${enabled ? 'On' : 'Off'}#${base}#${minShouldMatch} %#${
+      numberOfLogLines > -1 ? numberOfLogLines : 'All'
+    }#${mode || 'Custom'}`,
   }),
   REMOVE_INDEX_BTN: {
     category: SETTINGS_PAGE,
