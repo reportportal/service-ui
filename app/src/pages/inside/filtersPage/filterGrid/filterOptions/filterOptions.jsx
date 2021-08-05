@@ -122,7 +122,9 @@ export class FilterOptions extends Component {
       } else if (type === OPTIONS.STATISTICS) {
         optionName = this.statisticsOptions(entity);
       } else {
-        optionName = intl.formatMessage(messages[entity.filteringField]);
+        optionName = messages[entity.filteringField]
+          ? intl.formatMessage(messages[entity.filteringField])
+          : entity.filteringField;
       }
       switch (entity.condition) {
         case CONDITION_GREATER_EQ:
