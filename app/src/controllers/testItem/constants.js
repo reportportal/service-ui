@@ -35,6 +35,7 @@ export const DEFAULT_SORTING = formatSortingString(['startTime'], SORTING_ASC);
 export const DEFAULT_LAUNCHES_LIMIT = 600;
 export const DELETE_TEST_ITEMS = 'DeleteTestItems';
 export const COMPOSITE_ATTRIBUTES_FILTER = 'filter.has.compositeAttribute';
+export const LEVEL_ATTRIBUTES_FILTER = 'filter.has.levelAttribute';
 export const CURRENT_ITEM_LEVEL = 'currentItemLevel';
 export const PROVIDER_TYPE_WIDGET = 'widget';
 export const PROVIDER_TYPE_LAUNCH = 'launch';

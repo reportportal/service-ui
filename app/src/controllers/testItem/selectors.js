@@ -54,6 +54,7 @@ import {
   DEFAULT_SORTING,
   TEST_ITEMS_TYPE_LIST,
   COMPOSITE_ATTRIBUTES_FILTER,
+  LEVEL_ATTRIBUTES_FILTER,
   PROVIDER_TYPE_MODIFIERS_ID_MAP,
 } from './constants';
 import {
@@ -132,8 +133,10 @@ export const paginationSelector = (state) => {
   }
 };
 
-export const compositeAttributesSelector = (state) =>
-  queryParametersSelector(state, namespaceSelector(state))[COMPOSITE_ATTRIBUTES_FILTER];
+export const compositeAttributesSelector = (state) => {
+  const queryParameters = queryParametersSelector(state, namespaceSelector(state));
+  return queryParameters[LEVEL_ATTRIBUTES_FILTER] || queryParameters[COMPOSITE_ATTRIBUTES_FILTER];
+};
 
 export const isListViewSelector = (state, namespace) =>
   isListView(pagePropertiesSelector(state), namespace);
@@ -300,6 +303,7 @@ export const statisticsLinkSelector = createSelector(
       'filter.has.attributeKey': ownProps.attributeKey,
       'filter.has.attributeValue': ownProps.attributeValue,
       'filter.has.compositeAttribute': ownProps.compositeAttribute,
+      'filter.has.levelAttribute': ownProps.levelAttribute,
       providerType,
       [providerTypeModifierId]: ownProps[providerTypeModifierId],
       launchesLimit,
@@ -357,6 +361,7 @@ export const defectLinkSelector = createSelector(
       'filter.has.attributeKey': ownProps.attributeKey,
       'filter.has.attributeValue': ownProps.attributeValue,
       'filter.has.compositeAttribute': ownProps.compositeAttribute,
+      'filter.has.levelAttribute': ownProps.levelAttribute,
       providerType,
       [providerTypeModifierId]: ownProps[providerTypeModifierId],
       launchesLimit,
