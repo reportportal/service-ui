@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { analyticsEnabledSelector } from 'controllers/appInfo';
-import { AnalyticsWrapper } from 'components/main/analytics/AnalyticsWrapper';
+import { AnalyticsWrapper, EmptyAnalyticsWrapper } from 'components/main/analytics';
 import { fetchInitialDataAction, initialDataReadySelector } from 'controllers/initialData';
 
 @connect(
@@ -61,13 +61,9 @@ export class InitialDataContainer extends Component {
   }
 
   render() {
-    const { isAnalyticsEnabled } = this.props;
-    const component = isAnalyticsEnabled ? (
-      <AnalyticsWrapper>{this.props.children}</AnalyticsWrapper>
-    ) : (
-      this.props.children
-    );
+    const { isAnalyticsEnabled, isInitialDataReady, children } = this.props;
+    const Analytics = isAnalyticsEnabled ? AnalyticsWrapper : EmptyAnalyticsWrapper;
 
-    return this.props.isInitialDataReady ? component : <span>Loading...</span>;
+    return isInitialDataReady ? <Analytics>{children}</Analytics> : <span>Loading...</span>;
   }
 }

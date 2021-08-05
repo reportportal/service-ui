@@ -27,6 +27,7 @@ import { URLS } from 'common/urls';
 import { CUMULATIVE_TREND } from 'common/constants/widgetTypes';
 import { activeProjectSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
+import { analyticsEnabledSelector } from 'controllers/appInfo';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { ErrorMessage } from 'components/main/errorMessage';
@@ -60,6 +61,7 @@ const SILENT_UPDATE_TIMEOUT_FULLSCREEN = 30000;
   (state) => ({
     activeProject: activeProjectSelector(state),
     activeDashboardId: activeDashboardIdSelector(state),
+    isAnalyticsEnabled: analyticsEnabledSelector(state),
   }),
   {
     showModalAction,
@@ -85,6 +87,7 @@ export class SimpleWidget extends Component {
     }).isRequired,
     dashboardOwner: PropTypes.string,
     activeDashboardId: PropTypes.number.isRequired,
+    isAnalyticsEnabled: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -332,23 +335,27 @@ export class SimpleWidget extends Component {
   };
 
   showDeleteWidgetModal = () => {
-    this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.REMOVE_WIDGET);
+    const { tracking, isAnalyticsEnabled, onDelete } = this.props;
+
+    tracking.trackEvent(DASHBOARD_PAGE_EVENTS.REMOVE_WIDGET);
     const onConfirm = () => {
       const { widgetId, activeDashboardId } = this.props;
       const {
         widget: { id, widgetType, contentParameters },
       } = this.state;
-      this.props.onDelete(widgetId);
-      provideEcGA({
-        name: 'addProduct',
-        data: {
-          id,
-          name: widgetType,
-          category: `diagram/${contentParameters.widgetOptions.viewMode || 'unclassified'}`,
-        },
-        action: 'remove',
-        additionalData: { list: activeDashboardId },
-      });
+      onDelete(widgetId);
+      if (isAnalyticsEnabled) {
+        provideEcGA({
+          name: 'addProduct',
+          data: {
+            id,
+            name: widgetType,
+            category: `diagram/${contentParameters.widgetOptions.viewMode || 'unclassified'}`,
+          },
+          action: 'remove',
+          additionalData: { list: activeDashboardId },
+        });
+      }
     };
     this.props.showModalAction({
       id: 'deleteWidgetModal',
