@@ -27,6 +27,7 @@ import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLo
 import { showDefaultErrorNotification } from 'controllers/notification';
 import { activeProjectSelector } from 'controllers/user';
 import { fetchDashboardsAction } from 'controllers/dashboard';
+import { analyticsEnabledSelector } from 'controllers/appInfo';
 import { getWidgets } from 'pages/inside/dashboardItemPage/modals/common/widgets';
 import { provideEcGA } from 'components/main/analytics';
 import { activeDashboardIdSelector, pageSelector } from 'controllers/pages';
@@ -44,6 +45,7 @@ const cx = classNames.bind(styles);
     projectId: activeProjectSelector(state),
     activeDashboardId: activeDashboardIdSelector(state),
     currentPage: pageSelector(state),
+    isAnalyticsEnabled: analyticsEnabledSelector(state),
   }),
   {
     submitWidgetWizardForm: () => submit(WIDGET_WIZARD_FORM),
@@ -65,6 +67,7 @@ export class WidgetWizardContent extends Component {
     showDefaultErrorNotification: PropTypes.func.isRequired,
     closeModal: PropTypes.func.isRequired,
     showConfirmation: PropTypes.bool.isRequired,
+    isAnalyticsEnabled: PropTypes.bool.isRequired,
     onConfirm: PropTypes.func,
     eventsInfo: PropTypes.object,
     tracking: PropTypes.shape({
@@ -97,13 +100,19 @@ export class WidgetWizardContent extends Component {
   }
 
   onClickNextStep = () => {
-    const { tracking, eventsInfo, formValues, submitWidgetWizardForm } = this.props;
+    const {
+      tracking,
+      eventsInfo,
+      formValues,
+      submitWidgetWizardForm,
+      isAnalyticsEnabled,
+    } = this.props;
     tracking.trackEvent(eventsInfo.nextStep);
     if (this.state.step === 1 && formValues.contentParameters.contentFields) {
       tracking.trackEvent(eventsInfo.selectCriteria(formValues.contentParameters.contentFields));
     }
     submitWidgetWizardForm();
-    if (this.state.step === 0) {
+    if (isAnalyticsEnabled && this.state.step === 0) {
       provideEcGA({
         name: 'addProduct',
         data: {
@@ -128,6 +137,7 @@ export class WidgetWizardContent extends Component {
       eventsInfo: { addWidget },
       projectId,
       onConfirm,
+      isAnalyticsEnabled,
     } = this.props;
     const { selectedDashboard, ...rest } = formData;
     const data = prepareWidgetDataForSubmit(this.preprocessOutputData(rest));
@@ -146,17 +156,20 @@ export class WidgetWizardContent extends Component {
           ...getDefaultWidgetConfig(data.widgetType),
         };
         onConfirm(newWidget, this.props.closeModal, selectedDashboard);
-        provideEcGA({
-          name: 'addProduct',
-          data: {
-            id,
-            name: data.widgetType,
-            category: `diagram/${data.contentParameters.widgetOptions.viewMode || 'unclassified'}`,
-            variant: this.props.currentPage,
-          },
-          action: 'add',
-          additionalData: { list: selectedDashboard.id },
-        });
+        if (isAnalyticsEnabled) {
+          provideEcGA({
+            name: 'addProduct',
+            data: {
+              id,
+              name: data.widgetType,
+              category: `diagram/${data.contentParameters.widgetOptions.viewMode ||
+                'unclassified'}`,
+              variant: this.props.currentPage,
+            },
+            action: 'add',
+            additionalData: { list: selectedDashboard.id },
+          });
+        }
       })
       .catch((err) => {
         this.props.hideScreenLockAction();
