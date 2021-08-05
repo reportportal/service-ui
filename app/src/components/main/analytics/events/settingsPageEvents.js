@@ -460,6 +460,11 @@ export const SETTINGS_PAGE_EVENTS = {
     action: 'Click on Btn Save on Modal Rename Pattern',
     label: 'Rename Pattern',
   },
+  extensionTabClick: (name) => ({
+    category: SETTINGS_PAGE,
+    action: `Click on Tab ${name} in Settings`,
+    label: `Open Tab ${name} in Settings`,
+  }),
   pluginInstanceItemClick: getPluginInstanceItemClickEvent(SETTINGS_PAGE),
   pluginEditAuthorizationClick: getPluginEditAuthorizationClickEvent(SETTINGS_PAGE),
   pluginRemoveIntegrationClick: getPluginRemoveIntegrationClickEvent(SETTINGS_PAGE),
