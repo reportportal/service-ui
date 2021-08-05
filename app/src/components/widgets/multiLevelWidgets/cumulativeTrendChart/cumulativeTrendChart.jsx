@@ -312,7 +312,7 @@ export class CumulativeTrendChart extends PureComponent {
         itemId: TEST_ITEMS_TYPE_LIST,
         providerType: PROVIDER_TYPE_WIDGET,
         widgetId: widget.id,
-        compositeAttribute: activeAttributes.map(formatAttribute).join(','),
+        levelAttribute: activeAttributes.map(formatAttribute).join(','),
         launchesLimit: widget.contentParameters.itemsCount,
         filterTypes: BEFORE_AFTER_METHOD_TYPES_SEQUENCE,
         filterType: true,
@@ -320,7 +320,7 @@ export class CumulativeTrendChart extends PureComponent {
     } else {
       link = getStatisticsLink({
         statuses: [PASSED, FAILED, SKIPPED, INTERRUPTED],
-        compositeAttribute: activeAttributes.map(formatAttribute).join(','),
+        levelAttribute: activeAttributes.map(formatAttribute).join(','),
         launchesLimit: widget.contentParameters.itemsCount,
         providerType: PROVIDER_TYPE_WIDGET,
         widgetId: widget.id,
