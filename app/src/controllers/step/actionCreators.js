@@ -20,6 +20,7 @@ import {
   toggleItemSelectionAction,
   unselectAllItemsAction,
   defineGroupOperation,
+  toggleAllItemsAction,
 } from 'controllers/groupOperations';
 import { NAMESPACE } from './constants';
 import {
@@ -35,6 +36,7 @@ import { ignoreInAA, editDefect, includeInAA, linkIssue, postIssue, unlinkIssue 
 export const toggleStepSelectionAction = toggleItemSelectionAction(NAMESPACE);
 export const selectStepsAction = selectItemsAction(NAMESPACE);
 export const unselectAllStepsAction = unselectAllItemsAction(NAMESPACE);
+export const toggleAllStepsAction = toggleAllItemsAction(NAMESPACE);
 
 export const proceedWithValidItemsAction = createProceedWithValidItemsAction(NAMESPACE);
 

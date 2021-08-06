@@ -46,6 +46,7 @@ import {
   editDefectsAction,
   linkIssueAction,
   postIssueAction,
+  toggleAllStepsAction,
 } from 'controllers/step';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
 import { ENTITY_START_TIME } from 'components/filterEntities/constants';
@@ -97,10 +98,11 @@ const LINK_ISSUE_EVENTS_INFO = {
     isTestItemsList: isTestItemsListSelector(state),
   }),
   {
+    selectStepsAction,
     unselectAllSteps: unselectAllStepsAction,
     toggleStepSelection: toggleStepSelectionAction,
+    toggleAllStepsAction,
     proceedWithValidItemsAction,
-    selectStepsAction,
     fetchTestItemsAction,
     showModalAction,
     ignoreInAutoAnalysisAction,
@@ -135,6 +137,7 @@ export class StepPage extends Component {
     unselectAllSteps: PropTypes.func,
     proceedWithValidItemsAction: PropTypes.func,
     toggleStepSelection: PropTypes.func,
+    toggleAllStepsAction: PropTypes.func,
     loading: PropTypes.bool,
     fetchTestItemsAction: PropTypes.func,
     listView: PropTypes.bool,
@@ -180,6 +183,7 @@ export class StepPage extends Component {
     unselectAllSteps: () => {},
     proceedWithValidItemsAction: () => {},
     toggleStepSelection: () => {},
+    toggleAllStepsAction: () => {},
     loading: false,
     fetchTestItemsAction: () => {},
     listView: false,
@@ -258,13 +262,8 @@ export class StepPage extends Component {
   };
 
   handleAllStepsSelection = () => {
-    const { selectedItems, steps } = this.props;
     this.props.tracking.trackEvent(STEP_PAGE_EVENTS.SELECT_ALL_ITEMS);
-    if (steps.length === selectedItems.length) {
-      this.props.unselectAllSteps();
-      return;
-    }
-    this.props.selectStepsAction(steps);
+    this.props.toggleAllStepsAction(this.props.steps);
   };
 
   handleOneItemSelection = (value) => {
