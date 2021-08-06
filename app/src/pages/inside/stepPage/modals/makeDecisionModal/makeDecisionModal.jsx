@@ -274,22 +274,31 @@ const MakeDecision = ({ data }) => {
       suggestedItems,
       startTime,
     } = modalState;
+    let eventInfo;
     const hasSuggestions = !!suggestedItems.length;
-    const section = messages[decisionType].defaultMessage;
-    const optionLabel = messages[optionValue].defaultMessage;
-    const selectedItemsLength = selectedItems.length;
-    const timestamp = Date.now() - startTime;
-    const issueActionLabel = issueActionType && actionMessages[issueActionType].defaultMessage;
-    return isEqual(itemData.issue, modalState.source.issue) && issueActionType
-      ? onApplyAndContinue(defectFromTIGroup, hasSuggestions, issueActionLabel, defectFromTIGroup)
-      : onApply(
-          section,
-          defectFromTIGroup,
-          hasSuggestions,
-          optionLabel,
-          selectedItemsLength,
-          timestamp,
-        );
+    if (isEqual(itemData.issue, modalState.source.issue) && issueActionType) {
+      const issueActionLabel = issueActionType && actionMessages[issueActionType].defaultMessage;
+      eventInfo = onApplyAndContinue(
+        defectFromTIGroup,
+        hasSuggestions,
+        issueActionLabel,
+        defectFromTIGroup,
+      );
+    } else {
+      const section = messages[decisionType].defaultMessage;
+      const optionLabel = messages[optionValue].defaultMessage;
+      const selectedItemsLength = selectedItems.length;
+      const timestamp = Date.now() - startTime;
+      eventInfo = onApply(
+        section,
+        defectFromTIGroup,
+        hasSuggestions,
+        optionLabel,
+        selectedItemsLength,
+        timestamp,
+      );
+    }
+    return eventInfo;
   };
   const applyChangesImmediately = () => {
     if (isBulkOperation) {

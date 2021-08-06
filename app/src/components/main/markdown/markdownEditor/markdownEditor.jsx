@@ -127,7 +127,7 @@ export class MarkdownEditor extends React.Component {
 
     const toolbarActionWrapper = (action) => (...args) => {
       action(...args);
-      this.props.tracking.trackEvent(eventsInfo.onClickToolbarIconEventInfo);
+      this.props.tracking.trackEvent(eventsInfo.onClickToolbarIcon);
     };
 
     let toolbar = [
@@ -227,9 +227,9 @@ export class MarkdownEditor extends React.Component {
       },
     ];
 
-    if (eventsInfo.onClickToolbarIconEventInfo) {
+    if (eventsInfo.onClickToolbarIcon) {
       toolbar = toolbar.map((item) =>
-        item === '|' ? item : { ...item, action: toolbarActionWrapper(item.action) },
+        typeof item === 'object' ? { ...item, action: toolbarActionWrapper(item.action) } : item,
       );
     }
 
@@ -256,8 +256,8 @@ export class MarkdownEditor extends React.Component {
   }
   onChangeHandler = () => {
     this.props.onChange(this.simpleMDE.value());
-    this.props.eventsInfo.onChangeEventInfo &&
-      this.props.tracking.trackEvent(this.props.eventsInfo.onChangeEventInfo);
+    this.props.eventsInfo.onChange &&
+      this.props.tracking.trackEvent(this.props.eventsInfo.onChange);
     this.props.manipulateEditorOutside(this.simpleMDE.codemirror);
   };
 

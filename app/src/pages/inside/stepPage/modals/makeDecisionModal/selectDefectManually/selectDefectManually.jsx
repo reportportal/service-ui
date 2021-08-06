@@ -220,7 +220,7 @@ export const SelectDefectManually = ({
           manipulateEditorOutside={setCommentEditor}
           onChange={handleDefectCommentChange}
           eventsInfo={{
-            onClickToolbarIconEventInfo: eventsInfo.onClickEditorIcon(defectFromTIGroup),
+            onClickToolbarIcon: eventsInfo.onClickEditorIcon(defectFromTIGroup),
           }}
           placeholder={formatMessage(
             isBulkOperation
