@@ -175,7 +175,7 @@ export class FilterEditModal extends Component {
           <ModalField>
             <FieldProvider name="description">
               <MarkdownEditor
-                onChangeEventInfo={this.events.editDescription}
+                eventsInfo={{ onChange: this.events.editDescription }}
                 placeholder={intl.formatMessage(messages.descriptionPlaceholder)}
               />
             </FieldProvider>

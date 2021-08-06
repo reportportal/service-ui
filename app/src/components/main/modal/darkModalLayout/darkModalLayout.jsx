@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useDispatch } from 'react-redux';
 import { useIntl, defineMessages } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import { hideModalAction } from 'controllers/modal';
 import ErrorInlineIcon from 'common/img/error-inline.svg';
 import ShowLess from 'common/img/show-less-inline.svg';
@@ -48,7 +49,9 @@ export const DarkModalLayout = ({
   hotKeyAction,
   modalNote,
   renderRightSection,
+  eventsInfo,
 }) => {
+  const { trackEvent } = useTracking();
   const applicationSettings = getStorageItem(APPLICATION_SETTINGS);
   const collapsedRightSectionInitialState = applicationSettings
     ? applicationSettings.darkModalCollapsedRightSection
@@ -67,11 +70,14 @@ export const DarkModalLayout = ({
     updateStorageItem(APPLICATION_SETTINGS, {
       darkModalCollapsedRightSection: !collapsedRightSection,
     });
+    eventsInfo.openCloseRightSection &&
+      trackEvent(eventsInfo.openCloseRightSection(collapsedRightSection));
   };
   const { width } = windowSize;
 
   const closeModalWindow = () => {
     dispatch(hideModalAction());
+    eventsInfo.closeModal && trackEvent(eventsInfo.closeModal(Date.now()));
   };
   const handleClickOutside = (event) => {
     if (wrapperRef && !wrapperRef.current.contains(event.target)) {
@@ -168,6 +174,7 @@ DarkModalLayout.propTypes = {
   hotKeyAction: PropTypes.objectOf(PropTypes.func),
   modalNote: PropTypes.string,
   renderRightSection: PropTypes.func,
+  eventsInfo: PropTypes.object,
 };
 DarkModalLayout.defaultProps = {
   renderTitle: () => {},
@@ -177,4 +184,5 @@ DarkModalLayout.defaultProps = {
   hotKeyAction: {},
   modalNote: '',
   renderRightSection: () => {},
+  eventsInfo: {},
 };

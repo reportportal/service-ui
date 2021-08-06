@@ -17,9 +17,11 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import classNames from 'classnames/bind';
+import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import { messages } from '../../../messages';
 import { ALL_LOADED_TI_FROM_HISTORY_LINE } from '../../../constants';
 import styles from './itemsListHeader.scss';
@@ -36,9 +38,14 @@ export const ItemsListHeader = ({
   optionValue,
   isNarrowView,
   isBulkOperation,
+  eventsInfo,
 }) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const [isAllSelected, setIsAllSelected] = useState(selectedItems.length === testItems.length);
+  const defectFromTIGroup =
+    testItems.length > 0 && testItems[0].issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
+
   useEffect(() => {
     setIsAllSelected(selectedItems.length === testItems.length);
   }, [selectedItems]);
@@ -51,6 +58,20 @@ export const ItemsListHeader = ({
     setItems({
       selectedItems: isAllSelected ? allSelectedItems : testItems,
     });
+    // TODO optionsValue && ... remove error for bulk operation, remove after bulk ga has added
+    optionValue &&
+      trackEvent(
+        eventsInfo.onSelectAllItems(
+          defectFromTIGroup,
+          isAllSelected,
+          messages[optionValue].defaultMessage,
+        ),
+      );
+  };
+  const onSwitcherChange = (value) => {
+    onShowErrorLogsChange(value);
+    const { toggleShowErrLogsSwitcher } = eventsInfo;
+    trackEvent(toggleShowErrLogsSwitcher(defectFromTIGroup, value));
   };
 
   return (
@@ -68,7 +89,7 @@ export const ItemsListHeader = ({
           className={cx('switcher')}
           childrenClassName={cx('switcher-children')}
           value={showErrorLogs}
-          onChange={onShowErrorLogsChange}
+          onChange={onSwitcherChange}
           childrenFirst
           size="medium"
           mode="dark"
@@ -89,6 +110,7 @@ ItemsListHeader.propTypes = {
   optionValue: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   isBulkOperation: PropTypes.bool,
   isNarrowView: PropTypes.bool,
+  eventsInfo: PropTypes.object,
 };
 ItemsListHeader.defaultProps = {
   setItems: () => {},
@@ -100,4 +122,5 @@ ItemsListHeader.defaultProps = {
   optionValue: '',
   isBulkOperation: false,
   isNarrowView: false,
+  eventsInfo: {},
 };

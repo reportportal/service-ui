@@ -81,8 +81,8 @@ export const MachineLearningSuggestions = ({
 
   const onChange = (value) => {
     setShowErrorLogs(value);
-    const { toggleMLSwitcher } = eventsInfo;
-    trackEvent(toggleMLSwitcher(defectFromTIGroup, value));
+    const { toggleShowErrLogsSwitcher } = eventsInfo;
+    trackEvent(toggleShowErrLogsSwitcher(defectFromTIGroup, value, true));
   };
 
   const onClickExternalLinkEvent = () => {
@@ -144,7 +144,7 @@ export const MachineLearningSuggestions = ({
                         maxHeight={70}
                         eventsInfo={{
                           onOpenStackTraceEvent: () =>
-                            eventsInfo.onOpenStackTrace(defectFromTIGroup),
+                            eventsInfo.onOpenStackTrace(defectFromTIGroup, true),
                         }}
                       >
                         <div>{log.message}</div>
