@@ -29,6 +29,7 @@ export {
   proceedWithValidItemsAction,
   toggleStepSelectionAction,
   unselectAllStepsAction,
+  toggleAllStepsAction,
   ignoreInAutoAnalysisAction,
   includeInAutoAnalysisAction,
   unlinkIssueAction,
