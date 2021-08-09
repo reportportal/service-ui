@@ -64,8 +64,6 @@ const messages = defineMessages({
 export class LogItemInfo extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    onChangePage: PropTypes.func.isRequired,
-    onChangeLogLevel: PropTypes.func.isRequired,
     historyItems: PropTypes.array.isRequired,
     fetchFunc: PropTypes.func.isRequired,
     onToggleSauceLabsIntegrationView: PropTypes.func.isRequired,
@@ -123,8 +121,6 @@ export class LogItemInfo extends Component {
       logItem,
       loading,
       fetchFunc,
-      onChangePage,
-      onChangeLogLevel,
       onToggleSauceLabsIntegrationView,
       isSauceLabsIntegrationView,
       debugMode,
@@ -151,8 +147,6 @@ export class LogItemInfo extends Component {
             )}
           </div>
           <LogItemInfoTabs
-            onChangePage={onChangePage}
-            onChangeLogLevel={onChangeLogLevel}
             onToggleSauceLabsIntegrationView={onToggleSauceLabsIntegrationView}
             isSauceLabsIntegrationView={isSauceLabsIntegrationView}
             loading={loading}

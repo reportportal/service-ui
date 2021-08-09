@@ -114,6 +114,7 @@ export class ViewTabs extends Component {
       intl: { formatMessage },
       level,
     } = this.props;
+    const events = pageEventsMap[level] || {};
 
     const pages = [
       {
@@ -124,7 +125,7 @@ export class ViewTabs extends Component {
         available: true,
         disabled: false,
         hint: '',
-        event: pageEventsMap[level].LIST_VIEW_TAB,
+        event: events.LIST_VIEW_TAB,
       },
       {
         id: UNIQUE_ERRORS_VIEW,
@@ -143,7 +144,7 @@ export class ViewTabs extends Component {
         available: !isTestItemsList,
         disabled: false,
         hint: '',
-        event: pageEventsMap[level].LOG_VIEW_TAB,
+        event: events.LOG_VIEW_TAB,
       },
       {
         id: HISTORY_VIEW,
@@ -153,7 +154,7 @@ export class ViewTabs extends Component {
         available: !debugMode,
         disabled: false,
         hint: '',
-        event: pageEventsMap[level].HISTORY_VIEW_TAB,
+        event: events.HISTORY_VIEW_TAB,
       },
     ];
 
@@ -161,7 +162,7 @@ export class ViewTabs extends Component {
   };
 
   render() {
-    const { viewMode } = this.props;
+    const { viewMode, tracking } = this.props;
     const pages = this.getPages();
 
     return (
@@ -177,7 +178,7 @@ export class ViewTabs extends Component {
                 active: viewMode === page.id && !page.disabled,
                 disabled: page.disabled,
               })}
-              onClick={() => this.props.tracking.trackEvent(page.event)}
+              onClick={() => page.event && tracking.trackEvent(page.event)}
             >
               {page.icon && <i className={cx('icon')}>{Parser(page.icon)}</i>}
               {page.title}

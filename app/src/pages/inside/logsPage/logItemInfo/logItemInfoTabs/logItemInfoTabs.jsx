@@ -99,8 +99,6 @@ export class LogItemInfoTabs extends Component {
     intl: PropTypes.object.isRequired,
     lastActivity: PropTypes.object,
     loading: PropTypes.bool.isRequired,
-    onChangePage: PropTypes.func.isRequired,
-    onChangeLogLevel: PropTypes.func.isRequired,
     activeRetry: PropTypes.object.isRequired,
     retryId: PropTypes.number.isRequired,
     logId: PropTypes.number.isRequired,
@@ -124,6 +122,10 @@ export class LogItemInfoTabs extends Component {
     attachments: [],
     activeTabId: 'logs',
     setActiveTabId: () => {},
+  };
+
+  state = {
+    activeTabId: null,
   };
 
   static getDerivedStateFromProps(props) {
@@ -170,8 +172,6 @@ export class LogItemInfoTabs extends Component {
   makeTabs = () => {
     const {
       intl: { formatMessage },
-      onChangePage,
-      onChangeLogLevel,
       activeRetry,
       logItem,
     } = this.props;
@@ -191,8 +191,6 @@ export class LogItemInfoTabs extends Component {
         eventInfo: LOG_PAGE_EVENTS.STACK_TRACE_TAB,
         component: StackTrace,
         componentProps: {
-          onChangePage,
-          onChangeLogLevel,
           logItem,
         },
       },
@@ -204,8 +202,6 @@ export class LogItemInfoTabs extends Component {
         eventInfo: LOG_PAGE_EVENTS.LOGS_TAB,
         component: LogsGridWrapper,
         componentProps: {
-          onChangePage,
-          onChangeLogLevel,
           logItem,
           isSauceLabsIntegrationView: this.props.isSauceLabsIntegrationView,
         },
