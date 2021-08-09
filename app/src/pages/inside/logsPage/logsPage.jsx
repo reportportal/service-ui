@@ -18,21 +18,16 @@ import { Component, Fragment } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { connectRouter } from 'common/utils';
 import { PageLayout, PageSection } from 'layouts/pageLayout';
 import {
   refreshLogPageData,
   loadingSelector,
   pageLoadingSelector,
-  NAMESPACE,
-  LOG_LEVEL_FILTER_KEY,
-  setLogLevel,
   DETAILED_LOG_VIEW,
   logViewModeSelector,
 } from 'controllers/log';
 import { parentItemSelector } from 'controllers/testItem';
 import { debugModeSelector } from 'controllers/launch';
-import { PAGE_KEY } from 'controllers/pagination';
 import { userIdSelector } from 'controllers/user';
 import { LOG_PAGE, LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -55,16 +50,6 @@ import { LogsGridWrapper } from './logsGridWrapper';
     refresh: refreshLogPageData,
   },
 )
-@connectRouter(
-  undefined,
-  {
-    onChangeLogLevel: (userId, logLevel) => {
-      setLogLevel(userId, logLevel);
-      return { [LOG_LEVEL_FILTER_KEY]: logLevel.id, [PAGE_KEY]: 1 };
-    },
-  },
-  { namespace: NAMESPACE },
-)
 @track({ page: LOG_PAGE })
 export class LogsPage extends Component {
   static propTypes = {
@@ -75,19 +60,15 @@ export class LogsPage extends Component {
     }).isRequired,
     userId: PropTypes.string.isRequired,
     debugMode: PropTypes.bool.isRequired,
-    onChangePage: PropTypes.func,
     loading: PropTypes.bool,
     pageLoading: PropTypes.bool,
-    onChangeLogLevel: PropTypes.func,
     logViewMode: PropTypes.string,
     parentItem: PropTypes.object,
   };
 
   static defaultProps = {
-    onChangePage: () => {},
     loading: false,
     pageLoading: false,
-    onChangeLogLevel: () => {},
     logViewMode: DETAILED_LOG_VIEW,
     parentItem: {},
   };
@@ -110,16 +91,7 @@ export class LogsPage extends Component {
   };
 
   render() {
-    const {
-      refresh,
-      debugMode,
-      onChangePage,
-      loading,
-      pageLoading,
-      onChangeLogLevel,
-      logViewMode,
-      parentItem,
-    } = this.props;
+    const { refresh, debugMode, loading, pageLoading, logViewMode, parentItem } = this.props;
 
     return (
       <PageLayout>
@@ -137,8 +109,6 @@ export class LogsPage extends Component {
                 <Fragment>
                   {!debugMode && <HistoryLine />}
                   <LogItemInfo
-                    onChangeLogLevel={onChangeLogLevel}
-                    onChangePage={onChangePage}
                     onToggleSauceLabsIntegrationView={this.toggleSauceLabsIntegrationView}
                     isSauceLabsIntegrationView={this.state.isSauceLabsIntegrationView}
                     fetchFunc={refresh}
