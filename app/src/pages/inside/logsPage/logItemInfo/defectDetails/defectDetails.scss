@@ -83,20 +83,20 @@
   }
 }
 
+.separator:before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 1px;
+  height: 22px;
+  transform: translateY(-50%);
+  background: $COLOR--light-gray;
+}
+
 .collapsed-info {
   display: flex;
   align-items: center;
-  margin-right: 10px;
-
-  & > span:after {
-    content: '';
-    position: absolute;
-    top: -2px;
-    right: 0;
-    width: 1px;
-    height: 22px;
-    background: $COLOR--light-gray;
-  }
 }
 
 .issues-info {
@@ -106,6 +106,7 @@
   padding: 0 15px 0 12px;
   color: $COLOR--gray-47;
   font-size: 13px;
+  line-height: 20px;
 
   .icon {
     margin-right: 5px;
@@ -148,4 +149,14 @@
   &:hover {
     border: none;
   }
+}
+
+.status-wrapper {
+  position: relative;
+  margin-right: -1px;
+}
+
+.defect-item-wrapper {
+  position: relative;
+  padding-left: 10px;
 }

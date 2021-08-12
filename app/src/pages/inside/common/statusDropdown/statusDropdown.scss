@@ -20,11 +20,20 @@
 .dropdown {
   height: auto;
 }
+.opened {
+  .select-block {
+    box-shadow: none;
+  }
+}
 .select-block {
   min-width: 140px;
   padding: 0 10px 0 0;
   border: none;
   background-color: transparent;
+  &.select-block-log {
+    min-width: auto;
+    padding: 0 16px;
+  }
 }
 .value {
   display: inline;
@@ -39,4 +48,11 @@
 }
 .select-list {
   margin-top: 0;
+  min-width: fit-content;
+}
+.status-container {
+  display: inline-flex;
+}
+.dropdown-option {
+  padding: 0 16px 0 15px;
 }
