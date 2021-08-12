@@ -45,6 +45,10 @@ const messages = defineMessages({
     id: 'TestItemDetailsModal.parametersLabel',
     defaultMessage: 'Parameters:',
   },
+  testCaseId: {
+    id: 'TestItemDetailsModal.testCaseId',
+    defaultMessage: 'Test case id:',
+  },
 });
 
 @injectIntl
@@ -105,6 +109,14 @@ export class LogItemDetails extends Component {
               <CopyToClipboard text={logItem.codeRef} className={cx('copy')}>
                 {Parser(IconDuplicate)}
               </CopyToClipboard>
+            </div>
+          )}
+          {logItem.testCaseId && (
+            <div className={cx('info-line')} title={logItem.testCaseId}>
+              <span className={cx('label', 'attribute')}>
+                {intl.formatMessage(messages.testCaseId)}
+              </span>
+              <span className={cx('label')}>{logItem.testCaseId}</span>
             </div>
           )}
           <div className={cx('label')}>{intl.formatMessage(messages.description)}</div>
