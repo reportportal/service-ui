@@ -18,7 +18,7 @@ import React from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import RGL, { WidthProvider } from 'react-grid-layout';
-import { ruleListItemDefaultProps, ruleListItemPropTypes } from './constants';
+import { DRAG_AND_DROP, ruleListItemDefaultProps, ruleListItemPropTypes } from './constants';
 import { ListItem } from './listItem';
 import styles from './movableRuleList.scss';
 
@@ -38,10 +38,10 @@ export const MovableRuleList = ({ data, onMove, ...rest }) => {
     const isItemOrderChanged = oldPosition.y !== newPosition.y;
     if (isItemOrderChanged) {
       const updatedData = data.map((item, index) => ({ ...item, order: newLayout[index].y }));
-      onMove(updatedData);
+      onMove(updatedData, DRAG_AND_DROP);
     }
   };
-  const moveItem = (itemToMove, nextOrder) => {
+  const moveItem = (itemToMove, nextOrder, moveType) => {
     const updatedData = data.map((item) => {
       if (item.order === itemToMove.order) {
         return { ...item, order: nextOrder };
@@ -52,7 +52,7 @@ export const MovableRuleList = ({ data, onMove, ...rest }) => {
       return item;
     });
     setLayout(calculateLayout(updatedData));
-    onMove(updatedData);
+    onMove(updatedData, moveType);
   };
 
   return (
