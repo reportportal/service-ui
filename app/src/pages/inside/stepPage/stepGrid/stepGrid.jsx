@@ -74,7 +74,7 @@ NameColumn.defaultProps = {
   className: null,
 };
 
-const StatusColumn = ({ className, value, customProps: { onChange } }) => {
+const StatusColumn = ({ className, value, customProps: { onChange, fetchFunc } }) => {
   const { id, status, attributes, description } = value;
   return (
     <div className={cx('status-col', className)}>
@@ -84,6 +84,7 @@ const StatusColumn = ({ className, value, customProps: { onChange } }) => {
         attributes={attributes}
         description={description}
         onChange={onChange}
+        fetchFunc={fetchFunc}
       />
     </div>
   );
@@ -94,6 +95,7 @@ StatusColumn.propTypes = {
   customProps: PropTypes.shape({
     formatMessage: PropTypes.func.isRequired,
     onChange: PropTypes.func,
+    fetchFunc: PropTypes.func,
   }).isRequired,
 };
 StatusColumn.defaultProps = {
@@ -187,6 +189,7 @@ export class StepGrid extends Component {
       isGridRowHighlighted: PropTypes.bool,
       highlightedRowId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     }),
+    onStatusUpdate: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -221,6 +224,7 @@ export class StepGrid extends Component {
       onUnlinkSingleTicket,
       onEditItem,
       onEditDefect,
+      onStatusUpdate,
     } = props;
     this.columns = [
       {
@@ -272,6 +276,7 @@ export class StepGrid extends Component {
           formatMessage,
           onChange: (oldStatus, newStatus) =>
             tracking.trackEvent(getChangeItemStatusEvent(oldStatus, newStatus)),
+          fetchFunc: onStatusUpdate,
         },
         withFilter: true,
         filterEventInfo: events.STATUS_FILTER,

@@ -20,15 +20,12 @@ import { connect } from 'react-redux';
 import className from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
-import { fetchTestItemsAction } from 'controllers/testItem';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { formatStatus } from 'common/utils/localizationUtils';
 import { PASSED, FAILED, SKIPPED, IN_PROGRESS } from 'common/constants/testStatuses';
-import { fetchLogPageData } from 'controllers/log';
-import { pageSelector, PROJECT_LOG_PAGE, TEST_ITEM_PAGE } from 'controllers/pages';
 import { TestItemStatus } from 'pages/inside/common/testItemStatus';
 import { ATTRIBUTE_KEY_MANUALLY } from './constants';
 import styles from './statusDropdown.scss';
@@ -49,11 +46,8 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     currentProject: activeProjectSelector(state),
-    currentPage: pageSelector(state),
   }),
   {
-    fetchTestItems: fetchTestItemsAction,
-    fetchLog: fetchLogPageData,
     showMessage: showNotification,
   },
 )
@@ -61,28 +55,25 @@ const messages = defineMessages({
 export class StatusDropdown extends Component {
   static propTypes = {
     currentProject: PropTypes.string.isRequired,
-    currentPage: PropTypes.string.isRequired,
     intl: PropTypes.object.isRequired,
     itemId: PropTypes.number.isRequired,
     status: PropTypes.string.isRequired,
     attributes: PropTypes.array,
     description: PropTypes.string,
-    fetchTestItems: PropTypes.func,
-    fetchLog: PropTypes.func,
+    fetchFunc: PropTypes.func,
     showMessage: PropTypes.func,
     onChange: PropTypes.func,
+    withIndicator: PropTypes.bool,
   };
 
   static defaultProps = {
     attributes: [],
     description: '',
-    fetchTestItems: () => {},
-    fetchLog: () => {},
+    fetchFunc: () => {},
     showMessage: () => {},
     onChange: () => {},
+    withIndicator: false,
   };
-
-  getIsExpectedCurrentPage = (page) => this.props.currentPage === page;
 
   updateItem = (newStatus) => {
     const {
@@ -92,8 +83,7 @@ export class StatusDropdown extends Component {
       itemId,
       attributes,
       description,
-      fetchTestItems,
-      fetchLog,
+      fetchFunc,
       showMessage,
       onChange,
     } = this.props;
@@ -117,7 +107,6 @@ export class StatusDropdown extends Component {
           message: formatMessage(messages.itemUpdateSuccess),
           type: NOTIFICATION_TYPES.SUCCESS,
         });
-        const fetchFunc = this.getIsExpectedCurrentPage(TEST_ITEM_PAGE) ? fetchTestItems : fetchLog;
         fetchFunc();
       })
       .catch(() => {
@@ -129,28 +118,29 @@ export class StatusDropdown extends Component {
   };
 
   generateOptions = (status) => {
-    const { intl } = this.props;
+    const { intl, withIndicator } = this.props;
 
     const STATUS_TYPES = status === IN_PROGRESS ? [] : [PASSED, FAILED, SKIPPED];
-    const isTestItemsPage = this.getIsExpectedCurrentPage(TEST_ITEM_PAGE);
 
     if (STATUS_TYPES.indexOf(status) < 0) STATUS_TYPES.push(status);
 
     return STATUS_TYPES.map((item) => ({
-      label: isTestItemsPage ? (
-        formatStatus(intl.formatMessage, item)
-      ) : (
+      label: withIndicator ? (
         <span className={cx('status-container')}>
-          <TestItemStatus status={formatStatus(intl.formatMessage, item)} />
+          <TestItemStatus
+            status={formatStatus(intl.formatMessage, item)}
+            withIndicator={withIndicator}
+          />
         </span>
+      ) : (
+        formatStatus(intl.formatMessage, item)
       ),
       value: item,
     }));
   };
 
   render() {
-    const { status } = this.props;
-    const isLogPage = this.getIsExpectedCurrentPage(PROJECT_LOG_PAGE);
+    const { status, withIndicator } = this.props;
     return (
       <div className={cx('status-dropdown')}>
         <InputDropdown
@@ -159,12 +149,12 @@ export class StatusDropdown extends Component {
           onChange={this.updateItem}
           customClasses={{
             dropdown: cx('dropdown'),
-            selectBlock: cx('select-block', { 'select-block-log': isLogPage }),
+            selectBlock: cx('select-block', { 'select-block-with-indicator': withIndicator }),
             arrow: cx('arrow'),
             value: cx('value'),
             selectList: cx('select-list'),
-            dropdownOption: (isLogPage && cx('dropdown-option')) || '',
-            opened: (isLogPage && cx('opened')) || '',
+            dropdownOption: (withIndicator && cx('dropdown-option')) || '',
+            opened: (withIndicator && cx('opened')) || '',
           }}
           mobileDisabled
         />

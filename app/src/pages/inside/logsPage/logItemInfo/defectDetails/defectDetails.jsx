@@ -142,6 +142,7 @@ export class DefectDetails extends Component {
     fetchFunc: PropTypes.func.isRequired,
     updateHistoryItemIssues: PropTypes.func.isRequired,
     debugMode: PropTypes.bool.isRequired,
+    reloadPage: PropTypes.func.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -275,6 +276,7 @@ export class DefectDetails extends Component {
       btsIntegrations,
       debugMode,
       intl: { formatMessage },
+      reloadPage,
     } = this.props;
     const { expanded } = this.state;
     const isPostIssueUnavailable = !isPostIssueActionAvailable(this.props.btsIntegrations);
@@ -366,7 +368,7 @@ export class DefectDetails extends Component {
                     <span className={cx('icon')}>{Parser(ArrowDownIcon)}</span>
                     {formatMessage(messages.more)}
                   </span>
-                  <span className={cx('issues-info', 'separator')}>
+                  <span className={cx('issues-info', 'with-separator')}>
                     <span className={cx('icon')}>{Parser(BugIcon)}</span>
                     {logItem.issue.externalSystemIssues.length}
                   </span>
@@ -379,16 +381,18 @@ export class DefectDetails extends Component {
               )}
             </Fragment>
           )}
-          <span className={cx('status-wrapper', 'separator')}>
+          <span className={cx('status-wrapper', 'with-separator')}>
             <StatusDropdown
               itemId={logItem.id}
               status={logItem.status}
               attributes={logItem.attributes}
               description={logItem.description}
+              fetchFunc={reloadPage}
+              withIndicator
             />
           </span>
           {this.isDefectTypeVisible() && (
-            <span className={cx('defect-item-wrapper', 'separator')}>
+            <span className={cx('defect-item-wrapper', 'with-separator')}>
               <DefectTypeItem
                 type={logItem.issue.issueType}
                 noBorder

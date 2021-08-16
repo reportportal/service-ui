@@ -29,6 +29,7 @@ import {
   retriesSelector,
   RETRY_ID,
   NAMESPACE,
+  fetchLogPageData,
 } from 'controllers/log';
 import RetryIcon from 'common/img/retry-inline.svg';
 import { connectRouter } from 'common/utils';
@@ -46,12 +47,15 @@ const messages = defineMessages({
   },
 });
 
-@connect((state) => ({
-  logItem: activeLogSelector(state),
-  historyItems: historyItemsSelector(state),
-  retryItemId: activeRetryIdSelector(state),
-  retries: retriesSelector(state),
-}))
+@connect(
+  (state) => ({
+    logItem: activeLogSelector(state),
+    historyItems: historyItemsSelector(state),
+    retryItemId: activeRetryIdSelector(state),
+    retries: retriesSelector(state),
+  }),
+  { reloadLogPage: fetchLogPageData },
+)
 @track()
 @connectRouter(
   () => {},
@@ -70,6 +74,7 @@ export class LogItemInfo extends Component {
     isSauceLabsIntegrationView: PropTypes.bool.isRequired,
     debugMode: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
+    reloadLogPage: PropTypes.func.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -125,13 +130,19 @@ export class LogItemInfo extends Component {
       isSauceLabsIntegrationView,
       debugMode,
       intl: { formatMessage },
+      reloadLogPage,
     } = this.props;
 
     return (
       logItem && (
         <div className={cx('log-item-info')}>
           <div className={cx('details')}>
-            <DefectDetails logItem={logItem} debugMode={debugMode} fetchFunc={fetchFunc} />
+            <DefectDetails
+              logItem={logItem}
+              debugMode={debugMode}
+              fetchFunc={fetchFunc}
+              reloadPage={reloadLogPage}
+            />
             {this.hasRetries() && (
               <div
                 className={cx('retries', {
