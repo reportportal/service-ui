@@ -25,6 +25,7 @@ import IconOrderArrowDown from 'common/img/order-arrow-down-inline.svg';
 import IconDots from 'common/img/dots-inline.svg';
 import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import classNames from 'classnames/bind';
+import { ARROW_DOWN, ARROW_UP } from 'pages/common/settingsPage/ruleList/constants';
 import styles from './controlPanel.scss';
 
 const cx = classNames.bind(styles);
@@ -105,13 +106,13 @@ export class ControlPanel extends Component {
   moveUp = () => {
     const { onMove, item } = this.props;
 
-    onMove(item, item.order - 1);
+    onMove(item, item.order - 1, ARROW_UP);
   };
 
   moveDown = () => {
     const { onMove, item } = this.props;
 
-    onMove(item, item.order + 1);
+    onMove(item, item.order + 1, ARROW_DOWN);
   };
 
   onToggleActive = (enabled) => {

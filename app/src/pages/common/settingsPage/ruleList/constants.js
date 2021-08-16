@@ -16,6 +16,10 @@
 
 import PropTypes from 'prop-types';
 
+export const ARROW_DOWN = 'down';
+export const ARROW_UP = 'up';
+export const DRAG_AND_DROP = 'dragAndDrop';
+
 export const ruleListItemPropTypes = {
   readOnly: PropTypes.bool,
   onToggle: PropTypes.func,
