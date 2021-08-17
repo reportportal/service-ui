@@ -142,7 +142,7 @@ export class DefectDetails extends Component {
     fetchFunc: PropTypes.func.isRequired,
     updateHistoryItemIssues: PropTypes.func.isRequired,
     debugMode: PropTypes.bool.isRequired,
-    reloadPage: PropTypes.func.isRequired,
+    onUpdateStatus: PropTypes.func.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -276,7 +276,7 @@ export class DefectDetails extends Component {
       btsIntegrations,
       debugMode,
       intl: { formatMessage },
-      reloadPage,
+      onUpdateStatus,
     } = this.props;
     const { expanded } = this.state;
     const isPostIssueUnavailable = !isPostIssueActionAvailable(this.props.btsIntegrations);
@@ -387,7 +387,7 @@ export class DefectDetails extends Component {
               status={logItem.status}
               attributes={logItem.attributes}
               description={logItem.description}
-              fetchFunc={reloadPage}
+              fetchFunc={onUpdateStatus}
               withIndicator
             />
           </span>

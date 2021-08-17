@@ -29,7 +29,7 @@ import {
   retriesSelector,
   RETRY_ID,
   NAMESPACE,
-  fetchLogPageData,
+  updateItemStatus,
 } from 'controllers/log';
 import RetryIcon from 'common/img/retry-inline.svg';
 import { connectRouter } from 'common/utils';
@@ -54,7 +54,7 @@ const messages = defineMessages({
     retryItemId: activeRetryIdSelector(state),
     retries: retriesSelector(state),
   }),
-  { reloadLogPage: fetchLogPageData },
+  { onUpdateStatus: updateItemStatus },
 )
 @track()
 @connectRouter(
@@ -74,7 +74,7 @@ export class LogItemInfo extends Component {
     isSauceLabsIntegrationView: PropTypes.bool.isRequired,
     debugMode: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
-    reloadLogPage: PropTypes.func.isRequired,
+    onUpdateStatus: PropTypes.func.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -130,7 +130,7 @@ export class LogItemInfo extends Component {
       isSauceLabsIntegrationView,
       debugMode,
       intl: { formatMessage },
-      reloadLogPage,
+      onUpdateStatus,
     } = this.props;
 
     return (
@@ -141,7 +141,7 @@ export class LogItemInfo extends Component {
               logItem={logItem}
               debugMode={debugMode}
               fetchFunc={fetchFunc}
-              reloadPage={reloadLogPage}
+              onUpdateStatus={onUpdateStatus}
             />
             {this.hasRetries() && (
               <div

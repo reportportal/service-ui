@@ -27,7 +27,7 @@ import { logItemIdSelector, pathnameChangedSelector } from 'controllers/pages';
 import { debugModeSelector } from 'controllers/launch';
 import { createFetchPredicate, fetchDataAction } from 'controllers/fetch';
 import { fetch, isEmptyObject } from 'common/utils';
-import { HISTORY_LINE_DEFAULT_VALUE } from 'controllers/log';
+import { HISTORY_LINE_DEFAULT_VALUE, ON_UPDATE_ITEM_STATUS } from 'controllers/log';
 import { collectLogPayload } from './sagaUtils';
 import {
   ACTIVITY_NAMESPACE,
@@ -221,6 +221,14 @@ function* fetchLogPageData({ meta = {} }) {
   }
 }
 
+function* updateItemStatus() {
+  const offset = yield select(logPageOffsetSelector);
+  yield put(setPageLoadingAction(true));
+  yield call(fetchHistoryItems);
+  yield put(fetchTestItemsAction({ offset }));
+  yield put(setPageLoadingAction(false));
+}
+
 function* watchFetchLogPageData() {
   yield takeEvery(FETCH_LOG_PAGE_DATA, fetchLogPageData);
 }
@@ -233,6 +241,10 @@ function* watchFetchLineHistory() {
   yield takeEvery([SET_INCLUDE_ALL_LAUNCHES, FETCH_HISTORY_LINE_ITEMS], fetchHistoryItems);
 }
 
+function* watchUpdateItemStatus() {
+  yield takeEvery(ON_UPDATE_ITEM_STATUS, updateItemStatus);
+}
+
 export function* logSagas() {
   yield all([
     watchFetchLogPageData(),
@@ -241,5 +253,6 @@ export function* logSagas() {
     attachmentSagas(),
     sauceLabsSagas(),
     nestedStepSagas(),
+    watchUpdateItemStatus(),
   ]);
 }
