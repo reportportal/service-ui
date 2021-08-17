@@ -6,6 +6,7 @@ export const EXTENSION_TYPE_SIDEBAR_COMPONENT = 'uiExtension:sidebarComponent';
 export const EXTENSION_TYPE_LAUNCH_ITEM_COMPONENT = 'uiExtension:launchItemComponent';
 export const EXTENSION_TYPE_INTEGRATION_FORM_FIELDS = 'uiExtension:integrationFormFields';
 export const EXTENSION_TYPE_INTEGRATION_SETTINGS = 'uiExtension:integrationSettings';
+export const EXTENSION_TYPE_POST_ISSUE_FORM = 'uiExtension:postIssueForm';
 
 export const COMMAND_GET_FILE = 'getFile';
 

@@ -5,15 +5,17 @@ import { EXTENSION_TYPE_MODAL } from './constants';
 
 window.RP = {};
 
-// TODO store will be used later to add new routes
+// TODO: store will be used later to add new routes
 // eslint-disable-next-line no-unused-vars
 const createPluginRegistrationFunction = (store) => (plugin) => {
   const { name, extensions } = plugin;
+  const importProps = createImportProps(name);
   const wrappedExtensions = extensions.map((extension, i) => ({
-    name: `${plugin.name}__${i}`,
+    name: `${name}__${i}`,
     pluginName: name,
     ...extension,
-    component: (props) => <extension.component {...createImportProps(plugin.name)} {...props} />,
+    component: (props) => <extension.component {...importProps} {...props} />,
+    action: (params) => extension.action(importProps, ...params),
   }));
   wrappedExtensions.forEach((ex) => {
     if (ex.type === EXTENSION_TYPE_MODAL && !getModal({ id: ex.name })) {

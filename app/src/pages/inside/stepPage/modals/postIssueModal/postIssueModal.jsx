@@ -26,7 +26,10 @@ import { URLS } from 'common/urls';
 import { JIRA, RALLY } from 'common/constants/pluginNames';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
-import { namedAvailableBtsIntegrationsSelector } from 'controllers/plugins';
+import {
+  namedAvailableBtsIntegrationsSelector,
+  uiExtensionPostIssueFormSelector,
+} from 'controllers/plugins';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { btsIntegrationBackLinkSelector } from 'controllers/testItem';
@@ -36,7 +39,6 @@ import {
   normalizeFieldsWithOptions,
   mapFieldsToValues,
 } from 'components/fields/dynamicFieldsSection/utils';
-import { VALUE_ID_KEY, VALUE_NAME_KEY } from 'components/fields/dynamicFieldsSection/constants';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { ISSUE_TYPE_FIELD_KEY } from 'components/integrations/elements/bts/constants';
@@ -60,6 +62,7 @@ import {
   createFieldsValidationConfig,
   getDataSectionConfig,
   getDefaultIssueModalConfig,
+  getDefaultOptionValueKey,
 } from './utils';
 import styles from './postIssueModal.scss';
 
@@ -139,6 +142,7 @@ const messages = defineMessages({
     namedBtsIntegrations: namedAvailableBtsIntegrationsSelector(state),
     userId: userIdSelector(state),
     getBtsIntegrationBackLink: (itemId) => btsIntegrationBackLinkSelector(state, itemId),
+    postIssueExtensions: uiExtensionPostIssueFormSelector(state),
   }),
   {
     showScreenLockAction,
@@ -162,6 +166,7 @@ export class PostIssueModal extends Component {
     change: PropTypes.func.isRequired,
     getBtsIntegrationBackLink: PropTypes.func.isRequired,
     dirty: PropTypes.bool.isRequired,
+    postIssueExtensions: PropTypes.array,
     data: PropTypes.shape({
       items: PropTypes.array,
       fetchFunc: PropTypes.func,
@@ -176,6 +181,7 @@ export class PostIssueModal extends Component {
   };
 
   static defaultProps = {
+    postIssueExtensions: [],
     data: {
       items: [],
       fetchFunc: () => {},
@@ -218,7 +224,6 @@ export class PostIssueModal extends Component {
   }
 
   onPost = () => {
-    this.props.hideModalAction();
     this.props.handleSubmit(this.prepareDataToSend)();
   };
 
@@ -258,7 +263,7 @@ export class PostIssueModal extends Component {
     });
   };
 
-  onChangeCheckbox = (event) => {
+  trackFieldClick = (event) => {
     this.props.tracking.trackEvent(event);
   };
 
@@ -281,29 +286,26 @@ export class PostIssueModal extends Component {
     return systemAuthConfig;
   };
 
-  getDefaultOptionValueKey = (pluginName) =>
-    this.isJiraIntegration(pluginName) ? VALUE_NAME_KEY : VALUE_ID_KEY;
-
   dataFieldsConfig = [
     {
       name: INCLUDE_ATTACHMENTS_KEY,
       title: this.props.intl.formatMessage(messages.attachmentsHeader),
-      trackEvent: this.props.data.eventsInfo && this.props.data.eventsInfo.attachmentsSwitcher,
+      event: this.props.data.eventsInfo && this.props.data.eventsInfo.attachmentsSwitcher,
     },
     {
       name: INCLUDE_LOGS_KEY,
       title: this.props.intl.formatMessage(messages.logsHeader),
-      trackEvent: this.props.data.eventsInfo && this.props.data.eventsInfo.logsSwitcher,
+      event: this.props.data.eventsInfo && this.props.data.eventsInfo.logsSwitcher,
     },
     {
       name: INCLUDE_COMMENTS_KEY,
       title: this.props.intl.formatMessage(messages.commentsHeader),
-      trackEvent: this.props.data.eventsInfo && this.props.data.eventsInfo.commentSwitcher,
+      event: this.props.data.eventsInfo && this.props.data.eventsInfo.commentSwitcher,
     },
   ];
 
   initIntegrationFields = (defectFormFields = [], defaultConfig = {}, pluginName) => {
-    const defaultOptionValueKey = this.getDefaultOptionValueKey(pluginName);
+    const defaultOptionValueKey = getDefaultOptionValueKey(pluginName);
     const fields = normalizeFieldsWithOptions(defectFormFields, defaultOptionValueKey).map((item) =>
       item.fieldType === ISSUE_TYPE_FIELD_KEY ? { ...item, disabled: true } : item,
     );
@@ -343,10 +345,10 @@ export class PostIssueModal extends Component {
       data.token = formData.token;
     }
 
-    this.sendRequest(data);
+    this.postIssue(data);
   };
 
-  sendRequest = (data) => {
+  postIssue = (data) => {
     const {
       intl: { formatMessage },
       data: { fetchFunc },
@@ -355,13 +357,19 @@ export class PostIssueModal extends Component {
       userId,
     } = this.props;
     const { pluginName, integrationId, selectedItems } = this.state;
+    const currentExtension = this.getCurrentExtension();
+    const extensionAction = currentExtension && currentExtension.action;
 
     this.props.showScreenLockAction();
 
-    fetch(URLS.btsIntegrationPostTicket(activeProject, integrationId), {
-      method: 'post',
-      data,
-    })
+    const fetchAction = extensionAction
+      ? extensionAction(data, integrationId)
+      : fetch(URLS.btsIntegrationPostTicket(activeProject, integrationId), {
+          method: 'post',
+          data,
+        });
+
+    fetchAction
       .then((response) => {
         const {
           integrationParameters: { project, url },
@@ -469,8 +477,7 @@ export class PostIssueModal extends Component {
     return (
       <>
         <GhostButton
-          onClick={() => this.props.hideModalAction()}
-          disabled={false}
+          onClick={this.props.hideModalAction}
           transparentBorder
           transparentBackground
           appearance="topaz"
@@ -520,6 +527,13 @@ export class PostIssueModal extends Component {
     );
   };
 
+  getCurrentExtension = () => {
+    const { postIssueExtensions } = this.props;
+    const { pluginName } = this.state;
+
+    return postIssueExtensions.find((ext) => ext.pluginName === pluginName);
+  };
+
   render() {
     const {
       namedBtsIntegrations,
@@ -527,6 +541,7 @@ export class PostIssueModal extends Component {
     } = this.props;
     const { pluginName, integrationId, fields, expanded, wasExpanded } = this.state;
     const CredentialsComponent = SYSTEM_CREDENTIALS_BLOCKS[pluginName];
+    const currentExtension = this.getCurrentExtension();
     return (
       <DarkModalLayout
         renderHeaderElements={this.renderIssueFormHeaderElements}
@@ -547,7 +562,7 @@ export class PostIssueModal extends Component {
               <DynamicFieldsSection
                 withValidation
                 fields={fields}
-                defaultOptionValueKey={this.getDefaultOptionValueKey()}
+                defaultOptionValueKey={getDefaultOptionValueKey(pluginName)}
                 darkView
               />
             ) : (
@@ -569,7 +584,7 @@ export class PostIssueModal extends Component {
                       key={item.name}
                       name={item.name}
                       format={Boolean}
-                      onChange={() => this.onChangeCheckbox(item.trackEvent)}
+                      onChange={() => this.trackFieldClick(item.event)}
                     >
                       <InputCheckbox>
                         <span className={cx('switch-field-label', 'dark-view')}>{item.title}</span>
@@ -579,18 +594,21 @@ export class PostIssueModal extends Component {
                 </div>
               </div>
             )}
-            <div className={cx('credentials-block-wrapper', { expanded })}>
-              <h4 className={cx('form-block-header', 'dark-view')}>
-                <span onClick={this.expandCredentials} className={cx('header-text', 'dark-view')}>
-                  {formatMessage(messages.credentialsHeader, {
-                    system: pluginName,
-                  })}
-                </span>
-              </h4>
-              <div className={cx('credentials-block', { expand: wasExpanded })}>
-                <CredentialsComponent darkView />
+            {currentExtension && <currentExtension.component />}
+            {CredentialsComponent && (
+              <div className={cx('credentials-block-wrapper', { expanded })}>
+                <h4 className={cx('form-block-header', 'dark-view')}>
+                  <span onClick={this.expandCredentials} className={cx('header-text', 'dark-view')}>
+                    {formatMessage(messages.credentialsHeader, {
+                      system: pluginName,
+                    })}
+                  </span>
+                </h4>
+                <div className={cx('credentials-block', { expand: wasExpanded })}>
+                  <CredentialsComponent darkView />
+                </div>
               </div>
-            </div>
+            )}
           </form>
         )}
       </DarkModalLayout>
