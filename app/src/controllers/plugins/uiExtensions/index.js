@@ -6,5 +6,8 @@ export {
   extensionsLoadedSelector,
   uiExtensionSidebarComponentsSelector,
   uiExtensionLaunchItemComponentsSelector,
+  uiExtensionIntegrationSettingsSelector,
+  uiExtensionIntegrationFormFieldsSelector,
+  uiExtensionPostIssueFormSelector,
 } from './selectors';
 export { uiExtensionsReducer } from './reducer';

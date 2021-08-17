@@ -20,6 +20,8 @@ import {
   bindMessageToValidator,
 } from 'common/utils/validation';
 import { getSessionItem } from 'common/utils/storageUtils';
+import { JIRA, RALLY } from 'common/constants/pluginNames';
+import { VALUE_ID_KEY, VALUE_NAME_KEY } from 'components/fields/dynamicFieldsSection/constants';
 import {
   INCLUDE_ATTACHMENTS_KEY,
   INCLUDE_COMMENTS_KEY,
@@ -98,3 +100,11 @@ export const getDefaultIssueModalConfig = (namedIntegrations, userId) => {
     pluginName,
   };
 };
+
+const OPTION_VALUES_BY_PLUGIN = {
+  [JIRA]: VALUE_NAME_KEY,
+  [RALLY]: VALUE_ID_KEY,
+};
+
+export const getDefaultOptionValueKey = (pluginName) =>
+  OPTION_VALUES_BY_PLUGIN[pluginName] || VALUE_NAME_KEY;
