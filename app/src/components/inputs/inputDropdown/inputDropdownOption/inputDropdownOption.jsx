@@ -34,6 +34,7 @@ export const DropdownOption = ({
   value,
   independentSelection,
   title,
+  customClass,
 }) => {
   const onChangeHandler = () => {
     onChange && onChange(value);
@@ -71,7 +72,7 @@ export const DropdownOption = ({
   };
   return (
     <div
-      className={cx('dropdown-option', {
+      className={cx('dropdown-option', customClass, {
         selected: !multiple && selected,
         disabled,
         hidden,
@@ -95,6 +96,7 @@ DropdownOption.propTypes = {
   independentSelection: PropTypes.bool,
   onChange: PropTypes.func,
   title: PropTypes.string,
+  customClass: PropTypes.string,
 };
 
 DropdownOption.defaultProps = {
@@ -108,4 +110,5 @@ DropdownOption.defaultProps = {
   independentSelection: false,
   onChange: () => {},
   title: '',
+  customClass: '',
 };

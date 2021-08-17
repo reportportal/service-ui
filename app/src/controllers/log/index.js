@@ -27,6 +27,7 @@ export {
   setShouldShowLoadMoreAction,
   updateHistoryItemLaunchAttributesAction,
   setActiveTabIdAction,
+  fetchHistoryItemsWithLoadingAction,
 } from './actionCreators';
 export { logReducer } from './reducer';
 export {
@@ -49,6 +50,7 @@ export {
   DEFAULT_HISTORY_DEPTH,
   SET_SHOULD_SHOW_LOAD_MORE,
   SET_ACTIVE_TAB_ID,
+  FETCH_HISTORY_ITEMS_WITH_LOADING,
 } from './constants';
 export {
   historyItemsSelector,

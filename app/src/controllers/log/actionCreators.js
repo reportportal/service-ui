@@ -26,6 +26,7 @@ import {
   SET_SHOULD_SHOW_LOAD_MORE,
   UPDATE_HISTORY_ITEM_LAUNCH_ATTRIBUTES,
   SET_ACTIVE_TAB_ID,
+  FETCH_HISTORY_ITEMS_WITH_LOADING,
 } from './constants';
 
 export const fetchLogPageData = () => ({
@@ -86,4 +87,8 @@ export const updateHistoryItemLaunchAttributesAction = (launch) => ({
 export const setActiveTabIdAction = (activeTabId) => ({
   type: SET_ACTIVE_TAB_ID,
   payload: activeTabId,
+});
+
+export const fetchHistoryItemsWithLoadingAction = () => ({
+  type: FETCH_HISTORY_ITEMS_WITH_LOADING,
 });

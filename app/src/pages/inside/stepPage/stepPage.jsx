@@ -457,6 +457,7 @@ export class StepPage extends Component {
             sortingColumn={sortingColumn}
             sortingDirection={sortingDirection}
             rowHighlightingConfig={rowHighlightingConfig}
+            onStatusUpdate={this.props.fetchTestItemsAction}
           />
           {!!pageCount && !loading && (
             <PaginationToolbar
