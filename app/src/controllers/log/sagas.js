@@ -27,7 +27,7 @@ import { logItemIdSelector, pathnameChangedSelector } from 'controllers/pages';
 import { debugModeSelector } from 'controllers/launch';
 import { createFetchPredicate, fetchDataAction } from 'controllers/fetch';
 import { fetch, isEmptyObject } from 'common/utils';
-import { HISTORY_LINE_DEFAULT_VALUE, ON_UPDATE_ITEM_STATUS } from 'controllers/log';
+import { HISTORY_LINE_DEFAULT_VALUE, FETCH_HISTORY_ITEMS_WITH_LOADING } from 'controllers/log';
 import { collectLogPayload } from './sagaUtils';
 import {
   ACTIVITY_NAMESPACE,
@@ -221,11 +221,9 @@ function* fetchLogPageData({ meta = {} }) {
   }
 }
 
-function* updateItemStatus() {
-  const offset = yield select(logPageOffsetSelector);
+function* fetchHistoryItemsWithLoading() {
   yield put(setPageLoadingAction(true));
   yield call(fetchHistoryItems);
-  yield put(fetchTestItemsAction({ offset }));
   yield put(setPageLoadingAction(false));
 }
 
@@ -242,7 +240,7 @@ function* watchFetchLineHistory() {
 }
 
 function* watchUpdateItemStatus() {
-  yield takeEvery(ON_UPDATE_ITEM_STATUS, updateItemStatus);
+  yield takeEvery(FETCH_HISTORY_ITEMS_WITH_LOADING, fetchHistoryItemsWithLoading);
 }
 
 export function* logSagas() {

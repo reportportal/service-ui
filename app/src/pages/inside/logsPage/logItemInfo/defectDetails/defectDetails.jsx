@@ -30,7 +30,7 @@ import {
   postIssueAction,
   editDefectsAction,
 } from 'controllers/step';
-import { updateHistoryItemIssuesAction } from 'controllers/log';
+import { fetchHistoryItemsWithLoadingAction, updateHistoryItemIssuesAction } from 'controllers/log';
 import {
   availableBtsIntegrationsSelector,
   isPostIssueActionAvailable,
@@ -127,6 +127,7 @@ const UNLINK_ISSUE_EVENTS_INFO = {
     postIssueAction,
     editDefectsAction,
     updateHistoryItemIssues: updateHistoryItemIssuesAction,
+    fetchHistoryItemsWithLoading: fetchHistoryItemsWithLoadingAction,
   },
 )
 @track()
@@ -142,7 +143,7 @@ export class DefectDetails extends Component {
     fetchFunc: PropTypes.func.isRequired,
     updateHistoryItemIssues: PropTypes.func.isRequired,
     debugMode: PropTypes.bool.isRequired,
-    onUpdateStatus: PropTypes.func.isRequired,
+    fetchHistoryItemsWithLoading: PropTypes.func.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -276,7 +277,7 @@ export class DefectDetails extends Component {
       btsIntegrations,
       debugMode,
       intl: { formatMessage },
-      onUpdateStatus,
+      fetchHistoryItemsWithLoading,
     } = this.props;
     const { expanded } = this.state;
     const isPostIssueUnavailable = !isPostIssueActionAvailable(this.props.btsIntegrations);
@@ -387,7 +388,7 @@ export class DefectDetails extends Component {
               status={logItem.status}
               attributes={logItem.attributes}
               description={logItem.description}
-              fetchFunc={onUpdateStatus}
+              fetchFunc={fetchHistoryItemsWithLoading}
               withIndicator
             />
           </span>
