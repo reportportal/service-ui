@@ -263,8 +263,8 @@ export class PostIssueModal extends Component {
     });
   };
 
-  trackFieldClick = (event) => {
-    this.props.tracking.trackEvent(event);
+  trackFieldClick = (e, eventFn) => {
+    this.props.tracking.trackEvent(eventFn(e.target.checked));
   };
 
   getCloseConfirmationConfig = () => {
@@ -290,17 +290,17 @@ export class PostIssueModal extends Component {
     {
       name: INCLUDE_ATTACHMENTS_KEY,
       title: this.props.intl.formatMessage(messages.attachmentsHeader),
-      event: this.props.data.eventsInfo && this.props.data.eventsInfo.attachmentsSwitcher,
+      eventFn: this.props.data.eventsInfo && this.props.data.eventsInfo.attachmentsSwitcher,
     },
     {
       name: INCLUDE_LOGS_KEY,
       title: this.props.intl.formatMessage(messages.logsHeader),
-      event: this.props.data.eventsInfo && this.props.data.eventsInfo.logsSwitcher,
+      eventFn: this.props.data.eventsInfo && this.props.data.eventsInfo.logsSwitcher,
     },
     {
       name: INCLUDE_COMMENTS_KEY,
       title: this.props.intl.formatMessage(messages.commentsHeader),
-      event: this.props.data.eventsInfo && this.props.data.eventsInfo.commentSwitcher,
+      eventFn: this.props.data.eventsInfo && this.props.data.eventsInfo.commentSwitcher,
     },
   ];
 
@@ -522,6 +522,7 @@ export class PostIssueModal extends Component {
           isNarrowView={collapsedRightSection}
           isBulkOperation={this.isBulkOperation}
           loading={loading}
+          eventsInfo={this.props.data.eventsInfo}
         />
       </div>
     );
@@ -538,15 +539,20 @@ export class PostIssueModal extends Component {
     const {
       namedBtsIntegrations,
       intl: { formatMessage },
+      data: { eventsInfo },
     } = this.props;
     const { pluginName, integrationId, fields, expanded, wasExpanded } = this.state;
     const CredentialsComponent = SYSTEM_CREDENTIALS_BLOCKS[pluginName];
     const currentExtension = this.getCurrentExtension();
+    const layoutEventsInfo = {
+      openCloseRightSection: eventsInfo.openCloseRightSection,
+    };
     return (
       <DarkModalLayout
         renderHeaderElements={this.renderIssueFormHeaderElements}
         renderTitle={this.renderTitle}
         renderRightSection={this.renderRightSection}
+        eventsInfo={layoutEventsInfo}
       >
         {() => (
           <form className={cx('post-issue-form', 'dark-view')}>
@@ -584,7 +590,7 @@ export class PostIssueModal extends Component {
                       key={item.name}
                       name={item.name}
                       format={Boolean}
-                      onChange={() => this.trackFieldClick(item.event)}
+                      onChange={(e) => this.trackFieldClick(e, item.eventFn)}
                     >
                       <InputCheckbox>
                         <span className={cx('switch-field-label', 'dark-view')}>{item.title}</span>

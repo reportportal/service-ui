@@ -100,92 +100,138 @@ export const getEditToInvestigateSelectSpecificSimilarItemEvent = (category) => 
   label: `Choose specific item in Modal "Edit Defect"`,
 });
 
+const getOpenCloseRightSectionIssueEvent = (category, modalName) => (isOpen) => {
+  const iconLabel = isOpen ? 'Show more' : 'Show less';
+  const btnLabel = isOpen ? 'See details and error logs' : 'See less';
+  return {
+    category,
+    action: `Click icon ${iconLabel} on Modal ${modalName}`,
+    label: `${category}#${btnLabel}`,
+  };
+};
+const getOnClickExternalIssueLink = (category, modalName) => () => ({
+  category,
+  action: `Click on issue Link on Modal ${modalName}`,
+  label: category,
+});
+const getShowErrLogsSwitcherIssueEvent = (category, modalName) => ({ state }) => {
+  const switcher = state ? 'ON' : 'OFF';
+  return {
+    category,
+    action: `Switch "Show Error Logs" on Modal ${modalName}`,
+    label: `${category}#${switcher}`,
+  };
+};
+const getOnSelectAllIssueEvent = (category, modalName) => ({ state }) => {
+  const switcher = state ? 'OFF' : 'ON';
+  return {
+    category,
+    action: `Checkmark box "Item selected" on Modal ${modalName}`,
+    label: `${category}#${switcher}`,
+  };
+};
 // UNLINK ISSUE MODAL
-export const getUnlinkIssueModalEvents = (category) => ({
-  CANCEL_BTN_UNLINK_ISSUE_MODAL: {
+export const getUnlinkIssueModalEvents = (category) => {
+  const modalName = 'Unlink Issue';
+  return {
+    openCloseRightSection: getOpenCloseRightSectionIssueEvent(category, modalName),
+    onClickExternalLink: getOnClickExternalIssueLink(category, modalName),
+    toggleShowErrLogsSwitcher: getShowErrLogsSwitcherIssueEvent(category, modalName),
+    onSelectAllItems: getOnSelectAllIssueEvent(category, modalName),
+    CANCEL_BTN_UNLINK_ISSUE_MODAL: {
+      category,
+      action: 'Click on Cancel in Unlink issue',
+      label: 'Close Modal "Unlink issue"',
+    },
+    CLOSE_ICON_UNLINK_ISSUE_MODAL: {
+      category,
+      action: 'Click on Close icon in Unlink issue',
+      label: 'Close Modal "Unlink issue"',
+    },
+    UNLINK_BTN_UNLINK_ISSUE_MODAL: {
+      category,
+      action: 'Click on Unlink in Modal "Unlink issue"',
+      label: 'Unlink issues',
+    },
+    UNLINK_IN_UNLINK_ISSUE_MODAL_AUTO_ANALYZED_TRUE: {
+      category,
+      action: 'Click on Unlink in Modal "Unlink issue"',
+      label: 'Unlink issues, autoAnalyzed is true',
+    },
+    UNLINK_IN_UNLINK_ISSUE_MODAL_AUTO_ANALYZED_FALSE: {
+      category,
+      action: 'Click on Unlink in Modal "Unlink issue"',
+      label: 'Unlink issues, autoAnalyzed is false',
+    },
+  };
+};
+const getIncludeDataSwitcherEvent = (category, switcherLabel) => (state) => {
+  const checkboxState = state ? 'Active' : 'Disable';
+  return {
     category,
-    action: 'Click on Cancel in Unlink issue',
-    label: 'Close Modal "Unlink issue"',
-  },
-  CLOSE_ICON_UNLINK_ISSUE_MODAL: {
-    category,
-    action: 'Click on Close icon in Unlink issue',
-    label: 'Close Modal "Unlink issue"',
-  },
-  UNLINK_BTN_UNLINK_ISSUE_MODAL: {
-    category,
-    action: 'Click on Unlink in Modal "Unlink issue"',
-    label: 'Unlink issues',
-  },
-  UNLINK_IN_UNLINK_ISSUE_MODAL_AUTO_ANALYZED_TRUE: {
-    category,
-    action: 'Click on Unlink in Modal "Unlink issue"',
-    label: 'Unlink issues, autoAnalyzed is true',
-  },
-  UNLINK_IN_UNLINK_ISSUE_MODAL_AUTO_ANALYZED_FALSE: {
-    category,
-    action: 'Click on Unlink in Modal "Unlink issue"',
-    label: 'Unlink issues, autoAnalyzed is false',
-  },
-});
-
+    action: `Click on ${switcherLabel} on Modal Post Issue`,
+    label: `${category}#${checkboxState}`,
+  };
+};
 // POST ISSUE MODAL
-export const getPostIssueModalEvents = (category) => ({
-  CLOSE_ICON_POST_ISSUE_MODAL: {
-    category,
-    action: 'Click on Icon Close on Modal Post Issue',
-    label: 'Close Modal Post Issue',
-  },
-  ATTACHMENTS_SWITCHER_POST_ISSUE_MODAL: {
-    category,
-    action: 'Click on Attachments switcher on Modal Post Issue',
-    label: 'On/off Attachments in Modal Post Issue',
-  },
-  LOGS_SWITCHER_POST_ISSUE_MODAL: {
-    category,
-    action: 'Click on Logs switcher on Modal Post Issue',
-    label: 'On/off Logs in Modal Post Issue',
-  },
-  COMMENT_SWITCHER_POST_ISSUE_MODAL: {
-    category,
-    action: 'Click on Comment switcher on Modal Post Issue',
-    label: 'On/off Comment in Modal Post Issue',
-  },
-  CANCEL_BTN_POST_ISSUE_MODAL: {
-    category,
-    action: 'Click on Btn Cancel on Modal Post Issue',
-    label: 'Close Modal Post Issue',
-  },
-  POST_BTN_POST_ISSUE_MODAL: {
-    category,
-    action: 'Click on Btn Post on Modal Post Issue',
-    label: 'Post bug',
-  },
-});
+export const getPostIssueModalEvents = (category) => {
+  const modalName = 'Post Issue';
+  return {
+    openCloseRightSection: getOpenCloseRightSectionIssueEvent(category, modalName),
+    onClickExternalLink: getOnClickExternalIssueLink(category, modalName),
+    toggleShowErrLogsSwitcher: getShowErrLogsSwitcherIssueEvent(category, modalName),
+    onSelectAllItems: getOnSelectAllIssueEvent(category, modalName),
+    CLOSE_ICON_POST_ISSUE_MODAL: {
+      category,
+      action: 'Click on Icon Close on Modal Post Issue',
+      label: 'Close Modal Post Issue',
+    },
+    commentSwitcher: getIncludeDataSwitcherEvent(category, 'Comment Switcher'),
+    attachmentsSwitcher: getIncludeDataSwitcherEvent(category, 'Attachments Switcher'),
+    logsSwitcher: getIncludeDataSwitcherEvent(category, 'Logs Switcher'),
+    CANCEL_BTN_POST_ISSUE_MODAL: {
+      category,
+      action: 'Click on Btn Cancel on Modal Post Issue',
+      label: 'Close Modal Post Issue',
+    },
+    POST_BTN_POST_ISSUE_MODAL: {
+      category,
+      action: 'Click on Btn Post on Modal Post Issue',
+      label: 'Post bug',
+    },
+  };
+};
 
 // LINK ISSUE MODAL
-export const getLinkIssueModalEvents = (category) => ({
-  CLOSE_ICON_LINK_ISSUE_MODAL: {
-    category,
-    action: 'Click on Icon Close on Modal Link Issue',
-    label: 'Close Modal Link Issue',
-  },
-  ADD_NEW_ISSUE_BTN_LINK_ISSUE_MODAL: {
-    category,
-    action: 'Click on Btn Add New Issue on Modal Link Issue',
-    label: 'Add input in Modal Link Issue',
-  },
-  CANCEL_BTN_LINK_ISSUE_MODAL: {
-    category,
-    action: 'Click on Btn Cancel on Modal Link Issue',
-    label: 'Close Modal Modal Link Issue',
-  },
-  LOAD_BTN_LINK_ISSUE_MODAL: {
-    category,
-    action: 'Click on Btn Load on Modal Link Issue',
-    label: 'Link issue',
-  },
-});
+export const getLinkIssueModalEvents = (category) => {
+  const modalName = 'Link Issue';
+  return {
+    openCloseRightSection: getOpenCloseRightSectionIssueEvent(category, modalName),
+    onClickExternalLink: getOnClickExternalIssueLink(category, modalName),
+    toggleShowErrLogsSwitcher: getShowErrLogsSwitcherIssueEvent(category, modalName),
+    onSelectAllItems: getOnSelectAllIssueEvent(category, modalName),
+    CLOSE_ICON_LINK_ISSUE_MODAL: {
+      category,
+      action: 'Click on Icon Close on Modal Link Issue',
+      label: 'Close Modal Link Issue',
+    },
+    ADD_NEW_ISSUE_BTN_LINK_ISSUE_MODAL: {
+      category,
+      action: 'Click on Btn Add New Issue on Modal Link Issue',
+      label: 'Add input in Modal Link Issue',
+    },
+    CANCEL_BTN_LINK_ISSUE_MODAL: {
+      category,
+      action: 'Click on Btn Cancel on Modal Link Issue',
+      label: 'Close Modal Modal Link Issue',
+    },
+    LOAD_BTN_LINK_ISSUE_MODAL: {
+      category,
+      action: 'Click on Btn Load on Modal Link Issue',
+      label: 'Link issue',
+    },
+  };
+};
 
 // DELETE ITEM MODAL
 export const getDeleteItemModalEvents = (category) => ({
@@ -294,7 +340,7 @@ const getApplyAndContinueBtnEvent = (page) => (isTIGroup, hasSuggestions, issueB
     label: [page, defectGroup, suggestionsStatus, `after "+${issueBtn}"`].join('#'),
   };
 };
-const getShowErrLogsSwitcherEvent = (page) => (isTIGroup, state, isMlSection = false) => {
+const getShowErrLogsSwitcherEvent = (page) => ({ isTIGroup, state, isMlSection }) => {
   const action = isMlSection
     ? 'Switch Show Error Logs in ML Suggestions'
     : 'Switch "Show Error Logs" in Apply defect for';
@@ -323,7 +369,7 @@ const getOnClickIssueEvent = (page) => (isTIGroup, label) => {
     label: `${page}#${defectGroup}`,
   };
 };
-const getOnClickExternalLink = (page) => (isTIGroup, section = '') => {
+const getOnClickExternalLink = (page) => ({ isTIGroup, section }) => {
   const action = section
     ? 'Click on issue link and open page Log'
     : 'Click on issue Link from Apply defect for';
@@ -331,7 +377,7 @@ const getOnClickExternalLink = (page) => (isTIGroup, section = '') => {
   return {
     category: MODAL_MAKE_DECISION,
     action,
-    label: `${page}#${defectGroup}${section && `#in ${section}`}`,
+    label: `${page}#${defectGroup}${(section && `#in ${section}`) || ''}`,
   };
 };
 const getOpenStackTraceEvent = (page) => (isTIGroup, isMlSection = false) => {
@@ -364,10 +410,10 @@ const getOnDecisionOptionEvent = (page) => (isTIGroup, optionLabel) => {
     label: [page, defectGroup, selectedOption].join('#'),
   };
 };
-const getOnSelectAllEvent = (page) => (isTIGroup, state, optionLabel) => {
+const getOnSelectAllEvent = (page) => ({ isTIGroup, state, optionLabel }) => {
   const defectGroup = isTIGroup ? 'TI' : 'NoTI';
   const switcher = state ? 'OFF' : 'ON';
-  const selectedOption = optionLabel.replace(/{([A-Za-z]+)}/, 'filter');
+  const selectedOption = optionLabel && optionLabel.replace(/{([A-Za-z]+)}/, 'filter');
   return {
     category: MODAL_MAKE_DECISION,
     action: 'Checkmark box "Item selected" in Apply defect for',

@@ -56,14 +56,9 @@ const SimilarItemsList = ({
   isNarrowView,
   isBulkOperation,
   eventsInfo,
+  onClickExternalLinkEvent,
 }) => {
-  const { trackEvent } = useTracking();
   const isTIGroupDefect = testItems[0].issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
-  const onClickExternalLinkEvent = () => {
-    const { onClickExternalLink } = eventsInfo;
-    trackEvent(onClickExternalLink(isTIGroupDefect));
-  };
-
   return (
     <>
       {testItems.length > 0 &&
@@ -101,15 +96,12 @@ const SimilarItemsList = ({
               />
               {showErrorLogs &&
                 !isNarrowView &&
-                item.logs.slice(0, ERROR_LOGS_SIZE).map((log) => (
-                  <Log
-                    log={log}
-                    key={uniqueId()}
-                    eventsInfo={{
-                      onOpenStackTraceEvent: () => eventsInfo.onOpenStackTrace(isTIGroupDefect),
-                    }}
-                  />
-                ))}
+                item.logs.slice(0, ERROR_LOGS_SIZE).map((log) => {
+                  const logEventsInfo = eventsInfo.onOpenStackTrace && {
+                    onOpenStackTraceEvent: () => eventsInfo.onOpenStackTrace(isTIGroupDefect),
+                  };
+                  return <Log log={log} key={uniqueId()} eventsInfo={logEventsInfo} />;
+                })}
             </div>
           );
         })}
@@ -124,10 +116,12 @@ SimilarItemsList.propTypes = {
   isBulkOperation: PropTypes.bool,
   isNarrowView: PropTypes.bool,
   eventsInfo: PropTypes.object,
+  onClickExternalLinkEvent: PropTypes.func,
 };
 SimilarItemsList.defaultProps = {
   isNarrowView: false,
   eventsInfo: {},
+  onClickExternalLinkEvent: () => {},
 };
 
 const HistoryLineItemsList = ({
@@ -135,15 +129,8 @@ const HistoryLineItemsList = ({
   selectedItems,
   selectItem,
   isNarrowView,
-  eventsInfo,
+  onClickExternalLinkEvent,
 }) => {
-  const { trackEvent } = useTracking();
-  const onClickExternalLinkEvent = () => {
-    const isTIGroupDefect = testItems[0].issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
-    const { onClickExternalLink } = eventsInfo;
-    trackEvent(onClickExternalLink(isTIGroupDefect));
-  };
-
   return (
     testItems.length > 0 &&
     testItems.map((item, i) => {
@@ -165,10 +152,10 @@ HistoryLineItemsList.propTypes = {
   testItems: PropTypes.array.isRequired,
   selectedItems: PropTypes.array.isRequired,
   selectItem: PropTypes.func.isRequired,
-  eventsInfo: PropTypes.object,
+  onClickExternalLinkEvent: PropTypes.func,
 };
 HistoryLineItemsList.defaultProps = {
-  eventsInfo: {},
+  onClickExternalLinkEvent: () => {},
 };
 
 export const ItemsListBody = ({
@@ -181,12 +168,20 @@ export const ItemsListBody = ({
   isBulkOperation,
   eventsInfo,
 }) => {
+  const { trackEvent } = useTracking();
   const selectItem = (id) => {
     setItems({
       selectedItems: selectedItems.find((item) => item.itemId === id)
         ? selectedItems.filter((item) => item.itemId !== id)
         : [...selectedItems, testItems.find((item) => item.itemId === id)],
     });
+  };
+  const onClickExternalLinkEvent = () => {
+    const { onClickExternalLink } = eventsInfo;
+    const args = {
+      isTIGroup: testItems[0].issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
+    };
+    onClickExternalLink && trackEvent(onClickExternalLink(args));
   };
 
   return (
@@ -197,7 +192,7 @@ export const ItemsListBody = ({
           selectedItems={selectedItems}
           selectItem={selectItem}
           isNarrowView={isNarrowView}
-          eventsInfo={eventsInfo}
+          onClickExternalLinkEvent={onClickExternalLinkEvent}
         />
       ) : (
         <SimilarItemsList
@@ -208,6 +203,7 @@ export const ItemsListBody = ({
           isNarrowView={isNarrowView}
           isBulkOperation={isBulkOperation}
           eventsInfo={eventsInfo}
+          onClickExternalLinkEvent={onClickExternalLinkEvent}
         />
       )}
     </div>
