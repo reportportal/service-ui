@@ -75,7 +75,7 @@ const MakeDecision = ({ data }) => {
     startTime: Date.now(),
   });
   const [tabs, toggleTab, collapseTabsExceptCurr] = useAccordionTabsState({
-    [MACHINE_LEARNING_SUGGESTIONS]: false,
+    [MACHINE_LEARNING_SUGGESTIONS]: isAnalyzerAvailable,
     [COPY_FROM_HISTORY_LINE]: false,
     [SELECT_DEFECT_MANUALLY]: true,
   });
@@ -98,9 +98,9 @@ const MakeDecision = ({ data }) => {
       setLoadingMLSuggest(true);
       fetch(URLS.getMLSuggestions(activeProject, itemData.id))
         .then((resp) => {
-          resp.length === 0
-            ? collapseTabsExceptCurr(SELECT_DEFECT_MANUALLY)
-            : setModalState({ suggestedItems: resp });
+          if (resp.length !== 0) {
+            setModalState({ suggestedItems: resp });
+          }
           setLoadingMLSuggest(false);
         })
         .catch(() => {

@@ -111,7 +111,7 @@ export const MachineLearningSuggestions = ({
     );
   }
 
-  if (suggestedItems.length === 0) {
+  if (suggestedItems.length === 0 && !loadingMLSuggest) {
     return (
       <div className={cx('no-suggestion-prompt')}>
         {formatMessage(messages.suggestionsNotFound)}
