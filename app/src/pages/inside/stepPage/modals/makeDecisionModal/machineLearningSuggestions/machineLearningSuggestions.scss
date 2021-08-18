@@ -23,9 +23,11 @@
   font-family: $FONT-REGULAR;
   font-size: 11px;
   line-height: 15px;
+
   &-text {
     display: flex;
     align-self: flex-end;
+
     span:first-child {
       margin-right: 33px;
     }
@@ -39,6 +41,7 @@
 
 .suggestion-item {
   display: flex;
+
   &-wrapper {
     width: 100%;
   }
@@ -83,4 +86,53 @@
 .error-log {
   padding-left: 20px;
   margin-bottom: 10px;
+}
+
+.no-suggestion-prompt {
+  display: flex;
+  margin-bottom: 10px;
+  color: $COLOR--dark-gray;
+  font-family: $FONT-REGULAR;
+  font-size: 11px;
+  line-height: 15px;
+
+  .suggestion-link {
+    display: flex;
+    align-items: center;
+    margin-left: 5px;
+    color: $COLOR--topaz;
+    font-family: $FONT-REGULAR;
+    font-size: 11px;
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+
+    & > span {
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    &:hover {
+      .icon {
+        opacity: 1;
+      }
+    }
+
+    &.narrow-view {
+      width: 100%;
+      overflow: initial;
+    }
+  }
+
+  .icon {
+    min-width: 15px;
+    width: 15px;
+    height: 15px;
+    opacity: 0;
+    margin: 0 8px;
+
+    svg g g path {
+      fill: $COLOR--topaz;
+    }
+  }
 }
