@@ -35,6 +35,7 @@ import {
   getLinkIssueModalEvents,
   getDeleteItemModalEvents,
   getEditItemsModalEvents,
+  getMakeDecisionModalEvents,
 } from './common/testItemPages/modalEventsCreators';
 
 export const HISTORY_PAGE = 'history';
@@ -120,4 +121,5 @@ export const HISTORY_PAGE_EVENTS = {
     commonEvents: getRefineFiltersPanelEvents(HISTORY_PAGE),
     getChangeFilterEvent: getChangeFilterEvent(HISTORY_PAGE),
   },
+  MAKE_DECISION_MODAL_EVENTS: getMakeDecisionModalEvents(HISTORY_PAGE),
 };

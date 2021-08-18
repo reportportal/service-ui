@@ -82,14 +82,18 @@ export const MachineLearningSuggestions = ({
   const onChange = (value) => {
     setShowErrorLogs(value);
     const { toggleShowErrLogsSwitcher } = eventsInfo;
-    trackEvent(toggleShowErrLogsSwitcher(defectFromTIGroup, value, true));
+    trackEvent(
+      toggleShowErrLogsSwitcher({ isTIGroup: defectFromTIGroup, state: value, isMlSection: true }),
+    );
   };
 
   const onClickExternalLinkEvent = () => {
     const { onClickExternalLink } = eventsInfo;
-    trackEvent(
-      onClickExternalLink(defectFromTIGroup, messages[MACHINE_LEARNING_SUGGESTIONS].defaultMessage),
-    );
+    const args = {
+      isTIGroup: defectFromTIGroup,
+      section: messages[MACHINE_LEARNING_SUGGESTIONS].defaultMessage,
+    };
+    trackEvent(onClickExternalLink(args));
   };
 
   return loadingMLSuggest ? (

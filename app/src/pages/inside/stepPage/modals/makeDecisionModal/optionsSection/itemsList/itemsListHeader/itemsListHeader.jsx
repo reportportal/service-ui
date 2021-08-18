@@ -58,20 +58,19 @@ export const ItemsListHeader = ({
     setItems({
       selectedItems: isAllSelected ? allSelectedItems : testItems,
     });
-    // TODO optionsValue && ... remove error for bulk operation, remove after bulk ga has added
-    optionValue &&
-      trackEvent(
-        eventsInfo.onSelectAllItems(
-          defectFromTIGroup,
-          isAllSelected,
-          messages[optionValue].defaultMessage,
-        ),
-      );
+    const { onSelectAllItems } = eventsInfo;
+    const args = {
+      isTIGroup: defectFromTIGroup,
+      state: isAllSelected,
+      optionLabel: optionValue && messages[optionValue].defaultMessage,
+    };
+    onSelectAllItems && trackEvent(onSelectAllItems(args));
   };
   const onSwitcherChange = (value) => {
     onShowErrorLogsChange(value);
     const { toggleShowErrLogsSwitcher } = eventsInfo;
-    trackEvent(toggleShowErrLogsSwitcher(defectFromTIGroup, value));
+    const args = { isTIGroup: defectFromTIGroup, state: value };
+    trackEvent(toggleShowErrLogsSwitcher(args));
   };
 
   return (
