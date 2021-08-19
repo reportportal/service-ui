@@ -93,6 +93,7 @@ const HistoryLineItemContentWithTooltip = withTooltip({
   }),
   {
     updateLaunchAttributes: updateHistoryItemLaunchAttributesAction,
+    cancelRequest: () => ({ type: 'CANCEL_FETCH_DATA' }),
   },
 )
 @injectIntl
@@ -121,6 +122,7 @@ export class HistoryLineItem extends Component {
     launchAttributes: PropTypes.array,
     includeAllLaunches: PropTypes.bool,
     updateLaunchAttributes: PropTypes.func,
+    cancelRequest: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -157,6 +159,7 @@ export class HistoryLineItem extends Component {
       <div
         className={cx('history-line-item', { active, 'last-item': isLastItem })}
         onClick={() => {
+          this.props.cancelRequest();
           tracking.trackEvent(LOG_PAGE_EVENTS.HISTORY_LINE_ITEM);
           onClick();
         }}

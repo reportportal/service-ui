@@ -157,6 +157,7 @@ const routesMap = {
   [PROJECT_DASHBOARD_PAGE]: {
     path: '/:projectId/dashboard',
     thunk: (dispatch) => {
+      dispatch({ type: 'CANCEL_FETCH_DATA' });
       dispatch(
         fetchDashboardsAction({
           [SIZE_KEY]: 300,
@@ -184,6 +185,7 @@ const routesMap = {
       payload: { ...payload, filterId: launchDistinctSelector(getState()) },
     }),
     (dispatch) => {
+      dispatch({ type: 'CANCEL_FETCH_DATA' });
       dispatch(unselectAllLaunchesAction());
     },
   ),
@@ -205,6 +207,7 @@ const routesMap = {
     path: '/:projectId/filters',
     thunk: (dispatch, getState, { action }) => {
       const location = (action.meta || {}).location || {};
+      dispatch({ type: 'CANCEL_FETCH_DATA' });
       dispatch(fetchFiltersPageAction(location.kind !== 'load'));
     },
   },
