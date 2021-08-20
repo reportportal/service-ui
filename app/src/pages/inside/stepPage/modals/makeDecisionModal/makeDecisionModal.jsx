@@ -98,9 +98,9 @@ const MakeDecision = ({ data }) => {
       setLoadingMLSuggest(true);
       fetch(URLS.getMLSuggestions(activeProject, itemData.id))
         .then((resp) => {
-          resp.length === 0
-            ? collapseTabsExceptCurr(SELECT_DEFECT_MANUALLY)
-            : setModalState({ suggestedItems: resp });
+          if (resp.length !== 0) {
+            setModalState({ suggestedItems: resp });
+          }
           setLoadingMLSuggest(false);
         })
         .catch(() => {
@@ -364,27 +364,13 @@ const MakeDecision = ({ data }) => {
     const preparedHistoryLineItems = historyItems.filter(
       (item) => item.issue && item.id !== itemData.id,
     );
-    const disabledMLTooltip = () => {
-      if (!isAnalyzerAvailable) {
-        return formatMessage(messages.analyzerUnavailable);
-      } else if (modalState.suggestedItems.length === 0) {
-        return formatMessage(messages.disabledTabTooltip);
-      } else {
-        return '';
-      }
-    };
     const tabsData = [
       {
         id: MACHINE_LEARNING_SUGGESTIONS,
         shouldShow: !isBulkOperation,
-        disabled:
-          !isAnalyzerAvailable || (!loadingMLSuggest && modalState.suggestedItems.length === 0),
+        disabled: false,
         isOpen: tabs[MACHINE_LEARNING_SUGGESTIONS],
-        title: (
-          <div title={disabledMLTooltip()}>
-            {formatMessage(messages.machineLearningSuggestions)}
-          </div>
-        ),
+        title: <div>{formatMessage(messages.machineLearningSuggestions)}</div>,
         content: !isBulkOperation && (
           <MachineLearningSuggestions
             modalState={modalState}
@@ -393,6 +379,7 @@ const MakeDecision = ({ data }) => {
             collapseTabsExceptCurr={collapseTabsExceptCurr}
             loadingMLSuggest={loadingMLSuggest}
             eventsInfo={data.eventsInfo.editDefectsEvents}
+            isAnalyzerAvailable={isAnalyzerAvailable}
           />
         ),
       },

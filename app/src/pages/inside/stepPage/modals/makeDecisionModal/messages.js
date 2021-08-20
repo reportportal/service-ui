@@ -94,9 +94,9 @@ export const messages = defineMessages({
     id: 'MakeDecisionModal.modalNote',
     defaultMessage: 'You have to save changes or cancel them before closing the window',
   },
-  disabledTabTooltip: {
-    id: 'MakeDecisionModal.disabledTabTooltip',
-    defaultMessage: 'No similar failures in previous runs',
+  suggestionsNotFound: {
+    id: 'MakeDecisionModal.suggestionsNotFound',
+    defaultMessage: 'ML has not found any suggestions',
   },
   postIssueNote: {
     id: 'MakeDecisionModal.postIssueNote',
@@ -173,7 +173,11 @@ export const messages = defineMessages({
   },
   analyzerUnavailable: {
     id: 'MakeDecisionModal.analyzerUnavailable',
-    defaultMessage: 'Service Analyzer is not running',
+    defaultMessage: 'Service Analyzer is not running, please check',
+  },
+  analyzerUnavailableLink: {
+    id: 'MakeDecisionModal.analyzerUnavailableLink',
+    defaultMessage: 'how it could be fixed',
   },
   updateDefectsSuccess: {
     id: 'MakeDecisionModal.updateDefectsSuccess',

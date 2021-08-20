@@ -31,6 +31,8 @@ import {
 import { StackTraceMessageBlock } from 'pages/inside/common/stackTraceMessageBlock';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
+import Parser from 'html-react-parser';
+import ExternalLinkIcon from 'common/img/go-to-another-page-inline.svg';
 import styles from './machineLearningSuggestions.scss';
 import { messages } from '../messages';
 
@@ -43,6 +45,7 @@ export const MachineLearningSuggestions = ({
   collapseTabsExceptCurr,
   loadingMLSuggest,
   eventsInfo,
+  isAnalyzerAvailable,
 }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
@@ -95,6 +98,30 @@ export const MachineLearningSuggestions = ({
     };
     trackEvent(onClickExternalLink(args));
   };
+
+  if (!isAnalyzerAvailable) {
+    return (
+      <div className={cx('no-suggestion-prompt')}>
+        {formatMessage(messages.analyzerUnavailable)}
+        <a
+          href={'https://reportportal.io/docs/Deploy-Elastic-Search'}
+          target="_blank"
+          className={cx('suggestion-link')}
+        >
+          <span>{formatMessage(messages.analyzerUnavailableLink)}</span>
+          <div className={cx('icon')}>{Parser(ExternalLinkIcon)}</div>
+        </a>
+      </div>
+    );
+  }
+
+  if (suggestedItems.length === 0 && !loadingMLSuggest) {
+    return (
+      <div className={cx('no-suggestion-prompt')}>
+        {formatMessage(messages.suggestionsNotFound)}
+      </div>
+    );
+  }
 
   return loadingMLSuggest ? (
     <SpinningPreloader />
@@ -170,10 +197,12 @@ MachineLearningSuggestions.propTypes = {
   collapseTabsExceptCurr: PropTypes.func.isRequired,
   loadingMLSuggest: PropTypes.bool,
   eventsInfo: PropTypes.object,
+  isAnalyzerAvailable: PropTypes.bool,
 };
 MachineLearningSuggestions.defaultProps = {
   items: [],
   itemData: {},
   loadingMLSuggest: false,
   eventsInfo: {},
+  isAnalyzerAvailable: false,
 };
