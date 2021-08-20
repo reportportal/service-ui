@@ -35,3 +35,13 @@
 .left-arrow-button {
   margin-right: -1px;
 }
+
+.breadcrumbs-wrapper {
+  max-width: 71%;
+}
+
+@media (max-width: $SCREEN_XL_MAX) {
+  .breadcrumbs-wrapper {
+    max-width: 67%;
+  }
+}

@@ -17,6 +17,7 @@
 export const SCREEN_XS_MAX = 767;
 export const SCREEN_SM_MAX = 991;
 export const SCREEN_MD_MAX = 1199;
+export const SCREEN_XL_MAX = 1450;
 
 export const SCREEN_XS_MAX_MEDIA = `(max-width: ${SCREEN_XS_MAX}px)`;
 export const SCREEN_SM_MAX_MEDIA = '(max-width: 991px)';
