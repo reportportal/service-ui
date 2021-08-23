@@ -1032,6 +1032,7 @@
   "LogStatusBlock.statusPassed": "Пройдзены",
   "LogStatusBlock.statusSkipped": "Праваленыя",
   "LogToolbar.historyAcrossAllLaunches": "Гісторыя ўсіх запускаў",
+  "LogToolbar.historyShortAcrossAllLaunches": "Усе запускі",
   "LoginBlock.login": "увайдзіце ў ваш уліковы запіс",
   "LoginBlock.welcome": "Вітаем,",
   "LoginForm.badCredentials": "Некарэктныя ўліковыя дадзеныя",
