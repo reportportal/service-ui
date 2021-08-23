@@ -47,7 +47,7 @@ import {
 import { ParentInfo } from 'pages/inside/common/infoLine/parentInfo';
 import { stepPaginationSelector } from 'controllers/step';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
-import { SCREEN_XL_MAX } from 'common/constants/screenSizeVariables';
+import { SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
 import styles from './logToolbar.scss';
 
 const cx = classNames.bind(styles);
@@ -173,22 +173,24 @@ export class LogToolbar extends Component {
     } = this.props;
     return (
       <div className={cx('log-toolbar')}>
-        <div className={cx('breadcrumbs-wrapper')}>
-          <Breadcrumbs
-            descriptors={breadcrumbs}
-            togglerEventInfo={LOG_PAGE_EVENTS.plusMinusBreadcrumb}
-            breadcrumbEventInfo={LOG_PAGE_EVENTS.ITEM_NAME_BREADCRUMB_CLICK}
-            allEventClick={LOG_PAGE_EVENTS.ALL_LABEL_BREADCRUMB}
-            onRestorePath={restorePath}
-          />
-        </div>
+        <Breadcrumbs
+          descriptors={breadcrumbs}
+          togglerEventInfo={LOG_PAGE_EVENTS.plusMinusBreadcrumb}
+          breadcrumbEventInfo={LOG_PAGE_EVENTS.ITEM_NAME_BREADCRUMB_CLICK}
+          allEventClick={LOG_PAGE_EVENTS.ALL_LABEL_BREADCRUMB}
+          onRestorePath={restorePath}
+        />
         <div className={cx('action-buttons')}>
           {logViewMode === DETAILED_LOG_VIEW ? (
             <>
               {!debugMode && (
-                <InputCheckbox onChange={this.changeHistoryLineMode} value={includeAllLaunches}>
+                <InputCheckbox
+                  className={cx('history-line-mode')}
+                  onChange={this.changeHistoryLineMode}
+                  value={includeAllLaunches}
+                >
                   {intl.formatMessage(
-                    window.innerWidth > SCREEN_XL_MAX
+                    window.innerWidth > SCREEN_XS_MAX
                       ? messages.historyAllLaunchesLabel
                       : messages.historyShortAllLaunchesLabel,
                   )}

@@ -36,12 +36,6 @@
   margin-right: -1px;
 }
 
-.breadcrumbs-wrapper {
-  max-width: 71%;
-}
-
-@media (max-width: $SCREEN_XL_MAX) {
-  .breadcrumbs-wrapper {
-    max-width: 67%;
-  }
+.history-line-mode {
+  white-space: nowrap;
 }
