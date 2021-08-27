@@ -43,7 +43,7 @@
   display: flex;
 
   &-wrapper {
-    width: 100%;
+    width: calc(100% - 80px);
   }
 }
 
@@ -52,7 +52,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 9%;
+  width: 72px;
   height: 72px;
   margin-right: 8px;
   margin-bottom: 8px;

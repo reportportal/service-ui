@@ -77,9 +77,11 @@ export const ItemHeader = ({
           <DefectTypeItem type={issueType} className={cx('defect-type')} />
         </div>
       </div>
-      <div className={cx('bts-row', { 'narrow-view': isNarrowView })}>
-        <IssueList issues={externalSystemIssues} className={cx('issue')} readOnly />
-      </div>
+      {!!externalSystemIssues.length && (
+        <div className={cx('bts-row', { 'narrow-view': isNarrowView })}>
+          <IssueList issues={externalSystemIssues} className={cx('issue')} readOnly />
+        </div>
+      )}
     </div>
   );
 };
