@@ -159,7 +159,9 @@ export class SuitesPage extends Component {
   }
 
   componentWillUnmount() {
-    this.props.unselectAllSuitesAction();
+    if (this.props.selectedSuites.length > 0) {
+      this.props.unselectAllSuitesAction();
+    }
   }
 
   onHighlightRow = (highlightedRowId) => {
