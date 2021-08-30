@@ -173,6 +173,7 @@ export class AttributeEditor extends Component {
             />
           </FieldErrorHint>
         </div>
+        <span className={cx('separator')}>:</span>
         <div className={cx('control')}>
           <FieldErrorHint error={this.state.errors.value} staticHint>
             <AttributeInput
