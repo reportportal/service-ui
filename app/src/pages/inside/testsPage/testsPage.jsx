@@ -156,7 +156,9 @@ export class TestsPage extends Component {
   }
 
   componentWillUnmount() {
-    this.props.unselectAllTestsAction();
+    if (this.props.selectedTests.length > 0) {
+      this.props.unselectAllTestsAction();
+    }
   }
 
   onHighlightRow = (highlightedRowId) => {

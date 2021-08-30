@@ -236,7 +236,9 @@ export class StepPage extends Component {
     }
   }
   componentWillUnmount() {
-    this.props.unselectAllSteps();
+    if (this.props.selectedItems.length > 0) {
+      this.props.unselectAllSteps();
+    }
   }
 
   onHighlightRow = (highlightedRowId) => {

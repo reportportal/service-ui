@@ -161,7 +161,7 @@ const testItemPages = {
   (dispatch) => ({
     bulkDeleteTestItemsAction: (namespace) => (selectedItems, modalConfig) =>
       dispatch(createBulkDeleteTestItemsAction(namespace)(selectedItems, modalConfig)),
-    unselectAllItemsAction: (namespace) => () => dispatch(unselectAllItemsAction(namespace)()),
+    unselectAllItemsAction: (namespace) => dispatch(unselectAllItemsAction(namespace)()),
     ...bindActionCreators(
       {
         restorePath: restorePathAction,
@@ -270,7 +270,7 @@ export class TestItemPage extends Component {
       onConfirm: (items) =>
         this.props.deleteTestItemsAction({
           items,
-          callback: this.props.fetchTestItemsAction,
+          callback: this.unselectAndFetchItems,
         }),
       userId,
       parentLaunch,
