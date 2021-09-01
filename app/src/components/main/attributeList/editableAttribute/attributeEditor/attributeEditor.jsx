@@ -70,6 +70,7 @@ export class AttributeEditor extends Component {
     intl: PropTypes.object.isRequired,
     attribute: PropTypes.object,
     customClass: PropTypes.string,
+    borderView: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -83,6 +84,7 @@ export class AttributeEditor extends Component {
     invalid: false,
     attribute: {},
     customClass: '',
+    borderView: false,
   };
 
   constructor(props) {
@@ -152,7 +154,15 @@ export class AttributeEditor extends Component {
   handleAttributeKeyInputChange = (text) => this.setState({ isKeyEdited: !!text });
 
   render() {
-    const { projectId, attributes, keyURLCreator, valueURLCreator, customClass, intl } = this.props;
+    const {
+      projectId,
+      attributes,
+      keyURLCreator,
+      valueURLCreator,
+      customClass,
+      intl,
+      borderView,
+    } = this.props;
     return (
       <div className={cx('attribute-editor', customClass)}>
         <div className={cx('control')}>
@@ -170,6 +180,7 @@ export class AttributeEditor extends Component {
               attributeKey={this.state.key}
               attributeValue={this.state.value}
               onInputChange={this.handleAttributeKeyInputChange}
+              borderView={borderView}
             />
           </FieldErrorHint>
         </div>
@@ -188,6 +199,7 @@ export class AttributeEditor extends Component {
               placeholder={intl.formatMessage(messages.valueLabel)}
               attributeKey={this.state.key}
               attributeValue={this.state.value}
+              borderView={borderView}
             />
           </FieldErrorHint>
         </div>

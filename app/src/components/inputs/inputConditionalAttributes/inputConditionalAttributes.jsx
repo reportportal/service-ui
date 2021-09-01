@@ -151,13 +151,14 @@ export class InputConditionalAttributes extends Component {
             showButton={false}
             editable={false}
             onChange={this.onRemove}
-            customClass={cx('not-editable')}
+            customClass={cx('align-attr-field')}
           />
           <AttributeEditor
             keyURLCreator={keyURLCreator}
             valueURLCreator={valueURLCreator}
             projectId={projectId}
             onConfirm={this.onChangeAttributes}
+            borderView
           />
         </div>
         <div className={cx('conditions-block')} ref={this.setConditionsBlockRef}>

@@ -17,7 +17,7 @@
 .input-conditional-attributes {
   position: relative;
   width: 100%;
-  min-height: 30px;
+  max-height: 30px;
   box-sizing: border-box;
   background-color: $COLOR--white-two;
   border: 1px solid $COLOR--gray-80;
@@ -26,7 +26,6 @@
     border-color: $COLOR--gray-47;
   }
   &:focus-within {
-    background-color: inherit;
     border-color: $COLOR--topaz;
     box-shadow: 0 0 2px 0 rgba($COLOR--topaz, 0.7);
   }
@@ -149,9 +148,8 @@
   display: flex;
   align-items: center;
   margin-left: 60px;
+}
 
-  & > div {
-    padding-bottom: 0px;
-    margin-bottom: 0px;
-  }
+.align-attr-field {
+  margin-bottom: 12px;
 }

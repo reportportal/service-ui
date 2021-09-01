@@ -54,6 +54,7 @@ export class SingleAutocomplete extends Component {
     showDynamicSearchPrompt: PropTypes.bool,
     customClass: PropTypes.string,
     isOptionUnique: PropTypes.func,
+    borderView: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -79,6 +80,7 @@ export class SingleAutocomplete extends Component {
     async: false,
     customClass: '',
     isOptionUnique: null,
+    borderView: false,
   };
 
   getOptionProps = (getItemProps, highlightedIndex, selectedItem) => ({ item, index, ...rest }) =>
@@ -106,6 +108,7 @@ export class SingleAutocomplete extends Component {
       inputProps,
       customClass,
       maxLength,
+      borderView,
       ...props
     } = this.props;
     return (
@@ -147,6 +150,7 @@ export class SingleAutocomplete extends Component {
                         error,
                         touched,
                         disabled,
+                        'border-view': borderView,
                       })}
                     />
                     {selectedItem && !disabled && (
