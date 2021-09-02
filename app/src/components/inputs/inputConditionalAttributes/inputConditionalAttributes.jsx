@@ -151,7 +151,6 @@ export class InputConditionalAttributes extends Component {
             showButton={false}
             editable={false}
             onChange={this.onRemove}
-            customClass={cx('align-attr-field')}
           />
           <AttributeEditor
             keyURLCreator={keyURLCreator}

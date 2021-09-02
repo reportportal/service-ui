@@ -132,7 +132,10 @@ export class SingleAutocomplete extends Component {
             <div className={cx('autocomplete-container')}>
               <Reference>
                 {({ ref }) => (
-                  <div ref={ref} className={cx('autocomplete', customClass)}>
+                  <div
+                    ref={ref}
+                    className={cx('autocomplete', customClass, { 'naked-view': nakedView })}
+                  >
                     <input
                       {...getInputProps({
                         placeholder: !disabled ? placeholder : '',
@@ -150,7 +153,7 @@ export class SingleAutocomplete extends Component {
                         error,
                         touched,
                         disabled,
-                        'naked-view': nakedView,
+                        // 'naked-view': nakedView,
                       })}
                     />
                     {selectedItem && !disabled && (
