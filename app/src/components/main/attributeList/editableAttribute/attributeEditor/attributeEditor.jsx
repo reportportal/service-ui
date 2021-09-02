@@ -70,7 +70,7 @@ export class AttributeEditor extends Component {
     intl: PropTypes.object.isRequired,
     attribute: PropTypes.object,
     customClass: PropTypes.string,
-    borderView: PropTypes.bool,
+    nakedView: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -84,7 +84,7 @@ export class AttributeEditor extends Component {
     invalid: false,
     attribute: {},
     customClass: '',
-    borderView: false,
+    nakedView: false,
   };
 
   constructor(props) {
@@ -161,7 +161,7 @@ export class AttributeEditor extends Component {
       valueURLCreator,
       customClass,
       intl,
-      borderView,
+      nakedView,
     } = this.props;
     return (
       <div className={cx('attribute-editor', customClass)}>
@@ -180,11 +180,10 @@ export class AttributeEditor extends Component {
               attributeKey={this.state.key}
               attributeValue={this.state.value}
               onInputChange={this.handleAttributeKeyInputChange}
-              borderView={borderView}
+              nakedView={nakedView}
             />
           </FieldErrorHint>
         </div>
-        <span className={cx('separator')}>:</span>
         <div className={cx('control')}>
           <FieldErrorHint error={this.state.errors.value} staticHint>
             <AttributeInput
@@ -199,7 +198,7 @@ export class AttributeEditor extends Component {
               placeholder={intl.formatMessage(messages.valueLabel)}
               attributeKey={this.state.key}
               attributeValue={this.state.value}
-              borderView={borderView}
+              nakedView={nakedView}
             />
           </FieldErrorHint>
         </div>

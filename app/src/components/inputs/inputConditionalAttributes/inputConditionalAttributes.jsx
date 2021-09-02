@@ -158,7 +158,7 @@ export class InputConditionalAttributes extends Component {
             valueURLCreator={valueURLCreator}
             projectId={projectId}
             onConfirm={this.onChangeAttributes}
-            borderView
+            nakedView
           />
         </div>
         <div className={cx('conditions-block')} ref={this.setConditionsBlockRef}>
