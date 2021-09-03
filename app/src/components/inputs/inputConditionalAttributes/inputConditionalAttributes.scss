@@ -20,6 +20,15 @@
   min-height: 30px;
   box-sizing: border-box;
   background-color: $COLOR--white-two;
+  border: 1px solid $COLOR--gray-80;
+
+  &:hover {
+    border-color: $COLOR--gray-47;
+  }
+  &:focus-within {
+    border-color: $COLOR--topaz;
+    box-shadow: 0 0 2px 0 rgba($COLOR--topaz, 0.7);
+  }
 
   &.disabled {
     .conditions-block {
@@ -41,9 +50,9 @@
 
 .conditions-block {
   position: absolute;
-  top: 1px;
-  left: 1px;
-  bottom: 1px;
+  top: 0;
+  left: 0;
+  bottom: 0;
   width: 55px;
   background-color: $COLOR--gray-80;
   cursor: pointer;
@@ -139,7 +148,7 @@
   display: flex;
   align-items: center;
   margin-left: 60px;
-
+  flex-wrap: wrap;
   & > div {
     padding-bottom: 0px;
     margin-bottom: 0px;

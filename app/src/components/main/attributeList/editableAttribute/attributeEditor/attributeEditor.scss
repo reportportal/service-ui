@@ -15,6 +15,7 @@
  */
 
 .attribute-editor {
+  position: relative;
   display: flex;
   align-items: center;
   padding-bottom: 10px;
@@ -37,6 +38,17 @@
 
 .control {
   padding-right: 10px;
+}
+.control:nth-child(2):before {
+  content: ':';
+  position: absolute;
+  top: 7px;
+  left: 134px;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  line-height: 13px;
+  color: $COLOR--charcoal-grey;
+  z-index: 1;
 }
 
 .icon {

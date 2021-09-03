@@ -151,13 +151,13 @@ export class InputConditionalAttributes extends Component {
             showButton={false}
             editable={false}
             onChange={this.onRemove}
-            customClass={cx('not-editable')}
           />
           <AttributeEditor
             keyURLCreator={keyURLCreator}
             valueURLCreator={valueURLCreator}
             projectId={projectId}
             onConfirm={this.onChangeAttributes}
+            nakedView
           />
         </div>
         <div className={cx('conditions-block')} ref={this.setConditionsBlockRef}>
