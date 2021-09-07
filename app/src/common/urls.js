@@ -150,6 +150,10 @@ export const URLS = {
       'page.sort': 'user,ASC',
       term: searchTerm,
     })}`,
+  searchUsers: (term) =>
+    `${urlBase}user/search${getQueryParams({
+      term,
+    })}`,
   projectAddPattern: (activeProject) => `${urlBase}${activeProject}/settings/pattern`,
   projectUpdatePattern: (activeProject, patternId) =>
     `${urlBase}${activeProject}/settings/pattern/${patternId}`,
@@ -252,10 +256,7 @@ export const URLS = {
   analyticsServerSettings: () => `${urlBase}settings/analytics`,
   events: (projectId) => `${urlBase}${projectId}/activity`,
   allUsers: () => `${urlBase}user/all`,
-  searchUsers: (term) =>
-    `${urlBase}user/search${getQueryParams({
-      term,
-    })}`,
+
   exportUsers: (filterEntities) =>
     `${urlBase}user/export${getQueryParams({
       view: 'csv',
