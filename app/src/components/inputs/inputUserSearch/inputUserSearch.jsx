@@ -29,14 +29,14 @@ const newOptionCreator = (inputValue) => ({
 });
 const getURI = (isAdmin, projectId) => (input) =>
   isAdmin ? URLS.searchUsers(input) : URLS.projectUserSearchUser(projectId)(input);
-const makeOptions = (projectId) => ({ content: options }) =>
+const makeOptions = (projectId, isAdmin) => ({ content: options }) =>
   options.map((option) => ({
     userName: option.fullName || '',
-    userLogin: option.userId,
+    userLogin: isAdmin ? option.userId : option.login,
     email: option.email || '',
-    disabled: !!option.assignedProjects[projectId],
-    isAssigned: !!option.assignedProjects[projectId],
-    userAvatar: URLS.dataUserPhoto(projectId, option.userId, true),
+    disabled: isAdmin ? !!option.assignedProjects[projectId] : false,
+    isAssigned: isAdmin ? !!option.assignedProjects[projectId] : false,
+    userAvatar: URLS.dataUserPhoto(projectId, isAdmin ? option.userId : option.login, true),
     assignedProjects: option.assignedProjects || {},
   }));
 
@@ -68,7 +68,7 @@ export const InputUserSearch = ({
     error={error}
     touched={touched}
     isValidNewOption={isValidNewOption}
-    makeOptions={makeOptions(projectId)}
+    makeOptions={makeOptions(projectId, isAdmin)}
     createNewOption={newOptionCreator}
     value={value}
     parseValueToString={parseValueToString}
