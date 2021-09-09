@@ -70,6 +70,7 @@
   &.not-empty {
     background-color: $COLOR--white-two;
     box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.07);
+    border: 0;
   }
 }
 
@@ -121,6 +122,7 @@
 
   .defect-block {
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.17);
+    border: 0;
 
     &.not-empty {
       border: 1px solid transparent;
