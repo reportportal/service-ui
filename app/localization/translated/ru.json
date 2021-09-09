@@ -491,7 +491,7 @@
   "EmailFormFields.portFieldHint": "Возможны только цифры от '1' до '65535'",
   "EmailFormFields.portLabel": "Порт",
   "EmailFormFields.protocolLabel": "Протокол",
-  "EmailFormFields.usernameLabel": "Имя пользователя",
+  "EmailFormFields.usernameLabel": "Электорнная почта отправителя",
   "EmptyHistoryItem.emptyItemCaption": "Элемент пуст",
   "EmptyHistoryItem.emptyItemTooltip": "Тестовый сценарий не запускался",
   "EntitiesSelector.more": "Ещё",
