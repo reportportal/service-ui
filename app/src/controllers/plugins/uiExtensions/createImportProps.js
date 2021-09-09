@@ -142,6 +142,7 @@ import {
   BtsAuthFieldsInfo,
   BtsPropertiesForIssueForm,
 } from 'components/integrations/elements';
+import { updateLaunchLocallyAction } from 'controllers/launch';
 import { createGlobalNamedIntegrationsSelector } from '../selectors';
 
 const BUTTONS = {
@@ -246,6 +247,7 @@ export const createImportProps = (pluginName) => ({
     showScreenLockAction,
     hideScreenLockAction,
     updateConfigurationAttributesAction,
+    updateLaunchLocallyAction,
   },
   selectors: {
     pluginRouteSelector,
