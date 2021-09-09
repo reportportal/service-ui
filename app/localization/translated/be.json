@@ -491,7 +491,7 @@
   "EmailFormFields.portFieldHint": "Магчымы толькі лічбы ад '1' да '65535'",
   "EmailFormFields.portLabel": "Порт",
   "EmailFormFields.protocolLabel": "Пратакол",
-  "EmailFormFields.usernameLabel": "Імя карыстальніка",
+  "EmailFormFields.usernameLabel": "Электронная пошта адпраўніка",
   "EmptyHistoryItem.emptyItemCaption": "Элемент пусты",
   "EmptyHistoryItem.emptyItemTooltip": "Тэставы сцэнар не запушчаны",
   "EntitiesSelector.more": "Больш",
