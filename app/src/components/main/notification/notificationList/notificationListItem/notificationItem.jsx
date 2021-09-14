@@ -18,6 +18,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl } from 'react-intl';
+import DOMPurify from 'dompurify';
 import Parser from 'html-react-parser';
 import { NOTIFICATION_TYPES } from 'controllers/notification/constants';
 import styles from './notificationItem.scss';
@@ -174,7 +175,11 @@ export class NotificationItem extends PureComponent {
     return (
       <div key={message} onClick={this.messageClick}>
         <div className={cx('message-container', type)}>
-          <p>{Parser(messageId ? formatMessage(messages[messageId], values) : message)}</p>
+          <p>
+            {Parser(
+              DOMPurify.sanitize(messageId ? formatMessage(messages[messageId], values) : message),
+            )}
+          </p>
         </div>
       </div>
     );
