@@ -104,6 +104,12 @@ export class StackTrace extends Component {
     this.fetchItems();
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.isItemsExist() === 0 && prevProps.items !== this.props.items) {
+      this.fetchItems();
+    }
+  }
+
   getScrolledHeight = () =>
     this.props.loadMore ? this.props.minHeight - LOAD_MORE_HEIGHT : this.props.minHeight;
 
