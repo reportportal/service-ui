@@ -41,6 +41,7 @@ import {
   INDEXING_RUNNING,
   NUMBER_OF_LOG_LINES,
   MIN_SHOULD_MATCH,
+  ALL_MESSAGES_SHOULD_MATCH,
   ANALYZER_ENABLED,
   ANALYZER_MODE,
 } from './constants';
@@ -117,6 +118,7 @@ export class AutoAnalysisTab extends Component {
     return {
       [MIN_SHOULD_MATCH]: analyzerConfiguration[MIN_SHOULD_MATCH],
       [NUMBER_OF_LOG_LINES]: analyzerConfiguration[NUMBER_OF_LOG_LINES],
+      [ALL_MESSAGES_SHOULD_MATCH]: analyzerConfiguration[ALL_MESSAGES_SHOULD_MATCH],
     };
   };
 

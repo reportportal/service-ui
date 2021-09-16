@@ -121,6 +121,9 @@ export class AnalysisForm extends Component {
 
   onInputChange = (event, newValue, previousValue, name) => {
     const formInputsValues = this.props.formInputsValues;
+    if (!formInputsValues[name]) {
+      return;
+    }
     formInputsValues[name] = newValue;
     this.setAnalysisMode(formInputsValues);
   };
