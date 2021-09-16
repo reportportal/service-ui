@@ -19,6 +19,7 @@ import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { EntitiesSelector } from 'components/filterEntities/entitiesSelector';
+import { ENTITY_ATTRIBUTE } from 'components/filterEntities/constants';
 import { filterEntityShape } from '../propTypes';
 import styles from './entitiesGroup.scss';
 
@@ -105,7 +106,7 @@ export class EntitiesGroup extends Component {
             <div key={id} className={cx('entity-item', { vertical })}>
               <EntityComponent
                 entityId={id}
-                smallSize={entitySmallSize}
+                smallSize={entity.id === ENTITY_ATTRIBUTE ? false : entitySmallSize}
                 removable={removable}
                 title={title}
                 onRemove={() => {
