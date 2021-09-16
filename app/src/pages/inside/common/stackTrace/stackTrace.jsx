@@ -105,8 +105,8 @@ export class StackTrace extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { items, logItem } = this.props;
-    if (this.isItemsExist() === 0 && prevProps.items !== items && prevProps.logItem !== logItem) {
+    const { logItem } = this.props;
+    if (prevProps.logItem.id !== logItem.id) {
       this.fetchItems();
     }
   }
