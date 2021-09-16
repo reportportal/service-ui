@@ -32,7 +32,6 @@ import {
 } from 'controllers/log';
 import { StackTraceMessageBlock } from 'pages/inside/common/stackTraceMessageBlock';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
-import { FAILED } from 'common/constants/testStatuses';
 import styles from './stackTrace.scss';
 
 const cx = classNames.bind(styles);
@@ -107,7 +106,7 @@ export class StackTrace extends Component {
 
   componentDidUpdate(prevProps) {
     const { items, logItem } = this.props;
-    if (this.isItemsExist() === 0 && prevProps.items !== items && logItem.status === FAILED) {
+    if (this.isItemsExist() === 0 && prevProps.items !== items && prevProps.logItem !== logItem) {
       this.fetchItems();
     }
   }
