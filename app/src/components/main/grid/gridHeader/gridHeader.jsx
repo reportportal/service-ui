@@ -53,6 +53,7 @@ export const GridHeader = ({
         sortingActive={sortingColumn === column.id}
         onChangeSorting={onChangeSorting}
         onFilterClick={onFilterClick}
+        paddingRight={column.paddingRight}
       />
     ))}
     {selectable && <CheckboxHeaderCell value={allSelected} onChange={onToggleSelectAll} />}
