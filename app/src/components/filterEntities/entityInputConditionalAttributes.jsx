@@ -25,7 +25,6 @@ export class EntityInputConditionalAttributes extends PureComponent {
   static propTypes = {
     value: PropTypes.object.isRequired,
     title: PropTypes.string,
-    smallSize: PropTypes.bool,
     removable: PropTypes.bool,
     onRemove: PropTypes.func,
     onChange: PropTypes.func,
@@ -33,7 +32,6 @@ export class EntityInputConditionalAttributes extends PureComponent {
   };
   static defaultProps = {
     title: '',
-    smallSize: false,
     removable: true,
     placeholder: '',
     onChange: () => {},
@@ -42,17 +40,11 @@ export class EntityInputConditionalAttributes extends PureComponent {
   };
 
   render() {
-    const { value, onRemove, onChange, removable, title, smallSize, customProps } = this.props;
+    const { value, onRemove, onChange, removable, title, customProps } = this.props;
     const { projectId, keyURLCreator, valueURLCreator } = customProps;
 
     return (
-      <FieldFilterEntity
-        title={title}
-        removable={removable}
-        smallSize={smallSize}
-        onRemove={onRemove}
-        stretchable
-      >
+      <FieldFilterEntity title={title} removable={removable} onRemove={onRemove} stretchable>
         <InputConditionalAttributes
           value={value}
           onChange={onChange}
