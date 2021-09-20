@@ -53,6 +53,13 @@
     top: 100%;
     width: 260%;
   }
+
+  &.type-bottom-left-small {
+    right: auto;
+    left: 0;
+    top: 100%;
+    width: 150%;
+  }
 }
 
 .hint-content {
