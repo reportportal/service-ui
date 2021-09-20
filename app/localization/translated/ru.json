@@ -437,7 +437,7 @@
   "DemoBanner.githubAuthTitle": "GitHub авторизацию",
   "DemoBanner.timerCaption": "Данные будут удалены через",
   "DemoDataTab.descriptionHeader": "Система сгенерирует следующие демо-данные:",
-  "DemoDataTab.descriptionListFirstItem": "10 запусков",
+  "DemoDataTab.descriptionListFirstItem": "5 запусков",
   "DemoDataTab.descriptionListSecItem": "1 панель управления с 9 виджетами",
   "DemoDataTab.descriptionListThirdItem": "1 фильтр",
   "DemoDataTabForm.demoDataPostfixHint": "Postfix should have size from 1 to 90",
