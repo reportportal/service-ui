@@ -32,7 +32,7 @@ const messages = defineMessages({
   },
   descriptionListFirstItem: {
     id: 'DemoDataTab.descriptionListFirstItem',
-    defaultMessage: '10 launches',
+    defaultMessage: '5 launches',
   },
   descriptionListSecItem: {
     id: 'DemoDataTab.descriptionListSecItem',
