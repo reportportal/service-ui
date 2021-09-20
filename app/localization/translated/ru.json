@@ -8,7 +8,7 @@
   "AccessTokenBlock.warning": "Этот токен не должен передаваться или публиковаться в общедоступных источниках любого типа.",
   "AccessTokenBlock.warningHeader": "Храните токен в безопасности!",
   "AccuracyFormBlock.allMessagesShouldMatchDescription": "Когда анализируемый тест содержит два или более больших лога",
-  "AccuracyFormBlock.allMessagesShouldMatchTitle": "Сопоставление большого лога",
+  "AccuracyFormBlock.allMessagesShouldMatchTitle": "Все большие логи должны совпадать",
   "AccuracyFormBlock.minShouldMatchHint": "Параметр принимает значения от '50' до '100'",
   "AccuracyFormBlock.minimumShouldMatchDescription": "Процент совпадения слов между анализируемым логом и логом, сохраненным в ElasticSearch. Логи из ElasticSearch c процентом ниже установленного будут игнорировать в Авто-Анализе.",
   "AccuracyFormBlock.minimumShouldMatchTitle": "Минимальный процент совпадения",

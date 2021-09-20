@@ -8,7 +8,7 @@
   "AccessTokenBlock.warning": "Гэты токен не павінен перадавацца або публікавацца ў агульнадаступных крыніцах любога тыпу.",
   "AccessTokenBlock.warningHeader": "Захоўвайце токен ў бяспецы!",
   "AccuracyFormBlock.allMessagesShouldMatchDescription": "Калі аналізуемы тэст змяшчае два ці больш вялікіх лога",
-  "AccuracyFormBlock.allMessagesShouldMatchTitle": "Супастаўленне вялікага лога",
+  "AccuracyFormBlock.allMessagesShouldMatchTitle": "Усе вялікія логі павінны супадаць",
   "AccuracyFormBlock.minShouldMatchHint": "Параметр прымае значэння ад 50 да 100",
   "AccuracyFormBlock.minimumShouldMatchDescription": "Працэнт супадзення слоў паміж аналізаванай логам і логам, захаваным у ElasticSearch. Логі з ElasticSearch c адсоткам ніжэй устаноўленага будуць ігнараваць ў Аўта-аналізу.",
   "AccuracyFormBlock.minimumShouldMatchTitle": "Мінімальны працэнт супадзення",
