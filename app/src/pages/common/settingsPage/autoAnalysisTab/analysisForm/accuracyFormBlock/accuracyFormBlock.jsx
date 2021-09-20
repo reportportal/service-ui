@@ -57,7 +57,7 @@ const messages = defineMessages({
   },
   allMessagesShouldMatchTitle: {
     id: 'AccuracyFormBlock.allMessagesShouldMatchTitle',
-    defaultMessage: 'Big log message matching',
+    defaultMessage: 'All big log messages should match',
   },
   allMessagesShouldMatchDescription: {
     id: 'AccuracyFormBlock.allMessagesShouldMatchDescription',
@@ -143,6 +143,7 @@ export class AccuracyFormBlock extends Component {
         <FormField
           name="allMessagesShouldMatch"
           fieldWrapperClassName={cx('accuracy-form-input-wrapper')}
+          labelClassName={cx('all-messages-should-match-label')}
           label={intl.formatMessage(messages.allMessagesShouldMatchTitle)}
           onChange={this.props.onInputChange}
           format={Boolean}

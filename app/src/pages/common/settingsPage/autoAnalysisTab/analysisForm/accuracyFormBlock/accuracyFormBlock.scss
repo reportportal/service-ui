@@ -53,3 +53,15 @@
   font-style: italic;
   font-size: 13px;
 }
+
+.all-messages-should-match-label {
+  width: 210px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 150px;
+  }
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+  }
+}
