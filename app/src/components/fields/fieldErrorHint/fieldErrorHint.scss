@@ -53,13 +53,6 @@
     top: 100%;
     width: 260%;
   }
-
-  &.type-bottom-left-small {
-    right: auto;
-    left: 0;
-    top: 100%;
-    width: 150%;
-  }
 }
 
 .hint-content {
@@ -76,6 +69,10 @@
   background-color: $COLOR--white-two;
   border: 1px solid rgba(0, 0, 0, 0.2);
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+
+  &.width-content {
+    width: max-content;
+  }
 
   &.type-top,
   &.type-top-right {
