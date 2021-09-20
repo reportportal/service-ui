@@ -44,7 +44,7 @@ export const HeaderCell = track()(
     filterEventInfo,
     sortingEventInfo,
     tracking,
-    paddingRight,
+    paddingRight25,
   }) => {
     const displayedDirection = sortingActive ? sortingDirection : SORTING_ASC;
     const computedClassName = {
@@ -56,7 +56,7 @@ export const HeaderCell = track()(
       'sorting-active': sortingActive,
       'with-filter': withFilter,
       [`size-${size}`]: size,
-      'padding-right': paddingRight,
+      'padding-right25': paddingRight25,
     };
     const filterClickHandler = (e) => {
       e.stopPropagation();
@@ -107,7 +107,7 @@ HeaderCell.propTypes = {
     trackEvent: PropTypes.func,
     getTrackingData: PropTypes.func,
   }),
-  paddingRight: PropTypes.bool,
+  paddingRight25: PropTypes.bool,
 };
 HeaderCell.defaultProps = {
   title: {
@@ -130,5 +130,5 @@ HeaderCell.defaultProps = {
     trackEvent: () => {},
     getTrackingData: () => {},
   },
-  paddingRight: false,
+  paddingRight25: false,
 };
