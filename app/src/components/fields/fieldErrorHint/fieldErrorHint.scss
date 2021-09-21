@@ -70,6 +70,10 @@
   border: 1px solid rgba(0, 0, 0, 0.2);
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 
+  &.width-content {
+    width: max-content;
+  }
+
   &.type-top,
   &.type-top-right {
     transform: translateY(-100%);
