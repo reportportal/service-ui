@@ -117,22 +117,6 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.login',
     defaultMessage: 'Login',
   },
-  BTS_INTEGRATION_NOT_CONFIGURED: {
-    id: 'Common.btsIntegrationIsNotConfigured',
-    defaultMessage: 'BTS integration is not configured. Connect with Admin',
-  },
-  NO_BTS_INTEGRATION: {
-    id: 'Common.notBtsIntegration',
-    defaultMessage: 'There is no BTS integration. Connect with Admin',
-  },
-  NO_BTS_PLUGIN: {
-    id: 'Common.notBtsPlugin',
-    defaultMessage: 'There is no BTS plugin. Connect with Admin',
-  },
-  NO_AVAILABLE_BTS_PLUGIN: {
-    id: 'Common.notAvailableBtsPlugin',
-    defaultMessage: 'BTS plugin is disabled. Contact Admin',
-  },
   MOVE_TO_DEBUG: {
     id: 'Common.moveToDebug',
     defaultMessage: 'Move to debug',
