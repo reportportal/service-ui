@@ -17,7 +17,7 @@
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { canBulkEditItems } from 'common/utils/permissions';
 import { isPostIssueActionAvailable } from 'controllers/plugins';
-import { actionMessages } from './constants';
+import { actionMessages, ISSUE_OPERATION_MAX_ITEMS } from './constants';
 
 export const getIssueTitle = (
   formatMessage,
@@ -27,19 +27,19 @@ export const getIssueTitle = (
   isPostIssueUnavailable,
 ) => {
   if (!isBtsPluginsExist) {
-    return formatMessage(COMMON_LOCALE_KEYS.NO_BTS_PLUGIN);
+    return formatMessage(actionMessages.noBtsPlugin);
   }
 
   if (!enabledBtsPlugins.length) {
-    return formatMessage(COMMON_LOCALE_KEYS.NO_AVAILABLE_BTS_PLUGIN);
+    return formatMessage(actionMessages.noAvailableBtsPlugin);
   }
 
   if (!btsIntegrations.length) {
-    return formatMessage(COMMON_LOCALE_KEYS.NO_BTS_INTEGRATION);
+    return formatMessage(actionMessages.noBtsIntegration);
   }
 
   if (isPostIssueUnavailable) {
-    return formatMessage(COMMON_LOCALE_KEYS.BTS_INTEGRATION_NOT_CONFIGURED);
+    return formatMessage(actionMessages.btsIntegrationIsNotConfigured);
   }
 
   return '';
@@ -63,15 +63,20 @@ export const createStepActionDescriptors = (params) => {
     enabledBtsPlugins,
     accountRole,
     projectRole,
+    selectedItems = [],
   } = params;
-  const isPostIssueUnavailable = !isPostIssueActionAvailable(btsIntegrations);
-  const issueTitle = getIssueTitle(
-    formatMessage,
-    btsIntegrations,
-    isBtsPluginsExist,
-    enabledBtsPlugins,
-    isPostIssueUnavailable,
-  );
+  const isIssueOperationDisabled = selectedItems.length > ISSUE_OPERATION_MAX_ITEMS;
+  const isPostIssueUnavailable =
+    isIssueOperationDisabled || !isPostIssueActionAvailable(btsIntegrations);
+  const issueTitle = isIssueOperationDisabled
+    ? formatMessage(actionMessages.issueActionUnavailable)
+    : getIssueTitle(
+        formatMessage,
+        btsIntegrations,
+        isBtsPluginsExist,
+        enabledBtsPlugins,
+        isPostIssueUnavailable,
+      );
 
   return [
     {
@@ -84,6 +89,8 @@ export const createStepActionDescriptors = (params) => {
       label: formatMessage(actionMessages.editDefects),
       value: 'action-edit-defects',
       onClick: onEditDefects,
+      disabled: isIssueOperationDisabled,
+      title: isIssueOperationDisabled ? issueTitle : '',
     },
     {
       label: formatMessage(actionMessages.postIssue),
@@ -97,8 +104,8 @@ export const createStepActionDescriptors = (params) => {
       label: formatMessage(actionMessages.linkIssue),
       value: 'action-link-issue',
       hidden: debugMode,
-      disabled: !btsIntegrations.length,
-      title: btsIntegrations.length ? '' : issueTitle,
+      disabled: !btsIntegrations.length || isIssueOperationDisabled,
+      title: btsIntegrations.length && !isIssueOperationDisabled ? '' : issueTitle,
       onClick: onLinkIssue,
     },
     {
@@ -106,6 +113,8 @@ export const createStepActionDescriptors = (params) => {
       value: 'action-unlink-issue',
       hidden: debugMode,
       onClick: onUnlinkIssue,
+      disabled: isIssueOperationDisabled,
+      title: isIssueOperationDisabled ? issueTitle : '',
     },
     {
       label: formatMessage(actionMessages.ignoreInAA),

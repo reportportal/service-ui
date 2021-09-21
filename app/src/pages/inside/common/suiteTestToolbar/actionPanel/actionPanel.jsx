@@ -168,6 +168,7 @@ export class ActionPanel extends Component {
       enabledBtsPlugins,
       accountRole,
       projectRole,
+      selectedItems,
     } = this.props;
 
     return createStepActionDescriptors({
@@ -183,6 +184,7 @@ export class ActionPanel extends Component {
       enabledBtsPlugins,
       accountRole,
       projectRole,
+      selectedItems,
       onEditDefects: this.onEditDefects,
       onPostIssue: this.onPostIssue,
       onLinkIssue: this.onLinkIssue,
