@@ -97,6 +97,14 @@ export class HistoryLine extends Component {
     setShouldShowLoadMoreAction: () => {},
   };
 
+  componentDidUpdate() {
+    const { historyItems, activeItemId, changeActiveItem } = this.props;
+
+    if (!historyItems.find((item) => item.id === activeItemId)) {
+      changeActiveItem(historyItems[historyItems.length - 1].id);
+    }
+  }
+
   checkIfTheItemLinkIsActive = (item) =>
     item.id !== this.props.activeItemId && item.status !== NOT_FOUND;
 
