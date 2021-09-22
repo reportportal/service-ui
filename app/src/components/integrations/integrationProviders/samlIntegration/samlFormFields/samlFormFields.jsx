@@ -61,6 +61,10 @@ const messages = defineMessages({
     id: 'SamlFormFields.lastNameAttribute',
     defaultMessage: 'Last name',
   },
+  callbackUrl: {
+    id: 'SamlFormFields.callbackUrl',
+    defaultMessage: 'RP callback URL',
+  },
 });
 
 @injectIntl
@@ -168,6 +172,16 @@ export class SamlFormFields extends Component {
           validate={commonValidators.requiredField}
           lineAlign={lineAlign}
           required
+        >
+          <FieldErrorHint>
+            <Input mobileDisabled />
+          </FieldErrorHint>
+        </IntegrationFormField>
+        <IntegrationFormField
+          name="callbackUrl"
+          disabled={disabled}
+          label={formatMessage(messages.callbackUrl)}
+          lineAlign={lineAlign}
         >
           <FieldErrorHint>
             <Input mobileDisabled />
