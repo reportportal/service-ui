@@ -75,6 +75,15 @@ export class AnalyticsWrapper extends Component {
     ReactGA.ga()('require', 'ec');
   }
 
+  componentDidUpdate(prevProps) {
+    const { userId } = this.props;
+    if (prevProps.userId !== userId) {
+      ReactGA.set({
+        dimension3: userId,
+      });
+    }
+  }
+
   render() {
     return this.props.children;
   }
