@@ -136,6 +136,13 @@ export class LogItemInfoTabs extends Component {
       : null;
   }
 
+  componentDidMount() {
+    const { activeTabId, fetchFirstAttachments } = this.props;
+    if (activeTabId === ATTACHMENTS_TAB_ID) {
+      fetchFirstAttachments();
+    }
+  }
+
   componentDidUpdate(prevProps) {
     const {
       activeTabId,
