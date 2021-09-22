@@ -137,9 +137,7 @@ export class SamlFormFields extends Component {
           label={formatMessage(messages.identityProviderNameId)}
           lineAlign={lineAlign}
         >
-          <FieldErrorHint>
-            <Input mobileDisabled />
-          </FieldErrorHint>
+          <Input mobileDisabled />
         </IntegrationFormField>
         <IntegrationFormField
           name="identityProviderName"
@@ -183,9 +181,7 @@ export class SamlFormFields extends Component {
           label={formatMessage(messages.callbackUrl)}
           lineAlign={lineAlign}
         >
-          <FieldErrorHint>
-            <Input mobileDisabled />
-          </FieldErrorHint>
+          <Input mobileDisabled />
         </IntegrationFormField>
         <IntegrationFormField
           label={formatMessage(messages.nameAttributesMode)}
