@@ -61,10 +61,6 @@ const messages = defineMessages({
     id: 'SamlFormFields.lastNameAttribute',
     defaultMessage: 'Last name',
   },
-  callbackUrl: {
-    id: 'SamlFormFields.callbackUrl',
-    defaultMessage: 'RP callback URL',
-  },
 });
 
 @injectIntl
@@ -178,7 +174,7 @@ export class SamlFormFields extends Component {
         <IntegrationFormField
           name="callbackUrl"
           disabled={disabled}
-          label={formatMessage(messages.callbackUrl)}
+          label="RP callback URL"
           lineAlign={lineAlign}
         >
           <Input mobileDisabled />
