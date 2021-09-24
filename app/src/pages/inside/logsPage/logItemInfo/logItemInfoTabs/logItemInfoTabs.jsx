@@ -136,9 +136,26 @@ export class LogItemInfoTabs extends Component {
       : null;
   }
 
-  componentDidUpdate() {
-    if (this.props.loading && this.props.isSauceLabsIntegrationView) {
+  componentDidMount() {
+    const { activeTabId, fetchFirstAttachments } = this.props;
+    if (activeTabId === ATTACHMENTS_TAB_ID) {
+      fetchFirstAttachments();
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    const {
+      activeTabId,
+      fetchFirstAttachments,
+      isSauceLabsIntegrationView,
+      loading,
+      logId,
+    } = this.props;
+    if (loading && isSauceLabsIntegrationView) {
       this.props.onToggleSauceLabsIntegrationView();
+    }
+    if (prevProps.logId !== logId && activeTabId === ATTACHMENTS_TAB_ID) {
+      fetchFirstAttachments();
     }
   }
 
