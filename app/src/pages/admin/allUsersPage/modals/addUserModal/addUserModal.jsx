@@ -89,7 +89,7 @@ const messages = defineMessages({
 
 const generatePassword = () => {
   const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
-  const passSize = 8;
+  const passSize = 6;
   let pass = '';
   let i;
   let n;
