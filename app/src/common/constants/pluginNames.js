@@ -23,6 +23,7 @@ import {
 
 export const JIRA = 'jira';
 export const RALLY = 'rally';
+export const AZURE = 'Azure DevOps';
 export const EMAIL = 'email';
 export const SAUCE_LABS = 'saucelabs';
 export const SAML = 'saml';
@@ -31,7 +32,7 @@ export const AD = 'ad';
 
 // TODO: calculate it dynamically
 export const PLUGIN_NAMES_BY_GROUP_TYPES_MAP = {
-  [BTS_GROUP_TYPE]: [JIRA, RALLY],
+  [BTS_GROUP_TYPE]: [JIRA, RALLY, AZURE],
   [NOTIFICATION_GROUP_TYPE]: [EMAIL],
   [OTHER_GROUP_TYPE]: [SAUCE_LABS],
   [AUTHORIZATION_GROUP_TYPE]: [SAML, LDAP, AD],
@@ -41,6 +42,7 @@ export const PLUGIN_NAMES_BY_GROUP_TYPES_MAP = {
 export const GROUP_TYPES_BY_PLUGIN_NAMES_MAP = {
   [JIRA]: BTS_GROUP_TYPE,
   [RALLY]: BTS_GROUP_TYPE,
+  [AZURE]: BTS_GROUP_TYPE,
   [EMAIL]: NOTIFICATION_GROUP_TYPE,
   [SAML]: AUTHORIZATION_GROUP_TYPE,
   [LDAP]: AUTHORIZATION_GROUP_TYPE,
