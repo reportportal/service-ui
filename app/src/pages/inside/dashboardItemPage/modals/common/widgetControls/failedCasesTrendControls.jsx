@@ -18,13 +18,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import {
-  STATS_AB_TOTAL,
-  STATS_ND_TOTAL,
-  STATS_PB_TOTAL,
-  STATS_SI_TOTAL,
-  STATS_TI_TOTAL,
-} from 'common/constants/statistics';
+import { STATS_FAILED } from 'common/constants/statistics';
 import { commonValidators } from 'common/utils/validation';
 import { ITEMS_INPUT_WIDTH } from './constants';
 import { FiltersControl, InputControl } from './controls';
@@ -61,13 +55,7 @@ export class FailedCasesTrendControls extends Component {
     const { widgetSettings, initializeControlsForm } = props;
     initializeControlsForm({
       contentParameters: widgetSettings.contentParameters || {
-        contentFields: [
-          STATS_PB_TOTAL,
-          STATS_AB_TOTAL,
-          STATS_SI_TOTAL,
-          STATS_ND_TOTAL,
-          STATS_TI_TOTAL,
-        ],
+        contentFields: [STATS_FAILED],
         widgetOptions: {},
         itemsCount: DEFAULT_ITEMS_COUNT,
       },
