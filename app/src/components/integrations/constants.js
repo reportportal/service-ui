@@ -25,7 +25,7 @@ import DefaultPluginIcon from 'common/img/plugins/default-plugin-icon.svg';
 import ActiveDirectoryIcon from 'common/img/plugins/activeDirectory.png';
 
 export const PLUGIN_NAME_TITLES = {
-  [JIRA]: 'JIRA',
+  [JIRA]: 'JIRA Server',
   [RALLY]: 'RALLY',
   [EMAIL]: 'Email Server',
   [SAUCE_LABS]: 'Sauce Labs',
