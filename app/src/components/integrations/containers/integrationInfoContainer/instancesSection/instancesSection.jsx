@@ -212,13 +212,13 @@ export class InstancesSection extends Component {
       instanceType,
       tracking,
     } = this.props;
-    tracking.trackEvent(getUninstallPluginBtnClickEvent(instanceType.name));
+    tracking.trackEvent(getUninstallPluginBtnClickEvent(instanceType));
 
     this.props.showModalAction({
       id: 'confirmationModal',
       data: {
         message: formatMessage(messages.uninstallPluginConfirmation, {
-          pluginName: PLUGIN_NAME_TITLES[instanceType],
+          pluginName: PLUGIN_NAME_TITLES[instanceType] || instanceType,
         }),
         onConfirm: this.removePlugin,
         title: formatMessage(messages.uninstallPluginTitle),
