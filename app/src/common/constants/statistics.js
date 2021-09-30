@@ -25,11 +25,6 @@ export const STATS_FAILED = 'statistics$executions$failed';
 export const STATS_PASSED = 'statistics$executions$passed';
 export const STATS_SKIPPED = 'statistics$executions$skipped';
 
-export const STATS_AB = 'statistics$defects$automation_bug';
-export const STATS_SI = 'statistics$defects$system_issue';
-export const STATS_TI = 'statistics$defects$to_investigate';
-export const STATS_ND = 'statistics$defects$no_defect';
-
 export const PRODUCT_BUG = 'statistics$defects$product_bug$pb001';
 export const AUTOMATION_BUG = 'statistics$defects$automation_bug$ab001';
 export const SYSTEM_ISSUE = 'statistics$defects$system_issue$si001';
