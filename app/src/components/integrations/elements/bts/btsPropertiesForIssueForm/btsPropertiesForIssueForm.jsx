@@ -23,7 +23,6 @@ import classNames from 'classnames/bind';
 import { fetch } from 'common/utils';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { projectIdSelector } from 'controllers/pages';
-import { AZURE, JIRA } from 'common/constants/pluginNames';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { URLS } from 'common/urls';
 import { InputDropdown } from 'components/inputs/inputDropdown';
@@ -34,8 +33,8 @@ import {
   mapFieldsToValues,
   mergeFields,
 } from 'components/fields/dynamicFieldsSection/utils';
-import { VALUE_ID_KEY, VALUE_NAME_KEY } from 'components/fields/dynamicFieldsSection/constants';
 import { PLUGINS_PAGE_EVENTS, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { getDefaultOptionValueKey } from 'pages/inside/stepPage/modals/postIssueModal/utils';
 import { IntegrationFormField } from '../../integrationFormField';
 import { ISSUE_TYPE_FIELD_KEY } from '../constants';
 import styles from './btsPropertiesForIssueForm.scss';
@@ -105,10 +104,7 @@ export class BtsPropertiesForIssueForm extends Component {
 
   constructor(props) {
     super(props);
-    this.defaultOptionValueKey =
-      this.props.pluginName === JIRA || this.props.pluginName === AZURE
-        ? VALUE_NAME_KEY
-        : VALUE_ID_KEY;
+    this.defaultOptionValueKey = getDefaultOptionValueKey(props.pluginName);
     const fieldsConfig = this.setupInitialFieldsConfig();
 
     this.state = {
