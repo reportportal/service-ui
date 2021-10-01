@@ -20,7 +20,7 @@ import {
   bindMessageToValidator,
 } from 'common/utils/validation';
 import { getSessionItem } from 'common/utils/storageUtils';
-import { AZURE, JIRA, RALLY } from 'common/constants/pluginNames';
+import { JIRA, RALLY } from 'common/constants/pluginNames';
 import { VALUE_ID_KEY, VALUE_NAME_KEY } from 'components/fields/dynamicFieldsSection/constants';
 import {
   INCLUDE_ATTACHMENTS_KEY,
@@ -104,7 +104,6 @@ export const getDefaultIssueModalConfig = (namedIntegrations, userId) => {
 const OPTION_VALUES_BY_PLUGIN = {
   [JIRA]: VALUE_NAME_KEY,
   [RALLY]: VALUE_ID_KEY,
-  [AZURE]: VALUE_NAME_KEY,
 };
 
 export const getDefaultOptionValueKey = (pluginName) =>
