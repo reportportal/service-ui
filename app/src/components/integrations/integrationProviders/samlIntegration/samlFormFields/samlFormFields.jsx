@@ -72,12 +72,14 @@ export class SamlFormFields extends Component {
     disabled: PropTypes.bool,
     lineAlign: PropTypes.bool,
     initialData: PropTypes.object,
+    pluginDetails: PropTypes.object,
   };
 
   static defaultProps = {
     disabled: false,
     lineAlign: false,
     initialData: {},
+    pluginDetails: {},
   };
 
   constructor(props) {
@@ -92,7 +94,7 @@ export class SamlFormFields extends Component {
   }
 
   componentDidMount() {
-    this.props.initialize(this.props.initialData);
+    this.props.initialize({ ...this.props.initialData, ...this.props.pluginDetails });
   }
 
   componentDidUpdate(prevProps) {
