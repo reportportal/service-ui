@@ -185,7 +185,7 @@ const messages = defineMessages({
   },
   btsProjectHint: {
     id: 'BtsCommonMessages.btsProjectHint',
-    defaultMessage: 'Project name should have size from 1 to 55',
+    defaultMessage: 'Project name should have size from 1 to 80',
   },
   portFieldHint: {
     id: 'EmailFormFields.portFieldHint',

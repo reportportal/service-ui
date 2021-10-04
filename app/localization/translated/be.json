@@ -132,7 +132,7 @@
   "Breadcrumbs.restorePath": "Аднавіць шлях",
   "BtsCommonMessages.authTypeLabel": "Тып аўтарызацыі",
   "BtsCommonMessages.btsIntegrationNameHint": "Памер імя Інтэграцыі павінен быць ад 1 да 55",
-  "BtsCommonMessages.btsProjectHint": "Імя праекта павінна быць памерам ад '1' да '55'",
+  "BtsCommonMessages.btsProjectHint": "Імя праекта павінна быць памерам ад '1' да '80'",
   "BtsCommonMessages.btsUrlHint": "Калі ласка, падайце сапраўдную спасылку ў САХ",
   "BtsCommonMessages.integrationNameLabel": "Імя интеграцыі",
   "BtsCommonMessages.linkToBtsLabel": "Спасылка на САХ",
