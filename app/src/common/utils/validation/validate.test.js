@@ -325,8 +325,9 @@ describe('validate.btsProject', () => {
     expect(validate.btsProject(undefined)).toBe(false);
     expect(validate.btsProject('')).toBe(false);
     expect(validate.btsProject('  ')).toBe(false);
-    const textLonger55 = 'this is very long text aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
-    expect(validate.btsProject(textLonger55)).toBe(false);
+    const textLonger80 =
+      'this is very long text aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
+    expect(validate.btsProject(textLonger80)).toBe(false);
   });
 });
 

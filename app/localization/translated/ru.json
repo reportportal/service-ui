@@ -132,7 +132,7 @@
   "Breadcrumbs.restorePath": "Восстановить путь",
   "BtsCommonMessages.authTypeLabel": "Тип авторизации",
   "BtsCommonMessages.btsIntegrationNameHint": "Размер имени Интеграции должен быть от 1 до 55",
-  "BtsCommonMessages.btsProjectHint": "Имя проекта должно быть длиной от 1 до 55",
+  "BtsCommonMessages.btsProjectHint": "Имя проекта должно быть длиной от 1 до 80",
   "BtsCommonMessages.btsUrlHint": "Пожалуйста, предоставьте действительную ссылку в СОД",
   "BtsCommonMessages.integrationNameLabel": "Имя интеграции",
   "BtsCommonMessages.linkToBtsLabel": "Ссылка на СОД",
