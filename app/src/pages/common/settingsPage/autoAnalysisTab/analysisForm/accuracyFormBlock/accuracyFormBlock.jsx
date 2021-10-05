@@ -57,11 +57,11 @@ const messages = defineMessages({
   },
   allMessagesShouldMatchTitle: {
     id: 'AccuracyFormBlock.allMessagesShouldMatchTitle',
-    defaultMessage: 'All big log messages should match',
+    defaultMessage: 'All logs with 3 or more rows should match',
   },
   allMessagesShouldMatchDescription: {
     id: 'AccuracyFormBlock.allMessagesShouldMatchDescription',
-    defaultMessage: 'When an analyzed test item contains two or more big log messages',
+    defaultMessage: 'When an analyzed test item contains logs with 3 or more rows',
   },
 });
 
