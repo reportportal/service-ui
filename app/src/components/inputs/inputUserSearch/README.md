@@ -1,6 +1,6 @@
 ## **InputUserSearch component**
 
-Has no own size. Width = 100% of it's parent. Allows user searching. Component use react-select library. https://github.com/JedWatson/react-select
+Has no own size. Width = 100% of it's parent. Allows user searching.
 
 ### Props:
 
