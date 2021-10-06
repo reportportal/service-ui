@@ -14,4 +14,19 @@
  * limitations under the License.
  */
 
-export { SORTING_ENTITY_MAP, getSelectCriteriaFields } from './utils';
+// conditions should look like 'statistics$defects$product_bug$pb001'
+export const getDefectTypeLabel = (condition) => {
+  try {
+    const conditionUnits = condition.split('$');
+    const defectType = conditionUnits[2].replace('_', ' ');
+    const defectTypeLocator = conditionUnits[3];
+    const total = defectTypeLocator === 'total' ? 'Total' : '';
+    if (defectTypeLocator.indexOf('001') !== -1) {
+      return defectType;
+    }
+
+    return `${total || 'Custom'} ${defectType}`;
+  } catch (e) {
+    return '';
+  }
+};

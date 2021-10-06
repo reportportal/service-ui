@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  getSelectCriteriaFields,
-  SORTING_ENTITY_MAP,
-} from 'components/main/analytics/events/common/widgetPages/utils/utils';
+import { getSelectCriteriaFields, SORTING_ENTITY_MAP } from './utils';
 
 export const getSelectSortingFilterAddWidgetModal = (category) => (value, tab) => ({
   category,
