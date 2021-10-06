@@ -143,6 +143,7 @@ import {
   BtsPropertiesForIssueForm,
 } from 'components/integrations/elements';
 import { updateLaunchLocallyAction } from 'controllers/launch';
+import { getDefectTypeLabel } from 'components/main/analytics/events/common/utils';
 import { createGlobalNamedIntegrationsSelector } from '../selectors';
 
 const BUTTONS = {
@@ -285,6 +286,7 @@ export const createImportProps = (pluginName) => ({
     getDefaultTestItemLinkParams,
     getItemNameConfig,
     getDefectTypeLocators,
+    getDefectTypeLabel,
   },
   validators: {
     attributesArray,
