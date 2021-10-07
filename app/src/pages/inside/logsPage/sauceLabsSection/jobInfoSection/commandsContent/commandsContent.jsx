@@ -81,8 +81,11 @@ export class CommandsContent extends Component {
       filteredFommands = filteredFommands.filter((item) => {
         const commandParts = getCommandBlockConfig(item);
         return commandParts.some(({ id, content = '' }) => {
-          const data = id === RESPONSE_FIELD ? JSON.stringify(item.result) : content;
-          return data.indexOf(commandsSearchValue) !== -1;
+          const data = (id === RESPONSE_FIELD
+            ? JSON.stringify(item.result)
+            : content
+          ).toLowerCase();
+          return data.indexOf(commandsSearchValue.toLowerCase()) !== -1;
         });
       });
     }
