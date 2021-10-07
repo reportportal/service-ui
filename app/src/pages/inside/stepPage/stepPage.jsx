@@ -275,12 +275,18 @@ export class StepPage extends Component {
   };
 
   handleAllStepsSelection = () => {
-    this.props.tracking.trackEvent(STEP_PAGE_EVENTS.SELECT_ALL_ITEMS);
+    this.props.tracking.trackEvent(
+      STEP_PAGE_EVENTS.clickSelectAllItemsEvent(
+        this.props.selectedItems.length !== this.props.steps.length,
+      ),
+    );
     this.props.toggleAllStepsAction(this.props.steps);
   };
 
   handleOneItemSelection = (value) => {
-    this.props.tracking.trackEvent(STEP_PAGE_EVENTS.SELECT_ONE_ITEM);
+    this.props.tracking.trackEvent(
+      STEP_PAGE_EVENTS.clickSelectOneItemEvent(!this.props.selectedItems.includes(value)),
+    );
     this.props.toggleStepSelection(value);
   };
 

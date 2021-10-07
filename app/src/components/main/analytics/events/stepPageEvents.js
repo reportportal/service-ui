@@ -125,16 +125,16 @@ export const STEP_PAGE_EVENTS = {
     action: 'Click on icon "edit" of Defect type tag',
     label: 'Arise Modal "Edit Defect Type"',
   },
-  SELECT_ALL_ITEMS: {
+  clickSelectAllItemsEvent: (value) => ({
     category: STEP_PAGE,
     action: 'Click on item icon "select all items"',
-    label: 'Select/unselect all items',
-  },
-  SELECT_ONE_ITEM: {
+    label: `${value ? 'select' : 'unselect'} all items`,
+  }),
+  clickSelectOneItemEvent: (value) => ({
     category: STEP_PAGE,
     action: 'Click on item icon "select one item"',
-    label: 'Select/unselect one item',
-  },
+    label: `${value ? 'select' : 'unselect'} one item`,
+  }),
   CLOSE_ICON_SELECTED_ITEM: {
     category: STEP_PAGE,
     action: 'Click on icon "close" on selected item',

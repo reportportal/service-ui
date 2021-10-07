@@ -40,9 +40,34 @@ export const SORTING_ENTITY_MAP = {
   [STATS_TI_TOTAL]: 'To Investigate',
 };
 
+export const CHART_MODE_VALUES_MAP = {
+  launch: 'Launch mode',
+  day: 'Timeline mode',
+  'latest-false': 'All launches',
+  'latest-true': 'Latest launches',
+  'area-spline': 'Area view',
+  bar: 'Bar view',
+  donut: 'Donut view',
+  panel: 'Panel view',
+  pie: 'Pie view',
+  table: 'Table view',
+};
+
 export const getSelectCriteriaFields = (values) =>
   values
     .map((key) => {
       return getDefectTypeLabel(key) || SORTING_ENTITY_MAP[`${key}`];
     })
     .join('#');
+
+export const getNameWidgetOptions = (options) => {
+  let widgetOptions = options;
+  if (Object.prototype.hasOwnProperty.call(widgetOptions, 'latest')) {
+    const latest = `latest-${options.latest}`;
+    widgetOptions = { ...options, latest };
+  }
+  return Object.values(widgetOptions)
+    .filter((option) => CHART_MODE_VALUES_MAP[`${option}`])
+    .map((value) => CHART_MODE_VALUES_MAP[`${value}`])
+    .join('#');
+};

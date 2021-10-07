@@ -75,11 +75,11 @@ export const HISTORY_PAGE_EVENTS = {
     action: 'Click on Cross near Filter name',
     label: 'Remove custom column on History table',
   },
-  SELECT_HISTORY_ITEM: {
+  selectHistoryItem: (value) => ({
     category: HISTORY_PAGE,
     action: 'Click on item icon "select one item"',
-    label: 'Select/unselect one item',
-  },
+    label: `${value ? 'select' : 'unselect'} one item`,
+  }),
   CLICK_CLOSE_ICON_FROM_SELECTION: {
     category: HISTORY_PAGE,
     action: 'Click on icon "close" on selected item',
