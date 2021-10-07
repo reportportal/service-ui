@@ -70,15 +70,15 @@ export class CommandsContent extends Component {
   };
 
   getFilteredCommands = () => {
-    let { commands: filteredFommands } = this.props;
+    let { commands: filteredCommands } = this.props;
     const { hasScreenshot, commandsSearchValue } = this.state;
 
     if (hasScreenshot) {
-      filteredFommands = filteredFommands.filter((item) => typeof item.screenshot === 'number');
+      filteredCommands = filteredCommands.filter((item) => typeof item.screenshot === 'number');
     }
 
     if (commandsSearchValue) {
-      filteredFommands = filteredFommands.filter((item) => {
+      filteredCommands = filteredCommands.filter((item) => {
         const commandParts = getCommandBlockConfig(item);
         return commandParts.some(({ id, content = '' }) => {
           const data = (id === RESPONSE_FIELD
@@ -90,7 +90,7 @@ export class CommandsContent extends Component {
       });
     }
 
-    return filteredFommands;
+    return filteredCommands;
   };
 
   buildScreenShotLink = ({ screenshot: screenshotId } = {}) => {
