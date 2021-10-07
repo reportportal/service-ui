@@ -81,7 +81,7 @@ import { Input } from 'components/inputs/input';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { InputRadio } from 'components/inputs/inputRadio';
 import { URLS } from 'common/urls';
-import { isEmailIntegrationAvailableSelector } from 'controllers/plugins';
+import { isEmailIntegrationAvailableSelector, SECRET_FIELDS_KEY } from 'controllers/plugins';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -238,6 +238,7 @@ export const createImportProps = (pluginName) => ({
     FAILED,
     INTERRUPTED,
     SKIPPED,
+    SECRET_FIELDS_KEY,
   },
   actions: {
     showModalAction,
