@@ -36,6 +36,7 @@ import {
   filterIdSelector,
   pageSelector,
   testItemIdsSelector,
+  LAUNCHES_PAGE,
 } from 'controllers/pages';
 import { PAGE_KEY } from 'controllers/pagination';
 import { URLS } from 'common/urls';
@@ -205,12 +206,13 @@ function* fetchTestItems({ payload = {} }) {
       }
     } catch {
       const testItemIds = yield select(testItemIdsSelector);
+      const currentPage = yield select(pageSelector);
       const link = {
-        type: TEST_ITEM_PAGE,
+        type: isTestItemsList ? LAUNCHES_PAGE : currentPage,
         payload: {
-          filterId: ALL,
           projectId: project,
-          testItemIds,
+          filterId: ALL,
+          testItemIds: isTestItemsList ? '' : testItemIds,
         },
         meta: {
           query: pageQuery,
