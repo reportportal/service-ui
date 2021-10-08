@@ -237,9 +237,9 @@ export class FiltersControl extends Component {
 
     if (!predefinedFilter) return filters;
 
-    const filtersList = filters.filter((el) => el.id !== predefinedFilter.id);
+    const filtersList = filters.filter((el) => el.id !== predefinedFilter.id && el.id > 0);
 
-    filtersList.unshift(predefinedFilter);
+    predefinedFilter.id > 0 && filtersList.unshift(predefinedFilter);
 
     return filtersList;
   };
