@@ -229,7 +229,7 @@ export class ItemInfo extends Component {
               <RetriesCounter testItem={value} onLabelClick={onClickRetries} />
             </div>
           )}
-          {value.description && (
+          {value.description && value.description !== 'null' && (
             <div className={cx('item-description')}>
               <MarkdownViewer value={value.description} />
             </div>
