@@ -50,6 +50,7 @@ import {
   removeGlobalIntegrationSuccessAction,
   updateGlobalIntegrationSuccessAction,
   fetchGlobalIntegrationsSuccessAction,
+  removeGlobalIntegrationsByTypeSuccessAction,
 } from './actionCreators';
 import { fetchUiExtensions } from './uiExtensions';
 
@@ -214,13 +215,14 @@ function* watchFetchPlugins() {
   yield takeEvery(FETCH_PLUGINS, fetchPlugins);
 }
 
-function* removePlugin({ payload: { id, callback } }) {
+function* removePlugin({ payload: { id, callback, pluginName } }) {
   yield put(showScreenLockAction());
   try {
     yield call(fetch, URLS.pluginUpdate(id), {
       method: 'delete',
     });
     yield put(removePluginSuccessAction(id));
+    yield put(removeGlobalIntegrationsByTypeSuccessAction(pluginName));
     yield put(
       showNotification({
         messageId: 'removePluginSuccess',

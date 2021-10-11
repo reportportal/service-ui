@@ -33,15 +33,16 @@ import {
   REMOVE_GLOBAL_INTEGRATION_SUCCESS,
   FETCH_GLOBAL_INTEGRATIONS,
   FETCH_GLOBAL_INTEGRATIONS_SUCCESS,
+  REMOVE_GLOBAL_INTEGRATIONS_BY_TYPE_SUCCESS,
 } from './constants';
 
 export const fetchPluginsAction = () => ({
   type: FETCH_PLUGINS,
 });
 
-export const removePluginAction = (id, callback) => ({
+export const removePluginAction = (id, callback, pluginName) => ({
   type: REMOVE_PLUGIN,
-  payload: { id, callback },
+  payload: { id, callback, pluginName },
 });
 
 export const removePluginSuccessAction = (id) => ({
@@ -122,5 +123,10 @@ export const removeProjectIntegrationsByTypeAction = (instanceType) => ({
 
 export const removeProjectIntegrationsByTypeSuccessAction = (instanceType) => ({
   type: REMOVE_PROJECT_INTEGRATIONS_BY_TYPE_SUCCESS,
+  payload: instanceType,
+});
+
+export const removeGlobalIntegrationsByTypeSuccessAction = (instanceType) => ({
+  type: REMOVE_GLOBAL_INTEGRATIONS_BY_TYPE_SUCCESS,
   payload: instanceType,
 });

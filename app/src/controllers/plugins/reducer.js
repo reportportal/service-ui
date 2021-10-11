@@ -33,6 +33,7 @@ import {
   UPDATE_PROJECT_INTEGRATION_SUCCESS,
   REMOVE_PROJECT_INTEGRATION_SUCCESS,
   REMOVE_PROJECT_INTEGRATIONS_BY_TYPE_SUCCESS,
+  REMOVE_GLOBAL_INTEGRATIONS_BY_TYPE_SUCCESS,
 } from './constants';
 
 const addIntegration = (state, type, payload) => ({
@@ -109,6 +110,8 @@ export const integrationsReducer = (state = {}, { type, payload }) => {
       return removeIntegration(state, PROJECT_INTEGRATIONS, payload);
     case REMOVE_PROJECT_INTEGRATIONS_BY_TYPE_SUCCESS:
       return removeIntegrationByType(state, PROJECT_INTEGRATIONS, payload);
+    case REMOVE_GLOBAL_INTEGRATIONS_BY_TYPE_SUCCESS:
+      return removeIntegrationByType(state, GLOBAL_INTEGRATIONS, payload);
     default:
       return state;
   }
