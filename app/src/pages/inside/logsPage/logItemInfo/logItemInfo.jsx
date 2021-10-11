@@ -124,6 +124,7 @@ export class LogItemInfo extends Component {
       onToggleSauceLabsIntegrationView,
       isSauceLabsIntegrationView,
       debugMode,
+      retryItemId,
       intl: { formatMessage },
     } = this.props;
 
@@ -131,7 +132,12 @@ export class LogItemInfo extends Component {
       logItem && (
         <div className={cx('log-item-info')}>
           <div className={cx('details')}>
-            <DefectDetails logItem={logItem} debugMode={debugMode} fetchFunc={fetchFunc} />
+            <DefectDetails
+              retryItemId={retryItemId}
+              logItem={logItem}
+              debugMode={debugMode}
+              fetchFunc={fetchFunc}
+            />
             {this.hasRetries() && (
               <div
                 className={cx('retries', {

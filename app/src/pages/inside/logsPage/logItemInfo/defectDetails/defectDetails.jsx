@@ -162,11 +162,13 @@ export class DefectDetails extends Component {
     logItem: PropTypes.object,
     isBtsPluginsExist: PropTypes.bool,
     enabledBtsPlugins: PropTypes.array,
+    retryItemId: PropTypes.number,
   };
   static defaultProps = {
     logItem: null,
     isBtsPluginsExist: false,
     enabledBtsPlugins: [],
+    retryItemId: null,
   };
 
   state = {
@@ -401,6 +403,7 @@ export class DefectDetails extends Component {
               description={logItem.description}
               fetchFunc={fetchHistoryItemsWithLoading}
               withIndicator
+              readOnly={this.props.retryItemId !== logItem.id}
             />
           </span>
           {this.isDefectTypeVisible() && (

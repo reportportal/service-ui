@@ -71,6 +71,10 @@
       border-color: $COLOR--gray-80;
     }
   }
+
+  &.without-background {
+    background: none;
+  }
 }
 .value {
   display: inline-block;

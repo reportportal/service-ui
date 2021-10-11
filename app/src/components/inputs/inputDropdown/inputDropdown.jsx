@@ -44,6 +44,8 @@ export class InputDropdown extends Component {
     mobileDisabled: PropTypes.bool,
     independentGroupSelection: PropTypes.bool,
     customClasses: PropTypes.object,
+    arrowView: PropTypes.bool,
+    withoutBackground: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -59,6 +61,8 @@ export class InputDropdown extends Component {
     onBlur: () => {},
     mobileDisabled: false,
     independentGroupSelection: false,
+    arrowView: true,
+    withoutBackground: false,
     customClasses: {
       dropdown: '',
       selectBlock: '',
@@ -212,6 +216,8 @@ export class InputDropdown extends Component {
       multiple,
       selectAll,
       customClasses,
+      arrowView,
+      withoutBackground,
     } = this.props;
     return (
       <Manager>
@@ -230,11 +236,12 @@ export class InputDropdown extends Component {
                     error,
                     touched,
                     'mobile-disabled': mobileDisabled,
+                    'without-background': withoutBackground,
                   })}
                   onClick={this.onClickSelectBlock}
                 >
                   <span className={cx('value', customClasses.value)}>{this.displayedValue()}</span>
-                  <span className={cx('arrow', customClasses.arrow)} />
+                  {arrowView && <span className={cx('arrow', customClasses.arrow)} />}
                 </div>
               </div>
             )}
