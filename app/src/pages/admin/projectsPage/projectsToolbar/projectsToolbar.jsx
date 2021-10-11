@@ -210,6 +210,7 @@ export class ProjectsToolbar extends Component {
                   openFilter: ADMIN_PROJECTS_PAGE_EVENTS.FUNNEL_BTN,
                   applyBtn: ADMIN_PROJECTS_PAGE_EVENTS.APPLY_FILTER_BTN,
                 }}
+                placeholder={intl.formatMessage(messages.searchPlaceholder)}
               />
             )}
           />

@@ -166,6 +166,10 @@ export const messages = defineMessages({
     id: 'ProjectPage.assignButton',
     defaultMessage: 'Assign',
   },
+  searchPlaceholder: {
+    id: 'ProjectsPage.searchPlaceholder',
+    defaultMessage: 'Search by name',
+  },
   nameCol: { id: 'ProjectsGrid.nameCol', defaultMessage: 'Name' },
   projectTypeCol: { id: 'ProjectsGrid.projectTypeCol', defaultMessage: 'Project Type' },
   organizationCol: { id: 'ProjectsGrid.organizationCol', defaultMessage: 'Organization' },
