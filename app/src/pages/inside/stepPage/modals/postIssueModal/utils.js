@@ -86,18 +86,20 @@ export const getDataSectionConfig = (value) => ({
 });
 
 export const getDefaultIssueModalConfig = (namedIntegrations, userId) => {
-  const { pluginName = Object.keys(namedIntegrations)[0], integrationId, ...config } =
+  const defaultPluginName = Object.keys(namedIntegrations)[0];
+  const { pluginName = defaultPluginName, integrationId, ...config } =
     getSessionItem(`${userId}_settings`) || {};
 
+  const suggestedPluginName = namedIntegrations[pluginName] ? pluginName : defaultPluginName;
   const integration =
-    namedIntegrations[pluginName].find((item) => item.id === integrationId) ||
-    namedIntegrations[pluginName][0] ||
+    namedIntegrations[suggestedPluginName].find((item) => item.id === integrationId) ||
+    namedIntegrations[suggestedPluginName][0] ||
     {};
 
   return {
     ...config,
     integration,
-    pluginName,
+    pluginName: suggestedPluginName,
   };
 };
 
