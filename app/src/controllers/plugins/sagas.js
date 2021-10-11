@@ -26,6 +26,7 @@ import { fetchDataAction, createFetchPredicate } from 'controllers/fetch';
 import { hideModalAction } from 'controllers/modal';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { fetch, omit } from 'common/utils';
+import { userIdSelector } from 'controllers/user';
 import {
   NAMESPACE,
   FETCH_PLUGINS,
@@ -68,11 +69,13 @@ function* addIntegration({ payload: { data, isGlobal, pluginName, callback }, me
     });
 
     const integrationType = yield select(pluginByNameSelector, pluginName);
+    const creator = yield select(userIdSelector);
     const newIntegration = {
       ...data,
       integrationParameters: omit(data.integrationParameters, meta[SECRET_FIELDS_KEY]),
       id: response.id,
       integrationType,
+      creator,
     };
     const addIntegrationSuccessAction = isGlobal
       ? addGlobalIntegrationSuccessAction(newIntegration)
