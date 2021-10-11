@@ -174,8 +174,10 @@ export class InstancesSection extends Component {
     this.builtin = isPluginBuiltin(instanceType);
   }
 
-  removePlugin = () =>
-    this.props.removePluginAction(this.props.pluginId, this.props.removePluginSuccessCallback);
+  removePlugin = () => {
+    const { pluginId, removePluginSuccessCallback, instanceType } = this.props;
+    this.props.removePluginAction(pluginId, removePluginSuccessCallback, instanceType);
+  };
 
   removeProjectIntegrations = () =>
     this.props.removeProjectIntegrationsByTypeAction(this.props.instanceType);
