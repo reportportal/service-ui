@@ -284,6 +284,10 @@ export class DefectDetails extends Component {
     );
   };
 
+  getRetryStatus = () => {
+    return this.props.logItem.retries.find((retry) => retry.id === this.props.retryItemId);
+  };
+
   render() {
     const {
       logItem,
@@ -294,6 +298,9 @@ export class DefectDetails extends Component {
     } = this.props;
     const { expanded } = this.state;
     const isPostIssueUnavailable = !isPostIssueActionAvailable(this.props.btsIntegrations);
+
+    const itemStatus =
+      this.props.retryItemId !== logItem.id ? this.getRetryStatus().status : logItem.status;
 
     return (
       <div className={cx('details-container')}>
@@ -398,7 +405,7 @@ export class DefectDetails extends Component {
           <span className={cx('status-wrapper', 'with-separator')}>
             <StatusDropdown
               itemId={logItem.id}
-              status={logItem.status}
+              status={itemStatus}
               attributes={logItem.attributes}
               description={logItem.description}
               fetchFunc={fetchHistoryItemsWithLoading}
