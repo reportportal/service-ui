@@ -107,9 +107,10 @@ export class AttachmentActions extends Component {
 
     return (
       <div className={cx('attachment-actions', className)}>
-        {this.actionsConfig.map(({ id, ...actionConfig }) => (
-          <ActionsItem key={id} showCaption={showCaptions} {...actionConfig} />
-        ))}
+        {this.actionsConfig.map(
+          ({ id, hidden, ...actionConfig }) =>
+            !hidden && <ActionsItem key={id} showCaption={showCaptions} {...actionConfig} />,
+        )}
       </div>
     );
   }
