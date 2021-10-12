@@ -19,18 +19,30 @@ import Link from 'redux-first-router-link';
 import React from 'react';
 import { PROJECT_DETAILS_PAGE } from 'controllers/pages';
 import { Icon } from 'components/main/icon/icon';
+import { useIntl, defineMessages } from 'react-intl';
 
-export const ProjectStatisticButton = ({ projectName, onClick }) => (
-  <Link
-    to={{
-      type: PROJECT_DETAILS_PAGE,
-      payload: { projectId: projectName },
-    }}
-    onClick={onClick}
-  >
-    <Icon type={'icon-statistics'} />
-  </Link>
-);
+const messages = defineMessages({
+  buttonTooltip: {
+    id: 'ProjectStatisticButton.buttonTooltip',
+    defaultMessage: 'See detailed information',
+  },
+});
+
+export const ProjectStatisticButton = ({ projectName, onClick }) => {
+  const { formatMessage } = useIntl();
+  return (
+    <Link
+      to={{
+        type: PROJECT_DETAILS_PAGE,
+        payload: { projectId: projectName },
+      }}
+      onClick={onClick}
+      title={formatMessage(messages.buttonTooltip)}
+    >
+      <Icon type={'icon-statistics'} />
+    </Link>
+  );
+};
 
 ProjectStatisticButton.propTypes = {
   projectName: PropTypes.string.isRequired,
