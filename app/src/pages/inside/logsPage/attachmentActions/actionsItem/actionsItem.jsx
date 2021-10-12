@@ -22,22 +22,20 @@ import styles from './actionsItem.scss';
 
 const cx = classNames.bind(styles);
 
-export const ActionsItem = ({ caption, hidden, icon, action, showCaption }) => (
-  <span title={caption} onClick={hidden ? null : action} className={cx('actions-item', { hidden })}>
+export const ActionsItem = ({ caption, icon, action, showCaption }) => (
+  <span title={caption} onClick={action} className={cx('actions-item')}>
     <span className={cx('icon')}>{Parser(icon)}</span>
     {showCaption && <span className={cx('caption')}>{caption}</span>}
   </span>
 );
 ActionsItem.propTypes = {
   caption: PropTypes.string,
-  hidden: PropTypes.bool,
   showCaption: PropTypes.bool,
   icon: PropTypes.any,
   action: PropTypes.func,
 };
 ActionsItem.defaultProps = {
   caption: '',
-  hidden: false,
   showCaption: false,
   icon: '',
   action: null,
