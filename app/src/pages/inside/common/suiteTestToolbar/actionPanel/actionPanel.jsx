@@ -131,7 +131,7 @@ export class ActionPanel extends Component {
 
   onEditDefects = () => {
     const { tracking, selectedItems, onEditDefects } = this.props;
-    if (selectedItems.length === 1) {
+    if (selectedItems.length === 1 && selectedItems[0].issue) {
       tracking.trackEvent(
         pageEventsMap[this.props.level].MAKE_DECISION_MODAL_EVENTS.openModal(
           selectedItems[0].issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
