@@ -39,10 +39,12 @@
   }
 }
 .status-col {
-  width: 6%;
+  width: 8%;
+  max-width: 100px;
   font-family: $FONT-REGULAR;
   font-size: 13px;
   line-height: 20px;
+  word-break: keep-all;
 
   .mobile-hint {
     display: none;
