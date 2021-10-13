@@ -19,18 +19,24 @@ import Link from 'redux-first-router-link';
 import React from 'react';
 import { PROJECT_DETAILS_PAGE } from 'controllers/pages';
 import { Icon } from 'components/main/icon/icon';
+import { useIntl } from 'react-intl';
+import { messages } from '../messages';
 
-export const ProjectStatisticButton = ({ projectName, onClick }) => (
-  <Link
-    to={{
-      type: PROJECT_DETAILS_PAGE,
-      payload: { projectId: projectName },
-    }}
-    onClick={onClick}
-  >
-    <Icon type={'icon-statistics'} />
-  </Link>
-);
+export const ProjectStatisticButton = ({ projectName, onClick }) => {
+  const { formatMessage } = useIntl();
+  return (
+    <Link
+      to={{
+        type: PROJECT_DETAILS_PAGE,
+        payload: { projectId: projectName },
+      }}
+      onClick={onClick}
+      title={formatMessage(messages.statisticButtonTooltip)}
+    >
+      <Icon type={'icon-statistics'} />
+    </Link>
+  );
+};
 
 ProjectStatisticButton.propTypes = {
   projectName: PropTypes.string.isRequired,

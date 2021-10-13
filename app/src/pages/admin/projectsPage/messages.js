@@ -18,6 +18,10 @@ import { defineMessages } from 'react-intl';
 import { SETTINGS, MEMBERS, EVENTS } from 'common/constants/projectSections';
 
 export const messages = defineMessages({
+  statisticButtonTooltip: {
+    id: 'ProjectStatisticButton.buttonTooltip',
+    defaultMessage: 'See detailed information',
+  },
   pageTitle: {
     id: 'ProjectsPage.title',
     defaultMessage: 'All projects',

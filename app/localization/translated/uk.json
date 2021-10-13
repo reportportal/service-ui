@@ -1465,6 +1465,7 @@
   "ProjectRole.allPermissions": "Адміністратор має всі привілеї згідно карті прав",
   "ProjectRole.mobileTitle": "Проектна роль",
   "ProjectRole.updateMember": "Участник '<b>{name}</b>' обновлен",
+  "ProjectStatisticButton.buttonTooltip": "Дивитися докладну інформацію",
   "ProjectStatusPage.oneMonth": "1 місяць",
   "ProjectStatusPage.sixMonths": "6 місяців",
   "ProjectStatusPage.threeMonths": "3 місяці",
