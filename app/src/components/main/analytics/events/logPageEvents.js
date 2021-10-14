@@ -109,15 +109,25 @@ export const LOG_PAGE_EVENTS = {
     action: 'Click on History of Actions tab',
     label: 'Open History of Actions tab',
   },
-  LOG_LEVEL_FILTER: {
+  logLevelFilterEvent: (logLevel) => ({
     category: LOG_PAGE,
     action: 'Select Log level filter in dropdown',
-    label: 'Filter by selected parameter',
-  },
-  LOG_WITH_ATTACHMENT_CHECKBOX: {
+    label: `Filter by ${logLevel}`,
+  }),
+  logWithAttachmentCheckboxEvent: (value) => ({
     category: LOG_PAGE,
     action: 'Click on checkbox Logs with attachments',
-    label: 'Check/uncheck logs with attachments',
+    label: `${value ? 'check' : 'uncheck'} logs with attachments`,
+  }),
+  selectDropDownStatusEvent: (oldStatus, newStatus) => ({
+    category: LOG_PAGE,
+    action: 'Select Test Item Status from Drop-down List',
+    label: `Change status from ${oldStatus} to ${newStatus}`,
+  }),
+  CLICK_ON_MORE_BTN: {
+    category: LOG_PAGE,
+    action: 'Click on Button More in History Line',
+    label: '',
   },
   PREVIOUS_LOG_MSG_PAGE: {
     category: LOG_PAGE,

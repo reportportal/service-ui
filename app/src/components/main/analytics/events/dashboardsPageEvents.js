@@ -25,6 +25,8 @@ import {
   getSelectCriteriaEditWidget,
   getSelectCriteriaNewWidget,
   getSelectSortingFilterAddWidgetModal,
+  getSelectToggleButtonsAddWidgetModal,
+  getSelectToggleButtonsEditWidgetModal,
   getSortingForNewFilterEditWidgetModal,
 } from 'components/main/analytics/events/common/widgetPages/actionEventCreators';
 
@@ -408,4 +410,6 @@ export const DASHBOARD_PAGE_EVENTS = {
   },
   SELECT_CRITERIA_ADD_NEW_WIDGET_MODAL: getSelectCriteriaNewWidget(DASHBOARD_PAGE),
   SELECT_CRITERIA_EDIT_WIDGET_MODAL: getSelectCriteriaEditWidget(DASHBOARD_PAGE),
+  SELECT_TOGGLE_BUTTONS_ADD_NEW_WIDGET_MODAL: getSelectToggleButtonsAddWidgetModal(DASHBOARD_PAGE),
+  SELECT_TOGGLE_BUTTONS_EDIT_WIDGET_MODAL: getSelectToggleButtonsEditWidgetModal(DASHBOARD_PAGE),
 };

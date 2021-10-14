@@ -35,6 +35,8 @@ import { connectRouter } from 'common/utils';
 import { PAGE_KEY, DEFAULT_PAGINATION } from 'controllers/pagination';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import track from 'react-tracking';
+import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { HistoryLineItem } from './historyLineItem';
 import styles from './historyLine.scss';
 
@@ -58,6 +60,7 @@ const messages = defineMessages({
   },
   { namespace: NAMESPACE },
 )
+@track()
 @connect(
   (state) => ({
     historyItems: historyItemsSelector(state),
@@ -86,6 +89,10 @@ export class HistoryLine extends Component {
     changeActiveItem: PropTypes.func,
     fetchHistoryItemsAction: PropTypes.func,
     setShouldShowLoadMoreAction: PropTypes.func,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -125,6 +132,7 @@ export class HistoryLine extends Component {
     if (this.state.isLoading) {
       return;
     }
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.CLICK_ON_MORE_BTN);
     this.setState({ isLoading: true, prevItemsCount: historyItems.length });
     this.props.fetchHistoryItemsAction(true, this.finishLoading);
   };
