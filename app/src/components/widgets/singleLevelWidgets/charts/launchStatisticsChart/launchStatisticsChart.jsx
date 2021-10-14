@@ -224,10 +224,21 @@ export class LaunchStatisticsChart extends Component {
       TEST_ITEMS_TYPE_LIST,
     );
     const locators = getDefectTypeLocators(nameConfig, defectTypes);
+    const date = Date.parse(this.chartData.itemsData[data.index].date);
 
     const link = locators
-      ? getDefectLink({ defects: locators, itemId: TEST_ITEMS_TYPE_LIST, launchesLimit })
-      : getStatisticsLink({ statuses: this.getLinkParametersStatuses(nameConfig), launchesLimit });
+      ? getDefectLink({
+          defects: locators,
+          itemId: TEST_ITEMS_TYPE_LIST,
+          startTime: [date, date + 86400000],
+          launchesLimit,
+        })
+      : getStatisticsLink({
+          statuses: this.getLinkParametersStatuses(nameConfig),
+          startTime: [date, date + 86400000],
+          launchesLimit,
+        });
+
     this.props.navigate(Object.assign(link, defaultParams));
   };
 
