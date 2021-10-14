@@ -100,7 +100,7 @@ export class HistoryLine extends Component {
   componentDidUpdate() {
     const { historyItems, activeItemId, changeActiveItem } = this.props;
 
-    if (!historyItems.find((item) => item.id === activeItemId)) {
+    if (historyItems.length && !historyItems.find((item) => item.id === activeItemId)) {
       changeActiveItem(historyItems[historyItems.length - 1].id);
     }
   }
