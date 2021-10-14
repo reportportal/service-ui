@@ -81,3 +81,13 @@ export const getCancelBtnAddNewFilterAddWidgetModal = (category) => ({
   action: 'Click on Btn Cancel in Add new filter in Modal Add New Widget',
   label: 'Cancel adding new filter in Modal Add New Widget',
 });
+export const getSelectToggleButtonsAddWidgetModal = (category) => (values) => ({
+  category,
+  action: 'Select Toggle Button Item Label for Widget in Modal New Widget',
+  label: values,
+});
+export const getSelectToggleButtonsEditWidgetModal = (category) => (values) => ({
+  category,
+  action: 'Select Toggle Button Item Label for Widget in Modal Edit Widget',
+  label: values,
+});
