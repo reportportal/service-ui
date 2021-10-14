@@ -145,7 +145,7 @@ export class LogsGridToolbar extends Component {
   changeLogLevel = (newLogLevel) => {
     const { onChangeLogLevel, userId, logLevel: activeLogLevel } = this.props;
 
-    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.LOG_LEVEL_FILTER);
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.logLevelFilterEvent(newLogLevel.label));
     if (newLogLevel.id !== activeLogLevel.id) {
       onChangeLogLevel(userId, newLogLevel);
     }
@@ -154,7 +154,9 @@ export class LogsGridToolbar extends Component {
   toggleWithAttachments = () => {
     const { onChangeWithAttachments, withAttachments } = this.props;
 
-    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.LOG_WITH_ATTACHMENT_CHECKBOX);
+    this.props.tracking.trackEvent(
+      LOG_PAGE_EVENTS.logWithAttachmentCheckboxEvent(!withAttachments),
+    );
     onChangeWithAttachments(!withAttachments);
   };
 

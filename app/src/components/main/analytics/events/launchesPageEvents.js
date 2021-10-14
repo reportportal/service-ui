@@ -27,6 +27,7 @@ import {
   getChooseFilterAddWidgetModal,
   getSelectCriteriaNewWidget,
   getSelectSortingFilterAddWidgetModal,
+  getSelectToggleButtonsAddWidgetModal,
 } from 'components/main/analytics/events/common/widgetPages/actionEventCreators';
 
 export const LAUNCHES_PAGE = 'launches';
@@ -205,16 +206,16 @@ export const LAUNCHES_PAGE_EVENTS = {
     action: 'Click on Tooltip "To Investigate"',
     label: 'Transition to inner level of launch with To Investigate',
   },
-  CLICK_SELECT_ALL_ICON: {
+  clickSelectAllItemsEvent: (value) => ({
     category: LAUNCHES_PAGE,
     action: 'Click on item icon "select all launches"',
-    label: 'Select/unselect all launches',
-  },
-  CLICK_SELECT_ONE_ITEM: {
+    label: `${value ? 'select' : 'unselect'} all launches`,
+  }),
+  clickSelectOneItemEvent: (value) => ({
     category: LAUNCHES_PAGE,
     action: 'Click on item icon "select one launch"',
-    label: 'Select/unselect one launch',
-  },
+    label: `${value ? 'select' : 'unselect'} one launch`,
+  }),
   CLICK_ACTIONS_BTN: {
     category: LAUNCHES_PAGE,
     action: 'Click on button Actions',
@@ -447,4 +448,5 @@ export const LAUNCHES_MODAL_EVENTS = {
   },
   SELECT_CRITERIA_ADD_NEW_WIDGET_MODAL: getSelectCriteriaNewWidget(LAUNCHES_MODAL),
   SELECT_SORTING_FILTER_ADD_WIDGET_MODAL: getSelectSortingFilterAddWidgetModal(LAUNCHES_PAGE),
+  SELECT_TOGGLE_BUTTONS_ADD_NEW_WIDGET_MODAL: getSelectToggleButtonsAddWidgetModal(LAUNCHES_PAGE),
 };

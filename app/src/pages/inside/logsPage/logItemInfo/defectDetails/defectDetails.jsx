@@ -282,6 +282,10 @@ export class DefectDetails extends Component {
     );
   };
 
+  onChangeStatus = (oldStatus, newStatus) => {
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.selectDropDownStatusEvent(oldStatus, newStatus));
+  };
+
   render() {
     const {
       logItem,
@@ -400,6 +404,7 @@ export class DefectDetails extends Component {
               attributes={logItem.attributes}
               description={logItem.description}
               fetchFunc={fetchHistoryItemsWithLoading}
+              onChange={this.onChangeStatus}
               withIndicator
             />
           </span>

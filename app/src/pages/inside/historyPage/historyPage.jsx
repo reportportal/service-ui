@@ -105,7 +105,9 @@ export class HistoryPage extends Component {
   };
 
   selectItem = (item) => {
-    this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.SELECT_HISTORY_ITEM);
+    this.props.tracking.trackEvent(
+      HISTORY_PAGE_EVENTS.selectHistoryItem(!this.props.selectedItems.includes(item)),
+    );
     this.props.toggleItemSelection(item);
   };
 

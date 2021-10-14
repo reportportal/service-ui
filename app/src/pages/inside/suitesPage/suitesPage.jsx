@@ -178,12 +178,18 @@ export class SuitesPage extends Component {
   };
 
   handleAllSuitesSelection = () => {
-    this.props.tracking.trackEvent(SUITES_PAGE_EVENTS.SELECT_ALL_ITEMS);
+    this.props.tracking.trackEvent(
+      SUITES_PAGE_EVENTS.clickSelectAllItemsEvent(
+        this.props.suites.length !== this.props.selectedSuites.length,
+      ),
+    );
     this.props.toggleAllSuitesAction(this.props.suites);
   };
 
   handleOneItemSelection = (value) => {
-    this.props.tracking.trackEvent(SUITES_PAGE_EVENTS.SELECT_ONE_ITEM);
+    this.props.tracking.trackEvent(
+      SUITES_PAGE_EVENTS.clickSelectOneItemEvent(!this.props.selectedSuites.includes(value)),
+    );
     this.props.toggleSuiteSelectionAction(value);
   };
 

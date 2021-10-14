@@ -66,16 +66,16 @@ export const SUITES_PAGE_EVENTS = {
     action: 'Click on "edit" in Actions',
     label: 'Arise Modal "Edit Items"',
   },
-  SELECT_ALL_ITEMS: {
+  clickSelectAllItemsEvent: (value) => ({
     category: SUITE_PAGE,
     action: 'Click on item icon "select all items"',
-    label: 'Select/unselect all items',
-  },
-  SELECT_ONE_ITEM: {
+    label: `${value ? 'select' : 'unselect'} all items`,
+  }),
+  clickSelectOneItemEvent: (value) => ({
     category: SUITE_PAGE,
     action: 'Click on item icon "select one item"',
-    label: 'Select/unselect one item',
-  },
+    label: `${value ? 'select' : 'unselect'} one item`,
+  }),
   CLOSE_ICON_SELECTED_ITEM: {
     category: SUITE_PAGE,
     action: 'Click on icon "close" on selected item',
