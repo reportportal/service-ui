@@ -30,7 +30,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { getWidgets } from 'pages/inside/dashboardItemPage/modals/common/widgets';
-import { getNameWidgetOptions } from 'components/main/analytics/events/common/widgetPages/utils';
+import { getWidgetModeValuesString } from 'components/main/analytics/events/common/widgetPages/utils';
 import { EditWidgetControlsSectionForm } from './editWidgetControlsSectionForm';
 import { EditWidgetInfoSection } from './editWidgetInfoSection';
 import { WIDGET_WIZARD_FORM } from '../common/constants';
@@ -171,15 +171,12 @@ export class EditWidgetModal extends Component {
         this.props.data.eventsInfo.selectCriteria(widgetSettings.contentParameters.contentFields),
       );
     }
-    if (
+
+    const widgetMode =
       widgetSettings.contentParameters &&
-      getNameWidgetOptions(widgetSettings.contentParameters.widgetOptions)
-    ) {
-      this.props.tracking.trackEvent(
-        this.props.data.eventsInfo.selectToggleButtons(
-          getNameWidgetOptions(widgetSettings.contentParameters.widgetOptions),
-        ),
-      );
+      getWidgetModeValuesString(widgetSettings.contentParameters.widgetOptions);
+    if (widgetMode) {
+      this.props.tracking.trackEvent(this.props.data.eventsInfo.selectToggleButtons(widgetMode));
     }
   };
 

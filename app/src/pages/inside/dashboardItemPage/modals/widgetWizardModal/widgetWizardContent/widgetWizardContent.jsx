@@ -31,7 +31,7 @@ import { analyticsEnabledSelector } from 'controllers/appInfo';
 import { getWidgets } from 'pages/inside/dashboardItemPage/modals/common/widgets';
 import { provideEcGA } from 'components/main/analytics';
 import { activeDashboardIdSelector, pageSelector } from 'controllers/pages';
-import { getNameWidgetOptions } from 'components/main/analytics/events/common/widgetPages/utils';
+import { getWidgetModeValuesString } from 'components/main/analytics/events/common/widgetPages/utils';
 import { WIDGET_WIZARD_FORM } from '../../common/constants';
 import { prepareWidgetDataForSubmit, getDefaultWidgetConfig } from '../../common/utils';
 import { WizardInfoSection } from './wizardInfoSection';
@@ -112,17 +112,14 @@ export class WidgetWizardContent extends Component {
     if (this.state.step === 1 && formValues.contentParameters.contentFields) {
       tracking.trackEvent(eventsInfo.selectCriteria(formValues.contentParameters.contentFields));
     }
-    if (
-      this.state.step === 1 &&
+
+    const widgetMode =
       formValues.contentParameters &&
-      getNameWidgetOptions(formValues.contentParameters.widgetOptions)
-    ) {
-      tracking.trackEvent(
-        eventsInfo.selectToggleButtons(
-          getNameWidgetOptions(formValues.contentParameters.widgetOptions),
-        ),
-      );
+      getWidgetModeValuesString(formValues.contentParameters.widgetOptions);
+    if (this.state.step === 1 && widgetMode) {
+      tracking.trackEvent(eventsInfo.selectToggleButtons(widgetMode));
     }
+
     submitWidgetWizardForm();
     if (isAnalyticsEnabled && this.state.step === 0) {
       provideEcGA({

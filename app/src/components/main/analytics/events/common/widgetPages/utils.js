@@ -40,7 +40,7 @@ export const SORTING_ENTITY_MAP = {
   [STATS_TI_TOTAL]: 'To Investigate',
 };
 
-export const CHART_MODE_VALUES_MAP = {
+const WIDGET_MODE_VALUES_MAP = {
   launch: 'Launch mode',
   day: 'Timeline mode',
   'latest-false': 'All launches',
@@ -60,14 +60,14 @@ export const getSelectCriteriaFields = (values) =>
     })
     .join('#');
 
-export const getNameWidgetOptions = (options) => {
+export const getWidgetModeValuesString = (options) => {
   let widgetOptions = options;
   if (Object.prototype.hasOwnProperty.call(widgetOptions, 'latest')) {
     const latest = `latest-${options.latest}`;
     widgetOptions = { ...options, latest };
   }
   return Object.values(widgetOptions)
-    .filter((option) => CHART_MODE_VALUES_MAP[`${option}`])
-    .map((value) => CHART_MODE_VALUES_MAP[`${value}`])
+    .filter((option) => WIDGET_MODE_VALUES_MAP[`${option}`])
+    .map((value) => WIDGET_MODE_VALUES_MAP[`${value}`])
     .join('#');
 };
