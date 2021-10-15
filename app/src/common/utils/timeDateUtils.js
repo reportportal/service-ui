@@ -158,3 +158,9 @@ export const secondsToDays = (seconds, locale) =>
     .duration(seconds, 'seconds')
     .locale(locale)
     .humanize({ d: Number.MAX_SAFE_INTEGER });
+
+export const getMillisecondsWoTimezone = (time) => {
+  const date = new Date(time);
+  const userTimezoneOffset = date.getTimezoneOffset() * 60000;
+  return date.valueOf() + userTimezoneOffset;
+};
