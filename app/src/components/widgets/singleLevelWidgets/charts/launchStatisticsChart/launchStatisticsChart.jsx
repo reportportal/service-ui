@@ -40,6 +40,7 @@ import {
 } from 'components/widgets/common/utils';
 import { createTooltipRenderer } from 'components/widgets/common/tooltip';
 import { CHART_OFFSET } from 'components/widgets/common/constants';
+import { getMillisecondsWoTimezone } from 'common/utils/timeDateUtils';
 import { IssueTypeStatTooltip } from '../common/issueTypeStatTooltip';
 import { isSingleColumnChart, calculateTooltipParams } from './config/utils';
 import { getConfig } from './config/getConfig';
@@ -224,10 +225,23 @@ export class LaunchStatisticsChart extends Component {
       TEST_ITEMS_TYPE_LIST,
     );
     const locators = getDefectTypeLocators(nameConfig, defectTypes);
+    const startDate = getMillisecondsWoTimezone(this.chartData.itemsData[data.index].date);
+    const day = 86400000;
+    const endDate = startDate + day;
 
     const link = locators
-      ? getDefectLink({ defects: locators, itemId: TEST_ITEMS_TYPE_LIST, launchesLimit })
-      : getStatisticsLink({ statuses: this.getLinkParametersStatuses(nameConfig), launchesLimit });
+      ? getDefectLink({
+          defects: locators,
+          itemId: TEST_ITEMS_TYPE_LIST,
+          startTime: [startDate, endDate],
+          launchesLimit,
+        })
+      : getStatisticsLink({
+          statuses: this.getLinkParametersStatuses(nameConfig),
+          startTime: [startDate, endDate],
+          launchesLimit,
+        });
+
     this.props.navigate(Object.assign(link, defaultParams));
   };
 
