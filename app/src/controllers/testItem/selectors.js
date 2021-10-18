@@ -312,6 +312,9 @@ export const statisticsLinkSelector = createSelector(
     if (ownProps.statuses) {
       params['filter.in.status'] = ownProps.statuses.join(',');
     }
+    if (ownProps.startTime) {
+      params['filter.btw.startTime'] = ownProps.startTime.join(',');
+    }
     if (ownProps.types === null) {
       delete params['filter.in.type'];
     }
@@ -372,6 +375,10 @@ export const defectLinkSelector = createSelector(
       params['filter.in.type'] = ownProps.filterTypes
         ? [...ownProps.filterTypes, LEVEL_STEP].join(',')
         : LEVEL_STEP;
+    }
+
+    if (ownProps.startTime) {
+      params['filter.btw.startTime'] = ownProps.startTime.join(',');
     }
 
     return createLink(
