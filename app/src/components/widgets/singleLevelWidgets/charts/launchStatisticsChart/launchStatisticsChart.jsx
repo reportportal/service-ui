@@ -226,7 +226,8 @@ export class LaunchStatisticsChart extends Component {
     );
     const locators = getDefectTypeLocators(nameConfig, defectTypes);
     const startDate = getMillisecondsWoTimezone(this.chartData.itemsData[data.index].date);
-    const endDate = startDate + 86400000;
+    const day = 86400000;
+    const endDate = startDate + day;
 
     const link = locators
       ? getDefectLink({
