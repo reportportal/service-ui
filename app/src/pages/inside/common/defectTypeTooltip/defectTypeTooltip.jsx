@@ -21,6 +21,7 @@ import { connect } from 'react-redux';
 import { projectConfigSelector } from 'controllers/project';
 import { injectIntl, defineMessages } from 'react-intl';
 import { DefectLink } from 'pages/inside/common/defectLink';
+import { compositeAttributesSelector } from 'controllers/testItem';
 import styles from './defectTypeTooltip.scss';
 
 const cx = classNames.bind(styles);
@@ -41,6 +42,7 @@ const messages = defineMessages({
 @injectIntl
 @connect((state) => ({
   projectConfig: projectConfigSelector(state),
+  compositeAttributes: compositeAttributesSelector(state),
 }))
 export class DefectTypeTooltip extends Component {
   static propTypes = {
@@ -56,6 +58,7 @@ export class DefectTypeTooltip extends Component {
     isStepLevel: PropTypes.bool,
     singleDefectView: PropTypes.bool,
     target: PropTypes.string,
+    compositeAttributes: PropTypes.string,
     listViewLinkParams: PropTypes.shape({
       launchesLimit: PropTypes.number,
       compositeAttribute: PropTypes.string,
@@ -73,6 +76,7 @@ export class DefectTypeTooltip extends Component {
     isStepLevel: false,
     singleDefectView: false,
     target: '',
+    compositeAttributes: '',
     listViewLinkParams: {},
   };
 
@@ -106,6 +110,7 @@ export class DefectTypeTooltip extends Component {
       detailedView,
       detailedData,
       isStepLevel,
+      compositeAttributes,
     } = this.props;
 
     return detailedView ? (
@@ -136,6 +141,7 @@ export class DefectTypeTooltip extends Component {
               keepFilterParams
               className={cx('value', 'detailed')}
               eventInfo={tooltipEventInfo}
+              compositeAttributes={compositeAttributes}
             >
               {detailedData[dataKey]}
             </DefectLink>

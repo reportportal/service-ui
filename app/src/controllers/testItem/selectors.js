@@ -360,13 +360,16 @@ export const defectLinkSelector = createSelector(
       'filter.in.issueType': getDefectsString(ownProps.defects),
       'filter.has.attributeKey': ownProps.attributeKey,
       'filter.has.attributeValue': ownProps.attributeValue,
-      'filter.has.compositeAttribute': ownProps.compositeAttribute,
       'filter.has.levelAttribute': ownProps.levelAttribute,
       providerType,
       [providerTypeModifierId]: ownProps[providerTypeModifierId],
       launchesLimit,
       isLatest,
     };
+
+    if (ownProps.compositeAttributes) {
+      params['filter.has.compositeAttribute'] = ownProps.compositeAttributes;
+    }
 
     if (ownProps.filterType) {
       params['filter.in.type'] = ownProps.filterTypes
