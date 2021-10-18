@@ -58,6 +58,7 @@
 .scrolling-content {
   z-index: 0;
   &.with-footer {
+    z-index: auto;
     display: flex;
     flex-direction: column;
     justify-content: stretch;
