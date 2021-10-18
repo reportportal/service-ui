@@ -55,10 +55,9 @@ func configureRouter(srv *server.RpServer, rpConf struct {
 			"default-src": {"'self'", "data:", "'unsafe-inline'", "*.uservoice.com"},
 			"script-src": {
 				"'self'",
-				"'unsafe-inline'",
 				"'unsafe-eval'",
-				"status.reportportal.io",
 				"www.google-analytics.com",
+				"status.reportportal.io",
 				"stats.g.doubleclick.net",
 				"*.saucelabs.com",
 				"*.epam.com",
@@ -71,7 +70,7 @@ func configureRouter(srv *server.RpServer, rpConf struct {
 			"style-src":      {"'self'", "'unsafe-inline'", "https://tagmanager.google.com"},
 			"media-src":      {"'self'", "*.saucelabs.com", "blob:"},
 			"img-src":        {"*", "'self'", "'unsafe-inline'", "data:", "blob:", "http:", "https:", "www.google-analytics.com"},
-			"object-src":     {"'self'"},
+			"object-src":     {"'none'"},
 			"connect-src":    {"'self'", "https://www.google-analytics.com", "https://stats.g.doubleclick.net"},
 		}
 		// apply content security policies
