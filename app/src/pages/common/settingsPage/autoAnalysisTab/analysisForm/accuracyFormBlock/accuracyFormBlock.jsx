@@ -31,7 +31,7 @@ const cx = classNames.bind(styles);
 const messages = defineMessages({
   minimumShouldMatchTitle: {
     id: 'AccuracyFormBlock.minimumShouldMatchTitle',
-    defaultMessage: 'Minimum should match',
+    defaultMessage: 'Minimum should match for Auto-Analysis',
   },
   numberOfLogLinesTitle: {
     id: 'AccuracyFormBlock.numberOfLogLinesTitle',
@@ -62,6 +62,16 @@ const messages = defineMessages({
   allMessagesShouldMatchDescription: {
     id: 'AccuracyFormBlock.allMessagesShouldMatchDescription',
     defaultMessage: 'When an analyzed test item contains logs with 3 or more rows',
+  },
+  searchLogsMinShouldTitle: {
+    id: 'AccuracyFormBlock.searchLogsMinShouldTitle',
+    defaultMessage: 'Minimum should match for similar To Investigate items',
+  },
+  searchLogsMinShouldMatchDescription: {
+    id: 'AccuracyFormBlock.searchLogsMinShouldMatchDescription',
+    defaultMessage: `Percent of words equality between a log from considered test item 
+    and a log from To Investigate item in the ElasticSearch. If a log from ElasticSearch 
+    has the value less than set, this log won’t be shown in the similar To Investigate items section.`,
   },
 });
 
@@ -99,33 +109,12 @@ export class AccuracyFormBlock extends Component {
     ];
   }
 
-  normalizeValue = (value) => value && `${value}`.replace(/\D+/g, '');
+  normalizeValue = (value) => value && `${value}`.replace(/^0(?=[0-9])|\D+/g, '');
 
   render() {
     const { intl, disabled } = this.props;
     return (
       <Fragment>
-        <FormField
-          name="minShouldMatch"
-          fieldWrapperClassName={cx('accuracy-form-input-wrapper')}
-          label={intl.formatMessage(messages.minimumShouldMatchTitle)}
-          onChange={this.props.onInputChange}
-          normalize={this.normalizeValue}
-          format={String}
-          customBlock={{
-            node: <p>{intl.formatMessage(messages.minimumShouldMatchDescription)}</p>,
-          }}
-          disabled={disabled}
-        >
-          <FieldErrorHint>
-            <InputWithIcon
-              icon={<i className={cx('percent-icon')}>%</i>}
-              maxLength="3"
-              mobileDisabled
-            />
-          </FieldErrorHint>
-        </FormField>
-
         <FormField
           name="numberOfLogLines"
           fieldWrapperClassName={cx('accuracy-form-input-wrapper')}
@@ -154,6 +143,48 @@ export class AccuracyFormBlock extends Component {
           disabled={disabled}
         >
           <InputBigSwitcher mobileDisabled />
+        </FormField>
+
+        <FormField
+          name="minShouldMatch"
+          fieldWrapperClassName={cx('accuracy-form-input-wrapper')}
+          label={intl.formatMessage(messages.minimumShouldMatchTitle)}
+          onChange={this.props.onInputChange}
+          normalize={this.normalizeValue}
+          format={String}
+          customBlock={{
+            node: <p>{intl.formatMessage(messages.minimumShouldMatchDescription)}</p>,
+          }}
+          disabled={disabled}
+        >
+          <FieldErrorHint>
+            <InputWithIcon
+              icon={<i className={cx('percent-icon')}>%</i>}
+              maxLength="3"
+              mobileDisabled
+            />
+          </FieldErrorHint>
+        </FormField>
+
+        <FormField
+          name="searchLogsMinShouldMatch"
+          fieldWrapperClassName={cx('accuracy-form-input-wrapper')}
+          label={intl.formatMessage(messages.searchLogsMinShouldTitle)}
+          onChange={this.props.onInputChange}
+          normalize={this.normalizeValue}
+          format={String}
+          customBlock={{
+            node: <p>{intl.formatMessage(messages.searchLogsMinShouldMatchDescription)}</p>,
+          }}
+          disabled={disabled}
+        >
+          <FieldErrorHint>
+            <InputWithIcon
+              icon={<i className={cx('percent-icon')}>%</i>}
+              maxLength="3"
+              mobileDisabled
+            />
+          </FieldErrorHint>
         </FormField>
 
         <div className={cx('submit-button-container')}>
