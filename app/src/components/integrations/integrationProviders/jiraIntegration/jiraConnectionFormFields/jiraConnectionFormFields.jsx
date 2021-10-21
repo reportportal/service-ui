@@ -98,7 +98,7 @@ export class JiraConnectionFormFields extends Component {
         </IntegrationFormField>
         <IntegrationFormField
           name="project"
-          label={formatMessage(messages.projectNameLabel)}
+          label={formatMessage(COMMON_BTS_MESSAGES.projectKeyLabel)}
           required
           disabled={disabled || editAuthMode}
           lineAlign={lineAlign}
