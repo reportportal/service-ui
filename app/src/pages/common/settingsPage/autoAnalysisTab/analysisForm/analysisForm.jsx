@@ -28,7 +28,12 @@ import {
   getAutoAnalysisMinimumShouldMatchSubmitEvent,
 } from 'components/main/analytics/events';
 import { AccuracyFormBlock } from './accuracyFormBlock';
-import { NUMBER_OF_LOG_LINES, MIN_SHOULD_MATCH, ALL_MESSAGES_SHOULD_MATCH } from '../constants';
+import {
+  NUMBER_OF_LOG_LINES,
+  MIN_SHOULD_MATCH,
+  ALL_MESSAGES_SHOULD_MATCH,
+  SEARCH_LOGS_MIN_SHOULD_MATCH,
+} from '../constants';
 import styles from './analysisForm.scss';
 
 const cx = classNames.bind(styles);
@@ -57,14 +62,17 @@ const selector = formValueSelector('analysisForm');
 const analysisModeConfig = {
   Classic: {
     [MIN_SHOULD_MATCH]: 95,
+    [SEARCH_LOGS_MIN_SHOULD_MATCH]: 95,
     [NUMBER_OF_LOG_LINES]: -1,
   },
   Moderate: {
     [MIN_SHOULD_MATCH]: 80,
+    [SEARCH_LOGS_MIN_SHOULD_MATCH]: 95,
     [NUMBER_OF_LOG_LINES]: 5,
   },
   Light: {
     [MIN_SHOULD_MATCH]: 60,
+    [SEARCH_LOGS_MIN_SHOULD_MATCH]: 95,
     [NUMBER_OF_LOG_LINES]: 3,
   },
 };
@@ -73,15 +81,24 @@ const DEFAULT_ANALYSIS_MODE = 'Classic';
 
 @reduxForm({
   form: 'analysisForm',
-  validate: ({ minShouldMatch }) => ({
+  validate: ({ minShouldMatch, searchLogsMinShouldMatch }) => ({
     minShouldMatch: bindMessageToValidator(
       validate.analyzerMinShouldMatch,
       'minShouldMatchHint',
     )(minShouldMatch),
+    searchLogsMinShouldMatch: bindMessageToValidator(
+      validate.searchLogsMinShouldMatch,
+      'searchLogsMinShouldMatch',
+    )(searchLogsMinShouldMatch),
   }),
 })
 @connect((state) => ({
-  formInputsValues: selector(state, MIN_SHOULD_MATCH, NUMBER_OF_LOG_LINES),
+  formInputsValues: selector(
+    state,
+    MIN_SHOULD_MATCH,
+    NUMBER_OF_LOG_LINES,
+    SEARCH_LOGS_MIN_SHOULD_MATCH,
+  ),
 }))
 @injectIntl
 @track()
@@ -134,6 +151,8 @@ export class AnalysisForm extends Component {
     const existingMode = analysisModeKeys.find(
       (key) =>
         analysisModeConfig[key][MIN_SHOULD_MATCH] === Number(modeConfig[MIN_SHOULD_MATCH]) &&
+        analysisModeConfig[key][SEARCH_LOGS_MIN_SHOULD_MATCH] ===
+          Number(modeConfig[SEARCH_LOGS_MIN_SHOULD_MATCH]) &&
         analysisModeConfig[key][NUMBER_OF_LOG_LINES] === Number(modeConfig[NUMBER_OF_LOG_LINES]),
     );
     this.setState({
@@ -160,6 +179,10 @@ export class AnalysisForm extends Component {
     const { tracking, change } = this.props;
     tracking.trackEvent(SETTINGS_PAGE_EVENTS.toggleAutoAnalysisMode(newValue));
     change(MIN_SHOULD_MATCH, analysisModeConfig[newValue][MIN_SHOULD_MATCH]);
+    change(
+      SEARCH_LOGS_MIN_SHOULD_MATCH,
+      analysisModeConfig[newValue][SEARCH_LOGS_MIN_SHOULD_MATCH],
+    );
     change(NUMBER_OF_LOG_LINES, analysisModeConfig[newValue][NUMBER_OF_LOG_LINES]);
 
     this.setState({

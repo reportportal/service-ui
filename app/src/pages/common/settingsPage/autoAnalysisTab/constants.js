@@ -20,3 +20,4 @@ export const INDEXING_RUNNING = 'indexingRunning';
 export const ANALYZER_ENABLED = 'isAutoAnalyzerEnabled';
 export const ANALYZER_MODE = 'autoAnalyzerMode';
 export const ALL_MESSAGES_SHOULD_MATCH = 'allMessagesShouldMatch';
+export const SEARCH_LOGS_MIN_SHOULD_MATCH = 'searchLogsMinShouldMatch';
