@@ -17,6 +17,10 @@
 import { defineMessages } from 'react-intl';
 
 export const COMMON_BTS_MESSAGES = defineMessages({
+  projectKeyLabel: {
+    id: 'BtsCommonMessages.projectKeyLabel',
+    defaultMessage: 'Project key in BTS',
+  },
   linkToBtsLabel: {
     id: 'BtsCommonMessages.linkToBtsLabel',
     defaultMessage: 'Link to BTS',
