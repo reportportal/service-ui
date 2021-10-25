@@ -294,4 +294,5 @@ export const URLS = {
     `${urlBase}bts/${projectId}/${integrationId}/ticket`,
   btsTicket: (activeProject, issueId, btsProject, btsUrl) =>
     `${urlBase}bts/${activeProject}/ticket/${issueId}${getQueryParams({ btsProject, btsUrl })}`,
+  runUniqueErrorAnalysis: (activeProject) => `${urlBase}${activeProject}/launch/cluster`,
 };
