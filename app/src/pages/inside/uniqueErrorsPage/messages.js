@@ -42,4 +42,12 @@ export const messages = defineMessages({
     id: 'EmptyUniqueErrsAnalyzeModal.fieldName',
     defaultMessage: 'Numbers in error log:',
   },
+  uniqueErrAnalyzeModalIncludeNumbers: {
+    id: 'EmptyUniqueErrsAnalyzeModal.includeNumbers',
+    defaultMessage: 'Include number to analyzed logs',
+  },
+  uniqueErrAnalyzeModalExcludeNumbers: {
+    id: 'EmptyUniqueErrsAnalyzeModal.excludeNumbers',
+    defaultMessage: 'Exclude numbers from analyzed logs',
+  },
 });

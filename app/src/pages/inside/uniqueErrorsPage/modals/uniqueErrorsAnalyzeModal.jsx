@@ -19,9 +19,8 @@ import { withModal } from 'controllers/modal';
 import { ModalField, ModalLayout } from 'components/main/modal';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { formValueSelector, reduxForm } from 'redux-form';
+import { reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import { messages } from 'pages/inside/uniqueErrorsPage';
@@ -30,9 +29,6 @@ import styles from './uniqueErrorsAnalyzeModal.scss';
 const cx = classNames.bind(styles);
 
 @withModal('uniqueErrorsAnalyzeModal')
-@connect((state) => ({
-  numbersInLogs: formValueSelector('uniqueErrorsAnalyzeModal')(state, 'numbersInLogs'),
-}))
 @reduxForm({
   form: 'uniqueErrorsAnalyzeModal',
   initialValues: { removeNumbers: false },
@@ -41,13 +37,11 @@ const cx = classNames.bind(styles);
 export class UniqueErrorsAnalyzeModal extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    numbersInLogs: PropTypes.string,
     handleSubmit: PropTypes.func.isRequired,
     data: PropTypes.object,
   };
 
   static defaultProps = {
-    numbersInLogs: '',
     handleSubmit: () => {},
     data: {},
   };
@@ -72,8 +66,8 @@ export class UniqueErrorsAnalyzeModal extends Component {
     };
 
     const options = [
-      { label: 'Include number to analyzed logs', value: false },
-      { label: 'Exclude numbers from analyzed logs', value: true },
+      { label: formatMessage(messages.uniqueErrAnalyzeModalIncludeNumbers), value: false },
+      { label: formatMessage(messages.uniqueErrAnalyzeModalExcludeNumbers), value: true },
     ];
 
     return (

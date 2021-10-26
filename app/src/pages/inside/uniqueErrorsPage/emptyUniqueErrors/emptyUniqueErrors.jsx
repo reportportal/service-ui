@@ -41,7 +41,7 @@ const cx = classNames.bind(styles);
 )
 export class EmptyUniqueErrors extends Component {
   static propTypes = {
-    intl: PropTypes.object,
+    intl: PropTypes.object.isRequired,
     projectId: PropTypes.string,
     showModal: PropTypes.func,
     parentLaunch: PropTypes.object,
@@ -75,7 +75,6 @@ export class EmptyUniqueErrors extends Component {
       id: 'uniqueErrorsAnalyzeModal',
       data: {
         onSubmit: this.onSubmit,
-        type: 'add',
       },
     });
   };
