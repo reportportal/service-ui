@@ -54,7 +54,7 @@ export class UniqueErrorsAnalyzeModal extends Component {
     } = this.props;
 
     const okButton = {
-      text: 'Analyze',
+      text: formatMessage(messages.uniqueErrAnalyzeModalOkBtn),
       onClick: () => {
         handleSubmit((values) => {
           onSubmit(values);
@@ -62,7 +62,7 @@ export class UniqueErrorsAnalyzeModal extends Component {
       },
     };
     const cancelButton = {
-      text: 'Cancel',
+      text: formatMessage(messages.uniqueErrAnalyzeModalCancelBtn),
     };
 
     const options = [
@@ -71,7 +71,11 @@ export class UniqueErrorsAnalyzeModal extends Component {
     ];
 
     return (
-      <ModalLayout title={'Analyze launch'} okButton={okButton} cancelButton={cancelButton}>
+      <ModalLayout
+        title={formatMessage(messages.uniqueErrAnalyzeModalTitle)}
+        okButton={okButton}
+        cancelButton={cancelButton}
+      >
         <form className={cx('unique-errors-modal')}>
           <p className={cx('unique-errors-modal-text')}>
             {formatMessage(messages.uniqueErrAnalyzeModalText)}

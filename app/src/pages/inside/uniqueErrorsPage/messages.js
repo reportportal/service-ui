@@ -32,7 +32,7 @@ export const messages = defineMessages({
   emptyUniqueErrText: {
     id: 'EmptyUniqueErr.text',
     defaultMessage:
-      'Unique error analysis has not been run yet. To see unique error to this launch please run run run analysis manually',
+      'Unique error analysis has not been run yet. To see unique error to this launch please run analysis manually',
   },
   uniqueErrAnalyzeModalText: {
     id: 'EmptyUniqueErrsAnalyzeModal.text',
@@ -49,5 +49,17 @@ export const messages = defineMessages({
   uniqueErrAnalyzeModalExcludeNumbers: {
     id: 'EmptyUniqueErrsAnalyzeModal.excludeNumbers',
     defaultMessage: 'Exclude numbers from analyzed logs',
+  },
+  uniqueErrAnalyzeModalOkBtn: {
+    id: 'EmptyUniqueErrsAnalyzeModal.okBtn',
+    defaultMessage: 'Analyze',
+  },
+  uniqueErrAnalyzeModalCancelBtn: {
+    id: 'EmptyUniqueErrsAnalyzeModal.cancelBtn',
+    defaultMessage: 'Cancel',
+  },
+  uniqueErrAnalyzeModalTitle: {
+    id: 'EmptyUniqueErrsAnalyzeModal.title',
+    defaultMessage: 'Analyze launch',
   },
 });

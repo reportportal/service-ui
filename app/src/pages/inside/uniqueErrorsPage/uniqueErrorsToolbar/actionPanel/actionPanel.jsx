@@ -18,13 +18,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import RefreshIcon from 'common/img/refresh-inline.svg';
 import { breadcrumbsSelector, restorePathAction } from 'controllers/testItem';
 import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { ParentInfo } from 'pages/inside/common/infoLine/parentInfo';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import styles from './actionPanel.scss';
 
 const cx = classNames.bind(styles);
@@ -37,8 +38,10 @@ const cx = classNames.bind(styles);
     restorePath: restorePathAction,
   },
 )
+@injectIntl
 export class ActionPanel extends Component {
   static propTypes = {
+    intl: PropTypes.object.isRequired,
     breadcrumbs: PropTypes.arrayOf(breadcrumbDescriptorShape),
     showBreadcrumbs: PropTypes.bool,
     parentItem: PropTypes.object,
@@ -53,7 +56,13 @@ export class ActionPanel extends Component {
   };
 
   render() {
-    const { breadcrumbs, restorePath, showBreadcrumbs, parentItem } = this.props;
+    const {
+      breadcrumbs,
+      restorePath,
+      showBreadcrumbs,
+      parentItem,
+      intl: { formatMessage },
+    } = this.props;
 
     return (
       <div className={cx('action-panel', { 'right-buttons-only': !showBreadcrumbs })}>
@@ -61,7 +70,7 @@ export class ActionPanel extends Component {
         <div className={cx('action-buttons')}>
           {parentItem && <ParentInfo parentItem={parentItem} />}
           <div className={cx('action-button', 'mobile-hidden')}>
-            <GhostMenuButton title={'Actions'} disabled />
+            <GhostMenuButton title={formatMessage(COMMON_LOCALE_KEYS.ACTIONS)} disabled />
           </div>
           <div className={cx('action-button')}>
             <GhostButton icon={RefreshIcon} disabled transparentBackground>
