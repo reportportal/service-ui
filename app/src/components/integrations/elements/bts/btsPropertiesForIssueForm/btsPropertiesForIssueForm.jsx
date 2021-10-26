@@ -73,7 +73,7 @@ const messages = defineMessages({
 export class BtsPropertiesForIssueForm extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    instanceId: PropTypes.number.isRequired,
+    integrationId: PropTypes.number.isRequired,
     projectId: PropTypes.string,
     pluginName: PropTypes.string,
     initialData: PropTypes.object,
@@ -289,8 +289,12 @@ export class BtsPropertiesForIssueForm extends Component {
 
   fetchFieldsSet = (issueTypeValue) => {
     const url = this.props.isGlobal
-      ? URLS.btsGlobalIntegrationFieldsSet(this.props.instanceId, issueTypeValue)
-      : URLS.btsIntegrationFieldsSet(this.props.projectId, this.props.instanceId, issueTypeValue);
+      ? URLS.btsGlobalIntegrationFieldsSet(this.props.integrationId, issueTypeValue)
+      : URLS.btsIntegrationFieldsSet(
+          this.props.projectId,
+          this.props.integrationId,
+          issueTypeValue,
+        );
 
     return fetch(url);
   };
@@ -307,8 +311,8 @@ export class BtsPropertiesForIssueForm extends Component {
 
   fetchIssueType = () => {
     const url = this.props.isGlobal
-      ? URLS.btsGlobalIntegrationIssueTypes(this.props.instanceId)
-      : URLS.btsIntegrationIssueTypes(this.props.projectId, this.props.instanceId);
+      ? URLS.btsGlobalIntegrationIssueTypes(this.props.integrationId)
+      : URLS.btsIntegrationIssueTypes(this.props.projectId, this.props.integrationId);
 
     return fetch(url);
   };
