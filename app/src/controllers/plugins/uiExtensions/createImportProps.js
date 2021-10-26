@@ -142,6 +142,8 @@ import {
   IntegrationFormField,
   BtsAuthFieldsInfo,
   BtsPropertiesForIssueForm,
+  getDefectFormFields,
+  BTS_FIELDS_FORM,
 } from 'components/integrations/elements';
 import { updateLaunchLocallyAction } from 'controllers/launch';
 import { getDefectTypeLabel } from 'components/main/analytics/events/common/utils';
@@ -240,6 +242,7 @@ export const createImportProps = (pluginName) => ({
     INTERRUPTED,
     SKIPPED,
     SECRET_FIELDS_KEY,
+    BTS_FIELDS_FORM,
   },
   actions: {
     showModalAction,
@@ -289,6 +292,7 @@ export const createImportProps = (pluginName) => ({
     getItemNameConfig,
     getDefectTypeLocators,
     getDefectTypeLabel,
+    getDefectFormFields,
   },
   validators: {
     attributesArray,
