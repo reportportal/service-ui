@@ -9,6 +9,8 @@ export const EXTENSION_TYPE_INTEGRATION_SETTINGS = 'uiExtension:integrationSetti
 export const EXTENSION_TYPE_POST_ISSUE_FORM = 'uiExtension:postIssueForm';
 
 export const COMMAND_GET_FILE = 'getFile';
+export const COMMAND_GET_ISSUE_TYPES = 'getIssueTypes';
+export const COMMAND_GET_ISSUE_FIELDS = 'getIssueFields';
 
 export const EXTENSION_LOAD_START = 'extensionLoadStart';
 export const EXTENSION_LOAD_FINISH = 'extensionLoadFinish';
