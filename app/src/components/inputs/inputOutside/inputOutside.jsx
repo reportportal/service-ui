@@ -40,6 +40,7 @@ export class InputOutside extends Component {
     touched: PropTypes.bool,
     error: PropTypes.string,
     autoComplete: PropTypes.string,
+    name: PropTypes.string,
   };
   static defaultProps = {
     type: 'text',
@@ -58,6 +59,7 @@ export class InputOutside extends Component {
     touched: false,
     error: '',
     autoComplete: undefined,
+    name: '',
   };
 
   state = {
@@ -95,6 +97,7 @@ export class InputOutside extends Component {
       active,
       touched,
       autoComplete,
+      name,
     } = this.props;
     return (
       <div
@@ -118,6 +121,7 @@ export class InputOutside extends Component {
           onFocus={onFocus}
           onBlur={onBlur}
           onKeyUp={onKeyUp}
+          name={name}
         />
         {type === 'password' && (
           <div

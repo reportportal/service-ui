@@ -24,6 +24,7 @@ export const activeProjectSelector = (state) =>
   userSelector(state).activeProject || defaultProjectSelector(state) || '';
 export const idSelector = (state) => userInfoSelector(state).id;
 export const userIdSelector = (state) => userInfoSelector(state).userId;
+export const userEmailSelector = (state) => userInfoSelector(state).email || '';
 export const photoIdSelector = (state) => userInfoSelector(state).photoId;
 export const settingsSelector = (state) => userSelector(state).settings || {};
 export const startTimeFormatSelector = (state) =>

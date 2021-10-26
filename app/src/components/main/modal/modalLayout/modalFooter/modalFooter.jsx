@@ -36,6 +36,10 @@ export class ModalFooter extends Component {
       danger: PropTypes.bool,
       onClick: PropTypes.func,
       eventInfo: PropTypes.object,
+      attributes: PropTypes.shape({
+        type: PropTypes.string,
+        form: PropTypes.string,
+      }),
     }),
     cancelButton: PropTypes.shape({
       text: PropTypes.string.isRequired,
@@ -152,6 +156,8 @@ export class ModalFooter extends Component {
                   okButton.onClick(onClickOk);
                 }}
                 disabled={okButton.disabled || !submitConfirmed}
+                type={okButton.attributes && okButton.attributes.type}
+                form={okButton.attributes && okButton.attributes.form}
               >
                 {okButton.text}
               </BigButton>
