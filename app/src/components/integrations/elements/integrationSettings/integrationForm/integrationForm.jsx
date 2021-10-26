@@ -145,7 +145,7 @@ export class IntegrationForm extends Component {
               <FieldsComponent
                 initialize={initialize}
                 change={change}
-                instanceId={id}
+                integrationId={id}
                 initialData={integrationParameters}
                 pluginDetails={integrationType.details}
                 disabled={disabled}
