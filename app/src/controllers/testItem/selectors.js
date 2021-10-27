@@ -31,6 +31,7 @@ import {
   querySelector,
   filterIdSelector,
   HISTORY_PAGE,
+  UNIQUE_ERRORS_PAGE,
 } from 'controllers/pages';
 import { activeProjectSelector } from 'controllers/user';
 import { activeFilterSelector } from 'controllers/filter';
@@ -490,6 +491,16 @@ export const historyViewLinkSelector = createSelector(
   querySelector,
   (payload, query) => ({
     type: HISTORY_PAGE,
+    payload,
+    query: { ...query },
+  }),
+);
+
+export const uniqueErrorsLinkSelector = createSelector(
+  payloadSelector,
+  querySelector,
+  (payload, query) => ({
+    type: UNIQUE_ERRORS_PAGE,
     payload,
     query: { ...query },
   }),

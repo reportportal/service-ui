@@ -47,6 +47,7 @@ export class InfoPanel extends Component {
     isTestItemsList: PropTypes.bool.isRequired,
     isFilterParamsExists: PropTypes.bool,
     filteredItemStatistics: PropTypes.object,
+    withoutStatistics: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -56,6 +57,7 @@ export class InfoPanel extends Component {
     currentFilter: null,
     isFilterParamsExists: false,
     filteredItemStatistics: FILTERED_ITEM_STATISTICS_INITIAL_STATE,
+    withoutStatistics: false,
   };
 
   renderInfoLineListView = () =>
@@ -69,12 +71,13 @@ export class InfoPanel extends Component {
       isTestItemsList,
       isFilterParamsExists,
       filteredItemStatistics,
+      withoutStatistics,
     } = this.props;
 
     return (
       <div className={cx('info-panel')}>
         <ViewTabs viewMode={viewMode} isTestItemsList={isTestItemsList} />
-        {isTestItemsList ? (
+        {isTestItemsList || withoutStatistics ? (
           this.renderInfoLineListView()
         ) : (
           <Fragment>

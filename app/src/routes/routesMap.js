@@ -35,6 +35,7 @@ import {
   PROJECT_USERDEBUG_LOG_PAGE,
   PROJECT_USERDEBUG_PAGE,
   HISTORY_PAGE,
+  UNIQUE_ERRORS_PAGE,
   PROJECTS_PAGE,
   PROJECT_DETAILS_PAGE,
   ALL_USERS_PAGE,
@@ -199,6 +200,12 @@ const routesMap = {
     path: '/:projectId/launches/:filterId/:testItemIds+/history',
     thunk: (dispatch) => {
       dispatch(fetchHistoryPageInfoAction());
+    },
+  },
+  [UNIQUE_ERRORS_PAGE]: {
+    path: '/:projectId/launches/:filterId/:testItemIds+/uniqueErrors',
+    thunk: (dispatch) => {
+      dispatch(fetchTestItemsAction());
     },
   },
   PROJECT_FILTERS_PAGE: {

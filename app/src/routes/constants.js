@@ -35,6 +35,7 @@ import { SandboxPage } from 'pages/inside/sandboxPage';
 import { ProjectSettingsPageContainer } from 'pages/inside/projectSettingsPageContainer';
 import { ProjectMembersPageContainer } from 'pages/inside/projectMembersPageContainer';
 import { HistoryPage } from 'pages/inside/historyPage';
+import { UniqueErrorsPage } from 'pages/inside/uniqueErrorsPage';
 import { LoginPage } from 'pages/outside/loginPage';
 import { NotFoundPage } from 'pages/outside/notFoundPage';
 import { RegistrationPage } from 'pages/outside/registrationPage';
@@ -49,6 +50,7 @@ import {
   PROJECT_DETAILS_PAGE,
   OAUTH_SUCCESS,
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
+  UNIQUE_ERRORS_PAGE,
 } from 'controllers/pages';
 import { AdminUiExtensionPage } from 'pages/admin/adminUiExtensionPage';
 
@@ -95,6 +97,7 @@ export const pageRendering = {
   [PROJECT_LOG_PAGE]: { component: LogsPage, layout: AppLayout },
   [PROJECT_USERDEBUG_LOG_PAGE]: { component: LogsPage, layout: AppLayout },
   [HISTORY_PAGE]: { component: HistoryPage, layout: AppLayout },
+  [UNIQUE_ERRORS_PAGE]: { component: UniqueErrorsPage, layout: AppLayout },
   [PLUGIN_UI_EXTENSION_ADMIN_PAGE]: {
     component: AdminUiExtensionPage,
     layout: AdminLayout,

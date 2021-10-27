@@ -64,6 +64,7 @@ export {
   listViewLinkSelector,
   logViewLinkSelector,
   historyViewLinkSelector,
+  uniqueErrorsLinkSelector,
   getLogItemLinkSelector,
   isTestItemsListSelector,
   compositeAttributesSelector,
