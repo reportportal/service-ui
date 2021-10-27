@@ -71,8 +71,6 @@ export const SupportBlock = ({ options }) => {
     setModalShown(!isModalShown);
   };
 
-  const onChange = (val) => setUserChoice(val);
-
   const openModal = () => {
     setModalShown(false);
     dispatch(
@@ -102,7 +100,7 @@ export const SupportBlock = ({ options }) => {
               <InputDropdown
                 value={userChoice}
                 options={options}
-                onChange={onChange}
+                onChange={setUserChoice}
                 mobileDisabled
               />
               <div className={cx('solution-btn')}>
