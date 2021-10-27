@@ -53,7 +53,7 @@ export const SupportBlock = ({ options }) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const [isModalShown, setModalShown] = useState(false);
-  const [dropdownVal, setDropdownVal] = useState(options[0].value);
+  const [userChoice, setUserChoice] = useState(options[0].value);
   const wrapperRef = useRef();
 
   useEffect(() => {
@@ -64,14 +64,14 @@ export const SupportBlock = ({ options }) => {
     };
     document.addEventListener('click', handleClickOutside, false);
 
-    return () => document.addEventListener('click', handleClickOutside, false);
+    return () => document.removeEventListener('click', handleClickOutside, false);
   }, []);
 
   const toggleModal = () => {
     setModalShown(!isModalShown);
   };
 
-  const onChange = (val) => setDropdownVal(options.find((item) => item.value === val).value);
+  const onChange = (val) => setUserChoice(val);
 
   const openModal = () => {
     setModalShown(false);
@@ -83,78 +83,75 @@ export const SupportBlock = ({ options }) => {
   };
 
   return (
-    <>
-      <div className={cx('support-block')} ref={wrapperRef} onClick={toggleModal}>
-        <SupportBlockWithTooltip
-          tooltipContent={
-            <div className={cx('tooltip-text')}>{formatMessage(messages.helpAndSupport)}</div>
-          }
-          showTooltip={!isModalShown}
-          preventParsing
-        />
-        {isModalShown && (
-          <div className={cx('modal')} onClick={(e) => e.stopPropagation()}>
-            <div className={cx('modal-header')}>{formatMessage(messages.helpAndSupport)}</div>
-            <div className={cx('modal-content')}>
-              <div className={cx('solutions-block')}>
-                <span className={cx('solution-title')}>
-                  {formatMessage(messages.tryFindSolution)}
-                </span>
-                <InputDropdown
-                  value={dropdownVal}
-                  options={options}
-                  onChange={onChange}
-                  mobileDisabled
-                />
-                <div className={cx('solution-btn')}>
+    <div className={cx('support-block')} ref={wrapperRef} onClick={toggleModal}>
+      <SupportBlockWithTooltip
+        tooltipContent={
+          <div className={cx('tooltip-text')}>{formatMessage(messages.helpAndSupport)}</div>
+        }
+        showTooltip={!isModalShown}
+        preventParsing
+      />
+      {isModalShown && (
+        <div className={cx('modal')} onClick={(e) => e.stopPropagation()}>
+          <div className={cx('modal-header')}>{formatMessage(messages.helpAndSupport)}</div>
+          <div className={cx('modal-content')}>
+            <div className={cx('solutions-block')}>
+              <span className={cx('solution-title')}>
+                {formatMessage(messages.tryFindSolution)}
+              </span>
+              <InputDropdown
+                value={userChoice}
+                options={options}
+                onChange={onChange}
+                mobileDisabled
+              />
+              <div className={cx('solution-btn')}>
+                <a
+                  href={userChoice || EMAIL_QUESTION}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className={cx('solution-link')}
+                  onClick={toggleModal}
+                >
+                  {userChoice
+                    ? formatMessage(messages.instruction)
+                    : formatMessage(messages.askQuestion)}
+                </a>
+              </div>
+            </div>
+            <span className={cx('ask-help')}>
+              {formatMessage(messages.note, {
+                ourSupportTeam: (
                   <a
-                    href={dropdownVal || EMAIL_QUESTION}
+                    href={EMAIL_SUPPORT}
                     target="_blank"
                     rel="noreferrer noopener"
-                    className={cx('solution-link')}
+                    className={cx('support-link')}
                     onClick={toggleModal}
+                    key={EMAIL_SUPPORT}
                   >
-                    {dropdownVal
-                      ? formatMessage(messages.instruction)
-                      : formatMessage(messages.askQuestion)}
+                    {formatMessage(messages.ourSupportTeam)}
                   </a>
-                </div>
-              </div>
-              <span className={cx('ask-help')}>
-                {formatMessage(messages.note, {
-                  ourSupportTeam: (
-                    <a
-                      href={EMAIL_SUPPORT}
-                      className={cx('support-link')}
-                      onClick={toggleModal}
-                      key={EMAIL_SUPPORT}
-                    >
-                      {formatMessage(messages.ourSupportTeam)}
-                    </a>
-                  ),
-                  slackChannel: (
-                    <a
-                      href={referenceDictionary.rpSlack}
-                      target="_blank"
-                      rel="noreferrer noopener"
-                      className={cx('support-link')}
-                      onClick={toggleModal}
-                      key={referenceDictionary.rpSlack}
-                    >
-                      {formatMessage(messages.slackChannel)}
-                    </a>
-                  ),
-                })}
-              </span>
-              <GhostButton onClick={openModal}>
-                {formatMessage(messages.requestSupport)}
-              </GhostButton>
-            </div>
+                ),
+                slackChannel: (
+                  <a
+                    href={referenceDictionary.rpSlack}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className={cx('support-link')}
+                    onClick={toggleModal}
+                    key={referenceDictionary.rpSlack}
+                  >
+                    {formatMessage(messages.slackChannel)}
+                  </a>
+                ),
+              })}
+            </span>
+            <GhostButton onClick={openModal}>{formatMessage(messages.requestSupport)}</GhostButton>
           </div>
-        )}
-      </div>
-      <div className={cx('empty-block')} />
-    </>
+        </div>
+      )}
+    </div>
   );
 };
 SupportBlock.propTypes = {

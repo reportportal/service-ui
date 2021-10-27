@@ -36,6 +36,8 @@ import styles from './requestSupportModal.scss';
 
 const cx = classNames.bind(styles);
 
+const REQUEST_FORM_ID = 'requestFormId';
+
 const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
@@ -84,7 +86,7 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
           })();
         },
         disabled: invalid,
-        attributes: { type: 'submit', form: 'requestFormId' },
+        attributes: { type: 'submit', form: REQUEST_FORM_ID },
       }}
       cancelButton={{
         text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
@@ -95,7 +97,7 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
         <form
           action="https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8"
           method="POST"
-          id="requestFormId"
+          id={REQUEST_FORM_ID}
           target="dummyframe"
         >
           <input type="hidden" name="oid" value="00D24000000k2Rp" />

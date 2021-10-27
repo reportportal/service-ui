@@ -43,6 +43,7 @@
 
 .support-block {
   position: relative;
+  margin-bottom: 73px;
 }
 
 .modal {
@@ -139,11 +140,4 @@
   &:hover {
     text-decoration: underline;
   }
-}
-
-.empty-block {
-  height: 73px;
-}
-
-.modal-text {
 }
