@@ -23,6 +23,7 @@ import classNames from 'classnames/bind';
 import { fetch } from 'common/utils';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { projectIdSelector } from 'controllers/pages';
+import { projectInfoSelector } from 'controllers/project';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import {
   COMMAND_GET_ISSUE_TYPES,
@@ -66,7 +67,8 @@ const messages = defineMessages({
 
 @connect(
   (state) => ({
-    projectId: projectIdSelector(state),
+    projectName: projectIdSelector(state),
+    projectInfo: projectInfoSelector(state),
   }),
   {
     showNotification,
@@ -78,7 +80,8 @@ export class BtsPropertiesForIssueForm extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     integrationId: PropTypes.number.isRequired,
-    projectId: PropTypes.string,
+    projectName: PropTypes.string,
+    projectInfo: PropTypes.object,
     pluginName: PropTypes.string,
     initialData: PropTypes.object,
     showNotification: PropTypes.func,
@@ -95,7 +98,8 @@ export class BtsPropertiesForIssueForm extends Component {
   };
 
   static defaultProps = {
-    projectId: '',
+    projectName: '',
+    projectInfo: {},
     pluginName: '',
     initialData: {
       defectFormFields: [],
@@ -294,7 +298,14 @@ export class BtsPropertiesForIssueForm extends Component {
     });
 
   fetchFieldsSet = (issueTypeValue) => {
-    const { pluginDetails: details, isGlobal, integrationId, projectId } = this.props;
+    const {
+      pluginDetails: details,
+      isGlobal,
+      integrationId,
+      projectName,
+      projectInfo,
+    } = this.props;
+    const project = projectName || projectInfo.projectName;
     const isCommandAvailable =
       details &&
       details.allowedCommands &&
@@ -303,15 +314,16 @@ export class BtsPropertiesForIssueForm extends Component {
     let url;
 
     if (isCommandAvailable) {
-      url = URLS.projectIntegrationByIdCommand(projectId, integrationId, COMMAND_GET_ISSUE_FIELDS);
+      url = URLS.projectIntegrationByIdCommand(project, integrationId, COMMAND_GET_ISSUE_FIELDS);
       requestParams.method = 'PUT';
       requestParams.data = {
+        projectId: projectInfo.projectId,
         issueType: issueTypeValue,
       };
     } else {
       url = isGlobal
         ? URLS.btsGlobalIntegrationFieldsSet(integrationId, issueTypeValue)
-        : URLS.btsIntegrationFieldsSet(projectId, integrationId, issueTypeValue);
+        : URLS.btsIntegrationFieldsSet(project, integrationId, issueTypeValue);
     }
 
     return fetch(url, requestParams);
@@ -328,7 +340,14 @@ export class BtsPropertiesForIssueForm extends Component {
   };
 
   fetchIssueTypes = () => {
-    const { pluginDetails: details, isGlobal, integrationId, projectId } = this.props;
+    const {
+      pluginDetails: details,
+      isGlobal,
+      integrationId,
+      projectName,
+      projectInfo,
+    } = this.props;
+    const project = projectName || projectInfo.projectName;
     const isCommandAvailable =
       details &&
       details.allowedCommands &&
@@ -337,12 +356,15 @@ export class BtsPropertiesForIssueForm extends Component {
     let url;
 
     if (isCommandAvailable) {
-      url = URLS.projectIntegrationByIdCommand(projectId, integrationId, COMMAND_GET_ISSUE_TYPES);
+      url = URLS.projectIntegrationByIdCommand(project, integrationId, COMMAND_GET_ISSUE_TYPES);
       requestParams.method = 'PUT';
+      requestParams.data = {
+        projectId: projectInfo.projectId,
+      };
     } else {
       url = isGlobal
         ? URLS.btsGlobalIntegrationIssueTypes(integrationId)
-        : URLS.btsIntegrationIssueTypes(projectId, integrationId);
+        : URLS.btsIntegrationIssueTypes(project, integrationId);
     }
 
     return fetch(url, requestParams);
