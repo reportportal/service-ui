@@ -15,16 +15,18 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react';
+import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
+import { useTracking } from 'react-tracking';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { TextTooltip } from 'components/main/tooltips/textTooltip';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { GhostButton } from 'components/buttons/ghostButton';
+import { HELP_AND_SUPPORT_EVENTS } from 'components/main/analytics/events';
 import { showModalAction } from 'controllers/modal';
 import { referenceDictionary } from 'common/utils';
-import PropTypes from 'prop-types';
 import { messages } from './messages';
 import styles from './supportBlock.scss';
 
@@ -52,6 +54,7 @@ const SupportBlockWithTooltip = withTooltip({
 export const SupportBlock = ({ options }) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const [isModalShown, setModalShown] = useState(false);
   const [userChoice, setUserChoice] = useState(options[0].value);
   const wrapperRef = useRef();
@@ -69,6 +72,7 @@ export const SupportBlock = ({ options }) => {
 
   const toggleModal = () => {
     setModalShown(!isModalShown);
+    !isModalShown && trackEvent(HELP_AND_SUPPORT_EVENTS.clickOnSupportModalBtn());
   };
 
   const openModal = () => {
@@ -78,6 +82,20 @@ export const SupportBlock = ({ options }) => {
         id: 'requestSupportModal',
       }),
     );
+    trackEvent(
+      HELP_AND_SUPPORT_EVENTS.clickOnSupportModalBtn(messages.requestSupport.defaultMessage),
+    );
+  };
+
+  const onClickLink = (nameLink) => {
+    toggleModal();
+    trackEvent(HELP_AND_SUPPORT_EVENTS.clickOnSupportModalBtn(nameLink));
+  };
+
+  const onClickUserChoiceBtn = () => {
+    toggleModal();
+    const label = options.find(({ value }) => value === userChoice).label;
+    trackEvent(HELP_AND_SUPPORT_EVENTS.clickInstructionLink(label));
   };
 
   return (
@@ -109,7 +127,7 @@ export const SupportBlock = ({ options }) => {
                   target="_blank"
                   rel="noreferrer noopener"
                   className={cx('solution-link')}
-                  onClick={toggleModal}
+                  onClick={onClickUserChoiceBtn}
                 >
                   {userChoice
                     ? formatMessage(messages.instruction)
@@ -125,7 +143,7 @@ export const SupportBlock = ({ options }) => {
                     target="_blank"
                     rel="noreferrer noopener"
                     className={cx('support-link')}
-                    onClick={toggleModal}
+                    onClick={() => onClickLink('email')}
                     key={EMAIL_SUPPORT}
                   >
                     {formatMessage(messages.ourSupportTeam)}
@@ -137,7 +155,7 @@ export const SupportBlock = ({ options }) => {
                     target="_blank"
                     rel="noreferrer noopener"
                     className={cx('support-link')}
-                    onClick={toggleModal}
+                    onClick={() => onClickLink(messages.slackChannel.defaultMessage)}
                     key={referenceDictionary.rpSlack}
                   >
                     {formatMessage(messages.slackChannel)}
