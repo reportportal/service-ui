@@ -31,6 +31,7 @@ import { InputOutside } from 'components/inputs/inputOutside';
 import LoginIcon from 'common/img/login-field-icon-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
+import { HELP_AND_SUPPORT_EVENTS } from 'components/main/analytics/events';
 import { messages } from '../messages';
 import styles from './requestSupportModal.scss';
 
@@ -87,10 +88,19 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
         },
         disabled: invalid,
         attributes: { type: 'submit', form: REQUEST_FORM_ID },
+        eventInfo: HELP_AND_SUPPORT_EVENTS.clickOnRequestModalBtn(
+          COMMON_LOCALE_KEYS.SEND.defaultMessage,
+        ),
       }}
       cancelButton={{
         text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+        eventInfo: HELP_AND_SUPPORT_EVENTS.clickOnRequestModalBtn(
+          COMMON_LOCALE_KEYS.CANCEL.defaultMessage,
+        ),
       }}
+      closeIconEventInfo={HELP_AND_SUPPORT_EVENTS.clickOnRequestModalBtn(
+        COMMON_LOCALE_KEYS.CANCEL.defaultMessage,
+      )}
     >
       <>
         <span className={cx('text')}>{Parser(formatMessage(messages.modalText))}</span>
