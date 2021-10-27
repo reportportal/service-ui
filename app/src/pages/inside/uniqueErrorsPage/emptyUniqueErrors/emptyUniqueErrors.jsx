@@ -26,6 +26,11 @@ import { messages } from 'pages/inside/uniqueErrorsPage';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
+import {
+  NOTIFICATION_TYPES,
+  showDefaultErrorNotification,
+  showNotification,
+} from 'controllers/notification';
 import styles from './emptyUniqueErrors.scss';
 
 const cx = classNames.bind(styles);
@@ -37,6 +42,8 @@ const cx = classNames.bind(styles);
   }),
   {
     showModal: showModalAction,
+    showNotification,
+    showDefaultErrorNotification,
   },
 )
 export class EmptyUniqueErrors extends Component {
@@ -44,12 +51,16 @@ export class EmptyUniqueErrors extends Component {
     intl: PropTypes.object.isRequired,
     projectId: PropTypes.string,
     showModal: PropTypes.func,
+    showNotification: PropTypes.func,
+    showDefaultErrorNotification: PropTypes.func,
     parentLaunch: PropTypes.object,
   };
 
   static defaultProps = {
     projectId: '',
     showModal: () => {},
+    showNotification: () => {},
+    showDefaultErrorNotification: () => {},
     parentLaunch: {},
   };
 
@@ -62,12 +73,13 @@ export class EmptyUniqueErrors extends Component {
         removeNumbers,
       },
     })
-      .then((response) => {
-        console.log(response);
+      .then(({ message }) => {
+        this.props.showNotification({
+          message,
+          type: NOTIFICATION_TYPES.SUCCESS,
+        });
       })
-      .catch((e) => {
-        console.log(e);
-      });
+      .catch(this.props.showDefaultErrorNotification);
   };
 
   openModal = () => {

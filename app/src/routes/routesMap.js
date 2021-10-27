@@ -204,6 +204,9 @@ const routesMap = {
   },
   [UNIQUE_ERRORS_PAGE]: {
     path: '/:projectId/launches/:filterId/:testItemIds+/uniqueErrors',
+    thunk: (dispatch) => {
+      dispatch(fetchTestItemsAction());
+    },
   },
   PROJECT_FILTERS_PAGE: {
     path: '/:projectId/filters',
