@@ -24,6 +24,7 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import { messages } from 'pages/inside/uniqueErrorsPage';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import styles from './uniqueErrorsAnalyzeModal.scss';
 
 const cx = classNames.bind(styles);
@@ -55,14 +56,15 @@ export class UniqueErrorsAnalyzeModal extends Component {
 
     const okButton = {
       text: formatMessage(messages.uniqueErrAnalyzeModalOkBtn),
-      onClick: () => {
+      onClick: (closeModal) => {
         handleSubmit((values) => {
           onSubmit(values);
+          closeModal();
         })();
       },
     };
     const cancelButton = {
-      text: formatMessage(messages.uniqueErrAnalyzeModalCancelBtn),
+      text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
     };
 
     const options = [

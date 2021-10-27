@@ -501,7 +501,6 @@
   "EmptyUniqueErr.disableButtonTooltip": "Гэтую аперацыю нельга выканаць для запускаў у працэсе",
   "EmptyUniqueErr.headline": "Няма унікальных памылак",
   "EmptyUniqueErr.text": "Унікальны аналіз памылак яшчэ не праводзіўся. Каб убачыць унікальную памылку для гэтага запуску, запусціце аналіз уручную",
-  "EmptyUniqueErrsAnalyzeModal.cancelBtn": "Адмена",
   "EmptyUniqueErrsAnalyzeModal.excludeNumbers": "Выключыць лічбы з часопісаў",
   "EmptyUniqueErrsAnalyzeModal.fieldName": "Лічбы ў часопісе памылак:",
   "EmptyUniqueErrsAnalyzeModal.includeNumbers": "Уключыць лічбы ў часопісы",

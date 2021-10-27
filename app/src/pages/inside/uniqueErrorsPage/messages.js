@@ -54,10 +54,6 @@ export const messages = defineMessages({
     id: 'EmptyUniqueErrsAnalyzeModal.okBtn',
     defaultMessage: 'Analyze',
   },
-  uniqueErrAnalyzeModalCancelBtn: {
-    id: 'EmptyUniqueErrsAnalyzeModal.cancelBtn',
-    defaultMessage: 'Cancel',
-  },
   uniqueErrAnalyzeModalTitle: {
     id: 'EmptyUniqueErrsAnalyzeModal.title',
     defaultMessage: 'Analyze launch',

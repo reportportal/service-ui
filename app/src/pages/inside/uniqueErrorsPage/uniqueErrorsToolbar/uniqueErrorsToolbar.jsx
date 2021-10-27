@@ -23,7 +23,7 @@ import { ActionPanel } from './actionPanel';
 export const UniqueErrorsToolbar = ({ parentItem }) => (
   <Fragment>
     <ActionPanel parentItem={parentItem} />
-    {parentItem && <InfoPanel isUniqueErrorTab viewMode={UNIQUE_ERRORS_VIEW} data={parentItem} />}
+    {parentItem && <InfoPanel withoutStatistics viewMode={UNIQUE_ERRORS_VIEW} data={parentItem} />}
   </Fragment>
 );
 UniqueErrorsToolbar.propTypes = {

@@ -34,11 +34,10 @@ import {
   logViewLinkSelector,
   historyViewLinkSelector,
   levelSelector,
-  isTestItemsListSelector,
+  uniqueErrorsLinkSelector,
 } from 'controllers/testItem';
 import { debugModeSelector } from 'controllers/launch';
 import { pageEventsMap } from 'components/main/analytics';
-import { uniqueErrorsLinkSelector } from 'controllers/testItem/selectors';
 import { analyzerExtensionsSelector } from 'controllers/appInfo';
 import styles from './viewTabs.scss';
 
@@ -76,7 +75,6 @@ const messages = defineMessages({
   uniqueErrorsLink: uniqueErrorsLinkSelector(state),
   isAnalyzerAvailable: !!analyzerExtensionsSelector(state).length,
   level: levelSelector(state),
-  isTestItemsList: isTestItemsListSelector(state),
 }))
 @injectIntl
 export class ViewTabs extends Component {

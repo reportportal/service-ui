@@ -15,12 +15,12 @@
  */
 
 import { PageLayout, PageSection } from 'layouts/pageLayout';
-import { UniqueErrorsView } from 'pages/inside/uniqueErrorsPage/uniqueErrorsView';
 import { connect } from 'react-redux';
 import { launchSelector, parentItemSelector } from 'controllers/testItem';
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import { UniqueErrorsToolbar } from 'pages/inside/uniqueErrorsPage/uniqueErrorsToolbar/uniqueErrorsToolbar';
+import { UniqueErrorsView } from './uniqueErrorsView';
+import { UniqueErrorsToolbar } from './uniqueErrorsToolbar';
 
 @connect((state) => ({
   parentLaunch: launchSelector(state),

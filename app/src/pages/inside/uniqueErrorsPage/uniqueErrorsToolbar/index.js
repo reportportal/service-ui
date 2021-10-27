@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export UniqueErrorsToolbar from './uniqueErrorsToolbar';
+export { UniqueErrorsToolbar } from './uniqueErrorsToolbar';
