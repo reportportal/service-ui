@@ -29,6 +29,13 @@ import {
   getHistoryTabEvent,
   getClickSelectAllItemsEvent,
   getClickSelectOneItemEvent,
+  getClickCloseIconSelectedItem,
+  getClickCloseIconForAllSelections,
+  getEditIconClickEvent,
+  getAllLabelBreadcrumbEvent,
+  getItemNameBreadcrumbClickEvent,
+  getRefineByNameEvent,
+  getEditItemsActionEvent,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getEditDefectModalEvents,
@@ -52,11 +59,7 @@ export const getChangeItemStatusEvent = (oldStatus, newStatus) => ({
 });
 
 export const STEP_PAGE_EVENTS = {
-  REFINE_BY_NAME: {
-    category: STEP_PAGE,
-    action: 'Enter parameters to refine by name',
-    label: 'Refine by name',
-  },
+  REFINE_BY_NAME: getRefineByNameEvent(STEP_PAGE),
   // REFINE_FILTERS_PANEL
   REFINE_FILTERS_PANEL_EVENTS: {
     commonEvents: getRefineFiltersPanelEvents(STEP_PAGE),
@@ -112,16 +115,8 @@ export const STEP_PAGE_EVENTS = {
     action: 'Click on icon "filter" Defect type',
     label: 'Arises active "Defect type" input',
   },
-  EDIT_ICON_CLICK: {
-    category: STEP_PAGE,
-    action: 'Click on item icon "edit"',
-    label: 'Arise Modal "Edit Item"',
-  },
-  EDIT_ITEMS_ACTION: {
-    category: STEP_PAGE,
-    action: 'Click on "edit" in Actions',
-    label: 'Arise Modal "Edit Items"',
-  },
+  EDIT_ICON_CLICK: getEditIconClickEvent(STEP_PAGE),
+  EDIT_ITEMS_ACTION: getEditItemsActionEvent(STEP_PAGE),
   EDIT_DEFECT_TYPE_ICON: {
     category: STEP_PAGE,
     action: 'Click on icon "edit" of Defect type tag',
@@ -129,16 +124,8 @@ export const STEP_PAGE_EVENTS = {
   },
   CLICK_SELECT_ALL_ITEMS: getClickSelectAllItemsEvent(STEP_PAGE),
   CLICK_SELECT_ONE_ITEM: getClickSelectOneItemEvent(STEP_PAGE),
-  CLOSE_ICON_SELECTED_ITEM: {
-    category: STEP_PAGE,
-    action: 'Click on icon "close" on selected item',
-    label: 'Remove item from the selected items',
-  },
-  CLOSE_ICON_FOR_ALL_SELECTIONS: {
-    category: STEP_PAGE,
-    action: 'Click on Close Icon of all selection',
-    label: 'Close panel with selected items',
-  },
+  CLOSE_ICON_SELECTED_ITEM: getClickCloseIconSelectedItem(STEP_PAGE),
+  CLOSE_ICON_FOR_ALL_SELECTIONS: getClickCloseIconForAllSelections(STEP_PAGE),
   IGNORE_IN_AA_ACTION: {
     category: STEP_PAGE,
     action: 'Click on Ignore in Auto-Analysis',
@@ -155,16 +142,8 @@ export const STEP_PAGE_EVENTS = {
     label: 'Arise Modal "Unlink issue"',
   },
   plusMinusBreadcrumb: getClickOnPlusMinusEvents(STEP_PAGE),
-  ALL_LABEL_BREADCRUMB: {
-    category: STEP_PAGE,
-    action: 'Click on Bread Crumb All',
-    label: 'Transition to Launches Page',
-  },
-  ITEM_NAME_BREADCRUMB_CLICK: {
-    category: STEP_PAGE,
-    action: 'Click on Bread Crumb Item name',
-    label: 'Transition to Item',
-  },
+  ALL_LABEL_BREADCRUMB: getAllLabelBreadcrumbEvent(STEP_PAGE),
+  ITEM_NAME_BREADCRUMB_CLICK: getItemNameBreadcrumbClickEvent(STEP_PAGE),
   REFRESH_BTN: getRefreshPageActionEvent(STEP_PAGE),
   PROCEED_VALID_ITEMS: getProceedValidItemsEvent(STEP_PAGE),
   EDIT_DEFECT_ACTION: getEditDefectActionEvent(STEP_PAGE),
