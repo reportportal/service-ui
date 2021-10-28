@@ -27,6 +27,8 @@ import {
   getListViewTabEvent,
   getLogViewTabEvent,
   getHistoryTabEvent,
+  getClickSelectAllItemsEvent,
+  getClickSelectOneItemEvent,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getEditDefectModalEvents,
@@ -125,16 +127,8 @@ export const STEP_PAGE_EVENTS = {
     action: 'Click on icon "edit" of Defect type tag',
     label: 'Arise Modal "Edit Defect Type"',
   },
-  clickSelectAllItemsEvent: (value) => ({
-    category: STEP_PAGE,
-    action: 'Click on item icon "select all items"',
-    label: `${value ? 'select' : 'unselect'} all items`,
-  }),
-  clickSelectOneItemEvent: (value) => ({
-    category: STEP_PAGE,
-    action: 'Click on item icon "select one item"',
-    label: `${value ? 'select' : 'unselect'} one item`,
-  }),
+  CLICK_SELECT_ALL_ITEMS: getClickSelectAllItemsEvent(STEP_PAGE),
+  CLICK_SELECT_ONE_ITEM: getClickSelectOneItemEvent(STEP_PAGE),
   CLOSE_ICON_SELECTED_ITEM: {
     category: STEP_PAGE,
     action: 'Click on icon "close" on selected item',

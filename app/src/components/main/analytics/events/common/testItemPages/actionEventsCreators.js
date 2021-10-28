@@ -97,6 +97,18 @@ export const getClickOnPlusMinusEvents = (page) => (state) => ({
   label: state ? 'Minus' : 'Plus',
 });
 
+export const getClickSelectAllItemsEvent = (page) => (value) => ({
+  category: page,
+  action: 'Click on item icon "select all items"',
+  label: `${value ? 'select' : 'unselect'} all items`,
+});
+
+export const getClickSelectOneItemEvent = (page) => (value) => ({
+  category: page,
+  action: 'Click on item icon "select one item"',
+  label: `${value ? 'select' : 'unselect'} one item`,
+});
+
 export const getListViewTabEvent = (page) => ({
   category: page,
   action: 'Click on tab "List view"',

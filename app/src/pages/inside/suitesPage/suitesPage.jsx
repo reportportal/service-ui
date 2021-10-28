@@ -179,7 +179,7 @@ export class SuitesPage extends Component {
 
   handleAllSuitesSelection = () => {
     this.props.tracking.trackEvent(
-      SUITES_PAGE_EVENTS.clickSelectAllItemsEvent(
+      SUITES_PAGE_EVENTS.CLICK_SELECT_ALL_ITEMS(
         this.props.suites.length !== this.props.selectedSuites.length,
       ),
     );
@@ -188,7 +188,7 @@ export class SuitesPage extends Component {
 
   handleOneItemSelection = (value) => {
     this.props.tracking.trackEvent(
-      SUITES_PAGE_EVENTS.clickSelectOneItemEvent(!this.props.selectedSuites.includes(value)),
+      SUITES_PAGE_EVENTS.CLICK_SELECT_ONE_ITEM(!this.props.selectedSuites.includes(value)),
     );
     this.props.toggleSuiteSelectionAction(value);
   };

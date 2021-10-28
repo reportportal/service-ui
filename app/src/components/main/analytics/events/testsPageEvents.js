@@ -16,6 +16,8 @@
 
 import {
   getClickOnPlusMinusEvents,
+  getClickSelectAllItemsEvent,
+  getClickSelectOneItemEvent,
   getHistoryTabEvent,
   getListViewTabEvent,
   getLogViewTabEvent,
@@ -48,4 +50,6 @@ export const TESTS_PAGE_EVENTS = {
   REFINE_FILTERS_PANEL_EVENTS: {
     commonEvents: getRefineFiltersPanelEvents(TEST_PAGE),
   },
+  CLICK_SELECT_ALL_ITEMS: getClickSelectAllItemsEvent(TEST_PAGE),
+  CLICK_SELECT_ONE_ITEM: getClickSelectOneItemEvent(TEST_PAGE),
 };

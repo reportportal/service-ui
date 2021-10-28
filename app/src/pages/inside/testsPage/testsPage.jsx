@@ -23,7 +23,7 @@ import { PageLayout, PageSection } from 'layouts/pageLayout';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { SuiteTestToolbar } from 'pages/inside/common/suiteTestToolbar';
 import { debugModeSelector } from 'controllers/launch';
-import { SUITES_PAGE_EVENTS } from 'components/main/analytics/events';
+import { SUITES_PAGE_EVENTS, TESTS_PAGE_EVENTS } from 'components/main/analytics/events';
 import {
   testsSelector,
   selectedTestsSelector,
@@ -176,7 +176,7 @@ export class TestsPage extends Component {
 
   handleAllTestsSelection = () => {
     this.props.tracking.trackEvent(
-      SUITES_PAGE_EVENTS.clickSelectAllItemsEvent(
+      TESTS_PAGE_EVENTS.CLICK_SELECT_ALL_ITEMS(
         this.props.tests.length !== this.props.selectedTests.length,
       ),
     );
@@ -185,7 +185,7 @@ export class TestsPage extends Component {
 
   handleOneItemSelection = (value) => {
     this.props.tracking.trackEvent(
-      SUITES_PAGE_EVENTS.clickSelectOneItemEvent(!this.props.selectedTests.includes(value)),
+      TESTS_PAGE_EVENTS.CLICK_SELECT_ONE_ITEM(!this.props.selectedTests.includes(value)),
     );
     this.props.toggleTestSelectionAction(value);
   };
