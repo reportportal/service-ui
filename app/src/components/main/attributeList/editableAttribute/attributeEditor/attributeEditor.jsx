@@ -110,7 +110,8 @@ export class AttributeEditor extends Component {
 
   handleKeyChange = (key) => {
     this.setState((oldState) => ({
-      key,
+      // prevent setting null from [downshift](https://www.npmjs.com/package/downshift#onchange) as attribute key
+      key: key || undefined,
       errors: this.getValidationErrors(key, oldState.value),
     }));
   };
