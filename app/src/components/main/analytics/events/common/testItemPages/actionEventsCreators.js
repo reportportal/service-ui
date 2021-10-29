@@ -14,12 +14,6 @@
  * limitations under the License.
  */
 
-export const getProceedValidItemsEvent = (page) => ({
-  category: page,
-  action: 'Click on Btn "Proceed Valid Items"',
-  label: 'Remove invalid items from selection',
-});
-
 export const getEditDefectActionEvent = (category) => ({
   category,
   action: 'Click on Btn "Edit Defect"',
@@ -48,12 +42,6 @@ export const getUnlinkIssueActionEvent = (category) => ({
   category,
   action: 'Click on Btn "Unlink Issue"',
   label: 'Arise Modal "Unlink Issue"',
-});
-
-export const getRefreshPageActionEvent = (category) => ({
-  category,
-  action: 'Click on button "Refresh"',
-  label: 'Refresh page',
 });
 
 export const getChangeFilterEvent = (category) => (title, value) => ({
@@ -109,230 +97,240 @@ export const getClickSelectOneItemEvent = (page) => (value) => ({
   label: `${value ? 'select' : 'unselect'} one item`,
 });
 
-export const getClickCloseIconForAllSelections = (page) => ({
-  category: page,
-  action: 'Click on icon "close" of all selection',
-  label: 'Unselect all items',
-});
+export const getCommonActionEvents = (page) => ({
+  CLOSE_ICON_FOR_ALL_SELECTIONS: {
+    category: page,
+    action: 'Click on icon "close" of all selection',
+    label: 'Unselect all items',
+  },
 
-export const getClickCloseIconSelectedItem = (page) => ({
-  category: page,
-  action: 'Click on icon "close" on selected item',
-  label: 'Remove item from  selection',
-});
+  CLOSE_ICON_SELECTED_ITEM: {
+    category: page,
+    action: 'Click on icon "close" on selected item',
+    label: 'Remove item from  selection',
+  },
+  LIST_VIEW_TAB: {
+    category: page,
+    action: 'Click on tab "List view"',
+    label: 'User redirects to the List view page',
+  },
 
-export const getListViewTabEvent = (page) => ({
-  category: page,
-  action: 'Click on tab "List view"',
-  label: 'User redirects to the List view page',
-});
+  LOG_VIEW_TAB: {
+    category: page,
+    action: 'Click on tab "Log view"',
+    label: 'User redirects to the Log view page',
+  },
 
-export const getLogViewTabEvent = (page) => ({
-  category: page,
-  action: 'Click on tab "Log view"',
-  label: 'User redirects to the Log view page',
-});
+  HISTORY_VIEW_TAB: {
+    category: page,
+    action: 'Click on tab "History"',
+    label: 'User redirects to the History page',
+  },
 
-export const getHistoryTabEvent = (page) => ({
-  category: page,
-  action: 'Click on tab "History"',
-  label: 'User redirects to the History page',
-});
+  PB_TOOLTIP: {
+    category: page,
+    action: 'Click on Tooltip "Total Product Bugs"',
+    label: 'Transition to PB list view',
+  },
 
-export const getPBTooltipEvent = (page) => ({
-  category: page,
-  action: 'Click on Tooltip "Total Product Bugs"',
-  label: 'Transition to PB list view',
-});
+  AB_TOOLTIP: {
+    category: page,
+    action: 'Click on Tooltip "Auto Bug"',
+    label: 'Transition to AB list view ',
+  },
 
-export const getABTooltipEvent = (page) => ({
-  category: page,
-  action: 'Click on Tooltip "Auto Bug"',
-  label: 'Transition to AB list view ',
-});
+  SI_TOOLTIP: {
+    category: page,
+    action: 'Click on Tooltip "Total System Issue"',
+    label: 'Transition to SI list view',
+  },
 
-export const getSITooltipEvent = (page) => ({
-  category: page,
-  action: 'Click on Tooltip "Total System Issue"',
-  label: 'Transition to SI list view',
-});
+  TI_TOOLTIP: {
+    category: page,
+    action: 'Click on Tooltip "To Investigate"',
+    label: 'Transition to inner level of launch with To Investigate',
+  },
+  PB_CHART: {
+    category: page,
+    action: 'Click on PB Circle',
+    label: 'Transition to PB list view',
+  },
 
-export const getTITooltipEvent = (page) => ({
-  category: page,
-  action: 'Click on Tooltip "To Investigate"',
-  label: 'Transition to inner level of launch with To Investigate',
-});
+  AB_CHART: {
+    category: page,
+    action: 'Click on AB Circle',
+    label: 'Transition to AB list view ',
+  },
 
-export const getPBChartEvent = (page) => ({
-  category: page,
-  action: 'Click on PB Circle',
-  label: 'Transition to PB list view',
-});
+  SI_CHART: {
+    category: page,
+    action: 'Click on SI Circle',
+    label: 'Transition to SI list view ',
+  },
 
-export const getABChartEvent = (page) => ({
-  category: page,
-  action: 'Click on AB Circle',
-  label: 'Transition to AB list view ',
-});
+  TI_CHART: {
+    category: page,
+    action: 'Click on TI tag',
+    label: 'Transition to TI list view',
+  },
 
-export const getSIChartEvent = (page) => ({
-  category: page,
-  action: 'Click on SI Circle',
-  label: 'Transition to SI list view ',
-});
+  NAME_FILTER: {
+    category: page,
+    action: 'Click on icon "filter" on Name',
+    label: 'Suite name input becomes active',
+  },
 
-export const getTIChartEvent = (page) => ({
-  category: page,
-  action: 'Click on TI tag',
-  label: 'Transition to TI list view',
-});
+  NAME_SORTING: {
+    category: page,
+    action: 'Click on icon "sorting" on Name',
+    label: 'Sort items by name',
+  },
 
-export const getNameFilterEvent = (page) => ({
-  category: page,
-  action: 'Click on icon "filter" on Name',
-  label: 'Suite name input becomes active',
-});
+  EDIT_ICON_CLICK: {
+    category: page,
+    action: 'Click on item icon "edit"',
+    label: 'Arise Modal "Edit Item"',
+  },
 
-export const getNameSortingEvent = (page) => ({
-  category: page,
-  action: 'Click on icon "sorting" on Name',
-  label: 'Sort items by name',
-});
+  START_TIME_FILTER: {
+    category: page,
+    action: 'Click on icon "filter" on Start time',
+    label: 'Arises active "Start time" input',
+  },
 
-export const getEditIconClickEvent = (page) => ({
-  category: page,
-  action: 'Click on item icon "edit"',
-  label: 'Arise Modal "Edit Item"',
-});
+  START_TIME_SORTING: {
+    category: page,
+    action: 'Click on icon "sorting" on Start time',
+    label: 'Sort items by Start time',
+  },
 
-export const getStartTimeFilterEvent = (page) => ({
-  category: page,
-  action: 'Click on icon "filter" on Start time',
-  label: 'Arises active "Start time" input',
-});
+  TOTAL_FILTER: {
+    category: page,
+    action: 'Click on icon "filter" on Total',
+    label: 'Arises active "Total" input',
+  },
 
-export const getStartTimeSortingEvent = (page) => ({
-  category: page,
-  action: 'Click on icon "sorting" on Start time',
-  label: 'Sort items by Start time',
-});
+  TOTAL_SORTING: {
+    category: page,
+    action: 'Click on icon "sorting" on Total',
+    label: 'Sort items by Total',
+  },
 
-export const getTotalFilterEvent = (page) => ({
-  category: page,
-  action: 'Click on icon "filter" on Total',
-  label: 'Arises active "Total" input',
-});
+  PASSED_FILTER: {
+    category: page,
+    action: 'Click on icon "filter" on Passed',
+    label: 'Arises active "Passed" input',
+  },
 
-export const getTotalSortingEvent = (page) => ({
-  category: page,
-  action: 'Click on icon "sorting" on Total',
-  label: 'Sort items by Total',
-});
+  PASSED_SORTING: {
+    category: page,
+    action: 'Click on icon "sorting" on Passed',
+    label: 'Sort items by Passed',
+  },
 
-export const getPassedFilterEvent = (page) => ({
-  category: page,
-  action: 'Click on icon "filter" on Passed',
-  label: 'Arises active "Passed" input',
-});
+  FAILED_FILTER: {
+    category: page,
+    action: 'Click on icon "filter" on Failed',
+    label: 'Arises active "Failed" input',
+  },
 
-export const getPassedSortingEvent = (page) => ({
-  category: page,
-  action: 'Click on icon "sorting" on Passed',
-  label: 'Sort items by Passed',
-});
+  FAILED_SORTING: {
+    category: page,
+    action: 'Click on icon "sorting" on Failed',
+    label: 'Sort items by Failed',
+  },
 
-export const getFailedFilterEvent = (page) => ({
-  category: page,
-  action: 'Click on icon "filter" on Failed',
-  label: 'Arises active "Failed" input',
-});
+  SKIPPED_FILTER: {
+    category: page,
+    action: 'Click on icon "filter" on Skipped',
+    label: 'Arises active "Skipped" input',
+  },
 
-export const getFailedSortingEvent = (page) => ({
-  category: page,
-  action: 'Click on icon "sorting" on Failed',
-  label: 'Sort items by Failed',
-});
+  SKIPPED_SORTING: {
+    category: page,
+    action: 'Click on icon "sorting" on Skipped',
+    label: 'Sort items by Skipped',
+  },
 
-export const getSkippedFilterEvent = (page) => ({
-  category: page,
-  action: 'Click on icon "filter" on Skipped',
-  label: 'Arises active "Skipped" input',
-});
+  PB_FILTER: {
+    category: page,
+    action: 'Click on icon "filter" on Product Bug',
+    label: 'Arises active "Product Bug" input',
+  },
 
-export const getSkippedSortingEvent = (page) => ({
-  category: page,
-  action: 'Click on icon "sorting" on Skipped',
-  label: 'Sort items by Skipped',
-});
+  PB_SORTING: {
+    category: page,
+    action: 'Click on icon "sorting" on Product Bug',
+    label: 'Sort items by Product Bug',
+  },
 
-export const getPBFilterEvent = (page) => ({
-  category: page,
-  action: 'Click on icon "filter" on Product Bug',
-  label: 'Arises active "Product Bug" input',
-});
+  AB_FILTER: {
+    category: page,
+    action: 'Click on icon "filter" on Auto Bug',
+    label: 'Arises active "Auto Bug" input',
+  },
 
-export const getPBSortingEvent = (page) => ({
-  category: page,
-  action: 'Click on icon "sorting" on Product Bug',
-  label: 'Sort items by Product Bug',
-});
+  AB_SORTING: {
+    category: page,
+    action: 'Click on icon "sorting" on Auto Bug',
+    label: 'Sort items by Auto Bug',
+  },
 
-export const getABFilterEvent = (page) => ({
-  category: page,
-  action: 'Click on icon "filter" on Auto Bug',
-  label: 'Arises active "Auto Bug" input',
-});
+  SI_FILTER: {
+    category: page,
+    action: 'Click on icon "filter" on System Issue',
+    label: 'Arises active "System Issue" input',
+  },
 
-export const getABSortingEvent = (page) => ({
-  category: page,
-  action: 'Click on icon "sorting" on Auto Bug',
-  label: 'Sort items by Auto Bug',
-});
+  SI_SORTING: {
+    category: page,
+    action: 'Click on icon "sorting" on System Issue',
+    label: 'Sort items by System Issue',
+  },
 
-export const getSIFilterEvent = (page) => ({
-  category: page,
-  action: 'Click on icon "filter" on System Issue',
-  label: 'Arises active "System Issue" input',
-});
+  TI_FILTER: {
+    category: page,
+    action: 'Click on icon "filter" on To Investigate',
+    label: 'Arises active "To Investigate" input',
+  },
 
-export const getSISortingEvent = (page) => ({
-  category: page,
-  action: 'Click on icon "sorting" on System Issue',
-  label: 'Sort items by System Issue',
-});
+  TI_SORTING: {
+    category: page,
+    action: 'Click on icon "sorting" on To Investigatee',
+    label: 'Sort items by To Investigate',
+  },
 
-export const getTIFilterEvent = (page) => ({
-  category: page,
-  action: 'Click on icon "filter" on To Investigate',
-  label: 'Arises active "To Investigate" input',
-});
+  ALL_LABEL_BREADCRUMB: {
+    category: page,
+    action: 'Click on Bread Crumb All',
+    label: 'Transition to Launches Page',
+  },
 
-export const getTISortingEvent = (page) => ({
-  category: page,
-  action: 'Click on icon "sorting" on To Investigatee',
-  label: 'Sort items by To Investigate',
-});
+  ITEM_NAME_BREADCRUMB_CLICK: {
+    category: page,
+    action: 'Click on Bread Crumb Item name',
+    label: 'Transition to Item',
+  },
 
-export const getAllLabelBreadcrumbEvent = (page) => ({
-  category: page,
-  action: 'Click on Bread Crumb All',
-  label: 'Transition to Launches Page',
-});
+  REFINE_BY_NAME: {
+    category: page,
+    action: 'Enter parameters to refine by name',
+    label: 'Refine by name',
+  },
 
-export const getItemNameBreadcrumbClickEvent = (page) => ({
-  category: page,
-  action: 'Click on Bread Crumb Item name',
-  label: 'Transition to Item',
-});
-
-export const getRefineByNameEvent = (page) => ({
-  category: page,
-  action: 'Enter parameters to refine by name',
-  label: 'Refine by name',
-});
-
-export const getEditItemsActionEvent = (page) => ({
-  category: page,
-  action: 'Click on "edit" in Actions',
-  label: 'Arise Modal "Edit Items"',
+  EDIT_ITEMS_ACTION: {
+    category: page,
+    action: 'Click on "edit" in Actions',
+    label: 'Arise Modal "Edit Items"',
+  },
+  REFRESH_BTN: {
+    category: page,
+    action: 'Click on button "Refresh"',
+    label: 'Refresh page',
+  },
+  PROCEED_VALID_ITEMS: {
+    category: page,
+    action: 'Click on Btn "Proceed Valid Items"',
+    label: 'Remove invalid items from selection',
+  },
 });

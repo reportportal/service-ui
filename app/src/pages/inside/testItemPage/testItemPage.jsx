@@ -28,7 +28,6 @@ import { PageLayout, PageSection } from 'layouts/pageLayout';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { Breadcrumbs } from 'components/main/breadcrumbs';
 import { LEVEL_SUITE, LEVEL_TEST, LEVEL_STEP } from 'common/constants/launchLevels';
-import { SUITES_PAGE_EVENTS } from 'components/main/analytics/events/suitesPageEvents';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { userIdSelector, activeProjectSelector } from 'controllers/user';
 import { unselectAllItemsAction } from 'controllers/groupOperations';
@@ -53,6 +52,7 @@ import {
   FilterEntitiesURLContainer,
   FilterEntitiesContainer,
 } from 'components/filterEntities/containers';
+import { pageEventsMap } from 'components/main/analytics';
 import { NotFound } from './notFound';
 
 import styles from './testItemPage.scss';
@@ -130,18 +130,6 @@ export const getDeleteItemsActionParameters = (
   };
 };
 
-const STEPS_DELETE_ITEMS_MODAL_EVENTS = {
-  closeIcon: STEP_PAGE_EVENTS.DELETE_ITEM_MODAL_EVENTS.CLOSE_ICON_DELETE_ITEM_MODAL,
-  cancelBtn: STEP_PAGE_EVENTS.DELETE_ITEM_MODAL_EVENTS.CANCEL_BTN_DELETE_ITEM_MODAL,
-  deleteBtn: STEP_PAGE_EVENTS.DELETE_ITEM_MODAL_EVENTS.DELETE_BTN_DELETE_ITEM_MODAL,
-};
-
-const SUITES_DELETE_ITEMS_MODAL_EVENTS = {
-  closeIcon: SUITES_PAGE_EVENTS.DELETE_ITEM_MODAL_EVENTS.CLOSE_ICON_DELETE_ITEM_MODAL,
-  cancelBtn: SUITES_PAGE_EVENTS.DELETE_ITEM_MODAL_EVENTS.CANCEL_BTN_DELETE_ITEM_MODAL,
-  deleteBtn: SUITES_PAGE_EVENTS.DELETE_ITEM_MODAL_EVENTS.DELETE_BTN_DELETE_ITEM_MODAL,
-};
-
 const testItemPages = {
   [LEVEL_SUITE]: SuitesPage,
   [LEVEL_TEST]: TestsPage,
@@ -213,7 +201,7 @@ export class TestItemPage extends Component {
 
   onEditItem = (item) => {
     const { level, parentLaunch } = this.props;
-    const events = LEVEL_STEP === level ? STEP_PAGE_EVENTS : SUITES_PAGE_EVENTS;
+    const events = pageEventsMap[level];
 
     this.props.showModalAction({
       id: 'editItemModal',
@@ -229,7 +217,7 @@ export class TestItemPage extends Component {
 
   onEditItems = (items) => {
     const { level, parentLaunch, tracking } = this.props;
-    const events = LEVEL_STEP === level ? STEP_PAGE_EVENTS : SUITES_PAGE_EVENTS;
+    const events = pageEventsMap[level];
     tracking.trackEvent(events.EDIT_ITEMS_ACTION);
 
     this.props.showModalAction({
@@ -263,9 +251,14 @@ export class TestItemPage extends Component {
       level,
     } = this.props;
     tracking.trackEvent(
-      LEVEL_STEP === level ? STEP_PAGE_EVENTS.DELETE_ACTION : SUITES_PAGE_EVENTS.DELETE_BTN,
+      LEVEL_STEP === level ? STEP_PAGE_EVENTS.DELETE_ACTION : pageEventsMap[level].DELETE_BTN,
     );
 
+    const eventsInfo = {
+      closeIcon: pageEventsMap[level].DELETE_ITEM_MODAL_EVENTS.CLOSE_ICON_DELETE_ITEM_MODAL,
+      cancelBtn: pageEventsMap[level].DELETE_ITEM_MODAL_EVENTS.CANCEL_BTN_DELETE_ITEM_MODAL,
+      deleteBtn: pageEventsMap[level].DELETE_ITEM_MODAL_EVENTS.DELETE_BTN_DELETE_ITEM_MODAL,
+    };
     const parameters = getDeleteItemsActionParameters(selectedItems, formatMessage, {
       onConfirm: (items) =>
         this.props.deleteTestItemsAction({
@@ -274,8 +267,7 @@ export class TestItemPage extends Component {
         }),
       userId,
       parentLaunch,
-      eventsInfo:
-        LEVEL_STEP === level ? STEPS_DELETE_ITEMS_MODAL_EVENTS : SUITES_DELETE_ITEMS_MODAL_EVENTS,
+      eventsInfo,
     });
 
     this.props.bulkDeleteTestItemsAction(LEVELS[level].namespace)(selectedItems, parameters);

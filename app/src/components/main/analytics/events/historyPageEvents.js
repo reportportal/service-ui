@@ -21,9 +21,8 @@ import {
   getLinkIssueActionEvent,
   getUnlinkIssueActionEvent,
   getPostIssueActionEvent,
-  getProceedValidItemsEvent,
-  getRefreshPageActionEvent,
   getChangeFilterEvent,
+  getCommonActionEvents,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getEditDefectModalEvents,
@@ -90,13 +89,13 @@ export const HISTORY_PAGE_EVENTS = {
     action: 'Click on Close Icon of all selection',
     label: 'Close panel with selected items',
   },
-  REFRESH_BTN: getRefreshPageActionEvent(HISTORY_PAGE),
+  REFRESH_BTN: getCommonActionEvents(HISTORY_PAGE).REFRESH_BTN,
   EDIT_DEFECT_ACTION: getEditDefectActionEvent(HISTORY_PAGE),
   POST_ISSUE_ACTION: getPostIssueActionEvent(HISTORY_PAGE),
   LINK_ISSUE_ACTION: getLinkIssueActionEvent(HISTORY_PAGE),
   DELETE_ACTION: getDeleteActionEvent(HISTORY_PAGE),
   UNLINK_ISSUES_ACTION: getUnlinkIssueActionEvent(HISTORY_PAGE),
-  PROCEED_VALID_ITEMS: getProceedValidItemsEvent(HISTORY_PAGE),
+  PROCEED_VALID_ITEMS: getCommonActionEvents(HISTORY_PAGE).PROCEED_VALID_ITEMS,
   // EDIT_DEFECT_MODAL
   EDIT_DEFECT_MODAL_EVENTS: getEditDefectModalEvents(HISTORY_PAGE),
   SELECT_ALL_SIMILAR_ITEMS_EDIT_DEFECT_MODAL: getEditToInvestigateSelectAllSimilarItemsEvent(
