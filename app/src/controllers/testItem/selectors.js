@@ -371,8 +371,8 @@ export const defectLinkSelector = createSelector(
       isLatest,
     };
 
-    if (ownProps.compositeAttributes) {
-      params['filter.has.compositeAttribute'] = ownProps.compositeAttributes;
+    if (ownProps.compositeAttribute) {
+      params['filter.has.compositeAttribute'] = ownProps.compositeAttribute;
     }
 
     if (ownProps.filterType) {
