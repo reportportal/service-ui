@@ -147,6 +147,7 @@ import {
 } from 'components/integrations/elements';
 import { updateLaunchLocallyAction } from 'controllers/launch';
 import { getDefectTypeLabel } from 'components/main/analytics/events/common/utils';
+import { formatAttribute } from 'common/utils/attributeUtils';
 import { createGlobalNamedIntegrationsSelector } from '../selectors';
 
 const BUTTONS = {
@@ -293,6 +294,7 @@ export const createImportProps = (pluginName) => ({
     getDefectTypeLocators,
     getDefectTypeLabel,
     getDefectFormFields,
+    formatAttribute,
   },
   validators: {
     attributesArray,
