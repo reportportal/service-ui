@@ -56,6 +56,7 @@ export class GridCell extends PureComponent {
     refFunction: () => {},
     expanded: false,
     toggleExpand: () => {},
+    customProps: {},
   };
 
   render() {
@@ -74,7 +75,7 @@ export class GridCell extends PureComponent {
     const CellComponent = component;
     return (
       <CellComponent
-        className={cx('grid-cell', { [`align-${align}`]: align })}
+        className={cx('grid-cell', { [`align-${align}`]: align }, customProps.gridCellStyles)}
         refFunction={refFunction}
         title={title}
         value={formatter(value)}

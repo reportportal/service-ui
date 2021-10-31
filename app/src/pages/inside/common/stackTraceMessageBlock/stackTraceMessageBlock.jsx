@@ -38,6 +38,7 @@ export class StackTraceMessageBlock extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     eventsInfo: PropTypes.object,
+    customProps: PropTypes.object,
   };
 
   static defaultProps = {
@@ -46,6 +47,7 @@ export class StackTraceMessageBlock extends Component {
     level: ERROR,
     designMode: '',
     eventsInfo: {},
+    customProps: {},
   };
 
   constructor(props) {
@@ -105,7 +107,7 @@ export class StackTraceMessageBlock extends Component {
   };
 
   render() {
-    const { children, level, designMode } = this.props;
+    const { children, level, designMode, customProps } = this.props;
     const { expanded, withAccordion, maxHeight } = this.state;
 
     return (
@@ -115,6 +117,7 @@ export class StackTraceMessageBlock extends Component {
           { 'with-accordion': withAccordion },
           `level-${level.toLowerCase()}`,
           { [`design-mode-${designMode}`]: designMode },
+          customProps.rowWrapper,
         )}
       >
         {withAccordion && (
@@ -126,7 +129,7 @@ export class StackTraceMessageBlock extends Component {
           </div>
         )}
         <div
-          className={cx('row', { [`design-mode-${designMode}`]: designMode })}
+          className={cx('row', { [`design-mode-${designMode}`]: designMode }, customProps.row)}
           ref={this.overflowCell}
           style={{ maxHeight }}
         >
@@ -135,10 +138,14 @@ export class StackTraceMessageBlock extends Component {
         {this.state.withAccordion && (
           <div className={cx('accordion-wrapper')}>
             <div
-              className={cx('accordion-block', {
-                expanded: this.state.expanded,
-                [`design-mode-${designMode}`]: designMode,
-              })}
+              className={cx(
+                'accordion-block',
+                {
+                  expanded: this.state.expanded,
+                  [`design-mode-${designMode}`]: designMode,
+                },
+                customProps.accordionBlock,
+              )}
             >
               <div
                 className={cx('accordion-toggler', { rotated: this.state.expanded })}

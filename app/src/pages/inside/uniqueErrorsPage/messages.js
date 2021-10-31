@@ -34,6 +34,11 @@ export const messages = defineMessages({
     defaultMessage:
       'Unique error analysis has not been run yet. To see unique error to this launch please run analysis manually',
   },
+  rerunAnalysisText: {
+    id: 'EmptyUniqueErr.rerunAnalysisText',
+    defaultMessage:
+      'There are no error logs that have been found in the launch. But if launch scope has been changed, you can re-run analysis one more time',
+  },
   uniqueErrAnalyzeModalText: {
     id: 'EmptyUniqueErrsAnalyzeModal.text',
     defaultMessage: 'Choose the base on witch the Unique Error Analysis will be performed:',

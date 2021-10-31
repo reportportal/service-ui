@@ -26,6 +26,7 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import { ParentInfo } from 'pages/inside/common/infoLine/parentInfo';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { fetchClustersAction } from 'controllers/uniqueErrors';
 import styles from './actionPanel.scss';
 
 const cx = classNames.bind(styles);
@@ -36,6 +37,7 @@ const cx = classNames.bind(styles);
   }),
   {
     restorePath: restorePathAction,
+    onRefresh: () => fetchClustersAction({ refresh: true }),
   },
 )
 @injectIntl
@@ -46,6 +48,7 @@ export class ActionPanel extends Component {
     showBreadcrumbs: PropTypes.bool,
     parentItem: PropTypes.object,
     restorePath: PropTypes.func,
+    onRefresh: PropTypes.func,
   };
 
   static defaultProps = {
@@ -53,6 +56,7 @@ export class ActionPanel extends Component {
     showBreadcrumbs: true,
     parentItem: null,
     restorePath: () => {},
+    onRefresh: () => {},
   };
 
   render() {
@@ -61,6 +65,7 @@ export class ActionPanel extends Component {
       restorePath,
       showBreadcrumbs,
       parentItem,
+      onRefresh,
       intl: { formatMessage },
     } = this.props;
 
@@ -73,7 +78,7 @@ export class ActionPanel extends Component {
             <GhostMenuButton title={formatMessage(COMMON_LOCALE_KEYS.ACTIONS)} disabled />
           </div>
           <div className={cx('action-button')}>
-            <GhostButton icon={RefreshIcon} disabled transparentBackground>
+            <GhostButton icon={RefreshIcon} onClick={onRefresh} transparentBackground>
               <FormattedMessage id="Common.refresh" defaultMessage="Refresh" />
             </GhostButton>
           </div>

@@ -14,18 +14,33 @@
  * limitations under the License.
  */
 
+import React from 'react';
 import { EmptyUniqueErrors } from 'pages/inside/uniqueErrorsPage/emptyUniqueErrors';
 import PropTypes from 'prop-types';
+import { UniqueErrorsGrid } from '../uniqueErrorsGrid';
 
 export const UniqueErrorsView = (props) => {
-  const { parentLaunch } = props;
-  return <EmptyUniqueErrors parentLaunch={parentLaunch} />;
+  const { parentLaunch, clusters, loading } = props;
+
+  return (
+    <>
+      {clusters.length > 0 ? (
+        <UniqueErrorsGrid data={clusters} loading={loading} />
+      ) : (
+        <EmptyUniqueErrors parentLaunch={parentLaunch} />
+      )}
+    </>
+  );
 };
 
 UniqueErrorsView.propTypes = {
   parentLaunch: PropTypes.object,
+  clusters: PropTypes.array,
+  loading: PropTypes.bool,
 };
 
 UniqueErrorsView.defaultProps = {
   parentLaunch: {},
+  clusters: [],
+  loading: false,
 };

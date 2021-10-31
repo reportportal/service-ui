@@ -36,6 +36,7 @@ import { logReducer } from 'controllers/log';
 import { administrateReducer } from 'controllers/administrate';
 import { pluginsReducer } from 'controllers/plugins';
 import { initialDataReadyReducer } from 'controllers/initialData';
+import { uniqueErrorsReducer } from 'controllers/uniqueErrors';
 
 export default {
   appInfo: appInfoReducer,
@@ -56,6 +57,7 @@ export default {
   testItem: testItemReducer,
   step: stepReducer,
   log: logReducer,
+  uniqueErrors: uniqueErrorsReducer,
   itemsHistory: itemsHistoryReducer,
   administrate: administrateReducer,
   plugins: pluginsReducer,

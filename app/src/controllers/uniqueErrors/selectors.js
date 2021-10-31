@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-export { UniqueErrorsAnalyzeModal } from './modals';
-export { UniqueErrorsPage } from './uniqueErrorsPage';
-export { messages } from './messages';
-export { RP_CLUSTER_LAST_RUN } from './constants';
+const domainSelector = (state) => state.uniqueErrors || {};
+
+export const pageLoadingSelector = (state) => domainSelector(state).pageLoading;
+export const loadingSelector = (state) => domainSelector(state).loading;
+export const clustersSelector = (state) => domainSelector(state).clusters || [];
+export const uniqueErrorsPaginationSelector = (state) => domainSelector(state).pagination;

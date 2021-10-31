@@ -16,13 +16,12 @@
 
 import classNames from 'classnames/bind';
 import { GhostButton } from 'components/buttons/ghostButton';
-import { Component } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { showModalAction } from 'controllers/modal';
 import PropTypes from 'prop-types';
 import { IN_PROGRESS } from 'common/constants/testStatuses';
 import { injectIntl } from 'react-intl';
-import { messages } from 'pages/inside/uniqueErrorsPage';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
@@ -31,6 +30,10 @@ import {
   showDefaultErrorNotification,
   showNotification,
 } from 'controllers/notification';
+import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { loadingSelector } from 'controllers/uniqueErrors';
+import { RP_CLUSTER_LAST_RUN } from '../constants';
+import { messages } from '../messages';
 import styles from './emptyUniqueErrors.scss';
 
 const cx = classNames.bind(styles);
@@ -39,6 +42,7 @@ const cx = classNames.bind(styles);
 @connect(
   (state) => ({
     projectId: activeProjectSelector(state),
+    loading: loadingSelector(state),
   }),
   {
     showModal: showModalAction,
@@ -54,6 +58,7 @@ export class EmptyUniqueErrors extends Component {
     showNotification: PropTypes.func,
     showDefaultErrorNotification: PropTypes.func,
     parentLaunch: PropTypes.object,
+    loading: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -62,6 +67,7 @@ export class EmptyUniqueErrors extends Component {
     showNotification: () => {},
     showDefaultErrorNotification: () => {},
     parentLaunch: {},
+    loading: false,
   };
 
   onSubmit = ({ removeNumbers }) => {
@@ -94,30 +100,45 @@ export class EmptyUniqueErrors extends Component {
   render() {
     const {
       parentLaunch,
+      loading,
       intl: { formatMessage },
     } = this.props;
+    const lastRunAnalysis =
+      parentLaunch.attributes &&
+      parentLaunch.attributes.find((item) => item.key === RP_CLUSTER_LAST_RUN);
     const disabled = parentLaunch.status === IN_PROGRESS;
+
     return (
-      <div className={cx('empty-unique-errors')}>
-        <div className={cx('empty-unique-errors-content')}>
-          <div className={cx('empty-unique-errors-img')} />
-          <p className={cx('empty-unique-errors-headline')}>
-            {formatMessage(messages.emptyUniqueErrHeadline)}
-          </p>
-          <p className={cx('empty-unique-errors-text')}>
-            {formatMessage(messages.emptyUniqueErrText)}
-          </p>
-          <div className={cx('empty-unique-errors-btn')}>
-            <GhostButton
-              onClick={this.openModal}
-              disabled={disabled}
-              title={disabled ? formatMessage(messages.emptyUniqueErrDisableBtnTooltip) : null}
-            >
-              {formatMessage(messages.emptyUniqueErrBtn)}
-            </GhostButton>
+      <>
+        {loading ? (
+          <SpinningPreloader />
+        ) : (
+          <div className={cx('empty-unique-errors')}>
+            <div className={cx('empty-unique-errors-content')}>
+              <div className={cx('empty-unique-errors-img')} />
+              <p className={cx('empty-unique-errors-headline')}>
+                {formatMessage(messages.emptyUniqueErrHeadline)}
+              </p>
+
+              <p className={cx('empty-unique-errors-text')}>
+                {lastRunAnalysis
+                  ? formatMessage(messages.rerunAnalysisText)
+                  : formatMessage(messages.emptyUniqueErrText)}
+              </p>
+
+              <div className={cx('empty-unique-errors-btn')}>
+                <GhostButton
+                  onClick={this.openModal}
+                  disabled={disabled}
+                  title={disabled ? formatMessage(messages.emptyUniqueErrDisableBtnTooltip) : null}
+                >
+                  {formatMessage(messages.emptyUniqueErrBtn)}
+                </GhostButton>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        )}
+      </>
     );
   }
 }
