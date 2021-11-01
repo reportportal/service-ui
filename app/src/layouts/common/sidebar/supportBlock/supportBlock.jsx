@@ -20,6 +20,7 @@ import { useDispatch } from 'react-redux';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { useTracking } from 'react-tracking';
+import Parser from 'html-react-parser';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { TextTooltip } from 'components/main/tooltips/textTooltip';
 import { InputDropdown } from 'components/inputs/inputDropdown';
@@ -28,6 +29,7 @@ import { HELP_AND_SUPPORT_EVENTS } from 'components/main/analytics/events';
 import { showModalAction } from 'controllers/modal';
 import { referenceDictionary } from 'common/utils';
 import { messages } from './messages';
+import QuestionMark from './img/question-mark-inline.svg';
 import styles from './supportBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -35,11 +37,7 @@ const cx = classNames.bind(styles);
 const EMAIL_SUPPORT = `${referenceDictionary.rpEmail}?subject=Support Request from the new RP instance`;
 const EMAIL_QUESTION = `${referenceDictionary.rpEmail}?subject=A question from the new RP instance`;
 
-const SupportBtn = () => (
-  <span className={cx('support-btn')}>
-    <span className={cx('support-btn-icon')}>?</span>
-  </span>
-);
+const SupportBtn = () => <span className={cx('support-btn')}>{Parser(QuestionMark)}</span>;
 
 const SupportBlockWithTooltip = withTooltip({
   TooltipComponent: TextTooltip,
