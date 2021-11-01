@@ -295,4 +295,5 @@ export const URLS = {
   btsTicket: (activeProject, issueId, btsProject, btsUrl) =>
     `${urlBase}bts/${activeProject}/ticket/${issueId}${getQueryParams({ btsProject, btsUrl })}`,
   runUniqueErrorAnalysis: (activeProject) => `${urlBase}${activeProject}/launch/cluster`,
+  onboarding: (page = 'GENERAL') => `${urlBase}onboarding?page=${page}`,
 };

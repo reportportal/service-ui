@@ -149,3 +149,22 @@ export const FOOTER_EVENTS = {
     label: `${pageNumber}#${page}`,
   }),
 };
+
+const HELP_AND_SUPPORT = 'Help and Support';
+export const HELP_AND_SUPPORT_EVENTS = {
+  clickOnSupportModalBtn: (linkName) => ({
+    category: HELP_AND_SUPPORT,
+    action: 'Click on Button/Link on Modal Help and Support',
+    label: linkName || HELP_AND_SUPPORT,
+  }),
+  clickInstructionLink: (label) => ({
+    category: HELP_AND_SUPPORT,
+    action: 'Click on Button Instruction on Modal Help and Support ',
+    label,
+  }),
+  clickOnRequestModalBtn: (btn) => ({
+    category: HELP_AND_SUPPORT,
+    action: 'Click on Button on Modal Request Support',
+    label: btn,
+  }),
+};

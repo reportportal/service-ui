@@ -22,6 +22,10 @@ import { FormattedMessage } from 'react-intl';
 import { SidebarButton } from 'components/buttons/sidebarButton/sidebarButton';
 import { LOGIN_PAGE } from 'controllers/pages/constants';
 import PropTypes from 'prop-types';
+import { fetch } from 'common/utils';
+import { URLS } from 'common/urls';
+import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
+import { SupportBlock } from './supportBlock';
 import LogoutIcon from '../img/logout-inline.svg';
 import { UserBlock } from './userBlock';
 import styles from './sidebar.scss';
@@ -30,6 +34,7 @@ const cx = classNames.bind(styles);
 
 @connect(null, {
   logout: logoutAction,
+  showNotification,
 })
 export class Sidebar extends Component {
   static propTypes = {
@@ -37,6 +42,7 @@ export class Sidebar extends Component {
     logout: PropTypes.func,
     topSidebarItems: PropTypes.array,
     bottomSidebarItems: PropTypes.array,
+    showNotification: PropTypes.func.isRequired,
   };
   static defaultProps = {
     mainBlock: null,
@@ -44,6 +50,26 @@ export class Sidebar extends Component {
     topSidebarItems: [],
     bottomSidebarItems: [],
   };
+
+  state = {
+    onboardingOptions: [],
+  };
+
+  componentDidMount() {
+    fetch(URLS.onboarding())
+      .then((res) => {
+        Array.isArray(res) &&
+          this.setState({
+            onboardingOptions: res.map(({ problem, link }) => ({ label: problem, value: link })),
+          });
+      })
+      .catch(({ message }) => {
+        this.props.showNotification({
+          type: NOTIFICATION_TYPES.ERROR,
+          message,
+        });
+      });
+  }
 
   render() {
     const { mainBlock, topSidebarItems, bottomSidebarItems } = this.props;
@@ -81,6 +107,9 @@ export class Sidebar extends Component {
               <FormattedMessage id={'Sidebar.logoutBtn'} defaultMessage={'Logout'} />
             </SidebarButton>
           </div>
+          {this.state.onboardingOptions.length > 0 && (
+            <SupportBlock options={this.state.onboardingOptions} />
+          )}
           <UserBlock />
         </div>
       </aside>

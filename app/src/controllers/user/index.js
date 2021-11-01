@@ -44,6 +44,7 @@ export {
   defaultProjectSelector,
   activeProjectSelector,
   userIdSelector,
+  userEmailSelector,
   startTimeFormatSelector,
   isAdminSelector,
   assignedProjectsSelector,
