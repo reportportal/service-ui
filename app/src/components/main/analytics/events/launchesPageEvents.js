@@ -17,8 +17,8 @@
 import { getEditItemsModalEvents } from 'components/main/analytics/events/common/testItemPages/modalEventsCreators';
 import {
   getClickOnPlusMinusEvents,
+  getCommonActionEvents,
   getRefineFiltersPanelEvents,
-  getRefreshPageActionEvent,
 } from 'components/main/analytics/events/common/testItemPages/actionEventsCreators';
 import {
   getAddBtnAddNewFilterAddWidgetModal,
@@ -296,7 +296,7 @@ export const LAUNCHES_PAGE_EVENTS = {
     action: 'Click on Btn Add New Widget on Dashboard',
     label: 'Arise Modal Add New Widget',
   },
-  REFRESH_BTN: getRefreshPageActionEvent(LAUNCHES_PAGE),
+  REFRESH_BTN: getCommonActionEvents(LAUNCHES_PAGE).REFRESH_BTN,
   REFINE_FILTERS_PANEL_EVENTS: {
     commonEvents: getRefineFiltersPanelEvents(LAUNCHES_PAGE),
   },

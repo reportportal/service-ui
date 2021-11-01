@@ -276,7 +276,7 @@ export class StepPage extends Component {
 
   handleAllStepsSelection = () => {
     this.props.tracking.trackEvent(
-      STEP_PAGE_EVENTS.clickSelectAllItemsEvent(
+      STEP_PAGE_EVENTS.CLICK_SELECT_ALL_ITEMS(
         this.props.selectedItems.length !== this.props.steps.length,
       ),
     );
@@ -285,7 +285,7 @@ export class StepPage extends Component {
 
   handleOneItemSelection = (value) => {
     this.props.tracking.trackEvent(
-      STEP_PAGE_EVENTS.clickSelectOneItemEvent(!this.props.selectedItems.includes(value)),
+      STEP_PAGE_EVENTS.CLICK_SELECT_ONE_ITEM(!this.props.selectedItems.includes(value)),
     );
     this.props.toggleStepSelection(value);
   };

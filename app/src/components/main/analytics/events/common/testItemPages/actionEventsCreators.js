@@ -14,12 +14,6 @@
  * limitations under the License.
  */
 
-export const getProceedValidItemsEvent = (page) => ({
-  category: page,
-  action: 'Click on Btn "Proceed Valid Items"',
-  label: 'Remove invalid items from selection',
-});
-
 export const getEditDefectActionEvent = (category) => ({
   category,
   action: 'Click on Btn "Edit Defect"',
@@ -48,12 +42,6 @@ export const getUnlinkIssueActionEvent = (category) => ({
   category,
   action: 'Click on Btn "Unlink Issue"',
   label: 'Arise Modal "Unlink Issue"',
-});
-
-export const getRefreshPageActionEvent = (category) => ({
-  category,
-  action: 'Click on button "Refresh"',
-  label: 'Refresh page',
 });
 
 export const getChangeFilterEvent = (category) => (title, value) => ({
@@ -97,20 +85,252 @@ export const getClickOnPlusMinusEvents = (page) => (state) => ({
   label: state ? 'Minus' : 'Plus',
 });
 
-export const getListViewTabEvent = (page) => ({
+export const getClickSelectAllItemsEvent = (page) => (value) => ({
   category: page,
-  action: 'Click on tab "List view"',
-  label: 'User redirects to the List view page',
+  action: 'Click on item icon "select all items"',
+  label: `${value ? 'select' : 'unselect'} all items`,
 });
 
-export const getLogViewTabEvent = (page) => ({
+export const getClickSelectOneItemEvent = (page) => (value) => ({
   category: page,
-  action: 'Click on tab "Log view"',
-  label: 'User redirects to the Log view page',
+  action: 'Click on item icon "select one item"',
+  label: `${value ? 'select' : 'unselect'} one item`,
 });
 
-export const getHistoryTabEvent = (page) => ({
-  category: page,
-  action: 'Click on tab "History"',
-  label: 'User redirects to the History page',
+export const getCommonActionEvents = (page) => ({
+  CLOSE_ICON_FOR_ALL_SELECTIONS: {
+    category: page,
+    action: 'Click on icon "close" of all selection',
+    label: 'Unselect all items',
+  },
+
+  CLOSE_ICON_SELECTED_ITEM: {
+    category: page,
+    action: 'Click on icon "close" on selected item',
+    label: 'Remove item from  selection',
+  },
+  LIST_VIEW_TAB: {
+    category: page,
+    action: 'Click on tab "List view"',
+    label: 'User redirects to the List view page',
+  },
+
+  LOG_VIEW_TAB: {
+    category: page,
+    action: 'Click on tab "Log view"',
+    label: 'User redirects to the Log view page',
+  },
+
+  HISTORY_VIEW_TAB: {
+    category: page,
+    action: 'Click on tab "History"',
+    label: 'User redirects to the History page',
+  },
+
+  PB_TOOLTIP: {
+    category: page,
+    action: 'Click on Tooltip "Total Product Bugs"',
+    label: 'Transition to PB list view',
+  },
+
+  AB_TOOLTIP: {
+    category: page,
+    action: 'Click on Tooltip "Auto Bug"',
+    label: 'Transition to AB list view ',
+  },
+
+  SI_TOOLTIP: {
+    category: page,
+    action: 'Click on Tooltip "Total System Issue"',
+    label: 'Transition to SI list view',
+  },
+
+  TI_TOOLTIP: {
+    category: page,
+    action: 'Click on Tooltip "To Investigate"',
+    label: 'Transition to inner level of launch with To Investigate',
+  },
+  PB_CHART: {
+    category: page,
+    action: 'Click on PB Circle',
+    label: 'Transition to PB list view',
+  },
+
+  AB_CHART: {
+    category: page,
+    action: 'Click on AB Circle',
+    label: 'Transition to AB list view ',
+  },
+
+  SI_CHART: {
+    category: page,
+    action: 'Click on SI Circle',
+    label: 'Transition to SI list view ',
+  },
+
+  TI_CHART: {
+    category: page,
+    action: 'Click on TI tag',
+    label: 'Transition to TI list view',
+  },
+
+  NAME_FILTER: {
+    category: page,
+    action: 'Click on icon "filter" on Name',
+    label: 'Suite name input becomes active',
+  },
+
+  NAME_SORTING: {
+    category: page,
+    action: 'Click on icon "sorting" on Name',
+    label: 'Sort items by name',
+  },
+
+  EDIT_ICON_CLICK: {
+    category: page,
+    action: 'Click on item icon "edit"',
+    label: 'Arise Modal "Edit Item"',
+  },
+
+  START_TIME_FILTER: {
+    category: page,
+    action: 'Click on icon "filter" on Start time',
+    label: 'Arises active "Start time" input',
+  },
+
+  START_TIME_SORTING: {
+    category: page,
+    action: 'Click on icon "sorting" on Start time',
+    label: 'Sort items by Start time',
+  },
+
+  TOTAL_FILTER: {
+    category: page,
+    action: 'Click on icon "filter" on Total',
+    label: 'Arises active "Total" input',
+  },
+
+  TOTAL_SORTING: {
+    category: page,
+    action: 'Click on icon "sorting" on Total',
+    label: 'Sort items by Total',
+  },
+
+  PASSED_FILTER: {
+    category: page,
+    action: 'Click on icon "filter" on Passed',
+    label: 'Arises active "Passed" input',
+  },
+
+  PASSED_SORTING: {
+    category: page,
+    action: 'Click on icon "sorting" on Passed',
+    label: 'Sort items by Passed',
+  },
+
+  FAILED_FILTER: {
+    category: page,
+    action: 'Click on icon "filter" on Failed',
+    label: 'Arises active "Failed" input',
+  },
+
+  FAILED_SORTING: {
+    category: page,
+    action: 'Click on icon "sorting" on Failed',
+    label: 'Sort items by Failed',
+  },
+
+  SKIPPED_FILTER: {
+    category: page,
+    action: 'Click on icon "filter" on Skipped',
+    label: 'Arises active "Skipped" input',
+  },
+
+  SKIPPED_SORTING: {
+    category: page,
+    action: 'Click on icon "sorting" on Skipped',
+    label: 'Sort items by Skipped',
+  },
+
+  PB_FILTER: {
+    category: page,
+    action: 'Click on icon "filter" on Product Bug',
+    label: 'Arises active "Product Bug" input',
+  },
+
+  PB_SORTING: {
+    category: page,
+    action: 'Click on icon "sorting" on Product Bug',
+    label: 'Sort items by Product Bug',
+  },
+
+  AB_FILTER: {
+    category: page,
+    action: 'Click on icon "filter" on Auto Bug',
+    label: 'Arises active "Auto Bug" input',
+  },
+
+  AB_SORTING: {
+    category: page,
+    action: 'Click on icon "sorting" on Auto Bug',
+    label: 'Sort items by Auto Bug',
+  },
+
+  SI_FILTER: {
+    category: page,
+    action: 'Click on icon "filter" on System Issue',
+    label: 'Arises active "System Issue" input',
+  },
+
+  SI_SORTING: {
+    category: page,
+    action: 'Click on icon "sorting" on System Issue',
+    label: 'Sort items by System Issue',
+  },
+
+  TI_FILTER: {
+    category: page,
+    action: 'Click on icon "filter" on To Investigate',
+    label: 'Arises active "To Investigate" input',
+  },
+
+  TI_SORTING: {
+    category: page,
+    action: 'Click on icon "sorting" on To Investigatee',
+    label: 'Sort items by To Investigate',
+  },
+
+  ALL_LABEL_BREADCRUMB: {
+    category: page,
+    action: 'Click on Bread Crumb All',
+    label: 'Transition to Launches Page',
+  },
+
+  ITEM_NAME_BREADCRUMB_CLICK: {
+    category: page,
+    action: 'Click on Bread Crumb Item name',
+    label: 'Transition to Item',
+  },
+
+  REFINE_BY_NAME: {
+    category: page,
+    action: 'Enter parameters to refine by name',
+    label: 'Refine by name',
+  },
+
+  EDIT_ITEMS_ACTION: {
+    category: page,
+    action: 'Click on "edit" in Actions',
+    label: 'Arise Modal "Edit Items"',
+  },
+  REFRESH_BTN: {
+    category: page,
+    action: 'Click on button "Refresh"',
+    label: 'Refresh page',
+  },
+  PROCEED_VALID_ITEMS: {
+    category: page,
+    action: 'Click on Btn "Proceed Valid Items"',
+    label: 'Remove invalid items from selection',
+  },
 });
