@@ -15,11 +15,11 @@
  */
 
 import {
-  getRefreshPageActionEvent,
   getLinkIssueActionEvent,
   getPostIssueActionEvent,
   getUnlinkIssueActionEvent,
   getClickOnPlusMinusEvents,
+  getCommonActionEvents,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getDeleteItemModalEvents,
@@ -73,7 +73,7 @@ export const LOG_PAGE_EVENTS = {
     action: 'Click on Btn next Method',
     label: 'Transition to next Method Item',
   },
-  REFRESH_BTN: getRefreshPageActionEvent(LOG_PAGE),
+  REFRESH_BTN: getCommonActionEvents(LOG_PAGE).REFRESH_BTN,
   DEFECT_TYPE_TAG: {
     category: LOG_PAGE,
     action: 'Click on Defect type tag',
