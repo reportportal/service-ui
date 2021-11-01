@@ -25,11 +25,13 @@ import {
 } from 'controllers/testItem';
 import { createFetchPredicate, fetchDataAction } from 'controllers/fetch';
 import { pathnameChangedSelector } from 'controllers/pages';
+import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
+import { SORTING_KEY } from 'controllers/sorting';
 import { FETCH_CLUSTERS, NAMESPACE } from './constants';
 import { setPageLoadingAction } from './actionCreators';
 
 function* fetchClusters({ payload = {} }) {
-  const { offset = 0, params: payloadParams = {}, refresh = false } = payload;
+  const { refresh = false } = payload;
   let parentLaunch = yield select(launchSelector);
   const project = yield select(activeProjectSelector);
   const isPathNameChanged = yield select(pathnameChangedSelector);
@@ -40,19 +42,22 @@ function* fetchClusters({ payload = {} }) {
     yield call(fetchParentItems);
   }
   parentLaunch = yield select(launchSelector);
-  const namespace = yield select(namespaceSelector, offset);
+  const namespace = yield select(namespaceSelector);
   const query = yield select(queryParametersSelector, namespace);
   yield put(
     fetchDataAction(NAMESPACE)(
-      URLS.getClusterByLaunchId(project, parentLaunch.id, {
-        ...query,
-        ...payloadParams,
+      URLS.clusterByLaunchId(project, parentLaunch.id, {
+        [PAGE_KEY]: query[PAGE_KEY],
+        [SIZE_KEY]: query[SIZE_KEY],
+        [SORTING_KEY]: query[SORTING_KEY],
       }),
     ),
   );
-  const waitEffects = [take(createFetchPredicate(NAMESPACE))];
-  yield all(waitEffects);
-  yield put(setPageLoadingAction(false));
+  if (isPathNameChanged && !refresh) {
+    const waitEffects = [take(createFetchPredicate(NAMESPACE))];
+    yield all(waitEffects);
+    yield put(setPageLoadingAction(false));
+  }
 }
 
 function* watchFetchClusters() {

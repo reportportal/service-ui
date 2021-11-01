@@ -29,7 +29,7 @@ ExpandColumn.propTypes = {
 };
 
 const ClusterColumn = ({ className, ...rest }) => (
-  <div className={cx(className)}>
+  <div className={cx('cluster-col', className)}>
     <StackTraceMessageBlock
       level={'error'}
       maxHeight={75}
@@ -68,7 +68,6 @@ export const UniqueErrorsGrid = ({ data, loading }) => {
       component: ClusterColumn,
       customProps: {
         gridHeaderCellStyles: cx('cluster-header'),
-        gridCellStyles: cx('reset-padding'),
       },
     },
   ];

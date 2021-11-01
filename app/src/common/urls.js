@@ -295,7 +295,7 @@ export const URLS = {
   btsTicket: (activeProject, issueId, btsProject, btsUrl) =>
     `${urlBase}bts/${activeProject}/ticket/${issueId}${getQueryParams({ btsProject, btsUrl })}`,
   runUniqueErrorAnalysis: (activeProject) => `${urlBase}${activeProject}/launch/cluster`,
-  getClusterByLaunchId: (activeProject, launchId, query) =>
+  clusterByLaunchId: (activeProject, launchId, query) =>
     `${urlBase}${activeProject}/launch/cluster/${launchId}${getQueryParams(query)}`,
   onboarding: (page = 'GENERAL') => `${urlBase}onboarding?page=${page}`,
 };
