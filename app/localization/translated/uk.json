@@ -505,6 +505,7 @@
   "EmptyUniqueErr.button": "Запустити аналіз унікальних помилок",
   "EmptyUniqueErr.disableButtonTooltip": "Цю операцію не можна виконати для запусків у процесі",
   "EmptyUniqueErr.headline": "Немає унікальних помилок",
+  "EmptyUniqueErr.rerunAnalysisText": "Логів з помилками у запуску не виявлено. Але якщо запуск було змінено, ви можете повторно запустити аналіз",
   "EmptyUniqueErr.text": "Унікальний аналіз помилок не проводився. Щоб побачити унікальну помилку для цього запуску, запустіть аналіз вручну",
   "EmptyUniqueErrsAnalyzeModal.excludeNumbers": "Виключити цифри із журналів",
   "EmptyUniqueErrsAnalyzeModal.fieldName": "Цифри в журналі помилок:",

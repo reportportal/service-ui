@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 
-export { UniqueErrorsAnalyzeModal } from './modals';
-export { UniqueErrorsPage } from './uniqueErrorsPage';
-export { messages } from './messages';
-export { RP_CLUSTER_LAST_RUN } from './constants';
+export { uniqueErrorsReducer } from './reducer';
+export { fetchClustersAction, setPageLoadingAction } from './actionCreators';
+export { uniqueErrorsSagas } from './sagas';
+export { NAMESPACE, FETCH_CLUSTERS } from './constants';
+export {
+  pageLoadingSelector,
+  clustersSelector,
+  uniqueErrorsPaginationSelector,
+  loadingSelector,
+} from './selectors';

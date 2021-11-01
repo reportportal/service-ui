@@ -34,6 +34,7 @@ import { projectSagas } from 'controllers/project';
 import { initialDataSagas } from 'controllers/initialData';
 import { pageSagas } from 'controllers/pages';
 import { pluginSagas } from 'controllers/plugins';
+import { uniqueErrorsSagas } from 'controllers/uniqueErrors';
 
 const sagas = [
   notificationSagas,
@@ -55,6 +56,7 @@ const sagas = [
   initialDataSagas,
   pageSagas,
   pluginSagas,
+  uniqueErrorsSagas,
 ];
 
 export function* rootSagas() {

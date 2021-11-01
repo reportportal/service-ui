@@ -82,6 +82,7 @@ import { fetchProjectsAction } from 'controllers/administrate/projects';
 import { startSetViewMode } from 'controllers/administrate/projects/actionCreators';
 import { SIZE_KEY } from 'controllers/pagination';
 import { setSessionItem, updateStorageItem } from 'common/utils/storageUtils';
+import { fetchClustersAction } from 'controllers/uniqueErrors';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
@@ -205,7 +206,7 @@ const routesMap = {
   [UNIQUE_ERRORS_PAGE]: {
     path: '/:projectId/launches/:filterId/:testItemIds+/uniqueErrors',
     thunk: (dispatch) => {
-      dispatch(fetchTestItemsAction());
+      dispatch(fetchClustersAction());
     },
   },
   PROJECT_FILTERS_PAGE: {

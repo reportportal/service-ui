@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright 2021 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +14,34 @@
  * limitations under the License.
  */
 
-export { UniqueErrorsAnalyzeModal } from './modals';
-export { UniqueErrorsPage } from './uniqueErrorsPage';
-export { messages } from './messages';
-export { RP_CLUSTER_LAST_RUN } from './constants';
+.expand-col {
+  width: 10px;
+}
+
+.cluster-header {
+  padding-left: 37px;
+}
+
+.cluster-col {
+  padding: 0;
+}
+
+.row-wrapper {
+  padding: 9px 24px 9px 34px;
+  border-left: 3px solid $COLOR--orange-red;
+  background-image: linear-gradient(to right, $COLOR--light-red, $COLOR--light-red);
+  background-size: 7px 100%;
+}
+
+.row {
+  font-size: 12px;
+  line-height: 1.55;
+  color: $COLOR_-black-2;
+  white-space: pre-wrap;
+}
+
+.accordion-block {
+  align-items: center;
+  background: transparent;
+  box-shadow: none;
+}

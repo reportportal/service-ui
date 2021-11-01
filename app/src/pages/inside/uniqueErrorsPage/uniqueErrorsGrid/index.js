@@ -14,7 +14,4 @@
  * limitations under the License.
  */
 
-export { UniqueErrorsAnalyzeModal } from './modals';
-export { UniqueErrorsPage } from './uniqueErrorsPage';
-export { messages } from './messages';
-export { RP_CLUSTER_LAST_RUN } from './constants';
+export { UniqueErrorsGrid } from './uniqueErrorsGrid';
