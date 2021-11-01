@@ -102,6 +102,7 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
         >
           <input type="hidden" name="oid" value="00D24000000k2Rp" />
           <input type="hidden" name="retURL" value="http://" />
+          <input type="hidden" name="source" value="ReportPortal instance" />
 
           <div className={cx('form-field')}>
             <FieldProvider name="first_name">
