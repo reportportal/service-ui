@@ -105,14 +105,17 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
       <>
         <span className={cx('text')}>{Parser(formatMessage(messages.modalText))}</span>
         <form
-          action="https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8"
+          action="https://test.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8"
           method="POST"
           id={REQUEST_FORM_ID}
           target="dummyframe"
         >
-          <input type="hidden" name="oid" value="00D24000000k2Rp" />
+          <input type="hidden" name="oid" value="00D7a000000AZdD" />
           <input type="hidden" name="retURL" value="http://" />
           <input type="hidden" name="source" value="ReportPortal instance" />
+
+          <input type="hidden" name="debug" value="1" />
+          <input type="hidden" name="debugEmail" value="Olga_Korenko@epam.com" />
 
           <div className={cx('form-field')}>
             <FieldProvider name="first_name">
