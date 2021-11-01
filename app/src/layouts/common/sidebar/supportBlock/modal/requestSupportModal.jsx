@@ -99,7 +99,7 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
         ),
       }}
       closeIconEventInfo={HELP_AND_SUPPORT_EVENTS.clickOnRequestModalBtn(
-        COMMON_LOCALE_KEYS.CANCEL.defaultMessage,
+        COMMON_LOCALE_KEYS.CLOSE.defaultMessage,
       )}
     >
       <>
