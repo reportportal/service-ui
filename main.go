@@ -72,6 +72,7 @@ func configureRouter(srv *server.RpServer, rpConf struct {
 			"img-src":        {"*", "'self'", "'unsafe-inline'", "data:", "blob:", "http:", "https:", "www.google-analytics.com"},
 			"object-src":     {"'none'"},
 			"connect-src":    {"'self'", "https://www.google-analytics.com", "https://stats.g.doubleclick.net"},
+            "frame-src":      {"'self'", "https://test.salesforce.com"},
 		}
 		// apply content security policies
 		var STSSeconds int64 = 315360000
