@@ -23,7 +23,7 @@ import { PageLayout, PageSection } from 'layouts/pageLayout';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { SuiteTestToolbar } from 'pages/inside/common/suiteTestToolbar';
 import { debugModeSelector } from 'controllers/launch';
-import { SUITES_PAGE_EVENTS } from 'components/main/analytics/events';
+import { TESTS_PAGE_EVENTS } from 'components/main/analytics/events';
 import {
   testsSelector,
   selectedTestsSelector,
@@ -176,7 +176,7 @@ export class TestsPage extends Component {
 
   handleAllTestsSelection = () => {
     this.props.tracking.trackEvent(
-      SUITES_PAGE_EVENTS.clickSelectAllItemsEvent(
+      TESTS_PAGE_EVENTS.CLICK_SELECT_ALL_ITEMS(
         this.props.tests.length !== this.props.selectedTests.length,
       ),
     );
@@ -185,18 +185,18 @@ export class TestsPage extends Component {
 
   handleOneItemSelection = (value) => {
     this.props.tracking.trackEvent(
-      SUITES_PAGE_EVENTS.clickSelectOneItemEvent(!this.props.selectedTests.includes(value)),
+      TESTS_PAGE_EVENTS.CLICK_SELECT_ONE_ITEM(!this.props.selectedTests.includes(value)),
     );
     this.props.toggleTestSelectionAction(value);
   };
 
   unselectAllItems = () => {
-    this.props.tracking.trackEvent(SUITES_PAGE_EVENTS.CLOSE_ICON_FOR_ALL_SELECTIONS);
+    this.props.tracking.trackEvent(TESTS_PAGE_EVENTS.CLOSE_ICON_FOR_ALL_SELECTIONS);
     this.props.unselectAllTestsAction();
   };
 
   unselectItem = (item) => {
-    this.props.tracking.trackEvent(SUITES_PAGE_EVENTS.CLOSE_ICON_SELECTED_ITEM);
+    this.props.tracking.trackEvent(TESTS_PAGE_EVENTS.CLOSE_ICON_SELECTED_ITEM);
     this.props.toggleTestSelectionAction(item);
   };
   render() {
@@ -251,7 +251,7 @@ export class TestsPage extends Component {
             onFilterValidate={onFilterValidate}
             onFilterRemove={onFilterRemove}
             onFilterAdd={onFilterAdd}
-            events={SUITES_PAGE_EVENTS}
+            events={TESTS_PAGE_EVENTS}
           />
           <LaunchSuiteGrid
             data={tests}
@@ -263,7 +263,7 @@ export class TestsPage extends Component {
             onItemsSelect={this.props.selectTestsAction}
             onAllItemsSelect={this.handleAllTestsSelection}
             loading={loading}
-            events={SUITES_PAGE_EVENTS}
+            events={TESTS_PAGE_EVENTS}
             onFilterClick={onFilterAdd}
             onEditItem={onEditItem}
             rowHighlightingConfig={rowHighlightingConfig}
