@@ -15,22 +15,10 @@
  */
 
 .support-btn {
-  padding: 14px 14px;
-  cursor: pointer;
-}
-
-.support-btn-icon {
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 4px;
-  border: 2px solid $COLOR--white;
-  font-family: $FONT-CONDBOLD;
-  color: $COLOR--white;
-  font-size: 14px;
-  user-select: none;
+  width: 56px;
+  height: 54px;
+  cursor: pointer;
 }
 
 .tooltip-text {
@@ -43,12 +31,12 @@
 
 .support-block {
   position: relative;
-  margin-bottom: 73px;
+  margin-bottom: 70px;
 }
 
 .modal {
   position: absolute;
-  bottom: -31px;
+  bottom: -17px;
   left: 62px;
   width: max-content;
   max-width: 360px;
