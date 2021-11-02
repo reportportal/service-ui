@@ -137,7 +137,7 @@ export class ViewTabs extends Component {
         title: formatMessage(messages[UNIQUE_ERRORS_VIEW]),
         link: uniqueErrorsLink,
         icon: ListIcon,
-        available: !isTestItemsList,
+        available: !isTestItemsList && !debugMode,
         disabled: !isAnalyzerAvailable,
         hint: !isAnalyzerAvailable ? formatMessage(messages.disabledAnalyzer) : '',
       },
