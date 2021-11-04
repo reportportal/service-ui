@@ -16,13 +16,14 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { logoutAction } from 'controllers/auth';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
 import { SidebarButton } from 'components/buttons/sidebarButton/sidebarButton';
 import { LOGIN_PAGE } from 'controllers/pages/constants';
-import PropTypes from 'prop-types';
-import { fetch } from 'common/utils';
+import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
+import { updateStorageItem, getStorageItem, fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { SupportBlock } from './supportBlock';
@@ -56,19 +57,26 @@ export class Sidebar extends Component {
   };
 
   componentDidMount() {
-    fetch(URLS.onboarding())
-      .then((res) => {
-        Array.isArray(res) &&
-          this.setState({
-            onboardingOptions: res.map(({ problem, link }) => ({ label: problem, value: link })),
+    const appSettings = getStorageItem(APPLICATION_SETTINGS);
+    const shouldRequestOnboarding = !(appSettings && appSettings.shouldRequestOnboarding === false);
+    if (shouldRequestOnboarding) {
+      fetch(URLS.onboarding())
+        .then((res) => {
+          if (Array.isArray(res)) {
+            this.setState({
+              onboardingOptions: res.map(({ problem, link }) => ({ label: problem, value: link })),
+            });
+          } else if (res === -1) {
+            updateStorageItem(APPLICATION_SETTINGS, { shouldRequestOnboarding: false });
+          }
+        })
+        .catch(({ message }) => {
+          this.props.showNotification({
+            type: NOTIFICATION_TYPES.ERROR,
+            message,
           });
-      })
-      .catch(({ message }) => {
-        this.props.showNotification({
-          type: NOTIFICATION_TYPES.ERROR,
-          message,
         });
-      });
+    }
   }
 
   render() {
