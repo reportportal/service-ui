@@ -27,7 +27,7 @@ export const messages = defineMessages({
   },
   emptyUniqueErrHeadline: {
     id: 'EmptyUniqueErr.headline',
-    defaultMessage: 'No Unique Error',
+    defaultMessage: 'No Unique Errors',
   },
   emptyUniqueErrText: {
     id: 'EmptyUniqueErr.text',
