@@ -17,6 +17,7 @@
 import { combineReducers } from 'redux';
 import { loadingReducer } from 'controllers/loading';
 import { fetchReducer } from 'controllers/fetch';
+import { queueReducers } from 'common/utils';
 import {
   NAMESPACE,
   SET_LEVEL,
@@ -24,6 +25,7 @@ import {
   FILTERED_ITEM_STATISTICS_NAMESPACE,
   FILTERED_ITEM_STATISTICS_INITIAL_STATE,
   SET_PAGE_LOADING,
+  FETCH_PARENT_LAUNCH_SUCCESS,
 } from './constants';
 
 const levelReducer = (state = '', { type, payload }) => {
@@ -44,11 +46,23 @@ const pageLoadingReducer = (state = false, { type, payload }) => {
   }
 };
 
+const parentItemsReducer = (state = [], { type, payload }) => {
+  switch (type) {
+    case FETCH_PARENT_LAUNCH_SUCCESS:
+      return [payload, ...state.slice(1)];
+    default:
+      return state;
+  }
+};
+
 export const testItemReducer = combineReducers({
   level: levelReducer,
   loading: loadingReducer(NAMESPACE),
   pageLoading: pageLoadingReducer,
-  parentItems: fetchReducer(PARENT_ITEMS_NAMESPACE, { initialState: [] }),
+  parentItems: queueReducers(
+    parentItemsReducer,
+    fetchReducer(PARENT_ITEMS_NAMESPACE, { initialState: [] }),
+  ),
   filteredItemStatistics: fetchReducer(FILTERED_ITEM_STATISTICS_NAMESPACE, {
     initialState: FILTERED_ITEM_STATISTICS_INITIAL_STATE,
   }),

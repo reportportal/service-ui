@@ -25,7 +25,7 @@ export {
   fetchTestItemsFromLogPageAction,
   setDefaultItemStatisticsAction,
 } from './actionCreators';
-export { fetchParentItems, testItemsSagas } from './sagas';
+export { fetchParentItems, fetchParentLaunch, testItemsSagas } from './sagas';
 export {
   SET_PAGE_LOADING,
   FILTERED_ITEM_STATISTICS_INITIAL_STATE,

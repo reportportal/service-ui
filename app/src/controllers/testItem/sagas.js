@@ -56,6 +56,7 @@ import {
   setLevelAction,
   setPageLoadingAction,
   setDefaultItemStatisticsAction,
+  fetchParentLaunchSuccessAction,
 } from './actionCreators';
 import {
   FETCH_TEST_ITEMS,
@@ -126,6 +127,17 @@ export function* fetchParentItems() {
   );
   yield put(bulkFetchDataAction(PARENT_ITEMS_NAMESPACE, true)(urls));
   yield take(createFetchPredicate(PARENT_ITEMS_NAMESPACE));
+}
+
+export function* fetchParentLaunch({ payload = {} } = {}) {
+  const {
+    project = yield select(activeProjectSelector),
+    launchId = yield select(launchIdSelector),
+  } = payload;
+
+  const launch = yield call(fetch, URLS.launch(project, launchId));
+
+  yield put(fetchParentLaunchSuccessAction(launch));
 }
 
 function* fetchTestItems({ payload = {} }) {

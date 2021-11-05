@@ -27,6 +27,7 @@ import {
   DELETE_TEST_ITEMS,
   FILTERED_ITEM_STATISTICS_INITIAL_STATE,
   FILTERED_ITEM_STATISTICS_NAMESPACE,
+  FETCH_PARENT_LAUNCH_SUCCESS,
 } from './constants';
 
 export const setLevelAction = (level) => ({
@@ -79,3 +80,8 @@ export const createBulkDeleteTestItemsAction = (namespace) =>
 
 export const setDefaultItemStatisticsAction = () =>
   fetchSuccessAction(FILTERED_ITEM_STATISTICS_NAMESPACE, FILTERED_ITEM_STATISTICS_INITIAL_STATE);
+
+export const fetchParentLaunchSuccessAction = (launch) => ({
+  type: FETCH_PARENT_LAUNCH_SUCCESS,
+  payload: launch,
+});
