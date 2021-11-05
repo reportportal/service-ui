@@ -19,6 +19,7 @@ import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
 import {
   fetchParentItems,
+  fetchParentLaunch,
   launchSelector,
   namespaceSelector,
   queryParametersSelector,
@@ -40,6 +41,8 @@ function* fetchClusters({ payload = {} }) {
   }
   if (!parentLaunch) {
     yield call(fetchParentItems);
+  } else {
+    yield call(fetchParentLaunch, { payload: { project, launchId: parentLaunch.id } });
   }
   parentLaunch = yield select(launchSelector);
   const namespace = yield select(namespaceSelector);
