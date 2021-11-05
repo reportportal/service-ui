@@ -99,14 +99,12 @@ export class EmptyUniqueErrors extends Component {
 
   render() {
     const {
-      parentLaunch,
+      parentLaunch: { status, metadata },
       loading,
       intl: { formatMessage },
     } = this.props;
-    const lastRunAnalysis =
-      parentLaunch.attributes &&
-      parentLaunch.attributes.find((item) => item.key === RP_CLUSTER_LAST_RUN);
-    const disabled = parentLaunch.status === IN_PROGRESS;
+    const lastRunAnalysis = metadata && metadata[RP_CLUSTER_LAST_RUN];
+    const disabled = status === IN_PROGRESS;
 
     return (
       <>
