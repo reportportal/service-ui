@@ -17,48 +17,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useTracking } from 'react-tracking';
-import { StackTraceMessageBlock } from 'pages/inside/common/stackTraceMessageBlock';
 import classNames from 'classnames/bind';
-import { uniqueId } from 'common/utils';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
-import { ItemHeader } from '../../../elements/itemHeader';
-import { ExecutionInfo } from '../../../elements/executionInfo';
-import { ALL_LOADED_TI_FROM_HISTORY_LINE, ERROR_LOGS_SIZE } from '../../../constants';
+import { TestItemDetails } from 'pages/inside/stepPage/modals/makeDecisionModal/elements/testItemDetails';
+import {
+  ALL_LOADED_TI_FROM_HISTORY_LINE,
+  HISTORY_LINE_ITEM,
+  SIMILAR_TO_INVESTIGATE_ITEM,
+} from '../../../constants';
 import styles from './itemsListBody.scss';
 
 const cx = classNames.bind(styles);
-
-const Log = ({ log, eventsInfo }) => (
-  <div className={cx('error-log')}>
-    <StackTraceMessageBlock
-      level={log.level}
-      designMode="dark"
-      maxHeight={70}
-      eventsInfo={eventsInfo}
-    >
-      <div>{log.message}</div>
-    </StackTraceMessageBlock>
-  </div>
-);
-Log.propTypes = {
-  log: PropTypes.object.isRequired,
-  eventsInfo: PropTypes.object,
-};
-Log.defaultProps = {
-  eventsInfo: {},
-};
 
 const SimilarItemsList = ({
   testItems,
   selectedItems,
   selectItem,
-  showErrorLogs,
-  isNarrowView,
   isBulkOperation,
-  eventsInfo,
   onClickExternalLinkEvent,
+  showErrorLogs,
+  eventsInfo,
 }) => {
-  const isTIGroupDefect = testItems[0].issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
   return (
     <>
       {testItems.length > 0 &&
@@ -86,22 +65,16 @@ const SimilarItemsList = ({
 
           return (
             <div key={item.id || item.itemId}>
-              <ItemHeader
+              <TestItemDetails
                 item={composedItem}
+                logs={composedItem.logs}
                 selectItem={getSelectedItem()}
                 isSelected={selected}
-                preselected={!isBulkOperation ? i === 0 : null}
-                isNarrowView={isNarrowView}
                 onClickLinkEvent={onClickExternalLinkEvent}
+                mode={SIMILAR_TO_INVESTIGATE_ITEM}
+                showErrorLogs={showErrorLogs}
+                eventsInfo={eventsInfo}
               />
-              {showErrorLogs &&
-                !isNarrowView &&
-                item.logs.slice(0, ERROR_LOGS_SIZE).map((log) => {
-                  const logEventsInfo = eventsInfo.onOpenStackTrace && {
-                    onOpenStackTraceEvent: () => eventsInfo.onOpenStackTrace(isTIGroupDefect),
-                  };
-                  return <Log log={log} key={uniqueId()} eventsInfo={logEventsInfo} />;
-                })}
             </div>
           );
         })}
@@ -114,35 +87,31 @@ SimilarItemsList.propTypes = {
   selectItem: PropTypes.func.isRequired,
   showErrorLogs: PropTypes.bool.isRequired,
   isBulkOperation: PropTypes.bool,
-  isNarrowView: PropTypes.bool,
-  eventsInfo: PropTypes.object,
   onClickExternalLinkEvent: PropTypes.func,
+  eventsInfo: PropTypes.object,
 };
 SimilarItemsList.defaultProps = {
-  isNarrowView: false,
-  eventsInfo: {},
   onClickExternalLinkEvent: () => {},
+  eventsInfo: {},
 };
 
 const HistoryLineItemsList = ({
   testItems,
   selectedItems,
   selectItem,
-  isNarrowView,
   onClickExternalLinkEvent,
 }) => {
   return (
     testItems.length > 0 &&
     testItems.map((item, i) => {
       return (
-        <ExecutionInfo
+        <TestItemDetails
           item={item}
           selectItem={i !== 0 ? selectItem : undefined}
           isSelected={!!selectedItems.find((selectedItem) => selectedItem.id === item.id)}
-          preselected={i === 0}
           key={item.id}
-          isNarrowView={isNarrowView}
           onClickLinkEvent={onClickExternalLinkEvent}
+          mode={HISTORY_LINE_ITEM}
         />
       );
     })
@@ -164,7 +133,6 @@ export const ItemsListBody = ({
   setItems,
   showErrorLogs,
   optionValue,
-  isNarrowView,
   isBulkOperation,
   eventsInfo,
 }) => {
@@ -191,7 +159,6 @@ export const ItemsListBody = ({
           testItems={testItems}
           selectedItems={selectedItems}
           selectItem={selectItem}
-          isNarrowView={isNarrowView}
           onClickExternalLinkEvent={onClickExternalLinkEvent}
         />
       ) : (
@@ -200,7 +167,6 @@ export const ItemsListBody = ({
           selectedItems={selectedItems}
           selectItem={selectItem}
           showErrorLogs={showErrorLogs}
-          isNarrowView={isNarrowView}
           isBulkOperation={isBulkOperation}
           eventsInfo={eventsInfo}
           onClickExternalLinkEvent={onClickExternalLinkEvent}
@@ -216,7 +182,6 @@ ItemsListBody.propTypes = {
   showErrorLogs: PropTypes.bool,
   optionValue: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   isBulkOperation: PropTypes.bool,
-  isNarrowView: PropTypes.bool,
   eventsInfo: PropTypes.object,
 };
 ItemsListBody.defaultProps = {
@@ -226,6 +191,5 @@ ItemsListBody.defaultProps = {
   showErrorLogs: false,
   optionValue: '',
   isBulkOperation: false,
-  isNarrowView: true,
   eventsInfo: {},
 };

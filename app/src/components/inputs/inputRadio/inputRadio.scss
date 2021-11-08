@@ -131,6 +131,16 @@
     }
   }
 
+  .small-toggler {
+    width: 16px;
+    height: 16px;
+
+    &::after {
+      width: 8px;
+      height: 8px;
+    }
+  }
+
   &.children-container {
     max-width: 90%;
     color: $COLOR--dirty-gray;

@@ -17,22 +17,21 @@
 import React, { useState } from 'react';
 import classNames from 'classnames/bind';
 import { InputSwitcher } from 'components/inputs/inputSwitcher';
-import { ItemHeader } from 'pages/inside/stepPage/modals/makeDecisionModal/elements/itemHeader';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import {
-  ERROR_LOGS_SIZE,
+  ANALYZED_ITEM,
   HIGH,
   LOW,
   MACHINE_LEARNING_SUGGESTIONS,
   SAME,
 } from 'pages/inside/stepPage/modals/makeDecisionModal/constants';
-import { StackTraceMessageBlock } from 'pages/inside/common/stackTraceMessageBlock';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import Parser from 'html-react-parser';
 import ExternalLinkIcon from 'common/img/go-to-another-page-inline.svg';
+import { TestItemDetails } from 'pages/inside/stepPage/modals/makeDecisionModal/elements/testItemDetails/testItemDetails';
 import styles from './machineLearningSuggestions.scss';
 import { messages } from '../messages';
 
@@ -160,28 +159,19 @@ export const MachineLearningSuggestions = ({
                 </span>
               </div>
               <div className={cx('suggestion-item-wrapper')} key={testItemResource.id}>
-                <ItemHeader
+                <TestItemDetails
                   item={testItemResource}
                   selectItem={selectMachineLearningSuggestionItem}
                   isSelected={modalState.source.id === testItemResource.id}
                   onClickLinkEvent={onClickExternalLinkEvent}
+                  logs={logs}
+                  suggestRs={suggestRs}
+                  mode={ANALYZED_ITEM}
+                  eventsInfo={{
+                    onOpenStackTraceEvent: () =>
+                      eventsInfo.onOpenStackTrace(defectFromTIGroup, true),
+                  }}
                 />
-                {showErrorLogs &&
-                  logs.slice(0, ERROR_LOGS_SIZE).map((log) => (
-                    <div key={log.id} className={cx('error-log')}>
-                      <StackTraceMessageBlock
-                        level={log.level}
-                        designMode="dark"
-                        maxHeight={70}
-                        eventsInfo={{
-                          onOpenStackTraceEvent: () =>
-                            eventsInfo.onOpenStackTrace(defectFromTIGroup, true),
-                        }}
-                      >
-                        <div>{log.message}</div>
-                      </StackTraceMessageBlock>
-                    </div>
-                  ))}
               </div>
             </div>
           ),

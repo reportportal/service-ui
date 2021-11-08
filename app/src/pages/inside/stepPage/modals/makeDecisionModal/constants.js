@@ -27,6 +27,9 @@ export const ERROR_LOGS_SIZE = 5;
 export const SAME = 100;
 export const HIGH = 70;
 export const LOW = 40;
+export const HISTORY_LINE_ITEM = 'historyLineItem';
+export const SIMILAR_TO_INVESTIGATE_ITEM = 'similarToInvestigateItem';
+export const ANALYZED_ITEM = 'analyzedItem';
 
 export const SEARCH_MODES = {
   CURRENT_LAUNCH,
