@@ -34,7 +34,6 @@ import {
   toggleClusterItemSelectionAction,
 } from 'controllers/uniqueErrors/clusterItems';
 import { ENTITY_METHOD_TYPE } from 'components/filterEntities/constants';
-import { isLoadMoreButtonVisible } from 'controllers/log/nestedSteps';
 import { PROJECT_LOG_PAGE } from 'controllers/pages';
 import { reloadClusterAction } from 'controllers/uniqueErrors';
 import { modifyColumnsFunc } from './utils';
@@ -74,8 +73,12 @@ export const NestedGridRow = ({ data, onEditItem, onUnlinkSingleTicket, onEditDe
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const clusterItems = useSelector((state) => clusterItemsSelector(state, id));
-  const { collapsed, loading, content } = clusterItems;
-  const showMoreButton = isLoadMoreButtonVisible(clusterItems);
+  const {
+    collapsed,
+    loading,
+    content,
+    page: { number: currentPage, totalPages },
+  } = clusterItems;
   const selectedItems = useSelector(selectedClusterItemsSelector);
 
   const onToggle = () => {
@@ -128,7 +131,7 @@ export const NestedGridRow = ({ data, onEditItem, onUnlinkSingleTicket, onEditDe
                 onEditDefect={onEditDefect}
                 onStatusUpdate={() => dispatch(reloadClusterAction())}
               />
-              {showMoreButton && (
+              {totalPages > currentPage && (
                 <div
                   className={cx('load-more-container', {
                     loading,

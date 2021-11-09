@@ -49,7 +49,7 @@ export {
   TOGGLE_CLUSTER_ITEMS,
   LOAD_MORE_CLUSTER_ITEMS,
   REQUEST_CLUSTER_ITEMS,
-  PAGINATION_OFFSET,
+  PAGE_SIZE,
   INITIAL_STATE,
 } from './constants';
 export { clusterItemsSagas } from './sagas';

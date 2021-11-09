@@ -49,7 +49,7 @@ export const clusterItemsReducer = (state = {}, action) => {
         [id]: {
           ...state[id],
           loading: false,
-          content,
+          content: [...state[id].content, ...content],
           page,
         },
       };

@@ -22,7 +22,7 @@ export const TOGGLE_CLUSTER_ITEMS = 'toggleClusterItems';
 export const LOAD_MORE_CLUSTER_ITEMS = 'loadMoreClusterItems';
 export const REQUEST_CLUSTER_ITEMS = 'requestClusterItems';
 
-export const PAGINATION_OFFSET = 10;
+export const PAGE_SIZE = 10;
 
 export const INITIAL_STATE = {
   loading: false,

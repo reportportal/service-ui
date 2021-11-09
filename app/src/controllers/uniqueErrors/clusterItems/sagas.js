@@ -21,7 +21,13 @@ import { fetch, isEmptyObject } from 'common/utils';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
-import { parentItemsSelector } from 'controllers/testItem';
+import {
+  namespaceSelector,
+  parentItemsSelector,
+  PROVIDER_TYPE_CLUSTER,
+  queryParametersSelector,
+} from 'controllers/testItem';
+import { SORTING_KEY } from 'controllers/sorting';
 import {
   fetchClusterItemsErrorAction,
   fetchClusterItemsStartAction,
@@ -32,7 +38,7 @@ import { clusterItemsSelector } from './selectors';
 import {
   FETCH_CLUSTER_ITEMS_ERROR,
   LOAD_MORE_CLUSTER_ITEMS,
-  PAGINATION_OFFSET,
+  PAGE_SIZE,
   REQUEST_CLUSTER_ITEMS,
 } from './constants';
 
@@ -41,26 +47,20 @@ function* fetchClusterItems({ payload = {} }) {
   const { page } = yield select(clusterItemsSelector, id);
   const project = yield select(activeProjectSelector);
   const parentItems = yield select(parentItemsSelector);
-  let pageSize = PAGINATION_OFFSET;
+  let pageNumber = 1;
   if (!isEmptyObject(page)) {
-    const { totalElements, size } = page;
-    pageSize = size >= totalElements ? totalElements : size + PAGINATION_OFFSET;
+    const { totalPages, number } = page;
+    pageNumber = number >= totalPages ? totalPages : number + 1;
   }
-  /*
-    [PAGE_KEY]: 1,
-    [SIZE_KEY]: pageSize,
-    'filter.any.clusterId': payload,
-    'page.sort': 'startTime,ASC',
-    providerType: 'cluster',
-    launchId: parentItems[0].id,
-  */
+  const namespace = yield select(namespaceSelector);
+  const query = yield select(queryParametersSelector, namespace);
   const fetchParams = {
-    [PAGE_KEY]: 1,
-    [SIZE_KEY]: pageSize,
-    'filter.eq.parentId': 366783,
-    'page.sort': 'startTime,ASC',
-    providerType: 'launch',
+    [PAGE_KEY]: pageNumber,
+    [SIZE_KEY]: PAGE_SIZE,
+    [SORTING_KEY]: query[SORTING_KEY],
+    providerType: PROVIDER_TYPE_CLUSTER,
     launchId: parentItems[0].id,
+    'filter.any.clusterId': id,
   };
   try {
     yield put(fetchClusterItemsStartAction(payload));
