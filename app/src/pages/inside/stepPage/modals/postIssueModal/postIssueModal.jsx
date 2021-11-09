@@ -539,7 +539,7 @@ export class PostIssueModal extends Component {
     const {
       namedBtsIntegrations,
       intl: { formatMessage },
-      data: { eventsInfo },
+      data: { eventsInfo = {} },
     } = this.props;
     const { pluginName, integrationId, fields, expanded, wasExpanded } = this.state;
     const CredentialsComponent = SYSTEM_CREDENTIALS_BLOCKS[pluginName];

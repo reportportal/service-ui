@@ -134,7 +134,10 @@ export const SelectDefectManually = ({
         onClick: () => {
           setIssueActionType(POST_ISSUE);
           collapseTabsExceptCurr(SELECT_DEFECT_MANUALLY);
-          trackEvent(onClickIssueBtn(defectFromTIGroup, actionMessages[POST_ISSUE].defaultMessage));
+          onClickIssueBtn &&
+            trackEvent(
+              onClickIssueBtn(defectFromTIGroup, actionMessages[POST_ISSUE].defaultMessage),
+            );
         },
         disabled: isPostIssueUnavailable,
       },
@@ -147,7 +150,10 @@ export const SelectDefectManually = ({
         onClick: () => {
           setIssueActionType(LINK_ISSUE);
           collapseTabsExceptCurr(SELECT_DEFECT_MANUALLY);
-          trackEvent(onClickIssueBtn(defectFromTIGroup, actionMessages[LINK_ISSUE].defaultMessage));
+          onClickIssueBtn &&
+            trackEvent(
+              onClickIssueBtn(defectFromTIGroup, actionMessages[LINK_ISSUE].defaultMessage),
+            );
         },
         disabled: !btsIntegrations.length,
       },
@@ -166,9 +172,10 @@ export const SelectDefectManually = ({
         onClick: () => {
           setIssueActionType(UNLINK_ISSUE);
           collapseTabsExceptCurr(SELECT_DEFECT_MANUALLY);
-          trackEvent(
-            onClickIssueBtn(defectFromTIGroup, actionMessages[UNLINK_ISSUE].defaultMessage),
-          );
+          onClickIssueBtn &&
+            trackEvent(
+              onClickIssueBtn(defectFromTIGroup, actionMessages[UNLINK_ISSUE].defaultMessage),
+            );
         },
       });
     }
@@ -220,7 +227,8 @@ export const SelectDefectManually = ({
           manipulateEditorOutside={setCommentEditor}
           onChange={handleDefectCommentChange}
           eventsInfo={{
-            onClickToolbarIcon: eventsInfo.onClickEditorIcon(defectFromTIGroup),
+            onClickToolbarIcon:
+              eventsInfo.onClickEditorIcon && eventsInfo.onClickEditorIcon(defectFromTIGroup),
           }}
           placeholder={formatMessage(
             isBulkOperation

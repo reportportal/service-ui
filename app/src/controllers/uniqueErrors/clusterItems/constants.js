@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-import { FETCH_CLUSTERS, RELOAD_CLUSTERS, SET_PAGE_LOADING } from './constants';
+export const FETCH_CLUSTER_ITEMS_START = 'fetchClusterItemsStart';
+export const FETCH_CLUSTER_ITEMS_SUCCESS = 'fetchClusterItemsSuccess';
+export const FETCH_CLUSTER_ITEMS_ERROR = 'fetchClusterItemsError';
+export const CLEAR_CLUSTER_ITEMS = 'clearClusterItems';
+export const TOGGLE_CLUSTER_ITEMS = 'toggleClusterItems';
+export const LOAD_MORE_CLUSTER_ITEMS = 'loadMoreClusterItems';
+export const REQUEST_CLUSTER_ITEMS = 'requestClusterItems';
 
-export const fetchClustersAction = (payload) => ({
-  type: FETCH_CLUSTERS,
-  payload,
-});
+export const PAGINATION_OFFSET = 10;
 
-export const reloadClusterAction = () => ({
-  type: RELOAD_CLUSTERS,
-});
-
-export const setPageLoadingAction = (isLoading) => ({
-  type: SET_PAGE_LOADING,
-  payload: isLoading,
-});
+export const INITIAL_STATE = {
+  loading: false,
+  content: [],
+  page: {},
+  collapsed: true,
+  initial: true,
+};

@@ -262,10 +262,9 @@ const MakeDecision = ({ data }) => {
   };
   const getOnApplyEvent = () => {
     const {
-      eventsInfo: {
-        editDefectsEvents: { onApply, onApplyAndContinue },
-      },
+      eventsInfo: { editDefectsEvents = {} },
     } = data;
+    const { onApply, onApplyAndContinue } = editDefectsEvents;
     const {
       decisionType,
       issueActionType,
@@ -278,25 +277,24 @@ const MakeDecision = ({ data }) => {
     const hasSuggestions = !!suggestedItems.length;
     if (isEqual(itemData.issue, modalState.source.issue) && issueActionType) {
       const issueActionLabel = issueActionType && actionMessages[issueActionType].defaultMessage;
-      eventInfo = onApplyAndContinue(
-        defectFromTIGroup,
-        hasSuggestions,
-        issueActionLabel,
-        defectFromTIGroup,
-      );
+      eventInfo =
+        onApplyAndContinue &&
+        onApplyAndContinue(defectFromTIGroup, hasSuggestions, issueActionLabel, defectFromTIGroup);
     } else {
       const section = messages[decisionType].defaultMessage;
       const optionLabel = messages[optionValue].defaultMessage;
       const selectedItemsLength = selectedItems.length;
       const timestamp = Date.now() - startTime;
-      eventInfo = onApply(
-        section,
-        defectFromTIGroup,
-        hasSuggestions,
-        optionLabel,
-        selectedItemsLength,
-        timestamp,
-      );
+      eventInfo =
+        onApply &&
+        onApply(
+          section,
+          defectFromTIGroup,
+          hasSuggestions,
+          optionLabel,
+          selectedItemsLength,
+          timestamp,
+        );
     }
     return eventInfo;
   };
@@ -461,8 +459,10 @@ const MakeDecision = ({ data }) => {
     const hasSuggestions = !!suggestedItems.length;
     return {
       openCloseRightSection: (isOpen) =>
+        data.eventsInfo.editDefectsEvents &&
         data.eventsInfo.editDefectsEvents.openCloseRightSection(defectFromTIGroup, isOpen),
       closeModal: (endTime) =>
+        data.eventsInfo.editDefectsEvents &&
         data.eventsInfo.editDefectsEvents.closeModal(
           defectFromTIGroup,
           hasSuggestions,

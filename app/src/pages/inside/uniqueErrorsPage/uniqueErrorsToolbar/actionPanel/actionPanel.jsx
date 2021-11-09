@@ -20,13 +20,31 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import RefreshIcon from 'common/img/refresh-inline.svg';
-import { breadcrumbsSelector, restorePathAction } from 'controllers/testItem';
+import { breadcrumbsSelector, launchSelector, restorePathAction } from 'controllers/testItem';
 import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { ParentInfo } from 'pages/inside/common/infoLine/parentInfo';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { fetchClustersAction } from 'controllers/uniqueErrors';
+import { reloadClusterAction } from 'controllers/uniqueErrors';
+import { createStepActionDescriptors } from 'pages/inside/common/utils';
+import {
+  availableBtsIntegrationsSelector,
+  enabledBtsPluginsSelector,
+  isBtsPluginsExistSelector,
+} from 'controllers/plugins';
+import {
+  ignoreInAutoAnalysisAction,
+  includeInAutoAnalysisAction,
+  lastOperationSelector,
+  linkIssueAction,
+  postIssueAction,
+  unlinkIssueAction,
+  proceedWithValidItemsAction,
+} from 'controllers/uniqueErrors/clusterItems';
+import { showModalAction } from 'controllers/modal';
+import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
+
 import styles from './actionPanel.scss';
 
 const cx = classNames.bind(styles);
@@ -34,48 +52,194 @@ const cx = classNames.bind(styles);
 @connect(
   (state) => ({
     breadcrumbs: breadcrumbsSelector(state),
+    btsIntegrations: availableBtsIntegrationsSelector(state),
+    isBtsPluginsExist: isBtsPluginsExistSelector(state),
+    enabledBtsPlugins: enabledBtsPluginsSelector(state),
+    lastOperation: lastOperationSelector(state),
+    parentLaunch: launchSelector(state),
+    accountRole: userAccountRoleSelector(state),
+    projectRole: activeProjectRoleSelector(state),
   }),
   {
     restorePath: restorePathAction,
-    onRefresh: () => fetchClustersAction({ refresh: true }),
+    onRefresh: reloadClusterAction,
+    onLinkIssue: linkIssueAction,
+    onUnlinkIssue: unlinkIssueAction,
+    onPostIssue: postIssueAction,
+    proceedWithValidItems: proceedWithValidItemsAction,
+    showModalAction,
+    ignoreInAutoAnalysisAction,
+    includeInAutoAnalysisAction,
   },
 )
 @injectIntl
 export class ActionPanel extends Component {
   static propTypes = {
-    intl: PropTypes.object.isRequired,
+    accountRole: PropTypes.string,
     breadcrumbs: PropTypes.arrayOf(breadcrumbDescriptorShape),
-    showBreadcrumbs: PropTypes.bool,
-    parentItem: PropTypes.object,
-    restorePath: PropTypes.func,
+    btsIntegrations: PropTypes.array,
+    enabledBtsPlugins: PropTypes.array,
+    hasErrors: PropTypes.bool,
+    hasValidItems: PropTypes.bool,
+    ignoreInAutoAnalysisAction: PropTypes.func,
+    includeInAutoAnalysisAction: PropTypes.func,
+    intl: PropTypes.object.isRequired,
+    isBtsPluginsExist: PropTypes.bool,
+    lastOperation: PropTypes.object,
+    onDelete: PropTypes.func,
+    onEditDefects: PropTypes.func,
+    onEditItems: PropTypes.func,
+    onLinkIssue: PropTypes.func,
+    onPostIssue: PropTypes.func,
     onRefresh: PropTypes.func,
+    onUnlinkIssue: PropTypes.func,
+    parentItem: PropTypes.object,
+    parentLaunch: PropTypes.object,
+    restorePath: PropTypes.func,
+    proceedWithValidItems: PropTypes.func,
+    projectRole: PropTypes.string.isRequired,
+    selectedItems: PropTypes.array,
+    showModalAction: PropTypes.func,
+    showBreadcrumbs: PropTypes.bool,
+    unselectAndFetchItems: PropTypes.func,
   };
 
   static defaultProps = {
+    accountRole: '',
     breadcrumbs: [],
-    showBreadcrumbs: true,
-    parentItem: null,
-    restorePath: () => {},
+    btsIntegrations: [],
+    enabledBtsPlugins: [],
+    hasErrors: false,
+    hasValidItems: false,
+    ignoreInAutoAnalysisAction: () => {},
+    includeInAutoAnalysisAction: () => {},
+    isBtsPluginsExist: false,
+    lastOperation: {},
+    onDelete: () => {},
+    onEditDefects: () => {},
+    onEditItems: () => {},
+    onLinkIssue: () => {},
+    onPostIssue: () => {},
     onRefresh: () => {},
+    onUnlinkIssue: () => {},
+    parentItem: null,
+    parentLaunch: {},
+    restorePath: () => {},
+    proceedWithValidItems: () => {},
+    selectedItems: [],
+    showModalAction: () => {},
+    showBreadcrumbs: true,
+    unselectAndFetchItems: () => {},
+  };
+
+  handlePostIssue = () => {
+    this.props.onPostIssue(this.props.selectedItems, {
+      fetchFunc: this.props.unselectAndFetchItems,
+      eventsInfo: {},
+    });
+  };
+  handleLinkIssue = () => {
+    this.props.onLinkIssue(this.props.selectedItems, {
+      fetchFunc: this.props.unselectAndFetchItems,
+      eventsInfo: {},
+    });
+  };
+  handleUnlinkIssue = () => {
+    this.props.onUnlinkIssue(this.props.selectedItems, {
+      fetchFunc: this.props.unselectAndFetchItems,
+      eventsInfo: {},
+    });
+  };
+  handleIgnoreInAA = () => {
+    this.props.ignoreInAutoAnalysisAction(this.props.selectedItems, {
+      fetchFunc: this.props.unselectAndFetchItems,
+      eventsInfo: {},
+    });
+  };
+
+  handleIncludeInAA = () => {
+    this.props.includeInAutoAnalysisAction(this.props.selectedItems, {
+      fetchFunc: this.props.unselectAndFetchItems,
+      eventsInfo: {},
+    });
+  };
+
+  getItemsActionDescriptors = () => {
+    const {
+      intl: { formatMessage },
+      onEditItems,
+      onEditDefects,
+      onDelete,
+      btsIntegrations,
+      isBtsPluginsExist,
+      enabledBtsPlugins,
+      accountRole,
+      projectRole,
+      selectedItems,
+    } = this.props;
+
+    return createStepActionDescriptors({
+      formatMessage,
+      selectedItems,
+      accountRole,
+      projectRole,
+      enabledBtsPlugins,
+      isBtsPluginsExist,
+      btsIntegrations,
+      onDelete,
+      onIgnoreInAA: this.handleIgnoreInAA,
+      onIncludeInAA: this.handleIncludeInAA,
+      onEditItems,
+      onEditDefects,
+      onPostIssue: this.handlePostIssue,
+      onLinkIssue: this.handleLinkIssue,
+      onUnlinkIssue: this.handleUnlinkIssue,
+    });
+  };
+  onProceedWithValidItems = () => {
+    const {
+      lastOperation: { operationName, operationArgs },
+      selectedItems,
+    } = this.props;
+
+    this.props.proceedWithValidItems(operationName, selectedItems, operationArgs);
   };
 
   render() {
     const {
+      intl: { formatMessage },
       breadcrumbs,
       restorePath,
       showBreadcrumbs,
       parentItem,
       onRefresh,
-      intl: { formatMessage },
+      selectedItems,
+      hasErrors,
+      hasValidItems,
     } = this.props;
+    const itemsActionDescriptors = this.getItemsActionDescriptors();
 
     return (
-      <div className={cx('action-panel', { 'right-buttons-only': !showBreadcrumbs })}>
+      <div className={cx('action-panel', { 'right-buttons-only': !showBreadcrumbs && !hasErrors })}>
         {showBreadcrumbs && <Breadcrumbs descriptors={breadcrumbs} onRestorePath={restorePath} />}
+        {hasErrors && (
+          <GhostButton
+            disabled={!hasValidItems}
+            onClick={this.onProceedWithValidItems}
+            transparentBackground
+          >
+            {formatMessage(COMMON_LOCALE_KEYS.PROCEED_VALID_ITEMS)}
+          </GhostButton>
+        )}
         <div className={cx('action-buttons')}>
           {parentItem && <ParentInfo parentItem={parentItem} />}
           <div className={cx('action-button', 'mobile-hidden')}>
-            <GhostMenuButton title={formatMessage(COMMON_LOCALE_KEYS.ACTIONS)} disabled />
+            <GhostMenuButton
+              title={formatMessage(COMMON_LOCALE_KEYS.ACTIONS)}
+              items={itemsActionDescriptors}
+              disabled={!selectedItems.length}
+              transparentBackground
+            />
           </div>
           <div className={cx('action-button')}>
             <GhostButton icon={RefreshIcon} onClick={onRefresh} transparentBackground>
