@@ -21,7 +21,7 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import {
-  ANALYZED_ITEM,
+  ANALYZE_OR_SUGGEST_ITEM,
   HIGH,
   LOW,
   MACHINE_LEARNING_SUGGESTIONS,
@@ -166,7 +166,7 @@ export const MachineLearningSuggestions = ({
                   onClickLinkEvent={onClickExternalLinkEvent}
                   logs={logs}
                   suggestRs={suggestRs}
-                  mode={ANALYZED_ITEM}
+                  mode={ANALYZE_OR_SUGGEST_ITEM}
                   eventsInfo={{
                     onOpenStackTraceEvent: () =>
                       eventsInfo.onOpenStackTrace(defectFromTIGroup, true),

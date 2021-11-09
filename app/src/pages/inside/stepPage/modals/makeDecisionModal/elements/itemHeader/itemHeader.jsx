@@ -34,7 +34,7 @@ import { defectTypesSelector } from 'controllers/project';
 import {
   HISTORY_LINE_ITEM,
   SIMILAR_TO_INVESTIGATE_ITEM,
-  ANALYZED_ITEM,
+  ANALYZE_OR_SUGGEST_ITEM,
 } from 'pages/inside/stepPage/modals/makeDecisionModal/constants';
 import styles from './itemHeader.scss';
 
@@ -62,12 +62,12 @@ export const ItemHeader = ({
   return (
     <div
       className={cx('item-info', {
-        height40: mode === SIMILAR_TO_INVESTIGATE_ITEM,
+        'height-40': mode === SIMILAR_TO_INVESTIGATE_ITEM,
       })}
       onClick={() => toggleDetails()}
     >
       <div className={cx('header')}>
-        {mode !== ANALYZED_ITEM && (
+        {mode !== ANALYZE_OR_SUGGEST_ITEM && (
           <div>
             {mode === SIMILAR_TO_INVESTIGATE_ITEM && (
               <InputCheckbox
@@ -78,7 +78,7 @@ export const ItemHeader = ({
             )}
             {mode === HISTORY_LINE_ITEM && (
               <InputRadio
-                small
+                size={'small'}
                 mode={'dark'}
                 value={isSelected}
                 ownValue
@@ -92,7 +92,7 @@ export const ItemHeader = ({
             <span title={name}>{name}</span>
             <div className={cx('icon')}>{Parser(ExternalLinkIcon)}</div>
           </Link>
-          {mode === ANALYZED_ITEM && (
+          {mode === ANALYZE_OR_SUGGEST_ITEM && (
             <div className={cx('defect-block')}>
               {!hideLabels && ignoreAnalyzer && (
                 <IgnoredInAALabel className={cx('ignore-aa-label')} />
@@ -109,12 +109,14 @@ export const ItemHeader = ({
             </div>
           )}
           {mode === HISTORY_LINE_ITEM && (
-            <div className={cx('history-line-item')}>
-              <HistoryLineItemContent
-                defectTypes={defectTypes}
-                showTriangles={false}
-                testItem={item}
-              />
+            <div className={cx('history-line-block')}>
+              <div className={cx('history-line-item')}>
+                <HistoryLineItemContent
+                  defectTypes={defectTypes}
+                  showTriangles={false}
+                  testItem={item}
+                />
+              </div>
             </div>
           )}
         </div>

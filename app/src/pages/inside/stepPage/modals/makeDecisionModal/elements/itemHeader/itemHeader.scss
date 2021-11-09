@@ -140,13 +140,17 @@
   color: $COLOR--dirty-gray;
 }
 
-.height40 {
+.height-40 {
   min-height: 0;
   height: 40px;
 }
 
-.history-line-item {
-  position: absolute;
-  top: 6px;
-  right: -16px;
+.history-line-block {
+  width: 15%;
+
+  .history-line-item {
+    position: absolute;
+    top: 6px;
+    right: -18px;
+  }
 }

@@ -117,7 +117,6 @@ TestItemDetails.propTypes = {
 };
 
 TestItemDetails.defaultProps = {
-  item: {},
   isSelected: false,
   selectItem: () => {},
   nameLink: {},

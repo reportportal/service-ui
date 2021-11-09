@@ -29,7 +29,7 @@ export const HIGH = 70;
 export const LOW = 40;
 export const HISTORY_LINE_ITEM = 'historyLineItem';
 export const SIMILAR_TO_INVESTIGATE_ITEM = 'similarToInvestigateItem';
-export const ANALYZED_ITEM = 'analyzedItem';
+export const ANALYZE_OR_SUGGEST_ITEM = 'analyzeOrSuggestItem';
 
 export const SEARCH_MODES = {
   CURRENT_LAUNCH,
