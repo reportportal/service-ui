@@ -65,6 +65,8 @@ export class InputDropdown extends Component {
       value: '',
       arrow: '',
       selectList: '',
+      dropdownOption: '',
+      opened: '',
     },
   };
   state = {
@@ -173,7 +175,7 @@ export class InputDropdown extends Component {
   };
 
   renderOptions() {
-    const { options, multiple, value, independentGroupSelection } = this.props;
+    const { options, multiple, value, independentGroupSelection, customClasses } = this.props;
 
     return options.map((option) => {
       let selected = multiple
@@ -195,6 +197,7 @@ export class InputDropdown extends Component {
           independentSelection={independentGroupSelection}
           subOption={!!option.groupRef}
           onChange={this.getOptionChangeHandler(option)}
+          customClass={customClasses.dropdownOption}
         />
       );
     });
@@ -217,7 +220,9 @@ export class InputDropdown extends Component {
             {({ ref }) => (
               <div
                 ref={ref}
-                className={cx('dropdown', customClasses.dropdown, { opened: this.state.opened })}
+                className={cx('dropdown', customClasses.dropdown, customClasses.opened, {
+                  opened: this.state.opened,
+                })}
               >
                 <div
                   className={cx('select-block', customClasses.selectBlock, {

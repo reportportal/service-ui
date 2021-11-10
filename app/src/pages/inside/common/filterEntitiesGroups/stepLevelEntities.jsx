@@ -42,6 +42,7 @@ import {
   EntityItemStartTime,
   EntityInputConditionalTags,
   EntityDropdown,
+  EntityInputConditionalAttributes,
 } from 'components/filterEntities';
 import { bindDefaultValue } from 'components/filterEntities/utils';
 import {
@@ -53,8 +54,6 @@ import {
   ENTITY_NAME,
   ENTITY_START_TIME,
   ENTITY_DESCRIPTION,
-  ENTITY_ATTRIBUTE_KEYS,
-  ENTITY_ATTRIBUTE_VALUES,
   ENTITY_STATUS,
   ENTITY_DEFECT_TYPE,
   ENTITY_METHOD_TYPE,
@@ -65,6 +64,7 @@ import {
   CONDITION_EQ,
   ENTITY_PATTERN_NAME,
   ENTITY_RETRY,
+  ENTITY_ATTRIBUTE,
 } from 'components/filterEntities/constants';
 import { defectTypesSelector, patternsSelector } from 'controllers/project';
 import { launchIdSelector } from 'controllers/pages';
@@ -104,13 +104,9 @@ const messages = defineMessages({
     id: 'StepLevelEntities.DefectCommentPlaceholder',
     defaultMessage: 'Enter comment',
   },
-  AttributeKeysTitle: {
-    id: 'LaunchLevelEntities.AttributeKeysTitle',
-    defaultMessage: 'Attribute keys',
-  },
-  AttributeValuesTitle: {
-    id: 'LaunchLevelEntities.AttributeValuesTitle',
-    defaultMessage: 'Attribute values',
+  Attribute: {
+    id: 'LaunchLevelEntities.AttributeTitle',
+    defaultMessage: 'Attribute',
   },
   BtsIssueTitle: {
     id: 'StepLevelEntities.BtsIssueTitle',
@@ -272,14 +268,6 @@ const messages = defineMessages({
     id: 'StepLevelEntities.Defect_Type_ND001',
     defaultMessage: 'No defect',
   },
-  ATTRIBUTE_KEYS_PLACEHOLDER: {
-    id: 'StepLevelEntities.entityItemAttributeKeys.placeholder',
-    defaultMessage: 'Enter attribute keys',
-  },
-  ATTRIBUTE_VALUES_PLACEHOLDER: {
-    id: 'StepLevelEntities.entityItemAttributeValues.placeholder',
-    defaultMessage: 'Enter attribute values',
-  },
   BTS_ISSUE_PLACEHOLDER: {
     id: 'StepLevelEntities.entityItemBTSIssue.placeholder',
     defaultMessage: 'Enter Issue in BTS',
@@ -400,7 +388,16 @@ export class StepLevelEntities extends Component {
   };
 
   getEntities = () => {
-    const { intl, filterValues, projectId, launchId, visibleFilters } = this.props;
+    const { intl, projectId, launchId, visibleFilters } = this.props;
+
+    const getTestItemAttributeValuesSearch = (project, key) => {
+      return URLS.testItemAttributeValuesSearch(project, launchId, key);
+    };
+
+    const getTestItemAttributeKeysSearch = (project) => {
+      return URLS.testItemAttributeKeysSearch(project, launchId);
+    };
+
     return [
       {
         id: ENTITY_NAME,
@@ -560,35 +557,18 @@ export class StepLevelEntities extends Component {
         },
       },
       {
-        id: ENTITY_ATTRIBUTE_KEYS,
-        component: EntityInputConditionalTags,
-        value: this.bindDefaultValue(ENTITY_ATTRIBUTE_KEYS, {
+        id: ENTITY_ATTRIBUTE,
+        component: EntityInputConditionalAttributes,
+        value: this.bindDefaultValue(ENTITY_ATTRIBUTE, {
           condition: CONDITION_HAS,
         }),
-        title: intl.formatMessage(messages.AttributeKeysTitle),
-        active: visibleFilters.includes(ENTITY_ATTRIBUTE_KEYS),
+        title: intl.formatMessage(messages.Attribute),
+        active: visibleFilters.includes(ENTITY_ATTRIBUTE),
         removable: true,
         customProps: {
-          getURI: URLS.testItemAttributeKeysSearch(projectId, launchId),
-          placeholder: intl.formatMessage(messages.ATTRIBUTE_KEYS_PLACEHOLDER),
-        },
-      },
-      {
-        id: ENTITY_ATTRIBUTE_VALUES,
-        component: EntityInputConditionalTags,
-        value: this.bindDefaultValue(ENTITY_ATTRIBUTE_VALUES, {
-          condition: CONDITION_HAS,
-        }),
-        title: intl.formatMessage(messages.AttributeValuesTitle),
-        active: visibleFilters.includes(ENTITY_ATTRIBUTE_VALUES),
-        removable: true,
-        customProps: {
-          getURI: URLS.testItemAttributeValuesSearch(
-            projectId,
-            launchId,
-            (filterValues[ENTITY_ATTRIBUTE_KEYS] || {}).value || '',
-          ),
-          placeholder: intl.formatMessage(messages.ATTRIBUTE_VALUES_PLACEHOLDER),
+          projectId,
+          keyURLCreator: getTestItemAttributeKeysSearch,
+          valueURLCreator: getTestItemAttributeValuesSearch,
         },
       },
       {

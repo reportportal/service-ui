@@ -24,12 +24,8 @@ import {
   STATS_SKIPPED,
   STATS_TI_TOTAL,
   STATS_TOTAL,
-  PRODUCT_BUG,
-  AUTOMATION_BUG,
-  SYSTEM_ISSUE,
-  NO_DEFECT,
-  TO_INVESTIGATE,
 } from 'common/constants/statistics';
+import { getDefectTypeLabel } from '../../common/utils';
 
 export const SORTING_ENTITY_MAP = {
   [ENTITY_NAME]: 'Launch Name',
@@ -42,17 +38,36 @@ export const SORTING_ENTITY_MAP = {
   [STATS_AB_TOTAL]: 'Auto Bug',
   [STATS_SI_TOTAL]: 'System Issue',
   [STATS_TI_TOTAL]: 'To Investigate',
-  [PRODUCT_BUG]: 'Product Bug',
-  [AUTOMATION_BUG]: 'Automation Bug',
-  [SYSTEM_ISSUE]: 'System Issue',
-  [NO_DEFECT]: 'No Defect',
-  [TO_INVESTIGATE]: 'To Investigate',
 };
 
-export const getSelectCriteriaFields = (values) => {
-  return values
+const WIDGET_MODE_VALUES_MAP = {
+  launch: 'Launch mode',
+  day: 'Timeline mode',
+  'latest-false': 'All launches',
+  'latest-true': 'Latest launches',
+  'area-spline': 'Area view',
+  bar: 'Bar view',
+  donut: 'Donut view',
+  panel: 'Panel view',
+  pie: 'Pie view',
+  table: 'Table view',
+};
+
+export const getSelectCriteriaFields = (values) =>
+  values
     .map((key) => {
-      return SORTING_ENTITY_MAP[`${key}`];
+      return getDefectTypeLabel(key) || SORTING_ENTITY_MAP[`${key}`];
     })
+    .join('#');
+
+export const getWidgetModeValuesString = (options) => {
+  let widgetOptions = options;
+  if (Object.prototype.hasOwnProperty.call(widgetOptions, 'latest')) {
+    const latest = `latest-${options.latest}`;
+    widgetOptions = { ...options, latest };
+  }
+  return Object.values(widgetOptions)
+    .filter((option) => WIDGET_MODE_VALUES_MAP[`${option}`])
+    .map((value) => WIDGET_MODE_VALUES_MAP[`${value}`])
     .join('#');
 };

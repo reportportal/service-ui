@@ -15,6 +15,40 @@
  */
 
 export const FILTERS_PAGE = 'filters';
+
+export const getAddEditFilterModalEvents = (isEditMode) => {
+  const modalType = isEditMode ? 'Edit' : 'Add';
+  const actionType = isEditMode ? 'Update' : 'Add';
+
+  return {
+    clickCloseIcon: {
+      category: FILTERS_PAGE,
+      action: `Click on icon Close on Modal ${modalType} Filter`,
+      label: `Close Modal ${modalType} Filter`,
+    },
+    editDescription: {
+      category: FILTERS_PAGE,
+      action: `Enter description in Modal ${modalType} Filter`,
+      label: 'Description',
+    },
+    clickCancelBtn: {
+      category: FILTERS_PAGE,
+      action: `Click on button Cancel in Modal ${modalType} Filter`,
+      label: `Close Modal ${modalType} Filter`,
+    },
+    clickOkBtn: {
+      category: FILTERS_PAGE,
+      action: `Click on button ${actionType} in Modal ${modalType} Filter`,
+      label: `${actionType} filter in Modal ${modalType} Filter`,
+    },
+    clickShareUnshareSwitcher: (share) => ({
+      category: FILTERS_PAGE,
+      action: `Click on Share on/off in Modal ${modalType} Filter`,
+      label: `${share ? 'Share' : 'Unshare'} Filter`,
+    }),
+  };
+};
+
 export const FILTERS_PAGE_EVENTS = {
   SEARCH_FILTER: {
     category: FILTERS_PAGE,
@@ -50,31 +84,6 @@ export const FILTERS_PAGE_EVENTS = {
     category: FILTERS_PAGE,
     action: 'Click on icon Shared on Filter',
     label: 'Arise Modal Edit filter',
-  },
-  CLICK_CLOSE_ICON_MODAL_EDIT_FILTER: {
-    category: FILTERS_PAGE,
-    action: 'Click on icon Close on Modal Edit Filter',
-    label: 'Close Modal Edit Filter',
-  },
-  ENTER_DESCRIPTION_MODAL_EDIT_FILTER: {
-    category: FILTERS_PAGE,
-    action: 'Enter description in Modal Edit Filter',
-    label: 'Description',
-  },
-  CLICK_SHARE_SWITCHER_MODAL_EDIT_FILTER: {
-    category: FILTERS_PAGE,
-    action: 'Click on Share on/off in Modal Edit Filter',
-    label: 'Share/unshare Filter',
-  },
-  CLICK_CANCEL_BTN_MODAL_EDIT_FILTER: {
-    category: FILTERS_PAGE,
-    action: 'Click on button Cancel in Modal Edit Filter',
-    label: 'Close Modal Edit Filter',
-  },
-  CLICK_UPDATE_BTN_MODAL_EDIT_FILTER: {
-    category: FILTERS_PAGE,
-    action: 'Click on button Update in Modal Edit Filter',
-    label: 'Update Modal Edit Filter',
   },
   CLICK_CLOSE_ICON_MODAL_DELETE_FILTER: {
     category: FILTERS_PAGE,

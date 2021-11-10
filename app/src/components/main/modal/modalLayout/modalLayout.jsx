@@ -67,6 +67,7 @@ export class ModalLayout extends Component {
       confirmationWarningClassName: PropTypes.string,
       confirmationWarning: PropTypes.string,
       confirmSubmit: PropTypes.bool,
+      eventInfo: PropTypes.func,
     }),
     closeIconEventInfo: PropTypes.object,
     renderHeaderElements: PropTypes.func,
@@ -207,6 +208,7 @@ export class ModalLayout extends Component {
         closeConfirmation.confirmSubmit &&
         !this.state.closeConfirmed
       ),
+      confirmEvent: closeConfirmation && closeConfirmation.eventInfo,
     };
 
     return (

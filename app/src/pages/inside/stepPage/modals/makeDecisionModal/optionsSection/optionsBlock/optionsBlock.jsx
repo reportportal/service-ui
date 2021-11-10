@@ -17,12 +17,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
+import { useSelector } from 'react-redux';
 import { InputRadioGroup } from 'components/inputs/inputRadioGroup';
 import classNames from 'classnames/bind';
-import { TO_INVESTIGATE } from 'common/constants/defectTypes';
-import { useSelector } from 'react-redux';
+import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import { activeFilterSelector } from 'controllers/filter';
-import { defectTypesSelector } from 'controllers/project';
 import { historyItemsSelector } from 'controllers/log';
 import { analyzerExtensionsSelector } from 'controllers/appInfo';
 import {
@@ -38,28 +38,33 @@ import styles from './optionsBlock.scss';
 
 const cx = classNames.bind(styles);
 
-export const OptionsBlock = ({ optionValue, currentTestItem, loading, setModalState }) => {
+export const OptionsBlock = ({
+  optionValue,
+  currentTestItem,
+  loading,
+  setModalState,
+  eventsInfo,
+}) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const activeFilter = useSelector(activeFilterSelector);
-  const defectTypes = useSelector(defectTypesSelector);
   const historyItems = useSelector(historyItemsSelector);
   const isAnalyzerAvailable = !!useSelector(analyzerExtensionsSelector).length;
-  const TIDefectsGroup = defectTypes[TO_INVESTIGATE.toUpperCase()];
+  const defectFromTIGroup = currentTestItem.issue.issueType.startsWith(
+    TO_INVESTIGATE_LOCATOR_PREFIX,
+  );
   const getOptions = () => {
-    const currentItemFromTIGroup = TIDefectsGroup.find(
-      (type) => type.locator === currentTestItem.issue.issueType,
-    );
     const options = [
       {
         ownValue: CURRENT_EXECUTION_ONLY,
-        label: formatMessage(messages.currentExecutionOnly),
+        label: formatMessage(messages[CURRENT_EXECUTION_ONLY]),
       },
     ];
-    if (currentItemFromTIGroup) {
+    if (defectFromTIGroup) {
       const optionalOptions = [
         {
           ownValue: CURRENT_LAUNCH,
-          label: formatMessage(messages.currentLaunch),
+          label: formatMessage(messages[CURRENT_LAUNCH]),
           disabled: !isAnalyzerAvailable,
           tooltip: formatMessage(
             isAnalyzerAvailable ? messages.currentLaunchTooltip : messages.analyzerUnavailable,
@@ -67,7 +72,7 @@ export const OptionsBlock = ({ optionValue, currentTestItem, loading, setModalSt
         },
         {
           ownValue: LAST_TEN_LAUNCHES,
-          label: formatMessage(messages.lastTenLaunches),
+          label: formatMessage(messages[LAST_TEN_LAUNCHES]),
           disabled: !isAnalyzerAvailable,
           tooltip: formatMessage(
             isAnalyzerAvailable ? messages.lastTenLaunchesTooltip : messages.analyzerUnavailable,
@@ -78,7 +83,7 @@ export const OptionsBlock = ({ optionValue, currentTestItem, loading, setModalSt
         activeFilter.id > 0 &&
         optionalOptions.push({
           ownValue: WITH_FILTER,
-          label: formatMessage(messages.withFilter, {
+          label: formatMessage(messages[WITH_FILTER], {
             filterName: activeFilter.name,
           }),
           disabled: !isAnalyzerAvailable,
@@ -92,12 +97,11 @@ export const OptionsBlock = ({ optionValue, currentTestItem, loading, setModalSt
     }
     historyItems.length > 0 &&
       historyItems.some(
-        (item) =>
-          item.issue && TIDefectsGroup.find((type) => type.locator === item.issue.issueType),
+        (item) => item.issue && item.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
       ) &&
       options.push({
         ownValue: ALL_LOADED_TI_FROM_HISTORY_LINE,
-        label: formatMessage(messages.allLoadedTIFromHistoryLine),
+        label: formatMessage(messages[ALL_LOADED_TI_FROM_HISTORY_LINE]),
       });
     return options;
   };
@@ -109,10 +113,7 @@ export const OptionsBlock = ({ optionValue, currentTestItem, loading, setModalSt
           if (!item.issue || item.id === currentTestItem.id) {
             return items;
           }
-          const currentDefectType =
-            (item.issue && TIDefectsGroup.find((type) => type.locator === item.issue.issueType)) ||
-            {};
-          return currentDefectType.typeRef === TO_INVESTIGATE.toUpperCase()
+          return item.issue && item.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)
             ? [...items, { ...item, itemId: item.id }]
             : items;
         }, [])
@@ -148,6 +149,8 @@ export const OptionsBlock = ({ optionValue, currentTestItem, loading, setModalSt
           testItems: [],
           selectedItems: [],
         });
+    eventsInfo.onDecisionOption &&
+      trackEvent(eventsInfo.onDecisionOption(defectFromTIGroup, messages[value].defaultMessage));
   };
 
   return (
@@ -167,9 +170,11 @@ OptionsBlock.propTypes = {
   currentTestItem: PropTypes.object,
   loading: PropTypes.bool,
   setModalState: PropTypes.func,
+  eventsInfo: PropTypes.object,
 };
 OptionsBlock.defaultProps = {
   currentTestItem: {},
   loading: false,
   setModalState: () => {},
+  eventsInfo: {},
 };

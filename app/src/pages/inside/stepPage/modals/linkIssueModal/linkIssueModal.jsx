@@ -319,6 +319,7 @@ export class LinkIssueModal extends Component {
           isNarrowView={collapsedRightSection}
           isBulkOperation={this.isBulkOperation}
           loading={loading}
+          eventsInfo={this.props.data.eventsInfo}
         />
       </div>
     );
@@ -331,12 +332,16 @@ export class LinkIssueModal extends Component {
       change,
     } = this.props;
     const { pluginName, integrationId } = this.state;
+    const layoutEventsInfo = {
+      openCloseRightSection: eventsInfo.openCloseRightSection,
+    };
 
     return (
       <DarkModalLayout
         renderHeaderElements={this.renderIssueFormHeaderElements}
         renderTitle={this.renderTitle}
         renderRightSection={this.renderRightSection}
+        eventsInfo={layoutEventsInfo}
       >
         {() => (
           <form className={cx('form')}>

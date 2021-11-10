@@ -421,6 +421,7 @@ export class LaunchesPage extends Component {
           addFilter: LAUNCHES_MODAL_EVENTS.ADD_FILTER_BTN_ADD_WIDGET_MODAL,
           addNewFilter: LAUNCHES_MODAL_EVENTS.ADD_BTN_ADD_NEW_FILTER_ADD_WIDGET_MODAL,
           cancelAddNewFilter: LAUNCHES_MODAL_EVENTS.CANCEL_BTN_ADD_NEW_FILTER_ADD_WIDGET_MODAL,
+          selectToggleButtons: LAUNCHES_MODAL_EVENTS.SELECT_TOGGLE_BUTTONS_ADD_NEW_WIDGET_MODAL,
         },
       },
     });
@@ -686,12 +687,19 @@ export class LaunchesPage extends Component {
   };
 
   handleAllLaunchesSelection = () => {
-    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_SELECT_ALL_ICON);
+    this.props.tracking.trackEvent(
+      LAUNCHES_PAGE_EVENTS.clickSelectAllItemsEvent(
+        this.props.launches.length !== this.props.selectedLaunches.length,
+      ),
+    );
     this.props.toggleAllLaunchesAction(this.props.launches);
   };
 
   handleOneLaunchSelection = (value) => {
-    !this.props.level && this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_SELECT_ONE_ITEM);
+    !this.props.level &&
+      this.props.tracking.trackEvent(
+        LAUNCHES_PAGE_EVENTS.clickSelectOneItemEvent(!this.props.selectedLaunches.includes(value)),
+      );
     this.props.toggleLaunchSelectionAction(value);
   };
 

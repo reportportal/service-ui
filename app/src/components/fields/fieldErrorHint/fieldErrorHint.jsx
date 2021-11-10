@@ -226,6 +226,7 @@ export class FieldErrorHint extends Component {
     error: PropTypes.string,
     active: PropTypes.bool,
     staticHint: PropTypes.bool,
+    widthContent: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -235,6 +236,7 @@ export class FieldErrorHint extends Component {
     error: '',
     active: false,
     staticHint: false,
+    widthContent: false,
   };
 
   isHintVisible = () => {
@@ -246,7 +248,16 @@ export class FieldErrorHint extends Component {
   };
 
   render() {
-    const { hintType, children, intl, error, active, staticHint, ...rest } = this.props;
+    const {
+      hintType,
+      children,
+      intl,
+      error,
+      active,
+      staticHint,
+      widthContent,
+      ...rest
+    } = this.props;
     const classes = cx('field-error-hint', `type-${hintType}`);
 
     return (
@@ -258,7 +269,12 @@ export class FieldErrorHint extends Component {
             visible: this.isHintVisible(),
           })}
         >
-          <div className={cx('hint-content', `type-${hintType}`, { 'static-hint': staticHint })}>
+          <div
+            className={cx('hint-content', `type-${hintType}`, {
+              'static-hint': staticHint,
+              'width-content': widthContent,
+            })}
+          >
             {error && messages[error] ? intl.formatMessage(messages[error]) : error}
           </div>
         </div>

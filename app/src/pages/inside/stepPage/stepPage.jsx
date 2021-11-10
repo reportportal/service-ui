@@ -46,6 +46,7 @@ import {
   editDefectsAction,
   linkIssueAction,
   postIssueAction,
+  toggleAllStepsAction,
 } from 'controllers/step';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
 import { ENTITY_START_TIME } from 'components/filterEntities/constants';
@@ -64,16 +65,23 @@ const UNLINK_ISSUE_EVENTS_INFO = {
   unlinkBtn: STEP_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.UNLINK_BTN_UNLINK_ISSUE_MODAL,
   cancelBtn: STEP_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_UNLINK_ISSUE_MODAL,
   closeIcon: STEP_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_UNLINK_ISSUE_MODAL,
+  openCloseRightSection: STEP_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.openCloseRightSection,
+  onClickExternalLink: STEP_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.onClickExternalLink,
+  toggleShowErrLogsSwitcher: STEP_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.toggleShowErrLogsSwitcher,
+  onSelectAllItems: STEP_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.onSelectAllItems,
 };
 
 const POST_ISSUE_EVENTS_INFO = {
   postBtn: STEP_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.POST_BTN_POST_ISSUE_MODAL,
-  attachmentsSwitcher:
-    STEP_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.ATTACHMENTS_SWITCHER_POST_ISSUE_MODAL,
-  logsSwitcher: STEP_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.LOGS_SWITCHER_POST_ISSUE_MODAL,
-  commentSwitcher: STEP_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.COMMENT_SWITCHER_POST_ISSUE_MODAL,
+  attachmentsSwitcher: STEP_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.attachmentsSwitcher,
+  logsSwitcher: STEP_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.logsSwitcher,
+  commentSwitcher: STEP_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.commentSwitcher,
   cancelBtn: STEP_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.CANCEL_BTN_POST_ISSUE_MODAL,
   closeIcon: STEP_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.CLOSE_ICON_POST_ISSUE_MODAL,
+  openCloseRightSection: STEP_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.openCloseRightSection,
+  onClickExternalLink: STEP_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.onClickExternalLink,
+  toggleShowErrLogsSwitcher: STEP_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.toggleShowErrLogsSwitcher,
+  onSelectAllItems: STEP_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.onSelectAllItems,
 };
 
 const LINK_ISSUE_EVENTS_INFO = {
@@ -81,6 +89,10 @@ const LINK_ISSUE_EVENTS_INFO = {
   cancelBtn: STEP_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_LINK_ISSUE_MODAL,
   addNewIssue: STEP_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.ADD_NEW_ISSUE_BTN_LINK_ISSUE_MODAL,
   closeIcon: STEP_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_LINK_ISSUE_MODAL,
+  openCloseRightSection: STEP_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.openCloseRightSection,
+  onClickExternalLink: STEP_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.onClickExternalLink,
+  toggleShowErrLogsSwitcher: STEP_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.toggleShowErrLogsSwitcher,
+  onSelectAllItems: STEP_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.onSelectAllItems,
 };
 
 @connect(
@@ -97,10 +109,11 @@ const LINK_ISSUE_EVENTS_INFO = {
     isTestItemsList: isTestItemsListSelector(state),
   }),
   {
+    selectStepsAction,
     unselectAllSteps: unselectAllStepsAction,
     toggleStepSelection: toggleStepSelectionAction,
+    toggleAllStepsAction,
     proceedWithValidItemsAction,
-    selectStepsAction,
     fetchTestItemsAction,
     showModalAction,
     ignoreInAutoAnalysisAction,
@@ -135,6 +148,7 @@ export class StepPage extends Component {
     unselectAllSteps: PropTypes.func,
     proceedWithValidItemsAction: PropTypes.func,
     toggleStepSelection: PropTypes.func,
+    toggleAllStepsAction: PropTypes.func,
     loading: PropTypes.bool,
     fetchTestItemsAction: PropTypes.func,
     listView: PropTypes.bool,
@@ -180,6 +194,7 @@ export class StepPage extends Component {
     unselectAllSteps: () => {},
     proceedWithValidItemsAction: () => {},
     toggleStepSelection: () => {},
+    toggleAllStepsAction: () => {},
     loading: false,
     fetchTestItemsAction: () => {},
     listView: false,
@@ -221,7 +236,9 @@ export class StepPage extends Component {
     }
   }
   componentWillUnmount() {
-    this.props.unselectAllSteps();
+    if (this.props.selectedItems.length > 0) {
+      this.props.unselectAllSteps();
+    }
   }
 
   onHighlightRow = (highlightedRowId) => {
@@ -258,17 +275,18 @@ export class StepPage extends Component {
   };
 
   handleAllStepsSelection = () => {
-    const { selectedItems, steps } = this.props;
-    this.props.tracking.trackEvent(STEP_PAGE_EVENTS.SELECT_ALL_ITEMS);
-    if (steps.length === selectedItems.length) {
-      this.props.unselectAllSteps();
-      return;
-    }
-    this.props.selectStepsAction(steps);
+    this.props.tracking.trackEvent(
+      STEP_PAGE_EVENTS.CLICK_SELECT_ALL_ITEMS(
+        this.props.selectedItems.length !== this.props.steps.length,
+      ),
+    );
+    this.props.toggleAllStepsAction(this.props.steps);
   };
 
   handleOneItemSelection = (value) => {
-    this.props.tracking.trackEvent(STEP_PAGE_EVENTS.SELECT_ONE_ITEM);
+    this.props.tracking.trackEvent(
+      STEP_PAGE_EVENTS.CLICK_SELECT_ONE_ITEM(!this.props.selectedItems.includes(value)),
+    );
     this.props.toggleStepSelection(value);
   };
 
@@ -458,6 +476,7 @@ export class StepPage extends Component {
             sortingColumn={sortingColumn}
             sortingDirection={sortingDirection}
             rowHighlightingConfig={rowHighlightingConfig}
+            onStatusUpdate={this.props.fetchTestItemsAction}
           />
           {!!pageCount && !loading && (
             <PaginationToolbar

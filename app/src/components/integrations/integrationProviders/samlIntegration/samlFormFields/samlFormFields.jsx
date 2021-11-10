@@ -72,12 +72,14 @@ export class SamlFormFields extends Component {
     disabled: PropTypes.bool,
     lineAlign: PropTypes.bool,
     initialData: PropTypes.object,
+    pluginDetails: PropTypes.object,
   };
 
   static defaultProps = {
     disabled: false,
     lineAlign: false,
     initialData: {},
+    pluginDetails: {},
   };
 
   constructor(props) {
@@ -92,7 +94,7 @@ export class SamlFormFields extends Component {
   }
 
   componentDidMount() {
-    this.props.initialize(this.props.initialData);
+    this.props.initialize({ ...this.props.initialData, ...this.props.pluginDetails });
   }
 
   componentDidUpdate(prevProps) {
@@ -133,9 +135,7 @@ export class SamlFormFields extends Component {
           label={formatMessage(messages.identityProviderNameId)}
           lineAlign={lineAlign}
         >
-          <FieldErrorHint>
-            <Input mobileDisabled />
-          </FieldErrorHint>
+          <Input mobileDisabled />
         </IntegrationFormField>
         <IntegrationFormField
           name="identityProviderName"
@@ -172,6 +172,14 @@ export class SamlFormFields extends Component {
           <FieldErrorHint>
             <Input mobileDisabled />
           </FieldErrorHint>
+        </IntegrationFormField>
+        <IntegrationFormField
+          name="callbackUrl"
+          disabled={disabled}
+          label="RP callback URL"
+          lineAlign={lineAlign}
+        >
+          <Input mobileDisabled />
         </IntegrationFormField>
         <IntegrationFormField
           label={formatMessage(messages.nameAttributesMode)}

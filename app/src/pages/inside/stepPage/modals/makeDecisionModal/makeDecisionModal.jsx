@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useEffect, useMemo, useReducer, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { hideModalAction, withModal } from 'controllers/modal';
@@ -35,15 +35,16 @@ import { analyzerExtensionsSelector } from 'controllers/appInfo';
 import { MachineLearningSuggestions } from 'pages/inside/stepPage/modals/makeDecisionModal/machineLearningSuggestions';
 import { SCREEN_MD_MAX } from 'common/constants/screenSizeVariables';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
+import { actionMessages } from 'common/constants/localization/eventsLocalization';
 import { messages } from './messages';
 import {
   COPY_FROM_HISTORY_LINE,
   CURRENT_EXECUTION_ONLY,
+  CURRENT_LAUNCH,
   MACHINE_LEARNING_SUGGESTIONS,
   MAKE_DECISION_MODAL,
   SEARCH_MODES,
   SELECT_DEFECT_MANUALLY,
-  CURRENT_LAUNCH,
 } from './constants';
 import { SelectDefectManually } from './selectDefectManually';
 import { CopyFromHistoryLine } from './copyFromHistoryLine';
@@ -71,6 +72,7 @@ const MakeDecision = ({ data }) => {
     testItems: [],
     selectedItems: [],
     suggestedItems: [],
+    startTime: Date.now(),
   });
   const [tabs, toggleTab, collapseTabsExceptCurr] = useAccordionTabsState({
     [MACHINE_LEARNING_SUGGESTIONS]: isAnalyzerAvailable,
@@ -96,9 +98,9 @@ const MakeDecision = ({ data }) => {
       setLoadingMLSuggest(true);
       fetch(URLS.getMLSuggestions(activeProject, itemData.id))
         .then((resp) => {
-          resp.length === 0
-            ? collapseTabsExceptCurr(SELECT_DEFECT_MANUALLY)
-            : setModalState({ suggestedItems: resp });
+          if (resp.length !== 0) {
+            setModalState({ suggestedItems: resp });
+          }
           setLoadingMLSuggest(false);
         })
         .catch(() => {
@@ -261,12 +263,42 @@ const MakeDecision = ({ data }) => {
   const getOnApplyEvent = () => {
     const {
       eventsInfo: {
-        editDefectsEvents: { onApply },
+        editDefectsEvents: { onApply, onApplyAndContinue },
       },
     } = data;
-    const { decisionType, suggestedItems } = modalState;
+    const {
+      decisionType,
+      issueActionType,
+      optionValue,
+      selectedItems,
+      suggestedItems,
+      startTime,
+    } = modalState;
+    let eventInfo;
     const hasSuggestions = !!suggestedItems.length;
-    return onApply(messages[decisionType].defaultMessage, defectFromTIGroup, hasSuggestions);
+    if (isEqual(itemData.issue, modalState.source.issue) && issueActionType) {
+      const issueActionLabel = issueActionType && actionMessages[issueActionType].defaultMessage;
+      eventInfo = onApplyAndContinue(
+        defectFromTIGroup,
+        hasSuggestions,
+        issueActionLabel,
+        defectFromTIGroup,
+      );
+    } else {
+      const section = messages[decisionType].defaultMessage;
+      const optionLabel = messages[optionValue].defaultMessage;
+      const selectedItemsLength = selectedItems.length;
+      const timestamp = Date.now() - startTime;
+      eventInfo = onApply(
+        section,
+        defectFromTIGroup,
+        hasSuggestions,
+        optionLabel,
+        selectedItemsLength,
+        timestamp,
+      );
+    }
+    return eventInfo;
   };
   const applyChangesImmediately = () => {
     if (isBulkOperation) {
@@ -332,27 +364,13 @@ const MakeDecision = ({ data }) => {
     const preparedHistoryLineItems = historyItems.filter(
       (item) => item.issue && item.id !== itemData.id,
     );
-    const disabledMLTooltip = () => {
-      if (!isAnalyzerAvailable) {
-        return formatMessage(messages.analyzerUnavailable);
-      } else if (modalState.suggestedItems.length === 0) {
-        return formatMessage(messages.disabledTabTooltip);
-      } else {
-        return '';
-      }
-    };
     const tabsData = [
       {
         id: MACHINE_LEARNING_SUGGESTIONS,
         shouldShow: !isBulkOperation,
-        disabled:
-          !isAnalyzerAvailable || (!loadingMLSuggest && modalState.suggestedItems.length === 0),
+        disabled: false,
         isOpen: tabs[MACHINE_LEARNING_SUGGESTIONS],
-        title: (
-          <div title={disabledMLTooltip()}>
-            {formatMessage(messages.machineLearningSuggestions)}
-          </div>
-        ),
+        title: <div>{formatMessage(messages.machineLearningSuggestions)}</div>,
         content: !isBulkOperation && (
           <MachineLearningSuggestions
             modalState={modalState}
@@ -361,6 +379,7 @@ const MakeDecision = ({ data }) => {
             collapseTabsExceptCurr={collapseTabsExceptCurr}
             loadingMLSuggest={loadingMLSuggest}
             eventsInfo={data.eventsInfo.editDefectsEvents}
+            isAnalyzerAvailable={isAnalyzerAvailable}
           />
         ),
       },
@@ -433,9 +452,24 @@ const MakeDecision = ({ data }) => {
         setModalState={setModalState}
         isNarrowView={collapsedRightSection}
         isBulkOperation={isBulkOperation}
+        eventsInfo={data.eventsInfo.editDefectsEvents}
       />
     );
   };
+  const layoutEventsInfo = useMemo(() => {
+    const { suggestedItems, startTime } = modalState;
+    const hasSuggestions = !!suggestedItems.length;
+    return {
+      openCloseRightSection: (isOpen) =>
+        data.eventsInfo.editDefectsEvents.openCloseRightSection(defectFromTIGroup, isOpen),
+      closeModal: (endTime) =>
+        data.eventsInfo.editDefectsEvents.closeModal(
+          defectFromTIGroup,
+          hasSuggestions,
+          endTime - startTime,
+        ),
+    };
+  }, [modalState.suggestedItems]);
 
   return (
     <DarkModalLayout
@@ -445,6 +479,7 @@ const MakeDecision = ({ data }) => {
       hotKeyAction={hotKeyAction}
       modalNote={formatMessage(messages.modalNote)}
       renderRightSection={renderRightSection}
+      eventsInfo={layoutEventsInfo}
     >
       {({ collapsedRightSection, windowSize }) => (
         <Accordion

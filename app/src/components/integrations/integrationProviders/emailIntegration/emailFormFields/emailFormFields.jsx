@@ -71,7 +71,7 @@ const messages = defineMessages({
   },
   usernameLabel: {
     id: 'EmailFormFields.usernameLabel',
-    defaultMessage: 'Username',
+    defaultMessage: 'Sender email',
   },
   passwordLabel: {
     id: 'EmailFormFields.passwordLabel',

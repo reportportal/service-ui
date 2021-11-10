@@ -88,21 +88,26 @@ export const SETTINGS_PAGE_EVENTS = {
     action: 'Click on tab General in Settings',
     label: 'Open tab General in Settings',
   },
-  INACTIVITY_TIMEOUT_GENERAL: {
+  inactivityTimeoutGeneral: (period) => ({
     category: SETTINGS_PAGE,
     action: 'Edit input Launch inactivity timeout on tab General',
-    label: 'Change input Launch inactivity timeout on tab General',
-  },
-  KEEP_LOGS_GENERAL: {
+    label: period,
+  }),
+  keepLaunchesGeneral: (period) => ({
+    category: SETTINGS_PAGE,
+    action: 'Edit Input Keep launches on Tab General',
+    label: period,
+  }),
+  keepLogsGeneral: (period) => ({
     category: SETTINGS_PAGE,
     action: 'Edit input Keep logs on tab General',
-    label: 'Change input Keep logs on tab General',
-  },
-  KEEP_SCREENSHOTS_GENERAL: {
+    label: period,
+  }),
+  keepScreenshotsGeneral: (period) => ({
     category: SETTINGS_PAGE,
     action: 'Edit input Keep screenshots on tab General',
-    label: 'Change input Keep screenshots on tab General',
-  },
+    label: period,
+  }),
   GENERAL_SUBMIT: {
     category: SETTINGS_PAGE,
     action: 'Click on Btn Submit on tab General',
@@ -268,15 +273,15 @@ export const SETTINGS_PAGE_EVENTS = {
     action: 'Click on Btn Delete on Modal Delete Defect type',
     label: 'Delete Defect type',
   },
-  ADD_DEFECT_TYPE_BTN: {
+  addDefectTypeButton: (defectType) => ({
     category: SETTINGS_PAGE,
     action: 'Click on Btn Add defect type on tab Defect types',
-    label: 'Arise fieldes for Add defect type on tab Defect types',
-  },
+    label: defectType,
+  }),
   RESET_DEFAULT_COLOR: {
     category: SETTINGS_PAGE,
     action: 'Click on link Reset to default colors on tab Defect types',
-    label: 'Arise fieldes for Add defect type on tab Defect types',
+    label: 'Open Modal Reset Defect Colors',
   },
   CLOSE_ICON_RESET_DEFECT_COLORS_MODAL: {
     category: SETTINGS_PAGE,
@@ -328,21 +333,35 @@ export const SETTINGS_PAGE_EVENTS = {
     action: 'Click on Auto-Analysis OFF in Auto-Analysis tab',
     label: 'Auto-Analysis OFF',
   },
-  AUTO_ANALYSIS_BASE_RADIO_BTN: {
+  autoAnalysisBase: (base) => ({
     category: SETTINGS_PAGE,
     action: 'Choose radio Btn of Base for Auto-Analysis',
-    label: 'Choose Base for Auto-Analysis',
-  },
-  TOGGLE_AUTO_ANALYSIS_MODE: {
+    label: base,
+  }),
+  toggleAutoAnalysisMode: (mode) => ({
     category: SETTINGS_PAGE,
     action: 'Toggle Mode of Auto-Analysis Accuracy',
-    label: 'Choose Mode of Auto-Analysis',
-  },
-  SUBMIT_AUTO_ANALYSIS_SETTINGS: {
+    label: mode,
+  }),
+  toggleBigMessagesShouldMatch: (enabled) => ({
+    category: SETTINGS_PAGE,
+    action: 'Click on Switcher Big log message matching in Auto-Analysis Tab',
+    label: enabled ? 'On' : 'Off',
+  }),
+  submitAutoAnalysisSettings: (
+    enabled,
+    base,
+    minShouldMatch,
+    numberOfLogLines,
+    mode,
+    allMessagesShouldMatch,
+  ) => ({
     category: SETTINGS_PAGE,
     action: 'Click on Btn Submit in Auto-Analysis tab',
-    label: 'Submit changes in Auto-Analysis tab',
-  },
+    label: `${enabled ? 'On' : 'Off'}#${base}#${minShouldMatch} %#${
+      numberOfLogLines > -1 ? numberOfLogLines : 'All'
+    }#${mode || 'Custom'}#${allMessagesShouldMatch ? 'On' : 'Off'}`,
+  }),
   REMOVE_INDEX_BTN: {
     category: SETTINGS_PAGE,
     action: 'Click on Btn Remove index in Auto-Analysis tab',
@@ -453,6 +472,11 @@ export const SETTINGS_PAGE_EVENTS = {
     action: 'Click on Btn Save on Modal Rename Pattern',
     label: 'Rename Pattern',
   },
+  extensionTabClick: (name) => ({
+    category: SETTINGS_PAGE,
+    action: `Click on Tab ${name} in Settings`,
+    label: `Open Tab ${name} in Settings`,
+  }),
   pluginInstanceItemClick: getPluginInstanceItemClickEvent(SETTINGS_PAGE),
   pluginEditAuthorizationClick: getPluginEditAuthorizationClickEvent(SETTINGS_PAGE),
   pluginRemoveIntegrationClick: getPluginRemoveIntegrationClickEvent(SETTINGS_PAGE),

@@ -54,6 +54,7 @@ export class SingleAutocomplete extends Component {
     showDynamicSearchPrompt: PropTypes.bool,
     customClass: PropTypes.string,
     isOptionUnique: PropTypes.func,
+    nakedView: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -79,6 +80,7 @@ export class SingleAutocomplete extends Component {
     async: false,
     customClass: '',
     isOptionUnique: null,
+    nakedView: false,
   };
 
   getOptionProps = (getItemProps, highlightedIndex, selectedItem) => ({ item, index, ...rest }) =>
@@ -106,6 +108,7 @@ export class SingleAutocomplete extends Component {
       inputProps,
       customClass,
       maxLength,
+      nakedView,
       ...props
     } = this.props;
     return (
@@ -129,7 +132,10 @@ export class SingleAutocomplete extends Component {
             <div className={cx('autocomplete-container')}>
               <Reference>
                 {({ ref }) => (
-                  <div ref={ref} className={cx('autocomplete', customClass)}>
+                  <div
+                    ref={ref}
+                    className={cx('autocomplete', customClass, { 'naked-view': nakedView })}
+                  >
                     <input
                       {...getInputProps({
                         placeholder: !disabled ? placeholder : '',
@@ -147,6 +153,7 @@ export class SingleAutocomplete extends Component {
                         error,
                         touched,
                         disabled,
+                        // 'naked-view': nakedView,
                       })}
                     />
                     {selectedItem && !disabled && (

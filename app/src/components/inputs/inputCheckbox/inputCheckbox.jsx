@@ -28,9 +28,10 @@ export const InputCheckbox = ({
   onFocus,
   onBlur,
   iconTransparentBackground,
+  className,
 }) => (
   // eslint-disable-next-line
-  <label className={cx('input-checkbox')} onFocus={onFocus} onBlur={onBlur} tabIndex="1">
+  <label className={cx('input-checkbox', className)} onFocus={onFocus} onBlur={onBlur} tabIndex="1">
     <input
       type="checkbox"
       className={cx('input')}
@@ -55,6 +56,7 @@ InputCheckbox.propTypes = {
   onFocus: PropTypes.func,
   onBlur: PropTypes.func,
   iconTransparentBackground: PropTypes.bool,
+  className: PropTypes.string,
 };
 InputCheckbox.defaultProps = {
   children: '',
@@ -64,4 +66,5 @@ InputCheckbox.defaultProps = {
   onFocus: () => {},
   onBlur: () => {},
   iconTransparentBackground: false,
+  className: '',
 };

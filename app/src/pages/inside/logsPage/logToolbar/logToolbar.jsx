@@ -47,6 +47,7 @@ import {
 import { ParentInfo } from 'pages/inside/common/infoLine/parentInfo';
 import { stepPaginationSelector } from 'controllers/step';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
+import { SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
 import styles from './logToolbar.scss';
 
 const cx = classNames.bind(styles);
@@ -55,6 +56,10 @@ const messages = defineMessages({
   historyAllLaunchesLabel: {
     id: 'LogToolbar.historyAcrossAllLaunches',
     defaultMessage: 'History Across All Launches',
+  },
+  historyShortAllLaunchesLabel: {
+    id: 'LogToolbar.historyShortAcrossAllLaunches',
+    defaultMessage: 'All Launches',
   },
 });
 
@@ -179,8 +184,16 @@ export class LogToolbar extends Component {
           {logViewMode === DETAILED_LOG_VIEW ? (
             <>
               {!debugMode && (
-                <InputCheckbox onChange={this.changeHistoryLineMode} value={includeAllLaunches}>
-                  {intl.formatMessage(messages.historyAllLaunchesLabel)}
+                <InputCheckbox
+                  className={cx('history-line-mode')}
+                  onChange={this.changeHistoryLineMode}
+                  value={includeAllLaunches}
+                >
+                  {intl.formatMessage(
+                    window.innerWidth > SCREEN_XS_MAX
+                      ? messages.historyAllLaunchesLabel
+                      : messages.historyShortAllLaunchesLabel,
+                  )}
                 </InputCheckbox>
               )}
               <div className={cx('action-button')}>

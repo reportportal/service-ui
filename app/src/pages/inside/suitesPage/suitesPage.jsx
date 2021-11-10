@@ -159,7 +159,9 @@ export class SuitesPage extends Component {
   }
 
   componentWillUnmount() {
-    this.props.unselectAllSuitesAction();
+    if (this.props.selectedSuites.length > 0) {
+      this.props.unselectAllSuitesAction();
+    }
   }
 
   onHighlightRow = (highlightedRowId) => {
@@ -176,12 +178,18 @@ export class SuitesPage extends Component {
   };
 
   handleAllSuitesSelection = () => {
-    this.props.tracking.trackEvent(SUITES_PAGE_EVENTS.SELECT_ALL_ITEMS);
+    this.props.tracking.trackEvent(
+      SUITES_PAGE_EVENTS.CLICK_SELECT_ALL_ITEMS(
+        this.props.suites.length !== this.props.selectedSuites.length,
+      ),
+    );
     this.props.toggleAllSuitesAction(this.props.suites);
   };
 
   handleOneItemSelection = (value) => {
-    this.props.tracking.trackEvent(SUITES_PAGE_EVENTS.SELECT_ONE_ITEM);
+    this.props.tracking.trackEvent(
+      SUITES_PAGE_EVENTS.CLICK_SELECT_ONE_ITEM(!this.props.selectedSuites.includes(value)),
+    );
     this.props.toggleSuiteSelectionAction(value);
   };
 

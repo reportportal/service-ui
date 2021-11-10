@@ -237,19 +237,27 @@ export class UnlinkIssueModal extends Component {
           isNarrowView={collapsedRightSection}
           isBulkOperation={this.isBulkOperation}
           loading={loading}
+          eventsInfo={this.props.data.eventsInfo}
         />
       </div>
     );
   };
 
   render() {
-    const { intl } = this.props;
+    const {
+      intl,
+      data: { eventsInfo },
+    } = this.props;
+    const layoutEventsInfo = {
+      openCloseRightSection: eventsInfo.openCloseRightSection,
+    };
 
     return (
       <DarkModalLayout
         renderHeaderElements={this.renderIssueFormHeaderElements}
         renderTitle={this.renderTitle}
         renderRightSection={this.renderRightSection}
+        eventsInfo={layoutEventsInfo}
       >
         {() => (
           <p className={cx('main-text')}>

@@ -31,7 +31,7 @@ import { DEFECT_TYPES_SEQUENCE, NO_DEFECT } from 'common/constants/defectTypes';
 import {
   EntityInputConditional,
   EntityItemStartTime,
-  EntityInputConditionalTags,
+  EntityInputConditionalAttributes,
 } from 'components/filterEntities';
 import { bindDefaultValue } from 'components/filterEntities/utils';
 import {
@@ -42,10 +42,9 @@ import {
   ENTITY_NAME,
   ENTITY_START_TIME,
   ENTITY_DESCRIPTION,
-  ENTITY_ATTRIBUTE_KEYS,
-  ENTITY_ATTRIBUTE_VALUES,
   CONDITION_LESS_EQ,
   CONDITION_EQ,
+  ENTITY_ATTRIBUTE,
 } from 'components/filterEntities/constants';
 import { defectTypesSelector } from 'controllers/project';
 import { launchIdSelector } from 'controllers/pages';
@@ -65,13 +64,9 @@ const messages = defineMessages({
     id: 'SuiteLevelEntities.StartTimeTitle',
     defaultMessage: 'Start time',
   },
-  AttributeKeysTitle: {
-    id: 'LaunchLevelEntities.AttributeKeysTitle',
-    defaultMessage: 'Attribute keys',
-  },
-  AttributeValuesTitle: {
-    id: 'LaunchLevelEntities.AttributeValuesTitle',
-    defaultMessage: 'Attribute values',
+  Attribute: {
+    id: 'LaunchLevelEntities.AttributeTitle',
+    defaultMessage: 'Attribute',
   },
   TotalTitle: {
     id: 'SuiteLevelEntities.TotalTitle',
@@ -137,14 +132,6 @@ const messages = defineMessages({
     id: 'SuiteLevelEntities.descriptionPlaceholder',
     defaultMessage: 'Enter description',
   },
-  ATTRIBUTE_KEYS_PLACEHOLDER: {
-    id: 'SuiteLevelEntities.entityItemAttributeKeys.placeholder',
-    defaultMessage: 'Enter attribute keys',
-  },
-  ATTRIBUTE_VALUES_PLACEHOLDER: {
-    id: 'SuiteLevelEntities.entityItemAttributeValues.placeholder',
-    defaultMessage: 'Enter attribute values',
-  },
   STATS_PLACEHOLDER: {
     id: 'SuiteLevelEntities.entityItemStatistics.placeholder',
     defaultMessage: 'Enter quantity',
@@ -182,7 +169,15 @@ export class SuiteLevelEntities extends Component {
   };
 
   getStaticEntities = () => {
-    const { intl, filterValues, projectId, launchId, visibleFilters } = this.props;
+    const { intl, projectId, launchId, visibleFilters } = this.props;
+
+    const getTestItemAttributeValuesSearch = (project, key) => {
+      return URLS.testItemAttributeValuesSearch(project, launchId, key);
+    };
+
+    const getTestItemAttributeKeysSearch = (project) => {
+      return URLS.testItemAttributeKeysSearch(project, launchId);
+    };
     return [
       {
         id: ENTITY_NAME,
@@ -230,35 +225,18 @@ export class SuiteLevelEntities extends Component {
         },
       },
       {
-        id: ENTITY_ATTRIBUTE_KEYS,
-        component: EntityInputConditionalTags,
-        value: this.bindDefaultValue(ENTITY_ATTRIBUTE_KEYS, {
+        id: ENTITY_ATTRIBUTE,
+        component: EntityInputConditionalAttributes,
+        value: this.bindDefaultValue(ENTITY_ATTRIBUTE, {
           condition: CONDITION_HAS,
         }),
-        title: intl.formatMessage(messages.AttributeKeysTitle),
-        active: visibleFilters.includes(ENTITY_ATTRIBUTE_KEYS),
+        title: intl.formatMessage(messages.Attribute),
+        active: visibleFilters.includes(ENTITY_ATTRIBUTE),
         removable: true,
         customProps: {
-          getURI: URLS.testItemAttributeKeysSearch(projectId, launchId),
-          placeholder: intl.formatMessage(messages.ATTRIBUTE_KEYS_PLACEHOLDER),
-        },
-      },
-      {
-        id: ENTITY_ATTRIBUTE_VALUES,
-        component: EntityInputConditionalTags,
-        value: this.bindDefaultValue(ENTITY_ATTRIBUTE_VALUES, {
-          condition: CONDITION_HAS,
-        }),
-        title: intl.formatMessage(messages.AttributeValuesTitle),
-        active: visibleFilters.includes(ENTITY_ATTRIBUTE_VALUES),
-        removable: true,
-        customProps: {
-          getURI: URLS.testItemAttributeValuesSearch(
-            projectId,
-            launchId,
-            (filterValues[ENTITY_ATTRIBUTE_KEYS] || {}).value || '',
-          ),
-          placeholder: intl.formatMessage(messages.ATTRIBUTE_VALUES_PLACEHOLDER),
+          projectId,
+          keyURLCreator: getTestItemAttributeKeysSearch,
+          valueURLCreator: getTestItemAttributeValuesSearch,
         },
       },
       {

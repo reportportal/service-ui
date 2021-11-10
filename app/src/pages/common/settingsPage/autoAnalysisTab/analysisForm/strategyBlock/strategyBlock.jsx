@@ -98,7 +98,7 @@ export class StrategyBlock extends Component {
     onFormSubmit({
       [ANALYZER_MODE]: event.target.value,
     });
-    tracking.trackEvent(SETTINGS_PAGE_EVENTS.AUTO_ANALYSIS_BASE_RADIO_BTN);
+    tracking.trackEvent(SETTINGS_PAGE_EVENTS.autoAnalysisBase(event.target.value));
   };
 
   render() {

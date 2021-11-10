@@ -135,7 +135,7 @@ export class ActionPanel extends Component {
       tracking.trackEvent(
         pageEventsMap[this.props.level].MAKE_DECISION_MODAL_EVENTS.openModal(
           selectedItems[0].issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
-          true,
+          'ActionMenu',
         ),
       );
     }
@@ -168,6 +168,7 @@ export class ActionPanel extends Component {
       enabledBtsPlugins,
       accountRole,
       projectRole,
+      selectedItems,
     } = this.props;
 
     return createStepActionDescriptors({
@@ -183,6 +184,7 @@ export class ActionPanel extends Component {
       enabledBtsPlugins,
       accountRole,
       projectRole,
+      selectedItems,
       onEditDefects: this.onEditDefects,
       onPostIssue: this.onPostIssue,
       onLinkIssue: this.onLinkIssue,

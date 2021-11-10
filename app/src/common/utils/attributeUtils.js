@@ -17,6 +17,9 @@
 export const getAttributeValue = ({ key, value } = {}) => value || key;
 
 export const formatAttribute = ({ key, value } = {}) => {
+  if (key && !value) {
+    return `${key}:`;
+  }
   if (key && value) {
     return `${key}:${value}`;
   }
@@ -60,4 +63,30 @@ export const getUniqueAndCommonAttributes = (items) => {
       common: [],
       unique: [],
     });
+};
+
+export const parseQueryAttributes = ({ value }) => {
+  if (!value) return [];
+  const attributes = value.split(',').map((item) => {
+    if (item.includes(':')) {
+      if (item.indexOf(':') === item.length - 1) {
+        return {
+          key: item.slice(0, -1),
+          value: '',
+        };
+      } else {
+        const values = item.split(':');
+        return {
+          key: `${values[0]}`,
+          value: values[1],
+        };
+      }
+    } else {
+      return {
+        key: '',
+        value: item,
+      };
+    }
+  });
+  return attributes;
 };

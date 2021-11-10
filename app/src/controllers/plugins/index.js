@@ -59,4 +59,7 @@ export {
   extensionsLoadedSelector,
   uiExtensionSidebarComponentsSelector,
   uiExtensionLaunchItemComponentsSelector,
+  uiExtensionIntegrationSettingsSelector,
+  uiExtensionIntegrationFormFieldsSelector,
+  uiExtensionPostIssueFormSelector,
 } from './uiExtensions';

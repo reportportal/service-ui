@@ -62,9 +62,11 @@ export const CopyFromHistoryLine = ({
   const onClickExternalLinkEvent = () => {
     const { onClickExternalLink } = eventsInfo;
     const defectFromTIGroup = itemData.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
-    trackEvent(
-      onClickExternalLink(defectFromTIGroup, messages[COPY_FROM_HISTORY_LINE].defaultMessage),
-    );
+    const args = {
+      isTIGroup: defectFromTIGroup,
+      section: messages[COPY_FROM_HISTORY_LINE].defaultMessage,
+    };
+    trackEvent(onClickExternalLink(args));
   };
 
   return (

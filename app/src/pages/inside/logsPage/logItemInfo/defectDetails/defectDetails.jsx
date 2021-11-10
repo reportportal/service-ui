@@ -30,7 +30,7 @@ import {
   postIssueAction,
   editDefectsAction,
 } from 'controllers/step';
-import { updateHistoryItemIssuesAction } from 'controllers/log';
+import { fetchHistoryItemsWithLoadingAction, updateHistoryItemIssuesAction } from 'controllers/log';
 import {
   availableBtsIntegrationsSelector,
   isPostIssueActionAvailable,
@@ -38,6 +38,7 @@ import {
   enabledBtsPluginsSelector,
 } from 'controllers/plugins';
 import { DefectTypeItem } from 'pages/inside/common/defectTypeItem';
+import { StatusDropdown } from 'pages/inside/common/statusDropdown';
 import PlusIcon from 'common/img/plus-button-inline.svg';
 import CommentIcon from 'common/img/comment-inline.svg';
 import ArrowDownIcon from 'common/img/arrow-down-inline.svg';
@@ -91,18 +92,25 @@ const messages = defineMessages({
 });
 const POST_ISSUE_EVENTS_INFO = {
   postBtn: LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.POST_BTN_POST_ISSUE_MODAL,
-  attachmentsSwitcher:
-    LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.ATTACHMENTS_SWITCHER_POST_ISSUE_MODAL,
-  logsSwitcher: LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.LOGS_SWITCHER_POST_ISSUE_MODAL,
-  commentSwitcher: LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.COMMENT_SWITCHER_POST_ISSUE_MODAL,
+  attachmentsSwitcher: LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.attachmentsSwitcher,
+  logsSwitcher: LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.logsSwitcher,
+  commentSwitcher: LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.commentSwitcher,
   cancelBtn: LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.CANCEL_BTN_POST_ISSUE_MODAL,
   closeIcon: LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.CLOSE_ICON_POST_ISSUE_MODAL,
+  openCloseRightSection: LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.openCloseRightSection,
+  onClickExternalLink: LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.onClickExternalLink,
+  toggleShowErrLogsSwitcher: LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.toggleShowErrLogsSwitcher,
+  onSelectAllItems: LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.onSelectAllItems,
 };
 const LINK_ISSUE_EVENTS_INFO = {
   loadBtn: LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.LOAD_BTN_LINK_ISSUE_MODAL,
   cancelBtn: LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_LINK_ISSUE_MODAL,
   addNewIssue: LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.ADD_NEW_ISSUE_BTN_LINK_ISSUE_MODAL,
   closeIcon: LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_LINK_ISSUE_MODAL,
+  openCloseRightSection: LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.openCloseRightSection,
+  onClickExternalLink: LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.onClickExternalLink,
+  toggleShowErrLogsSwitcher: LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.toggleShowErrLogsSwitcher,
+  onSelectAllItems: LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.onSelectAllItems,
 };
 const UNLINK_ISSUE_EVENTS_INFO = {
   unlinkAutoAnalyzedFalse:
@@ -112,6 +120,10 @@ const UNLINK_ISSUE_EVENTS_INFO = {
   unlinkBtn: LOG_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.UNLINK_BTN_UNLINK_ISSUE_MODAL,
   cancelBtn: LOG_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_UNLINK_ISSUE_MODAL,
   closeIcon: LOG_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_UNLINK_ISSUE_MODAL,
+  openCloseRightSection: LOG_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.openCloseRightSection,
+  onClickExternalLink: LOG_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.onClickExternalLink,
+  toggleShowErrLogsSwitcher: LOG_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.toggleShowErrLogsSwitcher,
+  onSelectAllItems: LOG_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.onSelectAllItems,
 };
 
 @connect(
@@ -126,6 +138,7 @@ const UNLINK_ISSUE_EVENTS_INFO = {
     postIssueAction,
     editDefectsAction,
     updateHistoryItemIssues: updateHistoryItemIssuesAction,
+    fetchHistoryItemsWithLoading: fetchHistoryItemsWithLoadingAction,
   },
 )
 @track()
@@ -141,6 +154,7 @@ export class DefectDetails extends Component {
     fetchFunc: PropTypes.func.isRequired,
     updateHistoryItemIssues: PropTypes.func.isRequired,
     debugMode: PropTypes.bool.isRequired,
+    fetchHistoryItemsWithLoading: PropTypes.func.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -268,12 +282,17 @@ export class DefectDetails extends Component {
     );
   };
 
+  onChangeStatus = (oldStatus, newStatus) => {
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.selectDropDownStatusEvent(oldStatus, newStatus));
+  };
+
   render() {
     const {
       logItem,
       btsIntegrations,
       debugMode,
       intl: { formatMessage },
+      fetchHistoryItemsWithLoading,
     } = this.props;
     const { expanded } = this.state;
     const isPostIssueUnavailable = !isPostIssueActionAvailable(this.props.btsIntegrations);
@@ -365,7 +384,7 @@ export class DefectDetails extends Component {
                     <span className={cx('icon')}>{Parser(ArrowDownIcon)}</span>
                     {formatMessage(messages.more)}
                   </span>
-                  <span className={cx('issues-info')}>
+                  <span className={cx('issues-info', 'with-separator')}>
                     <span className={cx('icon')}>{Parser(BugIcon)}</span>
                     {logItem.issue.externalSystemIssues.length}
                   </span>
@@ -376,13 +395,28 @@ export class DefectDetails extends Component {
               {!!logItem.patternTemplates.length && (
                 <PALabel patternTemplates={logItem.patternTemplates} />
               )}
+            </Fragment>
+          )}
+          <span className={cx('status-wrapper', 'with-separator')}>
+            <StatusDropdown
+              itemId={logItem.id}
+              status={logItem.status}
+              attributes={logItem.attributes}
+              description={logItem.description}
+              fetchFunc={fetchHistoryItemsWithLoading}
+              onChange={this.onChangeStatus}
+              withIndicator
+            />
+          </span>
+          {this.isDefectTypeVisible() && (
+            <span className={cx('defect-item-wrapper', 'with-separator')}>
               <DefectTypeItem
                 type={logItem.issue.issueType}
                 noBorder
                 onClick={null}
                 className={cx('defect-item')}
               />
-            </Fragment>
+            </span>
           )}
           {!debugMode && (
             <div className={cx('make-decision-action')}>

@@ -21,7 +21,7 @@ import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
 import { reduxForm, SubmissionError } from 'redux-form';
 import { ModalLayout, withModal, ModalField } from 'components/main/modal';
-import { FILTERS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { getAddEditFilterModalEvents } from 'components/main/analytics/events';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { Input } from 'components/inputs/input';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -97,6 +97,11 @@ export class FilterEditModal extends Component {
     activeProject: '',
   };
 
+  constructor(props) {
+    super(props);
+    this.events = getAddEditFilterModalEvents(!props.data.creationMode);
+  }
+
   componentDidMount() {
     this.props.initialize(this.props.data.filter);
   }
@@ -143,20 +148,20 @@ export class FilterEditModal extends Component {
     const okButton = {
       text: this.getOkButtonTitle(),
       onClick: (closeModal) => {
-        tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_UPDATE_BTN_MODAL_EDIT_FILTER);
+        tracking.trackEvent(this.events.clickOkBtn);
         handleSubmit(this.saveFilterAndCloseModal(closeModal))();
       },
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-      eventInfo: FILTERS_PAGE_EVENTS.CLICK_CANCEL_BTN_MODAL_EDIT_FILTER,
+      eventInfo: this.events.clickCancelBtn,
     };
     return (
       <ModalLayout
         title={this.getTitle()}
         okButton={okButton}
         cancelButton={cancelButton}
-        closeIconEventInfo={FILTERS_PAGE_EVENTS.CLICK_CLOSE_ICON_MODAL_EDIT_FILTER}
+        closeIconEventInfo={this.events.clickCloseIcon}
         closeConfirmation={this.getCloseConfirmationConfig()}
       >
         <form>
@@ -170,16 +175,14 @@ export class FilterEditModal extends Component {
           <ModalField>
             <FieldProvider name="description">
               <MarkdownEditor
-                onChangeEventInfo={FILTERS_PAGE_EVENTS.ENTER_DESCRIPTION_MODAL_EDIT_FILTER}
+                eventsInfo={{ onChange: this.events.editDescription }}
                 placeholder={intl.formatMessage(messages.descriptionPlaceholder)}
               />
             </FieldProvider>
           </ModalField>
           <ModalField label={intl.formatMessage(messages.share)}>
             <FieldProvider name="share" format={Boolean} parse={Boolean}>
-              <InputBigSwitcher
-                onChangeEventInfo={FILTERS_PAGE_EVENTS.CLICK_SHARE_SWITCHER_MODAL_EDIT_FILTER}
-              />
+              <InputBigSwitcher onChangeEventInfo={this.events.clickShareUnshareSwitcher} />
             </FieldProvider>
           </ModalField>
         </form>

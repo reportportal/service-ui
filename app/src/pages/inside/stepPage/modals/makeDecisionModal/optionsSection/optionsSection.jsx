@@ -38,6 +38,7 @@ export const OptionsSection = ({
   modalState,
   isNarrowView,
   isBulkOperation,
+  eventsInfo,
 }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
@@ -144,6 +145,7 @@ export const OptionsSection = ({
             currentTestItem={currentTestItem}
             loading={loading}
             setModalState={setModalState}
+            eventsInfo={eventsInfo}
           />
         )}
         <div className={cx('items-list')}>
@@ -155,6 +157,7 @@ export const OptionsSection = ({
             optionValue={!isBulkOperation && optionValue}
             isNarrowView={isNarrowView}
             isBulkOperation={isBulkOperation}
+            eventsInfo={eventsInfo}
           />
         </div>
       </div>
@@ -171,6 +174,7 @@ OptionsSection.propTypes = {
   isBulkOperation: PropTypes.bool,
   isNarrowView: PropTypes.bool,
   modalState: PropTypes.object,
+  eventsInfo: PropTypes.object,
 };
 OptionsSection.defaultProps = {
   currentTestItem: {},
@@ -182,4 +186,5 @@ OptionsSection.defaultProps = {
   isBulkOperation: false,
   isNarrowView: true,
   modalState: {},
+  eventsInfo: {},
 };

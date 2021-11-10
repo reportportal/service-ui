@@ -65,6 +65,7 @@ export class ModalFooter extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     submitConfirmed: PropTypes.bool,
+    confirmEvent: PropTypes.func,
   };
   static defaultProps = {
     warningMessage: '',
@@ -82,10 +83,12 @@ export class ModalFooter extends Component {
     confirmWithCheckbox: false,
     renderFooterElements: () => {},
     submitConfirmed: false,
+    confirmEvent: null,
   };
   closeConfirmChangeHandler = () => {
-    const { closeConfirmed } = this.props;
+    const { closeConfirmed, confirmEvent, tracking } = this.props;
     this.props.onCloseConfirm(!closeConfirmed);
+    confirmEvent && tracking.trackEvent(confirmEvent(!closeConfirmed));
   };
 
   render() {

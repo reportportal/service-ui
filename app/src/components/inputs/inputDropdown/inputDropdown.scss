@@ -23,14 +23,14 @@
   display: inline-block;
   width: 100%;
   height: 30px;
-  &.opened {
-    .arrow {
-      transform: rotate(180deg);
-    }
-    .select-block {
-      border-color: $COLOR--topaz;
-      box-shadow: 0 0 2px 0 rgba($COLOR--topaz, 0.7);
-    }
+}
+.opened {
+  .arrow {
+    transform: rotate(180deg);
+  }
+  .select-block {
+    border-color: $COLOR--topaz;
+    box-shadow: 0 0 2px 0 rgba($COLOR--topaz, 0.7);
   }
 }
 .select-block {

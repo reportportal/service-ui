@@ -16,6 +16,8 @@
 
 import { defineMessages } from 'react-intl';
 
+export const ISSUE_OPERATION_MAX_ITEMS = 300;
+
 export const actionMessages = defineMessages({
   editDefects: {
     id: 'ActionPanel.editDefects',
@@ -44,5 +46,25 @@ export const actionMessages = defineMessages({
   actionsBtnTooltip: {
     id: 'ActionPanel.actionsBtnTooltip',
     defaultMessage: ' Select several items to processing',
+  },
+  btsIntegrationIsNotConfigured: {
+    id: 'ActionPanel.btsIntegrationIsNotConfigured',
+    defaultMessage: 'BTS integration is not configured. Connect with Admin',
+  },
+  noBtsIntegration: {
+    id: 'ActionPanel.noBtsIntegration',
+    defaultMessage: 'There is no BTS integration. Connect with Admin',
+  },
+  noBtsPlugin: {
+    id: 'ActionPanel.noBtsPlugin',
+    defaultMessage: 'There is no BTS plugin. Connect with Admin',
+  },
+  noAvailableBtsPlugin: {
+    id: 'ActionPanel.noAvailableBtsPlugin',
+    defaultMessage: 'BTS plugin is disabled. Contact Admin',
+  },
+  issueActionUnavailable: {
+    id: 'ActionPanel.issueActionUnavailable',
+    defaultMessage: 'This operation can be done only for 300 items simultaneously',
   },
 });

@@ -19,6 +19,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
+import { formatAttribute, parseQueryAttributes } from 'common/utils/attributeUtils';
 import { compositeAttributesSelector } from 'controllers/testItem';
 import styles from './infoLine.scss';
 
@@ -71,13 +72,13 @@ export class InfoLineListView extends Component {
           <div className={cx('composite-attributes')}>
             <span className={cx('label')}>{formatMessage(messages.filteredBy)}</span>
             <ul className={cx('list')}>
-              {compositeAttributes.split(',').map((item) => {
-                const attribute = item.split(':');
+              {parseQueryAttributes({ value: compositeAttributes }).map((attribute) => {
+                const attrString = formatAttribute(attribute);
 
                 return (
-                  <li key={item} className={cx('item')} title={item}>
-                    <span className={cx('item-child')}>{attribute[0]}</span>
-                    <span className={cx('item-child')}>{`:${attribute[1]}`}</span>
+                  <li key={attrString} className={cx('item')} title={attrString}>
+                    {attribute.key && <span className={cx('item-child')}>{attribute.key}:</span>}
+                    {attribute.value && <span className={cx('item-child')}>{attribute.value}</span>}
                   </li>
                 );
               })}

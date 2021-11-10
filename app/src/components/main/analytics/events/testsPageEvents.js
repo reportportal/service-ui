@@ -16,36 +16,25 @@
 
 import {
   getClickOnPlusMinusEvents,
-  getHistoryTabEvent,
-  getListViewTabEvent,
-  getLogViewTabEvent,
+  getClickSelectAllItemsEvent,
+  getClickSelectOneItemEvent,
+  getCommonActionEvents,
   getRefineFiltersPanelEvents,
-  getRefreshPageActionEvent,
 } from 'components/main/analytics/events/common/testItemPages/actionEventsCreators';
+import {
+  getDeleteItemModalEvents,
+  getEditItemsModalEvents,
+} from 'components/main/analytics/events/common/testItemPages/modalEventsCreators';
 
 export const TEST_PAGE = 'test';
 export const TESTS_PAGE_EVENTS = {
-  REFRESH_BTN: getRefreshPageActionEvent(TEST_PAGE),
+  ...getCommonActionEvents(TEST_PAGE),
   plusMinusBreadcrumb: getClickOnPlusMinusEvents(TEST_PAGE),
-  ALL_LABEL_BREADCRUMB: {
-    category: TEST_PAGE,
-    action: 'Click on Bread Crumb All',
-    label: 'Transition to Launches Page',
-  },
-  ITEM_NAME_BREADCRUMB_CLICK: {
-    category: TEST_PAGE,
-    action: 'Click on Bread Crumb Item name',
-    label: 'Transition to Item',
-  },
-  LIST_VIEW_TAB: getListViewTabEvent(TEST_PAGE),
-  LOG_VIEW_TAB: getLogViewTabEvent(TEST_PAGE),
-  HISTORY_VIEW_TAB: getHistoryTabEvent(TEST_PAGE),
-  REFINE_BY_NAME: {
-    category: TEST_PAGE,
-    action: 'Enter parameters to refine by name',
-    label: 'Refine by name',
-  },
   REFINE_FILTERS_PANEL_EVENTS: {
     commonEvents: getRefineFiltersPanelEvents(TEST_PAGE),
   },
+  CLICK_SELECT_ALL_ITEMS: getClickSelectAllItemsEvent(TEST_PAGE),
+  CLICK_SELECT_ONE_ITEM: getClickSelectOneItemEvent(TEST_PAGE),
+  EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(TEST_PAGE),
+  DELETE_ITEM_MODAL_EVENTS: getDeleteItemModalEvents(TEST_PAGE),
 };

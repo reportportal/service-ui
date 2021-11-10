@@ -21,6 +21,7 @@ import { injectIntl, defineMessages } from 'react-intl';
 import { InputWithIcon } from 'components/inputs/inputWithIcon';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
+import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
 import { BigButton } from 'components/buttons/bigButton';
 import { FormField } from 'components/fields/formField';
 import styles from './accuracyFormBlock.scss';
@@ -53,6 +54,14 @@ const messages = defineMessages({
   submitButtonText: {
     id: 'AccuracyFormBlock.submitButtonText',
     defaultMessage: 'Submit',
+  },
+  allMessagesShouldMatchTitle: {
+    id: 'AccuracyFormBlock.allMessagesShouldMatchTitle',
+    defaultMessage: 'All logs with 3 or more rows should match',
+  },
+  allMessagesShouldMatchDescription: {
+    id: 'AccuracyFormBlock.allMessagesShouldMatchDescription',
+    defaultMessage: 'When an analyzed test item contains logs with 3 or more rows',
   },
 });
 
@@ -119,7 +128,7 @@ export class AccuracyFormBlock extends Component {
 
         <FormField
           name="numberOfLogLines"
-          fieldWrapperClassName={cx('drop-down-block')}
+          fieldWrapperClassName={cx('accuracy-form-input-wrapper')}
           label={intl.formatMessage(messages.numberOfLogLinesTitle)}
           onChange={this.props.onInputChange}
           format={String}
@@ -129,6 +138,22 @@ export class AccuracyFormBlock extends Component {
           disabled={disabled}
         >
           <InputDropdown options={this.dropDownOptions} mobileDisabled />
+        </FormField>
+
+        <FormField
+          name="allMessagesShouldMatch"
+          fieldWrapperClassName={cx('accuracy-form-input-wrapper')}
+          labelClassName={cx('all-messages-should-match-label')}
+          label={intl.formatMessage(messages.allMessagesShouldMatchTitle)}
+          onChange={this.props.onInputChange}
+          format={Boolean}
+          parse={Boolean}
+          customBlock={{
+            node: <p>{intl.formatMessage(messages.allMessagesShouldMatchDescription)}</p>,
+          }}
+          disabled={disabled}
+        >
+          <InputBigSwitcher mobileDisabled />
         </FormField>
 
         <div className={cx('submit-button-container')}>

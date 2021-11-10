@@ -31,12 +31,11 @@ import {
   ENTITY_START_TIME,
   ENTITY_DEFECT_TYPE,
   CONDITION_HAS,
-  ENTITY_ATTRIBUTE_KEYS,
-  ENTITY_ATTRIBUTE_VALUES,
+  ENTITY_ATTRIBUTE,
 } from 'components/filterEntities/constants';
 import { NoItemMessage } from 'components/main/noItemMessage';
 import { getChangeItemStatusEvent } from 'components/main/analytics/events';
-import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
+import { formatAttribute } from 'common/utils';
 import { StatusDropdown } from '../../common/statusDropdown/statusDropdown';
 import { PredefinedFilterSwitcher } from './predefinedFilterSwitcher';
 import { DefectType } from './defectType';
@@ -75,7 +74,7 @@ NameColumn.defaultProps = {
   className: null,
 };
 
-const StatusColumn = ({ className, value, customProps: { onChange } }) => {
+const StatusColumn = ({ className, value, customProps: { onChange, fetchFunc } }) => {
   const { id, status, attributes, description } = value;
   return (
     <div className={cx('status-col', className)}>
@@ -85,6 +84,7 @@ const StatusColumn = ({ className, value, customProps: { onChange } }) => {
         attributes={attributes}
         description={description}
         onChange={onChange}
+        fetchFunc={fetchFunc}
       />
     </div>
   );
@@ -95,6 +95,7 @@ StatusColumn.propTypes = {
   customProps: PropTypes.shape({
     formatMessage: PropTypes.func.isRequired,
     onChange: PropTypes.func,
+    fetchFunc: PropTypes.func,
   }).isRequired,
 };
 StatusColumn.defaultProps = {
@@ -116,7 +117,11 @@ StartTimeColumn.defaultProps = {
   value: {},
 };
 
-const DefectTypeColumn = ({ className, value, customProps: { onEdit, onUnlinkSingleTicket } }) => (
+const DefectTypeColumn = ({
+  className,
+  value,
+  customProps: { onEdit, onUnlinkSingleTicket, events },
+}) => (
   <div className={cx('defect-type-col', className)}>
     {value.issue && value.issue.issueType && (
       <DefectType
@@ -124,6 +129,7 @@ const DefectTypeColumn = ({ className, value, customProps: { onEdit, onUnlinkSin
         patternTemplates={value.patternTemplates}
         onEdit={() => onEdit(value)}
         onRemove={onUnlinkSingleTicket(value)}
+        events={events}
       />
     )}
   </div>
@@ -134,6 +140,7 @@ DefectTypeColumn.propTypes = {
   customProps: PropTypes.shape({
     onEdit: PropTypes.func.isRequired,
     onUnlinkSingleTicket: PropTypes.func.isRequired,
+    events: PropTypes.object,
   }).isRequired,
 };
 DefectTypeColumn.defaultProps = {
@@ -182,6 +189,7 @@ export class StepGrid extends Component {
       isGridRowHighlighted: PropTypes.bool,
       highlightedRowId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     }),
+    onStatusUpdate: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -216,6 +224,7 @@ export class StepGrid extends Component {
       onUnlinkSingleTicket,
       onEditItem,
       onEditDefect,
+      onStatusUpdate,
     } = props;
     this.columns = [
       {
@@ -267,6 +276,7 @@ export class StepGrid extends Component {
           formatMessage,
           onChange: (oldStatus, newStatus) =>
             tracking.trackEvent(getChangeItemStatusEvent(oldStatus, newStatus)),
+          fetchFunc: onStatusUpdate,
         },
         withFilter: true,
         filterEventInfo: events.STATUS_FILTER,
@@ -292,14 +302,12 @@ export class StepGrid extends Component {
         component: DefectTypeColumn,
         customProps: {
           onEdit: (data) => {
-            tracking.trackEvent(
-              events.MAKE_DECISION_MODAL_EVENTS.openModal(
-                data.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
-              ),
-            );
             onEditDefect(data);
           },
           onUnlinkSingleTicket,
+          events: {
+            onEditEvent: events.MAKE_DECISION_MODAL_EVENTS.openModal,
+          },
         },
         withFilter: true,
         filterEventInfo: events.DEFECT_TYPE_FILTER,
@@ -311,19 +319,11 @@ export class StepGrid extends Component {
     this.props.onFilterClick(
       [
         {
-          id: ENTITY_ATTRIBUTE_KEYS,
+          id: ENTITY_ATTRIBUTE,
           value: {
-            filteringField: ENTITY_ATTRIBUTE_KEYS,
+            filteringField: ENTITY_ATTRIBUTE,
             condition: CONDITION_HAS,
-            value: attribute.key || '',
-          },
-        },
-        {
-          id: ENTITY_ATTRIBUTE_VALUES,
-          value: {
-            filteringField: ENTITY_ATTRIBUTE_VALUES,
-            condition: CONDITION_HAS,
-            value: attribute.value || '',
+            value: formatAttribute(attribute),
           },
         },
       ],

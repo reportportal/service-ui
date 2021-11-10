@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-import { formatAttribute, getAttributeValue, getUniqueAndCommonAttributes } from './attributeUtils';
+import {
+  formatAttribute,
+  getAttributeValue,
+  getUniqueAndCommonAttributes,
+  parseQueryAttributes,
+} from './attributeUtils';
 
 describe('attributeUtils', () => {
   describe('getAttributeValue', () => {
@@ -43,6 +48,66 @@ describe('attributeUtils', () => {
     });
     test('should return formatted value if both key and value specified', () => {
       expect(formatAttribute({ key: 'foo', value: 'bar' })).toBe('foo:bar');
+    });
+  });
+  describe('parseQueryAttributes', () => {
+    test('should return an empty array if object value property is empty', () => {
+      const value = {
+        condition: 'has',
+        filteringField: 'compositeAttribute',
+        value: '',
+      };
+      expect(parseQueryAttributes(value)).toEqual([]);
+    });
+    test('should return an array with attribute (with value and empty key) if object value property contains only attribute value', () => {
+      const value = {
+        condition: 'has',
+        filteringField: 'compositeAttribute',
+        value: 'justAttrValue',
+      };
+      const result = [
+        {
+          key: '',
+          value: 'justAttrValue',
+        },
+      ];
+      expect(parseQueryAttributes(value)).toEqual(result);
+    });
+    test('should return an array with attribute if object value property contains only one attribute', () => {
+      const value = {
+        condition: 'has',
+        filteringField: 'compositeAttribute',
+        value: 'key:value',
+      };
+      const result = [
+        {
+          key: 'key',
+          value: 'value',
+        },
+      ];
+      expect(parseQueryAttributes(value)).toEqual(result);
+    });
+    test('should return an array of attributes if object value property contains several attributes', () => {
+      const value = {
+        condition: 'has',
+        filteringField: 'compositeAttribute',
+        value: 'key1:value1,key2:,value3',
+      };
+      const result = [
+        {
+          key: 'key1',
+          value: 'value1',
+        },
+        {
+          key: 'key2',
+          value: '',
+        },
+        {
+          key: '',
+          value: 'value3',
+        },
+      ];
+      expect(parseQueryAttributes(value)).toEqual(result);
     });
   });
   describe('getUniqueAndCommonAttributes', () => {

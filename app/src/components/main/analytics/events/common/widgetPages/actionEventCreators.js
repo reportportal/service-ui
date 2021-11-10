@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  getSelectCriteriaFields,
-  SORTING_ENTITY_MAP,
-} from 'components/main/analytics/events/common/widgetPages/utils/utils';
+import { getSelectCriteriaFields, SORTING_ENTITY_MAP } from './utils';
 
 export const getSelectSortingFilterAddWidgetModal = (category) => (value, tab) => ({
   category,
@@ -83,4 +80,14 @@ export const getCancelBtnAddNewFilterAddWidgetModal = (category) => ({
   category,
   action: 'Click on Btn Cancel in Add new filter in Modal Add New Widget',
   label: 'Cancel adding new filter in Modal Add New Widget',
+});
+export const getSelectToggleButtonsAddWidgetModal = (category) => (values) => ({
+  category,
+  action: 'Select Toggle Button Item Label for Widget in Modal New Widget',
+  label: values,
+});
+export const getSelectToggleButtonsEditWidgetModal = (category) => (values) => ({
+  category,
+  action: 'Select Toggle Button Item Label for Widget in Modal Edit Widget',
+  label: values,
 });

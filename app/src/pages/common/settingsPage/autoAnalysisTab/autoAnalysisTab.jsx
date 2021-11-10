@@ -41,6 +41,7 @@ import {
   INDEXING_RUNNING,
   NUMBER_OF_LOG_LINES,
   MIN_SHOULD_MATCH,
+  ALL_MESSAGES_SHOULD_MATCH,
   ANALYZER_ENABLED,
   ANALYZER_MODE,
 } from './constants';
@@ -117,10 +118,13 @@ export class AutoAnalysisTab extends Component {
     return {
       [MIN_SHOULD_MATCH]: analyzerConfiguration[MIN_SHOULD_MATCH],
       [NUMBER_OF_LOG_LINES]: analyzerConfiguration[NUMBER_OF_LOG_LINES],
+      [ALL_MESSAGES_SHOULD_MATCH]: JSON.parse(
+        analyzerConfiguration[ALL_MESSAGES_SHOULD_MATCH] || 'false',
+      ),
     };
   };
 
-  getStrategyBlockValues = () => {
+  getAnalysisBaseSettings = () => {
     const { analyzerConfiguration } = this.props;
 
     return {
@@ -182,17 +186,19 @@ export class AutoAnalysisTab extends Component {
   render() {
     const { accountRole, userRole, showGenerateIndexModal, analyzerExtensions } = this.props;
     const disabled = !canUpdateSettings(accountRole, userRole);
+    const analysisBaseSettings = this.getAnalysisBaseSettings();
 
     return (
       <div className={cx('auto-analysis-tab')}>
         <StrategyBlock
           disabled={disabled}
-          data={this.getStrategyBlockValues()}
+          data={analysisBaseSettings}
           onFormSubmit={this.updateProjectConfig}
         />
         <AnalysisForm
           disabled={disabled}
           initialValues={this.getAnalysisFormValues()}
+          analysisBaseSettings={analysisBaseSettings}
           onFormSubmit={this.updateProjectConfig}
         />
         <IndexActionsBlock

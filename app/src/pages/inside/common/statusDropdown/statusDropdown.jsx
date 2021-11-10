@@ -20,13 +20,13 @@ import { connect } from 'react-redux';
 import className from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
-import { fetchTestItemsAction } from 'controllers/testItem';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { formatStatus } from 'common/utils/localizationUtils';
 import { PASSED, FAILED, SKIPPED, IN_PROGRESS } from 'common/constants/testStatuses';
+import { TestItemStatus } from 'pages/inside/common/testItemStatus';
 import { ATTRIBUTE_KEY_MANUALLY } from './constants';
 import styles from './statusDropdown.scss';
 
@@ -48,7 +48,6 @@ const messages = defineMessages({
     currentProject: activeProjectSelector(state),
   }),
   {
-    fetchFunc: fetchTestItemsAction,
     showMessage: showNotification,
   },
 )
@@ -64,6 +63,7 @@ export class StatusDropdown extends Component {
     fetchFunc: PropTypes.func,
     showMessage: PropTypes.func,
     onChange: PropTypes.func,
+    withIndicator: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -72,6 +72,7 @@ export class StatusDropdown extends Component {
     fetchFunc: () => {},
     showMessage: () => {},
     onChange: () => {},
+    withIndicator: false,
   };
 
   updateItem = (newStatus) => {
@@ -117,20 +118,29 @@ export class StatusDropdown extends Component {
   };
 
   generateOptions = (status) => {
-    const { intl } = this.props;
+    const { intl, withIndicator } = this.props;
 
     const STATUS_TYPES = status === IN_PROGRESS ? [] : [PASSED, FAILED, SKIPPED];
 
     if (STATUS_TYPES.indexOf(status) < 0) STATUS_TYPES.push(status);
 
     return STATUS_TYPES.map((item) => ({
-      label: formatStatus(intl.formatMessage, item),
+      label: withIndicator ? (
+        <span className={cx('status-container')}>
+          <TestItemStatus
+            status={formatStatus(intl.formatMessage, item)}
+            withIndicator={withIndicator}
+          />
+        </span>
+      ) : (
+        formatStatus(intl.formatMessage, item)
+      ),
       value: item,
     }));
   };
 
   render() {
-    const { status } = this.props;
+    const { status, withIndicator } = this.props;
     return (
       <div className={cx('status-dropdown')}>
         <InputDropdown
@@ -139,10 +149,12 @@ export class StatusDropdown extends Component {
           onChange={this.updateItem}
           customClasses={{
             dropdown: cx('dropdown'),
-            selectBlock: cx('select-block'),
+            selectBlock: cx('select-block', { 'select-block-with-indicator': withIndicator }),
             arrow: cx('arrow'),
             value: cx('value'),
             selectList: cx('select-list'),
+            dropdownOption: (withIndicator && cx('dropdown-option')) || '',
+            opened: (withIndicator && cx('opened')) || '',
           }}
           mobileDisabled
         />

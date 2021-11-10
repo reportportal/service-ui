@@ -21,9 +21,8 @@ import {
   getLinkIssueActionEvent,
   getUnlinkIssueActionEvent,
   getPostIssueActionEvent,
-  getProceedValidItemsEvent,
-  getRefreshPageActionEvent,
   getChangeFilterEvent,
+  getCommonActionEvents,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getEditDefectModalEvents,
@@ -35,6 +34,7 @@ import {
   getLinkIssueModalEvents,
   getDeleteItemModalEvents,
   getEditItemsModalEvents,
+  getMakeDecisionModalEvents,
 } from './common/testItemPages/modalEventsCreators';
 
 export const HISTORY_PAGE = 'history';
@@ -74,11 +74,11 @@ export const HISTORY_PAGE_EVENTS = {
     action: 'Click on Cross near Filter name',
     label: 'Remove custom column on History table',
   },
-  SELECT_HISTORY_ITEM: {
+  selectHistoryItem: (value) => ({
     category: HISTORY_PAGE,
     action: 'Click on item icon "select one item"',
-    label: 'Select/unselect one item',
-  },
+    label: `${value ? 'select' : 'unselect'} one item`,
+  }),
   CLICK_CLOSE_ICON_FROM_SELECTION: {
     category: HISTORY_PAGE,
     action: 'Click on icon "close" on selected item',
@@ -89,13 +89,13 @@ export const HISTORY_PAGE_EVENTS = {
     action: 'Click on Close Icon of all selection',
     label: 'Close panel with selected items',
   },
-  REFRESH_BTN: getRefreshPageActionEvent(HISTORY_PAGE),
+  REFRESH_BTN: getCommonActionEvents(HISTORY_PAGE).REFRESH_BTN,
   EDIT_DEFECT_ACTION: getEditDefectActionEvent(HISTORY_PAGE),
   POST_ISSUE_ACTION: getPostIssueActionEvent(HISTORY_PAGE),
   LINK_ISSUE_ACTION: getLinkIssueActionEvent(HISTORY_PAGE),
   DELETE_ACTION: getDeleteActionEvent(HISTORY_PAGE),
   UNLINK_ISSUES_ACTION: getUnlinkIssueActionEvent(HISTORY_PAGE),
-  PROCEED_VALID_ITEMS: getProceedValidItemsEvent(HISTORY_PAGE),
+  PROCEED_VALID_ITEMS: getCommonActionEvents(HISTORY_PAGE).PROCEED_VALID_ITEMS,
   // EDIT_DEFECT_MODAL
   EDIT_DEFECT_MODAL_EVENTS: getEditDefectModalEvents(HISTORY_PAGE),
   SELECT_ALL_SIMILAR_ITEMS_EDIT_DEFECT_MODAL: getEditToInvestigateSelectAllSimilarItemsEvent(
@@ -120,4 +120,5 @@ export const HISTORY_PAGE_EVENTS = {
     commonEvents: getRefineFiltersPanelEvents(HISTORY_PAGE),
     getChangeFilterEvent: getChangeFilterEvent(HISTORY_PAGE),
   },
+  MAKE_DECISION_MODAL_EVENTS: getMakeDecisionModalEvents(HISTORY_PAGE),
 };
