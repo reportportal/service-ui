@@ -21,8 +21,8 @@ import classNames from 'classnames/bind';
 import { useTracking } from 'react-tracking';
 import { SCREEN_SM_MAX, SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
-import { ExecutionInfo } from '../elements/executionInfo';
-import { COPY_FROM_HISTORY_LINE } from '../constants';
+import { TestItemDetails } from '../elements/testItemDetails';
+import { COPY_FROM_HISTORY_LINE, RADIO_TEST_ITEM_DETAILS } from '../constants';
 import { messages } from '../messages';
 import styles from './copyFromHistoryLine.scss';
 
@@ -77,13 +77,13 @@ export const CopyFromHistoryLine = ({
       </div>
       {items.map((item) => (
         <div className={cx('execution-item')} key={item.id}>
-          <ExecutionInfo
+          <TestItemDetails
             item={item}
-            selectedItem={modalState.source.id}
             selectItem={selectHistoryLineItem}
             isSelected={modalState.source.id === item.id}
             hideLabels={hideLabels()}
             onClickLinkEvent={onClickExternalLinkEvent}
+            mode={RADIO_TEST_ITEM_DETAILS}
           />
         </div>
       ))}

@@ -119,7 +119,7 @@
 }
 
 .mode-dark {
-  &.toggler {
+  &.toggler-medium {
     width: 20px;
     height: 20px;
     border-color: $COLOR--dark-gray-2;
@@ -128,6 +128,18 @@
     &::after {
       width: 12px;
       height: 12px;
+    }
+  }
+
+  .toggler-small {
+    width: 16px;
+    height: 16px;
+    border-color: $COLOR--dark-gray-2;
+    background-color: transparent;
+
+    &::after {
+      width: 8px;
+      height: 8px;
     }
   }
 

@@ -203,4 +203,12 @@ export const messages = defineMessages({
     id: 'MakeDecisionModal.suggestedChoiceFailed',
     defaultMessage: 'The proposed item selected by the user has not been sent for processing to ML',
   },
+  similarLog: {
+    id: 'MakeDecisionModal.similarLog',
+    defaultMessage: 'Similar Log',
+  },
+  noLogs: {
+    id: 'MakeDecisionModal.noLogs',
+    defaultMessage: 'No Logs Found x_x',
+  },
 });
