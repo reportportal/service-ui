@@ -32,10 +32,10 @@ import { InputRadio } from 'components/inputs/inputRadio';
 import { HistoryLineItemContent } from 'pages/inside/logsPage/historyLine/historyLineItem';
 import { defectTypesSelector } from 'controllers/project';
 import {
-  HISTORY_LINE_ITEM,
-  SIMILAR_TO_INVESTIGATE_ITEM,
-  ANALYZE_OR_SUGGEST_ITEM,
-} from 'pages/inside/stepPage/modals/makeDecisionModal/constants';
+  CHECKBOX_TEST_ITEM_DETAILS,
+  DEFAULT_TEST_ITEM_DETAILS,
+  RADIO_TEST_ITEM_DETAILS,
+} from '../../constants';
 import styles from './itemHeader.scss';
 
 const cx = classNames.bind(styles);
@@ -62,21 +62,21 @@ export const ItemHeader = ({
   return (
     <div
       className={cx('item-info', {
-        'height-40': mode === SIMILAR_TO_INVESTIGATE_ITEM,
+        'height-40': mode === CHECKBOX_TEST_ITEM_DETAILS,
       })}
-      onClick={() => toggleDetails()}
+      onClick={toggleDetails}
     >
       <div className={cx('header')}>
-        {mode !== ANALYZE_OR_SUGGEST_ITEM && (
+        {mode !== DEFAULT_TEST_ITEM_DETAILS && (
           <div>
-            {mode === SIMILAR_TO_INVESTIGATE_ITEM && (
+            {mode === CHECKBOX_TEST_ITEM_DETAILS && (
               <InputCheckbox
                 className={cx('checkbox-margin-right')}
                 value={isSelected}
                 onChange={() => selectItem(id)}
               />
             )}
-            {mode === HISTORY_LINE_ITEM && (
+            {mode === RADIO_TEST_ITEM_DETAILS && (
               <InputRadio
                 size={'small'}
                 mode={'dark'}
@@ -92,7 +92,7 @@ export const ItemHeader = ({
             <span title={name}>{name}</span>
             <div className={cx('icon')}>{Parser(ExternalLinkIcon)}</div>
           </Link>
-          {mode === ANALYZE_OR_SUGGEST_ITEM && (
+          {mode === DEFAULT_TEST_ITEM_DETAILS && (
             <div className={cx('defect-block')}>
               {!hideLabels && ignoreAnalyzer && (
                 <IgnoredInAALabel className={cx('ignore-aa-label')} />
@@ -108,7 +108,7 @@ export const ItemHeader = ({
               <DefectTypeItem type={issueType} className={cx('defect-type')} />
             </div>
           )}
-          {mode === HISTORY_LINE_ITEM && (
+          {mode === RADIO_TEST_ITEM_DETAILS && (
             <div className={cx('history-line-block')}>
               <div className={cx('history-line-item')}>
                 <HistoryLineItemContent
@@ -121,7 +121,7 @@ export const ItemHeader = ({
           )}
         </div>
       </div>
-      {!!externalSystemIssues.length && mode !== SIMILAR_TO_INVESTIGATE_ITEM && (
+      {!!externalSystemIssues.length && mode !== CHECKBOX_TEST_ITEM_DETAILS && (
         <div className={cx('bts-row')}>
           <IssueList issues={externalSystemIssues} className={cx('issue')} readOnly />
         </div>

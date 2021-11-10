@@ -19,12 +19,10 @@ import PropTypes from 'prop-types';
 import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
-import { TestItemDetails } from 'pages/inside/stepPage/modals/makeDecisionModal/elements/testItemDetails';
-import {
-  ALL_LOADED_TI_FROM_HISTORY_LINE,
-  HISTORY_LINE_ITEM,
-  SIMILAR_TO_INVESTIGATE_ITEM,
-} from '../../../constants';
+import { useIntl } from 'react-intl';
+import { TestItemDetails } from '../../../elements/testItemDetails';
+import { messages } from '../../../messages';
+import { ALL_LOADED_TI_FROM_HISTORY_LINE, CHECKBOX_TEST_ITEM_DETAILS } from '../../../constants';
 import styles from './itemsListBody.scss';
 
 const cx = classNames.bind(styles);
@@ -37,6 +35,7 @@ const SimilarItemsList = ({
   onClickExternalLinkEvent,
   showErrorLogs,
   eventsInfo,
+  noLogsMessage,
 }) => {
   return (
     <>
@@ -71,9 +70,10 @@ const SimilarItemsList = ({
                 selectItem={getSelectedItem()}
                 isSelected={selected}
                 onClickLinkEvent={onClickExternalLinkEvent}
-                mode={SIMILAR_TO_INVESTIGATE_ITEM}
+                mode={CHECKBOX_TEST_ITEM_DETAILS}
                 showErrorLogs={showErrorLogs}
                 eventsInfo={eventsInfo}
+                noLogsMessage={noLogsMessage}
               />
             </div>
           );
@@ -89,10 +89,12 @@ SimilarItemsList.propTypes = {
   isBulkOperation: PropTypes.bool,
   onClickExternalLinkEvent: PropTypes.func,
   eventsInfo: PropTypes.object,
+  noLogsMessage: PropTypes.string,
 };
 SimilarItemsList.defaultProps = {
   onClickExternalLinkEvent: () => {},
   eventsInfo: {},
+  noLogsMessage: '',
 };
 
 const HistoryLineItemsList = ({
@@ -100,6 +102,7 @@ const HistoryLineItemsList = ({
   selectedItems,
   selectItem,
   onClickExternalLinkEvent,
+  noLogsMessage,
 }) => {
   return (
     testItems.length > 0 &&
@@ -111,7 +114,8 @@ const HistoryLineItemsList = ({
           isSelected={!!selectedItems.find((selectedItem) => selectedItem.id === item.id)}
           key={item.id}
           onClickLinkEvent={onClickExternalLinkEvent}
-          mode={HISTORY_LINE_ITEM}
+          mode={CHECKBOX_TEST_ITEM_DETAILS}
+          noLogsMessage={noLogsMessage}
         />
       );
     })
@@ -122,9 +126,11 @@ HistoryLineItemsList.propTypes = {
   selectedItems: PropTypes.array.isRequired,
   selectItem: PropTypes.func.isRequired,
   onClickExternalLinkEvent: PropTypes.func,
+  noLogsMessage: PropTypes.string,
 };
 HistoryLineItemsList.defaultProps = {
   onClickExternalLinkEvent: () => {},
+  noLogsMessage: '',
 };
 
 export const ItemsListBody = ({
@@ -136,6 +142,7 @@ export const ItemsListBody = ({
   isBulkOperation,
   eventsInfo,
 }) => {
+  const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const selectItem = (id) => {
     setItems({
@@ -152,6 +159,8 @@ export const ItemsListBody = ({
     onClickExternalLink && trackEvent(onClickExternalLink(args));
   };
 
+  const noLogsMessage = formatMessage(messages.noLogs);
+
   return (
     <div className={cx('items-list')}>
       {optionValue === ALL_LOADED_TI_FROM_HISTORY_LINE ? (
@@ -160,6 +169,7 @@ export const ItemsListBody = ({
           selectedItems={selectedItems}
           selectItem={selectItem}
           onClickExternalLinkEvent={onClickExternalLinkEvent}
+          noLogsMessage={noLogsMessage}
         />
       ) : (
         <SimilarItemsList
@@ -170,6 +180,7 @@ export const ItemsListBody = ({
           isBulkOperation={isBulkOperation}
           eventsInfo={eventsInfo}
           onClickExternalLinkEvent={onClickExternalLinkEvent}
+          noLogsMessage={noLogsMessage}
         />
       )}
     </div>

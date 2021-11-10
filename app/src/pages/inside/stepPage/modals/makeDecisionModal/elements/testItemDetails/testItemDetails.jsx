@@ -20,9 +20,9 @@ import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import commentIcon from 'common/img/comment-inline.svg';
 import asteriskIcon from 'common/img/asterisk-inline.svg';
-import { ERROR_LOGS_SIZE } from 'pages/inside/stepPage/modals/makeDecisionModal/constants';
 import { StackTraceMessageBlock } from 'pages/inside/common/stackTraceMessageBlock';
 import { uniqueId } from 'common/utils';
+import { ERROR_LOGS_SIZE } from '../../constants';
 import { ItemHeader } from '../itemHeader';
 import styles from './testItemDetails.scss';
 
@@ -34,7 +34,9 @@ export const TestItemDetails = ({
   selectItem,
   logs,
   eventsInfo,
-  suggestRs,
+  highlightedLogId,
+  highlightedMessage,
+  noLogsMessage,
   hideLabels,
   onClickLinkEvent,
   isSelected,
@@ -81,9 +83,11 @@ export const TestItemDetails = ({
                   maxHeight={90}
                   eventsInfo={eventsInfo}
                 >
-                  <div className={cx('similar-log')}>
-                    {suggestRs.relevantLogId === log.id && (
-                      <p className={cx('similar-log-title')}>{Parser(asteriskIcon)} Similar Log</p>
+                  <div className={cx('highlighted-log')}>
+                    {highlightedLogId === log.id && (
+                      <p className={cx('highlighted-log-title')}>
+                        {Parser(asteriskIcon)} {highlightedMessage}
+                      </p>
                     )}
                     {log.message}
                   </div>
@@ -92,7 +96,7 @@ export const TestItemDetails = ({
             ))}
           {showDetails && !logs.length && (
             <div className={cx('no-logs')}>
-              <p className={cx('no-logs-text')}>No Logs Found x_x</p>
+              <p className={cx('no-logs-text')}>{noLogsMessage}</p>
             </div>
           )}
         </div>
@@ -111,7 +115,9 @@ TestItemDetails.propTypes = {
   onClickLinkEvent: PropTypes.func,
   logs: PropTypes.array,
   eventsInfo: PropTypes.object,
-  suggestRs: PropTypes.object,
+  highlightedLogId: PropTypes.number,
+  highlightedMessage: PropTypes.string,
+  noLogsMessage: PropTypes.string,
   mode: PropTypes.string,
   showErrorLogs: PropTypes.bool,
 };
@@ -125,7 +131,9 @@ TestItemDetails.defaultProps = {
   onClickLinkEvent: () => {},
   logs: [],
   eventsInfo: {},
-  suggestRs: {},
+  highlightedLogId: null,
+  highlightedMessage: '',
+  noLogsMessage: '',
   mode: '',
   showErrorLogs: false,
 };

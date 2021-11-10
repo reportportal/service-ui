@@ -22,7 +22,7 @@ import { useTracking } from 'react-tracking';
 import { SCREEN_SM_MAX, SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import { TestItemDetails } from '../elements/testItemDetails';
-import { COPY_FROM_HISTORY_LINE, HISTORY_LINE_ITEM } from '../constants';
+import { COPY_FROM_HISTORY_LINE, RADIO_TEST_ITEM_DETAILS } from '../constants';
 import { messages } from '../messages';
 import styles from './copyFromHistoryLine.scss';
 
@@ -78,13 +78,13 @@ export const CopyFromHistoryLine = ({
       {items.map((item) => (
         <div className={cx('execution-item')} key={item.id}>
           <TestItemDetails
-            key={item.id}
             item={item}
             selectItem={selectHistoryLineItem}
             isSelected={modalState.source.id === item.id}
             hideLabels={hideLabels()}
             onClickLinkEvent={onClickExternalLinkEvent}
-            mode={HISTORY_LINE_ITEM}
+            mode={RADIO_TEST_ITEM_DETAILS}
+            noLogsMessage={formatMessage(messages.noLogs)}
           />
         </div>
       ))}

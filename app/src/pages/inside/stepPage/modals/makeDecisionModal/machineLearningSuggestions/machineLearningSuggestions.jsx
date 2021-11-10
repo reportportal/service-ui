@@ -20,18 +20,18 @@ import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
-import {
-  ANALYZE_OR_SUGGEST_ITEM,
-  HIGH,
-  LOW,
-  MACHINE_LEARNING_SUGGESTIONS,
-  SAME,
-} from 'pages/inside/stepPage/modals/makeDecisionModal/constants';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import Parser from 'html-react-parser';
 import ExternalLinkIcon from 'common/img/go-to-another-page-inline.svg';
-import { TestItemDetails } from 'pages/inside/stepPage/modals/makeDecisionModal/elements/testItemDetails/testItemDetails';
+import {
+  DEFAULT_TEST_ITEM_DETAILS,
+  HIGH,
+  LOW,
+  MACHINE_LEARNING_SUGGESTIONS,
+  SAME,
+} from '../constants';
+import { TestItemDetails } from '../elements/testItemDetails';
 import styles from './machineLearningSuggestions.scss';
 import { messages } from '../messages';
 
@@ -165,8 +165,10 @@ export const MachineLearningSuggestions = ({
                   isSelected={modalState.source.id === testItemResource.id}
                   onClickLinkEvent={onClickExternalLinkEvent}
                   logs={logs}
-                  suggestRs={suggestRs}
-                  mode={ANALYZE_OR_SUGGEST_ITEM}
+                  highlightedLogId={suggestRs.relevantLogId}
+                  highlightedMessage={formatMessage(messages.similarLog)}
+                  noLogsMessage={formatMessage(messages.noLogs)}
+                  mode={DEFAULT_TEST_ITEM_DETAILS}
                   eventsInfo={{
                     onOpenStackTraceEvent: () =>
                       eventsInfo.onOpenStackTrace(defectFromTIGroup, true),

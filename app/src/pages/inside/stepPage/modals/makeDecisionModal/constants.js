@@ -27,9 +27,9 @@ export const ERROR_LOGS_SIZE = 5;
 export const SAME = 100;
 export const HIGH = 70;
 export const LOW = 40;
-export const HISTORY_LINE_ITEM = 'historyLineItem';
-export const SIMILAR_TO_INVESTIGATE_ITEM = 'similarToInvestigateItem';
-export const ANALYZE_OR_SUGGEST_ITEM = 'analyzeOrSuggestItem';
+export const RADIO_TEST_ITEM_DETAILS = 'radioTestItemDetails';
+export const CHECKBOX_TEST_ITEM_DETAILS = 'checkboxTestItemDetails';
+export const DEFAULT_TEST_ITEM_DETAILS = 'defaultTestItemDetails';
 
 export const SEARCH_MODES = {
   CURRENT_LAUNCH,

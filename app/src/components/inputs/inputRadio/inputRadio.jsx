@@ -60,7 +60,7 @@ export const InputRadio = ({
         checked: value === ownValue,
         'at-top': circleAtTop,
         [`mode-${mode}`]: mode,
-        [`${size}-toggler`]: size,
+        [`toggler-${size}`]: size,
       })}
     />
     {children && (
