@@ -144,6 +144,6 @@ ItemHeader.defaultProps = {
   selectItem: () => {},
   hideLabels: false,
   onClickLinkEvent: () => {},
-  mode: '',
+  mode: DEFAULT_TEST_ITEM_DETAILS,
   toggleDetails: () => {},
 };

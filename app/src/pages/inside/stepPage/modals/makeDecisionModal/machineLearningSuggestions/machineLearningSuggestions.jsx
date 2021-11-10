@@ -24,13 +24,7 @@ import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import Parser from 'html-react-parser';
 import ExternalLinkIcon from 'common/img/go-to-another-page-inline.svg';
-import {
-  DEFAULT_TEST_ITEM_DETAILS,
-  HIGH,
-  LOW,
-  MACHINE_LEARNING_SUGGESTIONS,
-  SAME,
-} from '../constants';
+import { HIGH, LOW, MACHINE_LEARNING_SUGGESTIONS, SAME } from '../constants';
 import { TestItemDetails } from '../elements/testItemDetails';
 import styles from './machineLearningSuggestions.scss';
 import { messages } from '../messages';
@@ -167,8 +161,6 @@ export const MachineLearningSuggestions = ({
                   logs={logs}
                   highlightedLogId={suggestRs.relevantLogId}
                   highlightedMessage={formatMessage(messages.similarLog)}
-                  noLogsMessage={formatMessage(messages.noLogs)}
-                  mode={DEFAULT_TEST_ITEM_DETAILS}
                   eventsInfo={{
                     onOpenStackTraceEvent: () =>
                       eventsInfo.onOpenStackTrace(defectFromTIGroup, true),

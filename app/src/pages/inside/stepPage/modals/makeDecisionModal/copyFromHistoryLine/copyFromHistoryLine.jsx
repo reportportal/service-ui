@@ -84,7 +84,6 @@ export const CopyFromHistoryLine = ({
             hideLabels={hideLabels()}
             onClickLinkEvent={onClickExternalLinkEvent}
             mode={RADIO_TEST_ITEM_DETAILS}
-            noLogsMessage={formatMessage(messages.noLogs)}
           />
         </div>
       ))}

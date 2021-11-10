@@ -22,8 +22,10 @@ import commentIcon from 'common/img/comment-inline.svg';
 import asteriskIcon from 'common/img/asterisk-inline.svg';
 import { StackTraceMessageBlock } from 'pages/inside/common/stackTraceMessageBlock';
 import { uniqueId } from 'common/utils';
-import { ERROR_LOGS_SIZE } from '../../constants';
+import { useIntl } from 'react-intl';
+import { DEFAULT_TEST_ITEM_DETAILS, ERROR_LOGS_SIZE } from '../../constants';
 import { ItemHeader } from '../itemHeader';
+import { messages } from '../../messages';
 import styles from './testItemDetails.scss';
 
 const cx = classNames.bind(styles);
@@ -36,12 +38,12 @@ export const TestItemDetails = ({
   eventsInfo,
   highlightedLogId,
   highlightedMessage,
-  noLogsMessage,
   hideLabels,
   onClickLinkEvent,
   isSelected,
   showErrorLogs,
 }) => {
+  const { formatMessage } = useIntl();
   const [showDetails, setShowDetails] = useState(showErrorLogs);
 
   useEffect(() => {
@@ -96,7 +98,7 @@ export const TestItemDetails = ({
             ))}
           {showDetails && !logs.length && (
             <div className={cx('no-logs')}>
-              <p className={cx('no-logs-text')}>{noLogsMessage}</p>
+              <p className={cx('no-logs-text')}>{formatMessage(messages.noLogs)}</p>
             </div>
           )}
         </div>
@@ -117,7 +119,6 @@ TestItemDetails.propTypes = {
   eventsInfo: PropTypes.object,
   highlightedLogId: PropTypes.number,
   highlightedMessage: PropTypes.string,
-  noLogsMessage: PropTypes.string,
   mode: PropTypes.string,
   showErrorLogs: PropTypes.bool,
 };
@@ -133,7 +134,6 @@ TestItemDetails.defaultProps = {
   eventsInfo: {},
   highlightedLogId: null,
   highlightedMessage: '',
-  noLogsMessage: '',
-  mode: '',
+  mode: DEFAULT_TEST_ITEM_DETAILS,
   showErrorLogs: false,
 };
