@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { NestedGridRow } from './nestedGridRow';
+export { ClusterItemsGridRow } from './clusterItemsGridRow';

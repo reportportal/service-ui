@@ -198,7 +198,6 @@ export class StepGrid extends Component {
       highlightedRowId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     }),
     onStatusUpdate: PropTypes.func.isRequired,
-    modifyColumnsSettings: PropTypes.object,
     modifyColumnsFunc: PropTypes.func,
   };
 
@@ -223,8 +222,7 @@ export class StepGrid extends Component {
       isGridRowHighlighted: false,
       highlightedRowId: null,
     }),
-    modifyColumnsSettings: {},
-    modifyColumnsFunc: () => {},
+    modifyColumnsFunc: null,
   };
 
   constructor(props) {
@@ -237,7 +235,6 @@ export class StepGrid extends Component {
       onEditItem,
       onEditDefect,
       onStatusUpdate,
-      modifyColumnsSettings,
       modifyColumnsFunc,
     } = props;
     this.columns = [
@@ -328,8 +325,8 @@ export class StepGrid extends Component {
         filterEventInfo: events.DEFECT_TYPE_FILTER,
       },
     ];
-    if (Object.keys(modifyColumnsSettings).length) {
-      this.columns = modifyColumnsFunc(this.columns, modifyColumnsSettings);
+    if (modifyColumnsFunc) {
+      this.columns = modifyColumnsFunc(this.columns);
     }
   }
 

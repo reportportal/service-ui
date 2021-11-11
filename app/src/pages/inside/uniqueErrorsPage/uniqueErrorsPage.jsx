@@ -51,7 +51,7 @@ import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { getDeleteItemsActionParameters } from 'pages/inside/testItemPage';
 import { injectIntl } from 'react-intl';
 import { userIdSelector } from 'controllers/user';
-import { reloadClusterAction } from 'controllers/uniqueErrors/actionCreators';
+import { reloadClustersAction } from 'controllers/uniqueErrors/actionCreators';
 import { UniqueErrorsToolbar } from './uniqueErrorsToolbar';
 
 @connect(
@@ -76,7 +76,7 @@ import { UniqueErrorsToolbar } from './uniqueErrorsToolbar';
     deleteTestItemsAction,
     editDefectsAction,
     fetchClustersAction,
-    reloadClusterAction,
+    reloadClusterAction: reloadClustersAction,
   },
 )
 @withPagination({
@@ -136,9 +136,6 @@ export class UniqueErrorsPage extends Component {
     onUnlinkIssue: () => {},
     editDefectsAction: () => {},
     reloadClusterAction: () => {},
-  };
-  unselectAllItems = () => {
-    this.props.unselectAllClusterItemsAction();
   };
   unselectItem = (item) => {
     this.props.toggleClusterItemSelectionAction(item);
@@ -241,11 +238,11 @@ export class UniqueErrorsPage extends Component {
                 errors={validationErrors}
                 selectedItems={selectedItems}
                 onUnselect={this.unselectItem}
-                onUnselectAll={this.unselectAllItems}
+                onUnselectAll={this.props.unselectAllClusterItemsAction}
                 onDelete={this.deleteItems}
                 parentItem={parentItem}
                 unselectAndFetchItems={this.unselectAndFetchItems}
-                onEditItems={() => this.onEditItems(selectedItems)}
+                onEditItems={this.onEditItems}
                 onEditDefects={this.handleEditDefects}
               />
               <UniqueErrorsGrid

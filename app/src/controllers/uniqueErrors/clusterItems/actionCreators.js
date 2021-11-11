@@ -42,7 +42,6 @@ import {
   FETCH_CLUSTER_ITEMS_START,
   FETCH_CLUSTER_ITEMS_SUCCESS,
   TOGGLE_CLUSTER_ITEMS,
-  FETCH_CLUSTER_ITEMS_ERROR,
   LOAD_MORE_CLUSTER_ITEMS,
   REQUEST_CLUSTER_ITEMS,
 } from './constants';
@@ -57,10 +56,6 @@ export const fetchClusterItemsStartAction = (payload) => ({
 });
 export const fetchClusterItemsSuccessAction = (payload) => ({
   type: FETCH_CLUSTER_ITEMS_SUCCESS,
-  payload,
-});
-export const fetchClusterItemsErrorAction = (payload) => ({
-  type: FETCH_CLUSTER_ITEMS_ERROR,
   payload,
 });
 

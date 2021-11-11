@@ -18,8 +18,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { Grid } from 'components/main/grid';
-import { EmptyUniqueErrors } from 'pages/inside/uniqueErrorsPage/emptyUniqueErrors';
-import { NestedGridRow } from './nestedGridRow';
+import { EmptyUniqueErrors } from '../emptyUniqueErrors';
+import { ClusterItemsGridRow } from './clusterItemsGridRow';
 import styles from './uniqueErrorsGrid.scss';
 
 const cx = classNames.bind(styles);
@@ -54,7 +54,7 @@ export const UniqueErrorsGrid = ({ parentLaunch, data, loading, ...rest }) => {
           columns={columns}
           data={data.map((item) => ({ ...item, hasContent: true }))}
           loading={loading}
-          nestedGridRow={NestedGridRow}
+          nestedGridRow={ClusterItemsGridRow}
           nestedView
           {...rest}
         />

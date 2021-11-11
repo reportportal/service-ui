@@ -191,6 +191,7 @@
   "Charts.skipped": "Пропущено",
   "Charts.testCasesCaption": "Тествовые випадки",
   "Charts.total": "Всього {type}",
+  "ClusterItemsGridRow.loadLabel": "Завантажити",
   "ColorPicker.pickSwatch": "Виберіть зразок",
   "ColorPicker.selectColor": "Виберіть свій колір",
   "CommandItem.commandTitle": "Команда",

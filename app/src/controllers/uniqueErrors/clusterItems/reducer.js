@@ -26,16 +26,15 @@ export const clusterItemsReducer = (state = {}, action) => {
     case FETCH_CLUSTER_ITEMS_START: {
       const {
         payload: { id },
-        refresh = false,
       } = action;
       return {
         ...state,
         [id]: {
           content: [],
           page: {},
-          collapsed: !refresh,
+          collapsed: true,
           ...state[id],
-          loading: !refresh,
+          loading: true,
         },
       };
     }
@@ -65,6 +64,7 @@ export const clusterItemsReducer = (state = {}, action) => {
         [id]: {
           ...state[id],
           collapsed: !state[id].collapsed,
+          loading: false,
         },
       };
     }

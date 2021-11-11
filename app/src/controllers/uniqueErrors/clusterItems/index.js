@@ -19,7 +19,6 @@ export {
   requestClusterItemsAction,
   fetchClusterItemsStartAction,
   fetchClusterItemsSuccessAction,
-  fetchClusterItemsErrorAction,
   toggleClusterItemsAction,
   loadMoreClusterItemsAction,
   toggleClusterItemSelectionAction,
@@ -44,7 +43,6 @@ export {
 export {
   FETCH_CLUSTER_ITEMS_START,
   FETCH_CLUSTER_ITEMS_SUCCESS,
-  FETCH_CLUSTER_ITEMS_ERROR,
   CLEAR_CLUSTER_ITEMS,
   TOGGLE_CLUSTER_ITEMS,
   LOAD_MORE_CLUSTER_ITEMS,

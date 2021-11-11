@@ -20,13 +20,13 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import RefreshIcon from 'common/img/refresh-inline.svg';
-import { breadcrumbsSelector, launchSelector, restorePathAction } from 'controllers/testItem';
+import { breadcrumbsSelector, restorePathAction } from 'controllers/testItem';
 import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { ParentInfo } from 'pages/inside/common/infoLine/parentInfo';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { reloadClusterAction } from 'controllers/uniqueErrors';
+import { reloadClustersAction } from 'controllers/uniqueErrors';
 import { createStepActionDescriptors } from 'pages/inside/common/utils';
 import {
   availableBtsIntegrationsSelector,
@@ -56,13 +56,12 @@ const cx = classNames.bind(styles);
     isBtsPluginsExist: isBtsPluginsExistSelector(state),
     enabledBtsPlugins: enabledBtsPluginsSelector(state),
     lastOperation: lastOperationSelector(state),
-    parentLaunch: launchSelector(state),
     accountRole: userAccountRoleSelector(state),
     projectRole: activeProjectRoleSelector(state),
   }),
   {
     restorePath: restorePathAction,
-    onRefresh: reloadClusterAction,
+    onRefresh: reloadClustersAction,
     onLinkIssue: linkIssueAction,
     onUnlinkIssue: unlinkIssueAction,
     onPostIssue: postIssueAction,
@@ -94,7 +93,6 @@ export class ActionPanel extends Component {
     onRefresh: PropTypes.func,
     onUnlinkIssue: PropTypes.func,
     parentItem: PropTypes.object,
-    parentLaunch: PropTypes.object,
     restorePath: PropTypes.func,
     proceedWithValidItems: PropTypes.func,
     projectRole: PropTypes.string.isRequired,
@@ -123,7 +121,6 @@ export class ActionPanel extends Component {
     onRefresh: () => {},
     onUnlinkIssue: () => {},
     parentItem: null,
-    parentLaunch: {},
     restorePath: () => {},
     proceedWithValidItems: () => {},
     selectedItems: [],

@@ -21,7 +21,7 @@ export const fetchClustersAction = (payload) => ({
   payload,
 });
 
-export const reloadClusterAction = () => ({
+export const reloadClustersAction = () => ({
   type: RELOAD_CLUSTERS,
 });
 

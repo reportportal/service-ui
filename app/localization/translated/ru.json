@@ -191,6 +191,7 @@
   "Charts.skipped": "Пропущено",
   "Charts.testCasesCaption": "Тествовые случаи",
   "Charts.total": "Всего {type}",
+  "ClusterItemsGridRow.loadLabel": "Загрузить еще",
   "ColorPicker.pickSwatch": "Выберите образец",
   "ColorPicker.selectColor": "Выберите свой цвет",
   "CommandItem.commandTitle": "Команда",

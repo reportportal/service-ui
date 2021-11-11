@@ -16,13 +16,12 @@
 
 export const FETCH_CLUSTER_ITEMS_START = 'fetchClusterItemsStart';
 export const FETCH_CLUSTER_ITEMS_SUCCESS = 'fetchClusterItemsSuccess';
-export const FETCH_CLUSTER_ITEMS_ERROR = 'fetchClusterItemsError';
 export const CLEAR_CLUSTER_ITEMS = 'clearClusterItems';
 export const TOGGLE_CLUSTER_ITEMS = 'toggleClusterItems';
 export const LOAD_MORE_CLUSTER_ITEMS = 'loadMoreClusterItems';
 export const REQUEST_CLUSTER_ITEMS = 'requestClusterItems';
 
-export const PAGE_SIZE = 10;
+export const PAGE_SIZE = 20;
 
 export const INITIAL_STATE = {
   loading: false,

@@ -21,9 +21,10 @@ export const modifyColumnsFunc = (columns, settings) =>
     if (settings.excludeColumns && settings.excludeColumns.includes(id)) {
       return acc;
     }
-    if (id in settings) {
-      Object.keys(settings[id]).forEach((key) => {
-        newItem = { ...newItem, [key]: { ...newItem[key], ...settings[id][key] } };
+    if (settings.updateColumns && id in settings.updateColumns) {
+      const { updateColumns } = settings;
+      Object.keys(updateColumns[id]).forEach((key) => {
+        newItem = { ...newItem, [key]: { ...newItem[key], ...updateColumns[id][key] } };
       });
     }
     return [...acc, newItem];

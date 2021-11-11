@@ -15,38 +15,31 @@
  */
 
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
-import { handleError } from 'controllers/fetch';
-
 import { fetch, isEmptyObject } from 'common/utils';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
 import {
   namespaceSelector,
-  parentItemsSelector,
   PROVIDER_TYPE_CLUSTER,
   queryParametersSelector,
 } from 'controllers/testItem';
+import { showDefaultErrorNotification } from 'controllers/notification';
 import { SORTING_KEY } from 'controllers/sorting';
+import { launchIdSelector } from 'controllers/pages';
 import {
-  fetchClusterItemsErrorAction,
   fetchClusterItemsStartAction,
   fetchClusterItemsSuccessAction,
   toggleClusterItemsAction,
 } from './actionCreators';
 import { clusterItemsSelector } from './selectors';
-import {
-  FETCH_CLUSTER_ITEMS_ERROR,
-  LOAD_MORE_CLUSTER_ITEMS,
-  PAGE_SIZE,
-  REQUEST_CLUSTER_ITEMS,
-} from './constants';
+import { LOAD_MORE_CLUSTER_ITEMS, PAGE_SIZE, REQUEST_CLUSTER_ITEMS } from './constants';
 
 function* fetchClusterItems({ payload = {} }) {
   const { id } = payload;
   const { page } = yield select(clusterItemsSelector, id);
   const project = yield select(activeProjectSelector);
-  const parentItems = yield select(parentItemsSelector);
+  const launchId = yield select(launchIdSelector);
   let pageNumber = 1;
   if (!isEmptyObject(page)) {
     const { totalPages, number } = page;
@@ -59,7 +52,7 @@ function* fetchClusterItems({ payload = {} }) {
     [SIZE_KEY]: PAGE_SIZE,
     [SORTING_KEY]: query[SORTING_KEY],
     providerType: PROVIDER_TYPE_CLUSTER,
-    launchId: parentItems[0].id,
+    launchId,
     'filter.any.clusterId': id,
   };
   try {
@@ -69,7 +62,7 @@ function* fetchClusterItems({ payload = {} }) {
     });
     yield put(fetchClusterItemsSuccessAction({ id, ...response }));
   } catch (err) {
-    yield put(fetchClusterItemsErrorAction(err));
+    yield put(showDefaultErrorNotification(err));
   }
 }
 
@@ -90,10 +83,6 @@ function* watchLoadMoreClusterItems() {
   yield takeEvery(LOAD_MORE_CLUSTER_ITEMS, fetchClusterItems);
 }
 
-function* watchFetchError() {
-  yield takeEvery(FETCH_CLUSTER_ITEMS_ERROR, handleError);
-}
-
 export function* clusterItemsSagas() {
-  yield all([watchRequestClusterItems(), watchLoadMoreClusterItems(), watchFetchError()]);
+  yield all([watchRequestClusterItems(), watchLoadMoreClusterItems()]);
 }

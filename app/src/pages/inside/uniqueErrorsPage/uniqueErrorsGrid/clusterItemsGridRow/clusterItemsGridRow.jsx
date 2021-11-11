@@ -35,16 +35,16 @@ import {
 } from 'controllers/uniqueErrors/clusterItems';
 import { ENTITY_METHOD_TYPE } from 'components/filterEntities/constants';
 import { PROJECT_LOG_PAGE } from 'controllers/pages';
-import { reloadClusterAction } from 'controllers/uniqueErrors';
+import { reloadClustersAction } from 'controllers/uniqueErrors';
 import { modifyColumnsFunc } from './utils';
-import styles from './nestedGridRow.scss';
+import styles from './clusterItemsGridRow.scss';
 
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
   loadLabel: {
-    id: 'NestedGridRow.loadLabel',
-    defaultMessage: 'Load 10 more',
+    id: 'ClusterItemsGridRow.loadLabel',
+    defaultMessage: 'Load more',
   },
 });
 
@@ -68,7 +68,7 @@ ClusterColumn.defaultProps = {
   cluster: {},
 };
 
-export const NestedGridRow = ({ data, onEditItem, onUnlinkSingleTicket, onEditDefect }) => {
+export const ClusterItemsGridRow = ({ data, onEditItem, onUnlinkSingleTicket, onEditDefect }) => {
   const { id } = data;
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
@@ -94,7 +94,11 @@ export const NestedGridRow = ({ data, onEditItem, onUnlinkSingleTicket, onEditDe
     dispatch(toggleClusterItemSelectionAction(value));
   };
   const modifyColumnsSettings = {
-    name: { customProps: { className: cx('name-col'), ownLinkParams: { page: PROJECT_LOG_PAGE } } },
+    updateColumns: {
+      name: {
+        customProps: { className: cx('name-col'), ownLinkParams: { page: PROJECT_LOG_PAGE } },
+      },
+    },
     excludeColumns: ['predefinedFilterSwitcher', ENTITY_METHOD_TYPE],
   };
 
@@ -120,8 +124,7 @@ export const NestedGridRow = ({ data, onEditItem, onUnlinkSingleTicket, onEditDe
             <div className={cx('table-cell')}>
               <StepGrid
                 data={content}
-                modifyColumnsSettings={modifyColumnsSettings}
-                modifyColumnsFunc={modifyColumnsFunc}
+                modifyColumnsFunc={(columns) => modifyColumnsFunc(columns, modifyColumnsSettings)}
                 selectedItems={selectedItems}
                 onAllItemsSelect={handleAllItemsSelection}
                 onItemSelect={handleOneItemSelection}
@@ -129,7 +132,7 @@ export const NestedGridRow = ({ data, onEditItem, onUnlinkSingleTicket, onEditDe
                 onUnlinkSingleTicket={onUnlinkSingleTicket}
                 onEditItem={onEditItem}
                 onEditDefect={onEditDefect}
-                onStatusUpdate={() => dispatch(reloadClusterAction())}
+                onStatusUpdate={() => dispatch(reloadClustersAction())}
               />
               {totalPages > currentPage && (
                 <div
@@ -155,13 +158,13 @@ export const NestedGridRow = ({ data, onEditItem, onUnlinkSingleTicket, onEditDe
     </>
   );
 };
-NestedGridRow.propTypes = {
+ClusterItemsGridRow.propTypes = {
   data: PropTypes.object,
   onEditItem: PropTypes.func,
   onUnlinkSingleTicket: PropTypes.func,
   onEditDefect: PropTypes.func,
 };
-NestedGridRow.defaultProps = {
+ClusterItemsGridRow.defaultProps = {
   data: {},
   onEditItem: () => {},
   onUnlinkSingleTicket: () => {},
