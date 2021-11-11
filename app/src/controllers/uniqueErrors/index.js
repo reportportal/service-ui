@@ -15,7 +15,7 @@
  */
 
 export { uniqueErrorsReducer } from './reducer';
-export { fetchClustersAction, setPageLoadingAction } from './actionCreators';
+export { fetchClustersAction, setPageLoadingAction, reloadClustersAction } from './actionCreators';
 export { uniqueErrorsSagas } from './sagas';
 export { NAMESPACE, FETCH_CLUSTERS } from './constants';
 export {

@@ -1,0 +1,108 @@
+/*!
+ * Copyright 2021 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.table-row-group {
+  display: table-row-group;
+}
+
+.table-row {
+  display: table-row;
+}
+
+.table-cell {
+  display: table-cell;
+  border-bottom: 6px solid $COLOR--primary-gray;
+}
+
+.expand-col {
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.nested-expand-col {
+  background: $COLOR--primary-gray;
+}
+
+.arrow-icon {
+  width: 24px;
+  height: 24px;
+  margin: 0 auto;
+  transition: transform 0.2s ease 0s;
+  fill: $COLOR--topaz;
+
+  svg {
+    min-width: 24px;
+  }
+
+  &.expanded {
+    transform: rotate(90deg);
+  }
+}
+
+.name-col {
+  width: 65%;
+}
+
+.cluster-row-wrapper {
+  padding: 9px 24px 9px 34px;
+  border-left: 3px solid $COLOR--orange-red;
+  background-image: linear-gradient(to right, $COLOR--light-red, $COLOR--light-red);
+  background-size: 7px 100%;
+}
+
+.cluster-row {
+  font-size: 12px;
+  line-height: 1.55;
+  color: $COLOR_-black-2;
+  white-space: pre-wrap;
+}
+
+.cluster-accordion-block {
+  align-items: center;
+  background: transparent;
+  box-shadow: none;
+}
+
+.load-more-container {
+  display: flex;
+  flex-wrap: nowrap;
+  align-content: flex-start;
+  align-items: center;
+  height: 34px;
+  padding: 6px 0 0 34px;
+  background-color: $COLOR--primary-gray;
+  cursor: pointer;
+}
+
+.load-more-label {
+  color: $COLOR--topaz;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 14px;
+}
+
+.load-more-label.loading {
+  color: $COLOR--gray-60;
+}
+
+.loading-icon {
+  width: 26px;
+  height: 26px;
+  margin-left: 10px;
+}
+
+.load-more-container.loading {
+  pointer-events: none;
+}

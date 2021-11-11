@@ -16,19 +16,82 @@
 
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames/bind';
 import { InfoPanel } from 'pages/inside/common/infoPanel';
 import { UNIQUE_ERRORS_VIEW } from 'controllers/testItem';
+import { SelectedItems } from 'pages/inside/common/selectedItems';
 import { ActionPanel } from './actionPanel';
+import styles from './uniqueErrorsToolbar.scss';
 
-export const UniqueErrorsToolbar = ({ parentItem }) => (
+const cx = classNames.bind(styles);
+
+export const UniqueErrorsToolbar = ({
+  parentItem,
+  selectedItems,
+  errors,
+  onUnselect,
+  onUnselectAll,
+  onDelete,
+  onPostIssue,
+  onLinkIssue,
+  onUnlinkIssue,
+  unselectAndFetchItems,
+  onEditItems,
+  onEditDefects,
+}) => (
   <Fragment>
-    <ActionPanel parentItem={parentItem} />
+    <div className={cx({ 'sticky-toolbar': selectedItems.length })}>
+      {!!selectedItems.length && (
+        <SelectedItems
+          selectedItems={selectedItems}
+          errors={errors}
+          onUnselect={onUnselect}
+          onClose={onUnselectAll}
+        />
+      )}
+      <ActionPanel
+        hasErrors={selectedItems.some((item) => !!errors[item.id])}
+        hasValidItems={selectedItems.length > Object.keys(errors).length}
+        showBreadcrumbs={selectedItems.length === 0}
+        selectedItems={selectedItems}
+        onPostIssue={onPostIssue}
+        onLinkIssue={onLinkIssue}
+        onUnlinkIssue={onUnlinkIssue}
+        onEditDefects={onEditDefects}
+        onEditItems={onEditItems}
+        onDelete={onDelete}
+        parentItem={parentItem}
+        unselectAndFetchItems={unselectAndFetchItems}
+      />
+    </div>
     {parentItem && <InfoPanel withoutStatistics viewMode={UNIQUE_ERRORS_VIEW} data={parentItem} />}
   </Fragment>
 );
 UniqueErrorsToolbar.propTypes = {
   parentItem: PropTypes.object,
+  selectedItems: PropTypes.arrayOf(PropTypes.object),
+  errors: PropTypes.object,
+  onUnselect: PropTypes.func,
+  onUnselectAll: PropTypes.func,
+  onDelete: PropTypes.func,
+  onPostIssue: PropTypes.func,
+  onLinkIssue: PropTypes.func,
+  onUnlinkIssue: PropTypes.func,
+  unselectAndFetchItems: PropTypes.func,
+  onEditItems: PropTypes.func,
+  onEditDefects: PropTypes.func,
 };
 UniqueErrorsToolbar.defaultProps = {
   parentItem: null,
+  selectedItems: [],
+  errors: {},
+  onUnselect: () => {},
+  onUnselectAll: () => {},
+  onDelete: () => {},
+  onPostIssue: () => {},
+  onLinkIssue: () => {},
+  onUnlinkIssue: () => {},
+  unselectAndFetchItems: () => {},
+  onEditItems: () => {},
+  onEditDefects: () => {},
 };

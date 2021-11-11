@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 
-import { FETCH_CLUSTERS, SET_PAGE_LOADING } from './constants';
+import { FETCH_CLUSTERS, RELOAD_CLUSTERS, SET_PAGE_LOADING } from './constants';
 
 export const fetchClustersAction = (payload) => ({
   type: FETCH_CLUSTERS,
   payload,
+});
+
+export const reloadClustersAction = () => ({
+  type: RELOAD_CLUSTERS,
 });
 
 export const setPageLoadingAction = (isLoading) => ({

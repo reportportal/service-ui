@@ -28,14 +28,24 @@ import { createFetchPredicate, fetchDataAction } from 'controllers/fetch';
 import { pathnameChangedSelector } from 'controllers/pages';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { SORTING_KEY } from 'controllers/sorting';
-import { FETCH_CLUSTERS, NAMESPACE } from './constants';
+import { unselectAllItemsAction } from 'controllers/groupOperations';
+import {
+  CLEAR_CLUSTER_ITEMS,
+  clusterItemsSagas,
+  selectedClusterItemsSelector,
+} from './clusterItems';
+import { FETCH_CLUSTERS, NAMESPACE, RELOAD_CLUSTERS } from './constants';
 import { setPageLoadingAction } from './actionCreators';
 
-function* fetchClusters({ payload = {} }) {
+function* fetchClusters(payload = {}) {
   const { refresh = false } = payload;
   let parentLaunch = yield select(launchSelector);
   const project = yield select(activeProjectSelector);
   const isPathNameChanged = yield select(pathnameChangedSelector);
+  const selectedItems = yield select(selectedClusterItemsSelector);
+  if (selectedItems.length) {
+    yield put(unselectAllItemsAction(NAMESPACE)());
+  }
   if (isPathNameChanged && !refresh) {
     yield put(setPageLoadingAction(true));
   }
@@ -63,10 +73,19 @@ function* fetchClusters({ payload = {} }) {
   }
 }
 
+function* reloadClusters() {
+  yield put({ type: CLEAR_CLUSTER_ITEMS });
+  yield call(fetchClusters, { refresh: true });
+}
+
 function* watchFetchClusters() {
   yield takeEvery(FETCH_CLUSTERS, fetchClusters);
 }
 
+function* watchReloadClusters() {
+  yield takeEvery(RELOAD_CLUSTERS, reloadClusters);
+}
+
 export function* uniqueErrorsSagas() {
-  yield all([watchFetchClusters()]);
+  yield all([watchFetchClusters(), clusterItemsSagas(), watchReloadClusters()]);
 }

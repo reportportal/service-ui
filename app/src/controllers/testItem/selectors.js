@@ -259,7 +259,8 @@ export const nameLinkSelector = (state, ownProps) => {
   let testItemIds = (ownLinkParams && ownLinkParams.testItemIds) || testItemIdsSelector(state);
   const isDebugMode = debugModeSelector(state);
   let query = pagePropertiesSelector(state);
-  const testItem = testItemSelector(state, ownProps.itemId);
+  const testItem =
+    (ownLinkParams && ownLinkParams.testItem) || testItemSelector(state, ownProps.itemId);
   const hasChildren = testItem && testItem.hasChildren;
   const page = (ownLinkParams && ownLinkParams.page) || getNextPage(isDebugMode, hasChildren);
   if (testItem) {

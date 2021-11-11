@@ -19,8 +19,9 @@ import { fetchReducer } from 'controllers/fetch';
 import { paginationReducer } from 'controllers/pagination';
 import { groupOperationsReducer } from 'controllers/groupOperations';
 import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
-import { PROJECT_USERDEBUG_TEST_ITEM_PAGE, TEST_ITEM_PAGE } from 'controllers/pages';
+import { UNIQUE_ERRORS_PAGE } from 'controllers/pages';
 import { loadingReducer } from 'controllers/loading';
+import { clusterItemsReducer } from './clusterItems';
 import { NAMESPACE, SET_PAGE_LOADING } from './constants';
 
 const pageLoadingReducer = (state = false, { type, payload }) => {
@@ -38,9 +39,7 @@ const reducer = combineReducers({
   clusters: fetchReducer(NAMESPACE, { contentPath: 'content' }),
   pagination: paginationReducer(NAMESPACE),
   groupOperations: groupOperationsReducer(NAMESPACE),
+  clusterItems: clusterItemsReducer,
 });
 
-export const uniqueErrorsReducer = createPageScopedReducer(reducer, [
-  TEST_ITEM_PAGE,
-  PROJECT_USERDEBUG_TEST_ITEM_PAGE,
-]);
+export const uniqueErrorsReducer = createPageScopedReducer(reducer, [UNIQUE_ERRORS_PAGE]);

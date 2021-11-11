@@ -14,8 +14,19 @@
  * limitations under the License.
  */
 
-export const NAMESPACE = 'uniqueErrors';
+export const FETCH_CLUSTER_ITEMS_START = 'fetchClusterItemsStart';
+export const FETCH_CLUSTER_ITEMS_SUCCESS = 'fetchClusterItemsSuccess';
+export const CLEAR_CLUSTER_ITEMS = 'clearClusterItems';
+export const TOGGLE_CLUSTER_ITEMS = 'toggleClusterItems';
+export const LOAD_MORE_CLUSTER_ITEMS = 'loadMoreClusterItems';
+export const REQUEST_CLUSTER_ITEMS = 'requestClusterItems';
 
-export const FETCH_CLUSTERS = 'fetchClusters';
-export const SET_PAGE_LOADING = `${NAMESPACE}/setPageLoading`;
-export const RELOAD_CLUSTERS = 'reloadClusters';
+export const PAGE_SIZE = 20;
+
+export const INITIAL_STATE = {
+  loading: false,
+  content: [],
+  page: {},
+  collapsed: true,
+  initial: true,
+};

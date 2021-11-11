@@ -18,43 +18,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { Grid } from 'components/main/grid';
-import { StackTraceMessageBlock } from 'pages/inside/common/stackTraceMessageBlock';
+import { EmptyUniqueErrors } from '../emptyUniqueErrors';
+import { ClusterItemsGridRow } from './clusterItemsGridRow';
 import styles from './uniqueErrorsGrid.scss';
 
 const cx = classNames.bind(styles);
 
-const ExpandColumn = ({ className }) => <div className={cx('expand-col', className)} />;
-ExpandColumn.propTypes = {
-  className: PropTypes.string.isRequired,
-};
-
-const ClusterColumn = ({ className, ...rest }) => (
-  <div className={cx('cluster-col', className)}>
-    <StackTraceMessageBlock
-      level={'error'}
-      maxHeight={75}
-      customProps={{
-        rowWrapper: cx('row-wrapper'),
-        row: cx('row'),
-        accordionBlock: cx('accordion-block'),
-      }}
-    >
-      <div>{rest.value.message}</div>
-    </StackTraceMessageBlock>
-  </div>
-);
-ClusterColumn.propTypes = {
-  className: PropTypes.string.isRequired,
-};
-
-export const UniqueErrorsGrid = ({ data, loading }) => {
-  const getColumns = () => [
+export const UniqueErrorsGrid = ({ parentLaunch, data, loading, ...rest }) => {
+  const columns = [
     {
       id: 'expand',
       title: {
         full: '',
       },
-      component: ExpandColumn,
       customProps: {
         gridHeaderCellStyles: cx('expand-col'),
       },
@@ -65,20 +41,36 @@ export const UniqueErrorsGrid = ({ data, loading }) => {
         full: 'ERROR LOG',
         short: 'ERROR LOG',
       },
-      component: ClusterColumn,
       customProps: {
         gridHeaderCellStyles: cx('cluster-header'),
       },
     },
   ];
 
-  return <Grid columns={getColumns()} data={data} loading={loading} />;
+  return (
+    <>
+      {data.length > 0 ? (
+        <Grid
+          columns={columns}
+          data={data.map((item) => ({ ...item, hasContent: true }))}
+          loading={loading}
+          nestedGridRow={ClusterItemsGridRow}
+          nestedView
+          {...rest}
+        />
+      ) : (
+        <EmptyUniqueErrors parentLaunch={parentLaunch} />
+      )}
+    </>
+  );
 };
 UniqueErrorsGrid.propTypes = {
+  parentLaunch: PropTypes.object,
   data: PropTypes.array,
   loading: PropTypes.bool,
 };
 UniqueErrorsGrid.defaultProps = {
+  parentLaunch: {},
   data: [],
   loading: false,
 };

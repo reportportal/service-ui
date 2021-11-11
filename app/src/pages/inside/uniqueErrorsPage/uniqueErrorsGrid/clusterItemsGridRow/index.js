@@ -14,8 +14,4 @@
  * limitations under the License.
  */
 
-export const NAMESPACE = 'uniqueErrors';
-
-export const FETCH_CLUSTERS = 'fetchClusters';
-export const SET_PAGE_LOADING = `${NAMESPACE}/setPageLoading`;
-export const RELOAD_CLUSTERS = 'reloadClusters';
+export { ClusterItemsGridRow } from './clusterItemsGridRow';

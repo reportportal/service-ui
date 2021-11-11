@@ -118,7 +118,7 @@ export class UnlinkIssueModal extends Component {
     const {
       intl,
       url,
-      data: { fetchFunc, eventsInfo },
+      data: { fetchFunc, eventsInfo = {} },
       tracking: { trackEvent },
     } = this.props;
     const { selectedItems } = this.state;
@@ -246,7 +246,7 @@ export class UnlinkIssueModal extends Component {
   render() {
     const {
       intl,
-      data: { eventsInfo },
+      data: { eventsInfo = {} },
     } = this.props;
     const layoutEventsInfo = {
       openCloseRightSection: eventsInfo.openCloseRightSection,
