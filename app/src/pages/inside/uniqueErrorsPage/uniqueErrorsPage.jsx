@@ -76,7 +76,7 @@ import { UniqueErrorsToolbar } from './uniqueErrorsToolbar';
     deleteTestItemsAction,
     editDefectsAction,
     fetchClustersAction,
-    reloadClusterAction: reloadClustersAction,
+    reloadClustersAction,
   },
 )
 @withPagination({
@@ -110,7 +110,7 @@ export class UniqueErrorsPage extends Component {
     deleteClusterItemsAction: PropTypes.func,
     onUnlinkIssue: PropTypes.func,
     editDefectsAction: PropTypes.func,
-    reloadClusterAction: PropTypes.func,
+    reloadClustersAction: PropTypes.func,
   };
   static defaultProps = {
     pageLoading: false,
@@ -135,14 +135,14 @@ export class UniqueErrorsPage extends Component {
     deleteClusterItemsAction: () => {},
     onUnlinkIssue: () => {},
     editDefectsAction: () => {},
-    reloadClusterAction: () => {},
+    reloadClustersAction: () => {},
   };
   unselectItem = (item) => {
     this.props.toggleClusterItemSelectionAction(item);
   };
   unselectAndFetchItems = () => {
     this.props.unselectAllClusterItemsAction();
-    this.props.reloadClusterAction();
+    this.props.reloadClustersAction();
   };
   onEditItem = (item) => {
     this.props.showModalAction({
