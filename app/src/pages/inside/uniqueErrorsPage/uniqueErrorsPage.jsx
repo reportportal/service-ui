@@ -249,7 +249,6 @@ export class UniqueErrorsPage extends Component {
                 parentLaunch={parentLaunch}
                 data={clusters}
                 loading={loading}
-                handleEditDefects={this.handleEditDefects}
                 onUnlinkSingleTicket={this.handleUnlinkSingleTicket}
                 unselectAndFetchItems={this.unselectAndFetchItems}
                 onEditItem={this.onEditItem}

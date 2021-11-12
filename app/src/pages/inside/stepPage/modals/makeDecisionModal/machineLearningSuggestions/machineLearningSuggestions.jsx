@@ -177,7 +177,7 @@ export const MachineLearningSuggestions = ({
 MachineLearningSuggestions.propTypes = {
   modalState: PropTypes.object.isRequired,
   setModalState: PropTypes.func.isRequired,
-  itemData: PropTypes.object,
+  itemData: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   collapseTabsExceptCurr: PropTypes.func.isRequired,
   loadingMLSuggest: PropTypes.bool,
   eventsInfo: PropTypes.object,
