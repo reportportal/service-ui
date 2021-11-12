@@ -59,6 +59,8 @@ const MakeDecision = ({ data }) => {
   const isAnalyzerAvailable = !!useSelector(analyzerExtensionsSelector).length;
   const isBulkOperation = data.items && data.items.length > 1;
   const itemData = isBulkOperation ? data.items : data.items[0];
+  const clusterIds = Array.from(new Set(data.items.map((item) => item.clusterId)));
+  const isMLSuggestionsAvailable = !isBulkOperation || clusterIds.length === 1;
   const defectFromTIGroup =
     itemData.issue && itemData.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
   const [modalState, setModalState] = useReducer((state, newState) => ({ ...state, ...newState }), {
@@ -94,9 +96,13 @@ const MakeDecision = ({ data }) => {
   }, [modalState]);
 
   useEffect(() => {
-    if (!isBulkOperation) {
+    if (isMLSuggestionsAvailable) {
       setLoadingMLSuggest(true);
-      fetch(URLS.getMLSuggestions(activeProject, itemData.id))
+      const url =
+        clusterIds.length === 1
+          ? URLS.MLSuggestionsByCluster(activeProject, clusterIds[0])
+          : URLS.MLSuggestions(activeProject, itemData.id);
+      fetch(url)
         .then((resp) => {
           if (resp.length !== 0) {
             setModalState({ suggestedItems: resp });
@@ -365,11 +371,11 @@ const MakeDecision = ({ data }) => {
     const tabsData = [
       {
         id: MACHINE_LEARNING_SUGGESTIONS,
-        shouldShow: !isBulkOperation,
+        shouldShow: isMLSuggestionsAvailable,
         disabled: false,
         isOpen: tabs[MACHINE_LEARNING_SUGGESTIONS],
         title: <div>{formatMessage(messages.machineLearningSuggestions)}</div>,
-        content: !isBulkOperation && (
+        content: isMLSuggestionsAvailable && (
           <MachineLearningSuggestions
             modalState={modalState}
             setModalState={setModalState}
@@ -495,6 +501,7 @@ MakeDecision.propTypes = {
     items: PropTypes.array,
     fetchFunc: PropTypes.func,
     eventsInfo: PropTypes.object,
+    clusterIds: PropTypes.arrayOf(PropTypes.number),
   }).isRequired,
 };
 export const MakeDecisionModal = withModal(MAKE_DECISION_MODAL)(MakeDecision);

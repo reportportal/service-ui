@@ -60,7 +60,11 @@ function* fetchClusterItems({ payload = {} }) {
     const response = yield call(fetch, URLS.testItemsWithProviderType(project), {
       params: fetchParams,
     });
-    yield put(fetchClusterItemsSuccessAction({ id, ...response }));
+    const responseWithClusterId = {
+      ...response,
+      content: response.content.map((item) => ({ clusterId: id, ...item })),
+    };
+    yield put(fetchClusterItemsSuccessAction({ id, ...responseWithClusterId }));
   } catch (err) {
     yield put(showDefaultErrorNotification(err));
   }
