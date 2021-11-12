@@ -59,7 +59,9 @@ const MakeDecision = ({ data }) => {
   const isAnalyzerAvailable = !!useSelector(analyzerExtensionsSelector).length;
   const isBulkOperation = data.items && data.items.length > 1;
   const itemData = isBulkOperation ? data.items : data.items[0];
-  const clusterIds = Array.from(new Set(data.items.map((item) => item.clusterId)));
+  const clusterIds = data.items[0].clusterId
+    ? Array.from(new Set(data.items.map(({ clusterId }) => clusterId)))
+    : [];
   const isMLSuggestionsAvailable = !isBulkOperation || clusterIds.length === 1;
   const defectFromTIGroup =
     itemData.issue && itemData.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
@@ -374,7 +376,14 @@ const MakeDecision = ({ data }) => {
         shouldShow: isMLSuggestionsAvailable,
         disabled: false,
         isOpen: tabs[MACHINE_LEARNING_SUGGESTIONS],
-        title: <div>{formatMessage(messages.machineLearningSuggestions)}</div>,
+        title: (
+          <div>
+            {formatMessage(messages.machineLearningSuggestions, {
+              target:
+                clusterIds.length === 1 ? formatMessage(messages.MLSuggestionsForCluster) : '',
+            })}
+          </div>
+        ),
         content: isMLSuggestionsAvailable && (
           <MachineLearningSuggestions
             modalState={modalState}
