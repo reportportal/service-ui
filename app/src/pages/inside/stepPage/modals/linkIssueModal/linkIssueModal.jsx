@@ -34,7 +34,7 @@ import { BtsIntegrationSelector } from 'pages/inside/common/btsIntegrationSelect
 import { DarkModalLayout } from 'components/main/modal/darkModalLayout';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { hideModalAction } from 'controllers/modal';
-import { ItemsList } from '../makeDecisionModal/optionsSection/itemsList';
+import { ItemsList } from '../makeDecisionModal/executionSection/optionsSection/itemsList';
 import { getDefaultIssueModalConfig } from '../postIssueModal/utils';
 import { LinkIssueFields } from './linkIssueFields';
 import styles from './linkIssueModal.scss';
@@ -126,8 +126,6 @@ export class LinkIssueModal extends Component {
     },
   };
 
-  isBulkOperation = this.props.data.items.length > 1;
-
   constructor(props) {
     super(props);
     const {
@@ -136,21 +134,16 @@ export class LinkIssueModal extends Component {
       data: { items },
     } = props;
     const { pluginName, integration } = getDefaultIssueModalConfig(namedBtsIntegrations, userId);
-    const currentItems = this.isBulkOperation
-      ? items.map((item) => {
-          return { ...item, itemId: item.id };
-        })
-      : items;
-
     this.props.initialize({
       issues: [{}],
     });
+
     this.state = {
       pluginName,
       integrationId: integration.id,
       loading: false,
-      testItems: currentItems,
-      selectedItems: currentItems,
+      testItems: items,
+      selectedItems: items,
     };
   }
 
@@ -317,7 +310,6 @@ export class LinkIssueModal extends Component {
           testItems={testItems}
           selectedItems={selectedItems}
           isNarrowView={collapsedRightSection}
-          isBulkOperation={this.isBulkOperation}
           loading={loading}
           eventsInfo={this.props.data.eventsInfo}
         />

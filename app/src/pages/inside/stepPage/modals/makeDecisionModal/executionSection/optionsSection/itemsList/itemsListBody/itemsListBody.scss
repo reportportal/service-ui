@@ -14,27 +14,13 @@
  * limitations under the License.
  */
 
-.header-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 0 12px 12px 0;
+.items-list {
+  & > div:not(:last-child) {
+    margin-bottom: 12px;
+  }
 }
 
-.checkbox-label {
-  color: $COLOR--dark-gray;
-}
-
-.checkbox-icon {
-  background: transparent;
-}
-
-.switcher {
-  width: auto;
-  min-width: 140px;
-  min-height: 12px;
-}
-
-.switcher-children {
-  color: $COLOR--dark-gray;
+.error-log {
+  padding-left: 20px;
+  margin-bottom: 10px;
 }

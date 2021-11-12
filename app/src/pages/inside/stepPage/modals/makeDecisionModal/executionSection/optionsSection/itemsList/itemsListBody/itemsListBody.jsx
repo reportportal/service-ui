@@ -19,8 +19,8 @@ import PropTypes from 'prop-types';
 import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
-import { TestItemDetails } from '../../../elements/testItemDetails';
-import { ALL_LOADED_TI_FROM_HISTORY_LINE, CHECKBOX_TEST_ITEM_DETAILS } from '../../../constants';
+import { TestItemDetails } from '../../../../elements/testItemDetails';
+import { CHECKBOX_TEST_ITEM_DETAILS } from '../../../../constants';
 import styles from './itemsListBody.scss';
 
 const cx = classNames.bind(styles);
@@ -29,47 +29,38 @@ const SimilarItemsList = ({
   testItems,
   selectedItems,
   selectItem,
-  isBulkOperation,
   onClickExternalLinkEvent,
-  showErrorLogs,
   eventsInfo,
+  onToggleCallback,
 }) => {
   return (
     <>
       {testItems.length > 0 &&
-        testItems.map((item, i) => {
-          let composedItem = item;
-          if (!isBulkOperation && i !== 0) {
-            const { itemId: id, itemName: name, issue, patternTemplates } = item;
-            composedItem = {
-              ...item,
-              id,
-              name,
-              issue,
-              patternTemplates,
-            };
-          }
+        testItems.map((item) => {
+          const { itemId, id, itemName, name, issue, patternTemplates } = item;
+          const composedItem = {
+            ...item,
+            id: id || itemId,
+            name: name || itemName,
+            issue,
+            patternTemplates,
+          };
           const selected = !!selectedItems.find(
             (selectedItem) => selectedItem.itemId === item.itemId,
           );
-          const getSelectedItem = () => {
-            if (isBulkOperation) {
-              return selectItem;
-            }
-            return i !== 0 ? selectItem : undefined;
-          };
 
           return (
             <div key={item.id || item.itemId}>
               <TestItemDetails
                 item={composedItem}
                 logs={composedItem.logs}
-                selectItem={getSelectedItem()}
+                selectItem={selectItem}
                 isSelected={selected}
                 onClickLinkEvent={onClickExternalLinkEvent}
                 mode={CHECKBOX_TEST_ITEM_DETAILS}
-                showErrorLogs={showErrorLogs}
+                showErrorLogs={item.opened}
                 eventsInfo={eventsInfo}
+                onToggleCallback={onToggleCallback}
               />
             </div>
           );
@@ -81,46 +72,14 @@ SimilarItemsList.propTypes = {
   testItems: PropTypes.array.isRequired,
   selectedItems: PropTypes.array.isRequired,
   selectItem: PropTypes.func.isRequired,
-  showErrorLogs: PropTypes.bool.isRequired,
-  isBulkOperation: PropTypes.bool,
   onClickExternalLinkEvent: PropTypes.func,
   eventsInfo: PropTypes.object,
+  onToggleCallback: PropTypes.func,
 };
 SimilarItemsList.defaultProps = {
   onClickExternalLinkEvent: () => {},
   eventsInfo: {},
-};
-
-const HistoryLineItemsList = ({
-  testItems,
-  selectedItems,
-  selectItem,
-  onClickExternalLinkEvent,
-}) => {
-  return (
-    testItems.length > 0 &&
-    testItems.map((item, i) => {
-      return (
-        <TestItemDetails
-          item={item}
-          selectItem={i !== 0 ? selectItem : undefined}
-          isSelected={!!selectedItems.find((selectedItem) => selectedItem.id === item.id)}
-          key={item.id}
-          onClickLinkEvent={onClickExternalLinkEvent}
-          mode={CHECKBOX_TEST_ITEM_DETAILS}
-        />
-      );
-    })
-  );
-};
-HistoryLineItemsList.propTypes = {
-  testItems: PropTypes.array.isRequired,
-  selectedItems: PropTypes.array.isRequired,
-  selectItem: PropTypes.func.isRequired,
-  onClickExternalLinkEvent: PropTypes.func,
-};
-HistoryLineItemsList.defaultProps = {
-  onClickExternalLinkEvent: () => {},
+  onToggleCallback: () => {},
 };
 
 export const ItemsListBody = ({
@@ -128,16 +87,15 @@ export const ItemsListBody = ({
   selectedItems,
   setItems,
   showErrorLogs,
-  optionValue,
-  isBulkOperation,
   eventsInfo,
+  onShowErrorLogsChange,
 }) => {
   const { trackEvent } = useTracking();
   const selectItem = (id) => {
     setItems({
-      selectedItems: selectedItems.find((item) => item.itemId === id)
-        ? selectedItems.filter((item) => item.itemId !== id)
-        : [...selectedItems, testItems.find((item) => item.itemId === id)],
+      selectedItems: selectedItems.find((item) => item.id === id)
+        ? selectedItems.filter((item) => item.id !== id)
+        : [...selectedItems, testItems.find((item) => item.id === id)],
     });
   };
   const onClickExternalLinkEvent = () => {
@@ -147,27 +105,31 @@ export const ItemsListBody = ({
     };
     onClickExternalLink && trackEvent(onClickExternalLink(args));
   };
+  const onToggleCallback = (id) => {
+    const newTestItems = testItems.map((item) =>
+      item.id === id ? { ...item, opened: !item.opened } : item,
+    );
+    setItems({
+      testItems: newTestItems,
+    });
+    if (newTestItems.every((item) => item.opened === true)) {
+      onShowErrorLogsChange(true);
+    } else {
+      onShowErrorLogsChange(false);
+    }
+  };
 
   return (
     <div className={cx('items-list')}>
-      {optionValue === ALL_LOADED_TI_FROM_HISTORY_LINE ? (
-        <HistoryLineItemsList
-          testItems={testItems}
-          selectedItems={selectedItems}
-          selectItem={selectItem}
-          onClickExternalLinkEvent={onClickExternalLinkEvent}
-        />
-      ) : (
-        <SimilarItemsList
-          testItems={testItems}
-          selectedItems={selectedItems}
-          selectItem={selectItem}
-          showErrorLogs={showErrorLogs}
-          isBulkOperation={isBulkOperation}
-          eventsInfo={eventsInfo}
-          onClickExternalLinkEvent={onClickExternalLinkEvent}
-        />
-      )}
+      <SimilarItemsList
+        testItems={testItems}
+        selectedItems={selectedItems}
+        selectItem={selectItem}
+        showErrorLogs={showErrorLogs}
+        eventsInfo={eventsInfo}
+        onClickExternalLinkEvent={onClickExternalLinkEvent}
+        onToggleCallback={onToggleCallback}
+      />
     </div>
   );
 };
@@ -177,8 +139,8 @@ ItemsListBody.propTypes = {
   setItems: PropTypes.func,
   showErrorLogs: PropTypes.bool,
   optionValue: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-  isBulkOperation: PropTypes.bool,
   eventsInfo: PropTypes.object,
+  onShowErrorLogsChange: PropTypes.func,
 };
 ItemsListBody.defaultProps = {
   testItems: [],
@@ -186,6 +148,6 @@ ItemsListBody.defaultProps = {
   setItems: () => {},
   showErrorLogs: false,
   optionValue: '',
-  isBulkOperation: false,
   eventsInfo: {},
+  onShowErrorLogsChange: () => {},
 };

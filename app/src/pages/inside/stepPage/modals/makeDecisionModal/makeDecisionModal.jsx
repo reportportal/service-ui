@@ -45,10 +45,11 @@ import {
   MAKE_DECISION_MODAL,
   SEARCH_MODES,
   SELECT_DEFECT_MANUALLY,
+  SHOW_LOGS_BY_DEFAULT,
 } from './constants';
 import { SelectDefectManually } from './selectDefectManually';
 import { CopyFromHistoryLine } from './copyFromHistoryLine';
-import { OptionsSection } from './optionsSection/optionsSection';
+import { ExecutionSection } from './executionSection';
 
 const MakeDecision = ({ data }) => {
   const { formatMessage } = useIntl();
@@ -69,6 +70,7 @@ const MakeDecision = ({ data }) => {
     issueActionType: '',
     optionValue: isAnalyzerAvailable && defectFromTIGroup ? CURRENT_LAUNCH : CURRENT_EXECUTION_ONLY,
     searchMode: isAnalyzerAvailable && defectFromTIGroup ? SEARCH_MODES.CURRENT_LAUNCH : '',
+    currentTestItems: data.items,
     testItems: [],
     selectedItems: [],
     suggestedItems: [],
@@ -111,10 +113,13 @@ const MakeDecision = ({ data }) => {
   }, []);
 
   const prepareDataToSend = ({ isIssueAction, replaceComment } = {}) => {
-    const { issue } = modalState.source;
+    const {
+      source: { issue },
+      currentTestItems,
+      selectedItems,
+    } = modalState;
     if (isBulkOperation) {
-      const { selectedItems: items } = modalState;
-      return items.map((item) => {
+      return currentTestItems.map((item) => {
         const comment = replaceComment
           ? issue.comment
           : `${item.issue.comment || ''}\n${issue.comment}`.trim();
@@ -130,7 +135,7 @@ const MakeDecision = ({ data }) => {
         };
       });
     }
-    return modalState.selectedItems.map((item, i) => {
+    return [...currentTestItems, ...selectedItems].map((item, i) => {
       const comment =
         issue.comment !== item.issue.comment &&
         (modalState.decisionType === COPY_FROM_HISTORY_LINE || i !== 0)
@@ -138,7 +143,7 @@ const MakeDecision = ({ data }) => {
           : issue.comment || '';
 
       return {
-        ...(isIssueAction ? item : {}),
+        ...(isIssueAction ? { ...item, opened: SHOW_LOGS_BY_DEFAULT } : {}),
         id: item.id || item.itemId,
         testItemId: item.id || item.itemId,
         issue: {
@@ -327,7 +332,7 @@ const MakeDecision = ({ data }) => {
             disabled={
               modalState.source.issue.comment
                 ? false
-                : !modalState.selectedItems.some(({ issue }) => !!issue.comment)
+                : !modalState.currentTestItems.some(({ issue }) => !!issue.comment)
             }
             transparentBorder
             transparentBackground
@@ -342,13 +347,13 @@ const MakeDecision = ({ data }) => {
         )}
         <GhostButton
           onClick={applyChanges}
-          disabled={modalState.selectedItems.length === 0 || !modalHasChanges}
+          disabled={!modalHasChanges}
           color="''"
           appearance="topaz"
         >
           {modalState.selectedItems.length > 1
             ? formatMessage(messages.applyToItems, {
-                itemsCount: modalState.selectedItems.length,
+                itemsCount: modalState.selectedItems.length + 1,
               })
             : formatMessage(
                 modalState.issueActionType ? messages.applyAndContinue : messages.apply,
@@ -444,8 +449,7 @@ const MakeDecision = ({ data }) => {
 
   const renderRightSection = (collapsedRightSection) => {
     return (
-      <OptionsSection
-        currentTestItem={itemData}
+      <ExecutionSection
         modalState={modalState}
         setModalState={setModalState}
         isNarrowView={collapsedRightSection}

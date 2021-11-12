@@ -133,7 +133,9 @@
 
   .toggler-small {
     width: 16px;
+    min-width: 16px;
     height: 16px;
+    margin-right: 16px;
     border-color: $COLOR--dark-gray-2;
     background-color: transparent;
 
@@ -145,7 +147,7 @@
 
   &.children-container {
     max-width: 90%;
-    color: $COLOR--dirty-gray;
+    color: $COLOR--gray-95;
     white-space: nowrap;
   }
 

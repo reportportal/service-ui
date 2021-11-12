@@ -19,16 +19,16 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
-import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import classNames from 'classnames/bind';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
-import { messages } from '../../../messages';
-import { ALL_LOADED_TI_FROM_HISTORY_LINE } from '../../../constants';
+import { isEmptyObject } from 'common/utils';
+import { messages } from '../../../../messages';
 import styles from './itemsListHeader.scss';
 
 const cx = classNames.bind(styles);
 
 export const ItemsListHeader = ({
+  currentTestItem,
   testItems,
   setItems,
   selectedItemsLength,
@@ -37,26 +37,23 @@ export const ItemsListHeader = ({
   onShowErrorLogsChange,
   optionValue,
   isNarrowView,
-  isBulkOperation,
   eventsInfo,
 }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const [isAllSelected, setIsAllSelected] = useState(selectedItems.length === testItems.length);
-  const defectFromTIGroup =
-    testItems.length > 0 && testItems[0].issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
+  const defectFromTIGroup = (
+    (!isEmptyObject(currentTestItem) && currentTestItem) ||
+    testItems[0]
+  ).issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
 
   useEffect(() => {
     setIsAllSelected(selectedItems.length === testItems.length);
   }, [selectedItems]);
 
   const onCheckboxChange = () => {
-    if (testItems.length === 1) {
-      return;
-    }
-    const allSelectedItems = isBulkOperation ? [] : testItems.slice(0, 1);
     setItems({
-      selectedItems: isAllSelected ? allSelectedItems : testItems,
+      selectedItems: isAllSelected ? [] : testItems,
     });
     const { onSelectAllItems } = eventsInfo;
     const args = {
@@ -66,10 +63,13 @@ export const ItemsListHeader = ({
     };
     onSelectAllItems && trackEvent(onSelectAllItems(args));
   };
-  const onSwitcherChange = (value) => {
-    onShowErrorLogsChange(value);
+  const onShowLogsChange = () => {
+    setItems({
+      testItems: testItems.map((item) => ({ ...item, opened: !showErrorLogs })),
+    });
+    onShowErrorLogsChange(!showErrorLogs);
     const { toggleShowErrLogsSwitcher } = eventsInfo;
-    const args = { isTIGroup: defectFromTIGroup, state: value };
+    const args = { isTIGroup: defectFromTIGroup, state: !showErrorLogs };
     trackEvent(toggleShowErrLogsSwitcher(args));
   };
 
@@ -83,23 +83,16 @@ export const ItemsListHeader = ({
           })}
         </span>
       </InputCheckbox>
-      {optionValue !== ALL_LOADED_TI_FROM_HISTORY_LINE && !isNarrowView && (
-        <InputSwitcher
-          className={cx('switcher')}
-          childrenClassName={cx('switcher-children')}
-          value={showErrorLogs}
-          onChange={onSwitcherChange}
-          childrenFirst
-          size="medium"
-          mode="dark"
-        >
-          {formatMessage(messages.showErrorLogs)}
-        </InputSwitcher>
+      {!isNarrowView && (
+        <InputCheckbox value={showErrorLogs} onChange={onShowLogsChange} iconTransparentBackground>
+          <span className={cx('checkbox-label')}>{formatMessage(messages.showErrorLogs)}</span>
+        </InputCheckbox>
       )}
     </div>
   );
 };
 ItemsListHeader.propTypes = {
+  currentTestItem: PropTypes.object,
   testItems: PropTypes.array,
   setItems: PropTypes.func,
   selectedItemsLength: PropTypes.number,
@@ -107,11 +100,11 @@ ItemsListHeader.propTypes = {
   showErrorLogs: PropTypes.bool,
   onShowErrorLogsChange: PropTypes.func,
   optionValue: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-  isBulkOperation: PropTypes.bool,
   isNarrowView: PropTypes.bool,
   eventsInfo: PropTypes.object,
 };
 ItemsListHeader.defaultProps = {
+  currentTestItem: {},
   setItems: () => {},
   selectedItemsLength: 0,
   testItems: [],
@@ -119,7 +112,6 @@ ItemsListHeader.defaultProps = {
   showErrorLogs: false,
   onShowErrorLogsChange: () => {},
   optionValue: '',
-  isBulkOperation: false,
   isNarrowView: false,
   eventsInfo: {},
 };

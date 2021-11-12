@@ -32,7 +32,7 @@ import { URLS } from 'common/urls';
 import { DarkModalLayout } from 'components/main/modal/darkModalLayout';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { hideModalAction } from 'controllers/modal';
-import { ItemsList } from '../makeDecisionModal/optionsSection/itemsList';
+import { ItemsList } from '../makeDecisionModal/executionSection/optionsSection/itemsList';
 import styles from './unlinkIssueModal.scss';
 
 const cx = classNames.bind(styles);
@@ -95,22 +95,16 @@ export class UnlinkIssueModal extends Component {
     hideModalAction: PropTypes.func,
   };
 
-  isBulkOperation = this.props.data.items.length > 1;
-
   constructor(props) {
     super(props);
     const {
       data: { items },
     } = props;
-    const selectedItems = this.isBulkOperation
-      ? items.map((item) => {
-          return { ...item, itemId: item.id };
-        })
-      : items;
+
     this.state = {
       loading: false,
-      testItems: selectedItems,
-      selectedItems,
+      testItems: items,
+      selectedItems: items,
     };
   }
 
@@ -235,7 +229,6 @@ export class UnlinkIssueModal extends Component {
           testItems={testItems}
           selectedItems={selectedItems}
           isNarrowView={collapsedRightSection}
-          isBulkOperation={this.isBulkOperation}
           loading={loading}
           eventsInfo={this.props.data.eventsInfo}
         />

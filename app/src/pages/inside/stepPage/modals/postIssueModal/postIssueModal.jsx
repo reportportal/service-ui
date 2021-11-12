@@ -48,7 +48,7 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import { hideModalAction } from 'controllers/modal';
 import ErrorInlineIcon from 'common/img/error-inline.svg';
 import Parser from 'html-react-parser';
-import { ItemsList } from '../makeDecisionModal/optionsSection/itemsList';
+import { ItemsList } from '../makeDecisionModal/executionSection/optionsSection/itemsList';
 import { JiraCredentials } from './jiraCredentials';
 import { RallyCredentials } from './rallyCredentials';
 import {
@@ -205,11 +205,6 @@ export class PostIssueModal extends Component {
     } = integration;
     const systemAuthConfig = this.getSystemAuthDefaultConfig(pluginName, config);
     const fields = this.initIntegrationFields(defectFormFields, systemAuthConfig, pluginName);
-    const selectedItems = this.isBulkOperation
-      ? items.map((item) => {
-          return { ...item, itemId: item.id };
-        })
-      : items;
 
     this.state = {
       fields,
@@ -218,8 +213,8 @@ export class PostIssueModal extends Component {
       expanded: true,
       wasExpanded: false,
       loading: false,
-      testItems: selectedItems,
-      selectedItems,
+      testItems: items,
+      selectedItems: items,
     };
   }
 
@@ -520,7 +515,6 @@ export class PostIssueModal extends Component {
           testItems={testItems}
           selectedItems={selectedItems}
           isNarrowView={collapsedRightSection}
-          isBulkOperation={this.isBulkOperation}
           loading={loading}
           eventsInfo={this.props.data.eventsInfo}
         />

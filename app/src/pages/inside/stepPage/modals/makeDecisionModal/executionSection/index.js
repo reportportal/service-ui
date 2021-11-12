@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2021 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,15 +14,4 @@
  * limitations under the License.
  */
 
-.items-list {
-  padding-right: 10px;
-
-  & > div:not(:last-child) {
-    margin-bottom: 12px;
-  }
-}
-
-.error-log {
-  padding-left: 20px;
-  margin-bottom: 10px;
-}
+export { ExecutionSection } from './executionSection';
