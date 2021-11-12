@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { useTracking } from 'react-tracking';
 import { SCREEN_SM_MAX, SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
+import { URLS } from 'common/urls';
+import { fetch } from 'common/utils';
 import { TestItemDetails } from '../elements/testItemDetails';
 import { COPY_FROM_HISTORY_LINE, RADIO_TEST_ITEM_DETAILS } from '../constants';
 import { messages } from '../messages';
@@ -33,25 +34,48 @@ export const CopyFromHistoryLine = ({
   modalState,
   itemData,
   setModalState,
-  collapseTabsExceptCurr,
   windowSize,
   eventsInfo,
+  activeProject,
 }) => {
-  const { formatMessage } = useIntl();
+  const [composedItems, setComposedItems] = useState(items);
   const { trackEvent } = useTracking();
 
+  useEffect(() => {
+    const itemIds = items.map((item) => item.id);
+    fetch(URLS.bulkLastLogs(activeProject), {
+      method: 'post',
+      data: { itemIds, logLevel: 'ERROR' },
+    })
+      .then((resp) => {
+        const itemsWithLogs = items.map((item) => {
+          return {
+            ...item,
+            logs: resp[item.id],
+          };
+        });
+        setComposedItems(itemsWithLogs);
+      })
+      .catch((e) => console.error(e));
+  }, []);
+
+  const source = modalState.historyChoice;
+
   const selectHistoryLineItem = (itemId) => {
-    if (itemId && itemId !== modalState.source.id) {
+    if (itemId && itemId !== source.id) {
       const historyItem = items.find((item) => item.id === itemId);
       setModalState({
         ...modalState,
-        source: historyItem,
         decisionType: COPY_FROM_HISTORY_LINE,
         issueActionType: '',
+        historyChoice: historyItem,
       });
-      collapseTabsExceptCurr(COPY_FROM_HISTORY_LINE);
     } else {
-      setModalState({ ...modalState, source: { issue: itemData.issue }, decisionType: '' });
+      setModalState({
+        ...modalState,
+        decisionType: '',
+        historyChoice: { issue: itemData.issue },
+      });
     }
   };
   const hideLabels = () => {
@@ -71,16 +95,13 @@ export const CopyFromHistoryLine = ({
 
   return (
     <>
-      <div className={cx('execution-header')}>
-        <span>{`${formatMessage(messages.execution)} #`}</span>
-        <span>{formatMessage(messages.defectType)}</span>
-      </div>
-      {items.map((item) => (
+      {composedItems.map((item) => (
         <div className={cx('execution-item')} key={item.id}>
           <TestItemDetails
             item={item}
+            logs={item.logs}
             selectItem={selectHistoryLineItem}
-            isSelected={modalState.source.id === item.id}
+            isSelected={source.id === item.id}
             hideLabels={hideLabels()}
             onClickLinkEvent={onClickExternalLinkEvent}
             mode={RADIO_TEST_ITEM_DETAILS}
@@ -95,12 +116,13 @@ CopyFromHistoryLine.propTypes = {
   modalState: PropTypes.object.isRequired,
   itemData: PropTypes.object,
   setModalState: PropTypes.func.isRequired,
-  collapseTabsExceptCurr: PropTypes.func.isRequired,
   windowSize: PropTypes.object,
   eventsInfo: PropTypes.object,
+  activeProject: PropTypes.string,
 };
 CopyFromHistoryLine.defaultProps = {
   items: [],
   windowSize: {},
   eventsInfo: {},
+  activeProject: '',
 };

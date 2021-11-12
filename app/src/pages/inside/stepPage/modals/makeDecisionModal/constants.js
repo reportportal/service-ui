@@ -37,4 +37,10 @@ export const SEARCH_MODES = {
   WITH_FILTER,
 };
 
+export const ACTIVE_TAB_MAP = {
+  [SELECT_DEFECT_MANUALLY]: 'selectManualChoice',
+  [COPY_FROM_HISTORY_LINE]: 'historyChoice',
+  [MACHINE_LEARNING_SUGGESTIONS]: 'suggestChoice',
+};
+
 export const SHOW_LOGS_BY_DEFAULT = false;
