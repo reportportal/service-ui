@@ -76,7 +76,11 @@ export const messages = defineMessages({
   },
   machineLearningSuggestions: {
     id: 'MakeDecisionModal.machineLearningSuggestions',
-    defaultMessage: 'Choose among ML suggestions',
+    defaultMessage: 'Choose among ML suggestions {target}',
+  },
+  MLSuggestionsForCluster: {
+    id: 'MakeDecisionModal.MLSuggestionsForCluster',
+    defaultMessage: 'for the cluster',
   },
   copyFromHistoryLine: {
     id: 'MakeDecisionModal.copyFromHistoryLine',
