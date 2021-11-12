@@ -215,4 +215,40 @@ export const messages = defineMessages({
     id: 'MakeDecisionModal.noItems',
     defaultMessage: 'No Items',
   },
+  analyzingSuggestions: {
+    id: 'MakeDecisionModal.analyzingSuggestions',
+    defaultMessage: 'Analyzing Suggestions',
+  },
+  analyzerSuggestion: {
+    id: 'MakeDecisionModal.analyzerSuggestion',
+    defaultMessage: 'Analyzer Suggestion',
+  },
+  noSuggestions: {
+    id: 'MakeDecisionModal.noSuggestions',
+    defaultMessage: 'No Analyzer Suggestions',
+  },
+  noAnalyzer: {
+    id: 'MakeDecisionModal.noAnalyzer',
+    defaultMessage: 'Service Analyzer is not running',
+  },
+  selection: {
+    id: 'MakeDecisionModal.selection',
+    defaultMessage: 'Selection',
+  },
+  manual: {
+    id: 'MakeDecisionModal.manual',
+    defaultMessage: 'Manual',
+  },
+  history: {
+    id: 'MakeDecisionModal.history',
+    defaultMessage: 'History',
+  },
+  ofTheTest: {
+    id: 'MakeDecisionModal.ofTheTest',
+    defaultMessage: 'of the test',
+  },
+  executionWith: {
+    id: 'MakeDecisionModal.executionWith',
+    defaultMessage: 'Execution with the {value}% similarity of defect',
+  },
 });

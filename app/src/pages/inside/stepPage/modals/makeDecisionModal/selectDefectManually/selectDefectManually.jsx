@@ -49,7 +49,6 @@ export const SelectDefectManually = ({
   itemData,
   isBulkOperation,
   setModalState,
-  collapseTabsExceptCurr,
   windowSize,
   collapsedRightSection,
   eventsInfo,
@@ -65,19 +64,18 @@ export const SelectDefectManually = ({
   const defectFromTIGroup =
     itemData.issue && itemData.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
 
+  const source = modalState.selectManualChoice;
+
   const handleManualChange = (value = {}) => {
     const issue = {
-      ...(modalState.decisionType === SELECT_DEFECT_MANUALLY
-        ? modalState.source.issue
-        : itemData.issue),
+      ...(modalState.decisionType === SELECT_DEFECT_MANUALLY ? source.issue : itemData.issue),
       ...value,
     };
     setModalState({
       ...modalState,
-      source: { issue },
       decisionType: SELECT_DEFECT_MANUALLY,
+      selectManualChoice: { issue },
     });
-    collapseTabsExceptCurr(SELECT_DEFECT_MANUALLY);
     !issue.comment && commentEditor.focus();
   };
 
@@ -116,9 +114,9 @@ export const SelectDefectManually = ({
               }
             : {
                 ...modalState,
-                source: { issue: itemData.issue },
                 decisionType: SELECT_DEFECT_MANUALLY,
                 issueActionType,
+                selectManualChoice: { issue: itemData.issue },
               },
         );
       }
@@ -133,7 +131,6 @@ export const SelectDefectManually = ({
         icon: PlusIcon,
         onClick: () => {
           setIssueActionType(POST_ISSUE);
-          collapseTabsExceptCurr(SELECT_DEFECT_MANUALLY);
           onClickIssueBtn &&
             trackEvent(
               onClickIssueBtn(defectFromTIGroup, actionMessages[POST_ISSUE].defaultMessage),
@@ -149,7 +146,6 @@ export const SelectDefectManually = ({
         icon: PlusIcon,
         onClick: () => {
           setIssueActionType(LINK_ISSUE);
-          collapseTabsExceptCurr(SELECT_DEFECT_MANUALLY);
           onClickIssueBtn &&
             trackEvent(
               onClickIssueBtn(defectFromTIGroup, actionMessages[LINK_ISSUE].defaultMessage),
@@ -171,7 +167,6 @@ export const SelectDefectManually = ({
         icon: UnlinkIcon,
         onClick: () => {
           setIssueActionType(UNLINK_ISSUE);
-          collapseTabsExceptCurr(SELECT_DEFECT_MANUALLY);
           onClickIssueBtn &&
             trackEvent(
               onClickIssueBtn(defectFromTIGroup, actionMessages[UNLINK_ISSUE].defaultMessage),
@@ -193,7 +188,7 @@ export const SelectDefectManually = ({
         <InputSwitcher
           value={
             modalState.decisionType === SELECT_DEFECT_MANUALLY
-              ? modalState.source.issue.ignoreAnalyzer
+              ? source.issue.ignoreAnalyzer
               : itemData.issue.ignoreAnalyzer
           }
           onChange={handleIgnoreAnalyzerChange}
@@ -212,7 +207,7 @@ export const SelectDefectManually = ({
         selectDefectType={selectDefectTypeManually}
         selectedItem={
           modalState.decisionType === SELECT_DEFECT_MANUALLY
-            ? modalState.source.issue.issueType || ''
+            ? source.issue.issueType || ''
             : itemData.issue.issueType
         }
         isNarrowView={getDefectTypeNarrowView()}
@@ -221,7 +216,7 @@ export const SelectDefectManually = ({
         <MarkdownEditor
           value={
             modalState.decisionType === SELECT_DEFECT_MANUALLY
-              ? modalState.source.issue.comment
+              ? source.issue.comment
               : itemData.issue.comment
           }
           manipulateEditorOutside={setCommentEditor}
@@ -252,7 +247,6 @@ SelectDefectManually.propTypes = {
   itemData: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
   isBulkOperation: PropTypes.bool.isRequired,
   setModalState: PropTypes.func.isRequired,
-  collapseTabsExceptCurr: PropTypes.func.isRequired,
   windowSize: PropTypes.object.isRequired,
   collapsedRightSection: PropTypes.bool.isRequired,
   eventsInfo: PropTypes.object,
