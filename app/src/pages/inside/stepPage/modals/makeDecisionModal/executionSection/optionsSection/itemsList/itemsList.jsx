@@ -14,28 +14,25 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { CURRENT_EXECUTION_ONLY } from '../../constants';
+import { CURRENT_EXECUTION_ONLY, SHOW_LOGS_BY_DEFAULT } from '../../../constants';
 import { ItemsListHeader } from './itemsListHeader';
 import { ItemsListBody } from './itemsListBody';
 
 export const ItemsList = ({
+  currentTestItem,
   testItems,
   selectedItems,
   setItems,
   loading,
   optionValue,
   isNarrowView,
-  isBulkOperation,
   eventsInfo,
 }) => {
-  const [showErrorLogs, setShowErrorLogs] = useState(false);
-  useEffect(() => {
-    isNarrowView ? setShowErrorLogs(false) : setShowErrorLogs(true);
-  }, [optionValue, isNarrowView]);
+  const [showErrorLogs, setShowErrorLogs] = useState(SHOW_LOGS_BY_DEFAULT);
 
   return loading ? (
     <SpinningPreloader />
@@ -44,6 +41,7 @@ export const ItemsList = ({
       <>
         {optionValue !== CURRENT_EXECUTION_ONLY && (
           <ItemsListHeader
+            currentTestItem={currentTestItem}
             testItems={testItems}
             setItems={setItems}
             selectedItems={selectedItems}
@@ -52,7 +50,6 @@ export const ItemsList = ({
             onShowErrorLogsChange={setShowErrorLogs}
             optionValue={optionValue}
             isNarrowView={isNarrowView}
-            isBulkOperation={isBulkOperation}
             eventsInfo={eventsInfo}
           />
         )}
@@ -61,11 +58,11 @@ export const ItemsList = ({
             testItems={testItems}
             selectedItems={selectedItems}
             setItems={setItems}
-            showErrorLogs={optionValue === CURRENT_EXECUTION_ONLY || showErrorLogs}
+            setShowErrorLogs={setShowErrorLogs}
             optionValue={optionValue}
             isNarrowView={isNarrowView}
-            isBulkOperation={isBulkOperation}
             eventsInfo={eventsInfo}
+            onShowErrorLogsChange={setShowErrorLogs}
           />
         </ScrollWrapper>
       </>
@@ -73,24 +70,24 @@ export const ItemsList = ({
   );
 };
 ItemsList.propTypes = {
+  currentTestItem: PropTypes.object,
   testItems: PropTypes.array,
   selectedItems: PropTypes.array,
   loading: PropTypes.bool,
   setItems: PropTypes.func,
   optionValue: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   selectAllItems: PropTypes.func,
-  isBulkOperation: PropTypes.bool,
   isNarrowView: PropTypes.bool,
   eventsInfo: PropTypes.object,
 };
 ItemsList.defaultProps = {
+  currentTestItem: {},
   testItems: [],
   selectedItems: [],
   loading: false,
   setItems: () => {},
   optionValue: '',
   selectAllItems: () => {},
-  isBulkOperation: false,
   isNarrowView: true,
   eventsInfo: {},
 };

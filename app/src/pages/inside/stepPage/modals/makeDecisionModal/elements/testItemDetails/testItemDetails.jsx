@@ -23,6 +23,7 @@ import asteriskIcon from 'common/img/asterisk-inline.svg';
 import { StackTraceMessageBlock } from 'pages/inside/common/stackTraceMessageBlock';
 import { uniqueId } from 'common/utils';
 import { useIntl } from 'react-intl';
+import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { DEFAULT_TEST_ITEM_DETAILS, ERROR_LOGS_SIZE } from '../../constants';
 import { ItemHeader } from '../itemHeader';
 import { messages } from '../../messages';
@@ -42,6 +43,8 @@ export const TestItemDetails = ({
   onClickLinkEvent,
   isSelected,
   showErrorLogs,
+  loading,
+  onToggleCallback,
 }) => {
   const { formatMessage } = useIntl();
   const [showDetails, setShowDetails] = useState(showErrorLogs);
@@ -52,6 +55,7 @@ export const TestItemDetails = ({
 
   const toggleDetails = () => {
     setShowDetails(!showDetails);
+    onToggleCallback(item.id);
   };
 
   return (
@@ -65,43 +69,47 @@ export const TestItemDetails = ({
         onClickLinkEvent={onClickLinkEvent}
         toggleDetails={toggleDetails}
       />
-      {showDetails && (
-        <div className={cx('test-item-details-content')}>
-          {item.issue && item.issue.comment && (
-            <div className={cx('defect-comment')}>
-              <div>{Parser(commentIcon)}</div>
-              <div className={cx('defect-comment-content')}>
-                <p className={cx('defect-comment-title')}>Defect Comment</p>
-                <p className={cx('defect-comment-text')}>{item.issue.comment}</p>
+      {showDetails && loading ? (
+        <SpinningPreloader />
+      ) : (
+        showDetails && (
+          <div className={cx('test-item-details-content')}>
+            {item.issue && item.issue.comment && (
+              <div className={cx('defect-comment')}>
+                <div>{Parser(commentIcon)}</div>
+                <div className={cx('defect-comment-content')}>
+                  <p className={cx('defect-comment-title')}>Defect Comment</p>
+                  <p className={cx('defect-comment-text')}>{item.issue.comment}</p>
+                </div>
               </div>
-            </div>
-          )}
-          {showDetails &&
-            logs.slice(0, ERROR_LOGS_SIZE).map((log) => (
-              <div key={uniqueId()} className={cx('error-log')}>
-                <StackTraceMessageBlock
-                  level={log.level}
-                  designMode="dark"
-                  maxHeight={90}
-                  eventsInfo={eventsInfo}
-                >
-                  <div className={cx('highlighted-log')}>
-                    {highlightedLogId === log.id && (
-                      <p className={cx('highlighted-log-title')}>
-                        {Parser(asteriskIcon)} {highlightedMessage}
-                      </p>
-                    )}
-                    {log.message}
-                  </div>
-                </StackTraceMessageBlock>
+            )}
+            {showDetails &&
+              logs.slice(0, ERROR_LOGS_SIZE).map((log) => (
+                <div key={uniqueId()} className={cx('error-log')}>
+                  <StackTraceMessageBlock
+                    level={log.level}
+                    designMode="dark"
+                    maxHeight={90}
+                    eventsInfo={eventsInfo}
+                  >
+                    <div className={cx('highlighted-log')}>
+                      {highlightedLogId === log.id && (
+                        <p className={cx('highlighted-log-title')}>
+                          {Parser(asteriskIcon)} {highlightedMessage}
+                        </p>
+                      )}
+                      {log.message}
+                    </div>
+                  </StackTraceMessageBlock>
+                </div>
+              ))}
+            {showDetails && !logs.length && (
+              <div className={cx('no-logs')}>
+                <p className={cx('no-logs-text')}>{formatMessage(messages.noLogs)}</p>
               </div>
-            ))}
-          {showDetails && !logs.length && (
-            <div className={cx('no-logs')}>
-              <p className={cx('no-logs-text')}>{formatMessage(messages.noLogs)}</p>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        )
       )}
     </div>
   );
@@ -121,6 +129,8 @@ TestItemDetails.propTypes = {
   highlightedMessage: PropTypes.string,
   mode: PropTypes.string,
   showErrorLogs: PropTypes.bool,
+  loading: PropTypes.bool,
+  onToggleCallback: PropTypes.func,
 };
 
 TestItemDetails.defaultProps = {
@@ -136,4 +146,6 @@ TestItemDetails.defaultProps = {
   highlightedMessage: '',
   mode: DEFAULT_TEST_ITEM_DETAILS,
   showErrorLogs: false,
+  loading: false,
+  onToggleCallback: () => {},
 };

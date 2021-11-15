@@ -57,9 +57,9 @@ export const messages = defineMessages({
     id: 'MakeDecisionModal.test',
     defaultMessage: 'Test {launchNumber}',
   },
-  currentSelection: {
-    id: 'MakeDecisionModal.currentSelection',
-    defaultMessage: 'Current selection',
+  executionToChange: {
+    id: 'MakeDecisionModal.executionToChange',
+    defaultMessage: 'Execution to change',
   },
   bulk: { id: 'MakeDecisionModal.bulk', defaultMessage: 'Bulk' },
   bulkOperationDecision: {
@@ -124,21 +124,17 @@ export const messages = defineMessages({
     id: 'MakeDecisionModal.defectType',
     defaultMessage: 'Defect type',
   },
-  applyDefectFor: {
-    id: 'MakeDecisionModal.applyDefectFor',
-    defaultMessage: 'Apply defect for:',
-  },
-  applyToSimilarItems: {
-    id: 'MakeDecisionModal.applyToSimilarItems',
-    defaultMessage: 'You can also apply this changes to other similar items in',
+  applyFor: {
+    id: 'MakeDecisionModal.applyFor',
+    defaultMessage: 'Apply for:',
   },
   currentExecutionOnly: {
     id: 'MakeDecisionModal.currentExecutionOnly',
-    defaultMessage: 'Current execution only',
+    defaultMessage: 'Current item only',
   },
   currentLaunch: {
     id: 'MakeDecisionModal.currentLaunch',
-    defaultMessage: 'Similar errors in the current launch',
+    defaultMessage: 'Current item & similar ”To Investigate” in the launch',
   },
   currentLaunchTooltip: {
     id: 'MakeDecisionModal.currentLaunchTooltip',
@@ -147,7 +143,7 @@ export const messages = defineMessages({
   },
   launchName: {
     id: 'MakeDecisionModal.launchName',
-    defaultMessage: 'Similar errors in last 10 launches',
+    defaultMessage: 'Current item & similar “To Investigate” in 10 launches',
   },
   lastTenLaunchesTooltip: {
     id: 'MakeDecisionModal.lastTenLaunchesTooltip',
@@ -156,7 +152,7 @@ export const messages = defineMessages({
   },
   filter: {
     id: 'MakeDecisionModal.filter',
-    defaultMessage: 'Similar errors in {filterName}',
+    defaultMessage: 'Current item & similar “To Investigate” in the {filterName}',
   },
   withFilterTooltip: {
     id: 'MakeDecisionModal.withFilterTooltip',
@@ -173,11 +169,7 @@ export const messages = defineMessages({
   },
   allLoadedTIFromHistoryLine: {
     id: 'MakeDecisionModal.allLoadedTIFromHistoryLine',
-    defaultMessage: 'All loaded TI from the history line',
-  },
-  analyzerUnavailable: {
-    id: 'MakeDecisionModal.analyzerUnavailable',
-    defaultMessage: 'Service Analyzer is not running, please check',
+    defaultMessage: 'Current item & “To Investigate” from the history line',
   },
   analyzerUnavailableLink: {
     id: 'MakeDecisionModal.analyzerUnavailableLink',
@@ -214,5 +206,9 @@ export const messages = defineMessages({
   noLogs: {
     id: 'MakeDecisionModal.noLogs',
     defaultMessage: 'No Logs Found x_x',
+  },
+  noItems: {
+    id: 'MakeDecisionModal.noItems',
+    defaultMessage: 'No Items',
   },
 });

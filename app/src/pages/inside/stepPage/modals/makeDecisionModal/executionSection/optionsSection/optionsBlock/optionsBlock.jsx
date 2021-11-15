@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
@@ -32,8 +32,8 @@ import {
   SEARCH_MODES,
   CURRENT_LAUNCH,
   WITH_FILTER,
-} from '../../constants';
-import { messages } from '../../messages';
+} from '../../../constants';
+import { messages } from '../../../messages';
 import styles from './optionsBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -49,6 +49,18 @@ export const OptionsBlock = ({
   const { trackEvent } = useTracking();
   const activeFilter = useSelector(activeFilterSelector);
   const historyItems = useSelector(historyItemsSelector);
+  const [expanded, setOptionsState] = useState(false);
+  const wrapperRef = useRef();
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (wrapperRef && wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+        setOptionsState(false);
+      }
+    };
+    document.addEventListener('click', handleClickOutside, false);
+
+    return () => document.removeEventListener('click', handleClickOutside, false);
+  }, []);
   const isAnalyzerAvailable = !!useSelector(analyzerExtensionsSelector).length;
   const defectFromTIGroup = currentTestItem.issue.issueType.startsWith(
     TO_INVESTIGATE_LOCATOR_PREFIX,
@@ -60,23 +72,17 @@ export const OptionsBlock = ({
         label: formatMessage(messages[CURRENT_EXECUTION_ONLY]),
       },
     ];
-    if (defectFromTIGroup) {
+    if (defectFromTIGroup && isAnalyzerAvailable) {
       const optionalOptions = [
         {
           ownValue: CURRENT_LAUNCH,
           label: formatMessage(messages[CURRENT_LAUNCH]),
-          disabled: !isAnalyzerAvailable,
-          tooltip: formatMessage(
-            isAnalyzerAvailable ? messages.currentLaunchTooltip : messages.analyzerUnavailable,
-          ),
+          tooltip: formatMessage(messages.currentLaunchTooltip),
         },
         {
           ownValue: LAST_TEN_LAUNCHES,
           label: formatMessage(messages[LAST_TEN_LAUNCHES]),
-          disabled: !isAnalyzerAvailable,
-          tooltip: formatMessage(
-            isAnalyzerAvailable ? messages.lastTenLaunchesTooltip : messages.analyzerUnavailable,
-          ),
+          tooltip: formatMessage(messages.lastTenLaunchesTooltip),
         },
       ];
       activeFilter &&
@@ -86,18 +92,19 @@ export const OptionsBlock = ({
           label: formatMessage(messages[WITH_FILTER], {
             filterName: activeFilter.name,
           }),
-          disabled: !isAnalyzerAvailable,
-          tooltip: isAnalyzerAvailable
-            ? formatMessage(messages.withFilterTooltip, {
-                filterName: activeFilter.name,
-              })
-            : formatMessage(messages.analyzerUnavailable),
+          tooltip: formatMessage(messages.withFilterTooltip, {
+            filterName: activeFilter.name,
+          }),
         });
       options.push(...optionalOptions);
     }
-    historyItems.length > 0 &&
+    defectFromTIGroup &&
+      historyItems.length > 0 &&
       historyItems.some(
-        (item) => item.issue && item.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
+        (item) =>
+          item.issue &&
+          item.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX) &&
+          currentTestItem.id !== item.id,
       ) &&
       options.push({
         ownValue: ALL_LOADED_TI_FROM_HISTORY_LINE,
@@ -105,27 +112,7 @@ export const OptionsBlock = ({
       });
     return options;
   };
-  const setItemsFromHistoryLine = (value) => {
-    const preparedHistoryItems = [
-      currentTestItem,
-      ...historyItems
-        .reduce((items, item) => {
-          if (!item.issue || item.id === currentTestItem.id) {
-            return items;
-          }
-          return item.issue && item.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)
-            ? [...items, { ...item, itemId: item.id }]
-            : items;
-        }, [])
-        .reverse(),
-    ];
-    setModalState({
-      optionValue: value,
-      searchMode: '',
-      testItems: preparedHistoryItems,
-      selectedItems: [preparedHistoryItems[0]],
-    });
-  };
+  const onToggle = () => setOptionsState(!expanded);
   const onChangeOption = (value) => {
     let searchMode;
     switch (value) {
@@ -141,27 +128,41 @@ export const OptionsBlock = ({
       default:
         searchMode = '';
     }
-    value === ALL_LOADED_TI_FROM_HISTORY_LINE
-      ? setItemsFromHistoryLine(value)
-      : setModalState({
-          optionValue: value,
-          searchMode,
-          testItems: [],
-          selectedItems: [],
-        });
+    setModalState({
+      optionValue: value,
+      searchMode,
+      selectedItems: [],
+    });
     eventsInfo.onDecisionOption &&
       trackEvent(eventsInfo.onDecisionOption(defectFromTIGroup, messages[value].defaultMessage));
+    onToggle();
   };
 
   return (
-    <div className={cx('options', { loading })}>
-      <InputRadioGroup
-        value={optionValue}
-        onChange={onChangeOption}
-        options={getOptions()}
-        inputGroupClassName={cx('radio-input-group')}
-        mode="dark"
-      />
+    <div ref={wrapperRef} className={cx('wrapper', { opened: expanded })}>
+      <span className={cx('selected-option-block')}>
+        <span className={cx('selected-option')} onClick={onToggle}>
+          {formatMessage(
+            messages[optionValue],
+            activeFilter && {
+              filterName: activeFilter.name,
+            },
+          )}
+        </span>
+        <span className={cx('arrow', { opened: expanded })} />
+      </span>
+      {expanded && (
+        <div className={cx('options', { loading })} onClick={(e) => e.stopPropagation()}>
+          <InputRadioGroup
+            value={optionValue}
+            onChange={onChangeOption}
+            options={getOptions()}
+            inputGroupClassName={cx('radio-input-group')}
+            mode="dark"
+            size="small"
+          />
+        </div>
+      )}
     </div>
   );
 };

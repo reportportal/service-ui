@@ -14,45 +14,17 @@
  * limitations under the License.
  */
 
-.options-section {
-  box-sizing: border-box;
+.header-row {
   display: flex;
-  max-width: 617px;
-  min-width: 617px;
-  height: 100%;
-  flex-direction: column;
-  padding: 84px 20px 20px 32px;
-  background-color: $COLOR--dark-modal;
-  &.narrow-view {
-    min-width: 364px;
-  }
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 12px 12px 14px;
 }
 
-.header-block {
-  display: flex;
-  flex-direction: column;
-}
-
-.header {
-  color: $COLOR--white-two;
-  font-size: 16px;
-  line-height: 22px;
-  margin-top: 44px;
-}
-
-.subheader {
-  margin-top: 6px;
+.checkbox-label {
   color: $COLOR--dark-gray;
-  font-size: 11px;
-  line-height: 15px;
 }
 
-.options-block {
-  display: flex;
-  margin-top: 28px;
-  flex-direction: column;
-}
-
-.items-list {
-  flex: 1 0;
+.checkbox-icon {
+  background: transparent;
 }

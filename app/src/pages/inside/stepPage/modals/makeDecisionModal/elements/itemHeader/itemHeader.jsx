@@ -74,6 +74,7 @@ export const ItemHeader = ({
                 className={cx('checkbox-margin-right')}
                 value={isSelected}
                 onChange={() => selectItem(id)}
+                iconTransparentBackground
               />
             )}
             {mode === RADIO_TEST_ITEM_DETAILS && (

@@ -36,3 +36,5 @@ export const SEARCH_MODES = {
   LAST_TEN_LAUNCHES,
   WITH_FILTER,
 };
+
+export const SHOW_LOGS_BY_DEFAULT = false;
