@@ -171,6 +171,10 @@ export const messages = defineMessages({
     id: 'MakeDecisionModal.allLoadedTIFromHistoryLine',
     defaultMessage: 'Current item & “To Investigate” from the history line',
   },
+  analyzerUnavailable: {
+    id: 'MakeDecisionModal.analyzerUnavailable',
+    defaultMessage: 'Service Analyzer is not running, please check',
+  },
   analyzerUnavailableLink: {
     id: 'MakeDecisionModal.analyzerUnavailableLink',
     defaultMessage: 'how it could be fixed',
