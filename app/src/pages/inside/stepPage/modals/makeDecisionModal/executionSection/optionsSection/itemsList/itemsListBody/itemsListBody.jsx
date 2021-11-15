@@ -112,11 +112,7 @@ export const ItemsListBody = ({
     setItems({
       testItems: newTestItems,
     });
-    if (newTestItems.every((item) => item.opened === true)) {
-      onShowErrorLogsChange(true);
-    } else {
-      onShowErrorLogsChange(false);
-    }
+    onShowErrorLogsChange(newTestItems.every((item) => item.opened === true));
   };
 
   return (

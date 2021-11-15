@@ -98,9 +98,13 @@ export const OptionsBlock = ({
         });
       options.push(...optionalOptions);
     }
-    historyItems.length > 0 &&
+    defectFromTIGroup &&
+      historyItems.length > 0 &&
       historyItems.some(
-        (item) => item.issue && item.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
+        (item) =>
+          item.issue &&
+          item.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX) &&
+          currentTestItem.id !== item.id,
       ) &&
       options.push({
         ownValue: ALL_LOADED_TI_FROM_HISTORY_LINE,

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
@@ -55,10 +55,9 @@ export const ExecutionSection = ({
   const { optionValue, currentTestItems } = modalState;
   const historyItems = useSelector(historyItemsSelector).filter(
     (item) =>
-      !(
-        (item.issue && !item.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)) ||
-        item.id === currentTestItems[0].id
-      ),
+      item.issue &&
+      item.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX) &&
+      item.id !== currentTestItems[0].id,
   );
 
   useEffect(() => {
@@ -166,14 +165,13 @@ export const ExecutionSection = ({
     <>
       <div className={cx('header')}>{formatMessage(messages.executionToChange)}</div>
       {currentTestItems.map((item) => (
-        <Fragment key={item.id}>
-          <TestItemDetails
-            item={item}
-            logs={item.logs}
-            showErrorLogs={currentItemsLoading || item.opened}
-            loading={currentItemsLoading}
-          />
-        </Fragment>
+        <TestItemDetails
+          item={item}
+          logs={item.logs}
+          showErrorLogs={currentItemsLoading || item.opened}
+          loading={currentItemsLoading}
+          key={item.id}
+        />
       ))}
       {!isBulkOperation && (
         <OptionsSection

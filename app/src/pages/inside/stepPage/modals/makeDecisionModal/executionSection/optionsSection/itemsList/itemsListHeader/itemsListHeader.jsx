@@ -51,7 +51,7 @@ export const ItemsListHeader = ({
     setIsAllSelected(selectedItems.length === testItems.length);
   }, [selectedItems]);
 
-  const onCheckboxChange = () => {
+  const onToggleAllItems = () => {
     setItems({
       selectedItems: isAllSelected ? [] : testItems,
     });
@@ -75,7 +75,7 @@ export const ItemsListHeader = ({
 
   return (
     <div className={cx('header-row')}>
-      <InputCheckbox value={isAllSelected} onChange={onCheckboxChange} iconTransparentBackground>
+      <InputCheckbox value={isAllSelected} onChange={onToggleAllItems} iconTransparentBackground>
         <span className={cx('checkbox-label')}>
           {formatMessage(messages.selectedItemCount, {
             selected: selectedItemsLength,
