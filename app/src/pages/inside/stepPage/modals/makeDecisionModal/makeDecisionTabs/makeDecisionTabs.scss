@@ -17,6 +17,7 @@
 .tabs {
   display: flex;
   max-width: 800px;
+  padding-top: 10px;
 
   @media (max-width: $SCREEN_MD_MAX) {
     max-width: 570px;
@@ -183,11 +184,17 @@
 }
 
 .jumping {
-  animation: jumping 1s ease 0s infinite normal none;
+  animation: jumping 2.5s ease 0s infinite normal none;
 }
 
 @keyframes jumping {
-  50% {
-    transform: translateY(5px);
+  0%,
+  24%,
+  48% {
+    transform: translateY(0px);
+  }
+  12%,
+  36% {
+    transform: translateY(-7px);
   }
 }
