@@ -1110,6 +1110,7 @@
   "MakeDecisionModal.noLogs": "Часопісы не знойдзены x_x",
   "MakeDecisionModal.noSuggestions": "Няма прапаноў аналізатара",
   "MakeDecisionModal.ofTheTest": "тэста",
+  "MakeDecisionModal.pleaseCheck": "праверце",
   "MakeDecisionModal.postIssueNote": "Пасля адпраўкі тыпу дэфекту вы зможаце выбраць параметры для публікацыі новай памылкі",
   "MakeDecisionModal.replaceCommentsAndApply": "Замяніць каментары і ужыць",
   "MakeDecisionModal.selectDefectTypeManually": "Выбраць дэфект уручную",

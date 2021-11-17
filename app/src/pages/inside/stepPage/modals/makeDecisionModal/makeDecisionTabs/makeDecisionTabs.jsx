@@ -20,6 +20,8 @@ import { useState } from 'react';
 import { uniqueId } from 'common/utils';
 import { useIntl } from 'react-intl';
 import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
+import Parser from 'html-react-parser';
+import ExternalLinkIcon from 'common/img/go-to-another-page-inline.svg';
 import {
   COPY_FROM_HISTORY_LINE,
   MACHINE_LEARNING_SUGGESTIONS,
@@ -101,11 +103,22 @@ export const MakeDecisionTabs = ({
             )}
             {(suggestedItems.length === 0 || !isAnalyzerAvailable) && !loadingMLSuggest && (
               <div className={cx('central-block-default')}>
-                <p className={cx('no-suggest-text')}>
-                  {formatMessage(
-                    isAnalyzerAvailable ? messages.noSuggestions : messages.noAnalyzer,
-                  )}
-                </p>
+                <div className={cx('no-suggestion-prompt')}>
+                  <p className={cx('padding-right-10')}>
+                    {formatMessage(messages.analyzerUnavailable)}
+                  </p>
+                  <p className={cx('link-wrapper')}>
+                    {formatMessage(messages.pleaseCheck)}
+                    <a
+                      href={'https://reportportal.io/docs/Deploy-Elastic-Search'}
+                      target="_blank"
+                      className={cx('suggestion-link')}
+                    >
+                      <span>{formatMessage(messages.analyzerUnavailableLink)}</span>
+                      <div className={cx('icon')}>{Parser(ExternalLinkIcon)}</div>
+                    </a>
+                  </p>
+                </div>
               </div>
             )}
 

@@ -1110,6 +1110,7 @@
   "MakeDecisionModal.noLogs": "Журналів не знайдено x_x",
   "MakeDecisionModal.noSuggestions": "Немає пропозиційного аналізу",
   "MakeDecisionModal.ofTheTest": "теста",
+  "MakeDecisionModal.pleaseCheck": "перевірте",
   "MakeDecisionModal.postIssueNote": "Після відправки типу дефекту ви зможете вибрати параметри для публікації нової помилки",
   "MakeDecisionModal.replaceCommentsAndApply": "Замінити коментарі та застосувати",
   "MakeDecisionModal.selectDefectTypeManually": "Вибрати дефект вручну",
