@@ -16,14 +16,17 @@
 
 .ignore-analysis {
   position: absolute;
-  top: -32px;
+  display: flex;
+  top: 105px;
   right: 20px;
   width: auto;
   height: 12px;
 }
 
-.input-switcher-children {
-  color: $COLOR--dark-gray;
+.checkbox-text {
+  margin-left: 12px;
+  color: $COLOR--gray-60;
+  font-size: 13px;
 }
 
 .defect-comment {
