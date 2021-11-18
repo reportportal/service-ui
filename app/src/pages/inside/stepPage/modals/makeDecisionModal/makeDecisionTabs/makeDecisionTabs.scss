@@ -69,18 +69,14 @@
     &::after {
       content: '';
       position: absolute;
-      left: 39%;
-      top: 58px;
+      left: calc(50% - 10px);
+      top: 105%;
       width: 0;
       height: 0;
       bottom: 0;
-      border-left: 12px solid transparent;
-      border-right: 12px solid transparent;
-      border-top: 12px solid $COLOR--tealish;
-
-      @media (max-width: $SCREEN_MD_MAX) {
-        left: 36%;
-      }
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-top: 10px solid $COLOR--tealish;
     }
   }
 }
@@ -156,14 +152,14 @@
       &::after {
         content: '';
         position: absolute;
-        left: calc(50% - 13px);
-        top: 58px;
+        left: calc(50% - 10px);
+        top: 105%;
         width: 0;
         height: 0;
         bottom: 0;
-        border-left: 12px solid transparent;
-        border-right: 12px solid transparent;
-        border-top: 12px solid $COLOR--tealish;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-top: 10px solid $COLOR--tealish;
       }
     }
   }
