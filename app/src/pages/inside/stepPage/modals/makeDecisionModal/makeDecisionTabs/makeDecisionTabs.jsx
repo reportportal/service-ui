@@ -17,7 +17,6 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useState } from 'react';
-import { uniqueId } from 'common/utils';
 import { useIntl } from 'react-intl';
 import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
 import Parser from 'html-react-parser';
@@ -79,6 +78,24 @@ export const MakeDecisionTabs = ({
       decisionType: tab,
     });
   };
+
+  const renderActiveTab = () => {
+    const tab = tabs.find((el) => el.isOpen);
+
+    return (
+      <div className={cx('tab')}>
+        <div className={cx('tab-header')}>
+          {tab.title ||
+            (suggestedItems.length &&
+              formatMessage(messages.executionWith, {
+                value: suggestedItems[selectedMLSuggest || 0].suggestRs.matchScore.toString(),
+              }))}
+        </div>
+        <div className={cx('tab-content')}>{tab.content}</div>
+      </div>
+    );
+  };
+
   return (
     <div className={cx('make-decision-tabs')}>
       {(!isBulkOperation || isMLSuggestionsAvailable) && (
@@ -151,23 +168,7 @@ export const MakeDecisionTabs = ({
           )}
         </div>
       )}
-      {tabs.map((tab) => {
-        if (tab.isOpen && tab.shouldShow) {
-          return (
-            <div key={uniqueId()} className={cx('tab')}>
-              <div className={cx('tab-header')}>
-                {tab.title ||
-                  (suggestedItems.length &&
-                    formatMessage(messages.executionWith, {
-                      value: suggestedItems[selectedMLSuggest || 0].suggestRs.matchScore.toString(),
-                    }))}
-              </div>
-              <div className={cx('tab-content')}>{tab.content}</div>
-            </div>
-          );
-        }
-        return null;
-      })}
+      {renderActiveTab()}
     </div>
   );
 };
