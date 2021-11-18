@@ -79,7 +79,12 @@ const MakeDecision = ({ data }) => {
     startTime: Date.now(),
     selectManualChoice: { issue: isBulkOperation ? { comment: '' } : itemData.issue },
     suggestChoice: {},
-    historyChoice: historyItems.find((item) => item.issue && item.id !== itemData.id),
+    historyChoice: historyItems.find(
+      (item) =>
+        item.issue &&
+        item.id !== itemData.id &&
+        !item.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
+    ),
   });
   const [activeTab, setActiveTab] = useState(SELECT_DEFECT_MANUALLY);
 
@@ -380,8 +385,12 @@ const MakeDecision = ({ data }) => {
 
   const getMakeDicisionTabs = (collapsedRightSection, windowSize) => {
     const preparedHistoryLineItems = historyItems.filter(
-      (item) => item.issue && item.id !== itemData.id,
+      (item) =>
+        item.issue &&
+        item.id !== itemData.id &&
+        !item.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
     );
+
     const tabsData = [
       {
         id: SELECT_DEFECT_MANUALLY,
