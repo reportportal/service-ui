@@ -31,9 +31,9 @@ import { historyItemsSelector } from 'controllers/log';
 import { linkIssueAction, postIssueAction, unlinkIssueAction } from 'controllers/step';
 import { LINK_ISSUE, POST_ISSUE, UNLINK_ISSUE } from 'common/constants/actionTypes';
 import { analyzerExtensionsSelector } from 'controllers/appInfo';
-import { SCREEN_MD_MAX } from 'common/constants/screenSizeVariables';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import { actionMessages } from 'common/constants/localization/eventsLocalization';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { MachineLearningSuggestions } from './machineLearningSuggestions';
 import { MakeDecisionTabs } from './makeDecisionTabs';
 import { messages } from './messages';
@@ -51,6 +51,7 @@ import {
 import { SelectDefectManually } from './selectDefectManually';
 import { CopyFromHistoryLine } from './copyFromHistoryLine';
 import { ExecutionSection } from './executionSection';
+import { Footer, InfoBlock } from './footer';
 
 const MakeDecision = ({ data }) => {
   const { formatMessage } = useIntl();
@@ -312,7 +313,7 @@ const MakeDecision = ({ data }) => {
     }
     return eventInfo;
   };
-  const applyChangesImmediately = () => {
+  const applyChanges = () => {
     if (isBulkOperation) {
       modalHasChanges &&
         activeTab === SELECT_DEFECT_MANUALLY &&
@@ -338,52 +339,26 @@ const MakeDecision = ({ data }) => {
 
     modalState.issueActionType && dispatch(hideModalAction()) && getIssueAction();
   };
-  const applyImmediatelyWithComment = () => {
-    saveDefect({ replaceComment: true });
-  };
-  const applyChanges = () => applyChangesImmediately();
 
-  const renderHeaderElements = () => {
-    return (
-      <>
-        {isBulkOperation && (
-          <GhostButton
-            onClick={applyImmediatelyWithComment}
-            disabled={
-              modalState[ACTIVE_TAB_MAP[activeTab]].issue.comment
-                ? false
-                : !modalState.currentTestItems.some(({ issue }) => !!issue.comment)
-            }
-            transparentBorder
-            transparentBackground
-            appearance="topaz"
-          >
-            {formatMessage(
-              modalState[ACTIVE_TAB_MAP[activeTab]].issue.comment
-                ? messages.replaceCommentsAndApply
-                : messages.clearCommentsAndApply,
-            )}
-          </GhostButton>
-        )}
-        <GhostButton
-          onClick={applyChanges}
-          disabled={!modalHasChanges}
-          color="''"
-          appearance="topaz"
-        >
-          {modalState.selectedItems.length > 1
-            ? formatMessage(messages.applyToItems, {
-                itemsCount: modalState.selectedItems.length + 1,
-              })
-            : formatMessage(
-                modalState.issueActionType ? messages.applyAndContinue : messages.apply,
-              )}
-        </GhostButton>
-      </>
-    );
-  };
+  const getFooterButtons = () => ({
+    okButton: (
+      <GhostButton onClick={applyChanges} disabled={!modalHasChanges} color="''" appearance="topaz">
+        {formatMessage(modalState.issueActionType ? messages.applyAndContinue : messages.apply)}
+      </GhostButton>
+    ),
+    cancelButton: (
+      <GhostButton
+        onClick={() => dispatch(hideModalAction())}
+        color="''"
+        appearance="topaz"
+        transparentBackground
+      >
+        {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
+      </GhostButton>
+    ),
+  });
 
-  const getMakeDicisionTabs = (collapsedRightSection, windowSize) => {
+  const getMakeDecisionTabs = (windowSize) => {
     const preparedHistoryLineItems = historyItems.filter(
       (item) =>
         item.issue &&
@@ -403,7 +378,6 @@ const MakeDecision = ({ data }) => {
             modalState={modalState}
             setModalState={setModalState}
             isBulkOperation={isBulkOperation}
-            collapsedRightSection={collapsedRightSection}
             windowSize={windowSize}
             eventsInfo={data.eventsInfo.editDefectsEvents}
           />
@@ -457,38 +431,10 @@ const MakeDecision = ({ data }) => {
     ctrlEnter: applyChanges,
   };
 
-  const renderTitle = (collapsedRightSection, windowSize) => {
-    const { width } = windowSize;
-    if (isBulkOperation) {
-      return formatMessage(collapsedRightSection ? messages.bulkOperationDecision : messages.bulk);
-    } else {
-      return formatMessage(
-        collapsedRightSection && width > SCREEN_MD_MAX ? messages.decisionForTest : messages.test,
-        {
-          launchNumber: itemData.launchNumber && `#${itemData.launchNumber}`,
-        },
-      );
-    }
-  };
-
-  const renderRightSection = (collapsedRightSection) => {
-    return (
-      <ExecutionSection
-        modalState={modalState}
-        setModalState={setModalState}
-        isNarrowView={collapsedRightSection}
-        isBulkOperation={isBulkOperation}
-        eventsInfo={data.eventsInfo.editDefectsEvents}
-      />
-    );
-  };
   const layoutEventsInfo = useMemo(() => {
     const { suggestedItems, startTime } = modalState;
     const hasSuggestions = !!suggestedItems.length;
     return {
-      openCloseRightSection: (isOpen) =>
-        data.eventsInfo.editDefectsEvents &&
-        data.eventsInfo.editDefectsEvents.openCloseRightSection(defectFromTIGroup, isOpen),
       closeModal: (endTime) =>
         data.eventsInfo.editDefectsEvents &&
         data.eventsInfo.editDefectsEvents.closeModal(
@@ -501,17 +447,33 @@ const MakeDecision = ({ data }) => {
 
   return (
     <DarkModalLayout
-      renderTitle={renderTitle}
-      renderHeaderElements={renderHeaderElements}
+      headerTitle={formatMessage(
+        isBulkOperation ? messages.selectDefectTypeManually : messages.selectDefect,
+      )}
       modalHasChanges={modalHasChanges}
       hotKeyAction={hotKeyAction}
       modalNote={formatMessage(messages.modalNote)}
-      renderRightSection={renderRightSection}
+      sideSection={
+        <ExecutionSection
+          modalState={modalState}
+          setModalState={setModalState}
+          isBulkOperation={isBulkOperation}
+          eventsInfo={data.eventsInfo.editDefectsEvents}
+        />
+      }
+      footer={
+        <Footer
+          buttons={getFooterButtons()}
+          modalState={modalState}
+          infoBlock={InfoBlock}
+          isBulkOperation={isBulkOperation}
+        />
+      }
       eventsInfo={layoutEventsInfo}
     >
-      {({ collapsedRightSection, windowSize }) => (
+      {({ windowSize }) => (
         <MakeDecisionTabs
-          tabs={getMakeDicisionTabs(collapsedRightSection, windowSize)}
+          tabs={getMakeDecisionTabs(windowSize)}
           toggleTab={setActiveTab}
           suggestedItems={modalState.suggestedItems}
           loadingMLSuggest={loadingMLSuggest}

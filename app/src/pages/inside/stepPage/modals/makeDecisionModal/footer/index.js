@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2021 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,36 +14,5 @@
  * limitations under the License.
  */
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 14px;
-  font-family: $FONT-REGULAR;
-  font-size: 24px;
-  color: $COLOR--white-two;
-}
-
-.title {
-  line-height: 33px;
-}
-
-.close-icon {
-  display: flex;
-  align-items: center;
-  min-width: 50px;
-  width: 58px;
-  height: 30px;
-  cursor: pointer;
-
-  svg {
-    width: 30px;
-    height: 30px;
-    fill: $COLOR--topaz;
-  }
-}
-
-.close-icon-prefix {
-  margin-right: 7px;
-  color: $COLOR--dark-gray;
-  font-size: 11px;
-}
+export { Footer } from './footer';
+export { InfoBlock } from './infoBlock';

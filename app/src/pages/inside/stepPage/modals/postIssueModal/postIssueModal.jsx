@@ -53,6 +53,7 @@ import { COMMAND_POST_ISSUE } from 'controllers/plugins/uiExtensions/constants';
 import { ItemsList } from '../makeDecisionModal/executionSection/optionsSection/itemsList';
 import { JiraCredentials } from './jiraCredentials';
 import { RallyCredentials } from './rallyCredentials';
+import { Footer } from '../makeDecisionModal/footer';
 import {
   INCLUDE_ATTACHMENTS_KEY,
   INCLUDE_LOGS_KEY,
@@ -66,6 +67,7 @@ import {
   getDefaultIssueModalConfig,
   getDefaultOptionValueKey,
 } from './utils';
+import { messages as makeDecisionMessages } from '../makeDecisionModal/messages';
 import styles from './postIssueModal.scss';
 
 const cx = classNames.bind(styles);
@@ -78,13 +80,9 @@ const SYSTEM_CREDENTIALS_BLOCKS = {
 let validationConfig = null;
 
 const messages = defineMessages({
-  post: {
-    id: 'PostIssueModal.post',
-    defaultMessage: 'Post',
-  },
   postIssue: {
     id: 'PostIssueModal.postIssue',
-    defaultMessage: 'Post issue',
+    defaultMessage: 'Post Issue',
   },
   systemUrlInfo: {
     id: 'PostIssueModal.systemUrlInfo',
@@ -125,10 +123,6 @@ const messages = defineMessages({
   postIssueFailed: {
     id: 'PostIssueModal.postIssueFailed',
     defaultMessage: 'Failed to post issue',
-  },
-  cancel: {
-    id: 'PostIssueModal.cancel',
-    defaultMessage: 'Cancel',
   },
 });
 
@@ -195,9 +189,6 @@ export class PostIssueModal extends Component {
 
   constructor(props) {
     super(props);
-    const {
-      data: { items },
-    } = props;
     const { pluginName, integration, ...config } = getDefaultIssueModalConfig(
       props.namedBtsIntegrations,
       props.userId,
@@ -216,9 +207,6 @@ export class PostIssueModal extends Component {
       integrationId: id,
       expanded: true,
       wasExpanded: false,
-      loading: false,
-      testItems: items,
-      selectedItems: items,
     };
   }
 
@@ -319,12 +307,13 @@ export class PostIssueModal extends Component {
   };
 
   prepareDataToSend = (formData) => {
-    const { getBtsIntegrationBackLink } = this.props;
-
-    const { selectedItems } = this.state;
+    const {
+      getBtsIntegrationBackLink,
+      data: { items },
+    } = this.props;
 
     const fields = this.state.fields.map((field) => ({ ...field, value: formData[field.id] }));
-    const backLinks = selectedItems.reduce(
+    const backLinks = items.reduce(
       (acc, item) => ({ ...acc, [item.id]: getBtsIntegrationBackLink(item) }),
       {},
     );
@@ -333,7 +322,7 @@ export class PostIssueModal extends Component {
       [INCLUDE_ATTACHMENTS_KEY]: formData[INCLUDE_ATTACHMENTS_KEY],
       [INCLUDE_LOGS_KEY]: formData[INCLUDE_LOGS_KEY],
       logQuantity: LOG_QUANTITY,
-      item: selectedItems[0].id,
+      item: items[0].id,
       fields,
       backLinks,
     };
@@ -350,13 +339,13 @@ export class PostIssueModal extends Component {
   postIssue = (data) => {
     const {
       intl: { formatMessage },
-      data: { fetchFunc },
+      data: { items, fetchFunc },
       namedBtsIntegrations,
       activeProject,
       projectInfo,
       userId,
     } = this.props;
-    const { pluginName, integrationId, selectedItems } = this.state;
+    const { pluginName, integrationId } = this.state;
     const {
       integrationParameters: { project: btsProject, url: btsUrl },
       integrationType: { details },
@@ -380,7 +369,7 @@ export class PostIssueModal extends Component {
 
     fetch(url, requestParams)
       .then((response) => {
-        const issues = selectedItems.map(({ id, issue = {} }) => ({
+        const issues = items.map(({ id, issue = {} }) => ({
           testItemId: id,
           issue: {
             ...issue,
@@ -438,100 +427,7 @@ export class PostIssueModal extends Component {
     });
   };
 
-  componentDidMount() {
-    const { intl, activeProject } = this.props;
-    const { testItems } = this.state;
-    const fetchLogs = () => {
-      this.setState({ loading: true });
-      const itemIds = testItems.map((item) => item.id);
-
-      fetch(URLS.bulkLastLogs(activeProject), {
-        method: 'post',
-        data: { itemIds, logLevel: 'ERROR' },
-      })
-        .then((testItemLogs) => {
-          const items = [];
-          testItems.forEach((elem) => {
-            items.push({ ...elem, logs: testItemLogs[elem.id] });
-          });
-          this.setState({
-            testItems: items,
-            loading: false,
-          });
-        })
-        .catch(() => {
-          this.setState({
-            testItems: [],
-            selectedItems: [],
-            loading: false,
-          });
-          this.props.showNotification({
-            message: intl.formatMessage(messages.linkIssueFailed),
-            type: NOTIFICATION_TYPES.ERROR,
-          });
-        });
-    };
-    fetchLogs();
-  }
-
   isBulkOperation = this.props.data.items.length > 1;
-
-  renderIssueFormHeaderElements = () => {
-    const {
-      intl: { formatMessage },
-    } = this.props;
-    return (
-      <>
-        <GhostButton
-          onClick={this.props.hideModalAction}
-          transparentBorder
-          transparentBackground
-          appearance="topaz"
-        >
-          {formatMessage(messages.cancel)}
-        </GhostButton>
-        <GhostButton
-          onClick={this.onPost}
-          disabled={this.props.invalid}
-          color="''"
-          appearance="topaz"
-        >
-          {formatMessage(messages.postIssue)}
-        </GhostButton>
-      </>
-    );
-  };
-  renderTitle = (collapsedRightSection) => {
-    const {
-      data: { items },
-      intl: { formatMessage },
-    } = this.props;
-    return collapsedRightSection
-      ? formatMessage(messages.postIssueForTheTest, {
-          launchNumber: items.launchNumber && `#${items.launchNumber}`,
-        })
-      : formatMessage(messages.post);
-  };
-
-  setItems = (newState) => {
-    this.setState(newState);
-  };
-
-  renderRightSection = (collapsedRightSection) => {
-    const { testItems, selectedItems, loading } = this.state;
-    return (
-      <div className={cx('items-list')}>
-        <ItemsList
-          setItems={this.setItems}
-          testItems={testItems}
-          selectedItems={selectedItems}
-          isNarrowView={collapsedRightSection}
-          loading={loading}
-          eventsInfo={this.props.data.eventsInfo}
-        />
-      </div>
-    );
-  };
 
   getCurrentExtension = () => {
     const { postIssueExtensions } = this.props;
@@ -540,24 +436,54 @@ export class PostIssueModal extends Component {
     return postIssueExtensions.find((ext) => ext.pluginName === pluginName);
   };
 
+  getFooterButtons = () => ({
+    cancelButton: (
+      <GhostButton
+        onClick={this.props.hideModalAction}
+        color="''"
+        appearance="topaz"
+        transparentBackground
+      >
+        {this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
+      </GhostButton>
+    ),
+    okButton: (
+      <GhostButton
+        onClick={this.onPost}
+        disabled={this.props.invalid}
+        color="''"
+        appearance="topaz"
+      >
+        {this.props.intl.formatMessage(messages.postIssue)}
+      </GhostButton>
+    ),
+  });
+
   render() {
     const {
       namedBtsIntegrations,
       intl: { formatMessage },
-      data: { eventsInfo = {} },
+      data: { items },
     } = this.props;
     const { pluginName, integrationId, fields, expanded, wasExpanded } = this.state;
     const CredentialsComponent = SYSTEM_CREDENTIALS_BLOCKS[pluginName];
     const currentExtension = this.getCurrentExtension();
-    const layoutEventsInfo = {
-      openCloseRightSection: eventsInfo.openCloseRightSection,
-    };
+
     return (
       <DarkModalLayout
-        renderHeaderElements={this.renderIssueFormHeaderElements}
-        renderTitle={this.renderTitle}
-        renderRightSection={this.renderRightSection}
-        eventsInfo={layoutEventsInfo}
+        headerTitle={formatMessage(messages.postIssue)}
+        footer={
+          <Footer
+            infoBlock={
+              items.length > 1
+                ? formatMessage(makeDecisionMessages.applyToItems, {
+                    itemsCount: items.length,
+                  })
+                : formatMessage(makeDecisionMessages.applyToItem)
+            }
+            buttons={this.getFooterButtons()}
+          />
+        }
       >
         {() => (
           <form className={cx('post-issue-form', 'dark-view')}>

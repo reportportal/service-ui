@@ -14,36 +14,32 @@
  * limitations under the License.
  */
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 14px;
-  font-family: $FONT-REGULAR;
-  font-size: 24px;
-  color: $COLOR--white-two;
-}
-
-.title {
-  line-height: 33px;
-}
-
-.close-icon {
+.container {
+  position: absolute;
+  bottom: 0;
   display: flex;
   align-items: center;
-  min-width: 50px;
-  width: 58px;
-  height: 30px;
-  cursor: pointer;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 72px;
+  padding: 21px 40px 21px 48px;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 13px;
+  line-height: 18px;
+  color: $COLOR--white-two;
+  background: $COLOR--black-1;
+  box-sizing: border-box;
+}
 
-  svg {
-    width: 30px;
-    height: 30px;
-    fill: $COLOR--topaz;
+.buttons-bar {
+  display: flex;
+  align-self: end;
+
+  &:first-child {
+    margin-right: 20px;
   }
 }
 
-.close-icon-prefix {
-  margin-right: 7px;
-  color: $COLOR--dark-gray;
-  font-size: 11px;
+.button {
+  margin-right: 11px;
 }

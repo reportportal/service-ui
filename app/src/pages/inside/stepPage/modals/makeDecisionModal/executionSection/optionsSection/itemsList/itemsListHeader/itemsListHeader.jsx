@@ -36,7 +36,6 @@ export const ItemsListHeader = ({
   showErrorLogs,
   onShowErrorLogsChange,
   optionValue,
-  isNarrowView,
   eventsInfo,
 }) => {
   const { formatMessage } = useIntl();
@@ -83,11 +82,9 @@ export const ItemsListHeader = ({
           })}
         </span>
       </InputCheckbox>
-      {!isNarrowView && (
-        <InputCheckbox value={showErrorLogs} onChange={onShowLogsChange} iconTransparentBackground>
-          <span className={cx('checkbox-label')}>{formatMessage(messages.showErrorLogs)}</span>
-        </InputCheckbox>
-      )}
+      <InputCheckbox value={showErrorLogs} onChange={onShowLogsChange} iconTransparentBackground>
+        <span className={cx('checkbox-label')}>{formatMessage(messages.showErrorLogs)}</span>
+      </InputCheckbox>
     </div>
   );
 };
@@ -100,7 +97,6 @@ ItemsListHeader.propTypes = {
   showErrorLogs: PropTypes.bool,
   onShowErrorLogsChange: PropTypes.func,
   optionValue: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-  isNarrowView: PropTypes.bool,
   eventsInfo: PropTypes.object,
 };
 ItemsListHeader.defaultProps = {
@@ -112,6 +108,5 @@ ItemsListHeader.defaultProps = {
   showErrorLogs: false,
   onShowErrorLogsChange: () => {},
   optionValue: '',
-  isNarrowView: false,
   eventsInfo: {},
 };

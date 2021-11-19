@@ -82,14 +82,16 @@ export const MakeDecisionTabs = ({
   const renderActiveTab = () => {
     const tab = tabs.find((el) => el.isOpen);
     return (
-      <div className={cx('tab')}>
-        <div className={cx('tab-header')}>
-          {tab.title ||
-            (suggestedItems.length &&
-              formatMessage(messages.executionWith, {
-                value: suggestedItems[selectedMLSuggest || 0].suggestRs.matchScore.toString(),
-              }))}
-        </div>
+      <div className={cx({ tab: !isBulkOperation })}>
+        {!isBulkOperation && (
+          <div className={cx('tab-header')}>
+            {tab.title ||
+              (suggestedItems.length &&
+                formatMessage(messages.executionWith, {
+                  value: suggestedItems[selectedMLSuggest || 0].suggestRs.matchScore.toString(),
+                }))}
+          </div>
+        )}
         <div
           className={cx('tab-content', {
             'padding-right-20': tab.id === COPY_FROM_HISTORY_LINE,
@@ -102,7 +104,7 @@ export const MakeDecisionTabs = ({
   };
 
   return (
-    <div className={cx('make-decision-tabs')}>
+    <div className={cx('make-decision-tabs', { 'margin-top-10': isBulkOperation })}>
       {(!isBulkOperation || isMLSuggestionsAvailable) && (
         <div className={cx('tabs')}>
           <div

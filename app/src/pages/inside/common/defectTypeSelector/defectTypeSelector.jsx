@@ -33,10 +33,7 @@ export const DefectTypeSelector = ({ selectDefectType, selectedItem, isNarrowVie
       {Object.keys(defectTypes).length > 0 && (
         <div className={cx('defect-options')}>
           {DEFECT_TYPES_SEQUENCE.map((option) => (
-            <div
-              key={option}
-              className={cx('select-option-group', { 'narrow-view': isNarrowView })}
-            >
+            <div key={option} className={cx('select-option-group')}>
               {defectTypes[option].map((defectType) => (
                 <div key={defectType.locator} className={cx('select-option')}>
                   <DefectTypeSelectorItem

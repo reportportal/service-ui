@@ -49,26 +49,21 @@ export const messages = defineMessages({
     id: 'MakeDecisionModal.ignoreAaShort',
     defaultMessage: 'Ignore in AA',
   },
-  decisionForTest: {
-    id: 'MakeDecisionModal.decisionForTest',
-    defaultMessage: 'Decision for the test {launchNumber}',
-  },
-  test: {
-    id: 'MakeDecisionModal.test',
-    defaultMessage: 'Test {launchNumber}',
-  },
   executionToChange: {
     id: 'MakeDecisionModal.executionToChange',
     defaultMessage: 'Execution to change',
   },
-  bulk: { id: 'MakeDecisionModal.bulk', defaultMessage: 'Bulk' },
-  bulkOperationDecision: {
-    id: 'MakeDecisionModal.bulkOperationDecision',
-    defaultMessage: 'Bulk Operation Decision',
+  applyToItem: {
+    id: 'MakeDecisionModal.applyToItem',
+    defaultMessage: 'Results will be applied for the Item',
   },
   applyToItems: {
     id: 'MakeDecisionModal.applyToItems',
-    defaultMessage: 'Apply to {itemsCount} Items',
+    defaultMessage: 'Results will be applied for {itemsCount} Items',
+  },
+  selectDefect: {
+    id: 'MakeDecisionModal.selectDefect',
+    defaultMessage: 'Select defect',
   },
   selectDefectTypeManually: {
     id: 'MakeDecisionModal.selectDefectTypeManually',
@@ -115,14 +110,6 @@ export const messages = defineMessages({
   unlinkIssueNote: {
     id: 'MakeDecisionModal.unlinkIssueNote',
     defaultMessage: 'After a defect type submission, the current links will be unlinked',
-  },
-  execution: {
-    id: 'MakeDecisionModal.execution',
-    defaultMessage: 'Execution',
-  },
-  defectType: {
-    id: 'MakeDecisionModal.defectType',
-    defaultMessage: 'Defect type',
   },
   applyFor: {
     id: 'MakeDecisionModal.applyFor',

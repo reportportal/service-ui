@@ -30,7 +30,6 @@ export const OptionsSection = ({
   currentTestItem,
   setModalState,
   modalState,
-  isNarrowView,
   eventsInfo,
   loading,
 }) => {
@@ -57,7 +56,6 @@ export const OptionsSection = ({
           selectedItems={selectedItems}
           loading={loading}
           optionValue={optionValue}
-          isNarrowView={isNarrowView}
           eventsInfo={eventsInfo}
         />
         {!loading && !testItems.length && optionValue !== CURRENT_EXECUTION_ONLY && (
@@ -72,7 +70,6 @@ OptionsSection.propTypes = {
   setModalState: PropTypes.func,
   loading: PropTypes.bool,
   isBulkOperation: PropTypes.bool,
-  isNarrowView: PropTypes.bool,
   modalState: PropTypes.object,
   eventsInfo: PropTypes.object,
 };
@@ -81,7 +78,6 @@ OptionsSection.defaultProps = {
   setModalState: () => {},
   loading: false,
   isBulkOperation: false,
-  isNarrowView: true,
   modalState: {},
   eventsInfo: {},
 };
