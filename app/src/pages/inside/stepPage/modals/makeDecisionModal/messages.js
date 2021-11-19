@@ -72,7 +72,7 @@ export const messages = defineMessages({
   },
   selectDefectTypeManually: {
     id: 'MakeDecisionModal.selectDefectTypeManually',
-    defaultMessage: 'Select defect type manually',
+    defaultMessage: 'Select defect manually',
   },
   machineLearningSuggestions: {
     id: 'MakeDecisionModal.machineLearningSuggestions',
@@ -84,7 +84,7 @@ export const messages = defineMessages({
   },
   copyFromHistoryLine: {
     id: 'MakeDecisionModal.copyFromHistoryLine',
-    defaultMessage: 'Copy from history line',
+    defaultMessage: 'Analyzed executions from the test history',
   },
   apply: {
     id: 'MakeDecisionModal.apply',
@@ -249,6 +249,6 @@ export const messages = defineMessages({
   },
   executionWith: {
     id: 'MakeDecisionModal.executionWith',
-    defaultMessage: 'Execution with the {value}% similarity of defect',
+    defaultMessage: 'The execution with {value}% similarity of defect',
   },
 });
