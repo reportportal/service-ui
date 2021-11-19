@@ -81,7 +81,6 @@ export const MakeDecisionTabs = ({
 
   const renderActiveTab = () => {
     const tab = tabs.find((el) => el.isOpen);
-
     return (
       <div className={cx('tab')}>
         <div className={cx('tab-header')}>
@@ -91,7 +90,13 @@ export const MakeDecisionTabs = ({
                 value: suggestedItems[selectedMLSuggest || 0].suggestRs.matchScore.toString(),
               }))}
         </div>
-        <div className={cx('tab-content')}>{tab.content}</div>
+        <div
+          className={cx('tab-content', {
+            'padding-right-20': tab.id === COPY_FROM_HISTORY_LINE,
+          })}
+        >
+          {tab.content}
+        </div>
       </div>
     );
   };
@@ -118,13 +123,13 @@ export const MakeDecisionTabs = ({
                 <p className={cx('suggest-text')}>{formatMessage(messages.analyzingSuggestions)}</p>
               </div>
             )}
-            {(suggestedItems.length === 0 || !isAnalyzerAvailable) && !loadingMLSuggest && (
+            {!isAnalyzerAvailable && !loadingMLSuggest && (
               <div className={cx('central-block-default')}>
                 <div className={cx('no-suggestion-prompt')}>
-                  <p className={cx('padding-right-10')}>
+                  <div className={cx('padding-right-20')}>
                     {formatMessage(messages.analyzerUnavailable)}
-                  </p>
-                  <p className={cx('link-wrapper')}>
+                  </div>
+                  <div className={cx('link-wrapper')}>
                     {formatMessage(messages.pleaseCheck)}
                     <a
                       href={'https://reportportal.io/docs/Deploy-Elastic-Search'}
@@ -134,7 +139,14 @@ export const MakeDecisionTabs = ({
                       <span>{formatMessage(messages.analyzerUnavailableLink)}</span>
                       <div className={cx('icon')}>{Parser(ExternalLinkIcon)}</div>
                     </a>
-                  </p>
+                  </div>
+                </div>
+              </div>
+            )}
+            {suggestedItems.length === 0 && !loadingMLSuggest && isAnalyzerAvailable && (
+              <div className={cx('central-block-default')}>
+                <div className={cx('no-suggestion-prompt')}>
+                  {formatMessage(messages.noSuggestions)}
                 </div>
               </div>
             )}

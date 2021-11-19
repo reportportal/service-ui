@@ -183,7 +183,7 @@ export const SelectDefectManually = ({
     (width < SCREEN_MD_MAX && !collapsedRightSection);
 
   return (
-    <>
+    <div className={cx('select-defect-wrapper')}>
       {!isBulkOperation && (
         <div className={cx('ignore-analysis')}>
           <InputCheckbox
@@ -194,10 +194,11 @@ export const SelectDefectManually = ({
             }
             onChange={handleIgnoreAnalyzerChange}
             iconTransparentBackground
-          />
-          <span className={cx('checkbox-text')}>
-            {formatMessage(width < SCREEN_SM_MAX ? messages.ignoreAaShort : messages.ignoreAa)}
-          </span>
+          >
+            <span className={cx('checkbox-text')}>
+              {formatMessage(width < SCREEN_SM_MAX ? messages.ignoreAaShort : messages.ignoreAa)}
+            </span>
+          </InputCheckbox>
         </div>
       )}
       <DefectTypeSelector
@@ -236,7 +237,7 @@ export const SelectDefectManually = ({
           selectedItem={modalState.issueActionType}
         />
       )}
-    </>
+    </div>
   );
 };
 SelectDefectManually.propTypes = {

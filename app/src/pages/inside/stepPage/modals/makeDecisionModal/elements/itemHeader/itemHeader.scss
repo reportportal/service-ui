@@ -50,7 +50,7 @@
   }
 
   @media (max-width: $SCREEN_SM_MAX) {
-    display: block;
+    display: flex;
     height: auto;
     line-height: 20px;
   }
@@ -65,7 +65,7 @@
   text-decoration: none;
   white-space: nowrap;
   overflow: hidden;
-  max-width: 90%;
+  max-width: 100%;
 
   & > span {
     text-overflow: ellipsis;
@@ -147,7 +147,15 @@
 }
 
 .history-line-block {
-  width: 15%;
+  min-width: 11%;
+
+  @media (max-width: $SCREEN_XL_MAX) {
+    min-width: 16%;
+  }
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    min-width: 22%;
+  }
 
   .history-line-item {
     position: absolute;

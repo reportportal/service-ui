@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
+.select-defect-wrapper {
+  position: relative;
+}
+
 .ignore-analysis {
   position: absolute;
   display: flex;
-  top: 105px;
-  right: 20px;
-  width: auto;
-  height: 12px;
+  top: -35px;
+  right: 2px;
 }
 
 .checkbox-text {
-  margin-left: 12px;
   color: $COLOR--gray-60;
   font-size: 13px;
 }
