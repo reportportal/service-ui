@@ -17,9 +17,10 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useState } from 'react';
-import { uniqueId } from 'common/utils';
 import { useIntl } from 'react-intl';
 import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
+import Parser from 'html-react-parser';
+import ExternalLinkIcon from 'common/img/go-to-another-page-inline.svg';
 import {
   COPY_FROM_HISTORY_LINE,
   MACHINE_LEARNING_SUGGESTIONS,
@@ -77,6 +78,29 @@ export const MakeDecisionTabs = ({
       decisionType: tab,
     });
   };
+
+  const renderActiveTab = () => {
+    const tab = tabs.find((el) => el.isOpen);
+    return (
+      <div className={cx('tab')}>
+        <div className={cx('tab-header')}>
+          {tab.title ||
+            (suggestedItems.length &&
+              formatMessage(messages.executionWith, {
+                value: suggestedItems[selectedMLSuggest || 0].suggestRs.matchScore.toString(),
+              }))}
+        </div>
+        <div
+          className={cx('tab-content', {
+            'padding-right-20': tab.id === COPY_FROM_HISTORY_LINE,
+          })}
+        >
+          {tab.content}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className={cx('make-decision-tabs')}>
       {(!isBulkOperation || isMLSuggestionsAvailable) && (
@@ -99,13 +123,31 @@ export const MakeDecisionTabs = ({
                 <p className={cx('suggest-text')}>{formatMessage(messages.analyzingSuggestions)}</p>
               </div>
             )}
-            {(suggestedItems.length === 0 || !isAnalyzerAvailable) && !loadingMLSuggest && (
+            {!isAnalyzerAvailable && !loadingMLSuggest && (
               <div className={cx('central-block-default')}>
-                <p className={cx('no-suggest-text')}>
-                  {formatMessage(
-                    isAnalyzerAvailable ? messages.noSuggestions : messages.noAnalyzer,
-                  )}
-                </p>
+                <div className={cx('no-suggestion-prompt')}>
+                  <div className={cx('padding-right-20')}>
+                    {formatMessage(messages.analyzerUnavailable)}
+                  </div>
+                  <div className={cx('link-wrapper')}>
+                    {formatMessage(messages.pleaseCheck)}
+                    <a
+                      href={'https://reportportal.io/docs/Deploy-Elastic-Search'}
+                      target="_blank"
+                      className={cx('suggestion-link')}
+                    >
+                      <span>{formatMessage(messages.analyzerUnavailableLink)}</span>
+                      <div className={cx('icon')}>{Parser(ExternalLinkIcon)}</div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            )}
+            {suggestedItems.length === 0 && !loadingMLSuggest && isAnalyzerAvailable && (
+              <div className={cx('central-block-default')}>
+                <div className={cx('no-suggestion-prompt')}>
+                  {formatMessage(messages.noSuggestions)}
+                </div>
               </div>
             )}
 
@@ -138,23 +180,7 @@ export const MakeDecisionTabs = ({
           )}
         </div>
       )}
-      {tabs.map((tab) => {
-        if (tab.isOpen && tab.shouldShow) {
-          return (
-            <div key={uniqueId()} className={cx('tab')}>
-              <div className={cx('tab-header')}>
-                {tab.title ||
-                  (suggestedItems.length &&
-                    formatMessage(messages.executionWith, {
-                      value: suggestedItems[selectedMLSuggest || 0].suggestRs.matchScore.toString(),
-                    }))}
-              </div>
-              <div className={cx('tab-content')}>{tab.content}</div>
-            </div>
-          );
-        }
-        return null;
-      })}
+      {renderActiveTab()}
     </div>
   );
 };

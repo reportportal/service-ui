@@ -173,7 +173,11 @@ export const messages = defineMessages({
   },
   analyzerUnavailable: {
     id: 'MakeDecisionModal.analyzerUnavailable',
-    defaultMessage: 'Service Analyzer is not running, please check',
+    defaultMessage: 'Service Analyzer is not running,',
+  },
+  pleaseCheck: {
+    id: 'MakeDecisionModal.pleaseCheck',
+    defaultMessage: 'please check',
   },
   analyzerUnavailableLink: {
     id: 'MakeDecisionModal.analyzerUnavailableLink',

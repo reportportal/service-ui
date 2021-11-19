@@ -77,6 +77,7 @@ export const MachineLearningSuggestions = ({
         logs={logs}
         highlightedLogId={suggestRs.relevantLogId}
         highlightedMessage={formatMessage(messages.similarLog)}
+        showErrorLogs
         eventsInfo={{
           onOpenStackTraceEvent: () => eventsInfo.onOpenStackTrace(defectFromTIGroup, true),
         }}

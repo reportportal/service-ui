@@ -30,13 +30,13 @@ import {
   isBtsPluginsExistSelector,
   isPostIssueActionAvailable,
 } from 'controllers/plugins';
-import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import { MarkdownEditor } from 'components/main/markdown';
 import { getIssueTitle } from 'pages/inside/common/utils';
 import { DefectTypeSelector } from 'pages/inside/common/defectTypeSelector';
 import { debugModeSelector } from 'controllers/launch';
 import { SCREEN_MD_MAX, SCREEN_SM_MAX, SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
+import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { SELECT_DEFECT_MANUALLY } from '../constants';
 import { messages } from '../messages';
 import { ActionButtonsBar } from './actionButtonsBar';
@@ -82,10 +82,10 @@ export const SelectDefectManually = ({
   const selectDefectTypeManually = (value) => {
     handleManualChange({ issueType: value });
   };
-  const handleIgnoreAnalyzerChange = (value) => {
-    handleManualChange({ ignoreAnalyzer: value });
+  const handleIgnoreAnalyzerChange = (e) => {
+    handleManualChange({ ignoreAnalyzer: e.target.checked });
     const { toggleIgnoreAASwitcher } = eventsInfo;
-    trackEvent(toggleIgnoreAASwitcher(defectFromTIGroup, value));
+    trackEvent(toggleIgnoreAASwitcher(defectFromTIGroup, e.target.checked));
   };
   const handleDefectCommentChange = (value) => {
     handleManualChange({ comment: value });
@@ -183,25 +183,23 @@ export const SelectDefectManually = ({
     (width < SCREEN_MD_MAX && !collapsedRightSection);
 
   return (
-    <>
+    <div className={cx('select-defect-wrapper')}>
       {!isBulkOperation && (
-        <InputSwitcher
-          value={
-            modalState.decisionType === SELECT_DEFECT_MANUALLY
-              ? source.issue.ignoreAnalyzer
-              : itemData.issue.ignoreAnalyzer
-          }
-          onChange={handleIgnoreAnalyzerChange}
-          className={cx('ignore-analysis')}
-          childrenFirst
-          childrenClassName={cx('input-switcher-children')}
-          size="medium"
-          mode="dark"
-        >
-          <span>
-            {formatMessage(width < SCREEN_SM_MAX ? messages.ignoreAaShort : messages.ignoreAa)}
-          </span>
-        </InputSwitcher>
+        <div className={cx('ignore-analysis')}>
+          <InputCheckbox
+            value={
+              modalState.decisionType === SELECT_DEFECT_MANUALLY
+                ? source.issue.ignoreAnalyzer
+                : itemData.issue.ignoreAnalyzer
+            }
+            onChange={handleIgnoreAnalyzerChange}
+            iconTransparentBackground
+          >
+            <span className={cx('checkbox-text')}>
+              {formatMessage(width < SCREEN_SM_MAX ? messages.ignoreAaShort : messages.ignoreAa)}
+            </span>
+          </InputCheckbox>
+        </div>
       )}
       <DefectTypeSelector
         selectDefectType={selectDefectTypeManually}
@@ -239,7 +237,7 @@ export const SelectDefectManually = ({
           selectedItem={modalState.issueActionType}
         />
       )}
-    </>
+    </div>
   );
 };
 SelectDefectManually.propTypes = {
