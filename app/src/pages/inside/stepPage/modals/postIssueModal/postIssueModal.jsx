@@ -39,6 +39,7 @@ import {
   normalizeFieldsWithOptions,
   mapFieldsToValues,
 } from 'components/fields/dynamicFieldsSection/utils';
+import { projectInfoSelector } from 'controllers/project';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { ISSUE_TYPE_FIELD_KEY } from 'components/integrations/elements/bts/constants';
@@ -48,6 +49,7 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import { hideModalAction } from 'controllers/modal';
 import ErrorInlineIcon from 'common/img/error-inline.svg';
 import Parser from 'html-react-parser';
+import { COMMAND_POST_ISSUE } from 'controllers/plugins/uiExtensions/constants';
 import { ItemsList } from '../makeDecisionModal/executionSection/optionsSection/itemsList';
 import { JiraCredentials } from './jiraCredentials';
 import { RallyCredentials } from './rallyCredentials';
@@ -139,6 +141,7 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     activeProject: activeProjectSelector(state),
+    projectInfo: projectInfoSelector(state),
     namedBtsIntegrations: namedAvailableBtsIntegrationsSelector(state),
     userId: userIdSelector(state),
     getBtsIntegrationBackLink: (itemId) => btsIntegrationBackLinkSelector(state, itemId),
@@ -156,6 +159,7 @@ export class PostIssueModal extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     activeProject: PropTypes.string.isRequired,
+    projectInfo: PropTypes.object.isRequired,
     namedBtsIntegrations: PropTypes.object.isRequired,
     userId: PropTypes.string.isRequired,
     showScreenLockAction: PropTypes.func.isRequired,
@@ -349,26 +353,33 @@ export class PostIssueModal extends Component {
       data: { fetchFunc },
       namedBtsIntegrations,
       activeProject,
+      projectInfo,
       userId,
     } = this.props;
     const { pluginName, integrationId, selectedItems } = this.state;
-    const currentExtension = this.getCurrentExtension();
-    const extensionAction = currentExtension && currentExtension.action;
+    const {
+      integrationParameters: { project: btsProject, url: btsUrl },
+      integrationType: { details },
+    } = namedBtsIntegrations[pluginName].find((item) => item.id === integrationId);
+    const isCommandAvailable =
+      details &&
+      details.allowedCommands &&
+      details.allowedCommands.indexOf(COMMAND_POST_ISSUE) !== -1;
+    const requestParams = { data, method: 'POST' };
+    let url = URLS.btsIntegrationPostTicket(activeProject, integrationId);
 
+    if (isCommandAvailable) {
+      url = URLS.projectIntegrationByIdCommand(activeProject, integrationId, COMMAND_POST_ISSUE);
+      requestParams.method = 'PUT';
+      requestParams.data = {
+        projectId: projectInfo.projectId,
+        entity: data,
+      };
+    }
     this.props.showScreenLockAction();
 
-    const fetchAction = extensionAction
-      ? extensionAction(data, integrationId)
-      : fetch(URLS.btsIntegrationPostTicket(activeProject, integrationId), {
-          method: 'post',
-          data,
-        });
-
-    fetchAction
+    fetch(url, requestParams)
       .then((response) => {
-        const {
-          integrationParameters: { project, url },
-        } = namedBtsIntegrations[pluginName].find((item) => item.id === integrationId);
         const issues = selectedItems.map(({ id, issue = {} }) => ({
           testItemId: id,
           issue: {
@@ -378,8 +389,8 @@ export class PostIssueModal extends Component {
               {
                 ticketId: response.id,
                 url: response.url,
-                btsProject: project,
-                btsUrl: url,
+                btsProject,
+                btsUrl,
               },
             ],
           },

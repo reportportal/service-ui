@@ -15,7 +15,6 @@ const createPluginRegistrationFunction = (store) => (plugin) => {
     pluginName: name,
     ...extension,
     component: (props) => <extension.component {...importProps} {...props} />,
-    action: (params) => extension.action(importProps, ...params),
   }));
   wrappedExtensions.forEach((ex) => {
     if (ex.type === EXTENSION_TYPE_MODAL && !getModal({ id: ex.name })) {
