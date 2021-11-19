@@ -22,6 +22,8 @@ import { SCREEN_SM_MAX, SCREEN_XS_MAX } from 'common/constants/screenSizeVariabl
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
+import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
+import { useDispatch } from 'react-redux';
 import { TestItemDetails } from '../elements/testItemDetails';
 import { COPY_FROM_HISTORY_LINE, RADIO_TEST_ITEM_DETAILS } from '../constants';
 import { messages } from '../messages';
@@ -38,6 +40,7 @@ export const CopyFromHistoryLine = ({
   eventsInfo,
   activeProject,
 }) => {
+  const dispatch = useDispatch();
   const [composedItems, setComposedItems] = useState(items);
   const { trackEvent } = useTracking();
 
@@ -56,7 +59,14 @@ export const CopyFromHistoryLine = ({
         });
         setComposedItems(itemsWithLogs);
       })
-      .catch((e) => console.error(e));
+      .catch(({ message }) => {
+        dispatch(
+          showNotification({
+            message,
+            type: NOTIFICATION_TYPES.ERROR,
+          }),
+        );
+      });
   }, []);
 
   const source = modalState.historyChoice;
