@@ -416,11 +416,8 @@ const MakeDecision = ({ data }) => {
         content: isMLSuggestionsAvailable && (
           <MachineLearningSuggestions
             modalState={modalState}
-            setModalState={setModalState}
             itemData={itemData}
-            loadingMLSuggest={loadingMLSuggest}
             eventsInfo={data.eventsInfo.editDefectsEvents}
-            isAnalyzerAvailable={isAnalyzerAvailable}
           />
         ),
       },
