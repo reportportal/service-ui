@@ -15,26 +15,15 @@
  */
 
 import React from 'react';
-import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
-import Parser from 'html-react-parser';
-import ExternalLinkIcon from 'common/img/go-to-another-page-inline.svg';
 import { MACHINE_LEARNING_SUGGESTIONS } from '../constants';
 import { TestItemDetails } from '../elements/testItemDetails';
-import styles from './machineLearningSuggestions.scss';
 import { messages } from '../messages';
 
-const cx = classNames.bind(styles);
-
-export const MachineLearningSuggestions = ({
-  modalState,
-  itemData,
-  eventsInfo,
-  isAnalyzerAvailable,
-}) => {
+export const MachineLearningSuggestions = ({ modalState, itemData, eventsInfo }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
 
@@ -53,22 +42,6 @@ export const MachineLearningSuggestions = ({
     trackEvent(onClickExternalLink(args));
   };
 
-  if (!isAnalyzerAvailable) {
-    return (
-      <div className={cx('no-suggestion-prompt')}>
-        {formatMessage(messages.analyzerUnavailable)}
-        <a
-          href={'https://reportportal.io/docs/Deploy-Elastic-Search'}
-          target="_blank"
-          className={cx('suggestion-link')}
-        >
-          <span>{formatMessage(messages.analyzerUnavailableLink)}</span>
-          <div className={cx('icon')}>{Parser(ExternalLinkIcon)}</div>
-        </a>
-      </div>
-    );
-  }
-
   return (
     <>
       <TestItemDetails
@@ -79,7 +52,8 @@ export const MachineLearningSuggestions = ({
         highlightedMessage={formatMessage(messages.similarLog)}
         showErrorLogs
         eventsInfo={{
-          onOpenStackTraceEvent: () => eventsInfo.onOpenStackTrace(defectFromTIGroup, true),
+          onOpenStackTraceEvent: () =>
+            eventsInfo.onOpenStackTrace && eventsInfo.onOpenStackTrace(defectFromTIGroup, true),
         }}
       />
     </>
@@ -88,16 +62,11 @@ export const MachineLearningSuggestions = ({
 
 MachineLearningSuggestions.propTypes = {
   modalState: PropTypes.object.isRequired,
-  setModalState: PropTypes.func.isRequired,
   itemData: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-  loadingMLSuggest: PropTypes.bool,
   eventsInfo: PropTypes.object,
-  isAnalyzerAvailable: PropTypes.bool,
 };
 MachineLearningSuggestions.defaultProps = {
   items: [],
   itemData: {},
-  loadingMLSuggest: false,
   eventsInfo: {},
-  isAnalyzerAvailable: false,
 };
