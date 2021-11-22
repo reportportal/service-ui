@@ -113,10 +113,6 @@
     .CodeMirror {
       height: 70px;
       min-height: 50px;
-
-      &-placeholder {
-        font-size: 14px;
-      }
     }
     .CodeMirror-scroll {
       max-height: 350px;
@@ -193,6 +189,10 @@
         min-height: 30px;
         background-color: transparent;
         color: $COLOR--gray-light;
+
+        &-placeholder {
+          font-size: 14px;
+        }
 
         ::-webkit-scrollbar {
           width: 4px;
