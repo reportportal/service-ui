@@ -190,6 +190,10 @@
         background-color: transparent;
         color: $COLOR--gray-light;
 
+        &-placeholder {
+          font-size: 14px;
+        }
+
         ::-webkit-scrollbar {
           width: 4px;
         }
