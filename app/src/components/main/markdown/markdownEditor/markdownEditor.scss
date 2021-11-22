@@ -113,6 +113,10 @@
     .CodeMirror {
       height: 70px;
       min-height: 50px;
+
+      &-placeholder {
+        font-size: 14px;
+      }
     }
     .CodeMirror-scroll {
       max-height: 350px;
