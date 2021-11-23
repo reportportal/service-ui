@@ -14,26 +14,28 @@
  * limitations under the License.
  */
 
+import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './bubblesPreloader.scss';
 
 const cx = classNames.bind(styles);
 
-export const BubblesPreloader = ({ color }) => (
-  <div className={cx('bubbles-preloader')}>
-    <span className={cx('bubble', { [`color-${color}`]: color })} />
-    <span className={cx('bubble', { [`color-${color}`]: color })} />
-    <span className={cx('bubble', { [`color-${color}`]: color })} />
-    <span className={cx('bubble', { [`color-${color}`]: color })} />
-    <span className={cx('bubble', { [`color-${color}`]: color })} />
-    <span className={cx('bubble', { [`color-${color}`]: color })} />
-    <span className={cx('bubble', { [`color-${color}`]: color })} />
+export const BubblesPreloader = ({ color, bubblesCount }) => (
+  <div className={cx('bubbles-preloader', { [`color-${color}`]: color })}>
+    {Array(bubblesCount)
+      .fill(null)
+      .map((item, index) => (
+        // eslint-disable-next-line react/no-array-index-key
+        <div className={cx('bubble')} key={index} />
+      ))}
   </div>
 );
 BubblesPreloader.propTypes = {
   color: PropTypes.string,
+  bubblesCount: PropTypes.number,
 };
 BubblesPreloader.defaultProps = {
   color: 'topaz',
+  bubblesCount: 7,
 };

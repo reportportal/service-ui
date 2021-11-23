@@ -15,25 +15,25 @@
  */
 
 .bubbles-preloader {
-  width: 46px;
   position: relative;
+
+  &.color-topaz .bubble {
+    background-color: $COLOR--topaz;
+  }
 }
 
 .bubble {
   position: absolute;
-  width: 2px;
-  height: 2px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: $COLOR--white-two;
+  transform: scale(0.3);
   animation: bubbles 2.5s infinite linear;
 }
 
-.color-topaz {
-  background-color: $COLOR--topaz;
-}
-
 .bubble:nth-child(1) {
-  left: 0px;
+  left: 0;
   animation-delay: 0.1s;
 }
 
@@ -70,9 +70,9 @@
 @keyframes bubbles {
   20%,
   60% {
-    transform: scale(1.5);
+    transform: scale(0.5);
   }
   40% {
-    transform: scale(3);
+    transform: scale(1);
   }
 }
