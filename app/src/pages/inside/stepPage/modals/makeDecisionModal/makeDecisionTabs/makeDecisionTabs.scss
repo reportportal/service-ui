@@ -14,9 +14,13 @@
  * limitations under the License.
  */
 
+.make-decision-tabs {
+  max-width: 812px;
+  margin: 0 auto;
+}
+
 .tabs {
   display: flex;
-  max-width: 800px;
   padding-top: 10px;
 
   @media (max-width: $SCREEN_MD_MAX) {
@@ -230,6 +234,10 @@
 
 .link-wrapper {
   display: flex;
+}
+
+.bulk-operation {
+  margin-top: 10px;
 }
 
 .jumping {

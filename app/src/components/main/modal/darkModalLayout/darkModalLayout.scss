@@ -15,91 +15,57 @@
  */
 
 .container {
+  position: absolute;
   top: 0;
-  left: 0;
+  bottom: 0;
   width: 100%;
-  height: 100%;
-  overflow: hidden;
 }
 
-.wrapper {
-  height: 100%;
+.modal-content {
   display: flex;
+  flex-direction: column;
+  height: 100%;
   margin-left: 56px;
-  justify-content: center;
-  background-color: rgba($COLOR--dark-modal, 0.95);
-  overflow: hidden;
 
   @media (max-width: $SCREEN_XS_MAX) {
     margin-left: 0;
   }
 }
 
+.wrapper {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  background-color: rgba($COLOR--dark-modal, 0.95);
+}
+
 .layout {
   width: 100%;
-  height: calc(100% - 70px);
-  max-width: 920px;
-  padding: 80px 10px 15px 10px;
+  padding: 32px 40px 70px 40px;
   box-sizing: border-box;
+
+  &.black-background {
+    background-color: rgba($COLOR--dark-modal, 0.5);
+  }
 }
 
 .note-row {
   margin-top: 10px;
 }
 
-.modal-content {
-  position: absolute;
-  height: 100%;
-  display: flex;
+.side-section {
   width: 100%;
-  top: 0;
-}
-
-.right-section {
+  max-width: 617px;
+  padding: 32px 40px 0 40px;
+  background-color: rgba($COLOR--dark-modal, 0.5);
   box-sizing: border-box;
-  display: flex;
-  flex: 0 0 auto;
-  width: 45%;
-  height: 100%;
-  flex-direction: column;
-  padding: 84px 20px 20px 32px;
-  background-color: $COLOR--dark-modal;
 
-  &.narrow-view {
-    max-width: 364px;
-  }
-
-  @media (max-width: $SCREEN_SM_MAX) {
-    padding: 84px 10px 20px 16px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
   }
 }
 
-.header {
-  display: flex;
-  flex-direction: column;
-}
-
-.button {
-  background: $COLOR--dark-modal;
-  border: none;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  padding: 0;
-  outline: none;
-}
-
-.show-icon {
-  margin-right: 8px;
-  width: 24px;
-}
-
-.show-icon-prefix {
-  color: $COLOR--dark-gray;
-  font-size: 11px;
-  line-height: 15px;
-}
-
-.hidden {
-  visibility: hidden;
+.footer {
+  position: relative;
+  height: 72px;
 }

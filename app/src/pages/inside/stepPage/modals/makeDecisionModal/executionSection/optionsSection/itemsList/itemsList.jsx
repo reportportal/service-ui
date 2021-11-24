@@ -29,7 +29,6 @@ export const ItemsList = ({
   setItems,
   loading,
   optionValue,
-  isNarrowView,
   eventsInfo,
 }) => {
   const [showErrorLogs, setShowErrorLogs] = useState(SHOW_LOGS_BY_DEFAULT);
@@ -49,7 +48,6 @@ export const ItemsList = ({
             showErrorLogs={showErrorLogs}
             onShowErrorLogsChange={setShowErrorLogs}
             optionValue={optionValue}
-            isNarrowView={isNarrowView}
             eventsInfo={eventsInfo}
           />
         )}
@@ -60,7 +58,6 @@ export const ItemsList = ({
             setItems={setItems}
             setShowErrorLogs={setShowErrorLogs}
             optionValue={optionValue}
-            isNarrowView={isNarrowView}
             eventsInfo={eventsInfo}
             onShowErrorLogsChange={setShowErrorLogs}
           />
@@ -77,7 +74,6 @@ ItemsList.propTypes = {
   setItems: PropTypes.func,
   optionValue: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   selectAllItems: PropTypes.func,
-  isNarrowView: PropTypes.bool,
   eventsInfo: PropTypes.object,
 };
 ItemsList.defaultProps = {
@@ -88,6 +84,5 @@ ItemsList.defaultProps = {
   setItems: () => {},
   optionValue: '',
   selectAllItems: () => {},
-  isNarrowView: true,
   eventsInfo: {},
 };

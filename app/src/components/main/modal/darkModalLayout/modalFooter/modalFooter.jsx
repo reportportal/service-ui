@@ -15,28 +15,26 @@
  */
 
 import React from 'react';
-import Parser from 'html-react-parser';
-import CloseIcon from 'common/img/cross-icon-inline.svg';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import styles from './modalHeader.scss';
+import styles from './modalFooter.scss';
 
 const cx = classNames.bind(styles);
 
-export const ModalHeader = ({ text, onClose }) => (
-  <div className={cx('header')}>
-    <span className={cx('title')}>{text}</span>
-    <div className={cx('close-icon')} onClick={onClose}>
-      <span className={cx('close-icon-prefix')}>Esc</span>
-      {Parser(CloseIcon)}
+export const ModalFooter = ({ buttons, infoBlock }) => (
+  <div className={cx('container')}>
+    {infoBlock && infoBlock}
+    <div className={cx('buttons-bar')}>
+      <span className={cx('button')}>{buttons.cancelButton}</span>
+      {buttons.okButton}
     </div>
   </div>
 );
-ModalHeader.propTypes = {
-  text: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-  onClose: PropTypes.func,
+ModalFooter.propTypes = {
+  buttons: PropTypes.object,
+  infoBlock: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
 };
-ModalHeader.defaultProps = {
-  text: '',
-  onClose: () => {},
+ModalFooter.defaultProps = {
+  buttons: null,
+  infoBlock: null,
 };

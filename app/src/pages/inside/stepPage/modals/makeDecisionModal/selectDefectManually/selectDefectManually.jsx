@@ -50,7 +50,6 @@ export const SelectDefectManually = ({
   isBulkOperation,
   setModalState,
   windowSize,
-  collapsedRightSection,
   eventsInfo,
 }) => {
   const { formatMessage } = useIntl();
@@ -179,8 +178,7 @@ export const SelectDefectManually = ({
   const { width } = windowSize;
 
   const getDefectTypeNarrowView = () =>
-    (width < SCREEN_SM_MAX && collapsedRightSection && width > SCREEN_XS_MAX) ||
-    (width < SCREEN_MD_MAX && !collapsedRightSection);
+    (width < SCREEN_SM_MAX && width > SCREEN_XS_MAX) || width < SCREEN_MD_MAX;
 
   return (
     <div className={cx('select-defect-wrapper')}>
@@ -246,7 +244,6 @@ SelectDefectManually.propTypes = {
   isBulkOperation: PropTypes.bool.isRequired,
   setModalState: PropTypes.func.isRequired,
   windowSize: PropTypes.object.isRequired,
-  collapsedRightSection: PropTypes.bool.isRequired,
   eventsInfo: PropTypes.object,
 };
 SelectDefectManually.defaultProps = {

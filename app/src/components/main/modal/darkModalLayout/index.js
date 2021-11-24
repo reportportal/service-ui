@@ -15,3 +15,4 @@
  */
 
 export { DarkModalLayout } from './darkModalLayout';
+export { ModalFooter } from './modalFooter';

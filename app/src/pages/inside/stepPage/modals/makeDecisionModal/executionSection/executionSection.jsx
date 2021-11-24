@@ -39,13 +39,7 @@ import { messages } from '../messages';
 
 const cx = classNames.bind(styles);
 
-export const ExecutionSection = ({
-  modalState,
-  setModalState,
-  isNarrowView,
-  isBulkOperation,
-  eventsInfo,
-}) => {
+export const ExecutionSection = ({ modalState, setModalState, isBulkOperation, eventsInfo }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const activeProject = useSelector(activeProjectSelector);
@@ -178,7 +172,6 @@ export const ExecutionSection = ({
           currentTestItem={currentTestItems[0]}
           modalState={modalState}
           setModalState={setModalState}
-          isNarrowView={isNarrowView}
           eventsInfo={eventsInfo}
           loading={loading}
         />
@@ -189,14 +182,12 @@ export const ExecutionSection = ({
 ExecutionSection.propTypes = {
   modalState: PropTypes.object,
   setModalState: PropTypes.func,
-  isNarrowView: PropTypes.bool,
   isBulkOperation: PropTypes.bool,
   eventsInfo: PropTypes.object,
 };
 ExecutionSection.defaultProps = {
   modalState: {},
   setModalState: () => {},
-  isNarrowView: true,
   isBulkOperation: false,
   eventsInfo: {},
 };
