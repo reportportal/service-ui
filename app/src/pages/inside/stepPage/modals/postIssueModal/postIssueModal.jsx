@@ -44,16 +44,14 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { ISSUE_TYPE_FIELD_KEY } from 'components/integrations/elements/bts/constants';
 import { BtsIntegrationSelector } from 'pages/inside/common/btsIntegrationSelector';
-import { DarkModalLayout } from 'components/main/modal/darkModalLayout';
+import { DarkModalLayout, ModalFooter } from 'components/main/modal/darkModalLayout';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { hideModalAction } from 'controllers/modal';
 import ErrorInlineIcon from 'common/img/error-inline.svg';
 import Parser from 'html-react-parser';
 import { COMMAND_POST_ISSUE } from 'controllers/plugins/uiExtensions/constants';
-import { ItemsList } from '../makeDecisionModal/executionSection/optionsSection/itemsList';
 import { JiraCredentials } from './jiraCredentials';
 import { RallyCredentials } from './rallyCredentials';
-import { Footer } from '../makeDecisionModal/footer';
 import {
   INCLUDE_ATTACHMENTS_KEY,
   INCLUDE_LOGS_KEY,
@@ -473,7 +471,7 @@ export class PostIssueModal extends Component {
       <DarkModalLayout
         headerTitle={formatMessage(messages.postIssue)}
         footer={
-          <Footer
+          <ModalFooter
             infoBlock={
               items.length > 1
                 ? formatMessage(makeDecisionMessages.applyToItems, {
@@ -485,69 +483,67 @@ export class PostIssueModal extends Component {
           />
         }
       >
-        {() => (
-          <form className={cx('post-issue-form', 'dark-view')}>
-            <BtsIntegrationSelector
-              namedBtsIntegrations={namedBtsIntegrations}
-              pluginName={pluginName}
-              integrationId={integrationId}
-              onChangeIntegration={this.onChangeIntegration}
-              onChangePluginName={this.onChangePlugin}
+        <form className={cx('post-issue-form', 'dark-view')}>
+          <BtsIntegrationSelector
+            namedBtsIntegrations={namedBtsIntegrations}
+            pluginName={pluginName}
+            integrationId={integrationId}
+            onChangeIntegration={this.onChangeIntegration}
+            onChangePluginName={this.onChangePlugin}
+            darkView
+          />
+          {fields.length ? (
+            <DynamicFieldsSection
+              withValidation
+              fields={fields}
+              defaultOptionValueKey={getDefaultOptionValueKey(pluginName)}
               darkView
             />
-            {fields.length ? (
-              <DynamicFieldsSection
-                withValidation
-                fields={fields}
-                defaultOptionValueKey={getDefaultOptionValueKey(pluginName)}
-                darkView
-              />
-            ) : (
-              <div className={cx('no-default-properties-message')}>
-                <div className={cx('icon')}>{Parser(ErrorInlineIcon)}</div>
-                <span>{formatMessage(messages.noDefaultPropertiesMessage)}</span>
+          ) : (
+            <div className={cx('no-default-properties-message')}>
+              <div className={cx('icon')}>{Parser(ErrorInlineIcon)}</div>
+              <span>{formatMessage(messages.noDefaultPropertiesMessage)}</span>
+            </div>
+          )}
+          {!this.isBulkOperation && (
+            <div className={cx('include-block-wrapper')}>
+              <h4 className={cx('form-block-header', 'dark-view')}>
+                <span className={cx('header-text', 'dark-view')}>
+                  {formatMessage(messages.includeDataHeader)}
+                </span>
+              </h4>
+              <div className={cx('include-data-block')}>
+                {this.dataFieldsConfig.map((item) => (
+                  <FieldProvider
+                    key={item.name}
+                    name={item.name}
+                    format={Boolean}
+                    onChange={(e) => this.trackFieldClick(e, item.eventFn)}
+                  >
+                    <InputCheckbox>
+                      <span className={cx('switch-field-label', 'dark-view')}>{item.title}</span>
+                    </InputCheckbox>
+                  </FieldProvider>
+                ))}
               </div>
-            )}
-            {!this.isBulkOperation && (
-              <div className={cx('include-block-wrapper')}>
-                <h4 className={cx('form-block-header', 'dark-view')}>
-                  <span className={cx('header-text', 'dark-view')}>
-                    {formatMessage(messages.includeDataHeader)}
-                  </span>
-                </h4>
-                <div className={cx('include-data-block')}>
-                  {this.dataFieldsConfig.map((item) => (
-                    <FieldProvider
-                      key={item.name}
-                      name={item.name}
-                      format={Boolean}
-                      onChange={(e) => this.trackFieldClick(e, item.eventFn)}
-                    >
-                      <InputCheckbox>
-                        <span className={cx('switch-field-label', 'dark-view')}>{item.title}</span>
-                      </InputCheckbox>
-                    </FieldProvider>
-                  ))}
-                </div>
+            </div>
+          )}
+          {currentExtension && <currentExtension.component />}
+          {CredentialsComponent && (
+            <div className={cx('credentials-block-wrapper', { expanded })}>
+              <h4 className={cx('form-block-header', 'dark-view')}>
+                <span onClick={this.expandCredentials} className={cx('header-text', 'dark-view')}>
+                  {formatMessage(messages.credentialsHeader, {
+                    system: pluginName,
+                  })}
+                </span>
+              </h4>
+              <div className={cx('credentials-block', { expand: wasExpanded })}>
+                <CredentialsComponent darkView />
               </div>
-            )}
-            {currentExtension && <currentExtension.component />}
-            {CredentialsComponent && (
-              <div className={cx('credentials-block-wrapper', { expanded })}>
-                <h4 className={cx('form-block-header', 'dark-view')}>
-                  <span onClick={this.expandCredentials} className={cx('header-text', 'dark-view')}>
-                    {formatMessage(messages.credentialsHeader, {
-                      system: pluginName,
-                    })}
-                  </span>
-                </h4>
-                <div className={cx('credentials-block', { expand: wasExpanded })}>
-                  <CredentialsComponent darkView />
-                </div>
-              </div>
-            )}
-          </form>
-        )}
+            </div>
+          )}
+        </form>
       </DarkModalLayout>
     );
   }

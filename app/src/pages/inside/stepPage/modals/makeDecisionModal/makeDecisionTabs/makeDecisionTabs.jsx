@@ -104,7 +104,7 @@ export const MakeDecisionTabs = ({
   };
 
   return (
-    <div className={cx('make-decision-tabs', { 'margin-top-10': isBulkOperation })}>
+    <div className={cx('make-decision-tabs', { 'bulk-operation': isBulkOperation })}>
       {(!isBulkOperation || isMLSuggestionsAvailable) && (
         <div className={cx('tabs')}>
           <div

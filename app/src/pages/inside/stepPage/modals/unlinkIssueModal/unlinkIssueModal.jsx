@@ -29,10 +29,9 @@ import {
 } from 'controllers/notification';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { DarkModalLayout } from 'components/main/modal/darkModalLayout';
+import { DarkModalLayout, ModalFooter } from 'components/main/modal/darkModalLayout';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { hideModalAction } from 'controllers/modal';
-import { Footer } from 'pages/inside/stepPage/modals/makeDecisionModal/footer';
 import { messages as makeDecisionMessages } from 'pages/inside/stepPage/modals/makeDecisionModal/messages';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import styles from './unlinkIssueModal.scss';
@@ -152,7 +151,7 @@ export class UnlinkIssueModal extends Component {
       <DarkModalLayout
         headerTitle={formatMessage(messages.unlinkIssue)}
         footer={
-          <Footer
+          <ModalFooter
             infoBlock={
               items.length > 1
                 ? formatMessage(makeDecisionMessages.applyToItems, {
@@ -164,9 +163,7 @@ export class UnlinkIssueModal extends Component {
           />
         }
       >
-        {() => (
-          <p className={cx('main-text')}>{formatMessage(messages.unlinkModalConfirmationText)}</p>
-        )}
+        <p className={cx('main-text')}>{formatMessage(messages.unlinkModalConfirmationText)}</p>
       </DarkModalLayout>
     );
   }

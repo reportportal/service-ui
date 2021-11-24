@@ -21,7 +21,7 @@ import { hideModalAction, withModal } from 'controllers/modal';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
-import { DarkModalLayout } from 'components/main/modal/darkModalLayout';
+import { DarkModalLayout, ModalFooter } from 'components/main/modal/darkModalLayout';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { activeProjectSelector } from 'controllers/user';
 import isEqual from 'fast-deep-equal';
@@ -34,6 +34,7 @@ import { analyzerExtensionsSelector } from 'controllers/appInfo';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import { actionMessages } from 'common/constants/localization/eventsLocalization';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { useWindowResize } from 'common/hooks';
 import { MachineLearningSuggestions } from './machineLearningSuggestions';
 import { MakeDecisionTabs } from './makeDecisionTabs';
 import { messages } from './messages';
@@ -51,7 +52,7 @@ import {
 import { SelectDefectManually } from './selectDefectManually';
 import { CopyFromHistoryLine } from './copyFromHistoryLine';
 import { ExecutionSection } from './executionSection';
-import { Footer, InfoBlock } from './footer';
+import { InfoBlock } from './elements/infoBlock';
 
 const MakeDecision = ({ data }) => {
   const { formatMessage } = useIntl();
@@ -88,6 +89,7 @@ const MakeDecision = ({ data }) => {
     ),
   });
   const [activeTab, setActiveTab] = useState(SELECT_DEFECT_MANUALLY);
+  const windowSize = useWindowResize();
 
   const [modalHasChanges, setModalHasChanges] = useState(false);
   const [loadingMLSuggest, setLoadingMLSuggest] = useState(false);
@@ -358,7 +360,7 @@ const MakeDecision = ({ data }) => {
     ),
   });
 
-  const getMakeDecisionTabs = (windowSize) => {
+  const getMakeDecisionTabs = () => {
     const preparedHistoryLineItems = historyItems.filter(
       (item) =>
         item.issue &&
@@ -462,29 +464,27 @@ const MakeDecision = ({ data }) => {
         />
       }
       footer={
-        <Footer
+        <ModalFooter
           buttons={getFooterButtons()}
           modalState={modalState}
-          infoBlock={InfoBlock}
+          infoBlock={<InfoBlock modalState={modalState} isBulkOperation={isBulkOperation} />}
           isBulkOperation={isBulkOperation}
         />
       }
       eventsInfo={layoutEventsInfo}
     >
-      {({ windowSize }) => (
-        <MakeDecisionTabs
-          tabs={getMakeDecisionTabs(windowSize)}
-          toggleTab={setActiveTab}
-          suggestedItems={modalState.suggestedItems}
-          loadingMLSuggest={loadingMLSuggest}
-          modalState={modalState}
-          setModalState={setModalState}
-          itemData={itemData}
-          isBulkOperation={isBulkOperation}
-          isAnalyzerAvailable={isAnalyzerAvailable}
-          isMLSuggestionsAvailable={isMLSuggestionsAvailable}
-        />
-      )}
+      <MakeDecisionTabs
+        tabs={getMakeDecisionTabs(windowSize)}
+        toggleTab={setActiveTab}
+        suggestedItems={modalState.suggestedItems}
+        loadingMLSuggest={loadingMLSuggest}
+        modalState={modalState}
+        setModalState={setModalState}
+        itemData={itemData}
+        isBulkOperation={isBulkOperation}
+        isAnalyzerAvailable={isAnalyzerAvailable}
+        isMLSuggestionsAvailable={isMLSuggestionsAvailable}
+      />
     </DarkModalLayout>
   );
 };

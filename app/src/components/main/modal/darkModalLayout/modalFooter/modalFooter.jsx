@@ -17,37 +17,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import styles from './footer.scss';
+import styles from './modalFooter.scss';
 
 const cx = classNames.bind(styles);
 
-export const Footer = ({ modalState, buttons, infoBlock, isBulkOperation }) => {
-  const InfoComponent = infoBlock;
-
-  return (
-    <div className={cx('container')}>
-      {infoBlock &&
-        (typeof infoBlock === 'string' ? (
-          infoBlock
-        ) : (
-          <InfoComponent modalState={modalState} isBulkOperation={isBulkOperation} />
-        ))}
-      <div className={cx('buttons-bar')}>
-        <span className={cx('button')}>{buttons.cancelButton}</span>
-        {buttons.okButton}
-      </div>
+export const ModalFooter = ({ buttons, infoBlock }) => (
+  <div className={cx('container')}>
+    {infoBlock && infoBlock}
+    <div className={cx('buttons-bar')}>
+      <span className={cx('button')}>{buttons.cancelButton}</span>
+      {buttons.okButton}
     </div>
-  );
-};
-Footer.propTypes = {
-  modalState: PropTypes.object,
+  </div>
+);
+ModalFooter.propTypes = {
   buttons: PropTypes.object,
-  infoBlock: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-  isBulkOperation: PropTypes.bool,
+  infoBlock: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
 };
-Footer.defaultProps = {
-  modalState: {},
-  buttons: {},
+ModalFooter.defaultProps = {
+  buttons: null,
   infoBlock: null,
-  isBulkOperation: false,
 };

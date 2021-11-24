@@ -31,12 +31,11 @@ import { fetch } from 'common/utils/fetch';
 import { updateSessionItem } from 'common/utils/storageUtils';
 import { RALLY } from 'common/constants/pluginNames';
 import { BtsIntegrationSelector } from 'pages/inside/common/btsIntegrationSelector';
-import { DarkModalLayout } from 'components/main/modal/darkModalLayout';
+import { DarkModalLayout, ModalFooter } from 'components/main/modal/darkModalLayout';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { hideModalAction } from 'controllers/modal';
 import { getDefaultIssueModalConfig } from '../postIssueModal/utils';
 import { LinkIssueFields } from './linkIssueFields';
-import { Footer } from '../makeDecisionModal/footer';
 import { messages as makeDecisionMessages } from '../makeDecisionModal/messages';
 import styles from './linkIssueModal.scss';
 
@@ -175,7 +174,6 @@ export class LinkIssueModal extends Component {
   };
 
   onLink = () => {
-    this.props.hideModalAction();
     this.props.handleSubmit(this.onFormSubmit)();
   };
 
@@ -241,7 +239,7 @@ export class LinkIssueModal extends Component {
       <DarkModalLayout
         headerTitle={formatMessage(messages.linkIssue)}
         footer={
-          <Footer
+          <ModalFooter
             infoBlock={
               items.length > 1
                 ? formatMessage(makeDecisionMessages.applyToItems, {
@@ -253,26 +251,24 @@ export class LinkIssueModal extends Component {
           />
         }
       >
-        {() => (
-          <form className={cx('form')}>
-            <BtsIntegrationSelector
-              namedBtsIntegrations={namedBtsIntegrations}
-              pluginName={pluginName}
-              integrationId={integrationId}
-              onChangeIntegration={this.onChangeIntegration}
-              onChangePluginName={this.onChangePlugin}
-              darkView
-            />
-            <FieldArray
-              name="issues"
-              change={change}
-              component={LinkIssueFields}
-              addEventInfo={eventsInfo.addNewIssue}
-              withAutocomplete={pluginName !== RALLY}
-              darkView
-            />
-          </form>
-        )}
+        <form className={cx('form')}>
+          <BtsIntegrationSelector
+            namedBtsIntegrations={namedBtsIntegrations}
+            pluginName={pluginName}
+            integrationId={integrationId}
+            onChangeIntegration={this.onChangeIntegration}
+            onChangePluginName={this.onChangePlugin}
+            darkView
+          />
+          <FieldArray
+            name="issues"
+            change={change}
+            component={LinkIssueFields}
+            addEventInfo={eventsInfo.addNewIssue}
+            withAutocomplete={pluginName !== RALLY}
+            darkView
+          />
+        </form>
       </DarkModalLayout>
     );
   }

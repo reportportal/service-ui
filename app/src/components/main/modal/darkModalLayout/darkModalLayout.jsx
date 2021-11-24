@@ -22,7 +22,6 @@ import { useTracking } from 'react-tracking';
 import { hideModalAction } from 'controllers/modal';
 import ErrorInlineIcon from 'common/img/error-inline.svg';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { useWindowResize } from 'common/hooks';
 import { ModalHeader } from './modalHeader';
 import { ModalNote } from './modalNote';
 import styles from './darkModalLayout.scss';
@@ -44,7 +43,6 @@ export const DarkModalLayout = ({
   const [isCtrlEnterPress, setIsCtrlEnterPress] = useState(false);
   const dispatch = useDispatch();
   const wrapperRef = useRef();
-  const windowSize = useWindowResize();
 
   const closeModalWindow = () => {
     dispatch(hideModalAction());
@@ -94,10 +92,10 @@ export const DarkModalLayout = ({
               </ScrollWrapper>
             </div>
           )}
-          <div className={cx('layout', { [`black-background`]: !sideSection })}>
+          <div className={cx('layout', { 'deep-black': !sideSection })}>
             <ModalHeader text={headerTitle} onClose={closeModalWindow} />
             <ScrollWrapper hideTracksWhenNotNeeded autoHide>
-              {children({ windowSize })}
+              {children}
               <div className={cx('note-row')}>
                 {modalNote && clickOutside && modalHasChanges && (
                   <ModalNote message={modalNote} icon={ErrorInlineIcon} status={'error'} />
@@ -113,7 +111,7 @@ export const DarkModalLayout = ({
 };
 DarkModalLayout.propTypes = {
   headerTitle: PropTypes.string,
-  children: PropTypes.func,
+  children: PropTypes.node,
   modalHasChanges: PropTypes.bool,
   hotKeyAction: PropTypes.objectOf(PropTypes.func),
   modalNote: PropTypes.string,
@@ -123,7 +121,7 @@ DarkModalLayout.propTypes = {
 };
 DarkModalLayout.defaultProps = {
   headerTitle: '',
-  children: () => {},
+  children: null,
   modalHasChanges: false,
   hotKeyAction: {},
   modalNote: '',
