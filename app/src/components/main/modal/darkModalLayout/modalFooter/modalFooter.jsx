@@ -21,8 +21,8 @@ import styles from './modalFooter.scss';
 
 const cx = classNames.bind(styles);
 
-export const ModalFooter = ({ buttons, infoBlock }) => (
-  <div className={cx('container')}>
+export const ModalFooter = ({ buttons, infoBlock, className }) => (
+  <div className={cx('container', className.footerContainer)}>
     {infoBlock && infoBlock}
     <div className={cx('buttons-bar')}>
       <span className={cx('button')}>{buttons.cancelButton}</span>
@@ -33,8 +33,10 @@ export const ModalFooter = ({ buttons, infoBlock }) => (
 ModalFooter.propTypes = {
   buttons: PropTypes.object,
   infoBlock: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
+  className: PropTypes.object,
 };
 ModalFooter.defaultProps = {
   buttons: null,
   infoBlock: null,
+  className: {},
 };

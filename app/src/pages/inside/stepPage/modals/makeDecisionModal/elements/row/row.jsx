@@ -14,5 +14,27 @@
  * limitations under the License.
  */
 
-export { useWindowResize } from './useWindowResize';
-export { useOnClickOutside } from './useOnClickOutside';
+import React from 'react';
+import PropTypes from 'prop-types';
+import Parser from 'html-react-parser';
+import classNames from 'classnames/bind';
+import ReplaceIcon from '../img/replace-inline.svg';
+import styles from './row.scss';
+
+const cx = classNames.bind(styles);
+
+export const Row = ({ text, children }) => (
+  <div className={cx('row')}>
+    {Parser(ReplaceIcon)}
+    <span className={cx('row-text')}>{text}</span>
+    {children && children}
+  </div>
+);
+Row.propTypes = {
+  text: PropTypes.string,
+  children: PropTypes.node,
+};
+Row.defaultProps = {
+  text: '',
+  children: null,
+};

@@ -14,5 +14,4 @@
  * limitations under the License.
  */
 
-export { useWindowResize } from './useWindowResize';
-export { useOnClickOutside } from './useOnClickOutside';
+export { Dropdown } from './dropdown';

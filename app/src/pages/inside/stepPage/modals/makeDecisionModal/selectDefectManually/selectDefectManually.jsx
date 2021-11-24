@@ -87,7 +87,7 @@ export const SelectDefectManually = ({
     trackEvent(toggleIgnoreAASwitcher(defectFromTIGroup, e.target.checked));
   };
   const handleDefectCommentChange = (value) => {
-    handleManualChange({ comment: value });
+    handleManualChange({ comment: value.trim() });
   };
 
   const getActionItems = () => {
@@ -221,11 +221,7 @@ export const SelectDefectManually = ({
             onClickToolbarIcon:
               eventsInfo.onClickEditorIcon && eventsInfo.onClickEditorIcon(defectFromTIGroup),
           }}
-          placeholder={formatMessage(
-            isBulkOperation
-              ? messages.defectCommentBulkOperationPlaceholder
-              : messages.defectCommentPlaceholder,
-          )}
+          placeholder={formatMessage(messages.defectCommentPlaceholder)}
           mode="dark"
         />
       </div>

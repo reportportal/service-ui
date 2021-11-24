@@ -30,6 +30,10 @@ export const LOW = 40;
 export const RADIO_TEST_ITEM_DETAILS = 'radioTestItemDetails';
 export const CHECKBOX_TEST_ITEM_DETAILS = 'checkboxTestItemDetails';
 export const DEFAULT_TEST_ITEM_DETAILS = 'defaultTestItemDetails';
+export const CLEAR_FOR_ALL = 'clearForAll';
+export const NOT_CHANGED_FOR_ALL = 'notChangedForAll';
+export const ADD_FOR_ALL = 'addForAll';
+export const REPLACE_FOR_ALL = 'replaceForAll';
 
 export const SEARCH_MODES = {
   CURRENT_LAUNCH,

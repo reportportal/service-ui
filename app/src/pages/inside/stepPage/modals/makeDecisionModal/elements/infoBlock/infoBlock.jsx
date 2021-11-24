@@ -14,43 +14,113 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
+import { DefectTypeItem } from 'pages/inside/common/defectTypeItem';
+import { IssueList } from 'pages/inside/stepPage/stepGrid/defectType/issueList';
+import { UNLINK_ISSUE } from 'common/constants/actionTypes';
+import { Row } from '../row';
+import { CommentSection } from '../commentSection';
+import { ACTIVE_TAB_MAP, SELECT_DEFECT_MANUALLY } from '../../constants';
 import { messages } from '../../messages';
 import styles from './infoBlock.scss';
 
 const cx = classNames.bind(styles);
 
-export const InfoBlock = ({ modalState, isBulkOperation }) => {
+export const InfoBlock = ({ modalState, setModalState, isBulkOperation, expanded, onToggle }) => {
   const { formatMessage } = useIntl();
-  const [expanded, setExpanded] = useState(false);
+  const { decisionType, issueActionType } = modalState;
+  const currentSource = modalState[ACTIVE_TAB_MAP[decisionType]].issue;
+
   const testItemsLength = isBulkOperation
     ? modalState.currentTestItems.length
     : modalState.selectedItems.length + modalState.currentTestItems.length;
+  const defectTypeChanged =
+    currentSource.issueType &&
+    modalState.currentTestItems.some((item) => item.issue.issueType !== currentSource.issueType);
+  const externalIssue =
+    (modalState.decisionType !== SELECT_DEFECT_MANUALLY &&
+      !!currentSource.externalSystemIssues.length &&
+      currentSource.externalSystemIssues) ||
+    [];
+  const ignoreInAAChanged =
+    !isBulkOperation &&
+    currentSource.ignoreAnalyzer !== modalState.currentTestItems[0].issue.ignoreAnalyzer;
 
   return (
     <div className={cx('container', { expanded })}>
-      <div className={cx('header')} onClick={() => setExpanded(!expanded)}>
+      <div className={cx('header', { expanded })} onClick={onToggle}>
         <span className={cx('arrow', { expanded })} />
-        <span className={cx('header-text', { expanded })}>
-          {testItemsLength > 1
-            ? formatMessage(messages.applyToItems, {
-                itemsCount: testItemsLength,
-              })
-            : formatMessage(messages.applyToItem)}
-        </span>
+        {formatMessage(messages.followingResult, {
+          items: (
+            <span className={cx('bold')} key={0}>
+              {testItemsLength > 1
+                ? formatMessage(messages.itemsCount, { count: testItemsLength })
+                : formatMessage(messages.item)}
+            </span>
+          ),
+        })}
       </div>
-      {expanded && <div>TBD</div>}
+      {expanded && (
+        <div className={cx('result-container')}>
+          {defectTypeChanged && (
+            <Row text={formatMessage(messages.defectReplaceWith)}>
+              <DefectTypeItem type={currentSource.issueType} className={cx('defect-type')} />
+              {ignoreInAAChanged &&
+                decisionType === SELECT_DEFECT_MANUALLY &&
+                `${formatMessage(messages.and)} ${formatMessage(
+                  currentSource.ignoreAnalyzer
+                    ? messages.defectIgnoreInAa
+                    : messages.defectIncludeInAa,
+                )}`}
+            </Row>
+          )}
+          {!defectTypeChanged && ignoreInAAChanged && (
+            <Row
+              text={formatMessage(
+                currentSource.ignoreAnalyzer
+                  ? messages.defectIgnoreInAa
+                  : messages.defectIncludeInAa,
+              ).replace(/^./, (str) => str.toUpperCase())}
+            />
+          )}
+          {!!externalIssue.length && (
+            <Row text={formatMessage(messages.linkReplacedWith)}>
+              <IssueList issues={externalIssue} className={cx('issue')} readOnly />
+            </Row>
+          )}
+          {issueActionType && (
+            <Row
+              text={formatMessage(
+                issueActionType === UNLINK_ISSUE
+                  ? messages.linkRemovedOnNextStep
+                  : messages.linkAddedOnNextStep,
+              )}
+            />
+          )}
+          <CommentSection
+            modalState={modalState}
+            setModalState={setModalState}
+            isBulkOperation={isBulkOperation}
+          />
+        </div>
+      )}
     </div>
   );
 };
 InfoBlock.propTypes = {
   modalState: PropTypes.object,
+  setModalState: PropTypes.func,
   isBulkOperation: PropTypes.bool,
+  expanded: PropTypes.bool,
+  onToggle: PropTypes.func,
 };
 InfoBlock.defaultProps = {
   modalState: {},
+  setModalState: () => {},
   isBulkOperation: false,
+  expanded: false,
+  onToggle: () => {},
 };

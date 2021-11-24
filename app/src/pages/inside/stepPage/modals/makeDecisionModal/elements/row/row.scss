@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright 2021 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,5 +14,21 @@
  * limitations under the License.
  */
 
-export { useWindowResize } from './useWindowResize';
-export { useOnClickOutside } from './useOnClickOutside';
+.row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-left: 34px;
+  font-family: $FONT-REGULAR;
+
+  & svg {
+    flex-shrink: 0;
+    width: 15px;
+    height: 15px;
+    margin-right: 20px;
+  }
+
+  &-text {
+    flex-shrink: 0;
+  }
+}
