@@ -45,6 +45,8 @@ import {
   ANALYZER_ENABLED,
   ANALYZER_MODE,
   SEARCH_LOGS_MIN_SHOULD_MATCH,
+  UNIQUE_ERROR_ENABLED,
+  UNIQUE_ERROR_REMOVE_NUMBERS,
 } from './constants';
 import styles from './autoAnalysisTab.scss';
 
@@ -132,6 +134,10 @@ export class AutoAnalysisTab extends Component {
     return {
       [ANALYZER_ENABLED]: JSON.parse(analyzerConfiguration[ANALYZER_ENABLED] || 'false'),
       [ANALYZER_MODE]: analyzerConfiguration[ANALYZER_MODE],
+      [UNIQUE_ERROR_ENABLED]: JSON.parse(analyzerConfiguration[UNIQUE_ERROR_ENABLED] || 'false'),
+      [UNIQUE_ERROR_REMOVE_NUMBERS]: JSON.parse(
+        analyzerConfiguration[UNIQUE_ERROR_REMOVE_NUMBERS] || 'false',
+      ),
     };
   };
 

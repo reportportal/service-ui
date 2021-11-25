@@ -333,6 +333,26 @@ export const SETTINGS_PAGE_EVENTS = {
     action: 'Click on Auto-Analysis OFF in Auto-Analysis tab',
     label: 'Auto-Analysis OFF',
   },
+  UNIQUE_ERROR_SWITCHER_ON: {
+    category: SETTINGS_PAGE,
+    action: 'Click on Unique error auto-analysis ON in Auto-Analysis tab',
+    label: 'Unique error auto-analysis ON',
+  },
+  UNIQUE_ERROR_SWITCHER_OFF: {
+    category: SETTINGS_PAGE,
+    action: 'Click on Unique error auto-analysis OFF in Auto-Analysis tab',
+    label: 'Unique error auto-analysis OFF',
+  },
+  UNIQUE_ERRORS_REMOVE_NUMBERS_INCLUDE: {
+    category: SETTINGS_PAGE,
+    action: 'Include numbers to analyzed logs selected in Auto-Analysis tab',
+    label: 'Include numbers to analyzed logs',
+  },
+  UNIQUE_ERRORS_REMOVE_NUMBERS_EXCLUDE: {
+    category: SETTINGS_PAGE,
+    action: 'Exclude numbers from analyzed logs selected in Auto-Analysis tab',
+    label: 'Exclude numbers from analyzed logs',
+  },
   autoAnalysisBase: (base) => ({
     category: SETTINGS_PAGE,
     action: 'Choose radio Btn of Base for Auto-Analysis',

@@ -23,8 +23,15 @@ import Parser from 'html-react-parser';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
 import { InputRadio } from 'components/inputs/inputRadio';
 import { FormField } from 'components/fields/formField';
+import { InputDropdown } from 'components/inputs/inputDropdown';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { ANALYZER_ENABLED, ANALYZER_MODE } from '../../constants';
+import { messages as importMessages } from 'pages/inside/uniqueErrorsPage';
+import {
+  ANALYZER_ENABLED,
+  ANALYZER_MODE,
+  UNIQUE_ERROR_ENABLED,
+  UNIQUE_ERROR_REMOVE_NUMBERS,
+} from '../../constants';
 import styles from './strategyBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -61,6 +68,19 @@ const messages = defineMessages({
     defaultMessage:
       'The test items are analyzed on base of previously investigated data in all launches',
   },
+  uniqueErrorAutoAnalysisSwitcherTitle: {
+    id: 'StrategyBlock.uniqueErrorAutoAnalysisSwitcherTitle',
+    defaultMessage: 'Unique error auto-analysis',
+  },
+  uniqueErrorAutoAnalysisStatusInfo: {
+    id: 'StrategyBlock.uniqueErrorAutoAnalysisStatusInfo',
+    defaultMessage:
+      'If ON - analysis starts as soon as any launch finished<br/>If OFF - not automatic, but can be invoked manually',
+  },
+  serviceAnalyzerDisabledTooltip: {
+    id: 'StrategyBlock.serviceAnalyzerDisabledTooltip',
+    defaultMessage: 'Service analyzer is not running',
+  },
 });
 
 @injectIntl
@@ -70,6 +90,8 @@ export class StrategyBlock extends Component {
     intl: PropTypes.object.isRequired,
     disabled: PropTypes.bool,
     data: PropTypes.object,
+    uniqueErrorAutoAnalysisDisabled: PropTypes.bool,
+    uniqueErrorsRemoveNumbersDisabled: PropTypes.bool,
     onFormSubmit: PropTypes.func,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -80,6 +102,8 @@ export class StrategyBlock extends Component {
   static defaultProps = {
     disabled: false,
     data: {},
+    uniqueErrorAutoAnalysisDisabled: false,
+    uniqueErrorsRemoveNumbersDisabled: false,
     onFormSubmit: () => {},
   };
 
@@ -101,12 +125,43 @@ export class StrategyBlock extends Component {
     tracking.trackEvent(SETTINGS_PAGE_EVENTS.autoAnalysisBase(event.target.value));
   };
 
+  changeUniqueErrorAutoAnalysisEnabled = (value) => {
+    const { tracking, onFormSubmit } = this.props;
+    onFormSubmit({
+      [UNIQUE_ERROR_ENABLED]: value,
+    });
+    value
+      ? tracking.trackEvent(SETTINGS_PAGE_EVENTS.UNIQUE_ERROR_SWITCHER_ON)
+      : tracking.trackEvent(SETTINGS_PAGE_EVENTS.UNIQUE_ERROR_SWITCHER_OFF);
+  };
+
+  changeUniqueErrorsRemoveNumbersEnabled = (value) => {
+    const { tracking, onFormSubmit } = this.props;
+    onFormSubmit({
+      [UNIQUE_ERROR_REMOVE_NUMBERS]: value,
+    });
+    value
+      ? tracking.trackEvent(SETTINGS_PAGE_EVENTS.UNIQUE_ERRORS_REMOVE_NUMBERS_EXCLUDE)
+      : tracking.trackEvent(SETTINGS_PAGE_EVENTS.UNIQUE_ERRORS_REMOVE_NUMBERS_INCLUDE);
+  };
+
   render() {
     const {
       intl: { formatMessage },
       disabled,
       data,
+      uniqueErrorAutoAnalysisDisabled,
+      uniqueErrorsRemoveNumbersDisabled,
     } = this.props;
+
+    const options = [
+      { label: formatMessage(importMessages.uniqueErrAnalyzeModalIncludeNumbers), value: false },
+      { label: formatMessage(importMessages.uniqueErrAnalyzeModalExcludeNumbers), value: true },
+    ];
+
+    const tooltip = !data[UNIQUE_ERROR_ENABLED]
+      ? formatMessage(messages.serviceAnalyzerDisabledTooltip)
+      : '';
 
     return (
       <div className={cx('strategy-block')}>
@@ -172,6 +227,41 @@ export class StrategyBlock extends Component {
               {formatMessage(messages.allLaunchesCaption)}
             </span>
           </InputRadio>
+        </FormField>
+
+        <FormField
+          fieldWrapperClassName={cx('switcher-wrapper')}
+          label={formatMessage(messages.uniqueErrorAutoAnalysisSwitcherTitle)}
+          customBlock={{
+            node: <p>{Parser(formatMessage(messages.uniqueErrorAutoAnalysisStatusInfo))}</p>,
+          }}
+          withoutProvider
+        >
+          <InputBigSwitcher
+            value={data[UNIQUE_ERROR_ENABLED]}
+            onChange={this.changeUniqueErrorAutoAnalysisEnabled}
+            disabled={uniqueErrorAutoAnalysisDisabled}
+            mobileDisabled
+            title={tooltip}
+          />
+        </FormField>
+
+        <FormField
+          fieldWrapperClassName={cx('unique-errors-remove-numbers')}
+          label={formatMessage(importMessages.uniqueErrAnalyzeModalFieldName)}
+          withoutProvider
+        >
+          <InputDropdown
+            value={data[UNIQUE_ERROR_REMOVE_NUMBERS]}
+            options={options}
+            disabled={
+              uniqueErrorsRemoveNumbersDisabled ||
+              uniqueErrorAutoAnalysisDisabled ||
+              !data[UNIQUE_ERROR_ENABLED]
+            }
+            onChange={this.changeUniqueErrorsRemoveNumbersEnabled}
+            title={tooltip}
+          />
         </FormField>
       </div>
     );

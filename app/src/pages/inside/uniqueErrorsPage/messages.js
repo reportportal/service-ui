@@ -49,7 +49,7 @@ export const messages = defineMessages({
   },
   uniqueErrAnalyzeModalIncludeNumbers: {
     id: 'EmptyUniqueErrsAnalyzeModal.includeNumbers',
-    defaultMessage: 'Include number to analyzed logs',
+    defaultMessage: 'Include numbers to analyzed logs',
   },
   uniqueErrAnalyzeModalExcludeNumbers: {
     id: 'EmptyUniqueErrsAnalyzeModal.excludeNumbers',
