@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
@@ -23,8 +23,7 @@ import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import { activeFilterSelector } from 'controllers/filter';
 import { historyItemsSelector } from 'controllers/log';
 import { analyzerExtensionsSelector } from 'controllers/appInfo';
-import { useOnClickOutside } from 'common/hooks';
-import { Dropdown } from '../../../elements/dropdown';
+import { InputDropdownRadio } from '../../../elements/inputDropdownRadio';
 import {
   ALL_LOADED_TI_FROM_HISTORY_LINE,
   CURRENT_EXECUTION_ONLY,
@@ -47,9 +46,6 @@ export const OptionsBlock = ({
   const activeFilter = useSelector(activeFilterSelector);
   const historyItems = useSelector(historyItemsSelector);
   const [expanded, setOptionsState] = useState(false);
-  const wrapperRef = useRef();
-  const clickOutside = () => setOptionsState(false);
-  useOnClickOutside(wrapperRef, clickOutside);
   const isAnalyzerAvailable = !!useSelector(analyzerExtensionsSelector).length;
   const defectFromTIGroup = currentTestItem.issue.issueType.startsWith(
     TO_INVESTIGATE_LOCATOR_PREFIX,
@@ -133,8 +129,8 @@ export const OptionsBlock = ({
     },
   );
   return (
-    <Dropdown
-      wrapperRef={wrapperRef}
+    <InputDropdownRadio
+      outsideClickHandler={() => setOptionsState(false)}
       expanded={expanded}
       onToggle={onToggle}
       selectedOption={selectedOption}

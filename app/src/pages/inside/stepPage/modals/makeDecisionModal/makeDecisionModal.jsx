@@ -35,9 +35,9 @@ import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import { actionMessages } from 'common/constants/localization/eventsLocalization';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useWindowResize } from 'common/hooks';
-import { MakeDecisionFooter } from './elements/makeDecisionFooter';
-import { MachineLearningSuggestions } from './machineLearningSuggestions';
+import { MakeDecisionFooter } from './makeDecisionFooter';
 import { MakeDecisionTabs } from './makeDecisionTabs';
+import { MachineLearningSuggestions, SelectDefectManually, CopyFromHistoryLine } from './tabs';
 import { messages } from './messages';
 import {
   ACTIVE_TAB_MAP,
@@ -54,8 +54,6 @@ import {
   SELECT_DEFECT_MANUALLY,
   SHOW_LOGS_BY_DEFAULT,
 } from './constants';
-import { SelectDefectManually } from './selectDefectManually';
-import { CopyFromHistoryLine } from './copyFromHistoryLine';
 import { ExecutionSection } from './executionSection';
 
 const MakeDecision = ({ data }) => {

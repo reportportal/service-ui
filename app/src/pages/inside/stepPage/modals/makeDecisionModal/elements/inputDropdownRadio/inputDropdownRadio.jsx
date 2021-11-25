@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
-import { InputRadioGroup } from 'components/inputs/inputRadioGroup';
 import classNames from 'classnames/bind';
-import styles from './dropdown.scss';
+import { useOnClickOutside } from 'common/hooks';
+import { InputRadioGroup } from 'components/inputs/inputRadioGroup';
+import styles from './inputDropdownRadio.scss';
 
 const cx = classNames.bind(styles);
 
-export const Dropdown = ({
-  wrapperRef,
+export const InputDropdownRadio = ({
+  outsideClickHandler,
   expanded,
   onToggle,
   selectedOption,
@@ -33,11 +34,11 @@ export const Dropdown = ({
   options,
   className,
 }) => {
+  const ref = useRef();
+  useOnClickOutside(ref, outsideClickHandler);
+
   return (
-    <div
-      ref={wrapperRef}
-      className={cx('wrapper', { opened: expanded }, className.dropdownWrapper)}
-    >
+    <div ref={ref} className={cx('wrapper', { opened: expanded }, className.dropdownWrapper)}>
       <span className={cx('selected-option-block')}>
         <span className={cx('selected-option', className.selectedOption)} onClick={onToggle}>
           {selectedOption}
@@ -62,8 +63,8 @@ export const Dropdown = ({
     </div>
   );
 };
-Dropdown.propTypes = {
-  wrapperRef: PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
+InputDropdownRadio.propTypes = {
+  outsideClickHandler: PropTypes.func,
   expanded: PropTypes.bool,
   onToggle: PropTypes.func,
   selectedOption: PropTypes.string.isRequired,
@@ -73,8 +74,8 @@ Dropdown.propTypes = {
   loading: PropTypes.bool,
   className: PropTypes.object,
 };
-Dropdown.defaultProps = {
-  wrapperRef: {},
+InputDropdownRadio.defaultProps = {
+  outsideClickHandler: () => {},
   expanded: false,
   onToggle: () => {},
   loading: false,

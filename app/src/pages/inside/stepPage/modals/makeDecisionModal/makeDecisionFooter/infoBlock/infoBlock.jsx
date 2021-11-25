@@ -21,8 +21,8 @@ import classNames from 'classnames/bind';
 import { DefectTypeItem } from 'pages/inside/common/defectTypeItem';
 import { IssueList } from 'pages/inside/stepPage/stepGrid/defectType/issueList';
 import { UNLINK_ISSUE } from 'common/constants/actionTypes';
-import { Row } from '../row';
-import { CommentSection } from '../commentSection';
+import { ResultRow } from './resultRow';
+import { CommentSection } from './commentSection';
 import { ACTIVE_TAB_MAP, SELECT_DEFECT_MANUALLY } from '../../constants';
 import { messages } from '../../messages';
 import styles from './infoBlock.scss';
@@ -66,7 +66,7 @@ export const InfoBlock = ({ modalState, setModalState, isBulkOperation, expanded
       {expanded && (
         <div className={cx('result-container')}>
           {defectTypeChanged && (
-            <Row text={formatMessage(messages.defectReplaceWith)}>
+            <ResultRow text={formatMessage(messages.defectReplaceWith)}>
               <DefectTypeItem type={currentSource.issueType} className={cx('defect-type')} />
               {ignoreInAAChanged &&
                 decisionType === SELECT_DEFECT_MANUALLY &&
@@ -75,10 +75,10 @@ export const InfoBlock = ({ modalState, setModalState, isBulkOperation, expanded
                     ? messages.defectIgnoreInAa
                     : messages.defectIncludeInAa,
                 )}`}
-            </Row>
+            </ResultRow>
           )}
           {!defectTypeChanged && ignoreInAAChanged && (
-            <Row
+            <ResultRow
               text={formatMessage(
                 currentSource.ignoreAnalyzer
                   ? messages.defectIgnoreInAa
@@ -87,12 +87,12 @@ export const InfoBlock = ({ modalState, setModalState, isBulkOperation, expanded
             />
           )}
           {!!externalIssue.length && (
-            <Row text={formatMessage(messages.linkReplacedWith)}>
+            <ResultRow text={formatMessage(messages.linkReplacedWith)}>
               <IssueList issues={externalIssue} className={cx('issue')} readOnly />
-            </Row>
+            </ResultRow>
           )}
           {issueActionType && (
-            <Row
+            <ResultRow
               text={formatMessage(
                 issueActionType === UNLINK_ISSUE
                   ? messages.linkRemovedOnNextStep

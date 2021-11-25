@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import { useOnClickOutside } from 'common/hooks';
-import { Dropdown } from '../../elements/dropdown';
-import { messages } from '../../messages';
-import { Row } from '../row';
+import { InputDropdownRadio } from '../../../elements/inputDropdownRadio';
+import { messages } from '../../../messages';
+import { ResultRow } from '../resultRow';
 import {
   ACTIVE_TAB_MAP,
   ADD_FOR_ALL,
@@ -29,18 +28,15 @@ import {
   NOT_CHANGED_FOR_ALL,
   REPLACE_FOR_ALL,
   SELECT_DEFECT_MANUALLY,
-} from '../../constants';
+} from '../../../constants';
 import styles from './commentSection.scss';
 
 const cx = classNames.bind(styles);
 
 const BulkComment = ({ modalState, setModalState }) => {
   const { formatMessage } = useIntl();
-  const wrapperRef = useRef();
   const [expanded, setExpanded] = useState(false);
   const onToggle = () => setExpanded(!expanded);
-  const clickOutside = () => setExpanded(false);
-  useOnClickOutside(wrapperRef, clickOutside);
   const { decisionType } = modalState;
   const untouchedCommentOpt = [
     {
@@ -85,9 +81,9 @@ const BulkComment = ({ modalState, setModalState }) => {
 
   return (
     <>
-      <Row text={formatMessage(messages.commentWill)}>
-        <Dropdown
-          wrapperRef={wrapperRef}
+      <ResultRow text={formatMessage(messages.commentWill)}>
+        <InputDropdownRadio
+          outsideClickHandler={() => setExpanded(false)}
           expanded={expanded}
           onToggle={onToggle}
           selectedOption={formatMessage(messages[modalState.commentOption])}
@@ -101,7 +97,7 @@ const BulkComment = ({ modalState, setModalState }) => {
             arrow: cx('dropdown-arrow'),
           }}
         />
-      </Row>
+      </ResultRow>
       {bulkComment && <div className={cx('comment')}>{bulkComment}</div>}
     </>
   );
@@ -143,7 +139,7 @@ export const CommentSection = ({ modalState, setModalState, isBulkOperation }) =
         <>
           {currentSource.issue.comment !== currentItemComment && (
             <>
-              <Row
+              <ResultRow
                 text={formatMessage(
                   comment ? messages.commentReplaceWith : messages.commentWillRemoved,
                 )}

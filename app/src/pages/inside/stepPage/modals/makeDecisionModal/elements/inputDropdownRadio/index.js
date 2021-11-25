@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { Row } from './row';
+export { InputDropdownRadio } from './inputDropdownRadio';

@@ -18,23 +18,23 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import ReplaceIcon from '../img/replace-inline.svg';
-import styles from './row.scss';
+import ReplaceIcon from 'common/img/replace-inline.svg';
+import styles from './resultRow.scss';
 
 const cx = classNames.bind(styles);
 
-export const Row = ({ text, children }) => (
+export const ResultRow = ({ text, children }) => (
   <div className={cx('row')}>
     {Parser(ReplaceIcon)}
     <span className={cx('row-text')}>{text}</span>
     {children && children}
   </div>
 );
-Row.propTypes = {
+ResultRow.propTypes = {
   text: PropTypes.string,
   children: PropTypes.node,
 };
-Row.defaultProps = {
+ResultRow.defaultProps = {
   text: '',
   children: null,
 };

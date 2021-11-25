@@ -35,7 +35,7 @@ import {
   CHECKBOX_TEST_ITEM_DETAILS,
   DEFAULT_TEST_ITEM_DETAILS,
   RADIO_TEST_ITEM_DETAILS,
-} from '../../constants';
+} from '../../../constants';
 import styles from './itemHeader.scss';
 
 const cx = classNames.bind(styles);

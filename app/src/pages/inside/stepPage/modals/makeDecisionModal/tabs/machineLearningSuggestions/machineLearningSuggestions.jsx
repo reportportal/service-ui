@@ -19,9 +19,9 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
-import { MACHINE_LEARNING_SUGGESTIONS } from '../constants';
-import { TestItemDetails } from '../elements/testItemDetails';
-import { messages } from '../messages';
+import { MACHINE_LEARNING_SUGGESTIONS } from '../../constants';
+import { TestItemDetails } from '../../elements/testItemDetails';
+import { messages } from '../../messages';
 
 export const MachineLearningSuggestions = ({ modalState, itemData, eventsInfo }) => {
   const { formatMessage } = useIntl();

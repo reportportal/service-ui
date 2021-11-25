@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useOnClickOutside } from 'common/hooks';
 import { ModalFooter } from 'components/main/modal/darkModalLayout';
-import { InfoBlock } from 'pages/inside/stepPage/modals/makeDecisionModal/elements/infoBlock';
+import { InfoBlock } from './infoBlock';
 import styles from './makeDecisionFooter.scss';
 
 const cx = classNames.bind(styles);
@@ -34,10 +34,7 @@ export const MakeDecisionFooter = ({
   const [expanded, setExpanded] = useState(false);
   const onToggle = () => setExpanded(!expanded);
   const wrapperRef = useRef();
-  const clickOutside = (event) => {
-    !wrapperRef.current.contains(event.target) && setExpanded(false);
-  };
-  useOnClickOutside(wrapperRef, clickOutside);
+  useOnClickOutside(wrapperRef, () => setExpanded(false));
 
   return (
     <div ref={wrapperRef}>
