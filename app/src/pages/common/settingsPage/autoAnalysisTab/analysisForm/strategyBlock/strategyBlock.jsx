@@ -90,8 +90,6 @@ export class StrategyBlock extends Component {
     intl: PropTypes.object.isRequired,
     disabled: PropTypes.bool,
     data: PropTypes.object,
-    uniqueErrorAutoAnalysisDisabled: PropTypes.bool,
-    uniqueErrorsRemoveNumbersDisabled: PropTypes.bool,
     onFormSubmit: PropTypes.func,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -102,8 +100,6 @@ export class StrategyBlock extends Component {
   static defaultProps = {
     disabled: false,
     data: {},
-    uniqueErrorAutoAnalysisDisabled: false,
-    uniqueErrorsRemoveNumbersDisabled: false,
     onFormSubmit: () => {},
   };
 
@@ -112,9 +108,11 @@ export class StrategyBlock extends Component {
     onFormSubmit({
       [ANALYZER_ENABLED]: value,
     });
-    value
-      ? tracking.trackEvent(SETTINGS_PAGE_EVENTS.AUTO_ANALYSIS_SWITCHER_ON)
-      : tracking.trackEvent(SETTINGS_PAGE_EVENTS.AUTO_ANALYSIS_SWITCHER_OFF);
+    tracking.trackEvent(
+      value
+        ? SETTINGS_PAGE_EVENTS.AUTO_ANALYSIS_SWITCHER_ON
+        : SETTINGS_PAGE_EVENTS.AUTO_ANALYSIS_SWITCHER_OFF,
+    );
   };
 
   changeAnalyzerMode = (event) => {
@@ -130,9 +128,11 @@ export class StrategyBlock extends Component {
     onFormSubmit({
       [UNIQUE_ERROR_ENABLED]: value,
     });
-    value
-      ? tracking.trackEvent(SETTINGS_PAGE_EVENTS.UNIQUE_ERROR_SWITCHER_ON)
-      : tracking.trackEvent(SETTINGS_PAGE_EVENTS.UNIQUE_ERROR_SWITCHER_OFF);
+    tracking.trackEvent(
+      value
+        ? SETTINGS_PAGE_EVENTS.UNIQUE_ERROR_SWITCHER_ON
+        : SETTINGS_PAGE_EVENTS.UNIQUE_ERROR_SWITCHER_OFF,
+    );
   };
 
   changeUniqueErrorsRemoveNumbersEnabled = (value) => {
@@ -140,9 +140,11 @@ export class StrategyBlock extends Component {
     onFormSubmit({
       [UNIQUE_ERROR_REMOVE_NUMBERS]: value,
     });
-    value
-      ? tracking.trackEvent(SETTINGS_PAGE_EVENTS.UNIQUE_ERRORS_REMOVE_NUMBERS_EXCLUDE)
-      : tracking.trackEvent(SETTINGS_PAGE_EVENTS.UNIQUE_ERRORS_REMOVE_NUMBERS_INCLUDE);
+    tracking.trackEvent(
+      value
+        ? SETTINGS_PAGE_EVENTS.UNIQUE_ERRORS_REMOVE_NUMBERS_EXCLUDE
+        : SETTINGS_PAGE_EVENTS.UNIQUE_ERRORS_REMOVE_NUMBERS_INCLUDE,
+    );
   };
 
   render() {
@@ -150,8 +152,6 @@ export class StrategyBlock extends Component {
       intl: { formatMessage },
       disabled,
       data,
-      uniqueErrorAutoAnalysisDisabled,
-      uniqueErrorsRemoveNumbersDisabled,
     } = this.props;
 
     const options = [
@@ -159,9 +159,7 @@ export class StrategyBlock extends Component {
       { label: formatMessage(importMessages.uniqueErrAnalyzeModalExcludeNumbers), value: true },
     ];
 
-    const tooltip = !data[UNIQUE_ERROR_ENABLED]
-      ? formatMessage(messages.serviceAnalyzerDisabledTooltip)
-      : '';
+    const tooltip = disabled ? formatMessage(messages.serviceAnalyzerDisabledTooltip) : '';
 
     return (
       <div className={cx('strategy-block')}>
@@ -240,7 +238,7 @@ export class StrategyBlock extends Component {
           <InputBigSwitcher
             value={data[UNIQUE_ERROR_ENABLED]}
             onChange={this.changeUniqueErrorAutoAnalysisEnabled}
-            disabled={uniqueErrorAutoAnalysisDisabled}
+            disabled={disabled}
             mobileDisabled
             title={tooltip}
           />
@@ -254,13 +252,8 @@ export class StrategyBlock extends Component {
           <InputDropdown
             value={data[UNIQUE_ERROR_REMOVE_NUMBERS]}
             options={options}
-            disabled={
-              uniqueErrorsRemoveNumbersDisabled ||
-              uniqueErrorAutoAnalysisDisabled ||
-              !data[UNIQUE_ERROR_ENABLED]
-            }
+            disabled={disabled}
             onChange={this.changeUniqueErrorsRemoveNumbersEnabled}
-            title={tooltip}
           />
         </FormField>
       </div>

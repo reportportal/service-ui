@@ -44,7 +44,6 @@ export class InputDropdown extends Component {
     mobileDisabled: PropTypes.bool,
     independentGroupSelection: PropTypes.bool,
     customClasses: PropTypes.object,
-    title: PropTypes.string,
   };
 
   static defaultProps = {
@@ -69,7 +68,6 @@ export class InputDropdown extends Component {
       dropdownOption: '',
       opened: '',
     },
-    title: '',
   };
   state = {
     opened: false,
@@ -214,11 +212,10 @@ export class InputDropdown extends Component {
       multiple,
       selectAll,
       customClasses,
-      title,
     } = this.props;
     return (
       <Manager>
-        <div ref={this.setRef} className={cx('dropdown-container')} title={title}>
+        <div ref={this.setRef} className={cx('dropdown-container')}>
           <Reference>
             {({ ref }) => (
               <div
