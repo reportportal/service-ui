@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2021 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,18 +14,6 @@
  * limitations under the License.
  */
 
-.execution-info-container {
-  display: flex;
-  align-items: center;
-  box-sizing: border-box;
-  max-width: 100%;
-  background-color: transparent;
-}
-
-.history-line-item {
-  margin-right: 8px;
-
-  & div:nth-child(1) {
-    cursor: default;
-  }
-}
+export { SelectDefectManually } from './selectDefectManually';
+export { CopyFromHistoryLine } from './copyFromHistoryLine';
+export { MachineLearningSuggestions } from './machineLearningSuggestions';

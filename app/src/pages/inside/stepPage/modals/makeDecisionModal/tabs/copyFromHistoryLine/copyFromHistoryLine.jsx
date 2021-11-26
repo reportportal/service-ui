@@ -24,9 +24,9 @@ import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { useDispatch } from 'react-redux';
-import { TestItemDetails } from '../elements/testItemDetails';
-import { COPY_FROM_HISTORY_LINE, RADIO_TEST_ITEM_DETAILS } from '../constants';
-import { messages } from '../messages';
+import { TestItemDetails } from '../../elements/testItemDetails';
+import { COPY_FROM_HISTORY_LINE, RADIO_TEST_ITEM_DETAILS } from '../../constants';
+import { messages } from '../../messages';
 import styles from './copyFromHistoryLine.scss';
 
 const cx = classNames.bind(styles);

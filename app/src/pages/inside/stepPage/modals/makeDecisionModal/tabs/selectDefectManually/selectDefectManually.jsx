@@ -37,8 +37,8 @@ import { debugModeSelector } from 'controllers/launch';
 import { SCREEN_MD_MAX, SCREEN_SM_MAX, SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
-import { SELECT_DEFECT_MANUALLY } from '../constants';
-import { messages } from '../messages';
+import { SELECT_DEFECT_MANUALLY } from '../../constants';
+import { messages } from '../../messages';
 import { ActionButtonsBar } from './actionButtonsBar';
 import styles from './selectDefectManually.scss';
 
@@ -87,7 +87,7 @@ export const SelectDefectManually = ({
     trackEvent(toggleIgnoreAASwitcher(defectFromTIGroup, e.target.checked));
   };
   const handleDefectCommentChange = (value) => {
-    handleManualChange({ comment: value });
+    handleManualChange({ comment: value.trim() });
   };
 
   const getActionItems = () => {
@@ -221,11 +221,7 @@ export const SelectDefectManually = ({
             onClickToolbarIcon:
               eventsInfo.onClickEditorIcon && eventsInfo.onClickEditorIcon(defectFromTIGroup),
           }}
-          placeholder={formatMessage(
-            isBulkOperation
-              ? messages.defectCommentBulkOperationPlaceholder
-              : messages.defectCommentPlaceholder,
-          )}
+          placeholder={formatMessage(messages.defectCommentPlaceholder)}
           mode="dark"
         />
       </div>

@@ -21,7 +21,7 @@ import { hideModalAction, withModal } from 'controllers/modal';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
-import { DarkModalLayout, ModalFooter } from 'components/main/modal/darkModalLayout';
+import { DarkModalLayout } from 'components/main/modal/darkModalLayout';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { activeProjectSelector } from 'controllers/user';
 import isEqual from 'fast-deep-equal';
@@ -35,24 +35,26 @@ import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import { actionMessages } from 'common/constants/localization/eventsLocalization';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useWindowResize } from 'common/hooks';
-import { MachineLearningSuggestions } from './machineLearningSuggestions';
+import { MakeDecisionFooter } from './makeDecisionFooter';
 import { MakeDecisionTabs } from './makeDecisionTabs';
+import { MachineLearningSuggestions, SelectDefectManually, CopyFromHistoryLine } from './tabs';
 import { messages } from './messages';
 import {
   ACTIVE_TAB_MAP,
+  ADD_FOR_ALL,
+  CLEAR_FOR_ALL,
   COPY_FROM_HISTORY_LINE,
   CURRENT_EXECUTION_ONLY,
   CURRENT_LAUNCH,
   MACHINE_LEARNING_SUGGESTIONS,
   MAKE_DECISION_MODAL,
+  NOT_CHANGED_FOR_ALL,
+  REPLACE_FOR_ALL,
   SEARCH_MODES,
   SELECT_DEFECT_MANUALLY,
   SHOW_LOGS_BY_DEFAULT,
 } from './constants';
-import { SelectDefectManually } from './selectDefectManually';
-import { CopyFromHistoryLine } from './copyFromHistoryLine';
 import { ExecutionSection } from './executionSection';
-import { InfoBlock } from './elements/infoBlock';
 
 const MakeDecision = ({ data }) => {
   const { formatMessage } = useIntl();
@@ -87,6 +89,7 @@ const MakeDecision = ({ data }) => {
         item.id !== itemData.id &&
         !item.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
     ),
+    commentOption: isBulkOperation ? NOT_CHANGED_FOR_ALL : REPLACE_FOR_ALL,
   });
   const [activeTab, setActiveTab] = useState(SELECT_DEFECT_MANUALLY);
   const windowSize = useWindowResize();
@@ -97,7 +100,8 @@ const MakeDecision = ({ data }) => {
     setModalHasChanges(
       (isBulkOperation
         ? !!modalState.selectManualChoice.issue.issueType ||
-          !!modalState.selectManualChoice.issue.comment
+          !!modalState.selectManualChoice.issue.comment ||
+          modalState.commentOption !== NOT_CHANGED_FOR_ALL
         : modalState.decisionType === SELECT_DEFECT_MANUALLY &&
           !isEqual(itemData.issue, modalState.selectManualChoice.issue)) ||
         (modalState.decisionType === COPY_FROM_HISTORY_LINE &&
@@ -127,14 +131,29 @@ const MakeDecision = ({ data }) => {
     }
   }, []);
 
-  const prepareDataToSend = ({ isIssueAction, replaceComment } = {}) => {
+  const prepareDataToSend = ({ isIssueAction } = {}) => {
     const { issue } = modalState[ACTIVE_TAB_MAP[activeTab]];
     const { currentTestItems, selectedItems } = modalState;
     if (isBulkOperation) {
       return currentTestItems.map((item) => {
-        const comment = replaceComment
-          ? issue.comment
-          : `${item.issue.comment || ''}\n${issue.comment}`.trim();
+        let comment;
+        switch (modalState.commentOption) {
+          case CLEAR_FOR_ALL: {
+            comment = '';
+            break;
+          }
+          case ADD_FOR_ALL: {
+            comment = `${item.issue.comment || ''}\n${issue.comment}`.trim();
+            break;
+          }
+          case REPLACE_FOR_ALL: {
+            comment = issue.comment;
+            break;
+          }
+          default: {
+            comment = item.issue.comment || '';
+          }
+        }
         return {
           ...(isIssueAction ? item : {}),
           testItemId: item.id,
@@ -147,24 +166,15 @@ const MakeDecision = ({ data }) => {
         };
       });
     }
-    return [...currentTestItems, ...selectedItems].map((item, i) => {
-      const comment =
-        issue.comment !== item.issue.comment &&
-        (modalState.decisionType === COPY_FROM_HISTORY_LINE || i !== 0)
-          ? `${item.issue.comment || ''}\n${issue.comment}`.trim()
-          : issue.comment || '';
-
-      return {
-        ...(isIssueAction ? { ...item, opened: SHOW_LOGS_BY_DEFAULT } : {}),
-        id: item.id || item.itemId,
-        testItemId: item.id || item.itemId,
-        issue: {
-          ...issue,
-          comment,
-          autoAnalyzed: false,
-        },
-      };
-    });
+    return [...currentTestItems, ...selectedItems].map((item) => ({
+      ...(isIssueAction ? { ...item, opened: SHOW_LOGS_BY_DEFAULT } : {}),
+      id: item.id || item.itemId,
+      testItemId: item.id || item.itemId,
+      issue: {
+        ...issue,
+        autoAnalyzed: false,
+      },
+    }));
   };
   const sendSuggestResponse = () => {
     const dataToSend = modalState.suggestedItems.map((item) => {
@@ -320,7 +330,8 @@ const MakeDecision = ({ data }) => {
       modalHasChanges &&
         activeTab === SELECT_DEFECT_MANUALLY &&
         (!!modalState.selectManualChoice.issue.issueType ||
-          !!modalState.selectManualChoice.issue.comment) &&
+          !!modalState.selectManualChoice.issue.comment ||
+          modalState.commentOption === CLEAR_FOR_ALL) &&
         saveDefect();
 
       !isEmptyObject(modalState.suggestChoice) &&
@@ -464,11 +475,12 @@ const MakeDecision = ({ data }) => {
         />
       }
       footer={
-        <ModalFooter
+        <MakeDecisionFooter
           buttons={getFooterButtons()}
           modalState={modalState}
-          infoBlock={<InfoBlock modalState={modalState} isBulkOperation={isBulkOperation} />}
           isBulkOperation={isBulkOperation}
+          setModalState={setModalState}
+          modalHasChanges={modalHasChanges}
         />
       }
       eventsInfo={layoutEventsInfo}

@@ -25,7 +25,7 @@ import { uniqueId } from 'common/utils';
 import { useIntl } from 'react-intl';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { DEFAULT_TEST_ITEM_DETAILS, ERROR_LOGS_SIZE } from '../../constants';
-import { ItemHeader } from '../itemHeader';
+import { ItemHeader } from './itemHeader';
 import { messages } from '../../messages';
 import styles from './testItemDetails.scss';
 

@@ -17,21 +17,21 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  includedToAa: {
-    id: 'MakeDecisionModal.includedToAa',
-    defaultMessage: 'Included to Auto-Analysis',
+  defectIncludeInAa: {
+    id: 'MakeDecisionModal.defectIncludeInAa',
+    defaultMessage: 'defect will be Include in Auto-Analysis',
   },
-  excludedFromAa: {
-    id: 'MakeDecisionModal.excludedFromAa',
-    defaultMessage: 'Excluded from Auto-Analysis',
+  defectIgnoreInAa: {
+    id: 'MakeDecisionModal.defectIgnoreInAa',
+    defaultMessage: 'defect will be Ignore in Auto-Analysis',
+  },
+  and: {
+    id: 'MakeDecisionModal.and',
+    defaultMessage: 'and',
   },
   defectCommentPlaceholder: {
     id: 'MakeDecisionModal.defectCommentPlaceholder',
     defaultMessage: 'Defect comment',
-  },
-  defectCommentBulkOperationPlaceholder: {
-    id: 'MakeDecisionModal.defectCommentBulkOperationPlaceholder',
-    defaultMessage: 'Add new data to existing comments',
   },
   clearCommentsAndApply: {
     id: 'MakeDecisionModal.clearCommentsAndApply',
@@ -241,5 +241,61 @@ export const messages = defineMessages({
   executionWith: {
     id: 'MakeDecisionModal.executionWith',
     defaultMessage: 'The execution with {value}% similarity of defect',
+  },
+  commentReplaceWith: {
+    id: 'MakeDecisionModal.commentReplaceWith',
+    defaultMessage: 'Defect comment will be replaced with:',
+  },
+  commentWillRemoved: {
+    id: 'MakeDecisionModal.commentWillRemoved',
+    defaultMessage: 'Defect comment will be removed',
+  },
+  commentWill: {
+    id: 'MakeDecisionModal.commentWill',
+    defaultMessage: 'Defect Comments will',
+  },
+  notChangedForAll: {
+    id: 'MakeDecisionModal.notChangedForAll',
+    defaultMessage: 'not be changed for all chosen items',
+  },
+  clearForAll: {
+    id: 'MakeDecisionModal.clearForAll',
+    defaultMessage: 'be cleared for all chosen items',
+  },
+  addForAll: {
+    id: 'MakeDecisionModal.addForAll',
+    defaultMessage: 'be added for all chosen items',
+  },
+  replaceForAll: {
+    id: 'MakeDecisionModal.replaceForAll',
+    defaultMessage: 'be replaced for all chosen items with',
+  },
+  followingResult: {
+    id: 'MakeDecisionModal.followingResult',
+    defaultMessage: 'Following results will be applied for {items}',
+  },
+  itemsCount: {
+    id: 'MakeDecisionModal.itemsCount',
+    defaultMessage: '{count} Items',
+  },
+  item: {
+    id: 'MakeDecisionModal.item',
+    defaultMessage: 'the Item',
+  },
+  linkAddedOnNextStep: {
+    id: 'MakeDecisionModal.linkAddedOnNextStep',
+    defaultMessage: 'The link to Bug Tracking System will be added in the next step',
+  },
+  linkRemovedOnNextStep: {
+    id: 'MakeDecisionModal.linkRemovedOnNextStep',
+    defaultMessage: 'The link to Bug Tracking System will be removed in the next step',
+  },
+  linkReplacedWith: {
+    id: 'MakeDecisionModal.linkReplacedWith',
+    defaultMessage: 'The link to Bug Tracking System will be replaced with',
+  },
+  defectReplaceWith: {
+    id: 'MakeDecisionModal.defectReplaceWith',
+    defaultMessage: 'The defect type will be changed to',
   },
 });

@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import { useSelector } from 'react-redux';
-import { InputRadioGroup } from 'components/inputs/inputRadioGroup';
-import classNames from 'classnames/bind';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import { activeFilterSelector } from 'controllers/filter';
 import { historyItemsSelector } from 'controllers/log';
 import { analyzerExtensionsSelector } from 'controllers/appInfo';
+import { InputDropdownRadio } from '../../../elements/inputDropdownRadio';
 import {
   ALL_LOADED_TI_FROM_HISTORY_LINE,
   CURRENT_EXECUTION_ONLY,
@@ -34,9 +33,6 @@ import {
   WITH_FILTER,
 } from '../../../constants';
 import { messages } from '../../../messages';
-import styles from './optionsBlock.scss';
-
-const cx = classNames.bind(styles);
 
 export const OptionsBlock = ({
   optionValue,
@@ -50,17 +46,6 @@ export const OptionsBlock = ({
   const activeFilter = useSelector(activeFilterSelector);
   const historyItems = useSelector(historyItemsSelector);
   const [expanded, setOptionsState] = useState(false);
-  const wrapperRef = useRef();
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (wrapperRef && wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-        setOptionsState(false);
-      }
-    };
-    document.addEventListener('click', handleClickOutside, false);
-
-    return () => document.removeEventListener('click', handleClickOutside, false);
-  }, []);
   const isAnalyzerAvailable = !!useSelector(analyzerExtensionsSelector).length;
   const defectFromTIGroup = currentTestItem.issue.issueType.startsWith(
     TO_INVESTIGATE_LOCATOR_PREFIX,
@@ -137,33 +122,23 @@ export const OptionsBlock = ({
       trackEvent(eventsInfo.onDecisionOption(defectFromTIGroup, messages[value].defaultMessage));
     onToggle();
   };
-
+  const selectedOption = formatMessage(
+    messages[optionValue],
+    activeFilter && {
+      filterName: activeFilter.name,
+    },
+  );
   return (
-    <div ref={wrapperRef} className={cx('wrapper', { opened: expanded })}>
-      <span className={cx('selected-option-block')}>
-        <span className={cx('selected-option')} onClick={onToggle}>
-          {formatMessage(
-            messages[optionValue],
-            activeFilter && {
-              filterName: activeFilter.name,
-            },
-          )}
-        </span>
-        <span className={cx('arrow', { opened: expanded })} />
-      </span>
-      {expanded && (
-        <div className={cx('options', { loading })} onClick={(e) => e.stopPropagation()}>
-          <InputRadioGroup
-            value={optionValue}
-            onChange={onChangeOption}
-            options={getOptions()}
-            inputGroupClassName={cx('radio-input-group')}
-            mode="dark"
-            size="small"
-          />
-        </div>
-      )}
-    </div>
+    <InputDropdownRadio
+      outsideClickHandler={() => setOptionsState(false)}
+      expanded={expanded}
+      onToggle={onToggle}
+      selectedOption={selectedOption}
+      optionValue={optionValue}
+      loading={loading}
+      onChangeOption={onChangeOption}
+      options={getOptions()}
+    />
   );
 };
 OptionsBlock.propTypes = {

@@ -16,27 +16,25 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import styles from './modalFooter.scss';
+import ReplaceIcon from 'common/img/replace-inline.svg';
+import styles from './resultRow.scss';
 
 const cx = classNames.bind(styles);
 
-export const ModalFooter = ({ buttons, infoBlock, className }) => (
-  <div className={cx('container', className.footerContainer)}>
-    {infoBlock && infoBlock}
-    <div className={cx('buttons-bar')}>
-      <span className={cx('button')}>{buttons.cancelButton}</span>
-      {buttons.okButton}
-    </div>
+export const ResultRow = ({ text, children }) => (
+  <div className={cx('row')}>
+    {Parser(ReplaceIcon)}
+    <span className={cx('row-text')}>{text}</span>
+    {children && children}
   </div>
 );
-ModalFooter.propTypes = {
-  buttons: PropTypes.object,
-  infoBlock: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
-  className: PropTypes.object,
+ResultRow.propTypes = {
+  text: PropTypes.string,
+  children: PropTypes.node,
 };
-ModalFooter.defaultProps = {
-  buttons: null,
-  infoBlock: null,
-  className: {},
+ResultRow.defaultProps = {
+  text: '',
+  children: null,
 };

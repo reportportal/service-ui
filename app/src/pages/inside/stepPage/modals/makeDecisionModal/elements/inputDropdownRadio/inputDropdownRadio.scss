@@ -16,10 +16,12 @@
 
 .wrapper {
   overflow: hidden;
-  border-bottom: 1px solid transparent;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: transparent;
 
   &.opened {
-    border-bottom: 1px solid $COLOR--topaz;
+    border-bottom-color: $COLOR--topaz;
   }
 }
 

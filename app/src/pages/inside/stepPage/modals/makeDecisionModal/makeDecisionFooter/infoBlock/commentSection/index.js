@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { LogItem } from './logItem';
+export { CommentSection } from './commentSection';
