@@ -45,6 +45,8 @@ import {
   ANALYZER_ENABLED,
   ANALYZER_MODE,
   SEARCH_LOGS_MIN_SHOULD_MATCH,
+  UNIQUE_ERROR_ENABLED,
+  UNIQUE_ERROR_REMOVE_NUMBERS,
 } from './constants';
 import styles from './autoAnalysisTab.scss';
 
@@ -132,7 +134,16 @@ export class AutoAnalysisTab extends Component {
     return {
       [ANALYZER_ENABLED]: JSON.parse(analyzerConfiguration[ANALYZER_ENABLED] || 'false'),
       [ANALYZER_MODE]: analyzerConfiguration[ANALYZER_MODE],
+      [UNIQUE_ERROR_ENABLED]: JSON.parse(analyzerConfiguration[UNIQUE_ERROR_ENABLED] || 'false'),
+      [UNIQUE_ERROR_REMOVE_NUMBERS]: JSON.parse(
+        analyzerConfiguration[UNIQUE_ERROR_REMOVE_NUMBERS] || 'false',
+      ),
     };
+  };
+
+  getIsAnalyzerServiceAvailable = () => {
+    const { analyzerExtensions } = this.props;
+    return !!analyzerExtensions.length;
   };
 
   checkIfConfirmationNeeded = (data) => {
@@ -186,9 +197,10 @@ export class AutoAnalysisTab extends Component {
   };
 
   render() {
-    const { accountRole, userRole, showGenerateIndexModal, analyzerExtensions } = this.props;
+    const { accountRole, userRole, showGenerateIndexModal } = this.props;
     const disabled = !canUpdateSettings(accountRole, userRole);
     const analysisBaseSettings = this.getAnalysisBaseSettings();
+    const isAnalyzerServiceAvailable = this.getIsAnalyzerServiceAvailable();
 
     return (
       <div className={cx('auto-analysis-tab')}>
@@ -196,6 +208,7 @@ export class AutoAnalysisTab extends Component {
           disabled={disabled}
           data={analysisBaseSettings}
           onFormSubmit={this.updateProjectConfig}
+          isAnalyzerServiceAvailable={isAnalyzerServiceAvailable}
         />
         <AnalysisForm
           disabled={disabled}
@@ -207,7 +220,7 @@ export class AutoAnalysisTab extends Component {
           disabled={disabled}
           indexingRunning={this.getIndexActionsBlockValues()}
           showGenerateIndexModal={showGenerateIndexModal}
-          analyzerExtensions={analyzerExtensions}
+          isAnalyzerServiceAvailable={isAnalyzerServiceAvailable}
         />
       </div>
     );
