@@ -47,7 +47,6 @@ import {
   SEARCH_LOGS_MIN_SHOULD_MATCH,
   UNIQUE_ERROR_ENABLED,
   UNIQUE_ERROR_REMOVE_NUMBERS,
-  ANALYZER_SERVICE_AVAILABLE,
 } from './constants';
 import styles from './autoAnalysisTab.scss';
 
@@ -130,7 +129,7 @@ export class AutoAnalysisTab extends Component {
   };
 
   getAnalysisBaseSettings = () => {
-    const { analyzerConfiguration, analyzerExtensions } = this.props;
+    const { analyzerConfiguration } = this.props;
 
     return {
       [ANALYZER_ENABLED]: JSON.parse(analyzerConfiguration[ANALYZER_ENABLED] || 'false'),
@@ -139,8 +138,12 @@ export class AutoAnalysisTab extends Component {
       [UNIQUE_ERROR_REMOVE_NUMBERS]: JSON.parse(
         analyzerConfiguration[UNIQUE_ERROR_REMOVE_NUMBERS] || 'false',
       ),
-      [ANALYZER_SERVICE_AVAILABLE]: !!analyzerExtensions.length,
     };
+  };
+
+  getIsAnalyzerServiceAvailable = () => {
+    const { analyzerExtensions } = this.props;
+    return !!analyzerExtensions.length;
   };
 
   checkIfConfirmationNeeded = (data) => {
@@ -194,9 +197,10 @@ export class AutoAnalysisTab extends Component {
   };
 
   render() {
-    const { accountRole, userRole, showGenerateIndexModal, analyzerExtensions } = this.props;
+    const { accountRole, userRole, showGenerateIndexModal } = this.props;
     const disabled = !canUpdateSettings(accountRole, userRole);
     const analysisBaseSettings = this.getAnalysisBaseSettings();
+    const isAnalyzerServiceAvailable = this.getIsAnalyzerServiceAvailable();
 
     return (
       <div className={cx('auto-analysis-tab')}>
@@ -204,6 +208,7 @@ export class AutoAnalysisTab extends Component {
           disabled={disabled}
           data={analysisBaseSettings}
           onFormSubmit={this.updateProjectConfig}
+          isAnalyzerServiceAvailable={isAnalyzerServiceAvailable}
         />
         <AnalysisForm
           disabled={disabled}
@@ -215,7 +220,7 @@ export class AutoAnalysisTab extends Component {
           disabled={disabled}
           indexingRunning={this.getIndexActionsBlockValues()}
           showGenerateIndexModal={showGenerateIndexModal}
-          analyzerExtensions={analyzerExtensions}
+          isAnalyzerServiceAvailable={isAnalyzerServiceAvailable}
         />
       </div>
     );

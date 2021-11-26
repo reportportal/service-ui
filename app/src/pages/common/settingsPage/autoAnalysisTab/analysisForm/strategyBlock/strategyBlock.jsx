@@ -29,7 +29,6 @@ import { messages as importMessages } from 'pages/inside/uniqueErrorsPage';
 import {
   ANALYZER_ENABLED,
   ANALYZER_MODE,
-  ANALYZER_SERVICE_AVAILABLE,
   UNIQUE_ERROR_ENABLED,
   UNIQUE_ERROR_REMOVE_NUMBERS,
 } from '../../constants';
@@ -100,12 +99,14 @@ export class StrategyBlock extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    isAnalyzerServiceAvailable: PropTypes.bool,
   };
 
   static defaultProps = {
     disabled: false,
     data: {},
     onFormSubmit: () => {},
+    isAnalyzerServiceAvailable: true,
   };
 
   changeAnalyzerEnabled = (value) => {
@@ -156,10 +157,10 @@ export class StrategyBlock extends Component {
     const {
       intl: { formatMessage },
       disabled,
-      data,
+      isAnalyzerServiceAvailable,
     } = this.props;
 
-    if (!data[ANALYZER_SERVICE_AVAILABLE]) {
+    if (!isAnalyzerServiceAvailable) {
       return formatMessage(messages.serviceAnalyzerDisabledTooltip);
     } else if (disabled) {
       return formatMessage(messages.unAssignTitleNoPermission);
@@ -173,9 +174,10 @@ export class StrategyBlock extends Component {
       intl: { formatMessage },
       disabled,
       data,
+      isAnalyzerServiceAvailable,
     } = this.props;
 
-    const isUniqueErrorAutoAnalysisDisabled = disabled || !data[ANALYZER_SERVICE_AVAILABLE];
+    const isUniqueErrorAutoAnalysisDisabled = disabled || !isAnalyzerServiceAvailable;
     const uniqueErrorAutoAnalysisTooltip = this.getUniqueErrorAutoAnalysisTooltip();
     const options = [
       { label: formatMessage(importMessages.uniqueErrAnalyzeModalIncludeNumbers), value: false },
