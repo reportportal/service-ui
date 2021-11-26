@@ -52,7 +52,7 @@ export const defectTypeLongName = composeValidators([isNotEmpty, lengthRange(3, 
 export const defectTypeShortName = composeValidators([isNotEmpty, maxLength(4)]);
 export const projectName = composeValidators([isNotEmpty, regex(/^[0-9a-zA-Z-_]{3,256}$/)]);
 export const btsIntegrationName = composeValidators([isNotEmpty, maxLength(55)]);
-export const btsProject = composeValidators([isNotEmpty, maxLength(80)]);
+export const btsProject = composeValidators([isNotEmpty, maxLength(55)]);
 export const patternNameLength = composeValidators([isNotEmpty, maxLength(55)]);
 export const createPatternNameUniqueValidator = (patternId, patterns) => (newPatternName) =>
   !patterns.some(

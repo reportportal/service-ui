@@ -60,7 +60,7 @@ import { attributesArray, isNotEmptyArray } from 'common/utils/validation/valida
 import {
   requiredField,
   btsUrl,
-  btsProject,
+  btsProjectKey,
   btsIntegrationName,
   email,
 } from 'common/utils/validation/commonValidators';
@@ -301,7 +301,7 @@ export const createImportProps = (pluginName) => ({
     isNotEmptyArray,
     requiredField,
     btsUrl,
-    btsProject,
+    btsProjectKey,
     btsIntegrationName,
     helpers: { composeValidators, bindMessageToValidator },
     email,
