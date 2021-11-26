@@ -187,9 +187,13 @@ const messages = defineMessages({
     id: 'BtsCommonMessages.btsUrlHint',
     defaultMessage: 'Please provide a valid BTS link',
   },
-  btsProjectHint: {
-    id: 'BtsCommonMessages.btsProjectHint',
-    defaultMessage: 'Project name should have size from 1 to 80',
+  btsProjectKeyHint: {
+    id: 'BtsCommonMessages.btsProjectKeyHint',
+    defaultMessage: 'Project key should have size from 1 to 55',
+  },
+  btsProjectIdHint: {
+    id: 'BtsCommonMessages.btsProjectIdHint',
+    defaultMessage: 'Project ID should have size from 1 to 55',
   },
   portFieldHint: {
     id: 'EmailFormFields.portFieldHint',

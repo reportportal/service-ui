@@ -104,7 +104,7 @@ export class RallyConnectionFormFields extends Component {
           disabled={disabled || editAuthMode}
           lineAlign={lineAlign}
           maxLength="55"
-          validate={commonValidators.btsProject}
+          validate={commonValidators.btsProjectId}
         >
           <FieldErrorHint>
             <Input mobileDisabled />

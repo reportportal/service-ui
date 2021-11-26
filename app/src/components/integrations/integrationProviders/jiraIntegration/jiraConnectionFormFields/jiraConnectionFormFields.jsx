@@ -103,7 +103,7 @@ export class JiraConnectionFormFields extends Component {
           disabled={disabled || editAuthMode}
           lineAlign={lineAlign}
           maxLength="55"
-          validate={commonValidators.btsProject}
+          validate={commonValidators.btsProjectKey}
         >
           <FieldErrorHint>
             <Input mobileDisabled />
