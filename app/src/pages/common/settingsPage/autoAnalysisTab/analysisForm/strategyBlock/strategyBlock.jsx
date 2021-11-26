@@ -29,6 +29,7 @@ import { messages as importMessages } from 'pages/inside/uniqueErrorsPage';
 import {
   ANALYZER_ENABLED,
   ANALYZER_MODE,
+  ANALYZER_SERVICE_AVAILABLE,
   UNIQUE_ERROR_ENABLED,
   UNIQUE_ERROR_REMOVE_NUMBERS,
 } from '../../constants';
@@ -80,6 +81,10 @@ const messages = defineMessages({
   serviceAnalyzerDisabledTooltip: {
     id: 'StrategyBlock.serviceAnalyzerDisabledTooltip',
     defaultMessage: 'Service analyzer is not running',
+  },
+  unAssignTitleNoPermission: {
+    id: 'UnassignButton.unAssignTitleNoPermission',
+    defaultMessage: 'You have no enough permission',
   },
 });
 
@@ -147,6 +152,22 @@ export class StrategyBlock extends Component {
     );
   };
 
+  getUniqueErrorAutoAnalysisTooltip = () => {
+    const {
+      intl: { formatMessage },
+      disabled,
+      data,
+    } = this.props;
+
+    if (!data[ANALYZER_SERVICE_AVAILABLE]) {
+      return formatMessage(messages.serviceAnalyzerDisabledTooltip);
+    } else if (disabled) {
+      return formatMessage(messages.unAssignTitleNoPermission);
+    } else {
+      return '';
+    }
+  };
+
   render() {
     const {
       intl: { formatMessage },
@@ -154,12 +175,12 @@ export class StrategyBlock extends Component {
       data,
     } = this.props;
 
+    const isUniqueErrorAutoAnalysisDisabled = disabled || !data[ANALYZER_SERVICE_AVAILABLE];
+    const uniqueErrorAutoAnalysisTooltip = this.getUniqueErrorAutoAnalysisTooltip();
     const options = [
       { label: formatMessage(importMessages.uniqueErrAnalyzeModalIncludeNumbers), value: false },
       { label: formatMessage(importMessages.uniqueErrAnalyzeModalExcludeNumbers), value: true },
     ];
-
-    const tooltip = disabled ? formatMessage(messages.serviceAnalyzerDisabledTooltip) : '';
 
     return (
       <div className={cx('strategy-block')}>
@@ -238,9 +259,9 @@ export class StrategyBlock extends Component {
           <InputBigSwitcher
             value={data[UNIQUE_ERROR_ENABLED]}
             onChange={this.changeUniqueErrorAutoAnalysisEnabled}
-            disabled={disabled}
+            disabled={isUniqueErrorAutoAnalysisDisabled}
             mobileDisabled
-            title={tooltip}
+            title={uniqueErrorAutoAnalysisTooltip}
           />
         </FormField>
 

@@ -18,6 +18,7 @@ export const MIN_SHOULD_MATCH = 'minShouldMatch';
 export const NUMBER_OF_LOG_LINES = 'numberOfLogLines';
 export const INDEXING_RUNNING = 'indexingRunning';
 export const ANALYZER_ENABLED = 'isAutoAnalyzerEnabled';
+export const ANALYZER_SERVICE_AVAILABLE = 'isAnalyzerServiceAvailable';
 export const ANALYZER_MODE = 'autoAnalyzerMode';
 export const UNIQUE_ERROR_ENABLED = 'uniqueError.enabled';
 export const UNIQUE_ERROR_REMOVE_NUMBERS = 'uniqueError.removeNumbers';

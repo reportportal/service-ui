@@ -47,6 +47,7 @@ import {
   SEARCH_LOGS_MIN_SHOULD_MATCH,
   UNIQUE_ERROR_ENABLED,
   UNIQUE_ERROR_REMOVE_NUMBERS,
+  ANALYZER_SERVICE_AVAILABLE,
 } from './constants';
 import styles from './autoAnalysisTab.scss';
 
@@ -129,7 +130,7 @@ export class AutoAnalysisTab extends Component {
   };
 
   getAnalysisBaseSettings = () => {
-    const { analyzerConfiguration } = this.props;
+    const { analyzerConfiguration, analyzerExtensions } = this.props;
 
     return {
       [ANALYZER_ENABLED]: JSON.parse(analyzerConfiguration[ANALYZER_ENABLED] || 'false'),
@@ -138,6 +139,7 @@ export class AutoAnalysisTab extends Component {
       [UNIQUE_ERROR_REMOVE_NUMBERS]: JSON.parse(
         analyzerConfiguration[UNIQUE_ERROR_REMOVE_NUMBERS] || 'false',
       ),
+      [ANALYZER_SERVICE_AVAILABLE]: !!analyzerExtensions.length,
     };
   };
 
