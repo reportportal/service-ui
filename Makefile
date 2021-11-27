@@ -7,7 +7,7 @@ GO = go
 BINARY_DIR=bin
 RELEASE_DIR=release
 
-BUILD_DEPS:= github.com/avarabyeu/releaser mvdan.cc/gofumpt/gofumports
+BUILD_DEPS:= github.com/avarabyeu/releaser mvdan.cc/gofumpt
 GODIRS_NOVENDOR = $(shell go list ./... | grep -v /vendor/)
 GOFILES_NOVENDOR = $(shell find . -type f -name '*.go' -not -path "./vendor/*")
 PACKAGE_COMMONS=github.com/reportportal/commons-go/v5
@@ -42,7 +42,6 @@ lint: checkstyle
 fmt:
 	gofmt -l -w -s ${GOFILES_NOVENDOR}
 #	gofumpt -l -w -s ${GOFILES_NOVENDOR}
-#	gofumports -l -w ${GOFILES_NOVENDOR}
 
 # Builds server
 build-server: checkstyle test
