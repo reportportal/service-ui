@@ -18,6 +18,7 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Parser from 'html-react-parser';
+import DOMPurify from 'dompurify';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { withModal, ModalLayout } from 'components/main/modal';
@@ -122,7 +123,11 @@ export class DeleteWidgetModal extends Component {
         closeIconEventInfo={eventsInfo.closeIcon}
       >
         <p className={cx('message')}>
-          {Parser(intl.formatMessage(messages.deleteWidgetText, { name: widget.name }))}
+          {Parser(
+            DOMPurify.sanitize(
+              intl.formatMessage(messages.deleteWidgetText, { name: widget.name }),
+            ),
+          )}
         </p>
       </ModalLayout>
     );
