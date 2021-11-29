@@ -39,9 +39,10 @@
   text-align: right;
   &.dark-view {
     color: $COLOR--dirty-gray;
-    min-width: 140px;
+    min-width: 160px;
     text-align: left;
-    padding-right: 36px;
+    margin-right: 16px;
+    padding-right: 0;
   }
 
   @media (max-width: $SCREEN_XS_MAX) {
@@ -54,7 +55,7 @@
 
 .remove-issue-fields-button {
   position: absolute;
-  left: 450px;
+  left: 486px;
   top: 35px;
   width: 17px;
   height: 17px;
@@ -82,7 +83,7 @@
 .add-issue-button {
   margin-left: 180px;
   &.dark-view {
-    margin-left: 140px;
+    margin-left: 176px;
   }
   @media (max-width: $SCREEN_XS_MAX) {
     margin-left: 0;

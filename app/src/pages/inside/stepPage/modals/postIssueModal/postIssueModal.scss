@@ -33,7 +33,7 @@
   box-sizing: border-box;
   display: flex;
   width: 280px;
-  margin-left: 142px;
+  margin-left: 176px;
   color: $COLOR--error;
   background-color: transparent;
   font-family: $FONT-REGULAR;
@@ -62,7 +62,6 @@
 .include-data-block {
   display: flex;
   flex-wrap: wrap;
-  margin-left: 60px;
   @media (max-width: $SCREEN_XS_MAX) {
     margin-left: 50px;
   }
@@ -79,9 +78,11 @@
 }
 
 .form-block-header {
+  position: relative;
   display: block;
+  width: 176px;
+  padding: 10px 36px 10px 0;
   box-sizing: border-box;
-  padding: 10px 0;
   background-color: $COLOR--white-four;
   &.dark-view {
     background-color: transparent;
@@ -89,7 +90,6 @@
 }
 
 .header-text {
-  position: relative;
   opacity: 0.9;
   font-size: 12px;
   color: $COLOR--gray-47;
@@ -111,8 +111,8 @@
     &:after {
       content: '+';
       position: absolute;
-      right: -48px;
-      top: -4px;
+      right: -13px;
+      top: 7px;
       font-size: 24px;
     }
     cursor: pointer;
@@ -122,8 +122,8 @@
     .header-text {
       &:after {
         content: '-';
-        top: -6px;
-        right: -45px;
+        top: 5px;
+        right: -8px;
       }
     }
 
