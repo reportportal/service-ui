@@ -19,11 +19,11 @@ import { defineMessages } from 'react-intl';
 export const messages = defineMessages({
   defectIncludeInAa: {
     id: 'MakeDecisionModal.defectIncludeInAa',
-    defaultMessage: 'defect will be Include in Auto-Analysis',
+    defaultMessage: 'defect will be included in Auto-Analysis',
   },
   defectIgnoreInAa: {
     id: 'MakeDecisionModal.defectIgnoreInAa',
-    defaultMessage: 'defect will be Ignore in Auto-Analysis',
+    defaultMessage: 'defect will be ignored in Auto-Analysis',
   },
   and: {
     id: 'MakeDecisionModal.and',
@@ -32,14 +32,6 @@ export const messages = defineMessages({
   defectCommentPlaceholder: {
     id: 'MakeDecisionModal.defectCommentPlaceholder',
     defaultMessage: 'Defect comment',
-  },
-  clearCommentsAndApply: {
-    id: 'MakeDecisionModal.clearCommentsAndApply',
-    defaultMessage: 'Clear Comments and Apply',
-  },
-  replaceCommentsAndApply: {
-    id: 'MakeDecisionModal.replaceCommentsAndApply',
-    defaultMessage: 'Replace Comments and Apply',
   },
   ignoreAa: {
     id: 'MakeDecisionModal.ignoreAa',
@@ -252,7 +244,7 @@ export const messages = defineMessages({
   },
   commentWill: {
     id: 'MakeDecisionModal.commentWill',
-    defaultMessage: 'Defect Comments will',
+    defaultMessage: 'Defect comments will',
   },
   notChangedForAll: {
     id: 'MakeDecisionModal.notChangedForAll',
