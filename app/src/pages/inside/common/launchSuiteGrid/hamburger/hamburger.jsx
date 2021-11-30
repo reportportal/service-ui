@@ -85,6 +85,10 @@ const messages = defineMessages({
     id: 'Hamburger.uniqueErrorAnalysisLaunchesInProgressError',
     defaultMessage: 'Unique Error analysis can not be run for launches in progress',
   },
+  serviceAnalyzerDisabledTooltip: {
+    id: 'Hamburger.serviceAnalyzerDisabledTooltip',
+    defaultMessage: 'Service analyzer is not running',
+  },
 });
 
 @injectIntl
@@ -228,6 +232,7 @@ export class Hamburger extends Component {
       id: 'uniqueErrorsAnalyzeModal',
       data: {
         launch: this.props.launch,
+        updateLaunchLocally: (data) => this.props.updateLaunchLocallyAction(data),
       },
     });
   };

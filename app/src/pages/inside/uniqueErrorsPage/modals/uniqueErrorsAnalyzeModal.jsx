@@ -21,7 +21,6 @@ import PropTypes from 'prop-types';
 import { reduxForm } from 'redux-form';
 import { withModal } from 'controllers/modal';
 import { activeProjectSelector } from 'controllers/user';
-import { updateLaunchLocallyAction } from 'controllers/launch';
 import {
   showDefaultErrorNotification,
   showNotification,
@@ -53,7 +52,6 @@ const cx = classNames.bind(styles);
   {
     showNotification,
     showDefaultErrorNotification,
-    updateLaunchLocallyAction,
   },
 )
 export class UniqueErrorsAnalyzeModal extends Component {
@@ -62,23 +60,22 @@ export class UniqueErrorsAnalyzeModal extends Component {
     handleSubmit: PropTypes.func.isRequired,
     data: PropTypes.shape({
       launch: PropTypes.object.isRequired,
+      updateLaunchLocally: PropTypes.func,
     }).isRequired,
     projectId: PropTypes.string.isRequired,
     showNotification: PropTypes.func,
     showDefaultErrorNotification: PropTypes.func,
-    updateLaunchLocallyAction: PropTypes.func,
   };
 
   static defaultProps = {
     handleSubmit: () => {},
     showNotification: () => {},
     showDefaultErrorNotification: () => {},
-    updateLaunchLocallyAction: () => {},
   };
 
   onSubmit = ({ removeNumbers }) => {
     const { projectId, data } = this.props;
-    const launch = data.launch;
+    const { launch, updateLaunchLocally } = data;
     fetch(URLS.runUniqueErrorAnalysis(projectId), {
       method: 'POST',
       data: {
@@ -96,7 +93,7 @@ export class UniqueErrorsAnalyzeModal extends Component {
           ...launch,
           analysing: [...analysing, ANALYZER_TYPES.CLUSTER_ANALYSER],
         };
-        this.props.updateLaunchLocallyAction(item);
+        updateLaunchLocally(item);
       })
       .catch(this.props.showDefaultErrorNotification);
   };

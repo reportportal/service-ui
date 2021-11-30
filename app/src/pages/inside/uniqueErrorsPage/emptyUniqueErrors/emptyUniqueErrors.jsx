@@ -24,6 +24,7 @@ import { ANALYZER_TYPES } from 'common/constants/analyzerTypes';
 import { activeProjectSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { loadingSelector } from 'controllers/uniqueErrors';
+import { fetchParentLaunchSuccessAction } from 'controllers/testItem/actionCreators';
 import { showDefaultErrorNotification, showNotification } from 'controllers/notification';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -44,6 +45,7 @@ const cx = classNames.bind(styles);
     showModal: showModalAction,
     showNotification,
     showDefaultErrorNotification,
+    fetchParentLaunchSuccessAction,
   },
 )
 export class EmptyUniqueErrors extends Component {
@@ -55,6 +57,7 @@ export class EmptyUniqueErrors extends Component {
     showDefaultErrorNotification: PropTypes.func,
     parentLaunch: PropTypes.object,
     loading: PropTypes.bool,
+    fetchParentLaunchSuccessAction: PropTypes.func,
   };
 
   static defaultProps = {
@@ -71,6 +74,7 @@ export class EmptyUniqueErrors extends Component {
       id: 'uniqueErrorsAnalyzeModal',
       data: {
         launch: this.props.parentLaunch,
+        updateLaunchLocally: (data) => this.props.fetchParentLaunchSuccessAction(data),
       },
     });
   };
@@ -88,7 +92,7 @@ export class EmptyUniqueErrors extends Component {
       return (
         <>
           <div className={cx('empty-unique-errors-loader')}>
-            <BubblesPreloader color={'topaz'} />
+            <BubblesPreloader />
           </div>
           <p className={cx('empty-unique-errors-text')}>
             {formatMessage(messages.inProgressAnalysisText)}

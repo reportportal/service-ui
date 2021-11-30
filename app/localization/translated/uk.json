@@ -753,6 +753,7 @@
   "Hamburger.noPermissions": "Ви не є власником запуску",
   "Hamburger.notYourLaunch": "Запуск був створений Вами",
   "Hamburger.patternAnalysis": "Патерн-аналіз",
+  "Hamburger.serviceAnalyzerDisabledTooltip": "Cервіс аналізу не запущено",
   "Hamburger.uniqueErrorAnalysis": "Аналіз унікальних помилок",
   "Hamburger.uniqueErrorAnalysisIsInProgress": "Аналіз унікальних помилок у процесі",
   "Hamburger.uniqueErrorAnalysisLaunchesInProgressError": "Аналіз унікальних помилок не може бути запущений для запусків у процесі",
