@@ -24,9 +24,12 @@ import { CUSTOMER } from 'common/constants/projectRoles';
 import { IN_PROGRESS } from 'common/constants/launchStatuses';
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
-import { canDeleteLaunch, canForceFinishLaunch, canMoveToDebug } from 'common/utils/permissions';
 import { URLS } from 'common/urls';
 import { downloadFile } from 'common/utils/downloadFile';
+import { canDeleteLaunch, canForceFinishLaunch, canMoveToDebug } from 'common/utils/permissions';
+import { updateLaunchLocallyAction } from 'controllers/launch';
+import { showModalAction } from 'controllers/modal';
+import { showDefaultErrorNotification, showNotification } from 'controllers/notification';
 import {
   activeProjectRoleSelector,
   userIdSelector,
@@ -34,7 +37,9 @@ import {
   activeProjectSelector,
 } from 'controllers/user';
 import { enabledPattersSelector } from 'controllers/project';
+import { analyzerExtensionsSelector } from 'controllers/appInfo';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { ANALYZER_TYPES } from 'common/constants/analyzerTypes';
 import { HamburgerMenuItem } from './hamburgerMenuItem';
 import styles from './hamburger.scss';
 
@@ -68,16 +73,37 @@ const messages = defineMessages({
     id: 'Hamburger.notYourLaunch',
     defaultMessage: 'You are not a launch owner',
   },
+  uniqueErrorAnalysis: {
+    id: 'Hamburger.uniqueErrorAnalysis',
+    defaultMessage: 'Unique Error analysis',
+  },
+  uniqueErrorAnalysisIsInProgress: {
+    id: 'Hamburger.uniqueErrorAnalysisIsInProgress',
+    defaultMessage: 'Unique Error analysis is in progress',
+  },
+  uniqueErrorAnalysisLaunchesInProgressError: {
+    id: 'Hamburger.uniqueErrorAnalysisLaunchesInProgressError',
+    defaultMessage: 'Unique Error analysis can not be run for launches in progress',
+  },
 });
 
 @injectIntl
-@connect((state) => ({
-  projectRole: activeProjectRoleSelector(state),
-  userId: userIdSelector(state),
-  accountRole: userAccountRoleSelector(state),
-  projectId: activeProjectSelector(state),
-  enabledPatterns: enabledPattersSelector(state),
-}))
+@connect(
+  (state) => ({
+    projectRole: activeProjectRoleSelector(state),
+    userId: userIdSelector(state),
+    accountRole: userAccountRoleSelector(state),
+    projectId: activeProjectSelector(state),
+    enabledPatterns: enabledPattersSelector(state),
+    analyzerExtensions: analyzerExtensionsSelector(state),
+  }),
+  {
+    showModal: showModalAction,
+    showNotification,
+    showDefaultErrorNotification,
+    updateLaunchLocallyAction,
+  },
+)
 @track()
 export class Hamburger extends Component {
   static propTypes = {
@@ -94,6 +120,11 @@ export class Hamburger extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    showModal: PropTypes.func,
+    showNotification: PropTypes.func,
+    showDefaultErrorNotification: PropTypes.func,
+    updateLaunchLocallyAction: PropTypes.func,
+    analyzerExtensions: PropTypes.array,
   };
 
   static defaultProps = {
@@ -101,6 +132,11 @@ export class Hamburger extends Component {
     customProps: {},
     accountRole: '',
     enabledPatterns: [],
+    showModal: () => {},
+    showNotification: () => {},
+    showDefaultErrorNotification: () => {},
+    updateLaunchLocallyAction: () => {},
+    analyzerExtensions: [],
   };
 
   state = {
@@ -187,6 +223,32 @@ export class Hamburger extends Component {
     }
   };
 
+  openUniqueErrorAnalysisModal = () => {
+    this.props.showModal({
+      id: 'uniqueErrorsAnalyzeModal',
+      data: {
+        launch: this.props.launch,
+      },
+    });
+  };
+
+  getClusterTitle = () => {
+    const { launch, intl, analyzerExtensions } = this.props;
+
+    const clusterActive = launch.analysing.find((item) => item === ANALYZER_TYPES.CLUSTER_ANALYSER);
+    const isLaunchInProgress = this.isInProgress();
+
+    if (clusterActive) {
+      return intl.formatMessage(messages.uniqueErrorAnalysisIsInProgress);
+    } else if (isLaunchInProgress) {
+      return intl.formatMessage(messages.uniqueErrorAnalysisLaunchesInProgressError);
+    } else if (!analyzerExtensions.length) {
+      return intl.formatMessage(messages.serviceAnalyzerDisabledTooltip);
+    } else {
+      return '';
+    }
+  };
+
   render() {
     const {
       intl,
@@ -197,6 +259,9 @@ export class Hamburger extends Component {
       enabledPatterns,
       tracking,
     } = this.props;
+
+    const clusterTitle = this.getClusterTitle();
+
     return (
       <div className={cx('hamburger')}>
         <div
@@ -272,6 +337,12 @@ export class Hamburger extends Component {
                 }}
               />
             )}
+            <HamburgerMenuItem
+              disabled={!!clusterTitle}
+              title={clusterTitle}
+              text={intl.formatMessage(messages.uniqueErrorAnalysis)}
+              onClick={this.openUniqueErrorAnalysisModal}
+            />
             <HamburgerMenuItem
               text={intl.formatMessage(messages.patternAnalysis)}
               title={!enabledPatterns.length && intl.formatMessage(messages.noPatternsEnabled)}

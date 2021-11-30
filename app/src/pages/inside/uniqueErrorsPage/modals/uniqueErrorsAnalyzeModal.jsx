@@ -15,16 +15,27 @@
  */
 
 import React, { Component } from 'react';
+import { injectIntl } from 'react-intl';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { reduxForm } from 'redux-form';
 import { withModal } from 'controllers/modal';
+import { activeProjectSelector } from 'controllers/user';
+import { updateLaunchLocallyAction } from 'controllers/launch';
+import {
+  showDefaultErrorNotification,
+  showNotification,
+  NOTIFICATION_TYPES,
+} from 'controllers/notification';
 import { ModalField, ModalLayout } from 'components/main/modal';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
-import PropTypes from 'prop-types';
-import { injectIntl } from 'react-intl';
 import { messages } from 'pages/inside/uniqueErrorsPage';
+import { URLS } from 'common/urls';
+import { fetch } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { ANALYZER_TYPES } from 'common/constants/analyzerTypes';
 import styles from './uniqueErrorsAnalyzeModal.scss';
 
 const cx = classNames.bind(styles);
@@ -35,22 +46,64 @@ const cx = classNames.bind(styles);
   initialValues: { removeNumbers: false },
 })
 @injectIntl
+@connect(
+  (state) => ({
+    projectId: activeProjectSelector(state),
+  }),
+  {
+    showNotification,
+    showDefaultErrorNotification,
+    updateLaunchLocallyAction,
+  },
+)
 export class UniqueErrorsAnalyzeModal extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     handleSubmit: PropTypes.func.isRequired,
-    data: PropTypes.object,
+    data: PropTypes.shape({
+      launch: PropTypes.object.isRequired,
+    }).isRequired,
+    projectId: PropTypes.string.isRequired,
+    showNotification: PropTypes.func,
+    showDefaultErrorNotification: PropTypes.func,
+    updateLaunchLocallyAction: PropTypes.func,
   };
 
   static defaultProps = {
     handleSubmit: () => {},
-    data: {},
+    showNotification: () => {},
+    showDefaultErrorNotification: () => {},
+    updateLaunchLocallyAction: () => {},
+  };
+
+  onSubmit = ({ removeNumbers }) => {
+    const { projectId, data } = this.props;
+    const launch = data.launch;
+    fetch(URLS.runUniqueErrorAnalysis(projectId), {
+      method: 'POST',
+      data: {
+        launchId: launch.id,
+        removeNumbers,
+      },
+    })
+      .then(({ message }) => {
+        this.props.showNotification({
+          message,
+          type: NOTIFICATION_TYPES.SUCCESS,
+        });
+        const analysing = launch.analysing;
+        const item = {
+          ...launch,
+          analysing: [...analysing, ANALYZER_TYPES.CLUSTER_ANALYSER],
+        };
+        this.props.updateLaunchLocallyAction(item);
+      })
+      .catch(this.props.showDefaultErrorNotification);
   };
 
   render() {
     const {
       handleSubmit,
-      data: { onSubmit },
       intl: { formatMessage },
     } = this.props;
 
@@ -58,7 +111,7 @@ export class UniqueErrorsAnalyzeModal extends Component {
       text: formatMessage(messages.uniqueErrAnalyzeModalOkBtn),
       onClick: (closeModal) => {
         handleSubmit((values) => {
-          onSubmit(values);
+          this.onSubmit(values);
           closeModal();
         })();
       },

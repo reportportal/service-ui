@@ -51,4 +51,13 @@
     text-align: center;
     padding: 20px 0;
   }
+  &-btn button {
+    width: 192px;
+  }
+
+  &-loader {
+    width: 48px;
+    height: 5px;
+    margin: auto;
+  }
 }

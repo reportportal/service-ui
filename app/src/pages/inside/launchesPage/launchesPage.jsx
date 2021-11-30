@@ -443,9 +443,10 @@ export class LaunchesPage extends Component {
           message: formatMessage(messages.analyseStartSuccess),
           type: NOTIFICATION_TYPES.SUCCESS,
         });
+        const analysing = launch.analysing;
         const item = {
           ...launch,
-          autoAnalyzing: true,
+          analysing: [...analysing, ANALYZER_TYPES.AUTO_ANALYZER],
         };
         this.props.updateLaunchLocallyAction(item);
       })
@@ -474,9 +475,10 @@ export class LaunchesPage extends Component {
           message: formatMessage(messages.patternAnalyseStartSuccess),
           type: NOTIFICATION_TYPES.SUCCESS,
         });
+        const analysing = launch.analysing;
         const item = {
           ...launch,
-          patternAnalyzing: true,
+          analysing: [...analysing, ANALYZER_TYPES.PATTERN_ANALYSER],
         };
         this.props.updateLaunchLocallyAction(item);
       })

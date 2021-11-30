@@ -15,23 +15,19 @@
  */
 
 import classNames from 'classnames/bind';
-import { GhostButton } from 'components/buttons/ghostButton';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { showModalAction } from 'controllers/modal';
+import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { IN_PROGRESS } from 'common/constants/testStatuses';
-import { injectIntl } from 'react-intl';
-import { fetch } from 'common/utils';
-import { URLS } from 'common/urls';
+import { ANALYZER_TYPES } from 'common/constants/analyzerTypes';
 import { activeProjectSelector } from 'controllers/user';
-import {
-  NOTIFICATION_TYPES,
-  showDefaultErrorNotification,
-  showNotification,
-} from 'controllers/notification';
-import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { showModalAction } from 'controllers/modal';
 import { loadingSelector } from 'controllers/uniqueErrors';
+import { showDefaultErrorNotification, showNotification } from 'controllers/notification';
+import { GhostButton } from 'components/buttons/ghostButton';
+import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
 import { RP_CLUSTER_LAST_RUN } from '../constants';
 import { messages } from '../messages';
 import styles from './emptyUniqueErrors.scss';
@@ -70,41 +66,67 @@ export class EmptyUniqueErrors extends Component {
     loading: false,
   };
 
-  onSubmit = ({ removeNumbers }) => {
-    const { projectId, parentLaunch } = this.props;
-    fetch(URLS.runUniqueErrorAnalysis(projectId), {
-      method: 'POST',
-      data: {
-        launchId: parentLaunch.id,
-        removeNumbers,
-      },
-    })
-      .then(({ message }) => {
-        this.props.showNotification({
-          message,
-          type: NOTIFICATION_TYPES.SUCCESS,
-        });
-      })
-      .catch(this.props.showDefaultErrorNotification);
-  };
-
   openModal = () => {
     this.props.showModal({
       id: 'uniqueErrorsAnalyzeModal',
       data: {
-        onSubmit: this.onSubmit,
+        launch: this.props.parentLaunch,
       },
     });
   };
 
-  render() {
+  getBody = () => {
     const {
-      parentLaunch: { status, metadata },
-      loading,
+      parentLaunch: { status, metadata, analysing },
       intl: { formatMessage },
     } = this.props;
-    const lastRunAnalysis = metadata && metadata[RP_CLUSTER_LAST_RUN];
+    const clusterActive = analysing.find((item) => item === ANALYZER_TYPES.CLUSTER_ANALYSER);
     const disabled = status === IN_PROGRESS;
+    const lastRunAnalysis = metadata && metadata[RP_CLUSTER_LAST_RUN];
+
+    if (clusterActive) {
+      return (
+        <>
+          <div className={cx('empty-unique-errors-loader')}>
+            <BubblesPreloader color={'topaz'} />
+          </div>
+          <p className={cx('empty-unique-errors-text')}>
+            {formatMessage(messages.inProgressAnalysisText)}
+          </p>
+          <div className={cx('empty-unique-errors-btn')}>
+            <GhostButton disabled>{formatMessage(messages.inProgressUniqueErrBtn)}</GhostButton>
+          </div>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <p className={cx('empty-unique-errors-headline')}>
+            {formatMessage(messages.emptyUniqueErrHeadline)}
+          </p>
+
+          <p className={cx('empty-unique-errors-text')}>
+            {lastRunAnalysis
+              ? formatMessage(messages.rerunAnalysisText)
+              : formatMessage(messages.emptyUniqueErrText)}
+          </p>
+
+          <div className={cx('empty-unique-errors-btn')}>
+            <GhostButton
+              onClick={this.openModal}
+              disabled={disabled}
+              title={disabled ? formatMessage(messages.emptyUniqueErrDisableBtnTooltip) : null}
+            >
+              {formatMessage(messages.emptyUniqueErrBtn)}
+            </GhostButton>
+          </div>
+        </>
+      );
+    }
+  };
+
+  render() {
+    const { loading } = this.props;
 
     return (
       <>
@@ -114,25 +136,7 @@ export class EmptyUniqueErrors extends Component {
           <div className={cx('empty-unique-errors')}>
             <div className={cx('empty-unique-errors-content')}>
               <div className={cx('empty-unique-errors-img')} />
-              <p className={cx('empty-unique-errors-headline')}>
-                {formatMessage(messages.emptyUniqueErrHeadline)}
-              </p>
-
-              <p className={cx('empty-unique-errors-text')}>
-                {lastRunAnalysis
-                  ? formatMessage(messages.rerunAnalysisText)
-                  : formatMessage(messages.emptyUniqueErrText)}
-              </p>
-
-              <div className={cx('empty-unique-errors-btn')}>
-                <GhostButton
-                  onClick={this.openModal}
-                  disabled={disabled}
-                  title={disabled ? formatMessage(messages.emptyUniqueErrDisableBtnTooltip) : null}
-                >
-                  {formatMessage(messages.emptyUniqueErrBtn)}
-                </GhostButton>
-              </div>
+              {this.getBody()}
             </div>
           </div>
         )}
