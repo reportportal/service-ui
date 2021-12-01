@@ -17,8 +17,9 @@
 .modal-note {
   display: flex;
   align-items: center;
+  max-width: 812px;
+  margin: 0 auto;
   line-height: 18px;
-  margin: 10px 0;
   font-family: $FONT-REGULAR;
   font-size: 10px;
   color: $COLOR--dark-gray;
