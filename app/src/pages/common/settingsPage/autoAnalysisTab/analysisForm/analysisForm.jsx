@@ -192,7 +192,12 @@ export class AnalysisForm extends Component {
 
   submitHandler = (data) => {
     const { tracking, onFormSubmit, analysisBaseSettings } = this.props;
-    const { minShouldMatch, numberOfLogLines, allMessagesShouldMatch } = data;
+    const {
+      minShouldMatch,
+      numberOfLogLines,
+      allMessagesShouldMatch,
+      searchLogsMinShouldMatch,
+    } = data;
     const { autoAnalyzerMode: base, isAutoAnalyzerEnabled } = analysisBaseSettings;
 
     tracking.trackEvent(getAutoAnalysisMinimumShouldMatchSubmitEvent(minShouldMatch));
@@ -200,10 +205,11 @@ export class AnalysisForm extends Component {
       SETTINGS_PAGE_EVENTS.submitAutoAnalysisSettings(
         isAutoAnalyzerEnabled,
         base,
-        minShouldMatch,
-        numberOfLogLines,
         this.state.autoAnalysisMode,
+        numberOfLogLines,
         allMessagesShouldMatch,
+        minShouldMatch,
+        searchLogsMinShouldMatch,
       ),
     );
     onFormSubmit(data);

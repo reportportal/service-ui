@@ -371,16 +371,17 @@ export const SETTINGS_PAGE_EVENTS = {
   submitAutoAnalysisSettings: (
     enabled,
     base,
-    minShouldMatch,
-    numberOfLogLines,
     mode,
+    numberOfLogLines,
     allMessagesShouldMatch,
+    minShouldMatch,
+    searchLogsMinShouldMatch,
   ) => ({
     category: SETTINGS_PAGE,
     action: 'Click on Btn Submit in Auto-Analysis tab',
-    label: `${enabled ? 'On' : 'Off'}#${base}#${minShouldMatch} %#${
+    label: `${enabled ? 'On' : 'Off'}#${base}#${mode || 'Custom'}#${
       numberOfLogLines > -1 ? numberOfLogLines : 'All'
-    }#${mode || 'Custom'}#${allMessagesShouldMatch ? 'On' : 'Off'}`,
+    }#${allMessagesShouldMatch ? 'On' : 'Off'}#${minShouldMatch}%#${searchLogsMinShouldMatch}%`,
   }),
   REMOVE_INDEX_BTN: {
     category: SETTINGS_PAGE,
