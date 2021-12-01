@@ -25,6 +25,36 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
+.token-value-block {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  padding: 6px 10px;
+  border: 1px solid $COLOR--gray-80;
+  font-size: 13px;
+  line-height: 13px;
+  color: $COLOR--charcoal-grey;
+}
+
+.copy {
+  flex-grow: 0;
+  flex-shrink: 0;
+  height: 16px;
+  width: 16px;
+  margin-left: 10px;
+  padding: 0;
+  outline: none;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  vertical-align: middle;
+  stroke: $COLOR--gray-60;
+  &:hover {
+    stroke: $COLOR--black-2;
+  }
+}
+
 .body-wrapper {
   padding: 15px;
 
@@ -54,17 +84,13 @@
 }
 .field {
   height: 100%;
-  display: block;
+  display: flex;
   box-sizing: border-box;
   flex-grow: 1;
   margin-right: 10px;
 
   @media (max-width: $SCREEN_XS_MAX) {
     margin: 0;
-
-    input {
-      background-color: $COLOR--gray-91;
-    }
   }
 
   &:hover {
