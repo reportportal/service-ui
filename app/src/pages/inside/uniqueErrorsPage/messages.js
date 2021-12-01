@@ -21,6 +21,10 @@ export const messages = defineMessages({
     id: 'EmptyUniqueErr.disableButtonTooltip',
     defaultMessage: 'This operation cannot be done for launches in progress',
   },
+  inProgressUniqueErrBtn: {
+    id: 'EmptyUniqueErr.inProgressUniqueErrBtn',
+    defaultMessage: 'In Progress...',
+  },
   emptyUniqueErrBtn: {
     id: 'EmptyUniqueErr.button',
     defaultMessage: 'Run Unique Error Analysis',
@@ -38,6 +42,11 @@ export const messages = defineMessages({
     id: 'EmptyUniqueErr.rerunAnalysisText',
     defaultMessage:
       'There are no error logs that have been found in the launch. But if launch scope has been changed, you can re-run analysis one more time',
+  },
+  inProgressAnalysisText: {
+    id: 'EmptyUniqueErr.inProgressAnalysisText',
+    defaultMessage:
+      'Unique error analysis in progress. To see unique error to this launch please refresh the page',
   },
   uniqueErrAnalyzeModalText: {
     id: 'EmptyUniqueErrsAnalyzeModal.text',
