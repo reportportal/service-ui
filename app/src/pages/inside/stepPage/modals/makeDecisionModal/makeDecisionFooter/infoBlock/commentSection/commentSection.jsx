@@ -18,6 +18,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { InputDropdownRadio } from '../../../elements/inputDropdownRadio';
 import { messages } from '../../../messages';
 import { ResultRow } from '../resultRow';
@@ -32,6 +33,17 @@ import {
 import styles from './commentSection.scss';
 
 const cx = classNames.bind(styles);
+
+const Comment = ({ comment }) => (
+  <div className={cx('comment')}>
+    <ScrollWrapper autoHeight autoHeightMax={145}>
+      {comment}
+    </ScrollWrapper>
+  </div>
+);
+Comment.propTypes = {
+  comment: PropTypes.string.isRequired,
+};
 
 const BulkComment = ({ modalState, setModalState }) => {
   const { formatMessage } = useIntl();
@@ -98,7 +110,7 @@ const BulkComment = ({ modalState, setModalState }) => {
           }}
         />
       </ResultRow>
-      {bulkComment && <div className={cx('comment')}>{bulkComment}</div>}
+      {bulkComment && <Comment comment={bulkComment} />}
     </>
   );
 };
@@ -144,7 +156,7 @@ export const CommentSection = ({ modalState, setModalState, isBulkOperation }) =
                   comment ? messages.commentReplaceWith : messages.commentWillRemoved,
                 )}
               />
-              {comment && <div className={cx('comment')}>{comment}</div>}
+              {comment && <Comment comment={comment} />}
             </>
           )}
         </>
