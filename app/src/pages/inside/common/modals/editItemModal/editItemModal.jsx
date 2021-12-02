@@ -292,6 +292,9 @@ export class EditItemModal extends Component {
             <ModalField label={formatMessage(messages.uuidLabel)}>
               <div title={item.uuid} className={cx('item-uuid')}>
                 {formatItemName(item.uuid)}
+                <CopyToClipboard text={item.uuid} className={cx('copy')}>
+                  {Parser(IconDuplicate)}
+                </CopyToClipboard>
               </div>
             </ModalField>
           )}
