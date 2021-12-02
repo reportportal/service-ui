@@ -461,7 +461,7 @@ const MakeDecision = ({ data }) => {
   return (
     <DarkModalLayout
       headerTitle={formatMessage(
-        isBulkOperation ? messages.selectDefectTypeManually : messages.selectDefect,
+        !isMLSuggestionsAvailable ? messages.selectDefectTypeManually : messages.selectDefect,
       )}
       modalHasChanges={modalHasChanges}
       hotKeyAction={hotKeyAction}
@@ -493,7 +493,6 @@ const MakeDecision = ({ data }) => {
         modalState={modalState}
         setModalState={setModalState}
         itemData={itemData}
-        isBulkOperation={isBulkOperation}
         isAnalyzerAvailable={isAnalyzerAvailable}
         isMLSuggestionsAvailable={isMLSuggestionsAvailable}
       />
