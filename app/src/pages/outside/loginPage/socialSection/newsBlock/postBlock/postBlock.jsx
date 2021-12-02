@@ -75,25 +75,19 @@ const getPostContent = (text, entities) => {
         }</a>`,
     );
   replaceObjects.sort((a, b) => a.start - b.start);
-  currentReplaceObject = replaceObjects.shift();
-
   text.split('').forEach((letter, index) => {
     if (!currentReplaceObject && replaceObjects.length) {
       currentReplaceObject = replaceObjects.shift();
     }
+
     if (!currentReplaceObject || index < currentReplaceObject.start) {
       result += letter;
-      return true;
-    }
-    if (currentReplaceObject.start === index) {
+    } else if (currentReplaceObject.start === index) {
       result += currentReplaceObject.html;
-      return true;
-    }
-    if (index >= currentReplaceObject.end) {
-      result += letter;
+    } else if (index >= currentReplaceObject.end) {
       currentReplaceObject = null;
+      result += ' ';
     }
-    return true;
   });
 
   return result.replace(/\n/g, '<br>');
