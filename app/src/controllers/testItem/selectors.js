@@ -32,6 +32,7 @@ import {
   filterIdSelector,
   HISTORY_PAGE,
   UNIQUE_ERRORS_PAGE,
+  pageSelector,
 } from 'controllers/pages';
 import { activeProjectSelector } from 'controllers/user';
 import { activeFilterSelector } from 'controllers/filter';
@@ -432,9 +433,9 @@ const btsBackLinkBaseSelector = createSelector(payloadSelector, (payload) => {
 });
 
 export const btsIntegrationBackLinkSelector = (state, { path = '', launchId } = {}) => {
-  const isStepLevel = isStepLevelSelector(state);
+  const isLogPage = pageSelector(state) === PROJECT_LOG_PAGE;
 
-  if (!isStepLevel) {
+  if (isLogPage) {
     return window.location.toString();
   }
 
