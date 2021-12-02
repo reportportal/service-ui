@@ -98,14 +98,6 @@ export class AccessTokenBlock extends Component {
     });
   };
 
-  setupRef = (node) => {
-    this.inputLink = node;
-  };
-
-  selectAccessToken = () => {
-    this.inputLink.select();
-  };
-
   regenerateHandler = () => {
     this.props.generateApiTokenAction({
       successMessage: this.props.intl.formatMessage(messages.regenerateSuccess),
@@ -127,13 +119,11 @@ export class AccessTokenBlock extends Component {
           <div className={cx('body-wrapper')}>
             <div className={cx('field-wrapper')}>
               <span className={cx('label')}>{formatMessage(messages.header)}</span>
-              <div className={cx('field')}>
-                <div className={cx('token-value-block')}>
-                  {this.props.token}
-                  <CopyToClipboard text={this.props.token} className={cx('copy')}>
-                    {Parser(IconDuplicate)}
-                  </CopyToClipboard>
-                </div>
+              <div className={cx('token-value-block')}>
+                {this.props.token}
+                <CopyToClipboard text={this.props.token} className={cx('copy')}>
+                  {Parser(IconDuplicate)}
+                </CopyToClipboard>
               </div>
               <div className={cx('regenerate-btn')}>
                 <ButtonWithTooltip>
