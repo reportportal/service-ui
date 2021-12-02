@@ -29,9 +29,9 @@ export const messages = defineMessages({
     id: 'MakeDecisionModal.and',
     defaultMessage: 'and',
   },
-  defectCommentPlaceholder: {
-    id: 'MakeDecisionModal.defectCommentPlaceholder',
-    defaultMessage: 'Defect comment',
+  comment: {
+    id: 'MakeDecisionModal.comment',
+    defaultMessage: 'Comment',
   },
   ignoreAa: {
     id: 'MakeDecisionModal.ignoreAa',
@@ -236,15 +236,15 @@ export const messages = defineMessages({
   },
   commentReplaceWith: {
     id: 'MakeDecisionModal.commentReplaceWith',
-    defaultMessage: 'Defect comment will be replaced with:',
+    defaultMessage: 'Comment will be replaced with:',
   },
   commentWillRemoved: {
     id: 'MakeDecisionModal.commentWillRemoved',
-    defaultMessage: 'Defect comment will be removed',
+    defaultMessage: 'Comment will be removed',
   },
   commentWill: {
     id: 'MakeDecisionModal.commentWill',
-    defaultMessage: 'Defect comments will',
+    defaultMessage: 'Comments will',
   },
   notChangedForAll: {
     id: 'MakeDecisionModal.notChangedForAll',

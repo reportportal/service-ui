@@ -221,7 +221,7 @@ export const SelectDefectManually = ({
             onClickToolbarIcon:
               eventsInfo.onClickEditorIcon && eventsInfo.onClickEditorIcon(defectFromTIGroup),
           }}
-          placeholder={formatMessage(messages.defectCommentPlaceholder)}
+          placeholder={formatMessage(messages.comment)}
           mode="dark"
         />
       </div>

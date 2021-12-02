@@ -78,7 +78,7 @@ export const TestItemDetails = ({
               <div className={cx('defect-comment')}>
                 <div>{Parser(commentIcon)}</div>
                 <div className={cx('defect-comment-content')}>
-                  <p className={cx('defect-comment-title')}>Defect Comment</p>
+                  <p className={cx('defect-comment-title')}>{formatMessage(messages.comment)}</p>
                   <p className={cx('defect-comment-text')}>{item.issue.comment}</p>
                 </div>
               </div>
