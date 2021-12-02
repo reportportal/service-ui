@@ -84,7 +84,8 @@ export class EmptyUniqueErrors extends Component {
       parentLaunch: { status, metadata, analysing },
       intl: { formatMessage },
     } = this.props;
-    const clusterActive = analysing.find((item) => item === ANALYZER_TYPES.CLUSTER_ANALYSER);
+    const clusterActive =
+      analysing && analysing.find((item) => item === ANALYZER_TYPES.CLUSTER_ANALYSER);
     const disabled = status === IN_PROGRESS;
     const lastRunAnalysis = metadata && metadata[RP_CLUSTER_LAST_RUN];
 
