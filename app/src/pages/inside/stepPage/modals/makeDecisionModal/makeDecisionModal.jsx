@@ -133,11 +133,11 @@ const MakeDecision = ({ data }) => {
 
   const prepareDataToSend = ({ isIssueAction } = {}) => {
     const { issue } = modalState[ACTIVE_TAB_MAP[activeTab]];
-    const { currentTestItems, selectedItems } = modalState;
+    const { currentTestItems, selectedItems, commentOption } = modalState;
     if (isBulkOperation) {
       return currentTestItems.map((item) => {
         let comment;
-        switch (modalState.commentOption) {
+        switch (commentOption) {
           case CLEAR_FOR_ALL: {
             comment = '';
             break;
@@ -166,12 +166,23 @@ const MakeDecision = ({ data }) => {
         };
       });
     }
+
+    let newIssue = issue;
+
+    if (activeTab === SELECT_DEFECT_MANUALLY) {
+      const baseIssue = modalState.currentTestItems[0].issue;
+      newIssue = Object.fromEntries(
+        Object.entries(issue).filter(([key, val]) => baseIssue[key] !== val),
+      );
+    }
+
     return [...currentTestItems, ...selectedItems].map((item) => ({
       ...(isIssueAction ? { ...item, opened: SHOW_LOGS_BY_DEFAULT } : {}),
       id: item.id || item.itemId,
       testItemId: item.id || item.itemId,
       issue: {
-        ...issue,
+        ...item.issue,
+        ...newIssue,
         autoAnalyzed: false,
       },
     }));
