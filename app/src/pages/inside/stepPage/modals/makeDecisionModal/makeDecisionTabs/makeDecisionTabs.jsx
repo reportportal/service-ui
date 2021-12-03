@@ -38,7 +38,6 @@ export const MakeDecisionTabs = ({
   loadingMLSuggest,
   modalState,
   setModalState,
-  isBulkOperation,
   isAnalyzerAvailable,
   isMLSuggestionsAvailable,
 }) => {
@@ -82,8 +81,8 @@ export const MakeDecisionTabs = ({
   const renderActiveTab = () => {
     const tab = tabs.find((el) => el.isOpen);
     return (
-      <div className={cx({ tab: !isBulkOperation })}>
-        {!isBulkOperation && (
+      <div className={cx({ tab: isMLSuggestionsAvailable })}>
+        {isMLSuggestionsAvailable && (
           <div className={cx('tab-header')}>
             {tab.title ||
               (suggestedItems.length &&
@@ -104,8 +103,8 @@ export const MakeDecisionTabs = ({
   };
 
   return (
-    <div className={cx('make-decision-tabs', { 'bulk-operation': isBulkOperation })}>
-      {(!isBulkOperation || isMLSuggestionsAvailable) && (
+    <div className={cx('make-decision-tabs')}>
+      {isMLSuggestionsAvailable && (
         <div className={cx('tabs')}>
           <div
             onClick={() => selectSideTab(SELECT_DEFECT_MANUALLY)}
@@ -194,7 +193,6 @@ MakeDecisionTabs.propTypes = {
   toggleTab: PropTypes.func,
   suggestedItems: PropTypes.array,
   loadingMLSuggest: PropTypes.bool,
-  isBulkOperation: PropTypes.bool,
   isAnalyzerAvailable: PropTypes.bool,
   isMLSuggestionsAvailable: PropTypes.bool,
 };
@@ -203,7 +201,6 @@ MakeDecisionTabs.defaultProps = {
   toggleTab: () => {},
   suggestedItems: [],
   loadingMLSuggest: false,
-  isBulkOperation: false,
   isAnalyzerAvailable: false,
   isMLSuggestionsAvailable: false,
 };

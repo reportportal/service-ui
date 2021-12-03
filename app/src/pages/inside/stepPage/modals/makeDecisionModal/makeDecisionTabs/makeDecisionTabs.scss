@@ -226,6 +226,10 @@
     margin-bottom: 20px;
     color: $COLOR--white-two;
   }
+
+  &-content {
+    margin-top: 10px;
+  }
 }
 
 .padding-right-20 {
@@ -234,10 +238,6 @@
 
 .link-wrapper {
   display: flex;
-}
-
-.bulk-operation {
-  margin-top: 10px;
 }
 
 .jumping {
