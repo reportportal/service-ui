@@ -300,6 +300,26 @@ export const LAUNCHES_PAGE_EVENTS = {
   REFINE_FILTERS_PANEL_EVENTS: {
     commonEvents: getRefineFiltersPanelEvents(LAUNCHES_PAGE),
   },
+  ADD_FILTER: {
+    category: LAUNCHES_PAGE,
+    action: 'Click on button "+Add filter"',
+    label: '',
+  },
+  refineBtnMore: (value) => ({
+    category: LAUNCHES_PAGE,
+    action: 'Select Parameter to Refine',
+    label: `${value}`,
+  }),
+  clickAttributes: (value) => ({
+    category: LAUNCHES_PAGE,
+    action: 'Click on icon Attributes',
+    label: `${value}`,
+  }),
+  clickFilterActionBarButton: (value) => ({
+    category: LAUNCHES_PAGE,
+    action: `Click on button "${value}" in filter action bar`,
+    label: '',
+  }),
 };
 
 export const LAUNCHES_MODAL_EVENTS = {

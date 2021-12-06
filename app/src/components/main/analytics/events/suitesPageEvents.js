@@ -50,4 +50,9 @@ export const SUITES_PAGE_EVENTS = {
   DELETE_ITEM_MODAL_EVENTS: getDeleteItemModalEvents(SUITE_PAGE),
   // EDIT_ITEMS_MODAL
   EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(SUITE_PAGE),
+  clickAttributes: (value) => ({
+    category: SUITE_PAGE,
+    action: 'Click on icon Attributes',
+    label: `${value}`,
+  }),
 };

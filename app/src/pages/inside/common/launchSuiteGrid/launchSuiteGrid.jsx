@@ -15,6 +15,7 @@
  */
 
 import React, { PureComponent, Fragment } from 'react';
+import track from 'react-tracking';
 import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
@@ -210,6 +211,7 @@ TiColumn.propTypes = {
 };
 
 @injectIntl
+@track()
 export class LaunchSuiteGrid extends PureComponent {
   static propTypes = {
     intl: PropTypes.object.isRequired,
@@ -237,6 +239,10 @@ export class LaunchSuiteGrid extends PureComponent {
       highlightedRowId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     }),
     noItemsBlock: PropTypes.element,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     data: [],
@@ -439,7 +445,9 @@ export class LaunchSuiteGrid extends PureComponent {
   }
 
   handleAttributeFilterClick = (attribute) => {
-    this.props.onFilterClick(
+    const { tracking, events, onFilterClick } = this.props;
+
+    onFilterClick(
       [
         {
           id: ENTITY_ATTRIBUTE,
@@ -452,6 +460,9 @@ export class LaunchSuiteGrid extends PureComponent {
       ],
       true,
     );
+
+    const textAttribute = attribute.key ? 'key:value' : 'value';
+    events.clickAttributes && tracking.trackEvent(events.clickAttributes(textAttribute));
   };
 
   handleOwnerFilterClick = (owner) =>
