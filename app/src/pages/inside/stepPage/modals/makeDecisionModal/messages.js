@@ -113,7 +113,7 @@ export const messages = defineMessages({
   },
   currentLaunch: {
     id: 'MakeDecisionModal.currentLaunch',
-    defaultMessage: 'Current item & similar ”To Investigate” in the launch',
+    defaultMessage: 'Similar ”To Investigate” in the launch & current item',
   },
   currentLaunchTooltip: {
     id: 'MakeDecisionModal.currentLaunchTooltip',
@@ -122,7 +122,7 @@ export const messages = defineMessages({
   },
   launchName: {
     id: 'MakeDecisionModal.launchName',
-    defaultMessage: 'Current item & similar “To Investigate” in 10 launches',
+    defaultMessage: 'Similar “To Investigate” in 10 launches & current item',
   },
   lastTenLaunchesTooltip: {
     id: 'MakeDecisionModal.lastTenLaunchesTooltip',
@@ -131,7 +131,7 @@ export const messages = defineMessages({
   },
   filter: {
     id: 'MakeDecisionModal.filter',
-    defaultMessage: 'Current item & similar “To Investigate” in the {filterName}',
+    defaultMessage: 'Similar “To Investigate” in the {filterName} & current item',
   },
   withFilterTooltip: {
     id: 'MakeDecisionModal.withFilterTooltip',
@@ -148,7 +148,7 @@ export const messages = defineMessages({
   },
   allLoadedTIFromHistoryLine: {
     id: 'MakeDecisionModal.allLoadedTIFromHistoryLine',
-    defaultMessage: 'Current item & “To Investigate” from the history line',
+    defaultMessage: '“To Investigate” from the history line & current item',
   },
   analyzerUnavailable: {
     id: 'MakeDecisionModal.analyzerUnavailable',

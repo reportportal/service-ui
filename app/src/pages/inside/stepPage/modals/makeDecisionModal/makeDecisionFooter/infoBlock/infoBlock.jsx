@@ -48,20 +48,29 @@ export const InfoBlock = ({ modalState, setModalState, isBulkOperation, expanded
   const ignoreInAAChanged =
     !isBulkOperation &&
     currentSource.ignoreAnalyzer !== modalState.currentTestItems[0].issue.ignoreAnalyzer;
+  const getTitle = () => {
+    if (expanded) {
+      return formatMessage(messages.followingResult, {
+        items: (
+          <span className={cx('bold')} key={0}>
+            {testItemsLength > 1
+              ? formatMessage(messages.itemsCount, { count: testItemsLength })
+              : formatMessage(messages.item)}
+          </span>
+        ),
+      });
+    } else {
+      return testItemsLength > 1
+        ? formatMessage(messages.applyToItems, { itemsCount: testItemsLength })
+        : formatMessage(messages.applyToItem);
+    }
+  };
 
   return (
     <div className={cx('container', { expanded })}>
       <div className={cx('header', { expanded })} onClick={onToggle}>
         <span className={cx('arrow', { expanded })} />
-        {formatMessage(messages.followingResult, {
-          items: (
-            <span className={cx('bold')} key={0}>
-              {testItemsLength > 1
-                ? formatMessage(messages.itemsCount, { count: testItemsLength })
-                : formatMessage(messages.item)}
-            </span>
-          ),
-        })}
+        {getTitle()}
       </div>
       {expanded && (
         <div className={cx('result-container')}>
