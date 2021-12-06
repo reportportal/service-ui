@@ -412,14 +412,10 @@ const MakeDecision = ({ data }) => {
         shouldShow: isMLSuggestionsAvailable,
         isOpen: activeTab === MACHINE_LEARNING_SUGGESTIONS,
         title:
-          clusterIds.length === 1 ? (
-            <div>
-              {formatMessage(messages.machineLearningSuggestions, {
-                target:
-                  clusterIds.length === 1 ? formatMessage(messages.MLSuggestionsForCluster) : '',
-              })}
-            </div>
-          ) : null,
+          modalState.suggestChoice.suggestRs &&
+          formatMessage(messages.executionWith, {
+            value: modalState.suggestChoice.suggestRs.matchScore,
+          }),
         content: isMLSuggestionsAvailable && (
           <MachineLearningSuggestions
             modalState={modalState}
