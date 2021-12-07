@@ -37,7 +37,7 @@ export const projectMembersSelector = (state) => projectInfoSelector(state).user
 
 export const projectCreationDateSelector = (state) => projectInfoSelector(state).creationDate || 0;
 
-export const projectIdSelector = (state) => projectInfoSelector(state).projectId;
+export const projectInfoIdSelector = (state) => projectInfoSelector(state).projectId;
 
 export const projectPreferencesSelector = (state) => projectSelector(state).preferences || {};
 

@@ -24,7 +24,7 @@ import { idSelector } from 'controllers/user/selectors';
 import {
   autoAnalysisEnabledSelector,
   patternAnalysisEnabledSelector,
-  projectIdSelector,
+  projectInfoIdSelector,
 } from 'controllers/project/selectors';
 
 const PAGE_VIEW = 'pageview';
@@ -36,7 +36,7 @@ const GOOGLE_ANALYTICS_INSTANCE = 'UA-96321031-1';
   userId: idSelector(state),
   isAutoAnalyzerEnabled: autoAnalysisEnabledSelector(state),
   isPatternAnalyzerEnabled: patternAnalysisEnabledSelector(state),
-  projectId: projectIdSelector(state),
+  projectId: projectInfoIdSelector(state),
 }))
 @track(
   {},
