@@ -60,8 +60,8 @@ export class AnalyticsWrapper extends Component {
     buildVersion: PropTypes.string.isRequired,
     children: PropTypes.node,
     userId: PropTypes.number.isRequired,
-    isAutoAnalyzerEnabled: PropTypes.string.isRequired,
-    isPatternAnalyzerEnabled: PropTypes.string.isRequired,
+    isAutoAnalyzerEnabled: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
+    isPatternAnalyzerEnabled: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
     projectId: PropTypes.number.isRequired,
   };
 
@@ -92,8 +92,8 @@ export class AnalyticsWrapper extends Component {
       dimension2: appVersion,
       dimension3: userId,
       dimension4: Date.now(),
-      dimension5: isAutoAnalyzerEnabled,
-      dimension6: isPatternAnalyzerEnabled,
+      dimension5: isAutoAnalyzerEnabled !== undefined ? isAutoAnalyzerEnabled.toString() : '',
+      dimension6: isPatternAnalyzerEnabled !== undefined ? isPatternAnalyzerEnabled.toString() : '',
       dimension7: projectId,
     });
     ReactGA.ga()('require', 'ec');
@@ -108,12 +108,13 @@ export class AnalyticsWrapper extends Component {
     }
     if (prevProps.isAutoAnalyzerEnabled !== isAutoAnalyzerEnabled) {
       ReactGA.set({
-        dimension5: isAutoAnalyzerEnabled,
+        dimension5: isAutoAnalyzerEnabled !== undefined ? isAutoAnalyzerEnabled.toString() : '',
       });
     }
     if (prevProps.isPatternAnalyzerEnabled !== isPatternAnalyzerEnabled) {
       ReactGA.set({
-        dimension6: isPatternAnalyzerEnabled,
+        dimension6:
+          isPatternAnalyzerEnabled !== undefined ? isPatternAnalyzerEnabled.toString() : '',
       });
     }
     if (prevProps.projectId !== projectId) {

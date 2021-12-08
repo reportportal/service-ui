@@ -48,12 +48,10 @@ export const subTypesSelector = (state) => projectConfigSelector(state).subTypes
 export const projectAttributesSelector = (state) => projectConfigSelector(state).attributes || {};
 
 export const autoAnalysisEnabledSelector = (state) =>
-  projectAttributesSelector(state)[AA_ATTRIBUTE_ENABLED_KEY] &&
-  projectAttributesSelector(state)[AA_ATTRIBUTE_ENABLED_KEY].toString();
+  projectAttributesSelector(state)[AA_ATTRIBUTE_ENABLED_KEY];
 
 export const patternAnalysisEnabledSelector = (state) =>
-  projectAttributesSelector(state)[PA_ATTRIBUTE_ENABLED_KEY] &&
-  projectAttributesSelector(state)[PA_ATTRIBUTE_ENABLED_KEY].toString();
+  projectAttributesSelector(state)[PA_ATTRIBUTE_ENABLED_KEY];
 
 export const defectTypesSelector = createSelector(subTypesSelector, (subTypes) =>
   DEFECT_TYPES_SEQUENCE.reduce(
