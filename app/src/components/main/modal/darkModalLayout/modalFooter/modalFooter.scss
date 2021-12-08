@@ -29,6 +29,10 @@
   color: $COLOR--white-two;
   background: $COLOR--black-1;
   box-sizing: border-box;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    padding: 15px;
+  }
 }
 
 .buttons-bar {

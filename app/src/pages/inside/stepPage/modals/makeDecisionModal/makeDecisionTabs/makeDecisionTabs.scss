@@ -22,10 +22,6 @@
 .tabs {
   display: flex;
   padding-top: 10px;
-
-  @media (max-width: $SCREEN_MD_MAX) {
-    max-width: 570px;
-  }
 }
 
 .side-block {
@@ -45,7 +41,7 @@
   }
 
   &-title {
-    padding-bottom: 3px;
+    padding: 0 10px 3px 10px;
     color: $COLOR--white-two;
     font-size: 12px;
     font-weight: 600;
@@ -92,8 +88,8 @@
   height: 58px;
   margin: 0 30px;
 
-  @media (max-width: $SCREEN_MD_MAX) {
-    width: 340px;
+  @media (min-width: $SCREEN_XS_MAX) and (max-width: $SCREEN_MD_MAX) {
+    margin: 0 15px;
   }
 
   &-default {

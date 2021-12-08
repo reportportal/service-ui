@@ -30,6 +30,10 @@
       fill: $COLOR--black-2;
     }
   }
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
 }
 
 .defect-type {
@@ -44,6 +48,10 @@
   display: flex;
   align-items: center;
   padding-bottom: 10px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    pointer-events: none;
+  }
 }
 
 .ignore-aa-label {

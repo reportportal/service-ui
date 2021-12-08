@@ -34,7 +34,7 @@ import { MarkdownEditor } from 'components/main/markdown';
 import { getIssueTitle } from 'pages/inside/common/utils';
 import { DefectTypeSelector } from 'pages/inside/common/defectTypeSelector';
 import { debugModeSelector } from 'controllers/launch';
-import { SCREEN_MD_MAX, SCREEN_SM_MAX, SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
+import { SCREEN_SM_MAX, SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { SELECT_DEFECT_MANUALLY } from '../../constants';
@@ -177,8 +177,7 @@ export const SelectDefectManually = ({
   };
   const { width } = windowSize;
 
-  const getDefectTypeNarrowView = () =>
-    (width < SCREEN_SM_MAX && width > SCREEN_XS_MAX) || width < SCREEN_MD_MAX;
+  const getDefectTypeNarrowView = () => width < SCREEN_SM_MAX && width > SCREEN_XS_MAX;
 
   return (
     <div className={cx('select-defect-wrapper')}>

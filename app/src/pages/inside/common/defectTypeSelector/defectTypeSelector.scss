@@ -17,10 +17,6 @@
 .defect-options {
   display: flex;
   flex-wrap: wrap;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    flex-direction: column;
-  }
 }
 
 .select-option-group {
@@ -35,12 +31,8 @@
   }
 
   @media (max-width: $SCREEN_XS_MAX) {
-    margin-right: 10px;
-
     &:not(:last-child) {
-      border-bottom: 1px solid $COLOR--black-1;
-      padding-bottom: 10px;
-      margin: 0 10px 10px 0;
+      margin-right: 10px;
     }
   }
 }
