@@ -331,7 +331,9 @@ export class StepGrid extends Component {
   }
 
   handleAttributeFilterClick = (attribute) => {
-    this.props.onFilterClick(
+    const { tracking, events, onFilterClick } = this.props;
+
+    onFilterClick(
       [
         {
           id: ENTITY_ATTRIBUTE,
@@ -344,6 +346,9 @@ export class StepGrid extends Component {
       ],
       true,
     );
+
+    const textAttribute = attribute.key ? 'key:value' : 'value';
+    events.clickAttributes && tracking.trackEvent(events.clickAttributes(textAttribute));
   };
 
   highlightFailedItems = (value) => ({

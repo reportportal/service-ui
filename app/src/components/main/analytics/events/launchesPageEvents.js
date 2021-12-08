@@ -16,6 +16,7 @@
 
 import { getEditItemsModalEvents } from 'components/main/analytics/events/common/testItemPages/modalEventsCreators';
 import {
+  getClickAttributes,
   getClickOnPlusMinusEvents,
   getCommonActionEvents,
   getRefineFiltersPanelEvents,
@@ -310,11 +311,7 @@ export const LAUNCHES_PAGE_EVENTS = {
     action: 'Select Parameter to Refine',
     label: `${value}`,
   }),
-  clickAttributes: (value) => ({
-    category: LAUNCHES_PAGE,
-    action: 'Click on icon Attributes',
-    label: `${value}`,
-  }),
+  clickAttributes: getClickAttributes(LAUNCHES_PAGE),
   clickFilterActionBarButton: (value) => ({
     category: LAUNCHES_PAGE,
     action: `Click on button "${value}" in filter action bar`,

@@ -86,8 +86,20 @@ export class AppSidebar extends Component {
     this.props.tracking.trackEvent(eventInfo);
   };
 
-  getFilterCount = () => {
-    return this.props.launchFilters.length;
+  getFiltersStatistic = () => {
+    let savedFilters = 0;
+    let unsavedFilters = 0;
+    this.props.launchFilters.forEach(
+      (filter) => {
+        if (filter.id < 0) {
+          unsavedFilters += 1;
+        } else {
+          savedFilters += 1;
+        }
+      },
+      [this],
+    );
+    return `${savedFilters}#${unsavedFilters}`;
   };
 
   createTopSidebarItems = () => {
@@ -107,7 +119,8 @@ export class AppSidebar extends Component {
         message: <FormattedMessage id={'Sidebar.dashboardsBtn'} defaultMessage={'Dashboards'} />,
       },
       {
-        onClick: () => this.onClickButton(SIDEBAR_EVENTS.clickLaunchesBtn(this.getFilterCount())),
+        onClick: () =>
+          this.onClickButton(SIDEBAR_EVENTS.clickLaunchesBtn(this.getFiltersStatistic())),
         link: {
           type: LAUNCHES_PAGE,
           payload: { projectId: activeProject },

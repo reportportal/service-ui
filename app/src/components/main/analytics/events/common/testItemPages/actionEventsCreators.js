@@ -97,6 +97,12 @@ export const getClickSelectOneItemEvent = (page) => (value) => ({
   label: `${value ? 'select' : 'unselect'} one item`,
 });
 
+export const getClickAttributes = (category) => (value) => ({
+  category,
+  action: 'Click on icon Attributes',
+  label: value,
+});
+
 export const getCommonActionEvents = (page) => ({
   CLOSE_ICON_FOR_ALL_SELECTIONS: {
     category: page,
