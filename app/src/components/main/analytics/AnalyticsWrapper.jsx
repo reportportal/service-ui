@@ -20,12 +20,13 @@ import { connect } from 'react-redux';
 import { instanceIdSelector, apiBuildVersionSelector } from 'controllers/appInfo';
 import track from 'react-tracking';
 import ReactGA from 'react-ga';
-import { idSelector } from 'controllers/user/selectors';
+import { idSelector, isAdminSelector } from 'controllers/user/selectors';
 import {
   autoAnalysisEnabledSelector,
   patternAnalysisEnabledSelector,
   projectInfoIdSelector,
 } from 'controllers/project/selectors';
+import { normalizeDimensionValue } from './utils';
 
 const PAGE_VIEW = 'pageview';
 const GOOGLE_ANALYTICS_INSTANCE = 'UA-96321031-1';
@@ -37,6 +38,7 @@ const GOOGLE_ANALYTICS_INSTANCE = 'UA-96321031-1';
   isAutoAnalyzerEnabled: autoAnalysisEnabledSelector(state),
   isPatternAnalyzerEnabled: patternAnalysisEnabledSelector(state),
   projectId: projectInfoIdSelector(state),
+  isAdmin: isAdminSelector(state),
 }))
 @track(
   {},
@@ -60,9 +62,10 @@ export class AnalyticsWrapper extends Component {
     buildVersion: PropTypes.string.isRequired,
     children: PropTypes.node,
     userId: PropTypes.number.isRequired,
-    isAutoAnalyzerEnabled: PropTypes.string.isRequired,
-    isPatternAnalyzerEnabled: PropTypes.string.isRequired,
+    isAutoAnalyzerEnabled: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
+    isPatternAnalyzerEnabled: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
     projectId: PropTypes.number.isRequired,
+    isAdmin: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -77,6 +80,7 @@ export class AnalyticsWrapper extends Component {
       isAutoAnalyzerEnabled,
       isPatternAnalyzerEnabled,
       projectId,
+      isAdmin,
     } = this.props;
     const appVersion =
       buildVersion &&
@@ -92,15 +96,21 @@ export class AnalyticsWrapper extends Component {
       dimension2: appVersion,
       dimension3: userId,
       dimension4: Date.now(),
-      dimension5: isAutoAnalyzerEnabled,
-      dimension6: isPatternAnalyzerEnabled,
-      dimension7: projectId,
+      dimension5: normalizeDimensionValue(isAutoAnalyzerEnabled),
+      dimension6: normalizeDimensionValue(isPatternAnalyzerEnabled),
+      dimension7: isAdmin ? undefined : projectId,
     });
     ReactGA.ga()('require', 'ec');
   }
 
   componentDidUpdate(prevProps) {
-    const { userId, isAutoAnalyzerEnabled, isPatternAnalyzerEnabled, projectId } = this.props;
+    const {
+      userId,
+      isAutoAnalyzerEnabled,
+      isPatternAnalyzerEnabled,
+      projectId,
+      isAdmin,
+    } = this.props;
     if (prevProps.userId !== userId) {
       ReactGA.set({
         dimension3: userId,
@@ -108,17 +118,17 @@ export class AnalyticsWrapper extends Component {
     }
     if (prevProps.isAutoAnalyzerEnabled !== isAutoAnalyzerEnabled) {
       ReactGA.set({
-        dimension5: isAutoAnalyzerEnabled,
+        dimension5: normalizeDimensionValue(isAutoAnalyzerEnabled),
       });
     }
     if (prevProps.isPatternAnalyzerEnabled !== isPatternAnalyzerEnabled) {
       ReactGA.set({
-        dimension6: isPatternAnalyzerEnabled,
+        dimension6: normalizeDimensionValue(isPatternAnalyzerEnabled),
       });
     }
     if (prevProps.projectId !== projectId) {
       ReactGA.set({
-        dimension7: projectId,
+        dimension7: isAdmin ? undefined : projectId,
       });
     }
   }

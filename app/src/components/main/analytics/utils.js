@@ -33,3 +33,7 @@ export const provideEcGA = ({
   }
   ga(command, hitType, eventName, action);
 };
+
+export const normalizeDimensionValue = (value) => {
+  return value !== undefined ? value.toString() : undefined;
+};
