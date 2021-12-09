@@ -82,15 +82,7 @@ export const MakeDecisionTabs = ({
     const tab = tabs.find((el) => el.isOpen);
     return (
       <div className={cx({ tab: isMLSuggestionsAvailable })}>
-        {isMLSuggestionsAvailable && (
-          <div className={cx('tab-header')}>
-            {tab.title ||
-              (suggestedItems.length &&
-                formatMessage(messages.executionWith, {
-                  value: suggestedItems[selectedMLSuggest || 0].suggestRs.matchScore.toString(),
-                }))}
-          </div>
-        )}
+        {isMLSuggestionsAvailable && <div className={cx('tab-header')}>{tab.title}</div>}
         <div
           className={cx('tab-content', {
             'padding-right-20': tab.id === COPY_FROM_HISTORY_LINE,
