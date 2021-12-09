@@ -7,6 +7,8 @@ export const EXTENSION_TYPE_LAUNCH_ITEM_COMPONENT = 'uiExtension:launchItemCompo
 export const EXTENSION_TYPE_INTEGRATION_FORM_FIELDS = 'uiExtension:integrationFormFields';
 export const EXTENSION_TYPE_INTEGRATION_SETTINGS = 'uiExtension:integrationSettings';
 export const EXTENSION_TYPE_POST_ISSUE_FORM = 'uiExtension:postIssueForm';
+export const EXTENSION_TYPE_NEW_ERROR_COMPONENT = 'uiExtension:newErrorComponent';
+export const EXTENSION_TYPE_NEW_ERROR_HEADER_COMPONENT = 'uiExtension:newErrorHeaderComponent';
 
 export const COMMAND_GET_FILE = 'getFile';
 export const COMMAND_GET_ISSUE_TYPES = 'getIssueTypes';

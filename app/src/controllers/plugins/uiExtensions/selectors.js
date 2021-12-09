@@ -8,6 +8,8 @@ import {
   EXTENSION_TYPE_INTEGRATION_FORM_FIELDS,
   EXTENSION_TYPE_INTEGRATION_SETTINGS,
   EXTENSION_TYPE_POST_ISSUE_FORM,
+  EXTENSION_TYPE_NEW_ERROR_COMPONENT,
+  EXTENSION_TYPE_NEW_ERROR_HEADER_COMPONENT,
 } from './constants';
 import { domainSelector, enabledPluginNamesSelector } from '../selectors';
 import { uiExtensionMap } from './uiExtensionStorage';
@@ -45,4 +47,10 @@ export const uiExtensionIntegrationSettingsSelector = createUiExtensionSelectorB
 );
 export const uiExtensionPostIssueFormSelector = createUiExtensionSelectorByType(
   EXTENSION_TYPE_POST_ISSUE_FORM,
+);
+export const uiExtensionNewErrorComponentsSelector = createUiExtensionSelectorByType(
+  EXTENSION_TYPE_NEW_ERROR_COMPONENT,
+);
+export const uiExtensionNewErrorHeaderComponentSelector = createUiExtensionSelectorByType(
+  EXTENSION_TYPE_NEW_ERROR_HEADER_COMPONENT,
 );

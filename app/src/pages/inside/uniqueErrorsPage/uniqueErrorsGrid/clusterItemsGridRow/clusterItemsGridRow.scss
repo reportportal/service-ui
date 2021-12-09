@@ -25,6 +25,10 @@
 .table-cell {
   display: table-cell;
   border-bottom: 6px solid $COLOR--primary-gray;
+
+  &-full-width {
+    width: 100%;
+  }
 }
 
 .expand-col {
@@ -34,6 +38,10 @@
 
 .nested-expand-col {
   background: $COLOR--primary-gray;
+}
+
+.nested-grid {
+  display: flex;
 }
 
 .arrow-icon {
@@ -68,6 +76,11 @@
   line-height: 1.55;
   color: $COLOR_-black-2;
   white-space: pre-wrap;
+  word-break: break-all;
+
+  @supports (word-break: break-word) {
+    word-break: break-word;
+  }
 }
 
 .cluster-accordion-block {

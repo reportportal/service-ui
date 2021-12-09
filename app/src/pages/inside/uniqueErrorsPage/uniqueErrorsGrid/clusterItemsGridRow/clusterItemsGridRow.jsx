@@ -36,6 +36,7 @@ import {
 import { ENTITY_METHOD_TYPE } from 'components/filterEntities/constants';
 import { PROJECT_LOG_PAGE } from 'controllers/pages';
 import { reloadClustersAction } from 'controllers/uniqueErrors';
+import { uiExtensionNewErrorComponentsSelector } from 'controllers/plugins/uiExtensions/selectors';
 import { modifyColumnsFunc } from './utils';
 import styles from './clusterItemsGridRow.scss';
 
@@ -73,6 +74,7 @@ export const ClusterItemsGridRow = ({ data, onEditItem, onUnlinkSingleTicket, on
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const clusterItems = useSelector((state) => clusterItemsSelector(state, id));
+  const extensionComponents = useSelector(uiExtensionNewErrorComponentsSelector);
   const {
     collapsed,
     loading,
@@ -114,6 +116,11 @@ export const ClusterItemsGridRow = ({ data, onEditItem, onUnlinkSingleTicket, on
           <div className={cx('table-cell')}>
             <ClusterColumn cluster={data} />
           </div>
+          {extensionComponents.map((extensionComponent) => (
+            <div className={cx('table-cell')}>
+              <extensionComponent.component key={extensionComponent.name} data={data} />
+            </div>
+          ))}
         </div>
       </div>
 
@@ -121,37 +128,43 @@ export const ClusterItemsGridRow = ({ data, onEditItem, onUnlinkSingleTicket, on
         <div className={cx('table-row-group')}>
           <div className={cx('table-row')}>
             <div className={cx('table-cell', 'nested-expand-col')} />
-            <div className={cx('table-cell')}>
-              <StepGrid
-                data={content}
-                modifyColumnsFunc={(columns) => modifyColumnsFunc(columns, modifyColumnsSettings)}
-                selectedItems={selectedItems}
-                onAllItemsSelect={handleAllItemsSelection}
-                onItemSelect={handleOneItemSelection}
-                onItemsSelect={() => dispatch(selectClusterItemsAction)}
-                onUnlinkSingleTicket={onUnlinkSingleTicket}
-                onEditItem={onEditItem}
-                onEditDefect={onEditDefect}
-                onStatusUpdate={() => dispatch(reloadClustersAction())}
-              />
-              {totalPages > currentPage && (
-                <div
-                  className={cx('load-more-container', {
-                    loading,
-                  })}
-                  onClick={loadMore}
-                >
-                  <div className={cx('load-more-label', { loading })}>
-                    {formatMessage(messages.loadLabel)}
-                  </div>
-                  {loading && (
-                    <div className={cx('loading-icon')}>
-                      <SpinningPreloader />
+            <td colSpan="2">
+              <div className={cx('nested-grid')}>
+                <div className={cx('table-cell', 'table-cell-full-width')}>
+                  <StepGrid
+                    data={content}
+                    modifyColumnsFunc={(columns) =>
+                      modifyColumnsFunc(columns, modifyColumnsSettings)
+                    }
+                    selectedItems={selectedItems}
+                    onAllItemsSelect={handleAllItemsSelection}
+                    onItemSelect={handleOneItemSelection}
+                    onItemsSelect={() => dispatch(selectClusterItemsAction)}
+                    onUnlinkSingleTicket={onUnlinkSingleTicket}
+                    onEditItem={onEditItem}
+                    onEditDefect={onEditDefect}
+                    onStatusUpdate={() => dispatch(reloadClustersAction())}
+                  />
+                  {totalPages > currentPage && (
+                    <div
+                      className={cx('load-more-container', {
+                        loading,
+                      })}
+                      onClick={loadMore}
+                    >
+                      <div className={cx('load-more-label', { loading })}>
+                        {formatMessage(messages.loadLabel)}
+                      </div>
+                      {loading && (
+                        <div className={cx('loading-icon')}>
+                          <SpinningPreloader />
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
-              )}
-            </div>
+              </div>
+            </td>
           </div>
         </div>
       )}
