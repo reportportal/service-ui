@@ -61,14 +61,6 @@ export const messages = defineMessages({
     id: 'MakeDecisionModal.selectDefectTypeManually',
     defaultMessage: 'Select defect manually',
   },
-  machineLearningSuggestions: {
-    id: 'MakeDecisionModal.machineLearningSuggestions',
-    defaultMessage: 'Choose among ML suggestions {target}',
-  },
-  MLSuggestionsForCluster: {
-    id: 'MakeDecisionModal.MLSuggestionsForCluster',
-    defaultMessage: 'for the cluster',
-  },
   copyFromHistoryLine: {
     id: 'MakeDecisionModal.copyFromHistoryLine',
     defaultMessage: 'Analyzed executions from the test history',
@@ -84,10 +76,6 @@ export const messages = defineMessages({
   modalNote: {
     id: 'MakeDecisionModal.modalNote',
     defaultMessage: 'You have to save changes or cancel them before closing the window',
-  },
-  suggestionsNotFound: {
-    id: 'MakeDecisionModal.suggestionsNotFound',
-    defaultMessage: 'ML has not found any suggestions',
   },
   postIssueNote: {
     id: 'MakeDecisionModal.postIssueNote',
@@ -170,14 +158,6 @@ export const messages = defineMessages({
     id: 'MakeDecisionModal.updateDefectsFailed',
     defaultMessage: 'Failed to update defects',
   },
-  similarity: {
-    id: 'MakeDecisionModal.similarity',
-    defaultMessage: 'Similarity',
-  },
-  suggestedTest: {
-    id: 'MakeDecisionModal.suggestedTest',
-    defaultMessage: 'Suggested test as a source',
-  },
   suggestedChoiceSuccess: {
     id: 'MakeDecisionModal.suggestedChoiceSuccess',
     defaultMessage: 'User choice of suggested item was sent for handling to ML',
@@ -209,10 +189,6 @@ export const messages = defineMessages({
   noSuggestions: {
     id: 'MakeDecisionModal.noSuggestions',
     defaultMessage: 'No Analyzer Suggestions',
-  },
-  noAnalyzer: {
-    id: 'MakeDecisionModal.noAnalyzer',
-    defaultMessage: 'Service Analyzer is not running',
   },
   selection: {
     id: 'MakeDecisionModal.selection',
