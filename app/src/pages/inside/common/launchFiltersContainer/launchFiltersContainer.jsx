@@ -117,15 +117,10 @@ export class LaunchFiltersContainer extends Component {
     const { launchesFiltersReady, launchFilters } = this.props;
 
     if (launchesFiltersReady) {
-      const launchFilterArrayStatistic = this.getFiltersCountStatistic(launchFilters);
-      const prevPropsLaunchFilterArrayStatistic = this.getFiltersCountStatistic(
-        prevProps.launchFilters,
-      );
-      if (
-        launchFilterArrayStatistic !== prevPropsLaunchFilterArrayStatistic ||
-        !this.state.isFilterTracked
-      ) {
-        this.trackFilters(launchFilterArrayStatistic);
+      const launchFiltersStatistic = this.getFiltersCountStatistic(launchFilters);
+      const prevLaunchFiltersStatistic = this.getFiltersCountStatistic(prevProps.launchFilters);
+      if (launchFiltersStatistic !== prevLaunchFiltersStatistic || !this.state.isFilterTracked) {
+        this.trackFilters(launchFiltersStatistic);
       }
     }
   }
@@ -147,8 +142,8 @@ export class LaunchFiltersContainer extends Component {
     return `${savedFilters}#${unsavedFilters}`;
   };
 
-  trackFilters = (filterArrayStatistic) => {
-    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.countFilters(filterArrayStatistic));
+  trackFilters = (filtersStatistic) => {
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.countFilters(filtersStatistic));
 
     if (!this.state.isFilterTracked) {
       this.setState({ isFilterTracked: true });
