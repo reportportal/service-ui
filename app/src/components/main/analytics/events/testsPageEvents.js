@@ -15,6 +15,7 @@
  */
 
 import {
+  getClickAttributes,
   getClickOnPlusMinusEvents,
   getClickSelectAllItemsEvent,
   getClickSelectOneItemEvent,
@@ -37,4 +38,5 @@ export const TESTS_PAGE_EVENTS = {
   CLICK_SELECT_ONE_ITEM: getClickSelectOneItemEvent(TEST_PAGE),
   EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(TEST_PAGE),
   DELETE_ITEM_MODAL_EVENTS: getDeleteItemModalEvents(TEST_PAGE),
+  clickAttributes: getClickAttributes(TEST_PAGE),
 };

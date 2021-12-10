@@ -38,7 +38,7 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import { levelSelector } from 'controllers/testItem';
 import { EntitiesGroup } from 'components/filterEntities/entitiesGroup';
 import AddFilterIcon from 'common/img/add-filter-inline.svg';
-import { getCriteriaToggler } from 'components/main/analytics/events';
+import { getCriteriaToggler, LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { FilterList } from './filterList';
 import { FiltersActionBar } from './filtersActionBar';
 import { ExpandToggler } from './expandToggler';
@@ -135,16 +135,19 @@ export class LaunchFiltersToolbar extends Component {
   };
 
   handleFilterClone = () => {
-    const { activeFilter, createFilter } = this.props;
+    const { activeFilter, createFilter, tracking } = this.props;
     createFilter(activeFilter);
+    tracking.trackEvent(LAUNCHES_PAGE_EVENTS.clickFilterActionBarButton('Clone'));
   };
 
   handleFilterCreate = () => {
-    this.props.createFilter();
+    const { createFilter, tracking } = this.props;
+    createFilter();
+    tracking.trackEvent(LAUNCHES_PAGE_EVENTS.ADD_FILTER);
   };
 
   handleFilterEdit = () => {
-    const { showModal, activeFilter, updateFilter } = this.props;
+    const { showModal, activeFilter, updateFilter, tracking } = this.props;
     showModal({
       id: 'filterEditModal',
       data: {
@@ -152,18 +155,27 @@ export class LaunchFiltersToolbar extends Component {
         onEdit: updateFilter,
       },
     });
+    tracking.trackEvent(LAUNCHES_PAGE_EVENTS.clickFilterActionBarButton('Edit'));
   };
 
   handleFilterReset = () => {
-    const { activeFilter, resetFilter, onResetFilter } = this.props;
+    const { activeFilter, resetFilter, onResetFilter, tracking } = this.props;
     resetFilter(activeFilter.id);
     onResetFilter();
+    tracking.trackEvent(LAUNCHES_PAGE_EVENTS.clickFilterActionBarButton('Discard'));
   };
 
   redirectToLaunches = () => this.props.redirectToLaunches(this.props.launchDistinct);
 
   updateActiveFilter = () => {
-    const { activeFilter, updateFilter, activeFilterId, showModal, saveNewFilter } = this.props;
+    const {
+      activeFilter,
+      updateFilter,
+      activeFilterId,
+      showModal,
+      saveNewFilter,
+      tracking,
+    } = this.props;
     if (activeFilterId < 0) {
       showModal({
         id: 'filterEditModal',
@@ -176,6 +188,7 @@ export class LaunchFiltersToolbar extends Component {
     } else {
       updateFilter(activeFilter);
     }
+    tracking.trackEvent(LAUNCHES_PAGE_EVENTS.clickFilterActionBarButton('Save'));
   };
   isNoFilterValues = () => {
     const {
@@ -278,6 +291,7 @@ export class LaunchFiltersToolbar extends Component {
                 onAdd={onFilterAdd}
                 errors={filterErrors}
                 entities={filterEntities}
+                events={LAUNCHES_PAGE_EVENTS}
               />
             </div>
             <FiltersActionBar

@@ -25,6 +25,7 @@ import {
   getClickSelectAllItemsEvent,
   getClickSelectOneItemEvent,
   getCommonActionEvents,
+  getClickAttributes,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getEditDefectModalEvents,
@@ -202,4 +203,5 @@ export const STEP_PAGE_EVENTS = {
     label: 'Close Modal "Include items in AA"',
   },
   MAKE_DECISION_MODAL_EVENTS: getMakeDecisionModalEvents(STEP_PAGE),
+  clickAttributes: getClickAttributes(STEP_PAGE),
 };
