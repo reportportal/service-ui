@@ -317,6 +317,11 @@ export const LAUNCHES_PAGE_EVENTS = {
     action: `Click on button "${value}" in filter action bar`,
     label: '',
   }),
+  mountLaunchesPage: (filterStatistic) => ({
+    category: LAUNCHES_PAGE,
+    action: 'Pageview',
+    label: filterStatistic,
+  }),
 };
 
 export const LAUNCHES_MODAL_EVENTS = {

@@ -18,7 +18,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import track from 'react-tracking';
-import { launchFiltersSelector } from 'controllers/filter';
 import {
   activeProjectSelector,
   activeProjectRoleSelector,
@@ -58,7 +57,6 @@ import { ProjectSelector } from '../../common/projectSelector';
   projectRole: activeProjectRoleSelector(state),
   accountRole: userAccountRoleSelector(state),
   extensionComponents: uiExtensionSidebarComponentsSelector(state),
-  launchFilters: launchFiltersSelector(state),
 }))
 @track()
 export class AppSidebar extends Component {
@@ -73,7 +71,6 @@ export class AppSidebar extends Component {
     assignedProjects: PropTypes.object,
     extensionComponents: PropTypes.array,
     onClickNavBtn: PropTypes.func,
-    launchFilters: PropTypes.array,
   };
   static defaultProps = {
     assignedProjects: {},
@@ -84,22 +81,6 @@ export class AppSidebar extends Component {
   onClickButton = (eventInfo) => {
     this.props.onClickNavBtn();
     this.props.tracking.trackEvent(eventInfo);
-  };
-
-  getFiltersStatistic = () => {
-    let savedFilters = 0;
-    let unsavedFilters = 0;
-    this.props.launchFilters.forEach(
-      (filter) => {
-        if (filter.id < 0) {
-          unsavedFilters += 1;
-        } else {
-          savedFilters += 1;
-        }
-      },
-      [this],
-    );
-    return `${savedFilters}#${unsavedFilters}`;
   };
 
   createTopSidebarItems = () => {
@@ -119,8 +100,7 @@ export class AppSidebar extends Component {
         message: <FormattedMessage id={'Sidebar.dashboardsBtn'} defaultMessage={'Dashboards'} />,
       },
       {
-        onClick: () =>
-          this.onClickButton(SIDEBAR_EVENTS.clickLaunchesBtn(this.getFiltersStatistic())),
+        onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_LAUNCHES_BTN),
         link: {
           type: LAUNCHES_PAGE,
           payload: { projectId: activeProject },
