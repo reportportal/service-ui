@@ -117,8 +117,16 @@ export class LaunchFiltersContainer extends Component {
     const { launchesFiltersReady, launchFilters } = this.props;
 
     if (launchesFiltersReady) {
-      if (launchFilters !== prevProps.launchFilters || !this.state.isFilterTracked) {
-        this.trackFilters();
+      const launchFilterArrayStatistic = this.getFiltersCountStatistic(launchFilters);
+      const prevPropsLaunchFilterArrayStatistic = this.getFiltersCountStatistic(
+        prevProps.launchFilters,
+      );
+      if (
+        JSON.stringify(launchFilterArrayStatistic) !==
+          JSON.stringify(prevPropsLaunchFilterArrayStatistic) ||
+        !this.state.isFilterTracked
+      ) {
+        this.trackFilters(launchFilterArrayStatistic);
       }
     }
   }
@@ -127,27 +135,26 @@ export class LaunchFiltersContainer extends Component {
     this.props.resetLocalSorting();
   }
 
-  trackFilters = () => {
-    const { tracking, launchFilters } = this.props;
+  getFiltersCountStatistic = (filterArray) => {
+    let savedFilters = 0;
+    let unsavedFilters = 0;
+    filterArray.forEach((filter) => {
+      if (filter.id < 0) {
+        unsavedFilters += 1;
+      } else {
+        savedFilters += 1;
+      }
+    });
+    return { savedFilters, unsavedFilters };
+  };
+
+  trackFilters = (filterArrayStatistic) => {
+    const filtersStatisticText = `${filterArrayStatistic.savedFilters}#${filterArrayStatistic.unsavedFilters}`;
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.countFilters(filtersStatisticText));
 
     if (!this.state.isFilterTracked) {
       this.setState({ isFilterTracked: true });
     }
-
-    let savedFilters = 0;
-    let unsavedFilters = 0;
-    launchFilters.forEach(
-      (filter) => {
-        if (filter.id < 0) {
-          unsavedFilters += 1;
-        } else {
-          savedFilters += 1;
-        }
-      },
-      [this],
-    );
-    const filtersStatistic = `${savedFilters}#${unsavedFilters}`;
-    tracking.trackEvent(LAUNCHES_PAGE_EVENTS.mountLaunchesPage(filtersStatistic));
   };
 
   getConditions = () => {

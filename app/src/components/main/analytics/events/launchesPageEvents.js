@@ -317,9 +317,9 @@ export const LAUNCHES_PAGE_EVENTS = {
     action: `Click on button "${value}" in filter action bar`,
     label: '',
   }),
-  mountLaunchesPage: (filterStatistic) => ({
+  countFilters: (filterStatistic) => ({
     category: LAUNCHES_PAGE,
-    action: 'Pageview',
+    action: 'Count Filters',
     label: filterStatistic,
   }),
 };
