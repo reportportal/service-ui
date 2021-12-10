@@ -122,8 +122,7 @@ export class LaunchFiltersContainer extends Component {
         prevProps.launchFilters,
       );
       if (
-        JSON.stringify(launchFilterArrayStatistic) !==
-          JSON.stringify(prevPropsLaunchFilterArrayStatistic) ||
+        launchFilterArrayStatistic !== prevPropsLaunchFilterArrayStatistic ||
         !this.state.isFilterTracked
       ) {
         this.trackFilters(launchFilterArrayStatistic);
@@ -145,12 +144,11 @@ export class LaunchFiltersContainer extends Component {
         savedFilters += 1;
       }
     });
-    return { savedFilters, unsavedFilters };
+    return `${savedFilters}#${unsavedFilters}`;
   };
 
   trackFilters = (filterArrayStatistic) => {
-    const filtersStatisticText = `${filterArrayStatistic.savedFilters}#${filterArrayStatistic.unsavedFilters}`;
-    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.countFilters(filtersStatisticText));
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.countFilters(filterArrayStatistic));
 
     if (!this.state.isFilterTracked) {
       this.setState({ isFilterTracked: true });
