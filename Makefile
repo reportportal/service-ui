@@ -3,50 +3,16 @@
 COMMIT_HASH = `git rev-parse --short HEAD 2>/dev/null`
 BUILD_DATE = `date +%FT%T%z`
 
-GO = go
 BINARY_DIR=bin
 RELEASE_DIR=release
 
-BUILD_DEPS:= github.com/avarabyeu/releaser mvdan.cc/gofumpt@v0.1.1
-GODIRS_NOVENDOR = $(shell go list ./... | grep -v /vendor/)
-GOFILES_NOVENDOR = $(shell find . -type f -name '*.go' -not -path "./vendor/*")
-PACKAGE_COMMONS=github.com/reportportal/commons-go/v5
 REPO_NAME=reportportal/service-ui
 
 UI_BUILD_REACT=app/
 
-BUILD_INFO_LDFLAGS=-ldflags "-extldflags '"-static"' -X ${PACKAGE_COMMONS}/commons.repo=${REPO_NAME} -X ${PACKAGE_COMMONS}/commons.branch=${COMMIT_HASH} -X ${PACKAGE_COMMONS}/commons.buildDate=${BUILD_DATE} -X ${PACKAGE_COMMONS}/commons.version=${v}"
 IMAGE_NAME=reportportal-dev-5/service-ui$(IMAGE_POSTFIX)
 
 .PHONY: get-build-deps test checkstyle lint build
-
-help:
-	@echo "build      - go build"
-	@echo "test       - go test"
-	@echo "checkstyle - gofmt+golint+misspell"
-
-get-build-deps:
-	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b "$(shell go env GOPATH)/bin" v1.36.0
-	$(GO) get $(BUILD_DEPS)
-	$(GO) mod download
-
-test:
-	$(GO) test ${GODIRS_NOVENDOR}
-
-
-checkstyle:
-	golangci-lint run --deadline 10m
-lint: checkstyle
-
-
-fmt:
-	gofmt -l -w -s ${GOFILES_NOVENDOR}
-#	gofumpt -l -w -s ${GOFILES_NOVENDOR}
-#	gofumports -l -w ${GOFILES_NOVENDOR}
-
-# Builds server
-build-server: checkstyle test
-	CGO_ENABLED=0 GOOS=linux $(GO) build ${BUILD_INFO_LDFLAGS} -o ${BINARY_DIR}/service-ui ./
 
 # Builds the project
 build-statics:
@@ -63,10 +29,6 @@ build-release: get-build-deps test
 	$(eval v := $(or $(v),$(shell releaser bump)))
 	# make sure latest version is bumped to file
 	releaser bump --version ${v}
-
-	CGO_ENABLED=0 GOARCH=amd64 GOOS=linux $(GO) build ${BUILD_INFO_LDFLAGS} -o ${RELEASE_DIR}/service-ui_linux_amd64 ./
-	CGO_ENABLED=0 GOARCH=amd64 GOOS=windows $(GO) build ${BUILD_INFO_LDFLAGS} -o ${RELEASE_DIR}/service-ui_win_amd64.exe ./
-	#gox -output "release/{{.Dir}}_{{.OS}}_{{.Arch}}" -os "linux windows" -arch "amd64" ${BUILD_INFO_LDFLAGS}
 
 	$(eval wd := $(shell pwd))
 	cd ${UI_BUILD_REACT}/build && tar -czvf "${wd}/${RELEASE_DIR}/ui.tar.gz" ./
