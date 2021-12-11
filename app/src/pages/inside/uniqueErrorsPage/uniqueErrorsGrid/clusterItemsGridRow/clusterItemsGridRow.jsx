@@ -36,7 +36,7 @@ import {
 import { ENTITY_METHOD_TYPE } from 'components/filterEntities/constants';
 import { PROJECT_LOG_PAGE } from 'controllers/pages';
 import { reloadClustersAction } from 'controllers/uniqueErrors';
-import { uiExtensionNewErrorComponentsSelector } from 'controllers/plugins/uiExtensions/selectors';
+import { uniqueErrorGridCellComponent } from 'controllers/plugins/uiExtensions/selectors';
 import { modifyColumnsFunc } from './utils';
 import styles from './clusterItemsGridRow.scss';
 
@@ -74,7 +74,7 @@ export const ClusterItemsGridRow = ({ data, onEditItem, onUnlinkSingleTicket, on
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const clusterItems = useSelector((state) => clusterItemsSelector(state, id));
-  const extensionComponents = useSelector(uiExtensionNewErrorComponentsSelector);
+  const extensionComponents = useSelector(uniqueErrorGridCellComponent);
   const {
     collapsed,
     loading,

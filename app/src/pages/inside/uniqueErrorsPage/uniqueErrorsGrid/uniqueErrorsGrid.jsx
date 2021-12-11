@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { Grid } from 'components/main/grid';
 import { useSelector } from 'react-redux';
-import { uiExtensionNewErrorHeaderComponentSelector } from 'controllers/plugins/uiExtensions/selectors';
+import { uniqueErrorGridHeaderCellComponent } from 'controllers/plugins/uiExtensions/selectors';
 import { EmptyUniqueErrors } from '../emptyUniqueErrors';
 import { ClusterItemsGridRow } from './clusterItemsGridRow';
 import styles from './uniqueErrorsGrid.scss';
@@ -27,7 +27,7 @@ import styles from './uniqueErrorsGrid.scss';
 const cx = classNames.bind(styles);
 
 export const UniqueErrorsGrid = ({ parentLaunch, data, loading, ...rest }) => {
-  const extensionComponents = useSelector(uiExtensionNewErrorHeaderComponentSelector);
+  const extensionComponents = useSelector(uniqueErrorGridHeaderCellComponent);
   const columns = [
     {
       id: 'expand',
