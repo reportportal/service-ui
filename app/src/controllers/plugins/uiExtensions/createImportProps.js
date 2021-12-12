@@ -29,6 +29,7 @@ import {
 } from 'redux-form';
 import Link from 'redux-first-router-link';
 import { useTracking } from 'react-tracking';
+import classNames from 'classnames/bind';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { BigButton } from 'components/buttons/bigButton';
 import { NavigationTabs } from 'components/main/navigationTabs';
@@ -193,6 +194,7 @@ export const createImportProps = (pluginName) => ({
     destroy,
     change,
     useTracking,
+    classNames,
   },
   components: {
     ...BUTTONS,

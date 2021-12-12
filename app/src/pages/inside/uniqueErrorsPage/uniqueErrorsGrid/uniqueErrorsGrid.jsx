@@ -18,6 +18,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { Grid } from 'components/main/grid';
+import { useSelector } from 'react-redux';
+import { uniqueErrorGridHeaderCellComponentSelector } from 'controllers/plugins/uiExtensions/selectors';
 import { EmptyUniqueErrors } from '../emptyUniqueErrors';
 import { ClusterItemsGridRow } from './clusterItemsGridRow';
 import styles from './uniqueErrorsGrid.scss';
@@ -25,6 +27,7 @@ import styles from './uniqueErrorsGrid.scss';
 const cx = classNames.bind(styles);
 
 export const UniqueErrorsGrid = ({ parentLaunch, data, loading, ...rest }) => {
+  const extensions = useSelector(uniqueErrorGridHeaderCellComponentSelector);
   const columns = [
     {
       id: 'expand',
@@ -47,12 +50,25 @@ export const UniqueErrorsGrid = ({ parentLaunch, data, loading, ...rest }) => {
     },
   ];
 
+  if (extensions.length) {
+    extensions.forEach((extensionComponent) => {
+      columns.push({
+        title: {
+          component: extensionComponent.component,
+        },
+      });
+    });
+  }
+
   return (
     <>
       {data.length > 0 ? (
         <Grid
           columns={columns}
-          data={data.map((item) => ({ ...item, hasContent: true }))}
+          data={data.map((item) => ({
+            ...item,
+            hasContent: true,
+          }))}
           loading={loading}
           nestedGridRow={ClusterItemsGridRow}
           nestedView
