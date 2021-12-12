@@ -48,9 +48,9 @@ export const uiExtensionIntegrationSettingsSelector = createUiExtensionSelectorB
 export const uiExtensionPostIssueFormSelector = createUiExtensionSelectorByType(
   EXTENSION_TYPE_POST_ISSUE_FORM,
 );
-export const uniqueErrorGridCellComponent = createUiExtensionSelectorByType(
+export const uniqueErrorGridCellComponentSelector = createUiExtensionSelectorByType(
   EXTENSION_TYPE_UNIQUE_ERROR_GRID_CELL_COMPONENT,
 );
-export const uniqueErrorGridHeaderCellComponent = createUiExtensionSelectorByType(
+export const uniqueErrorGridHeaderCellComponentSelector = createUiExtensionSelectorByType(
   EXTENSION_TYPE_UNIQUE_ERROR_GRID_HEADER_CELL_COMPONENT,
 );
