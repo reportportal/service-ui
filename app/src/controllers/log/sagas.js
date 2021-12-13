@@ -28,7 +28,6 @@ import { debugModeSelector } from 'controllers/launch';
 import { createFetchPredicate, fetchDataAction } from 'controllers/fetch';
 import { fetch, isEmptyObject } from 'common/utils';
 import { HISTORY_LINE_DEFAULT_VALUE, FETCH_HISTORY_ITEMS_WITH_LOADING } from 'controllers/log';
-import { requestClusterItemsAction } from 'controllers/uniqueErrors/clusterItems';
 import { collectLogPayload } from './sagaUtils';
 import {
   ACTIVITY_NAMESPACE,
@@ -55,7 +54,6 @@ import {
   includeAllLaunchesSelector,
   historyItemsSelector,
   activeLogSelector,
-  querySelector,
 } from './selectors';
 import {
   attachmentSagas,
@@ -173,11 +171,6 @@ function* fetchWholePage() {
   const testItems = yield select(itemsSelector);
   if (!testItems.length) {
     const offset = yield select(logPageOffsetSelector);
-    const query = yield select(querySelector);
-
-    if (query.clusterId) {
-      yield put(requestClusterItemsAction({ id: query.clusterId }));
-    }
 
     yield put(fetchTestItemsAction({ offset }));
   }
