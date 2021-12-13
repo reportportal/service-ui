@@ -16,6 +16,7 @@
 
 import React, { Component } from 'react';
 import track from 'react-tracking';
+import isEqual from 'fast-deep-equal';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
@@ -34,6 +35,7 @@ import {
   jobAttributesSelector,
   normalizeAttributesWithPrefix,
   JOB_ATTRIBUTE_PREFIX,
+  projectInfoLoadingSelector,
 } from 'controllers/project';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { FormField } from 'components/fields/formField';
@@ -42,6 +44,7 @@ import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/
 import { projectIdSelector } from 'controllers/pages';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { langSelector } from 'controllers/lang';
+import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import styles from './generalTab.scss';
 import { Messages } from './generalTabMessages';
 
@@ -57,6 +60,7 @@ const selector = formValueSelector('generalForm');
 @connect(
   (state) => ({
     projectId: projectIdSelector(state),
+    isLoaging: projectInfoLoadingSelector(state),
     jobConfig: jobAttributesSelector(state),
     accountRole: userAccountRoleSelector(state),
     userRole: activeProjectRoleSelector(state),
@@ -93,6 +97,7 @@ export class GeneralTab extends Component {
     lang: PropTypes.string,
     retention: PropTypes.number,
     formValues: PropTypes.object,
+    isLoaging: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -100,6 +105,7 @@ export class GeneralTab extends Component {
     fetchProjectAction: () => {},
     lang: 'en',
     retention: null,
+    isLoaging: false,
   };
 
   componentDidMount() {
@@ -110,6 +116,18 @@ export class GeneralTab extends Component {
       keepLogs: Number(this.getMinRetentionValue(keepLogs)),
       keepScreenshots: Number(this.getMinRetentionValue(keepScreenshots)),
     });
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!isEqual(prevProps.jobConfig, this.props.jobConfig)) {
+      const { interruptJobTime, keepLogs, keepScreenshots, keepLaunches } = this.props.jobConfig;
+      this.props.initialize({
+        interruptJobTime: Number(interruptJobTime),
+        keepLaunches: Number(this.getMinRetentionValue(keepLaunches)),
+        keepLogs: Number(this.getMinRetentionValue(keepLogs)),
+        keepScreenshots: Number(this.getMinRetentionValue(keepScreenshots)),
+      });
+    }
   }
 
   onFormSubmit = (formData) => {
@@ -263,8 +281,10 @@ export class GeneralTab extends Component {
   formatInterruptJobTimes = this.createValueFormatter(this.interruptJobTime);
 
   render() {
-    const { intl, accountRole, userRole } = this.props;
-    return (
+    const { intl, accountRole, userRole, isLoaging } = this.props;
+    return isLoaging ? (
+      <SpinningPreloader />
+    ) : (
       <div className={cx('general-tab')}>
         <form onSubmit={this.props.handleSubmit(this.onFormSubmit)}>
           <FormField
