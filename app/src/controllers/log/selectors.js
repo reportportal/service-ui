@@ -230,7 +230,7 @@ export const disablePrevItemLinkSelector = createSelector(
   groupedTestItemsSelector,
   ({ number }, id, items) => {
     const isNoPreviousItem = getPreviousItem(items, id) === null;
-    const isFirstPage = number === 1;
+    const isFirstPage = number ? number === 1 : true;
     return isNoPreviousItem && isFirstPage;
   },
 );

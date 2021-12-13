@@ -19,7 +19,7 @@ import { fetchReducer } from 'controllers/fetch';
 import { paginationReducer } from 'controllers/pagination';
 import { groupOperationsReducer } from 'controllers/groupOperations';
 import { createPageScopedReducer } from 'common/utils/createPageScopedReducer';
-import { UNIQUE_ERRORS_PAGE } from 'controllers/pages';
+import { UNIQUE_ERRORS_PAGE, PROJECT_LOG_PAGE } from 'controllers/pages';
 import { loadingReducer } from 'controllers/loading';
 import { clusterItemsReducer } from './clusterItems';
 import { NAMESPACE, SET_PAGE_LOADING } from './constants';
@@ -42,4 +42,7 @@ const reducer = combineReducers({
   clusterItems: clusterItemsReducer,
 });
 
-export const uniqueErrorsReducer = createPageScopedReducer(reducer, [UNIQUE_ERRORS_PAGE]);
+export const uniqueErrorsReducer = createPageScopedReducer(reducer, [
+  UNIQUE_ERRORS_PAGE,
+  PROJECT_LOG_PAGE,
+]);
