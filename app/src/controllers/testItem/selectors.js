@@ -52,6 +52,7 @@ import { defectTypesSelector } from 'controllers/project';
 import { omit } from 'common/utils';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { SORTING_KEY } from 'controllers/sorting';
+import { clusterItemsSelector } from 'controllers/uniqueErrors/clusterItems/selectors';
 import {
   DEFAULT_SORTING,
   TEST_ITEMS_TYPE_LIST,
@@ -106,6 +107,11 @@ export const isFilterParamsExistsSelector = (state) => {
 export const isStepLevelSelector = (state) => levelSelector(state) === LEVEL_STEP;
 
 export const itemsSelector = (state) => {
+  const query = querySelector(state);
+  if (query.clusterId) {
+    return clusterItemsSelector(state, query.clusterId).content;
+  }
+
   switch (levelSelector(state)) {
     case LEVEL_SUITE:
       return suitesSelector(state);
@@ -273,6 +279,13 @@ export const nameLinkSelector = (state, ownProps) => {
     query = {
       ...query,
       'filter.eq.uniqueId': ownProps.uniqueId,
+    };
+  }
+
+  if (ownLinkParams && ownLinkParams.testItem && ownLinkParams.testItem.clusterId) {
+    query = {
+      ...query,
+      clusterId: ownLinkParams.testItem.clusterId,
     };
   }
 
