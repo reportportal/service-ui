@@ -165,7 +165,7 @@
     "webpack-hot-middleware": "2.25.0",
     "webpack-merge": "4.2.2",
     "webpack-notifier": "^1.14.1",
-    "webpack-subresource-integrity": "1.5.1",
+    "webpack-subresource-integrity": "1.5.2",
     "why-did-you-update": "1.0.6"
   },
   "jest": {
