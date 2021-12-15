@@ -25,7 +25,7 @@ import {
   queryParametersSelector,
 } from 'controllers/testItem';
 import { createFetchPredicate, fetchDataAction } from 'controllers/fetch';
-import { pathnameChangedSelector } from 'controllers/pages';
+import { pathnameChangedSelector, launchIdSelector } from 'controllers/pages';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { SORTING_KEY } from 'controllers/sorting';
 import { unselectAllItemsAction } from 'controllers/groupOperations';
@@ -39,6 +39,7 @@ import { setPageLoadingAction } from './actionCreators';
 
 function* fetchClusters(payload = {}) {
   const { refresh = false } = payload;
+  const launchId = yield select(launchIdSelector);
   let parentLaunch = yield select(launchSelector);
   const project = yield select(activeProjectSelector);
   const isPathNameChanged = yield select(pathnameChangedSelector);
@@ -52,14 +53,14 @@ function* fetchClusters(payload = {}) {
   if (!parentLaunch) {
     yield call(fetchParentItems);
   } else {
-    yield call(fetchParentLaunch, { payload: { project, launchId: parentLaunch.id } });
+    yield call(fetchParentLaunch, { payload: { project, launchId } });
   }
   parentLaunch = yield select(launchSelector);
   const namespace = yield select(namespaceSelector);
   const query = yield select(queryParametersSelector, namespace);
   yield put(
     fetchDataAction(NAMESPACE)(
-      URLS.clusterByLaunchId(project, parentLaunch.id, {
+      URLS.clusterByLaunchId(project, launchId, {
         [PAGE_KEY]: query[PAGE_KEY],
         [SIZE_KEY]: query[SIZE_KEY],
         [SORTING_KEY]: query[SORTING_KEY],
