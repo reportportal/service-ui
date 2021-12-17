@@ -16,11 +16,11 @@
 
 export const LOGIN_PAGE = 'login';
 export const LOGIN_PAGE_EVENTS = {
-  CLICK_TWITTER_LINK: {
+  click_twitter_link: (link) => ({
     category: LOGIN_PAGE,
-    action: 'Click on twitter link',
-    label: 'Open twitter link',
-  },
+    action: 'Click on News Link on Page Login',
+    label: link,
+  }),
   CLICK_GITHUB_ICON: {
     category: LOGIN_PAGE,
     action: 'Click on Icon Github on Welcome screen',

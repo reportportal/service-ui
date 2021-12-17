@@ -34,8 +34,6 @@ import { showModalAction } from 'controllers/modal';
 import {
   PLUGINS_PAGE_EVENTS,
   getUninstallPluginBtnClickEvent,
-  getIntegrationAddClickEvent,
-  getSaveIntegrationModalEvents,
   getIntegrationUnlinkGlobalEvent,
 } from 'components/main/analytics/events';
 import { GhostButton } from 'components/buttons/ghostButton';
@@ -153,6 +151,7 @@ export class InstancesSection extends Component {
     isGlobal: PropTypes.bool,
     title: PropTypes.string,
     pluginId: PropTypes.number,
+    events: PropTypes.object,
   };
 
   static defaultProps = {
@@ -163,6 +162,7 @@ export class InstancesSection extends Component {
     isGlobal: false,
     title: '',
     pluginId: null,
+    events: {},
   };
 
   constructor(props) {
@@ -255,7 +255,7 @@ export class InstancesSection extends Component {
   };
 
   showAddProjectIntegrationModal = () => {
-    const { instanceType, pluginDetails, isGlobal } = this.props;
+    const { instanceType, pluginDetails, isGlobal, events } = this.props;
 
     this.props.showModalAction({
       id: 'addIntegrationModal',
@@ -263,7 +263,7 @@ export class InstancesSection extends Component {
         onConfirm: this.addProjectIntegration,
         instanceType,
         isGlobal,
-        eventsInfo: getSaveIntegrationModalEvents(instanceType, isGlobal),
+        eventsInfo: events.saveIntegrationModalEvents(instanceType, isGlobal),
         customProps: {
           pluginDetails,
         },
@@ -272,9 +272,9 @@ export class InstancesSection extends Component {
   };
 
   addProjectIntegrationClickHandler = () => {
-    const { instanceType, tracking } = this.props;
+    const { instanceType, tracking, events } = this.props;
 
-    tracking.trackEvent(getIntegrationAddClickEvent(instanceType));
+    tracking.trackEvent(events.integrationAddClickEvent(instanceType));
     this.showAddProjectIntegrationModal();
   };
 

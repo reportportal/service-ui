@@ -17,9 +17,11 @@
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
+import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './postBlock.scss';
 
 const cx = classNames.bind(styles);
+const HREF_TAG_NAME = 'A';
 
 const getPostContent = (text, entities) => {
   const replaceObjects = [];
@@ -93,14 +95,25 @@ const getPostContent = (text, entities) => {
   return result.replace(/\n/g, '<br>');
 };
 
-export const PostBlock = ({ tweetData }) => (
-  <div className={cx('post-block')}>
+const handleClick = (e, tracking) => {
+  const { href, tagName } = e.target;
+  if (tagName === HREF_TAG_NAME) {
+    tracking.trackEvent(LOGIN_PAGE_EVENTS.click_twitter_link(href));
+  }
+};
+
+export const PostBlock = ({ tweetData, tracking }) => (
+  <div className={cx('post-block')} onClick={(e) => handleClick(e, tracking)}>
     {Parser(getPostContent(tweetData.text, tweetData.entities))}
   </div>
 );
 
 PostBlock.propTypes = {
   tweetData: PropTypes.object,
+  tracking: PropTypes.shape({
+    trackEvent: PropTypes.func,
+    getTrackingData: PropTypes.func,
+  }).isRequired,
 };
 PostBlock.defaultProps = {
   tweetData: {},

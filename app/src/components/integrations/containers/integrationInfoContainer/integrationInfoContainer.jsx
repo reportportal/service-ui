@@ -54,12 +54,14 @@ export class IntegrationInfoContainer extends Component {
     onToggleActive: PropTypes.func,
     removePluginSuccessCallback: PropTypes.func,
     isGlobal: PropTypes.bool,
+    events: PropTypes.object,
   };
 
   static defaultProps = {
     onToggleActive: () => {},
     removePluginSuccessCallback: () => {},
     isGlobal: false,
+    events: {},
   };
 
   render() {
@@ -73,6 +75,7 @@ export class IntegrationInfoContainer extends Component {
       onToggleActive,
       isGlobal,
       showToggleConfirmationModal,
+      events,
     } = this.props;
     const pluginTitle = PLUGIN_NAME_TITLES[name] || name;
 
@@ -99,6 +102,7 @@ export class IntegrationInfoContainer extends Component {
           instanceType={name}
           isGlobal={isGlobal}
           title={pluginTitle}
+          events={events}
         />
       </Fragment>
     );

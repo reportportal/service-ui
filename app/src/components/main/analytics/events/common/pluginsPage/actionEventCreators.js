@@ -58,3 +58,28 @@ export const getClickDeleteBtnRemoveIntegrationEvent = (category) => (pluginName
   action: `Click on button Delete on ${pluginName} modal Remove integration`,
   label: `Close modal Remove integration and delete ${pluginName} integration`,
 });
+export const getIntegrationAddClickEvent = (category) => (integrationName) => ({
+  category,
+  action: `Click on Add integration ${integrationName} plugin`,
+  label: `Arise Modal Create Manual Integration for ${integrationName} integration`,
+});
+export const getSaveIntegrationModalEvents = (category) => (integrationName, isGlobal) => {
+  const integrationType = isGlobal ? 'Global' : 'Project';
+  return {
+    saveBtn: {
+      category,
+      action: `Click on Save in Modal Save ${integrationType} Integration for ${integrationName} plugin`,
+      label: `Save ${integrationType.toLowerCase()} integration for ${integrationName} plugin`,
+    },
+    cancelBtn: {
+      category,
+      action: `Click on Cancel in Modal Save ${integrationType} Integration for ${integrationName} plugin`,
+      label: `Close Modal Save ${integrationType} Integration for ${integrationName} plugin`,
+    },
+    closeIcon: {
+      category,
+      action: `Click on Close icon in Modal Save ${integrationType} Integration for ${integrationName} plugin`,
+      label: `Close Modal Save ${integrationType} Integration for ${integrationName} plugin`,
+    },
+  };
+};

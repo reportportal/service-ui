@@ -50,8 +50,6 @@ export {
   getSaveNewPatternEvent,
   getIntegrationItemClickEvent,
   getIntegrationUnlinkGlobalEvent,
-  getSaveIntegrationModalEvents,
-  getIntegrationAddClickEvent,
   getIntegrationEditAuthClickEvent,
   getAutoAnalysisMinimumShouldMatchSubmitEvent,
 } from './settingsPageEvents';

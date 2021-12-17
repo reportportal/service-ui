@@ -26,7 +26,10 @@ import { getPluginsFilter } from 'common/constants/pluginsFilter';
 import { ALL_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
 import { updatePluginSuccessAction } from 'controllers/plugins';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { getPluginFilterTabClickEvent } from 'components/main/analytics/events';
+import {
+  getPluginFilterTabClickEvent,
+  PLUGINS_PAGE_EVENTS,
+} from 'components/main/analytics/events';
 import { SimpleBreadcrumbs } from 'components/main/simpleBreadcrumbs';
 import {
   IntegrationInfoContainer,
@@ -191,6 +194,7 @@ export class InstalledTab extends Component {
             onItemClick={this.installedPluginsSettingsSubPageHandler}
             showToggleConfirmationModal={this.showToggleConfirmationModal}
             removePluginSuccessCallback={this.goToMainPageHandler}
+            events={PLUGINS_PAGE_EVENTS}
           />
         );
       case INSTALLED_PLUGINS_SETTINGS_SUBPAGE:
