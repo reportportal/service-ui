@@ -15,12 +15,14 @@
  */
 
 import {
+  getIntegrationAddClickEvent,
   getPluginChoosePropertiesCheckboxClickEvent,
   getPluginConfigureClickEvent,
   getPluginConfigureClickSubmitEvent,
   getPluginEditAuthorizationClickEvent,
   getPluginInstanceItemClickEvent,
   getPluginRemoveIntegrationClickEvent,
+  getSaveIntegrationModalEvents,
 } from 'components/main/analytics/events/common/pluginsPage/actionEventCreators';
 
 export const SETTINGS_PAGE = 'settings';
@@ -37,12 +39,6 @@ export const getIntegrationItemClickEvent = (integrationName) => ({
   label: `Open page with info for ${integrationName} integration on tab Integrations`,
 });
 
-export const getIntegrationAddClickEvent = (integrationName) => ({
-  category: SETTINGS_PAGE,
-  action: `Click on Add integration ${integrationName} plugin`,
-  label: `Arise Modal Create Manual Integration for ${integrationName} integration`,
-});
-
 export const getIntegrationEditAuthClickEvent = (integrationName) => ({
   category: SETTINGS_PAGE,
   action: `Click on Add integration ${integrationName} plugin`,
@@ -54,27 +50,6 @@ export const getIntegrationUnlinkGlobalEvent = (integrationName) => ({
   action: `Click on Unlink global integration for ${integrationName} integration on tab Integrations`,
   label: `Arise Modal Create Manual Integration for ${integrationName} integration`,
 });
-
-export const getSaveIntegrationModalEvents = (integrationName, isGlobal) => {
-  const integrationType = isGlobal ? 'Global' : 'Project';
-  return {
-    saveBtn: {
-      category: SETTINGS_PAGE,
-      action: `Click on Save in Modal Save ${integrationType} Integration for ${integrationName} plugin`,
-      label: `Save ${integrationType.toLowerCase()} integration for ${integrationName} plugin`,
-    },
-    cancelBtn: {
-      category: SETTINGS_PAGE,
-      action: `Click on Cancel in Modal Save ${integrationType} Integration for ${integrationName} plugin`,
-      label: `Close Modal Save ${integrationType} Integration for ${integrationName} plugin`,
-    },
-    closeIcon: {
-      category: SETTINGS_PAGE,
-      action: `Click on Close icon in Modal Save ${integrationType} Integration for ${integrationName} plugin`,
-      label: `Close Modal Save ${integrationType} Integration for ${integrationName} plugin`,
-    },
-  };
-};
 
 export const getAutoAnalysisMinimumShouldMatchSubmitEvent = (value) => ({
   category: SETTINGS_PAGE,
@@ -504,4 +479,6 @@ export const SETTINGS_PAGE_EVENTS = {
   pluginConfigureClick: getPluginConfigureClickEvent(SETTINGS_PAGE),
   pluginChoosePropertiesCheckboxClick: getPluginChoosePropertiesCheckboxClickEvent(SETTINGS_PAGE),
   pluginConfigureClickSubmit: getPluginConfigureClickSubmitEvent(SETTINGS_PAGE),
+  integrationAddClickEvent: getIntegrationAddClickEvent(SETTINGS_PAGE),
+  saveIntegrationModalEvents: getSaveIntegrationModalEvents(SETTINGS_PAGE),
 };
