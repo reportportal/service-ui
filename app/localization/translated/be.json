@@ -1814,6 +1814,7 @@
   "UpdateAnalysisSettings.minShouldMatch": "Мінімальны працэнт супадзення",
   "UpdateAnalysisSettings.minTermFreq": "Мінімальная колькасць тэрмаў",
   "UpdateAnalysisSettings.numberOfLogLines": "Колькасць радкоў лога",
+  "UpdateAnalysisSettings.uniqueError": "пераключэнне ўнікальных памылак",
   "UpdateAnalysisSettings.updated": "абнавіў",
   "UserBlock.adminBadge": "Адміністратар",
   "UserBlock.administrate": "Адміністраваць",

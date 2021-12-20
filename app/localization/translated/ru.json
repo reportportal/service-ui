@@ -1814,6 +1814,7 @@
   "UpdateAnalysisSettings.minShouldMatch": "Минимум должен составлять",
   "UpdateAnalysisSettings.minTermFreq": "Минимальная частота слова",
   "UpdateAnalysisSettings.numberOfLogLines": "Количество строк лога",
+  "UpdateAnalysisSettings.uniqueError": "переключение уникальных ошибок",
   "UpdateAnalysisSettings.updated": "обновил",
   "UserBlock.adminBadge": "Администратор",
   "UserBlock.administrate": "Администрировать",
