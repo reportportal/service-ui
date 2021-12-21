@@ -30,6 +30,14 @@ const messages = defineMessages({
     id: 'UpdateAnalysisSettings.autoAnalyze',
     defaultMessage: 'switch Auto Analysis',
   },
+  'analyzer.uniqueError.enabled': {
+    id: 'UpdateAnalysisSettings.uniqueError',
+    defaultMessage: 'switch Unique error',
+  },
+  'analyzer.uniqueError.removeNumbers': {
+    id: 'UpdateAnalysisSettings.numbersInErrorLog',
+    defaultMessage: 'Numbers in error log',
+  },
   'analyzer.numberOfLogLines': {
     id: 'UpdateAnalysisSettings.numberOfLogLines',
     defaultMessage: 'Number of log lines',
