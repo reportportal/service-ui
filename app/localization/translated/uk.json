@@ -1817,6 +1817,7 @@
   "UpdateAnalysisSettings.minTermFreq": "Мінімальна частота слова",
   "UpdateAnalysisSettings.numberOfLogLines": "Кількість рядків лода",
   "UpdateAnalysisSettings.uniqueError": "перемикання унікальних помилок",
+  "UpdateAnalysisSettings.numbersInErrorLog": "Цифри в журналі помилок",
   "UpdateAnalysisSettings.updated": "оновив",
   "UserBlock.adminBadge": "Адміністратор",
   "UserBlock.administrate": "Адмініструвати",
