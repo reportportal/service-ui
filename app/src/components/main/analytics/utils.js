@@ -34,6 +34,34 @@ export const provideEcGA = ({
   ga(command, hitType, eventName, action);
 };
 
+export const provideBulkEcGA = ({
+  name,
+  data,
+  action,
+  command = 'send',
+  hitType = 'event',
+  eventName = 'ecommerce',
+}) => {
+  const ga = ReactGA.ga();
+
+  data.forEach((el) => {
+    ga(`ec:${name}`, el);
+  });
+  ga(command, hitType, eventName, action);
+};
+
 export const normalizeDimensionValue = (value) => {
   return value !== undefined ? value.toString() : undefined;
+};
+
+export const formatEcDashboardData = (dashboard) => {
+  return dashboard.widgets.map((widget, index) => {
+    return {
+      id: widget.widgetId,
+      name: widget.widgetName,
+      category: `diagram/${widget.widgetOptions.viewMode || 'unclassified'}`,
+      list: dashboard.id,
+      position: index + 1,
+    };
+  });
 };

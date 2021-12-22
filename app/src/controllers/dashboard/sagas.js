@@ -32,6 +32,7 @@ import {
   pageSelector,
   projectIdSelector,
 } from 'controllers/pages';
+import { formatEcDashboardData, provideBulkEcGA } from 'components/main/analytics/utils';
 import {
   ADD_DASHBOARD,
   CHANGE_VISIBILITY_TYPE,
@@ -84,6 +85,14 @@ function* fetchDashboard() {
   try {
     const dashboard = yield call(fetch, URLS.dashboard(activeProject, activeDashboardId));
     yield put(updateDashboardItemSuccessAction(dashboard));
+
+    if (dashboard.widgets.length) {
+      provideBulkEcGA({
+        name: 'addImpression',
+        data: formatEcDashboardData(dashboard),
+        action: 'impression',
+      });
+    }
   } catch (error) {
     const projectId = yield select(projectIdSelector);
     yield put(
