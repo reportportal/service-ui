@@ -36,7 +36,7 @@ const messages = defineMessages({
   },
   'analyzer.uniqueError.removeNumbers': {
     id: 'UpdateAnalysisSettings.numbersInErrorLog',
-    defaultMessage: 'Numbers in error log',
+    defaultMessage: 'remove numbers in error log',
   },
   'analyzer.numberOfLogLines': {
     id: 'UpdateAnalysisSettings.numberOfLogLines',
