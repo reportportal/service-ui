@@ -1815,7 +1815,7 @@
   "UpdateAnalysisSettings.minTermFreq": "Мінімальная колькасць тэрмаў",
   "UpdateAnalysisSettings.numberOfLogLines": "Колькасць радкоў лога",
   "UpdateAnalysisSettings.uniqueError": "пераключэнне ўнікальных памылак",
-  "UpdateAnalysisSettings.numbersInErrorLog": "Лічбы ў часопісе памылак",
+  "UpdateAnalysisSettings.numbersInErrorLog": "выдаліць лічбы ў часопісе памылак",
   "UpdateAnalysisSettings.updated": "абнавіў",
   "UserBlock.adminBadge": "Адміністратар",
   "UserBlock.administrate": "Адміністраваць",
