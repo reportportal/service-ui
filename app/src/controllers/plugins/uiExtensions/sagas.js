@@ -31,7 +31,6 @@ export function* fetchUiExtensions() {
         if (!integration) {
           return null;
         }
-
         url = URLS.projectIntegrationByIdCommand(activeProject, integration.id, COMMAND_GET_FILE);
       }
 
