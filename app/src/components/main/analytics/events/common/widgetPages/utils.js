@@ -40,7 +40,7 @@ export const SORTING_ENTITY_MAP = {
   [STATS_TI_TOTAL]: 'To Investigate',
 };
 
-const WIDGET_MODE_VALUES_MAP = {
+export const WIDGET_MODE_VALUES_MAP = {
   launch: 'Launch mode',
   day: 'Timeline mode',
   'latest-false': 'All launches',
