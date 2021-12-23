@@ -378,6 +378,7 @@ export class PostIssueModal extends Component {
                 url: response.url,
                 btsProject,
                 btsUrl,
+                pluginName,
               },
             ],
           },
