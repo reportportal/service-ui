@@ -71,7 +71,6 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     userId: userIdSelector(state),
-    requestUrl: URLS.testItemsLinkIssues(activeProjectSelector(state)),
     namedBtsIntegrations: namedAvailableBtsIntegrationsSelector(state),
     activeProject: activeProjectSelector(state),
   }),
@@ -85,7 +84,6 @@ export class LinkIssueModal extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     userId: PropTypes.string.isRequired,
-    requestUrl: PropTypes.string.isRequired,
     activeProject: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
     namedBtsIntegrations: PropTypes.object.isRequired,
@@ -128,11 +126,12 @@ export class LinkIssueModal extends Component {
     const {
       intl,
       userId,
-      requestUrl,
       data: { items, fetchFunc },
+      activeProject,
       namedBtsIntegrations,
     } = this.props;
     const { pluginName, integrationId } = this.state;
+    const requestUrl = URLS.testItemsLinkIssues(activeProject);
     const {
       integrationParameters: { project, url },
     } = namedBtsIntegrations[pluginName].find((item) => item.id === integrationId);
@@ -142,6 +141,7 @@ export class LinkIssueModal extends Component {
       url: issue.issueLink,
       btsProject: project,
       btsUrl: url,
+      pluginName,
     }));
 
     fetch(requestUrl, {

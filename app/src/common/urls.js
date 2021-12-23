@@ -270,6 +270,8 @@ export const URLS = {
 
   plugin: () => `${urlBase}plugin`,
   pluginUpdate: (pluginId) => `${urlBase}plugin/${pluginId}`,
+  pluginCommandCommon: (projectId, pluginName, command) =>
+    `${urlBase}plugin/${projectId}/${pluginName}/common/${command}`,
   globalIntegrationsByPluginName: (pluginName = '') =>
     `${urlBase}integration/global/all/${pluginName}`,
   projectIntegrationByIdCommand: (projectId, integrationId, command) =>

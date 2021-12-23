@@ -36,9 +36,11 @@ export {
   isPostIssueActionAvailable,
   isAuthorizationPlugin,
   isPluginSwitchable,
+  isPluginSupportsCommonCommand,
 } from './utils';
 export {
   pluginsSelector,
+  pluginByNameSelector,
   availablePluginsSelector,
   availableGroupedPluginsSelector,
   createNamedIntegrationsSelector,
