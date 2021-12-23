@@ -65,11 +65,16 @@ import {
   ENTITY_PATTERN_NAME,
   ENTITY_RETRY,
   ENTITY_ATTRIBUTE,
+  ENTITY_NEW_FAILURE,
 } from 'components/filterEntities/constants';
 import { defectTypesSelector, patternsSelector } from 'controllers/project';
 import { launchIdSelector } from 'controllers/pages';
-import { levelSelector } from 'controllers/testItem';
+import { getQueryNamespace, levelSelector, PROVIDER_TYPE_LAUNCH } from 'controllers/testItem';
 import { pageEventsMap } from 'components/main/analytics';
+import { connectRouter } from 'common/utils';
+import { querySelector } from 'controllers/administrate/allUsers';
+import { createNamespacedQuery, extractNamespacedQuery } from 'common/utils/routingUtils';
+import { PROVIDER_TYPE_BASELINE } from 'controllers/testItem/constants';
 
 const messages = defineMessages({
   NameTitle: {
@@ -276,6 +281,18 @@ const messages = defineMessages({
     id: 'StepLevelEntities.PatternNameTitle',
     defaultMessage: 'Pattern name',
   },
+  NewFailureTitle: {
+    id: 'StepLevelEntities.NewFailureTitle',
+    defaultMessage: 'New failure',
+  },
+  NewFailureOption1: {
+    id: 'StepLevelEntities.NewFailureOption1',
+    defaultMessage: 'New failures',
+  },
+  NewFailureOption2: {
+    id: 'StepLevelEntities.NewFailureOption2',
+    defaultMessage: 'All tests',
+  },
 });
 
 const descriptionStepLevelEntity = bindMessageToValidator(
@@ -284,12 +301,16 @@ const descriptionStepLevelEntity = bindMessageToValidator(
 );
 
 @injectIntl
+@connectRouter(() => {}, {
+  updateUriQuery: (query) => query,
+})
 @connect((state) => ({
   defectTypes: defectTypesSelector(state),
   projectId: activeProjectSelector(state),
   launchId: launchIdSelector(state),
   patterns: patternsSelector(state),
   level: levelSelector(state),
+  query: querySelector(state),
 }))
 export class StepLevelEntities extends Component {
   static propTypes = {
@@ -302,12 +323,15 @@ export class StepLevelEntities extends Component {
     visibleFilters: PropTypes.array,
     patterns: PropTypes.array,
     level: PropTypes.string,
+    updateUriQuery: PropTypes.func.isRequired,
+    query: PropTypes.object,
   };
   static defaultProps = {
     filterValues: {},
     visibleFilters: [],
     patterns: [],
     level: '',
+    query: {},
   };
 
   getDefectTypeEntity = () => {
@@ -388,7 +412,7 @@ export class StepLevelEntities extends Component {
   };
 
   getEntities = () => {
-    const { intl, projectId, launchId, visibleFilters } = this.props;
+    const { intl, projectId, launchId, visibleFilters, query } = this.props;
 
     const getTestItemAttributeValuesSearch = (project, key) => {
       return URLS.testItemAttributeValuesSearch(project, launchId, key);
@@ -398,7 +422,10 @@ export class StepLevelEntities extends Component {
       return URLS.testItemAttributeKeysSearch(project, launchId);
     };
 
-    return [
+    const namespace = getQueryNamespace(0);
+    const extractedNamespacedQuery = extractNamespacedQuery(query, namespace);
+
+    const entities = [
       {
         id: ENTITY_NAME,
         component: EntityInputConditional,
@@ -653,13 +680,53 @@ export class StepLevelEntities extends Component {
       },
       ...this.getPatternNameEntity(),
     ];
+
+    if (extractedNamespacedQuery.baselineLaunchId) {
+      const options = [
+        {
+          label: intl.formatMessage(messages.NewFailureOption1),
+          value: 'true',
+        },
+        {
+          label: intl.formatMessage(messages.NewFailureOption2),
+          value: 'false',
+        },
+      ];
+      entities.push({
+        id: ENTITY_NEW_FAILURE,
+        component: EntityDropdown,
+        value: options.find(
+          (item) =>
+            JSON.parse(item.value) ===
+            (extractedNamespacedQuery.providerType === PROVIDER_TYPE_BASELINE),
+        ),
+        title: intl.formatMessage(messages.NewFailureTitle),
+        active: true,
+        removable: false,
+        customProps: {
+          onChange: (val) => {
+            this.props.updateUriQuery(
+              createNamespacedQuery(
+                {
+                  ...extractedNamespacedQuery,
+                  providerType: JSON.parse(val) ? PROVIDER_TYPE_BASELINE : PROVIDER_TYPE_LAUNCH,
+                },
+                namespace,
+              ),
+            );
+          },
+          options,
+        },
+      });
+    }
+
+    return entities;
   };
 
   bindDefaultValue = bindDefaultValue;
 
   render() {
     const { render, ...rest } = this.props;
-
     return render({
       ...rest,
       filterEntities: this.getEntities(),

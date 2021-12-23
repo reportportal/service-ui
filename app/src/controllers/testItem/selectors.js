@@ -324,6 +324,8 @@ export const statisticsLinkSelector = createSelector(
       [providerTypeModifierId]: ownProps[providerTypeModifierId],
       launchesLimit,
       isLatest,
+      ...(ownProps.baselineLaunchId && { baselineLaunchId: ownProps.baselineLaunchId }),
+      ...(ownProps.launchId && { launchId: ownProps.launchId }),
     };
     if (ownProps.statuses) {
       params['filter.in.status'] = ownProps.statuses.join(',');

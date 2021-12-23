@@ -117,8 +117,8 @@ export const ClusterItemsGridRow = ({ data, onEditItem, onUnlinkSingleTicket, on
             <ClusterColumn cluster={data} />
           </div>
           {extensions.map((extensionComponent) => (
-            <div className={cx('table-cell')}>
-              <extensionComponent.component key={extensionComponent.name} data={data} />
+            <div className={cx('table-cell')} key={extensionComponent.name}>
+              <extensionComponent.component data={data} />
             </div>
           ))}
         </div>
