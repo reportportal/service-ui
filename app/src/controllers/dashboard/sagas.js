@@ -32,7 +32,7 @@ import {
   pageSelector,
   projectIdSelector,
 } from 'controllers/pages';
-import { formatEcDashboardData, provideBulkEcGA } from 'components/main/analytics/utils';
+import { formatEcDashboardData, provideEcGA } from 'components/main/analytics/utils';
 import {
   ADD_DASHBOARD,
   CHANGE_VISIBILITY_TYPE,
@@ -87,7 +87,7 @@ function* fetchDashboard() {
     yield put(updateDashboardItemSuccessAction(dashboard));
 
     if (dashboard.widgets.length) {
-      provideBulkEcGA({
+      provideEcGA({
         name: 'addImpression',
         data: formatEcDashboardData(dashboard),
         action: 'impression',

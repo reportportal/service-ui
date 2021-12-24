@@ -29,26 +29,16 @@ export const provideEcGA = ({
 }) => {
   const ga = ReactGA.ga();
 
-  ga(`ec:${name}`, data);
+  if (Array.isArray(data)) {
+    data.forEach((el) => {
+      ga(`ec:${name}`, el);
+    });
+  } else {
+    ga(`ec:${name}`, data);
+  }
   if (additionalData) {
     ga('ec:setAction', action, additionalData);
   }
-  ga(command, hitType, eventName, action);
-};
-
-export const provideBulkEcGA = ({
-  name,
-  data,
-  action,
-  command = 'send',
-  hitType = 'event',
-  eventName = 'ecommerce',
-}) => {
-  const ga = ReactGA.ga();
-
-  data.forEach((el) => {
-    ga(`ec:${name}`, el);
-  });
   ga(command, hitType, eventName, action);
 };
 
