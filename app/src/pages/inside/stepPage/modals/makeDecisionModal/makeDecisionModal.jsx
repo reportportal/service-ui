@@ -102,12 +102,8 @@ const MakeDecision = ({ data }) => {
         ? !!modalState.selectManualChoice.issue.issueType ||
           !!modalState.selectManualChoice.issue.comment ||
           modalState.commentOption !== NOT_CHANGED_FOR_ALL
-        : modalState.decisionType === SELECT_DEFECT_MANUALLY &&
-          !isEqual(itemData.issue, modalState.selectManualChoice.issue)) ||
-        (modalState.decisionType === COPY_FROM_HISTORY_LINE &&
-          !isEmptyObject(modalState.historyChoice)) ||
-        !!modalState.issueActionType ||
-        modalState.decisionType === MACHINE_LEARNING_SUGGESTIONS,
+        : !isEqual(itemData.issue, modalState[ACTIVE_TAB_MAP[modalState.decisionType]].issue)) ||
+        !!modalState.issueActionType,
     );
   }, [modalState]);
 
