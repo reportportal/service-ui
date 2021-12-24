@@ -69,11 +69,16 @@ import {
 } from 'components/filterEntities/constants';
 import { defectTypesSelector, patternsSelector } from 'controllers/project';
 import { launchIdSelector } from 'controllers/pages';
-import { getQueryNamespace, levelSelector, PROVIDER_TYPE_LAUNCH } from 'controllers/testItem';
+import {
+  getQueryNamespace,
+  levelSelector,
+  namespaceSelector,
+  PROVIDER_TYPE_LAUNCH,
+  queryParametersSelector,
+} from 'controllers/testItem';
 import { pageEventsMap } from 'components/main/analytics';
 import { connectRouter } from 'common/utils';
-import { querySelector } from 'controllers/administrate/allUsers';
-import { createNamespacedQuery, extractNamespacedQuery } from 'common/utils/routingUtils';
+import { createNamespacedQuery } from 'common/utils/routingUtils';
 import { PROVIDER_TYPE_BASELINE } from 'controllers/testItem/constants';
 
 const messages = defineMessages({
@@ -310,7 +315,7 @@ const descriptionStepLevelEntity = bindMessageToValidator(
   launchId: launchIdSelector(state),
   patterns: patternsSelector(state),
   level: levelSelector(state),
-  query: querySelector(state),
+  query: queryParametersSelector(state, namespaceSelector(state)),
 }))
 export class StepLevelEntities extends Component {
   static propTypes = {
@@ -421,9 +426,6 @@ export class StepLevelEntities extends Component {
     const getTestItemAttributeKeysSearch = (project) => {
       return URLS.testItemAttributeKeysSearch(project, launchId);
     };
-
-    const namespace = getQueryNamespace(0);
-    const extractedNamespacedQuery = extractNamespacedQuery(query, namespace);
 
     const entities = [
       {
@@ -681,7 +683,7 @@ export class StepLevelEntities extends Component {
       ...this.getPatternNameEntity(),
     ];
 
-    if (extractedNamespacedQuery.baselineLaunchId) {
+    if (query.baselineLaunchId) {
       const options = [
         {
           label: intl.formatMessage(messages.NewFailureOption1),
@@ -696,9 +698,7 @@ export class StepLevelEntities extends Component {
         id: ENTITY_NEW_FAILURE,
         component: EntityDropdown,
         value: options.find(
-          (item) =>
-            JSON.parse(item.value) ===
-            (extractedNamespacedQuery.providerType === PROVIDER_TYPE_BASELINE),
+          (item) => JSON.parse(item.value) === (query.providerType === PROVIDER_TYPE_BASELINE),
         ),
         title: intl.formatMessage(messages.NewFailureTitle),
         active: true,
@@ -708,10 +708,10 @@ export class StepLevelEntities extends Component {
             this.props.updateUriQuery(
               createNamespacedQuery(
                 {
-                  ...extractedNamespacedQuery,
+                  ...query,
                   providerType: JSON.parse(val) ? PROVIDER_TYPE_BASELINE : PROVIDER_TYPE_LAUNCH,
                 },
-                namespace,
+                getQueryNamespace(0),
               ),
             );
           },
