@@ -46,7 +46,14 @@ import {
   STATS_SI_TOTAL,
   STATS_TI_TOTAL,
 } from 'common/constants/statistics';
-import { PASSED, FAILED, INTERRUPTED, SKIPPED } from 'common/constants/testStatuses';
+import {
+  PASSED,
+  FAILED,
+  INTERRUPTED,
+  SKIPPED,
+  CANCELLED,
+  STOPPED,
+} from 'common/constants/testStatuses';
 import {
   activeProjectSelector,
   activeProjectRoleSelector,
@@ -244,6 +251,8 @@ export const createImportProps = (pluginName) => ({
     FAILED,
     INTERRUPTED,
     SKIPPED,
+    CANCELLED,
+    STOPPED,
     SECRET_FIELDS_KEY,
     BTS_FIELDS_FORM,
   },
