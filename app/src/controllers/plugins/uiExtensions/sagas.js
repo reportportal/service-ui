@@ -4,7 +4,7 @@ import { fetch } from 'common/utils/fetch';
 import { activeProjectSelector } from 'controllers/user';
 import { COMMAND_GET_FILE } from './constants';
 import { pluginsSelector, globalIntegrationsSelector } from '../selectors';
-import { filterIntegrationsByName } from '../utils';
+import { filterIntegrationsByName, isPluginSupportsCommonCommand } from '../utils';
 import { extensionLoadFinishAction, extensionLoadStartAction } from './actions';
 
 export function* fetchUiExtensions() {
@@ -14,25 +14,30 @@ export function* fetchUiExtensions() {
       plugin.enabled &&
       plugin.details &&
       plugin.details.binaryData &&
-      plugin.details.allowedCommands.includes(COMMAND_GET_FILE),
+      (isPluginSupportsCommonCommand(plugin, COMMAND_GET_FILE) ||
+        plugin.details.allowedCommands.includes(COMMAND_GET_FILE)),
   );
   const globalIntegrations = yield select(globalIntegrationsSelector);
   const activeProject = yield select(activeProjectSelector);
   const calls = uiExtensionPlugins
     .map((plugin) => {
-      const integration = filterIntegrationsByName(globalIntegrations, plugin.name)[0];
-      if (!integration) {
-        return null;
+      const isCommonCommandSupported = isPluginSupportsCommonCommand(plugin, COMMAND_GET_FILE);
+      let url;
+
+      if (isCommonCommandSupported) {
+        url = URLS.pluginCommandCommon(activeProject, plugin.name, COMMAND_GET_FILE);
+      } else {
+        const integration = filterIntegrationsByName(globalIntegrations, plugin.name)[0];
+        if (!integration) {
+          return null;
+        }
+        url = URLS.projectIntegrationByIdCommand(activeProject, integration.id, COMMAND_GET_FILE);
       }
-      const fileKey = 'main';
-      return call(
-        fetch,
-        URLS.projectIntegrationByIdCommand(activeProject, integration.id, COMMAND_GET_FILE),
-        {
-          method: 'PUT',
-          data: { fileKey },
-        },
-      );
+
+      return call(fetch, url, {
+        method: 'PUT',
+        data: { fileKey: 'main' },
+      });
     })
     .filter(Boolean);
   if (calls.length === 0) {

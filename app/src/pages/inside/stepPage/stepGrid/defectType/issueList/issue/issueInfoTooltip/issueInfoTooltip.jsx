@@ -21,6 +21,8 @@ import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
+import { pluginByNameSelector, isPluginSupportsCommonCommand } from 'controllers/plugins';
+import { COMMAND_GET_ISSUE } from 'controllers/plugins/uiExtensions/constants';
 import { getStorageItem, updateStorageItem } from 'common/utils';
 import { ERROR_CANCELED, fetch } from 'common/utils/fetch';
 import { DottedPreloader } from 'components/preloaders/dottedPreloader';
@@ -55,8 +57,9 @@ const getStorageKey = (activeProject) => `${activeProject}_tickets`;
 
 const FETCH_ISSUE_INTERVAL = 900000; // min request interval = 15 min
 
-@connect((state) => ({
+@connect((state, ownProps) => ({
   activeProject: activeProjectSelector(state),
+  plugin: pluginByNameSelector(state, ownProps.pluginName),
 }))
 @injectIntl
 export class IssueInfoTooltip extends Component {
@@ -66,6 +69,13 @@ export class IssueInfoTooltip extends Component {
     ticketId: PropTypes.string.isRequired,
     btsProject: PropTypes.string.isRequired,
     btsUrl: PropTypes.string.isRequired,
+    plugin: PropTypes.object,
+    pluginName: PropTypes.string,
+  };
+
+  static defaultProps = {
+    plugin: null,
+    pluginName: '',
   };
 
   constructor(props) {
@@ -117,13 +127,30 @@ export class IssueInfoTooltip extends Component {
   };
 
   fetchData = () => {
-    const { activeProject, ticketId, btsProject, btsUrl } = this.props;
+    const { activeProject, ticketId, btsProject, btsUrl, plugin } = this.props;
     const cancelRequestFunc = (cancel) => {
       this.cancelRequest = cancel;
     };
     this.setState({ loading: true });
+    const isCommonCommandSupported =
+      plugin && isPluginSupportsCommonCommand(plugin, COMMAND_GET_ISSUE);
+    let url;
+    let data;
 
-    fetch(URLS.btsTicket(activeProject, ticketId, btsProject, btsUrl), {
+    if (isCommonCommandSupported) {
+      url = URLS.pluginCommandCommon(activeProject, plugin.name, COMMAND_GET_ISSUE);
+      data = {
+        ticketId,
+        url: btsUrl,
+        project: btsProject,
+      };
+    } else {
+      url = URLS.btsTicket(activeProject, ticketId, btsProject, btsUrl);
+    }
+
+    fetch(url, {
+      method: isCommonCommandSupported ? 'PUT' : 'GET',
+      data,
       abort: cancelRequestFunc,
     })
       .then((issue) => {
