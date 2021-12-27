@@ -32,7 +32,7 @@ import RefreshIcon from 'common/img/refresh-icon-inline.svg';
 import GlobeIcon from 'common/img/globe-icon-inline.svg';
 import ShareIcon from 'common/img/share-icon-inline.svg';
 import { getRelativeUnits } from 'common/utils/timeDateUtils';
-import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/common/widgets';
+import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/common/messages';
 import {
   widgetModeMessages,
   getWidgetModeByValue,

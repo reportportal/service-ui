@@ -25,7 +25,7 @@ import {
   STATS_TI_TOTAL,
   STATS_TOTAL,
 } from 'common/constants/statistics';
-import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/common/widgets';
+import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/common/messages';
 import { getDefectTypeLabel } from '../../common/utils';
 
 export const SORTING_ENTITY_MAP = {

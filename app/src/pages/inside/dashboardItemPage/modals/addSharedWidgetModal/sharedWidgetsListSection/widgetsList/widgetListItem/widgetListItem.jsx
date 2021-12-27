@@ -20,7 +20,7 @@ import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import { InputRadio } from 'components/inputs/inputRadio';
 import { OwnerBlock } from 'pages/inside/common/itemInfo/ownerBlock';
-import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/common/widgets';
+import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/common/messages';
 import styles from './widgetListItem.scss';
 
 const cx = classNames.bind(styles);
