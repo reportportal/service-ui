@@ -224,6 +224,11 @@ export const getEditItemsModalEvents = (category, itemType = 'Item') => ({
     action: `Edit description in Modal "Edit ${itemType}"`,
     label: 'Edit description',
   },
+  CLICK_COPY_LINK: {
+    category,
+    action: `Click on Icon Copy`,
+    label: 'Modal Edit Launch',
+  },
   BULK_EDIT_ITEMS_DESCRIPTION: {
     category,
     action: `Edit description in Modal "Edit ${itemType}" in a bulk`,
