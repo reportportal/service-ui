@@ -36,27 +36,3 @@ export const MOST_TIME_CONSUMING = 'mostTimeConsuming';
 export const MOST_POPULAR_PATTERNS = 'topPatternTemplates';
 export const COMPONENT_HEALTH_CHECK = 'componentHealthCheck';
 export const COMPONENT_HEALTH_CHECK_TABLE = 'componentHealthCheckTable';
-
-export const HUMAN_WIDGET_TYPES_MAP = {
-  [LAUNCH_STATISTICS]: 'Launch statistics chart',
-  [OVERALL_STATISTICS]: 'Overall statistics',
-  [LAUNCH_DURATION]: 'Launches duration chart',
-  [LAUNCH_EXECUTION_AND_ISSUE_STATISTICS]: 'Launch execution and issue statistic',
-  [PROJECT_ACTIVITY]: 'Project activity panel',
-  [TEST_CASES_GROWTH_TREND]: 'Test-cases growth trend chart',
-  [INVESTIGATED_PERCENTAGE_OF_LAUNCHES]: 'Investigated percentage of launches',
-  [LAUNCHES_TABLE]: 'Launches table',
-  [UNIQUE_BUGS_TABLE]: 'Unique bugs table',
-  [MOST_FAILED_TEST_CASES_TABLE]: 'Most failed test-cases table (TOP-20)',
-  [FAILED_CASES_TREND]: 'Failed cases trend chart',
-  [NON_PASSED_TEST_CASES_TREND]: 'Non-passed test-cases trend chart',
-  [DIFFERENT_LAUNCHES_COMPARISON]: 'Different launches comparison chart',
-  [PASSING_RATE_PER_LAUNCH]: 'Passing rate per launch',
-  [PASSING_RATE_SUMMARY]: 'Passing rate summary',
-  [FLAKY_TEST_CASES_TABLE]: 'Flaky test cases table (TOP-20)',
-  [CUMULATIVE_TREND]: 'Cumulative trend chart',
-  [MOST_TIME_CONSUMING]: 'Most time-consuming test cases widget (TOP-20)',
-  [MOST_POPULAR_PATTERNS]: 'Most popular pattern table (TOP-20)',
-  [COMPONENT_HEALTH_CHECK]: 'Component health check',
-  [COMPONENT_HEALTH_CHECK_TABLE]: 'Component health check (table view)',
-};

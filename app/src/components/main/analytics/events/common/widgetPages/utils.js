@@ -25,6 +25,7 @@ import {
   STATS_TI_TOTAL,
   STATS_TOTAL,
 } from 'common/constants/statistics';
+import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/common/widgets';
 import { getDefectTypeLabel } from '../../common/utils';
 
 export const SORTING_ENTITY_MAP = {
@@ -70,4 +71,29 @@ export const getWidgetModeValuesString = (options) => {
     .filter((option) => WIDGET_MODE_VALUES_MAP[`${option}`])
     .map((value) => WIDGET_MODE_VALUES_MAP[`${value}`])
     .join('#');
+};
+
+const sortDashboadWidgets = (widgets) => {
+  return widgets.sort((a, b) => {
+    if (a.widgetPosition.positionY < b.widgetPosition.positionY) return -1;
+    if (a.widgetPosition.positionY > b.widgetPosition.positionY) return 1;
+    if (a.widgetPosition.positionX < b.widgetPosition.positionX) return -1;
+    if (a.widgetPosition.positionX < b.widgetPosition.positionX) return 1;
+    return 0;
+  });
+};
+
+export const formatEcDashboardData = (dashboard) => {
+  const sortedWidgets = sortDashboadWidgets([...dashboard.widgets]);
+  return sortedWidgets.map((widget, index) => {
+    return {
+      id: widget.widgetId,
+      name: widgetTypesMessages[widget.widgetType].defaultMessage,
+      category: `${WIDGET_MODE_VALUES_MAP[widget.widgetOptions.viewMode] ||
+        'none'}/${WIDGET_MODE_VALUES_MAP[widget.widgetOptions.timeline] ||
+        'none'}/${WIDGET_MODE_VALUES_MAP[`latest-${widget.widgetOptions.latest}`] || 'none'}`,
+      list: dashboard.id,
+      position: index + 1,
+    };
+  });
 };

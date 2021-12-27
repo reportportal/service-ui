@@ -32,7 +32,8 @@ import {
   pageSelector,
   projectIdSelector,
 } from 'controllers/pages';
-import { formatEcDashboardData, provideEcGA } from 'components/main/analytics/utils';
+import { provideEcGA } from 'components/main/analytics/utils';
+import { formatEcDashboardData } from 'components/main/analytics/events/common/widgetPages/utils';
 import {
   ADD_DASHBOARD,
   CHANGE_VISIBILITY_TYPE,
