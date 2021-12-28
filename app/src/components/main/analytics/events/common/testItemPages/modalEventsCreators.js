@@ -224,7 +224,7 @@ export const getEditItemsModalEvents = (category, itemType = 'Item') => ({
     action: `Edit description in Modal "Edit ${itemType}"`,
     label: 'Edit description',
   },
-  CLICK_COPY_LINK: {
+  CLICK_COPY_ICON_UUID: {
     category,
     action: 'Click on Icon Copy for UUID',
     label: `Modal Edit ${itemType}`,
