@@ -235,12 +235,12 @@ export class EditItemModal extends Component {
     return URLS.testItemAttributeValuesSearch(projectId, item.launchId || item.id, key);
   };
 
-  onClickCopyLink = () => {
+  onClickCopyUUID = () => {
     const {
       data: { eventsInfo },
       tracking,
     } = this.props;
-    eventsInfo.CLICK_COPY_LINK && tracking.trackEvent(eventsInfo.CLICK_COPY_LINK);
+    eventsInfo.CLICK_COPY_ICON_UUID && tracking.trackEvent(eventsInfo.CLICK_COPY_ICON_UUID);
   };
 
   render() {
@@ -302,7 +302,7 @@ export class EditItemModal extends Component {
                 {formatItemName(item.uuid)}
                 <CopyToClipboard
                   text={item.uuid}
-                  onCopy={this.onClickCopyLink}
+                  onCopy={this.onClickCopyUUID}
                   className={cx('copy')}
                 >
                   {Parser(IconDuplicate)}
