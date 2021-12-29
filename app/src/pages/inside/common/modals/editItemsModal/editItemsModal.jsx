@@ -213,6 +213,8 @@ export class EditItemsModal extends Component {
       const attributeBeforeUpdate = this.findAttribute(oldAttributes, attributes);
       const updatedAttribute = this.findAttribute(attributes, oldAttributes);
 
+      if (!attributeBeforeUpdate) return;
+
       // Create attribute
       if (!attributeBeforeUpdate.value) {
         this.removeUniqueAttribute(updatedAttribute);
