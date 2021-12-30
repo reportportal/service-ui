@@ -38,6 +38,13 @@
   cursor: pointer;
   transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
 
+  &.dark-view {
+    background-color: transparent;
+    border: 1px solid $COLOR--dark-gray;
+    border-radius: 4px;
+    color: $COLOR--white-two;
+  }
+
   /* stylelint-disable */
   &[disabled] {
     background-color: $COLOR--gray-91;

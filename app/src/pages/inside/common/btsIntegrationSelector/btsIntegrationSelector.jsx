@@ -95,6 +95,8 @@ export class BtsIntegrationSelector extends Component {
                 selectBlock: 'dark-view',
                 value: 'dark-view',
                 arrow: 'dark-view',
+                selectList: 'dark-view',
+                dropdownOption: 'dark-view',
               }
             }
           />
@@ -115,6 +117,8 @@ export class BtsIntegrationSelector extends Component {
                 selectBlock: 'dark-view',
                 value: 'dark-view',
                 arrow: 'dark-view',
+                selectList: 'dark-view',
+                dropdownOption: 'dark-view',
               }
             }
           />

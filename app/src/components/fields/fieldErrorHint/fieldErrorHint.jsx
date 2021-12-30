@@ -235,6 +235,7 @@ export class FieldErrorHint extends Component {
     active: PropTypes.bool,
     staticHint: PropTypes.bool,
     widthContent: PropTypes.bool,
+    darkView: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -245,6 +246,7 @@ export class FieldErrorHint extends Component {
     active: false,
     staticHint: false,
     widthContent: false,
+    darkView: false,
   };
 
   isHintVisible = () => {
@@ -264,6 +266,7 @@ export class FieldErrorHint extends Component {
       active,
       staticHint,
       widthContent,
+      darkView,
       ...rest
     } = this.props;
     const classes = cx('field-error-hint', `type-${hintType}`);
@@ -281,6 +284,7 @@ export class FieldErrorHint extends Component {
             className={cx('hint-content', `type-${hintType}`, {
               'static-hint': staticHint,
               'width-content': widthContent,
+              'dark-view': darkView,
             })}
           >
             {error && messages[error] ? intl.formatMessage(messages[error]) : error}

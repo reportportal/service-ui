@@ -32,7 +32,11 @@ export const DynamicField = ({
   darkView,
   ...rest
 }) => {
-  const fieldChildren = withValidation ? <FieldErrorHint>{children}</FieldErrorHint> : children;
+  const fieldChildren = withValidation ? (
+    <FieldErrorHint darkView={darkView}>{children}</FieldErrorHint>
+  ) : (
+    children
+  );
   const fieldCommonProps = {
     name: field.id,
     label: field.fieldName,

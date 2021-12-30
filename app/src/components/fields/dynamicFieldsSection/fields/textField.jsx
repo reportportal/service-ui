@@ -25,6 +25,10 @@ export class TextField extends Component {
     darkView: PropTypes.bool,
   };
 
+  static defaultProps = {
+    darkView: false,
+  };
+
   formatInputValue = (value) => value && value[0];
 
   parseInputValue = (value) => (value ? [value] : []);
