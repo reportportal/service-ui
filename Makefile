@@ -1,18 +1,21 @@
 .DEFAULT_GOAL := build
 
-COMMIT_HASH = `git rev-parse --short HEAD 2>/dev/null`
-BUILD_DATE = `date +%FT%T%z`
+COMMIT_HASH = $(shell git rev-parse HEAD | git hash-object --stdin)
+BUILD_DATE = $(shell date +%FT%T%z)
 
-BINARY_DIR=bin
-RELEASE_DIR=release
+RELEASE_DIR := release
 
-REPO_NAME=reportportal/service-ui
+REPO_NAME := reportportal/service-ui
 
 UI_BUILD_REACT=app/
 
 IMAGE_NAME=reportportal-dev-5/service-ui$(IMAGE_POSTFIX)
 
-.PHONY: get-build-deps test checkstyle lint build
+.PHONY: build
+
+# Generates a json file with build info
+generate-build-info:
+	echo '{"build": { "version": "${v}", "branch": "${COMMIT_HASH}", "build_date": "${BUILD_DATE}", "name": "Service UI", "repo": "${REPO_NAME}"}}' > ./${UI_BUILD_REACT}build/buildInfo.json
 
 # Builds the project
 build-statics:
@@ -22,10 +25,10 @@ build-statics:
 	npm --prefix $(UI_BUILD_REACT) run build
 
 # Builds the project
-build: build-statics build-server
+build: build-statics generate-build-info
 
 # Builds server
-build-release: get-build-deps test
+build-release:
 	$(eval v := $(or $(v),$(shell releaser bump)))
 	# make sure latest version is bumped to file
 	releaser bump --version ${v}
@@ -48,7 +51,6 @@ pushDev:
 	docker push "$(REGISTRY)/$(IMAGE_NAME):latest"
 
 clean:
-	if [ -d ${BINARY_DIR} ] ; then rm -r ${BINARY_DIR} ; fi
 	if [ -d ${RELEASE_DIR} ] ; then rm -r ${RELEASE_DIR} ; fi
 	if [ -d 'node_modules' ] ; then rm -r 'node_modules' ; fi
 	if [ -d 'build' ] ; then rm -r 'build' ; fi
