@@ -18,6 +18,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Link from 'redux-first-router-link';
 import { useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import { getLogItemLinkSelector } from 'controllers/testItem/selectors';
 import Parser from 'html-react-parser';
 import { IssueList } from 'pages/inside/stepPage/stepGrid/defectType/issueList';
@@ -48,6 +49,7 @@ export const ItemHeader = ({
   onClickLinkEvent,
   mode,
   toggleDetails,
+  events,
 }) => {
   const {
     id,
@@ -58,6 +60,11 @@ export const ItemHeader = ({
   const defectTypes = useSelector(defectTypesSelector);
   const getLogItemLink = useSelector(getLogItemLinkSelector);
   const link = getLogItemLink(item);
+  const { trackEvent } = useTracking();
+
+  const onClickIssue = (pluginName) => {
+    trackEvent(events.onClickIssueTicketEvent(pluginName));
+  };
 
   return (
     <div
@@ -124,7 +131,12 @@ export const ItemHeader = ({
       </div>
       {!!externalSystemIssues.length && mode !== CHECKBOX_TEST_ITEM_DETAILS && (
         <div className={cx('bts-row')}>
-          <IssueList issues={externalSystemIssues} className={cx('issue')} readOnly />
+          <IssueList
+            issues={externalSystemIssues}
+            onClick={onClickIssue}
+            className={cx('issue')}
+            readOnly
+          />
         </div>
       )}
     </div>
@@ -138,6 +150,7 @@ ItemHeader.propTypes = {
   onClickLinkEvent: PropTypes.func,
   mode: PropTypes.string,
   toggleDetails: PropTypes.func,
+  events: PropTypes.object,
 };
 ItemHeader.defaultProps = {
   item: {},
@@ -147,4 +160,5 @@ ItemHeader.defaultProps = {
   onClickLinkEvent: () => {},
   mode: DEFAULT_TEST_ITEM_DETAILS,
   toggleDetails: () => {},
+  events: {},
 };

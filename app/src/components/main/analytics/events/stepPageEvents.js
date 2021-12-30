@@ -26,6 +26,7 @@ import {
   getClickSelectOneItemEvent,
   getCommonActionEvents,
   getClickAttributes,
+  getClickIssueTicketEvent,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getEditDefectModalEvents,
@@ -204,4 +205,5 @@ export const STEP_PAGE_EVENTS = {
   },
   MAKE_DECISION_MODAL_EVENTS: getMakeDecisionModalEvents(STEP_PAGE),
   clickAttributes: getClickAttributes(STEP_PAGE),
+  onClickIssueTicketEvent: getClickIssueTicketEvent(STEP_PAGE),
 };

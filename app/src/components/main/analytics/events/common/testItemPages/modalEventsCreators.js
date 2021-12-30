@@ -15,6 +15,7 @@
  */
 
 import { SEARCH_MODES } from 'pages/inside/stepPage/modals/makeDecisionModal/constants';
+import { getClickIssueTicketEvent } from 'components/main/analytics/events/common/testItemPages/actionEventsCreators';
 import { defectFromTIGroupMap } from './constants';
 
 // EDIT DEFECT MODAL
@@ -394,4 +395,5 @@ export const getMakeDecisionModalEvents = (page) => ({
   onExpandFooter: getOnExpandFooterEvent(page),
   onChangeCommentOption: getOnChangeCommentOptionEvent(page),
   onClickItem: getOnClickItemEvent(page),
+  onClickIssueTicketEvent: getClickIssueTicketEvent(MODAL_MAKE_DECISION),
 });

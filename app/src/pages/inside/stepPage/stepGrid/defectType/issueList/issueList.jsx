@@ -21,10 +21,17 @@ import styles from './issueList.scss';
 
 const cx = classNames.bind(styles);
 
-export const IssueList = ({ issues, onRemove, className, readOnly }) =>
+export const IssueList = ({ issues, onRemove, onClick, className, readOnly }) =>
   issues.map((issue) => (
     <div className={cx('issue-list-item')} key={`${issue.btsProject}_${issue.ticketId}`}>
-      <Issue {...issue} showTooltip onRemove={onRemove} className={className} readOnly={readOnly} />
+      <Issue
+        {...issue}
+        showTooltip
+        onRemove={onRemove}
+        onClick={() => onClick(issue.pluginName)}
+        className={className}
+        readOnly={readOnly}
+      />
     </div>
   ));
 
@@ -38,12 +45,14 @@ IssueList.propTypes = {
     }),
   ),
   onRemove: PropTypes.func,
+  onClick: PropTypes.func,
   className: PropTypes.string,
   readOnly: PropTypes.bool,
 };
 IssueList.defaultProps = {
   issues: [],
   onRemove: () => {},
+  onClick: () => {},
   className: '',
   readOnly: false,
 };

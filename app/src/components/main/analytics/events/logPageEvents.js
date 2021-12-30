@@ -20,6 +20,7 @@ import {
   getUnlinkIssueActionEvent,
   getClickOnPlusMinusEvents,
   getCommonActionEvents,
+  getClickIssueTicketEvent,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getDeleteItemModalEvents,
@@ -304,4 +305,5 @@ export const LOG_PAGE_EVENTS = {
     label: 'Play Sauce Labs video',
   },
   MAKE_DECISION_MODAL_EVENTS: getMakeDecisionModalEvents(LOG_PAGE),
+  onClickIssueTicketEvent: getClickIssueTicketEvent(LOG_PAGE),
 };

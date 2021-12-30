@@ -78,6 +78,11 @@ export const DefectType = ({ issue, onEdit, onRemove, patternTemplates, events }
     onEdit();
   };
 
+  const onClickIssue = (pluginName) => {
+    const { onClickIssueTicketEvent } = events;
+    onClickIssueTicketEvent && trackEvent(onClickIssueTicketEvent(pluginName));
+  };
+
   return (
     <div className={cx('defect-type')}>
       <div className={cx('defect-type-labels')}>
@@ -98,7 +103,7 @@ export const DefectType = ({ issue, onEdit, onRemove, patternTemplates, events }
         </div>
       </div>
       <div className={cx('issues')}>
-        <IssueList issues={issue.externalSystemIssues} onRemove={onRemove} />
+        <IssueList issues={issue.externalSystemIssues} onClick={onClickIssue} onRemove={onRemove} />
       </div>
       <div className={cx('comment')}>
         <ScrollWrapper autoHeight autoHeightMax={90}>

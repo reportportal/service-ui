@@ -103,6 +103,12 @@ export const getClickAttributes = (category) => (value) => ({
   label: value,
 });
 
+export const getClickIssueTicketEvent = (page) => (pluginName) => ({
+  category: page,
+  action: 'Click on Issue Ticket',
+  label: pluginName || 'BTS',
+});
+
 export const getCommonActionEvents = (page) => ({
   CLOSE_ICON_FOR_ALL_SELECTIONS: {
     category: page,

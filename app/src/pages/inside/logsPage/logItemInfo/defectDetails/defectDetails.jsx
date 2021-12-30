@@ -274,6 +274,10 @@ export class DefectDetails extends Component {
     this.props.tracking.trackEvent(LOG_PAGE_EVENTS.selectDropDownStatusEvent(oldStatus, newStatus));
   };
 
+  onClickIssue = (pluginName) => {
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.onClickIssueTicketEvent(pluginName));
+  };
+
   render() {
     const {
       logItem,
@@ -316,6 +320,7 @@ export class DefectDetails extends Component {
                     <IssueList
                       issues={logItem.issue.externalSystemIssues}
                       onRemove={this.handleUnlinkTicket}
+                      onClick={this.onClickIssue}
                     />
                   </div>
                   {!debugMode && (

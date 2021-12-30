@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
+import { getClickIssueTicketEvent } from './common/testItemPages/actionEventsCreators';
 import { getMakeDecisionModalEvents } from './common/testItemPages/modalEventsCreators';
 
 export const UNIQUE_ERRORS_PAGE = 'uniqueErrors';
 
 export const UNIQUE_ERRORS_PAGE_EVENTS = {
+  onClickIssueTicketEvent: getClickIssueTicketEvent(UNIQUE_ERRORS_PAGE),
   MAKE_DECISION_MODAL_EVENTS: getMakeDecisionModalEvents(UNIQUE_ERRORS_PAGE),
 };
