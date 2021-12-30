@@ -68,7 +68,7 @@ export const ItemHeader = ({
     >
       <div className={cx('header')}>
         {mode !== DEFAULT_TEST_ITEM_DETAILS && (
-          <div>
+          <div onClick={(e) => e.stopPropagation()}>
             {mode === CHECKBOX_TEST_ITEM_DETAILS && (
               <InputCheckbox
                 className={cx('checkbox-margin-right')}

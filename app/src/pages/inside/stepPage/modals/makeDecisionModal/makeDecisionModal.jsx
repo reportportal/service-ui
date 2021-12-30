@@ -306,6 +306,7 @@ const MakeDecision = ({ data }) => {
       selectedItems,
       suggestedItems,
       startTime,
+      suggestChoice,
     } = modalState;
     let eventInfo;
     const hasSuggestions = !!suggestedItems.length;
@@ -317,18 +318,20 @@ const MakeDecision = ({ data }) => {
     } else {
       const section = messages[decisionType].defaultMessage;
       const optionLabel = messages[optionValue].defaultMessage;
-      const selectedItemsLength = selectedItems.length;
+      const itemsLength = selectedItems.length;
       const timestamp = Date.now() - startTime;
+      const matchScore = suggestChoice.suggestRs && `${suggestChoice.suggestRs.matchScore}%`;
       eventInfo =
         onApply &&
-        onApply(
+        onApply({
           section,
           defectFromTIGroup,
           hasSuggestions,
           optionLabel,
-          selectedItemsLength,
+          itemsLength,
           timestamp,
-        );
+          matchScore,
+        });
     }
     return eventInfo;
   };
@@ -348,8 +351,8 @@ const MakeDecision = ({ data }) => {
       modalHasChanges &&
         !isEqual(itemData.issue, modalState[ACTIVE_TAB_MAP[activeTab]].issue) &&
         saveDefect();
-      trackEvent(getOnApplyEvent());
     }
+    trackEvent(getOnApplyEvent());
 
     ((modalState.decisionType === COPY_FROM_HISTORY_LINE &&
       isEqual(itemData.issue, modalState.historyChoice.issue)) ||
@@ -409,7 +412,7 @@ const MakeDecision = ({ data }) => {
         isOpen: activeTab === MACHINE_LEARNING_SUGGESTIONS,
         title:
           modalState.suggestChoice.suggestRs &&
-          formatMessage(messages.executionWith, {
+          formatMessage(messages.machineLearningSuggestions, {
             value: modalState.suggestChoice.suggestRs.matchScore,
           }),
         content: isMLSuggestionsAvailable && (
@@ -482,6 +485,7 @@ const MakeDecision = ({ data }) => {
           isBulkOperation={isBulkOperation}
           setModalState={setModalState}
           modalHasChanges={modalHasChanges}
+          eventsInfo={data.eventsInfo.editDefectsEvents}
         />
       }
       eventsInfo={layoutEventsInfo}

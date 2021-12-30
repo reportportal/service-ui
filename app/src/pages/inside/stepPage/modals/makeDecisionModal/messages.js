@@ -206,8 +206,8 @@ export const messages = defineMessages({
     id: 'MakeDecisionModal.ofTheTest',
     defaultMessage: 'of the test',
   },
-  executionWith: {
-    id: 'MakeDecisionModal.executionWith',
+  machineLearningSuggestions: {
+    id: 'MakeDecisionModal.machineLearningSuggestions',
     defaultMessage: 'The execution with {value}% similarity of defect',
   },
   commentReplaceWith: {

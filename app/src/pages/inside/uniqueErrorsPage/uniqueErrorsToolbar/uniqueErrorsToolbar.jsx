@@ -38,6 +38,7 @@ export const UniqueErrorsToolbar = ({
   unselectAndFetchItems,
   onEditItems,
   onEditDefects,
+  events,
 }) => (
   <Fragment>
     <div className={cx({ 'sticky-toolbar': selectedItems.length })}>
@@ -62,6 +63,7 @@ export const UniqueErrorsToolbar = ({
         onDelete={onDelete}
         parentItem={parentItem}
         unselectAndFetchItems={unselectAndFetchItems}
+        events={events}
       />
     </div>
     {parentItem && <InfoPanel withoutStatistics viewMode={UNIQUE_ERRORS_VIEW} data={parentItem} />}
@@ -80,6 +82,7 @@ UniqueErrorsToolbar.propTypes = {
   unselectAndFetchItems: PropTypes.func,
   onEditItems: PropTypes.func,
   onEditDefects: PropTypes.func,
+  events: PropTypes.object,
 };
 UniqueErrorsToolbar.defaultProps = {
   parentItem: null,
@@ -94,4 +97,5 @@ UniqueErrorsToolbar.defaultProps = {
   unselectAndFetchItems: () => {},
   onEditItems: () => {},
   onEditDefects: () => {},
+  events: {},
 };

@@ -17,8 +17,10 @@
 import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { useTracking } from 'react-tracking';
 import { useOnClickOutside } from 'common/hooks';
 import { ModalFooter } from 'components/main/modal/darkModalLayout';
+import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import { InfoBlock } from './infoBlock';
 import styles from './makeDecisionFooter.scss';
 
@@ -30,9 +32,19 @@ export const MakeDecisionFooter = ({
   isBulkOperation,
   setModalState,
   modalHasChanges,
+  eventsInfo,
 }) => {
+  const { trackEvent } = useTracking();
   const [expanded, setExpanded] = useState(false);
-  const onToggle = () => setExpanded(!expanded);
+  const onToggle = () => {
+    setExpanded(!expanded);
+    if (!expanded) {
+      const defectFromTIGroup = isBulkOperation
+        ? undefined
+        : modalState.currentTestItems[0].issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
+      trackEvent(eventsInfo.onExpandFooter(defectFromTIGroup));
+    }
+  };
   const wrapperRef = useRef();
   useOnClickOutside(wrapperRef, () => setExpanded(false));
 
@@ -49,6 +61,7 @@ export const MakeDecisionFooter = ({
               modalHasChanges={modalHasChanges}
               expanded={expanded}
               onToggle={onToggle}
+              eventsInfo={eventsInfo}
             />
           )
         }
@@ -65,6 +78,7 @@ MakeDecisionFooter.propTypes = {
   isBulkOperation: PropTypes.bool,
   setModalState: PropTypes.func,
   modalHasChanges: PropTypes.bool,
+  eventsInfo: PropTypes.object,
 };
 MakeDecisionFooter.defaultProps = {
   buttons: {},
@@ -72,4 +86,5 @@ MakeDecisionFooter.defaultProps = {
   isBulkOperation: false,
   setModalState: () => {},
   modalHasChanges: false,
+  eventsInfo: {},
 };

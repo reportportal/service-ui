@@ -40,7 +40,6 @@ export const TestItemDetails = ({
   highlightedLogId,
   highlightedMessage,
   hideLabels,
-  onClickLinkEvent,
   isSelected,
   showErrorLogs,
   loading,
@@ -56,6 +55,10 @@ export const TestItemDetails = ({
   const toggleDetails = () => {
     setShowDetails(!showDetails);
     onToggleCallback(item.id);
+    if (!showDetails) {
+      const { onClickItemEvent } = eventsInfo;
+      onClickItemEvent && onClickItemEvent();
+    }
   };
 
   return (
@@ -66,7 +69,7 @@ export const TestItemDetails = ({
         selectItem={selectItem}
         isSelected={isSelected}
         hideLabels={hideLabels}
-        onClickLinkEvent={onClickLinkEvent}
+        onClickLinkEvent={eventsInfo.onClickExternalLinkEvent}
         toggleDetails={toggleDetails}
       />
       {showDetails && loading ? (
@@ -122,7 +125,6 @@ TestItemDetails.propTypes = {
   nameLink: PropTypes.object,
   preselected: PropTypes.bool,
   hideLabels: PropTypes.bool,
-  onClickLinkEvent: PropTypes.func,
   logs: PropTypes.array,
   eventsInfo: PropTypes.object,
   highlightedLogId: PropTypes.number,
@@ -139,7 +141,6 @@ TestItemDetails.defaultProps = {
   nameLink: {},
   preselected: false,
   hideLabels: false,
-  onClickLinkEvent: () => {},
   logs: [],
   eventsInfo: {},
   highlightedLogId: null,

@@ -72,3 +72,4 @@ export {
   submitAnalyticsBtn,
 } from './adminServerSettingsPageEvents';
 export { TEST_PAGE, TESTS_PAGE_EVENTS } from './testsPageEvents';
+export { UNIQUE_ERRORS_PAGE_EVENTS } from './uniqueErrorsPageEvents';

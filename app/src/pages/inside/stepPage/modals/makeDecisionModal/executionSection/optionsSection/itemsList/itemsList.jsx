@@ -53,6 +53,7 @@ export const ItemsList = ({
         )}
         <ScrollWrapper autoHeight autoHeightMax={515} hideTracksWhenNotNeeded>
           <ItemsListBody
+            currentTestItem={currentTestItem}
             testItems={testItems}
             selectedItems={selectedItems}
             setItems={setItems}

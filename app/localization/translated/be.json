@@ -1095,7 +1095,7 @@
   "MakeDecisionModal.defectIncludeInAa": "дэфект будзе ўключаны ў Аўта-Аналіз",
   "MakeDecisionModal.defectReplaceWith": "Тып дэфекту будзе зменены на",
   "MakeDecisionModal.executionToChange": "Выкананне для змен",
-  "MakeDecisionModal.executionWith": "Выкананне з {value}% падабенствам дэфекту",
+  "MakeDecisionModal.machineLearningSuggestions": "Выкананне з {value}% падабенствам дэфекту",
   "MakeDecisionModal.filter": "Аналагічныя ”To Investigate” элементы ў фільтры {filterName} і бягучы элемент",
   "MakeDecisionModal.followingResult": "Наступныя вынікі будуць ужытыя да {items}",
   "MakeDecisionModal.history": "Гісторыя",

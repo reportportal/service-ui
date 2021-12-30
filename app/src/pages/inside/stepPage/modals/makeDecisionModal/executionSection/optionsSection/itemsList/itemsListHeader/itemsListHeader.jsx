@@ -56,7 +56,7 @@ export const ItemsListHeader = ({
     });
     const { onSelectAllItems } = eventsInfo;
     const args = {
-      isTIGroup: defectFromTIGroup,
+      defectFromTIGroup,
       state: isAllSelected,
       optionLabel: optionValue && messages[optionValue].defaultMessage,
     };
@@ -68,8 +68,7 @@ export const ItemsListHeader = ({
     });
     onShowErrorLogsChange(!showErrorLogs);
     const { toggleShowErrLogsSwitcher } = eventsInfo;
-    const args = { isTIGroup: defectFromTIGroup, state: !showErrorLogs };
-    trackEvent(toggleShowErrLogsSwitcher(args));
+    trackEvent(toggleShowErrLogsSwitcher({ defectFromTIGroup, state: !showErrorLogs }));
   };
 
   return (

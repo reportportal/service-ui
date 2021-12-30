@@ -46,6 +46,7 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
 import { HISTORY_PAGE_EVENTS } from 'components/main/analytics/events';
 import { createStepActionDescriptors } from 'pages/inside/common/utils';
+import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import { ActionPanel } from '../actionPanel';
 
 const UNLINK_ISSUE_EVENTS_INFO = {
@@ -289,7 +290,14 @@ export class ActionPanelWithGroupOperations extends Component {
   handleEditDefects = (eventData) => {
     const { selectedItems, debugMode, onEditDefects, tracking } = this.props;
     const items = eventData && eventData.id ? [eventData] : selectedItems;
-    tracking.trackEvent(HISTORY_PAGE_EVENTS.EDIT_DEFECT_ACTION);
+    tracking.trackEvent(
+      HISTORY_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS.openModal(
+        items.length === 1
+          ? items[0].issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)
+          : undefined,
+        'ActionMenu',
+      ),
+    );
     onEditDefects(items, {
       fetchFunc: this.unselectAndRefreshItems,
       debugMode,

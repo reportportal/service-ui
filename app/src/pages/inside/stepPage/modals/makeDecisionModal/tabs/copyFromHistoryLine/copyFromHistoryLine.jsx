@@ -70,6 +70,7 @@ export const CopyFromHistoryLine = ({
   }, []);
 
   const source = modalState.historyChoice;
+  const defectFromTIGroup = itemData.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
 
   const selectHistoryLineItem = (itemId) => {
     if (itemId && itemId !== source.id) {
@@ -95,12 +96,25 @@ export const CopyFromHistoryLine = ({
   };
   const onClickExternalLinkEvent = () => {
     const { onClickExternalLink } = eventsInfo;
-    const defectFromTIGroup = itemData.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
-    const args = {
-      isTIGroup: defectFromTIGroup,
-      section: messages[COPY_FROM_HISTORY_LINE].defaultMessage,
-    };
-    trackEvent(onClickExternalLink(args));
+    onClickExternalLink &&
+      trackEvent(
+        onClickExternalLink({
+          defectFromTIGroup,
+          section: messages[COPY_FROM_HISTORY_LINE].defaultMessage,
+        }),
+      );
+  };
+  const onClickItemEvent = () => {
+    const { onClickItem } = eventsInfo;
+    onClickItem &&
+      trackEvent(onClickItem(defectFromTIGroup, messages[COPY_FROM_HISTORY_LINE].defaultMessage));
+  };
+  const onOpenStackTraceEvent = () => {
+    const { onOpenStackTrace } = eventsInfo;
+    onOpenStackTrace &&
+      trackEvent(
+        onOpenStackTrace(defectFromTIGroup, messages[COPY_FROM_HISTORY_LINE].defaultMessage),
+      );
   };
 
   return (
@@ -113,8 +127,12 @@ export const CopyFromHistoryLine = ({
             selectItem={selectHistoryLineItem}
             isSelected={source.id === item.id}
             hideLabels={hideLabels()}
-            onClickLinkEvent={onClickExternalLinkEvent}
             mode={RADIO_TEST_ITEM_DETAILS}
+            eventsInfo={{
+              onOpenStackTraceEvent,
+              onClickItemEvent,
+              onClickExternalLinkEvent,
+            }}
           />
         </div>
       ))}
