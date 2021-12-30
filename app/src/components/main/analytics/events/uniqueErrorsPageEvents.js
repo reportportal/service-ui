@@ -19,10 +19,7 @@ import { getMakeDecisionModalEvents } from './common/testItemPages/modalEventsCr
 
 export const UNIQUE_ERRORS_PAGE = 'uniqueErrors';
 
-export const getOnClickIssueTicketEvent = (pluginName) => {
-  return getClickIssueTicketEvent(UNIQUE_ERRORS_PAGE)(pluginName);
-};
-
 export const UNIQUE_ERRORS_PAGE_EVENTS = {
+  onClickIssueTicketEvent: getClickIssueTicketEvent(UNIQUE_ERRORS_PAGE),
   MAKE_DECISION_MODAL_EVENTS: getMakeDecisionModalEvents(UNIQUE_ERRORS_PAGE),
 };

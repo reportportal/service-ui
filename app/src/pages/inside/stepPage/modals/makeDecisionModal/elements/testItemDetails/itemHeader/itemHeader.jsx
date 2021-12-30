@@ -32,7 +32,6 @@ import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { InputRadio } from 'components/inputs/inputRadio';
 import { HistoryLineItemContent } from 'pages/inside/logsPage/historyLine/historyLineItem';
 import { defectTypesSelector } from 'controllers/project';
-import { getMakeDecisionModalEvents } from 'components/main/analytics/events/common/testItemPages/modalEventsCreators';
 import {
   CHECKBOX_TEST_ITEM_DETAILS,
   DEFAULT_TEST_ITEM_DETAILS,
@@ -50,6 +49,7 @@ export const ItemHeader = ({
   onClickLinkEvent,
   mode,
   toggleDetails,
+  events,
 }) => {
   const {
     id,
@@ -61,10 +61,9 @@ export const ItemHeader = ({
   const getLogItemLink = useSelector(getLogItemLinkSelector);
   const link = getLogItemLink(item);
   const { trackEvent } = useTracking();
-  const MAKE_DECISION_MODAL_EVENTS = getMakeDecisionModalEvents();
 
   const onClickIssue = (pluginName) => {
-    trackEvent(MAKE_DECISION_MODAL_EVENTS.getOnClickIssueTicketEvent(pluginName));
+    trackEvent(events.onClickIssueTicketEvent(pluginName));
   };
 
   return (
@@ -151,6 +150,7 @@ ItemHeader.propTypes = {
   onClickLinkEvent: PropTypes.func,
   mode: PropTypes.string,
   toggleDetails: PropTypes.func,
+  events: PropTypes.object,
 };
 ItemHeader.defaultProps = {
   item: {},
@@ -160,4 +160,5 @@ ItemHeader.defaultProps = {
   onClickLinkEvent: () => {},
   mode: DEFAULT_TEST_ITEM_DETAILS,
   toggleDetails: () => {},
+  events: {},
 };

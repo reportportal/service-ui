@@ -55,7 +55,6 @@ import { prevTestItemSelector } from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
-import { getOnClickIssueTicketEvent } from 'components/main/analytics/events/stepPageEvents';
 import { StepGrid } from './stepGrid';
 
 const UNLINK_ISSUE_EVENTS_INFO = {
@@ -458,7 +457,7 @@ export class StepPage extends Component {
             listView={listView}
             onEditDefect={this.handleEditDefects}
             onUnlinkSingleTicket={this.handleUnlinkSingleTicket}
-            events={{ ...STEP_PAGE_EVENTS, getOnClickIssueTicketEvent }}
+            events={STEP_PAGE_EVENTS}
             onEditItem={this.onEditItem}
             onFilterClick={onFilterAdd}
             onChangeSorting={onChangeSorting}

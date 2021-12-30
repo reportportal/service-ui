@@ -71,6 +71,7 @@ export const TestItemDetails = ({
         hideLabels={hideLabels}
         onClickLinkEvent={eventsInfo.onClickExternalLinkEvent}
         toggleDetails={toggleDetails}
+        events={eventsInfo}
       />
       {showDetails && loading ? (
         <SpinningPreloader />

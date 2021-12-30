@@ -79,8 +79,8 @@ export const DefectType = ({ issue, onEdit, onRemove, patternTemplates, events }
   };
 
   const onClickIssue = (pluginName) => {
-    const { getOnClickIssueTicketEvent } = events;
-    getOnClickIssueTicketEvent && trackEvent(getOnClickIssueTicketEvent(pluginName));
+    const { onClickIssueTicketEvent } = events;
+    onClickIssueTicketEvent && trackEvent(onClickIssueTicketEvent(pluginName));
   };
 
   return (

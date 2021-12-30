@@ -195,6 +195,7 @@ export const ExecutionSection = ({ modalState, setModalState, isBulkOperation, e
             onOpenStackTraceEvent,
             onClickItemEvent,
             onClickExternalLinkEvent,
+            onClickIssueTicketEvent: eventsInfo.onClickIssueTicketEvent,
           }}
         />
       ))}

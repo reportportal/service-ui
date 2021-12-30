@@ -52,10 +52,6 @@ export const getHistoryLineCheckbox = (state) => ({
   label: state ? 'On' : 'Off',
 });
 
-export const getOnClickIssueTicketEvent = (pluginName) => {
-  return getClickIssueTicketEvent(LOG_PAGE)(pluginName);
-};
-
 export const LOG_PAGE_EVENTS = {
   plusMinusBreadcrumb: getClickOnPlusMinusEvents(LOG_PAGE),
   ALL_LABEL_BREADCRUMB: {
@@ -309,4 +305,5 @@ export const LOG_PAGE_EVENTS = {
     label: 'Play Sauce Labs video',
   },
   MAKE_DECISION_MODAL_EVENTS: getMakeDecisionModalEvents(LOG_PAGE),
+  onClickIssueTicketEvent: getClickIssueTicketEvent(LOG_PAGE),
 };

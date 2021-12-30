@@ -395,5 +395,5 @@ export const getMakeDecisionModalEvents = (page) => ({
   onExpandFooter: getOnExpandFooterEvent(page),
   onChangeCommentOption: getOnChangeCommentOptionEvent(page),
   onClickItem: getOnClickItemEvent(page),
-  getOnClickIssueTicketEvent: getClickIssueTicketEvent(MODAL_MAKE_DECISION),
+  onClickIssueTicketEvent: getClickIssueTicketEvent(MODAL_MAKE_DECISION),
 });

@@ -49,10 +49,6 @@ export const getChangeItemStatusEvent = (oldStatus, newStatus) => ({
   label: `Change status from ${oldStatus} to ${newStatus}`,
 });
 
-export const getOnClickIssueTicketEvent = (pluginName) => {
-  return getClickIssueTicketEvent(STEP_PAGE)(pluginName);
-};
-
 export const STEP_PAGE_EVENTS = {
   ...getCommonActionEvents(STEP_PAGE),
   // REFINE_FILTERS_PANEL
@@ -209,4 +205,5 @@ export const STEP_PAGE_EVENTS = {
   },
   MAKE_DECISION_MODAL_EVENTS: getMakeDecisionModalEvents(STEP_PAGE),
   clickAttributes: getClickAttributes(STEP_PAGE),
+  onClickIssueTicketEvent: getClickIssueTicketEvent(STEP_PAGE),
 };

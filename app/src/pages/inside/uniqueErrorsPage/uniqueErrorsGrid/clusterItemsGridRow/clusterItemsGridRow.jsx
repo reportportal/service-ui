@@ -34,7 +34,6 @@ import {
   toggleClusterItemSelectionAction,
 } from 'controllers/uniqueErrors/clusterItems';
 import { ENTITY_METHOD_TYPE } from 'components/filterEntities/constants';
-import { getOnClickIssueTicketEvent } from 'components/main/analytics/events/uniqueErrorsPageEvents';
 import { PROJECT_LOG_PAGE } from 'controllers/pages';
 import { reloadClustersAction } from 'controllers/uniqueErrors';
 import { uniqueErrorGridCellComponentSelector } from 'controllers/plugins/uiExtensions/selectors';
@@ -146,7 +145,7 @@ export const ClusterItemsGridRow = ({ data, onEditItem, onUnlinkSingleTicket, on
                     onEditItem={onEditItem}
                     onEditDefect={onEditDefect}
                     onStatusUpdate={() => dispatch(reloadClustersAction())}
-                    events={{ ...UNIQUE_ERRORS_PAGE_EVENTS, getOnClickIssueTicketEvent }}
+                    events={UNIQUE_ERRORS_PAGE_EVENTS}
                   />
                   {totalPages > currentPage && (
                     <div
