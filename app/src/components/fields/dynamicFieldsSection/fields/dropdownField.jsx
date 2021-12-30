@@ -54,6 +54,8 @@ export class DropdownField extends Component {
               selectBlock: 'dark-view',
               value: 'dark-view',
               arrow: 'dark-view',
+              selectList: 'dark-view',
+              dropdownOption: 'dark-view',
             }
           }
         />

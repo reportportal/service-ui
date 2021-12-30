@@ -27,9 +27,16 @@
 
   &:hover {
     background-color: $COLOR--tealish-hover;
+    &.dark-view {
+      background-color: $COLOR--charcoal-grey;
+    }
   }
   &.selected {
     background-color: $COLOR--gray-91;
+    &.dark-view {
+      background: none;
+      color: $COLOR--darkmode-topaz-text;
+    }
   }
   &.disabled {
     color: $COLOR--gray-60;
