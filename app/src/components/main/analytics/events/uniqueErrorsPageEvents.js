@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-import {
-  getClickIssueTicketEvent,
-  getMakeDecisionModalEvents,
-} from './common/testItemPages/modalEventsCreators';
+import { getClickIssueTicketEvent } from './common/testItemPages/actionEventsCreators';
+import { getMakeDecisionModalEvents } from './common/testItemPages/modalEventsCreators';
 
 export const UNIQUE_ERRORS_PAGE = 'uniqueErrors';
 
-export const getOnClickIssueTicket = (pluginName) => {
+export const getOnClickIssueTicketEvent = (pluginName) => {
   return getClickIssueTicketEvent(UNIQUE_ERRORS_PAGE)(pluginName);
 };
 

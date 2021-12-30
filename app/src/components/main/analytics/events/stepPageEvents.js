@@ -49,7 +49,7 @@ export const getChangeItemStatusEvent = (oldStatus, newStatus) => ({
   label: `Change status from ${oldStatus} to ${newStatus}`,
 });
 
-export const getOnClickIssueTicket = (pluginName) => {
+export const getOnClickIssueTicketEvent = (pluginName) => {
   return getClickIssueTicketEvent(STEP_PAGE)(pluginName);
 };
 

@@ -51,7 +51,7 @@ import {
   IgnoredInAALabel,
   PALabel,
 } from 'pages/inside/stepPage/stepGrid/defectType/defectType';
-import { getOnClickIssueTicket } from 'components/main/analytics/events/logPageEvents';
+import { getOnClickIssueTicketEvent } from 'components/main/analytics/events/logPageEvents';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import styles from './defectDetails.scss';
 
@@ -276,7 +276,7 @@ export class DefectDetails extends Component {
   };
 
   onClickIssue = (pluginName) => {
-    this.props.tracking.trackEvent(getOnClickIssueTicket(pluginName));
+    this.props.tracking.trackEvent(getOnClickIssueTicketEvent(pluginName));
   };
 
   render() {

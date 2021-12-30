@@ -52,7 +52,7 @@ export const getHistoryLineCheckbox = (state) => ({
   label: state ? 'On' : 'Off',
 });
 
-export const getOnClickIssueTicket = (pluginName) => {
+export const getOnClickIssueTicketEvent = (pluginName) => {
   return getClickIssueTicketEvent(LOG_PAGE)(pluginName);
 };
 
