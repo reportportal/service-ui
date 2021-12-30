@@ -35,25 +35,41 @@ export const MachineLearningSuggestions = ({ modalState, itemData, eventsInfo })
 
   const onClickExternalLinkEvent = () => {
     const { onClickExternalLink } = eventsInfo;
-    const args = {
-      isTIGroup: defectFromTIGroup,
-      section: messages[MACHINE_LEARNING_SUGGESTIONS].defaultMessage,
-    };
-    trackEvent(onClickExternalLink(args));
+    onClickExternalLink &&
+      trackEvent(
+        onClickExternalLink({
+          defectFromTIGroup,
+          section: messages[MACHINE_LEARNING_SUGGESTIONS].defaultMessage,
+        }),
+      );
+  };
+  const onClickItemEvent = () => {
+    const { onClickItem } = eventsInfo;
+    onClickItem &&
+      trackEvent(
+        onClickItem(defectFromTIGroup, messages[MACHINE_LEARNING_SUGGESTIONS].defaultMessage),
+      );
+  };
+  const onOpenStackTraceEvent = () => {
+    const { onOpenStackTrace } = eventsInfo;
+    onOpenStackTrace &&
+      trackEvent(
+        onOpenStackTrace(defectFromTIGroup, messages[MACHINE_LEARNING_SUGGESTIONS].defaultMessage),
+      );
   };
 
   return (
     <>
       <TestItemDetails
         item={item}
-        onClickLinkEvent={onClickExternalLinkEvent}
         logs={logs}
         highlightedLogId={suggestRs.relevantLogId}
         highlightedMessage={formatMessage(messages.similarLog)}
         showErrorLogs
         eventsInfo={{
-          onOpenStackTraceEvent: () =>
-            eventsInfo.onOpenStackTrace && eventsInfo.onOpenStackTrace(defectFromTIGroup, true),
+          onOpenStackTraceEvent,
+          onClickItemEvent,
+          onClickExternalLinkEvent,
         }}
       />
     </>

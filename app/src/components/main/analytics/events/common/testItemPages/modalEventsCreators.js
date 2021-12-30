@@ -15,6 +15,7 @@
  */
 
 import { SEARCH_MODES } from 'pages/inside/stepPage/modals/makeDecisionModal/constants';
+import { defectFromTIGroupMap } from './constants';
 
 // EDIT DEFECT MODAL
 export const getEditDefectModalEvents = (category) => ({
@@ -252,127 +253,130 @@ export const getEditItemsModalEvents = (category, itemType = 'Item') => ({
 });
 
 const MODAL_MAKE_DECISION = 'Modal Make decision';
-const getOpenModalEvent = (page) => (isTIGroup, actionPlace = '') => {
-  const defectGroup = isTIGroup ? 'TI' : 'NoTI';
-  return {
-    category: MODAL_MAKE_DECISION,
-    action: 'Open Modal "Make decision"',
-    label: `${page}${actionPlace && `#${actionPlace}`}#${defectGroup}`,
-  };
-};
-const getCloseModalEvent = (page) => (isTIGroup, hasSuggestions, timestamp) => {
-  const defectGroup = isTIGroup ? 'TI' : 'NoTI';
+const getOpenModalEvent = (page) => (defectFromTIGroup, actionPlace = '') => ({
+  category: MODAL_MAKE_DECISION,
+  action: 'Open Modal "Make decision"',
+  label: `${page}${actionPlace && `#${actionPlace}`}#${defectFromTIGroupMap[defectFromTIGroup]}`,
+});
+const getCloseModalEvent = (page) => (defectFromTIGroup, hasSuggestions, timestamp) => {
   const suggestionsStatus = hasSuggestions ? 'withML' : 'withoutML';
   return {
     category: MODAL_MAKE_DECISION,
     action: 'Close modal "Make decisions"',
-    label: [page, defectGroup, suggestionsStatus, timestamp].join('#'),
+    label: [page, defectFromTIGroupMap[defectFromTIGroup], suggestionsStatus, timestamp].join('#'),
   };
 };
-const getApplyBtnEvent = (page) => (
+const getApplyBtnEvent = (page) => ({
   section,
-  isTIGroup,
+  defectFromTIGroup,
   hasSuggestions,
   optionLabel,
   itemsLength,
   timestamp,
-) => {
-  const defectGroup = isTIGroup ? 'TI' : 'NoTI';
+  matchScore,
+}) => {
   const suggestionsStatus = hasSuggestions ? 'withML' : 'withoutML';
   const selectedOption = optionLabel.replace(/{([A-Za-z]+)}/, 'filter');
   return {
     category: MODAL_MAKE_DECISION,
     action: `Click on button "Apply" after selecting ${section}`,
-    label: [page, defectGroup, suggestionsStatus, selectedOption, itemsLength, timestamp].join('#'),
+    label: [
+      page,
+      defectFromTIGroupMap[defectFromTIGroup],
+      suggestionsStatus,
+      selectedOption,
+      itemsLength,
+      timestamp,
+      matchScore,
+    ]
+      .join('#')
+      .replace(/#$/, ''),
   };
 };
-const getApplyAndContinueBtnEvent = (page) => (isTIGroup, hasSuggestions, issueBtn) => {
-  const defectGroup = isTIGroup ? 'TI' : 'NoTI';
+const getApplyAndContinueBtnEvent = (page) => (defectFromTIGroup, hasSuggestions, issueBtn) => {
   const suggestionsStatus = hasSuggestions ? 'withML' : 'withoutML';
   return {
     category: MODAL_MAKE_DECISION,
     action: `Click on button "Apply & Continue" on modal "Make decision"`,
-    label: [page, defectGroup, suggestionsStatus, `after "+${issueBtn}"`].join('#'),
+    label: [
+      page,
+      defectFromTIGroupMap[defectFromTIGroup],
+      suggestionsStatus,
+      `after "+${issueBtn}"`,
+    ].join('#'),
   };
 };
-const getShowErrLogsSwitcherEvent = (page) => ({ isTIGroup, state, isMlSection }) => {
-  const action = isMlSection
-    ? 'Switch Show Error Logs in ML Suggestions'
-    : 'Switch "Show Error Logs" in Apply defect for';
-  const defectGroup = isTIGroup ? 'TI' : 'NoTI';
+const getShowErrLogsSwitcherEvent = (page) => ({ defectFromTIGroup, state }) => {
   const switcher = state ? 'ON' : 'OFF';
   return {
     category: MODAL_MAKE_DECISION,
-    action,
-    label: [page, defectGroup, switcher].join('#'),
+    action: 'Switch "Show Error Logs" in Apply defect for',
+    label: [page, defectFromTIGroupMap[defectFromTIGroup], switcher].join('#'),
   };
 };
-const getIgnoreAASwitcherEvent = (page) => (isTIGroup, state) => {
-  const defectGroup = isTIGroup ? 'TI' : 'NoTI';
+const getIgnoreAASwitcherEvent = (page) => (defectFromTIGroup, state) => {
   const switcher = state ? 'ON' : 'OFF';
   return {
     category: MODAL_MAKE_DECISION,
     action: 'Switch Ignore in Auto Analysis on modal "Make decision"',
-    label: [page, defectGroup, switcher].join('#'),
+    label: [page, defectFromTIGroupMap[defectFromTIGroup], switcher].join('#'),
   };
 };
-const getOnClickIssueEvent = (page) => (isTIGroup, label) => {
-  const defectGroup = isTIGroup ? 'TI' : 'NoTI';
-  return {
-    category: MODAL_MAKE_DECISION,
-    action: `Click on button "+${label}" on modal "Make decision"`,
-    label: `${page}#${defectGroup}`,
-  };
-};
-const getOnClickExternalLink = (page) => ({ isTIGroup, section }) => {
-  const action = section
-    ? 'Click on issue link and open page Log'
-    : 'Click on issue Link from Apply defect for';
-  const defectGroup = isTIGroup ? 'TI' : 'NoTI';
-  return {
-    category: MODAL_MAKE_DECISION,
-    action,
-    label: `${page}#${defectGroup}${(section && `#in ${section}`) || ''}`,
-  };
-};
-const getOpenStackTraceEvent = (page) => (isTIGroup, isMlSection = false) => {
-  const action = isMlSection
-    ? 'Open Error Logs in ML Suggestions'
-    : 'Open Error Logs in Apply defect for';
-  const defectGroup = isTIGroup ? 'TI' : 'NoTI';
-  return {
-    category: MODAL_MAKE_DECISION,
-    action,
-    label: `${page}#${defectGroup}`,
-  };
-};
-const getOnDecisionOptionEvent = (page) => (isTIGroup, optionLabel) => {
-  const defectGroup = isTIGroup ? 'TI' : 'NoTI';
+const getOnClickIssueEvent = (page) => (defectFromTIGroup, label) => ({
+  category: MODAL_MAKE_DECISION,
+  action: `Click on button "+${label}" on modal "Make decision"`,
+  label: `${page}#${defectFromTIGroupMap[defectFromTIGroup]}`,
+});
+const getOnClickExternalLink = (page) => ({ defectFromTIGroup, section }) => ({
+  category: MODAL_MAKE_DECISION,
+  action: 'Click on Issue Link and Open Page Log',
+  label: [page, defectFromTIGroupMap[defectFromTIGroup], section].join('#'),
+});
+const getOpenStackTraceEvent = (page) => (defectFromTIGroup, section) => ({
+  category: MODAL_MAKE_DECISION,
+  action: 'Expand Error Log',
+  label: [page, defectFromTIGroupMap[defectFromTIGroup], section].join('#'),
+});
+const getOnDecisionOptionEvent = (page) => (defectFromTIGroup, optionLabel) => {
   const selectedOption = optionLabel.replace(/{([A-Za-z]+)}/, 'filter');
   return {
     category: MODAL_MAKE_DECISION,
     action: 'Choose radio button "Apply defect for"',
-    label: [page, defectGroup, selectedOption].join('#'),
+    label: [page, defectFromTIGroupMap[defectFromTIGroup], selectedOption].join('#'),
   };
 };
-const getOnSelectAllEvent = (page) => ({ isTIGroup, state, optionLabel }) => {
-  const defectGroup = isTIGroup ? 'TI' : 'NoTI';
+const getOnSelectAllEvent = (page) => ({ defectFromTIGroup, state, optionLabel }) => {
   const switcher = state ? 'OFF' : 'ON';
   const selectedOption = optionLabel && optionLabel.replace(/{([A-Za-z]+)}/, 'filter');
   return {
     category: MODAL_MAKE_DECISION,
     action: 'Checkmark box "Item selected" in Apply defect for',
-    label: [page, defectGroup, switcher, selectedOption].join('#'),
+    label: [page, defectFromTIGroupMap[defectFromTIGroup], switcher, selectedOption].join('#'),
   };
 };
-const getOnClickEditorIconEvent = (page) => (isTIGroup) => {
-  const defectGroup = isTIGroup ? 'TI' : 'NoTI';
+const getOnClickEditorIconEvent = (page) => (defectFromTIGroup) => {
   return {
     category: MODAL_MAKE_DECISION,
     action: 'Click on icons Editor in toolbar',
-    label: `${page}#${defectGroup}`,
+    label: `${page}#${defectFromTIGroupMap[defectFromTIGroup]}`,
   };
 };
+const getOnExpandFooterEvent = (page) => (defectFromTIGroup) => ({
+  category: MODAL_MAKE_DECISION,
+  action: 'Following Results Will be Applied for the Items',
+  label: `${page}#${defectFromTIGroupMap[defectFromTIGroup]}`,
+});
+const getOnChangeCommentOptionEvent = (page) => (label) => ({
+  category: MODAL_MAKE_DECISION,
+  action:
+    'Choose Radio Button in Defect comments in "Following Results Will be Applied for the Items"',
+  label: `${page}#Defect comments will ${label}`,
+});
+const getOnClickItemEvent = (page) => (defectFromTIGroup, section) => ({
+  category: MODAL_MAKE_DECISION,
+  action: 'Show Error Logs or Defect Comment',
+  label: [page, defectFromTIGroupMap[defectFromTIGroup], section].join('#'),
+});
 
 export const getMakeDecisionModalEvents = (page) => ({
   openModal: getOpenModalEvent(page),
@@ -387,4 +391,7 @@ export const getMakeDecisionModalEvents = (page) => ({
   onDecisionOption: getOnDecisionOptionEvent(page),
   onSelectAllItems: getOnSelectAllEvent(page),
   onClickEditorIcon: getOnClickEditorIconEvent(page),
+  onExpandFooter: getOnExpandFooterEvent(page),
+  onChangeCommentOption: getOnChangeCommentOptionEvent(page),
+  onClickItem: getOnClickItemEvent(page),
 });

@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { useTracking } from 'react-tracking';
 import { InputDropdownRadio } from '../../../elements/inputDropdownRadio';
 import { messages } from '../../../messages';
 import { ResultRow } from '../resultRow';
@@ -45,8 +46,9 @@ Comment.propTypes = {
   comment: PropTypes.string.isRequired,
 };
 
-const BulkComment = ({ modalState, setModalState }) => {
+const BulkComment = ({ modalState, setModalState, eventsInfo }) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const [expanded, setExpanded] = useState(false);
   const onToggle = () => setExpanded(!expanded);
   const { decisionType } = modalState;
@@ -87,6 +89,7 @@ const BulkComment = ({ modalState, setModalState }) => {
   const onChangeOption = (val) => {
     setModalState({ commentOption: val });
     onToggle();
+    trackEvent(eventsInfo.onChangeCommentOption(messages[val].defaultMessage));
   };
 
   const bulkComment = currentSource.issue.comment;
@@ -117,13 +120,15 @@ const BulkComment = ({ modalState, setModalState }) => {
 BulkComment.propTypes = {
   modalState: PropTypes.object,
   setModalState: PropTypes.func,
+  eventsInfo: PropTypes.object,
 };
 BulkComment.defaultProps = {
   modalState: {},
   setModalState: () => {},
+  eventsInfo: {},
 };
 
-export const CommentSection = ({ modalState, setModalState, isBulkOperation }) => {
+export const CommentSection = ({ modalState, setModalState, isBulkOperation, eventsInfo }) => {
   const { formatMessage } = useIntl();
 
   const { decisionType } = modalState;
@@ -146,6 +151,7 @@ export const CommentSection = ({ modalState, setModalState, isBulkOperation }) =
           modalState={modalState}
           setModalState={setModalState}
           isBulkOperation={isBulkOperation}
+          eventsInfo={eventsInfo}
         />
       ) : (
         <>
@@ -168,9 +174,11 @@ CommentSection.propTypes = {
   modalState: PropTypes.object,
   isBulkOperation: PropTypes.bool,
   setModalState: PropTypes.func,
+  eventsInfo: PropTypes.object,
 };
 CommentSection.defaultProps = {
   modalState: {},
   isBulkOperation: false,
   setModalState: () => {},
+  eventsInfo: {},
 };

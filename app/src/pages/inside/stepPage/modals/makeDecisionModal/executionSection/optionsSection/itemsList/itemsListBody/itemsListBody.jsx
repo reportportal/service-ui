@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
+import { messages } from '../../../../../makeDecisionModal/messages';
 import { TestItemDetails } from '../../../../elements/testItemDetails';
 import { CHECKBOX_TEST_ITEM_DETAILS } from '../../../../constants';
 import styles from './itemsListBody.scss';
@@ -29,7 +30,6 @@ const SimilarItemsList = ({
   testItems,
   selectedItems,
   selectItem,
-  onClickExternalLinkEvent,
   eventsInfo,
   onToggleCallback,
 }) => {
@@ -56,7 +56,6 @@ const SimilarItemsList = ({
                 logs={composedItem.logs}
                 selectItem={selectItem}
                 isSelected={selected}
-                onClickLinkEvent={onClickExternalLinkEvent}
                 mode={CHECKBOX_TEST_ITEM_DETAILS}
                 showErrorLogs={item.opened}
                 eventsInfo={eventsInfo}
@@ -72,17 +71,16 @@ SimilarItemsList.propTypes = {
   testItems: PropTypes.array.isRequired,
   selectedItems: PropTypes.array.isRequired,
   selectItem: PropTypes.func.isRequired,
-  onClickExternalLinkEvent: PropTypes.func,
   eventsInfo: PropTypes.object,
   onToggleCallback: PropTypes.func,
 };
 SimilarItemsList.defaultProps = {
-  onClickExternalLinkEvent: () => {},
   eventsInfo: {},
   onToggleCallback: () => {},
 };
 
 export const ItemsListBody = ({
+  currentTestItem,
   testItems,
   selectedItems,
   setItems,
@@ -91,19 +89,15 @@ export const ItemsListBody = ({
   onShowErrorLogsChange,
 }) => {
   const { trackEvent } = useTracking();
+  const defectFromTIGroup = currentTestItem.issue.issueType.startsWith(
+    TO_INVESTIGATE_LOCATOR_PREFIX,
+  );
   const selectItem = (id) => {
     setItems({
       selectedItems: selectedItems.find((item) => item.id === id)
         ? selectedItems.filter((item) => item.id !== id)
         : [...selectedItems, testItems.find((item) => item.id === id)],
     });
-  };
-  const onClickExternalLinkEvent = () => {
-    const { onClickExternalLink } = eventsInfo;
-    const args = {
-      isTIGroup: testItems[0].issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
-    };
-    onClickExternalLink && trackEvent(onClickExternalLink(args));
   };
   const onToggleCallback = (id) => {
     const newTestItems = testItems.map((item) =>
@@ -114,6 +108,22 @@ export const ItemsListBody = ({
     });
     onShowErrorLogsChange(newTestItems.every((item) => item.opened === true));
   };
+  const onClickExternalLinkEvent = () => {
+    const { onClickExternalLink } = eventsInfo;
+    onClickExternalLink &&
+      trackEvent(
+        onClickExternalLink({ defectFromTIGroup, section: messages.applyFor.defaultMessage }),
+      );
+  };
+  const onClickItemEvent = () => {
+    const { onClickItem } = eventsInfo;
+    onClickItem && trackEvent(onClickItem(defectFromTIGroup, messages.applyFor.defaultMessage));
+  };
+  const onOpenStackTraceEvent = () => {
+    const { onOpenStackTrace } = eventsInfo;
+    onOpenStackTrace &&
+      trackEvent(onOpenStackTrace(defectFromTIGroup, messages.applyFor.defaultMessage));
+  };
 
   return (
     <div className={cx('items-list')}>
@@ -122,14 +132,18 @@ export const ItemsListBody = ({
         selectedItems={selectedItems}
         selectItem={selectItem}
         showErrorLogs={showErrorLogs}
-        eventsInfo={eventsInfo}
-        onClickExternalLinkEvent={onClickExternalLinkEvent}
         onToggleCallback={onToggleCallback}
+        eventsInfo={{
+          onOpenStackTraceEvent,
+          onClickItemEvent,
+          onClickExternalLinkEvent,
+        }}
       />
     </div>
   );
 };
 ItemsListBody.propTypes = {
+  currentTestItem: PropTypes.array,
   testItems: PropTypes.array,
   selectedItems: PropTypes.array,
   setItems: PropTypes.func,
@@ -139,6 +153,7 @@ ItemsListBody.propTypes = {
   onShowErrorLogsChange: PropTypes.func,
 };
 ItemsListBody.defaultProps = {
+  currentTestItem: [],
   testItems: [],
   selectedItems: [],
   setItems: () => {},

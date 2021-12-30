@@ -17,6 +17,7 @@
 import React, { Component } from 'react';
 import { PageLayout, PageSection } from 'layouts/pageLayout';
 import { connect } from 'react-redux';
+import track from 'react-tracking';
 import {
   deleteTestItemsAction,
   launchSelector,
@@ -52,6 +53,8 @@ import { getDeleteItemsActionParameters } from 'pages/inside/testItemPage';
 import { injectIntl } from 'react-intl';
 import { userIdSelector } from 'controllers/user';
 import { reloadClustersAction } from 'controllers/uniqueErrors/actionCreators';
+import { UNIQUE_ERRORS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import { UniqueErrorsToolbar } from './uniqueErrorsToolbar';
 
 @connect(
@@ -84,6 +87,7 @@ import { UniqueErrorsToolbar } from './uniqueErrorsToolbar';
   namespaceSelector,
 })
 @injectIntl
+@track()
 export class UniqueErrorsPage extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
@@ -111,6 +115,10 @@ export class UniqueErrorsPage extends Component {
     onUnlinkIssue: PropTypes.func,
     editDefectsAction: PropTypes.func,
     reloadClustersAction: PropTypes.func,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     pageLoading: false,
@@ -168,12 +176,22 @@ export class UniqueErrorsPage extends Component {
     });
   };
   handleEditDefects = (eventData) => {
-    const { selectedItems } = this.props;
+    const { selectedItems, tracking } = this.props;
     const items = eventData && eventData.id ? [eventData] : selectedItems;
     this.props.editDefectsAction(items, {
       fetchFunc: this.unselectAndFetchItems,
-      eventsInfo: {},
+      eventsInfo: {
+        editDefectsEvents: UNIQUE_ERRORS_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS,
+      },
     });
+    tracking.trackEvent(
+      UNIQUE_ERRORS_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS.openModal(
+        items.length === 1
+          ? items[0].issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)
+          : undefined,
+        eventData && eventData.id ? '' : 'ActionMenu',
+      ),
+    );
   };
   handleUnlinkSingleTicket = (testItem) => (ticketId) => {
     const items = [
@@ -244,6 +262,7 @@ export class UniqueErrorsPage extends Component {
                 unselectAndFetchItems={this.unselectAndFetchItems}
                 onEditItems={this.onEditItems}
                 onEditDefects={this.handleEditDefects}
+                events={UNIQUE_ERRORS_PAGE_EVENTS}
               />
               <UniqueErrorsGrid
                 parentLaunch={parentLaunch}

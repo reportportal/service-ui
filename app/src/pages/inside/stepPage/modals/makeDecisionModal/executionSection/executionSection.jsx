@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import { activeProjectSelector } from 'controllers/user';
 import { activeFilterSelector } from 'controllers/filter';
 import { fetch } from 'common/utils';
@@ -41,6 +42,7 @@ const cx = classNames.bind(styles);
 
 export const ExecutionSection = ({ modalState, setModalState, isBulkOperation, eventsInfo }) => {
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const dispatch = useDispatch();
   const activeProject = useSelector(activeProjectSelector);
   const activeFilter = useSelector(activeFilterSelector);
@@ -53,6 +55,9 @@ export const ExecutionSection = ({ modalState, setModalState, isBulkOperation, e
       item.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX) &&
       item.id !== currentTestItems[0].id,
   );
+  const defectFromTIGroup = isBulkOperation
+    ? undefined
+    : modalState.currentTestItems[0].issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
 
   useEffect(() => {
     const itemIds = [];
@@ -155,6 +160,27 @@ export const ExecutionSection = ({ modalState, setModalState, isBulkOperation, e
     }
   }, [optionValue]);
 
+  const onClickItemEvent = () => {
+    const { onClickItem } = eventsInfo;
+    onClickItem &&
+      trackEvent(onClickItem(defectFromTIGroup, messages.executionToChange.defaultMessage));
+  };
+  const onClickExternalLinkEvent = () => {
+    const { onClickExternalLink } = eventsInfo;
+    onClickExternalLink &&
+      trackEvent(
+        onClickExternalLink({
+          defectFromTIGroup,
+          section: messages.executionToChange.defaultMessage,
+        }),
+      );
+  };
+  const onOpenStackTraceEvent = () => {
+    const { onOpenStackTrace } = eventsInfo;
+    onOpenStackTrace &&
+      trackEvent(onOpenStackTrace(defectFromTIGroup, messages.executionToChange.defaultMessage));
+  };
+
   return (
     <>
       <div className={cx('header')}>{formatMessage(messages.executionToChange)}</div>
@@ -165,6 +191,11 @@ export const ExecutionSection = ({ modalState, setModalState, isBulkOperation, e
           showErrorLogs={currentItemsLoading || item.opened}
           loading={currentItemsLoading}
           key={item.id}
+          eventsInfo={{
+            onOpenStackTraceEvent,
+            onClickItemEvent,
+            onClickExternalLinkEvent,
+          }}
         />
       ))}
       {!isBulkOperation && (

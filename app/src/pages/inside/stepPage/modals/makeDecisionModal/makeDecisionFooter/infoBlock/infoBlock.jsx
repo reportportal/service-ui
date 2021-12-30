@@ -29,7 +29,14 @@ import styles from './infoBlock.scss';
 
 const cx = classNames.bind(styles);
 
-export const InfoBlock = ({ modalState, setModalState, isBulkOperation, expanded, onToggle }) => {
+export const InfoBlock = ({
+  modalState,
+  setModalState,
+  isBulkOperation,
+  expanded,
+  onToggle,
+  eventsInfo,
+}) => {
   const { formatMessage } = useIntl();
   const { decisionType, issueActionType } = modalState;
   const currentSource = modalState[ACTIVE_TAB_MAP[decisionType]].issue;
@@ -113,6 +120,7 @@ export const InfoBlock = ({ modalState, setModalState, isBulkOperation, expanded
             modalState={modalState}
             setModalState={setModalState}
             isBulkOperation={isBulkOperation}
+            eventsInfo={eventsInfo}
           />
         </div>
       )}
@@ -125,6 +133,7 @@ InfoBlock.propTypes = {
   isBulkOperation: PropTypes.bool,
   expanded: PropTypes.bool,
   onToggle: PropTypes.func,
+  eventsInfo: PropTypes.object,
 };
 InfoBlock.defaultProps = {
   modalState: {},
@@ -132,4 +141,5 @@ InfoBlock.defaultProps = {
   isBulkOperation: false,
   expanded: false,
   onToggle: () => {},
+  eventsInfo: {},
 };
