@@ -26,6 +26,7 @@ import {
   getClickSelectOneItemEvent,
   getCommonActionEvents,
   getClickAttributes,
+  getClickIssueTicketEvent,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getEditDefectModalEvents,
@@ -47,6 +48,10 @@ export const getChangeItemStatusEvent = (oldStatus, newStatus) => ({
   action: `Choose in drop-down from ${oldStatus} to ${newStatus}`,
   label: `Change status from ${oldStatus} to ${newStatus}`,
 });
+
+export const getOnClickIssueTicket = (pluginName) => {
+  return getClickIssueTicketEvent(STEP_PAGE)(pluginName);
+};
 
 export const STEP_PAGE_EVENTS = {
   ...getCommonActionEvents(STEP_PAGE),

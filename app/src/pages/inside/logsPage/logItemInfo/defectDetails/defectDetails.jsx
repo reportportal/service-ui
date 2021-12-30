@@ -51,6 +51,7 @@ import {
   IgnoredInAALabel,
   PALabel,
 } from 'pages/inside/stepPage/stepGrid/defectType/defectType';
+import { getOnClickIssueTicket } from 'components/main/analytics/events/logPageEvents';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import styles from './defectDetails.scss';
 
@@ -274,6 +275,10 @@ export class DefectDetails extends Component {
     this.props.tracking.trackEvent(LOG_PAGE_EVENTS.selectDropDownStatusEvent(oldStatus, newStatus));
   };
 
+  onClickIssue = (pluginName) => {
+    this.props.tracking.trackEvent(getOnClickIssueTicket(pluginName));
+  };
+
   render() {
     const {
       logItem,
@@ -316,6 +321,7 @@ export class DefectDetails extends Component {
                     <IssueList
                       issues={logItem.issue.externalSystemIssues}
                       onRemove={this.handleUnlinkTicket}
+                      onClick={this.onClickIssue}
                     />
                   </div>
                   {!debugMode && (

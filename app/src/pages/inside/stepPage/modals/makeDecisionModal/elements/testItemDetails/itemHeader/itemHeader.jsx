@@ -18,6 +18,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Link from 'redux-first-router-link';
 import { useSelector } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import { getLogItemLinkSelector } from 'controllers/testItem/selectors';
 import Parser from 'html-react-parser';
 import { IssueList } from 'pages/inside/stepPage/stepGrid/defectType/issueList';
@@ -31,6 +32,7 @@ import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { InputRadio } from 'components/inputs/inputRadio';
 import { HistoryLineItemContent } from 'pages/inside/logsPage/historyLine/historyLineItem';
 import { defectTypesSelector } from 'controllers/project';
+import { getOnClickIssueTicket } from 'components/main/analytics/events/common/testItemPages/modalEventsCreators';
 import {
   CHECKBOX_TEST_ITEM_DETAILS,
   DEFAULT_TEST_ITEM_DETAILS,
@@ -58,6 +60,11 @@ export const ItemHeader = ({
   const defectTypes = useSelector(defectTypesSelector);
   const getLogItemLink = useSelector(getLogItemLinkSelector);
   const link = getLogItemLink(item);
+  const { trackEvent } = useTracking();
+
+  const onClickIssue = (pluginName) => {
+    trackEvent(getOnClickIssueTicket(pluginName));
+  };
 
   return (
     <div
@@ -124,7 +131,12 @@ export const ItemHeader = ({
       </div>
       {!!externalSystemIssues.length && mode !== CHECKBOX_TEST_ITEM_DETAILS && (
         <div className={cx('bts-row')}>
-          <IssueList issues={externalSystemIssues} className={cx('issue')} readOnly />
+          <IssueList
+            issues={externalSystemIssues}
+            onClick={onClickIssue}
+            className={cx('issue')}
+            readOnly
+          />
         </div>
       )}
     </div>

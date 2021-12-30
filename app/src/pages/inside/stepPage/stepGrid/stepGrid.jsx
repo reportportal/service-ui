@@ -319,6 +319,7 @@ export class StepGrid extends Component {
           events: {
             onEditEvent:
               events.MAKE_DECISION_MODAL_EVENTS && events.MAKE_DECISION_MODAL_EVENTS.openModal,
+            getOnClickIssueTicket: events.getOnClickIssueTicket,
           },
         },
         withFilter: true,

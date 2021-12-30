@@ -14,9 +14,16 @@
  * limitations under the License.
  */
 
-import { getMakeDecisionModalEvents } from './common/testItemPages/modalEventsCreators';
+import {
+  getClickIssueTicketEvent,
+  getMakeDecisionModalEvents,
+} from './common/testItemPages/modalEventsCreators';
 
 export const UNIQUE_ERRORS_PAGE = 'uniqueErrors';
+
+export const getOnClickIssueTicket = (pluginName) => {
+  return getClickIssueTicketEvent(UNIQUE_ERRORS_PAGE)(pluginName);
+};
 
 export const UNIQUE_ERRORS_PAGE_EVENTS = {
   MAKE_DECISION_MODAL_EVENTS: getMakeDecisionModalEvents(UNIQUE_ERRORS_PAGE),

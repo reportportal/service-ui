@@ -20,6 +20,7 @@ import {
   getUnlinkIssueActionEvent,
   getClickOnPlusMinusEvents,
   getCommonActionEvents,
+  getClickIssueTicketEvent,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getDeleteItemModalEvents,
@@ -50,6 +51,10 @@ export const getHistoryLineCheckbox = (state) => ({
   action: 'Click on History line checkbox',
   label: state ? 'On' : 'Off',
 });
+
+export const getOnClickIssueTicket = (pluginName) => {
+  return getClickIssueTicketEvent(LOG_PAGE)(pluginName);
+};
 
 export const LOG_PAGE_EVENTS = {
   plusMinusBreadcrumb: getClickOnPlusMinusEvents(LOG_PAGE),
