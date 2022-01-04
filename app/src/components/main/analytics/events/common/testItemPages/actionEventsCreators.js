@@ -109,6 +109,18 @@ export const getClickIssueTicketEvent = (page) => (pluginName) => ({
   label: pluginName || 'BTS',
 });
 
+export const getClickUniqueErrorsEvent = (page) => ({
+  category: page,
+  action: 'Click on Tab "Unique Errors"',
+  label: 'User Redirects to the Unique Errors Page',
+});
+
+export const getClickExpandStackTraceArrowEvent = (page) => ({
+  category: page,
+  action: 'Click on Icon Arrow to Expand Stack Trace Message on Modal "Test Item Details" ',
+  label: 'Expand Stack Trace Message',
+});
+
 export const getCommonActionEvents = (page) => ({
   CLOSE_ICON_FOR_ALL_SELECTIONS: {
     category: page,

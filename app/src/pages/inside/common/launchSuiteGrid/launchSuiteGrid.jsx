@@ -462,7 +462,7 @@ export class LaunchSuiteGrid extends PureComponent {
     );
 
     const textAttribute = attribute.key ? 'key:value' : 'value';
-    events.clickAttributes && tracking.trackEvent(events.clickAttributes(textAttribute));
+    events.CLICK_ATTRIBUTES && tracking.trackEvent(events.CLICK_ATTRIBUTES(textAttribute));
   };
 
   handleOwnerFilterClick = (owner) =>

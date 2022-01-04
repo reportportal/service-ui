@@ -159,7 +159,10 @@ export class UniqueErrorsPage extends Component {
         item,
         type: LAUNCH_ITEM_TYPES.item,
         fetchFunc: this.unselectAndFetchItems,
-        eventsInfo: {},
+        eventsInfo: {
+          stackTraceTab: UNIQUE_ERRORS_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.STACK_TRACE_TAB_EVENT,
+          clickExpandEvent: UNIQUE_ERRORS_PAGE_EVENTS.CLICK_EXPAND_STACK_TRACE_ARROW,
+        },
       },
     });
   };
@@ -272,6 +275,7 @@ export class UniqueErrorsPage extends Component {
                 unselectAndFetchItems={this.unselectAndFetchItems}
                 onEditItem={this.onEditItem}
                 onEditDefect={this.handleEditDefects}
+                events={UNIQUE_ERRORS_PAGE_EVENTS}
               />
               {!!pageCount && !loading && (
                 <PaginationToolbar

@@ -311,7 +311,7 @@ export const LAUNCHES_PAGE_EVENTS = {
     action: 'Select Parameter to Refine',
     label: `${value}`,
   }),
-  clickAttributes: getClickAttributes(LAUNCHES_PAGE),
+  CLICK_ATTRIBUTES: getClickAttributes(LAUNCHES_PAGE),
   clickFilterActionBarButton: (value) => ({
     category: LAUNCHES_PAGE,
     action: `Click on button "${value}" in filter action bar`,

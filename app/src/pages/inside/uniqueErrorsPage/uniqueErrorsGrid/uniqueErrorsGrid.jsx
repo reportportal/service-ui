@@ -26,7 +26,7 @@ import styles from './uniqueErrorsGrid.scss';
 
 const cx = classNames.bind(styles);
 
-export const UniqueErrorsGrid = ({ parentLaunch, data, loading, ...rest }) => {
+export const UniqueErrorsGrid = ({ parentLaunch, data, loading, events, ...rest }) => {
   const extensions = useSelector(uniqueErrorGridHeaderCellComponentSelector);
   const columns = [
     {
@@ -75,7 +75,7 @@ export const UniqueErrorsGrid = ({ parentLaunch, data, loading, ...rest }) => {
           {...rest}
         />
       ) : (
-        <EmptyUniqueErrors parentLaunch={parentLaunch} />
+        <EmptyUniqueErrors parentLaunch={parentLaunch} events={events} />
       )}
     </>
   );
@@ -84,9 +84,11 @@ UniqueErrorsGrid.propTypes = {
   parentLaunch: PropTypes.object,
   data: PropTypes.array,
   loading: PropTypes.bool,
+  events: PropTypes.object,
 };
 UniqueErrorsGrid.defaultProps = {
   parentLaunch: {},
   data: [],
   loading: false,
+  events: {},
 };

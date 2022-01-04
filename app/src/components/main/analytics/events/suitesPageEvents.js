@@ -21,6 +21,7 @@ import {
   getClickSelectOneItemEvent,
   getCommonActionEvents,
   getClickAttributes,
+  getClickUniqueErrorsEvent,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getDeleteItemModalEvents,
@@ -51,5 +52,6 @@ export const SUITES_PAGE_EVENTS = {
   DELETE_ITEM_MODAL_EVENTS: getDeleteItemModalEvents(SUITE_PAGE),
   // EDIT_ITEMS_MODAL
   EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(SUITE_PAGE),
-  clickAttributes: getClickAttributes(SUITE_PAGE),
+  CLICK_ATTRIBUTES: getClickAttributes(SUITE_PAGE),
+  CLICK_UNIQUE_ERRORS: getClickUniqueErrorsEvent(SUITE_PAGE),
 };

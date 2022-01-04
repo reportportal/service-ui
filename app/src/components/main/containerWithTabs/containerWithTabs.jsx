@@ -52,10 +52,12 @@ export class ContainerWithTabs extends Component {
   };
 
   selectTabTracking = (id) => {
-    if (this.props.selectTabEventInfo) {
-      this.props.tracking.trackEvent(this.props.selectTabEventInfo);
-    } else if (this.props.data[id].eventInfo) {
-      this.props.tracking.trackEvent(this.props.data[id].eventInfo);
+    const { selectTabEventInfo, tracking, data } = this.props;
+    const { eventInfo } = data[id];
+    if (selectTabEventInfo) {
+      tracking.trackEvent(selectTabEventInfo);
+    } else if (eventInfo && eventInfo.stackTraceTab) {
+      tracking.trackEvent(eventInfo.stackTraceTab);
     }
   };
 
