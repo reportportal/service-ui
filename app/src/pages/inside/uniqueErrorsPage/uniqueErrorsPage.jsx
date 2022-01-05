@@ -55,6 +55,7 @@ import { userIdSelector } from 'controllers/user';
 import { reloadClustersAction } from 'controllers/uniqueErrors/actionCreators';
 import { UNIQUE_ERRORS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
+import { UNIQUE_ERRORS_PAGE } from 'components/main/analytics/events/uniqueErrorsPageEvents';
 import { UniqueErrorsToolbar } from './uniqueErrorsToolbar';
 
 @connect(
@@ -87,7 +88,7 @@ import { UniqueErrorsToolbar } from './uniqueErrorsToolbar';
   namespaceSelector,
 })
 @injectIntl
-@track()
+@track({ page: UNIQUE_ERRORS_PAGE })
 export class UniqueErrorsPage extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
@@ -177,6 +178,7 @@ export class UniqueErrorsPage extends Component {
         eventsInfo: {},
       },
     });
+    this.props.tracking.trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.EDIT_ITEMS_ACTION);
   };
   handleEditDefects = (eventData) => {
     const { selectedItems, tracking } = this.props;
@@ -230,6 +232,7 @@ export class UniqueErrorsPage extends Component {
       eventsInfo: {},
     });
     this.props.deleteClusterItemsAction(selectedItems, parameters);
+    this.props.tracking.trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.DELETE_ACTION);
   };
 
   render() {

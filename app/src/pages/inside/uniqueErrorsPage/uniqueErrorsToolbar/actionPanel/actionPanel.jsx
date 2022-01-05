@@ -16,6 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -72,6 +73,7 @@ const cx = classNames.bind(styles);
   },
 )
 @injectIntl
+@track()
 export class ActionPanel extends Component {
   static propTypes = {
     accountRole: PropTypes.string,
@@ -100,6 +102,11 @@ export class ActionPanel extends Component {
     showModalAction: PropTypes.func,
     showBreadcrumbs: PropTypes.bool,
     unselectAndFetchItems: PropTypes.func,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
+    events: PropTypes.object,
   };
 
   static defaultProps = {
@@ -127,31 +134,40 @@ export class ActionPanel extends Component {
     showModalAction: () => {},
     showBreadcrumbs: true,
     unselectAndFetchItems: () => {},
+    events: {},
   };
 
   handlePostIssue = () => {
-    this.props.onPostIssue(this.props.selectedItems, {
-      fetchFunc: this.props.unselectAndFetchItems,
+    const { unselectAndFetchItems, onPostIssue, selectedItems, events, tracking } = this.props;
+    onPostIssue(selectedItems, {
+      fetchFunc: unselectAndFetchItems,
       eventsInfo: {},
     });
+    events.POST_ISSUE_ACTION && tracking.trackEvent(events.POST_ISSUE_ACTION);
   };
   handleLinkIssue = () => {
-    this.props.onLinkIssue(this.props.selectedItems, {
-      fetchFunc: this.props.unselectAndFetchItems,
+    const { unselectAndFetchItems, selectedItems, events, tracking, onLinkIssue } = this.props;
+    onLinkIssue(selectedItems, {
+      fetchFunc: unselectAndFetchItems,
       eventsInfo: {},
     });
+    events.LINK_ISSUE_ACTION && tracking.trackEvent(events.LINK_ISSUE_ACTION);
   };
   handleUnlinkIssue = () => {
-    this.props.onUnlinkIssue(this.props.selectedItems, {
-      fetchFunc: this.props.unselectAndFetchItems,
+    const { unselectAndFetchItems, onUnlinkIssue, selectedItems, events, tracking } = this.props;
+    onUnlinkIssue(selectedItems, {
+      fetchFunc: unselectAndFetchItems,
       eventsInfo: {},
     });
+    events.UNLINK_ISSUES_ACTION && tracking.trackEvent(events.UNLINK_ISSUES_ACTION);
   };
   handleIgnoreInAA = () => {
     this.props.ignoreInAutoAnalysisAction(this.props.selectedItems, {
       fetchFunc: this.props.unselectAndFetchItems,
       eventsInfo: {},
     });
+    const { events, tracking } = this.props;
+    events.IGNORE_IN_AA_ACTION && tracking.trackEvent(events.IGNORE_IN_AA_ACTION);
   };
 
   handleIncludeInAA = () => {
@@ -159,6 +175,8 @@ export class ActionPanel extends Component {
       fetchFunc: this.props.unselectAndFetchItems,
       eventsInfo: {},
     });
+    const { events, tracking } = this.props;
+    events.INCLUDE_IN_AA_ACTION && tracking.trackEvent(events.INCLUDE_IN_AA_ACTION);
   };
 
   getItemsActionDescriptors = () => {

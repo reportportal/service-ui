@@ -17,6 +17,11 @@
 import {
   getClickExpandStackTraceArrowEvent,
   getClickIssueTicketEvent,
+  getCommonActionEvents,
+  getDeleteActionEvent,
+  getLinkIssueActionEvent,
+  getPostIssueActionEvent,
+  getUnlinkIssueActionEvent,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getEditItemsModalEvents,
@@ -26,6 +31,7 @@ import {
 export const UNIQUE_ERRORS_PAGE = 'uniqueErrors';
 
 export const UNIQUE_ERRORS_PAGE_EVENTS = {
+  ...getCommonActionEvents(UNIQUE_ERRORS_PAGE),
   onClickIssueTicketEvent: getClickIssueTicketEvent(UNIQUE_ERRORS_PAGE),
   MAKE_DECISION_MODAL_EVENTS: getMakeDecisionModalEvents(UNIQUE_ERRORS_PAGE),
   CLICK_RUN_BUTTON: {
@@ -52,4 +58,18 @@ export const UNIQUE_ERRORS_PAGE_EVENTS = {
   },
   EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(UNIQUE_ERRORS_PAGE),
   CLICK_EXPAND_STACK_TRACE_ARROW: getClickExpandStackTraceArrowEvent(UNIQUE_ERRORS_PAGE),
+  POST_ISSUE_ACTION: getPostIssueActionEvent(UNIQUE_ERRORS_PAGE),
+  LINK_ISSUE_ACTION: getLinkIssueActionEvent(UNIQUE_ERRORS_PAGE),
+  UNLINK_ISSUES_ACTION: getUnlinkIssueActionEvent(UNIQUE_ERRORS_PAGE),
+  DELETE_ACTION: getDeleteActionEvent(UNIQUE_ERRORS_PAGE),
+  IGNORE_IN_AA_ACTION: {
+    category: UNIQUE_ERRORS_PAGE,
+    action: 'Click on Ignore in Auto-Analysis',
+    label: 'Arise Modal "Ignore items in AA"',
+  },
+  INCLUDE_IN_AA_ACTION: {
+    category: UNIQUE_ERRORS_PAGE,
+    action: 'Click on Include in Auto-Analysis',
+    label: 'Arise Modal "Include items in AA"',
+  },
 };
