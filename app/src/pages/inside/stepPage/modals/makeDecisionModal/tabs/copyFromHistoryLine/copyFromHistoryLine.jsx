@@ -132,6 +132,7 @@ export const CopyFromHistoryLine = ({
               onOpenStackTraceEvent,
               onClickItemEvent,
               onClickExternalLinkEvent,
+              onClickIssueTicketEvent: eventsInfo.onClickIssueTicketEvent,
             }}
           />
         </div>
