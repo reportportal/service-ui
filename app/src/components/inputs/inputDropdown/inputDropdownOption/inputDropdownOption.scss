@@ -28,7 +28,8 @@
   &:hover {
     background-color: $COLOR--tealish-hover;
     &.dark-view {
-      background-color: $COLOR--charcoal-grey;
+      background-color: $COLOR--darkmode-bg-solid-98;
+      color: $COLOR--white-two;
     }
   }
   &.selected {
@@ -36,6 +37,9 @@
     &.dark-view {
       background: none;
       color: $COLOR--darkmode-topaz-text;
+      &:hover {
+        background: $COLOR--darkmode-bg-solid-98;
+      }
     }
   }
   &.disabled {
