@@ -17,6 +17,8 @@
 import {
   getClickExpandStackTraceArrowEvent,
   getClickIssueTicketEvent,
+  getClickSelectAllItemsEvent,
+  getClickSelectOneItemEvent,
   getCommonActionEvents,
   getDeleteActionEvent,
   getLinkIssueActionEvent,
@@ -28,7 +30,7 @@ import {
   getMakeDecisionModalEvents,
 } from './common/testItemPages/modalEventsCreators';
 
-export const UNIQUE_ERRORS_PAGE = 'uniqueErrors';
+export const UNIQUE_ERRORS_PAGE = 'Unique Errors';
 
 export const UNIQUE_ERRORS_PAGE_EVENTS = {
   ...getCommonActionEvents(UNIQUE_ERRORS_PAGE),
@@ -72,4 +74,6 @@ export const UNIQUE_ERRORS_PAGE_EVENTS = {
     action: 'Click on Include in Auto-Analysis',
     label: 'Arise Modal "Include items in AA"',
   },
+  CLICK_SELECT_ONE_ITEM: getClickSelectOneItemEvent(UNIQUE_ERRORS_PAGE),
+  CLICK_SELECT_ALL_ITEMS: getClickSelectAllItemsEvent(UNIQUE_ERRORS_PAGE),
 };

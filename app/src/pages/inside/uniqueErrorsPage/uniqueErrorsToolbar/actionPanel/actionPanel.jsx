@@ -219,6 +219,11 @@ export class ActionPanel extends Component {
 
     this.props.proceedWithValidItems(operationName, selectedItems, operationArgs);
   };
+  onReload = () => {
+    const { onRefresh, events, tracking } = this.props;
+    onRefresh();
+    events.REFRESH_BTN && tracking.trackEvent(events.REFRESH_BTN);
+  };
 
   render() {
     const {
@@ -227,7 +232,6 @@ export class ActionPanel extends Component {
       restorePath,
       showBreadcrumbs,
       parentItem,
-      onRefresh,
       selectedItems,
       hasErrors,
       hasValidItems,
@@ -257,7 +261,7 @@ export class ActionPanel extends Component {
             />
           </div>
           <div className={cx('action-button')}>
-            <GhostButton icon={RefreshIcon} onClick={onRefresh} transparentBackground>
+            <GhostButton icon={RefreshIcon} onClick={this.onReload} transparentBackground>
               <FormattedMessage id="Common.refresh" defaultMessage="Refresh" />
             </GhostButton>
           </div>

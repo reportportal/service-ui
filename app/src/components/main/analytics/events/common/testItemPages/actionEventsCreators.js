@@ -357,4 +357,9 @@ export const getCommonActionEvents = (page) => ({
     action: 'Click on Btn "Proceed Valid Items"',
     label: 'Remove invalid items from selection',
   },
+  CLICK_ITEM_NAME: {
+    category: page,
+    action: 'Click on Item Name',
+    label: 'Transition to Item page',
+  },
 });
