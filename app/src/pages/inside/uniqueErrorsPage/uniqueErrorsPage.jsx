@@ -163,6 +163,9 @@ export class UniqueErrorsPage extends Component {
         eventsInfo: {
           stackTraceTab: UNIQUE_ERRORS_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.STACK_TRACE_TAB_EVENT,
           clickExpandEvent: UNIQUE_ERRORS_PAGE_EVENTS.CLICK_EXPAND_STACK_TRACE_ARROW,
+          addAttributeEvent: UNIQUE_ERRORS_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.ADD_ATTRIBUTE,
+          clickSaveEvent:
+            UNIQUE_ERRORS_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.SAVE_BTN_EDIT_ITEM_MODAL,
         },
       },
     });
@@ -175,7 +178,10 @@ export class UniqueErrorsPage extends Component {
         parentLaunch: this.props.parentLaunch,
         type: LAUNCH_ITEM_TYPES.item,
         fetchFunc: this.unselectAndFetchItems,
-        eventsInfo: {},
+        eventsInfo: {
+          saveBtn: UNIQUE_ERRORS_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.SAVE_BTN_EDIT_ITEM_MODAL,
+          editDescription: UNIQUE_ERRORS_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.EDIT_ITEM_DESCRIPTION,
+        },
       },
     });
     this.props.tracking.trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.EDIT_ITEMS_ACTION);
@@ -222,11 +228,15 @@ export class UniqueErrorsPage extends Component {
       userId,
     } = this.props;
     const parameters = getDeleteItemsActionParameters(selectedItems, formatMessage, {
-      onConfirm: (items) =>
+      onConfirm: (items) => {
         this.props.deleteTestItemsAction({
           items,
           callback: this.unselectAndFetchItems,
-        }),
+        });
+        this.props.tracking.trackEvent(
+          UNIQUE_ERRORS_PAGE_EVENTS.DELETE_ITEM_MODAL_EVENTS.DELETE_BTN_DELETE_ITEM_MODAL,
+        );
+      },
       userId,
       parentLaunch: this.props.parentLaunch,
       eventsInfo: {},

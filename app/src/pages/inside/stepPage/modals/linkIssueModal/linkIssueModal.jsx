@@ -16,6 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import track from 'react-tracking';
 import { connect } from 'react-redux';
 import { reduxForm, FieldArray } from 'redux-form';
 import classNames from 'classnames/bind';
@@ -80,6 +81,7 @@ const messages = defineMessages({
   },
 )
 @injectIntl
+@track()
 export class LinkIssueModal extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
@@ -98,6 +100,10 @@ export class LinkIssueModal extends Component {
     }).isRequired,
     hideModalAction: PropTypes.func,
     invalid: PropTypes.bool,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -174,7 +180,13 @@ export class LinkIssueModal extends Component {
   };
 
   onLink = () => {
-    this.props.handleSubmit(this.onFormSubmit)();
+    const {
+      data: { eventsInfo },
+      handleSubmit,
+      tracking,
+    } = this.props;
+    handleSubmit(this.onFormSubmit)();
+    eventsInfo.loadBtn && tracking.trackEvent(eventsInfo.loadBtn);
   };
 
   onChangePlugin = (pluginName) => {

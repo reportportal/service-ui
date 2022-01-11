@@ -60,7 +60,9 @@ const ClusterColumn = ({ cluster }) => (
       row: cx('cluster-row'),
       accordionBlock: cx('cluster-accordion-block'),
     }}
-    eventsInfo={{ clickExpandEvent: UNIQUE_ERRORS_PAGE_EVENTS.CLICK_EXPANDED_ERROR_ARROW }}
+    eventsInfo={{
+      onOpenStackTraceEvent: () => UNIQUE_ERRORS_PAGE_EVENTS.CLICK_EXPANDED_ERROR_ARROW,
+    }}
   >
     <div>{cluster.message}</div>
   </StackTraceMessageBlock>

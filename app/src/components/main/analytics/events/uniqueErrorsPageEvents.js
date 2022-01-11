@@ -21,13 +21,19 @@ import {
   getClickSelectOneItemEvent,
   getCommonActionEvents,
   getDeleteActionEvent,
+  getIgnoreBtnIgnoreItemsInAAModal,
+  getIncludeBtnIncludeInAAModal,
   getLinkIssueActionEvent,
   getPostIssueActionEvent,
   getUnlinkIssueActionEvent,
 } from './common/testItemPages/actionEventsCreators';
 import {
+  getDeleteItemModalEvents,
   getEditItemsModalEvents,
+  getLinkIssueModalEvents,
   getMakeDecisionModalEvents,
+  getPostIssueModalEvents,
+  getUnlinkIssueModalEvents,
 } from './common/testItemPages/modalEventsCreators';
 
 export const UNIQUE_ERRORS_PAGE = 'Unique Errors';
@@ -46,7 +52,7 @@ export const UNIQUE_ERRORS_PAGE_EVENTS = {
     action: 'Click on Button "Analyze" in Modal "Analyze Launch"',
     label: isExcludeNumbers
       ? 'Exclude numbers from analyzed logs'
-      : 'Include number to analyzed logs',
+      : 'Include numbers to analyzed logs',
   }),
   CLICK_CLUSTER_ITEM_ARROW: {
     category: UNIQUE_ERRORS_PAGE,
@@ -76,4 +82,10 @@ export const UNIQUE_ERRORS_PAGE_EVENTS = {
   },
   CLICK_SELECT_ONE_ITEM: getClickSelectOneItemEvent(UNIQUE_ERRORS_PAGE),
   CLICK_SELECT_ALL_ITEMS: getClickSelectAllItemsEvent(UNIQUE_ERRORS_PAGE),
+  IGNORE_BTN_IGNORE_ITEMS_IN_AA_MODAL: getIgnoreBtnIgnoreItemsInAAModal(UNIQUE_ERRORS_PAGE),
+  DELETE_ITEM_MODAL_EVENTS: getDeleteItemModalEvents(UNIQUE_ERRORS_PAGE),
+  INCLUDE_BTN_INCLUDE_IN_AA_MODAL: getIncludeBtnIncludeInAAModal(UNIQUE_ERRORS_PAGE),
+  POST_ISSUE_MODAL_EVENTS: getPostIssueModalEvents(UNIQUE_ERRORS_PAGE),
+  LINK_ISSUE_MODAL_EVENTS: getLinkIssueModalEvents(UNIQUE_ERRORS_PAGE),
+  UNLINK_ISSUE_MODAL_EVENTS: getUnlinkIssueModalEvents(UNIQUE_ERRORS_PAGE),
 };

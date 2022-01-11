@@ -27,6 +27,7 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import { ParentInfo } from 'pages/inside/common/infoLine/parentInfo';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { UNIQUE_ERRORS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { reloadClustersAction } from 'controllers/uniqueErrors';
 import { createStepActionDescriptors } from 'pages/inside/common/utils';
 import {
@@ -141,7 +142,12 @@ export class ActionPanel extends Component {
     const { unselectAndFetchItems, onPostIssue, selectedItems, events, tracking } = this.props;
     onPostIssue(selectedItems, {
       fetchFunc: unselectAndFetchItems,
-      eventsInfo: {},
+      eventsInfo: {
+        postBtn: UNIQUE_ERRORS_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.POST_BTN_POST_ISSUE_MODAL,
+        attachmentsSwitcher: UNIQUE_ERRORS_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.attachmentsSwitcher,
+        logsSwitcher: UNIQUE_ERRORS_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.logsSwitcher,
+        commentSwitcher: UNIQUE_ERRORS_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.commentSwitcher,
+      },
     });
     events.POST_ISSUE_ACTION && tracking.trackEvent(events.POST_ISSUE_ACTION);
   };
@@ -149,7 +155,11 @@ export class ActionPanel extends Component {
     const { unselectAndFetchItems, selectedItems, events, tracking, onLinkIssue } = this.props;
     onLinkIssue(selectedItems, {
       fetchFunc: unselectAndFetchItems,
-      eventsInfo: {},
+      eventsInfo: {
+        addNewIssue:
+          UNIQUE_ERRORS_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.ADD_NEW_ISSUE_BTN_LINK_ISSUE_MODAL,
+        loadBtn: UNIQUE_ERRORS_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.LOAD_BTN_LINK_ISSUE_MODAL,
+      },
     });
     events.LINK_ISSUE_ACTION && tracking.trackEvent(events.LINK_ISSUE_ACTION);
   };
@@ -157,14 +167,21 @@ export class ActionPanel extends Component {
     const { unselectAndFetchItems, onUnlinkIssue, selectedItems, events, tracking } = this.props;
     onUnlinkIssue(selectedItems, {
       fetchFunc: unselectAndFetchItems,
-      eventsInfo: {},
+      eventsInfo: {
+        unlinkAutoAnalyzedTrue:
+          UNIQUE_ERRORS_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS
+            .UNLINK_IN_UNLINK_ISSUE_MODAL_AUTO_ANALYZED_TRUE,
+        unlinkAutoAnalyzedFalse:
+          UNIQUE_ERRORS_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS
+            .UNLINK_IN_UNLINK_ISSUE_MODAL_AUTO_ANALYZED_FALSE,
+      },
     });
     events.UNLINK_ISSUES_ACTION && tracking.trackEvent(events.UNLINK_ISSUES_ACTION);
   };
   handleIgnoreInAA = () => {
     this.props.ignoreInAutoAnalysisAction(this.props.selectedItems, {
       fetchFunc: this.props.unselectAndFetchItems,
-      eventsInfo: {},
+      eventsInfo: { ignoreBtn: UNIQUE_ERRORS_PAGE_EVENTS.IGNORE_BTN_IGNORE_ITEMS_IN_AA_MODAL },
     });
     const { events, tracking } = this.props;
     events.IGNORE_IN_AA_ACTION && tracking.trackEvent(events.IGNORE_IN_AA_ACTION);
@@ -173,7 +190,7 @@ export class ActionPanel extends Component {
   handleIncludeInAA = () => {
     this.props.includeInAutoAnalysisAction(this.props.selectedItems, {
       fetchFunc: this.props.unselectAndFetchItems,
-      eventsInfo: {},
+      eventsInfo: { includeBtn: UNIQUE_ERRORS_PAGE_EVENTS.INCLUDE_BTN_INCLUDE_IN_AA_MODAL },
     });
     const { events, tracking } = this.props;
     events.INCLUDE_IN_AA_ACTION && tracking.trackEvent(events.INCLUDE_IN_AA_ACTION);

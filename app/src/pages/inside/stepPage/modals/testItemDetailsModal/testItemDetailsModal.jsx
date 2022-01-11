@@ -137,7 +137,13 @@ export class TestItemDetailsModal extends Component {
     const {
       intl: { formatMessage },
       data: {
-        eventsInfo: { clickExpandEvent, detailsTab, stackTraceTab },
+        eventsInfo: {
+          clickExpandEvent,
+          detailsTab,
+          stackTraceTab,
+          addAttributeEvent,
+          clickSaveEvent,
+        },
       },
     } = this.props;
     return [
@@ -150,8 +156,10 @@ export class TestItemDetailsModal extends Component {
         name: formatMessage(messages.stackTraceTabTitle),
         content: this.renderStackTraceTab(),
         eventInfo: {
-          stackTraceTab,
           clickExpandEvent,
+          addAttributeEvent,
+          clickSaveEvent,
+          changeTab: stackTraceTab,
         },
       },
     ];
@@ -172,8 +180,14 @@ export class TestItemDetailsModal extends Component {
   };
 
   updateItemAndCloseModal = (closeModal) => (formData) => {
-    this.props.dirty && this.updateItem(formData);
+    const {
+      dirty,
+      data: { eventsInfo },
+      tracking,
+    } = this.props;
+    dirty && this.updateItem(formData);
     closeModal();
+    eventsInfo.clickSaveEvent && tracking.trackEvent(eventsInfo.clickSaveEvent);
   };
 
   updateItem = (data) => {

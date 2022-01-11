@@ -138,7 +138,7 @@ export class StackTrace extends Component {
   };
 
   renderStackTraceMessage = () => {
-    const { items, loadMore, loading, intl, hideTime, designMode } = this.props;
+    const { items, loadMore, loading, intl, hideTime, designMode, eventsInfo } = this.props;
     return (
       <React.Fragment>
         <ScrollWrapper autoHeight autoHeightMax={this.getScrolledHeight()}>
@@ -148,7 +148,7 @@ export class StackTrace extends Component {
                 level={item.level}
                 maxHeight={this.getMaxRowHeight()}
                 designMode={designMode}
-                eventsInfo={this.props.eventsInfo}
+                eventsInfo={eventsInfo}
               >
                 <div className={cx('message-container')}>
                   <div className={cx('cell', 'message-cell')}>{item.message}</div>

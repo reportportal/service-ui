@@ -96,9 +96,8 @@ export class StackTraceMessageBlock extends Component {
     }
 
     if (!this.state.expanded) {
-      const { onOpenStackTraceEvent, clickExpandEvent } = this.props.eventsInfo;
+      const { onOpenStackTraceEvent } = this.props.eventsInfo;
       onOpenStackTraceEvent && this.props.tracking.trackEvent(onOpenStackTraceEvent());
-      clickExpandEvent && this.props.tracking.trackEvent(clickExpandEvent);
     }
 
     this.setState({
