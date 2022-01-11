@@ -17,6 +17,7 @@
 import classNames from 'classnames/bind';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { track } from 'react-tracking';
 import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { IN_PROGRESS } from 'common/constants/testStatuses';
@@ -35,6 +36,7 @@ import styles from './emptyUniqueErrors.scss';
 
 const cx = classNames.bind(styles);
 
+@track()
 @injectIntl
 @connect(
   (state) => ({
@@ -58,6 +60,11 @@ export class EmptyUniqueErrors extends Component {
     parentLaunch: PropTypes.object,
     loading: PropTypes.bool,
     fetchParentLaunchSuccessAction: PropTypes.func,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
+    events: PropTypes.object,
   };
 
   static defaultProps = {
@@ -67,16 +74,20 @@ export class EmptyUniqueErrors extends Component {
     showDefaultErrorNotification: () => {},
     parentLaunch: {},
     loading: false,
+    events: {},
   };
 
   openModal = () => {
+    const { tracking, events } = this.props;
     this.props.showModal({
       id: 'uniqueErrorsAnalyzeModal',
       data: {
         launch: this.props.parentLaunch,
         updateLaunchLocally: (data) => this.props.fetchParentLaunchSuccessAction(data),
+        events,
       },
     });
+    events.CLICK_RUN_BUTTON && tracking.trackEvent(events.CLICK_RUN_BUTTON);
   };
 
   getBody = () => {

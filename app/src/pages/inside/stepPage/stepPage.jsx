@@ -257,6 +257,7 @@ export class StepPage extends Component {
           detailsTab: STEP_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.DETAILS_TAB_EVENT,
           stackTraceTab: STEP_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.STACK_TRACE_TAB_EVENT,
           addAttribute: STEP_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.ADD_ATTRIBUTE,
+          clickExpandEvent: STEP_PAGE_EVENTS.CLICK_EXPAND_STACK_TRACE_ARROW,
         },
       },
     });

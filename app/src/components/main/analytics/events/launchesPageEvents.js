@@ -62,11 +62,7 @@ export const getCriteriaToggler = (state) => ({
 
 export const LAUNCHES_PAGE_EVENTS = {
   plusMinusBreadcrumb: getClickOnPlusMinusEvents(LAUNCHES_PAGE),
-  CLICK_ITEM_NAME: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on Item Name',
-    label: 'Transition to Item page',
-  },
+  CLICK_ITEM_NAME: getCommonActionEvents(LAUNCHES_PAGE).CLICK_ITEM_NAME,
   CLICK_HAMBURGER_MENU: {
     category: LAUNCHES_PAGE,
     action: 'Click on Icon Menu near Launch Name',
@@ -311,7 +307,7 @@ export const LAUNCHES_PAGE_EVENTS = {
     action: 'Select Parameter to Refine',
     label: `${value}`,
   }),
-  clickAttributes: getClickAttributes(LAUNCHES_PAGE),
+  CLICK_ATTRIBUTES: getClickAttributes(LAUNCHES_PAGE),
   clickFilterActionBarButton: (value) => ({
     category: LAUNCHES_PAGE,
     action: `Click on button "${value}" in filter action bar`,

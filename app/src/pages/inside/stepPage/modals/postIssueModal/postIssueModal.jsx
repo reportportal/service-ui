@@ -59,11 +59,11 @@ import {
   LOG_QUANTITY,
 } from './constants';
 import {
-  validate,
   createFieldsValidationConfig,
   getDataSectionConfig,
   getDefaultIssueModalConfig,
   getDefaultOptionValueKey,
+  validate,
 } from './utils';
 import { messages as makeDecisionMessages } from '../makeDecisionModal/messages';
 import styles from './postIssueModal.scss';
@@ -209,7 +209,13 @@ export class PostIssueModal extends Component {
   }
 
   onPost = () => {
-    this.props.handleSubmit(this.prepareDataToSend)();
+    const {
+      handleSubmit,
+      tracking,
+      data: { eventsInfo },
+    } = this.props;
+    eventsInfo.postBtn && tracking.trackEvent(eventsInfo.postBtn);
+    handleSubmit(this.prepareDataToSend)();
   };
 
   onChangePlugin = (pluginName) => {

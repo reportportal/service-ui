@@ -27,6 +27,10 @@ import {
   getCommonActionEvents,
   getClickAttributes,
   getClickIssueTicketEvent,
+  getClickUniqueErrorsEvent,
+  getClickExpandStackTraceArrowEvent,
+  getIgnoreBtnIgnoreItemsInAAModal,
+  getIncludeBtnIncludeInAAModal,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getEditDefectModalEvents,
@@ -173,11 +177,7 @@ export const STEP_PAGE_EVENTS = {
     action: 'Click on "Copy Code reference"',
     label: 'Copy Code reference',
   },
-  IGNORE_BTN_IGNORE_ITEMS_IN_AA_MODAL: {
-    category: STEP_PAGE,
-    action: 'Click on Ignore in Modal "Ignore items in AA"',
-    label: 'Ignore items in AA',
-  },
+  IGNORE_BTN_IGNORE_ITEMS_IN_AA_MODAL: getIgnoreBtnIgnoreItemsInAAModal(STEP_PAGE),
   CLOSE_ICON_IGNORE_ITEMS_IN_AA_MODAL: {
     category: STEP_PAGE,
     action: 'Click on Close icon in Modal "Ignore items in AA"',
@@ -188,11 +188,7 @@ export const STEP_PAGE_EVENTS = {
     action: 'Click on Cancel in Modal "Ignore items in AA"',
     label: 'Close Modal "Ignore items in AA"',
   },
-  INCLUDE_BTN_INCLUDE_IN_AA_MODAL: {
-    category: STEP_PAGE,
-    action: 'Click on Include in Modal "Include items in AA"',
-    label: 'Include items in AA',
-  },
+  INCLUDE_BTN_INCLUDE_IN_AA_MODAL: getIncludeBtnIncludeInAAModal(STEP_PAGE),
   CLOSE_ICON_INCLUDE_ITEMS_IN_AA_MODAL: {
     category: STEP_PAGE,
     action: 'Click on Close icon in Modal "Include items in AA"',
@@ -204,6 +200,8 @@ export const STEP_PAGE_EVENTS = {
     label: 'Close Modal "Include items in AA"',
   },
   MAKE_DECISION_MODAL_EVENTS: getMakeDecisionModalEvents(STEP_PAGE),
-  clickAttributes: getClickAttributes(STEP_PAGE),
+  CLICK_ATTRIBUTES: getClickAttributes(STEP_PAGE),
   onClickIssueTicketEvent: getClickIssueTicketEvent(STEP_PAGE),
+  CLICK_UNIQUE_ERRORS: getClickUniqueErrorsEvent(STEP_PAGE),
+  CLICK_EXPAND_STACK_TRACE_ARROW: getClickExpandStackTraceArrowEvent(STEP_PAGE),
 };

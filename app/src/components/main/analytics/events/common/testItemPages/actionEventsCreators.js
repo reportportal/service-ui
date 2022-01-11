@@ -109,6 +109,30 @@ export const getClickIssueTicketEvent = (page) => (pluginName) => ({
   label: pluginName || 'BTS',
 });
 
+export const getClickUniqueErrorsEvent = (page) => ({
+  category: page,
+  action: 'Click on Tab "Unique Errors"',
+  label: 'User Redirects to the Unique Errors Page',
+});
+
+export const getClickExpandStackTraceArrowEvent = (page) => ({
+  category: page,
+  action: 'Click on Icon Arrow to Expand Stack Trace Message on Modal "Test Item Details"',
+  label: 'Expand Stack Trace Message',
+});
+
+export const getIgnoreBtnIgnoreItemsInAAModal = (page) => ({
+  category: page,
+  action: 'Click on Ignore in Modal "Ignore items in AA"',
+  label: 'Ignore items in AA',
+});
+
+export const getIncludeBtnIncludeInAAModal = (page) => ({
+  category: page,
+  action: 'Click on Include in Modal "Include items in AA"',
+  label: 'Include items in AA',
+});
+
 export const getCommonActionEvents = (page) => ({
   CLOSE_ICON_FOR_ALL_SELECTIONS: {
     category: page,
@@ -344,5 +368,10 @@ export const getCommonActionEvents = (page) => ({
     category: page,
     action: 'Click on Btn "Proceed Valid Items"',
     label: 'Remove invalid items from selection',
+  },
+  CLICK_ITEM_NAME: {
+    category: page,
+    action: 'Click on Item Name',
+    label: 'Transition to Item page',
   },
 });

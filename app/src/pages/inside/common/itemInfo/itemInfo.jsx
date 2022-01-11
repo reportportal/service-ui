@@ -151,6 +151,11 @@ export class ItemInfo extends Component {
     const patternAnalyzingLabel =
       value.analysing && value.analysing.find((item) => item === ANALYZER_TYPES.PATTERN_ANALYSER);
 
+    const onNameClick = () => {
+      const { events } = customProps;
+      events.CLICK_ITEM_NAME && tracking.trackEvent(events.CLICK_ITEM_NAME);
+    };
+
     return (
       <div ref={refFunction} className={cx('item-info')}>
         <div className={cx('main-info')}>
@@ -158,7 +163,7 @@ export class ItemInfo extends Component {
             itemId={value.id}
             ownLinkParams={customProps.ownLinkParams}
             className={cx('name-link')}
-            onClick={() => tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ITEM_NAME)}
+            onClick={onNameClick}
           >
             <ItemNameTooltip tooltipContent={value.name}>
               <span>{formatItemName(value.name)}</span>

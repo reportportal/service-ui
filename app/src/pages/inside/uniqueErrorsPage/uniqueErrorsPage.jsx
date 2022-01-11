@@ -55,6 +55,7 @@ import { userIdSelector } from 'controllers/user';
 import { reloadClustersAction } from 'controllers/uniqueErrors/actionCreators';
 import { UNIQUE_ERRORS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
+import { UNIQUE_ERRORS_PAGE } from 'components/main/analytics/events/uniqueErrorsPageEvents';
 import { UniqueErrorsToolbar } from './uniqueErrorsToolbar';
 
 @connect(
@@ -87,7 +88,7 @@ import { UniqueErrorsToolbar } from './uniqueErrorsToolbar';
   namespaceSelector,
 })
 @injectIntl
-@track()
+@track({ page: UNIQUE_ERRORS_PAGE })
 export class UniqueErrorsPage extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
@@ -159,7 +160,13 @@ export class UniqueErrorsPage extends Component {
         item,
         type: LAUNCH_ITEM_TYPES.item,
         fetchFunc: this.unselectAndFetchItems,
-        eventsInfo: {},
+        eventsInfo: {
+          stackTraceTab: UNIQUE_ERRORS_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.STACK_TRACE_TAB_EVENT,
+          clickExpandEvent: UNIQUE_ERRORS_PAGE_EVENTS.CLICK_EXPAND_STACK_TRACE_ARROW,
+          addAttributeEvent: UNIQUE_ERRORS_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.ADD_ATTRIBUTE,
+          clickSaveEvent:
+            UNIQUE_ERRORS_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.SAVE_BTN_EDIT_ITEM_MODAL,
+        },
       },
     });
   };
@@ -171,9 +178,13 @@ export class UniqueErrorsPage extends Component {
         parentLaunch: this.props.parentLaunch,
         type: LAUNCH_ITEM_TYPES.item,
         fetchFunc: this.unselectAndFetchItems,
-        eventsInfo: {},
+        eventsInfo: {
+          saveBtn: UNIQUE_ERRORS_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.SAVE_BTN_EDIT_ITEM_MODAL,
+          editDescription: UNIQUE_ERRORS_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.EDIT_ITEM_DESCRIPTION,
+        },
       },
     });
+    this.props.tracking.trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.EDIT_ITEMS_ACTION);
   };
   handleEditDefects = (eventData) => {
     const { selectedItems, tracking } = this.props;
@@ -217,16 +228,21 @@ export class UniqueErrorsPage extends Component {
       userId,
     } = this.props;
     const parameters = getDeleteItemsActionParameters(selectedItems, formatMessage, {
-      onConfirm: (items) =>
+      onConfirm: (items) => {
         this.props.deleteTestItemsAction({
           items,
           callback: this.unselectAndFetchItems,
-        }),
+        });
+        this.props.tracking.trackEvent(
+          UNIQUE_ERRORS_PAGE_EVENTS.DELETE_ITEM_MODAL_EVENTS.DELETE_BTN_DELETE_ITEM_MODAL,
+        );
+      },
       userId,
       parentLaunch: this.props.parentLaunch,
       eventsInfo: {},
     });
     this.props.deleteClusterItemsAction(selectedItems, parameters);
+    this.props.tracking.trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.DELETE_ACTION);
   };
 
   render() {
@@ -272,6 +288,7 @@ export class UniqueErrorsPage extends Component {
                 unselectAndFetchItems={this.unselectAndFetchItems}
                 onEditItem={this.onEditItem}
                 onEditDefect={this.handleEditDefects}
+                events={UNIQUE_ERRORS_PAGE_EVENTS}
               />
               {!!pageCount && !loading && (
                 <PaginationToolbar

@@ -140,6 +140,7 @@ export class ViewTabs extends Component {
         available: !isTestItemsList && !debugMode,
         disabled: !isAnalyzerAvailable,
         hint: !isAnalyzerAvailable ? formatMessage(messages.disabledAnalyzer) : '',
+        event: events.CLICK_UNIQUE_ERRORS,
       },
       {
         id: LOG_VIEW,

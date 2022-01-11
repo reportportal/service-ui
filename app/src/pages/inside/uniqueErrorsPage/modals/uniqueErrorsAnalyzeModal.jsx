@@ -17,6 +17,7 @@
 import React, { Component } from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import { track } from 'react-tracking';
 import PropTypes from 'prop-types';
 import { reduxForm } from 'redux-form';
 import { withModal } from 'controllers/modal';
@@ -44,6 +45,7 @@ const cx = classNames.bind(styles);
   form: 'uniqueErrorsAnalyzeModal',
   initialValues: { removeNumbers: false },
 })
+@track()
 @injectIntl
 @connect(
   (state) => ({
@@ -61,16 +63,22 @@ export class UniqueErrorsAnalyzeModal extends Component {
     data: PropTypes.shape({
       launch: PropTypes.object.isRequired,
       updateLaunchLocally: PropTypes.func,
+      events: PropTypes.object,
     }).isRequired,
     projectId: PropTypes.string.isRequired,
     showNotification: PropTypes.func,
     showDefaultErrorNotification: PropTypes.func,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
     handleSubmit: () => {},
     showNotification: () => {},
     showDefaultErrorNotification: () => {},
+    events: {},
   };
 
   onSubmit = ({ removeNumbers }) => {
@@ -94,6 +102,9 @@ export class UniqueErrorsAnalyzeModal extends Component {
           analysing: [...analysing, ANALYZER_TYPES.CLUSTER_ANALYSER],
         };
         updateLaunchLocally(item);
+        const { events } = data;
+        events.clickAnalyzeEvent &&
+          this.props.tracking.trackEvent(events.clickAnalyzeEvent(removeNumbers));
       })
       .catch(this.props.showDefaultErrorNotification);
   };

@@ -16,6 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -26,6 +27,7 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import { ParentInfo } from 'pages/inside/common/infoLine/parentInfo';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { UNIQUE_ERRORS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { reloadClustersAction } from 'controllers/uniqueErrors';
 import { createStepActionDescriptors } from 'pages/inside/common/utils';
 import {
@@ -72,6 +74,7 @@ const cx = classNames.bind(styles);
   },
 )
 @injectIntl
+@track()
 export class ActionPanel extends Component {
   static propTypes = {
     accountRole: PropTypes.string,
@@ -100,6 +103,11 @@ export class ActionPanel extends Component {
     showModalAction: PropTypes.func,
     showBreadcrumbs: PropTypes.bool,
     unselectAndFetchItems: PropTypes.func,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
+    events: PropTypes.object,
   };
 
   static defaultProps = {
@@ -127,38 +135,65 @@ export class ActionPanel extends Component {
     showModalAction: () => {},
     showBreadcrumbs: true,
     unselectAndFetchItems: () => {},
+    events: {},
   };
 
   handlePostIssue = () => {
-    this.props.onPostIssue(this.props.selectedItems, {
-      fetchFunc: this.props.unselectAndFetchItems,
-      eventsInfo: {},
+    const { unselectAndFetchItems, onPostIssue, selectedItems, events, tracking } = this.props;
+    onPostIssue(selectedItems, {
+      fetchFunc: unselectAndFetchItems,
+      eventsInfo: {
+        postBtn: UNIQUE_ERRORS_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.POST_BTN_POST_ISSUE_MODAL,
+        attachmentsSwitcher: UNIQUE_ERRORS_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.attachmentsSwitcher,
+        logsSwitcher: UNIQUE_ERRORS_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.logsSwitcher,
+        commentSwitcher: UNIQUE_ERRORS_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.commentSwitcher,
+      },
     });
+    events.POST_ISSUE_ACTION && tracking.trackEvent(events.POST_ISSUE_ACTION);
   };
   handleLinkIssue = () => {
-    this.props.onLinkIssue(this.props.selectedItems, {
-      fetchFunc: this.props.unselectAndFetchItems,
-      eventsInfo: {},
+    const { unselectAndFetchItems, selectedItems, events, tracking, onLinkIssue } = this.props;
+    onLinkIssue(selectedItems, {
+      fetchFunc: unselectAndFetchItems,
+      eventsInfo: {
+        addNewIssue:
+          UNIQUE_ERRORS_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.ADD_NEW_ISSUE_BTN_LINK_ISSUE_MODAL,
+        loadBtn: UNIQUE_ERRORS_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.LOAD_BTN_LINK_ISSUE_MODAL,
+      },
     });
+    events.LINK_ISSUE_ACTION && tracking.trackEvent(events.LINK_ISSUE_ACTION);
   };
   handleUnlinkIssue = () => {
-    this.props.onUnlinkIssue(this.props.selectedItems, {
-      fetchFunc: this.props.unselectAndFetchItems,
-      eventsInfo: {},
+    const { unselectAndFetchItems, onUnlinkIssue, selectedItems, events, tracking } = this.props;
+    onUnlinkIssue(selectedItems, {
+      fetchFunc: unselectAndFetchItems,
+      eventsInfo: {
+        unlinkAutoAnalyzedTrue:
+          UNIQUE_ERRORS_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS
+            .UNLINK_IN_UNLINK_ISSUE_MODAL_AUTO_ANALYZED_TRUE,
+        unlinkAutoAnalyzedFalse:
+          UNIQUE_ERRORS_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS
+            .UNLINK_IN_UNLINK_ISSUE_MODAL_AUTO_ANALYZED_FALSE,
+      },
     });
+    events.UNLINK_ISSUES_ACTION && tracking.trackEvent(events.UNLINK_ISSUES_ACTION);
   };
   handleIgnoreInAA = () => {
     this.props.ignoreInAutoAnalysisAction(this.props.selectedItems, {
       fetchFunc: this.props.unselectAndFetchItems,
-      eventsInfo: {},
+      eventsInfo: { ignoreBtn: UNIQUE_ERRORS_PAGE_EVENTS.IGNORE_BTN_IGNORE_ITEMS_IN_AA_MODAL },
     });
+    const { events, tracking } = this.props;
+    events.IGNORE_IN_AA_ACTION && tracking.trackEvent(events.IGNORE_IN_AA_ACTION);
   };
 
   handleIncludeInAA = () => {
     this.props.includeInAutoAnalysisAction(this.props.selectedItems, {
       fetchFunc: this.props.unselectAndFetchItems,
-      eventsInfo: {},
+      eventsInfo: { includeBtn: UNIQUE_ERRORS_PAGE_EVENTS.INCLUDE_BTN_INCLUDE_IN_AA_MODAL },
     });
+    const { events, tracking } = this.props;
+    events.INCLUDE_IN_AA_ACTION && tracking.trackEvent(events.INCLUDE_IN_AA_ACTION);
   };
 
   getItemsActionDescriptors = () => {
@@ -201,6 +236,11 @@ export class ActionPanel extends Component {
 
     this.props.proceedWithValidItems(operationName, selectedItems, operationArgs);
   };
+  onReload = () => {
+    const { onRefresh, events, tracking } = this.props;
+    onRefresh();
+    events.REFRESH_BTN && tracking.trackEvent(events.REFRESH_BTN);
+  };
 
   render() {
     const {
@@ -209,7 +249,6 @@ export class ActionPanel extends Component {
       restorePath,
       showBreadcrumbs,
       parentItem,
-      onRefresh,
       selectedItems,
       hasErrors,
       hasValidItems,
@@ -239,7 +278,7 @@ export class ActionPanel extends Component {
             />
           </div>
           <div className={cx('action-button')}>
-            <GhostButton icon={RefreshIcon} onClick={onRefresh} transparentBackground>
+            <GhostButton icon={RefreshIcon} onClick={this.onReload} transparentBackground>
               <FormattedMessage id="Common.refresh" defaultMessage="Refresh" />
             </GhostButton>
           </div>

@@ -16,6 +16,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useTracking } from 'react-tracking';
 import { useDispatch, useSelector } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
@@ -59,6 +60,9 @@ const ClusterColumn = ({ cluster }) => (
       row: cx('cluster-row'),
       accordionBlock: cx('cluster-accordion-block'),
     }}
+    eventsInfo={{
+      onOpenStackTraceEvent: () => UNIQUE_ERRORS_PAGE_EVENTS.CLICK_EXPANDED_ERROR_ARROW,
+    }}
   >
     <div>{cluster.message}</div>
   </StackTraceMessageBlock>
@@ -76,6 +80,7 @@ export const ClusterItemsGridRow = ({ data, onEditItem, onUnlinkSingleTicket, on
   const dispatch = useDispatch();
   const clusterItems = useSelector((state) => clusterItemsSelector(state, id));
   const extensions = useSelector(uniqueErrorGridCellComponentSelector);
+  const { trackEvent } = useTracking();
   const {
     collapsed,
     loading,
@@ -86,14 +91,19 @@ export const ClusterItemsGridRow = ({ data, onEditItem, onUnlinkSingleTicket, on
 
   const onToggle = () => {
     dispatch(requestClusterItemsAction({ id }));
+    trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.CLICK_CLUSTER_ITEM_ARROW);
   };
   const loadMore = () => {
     dispatch(loadMoreClusterItemsAction({ id }));
   };
   const handleAllItemsSelection = () => {
+    trackEvent(
+      UNIQUE_ERRORS_PAGE_EVENTS.CLICK_SELECT_ALL_ITEMS(selectedItems.length !== content.length),
+    );
     dispatch(toggleAllClusterItemsAction(content));
   };
   const handleOneItemSelection = (value) => {
+    trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.CLICK_SELECT_ONE_ITEM(!selectedItems.includes(value)));
     dispatch(toggleClusterItemSelectionAction(value));
   };
   const modifyColumnsSettings = {
