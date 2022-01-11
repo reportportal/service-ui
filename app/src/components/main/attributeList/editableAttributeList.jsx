@@ -16,6 +16,7 @@
 
 import { Component } from 'react';
 import PropTypes from 'prop-types';
+import track from 'react-tracking';
 import { AttributeList } from './attributeList';
 
 const NEW_ATTRIBUTE = {
@@ -23,6 +24,7 @@ const NEW_ATTRIBUTE = {
   edited: true,
 };
 
+@track()
 export class EditableAttributeList extends Component {
   static propTypes = {
     attributes: PropTypes.arrayOf(PropTypes.object),
@@ -36,6 +38,10 @@ export class EditableAttributeList extends Component {
     showButton: PropTypes.bool,
     editable: PropTypes.bool,
     eventsInfo: PropTypes.object,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -53,8 +59,9 @@ export class EditableAttributeList extends Component {
   };
 
   handleAddNew = () => {
-    const { attributes, onChange } = this.props;
+    const { attributes, onChange, eventsInfo, tracking } = this.props;
     onChange([...attributes, NEW_ATTRIBUTE]);
+    eventsInfo.addAttributeEvent && tracking.trackEvent(eventsInfo.addAttributeEvent);
   };
 
   handleChange = (attributes) => {
