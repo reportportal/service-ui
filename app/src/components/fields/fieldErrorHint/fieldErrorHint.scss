@@ -71,8 +71,9 @@
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 
   &.dark-view {
-    background-color: $COLOR--black-1;
-    color: $COLOR--white-two;
+    background-color: $COLOR--darkmode-gray-400;
+    color: $COLOR--darkmode-error-text;
+    box-shadow: none;
   }
 
   &.width-content {

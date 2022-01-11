@@ -120,8 +120,8 @@
   z-index: $Z-INDEX-POPUP;
   cursor: pointer;
   &.dark-view {
-    background-color: $COLOR--black-1;
-    color: $COLOR--white-two;
+    background-color: $COLOR--darkmode-gray-400;
+    color: $COLOR--darkmode-gray-100;
     box-shadow: none;
     border: 0;
   }
