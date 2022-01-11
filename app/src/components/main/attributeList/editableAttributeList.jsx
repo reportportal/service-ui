@@ -59,9 +59,8 @@ export class EditableAttributeList extends Component {
   };
 
   handleAddNew = () => {
-    const { attributes, onChange, eventsInfo, tracking } = this.props;
+    const { attributes, onChange } = this.props;
     onChange([...attributes, NEW_ATTRIBUTE]);
-    eventsInfo.addAttributeEvent && tracking.trackEvent(eventsInfo.addAttributeEvent);
   };
 
   handleChange = (attributes) => {
