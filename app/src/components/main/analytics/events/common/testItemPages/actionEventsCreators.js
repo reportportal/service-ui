@@ -121,13 +121,13 @@ export const getClickExpandStackTraceArrowEvent = (page) => ({
   label: 'Expand Stack Trace Message',
 });
 
-export const getIgnoreBtnIgnoreItemsInAAModal = (page) => ({
+export const getIgnoreBtnIgnoreItemsInAAModalEvent = (page) => ({
   category: page,
   action: 'Click on Ignore in Modal "Ignore items in AA"',
   label: 'Ignore items in AA',
 });
 
-export const getIncludeBtnIncludeInAAModal = (page) => ({
+export const getIncludeBtnIncludeInAAModalEvent = (page) => ({
   category: page,
   action: 'Click on Include in Modal "Include items in AA"',
   label: 'Include items in AA',

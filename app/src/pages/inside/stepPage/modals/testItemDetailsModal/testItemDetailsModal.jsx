@@ -137,13 +137,7 @@ export class TestItemDetailsModal extends Component {
     const {
       intl: { formatMessage },
       data: {
-        eventsInfo: {
-          clickExpandEvent,
-          detailsTab,
-          stackTraceTab,
-          addAttributeEvent,
-          clickSaveEvent,
-        },
+        eventsInfo: { clickExpandEvent, detailsTab, stackTraceTab, addAttribute, clickSaveEvent },
       },
     } = this.props;
     return [
@@ -157,7 +151,7 @@ export class TestItemDetailsModal extends Component {
         content: this.renderStackTraceTab(),
         eventInfo: {
           clickExpandEvent,
-          addAttributeEvent,
+          addAttribute,
           clickSaveEvent,
           changeTab: stackTraceTab,
         },
