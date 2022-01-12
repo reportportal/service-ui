@@ -295,9 +295,13 @@ export class TestItemDetailsModal extends Component {
     const {
       data: { item, eventsInfo },
     } = this.props;
+    const customEventsInfo = {
+      ...eventsInfo,
+      onOpenStackTraceEvent: () => eventsInfo.clickExpandEvent,
+    };
     return (
       <div className={cx('stack-trace-tab')}>
-        <StackTrace logItem={item} hideTime minHeight={508} eventsInfo={eventsInfo} />
+        <StackTrace logItem={item} hideTime minHeight={508} eventsInfo={customEventsInfo} />
       </div>
     );
   };
