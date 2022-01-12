@@ -65,7 +65,7 @@
     border-color: $COLOR--orange-red;
     box-shadow: 0 0 2px 0 rgba($COLOR--orange-red, 0.7);
     &.dark-view {
-      border: 2px solid $COLOR--darkmode-error-default;
+      border: 1px solid $COLOR--darkmode-error-default;
       box-shadow: none;
       color: $COLOR--white-two;
     }

@@ -527,7 +527,7 @@ export class PostIssueModal extends Component {
                     format={Boolean}
                     onChange={(e) => this.trackFieldClick(e, item.eventFn)}
                   >
-                    <InputCheckbox>
+                    <InputCheckbox iconTransparentBackground>
                       <span className={cx('switch-field-label', 'dark-view')}>{item.title}</span>
                     </InputCheckbox>
                   </FieldProvider>
