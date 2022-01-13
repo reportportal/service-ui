@@ -137,24 +137,19 @@ export class TestItemDetailsModal extends Component {
     const {
       intl: { formatMessage },
       data: {
-        eventsInfo: { clickExpandEvent, detailsTab, stackTraceTab, addAttribute, clickSaveEvent },
+        eventsInfo: { detailsTab, stackTraceTab },
       },
     } = this.props;
     return [
       {
         name: formatMessage(messages.detailsTabTitle),
         content: this.renderDetailsTab(editable),
-        eventInfo: detailsTab,
+        eventInfo: { changeTab: detailsTab },
       },
       {
         name: formatMessage(messages.stackTraceTabTitle),
         content: this.renderStackTraceTab(),
-        eventInfo: {
-          clickExpandEvent,
-          addAttribute,
-          clickSaveEvent,
-          changeTab: stackTraceTab,
-        },
+        eventInfo: { changeTab: stackTraceTab },
       },
     ];
   };
@@ -295,13 +290,9 @@ export class TestItemDetailsModal extends Component {
     const {
       data: { item, eventsInfo },
     } = this.props;
-    const customEventsInfo = {
-      ...eventsInfo,
-      onOpenStackTraceEvent: () => eventsInfo.clickExpandEvent,
-    };
     return (
       <div className={cx('stack-trace-tab')}>
-        <StackTrace logItem={item} hideTime minHeight={508} eventsInfo={customEventsInfo} />
+        <StackTrace logItem={item} hideTime minHeight={508} eventsInfo={eventsInfo} />
       </div>
     );
   };
