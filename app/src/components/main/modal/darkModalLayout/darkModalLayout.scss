@@ -36,17 +36,13 @@
   display: flex;
   justify-content: center;
   height: 100%;
-  background-color: rgba($COLOR--dark-modal, 0.95);
 }
 
 .layout {
   width: 100%;
   padding: 32px 40px 70px 40px;
   box-sizing: border-box;
-
-  &.black-background {
-    background-color: rgba($COLOR--dark-modal, 0.5);
-  }
+  background-color: rgba($COLOR--darkmode-bg, 0.96);
 
   @media (max-width: $SCREEN_SM_MAX) {
     padding: 15px 15px 70px 15px;
@@ -61,7 +57,7 @@
   width: 100%;
   max-width: 617px;
   padding: 32px 40px 0 40px;
-  background-color: rgba($COLOR--dark-modal, 0.5);
+  background-color: rgba($COLOR--darkmode-bg, 0.98);
   box-sizing: border-box;
 
   @media (max-width: $SCREEN_SM_MAX) {

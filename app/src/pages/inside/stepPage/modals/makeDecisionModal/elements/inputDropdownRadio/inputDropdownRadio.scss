@@ -21,7 +21,7 @@
   border-bottom-color: transparent;
 
   &.opened {
-    border-bottom-color: $COLOR--topaz;
+    border-bottom-color: $COLOR--darkmode-topaz-main;
   }
 }
 
@@ -35,7 +35,7 @@
 .selected-option {
   position: relative;
   padding-right: 8px;
-  color: $COLOR--gray-95;
+  color: $COLOR--white-two;
   font-family: $FONT-SEMIBOLD;
   font-size: 16px;
   line-height: 22px;
@@ -53,7 +53,7 @@
   border-top: 7px solid;
   border-right: 5px solid transparent;
   border-left: 5px solid transparent;
-  color: $COLOR--topaz;
+  color: $COLOR--darkmode-topaz-main;
   transition: transform 200ms linear;
 
   &.opened {
@@ -67,7 +67,7 @@
   left: 0;
   width: 100%;
   padding: 25px 22px;
-  background: $COLOR--black-1;
+  background: $COLOR--darkmode-gray-400;
   border-radius: 4px;
   z-index: $Z-INDEX-DEFAULT;
   box-sizing: border-box;

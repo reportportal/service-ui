@@ -29,7 +29,7 @@
   font-family: $FONT-SEMIBOLD;
   font-size: 13px;
   line-height: 18px;
-  color: $COLOR--topaz;
+  color: $COLOR--darkmode-topaz-main;
   cursor: pointer;
 
   &.expanded {
@@ -53,7 +53,7 @@
   margin-right: 10px;
   border-right: 12px solid transparent;
   border-left: 12px solid transparent;
-  border-bottom: 12px solid $COLOR--topaz;
+  border-bottom: 12px solid $COLOR--darkmode-topaz-main;
   transition: transform 200ms linear;
 
   &:before {
@@ -63,7 +63,7 @@
     left: -12px;
     border-right: 12px solid transparent;
     border-left: 12px solid transparent;
-    border-bottom: 12px solid $COLOR--black-1;
+    border-bottom: 12px solid $COLOR--darkmode-gray-400;
   }
 
   &.expanded {
@@ -84,14 +84,14 @@
   border: none;
   background-color: transparent;
   font-family: $FONT-REGULAR;
-  color: $COLOR--gray-light;
+  color: $COLOR--white-two;
   cursor: default;
 }
 
 .issue {
   height: 18px;
   margin-left: 10px;
-  border: 1px solid $COLOR--dirty-black;
-  background-color: $COLOR--black-3;
-  color: $COLOR--dirty-gray;
+  border: 1px solid $COLOR--darkmode-gray-200;
+  background-color: $COLOR--darkmode-gray-300;
+  color: $COLOR--darkmode-gray-100;
 }

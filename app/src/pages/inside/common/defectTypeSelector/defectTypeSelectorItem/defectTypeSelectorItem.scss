@@ -21,20 +21,20 @@
   height: 36px;
   padding: 0 12px;
   border-radius: 4px;
-  border: solid 2px transparent;
-  background-color: $COLOR--black-1;
-  color: $COLOR--gray-light;
+  border: solid 1px transparent;
+  background-color: $COLOR--darkmode-gray-400;
+  color: $COLOR--white-two;
   font-family: $FONT-REGULAR;
   font-size: 12px;
   line-height: 17px;
   cursor: pointer;
 
   &:hover {
-    border: solid 2px rgba($COLOR--topaz, 0.25);
+    border: solid 1px $COLOR--darkmode-topaz-additional;
   }
 
   &.selected {
-    border: solid 2px $COLOR--topaz;
+    border: solid 2px $COLOR--darkmode-topaz-main;
   }
 }
 
