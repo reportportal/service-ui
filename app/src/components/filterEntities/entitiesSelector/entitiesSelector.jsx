@@ -99,7 +99,11 @@ export class EntitiesSelector extends Component {
                       'sub-item': entity.meta && entity.meta.subItem,
                     })}
                   >
-                    <InputCheckbox value={entity.active} onChange={this.handleChange(entity)}>
+                    <InputCheckbox
+                      disabled={!entity.removable}
+                      value={entity.active}
+                      onChange={this.handleChange(entity)}
+                    >
                       {(entity.meta && entity.meta.longName) || entity.title}
                     </InputCheckbox>
                   </div>
