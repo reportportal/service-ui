@@ -25,10 +25,18 @@ import {
   queryParametersSelector,
 } from 'controllers/testItem';
 import { createFetchPredicate, fetchDataAction } from 'controllers/fetch';
-import { pathnameChangedSelector, launchIdSelector } from 'controllers/pages';
+import {
+  launchIdSelector,
+  pagePropertiesSelector,
+  pathnameChangedSelector,
+} from 'controllers/pages';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { SORTING_KEY } from 'controllers/sorting';
 import { unselectAllItemsAction } from 'controllers/groupOperations';
+import { FETCH_GLOBAL_INTEGRATIONS_SUCCESS } from 'controllers/plugins/constants';
+import { globalIntegrationsSelector } from 'controllers/plugins';
+import { ALL } from 'common/constants/reservedFilterIds';
+import { COMMAND_GET_CLUSTERS } from 'controllers/plugins/uiExtensions/constants';
 import {
   CLEAR_CLUSTER_ITEMS,
   clusterItemsSagas,
@@ -40,10 +48,15 @@ import { setPageLoadingAction } from './actionCreators';
 function* fetchClusters(payload = {}) {
   const { refresh = false } = payload;
   const launchId = yield select(launchIdSelector);
-  let parentLaunch = yield select(launchSelector);
+  const parentLaunch = yield select(launchSelector);
   const project = yield select(activeProjectSelector);
   const isPathNameChanged = yield select(pathnameChangedSelector);
   const selectedItems = yield select(selectedClusterItemsSelector);
+  let integrations = yield select(globalIntegrationsSelector);
+  if (!integrations.length) {
+    const response = yield take(FETCH_GLOBAL_INTEGRATIONS_SUCCESS);
+    integrations = response.payload;
+  }
   if (selectedItems.length) {
     yield put(unselectAllItemsAction(NAMESPACE)());
   }
@@ -55,18 +68,44 @@ function* fetchClusters(payload = {}) {
   } else {
     yield call(fetchParentLaunch, { payload: { project, launchId } });
   }
-  parentLaunch = yield select(launchSelector);
+
   const namespace = yield select(namespaceSelector);
   const query = yield select(queryParametersSelector, namespace);
-  yield put(
-    fetchDataAction(NAMESPACE)(
-      URLS.clusterByLaunchId(project, launchId, {
-        [PAGE_KEY]: query[PAGE_KEY],
-        [SIZE_KEY]: query[SIZE_KEY],
-        [SORTING_KEY]: query[SORTING_KEY],
-      }),
-    ),
+  const supportedIntegration = integrations.find(
+    (integration) =>
+      integration &&
+      integration.integrationType &&
+      integration.integrationType.details &&
+      integration.integrationType.details.metadata &&
+      integration.integrationType.details.metadata.supportedFeatures &&
+      integration.integrationType.details.metadata.supportedFeatures.includes('newErrors'),
   );
+
+  let url;
+  const requestParams = {};
+  if (supportedIntegration) {
+    url = URLS.projectIntegrationByIdCommand(
+      project,
+      supportedIntegration.id,
+      COMMAND_GET_CLUSTERS,
+    );
+    requestParams.method = 'PUT';
+    const uniqueErrorsParams = yield select(pagePropertiesSelector, NAMESPACE);
+    requestParams.data = {
+      launchId,
+      mode: uniqueErrorsParams.mode || ALL,
+      pageNumber: query[PAGE_KEY],
+      pageSize: query[SIZE_KEY],
+    };
+  } else {
+    url = URLS.clusterByLaunchId(project, launchId, {
+      [PAGE_KEY]: query[PAGE_KEY],
+      [SIZE_KEY]: query[SIZE_KEY],
+      [SORTING_KEY]: query[SORTING_KEY],
+    });
+  }
+  yield put(fetchDataAction(NAMESPACE)(url, requestParams));
+
   if (isPathNameChanged && !refresh) {
     const waitEffects = [take(createFetchPredicate(NAMESPACE))];
     yield all(waitEffects);

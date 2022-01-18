@@ -23,6 +23,7 @@ import {
 import * as launchLevels from 'common/constants/launchLevels';
 import * as methodTypes from 'common/constants/methodTypes';
 import { extractNamespacedQuery } from 'common/utils/routingUtils';
+import { omit } from 'common/utils';
 import { TEST_ITEM_TYPES_MAP } from './constants';
 import { LEVELS } from './levels';
 
@@ -131,4 +132,9 @@ export const isItemOwner = (userId, item, launch) => {
   }
 
   return true;
+};
+
+export const cleanUpQuery = (query) => {
+  const keys = Object.keys(query).filter((item) => !/^item+[0-9]/.test(item));
+  return omit(query, keys);
 };

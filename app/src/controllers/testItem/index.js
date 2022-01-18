@@ -79,5 +79,6 @@ export {
   isListView,
   groupItemsByParent,
   isItemOwner,
+  cleanUpQuery,
 } from './utils';
 export { LEVELS } from './levels';

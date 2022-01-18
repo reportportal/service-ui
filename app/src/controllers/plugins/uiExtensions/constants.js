@@ -17,6 +17,7 @@ export const COMMAND_GET_ISSUE_TYPES = 'getIssueTypes';
 export const COMMAND_GET_ISSUE_FIELDS = 'getIssueFields';
 export const COMMAND_POST_ISSUE = 'postTicket';
 export const COMMAND_GET_ISSUE = 'getIssue';
+export const COMMAND_GET_CLUSTERS = 'getClusters';
 
 export const EXTENSION_LOAD_START = 'extensionLoadStart';
 export const EXTENSION_LOAD_FINISH = 'extensionLoadFinish';
