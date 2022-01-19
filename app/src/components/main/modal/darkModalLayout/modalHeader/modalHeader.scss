@@ -38,12 +38,15 @@
   svg {
     width: 30px;
     height: 30px;
-    fill: $COLOR--topaz;
+    fill: $COLOR--darkmode-topaz-main;
+    &:hover {
+      fill: $COLOR--darkmode-topaz-hover;
+    }
   }
 }
 
 .close-icon-prefix {
   margin-right: 7px;
-  color: $COLOR--dark-gray;
+  color: $COLOR--darkmode-gray-200;
   font-size: 11px;
 }

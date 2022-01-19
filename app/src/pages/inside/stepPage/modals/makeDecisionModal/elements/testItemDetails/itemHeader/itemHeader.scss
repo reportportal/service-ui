@@ -24,7 +24,7 @@
   padding: 10px 20px;
   border-radius: 4px;
   border: 2px solid transparent;
-  background-color: $COLOR--black-1;
+  background-color: $COLOR--darkmode-gray-400;
   cursor: pointer;
   box-sizing: border-box;
 
@@ -59,7 +59,7 @@
 .item-name {
   display: flex;
   align-items: center;
-  color: $COLOR--topaz;
+  color: $COLOR--darkmode-topaz-text;
   font-family: $FONT-REGULAR;
   font-size: 13px;
   text-decoration: none;
@@ -73,6 +73,7 @@
   }
 
   &:hover {
+    color: $COLOR--darkmode-topaz-hover;
     .icon {
       opacity: 1;
     }
@@ -87,7 +88,7 @@
   margin: 0 8px;
 
   svg g g path {
-    fill: $COLOR--topaz;
+    fill: $COLOR--darkmode-gray-200;
   }
 }
 
@@ -96,7 +97,7 @@
   border: none;
   background-color: transparent;
   font-family: $FONT-REGULAR;
-  color: $COLOR--gray-light;
+  color: $COLOR--white-two;
   cursor: default;
 }
 
@@ -119,14 +120,14 @@
 
 .ignore-aa-label,
 .pa-label {
-  border: solid 1px $COLOR--dirty-black;
-  background-color: $COLOR--black-3;
-  color: $COLOR--dirty-gray;
+  border: solid 1px $COLOR--darkmode-gray-200;
+  background-color: $COLOR--darkmode-gray-300;
+  color: $COLOR--darkmode-gray-100;
 }
 
 .aa-label {
   svg {
-    fill: $COLOR--black-3;
+    fill: $COLOR--darkmode-gray-300;
   }
 }
 
@@ -136,9 +137,9 @@
 
 .issue {
   height: 18px;
-  border: 1px solid $COLOR--dirty-black;
-  background-color: $COLOR--black-3;
-  color: $COLOR--dirty-gray;
+  border: 1px solid $COLOR--darkmode-gray-200;
+  background-color: $COLOR--darkmode-gray-300;
+  color: $COLOR--darkmode-gray-100;
 }
 
 .height-40 {

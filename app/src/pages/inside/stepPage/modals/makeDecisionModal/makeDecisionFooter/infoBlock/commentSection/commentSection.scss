@@ -22,7 +22,7 @@
   padding: 0 19px;
   font-family: $FONT-MONOSPACE;
   font-size: 11px;
-  color: $COLOR--dirty-gray;
+  color: $COLOR--darkmode-gray-100;
   line-height: 20px;
   word-break: break-all;
 
@@ -60,13 +60,13 @@
   left: auto;
   width: auto;
   padding: 15px;
-  background-color: $COLOR--dark-modal;
+  background-color: $COLOR--darkmode-gray-400;
 }
 
 .selected-option {
   font-family: $FONT-REGULAR;
   font-size: 13px;
-  color: $COLOR--topaz;
+  color: $COLOR--darkmode-topaz-text;
 }
 
 .dropdown-arrow {

@@ -82,6 +82,7 @@ export const ItemHeader = ({
                 value={isSelected}
                 onChange={() => selectItem(id)}
                 iconTransparentBackground
+                darkView
               />
             )}
             {mode === RADIO_TEST_ITEM_DETAILS && (
