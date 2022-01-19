@@ -20,13 +20,14 @@ import styles from './checkIcon.scss';
 
 const cx = classNames.bind(styles);
 
-export const CheckIcon = ({ disabled, centered, checked, transparentBackground }) => (
+export const CheckIcon = ({ disabled, centered, checked, transparentBackground, darkView }) => (
   <div
     className={cx('square', {
       centered,
       checked,
       disabled,
       'transparent-background': transparentBackground,
+      'dark-view': darkView,
     })}
   >
     <svg
@@ -50,6 +51,7 @@ CheckIcon.propTypes = {
   centered: PropTypes.bool,
   checked: PropTypes.bool,
   transparentBackground: PropTypes.bool,
+  darkView: PropTypes.bool,
 };
 
 CheckIcon.defaultProps = {
@@ -57,4 +59,5 @@ CheckIcon.defaultProps = {
   centered: PropTypes.bool,
   checked: PropTypes.bool,
   transparentBackground: false,
+  darkView: false,
 };

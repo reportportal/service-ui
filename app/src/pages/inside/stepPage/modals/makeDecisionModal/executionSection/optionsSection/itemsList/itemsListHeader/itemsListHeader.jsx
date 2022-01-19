@@ -73,7 +73,12 @@ export const ItemsListHeader = ({
 
   return (
     <div className={cx('header-row')}>
-      <InputCheckbox value={isAllSelected} onChange={onToggleAllItems} iconTransparentBackground>
+      <InputCheckbox
+        value={isAllSelected}
+        onChange={onToggleAllItems}
+        iconTransparentBackground
+        darkView
+      >
         <span className={cx('checkbox-label')}>
           {formatMessage(messages.selectedItemCount, {
             selected: selectedItemsLength,
@@ -81,7 +86,12 @@ export const ItemsListHeader = ({
           })}
         </span>
       </InputCheckbox>
-      <InputCheckbox value={showErrorLogs} onChange={onShowLogsChange} iconTransparentBackground>
+      <InputCheckbox
+        value={showErrorLogs}
+        onChange={onShowLogsChange}
+        iconTransparentBackground
+        darkView
+      >
         <span className={cx('checkbox-label')}>{formatMessage(messages.showErrorLogs)}</span>
       </InputCheckbox>
     </div>

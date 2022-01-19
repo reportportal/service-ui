@@ -27,6 +27,10 @@
   border-color: $COLOR--gray-60;
   box-sizing: border-box;
 
+  &.dark-view {
+    border-color: $COLOR--darkmode-gray-100;
+  }
+
   &.centered {
     left: 50%;
     margin-left: -7px;

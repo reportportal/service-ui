@@ -191,6 +191,7 @@ export const SelectDefectManually = ({
             }
             onChange={handleIgnoreAnalyzerChange}
             iconTransparentBackground
+            darkView
           >
             <span className={cx('checkbox-text')}>
               {formatMessage(width < SCREEN_SM_MAX ? messages.ignoreAaShort : messages.ignoreAa)}
