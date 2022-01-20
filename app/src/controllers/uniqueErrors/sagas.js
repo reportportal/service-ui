@@ -94,7 +94,7 @@ function* fetchClusters(payload = {}) {
     const uniqueErrorsParams = yield select(pagePropertiesSelector, NAMESPACE);
     requestParams.data = {
       launchId,
-      mode: uniqueErrorsParams.mode,
+      ...uniqueErrorsParams,
       pageNumber: query[PAGE_KEY],
       pageSize: query[SIZE_KEY],
     };
