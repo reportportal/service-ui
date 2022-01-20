@@ -35,7 +35,6 @@ import { SORTING_KEY } from 'controllers/sorting';
 import { unselectAllItemsAction } from 'controllers/groupOperations';
 import { FETCH_GLOBAL_INTEGRATIONS_SUCCESS } from 'controllers/plugins/constants';
 import { globalIntegrationsSelector } from 'controllers/plugins';
-import { ALL } from 'common/constants/reservedFilterIds';
 import { COMMAND_GET_CLUSTERS } from 'controllers/plugins/uiExtensions/constants';
 import {
   CLEAR_CLUSTER_ITEMS,
@@ -78,7 +77,9 @@ function* fetchClusters(payload = {}) {
       integration.integrationType.details &&
       integration.integrationType.details.metadata &&
       integration.integrationType.details.metadata.supportedFeatures &&
-      integration.integrationType.details.metadata.supportedFeatures.includes('newErrors'),
+      integration.integrationType.details.metadata.supportedFeatures.includes(
+        'uniqueErrorsClusters',
+      ),
   );
 
   let url;
@@ -93,7 +94,7 @@ function* fetchClusters(payload = {}) {
     const uniqueErrorsParams = yield select(pagePropertiesSelector, NAMESPACE);
     requestParams.data = {
       launchId,
-      mode: uniqueErrorsParams.mode || ALL,
+      mode: uniqueErrorsParams.mode,
       pageNumber: query[PAGE_KEY],
       pageSize: query[SIZE_KEY],
     };

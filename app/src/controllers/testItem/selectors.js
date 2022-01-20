@@ -67,7 +67,7 @@ import {
   normalizeTestItem,
   getNextPage,
   isListView,
-  cleanUpQuery,
+  cleanUpTestItemQuery,
 } from './utils';
 
 const domainSelector = (state) => state.testItem || {};
@@ -483,7 +483,7 @@ export const listViewLinkSelector = createSelector(
     type: isDebugMode ? PROJECT_USERDEBUG_TEST_ITEM_PAGE : TEST_ITEM_PAGE,
     payload,
     meta: {
-      query: cleanUpQuery(query),
+      query: cleanUpTestItemQuery(query),
     },
   }),
 );
@@ -498,7 +498,7 @@ export const logViewLinkSelector = createSelector(
       type: page,
       payload,
       meta: {
-        query: cleanUpQuery(query),
+        query: cleanUpTestItemQuery(query),
       },
     };
   },
@@ -511,7 +511,7 @@ export const historyViewLinkSelector = createSelector(
     type: HISTORY_PAGE,
     payload,
     meta: {
-      query: cleanUpQuery(query),
+      query: cleanUpTestItemQuery(query),
     },
   }),
 );

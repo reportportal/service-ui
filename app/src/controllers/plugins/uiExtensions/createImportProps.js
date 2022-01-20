@@ -108,7 +108,7 @@ import {
   defectTypesSelector,
   updateConfigurationAttributesAction,
 } from 'controllers/project';
-import { statisticsLinkSelector, defectLinkSelector } from 'controllers/testItem';
+import { statisticsLinkSelector, defectLinkSelector, launchSelector } from 'controllers/testItem';
 import { Grid } from 'components/main/grid';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { AttributeListField } from 'components/main/attributeList';
@@ -286,6 +286,7 @@ export const createImportProps = (pluginName) => ({
     statisticsLinkSelector,
     defectLinkSelector,
     pagePropertiesSelector,
+    launchSelector,
   },
   icons: {
     PlusIcon,

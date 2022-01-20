@@ -134,7 +134,7 @@ export const isItemOwner = (userId, item, launch) => {
   return true;
 };
 
-export const cleanUpQuery = (query) => {
+export const cleanUpTestItemQuery = (query) => {
   const keys = Object.keys(query).filter((item) => !/^item+[0-9]/.test(item));
   return omit(query, keys);
 };
