@@ -26,9 +26,6 @@ jobs:
         node: [11, 12]
 
     steps:
-      - name: Get Date
-        run: 'echo "BUILD_DATE=`date +%FT%T%z`" >> $GITHUB_ENV'
-
       - uses: actions/checkout@v2
 
       - name: Setup NodeJS
