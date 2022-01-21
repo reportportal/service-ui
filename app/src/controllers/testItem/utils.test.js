@@ -104,7 +104,7 @@ describe('controllers/testItem/utils', () => {
     });
   });
 
-  describe('clenUpQuery', () => {
+  describe('cleanUpTestItemQuery', () => {
     test('should return empty object in case of no query params', () => {
       const query = {};
       const filteredQuery = cleanUpTestItemQuery(query);
