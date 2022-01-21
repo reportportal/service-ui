@@ -63,6 +63,8 @@ import {
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
   PROJECT_SETTINGS_TAB_PAGE,
   pluginRouteSelector,
+  updatePagePropertiesAction,
+  pagePropertiesSelector,
 } from 'controllers/pages';
 import { attributesArray, isNotEmptyArray } from 'common/utils/validation/validate';
 import {
@@ -106,7 +108,7 @@ import {
   defectTypesSelector,
   updateConfigurationAttributesAction,
 } from 'controllers/project';
-import { statisticsLinkSelector, defectLinkSelector } from 'controllers/testItem';
+import { statisticsLinkSelector, defectLinkSelector, launchSelector } from 'controllers/testItem';
 import { Grid } from 'components/main/grid';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { AttributeListField } from 'components/main/attributeList';
@@ -156,6 +158,7 @@ import {
 import { updateLaunchLocallyAction } from 'controllers/launch';
 import { getDefectTypeLabel } from 'components/main/analytics/events/common/utils';
 import { formatAttribute } from 'common/utils/attributeUtils';
+import { createNamespacedQuery } from 'common/utils/routingUtils';
 import { createGlobalNamedIntegrationsSelector } from '../selectors';
 
 const BUTTONS = {
@@ -266,6 +269,7 @@ export const createImportProps = (pluginName) => ({
     hideScreenLockAction,
     updateConfigurationAttributesAction,
     updateLaunchLocallyAction,
+    updatePagePropertiesAction,
   },
   selectors: {
     pluginRouteSelector,
@@ -281,6 +285,8 @@ export const createImportProps = (pluginName) => ({
     defectTypesSelector,
     statisticsLinkSelector,
     defectLinkSelector,
+    pagePropertiesSelector,
+    launchSelector,
   },
   icons: {
     PlusIcon,
@@ -306,6 +312,7 @@ export const createImportProps = (pluginName) => ({
     getDefectTypeLabel,
     getDefectFormFields,
     formatAttribute,
+    createNamespacedQuery,
   },
   validators: {
     attributesArray,

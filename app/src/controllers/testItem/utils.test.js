@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-import { normalizeTestItem, formatItemName, groupItemsByParent } from './utils';
+import {
+  normalizeTestItem,
+  formatItemName,
+  groupItemsByParent,
+  cleanUpTestItemQuery,
+} from './utils';
 
 describe('controllers/testItem/utils', () => {
   describe('normalizeTestItem', () => {
@@ -96,6 +101,22 @@ describe('controllers/testItem/utils', () => {
       };
 
       expect(groupedItems).toEqual(expectedGroupedItems);
+    });
+  });
+
+  describe('cleanUpTestItemQuery', () => {
+    test('should return empty object in case of no query params', () => {
+      const query = {};
+      const filteredQuery = cleanUpTestItemQuery(query);
+
+      expect(filteredQuery).toEqual({});
+    });
+
+    test('should save params belongs to the test items', () => {
+      const query = { item0Params: 'page.page=1', someQueryParams: 'some=param' };
+      const filteredQuery = cleanUpTestItemQuery(query);
+
+      expect(filteredQuery).toEqual({ item0Params: 'page.page=1' });
     });
   });
 });
