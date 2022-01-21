@@ -8,6 +8,12 @@ import { filterIntegrationsByName, isPluginSupportsCommonCommand } from '../util
 import { extensionLoadFinishAction, extensionLoadStartAction } from './actions';
 
 export function* fetchUiExtensions() {
+  // TODO: In the future plugins with js parts should not depend on integrations, only on plugins.
+  // TODO: This should be removed when common getFile plugin command will be presented in all plugins with js files.
+  const globalIntegrations = yield select(globalIntegrationsSelector);
+  if (!globalIntegrations.length) {
+    return;
+  }
   const plugins = yield select(pluginsSelector);
   const uiExtensionPlugins = plugins.filter(
     (plugin) =>
@@ -17,7 +23,6 @@ export function* fetchUiExtensions() {
       (isPluginSupportsCommonCommand(plugin, COMMAND_GET_FILE) ||
         plugin.details.allowedCommands.includes(COMMAND_GET_FILE)),
   );
-  const globalIntegrations = yield select(globalIntegrationsSelector);
   const activeProject = yield select(activeProjectSelector);
   const calls = uiExtensionPlugins
     .map((plugin) => {

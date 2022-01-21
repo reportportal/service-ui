@@ -244,6 +244,7 @@ function* watchRemovePlugin() {
   yield takeEvery(REMOVE_PLUGIN, removePlugin);
 }
 
+// TODO: in the future plugins with js parts should not depend on integrations, only on plugins.
 function* watchPluginChange() {
   yield takeEvery(
     [createFetchPredicate(NAMESPACE), FETCH_GLOBAL_INTEGRATIONS_SUCCESS],
