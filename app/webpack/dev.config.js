@@ -26,7 +26,7 @@ module.exports = () => {
     process.exit(1);
   }
   return {
-    devtool: 'eval-sourcemap',
+    devtool: 'eval-source-map',
     mode: 'development',
     module: {
       rules: [
@@ -49,7 +49,7 @@ module.exports = () => {
               loader: 'css-loader',
               options: {
                 modules: {
-                  localIdentName: '[name]__[local]--[hash:base64:5]',
+                  localIdentName: '[name]__[local]--[contenthash:base64:5]',
                 },
                 importLoaders: 1,
               },
@@ -65,9 +65,15 @@ module.exports = () => {
         },
       ],
     },
-    plugins: [new webpack.HotModuleReplacementPlugin()],
+    plugins: [
+      new webpack.ProvidePlugin({
+        process: 'process/browser',
+      }),
+    ],
     devServer: {
-      contentBase: path.resolve(__dirname, '../build'),
+      static: {
+        directory: path.resolve(__dirname, '../build'),
+      },
       hot: true,
       historyApiFallback: true,
       https: false,
