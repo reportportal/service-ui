@@ -34,7 +34,7 @@ import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { SORTING_KEY } from 'controllers/sorting';
 import { unselectAllItemsAction } from 'controllers/groupOperations';
 import { FETCH_GLOBAL_INTEGRATIONS_SUCCESS } from 'controllers/plugins/constants';
-import { globalIntegrationsSelector } from 'controllers/plugins';
+import { globalIntegrationsSelector, pluginsSelector } from 'controllers/plugins';
 import { COMMAND_GET_CLUSTERS } from 'controllers/plugins/uiExtensions/constants';
 import {
   CLEAR_CLUSTER_ITEMS,
@@ -44,6 +44,27 @@ import {
 import { FETCH_CLUSTERS, NAMESPACE, RELOAD_CLUSTERS } from './constants';
 import { setPageLoadingAction } from './actionCreators';
 
+function* getIntegration() {
+  let integrations = yield select(globalIntegrationsSelector);
+  if (!integrations.length) {
+    const response = yield take(FETCH_GLOBAL_INTEGRATIONS_SUCCESS);
+    integrations = response.payload;
+  }
+  const supportedIntegration = integrations.find(
+    (item) =>
+      item &&
+      item.integrationType &&
+      item.integrationType.details &&
+      item.integrationType.details.metadata &&
+      item.integrationType.details.metadata.supportedFeatures &&
+      item.integrationType.details.metadata.supportedFeatures.includes('uniqueErrorsClusters'),
+  );
+  const plugins = yield select(pluginsSelector);
+  const plugin = plugins.find((item) => item.name === supportedIntegration.name);
+
+  return plugin.enabled && supportedIntegration;
+}
+
 function* fetchClusters(payload = {}) {
   const { refresh = false } = payload;
   const launchId = yield select(launchIdSelector);
@@ -51,11 +72,7 @@ function* fetchClusters(payload = {}) {
   const project = yield select(activeProjectSelector);
   const isPathNameChanged = yield select(pathnameChangedSelector);
   const selectedItems = yield select(selectedClusterItemsSelector);
-  let integrations = yield select(globalIntegrationsSelector);
-  if (!integrations.length) {
-    const response = yield take(FETCH_GLOBAL_INTEGRATIONS_SUCCESS);
-    integrations = response.payload;
-  }
+
   if (selectedItems.length) {
     yield put(unselectAllItemsAction(NAMESPACE)());
   }
@@ -70,26 +87,12 @@ function* fetchClusters(payload = {}) {
 
   const namespace = yield select(namespaceSelector);
   const query = yield select(queryParametersSelector, namespace);
-  const supportedIntegration = integrations.find(
-    (integration) =>
-      integration &&
-      integration.integrationType &&
-      integration.integrationType.details &&
-      integration.integrationType.details.metadata &&
-      integration.integrationType.details.metadata.supportedFeatures &&
-      integration.integrationType.details.metadata.supportedFeatures.includes(
-        'uniqueErrorsClusters',
-      ),
-  );
 
   let url;
   const requestParams = {};
-  if (supportedIntegration) {
-    url = URLS.projectIntegrationByIdCommand(
-      project,
-      supportedIntegration.id,
-      COMMAND_GET_CLUSTERS,
-    );
+  const integration = yield getIntegration();
+  if (integration) {
+    url = URLS.projectIntegrationByIdCommand(project, integration.id, COMMAND_GET_CLUSTERS);
     requestParams.method = 'PUT';
     const uniqueErrorsParams = yield select(pagePropertiesSelector, NAMESPACE);
     requestParams.data = {
