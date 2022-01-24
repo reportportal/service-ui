@@ -33,7 +33,7 @@
   }
 
   &:hover {
-    border: 1px solid $COLOR--darkmode-topaz-additional;
+    border: 1px solid $COLOR--darkmode-topaz-hover;
   }
 
   &:active {
@@ -72,7 +72,7 @@
 
 .disabled {
   background-color: rgba($COLOR--darkmode-gray-400, 0.5);
-  color: rgba($COLOR--darkmode-topaz-main, 0.5);
+  color: rgba($COLOR--darkmode-topaz-text, 0.5);
   cursor: default;
   svg {
     fill: rgba($COLOR--darkmode-topaz-main, 0.5);

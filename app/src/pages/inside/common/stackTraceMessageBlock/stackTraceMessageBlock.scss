@@ -105,21 +105,21 @@
 }
 
 .design-mode-dark.row-wrapper {
-  border-left: 3px solid $COLOR--orange-red;
+  border-left: 3px solid $COLOR--darkmode-error;
   background-image: linear-gradient(
     to right,
-    rgba($COLOR--orange-red, 0.25),
-    rgba($COLOR--orange-red, 0.25)
+    rgba($COLOR--darkmode-error, 0.25),
+    rgba($COLOR--darkmode-error, 0.25)
   );
   background-size: 8px 100%;
   background-position: 1px 0;
   padding-left: 26px;
   &.level-fatal {
-    border-left: 3px solid $COLOR--fatal;
+    border-left: 3px solid $COLOR--darkmode-fatal;
     background-image: linear-gradient(
       to right,
-      rgba($COLOR--fatal, 0.25),
-      rgba($COLOR--fatal, 0.25)
+      rgba($COLOR--darkmode-fatal, 0.25),
+      rgba($COLOR--darkmode-fatal, 0.25)
     );
   }
 }
