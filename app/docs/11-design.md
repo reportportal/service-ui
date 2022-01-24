@@ -2,7 +2,7 @@
 
 To store designed UI wireframes, we are using [Zeplin](https://zeplin.io/).
 
-To get access to Report Portal workspace, please contact our UX Designer [Vitalii Oleksiuk](https://telescope.epam.com/who/Vitalii_Oleksiuk).
+To get access to Report Portal workspace, please contact our UX Design Team Leader.
 Also you can discuss all design-related questions with him.
 
 We already have stable style guide, witch includes colors palette, fonts, common elements and ect.

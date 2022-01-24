@@ -9,7 +9,7 @@ At the moment Report Portal supports English (default), Russian, Belorussian and
 
 Localization message id format: `ComponentsName.elementName` (for example FiltersPage.addFilterButton)
 
-If you can't find some keys required for your developing component please contact [Yauheniya Labanava](https://telescope.epam.com/who/Yauheniya_Labanava).
+If you can't find some keys required for your developing component please contact Business Analyst.
 
 Localization workflow is:
 
@@ -17,4 +17,4 @@ Localization workflow is:
 2. Execute npm script `manage:translations`.
 3. Find keys, related to developing component, in `be.json`, `ru.json` and `uk.json` files placed in `/localization/translated/` folder, and define translations for corresponding languages.
 4. **IMPORTANT!** Make sure that only related to your component keys have been changed, and there is no deleted lines related to other existing components.
-   If you see such case, please discuss it with [Ilya Hancharyk](https://telescope.epam.com/who/Ilya_Hancharyk).
+   If you see such case, please discuss it with UI Team Lead.

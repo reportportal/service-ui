@@ -18,11 +18,14 @@ WS related questions. Github account - [miracle8484](https://github.com/miracle8
 **WS Key Developer** - [Pavel Bortnik](https://telescope.epam.com/who/Pavel_Bortnik)<br/>
 WS development related questions. Github account - [pbortnik](https://github.com/pbortnik)
 
+**WS Key Developer** - [Ivan Budayeu](https://telescope.epam.com/who/Ivan_Budayeu)<br/>
+WS development related questions. Github account - [Yumfriez](https://github.com/Yumfriez)
+
 **UI Team Leader** - [Ilya Hancharyk](https://telescope.epam.com/who/Ilya_Hancharyk)<br/>
 UI related questions. Github account - [AmsterGet](https://github.com/AmsterGet)
 
 **UX Design Team Leader** - [Vitalii Oleksiuk](https://telescope.epam.com/who/Vitalii_Oleksiuk)<br/>
 UX & Design related questions.
 
-**QA Team Leader** - [Valentina Svettsova](https://telescope.epam.com/who/Valentina_Svettsova)<br/>
+**QA Team Leader** - [Olga Korenko](https://telescope.epam.com/who/Olga_Korenko)<br/>
 Testing & Project functionality related questions.
