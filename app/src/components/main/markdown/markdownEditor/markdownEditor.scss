@@ -188,7 +188,7 @@
         height: auto;
         min-height: 30px;
         background-color: transparent;
-        color: $COLOR--gray-light;
+        color: $COLOR--darkmode-gray-100;
 
         &-placeholder {
           font-size: 14px;
@@ -223,7 +223,7 @@
       }
 
       .CodeMirror .CodeMirror-code {
-        color: $COLOR--gray-light;
+        color: $COLOR--darkmode-gray-50;
 
         .cm-comment {
           border-radius: 0;
