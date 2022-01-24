@@ -14,6 +14,5 @@ RUN tar -zxvf ui.tar.gz -C /public && rm -f ui.tar.gz
 
 ENV RP_STATICS_PATH=/public
 
-
 EXPOSE 8080
 ENTRYPOINT ["/service-ui"]
