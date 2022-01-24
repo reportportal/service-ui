@@ -8,9 +8,9 @@
 
 `/src/` - application sources:
 
-- `/src/common/` - common constants, common css, css variables, fonts, images, icons, utils, polyfills, urls.
+- `/src/common/` - common constants, common css, css variables, fonts, images, icons, utils, polyfills, urls, hooks.
 - `/src/components/` - common, reusable components base.
-- `/src/controllers/` - stuff related to Redux(reducers, sagas, action creators, selectors and ect.).
+- `/src/controllers/` - stuff related to Redux (reducers, sagas, action creators, selectors and ect.).
 - `/src/layouts/` - application layouts.
 - `/src/pages/` - main development area. Contains project pages.
 - `/src/routes/` - router configuration.
@@ -24,6 +24,7 @@
 > │   ├── componentName.scss
 > │   ├── index.js (with component's export)
 > │   ├── constants.js (if component has local constants, which are used several times by sub components)
+> │   ├── utils.js (if component has local utilities, which are used several times by sub components)
 > │   └── subComponentFolder (if has)
 > │       └── ...
 > ```

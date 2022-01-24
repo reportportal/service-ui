@@ -168,26 +168,6 @@
     "webpack-subresource-integrity": "1.5.2",
     "why-did-you-update": "1.0.6"
   },
-  "jest": {
-    "setupFiles": [
-      "./jestsetup.js"
-    ],
-    "snapshotSerializers": [
-      "<rootDir>/node_modules/enzyme-to-json/serializer"
-    ],
-    "moduleNameMapper": {
-      "^.+\\.(css|scss)$": "identity-obj-proxy",
-      "^.+\\.(svg|jpg|jpeg|png|gif)$": "<rootDir>/test/__mocks__/fileMock.js",
-      "^components[/](.+)": "<rootDir>/src/components/$1",
-      "^controllers[/](.+)": "<rootDir>/src/controllers/$1",
-      "^common[/](.+)": "<rootDir>/src/common/$1",
-      "^pages[/](.+)": "<rootDir>/src/pages/$1",
-      "^store[/](.+)": "<rootDir>/src/store/$1",
-      "^routes[/](.+)": "<rootDir>/src/routes/$1",
-      "^layouts[/](.+)": "<rootDir>/src/layouts/$1"
-    },
-    "notify": false
-  },
   "lint-staged": {
     "*.{js,jsx}": [
       "eslint --fix",
