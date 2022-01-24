@@ -35,4 +35,6 @@ For development, you need a [node.js](https://nodejs.org). The recommended versi
 
 `npm run test:watch` - run tests when changing files
 
+`npm run test:coverage ` - run tests and check code coverage
+
 `npm run manage:translations` - checking the relevance of localization
