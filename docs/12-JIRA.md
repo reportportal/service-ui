@@ -1,5 +1,7 @@
 # JIRA
 
+## Task workflow
+
 To track bugs, handle tasks and agile project management we are using EPAM's JIRA system.
 
 You can get invitation to Report Portal workspace from Project or Delivery Manager.
@@ -15,3 +17,9 @@ Once you'll get some tasks, after planning session, workflow is:
 1.  If you task becomes reopened please repeat 2-8 steps, until your task will pass QA check.
 
 > If some task requires some discussion with team or additional requirements you can use `TBD` label and `[TBD]` prefix.
+
+## GitHub issues
+
+It's important to us to sort issues from users on GitHub, but this should be done as part of a Jira ticket.
+
+Thus, each issue that requires effort from a team member must be submitted to Jira as a ticket and must be within a sprint.
