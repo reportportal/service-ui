@@ -233,6 +233,7 @@ export class Hamburger extends Component {
       data: {
         launch: this.props.launch,
         updateLaunchLocally: (data) => this.props.updateLaunchLocallyAction(data),
+        events: { clickAnalyzeEvent: LAUNCHES_PAGE_EVENTS.clickAnalyzeEvent },
       },
     });
   };
