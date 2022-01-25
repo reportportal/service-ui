@@ -133,6 +133,14 @@ export const getIncludeBtnIncludeInAAModalEvent = (page) => ({
   label: 'Include items in AA',
 });
 
+export const getClickAnalyzeInUniqueErrorAnalysisModalEvent = (page) => (isExcludeNumbers) => ({
+  category: page,
+  action: 'Click on Button "Analyze" in Modal "Analyze Launch"',
+  label: isExcludeNumbers
+    ? 'Exclude numbers from analyzed logs'
+    : 'Include numbers to analyzed logs',
+});
+
 export const getCommonActionEvents = (page) => ({
   CLOSE_ICON_FOR_ALL_SELECTIONS: {
     category: page,
