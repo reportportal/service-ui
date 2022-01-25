@@ -17,7 +17,9 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
-const SriPlugin = require('webpack-subresource-integrity');
+const { SubresourceIntegrityPlugin } = require('webpack-subresource-integrity');
+const TerserPlugin = require('terser-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 module.exports = {
   mode: 'production',
@@ -40,7 +42,7 @@ module.exports = {
             loader: 'css-loader',
             options: {
               modules: {
-                localIdentName: '[name]__[local]--[hash:base64:5]',
+                localIdentName: '[name]__[local]--[contenthash:base64:5]',
               },
               importLoaders: 1,
             },
@@ -57,7 +59,41 @@ module.exports = {
       },
     ],
   },
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: '[name].[contenthash:6].css',
+    }),
+    new CompressionPlugin({
+      algorithm: 'gzip',
+      threshold: 10240,
+      minRatio: 0.8,
+    }),
+    new SubresourceIntegrityPlugin({
+      hashFuncNames: ['sha256', 'sha384'],
+    }),
+  ],
   optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          format: {
+            comments: false,
+          },
+        },
+        extractComments: false,
+      }),
+      new CssMinimizerPlugin({
+        minimizerOptions: {
+          preset: [
+            'default',
+            {
+              discardComments: { removeAll: true },
+            },
+          ],
+        },
+      }),
+    ],
     splitChunks: {
       cacheGroups: {
         styles: {
@@ -69,17 +105,7 @@ module.exports = {
       },
     },
   },
-  plugins: [
-    new MiniCssExtractPlugin({
-      filename: '[name].[hash:6].css',
-    }),
-    new CompressionPlugin({
-      algorithm: 'gzip',
-      threshold: 10240,
-      minRatio: 0.8,
-    }),
-    new SriPlugin({
-      hashFuncNames: ['sha256', 'sha384'],
-    }),
-  ],
+  performance: {
+    hints: false,
+  },
 };
