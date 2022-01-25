@@ -26,6 +26,7 @@ import {
   getLinkIssueActionEvent,
   getPostIssueActionEvent,
   getUnlinkIssueActionEvent,
+  getClickAnalyzeInUniqueErrorAnalysisModalEvent,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getDeleteItemModalEvents,
@@ -47,13 +48,7 @@ export const UNIQUE_ERRORS_PAGE_EVENTS = {
     action: 'Click on Button "Run Unique Error"',
     label: '',
   },
-  clickAnalyzeEvent: (isExcludeNumbers) => ({
-    category: UNIQUE_ERRORS_PAGE,
-    action: 'Click on Button "Analyze" in Modal "Analyze Launch"',
-    label: isExcludeNumbers
-      ? 'Exclude numbers from analyzed logs'
-      : 'Include numbers to analyzed logs',
-  }),
+  clickAnalyzeEvent: getClickAnalyzeInUniqueErrorAnalysisModalEvent(UNIQUE_ERRORS_PAGE),
   CLICK_CLUSTER_ITEM_ARROW: {
     category: UNIQUE_ERRORS_PAGE,
     action: 'Click on Cluster Item Arrow to Expand Test',

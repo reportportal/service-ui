@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-import { getEditItemsModalEvents } from 'components/main/analytics/events/common/testItemPages/modalEventsCreators';
+import { getEditItemsModalEvents } from './common/testItemPages/modalEventsCreators';
 import {
+  getClickAnalyzeInUniqueErrorAnalysisModalEvent,
   getClickAttributes,
   getClickOnPlusMinusEvents,
   getCommonActionEvents,
   getRefineFiltersPanelEvents,
-} from 'components/main/analytics/events/common/testItemPages/actionEventsCreators';
+} from './common/testItemPages/actionEventsCreators';
 import {
   getAddBtnAddNewFilterAddWidgetModal,
   getAddFilterBtnAddWidgetModal,
@@ -29,7 +30,7 @@ import {
   getSelectCriteriaNewWidget,
   getSelectSortingFilterAddWidgetModal,
   getSelectToggleButtonsAddWidgetModal,
-} from 'components/main/analytics/events/common/widgetPages/actionEventCreators';
+} from './common/widgetPages/actionEventCreators';
 
 export const LAUNCHES_PAGE = 'launches';
 const LAUNCHES_MODAL = 'Modal launches';
@@ -318,6 +319,7 @@ export const LAUNCHES_PAGE_EVENTS = {
     action: 'Count Filters',
     label: filterStatistic,
   }),
+  clickAnalyzeEvent: getClickAnalyzeInUniqueErrorAnalysisModalEvent(LAUNCHES_PAGE),
 };
 
 export const LAUNCHES_MODAL_EVENTS = {
