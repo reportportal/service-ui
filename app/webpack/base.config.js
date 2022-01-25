@@ -28,8 +28,10 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, '../build'),
-    filename: '[name].app.[hash:6].js',
+    filename: '[name].app.[contenthash:6].js',
     publicPath: '',
+    assetModuleFilename: 'media/[name].[ext]',
+    clean: true,
   },
   resolve: {
     extensions: ['.js', '.jsx', '.sass', '.scss', '.css'],
@@ -60,11 +62,12 @@ module.exports = {
       },
       {
         test: /\.(ico|jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)(\?.*)?$/,
-        loader: 'url-loader',
         exclude: /\/*-inline.svg/,
-        options: {
-          limit: 1000,
-          name: 'media/[name].[ext]',
+        type: 'asset',
+        parser: {
+          dataUrlCondition: {
+            maxSize: 1000,
+          },
         },
       },
       {
@@ -75,7 +78,7 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin({
-      cleanOnceBeforeBuildPatterns: ['**/*', path.resolve(__dirname, '../localization/messages')],
+      cleanOnceBeforeBuildPatterns: [path.resolve(__dirname, '../localization/messages')],
     }),
     new WebpackNotifierPlugin({ skipFirstNotification: true }),
     new HtmlWebpackPlugin({
