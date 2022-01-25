@@ -15,7 +15,6 @@
  */
 
 const path = require('path');
-const webpack = require('webpack');
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -65,11 +64,6 @@ module.exports = () => {
         },
       ],
     },
-    plugins: [
-      new webpack.ProvidePlugin({
-        process: 'process/browser',
-      }),
-    ],
     devServer: {
       static: {
         directory: path.resolve(__dirname, '../build'),
