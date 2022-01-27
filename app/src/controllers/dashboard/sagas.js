@@ -34,6 +34,7 @@ import {
 } from 'controllers/pages';
 import { provideEcGA } from 'components/main/analytics/utils';
 import { formatEcDashboardData } from 'components/main/analytics/events/common/widgetPages/utils';
+import { analyticsEnabledSelector } from 'controllers/appInfo';
 import {
   ADD_DASHBOARD,
   CHANGE_VISIBILITY_TYPE,
@@ -77,6 +78,8 @@ function* fetchDashboard() {
   const activeProject = yield select(activeProjectSelector);
   const activeDashboardId = yield select(activeDashboardIdSelector);
   const dashboardItems = yield select(dashboardItemsSelector);
+  const isAnalyticsEnabled = yield select(analyticsEnabledSelector);
+  let dashboard;
 
   if (dashboardItems.length === 0) {
     yield call(fetchDashboards, { payload: {} });
@@ -84,16 +87,8 @@ function* fetchDashboard() {
   }
 
   try {
-    const dashboard = yield call(fetch, URLS.dashboard(activeProject, activeDashboardId));
+    dashboard = yield call(fetch, URLS.dashboard(activeProject, activeDashboardId));
     yield put(updateDashboardItemSuccessAction(dashboard));
-
-    if (dashboard.widgets.length) {
-      provideEcGA({
-        name: 'addImpression',
-        data: formatEcDashboardData(dashboard),
-        action: 'impression',
-      });
-    }
   } catch (error) {
     const projectId = yield select(projectIdSelector);
     yield put(
@@ -102,6 +97,14 @@ function* fetchDashboard() {
         payload: { projectId },
       }),
     );
+  }
+
+  if (isAnalyticsEnabled && dashboard && dashboard.widgets.length) {
+    provideEcGA({
+      name: 'addImpression',
+      data: formatEcDashboardData(dashboard),
+      action: 'impression',
+    });
   }
 }
 
