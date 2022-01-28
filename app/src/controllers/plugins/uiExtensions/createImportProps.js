@@ -65,6 +65,7 @@ import {
   pluginRouteSelector,
   updatePagePropertiesAction,
   pagePropertiesSelector,
+  projectIdSelector,
 } from 'controllers/pages';
 import { attributesArray, isNotEmptyArray } from 'common/utils/validation/validate';
 import {
@@ -274,6 +275,7 @@ export const createImportProps = (pluginName) => ({
   selectors: {
     pluginRouteSelector,
     activeProjectSelector,
+    projectIdSelector,
     globalIntegrationsSelector: createGlobalNamedIntegrationsSelector(pluginName),
     projectMembersSelector,
     projectInfoSelector,
