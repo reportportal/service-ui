@@ -18,6 +18,7 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import { LOGIN_PAGE_EVENTS } from 'components/main/analytics/events';
+import DOMPurify from 'dompurify';
 import styles from './postBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -104,7 +105,7 @@ const handleClick = (e, tracking) => {
 
 export const PostBlock = ({ tweetData, tracking }) => (
   <div className={cx('post-block')} onClick={(e) => handleClick(e, tracking)}>
-    {Parser(getPostContent(tweetData.text, tweetData.entities))}
+    {Parser(DOMPurify.sanitize(getPostContent(tweetData.text, tweetData.entities)))}
   </div>
 );
 
