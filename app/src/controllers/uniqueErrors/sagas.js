@@ -65,6 +65,7 @@ function* getIntegration() {
       item.integrationType.details.metadata.supportedFeatures &&
       item.integrationType.details.metadata.supportedFeatures.includes('uniqueErrorsClusters'),
   );
+  if (!supportedIntegration) return null;
 
   let plugins = yield select(pluginsSelector);
   if (!plugins.length) {
@@ -73,7 +74,7 @@ function* getIntegration() {
   }
   const plugin = plugins.find((item) => item.name === supportedIntegration.name);
 
-  return plugin.enabled && supportedIntegration;
+  return yield plugin.enabled && supportedIntegration;
 }
 
 function* fetchClusters(payload = {}) {
