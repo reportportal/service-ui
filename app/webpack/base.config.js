@@ -89,9 +89,8 @@ module.exports = {
     new webpack.ProvidePlugin({
       React: 'react',
       Utils: 'common/utils',
-    }),
-    new webpack.ProvidePlugin({
       process: 'process/browser',
+      Buffer: ['buffer', 'Buffer'],
     }),
     // new CircularDependencyPlugin({
     //   exclude: /a\.js|node_modules/,
