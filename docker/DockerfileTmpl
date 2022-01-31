@@ -3,7 +3,7 @@ FROM alpine:3.10
 LABEL maintainer="Andrei Varabyeu <andrei_varabyeu@epam.com>"
 LABEL version={{.version}}
 
-ENV APP_DOWNLOAD_URL https://dl.bintray.com/epam/reportportal/{{.version}}
+ENV APP_DOWNLOAD_URL https://github.com/reportportal/service-ui/releases/download/v{{.version}}
 
 ADD ${APP_DOWNLOAD_URL}/service-ui_linux_amd64 /service-ui
 ADD ${APP_DOWNLOAD_URL}/ui.tar.gz /
