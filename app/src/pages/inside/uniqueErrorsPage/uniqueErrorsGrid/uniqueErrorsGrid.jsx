@@ -20,6 +20,12 @@ import classNames from 'classnames/bind';
 import { Grid } from 'components/main/grid';
 import { useSelector } from 'react-redux';
 import { uniqueErrorGridHeaderCellComponentSelector } from 'controllers/plugins/uiExtensions/selectors';
+import { NoItemMessage } from 'components/main/noItemMessage';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { useIntl } from 'react-intl';
+import { extractNamespacedQuery } from 'common/utils/routingUtils';
+import { NAMESPACE } from 'controllers/uniqueErrors';
+import { querySelector } from 'controllers/pages';
 import { EmptyUniqueErrors } from '../emptyUniqueErrors';
 import { ClusterItemsGridRow } from './clusterItemsGridRow';
 import styles from './uniqueErrorsGrid.scss';
@@ -27,6 +33,9 @@ import styles from './uniqueErrorsGrid.scss';
 const cx = classNames.bind(styles);
 
 export const UniqueErrorsGrid = ({ parentLaunch, data, loading, events, ...rest }) => {
+  const { formatMessage } = useIntl();
+  const query = useSelector(querySelector);
+  const hasNamespacedQuery = Object.keys(extractNamespacedQuery(query, NAMESPACE)).length;
   const extensions = useSelector(uniqueErrorGridHeaderCellComponentSelector);
   const columns = [
     {
@@ -62,18 +71,23 @@ export const UniqueErrorsGrid = ({ parentLaunch, data, loading, events, ...rest 
 
   return (
     <>
-      {data.length > 0 ? (
-        <Grid
-          columns={columns}
-          data={data.map((item) => ({
-            ...item,
-            hasContent: true,
-          }))}
-          loading={loading}
-          nestedGridRow={ClusterItemsGridRow}
-          nestedView
-          {...rest}
-        />
+      {data.length > 0 || hasNamespacedQuery ? (
+        <>
+          <Grid
+            columns={columns}
+            data={data.map((item) => ({
+              ...item,
+              hasContent: true,
+            }))}
+            loading={loading}
+            nestedGridRow={ClusterItemsGridRow}
+            nestedView
+            {...rest}
+          />
+          {!loading && !data.length && (
+            <NoItemMessage message={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />
+          )}
+        </>
       ) : (
         <EmptyUniqueErrors parentLaunch={parentLaunch} events={events} />
       )}
