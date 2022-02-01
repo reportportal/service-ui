@@ -65,6 +65,7 @@ function* getIntegration() {
       item.integrationType.details.metadata.supportedFeatures &&
       item.integrationType.details.metadata.supportedFeatures.includes('uniqueErrorsClusters'),
   );
+  if (!supportedIntegration) return null;
 
   let plugins = yield select(pluginsSelector);
   if (!plugins.length) {
@@ -101,7 +102,7 @@ function* fetchClusters(payload = {}) {
 
   let url;
   const requestParams = {};
-  const integration = yield getIntegration();
+  const integration = yield call(getIntegration);
   if (integration) {
     url = URLS.projectIntegrationByIdCommand(project, integration.id, COMMAND_GET_CLUSTERS);
     requestParams.method = 'PUT';
