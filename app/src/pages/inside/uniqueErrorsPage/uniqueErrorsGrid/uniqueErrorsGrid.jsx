@@ -84,7 +84,9 @@ export const UniqueErrorsGrid = ({ parentLaunch, data, loading, events, ...rest 
             nestedView
             {...rest}
           />
-          {!data.length && <NoItemMessage message={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />}
+          {!loading && !data.length && (
+            <NoItemMessage message={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />
+          )}
         </>
       ) : (
         <EmptyUniqueErrors parentLaunch={parentLaunch} events={events} />

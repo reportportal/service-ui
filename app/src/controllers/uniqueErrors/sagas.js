@@ -74,7 +74,7 @@ function* getIntegration() {
   }
   const plugin = plugins.find((item) => item.name === supportedIntegration.name);
 
-  return yield plugin.enabled && supportedIntegration;
+  return plugin.enabled && supportedIntegration;
 }
 
 function* fetchClusters(payload = {}) {
@@ -102,7 +102,7 @@ function* fetchClusters(payload = {}) {
 
   let url;
   const requestParams = {};
-  const integration = yield getIntegration();
+  const integration = yield call(getIntegration);
   if (integration) {
     url = URLS.projectIntegrationByIdCommand(project, integration.id, COMMAND_GET_CLUSTERS);
     requestParams.method = 'PUT';
