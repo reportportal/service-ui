@@ -45,7 +45,7 @@ jobs:
 
       - name: Generate Build info
         run: |
-          echo '{"build": { "version": "${{ github.event.inputs.version }}", "branch": "${{ env.GITHUB_SHA }}", "build_date": "${{ env.BUILD_DATE }}", "name": "Service UI", "repo": "${{ env.GITHUB_REPOSITORY }}"}}' > ./${{ env.UI_BUILD_REACT }}build/${{ env.BUILD_INFO_FILE }}
+          echo '{"build": { "version": "${{ github.event.inputs.version }}", "branch": "${{ github.sha }}", "build_date": "${{ env.BUILD_DATE }}", "name": "Service UI", "repo": "${{ github.repository }}"}}' > ./${{ env.UI_BUILD_REACT }}build/${{ env.BUILD_INFO_FILE }}
 
       - name: Create release directory
         run: mkdir -v ${{ github.workspace }}/${{ env.RELEASE_DIR }}
