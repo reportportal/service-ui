@@ -214,9 +214,28 @@
       .CodeMirror-cursor {
         border-left: 1px solid $COLOR--gray-light;
       }
+
+      .CodeMirror-vscrollbar {
+        min-height: 40px;
+        overflow: auto;
+        height: auto;
+
+        div {
+          min-height: 40px;
+          height: auto;
+          overflow: auto;
+        }
+      }
+
       .CodeMirror-scroll {
         max-height: 145px;
         min-height: 30px;
+        height: auto;
+        overflow: auto !important;
+
+        div {
+          height: auto !important;
+        }
       }
       .CodeMirror-wrap {
         padding: 0;
