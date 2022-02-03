@@ -232,11 +232,13 @@
         min-height: 30px;
         height: auto;
         overflow: auto !important;
-
-        div {
-          height: auto !important;
-        }
       }
+
+      .CodeMirror-scroll > div:nth-child(2) {
+        height: auto !important;
+        min-height: 30px;
+      }
+
       .CodeMirror-wrap {
         padding: 0;
       }
