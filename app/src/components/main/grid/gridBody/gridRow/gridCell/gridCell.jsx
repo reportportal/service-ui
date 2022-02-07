@@ -72,7 +72,7 @@ export class GridCell extends PureComponent {
       toggleExpand,
     } = this.props;
     const CellComponent = component;
-    return (
+    return CellComponent.length ? (
       <CellComponent
         className={cx('grid-cell', { [`align-${align}`]: align })}
         refFunction={refFunction}
@@ -83,6 +83,8 @@ export class GridCell extends PureComponent {
         expanded={expanded}
         toggleExpand={toggleExpand}
       />
+    ) : (
+      <div className={cx('grid-cell', { [`align-${align}`]: align })} />
     );
   }
 }
