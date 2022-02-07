@@ -257,6 +257,13 @@ $LEVEL_OFFSET_STEP: 20px;
     }
   }
 
+  .grid-row > div {
+    background: $COLOR--white-two;
+    &:first-child {
+      background: none;
+    }
+  }
+
   &:hover {
     background-color: $COLOR--white-two;
     .accordion-block {
