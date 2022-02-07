@@ -25,6 +25,7 @@ import { INTEGRATION_FORM } from 'components/integrations/elements/integrationSe
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { connect } from 'react-redux';
 import { uiExtensionIntegrationFormFieldsSelector } from 'controllers/plugins/uiExtensions/selectors';
+import { ExtensionLoader, extensionType, uiExtensionType } from 'components/extensionLoader';
 import { INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP } from '../../formFieldComponentsMap';
 
 const messages = defineMessages({
@@ -58,14 +59,7 @@ export class AddIntegrationModal extends Component {
     initialize: PropTypes.func.isRequired,
     change: PropTypes.func.isRequired,
     dirty: PropTypes.bool.isRequired,
-    fieldsExtensions: PropTypes.arrayOf(
-      PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        pluginName: PropTypes.string.isRequired,
-        title: PropTypes.string,
-        component: PropTypes.func.isRequired,
-      }),
-    ),
+    fieldsExtensions: PropTypes.arrayOf(PropTypes.oneOfType([extensionType, uiExtensionType])),
     data: PropTypes.object,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -125,7 +119,7 @@ export class AddIntegrationModal extends Component {
     );
     const FieldsComponent =
       INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP[instanceType] ||
-      (integrationFieldsExtension && integrationFieldsExtension.component);
+      (integrationFieldsExtension && ExtensionLoader);
 
     return (
       <ModalLayout
@@ -148,6 +142,7 @@ export class AddIntegrationModal extends Component {
           updateMetaData={this.updateMetaData}
           lineAlign
           {...customProps}
+          extension={integrationFieldsExtension}
         />
       </ModalLayout>
     );

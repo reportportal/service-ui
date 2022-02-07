@@ -6,7 +6,7 @@
     "plugin:prettier/recommended",
     "prettier/react"
   ],
-  "plugins": ["react", "jsx-a11y", "prettier", "babel"],
+  "plugins": ["react",  "react-hooks", "jsx-a11y", "prettier", "babel"],
   "settings": {
     "import/resolver": {
       "webpack": {
@@ -59,7 +59,9 @@
     "react/sort-comp": 0,
     "import/no-useless-path-segments": 0,
     "no-invalid-this": 0,
-    "prefer-object-spread": 0
+    "prefer-object-spread": 0,
+    "react-hooks/rules-of-hooks": 2,
+    "react-hooks/exhaustive-deps": 1
   },
   "parserOptions": {
     "ecmaFeatures": {

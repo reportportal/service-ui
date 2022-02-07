@@ -191,6 +191,7 @@ const INPUTS = {
   WithAsyncLoading,
 };
 
+// TODO: in the future these components and other stuff will be shared via WMF
 export const createImportProps = (pluginName) => ({
   lib: {
     React,
@@ -276,6 +277,7 @@ export const createImportProps = (pluginName) => ({
     pluginRouteSelector,
     activeProjectSelector,
     projectIdSelector,
+    // TODO: must be removed when the common plugin commands will be used
     globalIntegrationsSelector: createGlobalNamedIntegrationsSelector(pluginName),
     projectMembersSelector,
     projectInfoSelector,

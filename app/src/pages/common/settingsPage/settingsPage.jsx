@@ -35,6 +35,7 @@ import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/
 import { uiExtensionSettingsTabsSelector } from 'controllers/plugins';
 import { SETTINGS_PAGE, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { NavigationTabs } from 'components/main/navigationTabs';
+import { ExtensionLoader, uiExtensionType, extensionType } from 'components/extensionLoader';
 import { GeneralTab } from './generalTab';
 import { AutoAnalysisTab } from './autoAnalysisTab';
 import { NotificationsTab } from './notificationsTab';
@@ -81,7 +82,7 @@ const messages = defineMessages({
     activeTab: settingsTabSelector(state),
     accountRole: userAccountRoleSelector(state),
     userRole: activeProjectRoleSelector(state),
-    tabExtensions: uiExtensionSettingsTabsSelector(state),
+    extensions: uiExtensionSettingsTabsSelector(state),
   }),
   {
     onChangeTab: (linkAction) => linkAction,
@@ -98,33 +99,30 @@ export class SettingsPage extends Component {
     activeTab: PropTypes.string,
     accountRole: PropTypes.string.isRequired,
     userRole: PropTypes.string.isRequired,
-    tabExtensions: PropTypes.arrayOf(
-      PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        title: PropTypes.string,
-        component: PropTypes.func.isRequired,
-      }),
-    ),
+    extensions: PropTypes.arrayOf(PropTypes.oneOfType([extensionType, uiExtensionType])),
   };
   static defaultProps = {
     activeTab: GENERAL,
-    tabExtensions: [],
+    extensions: [],
   };
 
-  createExtensionTabs = () =>
-    this.props.tabExtensions.reduce(
+  createExtensionTabs = () => {
+    const { extensions } = this.props;
+
+    return extensions.reduce(
       (acc, extension) => ({
         ...acc,
         [extension.name]: {
           name: extension.title || extension.name,
           link: this.props.createTabLink(extension.name),
-          component: <extension.component />,
+          component: <ExtensionLoader extension={extension} />,
           mobileDisabled: true,
           eventInfo: SETTINGS_PAGE_EVENTS.extensionTabClick(extension.title || extension.name),
         },
       }),
       {},
     );
+  };
 
   createTabsConfig = () => {
     const extensionTabs = this.createExtensionTabs();

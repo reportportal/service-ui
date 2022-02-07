@@ -21,3 +21,7 @@ export const COMMAND_GET_CLUSTERS = 'getClusters';
 
 export const EXTENSION_LOAD_START = 'extensionLoadStart';
 export const EXTENSION_LOAD_FINISH = 'extensionLoadFinish';
+
+/* New plugins mechanism related code below */
+
+export const FETCH_EXTENSIONS_METADATA_SUCCESS = 'fetchExtensionsMetadataSuccess';

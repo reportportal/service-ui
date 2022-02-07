@@ -5,7 +5,69 @@ import { activeProjectSelector } from 'controllers/user';
 import { COMMAND_GET_FILE } from './constants';
 import { pluginsSelector, globalIntegrationsSelector } from '../selectors';
 import { filterIntegrationsByName, isPluginSupportsCommonCommand } from '../utils';
-import { extensionLoadFinishAction, extensionLoadStartAction } from './actions';
+import {
+  extensionLoadFinishAction,
+  extensionLoadStartAction,
+  fetchExtensionsMetadataSuccessAction,
+} from './actions';
+
+const METADATA_FILE_KEY = 'metadata';
+const MAIN_FILE_KEY = 'main';
+
+function* fetchExtensionsMetadata(integrations) {
+  const plugins = yield select(pluginsSelector);
+  const uiExtensionPlugins = plugins.filter(
+    (plugin) =>
+      plugin.enabled &&
+      plugin.details &&
+      plugin.details.binaryData &&
+      plugin.details.binaryData[METADATA_FILE_KEY] &&
+      (isPluginSupportsCommonCommand(plugin, COMMAND_GET_FILE) ||
+        plugin.details.allowedCommands.includes(COMMAND_GET_FILE)),
+  );
+
+  if (!uiExtensionPlugins.length) {
+    return;
+  }
+
+  const activeProject = yield select(activeProjectSelector);
+
+  // TODO: discuss with BE whether we can fetch plugins metadata via single API call
+  const calls = uiExtensionPlugins
+    .map((plugin) => {
+      const isCommonCommandSupported = isPluginSupportsCommonCommand(plugin, COMMAND_GET_FILE);
+      let url;
+
+      if (isCommonCommandSupported) {
+        url = URLS.pluginCommandCommon(activeProject, plugin.name, COMMAND_GET_FILE);
+      } else {
+        const integration = filterIntegrationsByName(integrations, plugin.name)[0];
+        if (!integration) {
+          return null;
+        }
+        url = URLS.projectIntegrationByIdCommand(activeProject, integration.id, COMMAND_GET_FILE);
+      }
+
+      return call(fetch, url, {
+        method: 'PUT',
+        data: { fileKey: METADATA_FILE_KEY },
+      });
+    })
+    .filter(Boolean);
+
+  if (calls.length === 0) {
+    return;
+  }
+
+  try {
+    const results = yield all(calls);
+    const metadataArray = results.filter(Boolean);
+
+    yield put(fetchExtensionsMetadataSuccessAction(metadataArray));
+  } catch (err) {
+    console.error('Plugins metadata load error'); // eslint-disable-line no-console
+  }
+}
 
 export function* fetchUiExtensions() {
   // TODO: In the future plugins with js parts should not depend on integrations, only on plugins.
@@ -14,12 +76,16 @@ export function* fetchUiExtensions() {
   if (!globalIntegrations.length) {
     return;
   }
+
+  yield call(fetchExtensionsMetadata, globalIntegrations);
+
   const plugins = yield select(pluginsSelector);
   const uiExtensionPlugins = plugins.filter(
     (plugin) =>
       plugin.enabled &&
       plugin.details &&
       plugin.details.binaryData &&
+      plugin.details.binaryData[MAIN_FILE_KEY] &&
       (isPluginSupportsCommonCommand(plugin, COMMAND_GET_FILE) ||
         plugin.details.allowedCommands.includes(COMMAND_GET_FILE)),
   );
