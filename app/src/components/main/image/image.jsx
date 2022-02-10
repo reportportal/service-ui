@@ -97,7 +97,7 @@ export class Image extends Component {
   };
 
   normalizeFileTypeForSvg = (file) => {
-    if (file.type === 'text/xml') {
+    if (file.type === 'text/xml' || file.type === 'text/xml;charset=utf-8') {
       return new Blob([file], { type: 'image/svg+xml' });
     }
 
