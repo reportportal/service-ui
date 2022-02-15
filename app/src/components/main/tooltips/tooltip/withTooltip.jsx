@@ -50,6 +50,8 @@ export const withTooltip = ({ TooltipComponent, data = {} }) => (WrappedComponen
       const styleWidth = data.dynamicWidth ? null : { width: data.width || DEFAULT_TOOLTIP_WIDTH };
       const topOffset = data.topOffset || 0;
       const leftOffset = data.leftOffset || 0;
+      const clientWidth = document.documentElement.clientWidth;
+      const maxWidth = clientWidth - 100;
       return (
         <Manager>
           <Reference>
@@ -86,7 +88,13 @@ export const withTooltip = ({ TooltipComponent, data = {} }) => (WrappedComponen
                     onMouseEnter={data.hoverable ? this.showTooltip : null}
                     onMouseLeave={data.hoverable ? this.hideTooltip : null}
                   >
-                    <div className={cx('tooltip-content')}>
+                    <div
+                      className={cx('tooltip-content')}
+                      style={{
+                        maxWidth: `${maxWidth}px`,
+                        width: 'fit-content',
+                      }}
+                    >
                       <TooltipComponent {...this.props} />
                       {!data.noArrow && (
                         <div
