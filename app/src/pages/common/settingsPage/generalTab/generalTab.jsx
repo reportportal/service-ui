@@ -60,7 +60,7 @@ const selector = formValueSelector('generalForm');
 @connect(
   (state) => ({
     projectId: projectIdSelector(state),
-    isLoaging: projectInfoLoadingSelector(state),
+    isLoading: projectInfoLoadingSelector(state),
     jobConfig: jobAttributesSelector(state),
     accountRole: userAccountRoleSelector(state),
     userRole: activeProjectRoleSelector(state),
@@ -97,7 +97,7 @@ export class GeneralTab extends Component {
     lang: PropTypes.string,
     retention: PropTypes.number,
     formValues: PropTypes.object,
-    isLoaging: PropTypes.bool,
+    isLoading: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -105,7 +105,7 @@ export class GeneralTab extends Component {
     fetchProjectAction: () => {},
     lang: 'en',
     retention: null,
-    isLoaging: false,
+    isLoading: false,
   };
 
   componentDidMount() {
@@ -258,6 +258,9 @@ export class GeneralTab extends Component {
         title: this.props.intl.formatMessage(Messages.keepLogsTooltip),
       };
     });
+    if (newOptions.every((v) => v.hidden)) {
+      newOptions.push(this.formatRetention(inputValues.keepLogs));
+    }
     return newOptions;
   };
 
@@ -270,6 +273,9 @@ export class GeneralTab extends Component {
       const hidden = inputValues.keepLogs === Infinity ? false : isHidden;
       return { ...elem, hidden };
     });
+    if (newOptions.every((v) => v.hidden)) {
+      newOptions.push(this.formatRetention(inputValues.keepScreenshots));
+    }
     return newOptions;
   };
 
@@ -281,8 +287,8 @@ export class GeneralTab extends Component {
   formatInterruptJobTimes = this.createValueFormatter(this.interruptJobTime);
 
   render() {
-    const { intl, accountRole, userRole, isLoaging } = this.props;
-    return isLoaging ? (
+    const { intl, accountRole, userRole, isLoading } = this.props;
+    return isLoading ? (
       <SpinningPreloader />
     ) : (
       <div className={cx('general-tab')}>
