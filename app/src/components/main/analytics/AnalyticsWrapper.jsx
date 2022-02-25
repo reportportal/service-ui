@@ -99,6 +99,7 @@ export class AnalyticsWrapper extends Component {
       dimension5: normalizeDimensionValue(isAutoAnalyzerEnabled),
       dimension6: normalizeDimensionValue(isPatternAnalyzerEnabled),
       dimension7: isAdmin ? undefined : projectId,
+      anonymizeIp: true,
     });
     ReactGA.ga()('require', 'ec');
   }
