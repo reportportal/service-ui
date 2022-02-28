@@ -24,6 +24,7 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
 import { BigButton } from 'components/buttons/bigButton';
 import { FormField } from 'components/fields/formField';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import styles from './accuracyFormBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -81,11 +82,13 @@ export class AccuracyFormBlock extends Component {
     disabled: PropTypes.bool,
     intl: PropTypes.object.isRequired,
     onInputChange: PropTypes.func,
+    isAnalyzerServiceAvailable: PropTypes.bool,
   };
 
   static defaultProps = {
     disabled: false,
     onInputChange: () => {},
+    isAnalyzerServiceAvailable: true,
   };
 
   constructor(props) {
@@ -112,7 +115,11 @@ export class AccuracyFormBlock extends Component {
   normalizeValue = (value) => value && `${value}`.replace(/^0(?=[0-9])|\D+/g, '');
 
   render() {
-    const { intl, disabled } = this.props;
+    const { intl, disabled, isAnalyzerServiceAvailable } = this.props;
+    const analyzerIsNotRunningTooltip = isAnalyzerServiceAvailable
+      ? ''
+      : intl.formatMessage(COMMON_LOCALE_KEYS.ANALYZER_DISABLED);
+
     return (
       <Fragment>
         <FormField
@@ -124,7 +131,8 @@ export class AccuracyFormBlock extends Component {
           customBlock={{
             node: <p>{intl.formatMessage(messages.numberOfLogLinesDescription)}</p>,
           }}
-          disabled={disabled}
+          disabled={disabled || !isAnalyzerServiceAvailable}
+          title={analyzerIsNotRunningTooltip}
         >
           <InputDropdown options={this.dropDownOptions} mobileDisabled />
         </FormField>
@@ -140,7 +148,8 @@ export class AccuracyFormBlock extends Component {
           customBlock={{
             node: <p>{intl.formatMessage(messages.allMessagesShouldMatchDescription)}</p>,
           }}
-          disabled={disabled}
+          disabled={disabled || !isAnalyzerServiceAvailable}
+          title={analyzerIsNotRunningTooltip}
         >
           <InputBigSwitcher mobileDisabled />
         </FormField>
@@ -155,7 +164,8 @@ export class AccuracyFormBlock extends Component {
           customBlock={{
             node: <p>{intl.formatMessage(messages.minimumShouldMatchDescription)}</p>,
           }}
-          disabled={disabled}
+          disabled={disabled || !isAnalyzerServiceAvailable}
+          title={analyzerIsNotRunningTooltip}
         >
           <FieldErrorHint>
             <InputWithIcon
@@ -176,7 +186,8 @@ export class AccuracyFormBlock extends Component {
           customBlock={{
             node: <p>{intl.formatMessage(messages.searchLogsMinShouldMatchDescription)}</p>,
           }}
-          disabled={disabled}
+          disabled={disabled || !isAnalyzerServiceAvailable}
+          title={analyzerIsNotRunningTooltip}
         >
           <FieldErrorHint>
             <InputWithIcon
@@ -189,7 +200,11 @@ export class AccuracyFormBlock extends Component {
 
         <div className={cx('submit-button-container')}>
           <div className={cx('submit-button-wrapper')}>
-            <BigButton type="submit" disabled={disabled}>
+            <BigButton
+              type="submit"
+              disabled={disabled || !isAnalyzerServiceAvailable}
+              title={analyzerIsNotRunningTooltip}
+            >
               <span className={cx('submit-button-text')}>
                 {intl.formatMessage(messages.submitButtonText)}
               </span>

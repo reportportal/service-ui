@@ -23,6 +23,7 @@ import { showModalAction } from 'controllers/modal';
 import classNames from 'classnames/bind';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import styles from './indexActionsBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -53,10 +54,6 @@ const messages = defineMessages({
   generateIndexButtonProgressCaption: {
     id: 'IndexActionsBlock.generateIndexButtonProgressCaption',
     defaultMessage: 'In progress...',
-  },
-  analyzerDisabledButtonTitle: {
-    id: 'IndexActionsBlock.analyzerDisabledButtonTitle',
-    defaultMessage: 'Service ANALYZER is not running',
   },
 });
 
@@ -105,7 +102,7 @@ export class IndexActionsBlock extends Component {
       isAnalyzerServiceAvailable,
     } = this.props;
     const analyzerButtonsTitle = !isAnalyzerServiceAvailable
-      ? formatMessage(messages.analyzerDisabledButtonTitle)
+      ? formatMessage(COMMON_LOCALE_KEYS.ANALYZER_DISABLED)
       : '';
     const isAnalyzerButtonsDisabled = indexingRunning || !isAnalyzerServiceAvailable || disabled;
 
