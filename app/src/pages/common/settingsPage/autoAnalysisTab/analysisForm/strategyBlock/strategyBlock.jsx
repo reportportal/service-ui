@@ -26,6 +26,7 @@ import { FormField } from 'components/fields/formField';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { messages as importMessages } from 'pages/inside/uniqueErrorsPage';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import {
   ANALYZER_ENABLED,
   ANALYZER_MODE,
@@ -76,10 +77,6 @@ const messages = defineMessages({
     id: 'StrategyBlock.uniqueErrorAutoAnalysisStatusInfo',
     defaultMessage:
       'If ON - analysis starts as soon as any launch finished<br/>If OFF - not automatic, but can be invoked manually',
-  },
-  serviceAnalyzerDisabledTooltip: {
-    id: 'StrategyBlock.serviceAnalyzerDisabledTooltip',
-    defaultMessage: 'Service analyzer is not running',
   },
   unAssignTitleNoPermission: {
     id: 'UnassignButton.unAssignTitleNoPermission',
@@ -161,7 +158,7 @@ export class StrategyBlock extends Component {
     } = this.props;
 
     if (!isAnalyzerServiceAvailable) {
-      return formatMessage(messages.serviceAnalyzerDisabledTooltip);
+      return formatMessage(COMMON_LOCALE_KEYS.ANALYZER_DISABLED);
     } else if (disabled) {
       return formatMessage(messages.unAssignTitleNoPermission);
     } else {
@@ -183,6 +180,9 @@ export class StrategyBlock extends Component {
       { label: formatMessage(importMessages.uniqueErrAnalyzeModalIncludeNumbers), value: false },
       { label: formatMessage(importMessages.uniqueErrAnalyzeModalExcludeNumbers), value: true },
     ];
+    const analyzerIsNotRunningTooltip = isAnalyzerServiceAvailable
+      ? ''
+      : formatMessage(COMMON_LOCALE_KEYS.ANALYZER_DISABLED);
 
     return (
       <div className={cx('strategy-block')}>
@@ -197,8 +197,9 @@ export class StrategyBlock extends Component {
           <InputBigSwitcher
             value={data[ANALYZER_ENABLED]}
             onChange={this.changeAnalyzerEnabled}
-            disabled={disabled}
+            disabled={disabled || !isAnalyzerServiceAvailable}
             mobileDisabled
+            title={analyzerIsNotRunningTooltip}
           />
         </FormField>
 
@@ -217,8 +218,9 @@ export class StrategyBlock extends Component {
             value={data[ANALYZER_MODE]}
             onChange={this.changeAnalyzerMode}
             name="aa-strategy"
-            disabled={disabled}
+            disabled={disabled || !isAnalyzerServiceAvailable}
             mobileDisabled
+            title={analyzerIsNotRunningTooltip}
           >
             <span className={cx('radio-children')}>
               {formatMessage(messages.sameNameLaunchesCaption)}
@@ -241,8 +243,9 @@ export class StrategyBlock extends Component {
             value={data[ANALYZER_MODE]}
             onChange={this.changeAnalyzerMode}
             name="aa-strategy"
-            disabled={disabled}
+            disabled={disabled || !isAnalyzerServiceAvailable}
             mobileDisabled
+            title={analyzerIsNotRunningTooltip}
           >
             <span className={cx('radio-children')}>
               {formatMessage(messages.allLaunchesCaption)}
@@ -275,8 +278,9 @@ export class StrategyBlock extends Component {
           <InputDropdown
             value={data[UNIQUE_ERROR_REMOVE_NUMBERS]}
             options={options}
-            disabled={disabled}
+            disabled={disabled || !isAnalyzerServiceAvailable}
             onChange={this.changeUniqueErrorsRemoveNumbersEnabled}
+            title={analyzerIsNotRunningTooltip}
           />
         </FormField>
       </div>

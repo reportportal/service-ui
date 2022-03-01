@@ -161,4 +161,8 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.openInNewTab',
     defaultMessage: 'Open in new tab',
   },
+  ANALYZER_DISABLED: {
+    id: 'Common.analyzerDisabled',
+    defaultMessage: 'Service analyzer is not running',
+  },
 });
