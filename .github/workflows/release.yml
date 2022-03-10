@@ -10,8 +10,6 @@ on:
 env:
   UI_BUILD_REACT: 'app/'
   RELEASE_DIR: 'release'
-  LINUX_ARTIFACT_NAME: 'service-ui_linux_amd64'
-  WINDOWS_ARTIFACT_NAME: 'service-ui_win_amd64.exe'
   UI_ARTIFACT_NAME: 'ui.tar.gz'
   VERSION_PLACEHOLDER: '{{.version}}'
   DOCKER_TEMPLATE_FILE: 'docker/DockerfileTmpl'
