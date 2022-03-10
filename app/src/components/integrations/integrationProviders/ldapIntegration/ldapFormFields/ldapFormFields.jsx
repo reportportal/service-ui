@@ -195,6 +195,7 @@ export class LdapFormFields extends Component {
       {
         fieldProps: {
           name: MANAGER_PASSWORD_KEY,
+          type: 'password',
         },
         label: messages.managerPasswordLabel,
         children: defaultField,
