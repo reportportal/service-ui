@@ -32,3 +32,9 @@
 .action-button {
   padding-left: 10px;
 }
+
+.mobile-hidden {
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: none;
+  }
+}
