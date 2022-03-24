@@ -22,7 +22,7 @@ import { updateIntegrationAction } from 'controllers/plugins';
 import { uiExtensionIntegrationSettingsSelector } from 'controllers/plugins/uiExtensions/selectors';
 import { INTEGRATIONS_SETTINGS_COMPONENTS_MAP } from 'components/integrations/settingsComponentsMap';
 import { PluginIcon } from 'components/integrations/elements/pluginIcon';
-import { ExtensionLoader, extensionType, uiExtensionType } from 'components/extensionLoader';
+import { ExtensionLoader, extensionType } from 'components/extensionLoader';
 import styles from './integrationSettingsContainer.scss';
 
 const cx = classNames.bind(styles);
@@ -39,7 +39,7 @@ export class IntegrationSettingsContainer extends Component {
   static propTypes = {
     goToPreviousPage: PropTypes.func.isRequired,
     updateIntegrationAction: PropTypes.func.isRequired,
-    settingsExtensions: PropTypes.arrayOf(PropTypes.oneOfType([extensionType, uiExtensionType])),
+    settingsExtensions: PropTypes.arrayOf(extensionType),
     data: PropTypes.object,
     isGlobal: PropTypes.bool,
   };

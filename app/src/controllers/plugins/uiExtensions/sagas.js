@@ -11,46 +11,31 @@ import {
   fetchExtensionsMetadataSuccessAction,
 } from './actions';
 
-const METADATA_FILE_KEY = 'metadata';
+const METADATA_FILE_KEY = 'metadata.json';
 const MAIN_FILE_KEY = 'main';
 
-function* fetchExtensionsMetadata(integrations) {
+function* fetchExtensionsMetadata() {
   const plugins = yield select(pluginsSelector);
   const uiExtensionPlugins = plugins.filter(
-    (plugin) =>
-      plugin.enabled &&
-      plugin.details &&
-      plugin.details.binaryData &&
-      plugin.details.binaryData[METADATA_FILE_KEY] &&
-      (isPluginSupportsCommonCommand(plugin, COMMAND_GET_FILE) ||
-        plugin.details.allowedCommands.includes(COMMAND_GET_FILE)),
+    (plugin) => plugin.name === 'example',
+    // plugin.enabled &&
+    // plugin.details &&
+    // plugin.details.binaryData &&
+    // plugin.details.binaryData[METADATA_FILE_KEY] &&
+    // (isPluginSupportsCommonCommand(plugin, COMMAND_GET_FILE) ||
+    //   plugin.details.allowedCommands.includes(COMMAND_GET_FILE)),
   );
 
   if (!uiExtensionPlugins.length) {
     return;
   }
 
-  const activeProject = yield select(activeProjectSelector);
-
   // TODO: discuss with BE whether we can fetch plugins metadata via single API call
   const calls = uiExtensionPlugins
     .map((plugin) => {
-      const isCommonCommandSupported = isPluginSupportsCommonCommand(plugin, COMMAND_GET_FILE);
-      let url;
-
-      if (isCommonCommandSupported) {
-        url = URLS.pluginCommandCommon(activeProject, plugin.name, COMMAND_GET_FILE);
-      } else {
-        const integration = filterIntegrationsByName(integrations, plugin.name)[0];
-        if (!integration) {
-          return null;
-        }
-        url = URLS.projectIntegrationByIdCommand(activeProject, integration.id, COMMAND_GET_FILE);
-      }
-
-      return call(fetch, url, {
-        method: 'PUT',
-        data: { fileKey: METADATA_FILE_KEY },
+      // TODO: use public/private endpoint to get files
+      return call(fetch, URLS.pluginFile(plugin.name, METADATA_FILE_KEY), {
+        contentType: 'application/json',
       });
     })
     .filter(Boolean);
@@ -61,6 +46,7 @@ function* fetchExtensionsMetadata(integrations) {
 
   try {
     const results = yield all(calls);
+    // TODO: inject pluginName to extension metadata here
     const metadataArray = results.filter(Boolean);
 
     yield put(fetchExtensionsMetadataSuccessAction(metadataArray));
@@ -69,6 +55,7 @@ function* fetchExtensionsMetadata(integrations) {
   }
 }
 
+// TODO: remove legacy extensions when all existing plugins will be migrated to the new engine
 export function* fetchUiExtensions() {
   // TODO: In the future plugins with js parts should not depend on integrations, only on plugins.
   // TODO: This should be removed when common getFile plugin command will be presented in all plugins with js files.

@@ -26,15 +26,15 @@ export const createExtensionSelectorByType = (type) =>
     extensionsMetadataSelector,
     extensionsLoadedSelector,
     (pluginNames, extensionsMetadata) => {
-      // TODO: omit it when legacy uiExtensions support will be removed
+      // TODO: remove legacy extensions when all existing plugins will be migrated to the new engine
       const uiExtensions = Array.from(uiExtensionMap.entries())
         .filter(([name]) => pluginNames.includes(name))
         .map(([, extensions]) => extensions);
 
       const newExtensions = extensionsMetadata
         .filter(({ pluginName }) => pluginNames.includes(pluginName))
-        .map(({ pluginName, library, extensions }) =>
-          extensions.map((ext) => ({ ...ext, pluginName, library })),
+        .map(({ pluginName, scope, extensions }) =>
+          extensions.map((ext) => ({ ...ext, pluginName, scope })),
         );
 
       return uiExtensions

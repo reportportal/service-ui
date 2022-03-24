@@ -5,6 +5,7 @@ import { EXTENSION_TYPE_MODAL } from './constants';
 
 window.RP = {};
 
+// TODO: remove legacy extensions when all existing plugins will be migrated to the new engine
 // TODO: store will be used later to add new routes
 // eslint-disable-next-line no-unused-vars
 const createPluginRegistrationFunction = (store) => (plugin) => {

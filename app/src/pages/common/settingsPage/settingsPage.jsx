@@ -35,7 +35,7 @@ import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/
 import { uiExtensionSettingsTabsSelector } from 'controllers/plugins';
 import { SETTINGS_PAGE, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { NavigationTabs } from 'components/main/navigationTabs';
-import { ExtensionLoader, uiExtensionType, extensionType } from 'components/extensionLoader';
+import { ExtensionLoader, extensionType } from 'components/extensionLoader';
 import { GeneralTab } from './generalTab';
 import { AutoAnalysisTab } from './autoAnalysisTab';
 import { NotificationsTab } from './notificationsTab';
@@ -99,7 +99,7 @@ export class SettingsPage extends Component {
     activeTab: PropTypes.string,
     accountRole: PropTypes.string.isRequired,
     userRole: PropTypes.string.isRequired,
-    extensions: PropTypes.arrayOf(PropTypes.oneOfType([extensionType, uiExtensionType])),
+    extensions: PropTypes.arrayOf(extensionType),
   };
   static defaultProps = {
     activeTab: GENERAL,
