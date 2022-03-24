@@ -97,14 +97,26 @@ const MakeDecision = ({ data }) => {
   const [modalHasChanges, setModalHasChanges] = useState(false);
   const [loadingMLSuggest, setLoadingMLSuggest] = useState(false);
   useEffect(() => {
-    setModalHasChanges(
-      (isBulkOperation
-        ? !!modalState.selectManualChoice.issue.issueType ||
-          !!modalState.selectManualChoice.issue.comment ||
-          modalState.commentOption !== NOT_CHANGED_FOR_ALL
-        : !isEqual(itemData.issue, modalState[ACTIVE_TAB_MAP[modalState.decisionType]].issue)) ||
-        !!modalState.issueActionType,
-    );
+    let hasChanges;
+    const newIssueData = modalState[ACTIVE_TAB_MAP[modalState.decisionType]].issue;
+    const hasIssueAction = !!modalState.issueActionType;
+    if (
+      isBulkOperation &&
+      (!isMLSuggestionsAvailable || modalState.decisionType === SELECT_DEFECT_MANUALLY)
+    ) {
+      hasChanges =
+        !!modalState.selectManualChoice.issue.issueType ||
+        !!modalState.selectManualChoice.issue.comment ||
+        modalState.commentOption !== NOT_CHANGED_FOR_ALL ||
+        hasIssueAction;
+    } else if (isBulkOperation && isMLSuggestionsAvailable) {
+      hasChanges =
+        modalState.currentTestItems.some((item) => !isEqual(item.issue, newIssueData)) ||
+        hasIssueAction;
+    } else {
+      hasChanges = !isEqual(itemData.issue, newIssueData) || hasIssueAction;
+    }
+    setModalHasChanges(hasChanges);
   }, [modalState]);
 
   useEffect(() => {
