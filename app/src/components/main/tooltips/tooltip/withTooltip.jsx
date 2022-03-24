@@ -51,7 +51,7 @@ export const withTooltip = ({ TooltipComponent, data = {} }) => (WrappedComponen
       const topOffset = data.topOffset || 0;
       const leftOffset = data.leftOffset || 0;
       const clientWidth = document.documentElement.clientWidth;
-      const maxWidth = clientWidth - 100;
+      const maxWidth = !styleWidth ? clientWidth - 100 : styleWidth;
       return (
         <Manager>
           <Reference>
@@ -92,7 +92,6 @@ export const withTooltip = ({ TooltipComponent, data = {} }) => (WrappedComponen
                       className={cx('tooltip-content')}
                       style={{
                         maxWidth: `${maxWidth}px`,
-                        width: 'fit-content',
                       }}
                     >
                       <TooltipComponent {...this.props} />
