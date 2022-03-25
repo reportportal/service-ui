@@ -401,6 +401,7 @@ export class BtsPropertiesForIssueForm extends Component {
                     onChange={this.handleIssueTypeChange}
                     mobileDisabled
                     options={this.issueTypeDropdownOptions}
+                    disabled={loading}
                   />
                 </IntegrationFormField>
                 <h4 className={cx('default-properties-title')}>
