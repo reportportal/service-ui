@@ -1,4 +1,4 @@
-FROM alpine:3.14.4 as generate-build-info
+FROM alpine:3.10.9 as generate-build-info
 RUN apk add git
 RUN apk add make
 RUN mkdir -p /usr/src/app/build
