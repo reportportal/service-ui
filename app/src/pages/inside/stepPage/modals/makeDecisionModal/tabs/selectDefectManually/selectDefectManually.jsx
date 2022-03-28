@@ -94,10 +94,11 @@ export const SelectDefectManually = ({
   const handleDefectCommentChange = (value) => {
     handleManualChange({ comment: value.trim() });
     if (isBulkOperation) {
-      if (!source.issue.comment && value.trim() !== '') {
+      const isValueEmpty = value.trim() === '';
+      if (!source.issue.comment && !isValueEmpty) {
         setModalState({ commentOption: ADD_FOR_ALL });
       } else if (
-        value.trim() === '' &&
+        isValueEmpty &&
         [ADD_FOR_ALL, REPLACE_FOR_ALL].includes(modalState.commentOption)
       ) {
         setModalState({ commentOption: NOT_CHANGED_FOR_ALL });
