@@ -37,7 +37,12 @@ import { debugModeSelector } from 'controllers/launch';
 import { SCREEN_SM_MAX, SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
-import { SELECT_DEFECT_MANUALLY } from '../../constants';
+import {
+  ADD_FOR_ALL,
+  NOT_CHANGED_FOR_ALL,
+  REPLACE_FOR_ALL,
+  SELECT_DEFECT_MANUALLY,
+} from '../../constants';
 import { messages } from '../../messages';
 import { ActionButtonsBar } from './actionButtonsBar';
 import styles from './selectDefectManually.scss';
@@ -88,6 +93,17 @@ export const SelectDefectManually = ({
   };
   const handleDefectCommentChange = (value) => {
     handleManualChange({ comment: value.trim() });
+    if (isBulkOperation) {
+      const isValueEmpty = value.trim() === '';
+      if (!source.issue.comment && !isValueEmpty) {
+        setModalState({ commentOption: ADD_FOR_ALL });
+      } else if (
+        isValueEmpty &&
+        [ADD_FOR_ALL, REPLACE_FOR_ALL].includes(modalState.commentOption)
+      ) {
+        setModalState({ commentOption: NOT_CHANGED_FOR_ALL });
+      }
+    }
   };
 
   const getActionItems = () => {
