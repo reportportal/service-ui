@@ -99,7 +99,6 @@ const MakeDecision = ({ data }) => {
   useEffect(() => {
     let hasChanges;
     const newIssueData = modalState[ACTIVE_TAB_MAP[modalState.decisionType]].issue;
-    const hasIssueAction = !!modalState.issueActionType;
     if (
       isBulkOperation &&
       (!isMLSuggestionsAvailable || modalState.decisionType === SELECT_DEFECT_MANUALLY)
@@ -107,16 +106,13 @@ const MakeDecision = ({ data }) => {
       hasChanges =
         !!modalState.selectManualChoice.issue.issueType ||
         !!modalState.selectManualChoice.issue.comment ||
-        modalState.commentOption !== NOT_CHANGED_FOR_ALL ||
-        hasIssueAction;
+        modalState.commentOption !== NOT_CHANGED_FOR_ALL;
     } else if (isBulkOperation && isMLSuggestionsAvailable) {
-      hasChanges =
-        modalState.currentTestItems.some((item) => !isEqual(item.issue, newIssueData)) ||
-        hasIssueAction;
+      hasChanges = modalState.currentTestItems.some((item) => !isEqual(item.issue, newIssueData));
     } else {
-      hasChanges = !isEqual(itemData.issue, newIssueData) || hasIssueAction;
+      hasChanges = !isEqual(itemData.issue, newIssueData);
     }
-    setModalHasChanges(hasChanges);
+    setModalHasChanges(hasChanges || !!modalState.issueActionType);
   }, [modalState]);
 
   useEffect(() => {
