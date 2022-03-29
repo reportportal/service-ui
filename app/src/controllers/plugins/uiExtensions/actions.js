@@ -18,7 +18,6 @@ import {
   EXTENSION_LOAD_FINISH,
   EXTENSION_LOAD_START,
   FETCH_EXTENSIONS_METADATA_SUCCESS,
-  UPDATE_EXTENSION_METADATA,
 } from './constants';
 
 export const extensionLoadStartAction = () => ({
@@ -31,9 +30,4 @@ export const extensionLoadFinishAction = () => ({
 export const fetchExtensionsMetadataSuccessAction = (extensionsMetadata) => ({
   type: FETCH_EXTENSIONS_METADATA_SUCCESS,
   payload: extensionsMetadata,
-});
-
-export const updateExtensionMetadataAction = (extension) => ({
-  type: UPDATE_EXTENSION_METADATA,
-  payload: extension,
 });

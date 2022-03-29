@@ -24,5 +24,7 @@ export const EXTENSION_LOAD_FINISH = 'extensionLoadFinish';
 
 /* New plugins mechanism related code below */
 
+export const METADATA_FILE_KEY = 'metadata';
+export const MAIN_FILE_KEY = 'main';
+
 export const FETCH_EXTENSIONS_METADATA_SUCCESS = 'fetchExtensionsMetadataSuccess';
-export const UPDATE_EXTENSION_METADATA = 'updateExtensionMetadata';

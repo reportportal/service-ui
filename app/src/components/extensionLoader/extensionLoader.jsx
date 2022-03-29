@@ -10,7 +10,7 @@ const DEFAULT_EXTENSION_FILE_NAME = 'remoteEntity.js';
 // TODO: Create a special error boundary for extension components
 function ExtensionLoader({ extension, ...componentProps }) {
   const { moduleName, scope, pluginName } = extension;
-  // TODO: use public/private endpoint to get files based on extension preferences
+  // TODO: use public/private endpoint to get files based on plugin type preferences (will be implemented in the scope of Sign Up plugin)
   const url = URLS.pluginFile(pluginName, DEFAULT_EXTENSION_FILE_NAME);
 
   const { failed, Component } = useFederatedComponent(scope, moduleName, url);
@@ -24,13 +24,7 @@ function ExtensionLoader({ extension, ...componentProps }) {
 
   return (
     <React.Suspense fallback={<SpinningPreloader />}>
-      {Component ? (
-        <Component
-          {...extensionImportProps}
-          {...componentProps}
-          meta={{ requester: 'service-ui' }}
-        />
-      ) : null}
+      {Component ? <Component {...extensionImportProps} {...componentProps} /> : null}
     </React.Suspense>
   );
 }
