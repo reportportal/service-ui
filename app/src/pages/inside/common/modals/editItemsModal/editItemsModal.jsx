@@ -342,7 +342,7 @@ export class EditItemsModal extends Component {
 
   showWarningMessage = () => this.setState({ warningMessageShown: true });
 
-  validateAttributes = () =>
+  validateAttributes =
     !validate.attributesArray(this.props.currentAttributes) && this.props.isSaveButtonPressed;
 
   onAddAttribute = () =>
@@ -382,7 +382,7 @@ export class EditItemsModal extends Component {
         closeIconEventInfo={eventsInfo.closeIcon}
         warningMessage={
           (warningMessageShown ? formatMessage(messages.warningMessage) : '') ||
-          (this.validateAttributes() && formatMessage(messages.changesWarning))
+          (this.validateAttributes && formatMessage(messages.changesWarning))
         }
       >
         <form>
