@@ -286,7 +286,7 @@ export class EditItemModal extends Component {
       isItemOwner(userId, item, parentLaunch),
     );
 
-    const validateAttributes = () =>
+    const validateAttributes =
       !validate.attributesArray(this.props.currentAttributes) && this.props.isSaveButtonPressed;
 
     const onAddAttribute = () =>
@@ -300,7 +300,7 @@ export class EditItemModal extends Component {
         closeConfirmation={this.getCloseConfirmationConfig()}
         closeIconEventInfo={eventsInfo.CLOSE_ICON_EDIT_ITEM_MODAL}
         warningMessage={
-          (validateAttributes() && formatMessage(messages.changesWarning)) ||
+          (validateAttributes && formatMessage(messages.changesWarning)) ||
           (type === LAUNCH_ITEM_TYPES.launch && editable && formatMessage(messages.launchWarning))
         }
       >
