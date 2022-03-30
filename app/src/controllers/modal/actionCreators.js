@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { SHOW_MODAL, HIDE_MODAL, CONFIRM_MODAL } from './constants';
+import { SHOW_MODAL, HIDE_MODAL, CONFIRM_MODAL, SET_IS_SAVE_BUTTON_PRESSED } from './constants';
 
 export const showModalAction = ({ id, data }) => ({
   type: SHOW_MODAL,
@@ -28,4 +28,11 @@ export const hideModalAction = () => ({
 
 export const confirmModalAction = () => ({
   type: CONFIRM_MODAL,
+});
+
+export const setIsSaveButtonPressedAction = (isSaveButtonPressed) => ({
+  type: SET_IS_SAVE_BUTTON_PRESSED,
+  payload: {
+    isSaveButtonPressed,
+  },
 });

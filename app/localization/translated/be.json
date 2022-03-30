@@ -1753,6 +1753,7 @@
   "TestItemChanges.postIssue": "апублікаваў памылку",
   "TestItemChanges.toItem": "да элемента тэставання",
   "TestItemChanges.unlinkIssue": "адмацаваў памылку",
+  "TestItemDetailsModal.changesWarning": "Змены не былі захаваны",
   "TestItemDetailsModal.codeRef": "Месцазнаходжанне:",
   "TestItemDetailsModal.description": "Апісанне:",
   "TestItemDetailsModal.duration": "Працягласць:",

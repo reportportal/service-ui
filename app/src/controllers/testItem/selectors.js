@@ -53,12 +53,17 @@ import { omit } from 'common/utils';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { SORTING_KEY } from 'controllers/sorting';
 import { clusterItemsSelector } from 'controllers/uniqueErrors/clusterItems/selectors';
+import { formValueSelector } from 'redux-form';
 import {
   DEFAULT_SORTING,
   TEST_ITEMS_TYPE_LIST,
   COMPOSITE_ATTRIBUTES_FILTER,
   LEVEL_ATTRIBUTES_FILTER,
   PROVIDER_TYPE_MODIFIERS_ID_MAP,
+  ATTRIBUTES,
+  EDIT_ITEM_FORM,
+  EDIT_ITEMS_FORM,
+  COMMON_ATTRIBUTES,
 } from './constants';
 import {
   createLink,
@@ -543,3 +548,8 @@ export const getLogItemLinkSelector = createSelector(
     return createLink(testItemIds, itemId, payload, {}, PROJECT_LOG_PAGE);
   },
 );
+
+export const currentAttributesSelector = (state, isMultiply) =>
+  isMultiply
+    ? formValueSelector(EDIT_ITEMS_FORM)(state, COMMON_ATTRIBUTES)
+    : formValueSelector(EDIT_ITEM_FORM)(state, ATTRIBUTES);

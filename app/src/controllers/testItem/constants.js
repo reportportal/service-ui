@@ -54,6 +54,11 @@ export const LOG_VIEW = 'PARENT_LOG_VIEW';
 export const HISTORY_VIEW = 'HISTORY_VIEW';
 export const UNIQUE_ERRORS_VIEW = 'UNIQUE_ERRORS_VIEW';
 
+export const EDIT_ITEM_FORM = 'editItemForm';
+export const EDIT_ITEMS_FORM = 'editItemsForm';
+export const ATTRIBUTES = 'attributes';
+export const COMMON_ATTRIBUTES = 'commonAttributes';
+
 export const FILTERED_ITEM_STATISTICS_INITIAL_STATE = {
   executions: {},
   defects: {},
