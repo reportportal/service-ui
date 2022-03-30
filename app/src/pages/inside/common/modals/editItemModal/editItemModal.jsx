@@ -18,7 +18,7 @@ import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
-import { reduxForm } from 'redux-form';
+import { formValueSelector, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -104,6 +104,10 @@ const messages = defineMessages({
     id: 'TestItemDetailsModal.parametersLabel',
     defaultMessage: 'Parameters:',
   },
+  changesWarning: {
+    id: 'TestItemDetailsModal.changesWarning',
+    defaultMessage: 'Changes were not saved',
+  },
 });
 
 @withModal('editItemModal')
@@ -121,6 +125,7 @@ const messages = defineMessages({
     userAccountRole: userAccountRoleSelector(state),
     userProjectRole: activeProjectRoleSelector(state),
     userId: userIdSelector(state),
+    currentAttributes: formValueSelector('editItemForm')(state, 'attributes'),
   }),
   {
     showNotification,
@@ -148,18 +153,24 @@ export class EditItemModal extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    currentAttributes: PropTypes.array,
   };
 
   static defaultProps = {
     userProjectRole: '',
     userAccountRole: '',
     userId: '',
+    currentAttributes: [],
   };
 
   componentDidMount() {
     this.props.initialize({
       description: this.props.data.item.description || '',
       attributes: this.props.data.item.attributes || [],
+    });
+
+    this.setState({
+      isSaveButtonPressed: false,
     });
   }
 
@@ -257,6 +268,7 @@ export class EditItemModal extends Component {
       text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
       onClick: (closeModal) => {
         tracking.trackEvent(eventsInfo.SAVE_BTN_EDIT_ITEM_MODAL);
+        this.setState({ isSaveButtonPressed: true });
         handleSubmit(this.updateItemAndCloseModal(closeModal))();
       },
     };
@@ -271,6 +283,15 @@ export class EditItemModal extends Component {
       isItemOwner(userId, item, parentLaunch),
     );
 
+    const validateAttributes = () => {
+      return (
+        !validate.attributesArray(this.props.currentAttributes) && this.state.isSaveButtonPressed
+      );
+    };
+
+    const onAddAttribute = () =>
+      this.state && this.state.isSaveButtonPressed && this.setState({ isSaveButtonPressed: false });
+
     return (
       <ModalLayout
         title={formatMessage(messages.modalHeader, { type: formatMessage(messages[type]) })}
@@ -279,7 +300,8 @@ export class EditItemModal extends Component {
         closeConfirmation={this.getCloseConfirmationConfig()}
         closeIconEventInfo={eventsInfo.CLOSE_ICON_EDIT_ITEM_MODAL}
         warningMessage={
-          type === LAUNCH_ITEM_TYPES.launch && editable && formatMessage(messages.launchWarning)
+          (validateAttributes() && formatMessage(messages.changesWarning)) ||
+          (type === LAUNCH_ITEM_TYPES.launch && editable && formatMessage(messages.launchWarning))
         }
       >
         <form>
@@ -316,6 +338,7 @@ export class EditItemModal extends Component {
                 keyURLCreator={this.getAttributeKeyURLCreator()}
                 valueURLCreator={this.getAttributeValueURLCreator()}
                 disabled={!editable}
+                onAdd={onAddAttribute}
               />
             </FieldProvider>
           </ModalField>
