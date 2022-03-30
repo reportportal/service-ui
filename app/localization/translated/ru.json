@@ -1753,6 +1753,7 @@
   "TestItemChanges.postIssue": "опубликовал ошибку",
   "TestItemChanges.toItem": "к элементу тестирования",
   "TestItemChanges.unlinkIssue": "открепил ошибку",
+  "TestItemDetailsModal.changesWarning": "Изменения не были сохранены",
   "TestItemDetailsModal.codeRef": "Местоположение:",
   "TestItemDetailsModal.description": "Описание:",
   "TestItemDetailsModal.duration": "Длительность:",
