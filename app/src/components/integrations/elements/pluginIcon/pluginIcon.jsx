@@ -28,12 +28,11 @@ import { Image } from 'components/main/image';
 export const PluginIcon = ({ pluginData, className, ...rest }) => {
   const { details, name } = pluginData;
   const isDynamicIconAvailable = details && details.binaryData && details.binaryData.icon;
+  const projectId = useSelector(activeProjectSelector);
+  const globalIntegrations = useSelector(globalIntegrationsSelector);
 
   const calculateIconSrc = () => {
     if (isDynamicIconAvailable) {
-      const projectId = useSelector(activeProjectSelector);
-      const globalIntegrations = useSelector(globalIntegrationsSelector);
-
       const isCommonCommandSupported = isPluginSupportsCommonCommand(pluginData, COMMAND_GET_FILE);
 
       if (isCommonCommandSupported) {

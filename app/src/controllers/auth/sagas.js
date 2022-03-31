@@ -71,6 +71,7 @@ import {
 } from './constants';
 import { tokenSelector } from './selectors';
 
+// TODO: clear cookie on logout
 function* handleLogout() {
   yield put(resetTokenAction());
   yield put(fetchAppInfoAction());

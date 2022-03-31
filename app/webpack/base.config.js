@@ -19,17 +19,18 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const WebpackNotifierPlugin = require('webpack-notifier');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
 // const CircularDependencyPlugin = require('circular-dependency-plugin');
 
 module.exports = {
   entry: {
     polyfills: path.resolve(__dirname, '../src/common/polyfills.js'),
-    main: path.resolve(__dirname, '../src/index.jsx'),
+    main: path.resolve(__dirname, '../src/init.js'),
   },
   output: {
     path: path.resolve(__dirname, '../build'),
     filename: '[name].app.[contenthash:6].js',
-    publicPath: '',
+    publicPath: 'auto',
     assetModuleFilename: 'media/[name].[ext]',
     clean: true,
   },
@@ -91,6 +92,24 @@ module.exports = {
       Utils: 'common/utils',
       process: 'process/browser',
       Buffer: ['buffer', 'Buffer'],
+    }),
+    new ModuleFederationPlugin({
+      name: 'main_app',
+      filename: 'main_app.js',
+      shared: {
+        react: {
+          import: 'react',
+          shareKey: 'react',
+          shareScope: 'default',
+          singleton: true,
+        },
+        'react-dom': {
+          singleton: true,
+        },
+        'react-redux': {
+          singleton: true,
+        },
+      },
     }),
     // new CircularDependencyPlugin({
     //   exclude: /a\.js|node_modules/,
