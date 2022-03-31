@@ -22,6 +22,7 @@ import { updateIntegrationAction } from 'controllers/plugins';
 import { uiExtensionIntegrationSettingsSelector } from 'controllers/plugins/uiExtensions/selectors';
 import { INTEGRATIONS_SETTINGS_COMPONENTS_MAP } from 'components/integrations/settingsComponentsMap';
 import { PluginIcon } from 'components/integrations/elements/pluginIcon';
+import { ExtensionLoader, extensionType } from 'components/extensionLoader';
 import styles from './integrationSettingsContainer.scss';
 
 const cx = classNames.bind(styles);
@@ -38,14 +39,7 @@ export class IntegrationSettingsContainer extends Component {
   static propTypes = {
     goToPreviousPage: PropTypes.func.isRequired,
     updateIntegrationAction: PropTypes.func.isRequired,
-    settingsExtensions: PropTypes.arrayOf(
-      PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        pluginName: PropTypes.string.isRequired,
-        title: PropTypes.string,
-        component: PropTypes.func.isRequired,
-      }),
-    ),
+    settingsExtensions: PropTypes.arrayOf(extensionType),
     data: PropTypes.object,
     isGlobal: PropTypes.bool,
   };
@@ -101,7 +95,8 @@ export class IntegrationSettingsContainer extends Component {
     );
     const IntegrationSettingsComponent =
       INTEGRATIONS_SETTINGS_COMPONENTS_MAP[instanceType] ||
-      (integrationSettingsExtension && integrationSettingsExtension.component);
+      (integrationSettingsExtension && ExtensionLoader);
+
     const updatedData = {
       ...data,
       name: updatedParameters.name || data.name,
@@ -122,6 +117,7 @@ export class IntegrationSettingsContainer extends Component {
           onUpdate={this.updateIntegration}
           goToPreviousPage={goToPreviousPage}
           isGlobal={isGlobal}
+          extension={integrationSettingsExtension}
         />
       </div>
     );
