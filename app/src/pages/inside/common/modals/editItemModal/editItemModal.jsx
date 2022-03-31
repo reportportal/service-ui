@@ -104,10 +104,6 @@ const messages = defineMessages({
     id: 'TestItemDetailsModal.parametersLabel',
     defaultMessage: 'Parameters:',
   },
-  changesWarning: {
-    id: 'TestItemDetailsModal.changesWarning',
-    defaultMessage: 'Field is invalid or changes were not saved',
-  },
 });
 
 @withModal('editItemModal')
@@ -166,10 +162,6 @@ export class EditItemModal extends Component {
     this.props.initialize({
       description: this.props.data.item.description || '',
       attributes: this.props.data.item.attributes || [],
-    });
-
-    this.setState({
-      isSaveButtonPressed: false,
     });
   }
 
@@ -267,7 +259,6 @@ export class EditItemModal extends Component {
       text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
       onClick: (closeModal) => {
         tracking.trackEvent(eventsInfo.SAVE_BTN_EDIT_ITEM_MODAL);
-        this.setState({ isSaveButtonPressed: true });
         handleSubmit(this.updateItemAndCloseModal(closeModal))();
       },
     };
@@ -282,10 +273,6 @@ export class EditItemModal extends Component {
       isItemOwner(userId, item, parentLaunch),
     );
 
-    const validateAttributes = this.props.invalid && this.state.isSaveButtonPressed;
-
-    const onAddAttribute = () => this.state && this.setState({ isSaveButtonPressed: false });
-
     return (
       <ModalLayout
         title={formatMessage(messages.modalHeader, { type: formatMessage(messages[type]) })}
@@ -294,7 +281,7 @@ export class EditItemModal extends Component {
         closeConfirmation={this.getCloseConfirmationConfig()}
         closeIconEventInfo={eventsInfo.CLOSE_ICON_EDIT_ITEM_MODAL}
         warningMessage={
-          (validateAttributes && formatMessage(messages.changesWarning)) ||
+          (this.props.invalid && formatMessage(COMMON_LOCALE_KEYS.changesWarning)) ||
           (type === LAUNCH_ITEM_TYPES.launch && editable && formatMessage(messages.launchWarning))
         }
       >
@@ -332,7 +319,6 @@ export class EditItemModal extends Component {
                 keyURLCreator={this.getAttributeKeyURLCreator()}
                 valueURLCreator={this.getAttributeValueURLCreator()}
                 disabled={!editable}
-                onAdd={onAddAttribute}
               />
             </FieldProvider>
           </ModalField>

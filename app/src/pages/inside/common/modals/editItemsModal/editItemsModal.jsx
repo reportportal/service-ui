@@ -95,10 +95,6 @@ const messages = defineMessages({
     id: 'EditItemsModal.warningMessage',
     defaultMessage: 'The attribute will be deleted for all launches after applying changes',
   },
-  changesWarning: {
-    id: 'TestItemsDetailsModal.changesWarning',
-    defaultMessage: 'Field is invalid or changes were not saved',
-  },
 });
 
 const ATTRIBUTE_CREATE = 'CREATE';
@@ -336,10 +332,6 @@ export class EditItemsModal extends Component {
 
   showWarningMessage = () => this.setState({ warningMessageShown: true });
 
-  validateAttributes = () => this.props.invalid && this.state.isSaveButtonPressed;
-
-  onAddAttribute = () => this.state && this.setState({ isSaveButtonPressed: false });
-
   render() {
     const { warningMessageShown } = this.state;
     const {
@@ -351,10 +343,7 @@ export class EditItemsModal extends Component {
     } = this.props;
     const okButton = {
       text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
-      onClick: (closeModal) => {
-        this.setState({ isSaveButtonPressed: true });
-        handleSubmit(this.updateItemsAndCloseModal(closeModal))();
-      },
+      onClick: (closeModal) => handleSubmit(this.updateItemsAndCloseModal(closeModal))(),
       eventInfo: eventsInfo.saveBtn,
     };
     const cancelButton = {
@@ -374,7 +363,7 @@ export class EditItemsModal extends Component {
         closeIconEventInfo={eventsInfo.closeIcon}
         warningMessage={
           (warningMessageShown ? formatMessage(messages.warningMessage) : '') ||
-          (this.validateAttributes() && formatMessage(messages.changesWarning))
+          (this.props.invalid && formatMessage(COMMON_LOCALE_KEYS.changesWarning))
         }
       >
         <form>
@@ -387,7 +376,6 @@ export class EditItemsModal extends Component {
               <AttributeListField
                 keyURLCreator={this.getAttributeKeyURLCreator()}
                 valueURLCreator={this.getAttributeValueURLCreator()}
-                onAdd={this.onAddAttribute}
               />
             </FieldProvider>
           </ModalField>
