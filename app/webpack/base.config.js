@@ -109,6 +109,12 @@ module.exports = {
         'react-redux': {
           singleton: true,
         },
+        classnames: {
+          singleton: true,
+        },
+        'prop-types': {
+          singleton: true,
+        },
       },
     }),
     // new CircularDependencyPlugin({
