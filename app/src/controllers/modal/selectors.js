@@ -16,4 +16,3 @@
 
 const modalSelector = (state) => state.modal || {};
 export const activeModalSelector = (state) => modalSelector(state).activeModal;
-export const isSaveButtonPressedSelector = (state) => modalSelector(state).isSaveButtonPressed;

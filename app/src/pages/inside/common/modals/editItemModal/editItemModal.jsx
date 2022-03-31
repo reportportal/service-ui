@@ -46,9 +46,6 @@ import { AccordionContainer } from 'components/main/accordionContainer';
 import { canEditLaunch } from 'common/utils/permissions';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { TestParameters } from 'pages/inside/common/testParameters';
-import { currentAttributesSelector } from 'controllers/testItem/selectors';
-import { setIsSaveButtonPressedAction } from 'controllers/modal/actionCreators';
-import { isSaveButtonPressedSelector } from 'controllers/modal/selectors';
 import styles from './editItemModal.scss';
 
 const cx = classNames.bind(styles);
@@ -109,7 +106,7 @@ const messages = defineMessages({
   },
   changesWarning: {
     id: 'TestItemDetailsModal.changesWarning',
-    defaultMessage: 'Changes were not saved',
+    defaultMessage: 'Field is invalid or changes were not saved',
   },
 });
 
@@ -128,12 +125,9 @@ const messages = defineMessages({
     userAccountRole: userAccountRoleSelector(state),
     userProjectRole: activeProjectRoleSelector(state),
     userId: userIdSelector(state),
-    currentAttributes: currentAttributesSelector(state, false),
-    isSaveButtonPressed: isSaveButtonPressedSelector(state),
   }),
   {
     showNotification,
-    setIsSaveButtonPressedAction,
   },
 )
 export class EditItemModal extends Component {
@@ -158,9 +152,7 @@ export class EditItemModal extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    currentAttributes: PropTypes.array,
-    isSaveButtonPressed: PropTypes.bool,
-    setIsSaveButtonPressedAction: PropTypes.func,
+    invalid: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -174,6 +166,10 @@ export class EditItemModal extends Component {
     this.props.initialize({
       description: this.props.data.item.description || '',
       attributes: this.props.data.item.attributes || [],
+    });
+
+    this.setState({
+      isSaveButtonPressed: false,
     });
   }
 
@@ -271,7 +267,7 @@ export class EditItemModal extends Component {
       text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
       onClick: (closeModal) => {
         tracking.trackEvent(eventsInfo.SAVE_BTN_EDIT_ITEM_MODAL);
-        this.props.setIsSaveButtonPressedAction(true);
+        this.setState({ isSaveButtonPressed: true });
         handleSubmit(this.updateItemAndCloseModal(closeModal))();
       },
     };
@@ -286,11 +282,9 @@ export class EditItemModal extends Component {
       isItemOwner(userId, item, parentLaunch),
     );
 
-    const validateAttributes =
-      !validate.attributesArray(this.props.currentAttributes) && this.props.isSaveButtonPressed;
+    const validateAttributes = this.props.invalid && this.state.isSaveButtonPressed;
 
-    const onAddAttribute = () =>
-      this.props.isSaveButtonPressed && this.props.setIsSaveButtonPressedAction(false);
+    const onAddAttribute = () => this.state && this.setState({ isSaveButtonPressed: false });
 
     return (
       <ModalLayout

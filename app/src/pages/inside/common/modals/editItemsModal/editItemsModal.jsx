@@ -38,9 +38,6 @@ import { MarkdownEditor } from 'components/main/markdown';
 import { AttributeListField } from 'components/main/attributeList';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import track from 'react-tracking';
-import { currentAttributesSelector } from 'controllers/testItem/selectors';
-import { setIsSaveButtonPressedAction } from 'controllers/modal/actionCreators';
-import { isSaveButtonPressedSelector } from 'controllers/modal/selectors';
 import styles from './editItemsModal.scss';
 
 const cx = classNames.bind(styles);
@@ -99,8 +96,8 @@ const messages = defineMessages({
     defaultMessage: 'The attribute will be deleted for all launches after applying changes',
   },
   changesWarning: {
-    id: 'TestItemDetailsModal.changesWarning',
-    defaultMessage: 'Changes were not saved',
+    id: 'TestItemsDetailsModal.changesWarning',
+    defaultMessage: 'Field is invalid or changes were not saved',
   },
 });
 
@@ -137,13 +134,10 @@ const makeDescriptionOptions = (formatMessage) => [
 @connect(
   (state) => ({
     currentProject: activeProjectSelector(state),
-    currentAttributes: currentAttributesSelector(state, true),
-    isSaveButtonPressed: isSaveButtonPressedSelector(state),
   }),
   {
     showNotification,
     showDefaultErrorNotification,
-    setIsSaveButtonPressedAction,
   },
 )
 @track()
@@ -167,9 +161,8 @@ export class EditItemsModal extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    invalid: PropTypes.bool.isRequired,
     ...formPropTypes,
-    isSaveButtonPressed: PropTypes.bool,
-    setIsSaveButtonPressedAction: PropTypes.func,
   };
 
   static defaultProps = {
@@ -179,6 +172,7 @@ export class EditItemsModal extends Component {
 
   state = {
     warningMessageShown: false,
+    isSaveButtonPressed: false,
   };
 
   componentDidMount() {
@@ -342,11 +336,9 @@ export class EditItemsModal extends Component {
 
   showWarningMessage = () => this.setState({ warningMessageShown: true });
 
-  validateAttributes =
-    !validate.attributesArray(this.props.currentAttributes) && this.props.isSaveButtonPressed;
+  validateAttributes = () => this.props.invalid && this.state.isSaveButtonPressed;
 
-  onAddAttribute = () =>
-    this.props.isSaveButtonPressed && this.props.setIsSaveButtonPressedAction(false);
+  onAddAttribute = () => this.state && this.setState({ isSaveButtonPressed: false });
 
   render() {
     const { warningMessageShown } = this.state;
@@ -360,7 +352,7 @@ export class EditItemsModal extends Component {
     const okButton = {
       text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
       onClick: (closeModal) => {
-        this.props.setIsSaveButtonPressedAction(true);
+        this.setState({ isSaveButtonPressed: true });
         handleSubmit(this.updateItemsAndCloseModal(closeModal))();
       },
       eventInfo: eventsInfo.saveBtn,
@@ -382,7 +374,7 @@ export class EditItemsModal extends Component {
         closeIconEventInfo={eventsInfo.closeIcon}
         warningMessage={
           (warningMessageShown ? formatMessage(messages.warningMessage) : '') ||
-          (this.validateAttributes && formatMessage(messages.changesWarning))
+          (this.validateAttributes() && formatMessage(messages.changesWarning))
         }
       >
         <form>
