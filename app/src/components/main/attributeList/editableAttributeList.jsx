@@ -42,7 +42,6 @@ export class EditableAttributeList extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    onAdd: PropTypes.func,
   };
 
   static defaultProps = {
@@ -57,12 +56,10 @@ export class EditableAttributeList extends Component {
     showButton: true,
     editable: true,
     eventsInfo: {},
-    onAdd: () => {},
   };
 
   handleAddNew = () => {
-    const { attributes, onChange, onAdd } = this.props;
-    onAdd();
+    const { attributes, onChange } = this.props;
     onChange([...attributes, NEW_ATTRIBUTE]);
   };
 
