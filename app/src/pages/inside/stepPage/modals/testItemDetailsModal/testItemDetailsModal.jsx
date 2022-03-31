@@ -106,6 +106,7 @@ export class TestItemDetailsModal extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     clearLogPageStackTrace: PropTypes.func,
+    invalid: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -330,7 +331,10 @@ export class TestItemDetailsModal extends Component {
         okButton={editable ? okButton : undefined}
         cancelButton={cancelButton}
         closeConfirmation={editable ? this.getCloseConfirmationConfig() : undefined}
-        warningMessage={editable ? intl.formatMessage(messages.launchWarning) : ''}
+        warningMessage={
+          (this.props.invalid && intl.formatMessage(COMMON_LOCALE_KEYS.changesWarning)) ||
+          (editable ? intl.formatMessage(messages.launchWarning) : '')
+        }
         contentClassName={cx('tab-container')}
         closeIconEventInfo={eventsInfo.closeIcon}
       >
