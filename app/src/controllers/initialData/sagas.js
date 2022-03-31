@@ -44,13 +44,13 @@ function* fetchInitialData() {
     const { payload: activeProject } = yield take(SET_ACTIVE_PROJECT);
     yield put(fetchProjectAction(activeProject));
     yield take(FETCH_PROJECT_SUCCESS);
-    yield put(fetchPluginsAction());
     yield put(fetchGlobalIntegrationsAction());
     yield put(authSuccessAction());
   } else {
     yield put(resetTokenAction());
   }
   yield put(setInitialDataReadyAction());
+  yield put(fetchPluginsAction());
 }
 
 function* watchFetchInitialData() {
