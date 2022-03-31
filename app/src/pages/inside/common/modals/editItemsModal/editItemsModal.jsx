@@ -157,6 +157,7 @@ export class EditItemsModal extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    invalid: PropTypes.bool.isRequired,
     ...formPropTypes,
   };
 
@@ -359,7 +360,10 @@ export class EditItemsModal extends Component {
         okButton={okButton}
         cancelButton={cancelButton}
         closeIconEventInfo={eventsInfo.closeIcon}
-        warningMessage={warningMessageShown ? formatMessage(messages.warningMessage) : ''}
+        warningMessage={
+          (warningMessageShown ? formatMessage(messages.warningMessage) : '') ||
+          (this.props.invalid && formatMessage(COMMON_LOCALE_KEYS.changesWarning))
+        }
       >
         <form>
           <ModalField

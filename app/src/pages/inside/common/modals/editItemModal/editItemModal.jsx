@@ -148,6 +148,7 @@ export class EditItemModal extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    invalid: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -279,7 +280,8 @@ export class EditItemModal extends Component {
         closeConfirmation={this.getCloseConfirmationConfig()}
         closeIconEventInfo={eventsInfo.CLOSE_ICON_EDIT_ITEM_MODAL}
         warningMessage={
-          type === LAUNCH_ITEM_TYPES.launch && editable && formatMessage(messages.launchWarning)
+          (this.props.invalid && formatMessage(COMMON_LOCALE_KEYS.changesWarning)) ||
+          (type === LAUNCH_ITEM_TYPES.launch && editable && formatMessage(messages.launchWarning))
         }
       >
         <form>

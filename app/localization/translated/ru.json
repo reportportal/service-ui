@@ -203,6 +203,7 @@
   "Common.analyzerDisabled": "Сервис analyzer не запущен",
   "Common.back": "Назад",
   "Common.cancel": "Отменить",
+  "Common.changesWarning": "Поле недействительно или изменения не были сохранены",
   "Common.clone": "Клонировать",
   "Common.close": "Закрыть",
   "Common.closeModalWarning": "Вы должны сохранить изменения или отменить их перед закрытием окна",

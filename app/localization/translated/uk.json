@@ -203,6 +203,7 @@
   "Common.analyzerDisabled": "Сервіс analyzer не запущений",
   "Common.back": "Тому",
   "Common.cancel": "Скасувати",
+  "Common.changesWarning": "Поле недійсне або зміни не збережено",
   "Common.clone": "Клонувати",
   "Common.close": "Закрити",
   "Common.closeModalWarning": "Ви повинні зберегти зміни або скасувати їх перед закриттям вікна",
