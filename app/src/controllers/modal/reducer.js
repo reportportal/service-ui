@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { SHOW_MODAL, HIDE_MODAL, INITIAL_STATE, SET_IS_SAVE_BUTTON_PRESSED } from './constants';
+import { SHOW_MODAL, HIDE_MODAL, INITIAL_STATE } from './constants';
 
 export const modalReducer = (state = INITIAL_STATE, { type, payload }) => {
   switch (type) {
@@ -22,8 +22,6 @@ export const modalReducer = (state = INITIAL_STATE, { type, payload }) => {
       return { ...state, activeModal: payload.activeModal };
     case HIDE_MODAL:
       return { ...state, activeModal: null };
-    case SET_IS_SAVE_BUTTON_PRESSED:
-      return { ...state, isSaveButtonPressed: payload.isSaveButtonPressed };
     default:
       return state;
   }
