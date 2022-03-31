@@ -168,7 +168,6 @@ export class EditItemsModal extends Component {
 
   state = {
     warningMessageShown: false,
-    isSaveButtonPressed: false,
   };
 
   componentDidMount() {

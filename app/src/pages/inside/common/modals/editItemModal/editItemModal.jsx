@@ -155,7 +155,6 @@ export class EditItemModal extends Component {
     userProjectRole: '',
     userAccountRole: '',
     userId: '',
-    currentAttributes: [],
   };
 
   componentDidMount() {
