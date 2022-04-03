@@ -3,7 +3,7 @@ import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
 import { activeProjectSelector } from 'controllers/user';
 import { COMMAND_GET_FILE, METADATA_FILE_KEY, MAIN_FILE_KEY } from './constants';
-import { pluginsSelector, globalIntegrationsSelector } from '../selectors';
+import { pluginsSelector, globalIntegrationsSelector, publicPluginsSelector } from '../selectors';
 import { filterIntegrationsByName, isPluginSupportsCommonCommand } from '../utils';
 import {
   extensionLoadFinishAction,
@@ -13,7 +13,9 @@ import {
 
 function* fetchExtensionsMetadata() {
   const plugins = yield select(pluginsSelector);
-  const uiExtensionPlugins = plugins.filter(
+  const publicPlugins = yield select(publicPluginsSelector);
+  const allPlugins = plugins.concat(publicPlugins);
+  const uiExtensionPlugins = allPlugins.filter(
     (plugin) =>
       plugin.enabled &&
       plugin.details &&
@@ -63,7 +65,9 @@ export function* fetchUiExtensions() {
   }
 
   const plugins = yield select(pluginsSelector);
-  const uiExtensionPlugins = plugins.filter(
+  const publicPlugins = yield select(publicPluginsSelector);
+  const allPlugins = plugins.concat(publicPlugins);
+  const uiExtensionPlugins = allPlugins.filter(
     (plugin) =>
       plugin.enabled &&
       plugin.details &&

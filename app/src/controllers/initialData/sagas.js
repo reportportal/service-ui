@@ -30,7 +30,11 @@ import {
   authSuccessAction,
 } from 'controllers/auth';
 import { FETCH_PROJECT_SUCCESS, fetchProjectAction } from 'controllers/project';
-import { fetchGlobalIntegrationsAction, fetchPluginsAction } from 'controllers/plugins';
+import {
+  fetchGlobalIntegrationsAction,
+  fetchPluginsAction,
+  fetchPublicPluginsAction,
+} from 'controllers/plugins';
 import { getStorageItem } from 'common/utils';
 import { setInitialDataReadyAction } from './actionCreators';
 import { FETCH_INITIAL_DATA } from './constants';
@@ -44,13 +48,14 @@ function* fetchInitialData() {
     const { payload: activeProject } = yield take(SET_ACTIVE_PROJECT);
     yield put(fetchProjectAction(activeProject));
     yield take(FETCH_PROJECT_SUCCESS);
+    yield put(fetchPluginsAction());
     yield put(fetchGlobalIntegrationsAction());
     yield put(authSuccessAction());
   } else {
     yield put(resetTokenAction());
   }
   yield put(setInitialDataReadyAction());
-  yield put(fetchPluginsAction());
+  yield put(fetchPublicPluginsAction());
 }
 
 function* watchFetchInitialData() {
