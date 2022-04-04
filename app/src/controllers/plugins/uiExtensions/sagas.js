@@ -12,8 +12,8 @@ import {
   fetchExtensionsMetadataSuccessAction,
 } from './actions';
 
-export function* fetchExtensionsMetadata(...params) {
-  const isPublic = params[0] && params[0].meta.namespace === PUBLIC_PLUGINS;
+export function* fetchExtensionsMetadata(action) {
+  const isPublic = action && action.meta.namespace === PUBLIC_PLUGINS;
   const plugins = yield select(isPublic ? publicPluginsSelector : pluginsSelector);
   const uiExtensionPlugins = plugins.filter(
     (plugin) =>
