@@ -27,7 +27,12 @@ import {
 
 export const domainSelector = (state) => state.plugins || {};
 
-export const pluginsSelector = (state) => domainSelector(state).plugins;
+export const pluginsSelector = (state) => {
+  return domainSelector(state).plugins;
+};
+export const publicPluginsSelector = (state) => {
+  return domainSelector(state).publicPlugins;
+};
 export const pluginByNameSelector = (state, name) =>
   pluginsSelector(state).find((plugin) => plugin.name === name);
 

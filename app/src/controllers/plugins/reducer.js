@@ -34,6 +34,7 @@ import {
   REMOVE_PROJECT_INTEGRATION_SUCCESS,
   REMOVE_PROJECT_INTEGRATIONS_BY_TYPE_SUCCESS,
   REMOVE_GLOBAL_INTEGRATIONS_BY_TYPE_SUCCESS,
+  PUBLIC_PLUGINS,
 } from './constants';
 
 const addIntegration = (state, type, payload) => ({
@@ -119,6 +120,7 @@ export const integrationsReducer = (state = {}, { type, payload }) => {
 
 export const pluginsReducer = combineReducers({
   plugins: queueReducers(fetchReducer(NAMESPACE), updatePluginLocallyReducer),
+  publicPlugins: fetchReducer(PUBLIC_PLUGINS),
   integrations: integrationsReducer,
   uiExtensions: uiExtensionsReducer,
 });

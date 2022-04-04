@@ -2,8 +2,9 @@ import { select, call, all, put } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
 import { activeProjectSelector } from 'controllers/user';
+import { PUBLIC_PLUGINS } from 'controllers/plugins/constants';
 import { COMMAND_GET_FILE, METADATA_FILE_KEY, MAIN_FILE_KEY } from './constants';
-import { pluginsSelector, globalIntegrationsSelector } from '../selectors';
+import { pluginsSelector, globalIntegrationsSelector, publicPluginsSelector } from '../selectors';
 import { filterIntegrationsByName, isPluginSupportsCommonCommand } from '../utils';
 import {
   extensionLoadFinishAction,
@@ -11,8 +12,9 @@ import {
   fetchExtensionsMetadataSuccessAction,
 } from './actions';
 
-function* fetchExtensionsMetadata() {
-  const plugins = yield select(pluginsSelector);
+export function* fetchExtensionsMetadata(action) {
+  const isPublic = action && action.meta.namespace === PUBLIC_PLUGINS;
+  const plugins = yield select(isPublic ? publicPluginsSelector : pluginsSelector);
   const uiExtensionPlugins = plugins.filter(
     (plugin) =>
       plugin.enabled &&
@@ -30,9 +32,15 @@ function* fetchExtensionsMetadata() {
   const calls = uiExtensionPlugins.map((plugin) => {
     const metadataFile = plugin.details.binaryData[METADATA_FILE_KEY];
     // TODO: use public/private endpoint to get files based on plugin type (public/private)
-    return call(fetch, URLS.pluginFile(plugin.name, metadataFile), {
-      contentType: 'application/json',
-    });
+    return call(
+      fetch,
+      isPublic
+        ? URLS.pluginPublicFile(plugin.name, metadataFile)
+        : URLS.pluginFile(plugin.name, metadataFile),
+      {
+        contentType: 'application/json',
+      },
+    );
   });
 
   if (calls.length === 0) {
@@ -44,6 +52,7 @@ function* fetchExtensionsMetadata() {
     const metadataArray = results.map((metadata, index) => ({
       ...metadata,
       pluginName: uiExtensionPlugins[index].name,
+      isPublic,
     }));
 
     yield put(fetchExtensionsMetadataSuccessAction(metadataArray));

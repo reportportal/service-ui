@@ -1,4 +1,4 @@
-export { fetchUiExtensions } from './sagas';
+export { fetchUiExtensions, fetchExtensionsMetadata } from './sagas';
 export {
   uiExtensionSettingsTabsSelector,
   uiExtensionAdminPagesSelector,

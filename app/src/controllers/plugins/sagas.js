@@ -30,6 +30,7 @@ import { userIdSelector } from 'controllers/user';
 import {
   NAMESPACE,
   FETCH_PLUGINS,
+  FETCH_PUBLIC_PLUGINS,
   REMOVE_PLUGIN,
   REMOVE_PROJECT_INTEGRATIONS_BY_TYPE,
   ADD_INTEGRATION,
@@ -38,6 +39,7 @@ import {
   FETCH_GLOBAL_INTEGRATIONS,
   SECRET_FIELDS_KEY,
   FETCH_GLOBAL_INTEGRATIONS_SUCCESS,
+  PUBLIC_PLUGINS,
 } from './constants';
 import { resolveIntegrationUrl } from './utils';
 import { pluginByNameSelector } from './selectors';
@@ -53,7 +55,7 @@ import {
   fetchGlobalIntegrationsSuccessAction,
   removeGlobalIntegrationsByTypeSuccessAction,
 } from './actionCreators';
-import { fetchUiExtensions } from './uiExtensions';
+import { fetchUiExtensions, fetchExtensionsMetadata } from './uiExtensions';
 
 function* addIntegration({ payload: { data, isGlobal, pluginName, callback }, meta }) {
   yield put(showScreenLockAction());
@@ -214,8 +216,16 @@ function* fetchPlugins() {
   yield put(fetchDataAction(NAMESPACE)(URLS.plugin()));
 }
 
+function* fetchPublicPlugins() {
+  yield put(fetchDataAction(PUBLIC_PLUGINS)(URLS.pluginPublic()));
+}
+
 function* watchFetchPlugins() {
   yield takeEvery(FETCH_PLUGINS, fetchPlugins);
+}
+
+function* watchFetchPublicPlugins() {
+  yield takeEvery(FETCH_PUBLIC_PLUGINS, fetchPublicPlugins);
 }
 
 function* removePlugin({ payload: { id, callback, pluginName } }) {
@@ -252,6 +262,10 @@ function* watchPluginChange() {
   );
 }
 
+function* watchPublicPluginChange() {
+  yield takeEvery(createFetchPredicate(PUBLIC_PLUGINS), fetchExtensionsMetadata);
+}
+
 export function* pluginSagas() {
   yield all([
     watchAddIntegration(),
@@ -260,7 +274,9 @@ export function* pluginSagas() {
     watchRemoveIntegrationsByType(),
     watchFetchGlobalIntegrations(),
     watchFetchPlugins(),
+    watchFetchPublicPlugins(),
     watchRemovePlugin(),
     watchPluginChange(),
+    watchPublicPluginChange(),
   ]);
 }

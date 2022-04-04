@@ -30,7 +30,11 @@ import {
   authSuccessAction,
 } from 'controllers/auth';
 import { FETCH_PROJECT_SUCCESS, fetchProjectAction } from 'controllers/project';
-import { fetchGlobalIntegrationsAction, fetchPluginsAction } from 'controllers/plugins';
+import {
+  fetchGlobalIntegrationsAction,
+  fetchPluginsAction,
+  fetchPublicPluginsAction,
+} from 'controllers/plugins';
 import { getStorageItem } from 'common/utils';
 import { setInitialDataReadyAction } from './actionCreators';
 import { FETCH_INITIAL_DATA } from './constants';
@@ -49,6 +53,7 @@ function* fetchInitialData() {
     yield put(authSuccessAction());
   } else {
     yield put(resetTokenAction());
+    yield put(fetchPublicPluginsAction());
   }
   yield put(setInitialDataReadyAction());
 }

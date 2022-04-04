@@ -18,6 +18,7 @@ export { pluginsReducer } from './reducer';
 export { SECRET_FIELDS_KEY } from './constants';
 export {
   fetchPluginsAction,
+  fetchPublicPluginsAction,
   removePluginAction,
   removePluginSuccessAction,
   updatePluginSuccessAction,

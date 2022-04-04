@@ -48,7 +48,11 @@ import {
   userIdSelector,
 } from 'controllers/user';
 import { FETCH_PROJECT_SUCCESS, fetchProjectAction } from 'controllers/project';
-import { fetchPluginsAction, fetchGlobalIntegrationsAction } from 'controllers/plugins';
+import {
+  fetchPluginsAction,
+  fetchGlobalIntegrationsAction,
+  fetchPublicPluginsAction,
+} from 'controllers/plugins';
 import { redirect, pathToAction } from 'redux-first-router';
 import qs, { stringify } from 'qs';
 import routesMap from 'routes/routesMap';
@@ -74,6 +78,7 @@ import { tokenSelector } from './selectors';
 // TODO: clear cookie on logout
 function* handleLogout() {
   yield put(resetTokenAction());
+  yield put(fetchPublicPluginsAction());
   yield put(fetchAppInfoAction());
   yield put(
     redirect({

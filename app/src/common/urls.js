@@ -269,6 +269,7 @@ export const URLS = {
   appInfo: () => `${compositeBase}info`,
 
   plugin: () => `${urlBase}plugin`,
+  pluginPublic: () => `${urlBase}plugin/public`,
   pluginUpdate: (pluginId) => `${urlBase}plugin/${pluginId}`,
   pluginFile: (pluginName, fileKey) => `${urlBase}plugin/${pluginName}/file/${fileKey}`,
   pluginPublicFile: (pluginName, fileKey) =>
