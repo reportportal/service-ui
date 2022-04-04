@@ -35,6 +35,7 @@ import {
   FETCH_GLOBAL_INTEGRATIONS,
   FETCH_GLOBAL_INTEGRATIONS_SUCCESS,
   REMOVE_GLOBAL_INTEGRATIONS_BY_TYPE_SUCCESS,
+  RESET_PLUGIN_SUCCESS,
 } from './constants';
 
 export const fetchPluginsAction = () => ({
@@ -59,6 +60,8 @@ export const updatePluginSuccessAction = (plugin) => ({
   type: UPDATE_PLUGIN_SUCCESS,
   payload: plugin,
 });
+
+export const resetPluginAction = () => ({ type: RESET_PLUGIN_SUCCESS });
 
 export const fetchGlobalIntegrationsAction = () => ({
   type: FETCH_GLOBAL_INTEGRATIONS,

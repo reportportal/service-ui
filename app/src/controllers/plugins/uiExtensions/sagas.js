@@ -14,8 +14,8 @@ import {
 function* fetchExtensionsMetadata() {
   const plugins = yield select(pluginsSelector);
   const publicPlugins = yield select(publicPluginsSelector);
-  const allPlugins = plugins.concat(publicPlugins);
-  const uiExtensionPlugins = allPlugins.filter(
+  const currentPlugins = !plugins.length ? publicPlugins : plugins;
+  const uiExtensionPlugins = currentPlugins.filter(
     (plugin) =>
       plugin.enabled &&
       plugin.details &&
@@ -65,9 +65,7 @@ export function* fetchUiExtensions() {
   }
 
   const plugins = yield select(pluginsSelector);
-  const publicPlugins = yield select(publicPluginsSelector);
-  const allPlugins = plugins.concat(publicPlugins);
-  const uiExtensionPlugins = allPlugins.filter(
+  const uiExtensionPlugins = plugins.filter(
     (plugin) =>
       plugin.enabled &&
       plugin.details &&

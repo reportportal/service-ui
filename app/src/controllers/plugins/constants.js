@@ -24,6 +24,7 @@ export const FETCH_PUBLIC_PLUGINS = 'fetchPublicPlugins';
 export const REMOVE_PLUGIN = 'removePlugin';
 export const UPDATE_PLUGIN_SUCCESS = 'updatePluginSuccess';
 export const REMOVE_PLUGIN_SUCCESS = 'removePluginSuccess';
+export const RESET_PLUGIN_SUCCESS = 'resetPluginSuccess';
 
 export const UPDATE_INTEGRATION = 'updateIntegration';
 export const REMOVE_INTEGRATION = 'removeIntegration';

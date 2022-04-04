@@ -262,6 +262,13 @@ function* watchPluginChange() {
   );
 }
 
+function* watchPublicPluginChange() {
+  yield takeEvery(
+    [createFetchPredicate(PUBLIC_PLUGINS), FETCH_GLOBAL_INTEGRATIONS_SUCCESS],
+    fetchUiExtensions,
+  );
+}
+
 export function* pluginSagas() {
   yield all([
     watchAddIntegration(),
@@ -273,5 +280,6 @@ export function* pluginSagas() {
     watchFetchPublicPlugins(),
     watchRemovePlugin(),
     watchPluginChange(),
+    watchPublicPluginChange(),
   ]);
 }

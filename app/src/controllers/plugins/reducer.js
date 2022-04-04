@@ -35,6 +35,7 @@ import {
   REMOVE_PROJECT_INTEGRATIONS_BY_TYPE_SUCCESS,
   REMOVE_GLOBAL_INTEGRATIONS_BY_TYPE_SUCCESS,
   PUBLIC_PLUGINS,
+  RESET_PLUGIN_SUCCESS,
 } from './constants';
 
 const addIntegration = (state, type, payload) => ({
@@ -80,6 +81,8 @@ export const updatePluginLocallyReducer = (state, { type, payload }) => {
       });
     case REMOVE_PLUGIN_SUCCESS:
       return state.filter((item) => item.type !== payload);
+    case RESET_PLUGIN_SUCCESS:
+      return [];
     default:
       return state;
   }
