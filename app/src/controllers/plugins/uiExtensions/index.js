@@ -11,5 +11,6 @@ export {
   uiExtensionPostIssueFormSelector,
   uniqueErrorGridCellComponentSelector,
   uniqueErrorGridHeaderCellComponentSelector,
+  uiExtensionLoginPageSelector,
 } from './selectors';
 export { uiExtensionsReducer } from './reducer';

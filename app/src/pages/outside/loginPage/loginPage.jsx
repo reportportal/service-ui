@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
@@ -22,6 +22,8 @@ import { connect } from 'react-redux';
 import { referenceDictionary, connectRouter } from 'common/utils';
 import { LOGIN_PAGE } from 'components/main/analytics/events';
 import { showDefaultErrorNotification } from 'controllers/notification';
+import { ExtensionLoader, extensionType } from 'components/extensionLoader';
+import { uiExtensionLoginPageSelector } from 'controllers/plugins/uiExtensions';
 import styles from './loginPage.scss';
 import { LoginPageSection } from './loginPageSection';
 import { SocialSection } from './socialSection';
@@ -39,9 +41,14 @@ const cx = classNames.bind(styles);
   errorAuth,
   multipleAuth,
 }))
-@connect(null, {
-  showDefaultErrorNotification,
-})
+@connect(
+  (state) => ({
+    extensions: uiExtensionLoginPageSelector(state),
+  }),
+  {
+    showDefaultErrorNotification,
+  },
+)
 @track({ page: LOGIN_PAGE })
 export class LoginPage extends PureComponent {
   static propTypes = {
@@ -50,6 +57,7 @@ export class LoginPage extends PureComponent {
     errorAuth: PropTypes.string,
     multipleAuth: PropTypes.string,
     showDefaultErrorNotification: PropTypes.func,
+    extensions: PropTypes.arrayOf(extensionType),
   };
   static defaultProps = {
     forgotPass: '',
@@ -57,6 +65,7 @@ export class LoginPage extends PureComponent {
     errorAuth: '',
     multipleAuth: '',
     showDefaultErrorNotification: () => {},
+    extensions: [],
   };
 
   componentDidMount() {
@@ -77,8 +86,9 @@ export class LoginPage extends PureComponent {
 
   getCurrentBlock = () => {
     const { forgotPass, reset, multipleAuth } = this.props;
-    let currentBlock = <LoginBlock />;
+    const extensions = this.getLoginPageExtensions();
 
+    let currentBlock = <LoginBlock />;
     if (forgotPass) {
       currentBlock = <ForgotPasswordBlock />;
     }
@@ -88,8 +98,30 @@ export class LoginPage extends PureComponent {
     if (multipleAuth) {
       currentBlock = <MultipleAuthBlock multipleAuthKey={multipleAuth} />;
     }
+    // TODO constant
+    if (extensions.signUp) {
+      currentBlock = extensions.signUp.component;
+    }
 
     return currentBlock;
+  };
+
+  getLoginPageExtensions = () => {
+    const { extensions } = this.props;
+
+    return extensions.reduce(
+      (acc, extension) => ({
+        ...acc,
+        [extension.name]: {
+          name: extension.title || extension.name,
+          // TODO link generation
+          link: '/signUp',
+          component: <ExtensionLoader extension={extension} />,
+          mobileDisabled: true,
+        },
+      }),
+      {},
+    );
   };
 
   render() {
