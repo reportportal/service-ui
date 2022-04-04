@@ -30,7 +30,6 @@ export const createExtensionSelectorByType = (type) =>
     enabledPluginNamesSelector,
     extensionsMetadataSelector,
     extensionsLoadedSelector,
-    enabledPublicPluginNamesSelector,
     (pluginNames, extensionsMetadata) => {
       // TODO: remove legacy extensions when all existing plugins will be migrated to the new engine
       const uiExtensions = Array.from(uiExtensionMap.entries())
@@ -45,6 +44,23 @@ export const createExtensionSelectorByType = (type) =>
 
       return uiExtensions
         .concat(newExtensions)
+        .reduce((acc, val) => acc.concat(val), [])
+        .filter((extension) => extension.type === type);
+    },
+  );
+
+export const createPublicExtensionSelectorByType = (type) =>
+  createSelector(
+    enabledPublicPluginNamesSelector,
+    extensionsMetadataSelector,
+    (pluginNames, extensionsMetadata) => {
+      const newExtensions = extensionsMetadata
+        .filter(({ pluginName }) => pluginNames.includes(pluginName))
+        .map(({ pluginName, scope, extensions }) =>
+          extensions.map((ext) => ({ ...ext, pluginName, scope })),
+        );
+
+      return newExtensions
         .reduce((acc, val) => acc.concat(val), [])
         .filter((extension) => extension.type === type);
     },
@@ -78,6 +94,6 @@ export const uniqueErrorGridCellComponentSelector = createExtensionSelectorByTyp
 export const uniqueErrorGridHeaderCellComponentSelector = createExtensionSelectorByType(
   EXTENSION_TYPE_UNIQUE_ERROR_GRID_HEADER_CELL_COMPONENT,
 );
-export const uiExtensionLoginPageSelector = createExtensionSelectorByType(
+export const uiExtensionLoginPageSelector = createPublicExtensionSelectorByType(
   EXTENSION_TYPE_LOGIN_PAGE,
 );

@@ -34,6 +34,8 @@ const messages = defineMessages({
   },
 });
 
+const SIGN_UP_PLUGIN_NAME = 'signup';
+
 @connect(
   (state) => ({
     extensions: uiExtensionLoginPageSelector(state),
@@ -48,29 +50,17 @@ export class LoginBlock extends PureComponent {
     extensions: [],
   };
 
-  getLoginPageExtensions = () => {
+  getSignUpExtension = () => {
     const { extensions } = this.props;
 
-    return extensions.reduce(
-      (acc, extension) => ({
-        ...acc,
-        [extension.name]: {
-          name: extension.title || extension.name,
-          // TODO link generation
-          link: '/signUp',
-          component: <ExtensionLoader extension={extension} />,
-          mobileDisabled: true,
-        },
-      }),
-      {},
-    );
+    return extensions.find((extension) => extension.pluginName === SIGN_UP_PLUGIN_NAME);
   };
 
   render() {
     return (
       <PageBlockContainer header={messages.welcome} hint={messages.login}>
         <LoginForm />
-        {this.getLoginPageExtensions().signUp && this.getLoginPageExtensions().signUp.component}
+        {this.getSignUpExtension() && <ExtensionLoader extension={this.getSignUpExtension()} />}
       </PageBlockContainer>
     );
   }
