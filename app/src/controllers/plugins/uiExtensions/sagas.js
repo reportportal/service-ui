@@ -15,8 +15,8 @@ import {
 export function* fetchExtensionsMetadata(...params) {
   const plugins = yield select(pluginsSelector);
   const publicPlugins = yield select(publicPluginsSelector);
-  const currentPlugins =
-    params[0] && params[0].meta.namespace === PUBLIC_PLUGINS ? publicPlugins : plugins;
+  const isPublic = params[0] && params[0].meta.namespace === PUBLIC_PLUGINS;
+  const currentPlugins = isPublic ? publicPlugins : plugins;
   const uiExtensionPlugins = currentPlugins.filter(
     (plugin) =>
       plugin.enabled &&
@@ -34,9 +34,15 @@ export function* fetchExtensionsMetadata(...params) {
   const calls = uiExtensionPlugins.map((plugin) => {
     const metadataFile = plugin.details.binaryData[METADATA_FILE_KEY];
     // TODO: use public/private endpoint to get files based on plugin type (public/private)
-    return call(fetch, URLS.pluginFile(plugin.name, metadataFile), {
-      contentType: 'application/json',
-    });
+    return call(
+      fetch,
+      isPublic
+        ? URLS.pluginPublicFile(plugin.name, metadataFile)
+        : URLS.pluginFile(plugin.name, metadataFile),
+      {
+        contentType: 'application/json',
+      },
+    );
   });
 
   if (calls.length === 0) {
@@ -48,6 +54,7 @@ export function* fetchExtensionsMetadata(...params) {
     const metadataArray = results.map((metadata, index) => ({
       ...metadata,
       pluginName: uiExtensionPlugins[index].name,
+      pluginType: isPublic,
     }));
 
     yield put(fetchExtensionsMetadataSuccessAction(metadataArray));
