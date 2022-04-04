@@ -16,8 +16,8 @@
 
 import { defineMessages } from 'react-intl';
 import { PageBlockContainer } from 'pages/outside/common/pageBlockContainer';
-import { connect } from 'react-redux';
-import React, { PureComponent } from 'react';
+import { useSelector } from 'react-redux';
+import React from 'react';
 import { ExtensionLoader, extensionType } from 'components/extensionLoader';
 import { uiExtensionLoginPageSelector } from 'controllers/plugins/uiExtensions';
 import PropTypes from 'prop-types';
@@ -34,30 +34,21 @@ const messages = defineMessages({
   },
 });
 
-@connect(
-  (state) => ({
-    extensions: uiExtensionLoginPageSelector(state),
-  }),
-  {},
-)
-export class LoginBlock extends PureComponent {
-  static propTypes = {
-    extensions: PropTypes.arrayOf(extensionType),
-  };
-  static defaultProps = {
-    extensions: [],
-  };
+export const LoginBlock = () => {
+  const extensions = useSelector(uiExtensionLoginPageSelector);
 
-  render() {
-    const { extensions } = this.props;
-
-    return (
-      <PageBlockContainer header={messages.welcome} hint={messages.login}>
-        <LoginForm />
-        {extensions.map((extension) => (
-          <ExtensionLoader extension={extension} />
-        ))}
-      </PageBlockContainer>
-    );
-  }
-}
+  return (
+    <PageBlockContainer header={messages.welcome} hint={messages.login}>
+      {extensions.map((extension) => (
+        <ExtensionLoader extension={extension} />
+      ))}
+      <LoginForm />
+    </PageBlockContainer>
+  );
+};
+LoginBlock.propTypes = {
+  extensions: PropTypes.arrayOf(extensionType),
+};
+LoginBlock.defaultProps = {
+  extensions: [],
+};
