@@ -55,7 +55,7 @@ import {
   fetchGlobalIntegrationsSuccessAction,
   removeGlobalIntegrationsByTypeSuccessAction,
 } from './actionCreators';
-import { fetchUiExtensions } from './uiExtensions';
+import { fetchUiExtensions, fetchExtensionsMetadata } from './uiExtensions';
 
 function* addIntegration({ payload: { data, isGlobal, pluginName, callback }, meta }) {
   yield put(showScreenLockAction());
@@ -263,10 +263,7 @@ function* watchPluginChange() {
 }
 
 function* watchPublicPluginChange() {
-  yield takeEvery(
-    [createFetchPredicate(PUBLIC_PLUGINS), FETCH_GLOBAL_INTEGRATIONS_SUCCESS],
-    fetchUiExtensions,
-  );
+  yield takeEvery(createFetchPredicate(PUBLIC_PLUGINS), fetchExtensionsMetadata);
 }
 
 export function* pluginSagas() {

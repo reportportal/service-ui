@@ -56,7 +56,6 @@ import {
 import { redirect, pathToAction } from 'redux-first-router';
 import qs, { stringify } from 'qs';
 import routesMap from 'routes/routesMap';
-import { resetPluginAction } from 'controllers/plugins/actionCreators';
 import {
   authSuccessAction,
   resetTokenAction,
@@ -79,7 +78,6 @@ import { tokenSelector } from './selectors';
 // TODO: clear cookie on logout
 function* handleLogout() {
   yield put(resetTokenAction());
-  yield put(resetPluginAction());
   yield put(fetchPublicPluginsAction());
   yield put(fetchAppInfoAction());
   yield put(

@@ -2,6 +2,7 @@ import { select, call, all, put } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
 import { activeProjectSelector } from 'controllers/user';
+import { PUBLIC_PLUGINS } from 'controllers/plugins/constants';
 import { COMMAND_GET_FILE, METADATA_FILE_KEY, MAIN_FILE_KEY } from './constants';
 import { pluginsSelector, globalIntegrationsSelector, publicPluginsSelector } from '../selectors';
 import { filterIntegrationsByName, isPluginSupportsCommonCommand } from '../utils';
@@ -11,10 +12,11 @@ import {
   fetchExtensionsMetadataSuccessAction,
 } from './actions';
 
-function* fetchExtensionsMetadata() {
+export function* fetchExtensionsMetadata(...params) {
   const plugins = yield select(pluginsSelector);
   const publicPlugins = yield select(publicPluginsSelector);
-  const currentPlugins = !plugins.length ? publicPlugins : plugins;
+  const currentPlugins =
+    params[0] && params[0].meta.namespace === PUBLIC_PLUGINS ? publicPlugins : plugins;
   const uiExtensionPlugins = currentPlugins.filter(
     (plugin) =>
       plugin.enabled &&

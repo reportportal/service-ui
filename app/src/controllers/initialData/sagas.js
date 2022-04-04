@@ -36,7 +36,6 @@ import {
   fetchPublicPluginsAction,
 } from 'controllers/plugins';
 import { getStorageItem } from 'common/utils';
-import { resetPluginAction } from 'controllers/plugins/actionCreators';
 import { setInitialDataReadyAction } from './actionCreators';
 import { FETCH_INITIAL_DATA } from './constants';
 
@@ -54,7 +53,6 @@ function* fetchInitialData() {
     yield put(authSuccessAction());
   } else {
     yield put(resetTokenAction());
-    yield put(resetPluginAction());
     yield put(fetchPublicPluginsAction());
   }
   yield put(setInitialDataReadyAction());
