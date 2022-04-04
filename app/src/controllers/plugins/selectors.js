@@ -45,6 +45,9 @@ export const availablePluginsSelector = createSelector(pluginsSelector, filterAv
 export const enabledPluginNamesSelector = createSelector(pluginsSelector, (plugins) =>
   filterEnabledPlugins(plugins).map((plugin) => plugin.name),
 );
+export const enabledPublicPluginNamesSelector = createSelector(publicPluginsSelector, (plugins) =>
+  filterEnabledPlugins(plugins).map((plugin) => plugin.name),
+);
 
 export const availableGroupedPluginsSelector = createSelector(
   availablePluginsSelector,

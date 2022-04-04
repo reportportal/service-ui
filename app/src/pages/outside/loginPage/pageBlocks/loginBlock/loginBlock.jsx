@@ -16,6 +16,11 @@
 
 import { defineMessages } from 'react-intl';
 import { PageBlockContainer } from 'pages/outside/common/pageBlockContainer';
+import { connect } from 'react-redux';
+import { PureComponent } from 'react';
+import { ExtensionLoader, extensionType } from 'components/extensionLoader';
+import { uiExtensionLoginPageSelector } from 'controllers/plugins/uiExtensions';
+import PropTypes from 'prop-types';
 import { LoginForm } from './loginForm';
 
 const messages = defineMessages({
@@ -29,8 +34,44 @@ const messages = defineMessages({
   },
 });
 
-export const LoginBlock = () => (
-  <PageBlockContainer header={messages.welcome} hint={messages.login}>
-    <LoginForm />
-  </PageBlockContainer>
-);
+@connect(
+  (state) => ({
+    extensions: uiExtensionLoginPageSelector(state),
+  }),
+  {},
+)
+export class LoginBlock extends PureComponent {
+  static propTypes = {
+    extensions: PropTypes.arrayOf(extensionType),
+  };
+  static defaultProps = {
+    extensions: [],
+  };
+
+  getLoginPageExtensions = () => {
+    const { extensions } = this.props;
+
+    return extensions.reduce(
+      (acc, extension) => ({
+        ...acc,
+        [extension.name]: {
+          name: extension.title || extension.name,
+          // TODO link generation
+          link: '/signUp',
+          component: <ExtensionLoader extension={extension} />,
+          mobileDisabled: true,
+        },
+      }),
+      {},
+    );
+  };
+
+  render() {
+    return (
+      <PageBlockContainer header={messages.welcome} hint={messages.login}>
+        <LoginForm />
+        {this.getLoginPageExtensions().signUp && this.getLoginPageExtensions().signUp.component}
+      </PageBlockContainer>
+    );
+  }
+}

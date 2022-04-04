@@ -12,7 +12,11 @@ import {
   EXTENSION_TYPE_UNIQUE_ERROR_GRID_HEADER_CELL_COMPONENT,
   EXTENSION_TYPE_LOGIN_PAGE,
 } from './constants';
-import { domainSelector, enabledPluginNamesSelector } from '../selectors';
+import {
+  domainSelector,
+  enabledPluginNamesSelector,
+  enabledPublicPluginNamesSelector,
+} from '../selectors';
 import { uiExtensionMap } from './uiExtensionStorage';
 
 export const extensionsLoadedSelector = (state) =>
@@ -26,6 +30,7 @@ export const createExtensionSelectorByType = (type) =>
     enabledPluginNamesSelector,
     extensionsMetadataSelector,
     extensionsLoadedSelector,
+    enabledPublicPluginNamesSelector,
     (pluginNames, extensionsMetadata) => {
       // TODO: remove legacy extensions when all existing plugins will be migrated to the new engine
       const uiExtensions = Array.from(uiExtensionMap.entries())
