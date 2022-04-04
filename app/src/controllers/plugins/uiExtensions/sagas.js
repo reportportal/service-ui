@@ -13,11 +13,9 @@ import {
 } from './actions';
 
 export function* fetchExtensionsMetadata(...params) {
-  const plugins = yield select(pluginsSelector);
-  const publicPlugins = yield select(publicPluginsSelector);
   const isPublic = params[0] && params[0].meta.namespace === PUBLIC_PLUGINS;
-  const currentPlugins = isPublic ? publicPlugins : plugins;
-  const uiExtensionPlugins = currentPlugins.filter(
+  const plugins = yield select(isPublic ? publicPluginsSelector : pluginsSelector);
+  const uiExtensionPlugins = plugins.filter(
     (plugin) =>
       plugin.enabled &&
       plugin.details &&
@@ -54,7 +52,7 @@ export function* fetchExtensionsMetadata(...params) {
     const metadataArray = results.map((metadata, index) => ({
       ...metadata,
       pluginName: uiExtensionPlugins[index].name,
-      pluginType: isPublic,
+      isPublic,
     }));
 
     yield put(fetchExtensionsMetadataSuccessAction(metadataArray));
