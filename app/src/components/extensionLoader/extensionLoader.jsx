@@ -9,9 +9,10 @@ const DEFAULT_EXTENSION_FILE_NAME = 'remoteEntity.js';
 
 // TODO: Create a special error boundary for extension components
 function ExtensionLoader({ extension, ...componentProps }) {
-  const { moduleName, scope, pluginName } = extension;
-  // TODO: use public/private endpoint to get files based on plugin type preferences (will be implemented in the scope of Sign Up plugin)
-  const url = URLS.pluginFile(pluginName, DEFAULT_EXTENSION_FILE_NAME);
+  const { moduleName, scope, pluginName, isPublic } = extension;
+  const url = isPublic
+    ? URLS.pluginPublicFile(pluginName, DEFAULT_EXTENSION_FILE_NAME)
+    : URLS.pluginFile(pluginName, DEFAULT_EXTENSION_FILE_NAME);
 
   const { failed, Component } = useFederatedComponent(scope, moduleName, url);
 

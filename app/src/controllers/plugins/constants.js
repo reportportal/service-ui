@@ -42,7 +42,8 @@ export const REMOVE_PROJECT_INTEGRATION_SUCCESS = 'removeProjectIntegrationSucce
 
 export const GLOBAL_INTEGRATIONS = 'globalIntegrations';
 export const PROJECT_INTEGRATIONS = 'projectIntegrations';
+export const PUBLIC_PLUGINS = 'publicPlugins';
 
 export const SECRET_FIELDS_KEY = 'rp_secretFieldsToClear';
 
-export const PUBLIC_PLUGINS = 'publicPlugins';
+export const PUBLIC_PLUGIN_ACCESS_TYPE = 'public';
