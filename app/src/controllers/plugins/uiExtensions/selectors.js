@@ -10,8 +10,13 @@ import {
   EXTENSION_TYPE_POST_ISSUE_FORM,
   EXTENSION_TYPE_UNIQUE_ERROR_GRID_CELL_COMPONENT,
   EXTENSION_TYPE_UNIQUE_ERROR_GRID_HEADER_CELL_COMPONENT,
+  EXTENSION_TYPE_LOGIN_PAGE,
 } from './constants';
-import { domainSelector, enabledPluginNamesSelector } from '../selectors';
+import {
+  domainSelector,
+  enabledPluginNamesSelector,
+  enabledPublicPluginNamesSelector,
+} from '../selectors';
 import { uiExtensionMap } from './uiExtensionStorage';
 
 export const extensionsLoadedSelector = (state) =>
@@ -44,6 +49,23 @@ export const createExtensionSelectorByType = (type) =>
     },
   );
 
+export const createPublicExtensionSelectorByType = (type) =>
+  createSelector(
+    enabledPublicPluginNamesSelector,
+    extensionsMetadataSelector,
+    (pluginNames, extensionsMetadata) => {
+      const newExtensions = extensionsMetadata
+        .filter(({ pluginName }) => pluginNames.includes(pluginName))
+        .map(({ pluginName, scope, extensions }) =>
+          extensions.map((ext) => ({ ...ext, pluginName, scope })),
+        );
+
+      return newExtensions
+        .reduce((acc, val) => acc.concat(val), [])
+        .filter((extension) => extension.type === type);
+    },
+  );
+
 export const uiExtensionSettingsTabsSelector = createExtensionSelectorByType(
   EXTENSION_TYPE_SETTINGS_TAB,
 );
@@ -71,4 +93,7 @@ export const uniqueErrorGridCellComponentSelector = createExtensionSelectorByTyp
 );
 export const uniqueErrorGridHeaderCellComponentSelector = createExtensionSelectorByType(
   EXTENSION_TYPE_UNIQUE_ERROR_GRID_HEADER_CELL_COMPONENT,
+);
+export const uiExtensionLoginPageSelector = createPublicExtensionSelectorByType(
+  EXTENSION_TYPE_LOGIN_PAGE,
 );

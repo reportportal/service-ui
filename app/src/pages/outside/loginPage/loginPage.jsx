@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
@@ -77,8 +77,8 @@ export class LoginPage extends PureComponent {
 
   getCurrentBlock = () => {
     const { forgotPass, reset, multipleAuth } = this.props;
-    let currentBlock = <LoginBlock />;
 
+    let currentBlock = <LoginBlock />;
     if (forgotPass) {
       currentBlock = <ForgotPasswordBlock />;
     }
