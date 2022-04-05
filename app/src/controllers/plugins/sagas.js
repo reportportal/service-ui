@@ -217,7 +217,7 @@ function* fetchPlugins() {
 }
 
 function* fetchPublicPlugins() {
-  yield put(fetchDataAction(PUBLIC_PLUGINS)(URLS.pluginPublic()));
+  yield put(fetchDataAction(PUBLIC_PLUGINS, true)(URLS.pluginPublic()));
 }
 
 function* watchFetchPlugins() {
