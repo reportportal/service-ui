@@ -38,8 +38,8 @@ export const createExtensionSelectorByType = (type) =>
 
       const newExtensions = extensionsMetadata
         .filter(({ pluginName }) => pluginNames.includes(pluginName))
-        .map(({ pluginName, scope, extensions }) =>
-          extensions.map((ext) => ({ ...ext, pluginName, scope })),
+        .map(({ pluginName, scope, extensions, isPublic }) =>
+          extensions.map((ext) => ({ ...ext, pluginName, scope, isPublic })),
         );
 
       return uiExtensions
@@ -56,8 +56,8 @@ export const createPublicExtensionSelectorByType = (type) =>
     (pluginNames, extensionsMetadata) => {
       const newExtensions = extensionsMetadata
         .filter(({ pluginName }) => pluginNames.includes(pluginName))
-        .map(({ pluginName, scope, extensions }) =>
-          extensions.map((ext) => ({ ...ext, pluginName, scope })),
+        .map(({ pluginName, scope, extensions, isPublic }) =>
+          extensions.map((ext) => ({ ...ext, pluginName, scope, isPublic })),
         );
 
       return newExtensions

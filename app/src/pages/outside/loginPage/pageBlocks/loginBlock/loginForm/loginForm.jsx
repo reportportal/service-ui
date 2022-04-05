@@ -35,6 +35,8 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import WarningIcon from 'common/img/error-inline.svg';
 import LoginIcon from 'common/img/login-field-icon-inline.svg';
 import PasswordIcon from 'common/img/password-field-icon-inline.svg';
+import { ExtensionLoader, extensionType } from 'components/extensionLoader';
+import { uiExtensionLoginPageSelector } from 'controllers/plugins/uiExtensions';
 import { ExternalLoginBlock } from './externalLoginBlock';
 import { DEFAULT_USER_CREDENTIALS } from './constants';
 import styles from './loginForm.scss';
@@ -73,6 +75,7 @@ const messages = defineMessages({
     lastFailedLoginTime: lastFailedLoginTimeSelector(state),
     badCredentials: badCredentialsSelector(state),
     isDemoInstance: isDemoInstanceSelector(state),
+    extensions: uiExtensionLoginPageSelector(state),
   }),
   {
     authorize: loginAction,
@@ -98,12 +101,14 @@ export class LoginForm extends React.Component {
     dispatch: PropTypes.func.isRequired,
     isDemoInstance: PropTypes.bool,
     initialize: PropTypes.func.isRequired,
+    extensions: PropTypes.arrayOf(extensionType),
   };
 
   static defaultProps = {
     externalAuth: {},
     lastFailedLoginTime: null,
     isDemoInstance: false,
+    extensions: [],
   };
 
   constructor(props) {
@@ -196,6 +201,7 @@ export class LoginForm extends React.Component {
       handleSubmit,
       externalAuth,
       authorize,
+      extensions,
     } = this.props;
     const { blockTime, isLoginLimitExceeded } = this.state;
 
@@ -212,6 +218,9 @@ export class LoginForm extends React.Component {
             </div>
           </div>
         ) : null}
+        {extensions.map((extension) => (
+          <ExtensionLoader extension={extension} />
+        ))}
         <div className={cx('login-field')}>
           <FieldProvider name="login">
             <FieldErrorHint>

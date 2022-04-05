@@ -16,11 +16,7 @@
 
 import { defineMessages } from 'react-intl';
 import { PageBlockContainer } from 'pages/outside/common/pageBlockContainer';
-import { useSelector } from 'react-redux';
 import React from 'react';
-import { ExtensionLoader, extensionType } from 'components/extensionLoader';
-import { uiExtensionLoginPageSelector } from 'controllers/plugins/uiExtensions';
-import PropTypes from 'prop-types';
 import { LoginForm } from './loginForm';
 
 const messages = defineMessages({
@@ -35,20 +31,9 @@ const messages = defineMessages({
 });
 
 export const LoginBlock = () => {
-  const extensions = useSelector(uiExtensionLoginPageSelector);
-
   return (
     <PageBlockContainer header={messages.welcome} hint={messages.login}>
-      {extensions.map((extension) => (
-        <ExtensionLoader extension={extension} />
-      ))}
       <LoginForm />
     </PageBlockContainer>
   );
-};
-LoginBlock.propTypes = {
-  extensions: PropTypes.arrayOf(extensionType),
-};
-LoginBlock.defaultProps = {
-  extensions: [],
 };
