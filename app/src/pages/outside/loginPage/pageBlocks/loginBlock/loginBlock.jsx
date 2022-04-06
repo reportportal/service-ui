@@ -14,10 +14,20 @@
  * limitations under the License.
  */
 
-import { defineMessages } from 'react-intl';
+import { defineMessages, FormattedMessage } from 'react-intl';
 import { PageBlockContainer } from 'pages/outside/common/pageBlockContainer';
 import React from 'react';
+import { isEmptyObject } from 'common/utils';
+import { ExternalLoginBlock } from 'pages/outside/loginPage/pageBlocks/loginBlock/loginForm/externalLoginBlock';
+import { ExtensionLoader } from 'components/extensionLoader';
+import { useSelector } from 'react-redux';
+import { authExtensionsSelector } from 'controllers/appInfo';
+import classNames from 'classnames/bind';
+import { uiExtensionLoginPageSelector } from 'controllers/plugins/uiExtensions';
+import styles from './loginBlock.scss';
 import { LoginForm } from './loginForm';
+
+const cx = classNames.bind(styles);
 
 const messages = defineMessages({
   welcome: {
@@ -31,9 +41,27 @@ const messages = defineMessages({
 });
 
 export const LoginBlock = () => {
+  const externalAuth = useSelector(authExtensionsSelector);
+  const extensions = useSelector(uiExtensionLoginPageSelector);
+
   return (
     <PageBlockContainer header={messages.welcome} hint={messages.login}>
-      <LoginForm />
+      {!isEmptyObject(externalAuth) ? (
+        <div>
+          <ExternalLoginBlock externalAuth={externalAuth} />
+          <div className={cx('separator')}>
+            <div className={cx('line')} />
+            <div className={cx('or')}>
+              <FormattedMessage id={'LoginForm.or'} defaultMessage={'or'} />
+            </div>
+          </div>
+        </div>
+      ) : null}
+      {extensions && extensions.length !== 0 ? (
+        extensions.map((extension) => <ExtensionLoader extension={extension} />)
+      ) : (
+        <LoginForm />
+      )}
     </PageBlockContainer>
   );
 };
