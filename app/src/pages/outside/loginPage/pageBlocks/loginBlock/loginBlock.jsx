@@ -47,7 +47,7 @@ export const LoginBlock = () => {
   return (
     <PageBlockContainer header={messages.welcome} hint={messages.login}>
       {!isEmptyObject(externalAuth) ? (
-        <div>
+        <React.Fragment>
           <ExternalLoginBlock externalAuth={externalAuth} />
           <div className={cx('separator')}>
             <div className={cx('line')} />
@@ -55,10 +55,12 @@ export const LoginBlock = () => {
               <FormattedMessage id={'LoginForm.or'} defaultMessage={'or'} />
             </div>
           </div>
-        </div>
+        </React.Fragment>
       ) : null}
       {extensions && extensions.length !== 0 ? (
-        extensions.map((extension) => <ExtensionLoader extension={extension} />)
+        extensions.map((extension) => (
+          <ExtensionLoader extension={extension} components={{ LoginForm }} />
+        ))
       ) : (
         <LoginForm />
       )}
