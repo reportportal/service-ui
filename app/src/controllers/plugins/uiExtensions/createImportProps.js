@@ -160,7 +160,6 @@ import { updateLaunchLocallyAction } from 'controllers/launch';
 import { getDefectTypeLabel } from 'components/main/analytics/events/common/utils';
 import { formatAttribute } from 'common/utils/attributeUtils';
 import { createNamespacedQuery } from 'common/utils/routingUtils';
-import { LoginForm } from 'pages/outside/loginPage/pageBlocks/loginBlock/loginForm';
 import { createGlobalNamedIntegrationsSelector } from '../selectors';
 
 const BUTTONS = {
@@ -242,7 +241,6 @@ export const createImportProps = (pluginName) => ({
     IntegrationFormField,
     BtsAuthFieldsInfo,
     BtsPropertiesForIssueForm,
-    LoginForm,
   },
   constants: {
     PLUGIN_UI_EXTENSION_ADMIN_PAGE,
