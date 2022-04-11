@@ -18,12 +18,12 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 import { PageBlockContainer } from 'pages/outside/common/pageBlockContainer';
 import React from 'react';
 import { isEmptyObject } from 'common/utils';
-import { ExternalLoginBlock } from 'pages/outside/loginPage/pageBlocks/loginBlock/loginForm/externalLoginBlock';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { useSelector } from 'react-redux';
 import { authExtensionsSelector } from 'controllers/appInfo';
 import classNames from 'classnames/bind';
 import { uiExtensionLoginPageSelector } from 'controllers/plugins/uiExtensions';
+import { ExternalLoginBlock } from './loginForm/externalLoginBlock';
 import styles from './loginBlock.scss';
 import { LoginForm } from './loginForm';
 
