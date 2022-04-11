@@ -23,7 +23,7 @@ import { useSelector } from 'react-redux';
 import { authExtensionsSelector } from 'controllers/appInfo';
 import classNames from 'classnames/bind';
 import { uiExtensionLoginPageSelector } from 'controllers/plugins/uiExtensions';
-import { getCurrentUrlParam } from 'common/utils/getCurrentUrlParam';
+import { pagePropertiesSelector } from 'controllers/pages';
 import { ExternalLoginBlock } from './loginForm/externalLoginBlock';
 import styles from './loginBlock.scss';
 import { LoginForm } from './loginForm';
@@ -41,11 +41,11 @@ const messages = defineMessages({
   },
 });
 
-const AUTH_PARAM = 'auth';
-
 export const LoginBlock = () => {
   const externalAuth = useSelector(authExtensionsSelector);
   const extensions = useSelector(uiExtensionLoginPageSelector);
+  const pageProps = useSelector(pagePropertiesSelector);
+  const auth = pageProps.auth;
 
   return (
     <PageBlockContainer header={messages.welcome} hint={messages.login}>
@@ -62,11 +62,7 @@ export const LoginBlock = () => {
       ) : null}
       {extensions && extensions.length !== 0 ? (
         extensions.map((extension) => (
-          <ExtensionLoader
-            extension={extension}
-            components={{ LoginForm }}
-            initAuthFlow={getCurrentUrlParam(AUTH_PARAM)}
-          />
+          <ExtensionLoader extension={extension} components={{ LoginForm }} initAuthFlow={auth} />
         ))
       ) : (
         <LoginForm />
