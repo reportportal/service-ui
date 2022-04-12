@@ -28,12 +28,14 @@ export class Layout extends Component {
     Banner: PropTypes.elementType,
     Header: PropTypes.elementType,
     Sidebar: PropTypes.elementType,
+    rawContent: PropTypes.bool,
   };
   static defaultProps = {
     children: null,
     Banner: null,
     Header: null,
     Sidebar: null,
+    rawContent: false,
   };
 
   state = {
@@ -79,7 +81,7 @@ export class Layout extends Component {
   };
 
   render() {
-    const { Header, Sidebar, Banner } = this.props;
+    const { Header, Sidebar, Banner, rawContent, children } = this.props;
     return (
       <div className={cx('layout')}>
         <div className={cx('slide-container', { 'side-menu-opened': this.state.sideMenuOpened })}>
@@ -95,13 +97,8 @@ export class Layout extends Component {
           </div>
           <div className={cx('content')}>
             {Banner && <Banner />}
-            <ScrollWrapper
-              withBackToTop
-              withFooter
-              resetRequired={this.state.resetScroll}
-              onReset={this.unmarkScrollToReset}
-            >
-              <div className={cx('scrolling-content')}>
+            {rawContent ? (
+              <>
                 <div className={cx('header-container')}>
                   {Header && (
                     <Header
@@ -110,9 +107,28 @@ export class Layout extends Component {
                     />
                   )}
                 </div>
-                <div className={cx('page-container')}>{this.props.children}</div>
-              </div>
-            </ScrollWrapper>
+                {children}
+              </>
+            ) : (
+              <ScrollWrapper
+                withBackToTop
+                withFooter
+                resetRequired={this.state.resetScroll}
+                onReset={this.unmarkScrollToReset}
+              >
+                <div className={cx('scrolling-content')}>
+                  <div className={cx('header-container')}>
+                    {Header && (
+                      <Header
+                        isSideMenuOpened={this.state.sideMenuOpened}
+                        toggleSideMenu={this.toggleSideMenu}
+                      />
+                    )}
+                  </div>
+                  <div className={cx('page-container')}>{children}</div>
+                </div>
+              </ScrollWrapper>
+            )}
             <div
               className={cx('sidebar-close-area', { visible: this.state.sideMenuOpened })}
               onClick={this.toggleSideMenu}
