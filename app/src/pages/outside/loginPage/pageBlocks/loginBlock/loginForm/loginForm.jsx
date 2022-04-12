@@ -22,10 +22,9 @@ import { connect } from 'react-redux';
 import { reduxForm, stopSubmit } from 'redux-form';
 import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
 import Link from 'redux-first-router-link';
-import { isEmptyObject } from 'common/utils/isEmptyObject';
 import { commonValidators } from 'common/utils/validation';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { authExtensionsSelector, isDemoInstanceSelector } from 'controllers/appInfo';
+import { isDemoInstanceSelector } from 'controllers/appInfo';
 import { loginAction, lastFailedLoginTimeSelector, badCredentialsSelector } from 'controllers/auth';
 import { LOGIN_PAGE } from 'controllers/pages';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -35,9 +34,6 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import WarningIcon from 'common/img/error-inline.svg';
 import LoginIcon from 'common/img/login-field-icon-inline.svg';
 import PasswordIcon from 'common/img/password-field-icon-inline.svg';
-import { ExtensionLoader, extensionType } from 'components/extensionLoader';
-import { uiExtensionLoginPageSelector } from 'controllers/plugins/uiExtensions';
-import { ExternalLoginBlock } from './externalLoginBlock';
 import { DEFAULT_USER_CREDENTIALS } from './constants';
 import styles from './loginForm.scss';
 
@@ -71,11 +67,9 @@ const messages = defineMessages({
 
 @connect(
   (state) => ({
-    externalAuth: authExtensionsSelector(state),
     lastFailedLoginTime: lastFailedLoginTimeSelector(state),
     badCredentials: badCredentialsSelector(state),
     isDemoInstance: isDemoInstanceSelector(state),
-    extensions: uiExtensionLoginPageSelector(state),
   }),
   {
     authorize: loginAction,
@@ -94,21 +88,17 @@ export class LoginForm extends React.Component {
     intl: PropTypes.object.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     authorize: PropTypes.func.isRequired,
-    externalAuth: PropTypes.object,
     lastFailedLoginTime: PropTypes.number,
     badCredentials: PropTypes.bool.isRequired,
     form: PropTypes.string.isRequired,
     dispatch: PropTypes.func.isRequired,
     isDemoInstance: PropTypes.bool,
     initialize: PropTypes.func.isRequired,
-    extensions: PropTypes.arrayOf(extensionType),
   };
 
   static defaultProps = {
-    externalAuth: {},
     lastFailedLoginTime: null,
     isDemoInstance: false,
-    extensions: [],
   };
 
   constructor(props) {
@@ -199,28 +189,12 @@ export class LoginForm extends React.Component {
     const {
       intl: { formatMessage },
       handleSubmit,
-      externalAuth,
       authorize,
-      extensions,
     } = this.props;
     const { blockTime, isLoginLimitExceeded } = this.state;
 
     return (
       <form className={cx('login-form')} onSubmit={handleSubmit(authorize)}>
-        {!isEmptyObject(externalAuth) ? (
-          <div>
-            <ExternalLoginBlock externalAuth={externalAuth} />
-            <div className={cx('separator')}>
-              <div className={cx('line')} />
-              <div className={cx('or')}>
-                <FormattedMessage id={'LoginForm.or'} defaultMessage={'or'} />
-              </div>
-            </div>
-          </div>
-        ) : null}
-        {extensions.map((extension) => (
-          <ExtensionLoader extension={extension} />
-        ))}
         <div className={cx('login-field')}>
           <FieldProvider name="login">
             <FieldErrorHint>

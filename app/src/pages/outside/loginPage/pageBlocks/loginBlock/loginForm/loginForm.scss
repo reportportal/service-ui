@@ -23,44 +23,6 @@
     width: 100%;
   }
 }
-.separator {
-  position: relative;
-  height: 20px;
-  margin-bottom: 30px;
-  margin-top: 20px;
-  text-align: center;
-
-  @media (max-width: $SCREEN_SM_MAX) {
-    left: -115px;
-    width: 610px;
-  }
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    left: 0;
-    width: 100%;
-    margin-bottom: 25px;
-    margin-top: 37px;
-  }
-}
-.line {
-  position: absolute;
-  left: 0;
-  top: 10px;
-  border-top: 1px solid $COLOR--steel-grey;
-  opacity: 0.2;
-  width: 100%;
-}
-.or {
-  position: relative;
-  padding: 0 14px;
-  background: $COLOR--white-two;
-  display: inline-block;
-  border: none;
-  font-size: 15px;
-  text-align: center;
-  color: $COLOR--steel-grey;
-  box-sizing: border-box;
-}
 .login-field {
   width: 380px;
   height: 40px;
