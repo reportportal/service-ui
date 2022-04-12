@@ -1,6 +1,7 @@
 import { getModal, addModal } from 'controllers/modal';
 import { uiExtensionMap } from './uiExtensionStorage';
 import { createImportProps } from './createImportProps';
+import { createExtensionOverrider } from './overrideExtension';
 import { EXTENSION_TYPE_MODAL } from './constants';
 
 window.RP = {};
@@ -27,7 +28,9 @@ const createPluginRegistrationFunction = (store) => (plugin) => {
 
 export const initPluginRegistration = (store) => {
   const registerPlugin = createPluginRegistrationFunction(store);
+  const overrideExtension = createExtensionOverrider(store);
   window.RP = {
     registerPlugin,
+    overrideExtension,
   };
 };
