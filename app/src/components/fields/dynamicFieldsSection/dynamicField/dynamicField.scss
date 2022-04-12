@@ -21,9 +21,11 @@
   font-family: $FONT-REGULAR;
   text-align: right;
   &.dark-view {
-    min-width: 140px;
+    min-width: 160px;
+    width: 160px;
     text-align: left;
-    padding-right: 36px;
+    margin-right: 16px;
+    padding-right: 0;
     color: $COLOR--dirty-gray;
   }
   @media (max-width: $SCREEN_XS_MAX) {

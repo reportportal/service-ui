@@ -235,6 +235,14 @@ export class EditItemModal extends Component {
     return URLS.testItemAttributeValuesSearch(projectId, item.launchId || item.id, key);
   };
 
+  onClickCopyUUID = () => {
+    const {
+      data: { eventsInfo },
+      tracking,
+    } = this.props;
+    eventsInfo.CLICK_COPY_ICON_UUID && tracking.trackEvent(eventsInfo.CLICK_COPY_ICON_UUID);
+  };
+
   render() {
     const {
       intl: { formatMessage },
@@ -292,6 +300,13 @@ export class EditItemModal extends Component {
             <ModalField label={formatMessage(messages.uuidLabel)}>
               <div title={item.uuid} className={cx('item-uuid')}>
                 {formatItemName(item.uuid)}
+                <CopyToClipboard
+                  text={item.uuid}
+                  onCopy={this.onClickCopyUUID}
+                  className={cx('copy')}
+                >
+                  {Parser(IconDuplicate)}
+                </CopyToClipboard>
               </div>
             </ModalField>
           )}

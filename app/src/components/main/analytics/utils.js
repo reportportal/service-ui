@@ -27,9 +27,19 @@ export const provideEcGA = ({
 }) => {
   const ga = ReactGA.ga();
 
-  ga(`ec:${name}`, data);
+  if (Array.isArray(data)) {
+    data.forEach((el) => {
+      ga(`ec:${name}`, el);
+    });
+  } else {
+    ga(`ec:${name}`, data);
+  }
   if (additionalData) {
     ga('ec:setAction', action, additionalData);
   }
   ga(command, hitType, eventName, action);
+};
+
+export const normalizeDimensionValue = (value) => {
+  return value !== undefined ? value.toString() : undefined;
 };

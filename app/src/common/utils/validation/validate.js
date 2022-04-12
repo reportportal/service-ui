@@ -63,6 +63,10 @@ export const analyzerMinShouldMatch = composeValidators([
   isNotEmpty,
   regex(/^([5-9][0-9])$|^100$/i),
 ]);
+export const searchLogsMinShouldMatch = composeValidators([
+  isNotEmpty,
+  regex(/^([0-9]|([1-9][0-9])|100)$/),
+]);
 export const itemNameEntity = composeValidators([
   isNotEmpty,
   ({ value }) => composeValidators([isNotEmpty, lengthRange(3, 256)])(value),

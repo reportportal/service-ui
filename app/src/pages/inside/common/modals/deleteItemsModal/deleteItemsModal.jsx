@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { injectIntl } from 'react-intl';
+import DOMPurify from 'dompurify';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import styles from './deleteItemsModal.scss';
@@ -75,7 +76,7 @@ export class DeleteItemsModal extends Component {
         closeIconEventInfo={eventsInfo.closeIcon}
         warningMessage={warning}
       >
-        <p className={cx('message')}>{Parser(mainContent)}</p>
+        <p className={cx('message')}>{Parser(DOMPurify.sanitize(mainContent))}</p>
       </ModalLayout>
     );
   }

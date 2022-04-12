@@ -83,6 +83,7 @@ export class StackTrace extends Component {
     }).isRequired,
     designMode: PropTypes.string,
     transparentBackground: PropTypes.bool,
+    eventsInfo: PropTypes.object,
   };
 
   static defaultProps = {
@@ -95,6 +96,7 @@ export class StackTrace extends Component {
     minHeight: SCROLL_HEIGHT,
     designMode: '',
     transparentBackground: false,
+    eventsInfo: {},
   };
 
   componentDidMount() {
@@ -136,7 +138,7 @@ export class StackTrace extends Component {
   };
 
   renderStackTraceMessage = () => {
-    const { items, loadMore, loading, intl, hideTime, designMode } = this.props;
+    const { items, loadMore, loading, intl, hideTime, designMode, eventsInfo } = this.props;
     return (
       <React.Fragment>
         <ScrollWrapper autoHeight autoHeightMax={this.getScrolledHeight()}>
@@ -146,6 +148,7 @@ export class StackTrace extends Component {
                 level={item.level}
                 maxHeight={this.getMaxRowHeight()}
                 designMode={designMode}
+                eventsInfo={eventsInfo}
               >
                 <div className={cx('message-container')}>
                   <div className={cx('cell', 'message-cell')}>{item.message}</div>

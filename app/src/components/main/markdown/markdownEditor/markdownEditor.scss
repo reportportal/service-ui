@@ -188,7 +188,11 @@
         height: auto;
         min-height: 30px;
         background-color: transparent;
-        color: $COLOR--gray-light;
+        color: $COLOR--darkmode-gray-100;
+
+        &-placeholder {
+          font-size: 14px;
+        }
 
         ::-webkit-scrollbar {
           width: 4px;
@@ -210,16 +214,37 @@
       .CodeMirror-cursor {
         border-left: 1px solid $COLOR--gray-light;
       }
+
+      .CodeMirror-vscrollbar {
+        min-height: 40px;
+        overflow: auto;
+        height: auto;
+
+        div {
+          min-height: 40px;
+          height: auto;
+          overflow: auto;
+        }
+      }
+
       .CodeMirror-scroll {
         max-height: 145px;
         min-height: 30px;
+        height: auto;
+        overflow: auto !important;
       }
+
+      .CodeMirror-scroll > div:nth-child(2) {
+        height: auto !important;
+        min-height: 30px;
+      }
+
       .CodeMirror-wrap {
         padding: 0;
       }
 
       .CodeMirror .CodeMirror-code {
-        color: $COLOR--gray-light;
+        color: $COLOR--darkmode-gray-50;
 
         .cm-comment {
           border-radius: 0;

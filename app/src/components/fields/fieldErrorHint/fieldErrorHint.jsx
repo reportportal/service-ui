@@ -89,6 +89,10 @@ const messages = defineMessages({
     id: 'AccuracyFormBlock.minShouldMatchHint',
     defaultMessage: 'The parameter should have value from 50 to 100',
   },
+  searchLogsMinShouldMatch: {
+    id: 'AccuracyFormBlock.searchLogsMinShouldMatch',
+    defaultMessage: 'The parameter should have value from 0 to 100',
+  },
   profilePassword: {
     id: 'ChangePasswordModal.profilePassword',
     defaultMessage: 'Password should have size from 4 to 256 symbols',
@@ -183,9 +187,13 @@ const messages = defineMessages({
     id: 'BtsCommonMessages.btsUrlHint',
     defaultMessage: 'Please provide a valid BTS link',
   },
-  btsProjectHint: {
-    id: 'BtsCommonMessages.btsProjectHint',
-    defaultMessage: 'Project name should have size from 1 to 55',
+  btsProjectKeyHint: {
+    id: 'BtsCommonMessages.btsProjectKeyHint',
+    defaultMessage: 'Project key should have size from 1 to 55',
+  },
+  btsProjectIdHint: {
+    id: 'BtsCommonMessages.btsProjectIdHint',
+    defaultMessage: 'Project ID should have size from 1 to 55',
   },
   portFieldHint: {
     id: 'EmailFormFields.portFieldHint',
@@ -227,6 +235,7 @@ export class FieldErrorHint extends Component {
     active: PropTypes.bool,
     staticHint: PropTypes.bool,
     widthContent: PropTypes.bool,
+    darkView: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -237,6 +246,7 @@ export class FieldErrorHint extends Component {
     active: false,
     staticHint: false,
     widthContent: false,
+    darkView: false,
   };
 
   isHintVisible = () => {
@@ -256,6 +266,7 @@ export class FieldErrorHint extends Component {
       active,
       staticHint,
       widthContent,
+      darkView,
       ...rest
     } = this.props;
     const classes = cx('field-error-hint', `type-${hintType}`);
@@ -273,6 +284,7 @@ export class FieldErrorHint extends Component {
             className={cx('hint-content', `type-${hintType}`, {
               'static-hint': staticHint,
               'width-content': widthContent,
+              'dark-view': darkView,
             })}
           >
             {error && messages[error] ? intl.formatMessage(messages[error]) : error}

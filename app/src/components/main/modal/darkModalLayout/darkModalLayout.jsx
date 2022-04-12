@@ -18,62 +18,31 @@ import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useDispatch } from 'react-redux';
-import { useIntl, defineMessages } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import { hideModalAction } from 'controllers/modal';
 import ErrorInlineIcon from 'common/img/error-inline.svg';
-import ShowLess from 'common/img/show-less-inline.svg';
-import ShowMore from 'common/img/show-more-inline.svg';
-import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
-import { updateStorageItem, getStorageItem } from 'common/utils';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import Parser from 'html-react-parser';
-import { useWindowResize } from 'common/hooks';
-import { SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
 import { ModalHeader } from './modalHeader';
 import { ModalNote } from './modalNote';
 import styles from './darkModalLayout.scss';
 
 const cx = classNames.bind(styles);
 
-const messages = defineMessages({
-  seeMore: { id: 'DarkModalLayout.seeMore', defaultMessage: 'See details & error logs' },
-  seeLess: { id: 'DarkModalLayout.seeLess', defaultMessage: 'See less' },
-});
-
 export const DarkModalLayout = ({
-  renderTitle,
-  renderHeaderElements,
+  headerTitle,
   children,
   modalHasChanges,
   hotKeyAction,
   modalNote,
-  renderRightSection,
+  sideSection,
+  footer,
   eventsInfo,
 }) => {
   const { trackEvent } = useTracking();
-  const applicationSettings = getStorageItem(APPLICATION_SETTINGS);
-  const collapsedRightSectionInitialState = applicationSettings
-    ? applicationSettings.darkModalCollapsedRightSection
-    : true;
   const [clickOutside, setClickOutside] = useState(false);
   const [isCtrlEnterPress, setIsCtrlEnterPress] = useState(false);
-  const [collapsedRightSection, setRightSectionCollapsed] = useState(
-    collapsedRightSectionInitialState,
-  );
-  const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const wrapperRef = useRef();
-  const windowSize = useWindowResize();
-  const collapseRightSection = () => {
-    setRightSectionCollapsed(!collapsedRightSection);
-    updateStorageItem(APPLICATION_SETTINGS, {
-      darkModalCollapsedRightSection: !collapsedRightSection,
-    });
-    eventsInfo.openCloseRightSection &&
-      trackEvent(eventsInfo.openCloseRightSection(collapsedRightSection));
-  };
-  const { width } = windowSize;
 
   const closeModalWindow = () => {
     dispatch(hideModalAction());
@@ -109,27 +78,24 @@ export const DarkModalLayout = ({
     };
   }, []);
   useEffect(() => {
-    isCtrlEnterPress && hotKeyAction.ctrlEnter();
+    modalHasChanges && isCtrlEnterPress && hotKeyAction.ctrlEnter();
   }, [isCtrlEnterPress]);
-  useEffect(() => {
-    if (width && width < SCREEN_XS_MAX && !collapsedRightSection) {
-      setRightSectionCollapsed(true);
-    }
-  }, [windowSize]);
-  const visibilityRightSectionButton = () => width < SCREEN_XS_MAX;
 
   return (
-    <div className={cx('modal-content')}>
-      <div className={cx('container')} onClick={handleClickOutside}>
-        <div ref={wrapperRef} className={cx('wrapper')}>
-          <div className={cx('layout')}>
-            <ModalHeader
-              text={renderTitle(collapsedRightSection, windowSize)}
-              onClose={closeModalWindow}
-              renderHeaderElements={renderHeaderElements}
-            />
+    <div className={cx('container')} onClick={handleClickOutside}>
+      <div className={cx('modal-content')} ref={wrapperRef}>
+        <div className={cx('wrapper')}>
+          {sideSection && (
+            <div className={cx('side-section')}>
+              <ScrollWrapper hideTracksWhenNotNeeded autoHide>
+                {sideSection}
+              </ScrollWrapper>
+            </div>
+          )}
+          <div className={cx('layout', { 'deep-black': !sideSection })}>
+            <ModalHeader text={headerTitle} onClose={closeModalWindow} />
             <ScrollWrapper hideTracksWhenNotNeeded autoHide>
-              {children({ collapsedRightSection, windowSize })}
+              {children}
               <div className={cx('note-row')}>
                 {modalNote && clickOutside && modalHasChanges && (
                   <ModalNote message={modalNote} icon={ErrorInlineIcon} status={'error'} />
@@ -138,51 +104,28 @@ export const DarkModalLayout = ({
             </ScrollWrapper>
           </div>
         </div>
+        {footer && <div className={cx('footer')}>{footer}</div>}
       </div>
-      {width > SCREEN_XS_MAX && (
-        <div className={cx('right-section', { 'narrow-view': collapsedRightSection })}>
-          <ScrollWrapper hideTracksWhenNotNeeded autoHide>
-            <div className={cx('header')}>
-              <button
-                className={cx('button', {
-                  hidden: visibilityRightSectionButton(),
-                })}
-                onClick={collapseRightSection}
-              >
-                <i className={cx('show-icon')}>
-                  {Parser(collapsedRightSection ? ShowMore : ShowLess)}
-                </i>{' '}
-                <span className={cx('show-icon-prefix')}>
-                  {collapsedRightSection
-                    ? formatMessage(messages.seeMore)
-                    : formatMessage(messages.seeLess)}
-                </span>
-              </button>
-            </div>
-            {renderRightSection(collapsedRightSection)}
-          </ScrollWrapper>
-        </div>
-      )}
     </div>
   );
 };
 DarkModalLayout.propTypes = {
-  renderTitle: PropTypes.func,
-  renderHeaderElements: PropTypes.func,
-  children: PropTypes.func,
+  headerTitle: PropTypes.string,
+  children: PropTypes.node,
   modalHasChanges: PropTypes.bool,
   hotKeyAction: PropTypes.objectOf(PropTypes.func),
   modalNote: PropTypes.string,
-  renderRightSection: PropTypes.func,
+  sideSection: PropTypes.node,
+  footer: PropTypes.node,
   eventsInfo: PropTypes.object,
 };
 DarkModalLayout.defaultProps = {
-  renderTitle: () => {},
-  renderHeaderElements: () => {},
-  children: () => {},
+  headerTitle: '',
+  children: null,
   modalHasChanges: false,
   hotKeyAction: {},
   modalNote: '',
-  renderRightSection: () => {},
+  sideSection: null,
+  footer: null,
   eventsInfo: {},
 };

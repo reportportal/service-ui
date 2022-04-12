@@ -15,33 +15,16 @@
  */
 
 .header {
-  position: relative;
   display: flex;
-  align-items: flex-start;
-  padding: 0 24px;
-  margin-bottom: 25px;
+  justify-content: space-between;
+  margin-bottom: 14px;
   font-family: $FONT-REGULAR;
   font-size: 24px;
   color: $COLOR--white-two;
 }
 
-.header-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  width: 100%;
-  padding-right: 40px;
-  box-sizing: border-box;
-}
-
-.header-elements {
-  display: flex;
-  flex-grow: 0;
-  width: auto;
-}
-
 .title {
-  line-height: 30px;
+  line-height: 33px;
 }
 
 .close-icon {
@@ -55,12 +38,15 @@
   svg {
     width: 30px;
     height: 30px;
-    fill: $COLOR--topaz;
+    fill: $COLOR--darkmode-topaz-main;
+    &:hover {
+      fill: $COLOR--darkmode-topaz-hover;
+    }
   }
 }
 
 .close-icon-prefix {
   margin-right: 7px;
-  color: $COLOR--dark-gray;
+  color: $COLOR--darkmode-gray-200;
   font-size: 11px;
 }

@@ -33,6 +33,10 @@ const messages = defineMessages({
     id: 'administrateUsersPageToolbar.allUsers',
     defaultMessage: '{count} items selected',
   },
+  searchPlaceholder: {
+    id: 'administrateUsersPageToolbar.searchPlaceholder',
+    defaultMessage: 'Search by name, login, email',
+  },
 });
 
 @injectIntl
@@ -68,6 +72,7 @@ export class UsersToolbar extends PureComponent {
   };
 
   render() {
+    const { intl } = this.props;
     return (
       <div className={cx('users-toolbar')}>
         <div className={cx('entities-wrapper')}>
@@ -83,6 +88,7 @@ export class UsersToolbar extends PureComponent {
                   openFilter: ADMIN_ALL_USERS_PAGE_EVENTS.FUNNEL_BTN,
                   applyBtn: ADMIN_ALL_USERS_PAGE_EVENTS.APPLY_FILTER_BTN,
                 }}
+                placeholder={intl.formatMessage(messages.searchPlaceholder)}
               />
             )}
           />

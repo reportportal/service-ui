@@ -212,27 +212,38 @@
   }
   &.appearance-topaz {
     border-radius: 2px;
-    border-color: transparent;
+    border-color: $COLOR--darkmode-topaz-main;
     min-width: 173px;
     color: $COLOR--white-two;
-    background-color: $COLOR--topaz;
+    background-color: $COLOR--darkmode-topaz-main;
     &:hover {
-      background-color: $COLOR--topaz-hover;
+      background-color: $COLOR--darkmode-topaz-hover;
       & svg * {
-        fill: $COLOR--topaz-hover;
+        fill: $COLOR--darkmode-topaz-hover;
+      }
+    }
+    &:active {
+      background-color: $COLOR--topaz-pressed;
+      border-color: $COLOR--topaz-pressed;
+      & svg * {
+        fill: $COLOR--topaz-pressed;
       }
     }
     &.transparent-background {
-      color: $COLOR--topaz;
       background: transparent;
-      min-width: 90px;
+      color: $COLOR--darkmode-gray-50;
     }
     &.transparent-background:hover {
       background: transparent;
-      color: $COLOR--topaz-hover;
+      border-color: $COLOR--darkmode-topaz-hover;
+      color: $COLOR--white-two;
     }
     & svg * {
-      fill: $COLOR--topaz;
+      fill: $COLOR--darkmode-topaz-main;
+    }
+    &.transparent-background:active {
+      background: transparent;
+      border-color: $COLOR--topaz-pressed;
     }
   }
   &.appearance-gray {
@@ -249,10 +260,10 @@
   &.appearance-topaz.disabled {
     border-radius: 2px;
     border-color: transparent;
-    color: $COLOR--gray-60;
-    background-color: $COLOR--topaz-disabled;
+    color: rgba($COLOR--white-two, 0.5);
+    background-color: rgba($COLOR--darkmode-topaz-main, 0.5);
     &.transparent-background {
-      color: $COLOR--topaz-disabled;
+      color: rgba($COLOR--darkmode-topaz-main, 0.5);
       background: transparent;
     }
   }

@@ -17,29 +17,21 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
-  includedToAa: {
-    id: 'MakeDecisionModal.includedToAa',
-    defaultMessage: 'Included to Auto-Analysis',
+  defectIncludeInAa: {
+    id: 'MakeDecisionModal.defectIncludeInAa',
+    defaultMessage: 'defect will be included in Auto-Analysis',
   },
-  excludedFromAa: {
-    id: 'MakeDecisionModal.excludedFromAa',
-    defaultMessage: 'Excluded from Auto-Analysis',
+  defectIgnoreInAa: {
+    id: 'MakeDecisionModal.defectIgnoreInAa',
+    defaultMessage: 'defect will be ignored in Auto-Analysis',
   },
-  defectCommentPlaceholder: {
-    id: 'MakeDecisionModal.defectCommentPlaceholder',
-    defaultMessage: 'Defect comment',
+  and: {
+    id: 'MakeDecisionModal.and',
+    defaultMessage: 'and',
   },
-  defectCommentBulkOperationPlaceholder: {
-    id: 'MakeDecisionModal.defectCommentBulkOperationPlaceholder',
-    defaultMessage: 'Add new data to existing comments',
-  },
-  clearCommentsAndApply: {
-    id: 'MakeDecisionModal.clearCommentsAndApply',
-    defaultMessage: 'Clear Comments and Apply',
-  },
-  replaceCommentsAndApply: {
-    id: 'MakeDecisionModal.replaceCommentsAndApply',
-    defaultMessage: 'Replace Comments and Apply',
+  comment: {
+    id: 'MakeDecisionModal.comment',
+    defaultMessage: 'Comment',
   },
   ignoreAa: {
     id: 'MakeDecisionModal.ignoreAa',
@@ -49,38 +41,29 @@ export const messages = defineMessages({
     id: 'MakeDecisionModal.ignoreAaShort',
     defaultMessage: 'Ignore in AA',
   },
-  decisionForTest: {
-    id: 'MakeDecisionModal.decisionForTest',
-    defaultMessage: 'Decision for the test {launchNumber}',
+  executionToChange: {
+    id: 'MakeDecisionModal.executionToChange',
+    defaultMessage: 'Execution to change',
   },
-  test: {
-    id: 'MakeDecisionModal.test',
-    defaultMessage: 'Test {launchNumber}',
-  },
-  currentSelection: {
-    id: 'MakeDecisionModal.currentSelection',
-    defaultMessage: 'Current selection',
-  },
-  bulk: { id: 'MakeDecisionModal.bulk', defaultMessage: 'Bulk' },
-  bulkOperationDecision: {
-    id: 'MakeDecisionModal.bulkOperationDecision',
-    defaultMessage: 'Bulk Operation Decision',
+  applyToItem: {
+    id: 'MakeDecisionModal.applyToItem',
+    defaultMessage: 'Results will be applied for the Item',
   },
   applyToItems: {
     id: 'MakeDecisionModal.applyToItems',
-    defaultMessage: 'Apply to {itemsCount} Items',
+    defaultMessage: 'Results will be applied for {itemsCount} Items',
+  },
+  selectDefect: {
+    id: 'MakeDecisionModal.selectDefect',
+    defaultMessage: 'Select defect',
   },
   selectDefectTypeManually: {
     id: 'MakeDecisionModal.selectDefectTypeManually',
-    defaultMessage: 'Select defect type manually',
-  },
-  machineLearningSuggestions: {
-    id: 'MakeDecisionModal.machineLearningSuggestions',
-    defaultMessage: 'Choose among ML suggestions',
+    defaultMessage: 'Select defect manually',
   },
   copyFromHistoryLine: {
     id: 'MakeDecisionModal.copyFromHistoryLine',
-    defaultMessage: 'Copy from history line',
+    defaultMessage: 'Analyzed executions from the test history',
   },
   apply: {
     id: 'MakeDecisionModal.apply',
@@ -93,10 +76,6 @@ export const messages = defineMessages({
   modalNote: {
     id: 'MakeDecisionModal.modalNote',
     defaultMessage: 'You have to save changes or cancel them before closing the window',
-  },
-  suggestionsNotFound: {
-    id: 'MakeDecisionModal.suggestionsNotFound',
-    defaultMessage: 'ML has not found any suggestions',
   },
   postIssueNote: {
     id: 'MakeDecisionModal.postIssueNote',
@@ -112,29 +91,17 @@ export const messages = defineMessages({
     id: 'MakeDecisionModal.unlinkIssueNote',
     defaultMessage: 'After a defect type submission, the current links will be unlinked',
   },
-  execution: {
-    id: 'MakeDecisionModal.execution',
-    defaultMessage: 'Execution',
-  },
-  defectType: {
-    id: 'MakeDecisionModal.defectType',
-    defaultMessage: 'Defect type',
-  },
-  applyDefectFor: {
-    id: 'MakeDecisionModal.applyDefectFor',
-    defaultMessage: 'Apply defect for:',
-  },
-  applyToSimilarItems: {
-    id: 'MakeDecisionModal.applyToSimilarItems',
-    defaultMessage: 'You can also apply this changes to other similar items in',
+  applyFor: {
+    id: 'MakeDecisionModal.applyFor',
+    defaultMessage: 'Apply for:',
   },
   currentExecutionOnly: {
     id: 'MakeDecisionModal.currentExecutionOnly',
-    defaultMessage: 'Current execution only',
+    defaultMessage: 'Current item only',
   },
   currentLaunch: {
     id: 'MakeDecisionModal.currentLaunch',
-    defaultMessage: 'Similar errors in the current launch',
+    defaultMessage: 'Similar ”To Investigate” in the launch & current item',
   },
   currentLaunchTooltip: {
     id: 'MakeDecisionModal.currentLaunchTooltip',
@@ -143,7 +110,7 @@ export const messages = defineMessages({
   },
   launchName: {
     id: 'MakeDecisionModal.launchName',
-    defaultMessage: 'Similar errors in last 10 launches',
+    defaultMessage: 'Similar “To Investigate” in 10 launches & current item',
   },
   lastTenLaunchesTooltip: {
     id: 'MakeDecisionModal.lastTenLaunchesTooltip',
@@ -152,7 +119,7 @@ export const messages = defineMessages({
   },
   filter: {
     id: 'MakeDecisionModal.filter',
-    defaultMessage: 'Similar errors in {filterName}',
+    defaultMessage: 'Similar “To Investigate” in the {filterName} & current item',
   },
   withFilterTooltip: {
     id: 'MakeDecisionModal.withFilterTooltip',
@@ -169,11 +136,15 @@ export const messages = defineMessages({
   },
   allLoadedTIFromHistoryLine: {
     id: 'MakeDecisionModal.allLoadedTIFromHistoryLine',
-    defaultMessage: 'All loaded TI from the history line',
+    defaultMessage: '“To Investigate” from the history line & current item',
   },
   analyzerUnavailable: {
     id: 'MakeDecisionModal.analyzerUnavailable',
-    defaultMessage: 'Service Analyzer is not running, please check',
+    defaultMessage: 'Service Analyzer is not running,',
+  },
+  pleaseCheck: {
+    id: 'MakeDecisionModal.pleaseCheck',
+    defaultMessage: 'please check',
   },
   analyzerUnavailableLink: {
     id: 'MakeDecisionModal.analyzerUnavailableLink',
@@ -187,14 +158,6 @@ export const messages = defineMessages({
     id: 'MakeDecisionModal.updateDefectsFailed',
     defaultMessage: 'Failed to update defects',
   },
-  similarity: {
-    id: 'MakeDecisionModal.similarity',
-    defaultMessage: 'Similarity',
-  },
-  suggestedTest: {
-    id: 'MakeDecisionModal.suggestedTest',
-    defaultMessage: 'Suggested test as a source',
-  },
   suggestedChoiceSuccess: {
     id: 'MakeDecisionModal.suggestedChoiceSuccess',
     defaultMessage: 'User choice of suggested item was sent for handling to ML',
@@ -202,5 +165,105 @@ export const messages = defineMessages({
   suggestedChoiceFailed: {
     id: 'MakeDecisionModal.suggestedChoiceFailed',
     defaultMessage: 'The proposed item selected by the user has not been sent for processing to ML',
+  },
+  similarLog: {
+    id: 'MakeDecisionModal.similarLog',
+    defaultMessage: 'Similar Log',
+  },
+  noLogs: {
+    id: 'MakeDecisionModal.noLogs',
+    defaultMessage: 'No Logs Found x_x',
+  },
+  noItems: {
+    id: 'MakeDecisionModal.noItems',
+    defaultMessage: 'No Items',
+  },
+  analyzingSuggestions: {
+    id: 'MakeDecisionModal.analyzingSuggestions',
+    defaultMessage: 'Analyzing Suggestions',
+  },
+  analyzerSuggestion: {
+    id: 'MakeDecisionModal.analyzerSuggestion',
+    defaultMessage: 'Analyzer Suggestion',
+  },
+  noSuggestions: {
+    id: 'MakeDecisionModal.noSuggestions',
+    defaultMessage: 'No Analyzer Suggestions',
+  },
+  selection: {
+    id: 'MakeDecisionModal.selection',
+    defaultMessage: 'Selection',
+  },
+  manual: {
+    id: 'MakeDecisionModal.manual',
+    defaultMessage: 'Manual',
+  },
+  history: {
+    id: 'MakeDecisionModal.history',
+    defaultMessage: 'History',
+  },
+  ofTheTest: {
+    id: 'MakeDecisionModal.ofTheTest',
+    defaultMessage: 'of the test',
+  },
+  machineLearningSuggestions: {
+    id: 'MakeDecisionModal.machineLearningSuggestions',
+    defaultMessage: 'The execution with {value}% similarity of defect',
+  },
+  commentReplaceWith: {
+    id: 'MakeDecisionModal.commentReplaceWith',
+    defaultMessage: 'Comment will be replaced with:',
+  },
+  commentWillRemoved: {
+    id: 'MakeDecisionModal.commentWillRemoved',
+    defaultMessage: 'Comment will be removed',
+  },
+  commentWill: {
+    id: 'MakeDecisionModal.commentWill',
+    defaultMessage: 'Comments will',
+  },
+  notChangedForAll: {
+    id: 'MakeDecisionModal.notChangedForAll',
+    defaultMessage: 'not be changed for all chosen items',
+  },
+  clearForAll: {
+    id: 'MakeDecisionModal.clearForAll',
+    defaultMessage: 'be cleared for all chosen items',
+  },
+  addForAll: {
+    id: 'MakeDecisionModal.addForAll',
+    defaultMessage: 'be added for all chosen items',
+  },
+  replaceForAll: {
+    id: 'MakeDecisionModal.replaceForAll',
+    defaultMessage: 'be replaced for all chosen items with',
+  },
+  followingResult: {
+    id: 'MakeDecisionModal.followingResult',
+    defaultMessage: 'Following results will be applied for {items}',
+  },
+  itemsCount: {
+    id: 'MakeDecisionModal.itemsCount',
+    defaultMessage: '{count} Items',
+  },
+  item: {
+    id: 'MakeDecisionModal.item',
+    defaultMessage: 'the Item',
+  },
+  linkAddedOnNextStep: {
+    id: 'MakeDecisionModal.linkAddedOnNextStep',
+    defaultMessage: 'The link to Bug Tracking System will be added in the next step',
+  },
+  linkRemovedOnNextStep: {
+    id: 'MakeDecisionModal.linkRemovedOnNextStep',
+    defaultMessage: 'The link to Bug Tracking System will be removed in the next step',
+  },
+  linkReplacedWith: {
+    id: 'MakeDecisionModal.linkReplacedWith',
+    defaultMessage: 'The link to Bug Tracking System will be replaced with',
+  },
+  defectReplaceWith: {
+    id: 'MakeDecisionModal.defectReplaceWith',
+    defaultMessage: 'The defect type will be changed to',
   },
 });

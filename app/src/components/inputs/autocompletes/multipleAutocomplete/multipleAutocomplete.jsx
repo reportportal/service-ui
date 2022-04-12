@@ -56,6 +56,7 @@ export class MultipleAutocomplete extends Component {
     showDynamicSearchPrompt: PropTypes.bool,
     customClass: PropTypes.string,
     isOptionUnique: PropTypes.func,
+    darkView: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -82,6 +83,7 @@ export class MultipleAutocomplete extends Component {
     async: false,
     customClass: '',
     isOptionUnique: null,
+    darkView: false,
   };
 
   state = {
@@ -118,6 +120,7 @@ export class MultipleAutocomplete extends Component {
       onStateChange,
       customClass,
       maxLength,
+      darkView,
       ...props
     } = this.props;
     const { focused } = this.state;
@@ -147,6 +150,7 @@ export class MultipleAutocomplete extends Component {
                     ref={ref}
                     className={cx('autocomplete', customClass, {
                       'mobile-disabled': mobileDisabled,
+                      'dark-view': darkView,
                       error,
                       touched,
                       focused,
@@ -191,7 +195,7 @@ export class MultipleAutocomplete extends Component {
                           disabled,
                           ...inputProps,
                         })}
-                        className={cx('input', { disabled })}
+                        className={cx('input', { disabled, 'dark-view': darkView })}
                       />
                     </div>
                     {isClearable && (
@@ -199,7 +203,9 @@ export class MultipleAutocomplete extends Component {
                         className={cx('input-control-btn', { 'mobile-disabled': mobileDisabled })}
                         onClick={removeAllItems}
                       >
-                        <i className={cx('cross-icon')}>{Parser(CrossIcon)}</i>
+                        <i className={cx('cross-icon', { 'dark-view': darkView })}>
+                          {Parser(CrossIcon)}
+                        </i>
                       </button>
                     )}
                   </div>

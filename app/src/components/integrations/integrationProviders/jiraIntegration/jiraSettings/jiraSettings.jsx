@@ -68,7 +68,7 @@ export class JiraSettings extends Component {
     },
     {
       value: this.props.data.integrationParameters.project,
-      message: this.props.intl.formatMessage(messages.projectNameLabel),
+      message: this.props.intl.formatMessage(COMMON_BTS_MESSAGES.projectKeyLabel),
     },
     {
       value: this.props.data.integrationParameters.username,

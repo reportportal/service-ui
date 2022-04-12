@@ -29,6 +29,7 @@ import {
 } from 'redux-form';
 import Link from 'redux-first-router-link';
 import { useTracking } from 'react-tracking';
+import classNames from 'classnames/bind';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { BigButton } from 'components/buttons/bigButton';
 import { NavigationTabs } from 'components/main/navigationTabs';
@@ -45,7 +46,14 @@ import {
   STATS_SI_TOTAL,
   STATS_TI_TOTAL,
 } from 'common/constants/statistics';
-import { PASSED, FAILED, INTERRUPTED, SKIPPED } from 'common/constants/testStatuses';
+import {
+  PASSED,
+  FAILED,
+  INTERRUPTED,
+  SKIPPED,
+  CANCELLED,
+  STOPPED,
+} from 'common/constants/testStatuses';
 import {
   activeProjectSelector,
   activeProjectRoleSelector,
@@ -55,13 +63,16 @@ import {
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
   PROJECT_SETTINGS_TAB_PAGE,
   pluginRouteSelector,
+  updatePagePropertiesAction,
+  pagePropertiesSelector,
 } from 'controllers/pages';
 import { attributesArray, isNotEmptyArray } from 'common/utils/validation/validate';
 import {
   requiredField,
   btsUrl,
-  btsProject,
+  btsProjectKey,
   btsIntegrationName,
+  email,
 } from 'common/utils/validation/commonValidators';
 import {
   composeValidators,
@@ -81,7 +92,7 @@ import { Input } from 'components/inputs/input';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { InputRadio } from 'components/inputs/inputRadio';
 import { URLS } from 'common/urls';
-import { isEmailIntegrationAvailableSelector } from 'controllers/plugins';
+import { isEmailIntegrationAvailableSelector, SECRET_FIELDS_KEY } from 'controllers/plugins';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -97,7 +108,7 @@ import {
   defectTypesSelector,
   updateConfigurationAttributesAction,
 } from 'controllers/project';
-import { statisticsLinkSelector, defectLinkSelector } from 'controllers/testItem';
+import { statisticsLinkSelector, defectLinkSelector, launchSelector } from 'controllers/testItem';
 import { Grid } from 'components/main/grid';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { AttributeListField } from 'components/main/attributeList';
@@ -141,10 +152,13 @@ import {
   IntegrationFormField,
   BtsAuthFieldsInfo,
   BtsPropertiesForIssueForm,
+  getDefectFormFields,
+  BTS_FIELDS_FORM,
 } from 'components/integrations/elements';
 import { updateLaunchLocallyAction } from 'controllers/launch';
 import { getDefectTypeLabel } from 'components/main/analytics/events/common/utils';
 import { formatAttribute } from 'common/utils/attributeUtils';
+import { createNamespacedQuery } from 'common/utils/routingUtils';
 import { createGlobalNamedIntegrationsSelector } from '../selectors';
 
 const BUTTONS = {
@@ -190,6 +204,7 @@ export const createImportProps = (pluginName) => ({
     destroy,
     change,
     useTracking,
+    classNames,
   },
   components: {
     ...BUTTONS,
@@ -239,6 +254,10 @@ export const createImportProps = (pluginName) => ({
     FAILED,
     INTERRUPTED,
     SKIPPED,
+    CANCELLED,
+    STOPPED,
+    SECRET_FIELDS_KEY,
+    BTS_FIELDS_FORM,
   },
   actions: {
     showModalAction,
@@ -250,6 +269,7 @@ export const createImportProps = (pluginName) => ({
     hideScreenLockAction,
     updateConfigurationAttributesAction,
     updateLaunchLocallyAction,
+    updatePagePropertiesAction,
   },
   selectors: {
     pluginRouteSelector,
@@ -265,6 +285,8 @@ export const createImportProps = (pluginName) => ({
     defectTypesSelector,
     statisticsLinkSelector,
     defectLinkSelector,
+    pagePropertiesSelector,
+    launchSelector,
   },
   icons: {
     PlusIcon,
@@ -288,15 +310,18 @@ export const createImportProps = (pluginName) => ({
     getItemNameConfig,
     getDefectTypeLocators,
     getDefectTypeLabel,
+    getDefectFormFields,
     formatAttribute,
+    createNamespacedQuery,
   },
   validators: {
     attributesArray,
     isNotEmptyArray,
     requiredField,
     btsUrl,
-    btsProject,
+    btsProjectKey,
     btsIntegrationName,
     helpers: { composeValidators, bindMessageToValidator },
+    email,
   },
 });

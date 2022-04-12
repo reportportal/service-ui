@@ -1,0 +1,131 @@
+/*!
+ * Copyright 2021 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.support-btn {
+  display: inline-flex;
+  width: 56px;
+  height: 54px;
+  cursor: pointer;
+}
+
+.tooltip-text {
+  display: block;
+  font-size: 17px;
+  font-family: $FONT-CONDBOLD;
+  text-transform: uppercase;
+  line-height: 25px;
+}
+
+.support-block {
+  position: relative;
+  margin-bottom: 70px;
+}
+
+.modal {
+  position: absolute;
+  bottom: -17px;
+  left: 62px;
+  width: max-content;
+  max-width: 360px;
+  border: solid 1px $COLOR--gray-80;
+  background: $COLOR--white-two;
+  z-index: $Z_INDEX-ALL_LATEST_DROPDOWN;
+  box-sizing: border-box;
+
+  &:before,
+  &:after {
+    position: absolute;
+    bottom: 36px;
+    left: -7px;
+    content: '';
+    margin: auto;
+    display: block;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 8px 7px 8px 0;
+  }
+
+  &:before {
+    border-color: transparent $COLOR--gray-80 transparent transparent;
+  }
+
+  &:after {
+    left: -5px;
+    border-color: transparent $COLOR--white-two transparent transparent;
+  }
+}
+
+.modal-header {
+  padding: 14px 21px;
+  border-bottom: 1px solid $COLOR--gray-80;
+  font-family: $FONT-CONDBOLD;
+  font-size: 16px;
+  color: $COLOR--topaz;
+  line-height: 24px;
+  text-transform: capitalize;
+}
+
+.modal-content {
+  padding: 20px 22px 30px 22px;
+}
+
+.solution-block {
+  margin-bottom: 20px;
+}
+
+.solution-title {
+  display: inline-block;
+  margin-bottom: 12px;
+  color: $COLOR--gray-60;
+  font-size: 12px;
+  font-family: $FONT-REGULAR;
+  line-height: 17px;
+}
+
+.solution-btn {
+  max-width: fit-content;
+  margin: 20px 0 30px 0;
+}
+
+.solution-link {
+  padding: 6px 13px;
+  font-size: 13px;
+  background: $COLOR--booger;
+  color: $COLOR--white-two;
+  text-decoration: none;
+
+  &:hover {
+    background-color: darken($COLOR--booger, 15%);
+  }
+}
+
+.ask-help {
+  display: inline-block;
+  margin-bottom: 20px;
+  font-size: 12px;
+  line-height: normal;
+  color: $COLOR--gray-60;
+}
+
+.support-link {
+  color: $COLOR--topaz;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

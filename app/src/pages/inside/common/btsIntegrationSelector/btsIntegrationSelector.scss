@@ -31,8 +31,10 @@
   font-family: $FONT-REGULAR;
   text-align: right;
   &.dark-view {
-    min-width: 140px;
-    padding-right: 36px;
+    width: 160px;
+    min-width: 160px;
+    margin-right: 16px;
+    padding-right: 0;
     text-align: left;
     color: $COLOR--dirty-gray;
   }

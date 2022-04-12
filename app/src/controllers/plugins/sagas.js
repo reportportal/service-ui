@@ -26,6 +26,7 @@ import { fetchDataAction, createFetchPredicate } from 'controllers/fetch';
 import { hideModalAction } from 'controllers/modal';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { fetch, omit } from 'common/utils';
+import { userIdSelector } from 'controllers/user';
 import {
   NAMESPACE,
   FETCH_PLUGINS,
@@ -50,6 +51,7 @@ import {
   removeGlobalIntegrationSuccessAction,
   updateGlobalIntegrationSuccessAction,
   fetchGlobalIntegrationsSuccessAction,
+  removeGlobalIntegrationsByTypeSuccessAction,
 } from './actionCreators';
 import { fetchUiExtensions } from './uiExtensions';
 
@@ -67,11 +69,13 @@ function* addIntegration({ payload: { data, isGlobal, pluginName, callback }, me
     });
 
     const integrationType = yield select(pluginByNameSelector, pluginName);
+    const creator = yield select(userIdSelector);
     const newIntegration = {
       ...data,
       integrationParameters: omit(data.integrationParameters, meta[SECRET_FIELDS_KEY]),
       id: response.id,
       integrationType,
+      creator,
     };
     const addIntegrationSuccessAction = isGlobal
       ? addGlobalIntegrationSuccessAction(newIntegration)
@@ -214,13 +218,14 @@ function* watchFetchPlugins() {
   yield takeEvery(FETCH_PLUGINS, fetchPlugins);
 }
 
-function* removePlugin({ payload: { id, callback } }) {
+function* removePlugin({ payload: { id, callback, pluginName } }) {
   yield put(showScreenLockAction());
   try {
     yield call(fetch, URLS.pluginUpdate(id), {
       method: 'delete',
     });
     yield put(removePluginSuccessAction(id));
+    yield put(removeGlobalIntegrationsByTypeSuccessAction(pluginName));
     yield put(
       showNotification({
         messageId: 'removePluginSuccess',
@@ -239,6 +244,7 @@ function* watchRemovePlugin() {
   yield takeEvery(REMOVE_PLUGIN, removePlugin);
 }
 
+// TODO: in the future plugins with js parts should not depend on integrations, only on plugins.
 function* watchPluginChange() {
   yield takeEvery(
     [createFetchPredicate(NAMESPACE), FETCH_GLOBAL_INTEGRATIONS_SUCCESS],

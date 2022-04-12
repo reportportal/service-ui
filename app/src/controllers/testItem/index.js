@@ -25,13 +25,14 @@ export {
   fetchTestItemsFromLogPageAction,
   setDefaultItemStatisticsAction,
 } from './actionCreators';
-export { fetchParentItems, testItemsSagas } from './sagas';
+export { fetchParentItems, fetchParentLaunch, testItemsSagas } from './sagas';
 export {
   SET_PAGE_LOADING,
   FILTERED_ITEM_STATISTICS_INITIAL_STATE,
   PROVIDER_TYPE_WIDGET,
   PROVIDER_TYPE_LAUNCH,
   PROVIDER_TYPE_FILTER,
+  PROVIDER_TYPE_CLUSTER,
   PROVIDER_TYPE_MODIFIERS_ID_MAP,
   LOG_VIEW,
   LIST_VIEW,
@@ -64,6 +65,7 @@ export {
   listViewLinkSelector,
   logViewLinkSelector,
   historyViewLinkSelector,
+  uniqueErrorsLinkSelector,
   getLogItemLinkSelector,
   isTestItemsListSelector,
   compositeAttributesSelector,

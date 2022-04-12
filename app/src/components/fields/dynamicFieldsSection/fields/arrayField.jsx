@@ -23,6 +23,11 @@ export class ArrayField extends Component {
   static propTypes = {
     field: PropTypes.object.isRequired,
     defaultOptionValueKey: PropTypes.string.isRequired,
+    darkView: PropTypes.bool,
+  };
+
+  static defaultProps = {
+    darkView: false,
   };
 
   formatOptions = (values = []) =>
@@ -51,19 +56,21 @@ export class ArrayField extends Component {
   parseTags = (options) => (options && options.map(this.parseValueToString)) || undefined;
 
   render() {
-    const { field, ...rest } = this.props;
+    const { field, darkView, ...rest } = this.props;
 
     return (
       <DynamicField
         field={field}
         format={this.creatable ? this.formatOptions : this.formatTags}
         parse={this.parseTags}
+        darkView={darkView}
         {...rest}
       >
         <MultipleAutocomplete
           options={this.formatOptions(field.definedValues)}
           parseValueToString={this.parseValueToString}
           creatable={this.creatable}
+          darkView={darkView}
           mobileDisabled
         />
       </DynamicField>

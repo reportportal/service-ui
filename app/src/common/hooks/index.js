@@ -15,3 +15,4 @@
  */
 
 export { useWindowResize } from './useWindowResize';
+export { useOnClickOutside } from './useOnClickOutside';

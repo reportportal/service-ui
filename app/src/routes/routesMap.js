@@ -35,6 +35,7 @@ import {
   PROJECT_USERDEBUG_LOG_PAGE,
   PROJECT_USERDEBUG_PAGE,
   HISTORY_PAGE,
+  UNIQUE_ERRORS_PAGE,
   PROJECTS_PAGE,
   PROJECT_DETAILS_PAGE,
   ALL_USERS_PAGE,
@@ -81,6 +82,7 @@ import { fetchProjectsAction } from 'controllers/administrate/projects';
 import { startSetViewMode } from 'controllers/administrate/projects/actionCreators';
 import { SIZE_KEY } from 'controllers/pagination';
 import { setSessionItem, updateStorageItem } from 'common/utils/storageUtils';
+import { fetchClustersAction } from 'controllers/uniqueErrors';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
@@ -199,6 +201,12 @@ const routesMap = {
     path: '/:projectId/launches/:filterId/:testItemIds+/history',
     thunk: (dispatch) => {
       dispatch(fetchHistoryPageInfoAction());
+    },
+  },
+  [UNIQUE_ERRORS_PAGE]: {
+    path: '/:projectId/launches/:filterId/:testItemIds+/uniqueErrors',
+    thunk: (dispatch) => {
+      dispatch(fetchClustersAction());
     },
   },
   PROJECT_FILTERS_PAGE: {

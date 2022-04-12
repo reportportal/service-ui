@@ -130,11 +130,15 @@ export class ActionPanel extends Component {
   };
 
   onEditDefects = () => {
-    const { tracking, selectedItems, onEditDefects } = this.props;
-    if (selectedItems.length === 1) {
+    const { tracking, selectedItems, onEditDefects, hasErrors } = this.props;
+    if (!hasErrors) {
+      const defectFromTIGroup =
+        selectedItems.length > 1 && selectedItems.some(({ issue }) => issue)
+          ? undefined
+          : selectedItems[0].issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
       tracking.trackEvent(
         pageEventsMap[this.props.level].MAKE_DECISION_MODAL_EVENTS.openModal(
-          selectedItems[0].issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
+          defectFromTIGroup,
           'ActionMenu',
         ),
       );

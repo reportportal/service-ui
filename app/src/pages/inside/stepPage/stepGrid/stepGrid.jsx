@@ -62,16 +62,24 @@ MethodTypeColumn.defaultProps = {
   value: {},
 };
 
-const NameColumn = ({ className, ...rest }) => (
-  <div className={cx('name-col', className)}>
-    <ItemInfoWithRetries {...rest} />
+const NameColumn = ({ className, customProps, ...rest }) => (
+  <div className={cx('name-col', className, customProps.className)}>
+    <ItemInfoWithRetries
+      {...rest}
+      customProps={{
+        ...customProps,
+        ownLinkParams: { ...customProps.ownLinkParams, testItem: rest.value },
+      }}
+    />
   </div>
 );
 NameColumn.propTypes = {
   className: PropTypes.string,
+  customProps: PropTypes.object,
 };
 NameColumn.defaultProps = {
   className: null,
+  customProps: {},
 };
 
 const StatusColumn = ({ className, value, customProps: { onChange, fetchFunc } }) => {
@@ -190,6 +198,7 @@ export class StepGrid extends Component {
       highlightedRowId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     }),
     onStatusUpdate: PropTypes.func.isRequired,
+    modifyColumnsFunc: PropTypes.func,
   };
 
   static defaultProps = {
@@ -213,6 +222,7 @@ export class StepGrid extends Component {
       isGridRowHighlighted: false,
       highlightedRowId: null,
     }),
+    modifyColumnsFunc: null,
   };
 
   constructor(props) {
@@ -225,6 +235,7 @@ export class StepGrid extends Component {
       onEditItem,
       onEditDefect,
       onStatusUpdate,
+      modifyColumnsFunc,
     } = props;
     this.columns = [
       {
@@ -306,17 +317,24 @@ export class StepGrid extends Component {
           },
           onUnlinkSingleTicket,
           events: {
-            onEditEvent: events.MAKE_DECISION_MODAL_EVENTS.openModal,
+            onEditEvent:
+              events.MAKE_DECISION_MODAL_EVENTS && events.MAKE_DECISION_MODAL_EVENTS.openModal,
+            onClickIssueTicketEvent: events.onClickIssueTicketEvent,
           },
         },
         withFilter: true,
         filterEventInfo: events.DEFECT_TYPE_FILTER,
       },
     ];
+    if (modifyColumnsFunc) {
+      this.columns = modifyColumnsFunc(this.columns);
+    }
   }
 
   handleAttributeFilterClick = (attribute) => {
-    this.props.onFilterClick(
+    const { tracking, events, onFilterClick } = this.props;
+
+    onFilterClick(
       [
         {
           id: ENTITY_ATTRIBUTE,
@@ -329,6 +347,9 @@ export class StepGrid extends Component {
       ],
       true,
     );
+
+    const textAttribute = attribute.key ? 'key:value' : 'value';
+    events.CLICK_ATTRIBUTES && tracking.trackEvent(events.CLICK_ATTRIBUTES(textAttribute));
   };
 
   highlightFailedItems = (value) => ({

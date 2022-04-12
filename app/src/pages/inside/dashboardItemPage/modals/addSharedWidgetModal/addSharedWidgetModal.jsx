@@ -24,7 +24,7 @@ import { activeProjectSelector } from 'controllers/user';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { showScreenLockAction } from 'controllers/screenLock';
-import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/common/widgets';
+import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/common/messages';
 import { getDefaultWidgetConfig } from '../common/utils';
 import { SharedWidgetInfoSection } from './sharedWidgetInfoSection';
 import { SharedWidgetsListSection } from './sharedWidgetsListSection';

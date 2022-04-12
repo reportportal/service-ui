@@ -19,7 +19,10 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
-import { getIntegrationItemClickEvent } from 'components/main/analytics/events';
+import {
+  getIntegrationItemClickEvent,
+  SETTINGS_PAGE_EVENTS,
+} from 'components/main/analytics/events';
 import {
   IntegrationInfoContainer,
   IntegrationSettingsContainer,
@@ -91,6 +94,7 @@ export class IntegrationsTab extends Component {
                 title: pageTitle,
               })
             }
+            events={SETTINGS_PAGE_EVENTS}
           />
         );
       case INTEGRATION_SETTINGS_SUBPAGE:

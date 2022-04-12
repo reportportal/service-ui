@@ -100,7 +100,7 @@ export class LinkIssueFields extends Component {
               onChange={withAutocomplete ? this.updateIssueId : null}
               labelClassName={cx('label', { 'dark-view': darkView })}
             >
-              <FieldErrorHint>
+              <FieldErrorHint darkView={darkView}>
                 <Input
                   className={darkView && 'dark-view'}
                   placeholder={this.props.intl.formatMessage(messages.issueLinkPlaceholder)}
@@ -113,7 +113,7 @@ export class LinkIssueFields extends Component {
               label={this.props.intl.formatMessage(messages.issueIdLabel)}
               labelClassName={cx('label', { 'dark-view': darkView })}
             >
-              <FieldErrorHint>
+              <FieldErrorHint darkView={darkView}>
                 <Input
                   maxLength="128"
                   placeholder={this.props.intl.formatMessage(messages.issueIdLabel)}

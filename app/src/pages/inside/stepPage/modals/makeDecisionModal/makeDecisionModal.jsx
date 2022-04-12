@@ -24,31 +24,37 @@ import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { DarkModalLayout } from 'components/main/modal/darkModalLayout';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { activeProjectSelector } from 'controllers/user';
-import { Accordion, useAccordionTabsState } from 'pages/inside/common/accordion';
 import isEqual from 'fast-deep-equal';
 import { URLS } from 'common/urls';
-import { fetch } from 'common/utils';
+import { fetch, isEmptyObject } from 'common/utils';
 import { historyItemsSelector } from 'controllers/log';
 import { linkIssueAction, postIssueAction, unlinkIssueAction } from 'controllers/step';
 import { LINK_ISSUE, POST_ISSUE, UNLINK_ISSUE } from 'common/constants/actionTypes';
 import { analyzerExtensionsSelector } from 'controllers/appInfo';
-import { MachineLearningSuggestions } from 'pages/inside/stepPage/modals/makeDecisionModal/machineLearningSuggestions';
-import { SCREEN_MD_MAX } from 'common/constants/screenSizeVariables';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import { actionMessages } from 'common/constants/localization/eventsLocalization';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { useWindowResize } from 'common/hooks';
+import { MakeDecisionFooter } from './makeDecisionFooter';
+import { MakeDecisionTabs } from './makeDecisionTabs';
+import { MachineLearningSuggestions, SelectDefectManually, CopyFromHistoryLine } from './tabs';
 import { messages } from './messages';
 import {
+  ACTIVE_TAB_MAP,
+  ADD_FOR_ALL,
+  CLEAR_FOR_ALL,
   COPY_FROM_HISTORY_LINE,
   CURRENT_EXECUTION_ONLY,
   CURRENT_LAUNCH,
   MACHINE_LEARNING_SUGGESTIONS,
   MAKE_DECISION_MODAL,
+  NOT_CHANGED_FOR_ALL,
+  REPLACE_FOR_ALL,
   SEARCH_MODES,
   SELECT_DEFECT_MANUALLY,
+  SHOW_LOGS_BY_DEFAULT,
 } from './constants';
-import { SelectDefectManually } from './selectDefectManually';
-import { CopyFromHistoryLine } from './copyFromHistoryLine';
-import { OptionsSection } from './optionsSection/optionsSection';
+import { ExecutionSection } from './executionSection';
 
 const MakeDecision = ({ data }) => {
   const { formatMessage } = useIntl();
@@ -59,44 +65,64 @@ const MakeDecision = ({ data }) => {
   const isAnalyzerAvailable = !!useSelector(analyzerExtensionsSelector).length;
   const isBulkOperation = data.items && data.items.length > 1;
   const itemData = isBulkOperation ? data.items : data.items[0];
+  const clusterIds = data.items[0].clusterId
+    ? Array.from(new Set(data.items.map(({ clusterId }) => clusterId)))
+    : [];
+  const isMLSuggestionsAvailable = !isBulkOperation || clusterIds.length === 1;
   const defectFromTIGroup =
     itemData.issue && itemData.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
   const [modalState, setModalState] = useReducer((state, newState) => ({ ...state, ...newState }), {
-    source: {
-      issue: isBulkOperation ? { comment: '' } : itemData.issue,
-    },
     decisionType: SELECT_DEFECT_MANUALLY,
     issueActionType: '',
     optionValue: isAnalyzerAvailable && defectFromTIGroup ? CURRENT_LAUNCH : CURRENT_EXECUTION_ONLY,
     searchMode: isAnalyzerAvailable && defectFromTIGroup ? SEARCH_MODES.CURRENT_LAUNCH : '',
+    currentTestItems: data.items,
     testItems: [],
     selectedItems: [],
     suggestedItems: [],
     startTime: Date.now(),
+    selectManualChoice: { issue: isBulkOperation ? { comment: '' } : itemData.issue },
+    suggestChoice: {},
+    historyChoice: historyItems.find(
+      (item) =>
+        item.issue &&
+        item.id !== itemData.id &&
+        !item.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
+    ),
+    commentOption: isBulkOperation ? NOT_CHANGED_FOR_ALL : REPLACE_FOR_ALL,
   });
-  const [tabs, toggleTab, collapseTabsExceptCurr] = useAccordionTabsState({
-    [MACHINE_LEARNING_SUGGESTIONS]: isAnalyzerAvailable,
-    [COPY_FROM_HISTORY_LINE]: false,
-    [SELECT_DEFECT_MANUALLY]: true,
-  });
+  const [activeTab, setActiveTab] = useState(SELECT_DEFECT_MANUALLY);
+  const windowSize = useWindowResize();
+
   const [modalHasChanges, setModalHasChanges] = useState(false);
   const [loadingMLSuggest, setLoadingMLSuggest] = useState(false);
   useEffect(() => {
-    setModalHasChanges(
-      (isBulkOperation
-        ? !!modalState.source.issue.issueType || !!modalState.source.issue.comment
-        : modalState.decisionType === SELECT_DEFECT_MANUALLY &&
-          !isEqual(itemData.issue, modalState.source.issue)) ||
-        modalState.decisionType === COPY_FROM_HISTORY_LINE ||
-        !!modalState.issueActionType ||
-        modalState.decisionType === MACHINE_LEARNING_SUGGESTIONS,
-    );
+    let hasChanges;
+    const newIssueData = modalState[ACTIVE_TAB_MAP[modalState.decisionType]].issue;
+    if (
+      isBulkOperation &&
+      (!isMLSuggestionsAvailable || modalState.decisionType === SELECT_DEFECT_MANUALLY)
+    ) {
+      hasChanges =
+        !!modalState.selectManualChoice.issue.issueType ||
+        !!modalState.selectManualChoice.issue.comment ||
+        modalState.commentOption !== NOT_CHANGED_FOR_ALL;
+    } else if (isBulkOperation && isMLSuggestionsAvailable) {
+      hasChanges = modalState.currentTestItems.some((item) => !isEqual(item.issue, newIssueData));
+    } else {
+      hasChanges = !isEqual(itemData.issue, newIssueData);
+    }
+    setModalHasChanges(hasChanges || !!modalState.issueActionType);
   }, [modalState]);
 
   useEffect(() => {
-    if (!isBulkOperation) {
+    if (isMLSuggestionsAvailable) {
       setLoadingMLSuggest(true);
-      fetch(URLS.getMLSuggestions(activeProject, itemData.id))
+      const url =
+        clusterIds.length === 1
+          ? URLS.MLSuggestionsByCluster(activeProject, clusterIds[0])
+          : URLS.MLSuggestions(activeProject, itemData.id);
+      fetch(url)
         .then((resp) => {
           if (resp.length !== 0) {
             setModalState({ suggestedItems: resp });
@@ -105,19 +131,33 @@ const MakeDecision = ({ data }) => {
         })
         .catch(() => {
           setLoadingMLSuggest(false);
-          collapseTabsExceptCurr(SELECT_DEFECT_MANUALLY);
         });
     }
   }, []);
 
-  const prepareDataToSend = ({ isIssueAction, replaceComment } = {}) => {
-    const { issue } = modalState.source;
+  const prepareDataToSend = ({ isIssueAction } = {}) => {
+    const { issue } = modalState[ACTIVE_TAB_MAP[activeTab]];
+    const { currentTestItems, selectedItems, commentOption } = modalState;
     if (isBulkOperation) {
-      const { selectedItems: items } = modalState;
-      return items.map((item) => {
-        const comment = replaceComment
-          ? issue.comment
-          : `${item.issue.comment || ''}\n${issue.comment}`.trim();
+      return currentTestItems.map((item) => {
+        let comment;
+        switch (commentOption) {
+          case CLEAR_FOR_ALL: {
+            comment = '';
+            break;
+          }
+          case ADD_FOR_ALL: {
+            comment = `${item.issue.comment || ''}\n${issue.comment}`.trim();
+            break;
+          }
+          case REPLACE_FOR_ALL: {
+            comment = issue.comment;
+            break;
+          }
+          default: {
+            comment = item.issue.comment || '';
+          }
+        }
         return {
           ...(isIssueAction ? item : {}),
           testItemId: item.id,
@@ -130,28 +170,30 @@ const MakeDecision = ({ data }) => {
         };
       });
     }
-    return modalState.selectedItems.map((item, i) => {
-      const comment =
-        issue.comment !== item.issue.comment &&
-        (modalState.decisionType === COPY_FROM_HISTORY_LINE || i !== 0)
-          ? `${item.issue.comment || ''}\n${issue.comment}`.trim()
-          : issue.comment || '';
 
-      return {
-        ...(isIssueAction ? item : {}),
-        id: item.id || item.itemId,
-        testItemId: item.id || item.itemId,
-        issue: {
-          ...issue,
-          comment,
-          autoAnalyzed: false,
-        },
-      };
-    });
+    let newIssue = issue;
+
+    if (activeTab === SELECT_DEFECT_MANUALLY) {
+      const baseIssue = modalState.currentTestItems[0].issue;
+      newIssue = Object.fromEntries(
+        Object.entries(issue).filter(([key, val]) => baseIssue[key] !== val),
+      );
+    }
+
+    return [...currentTestItems, ...selectedItems].map((item) => ({
+      ...(isIssueAction ? { ...item, opened: SHOW_LOGS_BY_DEFAULT } : {}),
+      id: item.id || item.itemId,
+      testItemId: item.id || item.itemId,
+      issue: {
+        ...item.issue,
+        ...newIssue,
+        autoAnalyzed: false,
+      },
+    }));
   };
   const sendSuggestResponse = () => {
     const dataToSend = modalState.suggestedItems.map((item) => {
-      if (modalState.source.id === item.testItemResource.id) {
+      if (modalState[ACTIVE_TAB_MAP[activeTab]].id === item.testItemResource.id) {
         return {
           ...item.suggestRs,
           userChoice: 1,
@@ -262,10 +304,9 @@ const MakeDecision = ({ data }) => {
   };
   const getOnApplyEvent = () => {
     const {
-      eventsInfo: {
-        editDefectsEvents: { onApply, onApplyAndContinue },
-      },
+      eventsInfo: { editDefectsEvents = {} },
     } = data;
+    const { onApply, onApplyAndContinue } = editDefectsEvents;
     const {
       decisionType,
       issueActionType,
@@ -273,121 +314,94 @@ const MakeDecision = ({ data }) => {
       selectedItems,
       suggestedItems,
       startTime,
+      suggestChoice,
     } = modalState;
     let eventInfo;
     const hasSuggestions = !!suggestedItems.length;
-    if (isEqual(itemData.issue, modalState.source.issue) && issueActionType) {
+    if (isEqual(itemData.issue, modalState[ACTIVE_TAB_MAP[activeTab]].issue) && issueActionType) {
       const issueActionLabel = issueActionType && actionMessages[issueActionType].defaultMessage;
-      eventInfo = onApplyAndContinue(
-        defectFromTIGroup,
-        hasSuggestions,
-        issueActionLabel,
-        defectFromTIGroup,
-      );
+      eventInfo =
+        onApplyAndContinue &&
+        onApplyAndContinue(defectFromTIGroup, hasSuggestions, issueActionLabel, defectFromTIGroup);
     } else {
       const section = messages[decisionType].defaultMessage;
       const optionLabel = messages[optionValue].defaultMessage;
-      const selectedItemsLength = selectedItems.length;
+      const itemsLength = selectedItems.length;
       const timestamp = Date.now() - startTime;
-      eventInfo = onApply(
-        section,
-        defectFromTIGroup,
-        hasSuggestions,
-        optionLabel,
-        selectedItemsLength,
-        timestamp,
-      );
+      const matchScore = suggestChoice.suggestRs && `${suggestChoice.suggestRs.matchScore}%`;
+      eventInfo =
+        onApply &&
+        onApply({
+          section,
+          defectFromTIGroup,
+          hasSuggestions,
+          optionLabel,
+          itemsLength,
+          timestamp,
+          matchScore,
+        });
     }
     return eventInfo;
   };
-  const applyChangesImmediately = () => {
+  const applyChanges = () => {
     if (isBulkOperation) {
       modalHasChanges &&
-        (!!modalState.source.issue.issueType || !!modalState.source.issue.comment) &&
+        activeTab === SELECT_DEFECT_MANUALLY &&
+        (!!modalState.selectManualChoice.issue.issueType ||
+          !!modalState.selectManualChoice.issue.comment ||
+          modalState.commentOption === CLEAR_FOR_ALL) &&
+        saveDefect();
+
+      !isEmptyObject(modalState.suggestChoice) &&
+        activeTab === MACHINE_LEARNING_SUGGESTIONS &&
         saveDefect();
     } else {
-      modalHasChanges && !isEqual(itemData.issue, modalState.source.issue) && saveDefect();
-      trackEvent(getOnApplyEvent());
+      modalHasChanges &&
+        !isEqual(itemData.issue, modalState[ACTIVE_TAB_MAP[activeTab]].issue) &&
+        saveDefect();
     }
-    (modalState.decisionType === COPY_FROM_HISTORY_LINE ||
-      modalState.decisionType === MACHINE_LEARNING_SUGGESTIONS) &&
-      isEqual(itemData.issue, modalState.source.issue) &&
+    trackEvent(getOnApplyEvent());
+
+    ((modalState.decisionType === COPY_FROM_HISTORY_LINE &&
+      isEqual(itemData.issue, modalState.historyChoice.issue)) ||
+      (modalState.decisionType === MACHINE_LEARNING_SUGGESTIONS &&
+        isEqual(itemData.issue, modalState.suggestChoice.issue))) &&
       dispatch(hideModalAction());
+
     modalState.issueActionType && dispatch(hideModalAction()) && getIssueAction();
   };
-  const applyImmediatelyWithComment = () => {
-    saveDefect({ replaceComment: true });
-  };
-  const applyChanges = () => applyChangesImmediately();
 
-  const renderHeaderElements = () => {
-    return (
-      <>
-        {isBulkOperation && (
-          <GhostButton
-            onClick={applyImmediatelyWithComment}
-            disabled={
-              modalState.source.issue.comment
-                ? false
-                : !modalState.selectedItems.some(({ issue }) => !!issue.comment)
-            }
-            transparentBorder
-            transparentBackground
-            appearance="topaz"
-          >
-            {formatMessage(
-              modalState.source.issue.comment
-                ? messages.replaceCommentsAndApply
-                : messages.clearCommentsAndApply,
-            )}
-          </GhostButton>
-        )}
-        <GhostButton
-          onClick={applyChanges}
-          disabled={modalState.selectedItems.length === 0 || !modalHasChanges}
-          color="''"
-          appearance="topaz"
-        >
-          {modalState.selectedItems.length > 1
-            ? formatMessage(messages.applyToItems, {
-                itemsCount: modalState.selectedItems.length,
-              })
-            : formatMessage(
-                modalState.issueActionType ? messages.applyAndContinue : messages.apply,
-              )}
-        </GhostButton>
-      </>
-    );
-  };
+  const getFooterButtons = () => ({
+    okButton: (
+      <GhostButton onClick={applyChanges} disabled={!modalHasChanges} color="''" appearance="topaz">
+        {formatMessage(modalState.issueActionType ? messages.applyAndContinue : messages.apply)}
+      </GhostButton>
+    ),
+    cancelButton: (
+      <GhostButton
+        onClick={() => dispatch(hideModalAction())}
+        color="''"
+        appearance="topaz"
+        transparentBackground
+      >
+        {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
+      </GhostButton>
+    ),
+  });
 
-  const getAccordionTabs = (collapsedRightSection, windowSize) => {
+  const getMakeDecisionTabs = () => {
     const preparedHistoryLineItems = historyItems.filter(
-      (item) => item.issue && item.id !== itemData.id,
+      (item) =>
+        item.issue &&
+        item.id !== itemData.id &&
+        !item.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
     );
+
     const tabsData = [
-      {
-        id: MACHINE_LEARNING_SUGGESTIONS,
-        shouldShow: !isBulkOperation,
-        disabled: false,
-        isOpen: tabs[MACHINE_LEARNING_SUGGESTIONS],
-        title: <div>{formatMessage(messages.machineLearningSuggestions)}</div>,
-        content: !isBulkOperation && (
-          <MachineLearningSuggestions
-            modalState={modalState}
-            setModalState={setModalState}
-            itemData={itemData}
-            collapseTabsExceptCurr={collapseTabsExceptCurr}
-            loadingMLSuggest={loadingMLSuggest}
-            eventsInfo={data.eventsInfo.editDefectsEvents}
-            isAnalyzerAvailable={isAnalyzerAvailable}
-          />
-        ),
-      },
       {
         id: SELECT_DEFECT_MANUALLY,
         shouldShow: true,
-        disabled: false,
-        isOpen: tabs[SELECT_DEFECT_MANUALLY],
+        isOpen: activeTab === SELECT_DEFECT_MANUALLY,
         title: formatMessage(messages.selectDefectTypeManually),
         content: (
           <SelectDefectManually
@@ -395,20 +409,34 @@ const MakeDecision = ({ data }) => {
             modalState={modalState}
             setModalState={setModalState}
             isBulkOperation={isBulkOperation}
-            collapseTabsExceptCurr={collapseTabsExceptCurr}
-            collapsedRightSection={collapsedRightSection}
             windowSize={windowSize}
+            eventsInfo={data.eventsInfo.editDefectsEvents}
+          />
+        ),
+      },
+      {
+        id: MACHINE_LEARNING_SUGGESTIONS,
+        shouldShow: isMLSuggestionsAvailable,
+        isOpen: activeTab === MACHINE_LEARNING_SUGGESTIONS,
+        title:
+          modalState.suggestChoice.suggestRs &&
+          formatMessage(messages.machineLearningSuggestions, {
+            value: modalState.suggestChoice.suggestRs.matchScore,
+          }),
+        content: isMLSuggestionsAvailable && (
+          <MachineLearningSuggestions
+            modalState={modalState}
+            itemData={itemData}
             eventsInfo={data.eventsInfo.editDefectsEvents}
           />
         ),
       },
     ];
     if (preparedHistoryLineItems.length > 0) {
-      tabsData.splice(1, 0, {
+      tabsData.push({
         id: COPY_FROM_HISTORY_LINE,
         shouldShow: !isBulkOperation,
-        disabled: false,
-        isOpen: tabs[COPY_FROM_HISTORY_LINE],
+        isOpen: activeTab === COPY_FROM_HISTORY_LINE,
         title: formatMessage(messages.copyFromHistoryLine),
         content: (
           <CopyFromHistoryLine
@@ -416,9 +444,9 @@ const MakeDecision = ({ data }) => {
             itemData={itemData}
             modalState={modalState}
             setModalState={setModalState}
-            collapseTabsExceptCurr={collapseTabsExceptCurr}
             windowSize={windowSize}
             eventsInfo={data.eventsInfo.editDefectsEvents}
+            activeProject={activeProject}
           />
         ),
       });
@@ -430,39 +458,12 @@ const MakeDecision = ({ data }) => {
     ctrlEnter: applyChanges,
   };
 
-  const renderTitle = (collapsedRightSection, windowSize) => {
-    const { width } = windowSize;
-    if (isBulkOperation) {
-      return formatMessage(collapsedRightSection ? messages.bulkOperationDecision : messages.bulk);
-    } else {
-      return formatMessage(
-        collapsedRightSection && width > SCREEN_MD_MAX ? messages.decisionForTest : messages.test,
-        {
-          launchNumber: itemData.launchNumber && `#${itemData.launchNumber}`,
-        },
-      );
-    }
-  };
-
-  const renderRightSection = (collapsedRightSection) => {
-    return (
-      <OptionsSection
-        currentTestItem={itemData}
-        modalState={modalState}
-        setModalState={setModalState}
-        isNarrowView={collapsedRightSection}
-        isBulkOperation={isBulkOperation}
-        eventsInfo={data.eventsInfo.editDefectsEvents}
-      />
-    );
-  };
   const layoutEventsInfo = useMemo(() => {
     const { suggestedItems, startTime } = modalState;
     const hasSuggestions = !!suggestedItems.length;
     return {
-      openCloseRightSection: (isOpen) =>
-        data.eventsInfo.editDefectsEvents.openCloseRightSection(defectFromTIGroup, isOpen),
       closeModal: (endTime) =>
+        data.eventsInfo.editDefectsEvents &&
         data.eventsInfo.editDefectsEvents.closeModal(
           defectFromTIGroup,
           hasSuggestions,
@@ -473,20 +474,42 @@ const MakeDecision = ({ data }) => {
 
   return (
     <DarkModalLayout
-      renderTitle={renderTitle}
-      renderHeaderElements={renderHeaderElements}
+      headerTitle={formatMessage(messages.selectDefect)}
       modalHasChanges={modalHasChanges}
       hotKeyAction={hotKeyAction}
       modalNote={formatMessage(messages.modalNote)}
-      renderRightSection={renderRightSection}
+      sideSection={
+        <ExecutionSection
+          modalState={modalState}
+          setModalState={setModalState}
+          isBulkOperation={isBulkOperation}
+          eventsInfo={data.eventsInfo.editDefectsEvents}
+        />
+      }
+      footer={
+        <MakeDecisionFooter
+          buttons={getFooterButtons()}
+          modalState={modalState}
+          isBulkOperation={isBulkOperation}
+          setModalState={setModalState}
+          modalHasChanges={modalHasChanges}
+          eventsInfo={data.eventsInfo.editDefectsEvents}
+        />
+      }
       eventsInfo={layoutEventsInfo}
     >
-      {({ collapsedRightSection, windowSize }) => (
-        <Accordion
-          tabs={getAccordionTabs(collapsedRightSection, windowSize)}
-          toggleTab={toggleTab}
-        />
-      )}
+      <MakeDecisionTabs
+        tabs={getMakeDecisionTabs(windowSize)}
+        toggleTab={setActiveTab}
+        suggestedItems={modalState.suggestedItems}
+        loadingMLSuggest={loadingMLSuggest}
+        modalState={modalState}
+        setModalState={setModalState}
+        itemData={itemData}
+        isBulkOperation={isBulkOperation}
+        isAnalyzerAvailable={isAnalyzerAvailable}
+        isMLSuggestionsAvailable={isMLSuggestionsAvailable}
+      />
     </DarkModalLayout>
   );
 };
@@ -495,6 +518,7 @@ MakeDecision.propTypes = {
     items: PropTypes.array,
     fetchFunc: PropTypes.func,
     eventsInfo: PropTypes.object,
+    clusterIds: PropTypes.arrayOf(PropTypes.number),
   }).isRequired,
 };
 export const MakeDecisionModal = withModal(MAKE_DECISION_MODAL)(MakeDecision);

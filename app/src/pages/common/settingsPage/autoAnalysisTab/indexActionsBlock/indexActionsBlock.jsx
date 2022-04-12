@@ -70,7 +70,7 @@ export class IndexActionsBlock extends Component {
     intl: PropTypes.object.isRequired,
     disabled: PropTypes.bool,
     indexingRunning: PropTypes.bool,
-    analyzerExtensions: PropTypes.array,
+    isAnalyzerServiceAvailable: PropTypes.bool,
     showRemoveIndexModal: PropTypes.func,
     showGenerateIndexModal: PropTypes.func,
     tracking: PropTypes.shape({
@@ -82,7 +82,7 @@ export class IndexActionsBlock extends Component {
   static defaultProps = {
     disabled: false,
     indexingRunning: false,
-    analyzerExtensions: [],
+    isAnalyzerServiceAvailable: true,
     showRemoveIndexModal: () => {},
     showGenerateIndexModal: () => {},
   };
@@ -102,12 +102,12 @@ export class IndexActionsBlock extends Component {
       intl: { formatMessage },
       disabled,
       indexingRunning,
-      analyzerExtensions,
+      isAnalyzerServiceAvailable,
     } = this.props;
-    const analyzerButtonsTitle = !analyzerExtensions.length
+    const analyzerButtonsTitle = !isAnalyzerServiceAvailable
       ? formatMessage(messages.analyzerDisabledButtonTitle)
       : '';
-    const isAnalyzerButtonsDisabled = indexingRunning || !analyzerExtensions.length || disabled;
+    const isAnalyzerButtonsDisabled = indexingRunning || !isAnalyzerServiceAvailable || disabled;
 
     return (
       <Fragment>

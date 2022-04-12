@@ -33,11 +33,12 @@ import {
   listViewLinkSelector,
   logViewLinkSelector,
   historyViewLinkSelector,
-  isStepLevelSelector,
   levelSelector,
+  uniqueErrorsLinkSelector,
 } from 'controllers/testItem';
 import { debugModeSelector } from 'controllers/launch';
 import { pageEventsMap } from 'components/main/analytics';
+import { analyzerExtensionsSelector } from 'controllers/appInfo';
 import styles from './viewTabs.scss';
 
 const cx = classNames.bind(styles);
@@ -59,32 +60,34 @@ const messages = defineMessages({
     id: 'ViewTabs.historyView',
     defaultMessage: 'History',
   },
-  disabledTabTooltip: {
-    id: 'ViewTabs.disabledTabTooltip',
-    defaultMessage: 'A new functionality will be available in the next version',
+  disabledAnalyzer: {
+    id: 'ViewTabs.disabledAnalyzer',
+    defaultMessage: 'Service ANALYZER is not running',
   },
 });
 
 @track()
 @connect((state) => ({
-  isStepLevel: isStepLevelSelector(state),
   debugMode: debugModeSelector(state),
   listViewLink: listViewLinkSelector(state),
   logViewLink: logViewLinkSelector(state),
   historyViewLink: historyViewLinkSelector(state),
+  uniqueErrorsLink: uniqueErrorsLinkSelector(state),
+  isAnalyzerAvailable: !!analyzerExtensionsSelector(state).length,
   level: levelSelector(state),
 }))
 @injectIntl
 export class ViewTabs extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    isStepLevel: PropTypes.bool,
     debugMode: PropTypes.bool,
     isTestItemsList: PropTypes.bool,
     viewMode: PropTypes.string,
     logViewLink: PropTypes.object,
     listViewLink: PropTypes.object,
     historyViewLink: PropTypes.object,
+    uniqueErrorsLink: PropTypes.object,
+    isAnalyzerAvailable: PropTypes.bool,
     level: PropTypes.string,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -93,13 +96,14 @@ export class ViewTabs extends Component {
   };
 
   static defaultProps = {
-    isStepLevel: false,
     debugMode: false,
     isTestItemsList: false,
     viewMode: LIST_VIEW,
     logViewLink: {},
     listViewLink: {},
     historyViewLink: {},
+    uniqueErrorsLink: {},
+    isAnalyzerAvailable: false,
     level: '',
   };
 
@@ -108,10 +112,11 @@ export class ViewTabs extends Component {
       listViewLink,
       logViewLink,
       historyViewLink,
+      uniqueErrorsLink,
       debugMode,
-      isStepLevel,
       isTestItemsList,
       intl: { formatMessage },
+      isAnalyzerAvailable,
       level,
     } = this.props;
     const events = pageEventsMap[level] || {};
@@ -130,11 +135,12 @@ export class ViewTabs extends Component {
       {
         id: UNIQUE_ERRORS_VIEW,
         title: formatMessage(messages[UNIQUE_ERRORS_VIEW]),
-        link: listViewLink,
+        link: uniqueErrorsLink,
         icon: ListIcon,
-        available: isStepLevel && !isTestItemsList,
-        disabled: true,
-        hint: formatMessage(messages.disabledTabTooltip),
+        available: !isTestItemsList && !debugMode,
+        disabled: !isAnalyzerAvailable,
+        hint: !isAnalyzerAvailable ? formatMessage(messages.disabledAnalyzer) : '',
+        event: events.CLICK_UNIQUE_ERRORS,
       },
       {
         id: LOG_VIEW,

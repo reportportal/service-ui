@@ -119,10 +119,10 @@
 }
 
 .mode-dark {
-  &.toggler {
+  &.toggler-medium {
     width: 20px;
     height: 20px;
-    border-color: $COLOR--dark-gray-2;
+    border-color: $COLOR--darkmode-gray-200;
     background-color: transparent;
 
     &::after {
@@ -131,18 +131,44 @@
     }
   }
 
+  .toggler-small {
+    width: 16px;
+    min-width: 16px;
+    height: 16px;
+    margin-right: 16px;
+    border-color: $COLOR--darkmode-gray-200;
+    background-color: transparent;
+
+    &::after {
+      width: 8px;
+      height: 8px;
+    }
+  }
+
+  &:hover {
+    border-color: $COLOR--darkmode-gray-100;
+  }
+
+  &:hover:after {
+    background-color: $COLOR--darkmode-topaz-hover;
+  }
+
   &.children-container {
     max-width: 90%;
-    color: $COLOR--dirty-gray;
+    color: $COLOR--white-two;
     white-space: nowrap;
   }
 
   &.disabled {
-    opacity: 0.3;
+    opacity: 0.5;
 
     .toggler {
-      background-color: transparent;
-      border-color: $COLOR--dark-gray-2;
+      &::after {
+        background-color: $COLOR--darkmode-topaz-main;
+      }
+      &:hover {
+        border-color: $COLOR--darkmode-gray-200;
+      }
     }
   }
 }

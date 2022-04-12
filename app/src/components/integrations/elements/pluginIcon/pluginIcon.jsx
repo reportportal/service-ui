@@ -21,7 +21,7 @@ import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
 import { COMMAND_GET_FILE } from 'controllers/plugins/uiExtensions/constants';
 import { globalIntegrationsSelector } from 'controllers/plugins/selectors';
-import { filterIntegrationsByName } from 'controllers/plugins/utils';
+import { filterIntegrationsByName, isPluginSupportsCommonCommand } from 'controllers/plugins/utils';
 import { PLUGIN_DEFAULT_IMAGE, PLUGIN_IMAGES_MAP } from 'components/integrations/constants';
 import { Image } from 'components/main/image';
 
@@ -33,6 +33,13 @@ export const PluginIcon = ({ pluginData, className, ...rest }) => {
     if (isDynamicIconAvailable) {
       const projectId = useSelector(activeProjectSelector);
       const globalIntegrations = useSelector(globalIntegrationsSelector);
+
+      const isCommonCommandSupported = isPluginSupportsCommonCommand(pluginData, COMMAND_GET_FILE);
+
+      if (isCommonCommandSupported) {
+        return URLS.pluginCommandCommon(projectId, name, COMMAND_GET_FILE);
+      }
+
       const integration = filterIntegrationsByName(globalIntegrations, name)[0];
       if (!integration) {
         return null;

@@ -15,9 +15,11 @@
  */
 
 import {
+  getClickAttributes,
   getClickOnPlusMinusEvents,
   getClickSelectAllItemsEvent,
   getClickSelectOneItemEvent,
+  getClickUniqueErrorsEvent,
   getCommonActionEvents,
   getRefineFiltersPanelEvents,
 } from 'components/main/analytics/events/common/testItemPages/actionEventsCreators';
@@ -37,4 +39,6 @@ export const TESTS_PAGE_EVENTS = {
   CLICK_SELECT_ONE_ITEM: getClickSelectOneItemEvent(TEST_PAGE),
   EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(TEST_PAGE),
   DELETE_ITEM_MODAL_EVENTS: getDeleteItemModalEvents(TEST_PAGE),
+  CLICK_ATTRIBUTES: getClickAttributes(TEST_PAGE),
+  CLICK_UNIQUE_ERRORS: getClickUniqueErrorsEvent(TEST_PAGE),
 };

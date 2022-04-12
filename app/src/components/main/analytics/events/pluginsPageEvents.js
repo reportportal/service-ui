@@ -17,12 +17,14 @@
 import {
   getClickDeleteBtnRemoveIntegrationEvent,
   getClickSaveBtnEditAuthorizationEvent,
+  getIntegrationAddClickEvent,
   getPluginChoosePropertiesCheckboxClickEvent,
   getPluginConfigureClickEvent,
   getPluginConfigureClickSubmitEvent,
   getPluginEditAuthorizationClickEvent,
   getPluginInstanceItemClickEvent,
   getPluginRemoveIntegrationClickEvent,
+  getSaveIntegrationModalEvents,
 } from 'components/main/analytics/events/common/pluginsPage/actionEventCreators';
 
 export const PLUGINS_PAGE = 'plugins';
@@ -105,4 +107,6 @@ export const PLUGINS_PAGE_EVENTS = {
   pluginConfigureClick: getPluginConfigureClickEvent(PLUGINS_PAGE),
   pluginChoosePropertiesCheckboxClick: getPluginChoosePropertiesCheckboxClickEvent(PLUGINS_PAGE),
   pluginConfigureClickSubmit: getPluginConfigureClickSubmitEvent(PLUGINS_PAGE),
+  integrationAddClickEvent: getIntegrationAddClickEvent(PLUGINS_PAGE),
+  saveIntegrationModalEvents: getSaveIntegrationModalEvents(PLUGINS_PAGE),
 };

@@ -29,13 +29,12 @@
     "@formatjs/intl-utils": "1.6.0",
     "array.find": "1.0.7",
     "array.findindex": "1.0.4",
-    "axios": "0.21.1",
-    "babel-plugin-add-module-exports": "0.2.1",
+    "axios": "^0.24.0",
     "c3": "0.7.8",
     "chart.js": "2.8.0",
     "chartjs-plugin-datalabels": "0.6.0",
     "classnames": "2.2.5",
-    "codemirror": "5.47.0",
+    "codemirror": "^5.63.3",
     "color": "3.1.1",
     "core-js": "2.5.7",
     "d3": "5.9.2",
@@ -61,7 +60,6 @@
     "qs": "6.5.2",
     "rc-slider": "8.6.3",
     "react": "16.12.0",
-    "react-autosuggest": "9.3.4",
     "react-color": "2.17.0",
     "react-copy-to-clipboard": "5.0.1",
     "react-custom-scrollbars": "4.2.1",
@@ -77,7 +75,6 @@
     "react-popper": "1.3.11",
     "react-redux": "7.1.3",
     "react-reflex": "3.0.16",
-    "react-select": "1.2.1",
     "react-syntax-highlighter": "11.0.1",
     "react-tracking": "7.2.1",
     "react-transition-group": "4.3.0",
@@ -93,7 +90,7 @@
     "semver-diff": "2.1.0",
     "simplemde": "1.11.2",
     "swagger-ui-react": "3.32.1",
-    "video.js": "7.4.1"
+    "video.js": "7.17.0"
   },
   "devDependencies": {
     "@babel/core": "7.6.3",
@@ -157,7 +154,7 @@
     "style-loader": "1.0.0",
     "stylelint": "11.0.0",
     "stylelint-config-recommended-scss": "4.0.0",
-    "stylelint-declaration-use-variable": "1.7.0",
+    "stylelint-declaration-use-variable": "^1.7.3",
     "stylelint-prettier": "1.1.1",
     "stylelint-scss": "3.11.1",
     "svg-inline-loader": "0.8.0",
@@ -167,29 +164,9 @@
     "webpack-dev-server": "3.11.0",
     "webpack-hot-middleware": "2.25.0",
     "webpack-merge": "4.2.2",
-    "webpack-notifier": "1.8.0",
-    "webpack-subresource-integrity": "1.5.1",
+    "webpack-notifier": "^1.14.1",
+    "webpack-subresource-integrity": "1.5.2",
     "why-did-you-update": "1.0.6"
-  },
-  "jest": {
-    "setupFiles": [
-      "./jestsetup.js"
-    ],
-    "snapshotSerializers": [
-      "<rootDir>/node_modules/enzyme-to-json/serializer"
-    ],
-    "moduleNameMapper": {
-      "^.+\\.(css|scss)$": "identity-obj-proxy",
-      "^.+\\.(svg|jpg|jpeg|png|gif)$": "<rootDir>/test/__mocks__/fileMock.js",
-      "^components[/](.+)": "<rootDir>/src/components/$1",
-      "^controllers[/](.+)": "<rootDir>/src/controllers/$1",
-      "^common[/](.+)": "<rootDir>/src/common/$1",
-      "^pages[/](.+)": "<rootDir>/src/pages/$1",
-      "^store[/](.+)": "<rootDir>/src/store/$1",
-      "^routes[/](.+)": "<rootDir>/src/routes/$1",
-      "^layouts[/](.+)": "<rootDir>/src/layouts/$1"
-    },
-    "notify": false
   },
   "lint-staged": {
     "*.{js,jsx}": [

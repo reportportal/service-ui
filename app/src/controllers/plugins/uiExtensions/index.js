@@ -9,5 +9,7 @@ export {
   uiExtensionIntegrationSettingsSelector,
   uiExtensionIntegrationFormFieldsSelector,
   uiExtensionPostIssueFormSelector,
+  uniqueErrorGridCellComponentSelector,
+  uniqueErrorGridHeaderCellComponentSelector,
 } from './selectors';
 export { uiExtensionsReducer } from './reducer';

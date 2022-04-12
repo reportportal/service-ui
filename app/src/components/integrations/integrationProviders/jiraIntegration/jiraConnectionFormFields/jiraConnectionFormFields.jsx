@@ -98,12 +98,12 @@ export class JiraConnectionFormFields extends Component {
         </IntegrationFormField>
         <IntegrationFormField
           name="project"
-          label={formatMessage(messages.projectNameLabel)}
+          label={formatMessage(COMMON_BTS_MESSAGES.projectKeyLabel)}
           required
           disabled={disabled || editAuthMode}
           lineAlign={lineAlign}
           maxLength="55"
-          validate={commonValidators.btsProject}
+          validate={commonValidators.btsProjectKey}
         >
           <FieldErrorHint>
             <Input mobileDisabled />

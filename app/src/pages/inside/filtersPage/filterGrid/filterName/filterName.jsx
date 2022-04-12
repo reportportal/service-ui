@@ -19,6 +19,7 @@ import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
+import DOMPurify from 'dompurify';
 import Link from 'redux-first-router-link';
 
 import { messages } from 'pages/inside/common/sharedFilterIcon/messages';
@@ -131,7 +132,7 @@ export class FilterName extends Component {
               })}
               onClick={() => onClickName(filter)}
             >
-              {Parser(this.getHighlightName(filter.name))}
+              {Parser(DOMPurify.sanitize(this.getHighlightName(filter.name)))}
             </span>
           </NameLink>
 

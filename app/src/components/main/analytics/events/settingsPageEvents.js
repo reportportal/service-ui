@@ -15,12 +15,14 @@
  */
 
 import {
+  getIntegrationAddClickEvent,
   getPluginChoosePropertiesCheckboxClickEvent,
   getPluginConfigureClickEvent,
   getPluginConfigureClickSubmitEvent,
   getPluginEditAuthorizationClickEvent,
   getPluginInstanceItemClickEvent,
   getPluginRemoveIntegrationClickEvent,
+  getSaveIntegrationModalEvents,
 } from 'components/main/analytics/events/common/pluginsPage/actionEventCreators';
 
 export const SETTINGS_PAGE = 'settings';
@@ -37,12 +39,6 @@ export const getIntegrationItemClickEvent = (integrationName) => ({
   label: `Open page with info for ${integrationName} integration on tab Integrations`,
 });
 
-export const getIntegrationAddClickEvent = (integrationName) => ({
-  category: SETTINGS_PAGE,
-  action: `Click on Add integration ${integrationName} plugin`,
-  label: `Arise Modal Create Manual Integration for ${integrationName} integration`,
-});
-
 export const getIntegrationEditAuthClickEvent = (integrationName) => ({
   category: SETTINGS_PAGE,
   action: `Click on Add integration ${integrationName} plugin`,
@@ -54,27 +50,6 @@ export const getIntegrationUnlinkGlobalEvent = (integrationName) => ({
   action: `Click on Unlink global integration for ${integrationName} integration on tab Integrations`,
   label: `Arise Modal Create Manual Integration for ${integrationName} integration`,
 });
-
-export const getSaveIntegrationModalEvents = (integrationName, isGlobal) => {
-  const integrationType = isGlobal ? 'Global' : 'Project';
-  return {
-    saveBtn: {
-      category: SETTINGS_PAGE,
-      action: `Click on Save in Modal Save ${integrationType} Integration for ${integrationName} plugin`,
-      label: `Save ${integrationType.toLowerCase()} integration for ${integrationName} plugin`,
-    },
-    cancelBtn: {
-      category: SETTINGS_PAGE,
-      action: `Click on Cancel in Modal Save ${integrationType} Integration for ${integrationName} plugin`,
-      label: `Close Modal Save ${integrationType} Integration for ${integrationName} plugin`,
-    },
-    closeIcon: {
-      category: SETTINGS_PAGE,
-      action: `Click on Close icon in Modal Save ${integrationType} Integration for ${integrationName} plugin`,
-      label: `Close Modal Save ${integrationType} Integration for ${integrationName} plugin`,
-    },
-  };
-};
 
 export const getAutoAnalysisMinimumShouldMatchSubmitEvent = (value) => ({
   category: SETTINGS_PAGE,
@@ -333,6 +308,26 @@ export const SETTINGS_PAGE_EVENTS = {
     action: 'Click on Auto-Analysis OFF in Auto-Analysis tab',
     label: 'Auto-Analysis OFF',
   },
+  UNIQUE_ERROR_SWITCHER_ON: {
+    category: SETTINGS_PAGE,
+    action: 'Click on Unique error auto-analysis ON in Auto-Analysis tab',
+    label: 'Unique error auto-analysis ON',
+  },
+  UNIQUE_ERROR_SWITCHER_OFF: {
+    category: SETTINGS_PAGE,
+    action: 'Click on Unique error auto-analysis OFF in Auto-Analysis tab',
+    label: 'Unique error auto-analysis OFF',
+  },
+  UNIQUE_ERRORS_REMOVE_NUMBERS_INCLUDE: {
+    category: SETTINGS_PAGE,
+    action: 'Include numbers to analyzed logs selected in Auto-Analysis tab',
+    label: 'Include numbers to analyzed logs',
+  },
+  UNIQUE_ERRORS_REMOVE_NUMBERS_EXCLUDE: {
+    category: SETTINGS_PAGE,
+    action: 'Exclude numbers from analyzed logs selected in Auto-Analysis tab',
+    label: 'Exclude numbers from analyzed logs',
+  },
   autoAnalysisBase: (base) => ({
     category: SETTINGS_PAGE,
     action: 'Choose radio Btn of Base for Auto-Analysis',
@@ -351,16 +346,17 @@ export const SETTINGS_PAGE_EVENTS = {
   submitAutoAnalysisSettings: (
     enabled,
     base,
-    minShouldMatch,
-    numberOfLogLines,
     mode,
+    numberOfLogLines,
     allMessagesShouldMatch,
+    minShouldMatch,
+    searchLogsMinShouldMatch,
   ) => ({
     category: SETTINGS_PAGE,
     action: 'Click on Btn Submit in Auto-Analysis tab',
-    label: `${enabled ? 'On' : 'Off'}#${base}#${minShouldMatch} %#${
+    label: `${enabled ? 'On' : 'Off'}#${base}#${mode || 'Custom'}#${
       numberOfLogLines > -1 ? numberOfLogLines : 'All'
-    }#${mode || 'Custom'}#${allMessagesShouldMatch ? 'On' : 'Off'}`,
+    }#${allMessagesShouldMatch ? 'On' : 'Off'}#${minShouldMatch}%#${searchLogsMinShouldMatch}%`,
   }),
   REMOVE_INDEX_BTN: {
     category: SETTINGS_PAGE,
@@ -483,4 +479,6 @@ export const SETTINGS_PAGE_EVENTS = {
   pluginConfigureClick: getPluginConfigureClickEvent(SETTINGS_PAGE),
   pluginChoosePropertiesCheckboxClick: getPluginChoosePropertiesCheckboxClickEvent(SETTINGS_PAGE),
   pluginConfigureClickSubmit: getPluginConfigureClickSubmitEvent(SETTINGS_PAGE),
+  integrationAddClickEvent: getIntegrationAddClickEvent(SETTINGS_PAGE),
+  saveIntegrationModalEvents: getSaveIntegrationModalEvents(SETTINGS_PAGE),
 };

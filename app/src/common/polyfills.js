@@ -107,6 +107,14 @@ if (!Object.entries) {
   };
 }
 
+if (!Object.fromEntries) {
+  Object.fromEntries = function fromEntries(entries){
+    var res = {};
+    for(var i = 0; i < entries.length; i++) res[entries[i][0]] = entries[i][1];
+    return res;
+  };
+}
+
 // Chrome Intl doesn't support 'be' locale, so we have to manually apply polyfill in this case
 export const polyfillLocales = () =>
   new Promise((resolve) => {

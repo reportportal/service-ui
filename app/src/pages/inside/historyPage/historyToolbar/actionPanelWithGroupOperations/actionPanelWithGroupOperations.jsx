@@ -46,6 +46,7 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
 import { HISTORY_PAGE_EVENTS } from 'components/main/analytics/events';
 import { createStepActionDescriptors } from 'pages/inside/common/utils';
+import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import { ActionPanel } from '../actionPanel';
 
 const UNLINK_ISSUE_EVENTS_INFO = {
@@ -56,11 +57,6 @@ const UNLINK_ISSUE_EVENTS_INFO = {
   unlinkBtn: HISTORY_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.UNLINK_BTN_UNLINK_ISSUE_MODAL,
   cancelBtn: HISTORY_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_UNLINK_ISSUE_MODAL,
   closeIcon: HISTORY_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_UNLINK_ISSUE_MODAL,
-  openCloseRightSection: HISTORY_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.openCloseRightSection,
-  onClickExternalLink: HISTORY_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.onClickExternalLink,
-  toggleShowErrLogsSwitcher:
-    HISTORY_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.toggleShowErrLogsSwitcher,
-  onSelectAllItems: HISTORY_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.onSelectAllItems,
 };
 
 const POST_ISSUE_EVENTS_INFO = {
@@ -70,10 +66,6 @@ const POST_ISSUE_EVENTS_INFO = {
   commentSwitcher: HISTORY_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.commentSwitcher,
   cancelBtn: HISTORY_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.CANCEL_BTN_POST_ISSUE_MODAL,
   closeIcon: HISTORY_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.CLOSE_ICON_POST_ISSUE_MODAL,
-  openCloseRightSection: HISTORY_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.openCloseRightSection,
-  onClickExternalLink: HISTORY_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.onClickExternalLink,
-  toggleShowErrLogsSwitcher: HISTORY_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.toggleShowErrLogsSwitcher,
-  onSelectAllItems: HISTORY_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.onSelectAllItems,
 };
 
 const LINK_ISSUE_EVENTS_INFO = {
@@ -81,10 +73,6 @@ const LINK_ISSUE_EVENTS_INFO = {
   cancelBtn: HISTORY_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_LINK_ISSUE_MODAL,
   addNewIssue: HISTORY_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.ADD_NEW_ISSUE_BTN_LINK_ISSUE_MODAL,
   closeIcon: HISTORY_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_LINK_ISSUE_MODAL,
-  openCloseRightSection: HISTORY_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.openCloseRightSection,
-  onClickExternalLink: HISTORY_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.onClickExternalLink,
-  toggleShowErrLogsSwitcher: HISTORY_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.toggleShowErrLogsSwitcher,
-  onSelectAllItems: HISTORY_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.onSelectAllItems,
 };
 
 @connect(
@@ -302,7 +290,14 @@ export class ActionPanelWithGroupOperations extends Component {
   handleEditDefects = (eventData) => {
     const { selectedItems, debugMode, onEditDefects, tracking } = this.props;
     const items = eventData && eventData.id ? [eventData] : selectedItems;
-    tracking.trackEvent(HISTORY_PAGE_EVENTS.EDIT_DEFECT_ACTION);
+    tracking.trackEvent(
+      HISTORY_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS.openModal(
+        items.length === 1
+          ? items[0].issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)
+          : undefined,
+        'ActionMenu',
+      ),
+    );
     onEditDefects(items, {
       fetchFunc: this.unselectAndRefreshItems,
       debugMode,

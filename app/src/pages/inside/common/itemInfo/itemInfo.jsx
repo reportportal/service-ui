@@ -29,6 +29,7 @@ import {
   uiExtensionLaunchItemComponentsSelector,
 } from 'controllers/plugins';
 import { IN_PROGRESS } from 'common/constants/testStatuses';
+import { ANALYZER_TYPES } from 'common/constants/analyzerTypes';
 import { MarkdownViewer } from 'components/main/markdown';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { PLUGIN_NAME_TITLES } from 'components/integrations';
@@ -142,6 +143,19 @@ export class ItemInfo extends Component {
       extensionComponents,
     } = this.props;
 
+    const autoAnalysisLabel =
+      value.analysing &&
+      value.analysing.find(
+        (item) => item === ANALYZER_TYPES.AUTO_ANALYZER || item === ANALYZER_TYPES.CLUSTER_ANALYSER,
+      );
+    const patternAnalyzingLabel =
+      value.analysing && value.analysing.find((item) => item === ANALYZER_TYPES.PATTERN_ANALYSER);
+
+    const onNameClick = () => {
+      const { events } = customProps;
+      events.CLICK_ITEM_NAME && tracking.trackEvent(events.CLICK_ITEM_NAME);
+    };
+
     return (
       <div ref={refFunction} className={cx('item-info')}>
         <div className={cx('main-info')}>
@@ -149,7 +163,7 @@ export class ItemInfo extends Component {
             itemId={value.id}
             ownLinkParams={customProps.ownLinkParams}
             className={cx('name-link')}
-            onClick={() => tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ITEM_NAME)}
+            onClick={onNameClick}
           >
             <ItemNameTooltip tooltipContent={value.name}>
               <span>{formatItemName(value.name)}</span>
@@ -164,10 +178,10 @@ export class ItemInfo extends Component {
             >
               {value.number && <span className={cx('number')}>#{value.number}</span>}
             </NameLink>
-            {value.autoAnalyzing && (
+            {autoAnalysisLabel && (
               <div className={cx('item-badge', 'auto-analysis')}>Auto-analysis</div>
             )}
-            {value.patternAnalyzing && (
+            {patternAnalyzingLabel && (
               <div className={cx('item-badge', 'pattern-analysis')}>Pattern-analysis</div>
             )}
             {value.rerun && <div className={cx('item-badge', 'rerun')}>Rerun</div>}

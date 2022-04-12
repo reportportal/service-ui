@@ -34,7 +34,6 @@ import { settingsTabSelector } from 'controllers/pages';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { uiExtensionSettingsTabsSelector } from 'controllers/plugins';
 import { SETTINGS_PAGE, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { BetaBadge } from 'pages/inside/common/betaBadge';
 import { NavigationTabs } from 'components/main/navigationTabs';
 import { GeneralTab } from './generalTab';
 import { AutoAnalysisTab } from './autoAnalysisTab';
@@ -138,12 +137,7 @@ export class SettingsPage extends Component {
         mobileDisabled: true,
       },
       [INTEGRATIONS]: {
-        name: (
-          <span>
-            {this.props.intl.formatMessage(messages.integrations)}
-            <BetaBadge className={cx('beta')} />
-          </span>
-        ),
+        name: this.props.intl.formatMessage(messages.integrations),
         link: this.props.createTabLink(INTEGRATIONS),
         component: <IntegrationsTab />,
         eventInfo: SETTINGS_PAGE_EVENTS.INTEGRATIONS_TAB,

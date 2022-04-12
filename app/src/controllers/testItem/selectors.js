@@ -31,6 +31,8 @@ import {
   querySelector,
   filterIdSelector,
   HISTORY_PAGE,
+  UNIQUE_ERRORS_PAGE,
+  pageSelector,
 } from 'controllers/pages';
 import { activeProjectSelector } from 'controllers/user';
 import { activeFilterSelector } from 'controllers/filter';
@@ -50,6 +52,7 @@ import { defectTypesSelector } from 'controllers/project';
 import { omit } from 'common/utils';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { SORTING_KEY } from 'controllers/sorting';
+import { clusterItemsSelector } from 'controllers/uniqueErrors/clusterItems/selectors';
 import {
   DEFAULT_SORTING,
   TEST_ITEMS_TYPE_LIST,
@@ -64,6 +67,7 @@ import {
   normalizeTestItem,
   getNextPage,
   isListView,
+  cleanUpTestItemQuery,
 } from './utils';
 
 const domainSelector = (state) => state.testItem || {};
@@ -104,6 +108,11 @@ export const isFilterParamsExistsSelector = (state) => {
 export const isStepLevelSelector = (state) => levelSelector(state) === LEVEL_STEP;
 
 export const itemsSelector = (state) => {
+  const query = querySelector(state);
+  if (query.clusterId) {
+    return clusterItemsSelector(state, query.clusterId).content;
+  }
+
   switch (levelSelector(state)) {
     case LEVEL_SUITE:
       return suitesSelector(state);
@@ -258,7 +267,8 @@ export const nameLinkSelector = (state, ownProps) => {
   let testItemIds = (ownLinkParams && ownLinkParams.testItemIds) || testItemIdsSelector(state);
   const isDebugMode = debugModeSelector(state);
   let query = pagePropertiesSelector(state);
-  const testItem = testItemSelector(state, ownProps.itemId);
+  const testItem =
+    (ownLinkParams && ownLinkParams.testItem) || testItemSelector(state, ownProps.itemId);
   const hasChildren = testItem && testItem.hasChildren;
   const page = (ownLinkParams && ownLinkParams.page) || getNextPage(isDebugMode, hasChildren);
   if (testItem) {
@@ -270,6 +280,13 @@ export const nameLinkSelector = (state, ownProps) => {
     query = {
       ...query,
       'filter.eq.uniqueId': ownProps.uniqueId,
+    };
+  }
+
+  if (ownLinkParams && ownLinkParams.testItem && ownLinkParams.testItem.clusterId) {
+    query = {
+      ...query,
+      clusterId: ownLinkParams.testItem.clusterId,
     };
   }
 
@@ -308,6 +325,8 @@ export const statisticsLinkSelector = createSelector(
       [providerTypeModifierId]: ownProps[providerTypeModifierId],
       launchesLimit,
       isLatest,
+      ...(ownProps.baselineLaunchId && { baselineLaunchId: ownProps.baselineLaunchId }),
+      ...(ownProps.launchId && { launchId: ownProps.launchId }),
     };
     if (ownProps.statuses) {
       params['filter.in.status'] = ownProps.statuses.join(',');
@@ -430,9 +449,9 @@ const btsBackLinkBaseSelector = createSelector(payloadSelector, (payload) => {
 });
 
 export const btsIntegrationBackLinkSelector = (state, { path = '', launchId } = {}) => {
-  const isStepLevel = isStepLevelSelector(state);
+  const isLogPage = pageSelector(state) === PROJECT_LOG_PAGE;
 
-  if (!isStepLevel) {
+  if (isLogPage) {
     return window.location.toString();
   }
 
@@ -464,7 +483,7 @@ export const listViewLinkSelector = createSelector(
     type: isDebugMode ? PROJECT_USERDEBUG_TEST_ITEM_PAGE : TEST_ITEM_PAGE,
     payload,
     meta: {
-      query,
+      query: cleanUpTestItemQuery(query),
     },
   }),
 );
@@ -479,7 +498,7 @@ export const logViewLinkSelector = createSelector(
       type: page,
       payload,
       meta: {
-        query,
+        query: cleanUpTestItemQuery(query),
       },
     };
   },
@@ -491,7 +510,21 @@ export const historyViewLinkSelector = createSelector(
   (payload, query) => ({
     type: HISTORY_PAGE,
     payload,
-    query: { ...query },
+    meta: {
+      query: cleanUpTestItemQuery(query),
+    },
+  }),
+);
+
+export const uniqueErrorsLinkSelector = createSelector(
+  payloadSelector,
+  querySelector,
+  (payload, query) => ({
+    type: UNIQUE_ERRORS_PAGE,
+    payload,
+    meta: {
+      query,
+    },
   }),
 );
 

@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-import { getEditItemsModalEvents } from 'components/main/analytics/events/common/testItemPages/modalEventsCreators';
+import { getEditItemsModalEvents } from './common/testItemPages/modalEventsCreators';
 import {
+  getClickAnalyzeInUniqueErrorAnalysisModalEvent,
+  getClickAttributes,
   getClickOnPlusMinusEvents,
   getCommonActionEvents,
   getRefineFiltersPanelEvents,
-} from 'components/main/analytics/events/common/testItemPages/actionEventsCreators';
+} from './common/testItemPages/actionEventsCreators';
 import {
   getAddBtnAddNewFilterAddWidgetModal,
   getAddFilterBtnAddWidgetModal,
@@ -28,7 +30,7 @@ import {
   getSelectCriteriaNewWidget,
   getSelectSortingFilterAddWidgetModal,
   getSelectToggleButtonsAddWidgetModal,
-} from 'components/main/analytics/events/common/widgetPages/actionEventCreators';
+} from './common/widgetPages/actionEventCreators';
 
 export const LAUNCHES_PAGE = 'launches';
 const LAUNCHES_MODAL = 'Modal launches';
@@ -61,11 +63,7 @@ export const getCriteriaToggler = (state) => ({
 
 export const LAUNCHES_PAGE_EVENTS = {
   plusMinusBreadcrumb: getClickOnPlusMinusEvents(LAUNCHES_PAGE),
-  CLICK_ITEM_NAME: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on Item Name',
-    label: 'Transition to Item page',
-  },
+  CLICK_ITEM_NAME: getCommonActionEvents(LAUNCHES_PAGE).CLICK_ITEM_NAME,
   CLICK_HAMBURGER_MENU: {
     category: LAUNCHES_PAGE,
     action: 'Click on Icon Menu near Launch Name',
@@ -300,6 +298,28 @@ export const LAUNCHES_PAGE_EVENTS = {
   REFINE_FILTERS_PANEL_EVENTS: {
     commonEvents: getRefineFiltersPanelEvents(LAUNCHES_PAGE),
   },
+  ADD_FILTER: {
+    category: LAUNCHES_PAGE,
+    action: 'Click on button "+Add filter"',
+    label: '',
+  },
+  refineBtnMore: (value) => ({
+    category: LAUNCHES_PAGE,
+    action: 'Select Parameter to Refine',
+    label: `${value}`,
+  }),
+  CLICK_ATTRIBUTES: getClickAttributes(LAUNCHES_PAGE),
+  clickFilterActionBarButton: (value) => ({
+    category: LAUNCHES_PAGE,
+    action: `Click on button "${value}" in filter action bar`,
+    label: '',
+  }),
+  countFilters: (filterStatistic) => ({
+    category: LAUNCHES_PAGE,
+    action: 'Count Filters',
+    label: filterStatistic,
+  }),
+  clickAnalyzeEvent: getClickAnalyzeInUniqueErrorAnalysisModalEvent(LAUNCHES_PAGE),
 };
 
 export const LAUNCHES_MODAL_EVENTS = {

@@ -17,61 +17,31 @@ on:
 
 env:
   UI_BUILD_REACT: 'app/'
-  GODIRS_NOVENDOR: '`go list ./... | grep -v /vendor/`'
-  PACKAGE_COMMONS: 'github.com/reportportal/commons-go/v5'
-  BINARY_DIR: 'bin'
-  BUILD_INFO_LDFLAGS: >-
-    -ldflags "-extldflags '"-static"'
-    -X ${PACKAGE_COMMONS}/commons.repo=${GITHUB_REPOSITORY}
-    -X ${PACKAGE_COMMONS}/commons.branch=${GITHUB_SHA}
-    -X ${PACKAGE_COMMONS}/commons.buildDate=${BUILD_DATE}
-    -X ${PACKAGE_COMMONS}/commons.version=${VERSION}"
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [11, 12]
 
     steps:
-      - name: Get Date
-        run: 'echo "BUILD_DATE=`date +%FT%T%z`" >> $GITHUB_ENV'
-
       - uses: actions/checkout@v2
 
       - name: Setup NodeJS
         uses: actions/setup-node@v2
         with:
-          node-version: '10.13.0'
-
-      - name: Setup Go
-        uses: actions/setup-go@v2
-        with:
-          go-version: '^1.14.1'
+          node-version: ${{ matrix.node }}
 
       - name: JS Build
         env:
-          NODE_OPTIONS: '--max_old_space_size=4096'
+          NODE_OPTIONS: '--max_old_space_size=2048'
 
         run: |
           npm --prefix ${{ env.UI_BUILD_REACT }} ci
           npm --prefix ${{ env.UI_BUILD_REACT }} run lint
           npm --prefix ${{ env.UI_BUILD_REACT }} run test:coverage
           npm --prefix ${{ env.UI_BUILD_REACT }} run build
-
-      - name: Go Linter
-        uses: golangci/golangci-lint-action@v2
-        with:
-          version: v1.36.0
-          skip-go-installation: true
-          args: '--deadline 10m'
-
-      - name: Go Tests
-        run: 'go test ${{ env.GODIRS_NOVENDOR }}'
-
-      - name: Go Build
-        env:
-          CGO_ENABLED: 0
-          GOOS: linux
-        run: 'go build ${{ env.BUILD_INFO_LDFLAGS }} -o ${{ env.BINARY_DIR }}/service-ui ./'
 
       - name: Codecov report
         uses: codecov/codecov-action@v1

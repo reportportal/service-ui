@@ -70,6 +70,12 @@
   border: 1px solid rgba(0, 0, 0, 0.2);
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 
+  &.dark-view {
+    background-color: $COLOR--darkmode-gray-400;
+    color: $COLOR--darkmode-error-text;
+    box-shadow: none;
+  }
+
   &.width-content {
     width: max-content;
   }

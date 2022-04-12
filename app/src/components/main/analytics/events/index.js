@@ -28,7 +28,12 @@ export {
   getCriteriaToggler,
 } from './launchesPageEvents';
 export { LOGIN_PAGE_EVENTS, LOGIN_PAGE } from './loginPageEvents';
-export { SIDEBAR_EVENTS, ADMIN_SIDEBAR_EVENTS, FOOTER_EVENTS } from './sidebarFooterEvents';
+export {
+  SIDEBAR_EVENTS,
+  ADMIN_SIDEBAR_EVENTS,
+  FOOTER_EVENTS,
+  HELP_AND_SUPPORT_EVENTS,
+} from './sidebarFooterEvents';
 export { MEMBERS_PAGE, MEMBERS_PAGE_EVENTS } from './membersPageEvents';
 export {
   PLUGINS_PAGE_EVENTS,
@@ -45,8 +50,6 @@ export {
   getSaveNewPatternEvent,
   getIntegrationItemClickEvent,
   getIntegrationUnlinkGlobalEvent,
-  getSaveIntegrationModalEvents,
-  getIntegrationAddClickEvent,
   getIntegrationEditAuthClickEvent,
   getAutoAnalysisMinimumShouldMatchSubmitEvent,
 } from './settingsPageEvents';
@@ -69,3 +72,4 @@ export {
   submitAnalyticsBtn,
 } from './adminServerSettingsPageEvents';
 export { TEST_PAGE, TESTS_PAGE_EVENTS } from './testsPageEvents';
+export { UNIQUE_ERRORS_PAGE_EVENTS } from './uniqueErrorsPageEvents';

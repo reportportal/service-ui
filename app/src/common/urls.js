@@ -104,7 +104,9 @@ export const URLS = {
       'filter.eq.attributeKey': key || undefined,
       'filter.cnt.attributeValue': searchTerm,
     })}`,
-  getMLSuggestions: (activeProject, itemId) => `${urlBase}${activeProject}/item/suggest/${itemId}`,
+  MLSuggestions: (activeProject, itemId) => `${urlBase}${activeProject}/item/suggest/${itemId}`,
+  MLSuggestionsByCluster: (activeProject, clusterId) =>
+    `${urlBase}${activeProject}/item/suggest/cluster/${clusterId}`,
   choiceSuggestedItems: (activeProject) => `${urlBase}${activeProject}/item/suggest/choice`,
   launchNameSearch: (activeProject) => (searchTerm = '') =>
     `${urlBase}${activeProject}/launch/names?filter.cnt.name=${searchTerm}`,
@@ -268,6 +270,8 @@ export const URLS = {
 
   plugin: () => `${urlBase}plugin`,
   pluginUpdate: (pluginId) => `${urlBase}plugin/${pluginId}`,
+  pluginCommandCommon: (projectId, pluginName, command) =>
+    `${urlBase}plugin/${projectId}/${pluginName}/common/${command}`,
   globalIntegrationsByPluginName: (pluginName = '') =>
     `${urlBase}integration/global/all/${pluginName}`,
   projectIntegrationByIdCommand: (projectId, integrationId, command) =>
@@ -294,4 +298,8 @@ export const URLS = {
     `${urlBase}bts/${projectId}/${integrationId}/ticket`,
   btsTicket: (activeProject, issueId, btsProject, btsUrl) =>
     `${urlBase}bts/${activeProject}/ticket/${issueId}${getQueryParams({ btsProject, btsUrl })}`,
+  runUniqueErrorAnalysis: (activeProject) => `${urlBase}${activeProject}/launch/cluster`,
+  clusterByLaunchId: (activeProject, launchId, query) =>
+    `${urlBase}${activeProject}/launch/cluster/${launchId}${getQueryParams(query)}`,
+  onboarding: (page = 'GENERAL') => `${urlBase}onboarding?page=${page}`,
 };

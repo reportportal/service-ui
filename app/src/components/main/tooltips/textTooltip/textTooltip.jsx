@@ -17,13 +17,14 @@
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
+import DOMPurify from 'dompurify';
 import styles from './textTooltip.scss';
 
 const cx = classNames.bind(styles);
 
 export const TextTooltip = ({ tooltipContent, className, preventParsing }) => (
   <div className={cx('text-tooltip', className)}>
-    {preventParsing ? tooltipContent : Parser(tooltipContent)}
+    {preventParsing ? tooltipContent : Parser(DOMPurify.sanitize(tooltipContent))}
   </div>
 );
 TextTooltip.propTypes = {

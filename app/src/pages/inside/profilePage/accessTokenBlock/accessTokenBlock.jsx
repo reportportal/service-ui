@@ -23,10 +23,12 @@ import classNames from 'classnames/bind';
 import { showModalAction } from 'controllers/modal';
 import { apiTokenValueSelector, generateApiTokenAction } from 'controllers/user';
 import WarningLockImage from 'common/img/warning-lock.png';
-import { Input } from 'components/inputs/input/input';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import { StripedMessage } from 'components/main/stripedMessage';
+import Parser from 'html-react-parser';
+import IconDuplicate from 'common/img/duplicate-inline.svg';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { ButtonWithTooltip } from './buttonWithTooltip';
 import styles from './accessTokenBlock.scss';
 import { BlockContainerHeader, BlockContainerBody } from '../blockContainer';
@@ -96,14 +98,6 @@ export class AccessTokenBlock extends Component {
     });
   };
 
-  setupRef = (node) => {
-    this.inputLink = node;
-  };
-
-  selectAccessToken = () => {
-    this.inputLink.select();
-  };
-
   regenerateHandler = () => {
     this.props.generateApiTokenAction({
       successMessage: this.props.intl.formatMessage(messages.regenerateSuccess),
@@ -125,13 +119,11 @@ export class AccessTokenBlock extends Component {
           <div className={cx('body-wrapper')}>
             <div className={cx('field-wrapper')}>
               <span className={cx('label')}>{formatMessage(messages.header)}</span>
-              <div className={cx('field')}>
-                <Input
-                  readonly
-                  value={this.props.token}
-                  refFunction={this.setupRef}
-                  onFocus={this.selectAccessToken}
-                />
+              <div className={cx('token-value-block')}>
+                {this.props.token}
+                <CopyToClipboard text={this.props.token} className={cx('copy')}>
+                  {Parser(IconDuplicate)}
+                </CopyToClipboard>
               </div>
               <div className={cx('regenerate-btn')}>
                 <ButtonWithTooltip>

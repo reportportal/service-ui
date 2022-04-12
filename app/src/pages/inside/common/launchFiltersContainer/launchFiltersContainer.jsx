@@ -15,6 +15,7 @@
  */
 
 import { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import isEqual from 'fast-deep-equal';
 import { connect } from 'react-redux';
@@ -26,6 +27,7 @@ import {
   createFilterAction,
   addFilteringFieldToConditions,
   updateFilterOrdersAction,
+  launchFiltersReadySelector,
 } from 'controllers/filter';
 import { filterIdSelector } from 'controllers/pages';
 import {
@@ -42,10 +44,12 @@ import { PAGE_KEY } from 'controllers/pagination';
 import { createFilterQuery } from 'components/filterEntities/containers/utils';
 import { SORTING_ASC, SORTING_DESC, formatSortingString, SORTING_KEY } from 'controllers/sorting';
 import { ENTITY_NUMBER } from 'components/filterEntities/constants';
+import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 
 @connect(
   (state) => ({
     launchFilters: launchFiltersSelector(state),
+    launchesFiltersReady: launchFiltersReadySelector(state),
     activeFilterId: filterIdSelector(state),
     activeFilter: activeFilterSelector(state),
     localSorting: localSortingSelector(state),
@@ -62,9 +66,11 @@ import { ENTITY_NUMBER } from 'components/filterEntities/constants';
     resetLocalSorting: resetLocalSortingAction,
   },
 )
+@track()
 export class LaunchFiltersContainer extends Component {
   static propTypes = {
     launchFilters: PropTypes.array,
+    launchesFiltersReady: PropTypes.bool,
     activeFilterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     activeFilter: PropTypes.object,
     render: PropTypes.func.isRequired,
@@ -79,10 +85,15 @@ export class LaunchFiltersContainer extends Component {
     localSorting: PropTypes.object,
     updateLocalSorting: PropTypes.func,
     resetLocalSorting: PropTypes.func,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
     launchFilters: [],
+    launchesFiltersReady: false,
     activeFilter: null,
     activeFilterId: null,
     fetchLaunchesWithParamsAction: () => {},
@@ -98,9 +109,46 @@ export class LaunchFiltersContainer extends Component {
     resetLocalSorting: () => {},
   };
 
+  state = {
+    isFilterTracked: false,
+  };
+
+  componentDidUpdate(prevProps) {
+    const { launchesFiltersReady, launchFilters } = this.props;
+
+    if (launchesFiltersReady) {
+      const launchFiltersStatistic = this.getFiltersCountStatistic(launchFilters);
+      const prevLaunchFiltersStatistic = this.getFiltersCountStatistic(prevProps.launchFilters);
+      if (launchFiltersStatistic !== prevLaunchFiltersStatistic || !this.state.isFilterTracked) {
+        this.trackFilters(launchFiltersStatistic);
+      }
+    }
+  }
+
   componentWillUnmount() {
     this.props.resetLocalSorting();
   }
+
+  getFiltersCountStatistic = (filterArray) => {
+    let savedFilters = 0;
+    let unsavedFilters = 0;
+    filterArray.forEach((filter) => {
+      if (filter.id < 0) {
+        unsavedFilters += 1;
+      } else {
+        savedFilters += 1;
+      }
+    });
+    return `${savedFilters}#${unsavedFilters}`;
+  };
+
+  trackFilters = (filtersStatistic) => {
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.countFilters(filtersStatistic));
+
+    if (!this.state.isFilterTracked) {
+      this.setState({ isFilterTracked: true });
+    }
+  };
 
   getConditions = () => {
     const { activeFilter } = this.props;

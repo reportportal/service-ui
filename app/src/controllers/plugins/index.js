@@ -36,9 +36,11 @@ export {
   isPostIssueActionAvailable,
   isAuthorizationPlugin,
   isPluginSwitchable,
+  isPluginSupportsCommonCommand,
 } from './utils';
 export {
   pluginsSelector,
+  pluginByNameSelector,
   availablePluginsSelector,
   availableGroupedPluginsSelector,
   createNamedIntegrationsSelector,
@@ -50,6 +52,7 @@ export {
   isEmailIntegrationAvailableSelector,
   isBtsPluginsExistSelector,
   enabledBtsPluginsSelector,
+  globalIntegrationsSelector,
 } from './selectors';
 export { pluginSagas } from './sagas';
 export {

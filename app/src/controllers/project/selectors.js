@@ -22,6 +22,7 @@ import {
   JOB_ATTRIBUTE_PREFIX,
   PROJECT_ATTRIBUTES_DELIMITER,
   PA_ATTRIBUTE_ENABLED_KEY,
+  AA_ATTRIBUTE_ENABLED_KEY,
 } from './constants';
 
 const projectSelector = (state) => state.project || {};
@@ -36,6 +37,8 @@ export const projectMembersSelector = (state) => projectInfoSelector(state).user
 
 export const projectCreationDateSelector = (state) => projectInfoSelector(state).creationDate || 0;
 
+export const projectInfoIdSelector = (state) => projectInfoSelector(state).projectId;
+
 export const projectPreferencesSelector = (state) => projectSelector(state).preferences || {};
 
 export const userFiltersSelector = (state) => projectPreferencesSelector(state).filters || [];
@@ -43,6 +46,12 @@ export const userFiltersSelector = (state) => projectPreferencesSelector(state).
 export const subTypesSelector = (state) => projectConfigSelector(state).subTypes || [];
 
 export const projectAttributesSelector = (state) => projectConfigSelector(state).attributes || {};
+
+export const autoAnalysisEnabledSelector = (state) =>
+  projectAttributesSelector(state)[AA_ATTRIBUTE_ENABLED_KEY];
+
+export const patternAnalysisEnabledSelector = (state) =>
+  projectAttributesSelector(state)[PA_ATTRIBUTE_ENABLED_KEY];
 
 export const defectTypesSelector = createSelector(subTypesSelector, (subTypes) =>
   DEFECT_TYPES_SEQUENCE.reduce(

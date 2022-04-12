@@ -33,6 +33,7 @@ export const InputRadio = ({
   mobileDisabled,
   title,
   mode,
+  size,
 }) => (
   // eslint-disable-next-line
   <label
@@ -59,6 +60,7 @@ export const InputRadio = ({
         checked: value === ownValue,
         'at-top': circleAtTop,
         [`mode-${mode}`]: mode,
+        [`toggler-${size}`]: size,
       })}
     />
     {children && (
@@ -70,8 +72,8 @@ export const InputRadio = ({
 );
 InputRadio.propTypes = {
   children: PropTypes.node,
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  ownValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]),
+  ownValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]),
   name: PropTypes.string,
   disabled: PropTypes.bool,
   mobileDisabled: PropTypes.bool,
@@ -81,6 +83,7 @@ InputRadio.propTypes = {
   onBlur: PropTypes.func,
   title: PropTypes.string,
   mode: PropTypes.oneOf(['default', 'dark']),
+  size: PropTypes.oneOf(['small', 'medium']),
 };
 InputRadio.defaultProps = {
   children: '',
@@ -95,4 +98,5 @@ InputRadio.defaultProps = {
   onBlur: () => {},
   title: undefined,
   mode: 'default',
+  size: 'medium',
 };

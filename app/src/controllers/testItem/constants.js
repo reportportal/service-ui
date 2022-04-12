@@ -22,24 +22,29 @@ import {
   LEVEL_SCENARIO,
 } from 'common/constants/launchLevels';
 
+export const NAMESPACE = 'testItem';
+
 export const SET_LEVEL = 'setLevel';
 export const FETCH_TEST_ITEMS = 'fetchTestItems';
 export const FETCH_TEST_ITEMS_LOG_PAGE = 'fetchTestItemsFromLogPage';
-export const TEST_ITEMS_TYPE_LIST = 'list';
+export const FETCH_PARENT_LAUNCH_SUCCESS = 'fetchParentLaunchSuccess';
+export const DELETE_TEST_ITEMS = 'DeleteTestItems';
+export const SET_PAGE_LOADING = `${NAMESPACE}/setPageLoading`;
 export const RESTORE_PATH = 'restorePath';
-export const NAMESPACE = 'testItem';
+
+export const TEST_ITEMS_TYPE_LIST = 'list';
 export const PARENT_ITEMS_NAMESPACE = `${NAMESPACE}/parentItems`;
 export const FILTERED_ITEM_STATISTICS_NAMESPACE = `${NAMESPACE}/filteredItemStatistics`;
-export const SET_PAGE_LOADING = `${NAMESPACE}/setPageLoading`;
 export const DEFAULT_SORTING = formatSortingString(['startTime'], SORTING_ASC);
 export const DEFAULT_LAUNCHES_LIMIT = 600;
-export const DELETE_TEST_ITEMS = 'DeleteTestItems';
 export const COMPOSITE_ATTRIBUTES_FILTER = 'filter.has.compositeAttribute';
 export const LEVEL_ATTRIBUTES_FILTER = 'filter.has.levelAttribute';
 export const CURRENT_ITEM_LEVEL = 'currentItemLevel';
 export const PROVIDER_TYPE_WIDGET = 'widget';
 export const PROVIDER_TYPE_LAUNCH = 'launch';
+export const PROVIDER_TYPE_BASELINE = 'baseline';
 export const PROVIDER_TYPE_FILTER = 'filter';
+export const PROVIDER_TYPE_CLUSTER = 'cluster';
 export const PROVIDER_TYPE_WIDGET_ID = 'widgetId';
 export const PROVIDER_TYPE_LAUNCH_ID = 'launchId';
 export const PROVIDER_TYPE_FILTER_ID = 'filterId';

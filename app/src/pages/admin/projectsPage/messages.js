@@ -18,6 +18,10 @@ import { defineMessages } from 'react-intl';
 import { SETTINGS, MEMBERS, EVENTS } from 'common/constants/projectSections';
 
 export const messages = defineMessages({
+  statisticButtonTooltip: {
+    id: 'ProjectStatisticButton.buttonTooltip',
+    defaultMessage: 'See detailed information',
+  },
   pageTitle: {
     id: 'ProjectsPage.title',
     defaultMessage: 'All projects',
@@ -165,6 +169,10 @@ export const messages = defineMessages({
   assignModalButton: {
     id: 'ProjectPage.assignButton',
     defaultMessage: 'Assign',
+  },
+  searchPlaceholder: {
+    id: 'ProjectsPage.searchPlaceholder',
+    defaultMessage: 'Search by name',
   },
   nameCol: { id: 'ProjectsGrid.nameCol', defaultMessage: 'Name' },
   projectTypeCol: { id: 'ProjectsGrid.projectTypeCol', defaultMessage: 'Project Type' },

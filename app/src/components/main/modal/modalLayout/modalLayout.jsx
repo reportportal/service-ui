@@ -47,6 +47,7 @@ export class ModalLayout extends Component {
       danger: PropTypes.bool,
       onClick: PropTypes.func,
       eventInfo: PropTypes.object,
+      attributes: PropTypes.object,
     }),
     cancelButton: PropTypes.shape({
       text: PropTypes.string.isRequired,
