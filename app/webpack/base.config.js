@@ -96,6 +96,12 @@ module.exports = {
     new ModuleFederationPlugin({
       name: 'main_app',
       filename: 'main_app.js',
+      exposes: {
+        './FieldProvider': './src/components/fields',
+        './FieldErrorHint': './src/components/fields/fieldErrorHint',
+        './BigButton': './src/components/buttons/bigButton',
+        './InputOutside': './src/components/inputs/inputOutside',
+      },
       shared: {
         react: {
           import: 'react',
@@ -107,6 +113,12 @@ module.exports = {
           singleton: true,
         },
         'react-redux': {
+          singleton: true,
+        },
+        'react-intl': {
+          singleton: true,
+        },
+        'redux-form': {
           singleton: true,
         },
         classnames: {
