@@ -1,18 +1,14 @@
 import React from 'react';
-import { URLS } from 'common/urls';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { createImportProps } from 'controllers/plugins/uiExtensions/createImportProps';
 import { extensionType } from './extensionTypes';
 import { useFederatedComponent } from './hooks';
-
-const DEFAULT_EXTENSION_FILE_NAME = 'remoteEntity.js';
+import { getExtensionUrl } from './utils';
 
 // TODO: Create a special error boundary for extension components
 function ExtensionLoader({ extension, ...componentProps }) {
-  const { moduleName, scope, pluginName, isPublic } = extension;
-  const url = isPublic
-    ? URLS.pluginPublicFile(pluginName, DEFAULT_EXTENSION_FILE_NAME)
-    : URLS.pluginFile(pluginName, DEFAULT_EXTENSION_FILE_NAME);
+  const { moduleName, scope, pluginName } = extension;
+  const url = getExtensionUrl(extension);
 
   const { failed, Component } = useFederatedComponent(scope, moduleName, url);
 

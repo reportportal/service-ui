@@ -2,7 +2,8 @@ import React from 'react';
 import { loadComponent } from './loadComponent';
 
 const useDynamicScript = (scope, url) => {
-  const loaded = !!window[scope];
+  const isDev = process.env.NODE_ENV === 'development';
+  const loaded = isDev ? false : !!window[scope];
   const [ready, setReady] = React.useState(loaded);
   const [failed, setFailed] = React.useState(false);
 

@@ -25,9 +25,9 @@ export const extensionsLoadedSelector = (state) =>
 const extensionsMetadataSelector = (state) =>
   domainSelector(state).uiExtensions.extensionsMetadata || [];
 
-export const createExtensionSelectorByType = (type) =>
+const createExtensionSelectorByType = (type, pluginNamesSelector = enabledPluginNamesSelector) =>
   createSelector(
-    enabledPluginNamesSelector,
+    pluginNamesSelector,
     extensionsMetadataSelector,
     extensionsLoadedSelector,
     (pluginNames, extensionsMetadata) => {
@@ -38,29 +38,12 @@ export const createExtensionSelectorByType = (type) =>
 
       const newExtensions = extensionsMetadata
         .filter(({ pluginName }) => pluginNames.includes(pluginName))
-        .map(({ pluginName, scope, extensions, isPublic }) =>
-          extensions.map((ext) => ({ ...ext, pluginName, scope, isPublic })),
+        .map(({ extensions, ...commonMetadata }) =>
+          extensions.map((ext) => ({ ...ext, ...commonMetadata })),
         );
 
       return uiExtensions
         .concat(newExtensions)
-        .reduce((acc, val) => acc.concat(val), [])
-        .filter((extension) => extension.type === type);
-    },
-  );
-
-export const createPublicExtensionSelectorByType = (type) =>
-  createSelector(
-    enabledPublicPluginNamesSelector,
-    extensionsMetadataSelector,
-    (pluginNames, extensionsMetadata) => {
-      const newExtensions = extensionsMetadata
-        .filter(({ pluginName }) => pluginNames.includes(pluginName))
-        .map(({ pluginName, scope, extensions, isPublic }) =>
-          extensions.map((ext) => ({ ...ext, pluginName, scope, isPublic })),
-        );
-
-      return newExtensions
         .reduce((acc, val) => acc.concat(val), [])
         .filter((extension) => extension.type === type);
     },
@@ -94,6 +77,7 @@ export const uniqueErrorGridCellComponentSelector = createExtensionSelectorByTyp
 export const uniqueErrorGridHeaderCellComponentSelector = createExtensionSelectorByType(
   EXTENSION_TYPE_UNIQUE_ERROR_GRID_HEADER_CELL_COMPONENT,
 );
-export const uiExtensionLoginPageSelector = createPublicExtensionSelectorByType(
+export const uiExtensionLoginPageSelector = createExtensionSelectorByType(
   EXTENSION_TYPE_LOGIN_PAGE,
+  enabledPublicPluginNamesSelector,
 );
