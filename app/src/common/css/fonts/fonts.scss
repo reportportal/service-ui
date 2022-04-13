@@ -43,3 +43,6 @@
   './Roboto-Mono-Regular/Roboto-Mono-Regular',
   'RobotoMono'
 );
+@include font-face('Roboto-Regular', './Roboto-Regular/Roboto-Regular', 'Roboto-Regular');
+@include font-face('Roboto-Medium', './Roboto-Medium/Roboto-Medium', 'Roboto-Medium');
+@include font-face('Roboto-Bold', './Roboto-Bold/Roboto-Bold', 'Roboto-Bold');

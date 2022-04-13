@@ -1,5 +1,5 @@
-/*!
- * Copyright 2019 EPAM Systems
+/*
+ * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,4 @@
  * limitations under the License.
  */
 
-$FONT-SEMIBOLD: OpenSans-Semibold;
-$FONT-LIGHT: OpenSans-Light;
-$FONT-REGULAR: OpenSans;
-$FONT-CONDBOLD: OpenSansCondBold;
-$FONT-MONOSPACE: Roboto-Mono-Regular, Menlo, Monaco, Consolas, 'Courier New', monospace;
-$FONT-ROBOTO-REGULAR: Roboto-Regular;
-$FONT-ROBOTO-MEDIUM: Roboto-Medium;
-$FONT-ROBOTO-BOLD: Roboto-Bold;
+export { Navigation } from './navigation';

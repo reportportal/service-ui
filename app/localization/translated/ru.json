@@ -1600,7 +1600,7 @@
   "SettingsPage.integrations": "Интеграции",
   "SettingsPage.notifications": "Уведомления",
   "SettingsPage.patternAnalysis": "Паттерн-анализ",
-  "SettingsPage.title": "Настройки",
+  "SettingsPage.title": "Настройки Проекта",
   "ShareFilter.shared": "Поделиться:",
   "ShareTooltip.sharedByFilter": "Доступ к фильтру открыл {owner}",
   "ShareTooltip.sharedFilter": "Вы открыли доступ к Вашему фильтру",
