@@ -182,6 +182,14 @@ export class EmailFormFields extends Component {
           </FieldErrorHint>
         </IntegrationFormField>
         <IntegrationFormField
+          name={USERNAME_KEY}
+          disabled={disabled}
+          label={formatMessage(messages.usernameLabel)}
+          lineAlign={lineAlign}
+        >
+          <Input mobileDisabled />
+        </IntegrationFormField>
+        <IntegrationFormField
           name={AUTH_ENABLED_KEY}
           disabled={disabled}
           label={formatMessage(messages.authLabel)}
@@ -192,24 +200,14 @@ export class EmailFormFields extends Component {
           <InputDropdown options={this.authOptions} mobileDisabled />
         </IntegrationFormField>
         {authEnabled && (
-          <Fragment>
-            <IntegrationFormField
-              name={USERNAME_KEY}
-              disabled={disabled}
-              label={formatMessage(messages.usernameLabel)}
-              lineAlign={lineAlign}
-            >
-              <Input mobileDisabled />
-            </IntegrationFormField>
-            <IntegrationFormField
-              name={PASSWORD_KEY}
-              disabled={disabled}
-              label={formatMessage(messages.passwordLabel)}
-              lineAlign={lineAlign}
-            >
-              <Input type="password" mobileDisabled />
-            </IntegrationFormField>
-          </Fragment>
+          <IntegrationFormField
+            name={PASSWORD_KEY}
+            disabled={disabled}
+            label={formatMessage(messages.passwordLabel)}
+            lineAlign={lineAlign}
+          >
+            <Input type="password" mobileDisabled />
+          </IntegrationFormField>
         )}
         <div className={cx('checkboxes-container', { 'line-align': lineAlign })}>
           <div className={cx('checkbox-wrapper')}>
