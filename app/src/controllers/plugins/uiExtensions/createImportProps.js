@@ -160,7 +160,10 @@ import { updateLaunchLocallyAction } from 'controllers/launch';
 import { getDefectTypeLabel } from 'components/main/analytics/events/common/utils';
 import { formatAttribute } from 'common/utils/attributeUtils';
 import { createNamespacedQuery } from 'common/utils/routingUtils';
-import { createGlobalNamedIntegrationsSelector } from '../selectors';
+import {
+  publicPluginsSelector,
+  createGlobalNamedIntegrationsSelector,
+} from 'controllers/plugins/selectors';
 
 const BUTTONS = {
   GhostButton,
@@ -291,6 +294,7 @@ export const createImportProps = (pluginName) => ({
     defectLinkSelector,
     pagePropertiesSelector,
     launchSelector,
+    publicPluginsSelector,
   },
   icons: {
     PlusIcon,
