@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FormattedMessage, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
@@ -61,12 +61,15 @@ export const ProjectSettingsPageContainer = () => {
   const userRole = useSelector(activeProjectRoleSelector);
   const accountRole = useSelector(userAccountRoleSelector);
 
-  const createTabLink = (tabName) => ({
-    type: PROJECT_SETTINGS_TAB_PAGE,
-    payload: { projectId, settingsTab: tabName },
-  });
+  const createTabLink = useCallback(
+    (tabName) => ({
+      type: PROJECT_SETTINGS_TAB_PAGE,
+      payload: { projectId, settingsTab: tabName },
+    }),
+    [projectId],
+  );
 
-  const createExtensionTabs = () => {
+  const createExtensionTabs = useCallback(() => {
     return extensions.reduce(
       (acc, extension) => ({
         ...acc,
@@ -80,9 +83,9 @@ export const ProjectSettingsPageContainer = () => {
       }),
       {},
     );
-  };
+  }, [createTabLink, extensions]);
 
-  const createItemsConfig = () => {
+  const createItemsConfig = useCallback(() => {
     const extensionTabs = createExtensionTabs();
     const tabsConfig = {
       [GENERAL]: {
@@ -145,7 +148,7 @@ export const ProjectSettingsPageContainer = () => {
       }
     });
     return { ...tabsConfig, ...extensionTabs };
-  };
+  }, [accountRole, createExtensionTabs, createTabLink, formatMessage, userRole]);
 
   const navigation = useMemo(() => {
     const itemsConfig = createItemsConfig();

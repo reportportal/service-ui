@@ -34,8 +34,8 @@ export const messages = defineMessages({
     defaultMessage: 'Defect types',
   },
   analysis: {
-    id: 'SettingsPage.analysis',
-    defaultMessage: 'Auto-Analysis',
+    id: 'SettingsPage.analyzer',
+    defaultMessage: 'Analyzer',
   },
   demoData: {
     id: 'SettingsPage.demoData',
