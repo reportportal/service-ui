@@ -1820,6 +1820,7 @@
   "UpdateAnalysisSettings.numberOfLogLines": "Кількість рядків лода",
   "UpdateAnalysisSettings.numbersInErrorLog": "вилучити цифри в журналі помилок",
   "UpdateAnalysisSettings.uniqueError": "перемикання унікальних помилок",
+  "UpdateAnalysisSettings.allMessagesShouldMatch": "переключення 'Всі журнали з 3 або більше рядками повинні збігатися'",
   "UpdateAnalysisSettings.updated": "оновив",
   "UserBlock.adminBadge": "Адміністратор",
   "UserBlock.administrate": "Адмініструвати",
