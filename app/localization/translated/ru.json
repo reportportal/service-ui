@@ -1820,6 +1820,7 @@
   "UpdateAnalysisSettings.numberOfLogLines": "Количество строк лога",
   "UpdateAnalysisSettings.numbersInErrorLog": "удалить цифры в журнале ошибок",
   "UpdateAnalysisSettings.uniqueError": "переключение уникальных ошибок",
+  "UpdateAnalysisSettings.allMessagesShouldMatch": "переключение 'Все журналы с 3 или более строками должны совпадать'",
   "UpdateAnalysisSettings.updated": "обновил",
   "UserBlock.adminBadge": "Администратор",
   "UserBlock.administrate": "Администрировать",

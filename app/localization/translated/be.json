@@ -1820,6 +1820,7 @@
   "UpdateAnalysisSettings.numberOfLogLines": "Колькасць радкоў лога",
   "UpdateAnalysisSettings.numbersInErrorLog": "выдаліць лічбы ў часопісе памылак",
   "UpdateAnalysisSettings.uniqueError": "пераключэнне ўнікальных памылак",
+  "UpdateAnalysisSettings.allMessagesShouldMatch": "пераключэнне 'Усе часопісы з 3 ці больш радкамі павінны супадаць'",
   "UpdateAnalysisSettings.updated": "абнавіў",
   "UserBlock.adminBadge": "Адміністратар",
   "UserBlock.administrate": "Адміністраваць",
