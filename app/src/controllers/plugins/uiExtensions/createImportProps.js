@@ -95,7 +95,11 @@ import { InputRadio } from 'components/inputs/inputRadio';
 import { URLS } from 'common/urls';
 import { isEmailIntegrationAvailableSelector, SECRET_FIELDS_KEY } from 'controllers/plugins';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
-import { showSuccessNotification, showErrorNotification } from 'controllers/notification';
+import {
+  showSuccessNotification,
+  showErrorNotification,
+  showDefaultErrorNotification,
+} from 'controllers/notification';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -275,6 +279,7 @@ export const createImportProps = (pluginName) => ({
     updateConfigurationAttributesAction,
     updateLaunchLocallyAction,
     updatePagePropertiesAction,
+    showDefaultErrorNotification,
   },
   selectors: {
     pluginRouteSelector,
