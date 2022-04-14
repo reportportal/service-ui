@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,12 +14,4 @@
  * limitations under the License.
  */
 
-.header {
-  position: sticky;
-  top: 0;
-  z-index: $Z-INDEX-DEFAULT;
-}
-
-.content {
-  padding: 33px 32px 0;
-}
+export { Header } from './header';

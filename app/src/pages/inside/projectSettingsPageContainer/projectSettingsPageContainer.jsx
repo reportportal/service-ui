@@ -47,6 +47,7 @@ import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/
 import { Navigation } from 'pages/inside/projectSettingsPageContainer/navigation';
 import { GeneralTab } from 'pages/common/settingsPage/generalTab/generalTab';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { Header } from 'pages/inside/projectSettingsPageContainer/header';
 import { messages } from './messages';
 import styles from './projectSettingsPageContainer.scss';
 
@@ -163,10 +164,17 @@ export const ProjectSettingsPageContainer = () => {
     return config[activeTab].component;
   }, [activeTab, config]);
 
+  const header = useMemo(() => {
+    const itemsConfig = createItemsConfig();
+    const title = itemsConfig[activeTab].name;
+
+    return <Header title={title} />;
+  }, [createItemsConfig, activeTab]);
+
   return (
     <SettingsLayout navigation={navigation}>
       <ScrollWrapper>
-        <div className={cx('header')}>{null}</div>
+        <div className={cx('header')}>{header}</div>
         <div className={cx('content')}>{content}</div>
       </ScrollWrapper>
     </SettingsLayout>
