@@ -37,7 +37,7 @@ Header.propTypes = {
   titleNode: PropTypes.node,
   children: PropTypes.node,
 };
-Header.propTypes = {
+Header.defaultProps = {
   title: '',
   titleNode: null,
   children: null,
