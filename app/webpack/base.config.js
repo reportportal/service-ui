@@ -101,6 +101,7 @@ module.exports = {
         './FieldErrorHint': './src/components/fields/fieldErrorHint',
         './BigButton': './src/components/buttons/bigButton',
         './InputOutside': './src/components/inputs/inputOutside',
+        './NavLink': './src/components/main/navLink',
       },
       shared: {
         react: {
@@ -119,6 +120,9 @@ module.exports = {
           singleton: true,
         },
         'redux-form': {
+          singleton: true,
+        },
+        'redux-first-router': {
           singleton: true,
         },
         classnames: {

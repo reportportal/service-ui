@@ -19,6 +19,8 @@ import PropTypes from 'prop-types';
 import { referenceDictionary } from 'common/utils';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import React from 'react';
+import Link from 'redux-first-router-link';
+import { LOGIN_PAGE } from 'controllers/pages';
 import { BlockHeader } from '../common/pageBlockContainer/blockHeader';
 import { RegistrationPageSection } from './registrationPageSection';
 import { RegistrationFailBlock } from './registrationFailBlock';
@@ -114,9 +116,9 @@ const TokenErrorSection = ({ tokenProvided }) => (
       </a>
       <br />
       <FormattedMessage id={'RegistrationPage.or'} defaultMessage={'or '} />
-      <a className={cx('backlink')} href="#login">
-        Log In
-      </a>
+      <Link to={{ type: LOGIN_PAGE }} className={cx('backlink')}>
+        <FormattedMessage id={'RegistrationPage.login'} defaultMessage={'Log In'} />
+      </Link>
       <FormattedMessage id={'RegistrationPage.again'} defaultMessage={' again'} />
     </div>
   </RegistrationFailBlock>
