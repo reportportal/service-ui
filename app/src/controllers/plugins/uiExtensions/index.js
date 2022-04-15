@@ -12,5 +12,6 @@ export {
   uniqueErrorGridCellComponentSelector,
   uniqueErrorGridHeaderCellComponentSelector,
   uiExtensionLoginPageSelector,
+  uiExtensionRegistrationPageSelector,
 } from './selectors';
 export { uiExtensionsReducer } from './reducer';

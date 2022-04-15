@@ -18,6 +18,7 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { referenceDictionary } from 'common/utils';
 import { defineMessages, FormattedMessage } from 'react-intl';
+import React from 'react';
 import { BlockHeader } from '../common/pageBlockContainer/blockHeader';
 import { RegistrationPageSection } from './registrationPageSection';
 import { RegistrationFailBlock } from './registrationFailBlock';
@@ -111,6 +112,12 @@ const TokenErrorSection = ({ tokenProvided }) => (
       <a className={cx('backlink')} href={referenceDictionary.rpLanding}>
         ReportPortal.io
       </a>
+      <br />
+      <FormattedMessage id={'RegistrationPage.or'} defaultMessage={'or '} />
+      <a className={cx('backlink')} href="#login">
+        Log In
+      </a>
+      <FormattedMessage id={'RegistrationPage.again'} defaultMessage={' again'} />
     </div>
   </RegistrationFailBlock>
 );
