@@ -18,7 +18,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { Menu } from '../menu';
+import { NavMenu } from '../navMenu';
 import styles from './navigation.scss';
 
 const cx = classNames.bind(styles);
@@ -27,7 +27,7 @@ export const Navigation = ({ items, title }) => {
   return (
     <ScrollWrapper>
       {title && <div className={cx('header')}>{title}</div>}
-      <Menu items={items} />
+      <NavMenu items={items} />
     </ScrollWrapper>
   );
 };

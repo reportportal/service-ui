@@ -23,7 +23,7 @@ import {
   projectIdSelector,
   settingsTabSelector,
 } from 'controllers/pages';
-import { ProjectSettingsLayout } from 'layouts/projectSettingsLayout';
+import { SettingsLayout } from 'layouts/settingsLayout';
 import {
   ANALYSIS,
   DEFECT,
@@ -69,7 +69,7 @@ export const ProjectSettingsPageContainer = () => {
     [projectId],
   );
 
-  const createExtensionTabs = useCallback(() => {
+  const extensionsConfig = useMemo(() => {
     return extensions.reduce(
       (acc, extension) => ({
         ...acc,
@@ -85,8 +85,7 @@ export const ProjectSettingsPageContainer = () => {
     );
   }, [createTabLink, extensions]);
 
-  const createItemsConfig = useCallback(() => {
-    const extensionTabs = createExtensionTabs();
+  const config = useMemo(() => {
     const tabsConfig = {
       [GENERAL]: {
         name: formatMessage(messages.general),
@@ -140,38 +139,36 @@ export const ProjectSettingsPageContainer = () => {
     if (!canSeeDemoData(accountRole, userRole)) {
       delete tabsConfig[DEMO_DATA];
     }
-    Object.keys(extensionTabs).forEach((tab) => {
+    Object.keys(extensionsConfig).forEach((tab) => {
       if (tabsConfig[tab]) {
-        tabsConfig[tab].component = extensionTabs[tab].component;
+        tabsConfig[tab].component = extensionsConfig[tab].component;
 
-        delete extensionTabs[tab];
+        delete extensionsConfig[tab];
       }
     });
-    return { ...tabsConfig, ...extensionTabs };
-  }, [accountRole, createExtensionTabs, createTabLink, formatMessage, userRole]);
+    return { ...tabsConfig, ...extensionsConfig };
+  }, [accountRole, extensionsConfig, createTabLink, userRole]);
 
   const navigation = useMemo(() => {
-    const itemsConfig = createItemsConfig();
     const title = <FormattedMessage id="SettingsPage.title" defaultMessage="Project Settings" />;
-    return <Navigation items={itemsConfig} title={title} />;
-  }, [createItemsConfig]);
+    return <Navigation items={config} title={title} />;
+  }, [config]);
 
   const content = useMemo(() => {
-    const itemsConfig = createItemsConfig();
-    if (!activeTab || !itemsConfig[activeTab]) {
-      const firstItemName = Object.keys(itemsConfig)[0];
-      dispatch(itemsConfig[firstItemName].link);
+    if (!activeTab || !config[activeTab]) {
+      const firstItemName = Object.keys(config)[0];
+      dispatch(config[firstItemName].link);
       return null;
     }
-    return itemsConfig[activeTab].component;
-  }, [activeTab, createItemsConfig, dispatch]);
+    return config[activeTab].component;
+  }, [activeTab, config]);
 
   return (
-    <ProjectSettingsLayout navigation={navigation}>
+    <SettingsLayout navigation={navigation}>
       <ScrollWrapper>
         <div className={cx('header')}>{null}</div>
         <div className={cx('content')}>{content}</div>
       </ScrollWrapper>
-    </ProjectSettingsLayout>
+    </SettingsLayout>
   );
 };

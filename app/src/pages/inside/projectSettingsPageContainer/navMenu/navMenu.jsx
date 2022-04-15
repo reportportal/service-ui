@@ -19,32 +19,32 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useTracking } from 'react-tracking';
 import { NavLink } from 'components/main/navLink';
-import styles from './menu.scss';
+import styles from './navMenu.scss';
 
 const cx = classNames.bind(styles);
 
-export const Menu = ({ items }) => {
+export const NavMenu = ({ items }) => {
   const { trackEvent } = useTracking();
   const createTrackingFunction = (eventInfo) => (eventInfo ? () => trackEvent(eventInfo) : null);
 
   return (
     <ul className={cx('menu')}>
       {items &&
-        Object.keys(items).map((item) => (
+        Object.keys(items).map((key) => (
           <NavLink
-            to={items[item].link}
-            key={item}
-            onClick={createTrackingFunction(items[item].eventInfo)}
+            to={items[key].link}
+            key={key}
+            onClick={createTrackingFunction(items[key].eventInfo)}
             className={cx('item')}
             activeClassName={cx('active')}
           >
-            {items[item].name}
+            {items[key].name}
           </NavLink>
         ))}
     </ul>
   );
 };
-Menu.propTypes = {
+NavMenu.propTypes = {
   items: PropTypes.objectOf(
     PropTypes.shape({
       name: PropTypes.string,

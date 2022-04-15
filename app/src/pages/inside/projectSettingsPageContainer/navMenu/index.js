@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { Menu } from './menu';
+export { NavMenu } from './navMenu';
