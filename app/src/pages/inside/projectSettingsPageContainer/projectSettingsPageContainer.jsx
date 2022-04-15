@@ -164,17 +164,16 @@ export const ProjectSettingsPageContainer = () => {
     return config[activeTab].component;
   }, [activeTab, config]);
 
-  const header = useMemo(() => {
-    const itemsConfig = createItemsConfig();
-    const title = itemsConfig[activeTab].name;
+  const getHeader = () => {
+    const title = config[activeTab].name;
 
     return <Header title={title} />;
-  }, [createItemsConfig, activeTab]);
+  };
 
   return (
     <SettingsLayout navigation={navigation}>
       <ScrollWrapper>
-        <div className={cx('header')}>{header}</div>
+        <div className={cx('header')}>{getHeader()}</div>
         <div className={cx('content')}>{content}</div>
       </ScrollWrapper>
     </SettingsLayout>
