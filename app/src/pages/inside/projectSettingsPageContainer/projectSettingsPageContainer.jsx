@@ -87,7 +87,7 @@ export const ProjectSettingsPageContainer = () => {
   }, [createTabLink, extensions]);
 
   const config = useMemo(() => {
-    const tabsConfig = {
+    const navConfig = {
       [GENERAL]: {
         name: formatMessage(messages.general),
         link: createTabLink(GENERAL),
@@ -138,16 +138,16 @@ export const ProjectSettingsPageContainer = () => {
       },
     };
     if (!canSeeDemoData(accountRole, userRole)) {
-      delete tabsConfig[DEMO_DATA];
+      delete navConfig[DEMO_DATA];
     }
-    Object.keys(extensionsConfig).forEach((tab) => {
-      if (tabsConfig[tab]) {
-        tabsConfig[tab].component = extensionsConfig[tab].component;
+    Object.keys(extensionsConfig).forEach((key) => {
+      if (navConfig[key]) {
+        navConfig[key].component = extensionsConfig[key].component;
 
-        delete extensionsConfig[tab];
+        delete extensionsConfig[key];
       }
     });
-    return { ...tabsConfig, ...extensionsConfig };
+    return { ...navConfig, ...extensionsConfig };
   }, [accountRole, extensionsConfig, createTabLink, userRole]);
 
   const navigation = useMemo(() => {
@@ -164,16 +164,12 @@ export const ProjectSettingsPageContainer = () => {
     return config[activeTab].component;
   }, [activeTab, config]);
 
-  const getHeader = () => {
-    const title = config[activeTab].name;
-
-    return <Header title={title} />;
-  };
-
   return (
     <SettingsLayout navigation={navigation}>
       <ScrollWrapper>
-        <div className={cx('header')}>{getHeader()}</div>
+        <div className={cx('header')}>
+          <Header title={config[activeTab].name} />
+        </div>
         <div className={cx('content')}>{content}</div>
       </ScrollWrapper>
     </SettingsLayout>
