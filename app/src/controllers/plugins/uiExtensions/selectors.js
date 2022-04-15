@@ -11,6 +11,7 @@ import {
   EXTENSION_TYPE_UNIQUE_ERROR_GRID_CELL_COMPONENT,
   EXTENSION_TYPE_UNIQUE_ERROR_GRID_HEADER_CELL_COMPONENT,
   EXTENSION_TYPE_LOGIN_PAGE,
+  EXTENSION_TYPE_REGISTRATION_PAGE,
 } from './constants';
 import {
   domainSelector,
@@ -79,5 +80,9 @@ export const uniqueErrorGridHeaderCellComponentSelector = createExtensionSelecto
 );
 export const uiExtensionLoginPageSelector = createExtensionSelectorByType(
   EXTENSION_TYPE_LOGIN_PAGE,
+  enabledPublicPluginNamesSelector,
+);
+export const uiExtensionRegistrationPageSelector = createExtensionSelectorByType(
+  EXTENSION_TYPE_REGISTRATION_PAGE,
   enabledPublicPluginNamesSelector,
 );
