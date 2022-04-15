@@ -14,12 +14,22 @@
  * limitations under the License.
  */
 
-.header {
-  position: sticky;
-  top: 0;
-  z-index: $Z-INDEX-DEFAULT;
+.container {
+  padding: 0 32px;
+  border-bottom: 1px solid $COLOR--e-100;
+  background: $COLOR--bg-000;
+  box-sizing: border-box;
 }
 
-.content {
-  padding: 33px 32px 0;
+.header {
+  display: flex;
+  min-height: 36px;
+  padding: 28px 0 25px;
+}
+
+.title {
+  font-family: $FONT-REGULAR;
+  font-size: 20px;
+  line-height: 31px;
+  color: $COLOR--almost-black;
 }
