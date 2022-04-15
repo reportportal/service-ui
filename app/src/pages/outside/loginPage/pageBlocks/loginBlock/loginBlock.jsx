@@ -62,7 +62,7 @@ export const LoginBlock = () => {
       ) : null}
       {extensions && extensions.length !== 0 ? (
         extensions.map((extension) => (
-          <ExtensionLoader extension={extension} components={{ LoginForm }} initAuthFlow={auth} />
+          <ExtensionLoader extension={extension} components={{ LoginForm }} authFlow={auth} />
         ))
       ) : (
         <LoginForm />
