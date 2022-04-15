@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { ProjectSettingsLayout } from './projectSettingsLayout';
+export { SettingsLayout } from './settingsLayout';

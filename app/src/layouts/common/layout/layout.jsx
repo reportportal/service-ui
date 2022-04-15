@@ -82,6 +82,17 @@ export class Layout extends Component {
 
   render() {
     const { Header, Sidebar, Banner, rawContent, children } = this.props;
+    const header = (
+      <div className={cx('header-container')}>
+        {Header && (
+          <Header
+            isSideMenuOpened={this.state.sideMenuOpened}
+            toggleSideMenu={this.toggleSideMenu}
+          />
+        )}
+      </div>
+    );
+
     return (
       <div className={cx('layout')}>
         <div className={cx('slide-container', { 'side-menu-opened': this.state.sideMenuOpened })}>
@@ -99,14 +110,7 @@ export class Layout extends Component {
             {Banner && <Banner />}
             {rawContent ? (
               <>
-                <div className={cx('header-container')}>
-                  {Header && (
-                    <Header
-                      isSideMenuOpened={this.state.sideMenuOpened}
-                      toggleSideMenu={this.toggleSideMenu}
-                    />
-                  )}
-                </div>
+                {header}
                 {children}
               </>
             ) : (
@@ -117,14 +121,7 @@ export class Layout extends Component {
                 onReset={this.unmarkScrollToReset}
               >
                 <div className={cx('scrolling-content')}>
-                  <div className={cx('header-container')}>
-                    {Header && (
-                      <Header
-                        isSideMenuOpened={this.state.sideMenuOpened}
-                        toggleSideMenu={this.toggleSideMenu}
-                      />
-                    )}
-                  </div>
+                  {header}
                   <div className={cx('page-container')}>{children}</div>
                 </div>
               </ScrollWrapper>
