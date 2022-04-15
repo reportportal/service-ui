@@ -53,6 +53,7 @@ import {
   UNIQUE_ERRORS_PAGE,
 } from 'controllers/pages';
 import { AdminUiExtensionPage } from 'pages/admin/adminUiExtensionPage';
+import { RawContentAppLayout } from 'layouts/appLayout/rawContentAppLayout';
 
 export const ANONYMOUS_ACCESS = 'anonymous';
 export const ADMIN_ACCESS = 'admin';
@@ -73,8 +74,14 @@ export const pageRendering = {
   PROJECT_LAUNCHES_PAGE: { component: LaunchesPage, layout: AppLayout },
   PROJECT_MEMBERS_PAGE: { component: ProjectMembersPageContainer, layout: AppLayout },
   PROJECT_SANDBOX_PAGE: { component: SandboxPage, layout: AppLayout },
-  PROJECT_SETTINGS_PAGE: { component: ProjectSettingsPageContainer, layout: AppLayout },
-  PROJECT_SETTINGS_TAB_PAGE: { component: ProjectSettingsPageContainer, layout: AppLayout },
+  PROJECT_SETTINGS_PAGE: {
+    component: ProjectSettingsPageContainer,
+    layout: RawContentAppLayout,
+  },
+  PROJECT_SETTINGS_TAB_PAGE: {
+    component: ProjectSettingsPageContainer,
+    layout: RawContentAppLayout,
+  },
   PROJECT_USERDEBUG_PAGE: { component: LaunchesPage, layout: AppLayout },
   PROJECT_USERDEBUG_TEST_ITEM_PAGE: { component: TestItemPage, layout: AppLayout },
   ADMINISTRATE_PAGE: { component: ProjectsPage, layout: AdminLayout, access: ADMIN_ACCESS },
