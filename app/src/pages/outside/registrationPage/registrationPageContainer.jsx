@@ -105,13 +105,15 @@ export class RegistrationPageContainer extends Component {
 
   render() {
     const uuid = this.props.uuid;
-    const extensions = this.props.extensions;
-    const type = this.props.pageProps.type;
+    const {
+      extensions,
+      pageProps: { type },
+    } = this.props;
 
     return (
       !uuid ||
       (this.state.isLoadingFinished &&
-        (type === TYPE_SIGNUP && extensions && extensions.length !== 0 ? (
+        (type === TYPE_SIGNUP && extensions.length !== 0 ? (
           extensions.map((extension) => (
             <ExtensionLoader
               extension={extension}
