@@ -95,7 +95,6 @@ module.exports = {
     }),
     new ModuleFederationPlugin({
       name: 'main_app',
-      filename: 'main_app.js',
       exposes: {
         './FieldProvider': './src/components/fields',
         './FieldErrorHint': './src/components/fields/fieldErrorHint',
