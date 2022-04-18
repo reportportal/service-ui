@@ -102,6 +102,9 @@ module.exports = {
         './BigButton': './src/components/buttons/bigButton',
         './InputOutside': './src/components/inputs/inputOutside',
         './NavLink': './src/components/main/navLink',
+        './FieldBottomConstraints': './src/components/fields/fieldBottomConstraints',
+        './RegistrationPageSection': './src/pages/outside/registrationPage/registrationPageSection',
+        './BlockHeader': './src/pages/outside/common/pageBlockContainer/blockHeader',
       },
       shared: {
         react: {

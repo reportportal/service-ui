@@ -14,4 +14,8 @@
  * limitations under the License.
  */
 
-export { BlockHeader } from './blockHeader';
+import { BlockHeader } from './blockHeader';
+
+export { BlockHeader };
+
+export default BlockHeader;

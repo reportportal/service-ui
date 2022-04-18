@@ -14,4 +14,8 @@
  * limitations under the License.
  */
 
-export { FieldBottomConstraints } from './fieldBottomConstraints';
+import { FieldBottomConstraints } from './fieldBottomConstraints';
+
+export { FieldBottomConstraints };
+
+export default FieldBottomConstraints;
