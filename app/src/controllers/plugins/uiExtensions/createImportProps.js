@@ -168,6 +168,7 @@ import {
   publicPluginsSelector,
   createGlobalNamedIntegrationsSelector,
 } from 'controllers/plugins/selectors';
+import { loginAction } from 'controllers/auth';
 
 const BUTTONS = {
   GhostButton,
@@ -280,6 +281,7 @@ export const createImportProps = (pluginName) => ({
     updateLaunchLocallyAction,
     updatePagePropertiesAction,
     showDefaultErrorNotification,
+    loginAction,
   },
   selectors: {
     pluginRouteSelector,
