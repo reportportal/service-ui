@@ -30,7 +30,7 @@ export const Tabs = ({ config, activeTab }) => {
     if (activeTab) {
       setActiveTabIndex(Object.keys(config).indexOf(activeTab));
     }
-  }, [activeTab]);
+  }, [activeTab, config]);
 
   const activeTabKey = Object.keys(config)[activeTabIndex];
   const activeTabInfo = config[activeTabKey];
@@ -91,13 +91,5 @@ Tabs.propTypes = {
 };
 Tabs.defaultProps = {
   activeTab: '',
-  config: PropTypes.objectOf(
-    PropTypes.shape({
-      name: PropTypes.node,
-      link: PropTypes.object,
-      component: PropTypes.Element,
-      eventInfo: PropTypes.object,
-      mobileDisabled: PropTypes.bool,
-    }),
-  ),
+  config: {},
 };
