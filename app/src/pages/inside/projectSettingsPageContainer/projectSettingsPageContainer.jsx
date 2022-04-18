@@ -168,7 +168,7 @@ export const ProjectSettingsPageContainer = () => {
     <SettingsLayout navigation={navigation}>
       <ScrollWrapper>
         <div className={cx('header')}>
-          <Header title={config[activeTab].name} />
+          <Header title={config[activeTab] && config[activeTab].name} />
         </div>
         <div className={cx('content')}>{content}</div>
       </ScrollWrapper>
