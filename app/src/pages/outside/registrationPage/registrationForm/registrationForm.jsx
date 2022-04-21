@@ -83,11 +83,13 @@ export class RegistrationForm extends Component {
     handleSubmit: PropTypes.func.isRequired,
     autofill: PropTypes.func.isRequired,
     email: PropTypes.string,
+    loading: PropTypes.bool,
   };
 
   static defaultProps = {
     submitForm: () => {},
     email: '',
+    loading: false,
   };
 
   componentDidMount = () => {
@@ -107,7 +109,7 @@ export class RegistrationForm extends Component {
     });
 
   render() {
-    const { handleSubmit, intl } = this.props;
+    const { handleSubmit, intl, loading } = this.props;
     const { formatMessage } = intl;
 
     return (
@@ -177,7 +179,7 @@ export class RegistrationForm extends Component {
             </BigButton>
           </div>
           <div className={cx('button-register')}>
-            <BigButton type={'submit'} roundedCorners color={'organish'}>
+            <BigButton type={'submit'} roundedCorners color={'organish'} disabled={loading}>
               <FormattedMessage id={'RegistrationForm.register'} defaultMessage={'Register'} />
             </BigButton>
           </div>

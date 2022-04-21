@@ -40,7 +40,13 @@ const messages = defineMessages({
   },
 });
 
-export const RegistrationPage = ({ tokenActive, tokenProvided, email, onRegistrationSubmit }) => {
+export const RegistrationPage = ({
+  tokenActive,
+  tokenProvided,
+  email,
+  onRegistrationSubmit,
+  loading,
+}) => {
   const backgroundClasses = {
     background: true,
     failed: !tokenProvided || !tokenActive,
@@ -67,7 +73,7 @@ export const RegistrationPage = ({ tokenActive, tokenProvided, email, onRegistra
           {tokenProvided && tokenActive ? (
             <div>
               <BlockHeader header={messages.welcome} hint={messages.registration} />
-              <RegistrationForm email={email} submitForm={onRegistrationSubmit} />
+              <RegistrationForm email={email} submitForm={onRegistrationSubmit} loading={loading} />
             </div>
           ) : (
             <TokenErrorSection tokenProvided={tokenProvided} />
@@ -82,12 +88,14 @@ RegistrationPage.propTypes = {
   tokenProvided: PropTypes.bool,
   email: PropTypes.string,
   onRegistrationSubmit: PropTypes.func,
+  loading: PropTypes.bool,
 };
 RegistrationPage.defaultProps = {
   tokenActive: false,
   tokenProvided: false,
   email: '',
   onRegistrationSubmit: () => {},
+  loading: false,
 };
 
 const TokenErrorSection = ({ tokenProvided }) => (
@@ -125,7 +133,9 @@ const TokenErrorSection = ({ tokenProvided }) => (
 );
 TokenErrorSection.propTypes = {
   tokenProvided: PropTypes.bool,
+  loading: PropTypes.bool,
 };
 TokenErrorSection.defaultProps = {
   tokenProvided: false,
+  loading: false,
 };
