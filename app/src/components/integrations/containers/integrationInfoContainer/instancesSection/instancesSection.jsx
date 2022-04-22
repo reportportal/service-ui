@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
@@ -294,6 +293,7 @@ export class InstancesSection extends Component {
       accountRole,
       userRole,
       isGlobal,
+      pluginDetails: { metadata },
     } = this.props;
     const isProjectIntegrationsExists = !!projectIntegrations.length;
     const disabled = !canUpdateSettings(accountRole, userRole);
@@ -303,55 +303,61 @@ export class InstancesSection extends Component {
 
     return (
       <div className={cx('instances-section')}>
-        {isProjectIntegrationsExists && !isGlobal && (
-          <Fragment>
+        {(!metadata || metadata.isIntegrationsAllowed) && (
+          <React.Fragment>
+            {isProjectIntegrationsExists && !isGlobal && (
+              <Fragment>
+                <InstancesList
+                  blocked={disabled}
+                  title={formatMessage(
+                    this.multiple ? messages.projectIntegrations : messages.projectIntegration,
+                  )}
+                  items={projectIntegrations}
+                  onItemClick={onItemClick}
+                  isGlobal={isGlobal}
+                />
+                {this.multiple && !disabled && (
+                  <div className={cx('add-integration-button')}>
+                    <GhostButton icon={PlusIcon} onClick={this.addProjectIntegrationClickHandler}>
+                      {formatMessage(messages.addIntegrationButtonTitle)}
+                    </GhostButton>
+                  </div>
+                )}
+              </Fragment>
+            )}
             <InstancesList
-              blocked={disabled}
+              blocked={!isGlobal}
               title={formatMessage(
-                this.multiple ? messages.projectIntegrations : messages.projectIntegration,
+                isGlobal && this.multiple
+                  ? messages.allGlobalIntegrations
+                  : globalIntegrationMessage,
+                {
+                  pluginName: this.props.title,
+                },
               )}
-              items={projectIntegrations}
+              items={globalIntegrations}
               onItemClick={onItemClick}
               isGlobal={isGlobal}
+              {...(isGlobal
+                ? {}
+                : {
+                    disabled: isProjectIntegrationsExists,
+                    disabledHint: formatMessage(messages.globalIntegrationsDisabledHint),
+                  })}
             />
-            {this.multiple && !disabled && (
+            {!globalIntegrations.length && (
+              <p className={cx('no-items-message')}>
+                {formatMessage(messages.noGlobalIntegrationMessage)}
+              </p>
+            )}
+            {(this.multiple || !globalIntegrations.length) && !disabled && isGlobal && (
               <div className={cx('add-integration-button')}>
                 <GhostButton icon={PlusIcon} onClick={this.addProjectIntegrationClickHandler}>
                   {formatMessage(messages.addIntegrationButtonTitle)}
                 </GhostButton>
               </div>
             )}
-          </Fragment>
-        )}
-        <InstancesList
-          blocked={!isGlobal}
-          title={formatMessage(
-            isGlobal && this.multiple ? messages.allGlobalIntegrations : globalIntegrationMessage,
-            {
-              pluginName: this.props.title,
-            },
-          )}
-          items={globalIntegrations}
-          onItemClick={onItemClick}
-          isGlobal={isGlobal}
-          {...(isGlobal
-            ? {}
-            : {
-                disabled: isProjectIntegrationsExists,
-                disabledHint: formatMessage(messages.globalIntegrationsDisabledHint),
-              })}
-        />
-        {!globalIntegrations.length && (
-          <p className={cx('no-items-message')}>
-            {formatMessage(messages.noGlobalIntegrationMessage)}
-          </p>
-        )}
-        {(this.multiple || !globalIntegrations.length) && !disabled && isGlobal && (
-          <div className={cx('add-integration-button')}>
-            <GhostButton icon={PlusIcon} onClick={this.addProjectIntegrationClickHandler}>
-              {formatMessage(messages.addIntegrationButtonTitle)}
-            </GhostButton>
-          </div>
+          </React.Fragment>
         )}
         {isGlobal && !this.builtin && (
           <Fragment>
