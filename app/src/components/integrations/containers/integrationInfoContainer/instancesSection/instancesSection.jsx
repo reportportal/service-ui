@@ -304,7 +304,7 @@ export class InstancesSection extends Component {
     return (
       <div className={cx('instances-section')}>
         {(!metadata || metadata.isIntegrationsAllowed) && (
-          <React.Fragment>
+          <Fragment>
             {isProjectIntegrationsExists && !isGlobal && (
               <Fragment>
                 <InstancesList
@@ -357,7 +357,7 @@ export class InstancesSection extends Component {
                 </GhostButton>
               </div>
             )}
-          </React.Fragment>
+          </Fragment>
         )}
         {isGlobal && !this.builtin && (
           <Fragment>
