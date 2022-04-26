@@ -300,10 +300,14 @@ export class InstancesSection extends Component {
     const globalIntegrationMessage = this.multiple
       ? messages.globalIntegrations
       : messages.globalIntegration;
+    const isIntegrationsAllowed =
+      metadata && metadata.isIntegrationsAllowed !== undefined
+        ? metadata.isIntegrationsAllowed
+        : true;
 
     return (
       <div className={cx('instances-section')}>
-        {(!metadata || metadata.isIntegrationsAllowed) && (
+        {isIntegrationsAllowed && (
           <Fragment>
             {isProjectIntegrationsExists && !isGlobal && (
               <Fragment>
