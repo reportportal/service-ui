@@ -688,6 +688,8 @@
   "Footer.copyright": "Всі права захищені",
   "Footer.documentation": "Документація",
   "Footer.git": "Ми на Гітхабі",
+  "Footer.notice": "Повідомлення про конфіденційність",
+  "Footer.privacy": "Політика конфіденційності",
   "Footer.slack": "Поспілкуйтеся з нами на слабину",
   "ForceUpdateModal.additionalText": "Будь ласка, авторизуйтеся заново, щоб застосувати зміни!",
   "ForceUpdateModal.header": "Увага!",
