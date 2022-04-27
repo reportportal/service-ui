@@ -38,6 +38,7 @@ module.exports = {
     extensions: ['.js', '.jsx', '.sass', '.scss', '.css'],
     alias: {
       components: path.resolve(__dirname, '../src/components'),
+      componentLibrary: path.resolve(__dirname, '../src/componentLibrary'),
       controllers: path.resolve(__dirname, '../src/controllers'),
       common: path.resolve(__dirname, '../src/common'),
       pages: path.resolve(__dirname, '../src/pages'),
