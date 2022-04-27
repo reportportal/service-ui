@@ -1596,7 +1596,7 @@
   "ServerSettingsTabs.updateAuthSuccess": "Налады інтэграцыі OAuth абноўлены",
   "ServiceVersionItem.newVersion": "Даступны новыя версіі: {newVersion}",
   "ServiceVersionsBlock.currentVersion": "Бягучая версія",
-  "SettingsPage.analysis": "Auto-Analysis",
+  "SettingsPage.analysis": "Аўтааналіз",
   "SettingsPage.analyzer": "Аналайзер",
   "SettingsPage.defect": "Тыпы дэфектаў",
   "SettingsPage.demoData": "Дэма-дадзеныя",
