@@ -83,18 +83,10 @@ export class Footer extends Component {
           </a>
           {authExtensions.epam && (
             <Fragment>
-              <a
-                href={referenceDictionary.rpEpamPolicy}
-                target="_blank"
-                onClick={() => tracking.trackEvent(FOOTER_EVENTS.POLICY_LINK)}
-              >
+              <a href={referenceDictionary.rpEpamPolicy} target="_blank">
                 <FormattedMessage id={'Footer.privacy'} defaultMessage={'Privacy Policy'} />
               </a>
-              <a
-                href={referenceDictionary.rpEpamNotice}
-                target="_blank"
-                onClick={() => tracking.trackEvent(FOOTER_EVENTS.NOTICE_LINK)}
-              >
+              <a href={referenceDictionary.rpEpamNotice} target="_blank">
                 <FormattedMessage id={'Footer.notice'} defaultMessage={'Privacy Notice'} />
               </a>
             </Fragment>

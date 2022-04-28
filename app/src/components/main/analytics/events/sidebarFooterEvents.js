@@ -143,16 +143,6 @@ export const FOOTER_EVENTS = {
     action: 'Click on Documentation link',
     label: 'Transition to Documentation',
   },
-  POLICY_LINK: {
-    category: FOOTER,
-    action: 'Click on Privacy Policy link',
-    label: 'Transition to Privacy Policy',
-  },
-  NOTICE_LINK: {
-    category: FOOTER,
-    action: 'Click on Privacy Notice link',
-    label: 'Transition to Privacy Notice',
-  },
   editNumberPerPage: (pageNumber, page) => ({
     category: FOOTER,
     action: 'Edit number per page',
