@@ -1,0 +1,202 @@
+/*!
+ * Copyright 2022 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 120px;
+  height: 36px;
+  margin: 4px;
+  padding: 7px 16px;
+  outline: none;
+  border-radius: 3px;
+  font-family: $FONT-ROBOTO-MEDIUM;
+  font-size: 13px;
+  line-height: 20px;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.topaz {
+  border: 1px solid $COLOR--topaz-2;
+  background-color: $COLOR--topaz-2;
+  color: $COLOR--bg-000;
+  &:hover:not(.disabled) {
+    border: 1px solid $COLOR--topaz-hover-2;
+    background-color: $COLOR--topaz-hover-2;
+  }
+  &:active:not(.disabled) {
+    border: 1px solid $COLOR--topaz-pressed;
+    background-color: $COLOR--topaz-pressed;
+  }
+  &:focus:not(.disabled, :active) {
+    border: 2px solid $COLOR--topaz-focused;
+  }
+}
+
+.ghost {
+  border: 1px solid $COLOR--topaz-2;
+  background-color: transparent;
+  color: $COLOR--almost-black;
+  &:hover:not(.disabled) {
+    border: 1px solid $COLOR--topaz-hover-2;
+  }
+  &:active:not(.disabled) {
+    border: 1px solid $COLOR--topaz-pressed;
+  }
+  &:focus:not(.disabled, :active) {
+    border: 2px solid $COLOR--topaz-focused;
+  }
+}
+
+.danger {
+  border: 1px solid $COLOR--red-failed-2;
+  background-color: $COLOR--red-failed-2;
+  color: $COLOR--bg-000;
+  &:hover:not(.disabled) {
+    opacity: 0.9;
+  }
+  &:active:not(.disabled) {
+    border: 1px solid $COLOR--red-pressed;
+    background-color: $COLOR--red-pressed;
+  }
+  &:focus:not(.disabled, :active) {
+    border: 2px solid $COLOR--red-focused;
+  }
+}
+
+.text {
+  min-width: auto;
+  height: auto;
+  border: 0;
+  padding: 0;
+  background: none;
+  color: $COLOR--topaz-2;
+  line-height: 22px;
+  &:hover:not(.disabled) {
+    color: $COLOR--topaz-hover-2;
+    svg * {
+      fill: $COLOR--topaz-hover-2;
+    }
+  }
+  &:active:not(.disabled) {
+    color: $COLOR--topaz-pressed;
+    svg * {
+      fill: $COLOR--topaz-pressed;
+    }
+  }
+  &:focus:not(.disabled, :active) {
+    color: $COLOR--topaz-focused;
+    svg * {
+      fill: $COLOR--topaz-focused;
+    }
+  }
+  svg * {
+    fill: $COLOR--topaz-2;
+  }
+}
+
+.dark-topaz {
+  border: 1px solid $COLOR--darkmode-topaz-main;
+  background-color: $COLOR--darkmode-topaz-main;
+  color: $COLOR--bg-000;
+  &:hover:not(.disabled) {
+    border: 1px solid $COLOR--darkmode-topaz-hover;
+    background-color: $COLOR--darkmode-topaz-hover;
+  }
+  &:active:not(.disabled) {
+    border: 1px solid $COLOR--topaz-pressed;
+    background-color: $COLOR--topaz-pressed;
+  }
+  &:focus:not(.disabled, :active) {
+    border: 2px solid $COLOR--darkmode-topaz-focused;
+  }
+}
+
+.dark-ghost {
+  border: 1px solid $COLOR--darkmode-topaz-main;
+  background-color: transparent;
+  color: $COLOR--darkmode-gray-50;
+  &:hover:not(.disabled) {
+    border: 1px solid $COLOR--darkmode-topaz-hover;
+  }
+  &:active:not(.disabled) {
+    border: 1px solid $COLOR--topaz-pressed;
+  }
+  &:focus:not(.disabled, :active) {
+    border: 2px solid $COLOR--darkmode-topaz-focused;
+  }
+}
+
+.dark-text {
+  min-width: auto;
+  height: auto;
+  border: 0;
+  padding: 0;
+  background: none;
+  line-height: 22px;
+  color: $COLOR--darkmode-topaz-text;
+  &:hover:not(.disabled) {
+    color: $COLOR--darkmode-topaz-hover;
+    svg * {
+      fill: $COLOR--darkmode-topaz-hover;
+    }
+  }
+  &:active:not(.disabled) {
+    color: $COLOR--darkmode-topaz-pressed;
+    svg * {
+      fill: $COLOR--darkmode-topaz-pressed;
+    }
+  }
+  &:focus:not(.disabled, :active) {
+    color: $COLOR--darkmode-topaz-focused;
+    svg * {
+      fill: $COLOR--darkmode-topaz-focused;
+    }
+  }
+  svg * {
+    fill: $COLOR--darkmode-topaz-text;
+  }
+}
+
+.wide {
+  padding: 7px 47px;
+}
+
+.icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+}
+
+.start-icon {
+  margin: auto 8px auto 0;
+}
+.end-icon {
+  margin: auto 0 auto 8px;
+  order: 1;
+}
+
+.disabled:not(.dark-topaz, .dark-ghost, .dark-text) {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.disabled:not(.topaz, .ghost, .text) {
+  opacity: 0.5;
+  cursor: default;
+}
