@@ -86,6 +86,7 @@
   padding: 0;
   background: none;
   color: $COLOR--topaz-2;
+  line-height: 22px;
   &:hover:not(.disabled) {
     color: $COLOR--topaz-hover-2;
     svg * {
@@ -147,6 +148,7 @@
   border: 0;
   padding: 0;
   background: none;
+  line-height: 22px;
   color: $COLOR--darkmode-topaz-text;
   &:hover:not(.disabled) {
     color: $COLOR--darkmode-topaz-hover;
