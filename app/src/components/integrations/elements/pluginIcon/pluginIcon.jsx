@@ -24,9 +24,7 @@ import { globalIntegrationsSelector } from 'controllers/plugins/selectors';
 import { filterIntegrationsByName, isPluginSupportsCommonCommand } from 'controllers/plugins/utils';
 import { PLUGIN_DEFAULT_IMAGE, PLUGIN_IMAGES_MAP } from 'components/integrations/constants';
 import { Image } from 'components/main/image';
-
-const PUBLIC_ACCESS_TYPE = 'public';
-const FILE_KEY = 'plugin-icon.svg';
+import { PUBLIC_PLUGIN_ACCESS_TYPE } from 'controllers/plugins/constants';
 
 export const PluginIcon = ({ pluginData, className, ...rest }) => {
   const { details, name } = pluginData;
@@ -34,7 +32,11 @@ export const PluginIcon = ({ pluginData, className, ...rest }) => {
   const projectId = useSelector(activeProjectSelector);
   const globalIntegrations = useSelector(globalIntegrationsSelector);
 
-  const isPublic = details && details.accessType === PUBLIC_ACCESS_TYPE;
+  const isPublic = details && details.accessType === PUBLIC_PLUGIN_ACCESS_TYPE;
+  const isCommand =
+    (isPluginSupportsCommonCommand(pluginData, COMMAND_GET_FILE) ||
+      filterIntegrationsByName(globalIntegrations, name)[0]) &&
+    !isPublic;
 
   const calculateIconSrc = () => {
     if (isDynamicIconAvailable) {
@@ -45,13 +47,13 @@ export const PluginIcon = ({ pluginData, className, ...rest }) => {
       }
 
       const integration = filterIntegrationsByName(globalIntegrations, name)[0];
-      if (!integration) {
-        return null;
+      if (integration && !isPublic) {
+        return URLS.projectIntegrationByIdCommand(projectId, integration.id, COMMAND_GET_FILE);
       }
 
       return isPublic
-        ? URLS.pluginPublicFile(integration.name, FILE_KEY)
-        : URLS.projectIntegrationByIdCommand(projectId, integration.id, COMMAND_GET_FILE);
+        ? URLS.pluginPublicFile(integration.name, details.binaryData.icon)
+        : URLS.pluginFile(integration.name, details.binaryData.icon);
     }
 
     return PLUGIN_IMAGES_MAP[name] || PLUGIN_DEFAULT_IMAGE;
@@ -63,7 +65,9 @@ export const PluginIcon = ({ pluginData, className, ...rest }) => {
         src={calculateIconSrc()}
         fallback={PLUGIN_DEFAULT_IMAGE}
         isStatic={!isDynamicIconAvailable}
-        requestParams={isPublic ? { method: 'GET' } : { method: 'PUT', data: { fileKey: 'icon' } }}
+        requestParams={
+          !isCommand ? { method: 'GET' } : { method: 'PUT', data: { fileKey: 'icon' } }
+        }
         preloaderColor="charcoal"
         className={className}
         {...rest}
