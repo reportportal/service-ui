@@ -25,11 +25,16 @@ import { filterIntegrationsByName, isPluginSupportsCommonCommand } from 'control
 import { PLUGIN_DEFAULT_IMAGE, PLUGIN_IMAGES_MAP } from 'components/integrations/constants';
 import { Image } from 'components/main/image';
 
+const PUBLIC_ACCESS_TYPE = 'public';
+const FILE_KEY = 'plugin-icon.svg';
+
 export const PluginIcon = ({ pluginData, className, ...rest }) => {
   const { details, name } = pluginData;
   const isDynamicIconAvailable = details && details.binaryData && details.binaryData.icon;
   const projectId = useSelector(activeProjectSelector);
   const globalIntegrations = useSelector(globalIntegrationsSelector);
+
+  const isPublic = details && details.accessType === PUBLIC_ACCESS_TYPE;
 
   const calculateIconSrc = () => {
     if (isDynamicIconAvailable) {
@@ -44,7 +49,9 @@ export const PluginIcon = ({ pluginData, className, ...rest }) => {
         return null;
       }
 
-      return URLS.projectIntegrationByIdCommand(projectId, integration.id, COMMAND_GET_FILE);
+      return isPublic
+        ? URLS.pluginPublicFile(integration.name, FILE_KEY)
+        : URLS.projectIntegrationByIdCommand(projectId, integration.id, COMMAND_GET_FILE);
     }
 
     return PLUGIN_IMAGES_MAP[name] || PLUGIN_DEFAULT_IMAGE;
@@ -56,7 +63,7 @@ export const PluginIcon = ({ pluginData, className, ...rest }) => {
         src={calculateIconSrc()}
         fallback={PLUGIN_DEFAULT_IMAGE}
         isStatic={!isDynamicIconAvailable}
-        requestParams={{ method: 'PUT', data: { fileKey: 'icon' } }}
+        requestParams={isPublic ? { method: 'GET' } : { method: 'PUT', data: { fileKey: 'icon' } }}
         preloaderColor="charcoal"
         className={className}
         {...rest}
