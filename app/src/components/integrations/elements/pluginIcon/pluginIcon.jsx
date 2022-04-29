@@ -32,19 +32,17 @@ export const PluginIcon = ({ pluginData, className, ...rest }) => {
   const projectId = useSelector(activeProjectSelector);
   const globalIntegrations = useSelector(globalIntegrationsSelector);
 
-  const isPublic = details && details.accessType === PUBLIC_PLUGIN_ACCESS_TYPE;
-
   const calculateIconParams = () => {
-    const putRequestParams = { method: 'PUT', data: { fileKey: 'icon' } };
-    const getRequestParams = { method: 'GET' };
+    const commandParams = { method: 'PUT', data: { fileKey: 'icon' } };
 
     if (isDynamicIconAvailable) {
+      const isPublic = details && details.accessType === PUBLIC_PLUGIN_ACCESS_TYPE;
       const isCommonCommandSupported = isPluginSupportsCommonCommand(pluginData, COMMAND_GET_FILE);
 
       if (isCommonCommandSupported) {
         return {
           url: URLS.pluginCommandCommon(projectId, name, COMMAND_GET_FILE),
-          requestParams: putRequestParams,
+          requestParams: commandParams,
         };
       }
 
@@ -52,7 +50,7 @@ export const PluginIcon = ({ pluginData, className, ...rest }) => {
       if (integration) {
         return {
           url: URLS.projectIntegrationByIdCommand(projectId, integration.id, COMMAND_GET_FILE),
-          requestParams: putRequestParams,
+          requestParams: commandParams,
         };
       }
 
@@ -60,7 +58,6 @@ export const PluginIcon = ({ pluginData, className, ...rest }) => {
         url: isPublic
           ? URLS.pluginPublicFile(name, details.binaryData.icon)
           : URLS.pluginFile(name, details.binaryData.icon),
-        requestParams: getRequestParams,
       };
     }
 
