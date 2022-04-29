@@ -34,7 +34,7 @@ export const PluginIcon = ({ pluginData, className, ...rest }) => {
 
   const isPublic = details && details.accessType === PUBLIC_PLUGIN_ACCESS_TYPE;
 
-  const calculateIconSrc = () => {
+  const calculateIconParams = () => {
     const putRequestParams = { method: 'PUT', data: { fileKey: 'icon' } };
     const getRequestParams = { method: 'GET' };
 
@@ -73,10 +73,10 @@ export const PluginIcon = ({ pluginData, className, ...rest }) => {
   return (
     <div className={className}>
       <Image
-        src={calculateIconSrc().url}
+        src={calculateIconParams().url}
         fallback={PLUGIN_DEFAULT_IMAGE}
         isStatic={!isDynamicIconAvailable}
-        requestParams={calculateIconSrc().requestParams}
+        requestParams={calculateIconParams().requestParams}
         preloaderColor="charcoal"
         className={className}
         {...rest}
