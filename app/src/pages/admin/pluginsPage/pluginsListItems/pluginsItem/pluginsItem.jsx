@@ -92,11 +92,7 @@ export class PluginsItem extends Component {
 
   onChangeHandler = () => {
     const {
-      data: {
-        name,
-        enabled,
-        details: { pluginLocation },
-      },
+      data: { name, enabled, details: { pluginLocation } = {} },
       showToggleConfirmationModal,
     } = this.props;
     const pluginName = PLUGIN_NAME_TITLES[name] || name;
