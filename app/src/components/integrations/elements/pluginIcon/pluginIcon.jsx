@@ -69,13 +69,15 @@ export const PluginIcon = ({ pluginData, className, ...rest }) => {
     };
   };
 
+  const { url, requestParams } = calculateIconParams();
+
   return (
     <div className={className}>
       <Image
-        src={calculateIconParams().url}
+        src={url}
         fallback={PLUGIN_DEFAULT_IMAGE}
         isStatic={!isDynamicIconAvailable}
-        requestParams={calculateIconParams().requestParams}
+        requestParams={requestParams}
         preloaderColor="charcoal"
         className={className}
         {...rest}
