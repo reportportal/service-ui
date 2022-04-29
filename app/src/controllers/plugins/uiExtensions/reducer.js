@@ -40,7 +40,7 @@ const extensionsMetadataReducer = (state = [], { type, payload }) => {
     case UPDATE_EXTENSION_METADATA:
       return state.map((item) => {
         if (item.pluginName === payload.pluginName) {
-          return payload;
+          return { ...item, ...payload };
         }
         return item;
       });

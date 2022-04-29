@@ -3,9 +3,16 @@ import { loadComponent } from './loadComponent';
 
 const useDynamicScript = (scope, url) => {
   const isDev = process.env.NODE_ENV === 'development';
-  const loaded = isDev ? false : !!window[scope];
+  const loaded = !!window[scope];
   const [ready, setReady] = React.useState(loaded);
   const [failed, setFailed] = React.useState(false);
+
+  React.useEffect(() => {
+    if (isDev && ready) {
+      delete window[`webpackChunks${scope}`];
+      setReady(false);
+    }
+  }, []);
 
   React.useEffect(() => {
     if (loaded) {
