@@ -66,7 +66,6 @@ export const PluginIcon = ({ pluginData, className, ...rest }) => {
 
     return {
       url: PLUGIN_IMAGES_MAP[name] || PLUGIN_DEFAULT_IMAGE,
-      requestParams: putRequestParams,
     };
   };
 
