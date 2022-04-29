@@ -47,13 +47,13 @@ export const PluginIcon = ({ pluginData, className, ...rest }) => {
       }
 
       const integration = filterIntegrationsByName(globalIntegrations, name)[0];
-      if (integration && !isPublic) {
+      if (integration) {
         return URLS.projectIntegrationByIdCommand(projectId, integration.id, COMMAND_GET_FILE);
       }
 
       return isPublic
-        ? URLS.pluginPublicFile(integration.name, details.binaryData.icon)
-        : URLS.pluginFile(integration.name, details.binaryData.icon);
+        ? URLS.pluginPublicFile(name, details.binaryData.icon)
+        : URLS.pluginFile(name, details.binaryData.icon);
     }
 
     return PLUGIN_IMAGES_MAP[name] || PLUGIN_DEFAULT_IMAGE;
