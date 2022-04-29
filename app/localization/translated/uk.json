@@ -232,6 +232,7 @@
   "Common.on": "Вкл",
   "Common.openInNewTab": "Відкрити в новій вкладці",
   "Common.proceedValidItems": "Обробити дійсні елементи",
+  "Common.processData": "Зачекайте, ми обробляємо ваші дані",
   "Common.refresh": "Оновити",
   "Common.requiredFieldHint": "Це поле обов’язкове",
   "Common.reset": "Скинути",
