@@ -21,8 +21,8 @@ import styles from './bubblesPreloader.scss';
 
 const cx = classNames.bind(styles);
 
-export const BubblesPreloader = ({ color, bubblesCount }) => (
-  <div className={cx('bubbles-preloader', { [`color-${color}`]: color })}>
+export const BubblesPreloader = ({ color, bubblesCount, customClassName }) => (
+  <div className={cx('bubbles-preloader', customClassName, { [`color-${color}`]: color })}>
     {Array(bubblesCount)
       .fill(null)
       .map((item, index) => (
@@ -34,8 +34,10 @@ export const BubblesPreloader = ({ color, bubblesCount }) => (
 BubblesPreloader.propTypes = {
   color: PropTypes.string,
   bubblesCount: PropTypes.number,
+  customClassName: PropTypes.string,
 };
 BubblesPreloader.defaultProps = {
   color: 'topaz',
   bubblesCount: 7,
+  customClassName: '',
 };
