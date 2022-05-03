@@ -55,6 +55,10 @@
     &.selected {
       @include selected-state($COLOR--topaz-2);
     }
+
+    &.hidden {
+      display: none;
+    }
   }
 }
 
@@ -67,11 +71,11 @@
     &.selected {
       @include selected-state($COLOR--darkmode-topaz-text);
     }
-  }
-}
 
-.hidden {
-  display: none;
+    &.hidden {
+      display: none;
+    }
+  }
 }
 
 .disabled {

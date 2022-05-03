@@ -26,7 +26,6 @@ import moment from 'moment';
 import { URLS } from 'common/urls';
 import { fetch, secondsToDays } from 'common/utils';
 import { canUpdateSettings } from 'common/utils/permissions';
-import { InputDropdown } from 'components/inputs/inputDropdown';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import {
   updateConfigurationAttributesAction,
@@ -37,7 +36,6 @@ import {
 } from 'controllers/project';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { FormField } from 'components/fields/formField';
-
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { projectIdSelector } from 'controllers/pages';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -45,6 +43,7 @@ import { langSelector } from 'controllers/lang';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
 import { Button } from 'componentLibrary/button';
+import { Dropdown } from 'componentLibrary/dropdown';
 import styles from './generalTab.scss';
 import { Messages } from './generalTabMessages';
 
@@ -322,7 +321,7 @@ export class GeneralTab extends Component {
             disabled={isDisabled}
             format={this.formatInterruptJobTimes}
           >
-            <InputDropdown
+            <Dropdown
               customClasses={{ dropdown: cx('dropdown') }}
               options={this.interruptJobTime}
               mobileDisabled
@@ -342,7 +341,7 @@ export class GeneralTab extends Component {
             disabled={isDisabled}
             format={this.formatRetention}
           >
-            <InputDropdown
+            <Dropdown
               customClasses={{ dropdown: cx('dropdown') }}
               options={this.getLaunchesOptions()}
               mobileDisabled
@@ -362,7 +361,7 @@ export class GeneralTab extends Component {
             disabled={isDisabled}
             format={this.formatRetention}
           >
-            <InputDropdown
+            <Dropdown
               customClasses={{ dropdown: cx('dropdown') }}
               options={this.getLogOptions()}
               mobileDisabled
@@ -382,7 +381,7 @@ export class GeneralTab extends Component {
             disabled={isDisabled}
             format={this.formatRetention}
           >
-            <InputDropdown
+            <Dropdown
               customClasses={{ dropdown: cx('dropdown') }}
               options={this.getScreenshotsOptions()}
               mobileDisabled
