@@ -94,7 +94,7 @@ export const Dropdown = ({
           selected={isSelected}
           label={option.label}
           title={option.title}
-          onChange={() => handleChange(option)}
+          onChange={option.disabled ? null : () => handleChange(option)}
           variant={variant}
         />
       );
