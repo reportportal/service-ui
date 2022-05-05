@@ -45,6 +45,7 @@ export const Dropdown = ({
 }) => {
   const [isOpened, setOpened] = useState(false);
   const containerRef = useRef();
+  let updatePosition;
 
   const handleClickOutside = () => {
     if (isOpened) {
@@ -57,6 +58,7 @@ export const Dropdown = ({
   const onClickDropdown = (e) => {
     if (!disabled) {
       e.stopPropagation();
+      updatePosition();
       setOpened(!isOpened);
       isOpened ? onBlur() : onFocus();
     }
@@ -140,7 +142,7 @@ export const Dropdown = ({
           }}
         >
           {({ placement, ref, style, scheduleUpdate }) => {
-            scheduleUpdate();
+            updatePosition = scheduleUpdate;
             return (
               <div
                 ref={ref}
