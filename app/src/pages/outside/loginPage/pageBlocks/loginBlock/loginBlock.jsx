@@ -22,8 +22,7 @@ import { ExtensionLoader } from 'components/extensionLoader';
 import { useSelector } from 'react-redux';
 import { authExtensionsSelector } from 'controllers/appInfo';
 import classNames from 'classnames/bind';
-import { uiExtensionLoginPageSelector } from 'controllers/plugins/uiExtensions';
-import { pagePropertiesSelector } from 'controllers/pages';
+import { uiExtensionLoginBlockSelector } from 'controllers/plugins/uiExtensions';
 import { ExternalLoginBlock } from './loginForm/externalLoginBlock';
 import styles from './loginBlock.scss';
 import { LoginForm } from './loginForm';
@@ -43,9 +42,7 @@ const messages = defineMessages({
 
 export const LoginBlock = () => {
   const externalAuth = useSelector(authExtensionsSelector);
-  const extensions = useSelector(uiExtensionLoginPageSelector);
-  const pageProps = useSelector(pagePropertiesSelector);
-  const auth = pageProps.auth;
+  const extensions = useSelector(uiExtensionLoginBlockSelector);
 
   return (
     <PageBlockContainer header={messages.welcome} hint={messages.login}>
@@ -60,13 +57,10 @@ export const LoginBlock = () => {
           </div>
         </>
       ) : null}
-      {extensions && extensions.length !== 0 ? (
-        extensions.map((extension) => (
-          <ExtensionLoader extension={extension} components={{ LoginForm }} authFlow={auth} />
-        ))
-      ) : (
-        <LoginForm />
-      )}
+      <LoginForm />
+      {extensions &&
+        extensions.length !== 0 &&
+        extensions.map((extension) => <ExtensionLoader extension={extension} />)}
     </PageBlockContainer>
   );
 };

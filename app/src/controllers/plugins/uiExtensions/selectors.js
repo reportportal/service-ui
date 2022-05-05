@@ -10,6 +10,7 @@ import {
   EXTENSION_TYPE_POST_ISSUE_FORM,
   EXTENSION_TYPE_UNIQUE_ERROR_GRID_CELL_COMPONENT,
   EXTENSION_TYPE_UNIQUE_ERROR_GRID_HEADER_CELL_COMPONENT,
+  EXTENSION_TYPE_LOGIN_BLOCK,
   EXTENSION_TYPE_LOGIN_PAGE,
   EXTENSION_TYPE_REGISTRATION_PAGE,
 } from './constants';
@@ -77,6 +78,10 @@ export const uniqueErrorGridCellComponentSelector = createExtensionSelectorByTyp
 );
 export const uniqueErrorGridHeaderCellComponentSelector = createExtensionSelectorByType(
   EXTENSION_TYPE_UNIQUE_ERROR_GRID_HEADER_CELL_COMPONENT,
+);
+export const uiExtensionLoginBlockSelector = createExtensionSelectorByType(
+  EXTENSION_TYPE_LOGIN_BLOCK,
+  enabledPublicPluginNamesSelector,
 );
 export const uiExtensionLoginPageSelector = createExtensionSelectorByType(
   EXTENSION_TYPE_LOGIN_PAGE,

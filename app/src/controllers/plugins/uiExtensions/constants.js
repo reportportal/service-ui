@@ -11,6 +11,7 @@ export const EXTENSION_TYPE_UNIQUE_ERROR_GRID_CELL_COMPONENT =
   'uiExtension:uniqueErrorGridCellComponent';
 export const EXTENSION_TYPE_UNIQUE_ERROR_GRID_HEADER_CELL_COMPONENT =
   'uiExtension:uniqueErrorGridHeaderCellComponent';
+export const EXTENSION_TYPE_LOGIN_BLOCK = 'uiExtension:loginBlock';
 export const EXTENSION_TYPE_LOGIN_PAGE = 'uiExtension:loginPage';
 export const EXTENSION_TYPE_REGISTRATION_PAGE = 'uiExtension:registrationPage';
 

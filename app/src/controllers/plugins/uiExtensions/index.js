@@ -11,6 +11,7 @@ export {
   uiExtensionPostIssueFormSelector,
   uniqueErrorGridCellComponentSelector,
   uniqueErrorGridHeaderCellComponentSelector,
+  uiExtensionLoginBlockSelector,
   uiExtensionLoginPageSelector,
   uiExtensionRegistrationPageSelector,
 } from './selectors';
