@@ -1,0 +1,112 @@
+/*!
+ * Copyright 2022 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.container {
+  position: relative;
+  display: inline-block;
+
+  &.disabled {
+    opacity: 0.3;
+  }
+}
+
+.label {
+  margin-bottom: 4px;
+  font-family: $FONT-ROBOTO-MEDIUM;
+  font-size: 13px;
+  line-height: 20px;
+  text-indent: 1px;
+  color: $COLOR--almost-black;
+}
+
+.sign {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+
+  &.disabled {
+    cursor: default;
+  }
+}
+
+.input-container {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 8px;
+  border: 1px solid $COLOR--e-200;
+  box-sizing: border-box;
+  border-radius: 3px;
+  background: $COLOR--bg-000;
+  user-select: none;
+
+  &:focus-within:not(.error) {
+    padding: 6px 7px;
+    border-width: 2px;
+    border-color: $COLOR--topaz-focused;
+  }
+
+  &:hover:not(.disabled):not(.error):not(:focus-within),
+  &.filled {
+    border-color: $COLOR--e-300;
+  }
+
+  &.error.touched {
+    border-color: $COLOR--red-failed-2;
+  }
+}
+
+.input-field {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  margin: 0 4px;
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 13px;
+  line-height: 20px;
+  text-align: center;
+  color: $COLOR--almost-black;
+  cursor: text;
+}
+
+.input {
+  padding: 0;
+  border: none;
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 13px;
+  line-height: 20px;
+  color: $COLOR--almost-black;
+  text-align: center;
+  appearance: textfield;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus::placeholder {
+    color: transparent;
+  }
+
+  &::placeholder {
+    color: $COLOR--e-200;
+  }
+
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    appearance: none;
+    margin: 0;
+  }
+}
