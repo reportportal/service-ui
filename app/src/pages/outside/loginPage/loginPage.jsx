@@ -22,6 +22,8 @@ import { connect } from 'react-redux';
 import { referenceDictionary, connectRouter } from 'common/utils';
 import { LOGIN_PAGE } from 'components/main/analytics/events';
 import { showDefaultErrorNotification } from 'controllers/notification';
+import { uiExtensionLoginPageSelector } from 'controllers/plugins/uiExtensions';
+import { ExtensionLoader } from 'components/extensionLoader';
 import styles from './loginPage.scss';
 import { LoginPageSection } from './loginPageSection';
 import { SocialSection } from './socialSection';
@@ -33,15 +35,21 @@ import { MultipleAuthBlock } from './pageBlocks/multipleAuthBlock';
 
 const cx = classNames.bind(styles);
 
-@connectRouter(({ forgotPass, reset, errorAuth, multipleAuth }) => ({
+@connectRouter(({ forgotPass, reset, errorAuth, multipleAuth, registration }) => ({
   forgotPass,
   reset,
   errorAuth,
   multipleAuth,
+  registration,
 }))
-@connect(null, {
-  showDefaultErrorNotification,
-})
+@connect(
+  (state) => ({
+    extensions: uiExtensionLoginPageSelector(state),
+  }),
+  {
+    showDefaultErrorNotification,
+  },
+)
 @track({ page: LOGIN_PAGE })
 export class LoginPage extends PureComponent {
   static propTypes = {
@@ -49,6 +57,8 @@ export class LoginPage extends PureComponent {
     reset: PropTypes.string,
     errorAuth: PropTypes.string,
     multipleAuth: PropTypes.string,
+    registration: PropTypes.string,
+    extensions: PropTypes.array,
     showDefaultErrorNotification: PropTypes.func,
   };
   static defaultProps = {
@@ -56,6 +66,8 @@ export class LoginPage extends PureComponent {
     reset: '',
     errorAuth: '',
     multipleAuth: '',
+    registration: '',
+    extensions: [],
     showDefaultErrorNotification: () => {},
   };
 
@@ -76,7 +88,7 @@ export class LoginPage extends PureComponent {
   }
 
   getCurrentBlock = () => {
-    const { forgotPass, reset, multipleAuth } = this.props;
+    const { forgotPass, reset, multipleAuth, registration, extensions } = this.props;
 
     let currentBlock = <LoginBlock />;
     if (forgotPass) {
@@ -88,12 +100,18 @@ export class LoginPage extends PureComponent {
     if (multipleAuth) {
       currentBlock = <MultipleAuthBlock multipleAuthKey={multipleAuth} />;
     }
+    if (registration && extensions) {
+      currentBlock = extensions.map((extension) => (
+        <ExtensionLoader key={extension.name} extension={extension} />
+      ));
+    }
 
     return currentBlock;
   };
 
   render() {
     const currentBlock = this.getCurrentBlock();
+    const { registration } = this.props;
 
     return (
       <div className={cx('login-page')}>
@@ -107,7 +125,7 @@ export class LoginPage extends PureComponent {
           </LoginPageSection>
           <LoginPageSection>
             {currentBlock}
-            <ServiceVersionsBlock />
+            {!registration && <ServiceVersionsBlock />}
           </LoginPageSection>
         </div>
       </div>
