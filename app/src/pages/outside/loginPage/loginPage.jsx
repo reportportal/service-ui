@@ -67,7 +67,7 @@ export class LoginPage extends PureComponent {
     errorAuth: '',
     multipleAuth: '',
     registration: '',
-    extension: [],
+    extensions: [],
     showDefaultErrorNotification: () => {},
   };
 
@@ -101,7 +101,9 @@ export class LoginPage extends PureComponent {
       currentBlock = <MultipleAuthBlock multipleAuthKey={multipleAuth} />;
     }
     if (registration && extensions) {
-      currentBlock = extensions.map((extension) => <ExtensionLoader extension={extension} />);
+      currentBlock = extensions.map((extension) => (
+        <ExtensionLoader key={extension.name} extension={extension} />
+      ));
     }
 
     return currentBlock;
@@ -109,6 +111,7 @@ export class LoginPage extends PureComponent {
 
   render() {
     const currentBlock = this.getCurrentBlock();
+    const { registration } = this.props;
 
     return (
       <div className={cx('login-page')}>
@@ -122,7 +125,7 @@ export class LoginPage extends PureComponent {
           </LoginPageSection>
           <LoginPageSection>
             {currentBlock}
-            <ServiceVersionsBlock />
+            {!registration && <ServiceVersionsBlock />}
           </LoginPageSection>
         </div>
       </div>
