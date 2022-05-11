@@ -1,0 +1,136 @@
+/*!
+ * Copyright 2022 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.checkbox-container {
+  display: inline-flex;
+  align-items: center;
+  padding-left: 24px;
+  color: $COLOR--almost-black;
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 13px;
+  line-height: 20px;
+  .disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+}
+
+.input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.checkbox {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 1px solid $COLOR--e-200;
+  border-radius: 3px;
+  margin-left: -24px;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.children-container {
+  cursor: pointer;
+}
+
+.input:checked + .checkbox {
+  border-color: $COLOR--topaz-2;
+  background-color: $COLOR--topaz-2;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='9' viewBox='0 0 12 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.5 4.25L4.5 7.25L10.5 0.75' stroke='white' stroke-width='2'/%3E%3C/svg%3E");
+}
+
+.input:hover + .checkbox {
+  border-color: $COLOR--e-400;
+}
+
+.input:checked:hover + .checkbox {
+  border-color: $COLOR--topaz-hover-2;
+  background-color: $COLOR--topaz-hover-2;
+}
+
+.input:focus + .checkbox {
+  border: 2px solid $COLOR--topaz-focused;
+}
+
+.input:checked:focus + .checkbox {
+  border-color: $COLOR--topaz-focused;
+  background-color: $COLOR--topaz-focused;
+}
+
+.input:disabled + .checkbox {
+  border-color: $COLOR--e-200;
+}
+
+.input:checked:disabled + .checkbox {
+  border-color: $COLOR--topaz-2;
+  background-color: $COLOR--topaz-2;
+  opacity: 0.3;
+  cursor: default;
+}
+
+.dark-view-container {
+  color: $COLOR--darkmode-gray-100;
+  .disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+.dark-view-checkbox {
+  border-color: $COLOR--darkmode-gray-100;
+}
+
+.input:checked + .dark-view-checkbox {
+  border-color: $COLOR--darkmode-topaz-main;
+  background-color: $COLOR--darkmode-topaz-main;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='9' viewBox='0 0 12 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.5 4.25L4.5 7.25L10.5 0.75' stroke='white' stroke-width='2'/%3E%3C/svg%3E");
+}
+
+.input:hover + .dark-view-checkbox {
+  border-color: $COLOR--darkmode-gray-50;
+}
+
+.input:checked:hover + .dark-view-checkbox {
+  border-color: $COLOR--darkmode-topaz-hover;
+  background-color: $COLOR--darkmode-topaz-hover;
+}
+
+.input:focus + .dark-view-checkbox {
+  border: 2px solid $COLOR--darkmode-topaz-focused;
+}
+
+.input:checked:focus + .dark-view-checkbox {
+  border-color: $COLOR--darkmode-topaz-focused;
+  background-color: $COLOR--darkmode-topaz-focused;
+}
+
+.input:disabled + .dark-view-checkbox {
+  border-color: $COLOR--darkmode-gray-100;
+}
+
+.input:checked:disabled + .dark-view-checkbox {
+  border-color: $COLOR--darkmode-topaz-main;
+  background-color: $COLOR--darkmode-topaz-main;
+  opacity: 0.5;
+  cursor: default;
+}
