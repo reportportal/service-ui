@@ -16,17 +16,15 @@
 
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
-import { useTracking } from 'react-tracking';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { CSSTransition } from 'react-transition-group';
 import classNames from 'classnames/bind';
-import { hideModalAction } from 'controllers/modal';
 import { ModalContent } from './modalContent';
 import { ModalFooter } from './modalFooter';
 import { ModalHeader } from './modalHeader';
 import styles from './modalLayout.scss';
 
+const ESC_KEYCODE = 27;
 const cx = classNames.bind(styles);
 
 export const ModalLayout = ({
@@ -36,16 +34,14 @@ export const ModalLayout = ({
   footerNode,
   okButton,
   cancelButton,
-  closeIconEventInfo,
   className,
   modalSize,
+  onCloseCallback,
 }) => {
-  const { trackEvent } = useTracking();
-  const dispatch = useDispatch();
   const [isShown, setShown] = useState(false);
 
   const onKeydown = (e) => {
-    if (e.keyCode === 27) {
+    if (e.keyCode === ESC_KEYCODE) {
       setShown(false);
     }
   };
@@ -56,9 +52,9 @@ export const ModalLayout = ({
     return () => document.removeEventListener('keydown', onKeydown, false);
   }, []);
 
-  const onClose = (eventInfo) => {
+  const onClose = () => {
     setShown(false);
-    trackEvent(eventInfo);
+    onCloseCallback();
   };
 
   return (
@@ -69,21 +65,17 @@ export const ModalLayout = ({
             timeout={300}
             in={isShown}
             classNames={cx('modal-window-animation')}
-            onExited={() => dispatch(hideModalAction())}
+            onExited={onClose}
           >
             {(status) => (
               <div className={cx('modal-window', { [`size-${modalSize}`]: modalSize }, className)}>
-                <ModalHeader
-                  title={title}
-                  headerNode={headerNode}
-                  onClose={() => onClose(closeIconEventInfo)}
-                />
+                <ModalHeader title={title} headerNode={headerNode} onClose={onClose} />
                 <ModalContent>{status !== 'exited' ? children : null}</ModalContent>
                 <ModalFooter
                   footerNode={footerNode}
                   okButton={okButton}
                   cancelButton={cancelButton}
-                  closeHandler={() => onClose(cancelButton.eventInfo)}
+                  closeHandler={onClose}
                 />
               </div>
             )}
@@ -110,9 +102,9 @@ ModalLayout.propTypes = {
     text: PropTypes.string.isRequired,
     eventInfo: PropTypes.object,
   }),
-  closeIconEventInfo: PropTypes.object,
   className: PropTypes.string,
   modalSize: PropTypes.oneOf(['default', 'small', 'large']),
+  onCloseCallback: PropTypes.func,
 };
 ModalLayout.defaultProps = {
   title: '',
@@ -121,7 +113,7 @@ ModalLayout.defaultProps = {
   footerNode: null,
   okButton: null,
   cancelButton: null,
-  closeIconEventInfo: null,
   className: '',
-  modalSize: 'large',
+  modalSize: 'default',
+  onCloseCallback: () => {},
 };
