@@ -32,7 +32,6 @@ Default width - 480px, height 100%
 - **footerNode**: _node_, optional, default = null
 - **okButton**: _object_, optional, default = null
 - **cancelButton**: _object_, optional, default = null
-- **closeIconEventInfo**: _object_, optional, default = null
 - **className**: _string_, optional, default = ""
 - **modalSize**: _string_, optional, default = "default"
 - **onClose**: _function_, optional, default = () => {}
