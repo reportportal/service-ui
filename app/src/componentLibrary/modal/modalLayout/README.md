@@ -35,6 +35,7 @@ Default width - 480px, height 100%
 - **closeIconEventInfo**: _object_, optional, default = null
 - **className**: _string_, optional, default = ""
 - **modalSize**: _string_, optional, default = "default"
+- **onClose**: _function_, optional, default = () => {}
 
 ### Variants
 

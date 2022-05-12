@@ -36,7 +36,7 @@ export const ModalLayout = ({
   cancelButton,
   className,
   modalSize,
-  onCloseCallback,
+  onClose,
 }) => {
   const [isShown, setShown] = useState(false);
 
@@ -52,9 +52,8 @@ export const ModalLayout = ({
     return () => document.removeEventListener('keydown', onKeydown, false);
   }, []);
 
-  const onClose = () => {
+  const closeModal = () => {
     setShown(false);
-    onCloseCallback();
   };
 
   return (
@@ -69,13 +68,13 @@ export const ModalLayout = ({
           >
             {(status) => (
               <div className={cx('modal-window', { [`size-${modalSize}`]: modalSize }, className)}>
-                <ModalHeader title={title} headerNode={headerNode} onClose={onClose} />
+                <ModalHeader title={title} headerNode={headerNode} onClose={closeModal} />
                 <ModalContent>{status !== 'exited' ? children : null}</ModalContent>
                 <ModalFooter
                   footerNode={footerNode}
                   okButton={okButton}
                   cancelButton={cancelButton}
-                  closeHandler={onClose}
+                  closeHandler={closeModal}
                 />
               </div>
             )}
@@ -104,7 +103,7 @@ ModalLayout.propTypes = {
   }),
   className: PropTypes.string,
   modalSize: PropTypes.oneOf(['default', 'small', 'large']),
-  onCloseCallback: PropTypes.func,
+  onClose: PropTypes.func,
 };
 ModalLayout.defaultProps = {
   title: '',
@@ -115,5 +114,5 @@ ModalLayout.defaultProps = {
   cancelButton: null,
   className: '',
   modalSize: 'default',
-  onCloseCallback: () => {},
+  onClose: () => {},
 };
