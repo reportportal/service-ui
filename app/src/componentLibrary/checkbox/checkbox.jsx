@@ -26,22 +26,27 @@ export const Checkbox = ({
   onFocus,
   onBlur,
   className,
-  darkView,
+  value,
+  variant,
 }) => (
   // eslint-disable-next-line
   <label
-    className={cx('checkbox-container', className, {
-      'dark-view-container': darkView,
+    className={cx(`${variant}-container`, className, {
       disabled,
     })}
     onFocus={onFocus}
     onBlur={onBlur}
     tabIndex="1"
   >
-    <input type="checkbox" className={cx('input')} disabled={disabled} onChange={onChange} />
+    <input
+      type="checkbox"
+      className={cx('input')}
+      disabled={disabled}
+      onChange={onChange}
+      checked={value}
+    />
     <span
-      className={cx('checkbox', {
-        'dark-view-checkbox': darkView,
+      className={cx('checkbox', variant, {
         disabled,
       })}
     />
@@ -49,6 +54,7 @@ export const Checkbox = ({
   </label>
 );
 Checkbox.propTypes = {
+  variant: PropTypes.string,
   children: PropTypes.node,
   value: PropTypes.bool,
   disabled: PropTypes.bool,
@@ -56,9 +62,9 @@ Checkbox.propTypes = {
   onFocus: PropTypes.func,
   onBlur: PropTypes.func,
   className: PropTypes.string,
-  darkView: PropTypes.bool,
 };
 Checkbox.defaultProps = {
+  variant: 'default',
   children: '',
   value: false,
   disabled: false,
@@ -66,5 +72,4 @@ Checkbox.defaultProps = {
   onFocus: () => {},
   onBlur: () => {},
   className: '',
-  darkView: false,
 };

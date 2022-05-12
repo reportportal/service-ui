@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-.checkbox-container {
+.default-container {
   display: inline-flex;
   align-items: center;
   padding-left: 24px;
@@ -29,11 +29,7 @@
 }
 
 .input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
+  display: none;
 }
 
 .checkbox {
@@ -51,7 +47,7 @@
   cursor: pointer;
 }
 
-.input:checked + .checkbox {
+.input:checked + .default {
   border-color: $COLOR--topaz-2;
   background-color: $COLOR--topaz-2;
   background-repeat: no-repeat;
@@ -59,29 +55,29 @@
   background-image: url("data:image/svg+xml,%3Csvg width='12' height='9' viewBox='0 0 12 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.5 4.25L4.5 7.25L10.5 0.75' stroke='white' stroke-width='2'/%3E%3C/svg%3E");
 }
 
-.input:hover + .checkbox {
+.input:hover + .default {
   border-color: $COLOR--e-400;
 }
 
-.input:checked:hover + .checkbox {
+.input:active:not(:disabled) + .default {
+  border: 2px solid $COLOR--topaz-focused;
+}
+
+.input:checked:hover + .default {
   border-color: $COLOR--topaz-hover-2;
   background-color: $COLOR--topaz-hover-2;
 }
 
-.input:focus + .checkbox {
-  border: 2px solid $COLOR--topaz-focused;
-}
-
-.input:checked:focus + .checkbox {
+.input:checked:active:not(:disabled) + .default {
   border-color: $COLOR--topaz-focused;
   background-color: $COLOR--topaz-focused;
 }
 
-.input:disabled + .checkbox {
+.input:disabled + .default {
   border-color: $COLOR--e-200;
 }
 
-.input:checked:disabled + .checkbox {
+.input:checked:disabled + .default {
   border-color: $COLOR--topaz-2;
   background-color: $COLOR--topaz-2;
   opacity: 0.3;
@@ -89,6 +85,12 @@
 }
 
 .dark-view-container {
+  display: inline-flex;
+  align-items: center;
+  padding-left: 24px;
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 13px;
+  line-height: 20px;
   color: $COLOR--darkmode-gray-100;
   .disabled {
     opacity: 0.5;
@@ -96,39 +98,41 @@
   }
 }
 
-.dark-view-checkbox {
+.dark-view {
   border-color: $COLOR--darkmode-gray-100;
 }
 
-.input:checked + .dark-view-checkbox {
+.input:checked + .dark-view {
   border-color: $COLOR--darkmode-topaz-main;
   background-color: $COLOR--darkmode-topaz-main;
   background-image: url("data:image/svg+xml,%3Csvg width='12' height='9' viewBox='0 0 12 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.5 4.25L4.5 7.25L10.5 0.75' stroke='white' stroke-width='2'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
-.input:hover + .dark-view-checkbox {
+.input:hover + .dark-view {
   border-color: $COLOR--darkmode-gray-50;
 }
 
-.input:checked:hover + .dark-view-checkbox {
+.input:active:not(:disabled) + .dark-view {
+  border: 2px solid$COLOR--darkmode-topaz-focused;
+}
+
+.input:checked:hover + .dark-view {
   border-color: $COLOR--darkmode-topaz-hover;
   background-color: $COLOR--darkmode-topaz-hover;
 }
 
-.input:focus + .dark-view-checkbox {
-  border: 2px solid $COLOR--darkmode-topaz-focused;
-}
-
-.input:checked:focus + .dark-view-checkbox {
+.input:checked:active:not(:disabled) + .dark-view {
   border-color: $COLOR--darkmode-topaz-focused;
   background-color: $COLOR--darkmode-topaz-focused;
 }
 
-.input:disabled + .dark-view-checkbox {
+.input:disabled + .dark-view {
   border-color: $COLOR--darkmode-gray-100;
 }
 
-.input:checked:disabled + .dark-view-checkbox {
+.input:checked:disabled + .dark-view {
   border-color: $COLOR--darkmode-topaz-main;
   background-color: $COLOR--darkmode-topaz-main;
   opacity: 0.5;
