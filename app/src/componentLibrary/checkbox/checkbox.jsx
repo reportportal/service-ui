@@ -36,7 +36,6 @@ export const Checkbox = ({
     })}
     onFocus={onFocus}
     onBlur={onBlur}
-    tabIndex="1"
   >
     <input
       type="checkbox"
@@ -64,7 +63,7 @@ Checkbox.propTypes = {
   className: PropTypes.string,
 };
 Checkbox.defaultProps = {
-  variant: 'default',
+  variant: 'light',
   children: '',
   value: false,
   disabled: false,

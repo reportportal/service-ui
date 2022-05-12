@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-.default-container {
+.light-container {
   display: inline-flex;
   align-items: center;
   padding-left: 24px;
@@ -47,7 +47,7 @@
   cursor: pointer;
 }
 
-.input:checked + .default {
+.input:checked + .light {
   border-color: $COLOR--topaz-2;
   background-color: $COLOR--topaz-2;
   background-repeat: no-repeat;
@@ -55,36 +55,36 @@
   background-image: url("data:image/svg+xml,%3Csvg width='12' height='9' viewBox='0 0 12 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.5 4.25L4.5 7.25L10.5 0.75' stroke='white' stroke-width='2'/%3E%3C/svg%3E");
 }
 
-.input:hover + .default {
+.input:hover + .light {
   border-color: $COLOR--e-400;
 }
 
-.input:active:not(:disabled) + .default {
+.input:active:not(:disabled) + .light {
   border: 2px solid $COLOR--topaz-focused;
 }
 
-.input:checked:hover + .default {
+.input:checked:hover + .light {
   border-color: $COLOR--topaz-hover-2;
   background-color: $COLOR--topaz-hover-2;
 }
 
-.input:checked:active:not(:disabled) + .default {
+.input:checked:active:not(:disabled) + .light {
   border-color: $COLOR--topaz-focused;
   background-color: $COLOR--topaz-focused;
 }
 
-.input:disabled + .default {
+.input:disabled + .light {
   border-color: $COLOR--e-200;
 }
 
-.input:checked:disabled + .default {
+.input:checked:disabled + .light {
   border-color: $COLOR--topaz-2;
   background-color: $COLOR--topaz-2;
   opacity: 0.3;
   cursor: default;
 }
 
-.dark-view-container {
+.dark-container {
   display: inline-flex;
   align-items: center;
   padding-left: 24px;
@@ -98,11 +98,11 @@
   }
 }
 
-.dark-view {
+.dark {
   border-color: $COLOR--darkmode-gray-100;
 }
 
-.input:checked + .dark-view {
+.input:checked + .dark {
   border-color: $COLOR--darkmode-topaz-main;
   background-color: $COLOR--darkmode-topaz-main;
   background-image: url("data:image/svg+xml,%3Csvg width='12' height='9' viewBox='0 0 12 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.5 4.25L4.5 7.25L10.5 0.75' stroke='white' stroke-width='2'/%3E%3C/svg%3E");
@@ -110,29 +110,29 @@
   background-position: center;
 }
 
-.input:hover + .dark-view {
+.input:hover + .dark {
   border-color: $COLOR--darkmode-gray-50;
 }
 
-.input:active:not(:disabled) + .dark-view {
+.input:active:not(:disabled) + .dark {
   border: 2px solid$COLOR--darkmode-topaz-focused;
 }
 
-.input:checked:hover + .dark-view {
+.input:checked:hover + .dark {
   border-color: $COLOR--darkmode-topaz-hover;
   background-color: $COLOR--darkmode-topaz-hover;
 }
 
-.input:checked:active:not(:disabled) + .dark-view {
+.input:checked:active:not(:disabled) + .dark {
   border-color: $COLOR--darkmode-topaz-focused;
   background-color: $COLOR--darkmode-topaz-focused;
 }
 
-.input:disabled + .dark-view {
+.input:disabled + .dark {
   border-color: $COLOR--darkmode-gray-100;
 }
 
-.input:checked:disabled + .dark-view {
+.input:checked:disabled + .dark {
   border-color: $COLOR--darkmode-topaz-main;
   background-color: $COLOR--darkmode-topaz-main;
   opacity: 0.5;
