@@ -40,6 +40,18 @@
   &.disabled {
     cursor: default;
   }
+
+  &:hover {
+    svg {
+      fill: $COLOR--e-400;
+    }
+  }
+
+  &:active {
+    svg {
+      fill: $COLOR--topaz-pressed;
+    }
+  }
 }
 
 .input-container {

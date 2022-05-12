@@ -5,7 +5,7 @@ Min width - 5 symbols. Max width - flexible
 ### Props:
 
 - **value**: _string_ or _number_ , optional, default = ""
-- **placeholder**: _string_, optional, default = ""
+- **placeholder**: _string_, optional, default = "0"
 - **disabled**: _bool_, optional, default = false
 - **label**: _string_, optional, default = ""
 - **postfix**: _string_, optional, default = ""
