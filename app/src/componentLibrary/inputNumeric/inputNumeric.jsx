@@ -91,7 +91,7 @@ export const InputNumeric = ({
 
   return (
     <div className={cx('container', { disabled })}>
-      {label && <div className={cx('label')}>{label}</div>}
+      {label && <span className={cx('label')}>{label}</span>}
       <div
         className={cx('input-container', {
           filled: !!value || value === 0,

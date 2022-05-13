@@ -16,7 +16,8 @@
 
 .container {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
+  flex-direction: column;
 
   &.disabled {
     opacity: 0.3;
@@ -33,6 +34,7 @@
 }
 
 .sign {
+  display: inline-block;
   width: 16px;
   height: 16px;
   cursor: pointer;
