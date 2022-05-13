@@ -14,18 +14,34 @@
  * limitations under the License.
  */
 
-.light-container {
+@mixin checkboxContainer($color, $opacity) {
   display: inline-flex;
   align-items: center;
   padding-left: 24px;
-  color: $COLOR--almost-black;
+  color: $color;
   font-family: $FONT-ROBOTO-REGULAR;
   font-size: 13px;
   line-height: 20px;
   .disabled {
-    opacity: 0.3;
-    cursor: default;
+    @include disabled-state($opacity);
   }
+}
+
+@mixin checked-state($borderColor, $backgroundColor) {
+  border-color: $borderColor;
+  background-color: $backgroundColor;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='9' viewBox='0 0 12 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.5 4.25L4.5 7.25L10.5 0.75' stroke='white' stroke-width='2'/%3E%3C/svg%3E");
+}
+
+@mixin disabled-state($opacity) {
+  opacity: $opacity;
+  pointer-events: none;
+}
+
+.light-container {
+  @include checkboxContainer($COLOR--almost-black, 0.3);
 }
 
 .input {
@@ -48,11 +64,7 @@
 }
 
 .input:checked + .light {
-  border-color: $COLOR--topaz-2;
-  background-color: $COLOR--topaz-2;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-image: url("data:image/svg+xml,%3Csvg width='12' height='9' viewBox='0 0 12 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.5 4.25L4.5 7.25L10.5 0.75' stroke='white' stroke-width='2'/%3E%3C/svg%3E");
+  @include checked-state($COLOR--topaz-2, $COLOR--topaz-2);
 }
 
 .input:hover + .light {
@@ -64,13 +76,11 @@
 }
 
 .input:checked:hover + .light {
-  border-color: $COLOR--topaz-hover-2;
-  background-color: $COLOR--topaz-hover-2;
+  @include checked-state($COLOR--topaz-hover-2, $COLOR--topaz-hover-2);
 }
 
 .input:checked:active:not(:disabled) + .light {
-  border-color: $COLOR--topaz-focused;
-  background-color: $COLOR--topaz-focused;
+  @include checked-state($COLOR--topaz-focused, $COLOR--topaz-focused);
 }
 
 .input:disabled + .light {
@@ -78,24 +88,12 @@
 }
 
 .input:checked:disabled + .light {
-  border-color: $COLOR--topaz-2;
-  background-color: $COLOR--topaz-2;
-  opacity: 0.3;
-  cursor: default;
+  @include checked-state($COLOR--topaz-2, $COLOR--topaz-2);
+  @include disabled-state(0.3);
 }
 
 .dark-container {
-  display: inline-flex;
-  align-items: center;
-  padding-left: 24px;
-  font-family: $FONT-ROBOTO-REGULAR;
-  font-size: 13px;
-  line-height: 20px;
-  color: $COLOR--darkmode-gray-100;
-  .disabled {
-    opacity: 0.5;
-    cursor: default;
-  }
+  @include checkboxContainer($COLOR--darkmode-gray-100, 0.5);
 }
 
 .dark {
@@ -103,11 +101,7 @@
 }
 
 .input:checked + .dark {
-  border-color: $COLOR--darkmode-topaz-main;
-  background-color: $COLOR--darkmode-topaz-main;
-  background-image: url("data:image/svg+xml,%3Csvg width='12' height='9' viewBox='0 0 12 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.5 4.25L4.5 7.25L10.5 0.75' stroke='white' stroke-width='2'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: center;
+  @include checked-state($COLOR--darkmode-topaz-main, $COLOR--darkmode-topaz-main);
 }
 
 .input:hover + .dark {
@@ -115,17 +109,15 @@
 }
 
 .input:active:not(:disabled) + .dark {
-  border: 2px solid$COLOR--darkmode-topaz-focused;
+  border: 2px solid $COLOR--darkmode-topaz-focused;
 }
 
 .input:checked:hover + .dark {
-  border-color: $COLOR--darkmode-topaz-hover;
-  background-color: $COLOR--darkmode-topaz-hover;
+  @include checked-state($COLOR--darkmode-topaz-hover, $COLOR--darkmode-topaz-hover);
 }
 
 .input:checked:active:not(:disabled) + .dark {
-  border-color: $COLOR--darkmode-topaz-focused;
-  background-color: $COLOR--darkmode-topaz-focused;
+  @include checked-state($COLOR--darkmode-topaz-focused, $COLOR--darkmode-topaz-focused);
 }
 
 .input:disabled + .dark {
@@ -133,8 +125,6 @@
 }
 
 .input:checked:disabled + .dark {
-  border-color: $COLOR--darkmode-topaz-main;
-  background-color: $COLOR--darkmode-topaz-main;
-  opacity: 0.5;
-  cursor: default;
+  @include checked-state($COLOR--darkmode-topaz-main, $COLOR--darkmode-topaz-main);
+  @include disabled-state(0.5);
 }
