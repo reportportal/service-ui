@@ -105,6 +105,7 @@ module.exports = {
         './FieldBottomConstraints': './src/components/fields/fieldBottomConstraints',
         './RegistrationPageSection': './src/pages/outside/registrationPage/registrationPageSection',
         './BlockHeader': './src/pages/outside/common/pageBlockContainer/blockHeader',
+        './InputCheckbox': './src/components/inputs/inputCheckbox',
       },
       shared: {
         react: {

@@ -14,4 +14,8 @@
  * limitations under the License.
  */
 
-export { InputCheckbox } from './inputCheckbox';
+import { InputCheckbox } from './inputCheckbox';
+
+export { InputCheckbox };
+
+export default InputCheckbox;
