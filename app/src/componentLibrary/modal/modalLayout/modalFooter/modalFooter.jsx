@@ -57,7 +57,6 @@ ModalFooter.propTypes = {
     disabled: PropTypes.bool,
     danger: PropTypes.bool,
     onClick: PropTypes.func,
-    eventInfo: PropTypes.object,
     attributes: PropTypes.shape({
       type: PropTypes.string,
       form: PropTypes.string,
