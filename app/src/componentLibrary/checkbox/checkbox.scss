@@ -19,6 +19,7 @@
   align-items: center;
   padding-left: 24px;
   color: $color;
+  border-color: $color;
   font-family: $FONT-ROBOTO-REGULAR;
   font-size: 13px;
   line-height: 20px;
@@ -40,10 +41,6 @@
   pointer-events: none;
 }
 
-.light-container {
-  @include checkboxContainer($COLOR--almost-black, 0.3);
-}
-
 .input {
   display: none;
 }
@@ -63,68 +60,58 @@
   cursor: pointer;
 }
 
-.input:checked + .light {
-  @include checked-state($COLOR--topaz-2, $COLOR--topaz-2);
-}
-
-.input:hover + .light {
-  border-color: $COLOR--e-400;
-}
-
-.input:active:not(:disabled) + .light {
-  border: 2px solid $COLOR--topaz-focused;
-}
-
-.input:checked:hover + .light {
-  @include checked-state($COLOR--topaz-hover-2, $COLOR--topaz-hover-2);
-}
-
-.input:checked:active:not(:disabled) + .light {
-  @include checked-state($COLOR--topaz-focused, $COLOR--topaz-focused);
-}
-
-.input:disabled + .light {
-  border-color: $COLOR--e-200;
-}
-
-.input:checked:disabled + .light {
-  @include checked-state($COLOR--topaz-2, $COLOR--topaz-2);
-  @include disabled-state(0.3);
-}
-
-.dark-container {
-  @include checkboxContainer($COLOR--darkmode-gray-100, 0.5);
+.light {
+  @include checkboxContainer($COLOR--almost-black, 0.3);
+  .input {
+    &:checked + .checkbox {
+      @include checked-state($COLOR--topaz-2, $COLOR--topaz-2);
+    }
+    &:hover + .checkbox {
+      border-color: $COLOR--e-400;
+    }
+    &:active:not(:disabled) + .checkbox {
+      border: 2px solid $COLOR--topaz-focused;
+    }
+    &:checked:hover + .checkbox {
+      @include checked-state($COLOR--topaz-hover-2, $COLOR--topaz-hover-2);
+    }
+    &:checked:active:not(:disabled) + .checkbox {
+      @include checked-state($COLOR--topaz-focused, $COLOR--topaz-focused);
+    }
+    &:disabled + .checkbox {
+      border-color: $COLOR--e-200;
+    }
+    &:checked:disabled + .checkbox {
+      @include checked-state($COLOR--topaz-2, $COLOR--topaz-2);
+      @include disabled-state(0.3);
+    }
+  }
 }
 
 .dark {
-  border-color: $COLOR--darkmode-gray-100;
-}
-
-.input:checked + .dark {
-  @include checked-state($COLOR--darkmode-topaz-main, $COLOR--darkmode-topaz-main);
-}
-
-.input:hover + .dark {
-  border-color: $COLOR--darkmode-gray-50;
-}
-
-.input:active:not(:disabled) + .dark {
-  border: 2px solid $COLOR--darkmode-topaz-focused;
-}
-
-.input:checked:hover + .dark {
-  @include checked-state($COLOR--darkmode-topaz-hover, $COLOR--darkmode-topaz-hover);
-}
-
-.input:checked:active:not(:disabled) + .dark {
-  @include checked-state($COLOR--darkmode-topaz-focused, $COLOR--darkmode-topaz-focused);
-}
-
-.input:disabled + .dark {
-  border-color: $COLOR--darkmode-gray-100;
-}
-
-.input:checked:disabled + .dark {
-  @include checked-state($COLOR--darkmode-topaz-main, $COLOR--darkmode-topaz-main);
-  @include disabled-state(0.5);
+  @include checkboxContainer($COLOR--darkmode-gray-100, 0.5);
+  .input {
+    &:checked + .checkbox {
+      @include checked-state($COLOR--darkmode-topaz-main, $COLOR--darkmode-topaz-main);
+    }
+    &:hover + .checkbox {
+      border-color: $COLOR--darkmode-gray-50;
+    }
+    &:active:not(:disabled) + .checkbox {
+      border: 2px solid $COLOR--darkmode-topaz-focused;
+    }
+    &:checked:hover + .checkbox {
+      @include checked-state($COLOR--darkmode-topaz-hover, $COLOR--darkmode-topaz-hover);
+    }
+    &:checked:active:not(:disabled) + .checkbox {
+      @include checked-state($COLOR--darkmode-topaz-focused, $COLOR--darkmode-topaz-focused);
+    }
+    &:disabled + .checkbox {
+      border-color: $COLOR--darkmode-gray-100;
+    }
+    &:checked:disabled + .checkbox {
+      @include checked-state($COLOR--darkmode-topaz-main, $COLOR--darkmode-topaz-main);
+      @include disabled-state(0.5);
+    }
+  }
 }
