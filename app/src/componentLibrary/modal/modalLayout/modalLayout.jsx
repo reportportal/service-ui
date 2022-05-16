@@ -94,12 +94,10 @@ ModalLayout.propTypes = {
     disabled: PropTypes.bool,
     danger: PropTypes.bool,
     onClick: PropTypes.func,
-    eventInfo: PropTypes.object,
     attributes: PropTypes.object,
   }),
   cancelButton: PropTypes.shape({
     text: PropTypes.string.isRequired,
-    eventInfo: PropTypes.object,
   }),
   className: PropTypes.string,
   modalSize: PropTypes.oneOf(['default', 'small', 'large']),
