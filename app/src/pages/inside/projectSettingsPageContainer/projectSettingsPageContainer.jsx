@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FormattedMessage, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
@@ -37,7 +37,6 @@ import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { IntegrationsTab } from 'pages/common/settingsPage/integrationsTab';
 import { NotificationsTab } from 'pages/common/settingsPage/notificationsTab';
 import { DefectTypesTab } from 'pages/common/settingsPage/defectTypesTab';
-import { AutoAnalysisTab } from 'pages/common/settingsPage/autoAnalysisTab';
 import { PatternAnalysisTab } from 'pages/common/settingsPage/patternAnalysisTab';
 import { DemoDataTab } from 'pages/common/settingsPage/demoDataTab';
 import { canSeeDemoData } from 'common/utils/permissions';
@@ -48,6 +47,7 @@ import { Navigation } from 'pages/inside/projectSettingsPageContainer/navigation
 import { GeneralTab } from 'pages/common/settingsPage/generalTab/generalTab';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { Header } from 'pages/inside/projectSettingsPageContainer/header';
+import { AnalyzerContainer } from './content/analyzerContainer';
 import { messages } from './messages';
 import styles from './projectSettingsPageContainer.scss';
 
@@ -61,11 +61,12 @@ export const ProjectSettingsPageContainer = () => {
   const activeTab = useSelector(settingsTabSelector);
   const userRole = useSelector(activeProjectRoleSelector);
   const accountRole = useSelector(userAccountRoleSelector);
+  const [headerChildren, setHeaderChildren] = useState(null);
 
   const createTabLink = useCallback(
-    (tabName) => ({
+    (tabName, extendedParams = {}) => ({
       type: PROJECT_SETTINGS_TAB_PAGE,
-      payload: { projectId, settingsTab: tabName },
+      payload: { projectId, settingsTab: tabName, ...extendedParams },
     }),
     [projectId],
   );
@@ -118,7 +119,7 @@ export const ProjectSettingsPageContainer = () => {
       [ANALYSIS]: {
         name: formatMessage(messages.analysis),
         link: createTabLink(ANALYSIS),
-        component: <AutoAnalysisTab />,
+        component: <AnalyzerContainer setHeaderChildren={setHeaderChildren} />,
         eventInfo: SETTINGS_PAGE_EVENTS.AUTO_ANALYSIS_TAB,
         mobileDisabled: true,
       },
@@ -168,7 +169,7 @@ export const ProjectSettingsPageContainer = () => {
     <SettingsLayout navigation={navigation}>
       <ScrollWrapper>
         <div className={cx('header')}>
-          <Header title={config[activeTab] && config[activeTab].name} />
+          <Header title={config[activeTab] && config[activeTab].name}>{headerChildren}</Header>
         </div>
         <div className={cx('content')}>{content}</div>
       </ScrollWrapper>
