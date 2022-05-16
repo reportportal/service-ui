@@ -23,7 +23,7 @@ import styles from './tabs.scss';
 
 const cx = classNames.bind(styles);
 
-export const Tabs = ({ config, activeTab }) => {
+export const Tabs = ({ config, activeTab, withContent }) => {
   const [activeTabIndex, setActiveTabIndex] = useState(Object.keys(config).indexOf(activeTab) || 0);
 
   useEffect(() => {
@@ -72,7 +72,7 @@ export const Tabs = ({ config, activeTab }) => {
           return config[item].link ? renderLinkTab(item, index) : renderDefaultTab(item, index);
         })}
       </div>
-      <div className={cx('tab-content')}>{activeTabInfo.component}</div>
+      {withContent && <div className={cx('tab-content')}>{activeTabInfo.component}</div>}
     </div>
   );
 };
@@ -88,8 +88,10 @@ Tabs.propTypes = {
       mobileDisabled: PropTypes.bool,
     }),
   ),
+  withContent: PropTypes.bool,
 };
 Tabs.defaultProps = {
   activeTab: '',
   config: {},
+  withContent: true,
 };
