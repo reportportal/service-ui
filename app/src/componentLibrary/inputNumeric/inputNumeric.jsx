@@ -146,7 +146,7 @@ InputNumeric.propTypes = {
 };
 InputNumeric.defaultProps = {
   value: '',
-  placeholder: 0,
+  placeholder: '0',
   disabled: false,
   onChange: () => {},
   onFocus: () => {},
