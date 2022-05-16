@@ -86,6 +86,8 @@
   line-height: 20px;
   color: $color;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 @mixin placeholder($color) {
