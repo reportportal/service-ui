@@ -31,7 +31,7 @@ export const Checkbox = ({
 }) => (
   // eslint-disable-next-line
   <label
-    className={cx(`${variant}-container`, className, {
+    className={cx(variant, className, {
       disabled,
     })}
     onFocus={onFocus}
@@ -45,7 +45,7 @@ export const Checkbox = ({
       checked={value}
     />
     <span
-      className={cx('checkbox', variant, {
+      className={cx('checkbox', {
         disabled,
       })}
     />
