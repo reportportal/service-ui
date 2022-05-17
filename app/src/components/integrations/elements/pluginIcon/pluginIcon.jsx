@@ -27,7 +27,7 @@ import { Image } from 'components/main/image';
 import { PUBLIC_PLUGIN_ACCESS_TYPE } from 'controllers/plugins/constants';
 
 export const PluginIcon = ({ pluginData, className, ...rest }) => {
-  const { details, name } = pluginData;
+  const { details, name, enabled } = pluginData;
   const isDynamicIconAvailable = details && details.binaryData && details.binaryData.icon;
   const projectId = useSelector(activeProjectSelector);
   const globalIntegrations = useSelector(globalIntegrationsSelector);
@@ -35,7 +35,7 @@ export const PluginIcon = ({ pluginData, className, ...rest }) => {
   const calculateIconParams = () => {
     const commandParams = { method: 'PUT', data: { fileKey: 'icon' } };
 
-    if (isDynamicIconAvailable) {
+    if (isDynamicIconAvailable && enabled) {
       const isPublic = details && details.accessType === PUBLIC_PLUGIN_ACCESS_TYPE;
       const isCommonCommandSupported = isPluginSupportsCommonCommand(pluginData, COMMAND_GET_FILE);
 
