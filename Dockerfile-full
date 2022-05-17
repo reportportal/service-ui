@@ -1,4 +1,4 @@
-# Only for technical/build aims, built image will be with newest version
+# Only for technical/build aims, built image will be with newest version ('nginx:alpine' according to the last step)
 FROM alpine:3.10.9 as generate-build-info
 RUN apk add git
 RUN apk add make
