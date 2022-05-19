@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { InputNumeric } from './inputNumeric';
+import { FieldNumber } from './fieldNumber';
 
-export { InputNumeric };
+export { FieldNumber };
 
-export default InputNumeric;
+export default FieldNumber;

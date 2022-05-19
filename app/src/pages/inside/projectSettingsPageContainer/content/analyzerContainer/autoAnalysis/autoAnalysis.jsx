@@ -20,7 +20,7 @@ import { useIntl } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { Button } from 'componentLibrary/button';
-import { InputNumeric } from 'componentLibrary/inputNumeric';
+import { FieldNumber } from 'componentLibrary/fieldNumber';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { bindMessageToValidator, validate } from 'common/utils/validation';
 import { Dropdown } from 'componentLibrary/dropdown';
@@ -93,7 +93,7 @@ const AutoAnalysis = ({
           disabled={isFieldDisabled}
         >
           <FieldErrorHint>
-            <InputNumeric postfix="%" max={100} />
+            <FieldNumber postfix="%" max={100} />
           </FieldErrorHint>
         </FieldElement>
         <Button type="submit" disabled={isFieldDisabled} mobileDisabled>

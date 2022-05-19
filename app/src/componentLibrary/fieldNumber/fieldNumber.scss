@@ -25,6 +25,7 @@
 }
 
 .label {
+  display: block;
   margin-bottom: 4px;
   font-family: $FONT-ROBOTO-MEDIUM;
   font-size: 13px;
@@ -43,13 +44,13 @@
     cursor: default;
   }
 
-  &:hover {
+  &:hover:not(.disabled) {
     svg {
       fill: $COLOR--e-400;
     }
   }
 
-  &:active {
+  &:active:not(.disabled) {
     svg {
       fill: $COLOR--topaz-pressed;
     }
@@ -87,13 +88,17 @@
   align-items: center;
   justify-content: center;
   min-width: 44px;
-  margin: 0 4px;
+  margin: 2px 4px 0;
   font-family: $FONT-ROBOTO-REGULAR;
   font-size: 13px;
   line-height: 20px;
   text-align: center;
   color: $COLOR--almost-black;
   cursor: text;
+
+  &.disabled {
+    cursor: default;
+  }
 }
 
 .input {

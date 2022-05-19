@@ -21,11 +21,11 @@ import Parser from 'html-react-parser';
 import MinusIcon from './img/minus-inline.svg';
 import PlusIcon from './img/plus-inline.svg';
 import { DEFAULT_WIDTH_CH, KEYCODES_MAP, MAX_WIDTH_CH } from './constants';
-import styles from './inputNumeric.scss';
+import styles from './fieldNumber.scss';
 
 const cx = classNames.bind(styles);
 
-export const InputNumeric = ({
+export const FieldNumber = ({
   value,
   placeholder,
   disabled,
@@ -104,7 +104,7 @@ export const InputNumeric = ({
         <span className={cx('sign', { disabled })} onClick={disabled ? null : handleDecrease}>
           {Parser(MinusIcon)}
         </span>
-        <span className={cx('input-field')} onClick={handleInputFieldClick}>
+        <span className={cx('input-field', { disabled })} onClick={handleInputFieldClick}>
           <input
             ref={inputRef}
             className={cx('input')}
@@ -129,7 +129,7 @@ export const InputNumeric = ({
     </div>
   );
 };
-InputNumeric.propTypes = {
+FieldNumber.propTypes = {
   value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   placeholder: PropTypes.string,
   disabled: PropTypes.bool,
@@ -144,7 +144,7 @@ InputNumeric.propTypes = {
   error: PropTypes.string,
   touched: PropTypes.bool,
 };
-InputNumeric.defaultProps = {
+FieldNumber.defaultProps = {
   value: '',
   placeholder: '0',
   disabled: false,
