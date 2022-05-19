@@ -688,6 +688,8 @@
   "Footer.copyright": "Все права защищены",
   "Footer.documentation": "Документация",
   "Footer.git": "Мы на GitHub",
+  "Footer.notice": "Уведомление о конфиденциальности",
+  "Footer.privacy": "Политика конфиденциальности",
   "Footer.slack": "Пообщайтесь с нами на Slack",
   "ForceUpdateModal.additionalText": "Пожалуйста, авторизуйтесь заново, чтобы применить изменения!",
   "ForceUpdateModal.header": "Внимание!",

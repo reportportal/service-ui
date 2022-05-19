@@ -14,21 +14,23 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import track from 'react-tracking';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
 import { FOOTER_EVENTS } from 'components/main/analytics/events';
-import { uiBuildVersionSelector } from 'controllers/appInfo';
+import { uiBuildVersionSelector, authExtensionsSelector } from 'controllers/appInfo';
 import { referenceDictionary } from 'common/utils/referenceDictionary';
+
 import styles from './footer.scss';
 
 const cx = classNames.bind(styles);
 
 @connect((state) => ({
   buildVersion: uiBuildVersionSelector(state),
+  authExtensions: authExtensionsSelector(state),
 }))
 @track()
 export class Footer extends Component {
@@ -38,9 +40,10 @@ export class Footer extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    authExtensions: PropTypes.object.isRequired,
   };
   render() {
-    const { buildVersion, tracking } = this.props;
+    const { buildVersion, tracking, authExtensions } = this.props;
     return (
       <footer className={cx('footer')}>
         <div className={cx('footer-links')}>
@@ -78,6 +81,16 @@ export class Footer extends Component {
           >
             <FormattedMessage id={'Footer.documentation'} defaultMessage={'Documentation'} />
           </a>
+          {authExtensions.epam && (
+            <Fragment>
+              <a href={referenceDictionary.rpEpamPolicy} target="_blank">
+                <FormattedMessage id={'Footer.privacy'} defaultMessage={'Privacy Policy'} />
+              </a>
+              <a href={referenceDictionary.rpEpamNotice} target="_blank">
+                <FormattedMessage id={'Footer.notice'} defaultMessage={'Privacy Notice'} />
+              </a>
+            </Fragment>
+          )}
         </div>
         <div className={cx('text-wrapper')}>
           <div className={cx('footer-text')}>
