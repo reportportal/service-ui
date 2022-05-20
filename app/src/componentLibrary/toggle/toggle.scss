@@ -72,9 +72,19 @@
   &:checked:hover + .slider {
     background-color: $COLOR--topaz-hover-2;
   }
+
+  &:checked:disabled + .slider {
+    background-color: $COLOR--topaz-2;
+    cursor: default;
+  }
+
+  &:disabled + .slider {
+    background-color: $COLOR--e-200;
+    cursor: default;
+  }
 }
 
 .disabled {
   opacity: 0.3;
-  pointer-events: none;
+  cursor: default;
 }

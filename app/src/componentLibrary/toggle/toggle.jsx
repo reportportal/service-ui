@@ -20,9 +20,23 @@ import styles from './toggle.scss';
 
 const cx = classNames.bind(styles);
 
-export const Toggle = ({ children, value, onChange, onFocus, onBlur, className, disabled }) => (
+export const Toggle = ({
+  children,
+  value,
+  onChange,
+  onFocus,
+  onBlur,
+  className,
+  disabled,
+  title,
+}) => (
   // eslint-disable-next-line
-  <label onFocus={onFocus} onBlur={onBlur} className={cx('toggle', className, { disabled })}>
+  <label
+    title={title}
+    onFocus={onFocus}
+    onBlur={onBlur}
+    className={cx('toggle', className, { disabled })}
+  >
     <input
       onChange={onChange}
       checked={value}
@@ -43,6 +57,7 @@ Toggle.propTypes = {
   onBlur: PropTypes.func,
   className: PropTypes.string,
   disabled: PropTypes.bool,
+  title: PropTypes.string,
 };
 
 Toggle.defaultProps = {
@@ -53,4 +68,5 @@ Toggle.defaultProps = {
   onBlur: () => {},
   className: '',
   disabled: false,
+  title: '',
 };
