@@ -154,3 +154,12 @@
   color: $COLOR--tealish;
   text-decoration: none;
 }
+.main-content {
+  @media (max-width: $SCREEN_SM_MAX) {
+    margin-top: 90px;
+  }
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-top: 73px;
+  }
+}
