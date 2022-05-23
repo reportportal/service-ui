@@ -84,14 +84,14 @@ export class RegistrationForm extends Component {
     autofill: PropTypes.func.isRequired,
     email: PropTypes.string,
     loading: PropTypes.bool,
-    initData: PropTypes.object,
+    initialData: PropTypes.object,
   };
 
   static defaultProps = {
     submitForm: () => {},
     email: '',
     loading: false,
-    initData: {},
+    initialData: {},
   };
 
   componentDidMount = () => {
@@ -102,10 +102,10 @@ export class RegistrationForm extends Component {
 
   autofillData = () => {
     this.autofillEmail();
-    this.props.autofill('login', this.props.initData.login);
-    this.props.autofill('name', this.props.initData.fullName);
-    this.props.autofill('password', this.props.initData.password);
-    this.props.autofill('confirmPassword', this.props.initData.password);
+    this.props.autofill('login', this.props.initialData.login);
+    this.props.autofill('name', this.props.initialData.fullName);
+    this.props.autofill('password', this.props.initialData.password);
+    this.props.autofill('confirmPassword', this.props.initialData.password);
   };
 
   resetForm = () => {

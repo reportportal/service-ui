@@ -46,7 +46,7 @@ export const RegistrationPage = ({
   email,
   onRegistrationSubmit,
   loading,
-  initData,
+  initialData,
 }) => {
   const backgroundClasses = {
     background: true,
@@ -78,7 +78,7 @@ export const RegistrationPage = ({
                 email={email}
                 submitForm={onRegistrationSubmit}
                 loading={loading}
-                initData={initData}
+                initialData={initialData}
               />
             </div>
           ) : (
@@ -95,7 +95,7 @@ RegistrationPage.propTypes = {
   email: PropTypes.string,
   onRegistrationSubmit: PropTypes.func,
   loading: PropTypes.bool,
-  initData: PropTypes.object,
+  initialData: PropTypes.object,
 };
 RegistrationPage.defaultProps = {
   tokenActive: false,
@@ -103,7 +103,7 @@ RegistrationPage.defaultProps = {
   email: '',
   onRegistrationSubmit: () => {},
   loading: false,
-  initData: {},
+  initialData: {},
 };
 
 const TokenErrorSection = ({ tokenProvided }) => (
