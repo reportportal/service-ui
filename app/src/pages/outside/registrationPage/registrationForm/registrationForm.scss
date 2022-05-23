@@ -24,7 +24,7 @@
   }
   @media (max-width: $SCREEN_XS_MAX) {
     width: 100%;
-    padding: 25px 20px;
+    padding: 0 20px;
     box-sizing: border-box;
   }
 }
@@ -47,6 +47,10 @@
 .confirm-password-field {
   width: 100%;
   margin-bottom: 50px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    margin-bottom: 32px;
+  }
 }
 .buttons-container {
   width: 355px;
