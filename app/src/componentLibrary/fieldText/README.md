@@ -5,7 +5,7 @@ Has 36px height & width adjusted by content.
 ### Props:
 
 - **value**: _string_, optional, default = ""
-- **inputContainerClassName**: _string_, optional, default = ""
+- **className**: _string_, optional, default = ""
 - **error**: _string_, optional, default = ""
 - **placeholder**: _string_, optional, default = ""
 - **maxLength**: _number_, optional, default = 254
@@ -18,9 +18,7 @@ Has 36px height & width adjusted by content.
 - **defaultWidth**: _bool_, optional, default = true
 - **startIcon**: _string_, optional, default = null
 - **endIcon**: _string_, optional, default = null
-- **withClearInputIcon**: _bool_, optional, default = true
-
-variant,
+- **clearable**: _bool_, optional, default = false
 
 ### Events:
 

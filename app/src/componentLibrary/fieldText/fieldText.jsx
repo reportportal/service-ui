@@ -26,7 +26,7 @@ const VARIANT = 'light';
 
 export const FieldText = ({
   value,
-  inputContainerClassName,
+  className,
   error,
   placeholder,
   maxLength,
@@ -40,11 +40,11 @@ export const FieldText = ({
   touched,
   title,
   label,
-  helperText,
+  helpText,
   defaultWidth,
   startIcon,
   endIcon,
-  withClearInputIcon = true,
+  clearable,
 }) => {
   const clearInput = () => onChange('');
 
@@ -52,7 +52,7 @@ export const FieldText = ({
     <>
       {label && <span className={cx(VARIANT, 'label', { disabled })}>{label}</span>}
       <div
-        className={cx(VARIANT, 'input-container', inputContainerClassName, {
+        className={cx(VARIANT, 'input-container', className, {
           error,
           touched,
           disabled,
@@ -84,7 +84,7 @@ export const FieldText = ({
             <i className={cx(VARIANT, 'icon')}>{Parser(endIcon)}</i>
           </span>
         )}
-        {withClearInputIcon && (
+        {clearable && (
           <span className={cx('icon-container-end')}>
             <i
               className={cx(VARIANT, 'clear-icon', { disabled })}
@@ -95,10 +95,10 @@ export const FieldText = ({
           </span>
         )}
       </div>
-      {(error || helperText) && (
+      {(error || helpText) && (
         <div className={cx(VARIANT, 'additional-content', { disabled })}>
           {error && touched && <span className={cx(VARIANT, 'error-text')}>{error}</span>}
-          {helperText && <span className={cx(VARIANT, 'helper-text')}>{helperText}</span>}
+          {helpText && <span className={cx(VARIANT, 'help-text')}>{helpText}</span>}
         </div>
       )}
     </>
@@ -106,7 +106,7 @@ export const FieldText = ({
 };
 FieldText.propTypes = {
   value: PropTypes.string,
-  inputContainerClassName: PropTypes.string,
+  className: PropTypes.string,
   error: PropTypes.string,
   placeholder: PropTypes.string,
   maxLength: PropTypes.number,
@@ -120,15 +120,15 @@ FieldText.propTypes = {
   touched: PropTypes.bool,
   title: PropTypes.string,
   label: PropTypes.string,
-  helperText: PropTypes.string,
+  helpText: PropTypes.string,
   defaultWidth: PropTypes.bool,
   startIcon: PropTypes.string,
   endIcon: PropTypes.string,
-  withClearInputIcon: PropTypes.bool,
+  clearable: PropTypes.bool,
 };
 FieldText.defaultProps = {
   value: '',
-  inputContainerClassName: '',
+  className: '',
   error: '',
   placeholder: 'placeholder',
   maxLength: 256,
@@ -142,9 +142,9 @@ FieldText.defaultProps = {
   touched: false,
   title: '',
   label: '',
-  helperText: '',
+  helpText: '',
   defaultWidth: true,
   startIcon: null,
   endIcon: null,
-  withClearInputIcon: false,
+  clearable: false,
 };
