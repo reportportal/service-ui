@@ -102,13 +102,12 @@ export class RegistrationForm extends Component {
   autofillEmail = () => this.props.autofill('email', this.props.email);
 
   autofillData = () => {
-    const initialData = this.props.initialData;
+    const { initialData } = this.props;
     this.props.initialize({
       ...initialData,
       name: initialData.fullName,
       confirmPassword: initialData.password,
     });
-    this.autofillEmail();
   };
 
   resetForm = () => {
