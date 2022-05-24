@@ -46,6 +46,7 @@ export const RegistrationPage = ({
   email,
   onRegistrationSubmit,
   loading,
+  initialData,
 }) => {
   const backgroundClasses = {
     background: true,
@@ -73,7 +74,12 @@ export const RegistrationPage = ({
           {tokenProvided && tokenActive ? (
             <div className={cx('main-content')}>
               <BlockHeader header={messages.welcome} hint={messages.registration} />
-              <RegistrationForm email={email} submitForm={onRegistrationSubmit} loading={loading} />
+              <RegistrationForm
+                email={email}
+                submitForm={onRegistrationSubmit}
+                loading={loading}
+                initialData={initialData}
+              />
             </div>
           ) : (
             <TokenErrorSection tokenProvided={tokenProvided} />
@@ -89,6 +95,7 @@ RegistrationPage.propTypes = {
   email: PropTypes.string,
   onRegistrationSubmit: PropTypes.func,
   loading: PropTypes.bool,
+  initialData: PropTypes.object,
 };
 RegistrationPage.defaultProps = {
   tokenActive: false,
@@ -96,6 +103,7 @@ RegistrationPage.defaultProps = {
   email: '',
   onRegistrationSubmit: () => {},
   loading: false,
+  initialData: {},
 };
 
 const TokenErrorSection = ({ tokenProvided }) => (
