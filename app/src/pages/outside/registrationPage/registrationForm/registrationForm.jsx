@@ -108,6 +108,7 @@ export class RegistrationForm extends Component {
       name: initialData.fullName,
       confirmPassword: initialData.password,
     });
+    this.autofillData();
   };
 
   resetForm = () => {
