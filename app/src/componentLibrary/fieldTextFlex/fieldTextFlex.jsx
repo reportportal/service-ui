@@ -36,11 +36,10 @@ export const FieldTextFlex = ({
   touched,
   className,
   label,
-  helperText,
+  helpText,
 }) => {
   const resizeHeight = (e) => {
-    e.target.style.height = `${HEIGHT}px`;
-    e.target.style.height = `${e.target.scrollHeight}px`;
+    e.target.style.height = `${e.target.scrollHeight || HEIGHT}px`;
   };
   return (
     <>
@@ -64,10 +63,10 @@ export const FieldTextFlex = ({
       >
         {value}
       </textarea>
-      {(error || helperText) && (
+      {(error || helpText) && (
         <div className={cx('additional-content', { disabled })}>
           {error && touched && <span className={cx('error-text')}>{error}</span>}
-          {helperText && <span className={cx('helper-text')}>{helperText}</span>}
+          {helpText && <span className={cx('help-text')}>{helpText}</span>}
         </div>
       )}
     </>
@@ -88,7 +87,7 @@ FieldTextFlex.propTypes = {
   refFunction: PropTypes.func,
   className: PropTypes.string,
   label: PropTypes.string,
-  helperText: PropTypes.string,
+  helpText: PropTypes.string,
 };
 
 FieldTextFlex.defaultProps = {
@@ -105,5 +104,5 @@ FieldTextFlex.defaultProps = {
   onKeyUp: () => {},
   refFunction: () => {},
   label: '',
-  helperText: '',
+  helpText: '',
 };

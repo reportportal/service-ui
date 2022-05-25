@@ -8,7 +8,7 @@ Width 100% from parent.
 - **value**: _string_, optional, default = ""
 - **placeholder**: _string_, optional, default = ""
 - **label**: _string_, optional, default = ""
-- **helperText**: _string_, optional, default = ""
+- **helpText**: _string_, optional, default = ""
 - **disabled**: _bool_, optional, default = false
 - **readonly**: _bool_, optional, default = false
 - **touched**: _bool_, optional, default = false

@@ -36,6 +36,10 @@
   color: $COLOR--almost-black;
   resize: vertical;
 
+  &::-webkit-resizer {
+    background-image: url('./img/resizer.svg');
+  }
+
   &:hover {
     outline-color: $COLOR--e-300;
   }
@@ -64,7 +68,7 @@
     @include additional-text($COLOR--red-failed-2);
   }
 
-  .helper-text {
+  .help-text {
     @include additional-text($COLOR--e-300);
   }
 }
