@@ -1,4 +1,4 @@
-## **InputNumeric**
+## **FieldNumber**
 
 Min width - 5 symbols. Max width - flexible
 

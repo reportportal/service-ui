@@ -236,6 +236,7 @@ export class FieldErrorHint extends Component {
     staticHint: PropTypes.bool,
     widthContent: PropTypes.bool,
     darkView: PropTypes.bool,
+    provideHint: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -247,6 +248,7 @@ export class FieldErrorHint extends Component {
     staticHint: false,
     widthContent: false,
     darkView: false,
+    provideHint: true,
   };
 
   isHintVisible = () => {
@@ -267,29 +269,37 @@ export class FieldErrorHint extends Component {
       staticHint,
       widthContent,
       darkView,
+      provideHint,
       ...rest
     } = this.props;
     const classes = cx('field-error-hint', `type-${hintType}`);
 
     return (
       <div className={classes}>
-        {children && cloneElement(children, { error, active, ...rest })}
-        <div
-          className={cx('hint', `type-${hintType}`, {
-            'static-hint': staticHint,
-            visible: this.isHintVisible(),
+        {children &&
+          cloneElement(children, {
+            error: error && messages[error] ? intl.formatMessage(messages[error]) : error,
+            active,
+            ...rest,
           })}
-        >
+        {provideHint && (
           <div
-            className={cx('hint-content', `type-${hintType}`, {
+            className={cx('hint', `type-${hintType}`, {
               'static-hint': staticHint,
-              'width-content': widthContent,
-              'dark-view': darkView,
+              visible: this.isHintVisible(),
             })}
           >
-            {error && messages[error] ? intl.formatMessage(messages[error]) : error}
+            <div
+              className={cx('hint-content', `type-${hintType}`, {
+                'static-hint': staticHint,
+                'width-content': widthContent,
+                'dark-view': darkView,
+              })}
+            >
+              {error && messages[error] ? intl.formatMessage(messages[error]) : error}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     );
   }

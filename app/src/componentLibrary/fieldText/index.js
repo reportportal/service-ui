@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { InputNumeric } from './inputNumeric';
+import { FieldText } from './fieldText';
 
-export { InputNumeric };
+export { FieldText };
 
-export default InputNumeric;
+export default FieldText;
