@@ -56,6 +56,16 @@
   &.transparent-background:not(.checked) {
     background-color: transparent;
   }
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 16px;
+    height: 16px;
+  }
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 24px;
+    height: 24px;
+  }
 }
 .icon {
   position: absolute;
