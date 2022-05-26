@@ -22,6 +22,8 @@ import styles from './inputOutside.scss';
 
 const cx = classNames.bind(styles);
 
+const STATIC_TOUCHED_TYPE = 'staticTouched';
+
 export class InputOutside extends Component {
   static propTypes = {
     type: PropTypes.string,
@@ -103,7 +105,11 @@ export class InputOutside extends Component {
       <div
         className={cx('input-outside', `type-${type}`, {
           disabled,
-          invalid: error && (active || touched),
+          active:
+            ((type === STATIC_TOUCHED_TYPE || type === 'password') && active && !touched) ||
+            (touched && !error),
+          invalid:
+            error && (touched || (active && type !== STATIC_TOUCHED_TYPE && type !== 'password')),
         })}
       >
         <div className={cx('icon')}>{Parser(icon)}</div>

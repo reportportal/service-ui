@@ -53,16 +53,18 @@
   text-overflow: ellipsis;
   cursor: pointer;
 
-  @media (max-width: $SCREEN_SM_MAX) {
-    padding-left: 24px;
-  }
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    padding-left: 42px;
-  }
-
   &.disabled {
     color: $COLOR--gray-60;
     cursor: default;
+  }
+
+  &.responsive {
+    @media (max-width: $SCREEN_SM_MAX) {
+      padding-left: 24px;
+    }
+
+    @media (max-width: $SCREEN_XS_MAX) {
+      padding-left: 42px;
+    }
   }
 }

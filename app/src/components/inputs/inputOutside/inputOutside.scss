@@ -32,6 +32,9 @@
   &.invalid {
     border-color: $COLOR--orange-red;
   }
+  &.active {
+    border-color: $COLOR--topaz;
+  }
   &.type-password {
     .input {
       padding-right: 35px;
