@@ -37,7 +37,6 @@ import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { IntegrationsTab } from 'pages/common/settingsPage/integrationsTab';
 import { NotificationsTab } from 'pages/common/settingsPage/notificationsTab';
 import { DefectTypesTab } from 'pages/common/settingsPage/defectTypesTab';
-import { PatternAnalysisTab } from 'pages/common/settingsPage/patternAnalysisTab';
 import { DemoDataTab } from 'pages/common/settingsPage/demoDataTab';
 import { canSeeDemoData } from 'common/utils/permissions';
 import { ExtensionLoader } from 'components/extensionLoader';
@@ -47,6 +46,7 @@ import { Navigation } from 'pages/inside/projectSettingsPageContainer/navigation
 import { GeneralTab } from 'pages/common/settingsPage/generalTab/generalTab';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { Header } from 'pages/inside/projectSettingsPageContainer/header';
+import { PatternAnalysis } from 'pages/inside/projectSettingsPageContainer/content/patternAnalysis';
 import { AnalyzerContainer } from './content/analyzerContainer';
 import { messages } from './messages';
 import styles from './projectSettingsPageContainer.scss';
@@ -126,7 +126,7 @@ export const ProjectSettingsPageContainer = () => {
       [PATTERN_ANALYSIS]: {
         name: formatMessage(messages.patternAnalysis),
         link: createTabLink(PATTERN_ANALYSIS),
-        component: <PatternAnalysisTab />,
+        component: <PatternAnalysis />,
         eventInfo: SETTINGS_PAGE_EVENTS.PATTERN_ANALYSIS_TAB,
         mobileDisabled: true,
       },
