@@ -21,6 +21,7 @@ import styles from './fieldTextFlex.scss';
 const cx = classNames.bind(styles);
 
 const HEIGHT = 72;
+const BORDER = 2;
 
 export const FieldTextFlex = ({
   value,
@@ -39,7 +40,7 @@ export const FieldTextFlex = ({
   helpText,
 }) => {
   const resizeHeight = (e) => {
-    e.target.style.height = `${e.target.scrollHeight || HEIGHT}px`;
+    e.target.style.height = `${e.target.scrollHeight + BORDER || HEIGHT}px`;
   };
   return (
     <>
