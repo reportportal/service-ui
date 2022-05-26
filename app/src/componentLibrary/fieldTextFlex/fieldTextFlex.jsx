@@ -40,7 +40,8 @@ export const FieldTextFlex = ({
   helpText,
 }) => {
   const resizeHeight = (e) => {
-    e.target.style.height = `${e.target.scrollHeight + BORDER || HEIGHT}px`;
+    e.target.style.height = `${HEIGHT}px`;
+    e.target.style.height = `${e.target.scrollHeight + BORDER}px`;
   };
   return (
     <>
@@ -64,7 +65,7 @@ export const FieldTextFlex = ({
       >
         {value}
       </textarea>
-      {(error || helpText) && (
+      {((error && touched) || helpText) && (
         <div className={cx('additional-content', { disabled })}>
           {error && touched && <span className={cx('error-text')}>{error}</span>}
           {helpText && <span className={cx('help-text')}>{helpText}</span>}
