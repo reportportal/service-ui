@@ -57,14 +57,16 @@
     background-color: transparent;
   }
 
-  @media (max-width: $SCREEN_SM_MAX) {
-    width: 16px;
-    height: 16px;
-  }
+  &.responsive {
+    @media (max-width: $SCREEN_SM_MAX) {
+      width: 16px;
+      height: 16px;
+    }
 
-  @media (max-width: $SCREEN_XS_MAX) {
-    width: 24px;
-    height: 24px;
+    @media (max-width: $SCREEN_XS_MAX) {
+      width: 24px;
+      height: 24px;
+    }
   }
 }
 .icon {
@@ -74,4 +76,16 @@
   transition: opacity 0.2s, transform 0.2s;
   opacity: 0;
   transform: scale(0);
+
+  &.responsive {
+    @media (max-width: $SCREEN_SM_MAX) {
+      width: 12px;
+      height: 13px;
+    }
+
+    @media (max-width: $SCREEN_XS_MAX) {
+      width: 19px;
+      height: 20px;
+    }
+  }
 }
