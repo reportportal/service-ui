@@ -17,6 +17,15 @@
 import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
+  noPatternAnalysisTitle: {
+    id: 'NoPatternAnalysis.title',
+    defaultMessage: 'No Pattern Rules',
+  },
+  noPatternAnalysisDescription: {
+    id: 'NoPatternAnalysis.description',
+    defaultMessage:
+      'System can analyze test results automatically by comparing test result stack trace with patterns saved in the system',
+  },
   createPatternModalHeader: {
     id: 'CreatePatternAnalysisModal.createPatternModalHeader',
     defaultMessage: 'Create Pattern',

@@ -14,7 +14,5 @@
  * limitations under the License.
  */
 
-import PatternAnalysis from './patternAnalysis';
-import CreatePatternAnalysisModal from './modals/createPatternAnalysisModal/createPatternAnalysisModal';
-
-export { PatternAnalysis, CreatePatternAnalysisModal };
+export { PatternAnalysis } from './patternAnalysis';
+export { CreatePatternAnalysisModal } from './modals/createPatternAnalysisModal';

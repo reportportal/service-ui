@@ -1300,7 +1300,6 @@
   "NoFiltersBlock.title": "У Вас нет фильтров",
   "NoItemsDemo.generateDemoDataDescription": "Для начала <a href='http://reportportal.io/download/integration' target='_blank'>Настройте собственную интеграцию</a> или сгенерируйте демо-данные",
   "NoItemsDemo.noDataTitle": "У вас нет данных",
-  "NoPatternAnalysis.create": "Создать Паттерн",
   "NoPatternAnalysis.description": "Система может автоматически анализировать результаты теста, сравнивая трассировку стека результатов теста с паттернами, сохраненными в системе.",
   "NoPatternAnalysis.title": "Нет Паттернов",
   "NoResultsForFilter.checkQuery": "Проверьте ваш запрос и попробуйте снова",

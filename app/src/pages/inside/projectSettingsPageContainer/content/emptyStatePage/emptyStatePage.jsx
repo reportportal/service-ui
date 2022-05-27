@@ -22,28 +22,28 @@ import ExternalLinkIcon from 'common/img/open-in-rounded-inline.svg';
 import { useIntl } from 'react-intl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import PropTypes from 'prop-types';
-import styles from './emptyPatternAnalysis.scss';
-import { messages } from './messages';
+import styles from './emptyStatePage.scss';
 
 const cx = classNames.bind(styles);
 
-const EmptyPatternAnalysis = ({ onAddPattern }) => {
+export const EmptyStatePage = ({
+  handleButton,
+  buttonName,
+  description,
+  documentationLink,
+  title,
+  isAbleToCreate,
+}) => {
   const { formatMessage } = useIntl();
   return (
     <div className={cx('container')}>
       <div className={cx('img')} />
-      <span className={cx('title')}>{formatMessage(messages.noPatternAnalysisTitle)}</span>
-      <span className={cx('description')}>
-        {formatMessage(messages.noPatternAnalysisDescription)}
-      </span>
-      <Button wide onClick={onAddPattern}>
-        {formatMessage(messages.noPatternAnalysisCreate)}
+      <span className={cx('title')}>{title}</span>
+      <span className={cx('description')}>{description}</span>
+      <Button disabled={!isAbleToCreate} wide onClick={handleButton}>
+        {buttonName}
       </Button>
-      <a
-        href={'https://reportportal.io/docs/Pattern-Analysis'}
-        target="_blank"
-        className={cx('link')}
-      >
+      <a href={documentationLink} target="_blank" className={cx('link')}>
         <span>{formatMessage(COMMON_LOCALE_KEYS.documentation)}</span>
         <div className={cx('icon')}>{Parser(ExternalLinkIcon)}</div>
       </a>
@@ -51,12 +51,20 @@ const EmptyPatternAnalysis = ({ onAddPattern }) => {
   );
 };
 
-EmptyPatternAnalysis.propTypes = {
-  onAddPattern: PropTypes.func,
+EmptyStatePage.propTypes = {
+  handleButton: PropTypes.func,
+  title: PropTypes.string,
+  description: PropTypes.string,
+  buttonName: PropTypes.string,
+  documentationLink: PropTypes.string,
+  isAbleToCreate: PropTypes.bool,
 };
 
-EmptyPatternAnalysis.defaultProps = {
-  onAddPattern: () => {},
+EmptyStatePage.defaultProps = {
+  handleButton: () => {},
+  title: '',
+  description: '',
+  buttonName: '',
+  documentationLink: '',
+  isAbleToCreate: false,
 };
-
-export default EmptyPatternAnalysis;

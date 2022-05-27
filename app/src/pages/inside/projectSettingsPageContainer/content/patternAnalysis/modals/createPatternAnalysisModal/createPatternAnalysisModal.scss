@@ -18,21 +18,16 @@
   margin-top: 32px;
 }
 
-.dropdown-container {
+.dropdown {
   margin-top: 16px;
   margin-bottom: 16px;
-}
-
-.label {
-  display: block;
-  margin-bottom: 4px;
-  font-family: $FONT-ROBOTO-MEDIUM;
-  font-size: 13px;
-  line-height: 20px;
-  color: $COLOR--almost-black;
 }
 
 .toggle {
   margin-top: 8px;
   white-space: nowrap;
+}
+
+.width-100 {
+  width: 100%;
 }

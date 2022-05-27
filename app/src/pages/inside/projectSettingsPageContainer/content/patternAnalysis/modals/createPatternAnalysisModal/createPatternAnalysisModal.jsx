@@ -32,8 +32,10 @@ import { FieldText } from 'componentLibrary/fieldText';
 import { Toggle } from 'componentLibrary/toggle';
 import { FieldTextFlex } from 'componentLibrary/fieldTextFlex';
 import { RegExEditor } from 'components/inputs/regExEditor';
+import { FieldErrorHint } from 'components/fields/fieldErrorHint';
+import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import styles from './createPatternAnalysisModal.scss';
-import { messages } from './messages';
+import { messages } from '../../messages';
 
 const cx = classNames.bind(styles);
 
@@ -76,21 +78,32 @@ const CreatePatternAnalysisModal = ({ data, handleSubmit, initialize }) => {
       {formatMessage(messages.createPatternModalDescription)}
       <div className={cx('content')}>
         <FieldProvider name="name" type="text">
-          <FieldText
-            label={formatMessage(messages.createPatternModalPatternName)}
-            defaultWidth={false}
-          />
+          <FieldErrorHint provideHint={false}>
+            <FieldText
+              label={formatMessage(messages.createPatternModalPatternName)}
+              defaultWidth={false}
+            />
+          </FieldErrorHint>
         </FieldProvider>
-        <div className={cx('dropdown-container')}>
-          <span className={cx('label')}>{formatMessage(messages.createPatternModalType)}</span>
-          <FieldProvider name="type" type="text">
-            <Dropdown defaultWidth={false} options={PATTERN_TYPES} />
-          </FieldProvider>
-        </div>
-        <span className={cx('label')}>{formatMessage(messages.createPatternModalCondition)}</span>
-        <FieldProvider name="value" type="text">
-          {selectedType === REGEX_PATTERN ? <RegExEditor /> : <FieldTextFlex />}
-        </FieldProvider>
+        <FieldElement
+          name="type"
+          type="text"
+          label={formatMessage(messages.createPatternModalType)}
+          className={cx('dropdown')}
+          childrenClassName={cx('width-100')}
+        >
+          <Dropdown defaultWidth={false} options={PATTERN_TYPES} />
+        </FieldElement>
+        <FieldElement
+          label={formatMessage(messages.createPatternModalCondition)}
+          name="value"
+          type="text"
+          childrenClassName={cx('width-100')}
+        >
+          <FieldErrorHint provideHint={false}>
+            {selectedType === REGEX_PATTERN ? <RegExEditor /> : <FieldTextFlex />}
+          </FieldErrorHint>
+        </FieldElement>
       </div>
     </ModalLayout>
   );
