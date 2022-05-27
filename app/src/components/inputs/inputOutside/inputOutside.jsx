@@ -22,8 +22,6 @@ import styles from './inputOutside.scss';
 
 const cx = classNames.bind(styles);
 
-const STATIC_TOUCHED_TYPE = 'staticTouched';
-
 export class InputOutside extends Component {
   static propTypes = {
     type: PropTypes.string,
@@ -43,6 +41,7 @@ export class InputOutside extends Component {
     error: PropTypes.string,
     autoComplete: PropTypes.string,
     name: PropTypes.string,
+    hasDynamicValidation: PropTypes.bool,
   };
   static defaultProps = {
     type: 'text',
@@ -62,6 +61,7 @@ export class InputOutside extends Component {
     error: '',
     autoComplete: undefined,
     name: '',
+    hasDynamicValidation: false,
   };
 
   state = {
@@ -100,16 +100,14 @@ export class InputOutside extends Component {
       touched,
       autoComplete,
       name,
+      hasDynamicValidation,
     } = this.props;
     return (
       <div
         className={cx('input-outside', `type-${type}`, {
           disabled,
-          active:
-            ((type === STATIC_TOUCHED_TYPE || type === 'password') && active && !touched) ||
-            (touched && !error),
-          invalid:
-            error && (touched || (active && type !== STATIC_TOUCHED_TYPE && type !== 'password')),
+          active: (hasDynamicValidation && active && !touched) || (touched && !error),
+          invalid: error && (touched || (active && !hasDynamicValidation)),
         })}
       >
         <div className={cx('icon')}>{Parser(icon)}</div>
