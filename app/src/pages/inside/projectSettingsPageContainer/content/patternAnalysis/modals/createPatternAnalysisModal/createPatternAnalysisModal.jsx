@@ -90,7 +90,6 @@ const CreatePatternAnalysisModal = ({ data, handleSubmit, initialize }) => {
           type="text"
           label={formatMessage(messages.createPatternModalType)}
           className={cx('dropdown')}
-          childrenClassName={cx('width-100')}
         >
           <Dropdown defaultWidth={false} options={PATTERN_TYPES} />
         </FieldElement>
@@ -98,7 +97,6 @@ const CreatePatternAnalysisModal = ({ data, handleSubmit, initialize }) => {
           label={formatMessage(messages.createPatternModalCondition)}
           name="value"
           type="text"
-          childrenClassName={cx('width-100')}
         >
           <FieldErrorHint provideHint={false}>
             {selectedType === REGEX_PATTERN ? <RegExEditor /> : <FieldTextFlex />}

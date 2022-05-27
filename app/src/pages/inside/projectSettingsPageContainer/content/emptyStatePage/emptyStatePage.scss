@@ -14,6 +14,15 @@
  * limitations under the License.
  */
 
+@mixin link-state($color) {
+  color: $color;
+  svg {
+    path {
+      fill: $color;
+    }
+  }
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -51,68 +60,30 @@
     font-family: $FONT-ROBOTO-REGULAR;
     font-size: 13px;
     line-height: 20px;
-    color: $COLOR--topaz-2;
     text-decoration: none;
     outline: none;
 
+    @include link-state($COLOR--topaz-2);
+
     &:hover {
-      color: $COLOR--topaz-hover-2;
       text-decoration: underline;
 
-      svg {
-        path {
-          fill: $COLOR--topaz-hover-2;
-        }
-
-        g path {
-          stroke: $COLOR--topaz-hover-2;
-        }
-      }
+      @include link-state($COLOR--topaz-hover-2);
     }
 
     &:active {
-      color: $COLOR--topaz-pressed;
-
-      svg {
-        path {
-          fill: $COLOR--topaz-pressed;
-        }
-
-        g path {
-          stroke: $COLOR--topaz-pressed;
-        }
-      }
-
-      &:focus {
-        color: $COLOR--topaz-focused;
-
-        svg {
-          path {
-            fill: $COLOR--topaz-focused;
-          }
-
-          g path {
-            stroke: $COLOR--topaz-focused;
-          }
-        }
-      }
+      @include link-state($COLOR--topaz-pressed);
     }
 
-    .icon {
-      width: 16px;
-      height: 16px;
-      margin-left: 10px;
-      padding-bottom: 2px;
-
-      svg {
-        path {
-          fill: $COLOR--topaz-2;
-        }
-
-        g path {
-          stroke: $COLOR--topaz-2;
-        }
-      }
+    &:focus {
+      @include link-state($COLOR--topaz-focused);
     }
+  }
+
+  .icon {
+    width: 13px;
+    height: 13px;
+    margin-left: 10px;
+    padding-bottom: 3px;
   }
 }

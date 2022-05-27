@@ -30,7 +30,7 @@ export const FieldElement = (props) => {
         <>
           <span className={cx('label')}>{label}</span>
           {description && <span className={cx('description')}>{description}</span>}
-          <div className={cx('wrapped-children', childrenClassName)}>
+          <div className={cx(childrenClassName)}>
             <FieldProvider {...rest}>{children}</FieldProvider>
           </div>
         </>

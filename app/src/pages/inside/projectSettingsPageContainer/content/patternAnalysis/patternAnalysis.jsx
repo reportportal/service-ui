@@ -58,7 +58,7 @@ export const PatternAnalysis = () => {
     );
   };
 
-  const isAbleToCreate = () => canUpdateSettings(userRole, projectRole);
+  const isAbleToCreate = canUpdateSettings(userRole, projectRole);
 
   return (
     <>
@@ -67,7 +67,7 @@ export const PatternAnalysis = () => {
         description={formatMessage(messages.noPatternAnalysisDescription)}
         buttonName={formatMessage(messages.createPatternModalHeader)}
         documentationLink={'https://reportportal.io/docs/Pattern-Analysis'}
-        isAbleToCreate={isAbleToCreate()}
+        disableButton={!isAbleToCreate}
         handleButton={onAddPattern}
       />
     </>
