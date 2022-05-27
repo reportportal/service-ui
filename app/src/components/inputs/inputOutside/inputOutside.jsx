@@ -41,6 +41,7 @@ export class InputOutside extends Component {
     error: PropTypes.string,
     autoComplete: PropTypes.string,
     name: PropTypes.string,
+    hasDynamicValidation: PropTypes.bool,
   };
   static defaultProps = {
     type: 'text',
@@ -60,6 +61,7 @@ export class InputOutside extends Component {
     error: '',
     autoComplete: undefined,
     name: '',
+    hasDynamicValidation: false,
   };
 
   state = {
@@ -98,12 +100,14 @@ export class InputOutside extends Component {
       touched,
       autoComplete,
       name,
+      hasDynamicValidation,
     } = this.props;
     return (
       <div
         className={cx('input-outside', `type-${type}`, {
           disabled,
-          invalid: error && (active || touched),
+          active: (hasDynamicValidation && active && !touched) || (touched && !error),
+          invalid: error && (touched || (active && !hasDynamicValidation)),
         })}
       >
         <div className={cx('icon')}>{Parser(icon)}</div>
