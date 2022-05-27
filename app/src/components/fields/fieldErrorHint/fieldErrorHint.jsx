@@ -25,17 +25,17 @@ const cx = classNames.bind(styles);
 const messages = defineMessages({
   loginHint: {
     id: 'RegistrationForm.loginHint',
-    defaultMessage:
-      'Login should have size from 1 to 128 symbols, latin, numeric characters, hyphen, underscore, dot.',
+    defaultMessage: 'User Name should contain only valid symbols and at least 1 Latin symbols',
   },
   nameHint: {
     id: 'RegistrationForm.nameHint',
     defaultMessage:
-      'Full name should have size from 3 to 256 symbols, latin, cyrillic, numeric characters, hyphen, underscore, dot, space.',
+      'Full Name should contain only valid symbols and at least 3 Latin or Cyrillic symbols',
   },
   passwordHint: {
     id: 'RegistrationForm.passwordHint',
-    defaultMessage: 'Password should have size from 4 to 256 symbols.',
+    defaultMessage:
+      'Password should contain at least 4 characters; a special symbol; upper-case (A - Z); lower-case',
   },
   emailHint: {
     id: 'Common.validation.email',
@@ -234,9 +234,10 @@ export class FieldErrorHint extends Component {
     error: PropTypes.string,
     active: PropTypes.bool,
     staticHint: PropTypes.bool,
+    staticTouchedHint: PropTypes.bool,
     widthContent: PropTypes.bool,
     darkView: PropTypes.bool,
-    provideHint: PropTypes.bool,
+    touched: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -246,15 +247,19 @@ export class FieldErrorHint extends Component {
     error: '',
     active: false,
     staticHint: false,
+    staticTouchedHint: false,
     widthContent: false,
     darkView: false,
-    provideHint: true,
+    touched: false,
   };
 
   isHintVisible = () => {
-    const { error, active, staticHint } = this.props;
+    const { error, active, staticHint, staticTouchedHint, touched } = this.props;
     if (staticHint) {
       return !!error;
+    }
+    if (staticTouchedHint) {
+      return !!error && touched;
     }
     return !!error && active;
   };
@@ -267,39 +272,34 @@ export class FieldErrorHint extends Component {
       error,
       active,
       staticHint,
+      staticTouchedHint,
       widthContent,
       darkView,
-      provideHint,
       ...rest
     } = this.props;
     const classes = cx('field-error-hint', `type-${hintType}`);
 
     return (
       <div className={classes}>
-        {children &&
-          cloneElement(children, {
-            error: error && messages[error] ? intl.formatMessage(messages[error]) : error,
-            active,
-            ...rest,
+        {children && cloneElement(children, { error, active, ...rest })}
+        <div
+          className={cx('hint', `type-${hintType}`, {
+            'static-hint': staticHint,
+            staticTouchedHint,
+            visible: this.isHintVisible(),
           })}
-        {provideHint && (
+        >
           <div
-            className={cx('hint', `type-${hintType}`, {
+            className={cx('hint-content', `type-${hintType}`, {
               'static-hint': staticHint,
-              visible: this.isHintVisible(),
+              'static-touched-hint': staticTouchedHint,
+              'width-content': widthContent,
+              'dark-view': darkView,
             })}
           >
-            <div
-              className={cx('hint-content', `type-${hintType}`, {
-                'static-hint': staticHint,
-                'width-content': widthContent,
-                'dark-view': darkView,
-              })}
-            >
-              {error && messages[error] ? intl.formatMessage(messages[error]) : error}
-            </div>
+            {error && messages[error] ? intl.formatMessage(messages[error]) : error}
           </div>
-        )}
+        </div>
       </div>
     );
   }
