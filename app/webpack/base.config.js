@@ -135,6 +135,9 @@ module.exports = {
         'prop-types': {
           singleton: true,
         },
+        'react-tracking': {
+          singleton: true,
+        },
       },
     }),
     // new CircularDependencyPlugin({
