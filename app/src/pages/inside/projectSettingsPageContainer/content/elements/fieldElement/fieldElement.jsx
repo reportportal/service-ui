@@ -23,20 +23,28 @@ import styles from './fieldElement.scss';
 const cx = classNames.bind(styles);
 
 export const FieldElement = (props) => {
-  const { label, description, children, className, childrenClassName, ...rest } = props;
+  const {
+    label,
+    description,
+    children,
+    className,
+    childrenClassName,
+    withoutProvider,
+    ...rest
+  } = props;
+  const getChildren = () =>
+    withoutProvider ? children : <FieldProvider {...rest}>{children}</FieldProvider>;
   return (
     <div className={cx('wrapper', className)}>
       {label ? (
         <>
           <span className={cx('label')}>{label}</span>
           {description && <span className={cx('description')}>{description}</span>}
-          <div className={cx(childrenClassName)}>
-            <FieldProvider {...rest}>{children}</FieldProvider>
-          </div>
+          <div className={cx(childrenClassName)}>{getChildren()}</div>
         </>
       ) : (
         <>
-          <FieldProvider {...rest}>{children}</FieldProvider>
+          {getChildren()}
           <span className={cx('description-alt')}>{description}</span>
         </>
       )}
@@ -49,10 +57,12 @@ FieldElement.propTypes = {
   description: PropTypes.string,
   className: PropTypes.string,
   childrenClassName: PropTypes.string,
+  withoutProvider: PropTypes.bool,
 };
 FieldElement.defaultProps = {
   label: '',
   description: '',
   className: '',
   childrenClassName: '',
+  withoutProvider: false,
 };
