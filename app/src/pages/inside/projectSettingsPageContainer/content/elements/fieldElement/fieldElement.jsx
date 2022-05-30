@@ -23,14 +23,14 @@ import styles from './fieldElement.scss';
 const cx = classNames.bind(styles);
 
 export const FieldElement = (props) => {
-  const { label, description, children, className, ...rest } = props;
+  const { label, description, children, className, childrenClassName, ...rest } = props;
   return (
     <div className={cx('wrapper', className)}>
       {label ? (
         <>
           <span className={cx('label')}>{label}</span>
-          <span className={cx('description')}>{description}</span>
-          <div className={cx('wrapped-children')}>
+          {description && <span className={cx('description')}>{description}</span>}
+          <div className={cx(childrenClassName)}>
             <FieldProvider {...rest}>{children}</FieldProvider>
           </div>
         </>
@@ -48,9 +48,11 @@ FieldElement.propTypes = {
   label: PropTypes.string,
   description: PropTypes.string,
   className: PropTypes.string,
+  childrenClassName: PropTypes.string,
 };
 FieldElement.defaultProps = {
   label: '',
   description: '',
   className: '',
+  childrenClassName: '',
 };

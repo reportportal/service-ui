@@ -14,29 +14,4 @@
  * limitations under the License.
  */
 
-.wrapper {
-  margin-bottom: 24px;
-}
-
-.label {
-  display: block;
-  margin-bottom: 4px;
-  color: $COLOR--almost-black;
-  font-size: 13px;
-  line-height: 20px;
-  font-family: $FONT-ROBOTO-MEDIUM;
-}
-
-.description {
-  display: block;
-  margin: 0 0 4px 0;
-  color: $COLOR--e-300;
-  font-size: 11px;
-  line-height: 16px;
-  font-family: $FONT-ROBOTO-REGULAR;
-}
-
-.description-alt {
-  @extend .description;
-  margin: 4px 0 0 0;
-}
+export { EmptyStatePage } from './emptyStatePage';

@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,29 +14,16 @@
  * limitations under the License.
  */
 
-.wrapper {
-  margin-bottom: 24px;
+.content {
+  margin-top: 32px;
 }
 
-.label {
-  display: block;
-  margin-bottom: 4px;
-  color: $COLOR--almost-black;
-  font-size: 13px;
-  line-height: 20px;
-  font-family: $FONT-ROBOTO-MEDIUM;
+.dropdown {
+  margin-top: 16px;
+  margin-bottom: 16px;
 }
 
-.description {
-  display: block;
-  margin: 0 0 4px 0;
-  color: $COLOR--e-300;
-  font-size: 11px;
-  line-height: 16px;
-  font-family: $FONT-ROBOTO-REGULAR;
-}
-
-.description-alt {
-  @extend .description;
-  margin: 4px 0 0 0;
+.toggle {
+  margin-top: 8px;
+  white-space: nowrap;
 }

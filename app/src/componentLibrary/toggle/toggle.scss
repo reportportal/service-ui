@@ -23,6 +23,7 @@
   line-height: 20px;
   color: $COLOR--almost-black;
   cursor: pointer;
+  width: 32px;
 }
 
 .children-container {
@@ -31,12 +32,8 @@
 
 .slider {
   background-color: $COLOR--e-200;
-  bottom: 0;
   cursor: pointer;
-  left: 0;
   position: absolute;
-  right: 0;
-  top: 0;
   transition: 0.4s;
   border-radius: 10px;
   width: 32px;

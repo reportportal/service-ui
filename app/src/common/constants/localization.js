@@ -173,4 +173,8 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.processData',
     defaultMessage: 'Please wait, we process your data',
   },
+  documentation: {
+    id: 'Common.documentation',
+    defaultMessage: 'Documentation',
+  },
 });
