@@ -23,7 +23,7 @@ import { Button } from 'componentLibrary/button';
 import { FieldNumber } from 'componentLibrary/fieldNumber';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { bindMessageToValidator, validate } from 'common/utils/validation';
-import { AnalyzerLayout } from '../../layout';
+import { Layout } from '../../layout';
 import { LabeledPreloader, FieldElement } from '../../elements';
 import { messages } from './messages';
 import { SEARCH_LOGS_MIN_SHOULD_MATCH } from '../constants';
@@ -53,7 +53,7 @@ const SimilarItems = ({
   const isFieldDisabled = !hasPermission || isPending;
 
   return (
-    <AnalyzerLayout description={formatMessage(messages.tabDescription)}>
+    <Layout description={formatMessage(messages.tabDescription)}>
       <form onSubmit={handleSubmit(submitHandler)}>
         <FieldElement
           name={SEARCH_LOGS_MIN_SHOULD_MATCH}
@@ -71,7 +71,7 @@ const SimilarItems = ({
         </Button>
         {isPending && <LabeledPreloader text={formatMessage(COMMON_LOCALE_KEYS.processData)} />}
       </form>
-    </AnalyzerLayout>
+    </Layout>
   );
 };
 SimilarItems.propTypes = {

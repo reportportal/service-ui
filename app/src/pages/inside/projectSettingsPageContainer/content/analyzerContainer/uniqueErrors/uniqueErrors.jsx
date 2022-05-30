@@ -26,7 +26,7 @@ import { FieldElement, LabeledPreloader } from '../../elements';
 import { messages } from './messages';
 import { UNIQUE_ERROR_ENABLED, UNIQUE_ERROR_REMOVE_NUMBERS } from '../constants';
 import { formatFieldName } from '../utils';
-import { AnalyzerLayout } from '../../layout';
+import { Layout } from '../../layout';
 
 const UniqueErrors = ({
   analyzerConfig,
@@ -69,7 +69,7 @@ const UniqueErrors = ({
   const isFieldDisabled = !hasPermission || isPending;
 
   return (
-    <AnalyzerLayout description={formatMessage(messages.tabDescription)}>
+    <Layout description={formatMessage(messages.tabDescription)}>
       <form onSubmit={handleSubmit(submitHandler)}>
         <FieldElement
           name={formatFieldName(UNIQUE_ERROR_ENABLED)}
@@ -95,7 +95,7 @@ const UniqueErrors = ({
         </Button>
         {isPending && <LabeledPreloader text={formatMessage(COMMON_LOCALE_KEYS.processData)} />}
       </form>
-    </AnalyzerLayout>
+    </Layout>
   );
 };
 UniqueErrors.propTypes = {
