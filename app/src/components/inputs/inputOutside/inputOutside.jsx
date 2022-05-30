@@ -106,7 +106,7 @@ export class InputOutside extends Component {
       <div
         className={cx('input-outside', `type-${type}`, {
           disabled,
-          active: (hasDynamicValidation && active && !touched) || (touched && !error),
+          active: active && ((hasDynamicValidation && !touched) || (touched && !error)),
           invalid: error && (touched || (active && !hasDynamicValidation)),
         })}
       >

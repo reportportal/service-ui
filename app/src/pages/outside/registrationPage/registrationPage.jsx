@@ -32,11 +32,11 @@ const cx = classNames.bind(styles);
 const messages = defineMessages({
   welcome: {
     id: 'RegistrationPage.welcome',
-    defaultMessage: 'Welcome,',
+    defaultMessage: ' ',
   },
   registration: {
     id: 'RegistrationPage.registration',
-    defaultMessage: 'complete the registration form',
+    defaultMessage: 'Welcome, create your profile',
   },
 });
 
@@ -47,6 +47,7 @@ export const RegistrationPage = ({
   onRegistrationSubmit,
   loading,
   initialData,
+  submitButtonTitle,
 }) => {
   const backgroundClasses = {
     background: true,
@@ -79,6 +80,7 @@ export const RegistrationPage = ({
                 submitForm={onRegistrationSubmit}
                 loading={loading}
                 initialData={initialData}
+                submitButtonTitle={submitButtonTitle}
               />
             </div>
           ) : (
@@ -96,6 +98,7 @@ RegistrationPage.propTypes = {
   onRegistrationSubmit: PropTypes.func,
   loading: PropTypes.bool,
   initialData: PropTypes.object,
+  submitButtonTitle: PropTypes.string,
 };
 RegistrationPage.defaultProps = {
   tokenActive: false,
@@ -104,6 +107,7 @@ RegistrationPage.defaultProps = {
   onRegistrationSubmit: () => {},
   loading: false,
   initialData: {},
+  submitButtonTitle: '',
 };
 
 const TokenErrorSection = ({ tokenProvided }) => (
