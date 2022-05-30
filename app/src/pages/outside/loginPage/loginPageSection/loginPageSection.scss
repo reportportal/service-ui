@@ -27,7 +27,7 @@
     width: 100%;
 
     &:not(.left) {
-      height: auto;
+      height: 660px;
       max-height: 640px;
       overflow-y: hidden;
       background-color: $COLOR--white-two;
