@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addPatternAction, patternsSelector } from 'controllers/project';
 import { useTracking } from 'react-tracking';
@@ -23,10 +24,12 @@ import { STRING_PATTERN } from 'common/constants/patternTypes';
 import { useIntl } from 'react-intl';
 import { canUpdateSettings } from 'common/utils/permissions';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
+import PropTypes from 'prop-types';
+import { PatternAnalysisContent } from './patternAnalysisContent';
 import { EmptyStatePage } from '../emptyStatePage/';
 import { messages } from './messages';
 
-export const PatternAnalysis = () => {
+export const PatternAnalysis = ({ setHeaderTitleNode }) => {
   const patterns = useSelector(patternsSelector);
   const userRole = useSelector(userAccountRoleSelector);
   const projectRole = useSelector(activeProjectRoleSelector);
@@ -62,14 +65,26 @@ export const PatternAnalysis = () => {
 
   return (
     <>
-      <EmptyStatePage
-        title={formatMessage(messages.noPatternAnalysisTitle)}
-        description={formatMessage(messages.noPatternAnalysisDescription)}
-        buttonName={formatMessage(messages.createPatternModalHeader)}
-        documentationLink={'https://reportportal.io/docs/Pattern-Analysis'}
-        disableButton={!isAbleToCreate}
-        handleButton={onAddPattern}
-      />
+      {patterns.length > 0 ? (
+        <PatternAnalysisContent
+          setHeaderTitleNode={setHeaderTitleNode}
+          onAddPattern={onAddPattern}
+          patterns={patterns}
+          disabled={!isAbleToCreate}
+        />
+      ) : (
+        <EmptyStatePage
+          title={formatMessage(messages.noPatternAnalysisTitle)}
+          description={formatMessage(messages.noPatternAnalysisDescription)}
+          buttonName={formatMessage(messages.createPatternModalHeader)}
+          documentationLink={'https://reportportal.io/docs/Pattern-Analysis'}
+          disableButton={!isAbleToCreate}
+          handleButton={onAddPattern}
+        />
+      )}
     </>
   );
+};
+PatternAnalysis.propTypes = {
+  setHeaderTitleNode: PropTypes.func.isRequired,
 };

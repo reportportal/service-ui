@@ -55,7 +55,7 @@ import styles from './analyzerContainer.scss';
 
 const cx = classNames.bind(styles);
 
-export const AnalyzerContainer = ({ setHeaderChildren }) => {
+export const AnalyzerContainer = ({ setHeaderNodes }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const projectId = useSelector(projectIdSelector);
@@ -123,8 +123,8 @@ export const AnalyzerContainer = ({ setHeaderChildren }) => {
           showModalAction({
             id: 'generateIndexModalWindow',
             data: {
-              modalTitle: indexSettingsMessages.regenerateIndexTitle,
-              modalDescription: indexSettingsMessages.regenerateIndexDescription,
+              modalTitle: formatMessage(indexSettingsMessages.regenerateIndexTitle),
+              modalDescription: formatMessage(indexSettingsMessages.regenerateIndexDescription),
             },
           }),
         );
@@ -202,7 +202,7 @@ export const AnalyzerContainer = ({ setHeaderChildren }) => {
   );
 
   useEffect(() => {
-    setHeaderChildren(
+    setHeaderNodes(
       <div className={cx('tabs')}>
         <Tabs config={tabsConfig} activeTab={activeSubTab} withContent={false} />
       </div>,
@@ -213,11 +213,11 @@ export const AnalyzerContainer = ({ setHeaderChildren }) => {
       dispatch(tabsConfig[firstItemName].link);
     }
 
-    return () => setHeaderChildren(null);
+    return () => setHeaderNodes(null);
   }, [activeSubTab]);
 
   return activeSubTab ? tabsConfig[activeSubTab].component : null;
 };
 AnalyzerContainer.propTypes = {
-  setHeaderChildren: PropTypes.func.isRequired,
+  setHeaderNodes: PropTypes.func.isRequired,
 };

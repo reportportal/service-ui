@@ -14,4 +14,6 @@
  * limitations under the License.
  */
 
-export { Layout } from './layout';
+import DeletePatternRuleModal from './deletePatternRuleModal';
+
+export { DeletePatternRuleModal };

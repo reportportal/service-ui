@@ -63,7 +63,7 @@ const CreatePatternAnalysisModal = ({ data, handleSubmit, initialize }) => {
 
   return (
     <ModalLayout
-      title={formatMessage(messages.createPatternModalHeader)}
+      title={data.modalTitle || formatMessage(messages.createPatternModalHeader)}
       okButton={okButton}
       cancelButton={cancelButton}
       onClose={() => dispatch(hideModalAction())}
@@ -112,6 +112,7 @@ CreatePatternAnalysisModal.propTypes = {
     patterns: PropTypes.array,
     onSave: PropTypes.func,
     eventsInfo: PropTypes.object,
+    modalTitle: PropTypes.string,
   }),
   handleSubmit: PropTypes.func.isRequired,
   initialize: PropTypes.func.isRequired,

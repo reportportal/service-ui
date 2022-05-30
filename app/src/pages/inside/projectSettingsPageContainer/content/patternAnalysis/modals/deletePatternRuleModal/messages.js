@@ -14,4 +14,15 @@
  * limitations under the License.
  */
 
-export { Layout } from './layout';
+import { defineMessages } from 'react-intl';
+
+export const messages = defineMessages({
+  deletePattern: {
+    id: 'PatternAnalysis.deletePattern',
+    defaultMessage: 'Delete Pattern Rule',
+  },
+  deletePatternMsg: {
+    id: 'PatternAnalysis.deletePatternMsg',
+    defaultMessage: 'Are you sure you want to delete this pattern?',
+  },
+});

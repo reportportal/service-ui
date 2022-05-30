@@ -14,4 +14,6 @@
  * limitations under the License.
  */
 
-export { Layout } from './layout';
+export { CreatePatternAnalysisModal } from './createPatternAnalysisModal';
+export { DeletePatternRuleModal } from './deletePatternRuleModal';
+export { EditPatternModal } from './editPatternModal';

@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { Layout } from './layout';
+export { PatternRuleContent } from './patternRuleContent';
