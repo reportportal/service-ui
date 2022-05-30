@@ -14,24 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames/bind';
-import { Divider, TabDescription } from '../elements';
-import styles from './analyzerLayout.scss';
-
-const cx = classNames.bind(styles);
-
-export const AnalyzerLayout = ({ description, children }) => {
-  return (
-    <>
-      <TabDescription>{description}</TabDescription>
-      <Divider />
-      <div className={cx('children')}>{children}</div>
-    </>
-  );
-};
-AnalyzerLayout.propTypes = {
-  description: PropTypes.string.isRequired,
-  children: PropTypes.node.isRequired,
-};
+.description {
+  all: inherit;
+  margin-bottom: 32px;
+}

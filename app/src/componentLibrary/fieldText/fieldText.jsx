@@ -95,7 +95,7 @@ export const FieldText = ({
           </span>
         )}
       </div>
-      {(error || helpText) && (
+      {((error && touched) || helpText) && (
         <div className={cx(VARIANT, 'additional-content', { disabled })}>
           {error && touched && <span className={cx(VARIANT, 'error-text')}>{error}</span>}
           {helpText && <span className={cx(VARIANT, 'help-text')}>{helpText}</span>}
@@ -130,7 +130,7 @@ FieldText.defaultProps = {
   value: '',
   className: '',
   error: '',
-  placeholder: 'placeholder',
+  placeholder: '',
   maxLength: 256,
   disabled: false,
   refFunction: () => {},

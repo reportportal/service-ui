@@ -92,12 +92,12 @@ const GenerateIndexModal = ({ data }) => {
 
   return (
     <ModalLayout
-      title={formatMessage(data.modalTitle)}
+      title={data.modalTitle}
       okButton={okButton}
       cancelButton={cancelButton}
       onClose={() => dispatch(hideModalAction())}
     >
-      {formatMessage(data.modalDescription)}
+      {data.modalDescription}
       <div className={cx('note-block')}>
         <p className={cx('note-title')}>{formatMessage(messages.noteBlockTitle)}</p>
         <p className={cx('note-text')}>{formatMessage(messages.noteBlockText)}</p>
@@ -107,14 +107,14 @@ const GenerateIndexModal = ({ data }) => {
 };
 GenerateIndexModal.propTypes = {
   data: PropTypes.shape({
-    modalTitle: PropTypes.object,
-    modalDescription: PropTypes.object,
+    modalTitle: PropTypes.string,
+    modalDescription: PropTypes.string,
   }),
 };
 GenerateIndexModal.defaultProps = {
   data: {
-    modalTitle: messages.generateIndexHeader,
-    modalDescription: messages.contentHeaderMessage,
+    modalTitle: '',
+    modalDescription: '',
   },
 };
 

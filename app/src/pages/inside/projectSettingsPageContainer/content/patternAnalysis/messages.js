@@ -50,4 +50,33 @@ export const messages = defineMessages({
     id: 'CreatePatternAnalysisModal.createPatternModalCondition',
     defaultMessage: 'Pattern Condition',
   },
+  tabDescription: {
+    id: 'PatternAnalysis.tabDescription',
+    defaultMessage:
+      'The Pattern-Analysis feature helps to find common patterns in error logs by marking them with the "PA" label',
+  },
+  autoPatternAnalysis: {
+    id: 'PatternAnalysis.autoPatternAnalysis',
+    defaultMessage: 'Auto Pattern-Analysis',
+  },
+  autoPatternAnalysisDescription: {
+    id: 'PatternAnalysis.autoPatternAnalysisDescription',
+    defaultMessage: 'Analysis starts as soon as any launch is finished',
+  },
+  create: {
+    id: 'PatternAnalysis.createPattern',
+    defaultMessage: 'Create Pattern',
+  },
+  duplicate: {
+    id: 'PatternAnalysis.duplicatePattern',
+    defaultMessage: 'Duplicate Pattern',
+  },
+  deletePattern: {
+    id: 'PatternAnalysis.deletePattern',
+    defaultMessage: 'Delete Pattern',
+  },
+  deletePatternMsg: {
+    id: 'PatternAnalysis.deletePatternMsg',
+    defaultMessage: 'Are you sure you want to delete this pattern?',
+  },
 });

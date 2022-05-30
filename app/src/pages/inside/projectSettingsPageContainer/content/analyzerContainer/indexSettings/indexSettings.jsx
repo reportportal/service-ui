@@ -27,7 +27,7 @@ import { useTracking } from 'react-tracking';
 import { showModalAction } from 'controllers/modal';
 import { useDispatch } from 'react-redux';
 import { Checkbox } from 'componentLibrary/checkbox';
-import { AnalyzerLayout } from '../../layout';
+import { Layout } from '../../layout';
 import { Divider } from '../../elements/divider';
 import { LabeledPreloader, FieldElement } from '../../elements';
 import { messages } from './messages';
@@ -93,7 +93,7 @@ const IndexSettings = ({
   const isFieldDisabled = !hasPermission || isPending;
 
   return (
-    <AnalyzerLayout description={formatMessage(messages.tabDescription)}>
+    <Layout description={formatMessage(messages.tabDescription)}>
       <form className={cx('index-settings-form')} onSubmit={handleSubmit(submitHandler)}>
         <FieldElement
           name={NUMBER_OF_LOG_LINES}
@@ -149,7 +149,7 @@ const IndexSettings = ({
           )}
         </div>
       </div>
-    </AnalyzerLayout>
+    </Layout>
   );
 };
 IndexSettings.propTypes = {

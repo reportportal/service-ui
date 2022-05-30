@@ -15,4 +15,4 @@
  */
 
 export { PatternAnalysis } from './patternAnalysis';
-export { CreatePatternAnalysisModal } from './modals/createPatternAnalysisModal';
+export { CreatePatternAnalysisModal, EditPatternModal, DeletePatternRuleModal } from './modals';

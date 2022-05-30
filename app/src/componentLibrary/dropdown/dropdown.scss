@@ -39,7 +39,7 @@
 }
 
 @mixin hover-state($borderColor, $arrowColor) {
-  &:hover:not(:active):not(.error) {
+  &:hover:not(:active):not(:focus-visible):not(.opened):not(.error) {
     border-color: $borderColor;
 
     @include arrow-color($arrowColor);
@@ -47,10 +47,12 @@
 }
 
 @mixin active-state($borderColor, $arrowColor) {
-  &:active {
+  &:active,
+  &:focus-visible {
     padding: 7px 11px;
     border-width: 2px;
     border-color: $borderColor;
+    outline: none;
 
     @include arrow-color($arrowColor);
   }
@@ -139,7 +141,7 @@
 
 .light {
   &.dropdown {
-    @include dropdown($COLOR--e-100, $COLOR--bg-000);
+    @include dropdown($COLOR--e-200, $COLOR--bg-000);
     @include hover-state($COLOR--e-300, $COLOR--e-400);
     @include active-state($COLOR--topaz-focused, $COLOR--e-400);
 

@@ -61,7 +61,7 @@ export const ProjectSettingsPageContainer = () => {
   const activeTab = useSelector(settingsTabSelector);
   const userRole = useSelector(activeProjectRoleSelector);
   const accountRole = useSelector(userAccountRoleSelector);
-  const [headerChildren, setHeaderChildren] = useState(null);
+  const [headerNodes, setHeaderNodes] = useState({});
 
   const createTabLink = useCallback(
     (tabName, extendedParams = {}) => ({
@@ -119,14 +119,18 @@ export const ProjectSettingsPageContainer = () => {
       [ANALYSIS]: {
         name: formatMessage(messages.analysis),
         link: createTabLink(ANALYSIS),
-        component: <AnalyzerContainer setHeaderChildren={setHeaderChildren} />,
+        component: (
+          <AnalyzerContainer setHeaderNodes={(node) => setHeaderNodes({ children: node })} />
+        ),
         eventInfo: SETTINGS_PAGE_EVENTS.AUTO_ANALYSIS_TAB,
         mobileDisabled: true,
       },
       [PATTERN_ANALYSIS]: {
         name: formatMessage(messages.patternAnalysis),
         link: createTabLink(PATTERN_ANALYSIS),
-        component: <PatternAnalysis />,
+        component: (
+          <PatternAnalysis setHeaderTitleNode={(node) => setHeaderNodes({ titleNode: node })} />
+        ),
         eventInfo: SETTINGS_PAGE_EVENTS.PATTERN_ANALYSIS_TAB,
         mobileDisabled: true,
       },
@@ -169,7 +173,12 @@ export const ProjectSettingsPageContainer = () => {
     <SettingsLayout navigation={navigation}>
       <ScrollWrapper>
         <div className={cx('header')}>
-          <Header title={config[activeTab] && config[activeTab].name}>{headerChildren}</Header>
+          <Header
+            title={config[activeTab] && config[activeTab].name}
+            titleNode={headerNodes.titleNode}
+          >
+            {headerNodes.children}
+          </Header>
         </div>
         <div className={cx('content')}>{content}</div>
       </ScrollWrapper>

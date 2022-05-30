@@ -14,4 +14,25 @@
  * limitations under the License.
  */
 
-export { Layout } from './layout';
+.info {
+  padding: 7px 24px 16px 24px;
+}
+
+.text {
+  display: block;
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.type {
+  @extend .text;
+  color: $COLOR--e-300;
+  text-transform: capitalize;
+}
+
+.value {
+  @extend .text;
+  margin-top: 4px;
+  color: $COLOR--almost-black;
+}

@@ -14,4 +14,24 @@
  * limitations under the License.
  */
 
-export { Layout } from './layout';
+import React from 'react';
+import PropTypes from 'prop-types';
+import classNames from 'classnames/bind';
+import { Divider, TabDescription } from '../elements';
+import styles from './layout.scss';
+
+const cx = classNames.bind(styles);
+
+export const Layout = ({ description, children }) => {
+  return (
+    <>
+      <TabDescription>{description}</TabDescription>
+      <Divider />
+      <div className={cx('children')}>{children}</div>
+    </>
+  );
+};
+Layout.propTypes = {
+  description: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
+};

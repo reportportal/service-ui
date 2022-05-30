@@ -25,7 +25,7 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { bindMessageToValidator, validate } from 'common/utils/validation';
 import { Dropdown } from 'componentLibrary/dropdown';
 import { Checkbox } from 'componentLibrary/checkbox';
-import { AnalyzerLayout } from '../../layout';
+import { Layout } from '../../layout';
 import { FieldElement, LabeledPreloader } from '../../elements';
 import { messages } from './messages';
 import { ANALYZER_ENABLED, ANALYZER_MODE, MIN_SHOULD_MATCH } from '../constants';
@@ -64,7 +64,7 @@ const AutoAnalysis = ({
   const isFieldDisabled = !hasPermission || isPending;
 
   return (
-    <AnalyzerLayout description={formatMessage(messages.tabDescription)}>
+    <Layout description={formatMessage(messages.tabDescription)}>
       <form onSubmit={handleSubmit(submitHandler)}>
         <FieldElement
           name={ANALYZER_ENABLED}
@@ -101,7 +101,7 @@ const AutoAnalysis = ({
         </Button>
         {isPending && <LabeledPreloader text={formatMessage(COMMON_LOCALE_KEYS.processData)} />}
       </form>
-    </AnalyzerLayout>
+    </Layout>
   );
 };
 AutoAnalysis.propTypes = {
