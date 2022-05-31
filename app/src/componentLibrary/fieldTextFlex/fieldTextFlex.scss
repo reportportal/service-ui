@@ -48,6 +48,10 @@
   &.error.touched {
     border: 1px solid $COLOR--red-failed-2;
   }
+
+  &::placeholder {
+    color: $COLOR--e-300;
+  }
 }
 
 .label {

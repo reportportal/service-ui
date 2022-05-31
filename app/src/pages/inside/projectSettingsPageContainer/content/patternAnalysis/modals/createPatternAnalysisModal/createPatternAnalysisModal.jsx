@@ -81,6 +81,7 @@ const CreatePatternAnalysisModal = ({ data, handleSubmit, initialize }) => {
           <FieldErrorHint provideHint={false}>
             <FieldText
               label={formatMessage(messages.createPatternModalPatternName)}
+              placeholder={formatMessage(messages.createPatternModalPatternName)}
               defaultWidth={false}
             />
           </FieldErrorHint>
@@ -99,7 +100,11 @@ const CreatePatternAnalysisModal = ({ data, handleSubmit, initialize }) => {
           type="text"
         >
           <FieldErrorHint provideHint={false}>
-            {selectedType === REGEX_PATTERN ? <RegExEditor /> : <FieldTextFlex />}
+            {selectedType === REGEX_PATTERN ? (
+              <RegExEditor placeholder={formatMessage(messages.patternConditionPlaceholder)} />
+            ) : (
+              <FieldTextFlex placeholder={formatMessage(messages.patternConditionPlaceholder)} />
+            )}
           </FieldErrorHint>
         </FieldElement>
       </div>

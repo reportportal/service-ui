@@ -63,6 +63,10 @@ $COLOR--REGEXP-selection: #d7d4f0;
       font-size: 13px;
       line-height: 20px;
     }
+    .CodeMirror-placeholder {
+      color: $COLOR--e-300;
+      opacity: 1;
+    }
     .CodeMirror-focused {
       padding: 4px;
     }

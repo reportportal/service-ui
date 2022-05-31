@@ -50,6 +50,10 @@ export const messages = defineMessages({
     id: 'CreatePatternAnalysisModal.createPatternModalCondition',
     defaultMessage: 'Pattern Condition',
   },
+  patternConditionPlaceholder: {
+    id: 'CreatePatternAnalysisModal.patternConditionPlaceholder',
+    defaultMessage: 'Text description',
+  },
   tabDescription: {
     id: 'PatternAnalysis.tabDescription',
     defaultMessage:

@@ -34,6 +34,7 @@ export class RegExEditor extends Component {
     readonly: PropTypes.bool,
     onChange: PropTypes.func,
     onBlur: PropTypes.func,
+    placeholder: PropTypes.string,
   };
 
   static defaultProps = {
@@ -47,6 +48,7 @@ export class RegExEditor extends Component {
     readonly: false,
     onChange: () => {},
     onBlur: () => {},
+    placeholder: '',
   };
 
   constructor(props) {
@@ -82,7 +84,7 @@ export class RegExEditor extends Component {
   };
 
   render() {
-    const { error, touched } = this.props;
+    const { error, touched, placeholder } = this.props;
     return (
       <div
         className={cx('code-editor', {
@@ -90,7 +92,12 @@ export class RegExEditor extends Component {
           touched,
         })}
       >
-        <textarea ref={this.textareaNode} defaultValue={this.state.value} autoComplete="off" />
+        <textarea
+          ref={this.textareaNode}
+          defaultValue={this.state.value}
+          autoComplete="off"
+          placeholder={placeholder}
+        />
       </div>
     );
   }
