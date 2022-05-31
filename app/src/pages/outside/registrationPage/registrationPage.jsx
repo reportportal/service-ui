@@ -66,7 +66,7 @@ export const RegistrationPage = ({
             <div className={cx('couple-minutes')}>
               <FormattedMessage
                 id={'RegistrationPage.coupleMinutes'}
-                defaultMessage={'It should only take a couple of minutes to get started'}
+                defaultMessage={'It only takes a couple of minutes to get started'}
               />
             </div>
           )}
