@@ -43,7 +43,7 @@ const messages = defineMessages({
   },
   confirmPasswordHint: {
     id: 'RegistrationForm.confirmPasswordHint',
-    defaultMessage: 'Passwords do not match.',
+    defaultMessage: 'Passwords do not match',
   },
   loginDuplicateHint: {
     id: 'RegistrationForm.loginDuplicateHint',
