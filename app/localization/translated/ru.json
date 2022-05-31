@@ -347,6 +347,7 @@
   "CreatePatternAnalysisModal.createPatternModalPatternName": "Имя паттерна",
   "CreatePatternAnalysisModal.createPatternModalToggle": "Активный",
   "CreatePatternAnalysisModal.createPatternModalType": "Тип",
+  "CreatePatternAnalysisModal.patternConditionPlaceholder": "Текстовое описание",
   "CreateUser.welcome": "добро пожаловать в Report Portal!",
   "CumulativeTrendControls.CriteriaFieldLabel": "Критерии для виджета",
   "CumulativeTrendControls.LaunchesLimitFieldLabel": "Количество запусков",
