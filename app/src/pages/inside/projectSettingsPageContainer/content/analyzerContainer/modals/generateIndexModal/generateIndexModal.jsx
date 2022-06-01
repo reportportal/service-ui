@@ -92,12 +92,12 @@ const GenerateIndexModal = ({ data }) => {
 
   return (
     <ModalLayout
-      title={data.modalTitle}
+      title={data.modalTitle || formatMessage(messages.generateIndexHeader)}
       okButton={okButton}
       cancelButton={cancelButton}
       onClose={() => dispatch(hideModalAction())}
     >
-      {data.modalDescription}
+      {data.modalDescription || formatMessage(messages.contentHeaderMessage)}
       <div className={cx('note-block')}>
         <p className={cx('note-title')}>{formatMessage(messages.noteBlockTitle)}</p>
         <p className={cx('note-text')}>{formatMessage(messages.noteBlockText)}</p>

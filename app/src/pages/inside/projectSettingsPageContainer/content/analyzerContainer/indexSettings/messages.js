@@ -48,15 +48,19 @@ export const messages = defineMessages({
     defaultMessage:
       'You have changed a parameter "Number of log lines". This action can influence on results of an analysis. For an appropriate work of the analyzer, please regenerate Index in Elastic Search. Do you want to regenerate it now?',
   },
+  inCaseOf: {
+    id: 'IndexSettings.inCaseOf',
+    defaultMessage: 'In case of',
+  },
   removeIndexDescription: {
     id: 'IndexSettings.removeIndexDescription',
     defaultMessage:
-      'All data with your investigations will be deleted from the ElasticSearch. For creating a new one you could start to investigate test results manually or generate data based on previous results on the project once again',
+      'all data with your investigations will be deleted from the ElasticSearch. To add new data you could generate index or investigate test results manually.',
   },
   generateIndexDescription: {
     id: 'IndexSettings.generateIndexDescription',
     defaultMessage:
-      'All data is removed from ElasticSearch and new one is generated based on all previous investigations on the project in accordance with current analysis settings. You can start auto-analyse test results after receiving an e-mail about the end of the generation process',
+      'all data is removed from ElasticSearch and new one is generated based on all previous investigations on the project. You can start using auto-analysis after receiving an e-mail about the end of the generation process.',
   },
   indexActionsBlockTitle: {
     id: 'IndexSettings.title',
