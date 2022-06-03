@@ -122,9 +122,22 @@ const IndexSettings = ({
         <span className={cx('index-block-title')}>
           {formatMessage(messages.indexActionsBlockTitle)}
         </span>
-        <span className={cx('index-block-description')}>
-          {formatMessage(messages.generateIndexDescription)}
-        </span>
+        <div className={cx('index-block-description')}>
+          <div>
+            {formatMessage(messages.inCaseOf)}
+            <span className={cx('strong')}>
+              {` "${formatMessage(messages.generateIndexButtonCaption)}" `}
+            </span>
+            {formatMessage(messages.generateIndexDescription)}
+          </div>
+          <div>
+            {formatMessage(messages.inCaseOf)}
+            <span className={cx('strong')}>
+              {` "${formatMessage(messages.removeIndexButtonCaption)}" `}
+            </span>
+            {formatMessage(messages.removeIndexDescription)}
+          </div>
+        </div>
         <div className={cx('buttons-group')}>
           <Button
             disabled={indexingRunning || isFieldDisabled}
