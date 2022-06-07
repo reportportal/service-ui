@@ -101,7 +101,9 @@ export class ProjectPanel extends Component {
         <div className={cx('info-block')}>
           <div className={cx('header')}>
             {this.getProjectIcon(entryType)}
-            <span className={cx('header-stretch-item', 'gray-text')}>{this.getOrganization()}</span>
+            <span className={cx('header-stretch-item', 'gray-text')} title={this.getOrganization()}>
+              {this.getOrganization()}
+            </span>
             <span className={cx('header-item')}>
               <ProjectMenu project={this.props.project} />
             </span>
