@@ -96,13 +96,15 @@ export class ProjectPanel extends Component {
     } = this.props;
     const { value: relativeTime, unit } = getRelativeUnits(new Date(lastRun).getTime());
 
+    const organization = this.getOrganization();
+
     return (
       <div className={cx('container')}>
         <div className={cx('info-block')}>
           <div className={cx('header')}>
             {this.getProjectIcon(entryType)}
-            <span className={cx('header-stretch-item', 'gray-text')} title={this.getOrganization()}>
-              {this.getOrganization()}
+            <span className={cx('header-stretch-item', 'gray-text')} title={organization}>
+              {organization}
             </span>
             <span className={cx('header-item')}>
               <ProjectMenu project={this.props.project} />
