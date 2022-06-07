@@ -22,9 +22,7 @@ import track from 'react-tracking';
 import { injectIntl } from 'react-intl';
 import { formatAttribute } from 'common/utils/attributeUtils';
 import { canUpdateSettings } from 'common/utils/permissions';
-import PlusIcon from 'common/img/plus-button-inline.svg';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { GhostButton } from 'components/buttons/ghostButton';
 import {
   updateProjectNotificationsConfigAction,
   projectNotificationsCasesSelector,
@@ -33,7 +31,7 @@ import {
 import { isEmailIntegrationAvailableSelector } from 'controllers/plugins';
 import { showModalAction } from 'controllers/modal';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
-import { NoCasesBlock } from 'components/main/noCasesBlock';
+import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
 import styles from './notificationsTab.scss';
 import { RuleListHeader } from '../ruleListHeader';
 import { RuleList } from '../ruleList';
@@ -273,19 +271,16 @@ export class NotificationsTab extends Component {
             />
           </Fragment>
         ) : (
-          <NoCasesBlock
-            noItemsMessage={formatMessage(messages.noItemsMessage)}
-            notificationsInfo={formatMessage(messages.notificationsInfo)}
-          >
-            <GhostButton
-              mobileDisabled
-              disabled={readOnlyNotificationCaseList}
-              icon={PlusIcon}
-              onClick={this.addNotificationCase}
-            >
-              {formatMessage(messages.create)}
-            </GhostButton>
-          </NoCasesBlock>
+          <EmptyStatePage
+            title={formatMessage(messages.noItemsMessage)}
+            description={formatMessage(messages.notificationsInfo)}
+            buttonName={formatMessage(messages.create)}
+            documentationLink={
+              'https://reportportal.io/docs/Project-configuration%3Ee-mail-notifications'
+            }
+            disableButton={readOnlyNotificationCaseList}
+            handleButton={this.addNotificationCase}
+          />
         )}
       </div>
     );
