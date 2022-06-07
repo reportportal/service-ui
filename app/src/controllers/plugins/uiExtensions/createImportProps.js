@@ -169,6 +169,10 @@ import {
   createGlobalNamedIntegrationsSelector,
 } from 'controllers/plugins/selectors';
 import { loginAction } from 'controllers/auth';
+import { ModalLayout as ModalLayoutComponent } from 'componentLibrary/modal';
+import { FieldText } from 'componentLibrary/fieldText';
+import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
+import { Checkbox } from 'componentLibrary/checkbox';
 
 const BUTTONS = {
   GhostButton,
@@ -249,6 +253,10 @@ export const createImportProps = (pluginName) => ({
     IntegrationFormField,
     BtsAuthFieldsInfo,
     BtsPropertiesForIssueForm,
+    ModalLayoutComponent,
+    FieldText,
+    FieldElement,
+    Checkbox,
   },
   constants: {
     PLUGIN_UI_EXTENSION_ADMIN_PAGE,
