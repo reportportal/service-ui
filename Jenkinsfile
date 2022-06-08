@@ -19,6 +19,7 @@ node {
                 make IMAGE_NAME=reportportal-dev/service-ui build-image-dev v=\$BUILD_VER
                 """
             }
+        }
 
         stage('Push to registries') {
             withEnv(["AWS_URI=${AWS_URI}", "AWS_REGION=${AWS_REGION}"]) {
