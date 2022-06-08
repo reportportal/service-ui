@@ -35,7 +35,7 @@ import { BigButton } from 'components/buttons/bigButton';
 import { NavigationTabs } from 'components/main/navigationTabs';
 import { NoCasesBlock } from 'components/main/noCasesBlock';
 import { ItemList } from 'components/main/itemList';
-import { ModalField } from 'components/main/modal';
+import { ModalLayout, ModalField } from 'components/main/modal';
 import { showModalAction, hideModalAction } from 'controllers/modal';
 import { fetch } from 'common/utils/fetch';
 import { isEmptyObject } from 'common/utils/isEmptyObject';
@@ -169,7 +169,7 @@ import {
   createGlobalNamedIntegrationsSelector,
 } from 'controllers/plugins/selectors';
 import { loginAction } from 'controllers/auth';
-import { ModalLayout } from 'componentLibrary/modal';
+import { ModalLayout as ModalLayoutComponent } from 'componentLibrary/modal';
 import { FieldText } from 'componentLibrary/fieldText';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { Checkbox } from 'componentLibrary/checkbox';
@@ -257,6 +257,7 @@ export const createImportProps = (pluginName) => ({
     IntegrationFormField,
     BtsAuthFieldsInfo,
     BtsPropertiesForIssueForm,
+    ModalLayoutComponent,
     FieldText,
     FieldElement,
     Checkbox,
