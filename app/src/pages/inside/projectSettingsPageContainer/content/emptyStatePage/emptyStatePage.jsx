@@ -40,13 +40,17 @@ export const EmptyStatePage = ({
       <div className={cx('img')} />
       <span className={cx('title')}>{title}</span>
       <span className={cx('description')}>{description}</span>
-      <Button disabled={disableButton} wide onClick={handleButton}>
-        {buttonName}
-      </Button>
-      <a href={documentationLink} target="_blank" className={cx('link')}>
-        <span>{formatMessage(COMMON_LOCALE_KEYS.documentation)}</span>
-        <div className={cx('icon')}>{Parser(ExternalLinkIcon)}</div>
-      </a>
+      {buttonName && (
+        <Button disabled={disableButton} wide onClick={handleButton}>
+          {buttonName}
+        </Button>
+      )}
+      {documentationLink && (
+        <a href={documentationLink} target="_blank" className={cx('link')}>
+          <span>{formatMessage(COMMON_LOCALE_KEYS.documentation)}</span>
+          <div className={cx('icon')}>{Parser(ExternalLinkIcon)}</div>
+        </a>
+      )}
     </div>
   );
 };
