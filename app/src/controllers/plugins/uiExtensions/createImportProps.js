@@ -35,7 +35,7 @@ import { BigButton } from 'components/buttons/bigButton';
 import { NavigationTabs } from 'components/main/navigationTabs';
 import { NoCasesBlock } from 'components/main/noCasesBlock';
 import { ItemList } from 'components/main/itemList';
-import { ModalLayout, ModalField } from 'components/main/modal';
+import { ModalField } from 'components/main/modal';
 import { showModalAction, hideModalAction } from 'controllers/modal';
 import { fetch } from 'common/utils/fetch';
 import { isEmptyObject } from 'common/utils/isEmptyObject';
@@ -169,10 +169,13 @@ import {
   createGlobalNamedIntegrationsSelector,
 } from 'controllers/plugins/selectors';
 import { loginAction } from 'controllers/auth';
-import { ModalLayout as ModalLayoutComponent } from 'componentLibrary/modal';
+import { ModalLayout } from 'componentLibrary/modal';
 import { FieldText } from 'componentLibrary/fieldText';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { Checkbox } from 'componentLibrary/checkbox';
+import { Button } from 'componentLibrary/button';
+import { Toggle } from 'componentLibrary/toggle';
+import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
 
 const BUTTONS = {
   GhostButton,
@@ -182,6 +185,7 @@ const BUTTONS = {
   GhostMenuButton,
   MultiActionButton,
   SidebarButton,
+  Button,
 };
 
 const INPUTS = {
@@ -253,10 +257,11 @@ export const createImportProps = (pluginName) => ({
     IntegrationFormField,
     BtsAuthFieldsInfo,
     BtsPropertiesForIssueForm,
-    ModalLayoutComponent,
     FieldText,
     FieldElement,
     Checkbox,
+    Toggle,
+    EmptyStatePage,
   },
   constants: {
     PLUGIN_UI_EXTENSION_ADMIN_PAGE,
