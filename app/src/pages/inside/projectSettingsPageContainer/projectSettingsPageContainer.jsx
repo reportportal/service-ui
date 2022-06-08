@@ -21,6 +21,7 @@ import classNames from 'classnames/bind';
 import {
   PROJECT_SETTINGS_TAB_PAGE,
   projectIdSelector,
+  querySelector,
   settingsTabSelector,
 } from 'controllers/pages';
 import { SettingsLayout } from 'layouts/settingsLayout';
@@ -61,6 +62,7 @@ export const ProjectSettingsPageContainer = () => {
   const activeTab = useSelector(settingsTabSelector);
   const userRole = useSelector(activeProjectRoleSelector);
   const accountRole = useSelector(userAccountRoleSelector);
+  const { subPage } = useSelector(querySelector);
   const [headerNodes, setHeaderNodes] = useState({});
 
   const createTabLink = useCallback(
@@ -156,9 +158,13 @@ export const ProjectSettingsPageContainer = () => {
   }, [accountRole, extensionsConfig, createTabLink, userRole]);
 
   const navigation = useMemo(() => {
-    const title = <FormattedMessage id="SettingsPage.title" defaultMessage="Project Settings" />;
-    return <Navigation items={config} title={title} />;
-  }, [config]);
+    if (subPage) {
+      return null;
+    } else {
+      const title = <FormattedMessage id="SettingsPage.title" defaultMessage="Project Settings" />;
+      return <Navigation items={config} title={title} />;
+    }
+  }, [config, subPage]);
 
   const content = useMemo(() => {
     if (!activeTab || !config[activeTab]) {
@@ -172,15 +178,17 @@ export const ProjectSettingsPageContainer = () => {
   return (
     <SettingsLayout navigation={navigation}>
       <ScrollWrapper>
-        <div className={cx('header')}>
-          <Header
-            title={config[activeTab] && config[activeTab].name}
-            titleNode={headerNodes.titleNode}
-          >
-            {headerNodes.children}
-          </Header>
-        </div>
-        <div className={cx('content')}>{content}</div>
+        {!subPage && (
+          <div className={cx('header')}>
+            <Header
+              title={config[activeTab] && config[activeTab].name}
+              titleNode={headerNodes.titleNode}
+            >
+              {headerNodes.children}
+            </Header>
+          </div>
+        )}
+        <div className={cx({ content: !subPage })}>{content}</div>
       </ScrollWrapper>
     </SettingsLayout>
   );

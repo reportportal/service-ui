@@ -173,6 +173,9 @@ import { ModalLayout as ModalLayoutComponent } from 'componentLibrary/modal';
 import { FieldText } from 'componentLibrary/fieldText';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { Checkbox } from 'componentLibrary/checkbox';
+import { Button } from 'componentLibrary/button';
+import { Toggle } from 'componentLibrary/toggle';
+import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
 
 const BUTTONS = {
   GhostButton,
@@ -182,6 +185,7 @@ const BUTTONS = {
   GhostMenuButton,
   MultiActionButton,
   SidebarButton,
+  Button,
 };
 
 const INPUTS = {
@@ -257,6 +261,8 @@ export const createImportProps = (pluginName) => ({
     FieldText,
     FieldElement,
     Checkbox,
+    Toggle,
+    EmptyStatePage,
   },
   constants: {
     PLUGIN_UI_EXTENSION_ADMIN_PAGE,

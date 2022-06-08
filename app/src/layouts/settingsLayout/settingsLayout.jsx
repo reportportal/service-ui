@@ -23,7 +23,7 @@ const cx = classNames.bind(styles);
 
 export const SettingsLayout = ({ navigation, children }) => (
   <div className={cx('container')}>
-    <div className={cx('navigation')}>{navigation}</div>
+    {navigation && <div className={cx('navigation')}>{navigation}</div>}
     <div className={cx('section')}>{children}</div>
   </div>
 );
