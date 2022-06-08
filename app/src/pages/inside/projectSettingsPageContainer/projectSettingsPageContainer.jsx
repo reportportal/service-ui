@@ -62,7 +62,7 @@ export const ProjectSettingsPageContainer = () => {
   const activeTab = useSelector(settingsTabSelector);
   const userRole = useSelector(activeProjectRoleSelector);
   const accountRole = useSelector(userAccountRoleSelector);
-  const { rawPage } = useSelector(querySelector);
+  const { subPage } = useSelector(querySelector);
   const [headerNodes, setHeaderNodes] = useState({});
 
   const createTabLink = useCallback(
@@ -158,13 +158,13 @@ export const ProjectSettingsPageContainer = () => {
   }, [accountRole, extensionsConfig, createTabLink, userRole]);
 
   const navigation = useMemo(() => {
-    if (rawPage) {
+    if (subPage) {
       return null;
     } else {
       const title = <FormattedMessage id="SettingsPage.title" defaultMessage="Project Settings" />;
       return <Navigation items={config} title={title} />;
     }
-  }, [config, rawPage]);
+  }, [config, subPage]);
 
   const content = useMemo(() => {
     if (!activeTab || !config[activeTab]) {
@@ -178,7 +178,7 @@ export const ProjectSettingsPageContainer = () => {
   return (
     <SettingsLayout navigation={navigation}>
       <ScrollWrapper>
-        {!rawPage && (
+        {!subPage && (
           <div className={cx('header')}>
             <Header
               title={config[activeTab] && config[activeTab].name}
@@ -188,7 +188,7 @@ export const ProjectSettingsPageContainer = () => {
             </Header>
           </div>
         )}
-        <div className={cx({ content: !rawPage })}>{content}</div>
+        <div className={cx({ content: !subPage })}>{content}</div>
       </ScrollWrapper>
     </SettingsLayout>
   );
