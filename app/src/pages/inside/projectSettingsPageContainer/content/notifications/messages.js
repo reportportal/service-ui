@@ -96,11 +96,11 @@ export const messages = defineMessages({
   },
   notificationsInfo: {
     id: 'NoCasesBlock.notificationsInfo',
-    defaultMessage: 'After launches finish, system will notify selected people by email.',
+    defaultMessage: 'Once a launch is finished system will notify selected people by email',
   },
   create: {
     id: 'AddNewCaseButton.addNewRuleButton',
-    defaultMessage: 'Create notification',
+    defaultMessage: 'Create Rule',
   },
   toggleLabel: {
     id: 'NotificationsEnableForm.toggleNotificationsLabel',
