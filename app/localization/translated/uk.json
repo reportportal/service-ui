@@ -1291,7 +1291,7 @@
   "NestedGridRow.loadLabel": "Завантажити 10",
   "NewsBlock.twitterTitle": "Ознайомтеся з нашими останніми твітами",
   "NoCasesBlock.noItemsMessage": "Правил повідомлення по електронній пошті Немає",
-  "NoCasesBlock.notificationsInfo": "Після завершення запуску система повідомить вибраних людей по електронній пошті.",
+  "NoCasesBlock.notificationsInfo": "Після завершення запуску система сповістить обраних людей електронною поштою",
   "NoDataAvailable.noDataMessage": "Доступних даних Немає.",
   "NoDataAvailableMaterializedView.renderingInfo": "Будь ласка, зачекайте, це може зайняти до кількох хвилин.",
   "NoDataAvailableMaterializedView.renderingTitle": "Ефективно використовувати час",

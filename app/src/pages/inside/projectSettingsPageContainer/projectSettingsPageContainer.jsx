@@ -35,7 +35,6 @@ import {
 } from 'common/constants/settingsTabs';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { IntegrationsTab } from 'pages/common/settingsPage/integrationsTab';
-import { NotificationsTab } from 'pages/common/settingsPage/notificationsTab';
 import { DefectTypesTab } from 'pages/common/settingsPage/defectTypesTab';
 import { DemoDataTab } from 'pages/common/settingsPage/demoDataTab';
 import { canSeeDemoData } from 'common/utils/permissions';
@@ -47,6 +46,7 @@ import { GeneralTab } from 'pages/common/settingsPage/generalTab/generalTab';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { Header } from 'pages/inside/projectSettingsPageContainer/header';
 import { PatternAnalysis } from 'pages/inside/projectSettingsPageContainer/content/patternAnalysis';
+import { Notifications } from 'pages/inside/projectSettingsPageContainer/content/notifications';
 import { AnalyzerContainer } from './content/analyzerContainer';
 import { messages } from './messages';
 import styles from './projectSettingsPageContainer.scss';
@@ -105,7 +105,7 @@ export const ProjectSettingsPageContainer = () => {
       [NOTIFICATIONS]: {
         name: formatMessage(messages.notifications),
         link: createTabLink(NOTIFICATIONS),
-        component: <NotificationsTab />,
+        component: <Notifications />,
         eventInfo: SETTINGS_PAGE_EVENTS.NOTIFICATIONS_TAB,
         mobileDisabled: true,
       },
