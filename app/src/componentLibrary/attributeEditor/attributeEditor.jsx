@@ -18,7 +18,6 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
-import { defineMessages, injectIntl } from 'react-intl';
 import Parser from 'html-react-parser';
 import { activeProjectSelector } from 'controllers/user';
 import {
@@ -35,17 +34,6 @@ import styles from './attributeEditor.scss';
 
 const cx = classNames.bind(styles);
 
-const messages = defineMessages({
-  keyLabel: {
-    id: 'AttributeEditor.keyLabel',
-    defaultMessage: 'Key',
-  },
-  valueLabel: {
-    id: 'AttributeEditor.valueLabel',
-    defaultMessage: 'Value',
-  },
-});
-
 const attributeKeyValidator = commonValidators.attributeKey;
 const attributeValueValidator = composeBoundValidators([
   commonValidators.requiredField,
@@ -55,7 +43,6 @@ const attributeValueValidator = composeBoundValidators([
 @connect((state) => ({
   projectId: activeProjectSelector(state),
 }))
-@injectIntl
 export class AttributeEditor extends Component {
   static propTypes = {
     projectId: PropTypes.string,
@@ -68,6 +55,8 @@ export class AttributeEditor extends Component {
     valueURLCreator: PropTypes.func,
     intl: PropTypes.object.isRequired,
     attribute: PropTypes.object,
+    keyPlaceholder: PropTypes.string,
+    valuePlaceholder: PropTypes.string,
   };
 
   static defaultProps = {
@@ -80,6 +69,8 @@ export class AttributeEditor extends Component {
     valueURLCreator: null,
     invalid: false,
     attribute: {},
+    keyPlaceholder: 'Key',
+    valuePlaceholder: 'Value',
   };
 
   constructor(props) {
@@ -150,7 +141,14 @@ export class AttributeEditor extends Component {
   handleAttributeKeyInputChange = (text) => this.setState({ isKeyEdited: !!text });
 
   render() {
-    const { projectId, attributes, keyURLCreator, valueURLCreator, intl } = this.props;
+    const {
+      projectId,
+      attributes,
+      keyURLCreator,
+      valueURLCreator,
+      keyPlaceholder,
+      valuePlaceholder,
+    } = this.props;
     return (
       <div className={cx('attribute-editor')}>
         <div>
@@ -160,7 +158,7 @@ export class AttributeEditor extends Component {
             attributeComparator={this.byKeyComparator}
             getURI={keyURLCreator(projectId)}
             creatable
-            placeholder={intl.formatMessage(messages.keyLabel)}
+            placeholder={keyPlaceholder}
             onChange={this.handleKeyChange}
             value={this.state.key}
             attributeKey={this.state.key}
@@ -179,7 +177,7 @@ export class AttributeEditor extends Component {
             creatable
             onChange={this.handleValueChange}
             value={this.state.value}
-            placeholder={intl.formatMessage(messages.valueLabel)}
+            placeholder={valuePlaceholder}
             attributeKey={this.state.key}
             attributeValue={this.state.value}
             autocompleteVariant={'value-variant'}
