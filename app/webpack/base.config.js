@@ -138,6 +138,12 @@ module.exports = {
         'react-tracking': {
           singleton: true,
         },
+        moment: {
+          singleton: true,
+        },
+        'html-react-parser': {
+          singleton: true,
+        },
       },
     }),
     // new CircularDependencyPlugin({
