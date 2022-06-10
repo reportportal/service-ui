@@ -16,6 +16,7 @@
 
 export const LABEL_WIDTH = 140;
 
+export const RULE_NAME_FIELD_KEY = 'ruleName';
 export const RECIPIENTS_FIELD_KEY = 'recipients';
 export const INFORM_OWNER_FIELD_KEY = 'informOwner';
 export const SEND_CASE_FIELD_KEY = 'sendCase';

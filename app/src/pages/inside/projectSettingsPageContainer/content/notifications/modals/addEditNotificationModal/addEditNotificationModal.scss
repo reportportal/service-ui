@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,5 +14,51 @@
  * limitations under the License.
  */
 
-export { Notifications } from './notifications';
-export { AddEditNotificationModal } from './modals';
+.content {
+  margin-top: 32px;
+}
+
+.autocomplete {
+  margin-top: 16px;
+  margin-bottom: 4px;
+}
+
+.checkbox {
+  margin-bottom: 16px;
+  margin-top: 16px;
+}
+
+.dropdown {
+  margin-bottom: 16px;
+}
+
+.text {
+  margin-bottom: 16px;
+}
+
+.toggle {
+  margin-top: 8px;
+  white-space: nowrap;
+}
+
+.form-input {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.form-label {
+  min-width: 170px;
+}
+
+.description {
+  display: block;
+  margin-top: 4px;
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 11px;
+  line-height: 16px;
+  color: $COLOR--e-300;
+}
+
+.attributes {
+  margin: 8px 0 0 0;
+}

@@ -14,5 +14,5 @@
  * limitations under the License.
  */
 
-export { Notifications } from './notifications';
-export { AddEditNotificationModal } from './modals';
+export { DeleteNotificationCaseModal } from './deleteNotificationCaseModal';
+export { AddEditNotificationModal } from './addEditNotificationModal';
