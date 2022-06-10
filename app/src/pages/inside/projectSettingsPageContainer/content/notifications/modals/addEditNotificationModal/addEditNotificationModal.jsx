@@ -193,7 +193,9 @@ const AddEditNotificationModal = ({
   const activeProject = useSelector(projectIdSelector);
   const [isEditorShown, setShowEditor] = React.useState(false);
 
-  useEffect(() => initialize(data.notification), []);
+  useEffect(() => {
+    initialize(data.notification);
+  }, []);
 
   const getDropdownInputConfig = () => {
     return [
