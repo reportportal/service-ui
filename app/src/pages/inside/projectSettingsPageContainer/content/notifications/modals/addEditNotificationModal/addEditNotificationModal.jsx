@@ -27,19 +27,18 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { validate, bindMessageToValidator } from 'common/utils/validation';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { Toggle } from 'componentLibrary/toggle';
 import { URLS } from 'common/urls';
 import { AsyncMultipleAutocomplete } from 'components/inputs/autocompletes/asyncMultipleAutocomplete';
-import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { InputDropdown } from 'components/inputs/inputDropdown';
+import { Dropdown } from 'componentLibrary/dropdown';
 import { AttributeListField } from 'components/main/attributeList';
 import { hideModalAction } from 'controllers/modal';
 import { FieldText } from 'componentLibrary/fieldText';
 import { Checkbox } from 'componentLibrary/checkbox';
 import { projectIdSelector } from 'controllers/pages';
 import { FieldBottomConstraints } from 'components/fields/fieldBottomConstraints';
+import { FieldElement } from '../../../elements';
 import {
   ATTRIBUTES_FIELD_KEY,
   INFORM_OWNER_FIELD_KEY,
@@ -197,34 +196,32 @@ const AddEditNotificationModal = ({
     initialize(data.notification);
   }, []);
 
-  const getDropdownInputConfig = () => {
-    return [
-      {
-        value: LAUNCH_CASES.ALWAYS,
-        label: formatMessage(messages[LAUNCH_CASES.ALWAYS]),
-      },
-      {
-        value: LAUNCH_CASES.MORE_10,
-        label: formatMessage(messages[LAUNCH_CASES.MORE_10]),
-      },
-      {
-        value: LAUNCH_CASES.MORE_20,
-        label: formatMessage(messages[LAUNCH_CASES.MORE_20]),
-      },
-      {
-        value: LAUNCH_CASES.MORE_50,
-        label: formatMessage(messages[LAUNCH_CASES.MORE_50]),
-      },
-      {
-        value: LAUNCH_CASES.FAILED,
-        label: formatMessage(messages[LAUNCH_CASES.FAILED]),
-      },
-      {
-        value: LAUNCH_CASES.TO_INVESTIGATE,
-        label: formatMessage(messages[LAUNCH_CASES.TO_INVESTIGATE]),
-      },
-    ];
-  };
+  const getDropdownInputConfig = [
+    {
+      value: LAUNCH_CASES.ALWAYS,
+      label: formatMessage(messages[LAUNCH_CASES.ALWAYS]),
+    },
+    {
+      value: LAUNCH_CASES.MORE_10,
+      label: formatMessage(messages[LAUNCH_CASES.MORE_10]),
+    },
+    {
+      value: LAUNCH_CASES.MORE_20,
+      label: formatMessage(messages[LAUNCH_CASES.MORE_20]),
+    },
+    {
+      value: LAUNCH_CASES.MORE_50,
+      label: formatMessage(messages[LAUNCH_CASES.MORE_50]),
+    },
+    {
+      value: LAUNCH_CASES.FAILED,
+      label: formatMessage(messages[LAUNCH_CASES.FAILED]),
+    },
+    {
+      value: LAUNCH_CASES.TO_INVESTIGATE,
+      label: formatMessage(messages[LAUNCH_CASES.TO_INVESTIGATE]),
+    },
+  ];
 
   const okButton = {
     text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
@@ -288,23 +285,21 @@ const AddEditNotificationModal = ({
           className={cx('checkbox')}
           onChange={() => trackEvent(SETTINGS_PAGE_EVENTS.CHECKBOX_LAUNCH_OWNER_NOTIFICATIONS)}
         >
-          <InputCheckbox className={cx('checkbox')}>
-            {formatMessage(messages.launchOwnerLabel)}
-          </InputCheckbox>
+          <Checkbox className={cx('checkbox')}>{formatMessage(messages.launchOwnerLabel)}</Checkbox>
         </FieldElement>
         <FieldElement
           label={formatMessage(messages.inCaseLabel)}
           name={SEND_CASE_FIELD_KEY}
           type="text"
-          className={cx('dropdown')}
+          className={cx('input')}
         >
-          <InputDropdown options={getDropdownInputConfig()} />
+          <Dropdown options={getDropdownInputConfig} />
         </FieldElement>
         <FieldElement
           label={formatMessage(messages.launchNamesLabel)}
           name={LAUNCH_NAMES_FIELD_KEY}
           onChange={() => trackEvent(SETTINGS_PAGE_EVENTS.LAUNCH_NAME_INPUT_NOTIFICATIONS)}
-          className={cx('text')}
+          className={cx('input')}
         >
           <FieldBottomConstraints text={formatMessage(messages.launchNamesNote)}>
             <FieldErrorHint hintType="top">
@@ -359,7 +354,8 @@ AddEditNotificationModal.defaultProps = {
 export default withModal('addEditNotificationModal')(
   reduxForm({
     form: 'notificationForm',
-    validate: ({ recipients, informOwner, launchNames, attributes }) => ({
+    validate: ({ ruleName, recipients, informOwner, launchNames, attributes }) => ({
+      ruleName: bindMessageToValidator(validate.notificationRuleName, 'ruleNameHint')(ruleName),
       recipients: bindMessageToValidator(
         validate.createNotificationRecipientsValidator(informOwner),
         'recipientsHint',

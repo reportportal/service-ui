@@ -69,6 +69,7 @@
   "AddEditNotificationModal.nameLabel": "Імя правіла",
   "AddEditNotificationModal.namePlaceholder": "Назва правіла",
   "AddEditNotificationModal.recipientsPlaceholder": "Імя/электронная пошта",
+  "AddEditNotificationModal.ruleNameHint": "Пале для запаўнення абавязковае. Імя правіла павінна мець памер ад «1» да «55» сімвалаў.",
   "AddFilter.filterName": "Назва Фільтра",
   "AddFilter.placeholderFilterName": "Увядзіце назву фільтра",
   "AddIntegrationModal.createGlobalTitle": "Стварыць глабальную інтэграцыю",

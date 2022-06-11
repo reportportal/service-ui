@@ -134,6 +134,10 @@ const messages = defineMessages({
     id: 'AddEditNotificationCaseModal.recipientsHint',
     defaultMessage: 'Select at least one recipient',
   },
+  ruleNameHint: {
+    id: 'AddEditNotificationModal.ruleNameHint',
+    defaultMessage: "Field is required. Rule name should have size from '1' to '55' characters.",
+  },
   launchesHint: {
     id: 'AddEditNotificationCaseModal.launchesHint',
     defaultMessage: 'Launch name should have size from 1 to 256',

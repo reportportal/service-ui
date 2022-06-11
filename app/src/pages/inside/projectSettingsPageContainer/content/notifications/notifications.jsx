@@ -26,6 +26,7 @@ import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import {
   projectNotificationsCasesSelector,
   projectNotificationsEnabledSelector,
+  updateProjectNotificationsConfigAction,
 } from 'controllers/project';
 import { isEmailIntegrationAvailableSelector } from 'controllers/plugins';
 import { showModalAction } from 'controllers/modal';
@@ -68,7 +69,7 @@ const ruleFieldsConfig = {
   },
 };
 
-export const Notifications = ({ updateNotificationsConfig }) => {
+export const Notifications = () => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
@@ -86,26 +87,26 @@ export const Notifications = ({ updateNotificationsConfig }) => {
 
   const toggleNotificationsEnabled = (isEnabled) => {
     trackEvent(SETTINGS_PAGE_EVENTS.EDIT_INPUT_NOTIFICATIONS);
-    updateNotificationsConfig({ enabled: isEnabled });
+    dispatch(updateProjectNotificationsConfigAction({ enabled: isEnabled }));
   };
 
   const confirmAddCase = (notificationCase) => {
     const newCases = [...cases, notificationCase].map(convertNotificationCaseForSubmission);
-    updateNotificationsConfig({ cases: newCases });
+    dispatch(updateProjectNotificationsConfigAction({ cases: newCases }));
   };
 
   const confirmEditCase = (id, notificationCase) => {
     const updatedCases = [...cases];
     updatedCases.splice(id, 1, notificationCase);
     const newCases = cases.map(convertNotificationCaseForSubmission);
-    updateNotificationsConfig({ cases: newCases });
+    dispatch(updateProjectNotificationsConfigAction({ cases: newCases }));
   };
 
   const confirmDeleteCase = (id) => {
     const newCases = cases
       .filter((item, index) => index !== id)
       .map(convertNotificationCaseForSubmission);
-    updateNotificationsConfig({ cases: newCases });
+    dispatch(updateProjectNotificationsConfigAction({ cases: newCases }));
   };
 
   const addNotificationCase = () => {
@@ -163,7 +164,7 @@ export const Notifications = ({ updateNotificationsConfig }) => {
         ? SETTINGS_PAGE_EVENTS.TURN_ON_NOTIFICATION_RULE_SWITCHER
         : SETTINGS_PAGE_EVENTS.TURN_OFF_NOTIFICATION_RULE_SWITCHER,
     );
-    updateNotificationsConfig({ cases: newCases });
+    dispatch(updateProjectNotificationsConfigAction({ cases: newCases }));
   };
 
   const getPanelTitle = () => formatMessage(messages.controlPanelName);
