@@ -293,7 +293,7 @@ const AddEditNotificationModal = ({
           type="text"
           className={cx('input')}
         >
-          <Dropdown options={caseOptions} />
+          <Dropdown options={caseOptions} defaultWidth={false} />
         </FieldElement>
         <FieldElement
           label={formatMessage(messages.launchNamesLabel)}
