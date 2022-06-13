@@ -69,7 +69,7 @@
   "AddEditNotificationModal.nameLabel": "Имя правила",
   "AddEditNotificationModal.namePlaceholder": "Имя правила",
   "AddEditNotificationModal.recipientsPlaceholder": "Имя/Электронная почта",
-  "AddEditNotificationModal.ruleNameHint": "Поле, обязательное для заполнения. Имя правила должно иметь размер от «1» до «55» символов.",
+  "AddEditNotificationModal.ruleNameHint": "Поле, обязательное для заполнения. Имя правила должно иметь размер от «1» до «55» символов",
   "AddFilter.filterName": "Имя фильтра",
   "AddFilter.placeholderFilterName": "Ввести имя фильтра",
   "AddIntegrationModal.createGlobalTitle": "Создать глобальную интеграцию",

@@ -136,7 +136,7 @@ const messages = defineMessages({
   },
   ruleNameHint: {
     id: 'AddEditNotificationModal.ruleNameHint',
-    defaultMessage: "Field is required. Rule name should have size from '1' to '55' characters.",
+    defaultMessage: "Field is required. Rule name should have size from '1' to '55' characters",
   },
   launchesHint: {
     id: 'AddEditNotificationCaseModal.launchesHint',
