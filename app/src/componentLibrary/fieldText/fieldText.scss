@@ -30,7 +30,6 @@
   width: 100%;
   margin: 2px 0 0 0;
   padding: 0;
-  border: none;
   background: transparent;
 
   &:focus {
@@ -173,6 +172,10 @@
     &.default-width {
       @include default-width;
     }
+  }
+
+  input {
+    border: none;
   }
 
   &.input {
