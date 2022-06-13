@@ -30,6 +30,7 @@ import {
   UPDATE_PATTERN_SUCCESS,
   DELETE_PATTERN_SUCCESS,
   FETCH_PROJECT,
+  ADD_PROJECT_NOTIFICATION_SUCCESS,
 } from './constants';
 
 export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, payload }) => {
@@ -53,6 +54,17 @@ export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, p
         configuration: {
           ...state.configuration,
           notificationsConfiguration: payload,
+        },
+      };
+    case ADD_PROJECT_NOTIFICATION_SUCCESS:
+      return {
+        ...state,
+        configuration: {
+          ...state.configuration,
+          notificationsConfiguration: {
+            ...state.configuration.notificationsConfiguration,
+            cases: [...state.configuration.notificationsConfiguration.cases, payload],
+          },
         },
       };
     case UPDATE_DEFECT_SUBTYPE_SUCCESS:

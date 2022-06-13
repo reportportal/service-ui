@@ -39,6 +39,8 @@ import {
   SHOW_FILTER_ON_LAUNCHES,
   HIDE_FILTER_ON_LAUNCHES,
   UPDATE_PROJECT_FILTER_PREFERENCES,
+  ADD_PROJECT_NOTIFICATION,
+  ADD_PROJECT_NOTIFICATION_SUCCESS,
 } from './constants';
 
 export const fetchProjectSuccessAction = (project) => ({
@@ -159,4 +161,14 @@ export const deletePatternSuccessAction = (pattern) => ({
 export const updatePAStateAction = (PAState) => ({
   type: UPDATE_PA_STATE,
   payload: PAState,
+});
+
+export const addProjectNotificationAction = (notification) => ({
+  type: ADD_PROJECT_NOTIFICATION,
+  payload: notification,
+});
+
+export const addProjectNotificationSuccessAction = (notification) => ({
+  type: ADD_PROJECT_NOTIFICATION_SUCCESS,
+  payload: notification,
 });
