@@ -285,7 +285,7 @@ const AddEditNotificationModal = ({
           className={cx('checkbox')}
           onChange={() => trackEvent(SETTINGS_PAGE_EVENTS.CHECKBOX_LAUNCH_OWNER_NOTIFICATIONS)}
         >
-          <Checkbox className={cx('checkbox')}>{formatMessage(messages.launchOwnerLabel)}</Checkbox>
+          <Checkbox>{formatMessage(messages.launchOwnerLabel)}</Checkbox>
         </FieldElement>
         <FieldElement
           label={formatMessage(messages.inCaseLabel)}
