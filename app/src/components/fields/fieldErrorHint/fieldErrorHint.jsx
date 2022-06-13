@@ -212,7 +212,7 @@ const messages = defineMessages({
     defaultMessage: 'Pattern with the same name already exists in the project',
   },
   ruleNameDuplicateHint: {
-    id: 'PNotifications.ruleNameDuplicateHint',
+    id: 'Notifications.ruleNameDuplicateHint',
     defaultMessage: 'Rule with the same name already exist on the project',
   },
   customColumnsDuplicationHint: {
