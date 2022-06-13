@@ -196,7 +196,7 @@ const AddEditNotificationModal = ({
     initialize(data.notification);
   }, []);
 
-  const getDropdownInputConfig = [
+  const caseOptions = [
     {
       value: LAUNCH_CASES.ALWAYS,
       label: formatMessage(messages[LAUNCH_CASES.ALWAYS]),
@@ -293,7 +293,7 @@ const AddEditNotificationModal = ({
           type="text"
           className={cx('input')}
         >
-          <Dropdown options={getDropdownInputConfig} />
+          <Dropdown options={caseOptions} />
         </FieldElement>
         <FieldElement
           label={formatMessage(messages.launchNamesLabel)}
