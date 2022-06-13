@@ -23,6 +23,10 @@
   margin-bottom: 4px;
 }
 
+.launches {
+  margin-bottom: 0;
+}
+
 .checkbox {
   margin-bottom: 16px;
   margin-top: 8px;
@@ -53,6 +57,10 @@
   font-size: 11px;
   line-height: 16px;
   color: $COLOR--e-300;
+
+  &.launches {
+    margin-bottom: 16px;
+  }
 }
 
 .attributes {

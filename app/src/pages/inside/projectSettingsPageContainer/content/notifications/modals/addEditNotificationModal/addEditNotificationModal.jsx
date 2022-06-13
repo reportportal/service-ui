@@ -37,7 +37,6 @@ import { hideModalAction } from 'controllers/modal';
 import { FieldText } from 'componentLibrary/fieldText';
 import { Checkbox } from 'componentLibrary/checkbox';
 import { projectIdSelector } from 'controllers/pages';
-import { FieldBottomConstraints } from 'components/fields/fieldBottomConstraints';
 import { FieldElement } from '../../../elements';
 import {
   ATTRIBUTES_FIELD_KEY,
@@ -107,7 +106,7 @@ const messages = defineMessages({
   },
   launchNamesPlaceholder: {
     id: 'AddEditNotificationCaseModal.launchNamesPlaceholder',
-    defaultMessage: 'Launch Name',
+    defaultMessage: 'Launch name',
   },
   launchNamesHint: {
     id: 'AddEditNotificationCaseModal.launchNamesHint',
@@ -299,22 +298,23 @@ const AddEditNotificationModal = ({
           label={formatMessage(messages.launchNamesLabel)}
           name={LAUNCH_NAMES_FIELD_KEY}
           onChange={() => trackEvent(SETTINGS_PAGE_EVENTS.LAUNCH_NAME_INPUT_NOTIFICATIONS)}
-          className={cx('input')}
+          className={cx('launches')}
         >
-          <FieldBottomConstraints text={formatMessage(messages.launchNamesNote)}>
-            <FieldErrorHint hintType="top">
-              <AsyncMultipleAutocomplete
-                placeholder={formatMessage(messages.launchNamesPlaceholder)}
-                notFoundPrompt={formatMessage(messages.launchNamesHint)}
-                minLength={3}
-                getURI={URLS.launchNameSearch(activeProject)}
-                creatable
-                isValidNewOption={validate.launchName}
-                showDynamicSearchPrompt
-              />
-            </FieldErrorHint>
-          </FieldBottomConstraints>
+          <FieldErrorHint hintType="top">
+            <AsyncMultipleAutocomplete
+              placeholder={formatMessage(messages.launchNamesPlaceholder)}
+              notFoundPrompt={formatMessage(messages.launchNamesHint)}
+              minLength={3}
+              getURI={URLS.launchNameSearch(activeProject)}
+              creatable
+              isValidNewOption={validate.launchName}
+              showDynamicSearchPrompt
+            />
+          </FieldErrorHint>
         </FieldElement>
+        <span className={cx('description', 'launches')}>
+          {formatMessage(messages.launchNamesNote)}
+        </span>
         <Checkbox value={isEditorShown} onChange={(e) => setShowEditor(e.target.checked)}>
           Attributes
         </Checkbox>
