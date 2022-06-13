@@ -74,11 +74,7 @@ export const RegistrationPage = ({
         <RegistrationPageSection failed={!tokenActive || !tokenProvided}>
           {tokenProvided && tokenActive ? (
             <div className={cx('main-content')}>
-              <BlockHeader
-                header={messages.welcome}
-                hint={messages.registration}
-                style={{ marginTop: '32px' }}
-              />
+              <BlockHeader header={messages.welcome} hint={messages.registration} />
               <RegistrationForm
                 email={email}
                 submitForm={onRegistrationSubmit}
