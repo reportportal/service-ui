@@ -60,7 +60,7 @@ export const createPatternNameUniqueValidator = (patternId, patterns) => (newPat
     ({ id, name: patternName }) =>
       patternName.toLowerCase() === newPatternName.toLowerCase() && id !== patternId,
   );
-export const createRuleNameUniqueValidator = (notificationName, notifications) => (newRuleName) =>
+export const createRuleNameUniqueValidator = (notifications) => (newRuleName) =>
   !notifications.some(
     ({ ruleName }) => ruleName && ruleName.toLowerCase() === newRuleName.toLowerCase(),
   );

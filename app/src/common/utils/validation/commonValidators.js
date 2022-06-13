@@ -63,11 +63,11 @@ export const createNumberOfLaunchesValidator = (message) =>
 export const createWidgetContentFieldsValidator = (message) =>
   bindMessageToValidator(validate.isNotEmptyArray, message);
 
-export const createRuleNameValidator = (notifications, notificationName) =>
+export const createRuleNameValidator = (notifications) =>
   composeBoundValidators([
     bindMessageToValidator(validate.ruleNameLength, 'ruleNameHint'),
     bindMessageToValidator(
-      validate.createRuleNameUniqueValidator(notificationName, notifications),
+      validate.createRuleNameUniqueValidator(notifications),
       'ruleNameDuplicateHint',
     ),
   ]);

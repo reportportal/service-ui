@@ -369,6 +369,27 @@ describe('validate.createPatternNameUniqueValidator', () => {
   });
 });
 
+describe('validate.createRuleNameUniqueValidator', () => {
+  const notifications = [
+    {
+      ruleName: 'abc',
+    },
+    {
+      ruleName: 'old_name',
+    },
+    {
+      ruleName: 'third',
+    },
+  ];
+  const ruleNameUniqueValidator = validate.createRuleNameUniqueValidator(notifications);
+  test('validation should be correct', () => {
+    expect(ruleNameUniqueValidator('new_name')).toBe(true);
+  });
+  test('Validation should not be correct', () => {
+    expect(ruleNameUniqueValidator('abc')).toBe(false);
+  });
+});
+
 describe('validate.analyzerMinShouldMatch', () => {
   test('validation should be correct', () => {
     expect(validate.analyzerMinShouldMatch('50')).toBe(true);
