@@ -1366,6 +1366,7 @@
   "OwnerBlock.ownerTitle": "Власник",
   "OwnerColumn.owner": "Власник:",
   "OwnersInfo.noDataMessage": "У вибраний період не було виконано жодного запуску",
+  "PNotifications.ruleNameDuplicateHint": "Правило з такою ж назвою вже існує в проекті",
   "PageSizeControl.perPage": "на сторінці",
   "PassingRatePerLaunchControls.LaunchNameFieldLabel": "Ім’я запуску",
   "PassingRatePerLaunchControls.LaunchNamePlaceholder": "Введіть ім’я запуску",

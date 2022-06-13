@@ -25,7 +25,7 @@ import { withModal } from 'components/main/modal';
 import { ModalLayout } from 'componentLibrary/modal';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { validate, bindMessageToValidator } from 'common/utils/validation';
+import { validate, bindMessageToValidator, commonValidators } from 'common/utils/validation';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { Toggle } from 'componentLibrary/toggle';
 import { URLS } from 'common/urls';
@@ -339,6 +339,7 @@ const AddEditNotificationModal = ({
 AddEditNotificationModal.propTypes = {
   data: PropTypes.shape({
     notification: PropTypes.object,
+    notifications: PropTypes.array,
     onSave: PropTypes.func,
     isNewCase: PropTypes.bool,
     eventsInfo: PropTypes.object,
@@ -354,8 +355,11 @@ AddEditNotificationModal.defaultProps = {
 export default withModal('addEditNotificationModal')(
   reduxForm({
     form: 'notificationForm',
-    validate: ({ ruleName, recipients, informOwner, launchNames, attributes }) => ({
-      ruleName: bindMessageToValidator(validate.notificationRuleName, 'ruleNameHint')(ruleName),
+    validate: (
+      { ruleName, recipients, informOwner, launchNames, attributes },
+      { data: { notifications } },
+    ) => ({
+      ruleName: commonValidators.createRuleNameValidator(notifications)(ruleName),
       recipients: bindMessageToValidator(
         validate.createNotificationRecipientsValidator(informOwner),
         'recipientsHint',

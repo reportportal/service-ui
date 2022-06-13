@@ -1366,6 +1366,7 @@
   "OwnerBlock.ownerTitle": "Владелец",
   "OwnerColumn.owner": "Владелец:",
   "OwnersInfo.noDataMessage": "В выбранный период не было выполнено ни одного запуска",
+  "PNotifications.ruleNameDuplicateHint": "Правило с таким названием уже существует в проекте",
   "PageSizeControl.perPage": "на странице",
   "PassingRatePerLaunchControls.LaunchNameFieldLabel": "Имя запуска",
   "PassingRatePerLaunchControls.LaunchNamePlaceholder": "Введите имя запуска",

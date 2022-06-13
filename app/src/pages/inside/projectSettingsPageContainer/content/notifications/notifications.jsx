@@ -117,20 +117,22 @@ export const Notifications = () => {
         data: {
           onSave: confirmAddCase,
           notification: DEFAULT_CASE_CONFIG,
+          notifications: cases,
           isNewCase: true,
         },
       }),
     );
   };
 
-  const onEdit = (notificationCase, id) => {
+  const onEdit = (notification, id) => {
     trackEvent(SETTINGS_PAGE_EVENTS.EDIT_RULE_NOTIFICATIONS);
     dispatch(
       showModalAction({
         id: 'addEditNotificationModal',
         data: {
           onSave: (data) => confirmEditCase(id, data),
-          notificationCase,
+          notification,
+          notifications: cases,
         },
       }),
     );

@@ -211,6 +211,10 @@ const messages = defineMessages({
     id: 'PatternAnalysis.patternNameDuplicateHint',
     defaultMessage: 'Pattern with the same name already exists in the project',
   },
+  ruleNameDuplicateHint: {
+    id: 'PNotifications.ruleNameDuplicateHint',
+    defaultMessage: 'Rule with the same name already exist on the project',
+  },
   customColumnsDuplicationHint: {
     id: 'ProductStatusControls.customColumnsDuplicationHint',
     defaultMessage: 'Duplicated column names are prohibited',
