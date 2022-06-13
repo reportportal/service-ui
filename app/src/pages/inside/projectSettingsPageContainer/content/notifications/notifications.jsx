@@ -27,6 +27,7 @@ import {
   projectNotificationsCasesSelector,
   projectNotificationsEnabledSelector,
   updateProjectNotificationsConfigAction,
+  addProjectNotificationAction,
 } from 'controllers/project';
 import { isEmailIntegrationAvailableSelector } from 'controllers/plugins';
 import { showModalAction } from 'controllers/modal';
@@ -87,18 +88,20 @@ export const Notifications = () => {
 
   const toggleNotificationsEnabled = (isEnabled) => {
     trackEvent(SETTINGS_PAGE_EVENTS.EDIT_INPUT_NOTIFICATIONS);
+    // TODO: use new endpoint
     dispatch(updateProjectNotificationsConfigAction({ enabled: isEnabled }));
   };
 
   const confirmAddCase = (notificationCase) => {
-    const newCases = [...cases, notificationCase].map(convertNotificationCaseForSubmission);
-    dispatch(updateProjectNotificationsConfigAction({ cases: newCases }));
+    const notification = convertNotificationCaseForSubmission(notificationCase);
+    dispatch(addProjectNotificationAction(notification));
   };
 
   const confirmEditCase = (id, notificationCase) => {
     const updatedCases = [...cases];
     updatedCases.splice(id, 1, notificationCase);
     const newCases = cases.map(convertNotificationCaseForSubmission);
+    // TODO: use new endpoint
     dispatch(updateProjectNotificationsConfigAction({ cases: newCases }));
   };
 
@@ -106,6 +109,7 @@ export const Notifications = () => {
     const newCases = cases
       .filter((item, index) => index !== id)
       .map(convertNotificationCaseForSubmission);
+    // TODO: use new endpoint
     dispatch(updateProjectNotificationsConfigAction({ cases: newCases }));
   };
 
@@ -166,6 +170,7 @@ export const Notifications = () => {
         ? SETTINGS_PAGE_EVENTS.TURN_ON_NOTIFICATION_RULE_SWITCHER
         : SETTINGS_PAGE_EVENTS.TURN_OFF_NOTIFICATION_RULE_SWITCHER,
     );
+    // TODO: use new endpoint
     dispatch(updateProjectNotificationsConfigAction({ cases: newCases }));
   };
 

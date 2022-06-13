@@ -50,6 +50,7 @@ import {
   HIDE_FILTER_ON_LAUNCHES,
   SHOW_FILTER_ON_LAUNCHES,
   UPDATE_PROJECT_FILTER_PREFERENCES,
+  ADD_PROJECT_NOTIFICATION,
 } from './constants';
 import {
   updateDefectSubTypeSuccessAction,
@@ -64,6 +65,7 @@ import {
   fetchProjectSuccessAction,
   fetchProjectPreferencesSuccessAction,
   updateProjectFilterPreferencesAction,
+  addProjectNotificationSuccessAction,
 } from './actionCreators';
 import { projectNotificationsConfigurationSelector, patternsSelector } from './selectors';
 
@@ -166,6 +168,32 @@ function* updateProjectNotificationsConfig({ payload: notificationsConfig }) {
 
 function* watchUpdateProjectNotificationsConfig() {
   yield takeEvery(UPDATE_NOTIFICATIONS_CONFIG, updateProjectNotificationsConfig);
+}
+
+function* addProjectNotification({ payload: notification }) {
+  try {
+    const projectId = yield select(projectIdSelector);
+
+    const response = yield call(fetch, URLS.notification(projectId), {
+      method: 'post',
+      data: notification,
+    });
+
+    yield put(addProjectNotificationSuccessAction({ ...notification, ...response }));
+    yield put(
+      showNotification({
+        messageId: 'updateProjectNotificationsConfigurationSuccess',
+        type: NOTIFICATION_TYPES.SUCCESS,
+      }),
+    );
+    yield put(hideModalAction());
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+  }
+}
+
+function* watchAddProjectNotification() {
+  yield takeEvery(ADD_PROJECT_NOTIFICATION, addProjectNotification);
 }
 
 function* updatePAState(PAEnabled) {
@@ -364,5 +392,6 @@ export function* projectSagas() {
     watchHideFilterOnLaunches(),
     watchShowFilterOnLaunches(),
     watchUpdateProjectFilterPreferences(),
+    watchAddProjectNotification(),
   ]);
 }

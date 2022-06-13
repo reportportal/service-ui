@@ -41,6 +41,7 @@ export {
   deletePatternSuccessAction,
   updatePAStateAction,
   fetchProjectPreferencesAction,
+  addProjectNotificationAction,
 } from './actionCreators';
 export { projectReducer } from './reducer';
 export {

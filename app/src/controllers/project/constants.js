@@ -48,6 +48,9 @@ export const DELETE_PATTERN = 'deletePattern';
 export const DELETE_PATTERN_SUCCESS = 'deletePatternSuccess';
 export const UPDATE_PA_STATE = 'updatePAState';
 
+export const ADD_PROJECT_NOTIFICATION = 'addProjectNotification';
+export const ADD_PROJECT_NOTIFICATION_SUCCESS = 'addProjectNotificationSuccess';
+
 export const NAMESPACE = 'project';
 
 export const HIDE_FILTER_ON_LAUNCHES = 'hideFilterOnLaunches';
