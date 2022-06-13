@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-import React, { Component, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
-import track from 'react-tracking';
-import { injectIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
+import { useIntl } from 'react-intl';
 import { formatAttribute } from 'common/utils/attributeUtils';
 import { canUpdateSettings } from 'common/utils/permissions';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import {
-  updateProjectNotificationsConfigAction,
   projectNotificationsCasesSelector,
   projectNotificationsEnabledSelector,
+  updateProjectNotificationsConfigAction,
 } from 'controllers/project';
 import { isEmailIntegrationAvailableSelector } from 'controllers/plugins';
 import { showModalAction } from 'controllers/modal';
@@ -69,154 +69,109 @@ const ruleFieldsConfig = {
   },
 };
 
-@injectIntl
-@connect(
-  (state) => ({
-    projectRole: activeProjectRoleSelector(state),
-    userRole: userAccountRoleSelector(state),
-    enabled: projectNotificationsEnabledSelector(state),
-    cases: projectNotificationsCasesSelector(state),
-    isEmailIntegrationAvailable: isEmailIntegrationAvailableSelector(state),
-  }),
-  {
-    updateNotificationsConfig: updateProjectNotificationsConfigAction,
-    showModal: showModalAction,
-  },
-)
-@track()
-export class Notifications extends Component {
-  static propTypes = {
-    intl: PropTypes.object.isRequired,
-    enabled: PropTypes.bool,
-    cases: PropTypes.array,
-    updateNotificationsConfig: PropTypes.func,
-    showModal: PropTypes.func,
-    projectRole: PropTypes.string,
-    userRole: PropTypes.string,
-    isEmailIntegrationAvailable: PropTypes.bool,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
-  };
-  static defaultProps = {
-    enabled: false,
-    cases: [],
-    showModal: () => {},
-    updateNotificationsConfig: () => {},
-    projectRole: '',
-    userRole: '',
-    isEmailIntegrationAvailable: true,
+export const Notifications = () => {
+  const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
+  const dispatch = useDispatch();
+
+  const projectRole = useSelector(activeProjectRoleSelector);
+  const userRole = useSelector(userAccountRoleSelector);
+  const enabled = useSelector(projectNotificationsEnabledSelector);
+  const cases = useSelector(projectNotificationsCasesSelector);
+  const isEmailIntegrationAvailable = useSelector(isEmailIntegrationAvailableSelector);
+
+  const isAbleToEditNotificationCaseList = () => canUpdateSettings(userRole, projectRole);
+
+  const isAbleToEditNotificationsEnableForm = () =>
+    canUpdateSettings(userRole, projectRole) && isEmailIntegrationAvailable;
+
+  const toggleNotificationsEnabled = (isEnabled) => {
+    trackEvent(SETTINGS_PAGE_EVENTS.EDIT_INPUT_NOTIFICATIONS);
+    dispatch(updateProjectNotificationsConfigAction({ enabled: isEnabled }));
   };
 
-  isAbleToEditNotificationCaseList = () =>
-    canUpdateSettings(this.props.userRole, this.props.projectRole);
-
-  isAbleToEditNotificationsEnableForm = () =>
-    canUpdateSettings(this.props.userRole, this.props.projectRole) &&
-    this.props.isEmailIntegrationAvailable;
-
-  toggleNotificationsEnabled = (enabled) => {
-    this.props.tracking.trackEvent(SETTINGS_PAGE_EVENTS.EDIT_INPUT_NOTIFICATIONS);
-    this.props.updateNotificationsConfig({ enabled });
+  const confirmAddCase = (notificationCase) => {
+    const newCases = [...cases, notificationCase].map(convertNotificationCaseForSubmission);
+    dispatch(updateProjectNotificationsConfigAction({ cases: newCases }));
   };
 
-  confirmAddCase = (notificationCase) => {
-    const { cases: oldCases, updateNotificationsConfig } = this.props;
-    const cases = [...oldCases, notificationCase].map(convertNotificationCaseForSubmission);
-    updateNotificationsConfig({ cases });
-  };
-
-  confirmEditCase = (id, notificationCase) => {
-    const { cases: oldCases, updateNotificationsConfig } = this.props;
-    const updatedCases = [...oldCases];
+  const confirmEditCase = (id, notificationCase) => {
+    const updatedCases = [...cases];
     updatedCases.splice(id, 1, notificationCase);
-    const cases = updatedCases.map(convertNotificationCaseForSubmission);
-    updateNotificationsConfig({ cases });
+    const newCases = cases.map(convertNotificationCaseForSubmission);
+    dispatch(updateProjectNotificationsConfigAction({ cases: newCases }));
   };
 
-  confirmDeleteCase = (id) => {
-    const { cases: oldCases, updateNotificationsConfig } = this.props;
-    const cases = oldCases
+  const confirmDeleteCase = (id) => {
+    const newCases = cases
       .filter((item, index) => index !== id)
       .map(convertNotificationCaseForSubmission);
-    updateNotificationsConfig({ cases });
+    dispatch(updateProjectNotificationsConfigAction({ cases: newCases }));
   };
 
-  addNotificationCase = () => {
-    const { showModal } = this.props;
-    this.props.tracking.trackEvent(SETTINGS_PAGE_EVENTS.ADD_RULE_BTN_NOTIFICATIONS);
-    showModal({
-      id: 'addEditNotificationCaseModal',
-      data: {
-        onConfirm: this.confirmAddCase,
-        notificationCase: DEFAULT_CASE_CONFIG,
-        isNewCase: true,
-        eventsInfo: {
-          closeIcon: SETTINGS_PAGE_EVENTS.CLOSE_ICON_ADD_RULE_NOTIFICATIONS,
-          cancelBtn: SETTINGS_PAGE_EVENTS.CANCEL_ADD_RULE_NOTIFICATIONS,
-          saveBtn: SETTINGS_PAGE_EVENTS.SAVE_ADD_RULE_NOTIFICATIONS,
+  const addNotificationCase = () => {
+    trackEvent(SETTINGS_PAGE_EVENTS.ADD_RULE_BTN_NOTIFICATIONS);
+    dispatch(
+      showModalAction({
+        id: 'addEditNotificationModal',
+        data: {
+          onSave: confirmAddCase,
+          notification: DEFAULT_CASE_CONFIG,
+          notifications: cases,
+          isNewCase: true,
         },
-      },
-    });
+      }),
+    );
   };
 
-  onEdit = (notificationCase, id) => {
-    const { showModal, tracking } = this.props;
-
-    tracking.trackEvent(SETTINGS_PAGE_EVENTS.EDIT_RULE_NOTIFICATIONS);
-    showModal({
-      id: 'addEditNotificationCaseModal',
-      data: {
-        onConfirm: (data) => this.confirmEditCase(id, data),
-        notificationCase,
-        eventsInfo: {
-          closeIcon: SETTINGS_PAGE_EVENTS.CLOSE_ICON_EDIT_RULE_NOTIFICATIONS,
-          cancelBtn: SETTINGS_PAGE_EVENTS.CANCEL_EDIT_RULE_NOTIFICATIONS,
-          saveBtn: SETTINGS_PAGE_EVENTS.SAVE_EDIT_RULE_NOTIFICATIONS,
+  const onEdit = (notification, id) => {
+    trackEvent(SETTINGS_PAGE_EVENTS.EDIT_RULE_NOTIFICATIONS);
+    dispatch(
+      showModalAction({
+        id: 'addEditNotificationModal',
+        data: {
+          onSave: (data) => confirmEditCase(id, data),
+          notification,
+          notifications: cases,
         },
-      },
-    });
+      }),
+    );
   };
 
-  onDelete = (notificationCase, id) => {
-    const { showModal, tracking } = this.props;
-
-    tracking.trackEvent(SETTINGS_PAGE_EVENTS.CLICK_ON_DELETE_RULE_NOTIFICATIONS);
-    showModal({
-      id: 'deleteNotificationCaseModal',
-      data: {
-        id,
-        onConfirm: () => this.confirmDeleteCase(id),
-        eventsInfo: {
-          closeIcon: SETTINGS_PAGE_EVENTS.CLOSE_ICON_DELETE_RULE_NOTIFICATIONS,
-          cancelBtn: SETTINGS_PAGE_EVENTS.CANCEL_DELETE_RULE_NOTIFICATIONS,
-          deleteBtn: SETTINGS_PAGE_EVENTS.DELETE_RULE_NOTIFICATIONS,
+  const onDelete = (notificationCase, id) => {
+    trackEvent(SETTINGS_PAGE_EVENTS.CLICK_ON_DELETE_RULE_NOTIFICATIONS);
+    dispatch(
+      showModalAction({
+        id: 'deleteNotificationModal',
+        data: {
+          id,
+          onSave: () => confirmDeleteCase(id),
+          eventsInfo: {
+            closeIcon: SETTINGS_PAGE_EVENTS.CLOSE_ICON_DELETE_RULE_NOTIFICATIONS,
+            cancelBtn: SETTINGS_PAGE_EVENTS.CANCEL_DELETE_RULE_NOTIFICATIONS,
+            deleteBtn: SETTINGS_PAGE_EVENTS.DELETE_RULE_NOTIFICATIONS,
+          },
         },
-      },
-    });
+      }),
+    );
   };
 
-  onToggleHandler = (enabled, notificationCase, id) => {
-    const { cases: oldCases, updateNotificationsConfig, tracking } = this.props;
-    const updatedCases = [...oldCases];
-    updatedCases.splice(id, 1, { ...notificationCase, enabled });
-    const cases = updatedCases.map(convertNotificationCaseForSubmission);
+  const onToggleHandler = (isEnabled, notificationCase, id) => {
+    const updatedCases = [...cases];
+    updatedCases.splice(id, 1, { ...notificationCase, enabled: isEnabled });
+    const newCases = updatedCases.map(convertNotificationCaseForSubmission);
 
-    tracking.trackEvent(
-      enabled
+    trackEvent(
+      isEnabled
         ? SETTINGS_PAGE_EVENTS.TURN_ON_NOTIFICATION_RULE_SWITCHER
         : SETTINGS_PAGE_EVENTS.TURN_OFF_NOTIFICATION_RULE_SWITCHER,
     );
-    updateNotificationsConfig({ cases });
+    dispatch(updateProjectNotificationsConfigAction({ cases: newCases }));
   };
 
-  getPanelTitle = () => this.props.intl.formatMessage(messages.controlPanelName);
+  const getPanelTitle = () => formatMessage(messages.controlPanelName);
 
-  getListItemContentData = (notificationCase) => {
-    const {
-      intl: { formatMessage },
-    } = this.props;
+  const getListItemContentData = (notificationCase) => {
     const notification = convertNotificationCaseForSubmission(notificationCase);
 
     return Object.keys(notification)
@@ -232,57 +187,67 @@ export class Notifications extends Component {
       .filter((item) => item.key && item.value);
   };
 
-  render() {
-    const {
-      intl: { formatMessage },
-      enabled,
-      cases,
-      isEmailIntegrationAvailable,
-    } = this.props;
-    const readOnlyNotificationsEnableForm = !this.isAbleToEditNotificationsEnableForm();
-    const readOnlyNotificationCaseList = !this.isAbleToEditNotificationCaseList();
-    const headerMessages = {
-      toggleLabel: formatMessage(messages.toggleLabel),
-      toggleNote: formatMessage(messages.toggleNote),
-      create: formatMessage(messages.create),
-    };
-    const titleMessage = !isEmailIntegrationAvailable ? formatMessage(messages.title) : '';
+  const readOnlyNotificationsEnableForm = !isAbleToEditNotificationsEnableForm();
+  const readOnlyNotificationCaseList = !isAbleToEditNotificationCaseList();
+  const headerMessages = {
+    toggleLabel: formatMessage(messages.toggleLabel),
+    toggleNote: formatMessage(messages.toggleNote),
+    create: formatMessage(messages.create),
+  };
+  const titleMessage = !isEmailIntegrationAvailable ? formatMessage(messages.title) : '';
 
-    return (
-      <div className={cx('notifications-tab')}>
-        {cases.length ? (
-          <Fragment>
-            <RuleListHeader
-              readOnly={readOnlyNotificationsEnableForm}
-              messages={headerMessages}
-              switcherValue={enabled}
-              titleMessage={titleMessage}
-              onAddItem={this.addNotificationCase}
-              onChangeSwitcher={this.toggleNotificationsEnabled}
-            />
-            <RuleList
-              readOnly={readOnlyNotificationCaseList}
-              data={cases}
-              onToggle={this.onToggleHandler}
-              onDelete={this.onDelete}
-              onEdit={this.onEdit}
-              getPanelTitle={this.getPanelTitle}
-              getListItemContentData={this.getListItemContentData}
-            />
-          </Fragment>
-        ) : (
-          <EmptyStatePage
-            title={formatMessage(messages.noItemsMessage)}
-            description={formatMessage(messages.notificationsInfo)}
-            buttonName={formatMessage(messages.create)}
-            documentationLink={
-              'https://reportportal.io/docs/Project-configuration%3Ee-mail-notifications'
-            }
-            disableButton={readOnlyNotificationCaseList}
-            handleButton={this.addNotificationCase}
+  return (
+    <div className={cx('notifications-tab')}>
+      {cases.length ? (
+        <Fragment>
+          <RuleListHeader
+            readOnly={readOnlyNotificationsEnableForm}
+            messages={headerMessages}
+            switcherValue={enabled}
+            titleMessage={titleMessage}
+            onAddItem={addNotificationCase}
+            onChangeSwitcher={toggleNotificationsEnabled}
           />
-        )}
-      </div>
-    );
-  }
-}
+          <RuleList
+            readOnly={readOnlyNotificationCaseList}
+            data={cases}
+            onToggle={onToggleHandler}
+            onDelete={onDelete}
+            onEdit={onEdit}
+            getPanelTitle={getPanelTitle}
+            getListItemContentData={getListItemContentData}
+          />
+        </Fragment>
+      ) : (
+        <EmptyStatePage
+          title={formatMessage(messages.noItemsMessage)}
+          description={formatMessage(messages.notificationsInfo)}
+          buttonName={formatMessage(messages.create)}
+          documentationLink={
+            'https://reportportal.io/docs/Project-configuration%3Ee-mail-notifications'
+          }
+          disableButton={readOnlyNotificationCaseList}
+          handleButton={addNotificationCase}
+        />
+      )}
+    </div>
+  );
+};
+Notifications.propTypes = {
+  enabled: PropTypes.bool,
+  cases: PropTypes.array,
+  updateNotificationsConfig: PropTypes.func,
+  showModal: PropTypes.func,
+  projectRole: PropTypes.string,
+  userRole: PropTypes.string,
+  isEmailIntegrationAvailable: PropTypes.bool,
+};
+Notifications.defaultProps = {
+  enabled: false,
+  cases: [],
+  showModal: () => {},
+  updateNotificationsConfig: () => {},
+  projectRole: '',
+  userRole: '',
+  isEmailIntegrationAvailable: true,
+};

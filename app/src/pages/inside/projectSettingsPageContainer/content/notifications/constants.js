@@ -16,6 +16,7 @@
 
 export const LABEL_WIDTH = 140;
 
+export const RULE_NAME_FIELD_KEY = 'ruleName';
 export const RECIPIENTS_FIELD_KEY = 'recipients';
 export const INFORM_OWNER_FIELD_KEY = 'informOwner';
 export const SEND_CASE_FIELD_KEY = 'sendCase';
@@ -33,6 +34,7 @@ export const LAUNCH_CASES = {
 };
 
 export const DEFAULT_CASE_CONFIG = {
+  [RULE_NAME_FIELD_KEY]: '',
   [RECIPIENTS_FIELD_KEY]: [],
   [INFORM_OWNER_FIELD_KEY]: true,
   [SEND_CASE_FIELD_KEY]: LAUNCH_CASES.ALWAYS,
