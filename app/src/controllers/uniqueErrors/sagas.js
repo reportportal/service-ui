@@ -33,11 +33,8 @@ import {
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { SORTING_KEY } from 'controllers/sorting';
 import { unselectAllItemsAction } from 'controllers/groupOperations';
-import {
-  FETCH_GLOBAL_INTEGRATIONS_SUCCESS,
-  NAMESPACE as PLUGINS_NAMESPACE,
-} from 'controllers/plugins/constants';
-import { globalIntegrationsSelector, pluginsSelector } from 'controllers/plugins';
+import { NAMESPACE as PLUGINS_NAMESPACE } from 'controllers/plugins/constants';
+import { pluginsSelector } from 'controllers/plugins';
 
 import { COMMAND_GET_CLUSTERS } from 'controllers/plugins/uiExtensions/constants';
 import {
@@ -48,33 +45,23 @@ import {
 import { FETCH_CLUSTERS, NAMESPACE, RELOAD_CLUSTERS } from './constants';
 import { setPageLoadingAction } from './actionCreators';
 
-function* getIntegration() {
-  // TODO: In the future plugins with js parts should not depend on integrations, only on plugins.
-  // TODO: This should be removed when common getFile plugin command will be presented in all plugins with js files.
-  let integrations = yield select(globalIntegrationsSelector);
-  if (!integrations.length) {
-    const response = yield take(FETCH_GLOBAL_INTEGRATIONS_SUCCESS);
-    integrations = response.payload;
-  }
-  const supportedIntegration = integrations.find(
-    (item) =>
-      item &&
-      item.integrationType &&
-      item.integrationType.details &&
-      item.integrationType.details.metadata &&
-      item.integrationType.details.metadata.supportedFeatures &&
-      item.integrationType.details.metadata.supportedFeatures.includes('uniqueErrorsClusters'),
-  );
-  if (!supportedIntegration) return null;
-
+function* getPlugin() {
   let plugins = yield select(pluginsSelector);
   if (!plugins.length) {
     const response = yield take(createFetchPredicate(PLUGINS_NAMESPACE));
     plugins = response.payload;
   }
-  const plugin = plugins.find((item) => item.name === supportedIntegration.name);
+  const supportedPlugin = plugins.find(
+    (item) =>
+      item &&
+      item.details &&
+      item.details.metadata &&
+      item.details.metadata.supportedFeatures &&
+      item.details.metadata.supportedFeatures.includes('uniqueErrorsClusters'),
+  );
+  if (!supportedPlugin) return null;
 
-  return plugin.enabled && supportedIntegration;
+  return supportedPlugin.enabled && supportedPlugin;
 }
 
 function* fetchClusters(payload = {}) {
@@ -102,9 +89,9 @@ function* fetchClusters(payload = {}) {
 
   let url;
   const requestParams = {};
-  const integration = yield call(getIntegration);
-  if (integration) {
-    url = URLS.projectIntegrationByIdCommand(project, integration.id, COMMAND_GET_CLUSTERS);
+  const plugin = yield call(getPlugin);
+  if (plugin) {
+    url = URLS.pluginCommandCommon(project, plugin.name, COMMAND_GET_CLUSTERS);
     requestParams.method = 'PUT';
     const uniqueErrorsParams = yield select(pagePropertiesSelector, NAMESPACE);
     requestParams.data = {
