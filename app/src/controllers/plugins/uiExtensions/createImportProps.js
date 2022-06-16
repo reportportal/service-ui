@@ -66,6 +66,7 @@ import {
   updatePagePropertiesAction,
   pagePropertiesSelector,
   projectIdSelector,
+  querySelector,
 } from 'controllers/pages';
 import { attributesArray, isNotEmptyArray } from 'common/utils/validation/validate';
 import {
@@ -316,6 +317,7 @@ export const createImportProps = (pluginName) => ({
     pagePropertiesSelector,
     launchSelector,
     publicPluginsSelector,
+    querySelector,
   },
   icons: {
     PlusIcon,
