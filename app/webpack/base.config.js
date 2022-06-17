@@ -129,6 +129,9 @@ module.exports = {
         'redux-first-router': {
           singleton: true,
         },
+        history: {
+          singleton: true,
+        },
         classnames: {
           singleton: true,
         },
