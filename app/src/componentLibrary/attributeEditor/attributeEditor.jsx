@@ -16,10 +16,8 @@
 
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
-import { activeProjectSelector } from 'controllers/user';
 import {
   validate,
   commonValidators,
@@ -29,6 +27,7 @@ import {
 import { isEmpty } from 'common/utils/validation/validatorHelpers';
 import CheckIcon from 'common/img/check-inline.svg';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
+import isEqual from 'fast-deep-equal';
 import { AttributeInput } from './attributeInput';
 import styles from './attributeEditor.scss';
 
@@ -40,9 +39,6 @@ const attributeValueValidator = composeBoundValidators([
   bindMessageToValidator(validate.attributeValue, 'attributeValueLengthHint'),
 ]);
 
-@connect((state) => ({
-  projectId: activeProjectSelector(state),
-}))
 export class AttributeEditor extends Component {
   static propTypes = {
     projectId: PropTypes.string,
@@ -57,6 +53,7 @@ export class AttributeEditor extends Component {
     attribute: PropTypes.object,
     keyPlaceholder: PropTypes.string,
     valuePlaceholder: PropTypes.string,
+    trackEvent: PropTypes.func,
   };
 
   static defaultProps = {
@@ -71,6 +68,7 @@ export class AttributeEditor extends Component {
     attribute: {},
     keyPlaceholder: 'Key',
     valuePlaceholder: 'Value',
+    trackEvent: () => {},
   };
 
   constructor(props) {
@@ -82,6 +80,22 @@ export class AttributeEditor extends Component {
       errors: this.getValidationErrors(props.attribute.key, props.attribute.value),
       isKeyEdited: false,
     };
+  }
+
+  updateState = () => {
+    const { key, value } = this.props.attribute;
+    this.setState({
+      key,
+      value,
+      errors: this.getValidationErrors(key, value),
+      isKeyEdited: false,
+    });
+  };
+
+  componentDidUpdate(prevProps) {
+    if (!isEqual(prevProps.attribute, this.props.attribute)) {
+      this.updateState();
+    }
   }
 
   getValidationErrors = (key, value) => ({
@@ -149,6 +163,7 @@ export class AttributeEditor extends Component {
       keyPlaceholder,
       valuePlaceholder,
     } = this.props;
+
     return (
       <div className={cx('attribute-editor')}>
         <div>
