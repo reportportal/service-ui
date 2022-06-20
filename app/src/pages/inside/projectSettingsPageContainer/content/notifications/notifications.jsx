@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-import React, { Fragment } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames/bind';
 import { useTracking } from 'react-tracking';
 import { useIntl } from 'react-intl';
-import { formatAttribute } from 'common/utils/attributeUtils';
 import { canUpdateSettings } from 'common/utils/permissions';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import {
   projectNotificationsCasesSelector,
-  projectNotificationsEnabledSelector,
+  projectNotificationsStateSelector,
   updateProjectNotificationsConfigAction,
   addProjectNotificationAction,
 } from 'controllers/project';
@@ -33,63 +32,41 @@ import { isEmailIntegrationAvailableSelector } from 'controllers/plugins';
 import { showModalAction } from 'controllers/modal';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
-import { RuleListHeader } from 'pages/common/settingsPage/ruleListHeader';
-import { RuleList } from 'pages/common/settingsPage/ruleList';
+import { Button } from 'componentLibrary/button';
+import { Checkbox } from 'componentLibrary/checkbox';
+import { updateNotificationStateAction } from 'controllers/project/actionCreators';
+import { RuleList } from '../elements/ruleList';
+import { Layout } from '../layout';
 import styles from './notifications.scss';
-import {
-  ATTRIBUTES_FIELD_KEY,
-  DEFAULT_CASE_CONFIG,
-  LAUNCH_NAMES_FIELD_KEY,
-  RECIPIENTS_FIELD_KEY,
-  SEND_CASE_FIELD_KEY,
-} from './constants';
+import { DEFAULT_CASE_CONFIG } from './constants';
 import { convertNotificationCaseForSubmission } from './utils';
 import { messages } from './messages';
+import { FieldElement } from '../elements';
+import PencilIcon from './img/pencil-inline.svg';
+import BinIcon from './img/bin-inline.svg';
+import CopyIcon from './img/copy-inline.svg';
+import { NotificationRuleContent } from '../elements/notificationRuleContent';
 
 const cx = classNames.bind(styles);
-const ruleFieldsConfig = {
-  [RECIPIENTS_FIELD_KEY]: {
-    title: messages.recipientsLabel,
-    dataFormatter: (data) =>
-      data.reduce((acc, item) => `${acc.length ? `${acc}, ` : ''}${item}`, ''),
-  },
-  [SEND_CASE_FIELD_KEY]: {
-    title: messages.inCaseLabel,
-    dataFormatter: (data, formatMessage) =>
-      messages[data] ? formatMessage(messages[data]) : messages[data],
-  },
-  [LAUNCH_NAMES_FIELD_KEY]: {
-    title: messages.launchNamesLabel,
-    dataFormatter: (data) =>
-      data.reduce((acc, item) => `${acc.length ? `${acc}, ` : ''}${item}`, ''),
-  },
-  [ATTRIBUTES_FIELD_KEY]: {
-    title: messages.attributesLabel,
-    dataFormatter: (data) =>
-      data.reduce((acc, item) => `${acc.length ? `${acc}, ` : ''}${formatAttribute(item)}`, ''),
-  },
-};
 
-export const Notifications = () => {
+export const Notifications = ({ setHeaderTitleNode }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
 
   const projectRole = useSelector(activeProjectRoleSelector);
   const userRole = useSelector(userAccountRoleSelector);
-  const enabled = useSelector(projectNotificationsEnabledSelector);
+  const enabled = useSelector(projectNotificationsStateSelector);
   const cases = useSelector(projectNotificationsCasesSelector);
   const isEmailIntegrationAvailable = useSelector(isEmailIntegrationAvailableSelector);
 
   const isAbleToEditNotificationCaseList = () => canUpdateSettings(userRole, projectRole);
-
   const isAbleToEditNotificationsEnableForm = () =>
     canUpdateSettings(userRole, projectRole) && isEmailIntegrationAvailable;
 
   const toggleNotificationsEnabled = (isEnabled) => {
     trackEvent(SETTINGS_PAGE_EVENTS.EDIT_INPUT_NOTIFICATIONS);
-    // TODO: use new endpoint
-    dispatch(updateProjectNotificationsConfigAction({ enabled: isEnabled }));
+    dispatch(updateNotificationStateAction(isEnabled));
   };
 
   const confirmAddCase = (notificationCase) => {
@@ -160,6 +137,18 @@ export const Notifications = () => {
     );
   };
 
+  useEffect(() => {
+    setHeaderTitleNode(
+      <span className={cx('button')} onClick={addNotificationCase}>
+        <Button disabled={!isAbleToEditNotificationCaseList()}>
+          {formatMessage(messages.create)}
+        </Button>
+      </span>,
+    );
+
+    return () => setHeaderTitleNode(null);
+  });
+
   const onToggleHandler = (isEnabled, notificationCase, id) => {
     const updatedCases = [...cases];
     updatedCases.splice(id, 1, { ...notificationCase, enabled: isEnabled });
@@ -174,55 +163,48 @@ export const Notifications = () => {
     dispatch(updateProjectNotificationsConfigAction({ cases: newCases }));
   };
 
-  const getPanelTitle = () => formatMessage(messages.controlPanelName);
-
-  const getListItemContentData = (notificationCase) => {
-    const notification = convertNotificationCaseForSubmission(notificationCase);
-
-    return Object.keys(notification)
-      .map((fieldKey) => {
-        const fieldInfo = ruleFieldsConfig[fieldKey];
-        const fieldData = notification[fieldKey];
-
-        return {
-          key: fieldInfo ? formatMessage(fieldInfo.title) : null,
-          value: fieldInfo && fieldData ? fieldInfo.dataFormatter(fieldData, formatMessage) : null,
-        };
-      })
-      .filter((item) => item.key && item.value);
-  };
-
   const readOnlyNotificationsEnableForm = !isAbleToEditNotificationsEnableForm();
   const readOnlyNotificationCaseList = !isAbleToEditNotificationCaseList();
-  const headerMessages = {
-    toggleLabel: formatMessage(messages.toggleLabel),
-    toggleNote: formatMessage(messages.toggleNote),
-    create: formatMessage(messages.create),
-  };
-  const titleMessage = !isEmailIntegrationAvailable ? formatMessage(messages.title) : '';
+
+  const actions = [
+    {
+      icon: CopyIcon,
+    },
+    {
+      icon: PencilIcon,
+      handler: onEdit,
+    },
+    {
+      icon: BinIcon,
+      handler: onDelete,
+    },
+  ];
 
   return (
-    <div className={cx('notifications-tab')}>
+    <>
       {cases.length ? (
-        <Fragment>
-          <RuleListHeader
-            readOnly={readOnlyNotificationsEnableForm}
-            messages={headerMessages}
-            switcherValue={enabled}
-            titleMessage={titleMessage}
-            onAddItem={addNotificationCase}
-            onChangeSwitcher={toggleNotificationsEnabled}
-          />
-          <RuleList
-            readOnly={readOnlyNotificationCaseList}
-            data={cases}
-            onToggle={onToggleHandler}
-            onDelete={onDelete}
-            onEdit={onEdit}
-            getPanelTitle={getPanelTitle}
-            getListItemContentData={getListItemContentData}
-          />
-        </Fragment>
+        <>
+          <Layout description={formatMessage(messages.tabDescription)}>
+            <FieldElement withoutProvider description={formatMessage(messages.toggleNote)}>
+              <Checkbox
+                disabled={readOnlyNotificationsEnableForm}
+                value={enabled}
+                onChange={(e) => toggleNotificationsEnabled(e.target.checked)}
+              >
+                {formatMessage(messages.toggleLabel)}
+              </Checkbox>
+            </FieldElement>
+          </Layout>
+          <div className={cx('notifications-container')}>
+            <RuleList
+              disabled={readOnlyNotificationCaseList}
+              data={cases.map((e) => ({ name: e.ruleName, ...e }))}
+              actions={actions}
+              onToggle={onToggleHandler}
+              ruleItemContent={NotificationRuleContent}
+            />
+          </div>
+        </>
       ) : (
         <EmptyStatePage
           title={formatMessage(messages.noItemsMessage)}
@@ -235,7 +217,7 @@ export const Notifications = () => {
           handleButton={addNotificationCase}
         />
       )}
-    </div>
+    </>
   );
 };
 Notifications.propTypes = {
@@ -246,6 +228,7 @@ Notifications.propTypes = {
   projectRole: PropTypes.string,
   userRole: PropTypes.string,
   isEmailIntegrationAvailable: PropTypes.bool,
+  setHeaderTitleNode: PropTypes.func.isRequired,
 };
 Notifications.defaultProps = {
   enabled: false,

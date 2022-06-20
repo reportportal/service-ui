@@ -53,7 +53,7 @@ export const createPatternNameValidator = (patterns, patternId) =>
   composeBoundValidators([
     bindMessageToValidator(validate.patternNameLength, 'patternNameLengthHint'),
     bindMessageToValidator(
-      validate.createPatternNameUniqueValidator(patternId, patterns),
+      validate.createNameUniqueValidator(patternId, patterns),
       'patternNameDuplicateHint',
     ),
   ]);
@@ -63,11 +63,11 @@ export const createNumberOfLaunchesValidator = (message) =>
 export const createWidgetContentFieldsValidator = (message) =>
   bindMessageToValidator(validate.isNotEmptyArray, message);
 
-export const createRuleNameValidator = (notifications) =>
+export const createRuleNameValidator = (notifications, notificationId) =>
   composeBoundValidators([
     bindMessageToValidator(validate.ruleNameLength, 'ruleNameHint'),
     bindMessageToValidator(
-      validate.createRuleNameUniqueValidator(notifications),
+      validate.createNameUniqueValidator(notificationId, notifications),
       'ruleNameDuplicateHint',
     ),
   ]);

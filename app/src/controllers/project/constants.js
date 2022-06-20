@@ -50,6 +50,8 @@ export const UPDATE_PA_STATE = 'updatePAState';
 
 export const ADD_PROJECT_NOTIFICATION = 'addProjectNotification';
 export const ADD_PROJECT_NOTIFICATION_SUCCESS = 'addProjectNotificationSuccess';
+export const UPDATE_NOTIFICATION_STATE = 'updateNotificationState';
+export const NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY = 'notifications.enabled';
 
 export const NAMESPACE = 'project';
 

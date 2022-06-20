@@ -23,6 +23,7 @@ import {
   PROJECT_ATTRIBUTES_DELIMITER,
   PA_ATTRIBUTE_ENABLED_KEY,
   AA_ATTRIBUTE_ENABLED_KEY,
+  NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY,
 } from './constants';
 
 const projectSelector = (state) => state.project || {};
@@ -122,6 +123,9 @@ export const projectNotificationsCasesSelector = createSelector(
 
 export const projectNotificationsEnabledSelector = (state) =>
   projectNotificationsConfigurationSelector(state).enabled || false;
+
+export const projectNotificationsStateSelector = (state) =>
+  !!(projectAttributesSelector(state)[NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY].toString() === 'true');
 
 export const defectColorsSelector = createSelector(projectConfigSelector, (config) => {
   const colors = {};

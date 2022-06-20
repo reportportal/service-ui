@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,10 +14,30 @@
  * limitations under the License.
  */
 
-.notifications-container {
-  margin-top: 44px;
+.info {
+  padding: 7px 24px 16px 24px;
 }
 
-.button {
-  margin-left: auto;
+.text {
+  display: block;
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.field {
+  @extend .text;
+  color: $COLOR--e-300;
+  text-transform: capitalize;
+}
+
+.value {
+  @extend .text;
+  margin-top: 4px;
+  color: $COLOR--almost-black;
+  margin-bottom: 16px;
+}
+
+.attribute {
+  background-color: $COLOR--bg-200;
 }
