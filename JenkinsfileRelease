@@ -14,7 +14,7 @@ node {
 
         stage('Build') {
                 withEnv(["NODE_OPTIONS=--max_old_space_size=3072"]) {
-                        docker.image('node:11').inside('-u root') {
+                        docker.image('node:14').inside('-u root') {
                             sh 'node -v'
                             sh 'npm config set unsafe-perm=true'
                             sh 'make build-statics'
