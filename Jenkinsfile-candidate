@@ -32,7 +32,7 @@ node {
         
         stage('Push to ECR') {
             withEnv(["AWS_URI=${AWS_URI}", "AWS_REGION=${AWS_REGION}", "TAG=${VERSION}"]) {
-                def image = env.AWS_URI + '/service-ui' + env.TAG + '-RC-' + env.BUILD_NUMBER
+                def image = env.AWS_URI + '/service-ui:' + env.TAG + '-RC-' + env.BUILD_NUMBER
                 def url = 'https://' + env.AWS_URI
                 def credentials = 'ecr:' + env.AWS_REGION + ':aws_credentials'
 
