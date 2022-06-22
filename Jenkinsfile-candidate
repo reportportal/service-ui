@@ -26,7 +26,7 @@ node {
         
         stage('Build Docker Image') {
             withEnv(["NODE_OPTIONS=--max_old_space_size=4096", "AWS_URI=${AWS_URI}"]) {
-                sh 'make IMAGE_NAME=$AWS_URI/service-ui build-image-dev v=$VERSION-RC-$BUILD_NUMBER'
+                sh 'make IMAGE_NAME=$AWS_URI/service-ui:$VERSION-RC-$BUILD_NUMBER build-image-dev v=$VERSION-RC-$BUILD_NUMBER'
             }
         }
         
