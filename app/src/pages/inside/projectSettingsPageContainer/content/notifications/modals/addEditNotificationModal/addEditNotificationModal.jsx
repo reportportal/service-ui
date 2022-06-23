@@ -360,7 +360,7 @@ export default withModal('addEditNotificationModal')(
       { data: { notification, notifications } },
     ) => ({
       ruleName: commonValidators.createRuleNameValidator(
-        notifications.map((e) => ({ name: e.ruleName, ...e })),
+        notifications.map((item) => ({ name: item.ruleName, ...item })),
         notification && notification.id,
       )(ruleName),
       recipients: bindMessageToValidator(

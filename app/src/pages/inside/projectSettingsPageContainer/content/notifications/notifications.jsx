@@ -35,6 +35,9 @@ import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/conten
 import { Button } from 'componentLibrary/button';
 import { Checkbox } from 'componentLibrary/checkbox';
 import { updateNotificationStateAction } from 'controllers/project/actionCreators';
+import PencilIcon from 'common/img/pencil-inline.svg';
+import BinIcon from 'common/img/bin-inline.svg';
+import CopyIcon from 'common/img/copy-inline.svg';
 import { RuleList } from '../elements/ruleList';
 import { Layout } from '../layout';
 import styles from './notifications.scss';
@@ -42,9 +45,6 @@ import { DEFAULT_CASE_CONFIG } from './constants';
 import { convertNotificationCaseForSubmission } from './utils';
 import { messages } from './messages';
 import { FieldElement } from '../elements';
-import PencilIcon from './img/pencil-inline.svg';
-import BinIcon from './img/bin-inline.svg';
-import CopyIcon from './img/copy-inline.svg';
 import { NotificationRuleContent } from '../elements/notificationRuleContent';
 
 const cx = classNames.bind(styles);
@@ -60,7 +60,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
   const cases = useSelector(projectNotificationsCasesSelector);
   const isEmailIntegrationAvailable = useSelector(isEmailIntegrationAvailableSelector);
 
-  const isAbleToEditNotificationCaseList = () => canUpdateSettings(userRole, projectRole);
+  const isAbleToEditNotificationList = () => canUpdateSettings(userRole, projectRole);
   const isAbleToEditNotificationsEnableForm = () =>
     canUpdateSettings(userRole, projectRole) && isEmailIntegrationAvailable;
 
@@ -90,7 +90,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
     dispatch(updateProjectNotificationsConfigAction({ cases: newCases }));
   };
 
-  const addNotificationCase = () => {
+  const onAdd = () => {
     trackEvent(SETTINGS_PAGE_EVENTS.ADD_RULE_BTN_NOTIFICATIONS);
     dispatch(
       showModalAction({
@@ -139,10 +139,8 @@ export const Notifications = ({ setHeaderTitleNode }) => {
 
   useEffect(() => {
     setHeaderTitleNode(
-      <span className={cx('button')} onClick={addNotificationCase}>
-        <Button disabled={!isAbleToEditNotificationCaseList()}>
-          {formatMessage(messages.create)}
-        </Button>
+      <span className={cx('button')} onClick={onAdd}>
+        <Button disabled={!isAbleToEditNotificationList()}>{formatMessage(messages.create)}</Button>
       </span>,
     );
 
@@ -164,7 +162,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
   };
 
   const readOnlyNotificationsEnableForm = !isAbleToEditNotificationsEnableForm();
-  const readOnlyNotificationCaseList = !isAbleToEditNotificationCaseList();
+  const readOnlyNotificationList = !isAbleToEditNotificationList();
 
   const actions = [
     {
@@ -197,8 +195,8 @@ export const Notifications = ({ setHeaderTitleNode }) => {
           </Layout>
           <div className={cx('notifications-container')}>
             <RuleList
-              disabled={readOnlyNotificationCaseList}
-              data={cases.map((e) => ({ name: e.ruleName, ...e }))}
+              disabled={readOnlyNotificationList}
+              data={cases.map((item) => ({ name: item.ruleName, ...item }))}
               actions={actions}
               onToggle={onToggleHandler}
               ruleItemContent={NotificationRuleContent}
@@ -213,8 +211,8 @@ export const Notifications = ({ setHeaderTitleNode }) => {
           documentationLink={
             'https://reportportal.io/docs/Project-configuration%3Ee-mail-notifications'
           }
-          disableButton={readOnlyNotificationCaseList}
-          handleButton={addNotificationCase}
+          disableButton={readOnlyNotificationList}
+          handleButton={onAdd}
         />
       )}
     </>
