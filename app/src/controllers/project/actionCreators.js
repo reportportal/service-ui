@@ -42,8 +42,12 @@ import {
   ADD_PROJECT_NOTIFICATION,
   ADD_PROJECT_NOTIFICATION_SUCCESS,
   UPDATE_NOTIFICATION_STATE,
-  UPDATE_NOTIFICATION,
-  DELETE_NOTIFICATION,
+  UPDATE_PROJECT_NOTIFICATION,
+  DELETE_PROJECT_NOTIFICATION,
+  FETCH_NOTIFICATIONS_PAGE,
+  FETCH_PROJECT_NOTIFICATIONS_SUCCESS,
+  DELETE_PROJECT_NOTIFICATION_SUCCESS,
+  UPDATE_PROJECT_NOTIFICATION_SUCCESS,
 } from './constants';
 
 export const fetchProjectSuccessAction = (project) => ({
@@ -64,16 +68,6 @@ export const updateConfigurationAttributesAction = (project) => ({
 export const updateProjectNotificationsConfigAction = (config) => ({
   type: UPDATE_NOTIFICATIONS_CONFIG,
   payload: config,
-});
-
-export const updateProjectNotificationAction = (notification) => ({
-  type: UPDATE_NOTIFICATION,
-  payload: notification,
-});
-
-export const deleteProjectNotificationAction = (id) => ({
-  type: DELETE_NOTIFICATION,
-  payload: id,
 });
 
 export const updateProjectNotificationsConfigSuccessAction = (config) => ({
@@ -176,6 +170,15 @@ export const updatePAStateAction = (PAState) => ({
   payload: PAState,
 });
 
+export const fetchNotificationsPageAction = () => ({
+  type: FETCH_NOTIFICATIONS_PAGE,
+});
+
+export const fetchNotificationsPageSuccessAction = (notifications) => ({
+  type: FETCH_PROJECT_NOTIFICATIONS_SUCCESS,
+  payload: notifications,
+});
+
 export const addProjectNotificationAction = (notification) => ({
   type: ADD_PROJECT_NOTIFICATION,
   payload: notification,
@@ -189,4 +192,24 @@ export const addProjectNotificationSuccessAction = (notification) => ({
 export const updateNotificationStateAction = (notificationState) => ({
   type: UPDATE_NOTIFICATION_STATE,
   payload: notificationState,
+});
+
+export const updateProjectNotificationAction = (notification) => ({
+  type: UPDATE_PROJECT_NOTIFICATION,
+  payload: notification,
+});
+
+export const updateProjectNotificationSuccessAction = (notification) => ({
+  type: UPDATE_PROJECT_NOTIFICATION_SUCCESS,
+  payload: notification,
+});
+
+export const deleteProjectNotificationAction = (id) => ({
+  type: DELETE_PROJECT_NOTIFICATION,
+  payload: id,
+});
+
+export const deleteProjectNotificationSuccessAction = (id) => ({
+  type: DELETE_PROJECT_NOTIFICATION_SUCCESS,
+  payload: id,
 });

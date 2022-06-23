@@ -53,8 +53,9 @@ import {
   ADD_PROJECT_NOTIFICATION,
   NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY,
   UPDATE_NOTIFICATION_STATE,
-  UPDATE_NOTIFICATION,
-  DELETE_NOTIFICATION,
+  UPDATE_PROJECT_NOTIFICATION,
+  DELETE_PROJECT_NOTIFICATION,
+  FETCH_NOTIFICATIONS_PAGE,
 } from './constants';
 import {
   updateDefectSubTypeSuccessAction,
@@ -70,6 +71,9 @@ import {
   fetchProjectPreferencesSuccessAction,
   updateProjectFilterPreferencesAction,
   addProjectNotificationSuccessAction,
+  fetchNotificationsPageSuccessAction,
+  deleteProjectNotificationSuccessAction,
+  updateProjectNotificationSuccessAction,
 } from './actionCreators';
 import { projectNotificationsConfigurationSelector, patternsSelector } from './selectors';
 
@@ -174,6 +178,16 @@ function* watchUpdateProjectNotificationsConfig() {
   yield takeEvery(UPDATE_NOTIFICATIONS_CONFIG, updateProjectNotificationsConfig);
 }
 
+function* fetchNotificationsPage() {
+  const projectId = yield select(projectIdSelector);
+  const notifications = yield call(fetch, URLS.notification(projectId));
+  yield put(fetchNotificationsPageSuccessAction(notifications));
+}
+
+function* watchFetchNotificationsPage() {
+  yield takeEvery(FETCH_NOTIFICATIONS_PAGE, fetchNotificationsPage);
+}
+
 function* addProjectNotification({ payload: notification }) {
   try {
     const projectId = yield select(projectIdSelector);
@@ -203,21 +217,13 @@ function* watchAddProjectNotification() {
 function* updateProjectNotification({ payload: notification }) {
   yield put(showScreenLockAction());
   try {
-    const currentConfig = yield select(projectNotificationsConfigurationSelector);
     const projectId = yield select(projectIdSelector);
-    const newConfig = {
-      ...currentConfig,
-      cases: currentConfig.cases.map((item) => {
-        if (notification.id === item.id) return notification;
-        return item;
-      }),
-    };
 
     yield call(fetch, URLS.notification(projectId), {
       method: 'put',
       data: notification,
     });
-    yield put(updateProjectNotificationsConfigSuccessAction(newConfig));
+    yield put(updateProjectNotificationSuccessAction(notification));
     yield put(
       showNotification({
         messageId: 'updateProjectNotificationsConfigurationSuccess',
@@ -233,24 +239,19 @@ function* updateProjectNotification({ payload: notification }) {
 }
 
 function* watchUpdateProjectNotification() {
-  yield takeEvery(UPDATE_NOTIFICATION, updateProjectNotification);
+  yield takeEvery(UPDATE_PROJECT_NOTIFICATION, updateProjectNotification);
 }
 
 function* deleteProjectNotification({ payload: id }) {
   console.log(id);
   yield put(showScreenLockAction());
   try {
-    const currentConfig = yield select(projectNotificationsConfigurationSelector);
     const projectId = yield select(projectIdSelector);
-    const newConfig = {
-      ...currentConfig,
-      cases: currentConfig.cases.filter((item) => item.id !== id),
-    };
 
-    yield call(fetch, URLS.deleteNotification(projectId, id), {
+    yield call(fetch, URLS.notificationById(projectId, id), {
       method: 'delete',
     });
-    yield put(updateProjectNotificationsConfigSuccessAction(newConfig));
+    yield put(deleteProjectNotificationSuccessAction(id));
     yield put(
       showNotification({
         messageId: 'updateProjectNotificationsConfigurationSuccess',
@@ -266,7 +267,7 @@ function* deleteProjectNotification({ payload: id }) {
 }
 
 function* watchDeleteProjectNotification() {
-  yield takeEvery(DELETE_NOTIFICATION, deleteProjectNotification);
+  yield takeEvery(DELETE_PROJECT_NOTIFICATION, deleteProjectNotification);
 }
 
 function* updateNotificationState(enabled) {
@@ -507,5 +508,6 @@ export function* projectSagas() {
     watchUpdateNotificationState(),
     watchUpdateProjectNotification(),
     watchDeleteProjectNotification(),
+    watchFetchNotificationsPage(),
   ]);
 }

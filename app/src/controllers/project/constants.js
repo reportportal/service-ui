@@ -27,8 +27,6 @@ export const FETCH_PROJECT_PREFERENCES_SUCCESS = 'fetchProjectPreferencesSuccess
 export const FETCH_CONFIGURATION_ATTRIBUTES = 'fetchConfigurationAttributes';
 export const UPDATE_CONFIGURATION_ATTRIBUTES = 'updateConfigurationAttributes';
 export const UPDATE_NOTIFICATIONS_CONFIG = 'updateNotificationsConfig';
-export const UPDATE_NOTIFICATION = 'updateNotification';
-export const DELETE_NOTIFICATION = 'deleteNotification';
 export const UPDATE_NOTIFICATIONS_CONFIG_SUCCESS = 'updateNotificationsConfigSuccess';
 export const UPDATE_DEFECT_SUBTYPE = 'updateDefectSubType';
 export const UPDATE_DEFECT_SUBTYPE_SUCCESS = 'updateDefectSubTypeSuccess';
@@ -52,8 +50,14 @@ export const UPDATE_PA_STATE = 'updatePAState';
 
 export const ADD_PROJECT_NOTIFICATION = 'addProjectNotification';
 export const ADD_PROJECT_NOTIFICATION_SUCCESS = 'addProjectNotificationSuccess';
+export const FETCH_NOTIFICATIONS_PAGE = 'fetchNotificationsPage';
+export const FETCH_PROJECT_NOTIFICATIONS_SUCCESS = 'fetchProjectNotificationSuccess';
 export const UPDATE_NOTIFICATION_STATE = 'updateNotificationState';
 export const NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY = 'notifications.enabled';
+export const UPDATE_PROJECT_NOTIFICATION = 'updateProjectNotification';
+export const UPDATE_PROJECT_NOTIFICATION_SUCCESS = 'updateProjectNotificationSuccess';
+export const DELETE_PROJECT_NOTIFICATION = 'deleteProjectNotification';
+export const DELETE_PROJECT_NOTIFICATION_SUCCESS = 'deleteProjectNotificationSuccess';
 
 export const NAMESPACE = 'project';
 
