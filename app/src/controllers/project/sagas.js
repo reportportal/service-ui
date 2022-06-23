@@ -53,6 +53,8 @@ import {
   ADD_PROJECT_NOTIFICATION,
   NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY,
   UPDATE_NOTIFICATION_STATE,
+  UPDATE_NOTIFICATION,
+  DELETE_NOTIFICATION,
 } from './constants';
 import {
   updateDefectSubTypeSuccessAction,
@@ -196,6 +198,75 @@ function* addProjectNotification({ payload: notification }) {
 
 function* watchAddProjectNotification() {
   yield takeEvery(ADD_PROJECT_NOTIFICATION, addProjectNotification);
+}
+
+function* updateProjectNotification({ payload: notification }) {
+  yield put(showScreenLockAction());
+  try {
+    const currentConfig = yield select(projectNotificationsConfigurationSelector);
+    const projectId = yield select(projectIdSelector);
+    const newConfig = {
+      ...currentConfig,
+      cases: currentConfig.cases.map((item) => {
+        if (notification.id === item.id) return notification;
+        return item;
+      }),
+    };
+
+    yield call(fetch, URLS.notification(projectId), {
+      method: 'put',
+      data: notification,
+    });
+    yield put(updateProjectNotificationsConfigSuccessAction(newConfig));
+    yield put(
+      showNotification({
+        messageId: 'updateProjectNotificationsConfigurationSuccess',
+        type: NOTIFICATION_TYPES.SUCCESS,
+      }),
+    );
+    yield put(hideModalAction());
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+  } finally {
+    yield put(hideScreenLockAction());
+  }
+}
+
+function* watchUpdateProjectNotification() {
+  yield takeEvery(UPDATE_NOTIFICATION, updateProjectNotification);
+}
+
+function* deleteProjectNotification({ payload: id }) {
+  console.log(id);
+  yield put(showScreenLockAction());
+  try {
+    const currentConfig = yield select(projectNotificationsConfigurationSelector);
+    const projectId = yield select(projectIdSelector);
+    const newConfig = {
+      ...currentConfig,
+      cases: currentConfig.cases.filter((item) => item.id !== id),
+    };
+
+    yield call(fetch, URLS.deleteNotification(projectId, id), {
+      method: 'delete',
+    });
+    yield put(updateProjectNotificationsConfigSuccessAction(newConfig));
+    yield put(
+      showNotification({
+        messageId: 'updateProjectNotificationsConfigurationSuccess',
+        type: NOTIFICATION_TYPES.SUCCESS,
+      }),
+    );
+    yield put(hideModalAction());
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+  } finally {
+    yield put(hideScreenLockAction());
+  }
+}
+
+function* watchDeleteProjectNotification() {
+  yield takeEvery(DELETE_NOTIFICATION, deleteProjectNotification);
 }
 
 function* updateNotificationState(enabled) {
@@ -434,5 +505,7 @@ export function* projectSagas() {
     watchUpdateProjectFilterPreferences(),
     watchAddProjectNotification(),
     watchUpdateNotificationState(),
+    watchUpdateProjectNotification(),
+    watchDeleteProjectNotification(),
   ]);
 }

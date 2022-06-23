@@ -63,6 +63,7 @@
   "AddEditNotificationCaseModal.launchOwnerLabel": "Запустити власника (хто запустив - той отримує)",
   "AddEditNotificationCaseModal.launchesHint": "Ім’я запуску повинно бути довжиною від 3 до 256.",
   "AddEditNotificationCaseModal.newRuleMessage": "Додати",
+  "AddEditNotificationCaseModal.copyRuleMessage": "Дублікат",
   "AddEditNotificationCaseModal.recipientsHint": "Будь ласка виберіть хоча б одного одержувача",
   "AddEditNotificationCaseModal.recipientsLabel": "Одержувачі",
   "AddEditNotificationCaseModal.title": "{actionType} Правило нотифікації",

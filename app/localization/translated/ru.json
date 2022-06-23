@@ -63,6 +63,7 @@
   "AddEditNotificationCaseModal.launchOwnerLabel": "Владелец запуска (кто запустил - тот и получает)",
   "AddEditNotificationCaseModal.launchesHint": "Имя запуска должно быть длиной от 3 до 256.",
   "AddEditNotificationCaseModal.newRuleMessage": "Добавить",
+  "AddEditNotificationCaseModal.copyRuleMessage": "Дублировать",
   "AddEditNotificationCaseModal.recipientsHint": "Пожалуйста, выберите хотя бы одного получателя",
   "AddEditNotificationCaseModal.recipientsLabel": "Получатели",
   "AddEditNotificationCaseModal.title": "{actionType} Правило уведомления",

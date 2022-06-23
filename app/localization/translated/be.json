@@ -63,6 +63,7 @@
   "AddEditNotificationCaseModal.launchOwnerLabel": "Запуск уладальніка (хто запусціў - той атрымлівае)",
   "AddEditNotificationCaseModal.launchesHint": "Назву запуску павінна мець памер ад 3 да 256",
   "AddEditNotificationCaseModal.newRuleMessage": "Дадаць",
+  "AddEditNotificationCaseModal.copyRuleMessage": "Дубляваць",
   "AddEditNotificationCaseModal.recipientsHint": "Калі ласка, выберыце хаця б аднаго атрымальніка",
   "AddEditNotificationCaseModal.recipientsLabel": "Атрымальнікі",
   "AddEditNotificationCaseModal.title": "{actionType} Правила апавяшчэння",

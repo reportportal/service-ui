@@ -42,6 +42,8 @@ import {
   ADD_PROJECT_NOTIFICATION,
   ADD_PROJECT_NOTIFICATION_SUCCESS,
   UPDATE_NOTIFICATION_STATE,
+  UPDATE_NOTIFICATION,
+  DELETE_NOTIFICATION,
 } from './constants';
 
 export const fetchProjectSuccessAction = (project) => ({
@@ -62,6 +64,16 @@ export const updateConfigurationAttributesAction = (project) => ({
 export const updateProjectNotificationsConfigAction = (config) => ({
   type: UPDATE_NOTIFICATIONS_CONFIG,
   payload: config,
+});
+
+export const updateProjectNotificationAction = (notification) => ({
+  type: UPDATE_NOTIFICATION,
+  payload: notification,
+});
+
+export const deleteProjectNotificationAction = (id) => ({
+  type: DELETE_NOTIFICATION,
+  payload: id,
 });
 
 export const updateProjectNotificationsConfigSuccessAction = (config) => ({

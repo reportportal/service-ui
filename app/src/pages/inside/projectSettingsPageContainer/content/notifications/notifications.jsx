@@ -25,7 +25,8 @@ import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import {
   projectNotificationsCasesSelector,
   projectNotificationsStateSelector,
-  updateProjectNotificationsConfigAction,
+  updateProjectNotificationAction,
+  deleteProjectNotificationAction,
   addProjectNotificationAction,
 } from 'controllers/project';
 import { isEmailIntegrationAvailableSelector } from 'controllers/plugins';
@@ -35,9 +36,9 @@ import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/conten
 import { Button } from 'componentLibrary/button';
 import { Checkbox } from 'componentLibrary/checkbox';
 import { updateNotificationStateAction } from 'controllers/project/actionCreators';
-import PencilIcon from 'common/img/pencil-inline.svg';
-import BinIcon from 'common/img/bin-inline.svg';
-import CopyIcon from 'common/img/copy-inline.svg';
+import PencilIcon from 'common/img/settingsRules/pencil-inline.svg';
+import BinIcon from 'common/img/settingsRules/bin-inline.svg';
+import CopyIcon from 'common/img/settingsRules/copy-inline.svg';
 import { RuleList } from '../elements/ruleList';
 import { Layout } from '../layout';
 import styles from './notifications.scss';
@@ -48,6 +49,7 @@ import { FieldElement } from '../elements';
 import { NotificationRuleContent } from '../elements/notificationRuleContent';
 
 const cx = classNames.bind(styles);
+const COPY_POSTFIX = '_copy';
 
 export const Notifications = ({ setHeaderTitleNode }) => {
   const { formatMessage } = useIntl();
@@ -74,20 +76,12 @@ export const Notifications = ({ setHeaderTitleNode }) => {
     dispatch(addProjectNotificationAction(notification));
   };
 
-  const confirmEditCase = (id, notificationCase) => {
-    const updatedCases = [...cases];
-    updatedCases.splice(id, 1, notificationCase);
-    const newCases = cases.map(convertNotificationCaseForSubmission);
-    // TODO: use new endpoint
-    dispatch(updateProjectNotificationsConfigAction({ cases: newCases }));
+  const confirmEditCase = (notification) => {
+    dispatch(updateProjectNotificationAction({ ...notification, name: notification.ruleName }));
   };
 
   const confirmDeleteCase = (id) => {
-    const newCases = cases
-      .filter((item, index) => index !== id)
-      .map(convertNotificationCaseForSubmission);
-    // TODO: use new endpoint
-    dispatch(updateProjectNotificationsConfigAction({ cases: newCases }));
+    dispatch(deleteProjectNotificationAction(id));
   };
 
   const onAdd = () => {
@@ -96,22 +90,23 @@ export const Notifications = ({ setHeaderTitleNode }) => {
       showModalAction({
         id: 'addEditNotificationModal',
         data: {
+          actionType: 'add',
           onSave: confirmAddCase,
           notification: DEFAULT_CASE_CONFIG,
           notifications: cases,
-          isNewCase: true,
         },
       }),
     );
   };
 
-  const onEdit = (notification, id) => {
+  const onEdit = (notification) => {
     trackEvent(SETTINGS_PAGE_EVENTS.EDIT_RULE_NOTIFICATIONS);
     dispatch(
       showModalAction({
         id: 'addEditNotificationModal',
         data: {
-          onSave: (data) => confirmEditCase(id, data),
+          actionType: 'edit',
+          onSave: (data) => confirmEditCase(data),
           notification,
           notifications: cases,
         },
@@ -119,19 +114,38 @@ export const Notifications = ({ setHeaderTitleNode }) => {
     );
   };
 
-  const onDelete = (notificationCase, id) => {
+  const onDelete = (notification) => {
     trackEvent(SETTINGS_PAGE_EVENTS.CLICK_ON_DELETE_RULE_NOTIFICATIONS);
     dispatch(
       showModalAction({
         id: 'deleteNotificationModal',
         data: {
-          id,
-          onSave: () => confirmDeleteCase(id),
+          onSave: () => confirmDeleteCase(notification.id),
           eventsInfo: {
             closeIcon: SETTINGS_PAGE_EVENTS.CLOSE_ICON_DELETE_RULE_NOTIFICATIONS,
             cancelBtn: SETTINGS_PAGE_EVENTS.CANCEL_DELETE_RULE_NOTIFICATIONS,
             deleteBtn: SETTINGS_PAGE_EVENTS.DELETE_RULE_NOTIFICATIONS,
           },
+        },
+      }),
+    );
+  };
+
+  const onCopy = (notification) => {
+    trackEvent(SETTINGS_PAGE_EVENTS.CLONE_PATTERN_ICON);
+    const newNotification = {
+      ...notification,
+      ruleName: notification.ruleName + COPY_POSTFIX,
+    };
+    delete newNotification.id;
+    dispatch(
+      showModalAction({
+        id: 'addEditNotificationModal',
+        data: {
+          actionType: 'copy',
+          onSave: confirmAddCase,
+          notification: newNotification,
+          notifications: cases,
         },
       }),
     );
@@ -147,18 +161,13 @@ export const Notifications = ({ setHeaderTitleNode }) => {
     return () => setHeaderTitleNode(null);
   });
 
-  const onToggleHandler = (isEnabled, notificationCase, id) => {
-    const updatedCases = [...cases];
-    updatedCases.splice(id, 1, { ...notificationCase, enabled: isEnabled });
-    const newCases = updatedCases.map(convertNotificationCaseForSubmission);
-
+  const onToggleHandler = (isEnabled, notification) => {
     trackEvent(
       isEnabled
         ? SETTINGS_PAGE_EVENTS.TURN_ON_NOTIFICATION_RULE_SWITCHER
         : SETTINGS_PAGE_EVENTS.TURN_OFF_NOTIFICATION_RULE_SWITCHER,
     );
-    // TODO: use new endpoint
-    dispatch(updateProjectNotificationsConfigAction({ cases: newCases }));
+    dispatch(updateProjectNotificationAction({ ...notification, enabled: isEnabled }));
   };
 
   const readOnlyNotificationsEnableForm = !isAbleToEditNotificationsEnableForm();
@@ -167,6 +176,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
   const actions = [
     {
       icon: CopyIcon,
+      handler: onCopy,
     },
     {
       icon: PencilIcon,
