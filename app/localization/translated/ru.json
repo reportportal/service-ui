@@ -1360,7 +1360,7 @@
   "Notifications.updateEmail": "updated",
   "NotificationsEnableForm.tabDescription": "Создайте правила уведомлений по электронной почте и включите автоматические уведомления по электронной почте, чтобы получать электронные письма о событии завершения запуска.",
   "NotificationsEnableForm.title": "Нет интеграции с E-mail сервером",
-  "NotificationsEnableForm.toggleNotificationsLabel": "Оповещения по электронной почте",
+  "NotificationsEnableForm.toggleNotificationsLabel": "Автоматические уведомления по электронной почте",
   "NotificationsEnableForm.toggleNotificationsNote": "Отправлять почтовые оповещения о завершенных запусках",
   "NotificationsTab.updateProjectNotificationsConfigurationSuccess": "Настройки уведомлений были успешно обновлены!",
   "OverallStatisticsControls.ContentFieldsValidationError": "Выберите не меньше одного элемента",
