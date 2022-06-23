@@ -107,7 +107,9 @@ export const ProjectSettingsPageContainer = () => {
       [NOTIFICATIONS]: {
         name: formatMessage(messages.notifications),
         link: createTabLink(NOTIFICATIONS),
-        component: <Notifications />,
+        component: (
+          <Notifications setHeaderTitleNode={(node) => setHeaderNodes({ titleNode: node })} />
+        ),
         eventInfo: SETTINGS_PAGE_EVENTS.NOTIFICATIONS_TAB,
         mobileDisabled: true,
       },

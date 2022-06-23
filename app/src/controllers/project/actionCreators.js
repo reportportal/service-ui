@@ -41,6 +41,7 @@ import {
   UPDATE_PROJECT_FILTER_PREFERENCES,
   ADD_PROJECT_NOTIFICATION,
   ADD_PROJECT_NOTIFICATION_SUCCESS,
+  UPDATE_NOTIFICATION_STATE,
 } from './constants';
 
 export const fetchProjectSuccessAction = (project) => ({
@@ -171,4 +172,9 @@ export const addProjectNotificationAction = (notification) => ({
 export const addProjectNotificationSuccessAction = (notification) => ({
   type: ADD_PROJECT_NOTIFICATION_SUCCESS,
   payload: notification,
+});
+
+export const updateNotificationStateAction = (notificationState) => ({
+  type: UPDATE_NOTIFICATION_STATE,
+  payload: notificationState,
 });

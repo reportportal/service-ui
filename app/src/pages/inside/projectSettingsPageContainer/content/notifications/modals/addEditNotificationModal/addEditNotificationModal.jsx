@@ -357,9 +357,12 @@ export default withModal('addEditNotificationModal')(
     form: 'notificationForm',
     validate: (
       { ruleName, recipients, informOwner, launchNames, attributes },
-      { data: { notifications } },
+      { data: { notification, notifications } },
     ) => ({
-      ruleName: commonValidators.createRuleNameValidator(notifications)(ruleName),
+      ruleName: commonValidators.createRuleNameValidator(
+        notifications.map((item) => ({ name: item.ruleName, ...item })),
+        notification && notification.id,
+      )(ruleName),
       recipients: bindMessageToValidator(
         validate.createNotificationRecipientsValidator(informOwner),
         'recipientsHint',

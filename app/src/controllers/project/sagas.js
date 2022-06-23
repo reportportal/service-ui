@@ -51,6 +51,8 @@ import {
   SHOW_FILTER_ON_LAUNCHES,
   UPDATE_PROJECT_FILTER_PREFERENCES,
   ADD_PROJECT_NOTIFICATION,
+  NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY,
+  UPDATE_NOTIFICATION_STATE,
 } from './constants';
 import {
   updateDefectSubTypeSuccessAction,
@@ -194,6 +196,44 @@ function* addProjectNotification({ payload: notification }) {
 
 function* watchAddProjectNotification() {
   yield takeEvery(ADD_PROJECT_NOTIFICATION, addProjectNotification);
+}
+
+function* updateNotificationState(enabled) {
+  const projectId = yield select(projectIdSelector);
+  const updatedConfig = {
+    configuration: {
+      attributes: {
+        [NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY]: enabled.toString(),
+      },
+    },
+  };
+
+  yield call(fetch, URLS.project(projectId), {
+    method: 'put',
+    data: updatedConfig,
+  });
+  yield put(updateConfigurationAttributesAction(updatedConfig));
+}
+
+function* updateNotificationStateWithNotification({ payload: enabled }) {
+  yield put(showScreenLockAction());
+  try {
+    yield call(updateNotificationState, enabled);
+    yield put(
+      showNotification({
+        messageId: 'updateProjectNotificationsConfigurationSuccess',
+        type: NOTIFICATION_TYPES.SUCCESS,
+      }),
+    );
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+  } finally {
+    yield put(hideScreenLockAction());
+  }
+}
+
+function* watchUpdateNotificationState() {
+  yield takeEvery(UPDATE_NOTIFICATION_STATE, updateNotificationStateWithNotification);
 }
 
 function* updatePAState(PAEnabled) {
@@ -393,5 +433,6 @@ export function* projectSagas() {
     watchShowFilterOnLaunches(),
     watchUpdateProjectFilterPreferences(),
     watchAddProjectNotification(),
+    watchUpdateNotificationState(),
   ]);
 }
