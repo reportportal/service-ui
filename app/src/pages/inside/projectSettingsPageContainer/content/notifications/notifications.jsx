@@ -23,9 +23,10 @@ import { useIntl } from 'react-intl';
 import { canUpdateSettings } from 'common/utils/permissions';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import {
-  projectNotificationsCasesSelector,
+  projectNotificationsSelector,
   projectNotificationsStateSelector,
-  updateProjectNotificationsConfigAction,
+  updateProjectNotificationAction,
+  deleteProjectNotificationAction,
   addProjectNotificationAction,
 } from 'controllers/project';
 import { isEmailIntegrationAvailableSelector } from 'controllers/plugins';
@@ -34,10 +35,13 @@ import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/
 import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
 import { Button } from 'componentLibrary/button';
 import { Checkbox } from 'componentLibrary/checkbox';
-import { updateNotificationStateAction } from 'controllers/project/actionCreators';
-import PencilIcon from 'common/img/pencil-inline.svg';
-import BinIcon from 'common/img/bin-inline.svg';
-import CopyIcon from 'common/img/copy-inline.svg';
+import {
+  fetchProjectNotificationsAction,
+  updateNotificationStateAction,
+} from 'controllers/project/actionCreators';
+import PencilIcon from 'common/img/newIcons/pencil-inline.svg';
+import BinIcon from 'common/img/newIcons/bin-inline.svg';
+import CopyIcon from 'common/img/newIcons/copy-inline.svg';
 import { RuleList } from '../elements/ruleList';
 import { Layout } from '../layout';
 import styles from './notifications.scss';
@@ -48,6 +52,7 @@ import { FieldElement } from '../elements';
 import { NotificationRuleContent } from '../elements/notificationRuleContent';
 
 const cx = classNames.bind(styles);
+const COPY_POSTFIX = '_copy';
 
 export const Notifications = ({ setHeaderTitleNode }) => {
   const { formatMessage } = useIntl();
@@ -57,8 +62,12 @@ export const Notifications = ({ setHeaderTitleNode }) => {
   const projectRole = useSelector(activeProjectRoleSelector);
   const userRole = useSelector(userAccountRoleSelector);
   const enabled = useSelector(projectNotificationsStateSelector);
-  const cases = useSelector(projectNotificationsCasesSelector);
+  const notifications = useSelector(projectNotificationsSelector);
   const isEmailIntegrationAvailable = useSelector(isEmailIntegrationAvailableSelector);
+
+  useEffect(() => {
+    dispatch(fetchProjectNotificationsAction());
+  }, []);
 
   const isAbleToEditNotificationList = () => canUpdateSettings(userRole, projectRole);
   const isAbleToEditNotificationsEnableForm = () =>
@@ -69,25 +78,17 @@ export const Notifications = ({ setHeaderTitleNode }) => {
     dispatch(updateNotificationStateAction(isEnabled));
   };
 
-  const confirmAddCase = (notificationCase) => {
-    const notification = convertNotificationCaseForSubmission(notificationCase);
+  const confirmAdd = (newNotification) => {
+    const notification = convertNotificationCaseForSubmission(newNotification);
     dispatch(addProjectNotificationAction(notification));
   };
 
-  const confirmEditCase = (id, notificationCase) => {
-    const updatedCases = [...cases];
-    updatedCases.splice(id, 1, notificationCase);
-    const newCases = cases.map(convertNotificationCaseForSubmission);
-    // TODO: use new endpoint
-    dispatch(updateProjectNotificationsConfigAction({ cases: newCases }));
+  const confirmEdit = (notification) => {
+    dispatch(updateProjectNotificationAction({ ...notification, name: notification.ruleName }));
   };
 
-  const confirmDeleteCase = (id) => {
-    const newCases = cases
-      .filter((item, index) => index !== id)
-      .map(convertNotificationCaseForSubmission);
-    // TODO: use new endpoint
-    dispatch(updateProjectNotificationsConfigAction({ cases: newCases }));
+  const confirmDelete = (id) => {
+    dispatch(deleteProjectNotificationAction(id));
   };
 
   const onAdd = () => {
@@ -96,42 +97,61 @@ export const Notifications = ({ setHeaderTitleNode }) => {
       showModalAction({
         id: 'addEditNotificationModal',
         data: {
-          onSave: confirmAddCase,
+          actionType: 'add',
+          onSave: confirmAdd,
           notification: DEFAULT_CASE_CONFIG,
-          notifications: cases,
-          isNewCase: true,
+          notifications,
         },
       }),
     );
   };
 
-  const onEdit = (notification, id) => {
+  const onEdit = (notification) => {
     trackEvent(SETTINGS_PAGE_EVENTS.EDIT_RULE_NOTIFICATIONS);
     dispatch(
       showModalAction({
         id: 'addEditNotificationModal',
         data: {
-          onSave: (data) => confirmEditCase(id, data),
+          actionType: 'edit',
+          onSave: (data) => confirmEdit(data),
           notification,
-          notifications: cases,
+          notifications,
         },
       }),
     );
   };
 
-  const onDelete = (notificationCase, id) => {
+  const onDelete = (notification) => {
     trackEvent(SETTINGS_PAGE_EVENTS.CLICK_ON_DELETE_RULE_NOTIFICATIONS);
     dispatch(
       showModalAction({
         id: 'deleteNotificationModal',
         data: {
-          id,
-          onSave: () => confirmDeleteCase(id),
+          onSave: () => confirmDelete(notification.id),
           eventsInfo: {
             closeIcon: SETTINGS_PAGE_EVENTS.CLOSE_ICON_DELETE_RULE_NOTIFICATIONS,
             cancelBtn: SETTINGS_PAGE_EVENTS.CANCEL_DELETE_RULE_NOTIFICATIONS,
             deleteBtn: SETTINGS_PAGE_EVENTS.DELETE_RULE_NOTIFICATIONS,
           },
+        },
+      }),
+    );
+  };
+
+  const onCopy = (notification) => {
+    trackEvent(SETTINGS_PAGE_EVENTS.CLONE_NOTIFICATIONS);
+    const { id, ...newNotification } = notification;
+    dispatch(
+      showModalAction({
+        id: 'addEditNotificationModal',
+        data: {
+          actionType: 'copy',
+          onSave: confirmAdd,
+          notification: {
+            ...newNotification,
+            ruleName: notification.ruleName + COPY_POSTFIX,
+          },
+          notifications,
         },
       }),
     );
@@ -147,18 +167,13 @@ export const Notifications = ({ setHeaderTitleNode }) => {
     return () => setHeaderTitleNode(null);
   });
 
-  const onToggleHandler = (isEnabled, notificationCase, id) => {
-    const updatedCases = [...cases];
-    updatedCases.splice(id, 1, { ...notificationCase, enabled: isEnabled });
-    const newCases = updatedCases.map(convertNotificationCaseForSubmission);
-
+  const onToggleHandler = (isEnabled, notification) => {
     trackEvent(
       isEnabled
         ? SETTINGS_PAGE_EVENTS.TURN_ON_NOTIFICATION_RULE_SWITCHER
         : SETTINGS_PAGE_EVENTS.TURN_OFF_NOTIFICATION_RULE_SWITCHER,
     );
-    // TODO: use new endpoint
-    dispatch(updateProjectNotificationsConfigAction({ cases: newCases }));
+    dispatch(updateProjectNotificationAction({ ...notification, enabled: isEnabled }));
   };
 
   const readOnlyNotificationsEnableForm = !isAbleToEditNotificationsEnableForm();
@@ -167,6 +182,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
   const actions = [
     {
       icon: CopyIcon,
+      handler: onCopy,
     },
     {
       icon: PencilIcon,
@@ -180,7 +196,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
 
   return (
     <>
-      {cases.length ? (
+      {notifications.length ? (
         <>
           <Layout description={formatMessage(messages.tabDescription)}>
             <FieldElement withoutProvider description={formatMessage(messages.toggleNote)}>
@@ -196,7 +212,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
           <div className={cx('notifications-container')}>
             <RuleList
               disabled={readOnlyNotificationList}
-              data={cases.map((item) => ({ name: item.ruleName, ...item }))}
+              data={notifications.map((item) => ({ name: item.ruleName, ...item }))}
               actions={actions}
               onToggle={onToggleHandler}
               ruleItemContent={NotificationRuleContent}
@@ -220,7 +236,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
 };
 Notifications.propTypes = {
   enabled: PropTypes.bool,
-  cases: PropTypes.array,
+  notifications: PropTypes.array,
   updateNotificationsConfig: PropTypes.func,
   showModal: PropTypes.func,
   projectRole: PropTypes.string,
@@ -230,7 +246,7 @@ Notifications.propTypes = {
 };
 Notifications.defaultProps = {
   enabled: false,
-  cases: [],
+  notifications: [],
   showModal: () => {},
   updateNotificationsConfig: () => {},
   projectRole: '',

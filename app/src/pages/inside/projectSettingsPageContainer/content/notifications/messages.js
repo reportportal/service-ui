@@ -104,7 +104,7 @@ export const messages = defineMessages({
   },
   toggleLabel: {
     id: 'NotificationsEnableForm.toggleNotificationsLabel',
-    defaultMessage: 'E-mail notification',
+    defaultMessage: 'Auto Email Notifications',
   },
   toggleNote: {
     id: 'NotificationsEnableForm.toggleNotificationsNote',

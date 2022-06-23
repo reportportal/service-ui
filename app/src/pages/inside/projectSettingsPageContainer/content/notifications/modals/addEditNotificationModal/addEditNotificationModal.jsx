@@ -60,13 +60,17 @@ const messages = defineMessages({
     id: 'AddEditNotificationCaseModal.description',
     defaultMessage: 'Select conditions to create a notification rule',
   },
-  addRuleMessage: {
+  add: {
     id: 'AddEditNotificationCaseModal.newRuleMessage',
     defaultMessage: 'Create',
   },
-  editRuleMessage: {
+  edit: {
     id: 'AddEditNotificationCaseModal.editRuleMessage',
     defaultMessage: 'Edit',
+  },
+  copy: {
+    id: 'AddEditNotificationCaseModal.copyRuleMessage',
+    defaultMessage: ' Duplicate',
   },
   active: {
     id: 'AddEditNotificationCaseModal.active',
@@ -178,12 +182,7 @@ const messages = defineMessages({
   },
 });
 
-const AddEditNotificationModal = ({
-  data,
-  data: { isNewCase, onSave },
-  handleSubmit,
-  initialize,
-}) => {
+const AddEditNotificationModal = ({ data, data: { onSave }, handleSubmit, initialize }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
@@ -233,7 +232,7 @@ const AddEditNotificationModal = ({
   return (
     <ModalLayout
       title={formatMessage(messages.title, {
-        actionType: formatMessage(isNewCase ? messages.addRuleMessage : messages.editRuleMessage),
+        actionType: formatMessage(messages[data.actionType]),
       })}
       okButton={okButton}
       cancelButton={cancelButton}
@@ -341,8 +340,8 @@ AddEditNotificationModal.propTypes = {
     notification: PropTypes.object,
     notifications: PropTypes.array,
     onSave: PropTypes.func,
-    isNewCase: PropTypes.bool,
     eventsInfo: PropTypes.object,
+    actionType: PropTypes.string,
   }),
   initialize: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,

@@ -111,6 +111,8 @@ export const externalSystemSelector = (state) => projectConfigSelector(state).ex
 export const projectNotificationsConfigurationSelector = (state) =>
   projectConfigSelector(state).notificationsConfiguration || {};
 
+export const projectNotificationSelector = (state) => projectSelector(state).notifications || {};
+
 export const projectNotificationsCasesSelector = createSelector(
   projectNotificationsConfigurationSelector,
   ({ cases = [] }) =>
@@ -118,6 +120,16 @@ export const projectNotificationsCasesSelector = createSelector(
       ...notificationCase,
       informOwner: notificationCase.recipients.includes(OWNER),
       recipients: notificationCase.recipients.filter((item) => item !== OWNER),
+    })),
+);
+
+export const projectNotificationsSelector = createSelector(
+  projectNotificationSelector,
+  ({ notifications = [] }) =>
+    notifications.map((notification) => ({
+      ...notification,
+      informOwner: notification.recipients.includes(OWNER),
+      recipients: notification.recipients.filter((item) => item !== OWNER),
     })),
 );
 

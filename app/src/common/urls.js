@@ -181,6 +181,8 @@ export const URLS = {
   suite: (activeProject, suiteId) => `${urlBase}${activeProject}/item/${suiteId}`,
 
   notification: (activeProject) => `${urlBase}notification/${activeProject}`,
+  notificationById: (activeProject, notificationId) =>
+    `${urlBase}notification/${activeProject}/${notificationId}`,
 
   testItems: (activeProject, ids) => `${urlBase}${activeProject}/item/${getQueryParams({ ids })}`,
   testItemsWithProviderType: (activeProject, ids) =>

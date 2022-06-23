@@ -42,6 +42,8 @@ export {
   updatePAStateAction,
   fetchProjectPreferencesAction,
   addProjectNotificationAction,
+  updateProjectNotificationAction,
+  deleteProjectNotificationAction,
 } from './actionCreators';
 export { projectReducer } from './reducer';
 export {
@@ -54,7 +56,9 @@ export {
   orderedContentFieldsSelector,
   orderedDefectFieldsSelector,
   projectNotificationsConfigurationSelector,
+  projectNotificationSelector,
   projectNotificationsCasesSelector,
+  projectNotificationsSelector,
   projectNotificationsEnabledSelector,
   externalSystemSelector,
   analyzerAttributesSelector,

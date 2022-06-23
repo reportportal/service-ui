@@ -35,7 +35,7 @@ const messages = defineMessages({
   },
 });
 
-const DeleteNotificationCaseModal = ({ data: { id, onSave, eventsInfo } }) => {
+const DeleteNotificationCaseModal = ({ data: { onSave, eventsInfo } }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
@@ -57,7 +57,7 @@ const DeleteNotificationCaseModal = ({ data: { id, onSave, eventsInfo } }) => {
       closeIconEventInfo={eventsInfo.closeIcon}
       onClose={() => dispatch(hideModalAction())}
     >
-      <div>{Parser(formatMessage(messages.message, { number: id + 1 }))}</div>
+      <div>{Parser(formatMessage(messages.message))}</div>
     </ModalLayout>
   );
 };

@@ -53,6 +53,9 @@ import {
   ADD_PROJECT_NOTIFICATION,
   NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY,
   UPDATE_NOTIFICATION_STATE,
+  UPDATE_PROJECT_NOTIFICATION,
+  DELETE_PROJECT_NOTIFICATION,
+  FETCH_PROJECT_NOTIFICATIONS,
 } from './constants';
 import {
   updateDefectSubTypeSuccessAction,
@@ -68,6 +71,9 @@ import {
   fetchProjectPreferencesSuccessAction,
   updateProjectFilterPreferencesAction,
   addProjectNotificationSuccessAction,
+  fetchProjectNotificationsSuccessAction,
+  deleteProjectNotificationSuccessAction,
+  updateProjectNotificationSuccessAction,
 } from './actionCreators';
 import { projectNotificationsConfigurationSelector, patternsSelector } from './selectors';
 
@@ -172,6 +178,16 @@ function* watchUpdateProjectNotificationsConfig() {
   yield takeEvery(UPDATE_NOTIFICATIONS_CONFIG, updateProjectNotificationsConfig);
 }
 
+function* fetchProjectNotifications() {
+  const projectId = yield select(projectIdSelector);
+  const notifications = yield call(fetch, URLS.notification(projectId));
+  yield put(fetchProjectNotificationsSuccessAction(notifications));
+}
+
+function* watchFetchProjectNotifications() {
+  yield takeEvery(FETCH_PROJECT_NOTIFICATIONS, fetchProjectNotifications);
+}
+
 function* addProjectNotification({ payload: notification }) {
   try {
     const projectId = yield select(projectIdSelector);
@@ -196,6 +212,62 @@ function* addProjectNotification({ payload: notification }) {
 
 function* watchAddProjectNotification() {
   yield takeEvery(ADD_PROJECT_NOTIFICATION, addProjectNotification);
+}
+
+function* updateProjectNotification({ payload: notification }) {
+  yield put(showScreenLockAction());
+  try {
+    const projectId = yield select(projectIdSelector);
+
+    yield call(fetch, URLS.notification(projectId), {
+      method: 'put',
+      data: notification,
+    });
+    yield put(updateProjectNotificationSuccessAction(notification));
+    yield put(
+      showNotification({
+        messageId: 'updateProjectNotificationsConfigurationSuccess',
+        type: NOTIFICATION_TYPES.SUCCESS,
+      }),
+    );
+    yield put(hideModalAction());
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+  } finally {
+    yield put(hideScreenLockAction());
+  }
+}
+
+function* watchUpdateProjectNotification() {
+  yield takeEvery(UPDATE_PROJECT_NOTIFICATION, updateProjectNotification);
+}
+
+function* deleteProjectNotification({ payload: id }) {
+  console.log(id);
+  yield put(showScreenLockAction());
+  try {
+    const projectId = yield select(projectIdSelector);
+
+    yield call(fetch, URLS.notificationById(projectId, id), {
+      method: 'delete',
+    });
+    yield put(deleteProjectNotificationSuccessAction(id));
+    yield put(
+      showNotification({
+        messageId: 'updateProjectNotificationsConfigurationSuccess',
+        type: NOTIFICATION_TYPES.SUCCESS,
+      }),
+    );
+    yield put(hideModalAction());
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+  } finally {
+    yield put(hideScreenLockAction());
+  }
+}
+
+function* watchDeleteProjectNotification() {
+  yield takeEvery(DELETE_PROJECT_NOTIFICATION, deleteProjectNotification);
 }
 
 function* updateNotificationState(enabled) {
@@ -434,5 +506,8 @@ export function* projectSagas() {
     watchUpdateProjectFilterPreferences(),
     watchAddProjectNotification(),
     watchUpdateNotificationState(),
+    watchUpdateProjectNotification(),
+    watchDeleteProjectNotification(),
+    watchFetchProjectNotifications(),
   ]);
 }

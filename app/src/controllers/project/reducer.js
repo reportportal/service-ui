@@ -31,6 +31,9 @@ import {
   DELETE_PATTERN_SUCCESS,
   FETCH_PROJECT,
   ADD_PROJECT_NOTIFICATION_SUCCESS,
+  FETCH_PROJECT_NOTIFICATIONS_SUCCESS,
+  DELETE_PROJECT_NOTIFICATION_SUCCESS,
+  UPDATE_PROJECT_NOTIFICATION_SUCCESS,
 } from './constants';
 
 export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, payload }) => {
@@ -54,17 +57,6 @@ export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, p
         configuration: {
           ...state.configuration,
           notificationsConfiguration: payload,
-        },
-      };
-    case ADD_PROJECT_NOTIFICATION_SUCCESS:
-      return {
-        ...state,
-        configuration: {
-          ...state.configuration,
-          notificationsConfiguration: {
-            ...state.configuration.notificationsConfiguration,
-            cases: [...state.configuration.notificationsConfiguration.cases, payload],
-          },
         },
       };
     case UPDATE_DEFECT_SUBTYPE_SUCCESS:
@@ -169,8 +161,36 @@ export const projectInfoLoadingReducer = (state = false, { type }) => {
   }
 };
 
+export const projectNotificationsReducer = (state = {}, { type, payload }) => {
+  switch (type) {
+    case FETCH_PROJECT_NOTIFICATIONS_SUCCESS:
+      return { ...state, notifications: payload };
+    case ADD_PROJECT_NOTIFICATION_SUCCESS:
+      return {
+        ...state,
+        notifications: [...state.notifications, payload],
+      };
+    case UPDATE_PROJECT_NOTIFICATION_SUCCESS:
+      return {
+        ...state,
+        notifications: state.notifications.map((item) => {
+          if (payload.id === item.id) return payload;
+          return item;
+        }),
+      };
+    case DELETE_PROJECT_NOTIFICATION_SUCCESS:
+      return {
+        ...state,
+        notifications: state.notifications.filter((item) => item.id !== payload),
+      };
+    default:
+      return state;
+  }
+};
+
 export const projectReducer = combineReducers({
   info: projectInfoReducer,
   preferences: projectPreferencesReducer,
   infoLoading: projectInfoLoadingReducer,
+  notifications: projectNotificationsReducer,
 });
