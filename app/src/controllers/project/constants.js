@@ -50,7 +50,7 @@ export const UPDATE_PA_STATE = 'updatePAState';
 
 export const ADD_PROJECT_NOTIFICATION = 'addProjectNotification';
 export const ADD_PROJECT_NOTIFICATION_SUCCESS = 'addProjectNotificationSuccess';
-export const FETCH_NOTIFICATIONS_PAGE = 'fetchNotificationsPage';
+export const FETCH_PROJECT_NOTIFICATIONS = 'fetchProjectNotification';
 export const FETCH_PROJECT_NOTIFICATIONS_SUCCESS = 'fetchProjectNotificationSuccess';
 export const UPDATE_NOTIFICATION_STATE = 'updateNotificationState';
 export const NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY = 'notifications.enabled';

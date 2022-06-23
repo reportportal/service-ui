@@ -162,7 +162,6 @@ export const projectInfoLoadingReducer = (state = false, { type }) => {
 };
 
 export const projectNotificationsReducer = (state = {}, { type, payload }) => {
-  console.log(type);
   switch (type) {
     case FETCH_PROJECT_NOTIFICATIONS_SUCCESS:
       return { ...state, notifications: payload };
@@ -193,5 +192,5 @@ export const projectReducer = combineReducers({
   info: projectInfoReducer,
   preferences: projectPreferencesReducer,
   infoLoading: projectInfoLoadingReducer,
-  projectNotifications: projectNotificationsReducer,
+  notifications: projectNotificationsReducer,
 });

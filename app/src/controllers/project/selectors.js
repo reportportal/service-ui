@@ -111,8 +111,7 @@ export const externalSystemSelector = (state) => projectConfigSelector(state).ex
 export const projectNotificationsConfigurationSelector = (state) =>
   projectConfigSelector(state).notificationsConfiguration || {};
 
-export const projectNotificationSelector = (state) =>
-  projectSelector(state).projectNotifications || {};
+export const projectNotificationSelector = (state) => projectSelector(state).notifications || {};
 
 export const projectNotificationsCasesSelector = createSelector(
   projectNotificationsConfigurationSelector,

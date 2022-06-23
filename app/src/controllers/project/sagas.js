@@ -55,7 +55,7 @@ import {
   UPDATE_NOTIFICATION_STATE,
   UPDATE_PROJECT_NOTIFICATION,
   DELETE_PROJECT_NOTIFICATION,
-  FETCH_NOTIFICATIONS_PAGE,
+  FETCH_PROJECT_NOTIFICATIONS,
 } from './constants';
 import {
   updateDefectSubTypeSuccessAction,
@@ -71,7 +71,7 @@ import {
   fetchProjectPreferencesSuccessAction,
   updateProjectFilterPreferencesAction,
   addProjectNotificationSuccessAction,
-  fetchNotificationsPageSuccessAction,
+  fetchProjectNotificationsSuccessAction,
   deleteProjectNotificationSuccessAction,
   updateProjectNotificationSuccessAction,
 } from './actionCreators';
@@ -178,14 +178,14 @@ function* watchUpdateProjectNotificationsConfig() {
   yield takeEvery(UPDATE_NOTIFICATIONS_CONFIG, updateProjectNotificationsConfig);
 }
 
-function* fetchNotificationsPage() {
+function* fetchProjectNotifications() {
   const projectId = yield select(projectIdSelector);
   const notifications = yield call(fetch, URLS.notification(projectId));
-  yield put(fetchNotificationsPageSuccessAction(notifications));
+  yield put(fetchProjectNotificationsSuccessAction(notifications));
 }
 
-function* watchFetchNotificationsPage() {
-  yield takeEvery(FETCH_NOTIFICATIONS_PAGE, fetchNotificationsPage);
+function* watchFetchProjectNotifications() {
+  yield takeEvery(FETCH_PROJECT_NOTIFICATIONS, fetchProjectNotifications);
 }
 
 function* addProjectNotification({ payload: notification }) {
@@ -508,6 +508,6 @@ export function* projectSagas() {
     watchUpdateNotificationState(),
     watchUpdateProjectNotification(),
     watchDeleteProjectNotification(),
-    watchFetchNotificationsPage(),
+    watchFetchProjectNotifications(),
   ]);
 }

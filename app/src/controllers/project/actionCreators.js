@@ -44,7 +44,7 @@ import {
   UPDATE_NOTIFICATION_STATE,
   UPDATE_PROJECT_NOTIFICATION,
   DELETE_PROJECT_NOTIFICATION,
-  FETCH_NOTIFICATIONS_PAGE,
+  FETCH_PROJECT_NOTIFICATIONS,
   FETCH_PROJECT_NOTIFICATIONS_SUCCESS,
   DELETE_PROJECT_NOTIFICATION_SUCCESS,
   UPDATE_PROJECT_NOTIFICATION_SUCCESS,
@@ -170,11 +170,11 @@ export const updatePAStateAction = (PAState) => ({
   payload: PAState,
 });
 
-export const fetchNotificationsPageAction = () => ({
-  type: FETCH_NOTIFICATIONS_PAGE,
+export const fetchProjectNotificationsAction = () => ({
+  type: FETCH_PROJECT_NOTIFICATIONS,
 });
 
-export const fetchNotificationsPageSuccessAction = (notifications) => ({
+export const fetchProjectNotificationsSuccessAction = (notifications) => ({
   type: FETCH_PROJECT_NOTIFICATIONS_SUCCESS,
   payload: notifications,
 });

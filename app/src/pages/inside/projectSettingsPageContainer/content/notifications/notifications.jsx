@@ -36,7 +36,7 @@ import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/conten
 import { Button } from 'componentLibrary/button';
 import { Checkbox } from 'componentLibrary/checkbox';
 import {
-  fetchNotificationsPageAction,
+  fetchProjectNotificationsAction,
   updateNotificationStateAction,
 } from 'controllers/project/actionCreators';
 import PencilIcon from 'common/img/newIcons/pencil-inline.svg';
@@ -66,7 +66,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
   const isEmailIntegrationAvailable = useSelector(isEmailIntegrationAvailableSelector);
 
   useEffect(() => {
-    dispatch(fetchNotificationsPageAction());
+    dispatch(fetchProjectNotificationsAction());
   }, []);
 
   const isAbleToEditNotificationList = () => canUpdateSettings(userRole, projectRole);
@@ -141,7 +141,6 @@ export const Notifications = ({ setHeaderTitleNode }) => {
   const onCopy = (notification) => {
     trackEvent(SETTINGS_PAGE_EVENTS.CLONE_NOTIFICATIONS);
     const { id, ...newNotification } = notification;
-    delete newNotification.id;
     dispatch(
       showModalAction({
         id: 'addEditNotificationModal',
