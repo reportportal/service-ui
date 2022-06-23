@@ -36,9 +36,9 @@ import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/conten
 import { Button } from 'componentLibrary/button';
 import { Checkbox } from 'componentLibrary/checkbox';
 import { updateNotificationStateAction } from 'controllers/project/actionCreators';
-import PencilIcon from 'common/img/settingsRules/pencil-inline.svg';
-import BinIcon from 'common/img/settingsRules/bin-inline.svg';
-import CopyIcon from 'common/img/settingsRules/copy-inline.svg';
+import PencilIcon from 'common/img/newIcons/pencil-inline.svg';
+import BinIcon from 'common/img/newIcons/bin-inline.svg';
+import CopyIcon from 'common/img/newIcons/copy-inline.svg';
 import { RuleList } from '../elements/ruleList';
 import { Layout } from '../layout';
 import styles from './notifications.scss';
