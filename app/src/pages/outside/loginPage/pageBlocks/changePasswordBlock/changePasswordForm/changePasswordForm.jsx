@@ -132,12 +132,14 @@ export class ChangePasswordForm extends PureComponent {
                 />
               }
             >
-              <FieldErrorHint>
+              <FieldErrorHint provideHint={false}>
                 <InputOutside
                   type={'password'}
                   icon={PasswordIcon}
                   maxLength={'256'}
                   placeholder={formatMessage(placeholders.newPassword)}
+                  hasDynamicValidation
+                  provideErrorHint
                 />
               </FieldErrorHint>
             </FieldBottomConstraints>
@@ -145,12 +147,14 @@ export class ChangePasswordForm extends PureComponent {
         </div>
         <div className={cx('confirm-new-password-field')}>
           <FieldProvider name="passwordRepeat">
-            <FieldErrorHint>
+            <FieldErrorHint provideHint={false}>
               <InputOutside
                 type={'password'}
                 icon={PasswordIcon}
                 maxLength={'256'}
                 placeholder={formatMessage(placeholders.confirmNewPassword)}
+                hasDynamicValidation
+                provideErrorHint
               />
             </FieldErrorHint>
           </FieldProvider>

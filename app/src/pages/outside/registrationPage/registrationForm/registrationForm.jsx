@@ -20,7 +20,6 @@ import PropTypes from 'prop-types';
 import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
 import { reduxForm, SubmissionError } from 'redux-form';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { FieldBottomConstraints } from 'components/fields/fieldBottomConstraints';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputOutside } from 'components/inputs/inputOutside';
 import { BigButton } from 'components/buttons/bigButton';
@@ -119,30 +118,30 @@ export class RegistrationForm extends Component {
       <form className={cx('registration-form')} onSubmit={handleSubmit(this.submitHandler)}>
         <div className={cx('name-field')}>
           <FieldProvider name="name">
-            <FieldBottomConstraints text={formatMessage(messages.nameConstraint)}>
-              <FieldErrorHint staticTouchedHint>
-                <InputOutside
-                  icon={NameIcon}
-                  maxLength="256"
-                  placeholder={formatMessage(messages.name)}
-                  hasDynamicValidation
-                />
-              </FieldErrorHint>
-            </FieldBottomConstraints>
+            <FieldErrorHint provideHint={false}>
+              <InputOutside
+                icon={NameIcon}
+                maxLength="256"
+                placeholder={formatMessage(messages.name)}
+                hasDynamicValidation
+                hint={formatMessage(messages.nameConstraint)}
+                provideErrorHint
+              />
+            </FieldErrorHint>
           </FieldProvider>
         </div>
         <div className={cx('login-field')}>
           <FieldProvider name="login">
-            <FieldBottomConstraints text={formatMessage(messages.loginConstraint)}>
-              <FieldErrorHint staticTouchedHint>
-                <InputOutside
-                  icon={LoginIcon}
-                  maxLength={'128'}
-                  placeholder={formatMessage(messages.login)}
-                  hasDynamicValidation
-                />
-              </FieldErrorHint>
-            </FieldBottomConstraints>
+            <FieldErrorHint provideHint={false}>
+              <InputOutside
+                icon={LoginIcon}
+                maxLength={'128'}
+                placeholder={formatMessage(messages.login)}
+                hasDynamicValidation
+                hint={formatMessage(messages.loginConstraint)}
+                provideErrorHint
+              />
+            </FieldErrorHint>
           </FieldProvider>
         </div>
         <div className={cx('email-field')}>
@@ -151,14 +150,15 @@ export class RegistrationForm extends Component {
           </FieldProvider>
         </div>
         <div className={cx('password-field')}>
-          <FieldProvider name="password" staticTouchedHint>
-            <FieldErrorHint>
+          <FieldProvider name="password">
+            <FieldErrorHint provideHint={false}>
               <InputOutside
                 type={'password'}
                 icon={PasswordIcon}
                 maxLength="256"
                 placeholder={formatMessage(messages.password)}
                 hasDynamicValidation
+                provideErrorHint
               />
             </FieldErrorHint>
           </FieldProvider>
@@ -168,7 +168,7 @@ export class RegistrationForm extends Component {
             <FieldErrorHint
               formPath={'user.registrationForm'}
               fieldName={'confirmPassword'}
-              staticTouchedHint
+              provideHint={false}
             >
               <InputOutside
                 type={'password'}
@@ -176,6 +176,7 @@ export class RegistrationForm extends Component {
                 maxLength="256"
                 placeholder={formatMessage(messages.confirmPassword)}
                 hasDynamicValidation
+                provideErrorHint
               />
             </FieldErrorHint>
           </FieldProvider>
