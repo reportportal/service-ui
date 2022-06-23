@@ -23,7 +23,7 @@ node {
 
         stage('Push to registries') {
             withEnv(["AWS_URI=${AWS_URI}", "AWS_REGION=${AWS_REGION}"]) {
-                sh 'docker tag reportportal-dev/service-ui ${AWS_URI}/service-ui:SNAPSHOT-${BUILD_NUMBER}'
+                sh 'docker tag reportportal-dev/service-ui $AWS_URI/service-ui:SNAPSHOT-$BUILD_NUMBER'
                 def image = env.AWS_URI + '/service-ui' + ':SNAPSHOT-' + env.BUILD_NUMBER
                 def url = 'https://' + env.AWS_URI
                 def credentials = 'ecr:' + env.AWS_REGION + ':aws_credentials'
@@ -35,8 +35,9 @@ node {
             
         stage('Cleanup') {
             withEnv(["AWS_URI=${AWS_URI}"]) {
-                sh 'docker rmi ${AWS_URI}/service-ui:SNAPSHOT-${BUILD_NUMBER}'
+                sh 'docker rmi $AWS_URI/service-ui:SNAPSHOT-$BUILD_NUMBER'
                 sh 'docker rmi reportportal-dev/service-ui:latest'
+                sh 'docker image prune -f'
             }
         }
     }
