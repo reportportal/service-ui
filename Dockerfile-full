@@ -1,3 +1,4 @@
+# Only for technical/build aims, built image will be with nginx:alpine according to the last step
 FROM alpine:3.10.9 as generate-build-info
 RUN apk add git
 RUN apk add make
@@ -7,7 +8,7 @@ WORKDIR /usr/src
 ARG version
 RUN make generate-build-info v=$version
 
-FROM node:12-alpine as build-frontend
+FROM node:14-alpine as build-frontend
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY ./app/ /usr/src/app/

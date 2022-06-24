@@ -9,13 +9,15 @@ REPO_NAME := reportportal/service-ui
 
 UI_BUILD_REACT=app/
 
+BUILD_INFO_FILE := buildInfo.json
+
 IMAGE_NAME=reportportal-dev-5/service-ui$(IMAGE_POSTFIX)
 
 .PHONY: build
 
 # Generates a json file with build info
 generate-build-info:
-	echo '{"build": { "version": "${v}", "branch": "${COMMIT_HASH}", "build_date": "${BUILD_DATE}", "name": "Service UI", "repo": "${REPO_NAME}"}}' > ./${UI_BUILD_REACT}build/buildInfo.json
+	echo '{"build": { "version": "${v}", "branch": "${COMMIT_HASH}", "build_date": "${BUILD_DATE}", "name": "Service UI", "repo": "${REPO_NAME}"}}' > ./${UI_BUILD_REACT}build/${BUILD_INFO_FILE}
 
 # Builds the project
 build-statics:

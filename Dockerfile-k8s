@@ -7,7 +7,6 @@ LABEL quay.expires-after=1w
 COPY bin/service-ui /
 COPY app/build /public
 
-
 ENV RP_STATICS_PATH=/public
 
 EXPOSE 8080
