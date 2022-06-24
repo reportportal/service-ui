@@ -1610,7 +1610,7 @@
   "ProjectsPage.projectExists": "Праект ''{name}'' ўжо існуе",
   "ProjectsPage.projectLengthHint": "Назва праекта",
   "ProjectsPage.projectNameLabel": "Назва праекта",
-  "ProjectsPage.projectNameLengthHint": "Project name may contain only Latin, numeric characters, hyphen, underscore, dot (from 3 to 256 symbols)",
+  "ProjectsPage.projectNameLengthHint": "Поўнае імя можа змяшчаць толькі лацінку, лічбы, злучок, падкрэсленне, кропку (ад 3 да 256 сімвалаў)",
   "ProjectsPage.searchPlaceholder": "Пошук па назве",
   "ProjectsPage.sortBy": "Сартаваць па",
   "ProjectsPage.title": "Усе Праекты",

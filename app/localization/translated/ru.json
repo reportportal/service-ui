@@ -1610,7 +1610,7 @@
   "ProjectsPage.projectExists": "Проект ''{name}'' уже существует",
   "ProjectsPage.projectLengthHint": "Имя проекта",
   "ProjectsPage.projectNameLabel": "Имя проекта",
-  "ProjectsPage.projectNameLengthHint": "Полное имя может содержать только латиницу, цифры, дефис, подчеркивание, точку (от 3 до 256 символов)",
+  "ProjectsPage.projectNameLengthHint": "Имя проекта может содержать только латиницу, цифры, дефис, подчеркивание, точку (от 3 до 256 символов)",
   "ProjectsPage.searchPlaceholder": "Поиск по названию",
   "ProjectsPage.sortBy": "Сортировать по",
   "ProjectsPage.title": "Все Проекты",
