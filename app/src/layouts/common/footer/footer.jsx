@@ -23,6 +23,7 @@ import { FormattedMessage } from 'react-intl';
 import { FOOTER_EVENTS } from 'components/main/analytics/events';
 import { uiBuildVersionSelector, authExtensionsSelector } from 'controllers/appInfo';
 import { referenceDictionary } from 'common/utils/referenceDictionary';
+
 import styles from './footer.scss';
 
 const cx = classNames.bind(styles);
