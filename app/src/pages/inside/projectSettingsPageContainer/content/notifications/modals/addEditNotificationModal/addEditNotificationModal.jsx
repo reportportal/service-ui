@@ -178,7 +178,7 @@ const messages = defineMessages({
   },
   toggleNote: {
     id: 'NotificationsEnableForm.toggleNotificationsNote',
-    defaultMessage: 'Send e-mail notifications about launches finished',
+    defaultMessage: 'Send email notifications on launch finish',
   },
 });
 

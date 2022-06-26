@@ -1361,7 +1361,7 @@
   "NotificationsEnableForm.tabDescription": "Створіть правила сповіщень електронною поштою та ввімкніть автоматичні сповіщення електронною поштою, щоб отримувати електронні листи під час завершення запуску.",
   "NotificationsEnableForm.title": "Немає інтеграції з електронною поштою сервером",
   "NotificationsEnableForm.toggleNotificationsLabel": "Автоматичне сповіщення електронною поштою",
-  "NotificationsEnableForm.toggleNotificationsNote": "Відправляти поштові оповіщення про завершених запусках",
+  "NotificationsEnableForm.toggleNotificationsNote": "Надсилайте сповіщення електронною поштою про завершення запуску",
   "NotificationsTab.updateProjectNotificationsConfigurationSuccess": "Налаштування сповіщень були успішно оновлені!",
   "OverallStatisticsControls.ContentFieldsValidationError": "Виберіть не менше одного елемента",
   "OverallStatisticsControls.CriteriaFieldLabel": "Критерії для віджету",

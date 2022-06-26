@@ -1361,7 +1361,7 @@
   "NotificationsEnableForm.tabDescription": "Стварыце правілы апавяшчэнняў па электроннай пошце і ўключыце аўтаматычныя апавяшчэнні па электроннай пошце, каб атрымліваць электронную пошту пры завяршэнні запуску.",
   "NotificationsEnableForm.title": "Няма інтэграцыі з E-mail серверам",
   "NotificationsEnableForm.toggleNotificationsLabel": "Аўтаматычныя апавяшчэнні па электроннай пошце",
-  "NotificationsEnableForm.toggleNotificationsNote": "Дасылаць апавяшчэнні электроннай пошты пра скончаныя запускі",
+  "NotificationsEnableForm.toggleNotificationsNote": "Адпраўляць апавяшчэнні па электроннай пошце аб заканчэнні запуску",
   "NotificationsTab.updateProjectNotificationsConfigurationSuccess": "Налады апавяшчэнняў былі паспяхова абноўлены!",
   "OverallStatisticsControls.ContentFieldsValidationError": "Абярыце па меншай меры адзін элемент",
   "OverallStatisticsControls.CriteriaFieldLabel": "Крытэрыі для віджэта",
