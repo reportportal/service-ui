@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { AttributeList } from './attributeList';
 
@@ -24,79 +23,76 @@ const NEW_ATTRIBUTE = {
   new: true,
 };
 
-export class EditableAttributeList extends Component {
-  static propTypes = {
-    attributes: PropTypes.arrayOf(PropTypes.object),
-    disabled: PropTypes.bool,
-    newAttrMessage: PropTypes.string,
-    onChange: PropTypes.func,
-    keyURLCreator: PropTypes.func,
-    valueURLCreator: PropTypes.func,
-    maxLength: PropTypes.number,
-    customClass: PropTypes.string,
-    showButton: PropTypes.bool,
-    editable: PropTypes.bool,
-    eventsInfo: PropTypes.object,
-    trackEvent: PropTypes.func,
-  };
-
-  static defaultProps = {
-    attributes: [],
-    disabled: false,
-    newAttrMessage: '',
-    onChange: () => {},
-    keyURLCreator: null,
-    valueURLCreator: null,
-    maxLength: Infinity,
-    customClass: '',
-    showButton: true,
-    editable: true,
-    eventsInfo: {},
-    trackEvent: () => {},
-  };
-
-  handleAddNew = () => {
-    const { attributes, onChange } = this.props;
+export const EditableAttributeList = ({
+  attributes,
+  onChange,
+  disabled,
+  keyURLCreator,
+  valueURLCreator,
+  newAttrMessage,
+  maxLength,
+  customClass,
+  showButton,
+  editable,
+  eventsInfo,
+  trackEvent,
+  ...rest
+}) => {
+  const handleAddNew = () => {
     onChange([...attributes, NEW_ATTRIBUTE]);
   };
 
-  handleChange = (attributes) => {
-    this.props.onChange(attributes);
+  const handleChange = (attr) => {
+    onChange(attr);
   };
 
-  render() {
-    const {
-      attributes,
-      disabled,
-      keyURLCreator,
-      valueURLCreator,
-      newAttrMessage,
-      maxLength,
-      customClass,
-      showButton,
-      editable,
-      eventsInfo,
-      trackEvent,
-      ...rest
-    } = this.props;
-    return (
-      <AttributeList
-        attributes={attributes}
-        onChange={this.handleChange}
-        onRemove={this.handleChange}
-        onAddNew={this.handleAddNew}
-        newAttrMessage={newAttrMessage}
-        disabled={disabled}
-        keyURLCreator={keyURLCreator}
-        valueURLCreator={valueURLCreator}
-        maxLength={maxLength}
-        customClass={customClass}
-        showButton={showButton}
-        editable={editable}
-        eventsInfo={eventsInfo}
-        trackEvent={trackEvent}
-        {...rest}
-      />
-    );
-  }
-}
+  return (
+    <AttributeList
+      attributes={attributes}
+      onChange={handleChange}
+      onRemove={handleChange}
+      onAddNew={handleAddNew}
+      newAttrMessage={newAttrMessage}
+      disabled={disabled}
+      keyURLCreator={keyURLCreator}
+      valueURLCreator={valueURLCreator}
+      maxLength={maxLength}
+      customClass={customClass}
+      showButton={showButton}
+      editable={editable}
+      eventsInfo={eventsInfo}
+      trackEvent={trackEvent}
+      {...rest}
+    />
+  );
+};
+
+EditableAttributeList.propTypes = {
+  attributes: PropTypes.arrayOf(PropTypes.object),
+  disabled: PropTypes.bool,
+  newAttrMessage: PropTypes.string,
+  onChange: PropTypes.func,
+  keyURLCreator: PropTypes.func,
+  valueURLCreator: PropTypes.func,
+  maxLength: PropTypes.number,
+  customClass: PropTypes.string,
+  showButton: PropTypes.bool,
+  editable: PropTypes.bool,
+  eventsInfo: PropTypes.object,
+  trackEvent: PropTypes.func,
+};
+
+EditableAttributeList.defaultProps = {
+  attributes: [],
+  disabled: false,
+  newAttrMessage: '',
+  onChange: () => {},
+  keyURLCreator: null,
+  valueURLCreator: null,
+  maxLength: Infinity,
+  customClass: '',
+  showButton: true,
+  editable: true,
+  eventsInfo: {},
+  trackEvent: () => {},
+};

@@ -27,62 +27,6 @@ import styles from './attributeList.scss';
 
 const cx = classNames.bind(styles);
 
-const getExistEditableAttr = (attributes) => {
-  return attributes.find((attr) => attr.edited);
-};
-
-const getIndexEditableAttr = (attributes) => {
-  return attributes.findIndex((attr) => attr.edited);
-};
-
-const createChangeHandler = (attributes, index, onChange, trackEvent, eventsInfo) => (
-  attribute,
-) => {
-  const newAttributes = [...attributes];
-  const { edited, ...newAttribute } = attribute;
-  newAttributes[index] = newAttribute;
-  onChange(newAttributes);
-  if (Object.keys(eventsInfo).length > 0) {
-    trackEvent(eventsInfo.addAttribute);
-  }
-};
-
-const createRemoveHandler = (attributes, index, onChange) => () => {
-  const newAttributes = [...attributes];
-  newAttributes.splice(index, 1);
-  onChange(newAttributes);
-};
-
-const isNewAttribute = (attribute) => !attribute.value;
-
-const createCancelEditHandler = (attributes, index, onChange) => () => {
-  const newAttributes = [...attributes];
-  if (isNewAttribute(attributes[index])) {
-    newAttributes.splice(index, 1);
-  } else {
-    const { edited, ...attribute } = newAttributes[index];
-    newAttributes[index] = attribute;
-  }
-  onChange(newAttributes);
-  return newAttributes;
-};
-
-const hasEditedAttribute = (attributes) => attributes.some((attribute) => !!attribute.edited);
-
-const createEditHandler = (attributes, index, onChange) => () => {
-  let newAttributes;
-  if (getExistEditableAttr(attributes)) {
-    const oldIndex = getIndexEditableAttr(attributes);
-    newAttributes = createCancelEditHandler(attributes, oldIndex, onChange)();
-  }
-  newAttributes = newAttributes || [...attributes];
-  newAttributes[index] = {
-    ...newAttributes[index],
-    edited: true,
-  };
-  onChange(newAttributes);
-};
-
 export const AttributeList = ({
   attributes,
   onChange,
@@ -99,31 +43,75 @@ export const AttributeList = ({
   eventsInfo,
   projectId,
 }) => {
-  const editableAttr = getExistEditableAttr(attributes);
-  const indexEditableAttr = getIndexEditableAttr(attributes);
+  const getExistEditableAttr = () => {
+    return attributes.find((attr) => attr.edited);
+  };
+
+  const getIndexEditableAttr = () => {
+    return attributes.findIndex((attr) => attr.edited);
+  };
+
+  const createChangeHandler = () => (attribute) => {
+    const index = getIndexEditableAttr();
+    const newAttributes = [...attributes];
+    const { edited, ...newAttribute } = attribute;
+    newAttributes[index] = newAttribute;
+    onChange(newAttributes);
+    if (Object.keys(eventsInfo).length > 0) {
+      trackEvent(eventsInfo.addAttribute);
+    }
+  };
+
+  const createRemoveHandler = (index) => () => {
+    const newAttributes = [...attributes];
+    newAttributes.splice(index, 1);
+    onChange(newAttributes);
+  };
+
+  const isNewAttribute = (attribute) => !attribute.value;
+
+  const createCancelEditHandler = (index) => () => {
+    const newAttributes = [...attributes];
+    if (isNewAttribute(attributes[index])) {
+      newAttributes.splice(index, 1);
+    } else {
+      const { edited, ...attribute } = newAttributes[index];
+      newAttributes[index] = attribute;
+    }
+    onChange(newAttributes);
+    return newAttributes;
+  };
+
+  const hasEditedAttribute = () => attributes.some((attribute) => !!attribute.edited);
+
+  const createEditHandler = (index) => () => {
+    let newAttributes;
+    if (getExistEditableAttr()) {
+      const oldIndex = getIndexEditableAttr();
+      newAttributes = createCancelEditHandler(oldIndex)();
+    }
+    newAttributes = newAttributes || [...attributes];
+    newAttributes[index] = {
+      ...newAttributes[index],
+      edited: true,
+    };
+    onChange(newAttributes);
+  };
+
+  const editableAttr = getExistEditableAttr();
+  const indexEditableAttr = getIndexEditableAttr();
+
   return (
     <Fragment>
       {editableAttr ? (
         <div className={cx('editor-wrapper')}>
           <AttributeEditor
             attribute={editableAttr}
-            onChange={createChangeHandler(
-              attributes,
-              indexEditableAttr,
-              onChange,
-              trackEvent,
-              eventsInfo,
-            )}
-            onConfirm={createChangeHandler(
-              attributes,
-              indexEditableAttr,
-              onChange,
-              trackEvent,
-              eventsInfo,
-            )}
-            onRemove={createRemoveHandler(attributes, indexEditableAttr, onChange)}
-            onEdit={editable && createEditHandler(attributes, indexEditableAttr, onChange)}
-            onCancel={createCancelEditHandler(attributes, indexEditableAttr, onChange)}
+            onChange={createChangeHandler()}
+            onConfirm={createChangeHandler()}
+            onRemove={createRemoveHandler(indexEditableAttr)}
+            onEdit={editable && createEditHandler(indexEditableAttr)}
+            onCancel={createCancelEditHandler(indexEditableAttr)}
             keyURLCreator={keyURLCreator}
             valueURLCreator={valueURLCreator}
             projectId={projectId}
@@ -141,17 +129,17 @@ export const AttributeList = ({
             attribute={attribute}
             attributes={filteredAttributes}
             editMode={attribute.edited}
-            onChange={createChangeHandler(attributes, i, onChange, trackEvent, eventsInfo)}
-            onRemove={createRemoveHandler(attributes, i, onChange)}
-            onEdit={editable && createEditHandler(attributes, i, onChange)}
-            onCancelEdit={createCancelEditHandler(attributes, i, onChange)}
+            onChange={createChangeHandler()}
+            onRemove={createRemoveHandler(i)}
+            onEdit={editable && createEditHandler(i)}
+            onCancelEdit={createCancelEditHandler(i)}
             disabled={disabled}
             keyURLCreator={keyURLCreator}
             valueURLCreator={valueURLCreator}
             customClass={customClass}
           />
         ))}
-      {!hasEditedAttribute(attributes) && !disabled && showButton && attributes.length < maxLength && (
+      {!hasEditedAttribute() && !disabled && showButton && attributes.length < maxLength && (
         <Button startIcon={PlusIcon} onClick={onAddNew} variant={'text'}>
           {newAttrMessage || (
             <FormattedMessage id="AttributeList.addNew" defaultMessage="Add new" />

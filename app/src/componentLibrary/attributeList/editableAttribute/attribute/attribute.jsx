@@ -23,12 +23,12 @@ import styles from './attribute.scss';
 
 const cx = classNames.bind(styles);
 
-const createRemoveClickHandler = (clickHandler) => (e) => {
-  e.stopPropagation();
-  clickHandler();
-};
-
 export const Attribute = ({ attribute, onClick, onRemove, disabled, customClass, variant }) => {
+  const onClickRemove = (e) => {
+    e.stopPropagation();
+    onRemove();
+  };
+
   return (
     <div
       className={cx('attribute', variant, customClass, { disabled })}
@@ -36,7 +36,7 @@ export const Attribute = ({ attribute, onClick, onRemove, disabled, customClass,
     >
       <div className={cx('label', variant)}>{formatAttribute(attribute)}</div>
       {!disabled && (
-        <div className={cx('remove-icon', variant)} onClick={createRemoveClickHandler(onRemove)}>
+        <div className={cx('remove-icon', variant)} onClick={onClickRemove}>
           {Parser(CrossIcon)}
         </div>
       )}
