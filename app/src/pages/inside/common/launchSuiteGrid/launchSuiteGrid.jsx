@@ -69,7 +69,7 @@ HamburgerColumn.propTypes = {
 const NameColumn = ({ className, ...rest }) => (
   <>
     <td rowSpan={2} className={cx('name-col', className)}>
-      <ItemInfo {...rest} withOutDescription />
+      <ItemInfo {...rest} hideDescription />
     </td>
     <div className={cx('name-col-mobile', className)}>
       <ItemInfo {...rest} />
@@ -524,7 +524,7 @@ export class LaunchSuiteGrid extends PureComponent {
           loading={loading}
           onFilterClick={onFilterClick}
           rowHighlightingConfig={rowHighlightingConfig}
-          withDescription={{ colSpan: 9, className: cx('description') }}
+          descriptionConfig={{ colSpan: 9, className: cx('description') }}
         />
         {!data.length && !loading && this.renderNoItemsBlock()}
       </Fragment>

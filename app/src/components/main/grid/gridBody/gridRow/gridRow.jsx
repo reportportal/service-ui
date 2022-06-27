@@ -52,7 +52,7 @@ export class GridRow extends Component {
     excludeFromSelection: PropTypes.arrayOf(PropTypes.object),
     gridRowClassName: PropTypes.string,
     level: PropTypes.number,
-    withDescription: PropTypes.shape({
+    descriptionConfig: PropTypes.shape({
       colSpan: PropTypes.number,
       className: PropTypes.string,
     }),
@@ -76,7 +76,7 @@ export class GridRow extends Component {
     excludeFromSelection: [],
     gridRowClassName: '',
     level: 0,
-    withDescription: null,
+    descriptionConfig: null,
   };
 
   state = {
@@ -177,7 +177,7 @@ export class GridRow extends Component {
       rowClassMapper,
       gridRowClassName,
       level,
-      withDescription,
+      descriptionConfig,
     } = this.props;
 
     const { expanded } = this.state;
@@ -227,7 +227,7 @@ export class GridRow extends Component {
                 customProps={column.customProps}
                 expanded={expanded}
                 toggleExpand={this.toggleAccordion}
-                rowSpan={withDescription ? column.rowSpan : null}
+                rowSpan={descriptionConfig ? column.rowSpan : null}
               />
             );
             if (level && i === 0) {
@@ -255,18 +255,18 @@ export class GridRow extends Component {
                 selected: this.isItemSelected(),
                 onChange: this.props.onToggleSelection,
               }}
-              rowSpan={withDescription ? 2 : null}
+              rowSpan={descriptionConfig ? 2 : null}
             />
           )}
         </div>
-        {withDescription && !!value.description && (
+        {descriptionConfig && !!value.description && (
           <tr className={cx('description-row')} ref={this.descriptionRef}>
             <td
-              colSpan={withDescription.colSpan}
+              colSpan={descriptionConfig.colSpan}
               className={cx(
                 'description-cell',
                 this.getHighlightBlockClasses(),
-                withDescription.className,
+                descriptionConfig.className,
               )}
             >
               <div

@@ -97,7 +97,7 @@ const NameColumn = (
           customProps={{ ownLinkParams, onOwnerClick, onClickAttribute }}
           value={itemPropValue}
           hideEdit
-          withOutDescription
+          hideDescription
         />
       </div>
       <div className={cx('name-col-mobile', className)}>
@@ -337,7 +337,7 @@ export class LaunchesTable extends PureComponent {
         <Grid
           columns={columns}
           data={data}
-          withDescription={{ colSpan: 12, className: cx('description') }}
+          descriptionConfig={{ colSpan: 12, className: cx('description') }}
         />
       </ScrollWrapper>
     );
