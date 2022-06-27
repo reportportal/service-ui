@@ -45,6 +45,7 @@ export class GridCell extends PureComponent {
     refFunction: PropTypes.func,
     expanded: PropTypes.bool,
     toggleExpand: PropTypes.func,
+    rowSpan: PropTypes.number,
   };
 
   static defaultProps = {
@@ -56,6 +57,7 @@ export class GridCell extends PureComponent {
     refFunction: () => {},
     expanded: false,
     toggleExpand: () => {},
+    rowSpan: 1,
   };
 
   render() {
@@ -70,6 +72,7 @@ export class GridCell extends PureComponent {
       customProps,
       expanded,
       toggleExpand,
+      rowSpan,
     } = this.props;
     const CellComponent = component;
     return (
@@ -82,6 +85,7 @@ export class GridCell extends PureComponent {
         customProps={customProps}
         expanded={expanded}
         toggleExpand={toggleExpand}
+        rowSpan={rowSpan}
       />
     );
   }
