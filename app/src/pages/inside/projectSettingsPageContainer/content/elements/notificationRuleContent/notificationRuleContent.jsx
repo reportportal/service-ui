@@ -23,6 +23,7 @@ import { AttributeListField } from 'components/main/attributeList';
 import styles from './notificationRuleContent.scss';
 
 const cx = classNames.bind(styles);
+const SEPARATOR = '; ';
 
 const messages = defineMessages({
   recipientsLabel: {
@@ -89,7 +90,7 @@ export const NotificationRuleContent = ({ item }) => {
       {item.launchNames.length > 0 && (
         <>
           <span className={cx('field')}>{formatMessage(messages.launchNameLabel)}</span>
-          <span className={cx('value')}>{item.launchNames.join('; ')}</span>
+          <span className={cx('value')}>{item.launchNames.join(SEPARATOR)}</span>
         </>
       )}
       <span className={cx('field')}>{formatMessage(messages.inCaseLabel)}</span>
@@ -99,8 +100,8 @@ export const NotificationRuleContent = ({ item }) => {
           <span className={cx('field')}>{formatMessage(messages.recipientsLabel)}</span>
           <span className={cx('value')}>
             {item.informOwner &&
-              formatMessage(messages.launchOwner) + (recipientsIsNotEmpty ? '; ' : '')}
-            {item.recipients.join('; ')}
+              formatMessage(messages.launchOwner) + (recipientsIsNotEmpty ? SEPARATOR : '')}
+            {item.recipients.join(SEPARATOR)}
           </span>
         </>
       )}
