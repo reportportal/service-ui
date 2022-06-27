@@ -32,8 +32,9 @@ export const Button = ({
   onClick,
   form,
   title,
+  customClassName,
 }) => {
-  const classes = cx('button', variant, {
+  const classes = cx('button', variant, customClassName, {
     disabled,
     wide,
   });
@@ -70,6 +71,7 @@ Button.propTypes = {
   onClick: PropTypes.func,
   form: PropTypes.string,
   title: PropTypes.string,
+  customClassName: PropTypes.string,
 };
 
 Button.defaultProps = {
@@ -83,4 +85,5 @@ Button.defaultProps = {
   onClick: () => {},
   form: null,
   title: '',
+  customClassName: '',
 };

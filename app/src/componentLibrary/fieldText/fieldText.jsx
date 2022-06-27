@@ -45,6 +45,7 @@ export const FieldText = ({
   startIcon,
   endIcon,
   clearable,
+  isRequired,
 }) => {
   const clearInput = () => onChange('');
 
@@ -70,7 +71,6 @@ export const FieldText = ({
           type="text"
           className={cx(VARIANT, 'input')}
           value={value}
-          placeholder={placeholder}
           maxLength={maxLength}
           disabled={disabled}
           onChange={disabled ? null : onChange}
@@ -79,6 +79,12 @@ export const FieldText = ({
           onKeyUp={disabled ? null : onKeyUp}
           onKeyDown={disabled ? null : onKeyDown}
         />
+        {placeholder && !value && (
+          <span className={cx('placeholder')}>
+            {placeholder}
+            {isRequired && <span className={cx('asterisk')} />}
+          </span>
+        )}
         {endIcon && (
           <span className={cx('icon-container-end')}>
             <i className={cx(VARIANT, 'icon')}>{Parser(endIcon)}</i>
@@ -125,6 +131,7 @@ FieldText.propTypes = {
   startIcon: PropTypes.string,
   endIcon: PropTypes.string,
   clearable: PropTypes.bool,
+  isRequired: PropTypes.bool,
 };
 FieldText.defaultProps = {
   value: '',
@@ -147,4 +154,5 @@ FieldText.defaultProps = {
   startIcon: null,
   endIcon: null,
   clearable: false,
+  isRequired: false,
 };
