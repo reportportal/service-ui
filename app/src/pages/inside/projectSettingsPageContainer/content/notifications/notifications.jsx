@@ -84,7 +84,11 @@ export const Notifications = ({ setHeaderTitleNode }) => {
   };
 
   const confirmEdit = (notification) => {
-    dispatch(updateProjectNotificationAction({ ...notification, name: notification.ruleName }));
+    dispatch(
+      updateProjectNotificationAction(
+        convertNotificationCaseForSubmission({ ...notification, name: notification.ruleName }),
+      ),
+    );
   };
 
   const confirmDelete = (id) => {

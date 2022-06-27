@@ -49,10 +49,14 @@ const messages = defineMessages({
     id: 'LoginForm.passwordPlaceholder',
     defaultMessage: 'Password',
   },
-  loginAttemptsExceeded: {
-    id: 'LoginForm.loginAttemptsExceeded',
+  loginAttemptsExceededMessage: {
+    id: 'LoginForm.loginAttemptsExceededMessage',
     defaultMessage:
-      'You entered incorrectly login or password many times. <br />Login form is blocked for <br /><br /> <b>{time} sec.</b>',
+      'You entered incorrectly login or password many times. <br />Login form is blocked for',
+  },
+  loginAttemptsExceededTime: {
+    id: 'LoginForm.loginAttemptsExceededTime',
+    defaultMessage: '{time} sec.',
   },
   errorMessage: {
     id: 'LoginForm.errorMessage',
@@ -192,7 +196,7 @@ export class LoginForm extends React.Component {
     } = this.props;
     const { blockTime, isLoginLimitExceeded } = this.state;
 
-    const FORGOT_PASSWORD_LINK = (
+    const forgotPasswordLink = (
       <Link
         to={{ type: LOGIN_PAGE, payload: { query: { forgotPass: 'true' } } }}
         className={cx('forgot-pass')}
@@ -200,6 +204,7 @@ export class LoginForm extends React.Component {
         <FormattedMessage id={'LoginForm.forgotPass'} defaultMessage={'Forgot password?'} />
       </Link>
     );
+
     return (
       <form className={cx('login-form')} onSubmit={handleSubmit(authorize)}>
         {!isLoginLimitExceeded ? (
@@ -225,11 +230,12 @@ export class LoginForm extends React.Component {
                     placeholder={formatMessage(messages.password)}
                     type="password"
                     hasDynamicValidation
+                    provideErrorHint
                   />
                 </FieldErrorHint>
               </FieldProvider>
             </div>
-            {FORGOT_PASSWORD_LINK}
+            {forgotPasswordLink}
             <div className={cx('login-button-container')}>
               <BigButton roundedCorners type="submit" color={'organish'}>
                 {formatMessage(COMMON_LOCALE_KEYS.LOGIN)}
@@ -239,11 +245,14 @@ export class LoginForm extends React.Component {
         ) : (
           <div className={cx('attempts-exceeded-block')}>
             <div className={cx('attempts-exceeded-block-content')}>
-              <span>
-                {Parser(formatMessage(messages.loginAttemptsExceeded, { time: blockTime }))}
+              <span>{Parser(formatMessage(messages.loginAttemptsExceededMessage))}</span>
+              <span className={cx('time')}>
+                <b>
+                  {Parser(formatMessage(messages.loginAttemptsExceededTime, { time: blockTime }))}
+                </b>
               </span>
             </div>
-            {FORGOT_PASSWORD_LINK}
+            {forgotPasswordLink}
           </div>
         )}
       </form>
