@@ -75,7 +75,10 @@ const messages = defineMessages({
 export const NotificationRuleContent = ({ item }) => {
   const { formatMessage } = useIntl();
 
-  const recipientsIsNotEmpty = item.recipients.length > 0;
+  const recipients = item.informOwner
+    ? [formatMessage(messages.launchOwner), ...item.recipients]
+    : item.recipients;
+
   const inCaseOptions = {
     [LAUNCH_CASES.ALWAYS]: formatMessage(messages[LAUNCH_CASES.ALWAYS]),
     [LAUNCH_CASES.MORE_10]: formatMessage(messages[LAUNCH_CASES.MORE_10]),
@@ -95,16 +98,8 @@ export const NotificationRuleContent = ({ item }) => {
       )}
       <span className={cx('field')}>{formatMessage(messages.inCaseLabel)}</span>
       <span className={cx('value')}>{inCaseOptions[item.sendCase]}</span>
-      {(recipientsIsNotEmpty || item.informOwner) && (
-        <>
-          <span className={cx('field')}>{formatMessage(messages.recipientsLabel)}</span>
-          <span className={cx('value')}>
-            {item.informOwner &&
-              formatMessage(messages.launchOwner) + (recipientsIsNotEmpty ? SEPARATOR : '')}
-            {item.recipients.join(SEPARATOR)}
-          </span>
-        </>
-      )}
+      <span className={cx('field')}>{formatMessage(messages.recipientsLabel)}</span>
+      <span className={cx('value')}>{recipients.join(SEPARATOR)}</span>
       {item.attributes.length > 0 && (
         <>
           <span className={cx('field')}>{formatMessage(messages.attributesLabel)}</span>
