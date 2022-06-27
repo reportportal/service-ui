@@ -32,11 +32,11 @@ import { URLS } from 'common/urls';
 import { AsyncMultipleAutocomplete } from 'components/inputs/autocompletes/asyncMultipleAutocomplete';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { Dropdown } from 'componentLibrary/dropdown';
-import { AttributeListField } from 'components/main/attributeList';
 import { hideModalAction } from 'controllers/modal';
 import { FieldText } from 'componentLibrary/fieldText';
 import { Checkbox } from 'componentLibrary/checkbox';
 import { projectIdSelector } from 'controllers/pages';
+import { AttributeListContainer } from 'components/containers/attributeListContainer';
 import { FieldElement } from '../../../elements';
 import {
   ATTRIBUTES_FIELD_KEY,
@@ -325,7 +325,7 @@ const AddEditNotificationModal = ({
             onChange={() => trackEvent(SETTINGS_PAGE_EVENTS.TAGS_INPUT_NOTIFICATIONS)}
             className={cx('attributes')}
           >
-            <AttributeListField
+            <AttributeListContainer
               keyURLCreator={URLS.launchAttributeKeysSearch}
               valueURLCreator={URLS.launchAttributeValuesSearch}
               newAttrMessage={formatMessage(messages.addAttribute)}

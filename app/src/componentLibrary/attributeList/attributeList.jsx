@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
@@ -102,7 +101,7 @@ export const AttributeList = ({
   const indexEditableAttr = getIndexEditableAttr();
 
   return (
-    <Fragment>
+    <div className={cx('attribute-list')}>
       {editableAttr ? (
         <div className={cx('editor-wrapper')}>
           <AttributeEditor
@@ -140,13 +139,18 @@ export const AttributeList = ({
           />
         ))}
       {!hasEditedAttribute() && !disabled && showButton && attributes.length < maxLength && (
-        <Button startIcon={PlusIcon} onClick={onAddNew} variant={'text'}>
+        <Button
+          startIcon={PlusIcon}
+          onClick={onAddNew}
+          variant={'text'}
+          customClassName={cx('margin-bottom')}
+        >
           {newAttrMessage || (
             <FormattedMessage id="AttributeList.addNew" defaultMessage="Add new" />
           )}
         </Button>
       )}
-    </Fragment>
+    </div>
   );
 };
 AttributeList.propTypes = {
