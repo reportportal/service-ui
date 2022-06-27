@@ -25,12 +25,13 @@ const cx = classNames.bind(styles);
 const messages = defineMessages({
   loginHint: {
     id: 'RegistrationForm.loginHint',
-    defaultMessage: 'User Name should contain only valid symbols and at least 1 Latin symbols',
+    defaultMessage:
+      'User name may contain only Latin, numeric characters, hyphen, underscore, dot (from 1 to 128 symbols)',
   },
   nameHint: {
     id: 'RegistrationForm.nameHint',
     defaultMessage:
-      'Full Name should contain only valid symbols and at least 3 Latin or Cyrillic symbols',
+      'Full name may contain only Latin, numeric characters, hyphen, underscore, dot (from 3 to 256 symbols)',
   },
   passwordHint: {
     id: 'RegistrationForm.passwordHint',
@@ -177,7 +178,7 @@ const messages = defineMessages({
   projectNameLengthHint: {
     id: 'ProjectsPage.projectNameLengthHint',
     defaultMessage:
-      "Project name should have size from '3' to '256', latin, numeric characters, hyphen, underscore.",
+      'Project name may contain only Latin, numeric characters, hyphen, underscore, dot (from 3 to 256 symbols)',
   },
   projectDuplicateHint: {
     id: 'ProjectsPage.projectDuplicateHint',
@@ -242,7 +243,6 @@ export class FieldErrorHint extends Component {
     error: PropTypes.string,
     active: PropTypes.bool,
     staticHint: PropTypes.bool,
-    staticTouchedHint: PropTypes.bool,
     widthContent: PropTypes.bool,
     darkView: PropTypes.bool,
     provideHint: PropTypes.bool,
@@ -256,7 +256,6 @@ export class FieldErrorHint extends Component {
     error: '',
     active: false,
     staticHint: false,
-    staticTouchedHint: false,
     widthContent: false,
     darkView: false,
     provideHint: true,
@@ -264,12 +263,9 @@ export class FieldErrorHint extends Component {
   };
 
   isHintVisible = () => {
-    const { error, active, staticHint, staticTouchedHint, touched } = this.props;
+    const { error, active, staticHint } = this.props;
     if (staticHint) {
       return !!error;
-    }
-    if (staticTouchedHint) {
-      return !!error && touched;
     }
     return !!error && active;
   };
@@ -282,7 +278,6 @@ export class FieldErrorHint extends Component {
       error,
       active,
       staticHint,
-      staticTouchedHint,
       widthContent,
       darkView,
       provideHint,
@@ -302,14 +297,12 @@ export class FieldErrorHint extends Component {
           <div
             className={cx('hint', `type-${hintType}`, {
               'static-hint': staticHint,
-              'static-touched-hint': staticTouchedHint,
               visible: this.isHintVisible(),
             })}
           >
             <div
               className={cx('hint-content', `type-${hintType}`, {
                 'static-hint': staticHint,
-                'static-touched-hint': staticTouchedHint,
                 'width-content': widthContent,
                 'dark-view': darkView,
               })}

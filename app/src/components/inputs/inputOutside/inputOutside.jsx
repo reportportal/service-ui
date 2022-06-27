@@ -20,6 +20,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './inputOutside.scss';
 
+const VARIANT = 'light';
 const cx = classNames.bind(styles);
 
 export class InputOutside extends Component {
@@ -42,6 +43,8 @@ export class InputOutside extends Component {
     autoComplete: PropTypes.string,
     name: PropTypes.string,
     hasDynamicValidation: PropTypes.bool,
+    hint: PropTypes.string,
+    provideErrorHint: PropTypes.bool,
   };
   static defaultProps = {
     type: 'text',
@@ -62,6 +65,8 @@ export class InputOutside extends Component {
     autoComplete: undefined,
     name: '',
     hasDynamicValidation: false,
+    hint: '',
+    provideErrorHint: false,
   };
 
   state = {
@@ -101,42 +106,51 @@ export class InputOutside extends Component {
       autoComplete,
       name,
       hasDynamicValidation,
+      hint,
+      provideErrorHint,
     } = this.props;
     return (
-      <div
-        className={cx('input-outside', `type-${type}`, {
-          disabled,
-          active: active && ((hasDynamicValidation && !touched) || (touched && !error)),
-          invalid: error && (touched || (active && !hasDynamicValidation)),
-        })}
-      >
-        <div className={cx('icon')}>{Parser(icon)}</div>
-        <input
-          ref={refFunction}
-          className={cx('input')}
-          type={this.getInputType()}
-          value={value}
-          autoComplete={autoComplete}
-          placeholder={placeholder}
-          maxLength={maxLength}
-          disabled={disabled}
-          readOnly={readonly}
-          onChange={onChange}
-          onFocus={onFocus}
-          onBlur={onBlur}
-          onKeyUp={onKeyUp}
-          name={name}
-        />
-        {type === 'password' && (
-          <div
-            className={cx('eye-icon', { opened: this.state.passwordVisible })}
-            onMouseDown={this.showPassword}
-            onMouseLeave={this.hidePassword}
-            onMouseUp={this.hidePassword}
-            onTouchStart={this.showPassword}
-            onTouchEnd={this.hidePassword}
-            onTouchCancel={this.hidePassword}
+      <div className={cx('content')}>
+        <div
+          className={cx('input-outside', `type-${type}`, {
+            disabled,
+            active: active && ((hasDynamicValidation && !touched) || (touched && !error)),
+            invalid: error && (touched || (active && !hasDynamicValidation)),
+          })}
+        >
+          <div className={cx('icon')}>{Parser(icon)}</div>
+          <input
+            ref={refFunction}
+            className={cx('input')}
+            type={this.getInputType()}
+            value={value}
+            autoComplete={autoComplete}
+            placeholder={placeholder}
+            maxLength={maxLength}
+            disabled={disabled}
+            readOnly={readonly}
+            onChange={onChange}
+            onFocus={onFocus}
+            onBlur={onBlur}
+            onKeyUp={onKeyUp}
+            name={name}
           />
+          {type === 'password' && (
+            <div
+              className={cx('eye-icon', { opened: this.state.passwordVisible })}
+              onMouseDown={this.showPassword}
+              onMouseLeave={this.hidePassword}
+              onMouseUp={this.hidePassword}
+              onTouchStart={this.showPassword}
+              onTouchEnd={this.hidePassword}
+              onTouchCancel={this.hidePassword}
+            />
+          )}
+        </div>
+        {provideErrorHint && error && (touched || (active && !hasDynamicValidation)) ? (
+          <span className={cx(VARIANT, 'error')}>{error}</span>
+        ) : (
+          hint && <div className={cx(VARIANT, 'hint')}>{hint}</div>
         )}
       </div>
     );

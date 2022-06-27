@@ -197,24 +197,27 @@ export class LoginForm extends React.Component {
       <form className={cx('login-form')} onSubmit={handleSubmit(authorize)}>
         <div className={cx('login-field')}>
           <FieldProvider name="login">
-            <FieldErrorHint>
+            <FieldErrorHint provideHint={false}>
               <InputOutside
                 disabled={isLoginLimitExceeded}
                 icon={LoginIcon}
                 placeholder={formatMessage(messages.login)}
                 maxLength="128"
+                hasDynamicValidation
+                provideErrorHint
               />
             </FieldErrorHint>
           </FieldProvider>
         </div>
         <div className={cx('password-field')}>
           <FieldProvider name="password">
-            <FieldErrorHint>
+            <FieldErrorHint provideHint={false}>
               <InputOutside
                 disabled={isLoginLimitExceeded}
                 icon={PasswordIcon}
                 placeholder={formatMessage(messages.password)}
                 type="password"
+                hasDynamicValidation
               />
             </FieldErrorHint>
           </FieldProvider>

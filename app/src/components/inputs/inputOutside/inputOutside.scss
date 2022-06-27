@@ -92,3 +92,32 @@
     height: 18px;
   }
 }
+
+@mixin additional-text($color) {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  font-size: 12px;
+  box-sizing: border-box;
+  text-align: left;
+  color: $color;
+}
+
+.content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.light {
+  &.error {
+    @include additional-text($COLOR--red-failed-2);
+  }
+
+  &.hint {
+    margin-top: 4px;
+    @include additional-text($COLOR--e-300);
+  }
+}
