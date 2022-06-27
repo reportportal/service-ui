@@ -29,6 +29,10 @@ const messages = defineMessages({
     id: 'AddEditNotificationCaseModal.recipientsLabel',
     defaultMessage: 'Recipients',
   },
+  launchOwner: {
+    id: 'NotificationRule.launchOwner',
+    defaultMessage: 'Launch Owner',
+  },
   inCaseLabel: {
     id: 'AddEditNotificationCaseModal.inCaseLabel',
     defaultMessage: 'In case',
@@ -70,6 +74,7 @@ const messages = defineMessages({
 export const NotificationRuleContent = ({ item }) => {
   const { formatMessage } = useIntl();
 
+  const recipientsIsNotEmpty = item.recipients.length > 0;
   const inCaseOptions = {
     [LAUNCH_CASES.ALWAYS]: formatMessage(messages[LAUNCH_CASES.ALWAYS]),
     [LAUNCH_CASES.MORE_10]: formatMessage(messages[LAUNCH_CASES.MORE_10]),
@@ -89,10 +94,14 @@ export const NotificationRuleContent = ({ item }) => {
       )}
       <span className={cx('field')}>{formatMessage(messages.inCaseLabel)}</span>
       <span className={cx('value')}>{inCaseOptions[item.sendCase]}</span>
-      {item.recipients.length > 0 && (
+      {(recipientsIsNotEmpty || item.informOwner) && (
         <>
           <span className={cx('field')}>{formatMessage(messages.recipientsLabel)}</span>
-          <span className={cx('value')}>{item.recipients.join('; ')}</span>
+          <span className={cx('value')}>
+            {item.informOwner &&
+              formatMessage(messages.launchOwner) + (recipientsIsNotEmpty ? '; ' : '')}
+            {item.recipients.join('; ')}
+          </span>
         </>
       )}
       {item.attributes.length > 0 && (
@@ -116,5 +125,6 @@ NotificationRuleContent.propTypes = {
     sendCase: PropTypes.string,
     recipients: PropTypes.array,
     attributes: PropTypes.array,
+    informOwner: PropTypes.bool,
   }).isRequired,
 };
