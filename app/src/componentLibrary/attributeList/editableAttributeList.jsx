@@ -27,15 +27,11 @@ export const EditableAttributeList = ({
   attributes,
   onChange,
   disabled,
-  keyURLCreator,
-  valueURLCreator,
   newAttrMessage,
   maxLength,
   customClass,
   showButton,
   editable,
-  eventsInfo,
-  trackEvent,
   ...rest
 }) => {
   const handleAddNew = () => {
@@ -54,14 +50,10 @@ export const EditableAttributeList = ({
       onAddNew={handleAddNew}
       newAttrMessage={newAttrMessage}
       disabled={disabled}
-      keyURLCreator={keyURLCreator}
-      valueURLCreator={valueURLCreator}
       maxLength={maxLength}
       customClass={customClass}
       showButton={showButton}
       editable={editable}
-      eventsInfo={eventsInfo}
-      trackEvent={trackEvent}
       {...rest}
     />
   );
@@ -72,14 +64,10 @@ EditableAttributeList.propTypes = {
   disabled: PropTypes.bool,
   newAttrMessage: PropTypes.string,
   onChange: PropTypes.func,
-  keyURLCreator: PropTypes.func,
-  valueURLCreator: PropTypes.func,
   maxLength: PropTypes.number,
   customClass: PropTypes.string,
   showButton: PropTypes.bool,
   editable: PropTypes.bool,
-  eventsInfo: PropTypes.object,
-  trackEvent: PropTypes.func,
 };
 
 EditableAttributeList.defaultProps = {
@@ -87,12 +75,8 @@ EditableAttributeList.defaultProps = {
   disabled: false,
   newAttrMessage: '',
   onChange: () => {},
-  keyURLCreator: null,
-  valueURLCreator: null,
   maxLength: Infinity,
   customClass: '',
   showButton: true,
   editable: true,
-  eventsInfo: {},
-  trackEvent: () => {},
 };

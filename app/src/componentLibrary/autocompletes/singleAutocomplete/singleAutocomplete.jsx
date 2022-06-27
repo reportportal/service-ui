@@ -39,6 +39,7 @@ export class SingleAutocomplete extends Component {
     maxLength: PropTypes.number,
     async: PropTypes.bool,
     autocompleteVariant: PropTypes.string,
+    isRequired: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -57,6 +58,7 @@ export class SingleAutocomplete extends Component {
     maxLength: null,
     async: false,
     autocompleteVariant: '',
+    isRequired: false,
   };
 
   getOptionProps = (getItemProps, highlightedIndex, selectedItem) => ({ item, index, ...rest }) =>
@@ -81,6 +83,7 @@ export class SingleAutocomplete extends Component {
       inputProps,
       maxLength,
       autocompleteVariant,
+      isRequired,
       ...props
     } = this.props;
     return (
@@ -107,6 +110,7 @@ export class SingleAutocomplete extends Component {
                         onBlur,
                         disabled,
                         defaultWidth: false,
+                        isRequired,
                         ...inputProps,
                       })}
                     />

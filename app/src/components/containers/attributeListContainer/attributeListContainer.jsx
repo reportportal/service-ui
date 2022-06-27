@@ -17,24 +17,28 @@
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { activeProjectSelector } from 'controllers/user';
-import { useTracking } from 'react-tracking';
 import { EditableAttributeList } from 'componentLibrary/attributeList/editableAttributeList';
 
-export const AttributeListContainer = ({ value, ...rest }) => {
+export const AttributeListContainer = ({ value, keyURLCreator, valueURLCreator, ...rest }) => {
   const projectId = useSelector(activeProjectSelector);
-  const { trackEvent } = useTracking();
+  const getURIKey = keyURLCreator(projectId);
+  const getURIValue = (key) => keyURLCreator(projectId, key);
   return (
     <EditableAttributeList
       attributes={value}
-      trackEvent={trackEvent}
-      projectId={projectId}
+      getURIKey={getURIKey}
+      getURIValue={getURIValue}
       {...rest}
     />
   );
 };
 AttributeListContainer.propTypes = {
   value: PropTypes.array,
+  keyURLCreator: PropTypes.func,
+  valueURLCreator: PropTypes.func,
 };
 AttributeListContainer.defaultProps = {
   value: [],
+  keyURLCreator: () => {},
+  valueURLCreator: () => {},
 };

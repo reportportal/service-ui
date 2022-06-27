@@ -31,8 +31,6 @@ EditableAttribute.propTypes = {
   onRemove: PropTypes.func,
   onChange: PropTypes.func,
   onCancelEdit: PropTypes.func,
-  keyURLCreator: PropTypes.func,
-  valueURLCreator: PropTypes.func,
 };
 EditableAttribute.defaultProps = {
   attribute: {},
@@ -44,6 +42,4 @@ EditableAttribute.defaultProps = {
   onRemove: () => {},
   onChange: () => {},
   onCancelEdit: () => {},
-  keyURLCreator: null,
-  valueURLCreator: null,
 };

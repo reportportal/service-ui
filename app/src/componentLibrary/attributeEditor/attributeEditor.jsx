@@ -39,12 +39,11 @@ const attributeValueValidator = composeBoundValidators([
 ]);
 
 export const AttributeEditor = ({
-  projectId,
   attributes,
   onConfirm,
   onCancel,
-  keyURLCreator,
-  valueURLCreator,
+  getURIKey,
+  getURIValue,
   attribute,
   keyPlaceholder,
   valuePlaceholder,
@@ -122,7 +121,7 @@ export const AttributeEditor = ({
           attributes={attributes}
           minLength={1}
           attributeComparator={byKeyComparator}
-          getURI={keyURLCreator(projectId)}
+          getURI={getURIKey}
           creatable
           placeholder={keyPlaceholder}
           onChange={handleKeyChange}
@@ -139,13 +138,14 @@ export const AttributeEditor = ({
           minLength={1}
           attributes={attributes}
           attributeComparator={byValueComparator}
-          getURI={valueURLCreator(projectId, state.key)}
+          getURI={getURIValue(state.key)}
           creatable
           onChange={handleValueChange}
           value={state.value}
           placeholder={valuePlaceholder}
           attributeKey={state.key}
           attributeValue={state.value}
+          isRequired
           autocompleteVariant={'value-variant'}
         />
       </div>
@@ -165,23 +165,22 @@ export const AttributeEditor = ({
 };
 
 AttributeEditor.propTypes = {
-  projectId: PropTypes.string,
   attributes: PropTypes.array,
   onConfirm: PropTypes.func,
   onCancel: PropTypes.func,
   handleSubmit: PropTypes.func,
-  keyURLCreator: PropTypes.func,
-  valueURLCreator: PropTypes.func,
+  getURIKey: PropTypes.func,
+  getURIValue: PropTypes.func,
   intl: PropTypes.object.isRequired,
   attribute: PropTypes.object,
   keyPlaceholder: PropTypes.string,
   valuePlaceholder: PropTypes.string,
-  trackEvent: PropTypes.func,
 };
 AttributeEditor.defaultProps = {
-  projectId: null,
   attributes: [],
   handleSubmit: () => {},
+  getURIKey: () => {},
+  getURIValue: () => {},
   onConfirm: () => {},
   onCancel: () => {},
   keyURLCreator: null,
@@ -189,5 +188,4 @@ AttributeEditor.defaultProps = {
   attribute: {},
   keyPlaceholder: 'Key',
   valuePlaceholder: 'Value',
-  trackEvent: () => {},
 };

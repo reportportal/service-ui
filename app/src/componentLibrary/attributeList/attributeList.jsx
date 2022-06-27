@@ -31,16 +31,13 @@ export const AttributeList = ({
   onChange,
   onAddNew,
   disabled,
-  keyURLCreator,
-  valueURLCreator,
+  getURIKey,
+  getURIValue,
   newAttrMessage,
   maxLength,
   customClass,
   showButton,
   editable,
-  trackEvent,
-  eventsInfo,
-  projectId,
 }) => {
   const getExistEditableAttr = () => {
     return attributes.find((attr) => attr.edited);
@@ -56,9 +53,6 @@ export const AttributeList = ({
     const { edited, ...newAttribute } = attribute;
     newAttributes[index] = newAttribute;
     onChange(newAttributes);
-    if (Object.keys(eventsInfo).length > 0) {
-      trackEvent(eventsInfo.addAttribute);
-    }
   };
 
   const createRemoveHandler = (index) => () => {
@@ -111,10 +105,8 @@ export const AttributeList = ({
             onRemove={createRemoveHandler(indexEditableAttr)}
             onEdit={editable && createEditHandler(indexEditableAttr)}
             onCancel={createCancelEditHandler(indexEditableAttr)}
-            keyURLCreator={keyURLCreator}
-            valueURLCreator={valueURLCreator}
-            projectId={projectId}
-            trackEvent={trackEvent}
+            getURIKey={getURIKey}
+            getURIValue={getURIValue}
           />
         </div>
       ) : (
@@ -133,8 +125,6 @@ export const AttributeList = ({
             onEdit={editable && createEditHandler(i)}
             onCancelEdit={createCancelEditHandler(i)}
             disabled={disabled}
-            keyURLCreator={keyURLCreator}
-            valueURLCreator={valueURLCreator}
             customClass={customClass}
           />
         ))}
@@ -164,13 +154,10 @@ AttributeList.propTypes = {
   onEdit: PropTypes.func,
   onAddNew: PropTypes.func,
   onRemove: PropTypes.func,
-  keyURLCreator: PropTypes.func,
-  valueURLCreator: PropTypes.func,
+  getURIKey: PropTypes.func,
+  getURIValue: PropTypes.func,
   showButton: PropTypes.bool,
   editable: PropTypes.bool,
-  trackEvent: PropTypes.func,
-  eventsInfo: PropTypes.object,
-  projectId: PropTypes.string,
 };
 AttributeList.defaultProps = {
   attributes: [],
@@ -185,9 +172,8 @@ AttributeList.defaultProps = {
   onRemove: () => {},
   onEdit: () => {},
   onAddNew: () => {},
+  getURIKey: () => {},
+  getURIValue: () => {},
   showButton: true,
   editable: true,
-  trackEvent: () => {},
-  eventsInfo: {},
-  projectId: '',
 };

@@ -19,6 +19,7 @@ Has 36px height & width adjusted by content.
 - **startIcon**: _string_, optional, default = null
 - **endIcon**: _string_, optional, default = null
 - **clearable**: _bool_, optional, default = false
+- **isRequired**: _bool_, optional, default = false
 
 ### Events:
 
