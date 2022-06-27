@@ -18,6 +18,7 @@ import React, { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { MarkdownViewer } from 'components/main/markdown';
 import { LOG_MESSAGE_HIGHLIGHT_TIMEOUT } from '../../constants';
 import { columnPropTypes } from '../../propTypes';
 import { GridCell } from './gridCell';
@@ -25,6 +26,7 @@ import { CheckboxCell } from './checkboxCell';
 import styles from './gridRow.scss';
 
 const cx = classNames.bind(styles);
+const DESCRIPTION_INITIAL_HEIGHT = 80;
 
 @track()
 export class GridRow extends Component {
@@ -50,6 +52,10 @@ export class GridRow extends Component {
     excludeFromSelection: PropTypes.arrayOf(PropTypes.object),
     gridRowClassName: PropTypes.string,
     level: PropTypes.number,
+    descriptionConfig: PropTypes.shape({
+      colSpan: PropTypes.number,
+      className: PropTypes.string,
+    }),
   };
 
   static defaultProps = {
@@ -70,6 +76,7 @@ export class GridRow extends Component {
     excludeFromSelection: [],
     gridRowClassName: '',
     level: 0,
+    descriptionConfig: null,
   };
 
   state = {
@@ -116,6 +123,7 @@ export class GridRow extends Component {
   };
 
   rowRef = React.createRef();
+  descriptionRef = React.createRef();
 
   highLightGridRow() {
     this.rowRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -134,7 +142,11 @@ export class GridRow extends Component {
       return;
     }
 
-    if (this.overflowCell.offsetHeight > this.overflowCellMaxHeight) {
+    if (
+      this.overflowCell.offsetHeight > this.overflowCellMaxHeight ||
+      (this.descriptionRef.current &&
+        this.descriptionRef.current.offsetHeight > DESCRIPTION_INITIAL_HEIGHT)
+    ) {
       !this.state.withAccordion && this.setupAccordion();
     } else if (this.overflowCell.offsetHeight < this.overflowCellMaxHeight) {
       this.state.withAccordion && this.removeAccordion();
@@ -165,6 +177,7 @@ export class GridRow extends Component {
       rowClassMapper,
       gridRowClassName,
       level,
+      descriptionConfig,
     } = this.props;
 
     const { expanded } = this.state;
@@ -214,6 +227,7 @@ export class GridRow extends Component {
                 customProps={column.customProps}
                 expanded={expanded}
                 toggleExpand={this.toggleAccordion}
+                rowSpan={descriptionConfig ? column.rowSpan : null}
               />
             );
             if (level && i === 0) {
@@ -241,9 +255,33 @@ export class GridRow extends Component {
                 selected: this.isItemSelected(),
                 onChange: this.props.onToggleSelection,
               }}
+              rowSpan={descriptionConfig ? 2 : null}
             />
           )}
         </div>
+        {descriptionConfig && !!value.description && (
+          <tr className={cx('description-row')} ref={this.descriptionRef}>
+            <td
+              colSpan={descriptionConfig.colSpan}
+              className={cx(
+                'description-cell',
+                this.getHighlightBlockClasses(),
+                descriptionConfig.className,
+              )}
+            >
+              <div
+                className={cx('description')}
+                style={{
+                  maxHeight: this.state.expanded
+                    ? 'max-content'
+                    : `${DESCRIPTION_INITIAL_HEIGHT}px`,
+                }}
+              >
+                <MarkdownViewer value={value.description} />
+              </div>
+            </td>
+          </tr>
+        )}
         {this.state.withAccordion && (
           <div className={cx('grid-row')}>
             <div className={cx('accordion-wrapper', { [`level-${level}`]: level !== 0 })}>

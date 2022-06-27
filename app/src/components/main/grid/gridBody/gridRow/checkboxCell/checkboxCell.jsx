@@ -25,10 +25,11 @@ export const CheckboxCell = ({
   className,
   value,
   customProps: { selected, onChange, disabled },
+  rowSpan,
 }) => (
-  <div className={cx('checkbox-cell', className)}>
+  <td rowSpan={rowSpan} className={cx('checkbox-cell', className)}>
     <InputCheckbox value={selected} onChange={() => onChange(value)} disabled={disabled} />
-  </div>
+  </td>
 );
 CheckboxCell.propTypes = {
   className: PropTypes.string,
@@ -38,8 +39,10 @@ CheckboxCell.propTypes = {
     disabled: PropTypes.bool,
     onChange: PropTypes.func,
   }),
+  rowSpan: PropTypes.number,
 };
 CheckboxCell.defaultProps = {
   className: '',
   customProps: {},
+  rowSpan: 1,
 };

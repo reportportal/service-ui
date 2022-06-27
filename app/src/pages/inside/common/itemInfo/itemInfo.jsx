@@ -88,6 +88,7 @@ export class ItemInfo extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     onClickRetries: PropTypes.func,
+    hideDescription: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -106,6 +107,7 @@ export class ItemInfo extends Component {
     onClickRetries: () => {},
     refFunction: null,
     extensions: [],
+    hideDescription: false,
   };
 
   handleEditItem = () => {
@@ -142,6 +144,7 @@ export class ItemInfo extends Component {
       onClickRetries,
       customProps,
       extensions,
+      hideDescription,
     } = this.props;
 
     const autoAnalysisLabel =
@@ -244,7 +247,7 @@ export class ItemInfo extends Component {
               <RetriesCounter testItem={value} onLabelClick={onClickRetries} />
             </div>
           )}
-          {value.description && (
+          {value.description && !hideDescription && (
             <div className={cx('item-description')}>
               <MarkdownViewer value={value.description} />
             </div>
