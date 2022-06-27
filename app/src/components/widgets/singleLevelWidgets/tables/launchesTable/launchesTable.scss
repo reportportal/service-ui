@@ -18,7 +18,16 @@
   width: 30%;
 
   @media (max-width: $SCREEN_SM_MAX) {
+    display: none;
+  }
+}
+.name-col-mobile {
+  width: 100%;
+  display: none;
+
+  @media (max-width: $SCREEN_SM_MAX) {
     width: 100%;
+    display: block;
   }
 }
 .time-col {
@@ -185,4 +194,9 @@
   .mobile-block {
     display: block;
   }
+}
+
+.description {
+  padding-left: 20px;
+  padding-right: 20px;
 }

@@ -90,14 +90,25 @@ const NameColumn = (
   };
 
   return (
-    <div className={cx('name-col', className)}>
-      <ItemInfo
-        {...rest}
-        customProps={{ ownLinkParams, onOwnerClick, onClickAttribute }}
-        value={itemPropValue}
-        hideEdit
-      />
-    </div>
+    <>
+      <div className={cx('name-col', className)}>
+        <ItemInfo
+          {...rest}
+          customProps={{ ownLinkParams, onOwnerClick, onClickAttribute }}
+          value={itemPropValue}
+          hideEdit
+          hideDescription
+        />
+      </div>
+      <div className={cx('name-col-mobile', className)}>
+        <ItemInfo
+          {...rest}
+          customProps={{ ownLinkParams, onOwnerClick, onClickAttribute }}
+          value={itemPropValue}
+          hideEdit
+        />
+      </div>
+    </>
   );
 };
 NameColumn.propTypes = {
@@ -318,11 +329,16 @@ export class LaunchesTable extends PureComponent {
 
   render() {
     const { result } = this.props.widget.content;
+    const data = result.map((item) => ({ ...item, description: item.values.description }));
     const columns = this.getColumns();
 
     return (
       <ScrollWrapper hideTracksWhenNotNeeded>
-        <Grid columns={columns} data={result} />
+        <Grid
+          columns={columns}
+          data={data}
+          descriptionConfig={{ colSpan: 12, className: cx('description') }}
+        />
       </ScrollWrapper>
     );
   }

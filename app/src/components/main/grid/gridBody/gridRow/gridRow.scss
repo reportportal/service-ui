@@ -300,3 +300,24 @@ $LEVEL_OFFSET_STEP: 20px;
   border-left-style: solid;
   @include levels-desktop;
 }
+
+.description-cell {
+  overflow: hidden;
+  background-color: transparent;
+  transition: background-color 2s ease;
+  padding-bottom: 30px;
+  &.highlight {
+    background-color: $COLOR--go-to-stack-trace;
+    transition: background-color 0.01s linear;
+  }
+}
+
+.description {
+  word-break: break-word;
+}
+
+@media (max-width: $SCREEN_SM_MAX) {
+  .description-row {
+    display: none;
+  }
+}

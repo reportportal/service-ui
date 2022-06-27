@@ -25,9 +25,20 @@
   width: 30%;
 
   @media (max-width: $SCREEN_SM_MAX) {
-    width: 100%;
+    display: none;
   }
 }
+
+.name-col-mobile {
+  width: 100%;
+  display: none;
+  padding-left: 15px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: block;
+  }
+}
+
 .start-time-col {
   width: 10%;
 
@@ -64,6 +75,10 @@
     border: 1px solid $COLOR--gray-91;
     padding: 0;
   }
+
+  .name-col {
+    display: none;
+  }
 }
 
 .select-col {
@@ -72,4 +87,9 @@
   @media (max-width: $SCREEN_SM_MAX) {
     display: none;
   }
+}
+
+.description {
+  padding-left: 10px;
+  padding-right: 10px;
 }

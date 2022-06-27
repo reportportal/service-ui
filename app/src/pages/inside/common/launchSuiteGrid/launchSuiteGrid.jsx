@@ -58,18 +58,23 @@ import styles from './launchSuiteGrid.scss';
 const cx = classNames.bind(styles);
 
 const HamburgerColumn = ({ className, ...rest }) => (
-  <div className={cx('hamburger-col', className)}>
+  <td rowSpan={2} className={cx('hamburger-col', className)}>
     <Hamburger launch={rest.value} customProps={rest.customProps} />
-  </div>
+  </td>
 );
 HamburgerColumn.propTypes = {
   className: PropTypes.string.isRequired,
 };
 
 const NameColumn = ({ className, ...rest }) => (
-  <div className={cx('name-col', className)}>
-    <ItemInfo {...rest} />
-  </div>
+  <>
+    <td rowSpan={2} className={cx('name-col', className)}>
+      <ItemInfo {...rest} hideDescription />
+    </td>
+    <div className={cx('name-col-mobile', className)}>
+      <ItemInfo {...rest} />
+    </div>
+  </>
 );
 NameColumn.propTypes = {
   className: PropTypes.string.isRequired,
@@ -519,6 +524,7 @@ export class LaunchSuiteGrid extends PureComponent {
           loading={loading}
           onFilterClick={onFilterClick}
           rowHighlightingConfig={rowHighlightingConfig}
+          descriptionConfig={{ colSpan: 9, className: cx('description') }}
         />
         {!data.length && !loading && this.renderNoItemsBlock()}
       </Fragment>
