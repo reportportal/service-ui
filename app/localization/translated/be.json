@@ -1125,7 +1125,7 @@
   "LoginForm.badCredentials": "Некарэктныя ўліковыя дадзеныя",
   "LoginForm.errorMessage": "Памылка",
   "LoginForm.forgotPass": "Забылі пароль?",
-  "LoginForm.loginAttemptsExceeded": "Вы ўводзілі няправільны лагін ці пароль шмат разоў. Форма ўваходу ў сістэму заблакаваная <b> {time} </b> сек.",
+  "LoginForm.loginAttemptsExceeded": "Вы ўводзілі няправільны лагін ці пароль шмат разоў. <br />Форма ўваходу ў сістэму заблакаваная <br /><br /> <b> {time} сек.</b>",
   "LoginForm.loginPlaceholder": "Лагін",
   "LoginForm.or": "альбо",
   "LoginForm.passwordPlaceholder": "Пароль",

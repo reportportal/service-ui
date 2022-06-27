@@ -50,6 +50,10 @@
   &:hover {
     text-decoration: underline;
   }
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-bottom: 0;
+  }
 }
 .login-button-container {
   width: 160px;
@@ -64,33 +68,29 @@
     margin-bottom: 30px;
   }
 }
-
 .attempts-exceeded-block {
   display: flex;
-  margin-bottom: 20px;
-  color: $COLOR--charcoal-grey;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.attempts-exceeded-block-content {
+  display: flex;
+  width: 320px;
+  margin-top: 140px;
+  margin-bottom: 200px;
+  text-align: center;
+  color: $COLOR--steel-grey;
   font-size: 12px;
   font-family: $FONT-REGULAR;
   line-height: 16px;
 
   b {
-    font-family: $FONT-SEMIBOLD;
+    font-size: 36px;
   }
 
-  .warning {
-    display: inline-flex;
-    margin-right: 5px;
-    color: $COLOR--failed;
-  }
-
-  .warning-icon {
-    display: inline-block;
-    width: 15px;
-    height: 15px;
-    margin-right: 5px;
-    vertical-align: middle;
-    svg {
-      fill: $COLOR--failed;
-    }
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 280px;
   }
 }
