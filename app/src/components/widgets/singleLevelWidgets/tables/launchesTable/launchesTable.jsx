@@ -91,7 +91,7 @@ const NameColumn = (
 
   return (
     <>
-      <div className={cx('name-col', className)}>
+      <td rowSpan={2} className={cx('name-col', className)}>
         <ItemInfo
           {...rest}
           customProps={{ ownLinkParams, onOwnerClick, onClickAttribute }}
@@ -99,7 +99,7 @@ const NameColumn = (
           hideEdit
           hideDescription
         />
-      </div>
+      </td>
       <div className={cx('name-col-mobile', className)}>
         <ItemInfo
           {...rest}
