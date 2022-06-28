@@ -188,7 +188,7 @@ const AddEditNotificationModal = ({ data, data: { onSave }, handleSubmit, initia
   const dispatch = useDispatch();
 
   const activeProject = useSelector(projectIdSelector);
-  const [isEditorShown, setShowEditor] = React.useState(false);
+  const [isEditorShown, setShowEditor] = React.useState(data.notification.attributes.length > 0);
 
   useEffect(() => {
     initialize(data.notification);
