@@ -177,7 +177,11 @@ export const Notifications = ({ setHeaderTitleNode }) => {
         ? SETTINGS_PAGE_EVENTS.TURN_ON_NOTIFICATION_RULE_SWITCHER
         : SETTINGS_PAGE_EVENTS.TURN_OFF_NOTIFICATION_RULE_SWITCHER,
     );
-    dispatch(updateProjectNotificationAction({ ...notification, enabled: isEnabled }));
+    dispatch(
+      updateProjectNotificationAction(
+        convertNotificationCaseForSubmission({ ...notification, enabled: isEnabled }),
+      ),
+    );
   };
 
   const readOnlyNotificationsEnableForm = !isAbleToEditNotificationsEnableForm();
