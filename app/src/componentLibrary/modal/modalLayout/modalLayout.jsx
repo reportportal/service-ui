@@ -37,6 +37,7 @@ export const ModalLayout = ({
   className,
   modalSize,
   onClose,
+  footerClassName,
 }) => {
   const [isShown, setShown] = useState(false);
 
@@ -75,6 +76,7 @@ export const ModalLayout = ({
                   okButton={okButton}
                   cancelButton={cancelButton}
                   closeHandler={closeModal}
+                  footerClassName={footerClassName}
                 />
               </div>
             )}
@@ -102,6 +104,7 @@ ModalLayout.propTypes = {
   className: PropTypes.string,
   modalSize: PropTypes.oneOf(['default', 'small', 'large']),
   onClose: PropTypes.func,
+  footerClassName: PropTypes.string,
 };
 ModalLayout.defaultProps = {
   title: '',
@@ -113,4 +116,5 @@ ModalLayout.defaultProps = {
   className: '',
   modalSize: 'default',
   onClose: () => {},
+  footerClassName: '',
 };

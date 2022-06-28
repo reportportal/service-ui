@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
@@ -37,7 +37,6 @@ export const FieldText = ({
   onBlur,
   onKeyUp,
   onKeyDown,
-  touched,
   title,
   label,
   helpText,
@@ -47,7 +46,12 @@ export const FieldText = ({
   clearable,
   isRequired,
 }) => {
+  const [touched, setTouched] = useState(false);
   const clearInput = () => onChange('');
+  const handleOnBlur = (e) => {
+    onBlur(e);
+    setTouched(true);
+  };
 
   return (
     <>
@@ -75,7 +79,7 @@ export const FieldText = ({
           disabled={disabled}
           onChange={disabled ? null : onChange}
           onFocus={disabled ? null : onFocus}
-          onBlur={disabled ? null : onBlur}
+          onBlur={disabled ? null : handleOnBlur}
           onKeyUp={disabled ? null : onKeyUp}
           onKeyDown={disabled ? null : onKeyDown}
         />
@@ -123,7 +127,6 @@ FieldText.propTypes = {
   onBlur: PropTypes.func,
   onKeyUp: PropTypes.func,
   onKeyDown: PropTypes.func,
-  touched: PropTypes.bool,
   title: PropTypes.string,
   label: PropTypes.string,
   helpText: PropTypes.string,
@@ -146,7 +149,6 @@ FieldText.defaultProps = {
   onBlur: () => {},
   onKeyUp: () => {},
   onKeyDown: () => {},
-  touched: false,
   title: '',
   label: '',
   helpText: '',

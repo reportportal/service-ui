@@ -48,6 +48,7 @@ export const AttributeEditor = ({
   keyPlaceholder,
   valuePlaceholder,
 }) => {
+  const [touched, setTouched] = useState(false);
   const getValidationErrors = (key, value) => ({
     key: attributeKeyValidator(key),
     value: attribute.edited && attributeValueValidator(value),
@@ -56,7 +57,7 @@ export const AttributeEditor = ({
   const [state, setState] = useState({
     key: attribute.key,
     value: attribute.value,
-    errors: getValidationErrors(attribute.key, attribute.value),
+    errors: touched && getValidationErrors(attribute.key, attribute.value),
     isKeyEdited: false,
   });
 
@@ -64,7 +65,12 @@ export const AttributeEditor = ({
 
   useEffect(() => {
     const { key, value } = attribute;
-    setState({ key, value, errors: getValidationErrors(key, value), isKeyEdited: false });
+    setState({
+      key,
+      value,
+      errors: touched && getValidationErrors(key, value),
+      isKeyEdited: false,
+    });
   }, [attribute]);
 
   const byKeyComparator = (attr, item, key, value) => attr.key === item && attr.value === value;
@@ -75,7 +81,7 @@ export const AttributeEditor = ({
     setState((oldState) => ({
       ...oldState,
       key: key || undefined,
-      errors: getValidationErrors(key, oldState.value),
+      errors: touched && getValidationErrors(key, oldState.value),
     }));
   };
 
@@ -83,7 +89,7 @@ export const AttributeEditor = ({
     setState((oldState) => ({
       ...oldState,
       value,
-      errors: getValidationErrors(oldState.key, value),
+      errors: touched && getValidationErrors(oldState.key, value),
     }));
   };
 
@@ -147,6 +153,8 @@ export const AttributeEditor = ({
           attributeValue={state.value}
           isRequired
           autocompleteVariant={'value-variant'}
+          error={state.errors.value}
+          setTouched={setTouched}
         />
       </div>
       <div className={cx('buttons')}>

@@ -19,6 +19,7 @@ import Downshift from 'downshift';
 import PropTypes from 'prop-types';
 import { Manager, Reference, Popper } from 'react-popper';
 import { FieldText } from 'componentLibrary/fieldText';
+import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { AutocompleteMenu } from './../common/autocompleteMenu';
 
 export class SingleAutocomplete extends Component {
@@ -40,6 +41,8 @@ export class SingleAutocomplete extends Component {
     async: PropTypes.bool,
     autocompleteVariant: PropTypes.string,
     isRequired: PropTypes.bool,
+    error: PropTypes.string,
+    setTouched: PropTypes.func,
   };
 
   static defaultProps = {
@@ -59,6 +62,8 @@ export class SingleAutocomplete extends Component {
     async: false,
     autocompleteVariant: '',
     isRequired: false,
+    error: '',
+    setTouched: () => {},
   };
 
   getOptionProps = (getItemProps, highlightedIndex, selectedItem) => ({ item, index, ...rest }) =>
@@ -84,6 +89,8 @@ export class SingleAutocomplete extends Component {
       maxLength,
       autocompleteVariant,
       isRequired,
+      error,
+      setTouched,
       ...props
     } = this.props;
     return (
@@ -99,21 +106,26 @@ export class SingleAutocomplete extends Component {
               <Reference>
                 {({ ref }) => (
                   <div ref={ref}>
-                    <FieldText
-                      {...getInputProps({
-                        placeholder: !disabled ? placeholder : '',
-                        maxLength,
-                        onFocus: () => {
-                          !value && openMenu();
-                          onFocus();
-                        },
-                        onBlur,
-                        disabled,
-                        defaultWidth: false,
-                        isRequired,
-                        ...inputProps,
-                      })}
-                    />
+                    <FieldErrorHint error={error} provideHint={false}>
+                      <FieldText
+                        {...getInputProps({
+                          placeholder: !disabled ? placeholder : '',
+                          maxLength,
+                          onFocus: () => {
+                            !value && openMenu();
+                            onFocus();
+                          },
+                          onBlur: () => {
+                            onBlur();
+                            setTouched(true);
+                          },
+                          disabled,
+                          defaultWidth: false,
+                          isRequired,
+                          ...inputProps,
+                        })}
+                      />
+                    </FieldErrorHint>
                   </div>
                 )}
               </Reference>

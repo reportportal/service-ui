@@ -100,6 +100,7 @@ export const AttributeList = ({
         <div className={cx('editor-wrapper')}>
           <AttributeEditor
             attribute={editableAttr}
+            attributes={attributes}
             onChange={createChangeHandler()}
             onConfirm={createChangeHandler()}
             onRemove={createRemoveHandler(indexEditableAttr)}

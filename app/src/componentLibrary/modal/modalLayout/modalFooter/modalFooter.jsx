@@ -22,9 +22,15 @@ import styles from './modalFooter.scss';
 
 const cx = classNames.bind(styles);
 
-export const ModalFooter = ({ okButton, cancelButton, closeHandler, footerNode }) => {
+export const ModalFooter = ({
+  okButton,
+  cancelButton,
+  closeHandler,
+  footerNode,
+  footerClassName,
+}) => {
   return (
-    <div className={cx('modal-footer')}>
+    <div className={cx('modal-footer', footerClassName)}>
       {footerNode && footerNode}
       <div className={cx('buttons-block')}>
         {cancelButton && (
@@ -68,10 +74,12 @@ ModalFooter.propTypes = {
   }),
   closeHandler: PropTypes.func,
   footerNode: PropTypes.node,
+  footerClassName: PropTypes.string,
 };
 ModalFooter.defaultProps = {
   okButton: null,
   cancelButton: null,
   closeHandler: () => {},
   footerNode: PropTypes.node,
+  footerClassName: '',
 };

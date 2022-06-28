@@ -242,6 +242,7 @@ const AddEditNotificationModal = ({ data, data: { onSave }, handleSubmit, initia
           <Toggle className={cx('toggle')}>{formatMessage(messages.active)}</Toggle>
         </FieldProvider>
       }
+      footerClassName={cx('footer')}
     >
       {formatMessage(messages.description)}
       <div className={cx('content')}>
@@ -317,7 +318,9 @@ const AddEditNotificationModal = ({ data, data: { onSave }, handleSubmit, initia
         <Checkbox value={isEditorShown} onChange={(e) => setShowEditor(e.target.checked)}>
           Attributes
         </Checkbox>
-        <span className={cx('description')}>{formatMessage(messages.attributesNote)}</span>
+        <span className={cx('description', { 'margin-bottom': !isEditorShown })}>
+          {formatMessage(messages.attributesNote)}
+        </span>
         {isEditorShown && (
           <FieldElement
             name={ATTRIBUTES_FIELD_KEY}

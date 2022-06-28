@@ -166,6 +166,7 @@
 
     .placeholder {
       position: absolute;
+      pointer-events: none;
       @include input-text($COLOR--e-300);
 
       .asterisk:after {

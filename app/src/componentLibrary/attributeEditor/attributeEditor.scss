@@ -40,11 +40,11 @@
 
 .attribute-editor {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .separator {
-  margin: 0 8px;
+  margin: 8px 8px;
   color: $COLOR--almost-black;
   font-size: 16px;
 }
