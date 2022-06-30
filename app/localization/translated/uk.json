@@ -189,7 +189,7 @@
   "ChangePasswordForm.failedChange": "Не вдалося оновити пароль",
   "ChangePasswordForm.newPasswordConfirmPlaceholder": "Підтвердіть новий пароль",
   "ChangePasswordForm.newPasswordPlaceholder": "Новий пароль",
-  "ChangePasswordForm.passwordConstraints": "4-128 символів",
+  "ChangePasswordForm.passwordConstraints": "4-256 символів",
   "ChangePasswordForm.successChange": "Ваш пароль успішно змінено",
   "ChangePasswordModal.confirmLabel": "Підтвердити",
   "ChangePasswordModal.confirmPlaceholder": "Підтвердіть новий пароль",

@@ -189,7 +189,7 @@
   "ChangePasswordForm.failedChange": "Не атрымалася абнавіць пароль",
   "ChangePasswordForm.newPasswordConfirmPlaceholder": "Пацвердзіць пароль",
   "ChangePasswordForm.newPasswordPlaceholder": "Новы пароль",
-  "ChangePasswordForm.passwordConstraints": "4-25 сімвалаў",
+  "ChangePasswordForm.passwordConstraints": "4-256 сімвалаў",
   "ChangePasswordForm.successChange": "Ваш пароль паспяхова зменены",
   "ChangePasswordModal.confirmLabel": "Пацвердзіць",
   "ChangePasswordModal.confirmPlaceholder": "Пацвердзіць новы пароль",
