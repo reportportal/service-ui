@@ -69,7 +69,6 @@ export const Notifications = ({ setHeaderTitleNode }) => {
     dispatch(fetchProjectNotificationsAction());
   }, []);
 
-  const isAbleToEditNotificationList = () => canUpdateSettings(userRole, projectRole);
   const isAbleToEditNotificationsEnableForm = () =>
     canUpdateSettings(userRole, projectRole) && isEmailIntegrationAvailable;
 
@@ -162,11 +161,15 @@ export const Notifications = ({ setHeaderTitleNode }) => {
   };
 
   useEffect(() => {
-    setHeaderTitleNode(
-      <span className={cx('button')} onClick={onAdd}>
-        <Button disabled={!isAbleToEditNotificationList()}>{formatMessage(messages.create)}</Button>
-      </span>,
-    );
+    if (notifications.length > 0) {
+      setHeaderTitleNode(
+        <span className={cx('button')} onClick={onAdd}>
+          <Button disabled={!isAbleToEditNotificationsEnableForm()}>
+            {formatMessage(messages.create)}
+          </Button>
+        </span>,
+      );
+    }
 
     return () => setHeaderTitleNode(null);
   });
@@ -185,7 +188,6 @@ export const Notifications = ({ setHeaderTitleNode }) => {
   };
 
   const readOnlyNotificationsEnableForm = !isAbleToEditNotificationsEnableForm();
-  const readOnlyNotificationList = !isAbleToEditNotificationList();
 
   const actions = [
     {
@@ -219,7 +221,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
           </Layout>
           <div className={cx('notifications-container')}>
             <RuleList
-              disabled={readOnlyNotificationList}
+              disabled={readOnlyNotificationsEnableForm}
               data={notifications.map((item) => ({ name: item.ruleName, ...item }))}
               actions={actions}
               onToggle={onToggleHandler}
@@ -235,7 +237,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
           documentationLink={
             'https://reportportal.io/docs/Project-configuration%3Ee-mail-notifications'
           }
-          disableButton={readOnlyNotificationList}
+          disableButton={readOnlyNotificationsEnableForm}
           handleButton={onAdd}
         />
       )}

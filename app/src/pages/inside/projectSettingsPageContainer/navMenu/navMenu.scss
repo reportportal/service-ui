@@ -31,6 +31,10 @@
   white-space: pre;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  &:hover {
+    background-color: $COLOR--grey-90;
+  }
 }
 
 .active {
