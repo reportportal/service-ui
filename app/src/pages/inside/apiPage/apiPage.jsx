@@ -97,7 +97,7 @@ export class ApiPage extends Component {
               docExpansion="none"
               apisSorter="alpha"
               jsonEditor={false}
-              defaultModelRendering="schema"
+              defaultModelRendering="example"
               showRequestHeaders={false}
               showOperationIds={false}
               requestInterceptor={this.setAuth}
