@@ -172,7 +172,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
     }
 
     return () => setHeaderTitleNode(null);
-  });
+  }, [setHeaderTitleNode]);
 
   const onToggleHandler = (isEnabled, notification) => {
     trackEvent(
