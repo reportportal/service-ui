@@ -79,6 +79,11 @@
   height: 16px;
   cursor: pointer;
 
+  svg {
+    height: 16px;
+    width: 16px;
+  }
+
   &:hover {
     @include fill-svg($COLOR--e-400);
   }

@@ -137,6 +137,11 @@
   height: 7px;
   margin-left: 12px;
   transition: transform 200ms linear;
+
+  svg {
+    height: 7px;
+    width: 13px;
+  }
 }
 
 .light {
