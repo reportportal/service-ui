@@ -15,7 +15,6 @@
  */
 
 @mixin input-container($borderColor, $backgroundColor) {
-  position: relative;
   display: flex;
   align-items: center;
   height: 36px;
@@ -164,19 +163,6 @@
     @include hover-state($COLOR--e-300);
     @include focus-state($COLOR--topaz-focused);
 
-    .placeholder {
-      position: absolute;
-      @include input-text($COLOR--e-300);
-
-      .asterisk:after {
-        position: absolute;
-        top: -3px;
-        right: -7px;
-        content: '*';
-        color: $COLOR--red-focused;
-      }
-    }
-
     &.error.touched {
       @include error-state($COLOR--red-failed-2);
     }
@@ -190,6 +176,11 @@
     }
   }
 
+  &.custom-input-wrapper {
+    position: relative;
+    width: 100%;
+  }
+
   input {
     border: none;
   }
@@ -197,6 +188,22 @@
   &.input {
     @include input-base;
     @include input-text($COLOR--almost-black);
+  }
+
+  &.placeholder {
+    @include input-text($COLOR--e-300);
+    position: absolute;
+    top: 2px;
+    left: 0;
+    pointer-events: none;
+
+    .asterisk:after {
+      position: absolute;
+      top: -3px;
+      right: -7px;
+      content: '*';
+      color: $COLOR--red-focused;
+    }
   }
 
   &.error-text {

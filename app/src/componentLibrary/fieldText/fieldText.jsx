@@ -66,25 +66,27 @@ export const FieldText = ({
             <i className={cx(VARIANT, 'icon')}>{Parser(startIcon)}</i>
           </span>
         )}
-        <input
-          ref={refFunction}
-          type="text"
-          className={cx(VARIANT, 'input')}
-          value={value}
-          maxLength={maxLength}
-          disabled={disabled}
-          onChange={disabled ? null : onChange}
-          onFocus={disabled ? null : onFocus}
-          onBlur={disabled ? null : onBlur}
-          onKeyUp={disabled ? null : onKeyUp}
-          onKeyDown={disabled ? null : onKeyDown}
-        />
-        {placeholder && !value && (
-          <span className={cx('placeholder')}>
-            {placeholder}
-            {isRequired && <span className={cx('asterisk')} />}
-          </span>
-        )}
+        <span className={cx(VARIANT, 'custom-input-wrapper')}>
+          <input
+            ref={refFunction}
+            type="text"
+            className={cx(VARIANT, 'input')}
+            value={value}
+            maxLength={maxLength}
+            disabled={disabled}
+            onChange={disabled ? null : onChange}
+            onFocus={disabled ? null : onFocus}
+            onBlur={disabled ? null : onBlur}
+            onKeyUp={disabled ? null : onKeyUp}
+            onKeyDown={disabled ? null : onKeyDown}
+          />
+          {placeholder && !value && (
+            <span className={cx(VARIANT, 'placeholder')}>
+              {placeholder}
+              {isRequired && <span className={cx(VARIANT, 'asterisk')} />}
+            </span>
+          )}
+        </span>
         {endIcon && (
           <span className={cx('icon-container-end')}>
             <i className={cx(VARIANT, 'icon')}>{Parser(endIcon)}</i>
