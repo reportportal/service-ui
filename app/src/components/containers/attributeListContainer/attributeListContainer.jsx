@@ -22,7 +22,7 @@ import { EditableAttributeList } from 'componentLibrary/attributeList/editableAt
 export const AttributeListContainer = ({ value, keyURLCreator, valueURLCreator, ...rest }) => {
   const projectId = useSelector(activeProjectSelector);
   const getURIKey = keyURLCreator(projectId);
-  const getURIValue = (key) => keyURLCreator(projectId, key);
+  const getURIValue = valueURLCreator(projectId);
   return (
     <EditableAttributeList
       attributes={value}
