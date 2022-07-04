@@ -42,6 +42,8 @@ import {
 import PencilIcon from 'common/img/newIcons/pencil-inline.svg';
 import BinIcon from 'common/img/newIcons/bin-inline.svg';
 import CopyIcon from 'common/img/newIcons/copy-inline.svg';
+import { projectNotificationsLoadingSelector } from 'controllers/project/selectors';
+import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { RuleList } from '../elements/ruleList';
 import { Layout } from '../layout';
 import styles from './notifications.scss';
@@ -64,6 +66,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
   const enabled = useSelector(projectNotificationsStateSelector);
   const notifications = useSelector(projectNotificationsSelector);
   const isEmailIntegrationAvailable = useSelector(isEmailIntegrationAvailableSelector);
+  const loading = useSelector(projectNotificationsLoadingSelector);
 
   useEffect(() => {
     dispatch(fetchProjectNotificationsAction());
@@ -201,6 +204,10 @@ export const Notifications = ({ setHeaderTitleNode }) => {
       handler: onDelete,
     },
   ];
+
+  if (loading) {
+    return <SpinningPreloader />;
+  }
 
   return (
     <>

@@ -74,6 +74,7 @@ import {
   fetchProjectNotificationsSuccessAction,
   deleteProjectNotificationSuccessAction,
   updateProjectNotificationSuccessAction,
+  setProjectNotificationsLoadingAction,
 } from './actionCreators';
 import { projectNotificationsConfigurationSelector, patternsSelector } from './selectors';
 
@@ -179,6 +180,7 @@ function* watchUpdateProjectNotificationsConfig() {
 }
 
 function* fetchProjectNotifications() {
+  yield put(setProjectNotificationsLoadingAction(true));
   const projectId = yield select(projectIdSelector);
   const notifications = yield call(fetch, URLS.notification(projectId));
   yield put(fetchProjectNotificationsSuccessAction(notifications));

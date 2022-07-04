@@ -48,6 +48,7 @@ import {
   FETCH_PROJECT_NOTIFICATIONS_SUCCESS,
   DELETE_PROJECT_NOTIFICATION_SUCCESS,
   UPDATE_PROJECT_NOTIFICATION_SUCCESS,
+  SET_PROJECT_NOTIFICATION_LOADING,
 } from './constants';
 
 export const fetchProjectSuccessAction = (project) => ({
@@ -212,4 +213,9 @@ export const deleteProjectNotificationAction = (id) => ({
 export const deleteProjectNotificationSuccessAction = (id) => ({
   type: DELETE_PROJECT_NOTIFICATION_SUCCESS,
   payload: id,
+});
+
+export const setProjectNotificationsLoadingAction = (loading) => ({
+  type: SET_PROJECT_NOTIFICATION_LOADING,
+  payload: loading,
 });
