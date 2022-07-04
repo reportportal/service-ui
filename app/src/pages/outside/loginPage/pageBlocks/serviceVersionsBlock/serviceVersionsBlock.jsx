@@ -15,48 +15,73 @@
  */
 
 import classNames from 'classnames/bind';
-import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
+import { withTooltip } from 'components/main/tooltips/tooltip';
+import Parser from 'html-react-parser';
+import { FormattedMessage } from 'react-intl';
 import styles from './serviceVersionsBlock.scss';
 import { ServiceVersionItem } from './serviceVersionItem';
+import deprecatedIcon from '../../img/info-small-deprecated-inline.svg';
+import currentIcon from '../../img/info-small-current-inline.svg';
 
 const cx = classNames.bind(styles);
 
-export const ServiceVersionsBlock = ({ services }) => (
-  <div className={cx('service-versions-block')}>
-    <span className={cx('current-version')}>
-      <FormattedMessage
-        id={'ServiceVersionsBlock.currentVersion'}
-        defaultMessage={'Current version'}
-      />
+const ServiceVersionsBlockWithTooltip = ({ services }) => {
+  return (
+    <div className={cx('tooltip-block')}>
+      <span className={cx('current-version')}>
+        <FormattedMessage
+          id={'ServiceVersionsBlock.currentVersion'}
+          defaultMessage={'Current version'}
+        />
+      </span>
       :
-    </span>
-    <span className={cx('versions-list')}>
-      {Object.keys(services).map((objKey) => {
-        const value = services[objKey];
+      <span className={cx('versions-list')}>
+        {Object.keys(services).map((objKey) => {
+          const value = services[objKey];
 
-        return (
-          <ServiceVersionItem
-            // eslint-disable-next-line react/no-array-index-key
-            key={objKey}
-            serviceName={value.name}
-            serviceVersion={value.version}
-            serviceNewVersion={value.newVersion}
-            isDeprecated={!!value.isDeprecated}
-          />
-        );
-      })}
-    </span>
-  </div>
-);
-
-ServiceVersionsBlock.propTypes = {
+          return (
+            <ServiceVersionItem
+              // eslint-disable-next-line react/no-array-index-key
+              key={objKey}
+              serviceName={value.name}
+              serviceVersion={value.version}
+              serviceNewVersion={value.newVersion}
+              isDeprecated={!!value.isDeprecated}
+            />
+          );
+        })}
+      </span>
+    </div>
+  );
+};
+ServiceVersionsBlockWithTooltip.propTypes = {
+  services: PropTypes.object,
   serviceVersions: PropTypes.object,
   latestServiceVersions: PropTypes.object,
-  services: PropTypes.object,
 };
-ServiceVersionsBlock.defaultProps = {
+ServiceVersionsBlockWithTooltip.defaultProps = {
   serviceVersions: {},
   latestServiceVersions: {},
   services: {},
 };
+export const ServiceVersionsBlock = ({ isDeprecated }) => {
+  const iconURL = isDeprecated ? deprecatedIcon : currentIcon;
+  return <i className={cx('status-icon')}>{Parser(iconURL)}</i>;
+};
+
+ServiceVersionsBlock.propTypes = {
+  isDeprecated: PropTypes.bool.isRequired,
+};
+ServiceVersionsBlock.defaultProps = {
+  isDeprecated: false,
+};
+
+export const ServiceVersionItemTooltip = withTooltip({
+  TooltipComponent: ServiceVersionsBlockWithTooltip,
+  data: {
+    dynamicWidth: true,
+    placement: 'top',
+    desktopOnly: true,
+  },
+})(ServiceVersionsBlock);
