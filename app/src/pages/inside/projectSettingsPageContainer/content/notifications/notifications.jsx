@@ -69,7 +69,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
     dispatch(fetchProjectNotificationsAction());
   }, []);
 
-  const isAbleToEditNotificationsEnableForm = () =>
+  const isAbleToEdit = () =>
     canUpdateSettings(userRole, projectRole) && isEmailIntegrationAvailable;
 
   const toggleNotificationsEnabled = (isEnabled) => {
@@ -164,9 +164,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
     if (notifications.length > 0) {
       setHeaderTitleNode(
         <span className={cx('button')} onClick={onAdd}>
-          <Button disabled={!isAbleToEditNotificationsEnableForm()}>
-            {formatMessage(messages.create)}
-          </Button>
+          <Button disabled={!isAbleToEdit()}>{formatMessage(messages.create)}</Button>
         </span>,
       );
     }
@@ -187,7 +185,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
     );
   };
 
-  const readOnlyNotificationsEnableForm = !isAbleToEditNotificationsEnableForm();
+  const isReadOnly = !isAbleToEdit();
 
   const actions = [
     {
@@ -211,7 +209,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
           <Layout description={formatMessage(messages.tabDescription)}>
             <FieldElement withoutProvider description={formatMessage(messages.toggleNote)}>
               <Checkbox
-                disabled={readOnlyNotificationsEnableForm}
+                disabled={isReadOnly}
                 value={enabled}
                 onChange={(e) => toggleNotificationsEnabled(e.target.checked)}
               >
@@ -221,7 +219,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
           </Layout>
           <div className={cx('notifications-container')}>
             <RuleList
-              disabled={readOnlyNotificationsEnableForm}
+              disabled={isReadOnly}
               data={notifications.map((item) => ({ name: item.ruleName, ...item }))}
               actions={actions}
               onToggle={onToggleHandler}
@@ -237,7 +235,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
           documentationLink={
             'https://reportportal.io/docs/Project-configuration%3Ee-mail-notifications'
           }
-          disableButton={readOnlyNotificationsEnableForm}
+          disableButton={isReadOnly}
           handleButton={onAdd}
         />
       )}
