@@ -77,15 +77,23 @@ export const Notifications = ({ setHeaderTitleNode }) => {
     dispatch(updateNotificationStateAction(isEnabled));
   };
 
-  const confirmAdd = (newNotification) => {
-    const notification = convertNotificationCaseForSubmission(newNotification);
+  const confirmAdd = (withoutAttributes) => (newNotification) => {
+    const notificationData = { ...newNotification };
+    if (withoutAttributes) {
+      notificationData.attributes = [];
+    }
+    const notification = convertNotificationCaseForSubmission(notificationData);
     dispatch(addProjectNotificationAction(notification));
   };
 
-  const confirmEdit = (notification) => {
+  const confirmEdit = (withoutAttributes) => (notification) => {
     dispatch(
       updateProjectNotificationAction(
-        convertNotificationCaseForSubmission({ ...notification, name: notification.ruleName }),
+        convertNotificationCaseForSubmission({
+          ...notification,
+          name: notification.ruleName,
+          attributes: withoutAttributes ? [] : notification.attributes,
+        }),
       ),
     );
   };
@@ -101,7 +109,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
         id: 'addEditNotificationModal',
         data: {
           actionType: 'add',
-          onSave: confirmAdd,
+          onSave: (withoutAttributes) => confirmAdd(withoutAttributes),
           notification: DEFAULT_CASE_CONFIG,
           notifications,
         },
@@ -116,7 +124,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
         id: 'addEditNotificationModal',
         data: {
           actionType: 'edit',
-          onSave: (data) => confirmEdit(data),
+          onSave: (withoutAttributes) => confirmEdit(withoutAttributes),
           notification,
           notifications,
         },
@@ -149,7 +157,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
         id: 'addEditNotificationModal',
         data: {
           actionType: 'copy',
-          onSave: confirmAdd,
+          onSave: (withoutAttributes) => confirmAdd(withoutAttributes),
           notification: {
             ...newNotification,
             ruleName: notification.ruleName + COPY_POSTFIX,

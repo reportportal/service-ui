@@ -45,7 +45,7 @@ export const FieldElement = (props) => {
       ) : (
         <>
           {getChildren()}
-          <span className={cx('description-alt')}>{description}</span>
+          {description && <span className={cx('description-alt')}>{description}</span>}
         </>
       )}
     </div>
