@@ -72,23 +72,26 @@ export const AttributeEditor = ({
   const byValueComparator = (attr, item, key) => attr.key === key && attr.value === item;
 
   const handleKeyChange = (key) => {
-    setState((oldState) => ({
-      ...oldState,
+    setState({
+      ...state,
       key: key || undefined,
-      errors: getValidationErrors(key, oldState.value),
-    }));
+      errors: getValidationErrors(key, state.value),
+    });
   };
 
   const handleValueChange = (value) => {
-    setState((oldState) => ({
-      ...oldState,
+    setState({
+      ...state,
       value,
-      errors: getValidationErrors(oldState.key, value),
-    }));
+      errors: getValidationErrors(state.key, value),
+    });
   };
 
   const isAttributeUnique = () =>
-    !attributes.some((attr) => attr.key === state.key && attr.value === state.value);
+    !attributes.some(
+      (attr) =>
+        (attr.key === state.key || (!state.key && attr.key === null)) && attr.value === state.value,
+    );
 
   const isAttributeEmpty = () => isEmpty(state.key) && isEmpty(state.value);
 
@@ -112,7 +115,7 @@ export const AttributeEditor = ({
   };
 
   const handleCancel = () => onCancel() || clearInputValues();
-  const handleAttributeKeyInputChange = (text) => setState({ isKeyEdited: !!text });
+  const handleAttributeKeyInputChange = (text) => setState({ ...state, isKeyEdited: !!text });
 
   return (
     <div className={cx('attribute-editor')}>
@@ -130,6 +133,7 @@ export const AttributeEditor = ({
           attributeValue={state.value}
           onInputChange={handleAttributeKeyInputChange}
           autocompleteVariant={'key-variant'}
+          error={state.errors.key}
         />
       </div>
       <div className={cx('separator')}>:</div>
@@ -138,7 +142,7 @@ export const AttributeEditor = ({
           minLength={1}
           attributes={attributes}
           attributeComparator={byValueComparator}
-          getURI={getURIValue(state.key)}
+          getURI={getURIValue}
           creatable
           onChange={handleValueChange}
           value={state.value}
@@ -147,6 +151,7 @@ export const AttributeEditor = ({
           attributeValue={state.value}
           isRequired
           autocompleteVariant={'value-variant'}
+          error={state.errors.value}
         />
       </div>
       <div className={cx('buttons')}>

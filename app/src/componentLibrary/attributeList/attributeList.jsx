@@ -107,6 +107,7 @@ export const AttributeList = ({
       {editableAttr && (
         <AttributeEditor
           attribute={editableAttr}
+          attributes={attributes}
           onChange={createChangeHandler()}
           onConfirm={createChangeHandler()}
           onRemove={createRemoveHandler(indexEditableAttr)}
