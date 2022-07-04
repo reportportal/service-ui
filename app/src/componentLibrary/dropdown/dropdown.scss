@@ -105,7 +105,7 @@
   width: 100%;
   min-height: 10px;
   background: $backgroundColor;
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: $BOX_SHADOW--modal-window;
   border-radius: 3px;
   box-sizing: border-box;
   z-index: $Z-INDEX-POPUP;
