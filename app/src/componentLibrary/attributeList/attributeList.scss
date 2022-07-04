@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-.attribute-list {
+.attributes-wrapper {
   display: flex;
-  align-items: center;
   flex-wrap: wrap;
+  gap: 16px;
 }
 
-.editor-wrapper {
-  margin-bottom: 16px;
+.attributes {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
-.margin-bottom {
-  margin-bottom: 16px;
+.editable-attribute {
+  margin-top: 16px;
 }

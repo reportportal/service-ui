@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
@@ -38,6 +39,7 @@ export const AttributeList = ({
   customClass,
   showButton,
   editable,
+  attributesListClassname,
 }) => {
   const getExistEditableAttr = () => {
     return attributes.find((attr) => attr.edited);
@@ -75,7 +77,7 @@ export const AttributeList = ({
     return newAttributes;
   };
 
-  const hasEditedAttribute = () => attributes.some((attribute) => !!attribute.edited);
+  const hasEditedAttribute = attributes.some((attribute) => !!attribute.edited);
 
   const createEditHandler = (index) => () => {
     let newAttributes;
@@ -94,52 +96,53 @@ export const AttributeList = ({
   const editableAttr = getExistEditableAttr();
   const indexEditableAttr = getIndexEditableAttr();
 
+  const availableAttributes = useMemo(
+    () =>
+      attributes.filter((attribute) => notSystemAttributePredicate(attribute) && !attribute.new),
+    [attributes],
+  );
+
   return (
-    <div className={cx('attribute-list')}>
-      {editableAttr ? (
-        <div className={cx('editor-wrapper')}>
-          <AttributeEditor
-            attribute={editableAttr}
-            onChange={createChangeHandler()}
-            onConfirm={createChangeHandler()}
-            onRemove={createRemoveHandler(indexEditableAttr)}
-            onEdit={editable && createEditHandler(indexEditableAttr)}
-            onCancel={createCancelEditHandler(indexEditableAttr)}
-            getURIKey={getURIKey}
-            getURIValue={getURIValue}
-          />
-        </div>
-      ) : (
-        ''
+    <div className={cx(attributesListClassname)}>
+      {editableAttr && (
+        <AttributeEditor
+          attribute={editableAttr}
+          onChange={createChangeHandler()}
+          onConfirm={createChangeHandler()}
+          onRemove={createRemoveHandler(indexEditableAttr)}
+          onEdit={editable && createEditHandler(indexEditableAttr)}
+          onCancel={createCancelEditHandler(indexEditableAttr)}
+          getURIKey={getURIKey}
+          getURIValue={getURIValue}
+        />
       )}
-      {attributes
-        .filter((attribute) => notSystemAttributePredicate(attribute) && !attribute.new)
-        .map((attribute, i, filteredAttributes) => (
-          <EditableAttribute
-            key={`${attribute.key}_${attribute.value}`}
-            attribute={attribute}
-            attributes={filteredAttributes}
-            editMode={attribute.edited}
-            onChange={createChangeHandler()}
-            onRemove={createRemoveHandler(i)}
-            onEdit={editable && createEditHandler(i)}
-            onCancelEdit={createCancelEditHandler(i)}
-            disabled={disabled}
-            customClass={customClass}
-          />
-        ))}
-      {!hasEditedAttribute() && !disabled && showButton && attributes.length < maxLength && (
-        <Button
-          startIcon={PlusIcon}
-          onClick={onAddNew}
-          variant={'text'}
-          customClassName={cx('margin-bottom')}
-        >
-          {newAttrMessage || (
-            <FormattedMessage id="AttributeList.addNew" defaultMessage="Add new" />
-          )}
-        </Button>
-      )}
+      <div className={cx('attributes-wrapper')}>
+        {availableAttributes.length > 0 && (
+          <span className={cx('attributes', { 'editable-attribute': editableAttr })}>
+            {availableAttributes.map((attribute, i) => (
+              <EditableAttribute
+                key={`${attribute.key}_${attribute.value}`}
+                attribute={attribute}
+                attributes={availableAttributes}
+                editMode={attribute.edited}
+                onChange={createChangeHandler()}
+                onRemove={createRemoveHandler(i)}
+                onEdit={editable && createEditHandler(i)}
+                onCancelEdit={createCancelEditHandler(i)}
+                disabled={disabled}
+                customClass={customClass}
+              />
+            ))}
+          </span>
+        )}
+        {!hasEditedAttribute && !disabled && showButton && attributes.length < maxLength && (
+          <Button startIcon={PlusIcon} onClick={onAddNew} variant={'text'}>
+            {newAttrMessage || (
+              <FormattedMessage id="AttributeList.addNew" defaultMessage="Add new" />
+            )}
+          </Button>
+        )}
+      </div>
     </div>
   );
 };
@@ -158,6 +161,7 @@ AttributeList.propTypes = {
   getURIValue: PropTypes.func,
   showButton: PropTypes.bool,
   editable: PropTypes.bool,
+  attributesListClassname: PropTypes.string,
 };
 AttributeList.defaultProps = {
   attributes: [],
@@ -176,4 +180,5 @@ AttributeList.defaultProps = {
   getURIValue: () => {},
   showButton: true,
   editable: true,
+  attributesListClassname: '',
 };

@@ -16,7 +16,7 @@
 
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { reduxForm } from 'redux-form';
+import { formValueSelector, reduxForm } from 'redux-form';
 import { useTracking } from 'react-tracking';
 import { useDispatch, useSelector } from 'react-redux';
 import className from 'classnames/bind';
@@ -70,7 +70,7 @@ const messages = defineMessages({
   },
   copy: {
     id: 'AddEditNotificationCaseModal.copyRuleMessage',
-    defaultMessage: ' Duplicate',
+    defaultMessage: 'Duplicate',
   },
   active: {
     id: 'AddEditNotificationCaseModal.active',
@@ -128,6 +128,10 @@ const messages = defineMessages({
     id: 'AddEditNotificationCaseModal.attributesNote',
     defaultMessage: 'Send notifications about launches containing specified attributes',
   },
+  attributesNotActive: {
+    id: 'AddEditNotificationCaseModal.attributesNotActive',
+    defaultMessage: 'Attributes are non active. To activate please select checkbox ‘Attributes’',
+  },
   addAttribute: {
     id: 'AddEditNotificationCaseModal.addAttribute',
     defaultMessage: 'Add Attribute',
@@ -180,15 +184,28 @@ const messages = defineMessages({
     id: 'NotificationsEnableForm.toggleNotificationsNote',
     defaultMessage: 'Send email notifications on launch finish',
   },
+  attributes: {
+    id: 'NotificationsEnableForm.attributes',
+    defaultMessage: 'Attributes',
+  },
 });
 
-const AddEditNotificationModal = ({ data, data: { onSave }, handleSubmit, initialize }) => {
+const AddEditNotificationModal = ({
+  data,
+  data: { onSave },
+  handleSubmit,
+  initialize,
+  form,
+  change,
+}) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
 
   const activeProject = useSelector(projectIdSelector);
   const [isEditorShown, setShowEditor] = React.useState(data.notification.attributes.length > 0);
+  const selector = formValueSelector(form);
+  const attributesValue = useSelector((state) => selector(state, ATTRIBUTES_FIELD_KEY));
 
   useEffect(() => {
     initialize(data.notification);
@@ -223,11 +240,28 @@ const AddEditNotificationModal = ({ data, data: { onSave }, handleSubmit, initia
 
   const okButton = {
     text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
-    onClick: () => handleSubmit(onSave)(),
+    onClick: () => handleSubmit(onSave(!isEditorShown))(),
   };
   const cancelButton = {
     text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
   };
+
+  const attributeControlHandler = (e) => {
+    setShowEditor(e.target.checked);
+    const attributes = attributesValue.reduce((acc, curr) => {
+      const attr = { ...curr };
+      if (attr.edited) {
+        delete attr.edited;
+      }
+      return [...acc, attr];
+    }, []);
+
+    change(ATTRIBUTES_FIELD_KEY, attributes);
+  };
+  const attributesCaption =
+    isEditorShown || (!isEditorShown && !attributesValue?.length)
+      ? formatMessage(messages.attributesNote)
+      : formatMessage(messages.attributesNotActive);
 
   return (
     <ModalLayout
@@ -314,23 +348,22 @@ const AddEditNotificationModal = ({ data, data: { onSave }, handleSubmit, initia
         <span className={cx('description', 'launches')}>
           {formatMessage(messages.launchNamesNote)}
         </span>
-        <Checkbox value={isEditorShown} onChange={(e) => setShowEditor(e.target.checked)}>
-          Attributes
+        <Checkbox value={isEditorShown} onChange={attributeControlHandler}>
+          {formatMessage(messages.attributes)}
         </Checkbox>
-        <span className={cx('description')}>{formatMessage(messages.attributesNote)}</span>
-        {isEditorShown && (
-          <FieldElement
-            name={ATTRIBUTES_FIELD_KEY}
-            onChange={() => trackEvent(SETTINGS_PAGE_EVENTS.TAGS_INPUT_NOTIFICATIONS)}
-            className={cx('attributes')}
-          >
-            <AttributeListContainer
-              keyURLCreator={URLS.launchAttributeKeysSearch}
-              valueURLCreator={URLS.launchAttributeValuesSearch}
-              newAttrMessage={formatMessage(messages.addAttribute)}
-            />
-          </FieldElement>
-        )}
+        <span className={cx('description')}>{attributesCaption}</span>
+        <FieldElement
+          name={ATTRIBUTES_FIELD_KEY}
+          onChange={() => trackEvent(SETTINGS_PAGE_EVENTS.TAGS_INPUT_NOTIFICATIONS)}
+          disabled={!isEditorShown}
+        >
+          <AttributeListContainer
+            keyURLCreator={URLS.launchAttributeKeysSearch}
+            valueURLCreator={URLS.launchAttributeValuesSearch}
+            newAttrMessage={formatMessage(messages.addAttribute)}
+            attributesListClassname={cx('attributes-list')}
+          />
+        </FieldElement>
       </div>
     </ModalLayout>
   );
@@ -346,6 +379,8 @@ AddEditNotificationModal.propTypes = {
   initialize: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   dirty: PropTypes.bool.isRequired,
+  form: PropTypes.string.isRequired,
+  change: PropTypes.func.isRequired,
 };
 AddEditNotificationModal.defaultProps = {
   data: {},
