@@ -16,10 +16,14 @@
 
 import { Component } from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames/bind';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
 import { AutocompletePrompt } from './autocompletePrompt';
 import { AutocompleteOption } from './autocompleteOption';
+import styles from './autocompleteOptions.scss';
+
+const cx = classNames.bind(styles);
 
 export class AutocompleteOptions extends Component {
   static propTypes = {
@@ -31,7 +35,7 @@ export class AutocompleteOptions extends Component {
     getItemProps: PropTypes.func,
     renderOption: PropTypes.func,
     async: PropTypes.bool,
-    autocompleteVariant: PropTypes.bool,
+    autocompleteVariant: PropTypes.string,
   };
 
   static defaultProps = {
@@ -60,12 +64,12 @@ export class AutocompleteOptions extends Component {
     const { loading } = this.props;
     if (loading) {
       return (
-        <>
+        <div className={cx('container')}>
           <AutocompletePrompt>
             <BubblesPreloader />
           </AutocompletePrompt>
           {this.renderNewItem(options)}
-        </>
+        </div>
       );
     }
     return '';
@@ -112,12 +116,12 @@ export class AutocompleteOptions extends Component {
     const prompt = this.getPrompt(options);
     if (prompt) return prompt;
     return (
-      <>
+      <div className={cx('container')}>
         <ScrollWrapper autoHeight autoHeightMax={140}>
           {this.renderItems(options)}
         </ScrollWrapper>
         {this.renderNewItem(options)}
-      </>
+      </div>
     );
   }
 }

@@ -80,7 +80,7 @@ $WIDTH-LARGE: 720px;
   background-color: $COLOR--bg-100;
   text-align: left;
   border-radius: 16px;
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+  box-shadow: $BOX_SHADOW--modal-window;
   opacity: 1;
   transition: margin-top 300ms ease-in, opacity 300ms ease-in;
 }
