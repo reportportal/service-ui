@@ -40,6 +40,9 @@ export class SingleAutocomplete extends Component {
     async: PropTypes.bool,
     autocompleteVariant: PropTypes.string,
     isRequired: PropTypes.bool,
+    error: PropTypes.string,
+    touched: PropTypes.bool,
+    setTouch: PropTypes.func,
   };
 
   static defaultProps = {
@@ -59,6 +62,9 @@ export class SingleAutocomplete extends Component {
     async: false,
     autocompleteVariant: '',
     isRequired: false,
+    error: '',
+    touched: false,
+    setTouch: () => {},
   };
 
   getOptionProps = (getItemProps, highlightedIndex, selectedItem) => ({ item, index, ...rest }) =>
@@ -84,6 +90,9 @@ export class SingleAutocomplete extends Component {
       maxLength,
       autocompleteVariant,
       isRequired,
+      error,
+      touched,
+      setTouch,
       ...props
     } = this.props;
     return (
@@ -107,10 +116,15 @@ export class SingleAutocomplete extends Component {
                           !value && openMenu();
                           onFocus();
                         },
-                        onBlur,
+                        onBlur: () => {
+                          onBlur();
+                          setTouch(true);
+                        },
                         disabled,
                         defaultWidth: false,
                         isRequired,
+                        touched,
+                        error,
                         ...inputProps,
                       })}
                     />
