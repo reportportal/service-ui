@@ -34,6 +34,7 @@ import {
   FETCH_PROJECT_NOTIFICATIONS_SUCCESS,
   DELETE_PROJECT_NOTIFICATION_SUCCESS,
   UPDATE_PROJECT_NOTIFICATION_SUCCESS,
+  SET_PROJECT_NOTIFICATION_LOADING,
 } from './constants';
 
 export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, payload }) => {
@@ -182,6 +183,11 @@ export const projectNotificationsReducer = (state = {}, { type, payload }) => {
       return {
         ...state,
         notifications: state.notifications.filter((item) => item.id !== payload),
+      };
+    case SET_PROJECT_NOTIFICATION_LOADING:
+      return {
+        ...state,
+        loading: payload,
       };
     default:
       return state;

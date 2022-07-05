@@ -139,6 +139,9 @@ export const projectNotificationsEnabledSelector = (state) =>
 export const projectNotificationsStateSelector = (state) =>
   !!(projectAttributesSelector(state)[NOTIFICATIONS_ATTRIBUTE_ENABLED_KEY].toString() === 'true');
 
+export const projectNotificationsLoadingSelector = (state) =>
+  projectNotificationSelector(state).loading || false;
+
 export const defectColorsSelector = createSelector(projectConfigSelector, (config) => {
   const colors = {};
   Object.keys(config).length &&

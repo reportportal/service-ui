@@ -74,6 +74,7 @@ import {
   fetchProjectNotificationsSuccessAction,
   deleteProjectNotificationSuccessAction,
   updateProjectNotificationSuccessAction,
+  setProjectNotificationsLoadingAction,
 } from './actionCreators';
 import { projectNotificationsConfigurationSelector, patternsSelector } from './selectors';
 
@@ -179,9 +180,14 @@ function* watchUpdateProjectNotificationsConfig() {
 }
 
 function* fetchProjectNotifications() {
-  const projectId = yield select(projectIdSelector);
-  const notifications = yield call(fetch, URLS.notification(projectId));
-  yield put(fetchProjectNotificationsSuccessAction(notifications));
+  yield put(setProjectNotificationsLoadingAction(true));
+  try {
+    const projectId = yield select(projectIdSelector);
+    const notifications = yield call(fetch, URLS.notification(projectId));
+    yield put(fetchProjectNotificationsSuccessAction(notifications));
+  } finally {
+    yield put(setProjectNotificationsLoadingAction(false));
+  }
 }
 
 function* watchFetchProjectNotifications() {
