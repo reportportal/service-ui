@@ -18,8 +18,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
-import { LAUNCH_CASES } from 'pages/inside/projectSettingsPageContainer/content/notifications/constants';
-import { AttributeListField } from 'components/main/attributeList';
+import { AttributeListContainer } from 'components/containers/attributeListContainer';
+import { LAUNCH_CASES } from '../../notifications/constants';
 import styles from './notificationRuleContent.scss';
 
 const cx = classNames.bind(styles);
@@ -104,11 +104,7 @@ export const NotificationRuleContent = ({ item }) => {
         <>
           <span className={cx('field')}>{formatMessage(messages.attributesLabel)}</span>
           <div className={cx('value')}>
-            <AttributeListField
-              disabled
-              attributes={item.attributes}
-              customClass={cx('attribute')}
-            />
+            <AttributeListContainer disabled attributes={item.attributes} />
           </div>
         </>
       )}
