@@ -27,6 +27,7 @@ import {
 import { isEmpty } from 'common/utils/validation/validatorHelpers';
 import CheckIcon from 'common/img/check-inline.svg';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
+import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { AttributeInput } from './attributeInput';
 import styles from './attributeEditor.scss';
 
@@ -34,7 +35,6 @@ const cx = classNames.bind(styles);
 
 const attributeKeyValidator = commonValidators.attributeKey;
 const attributeValueValidator = composeBoundValidators([
-  commonValidators.requiredField,
   bindMessageToValidator(validate.attributeValue, 'attributeValueLengthHint'),
 ]);
 
@@ -48,9 +48,11 @@ export const AttributeEditor = ({
   keyPlaceholder,
   valuePlaceholder,
 }) => {
+  const [keyTouched, setTouchKey] = useState(false);
+  const [valueTouched, setTouchValue] = useState(false);
   const getValidationErrors = (key, value) => ({
     key: attributeKeyValidator(key),
-    value: attribute.edited && attributeValueValidator(value),
+    value: attribute.edited && valueTouched && attributeValueValidator(value),
   });
 
   const [state, setState] = useState({
@@ -96,6 +98,7 @@ export const AttributeEditor = ({
   const isAttributeEmpty = () => isEmpty(state.key) && isEmpty(state.value);
 
   const isFormValid = () =>
+    state.value &&
     !state.errors.key &&
     !state.errors.value &&
     isAttributeUnique() &&
@@ -119,7 +122,12 @@ export const AttributeEditor = ({
 
   return (
     <div className={cx('attribute-editor')}>
-      <div>
+      <FieldErrorHint
+        provideHint={false}
+        error={state.errors.key}
+        touched={keyTouched}
+        setTouch={setTouchKey}
+      >
         <AttributeInput
           attributes={attributes}
           minLength={1}
@@ -133,11 +141,15 @@ export const AttributeEditor = ({
           attributeValue={state.value}
           onInputChange={handleAttributeKeyInputChange}
           autocompleteVariant={'key-variant'}
-          error={state.errors.key}
         />
-      </div>
+      </FieldErrorHint>
       <div className={cx('separator')}>:</div>
-      <div>
+      <FieldErrorHint
+        provideHint={false}
+        error={state.errors.value}
+        touched={valueTouched}
+        setTouch={setTouchValue}
+      >
         <AttributeInput
           minLength={1}
           attributes={attributes}
@@ -151,9 +163,8 @@ export const AttributeEditor = ({
           attributeValue={state.value}
           isRequired
           autocompleteVariant={'value-variant'}
-          error={state.errors.value}
         />
-      </div>
+      </FieldErrorHint>
       <div className={cx('buttons')}>
         <div
           className={cx('check-btn', { disabled: !isFormValid() })}
@@ -176,7 +187,6 @@ AttributeEditor.propTypes = {
   handleSubmit: PropTypes.func,
   getURIKey: PropTypes.func,
   getURIValue: PropTypes.func,
-  intl: PropTypes.object.isRequired,
   attribute: PropTypes.object,
   keyPlaceholder: PropTypes.string,
   valuePlaceholder: PropTypes.string,
