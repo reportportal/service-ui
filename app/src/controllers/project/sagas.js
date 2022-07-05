@@ -181,9 +181,13 @@ function* watchUpdateProjectNotificationsConfig() {
 
 function* fetchProjectNotifications() {
   yield put(setProjectNotificationsLoadingAction(true));
-  const projectId = yield select(projectIdSelector);
-  const notifications = yield call(fetch, URLS.notification(projectId));
-  yield put(fetchProjectNotificationsSuccessAction(notifications));
+  try {
+    const projectId = yield select(projectIdSelector);
+    const notifications = yield call(fetch, URLS.notification(projectId));
+    yield put(fetchProjectNotificationsSuccessAction(notifications));
+  } finally {
+    yield put(setProjectNotificationsLoadingAction(false));
+  }
 }
 
 function* watchFetchProjectNotifications() {

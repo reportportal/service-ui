@@ -165,7 +165,7 @@ export const projectInfoLoadingReducer = (state = false, { type }) => {
 export const projectNotificationsReducer = (state = {}, { type, payload }) => {
   switch (type) {
     case FETCH_PROJECT_NOTIFICATIONS_SUCCESS:
-      return { ...state, notifications: payload, loading: false };
+      return { ...state, notifications: payload };
     case ADD_PROJECT_NOTIFICATION_SUCCESS:
       return {
         ...state,
