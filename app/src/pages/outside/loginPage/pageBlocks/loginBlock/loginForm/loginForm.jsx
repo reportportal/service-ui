@@ -196,15 +196,6 @@ export class LoginForm extends React.Component {
     } = this.props;
     const { blockTime, isLoginLimitExceeded } = this.state;
 
-    const forgotPasswordLink = (
-      <Link
-        to={{ type: LOGIN_PAGE, payload: { query: { forgotPass: 'true' } } }}
-        className={cx('forgot-pass')}
-      >
-        <FormattedMessage id={'LoginForm.forgotPass'} defaultMessage={'Forgot password?'} />
-      </Link>
-    );
-
     return (
       <form className={cx('login-form')} onSubmit={handleSubmit(authorize)}>
         {!isLoginLimitExceeded ? (
@@ -235,7 +226,12 @@ export class LoginForm extends React.Component {
                 </FieldErrorHint>
               </FieldProvider>
             </div>
-            {forgotPasswordLink}
+            <Link
+              to={{ type: LOGIN_PAGE, payload: { query: { forgotPass: 'true' } } }}
+              className={cx('forgot-pass')}
+            >
+              <FormattedMessage id={'LoginForm.forgotPass'} defaultMessage={'Forgot password?'} />
+            </Link>
             <div className={cx('login-button-container')}>
               <BigButton roundedCorners type="submit" color={'organish'}>
                 {formatMessage(COMMON_LOCALE_KEYS.LOGIN)}
@@ -252,7 +248,12 @@ export class LoginForm extends React.Component {
                 </b>
               </span>
             </div>
-            {forgotPasswordLink}
+            <Link
+              to={{ type: LOGIN_PAGE, payload: { query: { forgotPass: 'true' } } }}
+              className={cx('forgot-pass', 'attempts-exceed')}
+            >
+              <FormattedMessage id={'LoginForm.forgotPass'} defaultMessage={'Forgot password?'} />
+            </Link>
           </div>
         )}
       </form>
