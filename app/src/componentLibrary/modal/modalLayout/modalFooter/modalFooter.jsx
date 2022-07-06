@@ -22,7 +22,13 @@ import styles from './modalFooter.scss';
 
 const cx = classNames.bind(styles);
 
-export const ModalFooter = ({ okButton, cancelButton, closeHandler, footerNode }) => {
+export const ModalFooter = ({
+  okButton,
+  cancelButton,
+  closeHandler,
+  footerNode,
+  customClassName,
+}) => {
   return (
     <div className={cx('modal-footer')}>
       {footerNode && footerNode}
@@ -38,6 +44,7 @@ export const ModalFooter = ({ okButton, cancelButton, closeHandler, footerNode }
           <div className={cx('button-container')}>
             <Button
               variant={okButton.danger ? 'danger' : 'topaz'}
+              customClassName={customClassName}
               onClick={okButton.onClick}
               disabled={okButton.disabled}
               type={okButton.attributes && okButton.attributes.type}
@@ -68,10 +75,12 @@ ModalFooter.propTypes = {
   }),
   closeHandler: PropTypes.func,
   footerNode: PropTypes.node,
+  customClassName: PropTypes.string,
 };
 ModalFooter.defaultProps = {
   okButton: null,
   cancelButton: null,
   closeHandler: () => {},
   footerNode: PropTypes.node,
+  customClassName: '',
 };

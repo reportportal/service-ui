@@ -19,23 +19,25 @@ import PropTypes from 'prop-types';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import Parser from 'html-react-parser';
 import { FormattedMessage } from 'react-intl';
+import { useDispatch } from 'react-redux';
+import { hideModalAction, showModalAction } from 'controllers/modal';
 import styles from './serviceVersionsBlock.scss';
 import { ServiceVersionItem } from './serviceVersionItem';
 import deprecatedIcon from '../../img/info-small-deprecated-inline.svg';
 import currentIcon from '../../img/info-small-current-inline.svg';
+import { ServiceVersionsBlockModal } from './serviceVersionBlockModal';
 
 const cx = classNames.bind(styles);
 
-const ServiceVersionsBlockWithTooltip = ({ services }) => {
+export const ServiceVersionsBlockWithTooltip = ({ services, cssClass }) => {
   return (
-    <div className={cx('tooltip-block')}>
+    <div className={cx(cssClass)}>
       <span className={cx('current-version')}>
         <FormattedMessage
           id={'ServiceVersionsBlock.currentVersion'}
-          defaultMessage={'Current version'}
+          defaultMessage={'Current version:'}
         />
       </span>
-      :
       <span className={cx('versions-list')}>
         {Object.keys(services).map((objKey) => {
           const value = services[objKey];
@@ -59,22 +61,45 @@ ServiceVersionsBlockWithTooltip.propTypes = {
   services: PropTypes.object,
   serviceVersions: PropTypes.object,
   latestServiceVersions: PropTypes.object,
+  cssClass: PropTypes.string,
 };
 ServiceVersionsBlockWithTooltip.defaultProps = {
   serviceVersions: {},
   latestServiceVersions: {},
   services: {},
+  cssClass: '',
 };
-export const ServiceVersionsBlock = ({ isDeprecated }) => {
+
+export const ServiceVersionsBlock = ({ isDeprecated, services }) => {
+  const dispatch = useDispatch();
   const iconURL = isDeprecated ? deprecatedIcon : currentIcon;
-  return <i className={cx('status-icon')}>{Parser(iconURL)}</i>;
+
+  const hideModal = () => {
+    dispatch(hideModalAction());
+  };
+
+  const shownModal = () => {
+    dispatch(
+      showModalAction({
+        component: <ServiceVersionsBlockModal services={services} hideModal={hideModal} />,
+      }),
+    );
+  };
+
+  return (
+    <i onTouchEnd={shownModal} className={cx('status-icon')}>
+      {Parser(iconURL)}
+    </i>
+  );
 };
 
 ServiceVersionsBlock.propTypes = {
   isDeprecated: PropTypes.bool.isRequired,
+  services: PropTypes.object,
 };
 ServiceVersionsBlock.defaultProps = {
   isDeprecated: false,
+  services: {},
 };
 
 export const ServiceVersionItemTooltip = withTooltip({
@@ -82,6 +107,5 @@ export const ServiceVersionItemTooltip = withTooltip({
   data: {
     dynamicWidth: true,
     placement: 'top',
-    desktopOnly: true,
   },
 })(ServiceVersionsBlock);
