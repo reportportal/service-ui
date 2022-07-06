@@ -86,6 +86,17 @@
   background: none;
   color: $COLOR--topaz-2;
   line-height: 22px;
+
+  svg * {
+    fill: $COLOR--topaz-2;
+  }
+
+  &:focus:not(.disabled, :active) {
+    color: $COLOR--topaz-focused;
+    svg * {
+      fill: $COLOR--topaz-focused;
+    }
+  }
   &:hover:not(.disabled) {
     color: $COLOR--topaz-hover-2;
     svg * {
@@ -97,15 +108,6 @@
     svg * {
       fill: $COLOR--topaz-pressed;
     }
-  }
-  &:focus:not(.disabled, :active) {
-    color: $COLOR--topaz-focused;
-    svg * {
-      fill: $COLOR--topaz-focused;
-    }
-  }
-  svg * {
-    fill: $COLOR--topaz-2;
   }
 }
 
@@ -149,26 +151,30 @@
   background: none;
   line-height: 22px;
   color: $COLOR--darkmode-topaz-text;
-  &:hover:not(.disabled) {
-    color: $COLOR--darkmode-topaz-hover;
-    svg * {
-      fill: $COLOR--darkmode-topaz-hover;
-    }
+
+  svg * {
+    fill: $COLOR--darkmode-topaz-text;
   }
-  &:active:not(.disabled) {
-    color: $COLOR--darkmode-topaz-pressed;
-    svg * {
-      fill: $COLOR--darkmode-topaz-pressed;
-    }
-  }
+
   &:focus:not(.disabled, :active) {
     color: $COLOR--darkmode-topaz-focused;
     svg * {
       fill: $COLOR--darkmode-topaz-focused;
     }
   }
-  svg * {
-    fill: $COLOR--darkmode-topaz-text;
+
+  &:active:not(.disabled) {
+    color: $COLOR--darkmode-topaz-pressed;
+    svg * {
+      fill: $COLOR--darkmode-topaz-pressed;
+    }
+  }
+
+  &:hover:not(.disabled) {
+    color: $COLOR--darkmode-topaz-hover;
+    svg * {
+      fill: $COLOR--darkmode-topaz-hover;
+    }
   }
 }
 
@@ -198,4 +204,31 @@
 .disabled:not(.topaz, .ghost, .text) {
   opacity: 0.5;
   cursor: default;
+}
+
+.organish {
+  display: block;
+  min-width: 160px;
+  min-height: 40px;
+  padding: 0 13px;
+  margin-right: 37px;
+  border: 1px solid;
+  font-family: $FONT-REGULAR;
+  font-size: 16px;
+  line-height: 25px;
+  letter-spacing: normal;
+  color: $COLOR--white-two;
+  text-shadow: none;
+  box-sizing: border-box;
+  background-color: $COLOR--organish;
+  border-color: $COLOR--organish;
+
+  &:hover:not(.disabled) {
+    background-color: darken($COLOR--organish, 15%);
+    border-color: darken($COLOR--organish, 15%);
+  }
+  &:active:not(.disabled) {
+    background-color: darken($COLOR--organish, 30%);
+    border-color: darken($COLOR--organish, 30%);
+  }
 }
