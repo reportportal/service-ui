@@ -25,13 +25,15 @@ import styles from './serviceVersionsBlock.scss';
 import { ServiceVersionItem } from './serviceVersionItem';
 import deprecatedIcon from '../../img/info-small-deprecated-inline.svg';
 import currentIcon from '../../img/info-small-current-inline.svg';
-import { ServiceVersionsBlockModal } from './serviceVersionBlockModal';
+import { ServiceVersionsBlockModal } from './serviceVersionBlockModal/serviceVersionBlockModal';
+
+export const isMobileDevice = /mobile/i.test(navigator.userAgent) && window.innerWidth < 768;
 
 const cx = classNames.bind(styles);
 
-export const ServiceVersionsBlockWithTooltip = ({ services, cssClass }) => {
+export const ServiceVersionsBlockWithTooltip = ({ services, className }) => {
   return (
-    <div className={cx(cssClass)}>
+    <div className={cx(className)}>
       <span className={cx('current-version')}>
         <FormattedMessage
           id={'ServiceVersionsBlock.currentVersion'}
@@ -61,13 +63,13 @@ ServiceVersionsBlockWithTooltip.propTypes = {
   services: PropTypes.object,
   serviceVersions: PropTypes.object,
   latestServiceVersions: PropTypes.object,
-  cssClass: PropTypes.string,
+  className: PropTypes.string,
 };
 ServiceVersionsBlockWithTooltip.defaultProps = {
   serviceVersions: {},
   latestServiceVersions: {},
   services: {},
-  cssClass: '',
+  className: '',
 };
 
 export const ServiceVersionsBlock = ({ isDeprecated, services }) => {
@@ -87,7 +89,7 @@ export const ServiceVersionsBlock = ({ isDeprecated, services }) => {
   };
 
   return (
-    <i onTouchEnd={shownModal} className={cx('status-icon')}>
+    <i onTouchEnd={isMobileDevice ? shownModal : null} className={cx('status-icon')}>
       {Parser(iconURL)}
     </i>
   );
@@ -98,7 +100,6 @@ ServiceVersionsBlock.propTypes = {
   services: PropTypes.object,
 };
 ServiceVersionsBlock.defaultProps = {
-  isDeprecated: false,
   services: {},
 };
 

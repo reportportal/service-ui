@@ -97,15 +97,7 @@ $WIDTH-LARGE: 720px;
   @include modalWidth($WIDTH-LARGE);
 }
 
-.light-cyan-overlay {
-  background-color: rgba($color: $COLOR--light-cyan, $alpha: 0.7);
-}
-
-.modal-window-mobile {
-  top: 20%;
-  padding: 25px 30px 42px;
-  height: 360px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+.overlay-light-cyan {
+  background-color: rgba($COLOR--light-cyan, 0.7);
+  z-index: $Z_INDEX-GRID_HEADER;
 }
