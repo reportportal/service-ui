@@ -25,8 +25,6 @@ import { FormattedMessage } from 'react-intl';
 import styles from './serviceVersionsBlock.scss';
 import { ServiceVersionItemTooltip } from './serviceVersionsBlock';
 
-export const isMobileDevice = /mobile/i.test(navigator.userAgent) && window.innerWidth < 768;
-
 const cx = classNames.bind(styles);
 
 @connect((state) => ({
@@ -101,8 +99,7 @@ export class ServiceVersionsBlockWithData extends Component {
     return (
       <div className={cx('service-versions-block')}>
         <ServiceVersionItemTooltip
-          showTooltip={!isMobileDevice}
-          cssClass={'tooltip-block'}
+          className={cx('tooltip-block')}
           services={this.state.services}
           isDeprecated={this.isDeprecated}
         />

@@ -58,7 +58,7 @@ export const ModalLayout = ({
   };
 
   return (
-    <div className={cx('modal-layout', overlay ? 'light-cyan-overlay' : '')}>
+    <div className={cx('modal-layout', { [`overlay-${overlay}`]: overlay })}>
       <div className={cx('scrolling-content')}>
         <Scrollbars>
           <CSSTransition
@@ -72,7 +72,6 @@ export const ModalLayout = ({
                 <ModalHeader title={title} headerNode={headerNode} onClose={closeModal} />
                 <ModalContent>{status !== 'exited' ? children : null}</ModalContent>
                 <ModalFooter
-                  customClassName={okButton.customClassName}
                   footerNode={footerNode}
                   okButton={okButton}
                   cancelButton={cancelButton}
@@ -105,7 +104,7 @@ ModalLayout.propTypes = {
   className: PropTypes.string,
   modalSize: PropTypes.oneOf(['default', 'small', 'large']),
   onClose: PropTypes.func,
-  overlay: PropTypes.bool,
+  overlay: PropTypes.string,
 };
 ModalLayout.defaultProps = {
   title: '',
@@ -117,5 +116,5 @@ ModalLayout.defaultProps = {
   className: '',
   modalSize: 'default',
   onClose: () => {},
-  overlay: false,
+  overlay: '',
 };
