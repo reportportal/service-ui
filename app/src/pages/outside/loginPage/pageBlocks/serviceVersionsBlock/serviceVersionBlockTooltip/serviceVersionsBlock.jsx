@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,7 +71,6 @@ ServiceVersionsBlockWithTooltip.defaultProps = {
 
 export const ServiceVersionsBlock = ({ isDeprecated, services }) => {
   const dispatch = useDispatch();
-  const iconURL = isDeprecated ? 'deprecated-icon' : 'current-icon';
 
   const hideModal = () => {
     dispatch(hideModalAction());
@@ -85,7 +84,12 @@ export const ServiceVersionsBlock = ({ isDeprecated, services }) => {
     );
   };
 
-  return <i onTouchEnd={isMobileDevice ? shownModal : null} className={cx(iconURL)} />;
+  return (
+    <i
+      onTouchEnd={isMobileDevice ? shownModal : null}
+      className={cx('icon', { 'deprecated-icon': isDeprecated })}
+    />
+  );
 };
 
 ServiceVersionsBlock.propTypes = {
