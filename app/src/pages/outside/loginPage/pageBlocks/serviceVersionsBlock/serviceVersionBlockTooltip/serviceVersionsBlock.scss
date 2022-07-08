@@ -14,43 +14,29 @@
  * limitations under the License.
  */
 
-.service-versions-block {
-  position: absolute;
-  bottom: 0;
-  display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  column-gap: 6px;
-  padding-bottom: 40px;
-  font-family: $FONT-REGULAR;
-  line-height: 1em;
-  box-sizing: border-box;
-
-  @media (max-width: $SCREEN_SM_MAX) {
-    width: 100%;
-    padding: 30px 30px 24px;
-  }
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    padding: 20px;
-  }
-}
-.current-version {
-  margin-right: 13px;
-  font-size: 12px;
-  color: $COLOR--gray-47;
-}
 .versions-list {
   font-size: 11px;
   color: $COLOR--charcoal-grey;
 }
-.status-icon {
+
+.deprecated-icon {
   display: inline-block;
-  width: 12px;
-  height: 12px;
+  width: 16px;
+  height: 16px;
+  background: url('../../../img/info-small-deprecated.svg') center no-repeat;
   cursor: pointer;
 }
-.tooltip-block {
-  width: 380px;
+
+.current-icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background: url('../../../img/info-small-current.svg') center no-repeat;
+  cursor: pointer;
+}
+
+.current-version {
+  margin-right: 13px;
+  font-size: 12px;
+  color: $COLOR--gray-47;
 }

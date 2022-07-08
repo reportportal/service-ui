@@ -96,7 +96,6 @@ ModalLayout.propTypes = {
     danger: PropTypes.bool,
     onClick: PropTypes.func,
     attributes: PropTypes.object,
-    customClassName: PropTypes.string,
   }),
   cancelButton: PropTypes.shape({
     text: PropTypes.string.isRequired,

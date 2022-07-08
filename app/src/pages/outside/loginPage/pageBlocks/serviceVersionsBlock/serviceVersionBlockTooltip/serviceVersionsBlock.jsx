@@ -17,17 +17,14 @@
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { withTooltip } from 'components/main/tooltips/tooltip';
-import Parser from 'html-react-parser';
 import { FormattedMessage } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { hideModalAction, showModalAction } from 'controllers/modal';
 import styles from './serviceVersionsBlock.scss';
-import { ServiceVersionItem } from './serviceVersionItem';
-import deprecatedIcon from '../../img/info-small-deprecated-inline.svg';
-import currentIcon from '../../img/info-small-current-inline.svg';
-import { ServiceVersionsBlockModal } from './serviceVersionBlockModal/serviceVersionBlockModal';
+import { ServiceVersionItem } from '../serviceVersionItem';
+import { ServiceVersionsBlockModal } from '../serviceVersionBlockModal';
 
-export const isMobileDevice = /mobile/i.test(navigator.userAgent) && window.innerWidth < 768;
+const isMobileDevice = /mobile/i.test(navigator.userAgent) && window.innerWidth < 768;
 
 const cx = classNames.bind(styles);
 
@@ -74,7 +71,7 @@ ServiceVersionsBlockWithTooltip.defaultProps = {
 
 export const ServiceVersionsBlock = ({ isDeprecated, services }) => {
   const dispatch = useDispatch();
-  const iconURL = isDeprecated ? deprecatedIcon : currentIcon;
+  const iconURL = isDeprecated ? 'deprecated-icon' : 'current-icon';
 
   const hideModal = () => {
     dispatch(hideModalAction());
@@ -88,11 +85,7 @@ export const ServiceVersionsBlock = ({ isDeprecated, services }) => {
     );
   };
 
-  return (
-    <i onTouchEnd={isMobileDevice ? shownModal : null} className={cx('status-icon')}>
-      {Parser(iconURL)}
-    </i>
-  );
+  return <i onTouchEnd={isMobileDevice ? shownModal : null} className={cx(iconURL)} />;
 };
 
 ServiceVersionsBlock.propTypes = {

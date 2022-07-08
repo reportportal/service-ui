@@ -19,15 +19,16 @@ import PropTypes from 'prop-types';
 import { ModalLayout } from 'componentLibrary/modal';
 import classNames from 'classnames/bind';
 import { BigButton } from 'components/buttons/bigButton';
+import { FormattedMessage } from 'react-intl';
 import styles from './serviceVersionsBlockModal.scss';
-import { ServiceVersionsBlockWithTooltip } from '../serviceVersionsBlock';
+import { ServiceVersionsBlockWithTooltip } from '../serviceVersionBlockTooltip/serviceVersionsBlock';
 
 const cx = classNames.bind(styles);
 
 const FooterNode = ({ hideModal }) => (
   <div className={cx('modal-footer-node')}>
     <BigButton roundedCorners color="organish" onClick={hideModal}>
-      Close
+      <FormattedMessage id={'Common.close'} defaultMessage={'Close'} />
     </BigButton>
   </div>
 );
