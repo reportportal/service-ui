@@ -1,5 +1,5 @@
 /*!
- * Copyright 2019 EPAM Systems
+ * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,20 +19,18 @@
   color: $COLOR--charcoal-grey;
 }
 
-.deprecated-icon {
+.icon {
   display: inline-block;
   width: 16px;
   height: 16px;
-  background: url('../../../img/info-small-deprecated.svg') center no-repeat;
+  background-color: $COLOR--tealish;
+  mask-image: url(./img/info-small-current.svg);
+  -webkit-mask-image: url(./img/info-small-current.svg);
   cursor: pointer;
 }
 
-.current-icon {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  background: url('../../../img/info-small-current.svg') center no-repeat;
-  cursor: pointer;
+.deprecated-icon {
+  background-color: $COLOR--japanese-koi;
 }
 
 .current-version {

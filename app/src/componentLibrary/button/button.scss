@@ -86,17 +86,6 @@
   background: none;
   color: $COLOR--topaz-2;
   line-height: 22px;
-
-  svg * {
-    fill: $COLOR--topaz-2;
-  }
-
-  &:focus:not(.disabled, :active) {
-    color: $COLOR--topaz-focused;
-    svg * {
-      fill: $COLOR--topaz-focused;
-    }
-  }
   &:hover:not(.disabled) {
     color: $COLOR--topaz-hover-2;
     svg * {
@@ -108,6 +97,15 @@
     svg * {
       fill: $COLOR--topaz-pressed;
     }
+  }
+  &:focus:not(.disabled, :active) {
+    color: $COLOR--topaz-focused;
+    svg * {
+      fill: $COLOR--topaz-focused;
+    }
+  }
+  svg * {
+    fill: $COLOR--topaz-2;
   }
 }
 
@@ -151,30 +149,26 @@
   background: none;
   line-height: 22px;
   color: $COLOR--darkmode-topaz-text;
-
-  svg * {
-    fill: $COLOR--darkmode-topaz-text;
-  }
-
-  &:focus:not(.disabled, :active) {
-    color: $COLOR--darkmode-topaz-focused;
+  &:hover:not(.disabled) {
+    color: $COLOR--darkmode-topaz-hover;
     svg * {
-      fill: $COLOR--darkmode-topaz-focused;
+      fill: $COLOR--darkmode-topaz-hover;
     }
   }
-
   &:active:not(.disabled) {
     color: $COLOR--darkmode-topaz-pressed;
     svg * {
       fill: $COLOR--darkmode-topaz-pressed;
     }
   }
-
-  &:hover:not(.disabled) {
-    color: $COLOR--darkmode-topaz-hover;
+  &:focus:not(.disabled, :active) {
+    color: $COLOR--darkmode-topaz-focused;
     svg * {
-      fill: $COLOR--darkmode-topaz-hover;
+      fill: $COLOR--darkmode-topaz-focused;
     }
+  }
+  svg * {
+    fill: $COLOR--darkmode-topaz-text;
   }
 }
 

@@ -19,19 +19,23 @@ import PropTypes from 'prop-types';
 import { ModalLayout } from 'componentLibrary/modal';
 import classNames from 'classnames/bind';
 import { BigButton } from 'components/buttons/bigButton';
-import { FormattedMessage } from 'react-intl';
+import { useIntl } from 'react-intl';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import styles from './serviceVersionsBlockModal.scss';
 import { ServiceVersionsBlockWithTooltip } from '../serviceVersionBlockTooltip/serviceVersionsBlock';
 
 const cx = classNames.bind(styles);
 
-const FooterNode = ({ hideModal }) => (
-  <div className={cx('modal-footer-node')}>
-    <BigButton roundedCorners color="organish" onClick={hideModal}>
-      <FormattedMessage id={'Common.close'} defaultMessage={'Close'} />
-    </BigButton>
-  </div>
-);
+const FooterNode = ({ hideModal }) => {
+  const { formatMessage } = useIntl();
+  return (
+    <div className={cx('modal-footer-node')}>
+      <BigButton roundedCorners color="organish" onClick={hideModal}>
+        {formatMessage(COMMON_LOCALE_KEYS.CLOSE)}
+      </BigButton>
+    </div>
+  );
+};
 FooterNode.propTypes = {
   hideModal: PropTypes.func.isRequired,
 };
