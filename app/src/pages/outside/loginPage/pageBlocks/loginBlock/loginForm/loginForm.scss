@@ -51,8 +51,14 @@
     text-decoration: underline;
   }
 
-  @media (max-width: $SCREEN_XS_MAX) {
-    margin-bottom: 0;
+  &.attempts-exceed {
+    @media (max-width: $SCREEN_SM_MAX) {
+      margin-bottom: -64px;
+    }
+
+    @media (max-width: $SCREEN_XS_MAX) {
+      margin-bottom: 0;
+    }
   }
 }
 .login-button-container {
@@ -88,7 +94,7 @@
   line-height: 16px;
 
   .time {
-    margin-top: 16px;
+    padding-top: 16px;
   }
 
   b {
