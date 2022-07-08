@@ -22,8 +22,8 @@ import fetchJsonp from 'fetch-jsonp';
 import semverDiff from 'semver-diff';
 import { appInfoSelector } from 'controllers/appInfo';
 import { FormattedMessage } from 'react-intl';
-import styles from './serviceVersionsBlock.scss';
-import { ServiceVersionItemTooltip } from './serviceVersionsBlock';
+import styles from './serviceVersionBlockWithData.scss';
+import { ServiceVersionItemTooltip } from './serviceVersionBlockTooltip';
 
 const cx = classNames.bind(styles);
 
