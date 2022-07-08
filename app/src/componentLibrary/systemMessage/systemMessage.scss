@@ -84,13 +84,13 @@
       @include message-headers($COLOR--system-message-error);
     }
 
-    h2 {
-      margin-bottom: 4px;
+    .children {
       text-indent: 1px;
       @include font-config($FONT-ROBOTO-BOLD, 13px, 20px, $COLOR--almost-black);
     }
 
     p {
+      margin-top: 4px;
       @include font-config($FONT-ROBOTO-REGULAR, 11px, 16px, $COLOR--e-400);
     }
   }

@@ -28,7 +28,7 @@ export const SystemMessage = ({ header, caption, children, mode, widthByContent 
       <div className={cx(`stripes-${mode}`)} />
       <div className={cx('text-container')}>
         {header && <h1 className={cx(`message-header-${mode}`)}>{header}</h1>}
-        <h2>{children}</h2>
+        <div className={cx('children')}>{children}</div>
         {caption && <p>{caption}</p>}
       </div>
     </div>
@@ -46,7 +46,7 @@ SystemMessage.propTypes = {
 SystemMessage.defaultProps = {
   header: '',
   caption: '',
-  children: '',
+  children: null,
   mode: MODE_INFORMATION,
   widthByContent: false,
 };
