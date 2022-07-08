@@ -28,6 +28,7 @@
   box-sizing: border-box;
 
   @media (max-width: $SCREEN_SM_MAX) {
+    position: static;
     width: 100%;
     padding: 30px 30px 24px;
   }
