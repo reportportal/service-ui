@@ -43,7 +43,7 @@ import { ExtensionLoader } from 'components/extensionLoader';
 import { uiExtensionSettingsTabsSelector } from 'controllers/plugins';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { Navigation } from 'pages/inside/projectSettingsPageContainer/navigation';
-import { GeneralTab } from 'pages/common/settingsPage/generalTab/generalTab';
+import { GeneralTab } from 'pages/inside/projectSettingsPageContainer/content/generalTab/generalTab';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { Header } from 'pages/inside/projectSettingsPageContainer/header';
 import { PatternAnalysis } from 'pages/inside/projectSettingsPageContainer/content/patternAnalysis';
