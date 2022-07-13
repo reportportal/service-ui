@@ -105,5 +105,6 @@ export const ServiceVersionItemTooltip = withTooltip({
   data: {
     dynamicWidth: true,
     placement: 'top',
+    tooltipTriggerClass: cx('tooltip-trigger-block'),
   },
 })(ServiceVersionsBlock);

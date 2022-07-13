@@ -37,3 +37,7 @@
   font-size: 12px;
   color: $COLOR--gray-47;
 }
+
+.tooltip-trigger-block {
+  z-index: $Z-INDEX-DEFAULT;
+}
