@@ -147,6 +147,9 @@ module.exports = {
         'html-react-parser': {
           singleton: true,
         },
+        'fast-deep-equal': {
+          singleton: true,
+        },
       },
     }),
     // new CircularDependencyPlugin({
