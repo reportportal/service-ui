@@ -37,7 +37,7 @@ export const SystemMessage = ({ header, caption, children, mode, widthByContent 
 
 SystemMessage.propTypes = {
   header: PropTypes.string,
-  caption: PropTypes.string,
+  caption: PropTypes.node,
   children: PropTypes.node,
   mode: PropTypes.oneOf([MODE_INFORMATION, MODE_WARNING, MODE_SYS_ERROR]),
   widthByContent: PropTypes.bool,
@@ -45,7 +45,7 @@ SystemMessage.propTypes = {
 
 SystemMessage.defaultProps = {
   header: '',
-  caption: '',
+  caption: null,
   children: null,
   mode: MODE_INFORMATION,
   widthByContent: false,
