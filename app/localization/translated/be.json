@@ -1021,6 +1021,7 @@
   "LocalizationBlock.note": "Да ведама",
   "LocalizationBlock.russian": "Рускі",
   "LocalizationBlock.ukrainian": "Ukrainian",
+  "LocalizationBlock.chinese": "简体中文",
   "LogItemActivity.changedByAnalyzer": "АА змяніў тып дэфекту",
   "LogItemActivity.issueLoadByAnalyzer": "AA прывязаў памылку",
   "LogItemActivity.linkIssue": "прывязаў памылку",

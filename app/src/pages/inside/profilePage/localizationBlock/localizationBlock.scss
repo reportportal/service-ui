@@ -17,7 +17,9 @@
 .localization-block {
   margin: 30px 0 30px 15px;
   display: flex;
-  align-items: start;
+  // align-items: start;
+  // Fixed Warning: start value has mixed support, consider using flex-start instead
+  align-items: flex-start;
   @media (max-width: $SCREEN_SM_MAX) {
     margin: 30px 0 0 15px;
   }

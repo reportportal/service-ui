@@ -129,11 +129,13 @@ export const polyfillLocales = () =>
         '@formatjs/intl-pluralrules/dist/locale-data/uk.js',
         '@formatjs/intl-pluralrules/dist/locale-data/ru.js',
         '@formatjs/intl-pluralrules/dist/locale-data/be.js',
+        '@formatjs/intl-pluralrules/dist/locale-data/zh.js',
         '@formatjs/intl-relativetimeformat/dist/core',
         '@formatjs/intl-relativetimeformat/dist/locale-data/en.js',
         '@formatjs/intl-relativetimeformat/dist/locale-data/uk.js',
         '@formatjs/intl-relativetimeformat/dist/locale-data/ru.js',
         '@formatjs/intl-relativetimeformat/dist/locale-data/be.js',
+        '@formatjs/intl-relativetimeformat/dist/locale-data/zh.js',
       ],
       (require) => {
         const { PluralRules } = require('@formatjs/intl-pluralrules/dist/core');
@@ -142,6 +144,7 @@ export const polyfillLocales = () =>
         require('@formatjs/intl-pluralrules/dist/locale-data/uk.js');
         require('@formatjs/intl-pluralrules/dist/locale-data/ru.js');
         require('@formatjs/intl-pluralrules/dist/locale-data/be.js');
+        require('@formatjs/intl-pluralrules/dist/locale-data/zh.js');
 
         const {
           default: RelativeTimeFormat,
@@ -151,6 +154,7 @@ export const polyfillLocales = () =>
         require('@formatjs/intl-relativetimeformat/dist/locale-data/uk.js');
         require('@formatjs/intl-relativetimeformat/dist/locale-data/ru.js');
         require('@formatjs/intl-relativetimeformat/dist/locale-data/be.js');
+        require('@formatjs/intl-relativetimeformat/dist/locale-data/zh.js');
         resolve();
       },
     );
