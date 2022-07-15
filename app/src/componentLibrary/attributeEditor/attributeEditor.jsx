@@ -154,7 +154,7 @@ export const AttributeEditor = ({
           minLength={1}
           attributes={attributes}
           attributeComparator={byValueComparator}
-          getURI={getURIValue}
+          getURI={getURIValue(state.key)}
           creatable
           onChange={handleValueChange}
           value={state.value}
