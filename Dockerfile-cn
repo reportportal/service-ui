@@ -1,0 +1,35 @@
+# Only for technical/build aims, built image will be with nginx:alpine according to the last step
+FROM alpine as generate-build-info
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
+    && apk update  \
+    && apk add --no-cache git make
+RUN mkdir -p /usr/src/app/build
+COPY ./Makefile /usr/src/
+WORKDIR /usr/src
+ARG version
+RUN make generate-build-info v=$version
+
+FROM node:14-alpine as build-frontend
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
+    && apk update \
+    && apk add --no-cache python3 make git \
+    && git init
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+COPY ./app/ /usr/src/app/
+RUN export NODE_OPTIONS="--max-old-space-size=4096" \
+    && npm install -g node-gyp --registry=https://registry.npmmirror.com \
+    && export SASS_BINARY_PATH=/usr/src/app/linux_musl-x64-83_binding.node \
+    && npm ci --registry=https://registry.npmmirror.com \
+    # && npx browserslist@latest --update-db \
+    # && npm install --save eslint-plugin-react-hooks@^1.7.0 react-dom@^15.4.2 redux@^3.1.0 redux-first-router@^2.1.1 stylelint@^13.13.0 \
+    && npm run build \
+    && npm run test
+
+FROM nginx:alpine
+COPY --from=build-frontend /usr/src/app/build /usr/share/nginx/html
+COPY --from=generate-build-info /usr/src/app/build /usr/share/nginx/html
+RUN rm /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/nginx.conf
+
+EXPOSE 8080
