@@ -40,13 +40,13 @@ export const PLUGIN_DESCRIPTIONS_MAP = {
   [JIRA]: (
     <FormattedMessage
       id="Integrations.Jira.description"
-      defaultMessage="Integration with JIRA Server, can be required for projects that collect defects in a separate tracking tool. Integration provides an exchange of information between ReportPortal and JIRA Server, such as posting issues and linking issues, getting updates on their statuses."
+      defaultMessage="The integration provides an exchange of information between ReportPortal and the JIRA Server, such as posting issues and linking issues, getting updates on their statuses."
     />
   ),
   [RALLY]: (
     <FormattedMessage
       id="Integrations.Rally.description"
-      defaultMessage="Integration with Rally, can be required for projects that collect defects in a separate tracking tool. Integration provides an exchange of information between ReportPortal and Rally, such as posting issues and linking issues, getting updates on their statuses."
+      defaultMessage="The integration provides an exchange of information between ReportPortal and the Rally, such as posting issues and linking issues, getting updates on their statuses."
     />
   ),
   [SAML]: (
