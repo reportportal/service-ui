@@ -53,10 +53,12 @@
 
   &.attempts-exceed {
     @media (max-width: $SCREEN_SM_MAX) {
-      margin-bottom: -64px;
+      position: absolute;
+      bottom: 72px;
     }
 
     @media (max-width: $SCREEN_XS_MAX) {
+      position: initial;
       margin-bottom: 0;
     }
   }
@@ -100,6 +102,10 @@
 
   b {
     font-size: 36px;
+  }
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    margin-bottom: 112px;
   }
 
   @media (max-width: $SCREEN_XS_MAX) {
