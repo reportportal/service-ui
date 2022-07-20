@@ -15,7 +15,7 @@
  */
 
 const PROJECT_SETTINGS = 'project_settings';
-export const PROJECT_SETTINGS_ANALYZER_EVENTS = {
+export const PROJECT_SETTINGS_PAGE_EVENTS = {
   CLICK_SUBMIT_IN_INDEX_TAB: (number, status) => ({
     action: 'click',
     category: PROJECT_SETTINGS,
