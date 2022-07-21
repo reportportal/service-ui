@@ -177,6 +177,9 @@ import { Checkbox } from 'componentLibrary/checkbox';
 import { Button } from 'componentLibrary/button';
 import { Toggle } from 'componentLibrary/toggle';
 import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
+import { Dropdown } from 'componentLibrary/dropdown';
+import { FieldNumber } from 'componentLibrary/fieldNumber';
+import { SystemMessage } from 'componentLibrary/systemMessage';
 
 const BUTTONS = {
   GhostButton,
@@ -264,6 +267,9 @@ export const createImportProps = (pluginName) => ({
     Checkbox,
     Toggle,
     EmptyStatePage,
+    Dropdown,
+    FieldNumber,
+    SystemMessage,
   },
   constants: {
     PLUGIN_UI_EXTENSION_ADMIN_PAGE,
