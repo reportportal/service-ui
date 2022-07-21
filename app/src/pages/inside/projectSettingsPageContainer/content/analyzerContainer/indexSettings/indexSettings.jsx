@@ -27,7 +27,7 @@ import { useTracking } from 'react-tracking';
 import { showModalAction } from 'controllers/modal';
 import { useDispatch } from 'react-redux';
 import { Checkbox } from 'componentLibrary/checkbox';
-import { PROJECT_SETTINGS_PAGE_EVENTS } from 'ga4Events/projectSettingsPageEvents';
+import { PROJECT_SETTINGS_ANALYZER_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { Layout } from '../../layout';
 import { Divider } from '../../elements/divider';
 import { LabeledPreloader, FieldElement } from '../../elements';
@@ -92,7 +92,7 @@ const IndexSettings = ({
     setPending(false);
 
     trackEvent(
-      PROJECT_SETTINGS_PAGE_EVENTS.CLICK_SUBMIT_IN_INDEX_TAB(
+      PROJECT_SETTINGS_ANALYZER_EVENTS.CLICK_SUBMIT_IN_INDEX_TAB(
         data[NUMBER_OF_LOG_LINES],
         data[ALL_MESSAGES_SHOULD_MATCH],
       ),
