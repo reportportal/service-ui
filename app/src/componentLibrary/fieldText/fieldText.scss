@@ -98,15 +98,13 @@
   color: $color;
 }
 
-@mixin icon($svgColor) {
+@mixin icon {
   display: inline-block;
   width: 16px;
   height: 16px;
-  @include fill-svg($svgColor);
 }
 
 @mixin clearIcon($hoverColor, $focusColor) {
-  @extend .icon;
   cursor: pointer;
 
   &.disabled {
@@ -215,10 +213,11 @@
   }
 
   &.icon {
-    @include icon($COLOR--e-200);
+    @include icon;
   }
 
   &.clear-icon {
+    @extend .icon;
     @include clearIcon($COLOR--e-400, $COLOR--topaz-pressed);
   }
 }
