@@ -36,6 +36,7 @@ export class AutocompleteOptions extends Component {
     renderOption: PropTypes.func,
     async: PropTypes.bool,
     autocompleteVariant: PropTypes.string,
+    createWithoutConfirmation: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -48,6 +49,7 @@ export class AutocompleteOptions extends Component {
     renderOption: null,
     async: false,
     autocompleteVariant: '',
+    createWithoutConfirmation: false,
   };
 
   filterStaticOptions = () => {
@@ -61,15 +63,15 @@ export class AutocompleteOptions extends Component {
   };
 
   getPrompt = (options) => {
-    const { loading } = this.props;
+    const { loading, createWithoutConfirmation } = this.props;
     if (loading) {
       return (
-        <div className={cx('container')}>
+        <>
           <AutocompletePrompt>
             <BubblesPreloader />
           </AutocompletePrompt>
-          {this.renderNewItem(options)}
-        </div>
+          {!createWithoutConfirmation && this.renderNewItem(options)}
+        </>
       );
     }
     return '';
@@ -100,27 +102,30 @@ export class AutocompleteOptions extends Component {
     const index = options.length;
     const isNew = true;
     return (
-      <AutocompleteOption
-        key={this.props.parseValueToString(inputValue)}
-        variant={autocompleteVariant}
-        {...getItemProps({ item: inputValue, index })}
-        isNew={isNew}
-      >
-        {this.props.parseValueToString(inputValue)}
-      </AutocompleteOption>
+      <div className={cx({ container: !options.length })}>
+        <AutocompleteOption
+          key={this.props.parseValueToString(inputValue)}
+          variant={autocompleteVariant}
+          {...getItemProps({ item: inputValue, index })}
+          isNew={isNew}
+        >
+          {this.props.parseValueToString(inputValue)}
+        </AutocompleteOption>
+      </div>
     );
   };
 
   render() {
-    const options = this.props.async ? this.props.options : this.filterStaticOptions();
+    const { async, options, createWithoutConfirmation } = this.props;
+    const availableOptions = async ? options : this.filterStaticOptions();
     const prompt = this.getPrompt(options);
     if (prompt) return prompt;
     return (
-      <div className={cx('container')}>
+      <div className={cx({ container: options.length })}>
         <ScrollWrapper autoHeight autoHeightMax={140}>
-          {this.renderItems(options)}
+          {this.renderItems(availableOptions)}
         </ScrollWrapper>
-        {this.renderNewItem(options)}
+        {!createWithoutConfirmation && this.renderNewItem(availableOptions)}
       </div>
     );
   }

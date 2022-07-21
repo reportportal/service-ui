@@ -26,11 +26,15 @@ const isReadyForSearch = (minLength, inputValue) =>
   !minLength || minLength <= inputValue.trim().length;
 
 export const AutocompleteMenu = React.forwardRef(
-  ({ isOpen, placement, style, minLength, inputValue, ...props }, ref) => {
+  ({ isOpen, placement, style, minLength, inputValue, className, ...props }, ref) => {
     return (
       <ul
         ref={ref}
-        className={cx('menu', { opened: isOpen && isReadyForSearch(minLength, inputValue) })}
+        className={cx(
+          'menu',
+          { opened: isOpen && isReadyForSearch(minLength, inputValue) },
+          className,
+        )}
         placement={placement}
         style={style}
       >
@@ -46,6 +50,7 @@ AutocompleteMenu.propTypes = {
   style: PropTypes.object,
   minLength: PropTypes.number,
   inputValue: PropTypes.string,
+  className: PropTypes.string,
 };
 
 AutocompleteMenu.defaultProps = {
@@ -54,4 +59,5 @@ AutocompleteMenu.defaultProps = {
   style: {},
   minLength: 1,
   inputValue: '',
+  className: '',
 };

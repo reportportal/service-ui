@@ -43,6 +43,10 @@ export class SingleAutocomplete extends Component {
     error: PropTypes.string,
     touched: PropTypes.bool,
     setTouch: PropTypes.func,
+    createWithoutConfirmation: PropTypes.bool,
+    menuClassName: PropTypes.string,
+    icon: PropTypes.string,
+    isOptionUnique: PropTypes.func,
   };
 
   static defaultProps = {
@@ -65,6 +69,10 @@ export class SingleAutocomplete extends Component {
     error: '',
     touched: false,
     setTouch: () => {},
+    createWithoutConfirmation: false,
+    menuClassName: '',
+    icon: null,
+    isOptionUnique: null,
   };
 
   getOptionProps = (getItemProps, highlightedIndex, selectedItem) => ({ item, index, ...rest }) =>
@@ -93,6 +101,11 @@ export class SingleAutocomplete extends Component {
       error,
       touched,
       setTouch,
+      createWithoutConfirmation,
+      menuClassName,
+      icon,
+      options,
+      isOptionUnique,
       ...props
     } = this.props;
     return (
@@ -103,7 +116,15 @@ export class SingleAutocomplete extends Component {
           selectedItem={value}
           onStateChange={onStateChange}
         >
-          {({ getInputProps, getItemProps, isOpen, inputValue, highlightedIndex, openMenu }) => (
+          {({
+            getInputProps,
+            getItemProps,
+            isOpen,
+            inputValue,
+            highlightedIndex,
+            openMenu,
+            selectItem,
+          }) => (
             <div>
               <Reference>
                 {({ ref }) => (
@@ -116,8 +137,15 @@ export class SingleAutocomplete extends Component {
                           !value && openMenu();
                           onFocus();
                         },
-                        onBlur: () => {
-                          onBlur();
+                        onBlur: (e) => {
+                          if (createWithoutConfirmation) {
+                            selectItem(inputValue);
+                          }
+                          onBlur(e);
+                          isOptionUnique &&
+                            isOptionUnique(
+                              inputValue ? !options.find((v) => v === inputValue) : null,
+                            );
                           setTouch(true);
                         },
                         disabled,
@@ -125,6 +153,7 @@ export class SingleAutocomplete extends Component {
                         isRequired,
                         touched,
                         error,
+                        endIcon: icon,
                         ...inputProps,
                       })}
                     />
@@ -150,6 +179,9 @@ export class SingleAutocomplete extends Component {
                     getItemProps={this.getOptionProps(getItemProps, highlightedIndex, value)}
                     parseValueToString={parseValueToString}
                     autocompleteVariant={autocompleteVariant}
+                    createWithoutConfirmation={createWithoutConfirmation}
+                    className={menuClassName}
+                    options={options}
                     {...props}
                   />
                 )}
