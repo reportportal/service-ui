@@ -232,6 +232,10 @@ const messages = defineMessages({
     id: 'MembersPageToolbar.membersSearchHint',
     defaultMessage: 'Member name must not be empty',
   },
+  descriptionHint: {
+    id: 'EditItemModal.descriptionHint',
+    defaultMessage: "Description should have size from '0' to '2048' symbols",
+  },
 });
 
 @injectIntl

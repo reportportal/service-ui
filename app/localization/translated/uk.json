@@ -515,6 +515,7 @@
   "EditItemModal.attributesLabel": "Атрибути",
   "EditItemModal.contentTitle": "Деталі {type}у",
   "EditItemModal.descriptionPlaceholder": "Внесіть опис {type}у",
+  "EditItemModal.descriptionHint": "Опис повинен мати розмір від «0» до «2048» символів",
   "EditItemModal.detailsTabTitle": "Деталі",
   "EditItemModal.item": "елемент",
   "EditItemModal.itemUpdateSuccess": "Завершено успішно",

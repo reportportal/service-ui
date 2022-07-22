@@ -23,6 +23,9 @@
   &.focused {
     border-color: $COLOR--topaz;
   }
+  &.invalid {
+    border-color: $COLOR--orange-red;
+  }
   :global {
     .editor-toolbar {
       opacity: 1;
@@ -268,4 +271,24 @@
       }
     }
   }
+}
+
+@mixin additional-text($color) {
+  position: relative;
+  top: 4px;
+  width: 100%;
+  height: 100%;
+  font-size: 12px;
+  box-sizing: border-box;
+  text-align: left;
+  color: $color;
+}
+
+.error {
+  @include additional-text($COLOR--red-failed-2);
+}
+
+.hint {
+  margin-top: 4px;
+  @include additional-text($COLOR--e-300);
 }

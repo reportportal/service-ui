@@ -515,6 +515,7 @@
   "EditItemModal.attributesLabel": "Атрыбуты",
   "EditItemModal.contentTitle": "Апісанне {type}а",
   "EditItemModal.descriptionPlaceholder": "Увядзіце апісанне {type}а",
+  "EditItemModal.descriptionHint": "Апісанне павінна мець памер ад '0' да '2048' сімвалаў",
   "EditItemModal.detailsTabTitle": "Апісанне",
   "EditItemModal.item": "элемент",
   "EditItemModal.itemUpdateSuccess": "Завершана паспяхова",

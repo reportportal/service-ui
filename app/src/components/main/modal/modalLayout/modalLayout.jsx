@@ -41,6 +41,7 @@ export class ModalLayout extends Component {
     title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]), // header props
     children: PropTypes.node, // content props
     warningMessage: PropTypes.string, // footer props
+    warningColor: PropTypes.string,
     okButton: PropTypes.shape({
       text: PropTypes.string.isRequired,
       disabled: PropTypes.bool,
@@ -84,6 +85,7 @@ export class ModalLayout extends Component {
     title: '',
     children: null,
     warningMessage: '',
+    warningColor: '',
     okButton: null,
     cancelButton: null,
     customButton: null,
@@ -182,6 +184,7 @@ export class ModalLayout extends Component {
     const {
       title,
       warningMessage,
+      warningColor,
       okButton,
       cancelButton,
       customButton,
@@ -191,6 +194,7 @@ export class ModalLayout extends Component {
     } = this.props;
     const footerProps = {
       warningMessage,
+      warningColor,
       okButton,
       cancelButton,
       customButton,

@@ -22,7 +22,7 @@ import classNames from 'classnames/bind';
 import { reduxForm, formPropTypes, formValues } from 'redux-form';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
-import { validate } from 'common/utils/validation';
+import { commonValidators, validate } from 'common/utils/validation';
 import { getUniqueAndCommonAttributes } from 'common/utils/attributeUtils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
@@ -37,6 +37,7 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { MarkdownEditor } from 'components/main/markdown';
 import { AttributeListField } from 'components/main/attributeList';
 import { InputDropdown } from 'components/inputs/inputDropdown';
+import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import track from 'react-tracking';
 import styles from './editItemsModal.scss';
 
@@ -122,8 +123,9 @@ const makeDescriptionOptions = (formatMessage) => [
 @injectIntl
 @reduxForm({
   form: 'editItemsForm',
-  validate: ({ commonAttributes }) => ({
+  validate: ({ commonAttributes, description }) => ({
     commonAttributes: !validate.attributesArray(commonAttributes),
+    description: commonValidators.createDescriptionValidator(description),
   }),
 })
 @formValues('descriptionAction', 'uniqueAttributes')
@@ -364,6 +366,7 @@ export class EditItemsModal extends Component {
           (warningMessageShown ? formatMessage(messages.warningMessage) : '') ||
           (this.props.invalid && formatMessage(COMMON_LOCALE_KEYS.changesWarning))
         }
+        warningColor={!this.props.invalid && 'orange'}
       >
         <form>
           <ModalField
@@ -407,7 +410,12 @@ export class EditItemsModal extends Component {
           {descriptionAction !== DESCRIPTION_LEAVE && (
             <ModalField>
               <FieldProvider name="description">
-                <MarkdownEditor placeholder={formatMessage(messages.descriptionPlaceholder)} />
+                <FieldErrorHint provideHint={false}>
+                  <MarkdownEditor
+                    placeholder={formatMessage(messages.descriptionPlaceholder)}
+                    provideErrorHint
+                  />
+                </FieldErrorHint>
               </FieldProvider>
             </ModalField>
           )}

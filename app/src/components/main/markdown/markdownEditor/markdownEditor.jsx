@@ -101,6 +101,11 @@ export class MarkdownEditor extends React.Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     manipulateEditorOutside: PropTypes.func,
+    active: PropTypes.bool,
+    touched: PropTypes.bool,
+    error: PropTypes.string,
+    hint: PropTypes.string,
+    provideErrorHint: PropTypes.bool,
   };
   static defaultProps = {
     value: '',
@@ -109,6 +114,11 @@ export class MarkdownEditor extends React.Component {
     eventsInfo: {},
     mode: MODE_DEFAULT,
     manipulateEditorOutside: () => {},
+    active: false,
+    touched: false,
+    error: '',
+    hint: '',
+    provideErrorHint: false,
   };
 
   state = {
@@ -262,23 +272,31 @@ export class MarkdownEditor extends React.Component {
   };
 
   render() {
-    const { value, onChange, mode } = this.props;
+    const { value, onChange, mode, active, error, touched, provideErrorHint, hint } = this.props;
     return (
-      <div
-        className={cx(
-          'markdown-editor',
-          { [`mode-${mode}`]: mode },
-          { preview: this.state.isPreview },
+      <>
+        <div
+          className={cx(
+            'markdown-editor',
+            { [`mode-${mode}`]: mode },
+            { preview: this.state.isPreview },
+            { invalid: error && (touched || active) },
+          )}
+        >
+          <textarea
+            ref={(holder) => {
+              this.holder = holder;
+            }}
+            value={value}
+            onChange={onChange}
+          />
+        </div>
+        {provideErrorHint && error && (touched || active) ? (
+          <span className={cx('error')}>{error}</span>
+        ) : (
+          hint && <div className={cx('hint')}>{hint}</div>
         )}
-      >
-        <textarea
-          ref={(holder) => {
-            this.holder = holder;
-          }}
-          value={value}
-          onChange={onChange}
-        />
-      </div>
+      </>
     );
   }
 }

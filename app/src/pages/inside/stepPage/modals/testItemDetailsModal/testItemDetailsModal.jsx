@@ -50,9 +50,10 @@ import {
 import { TestItemStatus } from 'pages/inside/common/testItemStatus';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { TestParameters } from 'pages/inside/common/testParameters';
-import { validate } from 'common/utils/validation';
+import { commonValidators, validate } from 'common/utils/validation';
 import { ContainerWithTabs } from 'components/main/containerWithTabs';
 import { StackTrace } from 'pages/inside/common/stackTrace';
+import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events/stepPageEvents';
 import { messages } from './messages';
 import styles from './testItemDetailsModal.scss';
@@ -62,8 +63,9 @@ const cx = classNames.bind(styles);
 @withModal('testItemDetails')
 @reduxForm({
   form: 'testItemDetails',
-  validate: ({ attributes }) => ({
+  validate: ({ attributes, description }) => ({
     attributes: !validate.attributesArray(attributes),
+    description: commonValidators.createDescriptionValidator(description),
   }),
 })
 @connect(
@@ -267,7 +269,12 @@ export class TestItemDetailsModal extends Component {
         {editable ? (
           <ModalField>
             <FieldProvider name="description">
-              <MarkdownEditor placeholder={intl.formatMessage(messages.descriptionPlaceholder)} />
+              <FieldErrorHint provideHint={false}>
+                <MarkdownEditor
+                  placeholder={intl.formatMessage(messages.descriptionPlaceholder)}
+                  provideErrorHint
+                />
+              </FieldErrorHint>
             </FieldProvider>
           </ModalField>
         ) : (
@@ -335,6 +342,7 @@ export class TestItemDetailsModal extends Component {
           (this.props.invalid && intl.formatMessage(COMMON_LOCALE_KEYS.changesWarning)) ||
           (editable ? intl.formatMessage(messages.launchWarning) : '')
         }
+        warningColor={!this.props.invalid && 'orange'}
         contentClassName={cx('tab-container')}
         closeIconEventInfo={eventsInfo.closeIcon}
       >

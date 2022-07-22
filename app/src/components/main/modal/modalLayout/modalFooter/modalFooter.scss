@@ -46,6 +46,12 @@
     svg {
       fill: $COLOR--failed;
     }
+
+    &.color-orange {
+      svg {
+        fill: $COLOR--warning;
+      }
+    }
   }
   .warning-message {
     display: inline-block;
@@ -55,6 +61,10 @@
     font-size: 10px;
     line-height: 1.4;
     color: $COLOR--failed;
+
+    &.color-orange {
+      color: $COLOR--black-1;
+    }
   }
 }
 .buttons-block {
