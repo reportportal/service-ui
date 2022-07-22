@@ -11,5 +11,3 @@ Most of the business logic is written by using [Redux-saga](https://redux-saga.j
 We use [redux-first-router](https://github.com/faceyspacey/redux-first-router/) as a routing library to keep redux store as the only source of truth and be able to change URL parameters from sagas.
 
 [c3js](https://github.com/c3js/c3) is used for displaying widgets.
-
-[Storybook](https://storybook.js.org/) is used in development for component visualization in different states.

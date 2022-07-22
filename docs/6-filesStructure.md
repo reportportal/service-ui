@@ -1,7 +1,5 @@
 # Files structure
 
-`/.storybook/` - storybook config.<br>
-
 `/docs/` - developers guide.<br>
 
 `/localization/` - localization config.<br>
