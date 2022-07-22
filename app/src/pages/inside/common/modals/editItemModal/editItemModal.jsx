@@ -105,6 +105,10 @@ const messages = defineMessages({
     id: 'TestItemDetailsModal.parametersLabel',
     defaultMessage: 'Parameters:',
   },
+  descriptionHint: {
+    id: 'EditItemModal.descriptionAdviceHint',
+    defaultMessage: 'You used 1000 of 2048 symbols',
+  },
 });
 
 @withModal('editItemModal')
@@ -246,6 +250,8 @@ export class EditItemModal extends Component {
     eventsInfo.CLICK_COPY_ICON_UUID && tracking.trackEvent(eventsInfo.CLICK_COPY_ICON_UUID);
   };
 
+  checkDescriptionLengthForHint = (description) => description.length > 1000;
+
   render() {
     const {
       intl: { formatMessage },
@@ -285,7 +291,7 @@ export class EditItemModal extends Component {
           (this.props.invalid && formatMessage(COMMON_LOCALE_KEYS.changesWarning)) ||
           (type === LAUNCH_ITEM_TYPES.launch && editable && formatMessage(messages.launchWarning))
         }
-        warningColor={!this.props.invalid && 'orange'}
+        warningType={!this.props.invalid && 'info'}
       >
         <form>
           <ModalField>
@@ -353,6 +359,10 @@ export class EditItemModal extends Component {
                       type: formatMessage(messages[type]),
                     })}
                     provideErrorHint
+                    hint={{
+                      text: formatMessage(messages.descriptionHint),
+                      condition: this.checkDescriptionLengthForHint,
+                    }}
                   />
                 </FieldErrorHint>
               </FieldProvider>

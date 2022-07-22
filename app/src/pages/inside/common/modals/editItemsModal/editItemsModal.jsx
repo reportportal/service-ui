@@ -96,6 +96,10 @@ const messages = defineMessages({
     id: 'EditItemsModal.warningMessage',
     defaultMessage: 'The attribute will be deleted for all launches after applying changes',
   },
+  descriptionHint: {
+    id: 'EditItemModal.descriptionAdviceHint',
+    defaultMessage: 'You used 1000 of 2048 symbols',
+  },
 });
 
 const ATTRIBUTE_CREATE = 'CREATE';
@@ -333,6 +337,8 @@ export class EditItemsModal extends Component {
 
   showWarningMessage = () => this.setState({ warningMessageShown: true });
 
+  checkDescriptionLengthForHint = (description) => description.length > 1000;
+
   render() {
     const { warningMessageShown } = this.state;
     const {
@@ -366,7 +372,7 @@ export class EditItemsModal extends Component {
           (warningMessageShown ? formatMessage(messages.warningMessage) : '') ||
           (this.props.invalid && formatMessage(COMMON_LOCALE_KEYS.changesWarning))
         }
-        warningColor={!this.props.invalid && 'orange'}
+        warningType={!this.props.invalid && 'info'}
       >
         <form>
           <ModalField
@@ -414,6 +420,10 @@ export class EditItemsModal extends Component {
                   <MarkdownEditor
                     placeholder={formatMessage(messages.descriptionPlaceholder)}
                     provideErrorHint
+                    hint={{
+                      text: formatMessage(messages.descriptionHint),
+                      condition: this.checkDescriptionLengthForHint,
+                    }}
                   />
                 </FieldErrorHint>
               </FieldProvider>

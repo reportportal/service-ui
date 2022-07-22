@@ -24,7 +24,7 @@
     border-color: $COLOR--topaz;
   }
   &.invalid {
-    border-color: $COLOR--orange-red;
+    border-color: $COLOR--red-failed-2;
   }
   :global {
     .editor-toolbar {
@@ -290,5 +290,5 @@
 
 .hint {
   margin-top: 4px;
-  @include additional-text($COLOR--e-300);
+  @include additional-text($COLOR--gray-47);
 }

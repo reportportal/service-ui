@@ -30,7 +30,7 @@ const cx = classNames.bind(styles);
 export class ModalFooter extends Component {
   static propTypes = {
     warningMessage: PropTypes.string,
-    warningColor: PropTypes.string,
+    warningType: PropTypes.string,
     okButton: PropTypes.shape({
       text: PropTypes.string.isRequired,
       disabled: PropTypes.bool,
@@ -74,7 +74,7 @@ export class ModalFooter extends Component {
   };
   static defaultProps = {
     warningMessage: '',
-    warningColor: '',
+    warningType: '',
     okButton: null,
     cancelButton: null,
     customButton: null,
@@ -100,7 +100,7 @@ export class ModalFooter extends Component {
   render() {
     const {
       warningMessage,
-      warningColor,
+      warningType,
       okButton,
       cancelButton,
       customButton,
@@ -138,10 +138,10 @@ export class ModalFooter extends Component {
         )}
         {warningMessage && (
           <div className={cx('warning-block')}>
-            <i className={cx('warning-icon', { [`color-${warningColor}`]: warningColor })}>
+            <i className={cx('warning-icon', { [warningType]: warningType })}>
               {Parser(WarningIcon)}
             </i>
-            <span className={cx('warning-message', { [`color-${warningColor}`]: warningColor })}>
+            <span className={cx('warning-message', { [warningType]: warningType })}>
               {warningMessage}
             </span>
           </div>

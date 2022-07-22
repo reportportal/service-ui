@@ -47,7 +47,7 @@
       fill: $COLOR--failed;
     }
 
-    &.color-orange {
+    &.info {
       svg {
         fill: $COLOR--warning;
       }
@@ -62,7 +62,7 @@
     line-height: 1.4;
     color: $COLOR--failed;
 
-    &.color-orange {
+    &.info {
       color: $COLOR--black-1;
     }
   }

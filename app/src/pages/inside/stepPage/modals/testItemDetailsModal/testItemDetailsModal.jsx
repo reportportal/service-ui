@@ -208,6 +208,8 @@ export class TestItemDetailsModal extends Component {
       .catch(this.props.showDefaultErrorNotification);
   };
 
+  checkDescriptionLengthForHint = (description) => description.length > 1000;
+
   renderDetailsTab = (editable) => {
     const {
       intl,
@@ -273,6 +275,10 @@ export class TestItemDetailsModal extends Component {
                 <MarkdownEditor
                   placeholder={intl.formatMessage(messages.descriptionPlaceholder)}
                   provideErrorHint
+                  hint={{
+                    text: intl.formatMessage(messages.descriptionHint),
+                    condition: this.checkDescriptionLengthForHint,
+                  }}
                 />
               </FieldErrorHint>
             </FieldProvider>
@@ -342,7 +348,7 @@ export class TestItemDetailsModal extends Component {
           (this.props.invalid && intl.formatMessage(COMMON_LOCALE_KEYS.changesWarning)) ||
           (editable ? intl.formatMessage(messages.launchWarning) : '')
         }
-        warningColor={!this.props.invalid && 'orange'}
+        warningType={!this.props.invalid && 'info'}
         contentClassName={cx('tab-container')}
         closeIconEventInfo={eventsInfo.closeIcon}
       >
