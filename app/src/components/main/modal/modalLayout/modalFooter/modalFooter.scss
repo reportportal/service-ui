@@ -43,11 +43,14 @@
     width: 16px;
     height: 16px;
     margin-top: -8px;
-    svg {
-      fill: $COLOR--failed;
+
+    &.type-error {
+      svg {
+        fill: $COLOR--failed;
+      }
     }
 
-    &.info {
+    &.type-info {
       svg {
         fill: $COLOR--warning;
       }
@@ -60,9 +63,11 @@
     font-family: $FONT-REGULAR;
     font-size: 10px;
     line-height: 1.4;
-    color: $COLOR--failed;
 
-    &.info {
+    &.type-error {
+      color: $COLOR--failed;
+    }
+    &.type-info {
       color: $COLOR--black-1;
     }
   }

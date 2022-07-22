@@ -74,7 +74,7 @@ export class ModalFooter extends Component {
   };
   static defaultProps = {
     warningMessage: '',
-    warningType: '',
+    warningType: 'error',
     okButton: null,
     cancelButton: null,
     customButton: null,
@@ -138,10 +138,10 @@ export class ModalFooter extends Component {
         )}
         {warningMessage && (
           <div className={cx('warning-block')}>
-            <i className={cx('warning-icon', { [warningType]: warningType })}>
+            <i className={cx('warning-icon', { [`type-${warningType}`]: warningType })}>
               {Parser(WarningIcon)}
             </i>
-            <span className={cx('warning-message', { [warningType]: warningType })}>
+            <span className={cx('warning-message', { [`type-${warningType}`]: warningType })}>
               {warningMessage}
             </span>
           </div>

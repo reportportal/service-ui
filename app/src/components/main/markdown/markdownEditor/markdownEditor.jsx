@@ -120,7 +120,7 @@ export class MarkdownEditor extends React.Component {
     active: false,
     touched: false,
     error: '',
-    hint: {},
+    hint: { hintText: '', condition: () => true },
     provideErrorHint: false,
   };
 
