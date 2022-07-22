@@ -304,7 +304,7 @@ export class MarkdownEditor extends React.Component {
           />
         </div>
         {provideErrorHint && error && (touched || active) ? (
-          <span className={cx('error')}>{error}</span>
+          <div className={cx('error')}>{error}</div>
         ) : (
           text &&
           this.simpleMDE &&
