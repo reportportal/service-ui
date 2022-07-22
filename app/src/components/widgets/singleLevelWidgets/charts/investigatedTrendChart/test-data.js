@@ -15,7 +15,6 @@
  */
 
 const LAUNCH_DATA = {
-  share: false,
   id: 5,
   name: 'start2',
   content_parameters: {
@@ -26,7 +25,6 @@ const LAUNCH_DATA = {
   },
   applied_filters: [
     {
-      share: false,
       id: 1,
       name: 'launch name',
       conditions: [],
@@ -79,7 +77,6 @@ const LAUNCH_DATA = {
 
 const TIMELINE_DATA = {
   owner: 'gerkom',
-  share: true,
   id: '5bbb7ccd027439000199fec7',
   name: 'timeline mode widget',
   content_parameters: {

@@ -132,11 +132,11 @@ function* addDashboard({ payload: dashboard }) {
 
 function* updateDashboard({ payload: dashboard }) {
   const activeProject = yield select(activeProjectSelector);
-  const { name, description, share, id } = dashboard;
+  const { name, description, id } = dashboard;
 
   yield call(fetch, URLS.dashboard(activeProject, id), {
     method: 'put',
-    data: { name, description, share },
+    data: { name, description },
   });
   yield put(updateDashboardItemSuccessAction(dashboard));
 }

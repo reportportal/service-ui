@@ -15,7 +15,6 @@
  */
 
 export default {
-  share: false,
   id: 19,
   name: 'cumulative test',
   contentParameters: {
@@ -32,7 +31,6 @@ export default {
   },
   appliedFilters: [
     {
-      share: false,
       id: 1,
       name: 'launch name',
       conditions: [

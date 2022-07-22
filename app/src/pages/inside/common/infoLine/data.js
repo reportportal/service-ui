@@ -170,7 +170,6 @@ export const mockData = {
   name: 'Demo Api Tests_090909',
   number: 10,
   owner: 'default',
-  share: false,
   statistics: {
     defects: {
       automation_bug: {

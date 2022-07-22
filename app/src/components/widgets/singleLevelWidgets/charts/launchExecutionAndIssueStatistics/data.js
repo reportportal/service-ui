@@ -15,7 +15,6 @@
  */
 
 export const widgetData = {
-  share: false,
   id: 13,
   name: 'start11',
   contentParameters: {
@@ -35,7 +34,6 @@ export const widgetData = {
   },
   appliedFilters: [
     {
-      share: false,
       id: 1,
       name: 'launch name',
       conditions: [],

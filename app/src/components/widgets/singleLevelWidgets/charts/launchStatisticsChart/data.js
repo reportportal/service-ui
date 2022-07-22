@@ -16,7 +16,6 @@
 
 export const areaViewData = {
   owner: 'default',
-  share: true,
   id: '5b3e3d991aa8410001223a89',
   name: 'LAUNCH STATISTICS AREA CHART#090090',
   contentParameters: {
@@ -1305,7 +1304,6 @@ export const areaViewData = {
 
 export const barViewData = {
   owner: 'default',
-  share: true,
   id: '5b3e3d991aa8410001223a8a',
   name: 'LAUNCH STATISTICS BAR CHART#090090',
   contentParameters: {
@@ -2136,7 +2134,6 @@ export const barViewData = {
 
 export const areaTimelineData = {
   owner: 'default',
-  share: true,
   id: '5b3e3d991aa8410001223a89',
   name: 'LAUNCH STATISTICS AREA CHART#090090',
   contentParameters: {
@@ -2196,7 +2193,6 @@ export const areaTimelineData = {
 
 export const barTimelineData = {
   owner: 'default',
-  share: true,
   id: '5b3e3d991aa8410001223a8a',
   name: 'LAUNCH STATISTICS BAR CHART#090090',
   contentParameters: {
@@ -2240,7 +2236,6 @@ export const barTimelineData = {
 
 export const areaViewWithZoomData = {
   owner: 'default',
-  share: true,
   id: '5b3e3d991aa8410001223a89',
   name: 'LAUNCH STATISTICS AREA CHART#090090',
   contentParameters: {

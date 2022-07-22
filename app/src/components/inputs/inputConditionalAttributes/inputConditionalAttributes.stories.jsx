@@ -43,7 +43,6 @@ const state = {
     launchesFilters: [
       {
         owner: 'superadmin',
-        share: true,
         id: 1,
         name: 'DEMO_FILTER',
         conditions: [

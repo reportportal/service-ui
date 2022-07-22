@@ -17,7 +17,6 @@
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
-import { SharedMessage } from './sharedMessage';
 import { FilterControls } from './filterControls';
 import { FiltersSorting } from '../../filtersSorting';
 import styles from './filtersActionBar.scss';
@@ -40,11 +39,6 @@ export const FiltersActionBar = ({
 }) => (
   <div className={cx('filters-action-bar')}>
     <div className={cx('info-section')}>
-      {filter.share && (
-        <div className={cx('shared')}>
-          <SharedMessage />
-        </div>
-      )}
       {unsaved && (
         <div className={cx('unsaved-message')}>
           <span className={cx('asterisk')}>*</span>

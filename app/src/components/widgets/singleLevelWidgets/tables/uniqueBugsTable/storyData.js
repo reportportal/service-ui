@@ -19,7 +19,6 @@ export const widgetData = {
   name: 'uniqueBugTable',
   description: 'bbbb',
   owner: 'test_testing',
-  share: true,
   widgetType: 'uniqueBugTable',
   contentParameters: {
     itemsCount: 50,

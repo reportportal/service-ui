@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -42,23 +42,20 @@ export const DashboardGridList = ({
     <EmptyDashboards userDashboards={userDashboards} filter={filter} action={onAddItem} />
   );
   return (
-    <Fragment>
-      <h3 className={cx('headline')}> {name} </h3>
-      <div className={cx('dashboard-grid-body')}>
-        {!loading && dashboardList.length
-          ? dashboardList.map((item) => (
-              <DashboardGridItem
-                key={item.id}
-                item={item}
-                onEdit={onEditItem}
-                onDelete={onDeleteItem}
-                currentUser={userInfo}
-                {...rest}
-              />
-            ))
-          : noItems}
-      </div>
-    </Fragment>
+    <div className={cx('dashboard-grid-body')}>
+      {!loading && dashboardList.length
+        ? dashboardList.map((item) => (
+            <DashboardGridItem
+              key={item.id}
+              item={item}
+              onEdit={onEditItem}
+              onDelete={onDeleteItem}
+              currentUser={userInfo}
+              {...rest}
+            />
+          ))
+        : noItems}
+    </div>
   );
 };
 

@@ -26,7 +26,6 @@ import {
   NameColumn,
   DescriptionColumn,
   OwnerColumn,
-  SharedColumn,
   EditColumn,
   DeleteColumn,
 } from './dashboardTableColumns';
@@ -45,10 +44,6 @@ const messages = defineMessages({
   owner: {
     id: 'DashboardTable.owner',
     defaultMessage: 'Owner',
-  },
-  shared: {
-    id: 'DashboardTable.shared',
-    defaultMessage: 'Shared',
   },
   edit: {
     id: 'DashboardTable.edit',
@@ -120,17 +115,6 @@ export class DashboardTable extends Component {
         },
         formatter: (value) => value.owner,
         component: OwnerColumn,
-      },
-      {
-        title: {
-          full: intl.formatMessage(messages.shared),
-          short: intl.formatMessage(messages.shared),
-        },
-        component: SharedColumn,
-        customProps: {
-          currentUser: userInfo,
-        },
-        align: ALIGN_CENTER,
       },
       {
         title: {

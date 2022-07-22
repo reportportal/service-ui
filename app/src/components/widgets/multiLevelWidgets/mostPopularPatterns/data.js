@@ -27,7 +27,6 @@ export const attributes = [
 
 export const level1 = {
   owner: 'superadmin',
-  share: false,
   id: 382,
   name: 'patterns',
   widgetType: 'topPatternTemplates',
@@ -42,7 +41,6 @@ export const level1 = {
   appliedFilters: [
     {
       owner: 'superadmin',
-      share: false,
       id: 380,
       name: 'Pattern template filter',
       conditions: [
@@ -120,7 +118,6 @@ export const level1 = {
 
 export const level2 = {
   owner: 'superadmin',
-  share: false,
   id: 382,
   name: 'patterns',
   widgetType: 'topPatternTemplates',
@@ -135,7 +132,6 @@ export const level2 = {
   appliedFilters: [
     {
       owner: 'superadmin',
-      share: false,
       id: 380,
       name: 'Pattern template filter',
       conditions: [

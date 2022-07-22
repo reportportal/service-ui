@@ -17,7 +17,6 @@
 export const mockData = {
   owner: 'default',
   widgetType: 'launchesTable',
-  share: true,
   id: '5bd8b0949daec2000132daba',
   name: 'Temporary table',
   contentParameters: {

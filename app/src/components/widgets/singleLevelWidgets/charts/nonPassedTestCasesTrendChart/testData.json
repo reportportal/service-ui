@@ -1,5 +1,4 @@
 {
-  "share": false,
   "id": 4,
   "name": "start1",
   "contentParameters": {
@@ -10,7 +9,6 @@
   },
   "appliedFilters": [
     {
-      "share": false,
       "id": 1,
       "name": "launch name",
       "conditions": [],

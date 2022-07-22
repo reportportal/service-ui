@@ -37,10 +37,6 @@ const messages = defineMessages({
     id: 'DashboardEmptyResults.currentUserDashboardsActionText',
     defaultMessage: 'Add New Dashboard',
   },
-  sharedDashboardsHeadline: {
-    id: 'DashboardEmptyResults.sharedDashboardsHeadline',
-    defaultMessage: 'No dashboards are shared',
-  },
   noDashboardFound: {
     id: 'DashboardEmptyResults.noDashboardFound',
     defaultMessage: 'No dashboards found for "{filter}"',
@@ -70,18 +66,11 @@ export class EmptyDashboards extends Component {
 
     return (
       <div className={cx('empty-dashboards')}>
-        {userDashboards ? (
-          <Fragment>
-            <div className={cx('empty-dashboard--shared')} />
-            <p className={cx('empty-dashboard-headline')}>
-              {intl.formatMessage(messages.currentUserDashboardsHeadline)}
-            </p>
-          </Fragment>
-        ) : (
+        {userDashboards && (
           <Fragment>
             <div className={cx('empty-dashboard--current-user')} />
             <p className={cx('empty-dashboard-headline')}>
-              {intl.formatMessage(messages.sharedDashboardsHeadline)}
+              {intl.formatMessage(messages.currentUserDashboardsHeadline)}
             </p>
           </Fragment>
         )}

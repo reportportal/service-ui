@@ -15,7 +15,6 @@
  */
 
 export const passingRateBarData = {
-  share: false,
   id: 2,
   name: 'test widget1',
   appliedFilters: [],
@@ -37,7 +36,6 @@ export const passingRateBarData = {
 };
 
 export const passingRatePieData = {
-  share: false,
   id: 2,
   name: 'test widget1',
   appliedFilters: [],

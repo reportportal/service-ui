@@ -35,7 +35,6 @@ export const widgetData = {
   name: 'casesTrend',
   description: 'bbbb',
   owner: 'test_testing',
-  share: true,
   widgetType: 'casesTrend',
   contentParameters: {
     itemsCount: 50,
@@ -118,7 +117,6 @@ export const widgetData = {
 export const widgetDataTimelineMode = {
   description: 'desc',
   owner: 'default',
-  share: false,
   id: '8',
   name: 'casesTrend_timeline',
   widgetType: 'casesTrend',

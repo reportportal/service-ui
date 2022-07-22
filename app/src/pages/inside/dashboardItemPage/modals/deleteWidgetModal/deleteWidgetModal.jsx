@@ -88,7 +88,7 @@ export class DeleteWidgetModal extends Component {
 
   getWarningMessage = () => {
     const { intl, data, userId, isAdmin, userProjectRole } = this.props;
-    if (data.widget.share && data.widget.owner === userId) {
+    if (data.widget.owner === userId) {
       return intl.formatMessage(messages.deleteOwnWidgetWarning);
     }
     if (data.widget.owner !== userId && (isAdmin || userProjectRole === PROJECT_MANAGER)) {
