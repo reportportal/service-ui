@@ -76,6 +76,6 @@ export const messages = defineMessages({
   },
   descriptionHint: {
     id: 'EditItemModal.descriptionHint',
-    defaultMessage: 'You used {type} of 2048 symbols',
+    defaultMessage: 'You used {length} of 2048 symbols',
   },
 });
