@@ -38,7 +38,6 @@ export class DashboardGrid extends Component {
       <Fragment>
         <DashboardGridList
           dashboardList={dashboardItems}
-          userDashboards
           nameEventInfo={DASHBOARD_PAGE_EVENTS.DASHBOARD_NAME_CLICK}
           {...rest}
         />
