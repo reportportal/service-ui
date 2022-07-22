@@ -3,7 +3,7 @@
 *.log
 node_modules
 build
-.storybook_app
+
 localization/messages
 localization/translated/en.json
 .env
