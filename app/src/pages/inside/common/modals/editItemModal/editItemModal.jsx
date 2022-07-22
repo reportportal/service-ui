@@ -107,7 +107,7 @@ const messages = defineMessages({
   },
   descriptionHint: {
     id: 'EditItemModal.descriptionAdviceHint',
-    defaultMessage: 'You used 1000 of 2048 symbols',
+    defaultMessage: 'You used {length} of 2048 symbols',
   },
 });
 
@@ -252,6 +252,13 @@ export class EditItemModal extends Component {
 
   checkDescriptionLengthForHint = (description) => description.length > 1000;
 
+  getDescriptionText = (description) => {
+    const {
+      intl: { formatMessage },
+    } = this.props;
+    return formatMessage(messages.descriptionHint, { length: description.length });
+  };
+
   render() {
     const {
       intl: { formatMessage },
@@ -360,8 +367,8 @@ export class EditItemModal extends Component {
                     })}
                     provideErrorHint
                     hint={{
-                      text: formatMessage(messages.descriptionHint),
-                      condition: this.checkDescriptionLengthForHint,
+                      hintText: this.getDescriptionText,
+                      hintCondition: this.checkDescriptionLengthForHint,
                     }}
                   />
                 </FieldErrorHint>

@@ -210,6 +210,13 @@ export class TestItemDetailsModal extends Component {
 
   checkDescriptionLengthForHint = (description) => description.length > 1000;
 
+  getDescriptionText = (description) => {
+    const {
+      intl: { formatMessage },
+    } = this.props;
+    return formatMessage(messages.descriptionHint, { length: description.length });
+  };
+
   renderDetailsTab = (editable) => {
     const {
       intl,
@@ -276,8 +283,8 @@ export class TestItemDetailsModal extends Component {
                   placeholder={intl.formatMessage(messages.descriptionPlaceholder)}
                   provideErrorHint
                   hint={{
-                    text: intl.formatMessage(messages.descriptionHint),
-                    condition: this.checkDescriptionLengthForHint,
+                    hintText: this.getDescriptionText,
+                    hintCondition: this.checkDescriptionLengthForHint,
                   }}
                 />
               </FieldErrorHint>

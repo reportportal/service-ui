@@ -105,8 +105,8 @@ export class MarkdownEditor extends React.Component {
     touched: PropTypes.bool,
     error: PropTypes.string,
     hint: PropTypes.shape({
-      text: PropTypes.string,
-      condition: PropTypes.func,
+      hintText: PropTypes.func,
+      hintCondition: PropTypes.func,
     }),
     provideErrorHint: PropTypes.bool,
   };
@@ -120,7 +120,7 @@ export class MarkdownEditor extends React.Component {
     active: false,
     touched: false,
     error: '',
-    hint: { hintText: '', condition: () => true },
+    hint: { hintText: () => '', hintCondition: () => true },
     provideErrorHint: false,
   };
 
@@ -283,7 +283,7 @@ export class MarkdownEditor extends React.Component {
       error,
       touched,
       provideErrorHint,
-      hint: { text, condition },
+      hint: { hintText, hintCondition },
     } = this.props;
     return (
       <>
@@ -306,9 +306,11 @@ export class MarkdownEditor extends React.Component {
         {provideErrorHint && error && (touched || active) ? (
           <div className={cx('error')}>{error}</div>
         ) : (
-          text &&
+          hintText &&
           this.simpleMDE &&
-          condition(this.simpleMDE.value()) && <div className={cx('hint')}>{text}</div>
+          hintCondition(this.simpleMDE.value()) && (
+            <div className={cx('hint')}>{hintText(this.simpleMDE.value())}</div>
+          )
         )}
       </>
     );

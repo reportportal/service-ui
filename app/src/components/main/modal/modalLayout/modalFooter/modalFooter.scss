@@ -43,6 +43,9 @@
     width: 16px;
     height: 16px;
     margin-top: -8px;
+    svg {
+      fill: $COLOR--failed;
+    }
 
     &.type-error {
       svg {
@@ -63,6 +66,7 @@
     font-family: $FONT-REGULAR;
     font-size: 10px;
     line-height: 1.4;
+    color: $COLOR--failed;
 
     &.type-error {
       color: $COLOR--failed;
