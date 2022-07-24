@@ -156,9 +156,7 @@ export class DashboardTable extends Component {
           data={dashboardItems}
           loading={loading}
         />
-        {dashboardItems.length === 0 && (
-          <EmptyDashboards userDashboards filter={filter} action={onAddItem} />
-        )}
+        {dashboardItems.length === 0 && <EmptyDashboards filter={filter} action={onAddItem} />}
       </Fragment>
     );
   }

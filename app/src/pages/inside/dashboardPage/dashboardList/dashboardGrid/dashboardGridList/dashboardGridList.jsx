@@ -27,7 +27,6 @@ const cx = classNames.bind(styles);
 export const DashboardGridList = ({
   name,
   dashboardList,
-  userDashboards,
   onEditItem,
   onDeleteItem,
   onAddItem,
@@ -39,7 +38,7 @@ export const DashboardGridList = ({
   const noItems = loading ? (
     <SpinningPreloader />
   ) : (
-    <EmptyDashboards userDashboards={userDashboards} filter={filter} action={onAddItem} />
+    <EmptyDashboards filter={filter} action={onAddItem} />
   );
   return (
     <div className={cx('dashboard-grid-body')}>
@@ -62,7 +61,6 @@ export const DashboardGridList = ({
 DashboardGridList.propTypes = {
   name: PropTypes.string,
   dashboardList: PropTypes.array,
-  userDashboards: PropTypes.bool,
   onEditItem: PropTypes.func,
   onDeleteItem: PropTypes.func,
   onAddItem: PropTypes.func,
@@ -73,7 +71,6 @@ DashboardGridList.propTypes = {
 DashboardGridList.defaultProps = {
   name: '',
   dashboardList: [],
-  userDashboards: false,
   onEditItem: () => {},
   onDeleteItem: () => {},
   onAddItem: () => {},

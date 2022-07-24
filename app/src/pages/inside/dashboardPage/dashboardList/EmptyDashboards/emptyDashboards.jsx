@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { Fragment, Component } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
@@ -48,44 +48,34 @@ export class EmptyDashboards extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     action: PropTypes.func,
-    userDashboards: PropTypes.bool,
     filter: PropTypes.string,
   };
 
   static defaultProps = {
     action: () => {},
-    userDashboards: false,
     filter: '',
   };
 
   render() {
-    const { userDashboards, action, intl, filter } = this.props;
+    const { action, intl, filter } = this.props;
 
     if (filter)
       return <NoResultsForFilter filter={filter} notFoundMessage={messages.noDashboardFound} />;
 
     return (
       <div className={cx('empty-dashboards')}>
-        {userDashboards && (
-          <Fragment>
-            <div className={cx('empty-dashboard--current-user')} />
-            <p className={cx('empty-dashboard-headline')}>
-              {intl.formatMessage(messages.currentUserDashboardsHeadline)}
-            </p>
-          </Fragment>
-        )}
-        {userDashboards && (
-          <Fragment>
-            <p className={cx('empty-dashboard-text')}>
-              {intl.formatMessage(messages.currentUserDashboardsText)}
-            </p>
-            <div className={cx('empty-dashboard-content')}>
-              <GhostButton icon={AddDashboardIcon} onClick={action}>
-                {intl.formatMessage(messages.currentUserDashboardsActionText)}
-              </GhostButton>
-            </div>
-          </Fragment>
-        )}
+        <div className={cx('empty-dashboard--current-user')} />
+        <p className={cx('empty-dashboard-headline')}>
+          {intl.formatMessage(messages.currentUserDashboardsHeadline)}
+        </p>
+        <p className={cx('empty-dashboard-text')}>
+          {intl.formatMessage(messages.currentUserDashboardsText)}
+        </p>
+        <div className={cx('empty-dashboard-content')}>
+          <GhostButton icon={AddDashboardIcon} onClick={action}>
+            {intl.formatMessage(messages.currentUserDashboardsActionText)}
+          </GhostButton>
+        </div>
       </div>
     );
   }
