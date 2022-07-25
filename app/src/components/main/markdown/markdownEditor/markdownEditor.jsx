@@ -307,9 +307,10 @@ export class MarkdownEditor extends React.Component {
           <div className={cx('error')}>{error}</div>
         ) : (
           hintText &&
-          this.simpleMDE &&
-          hintCondition(this.simpleMDE.value()) && (
-            <div className={cx('hint')}>{hintText(this.simpleMDE.value())}</div>
+          hintCondition(this.simpleMDE ? this.simpleMDE.value() : value) && (
+            <div className={cx('hint')}>
+              {hintText(this.simpleMDE ? this.simpleMDE.value() : value)}
+            </div>
           )
         )}
       </>

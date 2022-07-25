@@ -337,7 +337,7 @@ export class EditItemsModal extends Component {
 
   showWarningMessage = () => this.setState({ warningMessageShown: true });
 
-  checkDescriptionLengthForHint = (description) => description.length > 1000;
+  checkDescriptionLengthForHint = (description) => description.length > 1500;
 
   getDescriptionText = (description) => {
     const {
