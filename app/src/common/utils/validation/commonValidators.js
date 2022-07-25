@@ -71,3 +71,8 @@ export const createRuleNameValidator = (notifications, notificationId) =>
       'ruleNameDuplicateHint',
     ),
   ]);
+
+export const createDescriptionValidator = bindMessageToValidator(
+  validate.descriptionField,
+  'descriptionHint',
+);
