@@ -42,13 +42,13 @@ const NameColumnAttribute = ({ value, onClickAttribute, isClickableAttribute, mi
   );
 };
 NameColumnAttribute.propTypes = {
-  value: PropTypes.string,
+  value: PropTypes.object,
   onClickAttribute: PropTypes.func,
   isClickableAttribute: PropTypes.bool,
   minPassingRate: PropTypes.number,
 };
 NameColumnAttribute.defaultProps = {
-  value: '',
+  value: {},
   onClickAttribute: () => {},
   isClickableAttribute: false,
   minPassingRate: 0,
