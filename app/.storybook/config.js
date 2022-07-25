@@ -25,7 +25,7 @@ import 'c3/c3.css';
 import localeUK from '../localization/translated/uk.json';
 import localeRU from '../localization/translated/ru.json';
 import localeBE from '../localization/translated/be.json';
-import localeCN from '../localization/translated/cn.json';
+import localeCN from '../localization/translated/zh.json';
 
 import { Provider } from 'react-redux';
 import { store } from './store';
@@ -34,7 +34,7 @@ const messages = {
   uk: localeUK,
   ru: localeRU,
   be: localeBE,
-  cn: localeCN,
+  zh: localeZH,
 };
 setIntlConfig({
   locales: ['en', 'uk', 'ru', 'be'],

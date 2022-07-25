@@ -39,7 +39,7 @@ import EnglishFlagIcon from './img/en-flag-inline.svg';
 import UkrainianFlagIcon from './img/ua-flag-inline.svg';
 import RussianFlagIcon from './img/ru-flag-inline.svg';
 import BelarusFlagIcon from './img/be-flag-inline.svg';
-import ChineseFlagIcon from './img/cn-flag-inline.svg';
+import ChineseFlagIcon from './img/zh-flag-inline.svg';
 
 const cx = classNames.bind(styles);
 
