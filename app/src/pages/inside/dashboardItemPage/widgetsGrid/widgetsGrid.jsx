@@ -187,16 +187,10 @@ export class WidgetsGrid extends Component {
   renderItems = () => {
     const {
       dashboard: { widgets = [], owner },
-      currentUser,
     } = this.props;
 
     if (widgets.length) {
-      const newWidgets =
-        this.props.isPrintMode && owner !== currentUser
-          ? widgets.filter((item) => item.share)
-          : widgets;
-
-      return newWidgets.map(
+      return widgets.map(
         ({
           widgetPosition: { positionX: x, positionY: y },
           widgetSize: { width: w, height: h },

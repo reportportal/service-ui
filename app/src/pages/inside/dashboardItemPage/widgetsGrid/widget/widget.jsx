@@ -309,7 +309,6 @@ export class SimpleWidget extends Component {
           cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_EDIT_WIDGET_MODAL,
           changeName: DASHBOARD_PAGE_EVENTS.WIDGET_NAME_EDIT_WIDGET_MODAL,
           changeDescription: DASHBOARD_PAGE_EVENTS.WIDGET_DESCRIPTION_EDIT_WIDGET_MODAL,
-          shareWidget: DASHBOARD_PAGE_EVENTS.SHARE_WIDGET_EDIT_WIDGET_MODAL,
           okBtn: DASHBOARD_PAGE_EVENTS.SAVE_BTN_EDIT_WIDGET_MODAL,
           editFilterIcon: DASHBOARD_PAGE_EVENTS.EDIT_FILTER_ICON_EDIT_WIDGET_MODAL,
           enterSearchParams: DASHBOARD_PAGE_EVENTS.ENTER_SEARCH_PARAMS_EDIT_WIDGET_MODAL,
@@ -394,7 +393,6 @@ export class SimpleWidget extends Component {
     const widgetOptions = this.getWidgetOptions();
     const headerData = {
       owner: widget.owner,
-      shared: widget.share,
       name: widget.name,
       description: widget.description,
       type: widget.widgetType,

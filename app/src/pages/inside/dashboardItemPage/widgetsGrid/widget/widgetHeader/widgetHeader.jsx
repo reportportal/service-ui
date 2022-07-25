@@ -29,8 +29,6 @@ import { canEditWidget, canDeleteWidget } from 'common/utils/permissions';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import RefreshIcon from 'common/img/refresh-icon-inline.svg';
-import GlobeIcon from 'common/img/globe-icon-inline.svg';
-import ShareIcon from 'common/img/share-icon-inline.svg';
 import { getRelativeUnits } from 'common/utils/timeDateUtils';
 import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/common/messages';
 import {
@@ -51,14 +49,6 @@ const messages = defineMessages({
   forceUpdate: {
     id: 'WidgetHeader.forceUpdate',
     defaultMessage: 'Update',
-  },
-  widgetIsShared: {
-    id: 'WidgetHeader.widgetIsShared',
-    defaultMessage: 'Your widget is shared',
-  },
-  sharedWidget: {
-    id: 'WidgetHeader.sharedWidget',
-    defaultMessage: 'Widget was created by { owner }',
   },
 });
 
@@ -143,19 +133,6 @@ export class WidgetHeader extends Component {
               {data.description && (
                 <div className={cx('icon')}>
                   <DescriptionTooltipIcon tooltipContent={data.description} />
-                </div>
-              )}
-              {data.shared && isOwner && (
-                <div className={cx('icon')} title={intl.formatMessage(messages.widgetIsShared)}>
-                  {Parser(ShareIcon)}
-                </div>
-              )}
-              {data.shared && !isOwner && (
-                <div
-                  className={cx('icon')}
-                  title={intl.formatMessage(messages.sharedWidget, { owner: data.owner })}
-                >
-                  {Parser(GlobeIcon)}
                 </div>
               )}
             </div>
