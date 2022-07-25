@@ -51,7 +51,8 @@ export const WithAsyncLoading = (AutocompleteComponent) =>
       if (this.cancelToken) {
         this.cancelToken();
       }
-      const uri = getURI(inputValue);
+      const value = (inputValue || '').trim();
+      const uri = getURI(value);
       fetch(uri, {
         abort: (cancelToken) => {
           this.cancelToken = cancelToken;

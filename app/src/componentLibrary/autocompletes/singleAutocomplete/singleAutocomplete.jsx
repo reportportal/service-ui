@@ -138,14 +138,13 @@ export class SingleAutocomplete extends Component {
                           onFocus();
                         },
                         onBlur: (e) => {
+                          const newValue = inputValue.trim();
                           if (createWithoutConfirmation) {
-                            selectItem(inputValue);
+                            selectItem(newValue);
                           }
                           onBlur(e);
                           isOptionUnique &&
-                            isOptionUnique(
-                              inputValue ? !options.find((v) => v === inputValue) : null,
-                            );
+                            isOptionUnique(newValue ? !options.find((v) => v === newValue) : null);
                           setTouch(true);
                         },
                         disabled,
