@@ -15,6 +15,8 @@
  */
 
 import React from 'react';
+import { TextTooltip } from 'components/main/tooltips/textTooltip';
+import { withTooltip } from 'components/main/tooltips/tooltip';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { COLOR_DEEP_RED, COLOR_PASSED } from 'common/constants/colors';
@@ -23,26 +25,58 @@ import styles from '../componentHealthCheckTable.scss';
 
 const cx = classNames.bind(styles);
 
+const NameColumnAttribute = ({ value, onClickAttribute, isClickableAttribute, minPassingRate }) => {
+  const color = value.passingRate < minPassingRate ? COLOR_DEEP_RED : COLOR_PASSED;
+
+  return (
+    <div
+      className={cx('name-attr', { 'cursor-pointer': isClickableAttribute })}
+      onClick={
+        isClickableAttribute
+          ? () => onClickAttribute(value.attributeValue, value.passingRate, color)
+          : undefined
+      }
+    >
+      <span>{value.attributeValue}</span>
+    </div>
+  );
+};
+NameColumnAttribute.propTypes = {
+  value: PropTypes.object,
+  onClickAttribute: PropTypes.func,
+  isClickableAttribute: PropTypes.bool,
+  minPassingRate: PropTypes.number,
+};
+NameColumnAttribute.defaultProps = {
+  value: {},
+  onClickAttribute: () => {},
+  isClickableAttribute: false,
+  minPassingRate: 0,
+};
+
+const NameColumnAttributeWithTooltip = withTooltip({
+  TooltipComponent: TextTooltip,
+  data: {
+    dynamicWidth: true,
+    placement: 'right',
+  },
+})(NameColumnAttribute);
+
 export const NameColumn = (
   { className, value },
   name,
   { minPassingRate, formatMessage, onClickAttribute, isClickableAttribute },
 ) => {
-  const color = value.passingRate < minPassingRate ? COLOR_DEEP_RED : COLOR_PASSED;
-
   return (
     <div className={cx('name-col', className)}>
       {value.attributeValue ? (
-        <div
-          className={cx('name-attr', { 'cursor-pointer': isClickableAttribute })}
-          onClick={
-            isClickableAttribute
-              ? () => onClickAttribute(value.attributeValue, value.passingRate, color)
-              : undefined
-          }
-        >
-          <span title={value.attributeValue}>{value.attributeValue}</span>
-        </div>
+        <NameColumnAttributeWithTooltip
+          tooltipContent={value.attributeValue}
+          onClickAttribute={onClickAttribute}
+          isClickableAttribute={isClickableAttribute}
+          minPassingRate={minPassingRate}
+          value={value}
+        />
       ) : (
         <span className={cx('name-total', 'total-item')}>
           {formatMessage(hintMessages.nameTotal)}
