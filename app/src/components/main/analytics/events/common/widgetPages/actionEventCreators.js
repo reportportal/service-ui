@@ -52,12 +52,6 @@ export const getSelectCriteriaEditWidget = (category) => (values) => ({
   label: getSelectCriteriaFields(values),
 });
 
-export const getChooseRadioBtnShareWidget = (category) => (value) => ({
-  category,
-  action: 'Choose Radio Btn of Widget Type in Modal Add Shared Widget',
-  label: value,
-});
-
 export const getChooseFilterAddWidgetModal = (category) => ({
   category,
   action: 'Click on radio Btn of Filter in Modal Add New Widget',

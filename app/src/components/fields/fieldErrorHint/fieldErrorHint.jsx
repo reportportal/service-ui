@@ -62,10 +62,6 @@ const messages = defineMessages({
     id: 'FiltersPage.filterNameDuplicateHint',
     defaultMessage: 'Filter with the same name already exists in system.',
   },
-  sharedWidgetSearchHint: {
-    id: 'SharedWidgetsSearch.sharedWidgetSearchHint',
-    defaultMessage: 'Value should have size from 3 to 256.',
-  },
   launchNameHint: {
     id: 'LaunchMergeModal.launchNameHint',
     defaultMessage: 'Launch name should have size from 1 to 256.',

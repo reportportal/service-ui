@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -27,7 +27,6 @@ const cx = classNames.bind(styles);
 export const DashboardGridList = ({
   name,
   dashboardList,
-  userDashboards,
   onEditItem,
   onDeleteItem,
   onAddItem,
@@ -39,33 +38,29 @@ export const DashboardGridList = ({
   const noItems = loading ? (
     <SpinningPreloader />
   ) : (
-    <EmptyDashboards userDashboards={userDashboards} filter={filter} action={onAddItem} />
+    <EmptyDashboards filter={filter} action={onAddItem} />
   );
   return (
-    <Fragment>
-      <h3 className={cx('headline')}> {name} </h3>
-      <div className={cx('dashboard-grid-body')}>
-        {!loading && dashboardList.length
-          ? dashboardList.map((item) => (
-              <DashboardGridItem
-                key={item.id}
-                item={item}
-                onEdit={onEditItem}
-                onDelete={onDeleteItem}
-                currentUser={userInfo}
-                {...rest}
-              />
-            ))
-          : noItems}
-      </div>
-    </Fragment>
+    <div className={cx('dashboard-grid-body')}>
+      {!loading && dashboardList.length
+        ? dashboardList.map((item) => (
+            <DashboardGridItem
+              key={item.id}
+              item={item}
+              onEdit={onEditItem}
+              onDelete={onDeleteItem}
+              currentUser={userInfo}
+              {...rest}
+            />
+          ))
+        : noItems}
+    </div>
   );
 };
 
 DashboardGridList.propTypes = {
   name: PropTypes.string,
   dashboardList: PropTypes.array,
-  userDashboards: PropTypes.bool,
   onEditItem: PropTypes.func,
   onDeleteItem: PropTypes.func,
   onAddItem: PropTypes.func,
@@ -76,7 +71,6 @@ DashboardGridList.propTypes = {
 DashboardGridList.defaultProps = {
   name: '',
   dashboardList: [],
-  userDashboards: false,
   onEditItem: () => {},
   onDeleteItem: () => {},
   onAddItem: () => {},

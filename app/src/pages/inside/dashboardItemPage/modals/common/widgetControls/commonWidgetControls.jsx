@@ -21,7 +21,6 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { validate, composeBoundValidators, bindMessageToValidator } from 'common/utils/validation';
 import { isEmptyObject } from 'common/utils/isEmptyObject';
-import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
 import { Input } from 'components/inputs/input';
 import { InputTextArea } from 'components/inputs/inputTextArea';
 import { ModalField } from 'components/main/modal';
@@ -52,10 +51,6 @@ const messages = defineMessages({
   descriptionPlaceholder: {
     id: 'CommonWidgetControls.descriptionPlaceholder',
     defaultMessage: 'Enter widget description',
-  },
-  shareLabel: {
-    id: 'CommonWidgetControls.shareLabel',
-    defaultMessage: 'Share',
   },
 });
 
@@ -110,7 +105,7 @@ export class CommonWidgetControls extends Component {
       eventsInfo,
       dashboards,
       onChangeDashboard,
-      activeDashboard: { widgets = [], share },
+      activeDashboard: { widgets = [] },
     } = this.props;
 
     return (
@@ -135,18 +130,6 @@ export class CommonWidgetControls extends Component {
             onChange={() => trackEvent(eventsInfo.changeDescription)}
           >
             <InputTextArea />
-          </FieldProvider>
-        </ModalField>
-        <ModalField label={formatMessage(messages.shareLabel)} labelWidth={FIELD_LABEL_WIDTH}>
-          <FieldProvider
-            name="share"
-            format={Boolean}
-            parse={Boolean}
-            onChange={() => {
-              !share && trackEvent(eventsInfo.shareWidget);
-            }}
-          >
-            <InputBigSwitcher disabled={share} />
           </FieldProvider>
         </ModalField>
         {this.isShowDashboardsList() && (
