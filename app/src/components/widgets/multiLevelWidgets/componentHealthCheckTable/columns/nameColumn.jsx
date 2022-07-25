@@ -59,7 +59,6 @@ const NameColumnAttributeWithTooltip = withTooltip({
   data: {
     dynamicWidth: true,
     placement: 'right',
-    tooltipTriggerClass: cx('tooltip-trigger'),
   },
 })(NameColumnAttribute);
 
@@ -73,7 +72,10 @@ export const NameColumn = (
       {value.attributeValue ? (
         <NameColumnAttributeWithTooltip
           tooltipContent={value.attributeValue}
-          {...{ onClickAttribute, isClickableAttribute, minPassingRate, value }}
+          onClickAttribute={onClickAttribute}
+          isClickableAttribute={isClickableAttribute}
+          minPassingRate={minPassingRate}
+          value={value}
         />
       ) : (
         <span className={cx('name-total', 'total-item')}>
