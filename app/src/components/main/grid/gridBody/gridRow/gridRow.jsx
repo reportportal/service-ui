@@ -259,7 +259,7 @@ export class GridRow extends Component {
             />
           )}
         </div>
-        {descriptionConfig && !!value.description && (
+        {descriptionConfig && !!value.description ? (
           <tr className={cx('description-row')} ref={this.descriptionRef}>
             <td
               colSpan={descriptionConfig.colSpan}
@@ -281,6 +281,8 @@ export class GridRow extends Component {
               </div>
             </td>
           </tr>
+        ) : (
+          <tr className={cx('description-row')} ref={this.descriptionRef} />
         )}
         {this.state.withAccordion && (
           <div className={cx('grid-row')}>
