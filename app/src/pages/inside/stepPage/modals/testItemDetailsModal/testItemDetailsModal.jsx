@@ -208,7 +208,7 @@ export class TestItemDetailsModal extends Component {
       .catch(this.props.showDefaultErrorNotification);
   };
 
-  checkDescriptionLengthForHint = (description) => description.length > 1500;
+  checkDescriptionLengthForHint = (description) => description.length > 1948;
 
   getDescriptionText = (description) => {
     const {

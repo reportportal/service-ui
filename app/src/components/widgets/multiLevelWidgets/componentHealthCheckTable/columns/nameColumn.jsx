@@ -15,6 +15,8 @@
  */
 
 import React from 'react';
+import { TextTooltip } from 'components/main/tooltips/textTooltip';
+import { withTooltip } from 'components/main/tooltips/tooltip';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { COLOR_DEEP_RED, COLOR_PASSED } from 'common/constants/colors';
@@ -30,19 +32,28 @@ export const NameColumn = (
 ) => {
   const color = value.passingRate < minPassingRate ? COLOR_DEEP_RED : COLOR_PASSED;
 
+  const renderComponent = () => {
+    const Tooltip = () => <TextTooltip tooltipContent={value.attributeValue} />;
+    const WrappedComponent = () => (
+      <div
+        className={cx('name-attr', { 'cursor-pointer': isClickableAttribute })}
+        onClick={
+          isClickableAttribute
+            ? () => onClickAttribute(value.attributeValue, value.passingRate, color)
+            : undefined
+        }
+      >
+        <span>{value.attributeValue}</span>
+      </div>
+    );
+    const Wrapper = withTooltip({ TooltipComponent: Tooltip })(WrappedComponent);
+    return <Wrapper />;
+  };
+
   return (
     <div className={cx('name-col', className)}>
       {value.attributeValue ? (
-        <div
-          className={cx('name-attr', { 'cursor-pointer': isClickableAttribute })}
-          onClick={
-            isClickableAttribute
-              ? () => onClickAttribute(value.attributeValue, value.passingRate, color)
-              : undefined
-          }
-        >
-          <span title={value.attributeValue}>{value.attributeValue}</span>
-        </div>
+        renderComponent()
       ) : (
         <span className={cx('name-total', 'total-item')}>
           {formatMessage(hintMessages.nameTotal)}

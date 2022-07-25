@@ -250,7 +250,7 @@ export class EditItemModal extends Component {
     eventsInfo.CLICK_COPY_ICON_UUID && tracking.trackEvent(eventsInfo.CLICK_COPY_ICON_UUID);
   };
 
-  checkDescriptionLengthForHint = (description) => description.length > 1500;
+  checkDescriptionLengthForHint = (description) => description.length > 1948;
 
   getDescriptionText = (description) => {
     const {
