@@ -462,6 +462,8 @@
   "DurationTooltip.message": "Тривалість - це інтервал між початком першої і закінченням останньої подпрогона подпрогона. Але якщо подпрогоны відбуваються паралельно, час закінчення - це закінчення найбільш тривалого подпрогона, час закінчення - це закінчення найбільш тривалого подпрогона",
   "EditItemModal.attributesLabel": "Атрибути",
   "EditItemModal.contentTitle": "Деталі {type}у",
+  "EditItemModal.descriptionAdviceHint": "Ви використали {length} із 2048 символів",
+  "EditItemModal.descriptionHint": "Опис повинен мати розмір від '0' до '2048' символів",
   "EditItemModal.descriptionPlaceholder": "Внесіть опис {type}у",
   "EditItemModal.detailsTabTitle": "Деталі",
   "EditItemModal.item": "елемент",

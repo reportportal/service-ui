@@ -462,6 +462,8 @@
   "DurationTooltip.message": "Працягласць -  інтэрвал паміж пачаткам першага падзапуску і заканчэннем апошняга падзапуску. Але калі падзапускі ідуць у параллелі, час заканчэння - гэта час найдаўжэйшага падзапуску, у гэтым выпадку працягласць не будзе роўнай суме працягласцяў падзапускаў.",
   "EditItemModal.attributesLabel": "Атрыбуты",
   "EditItemModal.contentTitle": "Апісанне {type}а",
+  "EditItemModal.descriptionAdviceHint": "Вы выкарысталі {length} з 2048 сімвалаў",
+  "EditItemModal.descriptionHint": "Апісанне павінна мець памер ад '0' да '2048' сімвалаў",
   "EditItemModal.descriptionPlaceholder": "Увядзіце апісанне {type}а",
   "EditItemModal.detailsTabTitle": "Апісанне",
   "EditItemModal.item": "элемент",

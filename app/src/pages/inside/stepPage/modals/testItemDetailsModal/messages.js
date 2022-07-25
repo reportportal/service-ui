@@ -74,4 +74,8 @@ export const messages = defineMessages({
     id: 'EditItemModal.stackTraceTabTitle',
     defaultMessage: 'Stack trace',
   },
+  descriptionHint: {
+    id: 'EditItemModal.descriptionHint',
+    defaultMessage: 'You used {length} of 2048 symbols',
+  },
 });

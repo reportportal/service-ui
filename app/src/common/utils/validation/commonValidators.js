@@ -62,3 +62,8 @@ export const createNumberOfLaunchesValidator = (message) =>
   bindMessageToValidator(validate.widgetNumberOfLaunches, message);
 export const createWidgetContentFieldsValidator = (message) =>
   bindMessageToValidator(validate.isNotEmptyArray, message);
+
+export const createDescriptionValidator = bindMessageToValidator(
+  validate.descriptionField,
+  'descriptionHint',
+);

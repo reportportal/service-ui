@@ -50,9 +50,10 @@ import {
 import { TestItemStatus } from 'pages/inside/common/testItemStatus';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { TestParameters } from 'pages/inside/common/testParameters';
-import { validate } from 'common/utils/validation';
+import { commonValidators, validate } from 'common/utils/validation';
 import { ContainerWithTabs } from 'components/main/containerWithTabs';
 import { StackTrace } from 'pages/inside/common/stackTrace';
+import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events/stepPageEvents';
 import { messages } from './messages';
 import styles from './testItemDetailsModal.scss';
@@ -62,8 +63,9 @@ const cx = classNames.bind(styles);
 @withModal('testItemDetails')
 @reduxForm({
   form: 'testItemDetails',
-  validate: ({ attributes }) => ({
+  validate: ({ attributes, description }) => ({
     attributes: !validate.attributesArray(attributes),
+    description: commonValidators.createDescriptionValidator(description),
   }),
 })
 @connect(
@@ -106,6 +108,7 @@ export class TestItemDetailsModal extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     clearLogPageStackTrace: PropTypes.func,
+    invalid: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -205,6 +208,15 @@ export class TestItemDetailsModal extends Component {
       .catch(this.props.showDefaultErrorNotification);
   };
 
+  checkDescriptionLengthForHint = (description) => description.length > 1948;
+
+  getDescriptionText = (description) => {
+    const {
+      intl: { formatMessage },
+    } = this.props;
+    return formatMessage(messages.descriptionHint, { length: description.length });
+  };
+
   renderDetailsTab = (editable) => {
     const {
       intl,
@@ -266,7 +278,16 @@ export class TestItemDetailsModal extends Component {
         {editable ? (
           <ModalField>
             <FieldProvider name="description">
-              <MarkdownEditor placeholder={intl.formatMessage(messages.descriptionPlaceholder)} />
+              <FieldErrorHint provideHint={false}>
+                <MarkdownEditor
+                  placeholder={intl.formatMessage(messages.descriptionPlaceholder)}
+                  provideErrorHint
+                  hint={{
+                    hintText: this.getDescriptionText,
+                    hintCondition: this.checkDescriptionLengthForHint,
+                  }}
+                />
+              </FieldErrorHint>
             </FieldProvider>
           </ModalField>
         ) : (
@@ -330,7 +351,11 @@ export class TestItemDetailsModal extends Component {
         okButton={editable ? okButton : undefined}
         cancelButton={cancelButton}
         closeConfirmation={editable ? this.getCloseConfirmationConfig() : undefined}
-        warningMessage={editable ? intl.formatMessage(messages.launchWarning) : ''}
+        warningMessage={
+          (this.props.invalid && intl.formatMessage(COMMON_LOCALE_KEYS.changesWarning)) ||
+          (editable ? intl.formatMessage(messages.launchWarning) : '')
+        }
+        warningType={!this.props.invalid && 'info'}
         contentClassName={cx('tab-container')}
         closeIconEventInfo={eventsInfo.closeIcon}
       >

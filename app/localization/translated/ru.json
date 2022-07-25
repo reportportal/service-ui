@@ -462,6 +462,8 @@
   "DurationTooltip.message": "Длительность - это интервал между началом первого подпрогона и окончанием последнего подпрогона. Но если подпрогоны происходят параллельно, время окончания - это окончание наиболее длительного подпрогона, в этом случае длительность не будет равна сумме длительностей подпрогонов.",
   "EditItemModal.attributesLabel": "Атрибуты",
   "EditItemModal.contentTitle": "Детали {type}а",
+  "EditItemModal.descriptionAdviceHint": "Вы использовали {length} из 2048 символов",
+  "EditItemModal.descriptionHint": "Описание должно иметь размер от '0' до '2048' символов",
   "EditItemModal.descriptionPlaceholder": "Введите описание {type}а",
   "EditItemModal.detailsTabTitle": "Детали",
   "EditItemModal.item": "элемент",

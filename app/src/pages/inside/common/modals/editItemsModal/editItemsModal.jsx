@@ -22,7 +22,7 @@ import classNames from 'classnames/bind';
 import { reduxForm, formPropTypes, formValues } from 'redux-form';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
-import { validate } from 'common/utils/validation';
+import { commonValidators, validate } from 'common/utils/validation';
 import { getUniqueAndCommonAttributes } from 'common/utils/attributeUtils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
@@ -37,6 +37,7 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { MarkdownEditor } from 'components/main/markdown';
 import { AttributeListField } from 'components/main/attributeList';
 import { InputDropdown } from 'components/inputs/inputDropdown';
+import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import track from 'react-tracking';
 import styles from './editItemsModal.scss';
 
@@ -95,6 +96,10 @@ const messages = defineMessages({
     id: 'EditItemsModal.warningMessage',
     defaultMessage: 'The attribute will be deleted for all launches after applying changes',
   },
+  descriptionHint: {
+    id: 'EditItemModal.descriptionAdviceHint',
+    defaultMessage: 'You used {length} of 2048 symbols',
+  },
 });
 
 const ATTRIBUTE_CREATE = 'CREATE';
@@ -122,8 +127,9 @@ const makeDescriptionOptions = (formatMessage) => [
 @injectIntl
 @reduxForm({
   form: 'editItemsForm',
-  validate: ({ commonAttributes }) => ({
+  validate: ({ commonAttributes, description }) => ({
     commonAttributes: !validate.attributesArray(commonAttributes),
+    description: commonValidators.createDescriptionValidator(description),
   }),
 })
 @formValues('descriptionAction', 'uniqueAttributes')
@@ -157,6 +163,7 @@ export class EditItemsModal extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    invalid: PropTypes.bool.isRequired,
     ...formPropTypes,
   };
 
@@ -330,6 +337,15 @@ export class EditItemsModal extends Component {
 
   showWarningMessage = () => this.setState({ warningMessageShown: true });
 
+  checkDescriptionLengthForHint = (description) => description.length > 1948;
+
+  getDescriptionText = (description) => {
+    const {
+      intl: { formatMessage },
+    } = this.props;
+    return formatMessage(messages.descriptionHint, { length: description.length });
+  };
+
   render() {
     const { warningMessageShown } = this.state;
     const {
@@ -359,7 +375,11 @@ export class EditItemsModal extends Component {
         okButton={okButton}
         cancelButton={cancelButton}
         closeIconEventInfo={eventsInfo.closeIcon}
-        warningMessage={warningMessageShown ? formatMessage(messages.warningMessage) : ''}
+        warningMessage={
+          (warningMessageShown ? formatMessage(messages.warningMessage) : '') ||
+          (this.props.invalid && formatMessage(COMMON_LOCALE_KEYS.changesWarning))
+        }
+        warningType={!this.props.invalid && 'info'}
       >
         <form>
           <ModalField
@@ -403,7 +423,16 @@ export class EditItemsModal extends Component {
           {descriptionAction !== DESCRIPTION_LEAVE && (
             <ModalField>
               <FieldProvider name="description">
-                <MarkdownEditor placeholder={formatMessage(messages.descriptionPlaceholder)} />
+                <FieldErrorHint provideHint={false}>
+                  <MarkdownEditor
+                    placeholder={formatMessage(messages.descriptionPlaceholder)}
+                    provideErrorHint
+                    hint={{
+                      hintText: this.getDescriptionText,
+                      hintCondition: this.checkDescriptionLengthForHint,
+                    }}
+                  />
+                </FieldErrorHint>
               </FieldProvider>
             </ModalField>
           )}
