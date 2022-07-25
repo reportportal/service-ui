@@ -456,16 +456,6 @@ export const LAUNCHES_MODAL_EVENTS = {
     action: 'Enter Widget description in Modal Add New Widget',
     label: 'Widget description in Modal Add New Widget',
   },
-  SHARE_WIDGET_ADD_WIDGET_MODAL: {
-    category: LAUNCHES_MODAL,
-    action: 'Click on Share Widget on/off in Modal Add New Widget',
-    label: 'Share/unshare Widget',
-  },
-  ADD_BTN_ADD_WIDGET_MODAL: {
-    category: LAUNCHES_MODAL,
-    action: 'Click on Btn Add in Modal Add New Widget',
-    label: 'Submit changes in filter in Modal Add New Widget',
-  },
   SELECT_CRITERIA_ADD_NEW_WIDGET_MODAL: getSelectCriteriaNewWidget(LAUNCHES_MODAL),
   SELECT_SORTING_FILTER_ADD_WIDGET_MODAL: getSelectSortingFilterAddWidgetModal(LAUNCHES_PAGE),
   SELECT_TOGGLE_BUTTONS_ADD_NEW_WIDGET_MODAL: getSelectToggleButtonsAddWidgetModal(LAUNCHES_PAGE),

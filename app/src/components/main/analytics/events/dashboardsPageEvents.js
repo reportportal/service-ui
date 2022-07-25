@@ -19,7 +19,6 @@ import {
   getAddFilterBtnAddWidgetModal,
   getCancelBtnAddNewFilterAddWidgetModal,
   getChooseFilterAddWidgetModal,
-  getChooseRadioBtnShareWidget,
   getClickZoomAddWidgetArea,
   getClickZoomEditWidgetArea,
   getSelectCriteriaEditWidget,
@@ -52,11 +51,6 @@ export const DASHBOARD_PAGE_EVENTS = {
     action: 'Click on icon Close on Dashboard tile',
     label: 'Arise Modal Delete Dashboard',
   },
-  SHARED_DASHBOARD_NAME: {
-    category: DASHBOARD_PAGE,
-    action: 'Click on Shared Dashboard name',
-    label: 'Transition to Dashboard',
-  },
   CLOSE_ICON_ADD_NEW_DASHBOARD_MODAL: {
     category: DASHBOARD_PAGE,
     action: 'Click on icon Close on Modal Add New Dashboard',
@@ -66,11 +60,6 @@ export const DASHBOARD_PAGE_EVENTS = {
     category: DASHBOARD_PAGE,
     action: 'Enter description in Modal Add New Dashboard',
     label: 'Description',
-  },
-  SHARE_SWITCHER_ADD_NEW_DASHBOARD_MODAL: {
-    category: DASHBOARD_PAGE,
-    action: 'Click on Share on/off in Modal Add New Dashboard',
-    label: 'Share/unshare Dashboard',
   },
   CANCEL_BTN_ADD_NEW_DASHBOARD_MODAL: {
     category: DASHBOARD_PAGE,
@@ -91,11 +80,6 @@ export const DASHBOARD_PAGE_EVENTS = {
     category: DASHBOARD_PAGE,
     action: 'Enter description in Modal Edit Dashboard',
     label: 'Description',
-  },
-  SHARE_SWITCHER_EDIT_DASHBOARD_MODAL: {
-    category: DASHBOARD_PAGE,
-    action: 'Click on Share on/off in Modal Edit Dashboard',
-    label: 'Share/unshare Dashboard',
   },
   CANCEL_BTN_EDIT_DASHBOARD_MODAL: {
     category: DASHBOARD_PAGE,
@@ -131,11 +115,6 @@ export const DASHBOARD_PAGE_EVENTS = {
     category: DASHBOARD_PAGE,
     action: 'Click on Btn Add New Widget on Dashboard',
     label: 'Arise Modal Add New Widget',
-  },
-  ADD_SHARED_WIDGET_BTN: {
-    category: DASHBOARD_PAGE,
-    action: 'Click on Btn Add Shared Widget on Dashboard',
-    label: 'Arise Modal Add Shared Widget',
   },
   EDIT_DASHBOARD_BTN: {
     category: DASHBOARD_PAGE,
@@ -241,16 +220,6 @@ export const DASHBOARD_PAGE_EVENTS = {
     action: 'Enter Widget description in Modal Add New Widget',
     label: 'Widget description in Modal Add New Widget',
   },
-  SHARE_WIDGET_ADD_WIDGET_MODAL: {
-    category: DASHBOARD_PAGE,
-    action: 'Click on Share Widget on/off in Modal Add New Widget',
-    label: 'Share/unshare Widget',
-  },
-  ADD_BTN_ADD_WIDGET_MODAL: {
-    category: DASHBOARD_PAGE,
-    action: 'Click on Btn Add in Modal Add New Widget',
-    label: 'Submit changes in filter in Modal Add New Widget',
-  },
   CANCEL_BTN_ADD_WIDGET_MODAL: {
     category: DASHBOARD_PAGE,
     action: 'Click on Btn Cancel in Modal Add New Widget',
@@ -265,27 +234,6 @@ export const DASHBOARD_PAGE_EVENTS = {
     category: DASHBOARD_PAGE,
     action: 'Enter parameter for search in Modal Add New Widget',
     label: 'Show filter by parameter in Modal Add New Widget',
-  },
-  CLOSE_ICON_SHARE_WIDGET_MODAL: {
-    category: DASHBOARD_PAGE,
-    action: 'Click on icon Close on Modal Add Shared Widget',
-    label: 'Close Modal Add Shared Widget',
-  },
-  WIDGET_TYPE_SHARE_WIDGET_MODAL: getChooseRadioBtnShareWidget(DASHBOARD_PAGE),
-  SCROLL_WIDGET_SHARE_WIDGET_MODAL: {
-    category: DASHBOARD_PAGE,
-    action: 'Scroll widgets in Modal Add Shared Widget',
-    label: 'Scroll widgets in Modal Add Shared Widget',
-  },
-  CANCEL_BTN_SHARE_WIDGET_MODAL: {
-    category: DASHBOARD_PAGE,
-    action: 'Click on Btn Cancel in Modal Add Shared Widget',
-    label: 'Cancel Modal Add Shared Widget',
-  },
-  ADD_BTN_SHARE_WIDGET_MODAL: {
-    category: DASHBOARD_PAGE,
-    action: 'Click on Btn Add in Modal Add Shared Widget',
-    label: 'Add Shared Widget',
   },
   CLOSE_ICON_EDIT_WIDGET_MODAL: {
     category: DASHBOARD_PAGE,
@@ -306,11 +254,6 @@ export const DASHBOARD_PAGE_EVENTS = {
     category: DASHBOARD_PAGE,
     action: 'Change Widget description in Modal Edit Widget',
     label: 'New Widget description in Modal Edit Widget',
-  },
-  SHARE_WIDGET_EDIT_WIDGET_MODAL: {
-    category: DASHBOARD_PAGE,
-    action: 'Click on Share Widget on/off in Modal Edit Widget',
-    label: 'Share/unshare Widget',
   },
   CANCEL_BTN_EDIT_WIDGET_MODAL: {
     category: DASHBOARD_PAGE,

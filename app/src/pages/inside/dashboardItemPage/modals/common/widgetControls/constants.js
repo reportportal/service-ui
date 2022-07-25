@@ -63,7 +63,6 @@ export const requestDataShape = PropTypes.shape({
   filters: PropTypes.array,
   description: PropTypes.string,
   name: PropTypes.string,
-  share: PropTypes.bool,
   widgetType: PropTypes.oneOf(Object.keys(WIDGET_TYPES).map((key) => WIDGET_TYPES[key])),
   contentParameters: PropTypes.shape({
     itemsCount: PropTypes.string,

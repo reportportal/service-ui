@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import track from 'react-tracking';
-import { injectIntl, defineMessages } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -28,16 +28,6 @@ import { NavLink } from 'components/main/navLink';
 import styles from './dashboardGridItem.scss';
 
 const cx = classNames.bind(styles);
-const messages = defineMessages({
-  dashboardIsShared: {
-    id: 'DashboardGridItem.dashboardIsShared',
-    defaultMessage: 'Dashboard is shared',
-  },
-  dashboardIsSharedBy: {
-    id: 'DashboardGridItem.dashboardIsSharedBy',
-    defaultMessage: 'Dashboard is shared by',
-  },
-});
 
 @injectIntl
 @connect((state) => ({
@@ -95,11 +85,10 @@ export class DashboardGridItem extends Component {
     const {
       item,
       currentUser: { userId, userRole },
-      intl,
       projectId,
       projectRole,
     } = this.props;
-    const { name, description, owner, share, id } = item;
+    const { name, description, owner, id } = item;
     const isOwner = userId === owner;
 
     return (
@@ -123,28 +112,6 @@ export class DashboardGridItem extends Component {
             <p>{description}</p>
           </div>
           <div className={cx('grid-cell', 'owner')}>{owner}</div>
-          <div className={cx('grid-cell', 'shared')}>
-            {share && isOwner && (
-              <Fragment>
-                <div className={cx('icon-holder')}>
-                  <Icon type="icon-tables" />
-                </div>
-                <span className={cx('shared-text')}>
-                  {intl.formatMessage(messages.dashboardIsShared)}
-                </span>
-              </Fragment>
-            )}
-            {!isOwner && (
-              <Fragment>
-                <div className={cx('icon-holder')}>
-                  <Icon type="icon-planet" />
-                </div>
-                <span className={cx('shared-text')}>
-                  {intl.formatMessage(messages.dashboardIsSharedBy)} {owner}
-                </span>
-              </Fragment>
-            )}
-          </div>
 
           {canEditDashboard(userRole, projectRole, isOwner) && (
             <div className={cx('grid-cell', 'edit')} onClick={this.editItem}>
