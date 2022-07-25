@@ -180,6 +180,7 @@ import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/conten
 import { Dropdown } from 'componentLibrary/dropdown';
 import { FieldNumber } from 'componentLibrary/fieldNumber';
 import { SystemMessage } from 'componentLibrary/systemMessage';
+import { AsyncAutocomplete as AsyncAutocompleteField } from 'componentLibrary/autocompletes/asyncAutocomplete';
 
 const BUTTONS = {
   GhostButton,
@@ -270,6 +271,7 @@ export const createImportProps = (pluginName) => ({
     Dropdown,
     FieldNumber,
     SystemMessage,
+    AsyncAutocompleteField,
   },
   constants: {
     PLUGIN_UI_EXTENSION_ADMIN_PAGE,

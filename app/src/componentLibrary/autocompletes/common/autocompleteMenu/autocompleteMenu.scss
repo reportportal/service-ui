@@ -18,10 +18,8 @@
   position: absolute;
   top: 100%;
   display: none;
-  width: 264px;
-  min-height: 10px;
+  width: 100%;
   border-radius: 3px;
-  padding: 0;
   margin-top: 4px;
   font-family: $FONT-ROBOTO-MEDIUM;
   font-size: 13px;
@@ -29,6 +27,7 @@
   color: $COLOR--charcoal-grey;
   background-color: $COLOR--white-two;
   box-sizing: border-box;
+  box-shadow: $BOX_SHADOW--modal-window;
   z-index: $Z-INDEX-POPUP;
   &.opened {
     display: block;

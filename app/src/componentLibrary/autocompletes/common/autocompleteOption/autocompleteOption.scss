@@ -42,6 +42,7 @@
   display: inline-flex;
   align-items: center;
   width: 100%;
+  min-height: 36px;
   padding: 4px 12px;
   font-family: $FONT-ROBOTO-MEDIUM;
   font-size: 13px;
@@ -56,7 +57,7 @@
 .divider {
   display: block;
   height: 1px;
-  margin: 4px 12px;
+  margin: 0 12px;
   background: $COLOR--e-100;
 }
 
@@ -64,7 +65,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 12px 8px 12px;
+  min-height: 36px;
+  padding: 4px 12px;
+  box-sizing: border-box;
 }
 
 .key-variant {
