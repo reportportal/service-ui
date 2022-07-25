@@ -111,26 +111,18 @@ export class WizardThirdStepForm extends Component {
   };
 
   initializeControlsForm = () => {
-    const { intl, activeDashboard, dashboards } = this.props;
+    const { intl, dashboards } = this.props;
     const newDashboard = {
       name: intl.formatMessage(messages.newDashboardName),
       description: '',
-      share: false,
     };
     const selectedDashboard = dashboards.length > 0 ? dashboards[0] : newDashboard;
     const data = {
       name: this.generateWidgetName(),
       description: '',
-      share: activeDashboard.share || selectedDashboard.share,
       selectedDashboard,
     };
     return this.props.initializeWizardThirdStepForm(data);
-  };
-
-  handleDashboardChange = (event, value) => {
-    const { formValues, change } = this.props;
-    const share = value.share || formValues.share;
-    change('share', share);
   };
 
   render() {
@@ -155,7 +147,6 @@ export class WizardThirdStepForm extends Component {
             dashboards={dashboards}
             activeDashboard={activeDashboard}
             loading={loading}
-            onChangeDashboard={this.handleDashboardChange}
           />
         )}
       </form>
