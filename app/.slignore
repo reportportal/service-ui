@@ -14,7 +14,6 @@
 ./build/media/*
 ./localization/
 ./test/
-./.storybook/
 vendor*.js
 runtime*.js
 inline*.js
