@@ -40,11 +40,6 @@ export const URLS = {
       'page.page': 1,
       'page.size': 300,
     })}`,
-  dashboardsShared: (activeProject) =>
-    `${urlBase}${activeProject}/dashboard/shared${getQueryParams({
-      'page.page': 1,
-      'page.size': 300,
-    })}`,
 
   widget: (activeProject, widgetId = '') => `${urlBase}${activeProject}/widget/${widgetId}`,
   widgetMultilevel: (activeProject, widgetId, params) =>
@@ -52,14 +47,6 @@ export const URLS = {
       ...params,
     })}`,
   widgetPreview: (activeProject) => `${urlBase}${activeProject}/widget/preview`,
-  sharedWidget: (activeProject, params) =>
-    `${urlBase}${activeProject}/widget/shared${getQueryParams({
-      ...params,
-    })}`,
-  sharedWidgetSearch: (activeProject, params) =>
-    `${urlBase}${activeProject}/widget/shared/search${getQueryParams({
-      ...params,
-    })}`,
 
   dashboardWidget: (activeProject, dashboardId, widgetId) =>
     `${urlBase}${activeProject}/dashboard/${dashboardId}/${widgetId}`,

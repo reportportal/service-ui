@@ -25,7 +25,6 @@ import { PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
 import { canDeleteFilter } from 'common/utils/permissions';
 import { FilterName } from './filterName';
 import { FilterOptions } from './filterOptions';
-import { ShareFilter } from './shareFilter';
 import { DisplayFilter } from './displayFilter';
 import { DeleteFilterButton } from './deleteFilterButton';
 import styles from './filterGrid.scss';
@@ -35,7 +34,6 @@ const messages = defineMessages({
   nameCol: { id: 'MembersGrid.nameCol', defaultMessage: 'Filter name' },
   optionsCol: { id: 'MembersGrid.optionsCol', defaultMessage: 'Options' },
   ownerCol: { id: 'MembersGrid.ownerCol', defaultMessage: 'Owner' },
-  sharedCol: { id: 'MembersGrid.sharedCol', defaultMessage: 'Shared' },
   displayCol: { id: 'MembersGrid.displayCol', defaultMessage: 'Display on launches' },
   deleteCol: { id: 'MembersGrid.deleteCol', defaultMessage: 'Delete' },
 });
@@ -54,7 +52,6 @@ const NameColumn = ({ className, value, customProps }) => (
       }}
       isLink
       isBold
-      noShareIcons
       userRole={customProps.userRole}
       projectRole={customProps.projectRole}
     />
@@ -97,21 +94,6 @@ OwnerColumn.propTypes = {
 };
 OwnerColumn.defaultProps = {
   value: {},
-};
-
-const SharedColumn = ({ className, value, customProps }) => (
-  <div className={cx('shared-col', className)}>
-    <ShareFilter userId={customProps.userId} filter={value} onEdit={customProps.onEdit} />
-  </div>
-);
-SharedColumn.propTypes = {
-  className: PropTypes.string.isRequired,
-  value: PropTypes.object,
-  customProps: PropTypes.object,
-};
-SharedColumn.defaultProps = {
-  value: {},
-  customProps: {},
 };
 
 const DisplayOnLaunchColumn = ({ className, value, customProps }) => (
@@ -231,21 +213,6 @@ export class FilterGrid extends Component {
         full: this.props.intl.formatMessage(messages.ownerCol),
       },
       component: OwnerColumn,
-    },
-    {
-      id: 'shared',
-      title: {
-        full: this.props.intl.formatMessage(messages.sharedCol),
-      },
-      align: ALIGN_CENTER,
-      component: SharedColumn,
-      customProps: {
-        userId: this.props.userId,
-        onEdit: (filter) => {
-          this.props.onEdit(filter);
-          this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_SHARED_ICON);
-        },
-      },
     },
     {
       id: 'display',

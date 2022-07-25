@@ -15,9 +15,4 @@
  */
 
 export { DashboardItemPage } from './dashboardItemPage';
-export {
-  WidgetWizardModal,
-  AddSharedWidgetModal,
-  EditWidgetModal,
-  DeleteWidgetModal,
-} from './modals';
+export { WidgetWizardModal, EditWidgetModal, DeleteWidgetModal } from './modals';
