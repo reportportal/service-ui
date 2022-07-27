@@ -44,6 +44,7 @@ import BinIcon from 'common/img/newIcons/bin-inline.svg';
 import CopyIcon from 'common/img/newIcons/copy-inline.svg';
 import { projectNotificationsLoadingSelector } from 'controllers/project/selectors';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { PROJECT_SETTINGS_NOTIFICATIONS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { RuleList } from '../elements/ruleList';
 import { Layout } from '../layout';
 import styles from './notifications.scss';
@@ -55,6 +56,12 @@ import { NotificationRuleContent } from '../elements/notificationRuleContent';
 
 const cx = classNames.bind(styles);
 const COPY_POSTFIX = '_copy';
+
+const MODAL_NAMES = {
+  create: 'create_notification_rule',
+  edit: 'edit_notification_rule',
+  duplicate: 'duplicate_notification_rule',
+};
 
 export const Notifications = ({ setHeaderTitleNode }) => {
   const { formatMessage } = useIntl();
@@ -77,10 +84,23 @@ export const Notifications = ({ setHeaderTitleNode }) => {
 
   const toggleNotificationsEnabled = (isEnabled) => {
     trackEvent(SETTINGS_PAGE_EVENTS.EDIT_INPUT_NOTIFICATIONS);
+    trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_CHECKBOX_AUTO_NOTIFICATIONS(isEnabled));
     dispatch(updateNotificationStateAction(isEnabled));
   };
 
   const confirmAdd = (withoutAttributes) => (newNotification) => {
+    const { sendCase, attributes, enabled: switcher, informOwner, name } = newNotification;
+
+    trackEvent(
+      PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_SAVE_BUTTON_IN_MODAL(
+        name ? MODAL_NAMES.duplicate : MODAL_NAMES.create,
+        informOwner,
+        attributes.length,
+        messages[sendCase].defaultMessage,
+        switcher,
+      ),
+    );
+
     const notificationData = { ...newNotification };
     if (withoutAttributes) {
       notificationData.attributes = [];
@@ -90,6 +110,18 @@ export const Notifications = ({ setHeaderTitleNode }) => {
   };
 
   const confirmEdit = (withoutAttributes) => (notification) => {
+    const { sendCase, attributes, enabled: switcher, informOwner } = notification;
+
+    trackEvent(
+      PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_SAVE_BUTTON_IN_MODAL(
+        MODAL_NAMES.edit,
+        informOwner,
+        attributes.length,
+        messages[sendCase].defaultMessage,
+        switcher,
+      ),
+    );
+
     dispatch(
       updateProjectNotificationAction(
         convertNotificationCaseForSubmission({
@@ -107,6 +139,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
 
   const onAdd = () => {
     trackEvent(SETTINGS_PAGE_EVENTS.ADD_RULE_BTN_NOTIFICATIONS);
+    trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_CREATE_RULE_BUTTON);
     dispatch(
       showModalAction({
         id: 'addEditNotificationModal',
@@ -122,6 +155,8 @@ export const Notifications = ({ setHeaderTitleNode }) => {
 
   const onEdit = (notification) => {
     trackEvent(SETTINGS_PAGE_EVENTS.EDIT_RULE_NOTIFICATIONS);
+    trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_ICON_EDIT_NOTIFICATIONS);
+
     dispatch(
       showModalAction({
         id: 'addEditNotificationModal',
@@ -137,6 +172,8 @@ export const Notifications = ({ setHeaderTitleNode }) => {
 
   const onDelete = (notification) => {
     trackEvent(SETTINGS_PAGE_EVENTS.CLICK_ON_DELETE_RULE_NOTIFICATIONS);
+    trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_ICON_DELETE_NOTIFICATIONS);
+
     dispatch(
       showModalAction({
         id: 'deleteNotificationModal',
@@ -154,6 +191,8 @@ export const Notifications = ({ setHeaderTitleNode }) => {
 
   const onCopy = (notification) => {
     trackEvent(SETTINGS_PAGE_EVENTS.CLONE_NOTIFICATIONS);
+    trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_ICON_DUPLICATE_NOTIFICATIONS);
+
     const { id, ...newNotification } = notification;
     dispatch(
       showModalAction({
@@ -189,6 +228,8 @@ export const Notifications = ({ setHeaderTitleNode }) => {
         ? SETTINGS_PAGE_EVENTS.TURN_ON_NOTIFICATION_RULE_SWITCHER
         : SETTINGS_PAGE_EVENTS.TURN_OFF_NOTIFICATION_RULE_SWITCHER,
     );
+    trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.SWITCH_NOTIFICATION_RULE(isEnabled));
+
     dispatch(
       updateProjectNotificationAction(
         convertNotificationCaseForSubmission({ ...notification, enabled: isEnabled }),
@@ -212,6 +253,14 @@ export const Notifications = ({ setHeaderTitleNode }) => {
       handler: onDelete,
     },
   ];
+
+  const ruleListAnalyticsTrigger = () => {
+    trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_TO_EXPAND_NOTIFICATIONS_DETAILS);
+  };
+
+  const emptyStateAnalyticsTrigger = () => {
+    trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_LINK_DOCUMENTATION);
+  };
 
   if (loading) {
     return <SpinningPreloader />;
@@ -239,6 +288,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
               actions={actions}
               onToggle={onToggleHandler}
               ruleItemContent={NotificationRuleContent}
+              analyticsTrigger={ruleListAnalyticsTrigger}
             />
           </div>
         </>
@@ -252,6 +302,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
           }
           disableButton={isReadOnly}
           handleButton={onAdd}
+          analyticsTrigger={emptyStateAnalyticsTrigger}
         />
       )}
     </>

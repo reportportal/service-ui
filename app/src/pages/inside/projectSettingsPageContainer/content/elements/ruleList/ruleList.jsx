@@ -22,7 +22,14 @@ import styles from './ruleList.scss';
 
 const cx = classNames.bind(styles);
 
-export const RuleList = ({ data, actions, onToggle, disabled, ruleItemContent }) => {
+export const RuleList = ({
+  data,
+  actions,
+  onToggle,
+  disabled,
+  ruleItemContent,
+  analyticsTrigger,
+}) => {
   const Content = ruleItemContent;
   return (
     <div className={cx('container')}>
@@ -34,6 +41,7 @@ export const RuleList = ({ data, actions, onToggle, disabled, ruleItemContent })
           onToggle={onToggle}
           disabled={disabled}
           content={ruleItemContent && <Content item={item} />}
+          onClick={analyticsTrigger}
         />
       ))}
     </div>
@@ -45,10 +53,12 @@ RuleList.propTypes = {
   onToggle: PropTypes.func,
   disabled: PropTypes.bool,
   ruleItemContent: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
+  analyticsTrigger: PropTypes.oneOfType([PropTypes.func, PropTypes.instanceOf(null)]),
 };
 RuleList.defaultProps = {
   actions: [],
   onToggle: () => {},
   disabled: true,
   ruleItemContent: null,
+  analyticsTrigger: null,
 };
