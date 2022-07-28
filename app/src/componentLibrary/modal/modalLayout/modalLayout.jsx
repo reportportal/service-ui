@@ -54,14 +54,16 @@ export const ModalLayout = ({
 
     return () => document.removeEventListener('keydown', onKeydown, false);
   }, []);
-  const closeModal = () => {
-    setShown(false);
-  };
+
   useEffect(() => {
-    if (modalRef && modalRef.current && modalRef.current.firstElementChild) {
+    if (modalRef && modalRef.current) {
       modalRef.current.firstElementChild.focus();
     }
   }, []);
+
+  const closeModal = () => {
+    setShown(false);
+  };
 
   return (
     <div className={cx('modal-layout', { [`overlay-${overlay}`]: overlay })}>
