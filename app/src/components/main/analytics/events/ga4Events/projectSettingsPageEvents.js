@@ -16,40 +16,39 @@
 
 const PROJECT_SETTINGS = 'project_settings';
 const ANALYZER = 'analyzer';
-const setStatus = (status) => (status ? 'active' : 'disabled');
+const BASIC_EVENT_PARAMETERS = {
+  action: 'click',
+  category: PROJECT_SETTINGS,
+  element_name: 'button_submit',
+};
+
+const getStatus = (status) => (status ? 'active' : 'disabled');
+
 export const PROJECT_SETTINGS_ANALYZER_EVENTS = {
   CLICK_SUBMIT_IN_INDEX_TAB: (number, status) => ({
-    action: 'click',
-    category: PROJECT_SETTINGS,
-    element_name: 'button_submit',
+    ...BASIC_EVENT_PARAMETERS,
     place: `${ANALYZER}_index_settings`,
     number,
-    status: setStatus(status),
+    status: getStatus(status),
   }),
 
   CLICK_SUBMIT_IN_AUTO_ANALYZER_TAB: (number, status, type) => ({
-    action: 'click',
-    category: PROJECT_SETTINGS,
-    element_name: 'button_submit',
+    ...BASIC_EVENT_PARAMETERS,
     place: `${ANALYZER}_auto_analyzer`,
     number,
-    status: setStatus(status),
+    status: getStatus(status),
     type,
   }),
 
   CLICK_SUBMIT_IN_SIMILAR_ITEMS_TAB: (number) => ({
-    action: 'click',
-    category: PROJECT_SETTINGS,
-    element_name: 'button_submit',
+    ...BASIC_EVENT_PARAMETERS,
     place: `${ANALYZER}_similar_items`,
     number,
   }),
 
   CLICK_SUBMIT_IN_UNIQUE_ERRORS_TAB: (status) => ({
-    action: 'click',
-    category: PROJECT_SETTINGS,
-    element_name: 'button_submit',
+    ...BASIC_EVENT_PARAMETERS,
     place: `${ANALYZER}_unique_errors`,
-    status: setStatus(status),
+    status: getStatus(status),
   }),
 };

@@ -69,7 +69,9 @@ const UniqueErrors = ({
     setPending(false);
 
     trackEvent(
-      PROJECT_SETTINGS_ANALYZER_EVENTS.CLICK_SUBMIT_IN_UNIQUE_ERRORS_TAB(data.uniqueErrorEnabled),
+      PROJECT_SETTINGS_ANALYZER_EVENTS.CLICK_SUBMIT_IN_UNIQUE_ERRORS_TAB(
+        data[formatFieldName(UNIQUE_ERROR_ENABLED)],
+      ),
     );
   };
 
