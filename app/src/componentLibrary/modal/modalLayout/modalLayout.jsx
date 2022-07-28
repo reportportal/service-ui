@@ -51,14 +51,11 @@ export const ModalLayout = ({
   useEffect(() => {
     document.addEventListener('keydown', onKeydown, false);
     setShown(true);
+    if (modalRef && modalRef.current) {
+      modalRef.current.focus();
+    }
 
     return () => document.removeEventListener('keydown', onKeydown, false);
-  }, []);
-
-  useEffect(() => {
-    if (modalRef && modalRef.current) {
-      modalRef.current.firstElementChild.focus();
-    }
   }, []);
 
   const closeModal = () => {
