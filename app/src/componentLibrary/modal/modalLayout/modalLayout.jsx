@@ -76,6 +76,7 @@ export const ModalLayout = ({
               <div
                 className={cx('modal-window', { [`size-${modalSize}`]: modalSize }, className)}
                 ref={modalRef}
+                tabIndex="0"
               >
                 <ModalHeader title={title} headerNode={headerNode} onClose={closeModal} />
                 <ModalContent>{status !== 'exited' ? children : null}</ModalContent>

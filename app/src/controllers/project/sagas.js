@@ -249,7 +249,6 @@ function* watchUpdateProjectNotification() {
 }
 
 function* deleteProjectNotification({ payload: id }) {
-  console.log(id);
   yield put(showScreenLockAction());
   try {
     const projectId = yield select(projectIdSelector);
