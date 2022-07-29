@@ -22,9 +22,13 @@ const MODE_INFORMATION = 'info';
 const MODE_WARNING = 'warning';
 const MODE_SYS_ERROR = 'error';
 
-export const SystemMessage = ({ header, caption, children, mode, widthByContent }) => {
+export const SystemMessage = ({ header, caption, children, mode, widthByContent, className }) => {
   return (
-    <div className={cx('system-message', { 'content-width': widthByContent })}>
+    <div
+      className={cx('system-message', className, {
+        'content-width': widthByContent,
+      })}
+    >
       <div className={cx(`stripes-${mode}`)} />
       <div className={cx('text-container')}>
         {header && <h1 className={cx(`message-header-${mode}`)}>{header}</h1>}
@@ -41,6 +45,7 @@ SystemMessage.propTypes = {
   children: PropTypes.node,
   mode: PropTypes.oneOf([MODE_INFORMATION, MODE_WARNING, MODE_SYS_ERROR]),
   widthByContent: PropTypes.bool,
+  className: PropTypes.string,
 };
 
 SystemMessage.defaultProps = {
@@ -49,4 +54,5 @@ SystemMessage.defaultProps = {
   children: null,
   mode: MODE_INFORMATION,
   widthByContent: false,
+  className: '',
 };

@@ -56,3 +56,10 @@ export const PROJECT_SETTINGS_ANALYZER_EVENTS = {
     type: type ? 'exclude' : 'include',
   }),
 };
+
+export const PROJECT_SETTINGS_DEMO_DATA_EVENTS = {
+  CLICK_GENERATE_DATA_IN_DEMO_DATA_TAB: {
+    ...BASIC_EVENT_PARAMETERS,
+    place: 'demo_data',
+  },
+};
