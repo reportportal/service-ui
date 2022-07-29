@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { CSSTransition } from 'react-transition-group';
@@ -40,15 +40,20 @@ export const ModalLayout = ({
   overlay,
 }) => {
   const [isShown, setShown] = useState(false);
+  const modalRef = useRef();
 
   const onKeydown = (e) => {
     if (e.keyCode === ESC_KEYCODE) {
       setShown(false);
     }
   };
+
   useEffect(() => {
     document.addEventListener('keydown', onKeydown, false);
     setShown(true);
+    if (modalRef && modalRef.current) {
+      modalRef.current.focus();
+    }
 
     return () => document.removeEventListener('keydown', onKeydown, false);
   }, []);
@@ -68,7 +73,10 @@ export const ModalLayout = ({
             onExited={onClose}
           >
             {(status) => (
-              <div className={cx('modal-window', { [`size-${modalSize}`]: modalSize }, className)}>
+              <div
+                className={cx('modal-window', { [`size-${modalSize}`]: modalSize }, className)}
+                ref={modalRef}
+              >
                 <ModalHeader title={title} headerNode={headerNode} onClose={closeModal} />
                 <ModalContent>{status !== 'exited' ? children : null}</ModalContent>
                 <ModalFooter
