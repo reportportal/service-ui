@@ -21,7 +21,6 @@ import 'array.findindex';
 import 'promise-polyfill/src/polyfill';
 import 'polyfill-array-includes';
 import areIntlLocalesSupported from 'intl-locales-supported';
-import objectValues from 'object.values';
 
 // NodeList.prototype.forEach (https://developer.mozilla.org/en-US/docs/Web/API/NodeList/forEach#Polyfill)
 if (window.NodeList && !NodeList.prototype.forEach) {
@@ -33,84 +32,10 @@ if (window.NodeList && !NodeList.prototype.forEach) {
   };
 }
 
-// String.startsWith for IE 11 (https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith#polyfill)
-// This polyfill was added due to problems with swagger-ui-react: dist version doesn't include the polyfill, so we have to duplicate it here
-if (!String.prototype.startsWith) {
-  Object.defineProperty(String.prototype, 'startsWith', {
-    enumerable: false,
-    configurable: false,
-    writable: false,
-    value: function(searchString, position) {
-      position = position || 0;
-      return this.indexOf(searchString, position) === position;
-    }
-  });
-}
-
-// Object.assign for IE 11 (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign#Polyfill)
-// This polyfill was added due to problems with react-intl: dist version doesn't include the polyfill, so we have to duplicate it here
-if (typeof Object.assign !== 'function') {
-  // Must be writable: true, enumerable: false, configurable: true
-  Object.defineProperty(Object, 'assign', {
-    value: function assign(target, varArgs) {
-      // .length of function is 2
-      'use strict';
-      if (target === null || target === undefined) {
-        throw new TypeError('Cannot convert undefined or null to object');
-      }
-
-      const to = Object(target);
-
-      for (let index = 1; index < arguments.length; index++) {
-        const nextSource = arguments[index];
-
-        if (nextSource !== null && nextSource !== undefined) {
-          for (var nextKey in nextSource) {
-            // Avoid bugs when hasOwnProperty is shadowed
-            if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
-              to[nextKey] = nextSource[nextKey];
-            }
-          }
-        }
-      }
-      return to;
-    },
-    writable: true,
-    configurable: true,
-  });
-}
-
-// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isInteger
-Number.isInteger = Number.isInteger || function(value) {
-  return typeof value === 'number' &&
-    isFinite(value) &&
-    Math.floor(value) === value;
-};
-
-if (!Object.values) {
-  objectValues.shim();
-}
-
-// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries#Polyfill
-if (!Object.entries) {
-  Object.entries = function(obj) {
-    const ownProps = Object.keys(obj);
-    const resArray = new Array(ownProps.length); // preallocate the Array
-
-    let i = ownProps.length;
-
-    while (i--) {
-      resArray[i] = [ownProps[i], obj[ownProps[i]]];
-    }
-
-    return resArray;
-  };
-}
-
 if (!Object.fromEntries) {
-  Object.fromEntries = function fromEntries(entries){
+  Object.fromEntries = function fromEntries(entries) {
     var res = {};
-    for(var i = 0; i < entries.length; i++) res[entries[i][0]] = entries[i][1];
+    for (var i = 0; i < entries.length; i++) res[entries[i][0]] = entries[i][1];
     return res;
   };
 }
@@ -118,7 +43,11 @@ if (!Object.fromEntries) {
 // Chrome Intl doesn't support 'be' locale, so we have to manually apply polyfill in this case
 export const polyfillLocales = () =>
   new Promise((resolve) => {
-    if (window.Intl.PluralRules && window.Intl.RelativeTimeFormat && areIntlLocalesSupported(['en', 'uk', 'ru', 'be'])) {
+    if (
+      window.Intl.PluralRules &&
+      window.Intl.RelativeTimeFormat &&
+      areIntlLocalesSupported(['en', 'uk', 'ru', 'be'])
+    ) {
       resolve();
       return;
     }
