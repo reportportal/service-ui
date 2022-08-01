@@ -16,10 +16,6 @@
 
 /* eslint-disable */
 
-import 'array.find';
-import 'array.findindex';
-import 'promise-polyfill/src/polyfill';
-import 'polyfill-array-includes';
 import areIntlLocalesSupported from 'intl-locales-supported';
 
 // NodeList.prototype.forEach (https://developer.mozilla.org/en-US/docs/Web/API/NodeList/forEach#Polyfill)
@@ -29,14 +25,6 @@ if (window.NodeList && !NodeList.prototype.forEach) {
     for (let i = 0; i < this.length; i++) {
       callback.call(thisArg, this[i], i, this);
     }
-  };
-}
-
-if (!Object.fromEntries) {
-  Object.fromEntries = function fromEntries(entries) {
-    var res = {};
-    for (var i = 0; i < entries.length; i++) res[entries[i][0]] = entries[i][1];
-    return res;
   };
 }
 
