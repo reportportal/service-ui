@@ -15,27 +15,23 @@
  */
 
 .service-versions-block {
-  position: absolute;
-  bottom: 0;
   display: flex;
   width: 100%;
   align-items: center;
   justify-content: center;
   column-gap: 6px;
-  padding-bottom: 40px;
+  margin-top: 17px;
   font-family: $FONT-REGULAR;
   line-height: 1em;
   box-sizing: border-box;
 
   @media (max-width: $SCREEN_SM_MAX) {
-    position: static;
-    width: 100%;
-    padding: 30px 30px 24px;
+    padding-bottom: 24px;
   }
 
   @media (max-width: $SCREEN_XS_MAX) {
     padding-bottom: 40px;
-    padding-top: 40px;
+    padding-top: 24px;
   }
 }
 
