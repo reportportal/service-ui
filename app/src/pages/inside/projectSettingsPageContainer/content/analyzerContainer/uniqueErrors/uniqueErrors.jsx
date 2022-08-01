@@ -68,9 +68,20 @@ const UniqueErrors = ({
     await onFormSubmit(preparedData);
     setPending(false);
 
+    const isExclude = () => {
+      if (
+        preparedData[UNIQUE_ERROR_REMOVE_NUMBERS] &&
+        preparedData[UNIQUE_ERROR_REMOVE_NUMBERS] === 'true'
+      ) {
+        return true;
+      }
+      return false;
+    };
+
     trackEvent(
       PROJECT_SETTINGS_ANALYZER_EVENTS.CLICK_SUBMIT_IN_UNIQUE_ERRORS_TAB(
-        data[formatFieldName(UNIQUE_ERROR_ENABLED)],
+        preparedData[UNIQUE_ERROR_ENABLED],
+        isExclude(),
       ),
     );
   };

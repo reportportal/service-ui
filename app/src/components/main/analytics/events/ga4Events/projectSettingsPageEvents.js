@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
+import { normalizeEventType } from '../../utils';
+
 const PROJECT_SETTINGS = 'project_settings';
 const ANALYZER = 'analyzer';
+
 const BASIC_EVENT_PARAMETERS = {
   action: 'click',
   category: PROJECT_SETTINGS,
@@ -37,7 +40,7 @@ export const PROJECT_SETTINGS_ANALYZER_EVENTS = {
     place: `${ANALYZER}_auto_analyzer`,
     number,
     status: getStatus(status),
-    type,
+    type: normalizeEventType(type),
   }),
 
   CLICK_SUBMIT_IN_SIMILAR_ITEMS_TAB: (number) => ({
@@ -46,9 +49,10 @@ export const PROJECT_SETTINGS_ANALYZER_EVENTS = {
     number,
   }),
 
-  CLICK_SUBMIT_IN_UNIQUE_ERRORS_TAB: (status) => ({
+  CLICK_SUBMIT_IN_UNIQUE_ERRORS_TAB: (status, type) => ({
     ...BASIC_EVENT_PARAMETERS,
     place: `${ANALYZER}_unique_errors`,
     status: getStatus(status),
+    type: type ? 'exclude' : 'include',
   }),
 };
