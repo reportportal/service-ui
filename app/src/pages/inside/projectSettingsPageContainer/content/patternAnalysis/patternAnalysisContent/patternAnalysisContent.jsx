@@ -34,9 +34,7 @@ import PropTypes from 'prop-types';
 import PencilIcon from 'common/img/newIcons/pencil-inline.svg';
 import BinIcon from 'common/img/newIcons/bin-inline.svg';
 import CopyIcon from 'common/img/newIcons/copy-inline.svg';
-import { PatternRuleContent } from '../../elements/patternRuleContent';
-import { FieldElement } from '../../elements';
-import { RuleList } from '../../elements/ruleList';
+import { PatternRuleContent, FieldElement, RuleList } from '../../elements';
 import { Layout } from '../../layout';
 import { messages } from '../messages';
 import styles from './patternAnalysisContent.scss';
@@ -173,7 +171,7 @@ export const PatternAnalysisContent = ({
         <RuleList
           disabled={disabled}
           data={patterns}
-          actions={actions}
+          actionsConfig={actions}
           onToggle={onToggleHandler}
           ruleItemContent={PatternRuleContent}
         />
