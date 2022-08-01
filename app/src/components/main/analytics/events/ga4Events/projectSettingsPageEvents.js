@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import { normalizeEventType } from '../../utils';
-
 const PROJECT_SETTINGS = 'project_settings';
 const ANALYZER = 'analyzer';
 
@@ -40,7 +38,7 @@ export const PROJECT_SETTINGS_ANALYZER_EVENTS = {
     place: `${ANALYZER}_auto_analyzer`,
     number,
     status: getStatus(status),
-    type: normalizeEventType(type),
+    type,
   }),
 
   CLICK_SUBMIT_IN_SIMILAR_ITEMS_TAB: (number) => ({
