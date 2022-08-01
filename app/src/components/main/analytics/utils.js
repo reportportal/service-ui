@@ -43,5 +43,3 @@ export const provideEcGA = ({
 export const normalizeDimensionValue = (value) => {
   return value !== undefined ? value.toString() : undefined;
 };
-
-export const normalizeEventType = (type) => type.replace(/\s/g, '_').toLocaleLowerCase();
