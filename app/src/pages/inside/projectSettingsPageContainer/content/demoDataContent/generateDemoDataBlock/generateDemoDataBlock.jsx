@@ -29,7 +29,6 @@ import {
   showNotification,
 } from 'controllers/notification';
 import { useTracking } from 'react-tracking';
-import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { PROJECT_SETTINGS_DEMO_DATA_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import styles from './generateDemoDataBlock.scss';
 import { LabeledPreloader } from '../../elements';
@@ -56,7 +55,7 @@ const messages = defineMessages({
   },
 });
 
-export const GenerateDemoDataBlock = ({ onSuccess, className }) => {
+export const GenerateDemoDataBlock = ({ className }) => {
   const [isLoading, setIsLoading] = useState(false);
   const { formatMessage } = useIntl();
   const projectId = useSelector(projectIdSelector);
@@ -66,12 +65,10 @@ export const GenerateDemoDataBlock = ({ onSuccess, className }) => {
   const generateDemoData = () => {
     setIsLoading(true);
 
-    trackEvent(SETTINGS_PAGE_EVENTS.GENERATE_DATA_BTN);
     trackEvent(PROJECT_SETTINGS_DEMO_DATA_EVENTS.CLICK_GENERATE_DATA_IN_DEMO_DATA_TAB);
 
     fetch(URLS.generateDemoData(projectId), { method: 'POST', data: {} })
       .then(() => {
-        onSuccess();
         dispatch(
           showNotification({
             message: formatMessage(messages.generateDemoDataSuccess),
@@ -99,11 +96,9 @@ export const GenerateDemoDataBlock = ({ onSuccess, className }) => {
   );
 };
 GenerateDemoDataBlock.propTypes = {
-  onSuccess: PropTypes.func,
   className: PropTypes.string,
 };
 
 GenerateDemoDataBlock.defaultProps = {
-  onSuccess: () => {},
   className: '',
 };
