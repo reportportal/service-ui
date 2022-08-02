@@ -39,6 +39,7 @@ export const REMOVE_GLOBAL_INTEGRATIONS_BY_TYPE_SUCCESS = 'removeGlobalIntegrati
 export const ADD_PROJECT_INTEGRATION_SUCCESS = 'addProjectIntegrationSuccess';
 export const UPDATE_PROJECT_INTEGRATION_SUCCESS = 'updateProjectIntegrationSuccess';
 export const REMOVE_PROJECT_INTEGRATION_SUCCESS = 'removeProjectIntegrationSuccess';
+export const SET_PLUGINS_LOADING = 'setPluginsLoading';
 
 export const GLOBAL_INTEGRATIONS = 'globalIntegrations';
 export const PROJECT_INTEGRATIONS = 'projectIntegrations';

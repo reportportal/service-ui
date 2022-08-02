@@ -46,7 +46,7 @@
   }
 
   .description {
-    margin-top: 8px;
+    margin-top: 16px;
     margin-bottom: 24px;
     font-family: $FONT-ROBOTO-REGULAR;
     font-size: 13px;
@@ -86,5 +86,9 @@
     height: 13px;
     margin-left: 10px;
     padding-bottom: 3px;
+  }
+
+  .integration-empty {
+    margin-bottom: 0px;
   }
 }

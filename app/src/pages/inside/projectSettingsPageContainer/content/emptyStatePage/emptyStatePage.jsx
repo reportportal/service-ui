@@ -33,13 +33,16 @@ export const EmptyStatePage = ({
   documentationLink,
   title,
   disableButton,
+  integrationEmptyState,
 }) => {
   const { formatMessage } = useIntl();
   return (
     <div className={cx('container')}>
       <div className={cx('img')} />
       <span className={cx('title')}>{title}</span>
-      <span className={cx('description')}>{description}</span>
+      <span className={cx('description', { 'integration-empty': integrationEmptyState })}>
+        {description}
+      </span>
       {buttonName && (
         <Button disabled={disableButton} wide onClick={handleButton}>
           {buttonName}
@@ -62,6 +65,7 @@ EmptyStatePage.propTypes = {
   buttonName: PropTypes.string,
   documentationLink: PropTypes.string,
   disableButton: PropTypes.bool,
+  integrationEmptyState: PropTypes.bool,
 };
 
 EmptyStatePage.defaultProps = {
@@ -71,4 +75,5 @@ EmptyStatePage.defaultProps = {
   buttonName: '',
   documentationLink: '',
   disableButton: false,
+  integrationEmptyState: false,
 };

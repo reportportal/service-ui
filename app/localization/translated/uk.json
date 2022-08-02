@@ -922,6 +922,8 @@
   "IntegrationsList.bts": "Системи відстеження помилок",
   "IntegrationsList.notification": "Повідомлення",
   "IntegrationsList.other": "Інші",
+  "IntegrationsCase.noIntegrationsMessage": "Ніяких інтеграцій",
+  "IntegrationsCase.noIntegrationsDescription": "Ваш проект ще не має інтеграцій",
   "IntegrationsTab.integrationsBreadcrumbTitle": "Інтеграції",
   "InvestigatedPercentageOfLaunchesControls.ItemsFieldLabel": "Елементи",
   "InvestigatedPercentageOfLaunchesControls.ItemsValidationError": "Кількість елементів приймає значення від '1' до '600'",

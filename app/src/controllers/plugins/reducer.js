@@ -35,6 +35,7 @@ import {
   REMOVE_PROJECT_INTEGRATIONS_BY_TYPE_SUCCESS,
   REMOVE_GLOBAL_INTEGRATIONS_BY_TYPE_SUCCESS,
   PUBLIC_PLUGINS,
+  SET_PLUGINS_LOADING,
 } from './constants';
 
 const addIntegration = (state, type, payload) => ({
@@ -118,9 +119,19 @@ export const integrationsReducer = (state = {}, { type, payload }) => {
   }
 };
 
+export const loadingPluginsReducer = (state = false, { type, payload }) => {
+  switch (type) {
+    case SET_PLUGINS_LOADING:
+      return payload;
+    default:
+      return state;
+  }
+};
+
 export const pluginsReducer = combineReducers({
   plugins: queueReducers(fetchReducer(NAMESPACE), updatePluginLocallyReducer),
   publicPlugins: fetchReducer(PUBLIC_PLUGINS),
   integrations: integrationsReducer,
   uiExtensions: uiExtensionsReducer,
+  pluginsLoading: loadingPluginsReducer,
 });

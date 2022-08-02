@@ -922,6 +922,8 @@
   "IntegrationsList.bts": "Сістэма адсочвання памылак",
   "IntegrationsList.notification": "Апавяшчэнні",
   "IntegrationsList.other": "Іншыя",
+  "IntegrationsCase.noIntegrationsMessage": "Ніякіх інтэграцый",
+  "IntegrationsCase.noIntegrationsDescription": "У вашым праекце яшчэ няма інтэграцый",
   "IntegrationsTab.integrationsBreadcrumbTitle": "Інтэграцыі",
   "InvestigatedPercentageOfLaunchesControls.ItemsFieldLabel": "Элементы",
   "InvestigatedPercentageOfLaunchesControls.ItemsValidationError": "Колькасць элементаў павінна быць памерам ад '1' да '600'",

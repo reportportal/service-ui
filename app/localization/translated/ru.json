@@ -922,6 +922,8 @@
   "IntegrationsList.bts": "Системы отслеживания ошибок",
   "IntegrationsList.notification": "Уведомления",
   "IntegrationsList.other": "Другие",
+  "IntegrationsCase.noIntegrationsMessage": "Нет интеграций",
+  "IntegrationsCase.noIntegrationsDescription": "В вашем проекте еще нет интеграций",
   "IntegrationsTab.integrationsBreadcrumbTitle": "Интеграции",
   "InvestigatedPercentageOfLaunchesControls.ItemsFieldLabel": "Элементы",
   "InvestigatedPercentageOfLaunchesControls.ItemsValidationError": "Количество элементов принимает значения от '1' до '600'",

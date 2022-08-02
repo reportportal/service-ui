@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { takeEvery, all, put, select, call } from 'redux-saga/effects';
+import { takeEvery, all, put, select, call, take } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import {
   showNotification,
@@ -54,6 +54,7 @@ import {
   updateGlobalIntegrationSuccessAction,
   fetchGlobalIntegrationsSuccessAction,
   removeGlobalIntegrationsByTypeSuccessAction,
+  setPluginsLoadingAction,
 } from './actionCreators';
 import { fetchUiExtensions, fetchExtensionsMetadata } from './uiExtensions';
 
@@ -213,7 +214,10 @@ function* watchFetchGlobalIntegrations() {
 }
 
 function* fetchPlugins() {
+  yield put(setPluginsLoadingAction(true));
   yield put(fetchDataAction(NAMESPACE)(URLS.plugin()));
+  yield take(createFetchPredicate(NAMESPACE));
+  yield put(setPluginsLoadingAction(false));
 }
 
 function* fetchPublicPlugins() {

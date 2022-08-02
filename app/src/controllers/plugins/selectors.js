@@ -76,6 +76,8 @@ export const createNamedIntegrationsSelector = (integrationName, integrationsSel
 export const createGlobalNamedIntegrationsSelector = (name) =>
   createNamedIntegrationsSelector(name, globalIntegrationsSelector);
 
+export const pluginsLoadingSelector = (state) => domainSelector(state).pluginsLoading;
+
 export const createIntegrationsMapSelector = (integrationsSelector) => {
   return createSelector(integrationsSelector, (integrations) => {
     const integrationNames = integrations.map((item) => item.integrationType.name);
