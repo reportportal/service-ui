@@ -60,6 +60,5 @@ export const IntegrationsListItem = (props) => {
 };
 
 IntegrationsListItem.propTypes = {
-  intl: PropTypes.object.isRequired,
   integrationType: PropTypes.object.isRequired,
 };

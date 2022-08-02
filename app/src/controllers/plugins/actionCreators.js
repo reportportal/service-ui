@@ -35,7 +35,6 @@ import {
   FETCH_GLOBAL_INTEGRATIONS,
   FETCH_GLOBAL_INTEGRATIONS_SUCCESS,
   REMOVE_GLOBAL_INTEGRATIONS_BY_TYPE_SUCCESS,
-  SET_PLUGINS_LOADING,
 } from './constants';
 
 export const fetchPluginsAction = () => ({
@@ -135,9 +134,4 @@ export const removeProjectIntegrationsByTypeSuccessAction = (instanceType) => ({
 export const removeGlobalIntegrationsByTypeSuccessAction = (instanceType) => ({
   type: REMOVE_GLOBAL_INTEGRATIONS_BY_TYPE_SUCCESS,
   payload: instanceType,
-});
-
-export const setPluginsLoadingAction = (pluginsLoading) => ({
-  type: SET_PLUGINS_LOADING,
-  payload: pluginsLoading,
 });
