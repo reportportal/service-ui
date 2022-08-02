@@ -72,7 +72,9 @@ export const DemoDataTab = () => {
         header={formatMessage(messages.descriptionDetailsWarningMessageHeader)}
         widthByContent
       >
-        {formatMessage(messages.descriptionDetailsWarningMessageContent)}
+        <span className={cx('system-message-description')}>
+          {formatMessage(messages.descriptionDetailsWarningMessageContent)}
+        </span>
       </SystemMessage>
       <GenerateDemoDataBlock />
     </Layout>
