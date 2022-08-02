@@ -59,7 +59,7 @@ const messages = defineMessages({
 export const GenerateDemoDataBlock = ({ onSuccess, className }) => {
   const [isLoading, setIsLoading] = useState(false);
   const { formatMessage } = useIntl();
-  const projectId = useSelector((state) => projectIdSelector(state));
+  const projectId = useSelector(projectIdSelector);
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
 
@@ -88,18 +88,14 @@ export const GenerateDemoDataBlock = ({ onSuccess, className }) => {
       });
   };
   return (
-    <div>
+    <>
       <div className={cx('generate-data-block', className)}>
-        <Button
-          customClassName={cx('generate-button')}
-          onClick={generateDemoData}
-          disabled={isLoading}
-        >
+        <Button onClick={generateDemoData} disabled={isLoading}>
           {formatMessage(messages.generateButtonTitle)}
         </Button>
         {isLoading && <LabeledPreloader text={formatMessage(messages.preloaderInfo)} />}
       </div>
-    </div>
+    </>
   );
 };
 GenerateDemoDataBlock.propTypes = {

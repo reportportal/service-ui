@@ -19,24 +19,24 @@
   font-family: $FONT-ROBOTO-MEDIUM;
   font-size: 13px;
   text-align: left;
-  @media (max-width: $SCREEN_XS_MAX) {
-    margin-top: 12px;
-    margin-bottom: 5px;
-  }
+  line-height: 20px;
 }
 
 .description-list {
   font-family: $FONT-ROBOTO-REGULAR;
   font-size: 13px;
-  margin: 22px 24px;
+  margin: 16px 0 24px 24px;
   list-style-type: none;
   line-height: 20px;
 
   li {
     position: relative;
-    margin-bottom: 3px;
+    margin-bottom: 4px;
     padding-left: 9px;
     color: $COLOR--almost-black;
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 
   li::before {
