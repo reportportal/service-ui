@@ -22,10 +22,10 @@ const MODE_INFORMATION = 'info';
 const MODE_WARNING = 'warning';
 const MODE_SYS_ERROR = 'error';
 
-export const SystemMessage = ({ header, caption, children, mode, widthByContent, className }) => {
+export const SystemMessage = ({ header, caption, children, mode, widthByContent }) => {
   return (
     <div
-      className={cx('system-message', className, {
+      className={cx('system-message', {
         'content-width': widthByContent,
       })}
     >
@@ -45,7 +45,6 @@ SystemMessage.propTypes = {
   children: PropTypes.node,
   mode: PropTypes.oneOf([MODE_INFORMATION, MODE_WARNING, MODE_SYS_ERROR]),
   widthByContent: PropTypes.bool,
-  className: PropTypes.string,
 };
 
 SystemMessage.defaultProps = {
@@ -54,5 +53,4 @@ SystemMessage.defaultProps = {
   children: null,
   mode: MODE_INFORMATION,
   widthByContent: false,
-  className: '',
 };

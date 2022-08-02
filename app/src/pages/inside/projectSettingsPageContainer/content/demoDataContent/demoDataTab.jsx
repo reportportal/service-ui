@@ -15,14 +15,12 @@
  */
 
 import classNames from 'classnames/bind';
-import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import React from 'react';
 import { defineMessages, useIntl } from 'react-intl';
-import { useTracking } from 'react-tracking';
 import { SystemMessage } from 'componentLibrary/systemMessage';
-import { PROJECT_SETTINGS_DEMO_DATA_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { GenerateDemoDataBlock } from './generateDemoDataBlock';
 import styles from './demoDataTab.scss';
+import { Layout } from '../layout';
 
 const cx = classNames.bind(styles);
 
@@ -60,17 +58,9 @@ const messages = defineMessages({
 
 export const DemoDataTab = () => {
   const { formatMessage } = useIntl();
-  const { trackEvent } = useTracking();
-
-  const onGenerateDemoData = () => {
-    trackEvent(SETTINGS_PAGE_EVENTS.GENERATE_DATA_BTN);
-    trackEvent(PROJECT_SETTINGS_DEMO_DATA_EVENTS.CLICK_GENERATE_DATA_IN_DEMO_DATA_TAB);
-  };
 
   return (
-    <div className={cx('demo-data-tab')}>
-      <p className={cx('description-details')}>{formatMessage(messages.descriptionDetails)}</p>
-      <hr className={cx('description-delimiter')} />
+    <Layout description={formatMessage(messages.descriptionDetails)}>
       <h5 className={cx('description-header')}>{formatMessage(messages.descriptionHeader)}</h5>
       <ul className={cx('description-list')}>
         <li>{formatMessage(messages.descriptionListFirstItem)}</li>
@@ -81,11 +71,10 @@ export const DemoDataTab = () => {
         mode={'warning'}
         header={formatMessage(messages.descriptionDetailsWarningMessageHeader)}
         widthByContent
-        className={cx('warning-message-demo')}
       >
         {formatMessage(messages.descriptionDetailsWarningMessageContent)}
       </SystemMessage>
-      <GenerateDemoDataBlock onGenerate={onGenerateDemoData} />
-    </div>
+      <GenerateDemoDataBlock />
+    </Layout>
   );
 };

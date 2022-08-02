@@ -18,40 +18,10 @@
   margin-top: 23px;
   display: flex;
   align-items: center;
-  width: 80%;
-  column-gap: 20px;
-}
-
-.mobile-hint {
-  display: none;
-  margin: 10px 0;
-  color: $COLOR--charcoal-grey;
-  font-size: 14px;
-  @media (max-width: $SCREEN_XS_MAX) {
-    display: block;
-  }
+  width: auto;
+  max-width: max-content;
 }
 
 .generate-button {
-  flex-grow: 1;
-  display: inline-block;
-  max-width: max-content;
-  height: 36px;
-  padding-top: 2px;
-  font-family: $FONT-ROBOTO-MEDIUM;
-  line-height: 1.53;
-  font-size: 13px;
-  box-sizing: border-box;
-  @media (max-width: $SCREEN_XS_MAX) {
-    margin: 0 auto;
-  }
-}
-
-.generate-data-information {
-  font-family: $FONT-ROBOTO-REGULAR;
-  font-size: 11px;
-  line-height: 1.45;
-  color: $COLOR--e-300;
-  padding-top: 5px;
-  padding-left: 55px;
+  padding-top: 9px;
 }

@@ -43,7 +43,7 @@
 }
 
 .system-message {
-  min-height: 104px;
+  min-height: 85px;
   height: auto;
   width: 100%;
   background: $COLOR--bg-000;
@@ -97,5 +97,5 @@
 }
 
 .content-width {
-  width: max-content;
+  max-width: max-content;
 }

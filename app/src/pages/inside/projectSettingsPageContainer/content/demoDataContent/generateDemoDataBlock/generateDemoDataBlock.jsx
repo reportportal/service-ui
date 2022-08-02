@@ -22,14 +22,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { projectIdSelector } from 'controllers/pages';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { BigButton } from 'components/buttons/bigButton';
+import { Button } from 'componentLibrary/button';
 import {
   NOTIFICATION_TYPES,
   showDefaultErrorNotification,
   showNotification,
 } from 'controllers/notification';
-import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
+import { useTracking } from 'react-tracking';
+import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { PROJECT_SETTINGS_DEMO_DATA_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import styles from './generateDemoDataBlock.scss';
+import { LabeledPreloader } from '../../elements';
 
 const cx = classNames.bind(styles);
 
@@ -53,16 +56,19 @@ const messages = defineMessages({
   },
 });
 
-export const GenerateDemoDataBlock = ({ onGenerate, onSuccess, className }) => {
+export const GenerateDemoDataBlock = ({ onSuccess, className }) => {
   const [isLoading, setIsLoading] = useState(false);
   const { formatMessage } = useIntl();
   const projectId = useSelector((state) => projectIdSelector(state));
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
 
   const generateDemoData = () => {
     setIsLoading(true);
 
-    onGenerate();
+    trackEvent(SETTINGS_PAGE_EVENTS.GENERATE_DATA_BTN);
+    trackEvent(PROJECT_SETTINGS_DEMO_DATA_EVENTS.CLICK_GENERATE_DATA_IN_DEMO_DATA_TAB);
+
     fetch(URLS.generateDemoData(projectId), { method: 'POST', data: {} })
       .then(() => {
         onSuccess();
@@ -83,40 +89,25 @@ export const GenerateDemoDataBlock = ({ onGenerate, onSuccess, className }) => {
   };
   return (
     <div>
-      <span className={cx('mobile-hint')}>{formatMessage(messages.mobileHint)}</span>
       <div className={cx('generate-data-block', className)}>
-        <BigButton
-          className={cx('generate-button')}
-          mobileDisabled
-          roundedCorners
+        <Button
+          customClassName={cx('generate-button')}
           onClick={generateDemoData}
           disabled={isLoading}
-          color={'topaz'}
         >
-          <span className={cx('generate-button-title')}>
-            {formatMessage(messages.generateButtonTitle)}
-          </span>
-        </BigButton>
-        {isLoading && (
-          <>
-            <BubblesPreloader customClassName={cx('generate-data-preloader')} />
-            <p className={cx('generate-data-information')}>
-              {formatMessage(messages.preloaderInfo)}
-            </p>
-          </>
-        )}
+          {formatMessage(messages.generateButtonTitle)}
+        </Button>
+        {isLoading && <LabeledPreloader text={formatMessage(messages.preloaderInfo)} />}
       </div>
     </div>
   );
 };
 GenerateDemoDataBlock.propTypes = {
-  onGenerate: PropTypes.func,
   onSuccess: PropTypes.func,
   className: PropTypes.string,
 };
 
 GenerateDemoDataBlock.defaultProps = {
-  onGenerate: () => {},
   onSuccess: () => {},
   className: '',
 };

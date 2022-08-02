@@ -14,71 +14,37 @@
  * limitations under the License.
  */
 
-.demo-data-tab {
-  display: flex;
-  flex-direction: column;
-
-  .description-details {
-    font-family: $FONT-ROBOTO-REGULAR;
-    font-size: 13px;
-    color: $COLOR--almost-black;
-    line-height: 20px;
-    text-align: left;
-    padding-bottom: 23px;
-    max-width: 660px;
-    @media (max-width: $SCREEN_XS_MAX) {
-      width: 100%;
-    }
-  }
-
-  .description-delimiter {
-    width: 100%;
-    height: 1px;
-    background: $COLOR--e-100;
-    border: none;
-    margin: 0;
-  }
-
-  .description-header {
-    color: $COLOR--almost-black;
-    font-size: 13px;
-    font-family: $FONT-ROBOTO-MEDIUM;
-    line-height: 1.5;
-    text-indent: 1px;
-    text-align: left;
-    margin-top: 24px;
-    margin-bottom: 6px;
-    @media (max-width: $SCREEN_XS_MAX) {
-      margin-top: 12px;
-      margin-bottom: 5px;
-    }
+.description-header {
+  color: $COLOR--almost-black;
+  font-family: $FONT-ROBOTO-MEDIUM;
+  font-size: 13px;
+  text-align: left;
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-top: 12px;
+    margin-bottom: 5px;
   }
 }
 
 .description-list {
-  margin: 10px 0 24px 26px;
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 13px;
+  margin: 22px 24px;
   list-style-type: none;
+  line-height: 20px;
 
   li {
-    margin: 0 0 3px 0;
-    padding-left: 8px;
-    color: $COLOR--charcoal-grey;
-    font-size: 13px;
-    line-height: 1.5;
+    position: relative;
+    margin-bottom: 3px;
+    padding-left: 9px;
+    color: $COLOR--almost-black;
   }
 
   li::before {
     content: '\2022';
+    font-size: 18px;
+    position: absolute;
+    left: 0;
     color: $COLOR--topaz-2;
-    font-weight: bold;
-    display: inline-block;
-    width: 1em;
-    margin-left: -1em;
+    width: 4px;
   }
-}
-
-.warning-message-demo {
-  width: auto;
-  max-width: max-content;
-  min-height: 85px;
 }
