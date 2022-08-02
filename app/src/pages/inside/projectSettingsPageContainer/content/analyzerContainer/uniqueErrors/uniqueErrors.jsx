@@ -22,6 +22,8 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { Button } from 'componentLibrary/button';
 import { Dropdown } from 'componentLibrary/dropdown';
 import { Checkbox } from 'componentLibrary/checkbox';
+import { useTracking } from 'react-tracking';
+import { PROJECT_SETTINGS_ANALYZER_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { FieldElement, LabeledPreloader } from '../../elements';
 import { messages } from './messages';
 import { UNIQUE_ERROR_ENABLED, UNIQUE_ERROR_REMOVE_NUMBERS } from '../constants';
@@ -39,6 +41,7 @@ const UniqueErrors = ({
 }) => {
   const { formatMessage } = useIntl();
   const [isPending, setPending] = useState(false);
+  const { trackEvent } = useTracking();
 
   const dropdownOptions = [
     { label: formatMessage(messages.uniqueErrAnalyzeModalIncludeNumbers), value: 'false' },
@@ -64,6 +67,15 @@ const UniqueErrors = ({
     setPending(true);
     await onFormSubmit(preparedData);
     setPending(false);
+
+    const type = JSON.parse(preparedData[UNIQUE_ERROR_REMOVE_NUMBERS]);
+
+    trackEvent(
+      PROJECT_SETTINGS_ANALYZER_EVENTS.CLICK_SUBMIT_IN_UNIQUE_ERRORS_TAB(
+        preparedData[UNIQUE_ERROR_ENABLED],
+        type,
+      ),
+    );
   };
 
   const isFieldDisabled = !hasPermission || isPending;

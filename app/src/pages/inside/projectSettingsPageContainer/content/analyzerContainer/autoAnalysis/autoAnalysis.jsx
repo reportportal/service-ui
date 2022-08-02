@@ -25,6 +25,8 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { bindMessageToValidator, validate } from 'common/utils/validation';
 import { Dropdown } from 'componentLibrary/dropdown';
 import { Checkbox } from 'componentLibrary/checkbox';
+import { useTracking } from 'react-tracking';
+import { PROJECT_SETTINGS_ANALYZER_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { Layout } from '../../layout';
 import { FieldElement, LabeledPreloader } from '../../elements';
 import { messages } from './messages';
@@ -41,6 +43,7 @@ const AutoAnalysis = ({
 }) => {
   const { formatMessage } = useIntl();
   const [isPending, setPending] = useState(false);
+  const { trackEvent } = useTracking();
 
   const dropdownOptions = [
     { value: 'ALL', label: formatMessage(messages.allLaunchesCaption) },
@@ -59,6 +62,14 @@ const AutoAnalysis = ({
     setPending(true);
     await onFormSubmit(data);
     setPending(false);
+
+    trackEvent(
+      PROJECT_SETTINGS_ANALYZER_EVENTS.CLICK_SUBMIT_IN_AUTO_ANALYZER_TAB(
+        data[MIN_SHOULD_MATCH],
+        data[ANALYZER_ENABLED],
+        data[ANALYZER_MODE] === 'ALL' ? 'All' : messages.sameNameLaunchesCaption.defaultMessage,
+      ),
+    );
   };
 
   const isFieldDisabled = !hasPermission || isPending;

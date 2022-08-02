@@ -14,14 +14,45 @@
  * limitations under the License.
  */
 
+import { normalizeEventType } from '../../utils';
+
 const PROJECT_SETTINGS = 'project_settings';
+const ANALYZER = 'analyzer';
+
+const BASIC_EVENT_PARAMETERS = {
+  action: 'click',
+  category: PROJECT_SETTINGS,
+  element_name: 'button_submit',
+};
+
+const getStatus = (status) => (status ? 'active' : 'disabled');
+
 export const PROJECT_SETTINGS_ANALYZER_EVENTS = {
   CLICK_SUBMIT_IN_INDEX_TAB: (number, status) => ({
-    action: 'click',
-    category: PROJECT_SETTINGS,
-    element_name: 'button_submit',
-    place: 'analyzer_index_settings',
+    ...BASIC_EVENT_PARAMETERS,
+    place: `${ANALYZER}_index_settings`,
     number,
-    status: status ? 'active' : 'disabled',
+    status: getStatus(status),
+  }),
+
+  CLICK_SUBMIT_IN_AUTO_ANALYZER_TAB: (number, status, type) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: `${ANALYZER}_auto_analyzer`,
+    number,
+    status: getStatus(status),
+    type: normalizeEventType(type),
+  }),
+
+  CLICK_SUBMIT_IN_SIMILAR_ITEMS_TAB: (number) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: `${ANALYZER}_similar_items`,
+    number,
+  }),
+
+  CLICK_SUBMIT_IN_UNIQUE_ERRORS_TAB: (status, type) => ({
+    ...BASIC_EVENT_PARAMETERS,
+    place: `${ANALYZER}_unique_errors`,
+    status: getStatus(status),
+    type: type ? 'exclude' : 'include',
   }),
 };

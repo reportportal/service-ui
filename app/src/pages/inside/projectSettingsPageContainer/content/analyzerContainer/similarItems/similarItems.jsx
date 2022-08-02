@@ -23,6 +23,8 @@ import { Button } from 'componentLibrary/button';
 import { FieldNumber } from 'componentLibrary/fieldNumber';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { bindMessageToValidator, validate } from 'common/utils/validation';
+import { useTracking } from 'react-tracking';
+import { PROJECT_SETTINGS_ANALYZER_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { Layout } from '../../layout';
 import { LabeledPreloader, FieldElement } from '../../elements';
 import { messages } from './messages';
@@ -37,6 +39,7 @@ const SimilarItems = ({
 }) => {
   const { formatMessage } = useIntl();
   const [isPending, setPending] = useState(false);
+  const { trackEvent } = useTracking();
 
   useEffect(() => {
     initialize({
@@ -48,6 +51,12 @@ const SimilarItems = ({
     setPending(true);
     await onFormSubmit(data);
     setPending(false);
+
+    trackEvent(
+      PROJECT_SETTINGS_ANALYZER_EVENTS.CLICK_SUBMIT_IN_SIMILAR_ITEMS_TAB(
+        data[SEARCH_LOGS_MIN_SHOULD_MATCH],
+      ),
+    );
   };
 
   const isFieldDisabled = !hasPermission || isPending;
