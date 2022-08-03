@@ -209,11 +209,11 @@ export const Notifications = ({ setHeaderTitleNode }) => {
     },
   ];
 
-  const ruleListAnalyticsTrigger = () => {
+  const handleRuleItemClick = () => {
     trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_TO_EXPAND_NOTIFICATIONS_DETAILS);
   };
 
-  const emptyStateAnalyticsTrigger = () => {
+  const handleDocumentationClick = () => {
     trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_LINK_DOCUMENTATION);
   };
 
@@ -243,7 +243,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
               actions={actions}
               onToggle={onToggleHandler}
               ruleItemContent={NotificationRuleContent}
-              onClick={ruleListAnalyticsTrigger}
+              onClick={handleRuleItemClick}
             />
           </div>
         </>
@@ -257,7 +257,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
           }
           disableButton={isReadOnly}
           handleButton={onAdd}
-          onClick={emptyStateAnalyticsTrigger}
+          handleDocumentationClick={handleDocumentationClick}
         />
       )}
     </>

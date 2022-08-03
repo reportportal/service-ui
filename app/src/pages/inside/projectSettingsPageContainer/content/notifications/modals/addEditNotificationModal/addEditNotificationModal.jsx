@@ -297,7 +297,7 @@ const AddEditNotificationModal = ({
       cancelButton={cancelButton}
       onClose={() => dispatch(hideModalAction())}
       footerNode={
-        <FieldProvider name="enabled" format={(value) => !!value}>
+        <FieldProvider name={ENABLED_FIELD_KEY} format={(value) => !!value}>
           <Toggle className={cx('toggle')}>{formatMessage(messages.active)}</Toggle>
         </FieldProvider>
       }

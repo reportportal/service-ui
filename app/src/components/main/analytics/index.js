@@ -18,4 +18,4 @@ export { AnalyticsWrapper } from './AnalyticsWrapper';
 export { EmptyAnalyticsWrapper } from './EmptyAnalyticsWrapper';
 export { pageEventsMap } from './constants';
 export { provideEcGA } from './utils';
-export { normalizeEventType } from './utils';
+export { normalizeEventString } from './utils';

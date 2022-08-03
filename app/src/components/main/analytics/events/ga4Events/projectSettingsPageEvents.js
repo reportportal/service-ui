@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { normalizeEventType } from '../../utils';
+import { normalizeEventString } from '../../utils';
 
 const PROJECT_SETTINGS = 'project_settings';
 const ANALYZER = 'analyzer';
@@ -46,7 +46,7 @@ export const PROJECT_SETTINGS_ANALYZER_EVENTS = {
     place: `${ANALYZER}_auto_analyzer`,
     number,
     status: getStatus(status),
-    type: normalizeEventType(type),
+    type: normalizeEventString(type),
   }),
 
   CLICK_SUBMIT_IN_SIMILAR_ITEMS_TAB: (number) => ({
@@ -75,10 +75,10 @@ export const PROJECT_SETTINGS_NOTIFICATIONS_EVENTS = {
   CLICK_SAVE_BUTTON_IN_MODAL: (modalName, status, number, type, switcher) => ({
     ...BASIC_EVENT_PARAMETERS_NOTIFICATIONS,
     element_name: 'button_save',
-    modal: normalizeEventType(modalName),
+    modal: normalizeEventString(modalName),
     status: getStatus(status),
     number,
-    type: normalizeEventType(type),
+    type: normalizeEventString(type),
     switcher: getSwitcher(switcher),
   }),
 
