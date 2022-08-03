@@ -45,22 +45,26 @@ export const LoginBlock = () => {
   const extensions = useSelector(uiExtensionLoginBlockSelector);
 
   return (
-    <PageBlockContainer header={messages.welcome} hint={messages.login}>
-      {!isEmptyObject(externalAuth) ? (
-        <>
-          <ExternalLoginBlock externalAuth={externalAuth} />
-          <div className={cx('separator')}>
-            <div className={cx('line')} />
-            <div className={cx('or')}>
-              <FormattedMessage id={'LoginForm.or'} defaultMessage={'or'} />
+    <>
+      <PageBlockContainer header={messages.welcome} hint={messages.login}>
+        {!isEmptyObject(externalAuth) ? (
+          <>
+            <ExternalLoginBlock externalAuth={externalAuth} />
+            <div className={cx('separator')}>
+              <div className={cx('line')} />
+              <div className={cx('or')}>
+                <FormattedMessage id={'LoginForm.or'} defaultMessage={'or'} />
+              </div>
             </div>
-          </div>
-        </>
-      ) : null}
-      <LoginForm />
-      {extensions &&
-        extensions.length !== 0 &&
-        extensions.map((extension) => <ExtensionLoader extension={extension} />)}
-    </PageBlockContainer>
+          </>
+        ) : null}
+        <LoginForm />
+      </PageBlockContainer>
+      <div className={cx('bottom-content')}>
+        {extensions &&
+          extensions.length !== 0 &&
+          extensions.map((extension) => <ExtensionLoader extension={extension} />)}
+      </div>
+    </>
   );
 };
