@@ -23,24 +23,17 @@ import styles from './ruleItem.scss';
 
 const cx = classNames.bind(styles);
 
-export const RuleItem = ({
-  item,
-  actions,
-  onToggle,
-  disabled,
-  content,
-  onClick: analyticsTrigger,
-}) => {
+export const RuleItem = ({ item, actions, onToggle, disabled, content, onClick }) => {
   const [shown, setShown] = useState(false);
   const { enabled, name } = item;
   const onToggleActive = (val) => {
     onToggle(val, item);
   };
 
-  const onClick = () => {
+  const onClickHandler = () => {
     setShown(!shown);
-    if (!shown && analyticsTrigger) {
-      analyticsTrigger();
+    if (!shown && onClick) {
+      onClick();
     }
   };
 
@@ -54,7 +47,7 @@ export const RuleItem = ({
         />
       </span>
       <div className={cx('panel-wrapper')}>
-        <div className={cx('panel')} onClick={onClick}>
+        <div className={cx('panel')} onClick={onClickHandler}>
           <span className={cx('name')} title={name}>
             {name}
           </span>

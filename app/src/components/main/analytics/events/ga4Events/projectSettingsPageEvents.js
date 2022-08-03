@@ -75,7 +75,7 @@ export const PROJECT_SETTINGS_NOTIFICATIONS_EVENTS = {
   CLICK_SAVE_BUTTON_IN_MODAL: (modalName, status, number, type, switcher) => ({
     ...BASIC_EVENT_PARAMETERS_NOTIFICATIONS,
     element_name: 'button_save',
-    modal: modalName,
+    modal: normalizeEventType(modalName),
     status: getStatus(status),
     number,
     type: normalizeEventType(type),

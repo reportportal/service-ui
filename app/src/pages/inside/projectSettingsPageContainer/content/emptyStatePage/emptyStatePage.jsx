@@ -35,6 +35,7 @@ export const EmptyStatePage = ({
   disableButton,
   descriptionClassName,
   analyticsTrigger,
+  onClick,
 }) => {
   const { formatMessage } = useIntl();
   return (
@@ -48,12 +49,7 @@ export const EmptyStatePage = ({
         </Button>
       )}
       {documentationLink && (
-        <a
-          href={documentationLink}
-          onClick={analyticsTrigger}
-          target="_blank"
-          className={cx('link')}
-        >
+        <a href={documentationLink} onClick={onClick} target="_blank" className={cx('link')}>
           <span>{formatMessage(COMMON_LOCALE_KEYS.documentation)}</span>
           <div className={cx('icon')}>{Parser(ExternalLinkIcon)}</div>
         </a>
@@ -71,6 +67,7 @@ EmptyStatePage.propTypes = {
   disableButton: PropTypes.bool,
   descriptionClassName: PropTypes.string,
   analyticsTrigger: PropTypes.oneOfType([PropTypes.func, PropTypes.instanceOf(null)]),
+  onClick: PropTypes.oneOfType([PropTypes.func, PropTypes.instanceOf(null)]),
 };
 
 EmptyStatePage.defaultProps = {
@@ -82,4 +79,5 @@ EmptyStatePage.defaultProps = {
   disableButton: false,
   descriptionClassName: '',
   analyticsTrigger: null,
+  onClick: null,
 };
