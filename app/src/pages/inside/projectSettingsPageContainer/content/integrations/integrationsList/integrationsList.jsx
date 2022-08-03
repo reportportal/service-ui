@@ -51,7 +51,7 @@ export const IntegrationsList = (props) => {
           title={formatMessage(messages.noIntegrationsMessage)}
           description={formatMessage(messages.noIntegrationsDescription)}
           documentationLink={'https://reportportal.io/docs/Project-configuration%3Eintegrations'}
-          customClassName={cx('integration-empty')}
+          descriptionClassName={cx('integration-empty')}
         />
       )}
     </>

@@ -30,55 +30,54 @@
   color: $COLOR--e-400;
   max-width: 420px;
   margin: 0 auto;
+}
+.img {
+  width: 168px;
+  height: 123px;
+  margin: 163px 0 32px 0;
+  background-image: url('img/empty-state-img.svg');
+}
 
-  .img {
-    width: 168px;
-    height: 123px;
-    margin: 163px 0 32px 0;
-    background-image: url('img/empty-state-img.svg');
+.title {
+  font-family: $FONT-REGULAR;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 31px;
+}
+
+.description {
+  margin-top: 16px;
+  margin-bottom: 24px;
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 13px;
+  line-height: 20px;
+  text-align: center;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  margin-top: 18px;
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 13px;
+  line-height: 20px;
+  text-decoration: none;
+  outline: none;
+
+  @include link-state($COLOR--topaz-2);
+
+  &:hover {
+    text-decoration: underline;
+
+    @include link-state($COLOR--topaz-hover-2);
   }
 
-  .title {
-    font-family: $FONT-REGULAR;
-    font-weight: 400;
-    font-size: 20px;
-    line-height: 31px;
+  &:active {
+    @include link-state($COLOR--topaz-pressed);
   }
 
-  .description {
-    margin-top: 16px;
-    margin-bottom: 24px;
-    font-family: $FONT-ROBOTO-REGULAR;
-    font-size: 13px;
-    line-height: 20px;
-    text-align: center;
-  }
-
-  .link {
-    display: flex;
-    align-items: center;
-    margin-top: 18px;
-    font-family: $FONT-ROBOTO-REGULAR;
-    font-size: 13px;
-    line-height: 20px;
-    text-decoration: none;
-    outline: none;
-
-    @include link-state($COLOR--topaz-2);
-
-    &:hover {
-      text-decoration: underline;
-
-      @include link-state($COLOR--topaz-hover-2);
-    }
-
-    &:active {
-      @include link-state($COLOR--topaz-pressed);
-    }
-
-    &:focus {
-      @include link-state($COLOR--topaz-focused);
-    }
+  &:focus {
+    @include link-state($COLOR--topaz-focused);
   }
 
   .icon {
