@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+.integration-empty {
+  margin-bottom: 0px !important;
+}
+
 .integrations-list {
   display: flex;
   flex-direction: column;
@@ -36,7 +40,4 @@
 .integrations-group-items {
   display: flex;
   flex-direction: column;
-  @media (max-width: $SCREEN_XS_MAX) {
-    flex-direction: column;
-  }
 }

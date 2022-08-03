@@ -16,25 +16,22 @@
 
 .integrations-list-item {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  width: 820px;
+  max-width: 820px;
   min-height: 104px;
   height: auto;
-  margin: 0 15px 16px 24px;
+  margin: 0 0 16px 24px;
   padding: 16px 24px;
   box-sizing: border-box;
   cursor: pointer;
   background-color: $COLOR--white-two;
+  border-radius: 8px;
+  box-shadow: $BOX_SHADOW--item;
 
-  &:hover {
-    box-shadow: $BOX_SHADOW--item;
-    border-radius: 8px;
+  &:last-child {
+    margin-bottom: 0;
   }
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    width: 100%;
-    margin-right: 0;
+  &:hover {
+    box-shadow: $BOX_SHADOW--item-hover;
   }
 }
 

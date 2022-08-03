@@ -37,7 +37,7 @@ export const messages = defineMessages({
   },
   [OTHER_GROUP_TYPE]: {
     id: 'IntegrationsList.other',
-    defaultMessage: 'Third party',
+    defaultMessage: 'Other',
   },
   noIntegrationsMessage: {
     id: 'IntegrationsCase.noIntegrationsMessage',
