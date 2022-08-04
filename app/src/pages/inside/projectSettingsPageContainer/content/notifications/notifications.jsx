@@ -21,7 +21,6 @@ import classNames from 'classnames/bind';
 import { useTracking } from 'react-tracking';
 import { useIntl } from 'react-intl';
 import { canUpdateSettings } from 'common/utils/permissions';
-import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import {
   projectNotificationsSelector,
   projectNotificationsStateSelector,
@@ -44,8 +43,8 @@ import BinIcon from 'common/img/newIcons/bin-inline.svg';
 import CopyIcon from 'common/img/newIcons/copy-inline.svg';
 import { projectNotificationsLoadingSelector } from 'controllers/project/selectors';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { RuleList, FieldElement, NotificationRuleContent } from '../elements';
 import { PROJECT_SETTINGS_NOTIFICATIONS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
+import { RuleList, FieldElement, NotificationRuleContent } from '../elements';
 import { Layout } from '../layout';
 import styles from './notifications.scss';
 import { DEFAULT_CASE_CONFIG } from './constants';

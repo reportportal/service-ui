@@ -171,7 +171,7 @@ export const PatternAnalysisContent = ({
         <RuleList
           disabled={disabled}
           data={patterns}
-          actionsConfig={actions}
+          actions={actions}
           onToggle={onToggleHandler}
           ruleItemContent={PatternRuleContent}
         />
