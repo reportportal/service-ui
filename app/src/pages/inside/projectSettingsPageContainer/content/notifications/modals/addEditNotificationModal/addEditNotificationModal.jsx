@@ -256,15 +256,15 @@ const AddEditNotificationModal = ({
 
       handleSubmit(onSave(!isEditorShown))();
 
-      trackEvent(
-        PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_SAVE_BUTTON_IN_MODAL(
-          modalName,
-          informOwner,
-          attributesValue.length,
-          messages[sendCase].defaultMessage,
-          switcher,
-        ),
-      );
+      const eventParameters = {
+        modalName,
+        status: informOwner,
+        type: messages[sendCase].defaultMessage,
+        switcher,
+        number: isEditorShown ? attributesValue.length : undefined,
+      };
+
+      trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_SAVE_BUTTON_IN_MODAL(eventParameters));
     },
   };
   const cancelButton = {

@@ -53,12 +53,12 @@ RuleList.propTypes = {
   onToggle: PropTypes.func,
   disabled: PropTypes.bool,
   ruleItemContent: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
-  handleRuleItemClick: PropTypes.oneOfType([PropTypes.func, PropTypes.instanceOf(null)]),
+  handleRuleItemClick: PropTypes.func,
 };
 RuleList.defaultProps = {
   actions: [],
   onToggle: () => {},
   disabled: true,
   ruleItemContent: null,
-  handleRuleItemClick: null,
+  handleRuleItemClick: () => {},
 };

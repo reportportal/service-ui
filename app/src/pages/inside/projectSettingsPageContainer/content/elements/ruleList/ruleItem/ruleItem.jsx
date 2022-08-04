@@ -32,9 +32,7 @@ export const RuleItem = ({ item, actions, onToggle, disabled, content, onClick }
 
   const onClickHandler = () => {
     setShown(!shown);
-    if (!shown && onClick) {
-      onClick();
-    }
+    onClick(shown);
   };
 
   return (
@@ -79,12 +77,12 @@ RuleItem.propTypes = {
   onToggle: PropTypes.func,
   disabled: PropTypes.bool,
   content: PropTypes.node,
-  onClick: PropTypes.oneOfType([PropTypes.func, PropTypes.instanceOf(null)]),
+  onClick: PropTypes.func,
 };
 RuleItem.defaultProps = {
   actions: [],
   onToggle: () => {},
   disabled: false,
   content: null,
-  onClick: null,
+  onClick: () => {},
 };

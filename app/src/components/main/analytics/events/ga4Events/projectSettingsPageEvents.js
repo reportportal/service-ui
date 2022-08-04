@@ -72,14 +72,14 @@ export const PROJECT_SETTINGS_DEMO_DATA_EVENTS = {
 };
 
 export const PROJECT_SETTINGS_NOTIFICATIONS_EVENTS = {
-  CLICK_SAVE_BUTTON_IN_MODAL: (modalName, status, number, type, switcher) => ({
+  CLICK_SAVE_BUTTON_IN_MODAL: ({ modalName, status, number, type, switcher }) => ({
     ...BASIC_EVENT_PARAMETERS_NOTIFICATIONS,
     element_name: 'button_save',
     modal: normalizeEventString(modalName),
     status: getStatus(status),
-    number,
     type: normalizeEventString(type),
     switcher: getSwitcher(switcher),
+    ...(number !== undefined && { number }),
   }),
 
   CLICK_CHECKBOX_AUTO_NOTIFICATIONS: (status) => ({

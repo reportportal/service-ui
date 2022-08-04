@@ -209,8 +209,10 @@ export const Notifications = ({ setHeaderTitleNode }) => {
     },
   ];
 
-  const handleRuleItemClick = () => {
-    trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_TO_EXPAND_NOTIFICATIONS_DETAILS);
+  const handleRuleItemClick = (isShown) => {
+    if (isShown) {
+      trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_TO_EXPAND_NOTIFICATIONS_DETAILS);
+    }
   };
 
   const handleDocumentationClick = () => {
@@ -243,7 +245,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
               actions={actions}
               onToggle={onToggleHandler}
               ruleItemContent={NotificationRuleContent}
-              onClick={handleRuleItemClick}
+              handleRuleItemClick={handleRuleItemClick}
             />
           </div>
         </>
