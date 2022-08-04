@@ -498,7 +498,7 @@
   "DemoDataTab.descriptionListFirstItem": "5 запусков",
   "DemoDataTab.descriptionListSecItem": "1 панель управления с 9 виджетами",
   "DemoDataTab.descriptionListThirdItem": "1 фильтр",
-  "DemoDataTab.descriptionDetails": "Демонстрационные данные помогут вам ознакомиться с функциональностью ReportPortal. При создании демонстрационных данных будет создано несколько объектов, которые послужат вам в качестве примера. Панель инструментов и фильтр будут сгенерированы только в том случае, если вы их еще не создали.",
+  "DemoDataTab.descriptionDetails": "Демонстрационные данные помогут вам ознакомиться с функциональностью ReportPortal. При создании демонстрационных данных будет создано несколько объектов, которые послужат вам в качестве примера. Демонстрационная панель и фильтр будут сгенерированы только в том случае, если у вас их еще нет.",
   "DemoDataTab.descriptionWarningMessageHeader": "Внимание",
   "DemoDataTab.descriptionWarningMessageContent": "Если вы создаете демонстрационные данные, вам придется удалить их вручную.",
   "DemoDataTabForm.demoDataPostfixHint": "Postfix should have size from 1 to 90",
