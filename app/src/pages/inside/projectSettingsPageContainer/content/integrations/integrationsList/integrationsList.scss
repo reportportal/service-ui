@@ -14,6 +14,30 @@
  * limitations under the License.
  */
 
-$BOX_SHADOW--modal-window: 0 8px 40px rgba(0, 0, 0, 0.15);
-$BOX_SHADOW--item: 0px 1px 3px rgba(55, 67, 98, 0.1);
-$BOX_SHADOW--item-hover: 0px 1px 3px rgba(55, 67, 98, 0.2);
+.integration-empty {
+  margin-bottom: 0px;
+}
+
+.integrations-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.integrations-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 32px;
+}
+
+.integrations-group-header {
+  margin-bottom: 16px;
+  color: $COLOR--almost-black;
+  font-size: 15px;
+  line-height: 24px;
+  font-family: $FONT-ROBOTO-MEDIUM;
+}
+
+.integrations-group-items {
+  display: flex;
+  flex-direction: column;
+}

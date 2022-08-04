@@ -54,6 +54,7 @@ export {
   isBtsPluginsExistSelector,
   enabledBtsPluginsSelector,
   globalIntegrationsSelector,
+  pluginsLoadingSelector,
 } from './selectors';
 export { pluginSagas } from './sagas';
 export {

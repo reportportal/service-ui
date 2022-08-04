@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,6 +14,4 @@
  * limitations under the License.
  */
 
-$BOX_SHADOW--modal-window: 0 8px 40px rgba(0, 0, 0, 0.15);
-$BOX_SHADOW--item: 0px 1px 3px rgba(55, 67, 98, 0.1);
-$BOX_SHADOW--item-hover: 0px 1px 3px rgba(55, 67, 98, 0.2);
+export { IntegrationsList } from './integrationsList';

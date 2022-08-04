@@ -35,7 +35,7 @@ import {
   PATTERN_ANALYSIS,
 } from 'common/constants/settingsTabs';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { IntegrationsTab } from 'pages/common/settingsPage/integrationsTab';
+import { Integrations } from 'pages/inside/projectSettingsPageContainer/content/integrations';
 import { DefectTypesTab } from 'pages/common/settingsPage/defectTypesTab';
 import { DemoDataTab } from 'pages/inside/projectSettingsPageContainer/content/demoDataContent';
 import { canSeeDemoData } from 'common/utils/permissions';
@@ -101,7 +101,7 @@ export const ProjectSettingsPageContainer = () => {
       [INTEGRATIONS]: {
         name: formatMessage(messages.integrations),
         link: createTabLink(INTEGRATIONS),
-        component: <IntegrationsTab />,
+        component: <Integrations />,
         eventInfo: SETTINGS_PAGE_EVENTS.INTEGRATIONS_TAB,
       },
       [NOTIFICATIONS]: {

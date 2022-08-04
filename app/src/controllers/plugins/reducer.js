@@ -17,6 +17,7 @@
 import { combineReducers } from 'redux';
 import { fetchReducer } from 'controllers/fetch';
 import { queueReducers } from 'common/utils/queueReducers';
+import { loadingReducer } from 'controllers/loading';
 import { uiExtensionsReducer } from './uiExtensions';
 import {
   NAMESPACE,
@@ -123,4 +124,5 @@ export const pluginsReducer = combineReducers({
   publicPlugins: fetchReducer(PUBLIC_PLUGINS),
   integrations: integrationsReducer,
   uiExtensions: uiExtensionsReducer,
+  pluginsLoading: loadingReducer(NAMESPACE),
 });
