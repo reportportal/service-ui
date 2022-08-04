@@ -15,6 +15,7 @@
  */
 
 import PropTypes from 'prop-types';
+import { useEffect } from 'react';
 import { AttributeList } from './attributeList';
 
 const NEW_ATTRIBUTE = {
@@ -24,7 +25,7 @@ const NEW_ATTRIBUTE = {
 };
 
 export const EditableAttributeList = ({
-  attributes,
+  value: attributes,
   onChange,
   disabled,
   newAttrMessage,
@@ -32,11 +33,19 @@ export const EditableAttributeList = ({
   customClass,
   showButton,
   editable,
+  defaultOpen,
+  onAddNewAttribute,
   ...rest
 }) => {
   const handleAddNew = () => {
     onChange([...attributes, NEW_ATTRIBUTE]);
+    onAddNewAttribute();
   };
+  useEffect(() => {
+    if (defaultOpen && !attributes.length) {
+      handleAddNew();
+    }
+  }, [disabled, attributes]);
 
   const handleChange = (attr) => {
     onChange(attr);
@@ -60,7 +69,7 @@ export const EditableAttributeList = ({
 };
 
 EditableAttributeList.propTypes = {
-  attributes: PropTypes.arrayOf(PropTypes.object),
+  value: PropTypes.arrayOf(PropTypes.object),
   disabled: PropTypes.bool,
   newAttrMessage: PropTypes.string,
   onChange: PropTypes.func,
@@ -68,10 +77,12 @@ EditableAttributeList.propTypes = {
   customClass: PropTypes.string,
   showButton: PropTypes.bool,
   editable: PropTypes.bool,
+  defaultOpen: PropTypes.bool,
+  onAddNewAttribute: PropTypes.func,
 };
 
 EditableAttributeList.defaultProps = {
-  attributes: [],
+  value: [],
   disabled: false,
   newAttrMessage: '',
   onChange: () => {},
@@ -79,4 +90,6 @@ EditableAttributeList.defaultProps = {
   customClass: '',
   showButton: true,
   editable: true,
+  defaultOpen: false,
+  onAddNewAttribute: () => {},
 };

@@ -281,23 +281,6 @@ const AddEditNotificationModal = ({
     text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
   };
 
-  const attributeControlHandler = (e) => {
-    setShowEditor(e.target.checked);
-    const attributes = attributesValue.reduce((acc, curr) => {
-      const attr = { ...curr };
-      if (attr.edited) {
-        delete attr.edited;
-      }
-      return [...acc, attr];
-    }, []);
-
-    change(ATTRIBUTES_FIELD_KEY, attributes);
-  };
-  const attributesCaption =
-    isEditorShown || (!isEditorShown && !attributesValue?.length)
-      ? formatMessage(messages.attributesNote)
-      : formatMessage(messages.attributesNotActive);
-
   return (
     <ModalLayout
       title={formatMessage(messages.title, {
@@ -372,18 +355,20 @@ const AddEditNotificationModal = ({
         <span className={cx('description', 'launches')}>
           {formatMessage(messages.launchNamesNote)}
         </span>
-        <Checkbox value={isEditorShown} onChange={attributeControlHandler}>
-          {formatMessage(messages.attributes)}
-        </Checkbox>
-        <span className={cx('description')}>{attributesCaption}</span>
-        <FieldElement name={ATTRIBUTES_FIELD_KEY} disabled={!isEditorShown}>
-          <AttributeListContainer
-            keyURLCreator={URLS.launchAttributeKeysSearch}
-            valueURLCreator={URLS.launchAttributeValuesSearch}
-            newAttrMessage={formatMessage(messages.addAttribute)}
-            attributesListClassname={cx('attributes-list')}
-          />
-        </FieldElement>
+        <AttributeListContainer
+          name={ATTRIBUTES_FIELD_KEY}
+          disabled={!isEditorShown}
+          setShowEditor={setShowEditor}
+          shown={isEditorShown}
+          keyURLCreator={URLS.launchAttributeKeysSearch}
+          valueURLCreator={URLS.launchAttributeValuesSearch}
+          change={change}
+          defaultOpen={isEditorShown}
+          withControl
+          attributesValue={attributesValue}
+          attributesListClassname={cx('attributes-list')}
+          withoutProvider={false}
+        />
       </div>
     </ModalLayout>
   );
