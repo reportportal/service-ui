@@ -20,12 +20,10 @@ import { injectIntl, defineMessages } from 'react-intl';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { validate, composeBoundValidators, bindMessageToValidator } from 'common/utils/validation';
-import { isEmptyObject } from 'common/utils/isEmptyObject';
 import { Input } from 'components/inputs/input';
 import { InputTextArea } from 'components/inputs/inputTextArea';
 import { ModalField } from 'components/main/modal';
 import { FIELD_LABEL_WIDTH } from './controls/constants';
-import { DashboardControl } from './controls/dashboardControl';
 
 const messages = defineMessages({
   widgetNameHint: {
@@ -71,9 +69,7 @@ export class CommonWidgetControls extends Component {
     widgetId: PropTypes.number,
     eventsInfo: PropTypes.object,
     trackEvent: PropTypes.func,
-    dashboards: PropTypes.arrayOf(PropTypes.object),
     activeDashboard: PropTypes.object,
-    onChangeDashboard: PropTypes.func,
   };
 
   static defaultProps = {
@@ -81,9 +77,7 @@ export class CommonWidgetControls extends Component {
     widgetId: null,
     eventsInfo: {},
     trackEvent: () => {},
-    dashboards: [],
     activeDashboard: {},
-    onChangeDashboard: () => {},
     intl: {},
   };
 
@@ -92,19 +86,12 @@ export class CommonWidgetControls extends Component {
     props.initializeControlsForm && props.initializeControlsForm();
   }
 
-  isShowDashboardsList = () => {
-    const { activeDashboard, widgetId } = this.props;
-    return activeDashboard && isEmptyObject(activeDashboard) && !widgetId;
-  };
-
   render() {
     const {
       intl: { formatMessage },
       widgetId,
       trackEvent,
       eventsInfo,
-      dashboards,
-      onChangeDashboard,
       activeDashboard: { widgets = [] },
     } = this.props;
 
@@ -132,15 +119,6 @@ export class CommonWidgetControls extends Component {
             <InputTextArea />
           </FieldProvider>
         </ModalField>
-        {this.isShowDashboardsList() && (
-          <FieldProvider
-            name="selectedDashboard"
-            dashboards={dashboards}
-            onChange={onChangeDashboard}
-          >
-            <DashboardControl />
-          </FieldProvider>
-        )}
       </Fragment>
     );
   }

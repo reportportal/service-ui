@@ -1404,7 +1404,7 @@
   "PermissionMap.admin": "Адміністратор",
   "PermissionMap.attention": "Користувач з роллю адміністратора може виконувати всі операції.",
   "PermissionMap.changeStatus": "Зміна статусу",
-  "PermissionMap.createShareItem": "Створити елементом поділитися",
+  "PermissionMap.createItem": "Створити елемент",
   "PermissionMap.customer": "Замовник",
   "PermissionMap.editDeleteSharedItem": "Редагувати, видалити елемент загальнодоступний",
   "PermissionMap.editProjectSettings": "Змінити налаштування проекту",
