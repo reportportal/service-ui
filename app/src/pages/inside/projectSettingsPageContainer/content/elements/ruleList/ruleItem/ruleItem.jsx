@@ -31,8 +31,8 @@ export const RuleItem = ({ item, actions, onToggle, disabled, content, onClick }
   };
 
   const onClickHandler = () => {
+    onClick(!shown);
     setShown(!shown);
-    onClick(shown);
   };
 
   return (
