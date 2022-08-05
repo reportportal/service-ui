@@ -33,7 +33,6 @@ export const FilterList = ({ filters, activeFilterId, unsavedFilterIds, onRemove
           active={filter.id === activeFilterId}
           unsaved={unsavedFilterIds.indexOf(filter.id) > -1}
           onRemove={() => onRemoveFilter(filter)}
-          owner={filter.owner}
           intl={intl}
         />
       </div>
