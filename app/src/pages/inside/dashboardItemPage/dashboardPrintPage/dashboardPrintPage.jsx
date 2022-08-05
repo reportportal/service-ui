@@ -21,7 +21,7 @@ import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { activeDashboardItemSelector } from 'controllers/dashboard';
-import { activeProjectSelector, userIdSelector } from 'controllers/user';
+import { activeProjectSelector } from 'controllers/user';
 import { PageLayout } from 'layouts/pageLayout';
 import { GhostButton } from 'components/buttons/ghostButton';
 import ExportIcon from 'common/img/export-inline.svg';
@@ -48,7 +48,6 @@ const messages = defineMessages({
 @injectIntl
 @connect((state) => ({
   activeProject: activeProjectSelector(state),
-  currentUser: userIdSelector(state),
   dashboard: activeDashboardItemSelector(state),
 }))
 @track()
@@ -56,7 +55,6 @@ export class DashboardPrintPage extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     activeProject: PropTypes.string.isRequired,
-    currentUser: PropTypes.string.isRequired,
     dashboard: PropTypes.object.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -76,7 +74,6 @@ export class DashboardPrintPage extends Component {
     const {
       intl: { formatMessage },
       activeProject,
-      currentUser,
       dashboard,
     } = this.props;
 
@@ -99,12 +96,7 @@ export class DashboardPrintPage extends Component {
                 <span className={cx('title-value')}>{this.getDashboardName()}</span>
               </p>
             </div>
-            <WidgetsGrid
-              currentUser={currentUser}
-              dashboard={dashboard}
-              isPrintMode
-              isModifiable={false}
-            />
+            <WidgetsGrid dashboard={dashboard} isPrintMode isModifiable={false} />
           </div>
         </div>
       </PageLayout>

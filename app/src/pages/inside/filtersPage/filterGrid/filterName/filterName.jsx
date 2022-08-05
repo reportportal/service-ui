@@ -21,7 +21,6 @@ import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import DOMPurify from 'dompurify';
 import Link from 'redux-first-router-link';
-
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import { MarkdownViewer } from 'components/main/markdown';
 import { canEditFilter } from 'common/utils/permissions';

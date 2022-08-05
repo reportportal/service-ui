@@ -21,7 +21,6 @@ import Link from 'redux-first-router-link';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import { connect } from 'react-redux';
 import { getLaunchFilterLinkSelector } from 'controllers/launch';
-import { userIdSelector } from 'controllers/user';
 import { FilterDescriptionTooltipIcon } from './filterDescriptionTooltipIcon';
 import styles from './filterItem.scss';
 
@@ -70,7 +69,6 @@ const FilterItemBase = ({
 );
 
 export const FilterItem = connect((state) => ({
-  userId: userIdSelector(state),
   getLaunchFilterLink: getLaunchFilterLinkSelector(state),
 }))(FilterItemBase);
 
@@ -81,8 +79,6 @@ FilterItemBase.propTypes = {
   description: PropTypes.string,
   unsaved: PropTypes.bool,
   onRemove: PropTypes.func,
-  owner: PropTypes.string.isRequired,
-  userId: PropTypes.string.isRequired,
   getLaunchFilterLink: PropTypes.func.isRequired,
   className: PropTypes.string,
   isDisabled: PropTypes.bool,

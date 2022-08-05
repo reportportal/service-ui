@@ -156,13 +156,9 @@ const suiteTestTestItemMessages = defineMessages({
 });
 
 const widgetFilterDashboardMessages = defineMessages({
-  [ACTIONS.CREATE_SHARE_ITEM]: {
-    id: 'PermissionMap.createShareItem',
-    defaultMessage: 'Create, share item',
-  },
-  [ACTIONS.EDIT_DELETE_SHARED_ITEM]: {
-    id: 'PermissionMap.editDeleteSharedItem',
-    defaultMessage: 'Edit, delete shared item',
+  [ACTIONS.CREATE_ITEM]: {
+    id: 'PermissionMap.createItem',
+    defaultMessage: 'Create item',
   },
 });
 
