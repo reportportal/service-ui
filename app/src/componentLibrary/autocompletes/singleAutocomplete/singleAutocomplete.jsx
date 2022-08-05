@@ -139,6 +139,11 @@ export class SingleAutocomplete extends Component {
                         },
                         onBlur: (e) => {
                           const newValue = inputValue.trim();
+
+                          if (!createWithoutConfirmation && !newValue) {
+                            selectItem(newValue);
+                          }
+
                           if (createWithoutConfirmation) {
                             selectItem(newValue);
                           }
