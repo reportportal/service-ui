@@ -45,7 +45,7 @@ export const RuleItem = ({ item, actions, onToggle, disabled, content, onClick }
         />
       </span>
       <div className={cx('panel-wrapper')}>
-        <div className={cx('panel')} onClick={() => setShown(!shown)}>
+        <div className={cx('panel')} onClick={onClickHandler}>
           <span className={cx('name')} title={name}>
             {name}
           </span>
