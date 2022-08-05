@@ -44,8 +44,8 @@ export const normalizeDimensionValue = (value) => {
   return value !== undefined ? value.toString() : undefined;
 };
 
-export const normalizeEventType = (type) =>
-  type
+export const normalizeEventString = (string = '') =>
+  string
     .trim()
     .replace(/\s+/g, '_')
     .toLowerCase();

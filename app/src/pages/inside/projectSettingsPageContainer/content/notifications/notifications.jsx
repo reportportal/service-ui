@@ -21,7 +21,6 @@ import classNames from 'classnames/bind';
 import { useTracking } from 'react-tracking';
 import { useIntl } from 'react-intl';
 import { canUpdateSettings } from 'common/utils/permissions';
-import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import {
   projectNotificationsSelector,
   projectNotificationsStateSelector,
@@ -44,6 +43,7 @@ import BinIcon from 'common/img/newIcons/bin-inline.svg';
 import CopyIcon from 'common/img/newIcons/copy-inline.svg';
 import { projectNotificationsLoadingSelector } from 'controllers/project/selectors';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { PROJECT_SETTINGS_NOTIFICATIONS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { RuleList } from '../elements/ruleList';
 import { Layout } from '../layout';
 import styles from './notifications.scss';
@@ -76,7 +76,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
     canUpdateSettings(userRole, projectRole) && isEmailIntegrationAvailable;
 
   const toggleNotificationsEnabled = (isEnabled) => {
-    trackEvent(SETTINGS_PAGE_EVENTS.EDIT_INPUT_NOTIFICATIONS);
+    trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_CHECKBOX_AUTO_NOTIFICATIONS(isEnabled));
     dispatch(updateNotificationStateAction(isEnabled));
   };
 
@@ -106,7 +106,8 @@ export const Notifications = ({ setHeaderTitleNode }) => {
   };
 
   const onAdd = () => {
-    trackEvent(SETTINGS_PAGE_EVENTS.ADD_RULE_BTN_NOTIFICATIONS);
+    trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_CREATE_RULE_BUTTON);
+
     dispatch(
       showModalAction({
         id: 'addEditNotificationModal',
@@ -121,7 +122,8 @@ export const Notifications = ({ setHeaderTitleNode }) => {
   };
 
   const onEdit = (notification) => {
-    trackEvent(SETTINGS_PAGE_EVENTS.EDIT_RULE_NOTIFICATIONS);
+    trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_ICON_EDIT_NOTIFICATIONS);
+
     dispatch(
       showModalAction({
         id: 'addEditNotificationModal',
@@ -136,24 +138,21 @@ export const Notifications = ({ setHeaderTitleNode }) => {
   };
 
   const onDelete = (notification) => {
-    trackEvent(SETTINGS_PAGE_EVENTS.CLICK_ON_DELETE_RULE_NOTIFICATIONS);
+    trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_ICON_DELETE_NOTIFICATIONS);
+
     dispatch(
       showModalAction({
         id: 'deleteNotificationModal',
         data: {
           onSave: () => confirmDelete(notification.id),
-          eventsInfo: {
-            closeIcon: SETTINGS_PAGE_EVENTS.CLOSE_ICON_DELETE_RULE_NOTIFICATIONS,
-            cancelBtn: SETTINGS_PAGE_EVENTS.CANCEL_DELETE_RULE_NOTIFICATIONS,
-            deleteBtn: SETTINGS_PAGE_EVENTS.DELETE_RULE_NOTIFICATIONS,
-          },
         },
       }),
     );
   };
 
   const onCopy = (notification) => {
-    trackEvent(SETTINGS_PAGE_EVENTS.CLONE_NOTIFICATIONS);
+    trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_ICON_DUPLICATE_NOTIFICATIONS);
+
     const { id, ...newNotification } = notification;
     dispatch(
       showModalAction({
@@ -184,11 +183,8 @@ export const Notifications = ({ setHeaderTitleNode }) => {
   }, [notifications]);
 
   const onToggleHandler = (isEnabled, notification) => {
-    trackEvent(
-      isEnabled
-        ? SETTINGS_PAGE_EVENTS.TURN_ON_NOTIFICATION_RULE_SWITCHER
-        : SETTINGS_PAGE_EVENTS.TURN_OFF_NOTIFICATION_RULE_SWITCHER,
-    );
+    trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.SWITCH_NOTIFICATION_RULE(isEnabled));
+
     dispatch(
       updateProjectNotificationAction(
         convertNotificationCaseForSubmission({ ...notification, enabled: isEnabled }),
@@ -212,6 +208,16 @@ export const Notifications = ({ setHeaderTitleNode }) => {
       handler: onDelete,
     },
   ];
+
+  const handleRuleItemClick = (isShown) => {
+    if (isShown) {
+      trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_TO_EXPAND_NOTIFICATIONS_DETAILS);
+    }
+  };
+
+  const handleDocumentationClick = () => {
+    trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_LINK_DOCUMENTATION);
+  };
 
   if (loading) {
     return <SpinningPreloader />;
@@ -239,6 +245,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
               actions={actions}
               onToggle={onToggleHandler}
               ruleItemContent={NotificationRuleContent}
+              handleRuleItemClick={handleRuleItemClick}
             />
           </div>
         </>
@@ -252,6 +259,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
           }
           disableButton={isReadOnly}
           handleButton={onAdd}
+          handleDocumentationClick={handleDocumentationClick}
         />
       )}
     </>

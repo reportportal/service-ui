@@ -30,16 +30,17 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { Toggle } from 'componentLibrary/toggle';
 import { URLS } from 'common/urls';
 import { AsyncMultipleAutocomplete } from 'components/inputs/autocompletes/asyncMultipleAutocomplete';
-import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { Dropdown } from 'componentLibrary/dropdown';
 import { hideModalAction } from 'controllers/modal';
 import { FieldText } from 'componentLibrary/fieldText';
 import { Checkbox } from 'componentLibrary/checkbox';
 import { projectIdSelector } from 'controllers/pages';
 import { AttributeListContainer } from 'components/containers/attributeListContainer';
+import { PROJECT_SETTINGS_NOTIFICATIONS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { FieldElement } from '../../../elements';
 import {
   ATTRIBUTES_FIELD_KEY,
+  ENABLED_FIELD_KEY,
   INFORM_OWNER_FIELD_KEY,
   LAUNCH_CASES,
   LAUNCH_NAMES_FIELD_KEY,
@@ -205,7 +206,9 @@ const AddEditNotificationModal = ({
   const activeProject = useSelector(projectIdSelector);
   const [isEditorShown, setShowEditor] = React.useState(data.notification.attributes.length > 0);
   const selector = formValueSelector(form);
-  const attributesValue = useSelector((state) => selector(state, ATTRIBUTES_FIELD_KEY));
+  const { attributes: attributesValue, enabled: switcher } = useSelector((state) =>
+    selector(state, ATTRIBUTES_FIELD_KEY, ENABLED_FIELD_KEY),
+  );
 
   useEffect(() => {
     initialize(data.notification);
@@ -238,9 +241,31 @@ const AddEditNotificationModal = ({
     },
   ];
 
+  const {
+    actionType,
+    notification: { sendCase, informOwner },
+  } = data;
+
   const okButton = {
     text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
-    onClick: () => handleSubmit(onSave(!isEditorShown))(),
+    onClick: () => {
+      const modalName = `${messages.title.defaultMessage.replace(
+        /\{.*\}/i,
+        messages[actionType].defaultMessage,
+      )}`;
+
+      handleSubmit(onSave(!isEditorShown))();
+
+      const eventParameters = {
+        modalName,
+        status: informOwner,
+        type: messages[sendCase].defaultMessage,
+        switcher,
+        number: isEditorShown ? attributesValue.length : undefined,
+      };
+
+      trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_SAVE_BUTTON_IN_MODAL(eventParameters));
+    },
   };
   const cancelButton = {
     text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
@@ -272,18 +297,14 @@ const AddEditNotificationModal = ({
       cancelButton={cancelButton}
       onClose={() => dispatch(hideModalAction())}
       footerNode={
-        <FieldProvider name="enabled" format={(value) => !!value}>
+        <FieldProvider name={ENABLED_FIELD_KEY} format={(value) => !!value}>
           <Toggle className={cx('toggle')}>{formatMessage(messages.active)}</Toggle>
         </FieldProvider>
       }
     >
       {formatMessage(messages.description)}
       <div className={cx('content')}>
-        <FieldProvider
-          name={RULE_NAME_FIELD_KEY}
-          type="text"
-          onChange={() => trackEvent(SETTINGS_PAGE_EVENTS.EDIT_RECIPIENTS_INPUT_NOTIFICATIONS)}
-        >
+        <FieldProvider name={RULE_NAME_FIELD_KEY} type="text">
           <FieldErrorHint provideHint={false}>
             <FieldText
               label={formatMessage(messages.nameLabel)}
@@ -296,7 +317,6 @@ const AddEditNotificationModal = ({
           name={RECIPIENTS_FIELD_KEY}
           className={cx('autocomplete')}
           type="text"
-          onChange={() => trackEvent(SETTINGS_PAGE_EVENTS.EDIT_RECIPIENTS_INPUT_NOTIFICATIONS)}
           label={formatMessage(messages.recipientsLabel)}
         >
           <FieldErrorHint provideHint={false}>
@@ -311,12 +331,7 @@ const AddEditNotificationModal = ({
             />
           </FieldErrorHint>
         </FieldElement>
-        <FieldElement
-          name={INFORM_OWNER_FIELD_KEY}
-          type="text"
-          className={cx('checkbox')}
-          onChange={() => trackEvent(SETTINGS_PAGE_EVENTS.CHECKBOX_LAUNCH_OWNER_NOTIFICATIONS)}
-        >
+        <FieldElement name={INFORM_OWNER_FIELD_KEY} type="text" className={cx('checkbox')}>
           <Checkbox>{formatMessage(messages.launchOwnerLabel)}</Checkbox>
         </FieldElement>
         <FieldElement
@@ -330,7 +345,6 @@ const AddEditNotificationModal = ({
         <FieldElement
           label={formatMessage(messages.launchNamesLabel)}
           name={LAUNCH_NAMES_FIELD_KEY}
-          onChange={() => trackEvent(SETTINGS_PAGE_EVENTS.LAUNCH_NAME_INPUT_NOTIFICATIONS)}
           className={cx('launches')}
         >
           <FieldErrorHint hintType="top">
@@ -352,11 +366,7 @@ const AddEditNotificationModal = ({
           {formatMessage(messages.attributes)}
         </Checkbox>
         <span className={cx('description')}>{attributesCaption}</span>
-        <FieldElement
-          name={ATTRIBUTES_FIELD_KEY}
-          onChange={() => trackEvent(SETTINGS_PAGE_EVENTS.TAGS_INPUT_NOTIFICATIONS)}
-          disabled={!isEditorShown}
-        >
+        <FieldElement name={ATTRIBUTES_FIELD_KEY} disabled={!isEditorShown}>
           <AttributeListContainer
             keyURLCreator={URLS.launchAttributeKeysSearch}
             valueURLCreator={URLS.launchAttributeValuesSearch}

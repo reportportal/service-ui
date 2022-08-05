@@ -35,7 +35,7 @@ const messages = defineMessages({
   },
 });
 
-const DeleteNotificationCaseModal = ({ data: { onSave, eventsInfo } }) => {
+const DeleteNotificationCaseModal = ({ data: { onSave } }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
@@ -48,13 +48,10 @@ const DeleteNotificationCaseModal = ({ data: { onSave, eventsInfo } }) => {
         onClick: () => {
           onSave();
         },
-        eventInfo: eventsInfo.deleteBtn,
       }}
       cancelButton={{
         text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-        eventInfo: eventsInfo.cancelBtn,
       }}
-      closeIconEventInfo={eventsInfo.closeIcon}
       onClose={() => dispatch(hideModalAction())}
     >
       <div>{Parser(formatMessage(messages.message))}</div>

@@ -23,11 +23,16 @@ import styles from './ruleItem.scss';
 
 const cx = classNames.bind(styles);
 
-export const RuleItem = ({ item, actions, onToggle, disabled, content }) => {
+export const RuleItem = ({ item, actions, onToggle, disabled, content, onClick }) => {
   const [shown, setShown] = useState(false);
   const { enabled, name } = item;
   const onToggleActive = (val) => {
     onToggle(val, item);
+  };
+
+  const onClickHandler = () => {
+    onClick(!shown);
+    setShown(!shown);
   };
 
   return (
@@ -40,7 +45,7 @@ export const RuleItem = ({ item, actions, onToggle, disabled, content }) => {
         />
       </span>
       <div className={cx('panel-wrapper')}>
-        <div className={cx('panel')} onClick={() => setShown(!shown)}>
+        <div className={cx('panel')} onClick={onClickHandler}>
           <span className={cx('name')} title={name}>
             {name}
           </span>
@@ -72,10 +77,12 @@ RuleItem.propTypes = {
   onToggle: PropTypes.func,
   disabled: PropTypes.bool,
   content: PropTypes.node,
+  onClick: PropTypes.func,
 };
 RuleItem.defaultProps = {
   actions: [],
   onToggle: () => {},
   disabled: false,
   content: null,
+  onClick: () => {},
 };
