@@ -45,24 +45,31 @@ export const RuleItem = ({ item, actions, onToggle, disabled, content, onClick }
         />
       </span>
       <div className={cx('panel-wrapper')}>
-        <div className={cx('panel')} onClick={onClickHandler}>
+        <div className={cx('panel')} onClick={() => setShown(!shown)}>
           <span className={cx('name')} title={name}>
             {name}
           </span>
           {actions.length > 0 && !disabled && (
             <span className={cx('actions')}>
-              {actions.map(({ icon, handler }) => (
-                <i
-                  className={cx('icon')}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handler(item);
-                  }}
-                  key={icon}
-                >
-                  {Parser(icon)}
-                </i>
-              ))}
+              {actions.map(({ icon, handler, customIcon: CustomIcon, id }) => {
+                return (
+                  <React.Fragment key={id || icon}>
+                    {CustomIcon ? (
+                      <CustomIcon item={item} />
+                    ) : (
+                      <i
+                        className={cx('icon')}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handler(item);
+                        }}
+                      >
+                        {Parser(icon)}
+                      </i>
+                    )}
+                  </React.Fragment>
+                );
+              })}
             </span>
           )}
         </div>

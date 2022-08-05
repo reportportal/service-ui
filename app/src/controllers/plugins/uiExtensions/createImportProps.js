@@ -172,7 +172,10 @@ import {
 import { loginAction } from 'controllers/auth';
 import { ModalLayout as ModalLayoutComponent } from 'componentLibrary/modal';
 import { FieldText } from 'componentLibrary/fieldText';
-import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
+import {
+  FieldElement,
+  RuleList as RuleListComponent,
+} from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { Checkbox } from 'componentLibrary/checkbox';
 import { Button } from 'componentLibrary/button';
 import { Toggle } from 'componentLibrary/toggle';
@@ -272,6 +275,7 @@ export const createImportProps = (pluginName) => ({
     FieldNumber,
     SystemMessage,
     AsyncAutocompleteField,
+    RuleListComponent,
   },
   constants: {
     PLUGIN_UI_EXTENSION_ADMIN_PAGE,

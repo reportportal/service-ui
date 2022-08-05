@@ -41,10 +41,9 @@ export const DropdownOption = ({
         hidden,
       })}
       title={(disabled && title) || undefined}
+      onClick={onChangeHandler}
     >
-      <div className={cx('single-option')} onClick={onChangeHandler}>
-        {label}
-      </div>
+      <div className={cx('single-option')}>{label}</div>
     </div>
   );
 };

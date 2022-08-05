@@ -52,7 +52,7 @@ RuleList.propTypes = {
   actions: PropTypes.array,
   onToggle: PropTypes.func,
   disabled: PropTypes.bool,
-  ruleItemContent: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
+  ruleItemContent: PropTypes.elementType,
   handleRuleItemClick: PropTypes.func,
 };
 RuleList.defaultProps = {

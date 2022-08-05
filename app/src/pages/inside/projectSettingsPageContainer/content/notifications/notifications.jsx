@@ -44,14 +44,12 @@ import CopyIcon from 'common/img/newIcons/copy-inline.svg';
 import { projectNotificationsLoadingSelector } from 'controllers/project/selectors';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { PROJECT_SETTINGS_NOTIFICATIONS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
-import { RuleList } from '../elements/ruleList';
+import { RuleList, FieldElement, NotificationRuleContent } from '../elements';
 import { Layout } from '../layout';
 import styles from './notifications.scss';
 import { DEFAULT_CASE_CONFIG } from './constants';
 import { convertNotificationCaseForSubmission } from './utils';
 import { messages } from './messages';
-import { FieldElement } from '../elements';
-import { NotificationRuleContent } from '../elements/notificationRuleContent';
 
 const cx = classNames.bind(styles);
 const COPY_POSTFIX = '_copy';
