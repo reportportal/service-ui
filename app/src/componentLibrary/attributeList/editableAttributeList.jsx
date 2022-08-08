@@ -25,7 +25,7 @@ const NEW_ATTRIBUTE = {
 };
 
 export const EditableAttributeList = ({
-  value: attributes,
+  attributes,
   onChange,
   disabled,
   newAttrMessage,
@@ -34,12 +34,10 @@ export const EditableAttributeList = ({
   showButton,
   editable,
   defaultOpen,
-  onAddNewAttribute,
   ...rest
 }) => {
   const handleAddNew = () => {
     onChange([...attributes, NEW_ATTRIBUTE]);
-    onAddNewAttribute();
   };
   useEffect(() => {
     if (defaultOpen && !attributes.length) {
@@ -69,7 +67,7 @@ export const EditableAttributeList = ({
 };
 
 EditableAttributeList.propTypes = {
-  value: PropTypes.arrayOf(PropTypes.object),
+  attributes: PropTypes.arrayOf(PropTypes.object),
   disabled: PropTypes.bool,
   newAttrMessage: PropTypes.string,
   onChange: PropTypes.func,
@@ -78,10 +76,10 @@ EditableAttributeList.propTypes = {
   showButton: PropTypes.bool,
   editable: PropTypes.bool,
   defaultOpen: PropTypes.bool,
-  onAddNewAttribute: PropTypes.func,
 };
 
 EditableAttributeList.defaultProps = {
+  attributes: [],
   value: [],
   disabled: false,
   newAttrMessage: '',
@@ -91,5 +89,4 @@ EditableAttributeList.defaultProps = {
   showButton: true,
   editable: true,
   defaultOpen: false,
-  onAddNewAttribute: () => {},
 };
