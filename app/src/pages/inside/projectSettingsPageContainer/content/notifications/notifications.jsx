@@ -78,22 +78,17 @@ export const Notifications = ({ setHeaderTitleNode }) => {
     dispatch(updateNotificationStateAction(isEnabled));
   };
 
-  const confirmAdd = (withoutAttributes) => (newNotification) => {
-    const notificationData = { ...newNotification };
-    if (withoutAttributes) {
-      notificationData.attributes = [];
-    }
-    const notification = convertNotificationCaseForSubmission(notificationData);
+  const confirmAdd = (newNotification) => {
+    const notification = convertNotificationCaseForSubmission(newNotification);
     dispatch(addProjectNotificationAction(notification));
   };
 
-  const confirmEdit = (withoutAttributes) => (notification) => {
+  const confirmEdit = (notification) => {
     dispatch(
       updateProjectNotificationAction(
         convertNotificationCaseForSubmission({
           ...notification,
           name: notification.ruleName,
-          attributes: withoutAttributes ? [] : notification.attributes,
         }),
       ),
     );
@@ -111,7 +106,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
         id: 'addEditNotificationModal',
         data: {
           actionType: 'add',
-          onSave: (withoutAttributes) => confirmAdd(withoutAttributes),
+          onSave: confirmAdd,
           notification: DEFAULT_CASE_CONFIG,
           notifications,
         },
@@ -127,7 +122,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
         id: 'addEditNotificationModal',
         data: {
           actionType: 'edit',
-          onSave: (withoutAttributes) => confirmEdit(withoutAttributes),
+          onSave: confirmEdit,
           notification,
           notifications,
         },

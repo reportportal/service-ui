@@ -206,10 +206,7 @@ const AddEditNotificationModal = ({
   const activeProject = useSelector(projectIdSelector);
   const [isEditorShown, setShowEditor] = React.useState(data.notification.attributes.length > 0);
   const selector = formValueSelector(form);
-  const { attributes: attributesValue, enabled: switcher } = useSelector((state) =>
-    selector(state, ATTRIBUTES_FIELD_KEY, ENABLED_FIELD_KEY),
-  );
-
+  const attributesValue = useSelector((state) => selector(state, ATTRIBUTES_FIELD_KEY));
   useEffect(() => {
     initialize(data.notification);
   }, []);
@@ -241,32 +238,45 @@ const AddEditNotificationModal = ({
     },
   ];
 
-  const {
-    actionType,
-    notification: { sendCase, informOwner },
-  } = data;
+  const { actionType } = data;
+
+  const submitActions = (formFieldValues) => {
+    const modalName = `${messages.title.defaultMessage.replace(
+      /\{.*\}/i,
+      messages[actionType].defaultMessage,
+    )}`;
+
+    const newFormValues = {
+      ...formFieldValues,
+      attributes: !isEditorShown ? [] : formFieldValues.attributes,
+    };
+
+    const {
+      informOwner,
+      sendCase,
+      enabled: switcher,
+      attributes: { length },
+    } = newFormValues;
+
+    const eventParameters = {
+      modalName,
+      status: informOwner,
+      type: messages[sendCase].defaultMessage,
+      switcher,
+      number: isEditorShown ? length : undefined,
+    };
+
+    trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_SAVE_BUTTON_IN_MODAL(eventParameters));
+    onSave(newFormValues);
+  };
 
   const okButton = {
     text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
     onClick: () => {
-      const modalName = `${messages.title.defaultMessage.replace(
-        /\{.*\}/i,
-        messages[actionType].defaultMessage,
-      )}`;
-
-      handleSubmit(onSave(!isEditorShown))();
-
-      const eventParameters = {
-        modalName,
-        status: informOwner,
-        type: messages[sendCase].defaultMessage,
-        switcher,
-        number: isEditorShown ? attributesValue.length : undefined,
-      };
-
-      trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_SAVE_BUTTON_IN_MODAL(eventParameters));
+      handleSubmit(submitActions)();
     },
   };
+
   const cancelButton = {
     text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
   };
