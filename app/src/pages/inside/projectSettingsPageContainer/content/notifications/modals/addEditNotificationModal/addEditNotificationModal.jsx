@@ -16,7 +16,7 @@
 
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { formValueSelector, reduxForm } from 'redux-form';
+import { reduxForm } from 'redux-form';
 import { useTracking } from 'react-tracking';
 import { useDispatch, useSelector } from 'react-redux';
 import className from 'classnames/bind';
@@ -35,8 +35,8 @@ import { hideModalAction } from 'controllers/modal';
 import { FieldText } from 'componentLibrary/fieldText';
 import { Checkbox } from 'componentLibrary/checkbox';
 import { projectIdSelector } from 'controllers/pages';
-import { AttributeListContainer } from 'components/containers/attributeListContainer';
 import { PROJECT_SETTINGS_NOTIFICATIONS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
+import { AttributeListFormField } from 'components/containers/AttributeListFormField';
 import { FieldElement } from '../../../elements';
 import {
   ATTRIBUTES_FIELD_KEY,
@@ -191,22 +191,13 @@ const messages = defineMessages({
   },
 });
 
-const AddEditNotificationModal = ({
-  data,
-  data: { onSave },
-  handleSubmit,
-  initialize,
-  form,
-  change,
-}) => {
+const AddEditNotificationModal = ({ data, data: { onSave }, handleSubmit, initialize, change }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
 
   const activeProject = useSelector(projectIdSelector);
   const [isEditorShown, setShowEditor] = React.useState(data.notification.attributes.length > 0);
-  const selector = formValueSelector(form);
-  const attributesValue = useSelector((state) => selector(state, ATTRIBUTES_FIELD_KEY));
   useEffect(() => {
     initialize(data.notification);
   }, []);
@@ -280,23 +271,6 @@ const AddEditNotificationModal = ({
   const cancelButton = {
     text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
   };
-
-  const attributeControlHandler = (e) => {
-    setShowEditor(e.target.checked);
-    const attributes = attributesValue.reduce((acc, curr) => {
-      const attr = { ...curr };
-      if (attr.edited) {
-        delete attr.edited;
-      }
-      return [...acc, attr];
-    }, []);
-
-    change(ATTRIBUTES_FIELD_KEY, attributes);
-  };
-  const attributesCaption =
-    isEditorShown || (!isEditorShown && !attributesValue?.length)
-      ? formatMessage(messages.attributesNote)
-      : formatMessage(messages.attributesNotActive);
 
   return (
     <ModalLayout
@@ -372,16 +346,16 @@ const AddEditNotificationModal = ({
         <span className={cx('description', 'launches')}>
           {formatMessage(messages.launchNamesNote)}
         </span>
-        <Checkbox value={isEditorShown} onChange={attributeControlHandler}>
-          {formatMessage(messages.attributes)}
-        </Checkbox>
-        <span className={cx('description')}>{attributesCaption}</span>
         <FieldElement name={ATTRIBUTES_FIELD_KEY} disabled={!isEditorShown}>
-          <AttributeListContainer
+          <AttributeListFormField
             keyURLCreator={URLS.launchAttributeKeysSearch}
             valueURLCreator={URLS.launchAttributeValuesSearch}
             newAttrMessage={formatMessage(messages.addAttribute)}
             attributesListClassname={cx('attributes-list')}
+            defaultOpen={isEditorShown}
+            setShowEditor={setShowEditor}
+            shown={isEditorShown}
+            changeValue={change}
           />
         </FieldElement>
       </div>
@@ -399,7 +373,6 @@ AddEditNotificationModal.propTypes = {
   initialize: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   dirty: PropTypes.bool.isRequired,
-  form: PropTypes.string.isRequired,
   change: PropTypes.func.isRequired,
 };
 AddEditNotificationModal.defaultProps = {
