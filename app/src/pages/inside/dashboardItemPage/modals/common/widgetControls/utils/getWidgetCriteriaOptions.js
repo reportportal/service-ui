@@ -107,23 +107,23 @@ const messages = defineMessages({
 
   PRODUCT_BUG_TOTAL: {
     id: 'WidgetCriteriaOption.PRODUCT_BUG_TOTAL',
-    defaultMessage: 'Total product bugs',
+    defaultMessage: 'Product bugs group',
   },
   AUTOMATION_BUG_TOTAL: {
     id: 'WidgetCriteriaOption.AUTOMATION_BUG_TOTAL',
-    defaultMessage: 'Total automation bugs',
+    defaultMessage: 'Automation bugs group',
   },
   SYSTEM_ISSUE_TOTAL: {
     id: 'WidgetCriteriaOption.SYSTEM_ISSUE_TOTAL',
-    defaultMessage: 'Total system issues',
+    defaultMessage: 'System issues group',
   },
   TO_INVESTIGATE_TOTAL: {
     id: 'WidgetCriteriaOption.TO_INVESTIGATE_TOTAL',
-    defaultMessage: 'Total to investigate',
+    defaultMessage: 'To investigate group',
   },
   NO_DEFECT_TOTAL: {
     id: 'WidgetCriteriaOption.NO_DEFECT_TOTAL',
-    defaultMessage: 'Total no defects',
+    defaultMessage: 'No defects group',
   },
   Defect_Type_AB001: {
     id: 'WidgetCriteriaOption.Defect_Type_AB001',
@@ -275,37 +275,24 @@ export const getGroupedDefectTypesOptions = (
   let defectTypesOptions = [];
   defectTypesSequence.forEach((defectTypeId) => {
     const defectTypeGroup = defectTypes[defectTypeId];
-    const hasSubTypes = defectTypeGroup.length > 1;
-    if (hasSubTypes) {
-      defectTypesOptions.push({
-        label: formatMessage(messages[`${defectTypeGroup[0].typeRef}_TOTAL`]),
-        value: `${DEFECT_STATISTICS_BASE}${defectTypeGroup[0].typeRef.toLowerCase()}$total`,
-        groupId: defectTypeGroup[0].typeRef,
-      });
-      defectTypesOptions = defectTypesOptions.concat(
-        defectTypeGroup.map((defectType) => ({
-          groupRef: defectType.typeRef,
-          value: `${DEFECT_STATISTICS_BASE}${defectType.typeRef.toLowerCase()}$${
-            defectType.locator
-          }`,
-          label: messages[defectType.locator]
-            ? formatMessage(messages[`Defect_Type_${defectType.locator}`])
-            : defectType.longName,
-        })),
-      );
-    } else {
-      defectTypesOptions = defectTypesOptions.concat(
-        defectTypeGroup.map((defectType) => ({
-          value: `${DEFECT_STATISTICS_BASE}${defectType.typeRef.toLowerCase()}$${
-            defectType.locator
-          }`,
-          label: messages[defectType.locator]
-            ? formatMessage(messages[`Defect_Type_${defectType.locator}`])
-            : defectType.longName,
-        })),
-      );
-    }
+    defectTypesOptions.push({
+      label: formatMessage(messages[`${defectTypeGroup[0].typeRef}_TOTAL`]),
+      value: `${DEFECT_STATISTICS_BASE}${defectTypeGroup[0].typeRef.toLowerCase()}$total`,
+      groupId: defectTypeGroup[0].typeRef,
+      color: defectTypeGroup[0].color,
+    });
+    defectTypesOptions = defectTypesOptions.concat(
+      defectTypeGroup.map((defectType) => ({
+        groupRef: defectType.typeRef,
+        value: `${DEFECT_STATISTICS_BASE}${defectType.typeRef.toLowerCase()}$${defectType.locator}`,
+        label: messages[defectType.locator]
+          ? formatMessage(messages[`Defect_Type_${defectType.locator}`])
+          : defectType.longName,
+        color: defectType.color,
+      })),
+    );
   });
+
   return defectTypesOptions;
 };
 

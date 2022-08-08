@@ -179,7 +179,7 @@ export const ProjectSettingsPageContainer = () => {
 
   return (
     <SettingsLayout navigation={navigation}>
-      <ScrollWrapper>
+      <ScrollWrapper resetRequired>
         {!subPage && (
           <div className={cx('header')}>
             <Header
