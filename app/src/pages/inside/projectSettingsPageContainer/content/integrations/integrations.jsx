@@ -31,6 +31,7 @@ import {
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
 import { activeProjectSelector } from 'controllers/user';
 import { redirect } from 'redux-first-router';
+import { isEmptyObject } from 'common/utils';
 import { IntegrationInfo } from './integrationsList/integrationInfo';
 import { IntegrationsList } from './integrationsList';
 
@@ -40,7 +41,7 @@ const cx = classNames.bind(styles);
 
 export const Integrations = () => {
   const loading = useSelector(pluginsLoadingSelector);
-  const availablePlugins = useSelector(availableGroupedPluginsSelector);
+  const availableGroupedPlugins = useSelector(availableGroupedPluginsSelector);
   const plugins = useSelector(availablePluginsSelector);
   const activeProject = useSelector(activeProjectSelector);
   const dispatch = useDispatch();
@@ -54,31 +55,32 @@ export const Integrations = () => {
     [activeProject],
   );
   const goBackHandler = useCallback(() => {
+    setPlugin({});
     dispatch(initialPage);
-  }, []);
+  }, [initialPage]);
 
   useEffect(() => {
     const { subPage: pluginName } = query;
     const certainPlugin = plugins.find(({ name }) => name === pluginName);
     if (pluginName && certainPlugin) {
       setPlugin(certainPlugin);
-    } else if (pluginName && Object.entries(plugin).length === 0) {
+    } else if (pluginName && isEmptyObject(plugin)) {
       dispatch(redirect(initialPage));
     } else {
       dispatch(redirect(initialPage));
     }
-  }, [query]);
+  }, [query, plugins]);
 
   if (loading) {
     return <BubblesPreloader customClassName={cx('preloader')} />;
   }
-  const onItemClick = (pluginClicked) => {
+  const onItemClick = (pluginData) => {
     dispatch(
       updatePagePropertiesAction({
-        subPage: pluginClicked.name,
+        subPage: pluginData.name,
       }),
     );
-    setPlugin(pluginClicked);
+    setPlugin(pluginData);
   };
 
   return (
@@ -87,7 +89,10 @@ export const Integrations = () => {
         <IntegrationInfo goBackHandler={goBackHandler} data={plugin} />
       ) : (
         <div className={cx('integrations')}>
-          <IntegrationsList availableIntegrations={availablePlugins} onItemClick={onItemClick} />
+          <IntegrationsList
+            availableIntegrations={availableGroupedPlugins}
+            onItemClick={onItemClick}
+          />
         </div>
       )}
     </>

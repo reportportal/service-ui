@@ -66,3 +66,8 @@ IntegrationsList.propTypes = {
   availableIntegrations: PropTypes.object.isRequired,
   onItemClick: PropTypes.func,
 };
+
+IntegrationsList.defaultProps = {
+  availableIntegrations: {},
+  onItemClick: () => {},
+};

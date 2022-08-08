@@ -16,13 +16,13 @@
 
 .container {
   width: 100%;
-  min-height: 191px;
-  background: $COLOR--white-two;
+  background: $COLOR--bg-000;
   padding-left: 32px;
+  padding-top: 12px;
+  padding-bottom: 27px;
 }
 
 .back-to {
-  padding: 12px 0px 0px 32px;
   display: flex;
 }
 
@@ -76,5 +76,4 @@
   @include integrarion-measure(13px, 20px, $COLOR--almost-black, $FONT-ROBOTO-REGULAR);
   text-indent: 1px;
   max-width: 610px;
-  margin-bottom: 27px;
 }
