@@ -27,7 +27,7 @@ const cx = classNames.bind(styles);
 
 export const IntegrationsList = (props) => {
   const { formatMessage } = useIntl();
-  const { availableIntegrations } = props;
+  const { availableIntegrations, onItemClick } = props;
 
   return (
     <>
@@ -40,7 +40,11 @@ export const IntegrationsList = (props) => {
               </div>
               <div className={cx('integrations-group-items')}>
                 {availableIntegrations[key].map((item) => (
-                  <IntegrationsListItem key={item.name} integrationType={item} />
+                  <IntegrationsListItem
+                    key={item.name}
+                    integrationType={item}
+                    onItemClick={onItemClick}
+                  />
                 ))}
               </div>
             </div>
@@ -60,4 +64,5 @@ export const IntegrationsList = (props) => {
 
 IntegrationsList.propTypes = {
   availableIntegrations: PropTypes.object.isRequired,
+  onItemClick: PropTypes.func,
 };

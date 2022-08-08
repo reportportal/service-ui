@@ -1,0 +1,80 @@
+/*
+ * Copyright 2022 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.container {
+  width: 100%;
+  min-height: 191px;
+  background: $COLOR--white-two;
+  padding-left: 32px;
+}
+
+.back-to {
+  padding: 12px 0px 0px 32px;
+  display: flex;
+}
+
+.back-icon {
+  margin-right: 8px;
+  width: 16px;
+  height: 16px;
+  align-self: center;
+}
+
+.integration-image {
+  width: 90px;
+  height: 108px;
+  object-fit: contain;
+}
+
+.integration-block {
+  display: flex;
+  margin-top: 24px;
+}
+
+.integration-info-block {
+  display: flex;
+  flex-direction: column;
+  margin-left: 24px;
+}
+
+.integration-data-block {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin integrarion-measure($font-size, $line-height, $color, $font-family) {
+  font-size: $font-size;
+  line-height: $line-height;
+  color: $color;
+  font-family: $font-family;
+}
+
+.integration-name {
+  @include integrarion-measure(20px, 31px, $COLOR--almost-black, $FONT-REGULAR);
+  margin-bottom: 10.5px;
+}
+
+.integration-version {
+  @include integrarion-measure(11px, 16px, $COLOR--e-400, $FONT-ROBOTO-REGULAR);
+  margin-bottom: 8px;
+}
+
+.integration-description {
+  @include integrarion-measure(13px, 20px, $COLOR--almost-black, $FONT-ROBOTO-REGULAR);
+  text-indent: 1px;
+  max-width: 610px;
+  margin-bottom: 27px;
+}

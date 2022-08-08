@@ -14,12 +14,26 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useMemo, useCallback, useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import classNames from 'classnames/bind';
-import { availableGroupedPluginsSelector, pluginsLoadingSelector } from 'controllers/plugins';
+import {
+  availableGroupedPluginsSelector,
+  pluginsLoadingSelector,
+  availablePluginsSelector,
+} from 'controllers/plugins';
 import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
+import {
+  updatePagePropertiesAction,
+  PROJECT_SETTINGS_TAB_PAGE,
+  querySelector,
+} from 'controllers/pages';
+import { INTEGRATIONS } from 'common/constants/settingsTabs';
+import { activeProjectSelector } from 'controllers/user';
+import { redirect } from 'redux-first-router';
+import { IntegrationInfo } from './integrationsList/integrationInfo';
 import { IntegrationsList } from './integrationsList';
+
 import styles from './integrations.scss';
 
 const cx = classNames.bind(styles);
@@ -27,13 +41,53 @@ const cx = classNames.bind(styles);
 export const Integrations = () => {
   const loading = useSelector(pluginsLoadingSelector);
   const availablePlugins = useSelector(availableGroupedPluginsSelector);
+  const plugins = useSelector(availablePluginsSelector);
+  const activeProject = useSelector(activeProjectSelector);
+  const dispatch = useDispatch();
+  const query = useSelector(querySelector);
+  const [plugin, setPlugin] = useState({});
+  const initialPage = useMemo(
+    () => ({
+      type: PROJECT_SETTINGS_TAB_PAGE,
+      payload: { projectId: activeProject, settingsTab: INTEGRATIONS },
+    }),
+    [activeProject],
+  );
+  const goBackHandler = useCallback(() => {
+    dispatch(initialPage);
+  }, []);
+
+  useEffect(() => {
+    const { subPage: pluginName } = query;
+    const certainPlugin = plugins.find(({ name }) => name === pluginName);
+    if (pluginName && certainPlugin) {
+      setPlugin(certainPlugin);
+    } else if (pluginName && Object.entries(plugin).length === 0) {
+      dispatch(redirect(initialPage));
+    }
+  }, [query]);
 
   if (loading) {
     return <BubblesPreloader customClassName={cx('preloader')} />;
   }
+  const onItemClick = (pluginClicked) => {
+    dispatch(
+      updatePagePropertiesAction({
+        subPage: pluginClicked.name,
+      }),
+    );
+    setPlugin(pluginClicked);
+  };
+
   return (
-    <div className={cx('integrations')}>
-      <IntegrationsList availableIntegrations={availablePlugins} />
-    </div>
+    <>
+      {query.subPage && !!Object.keys(plugin).length ? (
+        <IntegrationInfo goBackHandler={goBackHandler} data={plugin} />
+      ) : (
+        <div className={cx('integrations')}>
+          <IntegrationsList availableIntegrations={availablePlugins} onItemClick={onItemClick} />
+        </div>
+      )}
+    </>
   );
 };
