@@ -21,16 +21,14 @@ import styles from './dropdownOption.scss';
 
 const cx = classNames.bind(styles);
 
-export const DropdownOption = ({
-  label,
-  disabled,
-  hidden,
-  selected,
-  onChange,
-  value,
-  title,
-  variant,
-}) => {
+export const DropdownOption = (props) => {
+  const {
+    option: { value, disabled, hidden, label, title, groupRef },
+    selected,
+    onChange,
+    variant,
+    render,
+  } = props;
   const onChangeHandler = () => onChange && onChange(value);
 
   return (
@@ -43,28 +41,31 @@ export const DropdownOption = ({
       title={(disabled && title) || undefined}
       onClick={onChangeHandler}
     >
-      <div className={cx('single-option')}>{label}</div>
+      <div className={cx('single-option', { 'sub-option': !!groupRef })}>
+        {render ? render(props) : label}
+      </div>
     </div>
   );
 };
 
 DropdownOption.propTypes = {
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool, PropTypes.number]),
-  label: PropTypes.node,
-  disabled: PropTypes.bool,
-  hidden: PropTypes.bool,
+  option: PropTypes.shape({
+    label: PropTypes.node.isRequired,
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool, PropTypes.number]).isRequired,
+    disabled: PropTypes.bool,
+    hidden: PropTypes.bool,
+    title: PropTypes.string,
+    groupRef: PropTypes.string,
+  }),
   selected: PropTypes.bool,
   onChange: PropTypes.func,
-  title: PropTypes.string,
   variant: PropTypes.oneOf(['light', 'dark', 'ghost']),
+  render: PropTypes.func,
 };
 
 DropdownOption.defaultProps = {
-  value: '',
-  label: '',
-  disabled: false,
-  hidden: false,
   selected: false,
   onChange: () => {},
   title: '',
+  render: null,
 };

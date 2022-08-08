@@ -42,6 +42,7 @@ export const Dropdown = ({
   variant,
   placeholder,
   defaultWidth,
+  renderOption,
 }) => {
   const [isOpened, setOpened] = useState(false);
   const containerRef = useRef();
@@ -90,14 +91,12 @@ export const Dropdown = ({
       return (
         <DropdownOption
           key={option.value}
-          value={option.value}
-          disabled={option.disabled}
-          hidden={option.hidden}
           selected={isSelected}
-          label={option.label}
-          title={option.title}
           onChange={option.disabled ? null : () => handleChange(option)}
           variant={variant}
+          option={option}
+          render={renderOption}
+          isOpened={isOpened}
         />
       );
     });
@@ -187,6 +186,7 @@ Dropdown.propTypes = {
   variant: PropTypes.oneOf(['light', 'dark', 'ghost']),
   placeholder: PropTypes.string,
   defaultWidth: PropTypes.bool,
+  renderOption: PropTypes.func,
 };
 
 Dropdown.defaultProps = {
@@ -204,4 +204,5 @@ Dropdown.defaultProps = {
   variant: 'light',
   placeholder: '',
   defaultWidth: true,
+  renderOption: null,
 };
