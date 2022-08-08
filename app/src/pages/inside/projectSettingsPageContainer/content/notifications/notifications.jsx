@@ -89,7 +89,6 @@ export const Notifications = ({ setHeaderTitleNode }) => {
         convertNotificationCaseForSubmission({
           ...notification,
           name: notification.ruleName,
-          attributes: notification.attributes,
         }),
       ),
     );

@@ -246,7 +246,10 @@ const AddEditNotificationModal = ({
       messages[actionType].defaultMessage,
     )}`;
 
-    const newFormValues = { ...formFieldValues };
+    const newFormValues = {
+      ...formFieldValues,
+      attributes: !isEditorShown ? [] : formFieldValues.attributes,
+    };
 
     const {
       informOwner,
@@ -254,8 +257,6 @@ const AddEditNotificationModal = ({
       enabled: switcher,
       attributes: { length },
     } = newFormValues;
-
-    newFormValues.attributes = !isEditorShown ? [] : newFormValues.attributes;
 
     const eventParameters = {
       modalName,
@@ -266,7 +267,6 @@ const AddEditNotificationModal = ({
     };
 
     trackEvent(PROJECT_SETTINGS_NOTIFICATIONS_EVENTS.CLICK_SAVE_BUTTON_IN_MODAL(eventParameters));
-
     onSave(newFormValues);
   };
 
