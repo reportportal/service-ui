@@ -38,10 +38,14 @@ export const IntegrationsListItem = (props) => {
   const {
     integrationType: { name, details = {} },
     integrationType,
+    onItemClick,
   } = props;
 
+  const itemClickHandler = () => {
+    onItemClick(integrationType);
+  };
   return (
-    <div className={cx('integrations-list-item')}>
+    <div className={cx('integrations-list-item')} onClick={itemClickHandler}>
       <PluginIcon className={cx('integration-image')} pluginData={integrationType} alt={name} />
       <div className={cx('integration-info-block')}>
         <div className={cx('integration-data-block')}>
@@ -61,4 +65,10 @@ export const IntegrationsListItem = (props) => {
 
 IntegrationsListItem.propTypes = {
   integrationType: PropTypes.object.isRequired,
+  onItemClick: PropTypes.func,
+};
+
+IntegrationsListItem.defaultProps = {
+  integrationType: {},
+  onItemClick: () => {},
 };
