@@ -64,6 +64,8 @@ export const Integrations = () => {
       setPlugin(certainPlugin);
     } else if (pluginName && Object.entries(plugin).length === 0) {
       dispatch(redirect(initialPage));
+    } else {
+      dispatch(redirect(initialPage));
     }
   }, [query]);
 
