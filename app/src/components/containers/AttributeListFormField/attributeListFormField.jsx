@@ -49,13 +49,14 @@ export const AttributeListFormField = ({
   changeValue,
   setShowEditor,
   value,
+  attributesNote,
   ...rest
 }) => {
   const { formatMessage } = useIntl();
 
   const attributesCaption =
     shown || (!shown && !value?.length)
-      ? formatMessage(messages.attributesNote)
+      ? attributesNote || formatMessage(messages.attributesNote)
       : formatMessage(messages.attributesNotActive);
 
   const attributeControlHandler = (e) => {
@@ -91,6 +92,7 @@ AttributeListFormField.propTypes = {
   valueURLCreator: PropTypes.func,
   changeValue: PropTypes.func,
   attributesValue: PropTypes.arrayOf(PropTypes.object),
+  attributesNote: PropTypes.string,
 };
 AttributeListFormField.defaultProps = {
   name: '',
@@ -101,4 +103,5 @@ AttributeListFormField.defaultProps = {
   valueURLCreator: () => {},
   changeValue: () => {},
   attributesValue: [],
+  attributesNote: '',
 };
