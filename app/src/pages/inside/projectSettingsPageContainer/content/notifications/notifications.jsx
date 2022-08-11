@@ -253,6 +253,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
           disableButton={isReadOnly}
           handleButton={onAdd}
           handleDocumentationClick={handleDocumentationClick}
+          imageType="bell"
         />
       )}
     </>
