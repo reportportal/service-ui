@@ -67,8 +67,7 @@ const getAppVersion = (buildVersion) =>
     });
     if (data.actionType && data.actionType === PAGE_VIEW) {
       ReactGA.pageview(data.page);
-    }
-    if (data.place) {
+    } else if (data.place) {
       const eventParameters = {
         instanceID: instanceId,
         version: getAppVersion(buildVersion),
@@ -77,7 +76,6 @@ const getAppVersion = (buildVersion) =>
         pattern_analysis: normalizeDimensionValue(isPatternAnalyzerEnabled),
         project_id: projectId,
         timestamp: Date.now(),
-        is_admin: isAdmin,
         ...omit(data, ['action']),
       };
 
