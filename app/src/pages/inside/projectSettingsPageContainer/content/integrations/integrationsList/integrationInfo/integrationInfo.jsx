@@ -21,13 +21,20 @@ import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
 import { Button } from 'componentLibrary/button';
+
 import { PluginIcon } from 'components/integrations/elements/pluginIcon';
 import { JIRA, RALLY, EMAIL, SAUCE_LABS } from 'common/constants/pluginNames';
 import { isAdminSelector, activeProjectRoleSelector } from 'controllers/user';
 import { canUpdateSettings } from 'common/utils/permissions';
 import { PLUGIN_NAME_TITLES } from 'components/integrations';
+import {
+  namedGlobalIntegrationsSelector,
+  namedProjectIntegrationsSelector,
+} from 'controllers/plugins';
+import { querySelector } from 'controllers/pages';
 import { PLUGIN_DESCRIPTIONS_MAP } from 'components/integrations/messages';
 import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
+import { AvailableIntegrations } from './availableIntegrations';
 import { JIRA_CLOUD, AZURE_DEVOPS } from './constats';
 import styles from './integrationInfo.scss';
 import BackIcon from './img/back-inline.svg';
@@ -48,12 +55,20 @@ export const IntegrationInfo = (props) => {
   const { formatMessage } = useIntl();
   const isAdmin = useSelector(isAdminSelector);
   const userProjectRole = useSelector(activeProjectRoleSelector);
+  const globalIntegrations = useSelector(namedGlobalIntegrationsSelector);
+  const projectIntegrations = useSelector(namedProjectIntegrationsSelector);
   const isAbleToClick = canUpdateSettings(isAdmin, userProjectRole);
+  const query = useSelector(querySelector);
+
   const {
     goBackHandler,
     data: { name, details = {} },
     data,
+    onArrowClick,
   } = props;
+
+  const availableGlobalIntegrations = globalIntegrations[data.name] || [];
+  const availableProjectIntegrations = projectIntegrations[data.name] || [];
   return (
     <>
       <div className={cx('container')}>
@@ -63,30 +78,69 @@ export const IntegrationInfo = (props) => {
             {formatMessage(messages.backToIntegration)}
           </Button>
         </div>
-        <div className={cx('integration-block')}>
-          <PluginIcon className={cx('integration-image')} pluginData={data} alt={name} />
-          <div className={cx('integration-info-block')}>
-            <div className={cx('integration-data-block')}>
-              <span className={cx('integration-name')}>{PLUGIN_NAME_TITLES[name] || name}</span>
-              <span className={cx('integration-version')}>
-                {details.version && `${formatMessage(messages.version)} ${details.version}`}
-              </span>
-            </div>
+        <div className={cx('header')}>
+          <div className={cx('integration-block')}>
+            <PluginIcon className={cx('integration-image')} pluginData={data} alt={name} />
+            <div className={cx('integration-info-block')}>
+              <div className={cx('integration-data-block')}>
+                <span className={cx('integration-name')}>{PLUGIN_NAME_TITLES[name] || name}</span>
+                <span className={cx('integration-version')}>
+                  {details.version && `${formatMessage(messages.version)} ${details.version}`}
+                </span>
+              </div>
 
-            <p className={cx('integration-description')}>
-              {PLUGIN_DESCRIPTIONS_MAP[name] ||
-                (details.description && Parser(details.description))}
-            </p>
+              <p className={cx('integration-description')}>
+                {PLUGIN_DESCRIPTIONS_MAP[name] ||
+                  (details.description && Parser(details.description))}
+              </p>
+            </div>
+          </div>
+          <div className={cx('buttons-section')}>
+            <Button disabled={!isAbleToClick}>
+              {formatMessage(messages.noGlobalIntegrationsButtonAdd)}
+            </Button>
+            {availableProjectIntegrations.length && isAbleToClick ? (
+              <Button variant="ghost">
+                {formatMessage(messages.resetToGlobalIntegrationsButton)}
+              </Button>
+            ) : null}
           </div>
         </div>
       </div>
-      <EmptyStatePage
-        title={formatMessage(messages.noGlobalIntegrationsMessage)}
-        description={formatMessage(messages.noGlobalIntegrationsDescription)}
-        buttonName={formatMessage(messages.noGlobalIntegrationsButtonAdd)}
-        disableButton={!isAbleToClick}
-        documentationLink={documentationList[name]}
-      />
+      {!query.id ? (
+        <>
+          {availableGlobalIntegrations.length || availableProjectIntegrations.length ? (
+            <>
+              {availableProjectIntegrations.length ? (
+                <AvailableIntegrations
+                  header={formatMessage(messages.projectIntegrationTitle)}
+                  text={formatMessage(messages.projectIntegrationText)}
+                  typeOfIntegration={availableProjectIntegrations}
+                  onArrowClick={onArrowClick}
+                />
+              ) : null}
+
+              <AvailableIntegrations
+                header={formatMessage(messages.globalIntegrationTitle)}
+                text={formatMessage(messages.globalIntegrationText)}
+                typeOfIntegration={availableGlobalIntegrations}
+                onArrowClick={onArrowClick}
+                isGlobal={Boolean(availableProjectIntegrations.length)}
+              />
+            </>
+          ) : (
+            <EmptyStatePage
+              title={formatMessage(messages.noGlobalIntegrationsMessage)}
+              description={formatMessage(messages.noGlobalIntegrationsDescription)}
+              buttonName={formatMessage(messages.noGlobalIntegrationsButtonAdd)}
+              disableButton={!isAbleToClick}
+              documentationLink={documentationList[name]}
+            />
+          )}
+        </>
+      ) : (
+        <h1>Configuration Page with unique id {query.id}</h1>
+      )}
     </>
   );
 };
@@ -94,4 +148,11 @@ export const IntegrationInfo = (props) => {
 IntegrationInfo.propTypes = {
   goBackHandler: PropTypes.func,
   data: PropTypes.object,
+  onArrowClick: PropTypes.func,
+};
+
+IntegrationInfo.defaultProps = {
+  data: {},
+  goBackHandler: () => {},
+  onArrowClick: () => {},
 };

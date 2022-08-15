@@ -1,0 +1,92 @@
+/*!
+ * Copyright 2022 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.instances-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: $BOX_SHADOW--item;
+  max-width: 820px;
+  min-height: 111px;
+  box-sizing: border-box;
+  padding: 24px;
+  border-radius: 8px;
+  background-color: $COLOR--bg-000;
+  margin-bottom: 8px;
+
+  &:last-child {
+    margin-bottom: 48px;
+  }
+
+  &.disabled {
+    .integration-name {
+      opacity: 0.4;
+    }
+    .connection-error-message {
+      color: $COLOR--e-300;
+      background-color: $COLOR--bg-000;
+      border: 1px solid $COLOR--e-300;
+      opacity: 0.5;
+    }
+    .creation-info {
+      opacity: 0.5;
+    }
+  }
+}
+
+.item-data {
+  .general-info {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .integration-name {
+    margin-bottom: 16px;
+    color: $COLOR--almost-black;
+    font-size: 20px;
+    font-family: $FONT-REGULAR;
+    line-height: 31px;
+  }
+  .connection-error-message {
+    padding: 5px 8px 4px;
+    background: $COLOR--red-failed-2;
+    border-radius: 6px;
+    font-size: 8px;
+    line-height: 9px;
+    text-transform: uppercase;
+    color: $COLOR--bg-000;
+    font-family: $FONT-ROBOTO-BOLD;
+    margin-left: 24px;
+    margin-top: 6.5px;
+  }
+
+  .creation-info {
+    color: $COLOR--e-300;
+    line-height: 16px;
+    font-size: 11px;
+    font-family: $FONT-ROBOTO-REGULAR;
+  }
+}
+
+.arrow-control {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+
+  svg {
+    fill: $COLOR--e-300;
+  }
+}

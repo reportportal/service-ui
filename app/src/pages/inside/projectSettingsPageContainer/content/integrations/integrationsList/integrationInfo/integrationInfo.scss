@@ -36,10 +36,25 @@
   height: 108px;
   object-fit: contain;
 }
+.header {
+  display: flex;
+}
+
+.buttons-section {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: row-reverse;
+  min-width: 369px;
+  min-height: 36px;
+  button {
+    margin-right: 8px;
+  }
+}
 
 .integration-block {
   display: flex;
   margin-top: 24px;
+  margin-right: 235px;
 }
 
 .integration-info-block {
