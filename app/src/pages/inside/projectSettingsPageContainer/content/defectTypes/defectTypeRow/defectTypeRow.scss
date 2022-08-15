@@ -34,9 +34,10 @@ $DEFECT_NAME_PADDING: 16px;
 }
 
 .abbr-cell {
-  width: 46px;
-  text-align: center;
-  margin-right: 32px;
+  display: flex;
+  justify-content: center;
+  width: 40px;
+  margin-right: 36px;
   color: $COLOR--e-400;
   font-size: 13px;
   font-family: $FONT-ROBOTO-REGULAR;
@@ -49,7 +50,7 @@ $DEFECT_NAME_PADDING: 16px;
 .defect-type-details-wrap {
   display: flex;
   width: 15%;
-  flex-direction: row-reverse;
+  justify-content: flex-end;
 
   @media (max-width: $SCREEN_XS_MAX) {
     display: none;
@@ -66,7 +67,7 @@ $DEFECT_NAME_PADDING: 16px;
 
 .defect-type {
   display: flex;
-  margin: 24px 16px 12px 0;
+  margin: 24px 9px 12px 0;
   align-items: center;
   justify-content: space-between;
 }

@@ -80,28 +80,30 @@ export const DefectTypeRow = ({
         </div>
       </div>
       <div className={cx('defect-type-details-wrap')}>
-        <DefectLocator locator={locator} />
-        <div className={cx('buttons-cell')}>
-          {!group && isPossibleUpdateSettings && (
-            <>
-              <button
-                className={cx('icon', 'edit-button')}
-                aria-label={formatMessage(COMMON_LOCALE_KEYS.EDIT)}
-                title={formatMessage(COMMON_LOCALE_KEYS.EDIT)}
-              >
-                {Parser(PencilIcon)}
-              </button>
-              <button
-                className={cx('icon', 'delete-button')}
-                aria-label={formatMessage(COMMON_LOCALE_KEYS.DELETE)}
-                title={formatMessage(COMMON_LOCALE_KEYS.DELETE)}
-              >
-                {Parser(BinIcon)}
-              </button>
-            </>
-          )}
-        </div>
         <div className={cx('abbr-cell')}>{shortName}</div>
+        <div>
+          <div className={cx('buttons-cell')}>
+            {!group && isPossibleUpdateSettings && (
+              <>
+                <button
+                  className={cx('icon', 'edit-button')}
+                  aria-label={formatMessage(COMMON_LOCALE_KEYS.EDIT)}
+                  title={formatMessage(COMMON_LOCALE_KEYS.EDIT)}
+                >
+                  {Parser(PencilIcon)}
+                </button>
+                <button
+                  className={cx('icon', 'delete-button')}
+                  aria-label={formatMessage(COMMON_LOCALE_KEYS.DELETE)}
+                  title={formatMessage(COMMON_LOCALE_KEYS.DELETE)}
+                >
+                  {Parser(BinIcon)}
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+        <DefectLocator locator={locator} />
       </div>
     </div>
   );
