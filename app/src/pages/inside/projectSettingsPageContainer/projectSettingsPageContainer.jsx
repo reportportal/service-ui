@@ -36,7 +36,7 @@ import {
 } from 'common/constants/settingsTabs';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { Integrations } from 'pages/inside/projectSettingsPageContainer/content/integrations';
-import { DefectTypesTab } from 'pages/common/settingsPage/defectTypesTab';
+import { DefectTypes } from 'pages/inside/projectSettingsPageContainer/content/defectTypes';
 import { DemoDataTab } from 'pages/inside/projectSettingsPageContainer/content/demoDataContent';
 import { canSeeDemoData } from 'common/utils/permissions';
 import { ExtensionLoader } from 'components/extensionLoader';
@@ -116,7 +116,9 @@ export const ProjectSettingsPageContainer = () => {
       [DEFECT]: {
         name: formatMessage(messages.defect),
         link: createTabLink(DEFECT),
-        component: <DefectTypesTab />,
+        component: (
+          <DefectTypes setHeaderTitleNode={(node) => setHeaderNodes({ titleNode: node })} />
+        ),
         eventInfo: SETTINGS_PAGE_EVENTS.DEFECT_TYPE_TAB,
         mobileDisabled: true,
       },
