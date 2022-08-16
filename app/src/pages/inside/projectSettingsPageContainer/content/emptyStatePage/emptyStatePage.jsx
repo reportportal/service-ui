@@ -23,8 +23,17 @@ import { useIntl } from 'react-intl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import PropTypes from 'prop-types';
 import styles from './emptyStatePage.scss';
+import plus from './img/empty-state-inline.svg';
+import bell from './img/notifications-empty-state-inline.svg';
+import rhombus from './img/quality-gates-empty-inline.svg';
 
 const cx = classNames.bind(styles);
+
+const images = {
+  bell,
+  rhombus,
+  plus,
+};
 
 export const EmptyStatePage = ({
   handleButton,
@@ -35,11 +44,12 @@ export const EmptyStatePage = ({
   disableButton,
   descriptionClassName,
   handleDocumentationClick,
+  imageType,
 }) => {
   const { formatMessage } = useIntl();
   return (
     <div className={cx('container')}>
-      <div className={cx('img')} />
+      <span className={cx('img')}>{Parser(images[imageType])}</span>
       <span className={cx('title')}>{title}</span>
       <span className={cx('description', descriptionClassName)}>{description}</span>
       {buttonName && (
@@ -71,6 +81,7 @@ EmptyStatePage.propTypes = {
   disableButton: PropTypes.bool,
   descriptionClassName: PropTypes.string,
   handleDocumentationClick: PropTypes.oneOfType([PropTypes.func, PropTypes.instanceOf(null)]),
+  imageType: PropTypes.oneOf(['plus', 'rhombus', 'bell']),
 };
 
 EmptyStatePage.defaultProps = {
@@ -82,4 +93,5 @@ EmptyStatePage.defaultProps = {
   disableButton: false,
   descriptionClassName: '',
   handleDocumentationClick: null,
+  imageType: 'plus',
 };

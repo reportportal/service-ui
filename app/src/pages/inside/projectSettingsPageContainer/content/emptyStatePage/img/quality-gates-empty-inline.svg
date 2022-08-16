@@ -1,0 +1,26 @@
+<svg width="168" height="123" viewBox="0 0 168 123" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g opacity="0.82">
+<g filter="url(#filter0_i_8641_20823)">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6 32H162V114.731C162 119.298 158.298 123 153.731 123H14.2687C9.70204 123 6 119.298 6 114.731V32Z" fill="#E3E7EC"/>
+</g>
+<path d="M0 8.26875C0 3.70205 3.70205 0 8.26875 0H159.731C164.298 0 168 3.70205 168 8.26875V19.5H0V8.26875Z" fill="#E3E7EC"/>
+<ellipse cx="12.6004" cy="9.74986" rx="4.2" ry="4.17857" fill="white"/>
+<ellipse cx="26.6004" cy="9.74986" rx="4.2" ry="4.17857" fill="white"/>
+<ellipse cx="40.5984" cy="9.74986" rx="4.2" ry="4.17857" fill="white"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M0 19.5H168V108.731C168 113.298 164.298 117 159.731 117H8.26875C3.70205 117 0 113.298 0 108.731V19.5Z" fill="#FEFEFE"/>
+<rect opacity="0.56" x="6.00195" y="28.6572" width="156.001" height="79.186" rx="3.9375" fill="#E7EAEE"/>
+<rect x="83" y="39.7158" width="40" height="40" rx="5" transform="rotate(45 83 39.7158)" fill="#C1C7D0"/>
+<path d="M71 65.42C69.8512 65.42 68.92 66.3512 68.92 67.5C68.92 68.6488 69.8512 69.58 71 69.58V65.42ZM95 69.58C96.1488 69.58 97.08 68.6488 97.08 67.5C97.08 66.3512 96.1488 65.42 95 65.42V69.58ZM85.08 56C85.08 54.8512 84.1488 53.92 83 53.92C81.8512 53.92 80.92 54.8512 80.92 56H85.08ZM80.92 79C80.92 80.1488 81.8512 81.08 83 81.08C84.1488 81.08 85.08 80.1488 85.08 79H80.92ZM71 69.58H95V65.42H71V69.58ZM80.92 56V79H85.08V56H80.92Z" fill="#F4F6F6"/>
+</g>
+<defs>
+<filter id="filter0_i_8641_20823" x="6" y="32" width="156" height="91" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="2.75625"/>
+<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0.509804 0 0 0 0 0.607843 0 0 0 0.15 0"/>
+<feBlend mode="normal" in2="shape" result="effect1_innerShadow_8641_20823"/>
+</filter>
+</defs>
+</svg>
