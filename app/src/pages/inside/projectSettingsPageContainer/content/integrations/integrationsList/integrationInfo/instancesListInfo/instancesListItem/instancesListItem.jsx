@@ -30,7 +30,8 @@ export const InstancesListItem = ({ id, title, creator, creationInfo, disabled, 
   const [connected, setConnected] = useState(true);
   const projectId = useSelector(projectIdSelector);
   const activeProject = useSelector(activeProjectSelector);
-  function testIntegrationConnection() {
+
+  useEffect(() => {
     fetch(URLS.testIntegrationConnection(projectId || activeProject, id))
       .then(() => {
         setConnected(true);
@@ -38,13 +39,7 @@ export const InstancesListItem = ({ id, title, creator, creationInfo, disabled, 
       .catch(() => {
         setConnected(false);
       });
-  }
-
-  useEffect(() => {
-    if (connected) {
-      testIntegrationConnection();
-    }
-  }, [connected]);
+  }, []);
 
   const itemClickHandler = () => {
     onArrowClick(id);

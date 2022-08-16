@@ -33,7 +33,6 @@ import { activeProjectSelector } from 'controllers/user';
 import { redirect } from 'redux-first-router';
 import { IntegrationInfo } from './integrationsList/integrationInfo';
 import { IntegrationsList } from './integrationsList';
-
 import styles from './integrations.scss';
 
 const cx = classNames.bind(styles);
@@ -80,17 +79,10 @@ export const Integrations = () => {
     setPlugin(pluginData);
   };
 
-  const onArrowClick = (integrationID) => {
-    dispatch(
-      updatePagePropertiesAction({
-        id: integrationID,
-      }),
-    );
-  };
   return (
     <>
       {query.subPage && !!Object.keys(plugin).length ? (
-        <IntegrationInfo goBackHandler={goBackHandler} data={plugin} onArrowClick={onArrowClick} />
+        <IntegrationInfo goBackHandler={goBackHandler} data={plugin} />
       ) : (
         <div className={cx('integrations')}>
           <IntegrationsList

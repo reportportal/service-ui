@@ -15,13 +15,12 @@
  */
 
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
 import { Button } from 'componentLibrary/button';
-
 import { PluginIcon } from 'components/integrations/elements/pluginIcon';
 import { JIRA, RALLY, EMAIL, SAUCE_LABS } from 'common/constants/pluginNames';
 import { isAdminSelector, activeProjectRoleSelector } from 'controllers/user';
@@ -31,7 +30,7 @@ import {
   namedGlobalIntegrationsSelector,
   namedProjectIntegrationsSelector,
 } from 'controllers/plugins';
-import { querySelector } from 'controllers/pages';
+import { querySelector, updatePagePropertiesAction } from 'controllers/pages';
 import { PLUGIN_DESCRIPTIONS_MAP } from 'components/integrations/messages';
 import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
 import { AvailableIntegrations } from './availableIntegrations';
@@ -58,17 +57,60 @@ export const IntegrationInfo = (props) => {
   const globalIntegrations = useSelector(namedGlobalIntegrationsSelector);
   const projectIntegrations = useSelector(namedProjectIntegrationsSelector);
   const isAbleToClick = canUpdateSettings(isAdmin, userProjectRole);
-  const query = useSelector(querySelector);
-
+  const { id } = useSelector(querySelector);
+  const dispatch = useDispatch();
   const {
     goBackHandler,
     data: { name, details = {} },
     data,
-    onArrowClick,
   } = props;
 
   const availableGlobalIntegrations = globalIntegrations[data.name] || [];
   const availableProjectIntegrations = projectIntegrations[data.name] || [];
+
+  const onArrowClick = (integrationID) => {
+    dispatch(
+      updatePagePropertiesAction({
+        id: integrationID,
+      }),
+    );
+  };
+
+  const integrationContent = () => {
+    return (
+      <>
+        {availableGlobalIntegrations.length > 0 || availableProjectIntegrations.length > 0 ? (
+          <>
+            {availableProjectIntegrations.length > 0 && (
+              <AvailableIntegrations
+                header={formatMessage(messages.projectIntegrationTitle)}
+                text={formatMessage(messages.projectIntegrationText)}
+                typeOfIntegration={availableProjectIntegrations}
+                onArrowClick={onArrowClick}
+              />
+            )}
+
+            <AvailableIntegrations
+              header={formatMessage(messages.globalIntegrationTitle)}
+              text={formatMessage(messages.globalIntegrationText)}
+              typeOfIntegration={availableGlobalIntegrations}
+              onArrowClick={onArrowClick}
+              isGlobal={Boolean(availableProjectIntegrations.length)}
+            />
+          </>
+        ) : (
+          <EmptyStatePage
+            title={formatMessage(messages.noGlobalIntegrationsMessage)}
+            description={formatMessage(messages.noGlobalIntegrationsDescription)}
+            buttonName={formatMessage(messages.noGlobalIntegrationsButtonAdd)}
+            disableButton={!isAbleToClick}
+            documentationLink={documentationList[name]}
+          />
+        )}
+      </>
+    );
+  };
+
   return (
     <>
       <div className={cx('container')}>
@@ -99,60 +141,36 @@ export const IntegrationInfo = (props) => {
             <Button disabled={!isAbleToClick}>
               {formatMessage(messages.noGlobalIntegrationsButtonAdd)}
             </Button>
-            {availableProjectIntegrations.length && isAbleToClick ? (
+            {availableProjectIntegrations.length > 0 && isAbleToClick && (
               <Button variant="ghost">
                 {formatMessage(messages.resetToGlobalIntegrationsButton)}
               </Button>
-            ) : null}
+            )}
           </div>
         </div>
       </div>
-      {!query.id ? (
-        <>
-          {availableGlobalIntegrations.length || availableProjectIntegrations.length ? (
-            <>
-              {availableProjectIntegrations.length ? (
-                <AvailableIntegrations
-                  header={formatMessage(messages.projectIntegrationTitle)}
-                  text={formatMessage(messages.projectIntegrationText)}
-                  typeOfIntegration={availableProjectIntegrations}
-                  onArrowClick={onArrowClick}
-                />
-              ) : null}
-
-              <AvailableIntegrations
-                header={formatMessage(messages.globalIntegrationTitle)}
-                text={formatMessage(messages.globalIntegrationText)}
-                typeOfIntegration={availableGlobalIntegrations}
-                onArrowClick={onArrowClick}
-                isGlobal={Boolean(availableProjectIntegrations.length)}
-              />
-            </>
-          ) : (
-            <EmptyStatePage
-              title={formatMessage(messages.noGlobalIntegrationsMessage)}
-              description={formatMessage(messages.noGlobalIntegrationsDescription)}
-              buttonName={formatMessage(messages.noGlobalIntegrationsButtonAdd)}
-              disableButton={!isAbleToClick}
-              documentationLink={documentationList[name]}
-            />
-          )}
-        </>
-      ) : (
-        <h1>Configuration Page with unique id {query.id}</h1>
-      )}
+      {!id ? integrationContent() : <h1>Configuration Page with unique id {id}</h1>}
     </>
   );
 };
 
 IntegrationInfo.propTypes = {
   goBackHandler: PropTypes.func,
-  data: PropTypes.object,
-  onArrowClick: PropTypes.func,
+  data: PropTypes.shape({
+    creationDate: PropTypes.number,
+    enabled: PropTypes.bool,
+    groupType: PropTypes.string,
+    name: PropTypes.string,
+    type: PropTypes.number,
+    details: PropTypes.shape({
+      id: PropTypes.string,
+      name: PropTypes.string,
+      version: PropTypes.string,
+      resources: PropTypes.string,
+    }),
+  }).isRequired,
 };
 
 IntegrationInfo.defaultProps = {
-  data: {},
   goBackHandler: () => {},
-  onArrowClick: () => {},
 };
