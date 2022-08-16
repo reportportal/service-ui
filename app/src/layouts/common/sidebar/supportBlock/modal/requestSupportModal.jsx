@@ -112,6 +112,8 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
         >
           <input type="hidden" name="oid" value="00D24000000k2Rp" />
           <input type="hidden" name="retURL" value="http://" />
+          <input type="hidden" name="lead_status" value="New" />
+          <input type="hidden" name="lead_source" value="RP Product" />
           <input type="hidden" name="ReportPortalSource__c" value="ReportPortal instance" />
 
           <div className={cx('form-field')}>
@@ -159,14 +161,6 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
               />
             </FieldErrorHint>
           </FieldProvider>
-
-          <select className={cx('hidden')} id="lead_source" name="lead_source">
-            <option value="ReportPortal">ReportPortal</option>
-          </select>
-
-          <select className={cx('hidden')} id="lead_status" name="lead_status">
-            <option value="New">New</option>
-          </select>
         </form>
       </>
     </ModalLayout>
