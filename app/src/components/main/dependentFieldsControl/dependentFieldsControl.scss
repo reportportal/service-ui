@@ -16,13 +16,12 @@
 
 .dependent-fields-control {
   display: flex;
-  align-items: start;
+  align-items: flex-start;
   flex-wrap: wrap;
   gap: 16px;
 
   @media (max-width: $SCREEN_XS_MAX) {
     flex-direction: column;
-    align-items: flex-start;
   }
 }
 
