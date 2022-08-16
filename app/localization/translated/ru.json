@@ -937,6 +937,8 @@
   "IntegrationsDescription.noGlobalIntegrationsButtonAdd": "Добавить интеграцию проекта",
   "IntegrationsDescription.resetToGlobalIntegrationsButton": "Сброс к глобальным интеграциям",
   "IntegrationsDescription.backToIntegration": "Назад к списку интеграций",
+  "IntegrationsDescription.GlobalIntegrationsSystemMessage": "Предупреждение",
+  "IntegrationsDescription.GlobalIntegrationsSystemMessageText": "Глобальные интеграции неактивны, поскольку вы настроили интеграцию проекта.",
   "IntegrationsDescription.globalIntegrationTitle": "Глобальные интеграции",
   "IntegrationsDescription.globalIntegrationText": "Глобальные интеграции создаются на уровне экземпляра и применяются ко всем проектам.",
   "IntegrationsDescription.projectIntegrationTitle": "Интеграция проекта",

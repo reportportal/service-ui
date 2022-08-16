@@ -19,6 +19,7 @@
   padding: 12px 32px 27px 32px;
   position: sticky;
   top: 0;
+  margin-bottom: 24px;
 }
 
 .back-to {
@@ -39,14 +40,13 @@
 }
 .header {
   display: flex;
+  margin-top: 24px;
 }
 
 .buttons-section {
-  margin-top: 24px;
   display: flex;
   flex-direction: row-reverse;
-  min-width: 369px;
-  min-height: 36px;
+  flex-shrink: 0;
   margin-left: auto;
   button {
     margin-right: 8px;
@@ -55,7 +55,6 @@
 
 .integration-block {
   display: flex;
-  margin-top: 24px;
 }
 
 .integration-info-block {

@@ -937,6 +937,8 @@
   "IntegrationsDescription.noGlobalIntegrationsButtonAdd": "Дадаць інтэграцыю праекта",
   "IntegrationsDescription.resetToGlobalIntegrationsButton": "Скід да глабальных інтэграцый",
   "IntegrationsDescription.backToIntegration": "Назад да спісу інтэграцый",
+  "IntegrationsDescription.GlobalIntegrationsSystemMessage": "Папярэджанне",
+  "IntegrationsDescription.GlobalIntegrationsSystemMessageText": "Глабальныя інтэграцыі неактыўныя, паколькі вы наладзілі інтэграцыю праекту.",
   "IntegrationsDescription.globalIntegrationTitle": "Глабальныя інтэграцыі",
   "IntegrationsDescription.globalIntegrationText": "Глабальныя інтэграцыі ствараюцца на ўзроўні экзэмпляра і прымяняюцца да ўсіх праектаў.",
   "IntegrationsDescription.projectIntegrationTitle": "Інтэграцыя праекта",

@@ -31,10 +31,6 @@
     box-shadow: $BOX_SHADOW--item-hover;
   }
 
-  &:last-child {
-    margin-bottom: 48px;
-  }
-
   &.disabled {
     .integration-name {
       opacity: 0.4;

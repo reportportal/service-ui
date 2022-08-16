@@ -17,10 +17,22 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { SystemMessage } from 'componentLibrary/systemMessage';
+import { defineMessages, useIntl } from 'react-intl';
 import { InstancesListInfo } from '../instancesListInfo';
 import styles from './availableIntegrations.scss';
 
 const cx = classNames.bind(styles);
+
+const messages = defineMessages({
+  GlobalIntegrationsSystemMessage: {
+    id: 'IntegrationsDescription.GlobalIntegrationsSystemMessage',
+    defaultMessage: 'Warning',
+  },
+  GlobalIntegrationsSystemMessageText: {
+    id: 'IntegrationsDescription.GlobalIntegrationsSystemMessageText',
+    defaultMessage: 'Global Integrations are inactive as you have configured Project Integration',
+  },
+});
 
 export const AvailableIntegrations = ({
   header,
@@ -28,20 +40,30 @@ export const AvailableIntegrations = ({
   typeOfIntegration,
   isGlobal,
   onArrowClick,
-}) => (
-  <div className={cx('global-integrations-section')}>
-    <h1 className={cx('global-integrations-header')}>{header}</h1>
-    <p className={cx('global-integrations-text')}>{text}</p>
-    {isGlobal ? (
-      <div className={cx('message-container')}>
-        <SystemMessage header="Warning" mode={'warning'}>
-          Global Integrations are inactive as you have configured Project Integration
-        </SystemMessage>
-      </div>
-    ) : null}
-    <InstancesListInfo items={typeOfIntegration} disabled={isGlobal} onArrowClick={onArrowClick} />
-  </div>
-);
+}) => {
+  const { formatMessage } = useIntl();
+  return (
+    <div className={cx('global-integrations-section')}>
+      <h1 className={cx('global-integrations-header')}>{header}</h1>
+      <p className={cx('global-integrations-text')}>{text}</p>
+      {isGlobal ? (
+        <div className={cx('message-container')}>
+          <SystemMessage
+            header={formatMessage(messages.GlobalIntegrationsSystemMessage)}
+            mode={'warning'}
+          >
+            {formatMessage(messages.GlobalIntegrationsSystemMessageText)}
+          </SystemMessage>
+        </div>
+      ) : null}
+      <InstancesListInfo
+        items={typeOfIntegration}
+        disabled={isGlobal}
+        onArrowClick={onArrowClick}
+      />
+    </div>
+  );
+};
 
 AvailableIntegrations.propTypes = {
   header: PropTypes.string,
