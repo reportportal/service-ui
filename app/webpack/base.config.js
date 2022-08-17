@@ -33,6 +33,8 @@ module.exports = {
     publicPath: 'auto',
     assetModuleFilename: 'media/[name].[ext]',
     clean: true,
+  },
+  optimization: {
     realContentHash: false,
   },
   resolve: {
