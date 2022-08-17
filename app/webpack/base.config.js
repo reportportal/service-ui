@@ -29,14 +29,14 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, '../build'),
-    filename: '[name].app.[contenthash:6].js',
+    filename: '[name].app.[contenthash:8].js',
     publicPath: 'auto',
     assetModuleFilename: 'media/[name].[ext]',
     clean: true,
   },
-  optimization: {
-    realContentHash: false,
-  },
+  // optimization: {
+  //   realContentHash: false,
+  // },
   resolve: {
     extensions: ['.js', '.jsx', '.sass', '.scss', '.css'],
     alias: {
