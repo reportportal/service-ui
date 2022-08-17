@@ -59,7 +59,7 @@ const RequestSupport = ({ handleSubmit, initialize, invalid }) => {
     return () => {
       dummyframe.parentNode.removeChild(dummyframe);
     };
-  }, [initialize, email]);
+  }, [email]);
 
   const onSubmit = (nextAction) => {
     iframe.onload = () => {
