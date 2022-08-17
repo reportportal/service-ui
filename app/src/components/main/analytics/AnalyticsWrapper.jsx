@@ -28,12 +28,11 @@ import {
   projectInfoIdSelector,
 } from 'controllers/project/selectors';
 import { omit } from 'common/utils';
+import { gaMeasurementIdSelector } from 'controllers/appInfo/selectors';
 import { normalizeDimensionValue } from './utils';
 
 const PAGE_VIEW = 'pageview';
 const GOOGLE_ANALYTICS_INSTANCE = 'UA-96321031-1';
-
-const GA_MEASUREMENT_ID = 'G-Q5Q5X3LTGC';
 
 const getAppVersion = (buildVersion) =>
   buildVersion &&
@@ -50,6 +49,7 @@ const getAppVersion = (buildVersion) =>
   isPatternAnalyzerEnabled: patternAnalysisEnabledSelector(state),
   projectId: projectInfoIdSelector(state),
   isAdmin: isAdminSelector(state),
+  gaMeasurementId: gaMeasurementIdSelector(state),
 }))
 @track(({ children, dispatch, ...additionalData }) => additionalData, {
   dispatch: ({
@@ -60,6 +60,7 @@ const getAppVersion = (buildVersion) =>
     isPatternAnalyzerEnabled,
     projectId,
     isAdmin,
+    gaMeasurementId,
     ...data
   }) => {
     ReactGA.set({
@@ -96,10 +97,12 @@ export class AnalyticsWrapper extends Component {
     isPatternAnalyzerEnabled: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
     projectId: PropTypes.number.isRequired,
     isAdmin: PropTypes.bool.isRequired,
+    gaMeasurementId: PropTypes.string,
   };
 
   static defaultProps = {
     children: null,
+    gaMeasurementId: '',
   };
 
   componentDidMount() {
@@ -111,13 +114,14 @@ export class AnalyticsWrapper extends Component {
       isPatternAnalyzerEnabled,
       projectId,
       isAdmin,
+      gaMeasurementId,
     } = this.props;
     const appVersion = getAppVersion(buildVersion);
 
     ReactGA.initialize(GOOGLE_ANALYTICS_INSTANCE);
     ReactGA.pageview(window.location.pathname + window.location.search);
 
-    GA4.initialize(GA_MEASUREMENT_ID, {
+    GA4.initialize(gaMeasurementId || 'G-Z22WZS0E4E', {
       gtagOptions: {
         anonymizeIp: true,
       },
