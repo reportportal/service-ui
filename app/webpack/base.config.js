@@ -33,6 +33,7 @@ module.exports = {
     publicPath: 'auto',
     assetModuleFilename: 'media/[name].[ext]',
     clean: true,
+    realContentHash: false,
   },
   resolve: {
     extensions: ['.js', '.jsx', '.sass', '.scss', '.css'],
