@@ -66,7 +66,7 @@ const messages = defineMessages({
   },
   chinese: {
     id: 'LocalizationBlock.chinese',
-    defaultMessage: '简体中文'
+    defaultMessage: '简体中文',
   },
   note: {
     id: 'LocalizationBlock.note',
