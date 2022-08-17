@@ -68,10 +68,10 @@ export const IntegrationInfo = (props) => {
   const availableGlobalIntegrations = globalIntegrations[data.name] || [];
   const availableProjectIntegrations = projectIntegrations[data.name] || [];
 
-  const openIntegration = (Id) => {
+  const openIntegration = (id) => {
     dispatch(
       updatePagePropertiesAction({
-        id: Id,
+        id,
       }),
     );
   };
