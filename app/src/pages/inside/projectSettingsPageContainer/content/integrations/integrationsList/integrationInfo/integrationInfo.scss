@@ -48,8 +48,13 @@
   flex-direction: row-reverse;
   flex-shrink: 0;
   margin-left: auto;
+
   button {
     margin-right: 8px;
+  }
+
+  button:first-of-type {
+    margin-right: 0px;
   }
 }
 

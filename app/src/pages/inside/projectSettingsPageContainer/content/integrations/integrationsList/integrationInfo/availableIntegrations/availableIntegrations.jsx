@@ -46,7 +46,7 @@ export const AvailableIntegrations = ({
     <div className={cx('global-integrations-section')}>
       <h1 className={cx('global-integrations-header')}>{header}</h1>
       <p className={cx('global-integrations-text')}>{text}</p>
-      {isGlobal ? (
+      {isGlobal && (
         <div className={cx('message-container')}>
           <SystemMessage
             header={formatMessage(messages.GlobalIntegrationsSystemMessage)}
@@ -55,7 +55,7 @@ export const AvailableIntegrations = ({
             {formatMessage(messages.GlobalIntegrationsSystemMessageText)}
           </SystemMessage>
         </div>
-      ) : null}
+      )}
       <InstancesListInfo
         items={typeOfIntegration}
         disabled={isGlobal}
