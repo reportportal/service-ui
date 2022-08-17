@@ -31,10 +31,8 @@ import {
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
 import { activeProjectSelector } from 'controllers/user';
 import { redirect } from 'redux-first-router';
-import { isEmptyObject } from 'common/utils';
 import { IntegrationInfo } from './integrationsList/integrationInfo';
 import { IntegrationsList } from './integrationsList';
-
 import styles from './integrations.scss';
 
 const cx = classNames.bind(styles);
@@ -64,8 +62,6 @@ export const Integrations = () => {
     const certainPlugin = plugins.find(({ name }) => name === pluginName);
     if (pluginName && certainPlugin) {
       setPlugin(certainPlugin);
-    } else if (pluginName && isEmptyObject(plugin)) {
-      dispatch(redirect(initialPage));
     } else {
       dispatch(redirect(initialPage));
     }
@@ -86,7 +82,7 @@ export const Integrations = () => {
   return (
     <>
       {query.subPage && !!Object.keys(plugin).length ? (
-        <IntegrationInfo goBackHandler={goBackHandler} data={plugin} />
+        <IntegrationInfo goBackHandler={goBackHandler} data={plugin} integrationId={query.id} />
       ) : (
         <div className={cx('integrations')}>
           <IntegrationsList

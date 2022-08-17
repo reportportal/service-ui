@@ -15,9 +15,11 @@
  */
 
 .container {
-  width: 100%;
   background: $COLOR--bg-000;
-  padding: 12px 0px 27px 32px;
+  padding: 12px 32px 27px 32px;
+  position: sticky;
+  top: 0;
+  margin-bottom: 24px;
 }
 
 .back-to {
@@ -36,10 +38,28 @@
   height: 108px;
   object-fit: contain;
 }
+.header {
+  display: flex;
+  margin-top: 24px;
+}
+
+.buttons-section {
+  display: flex;
+  flex-direction: row-reverse;
+  flex-shrink: 0;
+  margin-left: auto;
+
+  button {
+    margin-right: 8px;
+  }
+
+  button:first-of-type {
+    margin-right: 0px;
+  }
+}
 
 .integration-block {
   display: flex;
-  margin-top: 24px;
 }
 
 .integration-info-block {

@@ -30,6 +30,10 @@ export const messages = defineMessages({
     id: 'IntegrationsDescription.noGlobalIntegrationsButtonAdd',
     defaultMessage: 'Add Project Integration',
   },
+  resetToGlobalIntegrationsButton: {
+    id: 'IntegrationsDescription.resetToGlobalIntegrationsButton',
+    defaultMessage: 'Reset to Global Integrations',
+  },
   backToIntegration: {
     id: 'IntegrationsDescription.backToIntegration',
     defaultMessage: 'Back to Integrations List',
@@ -37,5 +41,23 @@ export const messages = defineMessages({
   version: {
     id: 'InfoSection.version',
     defaultMessage: 'version',
+  },
+  globalIntegrationTitle: {
+    id: 'IntegrationsDescription.globalIntegrationTitle',
+    defaultMessage: 'Global Integrations',
+  },
+  globalIntegrationText: {
+    id: 'IntegrationsDescription.globalIntegrationText',
+    defaultMessage:
+      'Global Integrations are created on the instance level and are applied to all projects',
+  },
+
+  projectIntegrationTitle: {
+    id: 'IntegrationsDescription.projectIntegrationTitle',
+    defaultMessage: 'Project Integrations',
+  },
+  projectIntegrationText: {
+    id: 'IntegrationsDescription.projectIntegrationText',
+    defaultMessage: 'Project Integrations are created per project',
   },
 });
