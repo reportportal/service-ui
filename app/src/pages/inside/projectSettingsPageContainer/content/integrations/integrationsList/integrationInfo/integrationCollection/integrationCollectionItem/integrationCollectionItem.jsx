@@ -15,6 +15,7 @@
  */
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { defineMessages, useIntl } from 'react-intl';
 import { projectIdSelector } from 'controllers/pages';
 import { activeProjectSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
@@ -22,14 +23,29 @@ import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import ArrowIcon from 'common/img/arrow-right-inline.svg';
-import styles from './instancesListItem.scss';
+import styles from './integrationCollectionItem.scss';
 
 const cx = classNames.bind(styles);
 
-export const InstancesListItem = ({ id, title, creator, creationInfo, disabled, onArrowClick }) => {
+const messages = defineMessages({
+  ConnectionErrorMessage: {
+    id: 'IntegrationsDescription.ConnectionErrorMessage',
+    defaultMessage: 'Connection Error',
+  },
+});
+
+export const IntegrationCollectionItem = ({
+  id,
+  title,
+  creator,
+  creationInfo,
+  disabled,
+  openIntegration,
+}) => {
   const [connected, setConnected] = useState(true);
   const projectId = useSelector(projectIdSelector);
   const activeProject = useSelector(activeProjectSelector);
+  const { formatMessage } = useIntl();
 
   useEffect(() => {
     fetch(URLS.testIntegrationConnection(projectId || activeProject, id))
@@ -42,14 +58,18 @@ export const InstancesListItem = ({ id, title, creator, creationInfo, disabled, 
   }, []);
 
   const itemClickHandler = () => {
-    onArrowClick(id);
+    openIntegration(id);
   };
   return (
     <li className={cx('instances-list-item', { disabled })}>
       <div className={cx('item-data')}>
         <div className={cx('general-info')}>
           <h4 className={cx('integration-name')}>{title}</h4>
-          {!connected && <span className={cx('connection-error-message')}>Connection Error</span>}
+          {!connected && (
+            <span className={cx('connection-error-message')}>
+              {formatMessage(messages.ConnectionErrorMessage)}
+            </span>
+          )}
         </div>
         <span className={cx('creation-info')}>
           {creator ? `${creator} on ${creationInfo}` : creationInfo}
@@ -63,19 +83,19 @@ export const InstancesListItem = ({ id, title, creator, creationInfo, disabled, 
   );
 };
 
-InstancesListItem.propTypes = {
+IntegrationCollectionItem.propTypes = {
   id: PropTypes.number,
   title: PropTypes.string.isRequired,
   creationInfo: PropTypes.string.isRequired,
   creator: PropTypes.string,
   disabled: PropTypes.bool,
-  onArrowClick: PropTypes.func,
+  openIntegration: PropTypes.func,
 };
 
-InstancesListItem.defaultProps = {
+IntegrationCollectionItem.defaultProps = {
   title: '',
   creationInfo: '',
   creator: '',
   disabled: false,
-  onArrowClick: () => {},
+  openIntegration: () => {},
 };

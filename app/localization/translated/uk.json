@@ -943,6 +943,7 @@
   "IntegrationsDescription.globalIntegrationText": "Глобальні інтеграції створюються лише на рівні екземпляра і застосовуються всім проектам.",
   "IntegrationsDescription.projectIntegrationTitle": "Інтеграція проекту",
   "IntegrationsDescription.projectIntegrationText": "Інтеграції проекту створюються для кожного проекту",
+  "IntegrationsDescription.ConnectionErrorMessage": "Помилка з'єднання",
   "IntegrationsTab.integrationsBreadcrumbTitle": "Інтеграції",
   "InvestigatedPercentageOfLaunchesControls.ItemsFieldLabel": "Елементи",
   "InvestigatedPercentageOfLaunchesControls.ItemsValidationError": "Кількість елементів приймає значення від '1' до '600'",

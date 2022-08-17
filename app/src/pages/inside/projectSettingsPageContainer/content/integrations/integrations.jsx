@@ -82,7 +82,7 @@ export const Integrations = () => {
   return (
     <>
       {query.subPage && !!Object.keys(plugin).length ? (
-        <IntegrationInfo goBackHandler={goBackHandler} data={plugin} />
+        <IntegrationInfo goBackHandler={goBackHandler} data={plugin} integrationId={query.id} />
       ) : (
         <div className={cx('integrations')}>
           <IntegrationsList

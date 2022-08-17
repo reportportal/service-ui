@@ -943,6 +943,7 @@
   "IntegrationsDescription.globalIntegrationText": "Глабальныя інтэграцыі ствараюцца на ўзроўні экзэмпляра і прымяняюцца да ўсіх праектаў.",
   "IntegrationsDescription.projectIntegrationTitle": "Інтэграцыя праекта",
   "IntegrationsDescription.projectIntegrationText": "Інтэграцыі праекта ствараюцца для кожнага праекта",
+  "IntegrationsDescription.ConnectionErrorMessage": "Памылка злучэння",
   "IntegrationsTab.integrationsBreadcrumbTitle": "Інтэграцыі",
   "InvestigatedPercentageOfLaunchesControls.ItemsFieldLabel": "Элементы",
   "InvestigatedPercentageOfLaunchesControls.ItemsValidationError": "Колькасць элементаў павінна быць памерам ад '1' да '600'",

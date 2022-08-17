@@ -18,7 +18,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { SystemMessage } from 'componentLibrary/systemMessage';
 import { defineMessages, useIntl } from 'react-intl';
-import { InstancesListInfo } from '../instancesListInfo';
+import { IntegrationCollection } from '../integrationCollection';
 import styles from './availableIntegrations.scss';
 
 const cx = classNames.bind(styles);
@@ -37,16 +37,16 @@ const messages = defineMessages({
 export const AvailableIntegrations = ({
   header,
   text,
-  typeOfIntegration,
-  isGlobal,
-  onArrowClick,
+  integrations,
+  hasProjectIntegration,
+  openIntegration,
 }) => {
   const { formatMessage } = useIntl();
   return (
-    <div className={cx('global-integrations-section')}>
-      <h1 className={cx('global-integrations-header')}>{header}</h1>
-      <p className={cx('global-integrations-text')}>{text}</p>
-      {isGlobal && (
+    <div className={cx('integrations-section')}>
+      <h1 className={cx('integrations-header')}>{header}</h1>
+      <p className={cx('integrations-text')}>{text}</p>
+      {hasProjectIntegration && (
         <div className={cx('message-container')}>
           <SystemMessage
             header={formatMessage(messages.GlobalIntegrationsSystemMessage)}
@@ -56,10 +56,10 @@ export const AvailableIntegrations = ({
           </SystemMessage>
         </div>
       )}
-      <InstancesListInfo
-        items={typeOfIntegration}
-        disabled={isGlobal}
-        onArrowClick={onArrowClick}
+      <IntegrationCollection
+        items={integrations}
+        disabled={hasProjectIntegration}
+        openIntegration={openIntegration}
       />
     </div>
   );
@@ -68,14 +68,14 @@ export const AvailableIntegrations = ({
 AvailableIntegrations.propTypes = {
   header: PropTypes.string,
   text: PropTypes.string,
-  typeOfIntegration: PropTypes.array.isRequired,
-  isGlobal: PropTypes.bool,
-  onArrowClick: PropTypes.func,
+  integrations: PropTypes.array.isRequired,
+  hasProjectIntegration: PropTypes.bool,
+  openIntegration: PropTypes.func,
 };
 
 AvailableIntegrations.defaultProps = {
   header: '',
   text: '',
-  typeOfIntegration: [],
-  isGlobal: false,
+  integrations: [],
+  hasProjectIntegration: false,
 };

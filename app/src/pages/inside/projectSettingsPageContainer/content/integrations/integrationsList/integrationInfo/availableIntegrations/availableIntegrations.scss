@@ -21,18 +21,18 @@
   font-family: $font-family;
 }
 
-.global-integrations-section {
+.integrations-section {
   max-width: 844px;
   padding: 0px 32px;
   margin: 0 auto 48px;
 }
 
-.global-integrations-header {
+.integrations-header {
   @include measure(15px, 24px, $COLOR--almost-black, $FONT-ROBOTO-MEDIUM);
   margin-bottom: 4px;
 }
 
-.global-integrations-text {
+.integrations-text {
   @include measure(11px, 16px, $COLOR--e-300, $FONT-ROBOTO-REGULAR);
 }
 

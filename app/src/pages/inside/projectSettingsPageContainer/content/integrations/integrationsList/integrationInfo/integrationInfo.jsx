@@ -30,7 +30,7 @@ import {
   namedGlobalIntegrationsSelector,
   namedProjectIntegrationsSelector,
 } from 'controllers/plugins';
-import { querySelector, updatePagePropertiesAction } from 'controllers/pages';
+import { updatePagePropertiesAction } from 'controllers/pages';
 import { PLUGIN_DESCRIPTIONS_MAP } from 'components/integrations/messages';
 import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
 import { AvailableIntegrations } from './availableIntegrations';
@@ -57,21 +57,21 @@ export const IntegrationInfo = (props) => {
   const globalIntegrations = useSelector(namedGlobalIntegrationsSelector);
   const projectIntegrations = useSelector(namedProjectIntegrationsSelector);
   const isAbleToClick = canUpdateSettings(isAdmin, userProjectRole);
-  const { id } = useSelector(querySelector);
   const dispatch = useDispatch();
   const {
     goBackHandler,
     data: { name, details = {} },
     data,
+    integrationId,
   } = props;
 
   const availableGlobalIntegrations = globalIntegrations[data.name] || [];
   const availableProjectIntegrations = projectIntegrations[data.name] || [];
 
-  const onArrowClick = (integrationID) => {
+  const openIntegration = (Id) => {
     dispatch(
       updatePagePropertiesAction({
-        id: integrationID,
+        id: Id,
       }),
     );
   };
@@ -85,17 +85,17 @@ export const IntegrationInfo = (props) => {
               <AvailableIntegrations
                 header={formatMessage(messages.projectIntegrationTitle)}
                 text={formatMessage(messages.projectIntegrationText)}
-                typeOfIntegration={availableProjectIntegrations}
-                onArrowClick={onArrowClick}
+                integrations={availableProjectIntegrations}
+                openIntegration={openIntegration}
               />
             )}
 
             <AvailableIntegrations
               header={formatMessage(messages.globalIntegrationTitle)}
               text={formatMessage(messages.globalIntegrationText)}
-              typeOfIntegration={availableGlobalIntegrations}
-              onArrowClick={onArrowClick}
-              isGlobal={Boolean(availableProjectIntegrations.length)}
+              integrations={availableGlobalIntegrations}
+              openIntegration={openIntegration}
+              hasProjectIntegration={Boolean(availableProjectIntegrations.length)}
             />
           </>
         ) : (
@@ -149,7 +149,11 @@ export const IntegrationInfo = (props) => {
           </div>
         </div>
       </div>
-      {!id ? integrationContent() : <h1>Configuration Page with unique id {id}</h1>}
+      {!integrationId ? (
+        integrationContent()
+      ) : (
+        <h1>Configuration Page with unique id = {integrationId}</h1>
+      )}
     </>
   );
 };
@@ -169,8 +173,10 @@ IntegrationInfo.propTypes = {
       resources: PropTypes.string,
     }),
   }).isRequired,
+  integrationId: PropTypes.string,
 };
 
 IntegrationInfo.defaultProps = {
   goBackHandler: () => {},
+  integrationId: '',
 };

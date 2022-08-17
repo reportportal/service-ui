@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { InstancesListItem } from './instancesListItem';
+export { IntegrationCollectionItem } from './integrationCollectionItem';

@@ -17,17 +17,17 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import moment from 'moment';
-import { InstancesListItem } from './instancesListItem';
-import styles from './instancesListInfo.scss';
+import { IntegrationCollectionItem } from './integrationCollectionItem';
+import styles from './integrationCollection.scss';
 
 const cx = classNames.bind(styles);
 
-export const InstancesListInfo = ({ items, disabled, onArrowClick }) => {
+export const IntegrationCollection = ({ items, disabled, openIntegration }) => {
   return (
     <div className={cx('instances-list-wrapper')}>
       <ul className={cx('instances-list')}>
         {items.map((item) => (
-          <InstancesListItem
+          <IntegrationCollectionItem
             key={item.id}
             id={item.id}
             disabled={disabled}
@@ -35,7 +35,7 @@ export const InstancesListInfo = ({ items, disabled, onArrowClick }) => {
             title={item.name}
             creator={item.creator}
             creationInfo={moment(item.creationDate).format('ll')}
-            onArrowClick={onArrowClick}
+            openIntegration={openIntegration}
           />
         ))}
       </ul>
@@ -43,14 +43,14 @@ export const InstancesListInfo = ({ items, disabled, onArrowClick }) => {
   );
 };
 
-InstancesListInfo.propTypes = {
+IntegrationCollection.propTypes = {
   items: PropTypes.array.isRequired,
   disabled: PropTypes.bool,
-  onArrowClick: PropTypes.func,
+  openIntegration: PropTypes.func,
 };
 
-InstancesListInfo.defaultProps = {
+IntegrationCollection.defaultProps = {
   items: [],
   disabled: false,
-  onArrowClick: () => {},
+  openIntegration: () => {},
 };
