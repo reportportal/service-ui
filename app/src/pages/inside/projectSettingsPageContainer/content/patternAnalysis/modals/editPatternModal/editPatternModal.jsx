@@ -48,7 +48,7 @@ const messages = defineMessages({
   },
 });
 
-const EditPatternModal = ({ data, handleSubmit, initialize }) => {
+const EditPatternModal = ({ data, handleSubmit, initialize, dirty }) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
@@ -74,6 +74,7 @@ const EditPatternModal = ({ data, handleSubmit, initialize }) => {
         text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
       }}
       onClose={() => dispatch(hideModalAction())}
+      isFieldsChanged={dirty}
     >
       <div className={cx('description')}>{formatMessage(messages.editPatternName)}</div>
       <FieldElement name="name" label={formatMessage(messages.patternName)}>
@@ -96,6 +97,10 @@ EditPatternModal.propTypes = {
   }).isRequired,
   handleSubmit: PropTypes.func.isRequired,
   initialize: PropTypes.func.isRequired,
+  dirty: PropTypes.bool,
+};
+EditPatternModal.defaultProps = {
+  dirty: false,
 };
 
 export default withModal('editPatternModalWindow')(

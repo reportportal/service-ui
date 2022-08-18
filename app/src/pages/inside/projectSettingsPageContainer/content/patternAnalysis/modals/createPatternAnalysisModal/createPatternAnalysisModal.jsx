@@ -41,7 +41,7 @@ const cx = classNames.bind(styles);
 
 const createPatternFormSelector = formValueSelector('createPatternForm');
 
-const CreatePatternAnalysisModal = ({ data, handleSubmit, initialize }) => {
+const CreatePatternAnalysisModal = ({ data, handleSubmit, initialize, dirty }) => {
   const { pattern, onSave } = data;
 
   const selectedType = useSelector((state) => createPatternFormSelector(state, 'type'));
@@ -67,6 +67,7 @@ const CreatePatternAnalysisModal = ({ data, handleSubmit, initialize }) => {
       okButton={okButton}
       cancelButton={cancelButton}
       onClose={() => dispatch(hideModalAction())}
+      isFieldsChanged={dirty}
       footerNode={
         <FieldProvider name="enabled" format={(value) => !!value}>
           <Toggle className={cx('toggle')}>
@@ -121,9 +122,11 @@ CreatePatternAnalysisModal.propTypes = {
   }),
   handleSubmit: PropTypes.func.isRequired,
   initialize: PropTypes.func.isRequired,
+  dirty: PropTypes.bool,
 };
 CreatePatternAnalysisModal.defaultProps = {
   data: {},
+  dirty: false,
 };
 
 export default withModal('createPatternAnalysisModal')(
