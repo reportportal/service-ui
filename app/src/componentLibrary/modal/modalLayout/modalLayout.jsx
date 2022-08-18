@@ -129,6 +129,6 @@ ModalLayout.defaultProps = {
   className: '',
   modalSize: 'default',
   onClose: () => {},
-  overlay: '',
+  overlay: 'default',
   allowCloseOutside: true,
 };

@@ -39,7 +39,6 @@ $Z-INDEX-OVERLAY: 2;
   width: 100%;
   height: 100%;
   text-align: center;
-  background-color: rgba($COLOR--e-400, 0.35);
 }
 
 .scrolling-content {
@@ -99,6 +98,11 @@ $Z-INDEX-OVERLAY: 2;
 
 .size-large {
   @include modalWidth($WIDTH-LARGE);
+}
+
+.overlay-default {
+  background-color: rgba($COLOR--e-400, 0.35);
+  z-index: $Z_INDEX-OVERLAY;
 }
 
 .overlay-light-cyan {
