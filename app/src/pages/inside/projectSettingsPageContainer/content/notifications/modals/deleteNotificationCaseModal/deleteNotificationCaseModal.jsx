@@ -35,7 +35,7 @@ const messages = defineMessages({
   },
 });
 
-const DeleteNotificationCaseModal = ({ data: { onSave }, dirty }) => {
+const DeleteNotificationCaseModal = ({ data: { onSave } }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
@@ -53,7 +53,6 @@ const DeleteNotificationCaseModal = ({ data: { onSave }, dirty }) => {
         text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
       }}
       onClose={() => dispatch(hideModalAction())}
-      allowCloseOutside={!dirty}
     >
       <div>{Parser(formatMessage(messages.message))}</div>
     </ModalLayout>
@@ -61,11 +60,9 @@ const DeleteNotificationCaseModal = ({ data: { onSave }, dirty }) => {
 };
 DeleteNotificationCaseModal.propTypes = {
   data: PropTypes.object,
-  dirty: PropTypes.bool,
 };
 DeleteNotificationCaseModal.defaultProps = {
   data: {},
-  dirty: false,
 };
 
 export default withModal('deleteNotificationModal')(DeleteNotificationCaseModal);
