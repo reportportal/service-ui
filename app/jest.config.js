@@ -38,5 +38,5 @@ module.exports = {
       statements: 60,
     },
   },
-  testPathIgnorePatterns: ['<rootDir>/node_modules/'],
+  modulePathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/src/common/hooks/'],
 };
