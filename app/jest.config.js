@@ -29,7 +29,12 @@ module.exports = {
     '^layouts[/](.+)': '<rootDir>/src/layouts/$1',
   },
   notify: false,
-  collectCoverageFrom: ['src/common/**/*.js', '!src/common/urls.js', '!src/common/polyfills.js'],
+  collectCoverageFrom: [
+    'src/common/**/*.js',
+    '!src/common/urls.js',
+    '!src/common/polyfills.js',
+    '!src/common/hooks/*.js',
+  ],
   coverageThreshold: {
     global: {
       branches: 60,
@@ -38,5 +43,5 @@ module.exports = {
       statements: 60,
     },
   },
-  modulePathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/src/common/hooks/'],
+  testPathIgnorePatterns: ['<rootDir>/node_modules/'],
 };
