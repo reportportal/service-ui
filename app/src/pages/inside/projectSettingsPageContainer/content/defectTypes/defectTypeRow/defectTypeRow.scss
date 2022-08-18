@@ -1,0 +1,151 @@
+/*!
+ * Copyright 2022 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+$DEFECT_NAME_PADDING: 16px;
+
+.name-cell,
+.abbr-cell {
+  padding-left: 10px;
+  padding-right: 10px;
+  box-sizing: border-box;
+}
+
+.name-cell {
+  padding-left: $DEFECT_NAME_PADDING;
+  width: 43%;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding-left: 0;
+    width: 60%;
+  }
+}
+
+.abbr-cell {
+  width: 46px;
+  text-align: center;
+  margin-right: 32px;
+  color: $COLOR--e-400;
+  font-size: 13px;
+  font-family: $FONT-ROBOTO-REGULAR;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 20%;
+  }
+}
+
+.defect-type-details-wrap {
+  display: flex;
+  width: 15%;
+  flex-direction: row-reverse;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+
+.color-marker {
+  display: inline-block;
+  height: 24px;
+  width: 24px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.defect-type {
+  display: flex;
+  margin: 24px 16px 12px 0;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.defect-type-name-wrap {
+  display: flex;
+  align-items: center;
+  width: 85%;
+}
+
+.defect-type-name {
+  margin-left: 5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  font-family: $FONT-ROBOTO-MEDIUM;
+  color: $COLOR--almost-black;
+}
+
+.icon {
+  background: none;
+  border: none;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  margin: 0 10px;
+  cursor: pointer;
+  outline: none;
+}
+
+.copy-button {
+  margin-left: 46px;
+  margin-right: 0;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.edit-button,
+.delete-button,
+.copy-button {
+  path {
+    fill: $COLOR--e-200;
+  }
+  &:hover path {
+    fill: $COLOR--e-400;
+  }
+}
+
+.buttons-cell {
+  display: flex;
+  width: auto;
+  min-width: 72px;
+  margin-right: 10px;
+}
+
+b {
+  font-family: $FONT-ROBOTO-BOLD;
+  font-size: 11px;
+}
+
+.locator {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: $COLOR--e-400;
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 11px;
+  padding: 8px 0 0 0;
+}
+
+.locator-wrapper {
+  width: 16px;
+  height: 16px;
+  margin-right: -10px;
+}
+
+.locator-icon {
+  margin-left: 0;
+}

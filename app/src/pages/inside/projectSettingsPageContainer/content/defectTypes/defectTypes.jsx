@@ -24,7 +24,6 @@ import { defectTypesSelector } from 'controllers/project';
 import { userAccountRoleSelector, activeProjectRoleSelector } from 'controllers/user';
 import { canUpdateSettings } from 'common/utils/permissions';
 import { DEFECT_TYPES_SEQUENCE } from 'common/constants/defectTypes';
-
 import { Button } from 'componentLibrary/button';
 import CreateDefectIcon from 'common/img/newIcons/create-subtype-inline.svg';
 import DefectGroupIcon from 'common/img/newIcons/defect-group-inline.svg';
@@ -33,8 +32,7 @@ import {
   TabDescription,
 } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { withHoverableTooltip } from 'components/main/tooltips/hoverableTooltip';
-import { DefectType } from './defectType';
-
+import { DefectTypeRow } from './defectTypeRow';
 import { messages } from './defectTypesMessages';
 import styles from './defectTypes.scss';
 
@@ -52,10 +50,8 @@ const CreateDefect = withHoverableTooltip({
   data: {
     placement: 'bottom',
     dynamicWidth: true,
-    tooltipTriggerClass: cx('defect-type-name-tooltip-trigger'),
   },
 })(() => <i className={cx('group-create')}>{Parser(CreateDefectIcon)}</i>);
-
 CreateDefect.propTypes = {
   formatMessage: PropTypes.func.isRequired,
 };
@@ -109,8 +105,7 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
             <div className={cx('group-content')}>
               {subTypes[groupName].map((subType, i) => (
                 <div key={subType.id}>
-                  <DefectType
-                    key={subType.id}
+                  <DefectTypeRow
                     data={subType}
                     parentType={subTypes[groupName][0]}
                     group={i === 0 ? subTypes[groupName] : null}
@@ -126,7 +121,6 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
     </>
   );
 };
-
 DefectTypes.propTypes = {
   setHeaderTitleNode: PropTypes.func.isRequired,
 };

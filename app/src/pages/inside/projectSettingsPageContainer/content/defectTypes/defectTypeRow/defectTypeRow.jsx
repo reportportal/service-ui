@@ -22,24 +22,14 @@ import classNames from 'classnames/bind';
 import BinIcon from 'common/img/newIcons/bin-inline.svg';
 import PencilIcon from 'common/img/newIcons/pencil-inline.svg';
 import CopyIcon from 'common/img/newIcons/copy-inline.svg';
-import LocatorIcon from 'common/img/newIcons/locator-icon-inline.svg';
+import IdIcon from 'common/img/newIcons/id-icon-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-
 import { withHoverableTooltip } from 'components/main/tooltips/hoverableTooltip';
-
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { defectTypeShape } from './defectTypeShape';
-import styles from './defectTypes.scss';
+import { defectTypeShape } from '../defectTypeShape';
+import styles from './defectTypeRow.scss';
 
 const cx = classNames.bind(styles);
-
-const ColorMarker = ({ color }) => (
-  <span className={cx('color-marker')} style={{ backgroundColor: color }} />
-);
-
-ColorMarker.propTypes = {
-  color: PropTypes.string.isRequired,
-};
 
 const DefectLocatorTooltip = ({ locator }) => (
   <>
@@ -62,19 +52,17 @@ const DefectLocator = withHoverableTooltip({
   data: {
     placement: 'bottom',
     dynamicWidth: true,
-    tooltipTriggerClass: cx('defect-type-name-tooltip-trigger'),
   },
 })(() => (
   <div className={cx('locator-wrapper')}>
-    <i className={cx('icon', 'locator-icon')}>{Parser(LocatorIcon)}</i>
+    <i className={cx('icon', 'locator-icon')}>{Parser(IdIcon)}</i>
   </div>
 ));
-
 DefectLocator.propTypes = {
   locator: PropTypes.string.isRequired,
 };
 
-export const DefectType = ({
+export const DefectTypeRow = ({
   data: { longName, shortName, locator, color },
   group,
   isPossibleUpdateSettings,
@@ -85,7 +73,7 @@ export const DefectType = ({
     <div className={cx('defect-type')}>
       <div className={cx('defect-type-name-wrap')}>
         <div className={cx('color-cell')}>
-          <ColorMarker color={color} />
+          <span className={cx('color-marker')} style={{ backgroundColor: color }} />
         </div>
         <div className={cx('name-cell')}>
           <div className={cx('defect-type-name')}>{longName}</div>
@@ -118,14 +106,13 @@ export const DefectType = ({
     </div>
   );
 };
-DefectType.propTypes = {
+DefectTypeRow.propTypes = {
   data: defectTypeShape,
   parentType: defectTypeShape.isRequired,
   group: PropTypes.arrayOf(defectTypeShape),
   isPossibleUpdateSettings: PropTypes.bool.isRequired,
 };
-
-DefectType.defaultProps = {
+DefectTypeRow.defaultProps = {
   data: {},
   group: null,
 };

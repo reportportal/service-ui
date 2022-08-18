@@ -32,49 +32,6 @@ $DEFECT_NAME_PADDING: 16px;
   padding-left: 24px;
 }
 
-.name-cell,
-.abbr-cell {
-  padding-left: 10px;
-  padding-right: 10px;
-  box-sizing: border-box;
-}
-
-.name-cell {
-  padding-left: $DEFECT_NAME_PADDING;
-  width: 43%;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    padding-left: 0;
-    width: 60%;
-  }
-}
-
-.abbr-cell {
-  width: 46px;
-  text-align: center;
-  margin-right: 32px;
-  color: $COLOR--e-400;
-  font-family: $FONT-ROBOTO-REGULAR;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    width: 20%;
-  }
-}
-
-.color-picker-cell {
-  padding-left: 10px;
-}
-
-.defect-type-details-wrap {
-  display: flex;
-  width: 15%;
-  flex-direction: row-reverse;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    display: none;
-  }
-}
-
 .defect-type-group {
   margin-bottom: 30px;
 }
@@ -139,6 +96,7 @@ $DEFECT_NAME_PADDING: 16px;
 
 .group-create {
   position: relative;
+  display: inline-block;
   width: 16px;
   height: 16px;
   cursor: pointer;
@@ -161,96 +119,6 @@ $DEFECT_NAME_PADDING: 16px;
   padding-bottom: 10px;
 }
 
-.color-marker {
-  display: inline-block;
-  height: 24px;
-  width: 24px;
-  border-radius: 4px;
-  flex-shrink: 0;
-}
-
-.defect-type {
-  display: flex;
-  margin: 24px 16px 12px 0;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.defect-type-name-tooltip-trigger {
-  width: 16px;
-  height: 16px;
-  max-width: 100%;
-}
-
-.defect-type-name-wrap {
-  display: flex;
-  align-items: center;
-}
-
-.defect-type-name {
-  margin-left: 5px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 13px;
-  font-family: $FONT-ROBOTO-MEDIUM;
-  color: $COLOR--almost-black;
-}
-
-.defect-type-group-footer {
-  display: flex;
-  align-items: center;
-  padding-left: $DEFECT_NAME_PADDING;
-  margin-bottom: 30px;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    display: none;
-  }
-}
-
-.defect-type-count-msg {
-  color: $COLOR--gray-60;
-  margin-left: 11px;
-}
-
-.icon {
-  background: none;
-  border: none;
-  width: 16px;
-  height: 16px;
-  padding: 0;
-  margin: 0 10px;
-  cursor: pointer;
-  outline: none;
-}
-
-.copy-button {
-  margin-left: 46px;
-  margin-right: 0;
-
-  svg {
-    width: 16px;
-    height: 16px;
-  }
-}
-
-.edit-button,
-.delete-button,
-.copy-button {
-  path {
-    fill: $COLOR--e-200;
-  }
-  &:hover path {
-    fill: $COLOR--e-400;
-  }
-}
-
-.buttons-cell {
-  display: flex;
-  width: auto;
-  min-width: 72px;
-  margin-right: 10px;
-}
-
 .create-tooltip {
   font-family: $FONT-ROBOTO-REGULAR;
   font-size: 11px;
@@ -259,29 +127,4 @@ $DEFECT_NAME_PADDING: 16px;
 
 .button {
   margin-left: auto;
-}
-
-b {
-  font-family: $FONT-ROBOTO-BOLD;
-  font-size: 11px;
-}
-
-.locator {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: $COLOR--e-400;
-  font-family: $FONT-ROBOTO-REGULAR;
-  font-size: 11px;
-  padding: 8px 0 0 0;
-}
-
-.locator-wrapper {
-  width: 16px;
-  height: 16px;
-  margin-right: -10px;
-}
-
-.locator-icon {
-  margin-left: 0;
 }
