@@ -143,6 +143,7 @@ export class AddIntegrationModal extends Component {
           lineAlign
           {...customProps}
           extension={integrationFieldsExtension}
+          withPreloader
         />
       </ModalLayout>
     );

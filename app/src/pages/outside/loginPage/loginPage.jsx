@@ -102,7 +102,7 @@ export class LoginPage extends PureComponent {
     }
     if (registration && extensions) {
       currentBlock = extensions.map((extension) => (
-        <ExtensionLoader key={extension.name} extension={extension} />
+        <ExtensionLoader key={extension.name} extension={extension} withPreloader />
       ));
     }
 

@@ -4,6 +4,7 @@ import {
   EXTENSION_TYPE_ADMIN_PAGE,
   EXTENSION_TYPE_PAGE,
   EXTENSION_TYPE_SIDEBAR_COMPONENT,
+  EXTENSION_TYPE_ADMIN_SIDEBAR_COMPONENT,
   EXTENSION_TYPE_LAUNCH_ITEM_COMPONENT,
   EXTENSION_TYPE_INTEGRATION_FORM_FIELDS,
   EXTENSION_TYPE_INTEGRATION_SETTINGS,
@@ -60,6 +61,9 @@ export const uiExtensionAdminPagesSelector = createExtensionSelectorByType(
 export const uiExtensionPagesSelector = createExtensionSelectorByType(EXTENSION_TYPE_PAGE);
 export const uiExtensionSidebarComponentsSelector = createExtensionSelectorByType(
   EXTENSION_TYPE_SIDEBAR_COMPONENT,
+);
+export const uiExtensionAdminSidebarComponentsSelector = createExtensionSelectorByType(
+  EXTENSION_TYPE_ADMIN_SIDEBAR_COMPONENT,
 );
 export const uiExtensionLaunchItemComponentsSelector = createExtensionSelectorByType(
   EXTENSION_TYPE_LAUNCH_ITEM_COMPONENT,

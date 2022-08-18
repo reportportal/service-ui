@@ -41,6 +41,7 @@ import {
 } from 'controllers/pages/constants';
 import { uiExtensionSidebarComponentsSelector } from 'controllers/plugins';
 import { Sidebar } from 'layouts/common/sidebar';
+import { ExtensionLoader, extensionType } from 'components/extensionLoader';
 import FiltersIcon from 'common/img/filters-icon-inline.svg';
 import DashboardIcon from './img/dashboard-icon-inline.svg';
 import LaunchesIcon from './img/launches-icon-inline.svg';
@@ -56,7 +57,7 @@ import { ProjectSelector } from '../../common/projectSelector';
   assignedProjects: assignedProjectsSelector(state),
   projectRole: activeProjectRoleSelector(state),
   accountRole: userAccountRoleSelector(state),
-  extensionComponents: uiExtensionSidebarComponentsSelector(state),
+  extensions: uiExtensionSidebarComponentsSelector(state),
 }))
 @track()
 export class AppSidebar extends Component {
@@ -69,12 +70,12 @@ export class AppSidebar extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     assignedProjects: PropTypes.object,
-    extensionComponents: PropTypes.array,
+    extensions: PropTypes.arrayOf(extensionType),
     onClickNavBtn: PropTypes.func,
   };
   static defaultProps = {
     assignedProjects: {},
-    extensionComponents: [],
+    extensions: [],
     onClickNavBtn: () => {},
   };
 
@@ -84,13 +85,7 @@ export class AppSidebar extends Component {
   };
 
   createTopSidebarItems = () => {
-    const {
-      projectRole,
-      accountRole,
-      activeProject,
-      onClickNavBtn,
-      extensionComponents,
-    } = this.props;
+    const { projectRole, accountRole, activeProject, onClickNavBtn, extensions } = this.props;
 
     const topItems = [
       {
@@ -150,8 +145,14 @@ export class AppSidebar extends Component {
       message: <FormattedMessage id={'Sidebar.settingsBnt'} defaultMessage={'Project settings'} />,
     });
 
-    if (extensionComponents.length) {
-      extensionComponents.forEach((item) => topItems.push({ ...item, onClick: onClickNavBtn }));
+    if (extensions.length) {
+      extensions.forEach((extension) =>
+        topItems.push({
+          name: extension.name,
+          component: <ExtensionLoader extension={extension} />,
+          onClick: onClickNavBtn,
+        }),
+      );
     }
 
     return topItems;
