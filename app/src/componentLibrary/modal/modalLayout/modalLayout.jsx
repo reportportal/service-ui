@@ -39,7 +39,7 @@ export const ModalLayout = ({
   modalSize,
   onClose,
   overlay,
-  isFieldsChanged,
+  allowCloseOutside,
 }) => {
   const [isShown, setShown] = useState(false);
   const modalRef = useRef();
@@ -64,7 +64,7 @@ export const ModalLayout = ({
     setShown(false);
   };
 
-  useOnClickOutside(modalRef, !isFieldsChanged && closeModal);
+  useOnClickOutside(modalRef, allowCloseOutside && closeModal);
 
   return (
     <div className={cx('modal-layout', { [`overlay-${overlay}`]: overlay })}>
@@ -117,7 +117,7 @@ ModalLayout.propTypes = {
   modalSize: PropTypes.oneOf(['default', 'small', 'large']),
   onClose: PropTypes.func,
   overlay: PropTypes.string,
-  isFieldsChanged: PropTypes.bool,
+  allowCloseOutside: PropTypes.bool,
 };
 ModalLayout.defaultProps = {
   title: '',
@@ -130,5 +130,5 @@ ModalLayout.defaultProps = {
   modalSize: 'default',
   onClose: () => {},
   overlay: '',
-  isFieldsChanged: false,
+  allowCloseOutside: true,
 };

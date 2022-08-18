@@ -74,7 +74,7 @@ const EditPatternModal = ({ data, handleSubmit, initialize, dirty }) => {
         text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
       }}
       onClose={() => dispatch(hideModalAction())}
-      isFieldsChanged={dirty}
+      allowCloseOutside={!dirty}
     >
       <div className={cx('description')}>{formatMessage(messages.editPatternName)}</div>
       <FieldElement name="name" label={formatMessage(messages.patternName)}>

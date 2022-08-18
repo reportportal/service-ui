@@ -67,7 +67,7 @@ const CreatePatternAnalysisModal = ({ data, handleSubmit, initialize, dirty }) =
       okButton={okButton}
       cancelButton={cancelButton}
       onClose={() => dispatch(hideModalAction())}
-      isFieldsChanged={dirty}
+      allowCloseOutside={!dirty}
       footerNode={
         <FieldProvider name="enabled" format={(value) => !!value}>
           <Toggle className={cx('toggle')}>

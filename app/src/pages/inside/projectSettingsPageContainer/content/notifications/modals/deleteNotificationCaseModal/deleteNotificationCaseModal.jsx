@@ -53,7 +53,7 @@ const DeleteNotificationCaseModal = ({ data: { onSave }, dirty }) => {
         text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
       }}
       onClose={() => dispatch(hideModalAction())}
-      isFieldsChanged={dirty}
+      allowCloseOutside={!dirty}
     >
       <div>{Parser(formatMessage(messages.message))}</div>
     </ModalLayout>
