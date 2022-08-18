@@ -191,7 +191,14 @@ const messages = defineMessages({
   },
 });
 
-const AddEditNotificationModal = ({ data, data: { onSave }, handleSubmit, initialize, change }) => {
+const AddEditNotificationModal = ({
+  data,
+  data: { onSave },
+  handleSubmit,
+  initialize,
+  change,
+  dirty,
+}) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
@@ -280,6 +287,7 @@ const AddEditNotificationModal = ({ data, data: { onSave }, handleSubmit, initia
       okButton={okButton}
       cancelButton={cancelButton}
       onClose={() => dispatch(hideModalAction())}
+      allowCloseOutside={!dirty}
       footerNode={
         <FieldProvider name={ENABLED_FIELD_KEY} format={(value) => !!value}>
           <Toggle className={cx('toggle')}>{formatMessage(messages.active)}</Toggle>
@@ -372,11 +380,12 @@ AddEditNotificationModal.propTypes = {
   }),
   initialize: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  dirty: PropTypes.bool.isRequired,
+  dirty: PropTypes.bool,
   change: PropTypes.func.isRequired,
 };
 AddEditNotificationModal.defaultProps = {
   data: {},
+  dirty: false,
 };
 
 export default withModal('addEditNotificationModal')(

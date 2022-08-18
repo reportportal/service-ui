@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { CSSTransition } from 'react-transition-group';
 import classNames from 'classnames/bind';
+import { useOnClickOutside } from 'common/hooks';
 import { ModalContent } from './modalContent';
 import { ModalFooter } from './modalFooter';
 import { ModalHeader } from './modalHeader';
@@ -38,6 +39,7 @@ export const ModalLayout = ({
   modalSize,
   onClose,
   overlay,
+  allowCloseOutside,
 }) => {
   const [isShown, setShown] = useState(false);
   const modalRef = useRef();
@@ -61,6 +63,8 @@ export const ModalLayout = ({
   const closeModal = () => {
     setShown(false);
   };
+
+  useOnClickOutside(modalRef, allowCloseOutside && closeModal);
 
   return (
     <div className={cx('modal-layout', { [`overlay-${overlay}`]: overlay })}>
@@ -113,6 +117,7 @@ ModalLayout.propTypes = {
   modalSize: PropTypes.oneOf(['default', 'small', 'large']),
   onClose: PropTypes.func,
   overlay: PropTypes.string,
+  allowCloseOutside: PropTypes.bool,
 };
 ModalLayout.defaultProps = {
   title: '',
@@ -124,5 +129,6 @@ ModalLayout.defaultProps = {
   className: '',
   modalSize: 'default',
   onClose: () => {},
-  overlay: '',
+  overlay: 'default',
+  allowCloseOutside: true,
 };
