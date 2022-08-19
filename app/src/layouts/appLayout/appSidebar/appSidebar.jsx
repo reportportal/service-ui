@@ -144,16 +144,13 @@ export class AppSidebar extends Component {
       icon: SettingsIcon,
       message: <FormattedMessage id={'Sidebar.settingsBnt'} defaultMessage={'Project settings'} />,
     });
-
-    if (extensions.length) {
-      extensions.forEach((extension) =>
-        topItems.push({
-          name: extension.name,
-          component: <ExtensionLoader extension={extension} />,
-          onClick: onClickNavBtn,
-        }),
-      );
-    }
+    extensions.forEach((extension) =>
+      topItems.push({
+        name: extension.name,
+        component: <ExtensionLoader extension={extension} />,
+        onClick: onClickNavBtn,
+      }),
+    );
 
     return topItems;
   };

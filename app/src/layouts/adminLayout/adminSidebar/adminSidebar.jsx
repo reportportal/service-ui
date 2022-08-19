@@ -138,15 +138,13 @@ export class AdminSidebar extends Component {
         message: <FormattedMessage id={'AdminSidebar.plugins'} defaultMessage={'Plugins'} />,
       },
     ];
-    if (extensions.length) {
-      extensions.forEach((extension) =>
-        items.push({
-          name: extension.name,
-          component: <ExtensionLoader extension={extension} />,
-          onClick: onClickNavBtn,
-        }),
-      );
-    }
+    extensions.forEach((extension) =>
+      items.push({
+        name: extension.name,
+        component: <ExtensionLoader extension={extension} />,
+        onClick: onClickNavBtn,
+      }),
+    );
 
     return items;
   };
