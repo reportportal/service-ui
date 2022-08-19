@@ -55,7 +55,6 @@ const CreateDefect = withHoverableTooltip({
   data: {
     placement: 'bottom',
     dynamicWidth: true,
-    tooltipTriggerClass: cx('defect-type-name-tooltip-trigger'),
   },
 })(({ onClick }) => (
   <i className={cx('group-create')} onClick={onClick}>

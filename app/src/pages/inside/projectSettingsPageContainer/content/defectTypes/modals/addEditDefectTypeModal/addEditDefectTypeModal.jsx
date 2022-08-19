@@ -42,6 +42,7 @@ import {
   GROUP_CASES,
   ABBREVIATION_FIELD_KEY,
   GROUP_FIELD_KEY,
+  COLORS,
 } from '../../constants';
 import styles from './addEditDefectTypeModal.scss';
 
@@ -211,6 +212,7 @@ const AddEditDefectTypeModal = ({
           <HexColorPickerComponent
             label={formatMessage(messages.color)}
             color={newColor}
+            presets={COLORS}
             onChange={setNewColor}
           />
         </FieldElement>

@@ -18,12 +18,11 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { HexColorPicker, HexColorInput } from 'react-colorful';
 import classNames from 'classnames/bind';
-import { COLORS } from './hexColorPickerSettings';
 import styles from './hexColorPicker.scss';
 
 const cx = classNames.bind(styles);
 
-export const HexColorPickerComponent = ({ label, color, onChange }) => {
+export const HexColorPickerComponent = ({ label, color, presets, onChange }) => {
   const [currentColor, setCurrentColor] = useState(color);
 
   useEffect(() => onChange(currentColor), [currentColor]);
@@ -41,7 +40,7 @@ export const HexColorPickerComponent = ({ label, color, onChange }) => {
           <div className={cx('hex-color-preset', 'current')} style={{ background: currentColor }} />
         </div>
         <div className={cx('hex-color-presets')}>
-          {COLORS.map((presetColor) => (
+          {presets.map((presetColor) => (
             <button
               key={presetColor}
               className={cx('hex-color-preset')}
@@ -56,7 +55,14 @@ export const HexColorPickerComponent = ({ label, color, onChange }) => {
 };
 
 HexColorPickerComponent.propTypes = {
-  label: PropTypes.string.isRequired,
-  color: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
+  label: PropTypes.string,
+  color: PropTypes.string,
+  presets: PropTypes.array,
+  onChange: PropTypes.func,
+};
+HexColorPickerComponent.defaultProps = {
+  label: '',
+  color: '#ffffff',
+  presets: [],
+  onChange: () => {},
 };
