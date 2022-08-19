@@ -19,6 +19,7 @@ import { defineMessages, useIntl } from 'react-intl';
 import { projectIdSelector } from 'controllers/pages';
 import { activeProjectSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
+import { fetch } from 'common/utils';
 import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
