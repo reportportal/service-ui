@@ -43,25 +43,29 @@ export const AvailableIntegrations = ({
 }) => {
   const { formatMessage } = useIntl();
   return (
-    <div className={cx('integrations-section')}>
-      <h1 className={cx('integrations-header')}>{header}</h1>
-      <p className={cx('integrations-text')}>{text}</p>
-      {hasProjectIntegration && (
-        <div className={cx('message-container')}>
-          <SystemMessage
-            header={formatMessage(messages.GlobalIntegrationsSystemMessage)}
-            mode={'warning'}
-          >
-            {formatMessage(messages.GlobalIntegrationsSystemMessageText)}
-          </SystemMessage>
+    <>
+      {integrations.length > 0 && (
+        <div className={cx('integrations-section')}>
+          <h1 className={cx('integrations-header')}>{header}</h1>
+          <p className={cx('integrations-text')}>{text}</p>
+          {hasProjectIntegration && (
+            <div className={cx('message-container')}>
+              <SystemMessage
+                header={formatMessage(messages.GlobalIntegrationsSystemMessage)}
+                mode={'warning'}
+              >
+                {formatMessage(messages.GlobalIntegrationsSystemMessageText)}
+              </SystemMessage>
+            </div>
+          )}
+          <IntegrationCollection
+            items={integrations}
+            disabled={hasProjectIntegration}
+            openIntegration={openIntegration}
+          />
         </div>
       )}
-      <IntegrationCollection
-        items={integrations}
-        disabled={hasProjectIntegration}
-        openIntegration={openIntegration}
-      />
-    </div>
+    </>
   );
 };
 
