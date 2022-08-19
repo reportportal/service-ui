@@ -133,7 +133,7 @@ const messages = defineMessages({
   },
   recipientsHint: {
     id: 'AddEditNotificationCaseModal.recipientsHint',
-    defaultMessage: 'Select at least one recipient',
+    defaultMessage: 'Please enter existent user name on your project or valid email',
   },
   ruleNameHint: {
     id: 'AddEditNotificationModal.ruleNameHint',

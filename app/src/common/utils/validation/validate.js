@@ -104,7 +104,17 @@ export const healthCheckWidgetPassingRate = composeValidators([isNotEmpty, range
 export const flakyWidgetNumberOfLaunches = composeValidators([isNotEmpty, range(2, 600)]);
 export const launchesWidgetContentFields = composeValidators([isNotEmptyArray, minLength(4)]);
 export const mostFailedWidgetNumberOfLaunches = composeValidators([isNotEmpty, range(2, 600)]);
-export const createNotificationRecipientsValidator = (informOwner) => (value) =>
-  isNotEmptyArray(value) || informOwner;
+export const createNotificationRecipientsValidator = (informOwner) => (value = []) => {
+  if (!informOwner && !value.length) return false;
+  if (informOwner && !value.length) {
+    return true;
+  }
+  const re = /[.@]/;
+  if (value.some(regex(re))) {
+    return value.filter(regex(re)).every(email);
+  }
+
+  return true;
+};
 export const notificationLaunchNames = (value) =>
   isEmpty(value) || !value.length || value.every(launchName);
