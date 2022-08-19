@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-export { DefectTypes } from './defectTypes';
+import DeleteDefectTypeModal from './deleteDefectTypeModal';
 
-export { AddEditDefectTypeModal, DeleteDefectTypeModal } from './modals';
+export { DeleteDefectTypeModal };

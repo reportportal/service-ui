@@ -14,6 +14,4 @@
  * limitations under the License.
  */
 
-export { DefectTypes } from './defectTypes';
-
-export { AddEditDefectTypeModal, DeleteDefectTypeModal } from './modals';
+export { HexColorPickerComponent } from './hexColorPicker';

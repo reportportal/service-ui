@@ -15,6 +15,7 @@
  */
 
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
@@ -26,6 +27,8 @@ import IdIcon from 'common/img/newIcons/id-icon-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { withHoverableTooltip } from 'components/main/tooltips/hoverableTooltip';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { showModalAction } from 'controllers/modal';
+import { deleteDefectSubTypeAction, updateDefectSubTypeAction } from 'controllers/project';
 import { defectTypeShape } from '../defectTypeShape';
 import styles from './defectTypeRow.scss';
 
@@ -63,11 +66,46 @@ DefectLocator.propTypes = {
 };
 
 export const DefectTypeRow = ({
+  data,
   data: { longName, shortName, locator, color },
   group,
   isPossibleUpdateSettings,
 }) => {
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+
+  const deleteDefect = () => {
+    dispatch(deleteDefectSubTypeAction(data));
+  };
+
+  const onDelete = () => {
+    dispatch(
+      showModalAction({
+        id: 'deleteDefectModal',
+        data: {
+          onSave: deleteDefect,
+          defectType: { name: longName },
+        },
+      }),
+    );
+  };
+
+  const editDefect = (defectType) => {
+    dispatch(updateDefectSubTypeAction(defectType));
+  };
+
+  const onEdit = () => {
+    dispatch(
+      showModalAction({
+        id: 'addEditDefectTypeModal',
+        data: {
+          onSave: editDefect,
+          defectType: { ...data, typeRef: data.typeRef.toLowerCase() },
+          actionType: 'edit',
+        },
+      }),
+    );
+  };
 
   return (
     <div className={cx('defect-type')}>
@@ -89,6 +127,7 @@ export const DefectTypeRow = ({
                   className={cx('icon', 'edit-button')}
                   aria-label={formatMessage(COMMON_LOCALE_KEYS.EDIT)}
                   title={formatMessage(COMMON_LOCALE_KEYS.EDIT)}
+                  onClick={onEdit}
                 >
                   {Parser(PencilIcon)}
                 </button>
@@ -96,6 +135,7 @@ export const DefectTypeRow = ({
                   className={cx('icon', 'delete-button')}
                   aria-label={formatMessage(COMMON_LOCALE_KEYS.DELETE)}
                   title={formatMessage(COMMON_LOCALE_KEYS.DELETE)}
+                  onClick={onDelete}
                 >
                   {Parser(BinIcon)}
                 </button>

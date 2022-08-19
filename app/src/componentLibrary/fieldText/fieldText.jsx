@@ -105,8 +105,11 @@ export const FieldText = ({
       </div>
       {((error && touched) || helpText) && (
         <div className={cx(VARIANT, 'additional-content', { disabled })}>
-          {error && touched && <span className={cx(VARIANT, 'error-text')}>{error}</span>}
-          {helpText && <span className={cx(VARIANT, 'help-text')}>{helpText}</span>}
+          {error && touched ? (
+            <span className={cx(VARIANT, 'error-text')}>{error}</span>
+          ) : (
+            helpText && <span className={cx(VARIANT, 'help-text')}>{helpText}</span>
+          )}
         </div>
       )}
     </>

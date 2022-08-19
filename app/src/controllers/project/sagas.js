@@ -95,6 +95,7 @@ function* updateDefectSubType({ payload: subTypes }) {
         type: NOTIFICATION_TYPES.SUCCESS,
       }),
     );
+    yield put(hideModalAction());
   } catch (error) {
     yield put(showDefaultErrorNotification(error));
   }
@@ -118,6 +119,7 @@ function* addDefectSubType({ payload: subType }) {
         type: NOTIFICATION_TYPES.SUCCESS,
       }),
     );
+    yield put(hideModalAction());
   } catch (error) {
     yield put(showDefaultErrorNotification(error));
   }
@@ -140,6 +142,7 @@ function* deleteDefectSubType({ payload: subType }) {
         type: NOTIFICATION_TYPES.SUCCESS,
       }),
     );
+    yield put(hideModalAction());
   } catch (error) {
     yield put(showDefaultErrorNotification(error));
   }

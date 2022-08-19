@@ -14,6 +14,24 @@
  * limitations under the License.
  */
 
-export { DefectTypes } from './defectTypes';
+export const MAX_DEFECT_TYPES_COUNT = 74;
 
-export { AddEditDefectTypeModal, DeleteDefectTypeModal } from './modals';
+export const NAME_FIELD_KEY = 'longName';
+export const GROUP_FIELD_KEY = 'typeRef';
+export const COLOR_FIELD_KEY = 'color';
+export const ABBREVIATION_FIELD_KEY = 'shortName';
+
+export const GROUP_CASES = {
+  PRODUCT_BUG: 'product_bug',
+  AUTOMATION_BUG: 'automation_bug',
+  SYSTEM_ISSUE: 'system_issue',
+  NO_DEFECT: 'no_defect',
+  TO_INVESTIGATE: 'to_investigate',
+};
+
+export const DEFAULT_DEFECT_CONFIG = {
+  [NAME_FIELD_KEY]: '',
+  [GROUP_FIELD_KEY]: GROUP_CASES.PRODUCT_BUG,
+  [COLOR_FIELD_KEY]: '#d32f2f',
+  [ABBREVIATION_FIELD_KEY]: '',
+};

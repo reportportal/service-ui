@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,6 +14,14 @@
  * limitations under the License.
  */
 
-export { DefectTypes } from './defectTypes';
+.content {
+  margin-top: 32px;
+}
 
-export { AddEditDefectTypeModal, DeleteDefectTypeModal } from './modals';
+.input {
+  margin-bottom: 16px;
+}
+
+.color-picker {
+  margin-top: 16px;
+}
