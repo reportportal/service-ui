@@ -201,7 +201,12 @@ export class ItemInfo extends Component {
           {value.status !== IN_PROGRESS &&
             customProps.withExtensions &&
             extensions.map((extension) => (
-              <ExtensionLoader key={extension.name} extension={extension} item={value} />
+              <ExtensionLoader
+                key={extension.name}
+                extension={extension}
+                item={value}
+                withPreloader
+              />
             ))}
           {value.startTime && (
             <span className={cx('duration-block')}>

@@ -5,6 +5,7 @@ export {
   uiExtensionPagesSelector,
   extensionsLoadedSelector,
   uiExtensionSidebarComponentsSelector,
+  uiExtensionAdminSidebarComponentsSelector,
   uiExtensionLaunchItemComponentsSelector,
   uiExtensionIntegrationSettingsSelector,
   uiExtensionIntegrationFormFieldsSelector,

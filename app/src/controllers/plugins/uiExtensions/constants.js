@@ -1,5 +1,6 @@
 export const EXTENSION_TYPE_SETTINGS_TAB = 'uiExtension:settingsTab';
 export const EXTENSION_TYPE_PAGE = 'uiExtension:page';
+export const EXTENSION_TYPE_ADMIN_SIDEBAR_COMPONENT = 'uiExtension:adminSidebarComponent';
 export const EXTENSION_TYPE_ADMIN_PAGE = 'uiExtension:adminPage';
 export const EXTENSION_TYPE_MODAL = 'uiExtension:modal';
 export const EXTENSION_TYPE_SIDEBAR_COMPONENT = 'uiExtension:sidebarComponent';

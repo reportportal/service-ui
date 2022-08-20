@@ -28,16 +28,16 @@ import {
   PLUGINS_PAGE,
   ALL_USERS_PAGE,
   PROJECTS_PAGE,
-  PLUGIN_UI_EXTENSION_ADMIN_PAGE,
 } from 'controllers/pages/constants';
 import { ALL } from 'common/constants/reservedFilterIds';
 import PropTypes from 'prop-types';
 import track, { useTracking } from 'react-tracking';
-import { uiExtensionAdminPagesSelector } from 'controllers/plugins/uiExtensions';
+import { uiExtensionAdminSidebarComponentsSelector } from 'controllers/plugins/uiExtensions';
 import { ADMIN_SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { TextTooltip } from 'components/main/tooltips/textTooltip';
 import { Sidebar } from 'layouts/common/sidebar';
+import { ExtensionLoader, extensionType } from 'components/extensionLoader';
 import ProjectsIcon from './img/projects-inline.svg';
 import UsersIcon from './img/all-users-inline.svg';
 import SettingsIcon from './img/server-settings-inline.svg';
@@ -82,7 +82,7 @@ const BackToProjectWithTooltip = withTooltip({
 
 @connect((state) => ({
   activeProject: activeProjectSelector(state),
-  extensions: uiExtensionAdminPagesSelector(state),
+  extensions: uiExtensionAdminSidebarComponentsSelector(state),
 }))
 @track()
 export class AdminSidebar extends Component {
@@ -93,13 +93,7 @@ export class AdminSidebar extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    extensions: PropTypes.arrayOf(
-      PropTypes.shape({
-        name: PropTypes.string,
-        buttonTitle: PropTypes.string,
-        buttonIcon: PropTypes.string,
-      }),
-    ),
+    extensions: PropTypes.arrayOf(extensionType),
   };
   static defaultProps = {
     onClickNavBtn: () => {},
@@ -114,6 +108,8 @@ export class AdminSidebar extends Component {
   };
 
   createTopSidebarItems = () => {
+    const { onClickNavBtn, extensions } = this.props;
+
     const items = [
       {
         onClick: this.handleClickButton(ADMIN_SIDEBAR_EVENTS.CLICK_PROJECTS_BTN),
@@ -142,13 +138,15 @@ export class AdminSidebar extends Component {
         message: <FormattedMessage id={'AdminSidebar.plugins'} defaultMessage={'Plugins'} />,
       },
     ];
-    const extensionItems = this.props.extensions.map((extension) => ({
-      onClick: this.handleClickButton(),
-      link: { type: PLUGIN_UI_EXTENSION_ADMIN_PAGE, payload: { pluginPage: extension.name } },
-      icon: extension.buttonIcon,
-      message: extension.buttonLabel || extension.name,
-    }));
-    return [...items, ...extensionItems];
+    extensions.forEach((extension) =>
+      items.push({
+        name: extension.name,
+        component: <ExtensionLoader extension={extension} />,
+        onClick: onClickNavBtn,
+      }),
+    );
+
+    return items;
   };
 
   createBottomSidebarItems = () => [

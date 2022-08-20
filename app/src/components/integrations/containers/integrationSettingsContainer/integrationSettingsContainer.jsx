@@ -118,6 +118,7 @@ export class IntegrationSettingsContainer extends Component {
           goToPreviousPage={goToPreviousPage}
           isGlobal={isGlobal}
           extension={integrationSettingsExtension}
+          withPreloader
         />
       </div>
     );

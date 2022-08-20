@@ -14,41 +14,31 @@
  *  limitations under the License.
  */
 
+import React from 'react';
 import PropTypes from 'prop-types';
 import { PageLayout, PageSection, PageHeader } from 'layouts/pageLayout';
-import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { ExtensionLoader, extensionType } from 'components/extensionLoader';
 
-export const UiExtensionPage = ({ extensions, activePluginPage, isExtensionsLoaded }) => {
-  const extension = extensions.find((ex) => ex.name === activePluginPage);
-  let component;
-  if (!isExtensionsLoaded) {
-    component = <SpinningPreloader />;
-  } else if (isExtensionsLoaded && extension && extension.component) {
-    component = <extension.component />;
-  } else {
-    component = <div>Plugin not found</div>;
-  }
+export const UiExtensionPage = ({ extensions, activePluginPage }) => {
+  const extension = React.useMemo(() => extensions.find((ex) => ex.name === activePluginPage), [
+    extensions,
+    activePluginPage,
+  ]);
 
   return (
     <PageLayout>
       {extension && <PageHeader breadcrumbs={[{ title: extension.title || extension.name }]} />}
-      <PageSection>{component}</PageSection>
+      <PageSection>
+        <ExtensionLoader extension={extension} withPreloader />
+      </PageSection>
     </PageLayout>
   );
 };
 UiExtensionPage.propTypes = {
-  extensions: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string,
-      title: PropTypes.string,
-      component: PropTypes.element,
-    }),
-  ),
+  extensions: PropTypes.arrayOf(extensionType),
   activePluginPage: PropTypes.string,
-  isExtensionsLoaded: PropTypes.bool,
 };
 UiExtensionPage.defaultProps = {
   extensions: [],
   activePluginPage: null,
-  isExtensionsLoaded: false,
 };
