@@ -138,8 +138,8 @@ export const URLS = {
   addProject: () => `${urlBase}project`,
   projectNames: () => `${urlBase}project/names`,
   searchProjectNames: () => `${urlBase}project/names/search`,
-  projectDefectSubType: (activeProject) => `${urlBase}${activeProject}/settings/sub-type`,
-  projectDeleteDefectSubType: (activeProject, id) =>
+  projectDefectType: (activeProject) => `${urlBase}${activeProject}/settings/sub-type`,
+  projectDeleteDefectType: (activeProject, id) =>
     `${urlBase}${activeProject}/settings/sub-type/${id}`,
   projects: () => `${urlBase}project/list`,
   projectPreferences: (activeProject, userId, filterId = '') =>
@@ -180,9 +180,9 @@ export const URLS = {
     `${urlBase}project/${activeProject}/notification`,
   suite: (activeProject, suiteId) => `${urlBase}${activeProject}/item/${suiteId}`,
 
-  notification: (activeProject) => `${urlBase}notification/${activeProject}`,
+  notification: (activeProject) => `${urlBase}${activeProject}/settings/notification`,
   notificationById: (activeProject, notificationId) =>
-    `${urlBase}notification/${activeProject}/${notificationId}`,
+    `${urlBase}${activeProject}/settings/notification/${notificationId}`,
 
   testItems: (activeProject, ids) => `${urlBase}${activeProject}/item/${getQueryParams({ ids })}`,
   testItemsWithProviderType: (activeProject, ids) =>

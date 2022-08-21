@@ -20,12 +20,12 @@ import {
   UPDATE_CONFIGURATION_ATTRIBUTES,
   UPDATE_NOTIFICATIONS_CONFIG,
   UPDATE_NOTIFICATIONS_CONFIG_SUCCESS,
-  UPDATE_DEFECT_SUBTYPE,
-  UPDATE_DEFECT_SUBTYPE_SUCCESS,
-  ADD_DEFECT_SUBTYPE,
-  ADD_DEFECT_SUBTYPE_SUCCESS,
-  DELETE_DEFECT_SUBTYPE,
-  DELETE_DEFECT_SUBTYPE_SUCCESS,
+  UPDATE_DEFECT_TYPE,
+  UPDATE_DEFECT_TYPE_SUCCESS,
+  ADD_DEFECT_TYPE,
+  ADD_DEFECT_TYPE_SUCCESS,
+  DELETE_DEFECT_TYPE,
+  DELETE_DEFECT_TYPE_SUCCESS,
   ADD_PATTERN,
   ADD_PATTERN_SUCCESS,
   UPDATE_PATTERN,
@@ -106,34 +106,34 @@ export const fetchConfigurationAttributesAction = (projectId) => ({
   payload: projectId,
 });
 
-export const updateDefectSubTypeAction = (subType) => ({
-  type: UPDATE_DEFECT_SUBTYPE,
-  payload: subType,
+export const updateDefectTypeAction = (defectType) => ({
+  type: UPDATE_DEFECT_TYPE,
+  payload: defectType,
 });
 
-export const updateDefectSubTypeSuccessAction = (subType) => ({
-  type: UPDATE_DEFECT_SUBTYPE_SUCCESS,
-  payload: subType,
+export const updateDefectTypeSuccessAction = (defectType) => ({
+  type: UPDATE_DEFECT_TYPE_SUCCESS,
+  payload: defectType,
 });
 
-export const addDefectSubTypeAction = (subType) => ({
-  type: ADD_DEFECT_SUBTYPE,
-  payload: subType,
+export const addDefectTypeAction = (defectType) => ({
+  type: ADD_DEFECT_TYPE,
+  payload: defectType,
 });
 
-export const addDefectSubTypeSuccessAction = (subType) => ({
-  type: ADD_DEFECT_SUBTYPE_SUCCESS,
-  payload: subType,
+export const addDefectTypeSuccessAction = (defectType) => ({
+  type: ADD_DEFECT_TYPE_SUCCESS,
+  payload: defectType,
 });
 
-export const deleteDefectSubTypeAction = (subType) => ({
-  type: DELETE_DEFECT_SUBTYPE,
-  payload: subType,
+export const deleteDefectTypeAction = (defectType) => ({
+  type: DELETE_DEFECT_TYPE,
+  payload: defectType,
 });
 
-export const deleteDefectSubTypeSuccessAction = (subType) => ({
-  type: DELETE_DEFECT_SUBTYPE_SUCCESS,
-  payload: subType,
+export const deleteDefectTypeSuccessAction = (defectType) => ({
+  type: DELETE_DEFECT_TYPE_SUCCESS,
+  payload: defectType,
 });
 
 export const addPatternAction = (pattern) => ({

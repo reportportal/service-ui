@@ -28,7 +28,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { withHoverableTooltip } from 'components/main/tooltips/hoverableTooltip';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { showModalAction } from 'controllers/modal';
-import { deleteDefectSubTypeAction, updateDefectSubTypeAction } from 'controllers/project';
+import { deleteDefectTypeAction, updateDefectTypeAction } from 'controllers/project';
 import { defectTypeShape } from '../defectTypeShape';
 import styles from './defectTypeRow.scss';
 
@@ -75,7 +75,7 @@ export const DefectTypeRow = ({
   const dispatch = useDispatch();
 
   const deleteDefect = () => {
-    dispatch(deleteDefectSubTypeAction(data));
+    dispatch(deleteDefectTypeAction(data));
   };
 
   const onDelete = () => {
@@ -91,7 +91,7 @@ export const DefectTypeRow = ({
   };
 
   const editDefect = (defectType) => {
-    dispatch(updateDefectSubTypeAction(defectType));
+    dispatch(updateDefectTypeAction(defectType));
   };
 
   const onEdit = () => {
@@ -100,7 +100,7 @@ export const DefectTypeRow = ({
         id: 'addEditDefectTypeModal',
         data: {
           onSave: editDefect,
-          defectType: { ...data, typeRef: data.typeRef.toLowerCase() },
+          defectType: { ...data, typeRef: data.typeRef },
           actionType: 'edit',
         },
       }),

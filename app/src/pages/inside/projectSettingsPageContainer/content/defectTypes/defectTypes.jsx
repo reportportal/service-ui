@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
-import { addDefectSubTypeAction, defectTypesSelector } from 'controllers/project';
+import { addDefectTypeAction, defectTypesSelector } from 'controllers/project';
 import { userAccountRoleSelector, activeProjectRoleSelector } from 'controllers/user';
 import { canUpdateSettings } from 'common/utils/permissions';
 import { DEFECT_TYPES_SEQUENCE } from 'common/constants/defectTypes';
@@ -33,10 +33,7 @@ import {
 } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { withHoverableTooltip } from 'components/main/tooltips/hoverableTooltip';
 import { showModalAction } from 'controllers/modal';
-import {
-  DEFAULT_DEFECT_CONFIG,
-  MAX_DEFECT_TYPES_COUNT,
-} from 'pages/inside/projectSettingsPageContainer/content/defectTypes/constants';
+import { MAX_DEFECT_TYPES_COUNT } from 'pages/inside/projectSettingsPageContainer/content/defectTypes/constants';
 import { DefectTypeRow } from './defectTypeRow';
 import { messages } from './defectTypesMessages';
 import styles from './defectTypes.scss';
@@ -71,12 +68,12 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
-  const subTypes = useSelector(defectTypesSelector);
+  const defectTypes = useSelector(defectTypesSelector);
   const userAccountRole = useSelector(userAccountRoleSelector);
   const userProjectRole = useSelector(activeProjectRoleSelector);
 
   const addDefect = (data) => {
-    dispatch(addDefectSubTypeAction({ ...data, typeRef: data.typeRef.toUpperCase() }));
+    dispatch(addDefectTypeAction({ ...data, typeRef: data.typeRef.toUpperCase() }));
   };
   const onAdd = (defectGroup) => {
     dispatch(
@@ -85,11 +82,8 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
         data: {
           onSave: addDefect,
           actionType: 'add',
-          defectType: !defectGroup ? DEFAULT_DEFECT_CONFIG : undefined,
-          defectGroup: defectGroup
-            ? { color: defectGroup.color, typeRef: defectGroup.typeRef.toLowerCase() }
-            : {},
-          defectTypes: subTypes,
+          defectType: { color: defectGroup.color, typeRef: defectGroup.typeRef.toLowerCase() },
+          defectTypes,
         },
       }),
     );
@@ -98,70 +92,76 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
   const isEditable = canUpdateSettings(userAccountRole, userProjectRole);
   const canAddNewDefectType = useMemo(
     () =>
-      DEFECT_TYPES_SEQUENCE.reduce((acc, groupName) => subTypes[groupName].length + acc, 0) <
+      DEFECT_TYPES_SEQUENCE.reduce((acc, groupName) => defectTypes[groupName].length + acc, 0) <
       MAX_DEFECT_TYPES_COUNT,
-    [subTypes],
+    [defectTypes],
   );
+  const interactionAllowed = isEditable && canAddNewDefectType;
 
   useEffect(() => {
     setHeaderTitleNode(
       <span className={cx('button')}>
-        <Button disabled={!isEditable || !canAddNewDefectType} onClick={() => onAdd()}>
+        <Button
+          disabled={!isEditable || !canAddNewDefectType}
+          onClick={() => onAdd(defectTypes[DEFECT_TYPES_SEQUENCE[0]][0])}
+        >
           {formatMessage(messages.createDefectHeader)}
         </Button>
       </span>,
     );
 
     return () => setHeaderTitleNode(null);
-  }, [subTypes, canAddNewDefectType, isEditable]);
+  }, [defectTypes, canAddNewDefectType, isEditable]);
 
   return (
     <>
       <TabDescription>{formatMessage(messages.description)}</TabDescription>
       <Divider />
       <div className={cx('defect-types-list')}>
-        {DEFECT_TYPES_SEQUENCE.map((groupName) => (
-          <div key={groupName} className={cx('defect-type-group')}>
-            <div className={cx('group-info')}>
-              <div className={cx('group-type')}>
-                <i
-                  className={cx('group-diagram', {
-                    [`type-${groupName.toLowerCase()}`]: groupName,
-                  })}
-                >
-                  {Parser(DefectGroupIcon)}
-                </i>
-                <div className={cx('group-name')}>
-                  {formatMessage(messages[groupName.toLowerCase()])}
+        {DEFECT_TYPES_SEQUENCE.map((groupName) => {
+          return (
+            <div key={groupName} className={cx('defect-type-group')}>
+              <div className={cx('group-info')}>
+                <div className={cx('group-type')}>
+                  <i
+                    className={cx('group-diagram', {
+                      [`type-${groupName.toLowerCase()}`]: groupName,
+                    })}
+                  >
+                    {Parser(DefectGroupIcon)}
+                  </i>
+                  <div className={cx('group-name')}>
+                    {formatMessage(messages[groupName.toLowerCase()])}
+                  </div>
                 </div>
-              </div>
-              {isEditable && canAddNewDefectType && (
-                <CreateDefect
-                  formatMessage={formatMessage}
-                  onClick={() => onAdd(subTypes[groupName][0])}
-                />
-              )}
-            </div>
-            <div className={cx('group-field-list')}>
-              <span>{formatMessage(messages.defectNameCol)}</span>
-              <span>{formatMessage(messages.abbreviationCol)}</span>
-            </div>
-            <Divider />
-            <div className={cx('group-content')}>
-              {subTypes[groupName].map((subType, i) => (
-                <div key={subType.id}>
-                  <DefectTypeRow
-                    data={subType}
-                    parentType={subTypes[groupName][0]}
-                    group={i === 0 ? subTypes[groupName] : null}
-                    isPossibleUpdateSettings={isEditable}
+                {interactionAllowed && (
+                  <CreateDefect
+                    formatMessage={formatMessage}
+                    onClick={() => onAdd(defectTypes[groupName][0])}
                   />
-                  <Divider />
-                </div>
-              ))}
+                )}
+              </div>
+              <div className={cx('group-field-list')}>
+                <span>{formatMessage(messages.defectNameCol)}</span>
+                <span>{formatMessage(messages.abbreviationCol)}</span>
+              </div>
+              <Divider />
+              <div className={cx('group-content')}>
+                {defectTypes[groupName].map((defectType, i) => (
+                  <div key={defectType.id}>
+                    <DefectTypeRow
+                      data={defectType}
+                      parentType={defectTypes[groupName][0]}
+                      group={i === 0 ? defectTypes[groupName] : null}
+                      isPossibleUpdateSettings={isEditable}
+                    />
+                    <Divider />
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </>
   );

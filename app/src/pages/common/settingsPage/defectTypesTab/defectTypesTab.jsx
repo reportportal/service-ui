@@ -21,7 +21,7 @@ import track from 'react-tracking';
 import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 
-import { defectTypesSelector, updateDefectSubTypeAction } from 'controllers/project';
+import { defectTypesSelector, updateDefectTypeAction } from 'controllers/project';
 import { showModalAction } from 'controllers/modal';
 import { userAccountRoleSelector, activeProjectRoleSelector } from 'controllers/user';
 import { canUpdateSettings } from 'common/utils/permissions';
@@ -47,7 +47,7 @@ const cx = classNames.bind(styles);
   }),
   {
     showModal: showModalAction,
-    updateDefectSubTypeAction,
+    updateDefectSubTypeAction: updateDefectTypeAction,
   },
 )
 @injectIntl

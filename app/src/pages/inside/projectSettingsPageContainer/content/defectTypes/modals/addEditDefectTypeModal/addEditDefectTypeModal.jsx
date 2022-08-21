@@ -35,11 +35,11 @@ import { Dropdown } from 'componentLibrary/dropdown';
 import { hideModalAction } from 'controllers/modal';
 import { FieldText } from 'componentLibrary/fieldText';
 import { HexColorPickerComponent } from 'components/main/hexColorPicker';
+import * as DEFECT_TYPES_SEQUENCE from 'common/constants/defectTypes';
 import { FieldElement } from '../../../elements';
 import {
   NAME_FIELD_KEY,
   COLOR_FIELD_KEY,
-  GROUP_CASES,
   ABBREVIATION_FIELD_KEY,
   GROUP_FIELD_KEY,
   COLORS,
@@ -85,64 +85,65 @@ const messages = defineMessages({
     id: 'AddEditDefectTypeModal.abbreviationHint',
     defaultMessage: 'Abbreviation may contain up to 4 symbols',
   },
-  [GROUP_CASES.AUTOMATION_BUG]: {
+  [DEFECT_TYPES_SEQUENCE.AUTOMATION_BUG]: {
     id: 'AddEditDefectTypeModal.automationBug',
     defaultMessage: 'Automation Bug Group',
   },
-  [GROUP_CASES.PRODUCT_BUG]: {
+  [DEFECT_TYPES_SEQUENCE.PRODUCT_BUG]: {
     id: 'AddEditDefectTypeModal.productBug',
     defaultMessage: 'Product Bug Group',
   },
-  [GROUP_CASES.TO_INVESTIGATE]: {
+  [DEFECT_TYPES_SEQUENCE.TO_INVESTIGATE]: {
     id: 'AddEditDefectTypeModal.toInvestigate',
     defaultMessage: 'To Investigate Group',
   },
-  [GROUP_CASES.NO_DEFECT]: {
+  [DEFECT_TYPES_SEQUENCE.NO_DEFECT]: {
     id: 'AddEditDefectTypeModal.noDefect',
     defaultMessage: 'No Defect Group',
   },
-  [GROUP_CASES.SYSTEM_ISSUE]: {
+  [DEFECT_TYPES_SEQUENCE.SYSTEM_ISSUE]: {
     id: 'AddEditDefectTypeModal.systemIssue',
     defaultMessage: 'System Issue Group',
   },
 });
 
 const ACTION_TYPE_ADD = 'add';
+
 const AddEditDefectTypeModal = ({
   data,
-  data: { onSave, defectType, defectGroup, defectTypes },
+  data: { onSave, defectType, defectTypes },
   handleSubmit,
   initialize,
   dirty,
 }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-  const [newColor, setNewColor] = useState(defectType ? defectType.color : defectGroup.color);
+  const [newColor, setNewColor] = useState(defectType.color);
 
   useEffect(() => {
-    initialize(defectType || defectGroup);
+    initialize(defectType);
   }, []);
 
-  const caseOptions = [
+  const defectGroupOptions = [
     {
-      value: GROUP_CASES.AUTOMATION_BUG,
-      label: formatMessage(messages[GROUP_CASES.AUTOMATION_BUG]),
+      value: DEFECT_TYPES_SEQUENCE.AUTOMATION_BUG,
+      label: formatMessage(messages[DEFECT_TYPES_SEQUENCE.AUTOMATION_BUG]),
     },
     {
-      value: GROUP_CASES.PRODUCT_BUG,
-      label: formatMessage(messages[GROUP_CASES.PRODUCT_BUG]),
+      value: DEFECT_TYPES_SEQUENCE.PRODUCT_BUG,
+      label: formatMessage(messages[DEFECT_TYPES_SEQUENCE.PRODUCT_BUG]),
     },
     {
-      value: GROUP_CASES.TO_INVESTIGATE,
-      label: formatMessage(messages[GROUP_CASES.TO_INVESTIGATE]),
+      value: DEFECT_TYPES_SEQUENCE.TO_INVESTIGATE,
+      label: formatMessage(messages[DEFECT_TYPES_SEQUENCE.TO_INVESTIGATE]),
     },
     {
-      value: GROUP_CASES.NO_DEFECT,
-      label: formatMessage(messages[GROUP_CASES.NO_DEFECT]),
+      value: DEFECT_TYPES_SEQUENCE.NO_DEFECT,
+      label: formatMessage(messages[DEFECT_TYPES_SEQUENCE.NO_DEFECT]),
     },
     {
-      value: GROUP_CASES.SYSTEM_ISSUE,
-      label: formatMessage(messages[GROUP_CASES.SYSTEM_ISSUE]),
+      value: DEFECT_TYPES_SEQUENCE.SYSTEM_ISSUE,
+      label: formatMessage(messages[DEFECT_TYPES_SEQUENCE.SYSTEM_ISSUE]),
     },
   ];
 
@@ -177,7 +178,7 @@ const AddEditDefectTypeModal = ({
       onClose={() => dispatch(hideModalAction())}
       allowCloseOutside={!dirty}
     >
-      {!defectType && formatMessage(messages.description)}
+      {actionType === ACTION_TYPE_ADD && formatMessage(messages.description)}
       <div className={cx('content')}>
         {actionType === ACTION_TYPE_ADD && (
           <FieldElement
@@ -187,7 +188,7 @@ const AddEditDefectTypeModal = ({
             className={cx('input')}
             onChange={(value) => setNewColor(defectTypes[value.toUpperCase()][0].color)}
           >
-            <Dropdown options={caseOptions} defaultWidth={false} />
+            <Dropdown options={defectGroupOptions} defaultWidth={false} />
           </FieldElement>
         )}
         <div className={cx('input')}>
@@ -223,7 +224,6 @@ const AddEditDefectTypeModal = ({
 AddEditDefectTypeModal.propTypes = {
   data: PropTypes.shape({
     defectType: PropTypes.object,
-    defectGroup: PropTypes.object,
     defectTypes: PropTypes.object,
     onSave: PropTypes.func,
     eventsInfo: PropTypes.object,
@@ -238,7 +238,7 @@ AddEditDefectTypeModal.defaultProps = {
   data: {},
 };
 
-export default withModal('addEditDefectTypeModal')(
+export const AddEditDefectTypeModalComponent = withModal('addEditDefectTypeModal')(
   reduxForm({
     form: 'DefectTypeForm',
     validate: ({ longName, shortName }) => {

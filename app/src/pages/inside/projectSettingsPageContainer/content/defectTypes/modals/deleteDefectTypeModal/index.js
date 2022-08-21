@@ -14,6 +14,4 @@
  * limitations under the License.
  */
 
-import DeleteDefectTypeModal from './deleteDefectTypeModal';
-
-export { DeleteDefectTypeModal };
+export { DeleteDefectTypeModalComponent as DeleteDefectTypeModal } from './deleteDefectTypeModal';

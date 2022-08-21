@@ -49,10 +49,7 @@ const DeleteDefectTypeModal = ({
       title={formatMessage(messages.title, { name })}
       okButton={{
         text: formatMessage(COMMON_LOCALE_KEYS.DELETE),
-        danger: true,
-        onClick: () => {
-          onSave();
-        },
+        onClick: onSave,
       }}
       cancelButton={{
         text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
@@ -70,4 +67,4 @@ DeleteDefectTypeModal.defaultProps = {
   data: {},
 };
 
-export default withModal('deleteDefectModal')(DeleteDefectTypeModal);
+export const DeleteDefectTypeModalComponent = withModal('deleteDefectModal')(DeleteDefectTypeModal);

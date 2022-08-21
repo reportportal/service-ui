@@ -52,12 +52,16 @@ const messages = defineMessages({
     id: 'ProjectsPage.deleteError',
     defaultMessage: 'An error occurred during deleting the project',
   },
-  updateDefectSubTypeSuccess: {
-    id: 'Project.updateDefectSubTypeSuccess',
-    defaultMessage: 'Completed successfully!',
+  addDefectTypeSuccess: {
+    id: 'Project.addDefectTypeSuccess',
+    defaultMessage: 'Defect has been successfully created',
   },
-  deleteDefectSubTypeSuccess: {
-    id: 'Project.deleteDefectSubTypeSuccess',
+  updateDefectTypeSuccess: {
+    id: 'Project.updateDefectTypeSuccess',
+    defaultMessage: 'Defect has been successfully updated',
+  },
+  deleteDefectTypeSuccess: {
+    id: 'Project.deleteDefectTypeSuccess',
     defaultMessage: 'Defect type was successfully deleted',
   },
   updateProjectNotificationsConfigurationSuccess: {
