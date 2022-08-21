@@ -46,7 +46,7 @@ export const MultipleAutocomplete = ({
   getItemValidationErrorType,
   creatable,
   editable,
-  additionalCreationCondition,
+  getAdditionalCreationCondition,
   highlightUnStoredItem,
   parseInputValueFn,
   handleUnStoredItemCb,
@@ -138,7 +138,7 @@ export const MultipleAutocomplete = ({
                         getItemValidationErrorType={getItemValidationErrorType}
                         editItem={editItem}
                         editable={editable}
-                        additionalCreationCondition={additionalCreationCondition}
+                        getAdditionalCreationCondition={getAdditionalCreationCondition}
                         storedItemsMap={storedItemsMap}
                         highlightUnStoredItem={highlightUnStoredItem}
                       />
@@ -155,7 +155,7 @@ export const MultipleAutocomplete = ({
                               event.key === 'Enter' &&
                               inputValue &&
                               creatable &&
-                              additionalCreationCondition(inputValue);
+                              getAdditionalCreationCondition(inputValue);
                             createNewItem({
                               event,
                               inputValue,
@@ -168,7 +168,7 @@ export const MultipleAutocomplete = ({
                           onBlur: () => {
                             onBlur();
                             const creationCondition =
-                              inputValue && creatable && additionalCreationCondition(inputValue);
+                              inputValue && creatable && getAdditionalCreationCondition(inputValue);
                             createNewItem({
                               inputValue,
                               selectItem,
@@ -248,7 +248,7 @@ MultipleAutocomplete.propTypes = {
   customClass: PropTypes.string,
   createWithoutConfirmation: PropTypes.bool,
   getItemValidationErrorType: PropTypes.func,
-  additionalCreationCondition: PropTypes.func,
+  getAdditionalCreationCondition: PropTypes.func,
   highlightUnStoredItem: PropTypes.bool,
   parseInputValueFn: PropTypes.func,
   handleUnStoredItemCb: PropTypes.func,
@@ -277,7 +277,7 @@ MultipleAutocomplete.defaultProps = {
   customClass: '',
   createWithoutConfirmation: false,
   getItemValidationErrorType: null,
-  additionalCreationCondition: () => true,
+  getAdditionalCreationCondition: () => true,
   highlightUnStoredItem: false,
   parseInputValueFn: null,
   handleUnStoredItemCb: null,

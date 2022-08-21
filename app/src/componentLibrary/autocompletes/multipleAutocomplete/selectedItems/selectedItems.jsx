@@ -32,7 +32,7 @@ const SelectedItem = ({
   error,
   editItem,
   editable,
-  additionalCreationCondition,
+  getAdditionalCreationCondition,
   storedOption,
   highlightUnStoredItem,
 }) => {
@@ -47,7 +47,7 @@ const SelectedItem = ({
     setValue(e.target.value);
   };
   const onKeyDownHandler = (e) => {
-    const creationCondition = additionalCreationCondition(value);
+    const creationCondition = getAdditionalCreationCondition(value);
     if (e.key === 'Enter' && creationCondition) {
       editItem(item, value);
       setEditMode(false);
@@ -111,7 +111,7 @@ SelectedItem.propTypes = {
   mobileDisabled: PropTypes.bool,
   error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   editable: PropTypes.bool,
-  additionalCreationCondition: PropTypes.func,
+  getAdditionalCreationCondition: PropTypes.func,
   storedOption: PropTypes.bool,
   highlightUnStoredItem: PropTypes.bool,
 };
@@ -122,7 +122,7 @@ SelectedItem.defaultProps = {
   parseValueToString: (value) => value || '',
   error: false,
   editable: false,
-  additionalCreationCondition: () => true,
+  getAdditionalCreationCondition: () => true,
   storedOption: true,
   highlightUnStoredItem: false,
 };

@@ -14,35 +14,23 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Downshift from 'downshift';
 import isEqual from 'fast-deep-equal';
 import { isArray } from 'c3/src/util';
 
-export class MultipleDownshift extends Component {
-  static propTypes = {
-    options: PropTypes.array,
-    onChange: PropTypes.func,
-    children: PropTypes.func.isRequired,
-    selectedItems: PropTypes.array,
-    handleUnStoredItemCb: PropTypes.func,
-  };
+export const MultipleDownshift = ({
+  selectedItems,
+  children,
+  onChange,
+  handleUnStoredItemCb,
+  options,
+  ...props
+}) => {
+  const [storedItemsMap, setStoredItems] = useState({});
 
-  static defaultProps = {
-    options: [],
-    onChange: () => {},
-    selectedItems: [],
-    handleUnStoredItemCb: null,
-  };
-
-  state = {
-    storedItemsMap: {},
-  };
-
-  collectStoredItemsMap = (newItemData, cb) => {
-    const { options } = this.props;
-    const { storedItemsMap } = this.state;
+  const collectStoredItems = (newItemData, cb) => {
     const newState = {
       ...storedItemsMap,
     };
@@ -51,29 +39,58 @@ export class MultipleDownshift extends Component {
         newState[item] = true;
       }
     });
-    this.setState(
-      {
-        storedItemsMap: newState,
-      },
-      cb(newState),
-    );
+    setStoredItems(newState);
+    cb(newState);
   };
-  filterStoredItemsMap = (removedItem, cb) => {
-    const { storedItemsMap } = this.state;
+  const filterStoredItems = (removedItem, cb) => {
     if (removedItem in storedItemsMap) {
       const newState = { ...storedItemsMap };
       delete newState[removedItem];
-      this.setState(
-        {
-          storedItemsMap: newState,
-        },
-        cb(newState),
-      );
+      setStoredItems(newState);
+      cb(newState);
     } else {
       cb(storedItemsMap);
     }
   };
-  stateReducer = (state, changes) => {
+  const addSelectedItem = (newItemData, downshift) => {
+    const newItem = isArray(newItemData) ? newItemData : [newItemData];
+    const newSelectedItems = [...selectedItems, ...newItem];
+    onChange(newSelectedItems, downshift);
+    const collectStoredItemsCb = (storedItems) =>
+      handleUnStoredItemCb && handleUnStoredItemCb(newSelectedItems, storedItems);
+    collectStoredItems(newItem, collectStoredItemsCb);
+  };
+  const editItem = (oldItem, newItem) => {
+    const position = selectedItems.indexOf(oldItem);
+    const newValue = [...selectedItems];
+    newValue.splice(position, 1, newItem);
+    onChange(newValue);
+  };
+  const removeItem = (removedItem, downshift) => {
+    const newSelectedItems = selectedItems.filter((item) => !isEqual(item, removedItem));
+    onChange(newSelectedItems, downshift);
+    const filterStoredItemsCb = (storedItems) =>
+      handleUnStoredItemCb && handleUnStoredItemCb(newSelectedItems, storedItems);
+    filterStoredItems(removedItem, filterStoredItemsCb);
+  };
+  const handleSelection = (selectedItem, downshift) => {
+    if (!selectedItem) return;
+    if (selectedItems.some((item) => isEqual(item, selectedItem))) {
+      removeItem(selectedItem, downshift);
+    } else {
+      addSelectedItem(selectedItem, downshift);
+    }
+  };
+  const getStateAndHelpers = (downshift) => {
+    return {
+      removeItem,
+      editItem,
+      handleChange: onChange,
+      storedItemsMap,
+      ...downshift,
+    };
+  };
+  const stateReducer = (state, changes) => {
     switch (changes.type) {
       case Downshift.stateChangeTypes.keyDownEnter:
       case Downshift.stateChangeTypes.clickItem:
@@ -86,68 +103,29 @@ export class MultipleDownshift extends Component {
         return changes;
     }
   };
-  handleChange = (selectedItems, downshift) =>
-    this.props.onChange(selectedItems, this.getStateAndHelpers(downshift));
-  addSelectedItem = (newItemData, downshift) => {
-    const { selectedItems, handleUnStoredItemCb } = this.props;
-    let newItem = [newItemData];
-    if (isArray(newItemData)) {
-      newItem = newItemData;
-    }
-    const newSelectedItems = [...selectedItems, ...newItem];
-    this.handleChange(newSelectedItems, downshift);
-    const collectStoredItemsMapCb = (storedItemsMap) =>
-      handleUnStoredItemCb && handleUnStoredItemCb(newSelectedItems, storedItemsMap);
-    this.collectStoredItemsMap(newItem, collectStoredItemsMapCb);
-  };
-  editItem = (oldItem, newItem, downshift) => {
-    const { selectedItems } = this.props;
-    const position = selectedItems.indexOf(oldItem);
-    const newValue = [...selectedItems];
-    newValue.splice(position, 1, newItem);
-    this.handleChange(newValue, downshift);
-  };
-  removeItem = (removedItem, downshift) => {
-    const { selectedItems, handleUnStoredItemCb } = this.props;
-    const newSelectedItems = selectedItems.filter((item) => !isEqual(item, removedItem));
-    this.handleChange(newSelectedItems, downshift);
-    const filterStoredItemsMapCb = (storedItemsMap) =>
-      handleUnStoredItemCb && handleUnStoredItemCb(newSelectedItems, storedItemsMap);
-    this.filterStoredItemsMap(removedItem, filterStoredItemsMapCb);
-  };
-  handleSelection = (selectedItem, downshift) => {
-    if (!selectedItem) return;
-    const { selectedItems } = this.props;
-    if (selectedItems.some((item) => isEqual(item, selectedItem))) {
-      this.removeItem(selectedItem, downshift);
-    } else {
-      this.addSelectedItem(selectedItem, downshift);
-    }
-  };
-  getStateAndHelpers(downshift) {
-    const { getRemoveButtonProps, removeItem, editItem, handleChange } = this;
-    const { storedItemsMap } = this.state;
-    return {
-      getRemoveButtonProps,
-      removeItem,
-      editItem,
-      handleChange,
-      storedItemsMap,
-      ...downshift,
-    };
-  }
 
-  render() {
-    const { children, ...props } = this.props;
-    return (
-      <Downshift
-        {...props}
-        stateReducer={this.stateReducer}
-        onChange={this.handleSelection}
-        selectedItem={null}
-      >
-        {(downshift) => children(this.getStateAndHelpers(downshift))}
-      </Downshift>
-    );
-  }
-}
+  return (
+    <Downshift
+      {...props}
+      stateReducer={stateReducer}
+      onChange={handleSelection}
+      selectedItem={null}
+    >
+      {(downshift) => children(getStateAndHelpers(downshift))}
+    </Downshift>
+  );
+};
+MultipleDownshift.propTypes = {
+  options: PropTypes.array,
+  onChange: PropTypes.func,
+  children: PropTypes.func.isRequired,
+  selectedItems: PropTypes.array,
+  handleUnStoredItemCb: PropTypes.func,
+};
+
+MultipleDownshift.defaultProps = {
+  options: [],
+  onChange: () => {},
+  selectedItems: [],
+  handleUnStoredItemCb: null,
+};

@@ -34,6 +34,18 @@ export const RecipientsContainer = ({ ...rest }) => {
   const { formatMessage } = useIntl();
   const activeProject = useSelector(projectIdSelector);
 
+  const getEmailValidationError = (v) => {
+    if (regex(/[.@]/)(v)) {
+      return !validate.email(v) && 'error';
+    }
+    return false;
+  };
+  const parseEmailsString = (string) => {
+    const re = /<([^\s<>@]+@[^\s<>@]+)>/g;
+    const emails = Array.from(string.matchAll(re), (m) => m[1]);
+    return [...new Set(emails)];
+  };
+
   return (
     <AsyncMultipleAutocomplete
       placeholder={formatMessage(messages.recipientsPlaceholder)}
@@ -42,17 +54,9 @@ export const RecipientsContainer = ({ ...rest }) => {
       creatable
       editable
       createWithoutConfirmation
-      getItemValidationErrorType={(v) => {
-        if (regex(/[.@]/)(v)) {
-          return !validate.email(v) && 'error';
-        }
-        return false;
-      }}
-      additionalCreationCondition={regex(/[.@]/)}
-      parseInputValueFn={(string) => {
-        const re = /<([^\s<>@]+@[^\s<>@]+)>/g;
-        return [...new Set(Array.from(string.matchAll(re), (m) => m[1]))];
-      }}
+      getItemValidationErrorType={getEmailValidationError}
+      getAdditionalCreationCondition={regex(/[.@]/)}
+      parseInputValueFn={parseEmailsString}
       {...rest}
     />
   );
