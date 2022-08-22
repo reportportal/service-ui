@@ -480,7 +480,7 @@
   "DefectTypesTab.createDefectHeader": "Стварыць дэфект",
   "DefectTypesTab.createDefectIcon": "Стварыце новы дэфект",
   "DefectTypesTab.defectLongNameHint": "Назва дэфекту павінна мець памер ад '3' да '55' сімвалаў",
-  "DefectTypesTab.defectNameCol": "Імя дэфекту",
+  "DefectTypesTab.defectNameCol": "Імя Дэфекту",
   "DefectTypesTab.defectShortNameHint": "Абрэвіятура дэфекту павінна мець памер ад '1' да '4' сімвалаў",
   "DefectTypesTab.deleteModalContent": "Вы ўпэўненыя, што хочаце выдаліць тып дэфекту? Усе дэфекты, якія прызнаныя '<b>{name}</b>', будуць адзначаны як '<b>{parentName}</b>'.",
   "DefectTypesTab.deleteModalHeader": "Выдаліць тып дэфекту",
