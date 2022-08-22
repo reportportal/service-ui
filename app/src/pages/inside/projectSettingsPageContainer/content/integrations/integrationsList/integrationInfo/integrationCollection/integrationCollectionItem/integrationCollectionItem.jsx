@@ -99,7 +99,7 @@ IntegrationCollectionItem.propTypes = {
     name: PropTypes.string,
     integrationParameters: PropTypes.object,
     integrationType: PropTypes.object,
-  }),
+  }).isRequired,
 };
 
 IntegrationCollectionItem.defaultProps = {
