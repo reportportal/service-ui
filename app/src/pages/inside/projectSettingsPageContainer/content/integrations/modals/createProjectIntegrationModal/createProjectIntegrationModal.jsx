@@ -102,8 +102,8 @@ const CreateProjectIntegrationModal = ({ data, initialize, change, handleSubmit 
           initialize={initialize}
           change={change}
           updateMetaData={updateMetaData}
-          {...customProps}
           extension={integrationFieldsExtension}
+          {...customProps}
         />
       </div>
     </ModalLayout>

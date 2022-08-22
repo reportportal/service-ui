@@ -48,7 +48,7 @@ export const IntegrationCollectionItem = ({
   const projectId = useSelector(projectIdSelector);
   const activeProject = useSelector(activeProjectSelector);
   const { formatMessage } = useIntl();
-
+  console.log(item);
   useEffect(() => {
     fetch(URLS.testIntegrationConnection(projectId || activeProject, id))
       .then(() => {
@@ -92,7 +92,14 @@ IntegrationCollectionItem.propTypes = {
   creator: PropTypes.string,
   disabled: PropTypes.bool,
   openIntegration: PropTypes.func,
-  item: PropTypes.object,
+  item: PropTypes.shape({
+    creator: PropTypes.string,
+    enabled: PropTypes.bool,
+    id: PropTypes.number,
+    name: PropTypes.string,
+    integrationParameters: PropTypes.object,
+    integrationType: PropTypes.object,
+  }),
 };
 
 IntegrationCollectionItem.defaultProps = {

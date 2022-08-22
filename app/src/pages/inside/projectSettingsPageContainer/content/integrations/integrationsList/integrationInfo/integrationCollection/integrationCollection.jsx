@@ -32,7 +32,6 @@ export const IntegrationCollection = ({ items, disabled, openIntegration }) => {
             item={item}
             id={item.id}
             disabled={disabled}
-            data={item}
             title={item.name}
             creator={item.creator}
             creationInfo={moment(item.creationDate).format('ll')}

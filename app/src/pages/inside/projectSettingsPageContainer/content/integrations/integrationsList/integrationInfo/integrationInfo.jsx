@@ -58,7 +58,7 @@ const documentationList = {
   [AZURE_DEVOPS]: 'https://reportportal.io/docs/Azure-DevOps-BTS',
 };
 export const IntegrationInfo = (props) => {
-  const [projectInfo, setProjectInfo] = useState({});
+  const [integrationInfo, setIntegrationInfo] = useState({});
   const [updatedParameters, setUpdatedParameters] = useState({});
   const { formatMessage } = useIntl();
   const isAdmin = useSelector(isAdminSelector);
@@ -78,11 +78,9 @@ export const IntegrationInfo = (props) => {
   const availableProjectIntegrations = projectIntegrations[data.name] || [];
 
   useEffect(() => {
-    const certainProject = availableProjectIntegrations.find(
-      (value) => value.id === +integrationId,
-    );
-    if (integrationId && certainProject) {
-      setProjectInfo(certainProject);
+    const integration = availableProjectIntegrations.find((value) => value.id === +integrationId);
+    if (integration) {
+      setIntegrationInfo(integration);
     }
   }, []);
 
@@ -93,7 +91,7 @@ export const IntegrationInfo = (props) => {
         id,
       }),
     );
-    setProjectInfo(integration);
+    setIntegrationInfo(integration);
   };
 
   const addProjectIntegration = (formData, metaData) => {
@@ -137,8 +135,8 @@ export const IntegrationInfo = (props) => {
       updateIntegrationAction(
         newData,
         false,
-        projectInfo.id,
-        projectInfo.name,
+        integrationInfo.id,
+        integrationInfo.name,
         (normalizedData) => {
           setUpdatedParameters(normalizedData);
           onConfirm();
@@ -159,10 +157,10 @@ export const IntegrationInfo = (props) => {
   };
 
   const updatedData = {
-    ...projectInfo,
-    name: updatedParameters.name || projectInfo.name,
+    ...integrationInfo,
+    name: updatedParameters.name || integrationInfo.name,
     integrationParameters: {
-      ...projectInfo.integrationParameters,
+      ...integrationInfo.integrationParameters,
       ...updatedParameters.integrationParameters,
     },
   };
@@ -189,7 +187,7 @@ export const IntegrationInfo = (props) => {
   };
 
   const removeIntegration = () => {
-    dispatch(removeIntegrationAction(projectInfo.id, false, goBackHandler));
+    dispatch(removeIntegrationAction(integrationInfo.id, false, goBackHandler));
   };
 
   const resetProjectIntegrations = () => dispatch(removeProjectIntegrationsByTypeAction(name));
@@ -200,9 +198,9 @@ export const IntegrationInfo = (props) => {
         id: 'deleteProjectIntegrationModal',
         data: {
           onConfirm: removeIntegration,
-          modalTitle: `${formatMessage(messages.projectIntegrationDelete)} ${projectInfo.name}`,
+          modalTitle: `${formatMessage(messages.projectIntegrationDelete)} ${integrationInfo.name}`,
           description: `${formatMessage(messages.projectIntegrationDeleteDescription)} ${
-            projectInfo.name
+            integrationInfo.name
           }?`,
         },
       }),

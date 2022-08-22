@@ -135,7 +135,6 @@ export class EmailFormFields extends Component {
       intl: { formatMessage },
       authEnabled,
       disabled,
-      lineAlign,
     } = this.props;
 
     return (
@@ -230,7 +229,7 @@ export class EmailFormFields extends Component {
             </FieldErrorHint>
           </FieldElement>
         )}
-        <div className={cx('checkboxes-container', { 'line-align': lineAlign })}>
+        <div className={cx('checkboxes-container')}>
           <div className={cx('checkbox-wrapper')}>
             <FieldProvider name={TLS_KEY} disabled={disabled} format={Boolean}>
               <Checkbox>TLS</Checkbox>
