@@ -48,7 +48,7 @@ export const IntegrationCollectionItem = ({
   const projectId = useSelector(projectIdSelector);
   const activeProject = useSelector(activeProjectSelector);
   const { formatMessage } = useIntl();
-  console.log(item);
+
   useEffect(() => {
     fetch(URLS.testIntegrationConnection(projectId || activeProject, id))
       .then(() => {
