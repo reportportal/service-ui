@@ -111,7 +111,9 @@ export const IntegrationInfo = (props) => {
         id: 'createProjectIntegrationModal',
         data: {
           modalTitle: formatMessage(messages.projectIntegrationCreate),
-          hasGlobalIntegration: Boolean(availableGlobalIntegrations.length),
+          hasGlobalIntegration: Boolean(
+            availableGlobalIntegrations.length && availableProjectIntegrations.length === 0,
+          ),
           instanceType: name,
           onConfirm: addProjectIntegration,
           customProps: {

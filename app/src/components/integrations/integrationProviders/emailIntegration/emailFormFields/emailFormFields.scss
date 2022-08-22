@@ -18,14 +18,6 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-
-  &.line-align {
-    margin-left: 210px;
-
-    @media (max-width: $SCREEN_SM_MAX) {
-      margin-left: 190px;
-    }
-  }
 }
 
 .checkbox-wrapper {
