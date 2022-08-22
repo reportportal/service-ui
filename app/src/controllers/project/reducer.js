@@ -23,9 +23,9 @@ import {
   FETCH_PROJECT_PREFERENCES_SUCCESS,
   UPDATE_CONFIGURATION_ATTRIBUTES,
   UPDATE_NOTIFICATIONS_CONFIG_SUCCESS,
-  UPDATE_DEFECT_SUBTYPE_SUCCESS,
-  ADD_DEFECT_SUBTYPE_SUCCESS,
-  DELETE_DEFECT_SUBTYPE_SUCCESS,
+  UPDATE_DEFECT_TYPE_SUCCESS,
+  ADD_DEFECT_TYPE_SUCCESS,
+  DELETE_DEFECT_TYPE_SUCCESS,
   ADD_PATTERN_SUCCESS,
   UPDATE_PATTERN_SUCCESS,
   DELETE_PATTERN_SUCCESS,
@@ -60,7 +60,7 @@ export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, p
           notificationsConfiguration: payload,
         },
       };
-    case UPDATE_DEFECT_SUBTYPE_SUCCESS:
+    case UPDATE_DEFECT_TYPE_SUCCESS:
       return {
         ...state,
         configuration: {
@@ -77,7 +77,7 @@ export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, p
           ),
         },
       };
-    case ADD_DEFECT_SUBTYPE_SUCCESS:
+    case ADD_DEFECT_TYPE_SUCCESS:
       return {
         ...state,
         configuration: {
@@ -88,7 +88,7 @@ export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, p
           },
         },
       };
-    case DELETE_DEFECT_SUBTYPE_SUCCESS:
+    case DELETE_DEFECT_TYPE_SUCCESS:
       return {
         ...state,
         configuration: {

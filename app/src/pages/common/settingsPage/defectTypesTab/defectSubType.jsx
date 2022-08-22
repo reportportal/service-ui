@@ -26,7 +26,7 @@ import CircleCrossIcon from 'common/img/circle-cross-icon-inline.svg';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { showModalAction } from 'controllers/modal';
-import { deleteDefectSubTypeAction, updateDefectSubTypeAction } from 'controllers/project';
+import { deleteDefectTypeAction, updateDefectTypeAction } from 'controllers/project';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { withHoverableTooltip } from 'components/main/tooltips/hoverableTooltip';
 import { C3Chart } from 'components/widgets/common/c3chart';
@@ -70,8 +70,8 @@ DefectTypeName.propTypes = {
 @track()
 @connect(null, {
   showModal: showModalAction,
-  deleteDefectSubTypeAction,
-  updateDefectSubTypeAction,
+  deleteDefectSubTypeAction: deleteDefectTypeAction,
+  updateDefectSubTypeAction: updateDefectTypeAction,
 })
 @injectIntl
 export class DefectSubType extends Component {

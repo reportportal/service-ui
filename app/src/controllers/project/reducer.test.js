@@ -23,9 +23,9 @@ import {
   UPDATE_CONFIGURATION_ATTRIBUTES,
   FETCH_PROJECT_PREFERENCES_SUCCESS,
   UPDATE_NOTIFICATIONS_CONFIG_SUCCESS,
-  UPDATE_DEFECT_SUBTYPE_SUCCESS,
-  ADD_DEFECT_SUBTYPE_SUCCESS,
-  DELETE_DEFECT_SUBTYPE_SUCCESS,
+  UPDATE_DEFECT_TYPE_SUCCESS,
+  ADD_DEFECT_TYPE_SUCCESS,
+  DELETE_DEFECT_TYPE_SUCCESS,
   ADD_PATTERN_SUCCESS,
   UPDATE_PATTERN_SUCCESS,
   DELETE_PATTERN_SUCCESS,
@@ -103,7 +103,7 @@ describe('project reducer', () => {
       ];
       const state = { configuration: { subTypes: { PRODUCT_BUG: [{ id: 1 }, { id: 2 }] } } };
       const newState = projectInfoReducer(state, {
-        type: UPDATE_DEFECT_SUBTYPE_SUCCESS,
+        type: UPDATE_DEFECT_TYPE_SUCCESS,
         payload,
       });
       expect(newState).toEqual({
@@ -134,7 +134,7 @@ describe('project reducer', () => {
       };
       const state = { configuration: { subTypes: { PRODUCT_BUG: [{ id: 1 }, { id: 2 }] } } };
       const newState = projectInfoReducer(state, {
-        type: ADD_DEFECT_SUBTYPE_SUCCESS,
+        type: ADD_DEFECT_TYPE_SUCCESS,
         payload,
       });
       expect(newState).toEqual({
@@ -165,7 +165,7 @@ describe('project reducer', () => {
         configuration: { subTypes: { PRODUCT_BUG: [{ id: 1 }, { id: 2 }, { id: 3 }] } },
       };
       const newState = projectInfoReducer(state, {
-        type: DELETE_DEFECT_SUBTYPE_SUCCESS,
+        type: DELETE_DEFECT_TYPE_SUCCESS,
         payload,
       });
       expect(newState).toEqual({

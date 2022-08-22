@@ -27,7 +27,7 @@ import {
 export const messages = defineMessages({
   defectNameCol: {
     id: 'DefectTypesTab.defectNameCol',
-    defaultMessage: 'Defect name',
+    defaultMessage: 'Defect Name',
   },
   abbreviationCol: {
     id: 'DefectTypesTab.abbreviationCol',

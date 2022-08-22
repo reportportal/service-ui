@@ -24,7 +24,7 @@ import { injectIntl } from 'react-intl';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import PlusIcon from 'common/img/plus-button-inline.svg';
-import { addDefectSubTypeAction } from 'controllers/project';
+import { addDefectTypeAction } from 'controllers/project';
 
 import { DefectSubType } from './defectSubType';
 import { defectTypeShape } from './defectTypeShape';
@@ -37,7 +37,7 @@ const cx = classNames.bind(styles);
 
 @track()
 @connect(null, {
-  addDefectSubTypeAction,
+  addDefectSubTypeAction: addDefectTypeAction,
 })
 @injectIntl
 export class DefectTypesGroup extends Component {

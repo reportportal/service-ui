@@ -46,8 +46,11 @@ export const FieldText = ({
   endIcon,
   clearable,
   isRequired,
+  hasDoubleMessage,
 }) => {
   const clearInput = () => onChange('');
+
+  const helpTextElement = <span className={cx(VARIANT, 'help-text')}>{helpText}</span>;
 
   return (
     <>
@@ -105,8 +108,14 @@ export const FieldText = ({
       </div>
       {((error && touched) || helpText) && (
         <div className={cx(VARIANT, 'additional-content', { disabled })}>
-          {error && touched && <span className={cx(VARIANT, 'error-text')}>{error}</span>}
-          {helpText && <span className={cx(VARIANT, 'help-text')}>{helpText}</span>}
+          {error && touched ? (
+            <>
+              <span className={cx(VARIANT, 'error-text')}>{error}</span>
+              {hasDoubleMessage && helpTextElement}
+            </>
+          ) : (
+            helpText && helpTextElement
+          )}
         </div>
       )}
     </>
@@ -134,6 +143,7 @@ FieldText.propTypes = {
   endIcon: PropTypes.string,
   clearable: PropTypes.bool,
   isRequired: PropTypes.bool,
+  hasDoubleMessage: PropTypes.bool,
 };
 FieldText.defaultProps = {
   value: '',
@@ -157,4 +167,5 @@ FieldText.defaultProps = {
   endIcon: null,
   clearable: false,
   isRequired: false,
+  hasDoubleMessage: false,
 };
