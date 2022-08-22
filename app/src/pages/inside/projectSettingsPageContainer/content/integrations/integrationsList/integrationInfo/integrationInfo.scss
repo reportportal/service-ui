@@ -96,3 +96,10 @@
   text-indent: 1px;
   max-width: 610px;
 }
+
+.buttons-setting {
+  display: flex;
+  justify-content: space-between;
+  width: 500px;
+  margin: 50px auto;
+}

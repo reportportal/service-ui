@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,26 +14,6 @@
  * limitations under the License.
  */
 
-.checkboxes-container {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
+import DeleteProjectIntegrationModal from './deleteProjectIntegraionModal';
 
-  &.line-align {
-    margin-left: 210px;
-
-    @media (max-width: $SCREEN_SM_MAX) {
-      margin-left: 190px;
-    }
-  }
-}
-
-.checkbox-wrapper {
-  &:first-child {
-    margin-right: 30px;
-  }
-}
-
-.fields {
-  margin-bottom: 16px;
-}
+export { DeleteProjectIntegrationModal };

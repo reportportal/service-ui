@@ -15,3 +15,4 @@
  */
 
 export { Integrations } from './integrations';
+export { CreateProjectIntegrationModal, DeleteProjectIntegrationModal } from './modals';

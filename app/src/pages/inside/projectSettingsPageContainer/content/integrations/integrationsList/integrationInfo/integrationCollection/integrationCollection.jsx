@@ -29,6 +29,7 @@ export const IntegrationCollection = ({ items, disabled, openIntegration }) => {
         {items.map((item) => (
           <IntegrationCollectionItem
             key={item.id}
+            item={item}
             id={item.id}
             disabled={disabled}
             data={item}

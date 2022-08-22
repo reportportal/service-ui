@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,16 +17,20 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
+import classNames from 'classnames/bind';
 import { SECRET_FIELDS_KEY } from 'controllers/plugins';
 import { commonValidators } from 'common/utils/validation';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { InputDropdown } from 'components/inputs/inputDropdown';
-import { InputTextArea } from 'components/inputs/inputTextArea';
-import { Input } from 'components/inputs/input';
-import { IntegrationFormField } from 'components/integrations/elements';
+import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
+import { FieldTextFlex } from 'componentLibrary/fieldTextFlex';
+import { Dropdown } from 'componentLibrary/dropdown';
 import { COMMON_BTS_MESSAGES } from 'components/integrations/elements/bts';
+import { FieldText } from 'componentLibrary/fieldText';
 import { DEFAULT_FORM_CONFIG } from '../constants';
 import { messages } from '../messages';
+import styles from './rallyConnectionFormFields.scss';
+
+const cx = classNames.bind(styles);
 
 @injectIntl
 export class RallyConnectionFormFields extends Component {
@@ -66,72 +70,71 @@ export class RallyConnectionFormFields extends Component {
     const {
       intl: { formatMessage },
       disabled,
-      lineAlign,
       editAuthMode,
     } = this.props;
 
     return (
       <Fragment>
-        <IntegrationFormField
+        <FieldElement
           name="integrationName"
-          label={formatMessage(COMMON_BTS_MESSAGES.integrationNameLabel)}
-          required
-          disabled={disabled}
-          lineAlign={lineAlign}
-          maxLength="55"
           validate={commonValidators.requiredField}
-        >
-          <FieldErrorHint>
-            <Input mobileDisabled />
-          </FieldErrorHint>
-        </IntegrationFormField>
-        <IntegrationFormField
-          name="url"
-          label={formatMessage(COMMON_BTS_MESSAGES.linkToBtsLabel)}
-          required
-          disabled={disabled || editAuthMode}
-          lineAlign={lineAlign}
-          validate={commonValidators.btsUrl}
-        >
-          <FieldErrorHint>
-            <Input mobileDisabled />
-          </FieldErrorHint>
-        </IntegrationFormField>
-        <IntegrationFormField
-          name="project"
-          label={formatMessage(messages.projectIdLabel)}
-          required
-          disabled={disabled || editAuthMode}
-          lineAlign={lineAlign}
-          maxLength="55"
-          validate={commonValidators.btsProjectId}
-        >
-          <FieldErrorHint>
-            <Input mobileDisabled />
-          </FieldErrorHint>
-        </IntegrationFormField>
-        <IntegrationFormField
-          name="authType"
-          label={formatMessage(COMMON_BTS_MESSAGES.authTypeLabel)}
           disabled={disabled}
-          lineAlign={lineAlign}
+          label={formatMessage(COMMON_BTS_MESSAGES.integrationNameLabel)}
+          className={cx('fields')}
         >
-          <FieldErrorHint>
-            <InputDropdown mobileDisabled options={this.systemAuthTypes} />
+          <FieldErrorHint provideHint={false}>
+            <FieldText
+              placeholder={formatMessage(COMMON_BTS_MESSAGES.integrationNameLabel)}
+              defaultWidth={false}
+              maxLength={55}
+              isRequired
+            />
           </FieldErrorHint>
-        </IntegrationFormField>
-        <IntegrationFormField
+        </FieldElement>
+        <FieldElement
+          name="url"
+          validate={commonValidators.btsUrl}
+          disabled={disabled || editAuthMode}
+          label={formatMessage(COMMON_BTS_MESSAGES.linkToBtsLabel)}
+          placeholder={formatMessage(COMMON_BTS_MESSAGES.linkToBtsLabel)}
+          className={cx('fields')}
+        >
+          <FieldErrorHint provideHint={false}>
+            <FieldText defaultWidth={false} isRequired />
+          </FieldErrorHint>
+        </FieldElement>
+        <FieldElement
+          name="project"
+          validate={commonValidators.btsProjectId}
+          disabled={disabled || editAuthMode}
+          className={cx('fields')}
+          placeholder={formatMessage(messages.projectIdLabel)}
+          label={formatMessage(messages.projectIdLabel)}
+        >
+          <FieldErrorHint provideHint={false}>
+            <FieldText defaultWidth={false} maxLength={55} isRequired />
+          </FieldErrorHint>
+        </FieldElement>
+        <FieldElement
+          label={formatMessage(COMMON_BTS_MESSAGES.authTypeLabel)}
+          name="authType"
+          disabled={disabled}
+          className={cx('fields')}
+        >
+          <FieldErrorHint provideHint={false}>
+            <Dropdown options={this.systemAuthTypes} defaultWidth={false} />
+          </FieldErrorHint>
+        </FieldElement>
+        <FieldElement
           name="oauthAccessKey"
           label={formatMessage(messages.accessKeyLabel)}
-          required
           disabled={disabled}
-          lineAlign={lineAlign}
           validate={commonValidators.requiredField}
         >
-          <FieldErrorHint>
-            <InputTextArea type="text" mobileDisabled />
+          <FieldErrorHint provideHint={false}>
+            <FieldTextFlex placeholder={formatMessage(messages.accessKeyLabel)} isRequired />
           </FieldErrorHint>
-        </IntegrationFormField>
+        </FieldElement>
       </Fragment>
     );
   }
