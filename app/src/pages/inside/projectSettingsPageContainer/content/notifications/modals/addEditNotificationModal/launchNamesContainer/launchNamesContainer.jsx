@@ -52,13 +52,8 @@ export const LaunchNamesContainer = ({ ...rest }) => {
   const activeProject = useSelector(projectIdSelector);
   const [showMessage, setShowMessage] = useState(false);
 
-  const handleSystemMessage = (items, storedItems) => {
-    if (items.length === Object.keys(storedItems).length) {
-      setShowMessage(false);
-    } else {
-      setShowMessage(true);
-    }
-  };
+  const handleSystemMessage = (items, storedItems) =>
+    setShowMessage(items.length !== Object.keys(storedItems).length);
 
   return (
     <>

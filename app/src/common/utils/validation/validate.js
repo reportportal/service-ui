@@ -109,9 +109,9 @@ export const createNotificationRecipientsValidator = (informOwner) => (value = [
   if (informOwner && !value.length) {
     return true;
   }
-  const re = /[.@]/;
-  if (value.some(regex(re))) {
-    return value.filter(regex(re)).every(email);
+  const checkIsStringWithEmailParts = regex(/[.@]/);
+  if (value.some(checkIsStringWithEmailParts)) {
+    return value.filter(checkIsStringWithEmailParts).every(email);
   }
 
   return true;

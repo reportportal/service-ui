@@ -30,7 +30,7 @@ export const MultipleDownshift = ({
 }) => {
   const [storedItemsMap, setStoredItems] = useState({});
 
-  const collectStoredItems = (newItemData, cb) => {
+  const collectStoredItems = (newItemData, collectStoredItemsCb) => {
     const newState = {
       ...storedItemsMap,
     };
@@ -40,16 +40,16 @@ export const MultipleDownshift = ({
       }
     });
     setStoredItems(newState);
-    cb(newState);
+    collectStoredItemsCb(newState);
   };
-  const filterStoredItems = (removedItem, cb) => {
+  const filterStoredItems = (removedItem, filterStoredItemsCb) => {
     if (removedItem in storedItemsMap) {
       const newState = { ...storedItemsMap };
       delete newState[removedItem];
       setStoredItems(newState);
-      cb(newState);
+      filterStoredItemsCb(newState);
     } else {
-      cb(storedItemsMap);
+      filterStoredItemsCb(storedItemsMap);
     }
   };
   const addSelectedItem = (newItemData, downshift) => {
@@ -81,15 +81,13 @@ export const MultipleDownshift = ({
       addSelectedItem(selectedItem, downshift);
     }
   };
-  const getStateAndHelpers = (downshift) => {
-    return {
-      removeItem,
-      editItem,
-      handleChange: onChange,
-      storedItemsMap,
-      ...downshift,
-    };
-  };
+  const getStateAndHelpers = (downshift) => ({
+    removeItem,
+    editItem,
+    handleChange: onChange,
+    storedItemsMap,
+    ...downshift,
+  });
   const stateReducer = (state, changes) => {
     switch (changes.type) {
       case Downshift.stateChangeTypes.keyDownEnter:

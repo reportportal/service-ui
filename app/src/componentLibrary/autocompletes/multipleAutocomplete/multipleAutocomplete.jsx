@@ -74,17 +74,15 @@ export const MultipleAutocomplete = ({
       removeItem(value[value.length - 1]);
     }
   };
-  const createNewItem = ({ inputValue, selectItem, clearSelection, creationCondition }) => {
-    if (creationCondition) {
-      if (parseInputValueFn) {
-        const parsedItems = parseInputValueFn(inputValue);
-        const items = parsedItems.length ? parsedItems : [inputValue];
-        selectItem(items);
-        clearSelection();
-      } else {
-        selectItem(inputValue);
-        clearSelection();
-      }
+  const createNewItem = ({ inputValue, selectItem, clearSelection }) => {
+    if (parseInputValueFn) {
+      const parsedItems = parseInputValueFn(inputValue);
+      const items = parsedItems.length ? parsedItems : [inputValue];
+      selectItem(items);
+      clearSelection();
+    } else {
+      selectItem(inputValue);
+      clearSelection();
     }
   };
 
@@ -156,25 +154,26 @@ export const MultipleAutocomplete = ({
                               inputValue &&
                               creatable &&
                               getAdditionalCreationCondition(inputValue);
-                            createNewItem({
-                              event,
-                              inputValue,
-                              selectItem,
-                              clearSelection,
-                              creationCondition,
-                            });
+                            if (creationCondition) {
+                              createNewItem({
+                                inputValue,
+                                selectItem,
+                                clearSelection,
+                              });
+                            }
                             removeItemByBackspace({ event, removeItem, inputValue });
                           },
                           onBlur: () => {
                             onBlur();
                             const creationCondition =
                               inputValue && creatable && getAdditionalCreationCondition(inputValue);
-                            createNewItem({
-                              inputValue,
-                              selectItem,
-                              clearSelection,
-                              creationCondition,
-                            });
+                            if (creationCondition) {
+                              createNewItem({
+                                inputValue,
+                                selectItem,
+                                clearSelection,
+                              });
+                            }
                           },
                           disabled,
                           ...inputProps,

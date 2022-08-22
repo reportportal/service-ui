@@ -60,46 +60,42 @@ const SelectedItem = ({
   };
 
   /* eslint-disable jsx-a11y/no-autofocus */
-  return (
-    <>
-      {editMode ? (
-        <input
-          autoFocus
-          value={value}
-          onChange={onChangeHandler}
-          onKeyDown={onKeyDownHandler}
-          onBlur={onBlurHandler}
-          className={cx('input')}
-        />
-      ) : (
-        <div
-          className={cx('selected-item', {
+  return editMode ? (
+    <input
+      autoFocus
+      value={value}
+      onChange={onChangeHandler}
+      onKeyDown={onKeyDownHandler}
+      onBlur={onBlurHandler}
+      className={cx('input')}
+    />
+  ) : (
+    <div
+      className={cx('selected-item', {
+        [`validation-${error}`]: error,
+        disabled,
+        'mobile-disabled': mobileDisabled,
+        'highlight-un-stored-item': highlightUnStoredItem && !storedOption,
+      })}
+      onClick={!disabled && editable && !storedOption ? changeEditMode : null}
+    >
+      {parseValueToString(item)}
+      {!disabled && (
+        <i
+          className={cx('cross-icon', {
             [`validation-${error}`]: error,
-            disabled,
             'mobile-disabled': mobileDisabled,
-            'highlight-un-stored-item': highlightUnStoredItem && !storedOption,
+            disabled,
           })}
-          onClick={!disabled && editable && !storedOption ? changeEditMode : null}
+          onClick={(e) => {
+            e.stopPropagation();
+            onRemoveItem(item);
+          }}
         >
-          {parseValueToString(item)}
-          {!disabled && (
-            <i
-              className={cx('cross-icon', {
-                [`validation-${error}`]: error,
-                'mobile-disabled': mobileDisabled,
-                disabled,
-              })}
-              onClick={(e) => {
-                e.stopPropagation();
-                onRemoveItem(item);
-              }}
-            >
-              {Parser(CrossIcon)}
-            </i>
-          )}
-        </div>
+          {Parser(CrossIcon)}
+        </i>
       )}
-    </>
+    </div>
   );
 };
 SelectedItem.propTypes = {
