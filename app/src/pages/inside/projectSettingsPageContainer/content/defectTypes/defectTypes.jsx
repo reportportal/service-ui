@@ -73,7 +73,7 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
   const userProjectRole = useSelector(activeProjectRoleSelector);
 
   const addDefect = (data) => {
-    dispatch(addDefectTypeAction({ ...data, typeRef: data.typeRef.toUpperCase() }));
+    dispatch(addDefectTypeAction({ ...data }));
   };
   const onAdd = (defectGroup) => {
     dispatch(
@@ -82,7 +82,7 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
         data: {
           onSave: addDefect,
           actionType: 'add',
-          defectType: { color: defectGroup.color, typeRef: defectGroup.typeRef.toLowerCase() },
+          defectType: { color: defectGroup.color, typeRef: defectGroup.typeRef },
           defectTypes,
         },
       }),

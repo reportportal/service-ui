@@ -17,7 +17,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { defineMessages, useIntl } from 'react-intl';
-import Parser from 'html-react-parser';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalLayout } from 'componentLibrary/modal';
 import { withModal } from 'components/main/modal';
@@ -56,7 +55,7 @@ const DeleteDefectTypeModal = ({
       }}
       onClose={() => dispatch(hideModalAction())}
     >
-      <div>{Parser(formatMessage(messages.message, { name }))}</div>
+      <div>{formatMessage(messages.message, { name })}</div>
     </ModalLayout>
   );
 };

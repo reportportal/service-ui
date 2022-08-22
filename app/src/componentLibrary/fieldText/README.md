@@ -20,6 +20,7 @@ Has 36px height & width adjusted by content.
 - **endIcon**: _string_, optional, default = null
 - **clearable**: _bool_, optional, default = false
 - **isRequired**: _bool_, optional, default = false
+- **hasDoubleMessage**: _bool_, optional, default = false
 
 ### Events:
 

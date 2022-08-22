@@ -28,4 +28,12 @@ export const DEFECT_TYPES_SEQUENCE = [
   TO_INVESTIGATE.toUpperCase(),
 ];
 
+export const DEFECT_TYPES_MAP = {
+  PRODUCT_BUG: PRODUCT_BUG.toUpperCase(),
+  AUTOMATION_BUG: AUTOMATION_BUG.toUpperCase(),
+  SYSTEM_ISSUE: SYSTEM_ISSUE.toUpperCase(),
+  NO_DEFECT: NO_DEFECT.toUpperCase(),
+  TO_INVESTIGATE: TO_INVESTIGATE.toUpperCase(),
+};
+
 export const TO_INVESTIGATE_LOCATOR_PREFIX = 'ti';

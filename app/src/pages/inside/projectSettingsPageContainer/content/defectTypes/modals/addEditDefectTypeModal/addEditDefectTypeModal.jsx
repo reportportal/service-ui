@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { reduxForm } from 'redux-form';
 import { useDispatch } from 'react-redux';
@@ -35,7 +35,7 @@ import { Dropdown } from 'componentLibrary/dropdown';
 import { hideModalAction } from 'controllers/modal';
 import { FieldText } from 'componentLibrary/fieldText';
 import { HexColorPickerComponent } from 'components/main/hexColorPicker';
-import * as DEFECT_TYPES_SEQUENCE from 'common/constants/defectTypes';
+import { DEFECT_TYPES_MAP } from 'common/constants/defectTypes';
 import { FieldElement } from '../../../elements';
 import {
   NAME_FIELD_KEY,
@@ -85,23 +85,23 @@ const messages = defineMessages({
     id: 'AddEditDefectTypeModal.abbreviationHint',
     defaultMessage: 'Abbreviation may contain up to 4 symbols',
   },
-  [DEFECT_TYPES_SEQUENCE.AUTOMATION_BUG]: {
+  [DEFECT_TYPES_MAP.AUTOMATION_BUG]: {
     id: 'AddEditDefectTypeModal.automationBug',
     defaultMessage: 'Automation Bug Group',
   },
-  [DEFECT_TYPES_SEQUENCE.PRODUCT_BUG]: {
+  [DEFECT_TYPES_MAP.PRODUCT_BUG]: {
     id: 'AddEditDefectTypeModal.productBug',
     defaultMessage: 'Product Bug Group',
   },
-  [DEFECT_TYPES_SEQUENCE.TO_INVESTIGATE]: {
+  [DEFECT_TYPES_MAP.TO_INVESTIGATE]: {
     id: 'AddEditDefectTypeModal.toInvestigate',
     defaultMessage: 'To Investigate Group',
   },
-  [DEFECT_TYPES_SEQUENCE.NO_DEFECT]: {
+  [DEFECT_TYPES_MAP.NO_DEFECT]: {
     id: 'AddEditDefectTypeModal.noDefect',
     defaultMessage: 'No Defect Group',
   },
-  [DEFECT_TYPES_SEQUENCE.SYSTEM_ISSUE]: {
+  [DEFECT_TYPES_MAP.SYSTEM_ISSUE]: {
     id: 'AddEditDefectTypeModal.systemIssue',
     defaultMessage: 'System Issue Group',
   },
@@ -115,10 +115,10 @@ const AddEditDefectTypeModal = ({
   handleSubmit,
   initialize,
   dirty,
+  change,
 }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-  const [newColor, setNewColor] = useState(defectType.color);
 
   useEffect(() => {
     initialize(defectType);
@@ -126,24 +126,24 @@ const AddEditDefectTypeModal = ({
 
   const defectGroupOptions = [
     {
-      value: DEFECT_TYPES_SEQUENCE.AUTOMATION_BUG,
-      label: formatMessage(messages[DEFECT_TYPES_SEQUENCE.AUTOMATION_BUG]),
+      value: DEFECT_TYPES_MAP.AUTOMATION_BUG,
+      label: formatMessage(messages[DEFECT_TYPES_MAP.AUTOMATION_BUG]),
     },
     {
-      value: DEFECT_TYPES_SEQUENCE.PRODUCT_BUG,
-      label: formatMessage(messages[DEFECT_TYPES_SEQUENCE.PRODUCT_BUG]),
+      value: DEFECT_TYPES_MAP.PRODUCT_BUG,
+      label: formatMessage(messages[DEFECT_TYPES_MAP.PRODUCT_BUG]),
     },
     {
-      value: DEFECT_TYPES_SEQUENCE.TO_INVESTIGATE,
-      label: formatMessage(messages[DEFECT_TYPES_SEQUENCE.TO_INVESTIGATE]),
+      value: DEFECT_TYPES_MAP.TO_INVESTIGATE,
+      label: formatMessage(messages[DEFECT_TYPES_MAP.TO_INVESTIGATE]),
     },
     {
-      value: DEFECT_TYPES_SEQUENCE.NO_DEFECT,
-      label: formatMessage(messages[DEFECT_TYPES_SEQUENCE.NO_DEFECT]),
+      value: DEFECT_TYPES_MAP.NO_DEFECT,
+      label: formatMessage(messages[DEFECT_TYPES_MAP.NO_DEFECT]),
     },
     {
-      value: DEFECT_TYPES_SEQUENCE.SYSTEM_ISSUE,
-      label: formatMessage(messages[DEFECT_TYPES_SEQUENCE.SYSTEM_ISSUE]),
+      value: DEFECT_TYPES_MAP.SYSTEM_ISSUE,
+      label: formatMessage(messages[DEFECT_TYPES_MAP.SYSTEM_ISSUE]),
     },
   ];
 
@@ -186,7 +186,10 @@ const AddEditDefectTypeModal = ({
             name={GROUP_FIELD_KEY}
             type="text"
             className={cx('input')}
-            onChange={(value) => setNewColor(defectTypes[value.toUpperCase()][0].color)}
+            onChange={(value) => {
+              change(GROUP_FIELD_KEY, value);
+              change(COLOR_FIELD_KEY, defectTypes[value][0].color);
+            }}
           >
             <Dropdown options={defectGroupOptions} defaultWidth={false} />
           </FieldElement>
@@ -203,19 +206,12 @@ const AddEditDefectTypeModal = ({
             <FieldText
               label={formatMessage(messages.abbreviation)}
               defaultWidth={false}
-              hasDynamicValidation
-              provideErrorHint
               helpText={formatMessage(messages.abbreviationHint)}
             />
           </FieldErrorHint>
         </FieldProvider>
         <FieldElement name={COLOR_FIELD_KEY} className={cx('color-picker')}>
-          <HexColorPickerComponent
-            label={formatMessage(messages.color)}
-            color={newColor}
-            presets={COLORS}
-            onChange={setNewColor}
-          />
+          <HexColorPickerComponent label={formatMessage(messages.color)} presets={COLORS} />
         </FieldElement>
       </div>
     </ModalLayout>

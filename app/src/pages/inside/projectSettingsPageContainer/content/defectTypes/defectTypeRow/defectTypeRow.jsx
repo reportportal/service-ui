@@ -100,7 +100,7 @@ export const DefectTypeRow = ({
         id: 'addEditDefectTypeModal',
         data: {
           onSave: editDefect,
-          defectType: { ...data, typeRef: data.typeRef },
+          defectType: { ...data },
           actionType: 'edit',
         },
       }),

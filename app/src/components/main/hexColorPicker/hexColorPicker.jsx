@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { HexColorPicker, HexColorInput } from 'react-colorful';
 import classNames from 'classnames/bind';
@@ -22,22 +22,16 @@ import styles from './hexColorPicker.scss';
 
 const cx = classNames.bind(styles);
 
-export const HexColorPickerComponent = ({ label, color, presets, onChange }) => {
-  const [currentColor, setCurrentColor] = useState(color);
-
-  useEffect(() => onChange(currentColor), [currentColor]);
-
-  useEffect(() => setCurrentColor(color), [color]);
-
+export const HexColorPickerComponent = ({ label, value, presets, onChange }) => {
   return (
     <div className={cx('hex-color-picker')}>
       <div className={cx('label')}>{label}</div>
-      <HexColorPicker color={currentColor} onChange={setCurrentColor} />
+      <HexColorPicker color={value} onChange={onChange} />
       <section>
         <div className={cx('hex-color-input-wrapper')}>
           <span>HEX</span>
-          <HexColorInput color={currentColor} onChange={setCurrentColor} prefixed />
-          <div className={cx('hex-color-preset', 'current')} style={{ background: currentColor }} />
+          <HexColorInput color={value} onChange={value} prefixed />
+          <div className={cx('hex-color-preset', 'current')} style={{ background: value }} />
         </div>
         <div className={cx('hex-color-presets')}>
           {presets.map((presetColor) => (
@@ -45,7 +39,7 @@ export const HexColorPickerComponent = ({ label, color, presets, onChange }) => 
               key={presetColor}
               className={cx('hex-color-preset')}
               style={{ background: presetColor }}
-              onClick={() => setCurrentColor(presetColor)}
+              onClick={() => onChange(presetColor)}
             />
           ))}
         </div>
@@ -56,13 +50,13 @@ export const HexColorPickerComponent = ({ label, color, presets, onChange }) => 
 
 HexColorPickerComponent.propTypes = {
   label: PropTypes.string,
-  color: PropTypes.string,
+  value: PropTypes.string,
   presets: PropTypes.array,
   onChange: PropTypes.func,
 };
 HexColorPickerComponent.defaultProps = {
   label: '',
-  color: '#ffffff',
+  value: '#ffffff',
   presets: [],
   onChange: () => {},
 };
