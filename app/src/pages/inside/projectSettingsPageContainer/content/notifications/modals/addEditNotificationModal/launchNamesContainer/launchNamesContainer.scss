@@ -14,42 +14,15 @@
  * limitations under the License.
  */
 
-.content {
-  margin-top: 32px;
+.helper-text {
+  display: inline-block;
+  margin-top: 4px;
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 11px;
+  line-height: 16px;
+  color: $COLOR--e-300;
 }
 
-.autocomplete {
-  margin-top: 16px;
-  margin-bottom: 4px;
-}
-
-.launches {
-  margin-bottom: 16px;
-}
-
-.checkbox {
-  margin-bottom: 16px;
-  margin-top: 8px;
-}
-
-.input {
-  margin-bottom: 16px;
-}
-
-.toggle {
-  margin-top: 8px;
-  white-space: nowrap;
-}
-
-.form-input {
-  position: relative;
-  flex-shrink: 0;
-}
-
-.form-label {
-  min-width: 170px;
-}
-
-.attributes-list {
-  margin-top: 8px;
+.system-message {
+  margin-top: 4px;
 }

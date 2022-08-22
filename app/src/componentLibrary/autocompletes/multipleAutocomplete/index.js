@@ -1,5 +1,5 @@
-/*!
- * Copyright 2022 EPAM Systems
+/*
+ * Copyright 2019 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,42 +14,4 @@
  * limitations under the License.
  */
 
-.content {
-  margin-top: 32px;
-}
-
-.autocomplete {
-  margin-top: 16px;
-  margin-bottom: 4px;
-}
-
-.launches {
-  margin-bottom: 16px;
-}
-
-.checkbox {
-  margin-bottom: 16px;
-  margin-top: 8px;
-}
-
-.input {
-  margin-bottom: 16px;
-}
-
-.toggle {
-  margin-top: 8px;
-  white-space: nowrap;
-}
-
-.form-input {
-  position: relative;
-  flex-shrink: 0;
-}
-
-.form-label {
-  min-width: 170px;
-}
-
-.attributes-list {
-  margin-top: 8px;
-}
+export { MultipleAutocomplete } from './multipleAutocomplete';

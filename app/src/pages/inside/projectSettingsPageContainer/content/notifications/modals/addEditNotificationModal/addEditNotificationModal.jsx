@@ -18,25 +18,25 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { reduxForm } from 'redux-form';
 import { useTracking } from 'react-tracking';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import className from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
 import { withModal } from 'components/main/modal';
 import { ModalLayout } from 'componentLibrary/modal';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { validate, bindMessageToValidator, commonValidators } from 'common/utils/validation';
+import { bindMessageToValidator, commonValidators, validate } from 'common/utils/validation';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { Toggle } from 'componentLibrary/toggle';
 import { URLS } from 'common/urls';
-import { AsyncMultipleAutocomplete } from 'components/inputs/autocompletes/asyncMultipleAutocomplete';
 import { Dropdown } from 'componentLibrary/dropdown';
 import { hideModalAction } from 'controllers/modal';
 import { FieldText } from 'componentLibrary/fieldText';
 import { Checkbox } from 'componentLibrary/checkbox';
-import { projectIdSelector } from 'controllers/pages';
 import { PROJECT_SETTINGS_NOTIFICATIONS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { AttributeListFormField } from 'components/containers/AttributeListFormField';
+import { RecipientsContainer } from './recipientsContainer';
+import { LaunchNamesContainer } from './launchNamesContainer';
 import { FieldElement } from '../../../elements';
 import {
   ATTRIBUTES_FIELD_KEY,
@@ -81,10 +81,6 @@ const messages = defineMessages({
     id: 'AddEditNotificationCaseModal.recipientsLabel',
     defaultMessage: 'Recipients',
   },
-  recipientsPlaceholder: {
-    id: 'AddEditNotificationModal.recipientsPlaceholder',
-    defaultMessage: 'Name/Email',
-  },
   nameLabel: {
     id: 'AddEditNotificationModal.nameLabel',
     defaultMessage: 'Rule Name',
@@ -92,10 +88,6 @@ const messages = defineMessages({
   namePlaceholder: {
     id: 'AddEditNotificationModal.namePlaceholder',
     defaultMessage: 'Rule name',
-  },
-  recipientsHint: {
-    id: 'AddEditNotificationCaseModal.recipientsHint',
-    defaultMessage: 'Please enter correct email',
   },
   launchOwnerLabel: {
     id: 'AddEditNotificationCaseModal.launchOwnerLabel',
@@ -109,17 +101,9 @@ const messages = defineMessages({
     id: 'AddEditNotificationCaseModal.launchNamesLabel',
     defaultMessage: 'Launch names',
   },
-  launchNamesPlaceholder: {
-    id: 'AddEditNotificationCaseModal.launchNamesPlaceholder',
-    defaultMessage: 'Launch name',
-  },
   launchNamesHint: {
     id: 'AddEditNotificationCaseModal.launchNamesHint',
     defaultMessage: 'Launch name should have size from 1 to 256',
-  },
-  launchNamesNote: {
-    id: 'AddEditNotificationCaseModal.launchNamesNote',
-    defaultMessage: 'Send notifications on the finish of selected launches',
   },
   attributesLabel: {
     id: 'AddEditNotificationCaseModal.attributesLabel',
@@ -202,8 +186,6 @@ const AddEditNotificationModal = ({
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
-
-  const activeProject = useSelector(projectIdSelector);
   const [isEditorShown, setShowEditor] = React.useState(data.notification.attributes.length > 0);
   useEffect(() => {
     initialize(data.notification);
@@ -312,15 +294,7 @@ const AddEditNotificationModal = ({
           label={formatMessage(messages.recipientsLabel)}
         >
           <FieldErrorHint provideHint={false}>
-            <AsyncMultipleAutocomplete
-              placeholder={formatMessage(messages.recipientsPlaceholder)}
-              notFoundPrompt={formatMessage(messages.recipientsHint)}
-              minLength={3}
-              getURI={URLS.projectUsernamesSearch(activeProject)}
-              creatable
-              showDynamicSearchPrompt
-              isValidNewOption={validate.requiredEmail}
-            />
+            <RecipientsContainer />
           </FieldErrorHint>
         </FieldElement>
         <FieldElement name={INFORM_OWNER_FIELD_KEY} type="text" className={cx('checkbox')}>
@@ -340,20 +314,9 @@ const AddEditNotificationModal = ({
           className={cx('launches')}
         >
           <FieldErrorHint hintType="top">
-            <AsyncMultipleAutocomplete
-              placeholder={formatMessage(messages.launchNamesPlaceholder)}
-              notFoundPrompt={formatMessage(messages.launchNamesHint)}
-              minLength={3}
-              getURI={URLS.launchNameSearch(activeProject)}
-              creatable
-              isValidNewOption={validate.launchName}
-              showDynamicSearchPrompt
-            />
+            <LaunchNamesContainer />
           </FieldErrorHint>
         </FieldElement>
-        <span className={cx('description', 'launches')}>
-          {formatMessage(messages.launchNamesNote)}
-        </span>
         <FieldElement name={ATTRIBUTES_FIELD_KEY} disabled={!isEditorShown}>
           <AttributeListFormField
             keyURLCreator={URLS.launchAttributeKeysSearch}
