@@ -84,7 +84,6 @@ const CreatePatternAnalysisModal = ({ data, handleSubmit, initialize, dirty }) =
               label={formatMessage(messages.createPatternModalPatternName)}
               placeholder={formatMessage(messages.createPatternModalPatternName)}
               defaultWidth={false}
-              isRequired
             />
           </FieldErrorHint>
         </FieldProvider>
