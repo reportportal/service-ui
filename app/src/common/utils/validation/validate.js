@@ -105,7 +105,9 @@ export const flakyWidgetNumberOfLaunches = composeValidators([isNotEmpty, range(
 export const launchesWidgetContentFields = composeValidators([isNotEmptyArray, minLength(4)]);
 export const mostFailedWidgetNumberOfLaunches = composeValidators([isNotEmpty, range(2, 600)]);
 export const createNotificationRecipientsValidator = (informOwner) => (value = []) => {
-  if (!informOwner && !value.length) return false;
+  if (!informOwner && !value.length) {
+    return false;
+  }
   if (informOwner && !value.length) {
     return true;
   }

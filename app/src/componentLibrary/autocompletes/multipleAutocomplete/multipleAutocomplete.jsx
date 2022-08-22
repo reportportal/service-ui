@@ -190,9 +190,7 @@ export const MultipleAutocomplete = ({
               placement="bottom-start"
               modifiers={{
                 preventOverflow: { enabled: true },
-                flip: {
-                  enabled: true,
-                },
+                flip: { enabled: true },
               }}
             >
               {({ placement, ref, style, scheduleUpdate }) => {
