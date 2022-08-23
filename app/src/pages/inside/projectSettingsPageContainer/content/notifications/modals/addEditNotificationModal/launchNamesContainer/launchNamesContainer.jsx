@@ -15,6 +15,7 @@
  */
 
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
@@ -47,13 +48,13 @@ const messages = defineMessages({
   },
 });
 
-export const LaunchNamesContainer = ({ ...rest }) => {
+export const LaunchNamesContainer = ({ highlightUnStoredItem, ...rest }) => {
   const { formatMessage } = useIntl();
   const activeProject = useSelector(projectIdSelector);
   const [showMessage, setShowMessage] = useState(false);
 
   const handleSystemMessage = (items, storedItems) =>
-    setShowMessage(items.length !== Object.keys(storedItems).length);
+    highlightUnStoredItem && setShowMessage(items.length !== Object.keys(storedItems).length);
 
   return (
     <>
@@ -62,7 +63,8 @@ export const LaunchNamesContainer = ({ ...rest }) => {
         getURI={URLS.launchNameSearch(activeProject)}
         createWithoutConfirmation
         creatable
-        highlightUnStoredItem
+        editable
+        highlightUnStoredItem={highlightUnStoredItem}
         handleUnStoredItemCb={handleSystemMessage}
         {...rest}
       />
@@ -82,4 +84,7 @@ export const LaunchNamesContainer = ({ ...rest }) => {
       )}
     </>
   );
+};
+LaunchNamesContainer.propTypes = {
+  highlightUnStoredItem: PropTypes.bool.isRequired,
 };

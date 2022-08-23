@@ -314,7 +314,7 @@ const AddEditNotificationModal = ({
           className={cx('launches')}
         >
           <FieldErrorHint hintType="top">
-            <LaunchNamesContainer />
+            <LaunchNamesContainer highlightUnStoredItem={actionType === 'add'} />
           </FieldErrorHint>
         </FieldElement>
         <FieldElement name={ATTRIBUTES_FIELD_KEY} disabled={!isEditorShown}>
