@@ -23,6 +23,7 @@ import styles from './hexColorPicker.scss';
 const cx = classNames.bind(styles);
 
 export const HexColorPickerComponent = ({ label, value, presets, onChange }) => {
+  // Problem with HexColorPicker: infinity onChange call with 2 different values
   const [color, setColor] = useState(value);
 
   useEffect(() => {

@@ -155,7 +155,7 @@ const AddEditDefectTypeModal = ({
   const okButton = {
     text:
       actionType === ACTION_TYPE_ADD
-        ? formatMessage(COMMON_LOCALE_KEYS.create)
+        ? formatMessage(COMMON_LOCALE_KEYS.CREATE)
         : formatMessage(COMMON_LOCALE_KEYS.SAVE),
     onClick: () => {
       handleSubmit(submitActions)();
