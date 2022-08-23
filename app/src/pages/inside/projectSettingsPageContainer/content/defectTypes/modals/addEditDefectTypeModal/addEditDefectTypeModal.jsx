@@ -24,12 +24,7 @@ import { withModal } from 'components/main/modal';
 import { ModalLayout } from 'componentLibrary/modal';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import {
-  validate,
-  bindMessageToValidator,
-  commonValidators,
-  composeBoundValidators,
-} from 'common/utils/validation';
+import { validate, bindMessageToValidator, composeBoundValidators } from 'common/utils/validation';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { Dropdown } from 'componentLibrary/dropdown';
 import { hideModalAction } from 'controllers/modal';
@@ -71,7 +66,7 @@ const messages = defineMessages({
   },
   name: {
     id: 'AddEditDefectTypeModal.name',
-    defaultMessage: 'Defect name',
+    defaultMessage: 'Defect Name',
   },
   abbreviation: {
     id: 'AddEditDefectTypeModal.abbreviation',
@@ -126,24 +121,24 @@ const AddEditDefectTypeModal = ({
 
   const defectGroupOptions = [
     {
-      value: DEFECT_TYPES_MAP.AUTOMATION_BUG,
-      label: formatMessage(messages[DEFECT_TYPES_MAP.AUTOMATION_BUG]),
-    },
-    {
       value: DEFECT_TYPES_MAP.PRODUCT_BUG,
       label: formatMessage(messages[DEFECT_TYPES_MAP.PRODUCT_BUG]),
     },
     {
-      value: DEFECT_TYPES_MAP.TO_INVESTIGATE,
-      label: formatMessage(messages[DEFECT_TYPES_MAP.TO_INVESTIGATE]),
+      value: DEFECT_TYPES_MAP.AUTOMATION_BUG,
+      label: formatMessage(messages[DEFECT_TYPES_MAP.AUTOMATION_BUG]),
+    },
+    {
+      value: DEFECT_TYPES_MAP.SYSTEM_ISSUE,
+      label: formatMessage(messages[DEFECT_TYPES_MAP.SYSTEM_ISSUE]),
     },
     {
       value: DEFECT_TYPES_MAP.NO_DEFECT,
       label: formatMessage(messages[DEFECT_TYPES_MAP.NO_DEFECT]),
     },
     {
-      value: DEFECT_TYPES_MAP.SYSTEM_ISSUE,
-      label: formatMessage(messages[DEFECT_TYPES_MAP.SYSTEM_ISSUE]),
+      value: DEFECT_TYPES_MAP.TO_INVESTIGATE,
+      label: formatMessage(messages[DEFECT_TYPES_MAP.TO_INVESTIGATE]),
     },
   ];
 
@@ -158,7 +153,10 @@ const AddEditDefectTypeModal = ({
   };
 
   const okButton = {
-    text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
+    text:
+      actionType === ACTION_TYPE_ADD
+        ? formatMessage(COMMON_LOCALE_KEYS.create)
+        : formatMessage(COMMON_LOCALE_KEYS.SAVE),
     onClick: () => {
       handleSubmit(submitActions)();
     },
@@ -201,12 +199,17 @@ const AddEditDefectTypeModal = ({
             </FieldErrorHint>
           </FieldProvider>
         </div>
-        <FieldProvider name={ABBREVIATION_FIELD_KEY} type="text">
+        <FieldProvider
+          name={ABBREVIATION_FIELD_KEY}
+          type="text"
+          className={cx('abbreviation-field')}
+        >
           <FieldErrorHint provideHint={false}>
             <FieldText
               label={formatMessage(messages.abbreviation)}
               defaultWidth={false}
               helpText={formatMessage(messages.abbreviationHint)}
+              className={cx('abbreviation-field')}
             />
           </FieldErrorHint>
         </FieldProvider>
@@ -240,11 +243,11 @@ export const AddEditDefectTypeModalComponent = withModal('addEditDefectTypeModal
     validate: ({ longName, shortName }) => {
       return {
         longName: composeBoundValidators([
-          commonValidators.requiredField,
+          bindMessageToValidator(validate.required, 'shortRequiredFieldHint'),
           bindMessageToValidator(validate.defectTypeLongName, 'defectLongNameHint'),
         ])(longName),
         shortName: composeBoundValidators([
-          commonValidators.requiredField,
+          bindMessageToValidator(validate.required, 'shortRequiredFieldHint'),
           bindMessageToValidator(validate.defectTypeShortName, 'defectShortNameHint'),
         ])(shortName),
       };
