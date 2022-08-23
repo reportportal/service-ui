@@ -50,7 +50,6 @@ IntegrationCollection.propTypes = {
 };
 
 IntegrationCollection.defaultProps = {
-  items: [],
   disabled: false,
   openIntegration: () => {},
 };

@@ -177,6 +177,7 @@ import {
   RuleList as RuleListComponent,
 } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { Checkbox } from 'componentLibrary/checkbox';
+import { FieldTextFlex } from 'componentLibrary/fieldTextFlex';
 import { Button } from 'componentLibrary/button';
 import { Toggle } from 'componentLibrary/toggle';
 import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
@@ -268,6 +269,7 @@ export const createImportProps = (pluginName) => ({
     BtsPropertiesForIssueForm,
     ModalLayoutComponent,
     FieldText,
+    FieldTextFlex,
     FieldElement,
     Checkbox,
     Toggle,

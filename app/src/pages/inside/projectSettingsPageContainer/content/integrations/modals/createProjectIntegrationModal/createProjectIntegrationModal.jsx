@@ -87,7 +87,7 @@ const CreateProjectIntegrationModal = ({ data, initialize, change, handleSubmit 
       cancelButton={cancelButton}
       onClose={() => dispatch(hideModalAction())}
     >
-      {data.hasGlobalIntegration && (
+      {data.hasWarningMessage && (
         <SystemMessage
           header={formatMessage(messages.GlobalIntegrationsSystemMessage)}
           mode={'warning'}

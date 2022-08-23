@@ -111,7 +111,7 @@ export const IntegrationInfo = (props) => {
         id: 'createProjectIntegrationModal',
         data: {
           modalTitle: formatMessage(messages.projectIntegrationCreate),
-          hasGlobalIntegration: Boolean(
+          hasWarningMessage: Boolean(
             availableGlobalIntegrations.length && availableProjectIntegrations.length === 0,
           ),
           instanceType: name,
