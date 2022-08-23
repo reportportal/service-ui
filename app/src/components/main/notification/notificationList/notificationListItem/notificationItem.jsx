@@ -62,7 +62,7 @@ const messages = defineMessages({
   },
   deleteDefectTypeSuccess: {
     id: 'Project.deleteDefectTypeSuccess',
-    defaultMessage: 'Defect type was successfully deleted',
+    defaultMessage: 'Defect has been deleted successfully',
   },
   updateProjectNotificationsConfigurationSuccess: {
     id: 'NotificationsTab.updateProjectNotificationsConfigurationSuccess',

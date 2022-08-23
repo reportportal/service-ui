@@ -155,6 +155,10 @@ const messages = defineMessages({
     id: 'Common.requiredFieldHint',
     defaultMessage: 'This field is required',
   },
+  shortRequiredFieldHint: {
+    id: 'Common.shortRequiredFieldHint',
+    defaultMessage: 'Field is required',
+  },
   attributeKeyLengthHint: {
     id: 'AttributeEditor.attributeKeyLengthHint',
     defaultMessage: 'Attribute key should have size from 1 to 128',
