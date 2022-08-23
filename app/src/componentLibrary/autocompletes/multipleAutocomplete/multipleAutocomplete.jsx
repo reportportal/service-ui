@@ -197,8 +197,7 @@ export const MultipleAutocomplete = ({
                 updatePosition = scheduleUpdate;
                 const filteredOptions = options.filter(
                   (item) =>
-                    value.indexOf(item) < 0 &&
-                    item.toLowerCase().startsWith(inputValue.toLowerCase()),
+                    value.indexOf(item) < 0 && item.toLowerCase() !== inputValue.toLowerCase(),
                 );
                 return (
                   <AutocompleteMenu
