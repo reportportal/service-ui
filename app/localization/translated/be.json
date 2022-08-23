@@ -972,7 +972,7 @@
   "IntegrationsDescription.projectIntegrationDelete": "Выдаліць",
   "IntegrationsDescription.projectIntegrationDeleteDescription": "Вы ўпэўненыя, што жадаеце выдаліць Інтэграцыю праекту",
   "IntegrationsDescription.projectIntegrationReset": "Скід да глабальных інтэграцый",
-  "IntegrationsDescription.projectIntegrationResetDescription": "Вы ўпэўненыя, што хочаце скінуць наладкі да Глабальных Інтэграцый? Усе вашыя прэктныя інтэграцыі будуць выдаленыя без магчымасці аднаўлення",
+  "IntegrationsDescription.projectIntegrationResetDescription": "Вы ўпэўненыя, што хочаце скінуць наладкі да Глабальных Інтэграцый? Усе вашыя прэктныя інтэграцыі будуць выдаленыя без магчымасці аднаўлення.",
   "IntegrationsDescription.GlobalIntegrationsSystemMessageModalCaption": "Глабальная і праектная інтэграцыі не могуць працаваць адначасова.",
   "IntegrationsDescription.GlobalIntegrationsSystemMessageModalText": "Звярніце ўвагу, што глабальныя інтэграцыі будуць адключаныя, калі вы створыце інтэграцыю праекту!",
   "IntegrationsTab.integrationsBreadcrumbTitle": "Інтэграцыі",
