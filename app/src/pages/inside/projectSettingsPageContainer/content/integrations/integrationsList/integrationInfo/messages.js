@@ -83,6 +83,6 @@ export const messages = defineMessages({
   projectIntegrationResetDescription: {
     id: 'IntegrationsDescription.projectIntegrationResetDescription',
     defaultMessage:
-      'Are you sure you want to reset to Global Integrations. All your Project Integrations will be deleted without the ability to recover',
+      'Are you sure you want to reset to Global Integrations? All your Project Integrations will be deleted without the ability to recover.',
   },
 });
