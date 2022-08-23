@@ -47,6 +47,7 @@ export const FieldText = ({
   clearable,
   isRequired,
   hasDoubleMessage,
+  type,
 }) => {
   const clearInput = () => onChange('');
 
@@ -72,7 +73,7 @@ export const FieldText = ({
         <span className={cx(VARIANT, 'custom-input-wrapper')}>
           <input
             ref={refFunction}
-            type="text"
+            type={type}
             className={cx(VARIANT, 'input')}
             value={value}
             maxLength={maxLength}
@@ -144,6 +145,7 @@ FieldText.propTypes = {
   clearable: PropTypes.bool,
   isRequired: PropTypes.bool,
   hasDoubleMessage: PropTypes.bool,
+  type: PropTypes.string,
 };
 FieldText.defaultProps = {
   value: '',
@@ -168,4 +170,5 @@ FieldText.defaultProps = {
   clearable: false,
   isRequired: false,
   hasDoubleMessage: false,
+  type: 'text',
 };

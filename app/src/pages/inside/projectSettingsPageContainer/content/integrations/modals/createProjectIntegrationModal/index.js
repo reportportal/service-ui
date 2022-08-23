@@ -13,6 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import CreateProjectIntegrationModal from './createProjectIntegrationModal';
 
-export { Integrations } from './integrations';
-export { CreateProjectIntegrationModal, DeleteProjectIntegrationModal } from './modals';
+export { CreateProjectIntegrationModal };

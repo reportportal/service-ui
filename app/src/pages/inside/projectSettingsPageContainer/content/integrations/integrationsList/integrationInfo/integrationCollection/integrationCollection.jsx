@@ -29,9 +29,9 @@ export const IntegrationCollection = ({ items, disabled, openIntegration }) => {
         {items.map((item) => (
           <IntegrationCollectionItem
             key={item.id}
+            item={item}
             id={item.id}
             disabled={disabled}
-            data={item}
             title={item.name}
             creator={item.creator}
             creationInfo={moment(item.creationDate).format('ll')}
@@ -50,7 +50,6 @@ IntegrationCollection.propTypes = {
 };
 
 IntegrationCollection.defaultProps = {
-  items: [],
   disabled: false,
   openIntegration: () => {},
 };

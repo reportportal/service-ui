@@ -42,6 +42,7 @@ export const IntegrationCollectionItem = ({
   creationInfo,
   disabled,
   openIntegration,
+  item,
 }) => {
   const [connected, setConnected] = useState(true);
   const projectId = useSelector(projectIdSelector);
@@ -59,7 +60,7 @@ export const IntegrationCollectionItem = ({
   }, []);
 
   const itemClickHandler = () => {
-    openIntegration(id);
+    openIntegration(item);
   };
   return (
     <li className={cx('instances-list-item', { disabled })}>
@@ -91,6 +92,14 @@ IntegrationCollectionItem.propTypes = {
   creator: PropTypes.string,
   disabled: PropTypes.bool,
   openIntegration: PropTypes.func,
+  item: PropTypes.shape({
+    creator: PropTypes.string,
+    enabled: PropTypes.bool,
+    id: PropTypes.number,
+    name: PropTypes.string,
+    integrationParameters: PropTypes.object,
+    integrationType: PropTypes.object,
+  }).isRequired,
 };
 
 IntegrationCollectionItem.defaultProps = {

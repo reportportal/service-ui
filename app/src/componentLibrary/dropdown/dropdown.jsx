@@ -66,7 +66,7 @@ export const Dropdown = ({
   };
 
   const getDisplayedValue = () => {
-    if (!value) return placeholder;
+    if (!value && value !== false) return placeholder;
     let displayedValue = (value && value.label) || value;
     options.forEach((option) => {
       if (option.value === value) {

@@ -60,4 +60,29 @@ export const messages = defineMessages({
     id: 'IntegrationsDescription.projectIntegrationText',
     defaultMessage: 'Project Integrations are created per project',
   },
+  projectIntegrationCreate: {
+    id: 'IntegrationsDescription.projectIntegrationCreate',
+    defaultMessage: 'Create Project Integration',
+  },
+  projectIntegrationEdit: {
+    id: 'IntegrationsDescription.projectIntegrationEdit',
+    defaultMessage: 'Edit Project Integration',
+  },
+  projectIntegrationDelete: {
+    id: 'IntegrationsDescription.projectIntegrationDelete',
+    defaultMessage: 'Delete',
+  },
+  projectIntegrationDeleteDescription: {
+    id: 'IntegrationsDescription.projectIntegrationDeleteDescription',
+    defaultMessage: 'Are you sure you want to delete Project Integration',
+  },
+  projectIntegrationReset: {
+    id: 'IntegrationsDescription.projectIntegrationReset',
+    defaultMessage: 'Reset to Global Integration',
+  },
+  projectIntegrationResetDescription: {
+    id: 'IntegrationsDescription.projectIntegrationResetDescription',
+    defaultMessage:
+      'Are you sure you want to reset to Global Integrations. All your Project Integrations will be deleted without the ability to recover',
+  },
 });

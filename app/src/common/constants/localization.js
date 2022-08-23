@@ -181,4 +181,8 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.warning',
     defaultMessage: 'Warning',
   },
+  CREATE: {
+    id: 'Common.create',
+    defaultMessage: 'Create',
+  },
 });

@@ -14,5 +14,5 @@
  * limitations under the License.
  */
 
-export { Integrations } from './integrations';
-export { CreateProjectIntegrationModal, DeleteProjectIntegrationModal } from './modals';
+export { CreateProjectIntegrationModal } from './createProjectIntegrationModal';
+export { DeleteProjectIntegrationModal } from './deleteProjectIntegrationModal';
