@@ -40,6 +40,7 @@ export const AttributeList = ({
   showButton,
   editable,
   attributesListClassname,
+  editorDefaultOpen,
 }) => {
   const getExistEditableAttr = () => {
     return attributes.find((attr) => attr.edited);
@@ -115,6 +116,7 @@ export const AttributeList = ({
           onCancel={createCancelEditHandler(indexEditableAttr)}
           getURIKey={getURIKey}
           getURIValue={getURIValue}
+          editorDefaultOpen={editorDefaultOpen}
         />
       )}
       <div className={cx('attributes-wrapper')}>
@@ -163,6 +165,7 @@ AttributeList.propTypes = {
   showButton: PropTypes.bool,
   editable: PropTypes.bool,
   attributesListClassname: PropTypes.string,
+  editorDefaultOpen: PropTypes.bool,
 };
 AttributeList.defaultProps = {
   attributes: [],
@@ -182,4 +185,5 @@ AttributeList.defaultProps = {
   showButton: true,
   editable: true,
   attributesListClassname: '',
+  editorDefaultOpen: false,
 };

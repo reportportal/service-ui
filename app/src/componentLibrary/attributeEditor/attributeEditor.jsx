@@ -47,6 +47,7 @@ export const AttributeEditor = ({
   attribute,
   keyPlaceholder,
   valuePlaceholder,
+  editorDefaultOpen,
 }) => {
   const [keyTouched, setTouchKey] = useState(false);
   const [valueTouched, setTouchValue] = useState(false);
@@ -116,8 +117,21 @@ export const AttributeEditor = ({
     });
     clearInputValues();
   };
-
-  const handleCancel = () => onCancel() || clearInputValues();
+  const isCancelButtonDisabled =
+    editorDefaultOpen && attribute.new && attributes.length === 1 && isAttributeEmpty();
+  const handleCancel = () => {
+    if (isCancelButtonDisabled) {
+      return null;
+    } else if (
+      editorDefaultOpen &&
+      attribute.new &&
+      attributes.length === 1 &&
+      !isAttributeEmpty()
+    ) {
+      return clearInputValues();
+    }
+    return onCancel();
+  };
   const handleAttributeKeyInputChange = (text) => setState({ ...state, isKeyEdited: !!text });
 
   return (
@@ -174,7 +188,10 @@ export const AttributeEditor = ({
         >
           {Parser(CheckIcon)}
         </div>
-        <div className={cx('cross-btn')} onClick={handleCancel}>
+        <div
+          className={cx('cross-btn', { disabled: isCancelButtonDisabled })}
+          onClick={handleCancel}
+        >
           {Parser(CrossIcon)}
         </div>
       </div>
@@ -192,6 +209,7 @@ AttributeEditor.propTypes = {
   attribute: PropTypes.object,
   keyPlaceholder: PropTypes.string,
   valuePlaceholder: PropTypes.string,
+  editorDefaultOpen: PropTypes.bool,
 };
 AttributeEditor.defaultProps = {
   attributes: [],
@@ -205,4 +223,5 @@ AttributeEditor.defaultProps = {
   attribute: {},
   keyPlaceholder: 'Key',
   valuePlaceholder: 'Value',
+  editorDefaultOpen: false,
 };

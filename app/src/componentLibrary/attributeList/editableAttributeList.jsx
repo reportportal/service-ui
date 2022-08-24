@@ -61,6 +61,7 @@ export const EditableAttributeList = ({
       customClass={customClass}
       showButton={showButton}
       editable={editable}
+      editorDefaultOpen={defaultOpen}
       {...rest}
     />
   );
