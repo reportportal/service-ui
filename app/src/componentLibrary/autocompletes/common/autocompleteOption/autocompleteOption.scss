@@ -68,12 +68,21 @@
   min-height: 36px;
   padding: 4px 12px;
   box-sizing: border-box;
+  cursor: pointer;
 }
 
 .key-variant {
   @include option-state($COLOR--tag-key-text, $COLOR--tag-key-background);
+
+  &.active {
+    background-color: $COLOR--bg-200;
+  }
 }
 
 .value-variant {
   @include option-state($COLOR--tag-value-text, $COLOR--tag-value-background);
+
+  &.active {
+    background-color: $COLOR--bg-200;
+  }
 }

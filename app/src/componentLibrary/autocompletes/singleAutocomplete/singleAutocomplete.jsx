@@ -21,6 +21,8 @@ import { Manager, Reference, Popper } from 'react-popper';
 import { FieldText } from 'componentLibrary/fieldText';
 import { AutocompleteMenu } from './../common/autocompleteMenu';
 
+const DEFAULT_OPTIONS_INDEX = 0;
+
 export class SingleAutocomplete extends Component {
   static propTypes = {
     options: PropTypes.array,
@@ -115,6 +117,7 @@ export class SingleAutocomplete extends Component {
           itemToString={parseValueToString}
           selectedItem={value}
           onStateChange={onStateChange}
+          defaultHighlightedIndex={DEFAULT_OPTIONS_INDEX}
         >
           {({
             getInputProps,
