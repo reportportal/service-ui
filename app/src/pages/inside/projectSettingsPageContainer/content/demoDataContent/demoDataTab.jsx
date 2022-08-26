@@ -43,8 +43,7 @@ const messages = defineMessages({
   },
   descriptionDetails: {
     id: 'DemoDataTab.descriptionDetails',
-    defaultMessage:
-      'Demo data will help you to get familiar with the functionality of the ReportPortal. By generation of the Demo Data several entities will be created and will serve you as an example. Demo Dashboard and Filter will be generated only in case you haven`t got them already.',
+    defaultMessage: `Demo data will help you to get familiar with the functionality of the ReportPortal. By generation of the Demo Data several entities will be created and will serve you as an example. Demo Dashboard and Filter will be generated only in case you haven't got them already.`,
   },
   descriptionDetailsWarningMessageHeader: {
     id: 'DemoDataTab.descriptionWarningMessageHeader',
