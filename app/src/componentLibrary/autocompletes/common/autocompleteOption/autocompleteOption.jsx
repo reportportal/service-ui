@@ -71,5 +71,4 @@ AutocompleteOption.defaultProps = {
   children: null,
   disabled: false,
   variant: '',
-  onClick: () => {},
 };
