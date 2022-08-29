@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { FormattedMessage, FormattedHTMLMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import Parser from 'html-react-parser';
 import {
   LAUNCH_STATISTICS,
@@ -99,7 +99,7 @@ export const getWidgets = (formatMessage) => [
     id: LAUNCH_STATISTICS,
     title: formatMessage(widgetTypesMessages[LAUNCH_STATISTICS]),
     description: (
-      <FormattedHTMLMessage
+      <FormattedMessage
         id={'Widgets.Description.statisticTrend'}
         defaultMessage={
           '- in "Launch mode" shows the growth trend in the number of test cases with each selected statuses from run to run,<br> - in "Timeline mode" shows sum, distributed by dates.'
@@ -137,7 +137,7 @@ export const getWidgets = (formatMessage) => [
     id: LAUNCH_EXECUTION_AND_ISSUE_STATISTICS,
     title: formatMessage(widgetTypesMessages[LAUNCH_EXECUTION_AND_ISSUE_STATISTICS]),
     description: (
-      <FormattedHTMLMessage
+      <FormattedMessage
         id={'Widgets.Description.launchStatistics'}
         defaultMessage={
           'Shows statistics of the last launch divided into 2 sections:</br> - Skipped, Passed, Failed </br> - Product Bug, System Issue, To Investigate, Automation Bugs.'
@@ -163,7 +163,7 @@ export const getWidgets = (formatMessage) => [
     id: TEST_CASES_GROWTH_TREND,
     title: formatMessage(widgetTypesMessages[TEST_CASES_GROWTH_TREND]),
     description: (
-      <FormattedHTMLMessage
+      <FormattedMessage
         id={'Widgets.Description.casesTrend'}
         defaultMessage={
           '- in "Launch Mode" shows the increment of test-cases from run to run,<br> - in "Timeline Mode" shows the increment of test-cases distributed by dates (in launches with the largest number of test-cases per day).'
@@ -177,7 +177,7 @@ export const getWidgets = (formatMessage) => [
     id: INVESTIGATED_PERCENTAGE_OF_LAUNCHES,
     title: formatMessage(widgetTypesMessages[INVESTIGATED_PERCENTAGE_OF_LAUNCHES]),
     description: (
-      <FormattedHTMLMessage
+      <FormattedMessage
         id={'Widgets.Description.investigatedTrend'}
         defaultMessage={
           '- in "Launch Mode" shows whether the launches are analyzed or not (the percentage of "Investigated"/"To Investigate") from run to run,<br> - in "Timeline Mode" shows percentage of "Investigated"/"To Investigate" tests in all runs per day distributed by dates.'

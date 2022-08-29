@@ -95,9 +95,12 @@ export class WidgetWizardContent extends Component {
     this.state = {
       step: 0,
     };
-    const { fetchDashboards } = this.props;
+    const {
+      fetchDashboards,
+      intl: { formatMessage },
+    } = this.props;
     fetchDashboards();
-    this.widgets = getWidgets(props.intl.formatMessage);
+    this.widgets = getWidgets(formatMessage);
   }
 
   onClickNextStep = () => {
@@ -201,22 +204,26 @@ export class WidgetWizardContent extends Component {
   render() {
     const {
       formValues: { widgetType },
+      formValues,
       showConfirmation,
+      intl,
+      projectId,
+      eventsInfo,
+      submitWidgetWizardForm,
     } = this.props;
 
     return (
       <div className={cx('widget-wizard-content')}>
         <WizardInfoSection
           activeWidget={this.widgets.find((widget) => widgetType === widget.id)}
-          projectId={this.props.projectId}
-          widgetSettings={prepareWidgetDataForSubmit(
-            this.preprocessOutputData(this.props.formValues),
-          )}
+          projectId={projectId}
+          widgetSettings={prepareWidgetDataForSubmit(this.preprocessOutputData(formValues))}
           step={this.state.step}
           showConfirmation={showConfirmation}
+          intl={intl}
         />
         <WizardControlsSection
-          eventsInfo={this.props.eventsInfo}
+          eventsInfo={eventsInfo}
           widgets={this.widgets}
           activeWidgetId={widgetType}
           step={this.state.step}
@@ -224,7 +231,8 @@ export class WidgetWizardContent extends Component {
           onClickPrevStep={this.onClickPrevStep}
           nextStep={this.nextStep}
           onAddWidget={this.onAddWidget}
-          submitWidgetWizardForm={this.props.submitWidgetWizardForm}
+          submitWidgetWizardForm={submitWidgetWizardForm}
+          intl={intl}
         />
       </div>
     );
