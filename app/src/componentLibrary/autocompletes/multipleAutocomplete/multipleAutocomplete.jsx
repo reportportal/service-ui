@@ -76,8 +76,8 @@ export const MultipleAutocomplete = ({
   };
   const createNewItem = ({ inputValue, selectItem, clearSelection }) => {
     if (parseInputValueFn) {
-      const uniqueParsedItems = [...new Set(parseInputValueFn(inputValue))];
-      const items = uniqueParsedItems.length ? uniqueParsedItems : [inputValue];
+      const parsedItems = parseInputValueFn(inputValue);
+      const items = parsedItems.length ? parsedItems : [inputValue];
       selectItem(items);
       clearSelection();
     } else {
