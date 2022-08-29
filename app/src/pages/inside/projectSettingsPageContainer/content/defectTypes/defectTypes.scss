@@ -127,3 +127,14 @@ $DEFECT_NAME_PADDING: 16px;
 .button {
   margin-left: auto;
 }
+
+.system-message {
+  padding-top: 24px;
+}
+
+.system-message-description {
+  font-family: $FONT-ROBOTO-BOLD;
+  font-size: 13px;
+  color: $COLOR--almost-black;
+  line-height: 16px;
+}
