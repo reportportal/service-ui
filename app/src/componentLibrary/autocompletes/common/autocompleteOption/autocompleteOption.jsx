@@ -35,7 +35,10 @@ export const AutocompleteOption = ({
   return isNew ? (
     <>
       <div className={cx('divider')} />
-      <li className={cx('new-item', variant, { active: isActive, selected: isSelected, disabled })}>
+      <li
+        className={cx('new-item', variant, { active: isActive, selected: isSelected, disabled })}
+        {...props}
+      >
         <span className={cx('value')}>{children}</span>
         <Button {...(!disabled ? props : {})} startIcon={PlusIcon} variant={'text'}>
           {variant === 'key-variant' ? 'New key' : 'New value'}
