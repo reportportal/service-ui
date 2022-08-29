@@ -54,7 +54,8 @@ export const MultipleDownshift = ({
   };
   const addSelectedItem = (newItemData, downshift) => {
     const newItem = isArray(newItemData) ? newItemData : [newItemData];
-    const newSelectedItems = [...selectedItems, ...newItem];
+    const filteredSelectedItems = selectedItems.filter((item) => newItem.indexOf(item) < 0);
+    const newSelectedItems = [...filteredSelectedItems, ...newItem];
     onChange(newSelectedItems, downshift);
     const collectStoredItemsCb = (storedItems) =>
       handleUnStoredItemCb && handleUnStoredItemCb(newSelectedItems, storedItems);
@@ -75,11 +76,7 @@ export const MultipleDownshift = ({
   };
   const handleSelection = (selectedItem, downshift) => {
     if (!selectedItem) return;
-    if (selectedItems.some((item) => isEqual(item, selectedItem))) {
-      removeItem(selectedItem, downshift);
-    } else {
-      addSelectedItem(selectedItem, downshift);
-    }
+    addSelectedItem(selectedItem, downshift);
   };
   const getStateAndHelpers = (downshift) => ({
     removeItem,
