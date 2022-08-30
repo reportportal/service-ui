@@ -58,14 +58,15 @@ const CreateDefect = withHoverableTooltip({
     placement: 'bottom',
     dynamicWidth: true,
   },
-})(({ onClick }) => (
-  <i className={cx('group-create')} onClick={onClick}>
+})(({ onClick, disabled }) => (
+  <i className={cx('group-create', { disabled })} onClick={onClick}>
     {Parser(CreateDefectIcon)}
   </i>
 ));
 CreateDefect.propTypes = {
   formatMessage: PropTypes.func.isRequired,
   onClick: PropTypes.func.isRequired,
+  disabled: PropTypes.bool.isRequired,
 };
 
 export const DefectTypes = ({ setHeaderTitleNode }) => {
@@ -99,7 +100,6 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
   );
   const isEditable = canUpdateSettings(userAccountRole, userProjectRole);
   const canAddNewDefectType = defectTypesLength < MAX_DEFECT_TYPES_COUNT;
-  const interactionAllowed = isEditable && canAddNewDefectType;
   const isInformationMessage =
     defectTypesLength >= WARNING_DEFECT_TYPES_COUNT && canAddNewDefectType;
 
@@ -165,10 +165,11 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
                     {formatMessage(messages[groupName.toLowerCase()])}
                   </div>
                 </div>
-                {interactionAllowed && (
+                {isEditable && (
                   <CreateDefect
                     formatMessage={formatMessage}
-                    onClick={() => onAdd(defectTypes[groupName][0])}
+                    onClick={() => canAddNewDefectType && onAdd(defectTypes[groupName][0])}
+                    disabled={!canAddNewDefectType}
                   />
                 )}
               </div>

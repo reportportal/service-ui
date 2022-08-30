@@ -79,7 +79,7 @@ $DEFECT_NAME_PADDING: 16px;
 
   &.type-no_defect {
     path {
-      stroke: $COLOR--darkmode-gray-100;
+      stroke: $COLOR--no-defect-bug-group;
     }
   }
 }
@@ -100,7 +100,12 @@ $DEFECT_NAME_PADDING: 16px;
   height: 16px;
   cursor: pointer;
 
-  &:hover {
+  &.disabled {
+    opacity: 0.3;
+    cursor: initial;
+  }
+
+  &:hover:not(.disabled) {
     @include fill-svg($COLOR--e-400);
   }
 }
