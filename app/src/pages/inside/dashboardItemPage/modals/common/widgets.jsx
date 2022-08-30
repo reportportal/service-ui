@@ -102,8 +102,11 @@ export const getWidgets = (formatMessage) => [
       <FormattedMessage
         id={'Widgets.Description.statisticTrend'}
         defaultMessage={
-          '- in "Launch mode" shows the growth trend in the number of test cases with each selected statuses from run to run,<br> - in "Timeline mode" shows sum, distributed by dates.'
+          '- in "Launch mode" shows the growth trend in the number of test cases with each selected statuses from run to run,{linebreak} - in "Timeline mode" shows sum, distributed by dates.'
         }
+        values={{
+          linebreak: <br />,
+        }}
       />
     ),
     preview: Parser(LAUNCH_STATISTICS_PREVIEW),
@@ -140,8 +143,11 @@ export const getWidgets = (formatMessage) => [
       <FormattedMessage
         id={'Widgets.Description.launchStatistics'}
         defaultMessage={
-          'Shows statistics of the last launch divided into 2 sections:</br> - Skipped, Passed, Failed </br> - Product Bug, System Issue, To Investigate, Automation Bugs.'
+          'Shows statistics of the last launch divided into 2 sections:{linebreak} - Skipped, Passed, Failed {linebreak} - Product Bug, System Issue, To Investigate, Automation Bugs.'
         }
+        values={{
+          linebreak: <br />,
+        }}
       />
     ),
     preview: Parser(LAUNCH_EXECUTION_AND_ISSUE_STATISTICS_PREVIEW),
@@ -166,8 +172,11 @@ export const getWidgets = (formatMessage) => [
       <FormattedMessage
         id={'Widgets.Description.casesTrend'}
         defaultMessage={
-          '- in "Launch Mode" shows the increment of test-cases from run to run,<br> - in "Timeline Mode" shows the increment of test-cases distributed by dates (in launches with the largest number of test-cases per day).'
+          '- in "Launch Mode" shows the increment of test-cases from run to run,{linebreak} - in "Timeline Mode" shows the increment of test-cases distributed by dates (in launches with the largest number of test-cases per day).'
         }
+        values={{
+          linebreak: <br />,
+        }}
       />
     ),
     preview: Parser(TEST_CASES_GROWTH_TREND_PREVIEW),
@@ -180,8 +189,11 @@ export const getWidgets = (formatMessage) => [
       <FormattedMessage
         id={'Widgets.Description.investigatedTrend'}
         defaultMessage={
-          '- in "Launch Mode" shows whether the launches are analyzed or not (the percentage of "Investigated"/"To Investigate") from run to run,<br> - in "Timeline Mode" shows percentage of "Investigated"/"To Investigate" tests in all runs per day distributed by dates.'
+          '- in "Launch Mode" shows whether the launches are analyzed or not (the percentage of "Investigated"/"To Investigate") from run to run,{linebreak} - in "Timeline Mode" shows percentage of "Investigated"/"To Investigate" tests in all runs per day distributed by dates.'
         }
+        values={{
+          linebreak: <br />,
+        }}
       />
     ),
     preview: Parser(INVESTIGATED_PERCENTAGE_OF_LAUNCHES_PREVIEW),
