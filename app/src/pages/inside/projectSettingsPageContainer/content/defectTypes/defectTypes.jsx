@@ -142,7 +142,13 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
             <span className={cx('system-message-description')}>
               {formatMessage(
                 !canAddNewDefectType ? messages.warningMessage : messages.informationMessage,
-                { length: MAX_DEFECT_TYPES_COUNT - defectTypesLength },
+                {
+                  length: MAX_DEFECT_TYPES_COUNT - defectTypesLength,
+                  slot:
+                    MAX_DEFECT_TYPES_COUNT - defectTypesLength === 1
+                      ? formatMessage(messages.informationMessageSingle)
+                      : formatMessage(messages.informationMessageMultiply),
+                },
               )}
             </span>
           </SystemMessage>

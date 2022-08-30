@@ -76,7 +76,15 @@ export const messages = defineMessages({
   },
   informationMessage: {
     id: 'DefectTypesTab.informationMessage',
-    defaultMessage: 'You have only {length} slots left for creating Defect Types',
+    defaultMessage: 'You have only {length} {slot} left for creating Defect Types',
+  },
+  informationMessageSingle: {
+    id: 'DefectTypesTab.informationMessageSingle',
+    defaultMessage: 'slot',
+  },
+  informationMessageMultiply: {
+    id: 'DefectTypesTab.informationMessageMultiply',
+    defaultMessage: 'slots',
   },
   informationSubMessage: {
     id: 'DefectTypesTab.informationSubMessage',

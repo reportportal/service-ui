@@ -491,7 +491,9 @@
   "DefectTypesTab.deleteModalHeader": "Видалити дефекту тип",
   "DefectTypesTab.description": "Типи дефектів — це набір дефектів, які з найбільшою ймовірністю можуть з’явитися під час виконання тестів. Ви можете використовувати Дефекти за замовчуванням, щоб позначити елементи тесту, або створити власні Дефекти, щоб полегшити аналіз виконання тестів.",
   "DefectTypesTab.diagramCol": "Діаграма",
-  "DefectTypesTab.informationMessage": "У вас залишилося лише {length} слотів для створення типів дефектів",
+  "DefectTypesTab.informationMessage": "У вас залишилося лише {length} {slot} для створення типів дефектів",
+  "DefectTypesTab.informationMessageSingle": "слот",
+  "DefectTypesTab.informationMessageMultiply": "слотів",
   "DefectTypesTab.informationSubMessage": "Ви використали {currentLength} типів дефектів із {maxLength} доступних. Після досягнення ліміту ви не зможете створити новий тип дефекту, доки не видалите хоча б один, створений раніше",
   "DefectTypesTab.informationTitle": "Інформація",
   "DefectTypesTab.noColorsToUpdate": "Квітів для оновлення Немає",
@@ -505,7 +507,6 @@
   "DefectTypesTab.toInvestigateBugsGroup": "Групі потрібен аналіз",
   "DefectTypesTab.warningMessage": "Ви досягли максимальної кількості типів дефектів, доступних для проекту",
   "DefectTypesTab.warningSubMessage": "Кількість типів дефектів у вашому проекті наразі становить {maxLength} із {maxLength}. Ви зможете створити новий, видаливши принаймні один створений раніше",
-
   "DeleteDefectTypeModal.message": "Ви впевнені, що хочете видалити {name}?",
   "DeleteDefectTypeModal.title": "Видалити {name}",
   "DeleteFilterDialog.deleteFilter": "Вы уверены, что хотите удалить фильтр '<b>{name}</b>'?",
