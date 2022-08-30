@@ -21,6 +21,7 @@ export const NAMESPACE = 'log';
 export const LOG_ITEMS_NAMESPACE = `${NAMESPACE}/logItems`;
 export const ACTIVITY_NAMESPACE = `${NAMESPACE}/activity`;
 export const STACK_TRACE_NAMESPACE = `${NAMESPACE}/stackTrace`;
+export const ERROR_LOGS_NAMESPACE = `${NAMESPACE}/errorLogs`;
 export const FETCH_LOG_PAGE_DATA = 'fetchLogPageData';
 export const FETCH_LOG_PAGE_STACK_TRACE = 'fetchLogPageStackTrace';
 export const DEFAULT_HISTORY_DEPTH = 12;
@@ -52,6 +53,7 @@ export const FETCH_HISTORY_LINE_ITEMS = 'FETCH_HISTORY_LINE_ITEMS';
 export const NUMBER_OF_ITEMS_TO_LOAD = 9;
 export const SET_ACTIVE_TAB_ID = 'SET_ACTIVE_TAB_ID';
 export const FETCH_HISTORY_ITEMS_WITH_LOADING = 'ON_UPDATE_ITEM_STATUS';
+export const FETCH_ERROR_LOGS = 'fetchErrorLogs';
 
 export const LOG_LEVELS = [
   {
