@@ -111,11 +111,8 @@ export class GridRow extends Component {
 
   getHighlightBlockClasses = () => {
     if (!this.checkIfTheHighlightNeeded()) return '';
-    if (this.props.rowHighlightingConfig.highlightErrorRow) {
-      return 'highlight-error-row';
-    } else {
-      return 'highlight';
-    }
+
+    return this.props.rowHighlightingConfig.highlightErrorRow ? 'highlight-error-row' : 'highlight';
   };
 
   handleRowClick = (e) => this.props.onClickRow(e, this.props.value);
