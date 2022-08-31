@@ -33,6 +33,7 @@ import {
   SET_INCLUDE_ALL_LAUNCHES,
   SET_SHOULD_SHOW_LOAD_MORE,
   SET_ACTIVE_TAB_ID,
+  ERROR_LOGS_NAMESPACE,
 } from './constants';
 import { attachmentsReducer } from './attachments';
 import { sauceLabsReducer } from './sauceLabs';
@@ -130,6 +131,9 @@ const reducer = combineReducers({
       fetchReducer(STACK_TRACE_NAMESPACE, { contentPath: 'content' }),
       stackTraceContentReducer,
     ),
+  }),
+  errorLogs: combineReducers({
+    content: fetchReducer(ERROR_LOGS_NAMESPACE, { contentPath: 'content' }),
   }),
   attachments: attachmentsReducer,
   sauceLabs: sauceLabsReducer,

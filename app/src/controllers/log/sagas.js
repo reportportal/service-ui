@@ -27,7 +27,11 @@ import { logItemIdSelector, pathnameChangedSelector } from 'controllers/pages';
 import { debugModeSelector } from 'controllers/launch';
 import { createFetchPredicate, fetchDataAction } from 'controllers/fetch';
 import { fetch, isEmptyObject } from 'common/utils';
-import { HISTORY_LINE_DEFAULT_VALUE, FETCH_HISTORY_ITEMS_WITH_LOADING } from 'controllers/log';
+import {
+  HISTORY_LINE_DEFAULT_VALUE,
+  FETCH_HISTORY_ITEMS_WITH_LOADING,
+  fetchErrorLogs,
+} from 'controllers/log';
 import { collectLogPayload } from './sagaUtils';
 import {
   ACTIVITY_NAMESPACE,
@@ -42,6 +46,8 @@ import {
   SET_INCLUDE_ALL_LAUNCHES,
   FETCH_HISTORY_LINE_ITEMS,
   NUMBER_OF_ITEMS_TO_LOAD,
+  FETCH_ERROR_LOGS,
+  ERROR_LOGS_NAMESPACE,
 } from './constants';
 import {
   activeLogIdSelector,
@@ -112,6 +118,21 @@ function* fetchStackTrace({ payload: logItem }) {
     fetchDataAction(STACK_TRACE_NAMESPACE)(URLS.logItemStackTrace(activeProject, path, pageSize)),
   );
   yield take(createFetchPredicate(STACK_TRACE_NAMESPACE));
+}
+
+function* fetchAllErrorLogs({ payload: logItem }) {
+  // TODO replace to new uri, add filters
+  const activeProject = yield select(activeProjectSelector);
+  const page = yield select(logStackTracePaginationSelector);
+  const { path } = logItem;
+  let pageSize = STACK_TRACE_PAGINATION_OFFSET;
+  if (!isEmptyObject(page) && page.totalElements > 0) {
+    const { totalElements, size } = page;
+    pageSize = size >= totalElements ? totalElements : size + STACK_TRACE_PAGINATION_OFFSET;
+  }
+  yield put(
+    fetchDataAction(ERROR_LOGS_NAMESPACE)(URLS.logItemStackTrace(activeProject, path, pageSize)),
+  );
 }
 
 function* fetchHistoryItems({ payload } = { payload: {} }) {
@@ -197,7 +218,7 @@ function* fetchHistoryItemData() {
 
 function* fetchLogPageData({ meta = {} }) {
   const isPathNameChanged = yield select(pathnameChangedSelector);
-  const logItem = yield select(activeLogSelector);
+  let logItem = yield select(activeLogSelector);
   yield put({ type: CLEAR_NESTED_STEPS });
   if (meta.refresh) {
     const offset = yield select(logPageOffsetSelector);
@@ -205,16 +226,20 @@ function* fetchLogPageData({ meta = {} }) {
       put(fetchTestItemsAction({ offset })),
       put(fetchLogPageStackTrace(logItem)),
       put(fetchFirstAttachmentsAction()),
+      put(fetchErrorLogs(logItem)),
       call(fetchLogs),
     ]);
     return;
   }
   if (isPathNameChanged) {
     yield call(fetchWholePage);
+    logItem = yield select(activeLogSelector);
+    yield put(fetchErrorLogs(logItem));
   } else {
     const logViewMode = yield select(logViewModeSelector);
     if (logViewMode === DETAILED_LOG_VIEW) {
       yield call(fetchHistoryItemData);
+      yield put(fetchErrorLogs(logItem));
     } else {
       yield call(fetchLogItems);
     }
@@ -235,6 +260,10 @@ function* watchFetchLogPageStackTrace() {
   yield takeEvery(FETCH_LOG_PAGE_STACK_TRACE, fetchStackTrace);
 }
 
+function* watchFetchErrorLogs() {
+  yield takeEvery(FETCH_ERROR_LOGS, fetchAllErrorLogs);
+}
+
 function* watchFetchLineHistory() {
   yield takeEvery([SET_INCLUDE_ALL_LAUNCHES, FETCH_HISTORY_LINE_ITEMS], fetchHistoryItems);
 }
@@ -247,6 +276,7 @@ export function* logSagas() {
   yield all([
     watchFetchLogPageData(),
     watchFetchLogPageStackTrace(),
+    watchFetchErrorLogs(),
     watchFetchLineHistory(),
     attachmentSagas(),
     sauceLabsSagas(),

@@ -40,6 +40,7 @@ import {
 } from 'components/main/analytics/events';
 import ConsoleIcon from 'common/img/console-inline.svg';
 import MarkdownIcon from 'common/img/markdown-inline.svg';
+import { GhostButton } from 'components/buttons/ghostButton';
 import { Pagination } from './pagination';
 import styles from './logsGridToolbar.scss';
 
@@ -65,6 +66,15 @@ const messages = defineMessages({
   hidePassedLogs: {
     id: 'LogsGridToolbar.hidePassedLogs',
     defaultMessage: 'Hide All Passed Logs',
+  },
+  errorLogs: {
+    id: 'LogsGridToolbar.errorLogs',
+    defaultMessage:
+      '{count, plural, =0 {No Error Logs} one {{totalItems} Error Log} other {{currentItem} of {totalItems} Error Logs}}',
+  },
+  showErrorLog: {
+    id: 'LogsGridToolbar.showErrorLog',
+    defaultMessage: 'Show',
   },
 });
 
@@ -101,6 +111,8 @@ export class LogsGridToolbar extends Component {
     withAttachments: PropTypes.bool,
     isEmptyStepsHidden: PropTypes.bool,
     isPassedLogsHidden: PropTypes.bool,
+    errorLogs: PropTypes.array,
+    highlightErrorLog: PropTypes.func,
   };
 
   static defaultProps = {
@@ -115,6 +127,8 @@ export class LogsGridToolbar extends Component {
     withAttachments: false,
     isEmptyStepsHidden: false,
     isPassedLogsHidden: false,
+    errorLogs: [],
+    highlightErrorLog: () => {},
   };
 
   state = {
@@ -192,6 +206,8 @@ export class LogsGridToolbar extends Component {
       isNestedStepsView,
       withAttachments,
       isPassedLogsHidden,
+      errorLogs,
+      highlightErrorLog,
     } = this.props;
     const { logViewMode } = this.state;
 
@@ -202,29 +218,46 @@ export class LogsGridToolbar extends Component {
             <div className={cx('log-level')}>
               <InputSlider options={LOG_LEVELS} value={logLevel} onChange={this.changeLogLevel} />
             </div>
-            <div className={cx('aside-element')}>
-              <InputCheckbox value={withAttachments} onChange={this.toggleWithAttachments}>
-                {intl.formatMessage(messages.withAttachments)}
-              </InputCheckbox>
+            <div className={cx('aside-element', 'error-counter-block')}>
+              <GhostButton onClick={highlightErrorLog} disabled={!errorLogs.length}>
+                {intl.formatMessage(messages.showErrorLog)}
+              </GhostButton>
+              <span className={cx('error-counter-text')}>
+                {intl.formatMessage(messages.errorLogs, {
+                  count: errorLogs.length,
+                  currentItem: <span className={cx('error-counter')}>1</span>,
+                  totalItems: <span className={cx('error-counter')}>{errorLogs.length}</span>,
+                })}
+              </span>
             </div>
-            {logPageMode === DETAILED_LOG_VIEW && (
-              <Fragment>
-                {isNestedStepsView && (
-                  <div className={cx('aside-element')}>
-                    <InputCheckbox value={isPassedLogsHidden} onChange={this.toggleHidePassedLogs}>
-                      {intl.formatMessage(messages.hidePassedLogs)}
-                    </InputCheckbox>
-                  </div>
-                )}
-                {/* <div className={cx('aside-element')}>
+          </div>
+          <div className={cx('aside')}>
+            <div className={cx('aside-element-block')}>
+              <div className={cx('aside-element')}>
+                <InputCheckbox value={withAttachments} onChange={this.toggleWithAttachments}>
+                  {intl.formatMessage(messages.withAttachments)}
+                </InputCheckbox>
+              </div>
+              {logPageMode === DETAILED_LOG_VIEW && (
+                <Fragment>
+                  {isNestedStepsView && (
+                    <div className={cx('aside-element')}>
+                      <InputCheckbox
+                        value={isPassedLogsHidden}
+                        onChange={this.toggleHidePassedLogs}
+                      >
+                        {intl.formatMessage(messages.hidePassedLogs)}
+                      </InputCheckbox>
+                    </div>
+                  )}
+                  {/* <div className={cx('aside-element')}>
                   <InputCheckbox value={isEmptyStepsHidden} onChange={this.toggleHideEmptySteps}>
                     {intl.formatMessage(messages.hideEmptySteps)}
                   </InputCheckbox>
                 </div> */}
-              </Fragment>
-            )}
-          </div>
-          <div className={cx('aside')}>
+                </Fragment>
+              )}
+            </div>
             <div className={cx('mode-buttons')}>
               <button
                 className={cx('mode-button', 'markdown', { active: logViewMode === MARKDOWN })}
