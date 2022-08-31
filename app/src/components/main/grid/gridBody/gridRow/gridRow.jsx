@@ -48,6 +48,7 @@ export class GridRow extends Component {
       onGridRowHighlighted: PropTypes.func,
       isGridRowHighlighted: PropTypes.bool,
       highlightedRowId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      highlightErrorRow: PropTypes.bool,
     }),
     excludeFromSelection: PropTypes.arrayOf(PropTypes.object),
     gridRowClassName: PropTypes.string,
@@ -72,6 +73,7 @@ export class GridRow extends Component {
       onGridRowHighlighted: () => {},
       isGridRowHighlighted: false,
       highlightedRowId: '',
+      highlightErrorRow: false,
     },
     excludeFromSelection: [],
     gridRowClassName: '',
@@ -107,7 +109,11 @@ export class GridRow extends Component {
     this.overflowCell.style.maxHeight = `${this.overflowCellMaxHeight}px`;
   };
 
-  getHighlightBlockClasses = () => (this.checkIfTheHighlightNeeded() ? cx('highlight') : '');
+  getHighlightBlockClasses = () => {
+    if (!this.checkIfTheHighlightNeeded()) return '';
+
+    return this.props.rowHighlightingConfig.highlightErrorRow ? 'highlight-error-row' : 'highlight';
+  };
 
   handleRowClick = (e) => this.props.onClickRow(e, this.props.value);
 
@@ -127,9 +133,11 @@ export class GridRow extends Component {
 
   highLightGridRow() {
     this.rowRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    setTimeout(() => {
-      this.props.rowHighlightingConfig.onGridRowHighlighted();
-    }, LOG_MESSAGE_HIGHLIGHT_TIMEOUT);
+    const { onGridRowHighlighted } = this.props.rowHighlightingConfig;
+    onGridRowHighlighted &&
+      setTimeout(() => {
+        onGridRowHighlighted();
+      }, LOG_MESSAGE_HIGHLIGHT_TIMEOUT);
   }
 
   removeAccordion = () => {
