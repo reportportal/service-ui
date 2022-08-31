@@ -35,6 +35,7 @@ import {
   logViewModeSelector,
   LOG_STATUS_FILTER_KEY,
   isLogPageWithNestedSteps,
+  errorLogsItemsSelector,
 } from 'controllers/log';
 import { withFilter } from 'controllers/filter';
 import { withPagination, PAGE_KEY, DEFAULT_PAGINATION, SIZE_KEY } from 'controllers/pagination';
@@ -53,6 +54,7 @@ import { SauceLabsSection } from '../sauceLabsSection';
     userId: userIdSelector(state),
     logViewMode: logViewModeSelector(state),
     isNestedStepView: isLogPageWithNestedSteps(state),
+    errorLogs: errorLogsItemsSelector(state),
   }),
   null,
 )
@@ -105,6 +107,7 @@ export class LogsGridWrapper extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     userId: PropTypes.string.isRequired,
+    logItem: PropTypes.object,
     logItems: PropTypes.array,
     activePage: PropTypes.number,
     itemCount: PropTypes.number,
@@ -132,9 +135,11 @@ export class LogsGridWrapper extends Component {
     hideEmptySteps: PropTypes.string,
     hidePassedLogs: PropTypes.string,
     isSauceLabsIntegrationView: PropTypes.bool.isRequired,
+    errorLogs: PropTypes.array,
   };
 
   static defaultProps = {
+    logItem: {},
     logItems: [],
     activePage: DEFAULT_PAGINATION[PAGE_KEY],
     itemCount: 0,
@@ -161,6 +166,16 @@ export class LogsGridWrapper extends Component {
     withAttachments: undefined,
     hideEmptySteps: undefined,
     hidePassedLogs: undefined,
+    errorLogs: [],
+  };
+
+  state = {
+    highlightedRowId: null,
+    isSauceLabsIntegrationView: false,
+  };
+
+  highlightErrorLog = () => {
+    this.setState({ highlightedRowId: this.props.errorLogs[0].id });
   };
 
   render() {
@@ -192,7 +207,14 @@ export class LogsGridWrapper extends Component {
       hideEmptySteps,
       hidePassedLogs,
       isSauceLabsIntegrationView,
+      errorLogs,
     } = this.props;
+    const rowHighlightingConfig = {
+      highlightedRowId: this.state.highlightedRowId,
+      isGridRowHighlighted: true,
+      highlightErrorRow: true,
+    };
+
     return (
       <>
         {isSauceLabsIntegrationView ? (
@@ -212,6 +234,8 @@ export class LogsGridWrapper extends Component {
               onHideEmptySteps={onChangeHideEmptySteps}
               onHidePassedLogs={onChangeHidePassedLogs}
               logPageMode={logViewMode}
+              errorLogs={errorLogs}
+              highlightErrorLog={this.highlightErrorLog}
             >
               {({ markdownMode, consoleView }) => (
                 <LogsGrid
@@ -227,6 +251,7 @@ export class LogsGridWrapper extends Component {
                   onChangeLogStatusFilter={onChangeLogStatusFilter}
                   consoleView={consoleView}
                   isNestedStepView={isNestedStepView}
+                  rowHighlightingConfig={rowHighlightingConfig}
                 />
               )}
             </LogsGridToolbar>

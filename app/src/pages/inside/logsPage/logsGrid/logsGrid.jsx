@@ -134,6 +134,11 @@ export class LogsGrid extends Component {
     logStatus: PropTypes.string,
     onChangeLogStatusFilter: PropTypes.func,
     isNestedStepView: PropTypes.bool,
+    rowHighlightingConfig: PropTypes.shape({
+      isGridRowHighlighted: PropTypes.bool,
+      highlightedRowId: PropTypes.number,
+      highlightErrorRow: PropTypes.bool,
+    }),
   };
 
   static defaultProps = {
@@ -149,6 +154,7 @@ export class LogsGrid extends Component {
     logStatus: null,
     onChangeLogStatusFilter: () => {},
     isNestedStepView: false,
+    rowHighlightingConfig: {},
   };
 
   getConsoleViewColumns = () => [
@@ -255,12 +261,15 @@ export class LogsGrid extends Component {
     this.props.consoleView ? this.getConsoleViewColumns() : this.getDefaultViewColumns();
 
   getLogRowClasses = (value) => {
-    const { consoleView } = this.props;
+    const { consoleView, rowHighlightingConfig } = this.props;
+    const isHighlightedErrorLog = rowHighlightingConfig.highlightedRowId === value.id;
 
     return {
       log: true,
-      'error-row': !consoleView && (value.level === ERROR || value.level === FATAL),
+      'error-row':
+        !consoleView && (value.level === ERROR || value.level === FATAL) && !isHighlightedErrorLog,
       'row-console': consoleView,
+      'highlight-error-row': isHighlightedErrorLog,
     };
   };
 
@@ -303,6 +312,7 @@ export class LogsGrid extends Component {
       sortingColumn,
       sortingDirection,
       onChangeSorting,
+      rowHighlightingConfig,
     } = this.props;
 
     return (
@@ -318,6 +328,7 @@ export class LogsGrid extends Component {
           onChangeSorting={onChangeSorting}
           toggleAccordionEventInfo={LOG_PAGE_EVENTS.EXPAND_LOG_MSG}
           nestedStepHeader={this.renderNestedStepHeader}
+          rowHighlightingConfig={rowHighlightingConfig}
           nestedView
         />
         {!logItems.length && !loading && (
