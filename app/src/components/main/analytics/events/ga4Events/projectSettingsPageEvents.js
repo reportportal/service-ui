@@ -19,6 +19,7 @@ import { normalizeEventString } from '../../utils';
 const PROJECT_SETTINGS = 'project_settings';
 const ANALYZER = 'analyzer';
 const NOTIFICATIONS = 'notifications';
+const DEFECT_TYPES = 'defect_types';
 const BASIC_EVENT_PARAMETERS = {
   action: 'click',
   category: PROJECT_SETTINGS,
@@ -28,6 +29,11 @@ const BASIC_EVENT_PARAMETERS_NOTIFICATIONS = {
   action: 'click',
   category: PROJECT_SETTINGS,
   place: NOTIFICATIONS,
+};
+const BASIC_EVENT_PARAMETERS_DEFECT_TYPES = {
+  action: 'click',
+  category: PROJECT_SETTINGS,
+  place: DEFECT_TYPES,
 };
 
 const getStatus = (status) => (status ? 'active' : 'disabled');
@@ -122,5 +128,20 @@ export const PROJECT_SETTINGS_NOTIFICATIONS_EVENTS = {
   CLICK_ICON_DELETE_NOTIFICATIONS: {
     ...BASIC_EVENT_PARAMETERS_NOTIFICATIONS,
     icon_name: 'icon_delete',
+  },
+};
+
+export const PROJECT_SETTINGS_DEFECT_TYPES_EVENTS = {
+  CLICK_CREATE_BUTTON: {
+    ...BASIC_EVENT_PARAMETERS_DEFECT_TYPES,
+    element_name: 'button_create_defect',
+  },
+  CLICK_COPY_ID_LOCATOR_ICON: {
+    ...BASIC_EVENT_PARAMETERS_DEFECT_TYPES,
+    element_name: 'icon_copy',
+  },
+  CLICK_CREATE_ICON: {
+    ...BASIC_EVENT_PARAMETERS_DEFECT_TYPES,
+    element_name: 'icon_create_defect',
   },
 };

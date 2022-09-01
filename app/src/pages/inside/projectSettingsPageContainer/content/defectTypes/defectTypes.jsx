@@ -15,6 +15,7 @@
  */
 
 import React, { useEffect, useMemo } from 'react';
+import { useTracking } from 'react-tracking';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from 'react-intl';
@@ -39,6 +40,7 @@ import {
 } from 'pages/inside/projectSettingsPageContainer/content/defectTypes/constants';
 import { SystemMessage } from 'componentLibrary/systemMessage';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { PROJECT_SETTINGS_DEFECT_TYPES_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { DefectTypeRow } from './defectTypeRow';
 import { messages } from './defectTypesMessages';
 import styles from './defectTypes.scss';
@@ -72,6 +74,7 @@ CreateDefect.propTypes = {
 export const DefectTypes = ({ setHeaderTitleNode }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
 
   const defectTypes = useSelector(defectTypesSelector);
   const userAccountRole = useSelector(userAccountRoleSelector);
@@ -92,6 +95,16 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
         },
       }),
     );
+  };
+
+  const onCreateButtonClick = (defectGroup) => {
+    trackEvent(PROJECT_SETTINGS_DEFECT_TYPES_EVENTS.CLICK_CREATE_BUTTON);
+    onAdd(defectGroup);
+  };
+
+  const onCreateIconClick = (defectGroup) => {
+    trackEvent(PROJECT_SETTINGS_DEFECT_TYPES_EVENTS.CLICK_CREATE_ICON);
+    onAdd(defectGroup);
   };
 
   const defectTypesLength = useMemo(
@@ -117,12 +130,13 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
           maxLength: MAX_DEFECT_TYPES_COUNT,
         }),
       };
+
   useEffect(() => {
     setHeaderTitleNode(
       <span className={cx('button')}>
         <Button
           disabled={!isEditable || !canAddNewDefectType}
-          onClick={() => onAdd(defectTypes[DEFECT_TYPES_SEQUENCE[0]][0])}
+          onClick={() => onCreateButtonClick(defectTypes[DEFECT_TYPES_SEQUENCE[0]][0])}
         >
           {formatMessage(messages.createDefectHeader)}
         </Button>
@@ -174,7 +188,9 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
                 {isEditable && (
                   <CreateDefect
                     formatMessage={formatMessage}
-                    onClick={() => canAddNewDefectType && onAdd(defectTypes[groupName][0])}
+                    onClick={() =>
+                      canAddNewDefectType && onCreateIconClick(defectTypes[groupName][0])
+                    }
                     disabled={!canAddNewDefectType}
                   />
                 )}

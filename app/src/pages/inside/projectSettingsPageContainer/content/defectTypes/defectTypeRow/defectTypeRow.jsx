@@ -16,6 +16,7 @@
 
 import React from 'react';
 import { useDispatch } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
@@ -29,18 +30,19 @@ import { withHoverableTooltip } from 'components/main/tooltips/hoverableTooltip'
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { showModalAction } from 'controllers/modal';
 import { deleteDefectTypeAction, updateDefectTypeAction } from 'controllers/project';
+import { PROJECT_SETTINGS_DEFECT_TYPES_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { defectTypeShape } from '../defectTypeShape';
 import styles from './defectTypeRow.scss';
 
 const cx = classNames.bind(styles);
 
-const DefectLocatorTooltip = ({ locator }) => (
+const DefectLocatorTooltip = ({ locator, onCopy }) => (
   <>
     <b>ID locator</b>
     <br />
     <div className={cx('locator')}>
       {locator}
-      <CopyToClipboard text={locator}>
+      <CopyToClipboard text={locator} onCopy={onCopy}>
         <i className={cx('icon', 'copy-button')}>{Parser(CopyIcon)}</i>
       </CopyToClipboard>
     </div>
@@ -48,6 +50,7 @@ const DefectLocatorTooltip = ({ locator }) => (
 );
 DefectLocatorTooltip.propTypes = {
   locator: PropTypes.string.isRequired,
+  onCopy: PropTypes.func.isRequired,
 };
 
 const DefectLocator = withHoverableTooltip({
@@ -63,6 +66,7 @@ const DefectLocator = withHoverableTooltip({
 ));
 DefectLocator.propTypes = {
   locator: PropTypes.string.isRequired,
+  onCopy: PropTypes.func.isRequired,
 };
 
 export const DefectTypeRow = ({
@@ -73,6 +77,7 @@ export const DefectTypeRow = ({
 }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
 
   const deleteDefect = () => {
     dispatch(deleteDefectTypeAction(data));
@@ -106,6 +111,8 @@ export const DefectTypeRow = ({
       }),
     );
   };
+
+  const onCopy = () => trackEvent(PROJECT_SETTINGS_DEFECT_TYPES_EVENTS.CLICK_COPY_ID_LOCATOR_ICON);
 
   return (
     <div className={cx('defect-type')}>
@@ -143,7 +150,7 @@ export const DefectTypeRow = ({
             )}
           </div>
         </div>
-        <DefectLocator locator={locator} />
+        <DefectLocator locator={locator} onCopy={onCopy} />
       </div>
     </div>
   );
