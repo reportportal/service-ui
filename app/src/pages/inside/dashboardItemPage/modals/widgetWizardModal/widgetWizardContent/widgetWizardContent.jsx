@@ -206,7 +206,6 @@ export class WidgetWizardContent extends Component {
       formValues: { widgetType },
       formValues,
       showConfirmation,
-      intl,
       projectId,
       eventsInfo,
       submitWidgetWizardForm,
@@ -220,7 +219,6 @@ export class WidgetWizardContent extends Component {
           widgetSettings={prepareWidgetDataForSubmit(this.preprocessOutputData(formValues))}
           step={this.state.step}
           showConfirmation={showConfirmation}
-          intl={intl}
         />
         <WizardControlsSection
           eventsInfo={eventsInfo}
@@ -232,7 +230,6 @@ export class WidgetWizardContent extends Component {
           nextStep={this.nextStep}
           onAddWidget={this.onAddWidget}
           submitWidgetWizardForm={submitWidgetWizardForm}
-          intl={intl}
         />
       </div>
     );
