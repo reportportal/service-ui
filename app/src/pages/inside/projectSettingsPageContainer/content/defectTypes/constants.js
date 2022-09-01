@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-export const MAX_DEFECT_TYPES_COUNT = 74;
+export const MAX_DEFECT_TYPES_COUNT = 75;
+export const WARNING_DEFECT_TYPES_COUNT = 65;
 
 export const NAME_FIELD_KEY = 'longName';
 export const GROUP_FIELD_KEY = 'typeRef';

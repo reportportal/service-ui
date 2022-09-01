@@ -17,8 +17,8 @@
 import {
   COLOR_BLACK_2,
   COLOR_WHITE_TWO,
-  COLOR_TO_INVESTIGATE,
   COLOR_PRODUCT_BUG,
+  COLOR_AUTOMATION_BUG,
 } from 'common/constants/colors';
 import { calculateFontColor } from './calculateFontColor';
 
@@ -28,7 +28,7 @@ describe('calculateFontColor', () => {
   });
 
   test('should return black color in case of bright argument color', () => {
-    expect(calculateFontColor(COLOR_TO_INVESTIGATE)).toBe(COLOR_BLACK_2);
+    expect(calculateFontColor(COLOR_AUTOMATION_BUG)).toBe(COLOR_BLACK_2);
   });
 
   test('should return white color in case of dark argument color', () => {

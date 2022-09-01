@@ -91,6 +91,7 @@
 
     p {
       margin-top: 4px;
+      max-width: 780px;
       @include font-config($FONT-ROBOTO-REGULAR, 11px, 16px, $COLOR--e-400);
     }
   }

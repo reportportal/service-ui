@@ -33,7 +33,12 @@ import {
 } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { withHoverableTooltip } from 'components/main/tooltips/hoverableTooltip';
 import { showModalAction } from 'controllers/modal';
-import { MAX_DEFECT_TYPES_COUNT } from 'pages/inside/projectSettingsPageContainer/content/defectTypes/constants';
+import {
+  MAX_DEFECT_TYPES_COUNT,
+  WARNING_DEFECT_TYPES_COUNT,
+} from 'pages/inside/projectSettingsPageContainer/content/defectTypes/constants';
+import { SystemMessage } from 'componentLibrary/systemMessage';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { DefectTypeRow } from './defectTypeRow';
 import { messages } from './defectTypesMessages';
 import styles from './defectTypes.scss';
@@ -53,15 +58,15 @@ const CreateDefect = withHoverableTooltip({
     placement: 'bottom',
     dynamicWidth: true,
   },
-})(({ onClick }) => (
-  <i className={cx('group-create')} onClick={onClick}>
+})(({ onClick, disabled }) => (
+  <i className={cx('group-create', { disabled })} onClick={onClick}>
     {Parser(CreateDefectIcon)}
   </i>
 ));
-
 CreateDefect.propTypes = {
   formatMessage: PropTypes.func.isRequired,
   onClick: PropTypes.func.isRequired,
+  disabled: PropTypes.bool.isRequired,
 };
 
 export const DefectTypes = ({ setHeaderTitleNode }) => {
@@ -89,15 +94,29 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
     );
   };
 
-  const isEditable = canUpdateSettings(userAccountRole, userProjectRole);
-  const canAddNewDefectType = useMemo(
-    () =>
-      DEFECT_TYPES_SEQUENCE.reduce((acc, groupName) => defectTypes[groupName].length + acc, 0) <
-      MAX_DEFECT_TYPES_COUNT,
+  const defectTypesLength = useMemo(
+    () => DEFECT_TYPES_SEQUENCE.reduce((acc, groupName) => defectTypes[groupName].length + acc, 0),
     [defectTypes],
   );
-  const interactionAllowed = isEditable && canAddNewDefectType;
+  const isEditable = canUpdateSettings(userAccountRole, userProjectRole);
+  const canAddNewDefectType = defectTypesLength < MAX_DEFECT_TYPES_COUNT;
+  const isInformationMessage =
+    defectTypesLength >= WARNING_DEFECT_TYPES_COUNT && canAddNewDefectType;
 
+  const getSystemMessagesProps = !canAddNewDefectType
+    ? {
+        mode: 'warning',
+        header: formatMessage(COMMON_LOCALE_KEYS.warning),
+        caption: formatMessage(messages.warningSubMessage, { maxLength: MAX_DEFECT_TYPES_COUNT }),
+      }
+    : {
+        mode: 'info',
+        header: formatMessage(messages.informationTitle),
+        caption: formatMessage(messages.informationSubMessage, {
+          currentLength: defectTypesLength,
+          maxLength: MAX_DEFECT_TYPES_COUNT,
+        }),
+      };
   useEffect(() => {
     setHeaderTitleNode(
       <span className={cx('button')}>
@@ -117,6 +136,24 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
     <>
       <TabDescription>{formatMessage(messages.description)}</TabDescription>
       <Divider />
+      {(isInformationMessage || !canAddNewDefectType) && (
+        <div className={cx('system-message')}>
+          <SystemMessage {...getSystemMessagesProps}>
+            <span className={cx('system-message-description')}>
+              {formatMessage(
+                !canAddNewDefectType ? messages.warningMessage : messages.informationMessage,
+                {
+                  length: MAX_DEFECT_TYPES_COUNT - defectTypesLength,
+                  slot:
+                    MAX_DEFECT_TYPES_COUNT - defectTypesLength === 1
+                      ? formatMessage(messages.informationMessageSingle)
+                      : formatMessage(messages.informationMessageMultiply),
+                },
+              )}
+            </span>
+          </SystemMessage>
+        </div>
+      )}
       <div className={cx('defect-types-list')}>
         {DEFECT_TYPES_SEQUENCE.map((groupName) => {
           return (
@@ -134,10 +171,11 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
                     {formatMessage(messages[groupName.toLowerCase()])}
                   </div>
                 </div>
-                {interactionAllowed && (
+                {isEditable && (
                   <CreateDefect
                     formatMessage={formatMessage}
-                    onClick={() => onAdd(defectTypes[groupName][0])}
+                    onClick={() => canAddNewDefectType && onAdd(defectTypes[groupName][0])}
+                    disabled={!canAddNewDefectType}
                   />
                 )}
               </div>

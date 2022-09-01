@@ -70,4 +70,34 @@ export const messages = defineMessages({
     defaultMessage:
       'Defect Types are a set of defects that are most likely to appear during tests execution. You can use default Defects to mark your test items or create your own Defects to make it easier to analyze tests execution.',
   },
+  informationTitle: {
+    id: 'DefectTypesTab.informationTitle',
+    defaultMessage: 'Information',
+  },
+  informationMessage: {
+    id: 'DefectTypesTab.informationMessage',
+    defaultMessage: 'You have only {length} {slot} left for creating Defect Types',
+  },
+  informationMessageSingle: {
+    id: 'DefectTypesTab.informationMessageSingle',
+    defaultMessage: 'slot',
+  },
+  informationMessageMultiply: {
+    id: 'DefectTypesTab.informationMessageMultiply',
+    defaultMessage: 'slots',
+  },
+  informationSubMessage: {
+    id: 'DefectTypesTab.informationSubMessage',
+    defaultMessage:
+      'You’ve used {currentLength} Defect Types out of {maxLength} available. After reaching the limit you won’t be able to create a new Defect Type until you delete at least one created previously',
+  },
+  warningMessage: {
+    id: 'DefectTypesTab.warningMessage',
+    defaultMessage: 'You have reached the maximum limit of Defect Types available per project',
+  },
+  warningSubMessage: {
+    id: 'DefectTypesTab.warningSubMessage',
+    defaultMessage:
+      'The number of Defect Types on your project is currently {maxLength} out of {maxLength}. You will be able to create a new one after deleting at least one created previously',
+  },
 });
