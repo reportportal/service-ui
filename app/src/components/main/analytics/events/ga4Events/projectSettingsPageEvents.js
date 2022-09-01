@@ -138,10 +138,10 @@ export const PROJECT_SETTINGS_DEFECT_TYPES_EVENTS = {
   },
   CLICK_COPY_ID_LOCATOR_ICON: {
     ...BASIC_EVENT_PARAMETERS_DEFECT_TYPES,
-    element_name: 'icon_copy',
+    icon_name: 'icon_copy',
   },
   CLICK_CREATE_ICON: {
     ...BASIC_EVENT_PARAMETERS_DEFECT_TYPES,
-    element_name: 'icon_create_defect',
+    icon_name: 'icon_create_defect',
   },
 };
