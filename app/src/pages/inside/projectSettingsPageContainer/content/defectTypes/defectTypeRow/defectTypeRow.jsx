@@ -16,6 +16,7 @@
 
 import React from 'react';
 import { useDispatch } from 'react-redux';
+import { useTracking } from 'react-tracking';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
@@ -29,23 +30,31 @@ import { withHoverableTooltip } from 'components/main/tooltips/hoverableTooltip'
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { showModalAction } from 'controllers/modal';
 import { deleteDefectTypeAction, updateDefectTypeAction } from 'controllers/project';
+import { PROJECT_SETTINGS_DEFECT_TYPES_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { defectTypeShape } from '../defectTypeShape';
 import styles from './defectTypeRow.scss';
 
 const cx = classNames.bind(styles);
 
-const DefectLocatorTooltip = ({ locator }) => (
-  <>
-    <b>ID locator</b>
-    <br />
-    <div className={cx('locator')}>
-      {locator}
-      <CopyToClipboard text={locator}>
-        <i className={cx('icon', 'copy-button')}>{Parser(CopyIcon)}</i>
-      </CopyToClipboard>
-    </div>
-  </>
-);
+const DefectLocatorTooltip = ({ locator }) => {
+  const { trackEvent } = useTracking();
+
+  return (
+    <>
+      <b>ID locator</b>
+      <br />
+      <div className={cx('locator')}>
+        {locator}
+        <CopyToClipboard
+          text={locator}
+          onCopy={() => trackEvent(PROJECT_SETTINGS_DEFECT_TYPES_EVENTS.CLICK_COPY_ID_LOCATOR_ICON)}
+        >
+          <i className={cx('icon', 'copy-button')}>{Parser(CopyIcon)}</i>
+        </CopyToClipboard>
+      </div>
+    </>
+  );
+};
 DefectLocatorTooltip.propTypes = {
   locator: PropTypes.string.isRequired,
 };
