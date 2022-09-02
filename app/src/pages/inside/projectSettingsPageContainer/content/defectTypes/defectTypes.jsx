@@ -129,7 +129,7 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
           disabled={!isEditable || !canAddNewDefectType}
           onClick={() =>
             onAdd(defectTypes[DEFECT_TYPES_SEQUENCE[0]][0], () =>
-              trackEvent(PROJECT_SETTINGS_DEFECT_TYPES_EVENTS.CLICK_CREATE_ICON),
+              trackEvent(PROJECT_SETTINGS_DEFECT_TYPES_EVENTS.CLICK_CREATE_BUTTON),
             )
           }
         >
