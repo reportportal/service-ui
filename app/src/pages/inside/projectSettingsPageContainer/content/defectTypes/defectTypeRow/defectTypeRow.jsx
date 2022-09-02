@@ -36,21 +36,27 @@ import styles from './defectTypeRow.scss';
 
 const cx = classNames.bind(styles);
 
-const DefectLocatorTooltip = ({ locator, onCopy }) => (
-  <>
-    <b>ID locator</b>
-    <br />
-    <div className={cx('locator')}>
-      {locator}
-      <CopyToClipboard text={locator} onCopy={onCopy}>
-        <i className={cx('icon', 'copy-button')}>{Parser(CopyIcon)}</i>
-      </CopyToClipboard>
-    </div>
-  </>
-);
+const DefectLocatorTooltip = ({ locator }) => {
+  const { trackEvent } = useTracking();
+
+  return (
+    <>
+      <b>ID locator</b>
+      <br />
+      <div className={cx('locator')}>
+        {locator}
+        <CopyToClipboard
+          text={locator}
+          onCopy={() => trackEvent(PROJECT_SETTINGS_DEFECT_TYPES_EVENTS.CLICK_COPY_ID_LOCATOR_ICON)}
+        >
+          <i className={cx('icon', 'copy-button')}>{Parser(CopyIcon)}</i>
+        </CopyToClipboard>
+      </div>
+    </>
+  );
+};
 DefectLocatorTooltip.propTypes = {
   locator: PropTypes.string.isRequired,
-  onCopy: PropTypes.func.isRequired,
 };
 
 const DefectLocator = withHoverableTooltip({
@@ -66,7 +72,6 @@ const DefectLocator = withHoverableTooltip({
 ));
 DefectLocator.propTypes = {
   locator: PropTypes.string.isRequired,
-  onCopy: PropTypes.func.isRequired,
 };
 
 export const DefectTypeRow = ({
@@ -77,7 +82,6 @@ export const DefectTypeRow = ({
 }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-  const { trackEvent } = useTracking();
 
   const deleteDefect = () => {
     dispatch(deleteDefectTypeAction(data));
@@ -111,8 +115,6 @@ export const DefectTypeRow = ({
       }),
     );
   };
-
-  const onCopy = () => trackEvent(PROJECT_SETTINGS_DEFECT_TYPES_EVENTS.CLICK_COPY_ID_LOCATOR_ICON);
 
   return (
     <div className={cx('defect-type')}>
@@ -150,7 +152,7 @@ export const DefectTypeRow = ({
             )}
           </div>
         </div>
-        <DefectLocator locator={locator} onCopy={onCopy} />
+        <DefectLocator locator={locator} />
       </div>
     </div>
   );

@@ -83,7 +83,8 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
   const addDefect = (data) => {
     dispatch(addDefectTypeAction({ ...data }));
   };
-  const onAdd = (defectGroup) => {
+  const onAdd = (defectGroup, event) => {
+    event();
     dispatch(
       showModalAction({
         id: 'addEditDefectTypeModal',
@@ -95,16 +96,6 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
         },
       }),
     );
-  };
-
-  const onCreateButtonClick = (defectGroup) => {
-    trackEvent(PROJECT_SETTINGS_DEFECT_TYPES_EVENTS.CLICK_CREATE_BUTTON);
-    onAdd(defectGroup);
-  };
-
-  const onCreateIconClick = (defectGroup) => {
-    trackEvent(PROJECT_SETTINGS_DEFECT_TYPES_EVENTS.CLICK_CREATE_ICON);
-    onAdd(defectGroup);
   };
 
   const defectTypesLength = useMemo(
@@ -136,7 +127,11 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
       <span className={cx('button')}>
         <Button
           disabled={!isEditable || !canAddNewDefectType}
-          onClick={() => onCreateButtonClick(defectTypes[DEFECT_TYPES_SEQUENCE[0]][0])}
+          onClick={() =>
+            onAdd(defectTypes[DEFECT_TYPES_SEQUENCE[0]][0], () =>
+              trackEvent(PROJECT_SETTINGS_DEFECT_TYPES_EVENTS.CLICK_CREATE_ICON),
+            )
+          }
         >
           {formatMessage(messages.createDefectHeader)}
         </Button>
@@ -189,7 +184,10 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
                   <CreateDefect
                     formatMessage={formatMessage}
                     onClick={() =>
-                      canAddNewDefectType && onCreateIconClick(defectTypes[groupName][0])
+                      canAddNewDefectType &&
+                      onAdd(defectTypes[groupName][0], () =>
+                        trackEvent(PROJECT_SETTINGS_DEFECT_TYPES_EVENTS.CLICK_CREATE_ICON),
+                      )
                     }
                     disabled={!canAddNewDefectType}
                   />
