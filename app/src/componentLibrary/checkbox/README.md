@@ -7,6 +7,7 @@
 - **disabled**: _bool_, optional, default = false
 - **variant**: _sting_, optional, default = "light"
 - **className**: _string_, optional, default = ""
+- **dataAutomationId**: _string_, optional, default = ''
 
 ### Events:
 

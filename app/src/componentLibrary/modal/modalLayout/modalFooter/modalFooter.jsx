@@ -29,7 +29,12 @@ export const ModalFooter = ({ okButton, cancelButton, closeHandler, footerNode }
       <div className={cx('buttons-block')}>
         {cancelButton && (
           <div className={cx('button-container')}>
-            <Button variant="ghost" onClick={closeHandler} disabled={cancelButton.disabled}>
+            <Button
+              variant="ghost"
+              onClick={closeHandler}
+              disabled={cancelButton.disabled}
+              dataAutomationId={'cancelButton'}
+            >
               {cancelButton.text}
             </Button>
           </div>
@@ -42,6 +47,7 @@ export const ModalFooter = ({ okButton, cancelButton, closeHandler, footerNode }
               disabled={okButton.disabled}
               type={okButton.attributes && okButton.attributes.type}
               form={okButton.attributes && okButton.attributes.form}
+              dataAutomationId={'submitButton'}
             >
               {okButton.text}
             </Button>

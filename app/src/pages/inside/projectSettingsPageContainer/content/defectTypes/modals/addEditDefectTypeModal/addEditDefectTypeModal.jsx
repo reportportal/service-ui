@@ -189,13 +189,21 @@ const AddEditDefectTypeModal = ({
               change(COLOR_FIELD_KEY, defectTypes[value][0].color);
             }}
           >
-            <Dropdown options={defectGroupOptions} defaultWidth={false} />
+            <Dropdown
+              options={defectGroupOptions}
+              defaultWidth={false}
+              dataAutomationId="typeRefField"
+            />
           </FieldElement>
         )}
         <div className={cx('input')}>
           <FieldProvider name={NAME_FIELD_KEY} type="text">
             <FieldErrorHint provideHint={false}>
-              <FieldText label={formatMessage(messages.name)} defaultWidth={false} />
+              <FieldText
+                label={formatMessage(messages.name)}
+                defaultWidth={false}
+                dataAutomationId="longNameField"
+              />
             </FieldErrorHint>
           </FieldProvider>
         </div>
@@ -210,6 +218,7 @@ const AddEditDefectTypeModal = ({
               defaultWidth={false}
               helpText={formatMessage(messages.abbreviationHint)}
               className={cx('abbreviation-field')}
+              dataAutomationId="shortNameField"
             />
           </FieldErrorHint>
         </FieldProvider>

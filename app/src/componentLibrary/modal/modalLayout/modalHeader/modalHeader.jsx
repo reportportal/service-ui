@@ -29,7 +29,7 @@ export const ModalHeader = ({ title, onClose, headerNode }) => (
       {title && <span className={cx('modal-title')}>{title}</span>}
       {headerNode && headerNode}
     </div>
-    <div className={cx('close-modal-icon')} onClick={onClose}>
+    <div className={cx('close-modal-icon')} onClick={onClose} data-automation-id={'closeModalIcon'}>
       {Parser(CloseIcon)}
     </div>
   </div>

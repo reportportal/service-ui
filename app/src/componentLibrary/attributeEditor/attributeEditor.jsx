@@ -156,6 +156,7 @@ export const AttributeEditor = ({
           onInputChange={handleAttributeKeyInputChange}
           autocompleteVariant={'key-variant'}
           menuClassName={cx('menu')}
+          dataAutomationId={'keyField'}
         />
       </FieldErrorHint>
       <div className={cx('separator')}>:</div>
@@ -179,18 +180,21 @@ export const AttributeEditor = ({
           isRequired
           autocompleteVariant={'value-variant'}
           menuClassName={cx('menu')}
+          dataAutomationId={'valueField'}
         />
       </FieldErrorHint>
       <div className={cx('buttons')}>
         <div
           className={cx('check-btn', { disabled: !isFormValid() })}
           onClick={isFormValid() ? handleSubmit : null}
+          data-automation-id={'saveAttributeButton'}
         >
           {Parser(CheckIcon)}
         </div>
         <div
           className={cx('cross-btn', { disabled: isCancelButtonDisabled })}
           onClick={handleCancel}
+          data-automation-id={'cancelAttributeButton'}
         >
           {Parser(CrossIcon)}
         </div>

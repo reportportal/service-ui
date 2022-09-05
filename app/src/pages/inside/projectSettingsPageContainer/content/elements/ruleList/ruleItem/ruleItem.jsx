@@ -36,12 +36,13 @@ export const RuleItem = ({ item, actions, onToggle, disabled, content, onClick }
   };
 
   return (
-    <div className={cx('container')}>
+    <div className={cx('container')} data-automation-id="listItem">
       <span className={cx('toggle')}>
         <Toggle
           value={enabled}
           onChange={(e) => onToggleActive(e.target.checked)}
           disabled={disabled}
+          dataAutomationId="enabledToggle"
         />
       </span>
       <div className={cx('panel-wrapper')}>
@@ -51,7 +52,7 @@ export const RuleItem = ({ item, actions, onToggle, disabled, content, onClick }
           </span>
           {actions.length > 0 && !disabled && (
             <span className={cx('actions')}>
-              {actions.map(({ icon, handler, customIcon: CustomIcon, id }) => {
+              {actions.map(({ icon, handler, dataAutomationId, customIcon: CustomIcon, id }) => {
                 return (
                   <React.Fragment key={id || icon}>
                     {CustomIcon ? (
@@ -63,6 +64,7 @@ export const RuleItem = ({ item, actions, onToggle, disabled, content, onClick }
                           e.stopPropagation();
                           handler(item);
                         }}
+                        data-automation-id={dataAutomationId}
                       >
                         {Parser(icon)}
                       </i>

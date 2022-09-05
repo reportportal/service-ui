@@ -22,7 +22,7 @@ import styles from './hexColorPicker.scss';
 
 const cx = classNames.bind(styles);
 
-export const HexColorPickerComponent = ({ label, value, presets, onChange }) => {
+export const HexColorPickerComponent = ({ label, value, presets, onChange, dataAutomationId }) => {
   // Problem with HexColorPicker: infinity onChange call with 2 different values
   const [color, setColor] = useState(value);
 
@@ -37,7 +37,12 @@ export const HexColorPickerComponent = ({ label, value, presets, onChange }) => 
       <section>
         <div className={cx('hex-color-input-wrapper')}>
           <span>HEX</span>
-          <HexColorInput color={color} onChange={setColor} prefixed />
+          <HexColorInput
+            color={color}
+            onChange={setColor}
+            prefixed
+            data-automation-id={dataAutomationId}
+          />
           <div className={cx('hex-color-preset', 'current')} style={{ background: color }} />
         </div>
         <div className={cx('hex-color-presets')}>
@@ -60,10 +65,12 @@ HexColorPickerComponent.propTypes = {
   value: PropTypes.string,
   presets: PropTypes.array,
   onChange: PropTypes.func,
+  dataAutomationId: PropTypes.string,
 };
 HexColorPickerComponent.defaultProps = {
   label: '',
   value: '#ffffff',
   presets: [],
   onChange: () => {},
+  dataAutomationId: 'colorField',
 };

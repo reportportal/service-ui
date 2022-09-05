@@ -66,6 +66,7 @@ export const LaunchNamesContainer = ({ highlightUnStoredItem, ...rest }) => {
         editable
         highlightUnStoredItem={highlightUnStoredItem}
         handleUnStoredItemCb={handleSystemMessage}
+        dataAutomationId="launchNamesField"
         {...rest}
       />
       <span className={cx('helper-text')}>{formatMessage(messages.launchNamesNote)}</span>

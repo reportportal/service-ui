@@ -67,7 +67,10 @@ export const ModalLayout = ({
   useOnClickOutside(modalRef, allowCloseOutside && closeModal);
 
   return (
-    <div className={cx('modal-layout', { [`overlay-${overlay}`]: overlay })}>
+    <div
+      className={cx('modal-layout', { [`overlay-${overlay}`]: overlay })}
+      data-automation-id="modalWindow"
+    >
       <div className={cx('scrolling-content')}>
         <Scrollbars>
           <CSSTransition

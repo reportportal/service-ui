@@ -167,7 +167,9 @@ export const Notifications = ({ setHeaderTitleNode }) => {
     if (notifications.length > 0) {
       setHeaderTitleNode(
         <span className={cx('button')} onClick={onAdd}>
-          <Button disabled={!isAbleToEdit()}>{formatMessage(messages.create)}</Button>
+          <Button disabled={!isAbleToEdit()} dataAutomationId={'createNotificationRuleButton'}>
+            {formatMessage(messages.create)}
+          </Button>
         </span>,
       );
     }
@@ -191,14 +193,17 @@ export const Notifications = ({ setHeaderTitleNode }) => {
     {
       icon: CopyIcon,
       handler: onCopy,
+      dataAutomationId: 'duplicateNotificationRuleIcon',
     },
     {
       icon: PencilIcon,
       handler: onEdit,
+      dataAutomationId: 'editNotificationRuleIcon',
     },
     {
       icon: BinIcon,
       handler: onDelete,
+      dataAutomationId: 'deleteNotificationRuleIcon',
     },
   ];
 
@@ -223,6 +228,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
           <Layout description={formatMessage(messages.tabDescription)}>
             <FieldElement withoutProvider description={formatMessage(messages.toggleNote)}>
               <Checkbox
+                dataAutomationId="notificationsEnabledCheckbox"
                 disabled={isReadOnly}
                 value={enabled}
                 onChange={(e) => toggleNotificationsEnabled(e.target.checked)}
@@ -231,7 +237,10 @@ export const Notifications = ({ setHeaderTitleNode }) => {
               </Checkbox>
             </FieldElement>
           </Layout>
-          <div className={cx('notifications-container')}>
+          <div
+            className={cx('notifications-container')}
+            data-automation-id="notificationsContainer"
+          >
             <RuleList
               disabled={isReadOnly}
               data={notifications.map((item) => ({ name: item.ruleName, ...item }))}
@@ -239,6 +248,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
               onToggle={onToggleHandler}
               ruleItemContent={NotificationRuleContent}
               handleRuleItemClick={handleRuleItemClick}
+              dataAutomationId="notificationsRulesList"
             />
           </div>
         </>
@@ -247,12 +257,14 @@ export const Notifications = ({ setHeaderTitleNode }) => {
           title={formatMessage(messages.noItemsMessage)}
           description={formatMessage(messages.notificationsInfo)}
           buttonName={formatMessage(messages.create)}
+          buttonDataAutomationId={'createNotificationRuleButton'}
           documentationLink={
             'https://reportportal.io/docs/Project-configuration%3Ee-mail-notifications'
           }
           disableButton={isReadOnly}
           handleButton={onAdd}
           handleDocumentationClick={handleDocumentationClick}
+          documentationDataAutomationId={'notificationsDocumentationLink'}
           imageType="bell"
         />
       )}

@@ -29,6 +29,7 @@ export const Toggle = ({
   className,
   disabled,
   title,
+  dataAutomationId,
 }) => (
   // eslint-disable-next-line
   <label
@@ -43,6 +44,7 @@ export const Toggle = ({
       disabled={disabled}
       className={cx('input')}
       type="checkbox"
+      data-automation-id={dataAutomationId}
     />
     <div className={cx('slider', 'round')} />
     {children && <span className={cx('children-container')}>{children}</span>}
@@ -58,6 +60,7 @@ Toggle.propTypes = {
   className: PropTypes.string,
   disabled: PropTypes.bool,
   title: PropTypes.string,
+  dataAutomationId: PropTypes.string,
 };
 
 Toggle.defaultProps = {
@@ -69,4 +72,5 @@ Toggle.defaultProps = {
   className: '',
   disabled: false,
   title: '',
+  dataAutomationId: '',
 };

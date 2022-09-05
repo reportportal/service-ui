@@ -49,6 +49,7 @@ export class SingleAutocomplete extends Component {
     menuClassName: PropTypes.string,
     icon: PropTypes.string,
     isOptionUnique: PropTypes.func,
+    dataAutomationId: PropTypes.string,
   };
 
   static defaultProps = {
@@ -75,6 +76,7 @@ export class SingleAutocomplete extends Component {
     menuClassName: '',
     icon: null,
     isOptionUnique: null,
+    dataAutomationId: '',
   };
 
   getOptionProps = (getItemProps, highlightedIndex, selectedItem) => ({ item, index, ...rest }) =>
@@ -108,6 +110,7 @@ export class SingleAutocomplete extends Component {
       icon,
       options,
       isOptionUnique,
+      dataAutomationId,
       ...props
     } = this.props;
     return (
@@ -161,6 +164,7 @@ export class SingleAutocomplete extends Component {
                         touched,
                         error,
                         endIcon: icon,
+                        dataAutomationId,
                         ...inputProps,
                       })}
                     />
