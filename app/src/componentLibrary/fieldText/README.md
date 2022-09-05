@@ -21,6 +21,7 @@ Has 36px height & width adjusted by content.
 - **clearable**: _bool_, optional, default = false
 - **isRequired**: _bool_, optional, default = false
 - **hasDoubleMessage**: _bool_, optional, default = false
+- **dataAutomationId**: _string_, optional, default = ''
 
 ### Events:
 

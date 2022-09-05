@@ -28,6 +28,7 @@ export const Checkbox = ({
   className,
   value,
   variant,
+  dataAutomationId,
 }) => (
   // eslint-disable-next-line
   <label
@@ -43,6 +44,7 @@ export const Checkbox = ({
       disabled={disabled}
       onChange={onChange}
       checked={value}
+      data-automation-id={dataAutomationId}
     />
     <span
       className={cx('checkbox', {
@@ -61,6 +63,7 @@ Checkbox.propTypes = {
   onFocus: PropTypes.func,
   onBlur: PropTypes.func,
   className: PropTypes.string,
+  dataAutomationId: PropTypes.string,
 };
 Checkbox.defaultProps = {
   variant: 'light',
@@ -71,4 +74,5 @@ Checkbox.defaultProps = {
   onFocus: () => {},
   onBlur: () => {},
   className: '',
+  dataAutomationId: '',
 };

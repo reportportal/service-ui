@@ -61,7 +61,11 @@ const CreateDefect = withHoverableTooltip({
     dynamicWidth: true,
   },
 })(({ onClick, disabled }) => (
-  <i className={cx('group-create', { disabled })} onClick={onClick}>
+  <i
+    className={cx('group-create', { disabled })}
+    onClick={onClick}
+    data-automation-id={'createDefectTypeIcon'}
+  >
     {Parser(CreateDefectIcon)}
   </i>
 ));
@@ -132,6 +136,7 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
               trackEvent(PROJECT_SETTINGS_DEFECT_TYPES_EVENTS.CLICK_CREATE_BUTTON),
             )
           }
+          dataAutomationId={'createDefectTypeButton'}
         >
           {formatMessage(messages.createDefectHeader)}
         </Button>
@@ -163,10 +168,10 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
           </SystemMessage>
         </div>
       )}
-      <div className={cx('defect-types-list')}>
+      <div className={cx('defect-types-list')} data-automation-id="defectTypeGroupsList">
         {DEFECT_TYPES_SEQUENCE.map((groupName) => {
           return (
-            <div key={groupName} className={cx('defect-type-group')}>
+            <div key={groupName} className={cx('defect-type-group')} data-automation-id="listItem">
               <div className={cx('group-info')}>
                 <div className={cx('group-type')}>
                   <i
@@ -198,9 +203,9 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
                 <span>{formatMessage(messages.abbreviationCol)}</span>
               </div>
               <Divider />
-              <div className={cx('group-content')}>
+              <div className={cx('group-content')} data-automation-id="defectTypesList">
                 {defectTypes[groupName].map((defectType, i) => (
-                  <div key={defectType.id}>
+                  <div key={defectType.id} data-automation-id="listItem">
                     <DefectTypeRow
                       data={defectType}
                       parentType={defectTypes[groupName][0]}

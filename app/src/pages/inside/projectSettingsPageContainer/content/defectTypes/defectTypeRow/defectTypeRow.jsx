@@ -67,7 +67,9 @@ const DefectLocator = withHoverableTooltip({
   },
 })(() => (
   <div className={cx('locator-wrapper')}>
-    <i className={cx('icon', 'locator-icon')}>{Parser(IdIcon)}</i>
+    <i className={cx('icon', 'locator-icon')} data-automation-id="defectTypeLocatorIcon">
+      {Parser(IdIcon)}
+    </i>
   </div>
 ));
 DefectLocator.propTypes = {
@@ -137,6 +139,7 @@ export const DefectTypeRow = ({
                   aria-label={formatMessage(COMMON_LOCALE_KEYS.EDIT)}
                   title={formatMessage(COMMON_LOCALE_KEYS.EDIT)}
                   onClick={onEdit}
+                  data-automation-id="editDefectTypeIcon"
                 >
                   {Parser(PencilIcon)}
                 </button>
@@ -145,6 +148,7 @@ export const DefectTypeRow = ({
                   aria-label={formatMessage(COMMON_LOCALE_KEYS.DELETE)}
                   title={formatMessage(COMMON_LOCALE_KEYS.DELETE)}
                   onClick={onDelete}
+                  data-automation-id="deleteDefectTypeIcon"
                 >
                   {Parser(BinIcon)}
                 </button>

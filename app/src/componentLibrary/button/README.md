@@ -12,6 +12,7 @@ Min width - 120px. Max width - flexible.
 - **endIcon**: _string(imported svg icon)_, optional, default = ""
 - **children**: _node_, optional, default= ""
 - **customClassName**: _string_, optional, default= ""
+- **dataAutomationId**: _string_, optional, default = ''
 
 ### Events:
 

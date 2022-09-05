@@ -42,7 +42,7 @@ export const ListItem = ({
   ));
 
   return (
-    <div className={cx('list-item')}>
+    <div className={cx('list-item')} data-automation-id="listItem">
       <ControlPanel item={item} {...rest} />
       <div className={cx('data')}>
         {contentWithScroll ? (

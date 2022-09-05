@@ -271,8 +271,14 @@ const AddEditNotificationModal = ({
       onClose={() => dispatch(hideModalAction())}
       allowCloseOutside={!dirty}
       footerNode={
-        <FieldProvider name={ENABLED_FIELD_KEY} format={(value) => !!value}>
-          <Toggle className={cx('toggle')}>{formatMessage(messages.active)}</Toggle>
+        <FieldProvider
+          name={ENABLED_FIELD_KEY}
+          format={(value) => !!value}
+          data-automation-id="enabledToggle"
+        >
+          <Toggle className={cx('toggle')} dataAutomationId="enabledToggle">
+            {formatMessage(messages.active)}
+          </Toggle>
         </FieldProvider>
       }
     >
@@ -284,6 +290,7 @@ const AddEditNotificationModal = ({
               label={formatMessage(messages.nameLabel)}
               placeholder={formatMessage(messages.namePlaceholder)}
               defaultWidth={false}
+              dataAutomationId="ruleNameField"
             />
           </FieldErrorHint>
         </FieldProvider>
@@ -298,7 +305,9 @@ const AddEditNotificationModal = ({
           </FieldErrorHint>
         </FieldElement>
         <FieldElement name={INFORM_OWNER_FIELD_KEY} type="text" className={cx('checkbox')}>
-          <Checkbox>{formatMessage(messages.launchOwnerLabel)}</Checkbox>
+          <Checkbox dataAutomationId="informOwnerCheckbox">
+            {formatMessage(messages.launchOwnerLabel)}
+          </Checkbox>
         </FieldElement>
         <FieldElement
           label={formatMessage(messages.inCaseLabel)}
@@ -306,7 +315,7 @@ const AddEditNotificationModal = ({
           type="text"
           className={cx('input')}
         >
-          <Dropdown options={caseOptions} defaultWidth={false} />
+          <Dropdown options={caseOptions} defaultWidth={false} dataAutomationId="sendCaseField" />
         </FieldElement>
         <FieldElement
           label={formatMessage(messages.launchNamesLabel)}

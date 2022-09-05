@@ -104,7 +104,7 @@ export const AttributeList = ({
   );
 
   return (
-    <div className={cx(attributesListClassname)}>
+    <div className={cx(attributesListClassname)} data-automation-id={'attributesField'}>
       {editableAttr && (
         <AttributeEditor
           attribute={editableAttr}
@@ -139,7 +139,12 @@ export const AttributeList = ({
           </span>
         )}
         {!hasEditedAttribute && !disabled && showButton && attributes.length < maxLength && (
-          <Button startIcon={PlusIcon} onClick={onAddNew} variant={'text'}>
+          <Button
+            startIcon={PlusIcon}
+            onClick={onAddNew}
+            variant={'text'}
+            dataAutomationId={'addAttributeButton'}
+          >
             {newAttrMessage || (
               <FormattedMessage id="AttributeList.addNew" defaultMessage="Add new" />
             )}

@@ -29,10 +29,11 @@ export const RuleList = ({
   disabled,
   ruleItemContent,
   handleRuleItemClick,
+  dataAutomationId,
 }) => {
   const Content = ruleItemContent;
   return (
-    <div className={cx('container')}>
+    <div className={cx('container')} data-automation-id={dataAutomationId}>
       {data.map((item) => (
         <RuleItem
           key={item.id}
@@ -54,6 +55,7 @@ RuleList.propTypes = {
   disabled: PropTypes.bool,
   ruleItemContent: PropTypes.elementType,
   handleRuleItemClick: PropTypes.func,
+  dataAutomationId: PropTypes.string,
 };
 RuleList.defaultProps = {
   actions: [],
@@ -61,4 +63,5 @@ RuleList.defaultProps = {
   disabled: true,
   ruleItemContent: null,
   handleRuleItemClick: () => {},
+  dataAutomationId: '',
 };

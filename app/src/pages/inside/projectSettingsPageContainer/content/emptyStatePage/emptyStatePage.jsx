@@ -45,6 +45,8 @@ export const EmptyStatePage = ({
   descriptionClassName,
   handleDocumentationClick,
   imageType,
+  buttonDataAutomationId,
+  documentationDataAutomationId,
 }) => {
   const { formatMessage } = useIntl();
   return (
@@ -53,7 +55,12 @@ export const EmptyStatePage = ({
       <span className={cx('title')}>{title}</span>
       <span className={cx('description', descriptionClassName)}>{description}</span>
       {buttonName && (
-        <Button disabled={disableButton} wide onClick={handleButton}>
+        <Button
+          disabled={disableButton}
+          wide
+          onClick={handleButton}
+          dataAutomationId={buttonDataAutomationId}
+        >
           {buttonName}
         </Button>
       )}
@@ -63,6 +70,7 @@ export const EmptyStatePage = ({
           onClick={handleDocumentationClick}
           target="_blank"
           className={cx('link')}
+          data-automation-id={documentationDataAutomationId}
         >
           <span>{formatMessage(COMMON_LOCALE_KEYS.documentation)}</span>
           <div className={cx('icon')}>{Parser(ExternalLinkIcon)}</div>
@@ -82,6 +90,8 @@ EmptyStatePage.propTypes = {
   descriptionClassName: PropTypes.string,
   handleDocumentationClick: PropTypes.oneOfType([PropTypes.func, PropTypes.instanceOf(null)]),
   imageType: PropTypes.oneOf(['plus', 'rhombus', 'bell']),
+  buttonDataAutomationId: PropTypes.string,
+  documentationDataAutomationId: PropTypes.string,
 };
 
 EmptyStatePage.defaultProps = {
@@ -94,4 +104,6 @@ EmptyStatePage.defaultProps = {
   descriptionClassName: '',
   handleDocumentationClick: null,
   imageType: 'plus',
+  buttonDataAutomationId: '',
+  documentationDataAutomationId: '',
 };

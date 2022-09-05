@@ -50,6 +50,7 @@ export const MultipleAutocomplete = ({
   highlightUnStoredItem,
   parseInputValueFn,
   handleUnStoredItemCb,
+  dataAutomationId,
   ...props
 }) => {
   let updatePosition;
@@ -179,6 +180,7 @@ export const MultipleAutocomplete = ({
                           ...inputProps,
                         })}
                         className={cx('input', { disabled })}
+                        data-automation-id={dataAutomationId}
                       />
                     </div>
                   </div>
@@ -248,6 +250,7 @@ MultipleAutocomplete.propTypes = {
   highlightUnStoredItem: PropTypes.bool,
   parseInputValueFn: PropTypes.func,
   handleUnStoredItemCb: PropTypes.func,
+  dataAutomationId: PropTypes.string,
 };
 
 MultipleAutocomplete.defaultProps = {
@@ -277,4 +280,5 @@ MultipleAutocomplete.defaultProps = {
   highlightUnStoredItem: false,
   parseInputValueFn: null,
   handleUnStoredItemCb: null,
+  dataAutomationId: '',
 };

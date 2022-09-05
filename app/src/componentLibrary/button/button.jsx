@@ -33,6 +33,7 @@ export const Button = ({
   form,
   title,
   customClassName,
+  dataAutomationId,
 }) => {
   const classes = cx('button', variant, customClassName, {
     disabled,
@@ -49,6 +50,7 @@ export const Button = ({
       onClick={onClick}
       form={form}
       title={title}
+      data-automation-id={dataAutomationId}
     >
       {icon && (
         <i className={cx('icon', { 'start-icon': startIcon, 'end-icon': endIcon })}>
@@ -72,6 +74,7 @@ Button.propTypes = {
   form: PropTypes.string,
   title: PropTypes.string,
   customClassName: PropTypes.string,
+  dataAutomationId: PropTypes.string,
 };
 
 Button.defaultProps = {
@@ -86,4 +89,5 @@ Button.defaultProps = {
   form: null,
   title: '',
   customClassName: '',
+  dataAutomationId: '',
 };

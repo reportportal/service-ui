@@ -48,6 +48,7 @@ export const FieldText = ({
   isRequired,
   hasDoubleMessage,
   type,
+  dataAutomationId,
 }) => {
   const clearInput = () => onChange('');
 
@@ -83,6 +84,7 @@ export const FieldText = ({
             onBlur={disabled ? null : onBlur}
             onKeyUp={disabled ? null : onKeyUp}
             onKeyDown={disabled ? null : onKeyDown}
+            data-automation-id={dataAutomationId}
           />
           {placeholder && !value && (
             <span className={cx(VARIANT, 'placeholder')}>
@@ -146,6 +148,7 @@ FieldText.propTypes = {
   isRequired: PropTypes.bool,
   hasDoubleMessage: PropTypes.bool,
   type: PropTypes.string,
+  dataAutomationId: PropTypes.string,
 };
 FieldText.defaultProps = {
   value: '',
@@ -171,4 +174,5 @@ FieldText.defaultProps = {
   isRequired: false,
   hasDoubleMessage: false,
   type: 'text',
+  dataAutomationId: '',
 };
