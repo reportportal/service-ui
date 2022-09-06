@@ -55,7 +55,7 @@ export const IntegrationSetting = ({
 
 IntegrationSetting.propTypes = {
   blocked: PropTypes.bool,
-  data: PropTypes.object,
+  data: PropTypes.object.isRequired,
   onRemoveIntegration: PropTypes.func,
   connected: PropTypes.bool,
   editAuthConfig: PropTypes.object,
@@ -66,4 +66,14 @@ IntegrationSetting.propTypes = {
   isEmptyConfiguration: PropTypes.bool,
 };
 
-IntegrationSetting.defaultProps = {};
+IntegrationSetting.defaultProps = {
+  blocked: false,
+  onRemoveIntegration: () => {},
+  connected: true,
+  editAuthConfig: {},
+  pluginName: '',
+  form: '',
+  onSubmit: () => {},
+  formFieldsComponent: {},
+  isEmptyConfiguration: false,
+};

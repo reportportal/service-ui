@@ -33,7 +33,6 @@ import {
 import { canUpdateSettings } from 'common/utils/permissions';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
-
 import { PLUGIN_NAME_TITLES } from 'components/integrations';
 import { showModalAction, hideModalAction } from 'controllers/modal';
 import {
@@ -44,10 +43,8 @@ import {
   removeIntegrationAction,
   removeProjectIntegrationsByTypeAction,
 } from 'controllers/plugins';
-
 import { updatePagePropertiesAction, projectIdSelector } from 'controllers/pages';
 import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
-
 import { IntegrationSetting } from './integrationSetting';
 import { IntegrationHeader } from './integrationHeader';
 import { AvailableIntegrations } from './availableIntegrations';
@@ -225,9 +222,9 @@ export const IntegrationInfo = (props) => {
     );
   };
 
-  const getEditAuthConfig = () => ({
+  const getEditAuthConfig = {
     onClick: editAuthorizationClickHandler,
-  });
+  };
 
   const removeIntegration = () => {
     dispatch(removeIntegrationAction(integrationInfo.id, false, goBackHandler));
@@ -316,7 +313,7 @@ export const IntegrationInfo = (props) => {
               onRemoveIntegration={removeIntegration}
               pluginName={integrationInfo.integrationType?.name}
               connected={connected}
-              editAuthConfig={getEditAuthConfig()}
+              editAuthConfig={getEditAuthConfig}
               form={BTS_FIELDS_FORM}
               onSubmit={onSubmit}
               formFieldsComponent={BtsPropertiesForIssueForm}

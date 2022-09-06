@@ -25,4 +25,8 @@ export const messages = defineMessages({
     id: 'RallyConnectionFormFields.accessKeyLabel',
     defaultMessage: 'AccessKey',
   },
+  projectIntegrationEdit: {
+    id: 'IntegrationsDescription.projectIntegrationEdit',
+    defaultMessage: 'Edit Project Integration',
+  },
 });

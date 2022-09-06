@@ -26,7 +26,6 @@ import { activeProjectSelector } from 'controllers/user';
 import { removeIntegrationAction } from 'controllers/plugins';
 import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
-
 import { INTEGRATION_FORM } from './integrationForm/constants';
 import { ConnectionSection } from './connectionSection';
 import { IntegrationForm } from './integrationForm';

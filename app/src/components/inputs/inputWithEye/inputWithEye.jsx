@@ -15,25 +15,16 @@
  */
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import Parser from 'html-react-parser';
+import EyeIcon from 'common/img/newIcons/eye-inline.svg';
+import CrossEyeIcon from 'common/img/newIcons/cross-eye-inline.svg';
 import styles from './inputWithEye.scss';
-import { Eye } from './Eye';
 
 const cx = classNames.bind(styles);
 
-export const InputWithEye = ({
-  children,
-  value,
-  disabled,
-  onChange,
-  onFocus,
-  onBlur,
-  iconTransparentBackground,
-  className,
-  darkView,
-  responsive,
-}) => (
+export const InputWithEye = ({ value, disabled, onChange, onFocus, onBlur, className }) => (
   // eslint-disable-next-line
-  <label className={cx('input-checkbox', className)} onFocus={onFocus} onBlur={onBlur} tabIndex="1">
+  <label className={cx('input-with-eye', className)} onFocus={onFocus} onBlur={onBlur} tabIndex="1">
     <input
       type="checkbox"
       className={cx('input')}
@@ -41,17 +32,13 @@ export const InputWithEye = ({
       disabled={disabled}
       onChange={onChange}
     />
-    <Eye
-      disabled={disabled}
-      centered={!children}
-      checked={value}
-      transparentBackground={iconTransparentBackground}
-      darkView={darkView}
-      responsive={responsive}
-    />
-    {children && (
-      <span className={cx('children-container', { disabled, responsive })}>{children}</span>
-    )}
+    <div
+      className={cx('eye', {
+        disabled,
+      })}
+    >
+      {Parser(value ? EyeIcon : CrossEyeIcon)}
+    </div>
   </label>
 );
 InputWithEye.propTypes = {

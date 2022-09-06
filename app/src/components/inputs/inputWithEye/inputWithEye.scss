@@ -14,57 +14,33 @@
  * limitations under the License.
  */
 
-.input-checkbox {
+.input-with-eye {
   display: flex;
   position: relative;
   height: 100%;
   outline: none;
   box-sizing: border-box;
   cursor: pointer;
-
-  &:hover {
-    .square {
-      border-color: $COLOR--charcoal-grey;
-
-      &.checked:not(.disabled) {
-        border-color: $COLOR--topaz;
-      }
-      &.disabled {
-        border-color: $COLOR--gray-91;
-      }
-    }
-  }
 }
 .input {
   display: none;
 }
-.children-container {
-  position: relative;
-  display: inline-block;
-  max-width: 100%;
-  box-sizing: border-box;
-  padding-left: 22px;
-  margin: auto 0;
-  overflow: hidden;
-  font-family: $FONT-REGULAR;
-  font-size: 13px;
-  line-height: 20px;
-  color: $COLOR--charcoal-grey;
-  text-overflow: ellipsis;
-  cursor: pointer;
 
-  &.disabled {
-    color: $COLOR--gray-60;
-    cursor: default;
+.eye {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  margin-top: -7px;
+  width: 16px;
+  height: 16px;
+
+  svg {
+    width: 16px;
+    height: 16px;
   }
 
-  &.responsive {
-    @media (max-width: $SCREEN_SM_MAX) {
-      padding-left: 24px;
-    }
-
-    @media (max-width: $SCREEN_XS_MAX) {
-      padding-left: 42px;
-    }
+  &.disabled {
+    opacity: 0.3;
+    cursor: default;
   }
 }

@@ -46,13 +46,10 @@
   display: flex;
   justify-content: space-between;
 }
-.show-block {
-  display: flex;
-  align-items: center;
-}
 
 .show-hint-wrapper {
   display: flex;
+  align-items: center;
   width: 54px;
 
   svg {

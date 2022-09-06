@@ -23,12 +23,12 @@ import track from 'react-tracking';
 import moment from 'moment';
 import Parser from 'html-react-parser';
 import { showModalAction } from 'controllers/modal';
+import { PLUGIN_NAME_TITLES } from 'components/integrations/constants';
 import { namedProjectIntegrationsSelector } from 'controllers/plugins';
 import { PLUGINS_PAGE_EVENTS, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { SystemMessage } from 'componentLibrary/systemMessage';
 import PencilIcon from 'common/img/newIcons/pencil-inline.svg';
 import TrashBin from 'common/img/newIcons/bin-inline.svg';
-
 import Tick from 'common/img/newIcons/tick-inline.svg';
 import ErrorIcon from 'common/img/newIcons/error-inline.svg';
 import styles from './connectionSection.scss';
@@ -64,6 +64,18 @@ const messages = defineMessages({
     id: 'ConnectionSection.warningMessageDescription',
     defaultMessage: 'Global Integrations are inactive as you have configured Project Integration',
   },
+  linkTo: {
+    id: 'ConnectionSection.linkTo',
+    defaultMessage: 'Link to',
+  },
+  projectKeyIn: {
+    id: 'ConnectionSection.projectKeyIn',
+    defaultMessage: 'Project key in',
+  },
+  authorizedByUsername: {
+    id: 'ConnectionSection.authorizedByUsername',
+    defaultMessage: 'Authorized by username',
+  },
   projectIntegrationDelete: {
     id: 'IntegrationsDescription.projectIntegrationDelete',
     defaultMessage: 'Delete',
@@ -75,12 +87,9 @@ const messages = defineMessages({
 });
 
 @connect(
-  (state) => {
-    const projectIntegrations = namedProjectIntegrationsSelector(state);
-    return {
-      projectIntegrations,
-    };
-  },
+  (state) => ({
+    projectIntegrations: namedProjectIntegrationsSelector(state),
+  }),
   {
     showModalAction,
   },
@@ -103,7 +112,16 @@ export class ConnectionSection extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     isGlobal: PropTypes.bool,
-    data: PropTypes.object.isRequired,
+    data: PropTypes.shape({
+      creationDate: PropTypes.number,
+      creator: PropTypes.string,
+      enabled: PropTypes.bool,
+      id: PropTypes.number,
+      name: PropTypes.string,
+      integrationParameters: PropTypes.object,
+      integrationType: PropTypes.object,
+      projectId: PropTypes.number,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -171,7 +189,9 @@ export class ConnectionSection extends Component {
               mode="error"
               caption={formatMessage(messages.connectionFailedCapture)}
             >
-              {formatMessage(messages.connectionFailedDescription, { pluginName })}
+              {formatMessage(messages.connectionFailedDescription, {
+                pluginName: PLUGIN_NAME_TITLES[pluginName] || pluginName,
+              })}
             </SystemMessage>
           </div>
         )}
@@ -200,45 +220,38 @@ export class ConnectionSection extends Component {
                   'connection-block-failed': !connected,
                 })}
               >
-                {!connected ? (
-                  <>
-                    {Parser(ErrorIcon)} <p>{formatMessage(messages.connectionFailedMessage)}</p>
-                  </>
-                ) : (
-                  <>
-                    {Parser(Tick)} <p>{formatMessage(messages.connectedMessage)}</p>
-                  </>
-                )}
+                {Parser(connected ? Tick : ErrorIcon)}{' '}
+                <p>
+                  {formatMessage(
+                    connected ? messages.connectedMessage : messages.connectionFailedMessage,
+                  )}
+                </p>
               </div>
             </div>
             {integrationParameters.url && (
               <div className={cx('sub-block')}>
-                <span>Link to BTS</span>
+                <span>{formatMessage(messages.linkTo)} BTS</span>
                 <p>{integrationParameters.url}</p>
               </div>
             )}
             {integrationParameters.project && (
               <div className={cx('sub-block')}>
-                <span>Project key in BTS</span>
+                <span>{formatMessage(messages.projectKeyIn)} BTS</span>
                 <p>{integrationParameters.project}</p>
               </div>
             )}
             {integrationParameters.username && (
               <div className={cx('sub-block')}>
-                <span>Authorized by username</span>
+                <span>{formatMessage(messages.authorizedByUsername)}</span>
                 <p>{integrationParameters.username}</p>
               </div>
             )}
           </div>
           <div className={cx('buttons-block')}>
-            {editAuthConfig && (
-              <>
-                {!blocked && (
-                  <button onClick={this.onEditAuth} className={cx('action-button')}>
-                    {Parser(PencilIcon)}
-                  </button>
-                )}
-              </>
+            {editAuthConfig && !blocked && (
+              <button onClick={this.onEditAuth} className={cx('action-button')}>
+                {Parser(PencilIcon)}
+              </button>
             )}
 
             {!blocked && (

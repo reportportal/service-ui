@@ -24,7 +24,6 @@ import { PLUGIN_NAME_TITLES } from 'components/integrations';
 import { PLUGIN_DESCRIPTIONS_MAP } from 'components/integrations/messages';
 import { PluginIcon } from 'components/integrations/elements/pluginIcon';
 import BackIcon from './img/back-inline.svg';
-
 import styles from './integrationHeader.scss';
 import { messages } from '../messages';
 
@@ -112,4 +111,6 @@ IntegrationHeader.defaultProps = {
   onAddProjectIntegration: () => {},
   onResetProjectIntegration: () => {},
   withButton: false,
+  isAbleToClick: false,
+  availableProjectIntegrations: [],
 };

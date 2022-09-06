@@ -40,7 +40,6 @@ export const AvailableIntegrations = ({
   integrations,
   hasProjectIntegration,
   openIntegration,
-  isGlobal,
 }) => {
   const { formatMessage } = useIntl();
   return (
@@ -63,7 +62,6 @@ export const AvailableIntegrations = ({
             items={integrations}
             disabled={hasProjectIntegration}
             openIntegration={openIntegration}
-            isGlobal={isGlobal}
           />
         </div>
       )}
@@ -77,7 +75,6 @@ AvailableIntegrations.propTypes = {
   integrations: PropTypes.array.isRequired,
   hasProjectIntegration: PropTypes.bool,
   openIntegration: PropTypes.func,
-  isGlobal: PropTypes.bool,
 };
 
 AvailableIntegrations.defaultProps = {
@@ -85,5 +82,4 @@ AvailableIntegrations.defaultProps = {
   text: '',
   integrations: [],
   hasProjectIntegration: false,
-  isGlobal: false,
 };

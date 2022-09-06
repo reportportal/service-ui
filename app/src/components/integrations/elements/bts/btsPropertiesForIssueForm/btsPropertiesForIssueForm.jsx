@@ -37,7 +37,6 @@ import { Dropdown } from 'componentLibrary/dropdown';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
 import { InputWithEye } from 'components/inputs/inputWithEye';
-
 import { DynamicFieldsSection } from 'components/fields/dynamicFieldsSection';
 import {
   normalizeFieldsWithOptions,
@@ -61,7 +60,7 @@ const ShowWithTooltip = withTooltip({
   TooltipComponent: Tooltip,
   data: {
     dynamicWidth: true,
-    align: 'buttom',
+    align: 'bottom',
     noArrow: false,
     dark: true,
   },
@@ -142,7 +141,6 @@ export class BtsPropertiesForIssueForm extends Component {
       loading: false,
       ...fieldsConfig,
       issueType: '',
-      opened: false,
     };
   }
 
@@ -401,7 +399,7 @@ export class BtsPropertiesForIssueForm extends Component {
 
   render() {
     const { intl, disabled } = this.props;
-    const { loading, opened } = this.state;
+    const { loading } = this.state;
     const preparedFields = this.prepareFieldsToRender();
 
     return (
@@ -415,7 +413,6 @@ export class BtsPropertiesForIssueForm extends Component {
                 <FieldElement
                   label="Issue Type"
                   disabled={loading}
-                  className={cx('fields')}
                   withoutProvider
                   description={intl.formatMessage(messages.availableIssueTypesHeader)}
                 >
@@ -436,7 +433,7 @@ export class BtsPropertiesForIssueForm extends Component {
                     <span className={cx('show-hint-text')}>
                       {intl.formatMessage(messages.showFieldsHeader)}
                     </span>
-                    <ShowWithTooltip showTooltip={!opened} />
+                    <ShowWithTooltip />
                   </div>
                 </div>
               </Fragment>

@@ -93,6 +93,7 @@ export class RallySettings extends Component {
     this.props.showModalAction({
       id: 'createProjectIntegrationModal',
       data: {
+        modalTitle: this.props.intl.formatMessage(messages.projectIntegrationEdit),
         onConfirm: this.getConfirmationFunc(testConnection),
         instanceType: integrationType.name,
         customProps: {
