@@ -188,22 +188,15 @@ const AddEditDefectTypeModal = ({
               change(GROUP_FIELD_KEY, value);
               change(COLOR_FIELD_KEY, defectTypes[value][0].color);
             }}
+            dataAutomationId="typeRefField"
           >
-            <Dropdown
-              options={defectGroupOptions}
-              defaultWidth={false}
-              dataAutomationId="typeRefField"
-            />
+            <Dropdown options={defectGroupOptions} defaultWidth={false} />
           </FieldElement>
         )}
         <div className={cx('input')}>
           <FieldProvider name={NAME_FIELD_KEY} type="text">
-            <FieldErrorHint provideHint={false}>
-              <FieldText
-                label={formatMessage(messages.name)}
-                defaultWidth={false}
-                dataAutomationId="longNameField"
-              />
+            <FieldErrorHint provideHint={false} dataAutomationId="longNameField">
+              <FieldText label={formatMessage(messages.name)} defaultWidth={false} />
             </FieldErrorHint>
           </FieldProvider>
         </div>
@@ -212,17 +205,20 @@ const AddEditDefectTypeModal = ({
           type="text"
           className={cx('abbreviation-field')}
         >
-          <FieldErrorHint provideHint={false}>
+          <FieldErrorHint provideHint={false} dataAutomationId="shortNameField">
             <FieldText
               label={formatMessage(messages.abbreviation)}
               defaultWidth={false}
               helpText={formatMessage(messages.abbreviationHint)}
               className={cx('abbreviation-field')}
-              dataAutomationId="shortNameField"
             />
           </FieldErrorHint>
         </FieldProvider>
-        <FieldElement name={COLOR_FIELD_KEY} className={cx('color-picker')}>
+        <FieldElement
+          name={COLOR_FIELD_KEY}
+          className={cx('color-picker')}
+          dataAutomationId={'colorField'}
+        >
           <HexColorPickerComponent label={formatMessage(messages.color)} presets={COLORS} />
         </FieldElement>
       </div>

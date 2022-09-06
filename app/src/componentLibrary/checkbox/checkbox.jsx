@@ -37,6 +37,7 @@ export const Checkbox = ({
     })}
     onFocus={onFocus}
     onBlur={onBlur}
+    data-automation-id={dataAutomationId}
   >
     <input
       type="checkbox"
@@ -44,7 +45,6 @@ export const Checkbox = ({
       disabled={disabled}
       onChange={onChange}
       checked={value}
-      data-automation-id={dataAutomationId}
     />
     <span
       className={cx('checkbox', {

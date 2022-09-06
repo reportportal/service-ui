@@ -271,11 +271,7 @@ const AddEditNotificationModal = ({
       onClose={() => dispatch(hideModalAction())}
       allowCloseOutside={!dirty}
       footerNode={
-        <FieldProvider
-          name={ENABLED_FIELD_KEY}
-          format={(value) => !!value}
-          data-automation-id="enabledToggle"
-        >
+        <FieldProvider name={ENABLED_FIELD_KEY} format={(value) => !!value}>
           <Toggle className={cx('toggle')} dataAutomationId="enabledToggle">
             {formatMessage(messages.active)}
           </Toggle>
@@ -285,12 +281,11 @@ const AddEditNotificationModal = ({
       {formatMessage(messages.description)}
       <div className={cx('content')}>
         <FieldProvider name={RULE_NAME_FIELD_KEY} type="text">
-          <FieldErrorHint provideHint={false}>
+          <FieldErrorHint provideHint={false} dataAutomationId="ruleNameField">
             <FieldText
               label={formatMessage(messages.nameLabel)}
               placeholder={formatMessage(messages.namePlaceholder)}
               defaultWidth={false}
-              dataAutomationId="ruleNameField"
             />
           </FieldErrorHint>
         </FieldProvider>
@@ -299,34 +294,44 @@ const AddEditNotificationModal = ({
           className={cx('autocomplete')}
           type="text"
           label={formatMessage(messages.recipientsLabel)}
+          dataAutomationId="recipientsField"
         >
           <FieldErrorHint provideHint={false}>
             <RecipientsContainer />
           </FieldErrorHint>
         </FieldElement>
-        <FieldElement name={INFORM_OWNER_FIELD_KEY} type="text" className={cx('checkbox')}>
-          <Checkbox dataAutomationId="informOwnerCheckbox">
-            {formatMessage(messages.launchOwnerLabel)}
-          </Checkbox>
+        <FieldElement
+          name={INFORM_OWNER_FIELD_KEY}
+          type="text"
+          className={cx('checkbox')}
+          dataAutomationId="informOwnerCheckbox"
+        >
+          <Checkbox>{formatMessage(messages.launchOwnerLabel)}</Checkbox>
         </FieldElement>
         <FieldElement
           label={formatMessage(messages.inCaseLabel)}
           name={SEND_CASE_FIELD_KEY}
           type="text"
           className={cx('input')}
+          dataAutomationId="sendCaseField"
         >
-          <Dropdown options={caseOptions} defaultWidth={false} dataAutomationId="sendCaseField" />
+          <Dropdown options={caseOptions} defaultWidth={false} />
         </FieldElement>
         <FieldElement
           label={formatMessage(messages.launchNamesLabel)}
           name={LAUNCH_NAMES_FIELD_KEY}
           className={cx('launches')}
+          dataAutomationId="launchNamesField"
         >
           <FieldErrorHint hintType="top">
             <LaunchNamesContainer highlightUnStoredItem={actionType === 'add'} />
           </FieldErrorHint>
         </FieldElement>
-        <FieldElement name={ATTRIBUTES_FIELD_KEY} disabled={!isEditorShown}>
+        <FieldElement
+          name={ATTRIBUTES_FIELD_KEY}
+          disabled={!isEditorShown}
+          dataAutomationId={'attributesField'}
+        >
           <AttributeListFormField
             keyURLCreator={URLS.launchAttributeKeysSearch}
             valueURLCreator={URLS.launchAttributeValuesSearch}

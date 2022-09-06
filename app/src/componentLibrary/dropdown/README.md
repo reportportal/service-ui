@@ -15,7 +15,6 @@ Default width - 240px
 - **variant**: _string_, optional, default = "light"
 - **placeholder**: _string_, optional, default = ""
 - **defaultWidth**: _bool_, optional, default = true
-- **dataAutomationId**: _string_, optional, default = ''
 
 ### Events:
 

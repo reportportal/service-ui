@@ -255,6 +255,7 @@ export class FieldErrorHint extends Component {
     darkView: PropTypes.bool,
     provideHint: PropTypes.bool,
     touched: PropTypes.bool,
+    dataAutomationId: PropTypes.string,
   };
 
   static defaultProps = {
@@ -268,6 +269,7 @@ export class FieldErrorHint extends Component {
     darkView: false,
     provideHint: true,
     touched: false,
+    dataAutomationId: '',
   };
 
   isHintVisible = () => {
@@ -289,12 +291,13 @@ export class FieldErrorHint extends Component {
       widthContent,
       darkView,
       provideHint,
+      dataAutomationId,
       ...rest
     } = this.props;
     const classes = cx('field-error-hint', `type-${hintType}`);
 
     return (
-      <div className={classes}>
+      <div className={classes} data-automation-id={dataAutomationId}>
         {children &&
           cloneElement(children, {
             error: error && messages[error] ? intl.formatMessage(messages[error]) : error,
