@@ -1,5 +1,5 @@
-/*!
- * Copyright 2019 EPAM Systems
+/*
+ * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,4 @@
  * limitations under the License.
  */
 
-.integration-settings {
-  display: flex;
-  flex-direction: column;
-  margin: 0 auto;
-  max-width: 820px;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    flex-direction: column;
-  }
-}
-
-.center {
-  margin: 0 auto;
-}
+export { IntegrationSetting } from './integrationSetting';

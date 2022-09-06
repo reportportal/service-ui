@@ -18,29 +18,21 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
-import { injectIntl, defineMessages } from 'react-intl';
 import track from 'react-tracking';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { projectIdSelector } from 'controllers/pages';
 import { activeProjectSelector } from 'controllers/user';
 import { removeIntegrationAction } from 'controllers/plugins';
-import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { PLUGIN_NAME_TITLES } from '../../constants';
+
 import { INTEGRATION_FORM } from './integrationForm/constants';
 import { ConnectionSection } from './connectionSection';
 import { IntegrationForm } from './integrationForm';
 import styles from './integrationSettings.scss';
 
 const cx = classNames.bind(styles);
-
-const messages = defineMessages({
-  failedConnectMessage: {
-    id: 'IntegrationSettings.failedConnectMessage',
-    defaultMessage: 'Failed connect to {pluginName} integration: {error}',
-  },
-});
 
 @connect(
   (state) => ({
@@ -51,7 +43,6 @@ const messages = defineMessages({
     removeIntegrationAction,
   },
 )
-@injectIntl
 @track()
 export class IntegrationSettings extends Component {
   static propTypes = {
@@ -135,7 +126,6 @@ export class IntegrationSettings extends Component {
 
   render() {
     const {
-      intl: { formatMessage },
       data,
       onUpdate,
       formFieldsComponent,
@@ -144,29 +134,23 @@ export class IntegrationSettings extends Component {
       formKey,
       isGlobal,
     } = this.props;
-    const { loading, connected, errorMessage } = this.state;
+    const { loading, connected } = this.state;
     const pluginName = data.integrationType.name;
 
     return (
       <div className={cx('integration-settings')}>
         {loading ? (
-          <SpinningPreloader />
+          <BubblesPreloader customClassName={cx('center')} />
         ) : (
           <Fragment>
             <ConnectionSection
               blocked={data.blocked}
-              failedConnectionMessage={
-                connected
-                  ? null
-                  : formatMessage(messages.failedConnectMessage, {
-                      pluginName: PLUGIN_NAME_TITLES[pluginName] || pluginName,
-                      error: errorMessage,
-                    })
-              }
+              connected={connected}
               testConnection={this.testIntegrationConnection}
               onRemoveIntegration={this.removeIntegration}
               editAuthConfig={editAuthConfig}
               pluginName={this.props.data.integrationType.name}
+              data={data}
               isGlobal={isGlobal}
             />
             <IntegrationForm

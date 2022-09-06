@@ -1,0 +1,70 @@
+/*!
+ * Copyright 2022 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.input-checkbox {
+  display: flex;
+  position: relative;
+  height: 100%;
+  outline: none;
+  box-sizing: border-box;
+  cursor: pointer;
+
+  &:hover {
+    .square {
+      border-color: $COLOR--charcoal-grey;
+
+      &.checked:not(.disabled) {
+        border-color: $COLOR--topaz;
+      }
+      &.disabled {
+        border-color: $COLOR--gray-91;
+      }
+    }
+  }
+}
+.input {
+  display: none;
+}
+.children-container {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding-left: 22px;
+  margin: auto 0;
+  overflow: hidden;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  line-height: 20px;
+  color: $COLOR--charcoal-grey;
+  text-overflow: ellipsis;
+  cursor: pointer;
+
+  &.disabled {
+    color: $COLOR--gray-60;
+    cursor: default;
+  }
+
+  &.responsive {
+    @media (max-width: $SCREEN_SM_MAX) {
+      padding-left: 24px;
+    }
+
+    @media (max-width: $SCREEN_XS_MAX) {
+      padding-left: 42px;
+    }
+  }
+}

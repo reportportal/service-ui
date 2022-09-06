@@ -1,5 +1,5 @@
 /*!
- * Copyright 2019 EPAM Systems
+ * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,126 +15,122 @@
  */
 
 .connection-section {
-  width: 100%;
-  max-width: 375px;
-  margin-right: 10px;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    max-width: 100%;
-    margin-bottom: 30px;
-  }
+  display: flex;
+  align-items: flex-start;
+  height: auto;
+  background: $COLOR--bg-000;
+  border-radius: 8px;
+  box-shadow: $BOX_SHADOW--item;
+  padding: 24px;
+}
+.with-global-message {
+  margin-bottom: 16px;
 }
 
-.block-header {
-  margin-bottom: 20px;
-  color: $COLOR--black-2;
-  font-size: 20px;
-  font-family: $FONT-SEMIBOLD;
+.connection-section-with-message {
+  margin-top: 16px;
 }
 
-.connection-status-block {
+.integration-info-block {
   display: flex;
   flex-direction: column;
-  width: 270px;
-  min-height: 40px;
-  box-sizing: border-box;
-  padding: 15px;
-  border-radius: 2px;
-  background-color: $COLOR--white-four;
-  font-size: 13px;
-  font-family: $FONT-SEMIBOLD;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    width: 100%;
-  }
 }
 
-.connection-status {
-  display: inline-flex;
-  align-items: center;
-  color: $COLOR--passed;
+.buttons-block {
+  width: 56px;
+  margin-left: auto;
+  display: flex;
+  justify-content: space-between;
 }
-
-.failed-connection-message {
-  margin-top: 10px;
-  margin-left: 25px;
-  color: $COLOR--brownish-grey;
-  font-size: 12px;
-  line-height: 1.5;
-  word-break: break-all;
-
-  @supports (word-break: break-word) {
-    word-break: break-word;
+.action-button {
+  background: none;
+  border: none;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  cursor: pointer;
+  outline: none;
+  path {
+    fill: $COLOR--e-200;
   }
-}
-
-.status-icon {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  margin-right: 10px;
-
-  svg {
-    fill: $COLOR--passed;
-  }
-}
-
-.connection-failed {
-  background-color: $COLOR--light-red;
-
-  .connection-status {
-    color: $COLOR--orange-red;
-  }
-
-  .status-icon {
-    transform: rotate(180deg);
-
-    svg {
-      fill: $COLOR--orange-red;
+  &:hover {
+    path {
+      fill: $COLOR--e-400;
     }
   }
 }
 
-.auth-info-block {
-  margin-top: 5px;
+.sub-header-block {
+  display: flex;
+  .general-info {
+    h1 {
+      font-size: 20px;
+      line-height: 31px;
+      color: $COLOR--almost-black;
+      font-family: $FONT-REGULAR;
+      margin-bottom: 8px;
+    }
+
+    p {
+      font-size: 11px;
+      line-height: 16px;
+      color: $COLOR--e-300;
+      font-family: $FONT-ROBOTO-REGULAR;
+    }
+  }
 }
 
-.connection-block-button {
+.connection-block {
+  box-sizing: border-box;
+  padding: 5px 8px 4px;
+  min-width: 89px;
+  height: 25px;
+  border: 1px solid $COLOR--test-execution-status-passed;
+  border-radius: 6px;
+  margin-top: 3px;
+  margin-left: 16px;
   display: flex;
   align-items: center;
-  margin-top: 20px;
-  margin-left: 15px;
-  padding: 0;
-  border: none;
-  background: none;
-  color: $COLOR--topaz;
-  font-size: 13px;
-  font-family: $FONT-REGULAR;
-  cursor: pointer;
 
-  &:hover {
-    color: $COLOR--tealish;
-    svg {
-      fill: $COLOR--tealish;
-    }
+  svg {
+    margin-right: 4px;
+    width: 16px;
+    height: 16px;
   }
-
-  &:focus {
-    outline: none;
-  }
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    display: none;
+  p {
+    text-transform: uppercase;
+    font-size: 8px;
+    line-height: 9px;
+    color: $COLOR--test-execution-status-passed;
+    font-family: $FONT-ROBOTO-BOLD;
   }
 }
 
-.button-icon {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  margin-right: 10px;
+.connection-block-failed {
+  border: 1px solid $COLOR--red-pressed;
+  min-width: 120px;
+  p {
+    color: $COLOR--red-pressed;
+  }
+}
 
-  svg {
-    fill: $COLOR--topaz;
+@mixin text-data($color) {
+  font-size: 13px;
+  line-height: 20px;
+  text-indent: 1px;
+  color: $color;
+  font-family: $FONT-ROBOTO-REGULAR;
+}
+
+.sub-block {
+  margin-top: 24px;
+
+  span {
+    @include text-data($COLOR--e-300);
+    margin-bottom: 4px;
+  }
+
+  p {
+    @include text-data($COLOR--almost-black);
   }
 }

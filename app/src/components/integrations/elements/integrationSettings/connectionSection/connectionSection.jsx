@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,29 +14,28 @@
  * limitations under the License.
  */
 
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
 import track from 'react-tracking';
+import moment from 'moment';
 import Parser from 'html-react-parser';
 import { showModalAction } from 'controllers/modal';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { namedProjectIntegrationsSelector } from 'controllers/plugins';
 import { PLUGINS_PAGE_EVENTS, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
-import InfoIcon from 'common/img/info-inline.svg';
-import CheckIcon from 'common/img/check-inline.svg';
-import TrashIcon from 'common/img/trashcan-inline.svg';
-import EditIcon from 'common/img/pencil-icon-inline.svg';
+import { SystemMessage } from 'componentLibrary/systemMessage';
+import PencilIcon from 'common/img/newIcons/pencil-inline.svg';
+import TrashBin from 'common/img/newIcons/bin-inline.svg';
+
+import Tick from 'common/img/newIcons/tick-inline.svg';
+import ErrorIcon from 'common/img/newIcons/error-inline.svg';
 import styles from './connectionSection.scss';
 
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
-  connectionTitle: {
-    id: 'ConnectionSection.connectionTitle',
-    defaultMessage: 'Connection',
-  },
   connectedMessage: {
     id: 'ConnectionSection.connectedMessage',
     defaultMessage: 'Connected',
@@ -45,33 +44,58 @@ const messages = defineMessages({
     id: 'ConnectionSection.connectionFailedMessage',
     defaultMessage: 'Connection Failed',
   },
-  removeIntegrationTitle: {
-    id: 'ConnectionSection.removeIntegrationTitle',
-    defaultMessage: 'Remove Integration',
+  connectionFailedHeader: {
+    id: 'ConnectionSection.connectionFailedHeader',
+    defaultMessage: 'Connection Error',
   },
-  editAuthorizationTitle: {
-    id: 'ConnectionSection.editAuthorizationTitle',
-    defaultMessage: 'Edit authorization',
+  connectionFailedDescription: {
+    id: 'ConnectionSection.connectionFailedDescription',
+    defaultMessage: 'Failed to connect to {pluginName}.',
   },
-  removeIntegrationMessage: {
-    id: 'ConnectionSection.removeIntegrationMessage',
-    defaultMessage: 'Do you really want to remove the integration?',
+  connectionFailedCapture: {
+    id: 'ConnectionSection.connectionFailedCapture',
+    defaultMessage: 'Please, check the integration settings or try to connect later.',
+  },
+  warningMessage: {
+    id: 'ConnectionSection.warningMessage',
+    defaultMessage: 'Warning',
+  },
+  warningMessageDescription: {
+    id: 'ConnectionSection.warningMessageDescription',
+    defaultMessage: 'Global Integrations are inactive as you have configured Project Integration',
+  },
+  projectIntegrationDelete: {
+    id: 'IntegrationsDescription.projectIntegrationDelete',
+    defaultMessage: 'Delete',
+  },
+  projectIntegrationDeleteDescription: {
+    id: 'IntegrationsDescription.projectIntegrationDeleteDescription',
+    defaultMessage: 'Are you sure you want to delete Project Integration',
   },
 });
 
-@connect(null, {
-  showModalAction,
-})
+@connect(
+  (state) => {
+    const projectIntegrations = namedProjectIntegrationsSelector(state);
+    return {
+      projectIntegrations,
+    };
+  },
+  {
+    showModalAction,
+  },
+)
 @track()
 @injectIntl
 export class ConnectionSection extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     showModalAction: PropTypes.func.isRequired,
+    projectIntegrations: PropTypes.object.isRequired,
     onRemoveIntegration: PropTypes.func.isRequired,
-    testConnection: PropTypes.func.isRequired,
+    testConnection: PropTypes.func,
     blocked: PropTypes.bool,
-    failedConnectionMessage: PropTypes.string,
+    connected: PropTypes.bool,
     editAuthConfig: PropTypes.object,
     pluginName: PropTypes.string,
     tracking: PropTypes.shape({
@@ -79,11 +103,12 @@ export class ConnectionSection extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     isGlobal: PropTypes.bool,
+    data: PropTypes.object.isRequired,
   };
 
   static defaultProps = {
     blocked: false,
-    failedConnectionMessage: null,
+    connected: true,
     editAuthConfig: null,
     pluginName: null,
     isGlobal: false,
@@ -95,6 +120,7 @@ export class ConnectionSection extends Component {
       tracking,
       pluginName,
       isGlobal,
+      data,
     } = this.props;
 
     tracking.trackEvent(
@@ -104,14 +130,11 @@ export class ConnectionSection extends Component {
     );
 
     this.props.showModalAction({
-      id: 'confirmationModal',
+      id: 'deleteProjectIntegrationModal',
       data: {
-        message: formatMessage(messages.removeIntegrationMessage),
         onConfirm: this.props.onRemoveIntegration,
-        title: formatMessage(messages.removeIntegrationTitle),
-        confirmText: formatMessage(COMMON_LOCALE_KEYS.DELETE),
-        cancelText: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-        dangerConfirm: true,
+        modalTitle: `${formatMessage(messages.projectIntegrationDelete)} ${data.name}`,
+        description: `${formatMessage(messages.projectIntegrationDeleteDescription)} ${data.name}?`,
       },
     });
   };
@@ -131,46 +154,101 @@ export class ConnectionSection extends Component {
       intl: { formatMessage },
       blocked,
       editAuthConfig,
-      failedConnectionMessage,
+      connected,
+      projectIntegrations,
+      pluginName,
+      data: { name, creator, creationDate, integrationParameters = {} },
     } = this.props;
-    const isConnectionFailed = !!failedConnectionMessage;
+
+    const availableProjectIntegrations = projectIntegrations[pluginName] || [];
 
     return (
-      <div className={cx('connection-section')}>
-        <h3 className={cx('block-header')}>{formatMessage(messages.connectionTitle)}</h3>
-        <div className={cx('connection-status-block', { 'connection-failed': isConnectionFailed })}>
-          <span className={cx('connection-status')}>
-            <span className={cx('status-icon')}>
-              {Parser(isConnectionFailed ? InfoIcon : CheckIcon)}
-            </span>
-            {formatMessage(
-              isConnectionFailed ? messages.connectionFailedMessage : messages.connectedMessage,
-            )}
-          </span>
-          {isConnectionFailed && (
-            <span className={cx('failed-connection-message')}>{failedConnectionMessage}</span>
-          )}
-        </div>
-        {editAuthConfig && (
-          <Fragment>
-            <div className={cx('connection-status-block', 'auth-info-block')}>
-              {editAuthConfig.content}
+      <>
+        {!connected && (
+          <div className={cx({ 'with-global-message': blocked })}>
+            <SystemMessage
+              header={formatMessage(messages.connectionFailedHeader)}
+              mode="error"
+              caption={formatMessage(messages.connectionFailedCapture)}
+            >
+              {formatMessage(messages.connectionFailedDescription, { pluginName })}
+            </SystemMessage>
+          </div>
+        )}
+        {availableProjectIntegrations.length > 0 && blocked && (
+          <SystemMessage header={formatMessage(messages.warningMessage)} mode="warning">
+            {formatMessage(messages.warningMessageDescription)}
+          </SystemMessage>
+        )}
+
+        <div
+          className={cx('connection-section', {
+            'connection-section-with-message':
+              !connected || (availableProjectIntegrations.length > 0 && blocked),
+          })}
+        >
+          <div className={cx('integration-info-block')}>
+            <div className={cx('sub-header-block')}>
+              <div className={cx('general-info')}>
+                <h1>{name}</h1>
+                <p>
+                  {creator} on {moment(creationDate).format('ll')}
+                </p>
+              </div>
+              <div
+                className={cx('connection-block', {
+                  'connection-block-failed': !connected,
+                })}
+              >
+                {!connected ? (
+                  <>
+                    {Parser(ErrorIcon)} <p>{formatMessage(messages.connectionFailedMessage)}</p>
+                  </>
+                ) : (
+                  <>
+                    {Parser(Tick)} <p>{formatMessage(messages.connectedMessage)}</p>
+                  </>
+                )}
+              </div>
             </div>
+            {integrationParameters.url && (
+              <div className={cx('sub-block')}>
+                <span>Link to BTS</span>
+                <p>{integrationParameters.url}</p>
+              </div>
+            )}
+            {integrationParameters.project && (
+              <div className={cx('sub-block')}>
+                <span>Project key in BTS</span>
+                <p>{integrationParameters.project}</p>
+              </div>
+            )}
+            {integrationParameters.username && (
+              <div className={cx('sub-block')}>
+                <span>Authorized by username</span>
+                <p>{integrationParameters.username}</p>
+              </div>
+            )}
+          </div>
+          <div className={cx('buttons-block')}>
+            {editAuthConfig && (
+              <>
+                {!blocked && (
+                  <button onClick={this.onEditAuth} className={cx('action-button')}>
+                    {Parser(PencilIcon)}
+                  </button>
+                )}
+              </>
+            )}
+
             {!blocked && (
-              <button className={cx('connection-block-button')} onClick={this.onEditAuth}>
-                <span className={cx('button-icon')}>{Parser(EditIcon)}</span>
-                {formatMessage(messages.editAuthorizationTitle)}
+              <button onClick={this.removeIntegrationHandler} className={cx('action-button')}>
+                {Parser(TrashBin)}
               </button>
             )}
-          </Fragment>
-        )}
-        {!blocked && (
-          <button className={cx('connection-block-button')} onClick={this.removeIntegrationHandler}>
-            <span className={cx('button-icon')}>{Parser(TrashIcon)}</span>
-            {formatMessage(messages.removeIntegrationTitle)}
-          </button>
-        )}
-      </div>
+          </div>
+        </div>
+      </>
     );
   }
 }

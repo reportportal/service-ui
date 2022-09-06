@@ -95,7 +95,7 @@ export class JiraSettings extends Component {
     } = this.props;
 
     this.props.showModalAction({
-      id: 'addIntegrationModal',
+      id: 'createProjectIntegrationModal',
       data: {
         onConfirm: this.getConfirmationFunc(testConnection),
         instanceType: integrationType.name,
