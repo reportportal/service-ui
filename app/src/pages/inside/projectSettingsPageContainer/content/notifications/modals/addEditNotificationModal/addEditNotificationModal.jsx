@@ -175,6 +175,8 @@ const messages = defineMessages({
   },
 });
 
+const FIELD = 'Field';
+
 const AddEditNotificationModal = ({
   data,
   data: { onSave },
@@ -281,7 +283,7 @@ const AddEditNotificationModal = ({
       {formatMessage(messages.description)}
       <div className={cx('content')}>
         <FieldProvider name={RULE_NAME_FIELD_KEY} type="text">
-          <FieldErrorHint provideHint={false} dataAutomationId="ruleNameField">
+          <FieldErrorHint provideHint={false} dataAutomationId={RULE_NAME_FIELD_KEY + FIELD}>
             <FieldText
               label={formatMessage(messages.nameLabel)}
               placeholder={formatMessage(messages.namePlaceholder)}
@@ -294,7 +296,7 @@ const AddEditNotificationModal = ({
           className={cx('autocomplete')}
           type="text"
           label={formatMessage(messages.recipientsLabel)}
-          dataAutomationId="recipientsField"
+          dataAutomationId={RECIPIENTS_FIELD_KEY + FIELD}
         >
           <FieldErrorHint provideHint={false}>
             <RecipientsContainer />
@@ -304,7 +306,7 @@ const AddEditNotificationModal = ({
           name={INFORM_OWNER_FIELD_KEY}
           type="text"
           className={cx('checkbox')}
-          dataAutomationId="informOwnerCheckbox"
+          dataAutomationId={INFORM_OWNER_FIELD_KEY + FIELD}
         >
           <Checkbox>{formatMessage(messages.launchOwnerLabel)}</Checkbox>
         </FieldElement>
@@ -313,7 +315,7 @@ const AddEditNotificationModal = ({
           name={SEND_CASE_FIELD_KEY}
           type="text"
           className={cx('input')}
-          dataAutomationId="sendCaseField"
+          dataAutomationId={SEND_CASE_FIELD_KEY + FIELD}
         >
           <Dropdown options={caseOptions} defaultWidth={false} />
         </FieldElement>
@@ -321,7 +323,7 @@ const AddEditNotificationModal = ({
           label={formatMessage(messages.launchNamesLabel)}
           name={LAUNCH_NAMES_FIELD_KEY}
           className={cx('launches')}
-          dataAutomationId="launchNamesField"
+          dataAutomationId={LAUNCH_NAMES_FIELD_KEY + FIELD}
         >
           <FieldErrorHint hintType="top">
             <LaunchNamesContainer highlightUnStoredItem={actionType === 'add'} />
@@ -330,7 +332,7 @@ const AddEditNotificationModal = ({
         <FieldElement
           name={ATTRIBUTES_FIELD_KEY}
           disabled={!isEditorShown}
-          dataAutomationId={'attributesField'}
+          dataAutomationId={ATTRIBUTES_FIELD_KEY + FIELD}
         >
           <AttributeListFormField
             keyURLCreator={URLS.launchAttributeKeysSearch}
