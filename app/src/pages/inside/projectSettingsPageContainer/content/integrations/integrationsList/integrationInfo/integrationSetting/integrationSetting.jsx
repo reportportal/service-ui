@@ -40,15 +40,17 @@ export const IntegrationSetting = ({
         editAuthConfig={editAuthConfig}
         pluginName={pluginName}
       />
-      <IntegrationForm
-        form={form}
-        data={data}
-        connected={connected}
-        pluginName={pluginName}
-        onSubmit={onSubmit}
-        formFieldsComponent={formFieldsComponent}
-        isEmptyConfiguration={isEmptyConfiguration}
-      />
+      {pluginName && (
+        <IntegrationForm
+          form={form}
+          data={data}
+          connected={connected}
+          pluginName={pluginName}
+          onSubmit={onSubmit}
+          formFieldsComponent={formFieldsComponent}
+          isEmptyConfiguration={isEmptyConfiguration}
+        />
+      )}
     </>
   );
 };
