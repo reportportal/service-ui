@@ -66,11 +66,11 @@ const messages = defineMessages({
   },
   linkTo: {
     id: 'ConnectionSection.linkTo',
-    defaultMessage: 'Link to',
+    defaultMessage: 'Link to BTS',
   },
   projectKeyIn: {
     id: 'ConnectionSection.projectKeyIn',
-    defaultMessage: 'Project key in',
+    defaultMessage: 'Project key in BTS',
   },
   authorizedByUsername: {
     id: 'ConnectionSection.authorizedByUsername',
@@ -220,7 +220,7 @@ export class ConnectionSection extends Component {
                   'connection-block-failed': !connected,
                 })}
               >
-                {Parser(connected ? Tick : ErrorIcon)}{' '}
+                {Parser(connected ? Tick : ErrorIcon)}
                 <p>
                   {formatMessage(
                     connected ? messages.connectedMessage : messages.connectionFailedMessage,
@@ -230,13 +230,13 @@ export class ConnectionSection extends Component {
             </div>
             {integrationParameters.url && (
               <div className={cx('sub-block')}>
-                <span>{formatMessage(messages.linkTo)} BTS</span>
+                <span>{formatMessage(messages.linkTo)}</span>
                 <p>{integrationParameters.url}</p>
               </div>
             )}
             {integrationParameters.project && (
               <div className={cx('sub-block')}>
-                <span>{formatMessage(messages.projectKeyIn)} BTS</span>
+                <span>{formatMessage(messages.projectKeyIn)}</span>
                 <p>{integrationParameters.project}</p>
               </div>
             )}

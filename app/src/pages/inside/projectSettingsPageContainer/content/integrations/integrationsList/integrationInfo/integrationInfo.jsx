@@ -25,11 +25,7 @@ import {
   activeProjectRoleSelector,
   activeProjectSelector,
 } from 'controllers/user';
-import {
-  BTS_FIELDS_FORM,
-  BtsPropertiesForIssueForm,
-  getDefectFormFields,
-} from 'components/integrations/elements/bts';
+import { BTS_FIELDS_FORM, getDefectFormFields } from 'components/integrations/elements/bts';
 import { canUpdateSettings } from 'common/utils/permissions';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
@@ -48,7 +44,7 @@ import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/conten
 import { IntegrationSetting } from './integrationSetting';
 import { IntegrationHeader } from './integrationHeader';
 import { AvailableIntegrations } from './availableIntegrations';
-import { JIRA_CLOUD, AZURE_DEVOPS } from './constats';
+import { JIRA_CLOUD, AZURE_DEVOPS, btsFormField } from './constats';
 import styles from './integrationInfo.scss';
 import { messages } from './messages';
 
@@ -63,6 +59,7 @@ const documentationList = {
     'https://reportportal.io/docs/Jira-Cloud-Integration%3Eproject-jira-cloud-integration',
   [AZURE_DEVOPS]: 'https://reportportal.io/docs/Azure-DevOps-BTS',
 };
+
 export const IntegrationInfo = (props) => {
   const [connected, setConnected] = useState(true);
   const [integrationInfo, setIntegrationInfo] = useState({});
@@ -316,7 +313,7 @@ export const IntegrationInfo = (props) => {
               editAuthConfig={getEditAuthConfig}
               form={BTS_FIELDS_FORM}
               onSubmit={onSubmit}
-              formFieldsComponent={BtsPropertiesForIssueForm}
+              formFieldsComponent={btsFormField[name]}
               isEmptyConfiguration={
                 !updatedData.integrationParameters.defectFormFields ||
                 !updatedData.integrationParameters.defectFormFields.length
