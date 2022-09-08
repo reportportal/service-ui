@@ -37,10 +37,15 @@
 }
 
 .buttons-block {
-  width: 56px;
   margin-left: auto;
   display: flex;
-  justify-content: space-between;
+  button {
+    margin-right: 26px;
+  }
+
+  button:last-child {
+    margin-right: 0px;
+  }
 }
 .action-button {
   background: none;

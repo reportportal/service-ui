@@ -22,6 +22,9 @@
   padding-right: 45px;
   box-sizing: border-box;
 
+  &:last-child {
+    margin-bottom: 20px;
+  }
   @media (max-width: $SCREEN_XS_MAX) {
     padding-right: 0;
   }

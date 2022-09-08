@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import React, { Component, Fragment } from 'react';
+import { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { connect } from 'react-redux';
-import track from 'react-tracking';
+import { useTracking } from 'react-tracking';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { projectIdSelector } from 'controllers/pages';
+import { projectIdSelector, querySelector } from 'controllers/pages';
 import { activeProjectSelector } from 'controllers/user';
 import { removeIntegrationAction } from 'controllers/plugins';
 import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
@@ -33,138 +33,105 @@ import styles from './integrationSettings.scss';
 
 const cx = classNames.bind(styles);
 
-@connect(
-  (state) => ({
-    projectId: projectIdSelector(state),
-    activeProject: activeProjectSelector(state),
-  }),
-  {
-    removeIntegrationAction,
-  },
-)
-@track()
-export class IntegrationSettings extends Component {
-  static propTypes = {
-    intl: PropTypes.object.isRequired,
-    projectId: PropTypes.string,
-    activeProject: PropTypes.string.isRequired,
-    data: PropTypes.object.isRequired,
-    formFieldsComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]).isRequired,
-    goToPreviousPage: PropTypes.func.isRequired,
-    onUpdate: PropTypes.func.isRequired,
-    removeIntegrationAction: PropTypes.func.isRequired,
-    editAuthConfig: PropTypes.object,
-    preventTestConnection: PropTypes.bool,
-    isEmptyConfiguration: PropTypes.bool,
-    isGlobal: PropTypes.bool,
-    formKey: PropTypes.string,
-    tracking: PropTypes.shape({
-      trackEvent: PropTypes.func,
-      getTrackingData: PropTypes.func,
-    }).isRequired,
-  };
-
-  static defaultProps = {
-    projectId: '',
-    editAuthConfig: null,
-    preventTestConnection: false,
-    isEmptyConfiguration: false,
-    isGlobal: false,
-    formKey: INTEGRATION_FORM,
-  };
-
-  state = {
-    connected: this.props.data.isNew || this.props.preventTestConnection,
-    loading: !this.props.data.isNew && !this.props.preventTestConnection,
-  };
-
-  componentDidMount() {
-    if (!this.state.connected) {
-      this.testIntegrationConnection();
+export const IntegrationSettings = (props) => {
+  const [connected, setConnected] = useState(true);
+  const [loading, setLoading] = useState(!props.data.isNew && !props.preventTestConnection);
+  const projectId = useSelector(projectIdSelector);
+  const activeProject = useSelector(activeProjectSelector);
+  const query = useSelector(querySelector);
+  const dispatch = useDispatch();
+  const { trackEvent } = useTracking();
+  const testIntegrationConnection = () => {
+    setLoading(true);
+    if ('id' in props.data) {
+      fetch(URLS.testIntegrationConnection(projectId || activeProject, props.data.id))
+        .then(() => {
+          setConnected(true);
+          setLoading(false);
+        })
+        .catch(() => {
+          setLoading(false);
+          setConnected(false);
+        });
     }
-  }
-
-  testIntegrationConnection = () => {
-    const {
-      data: { id },
-      projectId,
-      activeProject,
-    } = this.props;
-
-    this.setState({
-      loading: true,
-    });
-
-    fetch(URLS.testIntegrationConnection(projectId || activeProject, id))
-      .then(() => {
-        this.setState({
-          connected: true,
-          loading: false,
-        });
-      })
-      .catch(({ message }) => {
-        this.setState({
-          connected: false,
-          errorMessage: message,
-          loading: false,
-        });
-      });
   };
 
-  removeIntegration = () => {
+  useEffect(() => {
+    if (query.id || props.data) {
+      testIntegrationConnection();
+    }
+  }, [query.id, props.data]);
+
+  const removeIntegration = () => {
     const {
       data: { id, integrationType },
       isGlobal,
       goToPreviousPage,
-      tracking,
-    } = this.props;
+    } = props;
 
-    tracking.trackEvent(PLUGINS_PAGE_EVENTS.clickDeleteBtnRemoveIntegration(integrationType.name));
-    this.props.removeIntegrationAction(id, isGlobal, goToPreviousPage);
+    trackEvent(PLUGINS_PAGE_EVENTS.clickDeleteBtnRemoveIntegration(integrationType.name));
+    dispatch(removeIntegrationAction(id, isGlobal, goToPreviousPage));
   };
 
-  render() {
-    const {
-      data,
-      onUpdate,
-      formFieldsComponent,
-      editAuthConfig,
-      isEmptyConfiguration,
-      formKey,
-      isGlobal,
-    } = this.props;
-    const { loading, connected } = this.state;
-    const pluginName = data.integrationType.name;
+  const {
+    data,
+    onUpdate,
+    formFieldsComponent,
+    editAuthConfig,
+    isEmptyConfiguration,
+    formKey,
+    isGlobal,
+  } = props;
+  const pluginName = data.integrationType?.name;
 
-    return (
-      <div className={cx('integration-settings')}>
-        {loading ? (
-          <BubblesPreloader customClassName={cx('center')} />
-        ) : (
-          <Fragment>
-            <ConnectionSection
-              blocked={data.blocked}
-              connected={connected}
-              testConnection={this.testIntegrationConnection}
-              onRemoveIntegration={this.removeIntegration}
-              editAuthConfig={editAuthConfig}
-              pluginName={this.props.data.integrationType.name}
-              data={data}
-              isGlobal={isGlobal}
-            />
-            <IntegrationForm
-              form={formKey}
-              data={data}
-              connected={connected}
-              pluginName={pluginName}
-              isGlobal={isGlobal}
-              onSubmit={onUpdate}
-              formFieldsComponent={formFieldsComponent}
-              isEmptyConfiguration={isEmptyConfiguration}
-            />
-          </Fragment>
-        )}
-      </div>
-    );
-  }
-}
+  return (
+    <div className={cx('integration-settings')}>
+      {loading ? (
+        <BubblesPreloader customClassName={cx('center')} />
+      ) : (
+        <>
+          <ConnectionSection
+            blocked={data.blocked}
+            connected={connected}
+            testConnection={testIntegrationConnection}
+            onRemoveIntegration={removeIntegration}
+            editAuthConfig={editAuthConfig}
+            pluginName={props.data.integrationType?.name}
+            data={data}
+            isGlobal={isGlobal}
+          />
+          <IntegrationForm
+            form={formKey}
+            data={data}
+            connected={connected}
+            pluginName={pluginName}
+            isGlobal={isGlobal}
+            onSubmit={onUpdate}
+            formFieldsComponent={formFieldsComponent}
+            isEmptyConfiguration={isEmptyConfiguration}
+          />
+        </>
+      )}
+    </div>
+  );
+};
+
+IntegrationSettings.propTypes = {
+  data: PropTypes.object.isRequired,
+  formFieldsComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]).isRequired,
+  goToPreviousPage: PropTypes.func.isRequired,
+  onUpdate: PropTypes.func.isRequired,
+  editAuthConfig: PropTypes.object,
+  preventTestConnection: PropTypes.bool,
+  isEmptyConfiguration: PropTypes.bool,
+  isGlobal: PropTypes.bool,
+  formKey: PropTypes.string,
+};
+
+IntegrationSettings.defaultProps = {
+  editAuthConfig: null,
+  preventTestConnection: false,
+  isEmptyConfiguration: false,
+  isGlobal: false,
+  formKey: INTEGRATION_FORM,
+};

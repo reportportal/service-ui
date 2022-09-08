@@ -476,6 +476,7 @@
   "DefaultPropertiesForIssueForm.defaultIssueFormPropsHeader": "Ўласцівасці па змаўчанні для формы памылкі",
   "DefaultPropertiesForIssueForm.defaultValueHeader": "Значэнне па змаўчанні",
   "DefaultPropertiesForIssueForm.showFieldsHeader": "Паказать",
+  "DefaultPropertiesForIssueForm.tooltip": "Палі для публікацыі задач у САХ",
   "DefectTypeChanges.create": "created defect type",
   "DefectTypeChanges.defectTypes": "тыпы дэфектаў",
   "DefectTypeChanges.delete": "выдаліў дэфект тып",

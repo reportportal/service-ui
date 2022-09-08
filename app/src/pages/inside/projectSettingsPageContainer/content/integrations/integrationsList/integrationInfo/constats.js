@@ -14,16 +14,5 @@
  * limitations under the License.
  */
 
-import { BtsPropertiesForIssueForm } from 'components/integrations/elements/bts';
-import { EmailFormFields, SauceLabsFormFields } from 'components/integrations/integrationProviders';
-import { JIRA, RALLY, EMAIL, SAUCE_LABS } from 'common/constants/pluginNames';
-
 export const JIRA_CLOUD = 'JIRA Cloud';
 export const AZURE_DEVOPS = 'Azure DevOps';
-
-export const btsFormField = {
-  [JIRA]: BtsPropertiesForIssueForm,
-  [RALLY]: BtsPropertiesForIssueForm,
-  [EMAIL]: EmailFormFields,
-  [SAUCE_LABS]: SauceLabsFormFields,
-};

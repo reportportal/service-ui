@@ -17,7 +17,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { defineMessages, injectIntl } from 'react-intl';
+import { defineMessages, injectIntl, useIntl } from 'react-intl';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { fetch } from 'common/utils';
@@ -51,21 +51,6 @@ import styles from './btsPropertiesForIssueForm.scss';
 
 const cx = classNames.bind(styles);
 
-const Tooltip = () => <div>Fields for posting issues to your BTS</div>;
-const IconShow = () => {
-  return <>{Parser(InfoIcon)}</>;
-};
-
-const ShowWithTooltip = withTooltip({
-  TooltipComponent: Tooltip,
-  data: {
-    dynamicWidth: true,
-    align: 'bottom',
-    noArrow: false,
-    dark: true,
-  },
-})(IconShow);
-
 const messages = defineMessages({
   availableIssueTypesHeader: {
     id: 'DefaultPropertiesForIssueForm.availableIssueTypesHeader',
@@ -83,7 +68,30 @@ const messages = defineMessages({
     id: 'DefaultPropertiesForIssueForm.showFieldsHeader',
     defaultMessage: 'Show',
   },
+  tooltip: {
+    id: 'DefaultPropertiesForIssueForm.tooltip',
+    defaultMessage: 'Fields for posting issues to your BTS',
+  },
 });
+
+const Tooltip = () => {
+  const { formatMessage } = useIntl();
+  return <div>{formatMessage(messages.tooltip)}</div>;
+};
+
+const IconShow = () => {
+  return <>{Parser(InfoIcon)}</>;
+};
+
+const ShowWithTooltip = withTooltip({
+  TooltipComponent: Tooltip,
+  data: {
+    dynamicWidth: true,
+    align: 'bottom',
+    noArrow: false,
+    dark: true,
+  },
+})(IconShow);
 
 @connect(
   (state) => ({

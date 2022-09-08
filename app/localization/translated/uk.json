@@ -476,6 +476,7 @@
   "DefaultPropertiesForIssueForm.defaultIssueFormPropsHeader": "Властивості за замовчуванням для форми помилки",
   "DefaultPropertiesForIssueForm.defaultValueHeader": "Значення за замовчуванням",
   "DefaultPropertiesForIssueForm.showFieldsHeader": "Показати",
+  "DefaultPropertiesForIssueForm.tooltip": "Поля для публікації завдань у СОД",
   "DefectTypeChanges.create": "created defect type",
   "DefectTypeChanges.defectTypes": "типи дефектів",
   "DefectTypeChanges.delete": "видалив дефект тип",

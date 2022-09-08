@@ -64,18 +64,6 @@ export const messages = defineMessages({
     id: 'IntegrationsDescription.projectIntegrationCreate',
     defaultMessage: 'Create Project Integration',
   },
-  projectIntegrationEdit: {
-    id: 'IntegrationsDescription.projectIntegrationEdit',
-    defaultMessage: 'Edit Project Integration',
-  },
-  projectIntegrationDelete: {
-    id: 'IntegrationsDescription.projectIntegrationDelete',
-    defaultMessage: 'Delete',
-  },
-  projectIntegrationDeleteDescription: {
-    id: 'IntegrationsDescription.projectIntegrationDeleteDescription',
-    defaultMessage: 'Are you sure you want to delete Project Integration',
-  },
   projectIntegrationReset: {
     id: 'IntegrationsDescription.projectIntegrationReset',
     defaultMessage: 'Reset to Global Integration',

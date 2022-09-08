@@ -20,31 +20,25 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { JIRA, RALLY, EMAIL, SAUCE_LABS } from 'common/constants/pluginNames';
-import {
-  isAdminSelector,
-  activeProjectRoleSelector,
-  activeProjectSelector,
-} from 'controllers/user';
-import { BTS_FIELDS_FORM, getDefectFormFields } from 'components/integrations/elements/bts';
+import { isAdminSelector, activeProjectRoleSelector } from 'controllers/user';
+import { uiExtensionIntegrationSettingsSelector } from 'controllers/plugins/uiExtensions/selectors';
 import { canUpdateSettings } from 'common/utils/permissions';
-import { URLS } from 'common/urls';
-import { fetch } from 'common/utils';
 import { PLUGIN_NAME_TITLES } from 'components/integrations';
-import { showModalAction, hideModalAction } from 'controllers/modal';
+import { showModalAction } from 'controllers/modal';
 import {
   namedGlobalIntegrationsSelector,
   namedProjectIntegrationsSelector,
   addIntegrationAction,
   updateIntegrationAction,
-  removeIntegrationAction,
   removeProjectIntegrationsByTypeAction,
 } from 'controllers/plugins';
-import { updatePagePropertiesAction, projectIdSelector } from 'controllers/pages';
+import { updatePagePropertiesAction } from 'controllers/pages';
+import { ExtensionLoader } from 'components/extensionLoader';
+import { INTEGRATIONS_SETTINGS_COMPONENTS_MAP } from 'components/integrations/settingsComponentsMap';
 import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
-import { IntegrationSetting } from './integrationSetting';
 import { IntegrationHeader } from './integrationHeader';
 import { AvailableIntegrations } from './availableIntegrations';
-import { JIRA_CLOUD, AZURE_DEVOPS, btsFormField } from './constats';
+import { JIRA_CLOUD, AZURE_DEVOPS } from './constats';
 import styles from './integrationInfo.scss';
 import { messages } from './messages';
 
@@ -61,12 +55,10 @@ const documentationList = {
 };
 
 export const IntegrationInfo = (props) => {
-  const [connected, setConnected] = useState(true);
   const [integrationInfo, setIntegrationInfo] = useState({});
   const [updatedParameters, setUpdatedParameters] = useState({});
   const { formatMessage } = useIntl();
-  const projectId = useSelector(projectIdSelector);
-  const activeProject = useSelector(activeProjectSelector);
+  const settingsExtensions = useSelector(uiExtensionIntegrationSettingsSelector);
   const isAdmin = useSelector(isAdminSelector);
   const userProjectRole = useSelector(activeProjectRoleSelector);
   const globalIntegrations = useSelector(namedGlobalIntegrationsSelector);
@@ -99,21 +91,9 @@ export const IntegrationInfo = (props) => {
     }
   }, [integrationId, availableGlobalIntegrations]);
 
-  const testIntegrationConnection = () => {
-    fetch(URLS.testIntegrationConnection(projectId || activeProject, integrationInfo.id))
-      .then(() => {
-        setConnected(true);
-      })
-      .catch(() => {
-        setConnected(false);
-      });
-  };
-
-  useEffect(() => {
-    if (integrationId && integrationInfo) {
-      testIntegrationConnection();
-    }
-  }, [integrationId, integrationInfo]);
+  const integrationSettingsExtension = settingsExtensions.find((ext) => ext.pluginName === name);
+  const IntegrationSettingsComponent =
+    INTEGRATIONS_SETTINGS_COMPONENTS_MAP[name] || (integrationSettingsExtension && ExtensionLoader);
 
   const openIntegration = (integration) => {
     const { id } = integration;
@@ -179,16 +159,6 @@ export const IntegrationInfo = (props) => {
     );
   };
 
-  const getConfirmationFunc = (newData, metaData) => {
-    onUpdate(
-      newData,
-      () => {
-        dispatch(hideModalAction());
-      },
-      metaData,
-    );
-  };
-
   const updatedData = {
     ...integrationInfo,
     name: updatedParameters.name || integrationInfo.name,
@@ -196,35 +166,6 @@ export const IntegrationInfo = (props) => {
       ...integrationInfo.integrationParameters,
       ...updatedParameters.integrationParameters,
     },
-  };
-
-  const editAuthorizationClickHandler = () => {
-    const { integrationParameters, integrationType } = updatedData;
-    dispatch(
-      showModalAction({
-        id: 'createProjectIntegrationModal',
-        data: {
-          modalTitle: formatMessage(messages.projectIntegrationEdit),
-          onConfirm: getConfirmationFunc,
-          instanceType: integrationType.name,
-          customProps: {
-            initialData: {
-              ...integrationParameters,
-              integrationName: updatedData.name,
-            },
-            editAuthMode: true,
-          },
-        },
-      }),
-    );
-  };
-
-  const getEditAuthConfig = {
-    onClick: editAuthorizationClickHandler,
-  };
-
-  const removeIntegration = () => {
-    dispatch(removeIntegrationAction(integrationInfo.id, false, goBackHandler));
   };
 
   const resetProjectIntegrations = () => dispatch(removeProjectIntegrationsByTypeAction(name));
@@ -241,13 +182,6 @@ export const IntegrationInfo = (props) => {
         },
       }),
     );
-  };
-
-  const onSubmit = (newData, callback, metaData) => {
-    const { fields, checkedFieldsIds = {}, ...meta } = metaData;
-    const defectFormFields = getDefectFormFields(fields, checkedFieldsIds, newData);
-
-    onUpdate({ defectFormFields }, callback, meta);
   };
 
   const integrationContent = () => {
@@ -304,20 +238,12 @@ export const IntegrationInfo = (props) => {
         <>
           <IntegrationHeader data={data} goBackHandler={goBackHandler} />
           <div className={cx('integration-connection-block')}>
-            <IntegrationSetting
-              blocked={integrationInfo.blocked}
-              data={integrationInfo}
-              onRemoveIntegration={removeIntegration}
-              pluginName={integrationInfo.integrationType?.name}
-              connected={connected}
-              editAuthConfig={getEditAuthConfig}
-              form={BTS_FIELDS_FORM}
-              onSubmit={onSubmit}
-              formFieldsComponent={btsFormField[name]}
-              isEmptyConfiguration={
-                !updatedData.integrationParameters.defectFormFields ||
-                !updatedData.integrationParameters.defectFormFields.length
-              }
+            <IntegrationSettingsComponent
+              data={updatedData}
+              onUpdate={onUpdate}
+              goToPreviousPage={goBackHandler}
+              extension={integrationSettingsExtension}
+              withPreloader
             />
           </div>
         </>
