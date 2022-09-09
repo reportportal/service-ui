@@ -49,7 +49,9 @@ const DefectLocatorTooltip = ({ locator }) => {
           text={locator}
           onCopy={() => trackEvent(PROJECT_SETTINGS_DEFECT_TYPES_EVENTS.CLICK_COPY_ID_LOCATOR_ICON)}
         >
-          <i className={cx('icon', 'copy-button')}>{Parser(CopyIcon)}</i>
+          <i className={cx('icon', 'copy-button')} data-automation-id="defectTypeCopyLocatorIcon">
+            {Parser(CopyIcon)}
+          </i>
         </CopyToClipboard>
       </div>
     </>

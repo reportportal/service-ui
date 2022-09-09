@@ -30,12 +30,13 @@ export const FieldElement = (props) => {
     className,
     childrenClassName,
     withoutProvider,
+    dataAutomationId,
     ...rest
   } = props;
   const getChildren = () =>
     withoutProvider ? children : <FieldProvider {...rest}>{children}</FieldProvider>;
   return (
-    <div className={cx('wrapper', className)}>
+    <div className={cx('wrapper', className)} data-automation-id={dataAutomationId}>
       {label ? (
         <>
           <span className={cx('label')}>{label}</span>
@@ -58,6 +59,7 @@ FieldElement.propTypes = {
   className: PropTypes.string,
   childrenClassName: PropTypes.string,
   withoutProvider: PropTypes.bool,
+  dataAutomationId: PropTypes.string,
 };
 FieldElement.defaultProps = {
   label: '',
@@ -65,4 +67,5 @@ FieldElement.defaultProps = {
   className: '',
   childrenClassName: '',
   withoutProvider: false,
+  dataAutomationId: '',
 };

@@ -226,9 +226,12 @@ export const Notifications = ({ setHeaderTitleNode }) => {
       {notifications.length ? (
         <>
           <Layout description={formatMessage(messages.tabDescription)}>
-            <FieldElement withoutProvider description={formatMessage(messages.toggleNote)}>
+            <FieldElement
+              withoutProvider
+              description={formatMessage(messages.toggleNote)}
+              dataAutomationId="notificationsEnabledCheckbox"
+            >
               <Checkbox
-                dataAutomationId="notificationsEnabledCheckbox"
                 disabled={isReadOnly}
                 value={enabled}
                 onChange={(e) => toggleNotificationsEnabled(e.target.checked)}

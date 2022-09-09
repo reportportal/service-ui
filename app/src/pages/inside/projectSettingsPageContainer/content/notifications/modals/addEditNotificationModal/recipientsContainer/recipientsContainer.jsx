@@ -57,7 +57,6 @@ export const RecipientsContainer = ({ ...rest }) => {
       getItemValidationErrorType={getEmailValidationError}
       getAdditionalCreationCondition={regex(/[.@]/)}
       parseInputValueFn={parseEmailsString}
-      dataAutomationId="recipientsField"
       {...rest}
     />
   );

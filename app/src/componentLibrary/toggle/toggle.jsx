@@ -37,6 +37,7 @@ export const Toggle = ({
     onFocus={onFocus}
     onBlur={onBlur}
     className={cx('toggle', className, { disabled })}
+    data-automation-id={dataAutomationId}
   >
     <input
       onChange={onChange}
@@ -44,7 +45,6 @@ export const Toggle = ({
       disabled={disabled}
       className={cx('input')}
       type="checkbox"
-      data-automation-id={dataAutomationId}
     />
     <div className={cx('slider', 'round')} />
     {children && <span className={cx('children-container')}>{children}</span>}
