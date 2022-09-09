@@ -47,8 +47,8 @@ export const IntegrationSettings = (props) => {
   const query = useSelector(querySelector);
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
-  const availableGlobalIntegrations = globalIntegrations[props.data.integrationType?.name] || [];
-  const availableProjectIntegrations = projectIntegrations[props.data.integrationType?.name] || [];
+  const availableGlobalIntegrations = globalIntegrations[query.subPage] || [];
+  const availableProjectIntegrations = projectIntegrations[query.subPage] || [];
   const groupedIntegrations = [...availableGlobalIntegrations, ...availableProjectIntegrations];
 
   const testIntegrationConnection = () => {
@@ -67,7 +67,7 @@ export const IntegrationSettings = (props) => {
   };
   useEffect(() => {
     const hasId = groupedIntegrations.some((value) => value.id === +query.id);
-    if (!hasId && 'id' in props.data) {
+    if (!hasId) {
       dispatch(
         updatePagePropertiesAction({
           id: null,
