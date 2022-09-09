@@ -67,7 +67,7 @@ export const IntegrationSettings = (props) => {
   };
   useEffect(() => {
     const hasId = groupedIntegrations.some((value) => value.id === +query.id);
-    if (!hasId) {
+    if (!hasId && 'id' in props.data) {
       dispatch(
         updatePagePropertiesAction({
           id: null,
