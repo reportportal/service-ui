@@ -21,9 +21,13 @@ import classNames from 'classnames/bind';
 import { useTracking } from 'react-tracking';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { projectIdSelector, querySelector } from 'controllers/pages';
+import { projectIdSelector, querySelector, updatePagePropertiesAction } from 'controllers/pages';
 import { activeProjectSelector } from 'controllers/user';
-import { removeIntegrationAction } from 'controllers/plugins';
+import {
+  removeIntegrationAction,
+  namedGlobalIntegrationsSelector,
+  namedProjectIntegrationsSelector,
+} from 'controllers/plugins';
 import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { INTEGRATION_FORM } from './integrationForm/constants';
@@ -36,11 +40,17 @@ const cx = classNames.bind(styles);
 export const IntegrationSettings = (props) => {
   const [connected, setConnected] = useState(true);
   const [loading, setLoading] = useState(!props.data.isNew && !props.preventTestConnection);
+  const globalIntegrations = useSelector(namedGlobalIntegrationsSelector);
+  const projectIntegrations = useSelector(namedProjectIntegrationsSelector);
   const projectId = useSelector(projectIdSelector);
   const activeProject = useSelector(activeProjectSelector);
   const query = useSelector(querySelector);
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
+  const availableGlobalIntegrations = globalIntegrations[props.data.integrationType?.name] || [];
+  const availableProjectIntegrations = projectIntegrations[props.data.integrationType?.name] || [];
+  const groupedIntegrations = [...availableGlobalIntegrations, ...availableProjectIntegrations];
+
   const testIntegrationConnection = () => {
     setLoading(true);
     if ('id' in props.data) {
@@ -55,6 +65,16 @@ export const IntegrationSettings = (props) => {
         });
     }
   };
+  useEffect(() => {
+    const hasId = groupedIntegrations.some((value) => value.id === +query.id);
+    if (!hasId) {
+      dispatch(
+        updatePagePropertiesAction({
+          id: null,
+        }),
+      );
+    }
+  }, [query.id, groupedIntegrations]);
 
   useEffect(() => {
     if (query.id || props.data) {
