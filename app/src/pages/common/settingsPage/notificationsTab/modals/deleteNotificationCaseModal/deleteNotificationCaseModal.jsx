@@ -32,7 +32,7 @@ const messages = defineMessages({
   },
   message: {
     id: 'DeleteNotificationCaseModal.message',
-    defaultMessage: 'Are you sure you want to delete notification rule <b>{number}</b>?',
+    defaultMessage: 'Are you sure you want to delete notification rule <b>{name}</b>?',
   },
 });
 
@@ -51,7 +51,7 @@ export class DeleteNotificationCaseModal extends Component {
   render() {
     const {
       intl,
-      data: { id, onConfirm, eventsInfo },
+      data: { name, onConfirm, eventsInfo },
     } = this.props;
     return (
       <ModalLayout
@@ -71,7 +71,7 @@ export class DeleteNotificationCaseModal extends Component {
         closeIconEventInfo={eventsInfo.closeIcon}
       >
         <div className={cx('message')}>
-          {Parser(intl.formatMessage(messages.message, { number: id + 1 }))}
+          {Parser(intl.formatMessage(messages.message, { name }))}
         </div>
       </ModalLayout>
     );
