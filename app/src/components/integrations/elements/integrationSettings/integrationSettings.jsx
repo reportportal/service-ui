@@ -14,22 +14,25 @@
  * limitations under the License.
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useTracking } from 'react-tracking';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { projectIdSelector, querySelector, updatePagePropertiesAction } from 'controllers/pages';
+import { projectIdSelector, querySelector, PROJECT_SETTINGS_TAB_PAGE } from 'controllers/pages';
+import { mergeQuery } from 'common/utils/routingUtils';
 import { activeProjectSelector } from 'controllers/user';
 import {
   removeIntegrationAction,
   namedGlobalIntegrationsSelector,
   namedProjectIntegrationsSelector,
 } from 'controllers/plugins';
+import { INTEGRATIONS } from 'common/constants/settingsTabs';
 import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { redirect } from 'redux-first-router';
 import { INTEGRATION_FORM } from './integrationForm/constants';
 import { ConnectionSection } from './connectionSection';
 import { IntegrationForm } from './integrationForm';
@@ -51,6 +54,20 @@ export const IntegrationSettings = (props) => {
   const availableProjectIntegrations = projectIntegrations[query.subPage] || [];
   const groupedIntegrations = [...availableGlobalIntegrations, ...availableProjectIntegrations];
 
+  const updataedQuary = {
+    id: null,
+  };
+  const namedSubPage = useMemo(
+    () => ({
+      type: PROJECT_SETTINGS_TAB_PAGE,
+      payload: { projectId: activeProject, settingsTab: INTEGRATIONS },
+      meta: {
+        query: mergeQuery(query, updataedQuary),
+      },
+    }),
+    [activeProject],
+  );
+
   const testIntegrationConnection = () => {
     setLoading(true);
     if ('id' in props.data) {
@@ -68,11 +85,7 @@ export const IntegrationSettings = (props) => {
   useEffect(() => {
     const hasId = groupedIntegrations.some((value) => value.id === +query.id);
     if (!hasId) {
-      dispatch(
-        updatePagePropertiesAction({
-          id: null,
-        }),
-      );
+      dispatch(redirect(namedSubPage));
     }
   }, [query.id, groupedIntegrations]);
 
@@ -102,7 +115,7 @@ export const IntegrationSettings = (props) => {
     formKey,
     isGlobal,
   } = props;
-  const pluginName = data.integrationType?.name;
+  const pluginName = query.subPage;
 
   return (
     <div className={cx('integration-settings')}>
@@ -116,7 +129,7 @@ export const IntegrationSettings = (props) => {
             testConnection={testIntegrationConnection}
             onRemoveIntegration={removeIntegration}
             editAuthConfig={editAuthConfig}
-            pluginName={props.data.integrationType?.name}
+            pluginName={pluginName}
             data={data}
             isGlobal={isGlobal}
           />
