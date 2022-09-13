@@ -22,7 +22,7 @@ import { useTracking } from 'react-tracking';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { projectIdSelector, querySelector, PROJECT_SETTINGS_TAB_PAGE } from 'controllers/pages';
-import { mergeQuery } from 'common/utils/routingUtils';
+import { omit } from 'common/utils/omit';
 import { activeProjectSelector } from 'controllers/user';
 import {
   removeIntegrationAction,
@@ -54,15 +54,12 @@ export const IntegrationSettings = (props) => {
   const availableProjectIntegrations = projectIntegrations[query.subPage] || [];
   const groupedIntegrations = [...availableGlobalIntegrations, ...availableProjectIntegrations];
 
-  const updataedQuary = {
-    id: null,
-  };
   const namedSubPage = useMemo(
     () => ({
       type: PROJECT_SETTINGS_TAB_PAGE,
       payload: { projectId: activeProject, settingsTab: INTEGRATIONS },
       meta: {
-        query: mergeQuery(query, updataedQuary),
+        query: omit(query, ['id']),
       },
     }),
     [activeProject],
@@ -84,7 +81,7 @@ export const IntegrationSettings = (props) => {
   };
   useEffect(() => {
     const hasId = groupedIntegrations.some((value) => value.id === +query.id);
-    if (!hasId) {
+    if (!hasId && Object.keys(query).length > 0) {
       dispatch(redirect(namedSubPage));
     }
   }, [query.id, groupedIntegrations]);
@@ -115,7 +112,7 @@ export const IntegrationSettings = (props) => {
     formKey,
     isGlobal,
   } = props;
-  const pluginName = query.subPage;
+  const pluginName = data.integrationType?.name;
 
   return (
     <div className={cx('integration-settings')}>
