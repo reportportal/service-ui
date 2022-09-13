@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
@@ -62,10 +62,10 @@ export const IntegrationSettings = (props) => {
         query: omit(query, ['id']),
       },
     }),
-    [activeProject],
+    [activeProject, query],
   );
 
-  const testIntegrationConnection = () => {
+  const testIntegrationConnection = useCallback(() => {
     setLoading(true);
     if ('id' in props.data) {
       fetch(URLS.testIntegrationConnection(projectId || activeProject, props.data.id))
@@ -78,19 +78,20 @@ export const IntegrationSettings = (props) => {
           setConnected(false);
         });
     }
-  };
+  }, [props.data, activeProject, projectId]);
+
   useEffect(() => {
     const hasId = groupedIntegrations.some((value) => value.id === +query.id);
     if (!hasId && Object.keys(query).length > 0) {
       dispatch(redirect(namedSubPage));
     }
-  }, [query.id, groupedIntegrations]);
+  }, [query, groupedIntegrations, dispatch, namedSubPage]);
 
   useEffect(() => {
     if (query.id || props.data) {
       testIntegrationConnection();
     }
-  }, [query.id, props.data]);
+  }, [query.id, props.data, testIntegrationConnection]);
 
   const removeIntegration = () => {
     const {
