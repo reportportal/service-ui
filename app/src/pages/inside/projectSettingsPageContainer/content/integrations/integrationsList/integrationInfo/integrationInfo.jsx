@@ -237,7 +237,7 @@ export const IntegrationInfo = (props) => {
       ) : (
         <>
           <IntegrationHeader data={data} goBackHandler={goBackHandler} />
-          <div className={cx('integration-connection-block')}>
+          <div className={cx('integration-settings-block')}>
             <IntegrationSettingsComponent
               data={updatedData}
               onUpdate={onUpdate}

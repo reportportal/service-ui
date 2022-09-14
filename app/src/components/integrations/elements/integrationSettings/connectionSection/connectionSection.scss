@@ -118,24 +118,3 @@
     color: $COLOR--red-pressed;
   }
 }
-
-@mixin text-data($color) {
-  font-size: 13px;
-  line-height: 20px;
-  text-indent: 1px;
-  color: $color;
-  font-family: $FONT-ROBOTO-REGULAR;
-}
-
-.sub-block {
-  margin-top: 24px;
-
-  span {
-    @include text-data($COLOR--e-300);
-    margin-bottom: 4px;
-  }
-
-  p {
-    @include text-data($COLOR--almost-black);
-  }
-}

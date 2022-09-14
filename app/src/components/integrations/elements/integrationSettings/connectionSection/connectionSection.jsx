@@ -64,18 +64,6 @@ const messages = defineMessages({
     id: 'ConnectionSection.warningMessageDescription',
     defaultMessage: 'Global Integrations are inactive as you have configured Project Integration',
   },
-  linkTo: {
-    id: 'ConnectionSection.linkTo',
-    defaultMessage: 'Link to BTS',
-  },
-  projectKeyIn: {
-    id: 'ConnectionSection.projectKeyIn',
-    defaultMessage: 'Project key in BTS',
-  },
-  authorizedByUsername: {
-    id: 'ConnectionSection.authorizedByUsername',
-    defaultMessage: 'Authorized by username',
-  },
   projectIntegrationDelete: {
     id: 'IntegrationsDescription.projectIntegrationDelete',
     defaultMessage: 'Delete',
@@ -122,6 +110,7 @@ export class ConnectionSection extends Component {
       integrationType: PropTypes.object,
       projectId: PropTypes.number,
     }).isRequired,
+    editAuthContent: PropTypes.object,
   };
 
   static defaultProps = {
@@ -175,7 +164,7 @@ export class ConnectionSection extends Component {
       connected,
       projectIntegrations,
       pluginName,
-      data: { name, creator, creationDate, integrationParameters = {} },
+      data: { name, creator, creationDate },
     } = this.props;
 
     const availableProjectIntegrations = projectIntegrations[pluginName] || [];
@@ -228,24 +217,7 @@ export class ConnectionSection extends Component {
                 </p>
               </div>
             </div>
-            {integrationParameters.url && (
-              <div className={cx('sub-block')}>
-                <span>{formatMessage(messages.linkTo)}</span>
-                <p>{integrationParameters.url}</p>
-              </div>
-            )}
-            {integrationParameters.project && (
-              <div className={cx('sub-block')}>
-                <span>{formatMessage(messages.projectKeyIn)}</span>
-                <p>{integrationParameters.project}</p>
-              </div>
-            )}
-            {integrationParameters.username && (
-              <div className={cx('sub-block')}>
-                <span>{formatMessage(messages.authorizedByUsername)}</span>
-                <p>{integrationParameters.username}</p>
-              </div>
-            )}
+            {editAuthConfig && editAuthConfig.content}
           </div>
           <div className={cx('buttons-block')}>
             {editAuthConfig && !blocked && (
