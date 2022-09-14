@@ -92,7 +92,7 @@ export const FieldText = ({
           {placeholder && !value && (
             <span className={cx(VARIANT, 'placeholder')}>
               {placeholder}
-              {isRequired && <span className={cx(VARIANT, 'asterisk')} />}
+              {isRequired && !label && <span className={cx(VARIANT, 'asterisk')} />}
             </span>
           )}
         </span>
