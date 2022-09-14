@@ -23,7 +23,7 @@ import { ModalLayout, withModal } from 'components/main/modal';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { validate, bindMessageToValidator } from 'common/utils/validation';
+import { validate, bindMessageToValidator, commonValidators } from 'common/utils/validation';
 import { NotificationCaseFormFields } from './notificationCaseFormFields';
 import styles from './addEditNotificationCaseModal.scss';
 import { ENABLED_FIELD_KEY } from '../../constants';
@@ -52,7 +52,14 @@ const messages = defineMessages({
 @withModal('addEditNotificationCaseModal')
 @reduxForm({
   form: 'notificationCaseForm',
-  validate: ({ recipients, informOwner, launchNames, attributes }) => ({
+  validate: (
+    { ruleName, recipients, informOwner, launchNames, attributes },
+    { data: { notificationCase, cases } },
+  ) => ({
+    ruleName: commonValidators.createRuleNameValidator(
+      cases.map((item) => ({ name: item.ruleName, ...item })),
+      notificationCase && notificationCase.id,
+    )(ruleName),
     recipients: bindMessageToValidator(
       validate.createNotificationRecipientsValidator(informOwner),
       'recipientsHint',
@@ -73,6 +80,7 @@ export class AddEditNotificationCaseModal extends Component {
       onConfirm: PropTypes.func,
       isNewCase: PropTypes.bool,
       eventsInfo: PropTypes.object,
+      cases: PropTypes.array,
     }),
     initialize: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,

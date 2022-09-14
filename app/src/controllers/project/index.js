@@ -27,7 +27,6 @@ export {
   hideFilterOnLaunchesAction,
   fetchConfigurationAttributesAction,
   updateConfigurationAttributesAction,
-  updateProjectNotificationsConfigAction,
   updateDefectTypeAction,
   updateDefectTypeSuccessAction,
   addDefectTypeAction,

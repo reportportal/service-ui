@@ -18,8 +18,6 @@ import {
   FETCH_PROJECT_SUCCESS,
   FETCH_PROJECT_PREFERENCES_SUCCESS,
   UPDATE_CONFIGURATION_ATTRIBUTES,
-  UPDATE_NOTIFICATIONS_CONFIG,
-  UPDATE_NOTIFICATIONS_CONFIG_SUCCESS,
   UPDATE_DEFECT_TYPE,
   UPDATE_DEFECT_TYPE_SUCCESS,
   ADD_DEFECT_TYPE,
@@ -64,16 +62,6 @@ export const fetchProjectPreferencesSuccessAction = (preferences) => ({
 export const updateConfigurationAttributesAction = (project) => ({
   type: UPDATE_CONFIGURATION_ATTRIBUTES,
   payload: project.configuration.attributes,
-});
-
-export const updateProjectNotificationsConfigAction = (config) => ({
-  type: UPDATE_NOTIFICATIONS_CONFIG,
-  payload: config,
-});
-
-export const updateProjectNotificationsConfigSuccessAction = (config) => ({
-  type: UPDATE_NOTIFICATIONS_CONFIG_SUCCESS,
-  payload: config,
 });
 
 export const updateProjectFilterPreferencesAction = (filterId, method) => ({
