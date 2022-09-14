@@ -22,7 +22,6 @@ import {
   FETCH_PROJECT_SUCCESS,
   FETCH_PROJECT_PREFERENCES_SUCCESS,
   UPDATE_CONFIGURATION_ATTRIBUTES,
-  UPDATE_NOTIFICATIONS_CONFIG_SUCCESS,
   UPDATE_DEFECT_TYPE_SUCCESS,
   ADD_DEFECT_TYPE_SUCCESS,
   DELETE_DEFECT_TYPE_SUCCESS,
@@ -50,14 +49,6 @@ export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, p
             ...((state.configuration && state.configuration.attributes) || {}),
             ...payload,
           },
-        },
-      };
-    case UPDATE_NOTIFICATIONS_CONFIG_SUCCESS:
-      return {
-        ...state,
-        configuration: {
-          ...state.configuration,
-          notificationsConfiguration: payload,
         },
       };
     case UPDATE_DEFECT_TYPE_SUCCESS:

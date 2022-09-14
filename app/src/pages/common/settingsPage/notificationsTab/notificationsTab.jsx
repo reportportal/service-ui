@@ -193,7 +193,7 @@ export class NotificationsTab extends Component {
     showModal({
       id: 'addEditNotificationCaseModal',
       data: {
-        onConfirm: (data) => this.confirmEditCase(data),
+        onConfirm: this.confirmEditCase,
         notificationCase,
         eventsInfo: {
           closeIcon: SETTINGS_PAGE_EVENTS.CLOSE_ICON_EDIT_RULE_NOTIFICATIONS,

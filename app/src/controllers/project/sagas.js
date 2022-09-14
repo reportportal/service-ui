@@ -38,7 +38,6 @@ import {
   UPDATE_DEFECT_TYPE,
   ADD_DEFECT_TYPE,
   DELETE_DEFECT_TYPE,
-  UPDATE_NOTIFICATIONS_CONFIG,
   ADD_PATTERN,
   UPDATE_PATTERN,
   DELETE_PATTERN,
@@ -61,7 +60,6 @@ import {
   updateDefectTypeSuccessAction,
   addDefectTypeSuccessAction,
   deleteDefectTypeSuccessAction,
-  updateProjectNotificationsConfigSuccessAction,
   addPatternSuccessAction,
   updatePatternSuccessAction,
   deletePatternSuccessAction,
@@ -76,7 +74,7 @@ import {
   updateProjectNotificationSuccessAction,
   setProjectNotificationsLoadingAction,
 } from './actionCreators';
-import { projectNotificationsConfigurationSelector, patternsSelector } from './selectors';
+import { patternsSelector } from './selectors';
 
 function* updateDefectType({ payload: defectTypes }) {
   yield put(showScreenLockAction());
@@ -159,36 +157,6 @@ function* deleteDefectType({ payload: defectType }) {
 
 function* watchDeleteDefectType() {
   yield takeEvery(DELETE_DEFECT_TYPE, deleteDefectType);
-}
-
-function* updateProjectNotificationsConfig({ payload: notificationsConfig }) {
-  yield put(showScreenLockAction());
-  try {
-    const currentConfig = yield select(projectNotificationsConfigurationSelector);
-    const projectId = yield select(projectIdSelector);
-    const newConfig = { ...currentConfig, ...notificationsConfig };
-
-    yield call(fetch, URLS.projectNotificationConfiguration(projectId), {
-      method: 'put',
-      data: newConfig,
-    });
-    yield put(updateProjectNotificationsConfigSuccessAction(newConfig));
-    yield put(
-      showNotification({
-        messageId: 'updateProjectNotificationsConfigurationSuccess',
-        type: NOTIFICATION_TYPES.SUCCESS,
-      }),
-    );
-    yield put(hideModalAction());
-  } catch (error) {
-    yield put(showDefaultErrorNotification(error));
-  } finally {
-    yield put(hideScreenLockAction());
-  }
-}
-
-function* watchUpdateProjectNotificationsConfig() {
-  yield takeEvery(UPDATE_NOTIFICATIONS_CONFIG, updateProjectNotificationsConfig);
 }
 
 function* fetchProjectNotifications() {
@@ -510,7 +478,6 @@ export function* projectSagas() {
     watchUpdateDefectType(),
     watchAddDefectType(),
     watchDeleteDefectType(),
-    watchUpdateProjectNotificationsConfig(),
     watchAddPattern(),
     watchUpdatePattern(),
     watchUpdatePAState(),

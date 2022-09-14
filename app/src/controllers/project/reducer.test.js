@@ -22,7 +22,6 @@ import {
   FETCH_PROJECT_SUCCESS,
   UPDATE_CONFIGURATION_ATTRIBUTES,
   FETCH_PROJECT_PREFERENCES_SUCCESS,
-  UPDATE_NOTIFICATIONS_CONFIG_SUCCESS,
   UPDATE_DEFECT_TYPE_SUCCESS,
   ADD_DEFECT_TYPE_SUCCESS,
   DELETE_DEFECT_TYPE_SUCCESS,
@@ -72,21 +71,6 @@ describe('project reducer', () => {
             ...oldState.configuration.attributes,
             ...payload,
           },
-        },
-      });
-    });
-
-    test('should handle UPDATE_EMAIL_CONFIG_SUCCESS', () => {
-      const payload = { foo: 'bar' };
-      const newState = projectInfoReducer(PROJECT_INFO_INITIAL_STATE, {
-        type: UPDATE_NOTIFICATIONS_CONFIG_SUCCESS,
-        payload,
-      });
-      expect(newState).toEqual({
-        ...PROJECT_INFO_INITIAL_STATE,
-        configuration: {
-          ...PROJECT_INFO_INITIAL_STATE.configuration,
-          notificationsConfiguration: payload,
         },
       });
     });
