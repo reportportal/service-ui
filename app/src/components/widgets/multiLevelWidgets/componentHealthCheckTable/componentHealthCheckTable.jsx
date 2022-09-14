@@ -45,6 +45,8 @@ import {
 } from 'components/widgets/multiLevelWidgets/common/utils';
 import { STATE_READY } from 'components/widgets/common/constants';
 import isEqual from 'fast-deep-equal';
+import { projectOrganizationSlugSelector } from 'controllers/project/selectors';
+import { activeProjectKeySelector } from 'controllers/user/selectors';
 import {
   NAME,
   NAME_KEY,
@@ -144,7 +146,9 @@ const getColumn = (name, customProps, customColumn) => {
 
 @injectIntl
 @connect((state) => ({
-  project: activeProjectSelector(state),
+  projectName: activeProjectSelector(state),
+  organizationSlug: projectOrganizationSlugSelector(state),
+  projectKey: activeProjectKeySelector(state),
 }))
 export class ComponentHealthCheckTable extends Component {
   static propTypes = {
@@ -153,7 +157,9 @@ export class ComponentHealthCheckTable extends Component {
     fetchWidget: PropTypes.func,
     clearQueryParams: PropTypes.func,
     container: PropTypes.instanceOf(Element).isRequired,
-    project: PropTypes.string.isRequired,
+    projectName: PropTypes.string.isRequired,
+    organizationSlug: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -298,17 +304,21 @@ export class ComponentHealthCheckTable extends Component {
   getColumns = () => {
     const {
       intl: { formatMessage },
-      project,
+      projectName,
       widget,
+      organizationSlug,
+      projectKey,
     } = this.props;
     const customProps = {
       minPassingRate: this.getPassingRateValue(),
       formatMessage,
       isLatest: widget.contentParameters && widget.contentParameters.widgetOptions.latest,
       linkPayload: {
-        projectId: project,
+        projectId: projectName,
         filterId: widget.appliedFilters[0] && widget.appliedFilters[0].id,
         testItemIds: TEST_ITEMS_TYPE_LIST,
+        organizationSlug,
+        projectKey,
       },
       getCompositeAttributes: this.getCompositeAttributes,
       onClickAttribute: this.onClickAttribute,

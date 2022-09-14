@@ -21,8 +21,8 @@ import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { ALL } from 'common/constants/reservedFilterIds';
-import { activeProjectSelector } from 'controllers/user';
 import { TEST_ITEM_PAGE, PROJECT_LOG_PAGE } from 'controllers/pages/constants';
+import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project/selectors';
 import { MostTimeConsumingTestCasesChart } from './mostTimeConsumingTestCasesChart';
 import { MostTimeConsumingTestCasesTable } from './mostTimeConsumingTestCasesTable';
 import styles from './mostTimeConsumingTestCases.scss';
@@ -39,7 +39,8 @@ const localMessages = defineMessages({
 @injectIntl
 @connect(
   (state) => ({
-    projectId: activeProjectSelector(state),
+    projectKey: projectKeySelector(state),
+    organizationSlug: projectOrganizationSlugSelector(state),
   }),
   {
     navigate: (linkAction) => linkAction,
@@ -50,10 +51,11 @@ export class MostTimeConsumingTestCases extends Component {
     intl: PropTypes.object.isRequired,
     widget: PropTypes.object.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
-    projectId: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
     navigate: PropTypes.func.isRequired,
     isPreview: PropTypes.bool,
     observer: PropTypes.object,
+    organizationSlug: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -63,11 +65,12 @@ export class MostTimeConsumingTestCases extends Component {
 
   itemClickHandler = (id) => {
     const {
-      projectId,
+      projectKey,
       widget: {
         content: { result, latestLaunch = {} },
       },
       navigate,
+      organizationSlug,
     } = this.props;
     const { path } = result.find((el) => el.id === id) || {};
     let itemLink;
@@ -83,9 +86,10 @@ export class MostTimeConsumingTestCases extends Component {
 
     const navigationParams = {
       payload: {
-        projectId,
+        projectKey,
         filterId: ALL,
         testItemIds: itemLink,
+        organizationSlug,
       },
       type: pageType,
     };

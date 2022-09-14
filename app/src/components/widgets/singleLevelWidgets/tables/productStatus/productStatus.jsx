@@ -26,9 +26,9 @@ import {
 } from 'common/constants/statistics';
 import { changeActiveFilterAction } from 'controllers/filter';
 import { ALL } from 'common/constants/reservedFilterIds';
-import { activeProjectSelector } from 'controllers/user';
 import { Grid } from 'components/main/grid';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project/selectors';
 import { STATS_SI, STATS_PB, STATS_TI, STATS_ND, STATS_AB } from '../components/constants';
 import {
   NAME,
@@ -71,7 +71,8 @@ const columnComponentsMap = {
 
 @connect(
   (state) => ({
-    projectId: activeProjectSelector(state),
+    projectKey: projectKeySelector(state),
+    organizationSlug: projectOrganizationSlugSelector(state),
   }),
   {
     changeActiveFilterAction,
@@ -82,8 +83,9 @@ export class ProductStatus extends PureComponent {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     widget: PropTypes.object.isRequired,
-    projectId: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
     changeActiveFilterAction: PropTypes.func.isRequired,
+    organizationSlug: PropTypes.string.isRequired,
   };
 
   getColumnParameters = () => {
@@ -185,13 +187,14 @@ export class ProductStatus extends PureComponent {
   };
 
   getCustomProps = () => {
-    const { intl, projectId } = this.props;
+    const { intl, projectKey, organizationSlug } = this.props;
 
     return {
       formatMessage: intl.formatMessage,
       onFilterSelect: this.handleFilterSelect,
       linkPayload: {
-        projectId,
+        projectKey,
+        organizationSlug,
         filterId: ALL,
       },
       onFilterNameClick: this.props.changeActiveFilterAction,

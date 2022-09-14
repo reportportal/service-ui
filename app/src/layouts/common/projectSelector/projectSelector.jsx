@@ -68,6 +68,7 @@ export class ProjectSelector extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    organizationSlug: PropTypes.string.isRequired,
   };
   static defaultProps = {
     projects: [],
@@ -149,7 +150,12 @@ export class ProjectSelector extends Component {
                 <ScrollWrapper autoHeight autoHeightMax={600}>
                   {projects.map((project) => (
                     <NavLink
-                      to={{ type: PROJECT_PAGE, payload: { projectId: project } }}
+                      to={{
+                        type: PROJECT_PAGE,
+                        payload: {
+                          projectKey: project,
+                        },
+                      }}
                       key={project}
                       className={cx('project-list-item')}
                       activeClassName={cx('active')}

@@ -21,7 +21,6 @@ import { connect } from 'react-redux';
 import * as d3 from 'd3-selection';
 import { injectIntl } from 'react-intl';
 import { statisticsLinkSelector } from 'controllers/testItem';
-import { activeProjectSelector } from 'controllers/user';
 import { createFilterAction } from 'controllers/filter';
 import * as STATUSES from 'common/constants/testStatuses';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
@@ -32,6 +31,7 @@ import {
   getChartDefaultProps,
   getDefaultTestItemLinkParams,
 } from 'components/widgets/common/utils';
+import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project/selectors';
 import { getConfig } from './config/getConfig';
 import styles from './testCasesGrowthTrendChart.scss';
 
@@ -39,7 +39,8 @@ const cx = classNames.bind(styles);
 
 @connect(
   (state) => ({
-    projectId: activeProjectSelector(state),
+    projectKey: projectKeySelector(state),
+    organizationSlug: projectOrganizationSlugSelector(state),
     getStatisticsLink: statisticsLinkSelector(state),
   }),
   {
@@ -53,13 +54,14 @@ export class TestCasesGrowthTrendChart extends Component {
     intl: PropTypes.object.isRequired,
     widget: PropTypes.object.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
-    projectId: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
     getStatisticsLink: PropTypes.func.isRequired,
     navigate: PropTypes.func.isRequired,
     createFilterAction: PropTypes.func.isRequired,
     isPreview: PropTypes.bool,
     height: PropTypes.number,
     observer: PropTypes.object,
+    organizationSlug: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -123,9 +125,9 @@ export class TestCasesGrowthTrendChart extends Component {
   };
 
   launchModeClickHandler = (data) => {
-    const { widget, getStatisticsLink, projectId } = this.props;
+    const { widget, getStatisticsLink, projectKey, organizationSlug } = this.props;
     const id = widget.content.result[data.index].id;
-    const defaultParams = getDefaultTestItemLinkParams(projectId, ALL, id);
+    const defaultParams = getDefaultTestItemLinkParams(projectKey, ALL, id, organizationSlug);
     const statisticsLink = getStatisticsLink({
       statuses: [STATUSES.PASSED, STATUSES.FAILED, STATUSES.SKIPPED, STATUSES.INTERRUPTED],
     });

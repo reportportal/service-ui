@@ -64,9 +64,15 @@ export class TestItem extends Component {
   };
 
   componentDidMount() {
-    fetch(URLS.testItem(this.props.activity.projectName, this.props.activity.loggedObjectId), {
-      method: 'get',
-    }).then((response) => {
+    fetch(
+      URLS.testItem(
+        this.props.activity.projectName ?? this.props.activity.projectKey,
+        this.props.activity.loggedObjectId,
+      ),
+      {
+        method: 'get',
+      },
+    ).then((response) => {
       this.setState({ testItem: response });
     });
   }
@@ -130,9 +136,10 @@ export class TestItem extends Component {
           : intl.formatMessage(messages.toItem)}
         <Link
           to={getTestItemPageLink(
-            activity.projectName,
+            activity.projectKey ?? activity.projectName,
             pathToTestItem,
             this.state.testItem && this.state.testItem.type,
+            activity.organizationSlug,
           )}
           className={cx('link')}
           target="_blank"

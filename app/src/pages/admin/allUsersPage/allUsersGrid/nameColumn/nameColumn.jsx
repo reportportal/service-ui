@@ -22,13 +22,14 @@ import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { fetch } from 'common/utils';
 import { ADMINISTRATOR, USER } from 'common/constants/accountRoles';
-import { userIdSelector, activeProjectSelector } from 'controllers/user';
+import { userIdSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
 import { fetchAllUsersAction } from 'controllers/administrate/allUsers';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { showModalAction } from 'controllers/modal';
 import { UserAvatar } from 'pages/inside/common/userAvatar';
 import { ADMIN_ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { projectKeySelector } from 'controllers/project/selectors';
 import styles from './nameColumn.scss';
 
 const cx = classNames.bind(styles);
@@ -46,7 +47,7 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     currentUser: userIdSelector(state),
-    activeProject: activeProjectSelector(state),
+    projectKey: projectKeySelector(state),
   }),
   {
     showModal: showModalAction,
@@ -63,7 +64,7 @@ export class NameColumn extends Component {
     className: PropTypes.string.isRequired,
     value: PropTypes.object,
     currentUser: PropTypes.string,
-    activeProject: PropTypes.string,
+    projectKey: PropTypes.string,
     showModal: PropTypes.func,
     fetchAllUsers: PropTypes.func,
     tracking: PropTypes.shape({
@@ -74,7 +75,7 @@ export class NameColumn extends Component {
   static defaultProps = {
     value: {},
     currentUser: '',
-    activeProject: '',
+    projectKey: '',
     showModal: () => {},
     fetchAllUsers: () => {},
   };
@@ -116,7 +117,7 @@ export class NameColumn extends Component {
   render() {
     const {
       intl: { formatMessage },
-      activeProject,
+      projectKey,
       value,
       className,
       currentUser,
@@ -126,7 +127,7 @@ export class NameColumn extends Component {
       <div className={cx('name-col', className)}>
         <UserAvatar
           className={cx('avatar-wrapper')}
-          projectId={activeProject}
+          projectKey={projectKey}
           userId={value.userId}
         />
         <span className={cx('name')} title={value.fullName}>

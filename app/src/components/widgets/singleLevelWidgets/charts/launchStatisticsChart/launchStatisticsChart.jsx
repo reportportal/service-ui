@@ -26,7 +26,6 @@ import {
   statisticsLinkSelector,
   TEST_ITEMS_TYPE_LIST,
 } from 'controllers/testItem';
-import { activeProjectSelector } from 'controllers/user';
 import { createFilterAction } from 'controllers/filter';
 import { PASSED, FAILED, SKIPPED, INTERRUPTED } from 'common/constants/testStatuses';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
@@ -41,6 +40,7 @@ import {
 import { createTooltipRenderer } from 'components/widgets/common/tooltip';
 import { CHART_OFFSET } from 'components/widgets/common/constants';
 import { getMillisecondsWoTimezone } from 'common/utils/timeDateUtils';
+import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project/selectors';
 import { IssueTypeStatTooltip } from '../common/issueTypeStatTooltip';
 import { isSingleColumnChart, calculateTooltipParams } from './config/utils';
 import { getConfig } from './config/getConfig';
@@ -52,9 +52,10 @@ const cx = classNames.bind(styles);
 @injectIntl
 @connect(
   (state) => ({
-    projectId: activeProjectSelector(state),
+    projectKey: projectKeySelector(state),
     defectTypes: defectTypesSelector(state),
     orderedContentFields: orderedContentFieldsSelector(state),
+    organizationSlug: projectOrganizationSlugSelector(state),
     getDefectLink: defectLinkSelector(state),
     getStatisticsLink: statisticsLinkSelector(state),
   }),
@@ -68,7 +69,7 @@ export class LaunchStatisticsChart extends Component {
     intl: PropTypes.object.isRequired,
     navigate: PropTypes.func,
     widget: PropTypes.object.isRequired,
-    projectId: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
     defectTypes: PropTypes.object.isRequired,
     orderedContentFields: PropTypes.array.isRequired,
     getDefectLink: PropTypes.func.isRequired,
@@ -81,6 +82,7 @@ export class LaunchStatisticsChart extends Component {
     observer: PropTypes.object,
     uncheckedLegendItems: PropTypes.array,
     onChangeLegend: PropTypes.func,
+    organizationSlug: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -117,7 +119,7 @@ export class LaunchStatisticsChart extends Component {
 
     if (this.isSingleColumn()) {
       // eslint-disable-next-line
-      this.interactElems._groups[0].forEach(function (item) {
+      this.interactElems._groups[0].forEach(function(item) {
         if (!item.value) {
           d3.select(this).style('display', 'none');
         }
@@ -202,10 +204,17 @@ export class LaunchStatisticsChart extends Component {
     MODES_VALUES[CHART_MODES.TIMELINE_MODE];
 
   launchModeClickHandler = (data) => {
-    const { widget, getDefectLink, getStatisticsLink, defectTypes, projectId } = this.props;
+    const {
+      widget,
+      getDefectLink,
+      getStatisticsLink,
+      defectTypes,
+      projectKey,
+      organizationSlug,
+    } = this.props;
     const nameConfig = getItemNameConfig(data.id);
     const id = widget.content.result[data.index].id;
-    const defaultParams = getDefaultTestItemLinkParams(projectId, ALL, id);
+    const defaultParams = getDefaultTestItemLinkParams(projectKey, ALL, id, organizationSlug);
     const locators = getDefectTypeLocators(nameConfig, defectTypes);
 
     const link = locators
@@ -215,14 +224,22 @@ export class LaunchStatisticsChart extends Component {
   };
 
   timeLineModeClickHandler = (data) => {
-    const { widget, getDefectLink, getStatisticsLink, defectTypes, projectId } = this.props;
+    const {
+      widget,
+      getDefectLink,
+      getStatisticsLink,
+      defectTypes,
+      projectKey,
+      organizationSlug,
+    } = this.props;
     const chartFilterId = widget.appliedFilters[0].id;
     const launchesLimit = widget.contentParameters.itemsCount;
     const nameConfig = getItemNameConfig(data.id);
     const defaultParams = getDefaultTestItemLinkParams(
-      projectId,
+      projectKey,
       chartFilterId,
       TEST_ITEMS_TYPE_LIST,
+      organizationSlug,
     );
     const locators = getDefectTypeLocators(nameConfig, defectTypes);
     const startDate = getMillisecondsWoTimezone(this.chartData.itemsData[data.index].date);

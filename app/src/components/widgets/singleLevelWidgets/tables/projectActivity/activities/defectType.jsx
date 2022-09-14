@@ -65,7 +65,11 @@ export class DefectType extends Component {
         <span className={cx('user-name')}>{activity.user}</span>
         {messages[activity.actionType] && intl.formatMessage(messages[activity.actionType])}
         <Link
-          to={getProjectSettingTabPageLink(activity.projectName, DEFECT)}
+          to={getProjectSettingTabPageLink(
+            activity.projectKey ?? activity.projectName,
+            DEFECT,
+            activity.organizationSlug,
+          )}
           className={cx('link')}
           target="_blank"
         >

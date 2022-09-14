@@ -31,7 +31,11 @@ export const AnalysisConfigurations = ({ activity }) => (
     <span className={cx('user-name')}>{activity.user}</span>
     <FormattedMessage id="AnalysisConfigurations.update" defaultMessage="updated" />
     <Link
-      to={getProjectSettingTabPageLink(activity.projectName, ANALYSIS)}
+      to={getProjectSettingTabPageLink(
+        activity.projectKey ?? activity.projectName,
+        ANALYSIS,
+        activity.organizationSlug,
+      )}
       className={cx('link')}
       target="_blank"
     >

@@ -52,7 +52,11 @@ export class Notifications extends Component {
         <span className={cx('user-name')}>{activity.user}</span>
         {intl.formatMessage(messages.updated)}
         <Link
-          to={getProjectSettingTabPageLink(activity.projectName, NOTIFICATIONS)}
+          to={getProjectSettingTabPageLink(
+            activity.projectKey ?? activity.projectName,
+            NOTIFICATIONS,
+            activity.organizationSlug,
+          )}
           className={cx('link')}
           target="_blank"
         >

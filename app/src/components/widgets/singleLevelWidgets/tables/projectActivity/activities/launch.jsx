@@ -70,11 +70,12 @@ export class Launch extends Component {
     activity: {},
   };
 
-  getLaunchesPageLink = (projectId) => ({
+  getLaunchesPageLink = (projectKey, organizationSlug) => ({
     type: PROJECT_LAUNCHES_PAGE,
     payload: {
-      projectId,
+      projectKey,
       filterId: ALL,
+      organizationSlug,
     },
   });
 
@@ -97,7 +98,12 @@ export class Launch extends Component {
           <Fragment>
             {` ${formatMessage(messages.launch)}`}
             <Link
-              to={getTestItemPageLink(activity.projectName, activity.loggedObjectId)}
+              to={getTestItemPageLink(
+                activity.projectName,
+                activity.loggedObjectId,
+                undefined,
+                activity.organizationSlug,
+              )}
               className={cx('link')}
               target="_blank"
             >
@@ -107,7 +113,10 @@ export class Launch extends Component {
         )}
         {(activity.actionType === START_IMPORT || activity.actionType === FINISH_IMPORT) && (
           <Link
-            to={this.getLaunchesPageLink(activity.projectName)}
+            to={this.getLaunchesPageLink(
+              activity.projectKey ?? activity.projectName,
+              activity.organizationSlug,
+            )}
             className={cx('link')}
             target="_blank"
           >

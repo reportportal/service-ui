@@ -22,12 +22,7 @@ import classNames from 'classnames/bind';
 import track from 'react-tracking';
 import { ADMIN_PROJECTS_PAGE_EVENTS, ADMIN_PROJECTS_PAGE } from 'components/main/analytics/events';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
-import {
-  PROJECTS_PAGE,
-  PROJECT_DETAILS_PAGE,
-  projectIdSelector,
-  projectSectionSelector,
-} from 'controllers/pages';
+import { PROJECTS_PAGE, PROJECT_DETAILS_PAGE, projectSectionSelector } from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
 import { SETTINGS, MEMBERS, EVENTS } from 'common/constants/projectSections';
 import { GhostButton } from 'components/buttons/ghostButton';
@@ -40,6 +35,8 @@ import {
   addProjectAction,
   navigateToProjectSectionAction,
 } from 'controllers/administrate/projects';
+import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project/selectors';
+import { projectPayloadKeySelector } from 'controllers/pages/selectors';
 import { ProjectStatusPage } from '../projectStatusPage';
 import { ProjectEventsPage } from '../projectEventsPage';
 import { Projects } from './projects';
@@ -66,8 +63,10 @@ const HEADER_BUTTONS = [
 
 @connect(
   (state) => ({
-    projectId: projectIdSelector(state),
+    payloadKey: projectPayloadKeySelector(state),
     section: projectSectionSelector(state),
+    organizationSlug: projectOrganizationSlugSelector(state),
+    projectKey: projectKeySelector(state),
   }),
   {
     addProject: addProjectAction,
@@ -84,30 +83,41 @@ export class ProjectsPage extends Component {
     addProject: PropTypes.func.isRequired,
     showModal: PropTypes.func.isRequired,
     section: PropTypes.string,
-    projectId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    organizationSlug: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    payloadKey: PropTypes.string,
   };
 
   static defaultProps = {
     section: undefined,
-    projectId: undefined,
+    payloadKey: '',
   };
 
   onHeaderButtonClick = (section) => () => {
     this.props.tracking.trackEvent(
       ADMIN_PROJECTS_PAGE_EVENTS[`CLICK_${section.toUpperCase()}_BTN`],
     );
-    this.props.navigateToSection(this.props.projectId, section);
+
+    this.props.navigateToSection(
+      {
+        organizationSlug: this.props.organizationSlug,
+        projectKey: this.props.payloadKey,
+      },
+      section,
+    );
   };
 
   getBreadcrumbs = () => {
     const {
       intl: { formatMessage },
-      projectId,
+      payloadKey,
       section,
+      organizationSlug,
+      projectKey,
     } = this.props;
 
     const breadcrumbs = [
@@ -119,12 +129,12 @@ export class ProjectsPage extends Component {
       },
     ];
 
-    if (projectId) {
+    if (payloadKey) {
       breadcrumbs.push({
-        title: projectId,
+        title: `${payloadKey}`,
         link: {
           type: PROJECT_DETAILS_PAGE,
-          payload: { projectId, projectSection: null },
+          payload: { projectKey, projectSection: null, organizationSlug },
         },
       });
     }
@@ -156,11 +166,11 @@ export class ProjectsPage extends Component {
   renderHeaderButtons = () => {
     const {
       intl: { formatMessage },
-      projectId,
+      payloadKey,
       section,
     } = this.props;
 
-    if (!projectId) {
+    if (!payloadKey) {
       return (
         <div className={cx('mobile-hide')}>
           <GhostButton icon={AddProjectIcon} onClick={this.showAddProjectModal}>
@@ -188,21 +198,26 @@ export class ProjectsPage extends Component {
   };
 
   renderSection = () => {
-    const { projectId, section } = this.props;
+    const { payloadKey, section, organizationSlug } = this.props;
 
-    if (!projectId) {
+    if (!payloadKey) {
       return <Projects />;
     }
 
     switch (section) {
       case SETTINGS:
-        return <AdminProjectSettingsPageContainer projectId={projectId} />;
+        return (
+          <AdminProjectSettingsPageContainer
+            payloadKey={payloadKey}
+            organizationSlug={organizationSlug}
+          />
+        );
       case MEMBERS:
         return <MembersPage />;
       case EVENTS:
         return <ProjectEventsPage />;
       default:
-        return <ProjectStatusPage projectId={projectId} />;
+        return <ProjectStatusPage projectKey={payloadKey} />;
     }
   };
 

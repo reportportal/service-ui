@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { activeProjectSelector } from 'controllers/user';
+import {} from 'controllers/user';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
@@ -38,6 +38,8 @@ import { ADMIN_SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { TextTooltip } from 'components/main/tooltips/textTooltip';
 import { Sidebar } from 'layouts/common/sidebar';
+import { projectOrganizationSlugSelector } from 'controllers/project/selectors';
+import { activeProjectKeySelector } from 'controllers/user/selectors';
 import ProjectsIcon from './img/projects-inline.svg';
 import UsersIcon from './img/all-users-inline.svg';
 import SettingsIcon from './img/server-settings-inline.svg';
@@ -48,7 +50,7 @@ import styles from './adminSidebar.scss';
 
 const cx = classNames.bind(styles);
 
-const BackToProject = ({ activeProject }) => {
+const BackToProject = ({ organizationSlug, projectKey }) => {
   const { trackEvent } = useTracking();
   return (
     <Link
@@ -56,7 +58,11 @@ const BackToProject = ({ activeProject }) => {
       onClick={() => trackEvent(ADMIN_SIDEBAR_EVENTS.CLICK_BACK_TO_PROJECT_BTN)}
       to={{
         type: PROJECT_LAUNCHES_PAGE,
-        payload: { projectId: activeProject, filterId: ALL },
+        payload: {
+          projectKey,
+          filterId: ALL,
+          organizationSlug,
+        },
       }}
     >
       <i className={cx('icon')}>{Parser(BackIcon)}</i>
@@ -64,10 +70,8 @@ const BackToProject = ({ activeProject }) => {
   );
 };
 BackToProject.propTypes = {
-  activeProject: PropTypes.string,
-};
-BackToProject.defaultProps = {
-  activeProject: '',
+  organizationSlug: PropTypes.string.isRequired,
+  projectKey: PropTypes.string.isRequired,
 };
 
 const BackToProjectWithTooltip = withTooltip({
@@ -81,14 +85,16 @@ const BackToProjectWithTooltip = withTooltip({
 })(BackToProject);
 
 @connect((state) => ({
-  activeProject: activeProjectSelector(state),
   extensions: uiExtensionAdminPagesSelector(state),
+  organizationSlug: projectOrganizationSlugSelector(state),
+  projectKey: activeProjectKeySelector(state),
 }))
 @track()
 export class AdminSidebar extends Component {
   static propTypes = {
     onClickNavBtn: PropTypes.func,
-    activeProject: PropTypes.string.isRequired,
+    organizationSlug: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -151,33 +157,42 @@ export class AdminSidebar extends Component {
     return [...items, ...extensionItems];
   };
 
-  createBottomSidebarItems = () => [
-    {
-      onClick: this.props.onClickNavBtn,
-      link: {
-        type: PROJECT_LAUNCHES_PAGE,
-        payload: { projectId: this.props.activeProject, filterId: ALL },
+  createBottomSidebarItems = () => {
+    const { organizationSlug, projectKey } = this.props;
+
+    return [
+      {
+        onClick: this.props.onClickNavBtn,
+        link: {
+          type: PROJECT_LAUNCHES_PAGE,
+          payload: {
+            projectKey,
+            filterId: ALL,
+            organizationSlug,
+          },
+        },
+        icon: BackIcon,
+        message: (
+          <FormattedMessage id={'AdminSidebar.btnToProject'} defaultMessage={'Back to project'} />
+        ),
       },
-      icon: BackIcon,
-      message: (
-        <FormattedMessage id={'AdminSidebar.btnToProject'} defaultMessage={'Back to project'} />
-      ),
-    },
-    {
-      onClick: this.props.onClickNavBtn,
-      link: { type: USER_PROFILE_PAGE },
-      icon: ProfileIcon,
-      message: <FormattedMessage id={'AdminSidebar.btnProfile'} defaultMessage={'Profile'} />,
-    },
-  ];
+      {
+        onClick: this.props.onClickNavBtn,
+        link: { type: USER_PROFILE_PAGE },
+        icon: ProfileIcon,
+        message: <FormattedMessage id={'AdminSidebar.btnProfile'} defaultMessage={'Profile'} />,
+      },
+    ];
+  };
 
   render() {
-    const { activeProject } = this.props;
+    const { organizationSlug, projectKey } = this.props;
     const topSidebarItems = this.createTopSidebarItems();
     const bottomSidebarItems = this.createBottomSidebarItems();
     const mainBlock = (
       <BackToProjectWithTooltip
-        activeProject={activeProject}
+        organizationSlug={organizationSlug}
+        projectKey={projectKey}
         className={cx('back-to-project-tooltip')}
         tooltipContent={
           <FormattedMessage id={'AdminSidebar.btnToProject'} defaultMessage={'Back to project'} />

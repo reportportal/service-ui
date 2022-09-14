@@ -19,13 +19,13 @@ import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
-import { activeProjectSelector } from 'controllers/user';
 import { ChartContainer } from 'components/widgets/common/c3chart';
 import {
   getChartDefaultProps,
   getDefaultTestItemLinkParams,
 } from 'components/widgets/common/utils';
 import { ALL } from 'common/constants/reservedFilterIds';
+import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project/selectors';
 import { getConfig } from './config/getConfig';
 import styles from './launchesDurationChart.scss';
 
@@ -34,7 +34,8 @@ const cx = classNames.bind(styles);
 @injectIntl
 @connect(
   (state) => ({
-    projectId: activeProjectSelector(state),
+    projectKey: projectKeySelector(state),
+    organizationSlug: projectOrganizationSlugSelector(state),
   }),
   {
     navigate: (linkAction) => linkAction,
@@ -44,12 +45,13 @@ export class LaunchesDurationChart extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     navigate: PropTypes.func.isRequired,
-    projectId: PropTypes.string.isRequired,
     widget: PropTypes.object.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
     isPreview: PropTypes.bool,
     height: PropTypes.number,
     observer: PropTypes.object,
+    organizationSlug: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -61,9 +63,15 @@ export class LaunchesDurationChart extends Component {
   onChartClick = (data) => {
     const {
       widget: { content },
-      projectId,
+      projectKey,
+      organizationSlug,
     } = this.props;
-    const link = getDefaultTestItemLinkParams(projectId, ALL, `${content.result[data.index].id}`);
+    const link = getDefaultTestItemLinkParams(
+      projectKey,
+      ALL,
+      `${content.result[data.index].id}`,
+      organizationSlug,
+    );
 
     this.props.navigate(link);
   };

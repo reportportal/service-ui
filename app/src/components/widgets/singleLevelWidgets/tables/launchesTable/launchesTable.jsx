@@ -32,7 +32,6 @@ import {
   SYSTEM_ISSUE,
 } from 'common/constants/defectTypes';
 import { ALL } from 'common/constants/reservedFilterIds';
-import { activeProjectSelector } from 'controllers/user';
 import { TEST_ITEM_PAGE, LAUNCHES_PAGE } from 'controllers/pages';
 import { createFilterAction } from 'controllers/filter';
 import { Grid } from 'components/main/grid';
@@ -52,6 +51,7 @@ import { formatStatus } from 'common/utils/localizationUtils';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { getItemNameConfig } from 'components/widgets/common/utils';
 import { formatAttribute } from 'common/utils';
+import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project/selectors';
 import { defaultDefectsMessages, defaultStatisticsMessages } from '../components/messages';
 import { getStatisticsStatuses, groupFieldsWithDefectTypes } from '../components/utils';
 import {
@@ -258,7 +258,8 @@ const getColumn = (name, customProps, fieldKeys) => ({
 
 @connect(
   (state) => ({
-    projectId: activeProjectSelector(state),
+    projectKey: projectKeySelector(state),
+    organizationSlug: projectOrganizationSlugSelector(state),
   }),
   {
     createFilterAction,
@@ -269,22 +270,25 @@ export class LaunchesTable extends PureComponent {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     widget: PropTypes.object.isRequired,
-    projectId: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
     createFilterAction: PropTypes.func.isRequired,
+    organizationSlug: PropTypes.string.isRequired,
   };
 
   getColumns = () => {
     const {
       intl: { formatMessage },
       widget: { contentParameters },
-      projectId,
+      projectKey,
+      organizationSlug,
     } = this.props;
     const fieldsMap = groupFieldsWithDefectTypes(contentParameters.contentFields);
     const customProps = {
       formatMessage,
       linkPayload: {
-        projectId,
+        projectKey,
         filterId: ALL,
+        organizationSlug,
       },
       onOwnerClick: this.handleOwnerFilterClick,
       onClickAttribute: this.handleAttributeFilterClick,

@@ -90,7 +90,11 @@ export class Integration extends Component {
     } = this.props;
     const linksParams = {
       target: '_blank',
-      to: getProjectSettingTabPageLink(activity.projectName, INTEGRATIONS),
+      to: getProjectSettingTabPageLink(
+        activity.projectKey ?? activity.projectName,
+        INTEGRATIONS,
+        activity.organizationSlug,
+      ),
       className: cx('link'),
     };
     const integrationName = this.getIntegrationName();

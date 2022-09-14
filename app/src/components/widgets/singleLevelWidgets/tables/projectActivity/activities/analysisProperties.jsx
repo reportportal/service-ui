@@ -138,7 +138,11 @@ export class AnalysisProperties extends Component {
         <Link
           className={cx('link')}
           target="_blank"
-          to={getProjectSettingTabPageLink(activity.projectName, ANALYSIS)}
+          to={getProjectSettingTabPageLink(
+            activity.projectKey ?? activity.projectName,
+            ANALYSIS,
+            activity.organizationSlug,
+          )}
         >
           <FormattedMessage
             id="UpdateAnalysisSettings.analysisProps"
