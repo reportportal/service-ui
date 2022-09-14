@@ -145,13 +145,10 @@ export class EmailFormFields extends Component {
           validate={commonValidators.requiredField}
           disabled={disabled}
           className={cx('fields')}
+          isRequired
         >
           <FieldErrorHint provideHint={false}>
-            <FieldText
-              defaultWidth={false}
-              isRequired
-              placeholder={formatMessage(messages.hostLabel)}
-            />
+            <FieldText defaultWidth={false} />
           </FieldErrorHint>
         </FieldElement>
         <FieldElement
@@ -171,7 +168,7 @@ export class EmailFormFields extends Component {
           className={cx('fields')}
         >
           <FieldErrorHint provideHint={false}>
-            <FieldText defaultWidth={false} placeholder={formatMessage(messages.fromLabel)} />
+            <FieldText defaultWidth={false} />
           </FieldErrorHint>
         </FieldElement>
         <FieldElement
@@ -182,14 +179,10 @@ export class EmailFormFields extends Component {
           format={this.formatPortValue}
           normalize={this.normalizeValue}
           className={cx('fields')}
+          isRequired
         >
           <FieldErrorHint provideHint={false}>
-            <FieldText
-              defaultWidth={false}
-              isRequired
-              maxLength={5}
-              placeholder={formatMessage(messages.portLabel)}
-            />
+            <FieldText defaultWidth={false} maxLength={5} />
           </FieldErrorHint>
         </FieldElement>
         <FieldElement
@@ -199,7 +192,7 @@ export class EmailFormFields extends Component {
           className={cx('fields')}
         >
           <FieldErrorHint provideHint={false}>
-            <FieldText defaultWidth={false} placeholder={formatMessage(messages.usernameLabel)} />
+            <FieldText defaultWidth={false} />
           </FieldErrorHint>
         </FieldElement>
         <FieldElement

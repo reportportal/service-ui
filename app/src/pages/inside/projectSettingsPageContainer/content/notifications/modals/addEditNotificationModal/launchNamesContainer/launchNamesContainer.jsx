@@ -59,7 +59,6 @@ export const LaunchNamesContainer = ({ highlightUnStoredItem, ...rest }) => {
   return (
     <>
       <AsyncMultipleAutocomplete
-        placeholder={formatMessage(messages.launchNamesPlaceholder)}
         getURI={URLS.launchNameSearch(activeProject)}
         createWithoutConfirmation
         creatable

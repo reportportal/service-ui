@@ -25,6 +25,13 @@
   font-size: 13px;
   line-height: 20px;
   font-family: $FONT-ROBOTO-MEDIUM;
+
+  .asterisk {
+    position: absolute;
+    margin-top: -2.5px;
+    color: $COLOR--e-300;
+    padding-left: 4px;
+  }
 }
 
 .description {

@@ -81,14 +81,10 @@ export class RallyConnectionFormFields extends Component {
           disabled={disabled}
           label={formatMessage(COMMON_BTS_MESSAGES.integrationNameLabel)}
           className={cx('fields')}
+          isRequired
         >
           <FieldErrorHint provideHint={false}>
-            <FieldText
-              placeholder={formatMessage(COMMON_BTS_MESSAGES.integrationNameLabel)}
-              defaultWidth={false}
-              maxLength={55}
-              isRequired
-            />
+            <FieldText defaultWidth={false} maxLength={55} />
           </FieldErrorHint>
         </FieldElement>
         <FieldElement
@@ -96,11 +92,11 @@ export class RallyConnectionFormFields extends Component {
           validate={commonValidators.btsUrl}
           disabled={disabled || editAuthMode}
           label={formatMessage(COMMON_BTS_MESSAGES.linkToBtsLabel)}
-          placeholder={formatMessage(COMMON_BTS_MESSAGES.linkToBtsLabel)}
           className={cx('fields')}
+          isRequired
         >
           <FieldErrorHint provideHint={false}>
-            <FieldText defaultWidth={false} isRequired />
+            <FieldText defaultWidth={false} />
           </FieldErrorHint>
         </FieldElement>
         <FieldElement
@@ -108,11 +104,11 @@ export class RallyConnectionFormFields extends Component {
           validate={commonValidators.btsProjectId}
           disabled={disabled || editAuthMode}
           className={cx('fields')}
-          placeholder={formatMessage(messages.projectIdLabel)}
           label={formatMessage(messages.projectIdLabel)}
+          isRequired
         >
           <FieldErrorHint provideHint={false}>
-            <FieldText defaultWidth={false} maxLength={55} isRequired />
+            <FieldText defaultWidth={false} maxLength={55} />
           </FieldErrorHint>
         </FieldElement>
         <FieldElement
@@ -130,9 +126,10 @@ export class RallyConnectionFormFields extends Component {
           label={formatMessage(messages.accessKeyLabel)}
           disabled={disabled}
           validate={commonValidators.requiredField}
+          isRequired
         >
           <FieldErrorHint provideHint={false}>
-            <FieldTextFlex placeholder={formatMessage(messages.accessKeyLabel)} isRequired />
+            <FieldTextFlex />
           </FieldErrorHint>
         </FieldElement>
       </Fragment>

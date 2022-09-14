@@ -284,11 +284,7 @@ const AddEditNotificationModal = ({
       <div className={cx('content')}>
         <FieldProvider name={RULE_NAME_FIELD_KEY} type="text">
           <FieldErrorHint provideHint={false} dataAutomationId={RULE_NAME_FIELD_KEY + FIELD}>
-            <FieldText
-              label={formatMessage(messages.nameLabel)}
-              placeholder={formatMessage(messages.namePlaceholder)}
-              defaultWidth={false}
-            />
+            <FieldText label={formatMessage(messages.nameLabel)} defaultWidth={false} isRequired />
           </FieldErrorHint>
         </FieldProvider>
         <FieldElement

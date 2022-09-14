@@ -197,7 +197,7 @@ const AddEditDefectTypeModal = ({
         <div className={cx('input')}>
           <FieldProvider name={NAME_FIELD_KEY} type="text">
             <FieldErrorHint provideHint={false} dataAutomationId={NAME_FIELD_KEY + FIELD}>
-              <FieldText label={formatMessage(messages.name)} defaultWidth={false} />
+              <FieldText label={formatMessage(messages.name)} defaultWidth={false} isRequired />
             </FieldErrorHint>
           </FieldProvider>
         </div>
@@ -212,6 +212,7 @@ const AddEditDefectTypeModal = ({
               defaultWidth={false}
               helpText={formatMessage(messages.abbreviationHint)}
               className={cx('abbreviation-field')}
+              isRequired
             />
           </FieldErrorHint>
         </FieldProvider>

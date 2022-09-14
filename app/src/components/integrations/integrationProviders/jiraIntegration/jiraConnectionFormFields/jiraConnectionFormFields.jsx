@@ -80,14 +80,10 @@ export class JiraConnectionFormFields extends Component {
           validate={commonValidators.btsIntegrationName}
           disabled={disabled}
           className={cx('fields')}
+          isRequired
         >
           <FieldErrorHint provideHint={false}>
-            <FieldText
-              maxLength={55}
-              defaultWidth={false}
-              isRequired
-              placeholder={formatMessage(COMMON_BTS_MESSAGES.integrationNameLabel)}
-            />
+            <FieldText maxLength={55} defaultWidth={false} />
           </FieldErrorHint>
         </FieldElement>
         <FieldElement
@@ -96,13 +92,10 @@ export class JiraConnectionFormFields extends Component {
           validate={commonValidators.btsUrl}
           disabled={disabled || editAuthMode}
           className={cx('fields')}
+          isRequired
         >
           <FieldErrorHint provideHint={false}>
-            <FieldText
-              defaultWidth={false}
-              isRequired
-              placeholder={formatMessage(COMMON_BTS_MESSAGES.linkToBtsLabel)}
-            />
+            <FieldText defaultWidth={false} />
           </FieldErrorHint>
         </FieldElement>
         <FieldElement
@@ -110,8 +103,8 @@ export class JiraConnectionFormFields extends Component {
           label={formatMessage(COMMON_BTS_MESSAGES.projectKeyLabel)}
           validate={commonValidators.btsProjectKey}
           disabled={disabled || editAuthMode}
-          placeholder={formatMessage(COMMON_BTS_MESSAGES.projectKeyLabel)}
           className={cx('fields')}
+          isRequired
         >
           <FieldErrorHint provideHint={false}>
             <FieldText maxLength={55} defaultWidth={false} isRequired />
@@ -122,6 +115,7 @@ export class JiraConnectionFormFields extends Component {
           label={formatMessage(COMMON_BTS_MESSAGES.authTypeLabel)}
           disabled={disabled}
           className={cx('fields')}
+          isRequired
         >
           <FieldErrorHint provideHint={false}>
             <Dropdown options={this.systemAuthTypes} defaultWidth={false} />
@@ -133,14 +127,10 @@ export class JiraConnectionFormFields extends Component {
           validate={commonValidators.requiredField}
           disabled={disabled}
           className={cx('fields')}
+          isRequired
         >
           <FieldErrorHint provideHint={false}>
-            <FieldText
-              maxLength={55}
-              defaultWidth={false}
-              isRequired
-              placeholder={formatMessage(messages.usernameLabel)}
-            />
+            <FieldText maxLength={55} defaultWidth={false} />
           </FieldErrorHint>
         </FieldElement>
         <FieldElement
@@ -149,15 +139,10 @@ export class JiraConnectionFormFields extends Component {
           validate={commonValidators.requiredField}
           disabled={disabled}
           className={cx('last-fields')}
+          isRequired
         >
           <FieldErrorHint provideHint={false}>
-            <FieldText
-              maxLength={55}
-              defaultWidth={false}
-              isRequired
-              type="password"
-              placeholder={formatMessage(messages.passwordLabel)}
-            />
+            <FieldText maxLength={55} defaultWidth={false} type="password" />
           </FieldErrorHint>
         </FieldElement>
       </Fragment>
