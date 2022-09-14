@@ -21,7 +21,6 @@ import { track } from 'react-tracking';
 import PropTypes from 'prop-types';
 import { reduxForm } from 'redux-form';
 import { withModal } from 'controllers/modal';
-import { activeProjectSelector } from 'controllers/user';
 import {
   showDefaultErrorNotification,
   showNotification,
@@ -36,6 +35,7 @@ import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ANALYZER_TYPES } from 'common/constants/analyzerTypes';
+import { projectKeySelector } from 'controllers/project/selectors';
 import styles from './uniqueErrorsAnalyzeModal.scss';
 
 const cx = classNames.bind(styles);
@@ -49,7 +49,7 @@ const cx = classNames.bind(styles);
 @injectIntl
 @connect(
   (state) => ({
-    projectId: activeProjectSelector(state),
+    projectKey: projectKeySelector(state),
   }),
   {
     showNotification,
@@ -65,7 +65,7 @@ export class UniqueErrorsAnalyzeModal extends Component {
       updateLaunchLocally: PropTypes.func,
       events: PropTypes.object,
     }).isRequired,
-    projectId: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
     showNotification: PropTypes.func,
     showDefaultErrorNotification: PropTypes.func,
     tracking: PropTypes.shape({
@@ -82,9 +82,9 @@ export class UniqueErrorsAnalyzeModal extends Component {
   };
 
   onSubmit = ({ removeNumbers }) => {
-    const { projectId, data } = this.props;
+    const { projectKey, data } = this.props;
     const { launch, updateLaunchLocally } = data;
-    fetch(URLS.runUniqueErrorAnalysis(projectId), {
+    fetch(URLS.runUniqueErrorAnalysis(projectKey), {
       method: 'POST',
       data: {
         launchId: launch.id,

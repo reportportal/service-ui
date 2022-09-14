@@ -34,6 +34,7 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import { hideModalAction } from 'controllers/modal';
 import { messages as makeDecisionMessages } from 'pages/inside/stepPage/modals/makeDecisionModal/messages';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { projectKeySelector } from 'controllers/project/selectors';
 import styles from './unlinkIssueModal.scss';
 
 const cx = classNames.bind(styles);
@@ -58,7 +59,7 @@ const messages = defineMessages({
 @track()
 @connect(
   (state) => ({
-    url: URLS.testItemsUnlinkIssues(activeProjectSelector(state)),
+    url: URLS.testItemsUnlinkIssues(projectKeySelector(state)),
     activeProject: activeProjectSelector(state),
   }),
   {

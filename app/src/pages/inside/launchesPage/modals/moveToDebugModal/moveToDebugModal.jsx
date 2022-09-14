@@ -22,18 +22,18 @@ import { injectIntl } from 'react-intl';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { DEBUG, DEFAULT } from 'common/constants/common';
-import { activeProjectSelector } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCHES_MODAL_EVENTS } from 'components/main/analytics/events';
+import { projectKeySelector } from 'controllers/project/selectors';
 import { messages } from './translations';
 
 @withModal('moveLaunchesModal')
 @injectIntl
 @connect(
   (state) => ({
-    url: URLS.launchUpdate(activeProjectSelector(state)),
+    url: URLS.launchUpdate(projectKeySelector(state)),
   }),
   {
     showNotification,

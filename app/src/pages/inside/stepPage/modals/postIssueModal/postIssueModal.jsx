@@ -24,7 +24,7 @@ import { injectIntl, defineMessages } from 'react-intl';
 import { fetch, updateSessionItem } from 'common/utils';
 import { URLS } from 'common/urls';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { activeProjectSelector, userIdSelector } from 'controllers/user';
+import { userIdSelector } from 'controllers/user';
 import {
   namedAvailableBtsIntegrationsSelector,
   uiExtensionPostIssueFormSelector,
@@ -49,6 +49,7 @@ import { hideModalAction } from 'controllers/modal';
 import ErrorInlineIcon from 'common/img/error-inline.svg';
 import Parser from 'html-react-parser';
 import { COMMAND_POST_ISSUE } from 'controllers/plugins/uiExtensions/constants';
+import { projectKeySelector } from 'controllers/project/selectors';
 import {
   INCLUDE_ATTACHMENTS_KEY,
   INCLUDE_LOGS_KEY,
@@ -120,7 +121,7 @@ const messages = defineMessages({
 @track()
 @connect(
   (state) => ({
-    activeProject: activeProjectSelector(state),
+    projectKey: projectKeySelector(state),
     projectInfo: projectInfoSelector(state),
     namedBtsIntegrations: namedAvailableBtsIntegrationsSelector(state),
     userId: userIdSelector(state),
@@ -138,7 +139,6 @@ const messages = defineMessages({
 export class PostIssueModal extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    activeProject: PropTypes.string.isRequired,
     projectInfo: PropTypes.object.isRequired,
     namedBtsIntegrations: PropTypes.object.isRequired,
     userId: PropTypes.string.isRequired,
@@ -162,6 +162,7 @@ export class PostIssueModal extends Component {
     }).isRequired,
     hideModalAction: PropTypes.func,
     invalid: PropTypes.bool,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -309,7 +310,7 @@ export class PostIssueModal extends Component {
       intl: { formatMessage },
       data: { items, fetchFunc },
       namedBtsIntegrations,
-      activeProject,
+      projectKey,
       projectInfo,
       userId,
     } = this.props;
@@ -323,10 +324,10 @@ export class PostIssueModal extends Component {
       details.allowedCommands &&
       details.allowedCommands.indexOf(COMMAND_POST_ISSUE) !== -1;
     const requestParams = { data, method: 'POST' };
-    let url = URLS.btsIntegrationPostTicket(activeProject, integrationId);
+    let url = URLS.btsIntegrationPostTicket(projectKey, integrationId);
 
     if (isCommandAvailable) {
-      url = URLS.projectIntegrationByIdCommand(activeProject, integrationId, COMMAND_POST_ISSUE);
+      url = URLS.projectIntegrationByIdCommand(projectKey, integrationId, COMMAND_POST_ISSUE);
       requestParams.method = 'PUT';
       requestParams.data = {
         projectId: projectInfo.projectId,
@@ -354,7 +355,7 @@ export class PostIssueModal extends Component {
           },
         }));
 
-        return fetch(URLS.testItem(activeProject), {
+        return fetch(URLS.testItem(projectKey), {
           method: 'put',
           data: { issues },
         });

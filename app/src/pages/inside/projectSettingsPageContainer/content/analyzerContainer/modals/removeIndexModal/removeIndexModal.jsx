@@ -25,10 +25,10 @@ import {
   NOTIFICATION_TYPES,
   showDefaultErrorNotification,
 } from 'controllers/notification';
-import { projectIdSelector } from 'controllers/pages';
 import { withModal } from 'components/main/modal';
 import { hideModalAction } from 'controllers/modal';
 import { ModalLayout } from 'componentLibrary/modal';
+import { projectKeySelector } from 'controllers/project/selectors';
 
 const messages = defineMessages({
   removeIndexHeader: {
@@ -52,10 +52,10 @@ const messages = defineMessages({
 const RemoveIndexModal = () => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
-  const projectId = useSelector(projectIdSelector);
+  const projectKey = useSelector(projectKeySelector);
 
   const onClickRemove = () => {
-    fetch(URLS.projectIndex(projectId), { method: 'delete' })
+    fetch(URLS.projectIndex(projectKey), { method: 'delete' })
       .then(() => {
         dispatch(
           showNotification({

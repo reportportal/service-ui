@@ -34,9 +34,9 @@ import { Dropdown } from 'componentLibrary/dropdown';
 import { hideModalAction } from 'controllers/modal';
 import { FieldText } from 'componentLibrary/fieldText';
 import { Checkbox } from 'componentLibrary/checkbox';
-import { projectIdSelector } from 'controllers/pages';
 import { PROJECT_SETTINGS_NOTIFICATIONS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { AttributeListFormField } from 'components/containers/AttributeListFormField';
+import { projectKeySelector } from 'controllers/project/selectors';
 import { FieldElement } from '../../../elements';
 import {
   ATTRIBUTES_FIELD_KEY,
@@ -196,7 +196,7 @@ const AddEditNotificationModal = ({ data, data: { onSave }, handleSubmit, initia
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
 
-  const activeProject = useSelector(projectIdSelector);
+  const projectKey = useSelector(projectKeySelector);
   const [isEditorShown, setShowEditor] = React.useState(data.notification.attributes.length > 0);
   useEffect(() => {
     initialize(data.notification);
@@ -308,7 +308,7 @@ const AddEditNotificationModal = ({ data, data: { onSave }, handleSubmit, initia
               placeholder={formatMessage(messages.recipientsPlaceholder)}
               notFoundPrompt={formatMessage(messages.recipientsHint)}
               minLength={3}
-              getURI={URLS.projectUsernamesSearch(activeProject)}
+              getURI={URLS.projectUsernamesSearch(projectKey)}
               creatable
               showDynamicSearchPrompt
               isValidNewOption={validate.requiredEmail}
@@ -336,7 +336,7 @@ const AddEditNotificationModal = ({ data, data: { onSave }, handleSubmit, initia
               placeholder={formatMessage(messages.launchNamesPlaceholder)}
               notFoundPrompt={formatMessage(messages.launchNamesHint)}
               minLength={3}
-              getURI={URLS.launchNameSearch(activeProject)}
+              getURI={URLS.launchNameSearch(projectKey)}
               creatable
               isValidNewOption={validate.launchName}
               showDynamicSearchPrompt

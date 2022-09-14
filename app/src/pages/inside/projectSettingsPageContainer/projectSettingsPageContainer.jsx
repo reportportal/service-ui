@@ -18,12 +18,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FormattedMessage, useIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-import {
-  PROJECT_SETTINGS_TAB_PAGE,
-  projectIdSelector,
-  querySelector,
-  settingsTabSelector,
-} from 'controllers/pages';
+import { PROJECT_SETTINGS_TAB_PAGE, querySelector, settingsTabSelector } from 'controllers/pages';
 import { SettingsLayout } from 'layouts/settingsLayout';
 import {
   ANALYSIS,
@@ -48,6 +43,8 @@ import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { Header } from 'pages/inside/projectSettingsPageContainer/header';
 import { PatternAnalysis } from 'pages/inside/projectSettingsPageContainer/content/patternAnalysis';
 import { Notifications } from 'pages/inside/projectSettingsPageContainer/content/notifications';
+import { projectOrganizationSlugSelector } from 'controllers/project/selectors';
+import { projectPayloadKeySelector } from 'controllers/pages/selectors';
 import { AnalyzerContainer } from './content/analyzerContainer';
 import { messages } from './messages';
 import styles from './projectSettingsPageContainer.scss';
@@ -58,7 +55,8 @@ export const ProjectSettingsPageContainer = () => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const extensions = useSelector(uiExtensionSettingsTabsSelector);
-  const projectId = useSelector(projectIdSelector);
+  const organizationSlug = useSelector(projectOrganizationSlugSelector);
+  const projectKey = useSelector(projectPayloadKeySelector);
   const activeTab = useSelector(settingsTabSelector);
   const userRole = useSelector(activeProjectRoleSelector);
   const accountRole = useSelector(userAccountRoleSelector);
@@ -68,9 +66,14 @@ export const ProjectSettingsPageContainer = () => {
   const createTabLink = useCallback(
     (tabName, extendedParams = {}) => ({
       type: PROJECT_SETTINGS_TAB_PAGE,
-      payload: { projectId, settingsTab: tabName, ...extendedParams },
+      payload: {
+        projectKey,
+        settingsTab: tabName,
+        organizationSlug,
+        ...extendedParams,
+      },
     }),
-    [projectId],
+    [projectKey, organizationSlug],
   );
 
   const extensionsConfig = useMemo(() => {
