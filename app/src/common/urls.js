@@ -176,8 +176,6 @@ export const URLS = {
       ...createFilterQuery(filterEntities),
       ...sortingEntities,
     })}`,
-  projectNotificationConfiguration: (activeProject) =>
-    `${urlBase}project/${activeProject}/notification`,
   suite: (activeProject, suiteId) => `${urlBase}${activeProject}/item/${suiteId}`,
 
   notification: (activeProject) => `${urlBase}${activeProject}/settings/notification`,
