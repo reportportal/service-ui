@@ -85,7 +85,7 @@ FilterItemBase.propTypes = {
   getLaunchFilterLink: PropTypes.func.isRequired,
   className: PropTypes.string,
   isDisabled: PropTypes.bool,
-  organizationSlug: PropTypes.string,
+  organizationSlug: PropTypes.string.isRequired,
 };
 FilterItemBase.defaultProps = {
   active: false,

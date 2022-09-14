@@ -16,7 +16,6 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {} from 'controllers/user';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
