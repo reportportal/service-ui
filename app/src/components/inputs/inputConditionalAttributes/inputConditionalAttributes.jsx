@@ -44,6 +44,7 @@ export class InputConditionalAttributes extends Component {
     valueURLCreator: PropTypes.func,
     keyURLCreator: PropTypes.func,
     projectId: PropTypes.string,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -141,7 +142,7 @@ export class InputConditionalAttributes extends Component {
   };
 
   render() {
-    const { value, keyURLCreator, valueURLCreator, projectId } = this.props;
+    const { value, keyURLCreator, valueURLCreator, projectId, projectKey } = this.props;
     const inputConditions = this.getConditions();
     return (
       <div className={cx('input-conditional-attributes', { opened: this.state.opened })}>
@@ -156,6 +157,7 @@ export class InputConditionalAttributes extends Component {
             keyURLCreator={keyURLCreator}
             valueURLCreator={valueURLCreator}
             projectId={projectId}
+            projectKey={projectKey}
             onConfirm={this.onChangeAttributes}
             nakedView
           />

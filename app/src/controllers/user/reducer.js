@@ -24,6 +24,7 @@ import {
   ASSIGN_TO_RROJECT_SUCCESS,
   UNASSIGN_FROM_PROJECT_SUCCESS,
   FETCH_USER_SUCCESS,
+  SET_ACTIVE_PROJECT_KEY,
 } from './constants';
 
 export const settingsReducer = (state = SETTINGS_INITIAL_STATE, { type, payload }) => {
@@ -91,6 +92,15 @@ export const activeProjectReducer = (state = '', { type, payload }) => {
   }
 };
 
+export const activeProjectKeyReducer = (state = '', { type, payload }) => {
+  switch (type) {
+    case SET_ACTIVE_PROJECT_KEY:
+      return payload;
+    default:
+      return state;
+  }
+};
+
 export const apiTokenReducer = (state = {}, { type, payload }) => {
   switch (type) {
     case SET_API_TOKEN:
@@ -103,6 +113,7 @@ export const apiTokenReducer = (state = {}, { type, payload }) => {
 export const userReducer = combineReducers({
   info: userInfoReducer,
   activeProject: activeProjectReducer,
+  activeProjectKey: activeProjectKeyReducer,
   settings: settingsReducer,
   token: apiTokenReducer,
 });

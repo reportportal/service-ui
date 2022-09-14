@@ -16,17 +16,17 @@
 
 import { takeEvery, all, put, select } from 'redux-saga/effects';
 import { fetchDataAction } from 'controllers/fetch';
-import { projectIdSelector } from 'controllers/pages';
 import { URLS } from 'common/urls';
+import { projectPayloadKeySelector } from 'controllers/pages/selectors';
 import { NAMESPACE, FETCH_MEMBERS } from './constants';
 import { querySelector } from './selectors';
 
 function* fetchMembers() {
-  const projectId = yield select(projectIdSelector);
+  const projectKey = yield select(projectPayloadKeySelector);
   const query = yield select(querySelector);
-  if (projectId) {
+  if (projectKey) {
     yield put(
-      fetchDataAction(NAMESPACE)(URLS.projectUsers(projectId), {
+      fetchDataAction(NAMESPACE)(URLS.projectUsers(projectKey), {
         params: { ...query },
       }),
     );

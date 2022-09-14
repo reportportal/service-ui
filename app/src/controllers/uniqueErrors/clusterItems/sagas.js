@@ -18,7 +18,6 @@ import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 import { fetch, isEmptyObject } from 'common/utils';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { URLS } from 'common/urls';
-import { activeProjectSelector } from 'controllers/user';
 import {
   namespaceSelector,
   PROVIDER_TYPE_CLUSTER,
@@ -27,6 +26,7 @@ import {
 import { showDefaultErrorNotification } from 'controllers/notification';
 import { SORTING_KEY } from 'controllers/sorting';
 import { launchIdSelector } from 'controllers/pages';
+import { projectKeySelector } from 'controllers/project/selectors';
 import {
   fetchClusterItemsStartAction,
   fetchClusterItemsSuccessAction,
@@ -38,7 +38,7 @@ import { LOAD_MORE_CLUSTER_ITEMS, PAGE_SIZE, REQUEST_CLUSTER_ITEMS } from './con
 function* fetchClusterItems({ payload = {} }) {
   const { id } = payload;
   const { page } = yield select(clusterItemsSelector, id);
-  const project = yield select(activeProjectSelector);
+  const projectKey = yield select(projectKeySelector);
   const launchId = yield select(launchIdSelector);
   let pageNumber = 1;
   if (!isEmptyObject(page)) {
@@ -57,7 +57,7 @@ function* fetchClusterItems({ payload = {} }) {
   };
   try {
     yield put(fetchClusterItemsStartAction(payload));
-    const response = yield call(fetch, URLS.testItemsWithProviderType(project), {
+    const response = yield call(fetch, URLS.testItemsWithProviderType(projectKey), {
       params: fetchParams,
     });
     const responseWithClusterId = {

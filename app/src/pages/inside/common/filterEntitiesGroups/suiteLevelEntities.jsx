@@ -50,6 +50,7 @@ import { defectTypesSelector } from 'controllers/project';
 import { launchIdSelector } from 'controllers/pages';
 import { pageEventsMap } from 'components/main/analytics';
 import { levelSelector } from 'controllers/testItem';
+import { projectKeySelector } from 'controllers/project/selectors';
 
 const messages = defineMessages({
   NameTitle: {
@@ -150,6 +151,7 @@ const DEFECT_ENTITY_ID_BASE = 'statistics$defects$';
   projectId: activeProjectSelector(state),
   launchId: launchIdSelector(state),
   level: levelSelector(state),
+  projectKey: projectKeySelector(state),
 }))
 export class SuiteLevelEntities extends Component {
   static propTypes = {
@@ -161,6 +163,7 @@ export class SuiteLevelEntities extends Component {
     launchId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     visibleFilters: PropTypes.array,
     level: PropTypes.string,
+    projectKey: PropTypes.string.isRequired,
   };
   static defaultProps = {
     filterValues: {},
@@ -169,14 +172,14 @@ export class SuiteLevelEntities extends Component {
   };
 
   getStaticEntities = () => {
-    const { intl, projectId, launchId, visibleFilters } = this.props;
+    const { intl, projectId, launchId, visibleFilters, projectKey } = this.props;
 
-    const getTestItemAttributeValuesSearch = (project, key) => {
-      return URLS.testItemAttributeValuesSearch(project, launchId, key);
+    const getTestItemAttributeValuesSearch = (projectKeyValue, key) => {
+      return URLS.testItemAttributeValuesSearch(projectKeyValue, launchId, key);
     };
 
-    const getTestItemAttributeKeysSearch = (project) => {
-      return URLS.testItemAttributeKeysSearch(project, launchId);
+    const getTestItemAttributeKeysSearch = (projectKeyValue) => {
+      return URLS.testItemAttributeKeysSearch(projectKeyValue, launchId);
     };
     return [
       {
@@ -235,6 +238,7 @@ export class SuiteLevelEntities extends Component {
         removable: true,
         customProps: {
           projectId,
+          projectKey,
           keyURLCreator: getTestItemAttributeKeysSearch,
           valueURLCreator: getTestItemAttributeValuesSearch,
         },

@@ -80,6 +80,7 @@ import { pageEventsMap } from 'components/main/analytics';
 import { connectRouter } from 'common/utils';
 import { createNamespacedQuery } from 'common/utils/routingUtils';
 import { PROVIDER_TYPE_BASELINE } from 'controllers/testItem/constants';
+import { projectKeySelector } from 'controllers/project/selectors';
 
 const messages = defineMessages({
   NameTitle: {
@@ -311,11 +312,12 @@ const descriptionStepLevelEntity = bindMessageToValidator(
 })
 @connect((state) => ({
   defectTypes: defectTypesSelector(state),
-  projectId: activeProjectSelector(state),
+  projectName: activeProjectSelector(state),
   launchId: launchIdSelector(state),
   patterns: patternsSelector(state),
   level: levelSelector(state),
   query: queryParametersSelector(state, namespaceSelector(state)),
+  projectKey: projectKeySelector(state),
 }))
 export class StepLevelEntities extends Component {
   static propTypes = {
@@ -323,13 +325,14 @@ export class StepLevelEntities extends Component {
     defectTypes: PropTypes.object.isRequired,
     filterValues: PropTypes.object,
     render: PropTypes.func.isRequired,
-    projectId: PropTypes.string.isRequired,
+    projectName: PropTypes.string.isRequired,
     launchId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     visibleFilters: PropTypes.array,
     patterns: PropTypes.array,
     level: PropTypes.string,
     updateUriQuery: PropTypes.func.isRequired,
     query: PropTypes.object,
+    projectKey: PropTypes.string.isRequired,
   };
   static defaultProps = {
     filterValues: {},
@@ -417,14 +420,14 @@ export class StepLevelEntities extends Component {
   };
 
   getEntities = () => {
-    const { intl, projectId, launchId, visibleFilters, query } = this.props;
+    const { intl, projectName, launchId, visibleFilters, query, projectKey } = this.props;
 
-    const getTestItemAttributeValuesSearch = (project, key) => {
-      return URLS.testItemAttributeValuesSearch(project, launchId, key);
+    const getTestItemAttributeValuesSearch = (projectKeyValue, key) => {
+      return URLS.testItemAttributeValuesSearch(projectKeyValue, launchId, key);
     };
 
-    const getTestItemAttributeKeysSearch = (project) => {
-      return URLS.testItemAttributeKeysSearch(project, launchId);
+    const getTestItemAttributeKeysSearch = (projectKeyValue) => {
+      return URLS.testItemAttributeKeysSearch(projectKeyValue, launchId);
     };
 
     const entities = [
@@ -595,7 +598,8 @@ export class StepLevelEntities extends Component {
         active: visibleFilters.includes(ENTITY_ATTRIBUTE),
         removable: true,
         customProps: {
-          projectId,
+          projectName,
+          projectKey,
           keyURLCreator: getTestItemAttributeKeysSearch,
           valueURLCreator: getTestItemAttributeValuesSearch,
         },
@@ -654,7 +658,7 @@ export class StepLevelEntities extends Component {
         active: visibleFilters.includes(ENTITY_BTS_ISSUES),
         removable: true,
         customProps: {
-          getURI: URLS.testItemBTSIssuesSearch(projectId),
+          getURI: URLS.testItemBTSIssuesSearch(projectKey),
           placeholder: intl.formatMessage(messages.BTS_ISSUE_PLACEHOLDER),
         },
       },

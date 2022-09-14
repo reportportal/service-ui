@@ -21,12 +21,12 @@ import {
   showDefaultErrorNotification,
   NOTIFICATION_TYPES,
 } from 'controllers/notification';
-import { projectIdSelector } from 'controllers/pages';
 import { fetchDataAction, createFetchPredicate } from 'controllers/fetch';
 import { hideModalAction } from 'controllers/modal';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { fetch, omit } from 'common/utils';
 import { userIdSelector } from 'controllers/user';
+import { projectKeySelector } from 'controllers/project/selectors';
 import {
   NAMESPACE,
   FETCH_PLUGINS,
@@ -60,10 +60,10 @@ import { fetchUiExtensions, fetchExtensionsMetadata } from './uiExtensions';
 function* addIntegration({ payload: { data, isGlobal, pluginName, callback }, meta }) {
   yield put(showScreenLockAction());
   try {
-    const projectId = yield select(projectIdSelector);
+    const projectKey = yield select(projectKeySelector);
     const integrationUrl = isGlobal
       ? URLS.newGlobalIntegration(pluginName)
-      : URLS.newProjectIntegration(projectId, pluginName);
+      : URLS.newProjectIntegration(projectKey, pluginName);
     const url = resolveIntegrationUrl(integrationUrl, pluginName);
     const response = yield call(fetch, url, {
       method: 'post',
@@ -105,10 +105,10 @@ function* watchAddIntegration() {
 function* updateIntegration({ payload: { data, isGlobal, pluginName, id, callback }, meta }) {
   yield put(showScreenLockAction());
   try {
-    const projectId = yield select(projectIdSelector);
+    const projectKey = yield select(projectKeySelector);
     const integrationUrl = isGlobal
       ? URLS.globalIntegration(id)
-      : URLS.projectIntegration(projectId, id);
+      : URLS.projectIntegration(projectKey, id);
     const url = resolveIntegrationUrl(integrationUrl, pluginName, id);
 
     yield call(fetch, url, {
@@ -145,8 +145,8 @@ function* watchUpdateIntegration() {
 function* removeIntegration({ payload: { id, isGlobal, callback } }) {
   yield put(showScreenLockAction());
   try {
-    const projectId = yield select(projectIdSelector);
-    const url = isGlobal ? URLS.globalIntegration(id) : URLS.projectIntegration(projectId, id);
+    const projectKey = yield select(projectKeySelector);
+    const url = isGlobal ? URLS.globalIntegration(id) : URLS.projectIntegration(projectKey, id);
 
     yield call(fetch, url, {
       method: 'delete',
@@ -177,8 +177,8 @@ function* watchRemoveIntegration() {
 function* removeIntegrationsByType({ payload: instanceType }) {
   yield put(showScreenLockAction());
   try {
-    const projectId = yield select(projectIdSelector);
-    yield call(fetch, URLS.removeProjectIntegrationByType(projectId, instanceType), {
+    const projectKey = yield select(projectKeySelector);
+    yield call(fetch, URLS.removeProjectIntegrationByType(projectKey, instanceType), {
       method: 'delete',
     });
     yield put(removeProjectIntegrationsByTypeSuccessAction(instanceType));

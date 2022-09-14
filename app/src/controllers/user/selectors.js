@@ -44,3 +44,5 @@ export const apiTokenValueSelector = (state) => apiTokenSelector(state).value;
 export const apiTokenTypeSelector = (state) => apiTokenSelector(state).type;
 export const apiTokenStringSelector = (state) =>
   `${apiTokenTypeSelector(state)} ${apiTokenValueSelector(state)}`;
+
+export const activeProjectKeySelector = (state) => userSelector(state).activeProjectKey;

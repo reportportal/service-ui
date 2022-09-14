@@ -16,9 +16,10 @@
 
 import { all, select, put, takeEvery } from 'redux-saga/effects';
 import { EVENTS, SETTINGS, MEMBERS } from 'common/constants/projectSections';
-import { projectSectionSelector, projectIdSelector } from 'controllers/pages';
+import { projectSectionSelector } from 'controllers/pages';
 import { fetchProjectAction } from 'controllers/project';
 import { fetchMembersAction } from 'controllers/members';
+import { projectPayloadKeySelector } from 'controllers/pages/selectors';
 import { eventsSagas, fetchEventsAction } from './events';
 import { allUsersSagas } from './allUsers';
 import { projectsSagas } from './projects';
@@ -32,10 +33,10 @@ const pageDataActions = {
 function* fetchProjectData() {
   const section = yield select(projectSectionSelector);
   const sectionDataAction = pageDataActions[section] || fetchProjectAction;
-  const projectId = yield select(projectIdSelector);
+  const projectKey = yield select(projectPayloadKeySelector);
   const isAdminAccess = true;
 
-  yield put(sectionDataAction(projectId, isAdminAccess));
+  yield put(sectionDataAction(projectKey, isAdminAccess));
 }
 
 function* watchFetchProjectData() {

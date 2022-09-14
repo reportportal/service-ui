@@ -19,7 +19,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import className from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
-import { activeProjectSelector } from 'controllers/user';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
@@ -27,6 +26,7 @@ import { InputDropdown } from 'components/inputs/inputDropdown';
 import { formatStatus } from 'common/utils/localizationUtils';
 import { PASSED, FAILED, SKIPPED, IN_PROGRESS } from 'common/constants/testStatuses';
 import { TestItemStatus } from 'pages/inside/common/testItemStatus';
+import { projectKeySelector } from 'controllers/project/selectors';
 import { ATTRIBUTE_KEY_MANUALLY } from './constants';
 import styles from './statusDropdown.scss';
 
@@ -45,7 +45,7 @@ const messages = defineMessages({
 
 @connect(
   (state) => ({
-    currentProject: activeProjectSelector(state),
+    projectKey: projectKeySelector(state),
   }),
   {
     showMessage: showNotification,
@@ -54,7 +54,7 @@ const messages = defineMessages({
 @injectIntl
 export class StatusDropdown extends Component {
   static propTypes = {
-    currentProject: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
     intl: PropTypes.object.isRequired,
     itemId: PropTypes.number.isRequired,
     status: PropTypes.string.isRequired,
@@ -78,7 +78,7 @@ export class StatusDropdown extends Component {
   updateItem = (newStatus) => {
     const {
       intl: { formatMessage },
-      currentProject,
+      projectKey,
       status: oldStatus,
       itemId,
       attributes,
@@ -101,7 +101,7 @@ export class StatusDropdown extends Component {
 
     onChange(oldStatus, newStatus);
 
-    fetch(URLS.testItemUpdate(currentProject, itemId), { method: 'put', data })
+    fetch(URLS.testItemUpdate(projectKey, itemId), { method: 'put', data })
       .then(() => {
         showMessage({
           message: formatMessage(messages.itemUpdateSuccess),

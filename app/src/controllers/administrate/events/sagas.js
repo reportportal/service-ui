@@ -16,16 +16,16 @@
 
 import { takeEvery, all, put, select } from 'redux-saga/effects';
 import { fetchDataAction } from 'controllers/fetch';
-import { projectIdSelector } from 'controllers/pages';
 import { URLS } from 'common/urls';
+import { activeProjectKeySelector } from 'controllers/user/selectors';
 import { NAMESPACE, FETCH_EVENTS } from './constants';
 import { querySelector } from './selectors';
 
 function* fetchEvents() {
-  const projectId = yield select(projectIdSelector);
+  const projectKey = yield select(activeProjectKeySelector);
   const query = yield select(querySelector);
   yield put(
-    fetchDataAction(NAMESPACE)(URLS.events(projectId), {
+    fetchDataAction(NAMESPACE)(URLS.events(projectKey), {
       params: { ...query },
     }),
   );

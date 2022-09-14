@@ -23,7 +23,6 @@ import {
 } from 'controllers/fetch';
 import { showFilterOnLaunchesAction } from 'controllers/project';
 import { activeFilterSelector } from 'controllers/filter';
-import { activeProjectSelector } from 'controllers/user';
 import { put, select, all, takeEvery, take, call } from 'redux-saga/effects';
 import {
   testItemIdsArraySelector,
@@ -52,6 +51,8 @@ import {
 } from 'controllers/notification';
 import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
 import { ALL } from 'common/constants/reservedFilterIds';
+import { projectKeySelector } from 'controllers/project/selectors';
+import { activeProjectKeySelector } from 'controllers/user/selectors';
 import {
   setLevelAction,
   setPageLoadingAction,
@@ -87,9 +88,9 @@ import {
 } from './selectors';
 import { calculateLevel } from './utils';
 
-function* fetchFilteredItemStatistics(project, params) {
+function* fetchFilteredItemStatistics(projectKey, params) {
   yield put(
-    fetchDataAction(FILTERED_ITEM_STATISTICS_NAMESPACE)(URLS.testItemStatistics(project), {
+    fetchDataAction(FILTERED_ITEM_STATISTICS_NAMESPACE)(URLS.testItemStatistics(projectKey), {
       params,
     }),
   );
@@ -121,9 +122,9 @@ function* restorePath() {
 
 export function* fetchParentItems() {
   const itemIds = yield select(testItemIdsArraySelector);
-  const project = yield select(activeProjectSelector);
+  const projectKey = yield select(activeProjectKeySelector);
   const urls = itemIds.map((id, i) =>
-    i === 0 ? URLS.launch(project, id) : URLS.testItem(project, id),
+    i === 0 ? URLS.launch(projectKey, id) : URLS.testItem(projectKey, id),
   );
   yield put(bulkFetchDataAction(PARENT_ITEMS_NAMESPACE, true)(urls));
   yield take(createFetchPredicate(PARENT_ITEMS_NAMESPACE));
@@ -131,11 +132,11 @@ export function* fetchParentItems() {
 
 export function* fetchParentLaunch({ payload = {} } = {}) {
   const {
-    project = yield select(activeProjectSelector),
+    projectKey = yield select(projectKeySelector),
     launchId = yield select(launchIdSelector),
   } = payload;
 
-  const launch = yield call(fetch, URLS.launch(project, launchId));
+  const launch = yield call(fetch, URLS.launch(projectKey, launchId));
 
   yield put(fetchParentLaunchSuccessAction(launch));
 }
@@ -178,7 +179,7 @@ function* fetchTestItems({ payload = {} }) {
   if (itemIds.length > 1) {
     parentId = itemIds[itemIds.length - 1];
   }
-  const project = yield select(activeProjectSelector);
+  const projectKey = yield select(projectKeySelector);
   const namespace = yield select(namespaceSelector, offset);
   const query = yield select(queryParametersSelector, namespace);
   const pageQuery = yield select(pagePropertiesSelector);
@@ -212,7 +213,7 @@ function* fetchTestItems({ payload = {} }) {
   const isFilterNotReserved = !FILTER_TITLES[filterId];
   if ((isTestItemsList || isFilterNotReserved) && !activeFilter) {
     try {
-      const filter = yield call(fetch, URLS.filter(project, filterId));
+      const filter = yield call(fetch, URLS.filter(projectKey, filterId));
       if (filter) {
         yield put(showFilterOnLaunchesAction(filter));
       }
@@ -222,7 +223,7 @@ function* fetchTestItems({ payload = {} }) {
       const link = {
         type: isTestItemsList ? LAUNCHES_PAGE : currentPage,
         payload: {
-          projectId: project,
+          projectKey,
           filterId: ALL,
           testItemIds: isTestItemsList ? '' : testItemIds,
         },
@@ -234,7 +235,7 @@ function* fetchTestItems({ payload = {} }) {
     }
   }
   yield put(
-    fetchDataAction(NAMESPACE)(URLS.testItemsWithProviderType(project), {
+    fetchDataAction(NAMESPACE)(URLS.testItemsWithProviderType(projectKey), {
       params,
     }),
   );
@@ -261,7 +262,7 @@ function* fetchTestItems({ payload = {} }) {
 
   const isFilterParamsExists = yield select(isFilterParamsExistsSelector);
   if (!isTestItemsList && isFilterParamsExists) {
-    yield call(fetchFilteredItemStatistics, project, params);
+    yield call(fetchFilteredItemStatistics, projectKey, params);
   }
   yield put(setPageLoadingAction(false));
 }
@@ -292,7 +293,7 @@ export function* fetchTestItemsFromLogPage({ payload = {} }) {
   const stepParams = yield call(calculateStepPagination, { next, offset });
   yield call(fetchTestItems, { payload: { offset, params: stepParams } });
   const testItems = yield select(itemsSelector);
-  const projectId = yield select(activeProjectSelector);
+  const projectKey = yield select(projectKeySelector);
   const testItem = next ? testItems[0] : testItems[testItems.length - 1];
   const { launchId, path } = testItem;
   const testItemIds = [launchId, ...path.split('.')].join('/');
@@ -308,7 +309,7 @@ export function* fetchTestItemsFromLogPage({ payload = {} }) {
     type: PROJECT_LOG_PAGE,
     payload: {
       filterId,
-      projectId,
+      projectKey,
       testItemIds,
     },
     query,
@@ -322,10 +323,10 @@ function* watchTestItemsFromLogPage() {
 
 function* deleteTestItems({ payload: { items, callback } }) {
   const ids = items.map((item) => item.id).join(',');
-  const projectId = yield select(activeProjectSelector);
+  const projectKey = yield select(projectKeySelector);
   yield put(showScreenLockAction());
   try {
-    yield call(fetch, URLS.testItems(projectId, ids), {
+    yield call(fetch, URLS.testItems(projectKey, ids), {
       method: 'delete',
     });
     yield put(hideScreenLockAction());

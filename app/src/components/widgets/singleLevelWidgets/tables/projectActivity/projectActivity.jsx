@@ -46,8 +46,8 @@ import {
 } from 'common/constants/actionTypes';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { externalSystemSelector } from 'controllers/project';
-import { projectIdSelector } from 'controllers/pages';
 import { UserAvatar } from 'pages/inside/common/userAvatar';
+import { projectKeySelector } from 'controllers/project/selectors';
 import { DefaultProjectSettings } from './activities/defaultProjectSettings';
 import { AnalysisProperties } from './activities/analysisProperties';
 import { AnalysisConfigurations } from './activities/analysisConfigurations';
@@ -166,14 +166,14 @@ const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
 // TODO: rewrite it when integrations will be added
 @connect((state) => ({
   hasBts: externalSystemSelector(state).length > 0,
-  projectId: projectIdSelector(state),
+  projectKey: projectKeySelector(state),
   lang: langSelector(state),
 }))
 @injectIntl
 export class ProjectActivity extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    projectId: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
     widget: PropTypes.object,
     hasBts: PropTypes.bool,
     lang: PropTypes.string,
@@ -304,7 +304,7 @@ export class ProjectActivity extends Component {
                 <UserAvatar
                   className={cx('avatar-wrapper')}
                   userId={activity.user}
-                  projectId={this.props.projectId}
+                  projectKey={activity.projectKey ?? activity.projectName}
                   alt="avatar"
                 />
                 <div className={cx('activity-wrapper')}>

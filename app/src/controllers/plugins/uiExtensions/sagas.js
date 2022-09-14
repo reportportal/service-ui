@@ -1,8 +1,8 @@
 import { select, call, all, put } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
-import { activeProjectSelector } from 'controllers/user';
 import { PUBLIC_PLUGINS, PUBLIC_PLUGIN_ACCESS_TYPE } from 'controllers/plugins/constants';
+import { projectKeySelector } from 'controllers/project/selectors';
 import { COMMAND_GET_FILE, METADATA_FILE_KEY, MAIN_FILE_KEY } from './constants';
 import { pluginsSelector, globalIntegrationsSelector, publicPluginsSelector } from '../selectors';
 import { filterIntegrationsByName, isPluginSupportsCommonCommand } from '../utils';
@@ -81,20 +81,20 @@ export function* fetchUiExtensions() {
       (isPluginSupportsCommonCommand(plugin, COMMAND_GET_FILE) ||
         plugin.details.allowedCommands.includes(COMMAND_GET_FILE)),
   );
-  const activeProject = yield select(activeProjectSelector);
+  const projectKey = yield select(projectKeySelector);
   const calls = uiExtensionPlugins
     .map((plugin) => {
       const isCommonCommandSupported = isPluginSupportsCommonCommand(plugin, COMMAND_GET_FILE);
       let url;
 
       if (isCommonCommandSupported) {
-        url = URLS.pluginCommandCommon(activeProject, plugin.name, COMMAND_GET_FILE);
+        url = URLS.pluginCommandCommon(projectKey, plugin.name, COMMAND_GET_FILE);
       } else {
         const integration = filterIntegrationsByName(globalIntegrations, plugin.name)[0];
         if (!integration) {
           return null;
         }
-        url = URLS.projectIntegrationByIdCommand(activeProject, integration.id, COMMAND_GET_FILE);
+        url = URLS.projectIntegrationByIdCommand(projectKey, integration.id, COMMAND_GET_FILE);
       }
 
       return call(fetch, url, {
