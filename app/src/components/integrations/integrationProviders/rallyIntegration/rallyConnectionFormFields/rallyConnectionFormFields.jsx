@@ -108,7 +108,7 @@ export class RallyConnectionFormFields extends Component {
           isRequired
         >
           <FieldErrorHint provideHint={false}>
-            <FieldText defaultWidth={false} maxLength={55} isRequired />
+            <FieldText defaultWidth={false} maxLength={55} />
           </FieldErrorHint>
         </FieldElement>
         <FieldElement
@@ -129,7 +129,7 @@ export class RallyConnectionFormFields extends Component {
           isRequired
         >
           <FieldErrorHint provideHint={false}>
-            <FieldTextFlex isRequired />
+            <FieldTextFlex />
           </FieldErrorHint>
         </FieldElement>
       </Fragment>
