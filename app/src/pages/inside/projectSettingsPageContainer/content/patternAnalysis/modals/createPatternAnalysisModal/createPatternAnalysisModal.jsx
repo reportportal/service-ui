@@ -82,8 +82,8 @@ const CreatePatternAnalysisModal = ({ data, handleSubmit, initialize, dirty }) =
           <FieldErrorHint provideHint={false}>
             <FieldText
               label={formatMessage(messages.createPatternModalPatternName)}
-              placeholder={formatMessage(messages.createPatternModalPatternName)}
               defaultWidth={false}
+              isRequired
             />
           </FieldErrorHint>
         </FieldProvider>
@@ -99,6 +99,7 @@ const CreatePatternAnalysisModal = ({ data, handleSubmit, initialize, dirty }) =
           label={formatMessage(messages.createPatternModalCondition)}
           name="value"
           type="text"
+          isRequired
         >
           <FieldErrorHint provideHint={false}>
             {selectedType === REGEX_PATTERN ? (

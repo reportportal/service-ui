@@ -31,6 +31,7 @@ export const FieldElement = (props) => {
     childrenClassName,
     withoutProvider,
     dataAutomationId,
+    isRequired,
     ...rest
   } = props;
   const getChildren = () =>
@@ -39,7 +40,10 @@ export const FieldElement = (props) => {
     <div className={cx('wrapper', className)} data-automation-id={dataAutomationId}>
       {label ? (
         <>
-          <span className={cx('label')}>{label}</span>
+          <span className={cx('label')}>
+            {label}
+            {isRequired && <span className={cx('asterisk')}>*</span>}
+          </span>
           {description && <span className={cx('description')}>{description}</span>}
           <div className={cx(childrenClassName)}>{getChildren()}</div>
         </>
@@ -60,6 +64,7 @@ FieldElement.propTypes = {
   childrenClassName: PropTypes.string,
   withoutProvider: PropTypes.bool,
   dataAutomationId: PropTypes.string,
+  isRequired: PropTypes.bool,
 };
 FieldElement.defaultProps = {
   label: '',
@@ -68,4 +73,5 @@ FieldElement.defaultProps = {
   childrenClassName: '',
   withoutProvider: false,
   dataAutomationId: '',
+  isRequired: false,
 };

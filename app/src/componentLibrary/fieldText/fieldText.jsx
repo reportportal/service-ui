@@ -55,7 +55,12 @@ export const FieldText = ({
 
   return (
     <>
-      {label && <span className={cx(VARIANT, 'label', { disabled })}>{label}</span>}
+      {label && (
+        <span className={cx(VARIANT, 'label', { disabled })}>
+          {label}
+          {isRequired && <span className={cx('asterisk')}>*</span>}
+        </span>
+      )}
       <div
         className={cx(VARIANT, 'input-container', className, {
           error,

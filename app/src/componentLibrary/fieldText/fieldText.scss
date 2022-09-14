@@ -120,6 +120,12 @@
   }
 }
 
+@mixin asterisk() {
+  position: absolute;
+  top: -3px;
+  color: $COLOR--e-300;
+}
+
 .additional-content {
   margin-top: 4px;
 
@@ -150,6 +156,11 @@
 .light {
   &.label {
     @include label($COLOR--almost-black);
+
+    .asterisk {
+      @include asterisk();
+      padding-left: 4px;
+    }
 
     &.disabled {
       @include disabled-state;
@@ -196,11 +207,9 @@
     pointer-events: none;
 
     .asterisk:after {
-      position: absolute;
-      top: -3px;
+      @include asterisk();
       right: -7px;
       content: '*';
-      color: $COLOR--red-focused;
     }
   }
 

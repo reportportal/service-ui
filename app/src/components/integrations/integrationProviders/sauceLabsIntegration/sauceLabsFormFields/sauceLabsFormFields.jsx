@@ -105,9 +105,10 @@ export class SauceLabsFormFields extends Component {
           validate={commonValidators.requiredField}
           disabled={disabled}
           className={cx('fields')}
+          isRequired
         >
           <FieldErrorHint provideHint={false}>
-            <FieldText defaultWidth={false} placeholder={formatMessage(messages.userNameTitle)} />
+            <FieldText defaultWidth={false} />
           </FieldErrorHint>
         </FieldElement>
         <FieldElement
@@ -116,12 +117,10 @@ export class SauceLabsFormFields extends Component {
           validate={commonValidators.requiredField}
           disabled={disabled}
           className={cx('fields')}
+          isRequired
         >
           <FieldErrorHint provideHint={false}>
-            <FieldText
-              defaultWidth={false}
-              placeholder={formatMessage(messages.accessTokenTitle)}
-            />
+            <FieldText defaultWidth={false} />
           </FieldErrorHint>
         </FieldElement>
         <FieldElement
