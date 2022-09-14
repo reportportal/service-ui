@@ -25,7 +25,6 @@ import { connect } from 'react-redux';
 import { fetch, isEmptyObject } from 'common/utils';
 import { URLS } from 'common/urls';
 import { CUMULATIVE_TREND } from 'common/constants/widgetTypes';
-import { activeProjectSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { analyticsEnabledSelector } from 'controllers/appInfo';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -35,6 +34,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { CHARTS, MULTI_LEVEL_WIDGETS_MAP, NoDataAvailable } from 'components/widgets';
 import { provideEcGA } from 'components/main/analytics';
 import { activeDashboardIdSelector } from 'controllers/pages';
+import { projectKeySelector } from 'controllers/project/selectors';
 import { isWidgetDataAvailable } from '../../modals/common/utils';
 import { WidgetHeader } from './widgetHeader';
 import styles from './widget.scss';
@@ -59,9 +59,9 @@ const SILENT_UPDATE_TIMEOUT_FULLSCREEN = 30000;
 @injectIntl
 @connect(
   (state) => ({
-    activeProject: activeProjectSelector(state),
     activeDashboardId: activeDashboardIdSelector(state),
     isAnalyticsEnabled: analyticsEnabledSelector(state),
+    projectKey: projectKeySelector(state),
   }),
   {
     showModalAction,
@@ -71,7 +71,6 @@ const SILENT_UPDATE_TIMEOUT_FULLSCREEN = 30000;
 export class SimpleWidget extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    activeProject: PropTypes.string.isRequired,
     widgetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     widgetType: PropTypes.string.isRequired,
     showModalAction: PropTypes.func.isRequired,
@@ -88,6 +87,7 @@ export class SimpleWidget extends Component {
     dashboardOwner: PropTypes.string,
     activeDashboardId: PropTypes.number.isRequired,
     isAnalyticsEnabled: PropTypes.bool.isRequired,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -201,8 +201,9 @@ export class SimpleWidget extends Component {
   };
 
   getWidgetUrl = (params) => {
-    const { activeProject, widgetId, widgetType } = this.props;
-    let url = URLS.widget(activeProject, widgetId);
+    const { widgetId, widgetType, projectKey } = this.props;
+
+    let url = URLS.widget(projectKey, widgetId);
 
     if (MULTI_LEVEL_WIDGETS_MAP[widgetType]) {
       const { queryParameters } = this.state;
@@ -211,7 +212,7 @@ export class SimpleWidget extends Component {
         ...params,
       });
 
-      url = URLS.widgetMultilevel(activeProject, widgetId, queryParamsString);
+      url = URLS.widgetMultilevel(projectKey, widgetId, queryParamsString);
     }
     return url;
   };

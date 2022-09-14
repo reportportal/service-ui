@@ -18,10 +18,10 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { activeProjectSelector } from 'controllers/user';
 import { injectIntl, defineMessages } from 'react-intl';
 import { URLS } from 'common/urls';
 import { validate, bindMessageToValidator, commonValidators } from 'common/utils/validation';
+import { projectKeySelector } from 'controllers/project/selectors';
 import { ITEMS_INPUT_WIDTH } from './constants';
 import { InputControl, TagsControl, CheckboxControl } from './controls';
 
@@ -58,13 +58,13 @@ const itemsValidator = (message) =>
 
 @injectIntl
 @connect((state) => ({
-  activeProject: activeProjectSelector(state),
+  projectKey: projectKeySelector(state),
 }))
 export class FlakyTestCasesTableControls extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     widgetSettings: PropTypes.object.isRequired,
-    activeProject: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
     initializeControlsForm: PropTypes.func.isRequired,
   };
 
@@ -88,7 +88,7 @@ export class FlakyTestCasesTableControls extends Component {
   render() {
     const {
       intl: { formatMessage },
-      activeProject,
+      projectKey,
     } = this.props;
 
     return (
@@ -116,7 +116,7 @@ export class FlakyTestCasesTableControls extends Component {
             placeholder={formatMessage(messages.LaunchNamePlaceholder)}
             minLength={3}
             maxLength={256}
-            getURI={URLS.launchNameSearch(activeProject)}
+            getURI={URLS.launchNameSearch(projectKey)}
           />
         </FieldProvider>
         <FieldProvider name="contentParameters.widgetOptions.includeMethods">

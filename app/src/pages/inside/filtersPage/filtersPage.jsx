@@ -49,6 +49,7 @@ import {
 } from 'controllers/project';
 import { FILTERS_PAGE, FILTERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { NoResultsForFilter } from 'pages/inside/common/noResultsForFilter';
+import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project/selectors';
 import { NoFiltersBlock } from './noFiltersBlock';
 import { FilterPageToolbar } from './filterPageToolbar';
 import { FilterGrid } from './filterGrid';
@@ -75,13 +76,15 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     userId: userIdSelector(state),
-    url: URLS.filters(activeProjectSelector(state)),
+    url: URLS.filters(projectKeySelector(state)),
     activeProject: activeProjectSelector(state),
     userFilters: userFiltersSelector(state),
     projectRole: activeProjectRoleSelector(state),
     accountRole: userAccountRoleSelector(state),
     filters: filtersSelector(state),
     loading: pageLoadingSelector(state),
+    organizationSlug: projectOrganizationSlugSelector(state),
+    projectKey: projectKeySelector(state),
   }),
   {
     showModalAction,
@@ -130,6 +133,8 @@ export class FiltersPage extends Component {
     createFilter: PropTypes.func,
     updateFilterSuccessAction: PropTypes.func,
     showNotification: PropTypes.func,
+    organizationSlug: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -177,7 +182,7 @@ export class FiltersPage extends Component {
     });
 
   updateFilter = (filter) =>
-    fetch(URLS.filter(this.props.activeProject, filter.id), {
+    fetch(URLS.filter(this.props.projectKey, filter.id), {
       method: 'put',
       data: filter,
     })
@@ -193,7 +198,7 @@ export class FiltersPage extends Component {
       });
 
   deleteFilter = (filter) => {
-    fetch(URLS.filter(this.props.activeProject, filter.id), {
+    fetch(URLS.filter(this.props.projectKey, filter.id), {
       method: 'delete',
     })
       .then(() => {
@@ -236,6 +241,8 @@ export class FiltersPage extends Component {
       filters,
       loading,
       activeProject,
+      organizationSlug,
+      projectKey,
       ...rest
     } = this.props;
 
@@ -255,6 +262,8 @@ export class FiltersPage extends Component {
             filters={filters}
             loading={loading}
             activeProject={activeProject}
+            organizationSlug={organizationSlug}
+            projectKey={projectKey}
             {...rest}
           />
           {!filters.length && !loading && this.renderNoFiltersBlock()}

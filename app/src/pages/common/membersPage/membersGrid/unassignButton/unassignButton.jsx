@@ -35,6 +35,7 @@ import {
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import UnassignIcon from 'common/img/unassign-inline.svg';
+import { projectKeySelector } from 'controllers/project/selectors';
 
 const messages = defineMessages({
   anassignUser: {
@@ -90,6 +91,7 @@ const messages = defineMessages({
     entryType:
       assignedProjectsSelector(state)[projectIdSelector(state)] &&
       assignedProjectsSelector(state)[projectIdSelector(state)].entryType,
+    projectKey: projectKeySelector(state),
   }),
   { showNotification, showModalAction },
 )
@@ -110,6 +112,7 @@ export class UnassignButton extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    projectKey: PropTypes.string.isRequired,
   };
   static defaultProps = {
     userId: '',
@@ -154,8 +157,8 @@ export class UnassignButton extends Component {
   };
 
   unassignAction = () => {
-    const { projectId, userId, intl } = this.props;
-    fetch(URLS.userUnasign(projectId), {
+    const { userId, intl, projectKey } = this.props;
+    fetch(URLS.userUnasign(projectKey), {
       method: 'put',
       data: { userNames: [userId] },
     })

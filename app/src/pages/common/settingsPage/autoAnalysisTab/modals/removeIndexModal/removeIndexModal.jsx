@@ -27,8 +27,8 @@ import {
   showDefaultErrorNotification,
   NOTIFICATION_TYPES,
 } from 'controllers/notification';
-import { projectIdSelector } from 'controllers/pages';
 import { withModal, ModalLayout } from 'components/main/modal';
+import { projectKeySelector } from 'controllers/project/selectors';
 import styles from './removeIndexModal.scss';
 
 const cx = classNames.bind(styles);
@@ -54,7 +54,7 @@ const messages = defineMessages({
 @withModal('removeIndexModal')
 @connect(
   (state) => ({
-    projectId: projectIdSelector(state),
+    projectKey: projectKeySelector(state),
   }),
   { showNotification, showDefaultErrorNotification },
 )
@@ -62,17 +62,16 @@ const messages = defineMessages({
 export class RemoveIndexModal extends Component {
   static propTypes = {
     intl: PropTypes.object,
-    projectId: PropTypes.string,
+    projectKey: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
     showDefaultErrorNotification: PropTypes.func.isRequired,
   };
   static defaultProps = {
     intl: {},
-    projectId: '',
   };
 
   onClickRemove = (closeModal) => {
-    fetch(URLS.projectIndex(this.props.projectId), { method: 'delete' })
+    fetch(URLS.projectIndex(this.props.projectKey), { method: 'delete' })
       .then(() => {
         this.props.showNotification({
           message: this.props.intl.formatMessage(messages.removeSuccessNotification),

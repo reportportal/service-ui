@@ -30,7 +30,7 @@ import { URLS } from 'common/urls';
 import { STATS_FAILED, STATS_PASSED, STATS_SKIPPED } from 'common/constants/statistics';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { DEFAULT_LAUNCHES_LIMIT } from 'controllers/testItem';
-import { activeProjectSelector } from 'controllers/user';
+import { projectKeySelector } from 'controllers/project/selectors';
 import {
   FiltersControl,
   InputControl,
@@ -94,7 +94,7 @@ const attributeKeyValidator = (formatMessage) => (attributes) =>
   ]);
 
 @connect((state) => ({
-  activeProject: activeProjectSelector(state),
+  projectKey: projectKeySelector(state),
 }))
 @injectIntl
 export class CumulativeTrendControls extends Component {
@@ -104,8 +104,8 @@ export class CumulativeTrendControls extends Component {
     initializeControlsForm: PropTypes.func.isRequired,
     formAppearance: PropTypes.object.isRequired,
     onFormAppearanceChange: PropTypes.func.isRequired,
-    activeProject: PropTypes.string.isRequired,
     eventsInfo: PropTypes.object,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -165,7 +165,7 @@ export class CumulativeTrendControls extends Component {
       fields={fields}
       fieldValidator={fieldValidator}
       maxAttributesAmount={MAX_ATTRIBUTES_AMOUNT}
-      getURI={URLS.launchAttributeKeysSearch(this.props.activeProject)}
+      getURI={URLS.launchAttributeKeysSearch(this.props.projectKey)}
       attributeKeyFieldViewLabels={[
         this.props.intl.formatMessage(messages.attributeKeyFieldLabelOverview),
         this.props.intl.formatMessage(messages.attributeKeyFieldLabelDetailedView),

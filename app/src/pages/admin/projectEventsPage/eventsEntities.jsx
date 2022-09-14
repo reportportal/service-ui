@@ -19,7 +19,6 @@ import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import { URLS } from 'common/urls';
-import { activeProjectSelector } from 'controllers/user';
 
 import {
   EntityDropdown,
@@ -98,6 +97,7 @@ import {
   actionMessages,
   objectTypesMessages,
 } from 'common/constants/localization/eventsLocalization';
+import { projectKeySelector } from 'controllers/project/selectors';
 
 const messages = defineMessages({
   timeCol: { id: 'EventsGrid.timeCol', defaultMessage: 'Time' },
@@ -115,7 +115,7 @@ const messages = defineMessages({
 });
 @connect(
   (state) => ({
-    activeProject: activeProjectSelector(state),
+    projectKey: projectKeySelector(state),
   }),
   {},
 )
@@ -125,7 +125,7 @@ export class EventsEntities extends Component {
     intl: PropTypes.object.isRequired,
     filterValues: PropTypes.object,
     render: PropTypes.func.isRequired,
-    activeProject: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -135,7 +135,7 @@ export class EventsEntities extends Component {
   };
 
   getEntities = () => {
-    const { intl, activeProject } = this.props;
+    const { intl, projectKey } = this.props;
     return [
       {
         id: ACTIVITIES,
@@ -407,7 +407,7 @@ export class EventsEntities extends Component {
         active: true,
         removable: false,
         customProps: {
-          getURI: URLS.projectUsernamesSearch(activeProject),
+          getURI: URLS.projectUsernamesSearch(projectKey),
           placeholder: intl.formatMessage(messages.userSearchPlaceholder),
           minLength: 3,
         },

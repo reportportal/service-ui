@@ -22,7 +22,6 @@ import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { projectIdSelector } from 'controllers/pages';
 import {
   showNotification,
   showDefaultErrorNotification,
@@ -31,6 +30,7 @@ import {
 import { BigButton } from 'components/buttons/bigButton';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import warningIcon from 'common/img/error-inline.svg';
+import { projectPayloadKeySelector } from 'controllers/pages/selectors';
 import styles from './generateDemoDataBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -65,7 +65,7 @@ const messages = defineMessages({
 
 @connect(
   (state) => ({
-    projectId: projectIdSelector(state),
+    payloadProjectKey: projectPayloadKeySelector(state),
   }),
   {
     showNotification,
@@ -76,7 +76,7 @@ const messages = defineMessages({
 export class GenerateDemoDataBlock extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    projectId: PropTypes.string.isRequired,
+    payloadProjectKey: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
     showDefaultErrorNotification: PropTypes.func.isRequired,
     onGenerate: PropTypes.func,
@@ -95,13 +95,13 @@ export class GenerateDemoDataBlock extends Component {
   };
 
   generateDemoData = () => {
-    const { intl, projectId, onGenerate, onSuccess } = this.props;
+    const { intl, payloadProjectKey, onGenerate, onSuccess } = this.props;
 
     this.setState({
       isLoading: true,
     });
     onGenerate();
-    fetch(URLS.generateDemoData(projectId), { method: 'POST', data: {} })
+    fetch(URLS.generateDemoData(payloadProjectKey), { method: 'POST', data: {} })
       .then(() => {
         onSuccess();
         this.props.showNotification({

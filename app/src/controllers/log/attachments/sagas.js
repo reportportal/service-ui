@@ -31,6 +31,7 @@ import { downloadFile } from 'common/utils/downloadFile';
 import { JSON as JSON_TYPE } from 'common/constants/fileTypes';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { projectKeySelector } from 'controllers/project/selectors';
+import { activeProjectKeySelector } from 'controllers/user/selectors';
 import {
   ATTACHMENT_CODE_MODAL_ID,
   ATTACHMENT_HAR_FILE_MODAL_ID,
@@ -129,7 +130,7 @@ const ATTACHMENT_MODAL_WORKERS = {
 
 function* openAttachmentInModal({ payload: { id, contentType } }) {
   const modalId = getAttachmentModalId(contentType);
-  const projectKey = yield select(projectKeySelector);
+  const projectKey = yield select(activeProjectKeySelector);
 
   if (modalId) {
     const data = { projectKey, id, extension: extractExtension(contentType), contentType };

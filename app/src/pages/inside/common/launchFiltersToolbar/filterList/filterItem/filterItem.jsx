@@ -21,6 +21,7 @@ import Link from 'redux-first-router-link';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import { connect } from 'react-redux';
 import { getLaunchFilterLinkSelector } from 'controllers/launch';
+import { projectOrganizationSlugSelector } from 'controllers/project/selectors';
 import { FilterDescriptionTooltipIcon } from './filterDescriptionTooltipIcon';
 import styles from './filterItem.scss';
 
@@ -45,11 +46,12 @@ const FilterItemBase = ({
   className,
   isDisabled,
   getLaunchFilterLink,
+  organizationSlug,
 }) => (
   <Link
     className={cx('filter-item', className, { active })}
     onClick={isDisabled && handleClick}
-    to={getLaunchFilterLink(id, active)}
+    to={getLaunchFilterLink(id, active, organizationSlug)}
   >
     <span className={cx('name')}>
       {name}
@@ -69,6 +71,7 @@ const FilterItemBase = ({
 );
 
 export const FilterItem = connect((state) => ({
+  organizationSlug: projectOrganizationSlugSelector(state),
   getLaunchFilterLink: getLaunchFilterLinkSelector(state),
 }))(FilterItemBase);
 
@@ -82,6 +85,7 @@ FilterItemBase.propTypes = {
   getLaunchFilterLink: PropTypes.func.isRequired,
   className: PropTypes.string,
   isDisabled: PropTypes.bool,
+  organizationSlug: PropTypes.string,
 };
 FilterItemBase.defaultProps = {
   active: false,

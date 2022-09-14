@@ -2,7 +2,7 @@ import { select, call, all, put } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
 import { PUBLIC_PLUGINS, PUBLIC_PLUGIN_ACCESS_TYPE } from 'controllers/plugins/constants';
-import { projectKeySelector } from 'controllers/project/selectors';
+import { activeProjectKeySelector } from 'controllers/user/selectors';
 import { COMMAND_GET_FILE, METADATA_FILE_KEY, MAIN_FILE_KEY } from './constants';
 import { pluginsSelector, globalIntegrationsSelector, publicPluginsSelector } from '../selectors';
 import { filterIntegrationsByName, isPluginSupportsCommonCommand } from '../utils';
@@ -81,7 +81,7 @@ export function* fetchUiExtensions() {
       (isPluginSupportsCommonCommand(plugin, COMMAND_GET_FILE) ||
         plugin.details.allowedCommands.includes(COMMAND_GET_FILE)),
   );
-  const projectKey = yield select(projectKeySelector);
+  const projectKey = yield select(activeProjectKeySelector);
   const calls = uiExtensionPlugins
     .map((plugin) => {
       const isCommonCommandSupported = isPluginSupportsCommonCommand(plugin, COMMAND_GET_FILE);

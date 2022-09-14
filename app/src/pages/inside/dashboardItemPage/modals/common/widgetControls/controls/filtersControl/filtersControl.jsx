@@ -36,6 +36,7 @@ import {
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { SearchableFilterList } from 'pages/inside/common/searchableFilterList';
+import { projectKeySelector } from 'controllers/project/selectors';
 import { WIDGET_WIZARD_FORM } from '../../../constants';
 import { LockedActiveFilter } from './lockedActiveFilter';
 import { FilterEdit } from './filterEdit';
@@ -93,6 +94,7 @@ const messages = defineMessages({
     filters: filtersSelector(state),
     pagination: filtersPaginationSelector(state),
     loading: loadingSelector(state),
+    projectKey: projectKeySelector(state),
   }),
   {
     changeWizardForm: (field, value) => change(WIDGET_WIZARD_FORM, field, value, null),
@@ -127,6 +129,7 @@ export class FiltersControl extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     eventsInfo: PropTypes.object,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -180,6 +183,7 @@ export class FiltersControl extends Component {
       formAppearance: { mode: formAppearanceMode, filter: formAppearanceFilter },
       activeProject,
       eventsInfo,
+      projectKey,
     } = this.props;
 
     const component = (() => {
@@ -206,6 +210,7 @@ export class FiltersControl extends Component {
               onCancel={this.clearFormAppearance}
               onSave={this.handleFilterInsert}
               eventsInfo={eventsInfo}
+              projectKey={projectKey}
             />
           );
         }
@@ -320,12 +325,12 @@ export class FiltersControl extends Component {
   handleFilterInsert = () => {
     const {
       intl,
-      activeProject,
       notify,
+      projectKey,
       formAppearance: { filter },
     } = this.props;
 
-    fetch(URLS.filters(activeProject), {
+    fetch(URLS.filters(projectKey), {
       method: 'post',
       data: this.getFilterForSubmit(filter),
     })
@@ -349,10 +354,10 @@ export class FiltersControl extends Component {
   };
 
   handleFilterUpdate = (filter) => {
-    const { intl, notify, activeProject } = this.props;
+    const { intl, notify, projectKey } = this.props;
     const data = this.getFilterForSubmit(filter);
 
-    fetch(URLS.filter(activeProject, filter.id), {
+    fetch(URLS.filter(projectKey, filter.id), {
       method: 'put',
       data,
     })

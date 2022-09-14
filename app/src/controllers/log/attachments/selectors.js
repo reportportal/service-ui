@@ -16,7 +16,7 @@
 
 import { createSelector } from 'reselect';
 import { attachmentsSelector } from 'controllers/log/selectors';
-import { activeProjectSelector } from 'controllers/user';
+import { projectKeySelector } from 'controllers/project/selectors';
 import { createAttachment } from './utils';
 
 export const logsWithAttachmentsSelector = (state) =>
@@ -30,10 +30,10 @@ export const activeAttachmentIdSelector = (state) => attachmentsSelector(state).
 
 export const attachmentItemsSelector = createSelector(
   logsWithAttachmentsSelector,
-  activeProjectSelector,
-  (logItems, projectId) =>
+  projectKeySelector,
+  (logItems, projectKey) =>
     logItems
       .filter((item) => !!item.binaryContent)
       .map((item) => item.binaryContent)
-      .map((attachment) => createAttachment(attachment, projectId)),
+      .map((attachment) => createAttachment(attachment, projectKey)),
 );

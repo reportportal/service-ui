@@ -19,9 +19,9 @@ import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { activeProjectSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
+import { projectKeySelector } from 'controllers/project/selectors';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import { TogglerControl, TagsControl } from './controls';
 
@@ -47,13 +47,13 @@ const validators = {
 
 @injectIntl
 @connect((state) => ({
-  activeProject: activeProjectSelector(state),
+  projectKey: projectKeySelector(state),
 }))
 export class PassingRatePerLaunchControls extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     widgetSettings: PropTypes.object.isRequired,
-    activeProject: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
     initializeControlsForm: PropTypes.func.isRequired,
   };
 
@@ -76,7 +76,7 @@ export class PassingRatePerLaunchControls extends Component {
   render() {
     const {
       intl: { formatMessage },
-      activeProject,
+      projectKey,
     } = this.props;
 
     return (
@@ -90,7 +90,7 @@ export class PassingRatePerLaunchControls extends Component {
             placeholder={formatMessage(messages.LaunchNamePlaceholder)}
             minLength={3}
             maxLength={256}
-            getURI={URLS.launchNameSearch(activeProject)}
+            getURI={URLS.launchNameSearch(projectKey)}
           />
         </FieldProvider>
         <FieldProvider name="contentParameters.widgetOptions.viewMode">

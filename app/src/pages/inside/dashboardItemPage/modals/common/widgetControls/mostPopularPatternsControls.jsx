@@ -22,10 +22,10 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { URLS } from 'common/urls';
 import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
 import { ModalField } from 'components/main/modal';
-import { activeProjectSelector } from 'controllers/user';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { bindMessageToValidator, commonValidators, validate } from 'common/utils/validation';
 import { FIELD_LABEL_WIDTH } from 'pages/inside/dashboardItemPage/modals/common/widgetControls/controls/constants';
+import { projectKeySelector } from 'controllers/project/selectors';
 import { FiltersControl, InputControl, TogglerControl } from './controls';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import { ITEMS_INPUT_WIDTH } from './constants';
@@ -61,7 +61,7 @@ const attributeKeyValidator = (message) => bindMessageToValidator(validate.attri
 
 @injectIntl
 @connect((state) => ({
-  activeProject: activeProjectSelector(state),
+  projectKey: projectKeySelector(state),
 }))
 export class MostPopularPatternsControls extends Component {
   static propTypes = {
@@ -70,8 +70,8 @@ export class MostPopularPatternsControls extends Component {
     initializeControlsForm: PropTypes.func.isRequired,
     formAppearance: PropTypes.object.isRequired,
     onFormAppearanceChange: PropTypes.func.isRequired,
-    activeProject: PropTypes.string.isRequired,
     eventsInfo: PropTypes.object,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -100,7 +100,7 @@ export class MostPopularPatternsControls extends Component {
   parseFilterValue = (value) => value && [value];
 
   render() {
-    const { intl, formAppearance, onFormAppearanceChange, activeProject, eventsInfo } = this.props;
+    const { intl, formAppearance, onFormAppearanceChange, projectKey, eventsInfo } = this.props;
     return (
       <Fragment>
         <FieldProvider name="filters" parse={this.parseFilterValue} format={this.formatFilterValue}>
@@ -145,7 +145,7 @@ export class MostPopularPatternsControls extends Component {
             )}
           >
             <AsyncAutocomplete
-              getURI={URLS.launchAttributeKeysSearch(activeProject)}
+              getURI={URLS.launchAttributeKeysSearch(projectKey)}
               minLength={1}
               creatable
               placeholder={intl.formatMessage(messages.attributeKeyFieldPlaceholder)}

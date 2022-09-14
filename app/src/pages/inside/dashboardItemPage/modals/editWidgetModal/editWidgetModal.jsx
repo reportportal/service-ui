@@ -31,6 +31,7 @@ import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLo
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { getWidgets } from 'pages/inside/dashboardItemPage/modals/common/widgets';
 import { getWidgetModeValuesString } from 'components/main/analytics/events/common/widgetPages/utils';
+import { projectKeySelector } from 'controllers/project/selectors';
 import { EditWidgetControlsSectionForm } from './editWidgetControlsSectionForm';
 import { EditWidgetInfoSection } from './editWidgetInfoSection';
 import { WIDGET_WIZARD_FORM } from '../common/constants';
@@ -58,6 +59,7 @@ const messages = defineMessages({
     widgetSettings: getFormValues(WIDGET_WIZARD_FORM)(state),
     dirty: isDirty(WIDGET_WIZARD_FORM)(state),
     valid: isValid(WIDGET_WIZARD_FORM)(state),
+    projectKey: projectKeySelector(state),
   }),
   {
     showScreenLockAction,
@@ -88,6 +90,7 @@ export class EditWidgetModal extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -136,7 +139,7 @@ export class EditWidgetModal extends Component {
       data: { onConfirm, widget },
       intl: { formatMessage },
       widgetSettings,
-      projectId,
+      projectKey,
     } = this.props;
 
     const data = prepareWidgetDataForSubmit(this.preprocessOutputData(widgetSettings));
@@ -148,7 +151,7 @@ export class EditWidgetModal extends Component {
       );
 
     this.props.showScreenLockAction();
-    fetch(URLS.widget(projectId, widget.id), {
+    fetch(URLS.widget(projectKey, widget.id), {
       method: 'put',
       data,
     })
