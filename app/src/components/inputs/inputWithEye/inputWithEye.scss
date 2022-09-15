@@ -14,25 +14,33 @@
  * limitations under the License.
  */
 
-.field-item {
+.input-with-eye {
   display: flex;
-  flex-direction: column;
-  margin-top: 24px;
+  position: relative;
+  height: 100%;
+  outline: none;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+.input {
+  display: none;
 }
 
-.field-item-title {
-  font-size: 13px;
-  line-height: 20px;
-  text-indent: 1px;
-  color: $COLOR--e-300;
-  font-family: $FONT-ROBOTO-REGULAR;
-  margin-bottom: 4px;
-}
+.eye {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  margin-top: -7px;
+  width: 16px;
+  height: 16px;
 
-.field-item-value {
-  font-size: 13px;
-  line-height: 20px;
-  text-indent: 1px;
-  color: $COLOR--almost-black;
-  font-family: $FONT-ROBOTO-REGULAR;
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  &.disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
 }

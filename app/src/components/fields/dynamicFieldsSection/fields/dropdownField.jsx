@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { InputDropdown } from 'components/inputs/inputDropdown';
+import { Dropdown } from 'componentLibrary/dropdown';
 import { DynamicField } from '../dynamicField';
 
 export class DropdownField extends Component {
@@ -46,7 +46,7 @@ export class DropdownField extends Component {
         darkView={darkView}
         {...rest}
       >
-        <InputDropdown
+        <Dropdown
           mobileDisabled
           options={this.getInputOptions(field.definedValues)}
           customClasses={
@@ -58,6 +58,7 @@ export class DropdownField extends Component {
               dropdownOption: 'dark-view',
             }
           }
+          defaultWidth={false}
         />
       </DynamicField>
     );

@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Input } from 'components/inputs/input';
+import { FieldText } from 'componentLibrary/fieldText';
 import { DynamicField } from '../dynamicField';
 
 export class TextField extends Component {
@@ -43,7 +43,7 @@ export class TextField extends Component {
         darkView={darkView}
         {...rest}
       >
-        <Input className={darkView && 'dark-view'} mobileDisabled />
+        <FieldText defaultWidth={false} className={darkView && 'dark-view'} mobileDisabled />
       </DynamicField>
     );
   }

@@ -21,7 +21,6 @@ import { connect } from 'react-redux';
 import { updateIntegrationAction } from 'controllers/plugins';
 import { uiExtensionIntegrationSettingsSelector } from 'controllers/plugins/uiExtensions/selectors';
 import { INTEGRATIONS_SETTINGS_COMPONENTS_MAP } from 'components/integrations/settingsComponentsMap';
-import { PluginIcon } from 'components/integrations/elements/pluginIcon';
 import { ExtensionLoader, extensionType } from 'components/extensionLoader';
 import styles from './integrationSettingsContainer.scss';
 
@@ -108,10 +107,6 @@ export class IntegrationSettingsContainer extends Component {
 
     return (
       <div className={cx('integration-settings-container')}>
-        <div className={cx('settings-header')}>
-          <PluginIcon className={cx('logo')} pluginData={data.integrationType} alt={instanceType} />
-          <h2 className={cx('title')}>{updatedData.name}</h2>
-        </div>
         <IntegrationSettingsComponent
           data={updatedData}
           onUpdate={this.updateIntegration}

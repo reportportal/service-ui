@@ -56,12 +56,12 @@ const CreateProjectIntegrationModal = ({ data, initialize, change, handleSubmit 
   const { formatMessage } = useIntl();
   const { onConfirm, customProps } = data;
 
-  const updateMetaData = (metadata) => {
-    setMetaData({ ...metaData, ...metadata });
+  const updateMetaData = (newMetaData) => {
+    setMetaData({ ...metaData, ...newMetaData });
   };
 
-  const onSubmit = (newData, metadata) => {
-    onConfirm(newData, metadata);
+  const onSubmit = (newData) => {
+    onConfirm(newData, metaData);
   };
 
   const okButton = {

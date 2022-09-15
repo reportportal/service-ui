@@ -18,32 +18,28 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import Parser from 'html-react-parser';
 import { useIntl } from 'react-intl';
-import { Button } from 'componentLibrary/button';
-import { PluginIcon } from 'components/integrations/elements/pluginIcon';
 import { JIRA, RALLY, EMAIL, SAUCE_LABS } from 'common/constants/pluginNames';
 import { isAdminSelector, activeProjectRoleSelector } from 'controllers/user';
+import { uiExtensionIntegrationSettingsSelector } from 'controllers/plugins/uiExtensions/selectors';
 import { canUpdateSettings } from 'common/utils/permissions';
-
 import { PLUGIN_NAME_TITLES } from 'components/integrations';
-import { showModalAction, hideModalAction } from 'controllers/modal';
+import { showModalAction } from 'controllers/modal';
 import {
   namedGlobalIntegrationsSelector,
   namedProjectIntegrationsSelector,
   addIntegrationAction,
   updateIntegrationAction,
-  removeIntegrationAction,
   removeProjectIntegrationsByTypeAction,
 } from 'controllers/plugins';
-
 import { updatePagePropertiesAction } from 'controllers/pages';
-import { PLUGIN_DESCRIPTIONS_MAP } from 'components/integrations/messages';
+import { ExtensionLoader } from 'components/extensionLoader';
+import { INTEGRATIONS_SETTINGS_COMPONENTS_MAP } from 'components/integrations/settingsComponentsMap';
 import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
+import { IntegrationHeader } from './integrationHeader';
 import { AvailableIntegrations } from './availableIntegrations';
 import { JIRA_CLOUD, AZURE_DEVOPS } from './constats';
 import styles from './integrationInfo.scss';
-import BackIcon from './img/back-inline.svg';
 import { messages } from './messages';
 
 const cx = classNames.bind(styles);
@@ -57,10 +53,12 @@ const documentationList = {
     'https://reportportal.io/docs/Jira-Cloud-Integration%3Eproject-jira-cloud-integration',
   [AZURE_DEVOPS]: 'https://reportportal.io/docs/Azure-DevOps-BTS',
 };
+
 export const IntegrationInfo = (props) => {
   const [integrationInfo, setIntegrationInfo] = useState({});
   const [updatedParameters, setUpdatedParameters] = useState({});
   const { formatMessage } = useIntl();
+  const settingsExtensions = useSelector(uiExtensionIntegrationSettingsSelector);
   const isAdmin = useSelector(isAdminSelector);
   const userProjectRole = useSelector(activeProjectRoleSelector);
   const globalIntegrations = useSelector(namedGlobalIntegrationsSelector);
@@ -79,10 +77,23 @@ export const IntegrationInfo = (props) => {
 
   useEffect(() => {
     const integration = availableProjectIntegrations.find((value) => value.id === +integrationId);
+
     if (integration) {
       setIntegrationInfo(integration);
     }
-  }, []);
+  }, [integrationId, availableProjectIntegrations]);
+
+  useEffect(() => {
+    const integration = availableGlobalIntegrations.find((value) => value.id === +integrationId);
+
+    if (integration) {
+      setIntegrationInfo({ ...integration, blocked: true });
+    }
+  }, [integrationId, availableGlobalIntegrations]);
+
+  const integrationSettingsExtension = settingsExtensions.find((ext) => ext.pluginName === name);
+  const IntegrationSettingsComponent =
+    INTEGRATIONS_SETTINGS_COMPONENTS_MAP[name] || (integrationSettingsExtension && ExtensionLoader);
 
   const openIntegration = (integration) => {
     const { id } = integration;
@@ -148,16 +159,6 @@ export const IntegrationInfo = (props) => {
     );
   };
 
-  const getConfirmationFunc = (newData, metaData) => {
-    onUpdate(
-      newData,
-      () => {
-        dispatch(hideModalAction());
-      },
-      metaData,
-    );
-  };
-
   const updatedData = {
     ...integrationInfo,
     name: updatedParameters.name || integrationInfo.name,
@@ -167,47 +168,7 @@ export const IntegrationInfo = (props) => {
     },
   };
 
-  const editAuthorizationClickHandler = () => {
-    const { integrationParameters, integrationType } = updatedData;
-    dispatch(
-      showModalAction({
-        id: 'createProjectIntegrationModal',
-        data: {
-          modalTitle: formatMessage(messages.projectIntegrationEdit),
-          onConfirm: getConfirmationFunc,
-          instanceType: integrationType.name,
-          customProps: {
-            initialData: {
-              ...integrationParameters,
-              integrationName: updatedData.name,
-            },
-            editAuthMode: true,
-          },
-        },
-      }),
-    );
-  };
-
-  const removeIntegration = () => {
-    dispatch(removeIntegrationAction(integrationInfo.id, false, goBackHandler));
-  };
-
   const resetProjectIntegrations = () => dispatch(removeProjectIntegrationsByTypeAction(name));
-
-  const onDeleteProjectIntegration = () => {
-    dispatch(
-      showModalAction({
-        id: 'deleteProjectIntegrationModal',
-        data: {
-          onConfirm: removeIntegration,
-          modalTitle: `${formatMessage(messages.projectIntegrationDelete)} ${integrationInfo.name}`,
-          description: `${formatMessage(messages.projectIntegrationDeleteDescription)} ${
-            integrationInfo.name
-          }?`,
-        },
-      }),
-    );
-  };
 
   const onResetProjectIntegration = () => {
     dispatch(
@@ -258,53 +219,32 @@ export const IntegrationInfo = (props) => {
       </>
     );
   };
-
   return (
     <>
-      <div className={cx('container')}>
-        <div className={cx('back-to')}>
-          <i className={cx('back-icon')}>{Parser(BackIcon)}</i>
-          <Button onClick={goBackHandler} variant="text">
-            {formatMessage(messages.backToIntegration)}
-          </Button>
-        </div>
-        <div className={cx('header')}>
-          <div className={cx('integration-block')}>
-            <PluginIcon className={cx('integration-image')} pluginData={data} alt={name} />
-            <div className={cx('integration-info-block')}>
-              <div className={cx('integration-data-block')}>
-                <span className={cx('integration-name')}>{PLUGIN_NAME_TITLES[name] || name}</span>
-                <span className={cx('integration-version')}>
-                  {details.version && `${formatMessage(messages.version)} ${details.version}`}
-                </span>
-              </div>
-
-              <p className={cx('integration-description')}>
-                {PLUGIN_DESCRIPTIONS_MAP[name] ||
-                  (details.description && Parser(details.description))}
-              </p>
-            </div>
-          </div>
-          <div className={cx('buttons-section')}>
-            <Button disabled={!isAbleToClick} onClick={onAddProjectIntegration}>
-              {formatMessage(messages.noGlobalIntegrationsButtonAdd)}
-            </Button>
-            {availableProjectIntegrations.length > 0 && isAbleToClick && (
-              <Button onClick={onResetProjectIntegration} variant="ghost">
-                {formatMessage(messages.resetToGlobalIntegrationsButton)}
-              </Button>
-            )}
-          </div>
-        </div>
-      </div>
       {!integrationId ? (
-        integrationContent()
+        <>
+          <IntegrationHeader
+            data={data}
+            goBackHandler={goBackHandler}
+            onAddProjectIntegration={onAddProjectIntegration}
+            onResetProjectIntegration={onResetProjectIntegration}
+            isAbleToClick={isAbleToClick}
+            availableProjectIntegrations={availableProjectIntegrations}
+            withButton
+          />
+          {integrationContent()}
+        </>
       ) : (
         <>
-          <h1>Configuration Page with unique id = {integrationId}</h1>
-          <div className={cx('buttons-setting')}>
-            <Button onClick={editAuthorizationClickHandler}>Edit</Button>
-            <Button onClick={onDeleteProjectIntegration}>Delete</Button>
+          <IntegrationHeader data={data} goBackHandler={goBackHandler} />
+          <div className={cx('integration-settings-block')}>
+            <IntegrationSettingsComponent
+              data={updatedData}
+              onUpdate={onUpdate}
+              goToPreviousPage={goBackHandler}
+              extension={integrationSettingsExtension}
+              withPreloader
+            />
           </div>
         </>
       )}

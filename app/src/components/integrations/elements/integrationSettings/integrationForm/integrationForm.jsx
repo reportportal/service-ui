@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,7 @@ import { reduxForm } from 'redux-form';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { BigButton } from 'components/buttons/bigButton';
-import { GhostButton } from 'components/buttons/ghostButton';
+import { Button } from 'componentLibrary/button';
 import { isIntegrationSupportsMultipleInstances } from 'components/integrations/utils';
 import { PLUGINS_PAGE_EVENTS, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './integrationForm.scss';
@@ -77,10 +76,6 @@ export class IntegrationForm extends Component {
     metaData: {},
   };
 
-  isSupportsMultipleInstances = isIntegrationSupportsMultipleInstances(
-    this.props.data.integrationType.name,
-  );
-
   toggleDisabled = () => {
     if (this.props.dirty && !this.state.disabled) {
       this.props.reset();
@@ -128,9 +123,11 @@ export class IntegrationForm extends Component {
       isGlobal,
       pluginName,
     } = this.props;
+    const isSupportsMultipleInstances = isIntegrationSupportsMultipleInstances(pluginName);
+
     const { disabled } = this.state;
     const isConfigurationNotSpecified = blocked && isEmptyConfiguration;
-    const shouldFieldsBeHidden = !connected && this.isSupportsMultipleInstances;
+    const shouldFieldsBeHidden = !connected && isSupportsMultipleInstances;
 
     return (
       <form className={cx('integration-form')}>
@@ -159,34 +156,31 @@ export class IntegrationForm extends Component {
         {!blocked && (
           <div className={cx('controls-block')}>
             {disabled ? (
-              <GhostButton
-                onClick={this.toggleDisabled}
-                disabled={shouldFieldsBeHidden}
-                mobileDisabled
-              >
-                {formatMessage(messages.configureTitle)}
-              </GhostButton>
+              <Button onClick={this.toggleDisabled} disabled={shouldFieldsBeHidden}>
+                {formatMessage(COMMON_LOCALE_KEYS.EDIT)}
+              </Button>
             ) : (
               <div className={cx('control-buttons-block')}>
-                {!isEmptyConfiguration && (
-                  <div className={cx('button-container')}>
-                    <BigButton
-                      color={'gray-60'}
-                      onClick={this.toggleDisabled}
-                      disabled={shouldFieldsBeHidden}
-                    >
-                      {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
-                    </BigButton>
-                  </div>
-                )}
                 <div className={cx('button-container')}>
-                  <BigButton
+                  <Button
                     onClick={handleSubmit(this.submitIntegration)}
                     disabled={shouldFieldsBeHidden}
                   >
                     {formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
-                  </BigButton>
+                  </Button>
                 </div>
+
+                {!isEmptyConfiguration && (
+                  <div className={cx('button-container')}>
+                    <Button
+                      variant="ghost"
+                      onClick={this.toggleDisabled}
+                      disabled={shouldFieldsBeHidden}
+                    >
+                      {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
+                    </Button>
+                  </div>
+                )}
               </div>
             )}
           </div>

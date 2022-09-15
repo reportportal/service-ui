@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,25 +14,8 @@
  * limitations under the License.
  */
 
-.field-item {
-  display: flex;
-  flex-direction: column;
-  margin-top: 24px;
-}
+import { InputWithEye } from './inputWithEye';
 
-.field-item-title {
-  font-size: 13px;
-  line-height: 20px;
-  text-indent: 1px;
-  color: $COLOR--e-300;
-  font-family: $FONT-ROBOTO-REGULAR;
-  margin-bottom: 4px;
-}
+export { InputWithEye };
 
-.field-item-value {
-  font-size: 13px;
-  line-height: 20px;
-  text-indent: 1px;
-  color: $COLOR--almost-black;
-  font-family: $FONT-ROBOTO-REGULAR;
-}
+export default InputWithEye;

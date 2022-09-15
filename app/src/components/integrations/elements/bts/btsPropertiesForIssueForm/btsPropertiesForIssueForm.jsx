@@ -17,11 +17,11 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { defineMessages, injectIntl } from 'react-intl';
+import { defineMessages, injectIntl, useIntl } from 'react-intl';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { fetch } from 'common/utils';
-import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
 import { projectIdSelector } from 'controllers/pages';
 import { projectInfoSelector } from 'controllers/project';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -30,8 +30,13 @@ import {
   COMMAND_GET_ISSUE_FIELDS,
 } from 'controllers/plugins/uiExtensions/constants';
 import { URLS } from 'common/urls';
-import { InputDropdown } from 'components/inputs/inputDropdown';
-import { InputCheckbox } from 'components/inputs/inputCheckbox';
+import { withTooltip } from 'components/main/tooltips/tooltip';
+import Parser from 'html-react-parser';
+import InfoIcon from 'common/img/newIcons/icon-about-inline.svg';
+import { Dropdown } from 'componentLibrary/dropdown';
+import { FieldErrorHint } from 'components/fields/fieldErrorHint';
+import { FieldElement } from 'pages/inside/projectSettingsPageContainer/content/elements';
+import { InputWithEye } from 'components/inputs/inputWithEye';
 import { DynamicFieldsSection } from 'components/fields/dynamicFieldsSection';
 import {
   normalizeFieldsWithOptions,
@@ -63,7 +68,30 @@ const messages = defineMessages({
     id: 'DefaultPropertiesForIssueForm.showFieldsHeader',
     defaultMessage: 'Show',
   },
+  tooltip: {
+    id: 'DefaultPropertiesForIssueForm.tooltip',
+    defaultMessage: 'Fields for posting issues to your BTS',
+  },
 });
+
+const Tooltip = () => {
+  const { formatMessage } = useIntl();
+  return <div>{formatMessage(messages.tooltip)}</div>;
+};
+
+const IconShow = () => {
+  return <>{Parser(InfoIcon)}</>;
+};
+
+const ShowWithTooltip = withTooltip({
+  TooltipComponent: Tooltip,
+  data: {
+    dynamicWidth: true,
+    align: 'bottom',
+    noArrow: false,
+    dark: true,
+  },
+})(IconShow);
 
 @connect(
   (state) => ({
@@ -197,7 +225,7 @@ export class BtsPropertiesForIssueForm extends Component {
 
   getCustomBLockConfig = (field) => {
     const customBlock = (
-      <InputCheckbox
+      <InputWithEye
         onChange={() => this.onChangeFieldCheckbox(field.id, field.fieldName)}
         value={field.checked}
         disabled={field.required || this.props.disabled}
@@ -385,39 +413,43 @@ export class BtsPropertiesForIssueForm extends Component {
     return (
       <div className={cx('bts-properties-for-issue-form')}>
         {loading && !this.state.issueType ? (
-          <SpinningPreloader />
+          <BubblesPreloader customClassName={cx('center')} />
         ) : (
           <Fragment>
-            <h4 className={cx('default-properties-title')}>
-              {!disabled
-                ? intl.formatMessage(messages.availableIssueTypesHeader)
-                : intl.formatMessage(messages.defaultIssueFormPropsHeader)}
-            </h4>
             {!disabled && (
               <Fragment>
-                <IntegrationFormField label="Issue Type" required withoutProvider>
-                  <InputDropdown
-                    value={this.state.issueType}
-                    onChange={this.handleIssueTypeChange}
-                    mobileDisabled
-                    options={this.issueTypeDropdownOptions}
-                    disabled={loading}
-                  />
-                </IntegrationFormField>
-                <h4 className={cx('default-properties-title')}>
-                  {intl.formatMessage(messages.defaultIssueFormPropsHeader)}
-                </h4>
+                <FieldElement
+                  label="Issue Type"
+                  disabled={loading}
+                  withoutProvider
+                  description={intl.formatMessage(messages.availableIssueTypesHeader)}
+                >
+                  <FieldErrorHint provideHint={false}>
+                    <Dropdown
+                      value={this.state.issueType}
+                      onChange={this.handleIssueTypeChange}
+                      options={this.issueTypeDropdownOptions}
+                      defaultWidth={false}
+                    />
+                  </FieldErrorHint>
+                </FieldElement>
+                <div className={cx('default-property-block')}>
+                  <h4 className={cx('default-properties-title')}>
+                    {intl.formatMessage(messages.defaultIssueFormPropsHeader)}
+                  </h4>
+                  <div className={cx('show-hint-wrapper')}>
+                    <span className={cx('show-hint-text')}>
+                      {intl.formatMessage(messages.showFieldsHeader)}
+                    </span>
+                    <ShowWithTooltip />
+                  </div>
+                </div>
               </Fragment>
             )}
             {loading ? (
-              <SpinningPreloader />
+              <BubblesPreloader customClassName={cx('center')} />
             ) : (
               <Fragment>
-                <div className={cx('show-hint-wrapper')}>
-                  <span className={cx('show-hint')}>
-                    {intl.formatMessage(messages.showFieldsHeader)}
-                  </span>
-                </div>
                 <DynamicFieldsSection
                   fields={preparedFields}
                   customBlockCreator={this.getCustomBLockConfig}
