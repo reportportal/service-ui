@@ -187,7 +187,7 @@ export class NotificationsTab extends Component {
   };
 
   onEdit = (notificationCase) => {
-    const { showModal, tracking } = this.props;
+    const { showModal, tracking, cases } = this.props;
 
     tracking.trackEvent(SETTINGS_PAGE_EVENTS.EDIT_RULE_NOTIFICATIONS);
     showModal({
@@ -200,6 +200,7 @@ export class NotificationsTab extends Component {
           cancelBtn: SETTINGS_PAGE_EVENTS.CANCEL_EDIT_RULE_NOTIFICATIONS,
           saveBtn: SETTINGS_PAGE_EVENTS.SAVE_EDIT_RULE_NOTIFICATIONS,
         },
+        cases,
       },
     });
   };

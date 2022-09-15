@@ -99,8 +99,7 @@ $DEFECT_NAME_PADDING: 16px;
 }
 
 .copy-button {
-  margin-left: 46px;
-  margin-right: 0;
+  margin: -1.5px 0 0 10px;
 
   svg {
     width: 16px;
@@ -126,27 +125,21 @@ $DEFECT_NAME_PADDING: 16px;
   margin-right: 10px;
 }
 
-b {
-  font-family: $FONT-ROBOTO-BOLD;
-  font-size: 11px;
+.defect-locator-tooltip {
+  display: inline-flex;
+  font-size: 13px;
+  font-family: $FONT-ROBOTO-MEDIUM;
+  color: $COLOR--almost-black;
 }
 
 .locator {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  color: $COLOR--e-400;
   font-family: $FONT-ROBOTO-REGULAR;
-  font-size: 11px;
-  padding: 8px 0 0 0;
+  margin-left: 32px;
 }
 
 .locator-wrapper {
   width: 16px;
   height: 16px;
-  margin-right: -10px;
-}
-
-.locator-icon {
-  margin-left: 0;
 }
