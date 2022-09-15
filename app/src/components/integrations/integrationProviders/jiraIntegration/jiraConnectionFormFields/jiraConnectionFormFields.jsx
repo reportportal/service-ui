@@ -115,7 +115,6 @@ export class JiraConnectionFormFields extends Component {
           label={formatMessage(COMMON_BTS_MESSAGES.authTypeLabel)}
           disabled={disabled}
           className={cx('fields')}
-          isRequired
         >
           <FieldErrorHint provideHint={false}>
             <Dropdown options={this.systemAuthTypes} defaultWidth={false} />

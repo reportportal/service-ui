@@ -40,10 +40,9 @@ const DefectLocatorTooltip = ({ locator }) => {
   const { trackEvent } = useTracking();
 
   return (
-    <>
-      <b>ID locator</b>
-      <br />
-      <div className={cx('locator')}>
+    <div className={cx('defect-locator-tooltip')}>
+      Locator
+      <span className={cx('locator')}>
         {locator}
         <CopyToClipboard
           text={locator}
@@ -53,8 +52,8 @@ const DefectLocatorTooltip = ({ locator }) => {
             {Parser(CopyIcon)}
           </i>
         </CopyToClipboard>
-      </div>
-    </>
+      </span>
+    </div>
   );
 };
 DefectLocatorTooltip.propTypes = {
