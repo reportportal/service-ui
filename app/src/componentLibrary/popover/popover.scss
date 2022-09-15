@@ -1,0 +1,89 @@
+/*!
+ * Copyright 2022 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.popover {
+  display: block;
+  position: absolute;
+  z-index: $Z-INDEX-POPUP;
+  background-color: $COLOR--white-two;
+  border-radius: 8px;
+  box-shadow: $BOX_SHADOW--modal-window;
+  padding: 16px;
+  min-height: 61px;
+  min-width: 160px;
+  max-width: fit-content;
+  box-sizing: border-box;
+
+  &::after {
+    content: '';
+    position: absolute;
+    border: 9px solid transparent;
+  }
+
+  &.side-top::after {
+    border-bottom-color: $COLOR--white-two;
+    bottom: 100%;
+  }
+
+  &.side-bottom::after {
+    border-top-color: $COLOR--white-two;
+    top: 100%;
+  }
+
+  &.side-bottom,
+  &.side-top {
+    &.position-left::after {
+      left: 16px;
+    }
+
+    &.position-middle::after {
+      left: calc(100% / 2 - 9px);
+    }
+
+    &.position-right::after {
+      right: 16px;
+    }
+  }
+
+  &.side-left::after {
+    border-right-color: $COLOR--white-two;
+    right: 100%;
+  }
+
+  &.side-right::after {
+    border-left-color: $COLOR--white-two;
+    left: 100%;
+  }
+
+  &.side-left,
+  &.side-right {
+    &::after {
+      top: calc(100% / 2 - 9px);
+    }
+  }
+}
+
+.content {
+  display: block;
+}
+
+.title {
+  display: inline-block;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 13px;
+  line-height: 20px;
+  margin-bottom: 8px;
+}
