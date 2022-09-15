@@ -110,7 +110,6 @@ export class ConnectionSection extends Component {
       integrationType: PropTypes.object,
       projectId: PropTypes.number,
     }).isRequired,
-    editAuthContent: PropTypes.object,
   };
 
   static defaultProps = {
