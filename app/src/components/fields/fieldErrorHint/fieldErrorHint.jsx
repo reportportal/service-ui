@@ -173,11 +173,11 @@ const messages = defineMessages({
   },
   defectLongNameHint: {
     id: 'DefectTypesTab.defectLongNameHint',
-    defaultMessage: "Defect name should have size from '3' to '55' characters",
+    defaultMessage: "Defect Type name should have size from '3' to '55' characters",
   },
   defectShortNameHint: {
     id: 'DefectTypesTab.defectShortNameHint',
-    defaultMessage: "Defect abbreviation should have size from '1' to '4' characters",
+    defaultMessage: "Defect Type abbreviation should have size from '1' to '4' characters",
   },
   projectNameLengthHint: {
     id: 'ProjectsPage.projectNameLengthHint',
