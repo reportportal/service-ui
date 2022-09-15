@@ -27,7 +27,7 @@ import {
 export const messages = defineMessages({
   defectNameCol: {
     id: 'DefectTypesTab.defectNameCol',
-    defaultMessage: 'Defect Name',
+    defaultMessage: 'Defect Type name',
   },
   abbreviationCol: {
     id: 'DefectTypesTab.abbreviationCol',
@@ -59,16 +59,16 @@ export const messages = defineMessages({
   },
   createDefectHeader: {
     id: 'DefectTypesTab.createDefectHeader',
-    defaultMessage: 'Create Defect',
+    defaultMessage: 'Create Defect Type',
   },
   createDefectIcon: {
     id: 'DefectTypesTab.createDefectIcon',
-    defaultMessage: 'Create a new Defect',
+    defaultMessage: 'Create a new Defect Type',
   },
   description: {
     id: 'DefectTypesTab.description',
     defaultMessage:
-      'Defect Types are a set of defects that are most likely to appear during tests execution. You can use default Defects to mark your test items or create your own Defects to make it easier to analyze tests execution.',
+      'Defect Types are a set of defects that are most likely to appear during tests execution. You can use default Defect Types to mark your test items or create your own Defect Types to make it easier to analyze tests execution.',
   },
   informationTitle: {
     id: 'DefectTypesTab.informationTitle',

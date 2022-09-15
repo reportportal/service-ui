@@ -46,11 +46,11 @@ const cx = className.bind(styles);
 const messages = defineMessages({
   title: {
     id: 'AddEditDefectTypeModal.title',
-    defaultMessage: '{actionType} Defect',
+    defaultMessage: '{actionType} Defect Type',
   },
   description: {
     id: 'AddEditDefectTypeModal.description',
-    defaultMessage: 'Create your own Defect by filling in the form below',
+    defaultMessage: 'Create your own Defect Type by filling in the form below',
   },
   add: {
     id: 'AddEditDefectTypeModal.newRuleMessage',
@@ -66,7 +66,7 @@ const messages = defineMessages({
   },
   name: {
     id: 'AddEditDefectTypeModal.name',
-    defaultMessage: 'Defect Name',
+    defaultMessage: 'Defect Type name',
   },
   abbreviation: {
     id: 'AddEditDefectTypeModal.abbreviation',
@@ -74,7 +74,7 @@ const messages = defineMessages({
   },
   color: {
     id: 'AddEditDefectTypeModal.color',
-    defaultMessage: 'Color of Defect',
+    defaultMessage: 'Color of Defect type',
   },
   abbreviationHint: {
     id: 'AddEditDefectTypeModal.abbreviationHint',
