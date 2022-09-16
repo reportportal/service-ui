@@ -24,7 +24,7 @@ import classNames from 'classnames/bind';
 import BinIcon from 'common/img/newIcons/bin-inline.svg';
 import PencilIcon from 'common/img/newIcons/pencil-inline.svg';
 import CopyIcon from 'common/img/newIcons/copy-inline.svg';
-import IdIcon from 'common/img/newIcons/id-icon-inline.svg';
+import LocatorIcon from 'common/img/newIcons/locator-icon-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { withHoverableTooltip } from 'components/main/tooltips/hoverableTooltip';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -69,7 +69,7 @@ const DefectLocator = withHoverableTooltip({
 })(() => (
   <div className={cx('locator-wrapper')}>
     <i className={cx('icon', 'locator-icon')} data-automation-id="defectTypeLocatorIcon">
-      {Parser(IdIcon)}
+      {Parser(LocatorIcon)}
     </i>
   </div>
 ));
