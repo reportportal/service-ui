@@ -22,13 +22,13 @@ import styles from './hexColorPicker.scss';
 
 const cx = classNames.bind(styles);
 
-export const HexColorPickerComponent = ({ label, value, presets, onChange }) => {
+export const HexColorPickerComponent = ({ label, value, presets }) => {
   // Problem with HexColorPicker: infinity onChange call with 2 different values
   const [color, setColor] = useState(value);
 
   useEffect(() => {
-    onChange(color);
-  }, [color]);
+    setColor(value);
+  }, [value]);
 
   return (
     <div className={cx('hex-color-picker')}>
