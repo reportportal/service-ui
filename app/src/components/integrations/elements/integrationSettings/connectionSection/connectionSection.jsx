@@ -197,7 +197,11 @@ export class ConnectionSection extends Component {
         >
           <div className={cx('integration-info-block')}>
             <div className={cx('sub-header-block')}>
-              <div className={cx('general-info')}>
+              <div
+                className={cx('general-info', {
+                  blocked: blocked && availableProjectIntegrations.length > 0,
+                })}
+              >
                 <h1>{name}</h1>
                 <p>
                   {creator} on {moment(creationDate).format('ll')}
@@ -206,6 +210,7 @@ export class ConnectionSection extends Component {
               <div
                 className={cx('connection-block', {
                   'connection-block-failed': !connected,
+                  'connection-block-disabled': blocked && availableProjectIntegrations.length > 0,
                 })}
               >
                 {Parser(connected ? Tick : ErrorIcon)}

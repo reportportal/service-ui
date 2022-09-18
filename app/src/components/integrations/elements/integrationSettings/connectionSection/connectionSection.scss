@@ -82,6 +82,11 @@
       color: $COLOR--e-300;
       font-family: $FONT-ROBOTO-REGULAR;
     }
+    &.blocked {
+      h1 {
+        color: $COLOR--e-400;
+      }
+    }
   }
 }
 
@@ -117,4 +122,8 @@
   p {
     color: $COLOR--red-pressed;
   }
+}
+
+.connection-block-disabled {
+  opacity: 0.5;
 }
