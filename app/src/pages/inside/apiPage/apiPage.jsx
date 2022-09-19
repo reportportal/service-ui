@@ -17,11 +17,13 @@
 import React, { Component } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
+import track from 'react-tracking';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import SwaggerUI from 'swagger-ui-react';
 import 'swagger-ui-react/swagger-ui.css';
 import { URLS, DEFAULT_API_URL_PREFIX, UAT_API_URL_PREFIX } from 'common/urls';
+import { SIDEBAR_API_EVENTS } from 'analyticsEvents/apiPageEvents';
 import { tokenSelector } from 'controllers/auth';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { ToggleButton } from 'components/buttons/toggleButton';
@@ -40,8 +42,13 @@ const messages = defineMessages({
   token: tokenSelector(state),
 }))
 @injectIntl
+@track()
 export class ApiPage extends Component {
   static propTypes = {
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
     intl: PropTypes.object.isRequired,
     token: PropTypes.string.isRequired,
   };
@@ -51,6 +58,41 @@ export class ApiPage extends Component {
   };
 
   getBreadcrumbs = () => [{ title: this.props.intl.formatMessage(messages.apiPageTitle) }];
+
+  componentDidMount() {
+    const element = document.querySelector('.analytics-wrapper');
+    element.addEventListener('click', (e) => {
+      const h3Butoon = document.querySelectorAll('.opblock-tag');
+      const spanTags = document.querySelectorAll('.nostyle');
+      let name = '';
+
+      h3Butoon.forEach((tag) => {
+        if (e.target === tag) {
+          name = tag.querySelector('.markdown').innerText;
+        }
+
+        const pTag = tag.querySelector('p');
+        if (e.target === pTag) {
+          name = pTag.innerText;
+        }
+
+        const buttonShowHide = tag.querySelector('button');
+        if (e.target === buttonShowHide) {
+          const parent = buttonShowHide.parentElement;
+          name = parent.querySelector('.markdown').innerText;
+        }
+      });
+
+      spanTags.forEach((spans) => {
+        const newTag = spans.querySelector('span');
+        if (e.target === newTag) {
+          name = newTag.innerText;
+        }
+      });
+      const place = this.state.apiType.split('/')[1];
+      this.props.tracking.trackEvent(SIDEBAR_API_EVENTS.CLICK_SHOW_HIDE_BLOCK(name, place));
+    });
+  }
 
   tabChangeHandler = (apiType) => {
     this.setState({
@@ -91,18 +133,28 @@ export class ApiPage extends Component {
                 />
               </div>
             </div>
-            <SwaggerUI
-              url={URLS.apiDocs(apiType)}
-              validatorUrl={null}
-              docExpansion="none"
-              apisSorter="alpha"
-              jsonEditor={false}
-              defaultModelRendering="schema"
-              showRequestHeaders={false}
-              showOperationIds={false}
-              requestInterceptor={this.setAuth}
-              supportedSubmitMethods={['get', 'post', 'put', 'delete', 'patch', 'head', 'options']}
-            />
+            <div className={cx('analytics-wrapper')}>
+              <SwaggerUI
+                url={URLS.apiDocs(apiType)}
+                validatorUrl={null}
+                docExpansion="none"
+                apisSorter="alpha"
+                jsonEditor={false}
+                defaultModelRendering="schema"
+                showRequestHeaders={false}
+                showOperationIds={false}
+                requestInterceptor={this.setAuth}
+                supportedSubmitMethods={[
+                  'get',
+                  'post',
+                  'put',
+                  'delete',
+                  'patch',
+                  'head',
+                  'options',
+                ]}
+              />
+            </div>
           </div>
         </PageSection>
       </PageLayout>
