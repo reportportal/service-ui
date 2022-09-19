@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,5 +14,13 @@
  * limitations under the License.
  */
 
-export const arrayRemoveDoubles = (arr = []) =>
-  arr.filter((elem, index, self) => index === self.indexOf(elem));
+import { isEmptyObject } from './isEmptyObject';
+
+describe('isEmptyObject', () => {
+  test('should return false in case of provided object has own properties', () => {
+    expect(isEmptyObject({ a: 1, b: 2 })).toBe(false);
+  });
+  test('should return true in case of provided object has not own properties', () => {
+    expect(isEmptyObject({})).toBe(true);
+  });
+});
