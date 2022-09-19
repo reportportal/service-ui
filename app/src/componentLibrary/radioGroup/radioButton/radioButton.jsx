@@ -67,7 +67,6 @@ RadioButton.defaultProps = {
   variant: 'light',
   option: {},
   value: '',
-  disabled: false,
   onChange: () => {},
   onFocus: () => {},
   onBlur: () => {},
