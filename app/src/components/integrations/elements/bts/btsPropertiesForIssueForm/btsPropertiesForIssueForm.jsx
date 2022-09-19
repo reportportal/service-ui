@@ -455,14 +455,15 @@ export class BtsPropertiesForIssueForm extends Component {
                   customBlockCreator={this.getCustomBLockConfig}
                   customFieldWrapper={IntegrationFormField}
                   defaultOptionValueKey={this.defaultOptionValueKey}
-                  disabled={disabled}
                 >
-                  <div className={cx('show-hint-wrapper')}>
-                    <span className={cx('show-hint-text')}>
-                      {intl.formatMessage(messages.showFieldsHeader)}
-                    </span>
-                    <ShowWithTooltip />
-                  </div>
+                  {disabled && (
+                    <div className={cx('show-hint-wrapper')}>
+                      <span className={cx('show-hint-text')}>
+                        {intl.formatMessage(messages.showFieldsHeader)}
+                      </span>
+                      <ShowWithTooltip />
+                    </div>
+                  )}
                 </DynamicFieldsSection>
               </Fragment>
             )}

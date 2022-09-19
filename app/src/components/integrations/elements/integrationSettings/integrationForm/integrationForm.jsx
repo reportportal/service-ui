@@ -140,7 +140,7 @@ export class IntegrationForm extends Component {
               </p>
             ) : (
               <div className={cx('integration-form-fields')}>
-                {shouldFieldsBeHidden ? null : (
+                {!shouldFieldsBeHidden && (
                   <FieldsComponent
                     initialize={initialize}
                     change={change}

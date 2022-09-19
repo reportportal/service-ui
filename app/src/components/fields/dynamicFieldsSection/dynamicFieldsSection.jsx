@@ -36,7 +36,6 @@ export class DynamicFieldsSection extends Component {
     // default field property to use as value (depends on different sets of fields)
     defaultOptionValueKey: PropTypes.oneOf([VALUE_ID_KEY, VALUE_NAME_KEY]),
     darkView: PropTypes.bool,
-    disabled: PropTypes.bool,
     children: PropTypes.node,
   };
 
@@ -47,7 +46,6 @@ export class DynamicFieldsSection extends Component {
     customFieldWrapper: null,
     defaultOptionValueKey: VALUE_NAME_KEY,
     darkView: false,
-    disabled: false,
     children: null,
   };
 
@@ -86,11 +84,11 @@ export class DynamicFieldsSection extends Component {
   };
 
   render() {
-    const { disabled, children } = this.props;
+    const { children } = this.props;
     return (
       <div className={cx('dynamic-fields-section')}>
         <div className={cx('dynamic-fields-section-block')}>{this.createFields()}</div>
-        {disabled && <div className={cx('hint')}>{children}</div>}
+        {children && <div className={cx('hint')}>{children}</div>}
       </div>
     );
   }
