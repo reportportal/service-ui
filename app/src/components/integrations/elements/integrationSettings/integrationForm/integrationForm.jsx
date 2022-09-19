@@ -131,59 +131,63 @@ export class IntegrationForm extends Component {
 
     return (
       <form className={cx('integration-form')}>
-        <h3 className={cx('block-header')}>{formatMessage(messages.configurationTitle)}</h3>
-        {isConfigurationNotSpecified ? (
-          <p className={cx('configuration-not-specified-info')}>
-            {formatMessage(messages.configurationNotSpecifiedInfo)}
-          </p>
-        ) : (
-          <div className={cx('integration-form-fields')}>
-            {shouldFieldsBeHidden ? null : (
-              <FieldsComponent
-                initialize={initialize}
-                change={change}
-                integrationId={id}
-                initialData={integrationParameters}
-                pluginDetails={integrationType.details}
-                disabled={disabled}
-                updateMetaData={this.updateMetaData}
-                isGlobal={isGlobal}
-                pluginName={pluginName}
-              />
-            )}
-          </div>
-        )}
-        {!blocked && (
-          <div className={cx('controls-block')}>
-            {disabled ? (
-              <Button onClick={this.toggleDisabled} disabled={shouldFieldsBeHidden}>
-                {formatMessage(COMMON_LOCALE_KEYS.EDIT)}
-              </Button>
+        {!shouldFieldsBeHidden && (
+          <>
+            <h3 className={cx('block-header')}>{formatMessage(messages.configurationTitle)}</h3>
+            {isConfigurationNotSpecified ? (
+              <p className={cx('configuration-not-specified-info')}>
+                {formatMessage(messages.configurationNotSpecifiedInfo)}
+              </p>
             ) : (
-              <div className={cx('control-buttons-block')}>
-                <div className={cx('button-container')}>
-                  <Button
-                    onClick={handleSubmit(this.submitIntegration)}
-                    disabled={shouldFieldsBeHidden}
-                  >
-                    {formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
+              <div className={cx('integration-form-fields')}>
+                {!shouldFieldsBeHidden && (
+                  <FieldsComponent
+                    initialize={initialize}
+                    change={change}
+                    integrationId={id}
+                    initialData={integrationParameters}
+                    pluginDetails={integrationType.details}
+                    disabled={disabled}
+                    updateMetaData={this.updateMetaData}
+                    isGlobal={isGlobal}
+                    pluginName={pluginName}
+                  />
+                )}
+              </div>
+            )}
+            {!blocked && (
+              <div className={cx('controls-block')}>
+                {disabled ? (
+                  <Button onClick={this.toggleDisabled} disabled={shouldFieldsBeHidden}>
+                    {formatMessage(COMMON_LOCALE_KEYS.EDIT)}
                   </Button>
-                </div>
+                ) : (
+                  <div className={cx('control-buttons-block')}>
+                    <div className={cx('button-container')}>
+                      <Button
+                        onClick={handleSubmit(this.submitIntegration)}
+                        disabled={shouldFieldsBeHidden}
+                      >
+                        {formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
+                      </Button>
+                    </div>
 
-                {!isEmptyConfiguration && (
-                  <div className={cx('button-container')}>
-                    <Button
-                      variant="ghost"
-                      onClick={this.toggleDisabled}
-                      disabled={shouldFieldsBeHidden}
-                    >
-                      {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
-                    </Button>
+                    {!isEmptyConfiguration && (
+                      <div className={cx('button-container')}>
+                        <Button
+                          variant="ghost"
+                          onClick={this.toggleDisabled}
+                          disabled={shouldFieldsBeHidden}
+                        >
+                          {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
             )}
-          </div>
+          </>
         )}
       </form>
     );
