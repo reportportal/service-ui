@@ -38,7 +38,7 @@ const messages = defineMessages({
   deleteLaunchText: {
     id: 'DeleteLaunchDialog.deleteLaunch',
     defaultMessage:
-      "Are you sure to delete launch '<b>{name} #{number}</b>'? It will no longer exist.",
+      "Are you sure to delete launch ''<b>{name} #{number}</b>''? It will no longer exist.",
   },
   deleteLaunchWarning: {
     id: 'DeleteLaunchDialog.deleteLaunchWarning',

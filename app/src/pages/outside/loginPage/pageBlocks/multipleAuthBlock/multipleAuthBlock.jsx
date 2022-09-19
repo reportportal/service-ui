@@ -42,7 +42,7 @@ const messages = defineMessages({
   },
   loginWith: {
     id: 'MultipleAuthBlock.loginWith',
-    defaultMessage: "you can login with '<b>{providerName}</b>' provider",
+    defaultMessage: "you can login with ''<b>{providerName}</b>'' provider",
   },
   wrongAuthType: {
     id: 'MultipleAuthBlock.wrongAuthType',

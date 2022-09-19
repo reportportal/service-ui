@@ -45,7 +45,7 @@ const messages = defineMessages({
   },
   text: {
     id: 'IgnoreInAAModal.text',
-    defaultMessage: "Are you sure to ignore item '<b>{name}</b>' in Auto-Analysis?",
+    defaultMessage: "Are you sure to ignore item ''<b>{name}</b>'' in Auto-Analysis?",
   },
   textMultiple: {
     id: 'IgnoreInAAModal.textMultiple',

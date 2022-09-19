@@ -42,7 +42,7 @@ const messages = defineMessages({
   deleteWidgetText: {
     id: 'DeleteWidgetModal.deleteWidgetText',
     defaultMessage:
-      "Are you sure you want to delete widget '<b>{name}</b>'? It will no longer exist. This action can't be undone.",
+      "Are you sure you want to delete widget ''<b>{name}</b>''? It will no longer exist. This action can't be undone.",
   },
   deleteOwnWidgetWarning: {
     id: 'DeleteWidgetModal.deleteOwnWidgetWarning',

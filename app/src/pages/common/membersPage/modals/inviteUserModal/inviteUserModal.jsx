@@ -69,7 +69,7 @@ const messages = defineMessages({
   },
   memberWasInvited: {
     id: 'InviteUserModal.memberWasInvited',
-    defaultMessage: "Member '<b>{name}</b>' was assigned to the project",
+    defaultMessage: "Member ''<b>{name}</b>'' was assigned to the project",
   },
   inviteExternalMember: {
     id: 'InviteUserModal.inviteExternalMember',

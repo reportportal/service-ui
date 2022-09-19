@@ -45,7 +45,7 @@ const messages = defineMessages({
   },
   text: {
     id: 'IncludeInAAModal.text',
-    defaultMessage: "Are you sure to include item '<b>{name}</b>' in Auto-Analysis?",
+    defaultMessage: "Are you sure to include item ''<b>{name}</b>'' in Auto-Analysis?",
   },
   textMultiple: {
     id: 'IncludeInAAModal.textMultiple',

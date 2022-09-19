@@ -77,7 +77,7 @@ const messages = defineMessages({
   modalText: {
     id: 'UnassignModal.modalText',
     defaultMessage:
-      "Are you sure you want to unassign user '<b>{user}</b>' from the project '<b>{project}</b>'?",
+      "Are you sure you want to unassign user ''<b>{user}</b>'' from the project ''<b>{project}</b>''?",
   },
 });
 
