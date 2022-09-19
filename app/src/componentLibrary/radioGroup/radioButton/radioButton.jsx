@@ -30,7 +30,7 @@ export const RadioButton = ({ option, value, onChange, onFocus, onBlur, classNam
       })}
       onFocus={onFocus}
       onBlur={onBlur}
-      tabIndex="1"
+      tabIndex="0"
     >
       <input
         type="radio"

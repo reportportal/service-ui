@@ -1,4 +1,4 @@
-## **Radio button list**
+## **Radio button group**
 
 ### Props:
 
@@ -15,4 +15,4 @@
 
 ### Variants:
 
-Radio button list can be used in two variants: **light** for light background and **dark** for dark background.
+Radio button group can be used in two variants: **light** for light background and **dark** for dark background.
