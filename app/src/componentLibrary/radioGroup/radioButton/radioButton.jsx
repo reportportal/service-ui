@@ -19,25 +19,14 @@ import styles from './radioButton.scss';
 
 const cx = classNames.bind(styles);
 
-export const RadioButton = ({
-  option,
-  value,
-  disabled,
-  onChange,
-  onFocus,
-  onBlur,
-  className,
-  variant,
-  mobileDisabled,
-}) => {
+export const RadioButton = ({ option, value, onChange, onFocus, onBlur, className, variant }) => {
   const isChecked = option.value === value;
 
   return (
     // eslint-disable-next-line
     <label
       className={cx(variant, className, 'radio-button', {
-        disabled,
-        'mobile-disabled': mobileDisabled,
+        disabled: option.disabled,
       })}
       onFocus={onFocus}
       onBlur={onBlur}
@@ -46,14 +35,14 @@ export const RadioButton = ({
       <input
         type="radio"
         className={cx('input')}
-        disabled={disabled}
+        disabled={option.disabled}
         onChange={onChange}
         value={option.value}
         checked={isChecked}
       />
       <span
         className={cx(variant, 'toggler', {
-          disabled,
+          disabled: option.disabled,
           checked: isChecked,
         })}
       />
@@ -62,24 +51,25 @@ export const RadioButton = ({
   );
 };
 RadioButton.propTypes = {
-  variant: PropTypes.string,
-  option: PropTypes.string,
-  value: PropTypes.string,
-  disabled: PropTypes.bool,
+  variant: PropTypes.oneOf(['light', 'dark']),
+  option: PropTypes.shape({
+    value: PropTypes.string,
+    label: PropTypes.string,
+    disabled: PropTypes.bool,
+  }),
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]),
   onChange: PropTypes.func,
   onFocus: PropTypes.func,
   onBlur: PropTypes.func,
   className: PropTypes.string,
-  mobileDisabled: PropTypes.bool,
 };
 RadioButton.defaultProps = {
   variant: 'light',
-  option: '',
+  option: {},
   value: '',
   disabled: false,
   onChange: () => {},
   onFocus: () => {},
   onBlur: () => {},
   className: '',
-  mobileDisabled: false,
 };

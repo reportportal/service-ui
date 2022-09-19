@@ -30,9 +30,14 @@ export const RadioGroup = ({ options, value, ...rest }) => (
 );
 RadioGroup.propTypes = {
   variant: PropTypes.string,
-  options: PropTypes.array,
-  value: PropTypes.string,
-  disabled: PropTypes.bool,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.string,
+      label: PropTypes.string,
+      disabled: PropTypes.bool,
+    }),
+  ),
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]),
   onChange: PropTypes.func,
   onFocus: PropTypes.func,
   onBlur: PropTypes.func,
@@ -42,7 +47,6 @@ RadioGroup.defaultProps = {
   variant: 'light',
   options: [],
   value: '',
-  disabled: false,
   onChange: () => {},
   onFocus: () => {},
   onBlur: () => {},

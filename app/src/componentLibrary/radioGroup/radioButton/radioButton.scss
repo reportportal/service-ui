@@ -14,6 +14,21 @@
  * limitations under the License.
  */
 
+@mixin disabled-state {
+  opacity: 0.3;
+}
+
+@mixin toggler {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+}
+
+@mixin toggler-active {
+  width: 8px;
+  height: 8px;
+}
+
 .radio-button {
   display: flex;
   align-items: center;
@@ -28,19 +43,6 @@
     .toggler {
       &::after {
         background-color: $COLOR--topaz-pressed;
-      }
-    }
-  }
-
-  &.mobile-disabled {
-    @media (max-width: $SCREEN_XS_MAX) {
-      .toggler {
-        background-color: $COLOR--white;
-        border-color: $COLOR--gray-91;
-
-        &::after {
-          background-color: $COLOR--topaz-pressed;
-        }
       }
     }
   }
@@ -93,15 +95,12 @@
 
 .light {
   &.toggler {
-    width: 16px;
-    height: 16px;
-    min-width: 16px;
+    @include toggler;
     border-color: $COLOR--e-200;
     background-color: $COLOR--white-two;
 
     &::after {
-      width: 8px;
-      height: 8px;
+      @include toggler-active;
     }
   }
 
@@ -128,26 +127,23 @@
 
   &.disabled {
     .toggler {
-      opacity: 0.3;
+      @include disabled-state;
     }
 
     &::after {
-      opacity: 0.3;
+      @include disabled-state;
     }
   }
 }
 
 .dark {
   &.toggler {
-    width: 16px;
-    height: 16px;
-    min-width: 16px;
+    @include toggler;
     border-color: $COLOR--e-100;
     background: none;
 
     &::after {
-      width: 8px;
-      height: 8px;
+      @include toggler-active;
       background-color: $COLOR--darkmode-topaz-main;
     }
   }
@@ -175,11 +171,11 @@
 
   &.disabled {
     .toggler {
-      opacity: 0.3;
+      @include disabled-state;
     }
 
     &::after {
-      opacity: 0.3;
+      @include disabled-state;
     }
   }
 }
