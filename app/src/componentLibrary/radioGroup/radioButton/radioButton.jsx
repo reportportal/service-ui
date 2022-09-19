@@ -64,7 +64,7 @@ export const RadioButton = ({
 RadioButton.propTypes = {
   variant: PropTypes.string,
   option: PropTypes.string,
-  value: PropTypes.bool,
+  value: PropTypes.string,
   disabled: PropTypes.bool,
   onChange: PropTypes.func,
   onFocus: PropTypes.func,
@@ -75,7 +75,7 @@ RadioButton.propTypes = {
 RadioButton.defaultProps = {
   variant: 'light',
   option: '',
-  value: false,
+  value: '',
   disabled: false,
   onChange: () => {},
   onFocus: () => {},

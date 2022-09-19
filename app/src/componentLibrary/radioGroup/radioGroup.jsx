@@ -31,7 +31,7 @@ export const RadioGroup = ({ options, value, ...rest }) => (
 RadioGroup.propTypes = {
   variant: PropTypes.string,
   options: PropTypes.array,
-  value: PropTypes.bool,
+  value: PropTypes.string,
   disabled: PropTypes.bool,
   onChange: PropTypes.func,
   onFocus: PropTypes.func,
@@ -41,7 +41,7 @@ RadioGroup.propTypes = {
 RadioGroup.defaultProps = {
   variant: 'light',
   options: [],
-  value: false,
+  value: '',
   disabled: false,
   onChange: () => {},
   onFocus: () => {},

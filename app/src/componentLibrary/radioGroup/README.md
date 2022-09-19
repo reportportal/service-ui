@@ -2,7 +2,7 @@
 
 ### Props:
 
-- **value**: _bool_, optional, default = false
+- **value**: _string_, optional, default = ""
 - **options**: _array_, optional, default = []
 - **disabled**: _bool_, optional, default = false
 - **variant**: _sting_, optional, default = "light"
