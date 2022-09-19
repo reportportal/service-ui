@@ -28,7 +28,7 @@ import { DottedPreloader } from 'components/preloaders/dottedPreloader';
 import BugIcon from 'common/img/bug-inline.svg';
 import CommentIcon from 'common/img/comment-inline.svg';
 import { DefectTypeItem } from 'pages/inside/common/defectTypeItem';
-import { projectKeySelector } from 'controllers/project/selectors';
+import { projectKeySelector } from 'controllers/project';
 import { Triangles } from '../triangles';
 import styles from './historyLineItemTooltip.scss';
 

@@ -18,7 +18,11 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
-import { payloadSelector, PROJECT_SETTINGS_TAB_PAGE } from 'controllers/pages';
+import {
+  payloadSelector,
+  PROJECT_SETTINGS_TAB_PAGE,
+  urlProjectKeySelector,
+} from 'controllers/pages';
 import { Tabs } from 'components/main/tabs';
 import classNames from 'classnames/bind';
 import { ANALYSIS } from 'common/constants/settingsTabs';
@@ -28,6 +32,7 @@ import {
   fetchConfigurationAttributesAction,
   normalizeAttributesWithPrefix,
   updateConfigurationAttributesAction,
+  projectOrganizationSlugSelector,
 } from 'controllers/project';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
@@ -38,8 +43,6 @@ import { analyzerExtensionsSelector } from 'controllers/appInfo';
 import { canUpdateSettings } from 'common/utils/permissions';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { projectOrganizationSlugSelector } from 'controllers/project/selectors';
-import { projectPayloadKeySelector } from 'controllers/pages/selectors';
 import { messages } from './messages';
 import { messages as indexSettingsMessages } from './indexSettings/messages';
 import {
@@ -60,7 +63,7 @@ const cx = classNames.bind(styles);
 export const AnalyzerContainer = ({ setHeaderNodes }) => {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-  const projectKey = useSelector(projectPayloadKeySelector);
+  const projectKey = useSelector(urlProjectKeySelector);
   const organizationSlug = useSelector(projectOrganizationSlugSelector);
   const { subTab: activeSubTab } = useSelector(payloadSelector);
   const analyzerConfig = useSelector(analyzerAttributesSelector);

@@ -33,7 +33,6 @@ import {
 } from 'controllers/filter';
 import {
   userIdSelector,
-  activeProjectSelector,
   activeProjectRoleSelector,
   userAccountRoleSelector,
 } from 'controllers/user';
@@ -46,10 +45,11 @@ import {
   userFiltersSelector,
   showFilterOnLaunchesAction,
   hideFilterOnLaunchesAction,
+  projectKeySelector,
+  projectOrganizationSlugSelector,
 } from 'controllers/project';
 import { FILTERS_PAGE, FILTERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { NoResultsForFilter } from 'pages/inside/common/noResultsForFilter';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project/selectors';
 import { NoFiltersBlock } from './noFiltersBlock';
 import { FilterPageToolbar } from './filterPageToolbar';
 import { FilterGrid } from './filterGrid';
@@ -77,7 +77,6 @@ const messages = defineMessages({
   (state) => ({
     userId: userIdSelector(state),
     url: URLS.filters(projectKeySelector(state)),
-    activeProject: activeProjectSelector(state),
     userFilters: userFiltersSelector(state),
     projectRole: activeProjectRoleSelector(state),
     accountRole: userAccountRoleSelector(state),
@@ -115,7 +114,6 @@ export class FiltersPage extends Component {
     onChangePageSize: PropTypes.func,
     userId: PropTypes.string,
     filter: PropTypes.string,
-    activeProject: PropTypes.string,
     onFilterChange: PropTypes.func,
     fetchFiltersAction: PropTypes.func,
     showModalAction: PropTypes.func,
@@ -145,7 +143,6 @@ export class FiltersPage extends Component {
     pageSize: DEFAULT_PAGINATION[SIZE_KEY],
     userId: '',
     filter: '',
-    activeProject: '',
     onFilterChange: () => {},
     onChangePage: () => {},
     onChangePageSize: () => {},
@@ -240,7 +237,6 @@ export class FiltersPage extends Component {
       onChangePageSize,
       filters,
       loading,
-      activeProject,
       organizationSlug,
       projectKey,
       ...rest
@@ -261,7 +257,6 @@ export class FiltersPage extends Component {
             onDelete={this.confirmDelete}
             filters={filters}
             loading={loading}
-            activeProject={activeProject}
             organizationSlug={organizationSlug}
             projectKey={projectKey}
             {...rest}

@@ -22,7 +22,7 @@ import { defineMessages, useIntl } from 'react-intl';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { fetchProjectAction } from 'controllers/project';
+import { fetchProjectAction, projectKeySelector } from 'controllers/project';
 import {
   showNotification,
   showDefaultErrorNotification,
@@ -31,7 +31,6 @@ import {
 import { withModal } from 'components/main/modal';
 import { ModalLayout } from 'componentLibrary/modal';
 import { hideModalAction } from 'controllers/modal';
-import { projectKeySelector } from 'controllers/project/selectors';
 import styles from './generateIndexModal.scss';
 
 const cx = classNames.bind(styles);

@@ -21,7 +21,7 @@ import { injectIntl, defineMessages } from 'react-intl';
 import { change } from 'redux-form';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { userIdSelector, activeProjectSelector } from 'controllers/user/selectors';
+import { userIdSelector } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import AddFilterIcon from 'common/img/add-filter-inline.svg';
 import { fetch, debounce } from 'common/utils';
@@ -36,7 +36,7 @@ import {
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { SearchableFilterList } from 'pages/inside/common/searchableFilterList';
-import { projectKeySelector } from 'controllers/project/selectors';
+import { projectKeySelector } from 'controllers/project';
 import { WIDGET_WIZARD_FORM } from '../../../constants';
 import { LockedActiveFilter } from './lockedActiveFilter';
 import { FilterEdit } from './filterEdit';
@@ -90,7 +90,6 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     userId: userIdSelector(state),
-    activeProject: activeProjectSelector(state),
     filters: filtersSelector(state),
     pagination: filtersPaginationSelector(state),
     loading: loadingSelector(state),
@@ -111,7 +110,6 @@ export class FiltersControl extends Component {
     loading: PropTypes.bool.isRequired,
     error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
     userId: PropTypes.string,
-    activeProject: PropTypes.string,
     value: PropTypes.shape({
       value: PropTypes.string,
       label: PropTypes.string,
@@ -139,7 +137,6 @@ export class FiltersControl extends Component {
     error: '',
     userId: '',
     value: {},
-    activeProject: '',
     loading: false,
     filters: [],
     pagination: {},
@@ -181,7 +178,6 @@ export class FiltersControl extends Component {
   getFormAppearanceComponent = (activeFilter) => {
     const {
       formAppearance: { mode: formAppearanceMode, filter: formAppearanceFilter },
-      activeProject,
       eventsInfo,
       projectKey,
     } = this.props;
@@ -205,7 +201,6 @@ export class FiltersControl extends Component {
               filter={
                 formAppearanceFilter.conditions ? formAppearanceFilter : NEW_FILTER_DEFAULT_CONFIG
               }
-              activeProject={activeProject}
               onChange={this.handleFilterChange}
               onCancel={this.clearFormAppearance}
               onSave={this.handleFilterInsert}

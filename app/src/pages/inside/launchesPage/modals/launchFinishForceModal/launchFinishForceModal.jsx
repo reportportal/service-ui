@@ -27,7 +27,7 @@ import { userIdSelector } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { STOPPED } from 'common/constants/launchStatuses';
-import { projectKeySelector } from 'controllers/project/selectors';
+import { projectKeySelector } from 'controllers/project';
 import styles from './launchFinishForceModal.scss';
 
 const cx = classNames.bind(styles);

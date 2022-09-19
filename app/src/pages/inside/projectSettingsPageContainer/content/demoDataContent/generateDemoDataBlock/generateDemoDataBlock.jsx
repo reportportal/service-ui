@@ -29,7 +29,7 @@ import {
 } from 'controllers/notification';
 import { useTracking } from 'react-tracking';
 import { PROJECT_SETTINGS_DEMO_DATA_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
-import { projectKeySelector } from 'controllers/project/selectors';
+import { projectKeySelector } from 'controllers/project';
 import styles from './generateDemoDataBlock.scss';
 import { LabeledPreloader } from '../../elements';
 

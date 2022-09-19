@@ -30,7 +30,6 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
 import {
-  activeProjectSelector,
   activeProjectRoleSelector,
   userAccountRoleSelector,
   userIdSelector,
@@ -55,7 +54,7 @@ import { ContainerWithTabs } from 'components/main/containerWithTabs';
 import { StackTrace } from 'pages/inside/common/stackTrace';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events/stepPageEvents';
-import { projectKeySelector } from 'controllers/project/selectors';
+import { projectKeySelector } from 'controllers/project';
 import { messages } from './messages';
 import styles from './testItemDetailsModal.scss';
 
@@ -74,7 +73,6 @@ const cx = classNames.bind(styles);
     userAccountRole: userAccountRoleSelector(state),
     userProjectRole: activeProjectRoleSelector(state),
     userId: userIdSelector(state),
-    currentProject: activeProjectSelector(state),
     launch: launchSelector(state),
     projectKey: projectKeySelector(state),
   }),
@@ -102,7 +100,6 @@ export class TestItemDetailsModal extends Component {
     initialize: PropTypes.func.isRequired,
     dirty: PropTypes.bool,
     handleSubmit: PropTypes.func.isRequired,
-    currentProject: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
     showDefaultErrorNotification: PropTypes.func.isRequired,
     tracking: PropTypes.shape({

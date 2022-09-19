@@ -34,9 +34,8 @@ import {
 import { withModal, ModalLayout } from 'components/main/modal';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { defectColorsSelector } from 'controllers/project';
+import { defectColorsSelector, projectKeySelector } from 'controllers/project';
 import { LaunchesComparisonChart } from 'components/widgets/singleLevelWidgets/charts';
-import { projectKeySelector } from 'controllers/project/selectors';
 import styles from './launchCompareModal.scss';
 
 const cx = classNames.bind(styles);

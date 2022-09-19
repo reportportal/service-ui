@@ -28,7 +28,7 @@ import {
 import { withModal } from 'components/main/modal';
 import { hideModalAction } from 'controllers/modal';
 import { ModalLayout } from 'componentLibrary/modal';
-import { projectKeySelector } from 'controllers/project/selectors';
+import { projectKeySelector } from 'controllers/project';
 
 const messages = defineMessages({
   removeIndexHeader: {

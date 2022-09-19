@@ -20,8 +20,13 @@ import {
   userAccountRoleSelector,
   userInfoSelector,
   setActiveProjectAction,
+  activeProjectKeySelector,
 } from 'controllers/user';
-import { fetchProjectAction } from 'controllers/project';
+import {
+  fetchProjectAction,
+  projectKeySelector,
+  projectOrganizationSlugSelector,
+} from 'controllers/project';
 import {
   LOGIN_PAGE,
   REGISTRATION_PAGE,
@@ -82,8 +87,6 @@ import { startSetViewMode } from 'controllers/administrate/projects/actionCreato
 import { SIZE_KEY } from 'controllers/pagination';
 import { setSessionItem, updateStorageItem } from 'common/utils/storageUtils';
 import { fetchClustersAction } from 'controllers/uniqueErrors';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project/selectors';
-import { activeProjectKeySelector } from 'controllers/user/selectors';
 import { setActiveProjectKeyAction } from 'controllers/user/actionCreators';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 

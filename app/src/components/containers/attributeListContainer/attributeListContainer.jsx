@@ -17,7 +17,7 @@
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { EditableAttributeList } from 'componentLibrary/attributeList/editableAttributeList';
-import { projectKeySelector } from 'controllers/project/selectors';
+import { projectKeySelector } from 'controllers/project';
 
 export const AttributeListContainer = ({ value, keyURLCreator, valueURLCreator, ...rest }) => {
   const projectKey = useSelector(projectKeySelector);

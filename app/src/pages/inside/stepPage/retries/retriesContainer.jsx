@@ -20,7 +20,7 @@ import { connect } from 'react-redux';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
 import { ERROR } from 'common/constants/logLevels';
-import { projectKeySelector } from 'controllers/project/selectors';
+import { projectKeySelector } from 'controllers/project';
 import { Retries } from './retries';
 
 @connect((state) => ({

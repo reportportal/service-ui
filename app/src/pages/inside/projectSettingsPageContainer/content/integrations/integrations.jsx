@@ -30,7 +30,7 @@ import {
 } from 'controllers/pages';
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
 import { redirect } from 'redux-first-router';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project/selectors';
+import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
 import { isEmptyObject } from 'common/utils';
 import { IntegrationInfo } from './integrationsList/integrationInfo';
 import { IntegrationsList } from './integrationsList';

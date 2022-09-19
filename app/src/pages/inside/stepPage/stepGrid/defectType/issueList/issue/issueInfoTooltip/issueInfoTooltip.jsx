@@ -26,8 +26,7 @@ import { COMMAND_GET_ISSUE } from 'controllers/plugins/uiExtensions/constants';
 import { getStorageItem, updateStorageItem } from 'common/utils';
 import { ERROR_CANCELED, fetch } from 'common/utils/fetch';
 import { DottedPreloader } from 'components/preloaders/dottedPreloader';
-
-import { projectKeySelector } from 'controllers/project/selectors';
+import { projectKeySelector } from 'controllers/project';
 import styles from './issueInfoTooltip.scss';
 
 const cx = classNames.bind(styles);
