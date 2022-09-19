@@ -20,6 +20,7 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import { reduxForm, formValueSelector } from 'redux-form';
+import DOMPurify from 'dompurify';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { DEFAULT_PROJECT_ROLE, ROLES_MAP } from 'common/constants/projectRoles';
 import { URLS } from 'common/urls';
@@ -194,6 +195,7 @@ export class InviteUserModal extends Component {
       .then(() => {
         this.props.showNotification({
           message: formatMessage(messages.memberWasInvited, {
+            b: (innerData) => DOMPurify.sanitize(`<b>${innerData}</b>`),
             name: userData.user.userLogin,
           }),
           type: NOTIFICATION_TYPES.SUCCESS,

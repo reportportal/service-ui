@@ -125,7 +125,10 @@ export class DeleteWidgetModal extends Component {
         <p className={cx('message')}>
           {Parser(
             DOMPurify.sanitize(
-              intl.formatMessage(messages.deleteWidgetText, { name: widget.name }),
+              intl.formatMessage(messages.deleteWidgetText, {
+                b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
+                name: widget.name,
+              }),
             ),
           )}
         </p>

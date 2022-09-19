@@ -20,6 +20,7 @@ import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
 import track from 'react-tracking';
 import isEqual from 'fast-deep-equal';
+import DOMPurify from 'dompurify';
 import {
   LAUNCHES_PAGE,
   LAUNCHES_PAGE_EVENTS,
@@ -561,7 +562,10 @@ export class LaunchesPage extends Component {
           : intl.formatMessage(messages.deleteModalMultipleHeader),
       mainContent:
         selectedLaunches.length === 1
-          ? intl.formatMessage(messages.deleteModalContent, { name: selectedLaunches[0].name })
+          ? intl.formatMessage(messages.deleteModalContent, {
+              b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
+              name: selectedLaunches[0].name,
+            })
           : intl.formatMessage(messages.deleteModalMultipleContent),
       userId,
       warning,

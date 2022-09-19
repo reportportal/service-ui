@@ -18,6 +18,7 @@ import { Component } from 'react';
 import track from 'react-tracking';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import DOMPurify from 'dompurify';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
@@ -102,7 +103,11 @@ export class LaunchDeleteModal extends Component {
       >
         <p className={cx('message')}>
           {Parser(
-            intl.formatMessage(messages.deleteLaunchText, { name: item.name, number: item.number }),
+            intl.formatMessage(messages.deleteLaunchText, {
+              b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
+              name: item.name,
+              number: item.number,
+            }),
           )}
         </p>
       </ModalLayout>

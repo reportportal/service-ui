@@ -18,6 +18,7 @@ import React, { Component, Fragment } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import DOMPurify from 'dompurify';
 import { Fullscreen } from 'components/containers/fullscreen';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
@@ -192,6 +193,7 @@ export class DashboardItemPage extends Component {
         onConfirm: () => deleteDashboard(dashboard),
         header: formatMessage(messages.deleteModalTitle),
         mainContent: formatMessage(messages.deleteModalConfirmationText, {
+          b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
           name: `'<b>${dashboard.name}</b>'`,
         }),
         warning,

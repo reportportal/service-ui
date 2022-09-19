@@ -18,6 +18,7 @@ import { Fragment, Component } from 'react';
 import track from 'react-tracking';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
+import DOMPurify from 'dompurify';
 import { injectIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
 import { fetch } from 'common/utils';
@@ -109,7 +110,10 @@ export class ProjectRole extends Component {
     })
       .then(() => {
         this.props.showNotification({
-          message: intl.formatMessage(messages.updateMember, { name: userId }),
+          message: intl.formatMessage(messages.updateMember, {
+            b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
+            name: userId,
+          }),
           type: NOTIFICATION_TYPES.SUCCESS,
         });
       })

@@ -17,6 +17,7 @@ import React, { Component } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import DOMPurify from 'dompurify';
 import { injectIntl, defineMessages } from 'react-intl';
 import Link from 'redux-first-router-link';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -122,7 +123,10 @@ export class MultipleAuthBlock extends Component {
       );
     }
 
-    return formatMessage(messages.wrongAuthType, { authType: multipleAuthKey });
+    return formatMessage(messages.wrongAuthType, {
+      b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
+      authType: multipleAuthKey,
+    });
   };
 
   render() {

@@ -20,6 +20,7 @@ import { FILTERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
+import DOMPurify from 'dompurify';
 import { injectIntl, defineMessages } from 'react-intl';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -97,7 +98,12 @@ export class FilterDeleteModal extends Component {
         warningMessage={warningMessage}
       >
         <p className={cx('message')}>
-          {Parser(intl.formatMessage(messages.deleteFilterText, { name: filter.name }))}
+          {Parser(
+            intl.formatMessage(messages.deleteFilterText, {
+              b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
+              name: filter.name,
+            }),
+          )}
         </p>
       </ModalLayout>
     );
