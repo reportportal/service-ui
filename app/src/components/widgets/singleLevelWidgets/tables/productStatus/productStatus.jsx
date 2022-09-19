@@ -28,7 +28,7 @@ import { changeActiveFilterAction } from 'controllers/filter';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { Grid } from 'components/main/grid';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project/selectors';
+import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
 import { STATS_SI, STATS_PB, STATS_TI, STATS_ND, STATS_AB } from '../components/constants';
 import {
   NAME,

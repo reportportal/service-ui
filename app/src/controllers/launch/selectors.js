@@ -28,7 +28,7 @@ import {
   PROJECT_LAUNCHES_PAGE,
 } from 'controllers/pages';
 import { ALL, LATEST } from 'common/constants/reservedFilterIds';
-import { activeProjectKeySelector } from 'controllers/user/selectors';
+import { activeProjectKeySelector } from 'controllers/user';
 import { DEFAULT_SORTING, NAMESPACE } from './constants';
 
 const domainSelector = (state) => state.launches || {};

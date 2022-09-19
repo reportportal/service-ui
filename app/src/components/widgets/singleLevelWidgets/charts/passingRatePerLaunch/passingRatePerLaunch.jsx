@@ -23,7 +23,7 @@ import { ALL } from 'common/constants/reservedFilterIds';
 import { getDefaultTestItemLinkParams } from 'components/widgets/common/utils';
 import { statisticsLinkSelector } from 'controllers/testItem';
 import { STATS_PASSED } from 'common/constants/statistics';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project/selectors';
+import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
 import { PassingRateChart } from '../common/passingRateChart';
 
 const getFilterName = ({ contentParameters, content: { result = {} } = {} } = {}) =>

@@ -28,7 +28,7 @@ import {
   START_IMPORT,
   FINISH_IMPORT,
 } from 'common/constants/actionTypes';
-import { getTestItemPageLink } from './utils';
+import { getProjectKey, getTestItemPageLink } from './utils';
 import styles from './common.scss';
 
 const cx = classNames.bind(styles);
@@ -99,9 +99,8 @@ export class Launch extends Component {
             {` ${formatMessage(messages.launch)}`}
             <Link
               to={getTestItemPageLink(
-                activity.projectName,
+                getProjectKey(activity),
                 activity.loggedObjectId,
-                undefined,
                 activity.organizationSlug,
               )}
               className={cx('link')}
@@ -113,10 +112,7 @@ export class Launch extends Component {
         )}
         {(activity.actionType === START_IMPORT || activity.actionType === FINISH_IMPORT) && (
           <Link
-            to={this.getLaunchesPageLink(
-              activity.projectKey ?? activity.projectName,
-              activity.organizationSlug,
-            )}
+            to={this.getLaunchesPageLink(getProjectKey(activity), activity.organizationSlug)}
             className={cx('link')}
             target="_blank"
           >

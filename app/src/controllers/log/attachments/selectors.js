@@ -16,7 +16,7 @@
 
 import { createSelector } from 'reselect';
 import { attachmentsSelector } from 'controllers/log/selectors';
-import { projectKeySelector } from 'controllers/project/selectors';
+import { projectKeySelector } from 'controllers/project';
 import { createAttachment } from './utils';
 
 export const logsWithAttachmentsSelector = (state) =>

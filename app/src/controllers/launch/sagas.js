@@ -31,7 +31,7 @@ import { isEmptyValue } from 'common/utils/isEmptyValue';
 import { createFilterQuery } from 'components/filterEntities/containers/utils';
 import { formatSortingString, SORTING_ASC, SORTING_DESC, SORTING_KEY } from 'controllers/sorting';
 import { ENTITY_NUMBER } from 'components/filterEntities/constants';
-import { activeProjectKeySelector } from 'controllers/user/selectors';
+import { activeProjectKeySelector } from 'controllers/user';
 import {
   FETCH_LAUNCHES,
   NAMESPACE,

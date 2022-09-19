@@ -22,7 +22,11 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { TEST_ITEMS_TYPE_LIST } from 'controllers/testItem';
-import { userFiltersSelector } from 'controllers/project';
+import {
+  userFiltersSelector,
+  projectKeySelector,
+  projectOrganizationSlugSelector,
+} from 'controllers/project';
 import { TEST_ITEM_PAGE } from 'controllers/pages';
 import {
   getItemNameConfig,
@@ -30,7 +34,6 @@ import {
   getDefaultTestItemLinkParams,
 } from 'components/widgets/common/utils';
 import { ChartContainer } from 'components/widgets/common/c3chart';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project/selectors';
 import { getConfig } from './config/getConfig';
 import { isSmallDonutChartView } from './config/utils';
 import styles from './donutChart.scss';

@@ -25,7 +25,7 @@ import {
   CREATE_INTEGRATION,
   DELETE_INTEGRATION,
 } from 'common/constants/actionTypes';
-import { getProjectSettingTabPageLink } from './utils';
+import { getProjectKey, getProjectSettingTabPageLink } from './utils';
 import styles from './common.scss';
 
 const cx = classNames.bind(styles);
@@ -91,7 +91,7 @@ export class Integration extends Component {
     const linksParams = {
       target: '_blank',
       to: getProjectSettingTabPageLink(
-        activity.projectKey ?? activity.projectName,
+        getProjectKey(activity),
         INTEGRATIONS,
         activity.organizationSlug,
       ),

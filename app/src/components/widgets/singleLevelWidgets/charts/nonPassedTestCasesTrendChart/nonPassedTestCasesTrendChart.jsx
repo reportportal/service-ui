@@ -26,7 +26,7 @@ import {
 import { connect } from 'react-redux';
 import { statisticsLinkSelector } from 'controllers/testItem';
 import { FAILED, SKIPPED, INTERRUPTED } from 'common/constants/testStatuses';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project/selectors';
+import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
 import { getConfig } from './config/getConfig';
 import styles from './nonPassedTestCasesTrendChart.scss';
 

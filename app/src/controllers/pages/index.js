@@ -39,6 +39,7 @@ export {
   currentPathSelector,
   pluginPageSelector,
   pluginRouteSelector,
+  urlProjectKeySelector,
 } from './selectors';
 export { updatePagePropertiesAction, clearPageStateAction } from './actionCreators';
 

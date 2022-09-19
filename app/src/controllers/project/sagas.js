@@ -33,7 +33,7 @@ import {
   activeFilterSelector,
 } from 'controllers/filter';
 
-import { projectPayloadKeySelector } from 'controllers/pages/selectors';
+import { urlProjectKeySelector } from 'controllers/pages';
 import {
   UPDATE_DEFECT_SUBTYPE,
   ADD_DEFECT_SUBTYPE,
@@ -84,7 +84,7 @@ import {
 
 function* updateDefectSubType({ payload: subTypes }) {
   try {
-    const projectKey = yield select(projectPayloadKeySelector);
+    const projectKey = yield select(urlProjectKeySelector);
     const data = {
       ids: subTypes,
     };
@@ -110,7 +110,7 @@ function* watchUpdateDefectSubType() {
 
 function* addDefectSubType({ payload: subType }) {
   try {
-    const projectKey = yield select(projectPayloadKeySelector);
+    const projectKey = yield select(urlProjectKeySelector);
     const response = yield call(fetch, URLS.projectDefectSubType(projectKey), {
       method: 'post',
       data: subType,
@@ -133,7 +133,7 @@ function* watchAddDefectSubType() {
 
 function* deleteDefectSubType({ payload: subType }) {
   try {
-    const projectKey = yield select(projectPayloadKeySelector);
+    const projectKey = yield select(urlProjectKeySelector);
     yield call(fetch, URLS.projectDeleteDefectSubType(projectKey, subType.id), {
       method: 'delete',
     });
@@ -158,7 +158,7 @@ function* updateProjectNotificationsConfig({ payload: notificationsConfig }) {
   try {
     const currentConfig = yield select(projectNotificationsConfigurationSelector);
     const newConfig = { ...currentConfig, ...notificationsConfig };
-    const projectKey = yield select(projectPayloadKeySelector);
+    const projectKey = yield select(urlProjectKeySelector);
 
     yield call(fetch, URLS.projectNotificationConfiguration(projectKey), {
       method: 'put',
@@ -186,7 +186,7 @@ function* watchUpdateProjectNotificationsConfig() {
 function* fetchProjectNotifications() {
   yield put(setProjectNotificationsLoadingAction(true));
   try {
-    const projectKey = yield select(projectPayloadKeySelector);
+    const projectKey = yield select(urlProjectKeySelector);
     const notifications = yield call(fetch, URLS.notification(projectKey));
     yield put(fetchProjectNotificationsSuccessAction(notifications));
   } finally {
@@ -200,7 +200,7 @@ function* watchFetchProjectNotifications() {
 
 function* addProjectNotification({ payload: notification }) {
   try {
-    const projectKey = yield select(projectPayloadKeySelector);
+    const projectKey = yield select(urlProjectKeySelector);
 
     const response = yield call(fetch, URLS.notification(projectKey), {
       method: 'post',
@@ -227,7 +227,7 @@ function* watchAddProjectNotification() {
 function* updateProjectNotification({ payload: notification }) {
   yield put(showScreenLockAction());
   try {
-    const projectKey = yield select(projectPayloadKeySelector);
+    const projectKey = yield select(urlProjectKeySelector);
 
     yield call(fetch, URLS.notification(projectKey), {
       method: 'put',
@@ -255,7 +255,7 @@ function* watchUpdateProjectNotification() {
 function* deleteProjectNotification({ payload: id }) {
   yield put(showScreenLockAction());
   try {
-    const projectKey = yield select(projectPayloadKeySelector);
+    const projectKey = yield select(urlProjectKeySelector);
 
     yield call(fetch, URLS.notificationById(projectKey, id), {
       method: 'delete',
@@ -280,7 +280,7 @@ function* watchDeleteProjectNotification() {
 }
 
 function* updateNotificationState(enabled) {
-  const projectKey = yield select(projectPayloadKeySelector);
+  const projectKey = yield select(urlProjectKeySelector);
   const updatedConfig = {
     configuration: {
       attributes: {
@@ -318,7 +318,7 @@ function* watchUpdateNotificationState() {
 }
 
 function* updatePAState(PAEnabled) {
-  const projectKey = yield select(projectPayloadKeySelector);
+  const projectKey = yield select(urlProjectKeySelector);
   const updatedConfig = {
     configuration: {
       attributes: {
@@ -336,7 +336,7 @@ function* updatePAState(PAEnabled) {
 
 function* addPattern({ payload: pattern }) {
   try {
-    const projectKey = yield select(projectPayloadKeySelector);
+    const projectKey = yield select(urlProjectKeySelector);
     const response = yield call(fetch, URLS.projectAddPattern(projectKey), {
       method: 'post',
       data: pattern,
@@ -363,7 +363,7 @@ function* watchAddPattern() {
 
 function* updatePattern({ payload: pattern }) {
   try {
-    const projectKey = yield select(projectPayloadKeySelector);
+    const projectKey = yield select(urlProjectKeySelector);
     yield call(fetch, URLS.projectUpdatePattern(projectKey, pattern.id), {
       method: 'put',
       data: {
@@ -389,7 +389,7 @@ function* watchUpdatePattern() {
 
 function* deletePattern({ payload: pattern }) {
   try {
-    const projectKey = yield select(projectPayloadKeySelector);
+    const projectKey = yield select(urlProjectKeySelector);
     yield call(fetch, URLS.projectUpdatePattern(projectKey, pattern.id), { method: 'delete' });
     yield put(deletePatternSuccessAction(pattern));
     yield put(

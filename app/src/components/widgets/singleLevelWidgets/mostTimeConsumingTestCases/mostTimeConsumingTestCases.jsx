@@ -22,7 +22,7 @@ import { injectIntl, defineMessages } from 'react-intl';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { TEST_ITEM_PAGE, PROJECT_LOG_PAGE } from 'controllers/pages/constants';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project/selectors';
+import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
 import { MostTimeConsumingTestCasesChart } from './mostTimeConsumingTestCasesChart';
 import { MostTimeConsumingTestCasesTable } from './mostTimeConsumingTestCasesTable';
 import styles from './mostTimeConsumingTestCases.scss';

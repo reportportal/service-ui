@@ -20,7 +20,12 @@ import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import * as d3 from 'd3-selection';
-import { defectTypesSelector, orderedContentFieldsSelector } from 'controllers/project';
+import {
+  defectTypesSelector,
+  orderedContentFieldsSelector,
+  projectKeySelector,
+  projectOrganizationSlugSelector,
+} from 'controllers/project';
 import {
   defectLinkSelector,
   statisticsLinkSelector,
@@ -40,7 +45,6 @@ import {
 import { createTooltipRenderer } from 'components/widgets/common/tooltip';
 import { CHART_OFFSET } from 'components/widgets/common/constants';
 import { getMillisecondsWoTimezone } from 'common/utils/timeDateUtils';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project/selectors';
 import { IssueTypeStatTooltip } from '../common/issueTypeStatTooltip';
 import { isSingleColumnChart, calculateTooltipParams } from './config/utils';
 import { getConfig } from './config/getConfig';

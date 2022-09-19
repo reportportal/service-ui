@@ -25,7 +25,7 @@ import {
   getDefaultTestItemLinkParams,
 } from 'components/widgets/common/utils';
 import { ALL } from 'common/constants/reservedFilterIds';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project/selectors';
+import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
 import { getConfig } from './config/getConfig';
 import styles from './launchesDurationChart.scss';
 

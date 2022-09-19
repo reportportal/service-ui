@@ -29,7 +29,11 @@ import {
   TEST_ITEMS_TYPE_LIST,
   PROVIDER_TYPE_WIDGET,
 } from 'controllers/testItem';
-import { defectTypesSelector } from 'controllers/project';
+import {
+  defectTypesSelector,
+  projectKeySelector,
+  projectOrganizationSlugSelector,
+} from 'controllers/project';
 import { SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
 import { PASSED, FAILED, SKIPPED, INTERRUPTED } from 'common/constants/testStatuses';
 import { formatAttribute } from 'common/utils/attributeUtils';
@@ -37,7 +41,6 @@ import { BEFORE_AFTER_METHOD_TYPES_SEQUENCE } from 'common/constants/methodTypes
 import { STATE_READY, DEFECTS, TOTAL_KEY } from 'components/widgets/common/constants';
 import SearchIcon from 'common/img/search-icon-inline.svg';
 import FiltersIcon from 'common/img/filters-icon-inline.svg';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project/selectors';
 import { getChartData } from './chartjsConfig';
 import { CumulativeChartLegend } from './legend/cumulativeChartLegend';
 import { ActionsPopup } from './actionsPopup';

@@ -19,7 +19,7 @@ import { URLS } from 'common/urls';
 import { SAUCE_LABS } from 'common/constants/pluginNames';
 import { availableIntegrationsByPluginNameSelector } from 'controllers/plugins';
 import { fetchDataAction, createFetchPredicate } from 'controllers/fetch';
-import { projectKeySelector } from 'controllers/project/selectors';
+import { projectKeySelector } from 'controllers/project';
 import {
   EXECUTE_SAUCE_LABS_COMMAND_ACTION,
   BULK_EXECUTE_SAUCE_LABS_COMMAND_ACTION,

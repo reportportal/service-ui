@@ -25,8 +25,8 @@ import { URLS } from 'common/urls';
 import { removeIntegrationAction } from 'controllers/plugins';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { activeProjectKeySelector } from 'controllers/user/selectors';
-import { projectPayloadKeySelector } from 'controllers/pages/selectors';
+import { activeProjectKeySelector } from 'controllers/user';
+import { urlProjectKeySelector } from 'controllers/pages';
 import { PLUGIN_NAME_TITLES } from '../../constants';
 import { INTEGRATION_FORM } from './integrationForm/constants';
 import { ConnectionSection } from './connectionSection';
@@ -45,7 +45,7 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     projectKey: activeProjectKeySelector(state),
-    payloadProjectKey: projectPayloadKeySelector(state),
+    payloadProjectKey: urlProjectKeySelector(state),
   }),
   {
     removeIntegrationAction,

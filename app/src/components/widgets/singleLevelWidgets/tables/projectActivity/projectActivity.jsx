@@ -45,9 +45,8 @@ import {
   MATCHED_PATTERN,
 } from 'common/constants/actionTypes';
 import { AbsRelTime } from 'components/main/absRelTime';
-import { externalSystemSelector } from 'controllers/project';
+import { externalSystemSelector, projectKeySelector } from 'controllers/project';
 import { UserAvatar } from 'pages/inside/common/userAvatar';
-import { projectKeySelector } from 'controllers/project/selectors';
 import { DefaultProjectSettings } from './activities/defaultProjectSettings';
 import { AnalysisProperties } from './activities/analysisProperties';
 import { AnalysisConfigurations } from './activities/analysisConfigurations';
@@ -59,6 +58,7 @@ import { CommonEntity } from './activities/commonEntity';
 import { DefectType } from './activities/defectType';
 import { Notifications } from './activities/notifications';
 import styles from './projectActivity.scss';
+import { getProjectKey } from './activities/utils';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
@@ -304,7 +304,7 @@ export class ProjectActivity extends Component {
                 <UserAvatar
                   className={cx('avatar-wrapper')}
                   userId={activity.user}
-                  projectKey={activity.projectKey ?? activity.projectName}
+                  projectKey={getProjectKey(activity)}
                   alt="avatar"
                 />
                 <div className={cx('activity-wrapper')}>

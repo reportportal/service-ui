@@ -20,7 +20,7 @@ import { NOTIFICATION_TYPES } from 'controllers/notification/constants';
 import { redirect } from 'redux-first-router';
 import { URLS } from 'common/urls';
 import { fetchDataAction, createFetchPredicate } from 'controllers/fetch';
-import { apiTokenStringSelector, userIdSelector } from 'controllers/user';
+import { apiTokenStringSelector, userIdSelector, activeProjectKeySelector } from 'controllers/user';
 import { hideModalAction } from 'controllers/modal';
 import { fetch, updateToken } from 'common/utils/fetch';
 import { setStorageItem } from 'common/utils/storageUtils';
@@ -34,8 +34,8 @@ import {
 import { provideEcGA } from 'components/main/analytics/utils';
 import { formatEcDashboardData } from 'components/main/analytics/events/common/widgetPages/utils';
 import { analyticsEnabledSelector } from 'controllers/appInfo';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project/selectors';
-import { activeProjectKeySelector } from 'controllers/user/selectors';
+import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
+
 import {
   ADD_DASHBOARD,
   CHANGE_VISIBILITY_TYPE,
@@ -80,9 +80,9 @@ function* fetchDashboard() {
   const activeDashboardId = yield select(activeDashboardIdSelector);
   const dashboardItems = yield select(dashboardItemsSelector);
   const isAnalyticsEnabled = yield select(analyticsEnabledSelector);
-  let dashboard;
   const projectKey = yield select(activeProjectKeySelector);
   const organizationSlug = yield select(projectOrganizationSlugSelector);
+  let dashboard;
 
   if (dashboardItems.length === 0) {
     yield call(fetchDashboards, { payload: {} });

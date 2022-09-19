@@ -21,7 +21,7 @@ import Link from 'redux-first-router-link';
 import { FormattedMessage } from 'react-intl';
 import { ANALYSIS } from 'common/constants/settingsTabs';
 import { GENERATE_INDEX } from 'common/constants/actionTypes';
-import { getProjectSettingTabPageLink } from './utils';
+import { getProjectKey, getProjectSettingTabPageLink } from './utils';
 import styles from './common.scss';
 
 const cx = classNames.bind(styles);
@@ -32,7 +32,7 @@ export const AnalysisConfigurations = ({ activity }) => (
     <FormattedMessage id="AnalysisConfigurations.update" defaultMessage="updated" />
     <Link
       to={getProjectSettingTabPageLink(
-        activity.projectKey ?? activity.projectName,
+        getProjectKey(activity),
         ANALYSIS,
         activity.organizationSlug,
       )}

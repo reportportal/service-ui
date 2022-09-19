@@ -22,7 +22,7 @@ import Link from 'redux-first-router-link';
 import { URLS } from 'common/urls';
 import { fetch, arrayDiffer } from 'common/utils';
 import { UNLINK_ISSUE, LINK_ISSUE, POST_ISSUE } from 'common/constants/actionTypes';
-import { getTestItemPageLink } from './utils';
+import { getProjectKey, getTestItemPageLink } from './utils';
 import styles from './common.scss';
 
 const cx = classNames.bind(styles);
@@ -64,15 +64,9 @@ export class TestItem extends Component {
   };
 
   componentDidMount() {
-    fetch(
-      URLS.testItem(
-        this.props.activity.projectName ?? this.props.activity.projectKey,
-        this.props.activity.loggedObjectId,
-      ),
-      {
-        method: 'get',
-      },
-    ).then((response) => {
+    fetch(URLS.testItem(getProjectKey(this.props.activity), this.props.activity.loggedObjectId), {
+      method: 'get',
+    }).then((response) => {
       this.setState({ testItem: response });
     });
   }
@@ -136,7 +130,7 @@ export class TestItem extends Component {
           : intl.formatMessage(messages.toItem)}
         <Link
           to={getTestItemPageLink(
-            activity.projectKey ?? activity.projectName,
+            getProjectKey(activity),
             pathToTestItem,
             this.state.testItem && this.state.testItem.type,
             activity.organizationSlug,

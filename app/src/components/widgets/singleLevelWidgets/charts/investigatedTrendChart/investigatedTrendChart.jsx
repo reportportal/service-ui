@@ -28,7 +28,6 @@ import {
 } from 'common/constants/defectTypes';
 import { defectLinkSelector, statisticsLinkSelector } from 'controllers/testItem';
 import { createFilterAction } from 'controllers/filter';
-import { defectTypesSelector } from 'controllers/project';
 import {
   getUpdatedFilterWithTime,
   getChartDefaultProps,
@@ -37,7 +36,11 @@ import {
 import * as STATUSES from 'common/constants/testStatuses';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { ChartContainer } from 'components/widgets/common/c3chart';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project/selectors';
+import {
+  projectKeySelector,
+  projectOrganizationSlugSelector,
+  defectTypesSelector,
+} from 'controllers/project';
 import { getConfig as getStatusPageModeConfig } from '../common/statusPageChartConfig';
 import { selectConfigFunction } from './config';
 import styles from './investigatedTrendChart.scss';
@@ -62,7 +65,6 @@ export class InvestigatedTrendChart extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     navigate: PropTypes.func.isRequired,
-
     widget: PropTypes.object.isRequired,
     defectTypes: PropTypes.object.isRequired,
     getDefectLink: PropTypes.func.isRequired,

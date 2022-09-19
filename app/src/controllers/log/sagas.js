@@ -27,7 +27,7 @@ import { debugModeSelector } from 'controllers/launch';
 import { createFetchPredicate, fetchDataAction } from 'controllers/fetch';
 import { fetch, isEmptyObject } from 'common/utils';
 import { HISTORY_LINE_DEFAULT_VALUE, FETCH_HISTORY_ITEMS_WITH_LOADING } from 'controllers/log';
-import { activeProjectKeySelector } from 'controllers/user/selectors';
+import { activeProjectKeySelector } from 'controllers/user';
 import { collectLogPayload } from './sagaUtils';
 import {
   ACTIVITY_NAMESPACE,

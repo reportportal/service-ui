@@ -2,7 +2,7 @@ import { select, call, all, put } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
 import { PUBLIC_PLUGINS, PUBLIC_PLUGIN_ACCESS_TYPE } from 'controllers/plugins/constants';
-import { activeProjectKeySelector } from 'controllers/user/selectors';
+import { activeProjectKeySelector } from 'controllers/user';
 import { COMMAND_GET_FILE, METADATA_FILE_KEY, MAIN_FILE_KEY } from './constants';
 import { pluginsSelector, globalIntegrationsSelector, publicPluginsSelector } from '../selectors';
 import { filterIntegrationsByName, isPluginSupportsCommonCommand } from '../utils';

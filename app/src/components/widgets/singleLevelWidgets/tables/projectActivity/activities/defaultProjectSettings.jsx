@@ -22,6 +22,7 @@ import Link from 'redux-first-router-link';
 import { secondsToDays } from 'common/utils';
 import { PROJECT_SETTINGS_PAGE } from 'controllers/pages';
 import styles from './common.scss';
+import { getProjectKey } from './utils';
 
 const cx = classNames.bind(styles);
 
@@ -94,10 +95,7 @@ export class DefaultProjectSettings extends Component {
         <span className={cx('user-name')}>{activity.user}</span>
         <FormattedMessage id="ProjectActivity.updateProject" defaultMessage="updated" />
         <Link
-          to={this.getProjectSettingsLink(
-            activity.projectKey ?? activity.projectName,
-            activity.organizationSlug,
-          )}
+          to={this.getProjectSettingsLink(getProjectKey(activity), activity.organizationSlug)}
           className={cx('link')}
           target="_blank"
         >

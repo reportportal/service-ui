@@ -21,13 +21,14 @@ import { instanceIdSelector, apiBuildVersionSelector } from 'controllers/appInfo
 import track from 'react-tracking';
 import ReactGA from 'react-ga';
 import GA4 from 'react-ga4';
+
+import { omit } from 'common/utils';
 import { idSelector, isAdminSelector } from 'controllers/user/selectors';
 import {
   autoAnalysisEnabledSelector,
   patternAnalysisEnabledSelector,
   projectInfoIdSelector,
 } from 'controllers/project/selectors';
-import { omit } from 'common/utils';
 import { normalizeDimensionValue } from './utils';
 
 const PAGE_VIEW = 'pageview';

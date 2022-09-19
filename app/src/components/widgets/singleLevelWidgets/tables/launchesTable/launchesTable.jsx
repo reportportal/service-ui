@@ -51,7 +51,7 @@ import { formatStatus } from 'common/utils/localizationUtils';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { getItemNameConfig } from 'components/widgets/common/utils';
 import { formatAttribute } from 'common/utils';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project/selectors';
+import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
 import { defaultDefectsMessages, defaultStatisticsMessages } from '../components/messages';
 import { getStatisticsStatuses, groupFieldsWithDefectTypes } from '../components/utils';
 import {

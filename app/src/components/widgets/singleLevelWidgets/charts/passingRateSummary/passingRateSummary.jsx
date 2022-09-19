@@ -22,7 +22,7 @@ import { PASSED, FAILED, INTERRUPTED, SKIPPED } from 'common/constants/testStatu
 import { statisticsLinkSelector, TEST_ITEMS_TYPE_LIST } from 'controllers/testItem';
 import { getDefaultTestItemLinkParams } from 'components/widgets/common/utils';
 import { messages } from 'components/widgets/common/messages';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project/selectors';
+import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
 import { PassingRateChart } from '../common/passingRateChart';
 
 @connect(

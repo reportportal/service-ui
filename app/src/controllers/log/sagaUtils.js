@@ -15,14 +15,13 @@
  */
 
 import { select } from 'redux-saga/effects';
-import { activeProjectSelector, userIdSelector } from 'controllers/user';
+import { userIdSelector } from 'controllers/user';
 import { activeRetryIdSelector, querySelector } from 'controllers/log/selectors';
 import { LOG_LEVEL_FILTER_KEY, NAMESPACE } from 'controllers/log/constants';
 import { getLogLevel } from 'controllers/log/storageUtils';
-import { projectKeySelector } from 'controllers/project/selectors';
+import { projectKeySelector } from 'controllers/project';
 
 export function* collectLogPayload() {
-  const activeProject = yield select(activeProjectSelector);
   const projectKey = yield select(projectKeySelector);
   const userId = yield select(userIdSelector);
   const query = yield select(querySelector, NAMESPACE);
@@ -30,7 +29,6 @@ export function* collectLogPayload() {
   const activeLogItemId = yield select(activeRetryIdSelector);
 
   return {
-    activeProject,
     projectKey,
     userId,
     filterLevel,

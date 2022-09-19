@@ -34,8 +34,8 @@ import {
   pagePropertiesSelector,
 } from 'controllers/pages';
 import { isOldHistorySelector } from 'controllers/appInfo';
-import { projectKeySelector } from 'controllers/project/selectors';
-import { activeProjectKeySelector } from 'controllers/user/selectors';
+import { projectKeySelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 import {
   fetchItemsHistoryAction,
   resetHistoryAction,

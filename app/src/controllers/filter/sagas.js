@@ -30,12 +30,13 @@ import {
   updateProjectFilterPreferencesAction,
   fetchProjectPreferencesAction,
   FETCH_PROJECT_PREFERENCES_SUCCESS,
+  projectKeySelector,
+  projectOrganizationSlugSelector,
 } from 'controllers/project';
 import { launchDistinctSelector } from 'controllers/launch';
 import { PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
 import { omit } from 'common/utils/omit';
 import { NEW_FILTER_PREFIX } from 'common/constants/reservedFilterIds';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project/selectors';
 import {
   NAMESPACE,
   FETCH_FILTERS,

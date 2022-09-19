@@ -44,7 +44,7 @@ import {
   getBreadcrumbs,
   getNewActiveBreadcrumbs,
 } from 'components/widgets/multiLevelWidgets/common/utils';
-import { activeProjectKeySelector } from 'controllers/user/selectors';
+import { activeProjectKeySelector } from 'controllers/user';
 import { MAX_PASSING_RATE_VALUE } from './constants';
 import { ComponentHealthCheckLegend } from './legend/componentHealthCheckLegend';
 import { GroupsSection } from './groupsSection';

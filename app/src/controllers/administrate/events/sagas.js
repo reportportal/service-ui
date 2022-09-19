@@ -17,7 +17,7 @@
 import { takeEvery, all, put, select } from 'redux-saga/effects';
 import { fetchDataAction } from 'controllers/fetch';
 import { URLS } from 'common/urls';
-import { activeProjectKeySelector } from 'controllers/user/selectors';
+import { activeProjectKeySelector } from 'controllers/user';
 import { NAMESPACE, FETCH_EVENTS } from './constants';
 import { querySelector } from './selectors';
 

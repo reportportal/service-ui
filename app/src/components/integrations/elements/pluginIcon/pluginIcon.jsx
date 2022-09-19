@@ -24,7 +24,7 @@ import { filterIntegrationsByName, isPluginSupportsCommonCommand } from 'control
 import { PLUGIN_DEFAULT_IMAGE, PLUGIN_IMAGES_MAP } from 'components/integrations/constants';
 import { Image } from 'components/main/image';
 import { PUBLIC_PLUGIN_ACCESS_TYPE } from 'controllers/plugins/constants';
-import { activeProjectKeySelector } from 'controllers/user/selectors';
+import { activeProjectKeySelector } from 'controllers/user';
 
 export const PluginIcon = ({ pluginData, className, ...rest }) => {
   const { details, name, enabled } = pluginData;

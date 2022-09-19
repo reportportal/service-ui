@@ -24,7 +24,7 @@ export const getProjectSettingTabPageLink = (projectKey, settingsTab, organizati
   payload: { projectKey, settingsTab, organizationSlug },
 });
 
-export const getTestItemPageLink = (projectKey, testItemIds, itemType, organizationSlug) => ({
+export const getTestItemPageLink = (projectKey, testItemIds, organizationSlug, itemType) => ({
   type: getItemLevel(itemType) === LEVEL_STEP ? PROJECT_LOG_PAGE : TEST_ITEM_PAGE,
   payload: {
     projectKey,
@@ -33,3 +33,5 @@ export const getTestItemPageLink = (projectKey, testItemIds, itemType, organizat
     organizationSlug,
   },
 });
+
+export const getProjectKey = ({ projectKey, projectName }) => projectKey ?? projectName;

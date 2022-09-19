@@ -140,4 +140,4 @@ export const prevTestItemSelector = ({ location }) => {
   return parseInt(prevPath[currentPath.length], 10);
 };
 
-export const projectPayloadKeySelector = (state) => payloadSelector(state).projectKey;
+export const urlProjectKeySelector = (state) => payloadSelector(state).projectKey;

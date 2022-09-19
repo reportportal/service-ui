@@ -30,8 +30,8 @@ import { DETAILED_LOG_VIEW } from 'controllers/log/constants';
 import { downloadFile } from 'common/utils/downloadFile';
 import { JSON as JSON_TYPE } from 'common/constants/fileTypes';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
-import { projectKeySelector } from 'controllers/project/selectors';
-import { activeProjectKeySelector } from 'controllers/user/selectors';
+import { projectKeySelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 import {
   ATTACHMENT_CODE_MODAL_ID,
   ATTACHMENT_HAR_FILE_MODAL_ID,

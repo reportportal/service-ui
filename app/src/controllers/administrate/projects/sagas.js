@@ -31,7 +31,7 @@ import { fetch, getStorageItem, setStorageItem } from 'common/utils';
 import { PROJECT_PAGE } from 'controllers/pages';
 import { confirmSaga, hideModalAction } from 'controllers/modal';
 import { PROJECT_MANAGER } from 'common/constants/projectRoles';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project/selectors';
+import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
 import {
   NAMESPACE,
   FETCH_PROJECTS,

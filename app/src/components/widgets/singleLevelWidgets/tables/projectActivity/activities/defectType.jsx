@@ -21,7 +21,7 @@ import classNames from 'classnames/bind';
 import Link from 'redux-first-router-link';
 import { DEFECT } from 'common/constants/settingsTabs';
 import { DELETE_DEFECT, UPDATE_DEFECT, CREATE_DEFECT } from 'common/constants/actionTypes';
-import { getProjectSettingTabPageLink } from './utils';
+import { getProjectKey, getProjectSettingTabPageLink } from './utils';
 import styles from './common.scss';
 
 const cx = classNames.bind(styles);
@@ -66,7 +66,7 @@ export class DefectType extends Component {
         {messages[activity.actionType] && intl.formatMessage(messages[activity.actionType])}
         <Link
           to={getProjectSettingTabPageLink(
-            activity.projectKey ?? activity.projectName,
+            getProjectKey(activity),
             DEFECT,
             activity.organizationSlug,
           )}

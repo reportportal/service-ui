@@ -44,8 +44,13 @@ import {
   FETCH_USER_SUCCESS,
   fetchUserAction,
   userIdSelector,
+  activeProjectKeySelector,
 } from 'controllers/user';
-import { FETCH_PROJECT_SUCCESS, fetchProjectAction } from 'controllers/project';
+import {
+  FETCH_PROJECT_SUCCESS,
+  fetchProjectAction,
+  projectOrganizationSlugSelector,
+} from 'controllers/project';
 import {
   fetchPluginsAction,
   fetchGlobalIntegrationsAction,
@@ -54,9 +59,8 @@ import {
 import { redirect, pathToAction } from 'redux-first-router';
 import qs, { stringify } from 'qs';
 import routesMap from 'routes/routesMap';
-import { projectOrganizationSlugSelector } from 'controllers/project/selectors';
 import { SET_ACTIVE_PROJECT_KEY } from 'controllers/user/constants';
-import { activeProjectKeySelector } from 'controllers/user/selectors';
+
 import {
   authSuccessAction,
   resetTokenAction,

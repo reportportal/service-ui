@@ -25,7 +25,7 @@ import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { NoDataAvailable } from 'components/widgets';
 import { getDefaultTestItemLinkParams } from 'components/widgets/common/utils';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project/selectors';
+import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
 import { PatternGrid } from './patternGrid';
 import styles from './mostPopularPatterns.scss';
 

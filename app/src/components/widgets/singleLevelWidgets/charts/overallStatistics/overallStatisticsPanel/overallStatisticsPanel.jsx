@@ -17,14 +17,17 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
-import { orderedDefectFieldsSelector } from 'controllers/project';
+import {
+  orderedDefectFieldsSelector,
+  projectKeySelector,
+  projectOrganizationSlugSelector,
+} from 'controllers/project';
 import {
   defectLinkSelector,
   statisticsLinkSelector,
   TEST_ITEMS_TYPE_LIST,
 } from 'controllers/testItem';
 import { getDefaultTestItemLinkParams } from 'components/widgets/common/utils';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project/selectors';
 import { TotalStatistics } from './totalStatistics';
 import { OverallDefects } from './overallDefects';
 import styles from './overallStatisticsPanel.scss';
