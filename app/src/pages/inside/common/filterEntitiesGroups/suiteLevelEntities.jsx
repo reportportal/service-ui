@@ -19,7 +19,6 @@ import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
 import { URLS } from 'common/urls';
-import { activeProjectSelector } from 'controllers/user';
 import { commonValidators } from 'common/utils/validation';
 import {
   STATS_TOTAL,
@@ -46,11 +45,10 @@ import {
   CONDITION_EQ,
   ENTITY_ATTRIBUTE,
 } from 'components/filterEntities/constants';
-import { defectTypesSelector } from 'controllers/project';
+import { defectTypesSelector, projectKeySelector } from 'controllers/project';
 import { launchIdSelector } from 'controllers/pages';
 import { pageEventsMap } from 'components/main/analytics';
 import { levelSelector } from 'controllers/testItem';
-import { projectKeySelector } from 'controllers/project/selectors';
 
 const messages = defineMessages({
   NameTitle: {
@@ -148,7 +146,6 @@ const DEFECT_ENTITY_ID_BASE = 'statistics$defects$';
 @injectIntl
 @connect((state) => ({
   defectTypes: defectTypesSelector(state),
-  projectId: activeProjectSelector(state),
   launchId: launchIdSelector(state),
   level: levelSelector(state),
   projectKey: projectKeySelector(state),
@@ -159,7 +156,6 @@ export class SuiteLevelEntities extends Component {
     defectTypes: PropTypes.object.isRequired,
     filterValues: PropTypes.object,
     render: PropTypes.func.isRequired,
-    projectId: PropTypes.string.isRequired,
     launchId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     visibleFilters: PropTypes.array,
     level: PropTypes.string,
@@ -172,7 +168,7 @@ export class SuiteLevelEntities extends Component {
   };
 
   getStaticEntities = () => {
-    const { intl, projectId, launchId, visibleFilters, projectKey } = this.props;
+    const { intl, launchId, visibleFilters, projectKey } = this.props;
 
     const getTestItemAttributeValuesSearch = (projectKeyValue, key) => {
       return URLS.testItemAttributeValuesSearch(projectKeyValue, launchId, key);
@@ -237,7 +233,6 @@ export class SuiteLevelEntities extends Component {
         active: visibleFilters.includes(ENTITY_ATTRIBUTE),
         removable: true,
         customProps: {
-          projectId,
           projectKey,
           keyURLCreator: getTestItemAttributeKeysSearch,
           valueURLCreator: getTestItemAttributeValuesSearch,

@@ -21,7 +21,7 @@ import { connect } from 'react-redux';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { URLS } from 'common/urls';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
-import { projectKeySelector } from 'controllers/project/selectors';
+import { projectKeySelector } from 'controllers/project';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import { TogglerControl, TagsControl } from './controls';
 

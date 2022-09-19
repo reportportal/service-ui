@@ -27,7 +27,7 @@ import {
 import { dashboardItemsSelector, dashboardItemPropTypes } from 'controllers/dashboard';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { NavLink } from 'components/main/navLink';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project/selectors';
+import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
 import { AddDashboardButton } from './addDashboardButton';
 import styles from './dashboardPageHeader.scss';
 

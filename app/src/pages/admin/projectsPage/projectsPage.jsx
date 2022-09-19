@@ -22,7 +22,12 @@ import classNames from 'classnames/bind';
 import track from 'react-tracking';
 import { ADMIN_PROJECTS_PAGE_EVENTS, ADMIN_PROJECTS_PAGE } from 'components/main/analytics/events';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
-import { PROJECTS_PAGE, PROJECT_DETAILS_PAGE, projectSectionSelector } from 'controllers/pages';
+import {
+  PROJECTS_PAGE,
+  PROJECT_DETAILS_PAGE,
+  projectSectionSelector,
+  urlProjectKeySelector,
+} from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
 import { SETTINGS, MEMBERS, EVENTS } from 'common/constants/projectSections';
 import { GhostButton } from 'components/buttons/ghostButton';
@@ -35,8 +40,7 @@ import {
   addProjectAction,
   navigateToProjectSectionAction,
 } from 'controllers/administrate/projects';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project/selectors';
-import { projectPayloadKeySelector } from 'controllers/pages/selectors';
+import { projectOrganizationSlugSelector } from 'controllers/project';
 import { ProjectStatusPage } from '../projectStatusPage';
 import { ProjectEventsPage } from '../projectEventsPage';
 import { Projects } from './projects';
@@ -63,10 +67,9 @@ const HEADER_BUTTONS = [
 
 @connect(
   (state) => ({
-    payloadKey: projectPayloadKeySelector(state),
+    projectKey: urlProjectKeySelector(state),
     section: projectSectionSelector(state),
     organizationSlug: projectOrganizationSlugSelector(state),
-    projectKey: projectKeySelector(state),
   }),
   {
     addProject: addProjectAction,
@@ -89,12 +92,10 @@ export class ProjectsPage extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    payloadKey: PropTypes.string,
   };
 
   static defaultProps = {
     section: undefined,
-    payloadKey: '',
   };
 
   onHeaderButtonClick = (section) => () => {
@@ -105,7 +106,7 @@ export class ProjectsPage extends Component {
     this.props.navigateToSection(
       {
         organizationSlug: this.props.organizationSlug,
-        projectKey: this.props.payloadKey,
+        projectKey: this.props.projectKey,
       },
       section,
     );
@@ -114,7 +115,6 @@ export class ProjectsPage extends Component {
   getBreadcrumbs = () => {
     const {
       intl: { formatMessage },
-      payloadKey,
       section,
       organizationSlug,
       projectKey,
@@ -129,9 +129,9 @@ export class ProjectsPage extends Component {
       },
     ];
 
-    if (payloadKey) {
+    if (projectKey) {
       breadcrumbs.push({
-        title: `${payloadKey}`,
+        title: `${projectKey}`,
         link: {
           type: PROJECT_DETAILS_PAGE,
           payload: { projectKey, projectSection: null, organizationSlug },
@@ -166,11 +166,11 @@ export class ProjectsPage extends Component {
   renderHeaderButtons = () => {
     const {
       intl: { formatMessage },
-      payloadKey,
+      projectKey,
       section,
     } = this.props;
 
-    if (!payloadKey) {
+    if (!projectKey) {
       return (
         <div className={cx('mobile-hide')}>
           <GhostButton icon={AddProjectIcon} onClick={this.showAddProjectModal}>
@@ -198,9 +198,9 @@ export class ProjectsPage extends Component {
   };
 
   renderSection = () => {
-    const { payloadKey, section, organizationSlug } = this.props;
+    const { projectKey, section, organizationSlug } = this.props;
 
-    if (!payloadKey) {
+    if (!projectKey) {
       return <Projects />;
     }
 
@@ -208,7 +208,7 @@ export class ProjectsPage extends Component {
       case SETTINGS:
         return (
           <AdminProjectSettingsPageContainer
-            payloadKey={payloadKey}
+            projectKey={projectKey}
             organizationSlug={organizationSlug}
           />
         );
@@ -217,7 +217,7 @@ export class ProjectsPage extends Component {
       case EVENTS:
         return <ProjectEventsPage />;
       default:
-        return <ProjectStatusPage projectKey={payloadKey} />;
+        return <ProjectStatusPage projectKey={projectKey} />;
     }
   };
 

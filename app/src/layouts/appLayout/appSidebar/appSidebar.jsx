@@ -42,7 +42,7 @@ import {
 import { uiExtensionSidebarComponentsSelector } from 'controllers/plugins';
 import { Sidebar } from 'layouts/common/sidebar';
 import FiltersIcon from 'common/img/filters-icon-inline.svg';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project/selectors';
+import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
 import DashboardIcon from './img/dashboard-icon-inline.svg';
 import LaunchesIcon from './img/launches-icon-inline.svg';
 import DebugIcon from './img/debug-icon-inline.svg';
@@ -57,7 +57,7 @@ import { ProjectSelector } from '../../common/projectSelector';
   assignedProjects: assignedProjectsSelector(state),
   projectRole: activeProjectRoleSelector(state),
   accountRole: userAccountRoleSelector(state),
-  extensions: uiExtensionSidebarComponentsSelector(state),
+  extensionComponents: uiExtensionSidebarComponentsSelector(state),
   organizationSlug: projectOrganizationSlugSelector(state),
   projectKey: projectKeySelector(state),
 }))
@@ -188,18 +188,12 @@ export class AppSidebar extends Component {
   ];
 
   render() {
-    const { assignedProjects, activeProject, organizationSlug } = this.props;
+    const { assignedProjects, activeProject } = this.props;
     const topSidebarItems = this.createTopSidebarItems();
     const bottomSidebarItems = this.createBottomSidebarItems();
     const projects = Object.keys(assignedProjects).sort();
 
-    const mainBlock = (
-      <ProjectSelector
-        projects={projects}
-        activeProject={activeProject}
-        organizationSlug={organizationSlug}
-      />
-    );
+    const mainBlock = <ProjectSelector projects={projects} activeProject={activeProject} />;
 
     return (
       <Sidebar

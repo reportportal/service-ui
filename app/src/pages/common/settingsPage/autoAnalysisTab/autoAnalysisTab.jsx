@@ -32,9 +32,9 @@ import {
   normalizeAttributesWithPrefix,
   analyzerAttributesSelector,
   ANALYZER_ATTRIBUTE_PREFIX,
+  projectKeySelector,
 } from 'controllers/project';
 import { analyzerExtensionsSelector } from 'controllers/appInfo/selectors';
-import { projectKeySelector } from 'controllers/project/selectors';
 import { AnalysisForm } from './analysisForm/analysisForm';
 import { IndexActionsBlock } from './indexActionsBlock';
 import { StrategyBlock } from './analysisForm/strategyBlock';

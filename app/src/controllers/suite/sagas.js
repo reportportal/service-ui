@@ -18,7 +18,7 @@ import { takeEvery, all, put, select } from 'redux-saga/effects';
 import { fetchDataAction } from 'controllers/fetch';
 import { launchIdSelector } from 'controllers/pages';
 import { URLS } from 'common/urls';
-import { activeProjectKeySelector } from 'controllers/user/selectors';
+import { activeProjectKeySelector } from 'controllers/user';
 import { FETCH_SUITES, NAMESPACE } from './constants';
 
 function* getSuites({ payload }) {

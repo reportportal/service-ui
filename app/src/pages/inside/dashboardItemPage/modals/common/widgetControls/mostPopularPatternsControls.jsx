@@ -25,7 +25,7 @@ import { ModalField } from 'components/main/modal';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { bindMessageToValidator, commonValidators, validate } from 'common/utils/validation';
 import { FIELD_LABEL_WIDTH } from 'pages/inside/dashboardItemPage/modals/common/widgetControls/controls/constants';
-import { projectKeySelector } from 'controllers/project/selectors';
+import { projectKeySelector } from 'controllers/project';
 import { FiltersControl, InputControl, TogglerControl } from './controls';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import { ITEMS_INPUT_WIDTH } from './constants';

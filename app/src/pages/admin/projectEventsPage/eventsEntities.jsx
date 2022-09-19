@@ -97,7 +97,7 @@ import {
   actionMessages,
   objectTypesMessages,
 } from 'common/constants/localization/eventsLocalization';
-import { projectKeySelector } from 'controllers/project/selectors';
+import { projectKeySelector } from 'controllers/project';
 
 const messages = defineMessages({
   timeCol: { id: 'EventsGrid.timeCol', defaultMessage: 'Time' },

@@ -31,7 +31,6 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import {
-  activeProjectSelector,
   activeProjectRoleSelector,
   userAccountRoleSelector,
   userIdSelector,
@@ -47,7 +46,7 @@ import { canEditLaunch } from 'common/utils/permissions';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { TestParameters } from 'pages/inside/common/testParameters';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { projectKeySelector } from 'controllers/project/selectors';
+import { projectKeySelector } from 'controllers/project';
 import styles from './editItemModal.scss';
 
 const cx = classNames.bind(styles);
@@ -124,7 +123,6 @@ const messages = defineMessages({
 })
 @connect(
   (state) => ({
-    currentProject: activeProjectSelector(state),
     userAccountRole: userAccountRoleSelector(state),
     userProjectRole: activeProjectRoleSelector(state),
     userId: userIdSelector(state),
@@ -150,7 +148,6 @@ export class EditItemModal extends Component {
     initialize: PropTypes.func.isRequired,
     dirty: PropTypes.bool.isRequired,
     handleSubmit: PropTypes.func.isRequired,
-    currentProject: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,

@@ -30,13 +30,13 @@ const newOptionCreator = (inputValue) => ({
 });
 const getURI = (isAdmin, projectKey) => (input) =>
   isAdmin ? URLS.searchUsers(input) : URLS.projectUserSearchUser(projectKey)(input);
-const makeOptions = (projectId, isAdmin, projectKey) => ({ content: options }) =>
+const makeOptions = (isAdmin, projectKey) => ({ content: options }) =>
   options.map((option) => ({
     userName: option.fullName || '',
     userLogin: isAdmin ? option.userId : option.login,
     email: option.email || '',
-    disabled: isAdmin ? !!option.assignedProjects[projectId] : false,
-    isAssigned: isAdmin ? !!option.assignedProjects[projectId] : false,
+    disabled: isAdmin ? !!option.assignedProjects[projectKey] : false,
+    isAssigned: isAdmin ? !!option.assignedProjects[projectKey] : false,
     userAvatar: URLS.dataUserPhoto(projectKey, isAdmin ? option.userId : option.login, true),
     assignedProjects: option.assignedProjects || {},
   }));
@@ -57,7 +57,6 @@ const renderOption = (option, index, isNew, getItemProps) =>
 export const InputUserSearch = ({
   isAdmin,
   onChange,
-  projectId,
   value,
   error,
   touched,
@@ -70,7 +69,7 @@ export const InputUserSearch = ({
     error={error}
     touched={touched}
     isValidNewOption={isValidNewOption}
-    makeOptions={makeOptions(projectId, isAdmin, projectKey)}
+    makeOptions={makeOptions(isAdmin, projectKey)}
     createNewOption={newOptionCreator}
     value={value}
     parseValueToString={parseValueToString}
@@ -84,7 +83,6 @@ export const InputUserSearch = ({
 
 InputUserSearch.propTypes = {
   isAdmin: PropTypes.bool,
-  projectId: PropTypes.string,
   onChange: PropTypes.func,
   placeholder: PropTypes.string,
   value: PropTypes.object,
@@ -94,7 +92,6 @@ InputUserSearch.propTypes = {
 };
 InputUserSearch.defaultProps = {
   isAdmin: false,
-  projectId: '',
   onChange: () => {},
   placeholder: '',
   value: null,

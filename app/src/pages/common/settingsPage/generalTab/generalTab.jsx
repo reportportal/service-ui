@@ -43,7 +43,7 @@ import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
 import { Button } from 'componentLibrary/button';
 import { Dropdown } from 'componentLibrary/dropdown';
-import { projectPayloadKeySelector } from 'controllers/pages/selectors';
+import { urlProjectKeySelector } from 'controllers/pages';
 import styles from './generalTab.scss';
 import { Messages } from './generalTabMessages';
 
@@ -64,7 +64,7 @@ const selector = formValueSelector('generalForm');
     userRole: activeProjectRoleSelector(state),
     lang: langSelector(state),
     formValues: selector(state, 'keepLaunches', 'keepLogs', 'keepScreenshots'),
-    projectKey: projectPayloadKeySelector(state),
+    projectKey: urlProjectKeySelector(state),
   }),
   {
     showNotification,

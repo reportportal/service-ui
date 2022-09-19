@@ -21,7 +21,6 @@ import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { activeProjectSelector, assignedProjectsSelector } from 'controllers/user';
 import { MobileHeader } from 'layouts/common/mobileHeader';
-import { projectOrganizationSlugSelector } from 'controllers/project/selectors';
 import { ProjectSelector } from '../../common/projectSelector';
 import styles from './appHeader.scss';
 
@@ -30,7 +29,6 @@ const cx = classNames.bind(styles);
 @connect((state) => ({
   activeProject: activeProjectSelector(state),
   assignedProjects: assignedProjectsSelector(state),
-  organizationSlug: projectOrganizationSlugSelector(state),
 }))
 @track()
 export class AppHeader extends Component {
@@ -53,24 +51,13 @@ export class AppHeader extends Component {
   };
 
   render() {
-    const {
-      sideMenuOpened,
-      toggleSideMenu,
-      activeProject,
-      assignedProjects,
-      organizationSlug,
-    } = this.props;
+    const { sideMenuOpened, toggleSideMenu, activeProject, assignedProjects } = this.props;
     const projects = Object.keys(assignedProjects).sort();
     return (
       <header className={cx('header')}>
         <MobileHeader opened={sideMenuOpened} toggleSideMenu={toggleSideMenu} />
         <div className={cx('projects-block')}>
-          <ProjectSelector
-            projects={projects}
-            activeProject={activeProject}
-            organizationSlug={organizationSlug}
-            mobileOnly
-          />
+          <ProjectSelector projects={projects} activeProject={activeProject} mobileOnly />
         </div>
       </header>
     );

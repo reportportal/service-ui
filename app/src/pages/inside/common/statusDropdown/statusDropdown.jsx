@@ -26,7 +26,7 @@ import { InputDropdown } from 'components/inputs/inputDropdown';
 import { formatStatus } from 'common/utils/localizationUtils';
 import { PASSED, FAILED, SKIPPED, IN_PROGRESS } from 'common/constants/testStatuses';
 import { TestItemStatus } from 'pages/inside/common/testItemStatus';
-import { projectKeySelector } from 'controllers/project/selectors';
+import { projectKeySelector } from 'controllers/project';
 import { ATTRIBUTE_KEY_MANUALLY } from './constants';
 import styles from './statusDropdown.scss';
 

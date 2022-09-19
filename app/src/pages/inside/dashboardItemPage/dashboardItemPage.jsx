@@ -55,7 +55,7 @@ import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { DashboardPageHeader } from 'pages/inside/common/dashboardPageHeader';
 import AddWidgetIcon from 'common/img/add-widget-inline.svg';
 import ExportIcon from 'common/img/export-inline.svg';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project/selectors';
+import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
 import { getUpdatedWidgetsList } from './modals/common/utils';
 import EditIcon from './img/edit-inline.svg';
 import CancelIcon from './img/cancel-inline.svg';

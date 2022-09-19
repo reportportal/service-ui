@@ -47,12 +47,15 @@ import { FILTER_TITLES } from 'common/constants/reservedFilterTitles';
 import { suitesSelector, suitePaginationSelector } from 'controllers/suite';
 import { testsSelector, testPaginationSelector } from 'controllers/test';
 import { stepsSelector, stepPaginationSelector } from 'controllers/step';
-import { defectTypesSelector } from 'controllers/project';
 import { omit } from 'common/utils';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { SORTING_KEY } from 'controllers/sorting';
 import { clusterItemsSelector } from 'controllers/uniqueErrors/clusterItems/selectors';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project/selectors';
+import {
+  projectKeySelector,
+  projectOrganizationSlugSelector,
+  defectTypesSelector,
+} from 'controllers/project';
 import {
   DEFAULT_SORTING,
   TEST_ITEMS_TYPE_LIST,

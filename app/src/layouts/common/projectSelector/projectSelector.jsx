@@ -68,7 +68,6 @@ export class ProjectSelector extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    organizationSlug: PropTypes.string.isRequired,
   };
   static defaultProps = {
     projects: [],

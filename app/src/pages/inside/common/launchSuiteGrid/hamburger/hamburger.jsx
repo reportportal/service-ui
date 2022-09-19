@@ -35,11 +35,10 @@ import {
   userIdSelector,
   userAccountRoleSelector,
 } from 'controllers/user';
-import { enabledPattersSelector } from 'controllers/project';
+import { enabledPattersSelector, projectKeySelector } from 'controllers/project';
 import { analyzerExtensionsSelector } from 'controllers/appInfo';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ANALYZER_TYPES } from 'common/constants/analyzerTypes';
-import { projectKeySelector } from 'controllers/project/selectors';
 import { HamburgerMenuItem } from './hamburgerMenuItem';
 import styles from './hamburger.scss';
 

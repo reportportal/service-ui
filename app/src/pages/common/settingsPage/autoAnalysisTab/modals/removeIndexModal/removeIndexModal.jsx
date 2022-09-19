@@ -28,7 +28,7 @@ import {
   NOTIFICATION_TYPES,
 } from 'controllers/notification';
 import { withModal, ModalLayout } from 'components/main/modal';
-import { projectKeySelector } from 'controllers/project/selectors';
+import { projectKeySelector } from 'controllers/project';
 import styles from './removeIndexModal.scss';
 
 const cx = classNames.bind(styles);

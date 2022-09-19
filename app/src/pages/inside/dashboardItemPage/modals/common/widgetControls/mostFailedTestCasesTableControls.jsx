@@ -21,7 +21,7 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { injectIntl, defineMessages } from 'react-intl';
 import { URLS } from 'common/urls';
 import { validate, bindMessageToValidator } from 'common/utils/validation';
-import { projectKeySelector } from 'controllers/project/selectors';
+import { projectKeySelector } from 'controllers/project';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import {
   SKIPPED_FAILED_LAUNCHES_OPTIONS,

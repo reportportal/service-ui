@@ -20,7 +20,6 @@ import { injectIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
 import { commonValidators, bindMessageToValidator, validate } from 'common/utils/validation';
 import { URLS } from 'common/urls';
-import { activeProjectSelector } from 'controllers/user';
 import { FAILED, PASSED, SKIPPED, INTERRUPTED, IN_PROGRESS } from 'common/constants/launchStatuses';
 import { DEFECT_TYPES_SEQUENCE } from 'common/constants/defectTypes';
 import {
@@ -67,7 +66,7 @@ import {
   ENTITY_ATTRIBUTE,
   ENTITY_NEW_FAILURE,
 } from 'components/filterEntities/constants';
-import { defectTypesSelector, patternsSelector } from 'controllers/project';
+import { defectTypesSelector, patternsSelector, projectKeySelector } from 'controllers/project';
 import { launchIdSelector } from 'controllers/pages';
 import {
   getQueryNamespace,
@@ -80,7 +79,6 @@ import { pageEventsMap } from 'components/main/analytics';
 import { connectRouter } from 'common/utils';
 import { createNamespacedQuery } from 'common/utils/routingUtils';
 import { PROVIDER_TYPE_BASELINE } from 'controllers/testItem/constants';
-import { projectKeySelector } from 'controllers/project/selectors';
 
 const messages = defineMessages({
   NameTitle: {
@@ -312,7 +310,6 @@ const descriptionStepLevelEntity = bindMessageToValidator(
 })
 @connect((state) => ({
   defectTypes: defectTypesSelector(state),
-  projectName: activeProjectSelector(state),
   launchId: launchIdSelector(state),
   patterns: patternsSelector(state),
   level: levelSelector(state),
@@ -325,7 +322,6 @@ export class StepLevelEntities extends Component {
     defectTypes: PropTypes.object.isRequired,
     filterValues: PropTypes.object,
     render: PropTypes.func.isRequired,
-    projectName: PropTypes.string.isRequired,
     launchId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     visibleFilters: PropTypes.array,
     patterns: PropTypes.array,
@@ -420,7 +416,7 @@ export class StepLevelEntities extends Component {
   };
 
   getEntities = () => {
-    const { intl, projectName, launchId, visibleFilters, query, projectKey } = this.props;
+    const { intl, launchId, visibleFilters, query, projectKey } = this.props;
 
     const getTestItemAttributeValuesSearch = (projectKeyValue, key) => {
       return URLS.testItemAttributeValuesSearch(projectKeyValue, launchId, key);
@@ -598,7 +594,6 @@ export class StepLevelEntities extends Component {
         active: visibleFilters.includes(ENTITY_ATTRIBUTE),
         removable: true,
         customProps: {
-          projectName,
           projectKey,
           keyURLCreator: getTestItemAttributeKeysSearch,
           valueURLCreator: getTestItemAttributeValuesSearch,

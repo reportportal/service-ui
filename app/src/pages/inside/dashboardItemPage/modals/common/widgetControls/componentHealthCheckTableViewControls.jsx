@@ -33,7 +33,7 @@ import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { DEFAULT_LAUNCHES_LIMIT } from 'controllers/testItem';
-import { projectKeySelector } from 'controllers/project/selectors';
+import { projectKeySelector } from 'controllers/project';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import {
   FiltersControl,

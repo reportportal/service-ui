@@ -29,7 +29,7 @@ import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { showModalAction } from 'controllers/modal';
 import { UserAvatar } from 'pages/inside/common/userAvatar';
 import { ADMIN_ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { projectKeySelector } from 'controllers/project/selectors';
+import { projectKeySelector } from 'controllers/project';
 import styles from './nameColumn.scss';
 
 const cx = classNames.bind(styles);

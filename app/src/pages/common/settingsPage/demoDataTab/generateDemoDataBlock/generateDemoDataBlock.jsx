@@ -30,7 +30,7 @@ import {
 import { BigButton } from 'components/buttons/bigButton';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import warningIcon from 'common/img/error-inline.svg';
-import { projectPayloadKeySelector } from 'controllers/pages/selectors';
+import { urlProjectKeySelector } from 'controllers/pages';
 import styles from './generateDemoDataBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -65,7 +65,7 @@ const messages = defineMessages({
 
 @connect(
   (state) => ({
-    payloadProjectKey: projectPayloadKeySelector(state),
+    payloadProjectKey: urlProjectKeySelector(state),
   }),
   {
     showNotification,

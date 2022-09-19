@@ -29,7 +29,7 @@ import { FormField } from 'components/fields/formField';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { AttributeListField } from 'components/main/attributeList';
 import { AsyncMultipleAutocomplete } from 'components/inputs/autocompletes/asyncMultipleAutocomplete';
-import { projectPayloadKeySelector } from 'controllers/pages/selectors';
+import { urlProjectKeySelector } from 'controllers/pages';
 import {
   LAUNCH_CASES,
   LABEL_WIDTH,
@@ -46,7 +46,7 @@ const cx = className.bind(styles);
 
 @injectIntl
 @connect((state) => ({
-  projectKey: projectPayloadKeySelector(state),
+  projectKey: urlProjectKeySelector(state),
 }))
 @track()
 export class NotificationCaseFormFields extends Component {

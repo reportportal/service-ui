@@ -31,7 +31,7 @@ import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLo
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { getWidgets } from 'pages/inside/dashboardItemPage/modals/common/widgets';
 import { getWidgetModeValuesString } from 'components/main/analytics/events/common/widgetPages/utils';
-import { projectKeySelector } from 'controllers/project/selectors';
+import { projectKeySelector } from 'controllers/project';
 import { EditWidgetControlsSectionForm } from './editWidgetControlsSectionForm';
 import { EditWidgetInfoSection } from './editWidgetInfoSection';
 import { WIDGET_WIZARD_FORM } from '../common/constants';

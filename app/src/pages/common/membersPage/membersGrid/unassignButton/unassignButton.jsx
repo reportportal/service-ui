@@ -35,7 +35,7 @@ import {
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import UnassignIcon from 'common/img/unassign-inline.svg';
-import { projectKeySelector } from 'controllers/project/selectors';
+import { projectKeySelector } from 'controllers/project';
 
 const messages = defineMessages({
   anassignUser: {

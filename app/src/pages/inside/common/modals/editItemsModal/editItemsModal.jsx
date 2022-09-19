@@ -38,7 +38,7 @@ import { AttributeListField } from 'components/main/attributeList';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import track from 'react-tracking';
-import { projectKeySelector } from 'controllers/project/selectors';
+import { projectKeySelector } from 'controllers/project';
 import styles from './editItemsModal.scss';
 
 const cx = classNames.bind(styles);

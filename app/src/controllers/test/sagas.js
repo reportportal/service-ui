@@ -18,7 +18,7 @@ import { takeEvery, all, put, select } from 'redux-saga/effects';
 import { fetchDataAction } from 'controllers/fetch';
 import { launchIdSelector, suiteIdSelector } from 'controllers/pages';
 import { URLS } from 'common/urls';
-import { projectKeySelector } from 'controllers/project/selectors';
+import { projectKeySelector } from 'controllers/project';
 import { FETCH_TESTS, NAMESPACE } from './constants';
 
 function* getTests({ payload }) {

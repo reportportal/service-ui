@@ -25,7 +25,6 @@ import { userIdSelector, userInfoSelector } from './selectors';
 import {
   ASSIGN_TO_RROJECT,
   UNASSIGN_FROM_PROJECT,
-  SET_ACTIVE_PROJECT,
   GENERATE_API_TOKEN,
   FETCH_API_TOKEN,
   FETCH_USER,
@@ -74,7 +73,7 @@ function* assignToProject({ payload: project }) {
     const error = err.message;
     yield put(
       assignToProjectErrorAction({
-        projectName: project.projectKey,
+        projectKey: project.projectKey,
         projectRole: userRole,
         entryType: project.entryType,
       }),
@@ -128,7 +127,7 @@ function* fetchUserWorker() {
     return;
   }
   const userSettings = getStorageItem(`${user.userId}_settings`) || {};
-  const savedActiveProjectKey = userSettings.activeProject;
+  const savedActiveProjectKey = userSettings.activeProjectKey;
   const { activeProject } = userSettings ?? {};
   const defaultProjectKey = Object.keys(user.assignedProjects)[0];
   const defaultProjectName = user.assignedProjects[defaultProjectKey].projectName;
@@ -146,15 +145,6 @@ function* fetchUserWorker() {
   yield put(fetchApiTokenAction());
   yield put(setActiveProjectAction(activeProjectName));
   yield put(setActiveProjectKeyAction(activeProjectKey));
-}
-
-function* saveActiveProject({ payload: activeProject }) {
-  const user = yield select(userInfoSelector);
-  const currentUserSettings = getStorageItem(`${user.userId}_settings`) || {};
-  setStorageItem(`${user.userId}_settings`, {
-    ...currentUserSettings,
-    activeProject,
-  });
 }
 
 function* saveActiveProjectKeyWorker({ payload: activeProjectKey }) {
@@ -210,10 +200,6 @@ function* watchFetchApiToken() {
   yield takeEvery(FETCH_API_TOKEN, fetchApiToken);
 }
 
-function* watchSetActiveProject() {
-  yield takeEvery(SET_ACTIVE_PROJECT, saveActiveProject);
-}
-
 function* watchFetchUser() {
   yield takeEvery(FETCH_USER, fetchUserWorker);
 }
@@ -235,7 +221,6 @@ export function* userSagas() {
     watchAssignToProject(),
     watchUnassignFromProject(),
     watchFetchUser(),
-    watchSetActiveProject(),
     watchGenerateApiToken(),
     watchFetchApiToken(),
     watchSaveActiveProjectKey(),

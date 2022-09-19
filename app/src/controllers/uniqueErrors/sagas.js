@@ -36,7 +36,7 @@ import { NAMESPACE as PLUGINS_NAMESPACE } from 'controllers/plugins/constants';
 import { pluginsSelector } from 'controllers/plugins';
 
 import { COMMAND_GET_CLUSTERS } from 'controllers/plugins/uiExtensions/constants';
-import { projectKeySelector } from 'controllers/project/selectors';
+import { projectKeySelector } from 'controllers/project';
 import {
   CLEAR_CLUSTER_ITEMS,
   clusterItemsSagas,

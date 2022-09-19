@@ -125,7 +125,6 @@ export const StatisticColumn = ({ className, value }) => (
     />
   </div>
 );
-
 StatisticColumn.propTypes = {
   className: PropTypes.string.isRequired,
   value: PropTypes.object,

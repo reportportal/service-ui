@@ -21,7 +21,7 @@ import {
   bulkFetchDataAction,
   createFetchPredicate,
 } from 'controllers/fetch';
-import { showFilterOnLaunchesAction } from 'controllers/project';
+import { showFilterOnLaunchesAction, projectKeySelector } from 'controllers/project';
 import { activeFilterSelector } from 'controllers/filter';
 import { put, select, all, takeEvery, take, call } from 'redux-saga/effects';
 import {
@@ -51,8 +51,7 @@ import {
 } from 'controllers/notification';
 import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
 import { ALL } from 'common/constants/reservedFilterIds';
-import { projectKeySelector } from 'controllers/project/selectors';
-import { activeProjectKeySelector } from 'controllers/user/selectors';
+import { activeProjectKeySelector } from 'controllers/user';
 import {
   setLevelAction,
   setPageLoadingAction,

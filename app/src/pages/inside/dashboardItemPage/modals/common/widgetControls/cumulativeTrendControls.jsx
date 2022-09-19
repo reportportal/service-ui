@@ -30,7 +30,7 @@ import { URLS } from 'common/urls';
 import { STATS_FAILED, STATS_PASSED, STATS_SKIPPED } from 'common/constants/statistics';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { DEFAULT_LAUNCHES_LIMIT } from 'controllers/testItem';
-import { projectKeySelector } from 'controllers/project/selectors';
+import { projectKeySelector } from 'controllers/project';
 import {
   FiltersControl,
   InputControl,

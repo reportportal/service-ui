@@ -35,8 +35,7 @@ import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { ROLES_MAP } from 'common/constants/projectRoles';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-
-import { projectKeySelector } from 'controllers/project/selectors';
+import { projectKeySelector } from 'controllers/project';
 import styles from './projectRole.scss';
 
 const cx = classNames.bind(styles);

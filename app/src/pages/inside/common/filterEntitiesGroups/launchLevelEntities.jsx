@@ -20,7 +20,6 @@ import { injectIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
 import { commonValidators } from 'common/utils/validation';
 import { URLS } from 'common/urls';
-import { activeProjectSelector } from 'controllers/user';
 import {
   STATS_TOTAL,
   STATS_FAILED,
@@ -51,9 +50,8 @@ import {
   CONDITION_EQ,
   ENTITY_ATTRIBUTE,
 } from 'components/filterEntities/constants';
-import { defectTypesSelector } from 'controllers/project';
+import { defectTypesSelector, projectKeySelector } from 'controllers/project';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
-import { projectKeySelector } from 'controllers/project/selectors';
 
 const messages = defineMessages({
   NameTitle: {
@@ -163,7 +161,6 @@ const DEFECT_ENTITY_ID_BASE = 'statistics$defects$';
 @injectIntl
 @connect((state) => ({
   defectTypes: defectTypesSelector(state),
-  projectName: activeProjectSelector(state),
   projectKey: projectKeySelector(state),
 }))
 export class LaunchLevelEntities extends Component {
@@ -172,7 +169,6 @@ export class LaunchLevelEntities extends Component {
     defectTypes: PropTypes.object.isRequired,
     filterValues: PropTypes.object,
     render: PropTypes.func.isRequired,
-    projectName: PropTypes.string.isRequired,
     visibleFilters: PropTypes.array,
     projectKey: PropTypes.string.isRequired,
   };
@@ -182,7 +178,7 @@ export class LaunchLevelEntities extends Component {
   };
 
   getStaticEntities = () => {
-    const { intl, projectName, visibleFilters, projectKey } = this.props;
+    const { intl, visibleFilters, projectKey } = this.props;
     return [
       {
         id: ENTITY_NAME,
@@ -267,7 +263,6 @@ export class LaunchLevelEntities extends Component {
         active: visibleFilters.includes(ENTITY_ATTRIBUTE),
         removable: true,
         customProps: {
-          projectId: projectName,
           projectKey,
           keyURLCreator: URLS.launchAttributeKeysSearch,
           valueURLCreator: URLS.launchAttributeValuesSearch,

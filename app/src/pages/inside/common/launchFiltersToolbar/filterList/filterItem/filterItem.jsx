@@ -21,7 +21,7 @@ import Link from 'redux-first-router-link';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import { connect } from 'react-redux';
 import { getLaunchFilterLinkSelector } from 'controllers/launch';
-import { projectOrganizationSlugSelector } from 'controllers/project/selectors';
+import { projectOrganizationSlugSelector } from 'controllers/project';
 import { FilterDescriptionTooltipIcon } from './filterDescriptionTooltipIcon';
 import styles from './filterItem.scss';
 

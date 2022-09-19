@@ -26,7 +26,7 @@ import {
 import { showDefaultErrorNotification } from 'controllers/notification';
 import { SORTING_KEY } from 'controllers/sorting';
 import { launchIdSelector } from 'controllers/pages';
-import { projectKeySelector } from 'controllers/project/selectors';
+import { projectKeySelector } from 'controllers/project';
 import {
   fetchClusterItemsStartAction,
   fetchClusterItemsSuccessAction,

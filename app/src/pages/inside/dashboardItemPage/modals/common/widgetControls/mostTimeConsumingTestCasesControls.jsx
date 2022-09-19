@@ -21,7 +21,7 @@ import { connect } from 'react-redux';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { URLS } from 'common/urls';
-import { projectKeySelector } from 'controllers/project/selectors';
+import { projectKeySelector } from 'controllers/project';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { PASSED_FAILED_LAUNCHES_OPTIONS } from './constants';
 import { DropdownControl, TogglerControl, TagsControl, CheckboxControl } from './controls';

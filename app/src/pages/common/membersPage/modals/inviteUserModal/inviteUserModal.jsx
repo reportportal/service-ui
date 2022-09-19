@@ -41,7 +41,7 @@ import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomp
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { InputUserSearch } from 'components/inputs/inputUserSearch';
-import { projectKeySelector } from 'controllers/project/selectors';
+import { projectKeySelector } from 'controllers/project';
 import styles from './inviteUserModal.scss';
 
 const cx = classNames.bind(styles);

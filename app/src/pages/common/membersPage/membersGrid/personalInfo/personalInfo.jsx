@@ -22,7 +22,7 @@ import { FormattedMessage } from 'react-intl';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { userIdSelector } from 'controllers/user';
 import { UserAvatar } from 'pages/inside/common/userAvatar';
-import { projectKeySelector } from 'controllers/project/selectors';
+import { projectKeySelector } from 'controllers/project';
 import styles from './personalInfo.scss';
 
 const cx = classNames.bind(styles);
