@@ -127,12 +127,9 @@ function* fetchUserWorker() {
     return;
   }
   const userSettings = getStorageItem(`${user.userId}_settings`) || {};
-  const savedActiveProjectKey = userSettings.activeProjectKey;
-  const { activeProject } = userSettings ?? {};
+  const { activeProjectKey: savedActiveProjectKey } = userSettings ?? {};
   const defaultProjectKey = Object.keys(user.assignedProjects)[0];
   const defaultProjectName = user.assignedProjects[defaultProjectKey].projectName;
-  const isProjectNameExist =
-    user.assignedProjects[savedActiveProjectKey]?.projectName === activeProject;
 
   const activeProjectKey =
     savedActiveProjectKey && savedActiveProjectKey in user.assignedProjects
@@ -140,7 +137,7 @@ function* fetchUserWorker() {
       : defaultProjectKey;
 
   const activeProjectName =
-    savedActiveProjectKey && isProjectNameExist ? activeProject : defaultProjectName;
+    user.assignedProjects[savedActiveProjectKey]?.projectName ?? defaultProjectName;
 
   yield put(fetchApiTokenAction());
   yield put(setActiveProjectAction(activeProjectName));

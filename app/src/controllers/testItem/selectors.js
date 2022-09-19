@@ -540,10 +540,12 @@ export const uniqueErrorsLinkSelector = createSelector(
 
 export const getLogItemLinkSelector = createSelector(
   projectKeySelector,
-  (projectKey) => (testItem) => {
+  projectOrganizationSlugSelector,
+  (projectKey, organizationSlug) => (testItem) => {
     const payload = {
       projectKey,
       filterId: ALL,
+      organizationSlug,
     };
 
     const testItemPath = testItem.path.split('.').slice(0, -1);
