@@ -33,7 +33,6 @@ import {
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { SORTING_KEY } from 'controllers/sorting';
 import { unselectAllItemsAction } from 'controllers/groupOperations';
-import { NAMESPACE as PLUGINS_NAMESPACE } from 'controllers/plugins/constants';
 import { pluginsSelector } from 'controllers/plugins';
 
 import { COMMAND_GET_CLUSTERS } from 'controllers/plugins/uiExtensions/constants';
@@ -46,11 +45,7 @@ import { FETCH_CLUSTERS, NAMESPACE, RELOAD_CLUSTERS } from './constants';
 import { setPageLoadingAction } from './actionCreators';
 
 function* getPlugin() {
-  let plugins = yield select(pluginsSelector);
-  if (!plugins.length) {
-    const response = yield take(createFetchPredicate(PLUGINS_NAMESPACE));
-    plugins = response.payload;
-  }
+  const plugins = yield select(pluginsSelector);
   const supportedPlugin = plugins.find(
     (item) =>
       item &&
@@ -59,6 +54,7 @@ function* getPlugin() {
       item.details.metadata.supportedFeatures &&
       item.details.metadata.supportedFeatures.includes('uniqueErrorsClusters'),
   );
+
   if (!supportedPlugin) return null;
 
   return supportedPlugin.enabled && supportedPlugin;
