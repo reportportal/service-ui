@@ -37,7 +37,7 @@ export const CopyFromHistoryLine = ({
   setModalState,
   windowSize,
   eventsInfo,
-  activeProject,
+  projectKey,
 }) => {
   const dispatch = useDispatch();
   const [composedItems, setComposedItems] = useState(items);
@@ -45,7 +45,7 @@ export const CopyFromHistoryLine = ({
 
   useEffect(() => {
     const itemIds = items.map((item) => item.id);
-    fetch(URLS.bulkLastLogs(activeProject), {
+    fetch(URLS.bulkLastLogs(projectKey), {
       method: 'post',
       data: { itemIds, logLevel: 'ERROR' },
     })
@@ -128,11 +128,10 @@ CopyFromHistoryLine.propTypes = {
   setModalState: PropTypes.func.isRequired,
   windowSize: PropTypes.object,
   eventsInfo: PropTypes.object,
-  activeProject: PropTypes.string,
+  projectKey: PropTypes.string.isRequired,
 };
 CopyFromHistoryLine.defaultProps = {
   items: [],
   windowSize: {},
   eventsInfo: {},
-  activeProject: '',
 };

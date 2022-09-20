@@ -34,6 +34,7 @@ const cx = classNames.bind(styles);
 export class AppHeader extends Component {
   static propTypes = {
     activeProject: PropTypes.string.isRequired,
+    organizationSlug: PropTypes.string.isRequired,
     assignedProjects: PropTypes.object,
     sideMenuOpened: PropTypes.bool,
     toggleSideMenu: PropTypes.func,
@@ -51,15 +52,12 @@ export class AppHeader extends Component {
 
   render() {
     const { sideMenuOpened, toggleSideMenu, activeProject, assignedProjects } = this.props;
+    const projects = Object.keys(assignedProjects).sort();
     return (
       <header className={cx('header')}>
         <MobileHeader opened={sideMenuOpened} toggleSideMenu={toggleSideMenu} />
         <div className={cx('projects-block')}>
-          <ProjectSelector
-            projects={Object.keys(assignedProjects).sort()}
-            activeProject={activeProject}
-            mobileOnly
-          />
+          <ProjectSelector projects={projects} activeProject={activeProject} mobileOnly />
         </div>
       </header>
     );

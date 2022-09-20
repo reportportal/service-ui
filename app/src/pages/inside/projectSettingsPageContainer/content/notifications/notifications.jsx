@@ -27,6 +27,7 @@ import {
   updateProjectNotificationAction,
   deleteProjectNotificationAction,
   addProjectNotificationAction,
+  projectNotificationsLoadingSelector,
 } from 'controllers/project';
 import { isEmailIntegrationAvailableSelector } from 'controllers/plugins';
 import { showModalAction } from 'controllers/modal';
@@ -42,7 +43,6 @@ import {
 import PencilIcon from 'common/img/newIcons/pencil-inline.svg';
 import BinIcon from 'common/img/newIcons/bin-inline.svg';
 import CopyIcon from 'common/img/newIcons/copy-inline.svg';
-import { projectNotificationsLoadingSelector } from 'controllers/project/selectors';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { PROJECT_SETTINGS_NOTIFICATIONS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { docsReferences, createExternalLink } from 'common/utils';

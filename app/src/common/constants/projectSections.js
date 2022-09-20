@@ -16,3 +16,4 @@
 
 export const MEMBERS = 'members';
 export const MONITORING = 'monitoring';
+export const SETTINGS = 'settings';

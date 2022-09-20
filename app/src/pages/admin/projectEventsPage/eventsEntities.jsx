@@ -19,7 +19,6 @@ import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import { URLS } from 'common/urls';
-import { activeProjectSelector } from 'controllers/user';
 
 import {
   EntityDropdown,
@@ -111,6 +110,7 @@ import {
   objectTypesMessages,
 } from 'common/constants/localization/eventsLocalization';
 import { ADMIN_EVENT_MONITORING_PAGE_EVENTS } from 'components/main/analytics/events';
+import { projectKeySelector } from 'controllers/project';
 
 const messages = defineMessages({
   timeCol: { id: 'EventsGrid.timeCol', defaultMessage: 'Time' },
@@ -128,7 +128,7 @@ const messages = defineMessages({
 });
 @connect(
   (state) => ({
-    activeProject: activeProjectSelector(state),
+    projectKey: projectKeySelector(state),
   }),
   {},
 )
@@ -138,7 +138,7 @@ export class EventsEntities extends Component {
     intl: PropTypes.object.isRequired,
     filterValues: PropTypes.object,
     render: PropTypes.func.isRequired,
-    activeProject: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -148,7 +148,7 @@ export class EventsEntities extends Component {
   };
 
   getEntities = () => {
-    const { intl, activeProject } = this.props;
+    const { intl, projectKey } = this.props;
     return [
       {
         id: ACTIVITIES,
@@ -427,6 +427,21 @@ export class EventsEntities extends Component {
         title: intl.formatMessage(messages.objectNameCol),
         active: true,
         removable: false,
+      },
+      {
+        id: ENTITY_USER,
+        component: EntitySearch,
+        value: this.bindDefaultValue(ENTITY_USER, {
+          condition: CONDITION_IN,
+        }),
+        title: intl.formatMessage(messages.userCol),
+        active: true,
+        removable: false,
+        customProps: {
+          getURI: URLS.projectUsernamesSearch(projectKey),
+          placeholder: intl.formatMessage(messages.userSearchPlaceholder),
+          minLength: 3,
+        },
       },
       {
         id: ENTITY_SUBJECT_NAME,

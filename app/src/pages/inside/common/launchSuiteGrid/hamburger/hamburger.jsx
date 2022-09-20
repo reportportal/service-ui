@@ -34,9 +34,8 @@ import {
   activeProjectRoleSelector,
   userIdSelector,
   userAccountRoleSelector,
-  activeProjectSelector,
 } from 'controllers/user';
-import { enabledPattersSelector } from 'controllers/project';
+import { enabledPattersSelector, projectKeySelector } from 'controllers/project';
 import { analyzerExtensionsSelector } from 'controllers/appInfo';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ANALYZER_TYPES } from 'common/constants/analyzerTypes';
@@ -97,7 +96,7 @@ const messages = defineMessages({
     projectRole: activeProjectRoleSelector(state),
     userId: userIdSelector(state),
     accountRole: userAccountRoleSelector(state),
-    projectId: activeProjectSelector(state),
+    projectKey: projectKeySelector(state),
     enabledPatterns: enabledPattersSelector(state),
     analyzerExtensions: analyzerExtensionsSelector(state),
   }),
@@ -116,7 +115,7 @@ export class Hamburger extends Component {
     projectRole: PropTypes.string.isRequired,
     onAction: PropTypes.func,
     launch: PropTypes.object.isRequired,
-    projectId: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
     customProps: PropTypes.object,
     accountRole: PropTypes.string,
     enabledPatterns: PropTypes.array,
@@ -157,7 +156,7 @@ export class Hamburger extends Component {
   }
 
   onExportLaunch = (type) => {
-    downloadFile(URLS.exportLaunch(this.props.projectId, this.props.launch.id, type));
+    downloadFile(URLS.exportLaunch(this.props.projectKey, this.props.launch.id, type));
   };
 
   getForceFinishTooltip = () => {

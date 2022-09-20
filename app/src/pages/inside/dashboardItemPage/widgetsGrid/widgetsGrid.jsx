@@ -47,7 +47,7 @@ const messages = defineMessages({
 export class WidgetsGrid extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    activeProject: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
     currentUser: PropTypes.string.isRequired,
     isFullscreen: PropTypes.bool,
     isModifiable: PropTypes.bool,
@@ -138,9 +138,9 @@ export class WidgetsGrid extends Component {
   };
 
   onDeleteWidget = (widgetId) => {
-    const { dashboard, activeProject } = this.props;
+    const { dashboard, projectKey } = this.props;
 
-    fetch(URLS.dashboardWidget(activeProject, dashboard.id, widgetId), {
+    fetch(URLS.dashboardWidget(projectKey, dashboard.id, widgetId), {
       method: 'DELETE',
     }).then(() => {
       const newWidgets = this.getUpdatedWidgetsAfterDelete(widgetId);

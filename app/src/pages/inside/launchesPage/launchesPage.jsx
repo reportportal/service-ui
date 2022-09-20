@@ -34,9 +34,9 @@ import { ANALYZER_TYPES } from 'common/constants/analyzerTypes';
 import { IN_PROGRESS } from 'common/constants/testStatuses';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { MODAL_TYPE_IMPORT_LAUNCH } from 'pages/common/modals/importModal/constants';
-import { activeProjectSelector, userIdSelector } from 'controllers/user';
+import { userIdSelector } from 'controllers/user';
 import { isDemoInstanceSelector } from 'controllers/appInfo';
-import { projectConfigSelector } from 'controllers/project';
+import { projectConfigSelector, projectKeySelector } from 'controllers/project';
 import { withPagination, DEFAULT_PAGINATION, SIZE_KEY, PAGE_KEY } from 'controllers/pagination';
 import { showModalAction } from 'controllers/modal';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -164,8 +164,7 @@ const messages = defineMessages({
   (state) => ({
     debugMode: debugModeSelector(state),
     userId: userIdSelector(state),
-    activeProject: activeProjectSelector(state),
-    url: URLS.launches(activeProjectSelector(state)),
+    url: URLS.launches(projectKeySelector(state)),
     selectedLaunches: selectedLaunchesSelector(state),
     validationErrors: validationErrorsSelector(state),
     launches: launchesSelector(state),
@@ -174,6 +173,7 @@ const messages = defineMessages({
     projectSetting: projectConfigSelector(state),
     highlightItemId: prevTestItemSelector(state),
     isDemoInstance: isDemoInstanceSelector(state),
+    projectKey: projectKeySelector(state),
   }),
   {
     showModalAction,
@@ -215,7 +215,6 @@ export class LaunchesPage extends Component {
     onChangePage: PropTypes.func,
     onChangePageSize: PropTypes.func,
     sortingString: PropTypes.string,
-    activeProject: PropTypes.string.isRequired,
     selectedLaunches: PropTypes.arrayOf(PropTypes.object),
     validationErrors: PropTypes.object,
     toggleAllLaunchesAction: PropTypes.func,
@@ -243,6 +242,7 @@ export class LaunchesPage extends Component {
     updateLaunchesLocallyAction: PropTypes.func.isRequired,
     highlightItemId: PropTypes.number,
     isDemoInstance: PropTypes.bool,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -362,22 +362,22 @@ export class LaunchesPage extends Component {
     });
   };
   onAddDashboard = (dashboard) => {
-    const { activeProject } = this.props;
+    const { projectKey } = this.props;
     if (dashboard.id) {
       return Promise.resolve(dashboard);
     }
-    return fetch(URLS.dashboards(activeProject), {
+    return fetch(URLS.dashboards(projectKey), {
       method: 'post',
       data: dashboard,
     });
   };
   onAddWidget = (widget, closeModal, dashboard) => {
     const {
-      activeProject,
+      projectKey,
       intl: { formatMessage },
     } = this.props;
     this.onAddDashboard(dashboard).then(({ id }) => {
-      fetch(URLS.addDashboardWidget(activeProject, id), {
+      fetch(URLS.addDashboardWidget(projectKey, id), {
         method: 'put',
         data: { addWidget: widget },
       })
@@ -423,10 +423,10 @@ export class LaunchesPage extends Component {
   };
   autoAnalyseItem = (launch, data) => {
     const {
-      activeProject,
+      projectKey,
       intl: { formatMessage },
     } = this.props;
-    fetch(URLS.launchAnalyze(activeProject), {
+    fetch(URLS.launchAnalyze(projectKey), {
       method: 'POST',
       data: {
         ...data,
@@ -455,10 +455,10 @@ export class LaunchesPage extends Component {
 
   patternAnalyseItem = (launch, data) => {
     const {
-      activeProject,
+      projectKey,
       intl: { formatMessage },
     } = this.props;
-    fetch(URLS.launchAnalyze(activeProject), {
+    fetch(URLS.launchAnalyze(projectKey), {
       method: 'POST',
       data: {
         ...data,
@@ -507,7 +507,7 @@ export class LaunchesPage extends Component {
     );
     const ids = items.map((item) => item.id);
     this.props.showScreenLockAction();
-    fetch(URLS.launches(this.props.activeProject), {
+    fetch(URLS.launches(this.props.projectKey), {
       method: 'delete',
       data: {
         ids,
@@ -582,7 +582,7 @@ export class LaunchesPage extends Component {
   };
 
   fetchLaunchStatus = (launches) => {
-    fetch(URLS.launchStatus(this.props.activeProject, launches), {
+    fetch(URLS.launchStatus(this.props.projectKey, launches), {
       method: 'get',
     }).then((launchesWithStatus) => {
       const newLaunchesInProgress = this.state.launchesInProgress.filter(
@@ -644,7 +644,7 @@ export class LaunchesPage extends Component {
   openImportModal = () => {
     const {
       intl: { formatMessage },
-      activeProject,
+      projectKey,
     } = this.props;
 
     this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_IMPORT_BTN);
@@ -659,7 +659,7 @@ export class LaunchesPage extends Component {
         incorrectFileSize: formatMessage(messages.incorrectFileSize),
         noteMessage: formatMessage(messages.noteMessage),
         importConfirmationWarning: formatMessage(messages.importConfirmationWarning),
-        url: URLS.launchImport(activeProject),
+        url: URLS.launchImport(projectKey),
         eventsInfo: {
           okBtn: LAUNCHES_MODAL_EVENTS.OK_BTN_IMPORT_MODAL,
           cancelBtn: LAUNCHES_MODAL_EVENTS.CANCEL_BTN_IMPORT_MODAL,

@@ -37,22 +37,32 @@ const messages = defineMessages({
   deleteCol: { id: 'MembersGrid.deleteCol', defaultMessage: 'Delete' },
 });
 
-const NameColumn = ({ className, value, customProps }) => (
-  <div className={cx('name-col', className)}>
-    <FilterName
-      userFilters={customProps.userFilters}
-      filter={value}
-      onClickName={customProps.onClickName}
-      onEdit={customProps.onEdit}
-      nameLink={{
-        type: PROJECT_LAUNCHES_PAGE,
-        payload: { projectId: customProps.activeProject, filterId: value.id },
-      }}
-      isLink
-      isBold
-    />
-  </div>
-);
+const NameColumn = ({ className, value, customProps }) => {
+  const { organizationSlug, projectKey } = customProps;
+  return (
+    <div className={cx('name-col', className)}>
+      <FilterName
+        userFilters={customProps.userFilters}
+        filter={value}
+        onClickName={customProps.onClickName}
+        onEdit={customProps.onEdit}
+        userId={customProps.userId}
+        nameLink={{
+          type: PROJECT_LAUNCHES_PAGE,
+          payload: {
+            projectKey,
+            filterId: value.id,
+            organizationSlug,
+          },
+        }}
+        isLink
+        isBold
+        userRole={customProps.userRole}
+        projectRole={customProps.projectRole}
+      />
+    </div>
+  );
+};
 NameColumn.propTypes = {
   className: PropTypes.string.isRequired,
   value: PropTypes.object,
@@ -144,7 +154,8 @@ export class FilterGrid extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    activeProject: PropTypes.string,
+    organizationSlug: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -157,7 +168,6 @@ export class FilterGrid extends Component {
     onDelete: () => {},
     accountRole: '',
     loading: false,
-    activeProject: null,
   };
 
   getColumns = () => [
@@ -180,7 +190,11 @@ export class FilterGrid extends Component {
           this.props.onEdit(filter);
           this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_EDIT_ICON);
         },
-        activeProject: this.props.activeProject,
+        userId: this.props.userId,
+        projectKey: this.props.projectKey,
+        userRole: this.props.accountRole,
+        projectRole: this.props.projectRole,
+        organizationSlug: this.props.organizationSlug,
       },
     },
     {

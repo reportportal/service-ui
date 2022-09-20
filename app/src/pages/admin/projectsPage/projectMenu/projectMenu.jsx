@@ -30,7 +30,7 @@ import {
   deleteProjectAction,
   navigateToProjectSectionAction,
 } from 'controllers/administrate/projects';
-import { MEMBERS, MONITORING } from 'common/constants/projectSections';
+import { MEMBERS, MONITORING, SETTINGS } from 'common/constants/projectSections';
 import { DotsMenuButton, SEPARATOR_ITEM, DANGER_ITEM } from 'components/buttons/dotsMenuButton';
 import { ADMIN_PROJECTS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { navigateToProjectSettingsAction } from 'controllers/administrate/projects/actionCreators';
@@ -156,32 +156,30 @@ export class ProjectMenu extends Component {
 
   navigateToMembers = () => {
     const {
-      tracking: { trackEvent },
-      project: { projectName },
+      tracking,
+      project: { projectKey, organizationSlug },
     } = this.props;
-
-    trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.MEMBERS_ACTION);
-    this.props.navigateToProjectSection(projectName, MEMBERS);
-  };
-
-  navigateToSettings = () => {
-    const {
-      tracking: { trackEvent },
-      project: { projectName },
-    } = this.props;
-
-    trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.SETTINGS_ACTION);
-    this.props.navigateToProjectSettings(projectName);
+    tracking.trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.MEMBERS_ACTION);
+    this.props.navigateToProjectSection({ projectKey, organizationSlug }, MEMBERS);
   };
 
   navigateToEventsMonitoring = () => {
     const {
       tracking: { trackEvent },
-      project: { projectName },
+      project: { projectKey, organizationSlug },
     } = this.props;
 
     trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.CLICK_EVENT_MONITORING);
-    this.props.navigateToProjectSection(projectName, MONITORING);
+    this.props.navigateToProjectSection({ projectKey, organizationSlug }, MONITORING);
+  };
+
+  navigateToSettings = () => {
+    const {
+      tracking: { trackEvent },
+      project: { projectKey, organizationSlug },
+    } = this.props;
+    trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.SETTINGS_ACTION);
+    this.props.navigateToProjectSection({ projectKey, organizationSlug }, SETTINGS);
   };
 
   render() {

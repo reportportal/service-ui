@@ -20,11 +20,12 @@ import { URLS } from 'common/urls';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { assignToProjectSuccessAction } from 'controllers/user';
 import { PROJECT_TYPE_INTERNAL } from 'common/constants/projectsObjectTypes';
-import { MEMBERS } from 'common/constants/projectSections';
 import { fetch, getStorageItem, setStorageItem } from 'common/utils';
 import { PROJECT_PAGE } from 'controllers/pages';
 import { hideModalAction } from 'controllers/modal';
 import { PROJECT_MANAGER } from 'common/constants/projectRoles';
+import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
+import { assignedProjectsSelector, ASSIGN_TO_PROJECT_SUCCESS, ASSIGN_TO_PROJECT, ASSIGN_TO_PROJECT_ERROR } from 'controllers/user';
 import {
   NAMESPACE,
   FETCH_PROJECTS,
@@ -79,6 +80,8 @@ function* addProject({ payload: projectName }) {
       projectRole: PROJECT_MANAGER,
       entryType: PROJECT_TYPE_INTERNAL,
     };
+    const organizationSlug = yield select(projectOrganizationSlugSelector);
+    const projectKey = yield select(projectKeySelector);
     yield put(assignToProjectSuccessAction(projectInfo));
     yield put(hideModalAction());
     yield put(
@@ -88,7 +91,7 @@ function* addProject({ payload: projectName }) {
         values: { name: projectName },
       }),
     );
-    yield put(navigateToProjectSectionAction(projectName, MEMBERS));
+    yield put(navigateToProjectSectionAction({ organizationSlug, projectKey }, SETTINGS));
   } catch (err) {
     if (err.errorCode === ERROR_CODES.PROJECT_EXISTS) {
       yield put(
@@ -116,7 +119,7 @@ function* watchAddProject() {
 
 function* deleteProject({ payload: project }) {
   try {
-    yield call(fetch, URLS.project(project.id), {
+    yield call(fetch, URLS.project(project.projectKey), {
       method: 'delete',
     });
   } catch (err) {
@@ -137,12 +140,27 @@ function* watchDeleteProject() {
 }
 
 function* navigateToProject({ payload }) {
-  const { project } = payload;
-
-  yield put({
-    type: PROJECT_PAGE,
-    payload: { projectId: project.projectName },
-  });
+  const { project, confirmModalOptions } = payload;
+  const { organizationSlug, projectKey } = project;
+  const assignedProjects = yield select(assignedProjectsSelector);
+  let isAssigned = !!assignedProjects[project.projectKey];
+  if (!isAssigned) {
+    const isConfirmed = yield call(confirmSaga, confirmModalOptions);
+    if (isConfirmed) {
+      yield put({ type: ASSIGN_TO_PROJECT, payload: project });
+      const assignResult = yield race({
+        isAssigned: take(ASSIGN_TO_PROJECT_SUCCESS),
+        noAssigned: take(ASSIGN_TO_PROJECT_ERROR),
+      });
+      isAssigned = !!assignResult.isAssigned;
+    }
+  }
+  if (isAssigned) {
+    yield put({
+      type: PROJECT_PAGE,
+      payload: { organizationSlug, projectKey },
+    });
+  }
 }
 
 function* watchNavigateToProject() {

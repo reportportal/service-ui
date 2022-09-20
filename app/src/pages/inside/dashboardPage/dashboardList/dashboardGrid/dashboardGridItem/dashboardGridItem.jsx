@@ -21,16 +21,20 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { PROJECT_DASHBOARD_ITEM_PAGE } from 'controllers/pages';
-import { activeProjectSelector } from 'controllers/user';
+import { activeProjectRoleSelector } from 'controllers/user';
 import { Icon } from 'components/main/icon';
 import { NavLink } from 'components/main/navLink';
+import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
+import { canEditDashboard, canDeleteDashboard } from 'common/utils/permissions';
 import styles from './dashboardGridItem.scss';
 
 const cx = classNames.bind(styles);
 
 @injectIntl
 @connect((state) => ({
-  projectId: activeProjectSelector(state),
+  projectRole: activeProjectRoleSelector(state),
+  organizationSlug: projectOrganizationSlugSelector(state),
+  projectKey: projectKeySelector(state),
 }))
 @track()
 export class DashboardGridItem extends Component {
@@ -39,7 +43,7 @@ export class DashboardGridItem extends Component {
   }
 
   static propTypes = {
-    projectId: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
     intl: PropTypes.object.isRequired,
     item: PropTypes.object,
     onEdit: PropTypes.func,
@@ -49,6 +53,7 @@ export class DashboardGridItem extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    organizationSlug: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -76,13 +81,23 @@ export class DashboardGridItem extends Component {
   };
 
   render() {
-    const { item, projectId } = this.props;
+    const {
+      item,
+      currentUser: { userId, userRole },
+      projectKey,
+      projectRole,
+      organizationSlug,
+    } = this.props;
     const { name, description, owner, id } = item;
+    const isOwner = userId === owner;
 
     return (
       <div className={cx('grid-view')}>
         <NavLink
-          to={{ type: PROJECT_DASHBOARD_ITEM_PAGE, payload: { projectId, dashboardId: id } }}
+          to={{
+            type: PROJECT_DASHBOARD_ITEM_PAGE,
+            payload: { projectKey, organizationSlug, dashboardId: id },
+          }}
           className={cx('grid-view-inner')}
           onClick={() => this.props.tracking.trackEvent(this.props.nameEventInfo)}
         >
@@ -100,12 +115,16 @@ export class DashboardGridItem extends Component {
             <p>{description}</p>
           </div>
           <div className={cx('grid-cell', 'owner')}>{owner}</div>
-          <div className={cx('grid-cell', 'edit')} onClick={this.editItem}>
-            <Icon type="icon-pencil" />
-          </div>
-          <div className={cx('grid-cell', 'delete')} onClick={this.deleteItem}>
-            <Icon type="icon-close" />
-          </div>
+          {canEditDashboard(userRole, projectRole, isOwner) && (
+            <div className={cx('grid-cell', 'edit')} onClick={this.editItem}>
+              <Icon type="icon-pencil" />
+            </div>
+          )}
+          {canDeleteDashboard(userRole, projectRole, isOwner) && (
+            <div className={cx('grid-cell', 'delete')} onClick={this.deleteItem}>
+              <Icon type="icon-close" />
+            </div>
+          )}
         </NavLink>
       </div>
     );

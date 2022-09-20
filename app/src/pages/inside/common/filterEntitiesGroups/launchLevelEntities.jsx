@@ -20,7 +20,6 @@ import { injectIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
 import { commonValidators } from 'common/utils/validation';
 import { URLS } from 'common/urls';
-import { activeProjectSelector } from 'controllers/user';
 import {
   STATS_TOTAL,
   STATS_FAILED,
@@ -50,7 +49,7 @@ import {
   CONDITION_EQ,
   ENTITY_ATTRIBUTE,
 } from 'components/filterEntities/constants';
-import { defectTypesSelector } from 'controllers/project';
+import { defectTypesSelector, projectKeySelector } from 'controllers/project';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { getGroupedDefectTypesOptions } from 'pages/inside/common/utils';
 import { NO_DEFECT } from 'common/constants/defectTypes';
@@ -161,7 +160,7 @@ const messages = defineMessages({
 @injectIntl
 @connect((state) => ({
   defectTypes: defectTypesSelector(state),
-  activeProject: activeProjectSelector(state),
+  projectKey: projectKeySelector(state),
 }))
 export class LaunchLevelEntities extends Component {
   static propTypes = {
@@ -169,8 +168,8 @@ export class LaunchLevelEntities extends Component {
     defectTypes: PropTypes.object.isRequired,
     filterValues: PropTypes.object,
     render: PropTypes.func.isRequired,
-    activeProject: PropTypes.string.isRequired,
     visibleFilters: PropTypes.array,
+    projectKey: PropTypes.string.isRequired,
   };
   static defaultProps = {
     filterValues: {},
@@ -178,7 +177,7 @@ export class LaunchLevelEntities extends Component {
   };
 
   getStaticEntities = () => {
-    const { intl, activeProject, visibleFilters } = this.props;
+    const { intl, visibleFilters, projectKey } = this.props;
     return [
       {
         id: ENTITY_NAME,
@@ -235,7 +234,7 @@ export class LaunchLevelEntities extends Component {
         active: visibleFilters.includes(ENTITY_USER),
         removable: true,
         customProps: {
-          getURI: URLS.launchOwnersSearch(activeProject),
+          getURI: URLS.launchOwnersSearch(projectKey),
           placeholder: intl.formatMessage(messages.OWNER_NAME_PLACEHOLDER),
         },
       },
@@ -263,7 +262,7 @@ export class LaunchLevelEntities extends Component {
         active: visibleFilters.includes(ENTITY_ATTRIBUTE),
         removable: true,
         customProps: {
-          projectId: activeProject,
+          projectKey,
           keyURLCreator: URLS.launchAttributeKeysSearch,
           valueURLCreator: URLS.launchAttributeValuesSearch,
         },

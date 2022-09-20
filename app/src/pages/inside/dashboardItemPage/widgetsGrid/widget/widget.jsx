@@ -25,7 +25,6 @@ import { connect } from 'react-redux';
 import { fetch, isEmptyObject } from 'common/utils';
 import { URLS } from 'common/urls';
 import { CUMULATIVE_TREND } from 'common/constants/widgetTypes';
-import { activeProjectSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { analyticsEnabledSelector, baseEventParametersSelector } from 'controllers/appInfo';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -38,6 +37,7 @@ import { WIDGETS_EVENTS } from 'analyticsEvents/dashboardsPageEvents';
 import { getEcWidget } from 'components/main/analytics/events/common/widgetPages/utils';
 import { provideEcGA, baseEventParametersShape } from 'components/main/analytics/utils';
 import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/common/messages';
+import { projectKeySelector } from 'controllers/project';
 import { isWidgetDataAvailable } from '../../modals/common/utils';
 import { WidgetHeader } from './widgetHeader';
 import styles from './widget.scss';
@@ -62,10 +62,10 @@ const SILENT_UPDATE_TIMEOUT_FULLSCREEN = 30000;
 @injectIntl
 @connect(
   (state) => ({
-    activeProject: activeProjectSelector(state),
     activeDashboardId: activeDashboardIdSelector(state),
     isAnalyticsEnabled: analyticsEnabledSelector(state),
     baseEventParameters: baseEventParametersSelector(state),
+    projectKey: projectKeySelector(state),
   }),
   {
     showModalAction,
@@ -75,7 +75,6 @@ const SILENT_UPDATE_TIMEOUT_FULLSCREEN = 30000;
 export class SimpleWidget extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    activeProject: PropTypes.string.isRequired,
     widgetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     widgetType: PropTypes.string.isRequired,
     showModalAction: PropTypes.func.isRequired,
@@ -92,6 +91,7 @@ export class SimpleWidget extends Component {
     activeDashboardId: PropTypes.number.isRequired,
     isAnalyticsEnabled: PropTypes.bool.isRequired,
     baseEventParameters: baseEventParametersShape,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -204,8 +204,9 @@ export class SimpleWidget extends Component {
   };
 
   getWidgetUrl = (params) => {
-    const { activeProject, widgetId, widgetType } = this.props;
-    let url = URLS.widget(activeProject, widgetId);
+    const { widgetId, widgetType, projectKey } = this.props;
+
+    let url = URLS.widget(projectKey, widgetId);
 
     if (MULTI_LEVEL_WIDGETS_MAP[widgetType]) {
       const { queryParameters } = this.state;
@@ -214,7 +215,7 @@ export class SimpleWidget extends Component {
         ...params,
       });
 
-      url = URLS.widgetMultilevel(activeProject, widgetId, queryParamsString);
+      url = URLS.widgetMultilevel(projectKey, widgetId, queryParamsString);
     }
     return url;
   };

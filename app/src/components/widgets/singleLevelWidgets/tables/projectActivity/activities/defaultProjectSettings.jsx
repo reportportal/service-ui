@@ -23,6 +23,7 @@ import { secondsToDays } from 'common/utils';
 import { PROJECT_SETTINGS_PAGE } from 'controllers/pages';
 import styles from './common.scss';
 import { activityItemDefaultProps, activityItemPropTypes } from './propTypes';
+import { getProjectKey } from './utils';
 
 const cx = classNames.bind(styles);
 
@@ -82,19 +83,20 @@ export class DefaultProjectSettings extends Component {
     return `${activities.join(', ')}.`;
   };
 
-  getProjectSettingsLink = (projectId) => ({
+  getProjectSettingsLink = (projectKey, organizationSlug) => ({
     type: PROJECT_SETTINGS_PAGE,
-    payload: { projectId },
+    payload: { projectKey, organizationSlug },
   });
 
   render() {
     const { activity } = this.props;
+
     return (
       <Fragment>
         <span className={cx('user-name')}>{activity.user}</span>
         <FormattedMessage id="ProjectActivity.updateProject" defaultMessage="updated" />
         <Link
-          to={this.getProjectSettingsLink(activity.projectName)}
+          to={this.getProjectSettingsLink(getProjectKey(activity), activity.organizationSlug)}
           className={cx('link')}
           target="_blank"
         >

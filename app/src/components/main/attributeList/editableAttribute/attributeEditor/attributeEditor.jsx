@@ -20,7 +20,6 @@ import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl } from 'react-intl';
 import Parser from 'html-react-parser';
-import { activeProjectSelector } from 'controllers/user';
 import {
   validate,
   commonValidators,
@@ -31,6 +30,7 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import CircleCrossIcon from 'common/img/circle-cross-icon-inline.svg';
 import CircleCheckIcon from 'common/img/circle-check-inline.svg';
 import { isEmpty } from 'common/utils/validation/validatorHelpers';
+import { activeProjectKeySelector } from 'controllers/user';
 import { AttributeInput } from './attributeInput';
 import styles from './attributeEditor.scss';
 
@@ -58,12 +58,11 @@ const attributeFilterValueValidator = bindMessageToValidator(
 );
 
 @connect((state) => ({
-  projectId: activeProjectSelector(state),
+  projectKey: activeProjectKeySelector(state),
 }))
 @injectIntl
 export class AttributeEditor extends Component {
   static propTypes = {
-    projectId: PropTypes.string,
     attributes: PropTypes.array,
     onConfirm: PropTypes.func,
     onCancel: PropTypes.func,
@@ -81,10 +80,10 @@ export class AttributeEditor extends Component {
     customClass: PropTypes.string,
     nakedView: PropTypes.bool,
     isAttributeValueRequired: PropTypes.bool,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
-    projectId: null,
     attributes: [],
     handleSubmit: () => {},
     onConfirm: () => {},
@@ -189,13 +188,13 @@ export class AttributeEditor extends Component {
 
   render() {
     const {
-      projectId,
       attributes,
       keyURLCreator,
       valueURLCreator,
       customClass,
       intl,
       nakedView,
+      projectKey,
     } = this.props;
     return (
       <div className={cx('attribute-editor', customClass)}>
@@ -206,7 +205,7 @@ export class AttributeEditor extends Component {
               attributes={attributes}
               minLength={1}
               attributeComparator={this.byKeyComparator}
-              getURI={keyURLCreator(projectId)}
+              getURI={keyURLCreator(projectKey)}
               creatable
               placeholder={intl.formatMessage(messages.keyLabel)}
               onChange={this.handleKeyChange}
@@ -225,7 +224,7 @@ export class AttributeEditor extends Component {
               minLength={1}
               attributes={attributes}
               attributeComparator={this.byValueComparator}
-              getURI={valueURLCreator(projectId, this.state.key)}
+              getURI={valueURLCreator(projectKey, this.state.key)}
               creatable
               onChange={this.handleValueChange}
               value={this.state.value}

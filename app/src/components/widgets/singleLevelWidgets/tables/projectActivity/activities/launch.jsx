@@ -28,7 +28,7 @@ import {
   START_IMPORT,
   FINISH_IMPORT,
 } from 'common/constants/actionTypes';
-import { getTestItemPageLink } from './utils';
+import { getProjectKey, getTestItemPageLink } from './utils';
 import styles from './common.scss';
 import { activityItemDefaultProps, activityItemPropTypes } from './propTypes';
 
@@ -69,11 +69,12 @@ export class Launch extends Component {
   };
   static defaultProps = activityItemDefaultProps;
 
-  getLaunchesPageLink = (projectId) => ({
+  getLaunchesPageLink = (projectKey, organizationSlug) => ({
     type: PROJECT_LAUNCHES_PAGE,
     payload: {
-      projectId,
+      projectKey,
       filterId: ALL,
+      organizationSlug,
     },
   });
 
@@ -96,7 +97,11 @@ export class Launch extends Component {
           <Fragment>
             {` ${formatMessage(messages.launch)}`}
             <Link
-              to={getTestItemPageLink(activity.projectName, activity.loggedObjectId)}
+              to={getTestItemPageLink(
+                getProjectKey(activity),
+                activity.loggedObjectId,
+                activity.organizationSlug,
+              )}
               className={cx('link')}
               target="_blank"
             >
@@ -106,7 +111,7 @@ export class Launch extends Component {
         )}
         {(activity.actionType === START_IMPORT || activity.actionType === FINISH_IMPORT) && (
           <Link
-            to={this.getLaunchesPageLink(activity.projectName)}
+            to={this.getLaunchesPageLink(getProjectKey(activity), activity.organizationSlug)}
             className={cx('link')}
             target="_blank"
           >

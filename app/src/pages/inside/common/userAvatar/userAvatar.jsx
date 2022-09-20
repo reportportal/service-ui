@@ -24,11 +24,11 @@ import styles from './userAvatar.scss';
 
 const cx = classNames.bind(styles);
 
-export const UserAvatar = ({ className, projectId, userId }) => (
+export const UserAvatar = ({ className, projectKey, userId }) => (
   <div className={cx('user-avatar', className)}>
     <Image
       className={cx('avatar')}
-      src={URLS.dataUserPhoto(projectId, userId, true)}
+      src={URLS.dataUserPhoto(projectKey, userId, true)}
       alt="avatar"
       fallback={DefaultUserImage}
       preloaderColor="charcoal"
@@ -38,11 +38,11 @@ export const UserAvatar = ({ className, projectId, userId }) => (
 
 UserAvatar.propTypes = {
   className: PropTypes.string,
-  projectId: PropTypes.string,
+  projectKey: PropTypes.string,
   userId: PropTypes.string,
 };
 UserAvatar.defaultProps = {
   className: '',
-  projectId: '',
+  projectKey: '',
   userId: '',
 };

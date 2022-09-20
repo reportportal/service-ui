@@ -141,3 +141,5 @@ export const prevTestItemSelector = ({ location }) => {
   if (currentPath.length >= prevPath.length) return null;
   return parseInt(prevPath[currentPath.length], 10);
 };
+
+export const urlProjectKeySelector = (state) => payloadSelector(state).projectKey;

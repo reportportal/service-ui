@@ -44,14 +44,14 @@ export const assignProjectReducer = (state = [], { type, payload }) => {
   switch (type) {
     case ASSIGN_TO_PROJECT_SUCCESS:
       return state.map((project) =>
-        project.projectName === payload.projectName
+        project.projectKey === payload.projectKey
           ? { ...project, usersQuantity: project.usersQuantity + 1 }
           : project,
       );
     case UNASSIGN_FROM_PROJECT_SUCCESS: {
-      const { projectName } = payload;
+      const { projectKey } = payload;
       return state.map((project) =>
-        project.projectName === projectName
+        project.projectKey === projectKey
           ? { ...project, usersQuantity: project.usersQuantity - 1 }
           : project,
       );

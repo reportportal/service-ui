@@ -207,6 +207,7 @@ const AddEditNotificationModal = ({
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
+
   const [isEditorShown, setShowEditor] = React.useState(data.notification.attributes.length > 0);
   const attributesValue =
     useSelector((state) => attributesValueSelector(state, ATTRIBUTES_FIELD_KEY)) ?? [];

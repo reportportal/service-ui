@@ -23,11 +23,12 @@ import { injectIntl, defineMessages } from 'react-intl';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { activeProjectSelector, userIdSelector } from 'controllers/user';
+import { userIdSelector } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { STOPPED } from 'common/constants/launchStatuses';
 import track from 'react-tracking';
+import { projectKeySelector } from 'controllers/project';
 import styles from './launchFinishForceModal.scss';
 
 const cx = classNames.bind(styles);
@@ -70,7 +71,7 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     userId: userIdSelector(state),
-    url: URLS.launchStop(activeProjectSelector(state)),
+    url: URLS.launchStop(projectKeySelector(state)),
   }),
   {
     showNotification,

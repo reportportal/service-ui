@@ -37,7 +37,6 @@ import {
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { FormField } from 'components/fields/formField';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
-import { projectIdSelector } from 'controllers/pages';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { langSelector } from 'controllers/lang';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -45,6 +44,7 @@ import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
 import { Button } from 'componentLibrary/button';
 import { Dropdown } from 'componentLibrary/dropdown';
 import { PROJECT_SETTINGS_GENERAL_TAB_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
+import { urlProjectKeySelector } from 'controllers/pages';
 import styles from './generalTab.scss';
 import { Messages } from './generalTabMessages';
 
@@ -88,13 +88,13 @@ const getAnalyticsData = (...periods) =>
 })
 @connect(
   (state) => ({
-    projectId: projectIdSelector(state),
     isLoading: projectInfoLoadingSelector(state),
     jobConfig: jobAttributesSelector(state),
     accountRole: userAccountRoleSelector(state),
     userRole: activeProjectRoleSelector(state),
     lang: langSelector(state),
     formValues: selector(state, 'keepLaunches', 'keepLogs', 'keepScreenshots'),
+    projectKey: urlProjectKeySelector(state),
   }),
   {
     showNotification,
@@ -107,7 +107,6 @@ export class GeneralTab extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     handleSubmit: PropTypes.func.isRequired,
-    projectId: PropTypes.string.isRequired,
     jobConfig: PropTypes.shape({
       interruptJobTime: PropTypes.string.isRequired,
       keepLogs: PropTypes.string.isRequired,
@@ -127,6 +126,7 @@ export class GeneralTab extends Component {
     retention: PropTypes.number,
     formValues: PropTypes.object,
     isLoading: PropTypes.bool,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -177,7 +177,7 @@ export class GeneralTab extends Component {
         },
       },
     };
-    fetch(URLS.project(this.props.projectId), { method: 'put', data })
+    fetch(URLS.project(this.props.projectKey), { method: 'put', data })
       .then(() => {
         this.props.showNotification({
           message: this.props.intl.formatMessage(Messages.updateSuccessNotification),
@@ -326,7 +326,7 @@ export class GeneralTab extends Component {
   formatInterruptJobTimes = this.createValueFormatter(this.interruptJobTime);
 
   render() {
-    const { intl, accountRole, userRole, isLoading, projectId } = this.props;
+    const { intl, accountRole, userRole, isLoading } = this.props;
     const { processingData } = this.state;
     const isDisabled = !canUpdateSettings(accountRole, userRole) || processingData;
     return isLoading ? (
@@ -338,8 +338,8 @@ export class GeneralTab extends Component {
             <div className={cx('fake-input-label')}>
               {intl.formatMessage(Messages.projectNameLabel)}
             </div>
-            <div className={cx('fake-input')} title={projectId}>
-              {projectId}
+            <div className={cx('fake-input')}>
+              {this.props.projectKey}
             </div>
           </div>
           <FormField

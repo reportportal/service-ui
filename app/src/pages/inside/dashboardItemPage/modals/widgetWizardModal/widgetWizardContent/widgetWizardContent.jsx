@@ -25,7 +25,6 @@ import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { showDefaultErrorNotification } from 'controllers/notification';
-import { activeProjectSelector } from 'controllers/user';
 import { fetchDashboardsAction } from 'controllers/dashboard';
 import { analyticsEnabledSelector, baseEventParametersSelector } from 'controllers/appInfo';
 import { getWidgets } from 'pages/inside/dashboardItemPage/modals/common/widgets';
@@ -36,6 +35,7 @@ import {
   getEcWidget,
 } from 'components/main/analytics/events/common/widgetPages/utils';
 import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/common/messages';
+import { projectKeySelector } from 'controllers/project';
 import { WIDGET_WIZARD_FORM } from '../../common/constants';
 import { prepareWidgetDataForSubmit, getDefaultWidgetConfig } from '../../common/utils';
 import { WizardInfoSection } from './wizardInfoSection';
@@ -47,11 +47,11 @@ const cx = classNames.bind(styles);
 @injectIntl
 @connect(
   (state) => ({
-    projectId: activeProjectSelector(state),
     activeDashboardId: activeDashboardIdSelector(state),
     currentPage: pageSelector(state),
     isAnalyticsEnabled: analyticsEnabledSelector(state),
     baseEventParameters: baseEventParametersSelector(state),
+    projectKey: projectKeySelector(state),
   }),
   {
     submitWidgetWizardForm: () => submit(WIDGET_WIZARD_FORM),
@@ -67,7 +67,6 @@ export class WidgetWizardContent extends Component {
     intl: PropTypes.object.isRequired,
     formValues: PropTypes.object,
     submitWidgetWizardForm: PropTypes.func.isRequired,
-    projectId: PropTypes.string.isRequired,
     showScreenLockAction: PropTypes.func.isRequired,
     hideScreenLockAction: PropTypes.func.isRequired,
     showDefaultErrorNotification: PropTypes.func.isRequired,
@@ -84,6 +83,7 @@ export class WidgetWizardContent extends Component {
     activeDashboardId: PropTypes.number,
     currentPage: PropTypes.string,
     baseEventParameters: baseEventParametersShape,
+    projectKey: PropTypes.string.isRequired,
   };
   static defaultProps = {
     formValues: {
@@ -161,17 +161,17 @@ export class WidgetWizardContent extends Component {
     const {
       tracking: { trackEvent },
       eventsInfo: { addWidget },
-      projectId,
       onConfirm,
       isAnalyticsEnabled,
       baseEventParameters,
+      projectKey,
     } = this.props;
     const { selectedDashboard, ...rest } = formData;
     const data = prepareWidgetDataForSubmit(this.preprocessOutputData(rest));
 
     trackEvent(addWidget);
     this.props.showScreenLockAction();
-    fetch(URLS.widget(projectId), {
+    fetch(URLS.widget(projectKey), {
       method: 'post',
       data,
     })
@@ -224,17 +224,19 @@ export class WidgetWizardContent extends Component {
       formValues: { widgetType },
       formValues,
       showConfirmation,
-      projectId,
       eventsInfo,
       submitWidgetWizardForm,
+      projectKey,
     } = this.props;
 
     return (
       <div className={cx('widget-wizard-content')}>
         <WizardInfoSection
           activeWidget={this.widgets.find((widget) => widgetType === widget.id)}
-          projectId={projectId}
-          widgetSettings={prepareWidgetDataForSubmit(this.preprocessOutputData(formValues))}
+          projectKey={projectKey}
+          widgetSettings={prepareWidgetDataForSubmit(
+            this.preprocessOutputData(formValues),
+          )}
           step={this.state.step}
           showConfirmation={showConfirmation}
         />

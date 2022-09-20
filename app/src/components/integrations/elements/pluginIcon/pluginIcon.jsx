@@ -18,7 +18,6 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { URLS } from 'common/urls';
-import { activeProjectSelector } from 'controllers/user';
 import { COMMAND_GET_FILE } from 'controllers/plugins/uiExtensions/constants';
 import { globalIntegrationsSelector } from 'controllers/plugins/selectors';
 import {
@@ -28,11 +27,12 @@ import {
 } from 'controllers/plugins/utils';
 import { PLUGIN_DEFAULT_IMAGE, PLUGIN_IMAGES_MAP } from 'components/integrations/constants';
 import { Image } from 'components/main/image';
+import { activeProjectKeySelector } from 'controllers/user';
 
 export const PluginIcon = ({ pluginData, className, ...rest }) => {
   const { details, name, enabled } = pluginData;
   const isDynamicIconAvailable = details && details.binaryData && details.binaryData.icon;
-  const projectId = useSelector(activeProjectSelector);
+  const projectKey = useSelector(activeProjectKeySelector);
   const globalIntegrations = useSelector(globalIntegrationsSelector);
 
   const calculateIconParams = () => {
@@ -47,7 +47,7 @@ export const PluginIcon = ({ pluginData, className, ...rest }) => {
 
       if (isCommonCommandSupported) {
         return {
-          url: URLS.pluginCommandCommon(projectId, name, COMMAND_GET_FILE),
+          url: URLS.pluginCommandCommon(projectKey, name, COMMAND_GET_FILE),
           requestParams: commandParams,
         };
       }
@@ -55,7 +55,7 @@ export const PluginIcon = ({ pluginData, className, ...rest }) => {
       const integration = filterIntegrationsByName(globalIntegrations, name)[0];
       if (integration && isAllowedCommandSupported) {
         return {
-          url: URLS.projectIntegrationByIdCommand(projectId, integration.id, COMMAND_GET_FILE),
+          url: URLS.projectIntegrationByIdCommand(projectKey, integration.id, COMMAND_GET_FILE),
           requestParams: commandParams,
         };
       }

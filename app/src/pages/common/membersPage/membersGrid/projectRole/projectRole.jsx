@@ -36,7 +36,7 @@ import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { ROLES_MAP } from 'common/constants/projectRoles';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-
+import { projectKeySelector } from 'controllers/project';
 import styles from './projectRole.scss';
 
 const cx = classNames.bind(styles);
@@ -62,6 +62,7 @@ const messages = defineMessages({
       userAccountRoleSelector(state),
       activeProjectRoleSelector(state),
     ),
+    projectKey: projectKeySelector(state),
   }),
   { showNotification },
 )
@@ -81,6 +82,7 @@ export class ProjectRole extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    projectKey: PropTypes.string.isRequired,
   };
   static defaultProps = {
     assignedProjects: {},
@@ -104,7 +106,7 @@ export class ProjectRole extends Component {
     param.users[this.props.userId] = val;
     this.setState({ currentRole: val });
     tracking.trackEvent(MEMBERS_PAGE_EVENTS.CHANGE_PROJECT_ROLE);
-    fetch(URLS.project(this.props.projectId), {
+    fetch(URLS.project(this.props.projectKey), {
       method: 'put',
       data: param,
     })
