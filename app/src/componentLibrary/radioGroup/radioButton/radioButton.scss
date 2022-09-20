@@ -1,0 +1,181 @@
+/*!
+ * Copyright 2022 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@mixin disabled-state {
+  opacity: 0.3;
+}
+
+@mixin toggler {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+}
+
+@mixin toggler-active {
+  width: 8px;
+  height: 8px;
+}
+
+.radio-button {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  outline: none;
+  cursor: pointer;
+  padding-bottom: 4px;
+
+  &.disabled {
+    cursor: default;
+
+    .toggler {
+      &::after {
+        background-color: $COLOR--topaz-pressed;
+      }
+    }
+  }
+}
+
+.input {
+  display: none;
+}
+
+.toggler {
+  display: flex;
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  margin: auto 10px auto 0;
+  border-radius: 100%;
+  border-width: 1px;
+  border-style: solid;
+  line-height: 18;
+
+  &::after {
+    content: '';
+    display: block;
+    border-radius: 100%;
+    margin: auto;
+    background-color: $COLOR--topaz-pressed;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: transform 0.2s, opacity 0.2s;
+  }
+
+  &.checked,
+  &.disabled {
+    &::after {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+}
+
+.children-container {
+  display: inline-block;
+  overflow: hidden;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  line-height: 18px;
+  word-break: break-all;
+  text-overflow: ellipsis;
+}
+
+.light {
+  &.toggler {
+    @include toggler;
+    border-color: $COLOR--e-200;
+    background-color: $COLOR--white-two;
+
+    &::after {
+      @include toggler-active;
+    }
+  }
+
+  &.children-container {
+    max-width: 100%;
+    color: $COLOR--charcoal-grey;
+  }
+
+  &:hover:not(.disabled) {
+    border-color: $COLOR--e-400;
+  }
+
+  &:hover:after:not(.disabled) {
+    background-color: $COLOR--topaz-hover;
+  }
+
+  &:focus {
+    border-color: $COLOR--topaz-focused;
+  }
+
+  &:focus:after {
+    background-color: $COLOR--topaz-pressed;
+  }
+
+  &.disabled {
+    .toggler {
+      @include disabled-state;
+    }
+
+    &::after {
+      @include disabled-state;
+    }
+  }
+}
+
+.dark {
+  &.toggler {
+    @include toggler;
+    border-color: $COLOR--e-100;
+    background: none;
+
+    &::after {
+      @include toggler-active;
+      background-color: $COLOR--darkmode-topaz-main;
+    }
+  }
+
+  &.children-container {
+    max-width: 100%;
+    color: $COLOR--charcoal-grey;
+  }
+
+  &:hover:not(.disabled) {
+    border-color: $COLOR--darkmode-gray-50;
+  }
+
+  &:hover:after:not(.disabled) {
+    background-color: $COLOR--darkmode-topaz-hover;
+  }
+
+  &:focus {
+    border-color: $COLOR--darkmode-topaz-focused;
+  }
+
+  &:focus:after {
+    background-color: $COLOR--darkmode-topaz-main;
+  }
+
+  &.disabled {
+    .toggler {
+      @include disabled-state;
+    }
+
+    &::after {
+      @include disabled-state;
+    }
+  }
+}
