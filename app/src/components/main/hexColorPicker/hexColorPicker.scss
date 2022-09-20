@@ -19,6 +19,7 @@
     .react-colorful {
       width: 100%;
       border-radius: 0;
+      background-color: $COLOR--white-two;
     }
 
     .react-colorful__saturation {
@@ -55,6 +56,10 @@
   font-size: 13px;
   line-height: 20px;
   color: $COLOR--almost-black;
+}
+
+.section {
+  background-color: $COLOR--white-two;
 }
 
 .hex-color-presets {

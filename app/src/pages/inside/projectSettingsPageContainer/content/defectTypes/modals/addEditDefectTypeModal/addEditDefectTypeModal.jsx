@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { reduxForm } from 'redux-form';
 import { useDispatch } from 'react-redux';
@@ -116,6 +116,8 @@ const AddEditDefectTypeModal = ({
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
+  const [color, setColor] = useState();
+
   useEffect(() => {
     initialize(defectType);
   }, []);
@@ -186,8 +188,8 @@ const AddEditDefectTypeModal = ({
             type="text"
             className={cx('input')}
             onChange={(value) => {
-              change(GROUP_FIELD_KEY, value);
               change(COLOR_FIELD_KEY, defectTypes[value][0].color);
+              setColor(value);
             }}
             dataAutomationId={GROUP_FIELD_KEY + FIELD}
           >
@@ -220,6 +222,10 @@ const AddEditDefectTypeModal = ({
           name={COLOR_FIELD_KEY}
           className={cx('color-picker')}
           dataAutomationId={COLOR_FIELD_KEY + FIELD}
+          onChange={(value) => {
+            setColor(value);
+          }}
+          value={color}
         >
           <HexColorPickerComponent label={formatMessage(messages.color)} presets={COLORS} />
         </FieldElement>
