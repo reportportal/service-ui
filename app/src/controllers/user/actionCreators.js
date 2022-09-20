@@ -29,6 +29,7 @@ import {
   FETCH_USER_SUCCESS,
   FETCH_USER,
   FETCH_USER_ERROR,
+  SET_ACTIVE_PROJECT_KEY,
 } from './constants';
 
 export const fetchUserSuccessAction = (user) => ({
@@ -54,9 +55,14 @@ export const setApiTokenAction = (token) => ({
   },
 });
 
-export const setActiveProjectAction = (project) => ({
+export const setActiveProjectAction = (activeProject) => ({
   type: SET_ACTIVE_PROJECT,
-  payload: project,
+  payload: activeProject,
+});
+
+export const setActiveProjectKeyAction = (activeProjectKey) => ({
+  type: SET_ACTIVE_PROJECT_KEY,
+  payload: activeProjectKey,
 });
 
 export const generateApiTokenAction = ({ successMessage, errorMessage } = {}) => ({

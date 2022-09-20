@@ -20,22 +20,21 @@ import { connect } from 'react-redux';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
 import { ERROR } from 'common/constants/logLevels';
-import { activeProjectSelector } from 'controllers/user';
+import { projectKeySelector } from 'controllers/project';
 import { Retries } from './retries';
 
 @connect((state) => ({
-  activeProject: activeProjectSelector(state),
+  projectKey: projectKeySelector(state),
 }))
 export class RetriesContainer extends Component {
   static propTypes = {
     testItemId: PropTypes.number.isRequired,
-    activeProject: PropTypes.string,
+    projectKey: PropTypes.string.isRequired,
     retries: PropTypes.arrayOf(PropTypes.object).isRequired,
     collapsed: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
-    activeProject: '',
     retries: [],
   };
 
@@ -52,7 +51,7 @@ export class RetriesContainer extends Component {
 
   fetchLog = (itemId) => {
     this.setState({ loading: true });
-    fetch(URLS.logItem(this.props.activeProject, itemId, ERROR))
+    fetch(URLS.logItem(this.props.projectKey, itemId, ERROR))
       .then((result) =>
         this.setState({
           logItem: result.content[0],

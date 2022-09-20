@@ -30,7 +30,7 @@ const cx = classNames.bind(styles);
 
 export class WidgetInfoBlock extends PureComponent {
   static propTypes = {
-    projectId: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
     widgetSettings: PropTypes.object,
     activeWidget: PropTypes.object,
     customCondition: PropTypes.bool,
@@ -88,7 +88,7 @@ export class WidgetInfoBlock extends PureComponent {
       loading: true,
       widgetData: null,
     });
-    fetch(URLS.widgetPreview(this.props.projectId), {
+    fetch(URLS.widgetPreview(this.props.projectKey), {
       method: 'post',
       data: widgetSettings,
     })

@@ -22,8 +22,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { fetchProjectAction } from 'controllers/project';
-import { projectIdSelector } from 'controllers/pages';
+import { fetchProjectAction, projectKeySelector } from 'controllers/project';
 import {
   showNotification,
   showDefaultErrorNotification,
@@ -63,7 +62,7 @@ const messages = defineMessages({
 @withModal('generateIndexModal')
 @connect(
   (state) => ({
-    projectId: projectIdSelector(state),
+    projectKey: projectKeySelector(state),
   }),
   {
     fetchProjectAction,
@@ -82,11 +81,10 @@ export class GenerateIndexModal extends Component {
       modalTitle: PropTypes.object,
       modalDescription: PropTypes.object,
     }),
-    projectId: PropTypes.string,
+    projectKey: PropTypes.string.isRequired,
   };
   static defaultProps = {
     intl: {},
-    projectId: '',
     data: {
       modalTitle: messages.generateIndexHeader,
       modalDescription: messages.contentHeaderMessage,
@@ -94,13 +92,13 @@ export class GenerateIndexModal extends Component {
   };
 
   onClickGenerate = (closeModal) => {
-    fetch(URLS.projectIndex(this.props.projectId), { method: 'put' })
+    fetch(URLS.projectIndex(this.props.projectKey), { method: 'put' })
       .then(() => {
         this.props.showNotification({
           message: this.props.intl.formatMessage(messages.generateSuccessNotification),
           type: NOTIFICATION_TYPES.SUCCESS,
         });
-        this.props.fetchProjectAction(this.props.projectId);
+        this.props.fetchProjectAction(this.props.projectKey);
       })
       .catch(this.props.showDefaultErrorNotification);
     closeModal();

@@ -19,11 +19,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
 import { ModalLayout, withModal } from 'components/main/modal';
-import { activeProjectSelector } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
+import { projectKeySelector } from 'controllers/project';
 
 const MESSAGE_TYPES = {
   button: 'button',
@@ -66,7 +66,7 @@ const messages = defineMessages({
 @injectIntl
 @connect(
   (state) => ({
-    activeProject: activeProjectSelector(state),
+    projectKey: projectKeySelector(state),
   }),
   {
     showNotification,
@@ -74,7 +74,7 @@ const messages = defineMessages({
 )
 export class CopySendDefectModal extends Component {
   static propTypes = {
-    activeProject: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
     intl: PropTypes.object.isRequired,
     data: PropTypes.shape({
@@ -89,7 +89,7 @@ export class CopySendDefectModal extends Component {
   onInclude = (closeModal) => {
     const {
       intl,
-      activeProject,
+      projectKey,
       data: { lastHistoryItem, itemForCopy, fetchFunc },
     } = this.props;
 
@@ -104,7 +104,7 @@ export class CopySendDefectModal extends Component {
       },
     ];
 
-    fetch(URLS.testItem(activeProject), {
+    fetch(URLS.testItem(projectKey), {
       method: 'put',
       data: {
         issues,

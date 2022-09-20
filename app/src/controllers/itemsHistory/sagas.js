@@ -18,7 +18,6 @@ import { takeEvery, all, put, call, select, take } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { getStorageItem } from 'common/utils';
 import { concatFetchDataAction, createFetchPredicate } from 'controllers/fetch';
-import { activeProjectSelector } from 'controllers/user';
 import { LEVEL_SUITE } from 'common/constants/launchLevels';
 import {
   isTestItemsListSelector,
@@ -35,6 +34,8 @@ import {
   pagePropertiesSelector,
 } from 'controllers/pages';
 import { isOldHistorySelector } from 'controllers/appInfo';
+import { projectKeySelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 import {
   fetchItemsHistoryAction,
   resetHistoryAction,
@@ -92,8 +93,8 @@ function* fetchItemsHistory({ payload = {} }) {
   if (payload.loadMore) {
     yield put(setHistoryPageLoadingAction(true));
   }
-  const activeProject = yield select(activeProjectSelector);
   const params = yield call(getHistoryParams, payload);
+  const projectKey = yield select(activeProjectKeySelector);
 
   const historyDepth =
     payload.historyDepth ||
@@ -103,7 +104,7 @@ function* fetchItemsHistory({ payload = {} }) {
 
   yield put(
     concatFetchDataAction(NAMESPACE, payload.loadMore)(
-      URLS.testItemsHistory(activeProject, historyDepth, historyBase),
+      URLS.testItemsHistory(projectKey, historyDepth, historyBase),
       { params },
     ),
   );
@@ -146,7 +147,7 @@ function* refreshHistory({ payload }) {
 }
 
 function* fetchFilterHistory({ payload: { filter, loadMore } }) {
-  const activeProject = yield select(activeProjectSelector);
+  const projectKey = yield select(projectKeySelector);
   const itemsHistory = yield select(historySelector);
   const isOldHistory = yield select(isOldHistorySelector);
   const historyGroupingFieldKey = isOldHistory
@@ -174,7 +175,7 @@ function* fetchFilterHistory({ payload: { filter, loadMore } }) {
 
   yield put(
     concatFetchDataAction(FILTER_HISTORY_NAMESPACE, loadMore)(
-      URLS.testItemsHistory(activeProject, historyDepth, 'comparing'),
+      URLS.testItemsHistory(projectKey, historyDepth, 'comparing'),
       {
         params,
       },

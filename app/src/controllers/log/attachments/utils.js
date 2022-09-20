@@ -41,10 +41,10 @@ export const isTextWithJson = (contentType) => {
 export const getExtensionFromPattern = (extensionString) =>
   Object.keys(FILE_PATTERNS_MAP).find((key) => !!FILE_PATTERNS_MAP[key].exec(extensionString));
 
-export const getFileIconSource = (item, projectId, loadThumbnail) => {
+export const getFileIconSource = (item, projectKey, loadThumbnail) => {
   const [fileType, extension] = getAttachmentTypeConfig(item.contentType);
   if (fileType === IMAGE) {
-    return URLS.getFileById(projectId, item.id, loadThumbnail);
+    return URLS.getFileById(projectKey, item.id, loadThumbnail);
   }
   const extensionFromPattern = getExtensionFromPattern(extension || fileType);
   return (
@@ -63,13 +63,13 @@ export const getAttachmentModalId = (contentType) => {
   );
 };
 
-export const createAttachment = (item, projectId) => {
+export const createAttachment = (item, projectKey) => {
   const isImage = getAttachmentTypeConfig(item.contentType)[0] === IMAGE;
 
   return {
     id: item.id,
-    src: getFileIconSource(item, projectId),
-    thumbnailSrc: isImage ? URLS.getFileById(projectId, item.id, true) : null,
+    src: getFileIconSource(item, projectKey),
+    thumbnailSrc: isImage ? URLS.getFileById(projectKey, item.id, true) : null,
     alt: item.contentType,
     contentType: item.contentType,
     isImage,

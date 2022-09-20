@@ -48,6 +48,11 @@ export const subTypesSelector = (state) => projectConfigSelector(state).subTypes
 
 export const projectAttributesSelector = (state) => projectConfigSelector(state).attributes || {};
 
+export const projectOrganizationSlugSelector = (state) =>
+  projectInfoSelector(state).organizationSlug || '';
+
+export const projectKeySelector = (state) => projectInfoSelector(state).projectKey || '';
+
 export const autoAnalysisEnabledSelector = (state) =>
   projectAttributesSelector(state)[AA_ATTRIBUTE_ENABLED_KEY];
 

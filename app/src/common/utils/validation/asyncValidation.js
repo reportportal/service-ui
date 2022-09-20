@@ -33,8 +33,8 @@ export const projectNameUnique = (projectName) =>
     }
   });
 
-export const filterNameUnique = (activeProject, filterId, filterName) =>
-  fetch(URLS.searchFilterNames(activeProject), {
+export const filterNameUnique = (projectKey, filterId, filterName) =>
+  fetch(URLS.searchFilterNames(projectKey), {
     params: { 'filter.ne.id': filterId, 'filter.eq.name': filterName },
   }).then((filters) => {
     if (filters && filters.content && filters.content.length) {

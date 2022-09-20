@@ -92,7 +92,6 @@ const messages = defineMessages({
 @track({ page: SETTINGS_PAGE })
 export class SettingsPage extends Component {
   static propTypes = {
-    projectId: PropTypes.string.isRequired,
     createTabLink: PropTypes.func.isRequired,
     intl: PropTypes.object.isRequired,
     onChangeTab: PropTypes.func.isRequired,

@@ -45,8 +45,7 @@ import {
   MATCHED_PATTERN,
 } from 'common/constants/actionTypes';
 import { AbsRelTime } from 'components/main/absRelTime';
-import { externalSystemSelector } from 'controllers/project';
-import { projectIdSelector } from 'controllers/pages';
+import { externalSystemSelector, projectKeySelector } from 'controllers/project';
 import { UserAvatar } from 'pages/inside/common/userAvatar';
 import { DefaultProjectSettings } from './activities/defaultProjectSettings';
 import { AnalysisProperties } from './activities/analysisProperties';
@@ -59,6 +58,7 @@ import { CommonEntity } from './activities/commonEntity';
 import { DefectType } from './activities/defectType';
 import { Notifications } from './activities/notifications';
 import styles from './projectActivity.scss';
+import { getProjectKey } from './activities/utils';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
@@ -166,14 +166,14 @@ const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
 // TODO: rewrite it when integrations will be added
 @connect((state) => ({
   hasBts: externalSystemSelector(state).length > 0,
-  projectId: projectIdSelector(state),
+  projectKey: projectKeySelector(state),
   lang: langSelector(state),
 }))
 @injectIntl
 export class ProjectActivity extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    projectId: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
     widget: PropTypes.object,
     hasBts: PropTypes.bool,
     lang: PropTypes.string,
@@ -304,7 +304,7 @@ export class ProjectActivity extends Component {
                 <UserAvatar
                   className={cx('avatar-wrapper')}
                   userId={activity.user}
-                  projectId={this.props.projectId}
+                  projectKey={getProjectKey(activity)}
                   alt="avatar"
                 />
                 <div className={cx('activity-wrapper')}>

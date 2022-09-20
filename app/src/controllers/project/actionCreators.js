@@ -79,19 +79,19 @@ export const hideFilterOnLaunchesAction = (filter) => ({
   payload: filter,
 });
 
-export const fetchProjectPreferencesAction = (projectId) => ({
+export const fetchProjectPreferencesAction = (projectKey) => ({
   type: FETCH_PROJECT_PREFERENCES,
-  payload: projectId,
+  payload: projectKey,
 });
 
-export const fetchProjectAction = (projectId, fetchInfoOnly) => ({
+export const fetchProjectAction = (projectKey, fetchInfoOnly) => ({
   type: FETCH_PROJECT,
-  payload: { projectId, fetchInfoOnly },
+  payload: { fetchInfoOnly, projectKey },
 });
 
-export const fetchConfigurationAttributesAction = (projectId) => ({
+export const fetchConfigurationAttributesAction = (projectKey) => ({
   type: FETCH_CONFIGURATION_ATTRIBUTES,
-  payload: projectId,
+  payload: projectKey,
 });
 
 export const updateDefectTypeAction = (defectType) => ({

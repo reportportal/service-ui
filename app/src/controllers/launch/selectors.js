@@ -20,7 +20,6 @@ import {
   createSelectedItemsSelector,
   createLastOperationSelector,
 } from 'controllers/groupOperations';
-import { activeProjectSelector } from 'controllers/user';
 import {
   createQueryParametersSelector,
   pagePropertiesSelector,
@@ -29,6 +28,7 @@ import {
   PROJECT_LAUNCHES_PAGE,
 } from 'controllers/pages';
 import { ALL, LATEST } from 'common/constants/reservedFilterIds';
+import { activeProjectKeySelector } from 'controllers/user';
 import { DEFAULT_SORTING, NAMESPACE } from './constants';
 
 const domainSelector = (state) => state.launches || {};
@@ -69,16 +69,17 @@ export const launchesDistinctLinksSelectorsMap = {
 };
 
 export const getLaunchFilterLinkSelector = createSelector(
-  activeProjectSelector,
+  activeProjectKeySelector,
   launchDistinctSelector,
-  (projectId, allLatest) => (filter, active) => {
+  (projectKey, allLatest) => (filter, active, organizationSlug) => {
     const filterId = active ? allLatest : filter;
 
     return {
       type: PROJECT_LAUNCHES_PAGE,
       payload: {
-        projectId,
+        projectKey,
         filterId,
+        organizationSlug,
       },
     };
   },

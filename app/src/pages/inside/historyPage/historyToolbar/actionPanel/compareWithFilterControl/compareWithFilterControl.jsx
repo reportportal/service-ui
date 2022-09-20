@@ -21,7 +21,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { Manager, Popper, Reference } from 'react-popper';
 import track from 'react-tracking';
-import { userIdSelector, activeProjectSelector } from 'controllers/user/selectors';
+import { userIdSelector, activeProjectSelector } from 'controllers/user';
 import { debounce } from 'common/utils';
 import CompareIcon from 'common/img/compare-inline.svg';
 import CrossIcon from 'common/img/cross-icon-inline.svg';

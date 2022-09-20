@@ -18,7 +18,7 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
-import { userIdSelector } from 'controllers/user/selectors';
+import { userIdSelector } from 'controllers/user';
 import { FiltersActionPanel } from './filtersActionPanel';
 import { ActiveFilter } from './activeFilter';
 import { FiltersList } from './filtersList';

@@ -25,8 +25,8 @@ import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import {
   PROJECTS_PAGE,
   PROJECT_DETAILS_PAGE,
-  projectIdSelector,
   projectSectionSelector,
+  urlProjectKeySelector,
 } from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
 import { SETTINGS, MEMBERS, EVENTS } from 'common/constants/projectSections';
@@ -40,6 +40,7 @@ import {
   addProjectAction,
   navigateToProjectSectionAction,
 } from 'controllers/administrate/projects';
+import { projectOrganizationSlugSelector } from 'controllers/project';
 import { ProjectStatusPage } from '../projectStatusPage';
 import { ProjectEventsPage } from '../projectEventsPage';
 import { Projects } from './projects';
@@ -66,8 +67,9 @@ const HEADER_BUTTONS = [
 
 @connect(
   (state) => ({
-    projectId: projectIdSelector(state),
+    projectKey: urlProjectKeySelector(state),
     section: projectSectionSelector(state),
+    organizationSlug: projectOrganizationSlugSelector(state),
   }),
   {
     addProject: addProjectAction,
@@ -84,7 +86,8 @@ export class ProjectsPage extends Component {
     addProject: PropTypes.func.isRequired,
     showModal: PropTypes.func.isRequired,
     section: PropTypes.string,
-    projectId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    organizationSlug: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -93,21 +96,28 @@ export class ProjectsPage extends Component {
 
   static defaultProps = {
     section: undefined,
-    projectId: undefined,
   };
 
   onHeaderButtonClick = (section) => () => {
     this.props.tracking.trackEvent(
       ADMIN_PROJECTS_PAGE_EVENTS[`CLICK_${section.toUpperCase()}_BTN`],
     );
-    this.props.navigateToSection(this.props.projectId, section);
+
+    this.props.navigateToSection(
+      {
+        organizationSlug: this.props.organizationSlug,
+        projectKey: this.props.projectKey,
+      },
+      section,
+    );
   };
 
   getBreadcrumbs = () => {
     const {
       intl: { formatMessage },
-      projectId,
       section,
+      organizationSlug,
+      projectKey,
     } = this.props;
 
     const breadcrumbs = [
@@ -119,12 +129,12 @@ export class ProjectsPage extends Component {
       },
     ];
 
-    if (projectId) {
+    if (projectKey) {
       breadcrumbs.push({
-        title: projectId,
+        title: `${projectKey}`,
         link: {
           type: PROJECT_DETAILS_PAGE,
-          payload: { projectId, projectSection: null },
+          payload: { projectKey, projectSection: null, organizationSlug },
         },
       });
     }
@@ -156,11 +166,11 @@ export class ProjectsPage extends Component {
   renderHeaderButtons = () => {
     const {
       intl: { formatMessage },
-      projectId,
+      projectKey,
       section,
     } = this.props;
 
-    if (!projectId) {
+    if (!projectKey) {
       return (
         <div className={cx('mobile-hide')}>
           <GhostButton icon={AddProjectIcon} onClick={this.showAddProjectModal}>
@@ -188,21 +198,26 @@ export class ProjectsPage extends Component {
   };
 
   renderSection = () => {
-    const { projectId, section } = this.props;
+    const { projectKey, section, organizationSlug } = this.props;
 
-    if (!projectId) {
+    if (!projectKey) {
       return <Projects />;
     }
 
     switch (section) {
       case SETTINGS:
-        return <AdminProjectSettingsPageContainer projectId={projectId} />;
+        return (
+          <AdminProjectSettingsPageContainer
+            projectKey={projectKey}
+            organizationSlug={organizationSlug}
+          />
+        );
       case MEMBERS:
         return <MembersPage />;
       case EVENTS:
         return <ProjectEventsPage />;
       default:
-        return <ProjectStatusPage projectId={projectId} />;
+        return <ProjectStatusPage projectKey={projectKey} />;
     }
   };
 

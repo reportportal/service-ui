@@ -32,6 +32,7 @@ import {
   normalizeAttributesWithPrefix,
   analyzerAttributesSelector,
   ANALYZER_ATTRIBUTE_PREFIX,
+  projectKeySelector,
 } from 'controllers/project';
 import { analyzerExtensionsSelector } from 'controllers/appInfo/selectors';
 import { AnalysisForm } from './analysisForm/analysisForm';
@@ -79,6 +80,7 @@ const messages = defineMessages({
     userRole: activeProjectRoleSelector(state),
     analyzerConfiguration: analyzerAttributesSelector(state),
     analyzerExtensions: analyzerExtensionsSelector(state),
+    projectKey: projectKeySelector(state),
   }),
   {
     fetchConfigurationAttributesAction,
@@ -100,6 +102,7 @@ export class AutoAnalysisTab extends Component {
     showGenerateIndexModal: PropTypes.func.isRequired,
     analyzerConfiguration: PropTypes.object,
     analyzerExtensions: PropTypes.array,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -109,7 +112,7 @@ export class AutoAnalysisTab extends Component {
   };
 
   componentDidMount() {
-    this.props.fetchConfigurationAttributesAction(this.props.projectId);
+    this.props.fetchConfigurationAttributesAction(this.props.projectKey);
   }
 
   getIndexActionsBlockValues = () =>
@@ -174,7 +177,7 @@ export class AutoAnalysisTab extends Component {
       },
     };
 
-    fetch(URLS.project(this.props.projectId), { method: 'put', data })
+    fetch(URLS.project(this.props.projectKey), { method: 'put', data })
       .then(() => {
         this.props.showNotification({
           message: formatMessage(messages.updateSuccessNotification),

@@ -21,9 +21,9 @@ import classNames from 'classnames/bind';
 import { useTracking } from 'react-tracking';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { projectIdSelector, querySelector, PROJECT_SETTINGS_TAB_PAGE } from 'controllers/pages';
+import { urlProjectKeySelector, querySelector, PROJECT_SETTINGS_TAB_PAGE } from 'controllers/pages';
 import { omit } from 'common/utils/omit';
-import { activeProjectSelector } from 'controllers/user';
+import { activeProjectKeySelector } from 'controllers/user';
 import {
   removeIntegrationAction,
   namedGlobalIntegrationsSelector,
@@ -45,8 +45,8 @@ export const IntegrationSettings = (props) => {
   const [loading, setLoading] = useState(!props.data.isNew && !props.preventTestConnection);
   const globalIntegrations = useSelector(namedGlobalIntegrationsSelector);
   const projectIntegrations = useSelector(namedProjectIntegrationsSelector);
-  const projectId = useSelector(projectIdSelector);
-  const activeProject = useSelector(activeProjectSelector);
+  const projectKey = useSelector(activeProjectKeySelector);
+  const payloadProjectKey = useSelector(urlProjectKeySelector);
   const query = useSelector(querySelector);
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
@@ -57,18 +57,18 @@ export const IntegrationSettings = (props) => {
   const namedSubPage = useMemo(
     () => ({
       type: PROJECT_SETTINGS_TAB_PAGE,
-      payload: { projectId: activeProject, settingsTab: INTEGRATIONS },
+      payload: { projectKey: payloadProjectKey, settingsTab: INTEGRATIONS },
       meta: {
         query: omit(query, ['id']),
       },
     }),
-    [activeProject, query],
+    [payloadProjectKey, query],
   );
 
   const testIntegrationConnection = useCallback(() => {
     setLoading(true);
     if ('id' in props.data) {
-      fetch(URLS.testIntegrationConnection(projectId || activeProject, props.data.id))
+      fetch(URLS.testIntegrationConnection(projectKey || payloadProjectKey, props.data.id))
         .then(() => {
           setConnected(true);
           setLoading(false);
@@ -78,7 +78,7 @@ export const IntegrationSettings = (props) => {
           setConnected(false);
         });
     }
-  }, [props.data, activeProject, projectId]);
+  }, [props.data, projectKey, payloadProjectKey]);
 
   useEffect(() => {
     const hasId = groupedIntegrations.some((value) => value.id === +query.id);

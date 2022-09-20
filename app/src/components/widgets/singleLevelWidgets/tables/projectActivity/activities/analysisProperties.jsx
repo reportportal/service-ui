@@ -20,7 +20,7 @@ import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import Link from 'redux-first-router-link';
 import classNames from 'classnames/bind';
 import { ANALYSIS } from 'common/constants/settingsTabs';
-import { getProjectSettingTabPageLink } from './utils';
+import { getProjectKey, getProjectSettingTabPageLink } from './utils';
 import styles from './common.scss';
 
 const cx = classNames.bind(styles);
@@ -138,7 +138,11 @@ export class AnalysisProperties extends Component {
         <Link
           className={cx('link')}
           target="_blank"
-          to={getProjectSettingTabPageLink(activity.projectName, ANALYSIS)}
+          to={getProjectSettingTabPageLink(
+            getProjectKey(activity),
+            ANALYSIS,
+            activity.organizationSlug,
+          )}
         >
           <FormattedMessage
             id="UpdateAnalysisSettings.analysisProps"

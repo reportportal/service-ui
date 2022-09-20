@@ -22,7 +22,6 @@ import { injectIntl } from 'react-intl';
 import className from 'classnames/bind';
 import { URLS } from 'common/urls';
 import { validate } from 'common/utils/validation';
-import { projectIdSelector } from 'controllers/pages';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { InputDropdown } from 'components/inputs/inputDropdown';
@@ -31,6 +30,7 @@ import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { AttributeListField } from 'components/main/attributeList';
 import { AsyncMultipleAutocomplete } from 'components/inputs/autocompletes/asyncMultipleAutocomplete';
 import { Input } from 'components/inputs/input';
+import { urlProjectKeySelector } from 'controllers/pages';
 import {
   LAUNCH_CASES,
   LABEL_WIDTH,
@@ -48,20 +48,17 @@ const cx = className.bind(styles);
 
 @injectIntl
 @connect((state) => ({
-  activeProject: projectIdSelector(state),
+  projectKey: urlProjectKeySelector(state),
 }))
 @track()
 export class NotificationCaseFormFields extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    activeProject: PropTypes.string,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-  };
-  static defaultProps = {
-    activeProject: '',
+    projectKey: PropTypes.string.isRequired,
   };
 
   getDropdownInputConfig = () => {
@@ -100,8 +97,8 @@ export class NotificationCaseFormFields extends Component {
   render() {
     const {
       intl: { formatMessage },
-      activeProject,
       tracking,
+      projectKey,
     } = this.props;
 
     return (
@@ -130,7 +127,7 @@ export class NotificationCaseFormFields extends Component {
               placeholder={formatMessage(messages.recipientsPlaceholder)}
               notFoundPrompt={formatMessage(messages.recipientsHint)}
               minLength={3}
-              getURI={URLS.projectUsernamesSearch(activeProject)}
+              getURI={URLS.projectUsernamesSearch(projectKey)}
               creatable
               showDynamicSearchPrompt
               isValidNewOption={validate.requiredEmail}
@@ -175,7 +172,7 @@ export class NotificationCaseFormFields extends Component {
               placeholder={formatMessage(messages.launchNamesPlaceholder)}
               notFoundPrompt={formatMessage(messages.launchNamesHint)}
               minLength={3}
-              getURI={URLS.launchNameSearch(activeProject)}
+              getURI={URLS.launchNameSearch(projectKey)}
               creatable
               isValidNewOption={validate.launchName}
               showDynamicSearchPrompt
