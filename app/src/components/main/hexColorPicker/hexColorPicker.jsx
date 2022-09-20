@@ -26,7 +26,7 @@ export const HexColorPickerComponent = ({ label, value, presets, onChange }) => 
   <div className={cx('hex-color-picker')}>
     <div className={cx('label')}>{label}</div>
     <HexColorPicker color={value} onChange={onChange} />
-    <section>
+    <section className={cx('section')}>
       <div className={cx('hex-color-input-wrapper')}>
         <span>HEX</span>
         <HexColorInput color={value} onChange={onChange} prefixed />

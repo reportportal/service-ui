@@ -188,7 +188,6 @@ const AddEditDefectTypeModal = ({
             type="text"
             className={cx('input')}
             onChange={(value) => {
-              change(GROUP_FIELD_KEY, value);
               change(COLOR_FIELD_KEY, defectTypes[value][0].color);
               setColor(value);
             }}
@@ -224,7 +223,6 @@ const AddEditDefectTypeModal = ({
           className={cx('color-picker')}
           dataAutomationId={COLOR_FIELD_KEY + FIELD}
           onChange={(value) => {
-            change(COLOR_FIELD_KEY, value);
             setColor(value);
           }}
           value={color}
