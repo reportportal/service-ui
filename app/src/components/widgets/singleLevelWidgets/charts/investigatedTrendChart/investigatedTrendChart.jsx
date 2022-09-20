@@ -27,9 +27,7 @@ import {
   TO_INVESTIGATE,
 } from 'common/constants/defectTypes';
 import { defectLinkSelector, statisticsLinkSelector } from 'controllers/testItem';
-import { activeProjectSelector } from 'controllers/user';
 import { createFilterAction } from 'controllers/filter';
-import { defectTypesSelector } from 'controllers/project';
 import {
   getUpdatedFilterWithTime,
   getChartDefaultProps,
@@ -38,6 +36,11 @@ import {
 import * as STATUSES from 'common/constants/testStatuses';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { ChartContainer } from 'components/widgets/common/c3chart';
+import {
+  projectKeySelector,
+  projectOrganizationSlugSelector,
+  defectTypesSelector,
+} from 'controllers/project';
 import { getConfig as getStatusPageModeConfig } from '../common/statusPageChartConfig';
 import { selectConfigFunction } from './config';
 import styles from './investigatedTrendChart.scss';
@@ -47,8 +50,9 @@ const cx = classNames.bind(styles);
 @injectIntl
 @connect(
   (state) => ({
-    projectId: activeProjectSelector(state),
+    projectKey: projectKeySelector(state),
     defectTypes: defectTypesSelector(state),
+    organizationSlug: projectOrganizationSlugSelector(state),
     getDefectLink: defectLinkSelector(state),
     getStatisticsLink: statisticsLinkSelector(state),
   }),
@@ -61,7 +65,6 @@ export class InvestigatedTrendChart extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     navigate: PropTypes.func.isRequired,
-    projectId: PropTypes.string.isRequired,
     widget: PropTypes.object.isRequired,
     defectTypes: PropTypes.object.isRequired,
     getDefectLink: PropTypes.func.isRequired,
@@ -76,6 +79,8 @@ export class InvestigatedTrendChart extends Component {
     integerValueType: PropTypes.bool,
     uncheckedLegendItems: PropTypes.array,
     onChangeLegend: PropTypes.func,
+    organizationSlug: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -150,10 +155,10 @@ export class InvestigatedTrendChart extends Component {
   };
 
   launchModeClickHandler = (data) => {
-    const { widget, getDefectLink, getStatisticsLink, projectId } = this.props;
+    const { widget, getDefectLink, getStatisticsLink, projectKey, organizationSlug } = this.props;
     const id = widget.content.result[data.index].id;
-    const defaultParams = getDefaultTestItemLinkParams(projectId, ALL, id);
-    const defectTypeLocators = this.getDefectTypeLocators(data.id, projectId);
+    const defaultParams = getDefaultTestItemLinkParams(projectKey, ALL, id, organizationSlug);
+    const defectTypeLocators = this.getDefectTypeLocators(data.id, projectKey);
     const link = defectTypeLocators
       ? getDefectLink({ defects: defectTypeLocators, itemId: id })
       : getStatisticsLink({

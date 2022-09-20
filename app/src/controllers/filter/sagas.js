@@ -23,13 +23,15 @@ import {
   FETCH_ERROR,
 } from 'controllers/fetch';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { activeProjectSelector, userIdSelector } from 'controllers/user';
+import { userIdSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
 import {
   userFiltersSelector,
   updateProjectFilterPreferencesAction,
   fetchProjectPreferencesAction,
   FETCH_PROJECT_PREFERENCES_SUCCESS,
+  projectKeySelector,
+  projectOrganizationSlugSelector,
 } from 'controllers/project';
 import { launchDistinctSelector } from 'controllers/launch';
 import { PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
@@ -60,39 +62,36 @@ import {
 } from './actionCreators';
 
 function* fetchFilters() {
-  const activeProject = yield select(activeProjectSelector);
+  const projectKey = yield select(projectKeySelector);
   const query = yield select(querySelector);
   yield put(
-    fetchDataAction(NAMESPACE)(URLS.filters(activeProject), {
+    fetchDataAction(NAMESPACE)(URLS.filters(projectKey), {
       params: { ...query },
     }),
   );
 }
 
 function* fetchFiltersConcat({ payload: { params, concat } }) {
-  const activeProject = yield select(activeProjectSelector);
+  const projectKey = yield select(projectKeySelector);
   const query = yield select(querySelector);
   yield put(
-    concatFetchDataAction(NAMESPACE, concat)(URLS.filters(activeProject), {
+    concatFetchDataAction(NAMESPACE, concat)(URLS.filters(projectKey), {
       params: { ...query, ...params },
     }),
   );
 }
 
 function* updateLaunchesFilter({ payload: filter }) {
-  const activeProject = yield select(activeProjectSelector);
+  const projectKey = yield select(projectKeySelector);
   const shallowFilter = {
     ...filter,
     conditions: filter.conditions.filter((item) => item.value.trim()),
   };
   yield put(
-    fetchDataAction(LAUNCHES_FILTERS_UPDATE_NAMESPACE)(
-      URLS.filter(activeProject, shallowFilter.id),
-      {
-        method: 'put',
-        data: omit(shallowFilter, ['id']),
-      },
-    ),
+    fetchDataAction(LAUNCHES_FILTERS_UPDATE_NAMESPACE)(URLS.filter(projectKey, shallowFilter.id), {
+      method: 'put',
+      data: omit(shallowFilter, ['id']),
+    }),
   );
   yield put(updateFilterSuccessAction(shallowFilter));
   yield put(
@@ -104,12 +103,15 @@ function* updateLaunchesFilter({ payload: filter }) {
 }
 
 function* changeActiveFilter({ payload: filterId }) {
-  const activeProject = yield select(activeProjectSelector);
+  const organizationSlug = yield select(projectOrganizationSlugSelector);
+  const projectKey = yield select(projectKeySelector);
+
   yield put({
     type: PROJECT_LAUNCHES_PAGE,
     payload: {
-      projectId: activeProject,
+      projectKey,
       filterId,
+      organizationSlug,
     },
   });
 }
@@ -141,13 +143,13 @@ function* createFilter({ payload: filter = {} }) {
 }
 
 function* saveNewFilter({ payload: filter }) {
-  const activeProject = yield select(activeProjectSelector);
+  const projectKey = yield select(projectKeySelector);
   const shallowFilter = {
     ...filter,
     conditions: filter.conditions.filter((item) => item.value.trim()),
   };
   yield put(
-    fetchDataAction(LAUNCHES_FILTERS_UPDATE_NAMESPACE)(URLS.filter(activeProject), {
+    fetchDataAction(LAUNCHES_FILTERS_UPDATE_NAMESPACE)(URLS.filter(projectKey), {
       method: 'post',
       data: omit(shallowFilter, ['id']),
     }),
@@ -217,8 +219,8 @@ function* fetchFiltersPage({ payload: refreshProjectSettings }) {
   yield call(fetchFilters);
   const waitEffects = [take(createFetchPredicate(NAMESPACE))];
   if (refreshProjectSettings) {
-    const activeProject = yield select(activeProjectSelector);
-    yield put(fetchProjectPreferencesAction(activeProject));
+    const projectKey = yield select(projectKeySelector);
+    yield put(fetchProjectPreferencesAction(projectKey));
     waitEffects.push(take(FETCH_PROJECT_PREFERENCES_SUCCESS));
   }
   yield all(waitEffects);

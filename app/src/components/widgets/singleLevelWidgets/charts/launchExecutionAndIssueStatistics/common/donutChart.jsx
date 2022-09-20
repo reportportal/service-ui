@@ -22,8 +22,11 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { TEST_ITEMS_TYPE_LIST } from 'controllers/testItem';
-import { userFiltersSelector } from 'controllers/project';
-import { activeProjectSelector } from 'controllers/user';
+import {
+  userFiltersSelector,
+  projectKeySelector,
+  projectOrganizationSlugSelector,
+} from 'controllers/project';
 import { TEST_ITEM_PAGE } from 'controllers/pages';
 import {
   getItemNameConfig,
@@ -39,8 +42,9 @@ const cx = classNames.bind(styles);
 
 @connect(
   (state) => ({
-    project: activeProjectSelector(state),
+    projectKey: projectKeySelector(state),
     launchFilters: userFiltersSelector(state),
+    organizationSlug: projectOrganizationSlugSelector(state),
   }),
   {
     navigate: (linkAction) => linkAction,
@@ -53,7 +57,7 @@ export class DonutChart extends Component {
     widget: PropTypes.object.isRequired,
     isPreview: PropTypes.bool,
     navigate: PropTypes.func.isRequired,
-    project: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
     uncheckedLegendItems: PropTypes.array,
     onChangeLegend: PropTypes.func,
@@ -63,6 +67,7 @@ export class DonutChart extends Component {
     getLink: PropTypes.func,
     configParams: PropTypes.object,
     chartText: PropTypes.string,
+    organizationSlug: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -115,7 +120,8 @@ export class DonutChart extends Component {
       },
       launchFilters,
       getLink,
-      project,
+      projectKey,
+      organizationSlug,
     } = this.props;
 
     const nameConfig = getItemNameConfig(d.id);
@@ -141,22 +147,26 @@ export class DonutChart extends Component {
         isListType: false,
         itemId: id,
       };
-      navigationParams = getDefaultTestItemLinkParams(project, ALL, id);
+      navigationParams = getDefaultTestItemLinkParams(projectKey, ALL, id, organizationSlug);
     }
     const link = getLink(nameConfig, linkParams);
 
     this.props.navigate(Object.assign(link, navigationParams));
   };
 
-  getDefaultItemsTypeListLinkParams = (activeFilterId) => ({
-    payload: {
-      projectId: this.props.project,
-      filterId: activeFilterId,
-      testItemIds: TEST_ITEMS_TYPE_LIST,
-    },
-    type: TEST_ITEM_PAGE,
-  });
+  getDefaultItemsTypeListLinkParams = (activeFilterId) => {
+    const { organizationSlug, projectKey } = this.props;
 
+    return {
+      payload: {
+        projectKey,
+        filterId: activeFilterId,
+        testItemIds: TEST_ITEMS_TYPE_LIST,
+        organizationSlug,
+      },
+      type: TEST_ITEM_PAGE,
+    };
+  };
   getConfigData = () => {
     const {
       intl: { formatMessage },

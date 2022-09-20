@@ -22,12 +22,12 @@ import {
   logPageOffsetSelector,
 } from 'controllers/testItem';
 import { URLS } from 'common/urls';
-import { activeProjectSelector } from 'controllers/user';
 import { logItemIdSelector, pathnameChangedSelector } from 'controllers/pages';
 import { debugModeSelector } from 'controllers/launch';
 import { createFetchPredicate, fetchDataAction } from 'controllers/fetch';
 import { fetch, isEmptyObject } from 'common/utils';
 import { HISTORY_LINE_DEFAULT_VALUE, FETCH_HISTORY_ITEMS_WITH_LOADING } from 'controllers/log';
+import { activeProjectKeySelector } from 'controllers/user';
 import { collectLogPayload } from './sagaUtils';
 import {
   ACTIVITY_NAMESPACE,
@@ -71,16 +71,14 @@ import {
 } from './actionCreators';
 
 function* fetchActivity() {
-  const activeProject = yield select(activeProjectSelector);
+  const projectKey = yield select(activeProjectKeySelector);
   const activeLogItemId = yield select(activeLogIdSelector);
-  yield put(
-    fetchDataAction(ACTIVITY_NAMESPACE)(URLS.logItemActivity(activeProject, activeLogItemId)),
-  );
+  yield put(fetchDataAction(ACTIVITY_NAMESPACE)(URLS.logItemActivity(projectKey, activeLogItemId)));
   yield take(createFetchPredicate(ACTIVITY_NAMESPACE));
 }
 
 function* fetchLogItems(payload = {}) {
-  const { activeProject, filterLevel, activeLogItemId, query } = yield call(collectLogPayload);
+  const { projectKey, filterLevel, activeLogItemId, query } = yield call(collectLogPayload);
   const namespace = payload.namespace || LOG_ITEMS_NAMESPACE;
   const logLevel = payload.level || filterLevel;
   const fetchParams = {
@@ -89,8 +87,8 @@ function* fetchLogItems(payload = {}) {
   };
   const isLaunchLog = yield select(isLaunchLogSelector);
   const url = isLaunchLog
-    ? URLS.launchLogs(activeProject, activeLogItemId, logLevel)
-    : URLS.logItems(activeProject, activeLogItemId, logLevel);
+    ? URLS.launchLogs(projectKey, activeLogItemId, logLevel)
+    : URLS.logItems(projectKey, activeLogItemId, logLevel);
   yield put(
     fetchDataAction(namespace)(url, {
       params: fetchParams,
@@ -100,7 +98,7 @@ function* fetchLogItems(payload = {}) {
 }
 
 function* fetchStackTrace({ payload: logItem }) {
-  const activeProject = yield select(activeProjectSelector);
+  const projectKey = yield select(activeProjectKeySelector);
   const page = yield select(logStackTracePaginationSelector);
   const { path } = logItem;
   let pageSize = STACK_TRACE_PAGINATION_OFFSET;
@@ -109,14 +107,14 @@ function* fetchStackTrace({ payload: logItem }) {
     pageSize = size >= totalElements ? totalElements : size + STACK_TRACE_PAGINATION_OFFSET;
   }
   yield put(
-    fetchDataAction(STACK_TRACE_NAMESPACE)(URLS.logItemStackTrace(activeProject, path, pageSize)),
+    fetchDataAction(STACK_TRACE_NAMESPACE)(URLS.logItemStackTrace(projectKey, path, pageSize)),
   );
   yield take(createFetchPredicate(STACK_TRACE_NAMESPACE));
 }
 
 function* fetchHistoryItems({ payload } = { payload: {} }) {
   const { loadMore, callback } = payload;
-  const activeProject = yield select(activeProjectSelector);
+  const projectKey = yield select(activeProjectKeySelector);
   const logItemId = yield select(logItemIdSelector);
   const historyItems = yield select(historyItemsSelector);
   const isAllLaunches = yield select(includeAllLaunchesSelector);
@@ -126,7 +124,7 @@ function* fetchHistoryItems({ payload } = { payload: {} }) {
     : DEFAULT_HISTORY_DEPTH;
   const response = yield call(
     fetch,
-    URLS.testItemsHistory(activeProject, historyDepth, historyLineMode, logItemId),
+    URLS.testItemsHistory(projectKey, historyDepth, historyLineMode, logItemId),
   );
 
   yield put(fetchHistoryItemsSuccessAction(response.content));

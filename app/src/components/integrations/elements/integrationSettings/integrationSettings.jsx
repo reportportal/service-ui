@@ -22,11 +22,11 @@ import { injectIntl, defineMessages } from 'react-intl';
 import track from 'react-tracking';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { projectIdSelector } from 'controllers/pages';
-import { activeProjectSelector } from 'controllers/user';
 import { removeIntegrationAction } from 'controllers/plugins';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { activeProjectKeySelector } from 'controllers/user';
+import { urlProjectKeySelector } from 'controllers/pages';
 import { PLUGIN_NAME_TITLES } from '../../constants';
 import { INTEGRATION_FORM } from './integrationForm/constants';
 import { ConnectionSection } from './connectionSection';
@@ -44,8 +44,8 @@ const messages = defineMessages({
 
 @connect(
   (state) => ({
-    projectId: projectIdSelector(state),
-    activeProject: activeProjectSelector(state),
+    projectKey: activeProjectKeySelector(state),
+    payloadProjectKey: urlProjectKeySelector(state),
   }),
   {
     removeIntegrationAction,
@@ -56,8 +56,6 @@ const messages = defineMessages({
 export class IntegrationSettings extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    projectId: PropTypes.string,
-    activeProject: PropTypes.string.isRequired,
     data: PropTypes.object.isRequired,
     formFieldsComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]).isRequired,
     goToPreviousPage: PropTypes.func.isRequired,
@@ -72,15 +70,18 @@ export class IntegrationSettings extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    projectKey: PropTypes.string,
+    payloadProjectKey: PropTypes.string,
   };
 
   static defaultProps = {
-    projectId: '',
     editAuthConfig: null,
     preventTestConnection: false,
     isEmptyConfiguration: false,
     isGlobal: false,
     formKey: INTEGRATION_FORM,
+    payloadProjectKey: '',
+    projectKey: '',
   };
 
   state = {
@@ -97,15 +98,15 @@ export class IntegrationSettings extends Component {
   testIntegrationConnection = () => {
     const {
       data: { id },
-      projectId,
-      activeProject,
+      projectKey,
+      payloadProjectKey,
     } = this.props;
 
     this.setState({
       loading: true,
     });
 
-    fetch(URLS.testIntegrationConnection(projectId || activeProject, id))
+    fetch(URLS.testIntegrationConnection(projectKey || payloadProjectKey, id))
       .then(() => {
         this.setState({
           connected: true,

@@ -19,7 +19,6 @@ import { URLS } from 'common/urls';
 import { fetch, updateStorageItem, waitForSelector } from 'common/utils';
 import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
 import { fetchDataAction } from 'controllers/fetch';
-import { activeProjectSelector } from 'controllers/user';
 import { ALL, LATEST } from 'common/constants/reservedFilterIds';
 import {
   activeFilterSelector,
@@ -32,6 +31,7 @@ import { isEmptyValue } from 'common/utils/isEmptyValue';
 import { createFilterQuery } from 'components/filterEntities/containers/utils';
 import { formatSortingString, SORTING_ASC, SORTING_DESC, SORTING_KEY } from 'controllers/sorting';
 import { ENTITY_NUMBER } from 'components/filterEntities/constants';
+import { activeProjectKeySelector } from 'controllers/user';
 import {
   FETCH_LAUNCHES,
   NAMESPACE,
@@ -49,17 +49,16 @@ import {
 } from './selectors';
 
 function* fetchLaunchesWithParams({ payload }) {
-  const activeProject = yield select(activeProjectSelector);
+  const projectKey = yield select(activeProjectKeySelector);
   const params = yield select(queryParametersSelector);
   const isDebugMode = yield select(debugModeSelector);
   const queryParams = { ...params, ...payload };
   const launchDistinct = yield select(launchDistinctSelector);
   const urlCreator = launchDistinct === LATEST ? URLS.launchesLatest : URLS.launches;
   yield put(
-    fetchDataAction(NAMESPACE)(
-      !isDebugMode ? urlCreator(activeProject) : URLS.debug(activeProject),
-      { params: queryParams },
-    ),
+    fetchDataAction(NAMESPACE)(!isDebugMode ? urlCreator(projectKey) : URLS.debug(projectKey), {
+      params: queryParams,
+    }),
   );
 }
 
@@ -81,10 +80,10 @@ function* fetchLaunches() {
       activeFilter = yield select(activeFilterSelector);
     }
     if (!activeFilter) {
-      const activeProject = yield select(activeProjectSelector);
+      const projectKey = yield select(activeProjectKeySelector);
       let filter = null;
       try {
-        filter = yield call(fetch, URLS.filter(activeProject, filterId), { method: 'get' });
+        filter = yield call(fetch, URLS.filter(projectKey, filterId), { method: 'get' });
       } catch (e) {
         yield put(changeActiveFilterAction(ALL));
         return;

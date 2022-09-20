@@ -110,12 +110,12 @@ export class ProjectsAndRolesColumn extends Component {
     }
     this.match.removeListener(this.setMobileView);
   }
-  onChange = (project, role) => {
+  onChange = (projectKey, role) => {
     const {
       intl,
       value: { userId },
     } = this.props;
-    fetch(URLS.project(project), {
+    fetch(URLS.project(projectKey), {
       method: 'put',
       data: { users: { [userId]: role } },
     })
@@ -135,12 +135,12 @@ export class ProjectsAndRolesColumn extends Component {
         });
       });
   };
-  onAssignProjectRole = (project, role) => {
+  onAssignProjectRole = (projectKey, role) => {
     const {
       intl,
       value: { userId },
     } = this.props;
-    fetch(URLS.userInviteInternal(project), {
+    fetch(URLS.userInviteInternal(projectKey), {
       method: 'put',
       data: { userNames: { [userId]: role } },
     })
@@ -160,11 +160,11 @@ export class ProjectsAndRolesColumn extends Component {
         });
       });
   };
-  onDelete = (project) => {
+  onDelete = (projectKey) => {
     const {
       value: { userId },
     } = this.props;
-    this.showUnassignModal(project, userId);
+    this.showUnassignModal(projectKey, userId);
   };
   setMobileView = (media) =>
     media.matches !== this.state.isMobileView &&
@@ -227,9 +227,9 @@ export class ProjectsAndRolesColumn extends Component {
     this.toggleAssignRole();
   };
 
-  unassignAction = (projectId, userId) => {
+  unassignAction = (projectKey, userId) => {
     const { intl } = this.props;
-    fetch(URLS.userUnasign(projectId), {
+    fetch(URLS.userUnasign(projectKey), {
       method: 'put',
       data: { userNames: [userId] },
     })
@@ -284,7 +284,7 @@ export class ProjectsAndRolesColumn extends Component {
       value: { assignedProjects = {}, userId, accountType },
     } = this.props;
     return this.getProjectsList().map((key) => {
-      const { projectRole, entryType } = assignedProjects[key];
+      const { projectRole, entryType, projectName } = assignedProjects[key];
       return (
         <RolesRow
           key={key}
@@ -295,6 +295,7 @@ export class ProjectsAndRolesColumn extends Component {
           userId={userId}
           entryType={entryType}
           accountType={accountType}
+          projectName={projectName}
         />
       );
     });

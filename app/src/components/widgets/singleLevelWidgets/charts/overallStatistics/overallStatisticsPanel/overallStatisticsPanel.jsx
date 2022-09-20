@@ -17,13 +17,16 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
-import { orderedDefectFieldsSelector } from 'controllers/project';
+import {
+  orderedDefectFieldsSelector,
+  projectKeySelector,
+  projectOrganizationSlugSelector,
+} from 'controllers/project';
 import {
   defectLinkSelector,
   statisticsLinkSelector,
   TEST_ITEMS_TYPE_LIST,
 } from 'controllers/testItem';
-import { activeProjectSelector } from 'controllers/user';
 import { getDefaultTestItemLinkParams } from 'components/widgets/common/utils';
 import { TotalStatistics } from './totalStatistics';
 import { OverallDefects } from './overallDefects';
@@ -34,7 +37,8 @@ const cx = classNames.bind(styles);
 @connect(
   (state) => ({
     orderedContentFields: orderedDefectFieldsSelector(state),
-    project: activeProjectSelector(state),
+    projectKey: projectKeySelector(state),
+    organizationSlug: projectOrganizationSlugSelector(state),
     getDefectLink: defectLinkSelector(state),
     getStatisticsLink: statisticsLinkSelector(state),
   }),
@@ -46,11 +50,12 @@ export class OverallStatisticsPanel extends React.PureComponent {
   static propTypes = {
     widget: PropTypes.object.isRequired,
     orderedContentFields: PropTypes.array.isRequired,
-    project: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
     getDefectLink: PropTypes.func.isRequired,
     getStatisticsLink: PropTypes.func.isRequired,
     navigate: PropTypes.func.isRequired,
     isPreview: PropTypes.bool,
+    organizationSlug: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -58,7 +63,7 @@ export class OverallStatisticsPanel extends React.PureComponent {
   };
 
   onTotalStatisticsClick = (...statuses) => {
-    const { widget, getStatisticsLink, project } = this.props;
+    const { widget, getStatisticsLink, projectKey, organizationSlug } = this.props;
 
     const launchesLimit = widget.contentParameters.itemsCount;
     const isLatest = widget.contentParameters.widgetOptions.latest;
@@ -68,16 +73,17 @@ export class OverallStatisticsPanel extends React.PureComponent {
       isLatest,
     });
     const navigationParams = getDefaultTestItemLinkParams(
-      project,
+      projectKey,
       widget.appliedFilters[0].id,
       TEST_ITEMS_TYPE_LIST,
+      organizationSlug,
     );
 
     this.props.navigate(Object.assign(link, navigationParams));
   };
 
   onOverallDefectsClick = (defects) => {
-    const { widget, getDefectLink, project } = this.props;
+    const { widget, getDefectLink, projectKey, organizationSlug } = this.props;
 
     const launchesLimit = widget.contentParameters.itemsCount;
     const isLatest = widget.contentParameters.widgetOptions.latest;
@@ -88,9 +94,10 @@ export class OverallStatisticsPanel extends React.PureComponent {
       isLatest,
     });
     const navigationParams = getDefaultTestItemLinkParams(
-      project,
+      projectKey,
       widget.appliedFilters[0].id,
       TEST_ITEMS_TYPE_LIST,
+      organizationSlug,
     );
 
     this.props.navigate(Object.assign(link, navigationParams));

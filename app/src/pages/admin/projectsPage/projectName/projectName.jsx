@@ -35,7 +35,7 @@ const cx = classNames.bind(styles);
 @injectIntl
 @connect(
   (state, ownProps) => ({
-    isAssigned: !!assignedProjectsSelector(state)[ownProps.project.projectName],
+    isAssigned: !!assignedProjectsSelector(state)[ownProps.project.projectKey],
   }),
   {
     navigateToProject: navigateToProjectAction,
@@ -90,7 +90,7 @@ export class ProjectName extends Component {
 
   render() {
     const {
-      project: { projectName },
+      project: { projectKey, organizationSlug, projectName },
       isAssigned,
     } = this.props;
 
@@ -101,7 +101,10 @@ export class ProjectName extends Component {
         })}
         to={{
           type: PROJECT_PAGE,
-          payload: { projectId: projectName },
+          payload: {
+            projectKey,
+            organizationSlug,
+          },
         }}
         onClick={this.onProjectClick}
         title={projectName}

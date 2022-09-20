@@ -50,7 +50,7 @@ const localMessages = defineMessages({
     name: commonValidators.filterName(name),
   }),
   asyncValidate: ({ name }, dispatch, props) =>
-    validateAsync.filterNameUnique(props.activeProject, undefined, name),
+    validateAsync.filterNameUnique(props.projectKey, undefined, name),
   asyncChangeFields: ['name'],
   asyncBlurFields: ['name'],
   onChange: ({ name }, dispatcher, { onChange }) => onChange({ name }),

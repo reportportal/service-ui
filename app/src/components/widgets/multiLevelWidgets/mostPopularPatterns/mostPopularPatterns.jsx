@@ -21,11 +21,11 @@ import { connect } from 'react-redux';
 import isEqual from 'fast-deep-equal';
 import { createNamespacedQuery } from 'common/utils/routingUtils';
 import { getQueryNamespace, TEST_ITEMS_TYPE_LIST } from 'controllers/testItem';
-import { activeProjectSelector } from 'controllers/user';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { NoDataAvailable } from 'components/widgets';
 import { getDefaultTestItemLinkParams } from 'components/widgets/common/utils';
+import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
 import { PatternGrid } from './patternGrid';
 import styles from './mostPopularPatterns.scss';
 
@@ -33,7 +33,8 @@ const cx = classNames.bind(styles);
 
 @connect(
   (state) => ({
-    project: activeProjectSelector(state),
+    organizationSlug: projectOrganizationSlugSelector(state),
+    projectKey: projectKeySelector(state),
   }),
   {
     navigate: (linkAction) => linkAction,
@@ -41,11 +42,12 @@ const cx = classNames.bind(styles);
 )
 export class MostPopularPatterns extends Component {
   static propTypes = {
-    project: PropTypes.string.isRequired,
     navigate: PropTypes.func.isRequired,
     widget: PropTypes.object,
     fetchWidget: PropTypes.func,
     clearQueryParams: PropTypes.func,
+    organizationSlug: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -85,15 +87,16 @@ export class MostPopularPatterns extends Component {
   }
 
   onPatternClick = (patternName) => {
-    const { widget, project } = this.props;
+    const { widget, projectKey, organizationSlug } = this.props;
     const { selectedAttribute } = this.state;
 
     const launchesLimit = widget.contentParameters.itemsCount;
     const compositeAttribute = `${widget.contentParameters.widgetOptions.attributeKey}:${selectedAttribute}`;
     const defaultNavigationParams = getDefaultTestItemLinkParams(
-      project,
+      projectKey,
       widget.appliedFilters[0].id,
       TEST_ITEMS_TYPE_LIST,
+      organizationSlug,
     );
     const metaParams = this.getNavigationMetaParams(
       patternName,

@@ -37,13 +37,13 @@ import {
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { FormField } from 'components/fields/formField';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
-import { projectIdSelector } from 'controllers/pages';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { langSelector } from 'controllers/lang';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
 import { Button } from 'componentLibrary/button';
 import { Dropdown } from 'componentLibrary/dropdown';
+import { urlProjectKeySelector } from 'controllers/pages';
 import styles from './generalTab.scss';
 import { Messages } from './generalTabMessages';
 
@@ -58,13 +58,13 @@ const selector = formValueSelector('generalForm');
 })
 @connect(
   (state) => ({
-    projectId: projectIdSelector(state),
     isLoading: projectInfoLoadingSelector(state),
     jobConfig: jobAttributesSelector(state),
     accountRole: userAccountRoleSelector(state),
     userRole: activeProjectRoleSelector(state),
     lang: langSelector(state),
     formValues: selector(state, 'keepLaunches', 'keepLogs', 'keepScreenshots'),
+    projectKey: urlProjectKeySelector(state),
   }),
   {
     showNotification,
@@ -77,7 +77,6 @@ export class GeneralTab extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     handleSubmit: PropTypes.func.isRequired,
-    projectId: PropTypes.string.isRequired,
     jobConfig: PropTypes.shape({
       interruptJobTime: PropTypes.string.isRequired,
       keepLogs: PropTypes.string.isRequired,
@@ -97,10 +96,10 @@ export class GeneralTab extends Component {
     retention: PropTypes.number,
     formValues: PropTypes.object,
     isLoading: PropTypes.bool,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
-    projectId: '',
     fetchProjectAction: () => {},
     lang: 'en',
     retention: null,
@@ -143,7 +142,7 @@ export class GeneralTab extends Component {
         },
       },
     };
-    fetch(URLS.project(this.props.projectId), { method: 'put', data })
+    fetch(URLS.project(this.props.projectKey), { method: 'put', data })
       .then(() => {
         this.props.showNotification({
           message: this.props.intl.formatMessage(Messages.updateSuccessNotification),
@@ -302,7 +301,7 @@ export class GeneralTab extends Component {
         <form onSubmit={this.props.handleSubmit(this.onFormSubmit)}>
           <div>
             <div className={cx('fake-input-label')}>Name</div>
-            <div className={cx('fake-input')}>{this.props.projectId}</div>
+            <div className={cx('fake-input')}>{this.props.projectKey}</div>
           </div>
           <FormField
             name="interruptJobTime"

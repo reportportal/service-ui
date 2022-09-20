@@ -29,8 +29,11 @@ import {
   TEST_ITEMS_TYPE_LIST,
   PROVIDER_TYPE_WIDGET,
 } from 'controllers/testItem';
-import { defectTypesSelector } from 'controllers/project';
-import { activeProjectSelector } from 'controllers/user';
+import {
+  defectTypesSelector,
+  projectKeySelector,
+  projectOrganizationSlugSelector,
+} from 'controllers/project';
 import { SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
 import { PASSED, FAILED, SKIPPED, INTERRUPTED } from 'common/constants/testStatuses';
 import { formatAttribute } from 'common/utils/attributeUtils';
@@ -56,7 +59,8 @@ const PRINTED_LEGEND_HEIGHT = 80;
 @injectIntl
 @connect(
   (state) => ({
-    project: activeProjectSelector(state),
+    organizationSlug: projectOrganizationSlugSelector(state),
+    projectKey: projectKeySelector(state),
     defectTypes: defectTypesSelector(state),
     getDefectLink: defectLinkSelector(state),
     getStatisticsLink: statisticsLinkSelector(state),
@@ -73,7 +77,6 @@ export class CumulativeTrendChart extends PureComponent {
     getDefectLink: PropTypes.func.isRequired,
     getStatisticsLink: PropTypes.func.isRequired,
     navigate: PropTypes.func.isRequired,
-    project: PropTypes.string.isRequired,
     observer: PropTypes.object,
     fetchWidget: PropTypes.func,
     clearQueryParams: PropTypes.func,
@@ -84,6 +87,8 @@ export class CumulativeTrendChart extends PureComponent {
     isPrintMode: PropTypes.bool,
     onChangeUserSettings: PropTypes.func,
     container: PropTypes.instanceOf(Element).isRequired,
+    organizationSlug: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -286,19 +291,13 @@ export class CumulativeTrendChart extends PureComponent {
   };
 
   navigateToTestListView = () => {
-    const { selectedItem, activeAttributes } = this.state;
-    const {
-      widget,
-      userSettings,
-      getStatisticsLink,
-      getDefectLink,
-      defectTypes,
-      project,
-    } = this.props;
+    const { selectedItem, activeAttributes, organizationSlug, projectKey } = this.state;
+    const { widget, userSettings, getStatisticsLink, getDefectLink, defectTypes } = this.props;
     const navigationParams = getDefaultTestItemLinkParams(
-      project,
+      projectKey,
       widget.appliedFilters[0].id,
       TEST_ITEMS_TYPE_LIST,
+      organizationSlug,
     );
     let link;
 

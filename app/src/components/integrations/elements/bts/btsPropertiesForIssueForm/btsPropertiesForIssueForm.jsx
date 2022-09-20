@@ -23,7 +23,6 @@ import classNames from 'classnames/bind';
 import { fetch } from 'common/utils';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { projectIdSelector } from 'controllers/pages';
-import { projectInfoSelector } from 'controllers/project';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import {
   COMMAND_GET_ISSUE_TYPES,
@@ -40,6 +39,7 @@ import {
 } from 'components/fields/dynamicFieldsSection/utils';
 import { PLUGINS_PAGE_EVENTS, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { getDefaultOptionValueKey } from 'pages/inside/stepPage/modals/postIssueModal/utils';
+import { projectKeySelector } from 'controllers/project';
 import { IntegrationFormField } from '../../integrationFormField';
 import { ISSUE_TYPE_FIELD_KEY } from '../constants';
 import styles from './btsPropertiesForIssueForm.scss';
@@ -68,7 +68,7 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     projectName: projectIdSelector(state),
-    projectInfo: projectInfoSelector(state),
+    projectKey: projectKeySelector(state),
   }),
   {
     showNotification,
@@ -80,8 +80,6 @@ export class BtsPropertiesForIssueForm extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     integrationId: PropTypes.number.isRequired,
-    projectName: PropTypes.string,
-    projectInfo: PropTypes.object,
     pluginName: PropTypes.string,
     initialData: PropTypes.object,
     showNotification: PropTypes.func,
@@ -95,11 +93,10 @@ export class BtsPropertiesForIssueForm extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    projectKey: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
-    projectName: '',
-    projectInfo: {},
     pluginName: '',
     initialData: {
       defectFormFields: [],
@@ -298,14 +295,7 @@ export class BtsPropertiesForIssueForm extends Component {
     });
 
   fetchFieldsSet = (issueTypeValue) => {
-    const {
-      pluginDetails: details,
-      isGlobal,
-      integrationId,
-      projectName,
-      projectInfo,
-    } = this.props;
-    const project = projectName || projectInfo.projectName;
+    const { pluginDetails: details, isGlobal, integrationId, projectKey } = this.props;
     const isCommandAvailable =
       details &&
       details.allowedCommands &&
@@ -314,16 +304,16 @@ export class BtsPropertiesForIssueForm extends Component {
     let url;
 
     if (isCommandAvailable) {
-      url = URLS.projectIntegrationByIdCommand(project, integrationId, COMMAND_GET_ISSUE_FIELDS);
+      url = URLS.projectIntegrationByIdCommand(projectKey, integrationId, COMMAND_GET_ISSUE_FIELDS);
       requestParams.method = 'PUT';
       requestParams.data = {
-        projectId: projectInfo.projectId,
+        projectKey,
         issueType: issueTypeValue,
       };
     } else {
       url = isGlobal
         ? URLS.btsGlobalIntegrationFieldsSet(integrationId, issueTypeValue)
-        : URLS.btsIntegrationFieldsSet(project, integrationId, issueTypeValue);
+        : URLS.btsIntegrationFieldsSet(projectKey, integrationId, issueTypeValue);
     }
 
     return fetch(url, requestParams);
@@ -340,14 +330,8 @@ export class BtsPropertiesForIssueForm extends Component {
   };
 
   fetchIssueTypes = () => {
-    const {
-      pluginDetails: details,
-      isGlobal,
-      integrationId,
-      projectName,
-      projectInfo,
-    } = this.props;
-    const project = projectName || projectInfo.projectName;
+    const { pluginDetails: details, isGlobal, integrationId, projectKey } = this.props;
+
     const isCommandAvailable =
       details &&
       details.allowedCommands &&
@@ -356,15 +340,15 @@ export class BtsPropertiesForIssueForm extends Component {
     let url;
 
     if (isCommandAvailable) {
-      url = URLS.projectIntegrationByIdCommand(project, integrationId, COMMAND_GET_ISSUE_TYPES);
+      url = URLS.projectIntegrationByIdCommand(projectKey, integrationId, COMMAND_GET_ISSUE_TYPES);
       requestParams.method = 'PUT';
       requestParams.data = {
-        projectId: projectInfo.projectId,
+        projectKey,
       };
     } else {
       url = isGlobal
         ? URLS.btsGlobalIntegrationIssueTypes(integrationId)
-        : URLS.btsIntegrationIssueTypes(project, integrationId);
+        : URLS.btsIntegrationIssueTypes(projectKey, integrationId);
     }
 
     return fetch(url, requestParams);

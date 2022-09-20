@@ -22,23 +22,25 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import Link from 'redux-first-router-link';
 import { FormattedMessage } from 'react-intl';
-import { activeProjectSelector } from 'controllers/user';
 import { PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
 import AddFilterIcon from 'common/img/add-filter-inline.svg';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { ALL } from 'common/constants/reservedFilterIds';
 
+import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
 import styles from './noFiltersBlock.scss';
 
 const cx = classNames.bind(styles);
 
 @connect((state) => ({
-  activeProject: activeProjectSelector(state),
+  projectKey: projectKeySelector(state),
+  organizationSlug: projectOrganizationSlugSelector(state),
 }))
 @track()
 export class NoFiltersBlock extends PureComponent {
   static propTypes = {
-    activeProject: PropTypes.string.isRequired,
+    projectKey: PropTypes.string.isRequired,
+    organizationSlug: PropTypes.string.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -53,6 +55,7 @@ export class NoFiltersBlock extends PureComponent {
     this.props.onAddFilter();
   };
   render() {
+    const { organizationSlug, projectKey } = this.props;
     return (
       <div className={cx('no-filters-block')}>
         <div className={cx('flex-wrapper')}>
@@ -70,8 +73,9 @@ export class NoFiltersBlock extends PureComponent {
               to={{
                 type: PROJECT_LAUNCHES_PAGE,
                 payload: {
-                  projectId: this.props.activeProject,
+                  projectKey,
                   filterId: ALL,
+                  organizationSlug,
                 },
               }}
             >

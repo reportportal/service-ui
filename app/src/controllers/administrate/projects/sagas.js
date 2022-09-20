@@ -31,6 +31,7 @@ import { fetch, getStorageItem, setStorageItem } from 'common/utils';
 import { PROJECT_PAGE } from 'controllers/pages';
 import { confirmSaga, hideModalAction } from 'controllers/modal';
 import { PROJECT_MANAGER } from 'common/constants/projectRoles';
+import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
 import {
   NAMESPACE,
   FETCH_PROJECTS,
@@ -85,6 +86,8 @@ function* addProject({ payload: projectName }) {
       projectRole: PROJECT_MANAGER,
       entryType: PROJECT_TYPE_INTERNAL,
     };
+    const organizationSlug = yield select(projectOrganizationSlugSelector);
+    const projectKey = yield select(projectKeySelector);
     yield put(assignToProjectSuccessAction(projectInfo));
     yield put(hideModalAction());
     yield put(
@@ -94,7 +97,7 @@ function* addProject({ payload: projectName }) {
         values: { name: projectName },
       }),
     );
-    yield put(navigateToProjectSectionAction(projectName, SETTINGS));
+    yield put(navigateToProjectSectionAction({ organizationSlug, projectKey }, SETTINGS));
   } catch (err) {
     if (err.errorCode === ERROR_CODES.PROJECT_EXISTS) {
       yield put(
@@ -122,7 +125,7 @@ function* watchAddProject() {
 
 function* deleteProject({ payload: project }) {
   try {
-    yield call(fetch, URLS.project(project.id), {
+    yield call(fetch, URLS.project(project.projectKey), {
       method: 'delete',
     });
   } catch (err) {
@@ -144,8 +147,9 @@ function* watchDeleteProject() {
 
 function* navigateToProject({ payload }) {
   const { project, confirmModalOptions } = payload;
+  const { organizationSlug, projectKey } = project;
   const assignedProjects = yield select(assignedProjectsSelector);
-  let isAssigned = !!assignedProjects[project.projectName];
+  let isAssigned = !!assignedProjects[project.projectKey];
   if (!isAssigned) {
     const isConfirmed = yield call(confirmSaga, confirmModalOptions);
     if (isConfirmed) {
@@ -160,7 +164,7 @@ function* navigateToProject({ payload }) {
   if (isAssigned) {
     yield put({
       type: PROJECT_PAGE,
-      payload: { projectId: project.projectName },
+      payload: { organizationSlug, projectKey },
     });
   }
 }
