@@ -29,7 +29,7 @@ export const RadioGroup = ({ options, value, ...rest }) => (
   </div>
 );
 RadioGroup.propTypes = {
-  variant: PropTypes.string,
+  variant: PropTypes.oneOf(['light', 'dark']),
   options: PropTypes.arrayOf(
     PropTypes.shape({
       value: PropTypes.string,
