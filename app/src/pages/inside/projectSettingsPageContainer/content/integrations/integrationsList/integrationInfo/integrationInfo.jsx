@@ -19,6 +19,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import { JIRA, RALLY, EMAIL, SAUCE_LABS } from 'common/constants/pluginNames';
 import { isAdminSelector, activeProjectRoleSelector } from 'controllers/user';
 import { uiExtensionIntegrationSettingsSelector } from 'controllers/plugins/uiExtensions/selectors';
@@ -36,6 +37,7 @@ import { updatePagePropertiesAction } from 'controllers/pages';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { INTEGRATIONS_SETTINGS_COMPONENTS_MAP } from 'components/integrations/settingsComponentsMap';
 import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
+import { PROJECT_SETTINGS_INTEGRATION } from 'analyticsEvents/projectSettingsPageEvents';
 import { IntegrationHeader } from './integrationHeader';
 import { AvailableIntegrations } from './availableIntegrations';
 import { JIRA_CLOUD, AZURE_DEVOPS } from './constats';
@@ -58,6 +60,7 @@ export const IntegrationInfo = (props) => {
   const [integrationInfo, setIntegrationInfo] = useState({});
   const [updatedParameters, setUpdatedParameters] = useState({});
   const { formatMessage } = useIntl();
+  const { trackEvent } = useTracking();
   const settingsExtensions = useSelector(uiExtensionIntegrationSettingsSelector);
   const isAdmin = useSelector(isAdminSelector);
   const userProjectRole = useSelector(activeProjectRoleSelector);
@@ -111,7 +114,7 @@ export const IntegrationInfo = (props) => {
       integrationParameters: formData,
       name: formData.integrationName || PLUGIN_NAME_TITLES[name],
     };
-
+    trackEvent(PROJECT_SETTINGS_INTEGRATION.CLICK_CREATE_INTEGRATION_MODAL(name));
     dispatch(addIntegrationAction(newData, false, name, openIntegration, metaData));
   };
 
@@ -133,6 +136,7 @@ export const IntegrationInfo = (props) => {
         },
       }),
     );
+    trackEvent(PROJECT_SETTINGS_INTEGRATION.CLICK_ADD_PROJECT_INTEGRATION(name));
   };
   const onUpdate = (formData, onConfirm, metaData) => {
     const newData = {
@@ -182,6 +186,11 @@ export const IntegrationInfo = (props) => {
         },
       }),
     );
+    trackEvent(PROJECT_SETTINGS_INTEGRATION.CLICK_RESET_TO_GLOBAL_INEGRATION);
+  };
+
+  const handleDocumentationClick = () => {
+    trackEvent(PROJECT_SETTINGS_INTEGRATION.CLICK_DOCUMENTATION_BUTTON('integrations'));
   };
 
   const integrationContent = () => {
@@ -211,6 +220,7 @@ export const IntegrationInfo = (props) => {
             title={formatMessage(messages.noGlobalIntegrationsMessage)}
             handleButton={onAddProjectIntegration}
             description={formatMessage(messages.noGlobalIntegrationsDescription)}
+            handleDocumentationClick={handleDocumentationClick}
             buttonName={formatMessage(messages.noGlobalIntegrationsButtonAdd)}
             disableButton={!isAbleToClick}
             documentationLink={documentationList[name]}
