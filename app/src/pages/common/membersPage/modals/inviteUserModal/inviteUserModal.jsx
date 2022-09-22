@@ -25,7 +25,7 @@ import { DEFAULT_PROJECT_ROLE, ROLES_MAP } from 'common/constants/projectRoles';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils/fetch';
 import { commonValidators } from 'common/utils/validation';
-import { projectIdSelector } from 'controllers/pages';
+import { urlProjectKeySelector } from 'controllers/pages';
 import { isAdminSelector } from 'controllers/user';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import {
@@ -86,13 +86,13 @@ const inviteFormSelector = formValueSelector('inviteUserForm');
   (state, ownProps) => ({
     selectedProject: ownProps.data.isProjectSelector
       ? inviteFormSelector(state, 'project')
-      : projectIdSelector(state),
+      : urlProjectKeySelector(state),
     selectedUser: inviteFormSelector(state, 'user'),
     isAdmin: isAdminSelector(state),
     projectKey: projectKeySelector(state),
     initialValues: {
       role: DEFAULT_PROJECT_ROLE,
-      project: projectIdSelector(state),
+      project: urlProjectKeySelector(state),
     },
   }),
   {

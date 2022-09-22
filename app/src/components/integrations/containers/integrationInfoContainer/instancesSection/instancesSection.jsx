@@ -23,7 +23,7 @@ import PlusIcon from 'common/img/plus-button-inline.svg';
 import { canUpdateSettings } from 'common/utils/permissions';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
-import { projectIdSelector } from 'controllers/pages';
+import { urlProjectKeySelector } from 'controllers/pages';
 import {
   removePluginAction,
   addIntegrationAction,
@@ -114,7 +114,7 @@ const messages = defineMessages({
 
 @connect(
   (state) => ({
-    projectId: projectIdSelector(state),
+    projectKey: urlProjectKeySelector(state),
     accountRole: userAccountRoleSelector(state),
     userRole: activeProjectRoleSelector(state),
   }),
