@@ -186,7 +186,7 @@ export const IntegrationInfo = (props) => {
         },
       }),
     );
-    trackEvent(PROJECT_SETTINGS_INTEGRATION.CLICK_RESET_TO_GLOBAL_INEGRATION);
+    trackEvent(PROJECT_SETTINGS_INTEGRATION.CLICK_RESET_TO_GLOBAL_INTEGRATION);
   };
 
   const handleDocumentationClick = () => {

@@ -172,7 +172,7 @@ export const PROJECT_SETTINGS_INTEGRATION = {
     type: normalizeEventString(type),
   }),
 
-  CLICK_RESET_TO_GLOBAL_INEGRATION: {
+  CLICK_RESET_TO_GLOBAL_INTEGRATION: {
     ...BASIC_EVENT_PARAMETERS_INTEGRATIONS,
     element_name: 'button_reset',
   },
