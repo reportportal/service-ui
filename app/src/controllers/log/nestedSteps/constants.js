@@ -24,7 +24,7 @@ export const FETCH_NESTED_STEP_START = 'fetchNestedStepStartAction';
 export const FETCH_NESTED_STEP_SUCCESS = 'fetchNestedStepSuccessAction';
 export const FETCH_NESTED_STEP_ERROR = 'fetchNestedStepErrorAction';
 
-export const PAGINATION_OFFSET = 10;
+export const PAGINATION_OFFSET = 300;
 
 export const INITIAL_STATE = {
   loading: false,

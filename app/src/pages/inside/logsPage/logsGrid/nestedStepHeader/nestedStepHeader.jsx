@@ -58,10 +58,11 @@ export class NestedStepHeader extends Component {
   componentDidMount() {
     const {
       data: { status },
+      collapsed,
       onToggle,
     } = this.props;
 
-    status === FAILED && onToggle();
+    status === FAILED && collapsed && onToggle();
   }
 
   onToggle = () => {

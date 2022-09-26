@@ -54,6 +54,7 @@ export const NUMBER_OF_ITEMS_TO_LOAD = 9;
 export const SET_ACTIVE_TAB_ID = 'SET_ACTIVE_TAB_ID';
 export const FETCH_HISTORY_ITEMS_WITH_LOADING = 'ON_UPDATE_ITEM_STATUS';
 export const FETCH_ERROR_LOGS = 'fetchErrorLogs';
+export const FETCH_ERROR_LOG = 'fetchErrorLog';
 
 export const LOG_LEVELS = [
   {
@@ -81,3 +82,6 @@ export const LOG_LEVELS = [
     label: 'Trace',
   },
 ];
+
+export const PREVIOUS = 'previous';
+export const NEXT = 'next';

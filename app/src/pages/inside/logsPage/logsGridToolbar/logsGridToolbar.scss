@@ -82,21 +82,3 @@
   display: flex;
   align-items: center;
 }
-
-.error-counter-block {
-  display: flex;
-  align-items: center;
-  margin-left: 54px;
-}
-
-.error-counter-text {
-  margin-left: 16px;
-  font-family: $FONT-REGULAR;
-  font-size: 13px;
-  line-height: 18px;
-  color: $COLOR--charcoal-grey;
-}
-
-.error-counter {
-  font-family: $FONT-ROBOTO-BOLD;
-}
