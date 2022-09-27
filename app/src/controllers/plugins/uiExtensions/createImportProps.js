@@ -102,6 +102,7 @@ import {
   showDefaultErrorNotification,
 } from 'controllers/notification';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { DottedPreloader } from 'components/preloaders/dottedPreloader';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { SimpleBreadcrumbs } from 'components/main/simpleBreadcrumbs';
@@ -241,6 +242,7 @@ export const createImportProps = (pluginName) => ({
     NoCasesBlock,
     ItemList,
     SpinningPreloader,
+    DottedPreloader,
     ModalLayout,
     ModalField,
     FieldProvider,
