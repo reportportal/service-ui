@@ -36,6 +36,12 @@ const BASIC_EVENT_PARAMETERS_DEFECT_TYPES = {
   place: DEFECT_TYPES,
 };
 
+const BASIC_EVENT_PARAMETERS_INTEGRATIONS = {
+  action: 'click',
+  category: PROJECT_SETTINGS,
+  place: 'integrations',
+};
+
 const getStatus = (status) => (status ? 'active' : 'disabled');
 const getSwitcher = (switcher) => (switcher ? 'on' : 'off');
 
@@ -143,5 +149,31 @@ export const PROJECT_SETTINGS_DEFECT_TYPES_EVENTS = {
   CLICK_CREATE_ICON: {
     ...BASIC_EVENT_PARAMETERS_DEFECT_TYPES,
     icon_name: 'icon_create_defect',
+  },
+};
+
+export const PROJECT_SETTINGS_INTEGRATION = {
+  CLICK_DOCUMENTATION_BUTTON: (place) => ({
+    ...BASIC_EVENT_PARAMETERS_INTEGRATIONS,
+    place: normalizeEventString(place),
+    link_name: 'documentation',
+  }),
+
+  CLICK_ADD_PROJECT_INTEGRATION: (type) => ({
+    ...BASIC_EVENT_PARAMETERS_INTEGRATIONS,
+    element_name: 'button_add_project_integration',
+    type: normalizeEventString(type),
+  }),
+
+  CLICK_CREATE_INTEGRATION_MODAL: (type) => ({
+    ...BASIC_EVENT_PARAMETERS_INTEGRATIONS,
+    element_name: 'button_create',
+    modal: 'create_project_integration',
+    type: normalizeEventString(type),
+  }),
+
+  CLICK_RESET_TO_GLOBAL_INTEGRATION: {
+    ...BASIC_EVENT_PARAMETERS_INTEGRATIONS,
+    element_name: 'button_reset',
   },
 };

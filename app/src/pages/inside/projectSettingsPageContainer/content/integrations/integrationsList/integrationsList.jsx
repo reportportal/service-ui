@@ -17,7 +17,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
+import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
+import { PROJECT_SETTINGS_INTEGRATION } from 'analyticsEvents/projectSettingsPageEvents';
 import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
 import { IntegrationsListItem } from './integrationsListItem';
 import styles from './integrationsList.scss';
@@ -28,6 +30,11 @@ const cx = classNames.bind(styles);
 export const IntegrationsList = (props) => {
   const { formatMessage } = useIntl();
   const { availableIntegrations, onItemClick } = props;
+  const { trackEvent } = useTracking();
+
+  const handleDocumentationClick = () => {
+    trackEvent(PROJECT_SETTINGS_INTEGRATION.CLICK_DOCUMENTATION_BUTTON('no_integrations'));
+  };
 
   return (
     <>
@@ -55,6 +62,7 @@ export const IntegrationsList = (props) => {
           title={formatMessage(messages.noIntegrationsMessage)}
           description={formatMessage(messages.noIntegrationsDescription)}
           documentationLink={'https://reportportal.io/docs/Project-configuration%3Eintegrations'}
+          handleDocumentationClick={handleDocumentationClick}
           descriptionClassName={cx('integration-empty')}
         />
       )}
