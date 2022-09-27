@@ -23,9 +23,6 @@ const PERMISSIONS_MAP = {
   MANAGER: {
     DELETE_USER: 'ALL',
   },
-  CUSTOMER: {
-    CREATE_USER: 'ALL',
-  },
   MEMBER: {
     CREATE_USER: 'OWNER',
   },
@@ -42,12 +39,6 @@ describe('permissions', () => {
   });
   it("should return false if user hasn't got permission", () => {
     expect(canCreateUser('USER', 'MANAGER')).toBeFalsy();
-  });
-  it('should return true if user has permission "ALL"', () => {
-    expect(canCreateUser('USER', 'CUSTOMER')).toBeTruthy();
-  });
-  it('should return true if owner has permission "ALL"', () => {
-    expect(canCreateUser('USER', 'CUSTOMER', true)).toBeTruthy();
   });
   it('should return true if owner has permission "OWNER"', () => {
     expect(canCreateUser('USER', 'MEMBER', true)).toBeTruthy();

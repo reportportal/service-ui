@@ -36,19 +36,11 @@ export const ROLE_NAMES = defineMessages({
   },
   manager: {
     id: 'PermissionMap.manager',
-    defaultMessage: 'PM',
+    defaultMessage: 'Project Manager',
   },
   member: {
     id: 'PermissionMap.member',
     defaultMessage: 'Member',
-  },
-  operator: {
-    id: 'PermissionMap.operator',
-    defaultMessage: 'Operator',
-  },
-  customer: {
-    id: 'PermissionMap.customer',
-    defaultMessage: 'Customer',
   },
   attention: {
     id: 'PermissionMap.attention',
@@ -159,6 +151,10 @@ const widgetFilterDashboardMessages = defineMessages({
   [ACTIONS.CREATE_ITEM]: {
     id: 'PermissionMap.createItem',
     defaultMessage: 'Create item',
+  },
+  [ACTIONS.EDIT_DELETE_ITEM]: {
+    id: 'PermissionMap.editDeleteItem',
+    defaultMessage: 'Edit, delete item',
   },
 });
 

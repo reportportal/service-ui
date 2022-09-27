@@ -15,5 +15,8 @@
  */
 
 export function isEmptyObject(obj) {
+  if (typeof obj !== 'object' && obj != null) {
+    throw Error(`argument must be typeOf object`);
+  }
   return Object.keys(obj).length === 0;
 }
