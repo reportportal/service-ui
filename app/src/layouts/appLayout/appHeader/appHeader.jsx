@@ -57,7 +57,12 @@ export class AppHeader extends Component {
       <header className={cx('header')}>
         <MobileHeader opened={sideMenuOpened} toggleSideMenu={toggleSideMenu} />
         <div className={cx('projects-block')}>
-          <ProjectSelector projects={projects} activeProject={activeProject} mobileOnly />
+          <ProjectSelector
+            projects={projects}
+            assignedProjects={assignedProjects}
+            activeProject={activeProject}
+            mobileOnly
+          />
         </div>
       </header>
     );
