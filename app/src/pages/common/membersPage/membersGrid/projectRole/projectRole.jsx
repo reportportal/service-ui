@@ -24,7 +24,7 @@ import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { canChangeUserRole } from 'common/utils/permissions';
-import { projectIdSelector } from 'controllers/pages';
+import { urlProjectKeySelector } from 'controllers/pages';
 import {
   activeProjectRoleSelector,
   userAccountRoleSelector,
@@ -35,7 +35,6 @@ import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { ROLES_MAP } from 'common/constants/projectRoles';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { projectKeySelector } from 'controllers/project';
 import styles from './projectRole.scss';
 
 const cx = classNames.bind(styles);
@@ -55,13 +54,12 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     currentUser: userIdSelector(state),
-    projectId: projectIdSelector(state),
     isAdmin: isAdminSelector(state),
     canChangeRole: canChangeUserRole(
       userAccountRoleSelector(state),
       activeProjectRoleSelector(state),
     ),
-    projectKey: projectKeySelector(state),
+    projectKey: urlProjectKeySelector(state),
   }),
   { showNotification },
 )
@@ -123,8 +121,8 @@ export class ProjectRole extends Component {
       });
   };
   getUserRole() {
-    const { assignedProjects, projectId } = this.props;
-    return assignedProjects[projectId] && assignedProjects[projectId].projectRole;
+    const { assignedProjects, projectKey } = this.props;
+    return assignedProjects[projectKey] && assignedProjects[projectKey].projectRole;
   }
   render() {
     this.getUserRole();

@@ -22,7 +22,6 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { canUpdateSettings } from 'common/utils/permissions';
-import { projectIdSelector } from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
@@ -75,7 +74,6 @@ const messages = defineMessages({
 
 @connect(
   (state) => ({
-    projectId: projectIdSelector(state),
     accountRole: userAccountRoleSelector(state),
     userRole: activeProjectRoleSelector(state),
     analyzerConfiguration: analyzerAttributesSelector(state),
@@ -93,7 +91,6 @@ const messages = defineMessages({
 export class AutoAnalysisTab extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    projectId: PropTypes.string,
     fetchConfigurationAttributesAction: PropTypes.func.isRequired,
     updateConfigurationAttributesAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
@@ -106,7 +103,6 @@ export class AutoAnalysisTab extends Component {
   };
 
   static defaultProps = {
-    projectId: '',
     analyzerConfiguration: {},
     analyzerExtensions: [],
   };

@@ -16,11 +16,22 @@
 
 import { isEmptyObject } from './isEmptyObject';
 
-describe('isEmptyObject', () => {
-  test('should return false in case of provided object has own properties', () => {
-    expect(isEmptyObject({ a: 1, b: 2 })).toBe(false);
-  });
-  test('should return true in case of provided object has not own properties', () => {
+describe('isEmptyValue', () => {
+  test('should return true for empty object', () => {
     expect(isEmptyObject({})).toBe(true);
+  });
+  test('should return false if object is not empty', () => {
+    expect(isEmptyObject({ test: '123' })).toBe(false);
+  });
+
+  test('should throw error with message "argument must be typeOf object"', () => {
+    try {
+      expect(isEmptyObject(0)).toBe(false);
+      expect(isEmptyObject('')).toBe(false);
+      expect(isEmptyObject(undefined)).toBe(false);
+      expect(isEmptyObject(true)).toBe(false);
+    } catch (error) {
+      expect(error.message).toBe('argument must be typeOf object');
+    }
   });
 });

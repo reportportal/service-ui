@@ -18,7 +18,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl } from 'react-intl';
-import { PROJECT_MANAGER, OPERATOR, CUSTOMER, MEMBER } from 'common/constants/projectRoles';
+import { PROJECT_MANAGER, MEMBER } from 'common/constants/projectRoles';
 import { ALL } from 'common/constants/permissions';
 import { PERMISSIONS_MAP } from './permissions';
 import { PERMISSION_NAMES, ROLE_NAMES, PERMISSION_CATEGORIES } from './permissionsName';
@@ -36,7 +36,7 @@ export class PermissionMap extends Component {
   };
   generateTableCells = (permission) => {
     const { intl } = this.props;
-    const roles = [PROJECT_MANAGER, MEMBER, OPERATOR, CUSTOMER];
+    const roles = [MEMBER, PROJECT_MANAGER];
     const ownerPermission = (
       <div title={intl.formatMessage(ROLE_NAMES.ownTitle)} className={cx('owner-permission')} />
     );
@@ -93,10 +93,8 @@ export class PermissionMap extends Component {
           <thead>
             <tr>
               <th className={cx('roles-header')}>{intl.formatMessage(ROLE_NAMES.role)}</th>
-              <th className={cx('header')}>{intl.formatMessage(ROLE_NAMES.manager)}</th>
               <th className={cx('header')}>{intl.formatMessage(ROLE_NAMES.member)}</th>
-              <th className={cx('header')}>{intl.formatMessage(ROLE_NAMES.operator)}</th>
-              <th className={cx('header')}>{intl.formatMessage(ROLE_NAMES.customer)}</th>
+              <th className={cx('header')}>{intl.formatMessage(ROLE_NAMES.manager)}</th>
             </tr>
           </thead>
           <tbody>{this.generateTableRows()}</tbody>
