@@ -23,7 +23,6 @@ import PlusIcon from 'common/img/plus-button-inline.svg';
 import { canUpdateSettings } from 'common/utils/permissions';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
-import { urlProjectKeySelector } from 'controllers/pages';
 import {
   removePluginAction,
   addIntegrationAction,
@@ -114,7 +113,6 @@ const messages = defineMessages({
 
 @connect(
   (state) => ({
-    projectKey: urlProjectKeySelector(state),
     accountRole: userAccountRoleSelector(state),
     userRole: activeProjectRoleSelector(state),
   }),
@@ -131,7 +129,6 @@ export class InstancesSection extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     instanceType: PropTypes.string.isRequired,
-    projectId: PropTypes.string,
     onItemClick: PropTypes.func.isRequired,
     removePluginSuccessCallback: PropTypes.func.isRequired,
     showModalAction: PropTypes.func.isRequired,
@@ -157,7 +154,6 @@ export class InstancesSection extends Component {
     pluginDetails: {},
     projectIntegrations: [],
     globalIntegrations: [],
-    projectId: '',
     isGlobal: false,
     title: '',
     pluginId: null,
