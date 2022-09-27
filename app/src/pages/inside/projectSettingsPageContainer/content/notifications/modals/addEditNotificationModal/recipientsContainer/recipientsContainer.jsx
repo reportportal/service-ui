@@ -49,7 +49,7 @@ export const RecipientsContainer = ({ ...rest }) => {
   return (
     <AsyncMultipleAutocomplete
       placeholder={formatMessage(messages.recipientsPlaceholder)}
-      minLength={3}
+      minLength={1}
       getURI={URLS.projectUsernamesSearch(activeProject)}
       creatable
       editable
