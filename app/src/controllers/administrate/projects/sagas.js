@@ -31,7 +31,7 @@ import { fetch, getStorageItem, setStorageItem } from 'common/utils';
 import { PROJECT_PAGE } from 'controllers/pages';
 import { confirmSaga, hideModalAction } from 'controllers/modal';
 import { PROJECT_MANAGER } from 'common/constants/projectRoles';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
+import { projectOrganizationSlugSelector } from 'controllers/project';
 import {
   NAMESPACE,
   FETCH_PROJECTS,
@@ -74,7 +74,7 @@ function* watchSetViewMode() {
 
 function* addProject({ payload: projectName }) {
   try {
-    yield call(fetch, URLS.addProject(), {
+    const { projectKey } = yield call(fetch, URLS.addProject(), {
       method: 'post',
       data: {
         entryType: PROJECT_TYPE_INTERNAL,
@@ -82,12 +82,11 @@ function* addProject({ payload: projectName }) {
       },
     });
     const projectInfo = {
-      projectName,
+      projectKey,
       projectRole: PROJECT_MANAGER,
       entryType: PROJECT_TYPE_INTERNAL,
     };
     const organizationSlug = yield select(projectOrganizationSlugSelector);
-    const projectKey = yield select(projectKeySelector);
     yield put(assignToProjectSuccessAction(projectInfo));
     yield put(hideModalAction());
     yield put(
