@@ -22,7 +22,6 @@ import {
   activeProjectSelector,
   activeProjectRoleSelector,
   userAccountRoleSelector,
-  assignedProjectsSelector,
 } from 'controllers/user';
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { FormattedMessage } from 'react-intl';
@@ -54,7 +53,6 @@ import { ProjectSelector } from '../../common/projectSelector';
 
 @connect((state) => ({
   activeProject: activeProjectSelector(state),
-  assignedProjects: assignedProjectsSelector(state),
   projectRole: activeProjectRoleSelector(state),
   accountRole: userAccountRoleSelector(state),
   extensions: uiExtensionSidebarComponentsSelector(state),
@@ -73,12 +71,10 @@ export class AppSidebar extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    assignedProjects: PropTypes.object,
     extensions: PropTypes.arrayOf(extensionType),
     onClickNavBtn: PropTypes.func,
   };
   static defaultProps = {
-    assignedProjects: {},
     extensions: [],
     onClickNavBtn: () => {},
   };
@@ -189,12 +185,11 @@ export class AppSidebar extends Component {
   ];
 
   render() {
-    const { assignedProjects, activeProject } = this.props;
+    const { activeProject } = this.props;
     const topSidebarItems = this.createTopSidebarItems();
     const bottomSidebarItems = this.createBottomSidebarItems();
-    const projects = Object.keys(assignedProjects).sort();
 
-    const mainBlock = <ProjectSelector projects={projects} activeProject={activeProject} />;
+    const mainBlock = <ProjectSelector activeProject={activeProject} />;
 
     return (
       <Sidebar

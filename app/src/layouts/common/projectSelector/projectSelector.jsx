@@ -24,6 +24,8 @@ import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { NavLink } from 'components/main/navLink';
 import { withTooltip } from 'components/main/tooltips/tooltip';
+import { connect } from 'react-redux';
+import { assignedProjectsSelector } from 'controllers/user';
 import styles from './projectSelector.scss';
 
 const cx = classNames.bind(styles);
@@ -57,11 +59,19 @@ const CurrentProjectNameWithTooltip = withTooltip({
     dark: true,
   },
 })(CurrentProjectBlock);
-
+@connect((state) => ({
+  assignedProjects: assignedProjectsSelector(state),
+}))
 @track()
 export class ProjectSelector extends Component {
   static propTypes = {
-    projects: PropTypes.arrayOf(PropTypes.string),
+    assignedProjects: PropTypes.objectOf(
+      PropTypes.shape({
+        entryType: PropTypes.string,
+        projectName: PropTypes.string,
+        projectRole: PropTypes.string,
+      }),
+    ).isRequired,
     activeProject: PropTypes.string,
     mobileOnly: PropTypes.bool,
     tracking: PropTypes.shape({
@@ -70,18 +80,21 @@ export class ProjectSelector extends Component {
     }).isRequired,
   };
   static defaultProps = {
-    projects: [],
     activeProject: '',
     mobileOnly: false,
   };
 
   controlNode = null;
 
+  projectKeys = [];
+
   state = {
     opened: false,
   };
 
   componentDidMount() {
+    const { assignedProjects } = this.props;
+    this.projectKeys = Object.keys(assignedProjects).sort();
     document.addEventListener('click', this.handleOutsideClick);
   }
 
@@ -112,7 +125,7 @@ export class ProjectSelector extends Component {
   };
 
   render() {
-    const { projects, mobileOnly, activeProject } = this.props;
+    const { mobileOnly, activeProject, assignedProjects } = this.props;
     const { opened } = this.state;
 
     return (
@@ -147,22 +160,25 @@ export class ProjectSelector extends Component {
                 data-placement={placement}
               >
                 <ScrollWrapper autoHeight autoHeightMax={600}>
-                  {projects.map((project) => (
-                    <NavLink
-                      to={{
-                        type: PROJECT_PAGE,
-                        payload: {
-                          projectKey: project,
-                        },
-                      }}
-                      key={project}
-                      className={cx('project-list-item')}
-                      activeClassName={cx('active')}
-                      onClick={this.onClickProjectName}
-                    >
-                      <span title={project}>{project}</span>
-                    </NavLink>
-                  ))}
+                  {this.projectKeys.map((projectKey) => {
+                    const { projectName } = assignedProjects[projectKey];
+                    return (
+                      <NavLink
+                        to={{
+                          type: PROJECT_PAGE,
+                          payload: {
+                            projectKey,
+                          },
+                        }}
+                        key={projectKey}
+                        className={cx('project-list-item')}
+                        activeClassName={cx('active')}
+                        onClick={this.onClickProjectName}
+                      >
+                        <span title={projectName}>{projectName}</span>
+                      </NavLink>
+                    );
+                  })}
                 </ScrollWrapper>
               </div>
             )}
