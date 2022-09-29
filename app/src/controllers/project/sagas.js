@@ -76,11 +76,7 @@ import {
   updateProjectNotificationSuccessAction,
   setProjectNotificationsLoadingAction,
 } from './actionCreators';
-import {
-  projectNotificationsConfigurationSelector,
-  patternsSelector,
-  projectKeySelector,
-} from './selectors';
+import { projectNotificationsConfigurationSelector, patternsSelector } from './selectors';
 
 function* updateDefectSubType({ payload: subTypes }) {
   try {
@@ -488,7 +484,7 @@ function* watchShowFilterOnLaunches() {
 
 function* updateProjectFilterPreferences({ payload = {} }) {
   const { filterId, method } = payload;
-  const projectKey = yield select(projectKeySelector);
+  const projectKey = yield select(urlProjectKeySelector);
   const userId = yield select(userIdSelector);
   yield call(fetch, URLS.projectPreferences(projectKey, userId, filterId), { method });
 }

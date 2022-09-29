@@ -21,11 +21,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import * as d3 from 'd3-selection';
 import { ALL } from 'common/constants/reservedFilterIds';
-import {
-  defectTypesSelector,
-  projectKeySelector,
-  projectOrganizationSlugSelector,
-} from 'controllers/project';
+import { defectTypesSelector, projectOrganizationSlugSelector } from 'controllers/project';
 import { defectLinkSelector, statisticsLinkSelector } from 'controllers/testItem';
 import {
   getDefaultTestItemLinkParams,
@@ -34,6 +30,7 @@ import {
   getChartDefaultProps,
 } from 'components/widgets/common/utils';
 import { ChartContainer } from 'components/widgets/common/c3chart';
+import { activeProjectKeySelector } from 'controllers/user';
 import { getConfig } from './config/getConfig';
 import styles from './launchesComparisonChart.scss';
 
@@ -42,7 +39,7 @@ const cx = classNames.bind(styles);
 @injectIntl
 @connect(
   (state) => ({
-    projectKey: projectKeySelector(state),
+    projectKey: activeProjectKeySelector(state),
     defectTypes: defectTypesSelector(state),
     organizationSlug: projectOrganizationSlugSelector(state),
     getDefectLink: defectLinkSelector(state),

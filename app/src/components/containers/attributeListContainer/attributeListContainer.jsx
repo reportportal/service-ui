@@ -17,10 +17,10 @@
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { EditableAttributeList } from 'componentLibrary/attributeList/editableAttributeList';
-import { projectKeySelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 
 export const AttributeListContainer = ({ value, keyURLCreator, valueURLCreator, ...rest }) => {
-  const projectKey = useSelector(projectKeySelector);
+  const projectKey = useSelector(activeProjectKeySelector);
   const getURIKey = keyURLCreator(projectKey);
   const getURIValue = (key) => valueURLCreator(projectKey, key);
   return (

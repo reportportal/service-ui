@@ -23,14 +23,13 @@ import {
   FETCH_ERROR,
 } from 'controllers/fetch';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { userIdSelector } from 'controllers/user';
+import { activeProjectKeySelector, userIdSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
 import {
   userFiltersSelector,
   updateProjectFilterPreferencesAction,
   fetchProjectPreferencesAction,
   FETCH_PROJECT_PREFERENCES_SUCCESS,
-  projectKeySelector,
   projectOrganizationSlugSelector,
 } from 'controllers/project';
 import { launchDistinctSelector } from 'controllers/launch';
@@ -62,7 +61,7 @@ import {
 } from './actionCreators';
 
 function* fetchFilters() {
-  const projectKey = yield select(projectKeySelector);
+  const projectKey = yield select(activeProjectKeySelector);
   const query = yield select(querySelector);
   yield put(
     fetchDataAction(NAMESPACE)(URLS.filters(projectKey), {
@@ -72,7 +71,7 @@ function* fetchFilters() {
 }
 
 function* fetchFiltersConcat({ payload: { params, concat } }) {
-  const projectKey = yield select(projectKeySelector);
+  const projectKey = yield select(activeProjectKeySelector);
   const query = yield select(querySelector);
   yield put(
     concatFetchDataAction(NAMESPACE, concat)(URLS.filters(projectKey), {
@@ -82,7 +81,7 @@ function* fetchFiltersConcat({ payload: { params, concat } }) {
 }
 
 function* updateLaunchesFilter({ payload: filter }) {
-  const projectKey = yield select(projectKeySelector);
+  const projectKey = yield select(activeProjectKeySelector);
   const shallowFilter = {
     ...filter,
     conditions: filter.conditions.filter((item) => item.value.trim()),
@@ -104,7 +103,7 @@ function* updateLaunchesFilter({ payload: filter }) {
 
 function* changeActiveFilter({ payload: filterId }) {
   const organizationSlug = yield select(projectOrganizationSlugSelector);
-  const projectKey = yield select(projectKeySelector);
+  const projectKey = yield select(activeProjectKeySelector);
 
   yield put({
     type: PROJECT_LAUNCHES_PAGE,
@@ -143,7 +142,7 @@ function* createFilter({ payload: filter = {} }) {
 }
 
 function* saveNewFilter({ payload: filter }) {
-  const projectKey = yield select(projectKeySelector);
+  const projectKey = yield select(activeProjectKeySelector);
   const shallowFilter = {
     ...filter,
     conditions: filter.conditions.filter((item) => item.value.trim()),
@@ -219,7 +218,7 @@ function* fetchFiltersPage({ payload: refreshProjectSettings }) {
   yield call(fetchFilters);
   const waitEffects = [take(createFetchPredicate(NAMESPACE))];
   if (refreshProjectSettings) {
-    const projectKey = yield select(projectKeySelector);
+    const projectKey = yield select(activeProjectKeySelector);
     yield put(fetchProjectPreferencesAction(projectKey));
     waitEffects.push(take(FETCH_PROJECT_PREFERENCES_SUCCESS));
   }

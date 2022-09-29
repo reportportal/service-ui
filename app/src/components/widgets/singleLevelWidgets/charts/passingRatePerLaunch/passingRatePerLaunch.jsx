@@ -23,7 +23,8 @@ import { ALL } from 'common/constants/reservedFilterIds';
 import { getDefaultTestItemLinkParams } from 'components/widgets/common/utils';
 import { statisticsLinkSelector } from 'controllers/testItem';
 import { STATS_PASSED } from 'common/constants/statistics';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
+import { projectOrganizationSlugSelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 import { PassingRateChart } from '../common/passingRateChart';
 
 const getFilterName = ({ contentParameters, content: { result = {} } = {} } = {}) =>
@@ -31,7 +32,7 @@ const getFilterName = ({ contentParameters, content: { result = {} } = {} } = {}
 
 @connect(
   (state) => ({
-    projectKey: projectKeySelector(state),
+    projectKey: activeProjectKeySelector(state),
     organizationSlug: projectOrganizationSlugSelector(state),
     getStatisticsLink: statisticsLinkSelector(state),
   }),

@@ -22,6 +22,7 @@ import {
   activeProjectSelector,
   activeProjectRoleSelector,
   userAccountRoleSelector,
+  activeProjectKeySelector,
 } from 'controllers/user';
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { FormattedMessage } from 'react-intl';
@@ -40,7 +41,7 @@ import {
 import { uiExtensionSidebarComponentsSelector } from 'controllers/plugins';
 import { Sidebar } from 'layouts/common/sidebar';
 import FiltersIcon from 'common/img/filters-icon-inline.svg';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
+import { projectOrganizationSlugSelector } from 'controllers/project';
 import DashboardIcon from './img/dashboard-icon-inline.svg';
 import LaunchesIcon from './img/launches-icon-inline.svg';
 import DebugIcon from './img/debug-icon-inline.svg';
@@ -56,7 +57,7 @@ import { ProjectSelector } from '../../common/projectSelector';
   accountRole: userAccountRoleSelector(state),
   extensionComponents: uiExtensionSidebarComponentsSelector(state),
   organizationSlug: projectOrganizationSlugSelector(state),
-  projectKey: projectKeySelector(state),
+  projectKey: activeProjectKeySelector(state),
 }))
 @track()
 export class AppSidebar extends Component {
