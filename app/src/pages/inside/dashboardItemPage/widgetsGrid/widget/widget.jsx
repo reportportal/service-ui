@@ -34,7 +34,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { CHARTS, MULTI_LEVEL_WIDGETS_MAP, NoDataAvailable } from 'components/widgets';
 import { provideEcGA } from 'components/main/analytics';
 import { activeDashboardIdSelector } from 'controllers/pages';
-import { projectKeySelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 import { isWidgetDataAvailable } from '../../modals/common/utils';
 import { WidgetHeader } from './widgetHeader';
 import styles from './widget.scss';
@@ -61,7 +61,7 @@ const SILENT_UPDATE_TIMEOUT_FULLSCREEN = 30000;
   (state) => ({
     activeDashboardId: activeDashboardIdSelector(state),
     isAnalyticsEnabled: analyticsEnabledSelector(state),
-    projectKey: projectKeySelector(state),
+    projectKey: activeProjectKeySelector(state),
   }),
   {
     showModalAction,

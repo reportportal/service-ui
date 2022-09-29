@@ -26,14 +26,14 @@ import { PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
 import AddFilterIcon from 'common/img/add-filter-inline.svg';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { ALL } from 'common/constants/reservedFilterIds';
-
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
+import { projectOrganizationSlugSelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 import styles from './noFiltersBlock.scss';
 
 const cx = classNames.bind(styles);
 
 @connect((state) => ({
-  projectKey: projectKeySelector(state),
+  projectKey: activeProjectKeySelector(state),
   organizationSlug: projectOrganizationSlugSelector(state),
 }))
 @track()

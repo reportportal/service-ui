@@ -38,7 +38,7 @@ import { AttributeListField } from 'components/main/attributeList';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import track from 'react-tracking';
-import { projectKeySelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 import styles from './editItemsModal.scss';
 
 const cx = classNames.bind(styles);
@@ -135,7 +135,7 @@ const makeDescriptionOptions = (formatMessage) => [
 @formValues('descriptionAction', 'uniqueAttributes')
 @connect(
   (state) => ({
-    projectKey: projectKeySelector(state),
+    projectKey: activeProjectKeySelector(state),
   }),
   {
     showNotification,

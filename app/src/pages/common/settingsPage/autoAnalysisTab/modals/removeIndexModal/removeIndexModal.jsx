@@ -28,7 +28,7 @@ import {
   NOTIFICATION_TYPES,
 } from 'controllers/notification';
 import { withModal, ModalLayout } from 'components/main/modal';
-import { projectKeySelector } from 'controllers/project';
+import { urlProjectKeySelector } from 'controllers/pages';
 import styles from './removeIndexModal.scss';
 
 const cx = classNames.bind(styles);
@@ -54,7 +54,7 @@ const messages = defineMessages({
 @withModal('removeIndexModal')
 @connect(
   (state) => ({
-    projectKey: projectKeySelector(state),
+    projectKey: urlProjectKeySelector(state),
   }),
   { showNotification, showDefaultErrorNotification },
 )

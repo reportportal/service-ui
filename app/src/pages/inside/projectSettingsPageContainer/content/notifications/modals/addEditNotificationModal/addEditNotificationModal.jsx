@@ -36,7 +36,7 @@ import { FieldText } from 'componentLibrary/fieldText';
 import { Checkbox } from 'componentLibrary/checkbox';
 import { PROJECT_SETTINGS_NOTIFICATIONS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { AttributeListFormField } from 'components/containers/AttributeListFormField';
-import { projectKeySelector } from 'controllers/project';
+import { urlProjectKeySelector } from 'controllers/pages';
 import { FieldElement } from '../../../elements';
 import {
   ATTRIBUTES_FIELD_KEY,
@@ -196,7 +196,7 @@ const AddEditNotificationModal = ({ data, data: { onSave }, handleSubmit, initia
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
 
-  const projectKey = useSelector(projectKeySelector);
+  const projectKey = useSelector(urlProjectKeySelector);
   const [isEditorShown, setShowEditor] = React.useState(data.notification.attributes.length > 0);
   useEffect(() => {
     initialize(data.notification);

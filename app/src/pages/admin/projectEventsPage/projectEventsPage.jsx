@@ -27,12 +27,12 @@ import {
 } from 'controllers/administrate/events';
 import { ENTITY_CREATION_DATE } from 'components/filterEntities/constants';
 import { SORTING_DESC, withSortingURL } from 'controllers/sorting';
-import { projectKeySelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 import { EventsGrid } from './eventsGrid';
 import { EventsToolbar } from './eventsToolbar';
 
 @connect((state) => ({
-  url: URLS.events(projectKeySelector),
+  url: URLS.events(activeProjectKeySelector),
   events: eventsSelector(state),
   loading: loadingSelector(state),
 }))

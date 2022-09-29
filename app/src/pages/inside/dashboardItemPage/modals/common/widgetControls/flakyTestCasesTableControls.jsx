@@ -21,7 +21,7 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { injectIntl, defineMessages } from 'react-intl';
 import { URLS } from 'common/urls';
 import { validate, bindMessageToValidator, commonValidators } from 'common/utils/validation';
-import { projectKeySelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 import { ITEMS_INPUT_WIDTH } from './constants';
 import { InputControl, TagsControl, CheckboxControl } from './controls';
 
@@ -58,7 +58,7 @@ const itemsValidator = (message) =>
 
 @injectIntl
 @connect((state) => ({
-  projectKey: projectKeySelector(state),
+  projectKey: activeProjectKeySelector(state),
 }))
 export class FlakyTestCasesTableControls extends Component {
   static propTypes = {

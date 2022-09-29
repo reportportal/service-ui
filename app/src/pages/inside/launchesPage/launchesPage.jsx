@@ -34,9 +34,9 @@ import { IN_PROGRESS } from 'common/constants/testStatuses';
 import { levelSelector } from 'controllers/testItem';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { MODAL_TYPE_IMPORT_LAUNCH } from 'pages/common/modals/importModal/constants';
-import { userIdSelector } from 'controllers/user';
+import { activeProjectKeySelector, userIdSelector } from 'controllers/user';
 import { isDemoInstanceSelector } from 'controllers/appInfo';
-import { projectConfigSelector, projectKeySelector } from 'controllers/project';
+import { projectConfigSelector } from 'controllers/project';
 import { withPagination, DEFAULT_PAGINATION, SIZE_KEY, PAGE_KEY } from 'controllers/pagination';
 import { showModalAction } from 'controllers/modal';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -164,7 +164,7 @@ const messages = defineMessages({
   (state) => ({
     debugMode: debugModeSelector(state),
     userId: userIdSelector(state),
-    url: URLS.launches(projectKeySelector(state)),
+    url: URLS.launches(activeProjectKeySelector(state)),
     selectedLaunches: selectedLaunchesSelector(state),
     validationErrors: validationErrorsSelector(state),
     launches: launchesSelector(state),
@@ -174,7 +174,7 @@ const messages = defineMessages({
     projectSetting: projectConfigSelector(state),
     highlightItemId: prevTestItemSelector(state),
     isDemoInstance: isDemoInstanceSelector(state),
-    projectKey: projectKeySelector(state),
+    projectKey: activeProjectKeySelector(state),
   }),
   {
     showModalAction,

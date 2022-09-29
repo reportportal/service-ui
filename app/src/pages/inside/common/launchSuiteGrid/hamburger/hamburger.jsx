@@ -33,8 +33,9 @@ import {
   activeProjectRoleSelector,
   userIdSelector,
   userAccountRoleSelector,
+  activeProjectKeySelector,
 } from 'controllers/user';
-import { enabledPattersSelector, projectKeySelector } from 'controllers/project';
+import { enabledPattersSelector } from 'controllers/project';
 import { analyzerExtensionsSelector } from 'controllers/appInfo';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ANALYZER_TYPES } from 'common/constants/analyzerTypes';
@@ -95,7 +96,7 @@ const messages = defineMessages({
     projectRole: activeProjectRoleSelector(state),
     userId: userIdSelector(state),
     accountRole: userAccountRoleSelector(state),
-    projectKey: projectKeySelector(state),
+    projectKey: activeProjectKeySelector(state),
     enabledPatterns: enabledPattersSelector(state),
     analyzerExtensions: analyzerExtensionsSelector(state),
   }),
