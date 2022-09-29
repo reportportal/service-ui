@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import track from 'react-tracking';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
-import { activeProjectSelector, assignedProjectsSelector } from 'controllers/user';
+import { activeProjectSelector } from 'controllers/user';
 import { MobileHeader } from 'layouts/common/mobileHeader';
 import { ProjectSelector } from '../../common/projectSelector';
 import styles from './appHeader.scss';
@@ -28,14 +28,12 @@ const cx = classNames.bind(styles);
 
 @connect((state) => ({
   activeProject: activeProjectSelector(state),
-  assignedProjects: assignedProjectsSelector(state),
 }))
 @track()
 export class AppHeader extends Component {
   static propTypes = {
     activeProject: PropTypes.string.isRequired,
     organizationSlug: PropTypes.string.isRequired,
-    assignedProjects: PropTypes.object,
     sideMenuOpened: PropTypes.bool,
     toggleSideMenu: PropTypes.func,
     tracking: PropTypes.shape({
@@ -51,13 +49,12 @@ export class AppHeader extends Component {
   };
 
   render() {
-    const { sideMenuOpened, toggleSideMenu, activeProject, assignedProjects } = this.props;
-    const projects = Object.keys(assignedProjects).sort();
+    const { sideMenuOpened, toggleSideMenu, activeProject } = this.props;
     return (
       <header className={cx('header')}>
         <MobileHeader opened={sideMenuOpened} toggleSideMenu={toggleSideMenu} />
         <div className={cx('projects-block')}>
-          <ProjectSelector projects={projects} activeProject={activeProject} mobileOnly />
+          <ProjectSelector activeProject={activeProject} mobileOnly />
         </div>
       </header>
     );
