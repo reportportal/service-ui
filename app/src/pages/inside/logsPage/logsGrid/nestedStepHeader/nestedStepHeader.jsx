@@ -44,6 +44,7 @@ export class NestedStepHeader extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     markdownMode: PropTypes.bool,
+    additionalNameCellBlock: PropTypes.node,
   };
 
   static defaultProps = {
@@ -53,6 +54,7 @@ export class NestedStepHeader extends Component {
     level: 0,
     loading: false,
     markdownMode: false,
+    additionalNameCellBlock: null,
   };
 
   componentDidMount() {
@@ -85,15 +87,22 @@ export class NestedStepHeader extends Component {
       loading,
       collapsed,
       markdownMode,
+      additionalNameCellBlock,
     } = this.props;
     const name = markdownMode ? <MarkdownViewer value={data.name} /> : data.name;
     if (hasContent) {
       return (
-        <div className={cx('step-name')} onClick={this.onToggle}>
+        <div
+          className={cx('step-name', { 'show-additional-block': additionalNameCellBlock })}
+          onClick={this.onToggle}
+        >
           <div className={cx('arrow-icon', { expanded: !collapsed })}>
             {loading ? <SpinningPreloader /> : Parser(ArrowIcon)}
           </div>
           <div>{name}</div>
+          {additionalNameCellBlock && (
+            <div className={cx('additional-name-cell-block')}>{additionalNameCellBlock}</div>
+          )}
         </div>
       );
     }

@@ -21,6 +21,7 @@ import {
   FETCH_NESTED_STEP_ERROR,
   TOGGLE_NESTED_STEP,
   LOAD_MORE_NESTED_STEP,
+  FETCH_CURRENT_STEP,
 } from './constants';
 
 export const requestNestedStepAction = (payload) => ({
@@ -46,5 +47,9 @@ export const toggleNestedStepAction = (payload) => ({
 });
 export const loadMoreNestedStepAction = (payload) => ({
   type: LOAD_MORE_NESTED_STEP,
+  payload,
+});
+export const fetchCurrentStepAction = (payload) => ({
+  type: FETCH_CURRENT_STEP,
   payload,
 });

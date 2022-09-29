@@ -17,6 +17,14 @@
 export { nestedStepsReducer } from './reducer';
 export { nestedStepSagas } from './sagas';
 export { domainSelector as nestedStepsSelector, nestedStepSelector } from './selectors';
-export { requestNestedStepAction, loadMoreNestedStepAction } from './actionCreators';
+export {
+  requestNestedStepAction,
+  loadMoreNestedStepAction,
+  fetchCurrentStepAction,
+} from './actionCreators';
 export { CLEAR_NESTED_STEPS } from './constants';
-export { isLoadMoreButtonVisible, isLoadPreviousButtonVisible } from './utils';
+export {
+  isLoadMoreButtonVisible,
+  isLoadPreviousButtonVisible,
+  isLoadCurrentStepButtonVisible,
+} from './utils';

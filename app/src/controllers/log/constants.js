@@ -85,3 +85,4 @@ export const LOG_LEVELS = [
 
 export const PREVIOUS = 'previous';
 export const NEXT = 'next';
+export const ALL = 'all';
