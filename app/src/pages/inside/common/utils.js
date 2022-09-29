@@ -17,7 +17,82 @@
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { canBulkEditItems } from 'common/utils/permissions';
 import { isPostIssueActionAvailable } from 'controllers/plugins';
+import {
+  AUTOMATION_BUG,
+  DEFECT_TYPES_SEQUENCE,
+  NO_DEFECT,
+  PRODUCT_BUG,
+  SYSTEM_ISSUE,
+  TO_INVESTIGATE,
+} from 'common/constants/defectTypes';
+import { defineMessages } from 'react-intl';
 import { actionMessages, ISSUE_OPERATION_MAX_ITEMS } from './constants';
+
+const DEFECT_STATISTICS_BASE = 'statistics$defects$';
+
+const messages = defineMessages({
+  [PRODUCT_BUG]: {
+    id: 'WidgetCriteriaOption.PRODUCT_BUG',
+    defaultMessage: 'Product bug',
+  },
+  [AUTOMATION_BUG]: {
+    id: 'WidgetCriteriaOption.AUTOMATION_BUG',
+    defaultMessage: 'Automation bug',
+  },
+  [SYSTEM_ISSUE]: {
+    id: 'WidgetCriteriaOption.SYSTEM_ISSUE',
+    defaultMessage: 'System issue',
+  },
+  [TO_INVESTIGATE]: {
+    id: 'WidgetCriteriaOption.TO_INVESTIGATE',
+    defaultMessage: 'To investigate',
+  },
+  [NO_DEFECT]: {
+    id: 'WidgetCriteriaOption.NO_DEFECT',
+    defaultMessage: 'No defect',
+  },
+
+  PRODUCT_BUG_TOTAL: {
+    id: 'WidgetCriteriaOption.PRODUCT_BUG_TOTAL',
+    defaultMessage: 'Product bugs group',
+  },
+  AUTOMATION_BUG_TOTAL: {
+    id: 'WidgetCriteriaOption.AUTOMATION_BUG_TOTAL',
+    defaultMessage: 'Automation bugs group',
+  },
+  SYSTEM_ISSUE_TOTAL: {
+    id: 'WidgetCriteriaOption.SYSTEM_ISSUE_TOTAL',
+    defaultMessage: 'System issues group',
+  },
+  TO_INVESTIGATE_TOTAL: {
+    id: 'WidgetCriteriaOption.TO_INVESTIGATE_TOTAL',
+    defaultMessage: 'To investigate group',
+  },
+  NO_DEFECT_TOTAL: {
+    id: 'WidgetCriteriaOption.NO_DEFECT_TOTAL',
+    defaultMessage: 'No defects group',
+  },
+  Defect_Type_AB001: {
+    id: 'WidgetCriteriaOption.Defect_Type_AB001',
+    defaultMessage: 'Automation bug',
+  },
+  Defect_Type_PB001: {
+    id: 'WidgetCriteriaOption.Defect_Type_PB001',
+    defaultMessage: 'Product bug',
+  },
+  Defect_Type_SI001: {
+    id: 'WidgetCriteriaOption.Defect_Type_SI001',
+    defaultMessage: 'System issue',
+  },
+  Defect_Type_TI001: {
+    id: 'WidgetCriteriaOption.Defect_Type_TI001',
+    defaultMessage: 'To investigate',
+  },
+  Defect_Type_ND001: {
+    id: 'WidgetCriteriaOption.Defect_Type_ND001',
+    defaultMessage: 'No defect',
+  },
+});
 
 export const getIssueTitle = (
   formatMessage,
@@ -134,4 +209,38 @@ export const createStepActionDescriptors = (params) => {
       onClick: onDelete,
     },
   ];
+};
+
+export const getGroupedDefectTypesOptions = (
+  defectTypes,
+  formatMessage,
+  defectTypesSequence = DEFECT_TYPES_SEQUENCE,
+) => {
+  let defectTypesOptions = [];
+  defectTypesSequence.forEach((defectTypeId) => {
+    const defectTypeGroup = defectTypes[defectTypeId];
+    defectTypesOptions.push({
+      label: formatMessage(messages[`${defectTypeGroup[0].typeRef}_TOTAL`]),
+      value: `${DEFECT_STATISTICS_BASE}${defectTypeGroup[0].typeRef.toLowerCase()}$total`,
+      groupId: defectTypeGroup[0].typeRef,
+      color: defectTypeGroup[0].color,
+    });
+    defectTypesOptions = defectTypesOptions.concat(
+      defectTypeGroup.map((defectType) => ({
+        groupRef: defectType.typeRef,
+        value: `${DEFECT_STATISTICS_BASE}${defectType.typeRef.toLowerCase()}$${defectType.locator}`,
+        label: messages[defectType.locator]
+          ? formatMessage(messages[`Defect_Type_${defectType.locator}`])
+          : defectType.longName,
+        color: defectType.color,
+        locator: defectType.locator,
+        meta: {
+          longName: defectType.longName,
+          subItem: true,
+        },
+      })),
+    );
+  });
+
+  return defectTypesOptions;
 };

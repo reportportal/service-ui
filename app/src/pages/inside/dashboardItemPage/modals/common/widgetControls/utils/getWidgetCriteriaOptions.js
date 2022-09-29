@@ -53,6 +53,7 @@ import {
   DELETE_PATTERN,
   MATCHED_PATTERN,
 } from 'common/constants/actionTypes';
+import { getGroupedDefectTypesOptions } from 'pages/inside/common/utils';
 import {
   LAUNCH_STATUSES_OPTIONS,
   DEFECT_TYPES_OPTIONS,
@@ -266,35 +267,6 @@ const getDefectStatisticsOptions = (formatMessage) => [
 const getToInvestigateStatisticsOption = (formatMessage) => [
   { value: STATS_TI_TOTAL, label: formatMessage(messages[TO_INVESTIGATE]) },
 ];
-
-export const getGroupedDefectTypesOptions = (
-  defectTypes,
-  formatMessage,
-  defectTypesSequence = DEFECT_TYPES_SEQUENCE,
-) => {
-  let defectTypesOptions = [];
-  defectTypesSequence.forEach((defectTypeId) => {
-    const defectTypeGroup = defectTypes[defectTypeId];
-    defectTypesOptions.push({
-      label: formatMessage(messages[`${defectTypeGroup[0].typeRef}_TOTAL`]),
-      value: `${DEFECT_STATISTICS_BASE}${defectTypeGroup[0].typeRef.toLowerCase()}$total`,
-      groupId: defectTypeGroup[0].typeRef,
-      color: defectTypeGroup[0].color,
-    });
-    defectTypesOptions = defectTypesOptions.concat(
-      defectTypeGroup.map((defectType) => ({
-        groupRef: defectType.typeRef,
-        value: `${DEFECT_STATISTICS_BASE}${defectType.typeRef.toLowerCase()}$${defectType.locator}`,
-        label: messages[defectType.locator]
-          ? formatMessage(messages[`Defect_Type_${defectType.locator}`])
-          : defectType.longName,
-        color: defectType.color,
-      })),
-    );
-  });
-
-  return defectTypesOptions;
-};
 
 const getDefectTypesOptions = (defectTypes, formatMessage) => {
   let defectTypesOptions = [];
