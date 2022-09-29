@@ -34,7 +34,6 @@ export class AppHeader extends Component {
   static propTypes = {
     activeProject: PropTypes.string.isRequired,
     organizationSlug: PropTypes.string.isRequired,
-    assignedProjects: PropTypes.object,
     sideMenuOpened: PropTypes.bool,
     toggleSideMenu: PropTypes.func,
     tracking: PropTypes.shape({

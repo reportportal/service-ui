@@ -86,7 +86,7 @@ export class ProjectSelector extends Component {
 
   controlNode = null;
 
-  projects = [];
+  projectKeys = [];
 
   state = {
     opened: false,
@@ -94,7 +94,7 @@ export class ProjectSelector extends Component {
 
   componentDidMount() {
     const { assignedProjects } = this.props;
-    this.projects = Object.keys(assignedProjects).sort();
+    this.projectKeys = Object.keys(assignedProjects).sort();
     document.addEventListener('click', this.handleOutsideClick);
   }
 
@@ -160,17 +160,17 @@ export class ProjectSelector extends Component {
                 data-placement={placement}
               >
                 <ScrollWrapper autoHeight autoHeightMax={600}>
-                  {this.projects.map((project) => {
-                    const { projectName } = assignedProjects[project];
+                  {this.projectKeys.map((projectKey) => {
+                    const { projectName } = assignedProjects[projectKey];
                     return (
                       <NavLink
                         to={{
                           type: PROJECT_PAGE,
                           payload: {
-                            projectKey: project,
+                            projectKey,
                           },
                         }}
-                        key={project}
+                        key={projectKey}
                         className={cx('project-list-item')}
                         activeClassName={cx('active')}
                         onClick={this.onClickProjectName}
