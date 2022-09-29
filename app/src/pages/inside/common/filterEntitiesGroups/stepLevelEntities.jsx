@@ -22,7 +22,6 @@ import { commonValidators, bindMessageToValidator, validate } from 'common/utils
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
 import { FAILED, PASSED, SKIPPED, INTERRUPTED, IN_PROGRESS } from 'common/constants/launchStatuses';
-import { DEFECT_TYPES_SEQUENCE } from 'common/constants/defectTypes';
 import {
   BEFORE_SUITE,
   BEFORE_GROUPS,
@@ -80,6 +79,7 @@ import { pageEventsMap } from 'components/main/analytics';
 import { connectRouter } from 'common/utils';
 import { createNamespacedQuery } from 'common/utils/routingUtils';
 import { PROVIDER_TYPE_BASELINE } from 'controllers/testItem/constants';
+import { getGroupedDefectTypesOptions } from 'pages/inside/common/utils';
 
 const messages = defineMessages({
   NameTitle: {
@@ -341,38 +341,10 @@ export class StepLevelEntities extends Component {
 
   getDefectTypeEntity = () => {
     const { intl, defectTypes, filterValues, visibleFilters } = this.props;
-    let initChecked = [];
-    let options = [];
-    DEFECT_TYPES_SEQUENCE.forEach((defectTypeId) => {
-      const defectTypeGroup = defectTypes[defectTypeId];
-      const hasSubTypes = defectTypeGroup.length > 1;
-      initChecked = initChecked.concat(defectTypeGroup.map((defectType) => defectType.locator));
-      if (hasSubTypes) {
-        options.push({
-          label: intl.formatMessage(messages[`${defectTypeGroup[0].typeRef}_ALL`]),
-          value: defectTypeGroup[0].typeRef,
-          groupId: defectTypeGroup[0].typeRef,
-        });
-        options = options.concat(
-          defectTypeGroup.map((defectType) => ({
-            groupRef: defectType.typeRef,
-            value: defectType.locator,
-            label: messages[defectType.locator]
-              ? intl.formatMessage(messages[`Defect_Type_${defectType.locator}`])
-              : defectType.longName,
-          })),
-        );
-      } else {
-        options = options.concat(
-          defectTypeGroup.map((defectType) => ({
-            value: defectType.locator,
-            label: messages[defectType.locator]
-              ? intl.formatMessage(messages[`Defect_Type_${defectType.locator}`])
-              : defectType.longName,
-          })),
-        );
-      }
-    });
+    const options = getGroupedDefectTypesOptions(defectTypes, intl.formatMessage).map((option) => ({
+      ...option,
+      value: option.meta && option.meta.subItem ? option.locator : option.typeRef,
+    }));
     return {
       id: ENTITY_DEFECT_TYPE,
       component: EntityDropdown,

@@ -224,6 +224,7 @@ export const getGroupedDefectTypesOptions = (
       value: `${DEFECT_STATISTICS_BASE}${defectTypeGroup[0].typeRef.toLowerCase()}$total`,
       groupId: defectTypeGroup[0].typeRef,
       color: defectTypeGroup[0].color,
+      typeRef: defectTypeGroup[0].typeRef,
     });
     defectTypesOptions = defectTypesOptions.concat(
       defectTypeGroup.map((defectType) => ({
