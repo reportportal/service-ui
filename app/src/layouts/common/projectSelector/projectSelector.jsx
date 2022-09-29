@@ -24,6 +24,8 @@ import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { NavLink } from 'components/main/navLink';
 import { withTooltip } from 'components/main/tooltips/tooltip';
+import { connect } from 'react-redux';
+import { assignedProjectsSelector } from 'controllers/user';
 import styles from './projectSelector.scss';
 
 const cx = classNames.bind(styles);
@@ -57,11 +59,12 @@ const CurrentProjectNameWithTooltip = withTooltip({
     dark: true,
   },
 })(CurrentProjectBlock);
-
+@connect((state) => ({
+  assignedProjects: assignedProjectsSelector(state),
+}))
 @track()
 export class ProjectSelector extends Component {
   static propTypes = {
-    projects: PropTypes.arrayOf(PropTypes.string),
     assignedProjects: PropTypes.objectOf(
       PropTypes.shape({
         entryType: PropTypes.string,
@@ -77,18 +80,21 @@ export class ProjectSelector extends Component {
     }).isRequired,
   };
   static defaultProps = {
-    projects: [],
     activeProject: '',
     mobileOnly: false,
   };
 
   controlNode = null;
 
+  projects = [];
+
   state = {
     opened: false,
   };
 
   componentDidMount() {
+    const { assignedProjects } = this.props;
+    this.projects = Object.keys(assignedProjects).sort();
     document.addEventListener('click', this.handleOutsideClick);
   }
 
@@ -119,8 +125,9 @@ export class ProjectSelector extends Component {
   };
 
   render() {
-    const { projects, mobileOnly, activeProject, assignedProjects } = this.props;
+    const { mobileOnly, activeProject, assignedProjects } = this.props;
     const { opened } = this.state;
+
     return (
       <div
         className={cx('project-selector', { shown: this.state.opened, 'only-mobile': mobileOnly })}
@@ -153,8 +160,8 @@ export class ProjectSelector extends Component {
                 data-placement={placement}
               >
                 <ScrollWrapper autoHeight autoHeightMax={600}>
-                  {projects.map((project) => {
-                    const projectName = assignedProjects[project].projectName;
+                  {this.projects.map((project) => {
+                    const { projectName } = assignedProjects[project];
                     return (
                       <NavLink
                         to={{
