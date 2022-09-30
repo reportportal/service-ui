@@ -40,7 +40,7 @@ import {
 } from 'components/main/analytics/events';
 import ConsoleIcon from 'common/img/console-inline.svg';
 import MarkdownIcon from 'common/img/markdown-inline.svg';
-import { GhostButton } from 'components/buttons/ghostButton';
+import { ErrorLogsControl } from './errorLogsControl';
 import { Pagination } from './pagination';
 import styles from './logsGridToolbar.scss';
 
@@ -66,15 +66,6 @@ const messages = defineMessages({
   hidePassedLogs: {
     id: 'LogsGridToolbar.hidePassedLogs',
     defaultMessage: 'Hide All Passed Logs',
-  },
-  errorLogs: {
-    id: 'LogsGridToolbar.errorLogs',
-    defaultMessage:
-      '{count, plural, =0 {No Error Logs} one {{totalItems} Error Log} other {{currentItem} of {totalItems} Error Logs}}',
-  },
-  showErrorLog: {
-    id: 'LogsGridToolbar.showErrorLog',
-    defaultMessage: 'Show',
   },
 });
 
@@ -113,6 +104,7 @@ export class LogsGridToolbar extends Component {
     isPassedLogsHidden: PropTypes.bool,
     errorLogs: PropTypes.array,
     highlightErrorLog: PropTypes.func,
+    errorLogIndex: PropTypes.number,
   };
 
   static defaultProps = {
@@ -129,6 +121,7 @@ export class LogsGridToolbar extends Component {
     isPassedLogsHidden: false,
     errorLogs: [],
     highlightErrorLog: () => {},
+    errorLogIndex: null,
   };
 
   state = {
@@ -208,6 +201,7 @@ export class LogsGridToolbar extends Component {
       isPassedLogsHidden,
       errorLogs,
       highlightErrorLog,
+      errorLogIndex,
     } = this.props;
     const { logViewMode } = this.state;
 
@@ -218,17 +212,12 @@ export class LogsGridToolbar extends Component {
             <div className={cx('log-level')}>
               <InputSlider options={LOG_LEVELS} value={logLevel} onChange={this.changeLogLevel} />
             </div>
-            <div className={cx('aside-element', 'error-counter-block')}>
-              <GhostButton onClick={highlightErrorLog} disabled={!errorLogs.length}>
-                {intl.formatMessage(messages.showErrorLog)}
-              </GhostButton>
-              <span className={cx('error-counter-text')}>
-                {intl.formatMessage(messages.errorLogs, {
-                  count: errorLogs.length,
-                  currentItem: <span className={cx('error-counter')}>1</span>,
-                  totalItems: <span className={cx('error-counter')}>{errorLogs.length}</span>,
-                })}
-              </span>
+            <div className={cx('aside-element')}>
+              <ErrorLogsControl
+                errorLogs={errorLogs}
+                highlightErrorLog={highlightErrorLog}
+                errorLogIndex={errorLogIndex}
+              />
             </div>
           </div>
           <div className={cx('aside')}>

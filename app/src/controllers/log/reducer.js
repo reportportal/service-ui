@@ -133,7 +133,7 @@ const reducer = combineReducers({
     ),
   }),
   errorLogs: combineReducers({
-    content: fetchReducer(ERROR_LOGS_NAMESPACE, { contentPath: 'content' }),
+    content: fetchReducer(ERROR_LOGS_NAMESPACE),
   }),
   attachments: attachmentsReducer,
   sauceLabs: sauceLabsReducer,

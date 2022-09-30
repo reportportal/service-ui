@@ -22,19 +22,25 @@ import {
   requestNestedStepAction,
   isLoadMoreButtonVisible,
   loadMoreNestedStepAction,
+  isLoadPreviousButtonVisible,
 } from 'controllers/log/nestedSteps';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { NEXT, PREVIOUS } from 'controllers/log';
 import { NestedGridBody } from '../nestedGridBody';
 import styles from './nestedGridRow.scss';
 
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
+  loadPreviousLabel: {
+    id: 'NestedGridRow.loadPreviousLabel',
+    defaultMessage: 'Load previous 300',
+  },
   loadLabel: {
     id: 'NestedGridRow.loadLabel',
-    defaultMessage: 'Load 10 more',
+    defaultMessage: 'Load next 300 ',
   },
 });
 
@@ -59,13 +65,14 @@ export const NestedGridRow = injectIntl(
       intl,
       ...rest
     }) => {
+      const showPreviousButton = isLoadPreviousButtonVisible(nestedStep);
       const showMoreButton = isLoadMoreButtonVisible(nestedStep);
       const { collapsed, loading, content } = nestedStep;
       const requestStep = () => {
         requestNestedStep({ id });
       };
-      const loadMore = () => {
-        loadMoreNestedStep({ id });
+      const loadMore = (loadDirection) => {
+        loadMoreNestedStep({ id, loadDirection });
       };
       return (
         <Fragment>
@@ -78,6 +85,30 @@ export const NestedGridRow = injectIntl(
           />
           {!collapsed && (
             <Fragment>
+              {showPreviousButton && (
+                <td
+                  colSpan="100"
+                  className={cx('row-more', {
+                    [`level-${level + 1}`]: level + 1 !== 0,
+                  })}
+                >
+                  <div
+                    className={cx('row-more-container', {
+                      loading,
+                    })}
+                    onClick={() => loadMore(PREVIOUS)}
+                  >
+                    <div className={cx('row-more-label')}>
+                      {intl.formatMessage(messages.loadPreviousLabel)}
+                    </div>
+                    {loading && (
+                      <div className={cx('loading-icon')}>
+                        <SpinningPreloader />
+                      </div>
+                    )}
+                  </div>
+                </td>
+              )}
               <NestedGridBody
                 data={content}
                 level={level + 1}
@@ -95,7 +126,7 @@ export const NestedGridRow = injectIntl(
                     className={cx('row-more-container', {
                       loading,
                     })}
-                    onClick={loadMore}
+                    onClick={() => loadMore(NEXT)}
                   >
                     <div className={cx('row-more-label')}>
                       {intl.formatMessage(messages.loadLabel)}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import { INITIAL_STATE } from './constants';
+import { NEXT, PREVIOUS } from 'controllers/log';
 
-export const domainSelector = (state) => state.log.nestedSteps || {};
-
-export const nestedStepSelector = (state, id) => domainSelector(state)[id] || INITIAL_STATE;
+export const DIRECTION_SHIFT_MAP = { [PREVIOUS]: -1, [NEXT]: 1 };
