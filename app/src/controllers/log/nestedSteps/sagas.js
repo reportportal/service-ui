@@ -18,13 +18,8 @@ import { all, call, put, select, takeEvery, cancelled } from 'redux-saga/effects
 import { handleError } from 'controllers/fetch';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { URLS } from 'common/urls';
-import { omit, fetch, isEmptyObject } from 'common/utils';
-import {
-  REQUEST_NESTED_STEP,
-  FETCH_NESTED_STEP_ERROR,
-  PAGINATION_OFFSET,
-  LOAD_MORE_NESTED_STEP,
-} from './constants';
+import { omit, fetch } from 'common/utils';
+import { REQUEST_NESTED_STEP, FETCH_NESTED_STEP_ERROR, LOAD_MORE_NESTED_STEP } from './constants';
 import {
   fetchNestedStepStartAction,
   fetchNestedStepSuccessAction,
@@ -33,22 +28,19 @@ import {
 } from './actionCreators';
 import { collectLogPayload } from '../sagaUtils';
 import { nestedStepSelector } from './selectors';
+import { getPagination } from './utils';
 
 function* fetchNestedStep({ payload = {} }) {
-  const { id } = payload;
+  const { id, errorLogPage, loadDirection } = payload;
   const { activeProject, query, filterLevel } = yield call(collectLogPayload);
   const logLevel = filterLevel;
   const paramsExcludingPagination = omit(query, [PAGE_KEY, SIZE_KEY]);
   const { page } = yield select(nestedStepSelector, id);
-  let pageSize = PAGINATION_OFFSET;
-  if (!isEmptyObject(page)) {
-    const { totalElements, size } = page;
-    pageSize = size >= totalElements ? totalElements : size + PAGINATION_OFFSET;
-  }
+  const paginationParams = getPagination(page, loadDirection, errorLogPage);
+
   const fetchParams = {
     ...paramsExcludingPagination,
-    [PAGE_KEY]: 1,
-    [SIZE_KEY]: pageSize,
+    ...paginationParams,
   };
 
   let cancelRequest = () => {};
@@ -70,7 +62,7 @@ function* fetchNestedStep({ payload = {} }) {
   }
 }
 
-function* requestNestedStep({ payload = {} }) {
+export function* requestNestedStep({ payload = {} }) {
   const { id } = payload;
   const nestedStep = yield select(nestedStepSelector, id);
   if (nestedStep.initial) {
