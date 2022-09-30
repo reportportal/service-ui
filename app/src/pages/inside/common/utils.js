@@ -32,64 +32,64 @@ const DEFECT_STATISTICS_BASE = 'statistics$defects$';
 
 const messages = defineMessages({
   [PRODUCT_BUG]: {
-    id: 'WidgetCriteriaOption.PRODUCT_BUG',
+    id: 'FilterCriteriaOption.PRODUCT_BUG',
     defaultMessage: 'Product bug',
   },
   [AUTOMATION_BUG]: {
-    id: 'WidgetCriteriaOption.AUTOMATION_BUG',
+    id: 'FilterCriteriaOption.AUTOMATION_BUG',
     defaultMessage: 'Automation bug',
   },
   [SYSTEM_ISSUE]: {
-    id: 'WidgetCriteriaOption.SYSTEM_ISSUE',
+    id: 'FilterCriteriaOption.SYSTEM_ISSUE',
     defaultMessage: 'System issue',
   },
   [TO_INVESTIGATE]: {
-    id: 'WidgetCriteriaOption.TO_INVESTIGATE',
+    id: 'FilterCriteriaOption.TO_INVESTIGATE',
     defaultMessage: 'To investigate',
   },
   [NO_DEFECT]: {
-    id: 'WidgetCriteriaOption.NO_DEFECT',
+    id: 'FilterCriteriaOption.NO_DEFECT',
     defaultMessage: 'No defect',
   },
 
   PRODUCT_BUG_TOTAL: {
-    id: 'WidgetCriteriaOption.PRODUCT_BUG_TOTAL',
+    id: 'FilterCriteriaOption.PRODUCT_BUG_TOTAL',
     defaultMessage: 'Product bugs group',
   },
   AUTOMATION_BUG_TOTAL: {
-    id: 'WidgetCriteriaOption.AUTOMATION_BUG_TOTAL',
+    id: 'FilterCriteriaOption.AUTOMATION_BUG_TOTAL',
     defaultMessage: 'Automation bugs group',
   },
   SYSTEM_ISSUE_TOTAL: {
-    id: 'WidgetCriteriaOption.SYSTEM_ISSUE_TOTAL',
+    id: 'FilterCriteriaOption.SYSTEM_ISSUE_TOTAL',
     defaultMessage: 'System issues group',
   },
   TO_INVESTIGATE_TOTAL: {
-    id: 'WidgetCriteriaOption.TO_INVESTIGATE_TOTAL',
+    id: 'FilterCriteriaOption.TO_INVESTIGATE_TOTAL',
     defaultMessage: 'To investigate group',
   },
   NO_DEFECT_TOTAL: {
-    id: 'WidgetCriteriaOption.NO_DEFECT_TOTAL',
+    id: 'FilterCriteriaOption.NO_DEFECT_TOTAL',
     defaultMessage: 'No defects group',
   },
   Defect_Type_AB001: {
-    id: 'WidgetCriteriaOption.Defect_Type_AB001',
+    id: 'FilterCriteriaOption.Defect_Type_AB001',
     defaultMessage: 'Automation bug',
   },
   Defect_Type_PB001: {
-    id: 'WidgetCriteriaOption.Defect_Type_PB001',
+    id: 'FilterCriteriaOption.Defect_Type_PB001',
     defaultMessage: 'Product bug',
   },
   Defect_Type_SI001: {
-    id: 'WidgetCriteriaOption.Defect_Type_SI001',
+    id: 'FilterCriteriaOption.Defect_Type_SI001',
     defaultMessage: 'System issue',
   },
   Defect_Type_TI001: {
-    id: 'WidgetCriteriaOption.Defect_Type_TI001',
+    id: 'FilterCriteriaOption.Defect_Type_TI001',
     defaultMessage: 'To investigate',
   },
   Defect_Type_ND001: {
-    id: 'WidgetCriteriaOption.Defect_Type_ND001',
+    id: 'FilterCriteriaOption.Defect_Type_ND001',
     defaultMessage: 'No defect',
   },
 });
