@@ -17,82 +17,11 @@
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { canBulkEditItems } from 'common/utils/permissions';
 import { isPostIssueActionAvailable } from 'controllers/plugins';
-import {
-  AUTOMATION_BUG,
-  DEFECT_TYPES_SEQUENCE,
-  NO_DEFECT,
-  PRODUCT_BUG,
-  SYSTEM_ISSUE,
-  TO_INVESTIGATE,
-} from 'common/constants/defectTypes';
-import { defineMessages } from 'react-intl';
+import { DEFECT_TYPES_SEQUENCE } from 'common/constants/defectTypes';
+import { defectTypesLocalization } from 'common/constants/localization/defectTypesLocalization';
 import { actionMessages, ISSUE_OPERATION_MAX_ITEMS } from './constants';
 
 const DEFECT_STATISTICS_BASE = 'statistics$defects$';
-
-const messages = defineMessages({
-  [PRODUCT_BUG]: {
-    id: 'FilterCriteriaOption.PRODUCT_BUG',
-    defaultMessage: 'Product bug',
-  },
-  [AUTOMATION_BUG]: {
-    id: 'FilterCriteriaOption.AUTOMATION_BUG',
-    defaultMessage: 'Automation bug',
-  },
-  [SYSTEM_ISSUE]: {
-    id: 'FilterCriteriaOption.SYSTEM_ISSUE',
-    defaultMessage: 'System issue',
-  },
-  [TO_INVESTIGATE]: {
-    id: 'FilterCriteriaOption.TO_INVESTIGATE',
-    defaultMessage: 'To investigate',
-  },
-  [NO_DEFECT]: {
-    id: 'FilterCriteriaOption.NO_DEFECT',
-    defaultMessage: 'No defect',
-  },
-
-  PRODUCT_BUG_TOTAL: {
-    id: 'FilterCriteriaOption.PRODUCT_BUG_TOTAL',
-    defaultMessage: 'Product bugs group',
-  },
-  AUTOMATION_BUG_TOTAL: {
-    id: 'FilterCriteriaOption.AUTOMATION_BUG_TOTAL',
-    defaultMessage: 'Automation bugs group',
-  },
-  SYSTEM_ISSUE_TOTAL: {
-    id: 'FilterCriteriaOption.SYSTEM_ISSUE_TOTAL',
-    defaultMessage: 'System issues group',
-  },
-  TO_INVESTIGATE_TOTAL: {
-    id: 'FilterCriteriaOption.TO_INVESTIGATE_TOTAL',
-    defaultMessage: 'To investigate group',
-  },
-  NO_DEFECT_TOTAL: {
-    id: 'FilterCriteriaOption.NO_DEFECT_TOTAL',
-    defaultMessage: 'No defects group',
-  },
-  Defect_Type_AB001: {
-    id: 'FilterCriteriaOption.Defect_Type_AB001',
-    defaultMessage: 'Automation bug',
-  },
-  Defect_Type_PB001: {
-    id: 'FilterCriteriaOption.Defect_Type_PB001',
-    defaultMessage: 'Product bug',
-  },
-  Defect_Type_SI001: {
-    id: 'FilterCriteriaOption.Defect_Type_SI001',
-    defaultMessage: 'System issue',
-  },
-  Defect_Type_TI001: {
-    id: 'FilterCriteriaOption.Defect_Type_TI001',
-    defaultMessage: 'To investigate',
-  },
-  Defect_Type_ND001: {
-    id: 'FilterCriteriaOption.Defect_Type_ND001',
-    defaultMessage: 'No defect',
-  },
-});
 
 export const getIssueTitle = (
   formatMessage,
@@ -220,7 +149,7 @@ export const getGroupedDefectTypesOptions = (
   defectTypesSequence.forEach((defectTypeId) => {
     const defectTypeGroup = defectTypes[defectTypeId];
     defectTypesOptions.push({
-      label: formatMessage(messages[`${defectTypeGroup[0].typeRef}_TOTAL`]),
+      label: formatMessage(defectTypesLocalization[`${defectTypeGroup[0].typeRef}_TOTAL`]),
       value: `${DEFECT_STATISTICS_BASE}${defectTypeGroup[0].typeRef.toLowerCase()}$total`,
       groupId: defectTypeGroup[0].typeRef,
       color: defectTypeGroup[0].color,
@@ -230,8 +159,8 @@ export const getGroupedDefectTypesOptions = (
       defectTypeGroup.map((defectType) => ({
         groupRef: defectType.typeRef,
         value: `${DEFECT_STATISTICS_BASE}${defectType.typeRef.toLowerCase()}$${defectType.locator}`,
-        label: messages[defectType.locator]
-          ? formatMessage(messages[`Defect_Type_${defectType.locator}`])
+        label: defectTypesLocalization[defectType.locator]
+          ? formatMessage(defectTypesLocalization[`Defect_Type_${defectType.locator}`])
           : defectType.longName,
         color: defectType.color,
         locator: defectType.locator,
