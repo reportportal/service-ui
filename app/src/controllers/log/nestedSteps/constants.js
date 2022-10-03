@@ -23,8 +23,10 @@ export const LOAD_MORE_NESTED_STEP = 'loadMoreNestedStepAction';
 export const FETCH_NESTED_STEP_START = 'fetchNestedStepStartAction';
 export const FETCH_NESTED_STEP_SUCCESS = 'fetchNestedStepSuccessAction';
 export const FETCH_NESTED_STEP_ERROR = 'fetchNestedStepErrorAction';
+export const FETCH_CURRENT_STEP = 'fetchCurrentStep';
 
 export const PAGINATION_OFFSET = 300;
+export const MAX_PAGE_SIZE = 300000;
 
 export const INITIAL_STATE = {
   loading: false,

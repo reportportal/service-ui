@@ -19,7 +19,13 @@ import { handleError } from 'controllers/fetch';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { URLS } from 'common/urls';
 import { omit, fetch } from 'common/utils';
-import { REQUEST_NESTED_STEP, FETCH_NESTED_STEP_ERROR, LOAD_MORE_NESTED_STEP } from './constants';
+import { NEXT, ALL } from 'controllers/log';
+import {
+  REQUEST_NESTED_STEP,
+  FETCH_NESTED_STEP_ERROR,
+  LOAD_MORE_NESTED_STEP,
+  FETCH_CURRENT_STEP,
+} from './constants';
 import {
   fetchNestedStepStartAction,
   fetchNestedStepSuccessAction,
@@ -28,15 +34,15 @@ import {
 } from './actionCreators';
 import { collectLogPayload } from '../sagaUtils';
 import { nestedStepSelector } from './selectors';
-import { getPagination } from './utils';
+import { getDirectedPagination } from './utils';
 
 function* fetchNestedStep({ payload = {} }) {
-  const { id, errorLogPage, loadDirection } = payload;
+  const { id, errorLogPage, loadDirection = NEXT } = payload;
   const { activeProject, query, filterLevel } = yield call(collectLogPayload);
   const logLevel = filterLevel;
   const paramsExcludingPagination = omit(query, [PAGE_KEY, SIZE_KEY]);
   const { page } = yield select(nestedStepSelector, id);
-  const paginationParams = getPagination(page, loadDirection, errorLogPage);
+  const paginationParams = getDirectedPagination(page, loadDirection, errorLogPage);
 
   const fetchParams = {
     ...paramsExcludingPagination,
@@ -62,6 +68,28 @@ function* fetchNestedStep({ payload = {} }) {
   }
 }
 
+function* fetchCurrentStep({ payload = {} }) {
+  const { id } = payload;
+  yield call(fetchNestedStep, { payload: { id, loadDirection: ALL } });
+  const { collapsed, content } = yield select(nestedStepSelector, id);
+
+  if (collapsed) {
+    yield put(toggleNestedStepAction({ id }));
+  }
+
+  const itemsToLoad = content.reduce((acc, item) => {
+    if (item.hasContent) {
+      acc.push(item);
+    }
+    return acc;
+  }, []);
+
+  for (let i = 0; i < itemsToLoad.length; i += 1) {
+    const { id: loadItemId } = itemsToLoad[i];
+    yield call(fetchCurrentStep, { payload: { id: loadItemId } });
+  }
+}
+
 export function* requestNestedStep({ payload = {} }) {
   const { id } = payload;
   const nestedStep = yield select(nestedStepSelector, id);
@@ -79,10 +107,19 @@ function* watchLoadMoreNestedStep() {
   yield takeEvery(LOAD_MORE_NESTED_STEP, fetchNestedStep);
 }
 
+function* watchFetchCurrentStep() {
+  yield takeEvery(FETCH_CURRENT_STEP, fetchCurrentStep);
+}
+
 function* watchFetchError() {
   yield takeEvery(FETCH_NESTED_STEP_ERROR, handleError);
 }
 
 export function* nestedStepSagas() {
-  yield all([watchRequestNestedStep(), watchLoadMoreNestedStep(), watchFetchError()]);
+  yield all([
+    watchRequestNestedStep(),
+    watchLoadMoreNestedStep(),
+    watchFetchCurrentStep(),
+    watchFetchError(),
+  ]);
 }
