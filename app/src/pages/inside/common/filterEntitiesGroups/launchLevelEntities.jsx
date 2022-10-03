@@ -53,6 +53,7 @@ import {
 import { defectTypesSelector } from 'controllers/project';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { getGroupedDefectTypesOptions } from 'pages/inside/common/utils';
+import { NO_DEFECT } from 'common/constants/defectTypes';
 
 const messages = defineMessages({
   NameTitle: {
@@ -332,24 +333,29 @@ export class LaunchLevelEntities extends Component {
 
   getDynamicEntities = () => {
     const { defectTypes, intl, visibleFilters } = this.props;
-    return getGroupedDefectTypesOptions(defectTypes, intl.formatMessage).map((option) => {
-      return {
-        ...option,
-        id: option.value,
-        component: EntityInputConditional,
-        value: this.bindDefaultValue(option.value, {
-          condition: CONDITION_GREATER_EQ,
-        }),
-        validationFunc: commonValidators.launchNumericEntity,
-        title: option.label,
-        customProps: {
-          conditions: [CONDITION_GREATER_EQ, CONDITION_LESS_EQ, CONDITION_EQ],
-          placeholder: intl.formatMessage(messages.STATS_PLACEHOLDER),
-        },
-        removable: true,
-        active: visibleFilters.includes(option.value),
-      };
-    });
+    return getGroupedDefectTypesOptions(defectTypes, intl.formatMessage)
+      .filter(
+        (option) =>
+          option.groupId !== NO_DEFECT.toUpperCase() && option.groupRef !== NO_DEFECT.toUpperCase(),
+      )
+      .map((option) => {
+        return {
+          ...option,
+          id: option.value,
+          component: EntityInputConditional,
+          value: this.bindDefaultValue(option.value, {
+            condition: CONDITION_GREATER_EQ,
+          }),
+          validationFunc: commonValidators.launchNumericEntity,
+          title: option.label,
+          customProps: {
+            conditions: [CONDITION_GREATER_EQ, CONDITION_LESS_EQ, CONDITION_EQ],
+            placeholder: intl.formatMessage(messages.STATS_PLACEHOLDER),
+          },
+          removable: true,
+          active: visibleFilters.includes(option.value),
+        };
+      });
   };
 
   collectLostEntities = (entities) => {
