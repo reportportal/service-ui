@@ -1252,6 +1252,7 @@
   "NameColumn.changeAccountRoleNotification": "Роля карыстальніка для ''{name}'' зменена",
   "NameColumn.makeAdminLabel": "зрабіць адмінам",
   "NameColumn.youLabel": "вы",
+  "NestedGridRow.loadCurrentStep": "Загрузіць бягучы крок",
   "NestedGridRow.loadLabel": "Загрузіць наступныя 300",
   "NestedGridRow.loadPreviousLabel": "Загрузіць папярэднія 300",
   "NewsBlock.twitterTitle": "Азнаёміцца з нашымі апошнімі твітамі",

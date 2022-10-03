@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,44 +16,52 @@
 
 import { isEmptyObject } from 'common/utils';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
-import { PREVIOUS } from 'controllers/log';
-import { PAGINATION_OFFSET } from './constants';
+import { NEXT, PREVIOUS } from 'controllers/log';
+import { MAX_PAGE_SIZE, PAGINATION_OFFSET } from './constants';
 
-export const isLoadMoreButtonVisible = (step) => {
-  if (!step || isEmptyObject(step.page)) {
+export const isLoadMoreButtonVisible = (pageData) => {
+  if (!pageData || isEmptyObject(pageData)) {
     return false;
   }
-  const {
-    page: { number, totalPages },
-  } = step;
+  const { number, totalPages } = pageData;
   return number < totalPages;
 };
 
-export const isLoadPreviousButtonVisible = (step) => {
-  if (!step || isEmptyObject(step.page)) {
+export const isLoadPreviousButtonVisible = (pageData) => {
+  if (!pageData || isEmptyObject(pageData)) {
     return false;
   }
-  const {
-    page: { number },
-  } = step;
+  const { number } = pageData;
   return number !== 1;
 };
 
-export function getPagination(page, loadDirection, errorLogPage) {
-  const { number, size, totalElements } = page;
+export const isLoadCurrentStepButtonVisible = (pageData) => {
+  if (!pageData || isEmptyObject(pageData)) {
+    return true;
+  }
+  const { size, totalElements } = pageData;
+  return size < totalElements;
+};
 
-  if (loadDirection === PREVIOUS) {
-    return { [PAGE_KEY]: number - 1, [SIZE_KEY]: size + PAGINATION_OFFSET };
-  } else {
-    const pageNumber = errorLogPage || 1;
-    let pageSize;
-    if (size >= totalElements) {
-      pageSize = totalElements;
-    } else if (isEmptyObject(page) || errorLogPage) {
-      pageSize = PAGINATION_OFFSET;
-    } else {
-      pageSize = size + PAGINATION_OFFSET;
+export function getDirectedPagination(pageData, loadDirection, nextPage) {
+  const { number, size, totalElements } = pageData;
+  switch (loadDirection) {
+    case PREVIOUS: {
+      return { [PAGE_KEY]: number - 1, [SIZE_KEY]: size + PAGINATION_OFFSET };
     }
-    return { [PAGE_KEY]: pageNumber, [SIZE_KEY]: pageSize };
+    case NEXT: {
+      const pageNumber = nextPage || 1;
+      let pageSize;
+      if (isEmptyObject(pageData) || nextPage) {
+        pageSize = PAGINATION_OFFSET;
+      } else {
+        pageSize =
+          size + PAGINATION_OFFSET >= totalElements ? totalElements : size + PAGINATION_OFFSET;
+      }
+      return { [PAGE_KEY]: pageNumber, [SIZE_KEY]: pageSize };
+    }
+    default: {
+      return { [PAGE_KEY]: 1, [SIZE_KEY]: totalElements || MAX_PAGE_SIZE };
+    }
   }
 }

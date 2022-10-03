@@ -35,7 +35,6 @@ $LEVEL_OFFSET_STEP: 20px;
   border-left-style: solid;
   border-left-width: 0;
   background-color: $COLOR--gray-91;
-  color: $COLOR--topaz;
   font-size: 13px;
   @include levels(false);
 }
@@ -48,7 +47,6 @@ $LEVEL_OFFSET_STEP: 20px;
   align-content: flex-start;
   align-items: center;
   height: 32px;
-  cursor: pointer;
 }
 
 .loading-icon {
@@ -56,12 +54,36 @@ $LEVEL_OFFSET_STEP: 20px;
   height: 24px;
 }
 
-.row-more-label {
+.load-button {
+  display: flex;
+  align-items: center;
   margin-right: 13px;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 13px;
+  line-height: 18px;
+  color: $COLOR--topaz;
+  cursor: pointer;
+
+  &:not(:last-child) {
+    margin-right: 40px;
+  }
+
+  &.loading {
+    opacity: 0.5;
+    pointer-events: none;
+  }
 }
-.row-more-container.loading {
-  pointer-events: none;
+
+.button-label {
+  margin-left: 12px;
 }
-.row-more-container.loading .row-more-label {
-  color: $COLOR--gray-80;
+
+.icon {
+  display: inline-flex;
+  width: 16px;
+  height: 10px;
+}
+
+.rotate-icon {
+  transform: rotate(180deg);
 }

@@ -55,6 +55,7 @@ export {
   FETCH_HISTORY_ITEMS_WITH_LOADING,
   PREVIOUS,
   NEXT,
+  ALL,
 } from './constants';
 export {
   historyItemsSelector,
