@@ -142,8 +142,6 @@ const messages = defineMessages({
   },
 });
 
-const DEFECT_ENTITY_ID_BASE = 'statistics$defects$';
-
 @injectIntl
 @connect((state) => ({
   defectTypes: defectTypesSelector(state),
@@ -305,16 +303,13 @@ export class SuiteLevelEntities extends Component {
   getDynamicEntities = () => {
     const { defectTypes, intl, visibleFilters } = this.props;
     return getGroupedDefectTypesOptions(defectTypes, intl.formatMessage).map((option) => {
-      let entityId;
-      if (option.meta && option.meta.subItem) {
-        entityId = `${DEFECT_ENTITY_ID_BASE}${option.groupRef.toLowerCase()}$${option.locator}`;
-      } else {
-        entityId = `${DEFECT_ENTITY_ID_BASE}${option.groupId.toLowerCase()}$total`;
-      }
       return {
         ...option,
-        id: entityId,
+        id: option.value,
         component: EntityInputConditional,
+        value: this.bindDefaultValue(option.value, {
+          condition: CONDITION_GREATER_EQ,
+        }),
         validationFunc: commonValidators.launchNumericEntity,
         title: option.label,
         customProps: {
@@ -322,7 +317,7 @@ export class SuiteLevelEntities extends Component {
           placeholder: intl.formatMessage(messages.STATS_PLACEHOLDER),
         },
         removable: true,
-        active: visibleFilters.includes(entityId),
+        active: visibleFilters.includes(option.value),
       };
     });
   };
