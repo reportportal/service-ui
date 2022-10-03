@@ -17,7 +17,11 @@
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { canBulkEditItems } from 'common/utils/permissions';
 import { isPostIssueActionAvailable } from 'controllers/plugins';
+import { DEFECT_TYPES_SEQUENCE } from 'common/constants/defectTypes';
+import { defectTypesLocalization } from 'common/constants/localization/defectTypesLocalization';
 import { actionMessages, ISSUE_OPERATION_MAX_ITEMS } from './constants';
+
+const DEFECT_STATISTICS_BASE = 'statistics$defects$';
 
 export const getIssueTitle = (
   formatMessage,
@@ -134,4 +138,39 @@ export const createStepActionDescriptors = (params) => {
       onClick: onDelete,
     },
   ];
+};
+
+export const getGroupedDefectTypesOptions = (
+  defectTypes,
+  formatMessage,
+  defectTypesSequence = DEFECT_TYPES_SEQUENCE,
+) => {
+  let defectTypesOptions = [];
+  defectTypesSequence.forEach((defectTypeId) => {
+    const defectTypeGroup = defectTypes[defectTypeId];
+    defectTypesOptions.push({
+      label: formatMessage(defectTypesLocalization[`${defectTypeGroup[0].typeRef}_TOTAL`]),
+      value: `${DEFECT_STATISTICS_BASE}${defectTypeGroup[0].typeRef.toLowerCase()}$total`,
+      groupId: defectTypeGroup[0].typeRef,
+      color: defectTypeGroup[0].color,
+      typeRef: defectTypeGroup[0].typeRef,
+    });
+    defectTypesOptions = defectTypesOptions.concat(
+      defectTypeGroup.map((defectType) => ({
+        groupRef: defectType.typeRef,
+        value: `${DEFECT_STATISTICS_BASE}${defectType.typeRef.toLowerCase()}$${defectType.locator}`,
+        label: defectTypesLocalization[defectType.typeRef]
+          ? formatMessage(defectTypesLocalization[defectType.typeRef])
+          : defectType.longName,
+        color: defectType.color,
+        locator: defectType.locator,
+        meta: {
+          longName: defectType.longName,
+          subItem: true,
+        },
+      })),
+    );
+  });
+
+  return defectTypesOptions;
 };

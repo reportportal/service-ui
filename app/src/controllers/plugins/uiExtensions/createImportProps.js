@@ -147,7 +147,7 @@ import { SidebarButton } from 'components/buttons/sidebarButton';
 import { GeneralTab } from 'pages/common/settingsPage/generalTab';
 import { RuleList, ItemContent } from 'pages/common/settingsPage/ruleList';
 import { RuleListHeader } from 'pages/common/settingsPage/ruleListHeader';
-import { getGroupedDefectTypesOptions } from 'pages/inside/dashboardItemPage/modals/common/widgetControls/utils/getWidgetCriteriaOptions';
+import { getGroupedDefectTypesOptions } from 'pages/inside/common/utils';
 import { DEFECT_TYPES_SEQUENCE, TO_INVESTIGATE } from 'common/constants/defectTypes';
 import {
   getDefaultTestItemLinkParams,
