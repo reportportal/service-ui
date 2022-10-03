@@ -44,7 +44,6 @@ export const defectTypesLocalization = defineMessages({
     id: 'DefectTypes.NO_DEFECT',
     defaultMessage: 'No defect',
   },
-
   PRODUCT_BUG_TOTAL: {
     id: 'DefectTypes.PRODUCT_BUG_TOTAL',
     defaultMessage: 'Product bugs group',
@@ -64,25 +63,5 @@ export const defectTypesLocalization = defineMessages({
   NO_DEFECT_TOTAL: {
     id: 'DefectTypes.NO_DEFECT_TOTAL',
     defaultMessage: 'No defects group',
-  },
-  Defect_Type_AB001: {
-    id: 'DefectTypes.Defect_Type_AB001',
-    defaultMessage: 'Automation bug',
-  },
-  Defect_Type_PB001: {
-    id: 'DefectTypes.Defect_Type_PB001',
-    defaultMessage: 'Product bug',
-  },
-  Defect_Type_SI001: {
-    id: 'DefectTypes.Defect_Type_SI001',
-    defaultMessage: 'System issue',
-  },
-  Defect_Type_TI001: {
-    id: 'DefectTypes.Defect_Type_TI001',
-    defaultMessage: 'To investigate',
-  },
-  Defect_Type_ND001: {
-    id: 'DefectTypes.Defect_Type_ND001',
-    defaultMessage: 'No defect',
   },
 });
