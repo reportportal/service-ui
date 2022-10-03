@@ -159,7 +159,7 @@ export const getGroupedDefectTypesOptions = (
       defectTypeGroup.map((defectType) => ({
         groupRef: defectType.typeRef,
         value: `${DEFECT_STATISTICS_BASE}${defectType.typeRef.toLowerCase()}$${defectType.locator}`,
-        label: defectTypesLocalization[defectType.locator]
+        label: defectTypesLocalization[defectType.typeRef]
           ? formatMessage(defectTypesLocalization[`${defectType.typeRef}`])
           : defectType.longName,
         color: defectType.color,
