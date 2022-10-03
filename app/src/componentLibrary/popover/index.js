@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { Popover } from './popover';
+export { withPopover } from './withPopover/withPopover';

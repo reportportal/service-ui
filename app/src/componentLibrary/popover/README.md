@@ -25,3 +25,18 @@ Popover adjusts to triangle position.
 
 Min height is 61px.
 Min width is 160px.
+
+### Example
+
+```jsx
+const Hello = (props) => <span {...props}>hello</span>;
+
+const HelloWithPopover = withPopover({
+  title: 'hello title',
+  content: <span>hello content</span>,
+  side: 'bottom',
+  arrowPosition: 'right',
+})(Hello);
+
+<HelloWithPopover />;
+```

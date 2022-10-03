@@ -27,7 +27,8 @@ const SAFE_ZONE = 4;
 export const Popover = ({
   children,
   title,
-  trianglePosition,
+  side,
+  arrowPosition,
   dataAutomationId,
   onClose,
   parentRef,
@@ -37,8 +38,6 @@ export const Popover = ({
   const [left, setLeft] = useState(0);
 
   useOnClickOutside(popoverRef, onClose);
-
-  const { side, position } = trianglePosition;
 
   useEffect(() => {
     const { current: parent } = parentRef;
@@ -52,7 +51,7 @@ export const Popover = ({
     const popoverWidth = popover.offsetWidth;
 
     const setHorizontalPosition = () => {
-      switch (position) {
+      switch (arrowPosition) {
         case 'right':
           setLeft(parentLeft + parentWidth / 2 - popoverWidth + TRIANGLE_SIZE + 16);
           break;
@@ -69,24 +68,24 @@ export const Popover = ({
       setTop(parentTop + parentHeight / 2 - popoverHeight / 2);
     };
 
-    if (side === 'top') {
+    if (side === 'bottom') {
       setTop(parentTop + parentHeight + SAFE_ZONE + TRIANGLE_SIZE);
       setHorizontalPosition();
-    } else if (side === 'bottom') {
+    } else if (side === 'top') {
       setTop(parentTop - SAFE_ZONE - TRIANGLE_SIZE - popoverHeight);
       setHorizontalPosition();
-    } else if (side === 'left') {
+    } else if (side === 'right') {
       setVerticalMiddlePosition();
       setLeft(parentLeft + parentWidth + SAFE_ZONE + TRIANGLE_SIZE);
-    } else if (side === 'right') {
+    } else if (side === 'left') {
       setVerticalMiddlePosition();
       setLeft(parentLeft - SAFE_ZONE - TRIANGLE_SIZE - popoverWidth);
     }
-  }, [parentRef, popoverRef, side, position]);
+  }, [parentRef, side, arrowPosition]);
 
   return (
     <div
-      className={cx('popover', `side-${side}`, `position-${position}`)}
+      className={cx('popover', `side-${side}`, `position-${arrowPosition}`)}
       data-automation-id={dataAutomationId}
       ref={popoverRef}
       style={{ top, left }}
@@ -100,10 +99,8 @@ export const Popover = ({
 Popover.propTypes = {
   children: PropTypes.node,
   title: PropTypes.string,
-  trianglePosition: PropTypes.shape({
-    side: PropTypes.oneOf(['top', 'bottom', 'left', 'right']),
-    position: PropTypes.oneOf(['left', 'middle', 'right']),
-  }),
+  side: PropTypes.oneOf(['top', 'bottom', 'left', 'right']),
+  arrowPosition: PropTypes.oneOf(['left', 'middle', 'right']),
   dataAutomationId: PropTypes.string,
   onClose: PropTypes.func,
   parentRef: PropTypes.shape({ current: PropTypes.object }),
@@ -112,10 +109,8 @@ Popover.propTypes = {
 Popover.defaultProps = {
   children: null,
   title: '',
-  trianglePosition: {
-    side: 'top',
-    position: 'left',
-  },
+  side: 'top',
+  arrowPosition: 'left',
   dataAutomationId: '',
   onClose: () => {},
   parentRef: null,

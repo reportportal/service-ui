@@ -33,12 +33,12 @@
     border: 9px solid transparent;
   }
 
-  &.side-top::after {
+  &.side-bottom::after {
     border-bottom-color: $COLOR--white-two;
     bottom: 100%;
   }
 
-  &.side-bottom::after {
+  &.side-top::after {
     border-top-color: $COLOR--white-two;
     top: 100%;
   }
@@ -58,12 +58,12 @@
     }
   }
 
-  &.side-left::after {
+  &.side-right::after {
     border-right-color: $COLOR--white-two;
     right: 100%;
   }
 
-  &.side-right::after {
+  &.side-left::after {
     border-left-color: $COLOR--white-two;
     left: 100%;
   }
