@@ -345,9 +345,6 @@ export class LaunchLevelEntities extends Component {
         ...option,
         id: entityId,
         component: EntityInputConditional,
-        value: this.bindDefaultValue(entityId, {
-          condition: CONDITION_GREATER_EQ,
-        }),
         validationFunc: commonValidators.launchNumericEntity,
         title: option.label,
         customProps: {
