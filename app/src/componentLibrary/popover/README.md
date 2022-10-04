@@ -4,7 +4,8 @@
 
 - **children**: _node_, optional, default = null
 - **title**: _string_, optional, default = ''
-- **trianglePosition**: _object_, optional, default = { side: 'top', position: 'left' }
+- **side**: _string_, optional, default = 'top'
+- **arrowPosition**: _string_, optional, default = 'left'
 - **onClose**: _func_, optional, default = () => {}
 - **parentRef**: _object_, optional, default = null
 - **dataAutomationId**: _string_, optional, default = ''
@@ -29,7 +30,7 @@ Min width is 160px.
 ### Example
 
 ```jsx
-const Hello = (props) => <span {...props}>hello</span>;
+const Hello = () => <span>hello</span>;
 
 const HelloWithPopover = withPopover({
   title: 'hello title',

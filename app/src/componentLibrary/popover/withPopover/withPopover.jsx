@@ -15,41 +15,34 @@
  */
 
 import React, { useRef, useState } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { Popover } from '../popover';
 import styles from './withPopover.scss';
 
 const cx = classNames.bind(styles);
 
-export const withPopover = ({ content, ...props }) => (WrappedComponent) => () => {
+export const withPopover = ({ content, ...popoverConfig }) => (WrappedComponent) => ({
+  ...props
+}) => {
   const parentRef = useRef();
   const [isOpened, setOpened] = useState(false);
 
   return (
     <>
-      <div ref={parentRef} className={cx('with-popover')}>
-        <WrappedComponent
-          className={cx('wrapped-component')}
-          onClick={() => {
-            setOpened(true);
-          }}
-        />
+      <div
+        ref={parentRef}
+        className={cx('with-popover')}
+        onClick={() => {
+          setOpened(true);
+        }}
+      >
+        <WrappedComponent {...props} />
       </div>
       {isOpened && (
-        <Popover onClose={() => setOpened(false)} parentRef={parentRef} {...props}>
+        <Popover onClose={() => setOpened(false)} parentRef={parentRef} {...popoverConfig}>
           {content}
         </Popover>
       )}
     </>
   );
-};
-
-withPopover.propTypes = {
-  WrappedComponent: PropTypes.element.isRequired,
-  content: PropTypes.node,
-};
-
-withPopover.defaultProps = {
-  content: null,
 };
