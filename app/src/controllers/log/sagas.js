@@ -15,6 +15,7 @@
  */
 
 import { all, call, cancelled, put, select, take, takeEvery } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
 import {
   fetchParentItems,
   itemsSelector,
@@ -32,14 +33,9 @@ import { debugModeSelector } from 'controllers/launch';
 import { createFetchPredicate, fetchDataAction, handleError } from 'controllers/fetch';
 import { fetch, isEmptyObject } from 'common/utils';
 import {
-  HISTORY_LINE_DEFAULT_VALUE,
-  FETCH_HISTORY_ITEMS_WITH_LOADING,
-  fetchErrorLogs,
-  logItemsSelector,
-} from 'controllers/log';
-import {
   FETCH_NESTED_STEP_ERROR,
   FETCH_NESTED_STEP_SUCCESS,
+  CLEAR_NESTED_STEPS,
 } from 'controllers/log/nestedSteps/constants';
 import { PAGE_KEY } from 'controllers/pagination';
 import {
@@ -48,9 +44,30 @@ import {
 } from 'controllers/log/nestedSteps/actionCreators';
 import { createNamespacedQuery } from 'common/utils/routingUtils';
 import { FAILED } from 'common/constants/testStatuses';
-import { delay } from 'redux-saga';
-import { collectLogPayload } from './sagaUtils';
 import {
+  fetchErrorLogs,
+  clearLogPageStackTrace,
+  setPageLoadingAction,
+  fetchHistoryItemsSuccessAction,
+  setShouldShowLoadMoreAction,
+  fetchLogPageStackTrace,
+} from './actionCreators';
+import {
+  logItemsSelector,
+  activeLogIdSelector,
+  prevActiveLogIdSelector,
+  activeRetryIdSelector,
+  prevActiveRetryIdSelector,
+  logStackTracePaginationSelector,
+  logViewModeSelector,
+  isLaunchLogSelector,
+  includeAllLaunchesSelector,
+  historyItemsSelector,
+  activeLogSelector,
+} from './selectors';
+import {
+  HISTORY_LINE_DEFAULT_VALUE,
+  FETCH_HISTORY_ITEMS_WITH_LOADING,
   NAMESPACE,
   ACTIVITY_NAMESPACE,
   DEFAULT_HISTORY_DEPTH,
@@ -68,38 +85,15 @@ import {
   ERROR_LOGS_NAMESPACE,
   FETCH_ERROR_LOG,
 } from './constants';
-import {
-  activeLogIdSelector,
-  prevActiveLogIdSelector,
-  activeRetryIdSelector,
-  prevActiveRetryIdSelector,
-  logStackTracePaginationSelector,
-  logViewModeSelector,
-  isLaunchLogSelector,
-  includeAllLaunchesSelector,
-  historyItemsSelector,
-  activeLogSelector,
-} from './selectors';
+import { collectLogPayload } from './sagaUtils';
 import {
   attachmentSagas,
   clearAttachmentsAction,
   fetchFirstAttachmentsAction,
 } from './attachments';
 import { sauceLabsSagas } from './sauceLabs';
-import {
-  nestedStepSagas,
-  CLEAR_NESTED_STEPS,
-  nestedStepSelector,
-  nestedStepsSelector,
-} from './nestedSteps';
-
-import {
-  clearLogPageStackTrace,
-  setPageLoadingAction,
-  fetchHistoryItemsSuccessAction,
-  setShouldShowLoadMoreAction,
-  fetchLogPageStackTrace,
-} from './actionCreators';
+import { domainSelector as nestedStepsSelector, nestedStepSelector } from './nestedSteps/selectors';
+import { nestedStepSagas } from './nestedSteps/sagas';
 
 function* fetchActivity() {
   const activeProject = yield select(activeProjectSelector);
