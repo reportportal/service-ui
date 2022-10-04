@@ -309,6 +309,7 @@ export class SuiteLevelEntities extends Component {
           option.groupId !== NO_DEFECT.toUpperCase() && option.groupRef !== NO_DEFECT.toUpperCase(),
       )
       .map((option) => {
+        const meta = option.meta;
         return {
           ...option,
           id: option.value,
@@ -317,7 +318,10 @@ export class SuiteLevelEntities extends Component {
             condition: CONDITION_GREATER_EQ,
           }),
           validationFunc: commonValidators.launchNumericEntity,
-          title: option.label,
+          title:
+            meta && meta.shortName
+              ? meta.typeRefLabel.concat(' ').concat(meta.shortName)
+              : option.label,
           customProps: {
             conditions: [CONDITION_GREATER_EQ, CONDITION_LESS_EQ, CONDITION_EQ],
             placeholder: intl.formatMessage(messages.STATS_PLACEHOLDER),
