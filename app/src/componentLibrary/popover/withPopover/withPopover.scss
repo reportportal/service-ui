@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,26 +14,9 @@
  * limitations under the License.
  */
 
-import { useEffect } from 'react';
-
-export const useOnClickOutside = (ref, handler) => {
-  useEffect(() => {
-    if (!handler) {
-      return undefined;
-    }
-
-    const listener = (event) => {
-      if (ref && ref.current && !ref.current.contains(event.target)) {
-        handler(event);
-      }
-    };
-
-    document.addEventListener('click', listener);
-    document.addEventListener('touchstart', listener);
-
-    return () => {
-      document.removeEventListener('click', listener);
-      document.removeEventListener('touchstart', listener);
-    };
-  }, [ref, handler]);
-};
+.with-popover {
+  display: block;
+  width: fit-content;
+  height: fit-content;
+  cursor: pointer;
+}
