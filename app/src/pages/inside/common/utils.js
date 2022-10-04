@@ -169,7 +169,6 @@ export const getGroupedDefectTypesOptions = (
           color: defectType.color,
           locator: defectType.locator,
           meta: {
-            typeRefLabel: label,
             longName: defectType.longName,
             shortName: defectType.shortName,
             subItem: true,

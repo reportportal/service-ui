@@ -318,7 +318,7 @@ export class SuiteLevelEntities extends Component {
             condition: CONDITION_GREATER_EQ,
           }),
           validationFunc: commonValidators.launchNumericEntity,
-          title: meta && meta.shortName ? `${meta.typeRefLabel} ${meta.shortName}` : option.label,
+          title: meta && meta.shortName ? `${option.label} ${meta.shortName}` : option.label,
           customProps: {
             conditions: [CONDITION_GREATER_EQ, CONDITION_LESS_EQ, CONDITION_EQ],
             placeholder: intl.formatMessage(messages.STATS_PLACEHOLDER),
