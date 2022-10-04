@@ -50,8 +50,9 @@ import {
   CONDITION_EQ,
   ENTITY_ATTRIBUTE,
 } from 'components/filterEntities/constants';
-import { defectTypesSelector, projectKeySelector } from 'controllers/project';
+import { defectTypesSelector } from 'controllers/project';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
+import { activeProjectKeySelector } from 'controllers/user';
 
 const messages = defineMessages({
   NameTitle: {
@@ -161,7 +162,7 @@ const DEFECT_ENTITY_ID_BASE = 'statistics$defects$';
 @injectIntl
 @connect((state) => ({
   defectTypes: defectTypesSelector(state),
-  projectKey: projectKeySelector(state),
+  projectKey: activeProjectKeySelector(state),
 }))
 export class LaunchLevelEntities extends Component {
   static propTypes = {

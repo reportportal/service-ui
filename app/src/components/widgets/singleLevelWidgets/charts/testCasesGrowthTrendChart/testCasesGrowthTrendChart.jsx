@@ -31,7 +31,8 @@ import {
   getChartDefaultProps,
   getDefaultTestItemLinkParams,
 } from 'components/widgets/common/utils';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
+import { projectOrganizationSlugSelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 import { getConfig } from './config/getConfig';
 import styles from './testCasesGrowthTrendChart.scss';
 
@@ -39,7 +40,7 @@ const cx = classNames.bind(styles);
 
 @connect(
   (state) => ({
-    projectKey: projectKeySelector(state),
+    projectKey: activeProjectKeySelector(state),
     organizationSlug: projectOrganizationSlugSelector(state),
     getStatisticsLink: statisticsLinkSelector(state),
   }),

@@ -22,7 +22,8 @@ import { injectIntl, defineMessages } from 'react-intl';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { TEST_ITEM_PAGE, PROJECT_LOG_PAGE } from 'controllers/pages/constants';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
+import { projectOrganizationSlugSelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 import { MostTimeConsumingTestCasesChart } from './mostTimeConsumingTestCasesChart';
 import { MostTimeConsumingTestCasesTable } from './mostTimeConsumingTestCasesTable';
 import styles from './mostTimeConsumingTestCases.scss';
@@ -39,7 +40,7 @@ const localMessages = defineMessages({
 @injectIntl
 @connect(
   (state) => ({
-    projectKey: projectKeySelector(state),
+    projectKey: activeProjectKeySelector(state),
     organizationSlug: projectOrganizationSlugSelector(state),
   }),
   {

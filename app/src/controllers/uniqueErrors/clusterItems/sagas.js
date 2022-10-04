@@ -26,7 +26,7 @@ import {
 import { showDefaultErrorNotification } from 'controllers/notification';
 import { SORTING_KEY } from 'controllers/sorting';
 import { launchIdSelector } from 'controllers/pages';
-import { projectKeySelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 import {
   fetchClusterItemsStartAction,
   fetchClusterItemsSuccessAction,
@@ -38,7 +38,7 @@ import { LOAD_MORE_CLUSTER_ITEMS, PAGE_SIZE, REQUEST_CLUSTER_ITEMS } from './con
 function* fetchClusterItems({ payload = {} }) {
   const { id } = payload;
   const { page } = yield select(clusterItemsSelector, id);
-  const projectKey = yield select(projectKeySelector);
+  const projectKey = yield select(activeProjectKeySelector);
   const launchId = yield select(launchIdSelector);
   let pageNumber = 1;
   if (!isEmptyObject(page)) {

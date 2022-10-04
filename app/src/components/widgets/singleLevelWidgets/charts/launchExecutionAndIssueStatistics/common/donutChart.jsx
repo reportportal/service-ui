@@ -22,11 +22,7 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { TEST_ITEMS_TYPE_LIST } from 'controllers/testItem';
-import {
-  userFiltersSelector,
-  projectKeySelector,
-  projectOrganizationSlugSelector,
-} from 'controllers/project';
+import { userFiltersSelector, projectOrganizationSlugSelector } from 'controllers/project';
 import { TEST_ITEM_PAGE } from 'controllers/pages';
 import {
   getItemNameConfig,
@@ -34,6 +30,7 @@ import {
   getDefaultTestItemLinkParams,
 } from 'components/widgets/common/utils';
 import { ChartContainer } from 'components/widgets/common/c3chart';
+import { activeProjectKeySelector } from 'controllers/user';
 import { getConfig } from './config/getConfig';
 import { isSmallDonutChartView } from './config/utils';
 import styles from './donutChart.scss';
@@ -42,7 +39,7 @@ const cx = classNames.bind(styles);
 
 @connect(
   (state) => ({
-    projectKey: projectKeySelector(state),
+    projectKey: activeProjectKeySelector(state),
     launchFilters: userFiltersSelector(state),
     organizationSlug: projectOrganizationSlugSelector(state),
   }),

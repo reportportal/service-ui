@@ -27,7 +27,7 @@ import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { TestItemDetails } from 'pages/inside/stepPage/modals/makeDecisionModal/elements/testItemDetails';
 import { historyItemsSelector } from 'controllers/log';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
-import { projectKeySelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 import {
   ALL_LOADED_TI_FROM_HISTORY_LINE,
   CURRENT_EXECUTION_ONLY,
@@ -44,7 +44,7 @@ export const ExecutionSection = ({ modalState, setModalState, isBulkOperation, e
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
-  const projectKey = useSelector(projectKeySelector);
+  const projectKey = useSelector(activeProjectKeySelector);
   const activeFilter = useSelector(activeFilterSelector);
   const [currentItemsLoading, setCurrentItemsLoading] = useState(false);
   const [loading, setLoading] = useState(false);

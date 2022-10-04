@@ -22,7 +22,7 @@ import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { fetch } from 'common/utils';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { projectIdSelector } from 'controllers/pages';
+import { urlProjectKeySelector } from 'controllers/pages';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import {
   COMMAND_GET_ISSUE_TYPES,
@@ -39,7 +39,6 @@ import {
 } from 'components/fields/dynamicFieldsSection/utils';
 import { PLUGINS_PAGE_EVENTS, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { getDefaultOptionValueKey } from 'pages/inside/stepPage/modals/postIssueModal/utils';
-import { projectKeySelector } from 'controllers/project';
 import { IntegrationFormField } from '../../integrationFormField';
 import { ISSUE_TYPE_FIELD_KEY } from '../constants';
 import styles from './btsPropertiesForIssueForm.scss';
@@ -67,8 +66,7 @@ const messages = defineMessages({
 
 @connect(
   (state) => ({
-    projectName: projectIdSelector(state),
-    projectKey: projectKeySelector(state),
+    projectKey: urlProjectKeySelector(state),
   }),
   {
     showNotification,

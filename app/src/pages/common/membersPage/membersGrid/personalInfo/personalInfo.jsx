@@ -22,14 +22,14 @@ import { FormattedMessage } from 'react-intl';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { userIdSelector } from 'controllers/user';
 import { UserAvatar } from 'pages/inside/common/userAvatar';
-import { projectKeySelector } from 'controllers/project';
+import { urlProjectKeySelector } from 'controllers/pages';
 import styles from './personalInfo.scss';
 
 const cx = classNames.bind(styles);
 
 @connect((state) => ({
   currentUser: userIdSelector(state),
-  projectKey: projectKeySelector(state),
+  projectKey: urlProjectKeySelector(state),
 }))
 export class PersonalInfo extends Component {
   static propTypes = {

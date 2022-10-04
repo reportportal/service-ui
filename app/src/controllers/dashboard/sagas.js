@@ -34,7 +34,7 @@ import {
 import { provideEcGA } from 'components/main/analytics/utils';
 import { formatEcDashboardData } from 'components/main/analytics/events/common/widgetPages/utils';
 import { analyticsEnabledSelector } from 'controllers/appInfo';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
+import { projectOrganizationSlugSelector } from 'controllers/project';
 
 import {
   ADD_DASHBOARD,
@@ -111,7 +111,7 @@ function* fetchDashboard() {
 }
 
 function* addDashboard({ payload: dashboard }) {
-  const projectKey = yield select(projectKeySelector);
+  const projectKey = yield select(activeProjectKeySelector);
   const owner = yield select(userIdSelector);
   const organizationSlug = yield select(projectOrganizationSlugSelector);
   const { id } = yield call(fetch, URLS.dashboards(projectKey), {
@@ -138,7 +138,7 @@ function* addDashboard({ payload: dashboard }) {
 }
 
 function* updateDashboard({ payload: dashboard }) {
-  const projectKey = yield select(projectKeySelector);
+  const projectKey = yield select(activeProjectKeySelector);
   const { name, description, id } = dashboard;
 
   yield call(fetch, URLS.dashboard(projectKey, id), {
@@ -149,7 +149,7 @@ function* updateDashboard({ payload: dashboard }) {
 }
 
 function* updateDashboardWidgets({ payload: dashboard }) {
-  const projectKey = yield select(projectKeySelector);
+  const projectKey = yield select(activeProjectKeySelector);
 
   yield call(fetch, URLS.dashboard(projectKey, dashboard.id), {
     method: 'put',
@@ -163,7 +163,7 @@ function* updateDashboardWidgets({ payload: dashboard }) {
 
 function* removeDashboard({ payload: id }) {
   try {
-    const projectKey = yield select(projectKeySelector);
+    const projectKey = yield select(activeProjectKeySelector);
     yield call(fetch, URLS.dashboard(projectKey, id), {
       method: 'delete',
     });
@@ -185,7 +185,7 @@ function* redirectAfterDelete({ payload: dashboardId }) {
   if (activePage === PROJECT_DASHBOARD_ITEM_PAGE) {
     const activeDashboardId = yield select(activeDashboardIdSelector);
     if (activeDashboardId === dashboardId) {
-      const projectKey = yield select(projectKeySelector);
+      const projectKey = yield select(activeProjectKeySelector);
       yield put(hideModalAction());
       yield put(
         redirect({

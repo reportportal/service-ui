@@ -21,7 +21,7 @@ import { injectIntl, defineMessages } from 'react-intl';
 import { change } from 'redux-form';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { userIdSelector } from 'controllers/user';
+import { activeProjectKeySelector, userIdSelector } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import AddFilterIcon from 'common/img/add-filter-inline.svg';
 import { fetch, debounce } from 'common/utils';
@@ -36,7 +36,6 @@ import {
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { SearchableFilterList } from 'pages/inside/common/searchableFilterList';
-import { projectKeySelector } from 'controllers/project';
 import { WIDGET_WIZARD_FORM } from '../../../constants';
 import { LockedActiveFilter } from './lockedActiveFilter';
 import { FilterEdit } from './filterEdit';
@@ -93,7 +92,7 @@ const messages = defineMessages({
     filters: filtersSelector(state),
     pagination: filtersPaginationSelector(state),
     loading: loadingSelector(state),
-    projectKey: projectKeySelector(state),
+    projectKey: activeProjectKeySelector(state),
   }),
   {
     changeWizardForm: (field, value) => change(WIDGET_WIZARD_FORM, field, value, null),

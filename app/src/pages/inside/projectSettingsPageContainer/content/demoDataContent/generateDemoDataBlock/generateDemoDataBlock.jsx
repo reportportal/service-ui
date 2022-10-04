@@ -29,7 +29,7 @@ import {
 } from 'controllers/notification';
 import { useTracking } from 'react-tracking';
 import { PROJECT_SETTINGS_DEMO_DATA_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
-import { projectKeySelector } from 'controllers/project';
+import { urlProjectKeySelector } from 'controllers/pages';
 import styles from './generateDemoDataBlock.scss';
 import { LabeledPreloader } from '../../elements';
 
@@ -58,7 +58,7 @@ const messages = defineMessages({
 export const GenerateDemoDataBlock = ({ className }) => {
   const [isLoading, setIsLoading] = useState(false);
   const { formatMessage } = useIntl();
-  const projectKey = useSelector(projectKeySelector);
+  const projectKey = useSelector(urlProjectKeySelector);
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
 

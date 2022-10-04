@@ -34,7 +34,6 @@ import {
   pagePropertiesSelector,
 } from 'controllers/pages';
 import { isOldHistorySelector } from 'controllers/appInfo';
-import { projectKeySelector } from 'controllers/project';
 import { activeProjectKeySelector } from 'controllers/user';
 import {
   fetchItemsHistoryAction,
@@ -147,7 +146,7 @@ function* refreshHistory({ payload }) {
 }
 
 function* fetchFilterHistory({ payload: { filter, loadMore } }) {
-  const projectKey = yield select(projectKeySelector);
+  const projectKey = yield select(activeProjectKeySelector);
   const itemsHistory = yield select(historySelector);
   const isOldHistory = yield select(isOldHistorySelector);
   const historyGroupingFieldKey = isOldHistory

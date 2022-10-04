@@ -22,11 +22,7 @@ import {
   setActiveProjectAction,
   activeProjectKeySelector,
 } from 'controllers/user';
-import {
-  fetchProjectAction,
-  projectKeySelector,
-  projectOrganizationSlugSelector,
-} from 'controllers/project';
+import { fetchProjectAction, projectOrganizationSlugSelector } from 'controllers/project';
 import {
   LOGIN_PAGE,
   REGISTRATION_PAGE,
@@ -276,7 +272,7 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
     type: nextPageType,
     payload: { projectKey: hashProjectKey, organizationSlug: hashOrganization },
   } = action;
-  let projectKey = projectKeySelector(getState());
+  let projectKey = activeProjectKeySelector(getState());
   let organizationSlug = projectOrganizationSlugSelector(getState());
   const currentPageType = pageSelector(getState());
   const authorized = isAuthorizedSelector(getState());

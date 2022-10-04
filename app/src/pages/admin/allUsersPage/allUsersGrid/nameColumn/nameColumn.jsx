@@ -22,14 +22,13 @@ import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { fetch } from 'common/utils';
 import { ADMINISTRATOR, USER } from 'common/constants/accountRoles';
-import { userIdSelector } from 'controllers/user';
+import { activeProjectKeySelector, userIdSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
 import { fetchAllUsersAction } from 'controllers/administrate/allUsers';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { showModalAction } from 'controllers/modal';
 import { UserAvatar } from 'pages/inside/common/userAvatar';
 import { ADMIN_ALL_USERS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { projectKeySelector } from 'controllers/project';
 import styles from './nameColumn.scss';
 
 const cx = classNames.bind(styles);
@@ -47,7 +46,7 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     currentUser: userIdSelector(state),
-    projectKey: projectKeySelector(state),
+    projectKey: activeProjectKeySelector(state),
   }),
   {
     showModal: showModalAction,

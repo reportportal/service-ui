@@ -32,7 +32,7 @@ export const startTimeFormatSelector = (state) =>
 export const photoTimeStampSelector = (state) => settingsSelector(state).photoTimeStamp || null;
 export const assignedProjectsSelector = (state) => userInfoSelector(state).assignedProjects || {};
 export const userAccountRoleSelector = (state) => userInfoSelector(state).userRole || '';
-export const activeProjectKeySelector = (state) => userSelector(state).activeProjectKey;
+export const activeProjectKeySelector = (state) => userSelector(state).activeProjectKey || '';
 export const activeProjectRoleSelector = (state) => {
   const activeProjectKey = activeProjectKeySelector(state);
   const assignedProject = assignedProjectsSelector(state)[activeProjectKey];

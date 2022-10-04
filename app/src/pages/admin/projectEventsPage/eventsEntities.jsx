@@ -97,7 +97,7 @@ import {
   actionMessages,
   objectTypesMessages,
 } from 'common/constants/localization/eventsLocalization';
-import { projectKeySelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 
 const messages = defineMessages({
   timeCol: { id: 'EventsGrid.timeCol', defaultMessage: 'Time' },
@@ -115,7 +115,7 @@ const messages = defineMessages({
 });
 @connect(
   (state) => ({
-    projectKey: projectKeySelector(state),
+    projectKey: activeProjectKeySelector(state),
   }),
   {},
 )

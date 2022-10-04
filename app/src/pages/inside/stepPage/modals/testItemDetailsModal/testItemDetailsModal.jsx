@@ -30,6 +30,7 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
 import {
+  activeProjectKeySelector,
   activeProjectRoleSelector,
   userAccountRoleSelector,
   userIdSelector,
@@ -54,7 +55,6 @@ import { ContainerWithTabs } from 'components/main/containerWithTabs';
 import { StackTrace } from 'pages/inside/common/stackTrace';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events/stepPageEvents';
-import { projectKeySelector } from 'controllers/project';
 import { messages } from './messages';
 import styles from './testItemDetailsModal.scss';
 
@@ -74,7 +74,7 @@ const cx = classNames.bind(styles);
     userProjectRole: activeProjectRoleSelector(state),
     userId: userIdSelector(state),
     launch: launchSelector(state),
-    projectKey: projectKeySelector(state),
+    projectKey: activeProjectKeySelector(state),
   }),
   {
     showNotification,
