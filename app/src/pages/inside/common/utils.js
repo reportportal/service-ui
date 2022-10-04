@@ -157,8 +157,8 @@ export const getGroupedDefectTypesOptions = (
     });
     defectTypesOptions = defectTypesOptions.concat(
       defectTypeGroup.map((defectType) => {
-        const label = defectTypesLocalization[defectType.typeRef.toLowerCase()]
-          ? formatMessage(defectTypesLocalization[defectType.typeRef.toLowerCase()])
+        const label = defectTypesLocalization[defectType.locator]
+          ? formatMessage(defectTypesLocalization[`Defect_Type_${defectType.locator}`])
           : defectType.longName;
         return {
           groupRef: defectType.typeRef,
@@ -169,6 +169,9 @@ export const getGroupedDefectTypesOptions = (
           color: defectType.color,
           locator: defectType.locator,
           meta: {
+            groupRefLabel: defectTypesLocalization[defectType.typeRef.toLowerCase()]
+              ? formatMessage(defectTypesLocalization[defectType.typeRef.toLowerCase()])
+              : defectType.longName,
             longName: defectType.longName,
             shortName: defectType.shortName,
             subItem: true,
