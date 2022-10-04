@@ -21,9 +21,7 @@ import styles from './withPopover.scss';
 
 const cx = classNames.bind(styles);
 
-export const withPopover = ({ content, ...popoverConfig }) => (WrappedComponent) => ({
-  ...props
-}) => {
+export const withPopover = ({ content, ...popoverConfig }) => (WrappedComponent) => (props) => {
   const parentRef = useRef();
   const [isOpened, setOpened] = useState(false);
 
