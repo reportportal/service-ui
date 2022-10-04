@@ -23,7 +23,6 @@ import * as d3 from 'd3-selection';
 import {
   defectTypesSelector,
   orderedContentFieldsSelector,
-  projectKeySelector,
   projectOrganizationSlugSelector,
 } from 'controllers/project';
 import {
@@ -45,6 +44,7 @@ import {
 import { createTooltipRenderer } from 'components/widgets/common/tooltip';
 import { CHART_OFFSET } from 'components/widgets/common/constants';
 import { getMillisecondsWoTimezone } from 'common/utils/timeDateUtils';
+import { activeProjectKeySelector } from 'controllers/user';
 import { IssueTypeStatTooltip } from '../common/issueTypeStatTooltip';
 import { isSingleColumnChart, calculateTooltipParams } from './config/utils';
 import { getConfig } from './config/getConfig';
@@ -56,7 +56,7 @@ const cx = classNames.bind(styles);
 @injectIntl
 @connect(
   (state) => ({
-    projectKey: projectKeySelector(state),
+    projectKey: activeProjectKeySelector(state),
     defectTypes: defectTypesSelector(state),
     orderedContentFields: orderedContentFieldsSelector(state),
     organizationSlug: projectOrganizationSlugSelector(state),

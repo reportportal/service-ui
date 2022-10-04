@@ -25,7 +25,7 @@ import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { canAssignUnassignInternalUser } from 'common/utils/permissions';
-import { projectIdSelector } from 'controllers/pages';
+import { projectIdSelector, urlProjectKeySelector } from 'controllers/pages';
 import {
   activeProjectRoleSelector,
   userAccountRoleSelector,
@@ -35,7 +35,6 @@ import {
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import UnassignIcon from 'common/img/unassign-inline.svg';
-import { projectKeySelector } from 'controllers/project';
 
 const messages = defineMessages({
   anassignUser: {
@@ -91,7 +90,7 @@ const messages = defineMessages({
     entryType:
       assignedProjectsSelector(state)[projectIdSelector(state)] &&
       assignedProjectsSelector(state)[projectIdSelector(state)].entryType,
-    projectKey: projectKeySelector(state),
+    projectKey: urlProjectKeySelector(state),
   }),
   { showNotification, showModalAction },
 )

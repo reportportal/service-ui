@@ -34,7 +34,7 @@ import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import { actionMessages } from 'common/constants/localization/eventsLocalization';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useWindowResize } from 'common/hooks';
-import { projectKeySelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 import { MakeDecisionFooter } from './makeDecisionFooter';
 import { MakeDecisionTabs } from './makeDecisionTabs';
 import { MachineLearningSuggestions, SelectDefectManually, CopyFromHistoryLine } from './tabs';
@@ -60,7 +60,7 @@ const MakeDecision = ({ data }) => {
   const { formatMessage } = useIntl();
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
-  const projectKey = useSelector(projectKeySelector);
+  const projectKey = useSelector(activeProjectKeySelector);
   const historyItems = useSelector(historyItemsSelector);
   const isAnalyzerAvailable = !!useSelector(analyzerExtensionsSelector).length;
   const isBulkOperation = data.items && data.items.length > 1;

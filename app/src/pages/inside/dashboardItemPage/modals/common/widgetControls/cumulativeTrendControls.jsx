@@ -30,7 +30,7 @@ import { URLS } from 'common/urls';
 import { STATS_FAILED, STATS_PASSED, STATS_SKIPPED } from 'common/constants/statistics';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { DEFAULT_LAUNCHES_LIMIT } from 'controllers/testItem';
-import { projectKeySelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 import {
   FiltersControl,
   InputControl,
@@ -94,7 +94,7 @@ const attributeKeyValidator = (formatMessage) => (attributes) =>
   ]);
 
 @connect((state) => ({
-  projectKey: projectKeySelector(state),
+  projectKey: activeProjectKeySelector(state),
 }))
 @injectIntl
 export class CumulativeTrendControls extends Component {

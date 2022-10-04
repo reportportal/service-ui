@@ -20,7 +20,7 @@ import { connect } from 'react-redux';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
-import { activeProjectSelector } from 'controllers/user';
+import { activeProjectKeySelector } from 'controllers/user';
 import { withModal } from 'components/main/modal';
 import {
   showNotification,
@@ -34,7 +34,6 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import { hideModalAction } from 'controllers/modal';
 import { messages as makeDecisionMessages } from 'pages/inside/stepPage/modals/makeDecisionModal/messages';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { projectKeySelector } from 'controllers/project';
 import styles from './unlinkIssueModal.scss';
 
 const cx = classNames.bind(styles);
@@ -59,8 +58,7 @@ const messages = defineMessages({
 @track()
 @connect(
   (state) => ({
-    url: URLS.testItemsUnlinkIssues(projectKeySelector(state)),
-    activeProject: activeProjectSelector(state),
+    url: URLS.testItemsUnlinkIssues(activeProjectKeySelector(state)),
   }),
   {
     showNotification,
@@ -72,7 +70,6 @@ export class UnlinkIssueModal extends Component {
     intl: PropTypes.object.isRequired,
     url: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
-    activeProject: PropTypes.string.isRequired,
     data: PropTypes.shape({
       items: PropTypes.array,
       fetchFunc: PropTypes.func,

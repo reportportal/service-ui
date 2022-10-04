@@ -30,7 +30,6 @@ import { DETAILED_LOG_VIEW } from 'controllers/log/constants';
 import { downloadFile } from 'common/utils/downloadFile';
 import { JSON as JSON_TYPE } from 'common/constants/fileTypes';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
-import { projectKeySelector } from 'controllers/project';
 import { activeProjectKeySelector } from 'controllers/user';
 import {
   ATTACHMENT_CODE_MODAL_ID,
@@ -53,7 +52,7 @@ import {
 } from './utils';
 
 function* getAttachmentURL() {
-  const projectKey = yield select(projectKeySelector);
+  const projectKey = yield select(activeProjectKeySelector);
   const isLaunchLog = yield select(isLaunchLogSelector);
   const activeRetryId = yield select(activeRetryIdSelector);
   if (isLaunchLog) {
@@ -141,13 +140,13 @@ function* openAttachmentInModal({ payload: { id, contentType } }) {
 }
 
 function* downloadAttachment({ payload: { id, contentType } }) {
-  const projectKey = yield select(projectKeySelector);
+  const projectKey = yield select(activeProjectKeySelector);
 
   downloadFile(URLS.getFileById(projectKey, id), createAttachmentName(id, contentType));
 }
 
 function* openAttachmentInBrowser({ payload: id }) {
-  const projectKey = yield select(projectKeySelector);
+  const projectKey = yield select(activeProjectKeySelector);
   const data = yield call(fetch, URLS.getFileById(projectKey, id), { responseType: 'blob' });
 
   if (window.navigator && window.navigator.msSaveOrOpenBlob) {

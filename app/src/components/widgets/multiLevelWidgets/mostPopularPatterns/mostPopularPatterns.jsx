@@ -25,7 +25,8 @@ import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { NoDataAvailable } from 'components/widgets';
 import { getDefaultTestItemLinkParams } from 'components/widgets/common/utils';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
+import { projectOrganizationSlugSelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 import { PatternGrid } from './patternGrid';
 import styles from './mostPopularPatterns.scss';
 
@@ -34,7 +35,7 @@ const cx = classNames.bind(styles);
 @connect(
   (state) => ({
     organizationSlug: projectOrganizationSlugSelector(state),
-    projectKey: projectKeySelector(state),
+    projectKey: activeProjectKeySelector(state),
   }),
   {
     navigate: (linkAction) => linkAction,

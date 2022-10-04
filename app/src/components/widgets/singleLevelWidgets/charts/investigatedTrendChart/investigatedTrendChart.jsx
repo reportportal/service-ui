@@ -36,11 +36,8 @@ import {
 import * as STATUSES from 'common/constants/testStatuses';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { ChartContainer } from 'components/widgets/common/c3chart';
-import {
-  projectKeySelector,
-  projectOrganizationSlugSelector,
-  defectTypesSelector,
-} from 'controllers/project';
+import { projectOrganizationSlugSelector, defectTypesSelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 import { getConfig as getStatusPageModeConfig } from '../common/statusPageChartConfig';
 import { selectConfigFunction } from './config';
 import styles from './investigatedTrendChart.scss';
@@ -50,7 +47,7 @@ const cx = classNames.bind(styles);
 @injectIntl
 @connect(
   (state) => ({
-    projectKey: projectKeySelector(state),
+    projectKey: activeProjectKeySelector(state),
     defectTypes: defectTypesSelector(state),
     organizationSlug: projectOrganizationSlugSelector(state),
     getDefectLink: defectLinkSelector(state),

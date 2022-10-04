@@ -31,7 +31,7 @@ import { getWidgets } from 'pages/inside/dashboardItemPage/modals/common/widgets
 import { provideEcGA } from 'components/main/analytics';
 import { activeDashboardIdSelector, pageSelector } from 'controllers/pages';
 import { getWidgetModeValuesString } from 'components/main/analytics/events/common/widgetPages/utils';
-import { projectKeySelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 import { WIDGET_WIZARD_FORM } from '../../common/constants';
 import { prepareWidgetDataForSubmit, getDefaultWidgetConfig } from '../../common/utils';
 import { WizardInfoSection } from './wizardInfoSection';
@@ -46,7 +46,7 @@ const cx = classNames.bind(styles);
     activeDashboardId: activeDashboardIdSelector(state),
     currentPage: pageSelector(state),
     isAnalyticsEnabled: analyticsEnabledSelector(state),
-    projectKey: projectKeySelector(state),
+    projectKey: activeProjectKeySelector(state),
   }),
   {
     submitWidgetWizardForm: () => submit(WIDGET_WIZARD_FORM),

@@ -21,7 +21,7 @@ import { connect } from 'react-redux';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { URLS } from 'common/urls';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
-import { projectKeySelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import { TogglerControl, TagsControl, RadioGroupControl } from './controls';
 
@@ -65,7 +65,7 @@ const validators = {
 
 @injectIntl
 @connect((state) => ({
-  projectKey: projectKeySelector(state),
+  projectKey: activeProjectKeySelector(state),
 }))
 export class PassingRatePerLaunchControls extends Component {
   static propTypes = {

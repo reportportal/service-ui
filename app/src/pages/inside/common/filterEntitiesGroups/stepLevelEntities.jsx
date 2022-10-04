@@ -65,7 +65,7 @@ import {
   ENTITY_ATTRIBUTE,
   ENTITY_NEW_FAILURE,
 } from 'components/filterEntities/constants';
-import { defectTypesSelector, patternsSelector, projectKeySelector } from 'controllers/project';
+import { defectTypesSelector, patternsSelector } from 'controllers/project';
 import { launchIdSelector } from 'controllers/pages';
 import {
   getQueryNamespace,
@@ -78,6 +78,7 @@ import { pageEventsMap } from 'components/main/analytics';
 import { connectRouter } from 'common/utils';
 import { createNamespacedQuery } from 'common/utils/routingUtils';
 import { PROVIDER_TYPE_BASELINE } from 'controllers/testItem/constants';
+import { activeProjectKeySelector } from 'controllers/user';
 import { getGroupedDefectTypesOptions } from 'pages/inside/common/utils';
 
 const messages = defineMessages({
@@ -314,7 +315,7 @@ const descriptionStepLevelEntity = bindMessageToValidator(
   patterns: patternsSelector(state),
   level: levelSelector(state),
   query: queryParametersSelector(state, namespaceSelector(state)),
-  projectKey: projectKeySelector(state),
+  projectKey: activeProjectKeySelector(state),
 }))
 export class StepLevelEntities extends Component {
   static propTypes = {

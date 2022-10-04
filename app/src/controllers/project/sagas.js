@@ -74,7 +74,7 @@ import {
   updateProjectNotificationSuccessAction,
   setProjectNotificationsLoadingAction,
 } from './actionCreators';
-import { patternsSelector, projectKeySelector } from './selectors';
+import { patternsSelector } from './selectors';
 
 function* updateDefectType({ payload: defectTypes }) {
   yield put(showScreenLockAction());
@@ -464,7 +464,7 @@ function* watchShowFilterOnLaunches() {
 
 function* updateProjectFilterPreferences({ payload = {} }) {
   const { filterId, method } = payload;
-  const projectKey = yield select(projectKeySelector);
+  const projectKey = yield select(urlProjectKeySelector);
   const userId = yield select(userIdSelector);
   yield call(fetch, URLS.projectPreferences(projectKey, userId, filterId), { method });
 }

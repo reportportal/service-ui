@@ -27,7 +27,8 @@ import {
 import { dashboardItemsSelector, dashboardItemPropTypes } from 'controllers/dashboard';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { NavLink } from 'components/main/navLink';
-import { projectKeySelector, projectOrganizationSlugSelector } from 'controllers/project';
+import { projectOrganizationSlugSelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 import { AddDashboardButton } from './addDashboardButton';
 import styles from './dashboardPageHeader.scss';
 
@@ -45,7 +46,7 @@ const DASHBOARD_PAGE_ITEM_VALUE = 'All';
   organizationSlug: projectOrganizationSlugSelector(state),
   dashboards: dashboardItemsSelector(state),
   activeItemId: activeDashboardIdSelector(state),
-  projectKey: projectKeySelector(state),
+  projectKey: activeProjectKeySelector(state),
 }))
 @injectIntl
 export class DashboardPageHeader extends Component {

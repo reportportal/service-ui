@@ -22,6 +22,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { canUpdateSettings } from 'common/utils/permissions';
+import { urlProjectKeySelector } from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
@@ -31,7 +32,6 @@ import {
   normalizeAttributesWithPrefix,
   analyzerAttributesSelector,
   ANALYZER_ATTRIBUTE_PREFIX,
-  projectKeySelector,
 } from 'controllers/project';
 import { analyzerExtensionsSelector } from 'controllers/appInfo/selectors';
 import { AnalysisForm } from './analysisForm/analysisForm';
@@ -78,7 +78,7 @@ const messages = defineMessages({
     userRole: activeProjectRoleSelector(state),
     analyzerConfiguration: analyzerAttributesSelector(state),
     analyzerExtensions: analyzerExtensionsSelector(state),
-    projectKey: projectKeySelector(state),
+    projectKey: urlProjectKeySelector(state),
   }),
   {
     fetchConfigurationAttributesAction,

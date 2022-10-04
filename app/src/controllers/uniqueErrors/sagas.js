@@ -36,7 +36,7 @@ import { NAMESPACE as PLUGINS_NAMESPACE } from 'controllers/plugins/constants';
 import { pluginsSelector } from 'controllers/plugins';
 
 import { COMMAND_GET_CLUSTERS } from 'controllers/plugins/uiExtensions/constants';
-import { projectKeySelector } from 'controllers/project';
+import { activeProjectKeySelector } from 'controllers/user';
 import {
   CLEAR_CLUSTER_ITEMS,
   clusterItemsSagas,
@@ -68,7 +68,7 @@ function* fetchClusters(payload = {}) {
   const { refresh = false } = payload;
   const launchId = yield select(launchIdSelector);
   const parentLaunch = yield select(launchSelector);
-  const projectKey = yield select(projectKeySelector);
+  const projectKey = yield select(activeProjectKeySelector);
   const isPathNameChanged = yield select(pathnameChangedSelector);
   const selectedItems = yield select(selectedClusterItemsSelector);
 
