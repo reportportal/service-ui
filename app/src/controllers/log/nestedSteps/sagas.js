@@ -19,7 +19,7 @@ import { handleError } from 'controllers/fetch';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { URLS } from 'common/urls';
 import { omit, fetch } from 'common/utils';
-import { NEXT, ALL } from 'controllers/log';
+import { NEXT, ALL } from 'controllers/log/constants';
 import {
   REQUEST_NESTED_STEP,
   FETCH_NESTED_STEP_ERROR,

@@ -16,7 +16,7 @@
 
 import { isEmptyObject } from 'common/utils';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
-import { NEXT, PREVIOUS } from 'controllers/log';
+import { NEXT, PREVIOUS } from 'controllers/log/constants';
 import { MAX_PAGE_SIZE, PAGINATION_OFFSET } from './constants';
 
 export const isLoadMoreButtonVisible = (pageData) => {
