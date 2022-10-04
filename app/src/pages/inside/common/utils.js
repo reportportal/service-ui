@@ -156,19 +156,25 @@ export const getGroupedDefectTypesOptions = (
       typeRef: defectTypeGroup[0].typeRef,
     });
     defectTypesOptions = defectTypesOptions.concat(
-      defectTypeGroup.map((defectType) => ({
-        groupRef: defectType.typeRef,
-        value: `${DEFECT_STATISTICS_BASE}${defectType.typeRef.toLowerCase()}$${defectType.locator}`,
-        label: defectTypesLocalization[defectType.typeRef]
-          ? formatMessage(defectTypesLocalization[defectType.typeRef])
-          : defectType.longName,
-        color: defectType.color,
-        locator: defectType.locator,
-        meta: {
-          longName: defectType.longName,
-          subItem: true,
-        },
-      })),
+      defectTypeGroup.map((defectType) => {
+        const label = defectTypesLocalization[defectType.typeRef.toLowerCase()]
+          ? formatMessage(defectTypesLocalization[defectType.typeRef.toLowerCase()])
+          : defectType.longName;
+        return {
+          groupRef: defectType.typeRef,
+          value: `${DEFECT_STATISTICS_BASE}${defectType.typeRef.toLowerCase()}$${
+            defectType.locator
+          }`,
+          label,
+          color: defectType.color,
+          locator: defectType.locator,
+          meta: {
+            longName: defectType.longName,
+            shortName: defectType.shortName,
+            subItem: true,
+          },
+        };
+      }),
     );
   });
 

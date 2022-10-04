@@ -80,7 +80,6 @@ import { connectRouter } from 'common/utils';
 import { createNamespacedQuery } from 'common/utils/routingUtils';
 import { PROVIDER_TYPE_BASELINE } from 'controllers/testItem/constants';
 import { getGroupedDefectTypesOptions } from 'pages/inside/common/utils';
-import { NO_DEFECT } from 'common/constants/defectTypes';
 
 const messages = defineMessages({
   NameTitle: {
@@ -342,15 +341,10 @@ export class StepLevelEntities extends Component {
 
   getDefectTypeEntity = () => {
     const { intl, defectTypes, filterValues, visibleFilters } = this.props;
-    const options = getGroupedDefectTypesOptions(defectTypes, intl.formatMessage)
-      .filter(
-        (option) =>
-          option.groupId !== NO_DEFECT.toUpperCase() && option.groupRef !== NO_DEFECT.toUpperCase(),
-      )
-      .map((option) => ({
-        ...option,
-        value: option.meta && option.meta.subItem ? option.locator : option.typeRef,
-      }));
+    const options = getGroupedDefectTypesOptions(defectTypes, intl.formatMessage).map((option) => ({
+      ...option,
+      value: option.meta && option.meta.subItem ? option.locator : option.typeRef,
+    }));
     return {
       id: ENTITY_DEFECT_TYPE,
       component: EntityDropdown,
