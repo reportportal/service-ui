@@ -56,6 +56,8 @@ describe('nestedSteps/utils', () => {
   });
 
   describe('isLoadCurrentStepButtonVisible', () => {
+    const step = { id: '1', hasContent: true };
+    const nestedSteps = { 1: { content: [], page: {} } };
     test('isLoadCurrentStepButtonVisible return true if called without arguments', () => {
       expect(isLoadCurrentStepButtonVisible()).toBe(true);
     });
@@ -63,10 +65,14 @@ describe('nestedSteps/utils', () => {
       expect(isLoadCurrentStepButtonVisible({})).toBe(true);
     });
     test('isLoadCurrentStepButtonVisible return true if not all elements are loaded', () => {
-      expect(isLoadCurrentStepButtonVisible({ size: 1, totalElements: 5 })).toBe(true);
+      expect(isLoadCurrentStepButtonVisible({ size: 1, totalElements: 5 }, step, nestedSteps)).toBe(
+        true,
+      );
     });
     test('isLoadCurrentStepButtonVisible return false if all elements are loaded', () => {
-      expect(isLoadCurrentStepButtonVisible({ size: 2, totalElements: 2 })).toBe(false);
+      expect(isLoadCurrentStepButtonVisible({ size: 2, totalElements: 2 }, step, nestedSteps)).toBe(
+        false,
+      );
     });
   });
 
