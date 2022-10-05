@@ -16,6 +16,7 @@
 
 import { Component } from 'react';
 import PropTypes from 'prop-types';
+import DOMPurify from 'dompurify';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
@@ -136,7 +137,12 @@ export class IncludeInAAModal extends Component {
       data: { items },
     } = this.props;
     return items.length === 1
-      ? Parser(intl.formatMessage(messages.text, { name: items[0].name }))
+      ? Parser(
+          intl.formatMessage(messages.text, {
+            b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
+            name: items[0].name,
+          }),
+        )
       : intl.formatMessage(messages.textMultiple);
   };
 
