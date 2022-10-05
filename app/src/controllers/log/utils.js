@@ -129,3 +129,16 @@ export const updateHistoryItemLaunchAttributes = (items = [], launch) => {
     return item;
   });
 };
+
+export const getFormattedPageLocation = (pagesLocation = []) =>
+  pagesLocation.reduce((acc, curr, i) => {
+    const [id] = Object.keys(curr);
+    const nextLocation = pagesLocation[i + 1];
+    if (!nextLocation) {
+      return acc;
+    }
+    const [nextPage] = Object.values(nextLocation);
+    acc.push([id, nextPage]);
+
+    return acc;
+  }, []);
