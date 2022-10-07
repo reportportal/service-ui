@@ -45,7 +45,7 @@ const messages = defineMessages({
   },
   ItemsValidationError: {
     id: 'FlakyTestCasesTableControls.ItemsValidationError',
-    defaultMessage: 'Items count should have value from 2 to 600',
+    defaultMessage: 'Items count should have value from 2 to 100',
   },
   LaunchNamesValidationError: {
     id: 'FlakyTestCasesTableControls.LaunchNamesValidationError',
