@@ -102,7 +102,7 @@ export const widgetTypesMessages = defineMessages({
   },
   [FLAKY_TEST_CASES_TABLE]: {
     id: 'Widgets.Name.flakyTestCases',
-    defaultMessage: 'Flaky test cases table (TOP-20)',
+    defaultMessage: 'Flaky test cases table (TOP-50)',
   },
   [CUMULATIVE_TREND]: {
     id: 'Widgets.Name.cumulative',
