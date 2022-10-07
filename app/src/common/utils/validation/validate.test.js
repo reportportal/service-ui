@@ -528,13 +528,13 @@ describe('validate.cumulativeItemsValidation', () => {
 describe('validate.flakyWidgetNumberOfLaunches', () => {
   test('validation should be correct', () => {
     expect(validate.flakyWidgetNumberOfLaunches(2)).toBe(true);
-    expect(validate.flakyWidgetNumberOfLaunches(600)).toBe(true);
+    expect(validate.flakyWidgetNumberOfLaunches(100)).toBe(true);
   });
   test('Validation should not be correct', () => {
     expect(validate.flakyWidgetNumberOfLaunches(undefined)).toBe(false);
     expect(validate.flakyWidgetNumberOfLaunches('')).toBe(false);
     expect(validate.flakyWidgetNumberOfLaunches(1)).toBe(false);
-    expect(validate.flakyWidgetNumberOfLaunches(601)).toBe(false);
+    expect(validate.flakyWidgetNumberOfLaunches(101)).toBe(false);
   });
 });
 

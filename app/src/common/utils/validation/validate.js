@@ -101,7 +101,7 @@ export const descriptionField = maxLength(2048);
 export const widgetNumberOfLaunches = composeValidators([isNotEmpty, range(1, 600)]);
 export const cumulativeItemsValidation = composeValidators([isNotEmpty, range(1, 20000)]);
 export const healthCheckWidgetPassingRate = composeValidators([isNotEmpty, range(50, 100)]);
-export const flakyWidgetNumberOfLaunches = composeValidators([isNotEmpty, range(2, 600)]);
+export const flakyWidgetNumberOfLaunches = composeValidators([isNotEmpty, range(2, 100)]);
 export const launchesWidgetContentFields = composeValidators([isNotEmptyArray, minLength(4)]);
 export const mostFailedWidgetNumberOfLaunches = composeValidators([isNotEmpty, range(2, 600)]);
 export const createNotificationRecipientsValidator = (informOwner) => (value = []) => {
