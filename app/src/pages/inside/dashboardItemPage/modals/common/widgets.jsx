@@ -302,7 +302,7 @@ export const getWidgets = (formatMessage) => [
       <FormattedMessage
         id={'Widgets.Description.flakyTestCases'}
         defaultMessage={
-          'Shows the TOP-20 the most flaky test cases within the specified previous launches.'
+          'Shows the TOP-50 the most flaky test cases within the specified previous launches.'
         }
       />
     ),
