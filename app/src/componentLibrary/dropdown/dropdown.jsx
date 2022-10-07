@@ -43,6 +43,7 @@ export const Dropdown = ({
   placeholder,
   defaultWidth,
   renderOption,
+  dataAutomationId,
 }) => {
   const [isOpened, setOpened] = useState(false);
   const containerRef = useRef();
@@ -107,6 +108,7 @@ export const Dropdown = ({
         ref={containerRef}
         className={cx('container', { 'default-width': defaultWidth })}
         title={title}
+        data-automation-id={dataAutomationId}
       >
         <Reference>
           {({ ref }) => (
@@ -187,6 +189,7 @@ Dropdown.propTypes = {
   placeholder: PropTypes.string,
   defaultWidth: PropTypes.bool,
   renderOption: PropTypes.func,
+  dataAutomationId: PropTypes.string,
 };
 
 Dropdown.defaultProps = {
@@ -205,4 +208,5 @@ Dropdown.defaultProps = {
   placeholder: '',
   defaultWidth: true,
   renderOption: null,
+  dataAutomationId: '',
 };
