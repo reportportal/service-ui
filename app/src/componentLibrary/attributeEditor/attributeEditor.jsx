@@ -141,6 +141,7 @@ export const AttributeEditor = ({
         error={state.errors.key}
         touched={keyTouched}
         setTouch={setTouchKey}
+        dataAutomationId={'keyField'}
       >
         <AttributeInput
           attributes={attributes}
@@ -156,7 +157,6 @@ export const AttributeEditor = ({
           onInputChange={handleAttributeKeyInputChange}
           autocompleteVariant={'key-variant'}
           menuClassName={cx('menu')}
-          dataAutomationId={'keyField'}
         />
       </FieldErrorHint>
       <div className={cx('separator')}>:</div>
@@ -165,6 +165,7 @@ export const AttributeEditor = ({
         error={state.errors.value}
         touched={valueTouched}
         setTouch={setTouchValue}
+        dataAutomationId={'valueField'}
       >
         <AttributeInput
           minLength={1}
@@ -180,7 +181,6 @@ export const AttributeEditor = ({
           isRequired
           autocompleteVariant={'value-variant'}
           menuClassName={cx('menu')}
-          dataAutomationId={'valueField'}
         />
       </FieldErrorHint>
       <div className={cx('buttons')}>

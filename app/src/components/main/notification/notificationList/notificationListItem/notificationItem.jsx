@@ -178,7 +178,7 @@ export class NotificationItem extends PureComponent {
     }
     return (
       <div key={message} onClick={this.messageClick}>
-        <div className={cx('message-container', type)}>
+        <div className={cx('message-container', type)} data-automation-id="listItem">
           <p>
             {Parser(
               DOMPurify.sanitize(messageId ? formatMessage(messages[messageId], values) : message),

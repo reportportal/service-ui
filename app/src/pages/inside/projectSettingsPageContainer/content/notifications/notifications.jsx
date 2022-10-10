@@ -240,10 +240,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
               </Checkbox>
             </FieldElement>
           </Layout>
-          <div
-            className={cx('notifications-container')}
-            data-automation-id="notificationsContainer"
-          >
+          <div className={cx('notifications-container')}>
             <RuleList
               disabled={isReadOnly}
               data={notifications.map((item) => ({ name: item.ruleName, ...item }))}

@@ -41,7 +41,7 @@ export class NotificationList extends PureComponent {
 
   render() {
     return (
-      <div className={cx('notification-list')}>
+      <div className={cx('notification-list')} data-automation-id="notificationsContainer">
         <TransitionGroup>
           {this.props.notifications.map((m) => (
             <CSSTransition key={m.uid} timeout={500} classNames="notification-transition">
