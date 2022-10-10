@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import {
+  nestedStepsSelector,
   nestedStepSelector,
   requestNestedStepAction,
   isLoadMoreButtonVisible,
@@ -103,9 +104,10 @@ export const NestedGridRow = ({
   const { collapsed, loading, content, page } = useSelector((state) =>
     nestedStepSelector(state, id),
   );
+  const allNestedStepsData = useSelector(nestedStepsSelector);
   const showPreviousButton = isLoadPreviousButtonVisible(page);
   const showMoreButton = isLoadMoreButtonVisible(page);
-  const showLoadCurrentStepButton = isLoadCurrentStepButtonVisible(page);
+  const showLoadCurrentStepButton = isLoadCurrentStepButtonVisible(page, data, allNestedStepsData);
   const requestStep = () => {
     dispatch(requestNestedStepAction({ id }));
   };
