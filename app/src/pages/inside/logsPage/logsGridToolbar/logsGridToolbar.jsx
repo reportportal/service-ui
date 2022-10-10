@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { Component, Fragment } from 'react';
+import React, { Component, createRef, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
@@ -128,6 +128,8 @@ export class LogsGridToolbar extends Component {
     logViewMode: getLogViewMode(this.props.userId),
   };
 
+  panelRef = createRef();
+
   toggleLogViewMode = (targetViewMode) => {
     const { logViewMode } = this.state;
 
@@ -204,10 +206,11 @@ export class LogsGridToolbar extends Component {
       errorLogIndex,
     } = this.props;
     const { logViewMode } = this.state;
+    const stickyOffsetTop = this.panelRef.current ? this.panelRef.current.clientHeight : 0;
 
     return (
       <div className={cx('container')}>
-        <div className={cx('panel')}>
+        <div ref={this.panelRef} className={cx('panel')}>
           <div className={cx('aside')}>
             <div className={cx('log-level')}>
               <InputSlider options={LOG_LEVELS} value={logLevel} onChange={this.changeLogLevel} />
@@ -280,6 +283,7 @@ export class LogsGridToolbar extends Component {
           {children({
             markdownMode: logViewMode === MARKDOWN,
             consoleView: this.isConsoleViewMode(),
+            rawHeaderCellStylesConfig: { top: `${stickyOffsetTop}px` },
           })}
         </div>
       </div>

@@ -19,10 +19,13 @@
 }
 
 .panel {
+  position: sticky;
+  top: 0;
   display: flex;
   justify-content: space-between;
   background-color: $COLOR--white-two;
   padding: 15px;
+  z-index: $Z_INDEX-STICKY-TOOLBAR;
   @media (max-width: $SCREEN_XS_MAX) {
     display: none;
   }

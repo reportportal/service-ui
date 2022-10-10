@@ -275,7 +275,7 @@ export class LogsGridWrapper extends Component {
               highlightErrorLog={this.highlightErrorLog}
               errorLogIndex={this.state.errorLogIndex}
             >
-              {({ markdownMode, consoleView }) => (
+              {({ markdownMode, consoleView, rawHeaderCellStylesConfig }) => (
                 <LogsGrid
                   logItems={logItems}
                   loading={loading}
@@ -290,6 +290,7 @@ export class LogsGridWrapper extends Component {
                   consoleView={consoleView}
                   isNestedStepView={isNestedStepView}
                   rowHighlightingConfig={rowHighlightingConfig}
+                  rawHeaderCellStylesConfig={rawHeaderCellStylesConfig}
                 />
               )}
             </LogsGridToolbar>
