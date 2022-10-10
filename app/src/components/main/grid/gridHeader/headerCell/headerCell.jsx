@@ -72,9 +72,16 @@ export const HeaderCell = track()(
     const TitleComponent = title.component;
     const titleComponentProps = title.componentProps;
     return title.component ? (
-      <TitleComponent className={cx('header-cell', computedClassName)} {...titleComponentProps} />
+      <TitleComponent
+        className={cx('header-cell', computedClassName)}
+        style={customProps.rawHeaderCellStylesConfig}
+        {...titleComponentProps}
+      />
     ) : (
-      <div className={cx('header-cell', computedClassName)}>
+      <div
+        className={cx('header-cell', computedClassName)}
+        style={customProps.rawHeaderCellStylesConfig}
+      >
         <div className={cx('title-container')} onClick={sortable ? sortingClickHandler : null}>
           <div className={cx('filter')} onClick={filterClickHandler}>
             {Parser(FilterIcon)}
