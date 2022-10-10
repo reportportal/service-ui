@@ -35,10 +35,31 @@ export const isLoadPreviousButtonVisible = (pageData) => {
   return number !== 1;
 };
 
-export const isLoadCurrentStepButtonVisible = (pageData) => {
+export const isLoadCurrentStepButtonVisible = (pageData, step, allSteps) => {
   if (!pageData || isEmptyObject(pageData)) {
     return true;
   }
+  const { id, hasContent } = step;
+  if (hasContent) {
+    const decisionArr = [];
+    if (id in allSteps) {
+      const stepsToCheck = allSteps[id].content;
+      const filteredStepsToCheck = stepsToCheck.filter((item) => item.hasContent);
+      for (let i = 0; i < filteredStepsToCheck.length; i += 1) {
+        const nextStep = filteredStepsToCheck[i];
+        const { id: stepId } = nextStep;
+        const { page } = allSteps[stepId] || {};
+        const isShouldShowBtn = isLoadCurrentStepButtonVisible(page, nextStep, allSteps);
+        decisionArr.push(isShouldShowBtn);
+      }
+    } else if (!(id in allSteps)) {
+      return true;
+    }
+    if (decisionArr.length) {
+      return decisionArr.some((item) => !!item);
+    }
+  }
+
   const { size, totalElements } = pageData;
   return size < totalElements;
 };

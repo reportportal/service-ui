@@ -16,7 +16,7 @@
 
 export { nestedStepsReducer } from './reducer';
 export { nestedStepSagas } from './sagas';
-export { nestedStepSelector } from './selectors';
+export { nestedStepSelector, domainSelector as nestedStepsSelector } from './selectors';
 export {
   requestNestedStepAction,
   loadMoreNestedStepAction,
