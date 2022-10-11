@@ -172,12 +172,13 @@ export const getGroupedDefectTypesOptions = (
           color: defectType.color,
           locator: defectType.locator,
           meta: {
-            groupRefLabel: defectTypesLocalization[defectType.typeRef.toLowerCase()]
-              ? formatMessage(defectTypesLocalization[defectType.typeRef.toLowerCase()])
-              : defectType.longName,
-            longName: defectType.longName,
-            shortName: defectType.shortName,
             subItem: true,
+            subItemLabel: `${
+              defectTypesLocalization[defectType.typeRef.toLowerCase()]
+                ? formatMessage(defectTypesLocalization[defectType.typeRef.toLowerCase()])
+                : defectType.longName
+            } ${defectType.shortName}`,
+            longName: defectType.longName,
           },
         };
       }),
