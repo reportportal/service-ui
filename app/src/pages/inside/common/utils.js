@@ -17,7 +17,7 @@
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { canBulkEditItems } from 'common/utils/permissions';
 import { isPostIssueActionAvailable } from 'controllers/plugins';
-import { DEFECT_TYPES_SEQUENCE } from 'common/constants/defectTypes';
+import { DEFECT_TYPES_SEQUENCE, DEFAULT_DEFECT_TYPES_LOCATORS } from 'common/constants/defectTypes';
 import { defectTypesLocalization } from 'common/constants/localization/defectTypesLocalization';
 import { actionMessages, ISSUE_OPERATION_MAX_ITEMS } from './constants';
 
@@ -140,6 +140,9 @@ export const createStepActionDescriptors = (params) => {
   ];
 };
 
+export const isDefaultDefectType = (defectType) =>
+  DEFAULT_DEFECT_TYPES_LOCATORS.includes(defectType.locator);
+
 export const getGroupedDefectTypesOptions = (
   defectTypes,
   formatMessage,
@@ -157,7 +160,7 @@ export const getGroupedDefectTypesOptions = (
     });
     defectTypesOptions = defectTypesOptions.concat(
       defectTypeGroup.map((defectType) => {
-        const label = defectTypesLocalization[defectType.typeRef.toLowerCase()]
+        const label = isDefaultDefectType(defectType)
           ? formatMessage(defectTypesLocalization[defectType.typeRef.toLowerCase()])
           : defectType.longName;
         return {
@@ -169,9 +172,13 @@ export const getGroupedDefectTypesOptions = (
           color: defectType.color,
           locator: defectType.locator,
           meta: {
-            longName: defectType.longName,
-            shortName: defectType.shortName,
             subItem: true,
+            subItemLabel: `${
+              defectTypesLocalization[defectType.typeRef.toLowerCase()]
+                ? formatMessage(defectTypesLocalization[defectType.typeRef.toLowerCase()])
+                : defectType.longName
+            } ${defectType.shortName}`,
+            longName: defectType.longName,
           },
         };
       }),
