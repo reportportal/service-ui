@@ -40,7 +40,7 @@ const HelloWithPopover = withPopover({
   title: 'hello title',
   side: 'bottom',
   arrowPosition: 'right',
-  popoverWrapperStyle: { display: 'inline-block' },
+  popoverWrapperClassName: cx('popover-wrapper'),
 })(Hello);
 
 <HelloWithPopover content="content" />;

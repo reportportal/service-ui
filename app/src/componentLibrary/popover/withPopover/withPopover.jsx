@@ -21,7 +21,7 @@ import styles from './withPopover.scss';
 
 const cx = classNames.bind(styles);
 
-export const withPopover = ({ ContentComponent, popoverWrapperStyle, ...popoverConfig }) => (
+export const withPopover = ({ ContentComponent, popoverWrapperClassName, ...popoverConfig }) => (
   WrappedComponent,
 ) => (props) => {
   const parentRef = useRef();
@@ -31,11 +31,10 @@ export const withPopover = ({ ContentComponent, popoverWrapperStyle, ...popoverC
     <>
       <div
         ref={parentRef}
-        className={cx('with-popover')}
+        className={cx('with-popover', popoverWrapperClassName)}
         onClick={() => {
           setOpened(true);
         }}
-        style={popoverWrapperStyle}
       >
         <WrappedComponent isPopoverOpen={isOpened} {...props} />
       </div>
