@@ -1,6 +1,6 @@
 ## **Popover with optional title and content**
 
-### Props:
+### Popover props:
 
 - **children**: _node_, optional, default = null
 - **title**: _string_, optional, default = ''
@@ -24,20 +24,24 @@ Popover adjusts to triangle position.
 
 ### Size
 
-Min height is 61px.
+Min height is 52px.
 Min width is 160px.
 
 ### Example
 
 ```jsx
-const Hello = () => <span>hello</span>;
+const Hello = ({ isPopoverOpen }) => (
+  <span className={cx('hello', { active: isPopoverOpen })}>hello</span>
+);
+const Content = ({ content }) => <span>hello {content}</span>;
 
 const HelloWithPopover = withPopover({
+  ContentComponent: Content,
   title: 'hello title',
-  content: <span>hello content</span>,
   side: 'bottom',
   arrowPosition: 'right',
+  popoverWrapperClassName: cx('popover-wrapper'),
 })(Hello);
 
-<HelloWithPopover />;
+<HelloWithPopover content="content" />;
 ```
