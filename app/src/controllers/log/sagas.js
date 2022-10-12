@@ -94,6 +94,7 @@ import {
 import { sauceLabsSagas } from './sauceLabs';
 import { domainSelector as nestedStepsSelector, nestedStepSelector } from './nestedSteps/selectors';
 import { nestedStepSagas } from './nestedSteps/sagas';
+import { getFormattedPageLocation } from './utils';
 
 function* fetchActivity() {
   const activeProject = yield select(activeProjectSelector);
@@ -139,30 +140,53 @@ function* fetchStackTrace({ payload: logItem }) {
   yield take(createFetchPredicate(STACK_TRACE_NAMESPACE));
 }
 
-function* fetchAllErrorLogs({ payload: logItem }) {
+function* fetchAllErrorLogs({
+  payload: logItem,
+  namespace = ERROR_LOGS_NAMESPACE,
+  excludeLogContent = true,
+  level,
+}) {
   const { id } = logItem;
   const { activeProject, query, filterLevel } = yield call(collectLogPayload);
-  const retryId = yield select(activeRetryIdSelector);
+  let retryId = null;
+  const logViewMode = yield select(logViewModeSelector);
+  if (logViewMode === DETAILED_LOG_VIEW) {
+    retryId = yield select(activeRetryIdSelector);
+  }
   let cancelRequest = () => {};
   try {
     yield put(
-      fetchDataAction(ERROR_LOGS_NAMESPACE)(
-        URLS.errorLogs(activeProject, retryId || id, filterLevel),
+      fetchDataAction(namespace)(
+        URLS.errorLogs(activeProject, retryId || id, level || filterLevel),
         {
-          params: { ...query, excludeLogContent: true },
+          params: { ...query, excludeLogContent },
           abort: (cancelFunc) => {
             cancelRequest = cancelFunc;
           },
         },
       ),
     );
-    yield take(createFetchPredicate(ERROR_LOGS_NAMESPACE));
+    yield take(createFetchPredicate(namespace));
   } catch (err) {
     yield handleError(err);
   } finally {
     if (yield cancelled()) {
       cancelRequest();
     }
+  }
+}
+
+function* loadStep({ id, errorLogPage }) {
+  yield put(loadMoreNestedStepAction({ id, errorLogPage }));
+  yield take([FETCH_NESTED_STEP_SUCCESS, FETCH_NESTED_STEP_ERROR]);
+
+  let loadingRunning = true;
+  while (loadingRunning) {
+    const { loading } = yield select(nestedStepSelector, id);
+    if (!loading) {
+      loadingRunning = loading;
+    }
+    yield delay(10);
   }
 }
 
@@ -179,112 +203,102 @@ function* waitLoadAllNestedSteps() {
     });
 
     for (let i = 0; i < filteredNestedSteps.length; i += 1) {
-      const { initial } = yield select(nestedStepSelector, filteredNestedSteps[i].id);
+      const id = filteredNestedSteps[i].id;
+      const { initial } = yield select(nestedStepSelector, id);
       if (initial) {
-        yield put(loadMoreNestedStepAction({ id: filteredNestedSteps[i].id }));
-        yield take([FETCH_NESTED_STEP_SUCCESS, FETCH_NESTED_STEP_ERROR]);
-
-        let loadingRunning = true;
-        while (loadingRunning) {
-          yield delay(100);
-          const { loading: loadingState } = yield select(
-            nestedStepSelector,
-            filteredNestedSteps[i].id,
-          );
-          if (!loadingState) {
-            loadingRunning = loadingState;
-          }
-        }
-
+        yield loadStep({ id });
         yield call(waitLoadAllNestedSteps);
       }
     }
   }
 }
 
+function* navigateToErrorLogPage(query, initialPage) {
+  yield put(
+    updatePagePropertiesAction(
+      createNamespacedQuery({ ...query, [PAGE_KEY]: initialPage }, NAMESPACE),
+    ),
+  );
+  yield take(createFetchPredicate(LOG_ITEMS_NAMESPACE));
+}
+
 function* fetchErrorLog({ payload: { errorLogInfo, callback } }) {
-  const { id: errorLogId, pagesLocation, parentsIds = [] } = errorLogInfo;
+  const { id: errorLogId, pagesLocation } = errorLogInfo;
   const { query } = yield call(collectLogPayload);
-  const parentId = parentsIds[parentsIds.length - 1];
+  const [initialPage] = Object.values(pagesLocation[0]);
+  // format location as first item props reference to main page
+  const formattedPageLocation = getFormattedPageLocation(pagesLocation);
+  const skipIds = [];
 
+  // single log. highlight or move to another page
   if (pagesLocation.length === 1) {
-    const [errorLogData] = pagesLocation;
-    const [errorLogPage] = Object.values(errorLogData);
-
-    if (!parentId) {
-      if (+query[PAGE_KEY] !== +errorLogPage) {
-        yield put(
-          updatePagePropertiesAction(
-            createNamespacedQuery({ ...query, [PAGE_KEY]: errorLogPage }, NAMESPACE),
-          ),
-        );
-        yield take(createFetchPredicate(LOG_ITEMS_NAMESPACE));
-      }
-    } else if (parentId) {
-      const { content } = yield select(nestedStepSelector, parentId);
-      if (!content.length) {
-        if (errorLogPage !== 1) {
-          yield take([FETCH_NESTED_STEP_SUCCESS, FETCH_NESTED_STEP_ERROR]);
-        }
-        yield put(loadMoreNestedStepAction({ id: parentId, errorLogPage }));
-        yield take([FETCH_NESTED_STEP_SUCCESS, FETCH_NESTED_STEP_ERROR]);
-
-        const logItemData = yield select(logItemsSelector);
-        const logItem = logItemData.find((item) => +item.id === +parentId);
-        if (logItem && logItem.status !== FAILED) {
-          yield put(toggleNestedStepAction({ id: parentId }));
-        }
-      } else {
-        const { content: nestedStepContent } = yield select(nestedStepSelector, parentId);
-        if (!nestedStepContent.find((item) => +item.id === +errorLogId)) {
-          yield put(loadMoreNestedStepAction({ id: parentId, errorLogPage }));
-          yield take([FETCH_NESTED_STEP_SUCCESS, FETCH_NESTED_STEP_ERROR]);
-        }
-
-        if (parentsIds.length) {
-          for (let i = 0; i < parentsIds.length; i += 1) {
-            const { collapsed } = yield select(nestedStepSelector, parentsIds[i]);
-            if (collapsed) {
-              yield put(toggleNestedStepAction({ id: parentsIds[i] }));
-            }
+    if (+query[PAGE_KEY] !== +initialPage) {
+      yield navigateToErrorLogPage(query, initialPage);
+    }
+  } else {
+    // change page if initial page is not the same
+    if (+query[PAGE_KEY] !== +initialPage) {
+      yield navigateToErrorLogPage(query, initialPage);
+      // check is first nested step is FAILED
+      const logItems = yield select(logItemsSelector);
+      const [parentId] = formattedPageLocation[0];
+      const isWantedStepFailed = logItems.find(
+        (log) => +log.id === +parentId && log.status === FAILED,
+      );
+      // wait until wanted step is load
+      if (isWantedStepFailed) {
+        let isWrongId = true;
+        while (isWrongId) {
+          const {
+            payload: { id: takenId },
+          } = yield take([FETCH_NESTED_STEP_SUCCESS, FETCH_NESTED_STEP_ERROR]);
+          if (+takenId === +parentId) {
+            isWrongId = false;
+            // prevent collapse failed step as they unfold by default
+            skipIds.push(+parentId);
           }
         }
       }
     }
 
-    yield call(waitLoadAllNestedSteps);
+    for (let i = 0; i < formattedPageLocation.length; i += 1) {
+      const [id, page] = formattedPageLocation[i];
+      const { initial, content } = yield select(nestedStepSelector, id);
 
-    callback && callback();
-  } else {
-    const [processLogData] = pagesLocation;
-    const [processLogPage] = Object.values(processLogData);
-    const nextPagesLocation = pagesLocation.slice(1);
-
-    if (!parentId && +query[PAGE_KEY] !== +processLogPage) {
-      yield put(
-        updatePagePropertiesAction(
-          createNamespacedQuery({ ...query, [PAGE_KEY]: processLogPage }, NAMESPACE),
-        ),
-      );
-      yield take(createFetchPredicate(LOG_ITEMS_NAMESPACE));
+      if (initial) {
+        yield loadStep({ id, errorLogPage: page });
+      } else {
+        // check is next step exist in the current one
+        const nextLocation = formattedPageLocation[i + 1];
+        const wantedId = nextLocation ? nextLocation[0] : errorLogId;
+        const isLogLoaded = content.find((log) => +log.id === +wantedId);
+        if (!isLogLoaded) {
+          yield loadStep({ id, errorLogPage: page });
+        }
+        // check step is failed and open
+        const { collapsed, content: stepContent } = yield select(nestedStepSelector, id);
+        const step = stepContent.find((log) => +log.id === +wantedId && log.status === FAILED);
+        if (step && collapsed) {
+          skipIds.push(+step.id);
+        }
+      }
     }
-
-    let collectedParentsIds;
-    if (!parentId) {
-      collectedParentsIds = pagesLocation.slice(0, -1).map((item) => Object.keys(item)[0]);
-    }
-
-    yield call(fetchErrorLog, {
-      payload: {
-        errorLogInfo: {
-          id: errorLogId,
-          pagesLocation: nextPagesLocation,
-          parentsIds: parentId ? parentsIds : collectedParentsIds,
-        },
-        callback,
-      },
-    });
   }
+
+  yield call(waitLoadAllNestedSteps);
+
+  const idsToCheckIsCollapsed = formattedPageLocation
+    .map(([id]) => +id)
+    .filter((id) => !skipIds.includes(id));
+  for (let i = 0; i < idsToCheckIsCollapsed.length; i += 1) {
+    const id = idsToCheckIsCollapsed[i];
+    const { collapsed } = yield select(nestedStepSelector, id);
+    if (collapsed) {
+      yield put(toggleNestedStepAction({ id }));
+    }
+  }
+
+  yield callback && callback();
 }
 
 function* fetchHistoryItems({ payload } = { payload: {} }) {

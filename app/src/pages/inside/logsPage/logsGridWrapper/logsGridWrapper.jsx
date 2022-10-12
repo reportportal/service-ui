@@ -204,9 +204,9 @@ export class LogsGridWrapper extends Component {
     const { errorLogs } = this.props;
     const { errorLogIndex } = this.state;
     const nextErrorLogIndex = calculateNextIndex(errorLogs, errorLogIndex, direction);
-    this.setState({ skipHighlightOnRender: false });
 
-    const fetchErrorLogCb = () => this.setState({ errorLogIndex: nextErrorLogIndex });
+    const fetchErrorLogCb = () =>
+      this.setState({ skipHighlightOnRender: false, errorLogIndex: nextErrorLogIndex });
 
     this.props.fetchErrorLog(this.props.errorLogs[nextErrorLogIndex], fetchErrorLogCb);
   };
