@@ -108,13 +108,13 @@ export const NestedGridRow = ({
   const showPreviousButton = isLoadPreviousButtonVisible(page);
   const showMoreButton = isLoadMoreButtonVisible(page);
   const showLoadCurrentStepButton = isLoadCurrentStepButtonVisible(page, data, allNestedStepsData);
-  const [firstRowId, setFirstRow] = React.useState(null);
+  const [itemIntoViewId, setItemIntoViewId] = React.useState(null);
   const [direction, setDirection] = React.useState(null);
   const itemIntoViewRef = React.useRef(null);
 
   const calculateFirstRowIdOnLoadPreviousClick = (contentItems) => {
     const isStep = (item) => 'hasContent' in item;
-    setFirstRow((contentItems.find((item) => !isStep(item)) || {}).id);
+    setItemIntoViewId((contentItems.find((item) => !isStep(item)) || {}).id);
     setDirection(null);
   };
 
@@ -128,7 +128,7 @@ export const NestedGridRow = ({
       calculateFirstRowIdOnLoadPreviousClick(content);
     } else if (!loading && itemIntoViewRef.current) {
       scrollToPreviousViewAndResetRef();
-      setFirstRow(null);
+      setItemIntoViewId(null);
     }
   }, [loading]);
 
@@ -185,7 +185,7 @@ export const NestedGridRow = ({
             level={level + 1}
             nestedStepHeader={NestedStepHeader}
             itemIntoViewRef={itemIntoViewRef}
-            firstRowId={firstRowId}
+            itemIntoViewId={itemIntoViewId}
             {...rest}
           />
           {showMoreButton && (
