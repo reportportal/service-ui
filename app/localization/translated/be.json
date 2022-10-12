@@ -1629,6 +1629,7 @@
   "SortingControl.sortByPassingRate": "Прахадны бал",
   "SortingControl.sortByTotal": "Агульная колькасць",
   "StackTrace.emptyMessage": "Няма трасіроўкі стэка для адлюстравання",
+  "StackTrace.jumpTo": "Перайсці",
   "StackTrace.linkText": "Адкрыць логі",
   "StackTrace.loadLabel": "Загрузіць яшчэ",
   "StackTrace.messageRefCaption": "Перайдзіце да трасіроўкі стэка ў запісе лога",

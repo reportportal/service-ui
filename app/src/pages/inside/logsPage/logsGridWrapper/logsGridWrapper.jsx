@@ -18,7 +18,7 @@ import { Component, Fragment } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { connectRouter } from 'common/utils';
+import { connectRouter, getStorageItem, removeStorageItem } from 'common/utils';
 import {
   logItemsSelector,
   logPaginationSelector,
@@ -38,6 +38,7 @@ import {
   errorLogsItemsSelector,
   fetchErrorLog,
   RETRY_ID,
+  ERROR_LOG_INDEX_KEY,
 } from 'controllers/log';
 import { withFilter } from 'controllers/filter';
 import { withPagination, PAGE_KEY, DEFAULT_PAGINATION, SIZE_KEY } from 'controllers/pagination';
@@ -182,6 +183,17 @@ export class LogsGridWrapper extends Component {
     skipHighlightOnRender: false,
     isSauceLabsIntegrationView: false,
   };
+
+  componentDidMount() {
+    const errorLogId = getStorageItem(ERROR_LOG_INDEX_KEY);
+    if (errorLogId) {
+      const { errorLogs } = this.props;
+      const errorLogIndex = errorLogs.findIndex(({ id }) => id === errorLogId);
+      removeStorageItem(ERROR_LOG_INDEX_KEY);
+      const fetchErrorLogCb = () => this.setState({ skipHighlightOnRender: false, errorLogIndex });
+      this.props.fetchErrorLog(this.props.errorLogs[errorLogIndex], fetchErrorLogCb);
+    }
+  }
 
   componentDidUpdate(prevProps) {
     if (

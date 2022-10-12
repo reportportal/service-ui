@@ -127,10 +127,7 @@ const reducer = combineReducers({
       paginationReducer(STACK_TRACE_NAMESPACE),
       stackTracePaginationReducer,
     ),
-    content: queueReducers(
-      fetchReducer(STACK_TRACE_NAMESPACE, { contentPath: 'content' }),
-      stackTraceContentReducer,
-    ),
+    content: queueReducers(fetchReducer(STACK_TRACE_NAMESPACE), stackTraceContentReducer),
   }),
   errorLogs: combineReducers({
     content: fetchReducer(ERROR_LOGS_NAMESPACE),

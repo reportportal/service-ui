@@ -292,7 +292,13 @@ export class TestItemDetailsModal extends Component {
     } = this.props;
     return (
       <div className={cx('stack-trace-tab')}>
-        <StackTrace logItem={item} hideTime minHeight={508} eventsInfo={eventsInfo} />
+        <StackTrace
+          logItem={item}
+          hideTime
+          hideNavigateToError
+          minHeight={508}
+          eventsInfo={eventsInfo}
+        />
       </div>
     );
   };
