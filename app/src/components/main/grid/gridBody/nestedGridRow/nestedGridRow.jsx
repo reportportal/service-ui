@@ -115,7 +115,6 @@ export const NestedGridRow = ({
   const calculateFirstRowIdOnLoadPreviousClick = (contentItems) => {
     const isStep = (item) => 'hasContent' in item;
     setItemIntoViewId((contentItems.find((item) => !isStep(item)) || {}).id);
-    setDirection(null);
   };
 
   const scrollToPreviousViewAndResetRef = () => {
@@ -126,6 +125,7 @@ export const NestedGridRow = ({
   React.useEffect(() => {
     if (direction) {
       calculateFirstRowIdOnLoadPreviousClick(content);
+      setDirection(null);
     } else if (!loading && itemIntoViewRef.current) {
       scrollToPreviousViewAndResetRef();
       setItemIntoViewId(null);
