@@ -24,7 +24,7 @@
   display: flex;
   justify-content: space-between;
   background-color: $COLOR--white-two;
-  padding: 15px;
+  padding: 20px 15px;
   z-index: $Z_INDEX-STICKY-TOOLBAR;
   @media (max-width: $SCREEN_XS_MAX) {
     display: none;
