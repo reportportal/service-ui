@@ -31,7 +31,7 @@ import {
 } from 'controllers/pages';
 import { debugModeSelector } from 'controllers/launch';
 import { createFetchPredicate, fetchDataAction, handleError } from 'controllers/fetch';
-import { fetch, isEmptyObject } from 'common/utils';
+import { fetch } from 'common/utils';
 import {
   FETCH_NESTED_STEP_ERROR,
   FETCH_NESTED_STEP_SUCCESS,
@@ -44,6 +44,7 @@ import {
 } from 'controllers/log/nestedSteps/actionCreators';
 import { createNamespacedQuery } from 'common/utils/routingUtils';
 import { FAILED } from 'common/constants/testStatuses';
+import { ERROR } from 'common/constants/logLevels';
 import {
   fetchErrorLogs,
   clearLogPageStackTrace,
@@ -58,7 +59,6 @@ import {
   prevActiveLogIdSelector,
   activeRetryIdSelector,
   prevActiveRetryIdSelector,
-  logStackTracePaginationSelector,
   logViewModeSelector,
   isLaunchLogSelector,
   includeAllLaunchesSelector,
@@ -75,7 +75,6 @@ import {
   LOG_ITEMS_NAMESPACE,
   FETCH_LOG_PAGE_STACK_TRACE,
   STACK_TRACE_NAMESPACE,
-  STACK_TRACE_PAGINATION_OFFSET,
   DETAILED_LOG_VIEW,
   HISTORY_LINE_TABLE_MODE,
   SET_INCLUDE_ALL_LAUNCHES,
@@ -125,21 +124,6 @@ function* fetchLogItems(payload = {}) {
   yield take(createFetchPredicate(namespace));
 }
 
-function* fetchStackTrace({ payload: logItem }) {
-  const activeProject = yield select(activeProjectSelector);
-  const page = yield select(logStackTracePaginationSelector);
-  const { path } = logItem;
-  let pageSize = STACK_TRACE_PAGINATION_OFFSET;
-  if (!isEmptyObject(page) && page.totalElements > 0) {
-    const { totalElements, size } = page;
-    pageSize = size >= totalElements ? totalElements : size + STACK_TRACE_PAGINATION_OFFSET;
-  }
-  yield put(
-    fetchDataAction(STACK_TRACE_NAMESPACE)(URLS.logItemStackTrace(activeProject, path, pageSize)),
-  );
-  yield take(createFetchPredicate(STACK_TRACE_NAMESPACE));
-}
-
 function* fetchAllErrorLogs({
   payload: logItem,
   namespace = ERROR_LOGS_NAMESPACE,
@@ -174,6 +158,15 @@ function* fetchAllErrorLogs({
       cancelRequest();
     }
   }
+}
+
+function* fetchStackTrace({ payload: logItem }) {
+  yield call(fetchAllErrorLogs, {
+    payload: logItem,
+    namespace: STACK_TRACE_NAMESPACE,
+    excludeLogContent: false,
+    level: ERROR,
+  });
 }
 
 function* loadStep({ id, errorLogPage }) {
