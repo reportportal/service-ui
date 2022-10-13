@@ -20,18 +20,22 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import track from 'react-tracking';
+import Parser from 'html-react-parser';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { NoItemMessage } from 'components/main/noItemMessage';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { dateFormat } from 'common/utils';
+import { dateFormat, setStorageItem } from 'common/utils';
 import {
   logStackTraceItemsSelector,
   logStackTraceLoadingSelector,
   fetchLogPageStackTrace,
   isLoadMoreStackTraceVisible,
+  setActiveTabIdAction,
+  ERROR_LOG_INDEX_KEY,
 } from 'controllers/log';
 import { StackTraceMessageBlock } from 'pages/inside/common/stackTraceMessageBlock';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
+import NavigateArrowIcon from 'common/img/navigate-arrow-inline.svg';
 import styles from './stackTrace.scss';
 
 const cx = classNames.bind(styles);
@@ -49,6 +53,10 @@ const messages = defineMessages({
     id: 'StackTrace.loadLabel',
     defaultMessage: 'Load more',
   },
+  jumpTo: {
+    id: 'StackTrace.jumpTo',
+    defaultMessage: 'Jump To',
+  },
 });
 
 const MAX_ROW_HEIGHT = 120;
@@ -63,6 +71,7 @@ const LOAD_MORE_HEIGHT = 32;
   }),
   {
     fetchLogPageStackTrace,
+    setActiveTabIdAction,
   },
 )
 @injectIntl
@@ -73,9 +82,10 @@ export class StackTrace extends Component {
     items: PropTypes.array,
     loading: PropTypes.bool,
     fetchLogPageStackTrace: PropTypes.func,
+    setActiveTabIdAction: PropTypes.func,
     loadMore: PropTypes.bool,
     logItem: PropTypes.object,
-    hideTime: PropTypes.bool,
+    hideAdditionalCells: PropTypes.bool,
     minHeight: PropTypes.number,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -90,9 +100,10 @@ export class StackTrace extends Component {
     items: [],
     loading: false,
     fetchLogPageStackTrace: () => {},
+    setActiveTabIdAction: () => {},
     loadMore: false,
     logItem: {},
-    hideTime: false,
+    hideAdditionalCells: false,
     minHeight: SCROLL_HEIGHT,
     designMode: '',
     transparentBackground: false,
@@ -137,8 +148,21 @@ export class StackTrace extends Component {
     return items.length;
   };
 
+  navigateToError = (id) => {
+    setStorageItem(ERROR_LOG_INDEX_KEY, id);
+    this.props.setActiveTabIdAction('logs');
+  };
+
   renderStackTraceMessage = () => {
-    const { items, loadMore, loading, intl, hideTime, designMode, eventsInfo } = this.props;
+    const {
+      items,
+      loadMore,
+      loading,
+      intl,
+      hideAdditionalCells,
+      designMode,
+      eventsInfo,
+    } = this.props;
     return (
       <React.Fragment>
         <ScrollWrapper autoHeight autoHeightMax={this.getScrolledHeight()}>
@@ -152,8 +176,19 @@ export class StackTrace extends Component {
               >
                 <div className={cx('message-container')}>
                   <div className={cx('cell', 'message-cell')}>{item.message}</div>
-                  {!hideTime && (
-                    <div className={cx('cell', 'time-cell')}>{dateFormat(item.time)}</div>
+                  {!hideAdditionalCells && (
+                    <>
+                      <div className={cx('cell', 'time-cell')}>{dateFormat(item.time)}</div>
+                      <div className={cx('cell')}>
+                        <div
+                          className={cx('navigate-btn')}
+                          onClick={() => this.navigateToError(item.id)}
+                        >
+                          <span>{intl.formatMessage(messages.jumpTo)}</span>
+                          <i className={cx('navigate-icon')}>{Parser(NavigateArrowIcon)}</i>
+                        </div>
+                      </div>
+                    </>
                   )}
                 </div>
               </StackTraceMessageBlock>

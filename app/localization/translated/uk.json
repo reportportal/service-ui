@@ -1632,6 +1632,7 @@
   "SortingControl.sortByPassingRate": "Прохідний бал",
   "SortingControl.sortByTotal": "Загальна кількість",
   "StackTrace.emptyMessage": "Трасування стека Немає для відображення",
+  "StackTrace.jumpTo": "Перейти",
   "StackTrace.linkText": "Логи Відкрити",
   "StackTrace.loadLabel": "Завантажити",
   "StackTrace.messageRefCaption": "Перейдіть до трасуванні стека в запису журналу",

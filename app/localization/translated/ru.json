@@ -1632,6 +1632,7 @@
   "SortingControl.sortByPassingRate": "Проходной балл",
   "SortingControl.sortByTotal": "Общее количество",
   "StackTrace.emptyMessage": "Нет трассировки стека для отображения",
+  "StackTrace.jumpTo": "Перейти",
   "StackTrace.linkText": "Открыть логи",
   "StackTrace.loadLabel": "Загрузить еще",
   "StackTrace.messageRefCaption": "Перейдите к трассировке стека в записи журнала",

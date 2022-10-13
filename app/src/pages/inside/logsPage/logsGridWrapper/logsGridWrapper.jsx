@@ -18,7 +18,7 @@ import { Component, Fragment } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { connectRouter } from 'common/utils';
+import { connectRouter, getStorageItem, removeStorageItem } from 'common/utils';
 import {
   logItemsSelector,
   logPaginationSelector,
@@ -38,6 +38,7 @@ import {
   errorLogsItemsSelector,
   fetchErrorLog,
   RETRY_ID,
+  ERROR_LOG_INDEX_KEY,
 } from 'controllers/log';
 import { withFilter } from 'controllers/filter';
 import { withPagination, PAGE_KEY, DEFAULT_PAGINATION, SIZE_KEY } from 'controllers/pagination';
@@ -183,6 +184,17 @@ export class LogsGridWrapper extends Component {
     isSauceLabsIntegrationView: false,
   };
 
+  componentDidMount() {
+    const errorLogId = getStorageItem(ERROR_LOG_INDEX_KEY);
+    if (errorLogId) {
+      const { errorLogs } = this.props;
+      const errorLogIndex = errorLogs.findIndex(({ id }) => id === errorLogId);
+      removeStorageItem(ERROR_LOG_INDEX_KEY);
+      const fetchErrorLogCb = () => this.setState({ skipHighlightOnRender: false, errorLogIndex });
+      this.props.fetchErrorLog(errorLogs[errorLogIndex], fetchErrorLogCb);
+    }
+  }
+
   componentDidUpdate(prevProps) {
     if (
       this.props.logLevelId !== prevProps.logLevelId ||
@@ -208,7 +220,7 @@ export class LogsGridWrapper extends Component {
     const fetchErrorLogCb = () =>
       this.setState({ skipHighlightOnRender: false, errorLogIndex: nextErrorLogIndex });
 
-    this.props.fetchErrorLog(this.props.errorLogs[nextErrorLogIndex], fetchErrorLogCb);
+    this.props.fetchErrorLog(errorLogs[nextErrorLogIndex], fetchErrorLogCb);
   };
 
   render() {

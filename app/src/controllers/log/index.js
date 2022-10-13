@@ -56,6 +56,7 @@ export {
   PREVIOUS,
   NEXT,
   ALL,
+  ERROR_LOG_INDEX_KEY,
 } from './constants';
 export {
   historyItemsSelector,
