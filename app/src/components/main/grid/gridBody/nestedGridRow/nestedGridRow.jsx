@@ -108,10 +108,38 @@ export const NestedGridRow = ({
   const showPreviousButton = isLoadPreviousButtonVisible(page);
   const showMoreButton = isLoadMoreButtonVisible(page);
   const showLoadCurrentStepButton = isLoadCurrentStepButtonVisible(page, data, allNestedStepsData);
+  const [itemIntoViewId, setItemIntoViewId] = React.useState(null);
+  const [direction, setDirection] = React.useState(null);
+  const itemIntoViewRef = React.useRef(null);
+
+  const calculateFirstRowIdOnLoadPreviousClick = (contentItems) => {
+    const isStep = (item) => 'hasContent' in item;
+    setItemIntoViewId((contentItems.find((item) => !isStep(item)) || {}).id);
+  };
+
+  const scrollToPreviousViewAndResetRef = () => {
+    itemIntoViewRef.current.scrollIntoView({ block: 'center' });
+    itemIntoViewRef.current = null;
+  };
+
+  React.useEffect(() => {
+    if (direction) {
+      calculateFirstRowIdOnLoadPreviousClick(content);
+      setDirection(null);
+    } else if (!loading && itemIntoViewRef.current) {
+      scrollToPreviousViewAndResetRef();
+      setItemIntoViewId(null);
+    }
+  }, [loading]);
+
   const requestStep = () => {
     dispatch(requestNestedStepAction({ id }));
   };
   const loadMore = (loadDirection) => {
+    if (loadDirection === PREVIOUS) {
+      setDirection(loadDirection);
+    }
+
     dispatch(loadMoreNestedStepAction({ id, loadDirection }));
   };
   const loadCurrentStepButton = (
@@ -156,6 +184,8 @@ export const NestedGridRow = ({
             data={content}
             level={level + 1}
             nestedStepHeader={NestedStepHeader}
+            itemIntoViewRef={itemIntoViewRef}
+            itemIntoViewId={itemIntoViewId}
             {...rest}
           />
           {showMoreButton && (

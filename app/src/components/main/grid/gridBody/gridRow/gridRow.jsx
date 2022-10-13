@@ -37,6 +37,10 @@ export class GridRow extends Component {
     selectedItems: PropTypes.arrayOf(PropTypes.object),
     onToggleSelection: PropTypes.func,
     onClickRow: PropTypes.func,
+    itemIntoViewRef: PropTypes.shape({
+      current: PropTypes.oneOfType([PropTypes.instanceOf(Element), PropTypes.instanceOf(null)]),
+    }),
+    itemIntoViewId: PropTypes.number,
     changeOnlyMobileLayout: PropTypes.bool,
     rowClassMapper: PropTypes.func,
     toggleAccordionEventInfo: PropTypes.object,
@@ -81,6 +85,8 @@ export class GridRow extends Component {
     gridRowClassName: '',
     level: 0,
     descriptionConfig: null,
+    itemIntoViewRef: null,
+    itemIntoViewId: null,
   };
 
   state = {
@@ -191,6 +197,8 @@ export class GridRow extends Component {
       gridRowClassName,
       level,
       descriptionConfig,
+      itemIntoViewRef,
+      itemIntoViewId,
     } = this.props;
 
     const { expanded } = this.state;
@@ -215,6 +223,7 @@ export class GridRow extends Component {
           </div>
         )}
         <div
+          ref={itemIntoViewId === value.id ? itemIntoViewRef : null}
           className={cx(
             'grid-row',
             { 'change-mobile': changeOnlyMobileLayout, [`level-${level}`]: level !== 0 },
