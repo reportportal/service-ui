@@ -85,8 +85,7 @@ export class StackTrace extends Component {
     setActiveTabIdAction: PropTypes.func,
     loadMore: PropTypes.bool,
     logItem: PropTypes.object,
-    hideTime: PropTypes.bool,
-    hideNavigateToError: PropTypes.bool,
+    hideAdditionalCells: PropTypes.bool,
     minHeight: PropTypes.number,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -104,8 +103,7 @@ export class StackTrace extends Component {
     setActiveTabIdAction: () => {},
     loadMore: false,
     logItem: {},
-    hideTime: false,
-    hideNavigateToError: false,
+    hideAdditionalCells: false,
     minHeight: SCROLL_HEIGHT,
     designMode: '',
     transparentBackground: false,
@@ -161,8 +159,7 @@ export class StackTrace extends Component {
       loadMore,
       loading,
       intl,
-      hideTime,
-      hideNavigateToError,
+      hideAdditionalCells,
       designMode,
       eventsInfo,
     } = this.props;
@@ -179,19 +176,19 @@ export class StackTrace extends Component {
               >
                 <div className={cx('message-container')}>
                   <div className={cx('cell', 'message-cell')}>{item.message}</div>
-                  {!hideTime && (
-                    <div className={cx('cell', 'time-cell')}>{dateFormat(item.time)}</div>
-                  )}
-                  {!hideNavigateToError && (
-                    <div className={cx('cell')}>
-                      <div
-                        className={cx('navigate-btn')}
-                        onClick={() => this.navigateToError(item.id)}
-                      >
-                        <span>{intl.formatMessage(messages.jumpTo)}</span>
-                        <i className={cx('navigate-icon')}>{Parser(NavigateArrowIcon)}</i>
+                  {!hideAdditionalCells && (
+                    <>
+                      <div className={cx('cell', 'time-cell')}>{dateFormat(item.time)}</div>
+                      <div className={cx('cell')}>
+                        <div
+                          className={cx('navigate-btn')}
+                          onClick={() => this.navigateToError(item.id)}
+                        >
+                          <span>{intl.formatMessage(messages.jumpTo)}</span>
+                          <i className={cx('navigate-icon')}>{Parser(NavigateArrowIcon)}</i>
+                        </div>
                       </div>
-                    </div>
+                    </>
                   )}
                 </div>
               </StackTraceMessageBlock>

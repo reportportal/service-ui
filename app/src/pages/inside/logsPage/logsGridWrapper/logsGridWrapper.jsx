@@ -191,7 +191,7 @@ export class LogsGridWrapper extends Component {
       const errorLogIndex = errorLogs.findIndex(({ id }) => id === errorLogId);
       removeStorageItem(ERROR_LOG_INDEX_KEY);
       const fetchErrorLogCb = () => this.setState({ skipHighlightOnRender: false, errorLogIndex });
-      this.props.fetchErrorLog(this.props.errorLogs[errorLogIndex], fetchErrorLogCb);
+      this.props.fetchErrorLog(errorLogs[errorLogIndex], fetchErrorLogCb);
     }
   }
 
@@ -220,7 +220,7 @@ export class LogsGridWrapper extends Component {
     const fetchErrorLogCb = () =>
       this.setState({ skipHighlightOnRender: false, errorLogIndex: nextErrorLogIndex });
 
-    this.props.fetchErrorLog(this.props.errorLogs[nextErrorLogIndex], fetchErrorLogCb);
+    this.props.fetchErrorLog(errorLogs[nextErrorLogIndex], fetchErrorLogCb);
   };
 
   render() {
