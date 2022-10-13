@@ -92,10 +92,6 @@ const ShowWithTooltip = withPopover({
   ContentComponent: Popover,
   side: 'bottom',
   arrowPosition: 'middle',
-  popoverWrapperStyle: {
-    display: 'inline-block',
-    verticalAlign: 'center',
-  },
 })(IconShow);
 ShowWithTooltip.propTypes = {
   formatMessage: PropTypes.func.isRequired,
