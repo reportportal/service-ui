@@ -257,23 +257,18 @@ function* fetchErrorLog({ payload: { errorLogInfo, callback } }) {
     for (let i = 0; i < formattedPageLocation.length; i += 1) {
       const [id, page] = formattedPageLocation[i];
       const { initial, content } = yield select(nestedStepSelector, id);
+      const nextLocation = formattedPageLocation[i + 1];
+      const wantedId = nextLocation ? nextLocation[0] : errorLogId;
+      const isLogLoaded = content.find((log) => +log.id === +wantedId);
 
-      if (initial) {
+      if (initial || !isLogLoaded) {
         yield loadStep({ id, errorLogPage: page });
-      } else {
-        // check is next step exist in the current one
-        const nextLocation = formattedPageLocation[i + 1];
-        const wantedId = nextLocation ? nextLocation[0] : errorLogId;
-        const isLogLoaded = content.find((log) => +log.id === +wantedId);
-        if (!isLogLoaded) {
-          yield loadStep({ id, errorLogPage: page });
-        }
-        // check step is failed and open
-        const { collapsed, content: stepContent } = yield select(nestedStepSelector, id);
-        const step = stepContent.find((log) => +log.id === +wantedId && log.status === FAILED);
-        if (step && collapsed) {
-          skipIds.push(+step.id);
-        }
+      }
+      // add next id to skipIds arr if next step has failed status
+      const { collapsed, content: stepContent } = yield select(nestedStepSelector, id);
+      const step = stepContent.find((log) => +log.id === +wantedId && log.status === FAILED);
+      if (step && collapsed) {
+        skipIds.push(+wantedId);
       }
     }
   }
