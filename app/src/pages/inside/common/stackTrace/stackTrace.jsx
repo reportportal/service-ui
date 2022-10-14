@@ -32,6 +32,7 @@ import {
   isLoadMoreStackTraceVisible,
   setActiveTabIdAction,
   ERROR_LOG_INDEX_KEY,
+  activeRetryIdSelector,
 } from 'controllers/log';
 import { StackTraceMessageBlock } from 'pages/inside/common/stackTraceMessageBlock';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -68,6 +69,7 @@ const LOAD_MORE_HEIGHT = 32;
     items: logStackTraceItemsSelector(state),
     loading: logStackTraceLoadingSelector(state),
     loadMore: isLoadMoreStackTraceVisible(state),
+    retryId: activeRetryIdSelector(state),
   }),
   {
     fetchLogPageStackTrace,
@@ -94,6 +96,7 @@ export class StackTrace extends Component {
     designMode: PropTypes.string,
     transparentBackground: PropTypes.bool,
     eventsInfo: PropTypes.object,
+    retryId: PropTypes.number.isRequired,
   };
 
   static defaultProps = {
@@ -118,8 +121,8 @@ export class StackTrace extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { logItem } = this.props;
-    if (prevProps.logItem.id !== logItem.id) {
+    const { logItem, retryId } = this.props;
+    if (prevProps.logItem.id !== logItem.id || prevProps.retryId !== retryId) {
       this.fetchItems();
     }
   }
