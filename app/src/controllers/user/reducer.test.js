@@ -147,9 +147,11 @@ describe('user reducer', () => {
 
     test('should handle ASSIGN_TO_RROJECT_SUCCESS', () => {
       const payloadProject = {
-        projectName: 'superadmin_personal',
+        projectKey: 'superadmin_personal',
         entryType: 'INTERNAL',
         projectRole: PROJECT_MANAGER,
+        organizationSlug: 'organizationSlug',
+        projectName: 'superadmin personal',
       };
       const assignResult = {
         admin_personal: {
@@ -159,6 +161,8 @@ describe('user reducer', () => {
         superadmin_personal: {
           projectRole: 'PROJECT_MANAGER',
           entryType: 'INTERNAL',
+          organizationSlug: 'organizationSlug',
+          projectName: 'superadmin personal',
         },
       };
       expect(
@@ -181,9 +185,10 @@ describe('user reducer', () => {
         },
       };
       const payloadProject = {
-        projectName: 'superadmin_personal',
+        projectKey: 'superadmin_personal',
         entryType: 'INTERNAL',
         projectRole: PROJECT_MANAGER,
+        organizationSlug: 'organizationSlug',
       };
       expect(
         userAssignedProjectReducer(stateBeforeUnassign, {
