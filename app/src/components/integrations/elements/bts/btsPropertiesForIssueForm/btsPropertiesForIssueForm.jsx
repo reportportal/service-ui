@@ -88,12 +88,12 @@ const IconShow = () => {
   return <>{Parser(InfoIcon)}</>;
 };
 
-const ShowWithTooltip = withPopover({
+const ShowWithPopover = withPopover({
   ContentComponent: Popover,
   side: 'bottom',
   arrowPosition: 'middle',
 })(IconShow);
-ShowWithTooltip.propTypes = {
+ShowWithPopover.propTypes = {
   formatMessage: PropTypes.func.isRequired,
 };
 
@@ -445,7 +445,7 @@ export class BtsPropertiesForIssueForm extends Component {
                     <span className={cx('show-hint-text')}>
                       {intl.formatMessage(messages.showFieldsHeader)}
                     </span>
-                    <ShowWithTooltip formatMessage={intl.formatMessage} />
+                    <ShowWithPopover formatMessage={intl.formatMessage} />
                   </div>
                 </div>
               </Fragment>
@@ -465,7 +465,7 @@ export class BtsPropertiesForIssueForm extends Component {
                       <span className={cx('show-hint-text')}>
                         {intl.formatMessage(messages.showFieldsHeader)}
                       </span>
-                      <ShowWithTooltip formatMessage={intl.formatMessage} />
+                      <ShowWithPopover formatMessage={intl.formatMessage} />
                     </div>
                   )}
                 </DynamicFieldsSection>

@@ -40,7 +40,7 @@ const DefectLocatorPopoverContent = ({ locator }) => {
   const { trackEvent } = useTracking();
 
   return (
-    <div className={cx('defect-locator-tooltip')}>
+    <div className={cx('defect-locator-popover')}>
       Locator
       <span className={cx('locator')}>
         {locator}
