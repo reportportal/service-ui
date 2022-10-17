@@ -13,7 +13,7 @@ pipeline {
     stage('Push') {
       steps {
         script {
-          sh 'docker push $REGISTRY/service-ui$VERSION'
+          sh 'docker push $REGISTRY/service-ui:$VERSION'
         }
       }
     }
