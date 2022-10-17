@@ -101,7 +101,11 @@ export const FieldNumber = ({
         })}
         title={title}
       >
-        <span className={cx('sign', { disabled })} onClick={disabled ? null : handleDecrease}>
+        <span
+          className={cx('sign', { disabled })}
+          onClick={disabled ? null : handleDecrease}
+          data-automation-id={'minusIcon'}
+        >
           {Parser(MinusIcon)}
         </span>
         <span className={cx('input-field', { disabled })} onClick={handleInputFieldClick}>
@@ -122,7 +126,11 @@ export const FieldNumber = ({
           />
           {!!postfix && (value === 0 || !!value) && <span>{postfix.slice(0, 1)}</span>}
         </span>
-        <span className={cx('sign', { disabled })} onClick={disabled ? null : handleIncrease}>
+        <span
+          className={cx('sign', { disabled })}
+          onClick={disabled ? null : handleIncrease}
+          data-automation-id={'plusIcon'}
+        >
           {Parser(PlusIcon)}
         </span>
       </div>
