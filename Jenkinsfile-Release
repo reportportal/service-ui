@@ -10,6 +10,14 @@ pipeline {
       }
     }
 
+    stage('Push') {
+      steps {
+        script {
+          sh 'docker push $REGISTRY/reportportal:$VERSION'
+        }
+      }
+    }
+
     stage('Cleanup') {
       steps {
         script {
