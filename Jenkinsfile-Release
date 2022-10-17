@@ -5,7 +5,7 @@ pipeline {
     stage('Build') {
       steps {
         script {
-          sh 'docker build -t $REGISTRY/reportportal:$VERSION . --no-cache'
+          sh 'docker build -t $REGISTRY/service-ui:$VERSION . --no-cache'
         }
       }
     }
@@ -13,7 +13,7 @@ pipeline {
     stage('Push') {
       steps {
         script {
-          sh 'docker push $REGISTRY/reportportal:$VERSION'
+          sh 'docker push $REGISTRY/service-ui$VERSION'
         }
       }
     }
@@ -21,7 +21,7 @@ pipeline {
     stage('Cleanup') {
       steps {
         script {
-          sh 'docker rmi $REGISTRY/reportportal:$VERSION'
+          sh 'docker rmi $REGISTRY/service-ui:$VERSION'
         }
       }
     }
