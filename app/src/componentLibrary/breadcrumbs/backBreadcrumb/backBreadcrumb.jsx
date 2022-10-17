@@ -29,13 +29,13 @@ export const BackBreadcrumb = (props) => (
 );
 
 BackBreadcrumb.propTypes = {
-  url: PropTypes.string,
-  text: PropTypes.string,
+  descriptor: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    link: PropTypes.object.isRequired,
+  }).isRequired,
   maxBreadcrumbWidth: PropTypes.number,
 };
 
 BackBreadcrumb.defaultProps = {
-  url: '',
-  text: 'Back',
   maxBreadcrumbWidth: 132,
 };

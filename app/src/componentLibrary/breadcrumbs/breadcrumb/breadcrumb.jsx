@@ -17,46 +17,48 @@
 import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { NavLink } from 'components/main/navLink';
 import styles from './breadcrumb.scss';
 
 const cx = classNames.bind(styles);
 
-// todo add tooltip to <a> with {text} (EPMRPP-79184)
-export const Breadcrumb = ({ maxBreadcrumbWidth, text, numChars, url }) => {
+// todo remove title and add tooltip with {title} (EPMRPP-79184)
+export const Breadcrumb = ({
+  maxBreadcrumbWidth,
+  titleTailNumChars,
+  descriptor: { title, link },
+}) => {
   const ref = useRef();
 
   useEffect(() => {
     const { offsetWidth, scrollWidth, dataset } = ref.current;
 
     if (offsetWidth < scrollWidth) {
-      dataset.tail = text.slice(text.length - numChars);
+      dataset.tail = title.slice(title.length - titleTailNumChars);
     }
-  }, [text, numChars]);
+  }, [title, titleTailNumChars]);
 
   return (
-    <div className={cx('breadcrumb')}>
-      <a
-        ref={ref}
-        className={cx('breadcrumb-text')}
-        style={{ maxWidth: maxBreadcrumbWidth }}
-        href={url}
-      >
-        {text}
-      </a>
+    <div className={cx('breadcrumb')} title={title}>
+      <NavLink className={cx('link')} to={link}>
+        <div ref={ref} className={cx('breadcrumb-text')} style={{ maxWidth: maxBreadcrumbWidth }}>
+          {title}
+        </div>
+      </NavLink>
     </div>
   );
 };
 
 Breadcrumb.propTypes = {
   maxBreadcrumbWidth: PropTypes.number,
-  text: PropTypes.string,
-  numChars: PropTypes.number,
-  url: PropTypes.string,
+  titleTailNumChars: PropTypes.number,
+  descriptor: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    link: PropTypes.object.isRequired,
+  }).isRequired,
 };
 
 Breadcrumb.defaultProps = {
-  hiddenPaths: [],
-  text: '',
-  numChars: 8,
-  url: '',
+  maxBreadcrumbWidth: 132,
+  titleTailNumChars: 8,
 };

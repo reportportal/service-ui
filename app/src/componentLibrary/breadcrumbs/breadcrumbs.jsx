@@ -23,47 +23,53 @@ import { Meatball } from './meatball';
 import styles from './breadcrumbs.scss';
 
 const cx = classNames.bind(styles);
+const BREADCRUMBS_WIDTH = 740;
+const MEATBALL_WIDTH = 36;
+const ARROW_WIDTH = 20;
 
-/* eslint-disable react/no-array-index-key */
-export const Breadcrumbs = ({ paths, url, dataAutomationId }) => {
-  const shownPaths = [...paths];
-  const { path: firstLevelPath, text: firstLevelPathText = firstLevelPath } = shownPaths[0];
+export const Breadcrumbs = ({ descriptors, titleTailNumChars, dataAutomationId }) => {
+  const shownDescriptors = [...descriptors];
 
-  let hiddenPaths = [];
-  if (shownPaths.length > 5) {
-    hiddenPaths = shownPaths.splice(1, shownPaths.length - 4);
+  let hiddenDescriptors = [];
+  if (shownDescriptors.length > 5) {
+    hiddenDescriptors = shownDescriptors.splice(1, shownDescriptors.length - 4);
   }
 
   const maxBreadcrumbWidth =
-    (740 - (hiddenPaths.length ? 36 : 0) - (shownPaths.length - 1) * 20) / shownPaths.length;
+    (BREADCRUMBS_WIDTH -
+      (hiddenDescriptors.length ? MEATBALL_WIDTH : 0) -
+      (shownDescriptors.length - 1) * ARROW_WIDTH) /
+    shownDescriptors.length;
 
   return (
     <div className={cx('breadcrumbs-container')} data-automation-id={dataAutomationId}>
-      {paths.length === 1 ? (
-        <BackBreadcrumb url={`${url}/${firstLevelPath}`} text={firstLevelPathText} />
+      {descriptors.length === 1 ? (
+        <BackBreadcrumb
+          maxBreadcrumbWidth={maxBreadcrumbWidth}
+          descriptor={descriptors[0]}
+          titleTailNumChars={titleTailNumChars}
+        />
       ) : (
         <div className={cx('breadcrumbs')}>
-          {hiddenPaths.length ? (
+          {hiddenDescriptors.length ? (
             <>
               <Breadcrumb
-                key={'breadcrumb-0'}
+                key={descriptors[0].id}
+                descriptor={descriptors[0]}
                 maxBreadcrumbWidth={maxBreadcrumbWidth}
-                text={firstLevelPathText}
-                url={`${url}/${firstLevelPath}`}
+                titleTailNumChars={titleTailNumChars}
               />
-              <Meatball paths={hiddenPaths} url={`${url}/${firstLevelPath}`} />
-              {shownPaths.map(({ path, text }, index) => {
+              <div className={cx('meatball')}>
+                <Meatball descriptors={hiddenDescriptors} />
+              </div>
+              {shownDescriptors.map((descriptor, index) => {
                 if (index !== 0) {
                   return (
                     <Breadcrumb
-                      key={`breadcrumb-${index}`}
+                      key={descriptor.id}
+                      descriptor={descriptor}
                       maxBreadcrumbWidth={maxBreadcrumbWidth}
-                      text={text || path}
-                      url={`${url}/${firstLevelPath}/${hiddenPaths.map((p) => p.path).join('/')}
-                        /${shownPaths
-                          .map((p) => p.path)
-                          .slice(1, index + 1)
-                          .join('/')}`}
+                      titleTailNumChars={titleTailNumChars}
                     />
                   );
                 }
@@ -72,15 +78,12 @@ export const Breadcrumbs = ({ paths, url, dataAutomationId }) => {
             </>
           ) : (
             <>
-              {shownPaths.map(({ path, text }, index) => (
+              {shownDescriptors.map((descriptor) => (
                 <Breadcrumb
-                  key={`breadcrumb-${index}`}
+                  key={descriptor.id}
+                  descriptor={descriptor}
                   maxBreadcrumbWidth={maxBreadcrumbWidth}
-                  text={text || path}
-                  url={`${url}/${shownPaths
-                    .map((p) => p.path)
-                    .slice(0, index + 1)
-                    .join('/')}`}
+                  titleTailNumChars={titleTailNumChars}
                 />
               ))}
             </>
@@ -92,18 +95,19 @@ export const Breadcrumbs = ({ paths, url, dataAutomationId }) => {
 };
 
 Breadcrumbs.propTypes = {
-  paths: PropTypes.arrayOf(
+  descriptors: PropTypes.arrayOf(
     PropTypes.shape({
-      path: PropTypes.string,
-      text: PropTypes.string,
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      title: PropTypes.string.isRequired,
+      link: PropTypes.object.isRequired,
     }),
   ),
-  url: PropTypes.string,
+  titleTailNumChars: PropTypes.number,
   dataAutomationId: PropTypes.string,
 };
 
 Breadcrumbs.defaultProps = {
-  paths: [],
-  url: '',
+  descriptors: [],
+  titleTailNumChars: 8,
   dataAutomationId: '',
 };

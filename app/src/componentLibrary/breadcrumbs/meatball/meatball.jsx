@@ -24,58 +24,34 @@ import styles from './meatball.scss';
 
 const cx = classNames.bind(styles);
 
-/* eslint-disable react/no-array-index-key */
-export const Meatball = ({ paths, url }) => {
-  const meatballPopoverContent = (
-    <div className={cx('meatball-popover-content')}>
-      {paths.map(({ path, text }, index) => (
-        <div
-          className={cx('meatball-popover-content-row')}
-          style={{ paddingLeft: (index - 1) * 18 }}
-        >
-          {index !== 0 && <div className={cx('next-level-icon')} />}
-          <Breadcrumb
-            key={`hidden-breadcrumb-${index}`}
-            maxBreadcrumbWidth={132}
-            text={text || path}
-            url={`${url}/${paths
-              .map((p) => p.path)
-              .slice(0, index + 1)
-              .join('/')}`}
-          />
-        </div>
-      ))}
-    </div>
-  );
+const MeatballPopoverContent = ({ descriptors }) => (
+  <div className={cx('meatball-popover-content')}>
+    {descriptors.map((descriptor, index) => (
+      <div className={cx('meatball-popover-content-row')} style={{ paddingLeft: (index - 1) * 18 }}>
+        {index !== 0 && <div className={cx('next-level-icon')} />}
+        <Breadcrumb key={descriptor.id} maxBreadcrumbWidth={132} descriptor={descriptor} />
+      </div>
+    ))}
+  </div>
+);
 
-  const MeatballWithPopover = withPopover({
-    content: meatballPopoverContent,
-    side: 'bottom',
-    arrowPosition: 'left',
-    popoverWrapperStyle: {
-      display: 'inline-block',
-      verticalAlign: 'top',
-    },
-  })(MeatballIconComponent);
-
-  return (
-    <div className={cx('meatball')}>
-      <MeatballWithPopover />
-    </div>
-  );
-};
-
-Meatball.propTypes = {
-  paths: PropTypes.arrayOf(
+MeatballPopoverContent.propTypes = {
+  descriptors: PropTypes.arrayOf(
     PropTypes.shape({
-      path: PropTypes.string,
-      text: PropTypes.string,
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      title: PropTypes.string,
+      link: PropTypes.object,
     }),
   ),
-  url: PropTypes.string,
 };
 
-Meatball.defaultProps = {
-  paths: [],
-  url: '',
+MeatballPopoverContent.defaultProps = {
+  descriptors: [],
 };
+
+export const Meatball = withPopover({
+  ContentComponent: MeatballPopoverContent,
+  side: 'bottom',
+  arrowPosition: 'left',
+  popoverWrapperClassName: cx('popover-wrapper'),
+})(MeatballIconComponent);
