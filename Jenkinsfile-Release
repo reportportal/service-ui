@@ -1,0 +1,21 @@
+pipeline {
+  agent any
+
+  stages {
+    stage('Build') {
+      steps {
+        script {
+          sh 'docker build -t $REGISTRY/reportportal:$VERSION . --no-cache'
+        }
+      }
+    }
+
+    stage('Cleanup') {
+      steps {
+        script {
+          sh 'docker rmi $REGISTRY/reportportal:$VERSION'
+        }
+      }
+    }
+  }
+}
