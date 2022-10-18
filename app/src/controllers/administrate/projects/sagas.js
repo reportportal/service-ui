@@ -73,6 +73,10 @@ function* watchSetViewMode() {
 
 function* addProject({ payload: { projectName, organizationSlug } }) {
   try {
+    /*
+     TODO : Do not forget about this : <https://github.com/reportportal/service-ui/pull/3305#discussion_r997759608>.
+     TODO : Do we need to use (organizationSlug) as id or slug to find proper organization?
+    */
     const projectKey = projectName.trim().replace(/\s+/g, '_');
     yield call(fetch, URLS.addProject(), {
       method: 'post',

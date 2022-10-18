@@ -117,7 +117,7 @@ const routesMap = {
     },
   },
   [PROJECT_DETAILS_PAGE]: {
-    path: `/administrate/projects/:organizationSlug?/:projectKey/:projectSection(${SETTINGS}|${MEMBERS}|${EVENTS})?/:settingsTab?`,
+    path: `/administrate/projects/:organizationSlug/:projectKey/:projectSection(${SETTINGS}|${MEMBERS}|${EVENTS})?/:settingsTab?`,
     thunk: (dispatch) => {
       dispatch(fetchProjectDataAction());
     },
@@ -145,7 +145,7 @@ const routesMap = {
   [PLUGINS_TAB_PAGE]: `/administrate/plugins/:pluginsTab(${INSTALLED}|${STORE})`,
 
   [PROJECT_PAGE]: {
-    path: '/:organizationSlug?/:projectKey',
+    path: '/:organizationSlug/:projectKey',
     thunk: (dispatch, getState) => {
       dispatch(
         redirect({
@@ -159,7 +159,7 @@ const routesMap = {
     },
   },
   [PROJECT_DASHBOARD_PAGE]: {
-    path: '/:organizationSlug?/:projectKey/dashboard',
+    path: '/:organizationSlug/:projectKey/dashboard',
     thunk: (dispatch) => {
       dispatch(
         fetchDashboardsAction({
@@ -170,19 +170,19 @@ const routesMap = {
     },
   },
   [PROJECT_DASHBOARD_ITEM_PAGE]: {
-    path: '/:organizationSlug?/:projectKey/dashboard/:dashboardId',
+    path: '/:organizationSlug/:projectKey/dashboard/:dashboardId',
     thunk: (dispatch) => {
       dispatch(fetchDashboardAction());
     },
   },
   [PROJECT_DASHBOARD_PRINT_PAGE]: {
-    path: '/:organizationSlug?/:projectKey/dashboard/:dashboardId/print',
+    path: '/:organizationSlug/:projectKey/dashboard/:dashboardId/print',
     thunk: (dispatch) => {
       dispatch(fetchDashboardAction());
     },
   },
   [LAUNCHES_PAGE]: redirectRoute(
-    '/:organizationSlug?/:projectKey/launches',
+    '/:organizationSlug/:projectKey/launches',
     (payload, getState) => ({
       type: PROJECT_LAUNCHES_PAGE,
       payload: { ...payload, filterId: launchDistinctSelector(getState()) },
@@ -192,7 +192,7 @@ const routesMap = {
     },
   ),
   [PROJECT_LAUNCHES_PAGE]: {
-    path: '/:organizationSlug?/:projectKey/launches/:filterId',
+    path: '/:organizationSlug/:projectKey/launches/:filterId',
     thunk: (dispatch) => {
       dispatch(setDebugMode(false));
       dispatch(setLevelAction(''));
@@ -200,40 +200,40 @@ const routesMap = {
     },
   },
   [HISTORY_PAGE]: {
-    path: '/:organizationSlug?/:projectKey/launches/:filterId/:testItemIds+/history',
+    path: '/:organizationSlug/:projectKey/launches/:filterId/:testItemIds+/history',
     thunk: (dispatch) => {
       dispatch(fetchHistoryPageInfoAction());
     },
   },
   [UNIQUE_ERRORS_PAGE]: {
-    path: '/:organizationSlug?/:projectKey/launches/:filterId/:testItemIds+/uniqueErrors',
+    path: '/:organizationSlug/:projectKey/launches/:filterId/:testItemIds+/uniqueErrors',
     thunk: (dispatch) => {
       dispatch(fetchClustersAction());
     },
   },
   PROJECT_FILTERS_PAGE: {
-    path: '/:organizationSlug?/:projectKey/filters',
+    path: '/:organizationSlug/:projectKey/filters',
     thunk: (dispatch, getState, { action }) => {
       const location = (action.meta || {}).location || {};
       dispatch(fetchFiltersPageAction(location.kind !== 'load'));
     },
   },
   [PROJECT_LOG_PAGE]: {
-    path: '/:organizationSlug?/:projectKey/launches/:filterId/:testItemIds+/log',
+    path: '/:organizationSlug/:projectKey/launches/:filterId/:testItemIds+/log',
     thunk: (dispatch) => {
       dispatch(setDebugMode(false));
       dispatch(fetchLogPageData());
     },
   },
   [PROJECT_USERDEBUG_LOG_PAGE]: {
-    path: '/:organizationSlug?/:projectKey/userdebug/:filterId/:testItemIds+/log',
+    path: '/:organizationSlug/:projectKey/userdebug/:filterId/:testItemIds+/log',
     thunk: (dispatch) => {
       dispatch(setDebugMode(true));
       dispatch(fetchLogPageData());
     },
   },
   [PROJECT_USERDEBUG_PAGE]: {
-    path: '/:organizationSlug?/:projectKey/userdebug/:filterId',
+    path: '/:organizationSlug/:projectKey/userdebug/:filterId',
     thunk: (dispatch) => {
       dispatch(setDebugMode(true));
       dispatch(setLevelAction(''));
@@ -241,24 +241,24 @@ const routesMap = {
     },
   },
   PROJECT_USERDEBUG_TEST_ITEM_PAGE: {
-    path: '/:organizationSlug?/:projectKey/userdebug/:filterId/:testItemIds+',
+    path: '/:organizationSlug/:projectKey/userdebug/:filterId/:testItemIds+',
     thunk: (dispatch) => {
       dispatch(setDebugMode(true));
       dispatch(fetchTestItemsAction());
     },
   },
   PROJECT_MEMBERS_PAGE: {
-    path: '/:organizationSlug?/:projectKey/members',
+    path: '/:organizationSlug/:projectKey/members',
     thunk: (dispatch) => dispatch(fetchMembersAction()),
   },
-  PROJECT_SETTINGS_PAGE: redirectRoute('/:organizationSlug?/:projectKey/settings', (payload) => ({
+  PROJECT_SETTINGS_PAGE: redirectRoute('/:organizationSlug/:projectKey/settings', (payload) => ({
     type: PROJECT_SETTINGS_TAB_PAGE,
     payload: { ...payload, settingsTab: GENERAL },
   })),
-  [PROJECT_SETTINGS_TAB_PAGE]: `/:organizationSlug?/:projectKey/settings/:settingsTab/:subTab*`,
-  PROJECT_SANDBOX_PAGE: '/:organizationSlug?/:projectKey/sandbox',
+  [PROJECT_SETTINGS_TAB_PAGE]: `/:organizationSlug/:projectKey/settings/:settingsTab/:subTab*`,
+  PROJECT_SANDBOX_PAGE: '/:organizationSlug/:projectKey/sandbox',
   [TEST_ITEM_PAGE]: {
-    path: '/:organizationSlug?/:projectKey/launches/:filterId/:testItemIds+',
+    path: '/:organizationSlug/:projectKey/launches/:filterId/:testItemIds+',
     thunk: (dispatch) => {
       dispatch(setDebugMode(false));
       dispatch(fetchTestItemsAction());
@@ -334,7 +334,7 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
           dispatch(
             redirect({
               type: PROJECT_DASHBOARD_PAGE,
-              payload: { projectId: projectKey, organizationSlug },
+              payload: { projectKey, organizationSlug },
             }),
           );
         } else if (!authorized) {
