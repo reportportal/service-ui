@@ -23,20 +23,24 @@ import { Meatball } from './meatball';
 import styles from './breadcrumbs.scss';
 
 const cx = classNames.bind(styles);
-const BREADCRUMBS_WIDTH = 740;
+const MAX_BREADCRUMBS_WIDTH = 740;
 const MEATBALL_WIDTH = 36;
 const ARROW_WIDTH = 20;
+const MAX_SHOWN_DESCRIPTORS = 5;
 
 export const Breadcrumbs = ({ descriptors, titleTailNumChars, dataAutomationId }) => {
   const shownDescriptors = [...descriptors];
 
   let hiddenDescriptors = [];
-  if (shownDescriptors.length > 5) {
-    hiddenDescriptors = shownDescriptors.splice(1, shownDescriptors.length - 4);
+  if (shownDescriptors.length > MAX_SHOWN_DESCRIPTORS) {
+    hiddenDescriptors = shownDescriptors.splice(
+      1,
+      shownDescriptors.length - (MAX_SHOWN_DESCRIPTORS - 1),
+    );
   }
 
   const maxBreadcrumbWidth =
-    (BREADCRUMBS_WIDTH -
+    (MAX_BREADCRUMBS_WIDTH -
       (hiddenDescriptors.length ? MEATBALL_WIDTH : 0) -
       (shownDescriptors.length - 1) * ARROW_WIDTH) /
     shownDescriptors.length;
@@ -54,7 +58,6 @@ export const Breadcrumbs = ({ descriptors, titleTailNumChars, dataAutomationId }
           {hiddenDescriptors.length ? (
             <>
               <Breadcrumb
-                key={descriptors[0].id}
                 descriptor={descriptors[0]}
                 maxBreadcrumbWidth={maxBreadcrumbWidth}
                 titleTailNumChars={titleTailNumChars}
