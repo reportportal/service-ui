@@ -64,6 +64,7 @@ const DefectLocatorWithPopover = withPopover({
   ContentComponent: DefectLocatorPopoverContent,
   side: 'bottom',
   arrowPosition: 'right',
+  popoverWrapperClassName: cx('locator-icon-wrapper'),
 })(() => (
   <div className={cx('locator-wrapper')}>
     <i className={cx('icon', 'locator-icon')} data-automation-id="defectTypeLocatorIcon">
