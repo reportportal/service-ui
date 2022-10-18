@@ -31,7 +31,6 @@ import { fetch, getStorageItem, setStorageItem } from 'common/utils';
 import { PROJECT_PAGE } from 'controllers/pages';
 import { confirmSaga, hideModalAction } from 'controllers/modal';
 import { PROJECT_MANAGER } from 'common/constants/projectRoles';
-import { projectOrganizationSlugSelector } from 'controllers/project';
 import {
   NAMESPACE,
   FETCH_PROJECTS,
@@ -72,21 +71,29 @@ function* watchSetViewMode() {
   yield takeEvery(START_SET_VIEW_MODE, setViewMode);
 }
 
-function* addProject({ payload: projectName }) {
+function* addProject({ payload: { projectName, organizationSlug } }) {
   try {
-    const { projectKey } = yield call(fetch, URLS.addProject(), {
+    /*
+     TODO : Do not forget about this : <https://github.com/reportportal/service-ui/pull/3305#discussion_r997759608>.
+     TODO : Do we need to use (organizationSlug) as id or slug to find proper organization?
+    */
+    const projectKey = projectName.trim().replace(/\s+/g, '_');
+    yield call(fetch, URLS.addProject(), {
       method: 'post',
       data: {
         entryType: PROJECT_TYPE_INTERNAL,
-        projectName,
+        projectKey,
+        organizationId: organizationSlug,
       },
     });
+
     const projectInfo = {
       projectKey,
       projectRole: PROJECT_MANAGER,
       entryType: PROJECT_TYPE_INTERNAL,
+      organizationSlug,
+      projectName,
     };
-    const organizationSlug = yield select(projectOrganizationSlugSelector);
     yield put(assignToProjectSuccessAction(projectInfo));
     yield put(hideModalAction());
     yield put(

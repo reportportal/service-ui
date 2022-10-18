@@ -70,6 +70,7 @@ export class ProjectSelector extends Component {
         entryType: PropTypes.string,
         projectName: PropTypes.string,
         projectRole: PropTypes.string,
+        organizationSlug: PropTypes.string,
       }),
     ).isRequired,
     activeProject: PropTypes.string,
@@ -161,13 +162,14 @@ export class ProjectSelector extends Component {
               >
                 <ScrollWrapper autoHeight autoHeightMax={600}>
                   {this.projectKeys.map((projectKey) => {
-                    const { projectName } = assignedProjects[projectKey];
+                    const { projectName, organizationSlug } = assignedProjects[projectKey];
                     return (
                       <NavLink
                         to={{
                           type: PROJECT_PAGE,
                           payload: {
                             projectKey,
+                            organizationSlug,
                           },
                         }}
                         key={projectKey}

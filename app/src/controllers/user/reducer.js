@@ -41,24 +41,26 @@ export const settingsReducer = (state = SETTINGS_INITIAL_STATE, { type, payload 
 export const userAssignedProjectReducer = (state = {}, { type, payload }) => {
   switch (type) {
     case ASSIGN_TO_RROJECT_SUCCESS: {
-      const { projectName, projectRole, entryType } = payload;
+      const { projectKey, projectRole, entryType, organizationSlug, projectName } = payload;
       return {
         ...state,
-        [projectName]: {
+        [projectKey]: {
           projectRole,
           entryType,
+          organizationSlug,
+          projectName,
         },
       };
     }
     case UNASSIGN_FROM_PROJECT_SUCCESS: {
-      const { projectName } = payload;
+      const { projectKey } = payload;
       return Object.keys(state).reduce(
-        (result, assignedProjectName) =>
-          assignedProjectName === projectName
+        (result, assignedProjectKey) =>
+          assignedProjectKey === projectKey
             ? result
             : {
                 ...result,
-                [assignedProjectName]: state[assignedProjectName],
+                [assignedProjectKey]: state[assignedProjectKey],
               },
         {},
       );

@@ -61,6 +61,7 @@ function* assignToProject({ payload: project }) {
         projectKey: project.projectKey,
         projectRole: userRole,
         entryType: project.entryType,
+        organizationSlug: project.organizationSlug,
       }),
     );
     yield put(
@@ -76,6 +77,7 @@ function* assignToProject({ payload: project }) {
         projectKey: project.projectKey,
         projectRole: userRole,
         entryType: project.entryType,
+        organizationSlug: project.organizationSlug,
       }),
     );
     yield put(
