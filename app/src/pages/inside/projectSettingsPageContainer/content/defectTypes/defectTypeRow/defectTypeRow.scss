@@ -36,7 +36,7 @@ $DEFECT_NAME_PADDING: 16px;
 .abbr-cell {
   display: flex;
   justify-content: center;
-  width: 40px;
+  width: 28px;
   margin-right: 16px;
   color: $COLOR--e-400;
   font-size: 13px;
@@ -67,7 +67,7 @@ $DEFECT_NAME_PADDING: 16px;
 
 .defect-type {
   display: flex;
-  margin: 24px 9px 12px 0;
+  margin: 24px 0 12px 0;
   align-items: center;
   justify-content: space-between;
 }
@@ -100,6 +100,7 @@ $DEFECT_NAME_PADDING: 16px;
   &.locator-icon {
     width: 40px;
     height: 14px;
+    margin: 0;
   }
 }
 
@@ -128,6 +129,10 @@ $DEFECT_NAME_PADDING: 16px;
   width: auto;
   min-width: 72px;
   margin-right: 4px;
+}
+
+.locator-icon-wrapper {
+  padding-left: 10px;
 }
 
 .defect-locator-popover {

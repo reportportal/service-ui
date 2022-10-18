@@ -155,7 +155,9 @@ export const DefectTypeRow = ({
             )}
           </div>
         </div>
-        <DefectLocatorWithPopover locator={locator} />
+        <div className={cx('locator-icon-wrapper')}>
+          <DefectLocatorWithPopover locator={locator} />
+        </div>
       </div>
     </div>
   );
