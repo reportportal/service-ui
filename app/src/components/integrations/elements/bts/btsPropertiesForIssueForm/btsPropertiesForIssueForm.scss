@@ -75,3 +75,18 @@
     display: none;
   }
 }
+
+.popover {
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 11px;
+  line-height: 16px;
+  color: $COLOR--almost-black;
+
+  .title {
+    margin-bottom: 8px;
+    font-family: $FONT-ROBOTO-MEDIUM;
+    font-size: 13px;
+    line-height: 20px;
+    text-indent: 1px;
+  }
+}

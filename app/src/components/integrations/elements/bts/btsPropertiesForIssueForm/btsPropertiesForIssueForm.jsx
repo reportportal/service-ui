@@ -17,7 +17,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { defineMessages, injectIntl, useIntl } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { fetch } from 'common/utils';
@@ -30,7 +30,7 @@ import {
   COMMAND_GET_ISSUE_FIELDS,
 } from 'controllers/plugins/uiExtensions/constants';
 import { URLS } from 'common/urls';
-import { withTooltip } from 'components/main/tooltips/tooltip';
+import { withPopover } from 'componentLibrary/popover';
 import Parser from 'html-react-parser';
 import InfoIcon from 'common/img/newIcons/icon-about-inline.svg';
 import { Dropdown } from 'componentLibrary/dropdown';
@@ -74,24 +74,28 @@ const messages = defineMessages({
   },
 });
 
-const Tooltip = () => {
-  const { formatMessage } = useIntl();
-  return <div>{formatMessage(messages.tooltip)}</div>;
+const Popover = ({ formatMessage }) => (
+  <div className={cx('popover')}>
+    <div className={cx('title')}>{formatMessage(messages.showFieldsHeader)}</div>
+    <span>{formatMessage(messages.tooltip)}</span>
+  </div>
+);
+Popover.propTypes = {
+  formatMessage: PropTypes.func.isRequired,
 };
 
 const IconShow = () => {
   return <>{Parser(InfoIcon)}</>;
 };
 
-const ShowWithTooltip = withTooltip({
-  TooltipComponent: Tooltip,
-  data: {
-    dynamicWidth: true,
-    align: 'bottom',
-    noArrow: false,
-    dark: true,
-  },
+const ShowWithPopover = withPopover({
+  ContentComponent: Popover,
+  side: 'bottom',
+  arrowPosition: 'middle',
 })(IconShow);
+ShowWithPopover.propTypes = {
+  formatMessage: PropTypes.func.isRequired,
+};
 
 @connect(
   (state) => ({
@@ -441,7 +445,7 @@ export class BtsPropertiesForIssueForm extends Component {
                     <span className={cx('show-hint-text')}>
                       {intl.formatMessage(messages.showFieldsHeader)}
                     </span>
-                    <ShowWithTooltip />
+                    <ShowWithPopover formatMessage={intl.formatMessage} />
                   </div>
                 </div>
               </Fragment>
@@ -461,7 +465,7 @@ export class BtsPropertiesForIssueForm extends Component {
                       <span className={cx('show-hint-text')}>
                         {intl.formatMessage(messages.showFieldsHeader)}
                       </span>
-                      <ShowWithTooltip />
+                      <ShowWithPopover formatMessage={intl.formatMessage} />
                     </div>
                   )}
                 </DynamicFieldsSection>

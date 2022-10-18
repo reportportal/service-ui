@@ -26,7 +26,7 @@ import PencilIcon from 'common/img/newIcons/pencil-inline.svg';
 import CopyIcon from 'common/img/newIcons/copy-inline.svg';
 import LocatorIcon from 'common/img/newIcons/locator-icon-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { withHoverableTooltip } from 'components/main/tooltips/hoverableTooltip';
+import { withPopover } from 'componentLibrary/popover';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { showModalAction } from 'controllers/modal';
 import { deleteDefectTypeAction, updateDefectTypeAction } from 'controllers/project';
@@ -36,11 +36,11 @@ import styles from './defectTypeRow.scss';
 
 const cx = classNames.bind(styles);
 
-const DefectLocatorTooltip = ({ locator }) => {
+const DefectLocatorPopoverContent = ({ locator }) => {
   const { trackEvent } = useTracking();
 
   return (
-    <div className={cx('defect-locator-tooltip')}>
+    <div className={cx('defect-locator-popover')}>
       Locator
       <span className={cx('locator')}>
         {locator}
@@ -56,16 +56,14 @@ const DefectLocatorTooltip = ({ locator }) => {
     </div>
   );
 };
-DefectLocatorTooltip.propTypes = {
+DefectLocatorPopoverContent.propTypes = {
   locator: PropTypes.string.isRequired,
 };
 
-const DefectLocator = withHoverableTooltip({
-  TooltipComponent: DefectLocatorTooltip,
-  data: {
-    placement: 'bottom',
-    dynamicWidth: true,
-  },
+const DefectLocatorWithPopover = withPopover({
+  ContentComponent: DefectLocatorPopoverContent,
+  side: 'bottom',
+  arrowPosition: 'right',
 })(() => (
   <div className={cx('locator-wrapper')}>
     <i className={cx('icon', 'locator-icon')} data-automation-id="defectTypeLocatorIcon">
@@ -73,7 +71,7 @@ const DefectLocator = withHoverableTooltip({
     </i>
   </div>
 ));
-DefectLocator.propTypes = {
+DefectLocatorWithPopover.propTypes = {
   locator: PropTypes.string.isRequired,
 };
 
@@ -157,7 +155,7 @@ export const DefectTypeRow = ({
             )}
           </div>
         </div>
-        <DefectLocator locator={locator} />
+        <DefectLocatorWithPopover locator={locator} />
       </div>
     </div>
   );
