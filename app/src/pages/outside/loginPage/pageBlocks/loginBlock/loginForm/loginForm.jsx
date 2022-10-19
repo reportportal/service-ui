@@ -232,7 +232,7 @@ export class LoginForm extends React.Component {
                 icon={PasswordIcon}
                 placeholder={formatMessage(messages.password)}
                 type="password"
-                autocomplete="off"
+                autoСomplete="off"
               />
             </FieldErrorHint>
           </FieldProvider>
