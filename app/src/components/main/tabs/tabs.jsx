@@ -24,7 +24,10 @@ import styles from './tabs.scss';
 const cx = classNames.bind(styles);
 
 export const Tabs = ({ config, activeTab, withContent }) => {
-  const [activeTabIndex, setActiveTabIndex] = useState(Object.keys(config).indexOf(activeTab) || 0);
+  const [activeTabIndex, setActiveTabIndex] = useState(() => {
+    const tabIndex = Object.keys(config).indexOf(activeTab);
+    return tabIndex >= 0 ? tabIndex : 0;
+  });
 
   useEffect(() => {
     if (activeTab) {

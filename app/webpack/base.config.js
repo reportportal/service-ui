@@ -151,6 +151,9 @@ module.exports = {
         'fast-deep-equal': {
           singleton: true,
         },
+        'react-copy-to-clipboard': {
+          singleton: true,
+        },
       },
     }),
     // new CircularDependencyPlugin({
