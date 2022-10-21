@@ -67,6 +67,7 @@ import {
   pagePropertiesSelector,
   projectIdSelector,
   querySelector,
+  payloadSelector,
 } from 'controllers/pages';
 import { attributesArray, isNotEmptyArray } from 'common/utils/validation/validate';
 import {
@@ -187,6 +188,7 @@ import { FieldNumber } from 'componentLibrary/fieldNumber';
 import { SystemMessage } from 'componentLibrary/systemMessage';
 import { AsyncAutocomplete as AsyncAutocompleteField } from 'componentLibrary/autocompletes/asyncAutocomplete';
 import { AttributeListFormField } from 'components/containers/AttributeListFormField';
+import { Tabs } from 'components/main/tabs';
 
 const BUTTONS = {
   GhostButton,
@@ -239,6 +241,7 @@ export const createImportProps = (pluginName) => ({
     ...BUTTONS,
     ...INPUTS,
     NavigationTabs,
+    Tabs,
     NoCasesBlock,
     ItemList,
     SpinningPreloader,
@@ -318,6 +321,7 @@ export const createImportProps = (pluginName) => ({
   },
   selectors: {
     pluginRouteSelector,
+    payloadSelector,
     activeProjectSelector,
     projectIdSelector,
     // TODO: must be removed when the common plugin commands will be used
