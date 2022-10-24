@@ -18,6 +18,7 @@ import React, { Component, Fragment } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { formValueSelector } from 'redux-form';
 import { injectIntl } from 'react-intl';
 import className from 'classnames/bind';
 import { URLS } from 'common/urls';
@@ -30,6 +31,7 @@ import { FormField } from 'components/fields/formField';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { AttributeListField } from 'components/main/attributeList';
 import { AsyncMultipleAutocomplete } from 'components/inputs/autocompletes/asyncMultipleAutocomplete';
+import { InputRadioGroup } from 'components/inputs/inputRadioGroup';
 import {
   LAUNCH_CASES,
   LABEL_WIDTH,
@@ -38,15 +40,20 @@ import {
   LAUNCH_NAMES_FIELD_KEY,
   RECIPIENTS_FIELD_KEY,
   SEND_CASE_FIELD_KEY,
+  ATTRIBUTES_OPERATOR_FIELD_KEY,
+  NOTIFICATION_CASE_FORM,
+  ATTRIBUTES_OPERATORS,
 } from '../../../constants';
 import { messages } from '../../../messages';
 import styles from './notificationCaseFormFields.scss';
 
 const cx = className.bind(styles);
+const attributesValueSelector = formValueSelector(NOTIFICATION_CASE_FORM);
 
 @injectIntl
 @connect((state) => ({
   activeProject: projectIdSelector(state),
+  attributesValue: attributesValueSelector(state, ATTRIBUTES_FIELD_KEY),
 }))
 @track()
 export class NotificationCaseFormFields extends Component {
@@ -57,9 +64,11 @@ export class NotificationCaseFormFields extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    attributesValue: PropTypes.array,
   };
   static defaultProps = {
     activeProject: '',
+    attributesValue: [],
   };
 
   getDropdownInputConfig = () => {
@@ -95,11 +104,29 @@ export class NotificationCaseFormFields extends Component {
     ];
   };
 
+  attributesConditionOptions = () => {
+    const {
+      intl: { formatMessage },
+    } = this.props;
+
+    return [
+      {
+        ownValue: ATTRIBUTES_OPERATORS.AND,
+        label: formatMessage(messages[ATTRIBUTES_OPERATORS.AND]),
+      },
+      {
+        ownValue: ATTRIBUTES_OPERATORS.OR,
+        label: formatMessage(messages[ATTRIBUTES_OPERATORS.OR]),
+      },
+    ];
+  };
+
   render() {
     const {
       intl: { formatMessage },
       activeProject,
       tracking,
+      attributesValue,
     } = this.props;
 
     return (
@@ -172,9 +199,6 @@ export class NotificationCaseFormFields extends Component {
         </FormField>
         <FormField
           label={formatMessage(messages.attributesLabel)}
-          customBlock={{
-            node: <p>{formatMessage(messages.attributesNote)}</p>,
-          }}
           fieldWrapperClassName={cx('form-input')}
           labelClassName={cx('form-label')}
           name={ATTRIBUTES_FIELD_KEY}
@@ -185,6 +209,22 @@ export class NotificationCaseFormFields extends Component {
             valueURLCreator={URLS.launchAttributeValuesSearch}
           />
         </FormField>
+        {attributesValue.length > 0 && (
+          <FormField
+            customBlock={{
+              node: <p>{formatMessage(messages.attributesOperatorNote)}</p>,
+              wrapperClassName: cx('attributes-operator-note'),
+            }}
+            fieldWrapperClassName={cx('form-input')}
+            labelClassName={cx('form-label')}
+            name={ATTRIBUTES_OPERATOR_FIELD_KEY}
+          >
+            <InputRadioGroup
+              options={this.attributesConditionOptions()}
+              inputGroupClassName={cx('attributes-operator')}
+            />
+          </FormField>
+        )}
       </Fragment>
     );
   }

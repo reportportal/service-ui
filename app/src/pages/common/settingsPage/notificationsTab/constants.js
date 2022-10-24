@@ -16,12 +16,15 @@
 
 export const LABEL_WIDTH = 140;
 
+export const NOTIFICATION_CASE_FORM = 'notificationCaseForm';
+
 export const RECIPIENTS_FIELD_KEY = 'recipients';
 export const INFORM_OWNER_FIELD_KEY = 'informOwner';
 export const SEND_CASE_FIELD_KEY = 'sendCase';
 export const LAUNCH_NAMES_FIELD_KEY = 'launchNames';
 export const ATTRIBUTES_FIELD_KEY = 'attributes';
 export const ENABLED_FIELD_KEY = 'enabled';
+export const ATTRIBUTES_OPERATOR_FIELD_KEY = 'attributesOperator';
 
 export const LAUNCH_CASES = {
   ALWAYS: 'always',
@@ -32,6 +35,11 @@ export const LAUNCH_CASES = {
   TO_INVESTIGATE: 'toInvestigate',
 };
 
+export const ATTRIBUTES_OPERATORS = {
+  AND: 'AND',
+  OR: 'OR',
+};
+
 export const DEFAULT_CASE_CONFIG = {
   [RECIPIENTS_FIELD_KEY]: [],
   [INFORM_OWNER_FIELD_KEY]: true,
@@ -39,4 +47,5 @@ export const DEFAULT_CASE_CONFIG = {
   [LAUNCH_NAMES_FIELD_KEY]: [],
   [ATTRIBUTES_FIELD_KEY]: [],
   [ENABLED_FIELD_KEY]: true,
+  [ATTRIBUTES_OPERATOR_FIELD_KEY]: ATTRIBUTES_OPERATORS.AND,
 };

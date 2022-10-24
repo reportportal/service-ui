@@ -65,7 +65,8 @@ const ruleFieldsConfig = {
       data.reduce((acc, item) => `${acc.length ? `${acc}, ` : ''}${item}`, ''),
   },
   [ATTRIBUTES_FIELD_KEY]: {
-    title: messages.attributesLabel,
+    title: messages.attributesLabelWithOperator,
+    getTitleVariables: ({ attributesOperator }) => ({ attributesOperator }),
     dataFormatter: (data) =>
       data.reduce((acc, item) => `${acc.length ? `${acc}, ` : ''}${formatAttribute(item)}`, ''),
   },
@@ -225,9 +226,13 @@ export class NotificationsTab extends Component {
       .map((fieldKey) => {
         const fieldInfo = ruleFieldsConfig[fieldKey];
         const fieldData = notification[fieldKey];
+        const keyVars =
+          fieldInfo && fieldInfo.getTitleVariables
+            ? fieldInfo.getTitleVariables(notification)
+            : null;
 
         return {
-          key: fieldInfo ? formatMessage(fieldInfo.title) : null,
+          key: fieldInfo ? formatMessage(fieldInfo.title, keyVars) : null,
           value: fieldInfo && fieldData ? fieldInfo.dataFormatter(fieldData, formatMessage) : null,
         };
       })

@@ -24,6 +24,7 @@ export const convertNotificationCaseForSubmission = (obj) => {
     launchNames = [],
     attributes = [],
     enabled = true,
+    attributesOperator,
   } = obj;
   return {
     recipients: informOwner ? [...recipients, OWNER] : recipients,
@@ -31,5 +32,6 @@ export const convertNotificationCaseForSubmission = (obj) => {
     launchNames,
     attributes,
     enabled,
+    attributesOperator,
   };
 };
