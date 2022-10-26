@@ -26,7 +26,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { validate, bindMessageToValidator } from 'common/utils/validation';
 import { NotificationCaseFormFields } from './notificationCaseFormFields';
 import styles from './addEditNotificationCaseModal.scss';
-import { ENABLED_FIELD_KEY } from '../../constants';
+import { ENABLED_FIELD_KEY, NOTIFICATION_CASE_FORM } from '../../constants';
 
 const cx = className.bind(styles);
 
@@ -51,7 +51,7 @@ const messages = defineMessages({
 
 @withModal('addEditNotificationCaseModal')
 @reduxForm({
-  form: 'notificationCaseForm',
+  form: NOTIFICATION_CASE_FORM,
   validate: ({ recipients, informOwner, launchNames, attributes }) => ({
     recipients: bindMessageToValidator(
       validate.createNotificationRecipientsValidator(informOwner),

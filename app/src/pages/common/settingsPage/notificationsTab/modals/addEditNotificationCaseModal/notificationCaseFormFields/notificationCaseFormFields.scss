@@ -26,4 +26,13 @@
 
 .form-label {
   min-width: 170px;
+  width: auto;
+}
+
+.attributes-operator-note {
+  align-self: flex-start;
+}
+
+.attributes-operator > div:not(:last-child) {
+  margin-bottom: 15px;
 }
