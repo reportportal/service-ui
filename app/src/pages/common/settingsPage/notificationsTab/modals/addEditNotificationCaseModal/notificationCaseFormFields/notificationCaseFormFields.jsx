@@ -104,7 +104,7 @@ export class NotificationCaseFormFields extends Component {
     ];
   };
 
-  attributesConditionOptions = () => {
+  getAttributesConditionOptions = () => {
     const {
       intl: { formatMessage },
     } = this.props;
@@ -220,7 +220,7 @@ export class NotificationCaseFormFields extends Component {
             name={ATTRIBUTES_OPERATOR_FIELD_KEY}
           >
             <InputRadioGroup
-              options={this.attributesConditionOptions()}
+              options={this.getAttributesConditionOptions()}
               inputGroupClassName={cx('attributes-operator')}
             />
           </FormField>
