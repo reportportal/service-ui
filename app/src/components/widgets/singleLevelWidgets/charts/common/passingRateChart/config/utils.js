@@ -18,6 +18,9 @@ import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 
 export const getPercentage = (value, totalItems) => ((value / totalItems) * 100).toFixed(2);
 
+export const getPercentageWithoutSkipped = (value, totalItemsWithoutSkipped) =>
+  getPercentage(value, totalItemsWithoutSkipped);
+
 export const getChartViewModeOptions = (viewMode, isPreview, totalItems) =>
   viewMode === MODES_VALUES[CHART_MODES.BAR_VIEW]
     ? {
@@ -63,12 +66,22 @@ export const getChartViewModeOptions = (viewMode, isPreview, totalItems) =>
         },
       };
 
+export const getChartViewModeOptionsWithoutSkipped = (
+  viewMode,
+  isPreview,
+  totalItemsWithoutSkipped,
+) => getChartViewModeOptions(viewMode, isPreview, totalItemsWithoutSkipped);
+
 export const calculateTooltipParams = (data, color, customProps) => {
-  const { totalItems, formatMessage } = customProps;
+  const { totalItems, formatMessage, includeSkipped, totalItemsWithoutSkipped } = customProps;
   const { id, name, value } = data[0];
 
   return {
-    itemsCount: `${value} (${getPercentage(value, totalItems)}%)`,
+    itemsCount: `${value} (${
+      includeSkipped
+        ? getPercentage(value, totalItems)
+        : getPercentageWithoutSkipped(value, totalItemsWithoutSkipped)
+    }%)`,
     color: color(id),
     issueStatNameProps: { itemName: name, defectTypes: {}, formatMessage },
   };

@@ -23,7 +23,7 @@ import { activeProjectSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
-import { TogglerControl, TagsControl } from './controls';
+import { TogglerControl, TagsControl, RadioGroupControl } from './controls';
 
 const DEFAULT_ITEMS_COUNT = '30';
 const messages = defineMessages({
@@ -67,6 +67,7 @@ export class PassingRatePerLaunchControls extends Component {
         widgetOptions: {
           viewMode: MODES_VALUES[CHART_MODES.BAR_VIEW],
           launchNameFilter: false,
+          includeSkipped: true,
         },
       },
       filters: [],
@@ -77,6 +78,7 @@ export class PassingRatePerLaunchControls extends Component {
     const {
       intl: { formatMessage },
       activeProject,
+      widgetSettings: { contentParameters: { widgetOptions: { includeSkipped } = {} } = {} } = {},
     } = this.props;
 
     return (
@@ -101,6 +103,9 @@ export class PassingRatePerLaunchControls extends Component {
               formatMessage,
             )}
           />
+        </FieldProvider>
+        <FieldProvider name="contentParameters.widgetOptions.includeSkipped">
+          <RadioGroupControl radioButtonValue={includeSkipped} />
         </FieldProvider>
       </Fragment>
     );

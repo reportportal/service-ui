@@ -15,10 +15,16 @@
  */
 
 import * as COLORS from 'common/constants/colors';
-import { STATS_PASSED } from 'common/constants/statistics';
+import { STATS_FAILED, STATS_PASSED } from 'common/constants/statistics';
 import { createTooltipRenderer } from 'components/widgets/common/tooltip';
 import { IssueTypeStatTooltip } from '../../issueTypeStatTooltip';
-import { getPercentage, getChartViewModeOptions, calculateTooltipParams } from './utils';
+import {
+  getPercentage,
+  getChartViewModeOptions,
+  calculateTooltipParams,
+  getPercentageWithoutSkipped,
+  getChartViewModeOptionsWithoutSkipped,
+} from './utils';
 
 export const NOT_PASSED_STATISTICS_KEY = 'statistics$executions$notPassed';
 
@@ -31,32 +37,51 @@ export const getConfig = ({
   onRendered,
   viewMode,
   onChartClick,
+  includeSkipped,
 }) => {
   const totalItems = content.total;
+  const totalItemsWithoutSkipped = totalItems - (content.skipped ?? 0);
+
+  const calculateNotPassedExcludingSkipped = () => totalItemsWithoutSkipped - content.passed;
+  const calculateNotPassedWithSkipped = () => totalItems - content.passed;
+  const notPassed = includeSkipped
+    ? calculateNotPassedWithSkipped()
+    : calculateNotPassedExcludingSkipped();
+  const statisticKey = includeSkipped ? NOT_PASSED_STATISTICS_KEY : STATS_FAILED;
+
   const columnData = {
     [STATS_PASSED]: content.passed,
-    [NOT_PASSED_STATISTICS_KEY]: totalItems - content.passed,
+    [statisticKey]: notPassed,
   };
-  const columns = [
-    [STATS_PASSED, columnData[STATS_PASSED]],
-    [NOT_PASSED_STATISTICS_KEY, columnData[NOT_PASSED_STATISTICS_KEY]],
-  ];
+
+  const getColumn = (prevColumn, currentColumn) =>
+    prevColumn.concat([[currentColumn, columnData[currentColumn]]]);
+
+  const columns = [STATS_PASSED, statisticKey].reduce(getColumn, []);
+
+  const calculatePercentage = (value) =>
+    includeSkipped
+      ? getPercentage(value, totalItems)
+      : getPercentageWithoutSkipped(value, totalItemsWithoutSkipped);
+
   const chartData = {
     columns,
     type: viewMode,
-    groups: [[STATS_PASSED, NOT_PASSED_STATISTICS_KEY]],
+    groups: [[STATS_PASSED, statisticKey]],
     order: null,
     colors: {
       [STATS_PASSED]: COLORS.COLOR_PASSED,
-      [NOT_PASSED_STATISTICS_KEY]: COLORS.COLOR_NOTPASSED,
+      [statisticKey]: COLORS.COLOR_NOTPASSED,
     },
     labels: {
       show: !isPreview,
-      format: (value) => (isPreview || value === 0 ? '' : `${getPercentage(value, totalItems)}%`),
+      format: (value) => (isPreview || value === 0 ? '' : `${calculatePercentage(value)}%`),
     },
     onclick: isPreview ? undefined : onChartClick,
   };
-  const viewModeOptions = getChartViewModeOptions(viewMode, isPreview, totalItems);
+  const viewModeOptions = includeSkipped
+    ? getChartViewModeOptions(viewMode, isPreview, totalItems)
+    : getChartViewModeOptionsWithoutSkipped(viewMode, isPreview, totalItemsWithoutSkipped);
 
   return {
     data: chartData,
@@ -73,6 +98,8 @@ export const getConfig = ({
       contents: createTooltipRenderer(IssueTypeStatTooltip, calculateTooltipParams, {
         totalItems,
         formatMessage,
+        includeSkipped,
+        totalItemsWithoutSkipped,
       }),
     },
     size,

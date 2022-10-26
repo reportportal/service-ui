@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright 2019 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,13 +14,9 @@
  * limitations under the License.
  */
 
-export { CheckboxControl } from './checkboxControl';
-export { DropdownControl } from './dropdownControl';
-export { FiltersControl } from './filtersControl';
-export { InputControl } from './inputControl';
-export { TagsControl } from './tagsControl';
-export { TogglerControl } from './togglerControl';
-export { CustomColumnsControl } from './customColumnsControl';
-export { AttributesFieldArrayControl } from './attributesFieldArrayControl';
-export { SortingControl } from './sortingControl';
-export { RadioGroupControl } from './radioGroupControl';
+.radioGroupControl-wrapper {
+  padding-top: 10px;
+  .radioGroup:not(:last-child) {
+    padding-bottom: 11px;
+  }
+}
