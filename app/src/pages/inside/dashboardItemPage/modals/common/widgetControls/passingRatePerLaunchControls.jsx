@@ -78,7 +78,6 @@ export class PassingRatePerLaunchControls extends Component {
     const {
       intl: { formatMessage },
       activeProject,
-      widgetSettings: { contentParameters: { widgetOptions: { includeSkipped } = {} } = {} } = {},
     } = this.props;
 
     return (
@@ -105,7 +104,7 @@ export class PassingRatePerLaunchControls extends Component {
           />
         </FieldProvider>
         <FieldProvider name="contentParameters.widgetOptions.includeSkipped">
-          <RadioGroupControl radioButtonValue={includeSkipped} />
+          <RadioGroupControl />
         </FieldProvider>
       </Fragment>
     );

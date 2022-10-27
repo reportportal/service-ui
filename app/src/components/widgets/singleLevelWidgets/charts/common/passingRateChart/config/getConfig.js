@@ -18,13 +18,7 @@ import * as COLORS from 'common/constants/colors';
 import { STATS_FAILED, STATS_PASSED } from 'common/constants/statistics';
 import { createTooltipRenderer } from 'components/widgets/common/tooltip';
 import { IssueTypeStatTooltip } from '../../issueTypeStatTooltip';
-import {
-  getPercentage,
-  getChartViewModeOptions,
-  calculateTooltipParams,
-  getPercentageWithoutSkipped,
-  getChartViewModeOptionsWithoutSkipped,
-} from './utils';
+import { getPercentage, getChartViewModeOptions, calculateTooltipParams } from './utils';
 
 export const NOT_PASSED_STATISTICS_KEY = 'statistics$executions$notPassed';
 
@@ -42,11 +36,9 @@ export const getConfig = ({
   const totalItems = content.total;
   const totalItemsWithoutSkipped = totalItems - (content.skipped ?? 0);
 
-  const calculateNotPassedExcludingSkipped = () => totalItemsWithoutSkipped - content.passed;
-  const calculateNotPassedWithSkipped = () => totalItems - content.passed;
-  const notPassed = includeSkipped
-    ? calculateNotPassedWithSkipped()
-    : calculateNotPassedExcludingSkipped();
+  const notPassedExcludingSkipped = totalItemsWithoutSkipped - content.passed;
+  const notPassedWithSkipped = totalItems - content.passed;
+  const notPassed = includeSkipped ? notPassedWithSkipped : notPassedExcludingSkipped;
   const statisticKey = includeSkipped ? NOT_PASSED_STATISTICS_KEY : STATS_FAILED;
 
   const columnData = {
@@ -54,15 +46,15 @@ export const getConfig = ({
     [statisticKey]: notPassed,
   };
 
-  const getColumn = (prevColumn, currentColumn) =>
-    prevColumn.concat([[currentColumn, columnData[currentColumn]]]);
-
-  const columns = [STATS_PASSED, statisticKey].reduce(getColumn, []);
+  const columns = [
+    [STATS_PASSED, columnData[STATS_PASSED]],
+    [statisticKey, columnData[statisticKey]],
+  ];
 
   const calculatePercentage = (value) =>
     includeSkipped
       ? getPercentage(value, totalItems)
-      : getPercentageWithoutSkipped(value, totalItemsWithoutSkipped);
+      : getPercentage(value, totalItemsWithoutSkipped);
 
   const chartData = {
     columns,
@@ -81,7 +73,7 @@ export const getConfig = ({
   };
   const viewModeOptions = includeSkipped
     ? getChartViewModeOptions(viewMode, isPreview, totalItems)
-    : getChartViewModeOptionsWithoutSkipped(viewMode, isPreview, totalItemsWithoutSkipped);
+    : getChartViewModeOptions(viewMode, isPreview, totalItemsWithoutSkipped);
 
   return {
     data: chartData,

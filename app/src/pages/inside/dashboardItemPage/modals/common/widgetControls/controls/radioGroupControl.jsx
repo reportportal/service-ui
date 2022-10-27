@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,38 +18,66 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ModalField } from 'components/main/modal';
 import { RadioGroup } from 'componentLibrary/radioGroup';
-import { useIntl } from 'react-intl';
+import { useIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
-import {
-  EXCLUDING_SKIPPED,
-  formGroupControlMessage,
-  getWidgetPassingRateOptions,
-  TOTAL_TEST_CASES,
-} from '../utils/getWidgetPassingRateOptions';
 import style from './radioGroupControl.scss';
+import { FIELD_LABEL_WIDTH } from './constants';
 
 const cx = classNames.bind(style);
-const LABEL_WIDTH = 120;
 
-export const RadioGroupControl = ({ onChange, radioButtonValue }) => {
+const TOTAL_TEST_CASES_MESSAGE = 'Total test cases (Passed, Failed, Skipped)';
+const FORM_GROUP_CONTROL_MESSAGE = 'Ratio based on';
+const EXCLUDING_SKIPPED_MESSAGE = 'Total test cases excluding Skipped';
+
+const FORM_GROUP_CONTROL = 'ratioBasedOn';
+const EXCLUDING_SKIPPED = 'excludingSkipped';
+const TOTAL_TEST_CASES = 'total';
+
+const PASSING_RATE_OPTIONS = 'PassingRateOptions';
+
+const messages = defineMessages({
+  [TOTAL_TEST_CASES]: {
+    id: `${PASSING_RATE_OPTIONS}.${TOTAL_TEST_CASES}`,
+    defaultMessage: TOTAL_TEST_CASES_MESSAGE,
+  },
+  [EXCLUDING_SKIPPED]: {
+    id: `${PASSING_RATE_OPTIONS}.${EXCLUDING_SKIPPED}`,
+    defaultMessage: EXCLUDING_SKIPPED_MESSAGE,
+  },
+  [FORM_GROUP_CONTROL]: {
+    id: `${PASSING_RATE_OPTIONS}.${FORM_GROUP_CONTROL}`,
+    defaultMessage: FORM_GROUP_CONTROL_MESSAGE,
+  },
+});
+
+const getWidgetPassingRateOptions = (formatMessage) =>
+  [TOTAL_TEST_CASES, EXCLUDING_SKIPPED].map((option) => ({
+    label: formatMessage(messages[`${option}`]),
+    value: `${option === TOTAL_TEST_CASES}`,
+    disabled: false,
+  }));
+
+const formGroupControlMessage = messages[FORM_GROUP_CONTROL];
+
+export const RadioGroupControl = ({ onChange, value }) => {
   const { formatMessage } = useIntl();
   const options = getWidgetPassingRateOptions(formatMessage);
 
-  const handleValueChange = ({ target: { value } }) => {
-    const includeSkipped = value === TOTAL_TEST_CASES;
-    onChange(includeSkipped);
+  const handleValueChange = ({ target: { value: radioButtonValue } }) => {
+    onChange(JSON.parse(radioButtonValue));
   };
 
   return (
     <ModalField
       label={formatMessage(formGroupControlMessage)}
-      labelWidth={LABEL_WIDTH}
-      className={cx('radioGroupControl-wrapper')}
+      labelWidth={FIELD_LABEL_WIDTH}
+      className={cx('radio-group-control-wrapper')}
+      noMinHeight
     >
       <RadioGroup
         options={options}
-        className={cx('radioGroup')}
-        value={radioButtonValue ? TOTAL_TEST_CASES : EXCLUDING_SKIPPED}
+        className={cx('radio-group')}
+        value={`${value}`}
         onChange={handleValueChange}
       />
     </ModalField>
@@ -58,10 +86,10 @@ export const RadioGroupControl = ({ onChange, radioButtonValue }) => {
 
 RadioGroupControl.propTypes = {
   onChange: PropTypes.func,
-  radioButtonValue: PropTypes.bool,
+  value: PropTypes.bool,
 };
 
 RadioGroupControl.defaultProps = {
   onChange: () => {},
-  radioButtonValue: true,
+  value: true,
 };
