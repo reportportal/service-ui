@@ -52,12 +52,10 @@ const messages = defineMessages({
 
 const getWidgetPassingRateOptions = (formatMessage) =>
   [TOTAL_TEST_CASES, EXCLUDING_SKIPPED].map((option) => ({
-    label: formatMessage(messages[`${option}`]),
+    label: formatMessage(messages[option]),
     value: `${option === TOTAL_TEST_CASES}`,
     disabled: false,
   }));
-
-const formGroupControlMessage = messages[FORM_GROUP_CONTROL];
 
 export const RadioGroupControl = ({ onChange, value }) => {
   const { formatMessage } = useIntl();
@@ -69,7 +67,7 @@ export const RadioGroupControl = ({ onChange, value }) => {
 
   return (
     <ModalField
-      label={formatMessage(formGroupControlMessage)}
+      label={formatMessage(messages[FORM_GROUP_CONTROL])}
       labelWidth={FIELD_LABEL_WIDTH}
       className={cx('radio-group-control-wrapper')}
       noMinHeight

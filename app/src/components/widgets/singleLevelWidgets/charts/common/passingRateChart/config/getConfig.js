@@ -52,9 +52,7 @@ export const getConfig = ({
   ];
 
   const calculatePercentage = (value) =>
-    includeSkipped
-      ? getPercentage(value, totalItems)
-      : getPercentage(value, totalItemsWithoutSkipped);
+    getPercentage(value, includeSkipped ? totalItems : totalItemsWithoutSkipped);
 
   const chartData = {
     columns,
@@ -71,9 +69,11 @@ export const getConfig = ({
     },
     onclick: isPreview ? undefined : onChartClick,
   };
-  const viewModeOptions = includeSkipped
-    ? getChartViewModeOptions(viewMode, isPreview, totalItems)
-    : getChartViewModeOptions(viewMode, isPreview, totalItemsWithoutSkipped);
+  const viewModeOptions = getChartViewModeOptions(
+    viewMode,
+    isPreview,
+    includeSkipped ? totalItems : totalItemsWithoutSkipped,
+  );
 
   return {
     data: chartData,
