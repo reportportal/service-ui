@@ -64,15 +64,11 @@ export const getChartViewModeOptions = (viewMode, isPreview, totalItems) =>
       };
 
 export const calculateTooltipParams = (data, color, customProps) => {
-  const { totalItems, formatMessage, includeSkipped, totalItemsWithoutSkipped } = customProps;
+  const { totalItems, formatMessage } = customProps;
   const { id, name, value } = data[0];
 
   return {
-    itemsCount: `${value} (${
-      includeSkipped
-        ? getPercentage(value, totalItems)
-        : getPercentage(value, totalItemsWithoutSkipped)
-    }%)`,
+    itemsCount: `${value} (${getPercentage(value, totalItems)}%)`,
     color: color(id),
     issueStatNameProps: { itemName: name, defectTypes: {}, formatMessage },
   };

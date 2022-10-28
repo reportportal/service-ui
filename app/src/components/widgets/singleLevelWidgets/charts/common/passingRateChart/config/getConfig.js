@@ -33,13 +33,9 @@ export const getConfig = ({
   onChartClick,
   includeSkipped,
 }) => {
-  const totalItems = content.total;
-  const totalItemsWithoutSkipped = totalItems - (content.skipped ?? 0);
-
-  const notPassedExcludingSkipped = totalItemsWithoutSkipped - content.passed;
-  const notPassedWithSkipped = totalItems - content.passed;
-  const notPassed = includeSkipped ? notPassedWithSkipped : notPassedExcludingSkipped;
+  const totalItems = includeSkipped ? content.total : content.total - (content.skipped ?? 0);
   const statisticKey = includeSkipped ? NOT_PASSED_STATISTICS_KEY : STATS_FAILED;
+  const notPassed = totalItems - content.passed;
 
   const columnData = {
     [STATS_PASSED]: content.passed,
@@ -50,9 +46,6 @@ export const getConfig = ({
     [STATS_PASSED, columnData[STATS_PASSED]],
     [statisticKey, columnData[statisticKey]],
   ];
-
-  const calculatePercentage = (value) =>
-    getPercentage(value, includeSkipped ? totalItems : totalItemsWithoutSkipped);
 
   const chartData = {
     columns,
@@ -65,15 +58,11 @@ export const getConfig = ({
     },
     labels: {
       show: !isPreview,
-      format: (value) => (isPreview || value === 0 ? '' : `${calculatePercentage(value)}%`),
+      format: (value) => (isPreview || value === 0 ? '' : `${getPercentage(value, totalItems)}%`),
     },
     onclick: isPreview ? undefined : onChartClick,
   };
-  const viewModeOptions = getChartViewModeOptions(
-    viewMode,
-    isPreview,
-    includeSkipped ? totalItems : totalItemsWithoutSkipped,
-  );
+  const viewModeOptions = getChartViewModeOptions(viewMode, isPreview, totalItems);
 
   return {
     data: chartData,
@@ -90,8 +79,6 @@ export const getConfig = ({
       contents: createTooltipRenderer(IssueTypeStatTooltip, calculateTooltipParams, {
         totalItems,
         formatMessage,
-        includeSkipped,
-        totalItemsWithoutSkipped,
       }),
     },
     size,
