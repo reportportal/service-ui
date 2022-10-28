@@ -20,7 +20,7 @@ $triangle-position: calc(100% / 2 - 9px);
   display: block;
   position: fixed;
   z-index: $Z-INDEX-POPUP;
-  background: rgba(63, 63, 63, 0.95);
+  background: rgb($COLOR--almost-black, 0.95);
   color: $COLOR--white-two;
   border-radius: 8px;
   box-shadow: $BOX_SHADOW--modal-window;
