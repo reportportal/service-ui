@@ -23,9 +23,14 @@ import { activeProjectSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
-import { TogglerControl, TagsControl } from './controls';
+import { TogglerControl, TagsControl, RadioGroupControl } from './controls';
 
 const DEFAULT_ITEMS_COUNT = '30';
+
+const FORM_GROUP_CONTROL = 'PassingRateFormGroupControlLabel';
+const EXCLUDING_SKIPPED = 'PassingRateOptionExcludingSkipped';
+const TOTAL_TEST_CASES = 'PassingRateOptionTotal';
+
 const messages = defineMessages({
   LaunchNameFieldLabel: {
     id: 'PassingRatePerLaunchControls.LaunchNameFieldLabel',
@@ -39,7 +44,20 @@ const messages = defineMessages({
     id: 'PassingRatePerLaunchControls.LaunchNamesValidationError',
     defaultMessage: 'You must select at least one item',
   },
+  PassingRateOptionTotal: {
+    id: 'PassingRatePerLaunchControls.PassingRateOptionTotal',
+    defaultMessage: 'Total test cases (Passed, Failed, Skipped)',
+  },
+  PassingRateOptionExcludingSkipped: {
+    id: 'PassingRatePerLaunchControls.PassingRateExcludingSkipped',
+    defaultMessage: 'Total test cases excluding Skipped',
+  },
+  PassingRateFormGroupControlLabel: {
+    id: 'PassingRatePerLaunchControls.PassingRateFormGroupControlLabel',
+    defaultMessage: 'Ratio based on',
+  },
 });
+
 const validators = {
   launchNames: (formatMessage) => (value) =>
     (!value || !value.length) && formatMessage(messages.LaunchNamesValidationError),
@@ -67,6 +85,7 @@ export class PassingRatePerLaunchControls extends Component {
         widgetOptions: {
           viewMode: MODES_VALUES[CHART_MODES.BAR_VIEW],
           launchNameFilter: false,
+          includeSkipped: true,
         },
       },
       filters: [],
@@ -78,6 +97,11 @@ export class PassingRatePerLaunchControls extends Component {
       intl: { formatMessage },
       activeProject,
     } = this.props;
+
+    const options = [TOTAL_TEST_CASES, EXCLUDING_SKIPPED].map((option) => ({
+      label: formatMessage(messages[option]),
+      value: `${option === TOTAL_TEST_CASES}`,
+    }));
 
     return (
       <Fragment>
@@ -100,6 +124,12 @@ export class PassingRatePerLaunchControls extends Component {
               [CHART_MODES.BAR_VIEW, CHART_MODES.PIE_VIEW],
               formatMessage,
             )}
+          />
+        </FieldProvider>
+        <FieldProvider name="contentParameters.widgetOptions.includeSkipped">
+          <RadioGroupControl
+            options={options}
+            fieldLabel={formatMessage(messages[FORM_GROUP_CONTROL])}
           />
         </FieldProvider>
       </Fragment>
