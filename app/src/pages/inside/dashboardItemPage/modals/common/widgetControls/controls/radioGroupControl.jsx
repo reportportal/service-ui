@@ -18,56 +18,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ModalField } from 'components/main/modal';
 import { RadioGroup } from 'componentLibrary/radioGroup';
-import { useIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import style from './radioGroupControl.scss';
 import { FIELD_LABEL_WIDTH } from './constants';
 
 const cx = classNames.bind(style);
 
-const TOTAL_TEST_CASES_MESSAGE = 'Total test cases (Passed, Failed, Skipped)';
-const FORM_GROUP_CONTROL_MESSAGE = 'Ratio based on';
-const EXCLUDING_SKIPPED_MESSAGE = 'Total test cases excluding Skipped';
-
-const FORM_GROUP_CONTROL = 'ratioBasedOn';
-const EXCLUDING_SKIPPED = 'excludingSkipped';
-const TOTAL_TEST_CASES = 'total';
-
-const PASSING_RATE_OPTIONS = 'PassingRateOptions';
-
-const messages = defineMessages({
-  [TOTAL_TEST_CASES]: {
-    id: `${PASSING_RATE_OPTIONS}.${TOTAL_TEST_CASES}`,
-    defaultMessage: TOTAL_TEST_CASES_MESSAGE,
-  },
-  [EXCLUDING_SKIPPED]: {
-    id: `${PASSING_RATE_OPTIONS}.${EXCLUDING_SKIPPED}`,
-    defaultMessage: EXCLUDING_SKIPPED_MESSAGE,
-  },
-  [FORM_GROUP_CONTROL]: {
-    id: `${PASSING_RATE_OPTIONS}.${FORM_GROUP_CONTROL}`,
-    defaultMessage: FORM_GROUP_CONTROL_MESSAGE,
-  },
-});
-
-const getWidgetPassingRateOptions = (formatMessage) =>
-  [TOTAL_TEST_CASES, EXCLUDING_SKIPPED].map((option) => ({
-    label: formatMessage(messages[option]),
-    value: `${option === TOTAL_TEST_CASES}`,
-    disabled: false,
-  }));
-
-export const RadioGroupControl = ({ onChange, value }) => {
-  const { formatMessage } = useIntl();
-  const options = getWidgetPassingRateOptions(formatMessage);
-
+export const RadioGroupControl = ({ onChange, value, options, fieldLabel }) => {
   const handleValueChange = ({ target: { value: radioButtonValue } }) => {
     onChange(JSON.parse(radioButtonValue));
   };
 
   return (
     <ModalField
-      label={formatMessage(messages[FORM_GROUP_CONTROL])}
+      label={fieldLabel}
       labelWidth={FIELD_LABEL_WIDTH}
       className={cx('radio-group-control-wrapper')}
       noMinHeight
@@ -85,9 +49,15 @@ export const RadioGroupControl = ({ onChange, value }) => {
 RadioGroupControl.propTypes = {
   onChange: PropTypes.func,
   value: PropTypes.bool,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({ label: PropTypes.string, value: PropTypes.bool, disabled: PropTypes.bool }),
+  ),
+  fieldLabel: PropTypes.string,
 };
 
 RadioGroupControl.defaultProps = {
   onChange: () => {},
   value: true,
+  options: [],
+  fieldLabel: '',
 };

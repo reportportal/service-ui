@@ -26,6 +26,17 @@ import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import { TogglerControl, TagsControl, RadioGroupControl } from './controls';
 
 const DEFAULT_ITEMS_COUNT = '30';
+
+const TOTAL_TEST_CASES_MESSAGE = 'Total test cases (Passed, Failed, Skipped)';
+const FORM_GROUP_CONTROL_MESSAGE = 'Ratio based on';
+const EXCLUDING_SKIPPED_MESSAGE = 'Total test cases excluding Skipped';
+
+const FORM_GROUP_CONTROL = 'ratioBasedOn';
+const EXCLUDING_SKIPPED = 'excludingSkipped';
+const TOTAL_TEST_CASES = 'total';
+
+const PASSING_RATE_OPTIONS = 'PassingRateOptions';
+
 const messages = defineMessages({
   LaunchNameFieldLabel: {
     id: 'PassingRatePerLaunchControls.LaunchNameFieldLabel',
@@ -39,7 +50,20 @@ const messages = defineMessages({
     id: 'PassingRatePerLaunchControls.LaunchNamesValidationError',
     defaultMessage: 'You must select at least one item',
   },
+  [TOTAL_TEST_CASES]: {
+    id: `${PASSING_RATE_OPTIONS}.${TOTAL_TEST_CASES}`,
+    defaultMessage: TOTAL_TEST_CASES_MESSAGE,
+  },
+  [EXCLUDING_SKIPPED]: {
+    id: `${PASSING_RATE_OPTIONS}.${EXCLUDING_SKIPPED}`,
+    defaultMessage: EXCLUDING_SKIPPED_MESSAGE,
+  },
+  [FORM_GROUP_CONTROL]: {
+    id: `${PASSING_RATE_OPTIONS}.${FORM_GROUP_CONTROL}`,
+    defaultMessage: FORM_GROUP_CONTROL_MESSAGE,
+  },
 });
+
 const validators = {
   launchNames: (formatMessage) => (value) =>
     (!value || !value.length) && formatMessage(messages.LaunchNamesValidationError),
@@ -80,6 +104,12 @@ export class PassingRatePerLaunchControls extends Component {
       activeProject,
     } = this.props;
 
+    const options = [TOTAL_TEST_CASES, EXCLUDING_SKIPPED].map((option) => ({
+      label: formatMessage(messages[option]),
+      value: `${option === TOTAL_TEST_CASES}`,
+      disabled: false,
+    }));
+
     return (
       <Fragment>
         <FieldProvider
@@ -104,7 +134,10 @@ export class PassingRatePerLaunchControls extends Component {
           />
         </FieldProvider>
         <FieldProvider name="contentParameters.widgetOptions.includeSkipped">
-          <RadioGroupControl />
+          <RadioGroupControl
+            options={options}
+            fieldLabel={formatMessage(messages[FORM_GROUP_CONTROL])}
+          />
         </FieldProvider>
       </Fragment>
     );

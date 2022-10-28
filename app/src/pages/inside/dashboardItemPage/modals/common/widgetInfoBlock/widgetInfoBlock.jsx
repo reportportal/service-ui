@@ -57,24 +57,13 @@ export class WidgetInfoBlock extends PureComponent {
 
     const prevData = {
       filterIds: prevProps.widgetSettings.filterIds,
-      contentParameters: prevProps.widgetSettings.contentParameters ?? {},
+      contentParameters: prevProps.widgetSettings.contentParameters,
     };
 
     const newData = {
       filterIds,
       contentParameters,
     };
-
-    const {
-      widgetOptions: { includeSkipped: currentPassingRateOptions },
-    } = contentParameters;
-    const {
-      contentParameters: { widgetOptions: { includeSkipped: prevPassingRateOptions } = {} },
-    } = prevData;
-
-    if (currentPassingRateOptions !== prevPassingRateOptions) {
-      return;
-    }
 
     if (
       this.props.customCondition &&
