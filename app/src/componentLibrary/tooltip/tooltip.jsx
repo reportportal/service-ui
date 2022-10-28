@@ -23,6 +23,8 @@ const cx = classNames.bind(styles);
 const TRIANGLE_SIZE = 9;
 const SAFE_ZONE = 4;
 const MARGIN = 8;
+const LEFT_CENTER_INFELICITY = 11;
+const RIGHT_CENTER_INFELICITY = 9;
 
 export const Tooltip = ({
   children,
@@ -49,14 +51,20 @@ export const Tooltip = ({
     const setHorizontalPosition = () => {
       switch (arrowPosition) {
         case 'right':
-          setLeft(coords.clientX + parentWidth / 2 - tooltipWidth + TRIANGLE_SIZE + SAFE_ZONE + 5);
+          setLeft(
+            coords.clientX +
+              parentWidth / 2 -
+              tooltipWidth +
+              TRIANGLE_SIZE +
+              RIGHT_CENTER_INFELICITY,
+          );
           break;
         case 'middle':
           setLeft(coords.clientX - tooltipWidth / 2);
           break;
         case 'left':
         default:
-          setLeft(coords.clientX - TRIANGLE_SIZE - SAFE_ZONE - 11);
+          setLeft(coords.clientX - TRIANGLE_SIZE - SAFE_ZONE - LEFT_CENTER_INFELICITY);
       }
     };
 
@@ -84,7 +92,7 @@ export const Tooltip = ({
       className={cx('tooltip', `side-${side}`, `position-${arrowPosition}`)}
       data-automation-id={dataAutomationId}
       ref={tooltipRef}
-      style={{ top, left }}
+      style={{ top, left, display: top !== 0 ? 'block' : 'none' }}
     >
       {title && <div className={cx('title')}>{title}</div>}
       <div className={cx('content')}>{children}</div>

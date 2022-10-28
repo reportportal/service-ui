@@ -20,36 +20,31 @@ import { Tooltip } from '../tooltip';
 import styles from './withTooltip.scss';
 
 const cx = classNames.bind(styles);
-const TOOLTIP_DELAY = 2000;
+const TOOLTIP_DELAY_MS = 2000;
 
 export const withTooltip = ({ ContentComponent, tooltipWrapperClassName, ...tooltipConfig }) => (
   WrappedComponent,
 ) => (props) => {
   const parentRef = useRef();
-  const [isOpened, setOpened] = useState(false);
 
+  const [isOpened, setOpened] = useState(false);
+  const [isActive, setActive] = useState(false);
   const [coords, setCoords] = useState({ clientX: 0, clientY: 0 });
   const [currentTimeout, setCurrentTimeout] = useState(null);
 
   const getTooltipPosition = ({ clientX, clientY }) => {
-    setCoords({ clientX, clientY });
-  };
-
-  const addListener = () => {
-    window.addEventListener('mousemove', getTooltipPosition);
-  };
-
-  const removeListener = () => {
-    window.removeEventListener('mousemove', getTooltipPosition);
+    if (isActive) {
+      setCoords({ clientX, clientY });
+    }
   };
 
   useEffect(() => {
-    addListener();
+    window.addEventListener('mousemove', getTooltipPosition);
 
     return () => {
-      removeListener();
+      window.removeEventListener('mousemove', getTooltipPosition);
     };
-  }, [addListener, removeListener]);
+  }, [getTooltipPosition]);
 
   return (
     <>
@@ -57,12 +52,14 @@ export const withTooltip = ({ ContentComponent, tooltipWrapperClassName, ...tool
         ref={parentRef}
         className={cx('with-tooltip', tooltipWrapperClassName)}
         onMouseEnter={() => {
-          setCurrentTimeout(setTimeout(() => setOpened(true), TOOLTIP_DELAY));
+          setActive(true);
+          setCurrentTimeout(setTimeout(() => setOpened(true), TOOLTIP_DELAY_MS));
         }}
         onMouseLeave={() => {
           if (currentTimeout) {
             clearTimeout(currentTimeout);
           }
+          setActive(false);
           setOpened(false);
         }}
       >
