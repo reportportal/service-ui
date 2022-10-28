@@ -1,0 +1,95 @@
+/*!
+ * Copyright 2022 EPAM Systems
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.tooltip {
+  display: block;
+  position: fixed;
+  z-index: $Z-INDEX-POPUP;
+  background: rgba(63, 63, 63, 0.95);
+  color: $COLOR--white-two;
+  border-radius: 8px;
+  box-shadow: $BOX_SHADOW--modal-window;
+  padding: 16px;
+  min-height: 52px;
+  min-width: 160px;
+  max-width: fit-content;
+  box-sizing: border-box;
+
+  &::after {
+    content: '';
+    position: absolute;
+    border: 9px solid transparent;
+  }
+
+  &.side-bottom::after {
+    border-bottom-color: $COLOR--almost-black;
+    bottom: 100%;
+    opacity: 0.95;
+  }
+
+  &.side-top::after {
+    border-top-color: $COLOR--almost-black;
+    top: 100%;
+    opacity: 0.95;
+  }
+
+  &.side-bottom,
+  &.side-top {
+    &.position-left::after {
+      left: 16px;
+    }
+
+    &.position-middle::after {
+      left: calc(100% / 2 - 9px);
+    }
+
+    &.position-right::after {
+      right: 16px;
+    }
+  }
+
+  &.side-right::after {
+    border-right-color: $COLOR--almost-black;
+    right: 100%;
+    opacity: 0.95;
+  }
+
+  &.side-left::after {
+    border-left-color: $COLOR--almost-black;
+    left: 100%;
+    opacity: 0.95;
+  }
+
+  &.side-left,
+  &.side-right {
+    &::after {
+      top: calc(100% / 2 - 9px);
+    }
+  }
+}
+
+.content {
+  display: block;
+}
+
+.title {
+  display: inline-block;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 13px;
+  line-height: 20px;
+  margin-bottom: 8px;
+  color: $COLOR--white-two;
+}
