@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+$triangle-position: calc(100% / 2 - 9px);
+
 .tooltip {
   display: block;
   position: fixed;
@@ -53,7 +55,7 @@
     }
 
     &.position-middle::after {
-      left: calc(100% / 2 - 9px);
+      left: $triangle-position;
     }
 
     &.position-right::after {
@@ -76,7 +78,7 @@
   &.side-left,
   &.side-right {
     &::after {
-      top: calc(100% / 2 - 9px);
+      top: $triangle-position;
     }
   }
 }
