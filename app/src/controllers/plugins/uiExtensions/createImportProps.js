@@ -189,6 +189,7 @@ import { SystemMessage } from 'componentLibrary/systemMessage';
 import { AsyncAutocomplete as AsyncAutocompleteField } from 'componentLibrary/autocompletes/asyncAutocomplete';
 import { AttributeListFormField } from 'components/containers/AttributeListFormField';
 import { Tabs } from 'components/main/tabs';
+import { withTooltip } from 'components/main/tooltips/tooltip';
 
 const BUTTONS = {
   GhostButton,
@@ -285,6 +286,9 @@ export const createImportProps = (pluginName) => ({
     AsyncAutocompleteField,
     RuleListComponent,
     AttributeListFormField,
+  },
+  HOCs: {
+    withTooltip,
   },
   constants: {
     PLUGIN_UI_EXTENSION_ADMIN_PAGE,
