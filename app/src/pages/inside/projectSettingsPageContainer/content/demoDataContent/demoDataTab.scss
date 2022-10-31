@@ -25,7 +25,7 @@
 .description-list {
   font-family: $FONT-ROBOTO-REGULAR;
   font-size: 13px;
-  margin: 16px 0 24px 24px;
+  margin: 16px 0 32px 24px;
   list-style-type: none;
   line-height: 20px;
 
@@ -49,8 +49,9 @@
   }
 }
 
-.system-message-description {
-  font-family: $FONT-ROBOTO-MEDIUM;
-  line-height: 20px;
-  text-indent: 1px;
+.warning-message-description {
+  font-family: $FONT-ROBOTO-REGULAR;
+  font-size: 11px;
+  line-height: 16px;
+  color: $COLOR--almost-black;
 }
