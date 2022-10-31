@@ -546,7 +546,7 @@
   "DemoDataTab.descriptionListFirstItem": "5 запусків",
   "DemoDataTab.descriptionListSecItem": "1 панель управління з 9 віджетами",
   "DemoDataTab.descriptionListThirdItem": "1 фільтр",
-  "DemoDataTab.descriptionWarningMessageContent": "Якщо ви створите демонстраційні дані, вам доведеться видалити їх вручну.",
+  "DemoDataTab.descriptionWarningMessageContent": "Якщо ви створите демонстраційні дані, вам доведеться видалити їх вручну",
   "DemoDataTab.descriptionWarningMessageHeader": "Увага",
   "DemoDataTabForm.demoDataPostfixHint": "Postfix should have size from 1 to 90",
   "DisplayFilter.display": "Відобразити на запуски:",
