@@ -286,6 +286,8 @@ export const createImportProps = (pluginName) => ({
     AsyncAutocompleteField,
     RuleListComponent,
     AttributeListFormField,
+  },
+  HOCs: {
     withTooltip,
   },
   constants: {
