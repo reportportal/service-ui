@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
+import { Manager, Reference } from 'react-popper';
 import classNames from 'classnames/bind';
 import { Tooltip } from '../tooltip';
 import styles from './withTooltip.scss';
@@ -25,51 +26,35 @@ const TOOLTIP_DELAY_MS = 2000;
 export const withTooltip = ({ ContentComponent, tooltipWrapperClassName, ...tooltipConfig }) => (
   WrappedComponent,
 ) => (props) => {
-  const parentRef = useRef();
-
   const [isOpened, setOpened] = useState(false);
-  const [isActive, setActive] = useState(false);
-  const [coords, setCoords] = useState({ clientX: 0, clientY: 0 });
   const [currentTimeout, setCurrentTimeout] = useState(null);
 
-  const getTooltipPosition = ({ clientX, clientY }) => {
-    if (isActive) {
-      setCoords({ clientX, clientY });
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener('mousemove', getTooltipPosition);
-
-    return () => {
-      window.removeEventListener('mousemove', getTooltipPosition);
-    };
-  }, [getTooltipPosition]);
-
   return (
-    <>
-      <div
-        ref={parentRef}
-        className={cx('with-tooltip', tooltipWrapperClassName)}
-        onMouseEnter={() => {
-          setActive(true);
-          setCurrentTimeout(setTimeout(() => setOpened(true), TOOLTIP_DELAY_MS));
-        }}
-        onMouseLeave={() => {
-          if (currentTimeout) {
-            clearTimeout(currentTimeout);
-          }
-          setActive(false);
-          setOpened(false);
-        }}
-      >
-        <WrappedComponent isTooltipOpen={isOpened} {...props} />
-      </div>
+    <Manager>
+      <Reference>
+        {({ ref }) => (
+          <div
+            ref={ref}
+            className={cx('with-tooltip', tooltipWrapperClassName)}
+            onMouseEnter={() => {
+              setCurrentTimeout(setTimeout(() => setOpened(true), TOOLTIP_DELAY_MS));
+            }}
+            onMouseLeave={() => {
+              if (currentTimeout) {
+                clearTimeout(currentTimeout);
+              }
+              setOpened(false);
+            }}
+          >
+            <WrappedComponent isTooltipOpen={isOpened} {...props} />
+          </div>
+        )}
+      </Reference>
       {isOpened && (
-        <Tooltip parentRef={parentRef} {...tooltipConfig} coords={coords}>
+        <Tooltip {...tooltipConfig}>
           <ContentComponent {...props} />
         </Tooltip>
       )}
-    </>
+    </Manager>
   );
 };

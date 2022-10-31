@@ -14,108 +14,89 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import ReactDOM from 'react-dom';
+import { Popper } from 'react-popper';
 import styles from './tooltip.scss';
 
 const cx = classNames.bind(styles);
-const TRIANGLE_SIZE = 9;
-const SAFE_ZONE = 4;
-const MARGIN = 8;
-const LEFT_CENTER_INFELICITY = 11;
-const RIGHT_CENTER_INFELICITY = 9;
 
-export const Tooltip = ({
-  children,
-  title,
-  side,
-  arrowPosition,
-  dataAutomationId,
-  parentRef,
-  coords,
-}) => {
-  const tooltipRef = useRef();
-  const [top, setTop] = useState(0);
-  const [left, setLeft] = useState(0);
-
-  useEffect(() => {
-    const { current: parent } = parentRef;
-    const parentHeight = parent.offsetHeight;
-    const parentWidth = parent.offsetWidth;
-
-    const { current: tooltip } = tooltipRef;
-    const tooltipHeight = tooltip.offsetHeight;
-    const tooltipWidth = tooltip.offsetWidth;
-
-    const setHorizontalPosition = () => {
-      switch (arrowPosition) {
-        case 'right':
-          setLeft(
-            coords.clientX +
-              parentWidth / 2 -
-              tooltipWidth +
-              TRIANGLE_SIZE +
-              RIGHT_CENTER_INFELICITY,
-          );
-          break;
-        case 'middle':
-          setLeft(coords.clientX - tooltipWidth / 2);
-          break;
-        case 'left':
-        default:
-          setLeft(coords.clientX - TRIANGLE_SIZE - SAFE_ZONE - LEFT_CENTER_INFELICITY);
-      }
-    };
-
-    const setVerticalMiddlePosition = () => {
-      setTop(coords.clientY - tooltipHeight / 2);
-    };
-
-    if (side === 'bottom') {
-      setTop(coords.clientY + parentHeight + SAFE_ZONE);
-      setHorizontalPosition();
-    } else if (side === 'top') {
-      setTop(coords.clientY - tooltipHeight - TRIANGLE_SIZE - MARGIN - 2);
-      setHorizontalPosition();
-    } else if (side === 'right') {
-      setVerticalMiddlePosition();
-      setLeft(coords.clientX + TRIANGLE_SIZE + SAFE_ZONE + MARGIN);
-    } else if (side === 'left') {
-      setVerticalMiddlePosition();
-      setLeft(coords.clientX - TRIANGLE_SIZE - SAFE_ZONE - tooltipWidth - MARGIN);
-    }
-  }, [parentRef, side, arrowPosition, coords]);
-
-  return (
-    <div
-      className={cx('tooltip', `side-${side}`, `position-${arrowPosition}`)}
-      data-automation-id={dataAutomationId}
-      ref={tooltipRef}
-      style={{ top, left, display: top !== 0 ? 'block' : 'none' }}
-    >
-      {title && <div className={cx('title')}>{title}</div>}
-      <div className={cx('content')}>{children}</div>
-    </div>
+export const Tooltip = (props) => {
+  const {
+    children,
+    dynamicWidth,
+    width,
+    topOffset,
+    leftOffset,
+    side,
+    modifiers,
+    noArrow,
+    dataAutomationId,
+  } = props;
+  const styleWidth = dynamicWidth ? null : { width };
+  const clientWidth = document.documentElement.clientWidth;
+  const maxWidth = !styleWidth ? clientWidth - 100 : styleWidth;
+  const tooltipRoot = document.getElementById('tooltip-root');
+  return ReactDOM.createPortal(
+    <Popper placement={side} modifiers={modifiers} eventsEnabled={false}>
+      {({ placement, ref, style, arrowProps }) => (
+        <div
+          className={cx('tooltip')}
+          ref={ref}
+          style={{
+            ...style,
+            ...styleWidth,
+            top: style.top + topOffset,
+            left: style.left + leftOffset,
+          }}
+          data-placement={placement}
+          data-automation-id={dataAutomationId}
+        >
+          <div
+            className={cx('tooltip-content')}
+            style={{
+              maxWidth: `${maxWidth}px`,
+            }}
+          >
+            {children}
+            {!noArrow && (
+              <div
+                className={cx('tooltip-arrow')}
+                data-placement={placement}
+                ref={arrowProps.ref}
+                style={arrowProps.style}
+              />
+            )}
+          </div>
+        </div>
+      )}
+    </Popper>,
+    tooltipRoot,
   );
 };
 
 Tooltip.propTypes = {
   children: PropTypes.node,
-  title: PropTypes.string,
-  side: PropTypes.oneOf(['top', 'bottom', 'left', 'right']),
-  arrowPosition: PropTypes.oneOf(['left', 'middle', 'right']),
+  side: PropTypes.oneOf(['auto', 'top', 'bottom', 'left', 'right']),
+  modifiers: PropTypes.object,
+  noArrow: PropTypes.bool,
+  width: PropTypes.number,
+  dynamicWidth: PropTypes.bool,
+  topOffset: PropTypes.number,
+  leftOffset: PropTypes.number,
   dataAutomationId: PropTypes.string,
-  parentRef: PropTypes.shape({ current: PropTypes.object }),
-  coords: PropTypes.shape({ clientX: PropTypes.number, clientY: PropTypes.number }),
 };
 
 Tooltip.defaultProps = {
   children: null,
-  title: '',
   side: 'top',
-  arrowPosition: 'left',
+  modifiers: {},
+  noArrow: false,
+  width: 300,
+  dynamicWidth: true,
+  topOffset: 0,
+  leftOffset: 0,
   dataAutomationId: '',
-  parentRef: null,
-  coords: {},
 };
