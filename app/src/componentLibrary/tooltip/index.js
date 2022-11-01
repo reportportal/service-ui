@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { withTooltip } from './withTooltip/withTooltip';
+export { withTooltip } from './withTooltip';

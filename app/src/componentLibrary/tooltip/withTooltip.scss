@@ -20,6 +20,13 @@ $ARROW_HEIGHT: 9px;
 $ARROW_WIDTH: 18px;
 $triangle-color: rgba($COLOR--almost-black, 0.75);
 
+.with-tooltip {
+  display: block;
+  width: fit-content;
+  height: fit-content;
+  cursor: pointer;
+}
+
 .tooltip {
   transition: opacity 300ms ease;
   &[data-placement*='bottom'] {
