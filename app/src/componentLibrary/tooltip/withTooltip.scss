@@ -18,6 +18,7 @@
 
 $ARROW_HEIGHT: 9px;
 $ARROW_WIDTH: 18px;
+$DEFAULT_MARGIN: 4px;
 $triangle-color: rgba($COLOR--almost-black, 0.75);
 
 .with-tooltip {
@@ -29,6 +30,7 @@ $triangle-color: rgba($COLOR--almost-black, 0.75);
 
 .tooltip {
   transition: opacity 300ms ease;
+  margin: $DEFAULT_MARGIN;
   &[data-placement*='bottom'] {
     padding-top: $ARROW_HEIGHT;
     z-index: 2;

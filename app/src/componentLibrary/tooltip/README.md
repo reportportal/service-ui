@@ -3,7 +3,7 @@
 ### Tooltip props:
 
 - **children**: _node_, optional, default = null
-- **side**: _string_, optional, default = 'top'
+- **side**: _string_, optional, default = 'auto'
 - **noArrow**: _string_, optional, default = ''
 - **width**: _string_, optional, default = ''
 - **dynamicWidth**: _string_, optional, default = ''
