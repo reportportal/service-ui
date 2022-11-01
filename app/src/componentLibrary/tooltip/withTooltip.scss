@@ -92,7 +92,7 @@ $triangle-color: rgba($COLOR--almost-black, 0.75);
     }
 
     &::after {
-      top: 1px;
+      top: 0;
       border-color: transparent transparent $triangle-color;
     }
   }
@@ -112,7 +112,7 @@ $triangle-color: rgba($COLOR--almost-black, 0.75);
     }
 
     &::after {
-      bottom: 1px;
+      bottom: 0;
       border-color: $triangle-color transparent transparent;
     }
   }
@@ -133,7 +133,7 @@ $triangle-color: rgba($COLOR--almost-black, 0.75);
 
     &::after {
       top: 0;
-      right: 1px;
+      right: 0;
       border-color: transparent transparent transparent $triangle-color;
     }
   }
@@ -154,7 +154,7 @@ $triangle-color: rgba($COLOR--almost-black, 0.75);
 
     &::after {
       top: 0;
-      left: 1px;
+      left: 0;
       border-color: transparent $triangle-color transparent transparent;
     }
   }
