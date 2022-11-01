@@ -45,18 +45,6 @@ $triangle-color: rgba($COLOR--almost-black, 0.75);
   &[data-placement*='right'] {
     padding-left: $ARROW_HEIGHT;
   }
-
-  &.no-mobile {
-    @media (max-width: $SCREEN_XS_MAX) {
-      display: none;
-    }
-  }
-
-  &.desktop-only {
-    @media (max-width: $SCREEN_SM_MAX) {
-      display: none;
-    }
-  }
 }
 
 .tooltip-content {

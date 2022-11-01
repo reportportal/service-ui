@@ -72,8 +72,8 @@ export const withTooltip = ({
                 style={{
                   ...style,
                   ...styleWidth,
-                  top: style.top + topOffset,
-                  left: style.left + leftOffset,
+                  top: style.top + topOffset ? topOffset : 0,
+                  left: style.left + leftOffset ? leftOffset : 0,
                 }}
                 data-placement={placement}
                 data-automation-id={dataAutomationId}
