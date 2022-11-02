@@ -18,9 +18,9 @@ import { stringify } from 'qs';
 import { CSV } from 'common/constants/fileTypes';
 import { createFilterQuery } from 'components/filterEntities/containers/utils';
 
-export const DEFAULT_API_URL_PREFIX = '/api/v1';
-export const UAT_API_URL_PREFIX = '/uat';
-export const COMPOSITE_API_URL_PREFIX = '/composite/';
+export const DEFAULT_API_URL_PREFIX = '../api/v1';
+export const UAT_API_URL_PREFIX = '../uat';
+export const COMPOSITE_API_URL_PREFIX = '../composite/';
 
 const urlBase = `${DEFAULT_API_URL_PREFIX}/`;
 const uatBase = `${UAT_API_URL_PREFIX}/`;
