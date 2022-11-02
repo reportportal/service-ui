@@ -18,7 +18,7 @@ import { Component, Fragment } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { connectRouter } from 'common/utils';
+import { connectRouter, getStorageItem, removeStorageItem } from 'common/utils';
 import {
   logItemsSelector,
   logPaginationSelector,
@@ -36,6 +36,9 @@ import {
   LOG_STATUS_FILTER_KEY,
   isLogPageWithNestedSteps,
   errorLogsItemsSelector,
+  fetchErrorLog,
+  RETRY_ID,
+  ERROR_LOG_INDEX_KEY,
 } from 'controllers/log';
 import { withFilter } from 'controllers/filter';
 import { withPagination, PAGE_KEY, DEFAULT_PAGINATION, SIZE_KEY } from 'controllers/pagination';
@@ -45,6 +48,7 @@ import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { LogsGrid } from '../logsGrid';
 import { LogsGridToolbar } from '../logsGridToolbar';
 import { SauceLabsSection } from '../sauceLabsSection';
+import { calculateNextIndex } from './utils';
 
 @connect(
   (state) => ({
@@ -56,7 +60,7 @@ import { SauceLabsSection } from '../sauceLabsSection';
     isNestedStepView: isLogPageWithNestedSteps(state),
     errorLogs: errorLogsItemsSelector(state),
   }),
-  null,
+  { fetchErrorLog },
 )
 @withSortingURL({
   defaultFields: ['logTime'],
@@ -78,6 +82,7 @@ import { SauceLabsSection } from '../sauceLabsSection';
     withAttachments: query[WITH_ATTACHMENTS_FILTER_KEY],
     hideEmptySteps: query[HIDE_EMPTY_STEPS],
     hidePassedLogs: query[HIDE_PASSED_LOGS],
+    retryId: query[RETRY_ID],
   }),
   {
     onChangeLogLevel: (userId, logLevel) => {
@@ -118,7 +123,6 @@ export class LogsGridWrapper extends Component {
     loading: PropTypes.bool,
     pageLoading: PropTypes.bool,
     filter: PropTypes.string,
-    logLevelId: PropTypes.string,
     onFilterChange: PropTypes.func,
     sortingColumn: PropTypes.string,
     sortingDirection: PropTypes.string,
@@ -128,14 +132,17 @@ export class LogsGridWrapper extends Component {
     onChangeHideEmptySteps: PropTypes.func,
     onChangeHidePassedLogs: PropTypes.func,
     logViewMode: PropTypes.string,
-    logStatus: PropTypes.string,
     onChangeLogStatusFilter: PropTypes.func,
     isNestedStepView: PropTypes.bool,
+    logLevelId: PropTypes.string,
+    logStatus: PropTypes.string,
     withAttachments: PropTypes.string,
     hideEmptySteps: PropTypes.string,
     hidePassedLogs: PropTypes.string,
+    retryId: PropTypes.string,
     isSauceLabsIntegrationView: PropTypes.bool.isRequired,
     errorLogs: PropTypes.array,
+    fetchErrorLog: PropTypes.func,
   };
 
   static defaultProps = {
@@ -150,7 +157,6 @@ export class LogsGridWrapper extends Component {
     loading: false,
     pageLoading: false,
     filter: '',
-    logLevelId: null,
     onFilterChange: () => {},
     sortingColumn: '',
     sortingDirection: '',
@@ -160,22 +166,61 @@ export class LogsGridWrapper extends Component {
     onChangeHideEmptySteps: () => {},
     onChangeHidePassedLogs: () => {},
     logViewMode: DETAILED_LOG_VIEW,
-    logStatus: null,
     onChangeLogStatusFilter: () => {},
     isNestedStepView: false,
+    logLevelId: null,
+    logStatus: null,
     withAttachments: undefined,
     hideEmptySteps: undefined,
     hidePassedLogs: undefined,
+    retryId: undefined,
     errorLogs: [],
+    fetchErrorLog: () => {},
   };
 
   state = {
-    highlightedRowId: null,
+    errorLogIndex: null,
+    skipHighlightOnRender: false,
     isSauceLabsIntegrationView: false,
   };
 
-  highlightErrorLog = () => {
-    this.setState({ highlightedRowId: this.props.errorLogs[0].id });
+  componentDidMount() {
+    const errorLogId = getStorageItem(ERROR_LOG_INDEX_KEY);
+    if (errorLogId) {
+      const { errorLogs } = this.props;
+      const errorLogIndex = errorLogs.findIndex(({ id }) => id === errorLogId);
+      removeStorageItem(ERROR_LOG_INDEX_KEY);
+      const fetchErrorLogCb = () => this.setState({ skipHighlightOnRender: false, errorLogIndex });
+      this.props.fetchErrorLog(errorLogs[errorLogIndex], fetchErrorLogCb);
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      this.props.logLevelId !== prevProps.logLevelId ||
+      this.props.logStatus !== prevProps.logStatus ||
+      this.props.withAttachments !== prevProps.withAttachments ||
+      this.props.hideEmptySteps !== prevProps.hideEmptySteps ||
+      this.props.hidePassedLogs !== prevProps.hidePassedLogs ||
+      this.props.retryId !== prevProps.retryId ||
+      this.props.sortingDirection !== prevProps.sortingDirection ||
+      this.props.filter !== prevProps.filter ||
+      this.props.pageSize !== prevProps.pageSize
+    ) {
+      // eslint-disable-next-line react/no-did-update-set-state
+      this.setState({ errorLogIndex: null, skipHighlightOnRender: false });
+    }
+  }
+
+  highlightErrorLog = (direction) => {
+    const { errorLogs } = this.props;
+    const { errorLogIndex } = this.state;
+    const nextErrorLogIndex = calculateNextIndex(errorLogs, errorLogIndex, direction);
+
+    const fetchErrorLogCb = () =>
+      this.setState({ skipHighlightOnRender: false, errorLogIndex: nextErrorLogIndex });
+
+    this.props.fetchErrorLog(errorLogs[nextErrorLogIndex], fetchErrorLogCb);
   };
 
   render() {
@@ -210,9 +255,13 @@ export class LogsGridWrapper extends Component {
       errorLogs,
     } = this.props;
     const rowHighlightingConfig = {
-      highlightedRowId: this.state.highlightedRowId,
+      highlightedRowId:
+        this.props.errorLogs[this.state.errorLogIndex] &&
+        this.props.errorLogs[this.state.errorLogIndex].id,
       isGridRowHighlighted: true,
+      onGridRowHighlighted: () => this.setState(() => ({ skipHighlightOnRender: true })),
       highlightErrorRow: true,
+      skipHighlightOnRender: this.state.skipHighlightOnRender,
     };
 
     return (
@@ -236,8 +285,9 @@ export class LogsGridWrapper extends Component {
               logPageMode={logViewMode}
               errorLogs={errorLogs}
               highlightErrorLog={this.highlightErrorLog}
+              errorLogIndex={this.state.errorLogIndex}
             >
-              {({ markdownMode, consoleView }) => (
+              {({ markdownMode, consoleView, rawHeaderCellStylesConfig }) => (
                 <LogsGrid
                   logItems={logItems}
                   loading={loading}
@@ -252,6 +302,7 @@ export class LogsGridWrapper extends Component {
                   consoleView={consoleView}
                   isNestedStepView={isNestedStepView}
                   rowHighlightingConfig={rowHighlightingConfig}
+                  rawHeaderCellStylesConfig={rawHeaderCellStylesConfig}
                 />
               )}
             </LogsGridToolbar>

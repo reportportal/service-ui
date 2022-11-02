@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { Component, Fragment } from 'react';
+import React, { Component, createRef, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import track from 'react-tracking';
@@ -40,7 +40,7 @@ import {
 } from 'components/main/analytics/events';
 import ConsoleIcon from 'common/img/console-inline.svg';
 import MarkdownIcon from 'common/img/markdown-inline.svg';
-import { GhostButton } from 'components/buttons/ghostButton';
+import { ErrorLogsControl } from './errorLogsControl';
 import { Pagination } from './pagination';
 import styles from './logsGridToolbar.scss';
 
@@ -113,6 +113,7 @@ export class LogsGridToolbar extends Component {
     isPassedLogsHidden: PropTypes.bool,
     errorLogs: PropTypes.array,
     highlightErrorLog: PropTypes.func,
+    errorLogIndex: PropTypes.number,
   };
 
   static defaultProps = {
@@ -129,11 +130,14 @@ export class LogsGridToolbar extends Component {
     isPassedLogsHidden: false,
     errorLogs: [],
     highlightErrorLog: () => {},
+    errorLogIndex: null,
   };
 
   state = {
     logViewMode: getLogViewMode(this.props.userId),
   };
+
+  panelRef = createRef();
 
   toggleLogViewMode = (targetViewMode) => {
     const { logViewMode } = this.state;
@@ -208,27 +212,24 @@ export class LogsGridToolbar extends Component {
       isPassedLogsHidden,
       errorLogs,
       highlightErrorLog,
+      errorLogIndex,
     } = this.props;
     const { logViewMode } = this.state;
+    const stickyOffsetTop = this.panelRef.current ? this.panelRef.current.clientHeight : 0;
 
     return (
       <div className={cx('container')}>
-        <div className={cx('panel')}>
+        <div ref={this.panelRef} className={cx('panel')}>
           <div className={cx('aside')}>
             <div className={cx('log-level')}>
               <InputSlider options={LOG_LEVELS} value={logLevel} onChange={this.changeLogLevel} />
             </div>
-            <div className={cx('aside-element', 'error-counter-block')}>
-              <GhostButton onClick={highlightErrorLog} disabled={!errorLogs.length}>
-                {intl.formatMessage(messages.showErrorLog)}
-              </GhostButton>
-              <span className={cx('error-counter-text')}>
-                {intl.formatMessage(messages.errorLogs, {
-                  count: errorLogs.length,
-                  currentItem: <span className={cx('error-counter')}>1</span>,
-                  totalItems: <span className={cx('error-counter')}>{errorLogs.length}</span>,
-                })}
-              </span>
+            <div className={cx('aside-element')}>
+              <ErrorLogsControl
+                errorLogs={errorLogs}
+                highlightErrorLog={highlightErrorLog}
+                errorLogIndex={errorLogIndex}
+              />
             </div>
           </div>
           <div className={cx('aside')}>
@@ -291,6 +292,7 @@ export class LogsGridToolbar extends Component {
           {children({
             markdownMode: logViewMode === MARKDOWN,
             consoleView: this.isConsoleViewMode(),
+            rawHeaderCellStylesConfig: { top: `${stickyOffsetTop}px` },
           })}
         </div>
       </div>

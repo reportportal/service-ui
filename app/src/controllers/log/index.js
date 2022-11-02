@@ -22,6 +22,7 @@ export {
   setPageLoadingAction,
   clearLogPageStackTrace,
   fetchErrorLogs,
+  fetchErrorLog,
   updateHistoryItemIssuesAction,
   setIncludeAllLaunchesAction,
   fetchHistoryItemsAction,
@@ -52,6 +53,10 @@ export {
   SET_SHOULD_SHOW_LOAD_MORE,
   SET_ACTIVE_TAB_ID,
   FETCH_HISTORY_ITEMS_WITH_LOADING,
+  PREVIOUS,
+  NEXT,
+  ALL,
+  ERROR_LOG_INDEX_KEY,
 } from './constants';
 export {
   historyItemsSelector,

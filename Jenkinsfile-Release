@@ -1,0 +1,29 @@
+pipeline {
+  agent any
+
+  stages {
+    stage('Build') {
+      steps {
+        script {
+          sh 'docker build -t $REGISTRY/service-ui:$VERSION . --no-cache'
+        }
+      }
+    }
+
+    stage('Push') {
+      steps {
+        script {
+          sh 'docker push $REGISTRY/service-ui:$VERSION'
+        }
+      }
+    }
+
+    stage('Cleanup') {
+      steps {
+        script {
+          sh 'docker rmi $REGISTRY/service-ui:$VERSION'
+        }
+      }
+    }
+  }
+}

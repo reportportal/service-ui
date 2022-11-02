@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,4 @@
  * limitations under the License.
  */
 
-export { nestedStepsReducer } from './reducer';
-export { nestedStepSagas } from './sagas';
-export { nestedStepSelector, domainSelector as nestedStepsSelector } from './selectors';
-export {
-  requestNestedStepAction,
-  loadMoreNestedStepAction,
-  fetchCurrentStepAction,
-} from './actionCreators';
-export { CLEAR_NESTED_STEPS } from './constants';
-export {
-  isLoadMoreButtonVisible,
-  isLoadPreviousButtonVisible,
-  isLoadCurrentStepButtonVisible,
-} from './utils';
+export { ErrorLogsControl } from './errorLogsControl';

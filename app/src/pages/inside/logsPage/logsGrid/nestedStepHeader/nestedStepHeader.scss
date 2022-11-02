@@ -146,5 +146,18 @@ $LEVEL_OFFSET_STEP: 20px;
 }
 
 .header-container + .header-container .row-cell {
-  border-top-width: 0px;
+  border-top-width: 0;
+}
+
+.additional-name-cell-block {
+  display: none;
+}
+
+.show-additional-block {
+  &:hover {
+    .additional-name-cell-block {
+      margin-left: auto;
+      display: block;
+    }
+  }
 }

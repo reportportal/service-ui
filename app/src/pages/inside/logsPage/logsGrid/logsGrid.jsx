@@ -111,16 +111,31 @@ TimeColumn.defaultProps = {
   value: {},
 };
 
-const LogMessageSearchCell = ({ className, ...rest }) => (
-  <div className={className}>
+const LogMessageSearchCell = ({ className, rawStylesConfig, ...rest }) => (
+  <div className={className} style={rawStylesConfig}>
     <LogMessageSearch {...rest} />
   </div>
 );
 LogMessageSearchCell.propTypes = {
   className: PropTypes.string,
+  rawStylesConfig: PropTypes.object,
 };
 LogMessageSearchCell.defaultProps = {
   className: '',
+  rawStylesConfig: {},
+};
+const LogStatusCell = ({ className, rawStylesConfig, ...props }) => (
+  <div className={className} style={rawStylesConfig}>
+    <LogStatusBlock {...props} />
+  </div>
+);
+LogStatusCell.propTypes = {
+  className: PropTypes.string,
+  rawStylesConfig: PropTypes.object,
+};
+LogStatusCell.defaultProps = {
+  className: '',
+  rawStylesConfig: {},
 };
 
 @injectIntl
@@ -144,6 +159,7 @@ export class LogsGrid extends Component {
       highlightedRowId: PropTypes.number,
       highlightErrorRow: PropTypes.bool,
     }),
+    rawHeaderCellStylesConfig: PropTypes.object,
   };
 
   static defaultProps = {
@@ -160,6 +176,7 @@ export class LogsGrid extends Component {
     onChangeLogStatusFilter: () => {},
     isNestedStepView: false,
     rowHighlightingConfig: {},
+    rawHeaderCellStylesConfig: {},
   };
 
   getConsoleViewColumns = () => [
@@ -168,6 +185,7 @@ export class LogsGrid extends Component {
       component: AttachmentColumn,
       customProps: {
         consoleView: true,
+        rawHeaderCellStylesConfig: this.props.rawHeaderCellStylesConfig,
       },
     },
     {
@@ -178,6 +196,7 @@ export class LogsGrid extends Component {
       },
       customProps: {
         consoleView: true,
+        rawHeaderCellStylesConfig: this.props.rawHeaderCellStylesConfig,
       },
       component: MessageColumn,
     },
@@ -186,6 +205,7 @@ export class LogsGrid extends Component {
       component: TimeColumn,
       customProps: {
         mobile: true,
+        rawHeaderCellStylesConfig: this.props.rawHeaderCellStylesConfig,
       },
     },
     {
@@ -201,15 +221,16 @@ export class LogsGrid extends Component {
   ];
 
   getDefaultViewColumns = () => {
-    const { isNestedStepView } = this.props;
+    const { isNestedStepView, rawHeaderCellStylesConfig } = this.props;
     const statusColumn = {
       id: STATUS_COLUMN_ID,
       title: {
         full: this.props.intl.formatMessage(messages.statusColumnTitle),
-        component: LogStatusBlock,
+        component: LogStatusCell,
         componentProps: {
           logStatus: this.props.logStatus,
           onChangeLogStatusFilter: this.props.onChangeLogStatusFilter,
+          rawStylesConfig: rawHeaderCellStylesConfig,
         },
       },
       sortable: true,
@@ -223,6 +244,7 @@ export class LogsGrid extends Component {
           componentProps: {
             filter: this.props.filter,
             onFilterChange: this.props.onFilterChange,
+            rawStylesConfig: rawHeaderCellStylesConfig,
           },
         },
         sortable: true,
@@ -235,6 +257,9 @@ export class LogsGrid extends Component {
       {
         id: 'attachment',
         component: AttachmentColumn,
+        customProps: {
+          rawHeaderCellStylesConfig,
+        },
       },
       {
         id: TIME_COLUMN_ID,
@@ -244,6 +269,9 @@ export class LogsGrid extends Component {
         sortable: true,
         component: TimeColumn,
         sortingEventInfo: LOG_PAGE_EVENTS.TIME_SORTING,
+        customProps: {
+          rawHeaderCellStylesConfig,
+        },
       },
       {
         id: 'mobileAttachment',
@@ -278,7 +306,8 @@ export class LogsGrid extends Component {
     };
   };
 
-  renderConsoleViewHeader = () => {
+  renderConsoleViewHeader = (cellProps) => {
+    const { className, style: cellClassName } = cellProps;
     const {
       intl,
       sortingColumn,
@@ -289,18 +318,20 @@ export class LogsGrid extends Component {
     } = this.props;
 
     return (
-      <div className={cx('console-view-header')}>
-        <div
-          className={cx('time-header', {
-            [`sorting-${sortingDirection.toLowerCase()}`]: sortingDirection,
-            'sorting-active': sortingColumn === TIME_COLUMN_ID,
-          })}
-          onClick={() => onChangeSorting(TIME_COLUMN_ID)}
-        >
-          {intl.formatMessage(messages.timeColumnTitle)}
-          <div className={cx('arrow')}>{Parser(ArrowIcon)}</div>
+      <div className={className} style={cellClassName}>
+        <div className={cx('console-view-header')}>
+          <div
+            className={cx('time-header', {
+              [`sorting-${sortingDirection.toLowerCase()}`]: sortingDirection,
+              'sorting-active': sortingColumn === TIME_COLUMN_ID,
+            })}
+            onClick={() => onChangeSorting(TIME_COLUMN_ID)}
+          >
+            {intl.formatMessage(messages.timeColumnTitle)}
+            <div className={cx('arrow')}>{Parser(ArrowIcon)}</div>
+          </div>
+          <LogMessageSearch filter={filter} onFilterChange={onFilterChange} />
         </div>
-        <LogMessageSearch filter={filter} onFilterChange={onFilterChange} />
       </div>
     );
   };

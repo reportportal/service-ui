@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,74 @@
  */
 
 import { isEmptyObject } from 'common/utils';
+import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
+import { NEXT, PREVIOUS } from 'controllers/log/constants';
+import { MAX_PAGE_SIZE, PAGINATION_OFFSET } from './constants';
 
-export const isLoadMoreButtonVisible = (step) => {
-  if (!step || isEmptyObject(step.page)) {
+export const isLoadMoreButtonVisible = (pageData) => {
+  if (!pageData || isEmptyObject(pageData)) {
     return false;
   }
-  const {
-    page: { totalElements, size },
-  } = step;
-  return totalElements > size;
+  const { number, totalPages } = pageData;
+  return number < totalPages;
 };
+
+export const isLoadPreviousButtonVisible = (pageData) => {
+  if (!pageData || isEmptyObject(pageData)) {
+    return false;
+  }
+  const { number } = pageData;
+  return number !== 1;
+};
+
+export const isLoadCurrentStepButtonVisible = (pageData, step, allSteps) => {
+  if (!pageData || isEmptyObject(pageData)) {
+    return true;
+  }
+  const { id, hasContent } = step;
+  if (hasContent) {
+    const decisionArr = [];
+    if (id in allSteps) {
+      const stepsToCheck = allSteps[id].content;
+      const filteredStepsToCheck = stepsToCheck.filter((item) => item.hasContent);
+      for (let i = 0; i < filteredStepsToCheck.length; i += 1) {
+        const nextStep = filteredStepsToCheck[i];
+        const { id: stepId } = nextStep;
+        const { page } = allSteps[stepId] || {};
+        const isShouldShowBtn = isLoadCurrentStepButtonVisible(page, nextStep, allSteps);
+        decisionArr.push(isShouldShowBtn);
+      }
+    } else if (!(id in allSteps)) {
+      return true;
+    }
+    if (decisionArr.length) {
+      return decisionArr.some((item) => !!item);
+    }
+  }
+
+  const { size, totalElements } = pageData;
+  return size < totalElements;
+};
+
+export function getDirectedPagination(pageData, loadDirection, nextPage) {
+  const { number, size, totalElements } = pageData;
+  switch (loadDirection) {
+    case PREVIOUS: {
+      return { [PAGE_KEY]: number - 1, [SIZE_KEY]: size + PAGINATION_OFFSET };
+    }
+    case NEXT: {
+      const pageNumber = nextPage || 1;
+      let pageSize;
+      if (isEmptyObject(pageData) || nextPage) {
+        pageSize = PAGINATION_OFFSET;
+      } else {
+        pageSize =
+          size + PAGINATION_OFFSET >= totalElements ? totalElements : size + PAGINATION_OFFSET;
+      }
+      return { [PAGE_KEY]: pageNumber, [SIZE_KEY]: pageSize };
+    }
+    default: {
+      return { [PAGE_KEY]: 1, [SIZE_KEY]: totalElements || MAX_PAGE_SIZE };
+    }
+  }
+}

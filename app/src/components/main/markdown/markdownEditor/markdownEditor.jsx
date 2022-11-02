@@ -285,6 +285,7 @@ export class MarkdownEditor extends React.Component {
       provideErrorHint,
       hint: { hintText, hintCondition },
     } = this.props;
+
     return (
       <>
         <div

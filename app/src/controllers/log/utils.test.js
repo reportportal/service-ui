@@ -19,6 +19,7 @@ import {
   getNextItem,
   updateHistoryItemIssues,
   updateHistoryItemLaunchAttributes,
+  getFormattedPageLocation,
 } from './utils';
 
 describe('log/utils', () => {
@@ -99,6 +100,20 @@ describe('log/utils', () => {
           attributes: [{ key: 'attrKey', value: 'attrValue' }],
         }),
       ).toEqual(expectedItems);
+    });
+  });
+
+  describe('getFormattedPageLocation', () => {
+    const data = [{ '3995': 1 }, { '3996': 1 }, { '40981': 2 }];
+    const expectedRes = [
+      ['3995', 1],
+      ['3996', 2],
+    ];
+    test('should return empty array in case of matching locations data', () => {
+      expect(getFormattedPageLocation()).toEqual([]);
+    });
+    test('should return formatted locations', () => {
+      expect(getFormattedPageLocation(data)).toEqual(expectedRes);
     });
   });
 });
