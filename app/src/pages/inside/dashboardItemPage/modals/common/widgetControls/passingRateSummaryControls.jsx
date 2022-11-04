@@ -21,16 +21,17 @@ import { injectIntl, defineMessages } from 'react-intl';
 import { STATS_TOTAL, STATS_PASSED } from 'common/constants/statistics';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { commonValidators } from 'common/utils/validation';
-import { passingRateOptionMessages } from 'components/widgets/singleLevelWidgets/charts/common/passingRateChart/passingRateChart';
+import {
+  EXCLUDING_SKIPPED,
+  TOTAL_TEST_CASES,
+  FORM_GROUP_CONTROL,
+  passingRateOptionMessages,
+} from 'components/widgets/singleLevelWidgets/charts/common/passingRateChart/messages';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import { ITEMS_INPUT_WIDTH } from './constants';
 import { TogglerControl, FiltersControl, InputControl, RadioGroupControl } from './controls';
 
 const DEFAULT_ITEMS_COUNT = '50';
-
-const FORM_GROUP_CONTROL = 'PassingRateFormGroupControlLabel';
-const EXCLUDING_SKIPPED = 'PassingRateOptionExcludingSkipped';
-const TOTAL_TEST_CASES = 'PassingRateOptionTotal';
 
 const messages = defineMessages({
   ItemsFieldLabel: {

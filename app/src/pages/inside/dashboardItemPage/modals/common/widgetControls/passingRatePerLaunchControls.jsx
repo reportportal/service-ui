@@ -22,15 +22,16 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { activeProjectSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
-import { passingRateOptionMessages } from 'components/widgets/singleLevelWidgets/charts/common/passingRateChart/passingRateChart';
+import {
+  EXCLUDING_SKIPPED,
+  TOTAL_TEST_CASES,
+  FORM_GROUP_CONTROL,
+  passingRateOptionMessages,
+} from 'components/widgets/singleLevelWidgets/charts/common/passingRateChart/messages';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import { TogglerControl, TagsControl, RadioGroupControl } from './controls';
 
 const DEFAULT_ITEMS_COUNT = '30';
-
-const FORM_GROUP_CONTROL = 'PassingRateFormGroupControlLabel';
-const EXCLUDING_SKIPPED = 'PassingRateOptionExcludingSkipped';
-const TOTAL_TEST_CASES = 'PassingRateOptionTotal';
 
 const messages = defineMessages({
   LaunchNameFieldLabel: {
