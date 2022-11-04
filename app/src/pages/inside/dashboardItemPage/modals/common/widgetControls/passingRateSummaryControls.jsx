@@ -21,11 +21,18 @@ import { injectIntl, defineMessages } from 'react-intl';
 import { STATS_TOTAL, STATS_PASSED } from 'common/constants/statistics';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { commonValidators } from 'common/utils/validation';
+import {
+  EXCLUDING_SKIPPED,
+  TOTAL_TEST_CASES,
+  FORM_GROUP_CONTROL,
+  passingRateOptionMessages,
+} from 'components/widgets/singleLevelWidgets/charts/common/passingRateChart/messages';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import { ITEMS_INPUT_WIDTH } from './constants';
-import { TogglerControl, FiltersControl, InputControl } from './controls';
+import { TogglerControl, FiltersControl, InputControl, RadioGroupControl } from './controls';
 
 const DEFAULT_ITEMS_COUNT = '50';
+
 const messages = defineMessages({
   ItemsFieldLabel: {
     id: 'PassingRateSummaryControls.ItemsFieldLabel',
@@ -61,6 +68,7 @@ export class PassingRateSummaryControls extends Component {
         itemsCount: DEFAULT_ITEMS_COUNT,
         widgetOptions: {
           viewMode: MODES_VALUES[CHART_MODES.BAR_VIEW],
+          includeSkipped: true,
         },
       },
     });
@@ -78,6 +86,11 @@ export class PassingRateSummaryControls extends Component {
       onFormAppearanceChange,
       eventsInfo,
     } = this.props;
+
+    const options = [TOTAL_TEST_CASES, EXCLUDING_SKIPPED].map((option) => ({
+      label: formatMessage(passingRateOptionMessages[option]),
+      value: `${option === TOTAL_TEST_CASES}`,
+    }));
 
     return (
       <Fragment>
@@ -112,6 +125,12 @@ export class PassingRateSummaryControls extends Component {
                   [CHART_MODES.BAR_VIEW, CHART_MODES.PIE_VIEW],
                   formatMessage,
                 )}
+              />
+            </FieldProvider>
+            <FieldProvider name="contentParameters.widgetOptions.includeSkipped">
+              <RadioGroupControl
+                options={options}
+                fieldLabel={formatMessage(passingRateOptionMessages[FORM_GROUP_CONTROL])}
               />
             </FieldProvider>
           </Fragment>

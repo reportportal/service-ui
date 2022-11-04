@@ -43,11 +43,24 @@ export class PassingRateSummary extends Component {
   };
 
   onChartClick = (data) => {
-    const { widget, getStatisticsLink, project } = this.props;
+    const {
+      widget,
+      getStatisticsLink,
+      project,
+      widget: {
+        contentParameters: {
+          widgetOptions: { includeSkipped },
+        },
+      },
+    } = this.props;
+
+    const linkCreationParametersForFailed = includeSkipped
+      ? [FAILED, INTERRUPTED, SKIPPED]
+      : [FAILED, INTERRUPTED];
+
     const link = getStatisticsLink({
-      statuses: data.id === STATS_PASSED ? [PASSED] : [FAILED, INTERRUPTED, SKIPPED],
+      statuses: data.id === STATS_PASSED ? [PASSED] : linkCreationParametersForFailed,
       launchesLimit: widget.contentParameters.itemsCount,
-      types: null,
     });
     const navigationParams = getDefaultTestItemLinkParams(
       project,

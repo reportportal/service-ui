@@ -22,14 +22,16 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { activeProjectSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
+import {
+  EXCLUDING_SKIPPED,
+  TOTAL_TEST_CASES,
+  FORM_GROUP_CONTROL,
+  passingRateOptionMessages,
+} from 'components/widgets/singleLevelWidgets/charts/common/passingRateChart/messages';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import { TogglerControl, TagsControl, RadioGroupControl } from './controls';
 
 const DEFAULT_ITEMS_COUNT = '30';
-
-const FORM_GROUP_CONTROL = 'PassingRateFormGroupControlLabel';
-const EXCLUDING_SKIPPED = 'PassingRateOptionExcludingSkipped';
-const TOTAL_TEST_CASES = 'PassingRateOptionTotal';
 
 const messages = defineMessages({
   LaunchNameFieldLabel: {
@@ -43,18 +45,6 @@ const messages = defineMessages({
   LaunchNamesValidationError: {
     id: 'PassingRatePerLaunchControls.LaunchNamesValidationError',
     defaultMessage: 'You must select at least one item',
-  },
-  PassingRateOptionTotal: {
-    id: 'PassingRatePerLaunchControls.PassingRateOptionTotal',
-    defaultMessage: 'Total test cases (Passed, Failed, Skipped)',
-  },
-  PassingRateOptionExcludingSkipped: {
-    id: 'PassingRatePerLaunchControls.PassingRateExcludingSkipped',
-    defaultMessage: 'Total test cases excluding Skipped',
-  },
-  PassingRateFormGroupControlLabel: {
-    id: 'PassingRatePerLaunchControls.PassingRateFormGroupControlLabel',
-    defaultMessage: 'Ratio based on',
   },
 });
 
@@ -99,7 +89,7 @@ export class PassingRatePerLaunchControls extends Component {
     } = this.props;
 
     const options = [TOTAL_TEST_CASES, EXCLUDING_SKIPPED].map((option) => ({
-      label: formatMessage(messages[option]),
+      label: formatMessage(passingRateOptionMessages[option]),
       value: `${option === TOTAL_TEST_CASES}`,
     }));
 
@@ -129,7 +119,7 @@ export class PassingRatePerLaunchControls extends Component {
         <FieldProvider name="contentParameters.widgetOptions.includeSkipped">
           <RadioGroupControl
             options={options}
-            fieldLabel={formatMessage(messages[FORM_GROUP_CONTROL])}
+            fieldLabel={formatMessage(passingRateOptionMessages[FORM_GROUP_CONTROL])}
           />
         </FieldProvider>
       </Fragment>
