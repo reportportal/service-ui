@@ -21,16 +21,16 @@ const EXCLUDING_SKIPPED = 'PassingRateOptionExcludingSkipped';
 const TOTAL_TEST_CASES = 'PassingRateOptionTotal';
 
 const passingRateOptionMessages = defineMessages({
-  PassingRateOptionTotal: {
-    id: 'PassingRatePerLaunchControls.PassingRateOptionTotal',
+  [TOTAL_TEST_CASES]: {
+    id: `PassingRatePerLaunchControls.${TOTAL_TEST_CASES}`,
     defaultMessage: 'Total test cases (Passed, Failed, Skipped)',
   },
-  PassingRateOptionExcludingSkipped: {
-    id: 'PassingRatePerLaunchControls.PassingRateExcludingSkipped',
+  [EXCLUDING_SKIPPED]: {
+    id: `PassingRatePerLaunchControls.${EXCLUDING_SKIPPED}`,
     defaultMessage: 'Total test cases excluding Skipped',
   },
-  PassingRateFormGroupControlLabel: {
-    id: 'PassingRatePerLaunchControls.PassingRateFormGroupControlLabel',
+  [FORM_GROUP_CONTROL]: {
+    id: `PassingRatePerLaunchControls.${FORM_GROUP_CONTROL}`,
     defaultMessage: 'Ratio based on',
   },
 });
