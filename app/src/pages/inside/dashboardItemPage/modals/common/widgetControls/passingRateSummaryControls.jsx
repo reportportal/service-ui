@@ -23,9 +23,14 @@ import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { commonValidators } from 'common/utils/validation';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import { ITEMS_INPUT_WIDTH } from './constants';
-import { TogglerControl, FiltersControl, InputControl } from './controls';
+import { TogglerControl, FiltersControl, InputControl, RadioGroupControl } from './controls';
 
 const DEFAULT_ITEMS_COUNT = '50';
+
+const FORM_GROUP_CONTROL = 'PassingRateFormGroupControlLabel';
+const EXCLUDING_SKIPPED = 'PassingRateOptionExcludingSkipped';
+const TOTAL_TEST_CASES = 'PassingRateOptionTotal';
+
 const messages = defineMessages({
   ItemsFieldLabel: {
     id: 'PassingRateSummaryControls.ItemsFieldLabel',
@@ -34,6 +39,18 @@ const messages = defineMessages({
   ItemsValidationError: {
     id: 'PassingRateSummaryControls.ItemsValidationError',
     defaultMessage: 'Items count should have value from 1 to 600',
+  },
+  PassingRateOptionTotal: {
+    id: 'PassingRatePerLaunchControls.PassingRateOptionTotal',
+    defaultMessage: 'Total test cases (Passed, Failed, Skipped)',
+  },
+  PassingRateOptionExcludingSkipped: {
+    id: 'PassingRatePerLaunchControls.PassingRateExcludingSkipped',
+    defaultMessage: 'Total test cases excluding Skipped',
+  },
+  PassingRateFormGroupControlLabel: {
+    id: 'PassingRatePerLaunchControls.PassingRateFormGroupControlLabel',
+    defaultMessage: 'Ratio based on',
   },
 });
 
@@ -61,6 +78,7 @@ export class PassingRateSummaryControls extends Component {
         itemsCount: DEFAULT_ITEMS_COUNT,
         widgetOptions: {
           viewMode: MODES_VALUES[CHART_MODES.BAR_VIEW],
+          includeSkipped: true,
         },
       },
     });
@@ -78,6 +96,11 @@ export class PassingRateSummaryControls extends Component {
       onFormAppearanceChange,
       eventsInfo,
     } = this.props;
+
+    const options = [TOTAL_TEST_CASES, EXCLUDING_SKIPPED].map((option) => ({
+      label: formatMessage(messages[option]),
+      value: `${option === TOTAL_TEST_CASES}`,
+    }));
 
     return (
       <Fragment>
@@ -112,6 +135,12 @@ export class PassingRateSummaryControls extends Component {
                   [CHART_MODES.BAR_VIEW, CHART_MODES.PIE_VIEW],
                   formatMessage,
                 )}
+              />
+            </FieldProvider>
+            <FieldProvider name="contentParameters.widgetOptions.includeSkipped">
+              <RadioGroupControl
+                options={options}
+                fieldLabel={formatMessage(messages[FORM_GROUP_CONTROL])}
               />
             </FieldProvider>
           </Fragment>

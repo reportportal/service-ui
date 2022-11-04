@@ -288,7 +288,7 @@ export const getWidgets = (formatMessage) => [
       <FormattedMessage
         id={'Widgets.Description.passingRateSummary'}
         defaultMessage={
-          'Shows the percentage ratio of Passed test cases to Total cases for set of launches.'
+          'Shows the percentage ratio of Passed test cases to Total test cases including or excluding Skipped ones for set of launches.'
         }
       />
     ),
