@@ -23,7 +23,6 @@ import { statisticsLinkSelector, TEST_ITEMS_TYPE_LIST } from 'controllers/testIt
 import { activeProjectSelector } from 'controllers/user';
 import { getDefaultTestItemLinkParams } from 'components/widgets/common/utils';
 import { messages } from 'components/widgets/common/messages';
-import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { PassingRateChart } from '../common/passingRateChart';
 
 @connect(
@@ -62,7 +61,6 @@ export class PassingRateSummary extends Component {
     const link = getStatisticsLink({
       statuses: data.id === STATS_PASSED ? [PASSED] : linkCreationParametersForFailed,
       launchesLimit: widget.contentParameters.itemsCount,
-      types: TEST_ITEM_PAGE,
     });
     const navigationParams = getDefaultTestItemLinkParams(
       project,
