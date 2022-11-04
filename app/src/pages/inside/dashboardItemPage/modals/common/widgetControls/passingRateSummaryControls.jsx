@@ -21,6 +21,7 @@ import { injectIntl, defineMessages } from 'react-intl';
 import { STATS_TOTAL, STATS_PASSED } from 'common/constants/statistics';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { commonValidators } from 'common/utils/validation';
+import { passingRateOptionMessages } from 'components/widgets/singleLevelWidgets/charts/common/passingRateChart/passingRateChart';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import { ITEMS_INPUT_WIDTH } from './constants';
 import { TogglerControl, FiltersControl, InputControl, RadioGroupControl } from './controls';
@@ -39,18 +40,6 @@ const messages = defineMessages({
   ItemsValidationError: {
     id: 'PassingRateSummaryControls.ItemsValidationError',
     defaultMessage: 'Items count should have value from 1 to 600',
-  },
-  PassingRateOptionTotal: {
-    id: 'PassingRatePerLaunchControls.PassingRateOptionTotal',
-    defaultMessage: 'Total test cases (Passed, Failed, Skipped)',
-  },
-  PassingRateOptionExcludingSkipped: {
-    id: 'PassingRatePerLaunchControls.PassingRateExcludingSkipped',
-    defaultMessage: 'Total test cases excluding Skipped',
-  },
-  PassingRateFormGroupControlLabel: {
-    id: 'PassingRatePerLaunchControls.PassingRateFormGroupControlLabel',
-    defaultMessage: 'Ratio based on',
   },
 });
 
@@ -98,7 +87,7 @@ export class PassingRateSummaryControls extends Component {
     } = this.props;
 
     const options = [TOTAL_TEST_CASES, EXCLUDING_SKIPPED].map((option) => ({
-      label: formatMessage(messages[option]),
+      label: formatMessage(passingRateOptionMessages[option]),
       value: `${option === TOTAL_TEST_CASES}`,
     }));
 
@@ -140,7 +129,7 @@ export class PassingRateSummaryControls extends Component {
             <FieldProvider name="contentParameters.widgetOptions.includeSkipped">
               <RadioGroupControl
                 options={options}
-                fieldLabel={formatMessage(messages[FORM_GROUP_CONTROL])}
+                fieldLabel={formatMessage(passingRateOptionMessages[FORM_GROUP_CONTROL])}
               />
             </FieldProvider>
           </Fragment>

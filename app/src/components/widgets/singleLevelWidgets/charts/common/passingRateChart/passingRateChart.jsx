@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import * as d3 from 'd3-selection';
 import classNames from 'classnames/bind';
 import { STATS_FAILED, STATS_PASSED } from 'common/constants/statistics';
@@ -26,6 +26,21 @@ import { getConfig, NOT_PASSED_STATISTICS_KEY } from './config/getConfig';
 import styles from './passingRateChart.scss';
 
 const cx = classNames.bind(styles);
+
+export const passingRateOptionMessages = defineMessages({
+  PassingRateOptionTotal: {
+    id: 'PassingRatePerLaunchControls.PassingRateOptionTotal',
+    defaultMessage: 'Total test cases (Passed, Failed, Skipped)',
+  },
+  PassingRateOptionExcludingSkipped: {
+    id: 'PassingRatePerLaunchControls.PassingRateExcludingSkipped',
+    defaultMessage: 'Total test cases excluding Skipped',
+  },
+  PassingRateFormGroupControlLabel: {
+    id: 'PassingRatePerLaunchControls.PassingRateFormGroupControlLabel',
+    defaultMessage: 'Ratio based on',
+  },
+});
 
 @injectIntl
 export class PassingRateChart extends Component {
