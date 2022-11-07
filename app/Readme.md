@@ -4,7 +4,7 @@
 
 ## Installation
 
-For development, you need a [node.js](https://nodejs.org).
+For local development, you need a [node.js](https://nodejs.org)(minimum required version 12, recommended - 14).
 
 To launch the development environment, follow these steps:
 
@@ -35,10 +35,6 @@ To launch the development environment, follow these steps:
 `npm run test:watch` - run tests when changing files
 
 `npm run manage:translations` - checking the relevance of localization
-
-## Components
-
-All the components for which the stories are described are automatically collected when the develop branch. To look at this assembly it is possible [here](http://reportportal.io/service-ui/index.html)
 
 ## Technology
 
