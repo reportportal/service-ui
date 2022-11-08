@@ -37,10 +37,18 @@
   svg {
     width: 16px;
     height: 16px;
+
+    path {
+      fill: $COLOR--topaz-2;
+    }
   }
 
   &.disabled {
     opacity: 0.3;
     cursor: default;
+
+    svg path {
+      fill: $COLOR--e-200;
+    }
   }
 }

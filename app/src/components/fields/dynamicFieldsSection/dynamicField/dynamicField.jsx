@@ -41,7 +41,7 @@ export const DynamicField = ({
     name: field.id,
     label: field.fieldName,
     required: field.required,
-    disabled: field.disabled,
+    disabled: field.disabled || !field.checked,
     customBlock,
     ...rest,
   };

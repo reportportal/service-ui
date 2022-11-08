@@ -75,10 +75,7 @@ const messages = defineMessages({
 });
 
 const Popover = ({ formatMessage }) => (
-  <div className={cx('popover')}>
-    <div className={cx('title')}>{formatMessage(messages.showFieldsHeader)}</div>
-    <span>{formatMessage(messages.tooltip)}</span>
-  </div>
+  <div className={cx('popover')}>{formatMessage(messages.tooltip)}</div>
 );
 Popover.propTypes = {
   formatMessage: PropTypes.func.isRequired,
