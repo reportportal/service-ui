@@ -20,7 +20,8 @@
   align-items: center;
   min-width: 120px;
   height: 36px;
-  padding: 7px 16px;
+  padding: 9px 16px 7px;
+  margin: 0;
   outline: none;
   border-radius: 3px;
   font-family: $FONT-ROBOTO-MEDIUM;
@@ -173,7 +174,8 @@
 }
 
 .wide {
-  padding: 7px 47px;
+  padding: 9px 47px 7px;
+  margin: 0;
 }
 
 .icon {
