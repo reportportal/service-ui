@@ -47,5 +47,5 @@ export const normalizeDimensionValue = (value) => {
 export const normalizeEventString = (string = '') =>
   string
     .trim()
-    .replace(/\s+/g, '_')
+    .replace(/\s+|-/g, '_')
     .toLowerCase();

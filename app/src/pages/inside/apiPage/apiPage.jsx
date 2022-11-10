@@ -25,6 +25,8 @@ import { URLS, DEFAULT_API_URL_PREFIX, UAT_API_URL_PREFIX } from 'common/urls';
 import { tokenSelector } from 'controllers/auth';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { ToggleButton } from 'components/buttons/toggleButton';
+import track from 'react-tracking';
+import { API_DOCUMENTATION_PAGE_EVENTS } from 'analyticsEvents/apiDocumentationPageEvents';
 import styles from './apiPage.scss';
 
 const cx = classNames.bind(styles);
@@ -36,14 +38,25 @@ const messages = defineMessages({
   },
 });
 
+const OPTION_BLOCK_TAG_SECTION = '.opblock-tag-section';
+const OPTION_BLOCK_TAG_SECTION_OPEN = '.opblock-tag-section.is-open';
+const OPTION_BLOCK_TAG = '.opblock-tag';
+const OPTION_BLOCK_TAG_OPEN = '.opblock.is-open';
+const OPTION_BLOCK_SUMMARY = '.opblock-summary';
+
 @connect((state) => ({
   token: tokenSelector(state),
 }))
 @injectIntl
+@track()
 export class ApiPage extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     token: PropTypes.string.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   state = {
@@ -52,7 +65,13 @@ export class ApiPage extends Component {
 
   getBreadcrumbs = () => [{ title: this.props.intl.formatMessage(messages.apiPageTitle) }];
 
+  getAPIName = (apiType) => apiType.split('/')[1];
+
   tabChangeHandler = (apiType) => {
+    const { trackEvent } = this.props.tracking;
+    const apiName = this.getAPIName(apiType);
+    trackEvent(API_DOCUMENTATION_PAGE_EVENTS.CLICK_CHANGE_DOCUMENTATION_TYPE(apiName));
+
     this.setState({
       apiType,
     });
@@ -61,6 +80,54 @@ export class ApiPage extends Component {
   setAuth = (request) => {
     request.headers.Authorization = this.props.token;
     return request;
+  };
+
+  handleSwaggerControllerExpand = (target) => {
+    const { trackEvent } = this.props.tracking;
+
+    const {
+      dataset: { tag },
+    } = target.closest(OPTION_BLOCK_TAG);
+
+    trackEvent(
+      API_DOCUMENTATION_PAGE_EVENTS.CLICK_CONTROLLER_BLOCK(
+        this.getAPIName(this.state.apiType),
+        tag,
+      ),
+    );
+  };
+
+  handleSwaggerOptionBlockExpand = (target) => {
+    const { trackEvent } = this.props.tracking;
+
+    const {
+      dataset: { tag },
+    } = target.closest(OPTION_BLOCK_TAG_SECTION).firstElementChild;
+
+    const [{ textContent }] = target.closest(OPTION_BLOCK_SUMMARY).firstElementChild.children;
+
+    trackEvent(
+      API_DOCUMENTATION_PAGE_EVENTS.CLICK_OPTION_BLOCK({
+        place: this.getAPIName(this.state.apiType),
+        type: tag,
+        condition: textContent,
+      }),
+    );
+  };
+
+  handleClick = ({ target }) => {
+    if (!target.closest(OPTION_BLOCK_TAG_SECTION)) {
+      return;
+    }
+
+    if (target.closest(OPTION_BLOCK_SUMMARY) && !target.closest(OPTION_BLOCK_TAG_OPEN)) {
+      this.handleSwaggerOptionBlockExpand(target);
+      return;
+    }
+
+    if (!target.closest(OPTION_BLOCK_TAG_SECTION_OPEN)) {
+      this.handleSwaggerControllerExpand(target);
+    }
   };
 
   tabItems = [
@@ -91,18 +158,28 @@ export class ApiPage extends Component {
                 />
               </div>
             </div>
-            <SwaggerUI
-              url={URLS.apiDocs(apiType)}
-              validatorUrl={null}
-              docExpansion="none"
-              apisSorter="alpha"
-              jsonEditor={false}
-              defaultModelRendering="schema"
-              showRequestHeaders={false}
-              showOperationIds={false}
-              requestInterceptor={this.setAuth}
-              supportedSubmitMethods={['get', 'post', 'put', 'delete', 'patch', 'head', 'options']}
-            />
+            <div onClick={this.handleClick}>
+              <SwaggerUI
+                url={URLS.apiDocs(apiType)}
+                validatorUrl={null}
+                docExpansion="none"
+                apisSorter="alpha"
+                jsonEditor={false}
+                defaultModelRendering="schema"
+                showRequestHeaders={false}
+                showOperationIds={false}
+                requestInterceptor={this.setAuth}
+                supportedSubmitMethods={[
+                  'get',
+                  'post',
+                  'put',
+                  'delete',
+                  'patch',
+                  'head',
+                  'options',
+                ]}
+              />
+            </div>
           </div>
         </PageSection>
       </PageLayout>
