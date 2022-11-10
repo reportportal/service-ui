@@ -1,5 +1,5 @@
-/*!
- * Copyright 2019 EPAM Systems
+/*
+ * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,4 @@
  * limitations under the License.
  */
 
-.checkbox-cell {
-  width: 1%;
-  padding-top: 30px;
-  padding-right: 20px;
-  height: 100%;
-
-  @media (max-width: $SCREEN_SM_MAX) {
-    display: none;
-  }
-}
+export { ErrorLogsControl } from './errorLogsControl';

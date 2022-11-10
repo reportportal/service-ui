@@ -27,6 +27,8 @@ import {
   UPDATE_HISTORY_ITEM_LAUNCH_ATTRIBUTES,
   SET_ACTIVE_TAB_ID,
   FETCH_HISTORY_ITEMS_WITH_LOADING,
+  FETCH_ERROR_LOGS,
+  FETCH_ERROR_LOG,
 } from './constants';
 
 export const fetchLogPageData = () => ({
@@ -57,6 +59,16 @@ export const fetchLogPageStackTrace = (logItem) => ({
 
 export const clearLogPageStackTrace = () => ({
   type: CLEAR_LOG_PAGE_STACK_TRACE,
+});
+
+export const fetchErrorLogs = (logItem) => ({
+  type: FETCH_ERROR_LOGS,
+  payload: logItem,
+});
+
+export const fetchErrorLog = (errorLogInfo, callback) => ({
+  type: FETCH_ERROR_LOG,
+  payload: { errorLogInfo, callback },
 });
 
 export const setPageLoadingAction = (isLoading) => ({

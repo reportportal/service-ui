@@ -14,118 +14,208 @@
  * limitations under the License.
  */
 
-import { Fragment } from 'react';
-import { connect } from 'react-redux';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
+import Parser from 'html-react-parser';
 import {
+  nestedStepsSelector,
   nestedStepSelector,
   requestNestedStepAction,
   isLoadMoreButtonVisible,
   loadMoreNestedStepAction,
+  isLoadPreviousButtonVisible,
+  isLoadCurrentStepButtonVisible,
+  fetchCurrentStepAction,
 } from 'controllers/log/nestedSteps';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { NEXT, PREVIOUS } from 'controllers/log';
+import DoubleArrow from 'common/img/double-arrow-inline.svg';
+import LoadList from 'common/img/list-full-inline.svg';
 import { NestedGridBody } from '../nestedGridBody';
 import styles from './nestedGridRow.scss';
 
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
+  loadPreviousLabel: {
+    id: 'NestedGridRow.loadPreviousLabel',
+    defaultMessage: 'Load previous 300',
+  },
   loadLabel: {
     id: 'NestedGridRow.loadLabel',
-    defaultMessage: 'Load 10 more',
+    defaultMessage: 'Load next 300',
+  },
+  loadCurrentStep: {
+    id: 'NestedGridRow.loadCurrentStep',
+    defaultMessage: 'Load current step',
   },
 });
 
-export const NestedGridRow = injectIntl(
-  connect(
-    (state, ownProps) => ({
-      nestedStep: nestedStepSelector(state, ownProps.data.id),
-    }),
-    {
-      requestNestedStep: requestNestedStepAction,
-      loadMoreNestedStep: loadMoreNestedStepAction,
-    },
-  )(
-    ({
-      data,
-      nestedStep,
-      level,
-      data: { id },
-      nestedStepHeader: NestedStepHeader,
-      requestNestedStep,
-      loadMoreNestedStep,
-      intl,
-      ...rest
-    }) => {
-      const showMoreButton = isLoadMoreButtonVisible(nestedStep);
-      const { collapsed, loading, content } = nestedStep;
-      const requestStep = () => {
-        requestNestedStep({ id });
-      };
-      const loadMore = () => {
-        loadMoreNestedStep({ id });
-      };
-      return (
-        <Fragment>
-          <NestedStepHeader
-            data={data}
-            collapsed={collapsed}
-            loading={collapsed && loading}
-            onToggle={requestStep}
-            level={level}
-          />
-          {!collapsed && (
-            <Fragment>
-              <NestedGridBody
-                data={content}
-                level={level + 1}
-                nestedStepHeader={NestedStepHeader}
-                {...rest}
-              />
-              {showMoreButton && (
-                <td
-                  colSpan="100"
-                  className={cx('row-more', {
-                    [`level-${level + 1}`]: level + 1 !== 0,
-                  })}
-                >
-                  <div
-                    className={cx('row-more-container', {
-                      loading,
-                    })}
-                    onClick={loadMore}
-                  >
-                    <div className={cx('row-more-label')}>
-                      {intl.formatMessage(messages.loadLabel)}
-                    </div>
-                    {loading && (
-                      <div className={cx('loading-icon')}>
-                        <SpinningPreloader />
-                      </div>
-                    )}
-                  </div>
-                </td>
-              )}
-            </Fragment>
-          )}
-        </Fragment>
-      );
-    },
-  ),
+const RowMore = ({ level, children }) => (
+  <td
+    colSpan="100"
+    className={cx('row-more', {
+      [`level-${level + 1}`]: level + 1 !== 0,
+    })}
+  >
+    <div className={cx('row-more-container')}>{children}</div>
+  </td>
 );
+RowMore.propTypes = {
+  level: PropTypes.number.isRequired,
+  children: PropTypes.node.isRequired,
+};
+
+const LoadButton = ({ loading, clickHandler, label, icon, iconClassName }) => (
+  <div
+    className={cx('load-button', { loading })}
+    onClick={(e) => {
+      e.stopPropagation();
+      clickHandler();
+    }}
+  >
+    <i className={cx('icon', iconClassName)}>{Parser(icon)}</i>
+    <span className={cx('button-label')}>{label}</span>
+  </div>
+);
+LoadButton.propTypes = {
+  loading: PropTypes.bool.isRequired,
+  clickHandler: PropTypes.func.isRequired,
+  label: PropTypes.string.isRequired,
+  icon: PropTypes.string.isRequired,
+  iconClassName: PropTypes.string,
+};
+LoadButton.defaultProps = {
+  iconClassName: '',
+};
+
+export const NestedGridRow = ({
+  data,
+  level,
+  data: { id },
+  nestedStepHeader: NestedStepHeader,
+  ...rest
+}) => {
+  const dispatch = useDispatch();
+  const { formatMessage } = useIntl();
+  const { collapsed, loading, content, page } = useSelector((state) =>
+    nestedStepSelector(state, id),
+  );
+  const allNestedStepsData = useSelector(nestedStepsSelector);
+  const showPreviousButton = isLoadPreviousButtonVisible(page);
+  const showMoreButton = isLoadMoreButtonVisible(page);
+  const showLoadCurrentStepButton = isLoadCurrentStepButtonVisible(page, data, allNestedStepsData);
+  const [itemIntoViewId, setItemIntoViewId] = React.useState(null);
+  const [direction, setDirection] = React.useState(null);
+  const itemIntoViewRef = React.useRef(null);
+
+  const calculateFirstRowIdOnLoadPreviousClick = (contentItems) => {
+    const isStep = (item) => 'hasContent' in item;
+    setItemIntoViewId((contentItems.find((item) => !isStep(item)) || {}).id);
+  };
+
+  const scrollToPreviousViewAndResetRef = () => {
+    itemIntoViewRef.current.scrollIntoView({ block: 'center' });
+    itemIntoViewRef.current = null;
+  };
+
+  React.useEffect(() => {
+    if (direction) {
+      calculateFirstRowIdOnLoadPreviousClick(content);
+      setDirection(null);
+    } else if (!loading && itemIntoViewRef.current) {
+      scrollToPreviousViewAndResetRef();
+      setItemIntoViewId(null);
+    }
+  }, [loading]);
+
+  const requestStep = () => {
+    dispatch(requestNestedStepAction({ id }));
+  };
+  const loadMore = (loadDirection) => {
+    if (loadDirection === PREVIOUS) {
+      setDirection(loadDirection);
+    }
+
+    dispatch(loadMoreNestedStepAction({ id, loadDirection }));
+  };
+  const loadCurrentStepButton = (
+    <LoadButton
+      loading={loading}
+      clickHandler={() => dispatch(fetchCurrentStepAction({ id }))}
+      label={formatMessage(messages.loadCurrentStep)}
+      icon={LoadList}
+    />
+  );
+
+  return (
+    <>
+      <NestedStepHeader
+        data={data}
+        collapsed={collapsed}
+        loading={collapsed && loading}
+        onToggle={requestStep}
+        level={level}
+        additionalNameCellBlock={showLoadCurrentStepButton && loadCurrentStepButton}
+      />
+      {!collapsed && (
+        <>
+          {showPreviousButton && (
+            <RowMore level={level}>
+              <LoadButton
+                loading={loading}
+                clickHandler={() => loadMore(PREVIOUS)}
+                label={formatMessage(messages.loadPreviousLabel)}
+                icon={DoubleArrow}
+                iconClassName={cx('rotate-icon')}
+              />
+              {loadCurrentStepButton}
+              {loading && (
+                <div className={cx('loading-icon')}>
+                  <SpinningPreloader />
+                </div>
+              )}
+            </RowMore>
+          )}
+          <NestedGridBody
+            data={content}
+            level={level + 1}
+            nestedStepHeader={NestedStepHeader}
+            itemIntoViewRef={itemIntoViewRef}
+            itemIntoViewId={itemIntoViewId}
+            {...rest}
+          />
+          {showMoreButton && (
+            <RowMore level={level}>
+              <LoadButton
+                loading={loading}
+                clickHandler={() => loadMore(NEXT)}
+                label={formatMessage(messages.loadLabel)}
+                icon={DoubleArrow}
+              />
+              {loadCurrentStepButton}
+              {loading && (
+                <div className={cx('loading-icon')}>
+                  <SpinningPreloader />
+                </div>
+              )}
+            </RowMore>
+          )}
+        </>
+      )}
+    </>
+  );
+};
 
 NestedGridRow.propTypes = {
   data: PropTypes.object,
-  nestedStep: PropTypes.func,
-  requestNestedStep: PropTypes.func,
   level: PropTypes.number,
   nestedStepHeader: PropTypes.elementType.isRequired,
 };
 NestedGridRow.defaultProps = {
   data: {},
-  nestedStep: () => {},
-  requestNestedStep: () => {},
   level: 0,
 };

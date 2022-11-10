@@ -98,6 +98,7 @@ export const attributesArray = (value) =>
   isEmpty(value) ||
   !value.length ||
   value.every((attribute) => attributeValue(attribute.value) && !attribute.edited);
+export const descriptionField = maxLength(2048);
 
 export const widgetNumberOfLaunches = composeValidators([isNotEmpty, range(1, 600)]);
 export const cumulativeItemsValidation = composeValidators([isNotEmpty, range(1, 20000)]);

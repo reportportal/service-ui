@@ -161,4 +161,8 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.openInNewTab',
     defaultMessage: 'Open in new tab',
   },
+  changesWarning: {
+    id: 'Common.changesWarning',
+    defaultMessage: 'Field is invalid or changes were not saved',
+  },
 });

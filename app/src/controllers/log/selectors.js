@@ -64,6 +64,8 @@ export const logStackTraceSelector = (state) => logSelector(state).stackTrace ||
 export const logStackTraceItemsSelector = (state) => logStackTraceSelector(state).content;
 export const logStackTracePaginationSelector = (state) => logStackTraceSelector(state).pagination;
 export const logStackTraceLoadingSelector = (state) => logStackTraceSelector(state).loading;
+export const errorLogsSelector = (state) => logSelector(state).errorLogs || {};
+export const errorLogsItemsSelector = (state) => errorLogsSelector(state).content;
 export const pageLoadingSelector = (state) => logSelector(state).pageLoading;
 export const includeAllLaunchesSelector = (state) => logSelector(state).includeAllLaunches;
 export const shouldShowLoadMoreSelector = (state) => logSelector(state).shouldShowLoadMore;

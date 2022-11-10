@@ -1,5 +1,5 @@
-/*!
- * Copyright 2019 EPAM Systems
+/*
+ * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,28 @@
  * limitations under the License.
  */
 
-.checkbox-cell {
-  width: 1%;
-  padding-top: 30px;
-  padding-right: 20px;
-  height: 100%;
+.error-logs-block {
+  display: flex;
+  align-items: center;
+  margin-left: 54px;
+}
 
-  @media (max-width: $SCREEN_SM_MAX) {
-    display: none;
-  }
+.buttons-block {
+  display: flex;
+}
+
+.left-arrow-button {
+  margin-right: -1px;
+}
+
+.error-counter-text {
+  margin-left: 16px;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  line-height: 18px;
+  color: $COLOR--charcoal-grey;
+}
+
+.error-counter {
+  font-family: $FONT-SEMIBOLD;
 }

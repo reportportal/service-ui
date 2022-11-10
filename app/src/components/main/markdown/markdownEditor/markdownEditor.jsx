@@ -101,6 +101,14 @@ export class MarkdownEditor extends React.Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     manipulateEditorOutside: PropTypes.func,
+    active: PropTypes.bool,
+    touched: PropTypes.bool,
+    error: PropTypes.string,
+    hint: PropTypes.shape({
+      hintText: PropTypes.func,
+      hintCondition: PropTypes.func,
+    }),
+    provideErrorHint: PropTypes.bool,
   };
   static defaultProps = {
     value: '',
@@ -109,6 +117,11 @@ export class MarkdownEditor extends React.Component {
     eventsInfo: {},
     mode: MODE_DEFAULT,
     manipulateEditorOutside: () => {},
+    active: false,
+    touched: false,
+    error: '',
+    hint: { hintText: () => '', hintCondition: () => true },
+    provideErrorHint: false,
   };
 
   state = {
@@ -262,23 +275,46 @@ export class MarkdownEditor extends React.Component {
   };
 
   render() {
-    const { value, onChange, mode } = this.props;
+    const {
+      value,
+      onChange,
+      mode,
+      active,
+      error,
+      touched,
+      provideErrorHint,
+      hint: { hintText, hintCondition },
+    } = this.props;
+
     return (
-      <div
-        className={cx(
-          'markdown-editor',
-          { [`mode-${mode}`]: mode },
-          { preview: this.state.isPreview },
+      <>
+        <div
+          className={cx(
+            'markdown-editor',
+            { [`mode-${mode}`]: mode },
+            { preview: this.state.isPreview },
+            { invalid: error && (touched || active) },
+          )}
+        >
+          <textarea
+            ref={(holder) => {
+              this.holder = holder;
+            }}
+            value={value}
+            onChange={onChange}
+          />
+        </div>
+        {provideErrorHint && error && (touched || active) ? (
+          <div className={cx('error')}>{error}</div>
+        ) : (
+          hintText &&
+          hintCondition(this.simpleMDE ? this.simpleMDE.value() : value) && (
+            <div className={cx('hint')}>
+              {hintText(this.simpleMDE ? this.simpleMDE.value() : value)}
+            </div>
+          )
         )}
-      >
-        <textarea
-          ref={(holder) => {
-            this.holder = holder;
-          }}
-          value={value}
-          onChange={onChange}
-        />
-      </div>
+      </>
     );
   }
 }

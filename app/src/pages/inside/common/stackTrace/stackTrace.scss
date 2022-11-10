@@ -53,6 +53,21 @@
   white-space: nowrap;
 }
 
+.navigate-btn {
+  display: flex;
+  font-family: $FONT_SEMIBOLD;
+  white-space: nowrap;
+  color: $COLOR--topaz;
+  cursor: pointer;
+}
+
+.navigate-icon {
+  display: inline-flex;
+  margin: 6px 0 0 9px;
+  width: 13px;
+  height: 9px;
+}
+
 .load-more-container {
   padding-left: 35px;
   display: flex;

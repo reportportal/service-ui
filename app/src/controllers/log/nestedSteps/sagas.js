@@ -18,12 +18,13 @@ import { all, call, put, select, takeEvery, cancelled } from 'redux-saga/effects
 import { handleError } from 'controllers/fetch';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { URLS } from 'common/urls';
-import { omit, fetch, isEmptyObject } from 'common/utils';
+import { omit, fetch } from 'common/utils';
+import { NEXT, ALL } from 'controllers/log/constants';
 import {
   REQUEST_NESTED_STEP,
   FETCH_NESTED_STEP_ERROR,
-  PAGINATION_OFFSET,
   LOAD_MORE_NESTED_STEP,
+  FETCH_CURRENT_STEP,
 } from './constants';
 import {
   fetchNestedStepStartAction,
@@ -33,22 +34,19 @@ import {
 } from './actionCreators';
 import { collectLogPayload } from '../sagaUtils';
 import { nestedStepSelector } from './selectors';
+import { getDirectedPagination } from './utils';
 
 function* fetchNestedStep({ payload = {} }) {
-  const { id } = payload;
+  const { id, errorLogPage, loadDirection = NEXT } = payload;
   const { activeProject, query, filterLevel } = yield call(collectLogPayload);
   const logLevel = filterLevel;
   const paramsExcludingPagination = omit(query, [PAGE_KEY, SIZE_KEY]);
   const { page } = yield select(nestedStepSelector, id);
-  let pageSize = PAGINATION_OFFSET;
-  if (!isEmptyObject(page)) {
-    const { totalElements, size } = page;
-    pageSize = size >= totalElements ? totalElements : size + PAGINATION_OFFSET;
-  }
+  const paginationParams = getDirectedPagination(page, loadDirection, errorLogPage);
+
   const fetchParams = {
     ...paramsExcludingPagination,
-    [PAGE_KEY]: 1,
-    [SIZE_KEY]: pageSize,
+    ...paginationParams,
   };
 
   let cancelRequest = () => {};
@@ -70,7 +68,29 @@ function* fetchNestedStep({ payload = {} }) {
   }
 }
 
-function* requestNestedStep({ payload = {} }) {
+function* fetchCurrentStep({ payload = {} }) {
+  const { id } = payload;
+  yield call(fetchNestedStep, { payload: { id, loadDirection: ALL } });
+  const { collapsed, content } = yield select(nestedStepSelector, id);
+
+  if (collapsed) {
+    yield put(toggleNestedStepAction({ id }));
+  }
+
+  const itemsToLoad = content.reduce((acc, item) => {
+    if (item.hasContent) {
+      acc.push(item);
+    }
+    return acc;
+  }, []);
+
+  for (let i = 0; i < itemsToLoad.length; i += 1) {
+    const { id: loadItemId } = itemsToLoad[i];
+    yield call(fetchCurrentStep, { payload: { id: loadItemId } });
+  }
+}
+
+export function* requestNestedStep({ payload = {} }) {
   const { id } = payload;
   const nestedStep = yield select(nestedStepSelector, id);
   if (nestedStep.initial) {
@@ -87,10 +107,19 @@ function* watchLoadMoreNestedStep() {
   yield takeEvery(LOAD_MORE_NESTED_STEP, fetchNestedStep);
 }
 
+function* watchFetchCurrentStep() {
+  yield takeEvery(FETCH_CURRENT_STEP, fetchCurrentStep);
+}
+
 function* watchFetchError() {
   yield takeEvery(FETCH_NESTED_STEP_ERROR, handleError);
 }
 
 export function* nestedStepSagas() {
-  yield all([watchRequestNestedStep(), watchLoadMoreNestedStep(), watchFetchError()]);
+  yield all([
+    watchRequestNestedStep(),
+    watchLoadMoreNestedStep(),
+    watchFetchCurrentStep(),
+    watchFetchError(),
+  ]);
 }

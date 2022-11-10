@@ -23,6 +23,9 @@
   &.focused {
     border-color: $COLOR--topaz;
   }
+  &.invalid {
+    border-color: $COLOR--failed;
+  }
   :global {
     .editor-toolbar {
       opacity: 1;
@@ -268,4 +271,22 @@
       }
     }
   }
+}
+
+@mixin additional-text($color) {
+  margin-top: 4px;
+  width: 100%;
+  height: 100%;
+  font-size: 10px;
+  box-sizing: border-box;
+  text-align: left;
+  color: $color;
+}
+
+.error {
+  @include additional-text($COLOR--failed);
+}
+
+.hint {
+  @include additional-text($COLOR--gray-47);
 }

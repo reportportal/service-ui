@@ -25,7 +25,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Parser from 'html-react-parser';
 import IconDuplicate from 'common/img/duplicate-inline.svg';
 import { fetch } from 'common/utils/fetch';
-import { validate } from 'common/utils/validation';
+import { commonValidators, validate } from 'common/utils/validation';
 import { URLS } from 'common/urls';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
@@ -46,6 +46,7 @@ import { AccordionContainer } from 'components/main/accordionContainer';
 import { canEditLaunch } from 'common/utils/permissions';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { TestParameters } from 'pages/inside/common/testParameters';
+import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import styles from './editItemModal.scss';
 
 const cx = classNames.bind(styles);
@@ -104,6 +105,10 @@ const messages = defineMessages({
     id: 'TestItemDetailsModal.parametersLabel',
     defaultMessage: 'Parameters:',
   },
+  descriptionHint: {
+    id: 'EditItemModal.descriptionAdviceHint',
+    defaultMessage: 'You used {length} of 2048 symbols',
+  },
 });
 
 @withModal('editItemModal')
@@ -111,8 +116,9 @@ const messages = defineMessages({
 @track()
 @reduxForm({
   form: 'editItemForm',
-  validate: ({ attributes }) => ({
+  validate: ({ attributes, description }) => ({
     attributes: !validate.attributesArray(attributes),
+    description: commonValidators.createDescriptionValidator(description),
   }),
 })
 @connect(
@@ -148,6 +154,7 @@ export class EditItemModal extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    invalid: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -243,6 +250,15 @@ export class EditItemModal extends Component {
     eventsInfo.CLICK_COPY_ICON_UUID && tracking.trackEvent(eventsInfo.CLICK_COPY_ICON_UUID);
   };
 
+  checkDescriptionLengthForHint = (description) => description.length > 1948;
+
+  getDescriptionText = (description) => {
+    const {
+      intl: { formatMessage },
+    } = this.props;
+    return formatMessage(messages.descriptionHint, { length: description.length });
+  };
+
   render() {
     const {
       intl: { formatMessage },
@@ -281,6 +297,7 @@ export class EditItemModal extends Component {
         warningMessage={
           type === LAUNCH_ITEM_TYPES.launch && editable && formatMessage(messages.launchWarning)
         }
+        warningType={!this.props.invalid && 'info'}
       >
         <form>
           <ModalField>
@@ -342,11 +359,18 @@ export class EditItemModal extends Component {
           {editable ? (
             <ModalField>
               <FieldProvider name="description">
-                <MarkdownEditor
-                  placeholder={formatMessage(messages.descriptionPlaceholder, {
-                    type: formatMessage(messages[type]),
-                  })}
-                />
+                <FieldErrorHint provideHint={false}>
+                  <MarkdownEditor
+                    placeholder={formatMessage(messages.descriptionPlaceholder, {
+                      type: formatMessage(messages[type]),
+                    })}
+                    provideErrorHint
+                    hint={{
+                      hintText: this.getDescriptionText,
+                      hintCondition: this.checkDescriptionLengthForHint,
+                    }}
+                  />
+                </FieldErrorHint>
               </FieldProvider>
             </ModalField>
           ) : (

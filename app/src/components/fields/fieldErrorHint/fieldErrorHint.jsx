@@ -223,6 +223,10 @@ const messages = defineMessages({
     id: 'MembersPageToolbar.membersSearchHint',
     defaultMessage: 'Member name must not be empty',
   },
+  descriptionHint: {
+    id: 'EditItemModal.descriptionHint',
+    defaultMessage: "Description should have size from '0' to '2048' symbols",
+  },
 });
 
 @injectIntl
@@ -273,7 +277,12 @@ export class FieldErrorHint extends Component {
 
     return (
       <div className={classes}>
-        {children && cloneElement(children, { error, active, ...rest })}
+        {children &&
+          cloneElement(children, {
+            error: error && messages[error] ? intl.formatMessage(messages[error]) : error,
+            active,
+            ...rest,
+          })}
         <div
           className={cx('hint', `type-${hintType}`, {
             'static-hint': staticHint,
