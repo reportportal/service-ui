@@ -147,8 +147,8 @@ export class NotificationsTab extends Component {
   };
 
   addNotificationCase = () => {
-    const { showModal } = this.props;
-    this.props.tracking.trackEvent(SETTINGS_PAGE_EVENTS.ADD_RULE_BTN_NOTIFICATIONS);
+    const { showModal, tracking } = this.props;
+    tracking.trackEvent(SETTINGS_PAGE_EVENTS.ADD_RULE_BTN_NOTIFICATIONS);
     showModal({
       id: 'addEditNotificationCaseModal',
       data: {
@@ -158,7 +158,12 @@ export class NotificationsTab extends Component {
         eventsInfo: {
           closeIcon: SETTINGS_PAGE_EVENTS.CLOSE_ICON_ADD_RULE_NOTIFICATIONS,
           cancelBtn: SETTINGS_PAGE_EVENTS.CANCEL_ADD_RULE_NOTIFICATIONS,
-          saveBtn: SETTINGS_PAGE_EVENTS.SAVE_ADD_RULE_NOTIFICATIONS,
+          saveBtn: ({ attributesOperator }) =>
+            tracking.trackEvent(
+              SETTINGS_PAGE_EVENTS.SAVE_ADD_RULE_NOTIFICATIONS(
+                messages[attributesOperator].defaultMessage,
+              ),
+            ),
         },
       },
     });
@@ -176,7 +181,12 @@ export class NotificationsTab extends Component {
         eventsInfo: {
           closeIcon: SETTINGS_PAGE_EVENTS.CLOSE_ICON_EDIT_RULE_NOTIFICATIONS,
           cancelBtn: SETTINGS_PAGE_EVENTS.CANCEL_EDIT_RULE_NOTIFICATIONS,
-          saveBtn: SETTINGS_PAGE_EVENTS.SAVE_EDIT_RULE_NOTIFICATIONS,
+          saveBtn: ({ attributesOperator }) =>
+            tracking.trackEvent(
+              SETTINGS_PAGE_EVENTS.SAVE_EDIT_RULE_NOTIFICATIONS(
+                messages[attributesOperator].defaultMessage,
+              ),
+            ),
         },
       },
     });
