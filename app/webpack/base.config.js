@@ -20,6 +20,7 @@ const webpack = require('webpack');
 const WebpackNotifierPlugin = require('webpack-notifier');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
+const pjson = require('../package.json');
 // const CircularDependencyPlugin = require('circular-dependency-plugin');
 
 module.exports = {
@@ -113,45 +114,59 @@ module.exports = {
           shareKey: 'react',
           shareScope: 'default',
           singleton: true,
+          requiredVersion: pjson.dependencies.react,
         },
         'react-dom': {
           singleton: true,
+          requiredVersion: pjson.dependencies['react-dom'],
         },
         'react-redux': {
           singleton: true,
+          requiredVersion: pjson.dependencies['react-redux'],
         },
         'react-intl': {
           singleton: true,
+          requiredVersion: pjson.dependencies['react-intl'],
         },
         'redux-form': {
           singleton: true,
+          requiredVersion: pjson.dependencies['redux-form'],
         },
         'redux-first-router': {
           singleton: true,
+          requiredVersion: pjson.dependencies['redux-first-router'],
         },
         history: {
           singleton: true,
+          requiredVersion: pjson.dependencies.history,
         },
         classnames: {
           singleton: true,
+          requiredVersion: pjson.dependencies.classnames,
         },
         'prop-types': {
           singleton: true,
+          requiredVersion: pjson.dependencies['prop-types'],
         },
         'react-tracking': {
           singleton: true,
+          requiredVersion: pjson.dependencies['react-tracking'],
         },
         moment: {
           singleton: true,
+          requiredVersion: pjson.dependencies.moment,
         },
         'html-react-parser': {
           singleton: true,
+          requiredVersion: pjson.dependencies['html-react-parser'],
         },
         'fast-deep-equal': {
           singleton: true,
+          requiredVersion: pjson.dependencies['fast-deep-equal'],
         },
         'react-copy-to-clipboard': {
           singleton: true,
+          requiredVersion: pjson.dependencies['react-copy-to-clipboard'],
         },
       },
     }),

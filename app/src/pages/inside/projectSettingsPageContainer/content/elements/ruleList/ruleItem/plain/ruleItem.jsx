@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,10 @@
  */
 
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { Toggle } from 'componentLibrary/toggle';
+import { ruleItemPropTypes, ruleItemDefaultProps } from './propTypes';
 import styles from './ruleItem.scss';
 
 const cx = classNames.bind(styles);
@@ -101,20 +101,5 @@ export const RuleItem = ({
     </div>
   );
 };
-RuleItem.propTypes = {
-  item: PropTypes.shape({ enabled: PropTypes.bool, name: PropTypes.string.isRequired }),
-  actions: PropTypes.array,
-  onToggle: PropTypes.func,
-  disabled: PropTypes.bool,
-  content: PropTypes.node,
-  onClick: PropTypes.func,
-  onRuleNameClick: PropTypes.oneOfType(PropTypes.func, PropTypes.instanceOf(null)),
-};
-RuleItem.defaultProps = {
-  actions: [],
-  onToggle: () => {},
-  disabled: false,
-  content: null,
-  onClick: () => {},
-  onRuleNameClick: null,
-};
+RuleItem.propTypes = ruleItemPropTypes;
+RuleItem.defaultProps = ruleItemDefaultProps;

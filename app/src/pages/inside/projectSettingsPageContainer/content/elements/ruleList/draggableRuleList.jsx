@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,12 @@
  * limitations under the License.
  */
 
-import React, { Fragment } from 'react';
+import React, { Fragment, memo } from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames/bind';
+import { DraggableRuleItem } from './ruleItem';
 import { ruleListDefaultProps, ruleListPropTypes } from './propTypes';
-import { RuleItem } from './ruleItem';
-import { DraggableRuleList } from './draggableRuleList';
-import styles from './ruleList.scss';
 
-const cx = classNames.bind(styles);
-
-const PlainRuleList = ({
+const DraggableRuleListComponent = ({
   items,
   actions,
   onToggle,
@@ -32,49 +27,42 @@ const PlainRuleList = ({
   ruleItemContent,
   handleRuleItemClick,
   onRuleNameClick,
+  onRuleDrop,
 }) => {
+  const onDrop = (fromIndex, toIndex) => {
+    const updatedItems = [...items];
+    updatedItems.splice(fromIndex, 1);
+    updatedItems.splice(toIndex, 0, items[fromIndex]);
+
+    onRuleDrop(updatedItems);
+  };
+
   const Content = ruleItemContent;
   return (
     <Fragment>
-      {items.map((item) => (
-        <RuleItem
+      {items.map((item, index) => (
+        <DraggableRuleItem
           key={item.id}
-          item={item}
+          item={{ ...item, index }}
           actions={actions}
           onToggle={onToggle}
           disabled={disabled}
           content={ruleItemContent && <Content item={item} />}
           onClick={handleRuleItemClick}
           onRuleNameClick={onRuleNameClick}
+          onDrop={onDrop}
         />
       ))}
     </Fragment>
   );
 };
-PlainRuleList.propTypes = ruleListPropTypes;
-PlainRuleList.defaultProps = ruleListDefaultProps;
-
-export const RuleList = ({ isDraggable, onRuleDrop, dataAutomationId, data, ...rest }) => {
-  return (
-    <div className={cx('container')} data-automation-id={dataAutomationId}>
-      {isDraggable ? (
-        <DraggableRuleList items={data} onRuleDrop={onRuleDrop} {...rest} />
-      ) : (
-        <PlainRuleList items={data} {...rest} />
-      )}
-    </div>
-  );
-};
-RuleList.propTypes = {
+DraggableRuleListComponent.propTypes = {
   ...ruleListPropTypes,
-  data: PropTypes.array,
-  dataAutomationId: PropTypes.string,
   onRuleDrop: PropTypes.func,
-  isDraggable: PropTypes.bool,
 };
-RuleList.defaultProps = {
+DraggableRuleListComponent.defaultProps = {
   ...ruleListDefaultProps,
-  dataAutomationId: '',
   onRuleDrop: () => {},
-  isDraggable: false,
 };
+
+export const DraggableRuleList = memo(DraggableRuleListComponent);
