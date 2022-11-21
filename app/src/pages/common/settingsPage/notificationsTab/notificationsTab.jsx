@@ -48,6 +48,8 @@ import { convertNotificationCaseForSubmission } from './utils';
 import { messages } from './messages';
 
 const cx = classNames.bind(styles);
+const NO_ATTRIBUTES = 'No attributes';
+
 const ruleFieldsConfig = {
   [RECIPIENTS_FIELD_KEY]: {
     title: messages.recipientsLabel,
@@ -158,10 +160,10 @@ export class NotificationsTab extends Component {
         eventsInfo: {
           closeIcon: SETTINGS_PAGE_EVENTS.CLOSE_ICON_ADD_RULE_NOTIFICATIONS,
           cancelBtn: SETTINGS_PAGE_EVENTS.CANCEL_ADD_RULE_NOTIFICATIONS,
-          saveBtn: ({ attributesOperator }) =>
+          saveBtn: ({ attributesOperator, attributes }) =>
             tracking.trackEvent(
               SETTINGS_PAGE_EVENTS.SAVE_ADD_RULE_NOTIFICATIONS(
-                messages[attributesOperator].defaultMessage,
+                attributes.length ? messages[attributesOperator].defaultMessage : NO_ATTRIBUTES,
               ),
             ),
         },
@@ -181,10 +183,10 @@ export class NotificationsTab extends Component {
         eventsInfo: {
           closeIcon: SETTINGS_PAGE_EVENTS.CLOSE_ICON_EDIT_RULE_NOTIFICATIONS,
           cancelBtn: SETTINGS_PAGE_EVENTS.CANCEL_EDIT_RULE_NOTIFICATIONS,
-          saveBtn: ({ attributesOperator }) =>
+          saveBtn: ({ attributesOperator, attributes }) =>
             tracking.trackEvent(
               SETTINGS_PAGE_EVENTS.SAVE_EDIT_RULE_NOTIFICATIONS(
-                messages[attributesOperator].defaultMessage,
+                attributes.length ? messages[attributesOperator].defaultMessage : NO_ATTRIBUTES,
               ),
             ),
         },
