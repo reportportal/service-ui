@@ -54,8 +54,7 @@ export const Integrations = () => {
   );
   const goBackHandler = useCallback(() => {
     setPlugin({});
-    dispatch(initialPage);
-  }, [initialPage]);
+  }, []);
 
   useEffect(() => {
     const { subPage: pluginName } = query;

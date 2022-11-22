@@ -23,7 +23,7 @@ import styles from './backBreadcrumb.scss';
 const cx = classNames.bind(styles);
 
 export const BackBreadcrumb = (props) => (
-  <div className={cx('back-breadcrumb')}>
+  <div className={cx('back-breadcrumb')} data-automation-id={'backButton'}>
     <Breadcrumb {...props} />
   </div>
 );
@@ -32,6 +32,7 @@ BackBreadcrumb.propTypes = {
   descriptor: PropTypes.shape({
     title: PropTypes.string.isRequired,
     link: PropTypes.object.isRequired,
+    onClick: PropTypes.func,
   }).isRequired,
   maxBreadcrumbWidth: PropTypes.number,
 };

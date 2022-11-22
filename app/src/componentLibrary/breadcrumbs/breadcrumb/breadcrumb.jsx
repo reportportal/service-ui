@@ -26,7 +26,7 @@ const cx = classNames.bind(styles);
 export const Breadcrumb = ({
   maxBreadcrumbWidth,
   titleTailNumChars,
-  descriptor: { title, link },
+  descriptor: { title, link, onClick },
 }) => {
   const ref = useRef();
 
@@ -40,7 +40,7 @@ export const Breadcrumb = ({
 
   return (
     <div className={cx('breadcrumb')} title={title}>
-      <NavLink className={cx('link')} to={link}>
+      <NavLink className={cx('link')} to={link} onClick={onClick}>
         <div ref={ref} className={cx('breadcrumb-text')} style={{ maxWidth: maxBreadcrumbWidth }}>
           {title}
         </div>
@@ -55,6 +55,7 @@ Breadcrumb.propTypes = {
   descriptor: PropTypes.shape({
     title: PropTypes.string.isRequired,
     link: PropTypes.object.isRequired,
+    onClick: PropTypes.func,
   }).isRequired,
 };
 

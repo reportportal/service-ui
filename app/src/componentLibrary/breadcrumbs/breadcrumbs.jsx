@@ -103,6 +103,7 @@ Breadcrumbs.propTypes = {
       id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
       title: PropTypes.string.isRequired,
       link: PropTypes.object.isRequired,
+      onClick: PropTypes.func,
     }),
   ),
   titleTailNumChars: PropTypes.number,

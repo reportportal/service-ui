@@ -23,7 +23,7 @@ import { Button } from 'componentLibrary/button';
 import { PLUGIN_NAME_TITLES } from 'components/integrations';
 import { PLUGIN_DESCRIPTIONS_MAP } from 'components/integrations/messages';
 import { PluginIcon } from 'components/integrations/elements/pluginIcon';
-import BackIcon from './img/back-inline.svg';
+import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 import styles from './integrationHeader.scss';
 import { messages } from '../messages';
 
@@ -32,7 +32,6 @@ const cx = classNames.bind(styles);
 export const IntegrationHeader = (props) => {
   const { formatMessage } = useIntl();
   const {
-    goBackHandler,
     data: { name, details = {} },
     data,
     onAddProjectIntegration,
@@ -40,15 +39,13 @@ export const IntegrationHeader = (props) => {
     isAbleToClick,
     availableProjectIntegrations,
     withButton,
+    breadcrumbData,
   } = props;
 
   return (
     <div className={cx('container')}>
       <div className={cx('back-to')}>
-        <i className={cx('back-icon')}>{Parser(BackIcon)}</i>
-        <Button onClick={goBackHandler} variant="text">
-          {formatMessage(messages.backToIntegration)}
-        </Button>
+        <Breadcrumbs descriptors={breadcrumbData} />
       </div>
       <div className={cx('header')}>
         <div className={cx('integration-block')}>
@@ -104,6 +101,13 @@ IntegrationHeader.propTypes = {
   isAbleToClick: PropTypes.bool,
   availableProjectIntegrations: PropTypes.array,
   withButton: PropTypes.bool,
+  breadcrumbData: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      link: PropTypes.object.isRequired,
+      onClick: PropTypes.func,
+    }),
+  ),
 };
 
 IntegrationHeader.defaultProps = {
