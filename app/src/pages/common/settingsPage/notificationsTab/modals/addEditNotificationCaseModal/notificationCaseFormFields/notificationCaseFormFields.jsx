@@ -65,10 +65,12 @@ export class NotificationCaseFormFields extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     attributesValue: PropTypes.array,
+    change: PropTypes.func,
   };
   static defaultProps = {
     activeProject: '',
     attributesValue: [],
+    resetSection: () => {},
   };
 
   getDropdownInputConfig = () => {
@@ -107,16 +109,25 @@ export class NotificationCaseFormFields extends Component {
   getAttributesConditionOptions = () => {
     const {
       intl: { formatMessage },
+      attributesValue,
+      change,
     } = this.props;
+    const hasOneAttrOrLess = attributesValue.filter((attribute) => 'key' in attribute).length <= 1;
+
+    if (attributesValue.length === 1) {
+      change(ATTRIBUTES_OPERATOR_FIELD_KEY, ATTRIBUTES_OPERATORS.AND);
+    }
 
     return [
       {
         ownValue: ATTRIBUTES_OPERATORS.AND,
         label: formatMessage(messages[ATTRIBUTES_OPERATORS.AND]),
+        disabled: hasOneAttrOrLess,
       },
       {
         ownValue: ATTRIBUTES_OPERATORS.OR,
         label: formatMessage(messages[ATTRIBUTES_OPERATORS.OR]),
+        disabled: hasOneAttrOrLess,
       },
     ];
   };

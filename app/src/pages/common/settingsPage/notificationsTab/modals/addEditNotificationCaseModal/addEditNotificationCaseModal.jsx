@@ -77,6 +77,7 @@ export class AddEditNotificationCaseModal extends Component {
     initialize: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     dirty: PropTypes.bool.isRequired,
+    change: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -113,6 +114,7 @@ export class AddEditNotificationCaseModal extends Component {
     const {
       intl: { formatMessage },
       data: { isNewCase, onConfirm, eventsInfo },
+      change,
       handleSubmit,
     } = this.props;
 
@@ -139,7 +141,7 @@ export class AddEditNotificationCaseModal extends Component {
         closeIconEventInfo={eventsInfo.closeIcon}
         renderHeaderElements={this.renderHeaderElements}
       >
-        <NotificationCaseFormFields />
+        <NotificationCaseFormFields change={change} />
       </ModalLayout>
     );
   }
