@@ -27,9 +27,11 @@ import {
   FORM_GROUP_CONTROL,
   passingRateOptionMessages,
 } from 'components/widgets/singleLevelWidgets/charts/common/passingRateChart/messages';
+import track from 'react-tracking';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import { ITEMS_INPUT_WIDTH } from './constants';
 import { TogglerControl, FiltersControl, InputControl, RadioGroupControl } from './controls';
+import { widgetTypesMessages } from '../messages';
 
 const DEFAULT_ITEMS_COUNT = '50';
 
@@ -44,6 +46,7 @@ const messages = defineMessages({
   },
 });
 
+@track()
 @injectIntl
 export class PassingRateSummaryControls extends Component {
   static propTypes = {
@@ -52,7 +55,12 @@ export class PassingRateSummaryControls extends Component {
     initializeControlsForm: PropTypes.func.isRequired,
     formAppearance: PropTypes.object.isRequired,
     onFormAppearanceChange: PropTypes.func.isRequired,
+    widgetType: PropTypes.string.isRequired,
     eventsInfo: PropTypes.object,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -78,6 +86,20 @@ export class PassingRateSummaryControls extends Component {
 
   formatFilterValue = (value) => value && value[0];
   parseFilterValue = (value) => value && [value];
+
+  handleIncludeSkippedChange = (includeSkipped) => {
+    const {
+      eventsInfo: { ratioBasedOnChange },
+      tracking: { trackEvent },
+      widgetType,
+    } = this.props;
+
+    const eventType = includeSkipped
+      ? 'total_test_cases'
+      : passingRateOptionMessages[EXCLUDING_SKIPPED].defaultMessage;
+
+    trackEvent(ratioBasedOnChange(widgetTypesMessages[widgetType].defaultMessage, eventType));
+  };
 
   render() {
     const {
@@ -129,6 +151,7 @@ export class PassingRateSummaryControls extends Component {
             </FieldProvider>
             <FieldProvider name="contentParameters.widgetOptions.includeSkipped">
               <RadioGroupControl
+                onOptionChange={this.handleIncludeSkippedChange}
                 options={options}
                 fieldLabel={formatMessage(passingRateOptionMessages[FORM_GROUP_CONTROL])}
               />

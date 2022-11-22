@@ -24,9 +24,11 @@ import { FIELD_LABEL_WIDTH } from './constants';
 
 const cx = classNames.bind(style);
 
-export const RadioGroupControl = ({ onChange, value, options, fieldLabel }) => {
+export const RadioGroupControl = ({ onChange, value, options, fieldLabel, onOptionChange }) => {
   const handleValueChange = ({ target: { value: radioButtonValue } }) => {
-    onChange(JSON.parse(radioButtonValue));
+    const parsedValue = JSON.parse(radioButtonValue);
+    onOptionChange(parsedValue);
+    onChange(parsedValue);
   };
 
   return (
@@ -53,10 +55,12 @@ RadioGroupControl.propTypes = {
     PropTypes.shape({ label: PropTypes.string, value: PropTypes.bool, disabled: PropTypes.bool }),
   ),
   fieldLabel: PropTypes.string,
+  onOptionChange: PropTypes.func,
 };
 
 RadioGroupControl.defaultProps = {
   onChange: () => {},
+  onOptionChange: () => {},
   value: true,
   options: [],
   fieldLabel: '',
