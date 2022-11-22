@@ -149,9 +149,11 @@ export class PassingRateSummaryControls extends Component {
                 )}
               />
             </FieldProvider>
-            <FieldProvider name="contentParameters.widgetOptions.includeSkipped">
+            <FieldProvider
+              onChange={this.handleIncludeSkippedChange}
+              name="contentParameters.widgetOptions.includeSkipped"
+            >
               <RadioGroupControl
-                onOptionChange={this.handleIncludeSkippedChange}
                 options={options}
                 fieldLabel={formatMessage(passingRateOptionMessages[FORM_GROUP_CONTROL])}
               />
