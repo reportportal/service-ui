@@ -65,7 +65,7 @@ export class NotificationCaseFormFields extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     attributesValue: PropTypes.array,
-    resetSection: PropTypes.func,
+    change: PropTypes.func,
   };
   static defaultProps = {
     activeProject: '',
@@ -110,12 +110,12 @@ export class NotificationCaseFormFields extends Component {
     const {
       intl: { formatMessage },
       attributesValue,
-      resetSection,
+      change,
     } = this.props;
     const hasOneAttrOrLess = attributesValue.filter((attribute) => 'key' in attribute).length <= 1;
 
     if (attributesValue.length === 1) {
-      resetSection([ATTRIBUTES_OPERATOR_FIELD_KEY]);
+      change(ATTRIBUTES_OPERATOR_FIELD_KEY, ATTRIBUTES_OPERATORS.AND);
     }
 
     return [
