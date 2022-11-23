@@ -33,7 +33,6 @@ BackBreadcrumb.propTypes = {
     title: PropTypes.string.isRequired,
     link: PropTypes.object.isRequired,
     onClick: PropTypes.func,
-    tooltipDisabled: PropTypes.bool,
   }).isRequired,
   maxBreadcrumbWidth: PropTypes.number,
 };
