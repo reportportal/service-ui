@@ -64,6 +64,11 @@
   font-family: $FONT-ROBOTO-REGULAR;
   font-size: 13px;
   line-height: 20px;
+  &-text {
+    width: 90%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 .dropdown {

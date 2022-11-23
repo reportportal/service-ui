@@ -302,7 +302,9 @@ export class GeneralTab extends Component {
         <form onSubmit={this.props.handleSubmit(this.onFormSubmit)}>
           <div>
             <div className={cx('fake-input-label')}>Name</div>
-            <div className={cx('fake-input')}>{this.props.projectId}</div>
+            <div className={cx('fake-input')}>
+              <div className={cx('fake-input-text')}>{this.props.projectId}</div>
+            </div>
           </div>
           <FormField
             name="interruptJobTime"
