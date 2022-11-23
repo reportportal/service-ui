@@ -119,4 +119,8 @@ export const Messages = defineMessages({
     id: 'GeneralTab.forever',
     defaultMessage: 'Forever',
   },
+  nameTooltip: {
+    id: 'GeneralTab.nameTooltip',
+    defaultMessage: 'Placeholder Name of Project so long for this field',
+  },
 });

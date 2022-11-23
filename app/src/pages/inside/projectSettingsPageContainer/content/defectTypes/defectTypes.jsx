@@ -32,7 +32,7 @@ import {
   Divider,
   TabDescription,
 } from 'pages/inside/projectSettingsPageContainer/content/elements';
-import { withHoverableTooltip } from 'components/main/tooltips/hoverableTooltip';
+import { withTooltip } from 'componentLibrary/tooltip';
 import { showModalAction } from 'controllers/modal';
 import {
   MAX_DEFECT_TYPES_COUNT,
@@ -54,12 +54,10 @@ CreateDefectTooltip.propTypes = {
   formatMessage: PropTypes.func.isRequired,
 };
 
-const CreateDefect = withHoverableTooltip({
-  TooltipComponent: CreateDefectTooltip,
-  data: {
-    placement: 'bottom',
-    dynamicWidth: true,
-  },
+const CreateDefect = withTooltip({
+  ContentComponent: CreateDefectTooltip,
+  side: 'bottom',
+  dynamicWidth: true,
 })(({ onClick, disabled }) => (
   <i
     className={cx('group-create', { disabled })}

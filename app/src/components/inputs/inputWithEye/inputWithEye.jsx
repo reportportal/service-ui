@@ -13,34 +13,69 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import EyeIcon from 'common/img/newIcons/eye-inline.svg';
 import CrossEyeIcon from 'common/img/newIcons/cross-eye-inline.svg';
+import { withTooltip } from 'componentLibrary/tooltip';
+import React from 'react';
+import { messages } from './messages';
 import styles from './inputWithEye.scss';
 
 const cx = classNames.bind(styles);
 
-export const InputWithEye = ({ value, disabled, onChange, onFocus, onBlur, className }) => (
-  // eslint-disable-next-line
-  <label className={cx('input-with-eye', className)} onFocus={onFocus} onBlur={onBlur} tabIndex="1">
-    <input
-      type="checkbox"
-      className={cx('input')}
-      checked={value}
-      disabled={disabled}
-      onChange={onChange}
-    />
-    <div
-      className={cx('eye', {
-        disabled,
-      })}
-    >
-      {Parser(value ? EyeIcon : CrossEyeIcon)}
-    </div>
-  </label>
+const EyeComponent = ({ value }) => Parser(value ? EyeIcon : CrossEyeIcon);
+EyeComponent.propTypes = {
+  value: PropTypes.string.isRequired,
+};
+
+const EyeTooltip = ({ formatMessage, value }) => (
+  <span>{formatMessage(value ? messages.hideTooltip : messages.showTooltip)}</span>
 );
+EyeTooltip.propTypes = {
+  formatMessage: PropTypes.func.isRequired,
+  value: PropTypes.string.isRequired,
+};
+
+const EyeComponentWithTooltip = withTooltip({
+  ContentComponent: EyeTooltip,
+  side: 'bottom',
+  dynamicWidth: true,
+})(({ value }) => <EyeComponent value={value} />);
+EyeComponentWithTooltip.propTypes = {
+  formatMessage: PropTypes.func.isRequired,
+  value: PropTypes.string.isRequired,
+};
+
+export const InputWithEye = ({ value, disabled, onChange, onFocus, onBlur, className }) => {
+  const { formatMessage } = useIntl();
+
+  return (
+    // eslint-disable-next-line
+    <label className={cx('input-with-eye', className)} onFocus={onFocus} onBlur={onBlur} tabIndex="1">
+      <input
+        type="checkbox"
+        className={cx('input')}
+        checked={value}
+        disabled={disabled}
+        onChange={onChange}
+      />
+      <div
+        className={cx('eye', {
+          disabled,
+        })}
+      >
+        {disabled ? (
+          <EyeComponent value={value} />
+        ) : (
+          <EyeComponentWithTooltip formatMessage={formatMessage} value={value} />
+        )}
+      </div>
+    </label>
+  );
+};
 InputWithEye.propTypes = {
   children: PropTypes.node,
   value: PropTypes.bool,

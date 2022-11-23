@@ -194,6 +194,7 @@ export const IntegrationInfo = (props) => {
               type: PROJECT_SETTINGS_TAB_PAGE,
               payload: { projectId: activeProject, settingsTab: INTEGRATIONS, subPage: data.name },
             },
+            tooltipDisabled: true,
           },
           {
             id: data.name,
@@ -227,6 +228,7 @@ export const IntegrationInfo = (props) => {
               payload: { projectId: activeProject, settingsTab: INTEGRATIONS },
             },
             onClick: goBackHandler,
+            tooltipDisabled: true,
           },
         ];
 

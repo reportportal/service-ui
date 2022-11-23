@@ -18,15 +18,29 @@ import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { NavLink } from 'components/main/navLink';
+import { withTooltip } from 'componentLibrary/tooltip';
 import styles from './breadcrumb.scss';
 
 const cx = classNames.bind(styles);
 
-// todo remove title and add tooltip with {title} (EPMRPP-79184)
+const TitleTooltip = ({ title }) => <span>{title}</span>;
+TitleTooltip.propTypes = {
+  title: PropTypes.string.isRequired,
+};
+
+const TitleComponent = withTooltip({
+  ContentComponent: TitleTooltip,
+  side: 'bottom',
+  dynamicWidth: true,
+})(({ title }) => title);
+TitleComponent.propTypes = {
+  title: PropTypes.string.isRequired,
+};
+
 export const Breadcrumb = ({
   maxBreadcrumbWidth,
   titleTailNumChars,
-  descriptor: { title, link, onClick },
+  descriptor: { title, link, onClick, tooltipDisabled },
 }) => {
   const ref = useRef();
 
@@ -39,10 +53,10 @@ export const Breadcrumb = ({
   }, [title, titleTailNumChars]);
 
   return (
-    <div className={cx('breadcrumb')} title={title}>
+    <div className={cx('breadcrumb')}>
       <NavLink className={cx('link')} to={link} onClick={onClick}>
         <div ref={ref} className={cx('breadcrumb-text')} style={{ maxWidth: maxBreadcrumbWidth }}>
-          {title}
+          {tooltipDisabled ? title : <TitleComponent title={title} />}
         </div>
       </NavLink>
     </div>
@@ -56,6 +70,7 @@ Breadcrumb.propTypes = {
     title: PropTypes.string.isRequired,
     link: PropTypes.object.isRequired,
     onClick: PropTypes.func,
+    tooltipDisabled: PropTypes.bool,
   }).isRequired,
 };
 
