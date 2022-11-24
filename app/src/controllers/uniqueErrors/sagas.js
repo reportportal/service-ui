@@ -37,9 +37,14 @@ import {
   FETCH_GLOBAL_INTEGRATIONS_SUCCESS,
   NAMESPACE as PLUGINS_NAMESPACE,
 } from 'controllers/plugins/constants';
-import { globalIntegrationsSelector, pluginsSelector } from 'controllers/plugins';
+import {
+  fetchGlobalIntegrationsAction,
+  globalIntegrationsSelector,
+  pluginsSelector,
+} from 'controllers/plugins';
 
 import { COMMAND_GET_CLUSTERS } from 'controllers/plugins/uiExtensions/constants';
+import { locationSelector } from 'controllers/pages/selectors';
 import {
   CLEAR_CLUSTER_ITEMS,
   clusterItemsSagas,
@@ -52,7 +57,11 @@ function* getIntegration() {
   // TODO: In the future plugins with js parts should not depend on integrations, only on plugins.
   // TODO: This should be removed when common getFile plugin command will be presented in all plugins with js files.
   let integrations = yield select(globalIntegrationsSelector);
-  if (!integrations.length) {
+  const { kind } = yield select(locationSelector);
+  const pageIsReloaded = kind === 'load';
+
+  if (!integrations.length && !pageIsReloaded) {
+    yield put(fetchGlobalIntegrationsAction());
     const response = yield take(FETCH_GLOBAL_INTEGRATIONS_SUCCESS);
     integrations = response.payload;
   }
@@ -69,6 +78,7 @@ function* getIntegration() {
 
   let plugins = yield select(pluginsSelector);
   if (!plugins.length) {
+    yield put(fetchDataAction(PLUGINS_NAMESPACE)(URLS.plugin()));
     const response = yield take(createFetchPredicate(PLUGINS_NAMESPACE));
     plugins = response.payload;
   }
