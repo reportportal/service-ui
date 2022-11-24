@@ -197,7 +197,9 @@ export const IntegrationInfo = (props) => {
           },
           {
             id: data.name,
-            title: `${PLUGIN_NAME_TITLES[data.name]} ${formatMessage(messages.settings)}`,
+            title: `${PLUGIN_NAME_TITLES[data.name] || data.name} ${formatMessage(
+              messages.settings,
+            )}`,
             link: {
               type: PROJECT_SETTINGS_TAB_PAGE,
               payload: { projectId: activeProject, settingsTab: INTEGRATIONS },
