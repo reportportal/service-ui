@@ -73,7 +73,7 @@ export const LaunchNamesContainer = ({
         creatable
         editable
         handleUnStoredItemCb={handleSystemMessage}
-        isExistingLaunchNames={isExistingLaunchNames}
+        storedItemsMap={isExistingLaunchNames}
         highlightUnStoredItem={highlightUnStoredItem}
         value={value}
         {...rest}
