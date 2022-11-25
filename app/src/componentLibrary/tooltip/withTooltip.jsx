@@ -64,7 +64,7 @@ export const withTooltip = ({
       </Reference>
       {isOpened &&
         ReactDOM.createPortal(
-          <Popper placement={side} eventsEnabled={false}>
+          <Popper placement={side} eventsEnabled>
             {({ placement, ref, style, arrowProps }) => (
               <div
                 className={cx('tooltip')}

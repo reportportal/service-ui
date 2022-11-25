@@ -21,7 +21,11 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import { JIRA, RALLY, EMAIL, SAUCE_LABS } from 'common/constants/pluginNames';
-import { isAdminSelector, activeProjectRoleSelector } from 'controllers/user';
+import {
+  isAdminSelector,
+  activeProjectRoleSelector,
+  activeProjectSelector,
+} from 'controllers/user';
 import { uiExtensionIntegrationSettingsSelector } from 'controllers/plugins/uiExtensions/selectors';
 import { canUpdateSettings } from 'common/utils/permissions';
 import { PLUGIN_NAME_TITLES } from 'components/integrations';
@@ -33,16 +37,22 @@ import {
   updateIntegrationAction,
   removeProjectIntegrationsByTypeAction,
 } from 'controllers/plugins';
-import { updatePagePropertiesAction } from 'controllers/pages';
+import {
+  PROJECT_SETTINGS_TAB_PAGE,
+  querySelector,
+  updatePagePropertiesAction,
+} from 'controllers/pages';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { INTEGRATIONS_SETTINGS_COMPONENTS_MAP } from 'components/integrations/settingsComponentsMap';
 import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
 import { PROJECT_SETTINGS_INTEGRATION } from 'analyticsEvents/projectSettingsPageEvents';
+import { omit } from 'common/utils';
+import { INTEGRATIONS } from 'common/constants/settingsTabs';
 import { IntegrationHeader } from './integrationHeader';
 import { AvailableIntegrations } from './availableIntegrations';
+import { messages } from './messages';
 import { JIRA_CLOUD, AZURE_DEVOPS } from './constats';
 import styles from './integrationInfo.scss';
-import { messages } from './messages';
 
 const cx = classNames.bind(styles);
 
@@ -66,6 +76,8 @@ export const IntegrationInfo = (props) => {
   const userProjectRole = useSelector(activeProjectRoleSelector);
   const globalIntegrations = useSelector(namedGlobalIntegrationsSelector);
   const projectIntegrations = useSelector(namedProjectIntegrationsSelector);
+  const activeProject = useSelector(activeProjectSelector);
+  const query = useSelector(querySelector);
   const isAbleToClick = canUpdateSettings(isAdmin, userProjectRole);
   const dispatch = useDispatch();
   const {
@@ -172,6 +184,54 @@ export const IntegrationInfo = (props) => {
     },
   };
 
+  const getBreadcrumbData = (isIntegrationDetails) =>
+    isIntegrationDetails
+      ? [
+          {
+            id: 'integrationList',
+            title: formatMessage(messages.integrationList),
+            link: {
+              type: PROJECT_SETTINGS_TAB_PAGE,
+              payload: { projectId: activeProject, settingsTab: INTEGRATIONS, subPage: data.name },
+            },
+          },
+          {
+            id: data.name,
+            title: `${PLUGIN_NAME_TITLES[data.name] || data.name} ${formatMessage(
+              messages.settings,
+            )}`,
+            link: {
+              type: PROJECT_SETTINGS_TAB_PAGE,
+              payload: { projectId: activeProject, settingsTab: INTEGRATIONS },
+              meta: {
+                query: omit(query, ['id']),
+              },
+            },
+          },
+          {
+            id: updatedData.id,
+            title: updatedData.name,
+            link: {
+              type: PROJECT_SETTINGS_TAB_PAGE,
+              payload: { projectId: activeProject, settingsTab: INTEGRATIONS },
+              meta: {
+                query,
+              },
+            },
+          },
+        ]
+      : [
+          {
+            id: 'backToIntegrations',
+            title: formatMessage(messages.backToIntegration),
+            link: {
+              type: PROJECT_SETTINGS_TAB_PAGE,
+              payload: { projectId: activeProject, settingsTab: INTEGRATIONS },
+            },
+            onClick: goBackHandler,
+          },
+        ];
+
   const resetProjectIntegrations = () => dispatch(removeProjectIntegrationsByTypeAction(name));
 
   const onResetProjectIntegration = () => {
@@ -235,18 +295,18 @@ export const IntegrationInfo = (props) => {
         <>
           <IntegrationHeader
             data={data}
-            goBackHandler={goBackHandler}
             onAddProjectIntegration={onAddProjectIntegration}
             onResetProjectIntegration={onResetProjectIntegration}
             isAbleToClick={isAbleToClick}
             availableProjectIntegrations={availableProjectIntegrations}
             withButton
+            breadcrumbData={getBreadcrumbData(false)}
           />
           {integrationContent()}
         </>
       ) : (
         <>
-          <IntegrationHeader data={data} goBackHandler={goBackHandler} />
+          <IntegrationHeader data={data} breadcrumbData={getBreadcrumbData(true)} />
           <div className={cx('integration-settings-block')}>
             <IntegrationSettingsComponent
               data={updatedData}

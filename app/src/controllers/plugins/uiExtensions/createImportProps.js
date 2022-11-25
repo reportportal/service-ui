@@ -190,6 +190,7 @@ import { AsyncAutocomplete as AsyncAutocompleteField } from 'componentLibrary/au
 import { AttributeListFormField } from 'components/containers/AttributeListFormField';
 import { Tabs } from 'components/main/tabs';
 import { withTooltip } from 'components/main/tooltips/tooltip';
+import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
 
 const BUTTONS = {
   GhostButton,
@@ -286,6 +287,7 @@ export const createImportProps = (pluginName) => ({
     AsyncAutocompleteField,
     RuleListComponent,
     AttributeListFormField,
+    Breadcrumbs,
   },
   HOCs: {
     withTooltip,

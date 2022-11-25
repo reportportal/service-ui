@@ -44,6 +44,7 @@ import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { BubblesPreloader } from 'components/preloaders/bubblesPreloader';
 import { Button } from 'componentLibrary/button';
 import { Dropdown } from 'componentLibrary/dropdown';
+import { withTooltip } from 'componentLibrary/tooltip';
 import styles from './generalTab.scss';
 import { Messages } from './generalTabMessages';
 
@@ -52,6 +53,20 @@ const cx = classNames.bind(styles);
 const hoursToSeconds = (hours) => moment.duration(hours, 'hours').asSeconds();
 const daysToSeconds = (days) => moment.duration(days, 'days').asSeconds();
 const selector = formValueSelector('generalForm');
+
+const NameTooltip = ({ projectId }) => <span>{projectId}</span>;
+NameTooltip.propTypes = {
+  projectId: PropTypes.string.isRequired,
+};
+
+const NameInput = withTooltip({
+  ContentComponent: NameTooltip,
+  side: 'bottom',
+  dynamicWidth: true,
+})(({ projectId }) => <div className={cx('fake-input')}>{projectId}</div>);
+NameInput.propTypes = {
+  projectId: PropTypes.string.isRequired,
+};
 
 @reduxForm({
   form: 'generalForm',
@@ -302,9 +317,7 @@ export class GeneralTab extends Component {
         <form onSubmit={this.props.handleSubmit(this.onFormSubmit)}>
           <div>
             <div className={cx('fake-input-label')}>Name</div>
-            <div className={cx('fake-input')}>
-              <div className={cx('fake-input-text')}>{this.props.projectId}</div>
-            </div>
+            <NameInput projectId={this.props.projectId} />
           </div>
           <FormField
             name="interruptJobTime"
