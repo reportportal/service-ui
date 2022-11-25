@@ -50,7 +50,7 @@ const messages = defineMessages({
 
 export const LaunchNamesContainer = ({
   highlightUnStoredItem,
-  isExistingLaunchNames,
+  existingItemsMap,
   value,
   ...rest
 }) => {
@@ -59,7 +59,7 @@ export const LaunchNamesContainer = ({
   const [showMessage, setShowMessage] = useState(false);
 
   useEffect(() => {
-    setShowMessage(!value.every((item) => !!isExistingLaunchNames[item]));
+    setShowMessage(!value.every((item) => !!existingItemsMap[item]));
   }, []);
 
   const handleSystemMessage = (items, storedItems) =>
@@ -73,7 +73,7 @@ export const LaunchNamesContainer = ({
         creatable
         editable
         handleUnStoredItemCb={handleSystemMessage}
-        storedItemsMap={isExistingLaunchNames}
+        existingItemsMap={existingItemsMap}
         highlightUnStoredItem={highlightUnStoredItem}
         value={value}
         {...rest}
@@ -98,11 +98,11 @@ export const LaunchNamesContainer = ({
 LaunchNamesContainer.propTypes = {
   highlightUnStoredItem: PropTypes.bool.isRequired,
   value: PropTypes.arrayOf(PropTypes.string),
-  isExistingLaunchNames: PropTypes.shape({
+  existingItemsMap: PropTypes.shape({
     value: PropTypes.bool,
   }),
 };
 LaunchNamesContainer.defaultProps = {
   value: [],
-  isExistingLaunchNames: {},
+  existingItemsMap: {},
 };
