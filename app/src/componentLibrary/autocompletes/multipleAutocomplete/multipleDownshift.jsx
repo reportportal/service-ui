@@ -26,10 +26,10 @@ export const MultipleDownshift = ({
   onChange,
   handleUnStoredItemCb,
   options,
-  existingLaunchNames,
+  isExistingLaunchNames,
   ...props
 }) => {
-  const [storedItemsMap, setStoredItems] = useState(existingLaunchNames);
+  const [storedItemsMap, setStoredItems] = useState(isExistingLaunchNames);
 
   const collectStoredItems = (newItemData, collectStoredItemsCb) => {
     const newState = {
@@ -117,7 +117,7 @@ MultipleDownshift.propTypes = {
   children: PropTypes.func.isRequired,
   selectedItems: PropTypes.array,
   handleUnStoredItemCb: PropTypes.func,
-  existingLaunchNames: PropTypes.shape({
+  isExistingLaunchNames: PropTypes.shape({
     value: PropTypes.bool,
   }),
 };
@@ -127,5 +127,5 @@ MultipleDownshift.defaultProps = {
   onChange: () => {},
   selectedItems: [],
   handleUnStoredItemCb: null,
-  existingLaunchNames: {},
+  isExistingLaunchNames: {},
 };

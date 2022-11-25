@@ -184,7 +184,7 @@ export const projectNotificationsReducer = (state = {}, { type, payload }) => {
     case FETCH_EXISTING_LAUNCH_NAMES_SUCCESS:
       return {
         ...state,
-        existingLaunchNames: payload.reduce(
+        isExistingLaunchNames: payload.reduce(
           (initialValue, launchName) => Object.assign(initialValue, { [launchName]: !!launchName }),
           {},
         ),

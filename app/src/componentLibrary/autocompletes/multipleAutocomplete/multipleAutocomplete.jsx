@@ -51,7 +51,7 @@ export const MultipleAutocomplete = ({
   parseInputValueFn,
   handleUnStoredItemCb,
   dataAutomationId,
-  existingLaunchNames,
+  isExistingLaunchNames,
   ...props
 }) => {
   let updatePosition;
@@ -96,7 +96,7 @@ export const MultipleAutocomplete = ({
         selectedItems={value}
         onStateChange={onStateChange}
         options={options}
-        existingLaunchNames={existingLaunchNames}
+        isExistingLaunchNames={isExistingLaunchNames}
         handleUnStoredItemCb={handleUnStoredItemCb}
       >
         {({
@@ -253,7 +253,7 @@ MultipleAutocomplete.propTypes = {
   parseInputValueFn: PropTypes.func,
   handleUnStoredItemCb: PropTypes.func,
   dataAutomationId: PropTypes.string,
-  existingLaunchNames: PropTypes.shape({
+  isExistingLaunchNames: PropTypes.shape({
     value: PropTypes.bool,
   }),
 };
@@ -286,5 +286,5 @@ MultipleAutocomplete.defaultProps = {
   parseInputValueFn: null,
   handleUnStoredItemCb: null,
   dataAutomationId: '',
-  existingLaunchNames: {},
+  isExistingLaunchNames: {},
 };
