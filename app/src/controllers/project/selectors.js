@@ -133,6 +133,9 @@ export const projectNotificationsSelector = createSelector(
     })),
 );
 
+export const existingLaunchNamesSelector = (state) =>
+  projectNotificationSelector(state).existingLaunchNames ?? {};
+
 export const projectNotificationsEnabledSelector = (state) =>
   projectNotificationsConfigurationSelector(state).enabled || false;
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
@@ -48,10 +48,19 @@ const messages = defineMessages({
   },
 });
 
-export const LaunchNamesContainer = ({ highlightUnStoredItem, ...rest }) => {
+export const LaunchNamesContainer = ({
+  highlightUnStoredItem,
+  existingLaunchNames,
+  value,
+  ...rest
+}) => {
   const { formatMessage } = useIntl();
   const activeProject = useSelector(projectIdSelector);
   const [showMessage, setShowMessage] = useState(false);
+
+  useEffect(() => {
+    setShowMessage(!value.every((item) => !!existingLaunchNames[item]));
+  }, []);
 
   const handleSystemMessage = (items, storedItems) =>
     highlightUnStoredItem && setShowMessage(items.length !== Object.keys(storedItems).length);
@@ -63,8 +72,10 @@ export const LaunchNamesContainer = ({ highlightUnStoredItem, ...rest }) => {
         createWithoutConfirmation
         creatable
         editable
-        highlightUnStoredItem={highlightUnStoredItem}
         handleUnStoredItemCb={handleSystemMessage}
+        existingLaunchNames={existingLaunchNames}
+        highlightUnStoredItem={highlightUnStoredItem}
+        value={value}
         {...rest}
       />
       <span className={cx('helper-text')}>{formatMessage(messages.launchNamesNote)}</span>
@@ -86,4 +97,12 @@ export const LaunchNamesContainer = ({ highlightUnStoredItem, ...rest }) => {
 };
 LaunchNamesContainer.propTypes = {
   highlightUnStoredItem: PropTypes.bool.isRequired,
+  value: PropTypes.arrayOf(PropTypes.string),
+  existingLaunchNames: PropTypes.shape({
+    value: PropTypes.bool,
+  }),
+};
+LaunchNamesContainer.defaultProps = {
+  value: [],
+  existingLaunchNames: {},
 };

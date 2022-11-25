@@ -32,6 +32,7 @@ export const ADD_DEFECT_TYPE = 'addDefectType';
 export const ADD_DEFECT_TYPE_SUCCESS = 'addDefectTypeSuccess';
 export const DELETE_DEFECT_TYPE = 'deleteDefectType';
 export const DELETE_DEFECT_TYPE_SUCCESS = 'deleteDefectTypeSuccess';
+export const FETCH_EXISTING_LAUNCH_NAMES_SUCCESS = 'fetchExistingLaunchNamesSuccess';
 
 export const ANALYZER_ATTRIBUTE_PREFIX = 'analyzer';
 export const JOB_ATTRIBUTE_PREFIX = 'job';

@@ -73,6 +73,7 @@ import {
   deleteProjectNotificationSuccessAction,
   updateProjectNotificationSuccessAction,
   setProjectNotificationsLoadingAction,
+  fetchExistingLaunchNamesSuccessAction,
 } from './actionCreators';
 import { patternsSelector } from './selectors';
 
@@ -163,8 +164,14 @@ function* fetchProjectNotifications() {
   yield put(setProjectNotificationsLoadingAction(true));
   try {
     const projectId = yield select(projectIdSelector);
-    const notifications = yield call(fetch, URLS.notification(projectId));
+    const [notifications, existingLaunchNames] = yield all([
+      call(fetch, URLS.notification(projectId)),
+      call(fetch, URLS.launchesAll(projectId)),
+    ]);
     yield put(fetchProjectNotificationsSuccessAction(notifications));
+    yield put(fetchExistingLaunchNamesSuccessAction(existingLaunchNames));
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
   } finally {
     yield put(setProjectNotificationsLoadingAction(false));
   }
