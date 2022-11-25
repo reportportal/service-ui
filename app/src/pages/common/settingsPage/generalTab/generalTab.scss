@@ -55,7 +55,7 @@
 .fake-input {
   box-sizing: border-box;
   width: 240px;
-  padding: 7px 0 7px 12px;
+  padding: 7px 12px;
   margin-bottom: 24px;
   background: transparent;
   color: $COLOR--almost-black;
@@ -64,6 +64,8 @@
   font-family: $FONT-ROBOTO-REGULAR;
   font-size: 13px;
   line-height: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .dropdown {
