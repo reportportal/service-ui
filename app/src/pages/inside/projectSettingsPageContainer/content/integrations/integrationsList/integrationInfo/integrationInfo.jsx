@@ -89,6 +89,8 @@ export const IntegrationInfo = (props) => {
 
   const availableGlobalIntegrations = globalIntegrations[data.name] || [];
   const availableProjectIntegrations = projectIntegrations[data.name] || [];
+  const isAvailableLeastOneIntegration =
+    availableGlobalIntegrations.length > 0 || availableProjectIntegrations.length > 0;
 
   useEffect(() => {
     const integration = availableProjectIntegrations.find((value) => value.id === +integrationId);
@@ -256,7 +258,7 @@ export const IntegrationInfo = (props) => {
   const integrationContent = () => {
     return (
       <>
-        {availableGlobalIntegrations.length > 0 || availableProjectIntegrations.length > 0 ? (
+        {isAvailableLeastOneIntegration ? (
           <>
             {availableProjectIntegrations.length > 0 && (
               <AvailableIntegrations
@@ -299,6 +301,7 @@ export const IntegrationInfo = (props) => {
             onResetProjectIntegration={onResetProjectIntegration}
             isAbleToClick={isAbleToClick}
             availableProjectIntegrations={availableProjectIntegrations}
+            isAvailableLeastOneIntegration={isAvailableLeastOneIntegration}
             withButton
             breadcrumbData={getBreadcrumbData(false)}
           />
