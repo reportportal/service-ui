@@ -64,6 +64,8 @@
   "AddEditNotificationCaseModal.controlPanelName": "Правіла",
   "AddEditNotificationCaseModal.copyRuleMessage": "Дубляваць",
   "AddEditNotificationCaseModal.description": "Выберыце ўмовы для стварэння правіла апавяшчэння",
+  "AddEditNotificationCaseModal.attributesOperatorAnd": "Усе атрыбуты павінны супадаць",
+  "AddEditNotificationCaseModal.attributesOperatorOr": "Любы атрыбут павінен супадаць",
   "AddEditNotificationCaseModal.dropdownValueAlways": "Заўсёды",
   "AddEditNotificationCaseModal.dropdownValueFailed": "Пры запуску ёсць праблемы",
   "AddEditNotificationCaseModal.dropdownValueMore10": "> 10% элементаў маюць праблемы",

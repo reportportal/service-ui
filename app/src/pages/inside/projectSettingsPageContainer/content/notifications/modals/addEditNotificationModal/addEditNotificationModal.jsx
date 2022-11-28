@@ -16,9 +16,9 @@
 
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { reduxForm } from 'redux-form';
+import { formValueSelector, reduxForm } from 'redux-form';
 import { useTracking } from 'react-tracking';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import className from 'classnames/bind';
 import { defineMessages, useIntl } from 'react-intl';
 import { withModal } from 'components/main/modal';
@@ -35,11 +35,14 @@ import { FieldText } from 'componentLibrary/fieldText';
 import { Checkbox } from 'componentLibrary/checkbox';
 import { PROJECT_SETTINGS_NOTIFICATIONS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { AttributeListFormField } from 'components/containers/AttributeListFormField';
+import { RadioGroup } from 'componentLibrary/radioGroup';
 import { RecipientsContainer } from './recipientsContainer';
 import { LaunchNamesContainer } from './launchNamesContainer';
 import { FieldElement } from '../../../elements';
 import {
   ATTRIBUTES_FIELD_KEY,
+  ATTRIBUTES_OPERATORS,
+  ATTRIBUTES_OPERATOR_FIELD_KEY,
   ENABLED_FIELD_KEY,
   INFORM_OWNER_FIELD_KEY,
   LAUNCH_CASES,
@@ -121,6 +124,14 @@ const messages = defineMessages({
     id: 'AddEditNotificationCaseModal.addAttribute',
     defaultMessage: 'Add Attribute',
   },
+  [ATTRIBUTES_OPERATORS.AND]: {
+    id: 'AddEditNotificationCaseModal.attributesOperatorAnd',
+    defaultMessage: 'All attributes should match',
+  },
+  [ATTRIBUTES_OPERATORS.OR]: {
+    id: 'AddEditNotificationCaseModal.attributesOperatorOr',
+    defaultMessage: 'Any attribute should match',
+  },
   [LAUNCH_CASES.ALWAYS]: {
     id: 'AddEditNotificationCaseModal.dropdownValueAlways',
     defaultMessage: 'Always',
@@ -176,6 +187,9 @@ const messages = defineMessages({
 });
 
 const FIELD = 'Field';
+const NOTIFICATION_FORM = 'notificationForm';
+
+const attributesValueSelector = formValueSelector(NOTIFICATION_FORM);
 
 const AddEditNotificationModal = ({
   data,
@@ -189,6 +203,10 @@ const AddEditNotificationModal = ({
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
   const [isEditorShown, setShowEditor] = React.useState(data.notification.attributes.length > 0);
+  const attributesValue = useSelector((state) =>
+    attributesValueSelector(state, ATTRIBUTES_FIELD_KEY),
+  );
+
   useEffect(() => {
     initialize(data.notification);
   }, []);
@@ -263,6 +281,26 @@ const AddEditNotificationModal = ({
     text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
   };
 
+  const hasOneAttrOrLess = attributesValue.filter((attribute) => 'key' in attribute).length <= 1;
+  const getAttributesConditionOptions = () => {
+    if (attributesValue.length === 1) {
+      change(ATTRIBUTES_OPERATOR_FIELD_KEY, ATTRIBUTES_OPERATORS.AND);
+    }
+
+    return [
+      {
+        value: ATTRIBUTES_OPERATORS.AND,
+        label: formatMessage(messages[ATTRIBUTES_OPERATORS.AND]),
+        disabled: hasOneAttrOrLess,
+      },
+      {
+        value: ATTRIBUTES_OPERATORS.OR,
+        label: formatMessage(messages[ATTRIBUTES_OPERATORS.OR]),
+        disabled: hasOneAttrOrLess,
+      },
+    ];
+  };
+
   return (
     <ModalLayout
       title={formatMessage(messages.title, {
@@ -326,6 +364,7 @@ const AddEditNotificationModal = ({
           </FieldErrorHint>
         </FieldElement>
         <FieldElement
+          className={cx('attributes-list-wrapper')}
           name={ATTRIBUTES_FIELD_KEY}
           disabled={!isEditorShown}
           dataAutomationId={ATTRIBUTES_FIELD_KEY + FIELD}
@@ -341,6 +380,22 @@ const AddEditNotificationModal = ({
             changeValue={change}
           />
         </FieldElement>
+        {attributesValue.length > 0 && (
+          <FieldElement
+            className={cx('attributes-operator-wrapper')}
+            name={ATTRIBUTES_OPERATOR_FIELD_KEY}
+            dataAutomationId={ATTRIBUTES_OPERATOR_FIELD_KEY + FIELD}
+          >
+            <RadioGroup
+              descriptionClassName={cx(
+                hasOneAttrOrLess ? 'attributes-operator-disabled' : 'attributes-operator-active',
+                'attributes-operator',
+              )}
+              options={getAttributesConditionOptions()}
+              unCheckedDisabled
+            />
+          </FieldElement>
+        )}
       </div>
     </ModalLayout>
   );
@@ -365,7 +420,7 @@ AddEditNotificationModal.defaultProps = {
 
 export default withModal('addEditNotificationModal')(
   reduxForm({
-    form: 'notificationForm',
+    form: NOTIFICATION_FORM,
     validate: (
       { ruleName, recipients, informOwner, launchNames, attributes },
       { data: { notification, notifications } },

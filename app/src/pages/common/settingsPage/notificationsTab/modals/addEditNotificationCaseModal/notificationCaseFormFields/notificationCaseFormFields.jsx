@@ -72,7 +72,7 @@ export class NotificationCaseFormFields extends Component {
   static defaultProps = {
     activeProject: '',
     attributesValue: [],
-    resetSection: () => {},
+    change: () => {},
   };
 
   getDropdownInputConfig = () => {
