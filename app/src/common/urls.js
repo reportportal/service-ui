@@ -110,6 +110,7 @@ export const URLS = {
   choiceSuggestedItems: (activeProject) => `${urlBase}${activeProject}/item/suggest/choice`,
   launchNameSearch: (activeProject) => (searchTerm = '') =>
     `${urlBase}${activeProject}/launch/names?filter.cnt.name=${searchTerm}`,
+  launchesExistingNames: (activeProject) => `${urlBase}${activeProject}/launch/names`,
   launchOwnersSearch: (activeProject) => (searchTerm = '') =>
     `${urlBase}${activeProject}/launch/owners?filter.cnt.user=${searchTerm}`,
   launches: (activeProject) => `${urlBase}${activeProject}/launch`,

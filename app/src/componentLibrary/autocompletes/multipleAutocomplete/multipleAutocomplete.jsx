@@ -51,6 +51,7 @@ export const MultipleAutocomplete = ({
   parseInputValueFn,
   handleUnStoredItemCb,
   dataAutomationId,
+  existingItemsMap,
   ...props
 }) => {
   let updatePosition;
@@ -95,6 +96,7 @@ export const MultipleAutocomplete = ({
         selectedItems={value}
         onStateChange={onStateChange}
         options={options}
+        existingItemsMap={existingItemsMap}
         handleUnStoredItemCb={handleUnStoredItemCb}
       >
         {({
@@ -251,6 +253,9 @@ MultipleAutocomplete.propTypes = {
   parseInputValueFn: PropTypes.func,
   handleUnStoredItemCb: PropTypes.func,
   dataAutomationId: PropTypes.string,
+  existingItemsMap: PropTypes.shape({
+    value: PropTypes.bool,
+  }),
 };
 
 MultipleAutocomplete.defaultProps = {
@@ -281,4 +286,5 @@ MultipleAutocomplete.defaultProps = {
   parseInputValueFn: null,
   handleUnStoredItemCb: null,
   dataAutomationId: '',
+  existingItemsMap: {},
 };

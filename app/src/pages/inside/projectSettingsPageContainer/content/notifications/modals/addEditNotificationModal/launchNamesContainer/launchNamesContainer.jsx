@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
@@ -24,6 +24,7 @@ import { projectIdSelector } from 'controllers/pages';
 import { AsyncMultipleAutocomplete } from 'componentLibrary/autocompletes/asyncMultipleAutocomplete';
 import { SystemMessage } from 'componentLibrary/systemMessage';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { isExistingLaunchNamesSelector } from 'controllers/project/selectors';
 import styles from './launchNamesContainer.scss';
 
 const cx = classNames.bind(styles);
@@ -48,10 +49,15 @@ const messages = defineMessages({
   },
 });
 
-export const LaunchNamesContainer = ({ highlightUnStoredItem, ...rest }) => {
+export const LaunchNamesContainer = ({ highlightUnStoredItem, value, ...rest }) => {
   const { formatMessage } = useIntl();
   const activeProject = useSelector(projectIdSelector);
   const [showMessage, setShowMessage] = useState(false);
+  const existingItemsMap = useSelector(isExistingLaunchNamesSelector);
+
+  useEffect(() => {
+    setShowMessage(value.some((item) => !existingItemsMap[item]));
+  }, []);
 
   const handleSystemMessage = (items, storedItems) =>
     highlightUnStoredItem && setShowMessage(items.length !== Object.keys(storedItems).length);
@@ -63,8 +69,10 @@ export const LaunchNamesContainer = ({ highlightUnStoredItem, ...rest }) => {
         createWithoutConfirmation
         creatable
         editable
-        highlightUnStoredItem={highlightUnStoredItem}
         handleUnStoredItemCb={handleSystemMessage}
+        existingItemsMap={existingItemsMap}
+        highlightUnStoredItem={highlightUnStoredItem}
+        value={value}
         {...rest}
       />
       <span className={cx('helper-text')}>{formatMessage(messages.launchNamesNote)}</span>
@@ -86,4 +94,8 @@ export const LaunchNamesContainer = ({ highlightUnStoredItem, ...rest }) => {
 };
 LaunchNamesContainer.propTypes = {
   highlightUnStoredItem: PropTypes.bool.isRequired,
+  value: PropTypes.arrayOf(PropTypes.string),
+};
+LaunchNamesContainer.defaultProps = {
+  value: [],
 };

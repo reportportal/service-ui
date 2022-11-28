@@ -359,7 +359,7 @@ const AddEditNotificationModal = ({
           dataAutomationId={LAUNCH_NAMES_FIELD_KEY + FIELD}
         >
           <FieldErrorHint hintType="top">
-            <LaunchNamesContainer highlightUnStoredItem={actionType === 'add'} />
+            <LaunchNamesContainer highlightUnStoredItem />
           </FieldErrorHint>
         </FieldElement>
         <FieldElement

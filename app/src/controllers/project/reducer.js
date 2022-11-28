@@ -34,6 +34,7 @@ import {
   DELETE_PROJECT_NOTIFICATION_SUCCESS,
   UPDATE_PROJECT_NOTIFICATION_SUCCESS,
   SET_PROJECT_NOTIFICATION_LOADING,
+  FETCH_EXISTING_LAUNCH_NAMES_SUCCESS,
 } from './constants';
 
 export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, payload }) => {
@@ -180,6 +181,15 @@ export const projectNotificationsReducer = (state = {}, { type, payload }) => {
         ...state,
         loading: payload,
       };
+    case FETCH_EXISTING_LAUNCH_NAMES_SUCCESS:
+      return {
+        ...state,
+        isExistingLaunchNames: payload.reduce(
+          (initialValue, launchName) => Object.assign(initialValue, { [launchName]: !!launchName }),
+          {},
+        ),
+      };
+
     default:
       return state;
   }
