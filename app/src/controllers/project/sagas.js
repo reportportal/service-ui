@@ -166,7 +166,7 @@ function* fetchProjectNotifications() {
     const projectId = yield select(projectIdSelector);
     const [notifications, existingLaunchNames] = yield all([
       call(fetch, URLS.notification(projectId)),
-      call(fetch, URLS.launchesAll(projectId)),
+      call(fetch, URLS.launchesExistingNames(projectId)),
     ]);
     yield put(fetchProjectNotificationsSuccessAction(notifications));
     yield put(fetchExistingLaunchNamesSuccessAction(existingLaunchNames));
