@@ -24,6 +24,7 @@ import { projectIdSelector } from 'controllers/pages';
 import { AsyncMultipleAutocomplete } from 'componentLibrary/autocompletes/asyncMultipleAutocomplete';
 import { SystemMessage } from 'componentLibrary/systemMessage';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { isExistingLaunchNamesSelector } from 'controllers/project/selectors';
 import styles from './launchNamesContainer.scss';
 
 const cx = classNames.bind(styles);
@@ -48,18 +49,14 @@ const messages = defineMessages({
   },
 });
 
-export const LaunchNamesContainer = ({
-  highlightUnStoredItem,
-  existingItemsMap,
-  value,
-  ...rest
-}) => {
+export const LaunchNamesContainer = ({ highlightUnStoredItem, value, ...rest }) => {
   const { formatMessage } = useIntl();
   const activeProject = useSelector(projectIdSelector);
   const [showMessage, setShowMessage] = useState(false);
+  const existingItemsMap = useSelector(isExistingLaunchNamesSelector);
 
   useEffect(() => {
-    setShowMessage(!value.every((item) => !!existingItemsMap[item]));
+    setShowMessage(value.some((item) => !existingItemsMap[item]));
   }, []);
 
   const handleSystemMessage = (items, storedItems) =>
@@ -98,11 +95,7 @@ export const LaunchNamesContainer = ({
 LaunchNamesContainer.propTypes = {
   highlightUnStoredItem: PropTypes.bool.isRequired,
   value: PropTypes.arrayOf(PropTypes.string),
-  existingItemsMap: PropTypes.shape({
-    value: PropTypes.bool,
-  }),
 };
 LaunchNamesContainer.defaultProps = {
   value: [],
-  existingItemsMap: {},
 };
