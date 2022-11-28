@@ -38,7 +38,6 @@ export const IntegrationHeader = (props) => {
     onResetProjectIntegration,
     isAbleToClick,
     availableProjectIntegrations,
-    isAvailableLeastOneIntegration,
     withButton,
     breadcrumbData,
   } = props;
@@ -67,11 +66,9 @@ export const IntegrationHeader = (props) => {
         </div>
         {withButton && (
           <div className={cx('buttons-section')}>
-            {isAvailableLeastOneIntegration && (
-              <Button disabled={!isAbleToClick} onClick={onAddProjectIntegration}>
-                {formatMessage(messages.noGlobalIntegrationsButtonAdd)}
-              </Button>
-            )}
+            <Button disabled={!isAbleToClick} onClick={onAddProjectIntegration}>
+              {formatMessage(messages.noGlobalIntegrationsButtonAdd)}
+            </Button>
             {availableProjectIntegrations.length > 0 && isAbleToClick && (
               <Button onClick={onResetProjectIntegration} variant="ghost">
                 {formatMessage(messages.resetToGlobalIntegrationsButton)}
@@ -103,7 +100,6 @@ IntegrationHeader.propTypes = {
   onResetProjectIntegration: PropTypes.func,
   isAbleToClick: PropTypes.bool,
   availableProjectIntegrations: PropTypes.array,
-  isAvailableLeastOneIntegration: PropTypes.bool,
   withButton: PropTypes.bool,
   breadcrumbData: PropTypes.arrayOf(
     PropTypes.shape({

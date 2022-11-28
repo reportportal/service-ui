@@ -301,8 +301,7 @@ export const IntegrationInfo = (props) => {
             onResetProjectIntegration={onResetProjectIntegration}
             isAbleToClick={isAbleToClick}
             availableProjectIntegrations={availableProjectIntegrations}
-            isAvailableLeastOneIntegration={isAvailableLeastOneIntegration}
-            withButton
+            withButton={isAvailableLeastOneIntegration}
             breadcrumbData={getBreadcrumbData(false)}
           />
           {integrationContent()}
