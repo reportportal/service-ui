@@ -50,6 +50,9 @@
   min-width: 170px;
 }
 
-.attributes-list {
-  margin-top: 8px;
+.attributes-list-wrapper {
+  margin-bottom: 18px;
+  .attributes-list {
+    margin-top: 8px;
+  }
 }

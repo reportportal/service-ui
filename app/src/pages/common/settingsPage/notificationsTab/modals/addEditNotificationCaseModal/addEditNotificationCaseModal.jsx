@@ -26,7 +26,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { validate, bindMessageToValidator, commonValidators } from 'common/utils/validation';
 import { NotificationCaseFormFields } from './notificationCaseFormFields';
 import styles from './addEditNotificationCaseModal.scss';
-import { ENABLED_FIELD_KEY } from '../../constants';
+import { ENABLED_FIELD_KEY, NOTIFICATION_CASE_FORM } from '../../constants';
 
 const cx = className.bind(styles);
 
@@ -51,7 +51,7 @@ const messages = defineMessages({
 
 @withModal('addEditNotificationCaseModal')
 @reduxForm({
-  form: 'notificationCaseForm',
+  form: NOTIFICATION_CASE_FORM,
   validate: (
     { ruleName, recipients, informOwner, launchNames, attributes },
     { data: { notificationCase, cases } },
@@ -85,6 +85,7 @@ export class AddEditNotificationCaseModal extends Component {
     initialize: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     dirty: PropTypes.bool.isRequired,
+    change: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -121,6 +122,7 @@ export class AddEditNotificationCaseModal extends Component {
     const {
       intl: { formatMessage },
       data: { isNewCase, onConfirm, eventsInfo },
+      change,
       handleSubmit,
     } = this.props;
 
@@ -145,7 +147,7 @@ export class AddEditNotificationCaseModal extends Component {
         closeIconEventInfo={eventsInfo.closeIcon}
         renderHeaderElements={this.renderHeaderElements}
       >
-        <NotificationCaseFormFields />
+        <NotificationCaseFormFields change={change} />
       </ModalLayout>
     );
   }

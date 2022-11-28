@@ -41,9 +41,21 @@
     cursor: default;
 
     .toggler {
-      &::after {
-        background-color: $COLOR--topaz-pressed;
+      &.checked.disabled {
+        &::after {
+          background-color: $COLOR--topaz-pressed;
+        }
       }
+
+      &.disabled {
+        &::after {
+          background-color: transparent;
+        }
+      }
+    }
+
+    .children-container {
+      color: $COLOR--e-300;
     }
   }
 }
@@ -86,11 +98,12 @@
 .children-container {
   display: inline-block;
   overflow: hidden;
-  font-family: $FONT-REGULAR;
+  font-family: $FONT-ROBOTO-REGULAR;
   font-size: 13px;
-  line-height: 18px;
+  line-height: 20px;
   word-break: break-all;
   text-overflow: ellipsis;
+  color: $COLOR--almost-black;
 }
 
 .light {
@@ -106,7 +119,6 @@
 
   &.children-container {
     max-width: 100%;
-    color: $COLOR--charcoal-grey;
   }
 
   &:hover:not(.disabled) {

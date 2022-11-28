@@ -26,6 +26,7 @@ export const convertNotificationCaseForSubmission = (obj) => {
     launchNames = [],
     attributes = [],
     enabled = true,
+    attributesOperator,
   } = obj;
   return {
     id,
@@ -35,5 +36,6 @@ export const convertNotificationCaseForSubmission = (obj) => {
     launchNames,
     attributes,
     enabled,
+    attributesOperator,
   };
 };

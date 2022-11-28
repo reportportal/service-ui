@@ -15,7 +15,7 @@
  */
 
 import { defineMessages } from 'react-intl';
-import { LAUNCH_CASES } from './constants';
+import { ATTRIBUTES_OPERATORS, LAUNCH_CASES } from './constants';
 
 export const messages = defineMessages({
   nameLabel: {
@@ -60,11 +60,23 @@ export const messages = defineMessages({
   },
   attributesLabel: {
     id: 'NotificationCase.attributesLabel',
-    defaultMessage: 'Attributes (and)',
+    defaultMessage: 'Attributes',
   },
-  attributesNote: {
-    id: 'NotificationCase.attributesNote',
-    defaultMessage: 'Send notifications about launches containing specified attributes',
+  attributesLabelWithOperator: {
+    id: 'NotificationCase.attributesLabelWithOperator',
+    defaultMessage: 'Attributes ({attributesOperator})',
+  },
+  attributesOperatorNote: {
+    id: 'NotificationCase.attributesOperatorNote',
+    defaultMessage: 'Notify if the launch has all/at least one specified attribute',
+  },
+  [ATTRIBUTES_OPERATORS.AND]: {
+    id: 'NotificationCase.attributesOperatorAnd',
+    defaultMessage: 'All attributes',
+  },
+  [ATTRIBUTES_OPERATORS.OR]: {
+    id: 'NotificationCase.attributesOperatorOr',
+    defaultMessage: 'Any attribute',
   },
   [LAUNCH_CASES.ALWAYS]: {
     id: 'NotificationCase.dropdownValueAlways',
