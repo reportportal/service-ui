@@ -56,15 +56,3 @@
     margin-top: 8px;
   }
 }
-
-.attributes-operator {
-  font-family: $FONT-ROBOTO-REGULAR;
-  font-size: 13px;
-  line-height: 20px;
-  &.attributes-operator-active {
-    color: $COLOR--almost-black;
-  }
-  &.attributes-operator-disabled {
-    color: $COLOR--e-300;
-  }
-}

@@ -19,17 +19,7 @@ import styles from './radioButton.scss';
 
 const cx = classNames.bind(styles);
 
-export const RadioButton = ({
-  option,
-  value,
-  onChange,
-  onFocus,
-  onBlur,
-  className,
-  descriptionClassName,
-  variant,
-  unCheckedDisabled,
-}) => {
+export const RadioButton = ({ option, value, onChange, onFocus, onBlur, className, variant }) => {
   const isChecked = option.value === value;
 
   return (
@@ -52,13 +42,11 @@ export const RadioButton = ({
       />
       <span
         className={cx(variant, 'toggler', {
-          disabled: unCheckedDisabled ? isChecked && option.disabled : option.disabled,
+          disabled: option.disabled,
           checked: isChecked,
         })}
       />
-      <span className={cx(variant, 'children-container', descriptionClassName)}>
-        {option.label}
-      </span>
+      <span className={cx(variant, 'children-container')}>{option.label}</span>
     </label>
   );
 };
@@ -74,8 +62,6 @@ RadioButton.propTypes = {
   onFocus: PropTypes.func,
   onBlur: PropTypes.func,
   className: PropTypes.string,
-  descriptionClassName: PropTypes.string,
-  unCheckedDisabled: PropTypes.bool,
 };
 RadioButton.defaultProps = {
   variant: 'light',
@@ -85,6 +71,4 @@ RadioButton.defaultProps = {
   onFocus: () => {},
   onBlur: () => {},
   className: '',
-  descriptionClassName: '',
-  unCheckedDisabled: false,
 };

@@ -203,9 +203,8 @@ const AddEditNotificationModal = ({
   const { trackEvent } = useTracking();
   const dispatch = useDispatch();
   const [isEditorShown, setShowEditor] = React.useState(data.notification.attributes.length > 0);
-  const attributesValue = useSelector((state) =>
-    attributesValueSelector(state, ATTRIBUTES_FIELD_KEY),
-  );
+  const attributesValue =
+    useSelector((state) => attributesValueSelector(state, ATTRIBUTES_FIELD_KEY)) ?? [];
 
   useEffect(() => {
     initialize(data.notification);
@@ -386,14 +385,7 @@ const AddEditNotificationModal = ({
             name={ATTRIBUTES_OPERATOR_FIELD_KEY}
             dataAutomationId={ATTRIBUTES_OPERATOR_FIELD_KEY + FIELD}
           >
-            <RadioGroup
-              descriptionClassName={cx(
-                hasOneAttrOrLess ? 'attributes-operator-disabled' : 'attributes-operator-active',
-                'attributes-operator',
-              )}
-              options={getAttributesConditionOptions()}
-              unCheckedDisabled
-            />
+            <RadioGroup options={getAttributesConditionOptions()} />
           </FieldElement>
         )}
       </div>
