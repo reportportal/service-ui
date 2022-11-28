@@ -35,6 +35,7 @@ export const Attribute = ({
   disabled,
   customClass,
   backgroundDark,
+  maxCellWidth,
 }) => (
   <div
     className={cx('attribute', customClass, { disabled }, { [`background-dark`]: backgroundDark })}
@@ -45,8 +46,23 @@ export const Attribute = ({
         {Parser(CrossIcon)}
       </div>
     )}
-    <div className={cx('label', { [`background-dark`]: backgroundDark })}>
-      {formatAttribute(attribute)}
+    <div
+      className={cx('label', { [`background-dark`]: backgroundDark })}
+      title={formatAttribute(attribute, true)}
+    >
+      {attribute.key ? (
+        <>
+          <div className={cx('key')} style={{ maxWidth: maxCellWidth }}>
+            {attribute.key}
+          </div>
+          <div>:</div>
+          <div className={cx('value')} style={{ maxWidth: maxCellWidth }}>
+            {attribute.value}
+          </div>
+        </>
+      ) : (
+        <div>{attribute.value}</div>
+      )}
     </div>
   </div>
 );
@@ -58,6 +74,7 @@ Attribute.propTypes = {
   onClick: PropTypes.func,
   onRemove: PropTypes.func,
   backgroundDark: PropTypes.bool,
+  maxCellWidth: PropTypes.string,
 };
 
 Attribute.defaultProps = {
@@ -67,4 +84,5 @@ Attribute.defaultProps = {
   onClick: () => {},
   onRemove: () => {},
   backgroundDark: false,
+  maxCellWidth: '',
 };

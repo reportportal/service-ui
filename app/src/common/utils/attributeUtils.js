@@ -16,12 +16,14 @@
 
 export const getAttributeValue = ({ key, value } = {}) => value || key;
 
-export const formatAttribute = ({ key, value } = {}) => {
+export const formatAttribute = ({ key, value } = {}, withSpace) => {
+  const divider = withSpace ? ' : ' : ':';
+
   if (key && !value) {
-    return `${key}:`;
+    return `${key}${divider}`;
   }
   if (key && value) {
-    return `${key}:${value}`;
+    return `${key}${divider}${value}`;
   }
   return getAttributeValue({ key, value }) || '';
 };

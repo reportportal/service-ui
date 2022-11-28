@@ -90,10 +90,10 @@ export const searchFilter = (value) =>
   !value || composeValidators([isNotOnlySpaces, minLength(3)])(value);
 export const searchMembers = (value) => !value || isNotOnlySpaces(value);
 export const attributeKey = (value) =>
-  !value || composeValidators([isNotOnlySpaces, maxLength(128)])(value);
+  !value || composeValidators([isNotOnlySpaces, maxLength(512)])(value);
 export const uniqueAttributeKey = (attributes) => (value) =>
   attributes.filter((attribute) => attribute === value).length <= 1;
-export const attributeValue = composeValidators([isNotEmpty, maxLength(128)]);
+export const attributeValue = composeValidators([isNotEmpty, maxLength(512)]);
 export const attributesArray = (value) =>
   isEmpty(value) ||
   !value.length ||
