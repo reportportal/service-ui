@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { NavLink } from 'components/main/navLink';
@@ -22,24 +22,25 @@ import styles from './breadcrumb.scss';
 
 const cx = classNames.bind(styles);
 
-// todo remove title and add tooltip with {title} (EPMRPP-79184)
 export const Breadcrumb = ({
   maxBreadcrumbWidth,
   titleTailNumChars,
   descriptor: { title, link, onClick },
 }) => {
   const ref = useRef();
+  const [tooltipDisabled, setTooltipDisabled] = useState(true);
 
   useEffect(() => {
     const { offsetWidth, scrollWidth, dataset } = ref.current;
 
     if (offsetWidth < scrollWidth) {
       dataset.tail = title.slice(title.length - titleTailNumChars);
+      setTooltipDisabled(false);
     }
   }, [title, titleTailNumChars]);
 
   return (
-    <div className={cx('breadcrumb')} title={title}>
+    <div className={cx('breadcrumb')} title={tooltipDisabled ? null : title}>
       <NavLink className={cx('link')} to={link} onClick={onClick}>
         <div ref={ref} className={cx('breadcrumb-text')} style={{ maxWidth: maxBreadcrumbWidth }}>
           {title}
