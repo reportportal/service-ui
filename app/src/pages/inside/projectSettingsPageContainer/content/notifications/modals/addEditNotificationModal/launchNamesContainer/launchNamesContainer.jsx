@@ -55,13 +55,14 @@ export const LaunchNamesContainer = ({ highlightUnStoredItem, value, ...rest }) 
   const [showMessage, setShowMessage] = useState(false);
   const existingItemsMap = useSelector(isExistingLaunchNamesSelector);
 
+  const containsNonExistingName = (names, itemsMap) => names.some((name) => !itemsMap[name]);
+
   useEffect(() => {
-    setShowMessage(value.some((item) => !existingItemsMap[item]));
+    highlightUnStoredItem && setShowMessage(containsNonExistingName(value, existingItemsMap));
   }, []);
 
   const handleSystemMessage = (items, storedItems) =>
-    highlightUnStoredItem && setShowMessage(items.length !== Object.keys(storedItems).length);
-
+    highlightUnStoredItem && setShowMessage(containsNonExistingName(items, storedItems));
   return (
     <>
       <AsyncMultipleAutocomplete
