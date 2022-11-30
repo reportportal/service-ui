@@ -89,7 +89,7 @@ export const withTooltip = ({ TooltipComponent, data = {} }) => (WrappedComponen
                     onMouseLeave={data.hoverable ? this.hideTooltip : null}
                   >
                     <div
-                      className={cx('tooltip-content')}
+                      className={cx('tooltip-content', data.customClassName)}
                       style={{
                         maxWidth: `${maxWidth}px`,
                       }}

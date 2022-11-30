@@ -15,16 +15,97 @@
  */
 
 import classNames from 'classnames/bind';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
+import { approximateTimeFormat, dateFormat, getDuration, getApproximateTime } from 'common/utils';
+import {
+  isInProgress,
+  isStopped,
+  isInterrupted,
+  isSkipped,
+  messages,
+} from 'pages/inside/common/durationBlock/durationBlock';
 import styles from './durationTooltip.scss';
 
 const cx = classNames.bind(styles);
 
-export const DurationTooltip = () => (
-  <div className={cx('duration-tooltip')}>
-    <FormattedMessage
-      id="DurationTooltip.message"
-      defaultMessage="Duration is interval between first child starts and last child ends. But if child run in parallel, end time is a time of longest child, in this case duration will not be equal to child duration sum."
-    />
-  </div>
-);
+export const DurationTooltip = injectIntl(({ intl, status, timing, type }) => {
+  const { formatMessage } = intl;
+
+  const getOverApproximateTitle = () => {
+    const time = getApproximateTime(timing);
+    const end = getDuration(timing.start, timing.start + timing.approxTime * 1000);
+    const over = approximateTimeFormat(-time);
+
+    return formatMessage(messages.overApproximate, { end, over });
+  };
+
+  const hasStartAndEndTime = () => !!(timing.start && timing.end);
+  const hasStartNoEndTime = () => timing.start && !timing.end;
+
+  const isInvalidDuration = () =>
+    (isInProgress(status) && hasStartAndEndTime()) ||
+    (!isInProgress(status) && hasStartNoEndTime());
+
+  const validateForApproximateTime = () => {
+    const isLaunch = type === 'LAUNCH' || !type;
+
+    return isInProgress(status) && isLaunch && timing.approxTime > 0;
+  };
+
+  const getStatusTitle = () => {
+    const durationTime = getDuration(timing.start, timing.end);
+    const endTime = dateFormat(timing.end, true);
+    const approxTime = getApproximateTime(timing);
+    const approxTimeIsOver = approxTime < 0;
+
+    if (isInvalidDuration()) {
+      return formatMessage(
+        hasStartAndEndTime() ? messages.inProgressWithEnd : messages.notInProgressWithoutEnd,
+      );
+    }
+
+    if (isInProgress(status)) {
+      if (validateForApproximateTime() && approxTimeIsOver) {
+        return getOverApproximateTitle();
+      }
+
+      return formatMessage(messages.inProgress);
+    }
+
+    if (isSkipped(status)) {
+      return formatMessage(messages.skipped, { durationTime });
+    }
+
+    if (isStopped(status)) {
+      return (
+        <>
+          <div className={cx('duration-tooltip-status-stopped')}>
+            {formatMessage(messages.stoppedDuration, { durationTime })}
+          </div>
+          <div>{formatMessage(messages.stoppedTime, { endTime })}</div>
+        </>
+      );
+    }
+
+    if (isInterrupted(status)) {
+      return formatMessage(messages.interrupted, { durationTime, endTime });
+    }
+
+    return (
+      <>
+        <div>{formatMessage(messages.finishedDuration, { durationTime })}</div>
+        <div>{formatMessage(messages.finishedTime, { endTime })}</div>
+      </>
+    );
+  };
+
+  return (
+    <div className={cx('duration-tooltip')}>
+      <div className={cx('duration-tooltip-status')}>{getStatusTitle()}</div>
+      <FormattedMessage
+        id="DurationTooltip.message"
+        defaultMessage="Duration is interval between first child starts and last child ends. But if child run in parallel, end time is a time of longest child, in this case duration will not be equal to child duration sum."
+      />
+    </div>
+  );
+});
