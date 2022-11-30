@@ -38,6 +38,7 @@ export {
   getMinutesFromTimestamp,
   formatDuration,
   secondsToDays,
+  getApproximateTime,
 } from './timeDateUtils';
 export { connectRouter } from './connectRouter';
 export { uniqueId } from './uniqueId';

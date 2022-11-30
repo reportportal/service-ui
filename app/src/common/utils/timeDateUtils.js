@@ -164,3 +164,9 @@ export const getMillisecondsWoTimezone = (time) => {
   const userTimezoneOffset = date.getTimezoneOffset() * 60000;
   return date.valueOf() + userTimezoneOffset;
 };
+
+export const getApproximateTime = (timing) => {
+  const approxTime = Math.round(timing.approxTime * 1000);
+
+  return Math.round((timing.start + approxTime - moment().unix() * 1000) / 1000);
+};
