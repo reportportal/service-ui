@@ -55,11 +55,19 @@ export const DurationTooltip = ({ status, timing, type }) => {
     return isInProgress(status) && isLaunch && timing.approxTime > 0;
   };
 
+  const statusTemplate = (durationMsg, timeMsg, isWrong) => (
+    <>
+      <div className={cx({ 'duration-tooltip-status-stopped': isWrong })}>{durationMsg}</div>
+      <div>{timeMsg}</div>
+    </>
+  );
+
   const getStatusTitle = () => {
     const durationTime = getDuration(timing.start, timing.end);
     const endTime = dateFormat(timing.end, true);
     const approxTime = getApproximateTime(timing);
     const approxTimeIsOver = approxTime < 0;
+    const isWrong = isInterrupted(status) || isStopped(status);
 
     if (isInvalidDuration()) {
       return formatMessage(
@@ -80,25 +88,25 @@ export const DurationTooltip = ({ status, timing, type }) => {
     }
 
     if (isStopped(status)) {
-      return (
-        <>
-          <div className={cx('duration-tooltip-status-stopped')}>
-            {formatMessage(messages.stoppedDuration, { durationTime })}
-          </div>
-          <div>{formatMessage(messages.stoppedTime, { endTime })}</div>
-        </>
+      return statusTemplate(
+        formatMessage(messages.stoppedDuration, { durationTime }),
+        formatMessage(messages.stoppedTime, { endTime }),
+        isWrong,
       );
     }
 
     if (isInterrupted(status)) {
-      return formatMessage(messages.interrupted, { durationTime, endTime });
+      return statusTemplate(
+        formatMessage(messages.interruptedDuration, { durationTime }),
+        formatMessage(messages.stoppedTime, { endTime }),
+        isWrong,
+      );
     }
 
-    return (
-      <>
-        <div>{formatMessage(messages.finishedDuration, { durationTime })}</div>
-        <div>{formatMessage(messages.finishedTime, { endTime })}</div>
-      </>
+    return statusTemplate(
+      formatMessage(messages.finishedDuration, { durationTime }),
+      formatMessage(messages.finishedTime, { endTime }),
+      isWrong,
     );
   };
 

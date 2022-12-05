@@ -54,9 +54,9 @@ export const messages = defineMessages({
     id: 'DurationBlock.stoppedTime',
     defaultMessage: 'Stopped at: { endTime }',
   },
-  interrupted: {
-    id: 'DurationBlock.interrupted',
-    defaultMessage: 'Run INTERRUPTED after: { durationTime }. Stopped at: { endTime }',
+  interruptedDuration: {
+    id: 'DurationBlock.interruptedDuration',
+    defaultMessage: 'Run INTERRUPTED after: { durationTime }.',
   },
   finishedDuration: {
     id: 'DurationBlock.finishedDuration',

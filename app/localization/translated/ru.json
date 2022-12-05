@@ -556,7 +556,7 @@
   "DurationBlock.finishedTime": "Время окончания: {endTime}",
   "DurationBlock.inProgress": "В процессе",
   "DurationBlock.inProgressWithEnd": "Неправильный статус: 'В процессе' со временем окончания",
-  "DurationBlock.interrupted": "Прогон ПРЕРВАН после: {durationTime}. Остановлен в: {endTime}",
+  "DurationBlock.interruptedDuration": "Прогон ПРЕРВАН после: {durationTime}.",
   "DurationBlock.left": "осталось",
   "DurationBlock.notInProgressWithoutEnd": "Неправильный статус: элемент не 'В процессе', но не имеет времени окончания",
   "DurationBlock.overApproximate": "Среднее время выполнения - {end}, текущая задержка - {over}",

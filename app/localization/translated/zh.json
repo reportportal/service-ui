@@ -556,7 +556,7 @@
   "DurationBlock.finishedTime": "结束时间：{endTime}",
   "DurationBlock.inProgress": "进行中",
   "DurationBlock.inProgressWithEnd": "状态错误：设置为“进行中”，但已设置完成时间",
-  "DurationBlock.interrupted": "执行中断前经过: {durationTime}。停止时间：{endTime}",
+  "DurationBlock.interruptedDuration": "执行中断前经过: {durationTime}。",
   "DurationBlock.left": "左",
   "DurationBlock.notInProgressWithoutEnd": "状态错误：设置为非“进行中”，但未设置完成时间",
   "DurationBlock.overApproximate": "平均执行时长 - {end}，目前已超时 - {over}",
