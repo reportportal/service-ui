@@ -15,7 +15,9 @@
  */
 
 import classNames from 'classnames/bind';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
+import PropTypes from 'prop-types';
+
 import { approximateTimeFormat, dateFormat, getDuration, getApproximateTime } from 'common/utils';
 import {
   isInProgress,
@@ -24,12 +26,13 @@ import {
   isSkipped,
   messages,
 } from 'pages/inside/common/durationBlock/durationBlock';
+
 import styles from './durationTooltip.scss';
 
 const cx = classNames.bind(styles);
 
-export const DurationTooltip = injectIntl(({ intl, status, timing, type }) => {
-  const { formatMessage } = intl;
+export const DurationTooltip = ({ status, timing, type }) => {
+  const { formatMessage } = useIntl();
 
   const getOverApproximateTitle = () => {
     const time = getApproximateTime(timing);
@@ -102,10 +105,18 @@ export const DurationTooltip = injectIntl(({ intl, status, timing, type }) => {
   return (
     <div className={cx('duration-tooltip')}>
       <div className={cx('duration-tooltip-status')}>{getStatusTitle()}</div>
-      <FormattedMessage
-        id="DurationTooltip.message"
-        defaultMessage="Duration is interval between first child starts and last child ends. But if child run in parallel, end time is a time of longest child, in this case duration will not be equal to child duration sum."
-      />
+      {formatMessage(messages.tooltipDescribe)}
     </div>
   );
-});
+};
+
+DurationTooltip.propTypes = {
+  intl: PropTypes.object.isRequired,
+  type: PropTypes.string,
+  timing: PropTypes.shape({
+    start: PropTypes.number,
+    end: PropTypes.number,
+    approxTime: PropTypes.number,
+  }).isRequired,
+  status: PropTypes.string,
+};

@@ -74,6 +74,11 @@ export const messages = defineMessages({
     id: 'DurationBlock.left',
     defaultMessage: 'left',
   },
+  tooltipDescribe: {
+    id: 'DurationTooltip.message',
+    defaultMessage:
+      'Duration is interval between first child starts and last child ends. But if child run in parallel, end time is a time of longest child, in this case duration will not be equal to child duration sum.',
+  },
 });
 
 export const isInProgress = (status) => status === 'IN_PROGRESS';
