@@ -106,9 +106,4 @@ export const PROFILE_PAGE_EVENTS = {
     action: 'Click on Btn Submit on Modal Edit personal information',
     label: 'Submit changes on Modal Edit personal information',
   },
-  CHANGE_LANGUAGE: {
-    category: PROFILE_PAGE,
-    action: 'Edit input Language',
-    label: 'Change language',
-  },
 };

@@ -33,7 +33,7 @@ import {
 } from 'common/constants/supportedLanguages';
 import { langSelector, setLangAction } from 'controllers/lang';
 import { InputDropdown } from 'components/inputs/inputDropdown';
-import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
+import { PROFILE_EVENT } from 'components/main/analytics/events/ga4Events/profilePageEvent';
 import styles from './localizationBlock.scss';
 import EnglishFlagIcon from './img/en-flag-inline.svg';
 import UkrainianFlagIcon from './img/ua-flag-inline.svg';
@@ -77,6 +77,16 @@ const messages = defineMessages({
     defaultMessage: `This lang in beta. Please help us to translate it, send your PR to this <a target='_blank' href='https://github.com/reportportal/service-ui/blob/develop/app/localization/translated/ru.json' >file.</a>`,
   },
 });
+
+const langName = {
+  en: 'english',
+  uk: 'ukrainian',
+  ru: 'russian',
+  be: 'belarusian',
+  zh: 'chinese',
+};
+
+const langNameByCode = (code) => langName[code];
 
 const LanguageOption = ({ icon, label }) => (
   <div className={cx('icon-block')}>
@@ -143,7 +153,8 @@ export class LocalizationBlock extends Component {
   };
 
   onChangeLanguage = (lang) => {
-    this.props.tracking.trackEvent(PROFILE_PAGE_EVENTS.CHANGE_LANGUAGE);
+    const { trackEvent } = this.props.tracking;
+    trackEvent(PROFILE_EVENT.CHANGE_LANGUAGE(langNameByCode(lang)));
     updateStorageItem(APPLICATION_SETTINGS, { appLanguage: lang });
     this.props.setLangAction(lang);
   };
