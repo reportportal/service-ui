@@ -119,7 +119,6 @@ export const DurationTooltip = ({ status, timing, type }) => {
 };
 
 DurationTooltip.propTypes = {
-  intl: PropTypes.object.isRequired,
   type: PropTypes.string,
   timing: PropTypes.shape({
     start: PropTypes.number,
