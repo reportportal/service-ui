@@ -117,7 +117,7 @@ export const getConfig = ({
     padding: {
       top: isPreview ? 0 : 85,
       left: isPreview ? 0 : 40,
-      right: isPreview ? 0 : 20,
+      right: isPreview ? 0 : 30,
       bottom: isPreview || !isTimeline ? 0 : 10,
     },
     legend: {
