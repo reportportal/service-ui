@@ -97,11 +97,7 @@ export const getLaunchAxisTicks = (itemsLength) =>
   range(0, itemsLength, rangeMaxValue(itemsLength));
 
 export const getTimelineAxisTicks = (itemsLength) =>
-  range(
-    itemsLength > 5 ? ((itemsLength / 5 / 2).toFixed() / 2).toFixed() : 0,
-    itemsLength,
-    itemsLength > 5 ? (itemsLength / 5).toFixed() : 1,
-  );
+  range(0, itemsLength, itemsLength > 7 ? Number((itemsLength / 5).toFixed()) : 1);
 
 export const getUpdatedFilterWithTime = (chartFilter, itemDate) => {
   const rangeMillisecond = 86400000;
