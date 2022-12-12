@@ -18,97 +18,35 @@ import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { NavLink } from 'components/main/navLink';
-import { withTooltip } from 'componentLibrary/tooltip';
 import styles from './breadcrumb.scss';
 
 const cx = classNames.bind(styles);
 
-const BreadcrumbTitleComponent = ({
-  descriptor: { link, title, onClick },
+export const Breadcrumb = ({
   maxBreadcrumbWidth,
   titleTailNumChars,
-  tooltipDisabled,
-  setTooltipDisabled,
+  descriptor: { title, link, onClick },
 }) => {
   const ref = useRef();
+  const [breadcrumbTitle, setBreadcrumbTitle] = useState(null);
 
   useEffect(() => {
-    if (ref.current) {
-      const { offsetWidth, scrollWidth, dataset } = ref.current;
+    const { offsetWidth, scrollWidth, dataset } = ref.current;
 
-      if (offsetWidth < scrollWidth) {
-        dataset.tail = title.slice(title.length - titleTailNumChars);
-        setTooltipDisabled(false);
-      }
+    if (offsetWidth < scrollWidth) {
+      dataset.tail = title.slice(title.length - titleTailNumChars);
+      setBreadcrumbTitle(title);
     }
-  }, [ref, title, titleTailNumChars]);
+  }, [title, titleTailNumChars]);
 
   return (
-    <div className={cx(tooltipDisabled ? 'breadcrumb' : 'breadcrumb-with-tooltip')}>
+    <div className={cx('breadcrumb')} title={breadcrumbTitle}>
       <NavLink className={cx('link')} to={link} onClick={onClick}>
         <div ref={ref} className={cx('breadcrumb-text')} style={{ maxWidth: maxBreadcrumbWidth }}>
           {title}
         </div>
       </NavLink>
     </div>
-  );
-};
-BreadcrumbTitleComponent.propTypes = {
-  maxBreadcrumbWidth: PropTypes.number.isRequired,
-  titleTailNumChars: PropTypes.number,
-  descriptor: PropTypes.shape({
-    title: PropTypes.string.isRequired,
-    link: PropTypes.object.isRequired,
-    onClick: PropTypes.func,
-  }).isRequired,
-  tooltipDisabled: PropTypes.bool,
-  setTooltipDisabled: PropTypes.func,
-};
-BreadcrumbTitleComponent.defaultProps = {
-  tooltipDisabled: true,
-  setTooltipDisabled: () => {},
-};
-
-const BreadcrumbTitleTooltip = ({ descriptor: { title } }) => <span>{title}</span>;
-BreadcrumbTitleTooltip.propTypes = {
-  descriptor: PropTypes.shape({
-    title: PropTypes.string.isRequired,
-  }).isRequired,
-};
-
-const BreadcrumbTitleComponentWithTooltip = withTooltip({
-  ContentComponent: BreadcrumbTitleTooltip,
-  side: 'bottom',
-  dynamicWidth: true,
-  tooltipWrapperClassName: cx('breadcrumb'),
-})((props) => <BreadcrumbTitleComponent {...props} />);
-BreadcrumbTitleComponentWithTooltip.propTypes = {
-  maxBreadcrumbWidth: PropTypes.number.isRequired,
-  titleTailNumChars: PropTypes.number,
-  descriptor: PropTypes.shape({
-    title: PropTypes.string.isRequired,
-    link: PropTypes.object.isRequired,
-    onClick: PropTypes.func,
-  }).isRequired,
-};
-
-export const Breadcrumb = ({ maxBreadcrumbWidth, titleTailNumChars, descriptor }) => {
-  const [tooltipDisabled, setTooltipDisabled] = useState(true);
-
-  return tooltipDisabled ? (
-    <BreadcrumbTitleComponent
-      descriptor={descriptor}
-      maxBreadcrumbWidth={maxBreadcrumbWidth}
-      titleTailNumChars={titleTailNumChars}
-      tooltipDisabled={tooltipDisabled}
-      setTooltipDisabled={setTooltipDisabled}
-    />
-  ) : (
-    <BreadcrumbTitleComponentWithTooltip
-      descriptor={descriptor}
-      maxBreadcrumbWidth={maxBreadcrumbWidth}
-      titleTailNumChars={titleTailNumChars}
-    />
   );
 };
 
