@@ -152,11 +152,11 @@ const messages = defineMessages({
   },
   attributeKeyLengthHint: {
     id: 'AttributeEditor.attributeKeyLengthHint',
-    defaultMessage: 'Attribute key should have size from 1 to 128',
+    defaultMessage: 'Key should have size from 1 to 512 symbols',
   },
   attributeValueLengthHint: {
     id: 'AttributeEditor.attributeValueLengthHint',
-    defaultMessage: 'Attribute value should have size from 1 to 128',
+    defaultMessage: 'Value should have size from 1 to 512 symbols',
   },
   uniqueAttributeKeyHint: {
     id: 'AttributeEditor.uniqueAttributeKeyHint',
