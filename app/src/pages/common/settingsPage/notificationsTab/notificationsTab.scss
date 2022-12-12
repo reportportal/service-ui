@@ -21,3 +21,22 @@
     padding: 15px 10px;
   }
 }
+
+.attribute {
+  display: inline-flex;
+
+  div {
+    max-width: 132px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .value {
+    margin-left: 4px;
+  }
+
+  .key {
+    margin-right: 4px;
+  }
+}

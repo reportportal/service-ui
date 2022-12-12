@@ -18,6 +18,7 @@
   display: inline;
   margin-bottom: 10px;
 }
+
 .attributes-icon {
   display: inline-block;
   width: 15px;
@@ -37,22 +38,39 @@
   }
 }
 .attribute {
-  display: inline-block;
+  display: inline-flex;
   font-family: $FONT-REGULAR;
   font-size: 12px;
   color: $COLOR--gray-60;
   text-decoration: none;
-  margin: 5px 10px 0 0;
+  margin: 5px 8px 0;
   word-break: break-all;
   word-wrap: break-word;
   line-height: 14px;
 
-  &:hover {
+  &:hover:not(.no-hover-effects) {
     color: $COLOR--charcoal-grey;
   }
 
-  &.cursor {
+  &.cursor:not(.no-hover-effects) {
     cursor: pointer;
+  }
+
+  div {
+    max-width: 132px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .value {
+    flex-basis: auto !important;
+    margin-left: 4px;
+  }
+
+  .key {
+    flex-basis: auto !important;
+    margin-right: 4px;
   }
 
   @media (max-width: $SCREEN_SM_MAX) {
