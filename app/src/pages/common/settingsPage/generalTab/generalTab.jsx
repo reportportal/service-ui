@@ -292,7 +292,7 @@ export class GeneralTab extends Component {
   formatInterruptJobTimes = this.createValueFormatter(this.interruptJobTime);
 
   render() {
-    const { intl, accountRole, userRole, isLoading } = this.props;
+    const { intl, accountRole, userRole, isLoading, projectId } = this.props;
     const { processingData } = this.state;
     const isDisabled = !canUpdateSettings(accountRole, userRole) || processingData;
     return isLoading ? (
@@ -302,8 +302,8 @@ export class GeneralTab extends Component {
         <form onSubmit={this.props.handleSubmit(this.onFormSubmit)}>
           <div>
             <div className={cx('fake-input-label')}>Name</div>
-            <div className={cx('fake-input')} title={this.props.projectId}>
-              {this.props.projectId}
+            <div className={cx('fake-input')} title={projectId}>
+              {projectId}
             </div>
           </div>
           <FormField
