@@ -16,7 +16,11 @@
 
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { formatAttribute, notSystemAttributePredicate } from 'common/utils/attributeUtils';
+import {
+  formatAttribute,
+  formatAttributeWithSpacedDivider,
+  notSystemAttributePredicate,
+} from 'common/utils/attributeUtils';
 import styles from './attributesBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -37,7 +41,7 @@ export const AttributesBlock = ({
           'no-hover-effects': noHoverEffects,
         })}
         onClick={isAttributeClickable ? () => onClickAttribute(attribute) : null}
-        title={formatAttribute(attribute, true)}
+        title={formatAttributeWithSpacedDivider(attribute)}
       >
         {attribute.key ? (
           <>

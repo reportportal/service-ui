@@ -17,7 +17,7 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
-import { formatAttribute } from 'common/utils/attributeUtils';
+import { formatAttributeWithSpacedDivider } from 'common/utils/attributeUtils';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import styles from './attribute.scss';
 
@@ -48,7 +48,7 @@ export const Attribute = ({
     )}
     <div
       className={cx('label', { [`background-dark`]: backgroundDark })}
-      title={formatAttribute(attribute, true)}
+      title={formatAttributeWithSpacedDivider(attribute)}
     >
       {attribute.key ? (
         <>
