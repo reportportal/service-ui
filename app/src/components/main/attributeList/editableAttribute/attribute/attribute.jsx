@@ -74,7 +74,7 @@ Attribute.propTypes = {
   onClick: PropTypes.func,
   onRemove: PropTypes.func,
   backgroundDark: PropTypes.bool,
-  maxCellWidth: PropTypes.string,
+  maxCellWidth: PropTypes.number,
 };
 
 Attribute.defaultProps = {
@@ -84,5 +84,5 @@ Attribute.defaultProps = {
   onClick: () => {},
   onRemove: () => {},
   backgroundDark: false,
-  maxCellWidth: '',
+  maxCellWidth: 132,
 };

@@ -135,7 +135,7 @@ AttributeList.propTypes = {
     getTrackingData: PropTypes.func,
   }).isRequired,
   eventsInfo: PropTypes.object,
-  maxCellWidth: PropTypes.string,
+  maxCellWidth: PropTypes.number,
 };
 AttributeList.defaultProps = {
   attributes: [],
@@ -154,5 +154,5 @@ AttributeList.defaultProps = {
   editable: true,
   backgroundDark: false,
   eventsInfo: {},
-  maxCellWidth: '',
+  maxCellWidth: 132,
 };

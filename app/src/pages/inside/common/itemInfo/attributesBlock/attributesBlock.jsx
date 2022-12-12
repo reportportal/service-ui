@@ -25,7 +25,7 @@ export const AttributesBlock = ({
   attributes,
   onClickAttribute,
   isAttributeClickable,
-  hasHoverEffects,
+  noHoverEffects,
 }) => (
   <div className={cx('attributes-block')}>
     {attributes.some(notSystemAttributePredicate) && <div className={cx('attributes-icon')} />}
@@ -34,7 +34,7 @@ export const AttributesBlock = ({
         key={formatAttribute(attribute)}
         className={cx('attribute', {
           cursor: isAttributeClickable,
-          'no-hover-effects': !hasHoverEffects,
+          'no-hover-effects': noHoverEffects,
         })}
         onClick={isAttributeClickable ? () => onClickAttribute(attribute) : null}
         title={formatAttribute(attribute, true)}
@@ -63,10 +63,10 @@ AttributesBlock.propTypes = {
   ).isRequired,
   onClickAttribute: PropTypes.func,
   isAttributeClickable: PropTypes.bool,
-  hasHoverEffects: PropTypes.bool,
+  noHoverEffects: PropTypes.bool,
 };
 AttributesBlock.defaultProps = {
   onClickAttribute: () => {},
   isAttributeClickable: false,
-  hasHoverEffects: true,
+  noHoverEffects: false,
 };

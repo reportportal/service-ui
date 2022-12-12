@@ -96,7 +96,7 @@ export class LogItemDetails extends Component {
             )}
             {logItem.attributes && !!logItem.attributes.length && (
               <span className={cx('attribute')}>
-                <AttributesBlock attributes={logItem.attributes} hasHoverEffects={false} />
+                <AttributesBlock attributes={logItem.attributes} noHoverEffects />
               </span>
             )}
           </div>

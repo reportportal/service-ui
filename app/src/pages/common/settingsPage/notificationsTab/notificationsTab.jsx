@@ -70,21 +70,20 @@ const ruleFieldsConfig = {
     title: messages.attributesLabelWithOperator,
     getTitleVariables: ({ attributesOperator }) => ({ attributesOperator }),
     dataFormatter: (data) =>
-      data.length
-        ? data.map((item) => (
-            <div className={cx('attribute')} title={formatAttribute(item, true)}>
-              {item.key ? (
-                <>
-                  <div className={cx('key')}>{item.key}</div>
-                  <div>:</div>
-                  <div className={cx('value')}>{item.value}</div>
-                </>
-              ) : (
-                <div>{item.value}</div>
-              )}
-            </div>
-          ))
-        : null,
+      data.length &&
+      data.map((item) => (
+        <div className={cx('attribute')} title={formatAttribute(item, true)}>
+          {item.key ? (
+            <>
+              <div className={cx('key')}>{item.key}</div>
+              <div>:</div>
+              <div className={cx('value')}>{item.value}</div>
+            </>
+          ) : (
+            <div>{item.value}</div>
+          )}
+        </div>
+      )),
   },
 };
 
