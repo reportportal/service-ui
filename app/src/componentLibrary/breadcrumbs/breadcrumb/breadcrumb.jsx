@@ -28,19 +28,19 @@ export const Breadcrumb = ({
   descriptor: { title, link, onClick },
 }) => {
   const ref = useRef();
-  const [tooltipDisabled, setTooltipDisabled] = useState(true);
+  const [breadcrumbTitle, setBreadcrumbTitle] = useState(null);
 
   useEffect(() => {
     const { offsetWidth, scrollWidth, dataset } = ref.current;
 
     if (offsetWidth < scrollWidth) {
       dataset.tail = title.slice(title.length - titleTailNumChars);
-      setTooltipDisabled(false);
+      setBreadcrumbTitle(title);
     }
   }, [title, titleTailNumChars]);
 
   return (
-    <div className={cx('breadcrumb')} title={tooltipDisabled ? null : title}>
+    <div className={cx('breadcrumb')} title={breadcrumbTitle}>
       <NavLink className={cx('link')} to={link} onClick={onClick}>
         <div ref={ref} className={cx('breadcrumb-text')} style={{ maxWidth: maxBreadcrumbWidth }}>
           {title}
