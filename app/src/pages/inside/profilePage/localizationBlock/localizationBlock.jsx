@@ -79,11 +79,11 @@ const messages = defineMessages({
 });
 
 const langName = {
-  en: 'english',
-  uk: 'ukrainian',
-  ru: 'russian',
-  be: 'belarusian',
-  zh: 'chinese',
+  [ENGLISH]: 'english',
+  [UKRAINIAN]: 'ukrainian',
+  [RUSSIAN]: 'russian',
+  [BELARUSIAN]: 'belarusian',
+  [SIMPLIFIED_CHINESE]: 'chinese',
 };
 
 const langNameByCode = (code) => langName[code];
