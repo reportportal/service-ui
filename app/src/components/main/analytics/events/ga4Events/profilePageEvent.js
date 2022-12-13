@@ -19,7 +19,6 @@ const PROFILE_PAGE = 'profile';
 const BASIC_EVENT_PARAMETERS_PROFILE = {
   action: 'click',
   category: PROFILE_PAGE,
-  element_name: 'language_drop_down',
   place: PROFILE_PAGE,
 };
 
@@ -27,5 +26,6 @@ export const PROFILE_EVENT = {
   CHANGE_LANGUAGE: (lang) => ({
     ...BASIC_EVENT_PARAMETERS_PROFILE,
     type: lang,
+    element_name: 'language_drop_down',
   }),
 };

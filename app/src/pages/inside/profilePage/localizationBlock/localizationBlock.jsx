@@ -33,7 +33,7 @@ import {
 } from 'common/constants/supportedLanguages';
 import { langSelector, setLangAction } from 'controllers/lang';
 import { InputDropdown } from 'components/inputs/inputDropdown';
-import { PROFILE_EVENT } from 'components/main/analytics/events/ga4Events/profilePageEvent';
+import { PROFILE_EVENT } from 'analyticsEvents/profilePageEvent';
 import styles from './localizationBlock.scss';
 import EnglishFlagIcon from './img/en-flag-inline.svg';
 import UkrainianFlagIcon from './img/ua-flag-inline.svg';
