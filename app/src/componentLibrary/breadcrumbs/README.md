@@ -14,7 +14,6 @@ If there are more than 5 links, then it shows 4, and hides the rest of the links
   **link**: _object_,
   **onClick**: _func_, optional, default = () => {}
   }, optional, default = []
-- **titleTailNumChars**: _number_, optional, default = 8
 - **dataAutomationId**: _string_, optional, default = ''
 
 ### Example
