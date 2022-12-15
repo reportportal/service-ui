@@ -254,7 +254,7 @@ export const URLS = {
   userInviteExternal: () => `${urlBase}user/bid`,
   userUnasign: (activeProject) => `${urlBase}project/${activeProject}/unassign`,
 
-  generateDemoData: (projectId) => `${urlBase}demo/${projectId}`,
+  generateDemoData: (projectId) => `${urlBase}demo/${projectId}/generate`,
   getFileById: (projectId, dataId, loadThumbnail) =>
     `${urlBase}data/${projectId}/${dataId}${getQueryParams({ loadThumbnail })}`,
 
