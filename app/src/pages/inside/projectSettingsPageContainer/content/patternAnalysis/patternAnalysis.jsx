@@ -64,7 +64,7 @@ export const PatternAnalysis = ({ setHeaderTitleNode }) => {
   const isAbleToCreate = canUpdateSettings(userRole, projectRole);
 
   return (
-    <>
+    <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
       {patterns.length > 0 ? (
         <PatternAnalysisContent
           setHeaderTitleNode={setHeaderTitleNode}
@@ -82,7 +82,7 @@ export const PatternAnalysis = ({ setHeaderTitleNode }) => {
           handleButton={onAddPattern}
         />
       )}
-    </>
+    </div>
   );
 };
 PatternAnalysis.propTypes = {

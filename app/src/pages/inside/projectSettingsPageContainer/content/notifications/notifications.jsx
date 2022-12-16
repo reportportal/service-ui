@@ -224,7 +224,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
   return (
     <>
       {notifications.length ? (
-        <>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <Layout description={formatMessage(messages.tabDescription)}>
             <FieldElement
               withoutProvider
@@ -251,7 +251,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
               dataAutomationId="notificationsRulesList"
             />
           </div>
-        </>
+        </div>
       ) : (
         <EmptyStatePage
           title={formatMessage(messages.noItemsMessage)}

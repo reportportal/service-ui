@@ -145,7 +145,7 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
   }, [defectTypes, canAddNewDefectType, isEditable]);
 
   return (
-    <>
+    <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
       <TabDescription>{formatMessage(messages.description)}</TabDescription>
       <Divider />
       {(isInformationMessage || !canAddNewDefectType) && (
@@ -218,7 +218,7 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
           );
         })}
       </div>
-    </>
+    </div>
   );
 };
 DefectTypes.propTypes = {
