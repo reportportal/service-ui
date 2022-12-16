@@ -24,6 +24,14 @@ import { useOnClickOutside } from 'common/hooks';
 import { DropdownOption } from './dropdownOption';
 import ArrowIcon from './img/arrow-inline.svg';
 import styles from './dropdown.scss';
+import {
+  ARROW_DOWN_KEY_CODE,
+  ARROW_UP_KEY_CODE,
+  CLOSE_DROPDOWN_KEY_CODES_MAP,
+  ENTER_KEY_CODE,
+  NAVIGATION_DROPDOWN_KEY_CODES_MAP,
+  OPEN_DROPDOWN_KEY_CODES_MAP,
+} from './constants';
 
 const cx = classNames.bind(styles);
 
@@ -46,6 +54,7 @@ export const Dropdown = ({
   dataAutomationId,
 }) => {
   const [isOpened, setOpened] = useState(false);
+  const [hoveredItemIndex, setHoveredItemIndex] = useState(null);
   const containerRef = useRef();
   let updatePosition;
 
@@ -85,8 +94,49 @@ export const Dropdown = ({
     setOpened(!isOpened);
   };
 
-  const renderOptions = () =>
-    options.map((option) => {
+  const calculateItemIndex = (index, itemsCount) =>
+    ((index % itemsCount) + itemsCount) % itemsCount;
+
+  const handleArrowUpClick = () => {
+    setHoveredItemIndex((prevIndex) => prevIndex - 1);
+  };
+
+  const handleArrowDownClick = () => {
+    setHoveredItemIndex((prevIndex) => prevIndex + 1);
+  };
+
+  const handleKeyDownPress = ({ keyCode }) => {
+    if (NAVIGATION_DROPDOWN_KEY_CODES_MAP[keyCode] && isOpened) {
+      if (keyCode === ARROW_UP_KEY_CODE) {
+        handleArrowUpClick();
+        return;
+      }
+
+      if (keyCode === ARROW_DOWN_KEY_CODE) {
+        handleArrowDownClick();
+        return;
+      }
+
+      if (keyCode === ENTER_KEY_CODE) {
+        const option = options[calculateItemIndex(hoveredItemIndex, options.length)];
+        handleChange(option);
+        return;
+      }
+    }
+
+    if (OPEN_DROPDOWN_KEY_CODES_MAP[keyCode] && !isOpened) {
+      setOpened(true);
+      return;
+    }
+
+    if (CLOSE_DROPDOWN_KEY_CODES_MAP[keyCode]) {
+      setOpened(false);
+    }
+  };
+
+  const renderOptions = () => {
+    const itemIndexToHover = calculateItemIndex(hoveredItemIndex, options.length);
+    return options.map((option, index) => {
       const isSelected =
         option.value === ((value && value.value) !== undefined ? value.value : value);
       return (
@@ -98,9 +148,12 @@ export const Dropdown = ({
           option={option}
           render={renderOption}
           isOpened={isOpened}
+          highlightHovered={itemIndexToHover === index}
+          onMouseEnter={() => setHoveredItemIndex(index)}
         />
       );
     });
+  };
 
   return (
     <Manager>
@@ -123,6 +176,7 @@ export const Dropdown = ({
                 'mobile-disabled': mobileDisabled,
               })}
               onClick={onClickDropdown}
+              onKeyDown={handleKeyDownPress}
             >
               {icon && <i className={cx('icon')}>{Parser(icon)}</i>}
               <span className={cx(variant, 'value', { placeholder: !value })}>

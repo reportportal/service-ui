@@ -17,7 +17,7 @@
 @mixin dropdown-option($color) {
   display: inline-block;
   width: 100%;
-  padding: 8px 12px;
+  padding: 9px 12px 7px;
   font-family: $FONT-ROBOTO-REGULAR;
   font-size: 13px;
   color: $color;
@@ -47,8 +47,19 @@
 .ghost {
   &.dropdown-option {
     @include dropdown-option($COLOR--almost-black);
-    @include hover-state($COLOR--bg-200);
     @include active-state($COLOR--e-100, $COLOR--almost-black);
+
+    &.hover:not(.disabled) {
+      padding: 8px 11px 6px;
+      background-color: $COLOR--bg-200;
+      border: 1px solid $COLOR--topaz-focused;
+    }
+
+    &.hover:not(.disabled):hover {
+      @include hover-state($COLOR--bg-200);
+      border: none;
+      padding: 9px 12px 7px;
+    }
 
     &.selected {
       @include selected-state($COLOR--topaz-2);
