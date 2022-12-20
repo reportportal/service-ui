@@ -63,7 +63,7 @@ export const IntegrationCollectionItem = ({
     openIntegration(item);
   };
   return (
-    <li className={cx('instances-list-item', { disabled })}>
+    <li onClick={itemClickHandler} role="row" className={cx('instances-list-item', { disabled })}>
       <div className={cx('item-data')}>
         <div className={cx('general-info')}>
           <h4 className={cx('integration-name')}>{title}</h4>
@@ -78,9 +78,7 @@ export const IntegrationCollectionItem = ({
         </span>
       </div>
 
-      <div onClick={itemClickHandler} className={cx('arrow-control')}>
-        {Parser(ArrowIcon)}
-      </div>
+      <div className={cx('arrow-control')}>{Parser(ArrowIcon)}</div>
     </li>
   );
 };
