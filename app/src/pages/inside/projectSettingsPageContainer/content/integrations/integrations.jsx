@@ -79,7 +79,7 @@ export const Integrations = () => {
   };
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+    <>
       {query.subPage && !!Object.keys(plugin).length ? (
         <IntegrationInfo goBackHandler={goBackHandler} data={plugin} integrationId={query.id} />
       ) : (
@@ -90,6 +90,6 @@ export const Integrations = () => {
           />
         </div>
       )}
-    </div>
+    </>
   );
 };
