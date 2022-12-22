@@ -25,7 +25,11 @@ import {
   PROJECT_DASHBOARD_PAGE,
   PROJECT_DASHBOARD_ITEM_PAGE,
 } from 'controllers/pages';
-import { dashboardItemsSelector, dashboardItemPropTypes } from 'controllers/dashboard';
+import {
+  dashboardItemsSelector,
+  dashboardItemPropTypes,
+  totalDashboardsSelector,
+} from 'controllers/dashboard';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { NavLink } from 'components/main/navLink';
 import { AddDashboardButton } from './addDashboardButton';
@@ -40,11 +44,13 @@ const messages = defineMessages({
 });
 
 const DASHBOARD_PAGE_ITEM_VALUE = 'All';
+const DASHBOARDS_LIMIT = 300;
 
 @connect((state) => ({
   projectId: activeProjectSelector(state),
-  dashboards: dashboardItemsSelector(state),
+  dashboardsToDisplay: dashboardItemsSelector(state),
   activeItemId: activeDashboardIdSelector(state),
+  totalDashboards: totalDashboardsSelector(state),
 }))
 @injectIntl
 export class DashboardPageHeader extends Component {
@@ -52,14 +58,18 @@ export class DashboardPageHeader extends Component {
     intl: PropTypes.object.isRequired,
     projectId: PropTypes.string.isRequired,
     activeItemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    dashboards: PropTypes.arrayOf(dashboardItemPropTypes),
+    dashboardsToDisplay: PropTypes.arrayOf(dashboardItemPropTypes),
     eventsInfo: PropTypes.object,
+    isLoading: PropTypes.bool,
+    totalDashboards: PropTypes.number,
   };
 
   static defaultProps = {
     activeItemId: '',
-    dashboards: [],
+    dashboardsToDisplay: [],
     eventsInfo: {},
+    isLoading: true,
+    totalDashboards: 0,
   };
 
   getDashboardPageItem = () => ({
@@ -86,7 +96,7 @@ export class DashboardPageHeader extends Component {
 
   generateOptions = () =>
     [this.getDashboardPageItem()].concat(
-      this.props.dashboards.map((item) => ({
+      this.props.dashboardsToDisplay.map((item) => ({
         label: (
           <NavLink
             to={this.createDashboardLink(item.id)}
@@ -101,7 +111,19 @@ export class DashboardPageHeader extends Component {
     );
 
   render() {
-    const { activeItemId, eventsInfo } = this.props;
+    const {
+      activeItemId,
+      eventsInfo,
+      dashboardsToDisplay,
+      isLoading,
+      totalDashboards,
+    } = this.props;
+
+    const isCalculateExtraItems = totalDashboards > DASHBOARDS_LIMIT;
+    const extraItemsCount = isCalculateExtraItems ? totalDashboards - DASHBOARDS_LIMIT : 0;
+    const isAboveLimit = dashboardsToDisplay.length + extraItemsCount >= DASHBOARDS_LIMIT;
+
+    const disabled = isLoading || isAboveLimit;
 
     return (
       <div className={cx('dashboard-page-header')}>
@@ -111,7 +133,7 @@ export class DashboardPageHeader extends Component {
             value={activeItemId || DASHBOARD_PAGE_ITEM_VALUE}
           />
         </div>
-        <AddDashboardButton eventsInfo={eventsInfo} />
+        <AddDashboardButton disabled={disabled} eventsInfo={eventsInfo} />
       </div>
     );
   }

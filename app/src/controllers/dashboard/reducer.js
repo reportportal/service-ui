@@ -24,6 +24,7 @@ import {
   PROJECT_DASHBOARD_ITEM_PAGE,
   PROJECT_DASHBOARD_PRINT_PAGE,
 } from 'controllers/pages';
+import { paginationReducer } from 'controllers/pagination';
 import {
   ADD_DASHBOARD_SUCCESS,
   CHANGE_FULL_SCREEN_MODE,
@@ -67,6 +68,7 @@ const reducer = combineReducers({
   gridType: gridTypeReducer,
   fullScreenMode: fullScreenModeReducer,
   loading: loadingReducer(NAMESPACE),
+  pagePaginationInfo: paginationReducer(NAMESPACE),
 });
 
 export const dashboardReducer = createPageScopedReducer(reducer, [

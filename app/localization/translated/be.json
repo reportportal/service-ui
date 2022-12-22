@@ -352,6 +352,7 @@
   "DashboardForm.editModalTitle": "Рэдагаваць панэль кіравання",
   "DashboardForm.modalCancelButtonText": "Адмяніць",
   "DashboardGrid.myDashboards": "Мае панэлі кіравання",
+  "DashboardHeaderButton.buttonTooltip": "Ліміт у 300 панэляў кiравання дасягнуты. Каб стварыць новыю, трэба выдаліць хаця б адну, створаныую раней",
   "DashboardGrid.sharedDashboards": "Апублікаваныя панэлі кіравання",
   "DashboardGridItem.dashboardIsShared": "Панэль кіравання апублікавана",
   "DashboardGridItem.dashboardIsSharedBy": "Панэль кіравання апублікавана",

@@ -26,6 +26,7 @@ export const INITIAL_STATE = {
   gridType: '',
   fullScreenMode: false,
   loading: false,
+  pagePaginationInfo: {},
 };
 export const NAMESPACE = 'dashboards';
 export const FETCH_DASHBOARDS = 'fetchDashboards';

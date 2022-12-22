@@ -24,6 +24,7 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import { addDashboardAction } from 'controllers/dashboard';
 import { showModalAction } from 'controllers/modal';
 import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
+import { withTooltip } from 'components/main/tooltips/tooltip';
 import AddDashboardIcon from './img/ic-add-dash-inline.svg';
 import styles from './addDashboardButton.scss';
 
@@ -33,7 +34,25 @@ const messages = defineMessages({
     id: 'DashboardForm.addModalTitle',
     defaultMessage: 'Add New Dashboard',
   },
+  buttonTooltip: {
+    id: 'DashboardHeaderButton.buttonTooltip',
+    defaultMessage: `The limit of 300 dashboards has been reached. To create a new one you need to delete at least one created previously`,
+  },
 });
+
+const TooltipComponent = ({ formatMessage }) => <p>{formatMessage(messages.buttonTooltip)}</p>;
+
+TooltipComponent.propTypes = {
+  formatMessage: PropTypes.func,
+};
+
+TooltipComponent.defaultProps = {
+  formatMessage: () => {},
+};
+
+const ButtonWithTooltip = withTooltip({
+  TooltipComponent,
+})(GhostButton);
 
 @connect(null, {
   showModal: showModalAction,
@@ -47,6 +66,7 @@ export class AddDashboardButton extends Component {
     showModal: PropTypes.func,
     addDashboard: PropTypes.func,
     eventsInfo: PropTypes.object,
+    disabled: PropTypes.bool,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -57,6 +77,7 @@ export class AddDashboardButton extends Component {
     showModal: () => {},
     addDashboard: () => {},
     eventsInfo: {},
+    disabled: false,
   };
 
   onAddDashboardItem = () => {
@@ -73,13 +94,19 @@ export class AddDashboardButton extends Component {
   };
 
   render() {
-    const { intl } = this.props;
+    const { intl, disabled } = this.props;
 
     return (
       <div className={cx('add-dashboard-btn')}>
-        <GhostButton onClick={this.onAddDashboardItem} icon={AddDashboardIcon}>
-          {intl.formatMessage(messages.addModalTitle)}
-        </GhostButton>
+        {disabled ? (
+          <ButtonWithTooltip disabled formatMessage={intl.formatMessage} icon={AddDashboardIcon}>
+            {intl.formatMessage(messages.addModalTitle)}
+          </ButtonWithTooltip>
+        ) : (
+          <GhostButton onClick={this.onAddDashboardItem} icon={AddDashboardIcon}>
+            {intl.formatMessage(messages.addModalTitle)}
+          </GhostButton>
+        )}
       </div>
     );
   }

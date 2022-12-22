@@ -220,7 +220,7 @@ export class DashboardPage extends Component {
     return (
       <PageLayout>
         <PageHeader breadcrumbs={this.getBreadcrumbs()}>
-          <DashboardPageHeader eventsInfo={eventsInfo} />
+          <DashboardPageHeader isLoading={loading} eventsInfo={eventsInfo} />
         </PageHeader>
         <PageSection>
           <DashboardPageToolbar
