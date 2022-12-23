@@ -20,7 +20,7 @@ import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import track from 'react-tracking';
 import { injectIntl } from 'react-intl';
-import { formatAttribute } from 'common/utils/attributeUtils';
+import { formatAttributeWithSpacedDivider } from 'common/utils/attributeUtils';
 import { canUpdateSettings } from 'common/utils/permissions';
 import PlusIcon from 'common/img/plus-button-inline.svg';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -72,7 +72,7 @@ const ruleFieldsConfig = {
     dataFormatter: (data) =>
       data.length &&
       data.map((item) => (
-        <div className={cx('attribute')} title={formatAttribute(item, true)}>
+        <div className={cx('attribute')} title={formatAttributeWithSpacedDivider(item)}>
           {item.key ? (
             <>
               <div className={cx('key')}>{item.key}</div>
