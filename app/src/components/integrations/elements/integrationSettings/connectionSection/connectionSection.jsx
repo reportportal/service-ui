@@ -203,9 +203,6 @@ export class ConnectionSection extends Component {
                 })}
               >
                 <h1>{name}</h1>
-                <p>
-                  {creator} on {moment(creationDate).format('ll')}
-                </p>
               </div>
               <div
                 className={cx('connection-block', {
@@ -221,6 +218,9 @@ export class ConnectionSection extends Component {
                 </p>
               </div>
             </div>
+            <p className={cx('created-date-block')}>
+              {creator} on {moment(creationDate).format('ll')}
+            </p>
             {editAuthConfig && editAuthConfig.content}
           </div>
           <div className={cx('buttons-block')}>

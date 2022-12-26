@@ -76,18 +76,19 @@
       margin-bottom: 8px;
     }
 
-    p {
-      font-size: 11px;
-      line-height: 16px;
-      color: $COLOR--e-300;
-      font-family: $FONT-ROBOTO-REGULAR;
-    }
     &.blocked {
       h1 {
         color: $COLOR--e-400;
       }
     }
   }
+}
+
+.created-date-block {
+  font-size: 11px;
+  line-height: 16px;
+  color: $COLOR--e-300;
+  font-family: $FONT-ROBOTO-REGULAR;
 }
 
 .connection-block {
