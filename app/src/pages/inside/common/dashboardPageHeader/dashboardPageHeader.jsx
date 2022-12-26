@@ -29,6 +29,7 @@ import {
   dashboardItemsSelector,
   dashboardItemPropTypes,
   totalDashboardsSelector,
+  loadingSelector,
 } from 'controllers/dashboard';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { NavLink } from 'components/main/navLink';
@@ -51,6 +52,7 @@ const DASHBOARDS_LIMIT = 300;
   dashboardsToDisplay: dashboardItemsSelector(state),
   activeItemId: activeDashboardIdSelector(state),
   totalDashboards: totalDashboardsSelector(state),
+  isLoading: loadingSelector(state),
 }))
 @injectIntl
 export class DashboardPageHeader extends Component {
@@ -111,18 +113,9 @@ export class DashboardPageHeader extends Component {
     );
 
   render() {
-    const {
-      activeItemId,
-      eventsInfo,
-      dashboardsToDisplay,
-      isLoading,
-      totalDashboards,
-    } = this.props;
+    const { activeItemId, eventsInfo, isLoading, totalDashboards } = this.props;
 
-    const isCalculateExtraItems = totalDashboards > DASHBOARDS_LIMIT;
-    const extraItemsCount = isCalculateExtraItems ? totalDashboards - DASHBOARDS_LIMIT : 0;
-    const isAboveLimit = dashboardsToDisplay.length + extraItemsCount >= DASHBOARDS_LIMIT;
-
+    const isAboveLimit = totalDashboards >= DASHBOARDS_LIMIT;
     const disabled = isLoading || isAboveLimit;
 
     return (

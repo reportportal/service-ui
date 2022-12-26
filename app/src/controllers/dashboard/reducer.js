@@ -29,6 +29,8 @@ import {
   ADD_DASHBOARD_SUCCESS,
   CHANGE_FULL_SCREEN_MODE,
   CHANGE_VISIBILITY_TYPE,
+  DECREASE_TOTAL_DASHBOARDS_LOCALLY,
+  INCREASE_TOTAL_DASHBOARDS_LOCALLY,
   INITIAL_STATE,
   NAMESPACE,
   REMOVE_DASHBOARD_SUCCESS,
@@ -63,12 +65,23 @@ const fullScreenModeReducer = (state = INITIAL_STATE.fullScreenMode, { type, pay
   }
 };
 
+const totalDashboardsReducer = (state = INITIAL_STATE.pagination, { type }) => {
+  switch (type) {
+    case INCREASE_TOTAL_DASHBOARDS_LOCALLY:
+      return { ...state, totalElements: state.totalElements + 1 };
+    case DECREASE_TOTAL_DASHBOARDS_LOCALLY:
+      return { ...state, totalElements: state.totalElements - 1 };
+    default:
+      return state;
+  }
+};
+
 const reducer = combineReducers({
   dashboards: queueReducers(fetchReducer(NAMESPACE, { contentPath: 'content' }), dashboardsReducer),
   gridType: gridTypeReducer,
   fullScreenMode: fullScreenModeReducer,
   loading: loadingReducer(NAMESPACE),
-  pagePaginationInfo: paginationReducer(NAMESPACE),
+  pagination: queueReducers(paginationReducer(NAMESPACE), totalDashboardsReducer),
 });
 
 export const dashboardReducer = createPageScopedReducer(reducer, [

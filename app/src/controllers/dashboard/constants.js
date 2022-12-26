@@ -26,7 +26,7 @@ export const INITIAL_STATE = {
   gridType: '',
   fullScreenMode: false,
   loading: false,
-  pagePaginationInfo: {},
+  pagination: {},
 };
 export const NAMESPACE = 'dashboards';
 export const FETCH_DASHBOARDS = 'fetchDashboards';
@@ -44,3 +44,5 @@ export const DASHBOARDS_TABLE_VIEW = 'table';
 export const DASHBOARDS_GRID_VIEW = 'grid';
 export const CHANGE_FULL_SCREEN_MODE = 'changeFullScreenMode';
 export const TOGGLE_FULL_SCREEN_MODE = 'toggleFullScreenMode';
+export const INCREASE_TOTAL_DASHBOARDS_LOCALLY = 'increaseTotalDashboardsLocally';
+export const DECREASE_TOTAL_DASHBOARDS_LOCALLY = 'decreaseTotalDashboardsLocally';

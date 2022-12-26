@@ -36,7 +36,7 @@ export const activeDashboardItemSelector = createSelector(
 );
 
 export const totalDashboardsSelector = (state) =>
-  domainSelector(state).pagePaginationInfo.totalElements || 0;
+  domainSelector(state).pagination.totalElements || 0;
 
 export const dashboardFullScreenModeSelector = (state) => domainSelector(state).fullScreenMode;
 
