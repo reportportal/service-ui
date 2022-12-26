@@ -16,6 +16,7 @@
 
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
+import DOMPurify from 'dompurify';
 import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import styles from './blockHeader.scss';
@@ -26,7 +27,12 @@ export const BlockHeader = injectIntl(({ intl: { formatMessage }, header, hint, 
   <span className={cx('block-header')}>
     <span className={cx('huge-message')}>{formatMessage(header)}</span>
     <br />
-    {Parser(formatMessage(hint, hintParams))}
+    {Parser(
+      formatMessage(hint, {
+        b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
+        ...hintParams,
+      }),
+    )}
   </span>
 ));
 BlockHeader.propTypes = {

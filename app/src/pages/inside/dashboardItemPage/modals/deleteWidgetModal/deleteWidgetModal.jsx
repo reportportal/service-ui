@@ -36,7 +36,7 @@ const messages = defineMessages({
   deleteWidgetText: {
     id: 'DeleteWidgetModal.deleteWidgetText',
     defaultMessage:
-      "Are you sure you want to delete widget '<b>{name}</b>'? It will no longer exist. This action can't be undone.",
+      "Are you sure you want to delete widget ''<b>{name}</b>''? It will no longer exist. This action can't be undone.",
   },
   deleteOwnWidgetWarning: {
     id: 'DeleteWidgetModal.deleteOwnWidgetWarning',
@@ -114,7 +114,10 @@ export class DeleteWidgetModal extends Component {
         <p className={cx('message')}>
           {Parser(
             DOMPurify.sanitize(
-              intl.formatMessage(messages.deleteWidgetText, { name: widget.name }),
+              intl.formatMessage(messages.deleteWidgetText, {
+                b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
+                name: widget.name,
+              }),
             ),
           )}
         </p>
