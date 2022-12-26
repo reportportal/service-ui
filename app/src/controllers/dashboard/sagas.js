@@ -48,6 +48,8 @@ import {
   REMOVE_DASHBOARD_SUCCESS,
   CHANGE_FULL_SCREEN_MODE,
   TOGGLE_FULL_SCREEN_MODE,
+  INCREASE_TOTAL_DASHBOARDS_LOCALLY,
+  DECREASE_TOTAL_DASHBOARDS_LOCALLY,
 } from './constants';
 import {
   dashboardFullScreenModeSelector,
@@ -117,6 +119,7 @@ function* addDashboard({ payload: dashboard }) {
   });
 
   yield put(addDashboardSuccessAction({ id, owner, ...dashboard }));
+  yield put({ type: INCREASE_TOTAL_DASHBOARDS_LOCALLY });
   yield put(
     showNotification({
       messageId: 'addDashboardSuccess',
@@ -161,6 +164,7 @@ function* removeDashboard({ payload: id }) {
       method: 'delete',
     });
     yield put(deleteDashboardSuccessAction(id));
+    yield put({ type: DECREASE_TOTAL_DASHBOARDS_LOCALLY });
     yield put(
       showNotification({
         messageId: 'deleteDashboardSuccess',
