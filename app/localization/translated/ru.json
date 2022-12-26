@@ -352,6 +352,7 @@
   "DashboardForm.editModalTitle": "редактировать панель управления",
   "DashboardForm.modalCancelButtonText": "Отменить",
   "DashboardGrid.myDashboards": "Мои панели управления",
+  "DashboardHeaderButton.buttonTooltip": "Достигнут предел в 300 панелей управления. Для создания новой необходимо удалить хотя бы одну созданную ранее",
   "DashboardGrid.sharedDashboards": "Доступные панели управления",
   "DashboardGridItem.dashboardIsShared": "Панель управления доступна",
   "DashboardGridItem.dashboardIsSharedBy": "Панель управления добавлена в доступ",
