@@ -205,6 +205,9 @@ export class ComponentHealthCheck extends Component {
   getPassingRateValue = () =>
     Number(this.props.widget.contentParameters.widgetOptions.minPassingRate);
 
+  getGroupItemWidth = () =>
+    Number(this.props.widget.contentParameters.widgetOptions.groupItemWidth);
+
   getGroupItems = () => {
     const { widget } = this.props;
     const passingRate = this.getPassingRateValue();
@@ -285,6 +288,7 @@ export class ComponentHealthCheck extends Component {
               <GroupsSection
                 sectionTitle={intl.formatMessage(messages.failedGroupsTitle)}
                 itemsCount={groupItems.failedGroupItems.length}
+                groupItemWidth={this.getGroupItemWidth()}
                 groups={groupItems.failedGroupItems}
                 colorCalculator={this.colorCalculator}
                 onClickGroupItem={this.onClickGroupItem}
@@ -296,6 +300,7 @@ export class ComponentHealthCheck extends Component {
               <GroupsSection
                 sectionTitle={intl.formatMessage(messages.passedGroupsTitle)}
                 itemsCount={groupItems.passedGroupItems.length}
+                groupItemWidth={this.getGroupItemWidth()}
                 groups={groupItems.passedGroupItems}
                 colorCalculator={this.colorCalculator}
                 onClickGroupItem={this.onClickGroupItem}

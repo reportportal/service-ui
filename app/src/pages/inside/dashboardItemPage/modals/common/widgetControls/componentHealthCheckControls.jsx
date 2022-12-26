@@ -46,11 +46,16 @@ const cx = classNames.bind(styles);
 
 const MAX_ATTRIBUTES_AMOUNT = 10;
 const DEFAULT_PASSING_RATE = '100';
+const DEFAULT_GROUP_ITEM_WIDTH = '204';
 
 const messages = defineMessages({
   passingRateFieldLabel: {
     id: 'ComponentHealthCheckControls.PassingRateFieldLabel',
     defaultMessage: 'The min allowable passing rate for the component',
+  },
+  groupItemWidthFieldLabel: {
+    id: 'ComponentHealthCheckControls.GroupItemWidthFieldLabel',
+    defaultMessage: 'The width of a GroupItem',
   },
   componentTitle: {
     id: 'ComponentHealthCheckControls.ComponentTitle',
@@ -59,6 +64,10 @@ const messages = defineMessages({
   passingRateValidationError: {
     id: 'ComponentHealthCheckControls.PassingRateValidationError',
     defaultMessage: 'Should have value from 50 to 100',
+  },
+  groupItemWidthValidationError: {
+    id: 'ComponentHealthCheckControls.GroupItemWidthValidationError',
+    defaultMessage: 'Should have value from 150 to 1300',
   },
   attributesArrayValidationError: {
     id: 'ComponentHealthCheckControls.attributesArrayValidationError',
@@ -71,6 +80,11 @@ const passingRateValidator = (formatMessage) =>
   bindMessageToValidator(
     validate.healthCheckWidgetPassingRate,
     formatMessage(messages.passingRateValidationError),
+  );
+const groupItemWidthValidator = (formatMessage) =>
+  bindMessageToValidator(
+    validate.healthCheckWidgetGroupItemWidth,
+    formatMessage(messages.groupItemWidthValidationError),
   );
 const attributeKeyValidator = (formatMessage) => (attributes) =>
   composeBoundValidators([
@@ -111,6 +125,7 @@ export class ComponentHealthCheckControls extends Component {
         contentFields: [],
         widgetOptions: {
           minPassingRate: DEFAULT_PASSING_RATE,
+          groupItemWidth: DEFAULT_GROUP_ITEM_WIDTH,
           latest: MODES_VALUES[CHART_MODES.ALL_LAUNCHES],
           attributeKeys: [],
         },
@@ -119,6 +134,8 @@ export class ComponentHealthCheckControls extends Component {
   }
 
   normalizeValue = (value) => value && `${value}`.replace(/\D+/g, '');
+  // formatGroupItemWidthValue is needed when you edit a widget which was created by an older version where groupItemWith where undefined.
+  formatGroupItemWidthValue = (value) => `${value?value:DEFAULT_GROUP_ITEM_WIDTH}`.replace(/\D+/g, '');
 
   formatFilterValue = (value) => value && value[0];
   parseFilterValue = (value) => value && [value];
@@ -191,6 +208,20 @@ export class ComponentHealthCheckControls extends Component {
                 maxLength="3"
                 hintType={'top-right'}
                 inputBadge={'%'}
+              />
+            </FieldProvider>
+            <FieldProvider
+              name="contentParameters.widgetOptions.groupItemWidth"
+              validate={groupItemWidthValidator(formatMessage)}
+              format={this.formatGroupItemWidthValue}
+              normalize={this.normalizeValue}
+            >
+              <InputControl
+                fieldLabel={formatMessage(messages.groupItemWidthFieldLabel)}
+                inputWidth={ITEMS_INPUT_WIDTH}
+                maxLength="4"
+                hintType={'top-right'}
+                inputBadge={'px'}
               />
             </FieldProvider>
             <FieldArray

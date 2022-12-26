@@ -29,6 +29,7 @@ export const GroupsSection = injectIntl(
     intl: { formatMessage },
     sectionTitle,
     itemsCount,
+    groupItemWidth,
     groups,
     colorCalculator,
     onClickGroupItem,
@@ -46,6 +47,7 @@ export const GroupsSection = injectIntl(
             <GroupItem
               {...item}
               color={colorCalculator(item.passingRate)}
+              groupItemWidth={groupItemWidth}
               formatMessage={formatMessage}
               onClickGroupItem={onClickGroupItem}
               getSpecificTestListLink={getSpecificTestListLink}

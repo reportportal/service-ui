@@ -29,15 +29,16 @@ export const GroupItem = ({
   formatMessage,
   attributeValue,
   passingRate,
+  groupItemWidth,
   total,
   color,
   onClickGroupItem,
   getSpecificTestListLink,
   isClickable,
 }) => (
-  <div
+	  <div
     className={cx('group-item', { 'group-item-clickable': isClickable })}
-    style={{ borderTopColor: color }}
+    style={{ borderTopColor: color, width: groupItemWidth + 'px' }}
     onClick={isClickable ? () => onClickGroupItem(attributeValue, passingRate, color) : undefined}
   >
     <h4 className={cx('item-title')} title={attributeValue}>
@@ -71,6 +72,7 @@ GroupItem.propTypes = {
 GroupItem.defaultProps = {
   attributeValue: '',
   passingRate: 0,
+  groupItemWidth: 204,
   total: 0,
   color: '',
   formatMessage: () => {},

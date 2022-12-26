@@ -19,5 +19,6 @@ import PropTypes from 'prop-types';
 export const groupItemPropTypes = {
   attributeValue: PropTypes.string,
   passingRate: PropTypes.number,
+  groupItemWidth: PropTypes.number,
   total: PropTypes.number,
 };
