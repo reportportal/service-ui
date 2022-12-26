@@ -18,6 +18,7 @@ import React, { Component, Fragment } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import DOMPurify from 'dompurify';
 import { Fullscreen } from 'components/containers/fullscreen';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
@@ -116,7 +117,7 @@ const messages = defineMessages({
   deleteModalConfirmationText: {
     id: 'DashboardPage.modal.deleteModalConfirmationText',
     defaultMessage:
-      "Are you sure you want to delete dashboard '<b>{name}</b>'? It will no longer exist.",
+      "Are you sure you want to delete dashboard ''<b>{name}</b>''? It will no longer exist.",
   },
   print: {
     id: 'DashboardPage.print',
@@ -192,6 +193,7 @@ export class DashboardItemPage extends Component {
         onConfirm: () => deleteDashboard(dashboard),
         header: formatMessage(messages.deleteModalTitle),
         mainContent: formatMessage(messages.deleteModalConfirmationText, {
+          b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
           name: `'<b>${dashboard.name}</b>'`,
         }),
         warning,

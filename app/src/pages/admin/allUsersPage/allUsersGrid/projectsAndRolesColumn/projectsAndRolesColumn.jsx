@@ -20,6 +20,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { Manager, Reference, Popper } from 'react-popper';
+import DOMPurify from 'dompurify';
 import track from 'react-tracking';
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -55,7 +56,7 @@ const messages = defineMessages({
   unassignModalText: {
     id: 'UnassignModal.modalText',
     defaultMessage:
-      "Are you sure you want to unassign user '<b>{user}</b>' from the project '<b>{project}</b>'?",
+      "Are you sure you want to unassign user ''<b>{user}</b>'' from the project ''<b>{project}</b>''?",
   },
   addProject: {
     id: 'projectsAndRolesColumn.addProject',
@@ -206,6 +207,7 @@ export class ProjectsAndRolesColumn extends Component {
       id: 'confirmationModal',
       data: {
         message: intl.formatMessage(messages.unassignModalText, {
+          b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
           user,
           project,
         }),

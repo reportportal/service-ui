@@ -19,6 +19,7 @@ import track from 'react-tracking';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
+import DOMPurify from 'dompurify';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import {
   changeVisibilityTypeAction,
@@ -64,7 +65,7 @@ const messages = defineMessages({
   deleteModalConfirmationText: {
     id: 'DashboardPage.modal.deleteModalConfirmationText',
     defaultMessage:
-      "Are you sure you want to delete dashboard '<b>{name}</b>'? It will no longer exist.",
+      "Are you sure you want to delete dashboard ''<b>{name}</b>''? It will no longer exist.",
   },
   deleteModalSubmitButtonText: {
     id: 'DashboardPage.modal.deleteModalSubmitButtonText',
@@ -141,6 +142,7 @@ export class DashboardPage extends Component {
         onConfirm: () => deleteDashboard(item),
         header: formatMessage(messages.deleteModalTitle),
         mainContent: formatMessage(messages.deleteModalConfirmationText, {
+          b: (data) => DOMPurify.sanitize(`<b>${data}</b>`),
           name: item.name,
         }),
         warning,
