@@ -20,7 +20,7 @@ import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
 import isEqual from 'fast-deep-equal';
-import { lazyload } from 'react-lazyload';
+import LazyLoad from 'react-lazyload';
 import { connect } from 'react-redux';
 import { fetch, isEmptyObject } from 'common/utils';
 import { URLS } from 'common/urls';
@@ -433,14 +433,20 @@ export class SimpleWidget extends Component {
   }
 }
 
-export const LazyloadWidget = lazyload({
-  resize: true,
-  offset: 1000,
-  unmountIfInvisible: true,
-})(SimpleWidget);
+export const LazyLoadWidget = (props) => (
+  <LazyLoad
+    className={cx('lazy-load-wrapper')}
+    height={'100%'}
+    offset={1000}
+    resize
+    unmountIfInvisible
+  >
+    <SimpleWidget {...props} />
+  </LazyLoad>
+);
 
 export const Widget = (props) =>
-  props.isPrintMode ? <SimpleWidget {...props} /> : <LazyloadWidget {...props} />;
+  props.isPrintMode ? <SimpleWidget {...props} /> : <LazyLoadWidget {...props} />;
 
 Widget.propTypes = {
   isPrintMode: PropTypes.bool,
