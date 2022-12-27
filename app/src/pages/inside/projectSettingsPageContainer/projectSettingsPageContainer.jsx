@@ -17,7 +17,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FormattedMessage, useIntl } from 'react-intl';
-import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import {
   PROJECT_SETTINGS_TAB_PAGE,
@@ -199,11 +198,4 @@ export const ProjectSettingsPageContainer = () => {
       </ScrollWrapper>
     </SettingsLayout>
   );
-};
-
-export const CenteredContainerForPage = ({ children }) => (
-  <div className={cx('centred-content')}>{children}</div>
-);
-CenteredContainerForPage.propTypes = {
-  children: PropTypes.node.isRequired,
 };

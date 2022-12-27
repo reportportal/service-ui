@@ -32,7 +32,6 @@ import { isEmailIntegrationAvailableSelector } from 'controllers/plugins';
 import { showModalAction } from 'controllers/modal';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
-import { CenteredContainerForPage } from 'pages/inside/projectSettingsPageContainer';
 import { Button } from 'componentLibrary/button';
 import { Checkbox } from 'componentLibrary/checkbox';
 import {
@@ -47,6 +46,7 @@ import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { PROJECT_SETTINGS_NOTIFICATIONS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { RuleList, FieldElement, NotificationRuleContent } from '../elements';
 import { Layout } from '../layout';
+import { SettingsPageContent } from '../settingsPageContent';
 import styles from './notifications.scss';
 import { DEFAULT_CASE_CONFIG } from './constants';
 import { convertNotificationCaseForSubmission } from './utils';
@@ -225,7 +225,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
   return (
     <>
       {notifications.length ? (
-        <CenteredContainerForPage>
+        <SettingsPageContent>
           <Layout description={formatMessage(messages.tabDescription)}>
             <FieldElement
               withoutProvider
@@ -252,7 +252,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
               dataAutomationId="notificationsRulesList"
             />
           </div>
-        </CenteredContainerForPage>
+        </SettingsPageContent>
       ) : (
         <EmptyStatePage
           title={formatMessage(messages.noItemsMessage)}

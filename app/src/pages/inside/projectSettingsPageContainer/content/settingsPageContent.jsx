@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-$Z-INDEX-PAGE-CONTAINER-HEADER: 2;
+import PropTypes from 'prop-types';
+import classNames from 'classnames/bind';
 
-.header {
-  position: sticky;
-  top: 0;
-  z-index: $Z-INDEX-PAGE-CONTAINER-HEADER;
-}
+import styles from './settingsPageContent.scss';
 
-.content {
-  padding: 33px 32px 60px;
-}
+const cx = classNames.bind(styles);
+
+export const SettingsPageContent = ({ children }) => (
+  <div className={cx('settings-page-content')}>{children}</div>
+);
+SettingsPageContent.propTypes = {
+  children: PropTypes.node.isRequired,
+};
