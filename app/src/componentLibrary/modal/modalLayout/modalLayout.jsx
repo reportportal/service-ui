@@ -77,6 +77,7 @@ export const ModalLayout = ({
             <Scrollbars>
               <motion.div
                 className={cx('modal-window', { [`size-${modalSize}`]: modalSize }, className)}
+                key="modal-window"
                 ref={modalRef}
                 tabIndex="0"
                 initial={{ opacity: 0, marginTop: '-100px' }}
