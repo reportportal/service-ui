@@ -33,8 +33,6 @@ const messages = defineMessages({
 export const RecipientsContainer = ({ ...rest }) => {
   const { formatMessage } = useIntl();
   const activeProject = useSelector(projectIdSelector);
-  const recipientsPlaceholder =
-    rest.value.length === 0 ? formatMessage(messages.recipientsPlaceholder) : null;
 
   const getEmailValidationError = (v) => {
     if (regex(/[.@]/)(v)) {
@@ -50,7 +48,7 @@ export const RecipientsContainer = ({ ...rest }) => {
 
   return (
     <AsyncMultipleAutocomplete
-      placeholder={recipientsPlaceholder}
+      placeholder={formatMessage(messages.recipientsPlaceholder)}
       minLength={1}
       getURI={URLS.projectUsernamesSearch(activeProject)}
       creatable

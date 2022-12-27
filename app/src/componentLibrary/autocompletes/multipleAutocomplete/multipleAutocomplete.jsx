@@ -55,6 +55,8 @@ export const MultipleAutocomplete = ({
   ...props
 }) => {
   let updatePosition;
+  const placeholderIfEmptyField = value.length === 0 && !disabled ? placeholder : '';
+
   const handleChange = (...args) => {
     updatePosition && updatePosition();
     onChange(...args);
@@ -145,7 +147,7 @@ export const MultipleAutocomplete = ({
                       />
                       <input
                         {...getInputProps({
-                          placeholder: !disabled ? placeholder : '',
+                          placeholder: placeholderIfEmptyField,
                           maxLength,
                           onFocus: () => {
                             openMenu();
