@@ -25,6 +25,7 @@ import { useIntl } from 'react-intl';
 import { canUpdateSettings } from 'common/utils/permissions';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import PropTypes from 'prop-types';
+import { CenteredContainerForPage } from 'pages/inside/projectSettingsPageContainer';
 import { PatternAnalysisContent } from './patternAnalysisContent';
 import { EmptyStatePage } from '../emptyStatePage/';
 import { messages } from './messages';
@@ -66,12 +67,14 @@ export const PatternAnalysis = ({ setHeaderTitleNode }) => {
   return (
     <>
       {patterns.length > 0 ? (
-        <PatternAnalysisContent
-          setHeaderTitleNode={setHeaderTitleNode}
-          onAddPattern={onAddPattern}
-          patterns={patterns}
-          disabled={!isAbleToCreate}
-        />
+        <CenteredContainerForPage>
+          <PatternAnalysisContent
+            setHeaderTitleNode={setHeaderTitleNode}
+            onAddPattern={onAddPattern}
+            patterns={patterns}
+            disabled={!isAbleToCreate}
+          />
+        </CenteredContainerForPage>
       ) : (
         <EmptyStatePage
           title={formatMessage(messages.noPatternAnalysisTitle)}

@@ -32,6 +32,7 @@ import { isEmailIntegrationAvailableSelector } from 'controllers/plugins';
 import { showModalAction } from 'controllers/modal';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
+import { CenteredContainerForPage } from 'pages/inside/projectSettingsPageContainer';
 import { Button } from 'componentLibrary/button';
 import { Checkbox } from 'componentLibrary/checkbox';
 import {
@@ -224,7 +225,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
   return (
     <>
       {notifications.length ? (
-        <>
+        <CenteredContainerForPage>
           <Layout description={formatMessage(messages.tabDescription)}>
             <FieldElement
               withoutProvider
@@ -251,7 +252,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
               dataAutomationId="notificationsRulesList"
             />
           </div>
-        </>
+        </CenteredContainerForPage>
       ) : (
         <EmptyStatePage
           title={formatMessage(messages.noItemsMessage)}

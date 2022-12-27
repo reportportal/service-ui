@@ -38,6 +38,7 @@ import {
   MAX_DEFECT_TYPES_COUNT,
   WARNING_DEFECT_TYPES_COUNT,
 } from 'pages/inside/projectSettingsPageContainer/content/defectTypes/constants';
+import { CenteredContainerForPage } from 'pages/inside/projectSettingsPageContainer';
 import { SystemMessage } from 'componentLibrary/systemMessage';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { PROJECT_SETTINGS_DEFECT_TYPES_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
@@ -145,7 +146,7 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
   }, [defectTypes, canAddNewDefectType, isEditable]);
 
   return (
-    <>
+    <CenteredContainerForPage>
       <TabDescription>{formatMessage(messages.description)}</TabDescription>
       <Divider />
       {(isInformationMessage || !canAddNewDefectType) && (
@@ -218,7 +219,7 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
           );
         })}
       </div>
-    </>
+    </CenteredContainerForPage>
   );
 };
 DefectTypes.propTypes = {

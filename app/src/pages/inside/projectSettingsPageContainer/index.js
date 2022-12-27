@@ -14,4 +14,7 @@
  * limitations under the License.
  */
 
-export { ProjectSettingsPageContainer } from './projectSettingsPageContainer';
+export {
+  ProjectSettingsPageContainer,
+  CenteredContainerForPage,
+} from './projectSettingsPageContainer';
