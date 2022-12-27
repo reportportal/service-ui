@@ -17,7 +17,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Scrollbars } from 'react-custom-scrollbars';
-import { CSSTransition } from 'react-transition-group';
+import { motion, AnimatePresence } from 'framer-motion';
 import classNames from 'classnames/bind';
 import { useOnClickOutside } from 'common/hooks';
 import { ModalContent } from './modalContent';
@@ -67,38 +67,38 @@ export const ModalLayout = ({
   useOnClickOutside(modalRef, allowCloseOutside && closeModal);
 
   return (
-    <div
-      className={cx('modal-layout', { [`overlay-${overlay}`]: overlay })}
-      data-automation-id="modalWindow"
-    >
-      <div className={cx('scrolling-content')}>
-        <Scrollbars>
-          <CSSTransition
-            timeout={300}
-            in={isShown}
-            classNames={cx('modal-window-animation')}
-            onExited={onClose}
-          >
-            {(status) => (
-              <div
+    <AnimatePresence onExitComplete={onClose}>
+      {isShown && (
+        <div
+          className={cx('modal-layout', { [`overlay-${overlay}`]: overlay })}
+          data-automation-id="modalWindow"
+        >
+          <div className={cx('scrolling-content')}>
+            <Scrollbars>
+              <motion.div
                 className={cx('modal-window', { [`size-${modalSize}`]: modalSize }, className)}
+                key="modal-window"
                 ref={modalRef}
                 tabIndex="0"
+                initial={{ opacity: 0, marginTop: '-100px' }}
+                animate={{ opacity: 1, marginTop: '80px' }}
+                exit={{ opacity: 0, marginTop: '-100px' }}
+                transition={{ duration: 0.3 }}
               >
                 <ModalHeader title={title} headerNode={headerNode} onClose={closeModal} />
-                <ModalContent>{status !== 'exited' ? children : null}</ModalContent>
+                <ModalContent>{children}</ModalContent>
                 <ModalFooter
                   footerNode={footerNode}
                   okButton={okButton}
                   cancelButton={cancelButton}
                   closeHandler={closeModal}
                 />
-              </div>
-            )}
-          </CSSTransition>
-        </Scrollbars>
-      </div>
-    </div>
+              </motion.div>
+            </Scrollbars>
+          </div>
+        </div>
+      )}
+    </AnimatePresence>
   );
 };
 ModalLayout.propTypes = {

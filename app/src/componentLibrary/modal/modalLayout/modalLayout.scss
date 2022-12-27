@@ -48,34 +48,11 @@ $Z-INDEX-OVERLAY: 2;
   z-index: $Z-INDEX-OVERLAY;
 }
 
-:global {
-  .modal-window-animation-enter {
-    opacity: 0;
-    margin-top: -100px;
-  }
-
-  .modal-window-animation-enter-active {
-    opacity: 1;
-    margin-top: 80px;
-  }
-
-  .modal-window-animation-exit {
-    opacity: 1;
-    margin-top: 80px;
-  }
-
-  .modal-window-animation-exit-active {
-    opacity: 0;
-    margin-top: -100px;
-  }
-}
-
 .modal-window {
   position: absolute;
   left: 50%;
   transform: translate(-50%);
   display: inline-block;
-  margin-top: 80px;
   margin-bottom: 10px;
   padding: 32px 48px;
   box-sizing: border-box;
@@ -84,7 +61,6 @@ $Z-INDEX-OVERLAY: 2;
   border-radius: 16px;
   box-shadow: $BOX_SHADOW--modal-window;
   opacity: 1;
-  transition: margin-top 300ms ease-in, opacity 300ms ease-in;
   outline: none;
 }
 
