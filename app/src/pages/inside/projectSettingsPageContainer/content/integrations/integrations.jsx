@@ -83,12 +83,10 @@ export const Integrations = () => {
       {query.subPage && !!Object.keys(plugin).length ? (
         <IntegrationInfo goBackHandler={goBackHandler} data={plugin} integrationId={query.id} />
       ) : (
-        <div>
-          <IntegrationsList
-            availableIntegrations={availableGroupedPlugins}
-            onItemClick={onItemClick}
-          />
-        </div>
+        <IntegrationsList
+          availableIntegrations={availableGroupedPlugins}
+          onItemClick={onItemClick}
+        />
       )}
     </>
   );

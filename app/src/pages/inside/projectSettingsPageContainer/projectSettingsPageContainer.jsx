@@ -204,7 +204,6 @@ export const ProjectSettingsPageContainer = () => {
 export const CenteredContainerForPage = ({ children }) => (
   <div className={cx('centred-content')}>{children}</div>
 );
-
 CenteredContainerForPage.propTypes = {
   children: PropTypes.node.isRequired,
 };
