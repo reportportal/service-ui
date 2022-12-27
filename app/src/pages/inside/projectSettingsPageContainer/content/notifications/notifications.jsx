@@ -46,6 +46,7 @@ import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { PROJECT_SETTINGS_NOTIFICATIONS_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
 import { RuleList, FieldElement, NotificationRuleContent } from '../elements';
 import { Layout } from '../layout';
+import { SettingsPageContent } from '../settingsPageContent';
 import styles from './notifications.scss';
 import { DEFAULT_CASE_CONFIG } from './constants';
 import { convertNotificationCaseForSubmission } from './utils';
@@ -224,7 +225,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
   return (
     <>
       {notifications.length ? (
-        <>
+        <SettingsPageContent>
           <Layout description={formatMessage(messages.tabDescription)}>
             <FieldElement
               withoutProvider
@@ -251,7 +252,7 @@ export const Notifications = ({ setHeaderTitleNode }) => {
               dataAutomationId="notificationsRulesList"
             />
           </div>
-        </>
+        </SettingsPageContent>
       ) : (
         <EmptyStatePage
           title={formatMessage(messages.noItemsMessage)}

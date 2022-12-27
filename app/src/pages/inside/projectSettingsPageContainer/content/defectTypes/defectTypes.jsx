@@ -41,6 +41,7 @@ import {
 import { SystemMessage } from 'componentLibrary/systemMessage';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { PROJECT_SETTINGS_DEFECT_TYPES_EVENTS } from 'analyticsEvents/projectSettingsPageEvents';
+import { SettingsPageContent } from '../settingsPageContent';
 import { DefectTypeRow } from './defectTypeRow';
 import { messages } from './defectTypesMessages';
 import styles from './defectTypes.scss';
@@ -145,7 +146,7 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
   }, [defectTypes, canAddNewDefectType, isEditable]);
 
   return (
-    <>
+    <SettingsPageContent>
       <TabDescription>{formatMessage(messages.description)}</TabDescription>
       <Divider />
       {(isInformationMessage || !canAddNewDefectType) && (
@@ -218,7 +219,7 @@ export const DefectTypes = ({ setHeaderTitleNode }) => {
           );
         })}
       </div>
-    </>
+    </SettingsPageContent>
   );
 };
 DefectTypes.propTypes = {

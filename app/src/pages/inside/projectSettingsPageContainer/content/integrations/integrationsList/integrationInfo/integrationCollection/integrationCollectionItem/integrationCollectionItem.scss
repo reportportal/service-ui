@@ -26,12 +26,20 @@
   border-radius: 8px;
   background-color: $COLOR--bg-000;
   margin-bottom: 8px;
+  cursor: pointer;
 
   &:hover {
     box-shadow: $BOX_SHADOW--item-hover;
+    .arrow-control {
+      svg {
+        fill: $COLOR--e-400;
+      }
+    }
   }
 
   &.disabled {
+    cursor: default;
+
     .integration-name {
       opacity: 0.4;
     }
@@ -84,14 +92,9 @@
 .arrow-control {
   width: 16px;
   height: 16px;
-  cursor: pointer;
 
   svg {
     fill: $COLOR--e-300;
-
-    &:hover {
-      fill: $COLOR--e-400;
-    }
 
     &:active {
       fill: $COLOR--e-200;

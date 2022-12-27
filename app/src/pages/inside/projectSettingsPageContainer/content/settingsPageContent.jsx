@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2022 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,31 +14,16 @@
  * limitations under the License.
  */
 
-.integration-empty {
-  margin-bottom: 0px;
-}
+import PropTypes from 'prop-types';
+import classNames from 'classnames/bind';
 
-.integrations-list {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+import styles from './settingsPageContent.scss';
 
-.integrations-group {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 32px;
-}
+const cx = classNames.bind(styles);
 
-.integrations-group-header {
-  margin-bottom: 16px;
-  color: $COLOR--almost-black;
-  font-size: 15px;
-  line-height: 24px;
-  font-family: $FONT-ROBOTO-MEDIUM;
-}
-
-.integrations-group-items {
-  display: flex;
-  flex-direction: column;
-}
+export const SettingsPageContent = ({ children }) => (
+  <div className={cx('settings-page-content')}>{children}</div>
+);
+SettingsPageContent.propTypes = {
+  children: PropTypes.node.isRequired,
+};
