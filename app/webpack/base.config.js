@@ -92,7 +92,7 @@ module.exports = {
     new webpack.ProvidePlugin({
       React: 'react',
       Utils: 'common/utils',
-      process: 'process/browser',
+      process: 'process/browser.js',
       Buffer: ['buffer', 'Buffer'],
     }),
     new ModuleFederationPlugin({
