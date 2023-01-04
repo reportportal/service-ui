@@ -21,9 +21,16 @@ import Parser from 'html-react-parser';
 import { Manager, Reference, Popper } from 'react-popper';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { useOnClickOutside } from 'common/hooks';
+import { useSelect } from 'downshift';
 import { DropdownOption } from './dropdownOption';
 import ArrowIcon from './img/arrow-inline.svg';
 import styles from './dropdown.scss';
+import {
+  CLOSE_DROPDOWN_KEY_CODES_MAP,
+  ENTER_KEY_CODE,
+  OPEN_DROPDOWN_KEY_CODES_MAP,
+} from './constants';
+import { calculateDefaultIndex, calculateNextIndex, calculatePrevIndex } from './utils';
 
 const cx = classNames.bind(styles);
 
@@ -46,8 +53,8 @@ export const Dropdown = ({
   dataAutomationId,
 }) => {
   const [isOpened, setOpened] = useState(false);
-  const containerRef = useRef();
-  let updatePosition;
+  const containerRef = useRef(null);
+  const updatePosition = useRef(null);
 
   const handleClickOutside = () => {
     if (isOpened) {
@@ -57,11 +64,61 @@ export const Dropdown = ({
   };
   useOnClickOutside(containerRef, handleClickOutside);
 
-  const onClickDropdown = (e) => {
+  const handleChange = (option) => {
+    if (option.disabled) {
+      return;
+    }
+    onChange(option.value);
+    setOpened((prevState) => !prevState);
+  };
+
+  const defaultHighlightedIndex = calculateDefaultIndex(options, value);
+
+  const {
+    getToggleButtonProps,
+    getMenuProps,
+    getItemProps,
+    setHighlightedIndex,
+    highlightedIndex,
+    selectedItem,
+  } = useSelect({
+    items: options,
+    itemToString: (item) => item.label ?? placeholder,
+    onChange: handleChange,
+    selectedItem: value,
+    isOpen: isOpened,
+    circularNavigation: true,
+    defaultHighlightedIndex,
+    onHighlightedIndexChange: (changes) => {
+      switch (changes.type) {
+        case useSelect.stateChangeTypes.MenuKeyDownArrowUp:
+          return {
+            ...changes,
+            highlightedIndex: setHighlightedIndex(
+              calculatePrevIndex(changes.highlightedIndex, options),
+            ),
+          };
+
+        case useSelect.stateChangeTypes.MenuKeyDownArrowDown:
+          return {
+            ...changes,
+            highlightedIndex: setHighlightedIndex(
+              calculateNextIndex(changes.highlightedIndex, options),
+            ),
+          };
+
+        default:
+          return {
+            ...changes,
+          };
+      }
+    },
+  });
+
+  const onClickDropdown = () => {
     if (!disabled) {
-      e.stopPropagation();
-      updatePosition();
-      setOpened(!isOpened);
+      updatePosition.current();
+      setOpened((prevState) => !prevState);
       isOpened ? onBlur() : onFocus();
     }
   };
@@ -77,30 +134,52 @@ export const Dropdown = ({
     return displayedValue;
   };
 
-  const handleChange = (option) => {
-    if (option.disabled) {
+  const handleToggleButtonKeyDown = (event) => {
+    const { keyCode } = event;
+    if (OPEN_DROPDOWN_KEY_CODES_MAP[keyCode] && !isOpened) {
+      event.preventDefault();
+      setHighlightedIndex(defaultHighlightedIndex);
+      updatePosition.current();
+      setOpened(true);
+      onFocus();
+    }
+  };
+
+  const handleKeyDownMenu = (event) => {
+    const { keyCode } = event;
+    if (keyCode === ENTER_KEY_CODE) {
+      const option = options[highlightedIndex];
+      handleChange(option);
+      setOpened(false);
+      onBlur();
       return;
     }
-    onChange(option.value);
-    setOpened(!isOpened);
+
+    if (CLOSE_DROPDOWN_KEY_CODES_MAP[keyCode]) {
+      event.stopPropagation();
+      setOpened(false);
+      onBlur();
+    }
   };
 
   const renderOptions = () =>
-    options.map((option) => {
-      const isSelected =
-        option.value === ((value && value.value) !== undefined ? value.value : value);
-      return (
-        <DropdownOption
-          key={option.value}
-          selected={isSelected}
-          onChange={option.disabled ? null : () => handleChange(option)}
-          variant={variant}
-          option={option}
-          render={renderOption}
-          isOpened={isOpened}
-        />
-      );
-    });
+    options.map((option, index) => (
+      <DropdownOption
+        key={option.value}
+        index={index}
+        {...getItemProps({
+          item: option,
+          index,
+          selected: option.value === selectedItem.value,
+          variant,
+          option,
+          highlightHovered: highlightedIndex === index,
+          render: renderOption,
+          onChange: option.disabled ? null : () => handleChange(option),
+          onMouseEnter: setHighlightedIndex,
+        })}
+      />
+    ));
 
   return (
     <Manager>
@@ -113,16 +192,19 @@ export const Dropdown = ({
         <Reference>
           {({ ref }) => (
             <div
-              tabIndex="0"
-              ref={ref}
-              className={cx(variant, 'dropdown', {
-                opened: isOpened,
-                disabled,
-                error,
-                touched,
-                'mobile-disabled': mobileDisabled,
+              {...getToggleButtonProps({
+                ref,
+                tabIndex: 0,
+                className: cx(variant, 'dropdown', {
+                  opened: isOpened,
+                  disabled,
+                  error,
+                  touched,
+                  'mobile-disabled': mobileDisabled,
+                }),
+                onClick: onClickDropdown,
+                onKeyDown: handleToggleButtonKeyDown,
               })}
-              onClick={onClickDropdown}
             >
               {icon && <i className={cx('icon')}>{Parser(icon)}</i>}
               <span className={cx(variant, 'value', { placeholder: !value })}>
@@ -143,14 +225,15 @@ export const Dropdown = ({
           }}
         >
           {({ placement, ref, style, scheduleUpdate }) => {
-            updatePosition = scheduleUpdate;
+            updatePosition.current = scheduleUpdate;
             return (
               <div
-                ref={ref}
-                style={style}
                 data-placement={placement}
-                className={cx(variant, 'select-list', {
-                  opened: isOpened,
+                {...getMenuProps({
+                  ref,
+                  style,
+                  className: cx(variant, 'select-list', { opened: isOpened }),
+                  onKeyDown: handleKeyDownMenu,
                 })}
               >
                 <ScrollWrapper autoHeight autoHeightMax={216}>
