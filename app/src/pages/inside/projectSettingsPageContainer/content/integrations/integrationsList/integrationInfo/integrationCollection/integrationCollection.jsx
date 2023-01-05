@@ -23,12 +23,10 @@ import styles from './integrationCollection.scss';
 const cx = classNames.bind(styles);
 
 export const IntegrationCollection = ({ items, disabled, openIntegration }) => {
-  const sortedItems = items.sort((a, b) => b.creationDate - a.creationDate);
-
   return (
     <div className={cx('instances-list-wrapper')}>
       <ul className={cx('instances-list')}>
-        {sortedItems.map((item) => (
+        {items.map((item) => (
           <IntegrationCollectionItem
             key={item.id}
             item={item}
