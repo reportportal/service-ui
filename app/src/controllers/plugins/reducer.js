@@ -40,7 +40,7 @@ import {
 
 const addIntegration = (state, type, payload) => ({
   ...state,
-  [type]: [...state[type], payload],
+  [type]: [payload, ...state[type]],
 });
 
 const updateIntegration = (state, type, payload) => ({
