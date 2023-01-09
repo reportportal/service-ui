@@ -22,20 +22,15 @@ export const calculateDefaultIndex = (options, selectedValue) =>
 const calculateCurrentItemIndex = (index, itemsCount) =>
   ((index % itemsCount) + itemsCount) % itemsCount;
 
-export const calculatePrevIndex = (index, options) => {
+const findNearestAvailableIndex = (index, options, step = 1) => {
   if (!options[index].disabled) {
     return index;
   }
   const itemsCount = options.length;
 
-  return calculatePrevIndex(calculateCurrentItemIndex(index - 1, itemsCount), options);
+  return findNearestAvailableIndex(calculateCurrentItemIndex(index + step, itemsCount), options);
 };
 
-export const calculateNextIndex = (index, options) => {
-  if (!options[index].disabled) {
-    return index;
-  }
-  const itemsCount = options.length;
+export const calculateNextIndex = (index, options) => findNearestAvailableIndex(index, options);
 
-  return calculateNextIndex(calculateCurrentItemIndex(index + 1, itemsCount), options);
-};
+export const calculatePrevIndex = (index, options) => findNearestAvailableIndex(index, options, -1);

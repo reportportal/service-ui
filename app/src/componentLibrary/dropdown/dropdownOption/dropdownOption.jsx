@@ -30,7 +30,6 @@ export const DropdownOption = React.forwardRef((props, ref) => {
     render,
     highlightHovered,
     onMouseEnter,
-    index,
   } = props;
   const onChangeHandler = () => onChange && onChange(value);
 
@@ -45,7 +44,7 @@ export const DropdownOption = React.forwardRef((props, ref) => {
       title={(disabled && title) || undefined}
       onClick={onChangeHandler}
       ref={ref}
-      onMouseEnter={() => onMouseEnter(index)}
+      onMouseEnter={onMouseEnter}
     >
       <div className={cx('single-option', { 'sub-option': !!groupRef })}>
         {render ? render(props) : label}
@@ -69,7 +68,6 @@ DropdownOption.propTypes = {
   render: PropTypes.func,
   highlightHovered: PropTypes.bool,
   onMouseEnter: PropTypes.func,
-  index: PropTypes.number,
 };
 
 DropdownOption.defaultProps = {
@@ -79,5 +77,4 @@ DropdownOption.defaultProps = {
   render: null,
   highlightHovered: false,
   onMouseEnter: () => {},
-  index: 0,
 };

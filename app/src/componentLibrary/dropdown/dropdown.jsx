@@ -166,7 +166,6 @@ export const Dropdown = ({
     options.map((option, index) => (
       <DropdownOption
         key={option.value}
-        index={index}
         {...getItemProps({
           item: option,
           index,
@@ -176,7 +175,7 @@ export const Dropdown = ({
           highlightHovered: highlightedIndex === index,
           render: renderOption,
           onChange: option.disabled ? null : () => handleChange(option),
-          onMouseEnter: setHighlightedIndex,
+          onMouseEnter: () => setHighlightedIndex(index),
         })}
       />
     ));
