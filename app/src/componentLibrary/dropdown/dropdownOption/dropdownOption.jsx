@@ -21,13 +21,15 @@ import styles from './dropdownOption.scss';
 
 const cx = classNames.bind(styles);
 
-export const DropdownOption = (props) => {
+export const DropdownOption = React.forwardRef((props, ref) => {
   const {
     option: { value, disabled, hidden, label, title, groupRef },
     selected,
     onChange,
     variant,
     render,
+    highlightHovered,
+    onMouseEnter,
   } = props;
   const onChangeHandler = () => onChange && onChange(value);
 
@@ -37,16 +39,19 @@ export const DropdownOption = (props) => {
         selected,
         disabled,
         hidden,
+        hover: highlightHovered,
       })}
       title={(disabled && title) || undefined}
       onClick={onChangeHandler}
+      ref={ref}
+      onMouseEnter={onMouseEnter}
     >
       <div className={cx('single-option', { 'sub-option': !!groupRef })}>
         {render ? render(props) : label}
       </div>
     </div>
   );
-};
+});
 
 DropdownOption.propTypes = {
   option: PropTypes.shape({
@@ -61,6 +66,8 @@ DropdownOption.propTypes = {
   onChange: PropTypes.func,
   variant: PropTypes.oneOf(['light', 'dark', 'ghost']),
   render: PropTypes.func,
+  highlightHovered: PropTypes.bool,
+  onMouseEnter: PropTypes.func,
 };
 
 DropdownOption.defaultProps = {
@@ -68,4 +75,6 @@ DropdownOption.defaultProps = {
   onChange: () => {},
   title: '',
   render: null,
+  highlightHovered: false,
+  onMouseEnter: () => {},
 };
