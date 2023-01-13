@@ -23,9 +23,19 @@ import styles from './ruleItem.scss';
 
 const cx = classNames.bind(styles);
 
-export const RuleItem = ({ item, actions, onToggle, disabled, content, onClick }) => {
+export const RuleItem = ({
+  item,
+  actions,
+  onToggle,
+  disabled,
+  content,
+  onClick,
+  onRuleNameClick,
+}) => {
   const [shown, setShown] = useState(false);
   const { enabled, name } = item;
+  const isRuleNameClickable = Boolean(onRuleNameClick);
+
   const onToggleActive = (val) => {
     onToggle(val, item);
   };
@@ -33,6 +43,11 @@ export const RuleItem = ({ item, actions, onToggle, disabled, content, onClick }
   const onClickHandler = () => {
     onClick(!shown);
     setShown(!shown);
+  };
+
+  const handleRuleNameClick = (event) => {
+    event.stopPropagation();
+    onRuleNameClick(item);
   };
 
   return (
@@ -47,8 +62,14 @@ export const RuleItem = ({ item, actions, onToggle, disabled, content, onClick }
       </span>
       <div className={cx('panel-wrapper')}>
         <div className={cx('panel')} onClick={onClickHandler}>
-          <span className={cx('name')} title={name}>
-            {name}
+          <span className={cx('name-wrapper')} title={name}>
+            {isRuleNameClickable ? (
+              <i className={cx('name')} onClick={handleRuleNameClick}>
+                {name}
+              </i>
+            ) : (
+              <>{name}</>
+            )}
           </span>
           {actions.length > 0 && !disabled && (
             <span className={cx('actions')}>
@@ -87,6 +108,7 @@ RuleItem.propTypes = {
   disabled: PropTypes.bool,
   content: PropTypes.node,
   onClick: PropTypes.func,
+  onRuleNameClick: PropTypes.oneOfType(PropTypes.func, PropTypes.instanceOf(null)),
 };
 RuleItem.defaultProps = {
   actions: [],
@@ -94,4 +116,5 @@ RuleItem.defaultProps = {
   disabled: false,
   content: null,
   onClick: () => {},
+  onRuleNameClick: null,
 };

@@ -30,6 +30,7 @@ export const RuleList = ({
   ruleItemContent,
   handleRuleItemClick,
   dataAutomationId,
+  onRuleNameClick,
 }) => {
   const Content = ruleItemContent;
   return (
@@ -43,6 +44,7 @@ export const RuleList = ({
           disabled={disabled}
           content={ruleItemContent && <Content item={item} />}
           onClick={handleRuleItemClick}
+          onRuleNameClick={onRuleNameClick}
         />
       ))}
     </div>
@@ -56,6 +58,7 @@ RuleList.propTypes = {
   ruleItemContent: PropTypes.elementType,
   handleRuleItemClick: PropTypes.func,
   dataAutomationId: PropTypes.string,
+  onRuleNameClick: PropTypes.oneOfType(PropTypes.func, PropTypes.instanceOf(null)),
 };
 RuleList.defaultProps = {
   actions: [],
@@ -64,4 +67,5 @@ RuleList.defaultProps = {
   ruleItemContent: null,
   handleRuleItemClick: () => {},
   dataAutomationId: '',
+  onRuleNameClick: null,
 };
