@@ -42,7 +42,6 @@ module.exports = {
       store: path.resolve(__dirname, '../sl_instrumented/store'),
       routes: path.resolve(__dirname, '../sl_instrumented/routes'),
       layouts: path.resolve(__dirname, '../sl_instrumented/layouts'),
-      'react-intl': path.resolve(__dirname, '../node_modules/react-intl/dist/react-intl.js'), // https://github.com/formatjs/react-intl/issues/1499#issuecomment-570151879
     },
   },
   devtool: 'source-map',
