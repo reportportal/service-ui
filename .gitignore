@@ -9,7 +9,10 @@ build/
 *.iml
 *.iws
 *.log
+
+##VS Code
 .vscode
+.devcontainer
 
 coverage
 
