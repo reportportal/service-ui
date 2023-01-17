@@ -1,0 +1,35 @@
+name: Sonar scan
+on:
+  push:
+    branches:
+      - main
+      - develop
+  
+  pull_request:
+    types: [opened, synchronize, reopened]
+  
+env:
+  APP_DIR: app
+
+jobs:
+  sonarcloud:
+    name: SonarCloud
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: Install dependencies
+        run: npm --prefix ${{ env.APP_DIR }} ci
+      # This step should be used after supporting Node.js 18 runtime
+      # - name: Test and coverage
+      #   run: |
+      #     npm --prefix ${{ env.APP_DIR }} run test:coverage
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
