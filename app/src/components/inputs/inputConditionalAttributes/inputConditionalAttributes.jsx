@@ -143,6 +143,8 @@ export class InputConditionalAttributes extends Component {
   render() {
     const { value, keyURLCreator, valueURLCreator, projectId } = this.props;
     const inputConditions = this.getConditions();
+    const edited = true;
+
     return (
       <div className={cx('input-conditional-attributes', { opened: this.state.opened })}>
         <div className={cx('attributes-block')}>
@@ -158,6 +160,7 @@ export class InputConditionalAttributes extends Component {
             projectId={projectId}
             onConfirm={this.onChangeAttributes}
             nakedView
+            attribute={{ edited }}
           />
         </div>
         <div className={cx('conditions-block')} ref={this.setConditionsBlockRef}>
