@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
 import { FieldProvider } from 'components/fields/fieldProvider';
+import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { URLS } from 'common/urls';
 import { AsyncAutocomplete } from 'components/inputs/autocompletes/asyncAutocomplete';
 import { ModalField } from 'components/main/modal';
@@ -54,7 +55,7 @@ const messages = defineMessages({
   },
   attributeKeyValidationError: {
     id: 'MostPopularPatternsControls.attributeKeyValidationError',
-    defaultMessage: 'Value should have size from 1 to 128',
+    defaultMessage: 'Value should have size from 1 to 512',
   },
 });
 const attributeKeyValidator = (message) => bindMessageToValidator(validate.attributeValue, message);
@@ -144,12 +145,14 @@ export class MostPopularPatternsControls extends Component {
               intl.formatMessage(messages.attributeKeyValidationError),
             )}
           >
-            <AsyncAutocomplete
-              getURI={URLS.launchAttributeKeysSearch(activeProject)}
-              minLength={1}
-              creatable
-              placeholder={intl.formatMessage(messages.attributeKeyFieldPlaceholder)}
-            />
+            <FieldErrorHint error={intl.formatMessage(messages.attributeKeyValidationError)}>
+              <AsyncAutocomplete
+                getURI={URLS.launchAttributeKeysSearch(activeProject)}
+                minLength={1}
+                creatable
+                placeholder={intl.formatMessage(messages.attributeKeyFieldPlaceholder)}
+              />
+            </FieldErrorHint>
           </FieldProvider>
         </ModalField>
       </Fragment>
