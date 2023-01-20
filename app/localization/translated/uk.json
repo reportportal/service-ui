@@ -1591,7 +1591,7 @@
   "PluginsTabs.installed": "Встановлені",
   "PluginsTabs.store": "Магазин",
   "PostIssueModal.attachmentsHeader": "Вкладення",
-  "PostIssueModal.booleanFieldHint": "Це поле може містити значення: Правда/Брехня",
+  "PostIssueModal.booleanFieldHint": "Це поле може містити значення: true/false",
   "PostIssueModal.commentsHeader": "Коментарі",
   "PostIssueModal.doubleFieldHint": "Це поле повинно бути подвійного типу",
   "PostIssueModal.includeDataHeader": "Включити дані",
