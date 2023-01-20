@@ -1224,7 +1224,7 @@
   "MostPopularPatternsControls.CriteriaFieldLabel": "Критерії віджету",
   "MostPopularPatternsControls.attributeKeyFieldLabel": "Ключ атрибута",
   "MostPopularPatternsControls.attributeKeyFieldPlaceholder": "Введіть ключ атрибута",
-  "MostPopularPatternsControls.attributeKeyValidationError": "Значення ключа атрибута повинно бути від 1 до 128",
+  "MostPopularPatternsControls.attributeKeyValidationError": "Значення ключа атрибута повинно бути від 1 до 512",
   "MostPopularPatternsControls.numberOfLaunchesLabel": "Кількість запусків",
   "MostPopularPatternsControls.numberOfLaunchesValidationError": "Кількість запусків повинно бути від 1 до 600",
   "MostTimeConsumingTestCasesControls.ContentFieldsValidationError": "Виберіть не менше одного елемента",
