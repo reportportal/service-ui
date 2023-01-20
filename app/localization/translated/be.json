@@ -1591,7 +1591,7 @@
   "PluginsTabs.installed": "Устаноўлены",
   "PluginsTabs.store": "Крама",
   "PostIssueModal.attachmentsHeader": "Укладанні",
-  "PostIssueModal.booleanFieldHint": "Гэта поле можа ўтрымліваць значэння: Праўда/Хлусня",
+  "PostIssueModal.booleanFieldHint": "Гэта поле можа ўтрымліваць значэння: true/false",
   "PostIssueModal.commentsHeader": "Каментарыі",
   "PostIssueModal.doubleFieldHint": "Гэта поле павінна быць падвойнага тыпу",
   "PostIssueModal.includeDataHeader": "Уключыць дадзеныя",

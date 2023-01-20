@@ -1591,7 +1591,7 @@
   "PluginsTabs.installed": "Установлены",
   "PluginsTabs.store": "Магазин",
   "PostIssueModal.attachmentsHeader": "Вложения",
-  "PostIssueModal.booleanFieldHint": "Это поле может содержать значения: Правда/Ложь",
+  "PostIssueModal.booleanFieldHint": "Это поле может содержать значения: true/false",
   "PostIssueModal.commentsHeader": "Комментарии",
   "PostIssueModal.doubleFieldHint": "Это поле должно быть двойного типа",
   "PostIssueModal.includeDataHeader": "Включить данные",
