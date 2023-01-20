@@ -145,7 +145,7 @@ export class MostPopularPatternsControls extends Component {
               intl.formatMessage(messages.attributeKeyValidationError),
             )}
           >
-            <FieldErrorHint error={intl.formatMessage(messages.attributeKeyValidationError)}>
+            <FieldErrorHint>
               <AsyncAutocomplete
                 getURI={URLS.launchAttributeKeysSearch(activeProject)}
                 minLength={1}
