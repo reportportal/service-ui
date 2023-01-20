@@ -1224,7 +1224,7 @@
   "MostPopularPatternsControls.CriteriaFieldLabel": "Критерии виджета",
   "MostPopularPatternsControls.attributeKeyFieldLabel": "Ключ атрибута",
   "MostPopularPatternsControls.attributeKeyFieldPlaceholder": "Введите ключ атрибута",
-  "MostPopularPatternsControls.attributeKeyValidationError": "Значение ключа атрибута должно быть от 1 до 128",
+  "MostPopularPatternsControls.attributeKeyValidationError": "Значение ключа атрибута должно быть от 1 до 512",
   "MostPopularPatternsControls.numberOfLaunchesLabel": "Количество запусков",
   "MostPopularPatternsControls.numberOfLaunchesValidationError": "Количество запусков должно быть от 1 до 600",
   "MostTimeConsumingTestCasesControls.ContentFieldsValidationError": "Выберите не меньше одного элемента",

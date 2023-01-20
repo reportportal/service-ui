@@ -1224,7 +1224,7 @@
   "MostPopularPatternsControls.CriteriaFieldLabel": "Крытэрыі фішкі",
   "MostPopularPatternsControls.attributeKeyFieldLabel": "Ключ атрыбуту",
   "MostPopularPatternsControls.attributeKeyFieldPlaceholder": "Увядзіце ключ атрыбуту",
-  "MostPopularPatternsControls.attributeKeyValidationError": "Значэнне ключа атрыбуту павінна быць ад 1 да 128",
+  "MostPopularPatternsControls.attributeKeyValidationError": "Значэнне ключа атрыбуту павінна быць ад 1 да 512",
   "MostPopularPatternsControls.numberOfLaunchesLabel": "Колькасць запускаў",
   "MostPopularPatternsControls.numberOfLaunchesValidationError": "Колькасць запускаў павінна быць ад 1 да 600",
   "MostTimeConsumingTestCasesControls.ContentFieldsValidationError": "Абярыце па меншай меры адзін элемент",
