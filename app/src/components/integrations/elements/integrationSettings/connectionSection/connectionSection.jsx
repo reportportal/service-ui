@@ -25,8 +25,8 @@ import Parser from 'html-react-parser';
 import { showModalAction } from 'controllers/modal';
 import { PLUGIN_NAME_TITLES } from 'components/integrations/constants';
 import { namedProjectIntegrationsSelector } from 'controllers/plugins';
-import { activeProjectRoleSelector } from 'controllers/user';
-import { PROJECT_MANAGER } from 'common/constants/projectRoles';
+import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
+import { canUpdateSettings } from 'common/utils/permissions';
 import { PLUGINS_PAGE_EVENTS, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { SystemMessage } from 'componentLibrary/systemMessage';
 import PencilIcon from 'common/img/newIcons/pencil-inline.svg';
@@ -79,7 +79,8 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     projectIntegrations: namedProjectIntegrationsSelector(state),
-    userProjectRole: activeProjectRoleSelector(state),
+    accountRole: userAccountRoleSelector(state),
+    userRole: activeProjectRoleSelector(state),
   }),
   {
     showModalAction,
@@ -92,7 +93,8 @@ export class ConnectionSection extends Component {
     intl: PropTypes.object.isRequired,
     showModalAction: PropTypes.func.isRequired,
     projectIntegrations: PropTypes.object.isRequired,
-    userProjectRole: PropTypes.string.isRequired,
+    accountRole: PropTypes.string.isRequired,
+    userRole: PropTypes.string.isRequired,
     onRemoveIntegration: PropTypes.func.isRequired,
     testConnection: PropTypes.func,
     blocked: PropTypes.bool,
@@ -167,10 +169,13 @@ export class ConnectionSection extends Component {
       connected,
       projectIntegrations,
       pluginName,
+      accountRole,
+      userRole,
       data: { name, creator, creationDate },
     } = this.props;
 
     const availableProjectIntegrations = projectIntegrations[pluginName] || [];
+    const isAbleToEdit = canUpdateSettings(accountRole, userRole);
 
     return (
       <>
@@ -227,7 +232,7 @@ export class ConnectionSection extends Component {
             </p>
             {editAuthConfig && editAuthConfig.content}
           </div>
-          {this.props.userProjectRole === PROJECT_MANAGER && (
+          {isAbleToEdit && (
             <div className={cx('buttons-block')}>
               {editAuthConfig && !blocked && (
                 <button onClick={this.onEditAuth} className={cx('action-button')}>
