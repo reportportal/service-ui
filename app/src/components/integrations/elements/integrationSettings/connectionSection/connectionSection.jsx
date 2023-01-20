@@ -99,7 +99,7 @@ export class ConnectionSection extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    isAbleToEditByRole: PropTypes.bool.isRequired,
+    isEditable: PropTypes.bool.isRequired,
     isGlobal: PropTypes.bool,
     data: PropTypes.shape({
       creationDate: PropTypes.number,
@@ -164,7 +164,7 @@ export class ConnectionSection extends Component {
       connected,
       projectIntegrations,
       pluginName,
-      isAbleToEditByRole,
+      isEditable,
       data: { name, creator, creationDate },
     } = this.props;
 
@@ -225,7 +225,7 @@ export class ConnectionSection extends Component {
             </p>
             {editAuthConfig && editAuthConfig.content}
           </div>
-          {isAbleToEditByRole && (
+          {isEditable && (
             <div className={cx('buttons-block')}>
               {editAuthConfig && !blocked && (
                 <button onClick={this.onEditAuth} className={cx('action-button')}>

@@ -60,7 +60,7 @@ export class IntegrationForm extends Component {
     connected: PropTypes.bool.isRequired,
     isEmptyConfiguration: PropTypes.bool.isRequired,
     pluginName: PropTypes.string.isRequired,
-    isAbleToEditByRole: PropTypes.bool.isRequired,
+    isEditable: PropTypes.bool.isRequired,
     isGlobal: PropTypes.bool,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -123,7 +123,7 @@ export class IntegrationForm extends Component {
       isEmptyConfiguration,
       isGlobal,
       pluginName,
-      isAbleToEditByRole,
+      isEditable,
     } = this.props;
     const isSupportsMultipleInstances = isIntegrationSupportsMultipleInstances(pluginName);
 
@@ -157,7 +157,7 @@ export class IntegrationForm extends Component {
                 )}
               </div>
             )}
-            {!blocked && isAbleToEditByRole && (
+            {!blocked && isEditable && (
               <div className={cx('controls-block')}>
                 {disabled ? (
                   <Button onClick={this.toggleDisabled} disabled={shouldFieldsBeHidden}>

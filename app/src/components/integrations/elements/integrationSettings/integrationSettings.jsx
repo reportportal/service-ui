@@ -54,7 +54,7 @@ export const IntegrationSettings = (props) => {
   const activeProject = useSelector(activeProjectSelector);
   const accountRole = useSelector(userAccountRoleSelector);
   const userRole = useSelector(activeProjectRoleSelector);
-  const isAbleToEditByRole = canUpdateSettings(accountRole, userRole);
+  const isEditable = canUpdateSettings(accountRole, userRole);
   const query = useSelector(querySelector);
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
@@ -138,7 +138,7 @@ export const IntegrationSettings = (props) => {
             pluginName={pluginName}
             data={data}
             isGlobal={isGlobal}
-            isAbleToEditByRole={isAbleToEditByRole}
+            isEditable={isEditable}
           />
           <IntegrationForm
             form={formKey}
@@ -149,7 +149,7 @@ export const IntegrationSettings = (props) => {
             onSubmit={onUpdate}
             formFieldsComponent={formFieldsComponent}
             isEmptyConfiguration={isEmptyConfiguration}
-            isAbleToEditByRole={isAbleToEditByRole}
+            isEditable={isEditable}
           />
         </>
       )}
