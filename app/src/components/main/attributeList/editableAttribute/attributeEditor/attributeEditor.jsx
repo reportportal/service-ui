@@ -82,7 +82,10 @@ export class AttributeEditor extends Component {
     keyURLCreator: null,
     valueURLCreator: null,
     invalid: false,
-    attribute: {},
+    attribute: {
+      edited: true,
+      system: false,
+    },
     customClass: '',
     nakedView: false,
   };
