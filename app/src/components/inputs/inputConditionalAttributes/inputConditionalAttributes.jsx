@@ -143,6 +143,7 @@ export class InputConditionalAttributes extends Component {
   render() {
     const { value, keyURLCreator, valueURLCreator, projectId } = this.props;
     const inputConditions = this.getConditions();
+
     return (
       <div className={cx('input-conditional-attributes', { opened: this.state.opened })}>
         <div className={cx('attributes-block')}>
