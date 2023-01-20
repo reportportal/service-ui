@@ -68,7 +68,12 @@ export class AttributeEditor extends Component {
     keyURLCreator: PropTypes.func,
     valueURLCreator: PropTypes.func,
     intl: PropTypes.object.isRequired,
-    attribute: PropTypes.object,
+    attribute: PropTypes.shape({
+      edited: PropTypes.bool,
+      system: PropTypes.bool,
+      key: PropTypes.string,
+      value: PropTypes.string,
+    }),
     customClass: PropTypes.string,
     nakedView: PropTypes.bool,
   };
@@ -85,6 +90,8 @@ export class AttributeEditor extends Component {
     attribute: {
       edited: true,
       system: false,
+      key: '',
+      value: '',
     },
     customClass: '',
     nakedView: false,
