@@ -23,7 +23,12 @@ import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { projectIdSelector, querySelector, PROJECT_SETTINGS_TAB_PAGE } from 'controllers/pages';
 import { omit } from 'common/utils/omit';
-import { activeProjectSelector } from 'controllers/user';
+import {
+  activeProjectSelector,
+  activeProjectRoleSelector,
+  userAccountRoleSelector,
+} from 'controllers/user';
+import { canUpdateSettings } from 'common/utils/permissions';
 import {
   removeIntegrationAction,
   namedGlobalIntegrationsSelector,
@@ -47,6 +52,9 @@ export const IntegrationSettings = (props) => {
   const projectIntegrations = useSelector(namedProjectIntegrationsSelector);
   const projectId = useSelector(projectIdSelector);
   const activeProject = useSelector(activeProjectSelector);
+  const accountRole = useSelector(userAccountRoleSelector);
+  const userRole = useSelector(activeProjectRoleSelector);
+  const isAbleToEditByRole = canUpdateSettings(accountRole, userRole);
   const query = useSelector(querySelector);
   const dispatch = useDispatch();
   const { trackEvent } = useTracking();
@@ -130,6 +138,7 @@ export const IntegrationSettings = (props) => {
             pluginName={pluginName}
             data={data}
             isGlobal={isGlobal}
+            isAbleToEditByRole={isAbleToEditByRole}
           />
           <IntegrationForm
             form={formKey}
@@ -140,6 +149,7 @@ export const IntegrationSettings = (props) => {
             onSubmit={onUpdate}
             formFieldsComponent={formFieldsComponent}
             isEmptyConfiguration={isEmptyConfiguration}
+            isAbleToEditByRole={isAbleToEditByRole}
           />
         </>
       )}
