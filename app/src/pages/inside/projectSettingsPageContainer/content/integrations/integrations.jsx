@@ -56,10 +56,10 @@ export const Integrations = () => {
     setPlugin({});
   }, []);
 
-  const goToInitialPage = useCallback(() => {
+  const goToInitialPage = () => {
     setPlugin({});
     dispatch(redirect(initialPage));
-  }, []);
+  };
 
   useEffect(() => {
     const { subPage: pluginName } = query;

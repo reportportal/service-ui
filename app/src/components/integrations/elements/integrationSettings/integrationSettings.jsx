@@ -160,7 +160,6 @@ export const IntegrationSettings = (props) => {
 IntegrationSettings.propTypes = {
   data: PropTypes.object.isRequired,
   formFieldsComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]).isRequired,
-  goToPreviousPage: PropTypes.func.isRequired,
   goToInitialPage: PropTypes.func.isRequired,
   onUpdate: PropTypes.func.isRequired,
   editAuthConfig: PropTypes.object,
