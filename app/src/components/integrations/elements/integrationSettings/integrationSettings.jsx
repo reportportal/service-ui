@@ -105,11 +105,11 @@ export const IntegrationSettings = (props) => {
     const {
       data: { id, integrationType },
       isGlobal,
-      goToPreviousPage,
+      goToInitialPage,
     } = props;
 
     trackEvent(PLUGINS_PAGE_EVENTS.clickDeleteBtnRemoveIntegration(integrationType.name));
-    dispatch(removeIntegrationAction(id, isGlobal, goToPreviousPage));
+    dispatch(removeIntegrationAction(id, isGlobal, goToInitialPage));
   };
 
   const {
@@ -161,6 +161,7 @@ IntegrationSettings.propTypes = {
   data: PropTypes.object.isRequired,
   formFieldsComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]).isRequired,
   goToPreviousPage: PropTypes.func.isRequired,
+  goToInitialPage: PropTypes.func.isRequired,
   onUpdate: PropTypes.func.isRequired,
   editAuthConfig: PropTypes.object,
   preventTestConnection: PropTypes.bool,

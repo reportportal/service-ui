@@ -82,6 +82,7 @@ export const IntegrationInfo = (props) => {
   const dispatch = useDispatch();
   const {
     goBackHandler,
+    goToInitialPage,
     data: { name, details = {} },
     data,
     integrationId,
@@ -314,6 +315,7 @@ export const IntegrationInfo = (props) => {
               data={updatedData}
               onUpdate={onUpdate}
               goToPreviousPage={goBackHandler}
+              goToInitialPage={goToInitialPage}
               extension={integrationSettingsExtension}
               withPreloader
             />
@@ -326,6 +328,7 @@ export const IntegrationInfo = (props) => {
 
 IntegrationInfo.propTypes = {
   goBackHandler: PropTypes.func,
+  goToInitialPage: PropTypes.func.isRequired,
   data: PropTypes.shape({
     creationDate: PropTypes.number,
     enabled: PropTypes.bool,

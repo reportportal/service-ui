@@ -56,6 +56,11 @@ export const Integrations = () => {
     setPlugin({});
   }, []);
 
+  const goToInitialPage = useCallback(() => {
+    setPlugin({});
+    dispatch(redirect(initialPage));
+  }, []);
+
   useEffect(() => {
     const { subPage: pluginName } = query;
     const certainPlugin = plugins.find(({ name }) => name === pluginName);
@@ -81,7 +86,12 @@ export const Integrations = () => {
   return (
     <>
       {query.subPage && !!Object.keys(plugin).length ? (
-        <IntegrationInfo goBackHandler={goBackHandler} data={plugin} integrationId={query.id} />
+        <IntegrationInfo
+          goBackHandler={goBackHandler}
+          goToInitialPage={goToInitialPage}
+          data={plugin}
+          integrationId={query.id}
+        />
       ) : (
         <IntegrationsList
           availableIntegrations={availableGroupedPlugins}
