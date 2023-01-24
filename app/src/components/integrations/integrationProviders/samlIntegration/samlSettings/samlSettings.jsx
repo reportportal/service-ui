@@ -18,11 +18,11 @@ import PropTypes from 'prop-types';
 import { IntegrationSettings } from 'components/integrations/elements';
 import { SamlFormFields } from '../samlFormFields';
 
-export const SamlSettings = ({ data, goToPreviousPage, onUpdate, isGlobal }) => (
+export const SamlSettings = ({ data, goToInitialPage, onUpdate, isGlobal }) => (
   <IntegrationSettings
     data={data}
     onUpdate={onUpdate}
-    goToPreviousPage={goToPreviousPage}
+    goToInitialPage={goToInitialPage}
     isGlobal={isGlobal}
     formFieldsComponent={SamlFormFields}
     preventTestConnection
@@ -31,7 +31,7 @@ export const SamlSettings = ({ data, goToPreviousPage, onUpdate, isGlobal }) => 
 
 SamlSettings.propTypes = {
   data: PropTypes.object.isRequired,
-  goToPreviousPage: PropTypes.func.isRequired,
+  goToInitialPage: PropTypes.func.isRequired,
   onUpdate: PropTypes.func.isRequired,
   isGlobal: PropTypes.bool,
 };

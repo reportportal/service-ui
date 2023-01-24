@@ -93,13 +93,13 @@ export const RallySettings = (props) => {
     onClick: editAuthorizationClickHandler,
   });
 
-  const { data, goToPreviousPage, isGlobal } = props;
+  const { data, goToInitialPage, isGlobal } = props;
   return (
     <IntegrationSettings
       data={data}
       onUpdate={onSubmit}
-      goToPreviousPage={goToPreviousPage}
       formFieldsComponent={BtsPropertiesForIssueForm}
+      goToInitialPage={goToInitialPage}
       formKey={BTS_FIELDS_FORM}
       editAuthConfig={getEditAuthConfig()}
       isGlobal={isGlobal}
@@ -113,7 +113,7 @@ export const RallySettings = (props) => {
 
 RallySettings.propTypes = {
   data: PropTypes.object.isRequired,
-  goToPreviousPage: PropTypes.func.isRequired,
+  goToInitialPage: PropTypes.func.isRequired,
   onUpdate: PropTypes.func.isRequired,
   isGlobal: PropTypes.bool,
 };

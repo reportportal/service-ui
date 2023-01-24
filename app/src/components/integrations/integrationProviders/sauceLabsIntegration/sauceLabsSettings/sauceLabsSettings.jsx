@@ -18,11 +18,11 @@ import PropTypes from 'prop-types';
 import { IntegrationSettings } from 'components/integrations/elements';
 import { SauceLabsFormFields } from '../sauceLabsFormFields';
 
-export const SauceLabsSettings = ({ data, goToPreviousPage, onUpdate, isGlobal }) => (
+export const SauceLabsSettings = ({ data, goToInitialPage, onUpdate, isGlobal }) => (
   <IntegrationSettings
     data={data}
     onUpdate={onUpdate}
-    goToPreviousPage={goToPreviousPage}
+    goToInitialPage={goToInitialPage}
     isGlobal={isGlobal}
     formFieldsComponent={SauceLabsFormFields}
   />
@@ -30,7 +30,7 @@ export const SauceLabsSettings = ({ data, goToPreviousPage, onUpdate, isGlobal }
 
 SauceLabsSettings.propTypes = {
   data: PropTypes.object.isRequired,
-  goToPreviousPage: PropTypes.func.isRequired,
+  goToInitialPage: PropTypes.func.isRequired,
   onUpdate: PropTypes.func.isRequired,
   isGlobal: PropTypes.bool,
 };
