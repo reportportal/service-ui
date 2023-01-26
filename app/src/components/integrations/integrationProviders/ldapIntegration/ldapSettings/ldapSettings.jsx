@@ -18,10 +18,11 @@ import PropTypes from 'prop-types';
 import { IntegrationSettings } from 'components/integrations/elements';
 import { LdapFormFields } from '../ldapFormFields';
 
-export const LdapSettings = ({ data, goToInitialPage, onUpdate, isGlobal }) => (
+export const LdapSettings = ({ data, goToPreviousPage, goToInitialPage, onUpdate, isGlobal }) => (
   <IntegrationSettings
     data={data}
     onUpdate={onUpdate}
+    goToPreviousPage={goToPreviousPage}
     goToInitialPage={goToInitialPage}
     isGlobal={isGlobal}
     formFieldsComponent={LdapFormFields}
@@ -31,6 +32,7 @@ export const LdapSettings = ({ data, goToInitialPage, onUpdate, isGlobal }) => (
 
 LdapSettings.propTypes = {
   data: PropTypes.object.isRequired,
+  goToPreviousPage: PropTypes.func.isRequired,
   goToInitialPage: PropTypes.func.isRequired,
   onUpdate: PropTypes.func.isRequired,
   isGlobal: PropTypes.bool,

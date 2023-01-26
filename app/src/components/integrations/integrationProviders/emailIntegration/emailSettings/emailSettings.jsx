@@ -18,10 +18,11 @@ import PropTypes from 'prop-types';
 import { IntegrationSettings } from 'components/integrations/elements';
 import { EmailFormFields } from '../emailFormFields';
 
-export const EmailSettings = ({ data, goToInitialPage, onUpdate, isGlobal }) => (
+export const EmailSettings = ({ data, goToPreviousPage, goToInitialPage, onUpdate, isGlobal }) => (
   <IntegrationSettings
     data={data}
     onUpdate={onUpdate}
+    goToPreviousPage={goToPreviousPage}
     goToInitialPage={goToInitialPage}
     isGlobal={isGlobal}
     formFieldsComponent={EmailFormFields}
@@ -30,6 +31,7 @@ export const EmailSettings = ({ data, goToInitialPage, onUpdate, isGlobal }) => 
 
 EmailSettings.propTypes = {
   data: PropTypes.object.isRequired,
+  goToPreviousPage: PropTypes.func.isRequired,
   goToInitialPage: PropTypes.func.isRequired,
   onUpdate: PropTypes.func.isRequired,
   isGlobal: PropTypes.bool,

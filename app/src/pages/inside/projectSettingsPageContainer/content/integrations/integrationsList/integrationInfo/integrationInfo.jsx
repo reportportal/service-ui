@@ -314,6 +314,7 @@ export const IntegrationInfo = (props) => {
             <IntegrationSettingsComponent
               data={updatedData}
               onUpdate={onUpdate}
+              goToPreviousPage={goBackHandler}
               goToInitialPage={goToInitialPage}
               extension={integrationSettingsExtension}
               withPreloader
