@@ -97,13 +97,12 @@ export const JiraSettings = (props) => {
     onClick: editAuthorizationClickHandler,
   });
 
-  const { data, goToPreviousPage, isGlobal, goToInitialPage } = props;
+  const { data, goToPreviousPage, isGlobal } = props;
   return (
     <IntegrationSettings
       data={data}
       onUpdate={onSubmit}
       goToPreviousPage={goToPreviousPage}
-      goToInitialPage={goToInitialPage}
       formFieldsComponent={BtsPropertiesForIssueForm}
       formKey={BTS_FIELDS_FORM}
       editAuthConfig={getEditAuthConfig()}
@@ -119,7 +118,6 @@ export const JiraSettings = (props) => {
 JiraSettings.propTypes = {
   data: PropTypes.object.isRequired,
   goToPreviousPage: PropTypes.func.isRequired,
-  goToInitialPage: PropTypes.func.isRequired,
   onUpdate: PropTypes.func.isRequired,
   isGlobal: PropTypes.bool,
 };
