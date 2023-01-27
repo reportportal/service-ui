@@ -54,10 +54,26 @@
   margin-left: -24px;
   box-sizing: border-box;
   cursor: pointer;
+
+  &:focus-visible {
+    outline-color: $COLOR--topaz-focused;
+    outline-width: 2px;
+  }
 }
 
 .children-container {
   cursor: pointer;
+
+  & > a:focus-visible {
+    outline: none;
+    text-decoration: underline;
+    color: $COLOR--topaz-focused;
+  }
+
+  & > a {
+    color: $COLOR--topaz-2;
+    text-decoration: none;
+  }
 }
 
 .light {

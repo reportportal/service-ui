@@ -29,31 +29,50 @@ export const Checkbox = ({
   value,
   variant,
   dataAutomationId,
-}) => (
-  // eslint-disable-next-line
-  <label
-    className={cx(variant, className, {
-      disabled,
-    })}
-    onFocus={onFocus}
-    onBlur={onBlur}
-    data-automation-id={dataAutomationId}
-  >
-    <input
-      type="checkbox"
-      className={cx('input')}
-      disabled={disabled}
-      onChange={onChange}
-      checked={value}
-    />
-    <span
-      className={cx('checkbox', {
+}) => {
+  const handleKeyDown = ({ keyCode }) => {
+    const enterKeyCode = 13;
+    if (keyCode === enterKeyCode) {
+      onChange(!value);
+    }
+  };
+
+  const handleChange = () => {
+    onChange(!value);
+  };
+
+  return (
+    // eslint-disable-next-line
+    <label
+      id="chk1-label"
+      className={cx(variant, className, {
         disabled,
       })}
-    />
-    {children && <span className={cx('children-container', { disabled })}>{children}</span>}
-  </label>
-);
+      onFocus={onFocus}
+      onBlur={onBlur}
+      data-automation-id={dataAutomationId}
+    >
+      <input
+        type="checkbox"
+        className={cx('input')}
+        disabled={disabled}
+        onChange={handleChange}
+        checked={value}
+      />
+      <span
+        aria-labelledby="chk1-label"
+        role="checkbox"
+        aria-checked={value}
+        onKeyDown={handleKeyDown}
+        tabIndex={disabled ? '' : '0'}
+        className={cx('checkbox', {
+          disabled,
+        })}
+      />
+      {children && <span className={cx('children-container', { disabled })}>{children}</span>}
+    </label>
+  );
+};
 Checkbox.propTypes = {
   variant: PropTypes.string,
   children: PropTypes.node,

@@ -59,8 +59,8 @@ export const AttributeListFormField = ({
       ? attributesNote || formatMessage(messages.attributesNote)
       : formatMessage(messages.attributesNotActive);
 
-  const attributeControlHandler = (e) => {
-    setShowEditor(e.target.checked);
+  const attributeControlHandler = (isChecked) => {
+    setShowEditor(isChecked);
     const filteredAttributes = value.reduce((acc, curr) => {
       const attr = { ...curr };
       if (attr.new) return [...acc];
