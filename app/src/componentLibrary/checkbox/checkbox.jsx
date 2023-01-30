@@ -30,15 +30,23 @@ export const Checkbox = ({
   variant,
   dataAutomationId,
 }) => {
-  const handleKeyDown = ({ keyCode }) => {
+  const handleKeyDown = (event) => {
+    const { keyCode } = event;
+    const spaceKeyCode = 32;
     const enterKeyCode = 13;
+
+    if (keyCode === spaceKeyCode) {
+      event.preventDefault();
+      return;
+    }
     if (keyCode === enterKeyCode) {
-      onChange(!value);
+      event.preventDefault();
+      onChange(!event.target.checked);
     }
   };
 
-  const handleChange = () => {
-    onChange(!value);
+  const handleChange = (event) => {
+    onChange(event.target.checked);
   };
 
   return (
@@ -53,7 +61,9 @@ export const Checkbox = ({
       data-automation-id={dataAutomationId}
     >
       <input
+        tabIndex="0"
         type="checkbox"
+        onKeyDown={handleKeyDown}
         className={cx('input')}
         disabled={disabled}
         onChange={handleChange}
@@ -63,8 +73,6 @@ export const Checkbox = ({
         aria-labelledby="chk1-label"
         role="checkbox"
         aria-checked={value}
-        onKeyDown={handleKeyDown}
-        tabIndex={disabled ? '' : '0'}
         className={cx('checkbox', {
           disabled,
         })}
