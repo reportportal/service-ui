@@ -158,7 +158,11 @@ export const PatternAnalysisContent = ({
           withoutProvider
           description={formatMessage(messages.autoPatternAnalysisDescription)}
         >
-          <Checkbox disabled={disabled} value={PAState} onChange={onChangePatternAnalysis}>
+          <Checkbox
+            disabled={disabled}
+            value={PAState}
+            onChange={(e) => onChangePatternAnalysis(e.target.checked)}
+          >
             {formatMessage(messages.autoPatternAnalysis)}
           </Checkbox>
         </FieldElement>

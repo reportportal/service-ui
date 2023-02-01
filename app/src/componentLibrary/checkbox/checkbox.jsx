@@ -15,6 +15,7 @@
  */
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { useRef } from 'react';
 import styles from './checkbox.scss';
 
 const cx = classNames.bind(styles);
@@ -30,6 +31,8 @@ export const Checkbox = ({
   variant,
   dataAutomationId,
 }) => {
+  const inputRef = useRef(null);
+
   const handleKeyDown = (event) => {
     const { keyCode } = event;
     const spaceKeyCode = 32;
@@ -39,14 +42,11 @@ export const Checkbox = ({
       event.preventDefault();
       return;
     }
+
     if (keyCode === enterKeyCode) {
       event.preventDefault();
-      onChange(!event.target.checked);
+      inputRef.current.click();
     }
-  };
-
-  const handleChange = (event) => {
-    onChange(event.target.checked);
   };
 
   return (
@@ -61,12 +61,13 @@ export const Checkbox = ({
       data-automation-id={dataAutomationId}
     >
       <input
+        ref={inputRef}
         tabIndex="0"
         type="checkbox"
         onKeyDown={handleKeyDown}
         className={cx('input')}
         disabled={disabled}
-        onChange={handleChange}
+        onChange={onChange}
         checked={value}
       />
       <span
@@ -97,7 +98,7 @@ Checkbox.defaultProps = {
   children: '',
   value: false,
   disabled: false,
-  onChange: () => {},
+  // onChange: () => {},
   onFocus: () => {},
   onBlur: () => {},
   className: '',

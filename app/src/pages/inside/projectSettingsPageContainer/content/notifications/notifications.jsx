@@ -232,7 +232,11 @@ export const Notifications = ({ setHeaderTitleNode }) => {
               description={formatMessage(messages.toggleNote)}
               dataAutomationId="notificationsEnabledCheckbox"
             >
-              <Checkbox disabled={isReadOnly} value={enabled} onChange={toggleNotificationsEnabled}>
+              <Checkbox
+                disabled={isReadOnly}
+                value={enabled}
+                onChange={(e) => toggleNotificationsEnabled(e.target.checked)}
+              >
                 {formatMessage(messages.toggleLabel)}
               </Checkbox>
             </FieldElement>
