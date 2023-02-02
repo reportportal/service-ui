@@ -98,7 +98,7 @@ Checkbox.defaultProps = {
   children: '',
   value: false,
   disabled: false,
-  // onChange: () => {},
+  onChange: () => {},
   onFocus: () => {},
   onBlur: () => {},
   className: '',
