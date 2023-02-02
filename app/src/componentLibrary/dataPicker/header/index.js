@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,4 @@
  * limitations under the License.
  */
 
-import { ProjectActivity, messages, months } from './projectActivity';
-
-export { ProjectActivity, messages, months };
+export { DataPickerHeader } from './dataPickerHeader';

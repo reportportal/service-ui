@@ -61,7 +61,7 @@ import { Notifications } from './activities/notifications';
 import styles from './projectActivity.scss';
 
 const cx = classNames.bind(styles);
-const messages = defineMessages({
+export const messages = defineMessages({
   january: {
     id: 'ProjectActivity.january',
     defaultMessage: 'January',
@@ -147,7 +147,7 @@ const messages = defineMessages({
     defaultMessage: 'Sunday',
   },
 });
-const months = [
+export const months = [
   'january',
   'february',
   'march',
