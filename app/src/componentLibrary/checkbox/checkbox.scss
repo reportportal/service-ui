@@ -42,7 +42,10 @@
 }
 
 .input {
-  display: none;
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  left: 0;
 }
 
 .checkbox {
@@ -58,6 +61,17 @@
 
 .children-container {
   cursor: pointer;
+
+  & > a:focus-visible {
+    outline: none;
+    text-decoration: underline;
+    color: $COLOR--topaz-focused;
+  }
+
+  & > a {
+    color: $COLOR--topaz-2;
+    text-decoration: none;
+  }
 }
 
 .light {
@@ -84,6 +98,9 @@
     &:checked:disabled + .checkbox {
       @include checked-state($COLOR--topaz-2, $COLOR--topaz-2);
       @include disabled-state(0.3);
+    }
+    &:focus + .checkbox {
+      border: 2px solid $COLOR--topaz-focused;
     }
   }
 }

@@ -15,6 +15,7 @@
  */
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { useRef } from 'react';
 import styles from './checkbox.scss';
 
 const cx = classNames.bind(styles);
@@ -29,31 +30,58 @@ export const Checkbox = ({
   value,
   variant,
   dataAutomationId,
-}) => (
-  // eslint-disable-next-line
-  <label
-    className={cx(variant, className, {
-      disabled,
-    })}
-    onFocus={onFocus}
-    onBlur={onBlur}
-    data-automation-id={dataAutomationId}
-  >
-    <input
-      type="checkbox"
-      className={cx('input')}
-      disabled={disabled}
-      onChange={onChange}
-      checked={value}
-    />
-    <span
-      className={cx('checkbox', {
+}) => {
+  const inputRef = useRef(null);
+
+  const handleKeyDown = (event) => {
+    const { keyCode } = event;
+    const spaceKeyCode = 32;
+    const enterKeyCode = 13;
+
+    if (keyCode === spaceKeyCode) {
+      event.preventDefault();
+      return;
+    }
+
+    if (keyCode === enterKeyCode) {
+      event.preventDefault();
+      inputRef.current.click();
+    }
+  };
+
+  return (
+    // eslint-disable-next-line
+    <label
+      id="chk1-label"
+      className={cx(variant, className, {
         disabled,
       })}
-    />
-    {children && <span className={cx('children-container', { disabled })}>{children}</span>}
-  </label>
-);
+      onFocus={onFocus}
+      onBlur={onBlur}
+      data-automation-id={dataAutomationId}
+    >
+      <input
+        ref={inputRef}
+        tabIndex="0"
+        type="checkbox"
+        onKeyDown={handleKeyDown}
+        className={cx('input')}
+        disabled={disabled}
+        onChange={onChange}
+        checked={value}
+      />
+      <span
+        aria-labelledby="chk1-label"
+        role="checkbox"
+        aria-checked={value}
+        className={cx('checkbox', {
+          disabled,
+        })}
+      />
+      {children && <span className={cx('children-container', { disabled })}>{children}</span>}
+    </label>
+  );
+};
 Checkbox.propTypes = {
   variant: PropTypes.string,
   children: PropTypes.node,
