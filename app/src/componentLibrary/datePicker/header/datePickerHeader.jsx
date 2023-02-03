@@ -21,8 +21,8 @@ import PropTypes from 'prop-types';
 import { useMemo } from 'react';
 import { Dropdown } from 'componentLibrary/dropdown';
 import { messages, months } from 'components/widgets/singleLevelWidgets/tables/projectActivity';
-import styles from './dataPickerHeader.scss';
-import DataPickerHeaderIcon from './img/calendar-arrow-inline.svg';
+import styles from './datePickerHeader.scss';
+import DatePickerHeaderIcon from './img/calendar-arrow-inline.svg';
 
 const cx = classNames.bind(styles);
 
@@ -35,7 +35,7 @@ const getYearsFrom = (start, amountYearsToGenerate = 20) => {
   return new Array(yearsFromCurrent - start).fill().map((_, i) => start - i);
 };
 
-export const DataPickerHeader = ({
+export const DatePickerHeader = ({
   date,
   changeYear,
   changeMonth,
@@ -43,7 +43,7 @@ export const DataPickerHeader = ({
   increaseMonth,
   prevMonthButtonDisabled,
   nextMonthButtonDisabled,
-  setHeaderNodes,
+  headerNodes,
   customClassName,
 }) => {
   const { formatMessage } = useIntl();
@@ -72,14 +72,14 @@ export const DataPickerHeader = ({
 
   return (
     <>
-      {setHeaderNodes ? <div className={cx(customClassName)}>{setHeaderNodes()}</div> : null}
+      {headerNodes ? <div className={cx(customClassName)}>{headerNodes}</div> : null}
       <div className={cx('header')}>
         <i
           aria-label="Previous Months"
           onClick={prevMonthButtonDisabled ? null : decreaseMonth}
           className={cx('icon-prev', { disabled: prevMonthButtonDisabled })}
         >
-          {Parser(DataPickerHeaderIcon)}
+          {Parser(DatePickerHeaderIcon)}
         </i>
         <div className={cx('dropdowns-wrapper')}>
           <Dropdown
@@ -106,24 +106,24 @@ export const DataPickerHeader = ({
           onClick={nextMonthButtonDisabled ? null : increaseMonth}
           className={cx('icon-next', { disabled: nextMonthButtonDisabled })}
         >
-          {Parser(DataPickerHeaderIcon)}
+          {Parser(DatePickerHeaderIcon)}
         </i>
       </div>
     </>
   );
 };
-DataPickerHeader.propTypes = {
+DatePickerHeader.propTypes = {
   changeYear: PropTypes.func,
   changeMonth: PropTypes.func,
   decreaseMonth: PropTypes.func,
   increaseMonth: PropTypes.func,
-  setHeaderNodes: PropTypes.func,
+  headerNodes: PropTypes.node,
   date: PropTypes.instanceOf(Date),
   prevMonthButtonDisabled: PropTypes.bool,
   nextMonthButtonDisabled: PropTypes.bool,
   customClassName: PropTypes.string,
 };
-DataPickerHeader.defaultProps = {
+DatePickerHeader.defaultProps = {
   date: new Date(),
   prevMonthButtonDisabled: false,
   nextMonthButtonDisabled: false,
@@ -131,6 +131,6 @@ DataPickerHeader.defaultProps = {
   changeMonth: () => {},
   decreaseMonth: () => {},
   increaseMonth: () => {},
-  setHeaderNodes: null,
+  headerNodes: null,
   customClassName: '',
 };

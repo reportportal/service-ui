@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { DataPicker } from './dataPicker';
+export { DatePickerHeader } from './datePickerHeader';

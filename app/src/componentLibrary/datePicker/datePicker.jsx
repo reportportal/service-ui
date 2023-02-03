@@ -21,8 +21,8 @@ import PropTypes from 'prop-types';
 import { be, ru, enGB, uk } from 'date-fns/locale';
 import { langSelector } from 'controllers/lang';
 import { useSelector } from 'react-redux';
-import styles from './dataPicker.scss';
-import { DataPickerHeader } from './header';
+import styles from './datePicker.scss';
+import { DatePickerHeader } from './header';
 
 const cx = classNames.bind(styles);
 const currentLanguageToLocale = {
@@ -32,7 +32,7 @@ const currentLanguageToLocale = {
   uk,
 };
 
-export const DataPicker = ({
+export const DatePicker = ({
   value,
   onChange,
   disabled,
@@ -41,7 +41,7 @@ export const DataPicker = ({
   endDate,
   startDate,
   selectsRange,
-  setHeaderNodes,
+  headerNodes,
   customClassName,
   customTimeInput,
   shouldCloseOnSelect,
@@ -103,9 +103,9 @@ export const DataPicker = ({
       dayClassName={getDayClassName}
       calendarClassName={cx(calendarClassName, 'calendar')}
       renderCustomHeader={(customHeaderProps) => (
-        <DataPickerHeader
+        <DatePickerHeader
           {...customHeaderProps}
-          setHeaderNodes={setHeaderNodes}
+          headerNodes={headerNodes}
           customClass={customClassName}
         />
       )}
@@ -120,11 +120,11 @@ export const DataPicker = ({
     </ReactDatePicker>
   );
 };
-DataPicker.propTypes = {
+DatePicker.propTypes = {
   onChange: PropTypes.func,
   onBlur: PropTypes.func,
   onFocus: PropTypes.func,
-  setHeaderNodes: PropTypes.func,
+  headerNodes: PropTypes.node,
   disabled: PropTypes.bool,
   selectsRange: PropTypes.bool,
   shouldCloseOnSelect: PropTypes.bool,
@@ -139,11 +139,11 @@ DataPicker.propTypes = {
   children: PropTypes.element,
   customTimeInput: PropTypes.element,
 };
-DataPicker.defaultProps = {
+DatePicker.defaultProps = {
   onChange: () => {},
   onBlur: () => {},
   onFocus: () => {},
-  setHeaderNodes: null,
+  headerNodes: null,
   disabled: false,
   selectsRange: false,
   shouldCloseOnSelect: false,
