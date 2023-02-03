@@ -16,7 +16,7 @@ width - 380px. Max height - flexible.
 - **calendarClassName** : _string_, optional, default = ""
 - **fixedHeight** : _bool_, optional, default = false
 - **children** : _node_, optional, default = null
-- **setHeaderNodes** : _func_, optional, default = ()=>{}
+- **headerNodes** : _node_, optional, default = null
 - **value** : _string_, optional, default = new Date()
 
 ### Events
