@@ -155,4 +155,5 @@ DatePicker.defaultProps = {
   popperClassName: '',
   calendarClassName: '',
   children: null,
+  value: new Date(),
 };
