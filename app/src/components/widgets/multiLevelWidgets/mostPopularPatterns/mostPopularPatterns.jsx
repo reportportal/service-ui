@@ -160,8 +160,14 @@ export class MostPopularPatterns extends Component {
     return (
       <div className={cx('popular-patterns')}>
         <div className={cx('attribute-selector')}>
-          <div className={cx('attribute-label')}>{attributeKey}</div>
+          <div className={cx('attribute-key')}>
+            <span className={cx('description')}>KEY:</span>
+            <div title={`${attributeKey} : ${selectedAttribute}`} className={cx('attribute-label')}>
+              {attributeKey}
+            </div>
+          </div>
           <div className={cx('attribute-input')}>
+            <span className={cx('description')}>VALUE:</span>
             <InputDropdown
               options={this.getAttributes(result)}
               onChange={this.onChangeAttribute}

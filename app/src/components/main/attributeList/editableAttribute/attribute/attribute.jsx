@@ -66,7 +66,7 @@ export const Attribute = ({
     )}
     <div
       className={cx('label', {
-        [`background-$dark`]: backgroundDark,
+        'background-dark': backgroundDark,
         'expanded-view': expandedView,
       })}
       title={formatAttributeWithSpacedDivider(attribute)}
