@@ -28,15 +28,31 @@
   font-family: $FONT-REGULAR;
   font-size: 13px;
   color: $COLOR--black-2;
+  flex-wrap: wrap;
+
+  .description {
+    font-family: $FONT-SEMIBOLD;
+    font-size: 12px;
+    line-height: 16px;
+    color: $COLOR--gray-47;
+    text-transform: uppercase;
+  }
+}
+
+.attribute-key,
+.attribute-input {
+  width: 310px;
+  display: flex;
+  align-items: center;
+  column-gap: 8px;
 }
 
 .attribute-label {
   padding-right: 10px;
   line-height: 30px;
-}
-
-.attribute-input {
-  flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .second-level-panel {
