@@ -165,4 +165,12 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.changesWarning',
     defaultMessage: 'Field is invalid or changes were not saved',
   },
+  KEY: {
+    id: 'Common.key',
+    defaultMessage: 'Key',
+  },
+  VALUE: {
+    id: 'Common.value',
+    defaultMessage: 'Value',
+  },
 });
