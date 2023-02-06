@@ -46,10 +46,10 @@ export class MostPopularPatterns extends Component {
   static propTypes = {
     project: PropTypes.string.isRequired,
     navigate: PropTypes.func.isRequired,
+    intl: PropTypes.object.isRequired,
     widget: PropTypes.object,
     fetchWidget: PropTypes.func,
     clearQueryParams: PropTypes.func,
-    intl: PropTypes.object,
   };
 
   static defaultProps = {
@@ -70,7 +70,6 @@ export class MostPopularPatterns extends Component {
     },
     fetchWidget: () => {},
     clearQueryParams: () => {},
-    intl: {},
   };
 
   constructor(props) {
