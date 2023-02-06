@@ -26,11 +26,14 @@ import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { NoDataAvailable } from 'components/widgets';
 import { getDefaultTestItemLinkParams } from 'components/widgets/common/utils';
+import { injectIntl } from 'react-intl';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { PatternGrid } from './patternGrid';
 import styles from './mostPopularPatterns.scss';
 
 const cx = classNames.bind(styles);
 
+@injectIntl
 @connect(
   (state) => ({
     project: activeProjectSelector(state),
@@ -46,6 +49,7 @@ export class MostPopularPatterns extends Component {
     widget: PropTypes.object,
     fetchWidget: PropTypes.func,
     clearQueryParams: PropTypes.func,
+    intl: PropTypes.object,
   };
 
   static defaultProps = {
@@ -66,6 +70,7 @@ export class MostPopularPatterns extends Component {
     },
     fetchWidget: () => {},
     clearQueryParams: () => {},
+    intl: {},
   };
 
   constructor(props) {
@@ -152,6 +157,7 @@ export class MostPopularPatterns extends Component {
           widgetOptions: { attributeKey },
         },
       },
+      intl: { formatMessage },
     } = this.props;
     const { selectedAttribute } = this.state;
 
@@ -161,13 +167,13 @@ export class MostPopularPatterns extends Component {
       <div className={cx('popular-patterns')}>
         <div className={cx('attribute-selector')}>
           <div className={cx('attribute-key')}>
-            <span className={cx('description')}>KEY:</span>
+            <span className={cx('description')}>{formatMessage(COMMON_LOCALE_KEYS.KEY)}:</span>
             <div title={`${attributeKey} : ${selectedAttribute}`} className={cx('attribute-label')}>
               {attributeKey}
             </div>
           </div>
           <div className={cx('attribute-input')}>
-            <span className={cx('description')}>VALUE:</span>
+            <span className={cx('description')}>{formatMessage(COMMON_LOCALE_KEYS.VALUE)}:</span>
             <InputDropdown
               options={this.getAttributes(result)}
               onChange={this.onChangeAttribute}

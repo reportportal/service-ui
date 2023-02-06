@@ -240,6 +240,8 @@
   "Common.submit": "Адправіць",
   "Common.uninstall": "Выдаліць",
   "Common.update": "Актуалізаваць",
+  "Common.key": "Ключ",
+  "Common.value": "Значэнне",
   "Common.validation.email": "Электронны адрас няслушны. Калі ласка, увядзіце слушны электронны адрас.",
   "CommonEntityChanges.create": "стварыў панэль кіравання",
   "CommonEntityChanges.createFilter": "стварыў фільтр",

@@ -240,6 +240,8 @@
   "Common.submit": "Отправить",
   "Common.uninstall": "Удалить",
   "Common.update": "Обновить",
+  "Common.key": "Ключ",
+  "Common.value": "Значение",
   "Common.validation.email": "Неправильный адрес электронной почты. Введите правильный адрес электронной почты",
   "CommonEntityChanges.create": "создал панель управления",
   "CommonEntityChanges.createFilter": "создал фильтр",
