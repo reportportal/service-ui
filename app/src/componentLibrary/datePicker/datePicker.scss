@@ -62,6 +62,9 @@ $DAY_OF_THE_WEEK_HOVERED_Z_INDEX: 2;
     color: $COLOR--darkmode-gray-500;
     line-height: 20px;
     font-size: 13px;
+    .react-datepicker__day--range-end:first-child:before {
+      display: none;
+    }
   }
 }
 
