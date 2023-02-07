@@ -46,7 +46,7 @@ export const DatePickerHeader = ({
   const year = date.getFullYear();
   const month = date.getMonth();
 
-  const mothDropdownOptions = useMemo(
+  const monthDropdownOptions = useMemo(
     () =>
       months.reduce((acc, monthValue, monthNumber) => {
         return acc.concat({
@@ -67,7 +67,7 @@ export const DatePickerHeader = ({
 
   const displayedYear = yearDropdownOptions.find(({ value }) => value === year);
 
-  const displayedMonth = mothDropdownOptions[month];
+  const displayedMonth = monthDropdownOptions[month];
 
   return (
     <>
@@ -82,7 +82,7 @@ export const DatePickerHeader = ({
         </i>
         <div className={cx('dropdowns-wrapper')}>
           <Dropdown
-            options={mothDropdownOptions}
+            options={monthDropdownOptions}
             value={displayedMonth}
             onChange={changeMonth}
             transparentBackground
