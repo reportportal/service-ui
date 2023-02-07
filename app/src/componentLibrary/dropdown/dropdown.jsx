@@ -51,6 +51,9 @@ export const Dropdown = ({
   defaultWidth,
   renderOption,
   dataAutomationId,
+  transparentBackground,
+  className,
+  toggleButtonClassName,
 }) => {
   const [isOpened, setOpened] = useState(false);
   const containerRef = useRef(null);
@@ -184,7 +187,7 @@ export const Dropdown = ({
     <Manager>
       <div
         ref={containerRef}
-        className={cx('container', { 'default-width': defaultWidth })}
+        className={cx('container', { 'default-width': defaultWidth }, className)}
         title={title}
         data-automation-id={dataAutomationId}
       >
@@ -194,7 +197,8 @@ export const Dropdown = ({
               {...getToggleButtonProps({
                 ref,
                 tabIndex: 0,
-                className: cx(variant, 'dropdown', {
+                className: cx(variant, 'dropdown', toggleButtonClassName, {
+                  'transparent-background': transparentBackground,
                   opened: isOpened,
                   disabled,
                   error,
@@ -272,6 +276,9 @@ Dropdown.propTypes = {
   defaultWidth: PropTypes.bool,
   renderOption: PropTypes.func,
   dataAutomationId: PropTypes.string,
+  transparentBackground: PropTypes.bool,
+  className: PropTypes.string,
+  toggleButtonClassName: PropTypes.string,
 };
 
 Dropdown.defaultProps = {
@@ -291,4 +298,7 @@ Dropdown.defaultProps = {
   defaultWidth: true,
   renderOption: null,
   dataAutomationId: '',
+  transparentBackground: false,
+  className: '',
+  toggleButtonClassName: '',
 };
