@@ -18,7 +18,7 @@ import ReactDatePicker, { registerLocale } from 'react-datepicker';
 import classNames from 'classnames/bind';
 import { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { be, ru, enGB, uk } from 'date-fns/locale';
+import { be, ru, enGB, uk, zhCN } from 'date-fns/locale';
 import { langSelector } from 'controllers/lang';
 import { useSelector } from 'react-redux';
 import styles from './datePicker.scss';
@@ -30,6 +30,7 @@ const currentLanguageToLocale = {
   be,
   ru,
   uk,
+  zh: zhCN,
 };
 
 export const DatePicker = ({
