@@ -232,7 +232,8 @@ export const IntegrationInfo = (props) => {
     dispatch(redirect(pluginIntegrationListLink));
   };
 
-  const resetProjectIntegrations = () => dispatch(removeProjectIntegrationsByTypeAction(name));
+  const resetProjectIntegrations = () =>
+    dispatch(removeProjectIntegrationsByTypeAction(pluginName));
 
   const onResetProjectIntegration = () => {
     dispatch(
@@ -281,7 +282,7 @@ export const IntegrationInfo = (props) => {
           handleDocumentationClick={handleDocumentationClick}
           buttonName={formatMessage(messages.noGlobalIntegrationsButtonAdd)}
           disableButton={!isAbleToClick}
-          documentationLink={documentationList[name]}
+          documentationLink={documentationList[pluginName]}
         />
       )}
     </>
