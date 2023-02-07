@@ -18,7 +18,7 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { injectIntl, defineMessages } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { START_TIME_FORMAT_ABSOLUTE } from 'controllers/user';
 import { langSelector } from 'controllers/lang';
@@ -48,6 +48,7 @@ import { AbsRelTime } from 'components/main/absRelTime';
 import { externalSystemSelector } from 'controllers/project';
 import { projectIdSelector } from 'controllers/pages';
 import { UserAvatar } from 'pages/inside/common/userAvatar';
+import { COMMON_LOCALE_KEYS, months, days } from 'common/constants/localization';
 import { DefaultProjectSettings } from './activities/defaultProjectSettings';
 import { AnalysisProperties } from './activities/analysisProperties';
 import { AnalysisConfigurations } from './activities/analysisConfigurations';
@@ -61,107 +62,6 @@ import { Notifications } from './activities/notifications';
 import styles from './projectActivity.scss';
 
 const cx = classNames.bind(styles);
-export const messages = defineMessages({
-  january: {
-    id: 'ProjectActivity.january',
-    defaultMessage: 'January',
-  },
-  february: {
-    id: 'ProjectActivity.february',
-    defaultMessage: 'February',
-  },
-  march: {
-    id: 'ProjectActivity.march',
-    defaultMessage: 'March',
-  },
-  april: {
-    id: 'ProjectActivity.april',
-    defaultMessage: 'April',
-  },
-  may: {
-    id: 'ProjectActivity.may',
-    defaultMessage: 'May',
-  },
-  june: {
-    id: 'ProjectActivity.june',
-    defaultMessage: 'June',
-  },
-  july: {
-    id: 'ProjectActivity.july',
-    defaultMessage: 'July',
-  },
-  august: {
-    id: 'ProjectActivity.august',
-    defaultMessage: 'August',
-  },
-  september: {
-    id: 'ProjectActivity.september',
-    defaultMessage: 'September',
-  },
-  october: {
-    id: 'ProjectActivity.october',
-    defaultMessage: 'October',
-  },
-  november: {
-    id: 'ProjectActivity.november',
-    defaultMessage: 'November',
-  },
-  december: {
-    id: 'ProjectActivity.december',
-    defaultMessage: 'December',
-  },
-  today: {
-    id: 'ProjectActivity.today',
-    defaultMessage: 'Today',
-  },
-  yesterday: {
-    id: 'ProjectActivity.yesterday',
-    defaultMessage: 'Yesterday',
-  },
-  monday: {
-    id: 'ProjectActivity.monday',
-    defaultMessage: 'Monday',
-  },
-  tuesday: {
-    id: 'ProjectActivity.tuesday',
-    defaultMessage: 'Tuesday',
-  },
-  wednesday: {
-    id: 'ProjectActivity.wednesday',
-    defaultMessage: 'Wednesday',
-  },
-  thursday: {
-    id: 'ProjectActivity.thursday',
-    defaultMessage: 'Thursday',
-  },
-  friday: {
-    id: 'ProjectActivity.friday',
-    defaultMessage: 'Friday',
-  },
-  saturday: {
-    id: 'ProjectActivity.saturday',
-    defaultMessage: 'Saturday',
-  },
-  sunday: {
-    id: 'ProjectActivity.sunday',
-    defaultMessage: 'Sunday',
-  },
-});
-export const months = [
-  'january',
-  'february',
-  'march',
-  'april',
-  'may',
-  'june',
-  'july',
-  'august',
-  'september',
-  'october',
-  'november',
-  'december',
-];
-const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 // TODO: rewrite it when integrations will be added
 @connect((state) => ({
@@ -227,13 +127,13 @@ export class ProjectActivity extends Component {
     const yesterday = new Date(today - 86400000).valueOf();
     const dt = new Date(parseFloat(dateKey));
     if (dateKey === today) {
-      return intl.formatMessage(messages.today);
+      return intl.formatMessage(COMMON_LOCALE_KEYS.today);
     } else if (dateKey === yesterday) {
-      return intl.formatMessage(messages.yesterday);
+      return intl.formatMessage(COMMON_LOCALE_KEYS.yesterday);
     } else if (today - dateKey <= 604800000) {
       return days[dt.getDay()];
     }
-    return `${intl.formatMessage(messages[months[dt.getMonth()]])} ${dt.getDate()}`;
+    return `${intl.formatMessage(COMMON_LOCALE_KEYS[months[dt.getMonth()]])} ${dt.getDate()}`;
   };
 
   isValidActivity = (activity) =>

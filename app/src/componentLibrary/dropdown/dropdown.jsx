@@ -198,7 +198,7 @@ export const Dropdown = ({
                 ref,
                 tabIndex: 0,
                 className: cx(variant, 'dropdown', toggleButtonClassName, {
-                  transparentBackground,
+                  'transparent-background': transparentBackground,
                   opened: isOpened,
                   disabled,
                   error,

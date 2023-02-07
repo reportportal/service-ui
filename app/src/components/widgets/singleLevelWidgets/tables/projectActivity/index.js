@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-import { ProjectActivity, messages, months } from './projectActivity';
+import { ProjectActivity } from './projectActivity';
 
-export { ProjectActivity, messages, months };
+export { ProjectActivity };

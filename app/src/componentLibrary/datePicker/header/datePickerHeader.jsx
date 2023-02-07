@@ -20,14 +20,14 @@ import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { useMemo } from 'react';
 import { Dropdown } from 'componentLibrary/dropdown';
-import { messages, months } from 'components/widgets/singleLevelWidgets/tables/projectActivity';
+import { COMMON_LOCALE_KEYS, months } from 'common/constants/localization';
 import styles from './datePickerHeader.scss';
 import DatePickerHeaderIcon from './img/calendar-arrow-inline.svg';
 
 const cx = classNames.bind(styles);
 
 const messagesMonths = Object.fromEntries(
-  Object.entries(messages).filter(([key]) => months.includes(key)),
+  Object.entries(COMMON_LOCALE_KEYS).filter(([key]) => months.includes(key)),
 );
 
 const getYearsFrom = (start, amountYearsToGenerate = 20) => {
@@ -50,7 +50,7 @@ export const DatePickerHeader = ({
   const currentYear = date.getFullYear();
   const currentMonth = date.getMonth();
 
-  const mothsDropdownOptions = useMemo(
+  const mothDropdownOptions = useMemo(
     () =>
       Object.keys(messagesMonths).reduce((acc, month, monthNumber) => {
         return acc.concat({
@@ -61,14 +61,14 @@ export const DatePickerHeader = ({
     [],
   );
 
-  const yearsDropdownOptions = useMemo(() => {
+  const yearDropdownOptions = useMemo(() => {
     const yearValues = getYearsFrom(currentYear);
     return yearValues.reduce((acc, year) => acc.concat({ value: year, label: year }), []);
   }, [currentYear]);
 
-  const currentYearDisplayed = yearsDropdownOptions.find(({ value }) => value === currentYear);
+  const currentYearDisplayed = yearDropdownOptions.find(({ value }) => value === currentYear);
 
-  const currentMothDisplayed = mothsDropdownOptions[currentMonth];
+  const currentMothDisplayed = mothDropdownOptions[currentMonth];
 
   return (
     <>
@@ -83,7 +83,7 @@ export const DatePickerHeader = ({
         </i>
         <div className={cx('dropdowns-wrapper')}>
           <Dropdown
-            options={mothsDropdownOptions}
+            options={mothDropdownOptions}
             value={currentMothDisplayed}
             onChange={changeMonth}
             transparentBackground
@@ -92,7 +92,7 @@ export const DatePickerHeader = ({
             defaultWidth={false}
           />
           <Dropdown
-            options={yearsDropdownOptions}
+            options={yearDropdownOptions}
             value={currentYearDisplayed}
             onChange={changeYear}
             transparentBackground
