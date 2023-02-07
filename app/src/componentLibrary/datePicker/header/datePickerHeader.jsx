@@ -26,10 +26,6 @@ import DatePickerHeaderIcon from './img/calendar-arrow-inline.svg';
 
 const cx = classNames.bind(styles);
 
-const messagesMonths = Object.fromEntries(
-  Object.entries(COMMON_LOCALE_KEYS).filter(([key]) => months.includes(key)),
-);
-
 const getYearsFrom = (start, amountYearsToGenerate = 20) => {
   const yearsFromCurrent = start + amountYearsToGenerate;
   return new Array(yearsFromCurrent - start).fill().map((_, i) => start - i);
@@ -47,28 +43,31 @@ export const DatePickerHeader = ({
   customClassName,
 }) => {
   const { formatMessage } = useIntl();
-  const currentYear = date.getFullYear();
-  const currentMonth = date.getMonth();
+  const year = date.getFullYear();
+  const month = date.getMonth();
 
   const mothDropdownOptions = useMemo(
     () =>
-      Object.keys(messagesMonths).reduce((acc, month, monthNumber) => {
+      months.reduce((acc, monthValue, monthNumber) => {
         return acc.concat({
           value: monthNumber,
-          label: formatMessage(messagesMonths[month]),
+          label: formatMessage(COMMON_LOCALE_KEYS[monthValue]),
         });
       }, []),
     [],
   );
 
   const yearDropdownOptions = useMemo(() => {
-    const yearValues = getYearsFrom(currentYear);
-    return yearValues.reduce((acc, year) => acc.concat({ value: year, label: year }), []);
-  }, [currentYear]);
+    const yearValues = getYearsFrom(year);
+    return yearValues.reduce(
+      (acc, yearValue) => acc.concat({ value: yearValue, label: yearValue }),
+      [],
+    );
+  }, []);
 
-  const currentYearDisplayed = yearDropdownOptions.find(({ value }) => value === currentYear);
+  const displayedYear = yearDropdownOptions.find(({ value }) => value === year);
 
-  const currentMothDisplayed = mothDropdownOptions[currentMonth];
+  const displayedMonth = mothDropdownOptions[month];
 
   return (
     <>
@@ -84,7 +83,7 @@ export const DatePickerHeader = ({
         <div className={cx('dropdowns-wrapper')}>
           <Dropdown
             options={mothDropdownOptions}
-            value={currentMothDisplayed}
+            value={displayedMonth}
             onChange={changeMonth}
             transparentBackground
             className={cx('dropdown')}
@@ -93,7 +92,7 @@ export const DatePickerHeader = ({
           />
           <Dropdown
             options={yearDropdownOptions}
-            value={currentYearDisplayed}
+            value={displayedYear}
             onChange={changeYear}
             transparentBackground
             className={cx('dropdown')}
