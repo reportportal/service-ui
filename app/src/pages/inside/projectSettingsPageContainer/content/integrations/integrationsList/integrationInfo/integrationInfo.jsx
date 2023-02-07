@@ -16,6 +16,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { redirect } from 'redux-first-router';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
@@ -37,16 +38,11 @@ import {
   updateIntegrationAction,
   removeProjectIntegrationsByTypeAction,
 } from 'controllers/plugins';
-import {
-  PROJECT_SETTINGS_TAB_PAGE,
-  querySelector,
-  updatePagePropertiesAction,
-} from 'controllers/pages';
+import { PROJECT_SETTINGS_TAB_PAGE, updatePagePropertiesAction } from 'controllers/pages';
 import { ExtensionLoader } from 'components/extensionLoader';
 import { INTEGRATIONS_SETTINGS_COMPONENTS_MAP } from 'components/integrations/settingsComponentsMap';
 import { EmptyStatePage } from 'pages/inside/projectSettingsPageContainer/content/emptyStatePage';
 import { PROJECT_SETTINGS_INTEGRATION } from 'analyticsEvents/projectSettingsPageEvents';
-import { omit } from 'common/utils';
 import { INTEGRATIONS } from 'common/constants/settingsTabs';
 import { IntegrationHeader } from './integrationHeader';
 import { AvailableIntegrations } from './availableIntegrations';
@@ -77,18 +73,16 @@ export const IntegrationInfo = (props) => {
   const globalIntegrations = useSelector(namedGlobalIntegrationsSelector);
   const projectIntegrations = useSelector(namedProjectIntegrationsSelector);
   const activeProject = useSelector(activeProjectSelector);
-  const query = useSelector(querySelector);
   const isAbleToClick = canUpdateSettings(isAdmin, userProjectRole);
   const dispatch = useDispatch();
   const {
-    goBackHandler,
-    data: { name, details = {} },
-    data,
+    plugin: { name: pluginName, details = {} },
+    plugin,
     integrationId,
   } = props;
 
-  const availableGlobalIntegrations = globalIntegrations[data.name] || [];
-  const availableProjectIntegrations = projectIntegrations[data.name] || [];
+  const availableGlobalIntegrations = globalIntegrations[pluginName] || [];
+  const availableProjectIntegrations = projectIntegrations[pluginName] || [];
   const isAtLeastOneIntegrationAvailable =
     availableGlobalIntegrations.length > 0 || availableProjectIntegrations.length > 0;
 
@@ -108,9 +102,12 @@ export const IntegrationInfo = (props) => {
     }
   }, [integrationId, availableGlobalIntegrations]);
 
-  const integrationSettingsExtension = settingsExtensions.find((ext) => ext.pluginName === name);
+  const integrationSettingsExtension = settingsExtensions.find(
+    (ext) => ext.pluginName === pluginName,
+  );
   const IntegrationSettingsComponent =
-    INTEGRATIONS_SETTINGS_COMPONENTS_MAP[name] || (integrationSettingsExtension && ExtensionLoader);
+    INTEGRATIONS_SETTINGS_COMPONENTS_MAP[pluginName] ||
+    (integrationSettingsExtension && ExtensionLoader);
 
   const openIntegration = (integration) => {
     const { id } = integration;
@@ -126,10 +123,10 @@ export const IntegrationInfo = (props) => {
     const newData = {
       enabled: true,
       integrationParameters: formData,
-      name: formData.integrationName || PLUGIN_NAME_TITLES[name],
+      name: formData.integrationName || PLUGIN_NAME_TITLES[pluginName],
     };
-    trackEvent(PROJECT_SETTINGS_INTEGRATION.CLICK_CREATE_INTEGRATION_MODAL(name));
-    dispatch(addIntegrationAction(newData, false, name, openIntegration, metaData));
+    trackEvent(PROJECT_SETTINGS_INTEGRATION.CLICK_CREATE_INTEGRATION_MODAL(pluginName));
+    dispatch(addIntegrationAction(newData, false, pluginName, openIntegration, metaData));
   };
 
   const onAddProjectIntegration = () => {
@@ -142,7 +139,7 @@ export const IntegrationInfo = (props) => {
           hasWarningMessage: Boolean(
             availableGlobalIntegrations.length && availableProjectIntegrations.length === 0,
           ),
-          instanceType: name,
+          instanceType: pluginName,
           onConfirm: addProjectIntegration,
           customProps: {
             pluginDetails,
@@ -150,7 +147,7 @@ export const IntegrationInfo = (props) => {
         },
       }),
     );
-    trackEvent(PROJECT_SETTINGS_INTEGRATION.CLICK_ADD_PROJECT_INTEGRATION(name));
+    trackEvent(PROJECT_SETTINGS_INTEGRATION.CLICK_ADD_PROJECT_INTEGRATION(pluginName));
   };
   const onUpdate = (formData, onConfirm, metaData) => {
     const newData = {
@@ -185,56 +182,58 @@ export const IntegrationInfo = (props) => {
       ...updatedParameters.integrationParameters,
     },
   };
+  const allIntegrationListLink = {
+    type: PROJECT_SETTINGS_TAB_PAGE,
+    payload: { projectId: activeProject, settingsTab: INTEGRATIONS },
+  };
+  const pluginIntegrationListLink = {
+    ...allIntegrationListLink,
+    meta: {
+      query: {
+        subPage: pluginName,
+      },
+    },
+  };
 
-  const getBreadcrumbData = (isIntegrationDetails) =>
-    isIntegrationDetails
-      ? [
-          {
-            id: 'integrationList',
-            title: formatMessage(messages.integrationList),
-            link: {
-              type: PROJECT_SETTINGS_TAB_PAGE,
-              payload: { projectId: activeProject, settingsTab: INTEGRATIONS, subPage: data.name },
-            },
+  const integrationListBreadcrumbs = [
+    {
+      id: 'backToIntegrations',
+      title: formatMessage(messages.backToIntegration),
+      link: allIntegrationListLink,
+    },
+  ];
+  const integrationBreadcrumbs = [
+    {
+      id: 'integrationList',
+      title: formatMessage(messages.integrationList),
+      link: allIntegrationListLink,
+    },
+    {
+      id: pluginName,
+      title: `${PLUGIN_NAME_TITLES[pluginName] || pluginName} ${formatMessage(messages.settings)}`,
+      link: pluginIntegrationListLink,
+    },
+    {
+      id: updatedData.id,
+      title: updatedData.name,
+      link: {
+        ...pluginIntegrationListLink,
+        meta: {
+          query: {
+            subPage: pluginName,
+            id: integrationId,
           },
-          {
-            id: data.name,
-            title: `${PLUGIN_NAME_TITLES[data.name] || data.name} ${formatMessage(
-              messages.settings,
-            )}`,
-            link: {
-              type: PROJECT_SETTINGS_TAB_PAGE,
-              payload: { projectId: activeProject, settingsTab: INTEGRATIONS },
-              meta: {
-                query: omit(query, ['id']),
-              },
-            },
-          },
-          {
-            id: updatedData.id,
-            title: updatedData.name,
-            link: {
-              type: PROJECT_SETTINGS_TAB_PAGE,
-              payload: { projectId: activeProject, settingsTab: INTEGRATIONS },
-              meta: {
-                query,
-              },
-            },
-          },
-        ]
-      : [
-          {
-            id: 'backToIntegrations',
-            title: formatMessage(messages.backToIntegration),
-            link: {
-              type: PROJECT_SETTINGS_TAB_PAGE,
-              payload: { projectId: activeProject, settingsTab: INTEGRATIONS },
-            },
-            onClick: goBackHandler,
-          },
-        ];
+        },
+      },
+    },
+  ];
 
-  const resetProjectIntegrations = () => dispatch(removeProjectIntegrationsByTypeAction(name));
+  const goToPluginIntegrationList = () => {
+    dispatch(redirect(pluginIntegrationListLink));
+  };
+
+  const resetProjectIntegrations = () =>
+    dispatch(removeProjectIntegrationsByTypeAction(pluginName));
 
   const onResetProjectIntegration = () => {
     dispatch(
@@ -255,65 +254,62 @@ export const IntegrationInfo = (props) => {
     trackEvent(PROJECT_SETTINGS_INTEGRATION.CLICK_DOCUMENTATION_BUTTON('integrations'));
   };
 
-  const integrationContent = () => {
-    return (
-      <>
-        {isAtLeastOneIntegrationAvailable ? (
-          <>
-            {availableProjectIntegrations.length > 0 && (
-              <AvailableIntegrations
-                header={formatMessage(messages.projectIntegrationTitle)}
-                text={formatMessage(messages.projectIntegrationText)}
-                integrations={availableProjectIntegrations}
-                openIntegration={openIntegration}
-              />
-            )}
-
+  const renderIntegrationList = () => (
+    <>
+      {isAtLeastOneIntegrationAvailable ? (
+        <>
+          {availableProjectIntegrations.length > 0 && (
             <AvailableIntegrations
-              header={formatMessage(messages.globalIntegrationTitle)}
-              text={formatMessage(messages.globalIntegrationText)}
-              integrations={availableGlobalIntegrations}
+              header={formatMessage(messages.projectIntegrationTitle)}
+              text={formatMessage(messages.projectIntegrationText)}
+              integrations={availableProjectIntegrations}
               openIntegration={openIntegration}
-              hasProjectIntegration={Boolean(availableProjectIntegrations.length)}
             />
-          </>
-        ) : (
-          <EmptyStatePage
-            title={formatMessage(messages.noGlobalIntegrationsMessage)}
-            handleButton={onAddProjectIntegration}
-            description={formatMessage(messages.noGlobalIntegrationsDescription)}
-            handleDocumentationClick={handleDocumentationClick}
-            buttonName={formatMessage(messages.noGlobalIntegrationsButtonAdd)}
-            disableButton={!isAbleToClick}
-            documentationLink={documentationList[name]}
+          )}
+          <AvailableIntegrations
+            header={formatMessage(messages.globalIntegrationTitle)}
+            text={formatMessage(messages.globalIntegrationText)}
+            integrations={availableGlobalIntegrations}
+            openIntegration={openIntegration}
+            hasProjectIntegration={Boolean(availableProjectIntegrations.length)}
           />
-        )}
-      </>
-    );
-  };
+        </>
+      ) : (
+        <EmptyStatePage
+          title={formatMessage(messages.noGlobalIntegrationsMessage)}
+          handleButton={onAddProjectIntegration}
+          description={formatMessage(messages.noGlobalIntegrationsDescription)}
+          handleDocumentationClick={handleDocumentationClick}
+          buttonName={formatMessage(messages.noGlobalIntegrationsButtonAdd)}
+          disableButton={!isAbleToClick}
+          documentationLink={documentationList[pluginName]}
+        />
+      )}
+    </>
+  );
   return (
     <>
       {!integrationId ? (
         <>
           <IntegrationHeader
-            data={data}
+            data={plugin}
             onAddProjectIntegration={onAddProjectIntegration}
             onResetProjectIntegration={onResetProjectIntegration}
             isAbleToClick={isAbleToClick}
             availableProjectIntegrations={availableProjectIntegrations}
             withButton={isAtLeastOneIntegrationAvailable}
-            breadcrumbData={getBreadcrumbData(false)}
+            breadcrumbs={integrationListBreadcrumbs}
           />
-          {integrationContent()}
+          {renderIntegrationList()}
         </>
       ) : (
         <>
-          <IntegrationHeader data={data} breadcrumbData={getBreadcrumbData(true)} />
+          <IntegrationHeader data={plugin} breadcrumbs={integrationBreadcrumbs} />
           <div className={cx('integration-settings-block')}>
             <IntegrationSettingsComponent
               data={updatedData}
               onUpdate={onUpdate}
-              goToPreviousPage={goBackHandler}
+              goToPreviousPage={goToPluginIntegrationList}
               extension={integrationSettingsExtension}
               withPreloader
             />
@@ -323,10 +319,8 @@ export const IntegrationInfo = (props) => {
     </>
   );
 };
-
 IntegrationInfo.propTypes = {
-  goBackHandler: PropTypes.func,
-  data: PropTypes.shape({
+  plugin: PropTypes.shape({
     creationDate: PropTypes.number,
     enabled: PropTypes.bool,
     groupType: PropTypes.string,
@@ -341,8 +335,6 @@ IntegrationInfo.propTypes = {
   }).isRequired,
   integrationId: PropTypes.string,
 };
-
 IntegrationInfo.defaultProps = {
-  goBackHandler: () => {},
   integrationId: '',
 };

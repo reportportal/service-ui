@@ -39,13 +39,13 @@ export const IntegrationHeader = (props) => {
     isAbleToClick,
     availableProjectIntegrations,
     withButton,
-    breadcrumbData,
+    breadcrumbs,
   } = props;
 
   return (
     <div className={cx('container')}>
       <div className={cx('back-to')}>
-        <Breadcrumbs descriptors={breadcrumbData} />
+        <Breadcrumbs descriptors={breadcrumbs} />
       </div>
       <div className={cx('header')}>
         <div className={cx('integration-block')}>
@@ -80,7 +80,6 @@ export const IntegrationHeader = (props) => {
     </div>
   );
 };
-
 IntegrationHeader.propTypes = {
   goBackHandler: PropTypes.func,
   data: PropTypes.shape({
@@ -101,7 +100,7 @@ IntegrationHeader.propTypes = {
   isAbleToClick: PropTypes.bool,
   availableProjectIntegrations: PropTypes.array,
   withButton: PropTypes.bool,
-  breadcrumbData: PropTypes.arrayOf(
+  breadcrumbs: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string.isRequired,
       link: PropTypes.object.isRequired,
@@ -109,7 +108,6 @@ IntegrationHeader.propTypes = {
     }),
   ),
 };
-
 IntegrationHeader.defaultProps = {
   goBackHandler: () => {},
   onAddProjectIntegration: () => {},
@@ -117,4 +115,5 @@ IntegrationHeader.defaultProps = {
   withButton: false,
   isAbleToClick: false,
   availableProjectIntegrations: [],
+  breadcrumbs: [],
 };

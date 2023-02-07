@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useMemo, useCallback, useEffect, useState } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import classNames from 'classnames/bind';
 import {
@@ -52,9 +52,6 @@ export const Integrations = () => {
     }),
     [activeProject],
   );
-  const goBackHandler = useCallback(() => {
-    setPlugin({});
-  }, []);
 
   useEffect(() => {
     const { subPage: pluginName } = query;
@@ -81,7 +78,7 @@ export const Integrations = () => {
   return (
     <>
       {query.subPage && !!Object.keys(plugin).length ? (
-        <IntegrationInfo goBackHandler={goBackHandler} data={plugin} integrationId={query.id} />
+        <IntegrationInfo plugin={plugin} integrationId={query.id} />
       ) : (
         <IntegrationsList
           availableIntegrations={availableGroupedPlugins}
