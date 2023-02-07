@@ -54,7 +54,6 @@ export const IntegrationsListItem = (props) => {
             {details.version && `${formatMessage(messages.version)} ${details.version}`}
           </span>
         </div>
-
         <p className={cx('integration-description')}>
           {PLUGIN_DESCRIPTIONS_MAP[name] || (details.description && Parser(details.description))}
         </p>
@@ -62,12 +61,10 @@ export const IntegrationsListItem = (props) => {
     </div>
   );
 };
-
 IntegrationsListItem.propTypes = {
   integrationType: PropTypes.object.isRequired,
   onItemClick: PropTypes.func,
 };
-
 IntegrationsListItem.defaultProps = {
   integrationType: {},
   onItemClick: () => {},
