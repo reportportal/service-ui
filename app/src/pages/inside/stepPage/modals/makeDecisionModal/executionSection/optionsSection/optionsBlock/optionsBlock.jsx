@@ -95,7 +95,7 @@ export const OptionsBlock = ({
         ownValue: ALL_LOADED_TI_FROM_HISTORY_LINE,
         label: formatMessage(messages[ALL_LOADED_TI_FROM_HISTORY_LINE]),
       });
-    return options.map((option) => ({ ...option, mode: 'dark', size: 'small' }));
+    return options;
   };
   const onToggle = () => setOptionsState(!expanded);
   const onChangeOption = (value) => {

@@ -55,6 +55,8 @@ export const InputDropdownRadio = ({
             onChange={onChangeOption}
             options={options}
             inputGroupClassName={cx('radio-input-group')}
+            mode="dark"
+            size="small"
           />
         </div>
       )}
