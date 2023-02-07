@@ -36,14 +36,18 @@ export class InputRadioGroup extends PureComponent {
     ),
     inline: PropTypes.bool,
     inputGroupClassName: PropTypes.string,
+    mode: PropTypes.string,
+    size: PropTypes.string,
   };
   static defaultProps = {
     options: [],
     inline: false,
     inputGroupClassName: '',
+    mode: 'default',
+    size: 'medium',
   };
   renderRadioInputs = () => {
-    const { options, value } = this.props;
+    const { options, value, mode, size } = this.props;
     return options.map((item, index) => {
       const { label, ownValue, tooltip, ...rest } = item;
       const onChange = () => this.props.onChange(ownValue);
@@ -62,6 +66,8 @@ export class InputRadioGroup extends PureComponent {
             ownValue={ownValue}
             onChange={onChange}
             title={tooltip || label}
+            mode={mode}
+            size={size}
             {...rest}
           >
             {label}
