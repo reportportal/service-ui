@@ -83,7 +83,6 @@ export const AttributeList = track()(
     tracking,
     eventsInfo,
     maxCellWidth,
-    expandedView,
   }) => (
     <Fragment>
       {attributes.filter(notSystemAttributePredicate).map((attribute, i, filteredAttributes) => (
@@ -102,7 +101,6 @@ export const AttributeList = track()(
           customClass={customClass}
           backgroundDark={backgroundDark}
           maxCellWidth={maxCellWidth}
-          expandedView={expandedView}
         />
       ))}
       {!hasEditedAttribute(attributes) && !disabled && showButton && attributes.length < maxLength && (
@@ -138,7 +136,6 @@ AttributeList.propTypes = {
   }).isRequired,
   eventsInfo: PropTypes.object,
   maxCellWidth: PropTypes.number,
-  expandedView: PropTypes.bool,
 };
 AttributeList.defaultProps = {
   attributes: [],
@@ -158,5 +155,4 @@ AttributeList.defaultProps = {
   backgroundDark: false,
   eventsInfo: {},
   maxCellWidth: 132,
-  expandedView: false,
 };

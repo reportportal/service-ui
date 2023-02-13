@@ -28,23 +28,6 @@ const createRemoveClickHandler = (clickHandler) => (e) => {
   clickHandler();
 };
 
-const getAttributesView = (expandedView, attribute, maxCellWidth) =>
-  expandedView ? (
-    <div className={cx('attributes-container')}>
-      {attribute.key}:{attribute.value}
-    </div>
-  ) : (
-    <>
-      <div className={cx('key')} style={{ maxWidth: maxCellWidth }}>
-        {attribute.key}
-      </div>
-      <div>:</div>
-      <div className={cx('value')} style={{ maxWidth: maxCellWidth }}>
-        {attribute.value}
-      </div>
-    </>
-  );
-
 export const Attribute = ({
   attribute,
   onClick,
@@ -53,7 +36,6 @@ export const Attribute = ({
   customClass,
   backgroundDark,
   maxCellWidth,
-  expandedView,
 }) => (
   <div
     className={cx('attribute', customClass, { disabled }, { [`background-dark`]: backgroundDark })}
@@ -65,14 +47,19 @@ export const Attribute = ({
       </div>
     )}
     <div
-      className={cx('label', {
-        'background-dark': backgroundDark,
-        'expanded-view': expandedView,
-      })}
+      className={cx('label', { [`background-dark`]: backgroundDark })}
       title={formatAttributeWithSpacedDivider(attribute)}
     >
       {attribute.key ? (
-        getAttributesView(expandedView, attribute, maxCellWidth)
+        <>
+          <div className={cx('key')} style={{ maxWidth: maxCellWidth }}>
+            {attribute.key}
+          </div>
+          <div>:</div>
+          <div className={cx('value')} style={{ maxWidth: maxCellWidth }}>
+            {attribute.value}
+          </div>
+        </>
       ) : (
         <div>{attribute.value}</div>
       )}
@@ -87,7 +74,6 @@ Attribute.propTypes = {
   onClick: PropTypes.func,
   onRemove: PropTypes.func,
   backgroundDark: PropTypes.bool,
-  expandedView: PropTypes.bool,
   maxCellWidth: PropTypes.number,
 };
 
@@ -98,6 +84,5 @@ Attribute.defaultProps = {
   onClick: () => {},
   onRemove: () => {},
   backgroundDark: false,
-  expandedView: false,
   maxCellWidth: 132,
 };
