@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,4 @@
  * limitations under the License.
  */
 
-export const APP_INFO_NAMESPACE = 'appInfo';
-export const ANALYICS_INSTANCE_KEY = 'server.details.instance';
-export const ANALYTICS_ALL_KEY = 'server.analytics.all';
-export const OLD_HISTORY_KEY = 'history_old';
-export const GA_MEASUREMENT_ID = 'ga_measurement_id';
+export { SIDEBAR_EVENTS } from './sideBarEvents';

@@ -20,16 +20,26 @@ import { connect } from 'react-redux';
 import { instanceIdSelector, apiBuildVersionSelector } from 'controllers/appInfo';
 import track from 'react-tracking';
 import ReactGA from 'react-ga';
+import GA4 from 'react-ga4';
 import { idSelector, isAdminSelector } from 'controllers/user/selectors';
 import {
   autoAnalysisEnabledSelector,
   patternAnalysisEnabledSelector,
   projectInfoIdSelector,
 } from 'controllers/project/selectors';
+import { omit } from 'common/utils';
+import { gaMeasurementIdSelector } from 'controllers/appInfo/selectors';
 import { normalizeDimensionValue } from './utils';
 
 const PAGE_VIEW = 'pageview';
 const GOOGLE_ANALYTICS_INSTANCE = 'UA-96321031-1';
+
+const getAppVersion = (buildVersion) =>
+  buildVersion &&
+  buildVersion
+    .split('.')
+    .splice(0, 2)
+    .join('.');
 
 @connect((state) => ({
   instanceId: instanceIdSelector(state),
@@ -39,23 +49,44 @@ const GOOGLE_ANALYTICS_INSTANCE = 'UA-96321031-1';
   isPatternAnalyzerEnabled: patternAnalysisEnabledSelector(state),
   projectId: projectInfoIdSelector(state),
   isAdmin: isAdminSelector(state),
+  gaMeasurementId: gaMeasurementIdSelector(state),
 }))
-@track(
-  {},
-  {
-    dispatch: (data) => {
-      ReactGA.set({
-        dimension4: Date.now(),
-      });
-      if (data.actionType && data.actionType === PAGE_VIEW) {
-        ReactGA.pageview(data.page);
-      } else {
-        ReactGA.event(data);
-      }
-    },
-    process: (ownTrackingData) => (ownTrackingData.page ? { actionType: PAGE_VIEW } : null),
+@track(({ children, dispatch, ...additionalData }) => additionalData, {
+  dispatch: ({
+    instanceId,
+    buildVersion,
+    userId,
+    isAutoAnalyzerEnabled,
+    isPatternAnalyzerEnabled,
+    projectId,
+    isAdmin,
+    gaMeasurementId,
+    ...data
+  }) => {
+    ReactGA.set({
+      dimension4: Date.now(),
+    });
+    if (data.actionType && data.actionType === PAGE_VIEW) {
+      ReactGA.pageview(data.page);
+    } else if (data.place) {
+      const eventParameters = {
+        instanceID: instanceId,
+        version: getAppVersion(buildVersion),
+        uid: `${userId}|${instanceId}`,
+        auto_analysis: normalizeDimensionValue(isAutoAnalyzerEnabled),
+        pattern_analysis: normalizeDimensionValue(isPatternAnalyzerEnabled),
+        ...(!isAdmin && { project_id: `${projectId}|${instanceId}` }),
+        timestamp: Date.now(),
+        ...omit(data, ['action']),
+      };
+
+      GA4.event(data.action, eventParameters);
+    } else {
+      ReactGA.event(data);
+    }
   },
-)
+  process: (ownTrackingData) => (ownTrackingData.page ? { actionType: PAGE_VIEW } : null),
+})
 export class AnalyticsWrapper extends Component {
   static propTypes = {
     instanceId: PropTypes.string.isRequired,
@@ -66,10 +97,12 @@ export class AnalyticsWrapper extends Component {
     isPatternAnalyzerEnabled: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
     projectId: PropTypes.number.isRequired,
     isAdmin: PropTypes.bool.isRequired,
+    gaMeasurementId: PropTypes.string,
   };
 
   static defaultProps = {
     children: null,
+    gaMeasurementId: '',
   };
 
   componentDidMount() {
@@ -81,16 +114,19 @@ export class AnalyticsWrapper extends Component {
       isPatternAnalyzerEnabled,
       projectId,
       isAdmin,
+      gaMeasurementId,
     } = this.props;
-    const appVersion =
-      buildVersion &&
-      buildVersion
-        .split('.')
-        .splice(0, 2)
-        .join('.');
+    const appVersion = getAppVersion(buildVersion);
 
     ReactGA.initialize(GOOGLE_ANALYTICS_INSTANCE);
     ReactGA.pageview(window.location.pathname + window.location.search);
+
+    GA4.initialize(gaMeasurementId || 'G-Z22WZS0E4E', {
+      gtagOptions: {
+        anonymizeIp: true,
+      },
+    });
+
     ReactGA.set({
       dimension1: instanceId,
       dimension2: appVersion,
