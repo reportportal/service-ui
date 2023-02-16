@@ -78,32 +78,6 @@ OwnerColumn.defaultProps = {
   className: '',
 };
 
-export const SharedColumn = ({
-  value: { share, owner },
-  customProps: {
-    currentUser: { userId },
-  },
-  className,
-}) => {
-  const isShared = share || userId !== owner;
-
-  return (
-    <div className={cx(className, 'icon-cell', { empty: !isShared })}>
-      {isShared && <Icon type="icon-check" />}
-    </div>
-  );
-};
-SharedColumn.propTypes = {
-  value: PropTypes.object,
-  customProps: PropTypes.object,
-  className: PropTypes.string,
-};
-SharedColumn.defaultProps = {
-  value: {},
-  customProps: {},
-  className: '',
-};
-
 export const EditColumn = ({ value, customProps, className }) => {
   const {
     onEdit,
@@ -118,11 +92,9 @@ export const EditColumn = ({ value, customProps, className }) => {
 
   return (
     <div className={cx(className, 'icon-cell', 'with-button')}>
-      <div className={cx('icon-holder')}>
-        {canEditDashboard(userRole, projectRole, userId === owner) && (
-          <Icon type="icon-pencil" onClick={editItemHandler} />
-        )}
-      </div>
+      {canEditDashboard(userRole, projectRole, userId === owner) && (
+        <Icon type="icon-pencil" onClick={editItemHandler} />
+      )}
     </div>
   );
 };

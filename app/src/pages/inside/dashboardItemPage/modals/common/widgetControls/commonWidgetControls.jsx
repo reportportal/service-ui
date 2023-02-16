@@ -21,7 +21,6 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { validate, composeBoundValidators, bindMessageToValidator } from 'common/utils/validation';
 import { isEmptyObject } from 'common/utils/isEmptyObject';
-import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
 import { Input } from 'components/inputs/input';
 import { InputTextArea } from 'components/inputs/inputTextArea';
 import { ModalField } from 'components/main/modal';
@@ -53,10 +52,6 @@ const messages = defineMessages({
     id: 'CommonWidgetControls.descriptionPlaceholder',
     defaultMessage: 'Enter widget description',
   },
-  shareLabel: {
-    id: 'CommonWidgetControls.shareLabel',
-    defaultMessage: 'Share',
-  },
 });
 
 const widgetNameValidator = (formatMessage, widgets = [], widgetId) =>
@@ -78,7 +73,6 @@ export class CommonWidgetControls extends Component {
     trackEvent: PropTypes.func,
     dashboards: PropTypes.arrayOf(PropTypes.object),
     activeDashboard: PropTypes.object,
-    onChangeDashboard: PropTypes.func,
   };
 
   static defaultProps = {
@@ -88,7 +82,6 @@ export class CommonWidgetControls extends Component {
     trackEvent: () => {},
     dashboards: [],
     activeDashboard: {},
-    onChangeDashboard: () => {},
     intl: {},
   };
 
@@ -109,8 +102,7 @@ export class CommonWidgetControls extends Component {
       trackEvent,
       eventsInfo,
       dashboards,
-      onChangeDashboard,
-      activeDashboard: { widgets = [], share },
+      activeDashboard: { widgets = [] },
     } = this.props;
 
     return (
@@ -137,24 +129,8 @@ export class CommonWidgetControls extends Component {
             <InputTextArea />
           </FieldProvider>
         </ModalField>
-        <ModalField label={formatMessage(messages.shareLabel)} labelWidth={FIELD_LABEL_WIDTH}>
-          <FieldProvider
-            name="share"
-            format={Boolean}
-            parse={Boolean}
-            onChange={() => {
-              !share && trackEvent(eventsInfo.shareWidget);
-            }}
-          >
-            <InputBigSwitcher disabled={share} />
-          </FieldProvider>
-        </ModalField>
         {this.isShowDashboardsList() && (
-          <FieldProvider
-            name="selectedDashboard"
-            dashboards={dashboards}
-            onChange={onChangeDashboard}
-          >
+          <FieldProvider name="selectedDashboard" dashboards={dashboards}>
             <DashboardControl />
           </FieldProvider>
         )}

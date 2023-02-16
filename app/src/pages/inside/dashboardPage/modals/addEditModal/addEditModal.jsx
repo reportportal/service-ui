@@ -27,7 +27,6 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { Input } from 'components/inputs/input';
 import { InputTextArea } from 'components/inputs/inputTextArea';
-import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
 import { validate, composeBoundValidators, bindMessageToValidator } from 'common/utils/validation';
 import { dashboardItemsSelector } from 'controllers/dashboard';
 import styles from './addEditModal.scss';
@@ -49,10 +48,6 @@ const messages = defineMessages({
   dashboardDescriptionLabel: {
     id: 'DashboardForm.dashboardDescriptionLabel',
     defaultMessage: 'Description',
-  },
-  dashboardShareLabel: {
-    id: 'DashboardForm.dashboardShareLabel',
-    defaultMessage: 'Share',
   },
   editModalTitle: {
     id: 'DashboardForm.editModalTitle',
@@ -206,14 +201,6 @@ export class AddEditModal extends Component {
               placeholder={intl.formatMessage(messages.dashboardDescriptionPlaceholder)}
             >
               <InputTextArea />
-            </FieldProvider>
-          </ModalField>
-          <ModalField
-            label={intl.formatMessage(messages.dashboardShareLabel)}
-            labelWidth={LABEL_WIDTH}
-          >
-            <FieldProvider name="share" type="checkbox" format={Boolean} parse={Boolean}>
-              <InputBigSwitcher onChangeEventInfo={eventsInfo.shareSwitcher} />
             </FieldProvider>
           </ModalField>
         </form>

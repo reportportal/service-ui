@@ -41,11 +41,6 @@ export const getAddEditFilterModalEvents = (isEditMode) => {
       action: `Click on button ${actionType} in Modal ${modalType} Filter`,
       label: `${actionType} filter in Modal ${modalType} Filter`,
     },
-    clickShareUnshareSwitcher: (share) => ({
-      category: FILTERS_PAGE,
-      action: `Click on Share on/off in Modal ${modalType} Filter`,
-      label: `${share ? 'Share' : 'Unshare'} Filter`,
-    }),
   };
 };
 
@@ -78,11 +73,6 @@ export const FILTERS_PAGE_EVENTS = {
   CLICK_EDIT_ICON: {
     category: FILTERS_PAGE,
     action: 'Click on icon Edit on Filter name',
-    label: 'Arise Modal Edit filter',
-  },
-  CLICK_SHARED_ICON: {
-    category: FILTERS_PAGE,
-    action: 'Click on icon Shared on Filter',
     label: 'Arise Modal Edit filter',
   },
   CLICK_CLOSE_ICON_MODAL_DELETE_FILTER: {

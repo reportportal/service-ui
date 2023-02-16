@@ -74,19 +74,6 @@
     display: inline-block;
   }
 }
-.shared-col {
-  width: 8%;
-  padding: 15px;
-  text-align: center;
-  box-sizing: border-box;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    width: 100%;
-    padding: 0 15px;
-    margin-bottom: 8px;
-    text-align: left;
-  }
-}
 .delete-col {
   width: 8%;
   padding: 15px;

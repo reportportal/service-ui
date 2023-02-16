@@ -21,8 +21,6 @@ import Link from 'redux-first-router-link';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import { connect } from 'react-redux';
 import { getLaunchFilterLinkSelector } from 'controllers/launch';
-import { userIdSelector } from 'controllers/user';
-import { SharedFilterIcon } from 'pages/inside/common/sharedFilterIcon';
 import { FilterDescriptionTooltipIcon } from './filterDescriptionTooltipIcon';
 import styles from './filterItem.scss';
 
@@ -41,12 +39,9 @@ const FilterItemBase = ({
   id,
   name,
   active,
-  share,
   description,
   unsaved,
   onRemove,
-  owner,
-  userId,
   className,
   isDisabled,
   getLaunchFilterLink,
@@ -56,12 +51,6 @@ const FilterItemBase = ({
     onClick={isDisabled && handleClick}
     to={getLaunchFilterLink(id, active)}
   >
-    {share && (
-      <div className={cx('icon-holder')}>
-        <SharedFilterIcon share={share} currentUser={userId} owner={owner} />
-      </div>
-    )}
-
     <span className={cx('name')}>
       {name}
       {unsaved && <span className={cx('unsaved')}>*</span>}
@@ -80,7 +69,6 @@ const FilterItemBase = ({
 );
 
 export const FilterItem = connect((state) => ({
-  userId: userIdSelector(state),
   getLaunchFilterLink: getLaunchFilterLinkSelector(state),
 }))(FilterItemBase);
 
@@ -89,11 +77,8 @@ FilterItemBase.propTypes = {
   name: PropTypes.string.isRequired,
   active: PropTypes.bool,
   description: PropTypes.string,
-  share: PropTypes.bool,
   unsaved: PropTypes.bool,
   onRemove: PropTypes.func,
-  owner: PropTypes.string.isRequired,
-  userId: PropTypes.string.isRequired,
   getLaunchFilterLink: PropTypes.func.isRequired,
   className: PropTypes.string,
   isDisabled: PropTypes.bool,
@@ -101,7 +86,6 @@ FilterItemBase.propTypes = {
 FilterItemBase.defaultProps = {
   active: false,
   description: null,
-  share: false,
   unsaved: false,
   onRemove: () => {},
   className: '',

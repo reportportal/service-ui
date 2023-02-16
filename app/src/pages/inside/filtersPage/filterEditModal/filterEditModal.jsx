@@ -27,7 +27,6 @@ import { Input } from 'components/inputs/input';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { MarkdownEditor } from 'components/main/markdown';
-import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
 import { commonValidators, validateAsync } from 'common/utils/validation';
 import { activeProjectSelector } from 'controllers/user';
 
@@ -43,10 +42,6 @@ const messages = defineMessages({
   descriptionPlaceholder: {
     id: 'Filter.descriptionPlaceholder',
     defaultMessage: 'Enter filter description',
-  },
-  share: {
-    id: 'Filters.share',
-    defaultMessage: 'Share',
   },
   edit: {
     id: 'Filter.edit',
@@ -178,11 +173,6 @@ export class FilterEditModal extends Component {
                 eventsInfo={{ onChange: this.events.editDescription }}
                 placeholder={intl.formatMessage(messages.descriptionPlaceholder)}
               />
-            </FieldProvider>
-          </ModalField>
-          <ModalField label={intl.formatMessage(messages.share)}>
-            <FieldProvider name="share" format={Boolean} parse={Boolean}>
-              <InputBigSwitcher onChangeEventInfo={this.events.clickShareUnshareSwitcher} />
             </FieldProvider>
           </ModalField>
         </form>
