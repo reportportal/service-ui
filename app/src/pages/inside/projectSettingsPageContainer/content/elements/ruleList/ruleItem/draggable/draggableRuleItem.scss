@@ -14,5 +14,24 @@
  * limitations under the License.
  */
 
-export { RuleItem } from './plain';
-export { DraggableRuleItem } from './draggable';
+.draggable-rule-item {
+  display: flex;
+
+  &.drop-target-top {
+    padding-top: 5px;
+    border-top: 2px solid $COLOR--topaz-focused;
+  }
+  &.drop-target-bottom {
+    padding-bottom: 5px;
+    border-bottom: 2px solid $COLOR--topaz-focused;
+  }
+}
+
+.drag-control {
+  display: inline-block;
+  width: 5px;
+  height: auto;
+  border-radius: 2px;
+  background-color: $COLOR--topaz;
+  cursor: move;
+}

@@ -14,5 +14,4 @@
  * limitations under the License.
  */
 
-export { RuleItem } from './plain';
-export { DraggableRuleItem } from './draggable';
+export { DraggableRuleItem } from './draggableRuleItem';

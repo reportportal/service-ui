@@ -14,5 +14,4 @@
  * limitations under the License.
  */
 
-export { RuleItem } from './plain';
-export { DraggableRuleItem } from './draggable';
+export const RULE_DRAG_SOURCE_TYPE = 'RULE';

@@ -17,6 +17,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider } from 'react-dnd';
 import { ModalContainer } from 'components/main/modal';
 import { pageNames } from 'controllers/pages/constants';
 import { pageSelector, isInitialDispatchDoneSelector } from 'controllers/pages';
@@ -65,7 +67,9 @@ export default class PageSwitcher extends React.Component {
         <Layout>
           {mode === 'development' && <LocalizationSwitcher />}
           <PageErrorBoundary key={page}>
-            <PageComponent />
+            <DndProvider backend={HTML5Backend}>
+              <PageComponent />
+            </DndProvider>
           </PageErrorBoundary>
         </Layout>
         <ModalContainer />
