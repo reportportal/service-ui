@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-import { ANALYICS_INSTANCE_KEY, ANALYTICS_ALL_KEY, OLD_HISTORY_KEY } from './constants';
+import {
+  ANALYICS_INSTANCE_KEY,
+  ANALYTICS_ALL_KEY,
+  OLD_HISTORY_KEY,
+  GA_MEASUREMENT_ID,
+} from './constants';
 
 export const appInfoSelector = (state) => state.appInfo || {};
 const apiInfoSelector = (state) => appInfoSelector(state).api || {};
@@ -45,3 +50,5 @@ export const isOldHistorySelector = (state) =>
 export const isDemoInstanceSelector = (state) => !!apiJobsSelector(state).flushingDataTrigger;
 export const flushDataInSelector = (state) =>
   (apiJobsSelector(state).flushingDataTrigger || {}).triggersIn || null;
+
+export const gaMeasurementIdSelector = (state) => environmentSelector(state)[GA_MEASUREMENT_ID];

@@ -42,6 +42,7 @@ module.exports = {
       routes: path.resolve(__dirname, '../src/routes'),
       layouts: path.resolve(__dirname, '../src/layouts'),
       'react-intl': path.resolve(__dirname, '../node_modules/react-intl/dist/react-intl.js'), // https://github.com/formatjs/react-intl/issues/1499#issuecomment-570151879
+      analyticsEvents: path.resolve(__dirname, '../src/components/main/analytics/events/ga4Events'),
     },
   },
   module: {

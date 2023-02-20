@@ -25,6 +25,7 @@ import {
   assignedProjectsSelector,
 } from 'controllers/user';
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
+import { SIDEBAR_EVENTS as SIDEBAR_GA4_EVENTS } from 'analyticsEvents';
 import { FormattedMessage } from 'react-intl';
 import { CUSTOMER } from 'common/constants/projectRoles';
 import { canSeeMembers } from 'common/utils/permissions';
@@ -100,7 +101,7 @@ export class AppSidebar extends Component {
         message: <FormattedMessage id={'Sidebar.dashboardsBtn'} defaultMessage={'Dashboards'} />,
       },
       {
-        onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_LAUNCHES_BTN),
+        onClick: () => this.onClickButton(SIDEBAR_GA4_EVENTS.CLICK_LAUNCH_ICON),
         link: {
           type: LAUNCHES_PAGE,
           payload: { projectId: activeProject },

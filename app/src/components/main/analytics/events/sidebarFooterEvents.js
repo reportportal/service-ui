@@ -31,11 +31,6 @@ export const SIDEBAR_EVENTS = {
     action: 'Click on Menu button Dashboards',
     label: 'Transition on Dashboards Page',
   },
-  CLICK_LAUNCHES_BTN: {
-    category: SIDEBAR,
-    action: 'Click on Menu Button Launches',
-    label: 'Transition to Launches Page',
-  },
   CLICK_FILTERS_BTN: {
     category: SIDEBAR,
     action: 'Click on Menu button Filters',
