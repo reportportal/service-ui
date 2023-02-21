@@ -30,10 +30,29 @@ export const NameColumn = (
 ) => {
   const color = value.passingRate < minPassingRate ? COLOR_DEEP_RED : COLOR_PASSED;
 
+  const calculateName = () => {
+    const ellipsisPlace = 45;
+    const lengthAtWhichAppearsEllipsis = 50;
+    const isNameLengthMoreThanFifty = value.attributeValue.length > lengthAtWhichAppearsEllipsis;
+
+    if (!isNameLengthMoreThanFifty) return <span>{value.attributeValue}</span>;
+
+    const nameBeforeEllipsis = value.attributeValue.slice(0, ellipsisPlace);
+    const lastFiveSymbol = value.attributeValue.slice(-5);
+
+    return (
+      <>
+        <span className={cx({ ellipsis: isNameLengthMoreThanFifty })}>{nameBeforeEllipsis}</span>
+        <span>{lastFiveSymbol}</span>
+      </>
+    );
+  };
+
   return (
     <div className={cx('name-col', className)}>
       {value.attributeValue ? (
         <div
+          title={value.attributeValue}
           className={cx('name-attr', { 'cursor-pointer': isClickableAttribute })}
           onClick={
             isClickableAttribute
@@ -41,7 +60,7 @@ export const NameColumn = (
               : undefined
           }
         >
-          <span title={value.attributeValue}>{value.attributeValue}</span>
+          {calculateName()}
         </div>
       ) : (
         <span className={cx('name-total', 'total-item')}>

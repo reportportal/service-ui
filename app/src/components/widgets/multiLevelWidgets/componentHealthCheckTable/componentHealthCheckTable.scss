@@ -30,22 +30,23 @@
 .name-col {
   .name-attr {
     display: inline-block;
-    max-width: 115px;
+    width: 200px;
     font-family: $FONT-SEMIBOLD;
     color: $COLOR--topaz;
     font-size: 12px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
     line-height: 1.3;
+  }
+
+  .ellipsis {
+    &::after {
+      content: '...';
+      display: inline;
+    }
   }
 
   .cursor-pointer {
     cursor: pointer;
     font-size: 12px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
     line-height: 1.3;
   }
 
