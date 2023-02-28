@@ -552,13 +552,13 @@ describe('validate.launchesWidgetContentFields', () => {
 describe('validate.mostFailedWidgetNumberOfLaunches', () => {
   test('validation should be correct', () => {
     expect(validate.mostFailedWidgetNumberOfLaunches(2)).toBe(true);
-    expect(validate.mostFailedWidgetNumberOfLaunches(600)).toBe(true);
+    expect(validate.mostFailedWidgetNumberOfLaunches(100)).toBe(true);
   });
   test('Validation should not be correct', () => {
     expect(validate.mostFailedWidgetNumberOfLaunches(undefined)).toBe(false);
     expect(validate.mostFailedWidgetNumberOfLaunches('')).toBe(false);
     expect(validate.mostFailedWidgetNumberOfLaunches(1)).toBe(false);
-    expect(validate.mostFailedWidgetNumberOfLaunches(601)).toBe(false);
+    expect(validate.mostFailedWidgetNumberOfLaunches(101)).toBe(false);
   });
 });
 
