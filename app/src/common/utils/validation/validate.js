@@ -105,7 +105,7 @@ export const cumulativeItemsValidation = composeValidators([isNotEmpty, range(1,
 export const healthCheckWidgetPassingRate = composeValidators([isNotEmpty, range(50, 100)]);
 export const flakyWidgetNumberOfLaunches = composeValidators([isNotEmpty, range(2, 600)]);
 export const launchesWidgetContentFields = composeValidators([isNotEmptyArray, minLength(4)]);
-export const mostFailedWidgetNumberOfLaunches = composeValidators([isNotEmpty, range(2, 600)]);
+export const mostFailedWidgetNumberOfLaunches = composeValidators([isNotEmpty, range(2, 100)]);
 export const createNotificationRecipientsValidator = (informOwner) => (value) =>
   isNotEmptyArray(value) || informOwner;
 export const notificationLaunchNames = (value) =>
