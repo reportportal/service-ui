@@ -143,7 +143,7 @@ const messages = defineMessages({
   importTip: {
     id: 'LaunchesPage.tip',
     defaultMessage:
-      'Drop only <b>.zip</b> file under 32 MB to upload or <span>click</span> to add it',
+      'Drop <b>.xml</b> or <b>.zip</b> file under 32 MB to upload or <span>click</span> to add it',
   },
   noteMessage: {
     id: 'LaunchesPage.noteMessage',

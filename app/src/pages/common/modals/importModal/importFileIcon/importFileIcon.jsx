@@ -34,7 +34,6 @@ export const ImportFileIcon = ({
   isLoading,
   id,
   onDelete,
-  fileType,
   uploadingProgress,
   rejectMessage,
   uploadFailed,
@@ -51,6 +50,10 @@ export const ImportFileIcon = ({
     uploadFailReason,
   };
 
+  const fileName = file.name.split('.');
+  const fileExtensionIndex = fileName.length - 1;
+  const fileExtension = fileName[fileExtensionIndex];
+
   return (
     <div className={cx('file-wrapper')}>
       <div className={cx('file')}>
@@ -59,7 +62,7 @@ export const ImportFileIcon = ({
           <p className={cx('file-size')}>{fileSizeConverter(file.size)}</p>
           <div className={cx('file-state-holder')}>
             {valid ? (
-              <UploadIndicator {...uploadedProps} fileType={fileType} />
+              <UploadIndicator {...uploadedProps} fileExtension={fileExtension} />
             ) : (
               <InvalidIcon rejectMessage={rejectMessage} />
             )}
@@ -87,7 +90,6 @@ ImportFileIcon.propTypes = {
   isLoading: PropTypes.bool,
   id: PropTypes.string,
   onDelete: PropTypes.func,
-  fileType: PropTypes.string,
   uploadingProgress: PropTypes.number,
   rejectMessage: PropTypes.string,
   uploadFailed: PropTypes.bool,
@@ -102,7 +104,6 @@ ImportFileIcon.defaultProps = {
   id: '',
   rejectMessage: '',
   onDelete: () => {},
-  fileType: '',
   uploadingProgress: 0,
   uploadFailed: false,
   uploadFailReason: {},
