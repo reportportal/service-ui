@@ -18,7 +18,7 @@ import React, { Component, Fragment } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { activeProjectSelector, activeProjectRoleSelector } from 'controllers/user';
+import { activeProjectSelector } from 'controllers/user';
 import { injectIntl, defineMessages } from 'react-intl';
 import { Grid, ALIGN_CENTER } from 'components/main/grid';
 import { EmptyDashboards } from 'pages/inside/dashboardPage/dashboardList/EmptyDashboards';
@@ -58,7 +58,6 @@ const messages = defineMessages({
 @injectIntl
 @connect((state) => ({
   projectId: activeProjectSelector(state),
-  projectRole: activeProjectRoleSelector(state),
 }))
 export class DashboardTable extends Component {
   static propTypes = {
@@ -66,9 +65,7 @@ export class DashboardTable extends Component {
     onDeleteItem: PropTypes.func,
     onEditItem: PropTypes.func,
     onAddItem: PropTypes.func,
-    userInfo: PropTypes.object,
     projectId: PropTypes.string,
-    projectRole: PropTypes.string,
     dashboardItems: PropTypes.array,
     loading: PropTypes.bool,
     filter: PropTypes.string,
@@ -78,16 +75,14 @@ export class DashboardTable extends Component {
     onDeleteItem: () => {},
     onEditItem: () => {},
     onAddItem: () => {},
-    userInfo: {},
     projectId: '',
-    projectRole: '',
     dashboardItems: [],
     loading: false,
     filter: '',
   };
 
   getTableColumns() {
-    const { onDeleteItem, onEditItem, userInfo, intl, projectId, projectRole } = this.props;
+    const { onDeleteItem, onEditItem, intl, projectId } = this.props;
 
     return [
       {
@@ -124,8 +119,6 @@ export class DashboardTable extends Component {
         component: EditColumn,
         customProps: {
           onEdit: onEditItem,
-          currentUser: userInfo,
-          projectRole,
         },
         align: ALIGN_CENTER,
       },
@@ -137,8 +130,6 @@ export class DashboardTable extends Component {
         component: DeleteColumn,
         customProps: {
           onDelete: onDeleteItem,
-          currentUser: userInfo,
-          projectRole,
         },
         align: ALIGN_CENTER,
       },

@@ -37,13 +37,7 @@ export {
   canMergeLaunches,
   canWorkWithFilters,
   canReadData,
-  canDeleteWidget,
-  canDeleteDashboard,
-  canDeleteFilter,
   canResizeAndDragWidgets,
   canSeeDemoData,
   canAddWidget,
-  canEditDashboard,
-  canEditWidget,
-  canEditFilter,
 } from './permissions';

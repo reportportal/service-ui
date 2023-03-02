@@ -58,13 +58,7 @@ export class FiltersItem extends PureComponent {
           onChange={onChange}
           circleAtTop
         >
-          <FilterName
-            search={search}
-            filter={filter}
-            userId={userId}
-            showDesc={false}
-            editable={false}
-          />
+          <FilterName search={search} filter={filter} showDesc={false} editable={false} />
           <FilterOptions entities={filter.conditions} sort={filter.orders}>
             {userId === filter.owner && editable && (
               <span className={cx('pencil-icon')} onClick={onEdit}>

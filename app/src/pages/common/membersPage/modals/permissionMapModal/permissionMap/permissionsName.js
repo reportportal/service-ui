@@ -160,6 +160,10 @@ const widgetFilterDashboardMessages = defineMessages({
     id: 'PermissionMap.createItem',
     defaultMessage: 'Create item',
   },
+  [ACTIONS.EDIT_DELETE_ITEM]: {
+    id: 'PermissionMap.editDeleteItem',
+    defaultMessage: 'Edit, delete item',
+  },
 });
 
 export const PERMISSION_NAMES = {

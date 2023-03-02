@@ -24,12 +24,7 @@ import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
-import {
-  canResizeAndDragWidgets,
-  canAddWidget,
-  canEditDashboard,
-  canDeleteDashboard,
-} from 'common/utils/permissions';
+import { canResizeAndDragWidgets, canAddWidget } from 'common/utils/permissions';
 import {
   activeDashboardItemSelector,
   updateDashboardWidgetsAction,
@@ -334,21 +329,15 @@ export class DashboardItemPage extends Component {
                 )}
               </div>
               <div className={cx('buttons-block')}>
-                {canEditDashboard(userRole, projectRole, isOwner) && (
-                  <GhostButton icon={EditIcon} onClick={this.onEditDashboardItem}>
-                    {formatMessage(messages.editDashboard)}
-                  </GhostButton>
-                )}
-
+                <GhostButton icon={EditIcon} onClick={this.onEditDashboardItem}>
+                  {formatMessage(messages.editDashboard)}
+                </GhostButton>
                 <GhostButton icon={FullscreenIcon} onClick={this.toggleFullscreen}>
                   {formatMessage(messages.fullscreen)}
                 </GhostButton>
-
-                {canDeleteDashboard(userRole, projectRole, isOwner) && (
-                  <GhostButton icon={CancelIcon} onClick={this.onDeleteDashboard}>
-                    {formatMessage(messages.delete)}
-                  </GhostButton>
-                )}
+                <GhostButton icon={CancelIcon} onClick={this.onDeleteDashboard}>
+                  {formatMessage(messages.delete)}
+                </GhostButton>
                 <Link
                   to={{
                     type: PROJECT_DASHBOARD_PRINT_PAGE,

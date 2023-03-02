@@ -1336,6 +1336,7 @@
   "PermissionMap.attention": "Користувач з роллю адміністратора може виконувати всі операції.",
   "PermissionMap.changeStatus": "Зміна статусу",
   "PermissionMap.createItem": "Створити елемент",
+  "PermissionMap.editDeleteItem": "Змінити,видалити елемент",
   "PermissionMap.customer": "Замовник",
   "PermissionMap.editProjectSettings": "Змінити налаштування проекту",
   "PermissionMap.investigationActions": "Дії з аналізом (типи дефектів і питання в системі відслідковування помилок)",
