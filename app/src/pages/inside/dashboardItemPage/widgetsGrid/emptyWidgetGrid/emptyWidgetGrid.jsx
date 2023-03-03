@@ -53,15 +53,14 @@ export class EmptyWidgetGrid extends Component {
 
   render() {
     const { action, intl, isDisable } = this.props;
-    const isAddWidgetEnabled = !isDisable;
 
     return (
       <div className={cx('empty-widget')}>
-        <div className={cx('empty-dashboard', { 'add-enabled': isAddWidgetEnabled })} />
+        <div className={cx('empty-dashboard', { 'add-enabled': !isDisable })} />
         <p className={cx('empty-widget-headline')}>
           {intl.formatMessage(messages.notMyDashboardEmptyHeader)}
         </p>
-        {isAddWidgetEnabled && (
+        {!isDisable && (
           <Fragment>
             <p className={cx('empty-widget-text')}>
               {intl.formatMessage(messages.dashboardEmptyText)}
