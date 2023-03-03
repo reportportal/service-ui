@@ -15,10 +15,8 @@
  */
 
 import React, { Component, Fragment } from 'react';
-import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
-import { userIdSelector } from 'controllers/user/selectors';
 import { FiltersActionPanel } from './filtersActionPanel';
 import { ActiveFilter } from './activeFilter';
 import { FiltersList } from './filtersList';
@@ -38,14 +36,10 @@ const messages = defineMessages({
   },
 });
 
-@connect((state) => ({
-  userId: userIdSelector(state),
-}))
 @injectIntl
 export class SearchableFilterList extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    userId: PropTypes.string.isRequired,
     loading: PropTypes.bool.isRequired,
     pagination: PropTypes.object.isRequired,
     searchValue: PropTypes.string,
@@ -81,7 +75,6 @@ export class SearchableFilterList extends Component {
     const {
       filters,
       loading,
-      userId,
       touched,
       error,
       editable,
@@ -105,7 +98,6 @@ export class SearchableFilterList extends Component {
         <ActiveFilter filter={activeFilter} touched={touched} error={error || null} />
         <FiltersList
           search={searchValue}
-          userId={userId}
           filters={filters}
           loading={loading}
           activeId={activeFilter ? String(activeFilter.id) : ''}

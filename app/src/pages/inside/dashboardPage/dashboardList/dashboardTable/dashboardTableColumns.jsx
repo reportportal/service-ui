@@ -21,7 +21,6 @@ import track from 'react-tracking';
 import { Icon } from 'components/main/icon';
 import { PROJECT_DASHBOARD_ITEM_PAGE } from 'controllers/pages';
 import { NavLink } from 'components/main/navLink';
-import { canEditDashboard, canDeleteDashboard } from 'common/utils/permissions';
 import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './dashboardTable.scss';
 
@@ -79,12 +78,7 @@ OwnerColumn.defaultProps = {
 };
 
 export const EditColumn = ({ value, customProps, className }) => {
-  const {
-    onEdit,
-    currentUser: { userId, userRole },
-    projectRole,
-  } = customProps;
-  const { owner } = value;
+  const { onEdit } = customProps;
 
   const editItemHandler = () => {
     onEdit(value);
@@ -92,9 +86,7 @@ export const EditColumn = ({ value, customProps, className }) => {
 
   return (
     <div className={cx(className, 'icon-cell', 'with-button')}>
-      {canEditDashboard(userRole, projectRole, userId === owner) && (
-        <Icon type="icon-pencil" onClick={editItemHandler} />
-      )}
+      <Icon type="icon-pencil" onClick={editItemHandler} />
     </div>
   );
 };
@@ -110,12 +102,6 @@ EditColumn.defaultProps = {
 };
 
 export const DeleteColumn = ({ value, customProps, className }) => {
-  const {
-    currentUser: { userId, userRole },
-    projectRole,
-  } = customProps;
-  const { owner } = value;
-
   const deleteItemHandler = () => {
     customProps.onDelete(value);
   };
@@ -123,9 +109,7 @@ export const DeleteColumn = ({ value, customProps, className }) => {
   return (
     <div className={cx(className, 'icon-cell', 'with-button')}>
       <div className={cx('icon-holder')}>
-        {canDeleteDashboard(userRole, projectRole, userId === owner) && (
-          <Icon type="icon-delete" onClick={deleteItemHandler} />
-        )}
+        <Icon type="icon-delete" onClick={deleteItemHandler} />
       </div>
     </div>
   );

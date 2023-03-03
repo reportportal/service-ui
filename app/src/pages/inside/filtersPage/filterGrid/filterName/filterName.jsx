@@ -23,7 +23,6 @@ import DOMPurify from 'dompurify';
 import Link from 'redux-first-router-link';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import { MarkdownViewer } from 'components/main/markdown';
-import { canEditFilter } from 'common/utils/permissions';
 import styles from './filterName.scss';
 
 const cx = classNames.bind(styles);
@@ -37,14 +36,11 @@ export class FilterName extends Component {
     onClickName: PropTypes.func,
     onEdit: PropTypes.func,
     search: PropTypes.string,
-    userId: PropTypes.string,
     showDesc: PropTypes.bool,
     editable: PropTypes.bool,
     isBold: PropTypes.bool,
     isLink: PropTypes.bool,
     nameLink: PropTypes.object,
-    userRole: PropTypes.string,
-    projectRole: PropTypes.string,
   };
 
   static defaultProps = {
@@ -54,14 +50,11 @@ export class FilterName extends Component {
     onClickName: () => {},
     onEdit: () => {},
     search: '',
-    userId: '',
     showDesc: true,
     editable: true,
     isBold: false,
     isLink: false,
     nameLink: null,
-    userRole: null,
-    projectRole: null,
   };
 
   getHighlightName = () => {
@@ -86,14 +79,11 @@ export class FilterName extends Component {
       filter,
       onClickName,
       onEdit,
-      userId,
       showDesc,
       editable,
       isBold,
       isLink,
       nameLink,
-      userRole,
-      projectRole,
     } = this.props;
 
     const NameLink = ({ link, children }) =>
@@ -119,7 +109,7 @@ export class FilterName extends Component {
               {Parser(DOMPurify.sanitize(this.getHighlightName(filter.name)))}
             </span>
           </NameLink>
-          {canEditFilter(userRole, projectRole, userId === filter.owner) && editable && (
+          {editable && (
             <span className={cx('pencil-icon')} onClick={() => onEdit(filter)}>
               {Parser(PencilIcon)}
             </span>

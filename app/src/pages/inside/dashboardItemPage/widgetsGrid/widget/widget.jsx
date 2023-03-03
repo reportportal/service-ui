@@ -85,7 +85,6 @@ export class SimpleWidget extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    dashboardOwner: PropTypes.string,
     activeDashboardId: PropTypes.number.isRequired,
     isAnalyticsEnabled: PropTypes.bool.isRequired,
   };
@@ -96,7 +95,6 @@ export class SimpleWidget extends Component {
     isModifiable: false,
     isFullscreen: false,
     isPrintMode: false,
-    dashboardOwner: '',
   };
 
   static getDerivedStateFromError(error) {
@@ -389,7 +387,7 @@ export class SimpleWidget extends Component {
 
   render() {
     const { widget, visible } = this.state;
-    const { isFullscreen, widgetType, isModifiable, isPrintMode, dashboardOwner } = this.props;
+    const { isFullscreen, widgetType, isModifiable, isPrintMode } = this.props;
     const widgetOptions = this.getWidgetOptions();
     const headerData = {
       owner: widget.owner,
@@ -425,7 +423,6 @@ export class SimpleWidget extends Component {
             onForceUpdate={this.showForceUpdateWidgetModal}
             customClass={cx('common-control')}
             isPrintMode={isPrintMode}
-            dashboardOwner={dashboardOwner}
           />
         </div>
         <div ref={this.getWidgetNode} className={cx('widget', { hidden: !visible })}>
