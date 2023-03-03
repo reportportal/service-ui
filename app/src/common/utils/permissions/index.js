@@ -37,7 +37,5 @@ export {
   canMergeLaunches,
   canWorkWithFilters,
   canReadData,
-  canResizeAndDragWidgets,
   canSeeDemoData,
-  canAddWidget,
 } from './permissions';

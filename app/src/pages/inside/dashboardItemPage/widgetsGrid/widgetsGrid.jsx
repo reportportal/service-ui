@@ -265,7 +265,6 @@ export class WidgetsGrid extends Component {
       <EmptyWidgetGrid
         action={this.props.showWidgetWizard}
         isDisable={isFullscreen || isPrintMode}
-        dashboard={dashboard}
       />
     );
   };

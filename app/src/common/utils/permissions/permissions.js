@@ -61,6 +61,4 @@ export const canMoveToDebug = checkPermission(ACTIONS.MOVE_TO_DEBUG);
 export const canMergeLaunches = checkPermission(ACTIONS.MERGE_LAUNCHES);
 export const canWorkWithFilters = checkPermission(ACTIONS.WORK_WITH_FILTERS);
 export const canReadData = checkPermission(ACTIONS.READ_DATA);
-export const canResizeAndDragWidgets = checkPermission(ACTIONS.RESIZE_AND_DRAG_WIDGETS);
 export const canSeeDemoData = checkPermission(ACTIONS.SEE_DEMO_DATA);
-export const canAddWidget = checkPermission(ACTIONS.ADD_WIDGET);
