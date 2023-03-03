@@ -76,13 +76,14 @@ export class DeleteWidgetModal extends Component {
 
   getWarningMessage = () => {
     const { intl, data, userId } = this.props;
-    if (data.widget.owner === userId) {
-      return intl.formatMessage(messages.deleteOwnWidgetWarning);
-    }
-    if (data.widget.owner !== userId) {
-      return intl.formatMessage(messages.deleteWidgetAdminWarning);
-    }
-    return '';
+
+    const deleteNotOwnWidgetWarning = intl.formatMessage(
+      data.widget.owner === userId
+        ? messages.deleteOwnWidgetWarning
+        : messages.deleteWidgetAdminWarning,
+    );
+
+    return deleteNotOwnWidgetWarning;
   };
 
   render() {
