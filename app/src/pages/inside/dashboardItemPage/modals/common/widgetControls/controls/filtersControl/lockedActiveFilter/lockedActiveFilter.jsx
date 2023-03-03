@@ -60,13 +60,7 @@ export class LockedActiveFilter extends PureComponent {
           <span className={cx('not-found')}>{intl.formatMessage(messages.filterNotFound)}</span>
         ) : (
           <Fragment>
-            <FilterName
-              userId={filter.owner}
-              filter={filter}
-              showDesc={false}
-              editable={false}
-              isBold
-            />
+            <FilterName filter={filter} showDesc={false} editable={false} isBold />
             <FilterOptions entities={filter.conditions} sort={filter.orders} />
           </Fragment>
         )}

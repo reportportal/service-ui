@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -25,12 +25,6 @@ import { injectIntl, defineMessages } from 'react-intl';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import {
-  canResizeAndDragWidgets,
-  canAddWidget,
-  canEditDashboard,
-  canDeleteDashboard,
-} from 'common/utils/permissions';
-import {
   activeDashboardItemSelector,
   updateDashboardWidgetsAction,
   dashboardFullScreenModeSelector,
@@ -39,11 +33,7 @@ import {
   deleteDashboardAction,
   updateDashboardAction,
 } from 'controllers/dashboard';
-import {
-  userInfoSelector,
-  activeProjectSelector,
-  activeProjectRoleSelector,
-} from 'controllers/user';
+import { userInfoSelector, activeProjectSelector } from 'controllers/user';
 import {
   PROJECT_DASHBOARD_PAGE,
   PROJECT_DASHBOARD_PRINT_PAGE,
@@ -120,7 +110,6 @@ const messages = defineMessages({
     dashboard: activeDashboardItemSelector(state),
     userInfo: userInfoSelector(state),
     fullScreenMode: dashboardFullScreenModeSelector(state),
-    projectRole: activeProjectRoleSelector(state),
     activeDashboardId: activeDashboardIdSelector(state),
   }),
   {
@@ -154,13 +143,11 @@ export class DashboardItemPage extends Component {
     toggleFullScreenModeAction: PropTypes.func.isRequired,
     deleteDashboard: PropTypes.func.isRequired,
     editDashboard: PropTypes.func.isRequired,
-    projectRole: PropTypes.string,
     activeDashboardId: PropTypes.number,
   };
 
   static defaultProps = {
     fullScreenMode: false,
-    projectRole: '',
     activeDashboardId: undefined,
   };
 
@@ -298,11 +285,6 @@ export class DashboardItemPage extends Component {
     });
   };
 
-  hasOwnerActions() {
-    const { dashboard, userInfo } = this.props;
-    return dashboard.owner === userInfo.userId;
-  }
-
   render() {
     const {
       intl: { formatMessage },
@@ -310,11 +292,7 @@ export class DashboardItemPage extends Component {
       fullScreenMode,
       activeProject,
       changeFullScreenModeAction: changeFullScreenMode,
-      userInfo: { userRole },
-      projectRole,
     } = this.props;
-
-    const isOwner = this.hasOwnerActions();
 
     return (
       <PageLayout>
@@ -325,30 +303,20 @@ export class DashboardItemPage extends Component {
           <div className={cx('dashboard-item')}>
             <div className={cx('buttons-container')}>
               <div className={cx('buttons-block')}>
-                {canAddWidget(userRole, projectRole, isOwner) && (
-                  <Fragment>
-                    <GhostButton icon={AddWidgetIcon} onClick={this.showWidgetWizard}>
-                      {formatMessage(messages.addNewWidget)}
-                    </GhostButton>
-                  </Fragment>
-                )}
+                <GhostButton icon={AddWidgetIcon} onClick={this.showWidgetWizard}>
+                  {formatMessage(messages.addNewWidget)}
+                </GhostButton>
               </div>
               <div className={cx('buttons-block')}>
-                {canEditDashboard(userRole, projectRole, isOwner) && (
-                  <GhostButton icon={EditIcon} onClick={this.onEditDashboardItem}>
-                    {formatMessage(messages.editDashboard)}
-                  </GhostButton>
-                )}
-
+                <GhostButton icon={EditIcon} onClick={this.onEditDashboardItem}>
+                  {formatMessage(messages.editDashboard)}
+                </GhostButton>
                 <GhostButton icon={FullscreenIcon} onClick={this.toggleFullscreen}>
                   {formatMessage(messages.fullscreen)}
                 </GhostButton>
-
-                {canDeleteDashboard(userRole, projectRole, isOwner) && (
-                  <GhostButton icon={CancelIcon} onClick={this.onDeleteDashboard}>
-                    {formatMessage(messages.delete)}
-                  </GhostButton>
-                )}
+                <GhostButton icon={CancelIcon} onClick={this.onDeleteDashboard}>
+                  {formatMessage(messages.delete)}
+                </GhostButton>
                 <Link
                   to={{
                     type: PROJECT_DASHBOARD_PRINT_PAGE,
@@ -366,9 +334,7 @@ export class DashboardItemPage extends Component {
             </div>
             <Fullscreen enabled={fullScreenMode} onChange={changeFullScreenMode}>
               <WidgetsGrid
-                isModifiable={
-                  canResizeAndDragWidgets(userRole, projectRole, isOwner) && !fullScreenMode
-                }
+                isModifiable={!fullScreenMode}
                 dashboard={dashboard}
                 isFullscreen={fullScreenMode}
                 showWidgetWizard={this.showWidgetWizard}

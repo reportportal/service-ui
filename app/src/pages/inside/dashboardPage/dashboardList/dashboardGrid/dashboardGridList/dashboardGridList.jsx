@@ -30,7 +30,6 @@ export const DashboardGridList = ({
   onEditItem,
   onDeleteItem,
   onAddItem,
-  userInfo,
   loading,
   filter,
   ...rest
@@ -49,7 +48,6 @@ export const DashboardGridList = ({
               item={item}
               onEdit={onEditItem}
               onDelete={onDeleteItem}
-              currentUser={userInfo}
               {...rest}
             />
           ))
@@ -64,7 +62,6 @@ DashboardGridList.propTypes = {
   onEditItem: PropTypes.func,
   onDeleteItem: PropTypes.func,
   onAddItem: PropTypes.func,
-  userInfo: PropTypes.object,
   loading: PropTypes.bool,
   filter: PropTypes.string,
 };
@@ -74,7 +71,6 @@ DashboardGridList.defaultProps = {
   onEditItem: () => {},
   onDeleteItem: () => {},
   onAddItem: () => {},
-  userInfo: () => {},
   loading: false,
   filter: '',
 };

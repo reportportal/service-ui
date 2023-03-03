@@ -31,12 +31,7 @@ import {
   updateFilterSuccessAction,
   pageLoadingSelector,
 } from 'controllers/filter';
-import {
-  userIdSelector,
-  activeProjectSelector,
-  activeProjectRoleSelector,
-  userAccountRoleSelector,
-} from 'controllers/user';
+import { userIdSelector, activeProjectSelector } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { withPagination, DEFAULT_PAGINATION, SIZE_KEY, PAGE_KEY } from 'controllers/pagination';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
@@ -78,8 +73,6 @@ const messages = defineMessages({
     url: URLS.filters(activeProjectSelector(state)),
     activeProject: activeProjectSelector(state),
     userFilters: userFiltersSelector(state),
-    projectRole: activeProjectRoleSelector(state),
-    accountRole: userAccountRoleSelector(state),
     filters: filtersSelector(state),
     loading: pageLoadingSelector(state),
   }),
@@ -116,9 +109,7 @@ export class FiltersPage extends Component {
     onFilterChange: PropTypes.func,
     fetchFiltersAction: PropTypes.func,
     showModalAction: PropTypes.func,
-    projectRole: PropTypes.string,
     userFilters: PropTypes.arrayOf(PropTypes.object),
-    accountRole: PropTypes.string,
     loading: PropTypes.bool,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -146,9 +137,7 @@ export class FiltersPage extends Component {
     onChangePageSize: () => {},
     fetchFiltersAction: () => {},
     showModalAction: () => {},
-    projectRole: '',
     userFilters: [],
-    accountRole: '',
     loading: false,
     removeUserFilter: () => {},
     showFilterOnLaunchesAction: () => {},

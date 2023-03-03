@@ -20,9 +20,8 @@ import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { canEditDashboard, canDeleteDashboard } from 'common/utils/permissions';
 import { PROJECT_DASHBOARD_ITEM_PAGE } from 'controllers/pages';
-import { activeProjectSelector, activeProjectRoleSelector } from 'controllers/user';
+import { activeProjectSelector } from 'controllers/user';
 import { Icon } from 'components/main/icon';
 import { NavLink } from 'components/main/navLink';
 import styles from './dashboardGridItem.scss';
@@ -32,7 +31,6 @@ const cx = classNames.bind(styles);
 @injectIntl
 @connect((state) => ({
   projectId: activeProjectSelector(state),
-  projectRole: activeProjectRoleSelector(state),
 }))
 @track()
 export class DashboardGridItem extends Component {
@@ -43,11 +41,9 @@ export class DashboardGridItem extends Component {
   static propTypes = {
     projectId: PropTypes.string.isRequired,
     intl: PropTypes.object.isRequired,
-    currentUser: PropTypes.object,
     item: PropTypes.object,
     onEdit: PropTypes.func,
     onDelete: PropTypes.func,
-    projectRole: PropTypes.string,
     nameEventInfo: PropTypes.object,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -57,11 +53,9 @@ export class DashboardGridItem extends Component {
 
   static defaultProps = {
     action: () => {},
-    currentUser: {},
     item: {},
     onEdit: () => {},
     onDelete: () => {},
-    projectRole: '',
     nameEventInfo: {},
   };
 
@@ -82,14 +76,8 @@ export class DashboardGridItem extends Component {
   };
 
   render() {
-    const {
-      item,
-      currentUser: { userId, userRole },
-      projectId,
-      projectRole,
-    } = this.props;
+    const { item, projectId } = this.props;
     const { name, description, owner, id } = item;
-    const isOwner = userId === owner;
 
     return (
       <div className={cx('grid-view')}>
@@ -112,17 +100,12 @@ export class DashboardGridItem extends Component {
             <p>{description}</p>
           </div>
           <div className={cx('grid-cell', 'owner')}>{owner}</div>
-
-          {canEditDashboard(userRole, projectRole, isOwner) && (
-            <div className={cx('grid-cell', 'edit')} onClick={this.editItem}>
-              <Icon type="icon-pencil" />
-            </div>
-          )}
-          {canDeleteDashboard(userRole, projectRole, isOwner) && (
-            <div className={cx('grid-cell', 'delete')} onClick={this.deleteItem}>
-              <Icon type="icon-close" />
-            </div>
-          )}
+          <div className={cx('grid-cell', 'edit')} onClick={this.editItem}>
+            <Icon type="icon-pencil" />
+          </div>
+          <div className={cx('grid-cell', 'delete')} onClick={this.deleteItem}>
+            <Icon type="icon-close" />
+          </div>
         </NavLink>
       </div>
     );

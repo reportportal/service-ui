@@ -23,23 +23,16 @@ import styles from './deleteFilterButton.scss';
 
 const cx = classNames.bind(styles);
 
-export const DeleteFilterButton = ({ canDelete, onDelete, filter }) => (
-  <div
-    className={cx('bin-icon', {
-      disabled: !canDelete,
-    })}
-    onClick={() => (canDelete ? onDelete(filter) : null)}
-  >
+export const DeleteFilterButton = ({ onDelete, filter }) => (
+  <div className={cx('bin-icon')} onClick={() => onDelete(filter)}>
     {Parser(BinIcon)}
   </div>
 );
 DeleteFilterButton.propTypes = {
-  canDelete: PropTypes.bool,
   onDelete: PropTypes.func,
   filter: PropTypes.object,
 };
 DeleteFilterButton.defaultProps = {
-  canDelete: false,
   onDelete: () => {},
   filter: {},
 };

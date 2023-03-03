@@ -18,9 +18,6 @@ import React, { Fragment, Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
-import { connect } from 'react-redux';
-import { userInfoSelector, activeProjectRoleSelector } from 'controllers/user';
-import { canAddWidget } from 'common/utils/permissions';
 import { GhostButton } from 'components/buttons/ghostButton';
 import AddDashboardIcon from 'common/img/add-widget-inline.svg';
 import styles from './emptyWidgetGrid.scss';
@@ -42,41 +39,28 @@ const messages = defineMessages({
 });
 
 @injectIntl
-@connect((state) => ({
-  userInfo: userInfoSelector(state),
-  projectRole: activeProjectRoleSelector(state),
-}))
 export class EmptyWidgetGrid extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     action: PropTypes.func,
     isDisable: PropTypes.bool,
-    dashboard: PropTypes.object,
-    userInfo: PropTypes.object,
-    projectRole: PropTypes.string,
   };
 
   static defaultProps = {
     action: () => {},
     isDisable: false,
-    dashboard: {},
-    userInfo: {},
-    projectRole: '',
   };
 
   render() {
-    const { action, intl, isDisable, dashboard, userInfo, projectRole } = this.props;
-    const isAddWidgetEnabled =
-      canAddWidget(userInfo.userRole, projectRole, dashboard.owner === userInfo.userId) &&
-      !isDisable;
+    const { action, intl, isDisable } = this.props;
 
     return (
       <div className={cx('empty-widget')}>
-        <div className={cx('empty-dashboard', { 'add-enabled': isAddWidgetEnabled })} />
+        <div className={cx('empty-dashboard', { 'add-enabled': !isDisable })} />
         <p className={cx('empty-widget-headline')}>
           {intl.formatMessage(messages.notMyDashboardEmptyHeader)}
         </p>
-        {isAddWidgetEnabled && (
+        {!isDisable && (
           <Fragment>
             <p className={cx('empty-widget-text')}>
               {intl.formatMessage(messages.dashboardEmptyText)}

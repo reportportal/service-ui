@@ -31,7 +31,6 @@ export class FiltersItem extends PureComponent {
     filter: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
     search: PropTypes.string,
-    userId: PropTypes.string,
     activeFilterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     editable: PropTypes.bool,
     onEdit: PropTypes.func,
@@ -39,7 +38,6 @@ export class FiltersItem extends PureComponent {
 
   static defaultProps = {
     search: '',
-    userId: '',
     activeFilterId: '',
     item: {},
     editable: false,
@@ -47,7 +45,7 @@ export class FiltersItem extends PureComponent {
   };
 
   render() {
-    const { activeFilterId, filter, search, onChange, editable, onEdit, userId } = this.props;
+    const { activeFilterId, filter, search, onChange, editable, onEdit } = this.props;
 
     return (
       <div className={cx('filter-item')}>
@@ -58,15 +56,9 @@ export class FiltersItem extends PureComponent {
           onChange={onChange}
           circleAtTop
         >
-          <FilterName
-            search={search}
-            filter={filter}
-            userId={userId}
-            showDesc={false}
-            editable={false}
-          />
+          <FilterName search={search} filter={filter} showDesc={false} editable={false} />
           <FilterOptions entities={filter.conditions} sort={filter.orders}>
-            {userId === filter.owner && editable && (
+            {editable && (
               <span className={cx('pencil-icon')} onClick={onEdit}>
                 {Parser(PencilIcon)}
               </span>
