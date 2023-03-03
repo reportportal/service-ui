@@ -43,8 +43,8 @@ const messages = defineMessages({
     defaultMessage:
       'You are going to delete your own widget. This may affect other information on your own dashboards.',
   },
-  deleteWidgetAdminWarning: {
-    id: 'DeleteWidgetModal.deleteWidgetAdminWarning',
+  deleteNotOwnWidgetWarning: {
+    id: 'DeleteWidgetModal.deleteNotOwnWidgetWarning',
     defaultMessage:
       'You are going to delete not your own widget. This may affect other users information on the project.',
   },
@@ -77,13 +77,13 @@ export class DeleteWidgetModal extends Component {
   getWarningMessage = () => {
     const { intl, data, userId } = this.props;
 
-    const deleteNotOwnWidgetWarning = intl.formatMessage(
+    const message = intl.formatMessage(
       data.widget.owner === userId
         ? messages.deleteOwnWidgetWarning
-        : messages.deleteWidgetAdminWarning,
+        : messages.deleteNotOwnWidgetWarning,
     );
 
-    return deleteNotOwnWidgetWarning;
+    return message;
   };
 
   render() {

@@ -426,7 +426,7 @@
   "DeleteNotificationCaseModal.message": "Вы ўпэўнены, што жадаеце выдаліць правіла апавяшчэння <b>{number}</b>?",
   "DeleteNotificationCaseModal.title": "Выдаліць правіла апавяшчэння",
   "DeleteWidgetModal.deleteOwnWidgetWarning": "Вы збіраецеся выдаліць ваш відждэт. Гэта можа паўплываць на інфармацыю на вашых панэлях кіравання.",
-  "DeleteWidgetModal.deleteWidgetAdminWarning": "Вы збіраецеся выдаліць не ваш відждэт. Гэта можа паўплываць на інфармацыю іншых карыстальнікаў праекта.",
+  "DeleteWidgetModal.deleteNotOwnWidgetWarning": "Вы збіраецеся выдаліць не ваш відждэт. Гэта можа паўплываць на інфармацыю іншых карыстальнікаў праекта.",
   "DeleteWidgetModal.deleteWidgetHeader": "Выдаліць відждэт",
   "DeleteWidgetModal.deleteWidgetText": "Вы ўпэўнены, што хочаце выдаліць віджэт '<b>{name}</b>'? Вы страціце доступ да яго. Гэта дзеянне нельга адмяніць.",
   "DemoBanner.descriptionDefault": "Вы ўвайшлі пад уліковым запісам \"Дэма\". Для бяспечнай працы з дадзенымі, выкарыстоўвайце ",
