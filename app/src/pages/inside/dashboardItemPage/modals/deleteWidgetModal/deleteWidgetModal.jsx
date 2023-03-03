@@ -23,13 +23,7 @@ import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { PROJECT_MANAGER } from 'common/constants/projectRoles';
-import {
-  userIdSelector,
-  userAccountRoleSelector,
-  activeProjectRoleSelector,
-  isAdminSelector,
-} from 'controllers/user';
+import { userIdSelector } from 'controllers/user';
 import styles from './deleteWidgetModal.scss';
 
 const cx = classNames.bind(styles);
@@ -60,9 +54,6 @@ const messages = defineMessages({
 @injectIntl
 @connect((state) => ({
   userId: userIdSelector(state),
-  userAccountRole: userAccountRoleSelector(state),
-  userProjectRole: activeProjectRoleSelector(state),
-  isAdmin: isAdminSelector(state),
 }))
 export class DeleteWidgetModal extends Component {
   static propTypes = {
@@ -73,9 +64,6 @@ export class DeleteWidgetModal extends Component {
       eventsInfo: PropTypes.object,
     }),
     userId: PropTypes.string.isRequired,
-    userAccountRole: PropTypes.string.isRequired,
-    userProjectRole: PropTypes.string.isRequired,
-    isAdmin: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -87,11 +75,11 @@ export class DeleteWidgetModal extends Component {
   };
 
   getWarningMessage = () => {
-    const { intl, data, userId, isAdmin, userProjectRole } = this.props;
+    const { intl, data, userId } = this.props;
     if (data.widget.owner === userId) {
       return intl.formatMessage(messages.deleteOwnWidgetWarning);
     }
-    if (data.widget.owner !== userId && (isAdmin || userProjectRole === PROJECT_MANAGER)) {
+    if (data.widget.owner !== userId) {
       return intl.formatMessage(messages.deleteWidgetAdminWarning);
     }
     return '';
