@@ -683,12 +683,12 @@ export class LaunchesPage extends Component {
       finishedLaunchesCount: null,
     });
     this.props.fetchLaunchesAction();
-    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.REFRESH_BTN);
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_REFRESH_BTN);
   };
 
   handleAllLaunchesSelection = () => {
     this.props.tracking.trackEvent(
-      LAUNCHES_PAGE_EVENTS.clickSelectAllItemsEvent(
+      LAUNCHES_PAGE_EVENTS.CLICK_SELECT_ALL_ITEMS(
         this.props.launches.length !== this.props.selectedLaunches.length,
       ),
     );
@@ -698,7 +698,7 @@ export class LaunchesPage extends Component {
   handleOneLaunchSelection = (value) => {
     !this.props.level &&
       this.props.tracking.trackEvent(
-        LAUNCHES_PAGE_EVENTS.clickSelectOneItemEvent(!this.props.selectedLaunches.includes(value)),
+        LAUNCHES_PAGE_EVENTS.CLICK_SELECT_ONE_ITEM(!this.props.selectedLaunches.includes(value)),
       );
     this.props.toggleLaunchSelectionAction(value);
   };

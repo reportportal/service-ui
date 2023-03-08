@@ -31,7 +31,7 @@ import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcru
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
-import { LEVEL_STEP, LEVEL_SUITE, LEVEL_TEST } from 'common/constants/launchLevels';
+import { LEVEL_STEP } from 'common/constants/launchLevels';
 import { canBulkEditItems } from 'common/utils/permissions';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import RefreshIcon from 'common/img/refresh-inline.svg';
@@ -39,7 +39,7 @@ import { createStepActionDescriptors } from 'pages/inside/common/utils';
 import { ParentInfo } from 'pages/inside/common/infoLine/parentInfo';
 import { pageEventsMap } from 'components/main/analytics';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
-import styles from './actionPanel.scss';
+import styles from './testItemActionPanel.scss';
 
 const cx = classNames.bind(styles);
 
@@ -60,7 +60,7 @@ const cx = classNames.bind(styles);
 )
 @injectIntl
 @track()
-export class ActionPanel extends Component {
+export class TestItemActionPanel extends Component {
   static propTypes = {
     debugMode: PropTypes.bool,
     onRefresh: PropTypes.func,
@@ -125,7 +125,7 @@ export class ActionPanel extends Component {
   };
 
   onClickRefresh = () => {
-    this.props.tracking.trackEvent(pageEventsMap[this.props.level].REFRESH_BTN);
+    this.props.tracking.trackEvent(pageEventsMap[this.props.level].CLICK_REFRESH_BTN);
     this.props.onRefresh();
   };
 
@@ -216,6 +216,11 @@ export class ActionPanel extends Component {
 
   checkVisibility = (levels) => levels.some((level) => this.props.level === level);
 
+  onClickActionsButton = () => {
+    const { tracking, level } = this.props;
+    tracking.trackEvent(pageEventsMap[level].CLICK_ACTIONS_BTN);
+  };
+
   render() {
     const {
       breadcrumbs,
@@ -229,11 +234,15 @@ export class ActionPanel extends Component {
       level,
       parentItem,
     } = this.props;
-    const stepActionDescriptors = this.getStepActionDescriptors();
-    const suiteActionDescriptors = this.createSuiteActionDescriptors();
+    const actionDescriptors =
+      level === LEVEL_STEP ? this.getStepActionDescriptors() : this.createSuiteActionDescriptors();
 
     return (
-      <div className={cx('action-panel', { 'right-buttons-only': !showBreadcrumbs && !hasErrors })}>
+      <div
+        className={cx('test-item-action-panel', {
+          'right-buttons-only': !showBreadcrumbs && !hasErrors,
+        })}
+      >
         {showBreadcrumbs && (
           <Breadcrumbs
             togglerEventInfo={pageEventsMap[level].plusMinusBreadcrumb}
@@ -254,25 +263,14 @@ export class ActionPanel extends Component {
         )}
         <div className={cx('action-buttons')}>
           {parentItem && <ParentInfo parentItem={parentItem} />}
-          {this.checkVisibility([LEVEL_STEP]) && (
-            <div className={cx('action-button', 'mobile-hidden')}>
-              <GhostMenuButton
-                title={intl.formatMessage(COMMON_LOCALE_KEYS.ACTIONS)}
-                items={stepActionDescriptors}
-                disabled={!selectedItems.length}
-                transparentBackground
-              />
-            </div>
-          )}
-          {this.checkVisibility([LEVEL_SUITE, LEVEL_TEST]) && (
-            <div className={cx('action-button', 'mobile-hidden')}>
-              <GhostMenuButton
-                title={intl.formatMessage(COMMON_LOCALE_KEYS.ACTIONS)}
-                items={suiteActionDescriptors}
-                disabled={!selectedItems.length}
-              />
-            </div>
-          )}
+          <div className={cx('action-button', 'mobile-hidden')}>
+            <GhostMenuButton
+              title={intl.formatMessage(COMMON_LOCALE_KEYS.ACTIONS)}
+              items={actionDescriptors}
+              disabled={!selectedItems.length}
+              onClick={this.onClickActionsButton}
+            />
+          </div>
           <div className={cx('action-button')}>
             <GhostButton
               disabled={!!selectedItems.length}

@@ -75,8 +75,8 @@ const getAppVersion = (buildVersion) =>
         uid: `${userId}|${instanceId}`,
         auto_analysis: normalizeDimensionValue(isAutoAnalyzerEnabled),
         pattern_analysis: normalizeDimensionValue(isPatternAnalyzerEnabled),
-        ...(!isAdmin && { project_id: `${projectId}|${instanceId}` }),
         timestamp: Date.now(),
+        ...(!isAdmin && { project_id: `${projectId}|${instanceId}` }),
         ...omit(data, ['action']),
       };
 

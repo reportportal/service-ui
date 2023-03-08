@@ -19,8 +19,14 @@ import {
   getClickAnalyzeInUniqueErrorAnalysisModalEvent,
   getClickAttributes,
   getClickOnPlusMinusEvents,
-  getCommonActionEvents,
   getRefineFiltersPanelEvents,
+  getClickItemNameEvent,
+  getClickRefreshButtonEvent,
+  getClickSelectAllItemsEvent,
+  getClickSelectOneItemEvent,
+  getClickDonutEvents,
+  getClickDefectTooltipEvents,
+  getClickActionsButtonEvent,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getAddBtnAddNewFilterAddWidgetModal,
@@ -62,8 +68,16 @@ export const getCriteriaToggler = (state) => ({
 });
 
 export const LAUNCHES_PAGE_EVENTS = {
+  // GA4 events
+  CLICK_ITEM_NAME: getClickItemNameEvent(LAUNCHES_PAGE),
+  CLICK_REFRESH_BTN: getClickRefreshButtonEvent(LAUNCHES_PAGE),
+  CLICK_SELECT_ALL_ITEMS: getClickSelectAllItemsEvent(LAUNCHES_PAGE),
+  CLICK_SELECT_ONE_ITEM: getClickSelectOneItemEvent(LAUNCHES_PAGE),
+  ...getClickDonutEvents(LAUNCHES_PAGE),
+  ...getClickDefectTooltipEvents(LAUNCHES_PAGE),
+  CLICK_ACTIONS_BTN: getClickActionsButtonEvent(LAUNCHES_PAGE),
+  // GA3 events
   plusMinusBreadcrumb: getClickOnPlusMinusEvents(LAUNCHES_PAGE),
-  CLICK_ITEM_NAME: getCommonActionEvents(LAUNCHES_PAGE).CLICK_ITEM_NAME,
   CLICK_HAMBURGER_MENU: {
     category: LAUNCHES_PAGE,
     action: 'Click on Icon Menu near Launch Name',
@@ -164,61 +178,6 @@ export const LAUNCHES_PAGE_EVENTS = {
     action: 'Click on Edit Icon after launch name',
     label: 'Edit Launch/Arise Modal "Edit Launch"',
   },
-  PB_CHART: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on Product Bug Circle',
-    label: 'Transition to inner level of launch with Product Bugs',
-  },
-  AB_CHART: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on Auto Bug Circle',
-    label: 'Transition to inner level of launch with Auto Bug',
-  },
-  SI_CHART: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on System Issue Circle',
-    label: 'Transition to inner level of launch with System Issue',
-  },
-  TI_CHART: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on To Investigate tag',
-    label: 'Transition to inner level of launch with To Investigate',
-  },
-  PB_TOOLTIP: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on Tooltip "Total Product Bugs"',
-    label: 'Transition to inner level of launch with Product Bugs',
-  },
-  AB_TOOLTIP: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on Tooltip "Total Auto Bug"',
-    label: 'Transition to inner level of launch with Auto Bug',
-  },
-  SI_TOOLTIP: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on Tooltip "Total System Issue"',
-    label: 'Transition to inner level of launch with System Issue',
-  },
-  TI_TOOLTIP: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on Tooltip "To Investigate"',
-    label: 'Transition to inner level of launch with To Investigate',
-  },
-  clickSelectAllItemsEvent: (value) => ({
-    category: LAUNCHES_PAGE,
-    action: 'Click on item icon "select all launches"',
-    label: `${value ? 'select' : 'unselect'} all launches`,
-  }),
-  clickSelectOneItemEvent: (value) => ({
-    category: LAUNCHES_PAGE,
-    action: 'Click on item icon "select one launch"',
-    label: `${value ? 'select' : 'unselect'} one launch`,
-  }),
-  CLICK_ACTIONS_BTN: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on button Actions',
-    label: 'Arise Dropdown with list of actions',
-  },
   CLICK_MERGE_ACTION: {
     category: LAUNCHES_PAGE,
     action: 'Click on button "Merge" in list of actions',
@@ -294,7 +253,6 @@ export const LAUNCHES_PAGE_EVENTS = {
     action: 'Click on Btn Add New Widget on Dashboard',
     label: 'Arise Modal Add New Widget',
   },
-  REFRESH_BTN: getCommonActionEvents(LAUNCHES_PAGE).REFRESH_BTN,
   REFINE_FILTERS_PANEL_EVENTS: {
     commonEvents: getRefineFiltersPanelEvents(LAUNCHES_PAGE),
   },

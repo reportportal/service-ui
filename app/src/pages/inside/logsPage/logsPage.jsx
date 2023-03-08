@@ -83,7 +83,7 @@ export class LogsPage extends Component {
     });
 
   handleRefresh = () => {
-    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.REFRESH_BTN);
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.CLICK_REFRESH_BTN);
     if (this.state.isSauceLabsIntegrationView) {
       this.toggleSauceLabsIntegrationView();
     }

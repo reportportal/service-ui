@@ -21,7 +21,7 @@ import { InfoPanel } from 'pages/inside/common/infoPanel';
 import { SelectedItems } from 'pages/inside/common/selectedItems';
 import { RefineFiltersPanel } from 'pages/inside/common/refineFiltersPanel';
 import { LIST_VIEW } from 'controllers/testItem';
-import { ActionPanel } from './actionPanel';
+import { TestItemActionPanel } from './actionPanel';
 import styles from './suiteTestToolbar.scss';
 
 const cx = classNames.bind(styles);
@@ -62,7 +62,7 @@ export const SuiteTestToolbar = ({
           onClose={onUnselectAll}
         />
       )}
-      <ActionPanel
+      <TestItemActionPanel
         debugMode={debugMode}
         hasErrors={selectedItems.some((item) => !!errors[item.id])}
         hasValidItems={selectedItems.length > Object.keys(errors).length}

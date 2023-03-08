@@ -22,6 +22,11 @@ import {
   getCommonActionEvents,
   getClickAttributes,
   getClickUniqueErrorsEvent,
+  getClickItemNameEvent,
+  getClickRefreshButtonEvent,
+  getClickDonutEvents,
+  getClickDefectTooltipEvents,
+  getClickActionsButtonEvent,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getDeleteItemModalEvents,
@@ -30,6 +35,15 @@ import {
 
 export const SUITE_PAGE = 'suites';
 export const SUITES_PAGE_EVENTS = {
+  // GA4 events
+  CLICK_ITEM_NAME: getClickItemNameEvent(SUITE_PAGE),
+  CLICK_REFRESH_BTN: getClickRefreshButtonEvent(SUITE_PAGE),
+  CLICK_SELECT_ALL_ITEMS: getClickSelectAllItemsEvent(SUITE_PAGE),
+  CLICK_SELECT_ONE_ITEM: getClickSelectOneItemEvent(SUITE_PAGE),
+  ...getClickDonutEvents(SUITE_PAGE),
+  ...getClickDefectTooltipEvents(SUITE_PAGE),
+  CLICK_ACTIONS_BTN: getClickActionsButtonEvent(SUITE_PAGE),
+  // GA3 events
   ...getCommonActionEvents(SUITE_PAGE),
   plusMinusBreadcrumb: getClickOnPlusMinusEvents(SUITE_PAGE),
   DELETE_BTN: {
@@ -37,8 +51,6 @@ export const SUITES_PAGE_EVENTS = {
     action: 'Click on Btn Delete',
     label: 'Delete selected Items',
   },
-  CLICK_SELECT_ALL_ITEMS: getClickSelectAllItemsEvent(SUITE_PAGE),
-  CLICK_SELECT_ONE_ITEM: getClickSelectOneItemEvent(SUITE_PAGE),
   // REFINE_FILTERS_PANEL
   REFINE_FILTERS_PANEL_EVENTS: {
     commonEvents: getRefineFiltersPanelEvents(SUITE_PAGE),

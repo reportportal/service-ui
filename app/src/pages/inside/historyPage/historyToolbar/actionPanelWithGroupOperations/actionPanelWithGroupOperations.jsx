@@ -47,7 +47,7 @@ import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
 import { HISTORY_PAGE_EVENTS } from 'components/main/analytics/events';
 import { createStepActionDescriptors } from 'pages/inside/common/utils';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
-import { ActionPanel } from '../actionPanel';
+import { HistoryActionPanel } from '../actionPanel';
 
 const UNLINK_ISSUE_EVENTS_INFO = {
   unlinkAutoAnalyzedFalse:
@@ -175,6 +175,10 @@ export class ActionPanelWithGroupOperations extends Component {
     });
   };
 
+  onClickActionsButton = () => {
+    this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.CLICK_ACTIONS_BTN);
+  };
+
   getActionDescriptors = () => {
     const {
       intl: { formatMessage },
@@ -216,6 +220,7 @@ export class ActionPanelWithGroupOperations extends Component {
         title={formatMessage(COMMON_LOCALE_KEYS.ACTIONS)}
         items={actionDescriptors}
         disabled={!selectedItems.length}
+        onClick={this.onClickActionsButton}
       />,
     ];
   };
@@ -348,7 +353,7 @@ export class ActionPanelWithGroupOperations extends Component {
             onClose={onUnselectAll}
           />
         )}
-        <ActionPanel
+        <HistoryActionPanel
           onRefresh={onRefresh}
           buttons={this.getActionButtons()}
           customBlock={this.getCustomBlock(hasErrors)}

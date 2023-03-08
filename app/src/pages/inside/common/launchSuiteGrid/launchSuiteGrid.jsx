@@ -158,8 +158,8 @@ const PbColumn = ({ className, ...rest }) => (
       customProps={rest.customProps}
       data={rest.value.statistics.defects && rest.value.statistics.defects.product_bug}
       itemId={rest.value.id}
-      eventInfo={rest.customProps.events.PB_CHART}
-      tooltipEventInfo={rest.customProps.events.PB_TOOLTIP}
+      eventInfo={rest.customProps.events.CLICK_DONUT_PB}
+      tooltipEventInfo={rest.customProps.events.getClickTooltipPbEvent()}
     />
   </div>
 );
@@ -174,8 +174,8 @@ const AbColumn = ({ className, ...rest }) => (
       customProps={rest.customProps}
       data={rest.value.statistics.defects && rest.value.statistics.defects.automation_bug}
       itemId={rest.value.id}
-      eventInfo={rest.customProps.events.AB_CHART}
-      tooltipEventInfo={rest.customProps.events.AB_TOOLTIP}
+      eventInfo={rest.customProps.events.CLICK_DONUT_AB}
+      tooltipEventInfo={rest.customProps.events.getClickTooltipAbEvent()}
     />
   </div>
 );
@@ -190,8 +190,8 @@ const SiColumn = ({ className, ...rest }) => (
       customProps={rest.customProps}
       data={rest.value.statistics.defects && rest.value.statistics.defects.system_issue}
       itemId={rest.value.id}
-      eventInfo={rest.customProps.events.SI_CHART}
-      tooltipEventInfo={rest.customProps.events.SI_TOOLTIP}
+      eventInfo={rest.customProps.events.CLICK_DONUT_SI}
+      tooltipEventInfo={rest.customProps.events.getClickTooltipSiEvent()}
     />
   </div>
 );
@@ -206,8 +206,8 @@ const TiColumn = ({ className, ...rest }) => (
       customProps={rest.customProps}
       data={rest.value.statistics.defects && rest.value.statistics.defects.to_investigate}
       itemId={rest.value.id}
-      eventInfo={rest.customProps.events.TI_CHART}
-      tooltipEventInfo={rest.customProps.events.TI_TOOLTIP}
+      eventInfo={rest.customProps.events.CLICK_DONUT_TI}
+      tooltipEventInfo={rest.customProps.events.getClickTooltipTiEvent()}
     />
   </div>
 );

@@ -31,6 +31,10 @@ import {
   getClickExpandStackTraceArrowEvent,
   getIgnoreBtnIgnoreItemsInAAModalEvent,
   getIncludeBtnIncludeInAAModalEvent,
+  getClickItemNameEvent,
+  getClickRefreshButtonEvent,
+  getClickDefectTooltipEvents,
+  getClickActionsButtonEvent,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getEditDefectModalEvents,
@@ -54,6 +58,14 @@ export const getChangeItemStatusEvent = (oldStatus, newStatus) => ({
 });
 
 export const STEP_PAGE_EVENTS = {
+  // GA4 events
+  CLICK_ITEM_NAME: getClickItemNameEvent(STEP_PAGE),
+  CLICK_REFRESH_BTN: getClickRefreshButtonEvent(STEP_PAGE),
+  CLICK_SELECT_ALL_ITEMS: getClickSelectAllItemsEvent(STEP_PAGE),
+  CLICK_SELECT_ONE_ITEM: getClickSelectOneItemEvent(STEP_PAGE),
+  ...getClickDefectTooltipEvents(STEP_PAGE),
+  CLICK_ACTIONS_BTN: getClickActionsButtonEvent(STEP_PAGE),
+  // GA3 events
   ...getCommonActionEvents(STEP_PAGE),
   // REFINE_FILTERS_PANEL
   REFINE_FILTERS_PANEL_EVENTS: {
@@ -115,8 +127,6 @@ export const STEP_PAGE_EVENTS = {
     action: 'Click on icon "edit" of Defect type tag',
     label: 'Arise Modal "Edit Defect Type"',
   },
-  CLICK_SELECT_ALL_ITEMS: getClickSelectAllItemsEvent(STEP_PAGE),
-  CLICK_SELECT_ONE_ITEM: getClickSelectOneItemEvent(STEP_PAGE),
   IGNORE_IN_AA_ACTION: {
     category: STEP_PAGE,
     action: 'Click on Ignore in Auto-Analysis',

@@ -27,6 +27,9 @@ import {
   getPostIssueActionEvent,
   getUnlinkIssueActionEvent,
   getClickAnalyzeInUniqueErrorAnalysisModalEvent,
+  getClickItemNameEvent,
+  getClickRefreshButtonEvent,
+  getClickActionsButtonEvent,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getDeleteItemModalEvents,
@@ -37,9 +40,16 @@ import {
   getUnlinkIssueModalEvents,
 } from './common/testItemPages/modalEventsCreators';
 
-export const UNIQUE_ERRORS_PAGE = 'Unique Errors';
+export const UNIQUE_ERRORS_PAGE = 'unique_errors';
 
 export const UNIQUE_ERRORS_PAGE_EVENTS = {
+  // GA4 events
+  CLICK_ITEM_NAME: getClickItemNameEvent(UNIQUE_ERRORS_PAGE),
+  CLICK_REFRESH_BTN: getClickRefreshButtonEvent(UNIQUE_ERRORS_PAGE),
+  CLICK_SELECT_ONE_ITEM: getClickSelectOneItemEvent(UNIQUE_ERRORS_PAGE),
+  CLICK_SELECT_ALL_ITEMS: getClickSelectAllItemsEvent(UNIQUE_ERRORS_PAGE),
+  CLICK_ACTIONS_BTN: getClickActionsButtonEvent(UNIQUE_ERRORS_PAGE),
+  // GA3 events
   ...getCommonActionEvents(UNIQUE_ERRORS_PAGE),
   onClickIssueTicketEvent: getClickIssueTicketEvent(UNIQUE_ERRORS_PAGE),
   MAKE_DECISION_MODAL_EVENTS: getMakeDecisionModalEvents(UNIQUE_ERRORS_PAGE),
@@ -75,8 +85,6 @@ export const UNIQUE_ERRORS_PAGE_EVENTS = {
     action: 'Click on Include in Auto-Analysis',
     label: 'Arise Modal "Include items in AA"',
   },
-  CLICK_SELECT_ONE_ITEM: getClickSelectOneItemEvent(UNIQUE_ERRORS_PAGE),
-  CLICK_SELECT_ALL_ITEMS: getClickSelectAllItemsEvent(UNIQUE_ERRORS_PAGE),
   IGNORE_BTN_IGNORE_ITEMS_IN_AA_MODAL: getIgnoreBtnIgnoreItemsInAAModalEvent(UNIQUE_ERRORS_PAGE),
   DELETE_ITEM_MODAL_EVENTS: getDeleteItemModalEvents(UNIQUE_ERRORS_PAGE),
   INCLUDE_BTN_INCLUDE_IN_AA_MODAL: getIncludeBtnIncludeInAAModalEvent(UNIQUE_ERRORS_PAGE),
