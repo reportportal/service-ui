@@ -37,6 +37,7 @@ import {
   getSelectSortingFilterAddWidgetModal,
   getSelectToggleButtonsAddWidgetModal,
 } from './common/widgetPages/actionEventCreators';
+import { getBasicClickEventParameters } from './common/ga4Utils';
 
 export const LAUNCHES_PAGE = 'launches';
 const LAUNCHES_MODAL = 'Modal launches';
@@ -73,9 +74,14 @@ export const LAUNCHES_PAGE_EVENTS = {
   CLICK_REFRESH_BTN: getClickRefreshButtonEvent(LAUNCHES_PAGE),
   CLICK_SELECT_ALL_ITEMS: getClickSelectAllItemsEvent(LAUNCHES_PAGE),
   CLICK_SELECT_ONE_ITEM: getClickSelectOneItemEvent(LAUNCHES_PAGE),
+  CLICK_ACTIONS_BTN: getClickActionsButtonEvent(LAUNCHES_PAGE),
+  getClickOnListOfActionsButtonEvent: (element) => ({
+    ...getBasicClickEventParameters(LAUNCHES_PAGE),
+    place: 'list_of_actions',
+    element_name: element,
+  }),
   ...getClickDonutEvents(LAUNCHES_PAGE),
   ...getClickDefectTooltipEvents(LAUNCHES_PAGE),
-  CLICK_ACTIONS_BTN: getClickActionsButtonEvent(LAUNCHES_PAGE),
   // GA3 events
   plusMinusBreadcrumb: getClickOnPlusMinusEvents(LAUNCHES_PAGE),
   CLICK_HAMBURGER_MENU: {
@@ -177,41 +183,6 @@ export const LAUNCHES_PAGE_EVENTS = {
     category: LAUNCHES_PAGE,
     action: 'Click on Edit Icon after launch name',
     label: 'Edit Launch/Arise Modal "Edit Launch"',
-  },
-  CLICK_MERGE_ACTION: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on button "Merge" in list of actions',
-    label: 'Arise Modal "Merge Launches"',
-  },
-  CLICK_EDIT_LAUNCH_ACTION: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on button "Edit" in list of actions',
-    label: 'Edit Launch/Arise Modal "Edit Launch"',
-  },
-  CLICK_EDIT_LAUNCHES_ACTION: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on button "Edit" in list of actions',
-    label: 'Arise Modal "Edit launches" in a bulk',
-  },
-  CLICK_COMPARE_ACTION: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on button "Compare" in list of actions',
-    label: 'Arise Modal "Compare Launches"',
-  },
-  CLICK_MOVE_TO_DEBUG_ACTION: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on button "Move to Debug" in list of actions',
-    label: 'Arise Modal "Move to Debug"',
-  },
-  CLICK_FORCE_FINISH_ACTION: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on button "Force Finish" in list of actions',
-    label: 'Force Finish',
-  },
-  CLICK_DELETE_ACTION: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on button "Delete" in list of actions',
-    label: 'Arise Modal "Delete Launch"',
   },
   CLICK_CLOSE_ICON_FROM_SELECTION: {
     category: LAUNCHES_PAGE,
