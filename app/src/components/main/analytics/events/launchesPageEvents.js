@@ -252,6 +252,14 @@ export const LAUNCHES_PAGE_EVENTS = {
 };
 
 export const LAUNCHES_MODAL_EVENTS = {
+  // GA4 events
+  getClickOnMergeButtonInMergeModalEvent: (type = '') => ({
+    ...getBasicClickEventParameters(LAUNCHES_PAGE),
+    modal: 'merge_launch',
+    element_name: 'merge',
+    type,
+  }),
+  // GA3 events and GA4 events
   // EDIT_ITEMS_MODAL
   EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(LAUNCHES_PAGE, 'Launch'),
   CLOSE_ICON_MOVE_MODAL: {
@@ -293,11 +301,6 @@ export const LAUNCHES_MODAL_EVENTS = {
     category: LAUNCHES_MODAL,
     action: 'Click on Btn Cancel on Modal "Merge Launches"',
     label: 'Close modal "Merge Launches"',
-  },
-  MERGE_BTN_MERGE_MODAL: {
-    category: LAUNCHES_MODAL,
-    action: 'Click on Btn Merge on Modal "Merge Launches"',
-    label: 'Merge launches mentioned in modal "Merge Launches"',
   },
   CLOSE_ICON_IMPORT_MODAL: {
     category: LAUNCHES_MODAL,
