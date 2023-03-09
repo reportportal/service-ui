@@ -20,7 +20,7 @@ import { HISTORY_PAGE_EVENTS } from 'components/main/analytics/events';
 import { RefineFiltersPanel } from 'pages/inside/common/refineFiltersPanel';
 import { InfoPanel } from 'pages/inside/common/infoPanel';
 import { HISTORY_VIEW } from 'controllers/testItem';
-import { ActionPanel } from './actionPanel';
+import { HistoryActionPanel } from './actionPanel';
 import { ActionPanelWithGroupOperations } from './actionPanelWithGroupOperations';
 
 export const HistoryToolbar = ({
@@ -50,9 +50,15 @@ export const HistoryToolbar = ({
         parentItem={parentItem}
       />
     ) : (
-      <ActionPanel onRefresh={onRefresh} selectedItems={selectedItems} parentItem={parentItem} />
+      <HistoryActionPanel
+        onRefresh={onRefresh}
+        selectedItems={selectedItems}
+        parentItem={parentItem}
+      />
     )}
-    {(parentItem || isTestItemsList) && <InfoPanel viewMode={HISTORY_VIEW} data={parentItem} />}
+    {(parentItem || isTestItemsList) && (
+      <InfoPanel viewMode={HISTORY_VIEW} data={parentItem} events={HISTORY_PAGE_EVENTS} />
+    )}
     <RefineFiltersPanel
       onFilterAdd={onFilterAdd}
       onFilterRemove={onFilterRemove}

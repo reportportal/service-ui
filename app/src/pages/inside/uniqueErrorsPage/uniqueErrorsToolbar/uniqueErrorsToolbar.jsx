@@ -20,7 +20,7 @@ import classNames from 'classnames/bind';
 import { InfoPanel } from 'pages/inside/common/infoPanel';
 import { UNIQUE_ERRORS_VIEW } from 'controllers/testItem';
 import { SelectedItems } from 'pages/inside/common/selectedItems';
-import { ActionPanel } from './actionPanel';
+import { UniqueErrorsActionPanel } from './actionPanel';
 import styles from './uniqueErrorsToolbar.scss';
 
 const cx = classNames.bind(styles);
@@ -50,7 +50,7 @@ export const UniqueErrorsToolbar = ({
           onClose={onUnselectAll}
         />
       )}
-      <ActionPanel
+      <UniqueErrorsActionPanel
         hasErrors={selectedItems.some((item) => !!errors[item.id])}
         hasValidItems={selectedItems.length > Object.keys(errors).length}
         showBreadcrumbs={selectedItems.length === 0}

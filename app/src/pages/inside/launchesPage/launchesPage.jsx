@@ -31,7 +31,6 @@ import { URLS } from 'common/urls';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { ANALYZER_TYPES } from 'common/constants/analyzerTypes';
 import { IN_PROGRESS } from 'common/constants/testStatuses';
-import { levelSelector } from 'controllers/testItem';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { MODAL_TYPE_IMPORT_LAUNCH } from 'pages/common/modals/importModal/constants';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
@@ -171,7 +170,6 @@ const messages = defineMessages({
     launches: launchesSelector(state),
     lastOperation: lastOperationSelector(state),
     loading: loadingSelector(state),
-    level: levelSelector(state),
     projectSetting: projectConfigSelector(state),
     highlightItemId: prevTestItemSelector(state),
     isDemoInstance: isDemoInstanceSelector(state),
@@ -204,7 +202,6 @@ const messages = defineMessages({
 @track({ page: LAUNCHES_PAGE })
 export class LaunchesPage extends Component {
   static propTypes = {
-    level: PropTypes.string,
     debugMode: PropTypes.bool.isRequired,
     userId: PropTypes.string.isRequired,
     intl: PropTypes.object.isRequired,
@@ -248,7 +245,6 @@ export class LaunchesPage extends Component {
   };
 
   static defaultProps = {
-    level: '',
     launches: [],
     activePage: DEFAULT_PAGINATION[PAGE_KEY],
     itemCount: null,
@@ -542,7 +538,9 @@ export class LaunchesPage extends Component {
   };
 
   deleteItems = (launches) => {
-    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_DELETE_ACTION);
+    this.props.tracking.trackEvent(
+      LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('delete'),
+    );
     const { intl, userId } = this.props;
     const selectedLaunches = launches || this.props.selectedLaunches;
     const warning =
@@ -572,7 +570,9 @@ export class LaunchesPage extends Component {
   };
 
   finishForceLaunches = (eventData) => {
-    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_FORCE_FINISH_ACTION);
+    this.props.tracking.trackEvent(
+      LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('force_finish'),
+    );
     const launches = eventData && eventData.id ? [eventData] : this.props.selectedLaunches;
     this.props.forceFinishLaunchesAction(launches, {
       fetchFunc: this.unselectAndFetchLaunches,
@@ -613,7 +613,7 @@ export class LaunchesPage extends Component {
   };
 
   openEditModal = (launch) => {
-    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_EDIT_LAUNCH_ACTION);
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('edit'));
     this.props.showModalAction({
       id: 'editItemModal',
       data: {
@@ -626,7 +626,7 @@ export class LaunchesPage extends Component {
   };
 
   openEditItemsModal = (launches) => {
-    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_EDIT_LAUNCHES_ACTION);
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('edit'));
     this.props.showModalAction({
       id: 'editItemsModal',
       data: {
@@ -683,23 +683,20 @@ export class LaunchesPage extends Component {
       finishedLaunchesCount: null,
     });
     this.props.fetchLaunchesAction();
-    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.REFRESH_BTN);
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_REFRESH_BTN);
   };
 
   handleAllLaunchesSelection = () => {
-    this.props.tracking.trackEvent(
-      LAUNCHES_PAGE_EVENTS.clickSelectAllItemsEvent(
-        this.props.launches.length !== this.props.selectedLaunches.length,
-      ),
-    );
+    if (this.props.launches.length !== this.props.selectedLaunches.length) {
+      this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_SELECT_ALL_ITEMS);
+    }
     this.props.toggleAllLaunchesAction(this.props.launches);
   };
 
   handleOneLaunchSelection = (value) => {
-    !this.props.level &&
-      this.props.tracking.trackEvent(
-        LAUNCHES_PAGE_EVENTS.clickSelectOneItemEvent(!this.props.selectedLaunches.includes(value)),
-      );
+    if (!this.props.selectedLaunches.includes(value)) {
+      this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_SELECT_ONE_ITEM);
+    }
     this.props.toggleLaunchSelectionAction(value);
   };
 
@@ -714,7 +711,9 @@ export class LaunchesPage extends Component {
   };
 
   mergeLaunches = () => {
-    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_MERGE_ACTION);
+    this.props.tracking.trackEvent(
+      LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('merge'),
+    );
     this.props.mergeLaunchesAction(this.props.selectedLaunches, {
       fetchFunc: this.unselectAndResetPage,
     });
@@ -722,7 +721,9 @@ export class LaunchesPage extends Component {
 
   moveLaunches = (eventData) => {
     const launches = eventData && eventData.id ? [eventData] : this.props.selectedLaunches;
-    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_MOVE_TO_DEBUG_LAUNCH_MENU);
+    this.props.tracking.trackEvent(
+      LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('move_to_debug'),
+    );
     this.props.moveLaunchesAction(launches, {
       fetchFunc: this.unselectAndFetchLaunches,
       debugMode: this.props.debugMode,
@@ -730,7 +731,9 @@ export class LaunchesPage extends Component {
   };
 
   compareLaunches = () => {
-    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_COMPARE_ACTION);
+    this.props.tracking.trackEvent(
+      LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('compare'),
+    );
     this.props.compareLaunchesAction(this.props.selectedLaunches);
   };
 

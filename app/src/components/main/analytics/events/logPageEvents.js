@@ -19,8 +19,9 @@ import {
   getPostIssueActionEvent,
   getUnlinkIssueActionEvent,
   getClickOnPlusMinusEvents,
-  getCommonActionEvents,
+  getClickRefreshButtonEvent,
   getClickIssueTicketEvent,
+  getClickDefectTooltipEvents,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getDeleteItemModalEvents,
@@ -53,6 +54,10 @@ export const getHistoryLineCheckbox = (state) => ({
 });
 
 export const LOG_PAGE_EVENTS = {
+  // GA4 events
+  CLICK_REFRESH_BTN: getClickRefreshButtonEvent(LOG_PAGE),
+  ...getClickDefectTooltipEvents(LOG_PAGE),
+  // GA3 events
   plusMinusBreadcrumb: getClickOnPlusMinusEvents(LOG_PAGE),
   ALL_LABEL_BREADCRUMB: {
     category: LOG_PAGE,
@@ -74,7 +79,6 @@ export const LOG_PAGE_EVENTS = {
     action: 'Click on Btn next Method',
     label: 'Transition to next Method Item',
   },
-  REFRESH_BTN: getCommonActionEvents(LOG_PAGE).REFRESH_BTN,
   DEFECT_TYPE_TAG: {
     category: LOG_PAGE,
     action: 'Click on Defect type tag',

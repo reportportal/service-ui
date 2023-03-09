@@ -1,5 +1,5 @@
-/*
- * Copyright 2023 EPAM Systems
+/*!
+ * Copyright 2021 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,21 @@
  * limitations under the License.
  */
 
-const SIDEBAR = 'sidebar';
+.unique-errors-action-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 15px;
 
-const basicEventParameters = (iconName) => ({
-  action: 'click',
-  place: SIDEBAR,
-  category: SIDEBAR,
-  icon_name: iconName,
-});
+  &.right-buttons-only {
+    justify-content: flex-end;
+  }
+}
 
-export const SIDEBAR_EVENTS = {
-  CLICK_LAUNCH_ICON: {
-    ...basicEventParameters('launches'),
-  },
-};
+.action-buttons {
+  display: flex;
+}
+
+.action-button {
+  padding-left: 10px;
+}

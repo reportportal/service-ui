@@ -47,7 +47,7 @@ import {
 import { showModalAction } from 'controllers/modal';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 
-import styles from './actionPanel.scss';
+import styles from './uniqueErrorsActionPanel.scss';
 
 const cx = classNames.bind(styles);
 
@@ -75,7 +75,7 @@ const cx = classNames.bind(styles);
 )
 @injectIntl
 @track()
-export class ActionPanel extends Component {
+export class UniqueErrorsActionPanel extends Component {
   static propTypes = {
     accountRole: PropTypes.string,
     breadcrumbs: PropTypes.arrayOf(breadcrumbDescriptorShape),
@@ -151,6 +151,7 @@ export class ActionPanel extends Component {
     });
     events.POST_ISSUE_ACTION && tracking.trackEvent(events.POST_ISSUE_ACTION);
   };
+
   handleLinkIssue = () => {
     const { unselectAndFetchItems, selectedItems, events, tracking, onLinkIssue } = this.props;
     onLinkIssue(selectedItems, {
@@ -163,6 +164,7 @@ export class ActionPanel extends Component {
     });
     events.LINK_ISSUE_ACTION && tracking.trackEvent(events.LINK_ISSUE_ACTION);
   };
+
   handleUnlinkIssue = () => {
     const { unselectAndFetchItems, onUnlinkIssue, selectedItems, events, tracking } = this.props;
     onUnlinkIssue(selectedItems, {
@@ -178,6 +180,7 @@ export class ActionPanel extends Component {
     });
     events.UNLINK_ISSUES_ACTION && tracking.trackEvent(events.UNLINK_ISSUES_ACTION);
   };
+
   handleIgnoreInAA = () => {
     this.props.ignoreInAutoAnalysisAction(this.props.selectedItems, {
       fetchFunc: this.props.unselectAndFetchItems,
@@ -228,6 +231,7 @@ export class ActionPanel extends Component {
       onUnlinkIssue: this.handleUnlinkIssue,
     });
   };
+
   onProceedWithValidItems = () => {
     const {
       lastOperation: { operationName, operationArgs },
@@ -236,10 +240,16 @@ export class ActionPanel extends Component {
 
     this.props.proceedWithValidItems(operationName, selectedItems, operationArgs);
   };
-  onReload = () => {
+
+  onRefresh = () => {
     const { onRefresh, events, tracking } = this.props;
     onRefresh();
-    events.REFRESH_BTN && tracking.trackEvent(events.REFRESH_BTN);
+    events.CLICK_REFRESH_BTN && tracking.trackEvent(events.CLICK_REFRESH_BTN);
+  };
+
+  onClickActionsButton = () => {
+    const { events, tracking } = this.props;
+    tracking.trackEvent(events.CLICK_ACTIONS_BTN);
   };
 
   render() {
@@ -256,7 +266,11 @@ export class ActionPanel extends Component {
     const itemsActionDescriptors = this.getItemsActionDescriptors();
 
     return (
-      <div className={cx('action-panel', { 'right-buttons-only': !showBreadcrumbs && !hasErrors })}>
+      <div
+        className={cx('unique-errors-action-panel', {
+          'right-buttons-only': !showBreadcrumbs && !hasErrors,
+        })}
+      >
         {showBreadcrumbs && <Breadcrumbs descriptors={breadcrumbs} onRestorePath={restorePath} />}
         {hasErrors && (
           <GhostButton
@@ -274,11 +288,11 @@ export class ActionPanel extends Component {
               title={formatMessage(COMMON_LOCALE_KEYS.ACTIONS)}
               items={itemsActionDescriptors}
               disabled={!selectedItems.length}
-              transparentBackground
+              onClick={this.onClickActionsButton}
             />
           </div>
           <div className={cx('action-button')}>
-            <GhostButton icon={RefreshIcon} onClick={this.onReload} transparentBackground>
+            <GhostButton icon={RefreshIcon} onClick={this.onRefresh} transparentBackground>
               <FormattedMessage id="Common.refresh" defaultMessage="Refresh" />
             </GhostButton>
           </div>

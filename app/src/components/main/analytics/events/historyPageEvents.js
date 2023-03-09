@@ -23,6 +23,9 @@ import {
   getPostIssueActionEvent,
   getChangeFilterEvent,
   getCommonActionEvents,
+  getClickRefreshButtonEvent,
+  getClickDefectTooltipEvents,
+  getClickActionsButtonEvent,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getEditDefectModalEvents,
@@ -39,6 +42,11 @@ import {
 
 export const HISTORY_PAGE = 'history';
 export const HISTORY_PAGE_EVENTS = {
+  // GA4 events
+  CLICK_REFRESH_BTN: getClickRefreshButtonEvent(HISTORY_PAGE),
+  ...getClickDefectTooltipEvents(HISTORY_PAGE),
+  CLICK_ACTIONS_BTN: getClickActionsButtonEvent(HISTORY_PAGE),
+  // GA3 events
   SELECT_HISTORY_DEPTH: {
     category: HISTORY_PAGE,
     action: 'Select "history depth"',
@@ -89,7 +97,6 @@ export const HISTORY_PAGE_EVENTS = {
     action: 'Click on Close Icon of all selection',
     label: 'Close panel with selected items',
   },
-  REFRESH_BTN: getCommonActionEvents(HISTORY_PAGE).REFRESH_BTN,
   EDIT_DEFECT_ACTION: getEditDefectActionEvent(HISTORY_PAGE),
   POST_ISSUE_ACTION: getPostIssueActionEvent(HISTORY_PAGE),
   LINK_ISSUE_ACTION: getLinkIssueActionEvent(HISTORY_PAGE),

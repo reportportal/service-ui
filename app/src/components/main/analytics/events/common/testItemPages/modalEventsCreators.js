@@ -17,6 +17,7 @@
 import { SEARCH_MODES } from 'pages/inside/stepPage/modals/makeDecisionModal/constants';
 import { getClickIssueTicketEvent } from 'components/main/analytics/events/common/testItemPages/actionEventsCreators';
 import { defectFromTIGroupMap } from './constants';
+import { getBasicClickEventParameters } from '../ga4Utils';
 
 // EDIT DEFECT MODAL
 export const getEditDefectModalEvents = (category) => ({
@@ -206,6 +207,13 @@ export const getDeleteItemModalEvents = (category) => ({
 
 // EDIT ITEMS MODAL
 export const getEditItemsModalEvents = (category, itemType = 'Item') => ({
+  // GA4 events
+  SAVE_BTN_EDIT_ITEM_MODAL: {
+    ...getBasicClickEventParameters(category),
+    modal: 'edit_item',
+    element_name: 'save',
+  },
+  // GA3 events
   CLOSE_ICON_EDIT_ITEM_MODAL: {
     category,
     action: `Click on Close Icon on Modal "Edit ${itemType}"`,
@@ -215,11 +223,6 @@ export const getEditItemsModalEvents = (category, itemType = 'Item') => ({
     category,
     action: `Click on Btn Cancel on Modal "Edit ${itemType}`,
     label: `Close modal "Edit ${itemType}"`,
-  },
-  SAVE_BTN_EDIT_ITEM_MODAL: {
-    category,
-    action: `Click on Btn Save on Modal "Edit ${itemType}"`,
-    label: 'Save changes',
   },
   EDIT_ITEM_DESCRIPTION: {
     category,
