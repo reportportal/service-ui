@@ -19,7 +19,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { instanceIdSelector, apiBuildVersionSelector } from 'controllers/appInfo';
 import track from 'react-tracking';
-import ReactGA from 'react-ga';
 import GA4 from 'react-ga4';
 import { idSelector, isAdminSelector } from 'controllers/user/selectors';
 import {
@@ -30,9 +29,6 @@ import {
 import { omit } from 'common/utils';
 import { gaMeasurementIdSelector } from 'controllers/appInfo/selectors';
 import { normalizeDimensionValue } from './utils';
-
-const PAGE_VIEW = 'pageview';
-const GOOGLE_ANALYTICS_INSTANCE = 'UA-96321031-1';
 
 const getAppVersion = (buildVersion) =>
   buildVersion &&
@@ -63,12 +59,7 @@ const getAppVersion = (buildVersion) =>
     gaMeasurementId,
     ...data
   }) => {
-    ReactGA.set({
-      dimension4: Date.now(),
-    });
-    if (data.actionType && data.actionType === PAGE_VIEW) {
-      ReactGA.pageview(data.page);
-    } else if ('place' in data) {
+    if ('place' in data) {
       const eventParameters = {
         instanceID: instanceId,
         version: getAppVersion(buildVersion),
@@ -79,13 +70,10 @@ const getAppVersion = (buildVersion) =>
         ...(!isAdmin && { project_id: `${projectId}|${instanceId}` }),
         ...omit(data, data.place ? ['action'] : ['action', 'place']),
       };
-
       GA4.event(data.action, eventParameters);
-    } else {
-      ReactGA.event(data);
     }
   },
-  process: (ownTrackingData) => (ownTrackingData.page ? { actionType: PAGE_VIEW } : null),
+  process: ({ page }) => (page ? { action: 'pageview', page, place: '' } : null),
 })
 export class AnalyticsWrapper extends Component {
   static propTypes = {
@@ -106,68 +94,13 @@ export class AnalyticsWrapper extends Component {
   };
 
   componentDidMount() {
-    const {
-      instanceId,
-      buildVersion,
-      userId,
-      isAutoAnalyzerEnabled,
-      isPatternAnalyzerEnabled,
-      projectId,
-      isAdmin,
-      gaMeasurementId,
-    } = this.props;
-    const appVersion = getAppVersion(buildVersion);
-
-    ReactGA.initialize(GOOGLE_ANALYTICS_INSTANCE);
-    ReactGA.pageview(window.location.pathname + window.location.search);
+    const { gaMeasurementId } = this.props;
 
     GA4.initialize(gaMeasurementId || 'G-Z22WZS0E4E', {
       gtagOptions: {
         anonymizeIp: true,
       },
     });
-
-    ReactGA.set({
-      dimension1: instanceId,
-      dimension2: appVersion,
-      dimension3: userId,
-      dimension4: Date.now(),
-      dimension5: normalizeDimensionValue(isAutoAnalyzerEnabled),
-      dimension6: normalizeDimensionValue(isPatternAnalyzerEnabled),
-      dimension7: isAdmin ? undefined : projectId,
-      anonymizeIp: true,
-    });
-    ReactGA.ga()('require', 'ec');
-  }
-
-  componentDidUpdate(prevProps) {
-    const {
-      userId,
-      isAutoAnalyzerEnabled,
-      isPatternAnalyzerEnabled,
-      projectId,
-      isAdmin,
-    } = this.props;
-    if (prevProps.userId !== userId) {
-      ReactGA.set({
-        dimension3: userId,
-      });
-    }
-    if (prevProps.isAutoAnalyzerEnabled !== isAutoAnalyzerEnabled) {
-      ReactGA.set({
-        dimension5: normalizeDimensionValue(isAutoAnalyzerEnabled),
-      });
-    }
-    if (prevProps.isPatternAnalyzerEnabled !== isPatternAnalyzerEnabled) {
-      ReactGA.set({
-        dimension6: normalizeDimensionValue(isPatternAnalyzerEnabled),
-      });
-    }
-    if (prevProps.projectId !== projectId) {
-      ReactGA.set({
-        dimension7: isAdmin ? undefined : projectId,
-      });
-    }
   }
 
   render() {
