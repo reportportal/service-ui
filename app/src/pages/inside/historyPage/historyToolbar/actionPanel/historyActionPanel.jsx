@@ -28,7 +28,7 @@ import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcru
 import { GhostButton } from 'components/buttons/ghostButton';
 import { ParentInfo } from 'pages/inside/common/infoLine/parentInfo';
 import { CompareWithFilterControl } from './compareWithFilterControl';
-import styles from './actionPanel.scss';
+import styles from './historyActionPanel.scss';
 
 const cx = classNames.bind(styles);
 
@@ -42,7 +42,7 @@ const cx = classNames.bind(styles);
   },
 )
 @track()
-export class ActionPanel extends Component {
+export class HistoryActionPanel extends Component {
   static propTypes = {
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -72,7 +72,7 @@ export class ActionPanel extends Component {
   };
 
   refreshItemsAction = () => {
-    this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.REFRESH_BTN);
+    this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.CLICK_REFRESH_BTN);
     this.props.onRefresh();
   };
 
@@ -89,7 +89,11 @@ export class ActionPanel extends Component {
     } = this.props;
 
     return (
-      <div className={cx('action-panel', { 'right-buttons-only': !showBreadcrumbs && !hasErrors })}>
+      <div
+        className={cx('history-action-panel', {
+          'right-buttons-only': !showBreadcrumbs && !hasErrors,
+        })}
+      >
         {showBreadcrumbs && <Breadcrumbs descriptors={breadcrumbs} onRestorePath={restorePath} />}
         {customBlock}
         <div className={cx('action-buttons')}>

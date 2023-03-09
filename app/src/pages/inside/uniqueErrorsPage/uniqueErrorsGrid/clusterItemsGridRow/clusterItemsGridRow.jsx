@@ -97,13 +97,15 @@ export const ClusterItemsGridRow = ({ data, onEditItem, onUnlinkSingleTicket, on
     dispatch(loadMoreClusterItemsAction({ id }));
   };
   const handleAllItemsSelection = () => {
-    trackEvent(
-      UNIQUE_ERRORS_PAGE_EVENTS.CLICK_SELECT_ALL_ITEMS(selectedItems.length !== content.length),
-    );
+    if (selectedItems.length !== content.length) {
+      trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.CLICK_SELECT_ALL_ITEMS);
+    }
     dispatch(toggleAllClusterItemsAction(content));
   };
   const handleOneItemSelection = (value) => {
-    trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.CLICK_SELECT_ONE_ITEM(!selectedItems.includes(value)));
+    if (!selectedItems.includes(value)) {
+      trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.CLICK_SELECT_ONE_ITEM);
+    }
     dispatch(toggleClusterItemSelectionAction(value));
   };
   const modifyColumnsSettings = {

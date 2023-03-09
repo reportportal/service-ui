@@ -175,18 +175,16 @@ export class TestsPage extends Component {
   };
 
   handleAllTestsSelection = () => {
-    this.props.tracking.trackEvent(
-      TESTS_PAGE_EVENTS.CLICK_SELECT_ALL_ITEMS(
-        this.props.tests.length !== this.props.selectedTests.length,
-      ),
-    );
+    if (this.props.tests.length !== this.props.selectedTests.length) {
+      this.props.tracking.trackEvent(TESTS_PAGE_EVENTS.CLICK_SELECT_ALL_ITEMS);
+    }
     this.props.toggleAllTestsAction(this.props.tests);
   };
 
   handleOneItemSelection = (value) => {
-    this.props.tracking.trackEvent(
-      TESTS_PAGE_EVENTS.CLICK_SELECT_ONE_ITEM(!this.props.selectedTests.includes(value)),
-    );
+    if (!this.props.selectedTests.includes(value)) {
+      this.props.tracking.trackEvent(TESTS_PAGE_EVENTS.CLICK_SELECT_ONE_ITEM);
+    }
     this.props.toggleTestSelectionAction(value);
   };
 

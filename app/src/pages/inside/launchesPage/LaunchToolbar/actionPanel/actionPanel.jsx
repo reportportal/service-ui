@@ -246,7 +246,6 @@ export class ActionPanel extends Component {
               items={actionDescriptors}
               disabled={!selectedLaunches.length}
               onClick={this.onClickActionButton}
-              transparentBackground
             />
           </div>
           <div className={cx('action-button')}>

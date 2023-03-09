@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { ActionPanel } from './actionPanel';
+export { HistoryActionPanel } from './historyActionPanel';

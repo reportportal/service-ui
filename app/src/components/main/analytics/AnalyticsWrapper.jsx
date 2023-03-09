@@ -68,16 +68,16 @@ const getAppVersion = (buildVersion) =>
     });
     if (data.actionType && data.actionType === PAGE_VIEW) {
       ReactGA.pageview(data.page);
-    } else if (data.place) {
+    } else if ('place' in data) {
       const eventParameters = {
         instanceID: instanceId,
         version: getAppVersion(buildVersion),
         uid: `${userId}|${instanceId}`,
         auto_analysis: normalizeDimensionValue(isAutoAnalyzerEnabled),
         pattern_analysis: normalizeDimensionValue(isPatternAnalyzerEnabled),
-        ...(!isAdmin && { project_id: `${projectId}|${instanceId}` }),
         timestamp: Date.now(),
-        ...omit(data, ['action']),
+        ...(!isAdmin && { project_id: `${projectId}|${instanceId}` }),
+        ...omit(data, data.place ? ['action'] : ['action', 'place']),
       };
 
       GA4.event(data.action, eventParameters);

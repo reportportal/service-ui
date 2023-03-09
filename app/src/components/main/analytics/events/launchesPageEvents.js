@@ -19,8 +19,14 @@ import {
   getClickAnalyzeInUniqueErrorAnalysisModalEvent,
   getClickAttributes,
   getClickOnPlusMinusEvents,
-  getCommonActionEvents,
   getRefineFiltersPanelEvents,
+  getClickItemNameEvent,
+  getClickRefreshButtonEvent,
+  getClickSelectAllItemsEvent,
+  getClickSelectOneItemEvent,
+  getClickDonutEvents,
+  getClickDefectTooltipEvents,
+  getClickActionsButtonEvent,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getAddBtnAddNewFilterAddWidgetModal,
@@ -31,6 +37,7 @@ import {
   getSelectSortingFilterAddWidgetModal,
   getSelectToggleButtonsAddWidgetModal,
 } from './common/widgetPages/actionEventCreators';
+import { getBasicClickEventParameters } from './common/ga4Utils';
 
 export const LAUNCHES_PAGE = 'launches';
 const LAUNCHES_MODAL = 'Modal launches';
@@ -62,8 +69,21 @@ export const getCriteriaToggler = (state) => ({
 });
 
 export const LAUNCHES_PAGE_EVENTS = {
+  // GA4 events
+  CLICK_ITEM_NAME: getClickItemNameEvent(LAUNCHES_PAGE),
+  CLICK_REFRESH_BTN: getClickRefreshButtonEvent(LAUNCHES_PAGE),
+  CLICK_SELECT_ALL_ITEMS: getClickSelectAllItemsEvent(LAUNCHES_PAGE),
+  CLICK_SELECT_ONE_ITEM: getClickSelectOneItemEvent(LAUNCHES_PAGE),
+  CLICK_ACTIONS_BTN: getClickActionsButtonEvent(LAUNCHES_PAGE),
+  getClickOnListOfActionsButtonEvent: (element) => ({
+    ...getBasicClickEventParameters(LAUNCHES_PAGE),
+    place: 'list_of_actions',
+    element_name: element,
+  }),
+  ...getClickDonutEvents(LAUNCHES_PAGE),
+  ...getClickDefectTooltipEvents(LAUNCHES_PAGE),
+  // GA3 events
   plusMinusBreadcrumb: getClickOnPlusMinusEvents(LAUNCHES_PAGE),
-  CLICK_ITEM_NAME: getCommonActionEvents(LAUNCHES_PAGE).CLICK_ITEM_NAME,
   CLICK_HAMBURGER_MENU: {
     category: LAUNCHES_PAGE,
     action: 'Click on Icon Menu near Launch Name',
@@ -164,96 +184,6 @@ export const LAUNCHES_PAGE_EVENTS = {
     action: 'Click on Edit Icon after launch name',
     label: 'Edit Launch/Arise Modal "Edit Launch"',
   },
-  PB_CHART: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on Product Bug Circle',
-    label: 'Transition to inner level of launch with Product Bugs',
-  },
-  AB_CHART: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on Auto Bug Circle',
-    label: 'Transition to inner level of launch with Auto Bug',
-  },
-  SI_CHART: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on System Issue Circle',
-    label: 'Transition to inner level of launch with System Issue',
-  },
-  TI_CHART: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on To Investigate tag',
-    label: 'Transition to inner level of launch with To Investigate',
-  },
-  PB_TOOLTIP: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on Tooltip "Total Product Bugs"',
-    label: 'Transition to inner level of launch with Product Bugs',
-  },
-  AB_TOOLTIP: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on Tooltip "Total Auto Bug"',
-    label: 'Transition to inner level of launch with Auto Bug',
-  },
-  SI_TOOLTIP: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on Tooltip "Total System Issue"',
-    label: 'Transition to inner level of launch with System Issue',
-  },
-  TI_TOOLTIP: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on Tooltip "To Investigate"',
-    label: 'Transition to inner level of launch with To Investigate',
-  },
-  clickSelectAllItemsEvent: (value) => ({
-    category: LAUNCHES_PAGE,
-    action: 'Click on item icon "select all launches"',
-    label: `${value ? 'select' : 'unselect'} all launches`,
-  }),
-  clickSelectOneItemEvent: (value) => ({
-    category: LAUNCHES_PAGE,
-    action: 'Click on item icon "select one launch"',
-    label: `${value ? 'select' : 'unselect'} one launch`,
-  }),
-  CLICK_ACTIONS_BTN: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on button Actions',
-    label: 'Arise Dropdown with list of actions',
-  },
-  CLICK_MERGE_ACTION: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on button "Merge" in list of actions',
-    label: 'Arise Modal "Merge Launches"',
-  },
-  CLICK_EDIT_LAUNCH_ACTION: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on button "Edit" in list of actions',
-    label: 'Edit Launch/Arise Modal "Edit Launch"',
-  },
-  CLICK_EDIT_LAUNCHES_ACTION: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on button "Edit" in list of actions',
-    label: 'Arise Modal "Edit launches" in a bulk',
-  },
-  CLICK_COMPARE_ACTION: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on button "Compare" in list of actions',
-    label: 'Arise Modal "Compare Launches"',
-  },
-  CLICK_MOVE_TO_DEBUG_ACTION: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on button "Move to Debug" in list of actions',
-    label: 'Arise Modal "Move to Debug"',
-  },
-  CLICK_FORCE_FINISH_ACTION: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on button "Force Finish" in list of actions',
-    label: 'Force Finish',
-  },
-  CLICK_DELETE_ACTION: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on button "Delete" in list of actions',
-    label: 'Arise Modal "Delete Launch"',
-  },
   CLICK_CLOSE_ICON_FROM_SELECTION: {
     category: LAUNCHES_PAGE,
     action: 'Click on Close Icon on Tag of Launch',
@@ -294,7 +224,6 @@ export const LAUNCHES_PAGE_EVENTS = {
     action: 'Click on Btn Add New Widget on Dashboard',
     label: 'Arise Modal Add New Widget',
   },
-  REFRESH_BTN: getCommonActionEvents(LAUNCHES_PAGE).REFRESH_BTN,
   REFINE_FILTERS_PANEL_EVENTS: {
     commonEvents: getRefineFiltersPanelEvents(LAUNCHES_PAGE),
   },
@@ -323,6 +252,14 @@ export const LAUNCHES_PAGE_EVENTS = {
 };
 
 export const LAUNCHES_MODAL_EVENTS = {
+  // GA4 events
+  getClickOnMergeButtonInMergeModalEvent: (type = '') => ({
+    ...getBasicClickEventParameters(LAUNCHES_PAGE),
+    modal: 'merge_launch',
+    element_name: 'merge',
+    type,
+  }),
+  // GA3 events and GA4 events
   // EDIT_ITEMS_MODAL
   EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(LAUNCHES_PAGE, 'Launch'),
   CLOSE_ICON_MOVE_MODAL: {
@@ -364,11 +301,6 @@ export const LAUNCHES_MODAL_EVENTS = {
     category: LAUNCHES_MODAL,
     action: 'Click on Btn Cancel on Modal "Merge Launches"',
     label: 'Close modal "Merge Launches"',
-  },
-  MERGE_BTN_MERGE_MODAL: {
-    category: LAUNCHES_MODAL,
-    action: 'Click on Btn Merge on Modal "Merge Launches"',
-    label: 'Merge launches mentioned in modal "Merge Launches"',
   },
   CLOSE_ICON_IMPORT_MODAL: {
     category: LAUNCHES_MODAL,
