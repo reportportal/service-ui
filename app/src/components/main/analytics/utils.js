@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import ReactGA from 'react-ga';
+import GA4 from 'react-ga4';
 
-export const provideEcGA = ({
+// TODO rewrite it after adding the GA4 e-commerce events
+export const provideEcUniversalAnalytics = ({
   name,
   data,
   action,
@@ -25,7 +26,7 @@ export const provideEcGA = ({
   eventName = 'ecommerce',
   additionalData,
 }) => {
-  const ga = ReactGA.ga();
+  const ga = GA4.ga();
 
   if (Array.isArray(data)) {
     data.forEach((el) => {
@@ -39,6 +40,9 @@ export const provideEcGA = ({
   }
   ga(command, hitType, eventName, action);
 };
+//! Temporary solution. It allows us to avoid errors in the console.
+//! Remove this code after adding all the e-commerce events to GA4
+export const provideEcGA = () => {};
 
 export const normalizeDimensionValue = (value) => {
   return value !== undefined ? value.toString() : undefined;
