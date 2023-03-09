@@ -26,13 +26,13 @@ export const getClickRefreshButtonEvent = (category) => ({
   element_name: 'button_refresh',
 });
 // TODO: Update after Yuliya's answer
-export const getClickSelectAllItemsEvent = (category) => () => ({
+export const getClickSelectAllItemsEvent = (category) => ({
   ...getBasicClickEventParameters(category),
-  element_name: 'select_all_item', // TODO: 'all_item_selection'? and may be use value from second function as another parameter
+  element_name: 'select_all_item',
 });
-export const getClickSelectOneItemEvent = (category) => () => ({
+export const getClickSelectOneItemEvent = (category) => ({
   ...getBasicClickEventParameters(category),
-  element_name: 'select_one_item', // TODO: 'all_item_selection'? and may be use value from second function as another parameter
+  element_name: 'select_one_item',
 });
 export const getClickDonutEvents = (category) => ({
   CLICK_DONUT_PB: {

@@ -31,7 +31,6 @@ import { URLS } from 'common/urls';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { ANALYZER_TYPES } from 'common/constants/analyzerTypes';
 import { IN_PROGRESS } from 'common/constants/testStatuses';
-import { levelSelector } from 'controllers/testItem';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { MODAL_TYPE_IMPORT_LAUNCH } from 'pages/common/modals/importModal/constants';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
@@ -171,7 +170,6 @@ const messages = defineMessages({
     launches: launchesSelector(state),
     lastOperation: lastOperationSelector(state),
     loading: loadingSelector(state),
-    level: levelSelector(state),
     projectSetting: projectConfigSelector(state),
     highlightItemId: prevTestItemSelector(state),
     isDemoInstance: isDemoInstanceSelector(state),
@@ -204,7 +202,6 @@ const messages = defineMessages({
 @track({ page: LAUNCHES_PAGE })
 export class LaunchesPage extends Component {
   static propTypes = {
-    level: PropTypes.string,
     debugMode: PropTypes.bool.isRequired,
     userId: PropTypes.string.isRequired,
     intl: PropTypes.object.isRequired,
@@ -248,7 +245,6 @@ export class LaunchesPage extends Component {
   };
 
   static defaultProps = {
-    level: '',
     launches: [],
     activePage: DEFAULT_PAGINATION[PAGE_KEY],
     itemCount: null,
@@ -691,19 +687,16 @@ export class LaunchesPage extends Component {
   };
 
   handleAllLaunchesSelection = () => {
-    this.props.tracking.trackEvent(
-      LAUNCHES_PAGE_EVENTS.CLICK_SELECT_ALL_ITEMS(
-        this.props.launches.length !== this.props.selectedLaunches.length,
-      ),
-    );
+    if (this.props.launches.length !== this.props.selectedLaunches.length) {
+      this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_SELECT_ALL_ITEMS);
+    }
     this.props.toggleAllLaunchesAction(this.props.launches);
   };
 
   handleOneLaunchSelection = (value) => {
-    !this.props.level &&
-      this.props.tracking.trackEvent(
-        LAUNCHES_PAGE_EVENTS.CLICK_SELECT_ONE_ITEM(!this.props.selectedLaunches.includes(value)),
-      );
+    if (!this.props.selectedLaunches.includes(value)) {
+      this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_SELECT_ONE_ITEM);
+    }
     this.props.toggleLaunchSelectionAction(value);
   };
 
