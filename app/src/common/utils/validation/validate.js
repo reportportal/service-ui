@@ -94,6 +94,8 @@ export const attributeKey = (value) =>
 export const uniqueAttributeKey = (attributes) => (value) =>
   attributes.filter((attribute) => attribute === value).length <= 1;
 export const attributeValue = composeValidators([isNotEmpty, maxLength(512)]);
+export const attributesFilterValue = (value) =>
+  !value || composeValidators([isNotOnlySpaces, maxLength(512)])(value);
 export const attributesArray = (value) =>
   isEmpty(value) ||
   !value.length ||

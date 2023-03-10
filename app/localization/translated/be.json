@@ -120,6 +120,7 @@
   "Attachments.noAttachmentsMessage": "Няма ўкладанняў для адлюстравання",
   "AttributeEditor.attributeKeyLengthHint": "Ключ павінен мець памер ад 1 да 512 сімвалаў",
   "AttributeEditor.attributeValueLengthHint": "Значэнне павінна мець памер ад 1 да 512 сімвалаў",
+  "AttributeEditor.attributeFilterValueLengthHint": "Значэнне павінна мець памер не больш за 512 сімвалаў",
   "AttributeEditor.keyLabel": "Ключ",
   "AttributeEditor.uniqueAttributeKeyHint": "Ключ атрыбуту павінен быць унікальным",
   "AttributeEditor.valueLabel": "Значэнне",

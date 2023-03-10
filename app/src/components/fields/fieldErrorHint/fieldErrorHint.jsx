@@ -154,6 +154,10 @@ const messages = defineMessages({
     id: 'AttributeEditor.attributeValueLengthHint',
     defaultMessage: 'Value should have size from 1 to 512 symbols',
   },
+  attributeFilterValueLengthHint: {
+    id: 'AttributeEditor.attributeFilterValueLengthHint',
+    defaultMessage: 'Value should have size not more than 512 symbols',
+  },
   uniqueAttributeKeyHint: {
     id: 'AttributeEditor.uniqueAttributeKeyHint',
     defaultMessage: 'Attribute key should be unique',

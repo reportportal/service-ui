@@ -49,8 +49,7 @@ const messages = defineMessages({
 
 const attributeKeyValidator = commonValidators.attributeKey;
 const attributeValueValidator = composeBoundValidators([
-  commonValidators.requiredField,
-  bindMessageToValidator(validate.attributeValue, 'attributeValueLengthHint'),
+  bindMessageToValidator(validate.attributesFilterValue, 'attributeFilterValueLengthHint'),
 ]);
 
 @connect((state) => ({
@@ -128,7 +127,8 @@ export class AttributeEditor extends Component {
 
   handleValueChange = (value) => {
     this.setState((oldState) => ({
-      value,
+      // prevent setting null from [downshift](https://www.npmjs.com/package/downshift#onchange) as attribute key
+      value: value || undefined,
       errors: this.getValidationErrors(oldState.key, value),
     }));
   };
@@ -160,8 +160,16 @@ export class AttributeEditor extends Component {
   };
 
   clearInputValues = () => this.setState({ key: '', value: '' });
+  clearErrors = () =>
+    this.setState(() => ({
+      errors: this.getValidationErrors(this.props.attribute.key, this.props.attribute.value),
+    }));
 
-  handleCancel = () => this.props.onCancel() || this.clearInputValues();
+  handleCancel = () => {
+    this.props.onCancel() || this.clearInputValues();
+    this.clearErrors();
+  };
+
   handleAttributeKeyInputChange = (text) => this.setState({ isKeyEdited: !!text });
 
   render() {
