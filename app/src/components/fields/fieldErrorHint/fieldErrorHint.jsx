@@ -236,6 +236,8 @@ export class FieldErrorHint extends Component {
     staticHint: PropTypes.bool,
     widthContent: PropTypes.bool,
     darkView: PropTypes.bool,
+    touchedOnly: PropTypes.bool,
+    touched: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -247,13 +249,20 @@ export class FieldErrorHint extends Component {
     staticHint: false,
     widthContent: false,
     darkView: false,
+    touchedOnly: false,
+    touched: false,
   };
 
   isHintVisible = () => {
-    const { error, active, staticHint } = this.props;
+    const { error, active, staticHint, touchedOnly, touched } = this.props;
     if (staticHint) {
       return !!error;
     }
+
+    if (touchedOnly) {
+      return !!error && active && touched;
+    }
+
     return !!error && active;
   };
 
