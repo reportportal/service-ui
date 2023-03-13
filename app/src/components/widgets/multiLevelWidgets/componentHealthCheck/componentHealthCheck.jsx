@@ -28,7 +28,7 @@ import {
   COLOR_PASSED,
   COLOR_DULL_GREEN,
 } from 'common/constants/colors';
-import { formatAttribute } from 'common/utils';
+import { formatAttribute } from 'common/utils/attributeUtils';
 import { PASSED, FAILED, SKIPPED, INTERRUPTED } from 'common/constants/testStatuses';
 import {
   statisticsLinkSelector,
