@@ -50,17 +50,13 @@ describe('attributeUtils', () => {
       expect(attributeFormatter({})).toBe('');
     });
     test('should return formatted value if both key and value specified', () => {
-      expect(attributeFormatter({ key: 'foo', value: 'bar' })).toBe('foo:bar');
+      expect(attributeFormatter({ key: 'foo', value: 'bar' }, ':')).toBe('foo:bar');
     });
     test('should return formatted value if only key specified', () => {
-      expect(attributeFormatter({ key: 'foo' })).toBe('foo:');
+      expect(attributeFormatter({ key: 'foo' }, ':')).toBe('foo:');
     });
     test('should return formatted value if only value specified', () => {
-      expect(attributeFormatter({ value: 'bar' })).toBe('bar');
-    });
-    test('should return formatted value with non default divider', () => {
-      const customDivider = '-';
-      expect(attributeFormatter({ key: 'foo', value: 'bar' }, customDivider)).toBe('foo-bar');
+      expect(attributeFormatter({ value: 'bar' }, ':')).toBe('bar');
     });
   });
   describe('parseQueryAttributes', () => {

@@ -16,7 +16,7 @@
 
 export const getAttributeValue = ({ key, value } = {}) => value || key;
 
-export const attributeFormatter = ({ key, value } = {}, divider = ':') => {
+export const attributeFormatter = ({ key, value } = {}, divider) => {
   if (key && !value) {
     return `${key}${divider}`;
   }
