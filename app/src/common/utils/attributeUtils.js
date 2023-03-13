@@ -16,7 +16,7 @@
 
 export const getAttributeValue = ({ key, value } = {}) => value || key;
 
-export const formatAttribute = ({ key, value } = {}, divider = ':') => {
+export const attributeFormatter = ({ key, value } = {}, divider = ':') => {
   if (key && !value) {
     return `${key}${divider}`;
   }
@@ -26,8 +26,12 @@ export const formatAttribute = ({ key, value } = {}, divider = ':') => {
   return getAttributeValue({ key, value }) || '';
 };
 
+export const formatAttribute = (attribute) => {
+  return attributeFormatter(attribute, ':');
+};
+
 export const formatAttributeWithSpacedDivider = (attribute) => {
-  return formatAttribute(attribute, ' : ');
+  return attributeFormatter(attribute, ' : ');
 };
 
 export const systemAttributePredicate = ({ system } = {}) => !!system;

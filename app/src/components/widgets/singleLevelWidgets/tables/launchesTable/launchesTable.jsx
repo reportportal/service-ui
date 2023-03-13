@@ -51,7 +51,7 @@ import { DefectLink } from 'pages/inside/common/defectLink';
 import { formatStatus } from 'common/utils/localizationUtils';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { getItemNameConfig } from 'components/widgets/common/utils';
-import { formatAttribute } from 'common/utils';
+import { formatAttribute } from 'common/utils/attributeUtils';
 import { defaultDefectsMessages, defaultStatisticsMessages } from '../components/messages';
 import { getStatisticsStatuses, groupFieldsWithDefectTypes } from '../components/utils';
 import {

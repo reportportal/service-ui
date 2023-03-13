@@ -35,8 +35,8 @@ import {
 } from 'components/filterEntities/constants';
 import { NoItemMessage } from 'components/main/noItemMessage';
 import { getChangeItemStatusEvent } from 'components/main/analytics/events';
-import { formatAttribute } from 'common/utils';
-import { StatusDropdown } from '../../common/statusDropdown/statusDropdown';
+import { formatAttribute } from 'common/utils/attributeUtils';
+import { StatusDropdown } from 'pages/inside/common/statusDropdown/statusDropdown';
 import { PredefinedFilterSwitcher } from './predefinedFilterSwitcher';
 import { DefectType } from './defectType';
 import { GroupHeader } from './groupHeader';

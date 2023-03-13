@@ -49,7 +49,7 @@ import {
   STATS_SI_TOTAL,
   STATS_TI_TOTAL,
 } from 'common/constants/statistics';
-import { formatAttribute } from 'common/utils';
+import { formatAttribute } from 'common/utils/attributeUtils';
 import { Hamburger } from './hamburger';
 import { ExecutionStatistics } from './executionStatistics';
 import { DefectStatistics } from './defectStatistics';
