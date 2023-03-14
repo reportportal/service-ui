@@ -49,6 +49,10 @@ const messages = defineMessages({
 
 const attributeKeyValidator = commonValidators.attributeKey;
 const attributeValueValidator = composeBoundValidators([
+  commonValidators.requiredField,
+  bindMessageToValidator(validate.attributeValue, 'attributeValueLengthHint'),
+]);
+const attributeFilterValueValidator = composeBoundValidators([
   bindMessageToValidator(validate.attributesFilterValue, 'attributeFilterValueLengthHint'),
 ]);
 
@@ -75,6 +79,7 @@ export class AttributeEditor extends Component {
     }),
     customClass: PropTypes.string,
     nakedView: PropTypes.bool,
+    isAttributeValueRequired: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -94,6 +99,7 @@ export class AttributeEditor extends Component {
     },
     customClass: '',
     nakedView: false,
+    isAttributeValueRequired: true,
   };
 
   constructor(props) {
@@ -107,9 +113,14 @@ export class AttributeEditor extends Component {
     };
   }
 
+  getAttributeValueValidator = (value) =>
+    this.props.isAttributeValueRequired
+      ? attributeValueValidator(value)
+      : attributeFilterValueValidator(value);
+
   getValidationErrors = (key, value) => ({
     key: attributeKeyValidator(key),
-    value: this.props.attribute.edited && attributeValueValidator(value),
+    value: this.props.attribute.edited && this.getAttributeValueValidator(value),
   });
 
   byKeyComparator = (attribute, item, key, value) =>
