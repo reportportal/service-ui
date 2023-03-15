@@ -538,9 +538,6 @@ export class LaunchesPage extends Component {
   };
 
   deleteItems = (launches) => {
-    this.props.tracking.trackEvent(
-      LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('delete'),
-    );
     const { intl, userId } = this.props;
     const selectedLaunches = launches || this.props.selectedLaunches;
     const warning =
@@ -570,12 +567,14 @@ export class LaunchesPage extends Component {
   };
 
   finishForceLaunches = (eventData) => {
-    this.props.tracking.trackEvent(
-      LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('force_finish'),
-    );
     const launches = eventData && eventData.id ? [eventData] : this.props.selectedLaunches;
     this.props.forceFinishLaunchesAction(launches, {
       fetchFunc: this.unselectAndFetchLaunches,
+      eventsInfo: {
+        finishButton: LAUNCHES_MODAL_EVENTS.getClickOnFinishButtonInForceFinishModal(
+          eventData ? 'launch_menu' : 'list_of_actions',
+        ),
+      },
     });
   };
 
@@ -613,7 +612,6 @@ export class LaunchesPage extends Component {
   };
 
   openEditModal = (launch) => {
-    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('edit'));
     this.props.showModalAction({
       id: 'editItemModal',
       data: {
@@ -626,7 +624,6 @@ export class LaunchesPage extends Component {
   };
 
   openEditItemsModal = (launches) => {
-    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('edit'));
     this.props.showModalAction({
       id: 'editItemsModal',
       data: {
@@ -706,14 +703,10 @@ export class LaunchesPage extends Component {
       selectedLaunches,
     } = this.props;
 
-    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_PROCEED_ITEMS_BUTTON);
     this.props.proceedWithValidItemsAction(operationName, selectedLaunches, operationArgs);
   };
 
   mergeLaunches = () => {
-    this.props.tracking.trackEvent(
-      LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('merge'),
-    );
     this.props.mergeLaunchesAction(this.props.selectedLaunches, {
       fetchFunc: this.unselectAndResetPage,
     });
@@ -721,19 +714,19 @@ export class LaunchesPage extends Component {
 
   moveLaunches = (eventData) => {
     const launches = eventData && eventData.id ? [eventData] : this.props.selectedLaunches;
-    this.props.tracking.trackEvent(
-      LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('move_to_debug'),
-    );
+
     this.props.moveLaunchesAction(launches, {
       fetchFunc: this.unselectAndFetchLaunches,
       debugMode: this.props.debugMode,
+      eventsInfo: {
+        moveButton: LAUNCHES_MODAL_EVENTS.getClickOnMoveButtonInMoveToDebugModalEvent(
+          eventData ? 'launch_menu' : 'list_of_actions',
+        ),
+      },
     });
   };
 
   compareLaunches = () => {
-    this.props.tracking.trackEvent(
-      LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('compare'),
-    );
     this.props.compareLaunchesAction(this.props.selectedLaunches);
   };
 

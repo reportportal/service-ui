@@ -84,7 +84,8 @@ export class EntitiesGroup extends Component {
     } else {
       onAdd(entity);
       const title = entity ? entity.title : '';
-      events.refineBtnMore && tracking.trackEvent(events.refineBtnMore(title));
+      events.getRefineParametersEvent &&
+        tracking.trackEvent(events.getRefineParametersEvent(title, entity.meta && title));
     }
   };
 

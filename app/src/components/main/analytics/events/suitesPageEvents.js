@@ -15,7 +15,6 @@
  */
 
 import {
-  getRefineFiltersPanelEvents,
   getClickOnPlusMinusEvents,
   getClickSelectAllItemsEvent,
   getClickSelectOneItemEvent,
@@ -27,6 +26,8 @@ import {
   getClickDonutEvents,
   getClickDefectTooltipEvents,
   getClickActionsButtonEvent,
+  getClickPencilIconEvent,
+  getRefineParametersEvent,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getDeleteItemModalEvents,
@@ -43,6 +44,10 @@ export const SUITES_PAGE_EVENTS = {
   ...getClickDonutEvents(SUITE_PAGE),
   ...getClickDefectTooltipEvents(SUITE_PAGE),
   CLICK_ACTIONS_BTN: getClickActionsButtonEvent(SUITE_PAGE),
+  EDIT_ICON_CLICK: getClickPencilIconEvent(SUITE_PAGE),
+  REFINE_FILTERS_PANEL_EVENTS: {
+    commonEvents: { getRefineParametersEvent: getRefineParametersEvent(SUITE_PAGE) },
+  },
   // GA3 events
   ...getCommonActionEvents(SUITE_PAGE),
   plusMinusBreadcrumb: getClickOnPlusMinusEvents(SUITE_PAGE),
@@ -52,9 +57,6 @@ export const SUITES_PAGE_EVENTS = {
     label: 'Delete selected Items',
   },
   // REFINE_FILTERS_PANEL
-  REFINE_FILTERS_PANEL_EVENTS: {
-    commonEvents: getRefineFiltersPanelEvents(SUITE_PAGE),
-  },
   LOG_VIEW_SWITCHER: {
     category: SUITE_PAGE,
     action: 'Click on launch log view switcher',

@@ -30,6 +30,7 @@ import {
   getClickItemNameEvent,
   getClickRefreshButtonEvent,
   getClickActionsButtonEvent,
+  getClickPencilIconEvent,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getDeleteItemModalEvents,
@@ -49,6 +50,7 @@ export const UNIQUE_ERRORS_PAGE_EVENTS = {
   CLICK_SELECT_ONE_ITEM: getClickSelectOneItemEvent(UNIQUE_ERRORS_PAGE),
   CLICK_SELECT_ALL_ITEMS: getClickSelectAllItemsEvent(UNIQUE_ERRORS_PAGE),
   CLICK_ACTIONS_BTN: getClickActionsButtonEvent(UNIQUE_ERRORS_PAGE),
+  EDIT_ICON_CLICK: getClickPencilIconEvent(UNIQUE_ERRORS_PAGE),
   // GA3 events
   ...getCommonActionEvents(UNIQUE_ERRORS_PAGE),
   onClickIssueTicketEvent: getClickIssueTicketEvent(UNIQUE_ERRORS_PAGE),

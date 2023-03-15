@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { getBasicClickEventParameters } from '../ga4Utils';
+import { getBasicClickEventParameters, normalizeEventParameter } from '../ga4Utils';
 
 // GA4 events
 export const getClickItemNameEvent = (category) => ({
@@ -78,6 +78,17 @@ export const getClickActionsButtonEvent = (category) => ({
   ...getBasicClickEventParameters(category),
   element_name: 'button_actions',
 });
+export const getClickPencilIconEvent = (category) => ({
+  ...getBasicClickEventParameters(category),
+  icon_name: 'edit_item',
+});
+export const getRefineParametersEvent = (category) => (type, productBugGroup) => ({
+  ...getBasicClickEventParameters(category),
+  element_name: 'parameter_refine',
+  ...(productBugGroup
+    ? { product_bug_group: normalizeEventParameter(productBugGroup) }
+    : { type: normalizeEventParameter(type) }),
+});
 
 // GA3 events
 export const getEditDefectActionEvent = (category) => ({
@@ -117,16 +128,6 @@ export const getChangeFilterEvent = (category) => (title, value) => ({
 });
 
 export const getRefineFiltersPanelEvents = (category) => ({
-  REFINE_BTN_MORE: {
-    category,
-    action: 'Click on Refine Btn More',
-    label: 'Arise dropdown with parameters',
-  },
-  getSelectRefineParams: (parameter) => ({
-    category,
-    action: `Select ${parameter} parameter to refine`,
-    label: `Show ${parameter} parameter field to refine`,
-  }),
   getChosenDate: (date) => ({
     category,
     action: 'Choose time for filter by start time on Launches.',
@@ -238,12 +239,6 @@ export const getCommonActionEvents = (category) => ({
     category,
     action: 'Click on icon "sorting" on Name',
     label: 'Sort items by name',
-  },
-
-  EDIT_ICON_CLICK: {
-    category,
-    action: 'Click on item icon "edit"',
-    label: 'Arise Modal "Edit Item"',
   },
 
   START_TIME_FILTER: {
