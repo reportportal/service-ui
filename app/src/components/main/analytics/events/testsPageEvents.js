@@ -27,7 +27,7 @@ import {
   getClickDefectTooltipEvents,
   getClickActionsButtonEvent,
   getClickPencilIconEvent,
-  getRefineParametersEvent,
+  getRefineParametersEventCreator,
 } from 'components/main/analytics/events/common/testItemPages/actionEventsCreators';
 import {
   getDeleteItemModalEvents,
@@ -46,7 +46,7 @@ export const TESTS_PAGE_EVENTS = {
   CLICK_ACTIONS_BTN: getClickActionsButtonEvent(TEST_PAGE),
   EDIT_ICON_CLICK: getClickPencilIconEvent(TEST_PAGE),
   REFINE_FILTERS_PANEL_EVENTS: {
-    commonEvents: { getRefineParametersEvent: getRefineParametersEvent(TEST_PAGE) },
+    commonEvents: { getRefineParametersEvent: getRefineParametersEventCreator(TEST_PAGE) },
   },
   // GA3 events
   ...getCommonActionEvents(TEST_PAGE),

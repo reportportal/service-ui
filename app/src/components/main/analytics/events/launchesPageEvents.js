@@ -27,7 +27,7 @@ import {
   getClickDefectTooltipEvents,
   getClickActionsButtonEvent,
   getClickPencilIconEvent,
-  getRefineParametersEvent,
+  getRefineParametersEventCreator,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getAddBtnAddNewFilterAddWidgetModal,
@@ -88,7 +88,7 @@ export const LAUNCHES_PAGE_EVENTS = {
     place: 'list_of_actions',
     element_name: element,
   }),
-  getRefineParametersEvent: getRefineParametersEvent(LAUNCHES_PAGE),
+  getRefineParametersEvent: getRefineParametersEventCreator(LAUNCHES_PAGE),
   ...getClickDonutEvents(LAUNCHES_PAGE),
   ...getClickDefectTooltipEvents(LAUNCHES_PAGE),
   CLICK_HAMBURGER_MENU: {

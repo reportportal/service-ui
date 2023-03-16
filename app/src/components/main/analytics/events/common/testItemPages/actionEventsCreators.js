@@ -82,7 +82,7 @@ export const getClickPencilIconEvent = (category) => ({
   ...getBasicClickEventParameters(category),
   icon_name: 'edit_item',
 });
-export const getRefineParametersEvent = (category) => (type, productBugGroup) => ({
+export const getRefineParametersEventCreator = (category) => (type, productBugGroup) => ({
   ...getBasicClickEventParameters(category),
   element_name: 'parameter_refine',
   ...(productBugGroup

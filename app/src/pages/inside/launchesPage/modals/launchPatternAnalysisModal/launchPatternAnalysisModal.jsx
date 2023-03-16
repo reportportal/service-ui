@@ -130,12 +130,9 @@ export class LaunchPatternAnalysisModal extends Component {
   };
 
   analysisAndClose = (closeModal) => {
-    const analyticsData = this.state.analyzeItemsMode.reduce((acc, current, index, array) => {
-      const isLastItem = index === array.length - 1;
-      const delimiter = isLastItem ? '' : '#';
-
-      return acc.concat(`${ANALYZE_ITEMS_MODE_TO_ANALYTICS_DATA_MAP[current]}${delimiter}`);
-    }, '');
+    const analyticsData = this.state.analyzeItemsMode
+      .map((mode) => ANALYZE_ITEMS_MODE_TO_ANALYTICS_DATA_MAP[mode])
+      .join('#');
     this.props.tracking.trackEvent(
       LAUNCHES_MODAL_EVENTS.getClickOnAnalyzeInPatterAnalysisModal(analyticsData),
     );

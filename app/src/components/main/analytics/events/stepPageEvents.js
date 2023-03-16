@@ -35,7 +35,7 @@ import {
   getClickDefectTooltipEvents,
   getClickActionsButtonEvent,
   getClickPencilIconEvent,
-  getRefineParametersEvent,
+  getRefineParametersEventCreator,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getEditDefectModalEvents,
@@ -68,7 +68,7 @@ export const STEP_PAGE_EVENTS = {
   CLICK_ACTIONS_BTN: getClickActionsButtonEvent(STEP_PAGE),
   EDIT_ICON_CLICK: getClickPencilIconEvent(STEP_PAGE),
   REFINE_FILTERS_PANEL_EVENTS: {
-    commonEvents: { getRefineParametersEvent: getRefineParametersEvent(STEP_PAGE) },
+    commonEvents: { getRefineParametersEvent: getRefineParametersEventCreator(STEP_PAGE) },
     getChangeFilterEvent: getChangeFilterEvent(STEP_PAGE),
   },
   // GA3 events
