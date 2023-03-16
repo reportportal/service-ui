@@ -19,3 +19,9 @@ export const getBasicClickEventParameters = (category) => ({
   category,
   place: '',
 });
+
+export const normalizeEventParameter = (parameter = '') =>
+  parameter
+    .toLowerCase()
+    .trim()
+    .replace(/\s+|-/g, '_');

@@ -112,10 +112,10 @@ const MODAL_COMPARE_WIDTH = 900;
 export const forceFinishLaunchesAction = defineGroupOperation(
   NAMESPACE,
   'finishForceLaunches',
-  (launches, { fetchFunc }) =>
+  (launches, { fetchFunc, eventsInfo }) =>
     showModalAction({
       id: 'launchFinishForceModal',
-      data: { items: launches, fetchFunc },
+      data: { items: launches, fetchFunc, eventsInfo },
     }),
   validateFinishForceLaunch,
 );
@@ -143,10 +143,10 @@ export const compareLaunchesAction = defineGroupOperation(
 export const moveLaunchesAction = defineGroupOperation(
   NAMESPACE,
   'moveLaunches',
-  (launches, { fetchFunc, debugMode }) =>
+  (launches, { fetchFunc, debugMode, eventsInfo }) =>
     showModalAction({
       id: 'moveLaunchesModal',
-      data: { ids: launches.map((launch) => launch.id), fetchFunc, debugMode },
+      data: { ids: launches.map((launch) => launch.id), fetchFunc, debugMode, eventsInfo },
     }),
   validateMoveLaunch,
 );

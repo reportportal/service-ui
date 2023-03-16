@@ -48,6 +48,7 @@ export class MoveToDebugModal extends Component {
       fetchFunc: PropTypes.func,
       ids: PropTypes.array,
       debugMode: PropTypes.bool,
+      eventsInfo: {},
     }),
     showNotification: PropTypes.func,
     tracking: PropTypes.shape({
@@ -61,13 +62,21 @@ export class MoveToDebugModal extends Component {
       fetchFunc: () => {},
       ids: [],
       debugMode: false,
+      eventsInfo: {},
     },
     showNotification: () => {},
   };
 
   moveAndClose = (closeModal) => {
-    this.props.tracking.trackEvent(LAUNCHES_MODAL_EVENTS.CLICK_MOVE_BTN_MOVE_MODAL);
-    const { ids, fetchFunc, debugMode } = this.props.data;
+    const {
+      ids,
+      fetchFunc,
+      debugMode,
+      eventsInfo: { moveButton },
+    } = this.props.data;
+
+    this.props.tracking.trackEvent(moveButton);
+
     const newMode = debugMode ? DEFAULT.toUpperCase() : DEBUG.toUpperCase();
     const entities = ids.reduce((acc, id) => ({ ...acc, [id]: { mode: newMode } }), {});
     fetch(this.props.url, {

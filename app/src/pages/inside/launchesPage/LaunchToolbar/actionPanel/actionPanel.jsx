@@ -141,25 +141,43 @@ export class ActionPanel extends Component {
           selectedLaunches.length > 1
             ? onEditItems(selectedLaunches)
             : onEditItem(selectedLaunches[0]);
+          this.props.tracking.trackEvent(
+            LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('edit'),
+          );
         },
       },
       {
         label: intl.formatMessage(COMMON_LOCALE_KEYS.MERGE),
         value: 'action-merge',
         hidden: debugMode,
-        onClick: onMerge,
+        onClick: () => {
+          onMerge();
+          this.props.tracking.trackEvent(
+            LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('merge'),
+          );
+        },
       },
       {
         label: intl.formatMessage(COMMON_LOCALE_KEYS.COMPARE),
         value: 'action-compare',
         hidden: debugMode,
-        onClick: onCompare,
+        onClick: () => {
+          onCompare();
+          this.props.tracking.trackEvent(
+            LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('compare'),
+          );
+        },
       },
       {
         label: intl.formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_DEBUG),
         value: 'action-move-to-debug',
         hidden: debugMode || projectRole === CUSTOMER,
-        onClick: onMove,
+        onClick: () => {
+          onMove();
+          this.props.tracking.trackEvent(
+            LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('move_to_debug'),
+          );
+        },
       },
       {
         label: intl.formatMessage(COMMON_LOCALE_KEYS.MOVE_TO_ALL_LAUNCHES),
@@ -170,12 +188,22 @@ export class ActionPanel extends Component {
       {
         label: intl.formatMessage(COMMON_LOCALE_KEYS.FORCE_FINISH),
         value: 'action-force-finish',
-        onClick: onForceFinish,
+        onClick: () => {
+          onForceFinish();
+          this.props.tracking.trackEvent(
+            LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('force_finish'),
+          );
+        },
       },
       {
         label: intl.formatMessage(COMMON_LOCALE_KEYS.DELETE),
         value: 'action-delete',
-        onClick: onDelete,
+        onClick: () => {
+          onDelete();
+          this.props.tracking.trackEvent(
+            LAUNCHES_PAGE_EVENTS.getClickOnListOfActionsButtonEvent('delete'),
+          );
+        },
       },
     ];
   };

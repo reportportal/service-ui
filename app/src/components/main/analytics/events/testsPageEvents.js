@@ -21,12 +21,13 @@ import {
   getClickSelectOneItemEvent,
   getClickUniqueErrorsEvent,
   getCommonActionEvents,
-  getRefineFiltersPanelEvents,
   getClickItemNameEvent,
   getClickRefreshButtonEvent,
   getClickDonutEvents,
   getClickDefectTooltipEvents,
   getClickActionsButtonEvent,
+  getClickPencilIconEvent,
+  getRefineParametersEventCreator,
 } from 'components/main/analytics/events/common/testItemPages/actionEventsCreators';
 import {
   getDeleteItemModalEvents,
@@ -43,12 +44,13 @@ export const TESTS_PAGE_EVENTS = {
   ...getClickDonutEvents(TEST_PAGE),
   ...getClickDefectTooltipEvents(TEST_PAGE),
   CLICK_ACTIONS_BTN: getClickActionsButtonEvent(TEST_PAGE),
+  EDIT_ICON_CLICK: getClickPencilIconEvent(TEST_PAGE),
+  REFINE_FILTERS_PANEL_EVENTS: {
+    commonEvents: { getRefineParametersEvent: getRefineParametersEventCreator(TEST_PAGE) },
+  },
   // GA3 events
   ...getCommonActionEvents(TEST_PAGE),
   plusMinusBreadcrumb: getClickOnPlusMinusEvents(TEST_PAGE),
-  REFINE_FILTERS_PANEL_EVENTS: {
-    commonEvents: getRefineFiltersPanelEvents(TEST_PAGE),
-  },
   EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(TEST_PAGE),
   DELETE_ITEM_MODAL_EVENTS: getDeleteItemModalEvents(TEST_PAGE),
   CLICK_ATTRIBUTES: getClickAttributes(TEST_PAGE),

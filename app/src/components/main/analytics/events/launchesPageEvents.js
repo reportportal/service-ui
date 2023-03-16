@@ -16,7 +16,6 @@
 
 import { getEditItemsModalEvents } from './common/testItemPages/modalEventsCreators';
 import {
-  getClickAnalyzeInUniqueErrorAnalysisModalEvent,
   getClickAttributes,
   getClickOnPlusMinusEvents,
   getRefineFiltersPanelEvents,
@@ -27,6 +26,8 @@ import {
   getClickDonutEvents,
   getClickDefectTooltipEvents,
   getClickActionsButtonEvent,
+  getClickPencilIconEvent,
+  getRefineParametersEventCreator,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getAddBtnAddNewFilterAddWidgetModal,
@@ -68,6 +69,12 @@ export const getCriteriaToggler = (state) => ({
   label: state ? 'Hide' : 'Show',
 });
 
+const basicClickEventParametersLaunchPage = getBasicClickEventParameters(LAUNCHES_PAGE);
+const basicLaunchMenuClickEventParameters = {
+  ...basicClickEventParametersLaunchPage,
+  place: 'launch_menu',
+};
+
 export const LAUNCHES_PAGE_EVENTS = {
   // GA4 events
   CLICK_ITEM_NAME: getClickItemNameEvent(LAUNCHES_PAGE),
@@ -75,60 +82,61 @@ export const LAUNCHES_PAGE_EVENTS = {
   CLICK_SELECT_ALL_ITEMS: getClickSelectAllItemsEvent(LAUNCHES_PAGE),
   CLICK_SELECT_ONE_ITEM: getClickSelectOneItemEvent(LAUNCHES_PAGE),
   CLICK_ACTIONS_BTN: getClickActionsButtonEvent(LAUNCHES_PAGE),
+  EDIT_ICON_CLICK: getClickPencilIconEvent(LAUNCHES_PAGE),
   getClickOnListOfActionsButtonEvent: (element) => ({
     ...getBasicClickEventParameters(LAUNCHES_PAGE),
     place: 'list_of_actions',
     element_name: element,
   }),
+  getRefineParametersEvent: getRefineParametersEventCreator(LAUNCHES_PAGE),
   ...getClickDonutEvents(LAUNCHES_PAGE),
   ...getClickDefectTooltipEvents(LAUNCHES_PAGE),
-  // GA3 events
-  plusMinusBreadcrumb: getClickOnPlusMinusEvents(LAUNCHES_PAGE),
   CLICK_HAMBURGER_MENU: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on Icon Menu near Launch Name',
-    label: 'Arise Dropdown with single actions for this launch',
+    ...basicClickEventParametersLaunchPage,
+    icon_name: 'launch_menu',
   },
   CLICK_MOVE_TO_DEBUG_LAUNCH_MENU: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on "Move to Debug" in Launch Menu',
-    label: 'Arise Modal "Move to Debug"',
+    ...basicLaunchMenuClickEventParameters,
+    element_name: 'move_to_debug',
   },
   CLICK_FORCE_FINISH_LAUNCH_MENU: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on "Force Finish" in Launch Menu',
-    label: 'Interrupt launch loading',
+    ...basicLaunchMenuClickEventParameters,
+    element_name: 'force_finish',
+  },
+  CLICK_UNIQUE_ERROR_ANALYSIS_LAUNCH_MENU: {
+    ...basicLaunchMenuClickEventParameters,
+    element_name: 'unique_error_analysis',
   },
   CLICK_ANALYSIS_LAUNCH_MENU: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on "Analysis" in Launch Menu',
-    label: 'Arise Modal "Analyze Launches"',
+    ...basicLaunchMenuClickEventParameters,
+    element_name: 'analysis',
   },
   CLICK_PATTERN_ANALYSIS_LAUNCH_MENU: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on "Pattern analysis" in Launch Menu',
-    label: 'Arise Modal "Pattern Analyze Launches"',
+    ...basicLaunchMenuClickEventParameters,
+    element_name: 'pattern_analysis',
   },
   CLICK_DELETE_LAUNCH_MENU: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on "Delete" in Launch Menu',
-    label: 'Arise Modal "Delete Launch"',
+    ...basicLaunchMenuClickEventParameters,
+    element_name: 'delete',
   },
   CLICK_EXPORT_PDF: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on "Export: PDF" in Launch Menu',
-    label: 'Stars download of report in PDF',
+    ...basicLaunchMenuClickEventParameters,
+    element_name: 'pdf',
   },
   CLICK_EXPORT_HTML: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on "Export: HTML" in Launch Menu',
-    label: 'Stars download of report in HTML',
+    ...basicLaunchMenuClickEventParameters,
+    element_name: 'html',
   },
   CLICK_EXPORT_XLS: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on "Export: XLS" in Launch Menu',
-    label: 'Stars download of report in XLS',
+    ...basicLaunchMenuClickEventParameters,
+    element_name: 'xls',
   },
+  ADD_FILTER: {
+    ...basicClickEventParametersLaunchPage,
+    element_name: 'add_filters',
+  },
+  // GA3 events
+  plusMinusBreadcrumb: getClickOnPlusMinusEvents(LAUNCHES_PAGE),
   NAME_FILTER: {
     category: LAUNCHES_PAGE,
     action: getActionTableFilter('NAME'),
@@ -179,11 +187,6 @@ export const LAUNCHES_PAGE_EVENTS = {
     action: getActionTableFilter('TO INVESTIGATE'),
     label: getDescriptionTableFilter(),
   },
-  EDIT_ICON_CLICK: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on Edit Icon after launch name',
-    label: 'Edit Launch/Arise Modal "Edit Launch"',
-  },
   CLICK_CLOSE_ICON_FROM_SELECTION: {
     category: LAUNCHES_PAGE,
     action: 'Click on Close Icon on Tag of Launch',
@@ -227,16 +230,7 @@ export const LAUNCHES_PAGE_EVENTS = {
   REFINE_FILTERS_PANEL_EVENTS: {
     commonEvents: getRefineFiltersPanelEvents(LAUNCHES_PAGE),
   },
-  ADD_FILTER: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on button "+Add filter"',
-    label: '',
-  },
-  refineBtnMore: (value) => ({
-    category: LAUNCHES_PAGE,
-    action: 'Select Parameter to Refine',
-    label: `${value}`,
-  }),
+
   CLICK_ATTRIBUTES: getClickAttributes(LAUNCHES_PAGE),
   clickFilterActionBarButton: (value) => ({
     category: LAUNCHES_PAGE,
@@ -248,17 +242,45 @@ export const LAUNCHES_PAGE_EVENTS = {
     action: 'Count Filters',
     label: filterStatistic,
   }),
-  clickAnalyzeEvent: getClickAnalyzeInUniqueErrorAnalysisModalEvent(LAUNCHES_PAGE),
+  getClickOnAnalyzeButtonInUniqueErrorAnalyzeModal: (isExcludeNumbers) => ({
+    ...basicClickEventParametersLaunchPage,
+    modal: 'analyze_launch',
+    element_name: 'analyze',
+    type: `${isExcludeNumbers ? 'exclude' : 'include'}_numbers`,
+  }),
 };
 
 export const LAUNCHES_MODAL_EVENTS = {
   // GA4 events
   getClickOnMergeButtonInMergeModalEvent: (type = '') => ({
-    ...getBasicClickEventParameters(LAUNCHES_PAGE),
+    ...basicClickEventParametersLaunchPage,
     modal: 'merge_launch',
     element_name: 'merge',
     type,
   }),
+  getClickOnMoveButtonInMoveToDebugModalEvent: (place) => ({
+    ...basicClickEventParametersLaunchPage,
+    modal: 'move_to_debug',
+    element_name: 'move',
+    place,
+  }),
+  getClickOnFinishButtonInForceFinishModal: (place) => ({
+    ...basicClickEventParametersLaunchPage,
+    modal: 'force_finish',
+    element_name: 'finish',
+    place,
+  }),
+  getClickOnAnalyzeInPatterAnalysisModal: (type) => ({
+    ...basicClickEventParametersLaunchPage,
+    modal: 'pattern_analyze_launches',
+    element_name: 'analyze',
+    type,
+  }),
+  DELETE_BTN_DELETE_MODAL: {
+    ...basicClickEventParametersLaunchPage,
+    modal: 'delete_launch',
+    element_name: 'delete',
+  },
   // GA3 events and GA4 events
   // EDIT_ITEMS_MODAL
   EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(LAUNCHES_PAGE, 'Launch'),
@@ -272,11 +294,6 @@ export const LAUNCHES_MODAL_EVENTS = {
     action: 'Click on Btn Cancel on Modal "Move to Debug"',
     label: 'Close modal "Move to Debug"',
   },
-  CLICK_MOVE_BTN_MOVE_MODAL: {
-    category: LAUNCHES_MODAL,
-    action: 'Click on Btn Move on Modal "Move to Debug"',
-    label: 'Save changes "Move to Debug"',
-  },
   CLOSE_ICON_DELETE_MODAL: {
     category: LAUNCHES_MODAL,
     action: 'Click on Close Icon on Modal "Delete Launch"',
@@ -286,11 +303,6 @@ export const LAUNCHES_MODAL_EVENTS = {
     category: LAUNCHES_MODAL,
     action: 'Click on Btn Cancel on Modal "Delete Launch"',
     label: 'Close modal "Delete Launch"',
-  },
-  DELETE_BTN_DELETE_MODAL: {
-    category: LAUNCHES_MODAL,
-    action: 'Click on Btn Delete on Modal "Delete Launch"',
-    label: 'Delete launch mentioned in modal "Delete Launch"',
   },
   CLOSE_ICON_MERGE_MODAL: {
     category: LAUNCHES_MODAL,
@@ -326,11 +338,6 @@ export const LAUNCHES_MODAL_EVENTS = {
     category: LAUNCHES_MODAL,
     action: 'Click on Btn Deep Merge on Modal "Merge Launches"',
     label: 'Deep Merge',
-  },
-  OK_BTN_ANALYSIS_MODAL: {
-    category: LAUNCHES_MODAL,
-    action: 'Click on Btn Analyze on Modal "Analyze Launch"',
-    label: 'Analyze launch mentioned in modal "Analyze Launch"',
   },
   CLOSE_BTN_ANALYSIS_MODAL: {
     category: LAUNCHES_MODAL,
