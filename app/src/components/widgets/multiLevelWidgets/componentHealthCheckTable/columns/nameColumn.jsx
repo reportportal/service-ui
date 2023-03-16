@@ -23,25 +23,37 @@ import styles from '../componentHealthCheckTable.scss';
 
 const cx = classNames.bind(styles);
 
+const MAX_VALUE_LENGTH = 50;
+const CHARACTERS_COUNT_BEFORE_ELLIPSIS = 45;
+const CHARACTERS_COUNT_AFTER_ELLIPSIS = 5;
+
 export const NameColumn = (
   { className, value },
   name,
   { minPassingRate, formatMessage, onClickAttribute, isClickableAttribute },
 ) => {
   const color = value.passingRate < minPassingRate ? COLOR_DEEP_RED : COLOR_PASSED;
+  const { attributeValue } = value;
+
+  const attributeValueToDisplay =
+    attributeValue && attributeValue.length > MAX_VALUE_LENGTH
+      ? `${attributeValue.slice(0, CHARACTERS_COUNT_BEFORE_ELLIPSIS)} ... ${attributeValue.slice(
+          -CHARACTERS_COUNT_AFTER_ELLIPSIS,
+        )}`
+      : attributeValue;
 
   return (
     <div className={cx('name-col', className)}>
-      {value.attributeValue ? (
+      {attributeValue ? (
         <div
           className={cx('name-attr', { 'cursor-pointer': isClickableAttribute })}
           onClick={
             isClickableAttribute
-              ? () => onClickAttribute(value.attributeValue, value.passingRate, color)
+              ? () => onClickAttribute(attributeValue, value.passingRate, color)
               : undefined
           }
         >
-          <span title={value.attributeValue}>{value.attributeValue}</span>
+          <span title={attributeValue}>{attributeValueToDisplay}</span>
         </div>
       ) : (
         <span className={cx('name-total', 'total-item')}>
