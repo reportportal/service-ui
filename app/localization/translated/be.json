@@ -277,6 +277,7 @@
   "ComponentHealthCheckTable.passRateColumn": "Хуткасць праходжання",
   "ComponentHealthCheckTable.passingRateHint": "Хуткасць праходжання:",
   "ComponentHealthCheckTable.productBugColumnTitle": "Праблема прадукта",
+  "ComponentHealthCheckTable.nameColumn": "Імя",
   "ComponentHealthCheckTable.statusColumn": "Статус",
   "ComponentHealthCheckTable.statusHint": "Статус",
   "ComponentHealthCheckTable.systemIssueColumnTitle": "Сыстэмная праблема",
