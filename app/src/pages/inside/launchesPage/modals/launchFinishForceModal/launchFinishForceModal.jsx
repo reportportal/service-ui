@@ -27,6 +27,7 @@ import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { STOPPED } from 'common/constants/launchStatuses';
+import track from 'react-tracking';
 import styles from './launchFinishForceModal.scss';
 
 const cx = classNames.bind(styles);
@@ -65,6 +66,7 @@ const messages = defineMessages({
 
 @withModal('launchFinishForceModal')
 @injectIntl
+@track()
 @connect(
   (state) => ({
     userId: userIdSelector(state),
@@ -79,9 +81,14 @@ export class LaunchFinishForceModal extends Component {
     intl: PropTypes.object.isRequired,
     url: PropTypes.string.isRequired,
     userId: PropTypes.string.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
     data: PropTypes.shape({
       fetchFunc: PropTypes.func,
       items: PropTypes.array,
+      eventsInfo: {},
     }),
     showNotification: PropTypes.func,
   };
@@ -90,12 +97,20 @@ export class LaunchFinishForceModal extends Component {
     data: {
       fetchFunc: () => {},
       items: [],
+      eventsInfo: {},
     },
     showNotification: () => {},
   };
 
   finishAndClose = (closeModal) => {
-    const { items, fetchFunc } = this.props.data;
+    const {
+      items,
+      fetchFunc,
+      eventsInfo: { finishButton },
+    } = this.props.data;
+
+    this.props.tracking.trackEvent(finishButton);
+
     const entities = items.reduce(
       (acc, item) => ({
         ...acc,

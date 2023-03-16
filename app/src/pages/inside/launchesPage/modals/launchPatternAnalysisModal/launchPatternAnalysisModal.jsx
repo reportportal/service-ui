@@ -34,6 +34,12 @@ const { ANALYZER_MODE, ANALYZE_ITEMS_MODE } = LAUNCH_ANALYZE_TYPES;
 
 const PATTERN_ANALYZE_ITEMS_MODE = 'patternAnalyzeItemsMode';
 
+const ANALYZE_ITEMS_MODE_TO_ANALYTICS_DATA_MAP = {
+  [ANALYZE_ITEMS_MODE.TO_INVESTIGATE]: 'investigate_items',
+  [ANALYZE_ITEMS_MODE.AUTO_ANALYZED]: 'by_aa',
+  [ANALYZE_ITEMS_MODE.MANUALLY_ANALYZED]: 'manually',
+};
+
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
@@ -124,7 +130,13 @@ export class LaunchPatternAnalysisModal extends Component {
   };
 
   analysisAndClose = (closeModal) => {
-    this.props.tracking.trackEvent(LAUNCHES_MODAL_EVENTS.OK_BTN_PATTERN_ANALYSIS_MODAL);
+    const analyticsData = this.state.analyzeItemsMode
+      .map((mode) => ANALYZE_ITEMS_MODE_TO_ANALYTICS_DATA_MAP[mode])
+      .join('#');
+    this.props.tracking.trackEvent(
+      LAUNCHES_MODAL_EVENTS.getClickOnAnalyzeInPatterAnalysisModal(analyticsData),
+    );
+
     const errorMessage = this.validate();
     if (errorMessage) {
       this.setState({

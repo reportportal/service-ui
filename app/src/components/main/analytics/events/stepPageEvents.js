@@ -19,7 +19,6 @@ import {
   getLinkIssueActionEvent,
   getPostIssueActionEvent,
   getUnlinkIssueActionEvent,
-  getRefineFiltersPanelEvents,
   getChangeFilterEvent,
   getClickOnPlusMinusEvents,
   getClickSelectAllItemsEvent,
@@ -35,6 +34,8 @@ import {
   getClickRefreshButtonEvent,
   getClickDefectTooltipEvents,
   getClickActionsButtonEvent,
+  getClickPencilIconEvent,
+  getRefineParametersEventCreator,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getEditDefectModalEvents,
@@ -65,13 +66,14 @@ export const STEP_PAGE_EVENTS = {
   CLICK_SELECT_ONE_ITEM: getClickSelectOneItemEvent(STEP_PAGE),
   ...getClickDefectTooltipEvents(STEP_PAGE),
   CLICK_ACTIONS_BTN: getClickActionsButtonEvent(STEP_PAGE),
+  EDIT_ICON_CLICK: getClickPencilIconEvent(STEP_PAGE),
+  REFINE_FILTERS_PANEL_EVENTS: {
+    commonEvents: { getRefineParametersEvent: getRefineParametersEventCreator(STEP_PAGE) },
+    getChangeFilterEvent: getChangeFilterEvent(STEP_PAGE),
+  },
   // GA3 events
   ...getCommonActionEvents(STEP_PAGE),
   // REFINE_FILTERS_PANEL
-  REFINE_FILTERS_PANEL_EVENTS: {
-    commonEvents: getRefineFiltersPanelEvents(STEP_PAGE),
-    getChangeFilterEvent: getChangeFilterEvent(STEP_PAGE),
-  },
   METHOD_TYPE_SWITCHER: {
     category: STEP_PAGE,
     action: 'Click on Method type switcher',

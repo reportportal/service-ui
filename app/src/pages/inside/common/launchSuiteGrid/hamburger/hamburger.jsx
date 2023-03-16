@@ -233,7 +233,9 @@ export class Hamburger extends Component {
       data: {
         launch: this.props.launch,
         updateLaunchLocally: (data) => this.props.updateLaunchLocallyAction(data),
-        events: { clickAnalyzeEvent: LAUNCHES_PAGE_EVENTS.clickAnalyzeEvent },
+        events: {
+          clickAnalyzeEvent: LAUNCHES_PAGE_EVENTS.getClickOnAnalyzeButtonInUniqueErrorAnalyzeModal,
+        },
       },
     });
   };
@@ -347,7 +349,10 @@ export class Hamburger extends Component {
               disabled={!!clusterTitle}
               title={clusterTitle}
               text={intl.formatMessage(messages.uniqueErrorAnalysis)}
-              onClick={this.openUniqueErrorAnalysisModal}
+              onClick={() => {
+                tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_UNIQUE_ERROR_ANALYSIS_LAUNCH_MENU);
+                this.openUniqueErrorAnalysisModal();
+              }}
             />
             <HamburgerMenuItem
               text={intl.formatMessage(messages.patternAnalysis)}
