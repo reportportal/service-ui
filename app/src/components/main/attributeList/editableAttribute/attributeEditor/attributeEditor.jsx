@@ -52,9 +52,10 @@ const attributeValueValidator = composeBoundValidators([
   commonValidators.requiredField,
   bindMessageToValidator(validate.attributeValue, 'attributeValueLengthHint'),
 ]);
-const attributeFilterValueValidator = composeBoundValidators([
-  bindMessageToValidator(validate.attributesFilterValue, 'attributeFilterValueLengthHint'),
-]);
+const attributeFilterValueValidator = bindMessageToValidator(
+  validate.nonRequiredAttributeValueValidator,
+  'attributeValueLengthHint',
+);
 
 @connect((state) => ({
   projectId: activeProjectSelector(state),
