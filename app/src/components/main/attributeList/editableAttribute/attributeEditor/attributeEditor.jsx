@@ -139,7 +139,7 @@ export class AttributeEditor extends Component {
 
   handleValueChange = (value) => {
     this.setState((oldState) => ({
-      // prevent setting null from [downshift](https://www.npmjs.com/package/downshift#onchange) as attribute key
+      // prevent setting null from [downshift](https://www.npmjs.com/package/downshift#onchange) as attribute value
       value: value || undefined,
       errors: this.getValidationErrors(oldState.key, value),
     }));
@@ -174,7 +174,10 @@ export class AttributeEditor extends Component {
   clearInputValues = () => this.setState({ key: '', value: '' });
   clearErrors = () =>
     this.setState(() => ({
-      errors: this.getValidationErrors(this.props.attribute.key, this.props.attribute.value),
+      errors: {
+        key: undefined,
+        value: undefined,
+      },
     }));
 
   handleCancel = () => {
