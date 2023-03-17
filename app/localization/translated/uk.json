@@ -119,7 +119,7 @@
   "AttachmentModal.title": "Вкладення",
   "Attachments.noAttachmentsMessage": "Немає вкладень для відображення",
   "AttributeEditor.attributeKeyLengthHint": "Ключ повинен бути довжиною від 1 до 512 символів",
-  "AttributeEditor.attributeValueLengthHint": "Значення повинно бути довжиною від 1 до 512 символів",
+  "AttributeEditor.attributeValueLengthHint": "Значення повинно мати розмір не більше 512 символів",
   "AttributeEditor.keyLabel": "Ключ",
   "AttributeEditor.uniqueAttributeKeyHint": "Ключ атрибута повинен бути унікальним",
   "AttributeEditor.valueLabel": "Значення",
