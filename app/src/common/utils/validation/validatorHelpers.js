@@ -15,7 +15,7 @@
  */
 
 export const composeValidators = (validators) => (value) =>
-  !validators.some((validator) => !validator(value));
+  validators.every((validator) => validator(value));
 
 export const trimValue = (value) => (typeof value === 'string' ? value.trim() : value);
 export const isEmpty = (value) => {
