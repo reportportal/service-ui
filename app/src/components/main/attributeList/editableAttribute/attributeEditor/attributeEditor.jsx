@@ -52,6 +52,10 @@ const attributeValueValidator = composeBoundValidators([
   commonValidators.requiredField,
   bindMessageToValidator(validate.attributeValue, 'attributeValueLengthHint'),
 ]);
+const attributeFilterValueValidator = bindMessageToValidator(
+  validate.nonRequiredAttributeValueValidator,
+  'attributeValueLengthHint',
+);
 
 @connect((state) => ({
   projectId: activeProjectSelector(state),
@@ -76,6 +80,7 @@ export class AttributeEditor extends Component {
     }),
     customClass: PropTypes.string,
     nakedView: PropTypes.bool,
+    isAttributeValueRequired: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -95,6 +100,7 @@ export class AttributeEditor extends Component {
     },
     customClass: '',
     nakedView: false,
+    isAttributeValueRequired: true,
   };
 
   constructor(props) {
@@ -108,9 +114,14 @@ export class AttributeEditor extends Component {
     };
   }
 
+  getAttributeValueValidator = (value) =>
+    this.props.isAttributeValueRequired
+      ? attributeValueValidator(value)
+      : attributeFilterValueValidator(value);
+
   getValidationErrors = (key, value) => ({
     key: attributeKeyValidator(key),
-    value: this.props.attribute.edited && attributeValueValidator(value),
+    value: this.props.attribute.edited && this.getAttributeValueValidator(value),
   });
 
   byKeyComparator = (attribute, item, key, value) =>
@@ -128,7 +139,8 @@ export class AttributeEditor extends Component {
 
   handleValueChange = (value) => {
     this.setState((oldState) => ({
-      value,
+      // prevent setting null from [downshift](https://www.npmjs.com/package/downshift#onchange) as attribute value
+      value: value || undefined,
       errors: this.getValidationErrors(oldState.key, value),
     }));
   };
@@ -160,8 +172,19 @@ export class AttributeEditor extends Component {
   };
 
   clearInputValues = () => this.setState({ key: '', value: '' });
+  clearErrors = () =>
+    this.setState(() => ({
+      errors: {
+        key: undefined,
+        value: undefined,
+      },
+    }));
 
-  handleCancel = () => this.props.onCancel() || this.clearInputValues();
+  handleCancel = () => {
+    this.props.onCancel() || this.clearInputValues();
+    this.clearErrors();
+  };
+
   handleAttributeKeyInputChange = (text) => this.setState({ isKeyEdited: !!text });
 
   render() {
