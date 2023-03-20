@@ -16,8 +16,8 @@
 
 import { getEditItemsModalEvents } from './common/testItemPages/modalEventsCreators';
 import {
-  getClickAttributes,
-  getClickOnPlusMinusEvents,
+  getClickOnAttributesEvent,
+  getClickOnPlusMinusEventCreator,
   getRefineFiltersPanelEvents,
   getClickItemNameEvent,
   getClickRefreshButtonEvent,
@@ -28,6 +28,7 @@ import {
   getClickActionsButtonEvent,
   getClickPencilIconEvent,
   getRefineParametersEventCreator,
+  getCommonActionEvents,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getAddBtnAddNewFilterAddWidgetModal,
@@ -63,16 +64,15 @@ export const getRunAnalysisAnalysisModalEvent = (analyzeItemsMode) =>
   getAnalyzeItemEvent('Analyze Launch', analyzeItemsMode);
 export const getRunAnalysisPatternAnalysisModalEvent = (analyzeItemsMode) =>
   getAnalyzeItemEvent('Pattern Analyze Launch', analyzeItemsMode);
-export const getCriteriaToggler = (state) => ({
-  category: LAUNCHES_PAGE,
-  action: 'Click on icon Show/Hide Criteria',
-  label: state ? 'Hide' : 'Show',
-});
 
 const basicClickEventParametersLaunchPage = getBasicClickEventParameters(LAUNCHES_PAGE);
 const basicLaunchMenuClickEventParameters = {
   ...basicClickEventParametersLaunchPage,
   place: 'launch_menu',
+};
+const basicFilterActionBarClickEventParameters = {
+  ...basicClickEventParametersLaunchPage,
+  place: 'filter_action_bar',
 };
 
 export const LAUNCHES_PAGE_EVENTS = {
@@ -84,13 +84,44 @@ export const LAUNCHES_PAGE_EVENTS = {
   CLICK_ACTIONS_BTN: getClickActionsButtonEvent(LAUNCHES_PAGE),
   EDIT_ICON_CLICK: getClickPencilIconEvent(LAUNCHES_PAGE),
   getClickOnListOfActionsButtonEvent: (element) => ({
-    ...getBasicClickEventParameters(LAUNCHES_PAGE),
+    ...basicClickEventParametersLaunchPage,
     place: 'list_of_actions',
     element_name: element,
   }),
   getRefineParametersEvent: getRefineParametersEventCreator(LAUNCHES_PAGE),
   ...getClickDonutEvents(LAUNCHES_PAGE),
   ...getClickDefectTooltipEvents(LAUNCHES_PAGE),
+  getClickOnCriteriaTogglerEvent: (expanded) => ({
+    ...basicFilterActionBarClickEventParameters,
+    element_name: expanded ? 'hide_criteria' : 'show_criteria',
+  }),
+  CLICK_IMPORT_BTN: {
+    ...basicClickEventParametersLaunchPage,
+    element_name: 'import',
+  },
+  ADD_NEW_WIDGET_BTN: {
+    ...basicClickEventParametersLaunchPage,
+    element_name: 'add_new_widget',
+  },
+  getClickOnPlusMinusBreadcrumbEvent: getClickOnPlusMinusEventCreator(LAUNCHES_PAGE),
+  CLICK_ATTRIBUTES: getClickOnAttributesEvent(LAUNCHES_PAGE),
+  getClickOnFilterActionBarButtonEvent: (name) => ({
+    ...basicFilterActionBarClickEventParameters,
+    element_name: name,
+  }),
+  CLICK_ALL_LAUNCHES_DROPDOWN: {
+    ...basicClickEventParametersLaunchPage,
+    icon_name: 'icon_all_launches_dropdown',
+  },
+  SELECT_ALL_LAUNCHES: {
+    ...basicClickEventParametersLaunchPage,
+    element_name: 'all_launches',
+  },
+  SELECT_LATEST_LAUNCHES: {
+    ...basicClickEventParametersLaunchPage,
+    element_name: 'latest_launches',
+  },
+  CLICK_PROCEED_ITEMS_BUTTON: getCommonActionEvents(LAUNCHES_PAGE).PROCEED_VALID_ITEMS,
   CLICK_HAMBURGER_MENU: {
     ...basicClickEventParametersLaunchPage,
     icon_name: 'launch_menu',
@@ -135,8 +166,13 @@ export const LAUNCHES_PAGE_EVENTS = {
     ...basicClickEventParametersLaunchPage,
     element_name: 'add_filters',
   },
+  getClickOnAnalyzeButtonInUniqueErrorAnalyzeModal: (isExcludeNumbers) => ({
+    ...basicClickEventParametersLaunchPage,
+    modal: 'analyze_launch',
+    element_name: 'analyze',
+    type: `${isExcludeNumbers ? 'exclude' : 'include'}_numbers`,
+  }),
   // GA3 events
-  plusMinusBreadcrumb: getClickOnPlusMinusEvents(LAUNCHES_PAGE),
   NAME_FILTER: {
     category: LAUNCHES_PAGE,
     action: getActionTableFilter('NAME'),
@@ -197,56 +233,13 @@ export const LAUNCHES_PAGE_EVENTS = {
     action: 'Click on Close Icon of all selection',
     label: 'Unselect all launches',
   },
-  CLICK_PROCEED_ITEMS_BUTTON: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on button "Proceed Valid Items"',
-    label: 'Remove invalid launches from selection',
-  },
-  CLICK_ALL_LAUNCHES_DROPDOWN: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on All Launches dropdown icon',
-    label: 'Arise dropdown',
-  },
-  SELECT_ALL_LAUNCHES: {
-    category: LAUNCHES_PAGE,
-    action: 'Select All Launches on dropdown',
-    label: 'Transition to All Launches',
-  },
-  SELECT_LATEST_LAUNCHES: {
-    category: LAUNCHES_PAGE,
-    action: 'Select Latest Launches in dropdown',
-    label: 'Transition to Latest Launches',
-  },
-  CLICK_IMPORT_BTN: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on Btn Import',
-    label: 'Arise Modul Import Launch',
-  },
-  ADD_NEW_WIDGET_BTN: {
-    category: LAUNCHES_PAGE,
-    action: 'Click on Btn Add New Widget on Dashboard',
-    label: 'Arise Modal Add New Widget',
-  },
   REFINE_FILTERS_PANEL_EVENTS: {
     commonEvents: getRefineFiltersPanelEvents(LAUNCHES_PAGE),
   },
-
-  CLICK_ATTRIBUTES: getClickAttributes(LAUNCHES_PAGE),
-  clickFilterActionBarButton: (value) => ({
-    category: LAUNCHES_PAGE,
-    action: `Click on button "${value}" in filter action bar`,
-    label: '',
-  }),
   countFilters: (filterStatistic) => ({
     category: LAUNCHES_PAGE,
     action: 'Count Filters',
     label: filterStatistic,
-  }),
-  getClickOnAnalyzeButtonInUniqueErrorAnalyzeModal: (isExcludeNumbers) => ({
-    ...basicClickEventParametersLaunchPage,
-    modal: 'analyze_launch',
-    element_name: 'analyze',
-    type: `${isExcludeNumbers ? 'exclude' : 'include'}_numbers`,
   }),
 };
 
@@ -280,6 +273,11 @@ export const LAUNCHES_MODAL_EVENTS = {
     ...basicClickEventParametersLaunchPage,
     modal: 'delete_launch',
     element_name: 'delete',
+  },
+  OK_BTN_IMPORT_MODAL: {
+    ...basicClickEventParametersLaunchPage,
+    modal: 'import_launch',
+    element_name: 'import',
   },
   // GA3 events and GA4 events
   // EDIT_ITEMS_MODAL
@@ -323,11 +321,6 @@ export const LAUNCHES_MODAL_EVENTS = {
     category: LAUNCHES_MODAL,
     action: 'Click on Btn Cancel on Modal "Import Launch"',
     label: 'Close Modal Import Launch',
-  },
-  OK_BTN_IMPORT_MODAL: {
-    category: LAUNCHES_MODAL,
-    action: 'Click on Btn Ok on Modal "Import Launch"',
-    label: 'Import Launch',
   },
   LINEAR_MERGE_BTN_MERGE_MODAL: {
     category: LAUNCHES_MODAL,

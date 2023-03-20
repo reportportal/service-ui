@@ -15,11 +15,11 @@
  */
 
 import {
-  getClickOnPlusMinusEvents,
+  getClickOnPlusMinusEventCreator,
   getClickSelectAllItemsEvent,
   getClickSelectOneItemEvent,
   getCommonActionEvents,
-  getClickAttributes,
+  getClickOnAttributesEvent,
   getClickUniqueErrorsEvent,
   getClickItemNameEvent,
   getClickRefreshButtonEvent,
@@ -48,9 +48,10 @@ export const SUITES_PAGE_EVENTS = {
   REFINE_FILTERS_PANEL_EVENTS: {
     commonEvents: { getRefineParametersEvent: getRefineParametersEventCreator(SUITE_PAGE) },
   },
+  getClickOnPlusMinusBreadcrumbEvent: getClickOnPlusMinusEventCreator(SUITE_PAGE),
+  CLICK_ATTRIBUTES: getClickOnAttributesEvent(SUITE_PAGE),
   // GA3 events
   ...getCommonActionEvents(SUITE_PAGE),
-  plusMinusBreadcrumb: getClickOnPlusMinusEvents(SUITE_PAGE),
   DELETE_BTN: {
     category: SUITE_PAGE,
     action: 'Click on Btn Delete',
@@ -66,6 +67,5 @@ export const SUITES_PAGE_EVENTS = {
   DELETE_ITEM_MODAL_EVENTS: getDeleteItemModalEvents(SUITE_PAGE),
   // EDIT_ITEMS_MODAL
   EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(SUITE_PAGE),
-  CLICK_ATTRIBUTES: getClickAttributes(SUITE_PAGE),
   CLICK_UNIQUE_ERRORS: getClickUniqueErrorsEvent(SUITE_PAGE),
 };

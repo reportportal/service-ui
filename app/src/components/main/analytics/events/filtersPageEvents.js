@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+import { getBasicClickEventParameters } from './common/ga4Utils';
+import { LAUNCHES_PAGE } from './launchesPageEvents';
+
 export const FILTERS_PAGE = 'filters';
 
 export const getAddEditFilterModalEvents = (isEditMode) => {
@@ -36,11 +39,17 @@ export const getAddEditFilterModalEvents = (isEditMode) => {
       action: `Click on button Cancel in Modal ${modalType} Filter`,
       label: `Close Modal ${modalType} Filter`,
     },
-    clickOkBtn: {
-      category: FILTERS_PAGE,
-      action: `Click on button ${actionType} in Modal ${modalType} Filter`,
-      label: `${actionType} filter in Modal ${modalType} Filter`,
-    },
+    clickOkBtn: isEditMode
+      ? {
+          category: FILTERS_PAGE,
+          action: `Click on button ${actionType} in Modal ${modalType} Filter`,
+          label: `${actionType} filter in Modal ${modalType} Filter`,
+        }
+      : {
+          ...getBasicClickEventParameters(LAUNCHES_PAGE),
+          modal: 'add_filter',
+          element_name: 'add',
+        },
   };
 };
 

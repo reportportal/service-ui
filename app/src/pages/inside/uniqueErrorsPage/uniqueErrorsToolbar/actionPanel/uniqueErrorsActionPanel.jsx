@@ -271,7 +271,13 @@ export class UniqueErrorsActionPanel extends Component {
           'right-buttons-only': !showBreadcrumbs && !hasErrors,
         })}
       >
-        {showBreadcrumbs && <Breadcrumbs descriptors={breadcrumbs} onRestorePath={restorePath} />}
+        {showBreadcrumbs && (
+          <Breadcrumbs
+            descriptors={breadcrumbs}
+            onRestorePath={restorePath}
+            togglerEventInfo={UNIQUE_ERRORS_PAGE_EVENTS.getClickOnPlusMinusBreadcrumbEvent}
+          />
+        )}
         {hasErrors && (
           <GhostButton
             disabled={!hasValidItems}

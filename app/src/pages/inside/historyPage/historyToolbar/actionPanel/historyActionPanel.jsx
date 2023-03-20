@@ -94,7 +94,13 @@ export class HistoryActionPanel extends Component {
           'right-buttons-only': !showBreadcrumbs && !hasErrors,
         })}
       >
-        {showBreadcrumbs && <Breadcrumbs descriptors={breadcrumbs} onRestorePath={restorePath} />}
+        {showBreadcrumbs && (
+          <Breadcrumbs
+            descriptors={breadcrumbs}
+            onRestorePath={restorePath}
+            togglerEventInfo={HISTORY_PAGE_EVENTS.getClickOnPlusMinusBreadcrumbEvent}
+          />
+        )}
         {customBlock}
         <div className={cx('action-buttons')}>
           {parentItem && <ParentInfo parentItem={parentItem} />}

@@ -146,16 +146,14 @@ export const getRefineFiltersPanelEvents = (category) => ({
   }),
 });
 
-export const getClickOnPlusMinusEvents = (category) => (state) => ({
-  category,
-  action: 'Click on Bread Crumb icon Plus/Minus',
-  label: state ? 'Minus' : 'Plus',
+export const getClickOnPlusMinusEventCreator = (category) => (expanded) => ({
+  ...getBasicClickEventParameters(category),
+  icon_name: expanded ? 'minus' : 'plus',
 });
 
-export const getClickAttributes = (category) => (value) => ({
-  category,
-  action: 'Click on icon Attributes',
-  label: value,
+export const getClickOnAttributesEvent = (category) => ({
+  ...getBasicClickEventParameters(category),
+  icon_name: 'icon_attributes',
 });
 
 export const getClickIssueTicketEvent = (category) => (pluginName) => ({
@@ -198,6 +196,10 @@ export const getClickAnalyzeInUniqueErrorAnalysisModalEvent = (category) => (isE
 
 export const getCommonActionEvents = (category) => ({
   // GA4 events
+  PROCEED_VALID_ITEMS: {
+    ...getBasicClickEventParameters(category),
+    element_name: 'proceed_valid_items',
+  },
 
   // GA3 events
   CLOSE_ICON_FOR_ALL_SELECTIONS: {
@@ -371,10 +373,5 @@ export const getCommonActionEvents = (category) => ({
     category,
     action: 'Click on "edit" in Actions',
     label: 'Arise Modal "Edit Items"',
-  },
-  PROCEED_VALID_ITEMS: {
-    category,
-    action: 'Click on Btn "Proceed Valid Items"',
-    label: 'Remove invalid items from selection',
   },
 });
