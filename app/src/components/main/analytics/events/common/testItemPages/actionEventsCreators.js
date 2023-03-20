@@ -89,6 +89,14 @@ export const getRefineParametersEventCreator = (category) => (type, productBugGr
     ? { product_bug_group: normalizeEventParameter(productBugGroup) }
     : { type: normalizeEventParameter(type) }),
 });
+export const getClickOnPlusMinusEventCreator = (category) => (expanded) => ({
+  ...getBasicClickEventParameters(category),
+  icon_name: expanded ? 'minus' : 'plus',
+});
+export const getClickOnAttributesEvent = (category) => ({
+  ...getBasicClickEventParameters(category),
+  icon_name: 'icon_attributes',
+});
 
 // GA3 events
 export const getEditDefectActionEvent = (category) => ({
@@ -144,16 +152,6 @@ export const getRefineFiltersPanelEvents = (category) => ({
       'Choose time for filter by start time on Launches and click on checkbox "Dynamic update"',
     label: state ? 'Add checkmark' : 'Remove checkmark',
   }),
-});
-
-export const getClickOnPlusMinusEventCreator = (category) => (expanded) => ({
-  ...getBasicClickEventParameters(category),
-  icon_name: expanded ? 'minus' : 'plus',
-});
-
-export const getClickOnAttributesEvent = (category) => ({
-  ...getBasicClickEventParameters(category),
-  icon_name: 'icon_attributes',
 });
 
 export const getClickIssueTicketEvent = (category) => (pluginName) => ({
