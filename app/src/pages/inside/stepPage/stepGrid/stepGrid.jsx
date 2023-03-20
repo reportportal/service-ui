@@ -348,8 +348,7 @@ export class StepGrid extends Component {
       true,
     );
 
-    const textAttribute = attribute.key ? 'key:value' : 'value';
-    events.CLICK_ATTRIBUTES && tracking.trackEvent(events.CLICK_ATTRIBUTES(textAttribute));
+    events.CLICK_ATTRIBUTES && tracking.trackEvent(events.CLICK_ATTRIBUTES);
   };
 
   highlightFailedItems = (value) => ({

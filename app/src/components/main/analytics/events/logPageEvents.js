@@ -18,7 +18,7 @@ import {
   getLinkIssueActionEvent,
   getPostIssueActionEvent,
   getUnlinkIssueActionEvent,
-  getClickOnPlusMinusEvents,
+  getClickOnPlusMinusEventCreator,
   getClickRefreshButtonEvent,
   getClickIssueTicketEvent,
   getClickDefectTooltipEvents,
@@ -57,8 +57,8 @@ export const LOG_PAGE_EVENTS = {
   // GA4 events
   CLICK_REFRESH_BTN: getClickRefreshButtonEvent(LOG_PAGE),
   ...getClickDefectTooltipEvents(LOG_PAGE),
+  getClickOnPlusMinusBreadcrumbEvent: getClickOnPlusMinusEventCreator(LOG_PAGE),
   // GA3 events
-  plusMinusBreadcrumb: getClickOnPlusMinusEvents(LOG_PAGE),
   ALL_LABEL_BREADCRUMB: {
     category: LOG_PAGE,
     action: 'Click on Bread Crumb All',

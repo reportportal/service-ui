@@ -36,7 +36,7 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import { levelSelector } from 'controllers/testItem';
 import { EntitiesGroup } from 'components/filterEntities/entitiesGroup';
 import AddFilterIcon from 'common/img/add-filter-inline.svg';
-import { getCriteriaToggler, LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
+import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { FilterList } from './filterList';
 import { FiltersActionBar } from './filtersActionBar';
 import { ExpandToggler } from './expandToggler';
@@ -131,7 +131,7 @@ export class LaunchFiltersToolbar extends Component {
   handleFilterClone = () => {
     const { activeFilter, createFilter, tracking } = this.props;
     createFilter(activeFilter);
-    tracking.trackEvent(LAUNCHES_PAGE_EVENTS.clickFilterActionBarButton('Clone'));
+    tracking.trackEvent(LAUNCHES_PAGE_EVENTS.getClickOnFilterActionBarButtonEvent('clone'));
   };
 
   handleFilterCreate = () => {
@@ -149,14 +149,14 @@ export class LaunchFiltersToolbar extends Component {
         onEdit: updateFilter,
       },
     });
-    tracking.trackEvent(LAUNCHES_PAGE_EVENTS.clickFilterActionBarButton('Edit'));
+    tracking.trackEvent(LAUNCHES_PAGE_EVENTS.getClickOnFilterActionBarButtonEvent('edit'));
   };
 
   handleFilterReset = () => {
     const { activeFilter, resetFilter, onResetFilter, tracking } = this.props;
     resetFilter(activeFilter.id);
     onResetFilter();
-    tracking.trackEvent(LAUNCHES_PAGE_EVENTS.clickFilterActionBarButton('Discard'));
+    tracking.trackEvent(LAUNCHES_PAGE_EVENTS.getClickOnFilterActionBarButtonEvent('discard'));
   };
 
   redirectToLaunches = () => this.props.redirectToLaunches(this.props.launchDistinct);
@@ -182,7 +182,7 @@ export class LaunchFiltersToolbar extends Component {
     } else {
       updateFilter(activeFilter);
     }
-    tracking.trackEvent(LAUNCHES_PAGE_EVENTS.clickFilterActionBarButton('Save'));
+    tracking.trackEvent(LAUNCHES_PAGE_EVENTS.getClickOnFilterActionBarButtonEvent('save'));
   };
   isNoFilterValues = () => {
     const {
@@ -191,7 +191,10 @@ export class LaunchFiltersToolbar extends Component {
     return !conditions.some((filter) => !isEmptyValue(filter.value));
   };
   toggleExpand = () => {
-    this.props.tracking.trackEvent(getCriteriaToggler(this.state.expanded));
+    this.props.tracking.trackEvent(
+      LAUNCHES_PAGE_EVENTS.getClickOnCriteriaTogglerEvent(this.state.expanded),
+    );
+
     return this.setState({ expanded: !this.state.expanded });
   };
   isNewFilter = () => {

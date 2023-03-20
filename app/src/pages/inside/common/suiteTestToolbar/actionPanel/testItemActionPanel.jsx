@@ -245,7 +245,7 @@ export class TestItemActionPanel extends Component {
       >
         {showBreadcrumbs && (
           <Breadcrumbs
-            togglerEventInfo={pageEventsMap[level].plusMinusBreadcrumb}
+            togglerEventInfo={pageEventsMap[level].getClickOnPlusMinusBreadcrumbEvent}
             breadcrumbEventInfo={pageEventsMap[level].ITEM_NAME_BREADCRUMB_CLICK}
             allEventClick={pageEventsMap[level].ALL_LABEL_BREADCRUMB}
             descriptors={breadcrumbs}

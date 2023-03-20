@@ -26,6 +26,7 @@ import {
   getClickRefreshButtonEvent,
   getClickDefectTooltipEvents,
   getClickActionsButtonEvent,
+  getClickOnPlusMinusEventCreator,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getEditDefectModalEvents,
@@ -46,6 +47,7 @@ export const HISTORY_PAGE_EVENTS = {
   CLICK_REFRESH_BTN: getClickRefreshButtonEvent(HISTORY_PAGE),
   ...getClickDefectTooltipEvents(HISTORY_PAGE),
   CLICK_ACTIONS_BTN: getClickActionsButtonEvent(HISTORY_PAGE),
+  getClickOnPlusMinusBreadcrumbEvent: getClickOnPlusMinusEventCreator(HISTORY_PAGE),
   // GA3 events
   SELECT_HISTORY_DEPTH: {
     category: HISTORY_PAGE,
