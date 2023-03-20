@@ -242,7 +242,7 @@ export class ActionPanel extends Component {
           <Breadcrumbs
             descriptors={breadcrumbs}
             onRestorePath={restorePath}
-            togglerEventInfo={LAUNCHES_PAGE_EVENTS.plusMinusBreadcrumb}
+            togglerEventInfo={LAUNCHES_PAGE_EVENTS.getClickOnPlusMinusBreadcrumbEvent}
           />
         )}
         {hasErrors && (

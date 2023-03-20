@@ -205,13 +205,20 @@ export const getDeleteItemModalEvents = (category) => ({
   },
 });
 
+const EDIT_ITEM_MODAL = 'edit_item';
+
 // EDIT ITEMS MODAL
 export const getEditItemsModalEvents = (category, itemType = 'Item') => ({
   // GA4 events
   SAVE_BTN_EDIT_ITEM_MODAL: {
     ...getBasicClickEventParameters(category),
-    modal: 'edit_item',
+    modal: EDIT_ITEM_MODAL,
     element_name: 'save',
+  },
+  CLICK_COPY_ICON_UUID: {
+    ...getBasicClickEventParameters(category),
+    modal: EDIT_ITEM_MODAL,
+    icon_name: 'copy_uuid',
   },
   // GA3 events
   CLOSE_ICON_EDIT_ITEM_MODAL: {
@@ -228,11 +235,6 @@ export const getEditItemsModalEvents = (category, itemType = 'Item') => ({
     category,
     action: `Edit description in Modal "Edit ${itemType}"`,
     label: 'Edit description',
-  },
-  CLICK_COPY_ICON_UUID: {
-    category,
-    action: 'Click on Icon Copy for UUID',
-    label: `Modal Edit ${itemType}`,
   },
   BULK_EDIT_ITEMS_DESCRIPTION: {
     category,

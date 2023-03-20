@@ -222,6 +222,7 @@ export class TestsPage extends Component {
       onFilterChange,
       filterErrors,
       filterEntities,
+      tracking,
     } = this.props;
 
     const rowHighlightingConfig = {
@@ -238,6 +239,7 @@ export class TestsPage extends Component {
             parentItem={parentItem}
             onUnselect={this.unselectItem}
             onUnselectAll={this.unselectAllItems}
+            onProceedValidItems={() => tracking.trackEvent(TESTS_PAGE_EVENTS.PROCEED_VALID_ITEMS)}
             onRefresh={this.props.fetchTestItemsAction}
             debugMode={debugMode}
             errors={this.props.validationErrors}

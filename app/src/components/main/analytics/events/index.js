@@ -25,7 +25,6 @@ export {
   LAUNCHES_PAGE,
   getRunAnalysisAnalysisModalEvent,
   getRunAnalysisPatternAnalysisModalEvent,
-  getCriteriaToggler,
 } from './launchesPageEvents';
 export { LOGIN_PAGE_EVENTS, LOGIN_PAGE } from './loginPageEvents';
 export {
