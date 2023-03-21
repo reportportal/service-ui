@@ -234,7 +234,7 @@ export class Hamburger extends Component {
         launch: this.props.launch,
         updateLaunchLocally: (data) => this.props.updateLaunchLocallyAction(data),
         events: {
-          clickAnalyzeEvent: LAUNCHES_PAGE_EVENTS.getClickOnAnalyzeButtonInUniqueErrorAnalyzeModal,
+          clickAnalyzeEvent: LAUNCHES_PAGE_EVENTS.getClickOnAnalyzeUniqueErrorsEvent,
         },
       },
     });

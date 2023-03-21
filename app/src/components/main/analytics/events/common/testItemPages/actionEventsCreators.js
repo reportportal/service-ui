@@ -184,14 +184,6 @@ export const getIncludeBtnIncludeInAAModalEvent = (category) => ({
   label: 'Include items in AA',
 });
 
-export const getClickAnalyzeInUniqueErrorAnalysisModalEvent = (category) => (isExcludeNumbers) => ({
-  category,
-  action: 'Click on Button "Analyze" in Modal "Analyze Launch"',
-  label: isExcludeNumbers
-    ? 'Exclude numbers from analyzed logs'
-    : 'Include numbers to analyzed logs',
-});
-
 export const getCommonActionEvents = (category) => ({
   // GA4 events
   PROCEED_VALID_ITEMS: {
