@@ -121,7 +121,7 @@ export const LAUNCHES_PAGE_EVENTS = {
     ...basicClickEventParametersLaunchPage,
     element_name: 'latest_launches',
   },
-  CLICK_PROCEED_ITEMS_BUTTON: getCommonActionEvents(LAUNCHES_PAGE).PROCEED_VALID_ITEMS,
+  CLICK_PROCEED_VALID_ITEMS: getCommonActionEvents(LAUNCHES_PAGE).PROCEED_VALID_ITEMS,
   CLICK_HAMBURGER_MENU: {
     ...basicClickEventParametersLaunchPage,
     icon_name: 'launch_menu',
