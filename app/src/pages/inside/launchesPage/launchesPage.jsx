@@ -703,6 +703,7 @@ export class LaunchesPage extends Component {
       selectedLaunches,
     } = this.props;
 
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_PROCEED_VALID_ITEMS);
     this.props.proceedWithValidItemsAction(operationName, selectedLaunches, operationArgs);
   };
 
