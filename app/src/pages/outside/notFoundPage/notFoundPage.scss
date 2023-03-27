@@ -141,12 +141,12 @@ $RING_MOBILE_DELTA_STEP_WIDTH: 12px;
   top: 13px;
   left: 22px;
   width: 46px;
-  height: 39px;
-  background: $COLOR--black-2 url('~layouts/common/img/rp_logo.png') no-repeat 50% 60%;
+  height: 34px;
+  background: url('~layouts/common/img/logo.svg') no-repeat 50% 60%;
   background-position: center center;
   cursor: pointer;
   @media (max-width: $SCREEN_XS_MAX) {
-    background-image: url('~layouts/common/img/rp-mobile-logo.svg');
+    background-image: url('~common/img/logo.svg');
     background-position: center;
     left: 0;
     top: 10px;
@@ -384,14 +384,5 @@ $RING_MOBILE_DELTA_STEP_WIDTH: 12px;
   .layer-2 {
     top: -93px;
     background-image: url(~common/img/404/Mobile_404_stars2.svg);
-  }
-  .content-logotip .logo {
-    position: relative;
-    background-image: url(~common/img/404/mobile-logo.svg);
-    margin: 0 auto;
-    left: 0;
-    width: 150px;
-    top: 0;
-    height: 60px;
   }
 }
