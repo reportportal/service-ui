@@ -90,8 +90,11 @@ export const ClusterItemsGridRow = ({ data, onEditItem, onUnlinkSingleTicket, on
   const selectedItems = useSelector(selectedClusterItemsSelector);
 
   const onToggle = () => {
+    if (collapsed) {
+      trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.CLICK_CLUSTER_ITEM_ARROW);
+    }
+
     dispatch(requestClusterItemsAction({ id }));
-    trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.CLICK_CLUSTER_ITEM_ARROW);
   };
   const loadMore = () => {
     dispatch(loadMoreClusterItemsAction({ id }));

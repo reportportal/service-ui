@@ -258,6 +258,13 @@ export const getEditItemsModalEvents = (category, itemType = 'Item') => ({
   },
 });
 
+export const getClickOnAnalyzeUniqueErrorsEventCreator = (category) => (isExcludeNumbers) => ({
+  ...getBasicClickEventParameters(category),
+  modal: 'analyze_launch',
+  element_name: 'analyze',
+  type: `${isExcludeNumbers ? 'exclude' : 'include'}_numbers`,
+});
+
 const MODAL_MAKE_DECISION = 'Modal Make decision';
 const getOpenModalEvent = (page) => (defectFromTIGroup, actionPlace = '') => ({
   category: MODAL_MAKE_DECISION,
