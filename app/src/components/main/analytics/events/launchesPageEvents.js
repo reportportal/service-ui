@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-import { getEditItemsModalEvents } from './common/testItemPages/modalEventsCreators';
+import {
+  getClickOnAnalyzeUniqueErrorsEventCreator,
+  getEditItemsModalEvents,
+} from './common/testItemPages/modalEventsCreators';
 import {
   getClickOnAttributesEvent,
   getClickOnPlusMinusEventCreator,
@@ -166,12 +169,7 @@ export const LAUNCHES_PAGE_EVENTS = {
     ...basicClickEventParametersLaunchPage,
     element_name: 'add_filters',
   },
-  getClickOnAnalyzeButtonInUniqueErrorAnalyzeModal: (isExcludeNumbers) => ({
-    ...basicClickEventParametersLaunchPage,
-    modal: 'analyze_launch',
-    element_name: 'analyze',
-    type: `${isExcludeNumbers ? 'exclude' : 'include'}_numbers`,
-  }),
+  getClickOnAnalyzeUniqueErrorsEvent: getClickOnAnalyzeUniqueErrorsEventCreator(LAUNCHES_PAGE),
   // GA3 events
   NAME_FILTER: {
     category: LAUNCHES_PAGE,

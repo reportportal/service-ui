@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { getBasicClickEventParameters } from './common/ga4Utils';
 import {
   getClickExpandStackTraceArrowEvent,
   getClickIssueTicketEvent,
@@ -26,7 +27,6 @@ import {
   getLinkIssueActionEvent,
   getPostIssueActionEvent,
   getUnlinkIssueActionEvent,
-  getClickAnalyzeInUniqueErrorAnalysisModalEvent,
   getClickItemNameEvent,
   getClickRefreshButtonEvent,
   getClickActionsButtonEvent,
@@ -34,6 +34,7 @@ import {
   getClickOnPlusMinusEventCreator,
 } from './common/testItemPages/actionEventsCreators';
 import {
+  getClickOnAnalyzeUniqueErrorsEventCreator,
   getDeleteItemModalEvents,
   getEditItemsModalEvents,
   getLinkIssueModalEvents,
@@ -44,6 +45,8 @@ import {
 
 export const UNIQUE_ERRORS_PAGE = 'unique_errors';
 
+const basicUniqueErrorsPageClickEventParameters = getBasicClickEventParameters(UNIQUE_ERRORS_PAGE);
+
 export const UNIQUE_ERRORS_PAGE_EVENTS = {
   // GA4 events
   CLICK_ITEM_NAME: getClickItemNameEvent(UNIQUE_ERRORS_PAGE),
@@ -53,26 +56,23 @@ export const UNIQUE_ERRORS_PAGE_EVENTS = {
   CLICK_ACTIONS_BTN: getClickActionsButtonEvent(UNIQUE_ERRORS_PAGE),
   EDIT_ICON_CLICK: getClickPencilIconEvent(UNIQUE_ERRORS_PAGE),
   getClickOnPlusMinusBreadcrumbEvent: getClickOnPlusMinusEventCreator(UNIQUE_ERRORS_PAGE),
+  CLICK_RUN_BUTTON: {
+    ...basicUniqueErrorsPageClickEventParameters,
+    element_name: 'run_unique_errors_analysis',
+  },
+  clickAnalyzeEvent: getClickOnAnalyzeUniqueErrorsEventCreator(UNIQUE_ERRORS_PAGE),
+  CLICK_CLUSTER_ITEM_ARROW: {
+    ...basicUniqueErrorsPageClickEventParameters,
+    icon_name: 'expand_cluster',
+  },
+  CLICK_EXPANDED_ERROR_ARROW: {
+    ...basicUniqueErrorsPageClickEventParameters,
+    icon_name: 'expand_error',
+  },
   // GA3 events
   ...getCommonActionEvents(UNIQUE_ERRORS_PAGE),
   onClickIssueTicketEvent: getClickIssueTicketEvent(UNIQUE_ERRORS_PAGE),
   MAKE_DECISION_MODAL_EVENTS: getMakeDecisionModalEvents(UNIQUE_ERRORS_PAGE),
-  CLICK_RUN_BUTTON: {
-    category: UNIQUE_ERRORS_PAGE,
-    action: 'Click on Button "Run Unique Error"',
-    label: '',
-  },
-  clickAnalyzeEvent: getClickAnalyzeInUniqueErrorAnalysisModalEvent(UNIQUE_ERRORS_PAGE),
-  CLICK_CLUSTER_ITEM_ARROW: {
-    category: UNIQUE_ERRORS_PAGE,
-    action: 'Click on Cluster Item Arrow to Expand Test',
-    label: 'Open cluster',
-  },
-  CLICK_EXPANDED_ERROR_ARROW: {
-    category: UNIQUE_ERRORS_PAGE,
-    action: 'Click on Icon Arrow to Expand Errors',
-    label: 'Open Errors',
-  },
   EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(UNIQUE_ERRORS_PAGE),
   CLICK_EXPAND_STACK_TRACE_ARROW: getClickExpandStackTraceArrowEvent(UNIQUE_ERRORS_PAGE),
   POST_ISSUE_ACTION: getPostIssueActionEvent(UNIQUE_ERRORS_PAGE),
