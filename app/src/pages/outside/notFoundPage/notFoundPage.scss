@@ -141,8 +141,8 @@ $RING_MOBILE_DELTA_STEP_WIDTH: 12px;
   top: 13px;
   left: 22px;
   width: 46px;
-  height: 39px;
-  background: $COLOR--black-2 url('~layouts/common/img/rp_logo.png') no-repeat 50% 60%;
+  height: 34px;
+  background: url('~layouts/common/img/logo.svg') no-repeat 50% 60%;
   background-position: center center;
   cursor: pointer;
   @media (max-width: $SCREEN_XS_MAX) {
