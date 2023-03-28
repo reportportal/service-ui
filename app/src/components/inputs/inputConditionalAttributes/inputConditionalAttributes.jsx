@@ -56,7 +56,7 @@ export class InputConditionalAttributes extends Component {
     keyURLCreator: () => {},
     conditions: [CONDITION_HAS, CONDITION_NOT_HAS, CONDITION_ANY, CONDITION_NOT_ANY],
     projectId: '',
-    isAttributeValueRequired: true,
+    isAttributeValueRequired: false,
   };
 
   constructor(props) {
