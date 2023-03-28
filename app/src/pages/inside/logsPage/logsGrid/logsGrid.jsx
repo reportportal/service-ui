@@ -357,7 +357,7 @@ export class LogsGrid extends Component {
           sortingColumn={sortingColumn}
           sortingDirection={sortingDirection}
           onChangeSorting={onChangeSorting}
-          toggleAccordionEventInfo={LOG_PAGE_EVENTS.EXPAND_LOG_MSG}
+          expandAccordionEventInfo={LOG_PAGE_EVENTS.EXPAND_LOG_MSG}
           nestedStepHeader={this.renderNestedStepHeader}
           rowHighlightingConfig={rowHighlightingConfig}
           nestedView

@@ -20,7 +20,7 @@ import track from 'react-tracking';
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { getHistoryLineCheckbox, LOG_PAGE_EVENTS } from 'components/main/analytics/events';
+import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { Breadcrumbs } from 'components/main/breadcrumbs';
 import { GhostButton } from 'components/buttons/ghostButton';
 import LeftArrowIcon from 'common/img/arrow-left-small-inline.svg';
@@ -152,7 +152,8 @@ export class LogToolbar extends Component {
 
   changeHistoryLineMode = () => {
     const { tracking, includeAllLaunches } = this.props;
-    tracking.trackEvent(getHistoryLineCheckbox(!includeAllLaunches));
+
+    tracking.trackEvent(LOG_PAGE_EVENTS.getClickOnHistoryLineCheckboxEvent(!includeAllLaunches));
     this.props.setIncludeAllLaunchesAction(!includeAllLaunches);
   };
 

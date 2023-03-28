@@ -264,7 +264,7 @@ export class DefectDetails extends Component {
       }),
       () => {
         this.props.tracking.trackEvent(
-          this.state.expanded ? LOG_PAGE_EVENTS.MORE : LOG_PAGE_EVENTS.SHOW_LESS,
+          LOG_PAGE_EVENTS.getClickOnDefectDetailsTogglerEvent(this.state.expanded),
         );
       },
     );

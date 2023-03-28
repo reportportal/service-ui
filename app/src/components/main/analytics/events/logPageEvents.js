@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
+import { getBasicClickEventParameters } from './common/ga4Utils';
 import {
-  getLinkIssueActionEvent,
-  getPostIssueActionEvent,
   getUnlinkIssueActionEvent,
   getClickOnPlusMinusEventCreator,
   getClickRefreshButtonEvent,
   getClickIssueTicketEvent,
   getClickDefectTooltipEvents,
+  getClickOnExpandEvent,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getDeleteItemModalEvents,
@@ -36,6 +36,16 @@ import {
 } from './common/testItemPages/modalEventsCreators';
 
 export const LOG_PAGE = 'log';
+
+const basicLogPageClickEventParameters = getBasicClickEventParameters(LOG_PAGE);
+const basicHistoryLineClickEventParameters = {
+  ...basicLogPageClickEventParameters,
+  place: 'history_line',
+};
+const basicContainerWithDefectsClickEventParameters = {
+  ...basicLogPageClickEventParameters,
+  place: 'container_with_defects',
+};
 
 export const LogViewMode = (state, view) => ({
   category: LOG_PAGE,
@@ -58,6 +68,70 @@ export const LOG_PAGE_EVENTS = {
   CLICK_REFRESH_BTN: getClickRefreshButtonEvent(LOG_PAGE),
   ...getClickDefectTooltipEvents(LOG_PAGE),
   getClickOnPlusMinusBreadcrumbEvent: getClickOnPlusMinusEventCreator(LOG_PAGE),
+  getClickOnHistoryLineCheckboxEvent: (isChecked) => ({
+    ...basicLogPageClickEventParameters,
+    element_name: 'history_line_checkbox',
+    status: isChecked ? 'active' : 'disable',
+  }),
+  PREVIOUS_ITEM_BTN: {
+    ...basicLogPageClickEventParameters,
+    element_name: 'previous_method',
+  },
+  NEXT_ITEM_BTN: {
+    ...basicLogPageClickEventParameters,
+    element_name: 'next_method',
+  },
+  HISTORY_LINE_ITEM: {
+    ...basicHistoryLineClickEventParameters,
+    element_name: 'history_execution_tab',
+  },
+  CLICK_ON_MORE_BTN: {
+    ...basicHistoryLineClickEventParameters,
+    element_name: 'more',
+  },
+  getClickOnDefectDetailsTogglerEvent: (isExpanded) => ({
+    ...basicContainerWithDefectsClickEventParameters,
+    element_name: isExpanded ? 'more' : 'show_less',
+  }),
+  POST_ISSUE_ACTION: {
+    ...basicContainerWithDefectsClickEventParameters,
+    element_name: 'post',
+  },
+  LINK_ISSUE_ACTION: {
+    ...basicContainerWithDefectsClickEventParameters,
+    element_name: 'link',
+  },
+  STACK_TRACE_TAB: {
+    ...basicLogPageClickEventParameters,
+    element_name: 'stack_trace',
+  },
+  LOGS_TAB: {
+    ...basicLogPageClickEventParameters,
+    element_name: 'all_logs',
+  },
+  ATTACHMENT_TAB: {
+    ...basicLogPageClickEventParameters,
+    element_name: 'attachments',
+  },
+  ITEM_DETAILS_TAB: {
+    ...basicLogPageClickEventParameters,
+    element_name: 'item_details',
+  },
+  ACTIONS_TAB: {
+    ...basicLogPageClickEventParameters,
+    element_name: 'history_of_actions',
+  },
+  EXPAND_LOG_MSG: getClickOnExpandEvent(LOG_PAGE, 'all_logs'),
+  EXPAND_STACK_TRACE: getClickOnExpandEvent(LOG_PAGE, 'stack_trace'),
+  getClickOnLogLevelFilterEvent: (logLevel) => ({
+    ...basicLogPageClickEventParameters,
+    icon_name: 'level_filter',
+    element_name: logLevel,
+  }),
+  getClickOnHighlightErrorLogEvent: (hasDirection) => ({
+    ...basicLogPageClickEventParameters,
+    element_name: hasDirection ? 'show_error_logs' : 'show',
+  }),
   // GA3 events
   ALL_LABEL_BREADCRUMB: {
     category: LOG_PAGE,
@@ -69,56 +143,11 @@ export const LOG_PAGE_EVENTS = {
     action: 'Click on Bread Crumb Item name',
     label: 'Transition to Item',
   },
-  PREVIOUS_ITEM_BTN: {
-    category: LOG_PAGE,
-    action: 'Click on Btn prev Method',
-    label: 'Transition to prev Method Item',
-  },
-  NEXT_ITEM_BTN: {
-    category: LOG_PAGE,
-    action: 'Click on Btn next Method',
-    label: 'Transition to next Method Item',
-  },
   DEFECT_TYPE_TAG: {
     category: LOG_PAGE,
     action: 'Click on Defect type tag',
     label: 'Arise Modal Edit Defect type',
   },
-  HISTORY_LINE_ITEM: {
-    category: LOG_PAGE,
-    action: 'Click on History execution tab',
-    label: 'Transition to item log page',
-  },
-  STACK_TRACE_TAB: {
-    category: LOG_PAGE,
-    action: 'Click on Stack Trace tab',
-    label: 'Open Stack Trace tab',
-  },
-  LOGS_TAB: {
-    category: LOG_PAGE,
-    action: 'Click on Logs tab',
-    label: 'Open Logs tab',
-  },
-  ATTACHMENT_TAB: {
-    category: LOG_PAGE,
-    action: 'Click on Attachments tab',
-    label: 'Open Attachments tab',
-  },
-  ITEM_DETAILS_TAB: {
-    category: LOG_PAGE,
-    action: 'Click on Item Details tab',
-    label: 'Open Item Details tab',
-  },
-  ACTIONS_TAB: {
-    category: LOG_PAGE,
-    action: 'Click on History of Actions tab',
-    label: 'Open History of Actions tab',
-  },
-  logLevelFilterEvent: (logLevel) => ({
-    category: LOG_PAGE,
-    action: 'Select Log level filter in dropdown',
-    label: `Filter by ${logLevel}`,
-  }),
   logWithAttachmentCheckboxEvent: (value) => ({
     category: LOG_PAGE,
     action: 'Click on checkbox Logs with attachments',
@@ -129,11 +158,6 @@ export const LOG_PAGE_EVENTS = {
     action: 'Select Test Item Status from Drop-down List',
     label: `Change status from ${oldStatus} to ${newStatus}`,
   }),
-  CLICK_ON_MORE_BTN: {
-    category: LOG_PAGE,
-    action: 'Click on Button More in History Line',
-    label: '',
-  },
   PREVIOUS_LOG_MSG_PAGE: {
     category: LOG_PAGE,
     action: 'Click on Btn Previous Log message page',
@@ -193,13 +217,6 @@ export const LOG_PAGE_EVENTS = {
       label: 'Open Attachment in new browser tab',
     },
   },
-  EXPAND_LOG_MSG: {
-    category: LOG_PAGE,
-    action: 'Click on icon Expand in Log Message',
-    label: 'Expand/close log',
-  },
-  POST_ISSUE_ACTION: getPostIssueActionEvent(LOG_PAGE),
-  LINK_ISSUE_ACTION: getLinkIssueActionEvent(LOG_PAGE),
   UNLINK_ISSUES_ACTION: getUnlinkIssueActionEvent(LOG_PAGE),
   // EDIT_DEFECT_MODAL
   EDIT_DEFECT_MODAL_EVENTS: getEditDefectModalEvents(LOG_PAGE),
@@ -218,16 +235,6 @@ export const LOG_PAGE_EVENTS = {
   LINK_ISSUE_MODAL_EVENTS: getLinkIssueModalEvents(LOG_PAGE),
   // DELETE_ITEM_MODAL
   DELETE_ITEM_MODAL_EVENTS: getDeleteItemModalEvents(LOG_PAGE),
-  MORE: {
-    category: LOG_PAGE,
-    action: 'Click on button "More"',
-    label: 'Container with defects shows',
-  },
-  SHOW_LESS: {
-    category: LOG_PAGE,
-    action: 'Click on button "Show Less"',
-    label: 'Container with defects hides',
-  },
   PREVIOUS_ATTACHMENT_ICON: {
     category: LOG_PAGE,
     action: 'Click on icon Previous Attachment',

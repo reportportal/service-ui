@@ -59,26 +59,32 @@ export const LOG_LEVELS = [
   {
     id: logLevels.FATAL,
     label: 'Fatal',
+    trackingName: 'fatal',
   },
   {
     id: logLevels.ERROR,
     label: 'Error',
+    trackingName: 'error',
   },
   {
     id: logLevels.WARN,
     label: 'Warn',
+    trackingName: 'warn',
   },
   {
     id: logLevels.INFO,
     label: 'Info',
+    trackingName: 'info',
   },
   {
     id: logLevels.DEBUG,
     label: 'Debug',
+    trackingName: 'debug',
   },
   {
     id: logLevels.TRACE,
     label: 'Trace',
+    trackingName: 'trace',
   },
 ];
 

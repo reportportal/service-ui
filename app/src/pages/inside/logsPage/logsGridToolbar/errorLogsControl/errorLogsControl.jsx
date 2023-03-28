@@ -81,7 +81,7 @@ export const ErrorLogsControl = ({ errorLogs, highlightErrorLog, errorLogIndex }
           />
         </div>
       ) : (
-        <GhostButton onClick={highlightErrorLog} disabled={!errorLogsLength}>
+        <GhostButton onClick={() => highlightErrorLog()} disabled={!errorLogsLength}>
           {formatMessage(messages.showErrorLog)}
         </GhostButton>
       )}

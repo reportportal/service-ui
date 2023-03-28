@@ -209,6 +209,9 @@ export class LogItemInfoTabs extends Component {
         component: StackTrace,
         componentProps: {
           logItem,
+          eventsInfo: {
+            onOpenStackTraceEvent: () => LOG_PAGE_EVENTS.EXPAND_STACK_TRACE,
+          },
         },
       },
       {
