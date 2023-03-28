@@ -267,7 +267,6 @@ export class LaunchLevelEntities extends Component {
           projectId: activeProject,
           keyURLCreator: URLS.launchAttributeKeysSearch,
           valueURLCreator: URLS.launchAttributeValuesSearch,
-          isAttributeValueRequired: false,
         },
       },
       {

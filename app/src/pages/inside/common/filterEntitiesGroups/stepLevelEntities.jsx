@@ -598,7 +598,6 @@ export class StepLevelEntities extends Component {
           projectId,
           keyURLCreator: getTestItemAttributeKeysSearch,
           valueURLCreator: getTestItemAttributeValuesSearch,
-          isAttributeValueRequired: false,
         },
       },
       {
