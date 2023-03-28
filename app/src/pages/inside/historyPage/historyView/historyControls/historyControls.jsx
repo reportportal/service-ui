@@ -19,7 +19,12 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { InputDropdown } from 'components/inputs/inputDropdown';
-import { HISTORY_DEPTH_CONFIG, HISTORY_BASE_DEFAULT_VALUE } from 'controllers/itemsHistory';
+import {
+  HISTORY_DEPTH_CONFIG,
+  HISTORY_BASE_DEFAULT_VALUE,
+  HISTORY_BASE_ALL_LAUNCHES,
+  HISTORY_BASE_LAUNCHES_WITH_THE_SAME_NAME,
+} from 'controllers/itemsHistory/constants';
 import styles from './historyControls.scss';
 
 const cx = classNames.bind(styles);
@@ -63,8 +68,14 @@ export class HistoryControls extends Component {
   };
 
   launchModeOptions = [
-    { value: 'table', label: this.props.intl.formatMessage(messages.historyBaseAll) },
-    { value: 'line', label: this.props.intl.formatMessage(messages.historyBaseSameName) },
+    {
+      value: HISTORY_BASE_ALL_LAUNCHES,
+      label: this.props.intl.formatMessage(messages.historyBaseAll),
+    },
+    {
+      value: HISTORY_BASE_LAUNCHES_WITH_THE_SAME_NAME,
+      label: this.props.intl.formatMessage(messages.historyBaseSameName),
+    },
   ];
 
   render() {

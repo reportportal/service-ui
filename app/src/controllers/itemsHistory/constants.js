@@ -38,7 +38,9 @@ export const HISTORY_DEPTH_CONFIG = {
     { value: '30', label: '30' },
   ],
 };
-export const HISTORY_BASE_DEFAULT_VALUE = 'table';
+export const HISTORY_BASE_ALL_LAUNCHES = 'table';
+export const HISTORY_BASE_LAUNCHES_WITH_THE_SAME_NAME = 'line';
+export const HISTORY_BASE_DEFAULT_VALUE = HISTORY_BASE_ALL_LAUNCHES;
 
 export const PAGINATION_INITIAL_STATE = {
   number: 1,
