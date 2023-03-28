@@ -28,7 +28,6 @@ import {
   getLogViewMode,
   setLogViewMode,
   DETAILED_LOG_VIEW,
-  isLogPageWithOutNestedSteps,
   isLogPageWithNestedSteps,
 } from 'controllers/log';
 import { InputSlider } from 'components/inputs/inputSlider';
@@ -73,7 +72,6 @@ const messages = defineMessages({
 @track()
 @connect((state) => ({
   userId: userIdSelector(state),
-  isLogView: isLogPageWithOutNestedSteps(state),
   isNestedStepsView: isLogPageWithNestedSteps(state),
 }))
 export class LogsGridToolbar extends Component {
@@ -97,7 +95,6 @@ export class LogsGridToolbar extends Component {
     onHideEmptySteps: PropTypes.func,
     onHidePassedLogs: PropTypes.func,
     logPageMode: PropTypes.string,
-    isLogView: PropTypes.bool,
     isNestedStepsView: PropTypes.bool,
     withAttachments: PropTypes.bool,
     isEmptyStepsHidden: PropTypes.bool,
@@ -114,7 +111,6 @@ export class LogsGridToolbar extends Component {
     onHideEmptySteps: () => {},
     onHidePassedLogs: () => {},
     logPageMode: DETAILED_LOG_VIEW,
-    isLogView: true,
     isNestedStepsView: false,
     withAttachments: false,
     isEmptyStepsHidden: false,
@@ -183,9 +179,9 @@ export class LogsGridToolbar extends Component {
   };
 
   isConsoleViewMode = () => {
-    const { isLogView } = this.props;
+    const { isNestedStepsView } = this.props;
     const { logViewMode } = this.state;
-    return logViewMode === CONSOLE && isLogView;
+    return logViewMode === CONSOLE && !isNestedStepsView;
   };
 
   render() {
@@ -197,7 +193,6 @@ export class LogsGridToolbar extends Component {
       onChangePage,
       logLevel,
       logPageMode,
-      isLogView,
       isNestedStepsView,
       withAttachments,
       isPassedLogsHidden,
@@ -215,13 +210,15 @@ export class LogsGridToolbar extends Component {
             <div className={cx('log-level')}>
               <InputSlider options={LOG_LEVELS} value={logLevel} onChange={this.changeLogLevel} />
             </div>
-            <div className={cx('aside-element')}>
-              <ErrorLogsControl
-                errorLogs={errorLogs}
-                highlightErrorLog={highlightErrorLog}
-                errorLogIndex={errorLogIndex}
-              />
-            </div>
+            {logPageMode === DETAILED_LOG_VIEW && (
+              <div className={cx('aside-element')}>
+                <ErrorLogsControl
+                  errorLogs={errorLogs}
+                  highlightErrorLog={highlightErrorLog}
+                  errorLogIndex={errorLogIndex}
+                />
+              </div>
+            )}
           </div>
           <div className={cx('aside')}>
             <div className={cx('aside-element-block')}>
@@ -258,7 +255,7 @@ export class LogsGridToolbar extends Component {
               >
                 {Parser(MarkdownIcon)}
               </button>
-              {isLogView && (
+              {!isNestedStepsView && (
                 <button
                   className={cx('mode-button', 'console', { active: logViewMode === CONSOLE })}
                   onClick={this.toggleConsoleView}

@@ -83,7 +83,6 @@ export {
   errorLogsItemsSelector,
   isLoadMoreStackTraceVisible,
   logViewModeSelector,
-  isLogPageWithOutNestedSteps,
   isLogPageWithNestedSteps,
   pageLoadingSelector,
   includeAllLaunchesSelector,
