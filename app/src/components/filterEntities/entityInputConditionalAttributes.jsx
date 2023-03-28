@@ -41,7 +41,7 @@ export class EntityInputConditionalAttributes extends PureComponent {
 
   render() {
     const { value, onRemove, onChange, removable, title, customProps } = this.props;
-    const { projectId, keyURLCreator, valueURLCreator, isAttributeValueRequired } = customProps;
+    const { projectId, keyURLCreator, valueURLCreator } = customProps;
 
     return (
       <FieldFilterEntity title={title} removable={removable} onRemove={onRemove} stretchable>
@@ -51,7 +51,7 @@ export class EntityInputConditionalAttributes extends PureComponent {
           keyURLCreator={keyURLCreator}
           valueURLCreator={valueURLCreator}
           projectId={projectId}
-          isAttributeValueRequired={isAttributeValueRequired}
+          isAttributeValueRequired={false}
         />
       </FieldFilterEntity>
     );
