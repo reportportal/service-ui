@@ -237,6 +237,7 @@ export class SuiteLevelEntities extends Component {
           projectId,
           keyURLCreator: getTestItemAttributeKeysSearch,
           valueURLCreator: getTestItemAttributeValuesSearch,
+          isAttributeValueRequired: false,
         },
       },
       {
