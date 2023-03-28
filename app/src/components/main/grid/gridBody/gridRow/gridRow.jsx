@@ -43,7 +43,7 @@ export class GridRow extends Component {
     itemIntoViewId: PropTypes.number,
     changeOnlyMobileLayout: PropTypes.bool,
     rowClassMapper: PropTypes.func,
-    toggleAccordionEventInfo: PropTypes.object,
+    expandAccordionEventInfo: PropTypes.object,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -73,7 +73,7 @@ export class GridRow extends Component {
     onClickRow: null,
     changeOnlyMobileLayout: false,
     rowClassMapper: null,
-    toggleAccordionEventInfo: {},
+    expandAccordionEventInfo: {},
     rowHighlightingConfig: {
       onGridRowHighlighted: () => {},
       isGridRowHighlighted: false,
@@ -177,7 +177,9 @@ export class GridRow extends Component {
       return;
     }
 
-    this.props.tracking.trackEvent(this.props.toggleAccordionEventInfo);
+    if (!this.state.expanded) {
+      this.props.tracking.trackEvent(this.props.expandAccordionEventInfo);
+    }
 
     this.setState({ expanded: !this.state.expanded }, () => {
       this.overflowCell.style.maxHeight = !this.state.expanded

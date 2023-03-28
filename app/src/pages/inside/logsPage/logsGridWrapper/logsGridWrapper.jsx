@@ -45,6 +45,7 @@ import { withPagination, PAGE_KEY, DEFAULT_PAGINATION, SIZE_KEY } from 'controll
 import { withSortingURL, SORTING_ASC } from 'controllers/sorting';
 import { userIdSelector } from 'controllers/user';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
+import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { LogsGrid } from '../logsGrid';
 import { LogsGridToolbar } from '../logsGridToolbar';
 import { SauceLabsSection } from '../sauceLabsSection';
@@ -218,6 +219,8 @@ export class LogsGridWrapper extends Component {
   }
 
   highlightErrorLog = (direction) => {
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.getClickOnHighlightErrorLogEvent(!!direction));
+
     const { errorLogs } = this.props;
     const { errorLogIndex } = this.state;
     const nextErrorLogIndex = calculateNextIndex(errorLogs, errorLogIndex, direction);
