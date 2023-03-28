@@ -18,8 +18,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
-import 'rc-tooltip/assets/bootstrap.css';
 import classNames from 'classnames/bind';
+import { debounce } from 'common/utils';
 import styles from './inputSlider.scss';
 
 const cx = classNames.bind(styles);
@@ -34,15 +34,26 @@ export class InputSlider extends Component {
     options: PropTypes.arrayOf(optionShape),
     value: optionShape,
     onChange: PropTypes.func,
+    trackChange: PropTypes.func,
   };
 
   static defaultProps = {
     options: [],
     value: '',
     onChange: () => {},
+    trackChange: () => {},
   };
 
-  onChange = (newIndex) => this.props.onChange(this.props.options[newIndex]);
+  onChange = (newIndex) => {
+    const newOption = this.getOption(newIndex);
+
+    this.trackChange(newOption);
+    this.props.onChange(newOption);
+  };
+
+  trackChange = debounce((newOption) => this.props.trackChange(newOption), 5000);
+
+  getOption = (index) => this.props.options[index];
 
   getMaxValue = () => (this.props.options.length ? this.props.options.length - 1 : 0);
 

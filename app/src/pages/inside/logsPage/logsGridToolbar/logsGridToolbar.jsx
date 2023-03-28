@@ -150,10 +150,15 @@ export class LogsGridToolbar extends Component {
   changeLogLevel = (newLogLevel) => {
     const { onChangeLogLevel, userId, logLevel: activeLogLevel } = this.props;
 
-    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.logLevelFilterEvent(newLogLevel.label));
     if (newLogLevel.id !== activeLogLevel.id) {
       onChangeLogLevel(userId, newLogLevel);
     }
+  };
+
+  trackLogLevelFilterClick = (newLogLevel) => {
+    this.props.tracking.trackEvent(
+      LOG_PAGE_EVENTS.getClickOnLogLevelFilterEvent(newLogLevel.trackingName),
+    );
   };
 
   toggleWithAttachments = () => {
@@ -208,7 +213,12 @@ export class LogsGridToolbar extends Component {
         <div ref={this.panelRef} className={cx('panel')}>
           <div className={cx('aside')}>
             <div className={cx('log-level')}>
-              <InputSlider options={LOG_LEVELS} value={logLevel} onChange={this.changeLogLevel} />
+              <InputSlider
+                options={LOG_LEVELS}
+                value={logLevel}
+                onChange={this.changeLogLevel}
+                trackChange={this.trackLogLevelFilterClick}
+              />
             </div>
             {logPageMode === DETAILED_LOG_VIEW && (
               <div className={cx('aside-element')}>

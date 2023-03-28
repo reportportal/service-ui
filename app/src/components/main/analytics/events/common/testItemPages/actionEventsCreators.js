@@ -97,6 +97,11 @@ export const getClickOnAttributesEvent = (category) => ({
   ...getBasicClickEventParameters(category),
   icon_name: 'icon_attributes',
 });
+export const getClickOnExpandEvent = (category, place) => ({
+  ...getBasicClickEventParameters(category),
+  place,
+  icon_name: 'expand',
+});
 
 // GA3 events
 export const getEditDefectActionEvent = (category) => ({
