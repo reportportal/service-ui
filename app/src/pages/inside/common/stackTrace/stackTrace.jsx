@@ -152,6 +152,7 @@ export class StackTrace extends Component {
   };
 
   navigateToError = (id) => {
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.CLICK_JUMP_TO_ERROR_LOG);
     setStorageItem(ERROR_LOG_INDEX_KEY, id);
     this.props.setActiveTabIdAction('logs');
   };

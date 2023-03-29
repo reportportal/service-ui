@@ -23,6 +23,8 @@ import { logActivitySelector } from 'controllers/log';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { NoItemMessage } from 'components/main/noItemMessage';
 import { OwnerBlock } from 'pages/inside/common/itemInfo/ownerBlock';
+import track from 'react-tracking';
+import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { getActionMessage } from '../../utils/getActionMessage';
 import { HistoryItem } from './historyItem';
 import styles from './logItemActivity.scss';
@@ -40,14 +42,22 @@ const cx = classNames.bind(styles);
 @connect((state) => ({
   activity: logActivitySelector(state),
 }))
+@track()
 export class LogItemActivity extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     activity: PropTypes.array.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   isAnalyzerActivity = ({ actionType }) =>
     actionType === 'analyze_item' || actionType === 'link_issue_aa';
+
+  trackClickOnHistoryRelevantItemLink = () =>
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.CLICK_HISTORY_RELEVANT_ITEM_LINK);
 
   renderActivityItem = (activityItem) => {
     const { intl } = this.props;
@@ -77,7 +87,11 @@ export class LogItemActivity extends Component {
         </div>
         <div className={cx('history-column', 'column')}>
           {activityItem.details.history.map((historyItem) => (
-            <HistoryItem key={historyItem.field} historyItem={historyItem} />
+            <HistoryItem
+              key={historyItem.field}
+              historyItem={historyItem}
+              onHistoryRelevantItemLinkClick={this.trackClickOnHistoryRelevantItemLink}
+            />
           ))}
         </div>
       </div>

@@ -32,11 +32,7 @@ import {
 } from 'controllers/log';
 import { InputSlider } from 'components/inputs/inputSlider';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
-import {
-  getHideAllPassedLogs,
-  LOG_PAGE_EVENTS,
-  LogViewMode,
-} from 'components/main/analytics/events';
+import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import ConsoleIcon from 'common/img/console-inline.svg';
 import MarkdownIcon from 'common/img/markdown-inline.svg';
 import { ErrorLogsControl } from './errorLogsControl';
@@ -128,16 +124,12 @@ export class LogsGridToolbar extends Component {
 
   toggleLogViewMode = (targetViewMode) => {
     const { logViewMode } = this.state;
-
     const newLogViewMode = logViewMode === targetViewMode ? DEFAULT : targetViewMode;
+
+    this.props.tracking.trackEvent(
+      LOG_PAGE_EVENTS.getClickOnLogViewModeEvent(targetViewMode, newLogViewMode === targetViewMode),
+    );
     setLogViewMode(this.props.userId, newLogViewMode);
-
-    if (targetViewMode === MARKDOWN) {
-      this.props.tracking.trackEvent(LogViewMode(newLogViewMode === MARKDOWN, MARKDOWN));
-    } else if (targetViewMode === CONSOLE) {
-      this.props.tracking.trackEvent(LogViewMode(newLogViewMode === CONSOLE, CONSOLE));
-    }
-
     this.setState({
       logViewMode: newLogViewMode,
     });
@@ -165,7 +157,7 @@ export class LogsGridToolbar extends Component {
     const { onChangeWithAttachments, withAttachments } = this.props;
 
     this.props.tracking.trackEvent(
-      LOG_PAGE_EVENTS.logWithAttachmentCheckboxEvent(!withAttachments),
+      LOG_PAGE_EVENTS.getClickOnLogsWithAttachmentsCheckboxEvent(!withAttachments),
     );
     onChangeWithAttachments(!withAttachments);
   };
@@ -173,8 +165,10 @@ export class LogsGridToolbar extends Component {
   toggleHidePassedLogs = () => {
     const { onHidePassedLogs, isPassedLogsHidden } = this.props;
 
+    this.props.tracking.trackEvent(
+      LOG_PAGE_EVENTS.getClickOnHidePassedLogsCheckboxEvent(!isPassedLogsHidden),
+    );
     onHidePassedLogs(!isPassedLogsHidden);
-    this.props.tracking.trackEvent(getHideAllPassedLogs(!isPassedLogsHidden));
   };
 
   toggleHideEmptySteps = () => {

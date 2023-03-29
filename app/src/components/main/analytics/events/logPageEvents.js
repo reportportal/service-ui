@@ -46,22 +46,10 @@ const basicContainerWithDefectsClickEventParameters = {
   ...basicLogPageClickEventParameters,
   place: 'container_with_defects',
 };
-
-export const LogViewMode = (state, view) => ({
-  category: LOG_PAGE,
-  action: `Click on icon "${view.charAt(0).toUpperCase() + view.slice(1)} Mode"`,
-  label: state ? 'On' : 'Off',
-});
-export const getHideAllPassedLogs = (state) => ({
-  category: LOG_PAGE,
-  action: 'Click on checkbox "Hide All Passed Logs"',
-  label: state ? 'On' : 'Off',
-});
-export const getHistoryLineCheckbox = (state) => ({
-  category: LOG_PAGE,
-  action: 'Click on History line checkbox',
-  label: state ? 'On' : 'Off',
-});
+const basicAttachmentSectionClickEventParameters = {
+  ...basicLogPageClickEventParameters,
+  place: 'attachment_section',
+};
 
 export const LOG_PAGE_EVENTS = {
   // GA4 events
@@ -132,6 +120,58 @@ export const LOG_PAGE_EVENTS = {
     ...basicLogPageClickEventParameters,
     element_name: hasDirection ? 'show_error_logs' : 'show',
   }),
+  getClickOnLogsWithAttachmentsCheckboxEvent: (isChecked) => ({
+    ...basicLogPageClickEventParameters,
+    element_name: 'logs_with_attachments',
+    status: isChecked ? 'check' : 'uncheck',
+  }),
+  getClickOnHidePassedLogsCheckboxEvent: (isChecked) => ({
+    ...basicLogPageClickEventParameters,
+    element_name: 'hide_all_passed_logs',
+    status: isChecked ? 'check' : 'uncheck',
+  }),
+  getClickOnLogViewModeEvent: (viewMode, isActive) => ({
+    ...basicLogPageClickEventParameters,
+    icon_name: `${viewMode}_mode`,
+    status: isActive ? 'on' : 'off',
+  }),
+  CLICK_JUMP_TO_ERROR_LOG: {
+    ...basicLogPageClickEventParameters,
+    place: 'stack_trace',
+    icon_name: 'jump_to',
+  },
+  NESTED_STEP_EXPAND: {
+    ...basicLogPageClickEventParameters,
+    place: 'nested_steps',
+    icon_name: 'expand_nested_step',
+  },
+  CLICK_HISTORY_RELEVANT_ITEM_LINK: {
+    ...basicLogPageClickEventParameters,
+    place: 'history_of_actions',
+    link_name: 'item',
+  },
+  PREVIOUS_ATTACHMENT_ICON: {
+    ...basicLogPageClickEventParameters,
+    icon_name: 'previous_attachment',
+  },
+  NEXT_ATTACHMENT_ICON: {
+    ...basicLogPageClickEventParameters,
+    icon_name: 'next_attachment',
+  },
+  ATTACHMENT_THUMBNAIL: {
+    ...basicAttachmentSectionClickEventParameters,
+    icon_name: 'thumbnail_attachment',
+  },
+  ATTACHMENT_IN_CAROUSEL: {
+    DOWNLOAD: {
+      ...basicAttachmentSectionClickEventParameters,
+      icon_name: 'download',
+    },
+    OPEN_IN_NEW_TAB: {
+      ...basicAttachmentSectionClickEventParameters,
+      icon_name: 'open_in_new_tab',
+    },
+  },
   // GA3 events
   ALL_LABEL_BREADCRUMB: {
     category: LOG_PAGE,
@@ -148,11 +188,6 @@ export const LOG_PAGE_EVENTS = {
     action: 'Click on Defect type tag',
     label: 'Arise Modal Edit Defect type',
   },
-  logWithAttachmentCheckboxEvent: (value) => ({
-    category: LOG_PAGE,
-    action: 'Click on checkbox Logs with attachments',
-    label: `${value ? 'check' : 'uncheck'} logs with attachments`,
-  }),
   selectDropDownStatusEvent: (oldStatus, newStatus) => ({
     category: LOG_PAGE,
     action: 'Select Test Item Status from Drop-down List',
@@ -200,23 +235,6 @@ export const LOG_PAGE_EVENTS = {
       label: 'Open Attachment in new browser tab',
     },
   },
-  ATTACHMENT_IN_CAROUSEL: {
-    OPEN_IN_MODAL: {
-      category: LOG_PAGE,
-      action: 'Click on Attachment in Attachments section',
-      label: 'Open Attachment in modal',
-    },
-    DOWNLOAD: {
-      category: LOG_PAGE,
-      action: 'Click on Download Attachment icon in Attachments section',
-      label: 'Download Attachment',
-    },
-    OPEN_IN_NEW_TAB: {
-      category: LOG_PAGE,
-      action: 'Click on Open Attachment in new tab icon in Attachments section',
-      label: 'Open Attachment in new browser tab',
-    },
-  },
   UNLINK_ISSUES_ACTION: getUnlinkIssueActionEvent(LOG_PAGE),
   // EDIT_DEFECT_MODAL
   EDIT_DEFECT_MODAL_EVENTS: getEditDefectModalEvents(LOG_PAGE),
@@ -235,21 +253,6 @@ export const LOG_PAGE_EVENTS = {
   LINK_ISSUE_MODAL_EVENTS: getLinkIssueModalEvents(LOG_PAGE),
   // DELETE_ITEM_MODAL
   DELETE_ITEM_MODAL_EVENTS: getDeleteItemModalEvents(LOG_PAGE),
-  PREVIOUS_ATTACHMENT_ICON: {
-    category: LOG_PAGE,
-    action: 'Click on icon Previous Attachment',
-    label: 'Show Previous Attachment',
-  },
-  NEXT_ATTACHMENT_ICON: {
-    category: LOG_PAGE,
-    action: 'Click on icon Next Attachment',
-    label: 'Show Next Attachment',
-  },
-  ATTACHMENT_THUMBNAIL: {
-    category: LOG_PAGE,
-    action: 'Click on thumbnail of Attachment',
-    label: 'Show this Attachment',
-  },
   CLOSE_ICON_ATTACHMENT_MODAL: {
     category: LOG_PAGE,
     action: 'Click on icon Close on Modal Attachment',
@@ -299,11 +302,6 @@ export const LOG_PAGE_EVENTS = {
     category: LOG_PAGE,
     action: 'Click on Load more in Stake Trace',
     label: 'Load more logs in Stak Trace tab on Log view',
-  },
-  NESTED_STEP_EXPAND: {
-    category: LOG_PAGE,
-    action: 'Click on Nested step',
-    label: 'Expand Nested step',
   },
   SAUCE_LABS_BTN: {
     category: LOG_PAGE,
