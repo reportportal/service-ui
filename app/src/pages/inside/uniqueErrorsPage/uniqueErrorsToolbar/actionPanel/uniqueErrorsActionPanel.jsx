@@ -107,7 +107,6 @@ export class UniqueErrorsActionPanel extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    events: PropTypes.object,
   };
 
   static defaultProps = {
@@ -135,11 +134,10 @@ export class UniqueErrorsActionPanel extends Component {
     showModalAction: () => {},
     showBreadcrumbs: true,
     unselectAndFetchItems: () => {},
-    events: {},
   };
 
   handlePostIssue = () => {
-    const { unselectAndFetchItems, onPostIssue, selectedItems, events, tracking } = this.props;
+    const { unselectAndFetchItems, onPostIssue, selectedItems, tracking } = this.props;
     onPostIssue(selectedItems, {
       fetchFunc: unselectAndFetchItems,
       eventsInfo: {
@@ -149,11 +147,12 @@ export class UniqueErrorsActionPanel extends Component {
         commentSwitcher: UNIQUE_ERRORS_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.commentSwitcher,
       },
     });
-    events.POST_ISSUE_ACTION && tracking.trackEvent(events.POST_ISSUE_ACTION);
+    UNIQUE_ERRORS_PAGE_EVENTS.POST_ISSUE_ACTION &&
+      tracking.trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.POST_ISSUE_ACTION);
   };
 
   handleLinkIssue = () => {
-    const { unselectAndFetchItems, selectedItems, events, tracking, onLinkIssue } = this.props;
+    const { unselectAndFetchItems, selectedItems, tracking, onLinkIssue } = this.props;
     onLinkIssue(selectedItems, {
       fetchFunc: unselectAndFetchItems,
       eventsInfo: {
@@ -162,11 +161,11 @@ export class UniqueErrorsActionPanel extends Component {
         loadBtn: UNIQUE_ERRORS_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.LOAD_BTN_LINK_ISSUE_MODAL,
       },
     });
-    events.LINK_ISSUE_ACTION && tracking.trackEvent(events.LINK_ISSUE_ACTION);
+    tracking.trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.LINK_ISSUE_ACTION);
   };
 
   handleUnlinkIssue = () => {
-    const { unselectAndFetchItems, onUnlinkIssue, selectedItems, events, tracking } = this.props;
+    const { unselectAndFetchItems, onUnlinkIssue, selectedItems, tracking } = this.props;
     onUnlinkIssue(selectedItems, {
       fetchFunc: unselectAndFetchItems,
       eventsInfo: {
@@ -178,25 +177,25 @@ export class UniqueErrorsActionPanel extends Component {
             .UNLINK_IN_UNLINK_ISSUE_MODAL_AUTO_ANALYZED_FALSE,
       },
     });
-    events.UNLINK_ISSUES_ACTION && tracking.trackEvent(events.UNLINK_ISSUES_ACTION);
+    tracking.trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.UNLINK_ISSUES_ACTION);
   };
 
   handleIgnoreInAA = () => {
+    const { tracking } = this.props;
     this.props.ignoreInAutoAnalysisAction(this.props.selectedItems, {
       fetchFunc: this.props.unselectAndFetchItems,
       eventsInfo: { ignoreBtn: UNIQUE_ERRORS_PAGE_EVENTS.IGNORE_BTN_IGNORE_ITEMS_IN_AA_MODAL },
     });
-    const { events, tracking } = this.props;
-    events.IGNORE_IN_AA_ACTION && tracking.trackEvent(events.IGNORE_IN_AA_ACTION);
+    tracking.trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.IGNORE_IN_AA_ACTION);
   };
 
   handleIncludeInAA = () => {
+    const { tracking } = this.props;
     this.props.includeInAutoAnalysisAction(this.props.selectedItems, {
       fetchFunc: this.props.unselectAndFetchItems,
       eventsInfo: { includeBtn: UNIQUE_ERRORS_PAGE_EVENTS.INCLUDE_BTN_INCLUDE_IN_AA_MODAL },
     });
-    const { events, tracking } = this.props;
-    events.INCLUDE_IN_AA_ACTION && tracking.trackEvent(events.INCLUDE_IN_AA_ACTION);
+    tracking.trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.INCLUDE_IN_AA_ACTION);
   };
 
   getItemsActionDescriptors = () => {
@@ -242,14 +241,14 @@ export class UniqueErrorsActionPanel extends Component {
   };
 
   onRefresh = () => {
-    const { onRefresh, events, tracking } = this.props;
+    const { onRefresh, tracking } = this.props;
     onRefresh();
-    events.CLICK_REFRESH_BTN && tracking.trackEvent(events.CLICK_REFRESH_BTN);
+    tracking.trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.CLICK_REFRESH_BTN);
   };
 
   onClickActionsButton = () => {
-    const { events, tracking } = this.props;
-    tracking.trackEvent(events.CLICK_ACTIONS_BTN);
+    const { tracking } = this.props;
+    tracking.trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.CLICK_ACTIONS_BTN);
   };
 
   render() {

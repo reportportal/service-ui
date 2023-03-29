@@ -20,7 +20,6 @@ import {
   getClickSelectOneItemEvent,
   getCommonActionEvents,
   getClickOnAttributesEvent,
-  getClickUniqueErrorsEvent,
   getClickItemNameEvent,
   getClickRefreshButtonEvent,
   getClickDonutEvents,
@@ -28,6 +27,7 @@ import {
   getClickActionsButtonEvent,
   getClickPencilIconEvent,
   getRefineParametersEventCreator,
+  getClickOnTestItemsTabsEvents,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getDeleteItemModalEvents,
@@ -50,6 +50,7 @@ export const SUITES_PAGE_EVENTS = {
   },
   getClickOnPlusMinusBreadcrumbEvent: getClickOnPlusMinusEventCreator(SUITE_PAGE),
   CLICK_ATTRIBUTES: getClickOnAttributesEvent(SUITE_PAGE),
+  TEST_ITEM_TABS_EVENTS: getClickOnTestItemsTabsEvents(SUITE_PAGE),
   // GA3 events
   ...getCommonActionEvents(SUITE_PAGE),
   DELETE_BTN: {
@@ -67,5 +68,4 @@ export const SUITES_PAGE_EVENTS = {
   DELETE_ITEM_MODAL_EVENTS: getDeleteItemModalEvents(SUITE_PAGE),
   // EDIT_ITEMS_MODAL
   EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(SUITE_PAGE),
-  CLICK_UNIQUE_ERRORS: getClickUniqueErrorsEvent(SUITE_PAGE),
 };

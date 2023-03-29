@@ -307,7 +307,6 @@ export class UniqueErrorsPage extends Component {
                 unselectAndFetchItems={this.unselectAndFetchItems}
                 onEditItems={this.onEditItems}
                 onEditDefects={this.handleEditDefects}
-                events={UNIQUE_ERRORS_PAGE_EVENTS}
               />
               <UniqueErrorsGrid
                 parentLaunch={parentLaunch}
@@ -317,7 +316,6 @@ export class UniqueErrorsPage extends Component {
                 unselectAndFetchItems={this.unselectAndFetchItems}
                 onEditItem={this.onEditItem}
                 onEditDefect={this.handleEditDefects}
-                events={UNIQUE_ERRORS_PAGE_EVENTS}
               />
               {!!pageCount && !loading && (
                 <PaginationToolbar

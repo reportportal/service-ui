@@ -32,6 +32,7 @@ import {
   getClickActionsButtonEvent,
   getClickPencilIconEvent,
   getClickOnPlusMinusEventCreator,
+  getClickOnTestItemsTabsEvents,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getClickOnAnalyzeUniqueErrorsEventCreator,
@@ -69,6 +70,7 @@ export const UNIQUE_ERRORS_PAGE_EVENTS = {
     ...basicUniqueErrorsPageClickEventParameters,
     icon_name: 'expand_error',
   },
+  TEST_ITEM_TABS_EVENTS: getClickOnTestItemsTabsEvents(UNIQUE_ERRORS_PAGE),
   // GA3 events
   ...getCommonActionEvents(UNIQUE_ERRORS_PAGE),
   onClickIssueTicketEvent: getClickIssueTicketEvent(UNIQUE_ERRORS_PAGE),

@@ -19,7 +19,6 @@ import {
   getClickOnPlusMinusEventCreator,
   getClickSelectAllItemsEvent,
   getClickSelectOneItemEvent,
-  getClickUniqueErrorsEvent,
   getCommonActionEvents,
   getClickItemNameEvent,
   getClickRefreshButtonEvent,
@@ -28,6 +27,7 @@ import {
   getClickActionsButtonEvent,
   getClickPencilIconEvent,
   getRefineParametersEventCreator,
+  getClickOnTestItemsTabsEvents,
 } from 'components/main/analytics/events/common/testItemPages/actionEventsCreators';
 import {
   getDeleteItemModalEvents,
@@ -50,9 +50,9 @@ export const TESTS_PAGE_EVENTS = {
   },
   getClickOnPlusMinusBreadcrumbEvent: getClickOnPlusMinusEventCreator(TEST_PAGE),
   CLICK_ATTRIBUTES: getClickOnAttributesEvent(TEST_PAGE),
+  TEST_ITEM_TABS_EVENTS: getClickOnTestItemsTabsEvents(TEST_PAGE),
   // GA3 events
   ...getCommonActionEvents(TEST_PAGE),
   EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(TEST_PAGE),
   DELETE_ITEM_MODAL_EVENTS: getDeleteItemModalEvents(TEST_PAGE),
-  CLICK_UNIQUE_ERRORS: getClickUniqueErrorsEvent(TEST_PAGE),
 };

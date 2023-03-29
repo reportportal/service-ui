@@ -27,6 +27,7 @@ import {
   FILTERED_ITEM_STATISTICS_INITIAL_STATE,
 } from 'controllers/testItem';
 import { activeFilterSelector } from 'controllers/filter';
+import { React } from 'storybook-host/lib/common';
 import { ViewTabs } from './viewTabs';
 import styles from './infoPanel.scss';
 
@@ -76,7 +77,11 @@ export class InfoPanel extends Component {
 
     return (
       <div className={cx('info-panel')}>
-        <ViewTabs viewMode={viewMode} isTestItemsList={isTestItemsList} />
+        <ViewTabs
+          viewMode={viewMode}
+          isTestItemsList={isTestItemsList}
+          events={events.TEST_ITEM_TABS_EVENTS}
+        />
         {isTestItemsList || withoutStatistics ? (
           this.renderInfoLineListView()
         ) : (

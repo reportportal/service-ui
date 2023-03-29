@@ -33,11 +33,9 @@ import {
   listViewLinkSelector,
   logViewLinkSelector,
   historyViewLinkSelector,
-  levelSelector,
   uniqueErrorsLinkSelector,
 } from 'controllers/testItem';
 import { debugModeSelector } from 'controllers/launch';
-import { pageEventsMap } from 'components/main/analytics';
 import { analyzerExtensionsSelector } from 'controllers/appInfo';
 import styles from './viewTabs.scss';
 
@@ -74,7 +72,6 @@ const messages = defineMessages({
   historyViewLink: historyViewLinkSelector(state),
   uniqueErrorsLink: uniqueErrorsLinkSelector(state),
   isAnalyzerAvailable: !!analyzerExtensionsSelector(state).length,
-  level: levelSelector(state),
 }))
 @injectIntl
 export class ViewTabs extends Component {
@@ -88,7 +85,7 @@ export class ViewTabs extends Component {
     historyViewLink: PropTypes.object,
     uniqueErrorsLink: PropTypes.object,
     isAnalyzerAvailable: PropTypes.bool,
-    level: PropTypes.string,
+    events: PropTypes.object,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -104,7 +101,7 @@ export class ViewTabs extends Component {
     historyViewLink: {},
     uniqueErrorsLink: {},
     isAnalyzerAvailable: false,
-    level: '',
+    events: {},
   };
 
   getPages = () => {
@@ -117,9 +114,8 @@ export class ViewTabs extends Component {
       isTestItemsList,
       intl: { formatMessage },
       isAnalyzerAvailable,
-      level,
+      events,
     } = this.props;
-    const events = pageEventsMap[level] || {};
 
     const pages = [
       {
@@ -130,7 +126,7 @@ export class ViewTabs extends Component {
         available: true,
         disabled: false,
         hint: '',
-        event: events.LIST_VIEW_TAB,
+        event: events.CLICK_LIST_VIEW_TAB,
       },
       {
         id: UNIQUE_ERRORS_VIEW,
@@ -140,7 +136,7 @@ export class ViewTabs extends Component {
         available: !isTestItemsList && !debugMode,
         disabled: !isAnalyzerAvailable,
         hint: !isAnalyzerAvailable ? formatMessage(messages.disabledAnalyzer) : '',
-        event: events.CLICK_UNIQUE_ERRORS,
+        event: events.CLICK_UNIQUE_ERRORS_TAB,
       },
       {
         id: LOG_VIEW,
@@ -150,7 +146,7 @@ export class ViewTabs extends Component {
         available: !isTestItemsList,
         disabled: false,
         hint: '',
-        event: events.LOG_VIEW_TAB,
+        event: events.CLICK_LOG_VIEW_TAB,
       },
       {
         id: HISTORY_VIEW,
@@ -160,7 +156,7 @@ export class ViewTabs extends Component {
         available: !debugMode,
         disabled: false,
         hint: '',
-        event: events.HISTORY_VIEW_TAB,
+        event: events.CLICK_HISTORY_TAB,
       },
     ];
 

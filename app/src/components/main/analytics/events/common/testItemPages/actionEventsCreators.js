@@ -25,7 +25,6 @@ export const getClickRefreshButtonEvent = (category) => ({
   ...getBasicClickEventParameters(category),
   element_name: 'button_refresh',
 });
-// TODO: Update after Yuliya's answer
 export const getClickSelectAllItemsEvent = (category) => ({
   ...getBasicClickEventParameters(category),
   element_name: 'select_all_item',
@@ -102,6 +101,24 @@ export const getClickOnExpandEvent = (category, place) => ({
   place,
   icon_name: 'expand',
 });
+export const getClickOnTestItemsTabsEvents = (category) => ({
+  CLICK_LIST_VIEW_TAB: {
+    ...getBasicClickEventParameters(category),
+    element_name: 'tab_list_view',
+  },
+  CLICK_LOG_VIEW_TAB: {
+    ...getBasicClickEventParameters(category),
+    element_name: 'tab_log_view',
+  },
+  CLICK_HISTORY_TAB: {
+    ...getBasicClickEventParameters(category),
+    element_name: 'tab_history',
+  },
+  CLICK_UNIQUE_ERRORS_TAB: {
+    ...getBasicClickEventParameters(category),
+    element_name: 'tab_unique_errors',
+  },
+});
 
 // GA3 events
 export const getEditDefectActionEvent = (category) => ({
@@ -165,12 +182,6 @@ export const getClickIssueTicketEvent = (category) => (pluginName) => ({
   label: pluginName || 'BTS',
 });
 
-export const getClickUniqueErrorsEvent = (category) => ({
-  category,
-  action: 'Click on Tab "Unique Errors"',
-  label: 'User Redirects to the Unique Errors Page',
-});
-
 export const getClickExpandStackTraceArrowEvent = (category) => ({
   category,
   action: 'Click on Icon Arrow to Expand Stack Trace Message on Modal "Test Item Details"',
@@ -195,7 +206,6 @@ export const getCommonActionEvents = (category) => ({
     ...getBasicClickEventParameters(category),
     element_name: 'proceed_valid_items',
   },
-
   // GA3 events
   CLOSE_ICON_FOR_ALL_SELECTIONS: {
     category,
@@ -207,23 +217,6 @@ export const getCommonActionEvents = (category) => ({
     category,
     action: 'Click on icon "close" on selected item',
     label: 'Remove item from  selection',
-  },
-  LIST_VIEW_TAB: {
-    category,
-    action: 'Click on tab "List view"',
-    label: 'User redirects to the List view page',
-  },
-
-  LOG_VIEW_TAB: {
-    category,
-    action: 'Click on tab "Log view"',
-    label: 'User redirects to the Log view page',
-  },
-
-  HISTORY_VIEW_TAB: {
-    category,
-    action: 'Click on tab "History"',
-    label: 'User redirects to the History page',
   },
 
   NAME_FILTER: {

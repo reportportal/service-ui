@@ -26,7 +26,6 @@ import {
   getCommonActionEvents,
   getClickOnAttributesEvent,
   getClickIssueTicketEvent,
-  getClickUniqueErrorsEvent,
   getClickExpandStackTraceArrowEvent,
   getIgnoreBtnIgnoreItemsInAAModalEvent,
   getIncludeBtnIncludeInAAModalEvent,
@@ -36,6 +35,7 @@ import {
   getClickActionsButtonEvent,
   getClickPencilIconEvent,
   getRefineParametersEventCreator,
+  getClickOnTestItemsTabsEvents,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getEditDefectModalEvents,
@@ -73,6 +73,7 @@ export const STEP_PAGE_EVENTS = {
   },
   getClickOnPlusMinusBreadcrumbEvent: getClickOnPlusMinusEventCreator(STEP_PAGE),
   CLICK_ATTRIBUTES: getClickOnAttributesEvent(STEP_PAGE),
+  TEST_ITEM_TABS_EVENTS: getClickOnTestItemsTabsEvents(STEP_PAGE),
   // GA3 events
   ...getCommonActionEvents(STEP_PAGE),
   // REFINE_FILTERS_PANEL
@@ -214,6 +215,5 @@ export const STEP_PAGE_EVENTS = {
   },
   MAKE_DECISION_MODAL_EVENTS: getMakeDecisionModalEvents(STEP_PAGE),
   onClickIssueTicketEvent: getClickIssueTicketEvent(STEP_PAGE),
-  CLICK_UNIQUE_ERRORS: getClickUniqueErrorsEvent(STEP_PAGE),
   CLICK_EXPAND_STACK_TRACE_ARROW: getClickExpandStackTraceArrowEvent(STEP_PAGE),
 };

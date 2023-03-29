@@ -22,6 +22,7 @@ import {
   getClickIssueTicketEvent,
   getClickDefectTooltipEvents,
   getClickOnExpandEvent,
+  getClickOnTestItemsTabsEvents,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getDeleteItemModalEvents,
@@ -55,6 +56,7 @@ export const LOG_PAGE_EVENTS = {
   // GA4 events
   CLICK_REFRESH_BTN: getClickRefreshButtonEvent(LOG_PAGE),
   ...getClickDefectTooltipEvents(LOG_PAGE),
+  TEST_ITEM_TABS_EVENTS: getClickOnTestItemsTabsEvents(LOG_PAGE),
   getClickOnPlusMinusBreadcrumbEvent: getClickOnPlusMinusEventCreator(LOG_PAGE),
   getClickOnHistoryLineCheckboxEvent: (isChecked) => ({
     ...basicLogPageClickEventParameters,

@@ -27,6 +27,7 @@ import {
   getClickDefectTooltipEvents,
   getClickActionsButtonEvent,
   getClickOnPlusMinusEventCreator,
+  getClickOnTestItemsTabsEvents,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getEditDefectModalEvents,
@@ -83,6 +84,7 @@ export const HISTORY_PAGE_EVENTS = {
     ...basicClickEventParametersHistoryPage,
     icon_name: 'cross_filter',
   },
+  TEST_ITEM_TABS_EVENTS: getClickOnTestItemsTabsEvents(HISTORY_PAGE),
   // GA3 events
   CLICK_CLOSE_ICON_FROM_SELECTION: {
     category: HISTORY_PAGE,
