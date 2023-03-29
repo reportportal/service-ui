@@ -13,7 +13,7 @@
 
 3. Run the command `cd app`
 
-4. Run the command `npm install`
+4. Run the command `npm install` or `npm ci`
 
 5. Create file `.env` in `app` folder
 
