@@ -40,55 +40,50 @@ import {
   getEditItemsModalEvents,
   getMakeDecisionModalEvents,
 } from './common/testItemPages/modalEventsCreators';
+import { getBasicClickEventParameters } from './common/ga4Utils';
 
 export const HISTORY_PAGE = 'history';
+
+const basicClickEventParametersHistoryPage = getBasicClickEventParameters(HISTORY_PAGE);
+
 export const HISTORY_PAGE_EVENTS = {
   // GA4 events
   CLICK_REFRESH_BTN: getClickRefreshButtonEvent(HISTORY_PAGE),
   ...getClickDefectTooltipEvents(HISTORY_PAGE),
   CLICK_ACTIONS_BTN: getClickActionsButtonEvent(HISTORY_PAGE),
   getClickOnPlusMinusBreadcrumbEvent: getClickOnPlusMinusEventCreator(HISTORY_PAGE),
-  // GA3 events
-  SELECT_HISTORY_DEPTH: {
-    category: HISTORY_PAGE,
-    action: 'Select "history depth"',
-    label: 'Show parameter of selected "history depth"',
+  CLICK_COMPARE_WITH_FILTER_BTN: {
+    ...basicClickEventParametersHistoryPage,
+    element_name: 'compare',
   },
-  SELECT_HISTORY_BASE: {
-    category: HISTORY_PAGE,
-    action: 'Select "history base"',
-    label: 'Show parameter of selected "history base"',
+  getChooseFilterForCompareEvent: (withSearch) => ({
+    ...basicClickEventParametersHistoryPage,
+    element_name: 'filter_for_custom_column',
+    condition: `${withSearch ? 'with' : 'without'}_search`,
+  }),
+  SELECT_ONE_ITEM: {
+    ...basicClickEventParametersHistoryPage,
+    element_name: 'select_one_item',
   },
   CLICK_ON_ITEM: {
-    category: HISTORY_PAGE,
-    action: 'Click on item',
-    label: 'Transition to "Item"',
+    ...basicClickEventParametersHistoryPage,
+    element_name: 'item_name',
   },
-  COMPARE_WITH_FILTER_BTN: {
-    category: HISTORY_PAGE,
-    action: 'Click on button Compare',
-    label: 'Open a drop down with Filters for adding custom column on History table',
-  },
-  CHOOSE_FILTER_FOR_COMPARE: {
-    category: HISTORY_PAGE,
-    action: 'Choose filter for Custom column on History table',
-    label: 'Add new custom column on History table',
-  },
-  FILTERS_DROPDOWN_SEARCH_FILTER: {
-    category: HISTORY_PAGE,
-    action: 'Enter parameter for search in filters dropdown',
-    label: 'Show filters by parameter',
-  },
-  CLEAR_COMPARE_FILTER_CROSS_BTN: {
-    category: HISTORY_PAGE,
-    action: 'Click on Cross near Filter name',
-    label: 'Remove custom column on History table',
-  },
-  selectHistoryItem: (value) => ({
-    category: HISTORY_PAGE,
-    action: 'Click on item icon "select one item"',
-    label: `${value ? 'select' : 'unselect'} one item`,
+  getSelectHistoryDepthEvent: (depth) => ({
+    ...basicClickEventParametersHistoryPage,
+    element_name: 'history_depth',
+    number: depth,
   }),
+  getSelectHistoryBaseEvent: (isAllLaunches) => ({
+    ...basicClickEventParametersHistoryPage,
+    element_name: 'history_base',
+    type: isAllLaunches ? 'all_launches' : 'launches_with_same_name',
+  }),
+  CLICK_CROSS_BTN_NEAR_COMPARE_FILTER: {
+    ...basicClickEventParametersHistoryPage,
+    icon_name: 'cross_filter',
+  },
+  // GA3 events
   CLICK_CLOSE_ICON_FROM_SELECTION: {
     category: HISTORY_PAGE,
     action: 'Click on icon "close" on selected item',
