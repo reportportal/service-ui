@@ -102,6 +102,11 @@
   line-height: normal;
   font-family: $FONT-REGULAR;
   color: $COLOR--dirty-gray;
+  max-width: 100%;
+  width: fit-content;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .growth-duration {
