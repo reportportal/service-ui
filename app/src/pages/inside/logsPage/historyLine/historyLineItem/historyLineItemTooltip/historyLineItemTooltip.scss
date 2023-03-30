@@ -94,7 +94,7 @@
 
 .attribute-item {
   display: inline-block;
-  padding: 0 6px 2px 6px;
+  padding: 2px 6px 0 6px;
   margin: 3px 8px 0 0;
   border: 1px solid $COLOR--dirty-black;
   background-color: $COLOR--black-3;
@@ -107,6 +107,21 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  .attribute-item-key,
+  .attribute-item-value,
+  .attribute-item-separator {
+    max-width: 100px;
+    width: fit-content;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+  }
+
+  .attribute-item-separator {
+    padding-right: 5px;
+  }
 }
 
 .growth-duration {

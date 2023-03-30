@@ -131,8 +131,9 @@ export class HistoryLineItemTooltip extends Component {
           {launchAttributes.map((attribute) => {
             return (
               <span className={cx('attribute-item')}>
-                {attribute.key && `${attribute.key}: `}
-                {attribute.value}
+                {attribute.key && <span className={cx('attribute-item-key')}>{attribute.key}</span>}
+                {attribute.key && <span className={cx('attribute-item-separator')}>:</span>}
+                <span className={cx('attribute-item-value')}>{attribute.value}</span>
               </span>
             );
           })}
