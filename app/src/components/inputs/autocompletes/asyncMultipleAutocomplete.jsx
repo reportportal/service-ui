@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-import { WithAsyncLoading } from './withAsyncLoading';
+import { WithAsyncLoading, autocompleteComponentModes } from './withAsyncLoading';
 import { MultipleAutocomplete } from './multipleAutocomplete';
 
-export const AsyncMultipleAutocomplete = WithAsyncLoading(MultipleAutocomplete);
+export const AsyncMultipleAutocomplete = WithAsyncLoading(
+  MultipleAutocomplete,
+  autocompleteComponentModes.multi,
+);
