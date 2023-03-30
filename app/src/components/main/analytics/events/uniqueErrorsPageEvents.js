@@ -31,8 +31,8 @@ import {
   getClickRefreshButtonEvent,
   getClickActionsButtonEvent,
   getClickPencilIconEvent,
-  getClickOnPlusMinusEventCreator,
   getClickOnTestItemsTabsEvents,
+  getClickBreadcrumbsEvents,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getClickOnAnalyzeUniqueErrorsEventCreator,
@@ -56,7 +56,7 @@ export const UNIQUE_ERRORS_PAGE_EVENTS = {
   CLICK_SELECT_ALL_ITEMS: getClickSelectAllItemsEvent(UNIQUE_ERRORS_PAGE),
   CLICK_ACTIONS_BTN: getClickActionsButtonEvent(UNIQUE_ERRORS_PAGE),
   EDIT_ICON_CLICK: getClickPencilIconEvent(UNIQUE_ERRORS_PAGE),
-  getClickOnPlusMinusBreadcrumbEvent: getClickOnPlusMinusEventCreator(UNIQUE_ERRORS_PAGE),
+  ...getClickBreadcrumbsEvents(UNIQUE_ERRORS_PAGE),
   CLICK_RUN_BUTTON: {
     ...basicUniqueErrorsPageClickEventParameters,
     element_name: 'run_unique_errors_analysis',

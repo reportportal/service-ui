@@ -26,8 +26,8 @@ import {
   getClickRefreshButtonEvent,
   getClickDefectTooltipEvents,
   getClickActionsButtonEvent,
-  getClickOnPlusMinusEventCreator,
   getClickOnTestItemsTabsEvents,
+  getClickBreadcrumbsEvents,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getEditDefectModalEvents,
@@ -52,7 +52,7 @@ export const HISTORY_PAGE_EVENTS = {
   CLICK_REFRESH_BTN: getClickRefreshButtonEvent(HISTORY_PAGE),
   ...getClickDefectTooltipEvents(HISTORY_PAGE),
   CLICK_ACTIONS_BTN: getClickActionsButtonEvent(HISTORY_PAGE),
-  getClickOnPlusMinusBreadcrumbEvent: getClickOnPlusMinusEventCreator(HISTORY_PAGE),
+  ...getClickBreadcrumbsEvents(HISTORY_PAGE),
   CLICK_COMPARE_WITH_FILTER_BTN: {
     ...basicClickEventParametersHistoryPage,
     element_name: 'compare',

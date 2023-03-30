@@ -99,6 +99,8 @@ export class HistoryActionPanel extends Component {
             descriptors={breadcrumbs}
             onRestorePath={restorePath}
             togglerEventInfo={HISTORY_PAGE_EVENTS.getClickOnPlusMinusBreadcrumbEvent}
+            breadcrumbEventInfo={HISTORY_PAGE_EVENTS.CLICK_ITEM_NAME_BREADCRUMB}
+            allEventClick={HISTORY_PAGE_EVENTS.CLICK_ALL_LABEL_BREADCRUMB}
           />
         )}
         {customBlock}

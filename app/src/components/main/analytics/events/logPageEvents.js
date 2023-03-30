@@ -17,12 +17,12 @@
 import { getBasicClickEventParameters } from './common/ga4Utils';
 import {
   getUnlinkIssueActionEvent,
-  getClickOnPlusMinusEventCreator,
   getClickRefreshButtonEvent,
   getClickIssueTicketEvent,
   getClickDefectTooltipEvents,
   getClickOnExpandEvent,
   getClickOnTestItemsTabsEvents,
+  getClickBreadcrumbsEvents,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getDeleteItemModalEvents,
@@ -57,7 +57,7 @@ export const LOG_PAGE_EVENTS = {
   CLICK_REFRESH_BTN: getClickRefreshButtonEvent(LOG_PAGE),
   ...getClickDefectTooltipEvents(LOG_PAGE),
   TEST_ITEM_TABS_EVENTS: getClickOnTestItemsTabsEvents(LOG_PAGE),
-  getClickOnPlusMinusBreadcrumbEvent: getClickOnPlusMinusEventCreator(LOG_PAGE),
+  ...getClickBreadcrumbsEvents(LOG_PAGE),
   getClickOnHistoryLineCheckboxEvent: (isChecked) => ({
     ...basicLogPageClickEventParameters,
     element_name: 'history_line_checkbox',
@@ -175,16 +175,6 @@ export const LOG_PAGE_EVENTS = {
     },
   },
   // GA3 events
-  ALL_LABEL_BREADCRUMB: {
-    category: LOG_PAGE,
-    action: 'Click on Bread Crumb All',
-    label: 'Transition to Launches Page',
-  },
-  ITEM_NAME_BREADCRUMB_CLICK: {
-    category: LOG_PAGE,
-    action: 'Click on Bread Crumb Item name',
-    label: 'Transition to Item',
-  },
   DEFECT_TYPE_TAG: {
     category: LOG_PAGE,
     action: 'Click on Defect type tag',

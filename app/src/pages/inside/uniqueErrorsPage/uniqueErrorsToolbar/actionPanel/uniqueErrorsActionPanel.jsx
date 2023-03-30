@@ -275,6 +275,8 @@ export class UniqueErrorsActionPanel extends Component {
             descriptors={breadcrumbs}
             onRestorePath={restorePath}
             togglerEventInfo={UNIQUE_ERRORS_PAGE_EVENTS.getClickOnPlusMinusBreadcrumbEvent}
+            breadcrumbEventInfo={UNIQUE_ERRORS_PAGE_EVENTS.CLICK_ITEM_NAME_BREADCRUMB}
+            allEventClick={UNIQUE_ERRORS_PAGE_EVENTS.CLICK_ALL_LABEL_BREADCRUMB}
           />
         )}
         {hasErrors && (

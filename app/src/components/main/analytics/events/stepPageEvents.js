@@ -20,7 +20,6 @@ import {
   getPostIssueActionEvent,
   getUnlinkIssueActionEvent,
   getChangeFilterEvent,
-  getClickOnPlusMinusEventCreator,
   getClickSelectAllItemsEvent,
   getClickSelectOneItemEvent,
   getCommonActionEvents,
@@ -36,6 +35,7 @@ import {
   getClickPencilIconEvent,
   getRefineParametersEventCreator,
   getClickOnTestItemsTabsEvents,
+  getClickBreadcrumbsEvents,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getEditDefectModalEvents,
@@ -71,7 +71,7 @@ export const STEP_PAGE_EVENTS = {
     commonEvents: { getRefineParametersEvent: getRefineParametersEventCreator(STEP_PAGE) },
     getChangeFilterEvent: getChangeFilterEvent(STEP_PAGE),
   },
-  getClickOnPlusMinusBreadcrumbEvent: getClickOnPlusMinusEventCreator(STEP_PAGE),
+  ...getClickBreadcrumbsEvents(STEP_PAGE),
   CLICK_ATTRIBUTES: getClickOnAttributesEvent(STEP_PAGE),
   TEST_ITEM_TABS_EVENTS: getClickOnTestItemsTabsEvents(STEP_PAGE),
   // GA3 events

@@ -15,7 +15,6 @@
  */
 
 import {
-  getClickOnPlusMinusEventCreator,
   getClickSelectAllItemsEvent,
   getClickSelectOneItemEvent,
   getCommonActionEvents,
@@ -28,6 +27,7 @@ import {
   getClickPencilIconEvent,
   getRefineParametersEventCreator,
   getClickOnTestItemsTabsEvents,
+  getClickBreadcrumbsEvents,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getDeleteItemModalEvents,
@@ -48,7 +48,7 @@ export const SUITES_PAGE_EVENTS = {
   REFINE_FILTERS_PANEL_EVENTS: {
     commonEvents: { getRefineParametersEvent: getRefineParametersEventCreator(SUITE_PAGE) },
   },
-  getClickOnPlusMinusBreadcrumbEvent: getClickOnPlusMinusEventCreator(SUITE_PAGE),
+  ...getClickBreadcrumbsEvents(SUITE_PAGE),
   CLICK_ATTRIBUTES: getClickOnAttributesEvent(SUITE_PAGE),
   TEST_ITEM_TABS_EVENTS: getClickOnTestItemsTabsEvents(SUITE_PAGE),
   // GA3 events

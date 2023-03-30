@@ -20,7 +20,6 @@ import {
 } from './common/testItemPages/modalEventsCreators';
 import {
   getClickOnAttributesEvent,
-  getClickOnPlusMinusEventCreator,
   getRefineFiltersPanelEvents,
   getClickItemNameEvent,
   getClickRefreshButtonEvent,
@@ -32,6 +31,7 @@ import {
   getClickPencilIconEvent,
   getRefineParametersEventCreator,
   getCommonActionEvents,
+  getClickBreadcrumbsEvents,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getAddBtnAddNewFilterAddWidgetModal,
@@ -106,7 +106,8 @@ export const LAUNCHES_PAGE_EVENTS = {
     ...basicClickEventParametersLaunchPage,
     element_name: 'add_new_widget',
   },
-  getClickOnPlusMinusBreadcrumbEvent: getClickOnPlusMinusEventCreator(LAUNCHES_PAGE),
+  getClickOnPlusMinusBreadcrumbEvent: getClickBreadcrumbsEvents(LAUNCHES_PAGE)
+    .getClickOnPlusMinusBreadcrumbEvent,
   CLICK_ATTRIBUTES: getClickOnAttributesEvent(LAUNCHES_PAGE),
   getClickOnFilterActionBarButtonEvent: (name) => ({
     ...basicFilterActionBarClickEventParameters,
