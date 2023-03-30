@@ -103,16 +103,12 @@
   font-family: $FONT-REGULAR;
   color: $COLOR--dirty-gray;
   max-width: 100%;
-  width: fit-content;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 
   .attribute-item-key,
   .attribute-item-value,
   .attribute-item-separator {
     max-width: 100px;
-    width: fit-content;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
