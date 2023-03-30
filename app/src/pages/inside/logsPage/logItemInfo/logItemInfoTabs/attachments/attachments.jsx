@@ -117,7 +117,6 @@ export class Attachments extends Component {
     const attachment = this.props.attachments[itemIndex];
 
     if (isFileActionAllowed(attachment.contentType, OPEN_ATTACHMENT_IN_MODAL_ACTION)) {
-      this.props.tracking.trackEvent(LOG_PAGE_EVENTS.ATTACHMENT_IN_CAROUSEL.OPEN_IN_MODAL);
       this.props.openAttachmentInModalAction(attachment);
     }
   };

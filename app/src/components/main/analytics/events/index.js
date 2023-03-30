@@ -54,13 +54,7 @@ export {
 } from './settingsPageEvents';
 export { SUITE_PAGE, SUITES_PAGE_EVENTS } from './suitesPageEvents';
 export { STEP_PAGE, STEP_PAGE_EVENTS, getChangeItemStatusEvent } from './stepPageEvents';
-export {
-  LOG_PAGE,
-  LOG_PAGE_EVENTS,
-  LogViewMode,
-  getHideAllPassedLogs,
-  getHistoryLineCheckbox,
-} from './logPageEvents';
+export { LOG_PAGE, LOG_PAGE_EVENTS } from './logPageEvents';
 export { DASHBOARD_PAGE, DASHBOARD_PAGE_EVENTS } from './dashboardsPageEvents';
 export { HISTORY_PAGE, HISTORY_PAGE_EVENTS } from './historyPageEvents';
 export { ADMIN_ALL_USERS_PAGE_EVENTS } from './adminAllUsersPageEvents';
