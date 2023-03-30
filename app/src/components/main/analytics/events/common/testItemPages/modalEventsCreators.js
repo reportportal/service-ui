@@ -19,6 +19,21 @@ import { getClickIssueTicketEvent } from 'components/main/analytics/events/commo
 import { defectFromTIGroupMap } from './constants';
 import { getBasicClickEventParameters } from '../ga4Utils';
 
+// GA4 events
+export const getClickOnAnalyzeUniqueErrorsEventCreator = (category) => (isExcludeNumbers) => ({
+  ...getBasicClickEventParameters(category),
+  modal: 'analyze_launch',
+  element_name: 'analyze',
+  type: `${isExcludeNumbers ? 'exclude' : 'include'}_numbers`,
+});
+export const getClickOnDeleteBtnDeleteItemModalEventCreator = (category) => (itemLength) => ({
+  ...getBasicClickEventParameters(category),
+  modal: 'delete_item',
+  element_name: 'delete',
+  condition: itemLength > 1 ? 'bulk' : 'single',
+});
+
+// GA3 events
 // EDIT DEFECT MODAL
 export const getEditDefectModalEvents = (category) => ({
   CLOSE_ICON_EDIT_DEFECT_MODAL: {
@@ -186,26 +201,8 @@ export const getLinkIssueModalEvents = (category) => ({
   },
 });
 
-// DELETE ITEM MODAL
-export const getDeleteItemModalEvents = (category) => ({
-  CLOSE_ICON_DELETE_ITEM_MODAL: {
-    category,
-    action: 'Click on Icon Close on Modal Delete Item',
-    label: 'Close Modal Delete Item',
-  },
-  CANCEL_BTN_DELETE_ITEM_MODAL: {
-    category,
-    action: 'Click on Btn Cancel on Modal Delete Item',
-    label: 'Close Modal Delete Item',
-  },
-  DELETE_BTN_DELETE_ITEM_MODAL: {
-    category,
-    action: 'Click on Btn Delete on Modal Delete Item',
-    label: 'Delete item',
-  },
-});
-
 const EDIT_ITEM_MODAL = 'edit_item';
+const EDIT_ITEMS_MODAL = 'edit_items'; // There are two different modals for multiple and single item editing
 
 // EDIT ITEMS MODAL
 export const getEditItemsModalEvents = (category, itemType = 'Item') => ({
@@ -220,6 +217,12 @@ export const getEditItemsModalEvents = (category, itemType = 'Item') => ({
     modal: EDIT_ITEM_MODAL,
     icon_name: 'copy_uuid',
   },
+  getSaveBtnEditItemsEvent: (type) => ({
+    ...getBasicClickEventParameters(category),
+    modal: EDIT_ITEMS_MODAL,
+    element_name: 'save',
+    type,
+  }),
   // GA3 events
   CLOSE_ICON_EDIT_ITEM_MODAL: {
     category,
@@ -236,11 +239,6 @@ export const getEditItemsModalEvents = (category, itemType = 'Item') => ({
     action: `Edit description in Modal "Edit ${itemType}"`,
     label: 'Edit description',
   },
-  BULK_EDIT_ITEMS_DESCRIPTION: {
-    category,
-    action: `Edit description in Modal "Edit ${itemType}" in a bulk`,
-    label: 'Edit description in mode: ',
-  },
   DETAILS_TAB_EVENT: {
     category,
     action: `Click on tab "Details" on modal "Test item details"`,
@@ -256,13 +254,6 @@ export const getEditItemsModalEvents = (category, itemType = 'Item') => ({
     action: 'Click on add new attributes on modal "Test item details"',
     label: 'Add attributes',
   },
-});
-
-export const getClickOnAnalyzeUniqueErrorsEventCreator = (category) => (isExcludeNumbers) => ({
-  ...getBasicClickEventParameters(category),
-  modal: 'analyze_launch',
-  element_name: 'analyze',
-  type: `${isExcludeNumbers ? 'exclude' : 'include'}_numbers`,
 });
 
 const MODAL_MAKE_DECISION = 'Modal Make decision';

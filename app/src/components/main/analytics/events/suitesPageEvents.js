@@ -30,7 +30,7 @@ import {
   getClickBreadcrumbsEvents,
 } from './common/testItemPages/actionEventsCreators';
 import {
-  getDeleteItemModalEvents,
+  getClickOnDeleteBtnDeleteItemModalEventCreator,
   getEditItemsModalEvents,
 } from './common/testItemPages/modalEventsCreators';
 
@@ -65,7 +65,9 @@ export const SUITES_PAGE_EVENTS = {
     label: 'Open "Launch log view"',
   },
   // DELETE_ITEM_MODAL
-  DELETE_ITEM_MODAL_EVENTS: getDeleteItemModalEvents(SUITE_PAGE),
+  getClickOnDeleteBtnDeleteItemModalEvent: getClickOnDeleteBtnDeleteItemModalEventCreator(
+    SUITE_PAGE,
+  ),
   // EDIT_ITEMS_MODAL
   EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(SUITE_PAGE),
 };

@@ -37,7 +37,7 @@ import {
   getUnlinkIssueModalEvents,
   getPostIssueModalEvents,
   getLinkIssueModalEvents,
-  getDeleteItemModalEvents,
+  getClickOnDeleteBtnDeleteItemModalEventCreator,
   getEditItemsModalEvents,
   getMakeDecisionModalEvents,
 } from './common/testItemPages/modalEventsCreators';
@@ -118,7 +118,9 @@ export const HISTORY_PAGE_EVENTS = {
   // LINK_ISSUE_MODAL
   LINK_ISSUE_MODAL_EVENTS: getLinkIssueModalEvents(HISTORY_PAGE),
   // DELETE_ITEM_MODAL
-  DELETE_ITEM_MODAL_EVENTS: getDeleteItemModalEvents(HISTORY_PAGE),
+  getClickOnDeleteBtnDeleteItemModalEvent: getClickOnDeleteBtnDeleteItemModalEventCreator(
+    HISTORY_PAGE,
+  ),
   // EDIT_ITEMS_MODAL
   EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(HISTORY_PAGE),
   // REFINE_FILTERS_PANEL

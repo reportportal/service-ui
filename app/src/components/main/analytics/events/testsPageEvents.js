@@ -28,11 +28,11 @@ import {
   getRefineParametersEventCreator,
   getClickOnTestItemsTabsEvents,
   getClickBreadcrumbsEvents,
-} from 'components/main/analytics/events/common/testItemPages/actionEventsCreators';
+} from './common/testItemPages/actionEventsCreators';
 import {
-  getDeleteItemModalEvents,
+  getClickOnDeleteBtnDeleteItemModalEventCreator,
   getEditItemsModalEvents,
-} from 'components/main/analytics/events/common/testItemPages/modalEventsCreators';
+} from './common/testItemPages/modalEventsCreators';
 
 export const TEST_PAGE = 'test';
 export const TESTS_PAGE_EVENTS = {
@@ -54,5 +54,7 @@ export const TESTS_PAGE_EVENTS = {
   // GA3 events
   ...getCommonActionEvents(TEST_PAGE),
   EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(TEST_PAGE),
-  DELETE_ITEM_MODAL_EVENTS: getDeleteItemModalEvents(TEST_PAGE),
+  getClickOnDeleteBtnDeleteItemModalEvent: getClickOnDeleteBtnDeleteItemModalEventCreator(
+    TEST_PAGE,
+  ),
 };

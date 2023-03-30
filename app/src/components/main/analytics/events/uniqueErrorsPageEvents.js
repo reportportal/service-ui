@@ -36,7 +36,7 @@ import {
 } from './common/testItemPages/actionEventsCreators';
 import {
   getClickOnAnalyzeUniqueErrorsEventCreator,
-  getDeleteItemModalEvents,
+  getClickOnDeleteBtnDeleteItemModalEventCreator,
   getEditItemsModalEvents,
   getLinkIssueModalEvents,
   getMakeDecisionModalEvents,
@@ -92,7 +92,9 @@ export const UNIQUE_ERRORS_PAGE_EVENTS = {
     label: 'Arise Modal "Include items in AA"',
   },
   IGNORE_BTN_IGNORE_ITEMS_IN_AA_MODAL: getIgnoreBtnIgnoreItemsInAAModalEvent(UNIQUE_ERRORS_PAGE),
-  DELETE_ITEM_MODAL_EVENTS: getDeleteItemModalEvents(UNIQUE_ERRORS_PAGE),
+  getClickOnDeleteBtnDeleteItemModalEvent: getClickOnDeleteBtnDeleteItemModalEventCreator(
+    UNIQUE_ERRORS_PAGE,
+  ),
   INCLUDE_BTN_INCLUDE_IN_AA_MODAL: getIncludeBtnIncludeInAAModalEvent(UNIQUE_ERRORS_PAGE),
   POST_ISSUE_MODAL_EVENTS: getPostIssueModalEvents(UNIQUE_ERRORS_PAGE),
   LINK_ISSUE_MODAL_EVENTS: getLinkIssueModalEvents(UNIQUE_ERRORS_PAGE),

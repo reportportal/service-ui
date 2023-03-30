@@ -27,7 +27,6 @@ import {
   FILTERED_ITEM_STATISTICS_INITIAL_STATE,
 } from 'controllers/testItem';
 import { activeFilterSelector } from 'controllers/filter';
-import { React } from 'storybook-host/lib/common';
 import { ViewTabs } from './viewTabs';
 import styles from './infoPanel.scss';
 

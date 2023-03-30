@@ -17,6 +17,7 @@
 import {
   getClickOnAnalyzeUniqueErrorsEventCreator,
   getEditItemsModalEvents,
+  getClickOnDeleteBtnDeleteItemModalEventCreator,
 } from './common/testItemPages/modalEventsCreators';
 import {
   getClickOnAttributesEvent,
@@ -268,11 +269,9 @@ export const LAUNCHES_MODAL_EVENTS = {
     element_name: 'analyze',
     type,
   }),
-  DELETE_BTN_DELETE_MODAL: {
-    ...basicClickEventParametersLaunchPage,
-    modal: 'delete_launch',
-    element_name: 'delete',
-  },
+  getClickOnDeleteBtnDeleteItemModalEvent: getClickOnDeleteBtnDeleteItemModalEventCreator(
+    LAUNCHES_PAGE,
+  ),
   OK_BTN_IMPORT_MODAL: {
     ...basicClickEventParametersLaunchPage,
     modal: 'import_launch',
@@ -290,16 +289,6 @@ export const LAUNCHES_MODAL_EVENTS = {
     category: LAUNCHES_MODAL,
     action: 'Click on Btn Cancel on Modal "Move to Debug"',
     label: 'Close modal "Move to Debug"',
-  },
-  CLOSE_ICON_DELETE_MODAL: {
-    category: LAUNCHES_MODAL,
-    action: 'Click on Close Icon on Modal "Delete Launch"',
-    label: 'Close modal "Delete Launch"',
-  },
-  CANCEL_BTN_DELETE_MODAL: {
-    category: LAUNCHES_MODAL,
-    action: 'Click on Btn Cancel on Modal "Delete Launch"',
-    label: 'Close modal "Delete Launch"',
   },
   CLOSE_ICON_MERGE_MODAL: {
     category: LAUNCHES_MODAL,

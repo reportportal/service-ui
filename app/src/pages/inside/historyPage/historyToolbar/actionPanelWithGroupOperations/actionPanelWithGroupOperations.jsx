@@ -166,10 +166,8 @@ export class ActionPanelWithGroupOperations extends Component {
         type: LAUNCH_ITEM_TYPES.item,
         fetchFunc: this.unselectAndRefreshItems,
         eventsInfo: {
-          cancelBtn: HISTORY_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.CANCEL_BTN_EDIT_ITEM_MODAL,
-          closeIcon: HISTORY_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.CLOSE_ICON_EDIT_ITEM_MODAL,
-          saveBtn: HISTORY_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.SAVE_BTN_EDIT_ITEM_MODAL,
-          editDescription: HISTORY_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.BULK_EDIT_ITEMS_DESCRIPTION,
+          getSaveBtnEditItemsEvent:
+            HISTORY_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.getSaveBtnEditItemsEvent,
         },
       },
     });
@@ -275,18 +273,18 @@ export class ActionPanelWithGroupOperations extends Component {
     tracking.trackEvent(HISTORY_PAGE_EVENTS.DELETE_ACTION);
 
     const parameters = getDeleteItemsActionParameters(selectedItems, formatMessage, {
-      onConfirm: (items) =>
+      onConfirm: (items) => {
+        tracking.trackEvent(
+          HISTORY_PAGE_EVENTS.getClickOnDeleteBtnDeleteItemModalEvent(items.length),
+        );
         this.props.deleteTestItemsAction({
           items,
           callback: this.unselectAndRefreshItems,
-        }),
+        });
+      },
       userId,
       parentLaunch: this.props.parentLaunch,
-      eventsInfo: {
-        closeIcon: HISTORY_PAGE_EVENTS.DELETE_ITEM_MODAL_EVENTS.CLOSE_ICON_DELETE_ITEM_MODAL,
-        cancelBtn: HISTORY_PAGE_EVENTS.DELETE_ITEM_MODAL_EVENTS.CANCEL_BTN_DELETE_ITEM_MODAL,
-        deleteBtn: HISTORY_PAGE_EVENTS.DELETE_ITEM_MODAL_EVENTS.DELETE_BTN_DELETE_ITEM_MODAL,
-      },
+      eventsInfo: {},
     });
 
     deleteHistoryItems(selectedItems, parameters);

@@ -501,6 +501,9 @@ export class LaunchesPage extends Component {
   deleteItem = (item) => this.deleteItems([item]);
 
   confirmDeleteItems = (items) => {
+    this.props.tracking.trackEvent(
+      LAUNCHES_MODAL_EVENTS.getClickOnDeleteBtnDeleteItemModalEvent(items.length),
+    );
     const ids = items.map((item) => item.id);
     this.props.showScreenLockAction();
     fetch(URLS.launches(this.props.activeProject), {
@@ -558,11 +561,7 @@ export class LaunchesPage extends Component {
           : intl.formatMessage(messages.deleteModalMultipleContent),
       userId,
       warning,
-      eventsInfo: {
-        closeIcon: LAUNCHES_MODAL_EVENTS.CLOSE_ICON_DELETE_MODAL,
-        cancelBtn: LAUNCHES_MODAL_EVENTS.CANCEL_BTN_DELETE_MODAL,
-        deleteBtn: LAUNCHES_MODAL_EVENTS.DELETE_BTN_DELETE_MODAL,
-      },
+      eventsInfo: {},
     });
   };
 
@@ -631,11 +630,8 @@ export class LaunchesPage extends Component {
         type: LAUNCH_ITEM_TYPES.launch,
         fetchFunc: this.unselectAndFetchLaunches,
         eventsInfo: {
-          cancelBtn: LAUNCHES_MODAL_EVENTS.EDIT_ITEMS_MODAL_EVENTS.CANCEL_BTN_EDIT_ITEM_MODAL,
-          closeIcon: LAUNCHES_MODAL_EVENTS.EDIT_ITEMS_MODAL_EVENTS.CLOSE_ICON_EDIT_ITEM_MODAL,
-          saveBtn: LAUNCHES_MODAL_EVENTS.EDIT_ITEMS_MODAL_EVENTS.SAVE_BTN_EDIT_ITEM_MODAL,
-          editDescription:
-            LAUNCHES_MODAL_EVENTS.EDIT_ITEMS_MODAL_EVENTS.BULK_EDIT_ITEMS_DESCRIPTION,
+          getSaveBtnEditItemsEvent:
+            LAUNCHES_MODAL_EVENTS.EDIT_ITEMS_MODAL_EVENTS.getSaveBtnEditItemsEvent,
         },
       },
     });

@@ -159,7 +159,8 @@ export class ModalFooter extends Component {
               <BigButton
                 color={okButton.danger ? 'tomato' : 'booger'}
                 onClick={() => {
-                  this.props.tracking.trackEvent(this.props.okButton.eventInfo);
+                  // TODO: Avoid direct events tracking inside of common components. Can be handled via `onClick` callback
+                  okButton.eventInfo && this.props.tracking.trackEvent(okButton.eventInfo);
                   okButton.onClick(onClickOk);
                 }}
                 disabled={okButton.disabled || !submitConfirmed}
