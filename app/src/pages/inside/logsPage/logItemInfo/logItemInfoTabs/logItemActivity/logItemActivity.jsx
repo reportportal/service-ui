@@ -90,7 +90,7 @@ export class LogItemActivity extends Component {
             <HistoryItem
               key={historyItem.field}
               historyItem={historyItem}
-              onHistoryRelevantItemLinkClick={this.trackClickOnHistoryRelevantItemLink}
+              onClick={this.trackClickOnHistoryRelevantItemLink}
             />
           ))}
         </div>
