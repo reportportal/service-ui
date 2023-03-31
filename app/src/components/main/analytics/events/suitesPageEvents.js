@@ -15,12 +15,10 @@
  */
 
 import {
-  getClickOnPlusMinusEventCreator,
   getClickSelectAllItemsEvent,
   getClickSelectOneItemEvent,
   getCommonActionEvents,
   getClickOnAttributesEvent,
-  getClickUniqueErrorsEvent,
   getClickItemNameEvent,
   getClickRefreshButtonEvent,
   getClickDonutEvents,
@@ -28,9 +26,11 @@ import {
   getClickActionsButtonEvent,
   getClickPencilIconEvent,
   getRefineParametersEventCreator,
+  getClickOnTestItemsTabsEvents,
+  getClickBreadcrumbsEvents,
 } from './common/testItemPages/actionEventsCreators';
 import {
-  getDeleteItemModalEvents,
+  getClickOnDeleteBtnDeleteItemModalEventCreator,
   getEditItemsModalEvents,
 } from './common/testItemPages/modalEventsCreators';
 
@@ -48,8 +48,9 @@ export const SUITES_PAGE_EVENTS = {
   REFINE_FILTERS_PANEL_EVENTS: {
     commonEvents: { getRefineParametersEvent: getRefineParametersEventCreator(SUITE_PAGE) },
   },
-  getClickOnPlusMinusBreadcrumbEvent: getClickOnPlusMinusEventCreator(SUITE_PAGE),
+  ...getClickBreadcrumbsEvents(SUITE_PAGE),
   CLICK_ATTRIBUTES: getClickOnAttributesEvent(SUITE_PAGE),
+  TEST_ITEM_TABS_EVENTS: getClickOnTestItemsTabsEvents(SUITE_PAGE),
   // GA3 events
   ...getCommonActionEvents(SUITE_PAGE),
   DELETE_BTN: {
@@ -64,8 +65,9 @@ export const SUITES_PAGE_EVENTS = {
     label: 'Open "Launch log view"',
   },
   // DELETE_ITEM_MODAL
-  DELETE_ITEM_MODAL_EVENTS: getDeleteItemModalEvents(SUITE_PAGE),
+  getClickOnDeleteBtnDeleteItemModalEvent: getClickOnDeleteBtnDeleteItemModalEventCreator(
+    SUITE_PAGE,
+  ),
   // EDIT_ITEMS_MODAL
   EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(SUITE_PAGE),
-  CLICK_UNIQUE_ERRORS: getClickUniqueErrorsEvent(SUITE_PAGE),
 };

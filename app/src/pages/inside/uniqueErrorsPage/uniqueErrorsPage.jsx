@@ -205,8 +205,8 @@ export class UniqueErrorsPage extends Component {
         type: LAUNCH_ITEM_TYPES.item,
         fetchFunc: this.unselectAndFetchItems,
         eventsInfo: {
-          saveBtn: UNIQUE_ERRORS_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.SAVE_BTN_EDIT_ITEM_MODAL,
-          editDescription: UNIQUE_ERRORS_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.EDIT_ITEM_DESCRIPTION,
+          getSaveBtnEditItemsEvent:
+            UNIQUE_ERRORS_PAGE_EVENTS.EDIT_ITEMS_MODAL_EVENTS.getSaveBtnEditItemsEvent,
         },
       },
     });
@@ -258,13 +258,13 @@ export class UniqueErrorsPage extends Component {
     } = this.props;
     const parameters = getDeleteItemsActionParameters(selectedItems, formatMessage, {
       onConfirm: (items) => {
+        this.props.tracking.trackEvent(
+          UNIQUE_ERRORS_PAGE_EVENTS.getClickOnDeleteBtnDeleteItemModalEvent(items.length),
+        );
         this.props.deleteTestItemsAction({
           items,
           callback: this.unselectAndFetchItems,
         });
-        this.props.tracking.trackEvent(
-          UNIQUE_ERRORS_PAGE_EVENTS.DELETE_ITEM_MODAL_EVENTS.DELETE_BTN_DELETE_ITEM_MODAL,
-        );
       },
       userId,
       parentLaunch: this.props.parentLaunch,
@@ -307,7 +307,6 @@ export class UniqueErrorsPage extends Component {
                 unselectAndFetchItems={this.unselectAndFetchItems}
                 onEditItems={this.onEditItems}
                 onEditDefects={this.handleEditDefects}
-                events={UNIQUE_ERRORS_PAGE_EVENTS}
               />
               <UniqueErrorsGrid
                 parentLaunch={parentLaunch}
@@ -317,7 +316,6 @@ export class UniqueErrorsPage extends Component {
                 unselectAndFetchItems={this.unselectAndFetchItems}
                 onEditItem={this.onEditItem}
                 onEditDefect={this.handleEditDefects}
-                events={UNIQUE_ERRORS_PAGE_EVENTS}
               />
               {!!pageCount && !loading && (
                 <PaginationToolbar

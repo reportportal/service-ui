@@ -31,11 +31,12 @@ import {
   getClickRefreshButtonEvent,
   getClickActionsButtonEvent,
   getClickPencilIconEvent,
-  getClickOnPlusMinusEventCreator,
+  getClickOnTestItemsTabsEvents,
+  getClickBreadcrumbsEvents,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getClickOnAnalyzeUniqueErrorsEventCreator,
-  getDeleteItemModalEvents,
+  getClickOnDeleteBtnDeleteItemModalEventCreator,
   getEditItemsModalEvents,
   getLinkIssueModalEvents,
   getMakeDecisionModalEvents,
@@ -55,7 +56,7 @@ export const UNIQUE_ERRORS_PAGE_EVENTS = {
   CLICK_SELECT_ALL_ITEMS: getClickSelectAllItemsEvent(UNIQUE_ERRORS_PAGE),
   CLICK_ACTIONS_BTN: getClickActionsButtonEvent(UNIQUE_ERRORS_PAGE),
   EDIT_ICON_CLICK: getClickPencilIconEvent(UNIQUE_ERRORS_PAGE),
-  getClickOnPlusMinusBreadcrumbEvent: getClickOnPlusMinusEventCreator(UNIQUE_ERRORS_PAGE),
+  ...getClickBreadcrumbsEvents(UNIQUE_ERRORS_PAGE),
   CLICK_RUN_BUTTON: {
     ...basicUniqueErrorsPageClickEventParameters,
     element_name: 'run_unique_errors_analysis',
@@ -69,6 +70,7 @@ export const UNIQUE_ERRORS_PAGE_EVENTS = {
     ...basicUniqueErrorsPageClickEventParameters,
     icon_name: 'expand_error',
   },
+  TEST_ITEM_TABS_EVENTS: getClickOnTestItemsTabsEvents(UNIQUE_ERRORS_PAGE),
   // GA3 events
   ...getCommonActionEvents(UNIQUE_ERRORS_PAGE),
   onClickIssueTicketEvent: getClickIssueTicketEvent(UNIQUE_ERRORS_PAGE),
@@ -90,7 +92,9 @@ export const UNIQUE_ERRORS_PAGE_EVENTS = {
     label: 'Arise Modal "Include items in AA"',
   },
   IGNORE_BTN_IGNORE_ITEMS_IN_AA_MODAL: getIgnoreBtnIgnoreItemsInAAModalEvent(UNIQUE_ERRORS_PAGE),
-  DELETE_ITEM_MODAL_EVENTS: getDeleteItemModalEvents(UNIQUE_ERRORS_PAGE),
+  getClickOnDeleteBtnDeleteItemModalEvent: getClickOnDeleteBtnDeleteItemModalEventCreator(
+    UNIQUE_ERRORS_PAGE,
+  ),
   INCLUDE_BTN_INCLUDE_IN_AA_MODAL: getIncludeBtnIncludeInAAModalEvent(UNIQUE_ERRORS_PAGE),
   POST_ISSUE_MODAL_EVENTS: getPostIssueModalEvents(UNIQUE_ERRORS_PAGE),
   LINK_ISSUE_MODAL_EVENTS: getLinkIssueModalEvents(UNIQUE_ERRORS_PAGE),

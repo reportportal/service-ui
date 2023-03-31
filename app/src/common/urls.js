@@ -103,7 +103,7 @@ export const URLS = {
   launchesLatest: (activeProject, ids) =>
     `${urlBase}${activeProject}/launch/latest${getQueryParams({ ids })}`,
   launchUpdate: (activeProject) => `${urlBase}${activeProject}/launch/update`,
-  launchesInfoUpdate: (activeProject) => `${urlBase}${activeProject}/launch/info`,
+  launchesInfo: (activeProject) => `${urlBase}${activeProject}/launch/info`,
   launchStop: (activeProject) => `${urlBase}${activeProject}/launch/stop`,
   launchesItemsUpdate: (activeProject, id, type) =>
     `${urlBase}${activeProject}/${type}/${id}/update`,
@@ -179,7 +179,7 @@ export const URLS = {
       type,
       'filter.eq.id': id,
     })}`,
-  testItemsInfoUpdate: (activeProject) => `${urlBase}${activeProject}/item/info`,
+  testItemsInfo: (activeProject) => `${urlBase}${activeProject}/item/info`,
   testItemsLinkIssues: (activeProject) => `${urlBase}${activeProject}/item/issue/link`,
   testItemsUnlinkIssues: (activeProject) => `${urlBase}${activeProject}/item/issue/unlink`,
   testItemAttributeKeysSearch: (activeProject, launch = '') => (searchTerm = '') =>

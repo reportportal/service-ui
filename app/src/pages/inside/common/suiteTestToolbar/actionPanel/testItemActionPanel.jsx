@@ -246,8 +246,8 @@ export class TestItemActionPanel extends Component {
         {showBreadcrumbs && (
           <Breadcrumbs
             togglerEventInfo={pageEventsMap[level].getClickOnPlusMinusBreadcrumbEvent}
-            breadcrumbEventInfo={pageEventsMap[level].ITEM_NAME_BREADCRUMB_CLICK}
-            allEventClick={pageEventsMap[level].ALL_LABEL_BREADCRUMB}
+            breadcrumbEventInfo={pageEventsMap[level].CLICK_ITEM_NAME_BREADCRUMB}
+            allEventClick={pageEventsMap[level].CLICK_ALL_LABEL_BREADCRUMB}
             descriptors={breadcrumbs}
             onRestorePath={restorePath}
           />

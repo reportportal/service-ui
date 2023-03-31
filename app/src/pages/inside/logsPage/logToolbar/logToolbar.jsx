@@ -176,10 +176,10 @@ export class LogToolbar extends Component {
       <div className={cx('log-toolbar')}>
         <Breadcrumbs
           descriptors={breadcrumbs}
-          togglerEventInfo={LOG_PAGE_EVENTS.getClickOnPlusMinusBreadcrumbEvent}
-          breadcrumbEventInfo={LOG_PAGE_EVENTS.ITEM_NAME_BREADCRUMB_CLICK}
-          allEventClick={LOG_PAGE_EVENTS.ALL_LABEL_BREADCRUMB}
           onRestorePath={restorePath}
+          togglerEventInfo={LOG_PAGE_EVENTS.getClickOnPlusMinusBreadcrumbEvent}
+          breadcrumbEventInfo={LOG_PAGE_EVENTS.CLICK_ITEM_NAME_BREADCRUMB}
+          allEventClick={LOG_PAGE_EVENTS.CLICK_ALL_LABEL_BREADCRUMB}
         />
         <div className={cx('action-buttons')}>
           {logViewMode === DETAILED_LOG_VIEW ? (

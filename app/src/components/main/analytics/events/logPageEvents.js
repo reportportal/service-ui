@@ -17,14 +17,14 @@
 import { getBasicClickEventParameters } from './common/ga4Utils';
 import {
   getUnlinkIssueActionEvent,
-  getClickOnPlusMinusEventCreator,
   getClickRefreshButtonEvent,
   getClickIssueTicketEvent,
   getClickDefectTooltipEvents,
   getClickOnExpandEvent,
+  getClickOnTestItemsTabsEvents,
+  getClickBreadcrumbsEvents,
 } from './common/testItemPages/actionEventsCreators';
 import {
-  getDeleteItemModalEvents,
   getEditDefectModalEvents,
   getEditToInvestigateChangeSearchModeEvent,
   getEditToInvestigateSelectAllSimilarItemsEvent,
@@ -55,7 +55,8 @@ export const LOG_PAGE_EVENTS = {
   // GA4 events
   CLICK_REFRESH_BTN: getClickRefreshButtonEvent(LOG_PAGE),
   ...getClickDefectTooltipEvents(LOG_PAGE),
-  getClickOnPlusMinusBreadcrumbEvent: getClickOnPlusMinusEventCreator(LOG_PAGE),
+  TEST_ITEM_TABS_EVENTS: getClickOnTestItemsTabsEvents(LOG_PAGE),
+  ...getClickBreadcrumbsEvents(LOG_PAGE),
   getClickOnHistoryLineCheckboxEvent: (isChecked) => ({
     ...basicLogPageClickEventParameters,
     element_name: 'history_line_checkbox',
@@ -173,16 +174,6 @@ export const LOG_PAGE_EVENTS = {
     },
   },
   // GA3 events
-  ALL_LABEL_BREADCRUMB: {
-    category: LOG_PAGE,
-    action: 'Click on Bread Crumb All',
-    label: 'Transition to Launches Page',
-  },
-  ITEM_NAME_BREADCRUMB_CLICK: {
-    category: LOG_PAGE,
-    action: 'Click on Bread Crumb Item name',
-    label: 'Transition to Item',
-  },
   DEFECT_TYPE_TAG: {
     category: LOG_PAGE,
     action: 'Click on Defect type tag',
@@ -251,8 +242,6 @@ export const LOG_PAGE_EVENTS = {
   POST_ISSUE_MODAL_EVENTS: getPostIssueModalEvents(LOG_PAGE),
   // LINK_ISSUE_MODAL
   LINK_ISSUE_MODAL_EVENTS: getLinkIssueModalEvents(LOG_PAGE),
-  // DELETE_ITEM_MODAL
-  DELETE_ITEM_MODAL_EVENTS: getDeleteItemModalEvents(LOG_PAGE),
   CLOSE_ICON_ATTACHMENT_MODAL: {
     category: LOG_PAGE,
     action: 'Click on icon Close on Modal Attachment',
