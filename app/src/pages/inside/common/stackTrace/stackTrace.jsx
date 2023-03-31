@@ -167,6 +167,8 @@ export class StackTrace extends Component {
       designMode,
       eventsInfo,
     } = this.props;
+    const maxRowHeight = this.getMaxRowHeight();
+
     return (
       <React.Fragment>
         <ScrollWrapper autoHeight autoHeightMax={this.getScrolledHeight()}>
@@ -174,7 +176,7 @@ export class StackTrace extends Component {
             <div key={item.id} className={cx('row', { [`design-mode-${designMode}`]: designMode })}>
               <StackTraceMessageBlock
                 level={item.level}
-                maxHeight={this.getMaxRowHeight()}
+                maxHeight={maxRowHeight}
                 designMode={designMode}
                 eventsInfo={eventsInfo}
               >
