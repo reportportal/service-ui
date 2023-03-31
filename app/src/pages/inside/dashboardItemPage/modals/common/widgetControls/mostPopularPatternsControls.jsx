@@ -93,12 +93,26 @@ export class MostPopularPatternsControls extends Component {
         },
       },
     });
+
+    this.state = { attributeKeyValue: '' };
+  }
+
+  getValidationErrors(value) {
+    const { intl } = this.props;
+
+    return attributeKeyValidator(intl.formatMessage(messages.attributeKeyValidationError))(value);
   }
 
   normalizeValue = (value) => value && `${value}`.replace(/\D+/g, '');
 
   formatFilterValue = (value) => value && value[0];
   parseFilterValue = (value) => value && [value];
+
+  handleAttributeKeyChange = (value) => {
+    this.setState({
+      attributeKeyValue: value,
+    });
+  };
 
   render() {
     const { intl, formAppearance, onFormAppearanceChange, activeProject, eventsInfo } = this.props;
@@ -140,12 +154,11 @@ export class MostPopularPatternsControls extends Component {
           labelWidth={FIELD_LABEL_WIDTH}
         >
           <FieldProvider
+            handleChange={this.handleAttributeKeyChange}
             name="contentParameters.widgetOptions.attributeKey"
-            validate={attributeKeyValidator(
-              intl.formatMessage(messages.attributeKeyValidationError),
-            )}
+            validate={() => this.getValidationErrors(this.state.attributeKeyValue)}
           >
-            <FieldErrorHint touchedOnly>
+            <FieldErrorHint>
               <AsyncAutocomplete
                 getURI={URLS.launchAttributeKeysSearch(activeProject)}
                 minLength={1}
