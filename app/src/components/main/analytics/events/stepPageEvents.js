@@ -20,13 +20,11 @@ import {
   getPostIssueActionEvent,
   getUnlinkIssueActionEvent,
   getChangeFilterEvent,
-  getClickOnPlusMinusEventCreator,
   getClickSelectAllItemsEvent,
   getClickSelectOneItemEvent,
   getCommonActionEvents,
   getClickOnAttributesEvent,
   getClickIssueTicketEvent,
-  getClickUniqueErrorsEvent,
   getClickExpandStackTraceArrowEvent,
   getIgnoreBtnIgnoreItemsInAAModalEvent,
   getIncludeBtnIncludeInAAModalEvent,
@@ -36,6 +34,8 @@ import {
   getClickActionsButtonEvent,
   getClickPencilIconEvent,
   getRefineParametersEventCreator,
+  getClickOnTestItemsTabsEvents,
+  getClickBreadcrumbsEvents,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getEditDefectModalEvents,
@@ -45,7 +45,7 @@ import {
   getUnlinkIssueModalEvents,
   getPostIssueModalEvents,
   getLinkIssueModalEvents,
-  getDeleteItemModalEvents,
+  getClickOnDeleteBtnDeleteItemModalEventCreator,
   getEditItemsModalEvents,
   getMakeDecisionModalEvents,
 } from './common/testItemPages/modalEventsCreators';
@@ -71,8 +71,9 @@ export const STEP_PAGE_EVENTS = {
     commonEvents: { getRefineParametersEvent: getRefineParametersEventCreator(STEP_PAGE) },
     getChangeFilterEvent: getChangeFilterEvent(STEP_PAGE),
   },
-  getClickOnPlusMinusBreadcrumbEvent: getClickOnPlusMinusEventCreator(STEP_PAGE),
+  ...getClickBreadcrumbsEvents(STEP_PAGE),
   CLICK_ATTRIBUTES: getClickOnAttributesEvent(STEP_PAGE),
+  TEST_ITEM_TABS_EVENTS: getClickOnTestItemsTabsEvents(STEP_PAGE),
   // GA3 events
   ...getCommonActionEvents(STEP_PAGE),
   // REFINE_FILTERS_PANEL
@@ -167,7 +168,9 @@ export const STEP_PAGE_EVENTS = {
   // LINK_ISSUE_MODAL
   LINK_ISSUE_MODAL_EVENTS: getLinkIssueModalEvents(STEP_PAGE),
   // DELETE_ITEM_MODAL
-  DELETE_ITEM_MODAL_EVENTS: getDeleteItemModalEvents(STEP_PAGE),
+  getClickOnDeleteBtnDeleteItemModalEvent: getClickOnDeleteBtnDeleteItemModalEventCreator(
+    STEP_PAGE,
+  ),
   // EDIT_ITEMS_MODAL
   EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(STEP_PAGE),
   LOG_VIEW_SWITCHER: {
@@ -214,6 +217,5 @@ export const STEP_PAGE_EVENTS = {
   },
   MAKE_DECISION_MODAL_EVENTS: getMakeDecisionModalEvents(STEP_PAGE),
   onClickIssueTicketEvent: getClickIssueTicketEvent(STEP_PAGE),
-  CLICK_UNIQUE_ERRORS: getClickUniqueErrorsEvent(STEP_PAGE),
   CLICK_EXPAND_STACK_TRACE_ARROW: getClickExpandStackTraceArrowEvent(STEP_PAGE),
 };

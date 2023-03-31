@@ -228,10 +228,7 @@ export class TestItemPage extends Component {
         type: LAUNCH_ITEM_TYPES.item,
         fetchFunc: this.unselectAndFetchItems,
         eventsInfo: {
-          cancelBtn: events.EDIT_ITEMS_MODAL_EVENTS.CANCEL_BTN_EDIT_ITEM_MODAL,
-          closeIcon: events.EDIT_ITEMS_MODAL_EVENTS.CLOSE_ICON_EDIT_ITEM_MODAL,
-          saveBtn: events.EDIT_ITEMS_MODAL_EVENTS.SAVE_BTN_EDIT_ITEM_MODAL,
-          editDescription: events.EDIT_ITEMS_MODAL_EVENTS.BULK_EDIT_ITEMS_DESCRIPTION,
+          getSaveBtnEditItemsEvent: events.EDIT_ITEMS_MODAL_EVENTS.getSaveBtnEditItemsEvent,
         },
       },
     });
@@ -250,24 +247,22 @@ export class TestItemPage extends Component {
       tracking,
       level,
     } = this.props;
-    tracking.trackEvent(
-      LEVEL_STEP === level ? STEP_PAGE_EVENTS.DELETE_ACTION : pageEventsMap[level].DELETE_BTN,
-    );
+    const events = pageEventsMap[level];
+    tracking.trackEvent(LEVEL_STEP === level ? STEP_PAGE_EVENTS.DELETE_ACTION : events.DELETE_BTN);
 
-    const eventsInfo = {
-      closeIcon: pageEventsMap[level].DELETE_ITEM_MODAL_EVENTS.CLOSE_ICON_DELETE_ITEM_MODAL,
-      cancelBtn: pageEventsMap[level].DELETE_ITEM_MODAL_EVENTS.CANCEL_BTN_DELETE_ITEM_MODAL,
-      deleteBtn: pageEventsMap[level].DELETE_ITEM_MODAL_EVENTS.DELETE_BTN_DELETE_ITEM_MODAL,
-    };
     const parameters = getDeleteItemsActionParameters(selectedItems, formatMessage, {
-      onConfirm: (items) =>
+      onConfirm: (items) => {
+        this.props.tracking.trackEvent(
+          events.getClickOnDeleteBtnDeleteItemModalEvent(items.length),
+        );
         this.props.deleteTestItemsAction({
           items,
           callback: this.unselectAndFetchItems,
-        }),
+        });
+      },
       userId,
       parentLaunch,
-      eventsInfo,
+      eventsInfo: {},
     });
 
     this.props.bulkDeleteTestItemsAction(LEVELS[level].namespace)(selectedItems, parameters);

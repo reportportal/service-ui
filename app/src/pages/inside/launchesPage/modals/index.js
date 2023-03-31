@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-export { LaunchDeleteModal } from './launchDeleteModal';
 export { MoveToDebugModal } from './moveToDebugModal';
 export { LaunchCompareModal } from './launchCompareModal';
 export { LaunchMergeModal } from './launchMergeModal';

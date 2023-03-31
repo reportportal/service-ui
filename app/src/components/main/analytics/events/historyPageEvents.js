@@ -26,7 +26,8 @@ import {
   getClickRefreshButtonEvent,
   getClickDefectTooltipEvents,
   getClickActionsButtonEvent,
-  getClickOnPlusMinusEventCreator,
+  getClickOnTestItemsTabsEvents,
+  getClickBreadcrumbsEvents,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getEditDefectModalEvents,
@@ -36,7 +37,7 @@ import {
   getUnlinkIssueModalEvents,
   getPostIssueModalEvents,
   getLinkIssueModalEvents,
-  getDeleteItemModalEvents,
+  getClickOnDeleteBtnDeleteItemModalEventCreator,
   getEditItemsModalEvents,
   getMakeDecisionModalEvents,
 } from './common/testItemPages/modalEventsCreators';
@@ -51,7 +52,7 @@ export const HISTORY_PAGE_EVENTS = {
   CLICK_REFRESH_BTN: getClickRefreshButtonEvent(HISTORY_PAGE),
   ...getClickDefectTooltipEvents(HISTORY_PAGE),
   CLICK_ACTIONS_BTN: getClickActionsButtonEvent(HISTORY_PAGE),
-  getClickOnPlusMinusBreadcrumbEvent: getClickOnPlusMinusEventCreator(HISTORY_PAGE),
+  ...getClickBreadcrumbsEvents(HISTORY_PAGE),
   CLICK_COMPARE_WITH_FILTER_BTN: {
     ...basicClickEventParametersHistoryPage,
     element_name: 'compare',
@@ -83,6 +84,7 @@ export const HISTORY_PAGE_EVENTS = {
     ...basicClickEventParametersHistoryPage,
     icon_name: 'cross_filter',
   },
+  TEST_ITEM_TABS_EVENTS: getClickOnTestItemsTabsEvents(HISTORY_PAGE),
   // GA3 events
   CLICK_CLOSE_ICON_FROM_SELECTION: {
     category: HISTORY_PAGE,
@@ -116,7 +118,9 @@ export const HISTORY_PAGE_EVENTS = {
   // LINK_ISSUE_MODAL
   LINK_ISSUE_MODAL_EVENTS: getLinkIssueModalEvents(HISTORY_PAGE),
   // DELETE_ITEM_MODAL
-  DELETE_ITEM_MODAL_EVENTS: getDeleteItemModalEvents(HISTORY_PAGE),
+  getClickOnDeleteBtnDeleteItemModalEvent: getClickOnDeleteBtnDeleteItemModalEventCreator(
+    HISTORY_PAGE,
+  ),
   // EDIT_ITEMS_MODAL
   EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(HISTORY_PAGE),
   // REFINE_FILTERS_PANEL
