@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { getBasicClickEventParameters } from './common/ga4Utils';
+import { getBasicChooseEventParameters, getBasicClickEventParameters } from './common/ga4Utils';
 import {
   getUnlinkIssueActionEvent,
   getClickRefreshButtonEvent,
@@ -38,6 +38,7 @@ import {
 export const LOG_PAGE = 'log';
 
 const basicLogPageClickEventParameters = getBasicClickEventParameters(LOG_PAGE);
+const basicLogPageChooseEventParameters = getBasicChooseEventParameters(LOG_PAGE);
 const basicHistoryLineClickEventParameters = {
   ...basicLogPageClickEventParameters,
   place: 'history_line',
@@ -49,6 +50,14 @@ const basicContainerWithDefectsClickEventParameters = {
 const basicAttachmentSectionClickEventParameters = {
   ...basicLogPageClickEventParameters,
   place: 'attachment_section',
+};
+const basicLogMessageClickEventParameters = {
+  ...basicLogPageClickEventParameters,
+  place: 'log_message',
+};
+const basicNestedStepsClickEventParameters = {
+  ...basicLogPageClickEventParameters,
+  place: 'nested_steps',
 };
 
 export const LOG_PAGE_EVENTS = {
@@ -142,8 +151,7 @@ export const LOG_PAGE_EVENTS = {
     icon_name: 'jump_to',
   },
   NESTED_STEP_EXPAND: {
-    ...basicLogPageClickEventParameters,
-    place: 'nested_steps',
+    ...basicNestedStepsClickEventParameters,
     icon_name: 'expand_nested_step',
   },
   CLICK_HISTORY_RELEVANT_ITEM_LINK: {
@@ -173,6 +181,63 @@ export const LOG_PAGE_EVENTS = {
       icon_name: 'open_in_new_tab',
     },
   },
+  ATTACHMENT_IN_LOG_MSG: {
+    OPEN_IN_MODAL: {
+      ...basicLogMessageClickEventParameters,
+      icon_name: 'attachment',
+    },
+    DOWNLOAD: {
+      ...basicLogMessageClickEventParameters,
+      icon_name: 'download',
+    },
+    OPEN_IN_NEW_TAB: {
+      ...basicLogMessageClickEventParameters,
+      icon_name: 'open_in_new_tab',
+    },
+  },
+  ATTACHMENT_CODE_MODAL: {
+    OPEN_IN_NEW_TAB: {
+      ...basicLogPageClickEventParameters,
+      modal: 'attachment',
+      icon_name: 'open_in_new_tab',
+    },
+  },
+  ALL_STATUSES_DROPDOWN: {
+    OPEN: {
+      ...basicLogPageClickEventParameters,
+      icon_name: 'all_statuses',
+    },
+    getChangeStatusEvent: (status) => ({
+      ...basicLogPageChooseEventParameters,
+      place: 'nested_steps',
+      icon_name: 'all_statuses',
+      type: status,
+    }),
+  },
+  RETRY_CLICK: {
+    ...basicLogPageClickEventParameters,
+    icon_name: 'retries',
+  },
+  getClickOnLoadMoreLogsEvent: (direction) => ({
+    ...basicNestedStepsClickEventParameters,
+    icon_name: `load_${direction}_300`,
+  }),
+  LOAD_CURRENT_STEP: {
+    ...basicNestedStepsClickEventParameters,
+    icon_name: 'load_current_step',
+  },
+  TIME_SORTING: {
+    ...basicLogPageClickEventParameters,
+    icon_name: 'sort_time',
+  },
+  SAUCE_LABS_BTN: {
+    ...basicLogPageClickEventParameters,
+    icon_name: 'sauce_labs',
+  },
+  PLAY_SAUCE_LABS_VIDEO: {
+    ...basicLogPageClickEventParameters,
+    element_name: 'play_video_sauce_labs',
+  },
   // GA3 events
   DEFECT_TYPE_TAG: {
     category: LOG_PAGE,
@@ -198,33 +263,6 @@ export const LOG_PAGE_EVENTS = {
     category: LOG_PAGE,
     action: 'Enter filter parameter in Log message input',
     label: 'Filter log messages by parameter',
-  },
-  ALL_STATUSES: {
-    category: LOG_PAGE,
-    action: 'Click on Icon Sorting on "All Statuses" in Log Message',
-    label: 'Sort Logs',
-  },
-  TIME_SORTING: {
-    category: LOG_PAGE,
-    action: 'Click on icon Sorting on Time in Log Message',
-    label: 'Sort logs',
-  },
-  ATTACHMENT_IN_LOG_MSG: {
-    OPEN_IN_MODAL: {
-      category: LOG_PAGE,
-      action: 'Click on Attachment in Log Message',
-      label: 'Open Attachment in modal',
-    },
-    DOWNLOAD: {
-      category: LOG_PAGE,
-      action: 'Click on Download Attachment icon in Log Message',
-      label: 'Download Attachment',
-    },
-    OPEN_IN_NEW_TAB: {
-      category: LOG_PAGE,
-      action: 'Click on Open Attachment in new tab icon in Log Message',
-      label: 'Open Attachment in new browser tab',
-    },
   },
   UNLINK_ISSUES_ACTION: getUnlinkIssueActionEvent(LOG_PAGE),
   // EDIT_DEFECT_MODAL
@@ -282,25 +320,10 @@ export const LOG_PAGE_EVENTS = {
     action: 'Click on button Cancel in Modal "Send defect to the last item"',
     label: 'Close Modal "Send defect to the last item"',
   },
-  RETRY_CLICK: {
-    category: LOG_PAGE,
-    action: 'Click on retry',
-    label: 'Transition to retry log page',
-  },
   LOAD_MORE_CLICK_STACK_TRACE: {
     category: LOG_PAGE,
     action: 'Click on Load more in Stake Trace',
     label: 'Load more logs in Stak Trace tab on Log view',
-  },
-  SAUCE_LABS_BTN: {
-    category: LOG_PAGE,
-    action: 'Click on Sauce labs button',
-    label: 'Open Sauce Labs section',
-  },
-  PLAY_SAUCE_LABS_VIDEO: {
-    category: LOG_PAGE,
-    action: 'Click on Play button on Sauce Labs video',
-    label: 'Play Sauce Labs video',
   },
   MAKE_DECISION_MODAL_EVENTS: getMakeDecisionModalEvents(LOG_PAGE),
   onClickIssueTicketEvent: getClickIssueTicketEvent(LOG_PAGE),

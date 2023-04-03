@@ -14,11 +14,17 @@
  * limitations under the License.
  */
 
-export const getBasicClickEventParameters = (category) => ({
-  action: 'click',
+const getBasicEventParameters = (action, category) => ({
+  action,
   category,
   place: '',
 });
+
+export const getBasicClickEventParameters = (category) =>
+  getBasicEventParameters('click', category);
+
+export const getBasicChooseEventParameters = (category) =>
+  getBasicEventParameters('choose', category);
 
 export const normalizeEventParameter = (parameter = '') =>
   parameter
