@@ -345,6 +345,11 @@ export class LogsGrid extends Component {
       onChangeSorting,
       rowHighlightingConfig,
     } = this.props;
+    const eventsInfo = {
+      clickOnExpandAccordion: LOG_PAGE_EVENTS.EXPAND_LOG_MSG,
+      getClickOnLoadMore: LOG_PAGE_EVENTS.getClickOnLoadMoreLogsEvent,
+      clickOnLoadCurrentStep: LOG_PAGE_EVENTS.LOAD_CURRENT_STEP,
+    };
 
     return (
       <div className={cx('logs-grid')}>
@@ -357,10 +362,10 @@ export class LogsGrid extends Component {
           sortingColumn={sortingColumn}
           sortingDirection={sortingDirection}
           onChangeSorting={onChangeSorting}
-          expandAccordionEventInfo={LOG_PAGE_EVENTS.EXPAND_LOG_MSG}
           nestedStepHeader={this.renderNestedStepHeader}
           rowHighlightingConfig={rowHighlightingConfig}
           nestedView
+          eventsInfo={eventsInfo}
         />
         {!logItems.length && !loading && (
           <NoItemMessage message={intl.formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />

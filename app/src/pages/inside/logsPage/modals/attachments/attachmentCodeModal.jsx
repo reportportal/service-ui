@@ -62,6 +62,7 @@ export class AttachmentCodeModal extends Component {
   );
 
   openInNewTab = () => {
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.ATTACHMENT_CODE_MODAL.OPEN_IN_NEW_TAB);
     this.props.openAttachmentInBrowserAction(this.props.data.id);
   };
 
