@@ -28,7 +28,7 @@ import {
 } from 'controllers/project/selectors';
 import { omit } from 'common/utils';
 import { gaMeasurementIdSelector } from 'controllers/appInfo/selectors';
-import { EventEmitter } from 'common/utils/eventEmitter';
+import ReactObserver from 'react-event-observer';
 import { normalizeDimensionValue } from './utils';
 
 const getAppVersion = (buildVersion) =>
@@ -38,7 +38,7 @@ const getAppVersion = (buildVersion) =>
     .splice(0, 2)
     .join('.');
 
-export const analyticsEventEmitter = new EventEmitter();
+export const analyticsEventEmitter = ReactObserver();
 
 @connect((state) => ({
   instanceId: instanceIdSelector(state),

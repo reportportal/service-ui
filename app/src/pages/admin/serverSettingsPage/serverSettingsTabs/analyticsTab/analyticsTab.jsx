@@ -128,7 +128,7 @@ export class AnalyticsTab extends Component {
   }
 
   componentDidMount() {
-    analyticsEventEmitter.on('analyticsWasEnabled', this.trackEnablingAnalytics);
+    analyticsEventEmitter.subscribe('analyticsWasEnabled', this.trackEnablingAnalytics);
   }
 
   trackEnablingAnalytics = (status) => {
@@ -136,7 +136,7 @@ export class AnalyticsTab extends Component {
   };
 
   componentWillUnmount() {
-    analyticsEventEmitter.removeListeners('analyticsWasEnabled', this.trackEnablingAnalytics);
+    analyticsEventEmitter.unsubscribe('analyticsWasEnabled');
   }
 
   onListClick = () => {
