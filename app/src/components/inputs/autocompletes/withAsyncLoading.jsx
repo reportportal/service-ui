@@ -18,15 +18,10 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { debounce, fetch, ERROR_CANCELED } from 'common/utils';
 
-export const autocompleteComponentModes = {
-  single: 'single',
-  multi: 'multi',
-};
-
-export const WithAsyncLoading = (AutocompleteComponent, mode) =>
+export const WithAsyncLoading = (AutocompleteComponent) =>
   class WrappedAutocomplete extends Component {
     static propTypes = {
-      onChange: PropTypes.func,
+      handleChange: PropTypes.func,
       getURI: PropTypes.func,
       makeOptions: PropTypes.func,
       filterOption: PropTypes.func,
@@ -34,7 +29,7 @@ export const WithAsyncLoading = (AutocompleteComponent, mode) =>
     };
 
     static defaultProps = {
-      onChange: () => {},
+      handleChange: () => {},
       getURI: () => '',
       makeOptions: (values) => values,
       filterOption: () => true,
@@ -88,15 +83,14 @@ export const WithAsyncLoading = (AutocompleteComponent, mode) =>
     };
 
     handleStateChange = (changes, { isOpen, inputValue }) => {
+      this.props.handleChange(inputValue);
+
       if (!isOpen) return;
 
       if (
         ('isOpen' in changes && !this.props.minLength) ||
         ('inputValue' in changes && (inputValue || '').trim().length >= this.props.minLength)
       ) {
-        if (mode === autocompleteComponentModes.single) {
-          this.props.onChange(inputValue);
-        }
         this.loadOptions(inputValue || '');
       }
     };
