@@ -251,7 +251,7 @@ export class DefectDetails extends Component {
       },
     });
     this.props.tracking.trackEvent(
-      LOG_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS.openModal(
+      LOG_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS.getOpenModalEvent(
         logItem.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
       ),
     );
@@ -416,7 +416,7 @@ export class DefectDetails extends Component {
               <GhostButton
                 disabled={!logItem.issue}
                 onClick={this.handleEditDefect}
-                title={!logItem.issue && formatMessage(messages.makeDecisionTooltip)}
+                title={!logItem.issue ? formatMessage(messages.makeDecisionTooltip) : ''}
               >
                 {formatMessage(messages.makeDecision)}
               </GhostButton>

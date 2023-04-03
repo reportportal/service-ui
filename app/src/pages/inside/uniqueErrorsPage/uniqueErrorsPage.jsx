@@ -225,11 +225,11 @@ export class UniqueErrorsPage extends Component {
       },
     });
     tracking.trackEvent(
-      UNIQUE_ERRORS_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS.openModal(
+      UNIQUE_ERRORS_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS.getOpenModalEvent(
         items.length === 1
           ? items[0].issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)
           : undefined,
-        eventData && eventData.id ? '' : 'ActionMenu',
+        eventData && eventData.id ? '' : 'actions',
       ),
     );
   };

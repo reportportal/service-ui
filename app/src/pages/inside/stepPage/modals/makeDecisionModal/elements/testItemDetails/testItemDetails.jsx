@@ -54,11 +54,7 @@ export const TestItemDetails = ({
 
   const toggleDetails = () => {
     setShowDetails(!showDetails);
-    onToggleCallback(item.id);
-    if (!showDetails) {
-      const { onClickItemEvent } = eventsInfo;
-      onClickItemEvent && onClickItemEvent();
-    }
+    onToggleCallback(item.id, !showDetails);
   };
 
   return (

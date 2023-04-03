@@ -18,7 +18,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { useDispatch } from 'react-redux';
-import { useTracking } from 'react-tracking';
 import { hideModalAction } from 'controllers/modal';
 import ErrorInlineIcon from 'common/img/error-inline.svg';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
@@ -36,9 +35,7 @@ export const DarkModalLayout = ({
   modalNote,
   sideSection,
   footer,
-  eventsInfo,
 }) => {
-  const { trackEvent } = useTracking();
   const [clickOutside, setClickOutside] = useState(false);
   const [isCtrlEnterPress, setIsCtrlEnterPress] = useState(false);
   const dispatch = useDispatch();
@@ -46,7 +43,6 @@ export const DarkModalLayout = ({
 
   const closeModalWindow = () => {
     dispatch(hideModalAction());
-    eventsInfo.closeModal && trackEvent(eventsInfo.closeModal(Date.now()));
   };
   const handleClickOutside = (event) => {
     if (wrapperRef && !wrapperRef.current.contains(event.target)) {
@@ -117,7 +113,6 @@ DarkModalLayout.propTypes = {
   modalNote: PropTypes.string,
   sideSection: PropTypes.node,
   footer: PropTypes.node,
-  eventsInfo: PropTypes.object,
 };
 DarkModalLayout.defaultProps = {
   headerTitle: '',
@@ -127,5 +122,4 @@ DarkModalLayout.defaultProps = {
   modalNote: '',
   sideSection: null,
   footer: null,
-  eventsInfo: {},
 };

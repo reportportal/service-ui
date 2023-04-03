@@ -104,17 +104,13 @@ export const CopyFromHistoryLine = ({
         }),
       );
   };
-  const onClickItemEvent = () => {
-    const { onClickItem } = eventsInfo;
-    onClickItem &&
-      trackEvent(onClickItem(defectFromTIGroup, messages[COPY_FROM_HISTORY_LINE].defaultMessage));
-  };
   const onOpenStackTraceEvent = () => {
-    const { onOpenStackTrace } = eventsInfo;
-    onOpenStackTrace &&
-      trackEvent(
-        onOpenStackTrace(defectFromTIGroup, messages[COPY_FROM_HISTORY_LINE].defaultMessage),
-      );
+    return eventsInfo.getOpenStackTraceEvent(defectFromTIGroup, 'history');
+  };
+  const onToggleItem = (id, expanded) => {
+    if (expanded) {
+      trackEvent(eventsInfo.getClickItemEvent(defectFromTIGroup, 'history'));
+    }
   };
 
   return (
@@ -130,10 +126,10 @@ export const CopyFromHistoryLine = ({
             mode={RADIO_TEST_ITEM_DETAILS}
             eventsInfo={{
               onOpenStackTraceEvent,
-              onClickItemEvent,
               onClickExternalLinkEvent,
               onClickIssueTicketEvent: eventsInfo.onClickIssueTicketEvent,
             }}
+            onToggleCallback={onToggleItem}
           />
         </div>
       ))}

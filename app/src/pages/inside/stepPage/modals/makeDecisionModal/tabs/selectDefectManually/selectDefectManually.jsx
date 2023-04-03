@@ -88,8 +88,8 @@ export const SelectDefectManually = ({
   };
   const handleIgnoreAnalyzerChange = (e) => {
     handleManualChange({ ignoreAnalyzer: e.target.checked });
-    const { toggleIgnoreAASwitcher } = eventsInfo;
-    trackEvent(toggleIgnoreAASwitcher(defectFromTIGroup, e.target.checked));
+    const { getClickIgnoreAACheckboxEvent } = eventsInfo;
+    trackEvent(getClickIgnoreAACheckboxEvent(defectFromTIGroup, e.target.checked));
   };
   const handleDefectCommentChange = (value) => {
     handleManualChange({ comment: value.trim() });
@@ -235,7 +235,8 @@ export const SelectDefectManually = ({
           onChange={handleDefectCommentChange}
           eventsInfo={{
             onClickToolbarIcon:
-              eventsInfo.onClickEditorIcon && eventsInfo.onClickEditorIcon(defectFromTIGroup),
+              eventsInfo.getClickCommentEditorIcon &&
+              eventsInfo.getClickCommentEditorIcon(defectFromTIGroup),
           }}
           placeholder={formatMessage(messages.comment)}
           mode="dark"

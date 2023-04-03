@@ -67,8 +67,8 @@ export const ItemsListHeader = ({
       testItems: testItems.map((item) => ({ ...item, opened: !showErrorLogs })),
     });
     onShowErrorLogsChange(!showErrorLogs);
-    const { toggleShowErrLogsSwitcher } = eventsInfo;
-    trackEvent(toggleShowErrLogsSwitcher({ defectFromTIGroup, state: !showErrorLogs }));
+    const { getToggleShowErrLogsSwitcherEvent } = eventsInfo;
+    trackEvent(getToggleShowErrLogsSwitcherEvent(defectFromTIGroup, !showErrorLogs));
   };
 
   return (

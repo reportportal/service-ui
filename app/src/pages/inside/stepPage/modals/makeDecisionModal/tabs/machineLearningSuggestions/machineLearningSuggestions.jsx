@@ -43,19 +43,13 @@ export const MachineLearningSuggestions = ({ modalState, itemData, eventsInfo })
         }),
       );
   };
-  const onClickItemEvent = () => {
-    const { onClickItem } = eventsInfo;
-    onClickItem &&
-      trackEvent(
-        onClickItem(defectFromTIGroup, messages[MACHINE_LEARNING_SUGGESTIONS].defaultMessage),
-      );
-  };
   const onOpenStackTraceEvent = () => {
-    const { onOpenStackTrace } = eventsInfo;
-    onOpenStackTrace &&
-      trackEvent(
-        onOpenStackTrace(defectFromTIGroup, messages[MACHINE_LEARNING_SUGGESTIONS].defaultMessage),
-      );
+    return eventsInfo.getOpenStackTraceEvent(defectFromTIGroup, 'ml_suggestions');
+  };
+  const onToggleItem = (id, expanded) => {
+    if (expanded) {
+      trackEvent(eventsInfo.getClickItemEvent(defectFromTIGroup, 'ml_suggestions'));
+    }
   };
 
   return (
@@ -68,9 +62,9 @@ export const MachineLearningSuggestions = ({ modalState, itemData, eventsInfo })
         showErrorLogs
         eventsInfo={{
           onOpenStackTraceEvent,
-          onClickItemEvent,
           onClickExternalLinkEvent,
         }}
+        onToggleCallback={onToggleItem}
       />
     </>
   );

@@ -15,7 +15,6 @@
  */
 
 export const defectFromTIGroupMap = {
-  true: 'TI',
-  false: 'NoTI',
-  undefined: 'Bulk',
+  true: 'no_investigate',
+  false: 'no_investigate',
 };
