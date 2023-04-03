@@ -51,6 +51,11 @@ const messages = defineMessages({
 });
 const TIME_COLUMN_ID = 'logTime';
 const STATUS_COLUMN_ID = 'status';
+const LOGS_GRID_EVENTS_INFO = {
+  clickOnExpandAccordion: LOG_PAGE_EVENTS.EXPAND_LOG_MSG,
+  getClickOnLoadMore: LOG_PAGE_EVENTS.getClickOnLoadMoreLogsEvent,
+  clickOnLoadCurrentStep: LOG_PAGE_EVENTS.LOAD_CURRENT_STEP,
+};
 
 const MessageColumn = ({ className, value, ...rest }) => (
   <div
@@ -345,11 +350,6 @@ export class LogsGrid extends Component {
       onChangeSorting,
       rowHighlightingConfig,
     } = this.props;
-    const eventsInfo = {
-      clickOnExpandAccordion: LOG_PAGE_EVENTS.EXPAND_LOG_MSG,
-      getClickOnLoadMore: LOG_PAGE_EVENTS.getClickOnLoadMoreLogsEvent,
-      clickOnLoadCurrentStep: LOG_PAGE_EVENTS.LOAD_CURRENT_STEP,
-    };
 
     return (
       <div className={cx('logs-grid')}>
@@ -365,7 +365,7 @@ export class LogsGrid extends Component {
           nestedStepHeader={this.renderNestedStepHeader}
           rowHighlightingConfig={rowHighlightingConfig}
           nestedView
-          eventsInfo={eventsInfo}
+          eventsInfo={LOGS_GRID_EVENTS_INFO}
         />
         {!logItems.length && !loading && (
           <NoItemMessage message={intl.formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />

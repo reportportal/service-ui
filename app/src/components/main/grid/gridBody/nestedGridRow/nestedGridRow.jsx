@@ -95,7 +95,7 @@ LoadButton.defaultProps = {
 
 export const NestedGridRow = track()(
   ({ tracking, data, level, data: { id }, nestedStepHeader: NestedStepHeader, ...rest }) => {
-    const { eventsInfo } = rest;
+    const { eventsInfo = {} } = rest;
     const dispatch = useDispatch();
     const { formatMessage } = useIntl();
     const { collapsed, loading, content, page } = useSelector((state) =>
