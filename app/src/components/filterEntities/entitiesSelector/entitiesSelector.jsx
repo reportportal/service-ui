@@ -74,12 +74,18 @@ export class EntitiesSelector extends Component {
   };
 
   handleChange = (entity) => () => {
-    const { tracking, events, onChange, entities } = this.props;
-    if (!entity.active && events.getRefineParametersEvent) {
+    const {
+      tracking,
+      onChange,
+      entities,
+      events: { commonEvents = {} },
+    } = this.props;
+
+    if (!entity.active) {
       const analyticsData = getEntityTitle(entities, entity);
 
       tracking.trackEvent(
-        events.getRefineParametersEvent(analyticsData, entity.meta && analyticsData),
+        commonEvents.getRefineParametersEvent(analyticsData, entity.meta && analyticsData),
       );
     }
     this.setState({ opened: !this.state.opened });
