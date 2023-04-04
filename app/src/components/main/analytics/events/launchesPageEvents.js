@@ -92,7 +92,9 @@ export const LAUNCHES_PAGE_EVENTS = {
     place: 'list_of_actions',
     element_name: element,
   }),
-  getRefineParametersEvent: getRefineParametersEventCreator(LAUNCHES_PAGE),
+  commonEvents: {
+    getRefineParametersEvent: getRefineParametersEventCreator(LAUNCHES_PAGE),
+  },
   ...getClickDonutEvents(LAUNCHES_PAGE),
   ...getClickDefectTooltipEvents(LAUNCHES_PAGE),
   getClickOnCriteriaTogglerEvent: (expanded) => ({
