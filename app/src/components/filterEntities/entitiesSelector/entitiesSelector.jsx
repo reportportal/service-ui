@@ -28,13 +28,13 @@ const cx = classNames.bind(styles);
 
 const getEntityTitle = (entities, { id: entityId, title }) => {
   const compositeIdDelimiter = '$';
-  const isIncludeDelimiter = entityId.lastIndexOf(compositeIdDelimiter);
-  const includeNextCharacterAfterDelimiter = isIncludeDelimiter + 1;
+  const lastIndexOfDelimiter = entityId.lastIndexOf(compositeIdDelimiter);
+  const nextCharacterIndexAfterDelimiter = lastIndexOfDelimiter + 1;
 
   return (
-    (isIncludeDelimiter !== -1
+    (lastIndexOfDelimiter !== -1
       ? entities.find(({ id }) =>
-          id.startsWith(entityId.slice(0, includeNextCharacterAfterDelimiter)),
+          id.startsWith(entityId.slice(0, nextCharacterIndexAfterDelimiter)),
         ).title
       : title) || ''
   );
