@@ -47,7 +47,6 @@ export const ItemsList = ({
             selectedItemsLength={selectedItems.length}
             showErrorLogs={showErrorLogs}
             onShowErrorLogsChange={setShowErrorLogs}
-            optionValue={optionValue}
             eventsInfo={eventsInfo}
           />
         )}

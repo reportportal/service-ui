@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useMemo, useReducer, useState } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { hideModalAction, withModal } from 'controllers/modal';
@@ -32,7 +32,6 @@ import { linkIssueAction, postIssueAction, unlinkIssueAction } from 'controllers
 import { LINK_ISSUE, POST_ISSUE, UNLINK_ISSUE } from 'common/constants/actionTypes';
 import { analyzerExtensionsSelector } from 'controllers/appInfo';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
-import { actionMessages } from 'common/constants/localization/eventsLocalization';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { useWindowResize } from 'common/hooks';
 import { MakeDecisionFooter } from './makeDecisionFooter';
@@ -306,40 +305,17 @@ const MakeDecision = ({ data }) => {
     const {
       eventsInfo: { editDefectsEvents = {} },
     } = data;
-    const { onApply, onApplyAndContinue } = editDefectsEvents;
-    const {
-      decisionType,
-      issueActionType,
-      optionValue,
-      selectedItems,
-      suggestedItems,
-      startTime,
-      suggestChoice,
-    } = modalState;
+    const { issueActionType, suggestedItems } = modalState;
     let eventInfo;
     const hasSuggestions = !!suggestedItems.length;
     if (isEqual(itemData.issue, modalState[ACTIVE_TAB_MAP[activeTab]].issue) && issueActionType) {
-      const issueActionLabel = issueActionType && actionMessages[issueActionType].defaultMessage;
-      eventInfo =
-        onApplyAndContinue &&
-        onApplyAndContinue(defectFromTIGroup, hasSuggestions, issueActionLabel, defectFromTIGroup);
+      eventInfo = editDefectsEvents.getClickOnApplyAndContinueEvent(
+        defectFromTIGroup,
+        hasSuggestions,
+        issueActionType.toLowerCase(),
+      );
     } else {
-      const section = messages[decisionType].defaultMessage;
-      const optionLabel = messages[optionValue].defaultMessage;
-      const itemsLength = selectedItems.length;
-      const timestamp = Date.now() - startTime;
-      const matchScore = suggestChoice.suggestRs && `${suggestChoice.suggestRs.matchScore}%`;
-      eventInfo =
-        onApply &&
-        onApply({
-          section,
-          defectFromTIGroup,
-          hasSuggestions,
-          optionLabel,
-          itemsLength,
-          timestamp,
-          matchScore,
-        });
+      eventInfo = editDefectsEvents.getClickOnApplyEvent(defectFromTIGroup, hasSuggestions);
     }
     return eventInfo;
   };
@@ -458,20 +434,6 @@ const MakeDecision = ({ data }) => {
     ctrlEnter: applyChanges,
   };
 
-  const layoutEventsInfo = useMemo(() => {
-    const { suggestedItems, startTime } = modalState;
-    const hasSuggestions = !!suggestedItems.length;
-    return {
-      closeModal: (endTime) =>
-        data.eventsInfo.editDefectsEvents &&
-        data.eventsInfo.editDefectsEvents.closeModal(
-          defectFromTIGroup,
-          hasSuggestions,
-          endTime - startTime,
-        ),
-    };
-  }, [modalState.suggestedItems]);
-
   return (
     <DarkModalLayout
       headerTitle={formatMessage(messages.selectDefect)}
@@ -496,7 +458,6 @@ const MakeDecision = ({ data }) => {
           eventsInfo={data.eventsInfo.editDefectsEvents}
         />
       }
-      eventsInfo={layoutEventsInfo}
     >
       <MakeDecisionTabs
         tabs={getMakeDecisionTabs(windowSize)}

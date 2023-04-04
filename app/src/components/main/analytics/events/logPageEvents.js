@@ -25,7 +25,6 @@ import {
   getClickBreadcrumbsEvents,
 } from './common/testItemPages/actionEventsCreators';
 import {
-  getEditDefectModalEvents,
   getEditToInvestigateChangeSearchModeEvent,
   getEditToInvestigateSelectAllSimilarItemsEvent,
   getEditToInvestigateSelectSpecificSimilarItemEvent,
@@ -266,7 +265,6 @@ export const LOG_PAGE_EVENTS = {
   },
   UNLINK_ISSUES_ACTION: getUnlinkIssueActionEvent(LOG_PAGE),
   // EDIT_DEFECT_MODAL
-  EDIT_DEFECT_MODAL_EVENTS: getEditDefectModalEvents(LOG_PAGE),
   SELECT_ALL_SIMILAR_ITEMS_EDIT_DEFECT_MODAL: getEditToInvestigateSelectAllSimilarItemsEvent(
     LOG_PAGE,
   ),

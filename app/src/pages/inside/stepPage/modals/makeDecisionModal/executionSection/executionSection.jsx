@@ -160,25 +160,11 @@ export const ExecutionSection = ({ modalState, setModalState, isBulkOperation, e
     }
   }, [optionValue]);
 
-  const onClickItemEvent = () => {
-    const { onClickItem } = eventsInfo;
-    onClickItem &&
-      trackEvent(onClickItem(defectFromTIGroup, messages.executionToChange.defaultMessage));
-  };
   const onClickExternalLinkEvent = () => {
-    const { onClickExternalLink } = eventsInfo;
-    onClickExternalLink &&
-      trackEvent(
-        onClickExternalLink({
-          defectFromTIGroup,
-          section: messages.executionToChange.defaultMessage,
-        }),
-      );
+    trackEvent(eventsInfo.getClickItemLinkEvent(defectFromTIGroup, 'execution_to_change'));
   };
   const onOpenStackTraceEvent = () => {
-    const { onOpenStackTrace } = eventsInfo;
-    onOpenStackTrace &&
-      trackEvent(onOpenStackTrace(defectFromTIGroup, messages.executionToChange.defaultMessage));
+    return eventsInfo.getOpenStackTraceEvent(defectFromTIGroup, 'execution_to_change');
   };
 
   return (
@@ -193,9 +179,7 @@ export const ExecutionSection = ({ modalState, setModalState, isBulkOperation, e
           key={item.id}
           eventsInfo={{
             onOpenStackTraceEvent,
-            onClickItemEvent,
             onClickExternalLinkEvent,
-            onClickIssueTicketEvent: eventsInfo.onClickIssueTicketEvent,
           }}
         />
       ))}

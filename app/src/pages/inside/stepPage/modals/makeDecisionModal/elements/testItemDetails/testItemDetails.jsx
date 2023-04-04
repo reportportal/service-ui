@@ -55,10 +55,6 @@ export const TestItemDetails = ({
   const toggleDetails = () => {
     setShowDetails(!showDetails);
     onToggleCallback(item.id);
-    if (!showDetails) {
-      const { onClickItemEvent } = eventsInfo;
-      onClickItemEvent && onClickItemEvent();
-    }
   };
 
   return (
@@ -71,7 +67,6 @@ export const TestItemDetails = ({
         hideLabels={hideLabels}
         onClickLinkEvent={eventsInfo.onClickExternalLinkEvent}
         toggleDetails={toggleDetails}
-        events={eventsInfo}
       />
       {showDetails && loading ? (
         <SpinningPreloader />

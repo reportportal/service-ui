@@ -89,7 +89,7 @@ const BulkComment = ({ modalState, setModalState, eventsInfo }) => {
   const onChangeOption = (val) => {
     setModalState({ commentOption: val });
     onToggle();
-    trackEvent(eventsInfo.onChangeCommentOption(messages[val].defaultMessage));
+    trackEvent(eventsInfo.getOnChangeCommentOptionEvent(messages[val].defaultMessage));
   };
 
   const bulkComment = currentSource.issue.comment;
@@ -150,7 +150,6 @@ export const CommentSection = ({ modalState, setModalState, isBulkOperation, eve
         <BulkComment
           modalState={modalState}
           setModalState={setModalState}
-          isBulkOperation={isBulkOperation}
           eventsInfo={eventsInfo}
         />
       ) : (
