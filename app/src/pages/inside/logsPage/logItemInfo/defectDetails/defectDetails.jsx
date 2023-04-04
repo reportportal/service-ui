@@ -238,6 +238,11 @@ export class DefectDetails extends Component {
 
   handleEditDefect = () => {
     const { logItem } = this.props;
+    this.props.tracking.trackEvent(
+      LOG_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS.getOpenModalEvent(
+        logItem.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
+      ),
+    );
     this.props.editDefectsAction([logItem], {
       fetchFunc: this.onDefectEdited,
       eventsInfo: {
@@ -250,11 +255,6 @@ export class DefectDetails extends Component {
         linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
       },
     });
-    this.props.tracking.trackEvent(
-      LOG_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS.openModal(
-        logItem.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
-      ),
-    );
   };
 
   toggleExpanded = () => {
@@ -416,7 +416,7 @@ export class DefectDetails extends Component {
               <GhostButton
                 disabled={!logItem.issue}
                 onClick={this.handleEditDefect}
-                title={!logItem.issue && formatMessage(messages.makeDecisionTooltip)}
+                title={!logItem.issue ? formatMessage(messages.makeDecisionTooltip) : ''}
               >
                 {formatMessage(messages.makeDecision)}
               </GhostButton>

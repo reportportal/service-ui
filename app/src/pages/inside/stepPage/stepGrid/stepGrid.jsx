@@ -318,7 +318,8 @@ export class StepGrid extends Component {
           onUnlinkSingleTicket,
           events: {
             onEditEvent:
-              events.MAKE_DECISION_MODAL_EVENTS && events.MAKE_DECISION_MODAL_EVENTS.openModal,
+              events.MAKE_DECISION_MODAL_EVENTS &&
+              events.MAKE_DECISION_MODAL_EVENTS.getOpenModalEvent,
             onClickIssueTicketEvent: events.onClickIssueTicketEvent,
           },
         },

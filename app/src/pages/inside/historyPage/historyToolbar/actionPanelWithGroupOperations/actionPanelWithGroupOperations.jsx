@@ -294,11 +294,11 @@ export class ActionPanelWithGroupOperations extends Component {
     const { selectedItems, debugMode, onEditDefects, tracking } = this.props;
     const items = eventData && eventData.id ? [eventData] : selectedItems;
     tracking.trackEvent(
-      HISTORY_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS.openModal(
+      HISTORY_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS.getOpenModalEvent(
         items.length === 1
           ? items[0].issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)
           : undefined,
-        'ActionMenu',
+        'actions',
       ),
     );
     onEditDefects(items, {

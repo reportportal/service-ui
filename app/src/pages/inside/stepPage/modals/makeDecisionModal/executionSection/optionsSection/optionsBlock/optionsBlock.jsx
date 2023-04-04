@@ -118,8 +118,12 @@ export const OptionsBlock = ({
       searchMode,
       selectedItems: [],
     });
-    eventsInfo.onDecisionOption &&
-      trackEvent(eventsInfo.onDecisionOption(defectFromTIGroup, messages[value].defaultMessage));
+    trackEvent(
+      eventsInfo.getClickOnApplyDefectForOptionEvent(
+        defectFromTIGroup,
+        messages[value].defaultMessage,
+      ),
+    );
     onToggle();
   };
   const selectedOption = formatMessage(
