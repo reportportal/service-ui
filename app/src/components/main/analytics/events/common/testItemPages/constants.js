@@ -15,6 +15,6 @@
  */
 
 export const defectFromTIGroupMap = {
-  true: 'no_investigate',
+  true: 'to_investigate',
   false: 'no_investigate',
 };
