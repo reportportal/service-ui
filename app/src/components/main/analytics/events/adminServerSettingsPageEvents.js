@@ -24,6 +24,7 @@ const basicClickEventParametersAdminServerSettingsPage = getBasicClickEventParam
 
 export const submitAnalyticsBtn = (status) => ({
   ...basicClickEventParametersAdminServerSettingsPage,
+  element_name: 'submit',
   status,
 });
 
