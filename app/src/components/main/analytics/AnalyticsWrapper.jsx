@@ -38,7 +38,7 @@ const getAppVersion = (buildVersion) =>
     .splice(0, 2)
     .join('.');
 
-export const analyticsEventEmitter = ReactObserver();
+export const analyticsEventObserver = ReactObserver();
 
 @connect((state) => ({
   instanceId: instanceIdSelector(state),
@@ -52,7 +52,7 @@ export const analyticsEventEmitter = ReactObserver();
 }))
 @track(({ children, dispatch, ...additionalData }) => additionalData, {
   dispatchOnMount: () => {
-    queueMicrotask(() => analyticsEventEmitter.emit('analyticsWasEnabled', 'active'));
+    queueMicrotask(() => analyticsEventObserver.emit('analyticsWasEnabled', 'active'));
   },
   dispatch: ({
     instanceId,

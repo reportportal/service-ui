@@ -38,7 +38,7 @@ import {
   fetchAppInfoAction,
   ANALYTICS_ALL_KEY,
 } from 'controllers/appInfo';
-import { analyticsEventEmitter } from 'components/main/analytics/AnalyticsWrapper';
+import { analyticsEventObserver } from 'components/main/analytics/AnalyticsWrapper';
 import styles from './analyticsTab.scss';
 
 const cx = classNames.bind(styles);
@@ -128,7 +128,7 @@ export class AnalyticsTab extends Component {
   }
 
   componentDidMount() {
-    analyticsEventEmitter.subscribe('analyticsWasEnabled', this.trackEnablingAnalytics);
+    analyticsEventObserver.subscribe('analyticsWasEnabled', this.trackEnablingAnalytics);
   }
 
   trackEnablingAnalytics = (status) => {
@@ -136,7 +136,7 @@ export class AnalyticsTab extends Component {
   };
 
   componentWillUnmount() {
-    analyticsEventEmitter.unsubscribe('analyticsWasEnabled');
+    analyticsEventObserver.unsubscribe('analyticsWasEnabled');
   }
 
   onListClick = () => {
