@@ -19,7 +19,6 @@ import PropTypes from 'prop-types';
 import { useTracking } from 'react-tracking';
 import classNames from 'classnames/bind';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
-import { messages } from '../../../../../makeDecisionModal/messages';
 import { TestItemDetails } from '../../../../elements/testItemDetails';
 import { CHECKBOX_TEST_ITEM_DETAILS } from '../../../../constants';
 import styles from './itemsListBody.scss';
@@ -93,10 +92,7 @@ export const ItemsListBody = ({
         : [...selectedItems, testItems.find((item) => item.id === id)],
     });
   };
-  const onToggleItem = (id, expanded) => {
-    if (expanded) {
-      trackEvent(eventsInfo.getClickItemEvent(defectFromTIGroup, 'apply_for'));
-    }
+  const onToggleItem = (id) => {
     const newTestItems = testItems.map((item) =>
       item.id === id ? { ...item, opened: !item.opened } : item,
     );
@@ -106,11 +102,7 @@ export const ItemsListBody = ({
     onShowErrorLogsChange(newTestItems.every((item) => item.opened === true));
   };
   const onClickExternalLinkEvent = () => {
-    const { onClickExternalLink } = eventsInfo;
-    onClickExternalLink &&
-      trackEvent(
-        onClickExternalLink({ defectFromTIGroup, section: messages.applyFor.defaultMessage }),
-      );
+    trackEvent(eventsInfo.getClickItemLinkEvent(defectFromTIGroup, 'apply_for'));
   };
   const onOpenStackTraceEvent = () => {
     return eventsInfo.getOpenStackTraceEvent(defectFromTIGroup, 'apply_for');

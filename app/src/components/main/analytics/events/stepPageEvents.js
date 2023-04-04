@@ -38,7 +38,6 @@ import {
   getClickBreadcrumbsEvents,
 } from './common/testItemPages/actionEventsCreators';
 import {
-  getEditDefectModalEvents,
   getEditToInvestigateChangeSearchModeEvent,
   getEditToInvestigateSelectAllSimilarItemsEvent,
   getEditToInvestigateSelectSpecificSimilarItemEvent,
@@ -153,7 +152,6 @@ export const STEP_PAGE_EVENTS = {
   UNLINK_ISSUES_ACTION: getUnlinkIssueActionEvent(STEP_PAGE),
   DELETE_ACTION: getDeleteActionEvent(STEP_PAGE),
   // EDIT_DEFECT_MODAL
-  EDIT_DEFECT_MODAL_EVENTS: getEditDefectModalEvents(STEP_PAGE),
   SELECT_ALL_SIMILAR_ITEMS_EDIT_DEFECT_MODAL: getEditToInvestigateSelectAllSimilarItemsEvent(
     STEP_PAGE,
   ),

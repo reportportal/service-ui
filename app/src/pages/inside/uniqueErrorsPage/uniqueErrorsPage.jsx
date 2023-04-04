@@ -215,6 +215,14 @@ export class UniqueErrorsPage extends Component {
   handleEditDefects = (eventData) => {
     const { selectedItems, tracking } = this.props;
     const items = eventData && eventData.id ? [eventData] : selectedItems;
+    tracking.trackEvent(
+      UNIQUE_ERRORS_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS.getOpenModalEvent(
+        items.length === 1
+          ? items[0].issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)
+          : undefined,
+        eventData && eventData.id ? '' : 'actions',
+      ),
+    );
     this.props.editDefectsAction(items, {
       fetchFunc: this.unselectAndFetchItems,
       eventsInfo: {
@@ -224,14 +232,6 @@ export class UniqueErrorsPage extends Component {
         postIssueEvents: POST_ISSUE_EVENTS_INFO,
       },
     });
-    tracking.trackEvent(
-      UNIQUE_ERRORS_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS.getOpenModalEvent(
-        items.length === 1
-          ? items[0].issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)
-          : undefined,
-        eventData && eventData.id ? '' : 'actions',
-      ),
-    );
   };
   handleUnlinkSingleTicket = (testItem) => (ticketId) => {
     const items = [

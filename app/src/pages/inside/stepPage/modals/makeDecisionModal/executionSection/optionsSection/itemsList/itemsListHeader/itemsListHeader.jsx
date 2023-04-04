@@ -35,7 +35,6 @@ export const ItemsListHeader = ({
   selectedItems,
   showErrorLogs,
   onShowErrorLogsChange,
-  optionValue,
   eventsInfo,
 }) => {
   const { formatMessage } = useIntl();
@@ -54,13 +53,6 @@ export const ItemsListHeader = ({
     setItems({
       selectedItems: isAllSelected ? [] : testItems,
     });
-    const { onSelectAllItems } = eventsInfo;
-    const args = {
-      defectFromTIGroup,
-      state: isAllSelected,
-      optionLabel: optionValue && messages[optionValue].defaultMessage,
-    };
-    onSelectAllItems && trackEvent(onSelectAllItems(args));
   };
   const onShowLogsChange = () => {
     setItems({
@@ -105,7 +97,6 @@ ItemsListHeader.propTypes = {
   selectedItems: PropTypes.array,
   showErrorLogs: PropTypes.bool,
   onShowErrorLogsChange: PropTypes.func,
-  optionValue: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   eventsInfo: PropTypes.object,
 };
 ItemsListHeader.defaultProps = {
@@ -116,6 +107,5 @@ ItemsListHeader.defaultProps = {
   selectedItems: [],
   showErrorLogs: false,
   onShowErrorLogsChange: () => {},
-  optionValue: '',
   eventsInfo: {},
 };

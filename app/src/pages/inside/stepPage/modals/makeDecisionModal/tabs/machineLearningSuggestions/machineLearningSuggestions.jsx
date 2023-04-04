@@ -19,7 +19,6 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useTracking } from 'react-tracking';
 import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
-import { MACHINE_LEARNING_SUGGESTIONS } from '../../constants';
 import { TestItemDetails } from '../../elements/testItemDetails';
 import { messages } from '../../messages';
 
@@ -34,22 +33,10 @@ export const MachineLearningSuggestions = ({ modalState, itemData, eventsInfo })
     itemData.issue && itemData.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
 
   const onClickExternalLinkEvent = () => {
-    const { onClickExternalLink } = eventsInfo;
-    onClickExternalLink &&
-      trackEvent(
-        onClickExternalLink({
-          defectFromTIGroup,
-          section: messages[MACHINE_LEARNING_SUGGESTIONS].defaultMessage,
-        }),
-      );
+    trackEvent(eventsInfo.getClickItemLinkEvent(defectFromTIGroup, 'ml_suggestions'));
   };
   const onOpenStackTraceEvent = () => {
     return eventsInfo.getOpenStackTraceEvent(defectFromTIGroup, 'ml_suggestions');
-  };
-  const onToggleItem = (id, expanded) => {
-    if (expanded) {
-      trackEvent(eventsInfo.getClickItemEvent(defectFromTIGroup, 'ml_suggestions'));
-    }
   };
 
   return (
@@ -64,7 +51,6 @@ export const MachineLearningSuggestions = ({ modalState, itemData, eventsInfo })
           onOpenStackTraceEvent,
           onClickExternalLinkEvent,
         }}
-        onToggleCallback={onToggleItem}
       />
     </>
   );

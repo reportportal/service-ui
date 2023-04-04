@@ -136,7 +136,6 @@ export const SelectDefectManually = ({
         );
       }
     };
-    const { onClickIssueBtn } = eventsInfo;
     const actionButtonItems = [
       {
         id: POST_ISSUE,
@@ -146,10 +145,6 @@ export const SelectDefectManually = ({
         icon: PlusIcon,
         onClick: () => {
           setIssueActionType(POST_ISSUE);
-          onClickIssueBtn &&
-            trackEvent(
-              onClickIssueBtn(defectFromTIGroup, actionMessages[POST_ISSUE].defaultMessage),
-            );
         },
         disabled: isPostIssueUnavailable,
       },
@@ -161,10 +156,6 @@ export const SelectDefectManually = ({
         icon: PlusIcon,
         onClick: () => {
           setIssueActionType(LINK_ISSUE);
-          onClickIssueBtn &&
-            trackEvent(
-              onClickIssueBtn(defectFromTIGroup, actionMessages[LINK_ISSUE].defaultMessage),
-            );
         },
         disabled: !btsIntegrations.length,
       },
@@ -182,10 +173,6 @@ export const SelectDefectManually = ({
         icon: UnlinkIcon,
         onClick: () => {
           setIssueActionType(UNLINK_ISSUE);
-          onClickIssueBtn &&
-            trackEvent(
-              onClickIssueBtn(defectFromTIGroup, actionMessages[UNLINK_ISSUE].defaultMessage),
-            );
         },
       });
     }

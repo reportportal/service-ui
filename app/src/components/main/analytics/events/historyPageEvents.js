@@ -30,7 +30,6 @@ import {
   getClickBreadcrumbsEvents,
 } from './common/testItemPages/actionEventsCreators';
 import {
-  getEditDefectModalEvents,
   getEditToInvestigateSelectAllSimilarItemsEvent,
   getEditToInvestigateSelectSpecificSimilarItemEvent,
   getEditToInvestigateChangeSearchModeEvent,
@@ -103,7 +102,6 @@ export const HISTORY_PAGE_EVENTS = {
   UNLINK_ISSUES_ACTION: getUnlinkIssueActionEvent(HISTORY_PAGE),
   PROCEED_VALID_ITEMS: getCommonActionEvents(HISTORY_PAGE).PROCEED_VALID_ITEMS,
   // EDIT_DEFECT_MODAL
-  EDIT_DEFECT_MODAL_EVENTS: getEditDefectModalEvents(HISTORY_PAGE),
   SELECT_ALL_SIMILAR_ITEMS_EDIT_DEFECT_MODAL: getEditToInvestigateSelectAllSimilarItemsEvent(
     HISTORY_PAGE,
   ),

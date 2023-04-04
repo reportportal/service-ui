@@ -15,7 +15,6 @@
  */
 
 import { SEARCH_MODES } from 'pages/inside/stepPage/modals/makeDecisionModal/constants';
-import { getClickIssueTicketEvent } from 'components/main/analytics/events/common/testItemPages/actionEventsCreators';
 import { defectFromTIGroupMap } from './constants';
 import { getBasicClickEventParameters } from '../ga4Utils';
 
@@ -100,7 +99,7 @@ const getOpenStackTraceEventCreator = (place) => (defectFromTIGroup, type) => ({
   icon_name: 'expand_error_log',
   type,
 });
-const getClickOnItemEventCreator = (place) => (defectFromTIGroup, type) => ({
+const getClickOnItemLinkEventCreator = (place) => (defectFromTIGroup, type) => ({
   ...getBasicClickEventParametersMakeDecisionCreator(place, defectFromTIGroup),
   link_name: 'item_link',
   type,
@@ -109,7 +108,7 @@ const getApplyDefectForOptionEventCreator = (place) => (defectFromTIGroup, typeL
   const type = typeLabel
     .replace(/{([A-Za-z]+)}/, 'filter')
     .toLowerCase()
-    .replace(' ', '_');
+    .replace(/\s/g, '_');
   return {
     ...getBasicClickEventParametersMakeDecisionCreator(place, defectFromTIGroup),
     icon_name: 'apply_for',
@@ -123,30 +122,8 @@ const getExpandFooterEventCreator = (place) => (defectFromTIGroup) => ({
 const getOnChangeCommentOptionEventCreator = (place) => (label) => ({
   ...getBasicClickEventParametersMakeDecisionCreator(place),
   icon_name: 'results_will_be_applied_for_the_item',
-  type: label.toLowerCase().replace(' ', '_'),
+  type: label.toLowerCase().replace(/\s/g, '_'),
 });
-
-// GA3 events
-const getOnClickIssueEvent = (page) => (defectFromTIGroup, label) => ({
-  category: MAKE_DECISION,
-  action: `Click on button "+${label}" on modal "Make decision"`,
-  label: `${page}#${defectFromTIGroupMap[defectFromTIGroup]}`,
-});
-const getOnClickExternalLink = (page) => ({ defectFromTIGroup, section }) => ({
-  category: MAKE_DECISION,
-  action: 'Click on Issue Link and Open Page Log',
-  label: [page, defectFromTIGroupMap[defectFromTIGroup], section].join('#'),
-});
-const getOnSelectAllEvent = (page) => ({ defectFromTIGroup, state, optionLabel }) => {
-  const switcher = state ? 'OFF' : 'ON';
-  const selectedOption = optionLabel && optionLabel.replace(/{([A-Za-z]+)}/, 'filter');
-  return {
-    category: MAKE_DECISION,
-    action: 'Checkmark box "Item selected" in Apply defect for',
-    label: [page, defectFromTIGroupMap[defectFromTIGroup], switcher, selectedOption].join('#'),
-  };
-};
-
 export const getMakeDecisionModalEvents = (page) => ({
   getOpenModalEvent: getOpenModalEventCreator(page),
   getClickOnApplyEvent: getClickOnApplyBtnEventCreator(page),
@@ -155,15 +132,10 @@ export const getMakeDecisionModalEvents = (page) => ({
   getClickIgnoreAACheckboxEvent: getClickIgnoreAACheckboxEventCreator(page),
   getClickCommentEditorIcon: getClickOnCommentEditorIconEventCreator(page),
   getOpenStackTraceEvent: getOpenStackTraceEventCreator(page),
-  getClickItemEvent: getClickOnItemEventCreator(page),
+  getClickItemLinkEvent: getClickOnItemLinkEventCreator(page),
   getClickOnApplyDefectForOptionEvent: getApplyDefectForOptionEventCreator(page),
   getExpandFooterEvent: getExpandFooterEventCreator(page),
   getOnChangeCommentOptionEvent: getOnChangeCommentOptionEventCreator(page),
-
-  onClickIssueBtn: getOnClickIssueEvent(page),
-  onClickExternalLink: getOnClickExternalLink(page),
-  onSelectAllItems: getOnSelectAllEvent(page),
-  onClickIssueTicketEvent: getClickIssueTicketEvent(MAKE_DECISION),
 });
 
 // GA3 events
