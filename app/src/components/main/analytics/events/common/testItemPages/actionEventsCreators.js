@@ -72,6 +72,11 @@ export const getClickDefectTooltipEvents = (category) => ({
     icon_name: 'tooltip_to_invest',
     place,
   }),
+  getClickTooltipNdEvent: (place = 'body') => ({
+    ...getBasicClickEventParameters(category),
+    icon_name: 'tooltip_no_defect',
+    place,
+  }),
 });
 export const getClickActionsButtonEvent = (category) => ({
   ...getBasicClickEventParameters(category),
