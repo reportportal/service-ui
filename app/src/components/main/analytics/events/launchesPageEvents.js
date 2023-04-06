@@ -86,7 +86,7 @@ export const LAUNCHES_PAGE_EVENTS = {
   CLICK_SELECT_ALL_ITEMS: getClickSelectAllItemsEvent(LAUNCHES_PAGE),
   CLICK_SELECT_ONE_ITEM: getClickSelectOneItemEvent(LAUNCHES_PAGE),
   CLICK_ACTIONS_BTN: getClickActionsButtonEvent(LAUNCHES_PAGE),
-  EDIT_ICON_CLICK: getClickPencilIconEvent(LAUNCHES_PAGE),
+  CLICK_EDIT_ICON: getClickPencilIconEvent(LAUNCHES_PAGE),
   getClickOnListOfActionsButtonEvent: (element) => ({
     ...basicClickEventParametersLaunchPage,
     place: 'list_of_actions',

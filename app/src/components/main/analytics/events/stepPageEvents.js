@@ -48,8 +48,11 @@ import {
   getEditItemsModalEvents,
   getMakeDecisionModalEvents,
 } from './common/testItemPages/modalEventsCreators';
+import { getBasicClickEventParameters } from './common/ga4Utils';
 
 export const STEP_PAGE = 'step';
+
+const basicClickEventParametersStepPage = getBasicClickEventParameters(STEP_PAGE);
 
 export const getChangeItemStatusEvent = (oldStatus, newStatus) => ({
   category: STEP_PAGE,
@@ -65,7 +68,7 @@ export const STEP_PAGE_EVENTS = {
   CLICK_SELECT_ONE_ITEM: getClickSelectOneItemEvent(STEP_PAGE),
   ...getClickDefectTooltipEvents(STEP_PAGE),
   CLICK_ACTIONS_BTN: getClickActionsButtonEvent(STEP_PAGE),
-  EDIT_ICON_CLICK: getClickPencilIconEvent(STEP_PAGE),
+  CLICK_EDIT_ICON: getClickPencilIconEvent(STEP_PAGE),
   REFINE_FILTERS_PANEL_EVENTS: {
     commonEvents: { getRefineParametersEvent: getRefineParametersEventCreator(STEP_PAGE) },
     getChangeFilterEvent: getChangeFilterEvent(STEP_PAGE),
@@ -73,6 +76,24 @@ export const STEP_PAGE_EVENTS = {
   ...getClickBreadcrumbsEvents(STEP_PAGE),
   CLICK_ATTRIBUTES: getClickOnAttributesEvent(STEP_PAGE),
   TEST_ITEM_TABS_EVENTS: getClickOnTestItemsTabsEvents(STEP_PAGE),
+  getClickOnDeleteBtnDeleteItemModalEvent: getClickOnDeleteBtnDeleteItemModalEventCreator(
+    STEP_PAGE,
+  ),
+  CLICK_ON_RETRIES_BTN: {
+    ...basicClickEventParametersStepPage,
+    place: 'item_info',
+    element_name: 'retries',
+  },
+  CLICK_ON_PARTICULAR_RETRY_BTN: {
+    ...basicClickEventParametersStepPage,
+    place: 'item_info',
+    element_name: 'retry_to_read',
+  },
+  CLICK_LINK_OPEN_RETRY_IN_LOG_VIEW: {
+    ...basicClickEventParametersStepPage,
+    place: 'retries_info',
+    link_name: 'open_in_log_view',
+  },
   // GA3 events
   ...getCommonActionEvents(STEP_PAGE),
   // REFINE_FILTERS_PANEL
@@ -165,26 +186,12 @@ export const STEP_PAGE_EVENTS = {
   POST_ISSUE_MODAL_EVENTS: getPostIssueModalEvents(STEP_PAGE),
   // LINK_ISSUE_MODAL
   LINK_ISSUE_MODAL_EVENTS: getLinkIssueModalEvents(STEP_PAGE),
-  // DELETE_ITEM_MODAL
-  getClickOnDeleteBtnDeleteItemModalEvent: getClickOnDeleteBtnDeleteItemModalEventCreator(
-    STEP_PAGE,
-  ),
   // EDIT_ITEMS_MODAL
   EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(STEP_PAGE),
   LOG_VIEW_SWITCHER: {
     category: STEP_PAGE,
     action: 'Click on test log view switcher',
     label: 'Open "Parent log view"',
-  },
-  RETRIES_BTN_CLICK: {
-    category: STEP_PAGE,
-    action: 'Click on Btn Retries',
-    label: 'Open a list with Retries',
-  },
-  OPEN_RETRY_IN_LOG_VIEW_LINK_CLICK: {
-    category: STEP_PAGE,
-    action: 'Click on "Open in Log view"',
-    label: 'Open Retry in Log view',
   },
   COPY_CODE_REFERENCE_EDIT_ITEM_MODAL: {
     category: STEP_PAGE,

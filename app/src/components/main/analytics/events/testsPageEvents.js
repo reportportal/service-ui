@@ -44,7 +44,7 @@ export const TESTS_PAGE_EVENTS = {
   ...getClickDonutEvents(TEST_PAGE),
   ...getClickDefectTooltipEvents(TEST_PAGE),
   CLICK_ACTIONS_BTN: getClickActionsButtonEvent(TEST_PAGE),
-  EDIT_ICON_CLICK: getClickPencilIconEvent(TEST_PAGE),
+  CLICK_EDIT_ICON: getClickPencilIconEvent(TEST_PAGE),
   REFINE_FILTERS_PANEL_EVENTS: {
     commonEvents: { getRefineParametersEvent: getRefineParametersEventCreator(TEST_PAGE) },
   },

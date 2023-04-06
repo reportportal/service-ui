@@ -59,7 +59,7 @@ export class ItemInfoWithRetries extends Component {
 
   showRetries = () => {
     if (!this.props.expanded) {
-      this.props.tracking.trackEvent(STEP_PAGE_EVENTS.RETRIES_BTN_CLICK);
+      this.props.tracking.trackEvent(STEP_PAGE_EVENTS.CLICK_ON_RETRIES_BTN);
       this.props.toggleExpand();
     }
     this.setState({ retriesVisible: true }, () => {

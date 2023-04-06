@@ -44,7 +44,7 @@ export const SUITES_PAGE_EVENTS = {
   ...getClickDonutEvents(SUITE_PAGE),
   ...getClickDefectTooltipEvents(SUITE_PAGE),
   CLICK_ACTIONS_BTN: getClickActionsButtonEvent(SUITE_PAGE),
-  EDIT_ICON_CLICK: getClickPencilIconEvent(SUITE_PAGE),
+  CLICK_EDIT_ICON: getClickPencilIconEvent(SUITE_PAGE),
   REFINE_FILTERS_PANEL_EVENTS: {
     commonEvents: { getRefineParametersEvent: getRefineParametersEventCreator(SUITE_PAGE) },
   },
