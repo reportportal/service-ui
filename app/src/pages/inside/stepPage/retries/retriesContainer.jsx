@@ -28,7 +28,7 @@ import { Retries } from './retries';
 @connect((state) => ({
   activeProject: activeProjectSelector(state),
 }))
-@track
+@track()
 export class RetriesContainer extends Component {
   static propTypes = {
     testItemId: PropTypes.number.isRequired,
