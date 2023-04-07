@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { LAUNCH_ANALYZE_TYPES } from 'common/constants/launchAnalyzeTypes';
 import {
   getClickOnAnalyzeUniqueErrorsEventCreator,
   getEditItemsModalEvents,
@@ -48,26 +49,22 @@ import { getBasicClickEventParameters } from './common/ga4Utils';
 export const LAUNCHES_PAGE = 'launches';
 const LAUNCHES_MODAL = 'Modal launches';
 
+const { ANALYZER_MODE, ANALYZE_ITEMS_MODE } = LAUNCH_ANALYZE_TYPES;
+
+const LAUNCH_ANALYZE_TYPES_TO_ANALYTICS_TITLES_MAP = {
+  [ANALYZE_ITEMS_MODE.TO_INVESTIGATE]: 'investigate_items',
+  [ANALYZE_ITEMS_MODE.AUTO_ANALYZED]: 'by_aa',
+  [ANALYZE_ITEMS_MODE.MANUALLY_ANALYZED]: 'manually',
+  [ANALYZER_MODE.ALL]: 'all_launches',
+  [ANALYZER_MODE.LAUNCH_NAME]: 'launches_with_the_same_name',
+  [ANALYZER_MODE.CURRENT_LAUNCH]: 'only_current_launch',
+};
+const formatAnalyzeItemsMode = (modes) =>
+  modes.map((mode) => LAUNCH_ANALYZE_TYPES_TO_ANALYTICS_TITLES_MAP[mode]).join('#');
+
 const getActionTableFilter = (titleName) =>
   `Click on Filter Icon before Table title "${titleName}"`;
 const getDescriptionTableFilter = () => 'Arise new field in filter';
-
-const getAnalyzeItemMessage = (analyzerType, analyzeItemsMode) =>
-  `Run analysis on Modal ${analyzerType} with mode: ${analyzeItemsMode}`;
-
-const getAnalyzeItemEvent = (analyzerType, analyzeItemsMode) => {
-  const message = getAnalyzeItemMessage(analyzerType, analyzeItemsMode.join(', '));
-  return {
-    category: LAUNCHES_MODAL,
-    action: message,
-    label: message,
-  };
-};
-
-export const getRunAnalysisAnalysisModalEvent = (analyzeItemsMode) =>
-  getAnalyzeItemEvent('Analyze Launch', analyzeItemsMode);
-export const getRunAnalysisPatternAnalysisModalEvent = (analyzeItemsMode) =>
-  getAnalyzeItemEvent('Pattern Analyze Launch', analyzeItemsMode);
 
 const basicClickEventParametersLaunchPage = getBasicClickEventParameters(LAUNCHES_PAGE);
 const basicLaunchMenuClickEventParameters = {
@@ -86,7 +83,7 @@ export const LAUNCHES_PAGE_EVENTS = {
   CLICK_SELECT_ALL_ITEMS: getClickSelectAllItemsEvent(LAUNCHES_PAGE),
   CLICK_SELECT_ONE_ITEM: getClickSelectOneItemEvent(LAUNCHES_PAGE),
   CLICK_ACTIONS_BTN: getClickActionsButtonEvent(LAUNCHES_PAGE),
-  EDIT_ICON_CLICK: getClickPencilIconEvent(LAUNCHES_PAGE),
+  CLICK_EDIT_ICON: getClickPencilIconEvent(LAUNCHES_PAGE),
   getClickOnListOfActionsButtonEvent: (element) => ({
     ...basicClickEventParametersLaunchPage,
     place: 'list_of_actions',
@@ -265,11 +262,18 @@ export const LAUNCHES_MODAL_EVENTS = {
     element_name: 'finish',
     place,
   }),
-  getClickOnAnalyzeInPatterAnalysisModal: (type) => ({
+  getClickOnAnalyzeInPatterAnalysisModal: (analyzeItemsMode) => ({
     ...basicClickEventParametersLaunchPage,
     modal: 'pattern_analyze_launches',
     element_name: 'analyze',
-    type,
+    type: formatAnalyzeItemsMode(analyzeItemsMode),
+  }),
+  getClickOnAnalyzeInAnalysisModal: (analyzerMode, analyzeItemsMode) => ({
+    ...basicClickEventParametersLaunchPage,
+    modal: 'analyze_launches',
+    element_name: 'analyze',
+    condition: LAUNCH_ANALYZE_TYPES_TO_ANALYTICS_TITLES_MAP[analyzerMode],
+    type: formatAnalyzeItemsMode(analyzeItemsMode),
   }),
   getClickOnDeleteBtnDeleteItemModalEvent: getClickOnDeleteBtnDeleteItemModalEventCreator(
     LAUNCHES_PAGE,

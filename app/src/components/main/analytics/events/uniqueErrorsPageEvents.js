@@ -55,7 +55,7 @@ export const UNIQUE_ERRORS_PAGE_EVENTS = {
   CLICK_SELECT_ONE_ITEM: getClickSelectOneItemEvent(UNIQUE_ERRORS_PAGE),
   CLICK_SELECT_ALL_ITEMS: getClickSelectAllItemsEvent(UNIQUE_ERRORS_PAGE),
   CLICK_ACTIONS_BTN: getClickActionsButtonEvent(UNIQUE_ERRORS_PAGE),
-  EDIT_ICON_CLICK: getClickPencilIconEvent(UNIQUE_ERRORS_PAGE),
+  CLICK_EDIT_ICON: getClickPencilIconEvent(UNIQUE_ERRORS_PAGE),
   ...getClickBreadcrumbsEvents(UNIQUE_ERRORS_PAGE),
   CLICK_RUN_BUTTON: {
     ...basicUniqueErrorsPageClickEventParameters,

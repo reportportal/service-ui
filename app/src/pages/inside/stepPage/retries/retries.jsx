@@ -17,7 +17,7 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { RetriesList } from './retriesList';
-import { StackTrace } from './stackTrace';
+import { RetriesStackTrace } from './retriesStackTrace';
 import styles from './retries.scss';
 
 const cx = classNames.bind(styles);
@@ -37,7 +37,7 @@ export const Retries = ({
       <RetriesList retries={retries} selectedId={selectedId} onRetrySelect={onRetrySelect} />
     </div>
     <div className={cx('details', { collapsed })}>
-      <StackTrace
+      <RetriesStackTrace
         retryId={selectedId}
         testItemId={testItemId}
         index={selectedIndex}

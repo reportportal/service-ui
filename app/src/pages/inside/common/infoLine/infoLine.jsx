@@ -24,6 +24,7 @@ import {
   AUTOMATION_BUG,
   SYSTEM_ISSUE,
   TO_INVESTIGATE,
+  NO_DEFECT,
 } from 'common/constants/defectTypes';
 import { StatisticsLink } from 'pages/inside/common/statisticsLink';
 import { isStepLevelSelector } from 'controllers/testItem';
@@ -86,6 +87,7 @@ export class InfoLine extends Component {
       [AUTOMATION_BUG]: events.getClickTooltipAbEvent('header'),
       [SYSTEM_ISSUE]: events.getClickTooltipSiEvent('header'),
       [TO_INVESTIGATE]: events.getClickTooltipTiEvent('header'),
+      [NO_DEFECT]: events.getClickTooltipNdEvent('header'),
     };
     return (
       <div className={cx('info-line', { 'detailed-view': detailedView })}>

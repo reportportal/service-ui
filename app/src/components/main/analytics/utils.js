@@ -16,7 +16,7 @@
 
 import GA4 from 'react-ga4';
 
-// TODO rewrite it after adding the GA4 e-commerce events
+// TODO: rewrite it after adding the GA4 e-commerce events
 export const provideEcUniversalAnalytics = ({
   name,
   data,
