@@ -131,12 +131,14 @@ export class TestItemActionPanel extends Component {
 
   onEditDefects = () => {
     const { tracking, selectedItems, onEditDefects, hasErrors } = this.props;
-    onEditDefects(this.props.selectedItems);
+
     if (!hasErrors) {
       const defectFromTIGroup =
         selectedItems.length > 1 && selectedItems.some(({ issue }) => issue)
           ? undefined
-          : selectedItems[0].issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
+          : selectedItems[0].issue &&
+            selectedItems[0].issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX);
+
       tracking.trackEvent(
         pageEventsMap[this.props.level].MAKE_DECISION_MODAL_EVENTS.getOpenModalEvent(
           defectFromTIGroup,
@@ -144,6 +146,8 @@ export class TestItemActionPanel extends Component {
         ),
       );
     }
+
+    onEditDefects(selectedItems);
   };
 
   onPostIssue = () => {

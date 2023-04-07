@@ -123,17 +123,6 @@ const messages = defineMessages({
     defaultMessage: 'Failed to post issue',
   },
 });
-const getAnalyticsData = ({ includeData, includeComments, includeLogs }) => {
-  const analyticsDataMap = {
-    logs: includeLogs,
-    attachments: includeData,
-    comments: includeComments,
-  };
-
-  return Object.keys(analyticsDataMap)
-    .filter((key) => analyticsDataMap[key])
-    .join('#');
-};
 
 @withModal('postIssueModal')
 @reduxForm({
@@ -371,7 +360,7 @@ export class PostIssueModal extends Component {
     }
     this.props.showScreenLockAction();
 
-    trackEvent(eventsInfo.postBtn(getAnalyticsData(data)));
+    trackEvent(eventsInfo.postBtn(data));
 
     fetch(url, requestParams)
       .then((response) => {

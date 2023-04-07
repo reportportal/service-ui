@@ -17,6 +17,7 @@
 import { SEARCH_MODES } from 'pages/inside/stepPage/modals/makeDecisionModal/constants';
 import { defectFromTIGroupMap } from './constants';
 import { getBasicClickEventParameters } from '../ga4Utils';
+import { getIncludedData } from '../utils';
 
 // GA4 events
 export const getClickOnAnalyzeUniqueErrorsEventCreator = (category) => (isExcludeNumbers) => ({
@@ -176,11 +177,6 @@ export const getEditToInvestigateSelectSpecificSimilarItemEvent = (category) => 
 });
 
 // UNLINK ISSUE MODAL
-const getBasicUnlinkIssueModalEventParameters = (category) => ({
-  ...getBasicClickEventParameters(category),
-  modal: 'unlink_issue',
-});
-
 export const getUnlinkIssueModalEvents = (category) => ({
   CANCEL_BTN_UNLINK_ISSUE_MODAL: {
     category,
@@ -192,20 +188,16 @@ export const getUnlinkIssueModalEvents = (category) => ({
     action: 'Click on Close icon in Unlink issue',
     label: 'Close Modal "Unlink issue"',
   },
-  UNLINK_BTN_UNLINK_ISSUE_MODAL: (place) => (isAutoAnalyzeEnabled) => ({
-    ...getBasicUnlinkIssueModalEventParameters(category),
+  getClickUnlinkButtonEventParameters: (place) => (isAutoAnalyzeEnabled) => ({
+    ...getBasicClickEventParameters(category),
+    modal: 'unlink_issue',
     element_name: 'unlink_issue',
-    ...(place && { place }),
     type: `autoAnalyzed_${isAutoAnalyzeEnabled}`,
+    ...(place && { place }),
   }),
 });
 
 // POST ISSUE MODAL
-const getPostIssueModalBasicEventParameters = (category) => ({
-  ...getBasicClickEventParameters(category),
-  modal: 'post_issue',
-});
-
 export const getPostIssueModalEvents = (category) => ({
   CLOSE_ICON_POST_ISSUE_MODAL: {
     category,
@@ -217,12 +209,17 @@ export const getPostIssueModalEvents = (category) => ({
     action: 'Click on Btn Cancel on Modal Post Issue',
     label: 'Close Modal Post Issue',
   },
-  POST_BTN_POST_ISSUE_MODAL: (place) => (type) => ({
-    ...getPostIssueModalBasicEventParameters(category),
-    element_name: 'post_issue',
-    ...(type && { type }),
-    ...(place && { place }),
-  }),
+  getClickPostIssueButtonEventParameters: (place) => (type) => {
+    const analyticsData = getIncludedData(type);
+
+    return {
+      ...getBasicClickEventParameters(category),
+      modal: 'post_issue',
+      element_name: 'post_issue',
+      ...(analyticsData && { type: analyticsData }),
+      ...(place && { place }),
+    };
+  },
 });
 
 const getBasicLinkIssueModalEventParameters = (category) => ({
@@ -236,7 +233,7 @@ export const getLinkIssueModalEvents = (category) => ({
     action: 'Click on Icon Close on Modal Link Issue',
     label: 'Close Modal Link Issue',
   },
-  ADD_NEW_ISSUE_BTN_LINK_ISSUE_MODAL: (place) => ({
+  getClickAddNewIssueButtonEventParameters: (place) => ({
     ...getBasicLinkIssueModalEventParameters(category),
     element_name: 'add_new_issue',
     ...(place && { place }),
@@ -246,7 +243,7 @@ export const getLinkIssueModalEvents = (category) => ({
     action: 'Click on Btn Cancel on Modal Link Issue',
     label: 'Close Modal Modal Link Issue',
   },
-  LOAD_BTN_LINK_ISSUE_MODAL: (place = '') => (number) => ({
+  getClickLoadButtonEventParameters: (place = '') => (number) => ({
     ...getBasicLinkIssueModalEventParameters(category),
     element_name: 'link_issue',
     number,
