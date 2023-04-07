@@ -28,6 +28,7 @@ import {
   getRefineParametersEventCreator,
   getClickOnTestItemsTabsEvents,
   getClickBreadcrumbsEvents,
+  getDeleteActionEvent,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getClickOnDeleteBtnDeleteItemModalEventCreator,
@@ -45,6 +46,7 @@ export const TESTS_PAGE_EVENTS = {
   ...getClickDefectTooltipEvents(TEST_PAGE),
   CLICK_ACTIONS_BTN: getClickActionsButtonEvent(TEST_PAGE),
   CLICK_EDIT_ICON: getClickPencilIconEvent(TEST_PAGE),
+  DELETE_BTN: getDeleteActionEvent(TEST_PAGE),
   REFINE_FILTERS_PANEL_EVENTS: {
     commonEvents: { getRefineParametersEvent: getRefineParametersEventCreator(TEST_PAGE) },
   },

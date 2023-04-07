@@ -50,28 +50,21 @@ import { TO_INVESTIGATE_LOCATOR_PREFIX } from 'common/constants/defectTypes';
 import { HistoryActionPanel } from '../actionPanel';
 
 const UNLINK_ISSUE_EVENTS_INFO = {
-  unlinkAutoAnalyzedFalse:
-    HISTORY_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.UNLINK_IN_UNLINK_ISSUE_MODAL_AUTO_ANALYZED_FALSE,
-  unlinkAutoAnalyzedTrue:
-    HISTORY_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.UNLINK_IN_UNLINK_ISSUE_MODAL_AUTO_ANALYZED_TRUE,
-  unlinkBtn: HISTORY_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.UNLINK_BTN_UNLINK_ISSUE_MODAL,
+  unlinkBtn: HISTORY_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.UNLINK_BTN_UNLINK_ISSUE_MODAL(),
   cancelBtn: HISTORY_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_UNLINK_ISSUE_MODAL,
   closeIcon: HISTORY_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_UNLINK_ISSUE_MODAL,
 };
 
 const POST_ISSUE_EVENTS_INFO = {
-  postBtn: HISTORY_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.POST_BTN_POST_ISSUE_MODAL,
-  attachmentsSwitcher: HISTORY_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.attachmentsSwitcher,
-  logsSwitcher: HISTORY_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.logsSwitcher,
-  commentSwitcher: HISTORY_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.commentSwitcher,
+  postBtn: HISTORY_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.POST_BTN_POST_ISSUE_MODAL(),
   cancelBtn: HISTORY_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.CANCEL_BTN_POST_ISSUE_MODAL,
   closeIcon: HISTORY_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.CLOSE_ICON_POST_ISSUE_MODAL,
 };
 
 const LINK_ISSUE_EVENTS_INFO = {
-  loadBtn: HISTORY_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.LOAD_BTN_LINK_ISSUE_MODAL,
+  loadBtn: HISTORY_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.LOAD_BTN_LINK_ISSUE_MODAL(),
   cancelBtn: HISTORY_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_LINK_ISSUE_MODAL,
-  addNewIssue: HISTORY_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.ADD_NEW_ISSUE_BTN_LINK_ISSUE_MODAL,
+  addNewIssue: HISTORY_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.ADD_NEW_ISSUE_BTN_LINK_ISSUE_MODAL(),
   closeIcon: HISTORY_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_LINK_ISSUE_MODAL,
 };
 
@@ -158,6 +151,7 @@ export class ActionPanelWithGroupOperations extends Component {
   };
 
   onEditItems = () => {
+    this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.EDIT_ITEMS_ACTION);
     this.props.showModalAction({
       id: 'editItemsModal',
       data: {
@@ -293,14 +287,7 @@ export class ActionPanelWithGroupOperations extends Component {
   handleEditDefects = (eventData) => {
     const { selectedItems, debugMode, onEditDefects, tracking } = this.props;
     const items = eventData && eventData.id ? [eventData] : selectedItems;
-    tracking.trackEvent(
-      HISTORY_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS.getOpenModalEvent(
-        items.length === 1
-          ? items[0].issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)
-          : undefined,
-        'actions',
-      ),
-    );
+
     onEditDefects(items, {
       fetchFunc: this.unselectAndRefreshItems,
       debugMode,
@@ -311,6 +298,15 @@ export class ActionPanelWithGroupOperations extends Component {
         linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
       },
     });
+
+    tracking.trackEvent(
+      HISTORY_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS.getOpenModalEvent(
+        items.length === 1
+          ? items[0].issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX)
+          : undefined,
+        'actions',
+      ),
+    );
   };
 
   proceedWithValidItems = () => {

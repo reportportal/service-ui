@@ -131,6 +131,7 @@ export class TestItemActionPanel extends Component {
 
   onEditDefects = () => {
     const { tracking, selectedItems, onEditDefects, hasErrors } = this.props;
+    onEditDefects(this.props.selectedItems);
     if (!hasErrors) {
       const defectFromTIGroup =
         selectedItems.length > 1 && selectedItems.some(({ issue }) => issue)
@@ -143,7 +144,6 @@ export class TestItemActionPanel extends Component {
         ),
       );
     }
-    onEditDefects(this.props.selectedItems);
   };
 
   onPostIssue = () => {
