@@ -24,18 +24,18 @@ import { MarkdownViewer } from 'components/main/markdown';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { NoItemMessage } from 'components/main/noItemMessage';
-import styles from './stackTrace.scss';
+import styles from './retriesStackTrace.scss';
 
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
   noItem: {
-    id: 'StackTrace.emptyMessage',
+    id: 'RetriesStackTrace.emptyMessage',
     defaultMessage: 'No stack trace to display',
   },
 });
 
-export const StackTrace = track()(
+export const RetriesStackTrace = track()(
   injectIntl(
     ({ index, message, link, loading, intl: { formatMessage }, tracking: { trackEvent } }) => {
       let description = <NoItemMessage message={formatMessage(messages.noItem)} />;
@@ -50,13 +50,13 @@ export const StackTrace = track()(
       }
 
       return (
-        <div className={cx('stack-trace')}>
+        <div className={cx('retries-stack-trace')}>
           <div className={cx('title')}>Stack trace #{index + 1}</div>
           <div className={cx('description', { empty: !message || loading })}>{description}</div>
           <div className={cx('link')}>
             <Link
               to={link}
-              onClick={() => trackEvent(STEP_PAGE_EVENTS.OPEN_RETRY_IN_LOG_VIEW_LINK_CLICK)}
+              onClick={() => trackEvent(STEP_PAGE_EVENTS.CLICK_LINK_OPEN_RETRY_IN_LOG_VIEW)}
             >
               <FormattedMessage id="StackTrace.linkText" defaultMessage="Open in Log view" />
             </Link>
@@ -66,14 +66,19 @@ export const StackTrace = track()(
     },
   ),
 );
-StackTrace.propTypes = {
+RetriesStackTrace.propTypes = {
+  intl: PropTypes.object.isRequired,
+  tracking: PropTypes.shape({
+    trackEvent: PropTypes.func,
+    getTrackingData: PropTypes.func,
+  }).isRequired,
   index: PropTypes.number.isRequired,
   message: PropTypes.string,
   retryId: PropTypes.number.isRequired,
   link: PropTypes.object.isRequired,
   loading: PropTypes.bool,
 };
-StackTrace.defaultProps = {
+RetriesStackTrace.defaultProps = {
   message: '',
   loading: false,
 };

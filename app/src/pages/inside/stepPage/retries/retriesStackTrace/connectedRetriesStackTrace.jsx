@@ -16,8 +16,8 @@
 
 import { connect } from 'react-redux';
 import { retryLinkSelector } from 'controllers/log';
-import { StackTrace } from './stackTrace';
+import { RetriesStackTrace } from './retriesStackTrace';
 
-export const ConnectedStackTrace = connect((state, props) => ({
+export const ConnectedRetriesStackTrace = connect((state, props) => ({
   link: retryLinkSelector(state, props),
-}))(StackTrace);
+}))(RetriesStackTrace);

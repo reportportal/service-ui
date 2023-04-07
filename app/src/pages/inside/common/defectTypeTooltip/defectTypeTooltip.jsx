@@ -196,7 +196,7 @@ export class DefectTypeTooltip extends Component {
              * Display defect types in a proper order,
              * the first is the system type (Product Bug, To investigate, etc.)
              * that is way they are sorted by ID
-             * Don't display defect sub types with zero defect's amount,
+             * Don't display defect subtypes with zero defect's amount,
              * except system types (i.e. with index=0)
              */
             filteredBodyData.map(({ locator, color, longName }) => {

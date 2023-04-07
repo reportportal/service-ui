@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { ConnectedStackTrace as StackTrace } from './connectedStackTrace';
+export { ConnectedRetriesStackTrace as RetriesStackTrace } from './connectedRetriesStackTrace';

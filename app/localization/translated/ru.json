@@ -1617,7 +1617,7 @@
   "SortingControl.sortByFailedItems": "Неудачные пункты",
   "SortingControl.sortByPassingRate": "Проходной балл",
   "SortingControl.sortByTotal": "Общее количество",
-  "StackTrace.emptyMessage": "Нет трассировки стека для отображения",
+  "RetriesStackTrace.emptyMessage": "Нет трассировки стека для отображения",
   "StackTrace.jumpTo": "Перейти",
   "StackTrace.linkText": "Открыть логи",
   "StackTrace.loadLabel": "Загрузить еще",

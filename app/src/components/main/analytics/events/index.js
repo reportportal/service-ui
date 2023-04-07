@@ -19,13 +19,7 @@ export {
   FILTERS_PAGE,
   getAddEditFilterModalEvents,
 } from './filtersPageEvents';
-export {
-  LAUNCHES_PAGE_EVENTS,
-  LAUNCHES_MODAL_EVENTS,
-  LAUNCHES_PAGE,
-  getRunAnalysisAnalysisModalEvent,
-  getRunAnalysisPatternAnalysisModalEvent,
-} from './launchesPageEvents';
+export { LAUNCHES_PAGE_EVENTS, LAUNCHES_MODAL_EVENTS, LAUNCHES_PAGE } from './launchesPageEvents';
 export { LOGIN_PAGE_EVENTS, LOGIN_PAGE } from './loginPageEvents';
 export {
   SIDEBAR_EVENTS,

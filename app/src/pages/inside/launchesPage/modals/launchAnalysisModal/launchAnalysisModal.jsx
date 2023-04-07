@@ -20,10 +20,7 @@ import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import {
-  LAUNCHES_MODAL_EVENTS,
-  getRunAnalysisAnalysisModalEvent,
-} from 'components/main/analytics/events';
+import { LAUNCHES_MODAL_EVENTS } from 'components/main/analytics/events';
 import { InputRadio } from 'components/inputs/inputRadio';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { LAUNCH_ANALYZE_TYPES } from 'common/constants/launchAnalyzeTypes';
@@ -151,7 +148,6 @@ export class LaunchAnalysisModal extends Component {
     }
   };
   analysisAndClose = (closeModal) => {
-    this.props.tracking.trackEvent(LAUNCHES_MODAL_EVENTS.OK_BTN_ANALYSIS_MODAL);
     const errorMessage = this.validate();
     if (errorMessage) {
       this.setState({
@@ -170,7 +166,9 @@ export class LaunchAnalysisModal extends Component {
       analyzerMode,
       launchId: id,
     };
-    this.props.tracking.trackEvent(getRunAnalysisAnalysisModalEvent(analyzeItemsMode));
+    this.props.tracking.trackEvent(
+      LAUNCHES_MODAL_EVENTS.getClickOnAnalyzeInAnalysisModal(analyzerMode, analyzeItemsMode),
+    );
     this.props.data.onConfirm(data);
     closeModal();
   };

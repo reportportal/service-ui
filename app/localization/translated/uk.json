@@ -1617,7 +1617,7 @@
   "SortingControl.sortByFailedItems": "Невдалі пункти",
   "SortingControl.sortByPassingRate": "Прохідний бал",
   "SortingControl.sortByTotal": "Загальна кількість",
-  "StackTrace.emptyMessage": "Трасування стека Немає для відображення",
+  "RetriesStackTrace.emptyMessage": "Трасування стека Немає для відображення",
   "StackTrace.jumpTo": "Перейти",
   "StackTrace.linkText": "Логи Відкрити",
   "StackTrace.loadLabel": "Завантажити",

@@ -20,10 +20,7 @@ import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import {
-  LAUNCHES_MODAL_EVENTS,
-  getRunAnalysisPatternAnalysisModalEvent,
-} from 'components/main/analytics/events';
+import { LAUNCHES_MODAL_EVENTS } from 'components/main/analytics/events';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { LAUNCH_ANALYZE_TYPES } from 'common/constants/launchAnalyzeTypes';
 import { setStorageItem, getStorageItem } from 'common/utils';
@@ -33,12 +30,6 @@ import styles from './launchPatternAnalysisModal.scss';
 const { ANALYZER_MODE, ANALYZE_ITEMS_MODE } = LAUNCH_ANALYZE_TYPES;
 
 const PATTERN_ANALYZE_ITEMS_MODE = 'patternAnalyzeItemsMode';
-
-const ANALYZE_ITEMS_MODE_TO_ANALYTICS_DATA_MAP = {
-  [ANALYZE_ITEMS_MODE.TO_INVESTIGATE]: 'investigate_items',
-  [ANALYZE_ITEMS_MODE.AUTO_ANALYZED]: 'by_aa',
-  [ANALYZE_ITEMS_MODE.MANUALLY_ANALYZED]: 'manually',
-};
 
 const cx = classNames.bind(styles);
 
@@ -130,13 +121,6 @@ export class LaunchPatternAnalysisModal extends Component {
   };
 
   analysisAndClose = (closeModal) => {
-    const analyticsData = this.state.analyzeItemsMode
-      .map((mode) => ANALYZE_ITEMS_MODE_TO_ANALYTICS_DATA_MAP[mode])
-      .join('#');
-    this.props.tracking.trackEvent(
-      LAUNCHES_MODAL_EVENTS.getClickOnAnalyzeInPatterAnalysisModal(analyticsData),
-    );
-
     const errorMessage = this.validate();
     if (errorMessage) {
       this.setState({
@@ -155,7 +139,9 @@ export class LaunchPatternAnalysisModal extends Component {
       launchId: id,
       analyzerMode: ANALYZER_MODE.ALL,
     };
-    this.props.tracking.trackEvent(getRunAnalysisPatternAnalysisModalEvent(analyzeItemsMode));
+    this.props.tracking.trackEvent(
+      LAUNCHES_MODAL_EVENTS.getClickOnAnalyzeInPatterAnalysisModal(analyzeItemsMode),
+    );
     this.props.data.onConfirm(data);
     closeModal();
   };
