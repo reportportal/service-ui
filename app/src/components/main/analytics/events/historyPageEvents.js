@@ -15,7 +15,6 @@
  */
 
 import {
-  getRefineFiltersPanelEvents,
   getDeleteActionEvent,
   getEditDefectActionEvent,
   getLinkIssueActionEvent,
@@ -28,6 +27,8 @@ import {
   getClickActionsButtonEvent,
   getClickOnTestItemsTabsEvents,
   getClickBreadcrumbsEvents,
+  getRefineParametersEventCreator,
+  getRefineFiltersPanelEvents,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getEditToInvestigateSelectAllSimilarItemsEvent,
@@ -45,6 +46,7 @@ import { getBasicClickEventParameters } from './common/ga4Utils';
 export const HISTORY_PAGE = 'history';
 
 const basicClickEventParametersHistoryPage = getBasicClickEventParameters(HISTORY_PAGE);
+const { PROCEED_VALID_ITEMS, EDIT_ITEMS_ACTION } = getCommonActionEvents(HISTORY_PAGE);
 
 export const HISTORY_PAGE_EVENTS = {
   // GA4 events
@@ -84,6 +86,20 @@ export const HISTORY_PAGE_EVENTS = {
     icon_name: 'cross_filter',
   },
   TEST_ITEM_TABS_EVENTS: getClickOnTestItemsTabsEvents(HISTORY_PAGE),
+  EDIT_ITEMS_ACTION,
+  EDIT_DEFECT_ACTION: getEditDefectActionEvent(HISTORY_PAGE),
+  POST_ISSUE_ACTION: getPostIssueActionEvent(HISTORY_PAGE),
+  LINK_ISSUE_ACTION: getLinkIssueActionEvent(HISTORY_PAGE),
+  DELETE_ACTION: getDeleteActionEvent(HISTORY_PAGE),
+  UNLINK_ISSUES_ACTION: getUnlinkIssueActionEvent(HISTORY_PAGE),
+  PROCEED_VALID_ITEMS,
+  REFINE_FILTERS_PANEL_EVENTS: {
+    commonEvents: {
+      getRefineFiltersPanelEvents: getRefineFiltersPanelEvents(HISTORY_PAGE),
+      getRefineParametersEvent: getRefineParametersEventCreator(HISTORY_PAGE),
+    },
+    getChangeFilterEvent: getChangeFilterEvent(HISTORY_PAGE),
+  },
   // GA3 events
   CLICK_CLOSE_ICON_FROM_SELECTION: {
     category: HISTORY_PAGE,
@@ -95,12 +111,6 @@ export const HISTORY_PAGE_EVENTS = {
     action: 'Click on Close Icon of all selection',
     label: 'Close panel with selected items',
   },
-  EDIT_DEFECT_ACTION: getEditDefectActionEvent(HISTORY_PAGE),
-  POST_ISSUE_ACTION: getPostIssueActionEvent(HISTORY_PAGE),
-  LINK_ISSUE_ACTION: getLinkIssueActionEvent(HISTORY_PAGE),
-  DELETE_ACTION: getDeleteActionEvent(HISTORY_PAGE),
-  UNLINK_ISSUES_ACTION: getUnlinkIssueActionEvent(HISTORY_PAGE),
-  PROCEED_VALID_ITEMS: getCommonActionEvents(HISTORY_PAGE).PROCEED_VALID_ITEMS,
   // EDIT_DEFECT_MODAL
   SELECT_ALL_SIMILAR_ITEMS_EDIT_DEFECT_MODAL: getEditToInvestigateSelectAllSimilarItemsEvent(
     HISTORY_PAGE,
@@ -121,10 +131,5 @@ export const HISTORY_PAGE_EVENTS = {
   ),
   // EDIT_ITEMS_MODAL
   EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(HISTORY_PAGE),
-  // REFINE_FILTERS_PANEL
-  REFINE_FILTERS_PANEL_EVENTS: {
-    commonEvents: getRefineFiltersPanelEvents(HISTORY_PAGE),
-    getChangeFilterEvent: getChangeFilterEvent(HISTORY_PAGE),
-  },
   MAKE_DECISION_MODAL_EVENTS: getMakeDecisionModalEvents(HISTORY_PAGE),
 };

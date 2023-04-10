@@ -141,10 +141,7 @@ export class UniqueErrorsActionPanel extends Component {
     onPostIssue(selectedItems, {
       fetchFunc: unselectAndFetchItems,
       eventsInfo: {
-        postBtn: UNIQUE_ERRORS_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.POST_BTN_POST_ISSUE_MODAL,
-        attachmentsSwitcher: UNIQUE_ERRORS_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.attachmentsSwitcher,
-        logsSwitcher: UNIQUE_ERRORS_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.logsSwitcher,
-        commentSwitcher: UNIQUE_ERRORS_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.commentSwitcher,
+        postBtn: UNIQUE_ERRORS_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.getClickPostIssueButtonEventParameters(),
       },
     });
     UNIQUE_ERRORS_PAGE_EVENTS.POST_ISSUE_ACTION &&
@@ -156,9 +153,8 @@ export class UniqueErrorsActionPanel extends Component {
     onLinkIssue(selectedItems, {
       fetchFunc: unselectAndFetchItems,
       eventsInfo: {
-        addNewIssue:
-          UNIQUE_ERRORS_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.ADD_NEW_ISSUE_BTN_LINK_ISSUE_MODAL,
-        loadBtn: UNIQUE_ERRORS_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.LOAD_BTN_LINK_ISSUE_MODAL,
+        addNewIssue: UNIQUE_ERRORS_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickAddNewIssueButtonEventParameters(),
+        loadBtn: UNIQUE_ERRORS_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickLoadButtonEventParameters(),
       },
     });
     tracking.trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.LINK_ISSUE_ACTION);
@@ -169,12 +165,7 @@ export class UniqueErrorsActionPanel extends Component {
     onUnlinkIssue(selectedItems, {
       fetchFunc: unselectAndFetchItems,
       eventsInfo: {
-        unlinkAutoAnalyzedTrue:
-          UNIQUE_ERRORS_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS
-            .UNLINK_IN_UNLINK_ISSUE_MODAL_AUTO_ANALYZED_TRUE,
-        unlinkAutoAnalyzedFalse:
-          UNIQUE_ERRORS_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS
-            .UNLINK_IN_UNLINK_ISSUE_MODAL_AUTO_ANALYZED_FALSE,
+        unlinkBtn: UNIQUE_ERRORS_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.getClickUnlinkButtonEventParameters(),
       },
     });
     tracking.trackEvent(UNIQUE_ERRORS_PAGE_EVENTS.UNLINK_ISSUES_ACTION);

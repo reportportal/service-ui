@@ -30,3 +30,15 @@ export const getDefectTypeLabel = (condition) => {
     return '';
   }
 };
+
+export const getIncludedData = ({ includeData, includeComments, includeLogs }) => {
+  const analyticsDataMap = {
+    logs: includeLogs,
+    attachments: includeData,
+    comments: includeComments,
+  };
+
+  return Object.keys(analyticsDataMap)
+    .filter((key) => analyticsDataMap[key])
+    .join('#');
+};

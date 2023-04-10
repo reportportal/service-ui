@@ -28,6 +28,7 @@ import {
   getRefineParametersEventCreator,
   getClickOnTestItemsTabsEvents,
   getClickBreadcrumbsEvents,
+  getDeleteActionEvent,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getClickOnDeleteBtnDeleteItemModalEventCreator,
@@ -51,13 +52,10 @@ export const SUITES_PAGE_EVENTS = {
   ...getClickBreadcrumbsEvents(SUITE_PAGE),
   CLICK_ATTRIBUTES: getClickOnAttributesEvent(SUITE_PAGE),
   TEST_ITEM_TABS_EVENTS: getClickOnTestItemsTabsEvents(SUITE_PAGE),
+  DELETE_BTN: getDeleteActionEvent(SUITE_PAGE),
   // GA3 events
   ...getCommonActionEvents(SUITE_PAGE),
-  DELETE_BTN: {
-    category: SUITE_PAGE,
-    action: 'Click on Btn Delete',
-    label: 'Delete selected Items',
-  },
+
   // REFINE_FILTERS_PANEL
   LOG_VIEW_SWITCHER: {
     category: SUITE_PAGE,

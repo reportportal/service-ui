@@ -99,7 +99,7 @@ export class StatusDropdown extends Component {
 
     if (newStatus === oldStatus) return;
 
-    onChange(oldStatus, newStatus);
+    onChange(newStatus);
 
     fetch(URLS.testItemUpdate(currentProject, itemId), { method: 'put', data })
       .then(() => {

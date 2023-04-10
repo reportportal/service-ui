@@ -34,7 +34,6 @@ import {
   ENTITY_ATTRIBUTE,
 } from 'components/filterEntities/constants';
 import { NoItemMessage } from 'components/main/noItemMessage';
-import { getChangeItemStatusEvent } from 'components/main/analytics/events';
 import { formatAttribute } from 'common/utils/attributeUtils';
 import { StatusDropdown } from 'pages/inside/common/statusDropdown/statusDropdown';
 import { PredefinedFilterSwitcher } from './predefinedFilterSwitcher';
@@ -285,8 +284,7 @@ export class StepGrid extends Component {
         component: StatusColumn,
         customProps: {
           formatMessage,
-          onChange: (oldStatus, newStatus) =>
-            tracking.trackEvent(getChangeItemStatusEvent(oldStatus, newStatus)),
+          onChange: (status) => tracking.trackEvent(events.getChangeItemStatusEvent(status)),
           fetchFunc: onStatusUpdate,
         },
         withFilter: true,

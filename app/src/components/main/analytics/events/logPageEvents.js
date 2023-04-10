@@ -23,6 +23,7 @@ import {
   getClickOnExpandEvent,
   getClickOnTestItemsTabsEvents,
   getClickBreadcrumbsEvents,
+  getChangeItemStatusEventCreator,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getEditToInvestigateChangeSearchModeEvent,
@@ -237,17 +238,13 @@ export const LOG_PAGE_EVENTS = {
     ...basicLogPageClickEventParameters,
     element_name: 'play_video_sauce_labs',
   },
+  getChangeItemStatusEvent: getChangeItemStatusEventCreator(LOG_PAGE),
   // GA3 events
   DEFECT_TYPE_TAG: {
     category: LOG_PAGE,
     action: 'Click on Defect type tag',
     label: 'Arise Modal Edit Defect type',
   },
-  selectDropDownStatusEvent: (oldStatus, newStatus) => ({
-    category: LOG_PAGE,
-    action: 'Select Test Item Status from Drop-down List',
-    label: `Change status from ${oldStatus} to ${newStatus}`,
-  }),
   PREVIOUS_LOG_MSG_PAGE: {
     category: LOG_PAGE,
     action: 'Click on Btn Previous Log message page',
