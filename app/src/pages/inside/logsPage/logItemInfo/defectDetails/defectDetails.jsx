@@ -90,30 +90,25 @@ const messages = defineMessages({
     defaultMessage: 'Comment',
   },
 });
-const MAKE_DECISION = 'make_decision';
 
-const POST_ISSUE_EVENTS_INFO = {
-  postBtn: LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.getClickPostIssueButtonEventParameters(
-    MAKE_DECISION,
-  ),
+const getPostIssueEventsInfo = (place) => ({
+  postBtn: LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.getClickPostIssueButtonEventParameters(place),
   cancelBtn: LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.CANCEL_BTN_POST_ISSUE_MODAL,
   closeIcon: LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.CLOSE_ICON_POST_ISSUE_MODAL,
-};
-const LINK_ISSUE_EVENTS_INFO = {
-  loadBtn: LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickLoadButtonEventParameters(MAKE_DECISION),
+});
+const getLinkIssueEventsInfo = (place) => ({
+  loadBtn: LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickLoadButtonEventParameters(place),
   cancelBtn: LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_LINK_ISSUE_MODAL,
   addNewIssue: LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickAddNewIssueButtonEventParameters(
-    MAKE_DECISION,
+    place,
   ),
   closeIcon: LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_LINK_ISSUE_MODAL,
-};
-const UNLINK_ISSUE_EVENTS_INFO = {
-  unlinkBtn: LOG_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.getClickUnlinkButtonEventParameters(
-    MAKE_DECISION,
-  ),
+});
+const getUnlinkIssueEventsInfo = (place) => ({
+  unlinkBtn: LOG_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.getClickUnlinkButtonEventParameters(place),
   cancelBtn: LOG_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_UNLINK_ISSUE_MODAL,
   closeIcon: LOG_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_UNLINK_ISSUE_MODAL,
-};
+});
 
 @connect(
   (state) => ({
@@ -193,7 +188,7 @@ export class DefectDetails extends Component {
     this.props.tracking.trackEvent(LOG_PAGE_EVENTS.LINK_ISSUE_ACTION);
     this.props.linkIssueAction([this.props.logItem], {
       fetchFunc: this.props.fetchFunc,
-      eventsInfo: LINK_ISSUE_EVENTS_INFO,
+      eventsInfo: getLinkIssueEventsInfo(),
     });
   };
 
@@ -215,7 +210,7 @@ export class DefectDetails extends Component {
 
     this.props.unlinkIssueAction(items, {
       fetchFunc,
-      eventsInfo: UNLINK_ISSUE_EVENTS_INFO,
+      eventsInfo: getUnlinkIssueEventsInfo(),
     });
   };
 
@@ -223,7 +218,7 @@ export class DefectDetails extends Component {
     this.props.tracking.trackEvent(LOG_PAGE_EVENTS.POST_ISSUE_ACTION);
     this.props.postIssueAction([this.props.logItem], {
       fetchFunc: this.props.fetchFunc,
-      eventsInfo: POST_ISSUE_EVENTS_INFO,
+      eventsInfo: getPostIssueEventsInfo(),
     });
   };
 
@@ -239,6 +234,8 @@ export class DefectDetails extends Component {
 
   handleEditDefect = () => {
     const { logItem } = this.props;
+    const MAKE_DECISION = 'make_decision';
+
     this.props.tracking.trackEvent(
       LOG_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS.getOpenModalEvent(
         logItem.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
@@ -251,9 +248,9 @@ export class DefectDetails extends Component {
         selectAllSimilarItems: LOG_PAGE_EVENTS.SELECT_ALL_SIMILAR_ITEMS_EDIT_DEFECT_MODAL,
         selectSpecificSimilarItem: LOG_PAGE_EVENTS.SELECT_SPECIFIC_SIMILAR_ITEM_EDIT_DEFECT_MODAL,
         editDefectsEvents: LOG_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS,
-        unlinkIssueEvents: UNLINK_ISSUE_EVENTS_INFO,
-        postIssueEvents: POST_ISSUE_EVENTS_INFO,
-        linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
+        unlinkIssueEvents: getUnlinkIssueEventsInfo(MAKE_DECISION),
+        postIssueEvents: getPostIssueEventsInfo(MAKE_DECISION),
+        linkIssueEvents: getLinkIssueEventsInfo(MAKE_DECISION),
       },
     });
   };
