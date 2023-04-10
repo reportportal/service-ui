@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { getBasicClickEventParameters } from './common/ga4Utils';
 import {
   getEditDefectActionEvent,
   getDeleteActionEvent,
@@ -26,7 +27,6 @@ import {
   getClickOnAttributesEvent,
   getClickIssueTicketEvent,
   getClickExpandStackTraceArrowEvent,
-  getIgnoreBtnIgnoreItemsInAAModalEvent,
   getIncludeBtnIncludeInAAModalEvent,
   getClickItemNameEvent,
   getClickRefreshButtonEvent,
@@ -36,6 +36,9 @@ import {
   getRefineParametersEventCreator,
   getClickOnTestItemsTabsEvents,
   getClickBreadcrumbsEvents,
+  getChangeItemStatusEventCreator,
+  getIgnoreInAutoAnalysisActionEventCreator,
+  getIncludeInAutoAnalysisActionEventCreator,
 } from './common/testItemPages/actionEventsCreators';
 import {
   getEditToInvestigateChangeSearchModeEvent,
@@ -47,8 +50,9 @@ import {
   getClickOnDeleteBtnDeleteItemModalEventCreator,
   getEditItemsModalEvents,
   getMakeDecisionModalEvents,
+  getEditItemDetailsModalEvents,
+  getIgnoreBtnIgnoreItemsInAAModalEvent,
 } from './common/testItemPages/modalEventsCreators';
-import { getBasicClickEventParameters } from './common/ga4Utils';
 
 export const STEP_PAGE = 'step';
 
@@ -94,14 +98,25 @@ export const STEP_PAGE_EVENTS = {
     place: 'retries_info',
     link_name: 'open_in_log_view',
   },
+  getChangeItemStatusEvent: getChangeItemStatusEventCreator(STEP_PAGE),
+  getSwitchMethodTypeEvent: (isActive) => ({
+    ...basicClickEventParametersStepPage,
+    element_name: 'method_type',
+    switcher: isActive ? 'on' : 'off',
+  }),
+  DELETE_ACTION: getDeleteActionEvent(STEP_PAGE),
+  EDIT_DEFECT_ACTION: getEditDefectActionEvent(STEP_PAGE),
+  POST_ISSUE_ACTION: getPostIssueActionEvent(STEP_PAGE),
+  LINK_ISSUE_ACTION: getLinkIssueActionEvent(STEP_PAGE),
+  UNLINK_ISSUES_ACTION: getUnlinkIssueActionEvent(STEP_PAGE),
+  IGNORE_IN_AA_ACTION: getIgnoreInAutoAnalysisActionEventCreator(STEP_PAGE),
+  INCLUDE_IN_AA_ACTION: getIncludeInAutoAnalysisActionEventCreator(STEP_PAGE),
+  // MODAL EVENTS
+  EDIT_ITEM_DETAILS_MODAL_EVENTS: getEditItemDetailsModalEvents(STEP_PAGE),
+  IGNORE_BTN_IGNORE_ITEMS_IN_AA_MODAL: getIgnoreBtnIgnoreItemsInAAModalEvent(STEP_PAGE),
   // GA3 events
   ...getCommonActionEvents(STEP_PAGE),
   // REFINE_FILTERS_PANEL
-  METHOD_TYPE_SWITCHER: {
-    category: STEP_PAGE,
-    action: 'Click on Method type switcher',
-    label: 'Show/Hide method type',
-  },
   METHOD_TYPE_FILTER: {
     category: STEP_PAGE,
     action: 'Click on icon "filter" Method type',
@@ -152,26 +167,11 @@ export const STEP_PAGE_EVENTS = {
     action: 'Click on icon "edit" of Defect type tag',
     label: 'Arise Modal "Edit Defect Type"',
   },
-  IGNORE_IN_AA_ACTION: {
-    category: STEP_PAGE,
-    action: 'Click on Ignore in Auto-Analysis',
-    label: 'Arise Modal "Ignore items in AA"',
-  },
-  INCLUDE_IN_AA_ACTION: {
-    category: STEP_PAGE,
-    action: 'Click on Include in Auto-Analysis',
-    label: 'Arise Modal "Include items in AA"',
-  },
   UNLINK_SINGLE_ISSUE: {
     category: STEP_PAGE,
     action: 'Click on Cross icon in issue block',
     label: 'Arise Modal "Unlink issue"',
   },
-  EDIT_DEFECT_ACTION: getEditDefectActionEvent(STEP_PAGE),
-  POST_ISSUE_ACTION: getPostIssueActionEvent(STEP_PAGE),
-  LINK_ISSUE_ACTION: getLinkIssueActionEvent(STEP_PAGE),
-  UNLINK_ISSUES_ACTION: getUnlinkIssueActionEvent(STEP_PAGE),
-  DELETE_ACTION: getDeleteActionEvent(STEP_PAGE),
   // EDIT_DEFECT_MODAL
   SELECT_ALL_SIMILAR_ITEMS_EDIT_DEFECT_MODAL: getEditToInvestigateSelectAllSimilarItemsEvent(
     STEP_PAGE,
@@ -198,7 +198,6 @@ export const STEP_PAGE_EVENTS = {
     action: 'Click on "Copy Code reference"',
     label: 'Copy Code reference',
   },
-  IGNORE_BTN_IGNORE_ITEMS_IN_AA_MODAL: getIgnoreBtnIgnoreItemsInAAModalEvent(STEP_PAGE),
   CLOSE_ICON_IGNORE_ITEMS_IN_AA_MODAL: {
     category: STEP_PAGE,
     action: 'Click on Close icon in Modal "Ignore items in AA"',

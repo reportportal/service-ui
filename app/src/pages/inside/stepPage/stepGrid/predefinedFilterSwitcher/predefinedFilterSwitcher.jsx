@@ -55,7 +55,7 @@ export const PredefinedFilterSwitcher = track()(
           <InputSwitcher
             value={isCollapsed}
             onChange={(val) => {
-              tracking.trackEvent(STEP_PAGE_EVENTS.METHOD_TYPE_SWITCHER);
+              tracking.trackEvent(STEP_PAGE_EVENTS.getSwitchMethodTypeEvent(val));
               toggleFilter(val);
             }}
           />

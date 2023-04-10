@@ -17,6 +17,7 @@
 import { SEARCH_MODES } from 'pages/inside/stepPage/modals/makeDecisionModal/constants';
 import { defectFromTIGroupMap } from './constants';
 import { getBasicClickEventParameters } from '../ga4Utils';
+import { getIncludedData } from '../utils';
 
 // GA4 events
 export const getClickOnAnalyzeUniqueErrorsEventCreator = (category) => (isExcludeNumbers) => ({
@@ -138,6 +139,12 @@ export const getMakeDecisionModalEvents = (page) => ({
   getOnChangeCommentOptionEvent: getOnChangeCommentOptionEventCreator(page),
 });
 
+export const getIgnoreBtnIgnoreItemsInAAModalEvent = (category) => ({
+  ...getBasicClickEventParameters(category),
+  modal: 'ignore_item_in_aa',
+  element_name: 'ignore',
+});
+
 // GA3 events
 export const getEditToInvestigateChangeSearchModeEvent = (category) => ({
   [SEARCH_MODES.CURRENT_LAUNCH]: {
@@ -181,31 +188,15 @@ export const getUnlinkIssueModalEvents = (category) => ({
     action: 'Click on Close icon in Unlink issue',
     label: 'Close Modal "Unlink issue"',
   },
-  UNLINK_BTN_UNLINK_ISSUE_MODAL: {
-    category,
-    action: 'Click on Unlink in Modal "Unlink issue"',
-    label: 'Unlink issues',
-  },
-  UNLINK_IN_UNLINK_ISSUE_MODAL_AUTO_ANALYZED_TRUE: {
-    category,
-    action: 'Click on Unlink in Modal "Unlink issue"',
-    label: 'Unlink issues, autoAnalyzed is true',
-  },
-  UNLINK_IN_UNLINK_ISSUE_MODAL_AUTO_ANALYZED_FALSE: {
-    category,
-    action: 'Click on Unlink in Modal "Unlink issue"',
-    label: 'Unlink issues, autoAnalyzed is false',
-  },
+  getClickUnlinkButtonEventParameters: (place) => (isAutoAnalyzeEnabled) => ({
+    ...getBasicClickEventParameters(category),
+    modal: 'unlink_issue',
+    element_name: 'unlink_issue',
+    type: `autoAnalyzed_${isAutoAnalyzeEnabled}`,
+    ...(place && { place }),
+  }),
 });
 
-const getIncludeDataSwitcherEvent = (category, switcherLabel) => (state) => {
-  const checkboxState = state ? 'Active' : 'Disable';
-  return {
-    category,
-    action: `Click on ${switcherLabel} on Modal Post Issue`,
-    label: `${category}#${checkboxState}`,
-  };
-};
 // POST ISSUE MODAL
 export const getPostIssueModalEvents = (category) => ({
   CLOSE_ICON_POST_ISSUE_MODAL: {
@@ -213,21 +204,28 @@ export const getPostIssueModalEvents = (category) => ({
     action: 'Click on Icon Close on Modal Post Issue',
     label: 'Close Modal Post Issue',
   },
-  commentSwitcher: getIncludeDataSwitcherEvent(category, 'Comment Switcher'),
-  attachmentsSwitcher: getIncludeDataSwitcherEvent(category, 'Attachments Switcher'),
-  logsSwitcher: getIncludeDataSwitcherEvent(category, 'Logs Switcher'),
   CANCEL_BTN_POST_ISSUE_MODAL: {
     category,
     action: 'Click on Btn Cancel on Modal Post Issue',
     label: 'Close Modal Post Issue',
   },
-  POST_BTN_POST_ISSUE_MODAL: {
-    category,
-    action: 'Click on Btn Post on Modal Post Issue',
-    label: 'Post bug',
+  getClickPostIssueButtonEventParameters: (place) => (type) => {
+    const analyticsData = getIncludedData(type);
+
+    return {
+      ...getBasicClickEventParameters(category),
+      modal: 'post_issue',
+      element_name: 'post_issue',
+      ...(analyticsData && { type: analyticsData }),
+      ...(place && { place }),
+    };
   },
 });
 
+const getBasicLinkIssueModalEventParameters = (category) => ({
+  ...getBasicClickEventParameters(category),
+  modal: 'link_issue',
+});
 // LINK ISSUE MODAL
 export const getLinkIssueModalEvents = (category) => ({
   CLOSE_ICON_LINK_ISSUE_MODAL: {
@@ -235,21 +233,22 @@ export const getLinkIssueModalEvents = (category) => ({
     action: 'Click on Icon Close on Modal Link Issue',
     label: 'Close Modal Link Issue',
   },
-  ADD_NEW_ISSUE_BTN_LINK_ISSUE_MODAL: {
-    category,
-    action: 'Click on Btn Add New Issue on Modal Link Issue',
-    label: 'Add input in Modal Link Issue',
-  },
+  getClickAddNewIssueButtonEventParameters: (place) => ({
+    ...getBasicLinkIssueModalEventParameters(category),
+    element_name: 'add_new_issue',
+    ...(place && { place }),
+  }),
   CANCEL_BTN_LINK_ISSUE_MODAL: {
     category,
     action: 'Click on Btn Cancel on Modal Link Issue',
     label: 'Close Modal Modal Link Issue',
   },
-  LOAD_BTN_LINK_ISSUE_MODAL: {
-    category,
-    action: 'Click on Btn Load on Modal Link Issue',
-    label: 'Link issue',
-  },
+  getClickLoadButtonEventParameters: (place = '') => (number) => ({
+    ...getBasicLinkIssueModalEventParameters(category),
+    element_name: 'link_issue',
+    number,
+    ...(place && { place }),
+  }),
 });
 
 const EDIT_ITEM_MODAL = 'edit_item';
@@ -306,3 +305,33 @@ export const getEditItemsModalEvents = (category, itemType = 'Item') => ({
     label: 'Add attributes',
   },
 });
+
+const TEST_ITEM_DETAILS_MODAL = 'test_item_details';
+
+export const getEditItemDetailsModalEvents = (category) => {
+  const basicClickEventParams = getBasicClickEventParameters(category);
+  const modal = TEST_ITEM_DETAILS_MODAL;
+
+  return {
+    DETAILS_TAB: {
+      ...basicClickEventParams,
+      modal,
+      element_name: 'details',
+    },
+    STACK_TRACE_TAB: {
+      ...basicClickEventParams,
+      modal,
+      element_name: 'stack_trace',
+    },
+    EXPAND_STACK_TRACE: {
+      ...basicClickEventParams,
+      modal,
+      icon_name: 'arrow_to_expand',
+    },
+    SAVE_BTN: {
+      ...basicClickEventParams,
+      modal,
+      element_name: 'save',
+    },
+  };
+};

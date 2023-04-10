@@ -209,12 +209,7 @@ export class PostIssueModal extends Component {
   }
 
   onPost = () => {
-    const {
-      handleSubmit,
-      tracking,
-      data: { eventsInfo },
-    } = this.props;
-    eventsInfo.postBtn && tracking.trackEvent(eventsInfo.postBtn);
+    const { handleSubmit } = this.props;
     handleSubmit(this.prepareDataToSend)();
   };
 
@@ -254,10 +249,6 @@ export class PostIssueModal extends Component {
     });
   };
 
-  trackFieldClick = (e, eventFn) => {
-    this.props.tracking.trackEvent(eventFn(e.target.checked));
-  };
-
   getCloseConfirmationConfig = () => {
     if (!this.props.dirty) {
       return null;
@@ -281,17 +272,14 @@ export class PostIssueModal extends Component {
     {
       name: INCLUDE_ATTACHMENTS_KEY,
       title: this.props.intl.formatMessage(messages.attachmentsHeader),
-      eventFn: this.props.data.eventsInfo && this.props.data.eventsInfo.attachmentsSwitcher,
     },
     {
       name: INCLUDE_LOGS_KEY,
       title: this.props.intl.formatMessage(messages.logsHeader),
-      eventFn: this.props.data.eventsInfo && this.props.data.eventsInfo.logsSwitcher,
     },
     {
       name: INCLUDE_COMMENTS_KEY,
       title: this.props.intl.formatMessage(messages.commentsHeader),
-      eventFn: this.props.data.eventsInfo && this.props.data.eventsInfo.commentSwitcher,
     },
   ];
 
@@ -343,7 +331,8 @@ export class PostIssueModal extends Component {
   postIssue = (data) => {
     const {
       intl: { formatMessage },
-      data: { items, fetchFunc },
+      data: { items, fetchFunc, eventsInfo },
+      tracking: { trackEvent },
       namedBtsIntegrations,
       activeProject,
       projectInfo,
@@ -370,6 +359,8 @@ export class PostIssueModal extends Component {
       };
     }
     this.props.showScreenLockAction();
+
+    trackEvent(eventsInfo.postBtn(data));
 
     fetch(url, requestParams)
       .then((response) => {
@@ -521,12 +512,7 @@ export class PostIssueModal extends Component {
               </h4>
               <div className={cx('include-data-block')}>
                 {this.dataFieldsConfig.map((item) => (
-                  <FieldProvider
-                    key={item.name}
-                    name={item.name}
-                    format={Boolean}
-                    onChange={(e) => this.trackFieldClick(e, item.eventFn)}
-                  >
+                  <FieldProvider key={item.name} name={item.name} format={Boolean}>
                     <InputCheckbox iconTransparentBackground>
                       <span className={cx('switch-field-label', 'dark-view')}>{item.title}</span>
                     </InputCheckbox>

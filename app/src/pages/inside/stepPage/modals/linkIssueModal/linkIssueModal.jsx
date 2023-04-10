@@ -181,12 +181,12 @@ export class LinkIssueModal extends Component {
 
   onLink = () => {
     const {
-      data: { eventsInfo },
+      data: { eventsInfo, items },
       handleSubmit,
       tracking,
     } = this.props;
     handleSubmit(this.onFormSubmit)();
-    eventsInfo.loadBtn && tracking.trackEvent(eventsInfo.loadBtn);
+    eventsInfo.loadBtn && tracking.trackEvent(eventsInfo.loadBtn(items.length));
   };
 
   onChangePlugin = (pluginName) => {

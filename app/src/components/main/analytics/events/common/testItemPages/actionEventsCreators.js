@@ -134,37 +134,52 @@ export const getClickBreadcrumbsEvents = (category) => ({
     icon_name: expanded ? 'minus' : 'plus',
   }),
 });
-
-// GA3 events
-export const getEditDefectActionEvent = (category) => ({
-  category,
-  action: 'Click on Btn "Edit Defect"',
-  label: 'Arise Modal "Edit Defect Type"',
+export const getChangeItemStatusEventCreator = (category) => (status) => ({
+  ...getBasicClickEventParameters(category),
+  type: 'status',
+  element_name: status.toLowerCase(),
 });
 
-export const getPostIssueActionEvent = (category) => ({
-  category,
-  action: 'Click on Btn "Post Issue"',
-  label: 'Arise Modal "Post Issue"',
-});
-
-export const getLinkIssueActionEvent = (category) => ({
-  category,
-  action: 'Click on Btn "Link Issue"',
-  label: 'Arise Modal "Link Issue"',
+const getClickListOfActionsEventCreator = (category) => ({
+  ...getBasicClickEventParameters(category),
+  place: 'list_of_actions',
 });
 
 export const getDeleteActionEvent = (category) => ({
-  category,
-  action: 'Click on Btn "Delete"',
-  label: 'Arise Modal "Delete Item"',
+  ...getClickListOfActionsEventCreator(category),
+  element_name: 'delete',
+});
+
+export const getEditDefectActionEvent = (category) => ({
+  ...getClickListOfActionsEventCreator(category),
+  element_name: 'edit_defects',
+});
+
+export const getPostIssueActionEvent = (category) => ({
+  ...getClickListOfActionsEventCreator(category),
+  element_name: 'post_issue',
+});
+
+export const getLinkIssueActionEvent = (category) => ({
+  ...getClickListOfActionsEventCreator(category),
+  element_name: 'link_issue',
 });
 
 export const getUnlinkIssueActionEvent = (category) => ({
-  category,
-  action: 'Click on Btn "Unlink Issue"',
-  label: 'Arise Modal "Unlink Issue"',
+  ...getClickListOfActionsEventCreator(category),
+  element_name: 'unlink_issue',
 });
+
+export const getIgnoreInAutoAnalysisActionEventCreator = (category) => ({
+  ...getClickListOfActionsEventCreator(category),
+  element_name: 'ignore_in_Auto_Analysis',
+});
+
+export const getIncludeInAutoAnalysisActionEventCreator = (category) => ({
+  ...getClickListOfActionsEventCreator(category),
+  element_name: 'include_into_auto_analysis',
+});
+// GA3 events
 
 export const getChangeFilterEvent = (category) => (title, value) => ({
   category,
@@ -192,21 +207,15 @@ export const getRefineFiltersPanelEvents = (category) => ({
 });
 
 export const getClickIssueTicketEvent = (category) => (pluginName) => ({
-  category,
-  action: 'Click on Issue Ticket',
-  label: pluginName || 'BTS',
+  ...getBasicClickEventParameters(category),
+  element_name: 'issue_ticket',
+  type: normalizeEventParameter(pluginName || 'BTS'),
 });
 
 export const getClickExpandStackTraceArrowEvent = (category) => ({
   category,
   action: 'Click on Icon Arrow to Expand Stack Trace Message on Modal "Test Item Details"',
   label: 'Expand Stack Trace Message',
-});
-
-export const getIgnoreBtnIgnoreItemsInAAModalEvent = (category) => ({
-  category,
-  action: 'Click on Ignore in Modal "Ignore items in AA"',
-  label: 'Ignore items in AA',
 });
 
 export const getIncludeBtnIncludeInAAModalEvent = (category) => ({
@@ -221,6 +230,11 @@ export const getCommonActionEvents = (category) => ({
     ...getBasicClickEventParameters(category),
     element_name: 'proceed_valid_items',
   },
+  EDIT_ITEMS_ACTION: {
+    ...getClickListOfActionsEventCreator(category),
+    element_name: 'edit_items',
+  },
+
   // GA3 events
   CLOSE_ICON_FOR_ALL_SELECTIONS: {
     category,
@@ -358,11 +372,5 @@ export const getCommonActionEvents = (category) => ({
     category,
     action: 'Enter parameters to refine by name',
     label: 'Refine by name',
-  },
-
-  EDIT_ITEMS_ACTION: {
-    category,
-    action: 'Click on "edit" in Actions',
-    label: 'Arise Modal "Edit Items"',
   },
 });
