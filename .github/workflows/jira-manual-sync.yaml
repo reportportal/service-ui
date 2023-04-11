@@ -1,24 +1,12 @@
 name: Manual update Jira fix versions
 
 on:
-  # create:
-  #   branches:
-  #     - 'rc/[0-9]*'
-  #     - 'hotfix/[0-9]*'
-  # push:
-  #   branches:
-  #     - 'rc/[0-9]+.[0-9]*'
-  #     - 'hotfix/[0-9]+.[0-9]*'
-  #   paths-ignore:
-  #     - 'readme.md'
-  #     - 'README.md'
-  #     - 'LICENSE'
   workflow_dispatch:
     inputs:
-      JIRA_FIX_VERSION:
+      jira_fix_version:
         description: 'Jira Fix Version'
         required: true
-      LATEST_RELEASE_TAG:
+      latest_release_tag:
         description: 'Latest Release Tag'
         required: true
 
@@ -41,5 +29,5 @@ jobs:
         env:
           JIRA_SERVER: ${{ vars.JIRA_SERVER }}
           JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}
-          JIRA_FIX_VERSION: ${{ inputs.JIRA_FIX_VERSION }}
-          LATEST_RELEASE_TAG: ${{ inputs.LATEST_RELEASE_TAG }}
+          JIRA_FIX_VERSION: ${{ inputs.jira_fix_version }}
+          LATEST_RELEASE_TAG: ${{ inputs.latest_release_tag }}
