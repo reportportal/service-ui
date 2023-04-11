@@ -1,4 +1,4 @@
-name: Update Jira Issues Fix Versions for Service Release
+name: Update Jira Fix Versions
 
 on:
   create:

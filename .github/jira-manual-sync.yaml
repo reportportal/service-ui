@@ -1,4 +1,4 @@
-name: Update Jira Fix Versions
+name: Manual update Jira fix versions
 
 on:
   # create:
