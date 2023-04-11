@@ -11,7 +11,7 @@ on:
         required: true
 
 jobs:
-  sync-service-versions-with-jira:
+  manual-sync-service-versions-with-jira:
     runs-on: ubuntu-latest
     steps:
       - name: Full Checkout
