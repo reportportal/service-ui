@@ -303,6 +303,7 @@ export class ActionPanelWithGroupOperations extends Component {
         'actions',
       ),
     );
+    tracking.trackEvent(HISTORY_PAGE_EVENTS.EDIT_DEFECT_ACTION);
 
     onEditDefects(items, {
       fetchFunc: this.unselectAndRefreshItems,
