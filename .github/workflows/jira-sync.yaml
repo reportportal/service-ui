@@ -18,14 +18,10 @@ jobs:
   sync-service-versions-with-jira:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout master
+      - name: Full Checkout
         uses: actions/checkout@v3
         with:
-          ref: master
-      - name: Checkout
-        uses: actions/checkout@v3
-        # with:
-        #   fetch-depth: '0'
+          fetch-depth: '0'
       - name: Get tags
         run: git fetch --tags origin
       - name: Install Python
