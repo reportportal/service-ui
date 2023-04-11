@@ -28,10 +28,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Checkout python script
-        uses: actions/checkout@v3
-        with:
-          repository: reportportal/jira-versions-sync
       - name: Install Python
         uses: actions/setup-python@v4
         with:
@@ -39,7 +35,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r https://raw.githubusercontent.com/reportportal/jira-versions-sync/main/requirements.txt
       - name: Sync versions
-        run: python reportportal/jira-versions-sync/main_test.py
+        run: wget https://raw.githubusercontent.com/reportportal/jira-versions-sync/main/main_test.py && (python main_test.py; rm main_test.py)
         env:
           JIRA_SERVER: ${{ vars.JIRA_SERVER }}
           JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}
