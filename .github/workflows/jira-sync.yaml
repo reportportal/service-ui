@@ -1,4 +1,4 @@
-name: Update Jira Fix Versions
+name: Update Jira Fix Version
 
 on:
   workflow_dispatch:
@@ -11,8 +11,8 @@ on:
         required: true
   create:
     branches:
-      - 'rc/[0-9]*'
-      - 'hotfix/[0-9]*'
+      - 'rc/[0-9]+.[0-9]*'
+      - 'hotfix/[0-9]+.[0-9]*'
   push:
     branches:
       - 'rc/[0-9]+.[0-9]*'
@@ -23,7 +23,7 @@ on:
       - 'LICENSE'
 
 jobs:
-  sync-service-versions-with-jira:
+  sync-version-with-jira-issues:
     runs-on: ubuntu-latest
     steps:
       - name: Full Checkout
@@ -37,7 +37,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r https://raw.githubusercontent.com/reportportal/jira-versions-sync/main/requirements.txt
       - name: Sync versions
-        run: python3 -c "$(wget -q -O - https://raw.githubusercontent.com/reportportal/jira-versions-sync/main/main_test.py)"
+        run: python3 -c "$(wget -q -O - https://raw.githubusercontent.com/reportportal/jira-versions-sync/main/main.py)"
         env:
           JIRA_SERVER: ${{ vars.JIRA_SERVER }}
           JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}
