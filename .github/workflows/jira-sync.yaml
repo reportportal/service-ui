@@ -36,7 +36,7 @@ jobs:
           python-version: 3.11
       - name: Install dependencies
         run: pip install -r https://raw.githubusercontent.com/reportportal/jira-versions-sync/main/requirements.txt
-      - name: Sync versions
+      - name: Update Jira Issues
         run: python3 -c "$(wget -q -O - https://raw.githubusercontent.com/reportportal/jira-versions-sync/main/main.py)"
         env:
           JIRA_SERVER: ${{ vars.JIRA_SERVER }}
