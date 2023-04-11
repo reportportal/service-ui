@@ -1,6 +1,14 @@
 name: Update Jira Fix Versions
 
 on:
+  workflow_dispatch:
+    inputs:
+      jira_fix_version:
+        description: 'Jira Fix Version'
+        required: true
+      latest_release_tag:
+        description: 'Latest Release Tag'
+        required: true
   create:
     branches:
       - 'rc/[0-9]*'
