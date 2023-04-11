@@ -39,5 +39,5 @@ jobs:
         env:
           JIRA_SERVER: ${{ vars.JIRA_SERVER }}
           JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}
-          JIRA_FIX_VERSION: ${{ inputs.JIRA_FIX_VERSION }}
-          LATEST_RELEASE_TAG: ${{ inputs.LATEST_RELEASE_TAG }}
+          # JIRA_FIX_VERSION: ${{ inputs.JIRA_FIX_VERSION }}
+          # LATEST_RELEASE_TAG: ${{ inputs.LATEST_RELEASE_TAG }}
