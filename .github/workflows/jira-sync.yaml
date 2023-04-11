@@ -1,7 +1,7 @@
 name: Update Jira Issues Fix Versions for Service Release
 
 on:
-  created:
+  create:
     branches:
       - 'rc/[0-9]*'
       - 'hotfix/[0-9]*'
