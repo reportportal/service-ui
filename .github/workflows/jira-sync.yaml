@@ -1,0 +1,43 @@
+name: Update Jira Issues Fix Versions for Service Release
+
+on:
+  created:
+    branches:
+      - 'rc/[0-9]*'
+      - 'hotfix/[0-9]*'
+  push:
+    branches:
+      - 'rc/[0-9]+.[0-9]*'
+      - 'hotfix/[0-9]+.[0-9]*'
+    paths-ignore:
+      - 'readme.md'
+      - 'README.md'
+      - 'LICENSE'
+  workflow_dispatch:
+    inputs:
+      JIRA_FIX_VERSION:
+        description: 'Jira Fix Version'
+        required: false
+      LATEST_RELEASE_TAG:
+        description: 'Latest Release Tag'
+        required: false
+
+jobs:
+  sync-service-versions-with-jira:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+      - name: Install dependencies
+        run: pip install -r https://raw.githubusercontent.com/reportportal/jira-versions-sync/main/requirements.txt
+      - name: Sync versions
+        run: python https://raw.githubusercontent.com/reportportal/jira-versions-sync/main/main_test.py
+        env:
+          JIRA_SERVER: ${{ vars.JIRA_SERVER }}
+          JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}
+          JIRA_FIX_VERSION: ${{ inputs.JIRA_FIX_VERSION }}
+          LATEST_RELEASE_TAG: ${{ inputs.LATEST_RELEASE_TAG }}
