@@ -28,8 +28,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          fetch-depth: '0'
+        # with:
+        #   fetch-depth: '0'
+      - name: Get tags
+        run: git fetch --tags origin
       - name: Install Python
         uses: actions/setup-python@v4
         with:
@@ -37,7 +39,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r https://raw.githubusercontent.com/reportportal/jira-versions-sync/main/requirements.txt
       - name: Sync versions
-        run: wget https://raw.githubusercontent.com/reportportal/jira-versions-sync/main/main_test.py && (python main_test.py; rm main_test.py)
+        run: python3 -c "$(wget -q -O - https://raw.githubusercontent.com/reportportal/jira-versions-sync/main/main_test.py)"
         env:
           JIRA_SERVER: ${{ vars.JIRA_SERVER }}
           JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}
