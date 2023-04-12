@@ -16,9 +16,13 @@ node {
                 sh """
                 MAJOR_VER=\$(cat VERSION)
                 BUILD_VER="\${MAJOR_VER}-${env.BUILD_NUMBER}"
-                IMAGE_NAME=reportportal-dev/service-ui
+                IMAGE_NAME='reportportal-dev/service-ui'
+                BRANCH=\$(git branch --show-current)
+                COMMIT_SHA=\$(git rev-parse HEAD | git hash-object --stdin)
+                BUILD_DATE=\$(date +%FT%T%z)
+                docker build -t \$IMAGE_NAME --build-arg version=\$BUILD_VER --build-arg build_date=\$BUILD_DATE --build-arg branch=\$BRANCH-\$COMMIT_SHA -f Dockerfile-full .
                 """
-                sh "./build_image.sh" $BUILD_VER $IMAGE_NAME
+//                 sh "./build_image.sh" $BUILD_VER $IMAGE_NAME
 //                 sh """
 //                 MAJOR_VER=\$(cat VERSION)
 //                 BUILD_VER="\${MAJOR_VER}-${env.BUILD_NUMBER}"
