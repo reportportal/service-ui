@@ -16,7 +16,7 @@ node {
                 sh """
                 MAJOR_VER=\$(cat VERSION)
                 BUILD_VER="\${MAJOR_VER}-${env.BUILD_NUMBER}"
-                make IMAGE_NAME=reportportal-dev/service-ui build-image-dev v=\$BUILD_VER
+                docker build -t reportportal-dev/service-ui --build-arg version=\$BUILD_VER -f Dockerfile-full .
                 """
             }
         }
@@ -32,7 +32,7 @@ node {
                 }
             }
         }
-            
+
         stage('Cleanup') {
             withEnv(["AWS_URI=${AWS_URI}"]) {
                 sh 'docker rmi $AWS_URI/service-ui:SNAPSHOT-$BUILD_NUMBER'

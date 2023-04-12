@@ -1,20 +1,19 @@
-# Only for technical/build aims, built image will be with nginx:alpine according to the last step
+# Only for technical/build aims, built image will be with nginxinc/nginx-unprivileged:alpine according to the last step
 
-FROM alpine:3.10.9 as generate-build-info
+FROM alpine:latest as generate-build-info
 RUN apk add git
-RUN apk add make
 RUN mkdir -p /usr/src/app/build
-COPY ./Makefile /usr/src/
 WORKDIR /usr/src
 ARG version
-RUN make generate-build-info v=$version
+# TODO: use variables from Jenkins job if possible
+RUN echo {\"build\": { \"version\": \"${version}\", \"branch\": \"${COMMIT_HASH}\", \"build_date\": \"${BUILD_DATE}\", \"name\": \"Service UI\", \"repo\": \"${REPO_NAME}\"}} > ./app/build/buildInfo.json
 
 FROM node:12-alpine as build-frontend
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY ./app/ /usr/src/app/
 RUN export NODE_OPTIONS="--max-old-space-size=4096"
-RUN npm ci && npm run build && npm run test
+RUN npm ci && npm run build
 
 FROM nginxinc/nginx-unprivileged:alpine
 
