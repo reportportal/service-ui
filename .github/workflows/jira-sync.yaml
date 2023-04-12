@@ -21,15 +21,6 @@ on:
       - 'readme.md'
       - 'README.md'
       - 'LICENSE'
-  pull_request:
-    types: [opened, synchronize, reopened]
-    branches:
-      - 'master'
-      - 'main'
-    paths-ignore:
-      - 'readme.md'
-      - 'README.md'
-      - 'LICENSE'
 
 jobs:
   sync-version-with-jira-issues:
