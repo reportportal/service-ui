@@ -16,7 +16,9 @@ node {
                 sh """
                 MAJOR_VER=\$(cat VERSION)
                 BUILD_VER="\${MAJOR_VER}-${env.BUILD_NUMBER}"
-                docker build -t reportportal-dev/service-ui --build-arg version=\$BUILD_VER -f Dockerfile-full .
+                BRANCH=\$(git rev-parse --short HEAD 2>/dev/null)
+                BUILD_DATE=\$(date +%FT%T%z)
+                docker build -t reportportal-dev/service-ui --build-arg version=\$BUILD_VER --build-arg build_date=\$BRANCH --build-arg branch=\$BRANCH -f Dockerfile-full .
                 """
             }
         }

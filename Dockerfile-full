@@ -1,12 +1,12 @@
 # Only for technical/build aims, built image will be with nginxinc/nginx-unprivileged:alpine according to the last step
 
 FROM alpine:latest as generate-build-info
-RUN apk add git
 RUN mkdir -p /usr/src/app/build
 WORKDIR /usr/src
 ARG version
-# TODO: use variables from Jenkins job if possible
-RUN echo {\"build\": { \"version\": \"${version}\", \"branch\": \"${COMMIT_HASH}\", \"build_date\": \"${BUILD_DATE}\", \"name\": \"Service UI\", \"repo\": \"${REPO_NAME}\"}} > ./app/build/buildInfo.json
+ARG git_branch
+ARG build_date
+RUN echo {\"build\": { \"version\": \"${version}\", \"branch\": \"${git_branch}\", \"build_date\": \"${build_date}\", \"name\": \"Service UI\", \"repo\": \"reportportal/service-ui\"}} > ./app/build/buildInfo.json
 
 FROM node:12-alpine as build-frontend
 RUN mkdir -p /usr/src/app
