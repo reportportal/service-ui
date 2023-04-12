@@ -1,3 +1,4 @@
+#usage sh "./build_image.sh" $BUILD_VER $IMAGE_NAME
 $VERSION=$1
 $IMAGE_NAME=$2
 BRANCH='git branch --show-current'
