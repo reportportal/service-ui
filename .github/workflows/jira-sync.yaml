@@ -21,12 +21,28 @@ on:
       - 'readme.md'
       - 'README.md'
       - 'LICENSE'
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - 'master'
+      - 'main'
+    paths-ignore:
+      - 'readme.md'
+      - 'README.md'
+      - 'LICENSE'
 
 jobs:
   sync-version-with-jira-issues:
     runs-on: ubuntu-latest
     steps:
-      - name: Full Checkout
+      - name: Pull Request Checkout
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: '0'
+      - name: Checkout
+        if: ${{ github.event_name != 'pull_request' }}
         uses: actions/checkout@v3
         with:
           fetch-depth: '0'
@@ -41,5 +57,5 @@ jobs:
         env:
           JIRA_SERVER: ${{ vars.JIRA_SERVER }}
           JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}
-          JIRA_FIX_VERSION: ${{ inputs.JIRA_FIX_VERSION }}
-          LATEST_RELEASE_TAG: ${{ inputs.LATEST_RELEASE_TAG }}
+          JIRA_FIX_VERSION: ${{ inputs.jira_fix_version }}
+          LATEST_RELEASE_TAG: ${{ inputs.latest_release_tag }}
