@@ -4,9 +4,9 @@ FROM alpine:latest as generate-build-info
 RUN mkdir -p /usr/src/app/build
 WORKDIR /usr/src
 ARG version
-ARG git_branch
+ARG branch
 ARG build_date
-RUN echo {\"build\": { \"version\": \"${version}\", \"branch\": \"${git_branch}\", \"build_date\": \"${build_date}\", \"name\": \"Service UI\", \"repo\": \"reportportal/service-ui\"}} > ./app/build/buildInfo.json
+RUN echo {\"build\": { \"version\": \"${version}\", \"branch\": \"${branch}\", \"build_date\": \"${build_date}\", \"name\": \"Service UI\", \"repo\": \"reportportal/service-ui\"}} > ./app/build/buildInfo.json
 
 FROM node:12-alpine as build-frontend
 RUN mkdir -p /usr/src/app

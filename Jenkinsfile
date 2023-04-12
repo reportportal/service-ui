@@ -16,10 +16,16 @@ node {
                 sh """
                 MAJOR_VER=\$(cat VERSION)
                 BUILD_VER="\${MAJOR_VER}-${env.BUILD_NUMBER}"
-                BRANCH=\$(git rev-parse --short HEAD 2>/dev/null)
-                BUILD_DATE=\$(date +%FT%T%z)
-                docker build -t reportportal-dev/service-ui --build-arg version=\$BUILD_VER --build-arg build_date=\$BRANCH --build-arg branch=\$BRANCH -f Dockerfile-full .
+                IMAGE_NAME=reportportal-dev/service-ui
                 """
+                sh "./build_image.sh" $BUILD_VER $IMAGE_NAME
+//                 sh """
+//                 MAJOR_VER=\$(cat VERSION)
+//                 BUILD_VER="\${MAJOR_VER}-${env.BUILD_NUMBER}"
+//                 BRANCH=\$(git rev-parse --short HEAD 2>/dev/null)
+//                 BUILD_DATE=\$(date +%FT%T%z)
+//                 docker build -t reportportal-dev/service-ui --build-arg version=\$BUILD_VER --build-arg build_date=\$BUILD_DATEq --build-arg branch=\$BRANCH -f Dockerfile-full .
+//                 """
             }
         }
 
