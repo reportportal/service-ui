@@ -40,7 +40,7 @@ export const columnPropTypes = {
     component: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
     align: alignValuesPropTypes,
   }),
-  customProps: PropTypes.object,
+  cellCustomProps: PropTypes.object,
   component: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
   align: alignValuesPropTypes,
   id: PropTypes.string.isRequired,

@@ -24,9 +24,9 @@ import styles from './plainTableRow.scss';
 const cx = classNames.bind(styles);
 
 export const PlainTableRow = ({ value, columns, actions }) => (
-  <div className={cx('row-wrapper')}>
-    <div className={cx('row', 'row-appearance')}>
-      {columns.map(({ id, align, component, title, customProps }) => (
+  <div className={cx('plain-table-row-wrapper')}>
+    <div className={cx('plain-table-row', 'plain-table-row-appearance')}>
+      {columns.map(({ id, align, component, title, cellCustomProps }) => (
         <PlainTableCell
           key={id}
           id={id}
@@ -34,16 +34,15 @@ export const PlainTableRow = ({ value, columns, actions }) => (
           title={title}
           component={component}
           align={align}
-          customProps={customProps}
+          cellCustomProps={cellCustomProps}
         />
       ))}
     </div>
-    {actions.length > 0 &&
-      actions.map(({ id, handler, icon }) => (
-        <i className={cx('row-icon')} key={id} onClick={() => handler(value)}>
-          {Parser(icon)}
-        </i>
-      ))}
+    {actions.map(({ id, handler, icon }) => (
+      <i className={cx('plain-table-row-icon')} key={id} onClick={() => handler(value)}>
+        {Parser(icon)}
+      </i>
+    ))}
   </div>
 );
 PlainTableRow.propTypes = {

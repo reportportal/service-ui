@@ -22,13 +22,13 @@
   }
 }
 
-.row-wrapper {
+.plain-table-row-wrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
   column-gap: 25px;
 
-  .row {
+  .plain-table-row {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
     width: 100%;
@@ -37,13 +37,13 @@
     box-sizing: border-box;
   }
 
-  .row-appearance {
+  .plain-table-row-appearance {
     background-color: $COLOR--white-two;
     border-radius: 16px;
     box-shadow: 0 1px 3px rgba(55, 67, 98, 0.1);
   }
 
-  .row-icon {
+  .plain-table-row-icon {
     width: 16px;
     height: 16px;
     cursor: pointer;

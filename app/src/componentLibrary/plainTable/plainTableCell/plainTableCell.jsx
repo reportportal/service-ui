@@ -23,7 +23,7 @@ import { TextCell } from '../textCell';
 
 const cx = classNames.bind(styles);
 
-export const PlainTableCell = ({ value, id, component, title, align, customProps }) => {
+export const PlainTableCell = ({ value, id, component, title, align, cellCustomProps }) => {
   const CellComponent = component;
 
   return (
@@ -31,7 +31,7 @@ export const PlainTableCell = ({ value, id, component, title, align, customProps
       className={cx('table-cell', { [`align-${align}`]: align })}
       title={title}
       id={id}
-      customProps={customProps}
+      cellCustomProps={cellCustomProps}
       value={value}
     />
   );
