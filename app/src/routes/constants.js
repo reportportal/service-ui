@@ -54,6 +54,7 @@ import {
 } from 'controllers/pages';
 import { AdminUiExtensionPage } from 'pages/admin/adminUiExtensionPage';
 import { RawContentAppLayout } from 'layouts/appLayout/rawContentAppLayout';
+import { UIExtensionPageLayout } from 'layouts/adminLayout/adminUIExtensionLayout';
 
 export const ANONYMOUS_ACCESS = 'anonymous';
 export const ADMIN_ACCESS = 'admin';
@@ -107,7 +108,7 @@ export const pageRendering = {
   [UNIQUE_ERRORS_PAGE]: { component: UniqueErrorsPage, layout: AppLayout },
   [PLUGIN_UI_EXTENSION_ADMIN_PAGE]: {
     component: AdminUiExtensionPage,
-    layout: AdminLayout,
+    layout: UIExtensionPageLayout,
     access: ADMIN_ACCESS,
   },
 };

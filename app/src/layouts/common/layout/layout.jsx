@@ -29,6 +29,7 @@ export class Layout extends Component {
     Header: PropTypes.elementType,
     Sidebar: PropTypes.elementType,
     rawContent: PropTypes.bool,
+    isAdminExtensionPage: PropTypes.bool,
   };
   static defaultProps = {
     children: null,
@@ -36,6 +37,7 @@ export class Layout extends Component {
     Header: null,
     Sidebar: null,
     rawContent: false,
+    isAdminExtensionPage: false,
   };
 
   state = {
@@ -122,7 +124,13 @@ export class Layout extends Component {
               >
                 <div className={cx('scrolling-content')}>
                   {header}
-                  <div className={cx('page-container')}>{children}</div>
+                  <div
+                    className={cx('page-container', {
+                      'extension-page-container': this.props.isAdminExtensionPage,
+                    })}
+                  >
+                    {children}
+                  </div>
                 </div>
               </ScrollWrapper>
             )}

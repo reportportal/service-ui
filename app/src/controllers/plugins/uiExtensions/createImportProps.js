@@ -191,6 +191,7 @@ import { AttributeListFormField } from 'components/containers/AttributeListFormF
 import { Tabs } from 'components/main/tabs';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { Breadcrumbs } from 'componentLibrary/breadcrumbs';
+import { PlainTable } from 'componentLibrary/plainTable';
 
 const BUTTONS = {
   GhostButton,
@@ -288,6 +289,7 @@ export const createImportProps = (pluginName) => ({
     RuleListComponent,
     AttributeListFormField,
     Breadcrumbs,
+    PlainTable,
   },
   HOCs: {
     withTooltip,
