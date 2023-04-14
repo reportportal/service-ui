@@ -70,6 +70,10 @@ export class GhostMenuButton extends Component {
 
   toggleMenu = () => {
     this.setState({ opened: !this.state.opened });
+  };
+
+  handleMenuButtonClick = () => {
+    this.toggleMenu();
     this.props.onClick();
   };
 
@@ -86,7 +90,7 @@ export class GhostMenuButton extends Component {
         ref={(node) => {
           this.node = node;
         }}
-        onClick={!disabled ? this.toggleMenu : null}
+        onClick={!disabled ? this.handleMenuButtonClick : null}
       >
         <i className={cx('hamburger-icon')}>
           <div className={cx('hamburger-icon-part')} />
