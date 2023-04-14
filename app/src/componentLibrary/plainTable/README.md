@@ -1,6 +1,6 @@
 ## **PlainTable**
 
-Has 930px width, min-height 80px
+Has width 100% of the parent, min-height 135px
 
 ### Props
 
