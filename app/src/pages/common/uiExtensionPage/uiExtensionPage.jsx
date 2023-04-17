@@ -24,10 +24,6 @@ import styles from './uiExtensionPage.scss';
 
 const cx = classNames.bind(styles);
 
-const newExtensionsScopesMap = {
-  billing_saas_plugin: true,
-};
-
 export const UiExtensionPage = ({ extensions, activePluginPage }) => {
   const extension = React.useMemo(() => extensions.find((ex) => ex.name === activePluginPage), [
     extensions,
@@ -36,7 +32,7 @@ export const UiExtensionPage = ({ extensions, activePluginPage }) => {
 
   const [headerNodes, setHeaderNodes] = useState({});
 
-  const pageLayout = newExtensionsScopesMap[extension.scope] ? (
+  const pageLayout = extension.newLayout ? (
     <>
       <div className={cx('header')}>
         <Header
