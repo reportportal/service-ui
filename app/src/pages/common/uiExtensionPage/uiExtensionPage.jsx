@@ -14,10 +14,15 @@
  *  limitations under the License.
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { PageLayout, PageSection, PageHeader } from 'layouts/pageLayout';
+import { PageHeader, PageLayout, PageSection } from 'layouts/pageLayout';
 import { ExtensionLoader, extensionType } from 'components/extensionLoader';
+import { Header } from 'pages/inside/projectSettingsPageContainer/header';
+import classNames from 'classnames/bind';
+import styles from './uiExtensionPage.scss';
+
+const cx = classNames.bind(styles);
 
 export const UiExtensionPage = ({ extensions, activePluginPage }) => {
   const extension = React.useMemo(() => extensions.find((ex) => ex.name === activePluginPage), [
@@ -25,7 +30,23 @@ export const UiExtensionPage = ({ extensions, activePluginPage }) => {
     activePluginPage,
   ]);
 
-  return (
+  const [headerNodes, setHeaderNodes] = useState({});
+
+  const pageLayout = extension.newLayout ? (
+    <>
+      <div className={cx('header')}>
+        <Header
+          titleNode={headerNodes.titleNode}
+          title={extension ? extension.title || extension.name : ''}
+        >
+          {headerNodes.children}
+        </Header>
+      </div>
+      <PageSection>
+        <ExtensionLoader extension={extension} withPreloader setHeaderNodes={setHeaderNodes} />
+      </PageSection>
+    </>
+  ) : (
     <PageLayout>
       {extension && <PageHeader breadcrumbs={[{ title: extension.title || extension.name }]} />}
       <PageSection>
@@ -33,6 +54,8 @@ export const UiExtensionPage = ({ extensions, activePluginPage }) => {
       </PageSection>
     </PageLayout>
   );
+
+  return pageLayout;
 };
 UiExtensionPage.propTypes = {
   extensions: PropTypes.arrayOf(extensionType),
