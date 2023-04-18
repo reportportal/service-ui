@@ -32,28 +32,26 @@ export const UiExtensionPage = ({ extensions, activePluginPage }) => {
 
   const [headerNodes, setHeaderNodes] = useState({});
 
-  const pageLayout = extension.newLayout ? (
-    <>
-      <div className={cx('header')}>
-        <Header
-          titleNode={headerNodes.titleNode}
-          title={extension ? extension.title || extension.name : ''}
-        >
-          {headerNodes.children}
-        </Header>
-      </div>
-      <PageSection>
-        <ExtensionLoader extension={extension} withPreloader setHeaderNodes={setHeaderNodes} />
-      </PageSection>
-    </>
-  ) : (
-    <PageLayout>
-      {extension && <PageHeader breadcrumbs={[{ title: extension.title || extension.name }]} />}
-      <PageSection>
-        <ExtensionLoader extension={extension} withPreloader />
-      </PageSection>
-    </PageLayout>
-  );
+  const pageLayout =
+    extension && extension.newLayout ? (
+      <>
+        <div className={cx('header')}>
+          <Header titleNode={headerNodes.titleNode} title={extension.title || extension.name}>
+            {headerNodes.children}
+          </Header>
+        </div>
+        <PageSection>
+          <ExtensionLoader extension={extension} withPreloader setHeaderNodes={setHeaderNodes} />
+        </PageSection>
+      </>
+    ) : (
+      <PageLayout>
+        {extension && <PageHeader breadcrumbs={[{ title: extension.title || extension.name }]} />}
+        <PageSection>
+          <ExtensionLoader extension={extension} withPreloader />
+        </PageSection>
+      </PageLayout>
+    );
 
   return pageLayout;
 };
