@@ -14,7 +14,7 @@
   background-color: $COLOR--white-two;
   box-sizing: border-box;
   box-shadow: 0 6px 12px $COLOR--gray-80;
-  z-index: $Z-INDEX-POPUP;
+  z-index: $Z-INDEX_AUTOCOMPLETE;
   &.opened {
     display: block;
   }
