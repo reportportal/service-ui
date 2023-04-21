@@ -15,7 +15,7 @@
  */
 
 import { SEARCH_MODES } from 'pages/inside/stepPage/modals/makeDecisionModal/constants';
-import { defectFromTIGroupMap } from './constants';
+import { DEFECT_FROM_TI_GROUP_MAP } from './constants';
 import { getBasicClickEventParameters } from '../ga4Utils';
 import { getIncludedData } from '../utils';
 
@@ -38,13 +38,13 @@ const basicClickEventParametersMakeDecision = getBasicClickEventParameters(MAKE_
 const getBasicClickEventParametersMakeDecisionCreator = (place, defectFromTIGroup) => ({
   ...basicClickEventParametersMakeDecision,
   place,
-  condition: defectFromTIGroupMap[defectFromTIGroup] || 'bulk',
+  condition: DEFECT_FROM_TI_GROUP_MAP[defectFromTIGroup] || 'bulk',
 });
 
 const getOpenModalEventCreator = (place) => (defectFromTIGroup, actionPlace = '') => ({
   ...basicClickEventParametersMakeDecision,
   place: `${place}${actionPlace && `#${actionPlace}`}`,
-  condition: defectFromTIGroupMap[defectFromTIGroup] || 'bulk',
+  condition: DEFECT_FROM_TI_GROUP_MAP[defectFromTIGroup] || 'bulk',
 });
 const getClickOnApplyBtnEventCreator = (place) => (defectFromTIGroup, hasSuggestions) => {
   const basicEventParameters = getBasicClickEventParametersMakeDecisionCreator(
