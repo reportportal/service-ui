@@ -26,20 +26,6 @@ import styles from './entitiesSelector.scss';
 
 const cx = classNames.bind(styles);
 
-const getEntityTitle = (entities, { id: entityId, title }) => {
-  const compositeIdDelimiter = '$';
-  const lastIndexOfDelimiter = entityId.lastIndexOf(compositeIdDelimiter);
-  const nextCharacterIndexAfterDelimiter = lastIndexOfDelimiter + 1;
-
-  return (
-    (lastIndexOfDelimiter !== -1
-      ? entities.find(({ id }) =>
-          id.startsWith(entityId.slice(0, nextCharacterIndexAfterDelimiter)),
-        ).title
-      : title) || ''
-  );
-};
-
 @track()
 export class EntitiesSelector extends Component {
   static propTypes = {
@@ -77,16 +63,11 @@ export class EntitiesSelector extends Component {
     const {
       tracking,
       onChange,
-      entities,
       events: { commonEvents = {} },
     } = this.props;
 
-    if (!entity.active) {
-      const analyticsData = getEntityTitle(entities, entity);
-
-      tracking.trackEvent(
-        commonEvents.getRefineParametersEvent(analyticsData, entity.meta && analyticsData),
-      );
+    if (!entity.active && commonEvents.getRefineParametersEvent) {
+      tracking.trackEvent(commonEvents.getRefineParametersEvent(entity));
     }
     this.setState({ opened: !this.state.opened });
     onChange(entity.id);

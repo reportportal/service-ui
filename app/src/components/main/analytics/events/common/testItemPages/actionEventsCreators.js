@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 
 import { getBasicClickEventParameters, normalizeEventParameter } from '../ga4Utils';
+import { getFilterEntityType } from './utils';
 
 // GA4 events
 export const getClickItemNameEvent = (category) => ({
@@ -86,12 +87,10 @@ export const getClickPencilIconEvent = (category) => ({
   ...getBasicClickEventParameters(category),
   icon_name: 'edit_item',
 });
-export const getRefineParametersEventCreator = (category) => (type, productBugGroup) => ({
+export const getRefineParametersEventCreator = (category) => (entity) => ({
   ...getBasicClickEventParameters(category),
   element_name: 'parameter_refine',
-  ...(productBugGroup
-    ? { product_bug_group: normalizeEventParameter(productBugGroup) }
-    : { type: normalizeEventParameter(type) }),
+  type: getFilterEntityType(entity),
 });
 export const getClickOnAttributesEvent = (category) => ({
   ...getBasicClickEventParameters(category),
