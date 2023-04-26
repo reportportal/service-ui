@@ -54,7 +54,7 @@ export const pluginsTabSelector = (state) => payloadSelector(state).pluginsTab;
 export const pluginPageSelector = (state) => payloadSelector(state).pluginPage;
 export const pluginRouteSelector = (state) => payloadSelector(state).pluginRoute;
 
-export const adminProfileRouteSelector = (state) => payloadSelector(state).profileRoute;
+export const userProfileRouteSelector = (state) => payloadSelector(state).profileRoute;
 
 export const pageSelector = (state) => pageNames[state.location.type] || NO_PAGE;
 export const projectSectionSelector = (state) => payloadSelector(state).projectSection || '';

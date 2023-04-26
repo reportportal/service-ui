@@ -22,15 +22,19 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { PageLayout, PageHeader } from 'layouts/pageLayout';
 import { PROFILE_PAGE } from 'components/main/analytics/events';
-import { USER_PROFILE_PAGE, adminProfileRouteSelector } from 'controllers/pages';
+import { userProfileRouteSelector, USER_PROFILE_TABS_PAGE } from 'controllers/pages';
 import { NavigationTabs } from 'components/main/navigationTabs';
+import {
+  API_KEYS_ROUTE,
+  CONFIG_EXAMPLES_ROUTE,
+  PROJECT_ASSIGNMENT_ROUTE,
+} from 'common/constants/adminProfileRoutes';
 import { PersonalInfoBlock } from './personalInfoBlock';
 import { AccessTokenBlock } from './accessTokenBlock';
 import { AssignedProjectsBlock } from './assignedProjectsBlock';
 import { ConfigExamplesBlock } from './configExamplesBlock';
 import { LocalizationBlock } from './localizationBlock';
 import styles from './profilePage.scss';
-import { API_KEYS_ROUTE, CONFIG_EXAMPLES_ROUTE, PROJECT_ASSIGNMENT_ROUTE } from './constants';
 
 const cx = classNames.bind(styles);
 
@@ -41,20 +45,20 @@ const messages = defineMessages({
   },
   profilePageProjectAssignmentTab: {
     id: 'ProfilePage.projectAssignmentTab',
-    defaultMessage: 'PROJECT ASSIGNMENT',
+    defaultMessage: 'Project assignment',
   },
   profilePageProjectApiKeysTab: {
     id: 'ProfilePage.apiKeys',
-    defaultMessage: 'API KEYS',
+    defaultMessage: 'API keys',
   },
   profilePageConfigurationExamplesTab: {
     id: 'ProfilePage.configurationExamples',
-    defaultMessage: 'CONFIGURATION EXAMPLES',
+    defaultMessage: 'Configuration examples',
   },
 });
 
-const getDefaultLinkConfig = (profileRoute) => ({
-  type: USER_PROFILE_PAGE,
+const getProfilePageLink = (profileRoute) => ({
+  type: USER_PROFILE_TABS_PAGE,
   payload: {
     profileRoute,
   },
@@ -63,23 +67,23 @@ const getDefaultLinkConfig = (profileRoute) => ({
 const getNavigationTabsConfig = (formatMessage) => ({
   [PROJECT_ASSIGNMENT_ROUTE]: {
     name: formatMessage(messages.profilePageProjectAssignmentTab),
-    link: getDefaultLinkConfig(PROJECT_ASSIGNMENT_ROUTE),
+    link: getProfilePageLink(PROJECT_ASSIGNMENT_ROUTE),
     component: <AssignedProjectsBlock />,
   },
   [API_KEYS_ROUTE]: {
     name: formatMessage(messages.profilePageProjectApiKeysTab),
-    link: getDefaultLinkConfig(API_KEYS_ROUTE),
+    link: getProfilePageLink(API_KEYS_ROUTE),
     component: <AccessTokenBlock />,
   },
   [CONFIG_EXAMPLES_ROUTE]: {
     name: formatMessage(messages.profilePageConfigurationExamplesTab),
-    link: getDefaultLinkConfig(CONFIG_EXAMPLES_ROUTE),
+    link: getProfilePageLink(CONFIG_EXAMPLES_ROUTE),
     component: <ConfigExamplesBlock />,
   },
 });
 
 @connect((state) => ({
-  activeTab: adminProfileRouteSelector(state),
+  activeTab: userProfileRouteSelector(state),
 }))
 @injectIntl
 @track({ page: PROFILE_PAGE })
@@ -103,9 +107,9 @@ export class ProfilePage extends Component {
       <div className={cx('container')}>
         <section className={cx('content-wrapper')}>
           <div>
-            <article className={cx('section-wrapper')}>
+            <div className={cx('section-wrapper')}>
               <PersonalInfoBlock />
-            </article>
+            </div>
             <NavigationTabs
               config={getNavigationTabsConfig(this.props.intl.formatMessage)}
               activeTab={this.props.activeTab}

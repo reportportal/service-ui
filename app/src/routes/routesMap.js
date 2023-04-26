@@ -53,6 +53,7 @@ import {
   clearPageStateAction,
   adminPageNames,
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
+  USER_PROFILE_TABS_PAGE,
 } from 'controllers/pages';
 import { GENERAL, AUTHORIZATION_CONFIGURATION, ANALYTICS } from 'common/constants/settingsTabs';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
@@ -83,6 +84,11 @@ import { startSetViewMode } from 'controllers/administrate/projects/actionCreato
 import { SIZE_KEY } from 'controllers/pagination';
 import { setSessionItem, updateStorageItem } from 'common/utils/storageUtils';
 import { fetchClustersAction } from 'controllers/uniqueErrors';
+import {
+  API_KEYS_ROUTE,
+  CONFIG_EXAMPLES_ROUTE,
+  PROJECT_ASSIGNMENT_ROUTE,
+} from 'common/constants/adminProfileRoutes';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
@@ -104,7 +110,12 @@ const routesMap = {
   [NOT_FOUND]: '/notfound',
 
   ADMINISTRATE_PAGE: redirectRoute('/administrate', () => ({ type: PROJECTS_PAGE })),
-  USER_PROFILE_PAGE: '/user-profile/:profileRoute*',
+  USER_PROFILE_PAGE: redirectRoute('/userProfile', () => ({
+    type: USER_PROFILE_TABS_PAGE,
+    payload: { profileRoute: PROJECT_ASSIGNMENT_ROUTE },
+  })),
+
+  [USER_PROFILE_TABS_PAGE]: `/userProfile/:profileRoute(${PROJECT_ASSIGNMENT_ROUTE}|${API_KEYS_ROUTE}|${CONFIG_EXAMPLES_ROUTE})`,
 
   API_PAGE: '/api',
 

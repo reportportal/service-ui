@@ -27,11 +27,10 @@ import { withTooltip } from 'components/main/tooltips/tooltip';
 import { TextTooltip } from 'components/main/tooltips/textTooltip';
 import { userInfoSelector, photoTimeStampSelector } from 'controllers/user';
 import { logoutAction } from 'controllers/auth';
-import { API_PAGE, ADMINISTRATE_PAGE, USER_PROFILE_PAGE } from 'controllers/pages/constants';
+import { API_PAGE, ADMINISTRATE_PAGE, USER_PROFILE_PAGE } from 'controllers/pages';
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { NavLink } from 'components/main/navLink';
 import { Image } from 'components/main/image';
-import { PROJECT_ASSIGNMENT_ROUTE } from 'pages/inside/profilePage/constants';
 import styles from './userBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -158,9 +157,6 @@ export class UserBlock extends Component {
             <NavLink
               to={{
                 type: USER_PROFILE_PAGE,
-                payload: {
-                  profileRoute: PROJECT_ASSIGNMENT_ROUTE,
-                },
               }}
               className={cx('menu-item')}
               activeClassName={cx('active')}

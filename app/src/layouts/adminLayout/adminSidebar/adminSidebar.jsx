@@ -23,13 +23,13 @@ import Parser from 'html-react-parser';
 import Link from 'redux-first-router-link';
 import {
   PROJECT_LAUNCHES_PAGE,
-  USER_PROFILE_PAGE,
   SERVER_SETTINGS_PAGE,
   PLUGINS_PAGE,
   ALL_USERS_PAGE,
   PROJECTS_PAGE,
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
-} from 'controllers/pages/constants';
+  USER_PROFILE_PAGE,
+} from 'controllers/pages';
 import { ALL } from 'common/constants/reservedFilterIds';
 import PropTypes from 'prop-types';
 import track, { useTracking } from 'react-tracking';
@@ -38,7 +38,6 @@ import { ADMIN_SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { TextTooltip } from 'components/main/tooltips/textTooltip';
 import { Sidebar } from 'layouts/common/sidebar';
-import { PROJECT_ASSIGNMENT_ROUTE } from 'pages/inside/profilePage/constants';
 import ProjectsIcon from './img/projects-inline.svg';
 import UsersIcon from './img/all-users-inline.svg';
 import SettingsIcon from './img/server-settings-inline.svg';
@@ -168,9 +167,6 @@ export class AdminSidebar extends Component {
       onClick: this.props.onClickNavBtn,
       link: {
         type: USER_PROFILE_PAGE,
-        payload: {
-          profileRoute: PROJECT_ASSIGNMENT_ROUTE,
-        },
       },
       icon: ProfileIcon,
       message: <FormattedMessage id={'AdminSidebar.btnProfile'} defaultMessage={'Profile'} />,
