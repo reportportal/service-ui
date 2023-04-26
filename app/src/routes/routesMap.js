@@ -287,6 +287,7 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
   const accountRole = userAccountRoleSelector(getState());
   const userInfo = userInfoSelector(getState());
   const userProjects = userInfo ? userInfo.assignedProjects : {};
+  const isAdmin = accountRole === ADMINISTRATOR;
   const isAdminNewPageType = !!adminPageNames[nextPageType];
   const isAdminCurrentPageType = !!adminPageNames[currentPageType];
 
@@ -296,7 +297,7 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
     (hashProject !== projectId || isAdminCurrentPageType) &&
     !isAdminNewPageType
   ) {
-    if (hashProject in userProjects) {
+    if (hashProject in userProjects || isAdmin) {
       dispatch(setActiveProjectAction(hashProject));
       dispatch(fetchProjectAction(hashProject));
       projectId = hashProject;
@@ -327,7 +328,7 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
         }
         break;
       case ADMIN_ACCESS:
-        if (authorized && accountRole !== ADMINISTRATOR) {
+        if (authorized && !isAdmin) {
           dispatch(redirect({ type: PROJECT_DASHBOARD_PAGE, payload: { projectId } }));
         } else if (!authorized) {
           setSessionItem(ANONYMOUS_REDIRECT_PATH_STORAGE_KEY, redirectPath);

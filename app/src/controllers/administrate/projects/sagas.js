@@ -24,6 +24,7 @@ import {
   ASSIGN_TO_RROJECT_SUCCESS,
   ASSIGN_TO_RROJECT_ERROR,
   assignToProjectSuccessAction,
+  isAdminSelector,
 } from 'controllers/user';
 import { PROJECT_TYPE_INTERNAL } from 'common/constants/projectsObjectTypes';
 import { SETTINGS } from 'common/constants/projectSections';
@@ -145,8 +146,10 @@ function* watchDeleteProject() {
 function* navigateToProject({ payload }) {
   const { project, confirmModalOptions } = payload;
   const assignedProjects = yield select(assignedProjectsSelector);
+  const isAdmin = yield select(isAdminSelector);
   let isAssigned = !!assignedProjects[project.projectName];
-  if (!isAssigned) {
+
+  if (!isAssigned && !isAdmin) {
     const isConfirmed = yield call(confirmSaga, confirmModalOptions);
     if (isConfirmed) {
       yield put({ type: ASSIGN_TO_RROJECT, payload: project });
@@ -157,7 +160,8 @@ function* navigateToProject({ payload }) {
       isAssigned = !!assignResult.isAssigned;
     }
   }
-  if (isAssigned) {
+
+  if (isAssigned || isAdmin) {
     yield put({
       type: PROJECT_PAGE,
       payload: { projectId: project.projectName },
