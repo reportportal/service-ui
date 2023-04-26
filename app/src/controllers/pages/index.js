@@ -39,6 +39,7 @@ export {
   currentPathSelector,
   pluginPageSelector,
   pluginRouteSelector,
+  adminProfileRouteSelector,
 } from './selectors';
 export { updatePagePropertiesAction, clearPageStateAction } from './actionCreators';
 

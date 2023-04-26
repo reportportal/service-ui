@@ -38,6 +38,7 @@ import { ADMIN_SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { TextTooltip } from 'components/main/tooltips/textTooltip';
 import { Sidebar } from 'layouts/common/sidebar';
+import { PROJECT_ASSIGNMENT_ROUTE } from 'pages/inside/profilePage/constants';
 import ProjectsIcon from './img/projects-inline.svg';
 import UsersIcon from './img/all-users-inline.svg';
 import SettingsIcon from './img/server-settings-inline.svg';
@@ -165,7 +166,12 @@ export class AdminSidebar extends Component {
     },
     {
       onClick: this.props.onClickNavBtn,
-      link: { type: USER_PROFILE_PAGE },
+      link: {
+        type: USER_PROFILE_PAGE,
+        payload: {
+          profileRoute: PROJECT_ASSIGNMENT_ROUTE,
+        },
+      },
       icon: ProfileIcon,
       message: <FormattedMessage id={'AdminSidebar.btnProfile'} defaultMessage={'Profile'} />,
     },

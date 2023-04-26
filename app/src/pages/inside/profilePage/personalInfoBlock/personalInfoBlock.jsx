@@ -32,17 +32,13 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import { Image } from 'components/main/image';
 import styles from './personalInfoBlock.scss';
-import { BlockContainerBody, BlockContainerHeader } from '../blockContainer';
+import { BlockContainerBody } from '../blockContainer';
 import { PhotoControls } from './photoControls';
 import { UserInfo } from './userInfo/userInfo';
 
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
-  header: {
-    id: 'PersonalInfoBlock.header',
-    defaultMessage: 'Personal information',
-  },
   changePassword: {
     id: 'PersonalInfoBlock.changePassword',
     defaultMessage: 'Change Password',
@@ -187,7 +183,6 @@ export class PersonalInfoBlock extends Component {
     const { forceUpdateInProgress } = this.state;
     return (
       <div className={cx('personal-info-block')}>
-        <BlockContainerHeader>{intl.formatMessage(messages.header)}</BlockContainerHeader>
         <BlockContainerBody>
           <div className={cx('block-content')}>
             <div className={cx('avatar-wrapper')}>

@@ -31,6 +31,7 @@ import { API_PAGE, ADMINISTRATE_PAGE, USER_PROFILE_PAGE } from 'controllers/page
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { NavLink } from 'components/main/navLink';
 import { Image } from 'components/main/image';
+import { PROJECT_ASSIGNMENT_ROUTE } from 'pages/inside/profilePage/constants';
 import styles from './userBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -155,7 +156,12 @@ export class UserBlock extends Component {
               <div className={cx('details')}>{userDetails}</div>
             </div>
             <NavLink
-              to={{ type: USER_PROFILE_PAGE }}
+              to={{
+                type: USER_PROFILE_PAGE,
+                payload: {
+                  profileRoute: PROJECT_ASSIGNMENT_ROUTE,
+                },
+              }}
               className={cx('menu-item')}
               activeClassName={cx('active')}
               onClick={() => this.props.tracking.trackEvent(SIDEBAR_EVENTS.CLICK_PROFILE_LINK)}

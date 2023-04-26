@@ -104,7 +104,7 @@ const routesMap = {
   [NOT_FOUND]: '/notfound',
 
   ADMINISTRATE_PAGE: redirectRoute('/administrate', () => ({ type: PROJECTS_PAGE })),
-  USER_PROFILE_PAGE: '/user-profile',
+  USER_PROFILE_PAGE: '/user-profile/:profileRoute*',
 
   API_PAGE: '/api',
 

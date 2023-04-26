@@ -42,6 +42,7 @@ import {
 import { uiExtensionSidebarComponentsSelector } from 'controllers/plugins';
 import { Sidebar } from 'layouts/common/sidebar';
 import FiltersIcon from 'common/img/filters-icon-inline.svg';
+import { PROJECT_ASSIGNMENT_ROUTE } from 'pages/inside/profilePage/constants';
 import DashboardIcon from './img/dashboard-icon-inline.svg';
 import LaunchesIcon from './img/launches-icon-inline.svg';
 import DebugIcon from './img/debug-icon-inline.svg';
@@ -160,7 +161,12 @@ export class AppSidebar extends Component {
   createBottomSidebarItems = () => [
     {
       onClick: this.props.onClickNavBtn,
-      link: { type: USER_PROFILE_PAGE },
+      link: {
+        type: USER_PROFILE_PAGE,
+        payload: {
+          profileRoute: PROJECT_ASSIGNMENT_ROUTE,
+        },
+      },
       icon: ProfileIcon,
       message: <FormattedMessage id={'Sidebar.profileBtn'} defaultMessage={'Profile'} />,
     },
