@@ -17,12 +17,12 @@ import classNames from 'classnames/bind';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { FormattedMessage } from 'react-intl';
 import { ContainerWithTabs } from 'components/main/containerWithTabs';
 import { apiTokenValueSelector, activeProjectSelector, userIdSelector } from 'controllers/user';
 import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './configExamplesBlock.scss';
-import { BlockContainerHeader, BlockContainerBody } from '../blockContainer';
+import { BlockContainerBody } from '../blockContainer';
+
 import { TabsConfig } from './tabsConfig';
 
 const cx = classNames.bind(styles);
@@ -47,14 +47,6 @@ export class ConfigExamplesBlock extends Component {
     const { token, activeProject, login } = this.props;
     return (
       <div className={cx('config-example-block')}>
-        <BlockContainerHeader>
-          <span className={cx('header')}>
-            <FormattedMessage
-              id={'ConfigExamplesBlock.header'}
-              defaultMessage={'Configuration examples'}
-            />
-          </span>
-        </BlockContainerHeader>
         <BlockContainerBody>
           <div className={cx('content-container')}>
             <ContainerWithTabs

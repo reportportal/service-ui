@@ -51,6 +51,7 @@ import {
   OAUTH_SUCCESS,
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
   UNIQUE_ERRORS_PAGE,
+  USER_PROFILE_SUB_PAGE,
 } from 'controllers/pages';
 import { AdminUiExtensionPage } from 'pages/admin/adminUiExtensionPage';
 
@@ -64,6 +65,7 @@ export const pageRendering = {
   REGISTRATION_PAGE: { component: RegistrationPage, layout: EmptyLayout, access: ANONYMOUS_ACCESS },
   [OAUTH_SUCCESS]: { component: EmptyLayout, layout: EmptyLayout, access: ANONYMOUS_ACCESS },
   USER_PROFILE_PAGE: { component: ProfilePage, layout: AppLayout },
+  [USER_PROFILE_SUB_PAGE]: { component: ProfilePage, layout: AppLayout },
   API_PAGE: { component: ApiPage, layout: AppLayout },
   PROJECT_DASHBOARD_PAGE: { component: DashboardPage, layout: AppLayout },
   PROJECT_DASHBOARD_ITEM_PAGE: { component: DashboardItemPage, layout: AppLayout },
