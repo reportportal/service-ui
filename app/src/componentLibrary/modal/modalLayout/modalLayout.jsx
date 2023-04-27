@@ -19,13 +19,15 @@ import PropTypes from 'prop-types';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { motion, AnimatePresence } from 'framer-motion';
 import classNames from 'classnames/bind';
-import { useOnClickOutside } from 'common/hooks';
+import { useOnClickOutside, useWindowResize } from 'common/hooks';
 import { ModalContent } from './modalContent';
 import { ModalFooter } from './modalFooter';
 import { ModalHeader } from './modalHeader';
 import styles from './modalLayout.scss';
 
 const ESC_KEYCODE = 27;
+const MODAL_MAX_RATIO = 0.9;
+const MODAL_HEADER_AND_FOOTER_HEIGHT = 176;
 const cx = classNames.bind(styles);
 
 export const ModalLayout = ({
@@ -42,13 +44,27 @@ export const ModalLayout = ({
   allowCloseOutside,
 }) => {
   const [isShown, setShown] = useState(false);
+  const [modalHeight, setModalHeight] = useState(0);
   const modalRef = useRef();
+
+  const windowSize = useWindowResize();
+  const windowHeight = windowSize.height;
+  const modalMaxHeight = windowHeight * MODAL_MAX_RATIO;
+  const modalPadding = (windowHeight - modalHeight) / 2;
+  const contentMaxHeight = modalMaxHeight - MODAL_HEADER_AND_FOOTER_HEIGHT;
 
   const onKeydown = (e) => {
     if (e.keyCode === ESC_KEYCODE) {
       setShown(false);
     }
   };
+
+  useEffect(() => {
+    if (modalRef && modalRef.current) {
+      const { clientHeight } = modalRef.current;
+      setModalHeight(clientHeight);
+    }
+  }, [title, headerNode, children, footerNode, modalHeight, modalRef, windowSize]);
 
   useEffect(() => {
     document.addEventListener('keydown', onKeydown, false);
@@ -74,27 +90,27 @@ export const ModalLayout = ({
           data-automation-id="modalWindow"
         >
           <div className={cx('scrolling-content')}>
-            <Scrollbars>
-              <motion.div
-                className={cx('modal-window', { [`size-${modalSize}`]: modalSize }, className)}
-                key="modal-window"
-                ref={modalRef}
-                tabIndex="0"
-                initial={{ opacity: 0, marginTop: '-100px' }}
-                animate={{ opacity: 1, marginTop: '80px' }}
-                exit={{ opacity: 0, marginTop: '-100px' }}
-                transition={{ duration: 0.3 }}
-              >
-                <ModalHeader title={title} headerNode={headerNode} onClose={closeModal} />
+            <motion.div
+              className={cx('modal-window', { [`size-${modalSize}`]: modalSize }, className)}
+              key="modal-window"
+              ref={modalRef}
+              tabIndex="0"
+              initial={{ opacity: 0, marginTop: -modalPadding }}
+              animate={{ opacity: 1, marginTop: modalPadding }}
+              exit={{ opacity: 0, marginTop: -modalPadding }}
+              transition={{ duration: 0.3 }}
+            >
+              <ModalHeader title={title} headerNode={headerNode} onClose={closeModal} />
+              <Scrollbars autoHeight autoHeightMax={contentMaxHeight} style={{ width: 418 }}>
                 <ModalContent>{children}</ModalContent>
-                <ModalFooter
-                  footerNode={footerNode}
-                  okButton={okButton}
-                  cancelButton={cancelButton}
-                  closeHandler={closeModal}
-                />
-              </motion.div>
-            </Scrollbars>
+              </Scrollbars>
+              <ModalFooter
+                footerNode={footerNode}
+                okButton={okButton}
+                cancelButton={cancelButton}
+                closeHandler={closeModal}
+              />
+            </motion.div>
           </div>
         </div>
       )}
