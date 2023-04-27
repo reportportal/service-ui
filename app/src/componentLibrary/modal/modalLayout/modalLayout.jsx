@@ -50,8 +50,19 @@ export const ModalLayout = ({
   const windowSize = useWindowResize();
   const windowHeight = windowSize.height;
   const modalMaxHeight = windowHeight * MODAL_MAX_RATIO;
-  const modalPadding = (windowHeight - modalHeight) / 2;
+  const modalMargin = (windowHeight - modalHeight) / 2;
   const contentMaxHeight = modalMaxHeight - MODAL_HEADER_AND_FOOTER_HEIGHT;
+
+  const getContentScrollbarWidth = () => {
+    switch (modalSize) {
+      case 'small':
+        return 258;
+      case 'large':
+        return 658;
+      default:
+        return 418;
+    }
+  };
 
   const onKeydown = (e) => {
     if (e.keyCode === ESC_KEYCODE) {
@@ -64,7 +75,7 @@ export const ModalLayout = ({
       const { clientHeight } = modalRef.current;
       setModalHeight(clientHeight);
     }
-  }, [title, headerNode, children, footerNode, modalHeight, modalRef, windowSize]);
+  }, [children, windowSize]);
 
   useEffect(() => {
     document.addEventListener('keydown', onKeydown, false);
@@ -95,13 +106,17 @@ export const ModalLayout = ({
               key="modal-window"
               ref={modalRef}
               tabIndex="0"
-              initial={{ opacity: 0, marginTop: -modalPadding }}
-              animate={{ opacity: 1, marginTop: modalPadding }}
-              exit={{ opacity: 0, marginTop: -modalPadding }}
+              initial={{ opacity: 0, marginTop: -modalMargin }}
+              animate={{ opacity: 1, marginTop: modalMargin }}
+              exit={{ opacity: 0, marginTop: -modalMargin }}
               transition={{ duration: 0.3 }}
             >
               <ModalHeader title={title} headerNode={headerNode} onClose={closeModal} />
-              <Scrollbars autoHeight autoHeightMax={contentMaxHeight} style={{ width: 418 }}>
+              <Scrollbars
+                autoHeight
+                autoHeightMax={contentMaxHeight}
+                style={{ width: getContentScrollbarWidth() }}
+              >
                 <ModalContent>{children}</ModalContent>
               </Scrollbars>
               <ModalFooter

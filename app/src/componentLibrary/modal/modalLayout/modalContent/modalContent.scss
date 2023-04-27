@@ -15,7 +15,7 @@
  */
 
 .modal-content {
-  width: 384px;
+  width: calc(100% - 34px);
   margin-top: 13px;
   font-family: $FONT-ROBOTO-REGULAR;
   font-size: 13px;
