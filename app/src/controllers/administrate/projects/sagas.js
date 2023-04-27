@@ -14,22 +14,16 @@
  * limitations under the License.
  */
 
-import { takeEvery, takeLatest, race, take, all, put, select, call } from 'redux-saga/effects';
+import { takeEvery, takeLatest, all, put, select, call } from 'redux-saga/effects';
 import { fetchDataAction } from 'controllers/fetch';
 import { URLS } from 'common/urls';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import {
-  assignedProjectsSelector,
-  ASSIGN_TO_RROJECT,
-  ASSIGN_TO_RROJECT_SUCCESS,
-  ASSIGN_TO_RROJECT_ERROR,
-  assignToProjectSuccessAction,
-} from 'controllers/user';
+import { assignToProjectSuccessAction } from 'controllers/user';
 import { PROJECT_TYPE_INTERNAL } from 'common/constants/projectsObjectTypes';
 import { SETTINGS } from 'common/constants/projectSections';
 import { fetch, getStorageItem, setStorageItem } from 'common/utils';
 import { PROJECT_PAGE } from 'controllers/pages';
-import { confirmSaga, hideModalAction } from 'controllers/modal';
+import { hideModalAction } from 'controllers/modal';
 import { PROJECT_MANAGER } from 'common/constants/projectRoles';
 import {
   NAMESPACE,
@@ -143,26 +137,12 @@ function* watchDeleteProject() {
 }
 
 function* navigateToProject({ payload }) {
-  const { project, confirmModalOptions } = payload;
-  const assignedProjects = yield select(assignedProjectsSelector);
-  let isAssigned = !!assignedProjects[project.projectName];
-  if (!isAssigned) {
-    const isConfirmed = yield call(confirmSaga, confirmModalOptions);
-    if (isConfirmed) {
-      yield put({ type: ASSIGN_TO_RROJECT, payload: project });
-      const assignResult = yield race({
-        isAssigned: take(ASSIGN_TO_RROJECT_SUCCESS),
-        noAssigned: take(ASSIGN_TO_RROJECT_ERROR),
-      });
-      isAssigned = !!assignResult.isAssigned;
-    }
-  }
-  if (isAssigned) {
-    yield put({
-      type: PROJECT_PAGE,
-      payload: { projectId: project.projectName },
-    });
-  }
+  const { project } = payload;
+
+  yield put({
+    type: PROJECT_PAGE,
+    payload: { projectId: project.projectName },
+  });
 }
 
 function* watchNavigateToProject() {
