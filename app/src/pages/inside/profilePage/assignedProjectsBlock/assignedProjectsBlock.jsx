@@ -60,8 +60,7 @@ export class AssignedProjectsBlock extends Component {
           </div>
           <div className={cx('role-col')}>{intl.formatMessage(messages.headerRoleCol)}</div>
         </BlockContainerHeader>
-
-        <ScrollWrapper autoHeight autoHeightMax={350}>
+        <ScrollWrapper autoHeight autoHeightMax={380}>
           <BlockContainerBody>
             {Object.keys(projects).map((project) => (
               <div key={project} className={cx('project-item')}>

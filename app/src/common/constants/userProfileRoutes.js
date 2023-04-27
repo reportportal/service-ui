@@ -1,5 +1,5 @@
-/*!
- * Copyright 2019 EPAM Systems
+/*
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,6 @@
  * limitations under the License.
  */
 
-.container {
-  height: 93%;
-  background-color: $COLOR--white-two;
-  padding: 0 120px;
-
-  .content-wrapper {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 100%;
-    height: 100%;
-    max-width: 1370px;
-    margin: 0 auto;
-    .section-wrapper {
-      padding: 0 30px;
-    }
-  }
-}
+export const API_KEYS_ROUTE = 'apiKeys';
+export const PROJECT_ASSIGNMENT_ROUTE = 'assignedProjects';
+export const CONFIG_EXAMPLES_ROUTE = 'configExamples';
