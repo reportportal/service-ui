@@ -27,7 +27,6 @@ import { navigateToProjectAction } from 'controllers/administrate/projects';
 import { showModalAction } from 'controllers/modal';
 import { PROJECT_PAGE } from 'controllers/pages';
 import { assignedProjectsSelector } from 'controllers/user';
-import { messages } from './../messages';
 import styles from './projectName.scss';
 
 const cx = classNames.bind(styles);
@@ -63,24 +62,13 @@ export class ProjectName extends Component {
   };
 
   onProjectClick = (event) => {
-    const { tracking, intl, isAssigned, disableAnalytics } = this.props;
+    const { tracking, isAssigned, disableAnalytics } = this.props;
     if (!isAssigned && window.matchMedia(SCREEN_XS_MAX_MEDIA).matches) {
       event.preventDefault();
       return;
     }
-    const confirmAssignModalOpts = {
-      id: 'confirmationModal',
-      data: {
-        message: intl.formatMessage(messages.assignModalConfirmationText),
-        onConfirm: () => {},
-        title: intl.formatMessage(messages.assignModalTitle),
-        confirmText: intl.formatMessage(messages.assignModalButton),
-        cancelText: intl.formatMessage(messages.modalCancelButtonText),
-      },
-    };
     this.props.navigateToProject({
       project: this.props.project,
-      confirmModalOptions: confirmAssignModalOpts,
     });
     if (!disableAnalytics) {
       tracking.trackEvent(ADMIN_PROJECTS_PAGE_EVENTS.PROJECT_NAME);

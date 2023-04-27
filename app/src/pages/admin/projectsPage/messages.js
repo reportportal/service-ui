@@ -54,10 +54,6 @@ export const messages = defineMessages({
     id: 'ProjectDetailsPageEvents.title',
     defaultMessage: 'Events',
   },
-  modalCancelButtonText: {
-    id: 'Common.cancel',
-    defaultMessage: 'Cancel',
-  },
   deleteProjectsCount: {
     id: 'ProjectsPage.deleteProjectsCount',
     defaultMessage: '{count} items selected',
@@ -157,18 +153,6 @@ export const messages = defineMessages({
   lastLaunch: {
     id: 'ProjectPanel.lastLaunch',
     defaultMessage: '{date} run',
-  },
-  assignModalConfirmationText: {
-    id: 'ProjectsPage.assignModalConfirmationText',
-    defaultMessage: 'You are not a member of this project yet. Would you like to be assigned?',
-  },
-  assignModalTitle: {
-    id: 'ProjectPage.assignModalTitle',
-    defaultMessage: 'Assign to the project',
-  },
-  assignModalButton: {
-    id: 'ProjectPage.assignButton',
-    defaultMessage: 'Assign',
   },
   searchPlaceholder: {
     id: 'ProjectsPage.searchPlaceholder',

@@ -17,6 +17,7 @@
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { createSelector } from 'reselect';
 import { INTERNAL } from 'common/constants/accountType';
+import { projectInfoSelector } from 'controllers/project/selectors';
 import { START_TIME_FORMAT_RELATIVE } from './constants';
 
 const userSelector = (state) => state.user || {};
@@ -43,7 +44,7 @@ export const isAdminSelector = (state) => userInfoSelector(state).userRole === A
 
 export const availableProjectsSelector = createSelector(
   userInfoSelector,
-  (state) => state.project.info || {},
+  projectInfoSelector,
   activeProjectSelector,
   isAdminSelector,
   ({ assignedProjects }, { entryType = INTERNAL }, activeProjectName, isAdmin) => {
