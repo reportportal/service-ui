@@ -22,13 +22,13 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { PageLayout, PageHeader } from 'layouts/pageLayout';
 import { PROFILE_PAGE } from 'components/main/analytics/events';
-import { userProfileRouteSelector, USER_PROFILE_TABS_PAGE } from 'controllers/pages';
+import { userProfileRouteSelector, USER_PROFILE_SUB_PAGE } from 'controllers/pages';
 import { NavigationTabs } from 'components/main/navigationTabs';
 import {
   API_KEYS_ROUTE,
   CONFIG_EXAMPLES_ROUTE,
   PROJECT_ASSIGNMENT_ROUTE,
-} from 'common/constants/adminProfileRoutes';
+} from 'common/constants/userProfileRoutes';
 import { PersonalInfoBlock } from './personalInfoBlock';
 import { AccessTokenBlock } from './accessTokenBlock';
 import { AssignedProjectsBlock } from './assignedProjectsBlock';
@@ -58,7 +58,7 @@ const messages = defineMessages({
 });
 
 const getProfilePageLink = (profileRoute) => ({
-  type: USER_PROFILE_TABS_PAGE,
+  type: USER_PROFILE_SUB_PAGE,
   payload: {
     profileRoute,
   },

@@ -53,7 +53,7 @@ import {
   clearPageStateAction,
   adminPageNames,
   PLUGIN_UI_EXTENSION_ADMIN_PAGE,
-  USER_PROFILE_TABS_PAGE,
+  USER_PROFILE_SUB_PAGE,
 } from 'controllers/pages';
 import { GENERAL, AUTHORIZATION_CONFIGURATION, ANALYTICS } from 'common/constants/settingsTabs';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
@@ -88,7 +88,7 @@ import {
   API_KEYS_ROUTE,
   CONFIG_EXAMPLES_ROUTE,
   PROJECT_ASSIGNMENT_ROUTE,
-} from 'common/constants/adminProfileRoutes';
+} from 'common/constants/userProfileRoutes';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 
 const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
@@ -111,11 +111,11 @@ const routesMap = {
 
   ADMINISTRATE_PAGE: redirectRoute('/administrate', () => ({ type: PROJECTS_PAGE })),
   USER_PROFILE_PAGE: redirectRoute('/userProfile', () => ({
-    type: USER_PROFILE_TABS_PAGE,
+    type: USER_PROFILE_SUB_PAGE,
     payload: { profileRoute: PROJECT_ASSIGNMENT_ROUTE },
   })),
 
-  [USER_PROFILE_TABS_PAGE]: `/userProfile/:profileRoute(${PROJECT_ASSIGNMENT_ROUTE}|${API_KEYS_ROUTE}|${CONFIG_EXAMPLES_ROUTE})`,
+  [USER_PROFILE_SUB_PAGE]: `/userProfile/:profileRoute(${PROJECT_ASSIGNMENT_ROUTE}|${API_KEYS_ROUTE}|${CONFIG_EXAMPLES_ROUTE})`,
 
   API_PAGE: '/api',
 
