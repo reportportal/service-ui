@@ -62,6 +62,7 @@ $Z-INDEX-OVERLAY: 2;
   box-shadow: $BOX_SHADOW--modal-window;
   opacity: 1;
   outline: none;
+  max-height: 90%;
 }
 
 .size-default {
