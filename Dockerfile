@@ -1,6 +1,6 @@
 # Only for technical/build aims, built image will be with nginxinc/nginx-unprivileged:alpine according to the last step
 
-FROM alpine:latest as generate-build-info
+FROM alpine:latest AS generate-build-info
 RUN mkdir -p /usr/src/app/build
 WORKDIR /usr/src
 ARG version
@@ -8,7 +8,7 @@ ARG branch
 ARG build_date
 RUN echo {\"build\": { \"version\": \"${version}\", \"branch\": \"${branch}\", \"build_date\": \"${build_date}\", \"name\": \"Service UI\", \"repo\": \"reportportal/service-ui\"}} > ./app/build/buildInfo.json
 
-FROM node:12-alpine as build-frontend
+FROM node:12-alpine AS build-frontend
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY ./app/ /usr/src/app/
