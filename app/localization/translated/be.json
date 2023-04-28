@@ -109,7 +109,7 @@
   "AnalyticsTab.analyticsListPoint2": "Інфармацыя пра паводзіны: падрабязнасці вашага выкарыстання ReportPortal, на што вы націскаеце і якія дзеянні вырабляеце, як доўга трымаеце прыкладанне адкрытым.",
   "AnalyticsTab.updateAnalyticsEnabledSuccess": "Настройкі сервера паспяхова абноўленыя",
   "ApiPage.title": "Дакументацыя API",
-  "AssignedProjectsBlock.headerNameCol": "Прызначаныя праекты",
+  "AssignedProjectsBlock.headerNameCol": "Праекты",
   "AssignedProjectsBlock.headerRoleCol": "Праектная роля",
   "AsyncAutocomplete.dynamicSearchPromptText": "Калі ласка увядзіце {length} або больш сімвалаў",
   "AsyncAutocomplete.loading": "Загрузка ...",
