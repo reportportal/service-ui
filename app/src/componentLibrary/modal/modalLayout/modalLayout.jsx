@@ -53,6 +53,7 @@ export const ModalLayout = ({
   const modalMargin = (windowHeight - modalHeight) / 2;
   const contentMaxHeight = modalMaxHeight - MODAL_HEADER_AND_FOOTER_HEIGHT;
 
+  // TODO refactor with flexible modal width
   const getContentScrollbarWidth = () => {
     switch (modalSize) {
       case 'small':
