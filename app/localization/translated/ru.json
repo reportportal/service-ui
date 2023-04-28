@@ -109,7 +109,7 @@
   "AnalyticsTab.analyticsListPoint2": "Информация о поведении: подробности вашего использования ReportPortal, на что вы нажимаете и какие действия производите, как долго держите приложение открытым.",
   "AnalyticsTab.updateAnalyticsEnabledSuccess": "Настройки сервера успешно обновлены",
   "ApiPage.title": "Документация API",
-  "AssignedProjectsBlock.headerNameCol": "Назначенные проекты",
+  "AssignedProjectsBlock.headerNameCol": "Проекты",
   "AssignedProjectsBlock.headerRoleCol": "Проектная роль",
   "AsyncAutocomplete.dynamicSearchPromptText": "Пожалуйста введите {length} или более символов",
   "AsyncAutocomplete.loading": "Загрузка ...",
