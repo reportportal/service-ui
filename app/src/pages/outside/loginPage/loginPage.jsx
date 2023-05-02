@@ -22,6 +22,8 @@ import { connect } from 'react-redux';
 import { referenceDictionary, connectRouter } from 'common/utils';
 import { LOGIN_PAGE } from 'components/main/analytics/events';
 import { showDefaultErrorNotification } from 'controllers/notification';
+import { instanceTypeSelector } from 'controllers/appInfo/selectors';
+import { EPAM, SAAS } from 'controllers/appInfo/constants';
 import styles from './loginPage.scss';
 import { LoginPageSection } from './loginPageSection';
 import { SocialSection } from './socialSection';
@@ -30,6 +32,7 @@ import { ForgotPasswordBlock } from './pageBlocks/forgotPasswordBlock';
 import { ChangePasswordBlock } from './pageBlocks/changePasswordBlock';
 import { ServiceVersionsBlock } from './pageBlocks/serviceVersionsBlock';
 import { MultipleAuthBlock } from './pageBlocks/multipleAuthBlock';
+import { PolicyBlock } from './pageBlocks/policyBlock';
 
 const cx = classNames.bind(styles);
 
@@ -39,9 +42,14 @@ const cx = classNames.bind(styles);
   errorAuth,
   multipleAuth,
 }))
-@connect(null, {
-  showDefaultErrorNotification,
-})
+@connect(
+  (state) => ({
+    instanceType: instanceTypeSelector(state),
+  }),
+  {
+    showDefaultErrorNotification,
+  },
+)
 @track({ page: LOGIN_PAGE })
 export class LoginPage extends PureComponent {
   static propTypes = {
@@ -50,6 +58,7 @@ export class LoginPage extends PureComponent {
     errorAuth: PropTypes.string,
     multipleAuth: PropTypes.string,
     showDefaultErrorNotification: PropTypes.func,
+    instanceType: PropTypes.string.isRequired,
   };
   static defaultProps = {
     forgotPass: '',
@@ -93,6 +102,7 @@ export class LoginPage extends PureComponent {
   };
 
   render() {
+    const { instanceType } = this.props;
     const currentBlock = this.getCurrentBlock();
 
     return (
@@ -108,6 +118,7 @@ export class LoginPage extends PureComponent {
           <LoginPageSection>
             {currentBlock}
             <ServiceVersionsBlock />
+            {(instanceType === EPAM || instanceType === SAAS) && <PolicyBlock />}
           </LoginPageSection>
         </div>
       </div>
