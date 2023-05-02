@@ -27,4 +27,6 @@ export const referenceDictionary = {
   rpEpam: 'https://www.epam.com/',
   rpEpamPolicy: 'https://privacy.epam.com/core/interaction/showpolicy?type=PrivacyPolicy',
   rpEpamNotice: 'https://privacy.epam.com/core/interaction/showpolicy?type=CommonPrivacyNotice',
+  rpEpamCommonPolicy:
+    'https://privacy.epam.com/core/interaction/showpolicy?type=CommonPrivacyPolicy',
 };

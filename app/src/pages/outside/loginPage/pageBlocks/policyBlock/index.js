@@ -1,5 +1,5 @@
-/*!
- * Copyright 2019 EPAM Systems
+/*
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,31 +14,4 @@
  * limitations under the License.
  */
 
-.service-versions-block {
-  width: 100%;
-  padding: 0 50px;
-  margin-top: -40px;
-  font-family: $FONT-REGULAR;
-  line-height: 1em;
-  box-sizing: border-box;
-
-  @media (max-width: $SCREEN_SM_MAX) {
-    position: static;
-    width: 100%;
-    padding: 30px 30px 0;
-    margin: 0;
-  }
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    padding: 20px;
-  }
-}
-.current-version {
-  margin-right: 13px;
-  font-size: 12px;
-  color: $COLOR--gray-47;
-}
-.versions-list {
-  font-size: 11px;
-  color: $COLOR--charcoal-grey;
-}
+export { PolicyBlock } from './policyBlock';
