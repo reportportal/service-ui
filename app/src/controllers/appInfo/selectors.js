@@ -19,6 +19,8 @@ import {
   ANALYTICS_ALL_KEY,
   OLD_HISTORY_KEY,
   GA_MEASUREMENT_ID,
+  INSTANCE_TYPE,
+  NOT_PROVIDED,
 } from './constants';
 
 export const appInfoSelector = (state) => state.appInfo || {};
@@ -51,3 +53,5 @@ export const isDemoInstanceSelector = (state) => !!apiJobsSelector(state).flushi
 export const flushDataInSelector = (state) =>
   (apiJobsSelector(state).flushingDataTrigger || {}).triggersIn || null;
 export const gaMeasurementIdSelector = (state) => environmentSelector(state)[GA_MEASUREMENT_ID];
+export const instanceTypeSelector = (state) =>
+  environmentSelector(state)[INSTANCE_TYPE] || NOT_PROVIDED;

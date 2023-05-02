@@ -19,8 +19,10 @@ import { defineMessages, useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
-import { authExtensionsSelector, uiBuildVersionSelector } from 'controllers/appInfo';
 import { referenceDictionary } from 'common/utils';
+import { uiBuildVersionSelector } from 'controllers/appInfo';
+import { instanceTypeSelector } from 'controllers/appInfo/selectors';
+import { EPAM, SAAS } from 'controllers/appInfo/constants';
 import styles from './settingsLayout.scss';
 
 const cx = classNames.bind(styles);
@@ -59,7 +61,7 @@ const messages = defineMessages({
   },
 });
 
-const SettingsLayoutBase = ({ navigation, children, buildVersion, authExtensions }) => {
+const SettingsLayoutBase = ({ navigation, children, buildVersion, instanceType }) => {
   const { formatMessage } = useIntl();
 
   const footerLeftItems = [
@@ -85,7 +87,7 @@ const SettingsLayoutBase = ({ navigation, children, buildVersion, authExtensions
     <a href={referenceDictionary.rpDoc} target="_blank" className={cx('link')}>
       <span>{formatMessage(messages.documentation)}</span>
     </a>,
-    (authExtensions.epam || authExtensions.saas) && (
+    (instanceType === EPAM || instanceType === SAAS) && (
       <a href={referenceDictionary.rpEpamPolicy} target="_blank" className={cx('link')}>
         <span>{formatMessage(messages.privacyPolicy)}</span>
       </a>
@@ -129,7 +131,7 @@ SettingsLayoutBase.propTypes = {
   header: PropTypes.node,
   children: PropTypes.node,
   buildVersion: PropTypes.string.isRequired,
-  authExtensions: PropTypes.object.isRequired,
+  instanceType: PropTypes.string.isRequired,
 };
 SettingsLayoutBase.defaultProps = {
   navigation: null,
@@ -138,5 +140,5 @@ SettingsLayoutBase.defaultProps = {
 };
 export const SettingsLayout = connect((state) => ({
   buildVersion: uiBuildVersionSelector(state),
-  authExtensions: authExtensionsSelector(state),
+  instanceType: instanceTypeSelector(state),
 }))(SettingsLayoutBase);

@@ -21,16 +21,17 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
 import { FOOTER_EVENTS } from 'components/main/analytics/events';
-import { uiBuildVersionSelector, authExtensionsSelector } from 'controllers/appInfo';
 import { referenceDictionary } from 'common/utils/referenceDictionary';
-
+import { uiBuildVersionSelector } from 'controllers/appInfo';
+import { instanceTypeSelector } from 'controllers/appInfo/selectors';
+import { EPAM, SAAS } from 'controllers/appInfo/constants';
 import styles from './footer.scss';
 
 const cx = classNames.bind(styles);
 
 @connect((state) => ({
   buildVersion: uiBuildVersionSelector(state),
-  authExtensions: authExtensionsSelector(state),
+  instanceType: instanceTypeSelector(state),
 }))
 @track()
 export class Footer extends Component {
@@ -40,10 +41,10 @@ export class Footer extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    authExtensions: PropTypes.object.isRequired,
+    instanceType: PropTypes.string.isRequired,
   };
   render() {
-    const { buildVersion, tracking, authExtensions } = this.props;
+    const { buildVersion, tracking, instanceType } = this.props;
     return (
       <footer className={cx('footer')}>
         <div className={cx('footer-links')}>
@@ -81,7 +82,7 @@ export class Footer extends Component {
           >
             <FormattedMessage id={'Footer.documentation'} defaultMessage={'Documentation'} />
           </a>
-          {(authExtensions.epam || authExtensions.saas) && (
+          {(instanceType === EPAM || instanceType === SAAS) && (
             <Fragment>
               <a href={referenceDictionary.rpEpamPolicy} target="_blank">
                 <FormattedMessage id={'Footer.privacy'} defaultMessage={'Privacy Policy'} />
