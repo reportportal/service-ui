@@ -42,10 +42,14 @@ const cx = classNames.bind(styles);
   errorAuth,
   multipleAuth,
 }))
-@connect((state) => ({
-  showDefaultErrorNotification,
-  instanceType: instanceTypeSelector(state),
-}))
+@connect(
+  (state) => ({
+    instanceType: instanceTypeSelector(state),
+  }),
+  {
+    showDefaultErrorNotification,
+  },
+)
 @track({ page: LOGIN_PAGE })
 export class LoginPage extends PureComponent {
   static propTypes = {
