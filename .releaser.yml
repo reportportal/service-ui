@@ -1,7 +1,0 @@
-bintray:
-  user: avarabyeu
-  org: epam
-  repo: reportportal
-  pack: service-ui
-artifactsFolder: release
-replace: docker/DockerfileTmpl=Dockerfile

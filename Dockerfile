@@ -1,14 +1,27 @@
+# Only for technical/build aims, built image will be with nginxinc/nginx-unprivileged:alpine according to the last step
+
+FROM alpine:latest AS generate-build-info
+RUN mkdir -p /usr/src/app/build
+WORKDIR /usr/src
+ARG version
+ARG branch
+ARG build_date
+RUN echo {\"build\": { \"version\": \"${version}\", \"branch\": \"${branch}\", \"build_date\": \"${build_date}\", \"name\": \"Service UI\", \"repo\": \"reportportal/service-ui\"}} > ./app/build/buildInfo.json
+
+FROM node:12-alpine AS build-frontend
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+COPY ./app/ /usr/src/app/
+RUN export NODE_OPTIONS="--max-old-space-size=4096"
+RUN npm ci && npm run lint && npm run test:coverage && npm run build
+
 FROM nginxinc/nginx-unprivileged:alpine
 
-LABEL maintainer="Andrei Varabyeu <andrei_varabyeu@epam.com>"
-LABEL version=5.7.4
-
-ENV APP_DOWNLOAD_URL https://github.com/reportportal/service-ui/releases/download/v5.7.4
-
 USER root
-ADD ${APP_DOWNLOAD_URL}/ui.tar.gz /
 
-RUN tar -zxvf ui.tar.gz -C /usr/share/nginx/html && rm -f ui.tar.gz
+COPY --from=build-frontend /usr/src/app/build /usr/share/nginx/html
+COPY --from=generate-build-info /usr/src/app/build /usr/share/nginx/html
+
 RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/nginx.conf
 
