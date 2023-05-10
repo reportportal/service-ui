@@ -19,6 +19,8 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { Grid } from 'components/main/grid';
+import { NoItemMessage } from 'components/main/noItemMessage';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { PersonalInfo } from './personalInfo';
 import { LastLogin } from './lastLogin';
 import { ProjectRole } from './projectRole';
@@ -103,12 +105,14 @@ export class MembersGrid extends PureComponent {
     fetchData: PropTypes.func,
     intl: PropTypes.object.isRequired,
     loading: PropTypes.bool,
+    filter: PropTypes.string,
   };
 
   static defaultProps = {
     data: [],
     fetchData: () => {},
     loading: false,
+    filter: '',
   };
 
   getColumns = () => [
@@ -149,13 +153,15 @@ export class MembersGrid extends PureComponent {
   COLUMNS = this.getColumns();
 
   render() {
+    const { data, loading, intl, filter } = this.props;
+
     return (
-      <Grid
-        columns={this.COLUMNS}
-        data={this.props.data}
-        changeOnlyMobileLayout
-        loading={this.props.loading}
-      />
+      <>
+        <Grid columns={this.COLUMNS} data={data} changeOnlyMobileLayout loading={loading} />
+        {!data.length && !loading && !filter && (
+          <NoItemMessage message={intl.formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />
+        )}
+      </>
     );
   }
 }
