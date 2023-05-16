@@ -15,43 +15,57 @@
  */
 
 import {
-  getRefineFiltersPanelEvents,
-  getClickOnPlusMinusEvents,
   getClickSelectAllItemsEvent,
   getClickSelectOneItemEvent,
   getCommonActionEvents,
-  getClickAttributes,
-  getClickUniqueErrorsEvent,
+  getClickOnAttributesEvent,
+  getClickItemNameEvent,
+  getClickRefreshButtonEvent,
+  getClickDonutEvents,
+  getClickDefectTooltipEvents,
+  getClickActionsButtonEvent,
+  getClickPencilIconEvent,
+  getRefineParametersEventCreator,
+  getClickOnTestItemsTabsEvents,
+  getClickBreadcrumbsEvents,
+  getDeleteActionEvent,
 } from './common/testItemPages/actionEventsCreators';
 import {
-  getDeleteItemModalEvents,
+  getClickOnDeleteBtnDeleteItemModalEventCreator,
   getEditItemsModalEvents,
 } from './common/testItemPages/modalEventsCreators';
 
 export const SUITE_PAGE = 'suites';
 export const SUITES_PAGE_EVENTS = {
-  ...getCommonActionEvents(SUITE_PAGE),
-  plusMinusBreadcrumb: getClickOnPlusMinusEvents(SUITE_PAGE),
-  DELETE_BTN: {
-    category: SUITE_PAGE,
-    action: 'Click on Btn Delete',
-    label: 'Delete selected Items',
-  },
+  // GA4 events
+  CLICK_ITEM_NAME: getClickItemNameEvent(SUITE_PAGE),
+  CLICK_REFRESH_BTN: getClickRefreshButtonEvent(SUITE_PAGE),
   CLICK_SELECT_ALL_ITEMS: getClickSelectAllItemsEvent(SUITE_PAGE),
   CLICK_SELECT_ONE_ITEM: getClickSelectOneItemEvent(SUITE_PAGE),
-  // REFINE_FILTERS_PANEL
+  ...getClickDonutEvents(SUITE_PAGE),
+  ...getClickDefectTooltipEvents(SUITE_PAGE),
+  CLICK_ACTIONS_BTN: getClickActionsButtonEvent(SUITE_PAGE),
+  CLICK_EDIT_ICON: getClickPencilIconEvent(SUITE_PAGE),
   REFINE_FILTERS_PANEL_EVENTS: {
-    commonEvents: getRefineFiltersPanelEvents(SUITE_PAGE),
+    commonEvents: { getRefineParametersEvent: getRefineParametersEventCreator(SUITE_PAGE) },
   },
+  ...getClickBreadcrumbsEvents(SUITE_PAGE),
+  CLICK_ATTRIBUTES: getClickOnAttributesEvent(SUITE_PAGE),
+  TEST_ITEM_TABS_EVENTS: getClickOnTestItemsTabsEvents(SUITE_PAGE),
+  DELETE_BTN: getDeleteActionEvent(SUITE_PAGE),
+  // GA3 events
+  ...getCommonActionEvents(SUITE_PAGE),
+
+  // REFINE_FILTERS_PANEL
   LOG_VIEW_SWITCHER: {
     category: SUITE_PAGE,
     action: 'Click on launch log view switcher',
     label: 'Open "Launch log view"',
   },
   // DELETE_ITEM_MODAL
-  DELETE_ITEM_MODAL_EVENTS: getDeleteItemModalEvents(SUITE_PAGE),
+  getClickOnDeleteBtnDeleteItemModalEvent: getClickOnDeleteBtnDeleteItemModalEventCreator(
+    SUITE_PAGE,
+  ),
   // EDIT_ITEMS_MODAL
   EDIT_ITEMS_MODAL_EVENTS: getEditItemsModalEvents(SUITE_PAGE),
-  CLICK_ATTRIBUTES: getClickAttributes(SUITE_PAGE),
-  CLICK_UNIQUE_ERRORS: getClickUniqueErrorsEvent(SUITE_PAGE),
 };

@@ -88,8 +88,8 @@ export const SelectDefectManually = ({
   };
   const handleIgnoreAnalyzerChange = (e) => {
     handleManualChange({ ignoreAnalyzer: e.target.checked });
-    const { toggleIgnoreAASwitcher } = eventsInfo;
-    trackEvent(toggleIgnoreAASwitcher(defectFromTIGroup, e.target.checked));
+    const { getClickIgnoreAACheckboxEvent } = eventsInfo;
+    trackEvent(getClickIgnoreAACheckboxEvent(defectFromTIGroup, e.target.checked));
   };
   const handleDefectCommentChange = (value) => {
     handleManualChange({ comment: value.trim() });
@@ -136,7 +136,6 @@ export const SelectDefectManually = ({
         );
       }
     };
-    const { onClickIssueBtn } = eventsInfo;
     const actionButtonItems = [
       {
         id: POST_ISSUE,
@@ -146,10 +145,6 @@ export const SelectDefectManually = ({
         icon: PlusIcon,
         onClick: () => {
           setIssueActionType(POST_ISSUE);
-          onClickIssueBtn &&
-            trackEvent(
-              onClickIssueBtn(defectFromTIGroup, actionMessages[POST_ISSUE].defaultMessage),
-            );
         },
         disabled: isPostIssueUnavailable,
       },
@@ -161,10 +156,6 @@ export const SelectDefectManually = ({
         icon: PlusIcon,
         onClick: () => {
           setIssueActionType(LINK_ISSUE);
-          onClickIssueBtn &&
-            trackEvent(
-              onClickIssueBtn(defectFromTIGroup, actionMessages[LINK_ISSUE].defaultMessage),
-            );
         },
         disabled: !btsIntegrations.length,
       },
@@ -182,10 +173,6 @@ export const SelectDefectManually = ({
         icon: UnlinkIcon,
         onClick: () => {
           setIssueActionType(UNLINK_ISSUE);
-          onClickIssueBtn &&
-            trackEvent(
-              onClickIssueBtn(defectFromTIGroup, actionMessages[UNLINK_ISSUE].defaultMessage),
-            );
         },
       });
     }
@@ -235,7 +222,8 @@ export const SelectDefectManually = ({
           onChange={handleDefectCommentChange}
           eventsInfo={{
             onClickToolbarIcon:
-              eventsInfo.onClickEditorIcon && eventsInfo.onClickEditorIcon(defectFromTIGroup),
+              eventsInfo.getClickCommentEditorIcon &&
+              eventsInfo.getClickCommentEditorIcon(defectFromTIGroup),
           }}
           placeholder={formatMessage(messages.comment)}
           mode="dark"

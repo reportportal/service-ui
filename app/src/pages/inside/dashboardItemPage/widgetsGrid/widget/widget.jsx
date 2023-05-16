@@ -85,7 +85,6 @@ export class SimpleWidget extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    dashboardOwner: PropTypes.string,
     activeDashboardId: PropTypes.number.isRequired,
     isAnalyticsEnabled: PropTypes.bool.isRequired,
   };
@@ -96,7 +95,6 @@ export class SimpleWidget extends Component {
     isModifiable: false,
     isFullscreen: false,
     isPrintMode: false,
-    dashboardOwner: '',
   };
 
   static getDerivedStateFromError(error) {
@@ -309,7 +307,6 @@ export class SimpleWidget extends Component {
           cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_EDIT_WIDGET_MODAL,
           changeName: DASHBOARD_PAGE_EVENTS.WIDGET_NAME_EDIT_WIDGET_MODAL,
           changeDescription: DASHBOARD_PAGE_EVENTS.WIDGET_DESCRIPTION_EDIT_WIDGET_MODAL,
-          shareWidget: DASHBOARD_PAGE_EVENTS.SHARE_WIDGET_EDIT_WIDGET_MODAL,
           okBtn: DASHBOARD_PAGE_EVENTS.SAVE_BTN_EDIT_WIDGET_MODAL,
           editFilterIcon: DASHBOARD_PAGE_EVENTS.EDIT_FILTER_ICON_EDIT_WIDGET_MODAL,
           enterSearchParams: DASHBOARD_PAGE_EVENTS.ENTER_SEARCH_PARAMS_EDIT_WIDGET_MODAL,
@@ -390,11 +387,10 @@ export class SimpleWidget extends Component {
 
   render() {
     const { widget, visible } = this.state;
-    const { isFullscreen, widgetType, isModifiable, isPrintMode, dashboardOwner } = this.props;
+    const { isFullscreen, widgetType, isModifiable, isPrintMode } = this.props;
     const widgetOptions = this.getWidgetOptions();
     const headerData = {
       owner: widget.owner,
-      shared: widget.share,
       name: widget.name,
       description: widget.description,
       type: widget.widgetType,
@@ -427,7 +423,6 @@ export class SimpleWidget extends Component {
             onForceUpdate={this.showForceUpdateWidgetModal}
             customClass={cx('common-control')}
             isPrintMode={isPrintMode}
-            dashboardOwner={dashboardOwner}
           />
         </div>
         <div ref={this.getWidgetNode} className={cx('widget', { hidden: !visible })}>

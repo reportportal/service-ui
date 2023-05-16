@@ -17,11 +17,11 @@
 .attribute {
   display: inline-flex;
   align-items: center;
+  max-width: 310px;
   min-height: 24px;
-  margin-bottom: 10px;
+  padding: 0 8px;
   margin-right: 10px;
-  padding-left: 10px;
-  padding-right: 10px;
+  margin-bottom: 10px;
   background-color: $COLOR--white;
   border-radius: 2px;
   cursor: pointer;
@@ -53,7 +53,7 @@
 }
 
 .label {
-  display: inline-block;
+  display: inline-flex;
   color: $COLOR--black-2;
   font-family: $FONT-REGULAR;
   font-size: 13px;
@@ -63,6 +63,21 @@
   @supports (word-break: break-word) {
     word-break: break-word;
   }
+
+  div {
+    max-width: 132px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .value {
+    margin-left: 4px;
+  }
+
+  .key {
+    margin-right: 4px;
+  }
 }
 
 .remove-icon {
@@ -70,7 +85,7 @@
   display: inline-block;
   height: 10px;
   width: 10px;
-  padding-right: 10px;
+  padding-right: 8px;
   line-height: 8px;
 
   svg {

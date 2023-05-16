@@ -18,7 +18,7 @@ import React, { Component, Fragment } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { activeProjectSelector, activeProjectRoleSelector } from 'controllers/user';
+import { activeProjectSelector } from 'controllers/user';
 import { injectIntl, defineMessages } from 'react-intl';
 import { Grid, ALIGN_CENTER } from 'components/main/grid';
 import { EmptyDashboards } from 'pages/inside/dashboardPage/dashboardList/EmptyDashboards';
@@ -26,7 +26,6 @@ import {
   NameColumn,
   DescriptionColumn,
   OwnerColumn,
-  SharedColumn,
   EditColumn,
   DeleteColumn,
 } from './dashboardTableColumns';
@@ -46,10 +45,6 @@ const messages = defineMessages({
     id: 'DashboardTable.owner',
     defaultMessage: 'Owner',
   },
-  shared: {
-    id: 'DashboardTable.shared',
-    defaultMessage: 'Shared',
-  },
   edit: {
     id: 'DashboardTable.edit',
     defaultMessage: 'Edit',
@@ -63,7 +58,6 @@ const messages = defineMessages({
 @injectIntl
 @connect((state) => ({
   projectId: activeProjectSelector(state),
-  projectRole: activeProjectRoleSelector(state),
 }))
 export class DashboardTable extends Component {
   static propTypes = {
@@ -71,9 +65,7 @@ export class DashboardTable extends Component {
     onDeleteItem: PropTypes.func,
     onEditItem: PropTypes.func,
     onAddItem: PropTypes.func,
-    userInfo: PropTypes.object,
     projectId: PropTypes.string,
-    projectRole: PropTypes.string,
     dashboardItems: PropTypes.array,
     loading: PropTypes.bool,
     filter: PropTypes.string,
@@ -83,16 +75,14 @@ export class DashboardTable extends Component {
     onDeleteItem: () => {},
     onEditItem: () => {},
     onAddItem: () => {},
-    userInfo: {},
     projectId: '',
-    projectRole: '',
     dashboardItems: [],
     loading: false,
     filter: '',
   };
 
   getTableColumns() {
-    const { onDeleteItem, onEditItem, userInfo, intl, projectId, projectRole } = this.props;
+    const { onDeleteItem, onEditItem, intl, projectId } = this.props;
 
     return [
       {
@@ -123,25 +113,12 @@ export class DashboardTable extends Component {
       },
       {
         title: {
-          full: intl.formatMessage(messages.shared),
-          short: intl.formatMessage(messages.shared),
-        },
-        component: SharedColumn,
-        customProps: {
-          currentUser: userInfo,
-        },
-        align: ALIGN_CENTER,
-      },
-      {
-        title: {
           full: intl.formatMessage(messages.edit),
           short: intl.formatMessage(messages.edit),
         },
         component: EditColumn,
         customProps: {
           onEdit: onEditItem,
-          currentUser: userInfo,
-          projectRole,
         },
         align: ALIGN_CENTER,
       },
@@ -153,8 +130,6 @@ export class DashboardTable extends Component {
         component: DeleteColumn,
         customProps: {
           onDelete: onDeleteItem,
-          currentUser: userInfo,
-          projectRole,
         },
         align: ALIGN_CENTER,
       },
@@ -172,9 +147,7 @@ export class DashboardTable extends Component {
           data={dashboardItems}
           loading={loading}
         />
-        {dashboardItems.length === 0 && (
-          <EmptyDashboards userDashboards filter={filter} action={onAddItem} />
-        )}
+        {dashboardItems.length === 0 && <EmptyDashboards filter={filter} action={onAddItem} />}
       </Fragment>
     );
   }

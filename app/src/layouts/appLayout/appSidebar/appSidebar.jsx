@@ -100,7 +100,7 @@ export class AppSidebar extends Component {
         message: <FormattedMessage id={'Sidebar.dashboardsBtn'} defaultMessage={'Dashboards'} />,
       },
       {
-        onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_LAUNCHES_BTN),
+        onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_LAUNCH_ICON),
         link: {
           type: LAUNCHES_PAGE,
           payload: { projectId: activeProject },

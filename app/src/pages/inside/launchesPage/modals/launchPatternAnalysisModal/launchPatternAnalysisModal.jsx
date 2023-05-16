@@ -20,10 +20,7 @@ import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import {
-  LAUNCHES_MODAL_EVENTS,
-  getRunAnalysisPatternAnalysisModalEvent,
-} from 'components/main/analytics/events';
+import { LAUNCHES_MODAL_EVENTS } from 'components/main/analytics/events';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { LAUNCH_ANALYZE_TYPES } from 'common/constants/launchAnalyzeTypes';
 import { setStorageItem, getStorageItem } from 'common/utils';
@@ -124,7 +121,6 @@ export class LaunchPatternAnalysisModal extends Component {
   };
 
   analysisAndClose = (closeModal) => {
-    this.props.tracking.trackEvent(LAUNCHES_MODAL_EVENTS.OK_BTN_PATTERN_ANALYSIS_MODAL);
     const errorMessage = this.validate();
     if (errorMessage) {
       this.setState({
@@ -143,7 +139,9 @@ export class LaunchPatternAnalysisModal extends Component {
       launchId: id,
       analyzerMode: ANALYZER_MODE.ALL,
     };
-    this.props.tracking.trackEvent(getRunAnalysisPatternAnalysisModalEvent(analyzeItemsMode));
+    this.props.tracking.trackEvent(
+      LAUNCHES_MODAL_EVENTS.getClickOnAnalyzeInPatterAnalysisModal(analyzeItemsMode),
+    );
     this.props.data.onConfirm(data);
     closeModal();
   };

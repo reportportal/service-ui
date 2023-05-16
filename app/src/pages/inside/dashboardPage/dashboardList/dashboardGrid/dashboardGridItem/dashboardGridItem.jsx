@@ -14,35 +14,23 @@
  * limitations under the License.
  */
 
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import track from 'react-tracking';
-import { injectIntl, defineMessages } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { canEditDashboard, canDeleteDashboard } from 'common/utils/permissions';
 import { PROJECT_DASHBOARD_ITEM_PAGE } from 'controllers/pages';
-import { activeProjectSelector, activeProjectRoleSelector } from 'controllers/user';
+import { activeProjectSelector } from 'controllers/user';
 import { Icon } from 'components/main/icon';
 import { NavLink } from 'components/main/navLink';
 import styles from './dashboardGridItem.scss';
 
 const cx = classNames.bind(styles);
-const messages = defineMessages({
-  dashboardIsShared: {
-    id: 'DashboardGridItem.dashboardIsShared',
-    defaultMessage: 'Dashboard is shared',
-  },
-  dashboardIsSharedBy: {
-    id: 'DashboardGridItem.dashboardIsSharedBy',
-    defaultMessage: 'Dashboard is shared by',
-  },
-});
 
 @injectIntl
 @connect((state) => ({
   projectId: activeProjectSelector(state),
-  projectRole: activeProjectRoleSelector(state),
 }))
 @track()
 export class DashboardGridItem extends Component {
@@ -53,11 +41,9 @@ export class DashboardGridItem extends Component {
   static propTypes = {
     projectId: PropTypes.string.isRequired,
     intl: PropTypes.object.isRequired,
-    currentUser: PropTypes.object,
     item: PropTypes.object,
     onEdit: PropTypes.func,
     onDelete: PropTypes.func,
-    projectRole: PropTypes.string,
     nameEventInfo: PropTypes.object,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -67,11 +53,9 @@ export class DashboardGridItem extends Component {
 
   static defaultProps = {
     action: () => {},
-    currentUser: {},
     item: {},
     onEdit: () => {},
     onDelete: () => {},
-    projectRole: '',
     nameEventInfo: {},
   };
 
@@ -92,15 +76,8 @@ export class DashboardGridItem extends Component {
   };
 
   render() {
-    const {
-      item,
-      currentUser: { userId, userRole },
-      intl,
-      projectId,
-      projectRole,
-    } = this.props;
-    const { name, description, owner, share, id } = item;
-    const isOwner = userId === owner;
+    const { item, projectId } = this.props;
+    const { name, description, owner, id } = item;
 
     return (
       <div className={cx('grid-view')}>
@@ -123,39 +100,12 @@ export class DashboardGridItem extends Component {
             <p>{description}</p>
           </div>
           <div className={cx('grid-cell', 'owner')}>{owner}</div>
-          <div className={cx('grid-cell', 'shared')}>
-            {share && isOwner && (
-              <Fragment>
-                <div className={cx('icon-holder')}>
-                  <Icon type="icon-tables" />
-                </div>
-                <span className={cx('shared-text')}>
-                  {intl.formatMessage(messages.dashboardIsShared)}
-                </span>
-              </Fragment>
-            )}
-            {!isOwner && (
-              <Fragment>
-                <div className={cx('icon-holder')}>
-                  <Icon type="icon-planet" />
-                </div>
-                <span className={cx('shared-text')}>
-                  {intl.formatMessage(messages.dashboardIsSharedBy)} {owner}
-                </span>
-              </Fragment>
-            )}
+          <div className={cx('grid-cell', 'edit')} onClick={this.editItem}>
+            <Icon type="icon-pencil" />
           </div>
-
-          {canEditDashboard(userRole, projectRole, isOwner) && (
-            <div className={cx('grid-cell', 'edit')} onClick={this.editItem}>
-              <Icon type="icon-pencil" />
-            </div>
-          )}
-          {canDeleteDashboard(userRole, projectRole, isOwner) && (
-            <div className={cx('grid-cell', 'delete')} onClick={this.deleteItem}>
-              <Icon type="icon-close" />
-            </div>
-          )}
+          <div className={cx('grid-cell', 'delete')} onClick={this.deleteItem}>
+            <Icon type="icon-close" />
+          </div>
         </NavLink>
       </div>
     );

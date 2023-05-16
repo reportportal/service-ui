@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 EPAM Systems
+ * Copyright 2023 EPAM Systems
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,35 +14,171 @@
  * limitations under the License.
  */
 
-export const getEditDefectActionEvent = (category) => ({
-  category,
-  action: 'Click on Btn "Edit Defect"',
-  label: 'Arise Modal "Edit Defect Type"',
+import { getBasicClickEventParameters, normalizeEventParameter } from '../ga4Utils';
+import { getFilterEntityType } from './utils';
+
+// GA4 events
+export const getClickItemNameEvent = (category) => ({
+  ...getBasicClickEventParameters(category),
+  element_name: 'item_name',
+});
+export const getClickRefreshButtonEvent = (category) => ({
+  ...getBasicClickEventParameters(category),
+  element_name: 'button_refresh',
+});
+export const getClickSelectAllItemsEvent = (category) => ({
+  ...getBasicClickEventParameters(category),
+  element_name: 'select_all_item',
+});
+export const getClickSelectOneItemEvent = (category) => ({
+  ...getBasicClickEventParameters(category),
+  element_name: 'select_one_item',
+});
+export const getClickDonutEvents = (category) => ({
+  CLICK_DONUT_PB: {
+    ...getBasicClickEventParameters(category),
+    icon_name: 'donut_product_bug',
+  },
+  CLICK_DONUT_AB: {
+    ...getBasicClickEventParameters(category),
+    icon_name: 'donut_auto_bug',
+  },
+  CLICK_DONUT_SI: {
+    ...getBasicClickEventParameters(category),
+    icon_name: 'donut_system_issue',
+  },
+  CLICK_DONUT_TI: {
+    ...getBasicClickEventParameters(category),
+    icon_name: 'donut_to_invest',
+  },
+});
+export const getClickDefectTooltipEvents = (category) => ({
+  getClickTooltipPbEvent: (place = 'body') => ({
+    ...getBasicClickEventParameters(category),
+    icon_name: 'tooltip_product_bug',
+    place,
+  }),
+  getClickTooltipAbEvent: (place = 'body') => ({
+    ...getBasicClickEventParameters(category),
+    icon_name: 'tooltip_auto_bug',
+    place,
+  }),
+  getClickTooltipSiEvent: (place = 'body') => ({
+    ...getBasicClickEventParameters(category),
+    icon_name: 'tooltip_system_issue',
+    place,
+  }),
+  getClickTooltipTiEvent: (place = 'body') => ({
+    ...getBasicClickEventParameters(category),
+    icon_name: 'tooltip_to_invest',
+    place,
+  }),
+  getClickTooltipNdEvent: (place = 'body') => ({
+    ...getBasicClickEventParameters(category),
+    icon_name: 'tooltip_no_defect',
+    place,
+  }),
+});
+export const getClickActionsButtonEvent = (category) => ({
+  ...getBasicClickEventParameters(category),
+  element_name: 'button_actions',
+});
+export const getClickPencilIconEvent = (category) => ({
+  ...getBasicClickEventParameters(category),
+  icon_name: 'edit_item',
+});
+export const getRefineParametersEventCreator = (category) => (entity) => ({
+  ...getBasicClickEventParameters(category),
+  element_name: 'parameter_refine',
+  type: getFilterEntityType(entity),
+});
+export const getClickOnAttributesEvent = (category) => ({
+  ...getBasicClickEventParameters(category),
+  icon_name: 'icon_attributes',
+});
+export const getClickOnExpandEvent = (category, place) => ({
+  ...getBasicClickEventParameters(category),
+  place,
+  icon_name: 'expand',
+});
+export const getClickOnTestItemsTabsEvents = (category) => ({
+  CLICK_LIST_VIEW_TAB: {
+    ...getBasicClickEventParameters(category),
+    element_name: 'tab_list_view',
+  },
+  CLICK_LOG_VIEW_TAB: {
+    ...getBasicClickEventParameters(category),
+    element_name: 'tab_log_view',
+  },
+  CLICK_HISTORY_TAB: {
+    ...getBasicClickEventParameters(category),
+    element_name: 'tab_history',
+  },
+  CLICK_UNIQUE_ERRORS_TAB: {
+    ...getBasicClickEventParameters(category),
+    element_name: 'tab_unique_errors',
+  },
+});
+export const getClickBreadcrumbsEvents = (category) => ({
+  CLICK_ALL_LABEL_BREADCRUMB: {
+    ...getBasicClickEventParameters(category),
+    element_name: 'bread_crumb_all',
+  },
+  CLICK_ITEM_NAME_BREADCRUMB: {
+    ...getBasicClickEventParameters(category),
+    element_name: 'bread_crumb_item_name',
+  },
+  getClickOnPlusMinusBreadcrumbEvent: (expanded) => ({
+    ...getBasicClickEventParameters(category),
+    icon_name: expanded ? 'minus' : 'plus',
+  }),
+});
+export const getChangeItemStatusEventCreator = (category) => (status) => ({
+  ...getBasicClickEventParameters(category),
+  type: 'status',
+  element_name: status.toLowerCase(),
 });
 
-export const getPostIssueActionEvent = (category) => ({
-  category,
-  action: 'Click on Btn "Post Issue"',
-  label: 'Arise Modal "Post Issue"',
-});
-
-export const getLinkIssueActionEvent = (category) => ({
-  category,
-  action: 'Click on Btn "Link Issue"',
-  label: 'Arise Modal "Link Issue"',
+const getClickListOfActionsEventCreator = (category) => ({
+  ...getBasicClickEventParameters(category),
+  place: 'list_of_actions',
 });
 
 export const getDeleteActionEvent = (category) => ({
-  category,
-  action: 'Click on Btn "Delete"',
-  label: 'Arise Modal "Delete Item"',
+  ...getClickListOfActionsEventCreator(category),
+  element_name: 'delete',
+});
+
+export const getEditDefectActionEvent = (category) => ({
+  ...getClickListOfActionsEventCreator(category),
+  element_name: 'edit_defects',
+});
+
+export const getPostIssueActionEvent = (category) => ({
+  ...getClickListOfActionsEventCreator(category),
+  element_name: 'post_issue',
+});
+
+export const getLinkIssueActionEvent = (category) => ({
+  ...getClickListOfActionsEventCreator(category),
+  element_name: 'link_issue',
 });
 
 export const getUnlinkIssueActionEvent = (category) => ({
-  category,
-  action: 'Click on Btn "Unlink Issue"',
-  label: 'Arise Modal "Unlink Issue"',
+  ...getClickListOfActionsEventCreator(category),
+  element_name: 'unlink_issue',
 });
+
+export const getIgnoreInAutoAnalysisActionEventCreator = (category) => ({
+  ...getClickListOfActionsEventCreator(category),
+  element_name: 'ignore_in_Auto_Analysis',
+});
+
+export const getIncludeInAutoAnalysisActionEventCreator = (category) => ({
+  ...getClickListOfActionsEventCreator(category),
+  element_name: 'include_into_auto_analysis',
+});
+// GA3 events
 
 export const getChangeFilterEvent = (category) => (title, value) => ({
   category,
@@ -51,16 +187,6 @@ export const getChangeFilterEvent = (category) => (title, value) => ({
 });
 
 export const getRefineFiltersPanelEvents = (category) => ({
-  REFINE_BTN_MORE: {
-    category,
-    action: 'Click on Refine Btn More',
-    label: 'Arise dropdown with parameters',
-  },
-  getSelectRefineParams: (parameter) => ({
-    category,
-    action: `Select ${parameter} parameter to refine`,
-    label: `Show ${parameter} parameter field to refine`,
-  }),
   getChosenDate: (date) => ({
     category,
     action: 'Choose time for filter by start time on Launches.',
@@ -79,307 +205,171 @@ export const getRefineFiltersPanelEvents = (category) => ({
   }),
 });
 
-export const getClickOnPlusMinusEvents = (page) => (state) => ({
-  category: page,
-  action: 'Click on Bread Crumb icon Plus/Minus',
-  label: state ? 'Minus' : 'Plus',
+export const getClickIssueTicketEvent = (category) => (pluginName) => ({
+  ...getBasicClickEventParameters(category),
+  element_name: 'issue_ticket',
+  type: normalizeEventParameter(pluginName || 'BTS'),
 });
 
-export const getClickSelectAllItemsEvent = (page) => (value) => ({
-  category: page,
-  action: 'Click on item icon "select all items"',
-  label: `${value ? 'select' : 'unselect'} all items`,
-});
-
-export const getClickSelectOneItemEvent = (page) => (value) => ({
-  category: page,
-  action: 'Click on item icon "select one item"',
-  label: `${value ? 'select' : 'unselect'} one item`,
-});
-
-export const getClickAttributes = (category) => (value) => ({
+export const getClickExpandStackTraceArrowEvent = (category) => ({
   category,
-  action: 'Click on icon Attributes',
-  label: value,
-});
-
-export const getClickIssueTicketEvent = (page) => (pluginName) => ({
-  category: page,
-  action: 'Click on Issue Ticket',
-  label: pluginName || 'BTS',
-});
-
-export const getClickUniqueErrorsEvent = (page) => ({
-  category: page,
-  action: 'Click on Tab "Unique Errors"',
-  label: 'User Redirects to the Unique Errors Page',
-});
-
-export const getClickExpandStackTraceArrowEvent = (page) => ({
-  category: page,
   action: 'Click on Icon Arrow to Expand Stack Trace Message on Modal "Test Item Details"',
   label: 'Expand Stack Trace Message',
 });
 
-export const getIgnoreBtnIgnoreItemsInAAModalEvent = (page) => ({
-  category: page,
-  action: 'Click on Ignore in Modal "Ignore items in AA"',
-  label: 'Ignore items in AA',
-});
-
-export const getIncludeBtnIncludeInAAModalEvent = (page) => ({
-  category: page,
+export const getIncludeBtnIncludeInAAModalEvent = (category) => ({
+  category,
   action: 'Click on Include in Modal "Include items in AA"',
   label: 'Include items in AA',
 });
 
-export const getClickAnalyzeInUniqueErrorAnalysisModalEvent = (page) => (isExcludeNumbers) => ({
-  category: page,
-  action: 'Click on Button "Analyze" in Modal "Analyze Launch"',
-  label: isExcludeNumbers
-    ? 'Exclude numbers from analyzed logs'
-    : 'Include numbers to analyzed logs',
-});
+export const getCommonActionEvents = (category) => ({
+  // GA4 events
+  PROCEED_VALID_ITEMS: {
+    ...getBasicClickEventParameters(category),
+    element_name: 'proceed_valid_items',
+  },
+  EDIT_ITEMS_ACTION: {
+    ...getClickListOfActionsEventCreator(category),
+    element_name: 'edit_items',
+  },
 
-export const getCommonActionEvents = (page) => ({
+  // GA3 events
   CLOSE_ICON_FOR_ALL_SELECTIONS: {
-    category: page,
+    category,
     action: 'Click on icon "close" of all selection',
     label: 'Unselect all items',
   },
 
   CLOSE_ICON_SELECTED_ITEM: {
-    category: page,
+    category,
     action: 'Click on icon "close" on selected item',
     label: 'Remove item from  selection',
   },
-  LIST_VIEW_TAB: {
-    category: page,
-    action: 'Click on tab "List view"',
-    label: 'User redirects to the List view page',
-  },
-
-  LOG_VIEW_TAB: {
-    category: page,
-    action: 'Click on tab "Log view"',
-    label: 'User redirects to the Log view page',
-  },
-
-  HISTORY_VIEW_TAB: {
-    category: page,
-    action: 'Click on tab "History"',
-    label: 'User redirects to the History page',
-  },
-
-  PB_TOOLTIP: {
-    category: page,
-    action: 'Click on Tooltip "Total Product Bugs"',
-    label: 'Transition to PB list view',
-  },
-
-  AB_TOOLTIP: {
-    category: page,
-    action: 'Click on Tooltip "Auto Bug"',
-    label: 'Transition to AB list view ',
-  },
-
-  SI_TOOLTIP: {
-    category: page,
-    action: 'Click on Tooltip "Total System Issue"',
-    label: 'Transition to SI list view',
-  },
-
-  TI_TOOLTIP: {
-    category: page,
-    action: 'Click on Tooltip "To Investigate"',
-    label: 'Transition to inner level of launch with To Investigate',
-  },
-  PB_CHART: {
-    category: page,
-    action: 'Click on PB Circle',
-    label: 'Transition to PB list view',
-  },
-
-  AB_CHART: {
-    category: page,
-    action: 'Click on AB Circle',
-    label: 'Transition to AB list view ',
-  },
-
-  SI_CHART: {
-    category: page,
-    action: 'Click on SI Circle',
-    label: 'Transition to SI list view ',
-  },
-
-  TI_CHART: {
-    category: page,
-    action: 'Click on TI tag',
-    label: 'Transition to TI list view',
-  },
 
   NAME_FILTER: {
-    category: page,
+    category,
     action: 'Click on icon "filter" on Name',
     label: 'Suite name input becomes active',
   },
 
   NAME_SORTING: {
-    category: page,
+    category,
     action: 'Click on icon "sorting" on Name',
     label: 'Sort items by name',
   },
 
-  EDIT_ICON_CLICK: {
-    category: page,
-    action: 'Click on item icon "edit"',
-    label: 'Arise Modal "Edit Item"',
-  },
-
   START_TIME_FILTER: {
-    category: page,
+    category,
     action: 'Click on icon "filter" on Start time',
     label: 'Arises active "Start time" input',
   },
 
   START_TIME_SORTING: {
-    category: page,
+    category,
     action: 'Click on icon "sorting" on Start time',
     label: 'Sort items by Start time',
   },
 
   TOTAL_FILTER: {
-    category: page,
+    category,
     action: 'Click on icon "filter" on Total',
     label: 'Arises active "Total" input',
   },
 
   TOTAL_SORTING: {
-    category: page,
+    category,
     action: 'Click on icon "sorting" on Total',
     label: 'Sort items by Total',
   },
 
   PASSED_FILTER: {
-    category: page,
+    category,
     action: 'Click on icon "filter" on Passed',
     label: 'Arises active "Passed" input',
   },
 
   PASSED_SORTING: {
-    category: page,
+    category,
     action: 'Click on icon "sorting" on Passed',
     label: 'Sort items by Passed',
   },
 
   FAILED_FILTER: {
-    category: page,
+    category,
     action: 'Click on icon "filter" on Failed',
     label: 'Arises active "Failed" input',
   },
 
   FAILED_SORTING: {
-    category: page,
+    category,
     action: 'Click on icon "sorting" on Failed',
     label: 'Sort items by Failed',
   },
 
   SKIPPED_FILTER: {
-    category: page,
+    category,
     action: 'Click on icon "filter" on Skipped',
     label: 'Arises active "Skipped" input',
   },
 
   SKIPPED_SORTING: {
-    category: page,
+    category,
     action: 'Click on icon "sorting" on Skipped',
     label: 'Sort items by Skipped',
   },
 
   PB_FILTER: {
-    category: page,
+    category,
     action: 'Click on icon "filter" on Product Bug',
     label: 'Arises active "Product Bug" input',
   },
 
   PB_SORTING: {
-    category: page,
+    category,
     action: 'Click on icon "sorting" on Product Bug',
     label: 'Sort items by Product Bug',
   },
 
   AB_FILTER: {
-    category: page,
+    category,
     action: 'Click on icon "filter" on Auto Bug',
     label: 'Arises active "Auto Bug" input',
   },
 
   AB_SORTING: {
-    category: page,
+    category,
     action: 'Click on icon "sorting" on Auto Bug',
     label: 'Sort items by Auto Bug',
   },
 
   SI_FILTER: {
-    category: page,
+    category,
     action: 'Click on icon "filter" on System Issue',
     label: 'Arises active "System Issue" input',
   },
 
   SI_SORTING: {
-    category: page,
+    category,
     action: 'Click on icon "sorting" on System Issue',
     label: 'Sort items by System Issue',
   },
 
   TI_FILTER: {
-    category: page,
+    category,
     action: 'Click on icon "filter" on To Investigate',
     label: 'Arises active "To Investigate" input',
   },
 
   TI_SORTING: {
-    category: page,
+    category,
     action: 'Click on icon "sorting" on To Investigatee',
     label: 'Sort items by To Investigate',
   },
 
-  ALL_LABEL_BREADCRUMB: {
-    category: page,
-    action: 'Click on Bread Crumb All',
-    label: 'Transition to Launches Page',
-  },
-
-  ITEM_NAME_BREADCRUMB_CLICK: {
-    category: page,
-    action: 'Click on Bread Crumb Item name',
-    label: 'Transition to Item',
-  },
-
   REFINE_BY_NAME: {
-    category: page,
+    category,
     action: 'Enter parameters to refine by name',
     label: 'Refine by name',
-  },
-
-  EDIT_ITEMS_ACTION: {
-    category: page,
-    action: 'Click on "edit" in Actions',
-    label: 'Arise Modal "Edit Items"',
-  },
-  REFRESH_BTN: {
-    category: page,
-    action: 'Click on button "Refresh"',
-    label: 'Refresh page',
-  },
-  PROCEED_VALID_ITEMS: {
-    category: page,
-    action: 'Click on Btn "Proceed Valid Items"',
-    label: 'Remove invalid items from selection',
-  },
-  CLICK_ITEM_NAME: {
-    category: page,
-    action: 'Click on Item Name',
-    label: 'Transition to Item page',
   },
 });

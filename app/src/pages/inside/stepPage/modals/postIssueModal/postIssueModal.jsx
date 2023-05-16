@@ -21,9 +21,8 @@ import { reduxForm } from 'redux-form';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
-import { fetch, updateSessionItem, getSessionItem } from 'common/utils';
+import { fetch, updateSessionItem } from 'common/utils';
 import { URLS } from 'common/urls';
-import { JIRA, RALLY } from 'common/constants/pluginNames';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import {
@@ -50,8 +49,6 @@ import { hideModalAction } from 'controllers/modal';
 import ErrorInlineIcon from 'common/img/error-inline.svg';
 import Parser from 'html-react-parser';
 import { COMMAND_POST_ISSUE } from 'controllers/plugins/uiExtensions/constants';
-import { JiraCredentials } from './jiraCredentials';
-import { RallyCredentials } from './rallyCredentials';
 import {
   INCLUDE_ATTACHMENTS_KEY,
   INCLUDE_LOGS_KEY,
@@ -69,11 +66,6 @@ import { messages as makeDecisionMessages } from '../makeDecisionModal/messages'
 import styles from './postIssueModal.scss';
 
 const cx = classNames.bind(styles);
-
-const SYSTEM_CREDENTIALS_BLOCKS = {
-  [JIRA]: JiraCredentials,
-  [RALLY]: RallyCredentials,
-};
 
 let validationConfig = null;
 
@@ -101,10 +93,6 @@ const messages = defineMessages({
   commentsHeader: {
     id: 'PostIssueModal.commentsHeader',
     defaultMessage: 'Comments',
-  },
-  credentialsHeader: {
-    id: 'PostIssueModal.credentialsHeader',
-    defaultMessage: '{system} Credentials:',
   },
   noDefaultPropertiesMessage: {
     id: 'PostIssueModal.noDefaultPropertiesMessage',
@@ -187,7 +175,7 @@ export class PostIssueModal extends Component {
 
   constructor(props) {
     super(props);
-    const { pluginName, integration, ...config } = getDefaultIssueModalConfig(
+    const { pluginName, integration } = getDefaultIssueModalConfig(
       props.namedBtsIntegrations,
       props.userId,
     );
@@ -196,25 +184,17 @@ export class PostIssueModal extends Component {
       id,
       integrationParameters: { defectFormFields },
     } = integration;
-    const systemAuthConfig = this.getSystemAuthDefaultConfig(pluginName, config);
-    const fields = this.initIntegrationFields(defectFormFields, systemAuthConfig, pluginName);
+    const fields = this.initIntegrationFields(defectFormFields, pluginName);
 
     this.state = {
       fields,
       pluginName,
       integrationId: id,
-      expanded: true,
-      wasExpanded: false,
     };
   }
 
   onPost = () => {
-    const {
-      handleSubmit,
-      tracking,
-      data: { eventsInfo },
-    } = this.props;
-    eventsInfo.postBtn && tracking.trackEvent(eventsInfo.postBtn);
+    const { handleSubmit } = this.props;
     handleSubmit(this.prepareDataToSend)();
   };
 
@@ -224,12 +204,7 @@ export class PostIssueModal extends Component {
     }
 
     const { id, integrationParameters } = this.props.namedBtsIntegrations[pluginName][0];
-    const systemAuthConfig = this.getSystemAuthDefaultConfig(pluginName);
-    const fields = this.initIntegrationFields(
-      integrationParameters.defectFormFields,
-      systemAuthConfig,
-      pluginName,
-    );
+    const fields = this.initIntegrationFields(integrationParameters.defectFormFields, pluginName);
 
     this.setState({
       pluginName,
@@ -254,10 +229,6 @@ export class PostIssueModal extends Component {
     });
   };
 
-  trackFieldClick = (e, eventFn) => {
-    this.props.tracking.trackEvent(eventFn(e.target.checked));
-  };
-
   getCloseConfirmationConfig = () => {
     if (!this.props.dirty) {
       return null;
@@ -268,41 +239,28 @@ export class PostIssueModal extends Component {
     };
   };
 
-  getSystemAuthDefaultConfig = (pluginName, config) => {
-    const systemAuthConfig = {};
-    if (this.isJiraIntegration(pluginName)) {
-      const storedConfig = config || getSessionItem(`${this.props.userId}_settings`) || {};
-      systemAuthConfig.username = storedConfig.username;
-    }
-    return systemAuthConfig;
-  };
-
   dataFieldsConfig = [
     {
       name: INCLUDE_ATTACHMENTS_KEY,
       title: this.props.intl.formatMessage(messages.attachmentsHeader),
-      eventFn: this.props.data.eventsInfo && this.props.data.eventsInfo.attachmentsSwitcher,
     },
     {
       name: INCLUDE_LOGS_KEY,
       title: this.props.intl.formatMessage(messages.logsHeader),
-      eventFn: this.props.data.eventsInfo && this.props.data.eventsInfo.logsSwitcher,
     },
     {
       name: INCLUDE_COMMENTS_KEY,
       title: this.props.intl.formatMessage(messages.commentsHeader),
-      eventFn: this.props.data.eventsInfo && this.props.data.eventsInfo.commentSwitcher,
     },
   ];
 
-  initIntegrationFields = (defectFormFields = [], defaultConfig = {}, pluginName) => {
+  initIntegrationFields = (defectFormFields = [], pluginName) => {
     const defaultOptionValueKey = getDefaultOptionValueKey(pluginName);
     const fields = normalizeFieldsWithOptions(defectFormFields, defaultOptionValueKey).map((item) =>
       item.fieldType === ISSUE_TYPE_FIELD_KEY ? { ...item, disabled: true } : item,
     );
     validationConfig = createFieldsValidationConfig(fields);
     this.props.initialize({
-      ...defaultConfig,
       ...getDataSectionConfig(!this.isBulkOperation),
       ...mapFieldsToValues(fields),
     });
@@ -330,12 +288,6 @@ export class PostIssueModal extends Component {
       fields,
       backLinks,
     };
-    if (this.isJiraIntegration()) {
-      data.password = formData.password;
-      data.username = formData.username;
-    } else {
-      data.token = formData.token;
-    }
 
     this.postIssue(data);
   };
@@ -343,7 +295,8 @@ export class PostIssueModal extends Component {
   postIssue = (data) => {
     const {
       intl: { formatMessage },
-      data: { items, fetchFunc },
+      data: { items, fetchFunc, eventsInfo },
+      tracking: { trackEvent },
       namedBtsIntegrations,
       activeProject,
       projectInfo,
@@ -370,6 +323,8 @@ export class PostIssueModal extends Component {
       };
     }
     this.props.showScreenLockAction();
+
+    trackEvent(eventsInfo.postBtn(data));
 
     fetch(url, requestParams)
       .then((response) => {
@@ -404,10 +359,6 @@ export class PostIssueModal extends Component {
           integrationId,
         };
 
-        if (this.isJiraIntegration()) {
-          sessionConfig.username = data.username;
-        }
-
         updateSessionItem(`${userId}_settings`, sessionConfig);
         this.props.showNotification({
           message: formatMessage(messages.postIssueSuccess),
@@ -421,15 +372,6 @@ export class PostIssueModal extends Component {
           type: NOTIFICATION_TYPES.ERROR,
         });
       });
-  };
-
-  isJiraIntegration = (pluginName = this.state.pluginName) => pluginName === JIRA;
-
-  expandCredentials = () => {
-    this.setState({
-      expanded: !this.state.expanded,
-      wasExpanded: true,
-    });
   };
 
   isBulkOperation = this.props.data.items.length > 1;
@@ -470,8 +412,7 @@ export class PostIssueModal extends Component {
       intl: { formatMessage },
       data: { items },
     } = this.props;
-    const { pluginName, integrationId, fields, expanded, wasExpanded } = this.state;
-    const CredentialsComponent = SYSTEM_CREDENTIALS_BLOCKS[pluginName];
+    const { pluginName, integrationId, fields } = this.state;
     const currentExtension = this.getCurrentExtension();
 
     return (
@@ -521,12 +462,7 @@ export class PostIssueModal extends Component {
               </h4>
               <div className={cx('include-data-block')}>
                 {this.dataFieldsConfig.map((item) => (
-                  <FieldProvider
-                    key={item.name}
-                    name={item.name}
-                    format={Boolean}
-                    onChange={(e) => this.trackFieldClick(e, item.eventFn)}
-                  >
+                  <FieldProvider key={item.name} name={item.name} format={Boolean}>
                     <InputCheckbox iconTransparentBackground>
                       <span className={cx('switch-field-label', 'dark-view')}>{item.title}</span>
                     </InputCheckbox>
@@ -536,20 +472,6 @@ export class PostIssueModal extends Component {
             </div>
           )}
           {currentExtension && <currentExtension.component />}
-          {CredentialsComponent && (
-            <div className={cx('credentials-block-wrapper', { expanded })}>
-              <h4 className={cx('form-block-header', 'dark-view')}>
-                <span onClick={this.expandCredentials} className={cx('header-text', 'dark-view')}>
-                  {formatMessage(messages.credentialsHeader, {
-                    system: pluginName,
-                  })}
-                </span>
-              </h4>
-              <div className={cx('credentials-block', { expand: wasExpanded })}>
-                <CredentialsComponent darkView />
-              </div>
-            </div>
-          )}
         </form>
       </DarkModalLayout>
     );

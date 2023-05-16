@@ -20,7 +20,7 @@ import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import track from 'react-tracking';
 import { injectIntl } from 'react-intl';
-import { formatAttribute } from 'common/utils/attributeUtils';
+import { formatAttributeWithSpacedDivider } from 'common/utils/attributeUtils';
 import { canUpdateSettings } from 'common/utils/permissions';
 import PlusIcon from 'common/img/plus-button-inline.svg';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -48,6 +48,8 @@ import { convertNotificationCaseForSubmission } from './utils';
 import { messages } from './messages';
 
 const cx = classNames.bind(styles);
+const NO_ATTRIBUTES = 'No attributes';
+
 const ruleFieldsConfig = {
   [RECIPIENTS_FIELD_KEY]: {
     title: messages.recipientsLabel,
@@ -65,9 +67,23 @@ const ruleFieldsConfig = {
       data.reduce((acc, item) => `${acc.length ? `${acc}, ` : ''}${item}`, ''),
   },
   [ATTRIBUTES_FIELD_KEY]: {
-    title: messages.attributesLabel,
+    title: messages.attributesLabelWithOperator,
+    getTitleVariables: ({ attributesOperator }) => ({ attributesOperator }),
     dataFormatter: (data) =>
-      data.reduce((acc, item) => `${acc.length ? `${acc}, ` : ''}${formatAttribute(item)}`, ''),
+      data.length &&
+      data.map((item) => (
+        <div className={cx('attribute')} title={formatAttributeWithSpacedDivider(item)}>
+          {item.key ? (
+            <>
+              <div className={cx('key')}>{item.key}</div>
+              <div>:</div>
+              <div className={cx('value')}>{item.value}</div>
+            </>
+          ) : (
+            <div>{item.value}</div>
+          )}
+        </div>
+      )),
   },
 };
 
@@ -146,8 +162,8 @@ export class NotificationsTab extends Component {
   };
 
   addNotificationCase = () => {
-    const { showModal } = this.props;
-    this.props.tracking.trackEvent(SETTINGS_PAGE_EVENTS.ADD_RULE_BTN_NOTIFICATIONS);
+    const { showModal, tracking } = this.props;
+    tracking.trackEvent(SETTINGS_PAGE_EVENTS.ADD_RULE_BTN_NOTIFICATIONS);
     showModal({
       id: 'addEditNotificationCaseModal',
       data: {
@@ -157,7 +173,12 @@ export class NotificationsTab extends Component {
         eventsInfo: {
           closeIcon: SETTINGS_PAGE_EVENTS.CLOSE_ICON_ADD_RULE_NOTIFICATIONS,
           cancelBtn: SETTINGS_PAGE_EVENTS.CANCEL_ADD_RULE_NOTIFICATIONS,
-          saveBtn: SETTINGS_PAGE_EVENTS.SAVE_ADD_RULE_NOTIFICATIONS,
+          saveBtn: ({ attributesOperator, attributes }) =>
+            tracking.trackEvent(
+              SETTINGS_PAGE_EVENTS.SAVE_ADD_RULE_NOTIFICATIONS(
+                attributes.length ? messages[attributesOperator].defaultMessage : NO_ATTRIBUTES,
+              ),
+            ),
         },
       },
     });
@@ -175,7 +196,12 @@ export class NotificationsTab extends Component {
         eventsInfo: {
           closeIcon: SETTINGS_PAGE_EVENTS.CLOSE_ICON_EDIT_RULE_NOTIFICATIONS,
           cancelBtn: SETTINGS_PAGE_EVENTS.CANCEL_EDIT_RULE_NOTIFICATIONS,
-          saveBtn: SETTINGS_PAGE_EVENTS.SAVE_EDIT_RULE_NOTIFICATIONS,
+          saveBtn: ({ attributesOperator, attributes }) =>
+            tracking.trackEvent(
+              SETTINGS_PAGE_EVENTS.SAVE_EDIT_RULE_NOTIFICATIONS(
+                attributes.length ? messages[attributesOperator].defaultMessage : NO_ATTRIBUTES,
+              ),
+            ),
         },
       },
     });
@@ -225,9 +251,13 @@ export class NotificationsTab extends Component {
       .map((fieldKey) => {
         const fieldInfo = ruleFieldsConfig[fieldKey];
         const fieldData = notification[fieldKey];
+        const keyVars =
+          fieldInfo && fieldInfo.getTitleVariables
+            ? fieldInfo.getTitleVariables(notification)
+            : null;
 
         return {
-          key: fieldInfo ? formatMessage(fieldInfo.title) : null,
+          key: fieldInfo ? formatMessage(fieldInfo.title, keyVars) : null,
           value: fieldInfo && fieldData ? fieldInfo.dataFormatter(fieldData, formatMessage) : null,
         };
       })

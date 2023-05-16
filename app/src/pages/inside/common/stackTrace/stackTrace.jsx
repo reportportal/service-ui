@@ -152,6 +152,7 @@ export class StackTrace extends Component {
   };
 
   navigateToError = (id) => {
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.CLICK_JUMP_TO_ERROR_LOG);
     setStorageItem(ERROR_LOG_INDEX_KEY, id);
     this.props.setActiveTabIdAction('logs');
   };
@@ -166,6 +167,8 @@ export class StackTrace extends Component {
       designMode,
       eventsInfo,
     } = this.props;
+    const maxRowHeight = this.getMaxRowHeight();
+
     return (
       <React.Fragment>
         <ScrollWrapper autoHeight autoHeightMax={this.getScrolledHeight()}>
@@ -173,7 +176,7 @@ export class StackTrace extends Component {
             <div key={item.id} className={cx('row', { [`design-mode-${designMode}`]: designMode })}>
               <StackTraceMessageBlock
                 level={item.level}
-                maxHeight={this.getMaxRowHeight()}
+                maxHeight={maxRowHeight}
                 designMode={designMode}
                 eventsInfo={eventsInfo}
               >

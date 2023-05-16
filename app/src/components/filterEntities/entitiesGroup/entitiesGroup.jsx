@@ -77,14 +77,12 @@ export class EntitiesGroup extends Component {
     this.state.activeField === entityId ? this.setState({ activeField: null }) : null;
 
   toggleEntity = (entityId) => {
-    const { tracking, events, onRemove, onAdd } = this.props;
+    const { onRemove, onAdd } = this.props;
     const entity = this.getEntity(entityId);
     if (entity.active) {
       onRemove(entityId);
     } else {
       onAdd(entity);
-      const title = entity ? entity.title : '';
-      events.refineBtnMore && tracking.trackEvent(events.refineBtnMore(title));
     }
   };
 

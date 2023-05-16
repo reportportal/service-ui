@@ -35,7 +35,6 @@ export const getOrdersWithDefault = (column) => [
 ];
 
 export const NEW_FILTER_DEFAULT_CONFIG = {
-  share: false,
   type: 'launch',
   conditions: [{ filteringField: ENTITY_NAME, value: '', condition: CONDITION_CNT }],
   orders: getOrdersWithDefault(ENTITY_START_TIME),

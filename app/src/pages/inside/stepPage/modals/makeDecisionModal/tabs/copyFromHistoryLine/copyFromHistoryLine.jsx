@@ -26,7 +26,6 @@ import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { useDispatch } from 'react-redux';
 import { TestItemDetails } from '../../elements/testItemDetails';
 import { COPY_FROM_HISTORY_LINE, RADIO_TEST_ITEM_DETAILS } from '../../constants';
-import { messages } from '../../messages';
 import styles from './copyFromHistoryLine.scss';
 
 const cx = classNames.bind(styles);
@@ -95,26 +94,10 @@ export const CopyFromHistoryLine = ({
     return width < SCREEN_SM_MAX && width > SCREEN_XS_MAX;
   };
   const onClickExternalLinkEvent = () => {
-    const { onClickExternalLink } = eventsInfo;
-    onClickExternalLink &&
-      trackEvent(
-        onClickExternalLink({
-          defectFromTIGroup,
-          section: messages[COPY_FROM_HISTORY_LINE].defaultMessage,
-        }),
-      );
-  };
-  const onClickItemEvent = () => {
-    const { onClickItem } = eventsInfo;
-    onClickItem &&
-      trackEvent(onClickItem(defectFromTIGroup, messages[COPY_FROM_HISTORY_LINE].defaultMessage));
+    trackEvent(eventsInfo.getClickItemLinkEvent(defectFromTIGroup, 'history'));
   };
   const onOpenStackTraceEvent = () => {
-    const { onOpenStackTrace } = eventsInfo;
-    onOpenStackTrace &&
-      trackEvent(
-        onOpenStackTrace(defectFromTIGroup, messages[COPY_FROM_HISTORY_LINE].defaultMessage),
-      );
+    return eventsInfo.getOpenStackTraceEvent(defectFromTIGroup, 'history');
   };
 
   return (
@@ -130,9 +113,7 @@ export const CopyFromHistoryLine = ({
             mode={RADIO_TEST_ITEM_DETAILS}
             eventsInfo={{
               onOpenStackTraceEvent,
-              onClickItemEvent,
               onClickExternalLinkEvent,
-              onClickIssueTicketEvent: eventsInfo.onClickIssueTicketEvent,
             }}
           />
         </div>

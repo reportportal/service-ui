@@ -90,29 +90,25 @@ const messages = defineMessages({
     defaultMessage: 'Comment',
   },
 });
-const POST_ISSUE_EVENTS_INFO = {
-  postBtn: LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.POST_BTN_POST_ISSUE_MODAL,
-  attachmentsSwitcher: LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.attachmentsSwitcher,
-  logsSwitcher: LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.logsSwitcher,
-  commentSwitcher: LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.commentSwitcher,
+
+const getPostIssueEventsInfo = (place) => ({
+  postBtn: LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.getClickPostIssueButtonEventParameters(place),
   cancelBtn: LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.CANCEL_BTN_POST_ISSUE_MODAL,
   closeIcon: LOG_PAGE_EVENTS.POST_ISSUE_MODAL_EVENTS.CLOSE_ICON_POST_ISSUE_MODAL,
-};
-const LINK_ISSUE_EVENTS_INFO = {
-  loadBtn: LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.LOAD_BTN_LINK_ISSUE_MODAL,
+});
+const getLinkIssueEventsInfo = (place) => ({
+  loadBtn: LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickLoadButtonEventParameters(place),
   cancelBtn: LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_LINK_ISSUE_MODAL,
-  addNewIssue: LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.ADD_NEW_ISSUE_BTN_LINK_ISSUE_MODAL,
+  addNewIssue: LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.getClickAddNewIssueButtonEventParameters(
+    place,
+  ),
   closeIcon: LOG_PAGE_EVENTS.LINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_LINK_ISSUE_MODAL,
-};
-const UNLINK_ISSUE_EVENTS_INFO = {
-  unlinkAutoAnalyzedFalse:
-    LOG_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.UNLINK_IN_UNLINK_ISSUE_MODAL_AUTO_ANALYZED_FALSE,
-  unlinkAutoAnalyzedTrue:
-    LOG_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.UNLINK_IN_UNLINK_ISSUE_MODAL_AUTO_ANALYZED_TRUE,
-  unlinkBtn: LOG_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.UNLINK_BTN_UNLINK_ISSUE_MODAL,
+});
+const getUnlinkIssueEventsInfo = (place) => ({
+  unlinkBtn: LOG_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.getClickUnlinkButtonEventParameters(place),
   cancelBtn: LOG_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CANCEL_BTN_UNLINK_ISSUE_MODAL,
   closeIcon: LOG_PAGE_EVENTS.UNLINK_ISSUE_MODAL_EVENTS.CLOSE_ICON_UNLINK_ISSUE_MODAL,
-};
+});
 
 @connect(
   (state) => ({
@@ -192,7 +188,7 @@ export class DefectDetails extends Component {
     this.props.tracking.trackEvent(LOG_PAGE_EVENTS.LINK_ISSUE_ACTION);
     this.props.linkIssueAction([this.props.logItem], {
       fetchFunc: this.props.fetchFunc,
-      eventsInfo: LINK_ISSUE_EVENTS_INFO,
+      eventsInfo: getLinkIssueEventsInfo(),
     });
   };
 
@@ -214,7 +210,7 @@ export class DefectDetails extends Component {
 
     this.props.unlinkIssueAction(items, {
       fetchFunc,
-      eventsInfo: UNLINK_ISSUE_EVENTS_INFO,
+      eventsInfo: getUnlinkIssueEventsInfo(),
     });
   };
 
@@ -222,7 +218,7 @@ export class DefectDetails extends Component {
     this.props.tracking.trackEvent(LOG_PAGE_EVENTS.POST_ISSUE_ACTION);
     this.props.postIssueAction([this.props.logItem], {
       fetchFunc: this.props.fetchFunc,
-      eventsInfo: POST_ISSUE_EVENTS_INFO,
+      eventsInfo: getPostIssueEventsInfo(),
     });
   };
 
@@ -238,6 +234,13 @@ export class DefectDetails extends Component {
 
   handleEditDefect = () => {
     const { logItem } = this.props;
+    const MAKE_DECISION = 'make_decision';
+
+    this.props.tracking.trackEvent(
+      LOG_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS.getOpenModalEvent(
+        logItem.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
+      ),
+    );
     this.props.editDefectsAction([logItem], {
       fetchFunc: this.onDefectEdited,
       eventsInfo: {
@@ -245,16 +248,11 @@ export class DefectDetails extends Component {
         selectAllSimilarItems: LOG_PAGE_EVENTS.SELECT_ALL_SIMILAR_ITEMS_EDIT_DEFECT_MODAL,
         selectSpecificSimilarItem: LOG_PAGE_EVENTS.SELECT_SPECIFIC_SIMILAR_ITEM_EDIT_DEFECT_MODAL,
         editDefectsEvents: LOG_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS,
-        unlinkIssueEvents: UNLINK_ISSUE_EVENTS_INFO,
-        postIssueEvents: POST_ISSUE_EVENTS_INFO,
-        linkIssueEvents: LINK_ISSUE_EVENTS_INFO,
+        unlinkIssueEvents: getUnlinkIssueEventsInfo(MAKE_DECISION),
+        postIssueEvents: getPostIssueEventsInfo(MAKE_DECISION),
+        linkIssueEvents: getLinkIssueEventsInfo(MAKE_DECISION),
       },
     });
-    this.props.tracking.trackEvent(
-      LOG_PAGE_EVENTS.MAKE_DECISION_MODAL_EVENTS.openModal(
-        logItem.issue.issueType.startsWith(TO_INVESTIGATE_LOCATOR_PREFIX),
-      ),
-    );
   };
 
   toggleExpanded = () => {
@@ -264,15 +262,14 @@ export class DefectDetails extends Component {
       }),
       () => {
         this.props.tracking.trackEvent(
-          this.state.expanded ? LOG_PAGE_EVENTS.MORE : LOG_PAGE_EVENTS.SHOW_LESS,
+          LOG_PAGE_EVENTS.getClickOnDefectDetailsTogglerEvent(this.state.expanded),
         );
       },
     );
   };
 
-  onChangeStatus = (oldStatus, newStatus) => {
-    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.selectDropDownStatusEvent(oldStatus, newStatus));
-  };
+  onChangeStatus = (status) =>
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.getChangeItemStatusEvent(status));
 
   onClickIssue = (pluginName) => {
     this.props.tracking.trackEvent(LOG_PAGE_EVENTS.onClickIssueTicketEvent(pluginName));
@@ -416,7 +413,7 @@ export class DefectDetails extends Component {
               <GhostButton
                 disabled={!logItem.issue}
                 onClick={this.handleEditDefect}
-                title={!logItem.issue && formatMessage(messages.makeDecisionTooltip)}
+                title={!logItem.issue ? formatMessage(messages.makeDecisionTooltip) : ''}
               >
                 {formatMessage(messages.makeDecision)}
               </GhostButton>

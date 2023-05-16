@@ -34,9 +34,8 @@ import {
   ENTITY_ATTRIBUTE,
 } from 'components/filterEntities/constants';
 import { NoItemMessage } from 'components/main/noItemMessage';
-import { getChangeItemStatusEvent } from 'components/main/analytics/events';
-import { formatAttribute } from 'common/utils';
-import { StatusDropdown } from '../../common/statusDropdown/statusDropdown';
+import { formatAttribute } from 'common/utils/attributeUtils';
+import { StatusDropdown } from 'pages/inside/common/statusDropdown/statusDropdown';
 import { PredefinedFilterSwitcher } from './predefinedFilterSwitcher';
 import { DefectType } from './defectType';
 import { GroupHeader } from './groupHeader';
@@ -285,8 +284,7 @@ export class StepGrid extends Component {
         component: StatusColumn,
         customProps: {
           formatMessage,
-          onChange: (oldStatus, newStatus) =>
-            tracking.trackEvent(getChangeItemStatusEvent(oldStatus, newStatus)),
+          onChange: (status) => tracking.trackEvent(events.getChangeItemStatusEvent(status)),
           fetchFunc: onStatusUpdate,
         },
         withFilter: true,
@@ -318,7 +316,8 @@ export class StepGrid extends Component {
           onUnlinkSingleTicket,
           events: {
             onEditEvent:
-              events.MAKE_DECISION_MODAL_EVENTS && events.MAKE_DECISION_MODAL_EVENTS.openModal,
+              events.MAKE_DECISION_MODAL_EVENTS &&
+              events.MAKE_DECISION_MODAL_EVENTS.getOpenModalEvent,
             onClickIssueTicketEvent: events.onClickIssueTicketEvent,
           },
         },
@@ -348,8 +347,7 @@ export class StepGrid extends Component {
       true,
     );
 
-    const textAttribute = attribute.key ? 'key:value' : 'value';
-    events.CLICK_ATTRIBUTES && tracking.trackEvent(events.CLICK_ATTRIBUTES(textAttribute));
+    events.CLICK_ATTRIBUTES && tracking.trackEvent(events.CLICK_ATTRIBUTES);
   };
 
   highlightFailedItems = (value) => ({

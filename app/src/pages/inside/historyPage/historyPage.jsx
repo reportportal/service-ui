@@ -25,6 +25,7 @@ import {
   toggleHistoryItemSelectionAction,
   unselectAllHistoryItemsAction,
   HISTORY_BASE_DEFAULT_VALUE,
+  HISTORY_BASE_ALL_LAUNCHES,
 } from 'controllers/itemsHistory';
 import {
   parentItemSelector,
@@ -94,7 +95,9 @@ export class HistoryPage extends Component {
   }
 
   changeHistoryBase = (historyBase) => {
-    this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.SELECT_HISTORY_BASE);
+    this.props.tracking.trackEvent(
+      HISTORY_PAGE_EVENTS.getSelectHistoryBaseEvent(historyBase === HISTORY_BASE_ALL_LAUNCHES),
+    );
 
     if (historyBase !== this.state.historyBase) {
       this.setState({
@@ -105,9 +108,9 @@ export class HistoryPage extends Component {
   };
 
   selectItem = (item) => {
-    this.props.tracking.trackEvent(
-      HISTORY_PAGE_EVENTS.selectHistoryItem(!this.props.selectedItems.includes(item)),
-    );
+    if (!this.props.selectedItems.includes(item)) {
+      this.props.tracking.trackEvent(HISTORY_PAGE_EVENTS.SELECT_ONE_ITEM);
+    }
     this.props.toggleItemSelection(item);
   };
 

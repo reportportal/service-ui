@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -25,12 +25,6 @@ import { injectIntl, defineMessages } from 'react-intl';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import {
-  canResizeAndDragWidgets,
-  canAddWidget,
-  canEditDashboard,
-  canDeleteDashboard,
-} from 'common/utils/permissions';
-import {
   activeDashboardItemSelector,
   updateDashboardWidgetsAction,
   dashboardFullScreenModeSelector,
@@ -39,11 +33,7 @@ import {
   deleteDashboardAction,
   updateDashboardAction,
 } from 'controllers/dashboard';
-import {
-  userInfoSelector,
-  activeProjectSelector,
-  activeProjectRoleSelector,
-} from 'controllers/user';
+import { userInfoSelector, activeProjectSelector } from 'controllers/user';
 import {
   PROJECT_DASHBOARD_PAGE,
   PROJECT_DASHBOARD_PRINT_PAGE,
@@ -57,11 +47,9 @@ import Link from 'redux-first-router-link';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { DashboardPageHeader } from 'pages/inside/common/dashboardPageHeader';
-import GlobeIcon from 'common/img/globe-icon-inline.svg';
 import AddWidgetIcon from 'common/img/add-widget-inline.svg';
 import ExportIcon from 'common/img/export-inline.svg';
 import { getUpdatedWidgetsList } from './modals/common/utils';
-import AddSharedWidgetIcon from './img/add-shared-inline.svg';
 import EditIcon from './img/edit-inline.svg';
 import CancelIcon from './img/cancel-inline.svg';
 import FullscreenIcon from './img/full-screen-inline.svg';
@@ -79,10 +67,6 @@ const messages = defineMessages({
     id: 'DashboardItemPage.addNewWidget',
     defaultMessage: 'Add new widget',
   },
-  addSharedWidget: {
-    id: 'DashboardItemPage.addSharedWidget',
-    defaultMessage: 'Add shared widget',
-  },
   editDashboard: {
     id: 'DashboardItemPage.editDashboard',
     defaultMessage: 'Edit',
@@ -98,10 +82,6 @@ const messages = defineMessages({
   addWidgetSuccess: {
     id: 'DashboardItemPage.addWidgetSuccess',
     defaultMessage: 'Widget has been added',
-  },
-  sharedWidgetCaption: {
-    id: 'DashboardItemPage.sharedWidgetCaption',
-    defaultMessage: 'Dashboard has been shared by',
   },
   deleteModalWarningMessage: {
     id: 'DashboardPage.modal.deleteModalWarningMessage',
@@ -130,7 +110,6 @@ const messages = defineMessages({
     dashboard: activeDashboardItemSelector(state),
     userInfo: userInfoSelector(state),
     fullScreenMode: dashboardFullScreenModeSelector(state),
-    projectRole: activeProjectRoleSelector(state),
     activeDashboardId: activeDashboardIdSelector(state),
   }),
   {
@@ -164,13 +143,11 @@ export class DashboardItemPage extends Component {
     toggleFullScreenModeAction: PropTypes.func.isRequired,
     deleteDashboard: PropTypes.func.isRequired,
     editDashboard: PropTypes.func.isRequired,
-    projectRole: PropTypes.string,
     activeDashboardId: PropTypes.number,
   };
 
   static defaultProps = {
     fullScreenMode: false,
-    projectRole: '',
     activeDashboardId: undefined,
   };
 
@@ -216,7 +193,6 @@ export class DashboardItemPage extends Component {
         eventsInfo: {
           closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_EDIT_DASHBOARD_MODAL,
           changeDescription: DASHBOARD_PAGE_EVENTS.ENTER_DESCRIPTION_EDIT_DASHBOARD_MODAL,
-          shareSwitcher: DASHBOARD_PAGE_EVENTS.SHARE_SWITCHER_EDIT_DASHBOARD_MODAL,
           cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_EDIT_DASHBOARD_MODAL,
           submitBtn: DASHBOARD_PAGE_EVENTS.UPDATE_BTN_EDIT_DASHBOARD_MODAL,
         },
@@ -292,8 +268,6 @@ export class DashboardItemPage extends Component {
           nextStep: DASHBOARD_PAGE_EVENTS.NEXT_STEP_ADD_WIDGET_MODAL,
           prevStep: DASHBOARD_PAGE_EVENTS.PREVIOUS_STEP_ADD_WIDGET_MODAL,
           changeDescription: DASHBOARD_PAGE_EVENTS.ENTER_WIDGET_DESCRIPTION_ADD_WIDGET_MODAL,
-          shareWidget: DASHBOARD_PAGE_EVENTS.SHARE_WIDGET_ADD_WIDGET_MODAL,
-          addWidget: DASHBOARD_PAGE_EVENTS.ADD_BTN_ADD_WIDGET_MODAL,
           editFilterIcon: DASHBOARD_PAGE_EVENTS.EDIT_FILTER_ADD_WIDGET_MODAL,
           enterSearchParams: DASHBOARD_PAGE_EVENTS.ENTER_SEARCH_PARAMS_ADD_WIDGET_MODAL,
           chooseFilter: DASHBOARD_PAGE_EVENTS.CHOOSE_FILTER_ADD_WIDGET_MODAL,
@@ -311,29 +285,6 @@ export class DashboardItemPage extends Component {
     });
   };
 
-  showAddSharedWidgetModal = () => {
-    this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.ADD_SHARED_WIDGET_BTN);
-    this.props.showModalAction({
-      id: 'addSharedWidgetModal',
-      data: {
-        onConfirm: this.addWidget,
-        currentDashboard: this.props.dashboard,
-        eventsInfo: {
-          closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_SHARE_WIDGET_MODAL,
-          cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_SHARE_WIDGET_MODAL,
-          addBtn: DASHBOARD_PAGE_EVENTS.ADD_BTN_SHARE_WIDGET_MODAL,
-          chooseRadioBtn: DASHBOARD_PAGE_EVENTS.WIDGET_TYPE_SHARE_WIDGET_MODAL,
-          scrollWidgets: DASHBOARD_PAGE_EVENTS.SCROLL_WIDGET_SHARE_WIDGET_MODAL,
-        },
-      },
-    });
-  };
-
-  hasOwnerActions() {
-    const { dashboard, userInfo } = this.props;
-    return dashboard.owner === userInfo.userId;
-  }
-
   render() {
     const {
       intl: { formatMessage },
@@ -341,11 +292,7 @@ export class DashboardItemPage extends Component {
       fullScreenMode,
       activeProject,
       changeFullScreenModeAction: changeFullScreenMode,
-      userInfo: { userRole, userId },
-      projectRole,
     } = this.props;
-
-    const isOwner = this.hasOwnerActions();
 
     return (
       <PageLayout>
@@ -356,39 +303,20 @@ export class DashboardItemPage extends Component {
           <div className={cx('dashboard-item')}>
             <div className={cx('buttons-container')}>
               <div className={cx('buttons-block')}>
-                {canAddWidget(userRole, projectRole, isOwner) ? (
-                  <Fragment>
-                    <GhostButton icon={AddWidgetIcon} onClick={this.showWidgetWizard}>
-                      {formatMessage(messages.addNewWidget)}
-                    </GhostButton>
-
-                    <GhostButton icon={AddSharedWidgetIcon} onClick={this.showAddSharedWidgetModal}>
-                      {formatMessage(messages.addSharedWidget)}
-                    </GhostButton>
-                  </Fragment>
-                ) : (
-                  <div className={cx('shared-caption')}>
-                    <span className={cx('globe-icon')}>{Parser(GlobeIcon)}</span>
-                    {formatMessage(messages.sharedWidgetCaption)} {dashboard.owner}
-                  </div>
-                )}
+                <GhostButton icon={AddWidgetIcon} onClick={this.showWidgetWizard}>
+                  {formatMessage(messages.addNewWidget)}
+                </GhostButton>
               </div>
               <div className={cx('buttons-block')}>
-                {canEditDashboard(userRole, projectRole, isOwner) && (
-                  <GhostButton icon={EditIcon} onClick={this.onEditDashboardItem}>
-                    {formatMessage(messages.editDashboard)}
-                  </GhostButton>
-                )}
-
+                <GhostButton icon={EditIcon} onClick={this.onEditDashboardItem}>
+                  {formatMessage(messages.editDashboard)}
+                </GhostButton>
                 <GhostButton icon={FullscreenIcon} onClick={this.toggleFullscreen}>
                   {formatMessage(messages.fullscreen)}
                 </GhostButton>
-
-                {canDeleteDashboard(userRole, projectRole, isOwner) && (
-                  <GhostButton icon={CancelIcon} onClick={this.onDeleteDashboard}>
-                    {formatMessage(messages.delete)}
-                  </GhostButton>
-                )}
+                <GhostButton icon={CancelIcon} onClick={this.onDeleteDashboard}>
+                  {formatMessage(messages.delete)}
+                </GhostButton>
                 <Link
                   to={{
                     type: PROJECT_DASHBOARD_PRINT_PAGE,
@@ -406,16 +334,13 @@ export class DashboardItemPage extends Component {
             </div>
             <Fullscreen enabled={fullScreenMode} onChange={changeFullScreenMode}>
               <WidgetsGrid
-                isModifiable={
-                  canResizeAndDragWidgets(userRole, projectRole, isOwner) && !fullScreenMode
-                }
+                isModifiable={!fullScreenMode}
                 dashboard={dashboard}
                 isFullscreen={fullScreenMode}
                 showWidgetWizard={this.showWidgetWizard}
                 activeProject={activeProject}
                 showNotification={this.props.showNotification}
                 updateDashboardWidgetsAction={this.props.updateDashboardWidgetsAction}
-                currentUser={userId}
               />
               {fullScreenMode && (
                 <i className={cx('icon-close')} onClick={this.toggleFullscreen}>

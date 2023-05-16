@@ -28,7 +28,6 @@ const cx = classNames.bind(styles);
 export const FiltersList = ({
   search,
   customClass,
-  userId,
   activeId,
   filters,
   loading,
@@ -44,7 +43,6 @@ export const FiltersList = ({
       {filters.map((item) => (
         <FiltersItem
           search={search || ''}
-          userId={userId}
           filter={item}
           activeFilterId={activeId}
           key={item.id}
@@ -68,7 +66,6 @@ export const FiltersList = ({
 FiltersList.propTypes = {
   filters: PropTypes.array.isRequired,
   customClass: PropTypes.string,
-  userId: PropTypes.string,
   search: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   activeId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   loading: PropTypes.bool,
@@ -83,7 +80,6 @@ FiltersList.propTypes = {
 FiltersList.defaultProps = {
   activeId: '',
   customClass: '',
-  userId: '',
   search: '',
   loading: false,
   onLazyLoad: null,

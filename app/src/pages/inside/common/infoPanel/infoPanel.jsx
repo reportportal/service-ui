@@ -76,7 +76,11 @@ export class InfoPanel extends Component {
 
     return (
       <div className={cx('info-panel')}>
-        <ViewTabs viewMode={viewMode} isTestItemsList={isTestItemsList} />
+        <ViewTabs
+          viewMode={viewMode}
+          isTestItemsList={isTestItemsList}
+          events={events.TEST_ITEM_TABS_EVENTS}
+        />
         {isTestItemsList || withoutStatistics ? (
           this.renderInfoLineListView()
         ) : (

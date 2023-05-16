@@ -21,6 +21,7 @@ import { debounce, fetch, ERROR_CANCELED } from 'common/utils';
 export const WithAsyncLoading = (AutocompleteComponent) =>
   class WrappedAutocomplete extends Component {
     static propTypes = {
+      handleChange: PropTypes.func,
       getURI: PropTypes.func,
       makeOptions: PropTypes.func,
       filterOption: PropTypes.func,
@@ -28,6 +29,7 @@ export const WithAsyncLoading = (AutocompleteComponent) =>
     };
 
     static defaultProps = {
+      handleChange: () => {},
       getURI: () => '',
       makeOptions: (values) => values,
       filterOption: () => true,
@@ -81,6 +83,8 @@ export const WithAsyncLoading = (AutocompleteComponent) =>
     };
 
     handleStateChange = (changes, { isOpen, inputValue }) => {
+      this.props.handleChange(inputValue);
+
       if (!isOpen) return;
 
       if (

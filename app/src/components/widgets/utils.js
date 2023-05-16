@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { formatAttribute } from 'common/utils';
+import { formatAttribute } from 'common/utils/attributeUtils';
 
 export const cumulativeFormatParams = (params = {}) => ({
   ...(params.refresh && { refresh: params.refresh }),

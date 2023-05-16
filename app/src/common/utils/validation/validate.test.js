@@ -465,9 +465,9 @@ describe('validate.attributeKey', () => {
   });
   test('Validation should not be correct', () => {
     expect(validate.attributeKey('    ')).toBe(false);
-    const textLonger128 =
-      'this is very long text aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
-    expect(validate.attributeKey(textLonger128)).toBe(false);
+    const textLonger512 =
+      'this is very long text aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
+    expect(validate.attributeKey(textLonger512)).toBe(false);
   });
 });
 
@@ -480,9 +480,9 @@ describe('validate.attributeValue', () => {
     expect(validate.attributeValue(undefined)).toBe(false);
     expect(validate.attributeValue('')).toBe(false);
     expect(validate.attributeValue('    ')).toBe(false);
-    const textLonger128 =
-      'this is very long text aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
-    expect(validate.attributeValue(textLonger128)).toBe(false);
+    const textLonger512 =
+      'this is very long text aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
+    expect(validate.attributeValue(textLonger512)).toBe(false);
   });
 });
 
@@ -528,13 +528,13 @@ describe('validate.cumulativeItemsValidation', () => {
 describe('validate.flakyWidgetNumberOfLaunches', () => {
   test('validation should be correct', () => {
     expect(validate.flakyWidgetNumberOfLaunches(2)).toBe(true);
-    expect(validate.flakyWidgetNumberOfLaunches(600)).toBe(true);
+    expect(validate.flakyWidgetNumberOfLaunches(100)).toBe(true);
   });
   test('Validation should not be correct', () => {
     expect(validate.flakyWidgetNumberOfLaunches(undefined)).toBe(false);
     expect(validate.flakyWidgetNumberOfLaunches('')).toBe(false);
     expect(validate.flakyWidgetNumberOfLaunches(1)).toBe(false);
-    expect(validate.flakyWidgetNumberOfLaunches(601)).toBe(false);
+    expect(validate.flakyWidgetNumberOfLaunches(101)).toBe(false);
   });
 });
 
@@ -552,13 +552,13 @@ describe('validate.launchesWidgetContentFields', () => {
 describe('validate.mostFailedWidgetNumberOfLaunches', () => {
   test('validation should be correct', () => {
     expect(validate.mostFailedWidgetNumberOfLaunches(2)).toBe(true);
-    expect(validate.mostFailedWidgetNumberOfLaunches(600)).toBe(true);
+    expect(validate.mostFailedWidgetNumberOfLaunches(100)).toBe(true);
   });
   test('Validation should not be correct', () => {
     expect(validate.mostFailedWidgetNumberOfLaunches(undefined)).toBe(false);
     expect(validate.mostFailedWidgetNumberOfLaunches('')).toBe(false);
     expect(validate.mostFailedWidgetNumberOfLaunches(1)).toBe(false);
-    expect(validate.mostFailedWidgetNumberOfLaunches(601)).toBe(false);
+    expect(validate.mostFailedWidgetNumberOfLaunches(101)).toBe(false);
   });
 });
 

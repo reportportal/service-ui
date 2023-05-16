@@ -31,7 +31,6 @@ import { URLS } from 'common/urls';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { ANALYZER_TYPES } from 'common/constants/analyzerTypes';
 import { IN_PROGRESS } from 'common/constants/testStatuses';
-import { levelSelector } from 'controllers/testItem';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { MODAL_TYPE_IMPORT_LAUNCH } from 'pages/common/modals/importModal/constants';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
@@ -143,7 +142,7 @@ const messages = defineMessages({
   importTip: {
     id: 'LaunchesPage.tip',
     defaultMessage:
-      'Drop only <b>.zip</b> file under 32 MB to upload or <span>click</span> to add it',
+      'Drop <b>.xml</b> or <b>.zip</b> file under 32 MB to upload or <span>click</span> to add it',
   },
   noteMessage: {
     id: 'LaunchesPage.noteMessage',
@@ -171,7 +170,6 @@ const messages = defineMessages({
     launches: launchesSelector(state),
     lastOperation: lastOperationSelector(state),
     loading: loadingSelector(state),
-    level: levelSelector(state),
     projectSetting: projectConfigSelector(state),
     highlightItemId: prevTestItemSelector(state),
     isDemoInstance: isDemoInstanceSelector(state),
@@ -204,7 +202,6 @@ const messages = defineMessages({
 @track({ page: LAUNCHES_PAGE })
 export class LaunchesPage extends Component {
   static propTypes = {
-    level: PropTypes.string,
     debugMode: PropTypes.bool.isRequired,
     userId: PropTypes.string.isRequired,
     intl: PropTypes.object.isRequired,
@@ -248,7 +245,6 @@ export class LaunchesPage extends Component {
   };
 
   static defaultProps = {
-    level: '',
     launches: [],
     activePage: DEFAULT_PAGINATION[PAGE_KEY],
     itemCount: null,
@@ -413,8 +409,6 @@ export class LaunchesPage extends Component {
           nextStep: LAUNCHES_MODAL_EVENTS.NEXT_STEP_ADD_WIDGET_MODAL,
           prevStep: LAUNCHES_MODAL_EVENTS.PREVIOUS_STEP_ADD_WIDGET_MODAL,
           changeDescription: LAUNCHES_MODAL_EVENTS.ENTER_WIDGET_DESCRIPTION_ADD_WIDGET_MODAL,
-          shareWidget: LAUNCHES_MODAL_EVENTS.SHARE_WIDGET_ADD_WIDGET_MODAL,
-          addWidget: LAUNCHES_MODAL_EVENTS.ADD_BTN_ADD_WIDGET_MODAL,
           selectCriteria: LAUNCHES_MODAL_EVENTS.SELECT_CRITERIA_ADD_NEW_WIDGET_MODAL,
           sortingSelectParameters: LAUNCHES_MODAL_EVENTS.SELECT_SORTING_FILTER_ADD_WIDGET_MODAL,
           chooseFilter: LAUNCHES_MODAL_EVENTS.CHOOSE_FILTER_ADD_WIDGET_MODAL,
@@ -507,6 +501,9 @@ export class LaunchesPage extends Component {
   deleteItem = (item) => this.deleteItems([item]);
 
   confirmDeleteItems = (items) => {
+    this.props.tracking.trackEvent(
+      LAUNCHES_MODAL_EVENTS.getClickOnDeleteBtnDeleteItemModalEvent(items.length),
+    );
     const ids = items.map((item) => item.id);
     this.props.showScreenLockAction();
     fetch(URLS.launches(this.props.activeProject), {
@@ -544,7 +541,6 @@ export class LaunchesPage extends Component {
   };
 
   deleteItems = (launches) => {
-    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_DELETE_ACTION);
     const { intl, userId } = this.props;
     const selectedLaunches = launches || this.props.selectedLaunches;
     const warning =
@@ -565,19 +561,19 @@ export class LaunchesPage extends Component {
           : intl.formatMessage(messages.deleteModalMultipleContent),
       userId,
       warning,
-      eventsInfo: {
-        closeIcon: LAUNCHES_MODAL_EVENTS.CLOSE_ICON_DELETE_MODAL,
-        cancelBtn: LAUNCHES_MODAL_EVENTS.CANCEL_BTN_DELETE_MODAL,
-        deleteBtn: LAUNCHES_MODAL_EVENTS.DELETE_BTN_DELETE_MODAL,
-      },
+      eventsInfo: {},
     });
   };
 
   finishForceLaunches = (eventData) => {
-    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_FORCE_FINISH_ACTION);
     const launches = eventData && eventData.id ? [eventData] : this.props.selectedLaunches;
     this.props.forceFinishLaunchesAction(launches, {
       fetchFunc: this.unselectAndFetchLaunches,
+      eventsInfo: {
+        finishButton: LAUNCHES_MODAL_EVENTS.getClickOnFinishButtonInForceFinishModal(
+          eventData ? 'launch_menu' : 'list_of_actions',
+        ),
+      },
     });
   };
 
@@ -615,7 +611,6 @@ export class LaunchesPage extends Component {
   };
 
   openEditModal = (launch) => {
-    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_EDIT_LAUNCH_ACTION);
     this.props.showModalAction({
       id: 'editItemModal',
       data: {
@@ -628,7 +623,6 @@ export class LaunchesPage extends Component {
   };
 
   openEditItemsModal = (launches) => {
-    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_EDIT_LAUNCHES_ACTION);
     this.props.showModalAction({
       id: 'editItemsModal',
       data: {
@@ -636,11 +630,8 @@ export class LaunchesPage extends Component {
         type: LAUNCH_ITEM_TYPES.launch,
         fetchFunc: this.unselectAndFetchLaunches,
         eventsInfo: {
-          cancelBtn: LAUNCHES_MODAL_EVENTS.EDIT_ITEMS_MODAL_EVENTS.CANCEL_BTN_EDIT_ITEM_MODAL,
-          closeIcon: LAUNCHES_MODAL_EVENTS.EDIT_ITEMS_MODAL_EVENTS.CLOSE_ICON_EDIT_ITEM_MODAL,
-          saveBtn: LAUNCHES_MODAL_EVENTS.EDIT_ITEMS_MODAL_EVENTS.SAVE_BTN_EDIT_ITEM_MODAL,
-          editDescription:
-            LAUNCHES_MODAL_EVENTS.EDIT_ITEMS_MODAL_EVENTS.BULK_EDIT_ITEMS_DESCRIPTION,
+          getSaveBtnEditItemsEvent:
+            LAUNCHES_MODAL_EVENTS.EDIT_ITEMS_MODAL_EVENTS.getSaveBtnEditItemsEvent,
         },
       },
     });
@@ -685,23 +676,20 @@ export class LaunchesPage extends Component {
       finishedLaunchesCount: null,
     });
     this.props.fetchLaunchesAction();
-    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.REFRESH_BTN);
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_REFRESH_BTN);
   };
 
   handleAllLaunchesSelection = () => {
-    this.props.tracking.trackEvent(
-      LAUNCHES_PAGE_EVENTS.clickSelectAllItemsEvent(
-        this.props.launches.length !== this.props.selectedLaunches.length,
-      ),
-    );
+    if (this.props.launches.length !== this.props.selectedLaunches.length) {
+      this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_SELECT_ALL_ITEMS);
+    }
     this.props.toggleAllLaunchesAction(this.props.launches);
   };
 
   handleOneLaunchSelection = (value) => {
-    !this.props.level &&
-      this.props.tracking.trackEvent(
-        LAUNCHES_PAGE_EVENTS.clickSelectOneItemEvent(!this.props.selectedLaunches.includes(value)),
-      );
+    if (!this.props.selectedLaunches.includes(value)) {
+      this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_SELECT_ONE_ITEM);
+    }
     this.props.toggleLaunchSelectionAction(value);
   };
 
@@ -711,12 +699,11 @@ export class LaunchesPage extends Component {
       selectedLaunches,
     } = this.props;
 
-    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_PROCEED_ITEMS_BUTTON);
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_PROCEED_VALID_ITEMS);
     this.props.proceedWithValidItemsAction(operationName, selectedLaunches, operationArgs);
   };
 
   mergeLaunches = () => {
-    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_MERGE_ACTION);
     this.props.mergeLaunchesAction(this.props.selectedLaunches, {
       fetchFunc: this.unselectAndResetPage,
     });
@@ -724,15 +711,19 @@ export class LaunchesPage extends Component {
 
   moveLaunches = (eventData) => {
     const launches = eventData && eventData.id ? [eventData] : this.props.selectedLaunches;
-    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_MOVE_TO_DEBUG_LAUNCH_MENU);
+
     this.props.moveLaunchesAction(launches, {
       fetchFunc: this.unselectAndFetchLaunches,
       debugMode: this.props.debugMode,
+      eventsInfo: {
+        moveButton: LAUNCHES_MODAL_EVENTS.getClickOnMoveButtonInMoveToDebugModalEvent(
+          eventData ? 'launch_menu' : 'list_of_actions',
+        ),
+      },
     });
   };
 
   compareLaunches = () => {
-    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_COMPARE_ACTION);
     this.props.compareLaunchesAction(this.props.selectedLaunches);
   };
 

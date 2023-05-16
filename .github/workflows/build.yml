@@ -3,7 +3,7 @@ name: Build
 on:
   push:
     branches:
-      - '*'
+      - '**'
       - '!master'
     paths-ignore:
       - readme.md
@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [11, 12]
+        node: [12]
 
     steps:
       - uses: actions/checkout@v2

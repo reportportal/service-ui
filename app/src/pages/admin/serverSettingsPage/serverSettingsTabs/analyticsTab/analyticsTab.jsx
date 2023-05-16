@@ -38,6 +38,7 @@ import {
   fetchAppInfoAction,
   ANALYTICS_ALL_KEY,
 } from 'controllers/appInfo';
+import { analyticsEventObserver } from 'components/main/analytics/AnalyticsWrapper';
 import styles from './analyticsTab.scss';
 
 const cx = classNames.bind(styles);
@@ -126,6 +127,18 @@ export class AnalyticsTab extends Component {
     };
   }
 
+  componentDidMount() {
+    analyticsEventObserver.subscribe('analyticsWasEnabled', this.trackEnablingAnalytics);
+  }
+
+  trackEnablingAnalytics = (status) => {
+    this.props.tracking.trackEvent(submitAnalyticsBtn(status));
+  };
+
+  componentWillUnmount() {
+    analyticsEventObserver.unsubscribe('analyticsWasEnabled');
+  }
+
   onListClick = () => {
     this.setState((state) => ({
       listShown: !state.listShown,
@@ -137,9 +150,6 @@ export class AnalyticsTab extends Component {
       loading: true,
     });
     this.updateStatisticsConfig(this.state.analyticsEnabled);
-    this.props.tracking.trackEvent(
-      submitAnalyticsBtn(this.state.analyticsEnabled ? 'active' : 'disable'),
-    );
   };
 
   toggleStatistics = () => {
@@ -159,7 +169,12 @@ export class AnalyticsTab extends Component {
         enabled: analyticsEnabled,
       },
     })
-      .then(this.updateSettingSuccess)
+      .then(() => {
+        this.updateSettingSuccess();
+        if (!this.state.analyticsEnabled) {
+          this.props.tracking.trackEvent(submitAnalyticsBtn('disabled'));
+        }
+      })
       .catch(this.catchRequestError);
   };
 

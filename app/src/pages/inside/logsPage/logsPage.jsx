@@ -77,13 +77,18 @@ export class LogsPage extends Component {
     isSauceLabsIntegrationView: false,
   };
 
-  toggleSauceLabsIntegrationView = () =>
-    this.setState({
-      isSauceLabsIntegrationView: !this.state.isSauceLabsIntegrationView,
-    });
+  toggleSauceLabsIntegrationView = () => {
+    const isSauceLabsIntegrationView = !this.state.isSauceLabsIntegrationView;
+
+    if (isSauceLabsIntegrationView) {
+      this.props.tracking.trackEvent(LOG_PAGE_EVENTS.SAUCE_LABS_BTN);
+    }
+
+    this.setState({ isSauceLabsIntegrationView });
+  };
 
   handleRefresh = () => {
-    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.REFRESH_BTN);
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.CLICK_REFRESH_BTN);
     if (this.state.isSauceLabsIntegrationView) {
       this.toggleSauceLabsIntegrationView();
     }

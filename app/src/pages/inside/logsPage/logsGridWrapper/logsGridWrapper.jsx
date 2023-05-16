@@ -45,6 +45,7 @@ import { withPagination, PAGE_KEY, DEFAULT_PAGINATION, SIZE_KEY } from 'controll
 import { withSortingURL, SORTING_ASC } from 'controllers/sorting';
 import { userIdSelector } from 'controllers/user';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
+import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { LogsGrid } from '../logsGrid';
 import { LogsGridToolbar } from '../logsGridToolbar';
 import { SauceLabsSection } from '../sauceLabsSection';
@@ -185,34 +186,41 @@ export class LogsGridWrapper extends Component {
   };
 
   componentDidMount() {
-    const errorLogId = getStorageItem(ERROR_LOG_INDEX_KEY);
-    if (errorLogId) {
-      const { errorLogs } = this.props;
-      const errorLogIndex = errorLogs.findIndex(({ id }) => id === errorLogId);
-      removeStorageItem(ERROR_LOG_INDEX_KEY);
-      const fetchErrorLogCb = () => this.setState({ skipHighlightOnRender: false, errorLogIndex });
-      this.props.fetchErrorLog(errorLogs[errorLogIndex], fetchErrorLogCb);
+    if (this.props.logViewMode === DETAILED_LOG_VIEW) {
+      const errorLogId = getStorageItem(ERROR_LOG_INDEX_KEY);
+      if (errorLogId) {
+        const { errorLogs } = this.props;
+        const errorLogIndex = errorLogs.findIndex(({ id }) => id === errorLogId);
+        removeStorageItem(ERROR_LOG_INDEX_KEY);
+        const fetchErrorLogCb = () =>
+          this.setState({ skipHighlightOnRender: false, errorLogIndex });
+        this.props.fetchErrorLog(errorLogs[errorLogIndex], fetchErrorLogCb);
+      }
     }
   }
 
   componentDidUpdate(prevProps) {
-    if (
-      this.props.logLevelId !== prevProps.logLevelId ||
-      this.props.logStatus !== prevProps.logStatus ||
-      this.props.withAttachments !== prevProps.withAttachments ||
-      this.props.hideEmptySteps !== prevProps.hideEmptySteps ||
-      this.props.hidePassedLogs !== prevProps.hidePassedLogs ||
-      this.props.retryId !== prevProps.retryId ||
-      this.props.sortingDirection !== prevProps.sortingDirection ||
-      this.props.filter !== prevProps.filter ||
-      this.props.pageSize !== prevProps.pageSize
-    ) {
-      // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({ errorLogIndex: null, skipHighlightOnRender: false });
+    if (this.props.logViewMode === DETAILED_LOG_VIEW) {
+      if (
+        this.props.logLevelId !== prevProps.logLevelId ||
+        this.props.logStatus !== prevProps.logStatus ||
+        this.props.withAttachments !== prevProps.withAttachments ||
+        this.props.hideEmptySteps !== prevProps.hideEmptySteps ||
+        this.props.hidePassedLogs !== prevProps.hidePassedLogs ||
+        this.props.retryId !== prevProps.retryId ||
+        this.props.sortingDirection !== prevProps.sortingDirection ||
+        this.props.filter !== prevProps.filter ||
+        this.props.pageSize !== prevProps.pageSize
+      ) {
+        // eslint-disable-next-line react/no-did-update-set-state
+        this.setState({ errorLogIndex: null, skipHighlightOnRender: false });
+      }
     }
   }
 
   highlightErrorLog = (direction) => {
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.getClickOnHighlightErrorLogEvent(!!direction));
+
     const { errorLogs } = this.props;
     const { errorLogIndex } = this.state;
     const nextErrorLogIndex = calculateNextIndex(errorLogs, errorLogIndex, direction);

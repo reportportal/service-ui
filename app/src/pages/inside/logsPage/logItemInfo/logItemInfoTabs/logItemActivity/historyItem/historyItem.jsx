@@ -62,10 +62,12 @@ export class HistoryItem extends Component {
     projectId: PropTypes.string.isRequired,
     filterId: PropTypes.string.isRequired,
     patterns: PropTypes.array,
+    onClick: PropTypes.func,
   };
 
   static defaultProps = {
     patterns: [],
+    onClick: () => {},
   };
 
   isValueEmpty = (value) => value === '';
@@ -91,7 +93,7 @@ export class HistoryItem extends Component {
   }
 
   renderRelevantValue(value) {
-    const { projectId, filterId, intl } = this.props;
+    const { projectId, filterId, intl, onClick } = this.props;
 
     try {
       const relevantItem = normalizeAndParse(value);
@@ -107,7 +109,7 @@ export class HistoryItem extends Component {
       return (
         <Fragment>
           {intl.formatMessage(messages.basedOn)}{' '}
-          <Link className={cx('link')} to={itemLink} target="_blank">
+          <Link className={cx('link')} to={itemLink} target="_blank" onClick={onClick}>
             {intl.formatMessage(messages.item)}
           </Link>
         </Fragment>

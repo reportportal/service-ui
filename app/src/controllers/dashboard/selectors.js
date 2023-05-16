@@ -35,6 +35,9 @@ export const activeDashboardItemSelector = createSelector(
     dashboardItems.find((item) => item.id === activeDashboardId) || {},
 );
 
+export const totalDashboardsSelector = (state) =>
+  domainSelector(state).pagination.totalElements || 0;
+
 export const dashboardFullScreenModeSelector = (state) => domainSelector(state).fullScreenMode;
 
 export const querySelector = createQueryParametersSelector();

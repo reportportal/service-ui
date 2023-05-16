@@ -113,7 +113,7 @@ export class ItemInfo extends Component {
     const { onEditItem, events } = this.props.customProps;
     if (onEditItem) {
       onEditItem(this.props.value);
-      this.props.tracking.trackEvent(events.EDIT_ICON_CLICK);
+      this.props.tracking.trackEvent(events.CLICK_EDIT_ICON);
     }
   };
 

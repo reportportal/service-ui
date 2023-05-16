@@ -22,7 +22,7 @@ export const referenceDictionary = {
   rpTwitter: 'http://twitter.com/ReportPortal_io',
   rpYoutube: 'http://youtube.com/c/ReportPortalCommunity',
   rpVk: 'https://vk.com/reportportal_io',
-  rpSlack: 'https://reportportal-slack-auto.herokuapp.com/',
+  rpSlack: 'https://slack.epmrpp.reportportal.io/',
   rpEmail: 'mailto:support@reportportal.io',
   rpEpam: 'https://www.epam.com/',
   rpEpamPolicy: 'https://privacy.epam.com/core/interaction/showpolicy?type=PrivacyPolicy',

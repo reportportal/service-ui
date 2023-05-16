@@ -19,7 +19,13 @@ import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
-import { PRODUCT_BUG, AUTOMATION_BUG, SYSTEM_ISSUE } from 'common/constants/defectTypes';
+import {
+  PRODUCT_BUG,
+  AUTOMATION_BUG,
+  SYSTEM_ISSUE,
+  TO_INVESTIGATE,
+  NO_DEFECT,
+} from 'common/constants/defectTypes';
 import { StatisticsLink } from 'pages/inside/common/statisticsLink';
 import { isStepLevelSelector } from 'controllers/testItem';
 import { DefectTypeBlock } from './defectTypeBlock';
@@ -77,9 +83,11 @@ export class InfoLine extends Component {
     const executions = normalizeExecutions(data.statistics.executions);
     const passed = (executions.passed / executions.total) * 100 || 0;
     const tooltipEventsInfo = {
-      [PRODUCT_BUG]: events.PB_TOOLTIP,
-      [SYSTEM_ISSUE]: events.SI_TOOLTIP,
-      [AUTOMATION_BUG]: events.AB_TOOLTIP,
+      [PRODUCT_BUG]: events.getClickTooltipPbEvent('header'),
+      [AUTOMATION_BUG]: events.getClickTooltipAbEvent('header'),
+      [SYSTEM_ISSUE]: events.getClickTooltipSiEvent('header'),
+      [TO_INVESTIGATE]: events.getClickTooltipTiEvent('header'),
+      [NO_DEFECT]: events.getClickTooltipNdEvent('header'),
     };
     return (
       <div className={cx('info-line', { 'detailed-view': detailedView })}>

@@ -17,10 +17,11 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { UNIQUE_ERRORS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { InfoPanel } from 'pages/inside/common/infoPanel';
 import { UNIQUE_ERRORS_VIEW } from 'controllers/testItem';
 import { SelectedItems } from 'pages/inside/common/selectedItems';
-import { ActionPanel } from './actionPanel';
+import { UniqueErrorsActionPanel } from './actionPanel';
 import styles from './uniqueErrorsToolbar.scss';
 
 const cx = classNames.bind(styles);
@@ -38,7 +39,6 @@ export const UniqueErrorsToolbar = ({
   unselectAndFetchItems,
   onEditItems,
   onEditDefects,
-  events,
 }) => (
   <Fragment>
     <div className={cx({ 'sticky-toolbar': selectedItems.length })}>
@@ -50,7 +50,7 @@ export const UniqueErrorsToolbar = ({
           onClose={onUnselectAll}
         />
       )}
-      <ActionPanel
+      <UniqueErrorsActionPanel
         hasErrors={selectedItems.some((item) => !!errors[item.id])}
         hasValidItems={selectedItems.length > Object.keys(errors).length}
         showBreadcrumbs={selectedItems.length === 0}
@@ -63,10 +63,16 @@ export const UniqueErrorsToolbar = ({
         onDelete={onDelete}
         parentItem={parentItem}
         unselectAndFetchItems={unselectAndFetchItems}
-        events={events}
       />
     </div>
-    {parentItem && <InfoPanel withoutStatistics viewMode={UNIQUE_ERRORS_VIEW} data={parentItem} />}
+    {parentItem && (
+      <InfoPanel
+        withoutStatistics
+        viewMode={UNIQUE_ERRORS_VIEW}
+        data={parentItem}
+        events={UNIQUE_ERRORS_PAGE_EVENTS}
+      />
+    )}
   </Fragment>
 );
 UniqueErrorsToolbar.propTypes = {
@@ -82,7 +88,6 @@ UniqueErrorsToolbar.propTypes = {
   unselectAndFetchItems: PropTypes.func,
   onEditItems: PropTypes.func,
   onEditDefects: PropTypes.func,
-  events: PropTypes.object,
 };
 UniqueErrorsToolbar.defaultProps = {
   parentItem: null,
@@ -97,5 +102,4 @@ UniqueErrorsToolbar.defaultProps = {
   unselectAndFetchItems: () => {},
   onEditItems: () => {},
   onEditDefects: () => {},
-  events: {},
 };

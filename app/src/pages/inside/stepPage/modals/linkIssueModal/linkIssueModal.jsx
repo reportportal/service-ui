@@ -132,8 +132,9 @@ export class LinkIssueModal extends Component {
     const {
       intl,
       userId,
-      data: { items, fetchFunc },
+      data: { items, fetchFunc, eventsInfo },
       activeProject,
+      tracking,
       namedBtsIntegrations,
     } = this.props;
     const { pluginName, integrationId } = this.state;
@@ -149,6 +150,8 @@ export class LinkIssueModal extends Component {
       btsUrl: url,
       pluginName,
     }));
+
+    eventsInfo.loadBtn && tracking.trackEvent(eventsInfo.loadBtn(issues.length));
 
     fetch(requestUrl, {
       method: 'put',
@@ -180,13 +183,8 @@ export class LinkIssueModal extends Component {
   };
 
   onLink = () => {
-    const {
-      data: { eventsInfo },
-      handleSubmit,
-      tracking,
-    } = this.props;
+    const { handleSubmit } = this.props;
     handleSubmit(this.onFormSubmit)();
-    eventsInfo.loadBtn && tracking.trackEvent(eventsInfo.loadBtn);
   };
 
   onChangePlugin = (pluginName) => {

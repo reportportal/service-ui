@@ -111,8 +111,8 @@ export const getTimelineConfig = ({
     padding: {
       top: isPreview ? 0 : 85,
       left: isPreview ? 0 : 60,
-      right: isPreview ? 0 : 20,
-      bottom: 0,
+      right: isPreview ? 0 : 30,
+      bottom: isPreview ? 0 : 10,
     },
     legend: {
       show: false,
