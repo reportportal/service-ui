@@ -58,7 +58,7 @@ jobs:
       - name: Tag release
         id: tagRelease
         run: |
-          git tag -a ${{ github.event.inputs.version }} -m 'Release ${{ github.event.inputs.version }}'
+          git tag -a v${{ github.event.inputs.version }} -m 'Release ${{ github.event.inputs.version }}'
           git push --tags
 
       - name: Create Release
@@ -83,16 +83,10 @@ jobs:
           asset_name: ${{ env.UI_ARTIFACT_NAME }}
           asset_content_type: application/gzip
 
-      - name: Bump version
-        uses: HardNorth/github-version-generate@v1.1.0
-        with:
-          version: ${{ github.event.inputs.version }}-SNAPSHOT
-          next-version-increment-patch: true
-
       - name: Commit version
         run: |
-          echo ${{ env.NEXT_VERSION }} > ${{ github.workspace }}/VERSION
+          echo ${{ github.event.inputs.version }} > ${{ github.workspace }}/VERSION
           git add ${{ github.workspace }}/VERSION
           export CHANGED=`git status | grep VERSION | xargs`
-          [ -z "${CHANGED}" ] || git commit -m 'Bump new snapshot version'
+          [ -z "${CHANGED}" ] || git commit -m 'Commit version'
           git push
