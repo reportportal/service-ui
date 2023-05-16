@@ -36,6 +36,8 @@ export class InputRadioGroup extends PureComponent {
     ),
     inline: PropTypes.bool,
     inputGroupClassName: PropTypes.string,
+    mode: PropTypes.string,
+    size: PropTypes.string,
   };
   static defaultProps = {
     options: [],

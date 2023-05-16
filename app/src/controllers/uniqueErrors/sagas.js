@@ -48,7 +48,10 @@ import { setPageLoadingAction } from './actionCreators';
 
 function* getPlugin() {
   let plugins = yield select(pluginsSelector);
-  if (!plugins.length) {
+  const { kind } = yield select(locationSelector);
+  const pageIsReloaded = kind === 'load';
+
+  if (!plugins.length && !pageIsReloaded) {
     yield put(fetchDataAction(PLUGINS_NAMESPACE)(URLS.plugin()));
     const response = yield take(createFetchPredicate(PLUGINS_NAMESPACE));
     plugins = response.payload;
